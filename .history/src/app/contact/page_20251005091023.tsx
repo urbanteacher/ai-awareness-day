@@ -43,7 +43,7 @@ export default function ContactPage() {
                   <Clock className="h-5 w-5 text-green-500 mt-1" />
                   <div>
                     <h4 className="font-semibold">Response Time</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-200">Within 24 hours</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Within 24 hours</p>
                     <p className="text-xs text-gray-500">We typically respond much faster</p>
                   </div>
                 </div>
@@ -52,7 +52,7 @@ export default function ContactPage() {
                   <MapPin className="h-5 w-5 text-purple-500 mt-1" />
                   <div>
                     <h4 className="font-semibold">Location</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-200">Global Remote Team</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Global Remote Team</p>
                     <p className="text-xs text-gray-500">Supporting developers worldwide</p>
                   </div>
                 </div>
@@ -66,21 +66,21 @@ export default function ContactPage() {
               <CardContent className="space-y-4">
                 <div>
                   <h4 className="font-semibold text-sm">How can my school participate?</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-200">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
                     Simply sign up and access our comprehensive resources for AI education in schools.
                   </p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-sm">Are the resources free?</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-200">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
                     Yes! All educational resources are completely free for UK schools.
                   </p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-sm">What age groups are covered?</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-200">
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
                     Our resources are designed for primary and secondary school students across all age groups.
                   </p>
                 </div>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <h3 className="font-semibold mb-2">Documentation</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Comprehensive guides and API references
                   </p>
                   <a 
@@ -127,7 +127,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                   </div>
                   <h3 className="font-semibold mb-2">Discord Community</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Join our community for discussions and support
                   </p>
                   <a 
@@ -149,7 +149,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
                   <h3 className="font-semibold mb-2">GitHub Issues</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Report bugs and request features
                   </p>
                   <a 

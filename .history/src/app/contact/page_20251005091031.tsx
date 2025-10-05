@@ -107,7 +107,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <h3 className="font-semibold mb-2">Documentation</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Comprehensive guides and API references
                   </p>
                   <a 
@@ -127,7 +127,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                   </div>
                   <h3 className="font-semibold mb-2">Discord Community</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Join our community for discussions and support
                   </p>
                   <a 
@@ -149,7 +149,7 @@ export default function ContactPage() {
                     <MessageSquare className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
                   <h3 className="font-semibold mb-2">GitHub Issues</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     Report bugs and request features
                   </p>
                   <a 

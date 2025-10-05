@@ -223,7 +223,7 @@ export default function DisplayBoardMockup() {
                     <div className="w-16 h-16 mx-auto mb-1 bg-white dark:bg-gray-700 p-1 rounded flex items-center justify-center">
                       <QrCode className="w-12 h-12 text-gray-800" />
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-200">AI Guidelines</p>
+                    <p className="text-xs text-gray-600">AI Guidelines</p>
                   </div>
                 </div>
               </div>
