@@ -49,7 +49,7 @@ export function PolygonCard({
 
       {/* Title section */}
       <div className="absolute top-0 left-0 w-full h-3/5 flex items-center justify-center">
-        <span className="text-white font-bold text-lg">{title}</span>
+        <span className="text-white font-bold text-base sm:text-lg">{title}</span>
       </div>
 
       {/* Bottom section */}
