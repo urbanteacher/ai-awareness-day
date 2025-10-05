@@ -73,8 +73,8 @@ export function StepCard({
         </div>
         
         {/* Content */}
-        <div className="p-6 bg-gray-100 dark:bg-gray-800">
-          <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">{description}</p>
+        <div className="p-6 bg-gray-800">
+          <p className="text-gray-300 text-base leading-relaxed">{description}</p>
         </div>
       </div>
     </motion.div>

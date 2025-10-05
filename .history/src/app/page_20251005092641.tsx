@@ -82,7 +82,7 @@ export default function Home() {
           </section>
           
           {/* IMPLEMENTATION SECTION - Step-by-step guide */}
-          <SectionWrapper id="implementation" className="bg-white dark:bg-black" padding="sm">
+          <SectionWrapper id="implementation" className="bg-white dark:bg-gray-800" padding="sm">
             <ImplementationSection />
           </SectionWrapper>
           
