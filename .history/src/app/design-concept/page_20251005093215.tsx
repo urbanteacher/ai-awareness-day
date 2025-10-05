@@ -471,12 +471,12 @@ export default function DesignConceptPage() {
                   <p className="text-sm text-muted-foreground">Height: 60% | 96px on medium size</p>
                 </div>
               </SectionCard>
-                <SectionCard>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Text Section</h4>
-                    <p className="text-sm text-muted-foreground">Height: 40% | 64px on medium | bg: #1f2937 (consistent in both modes)</p>
-                  </div>
-                </SectionCard>
+              <SectionCard>
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Text Section</h4>
+                  <p className="text-sm text-muted-foreground">Height: 40% | 64px on medium | bg: #1f2937</p>
+                </div>
+              </SectionCard>
               <SectionCard>
                 <div className="space-y-2">
                   <h4 className="font-semibold">Title Font</h4>
