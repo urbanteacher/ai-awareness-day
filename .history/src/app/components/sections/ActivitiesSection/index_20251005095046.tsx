@@ -49,7 +49,7 @@ const activityTypes = [
   },
   {
     id: "after-school-clubs",
-    title: "After School Subjects",
+    title: "After School Clubs",
     duration: "30-45 min",
     description: "Extended learning",
     icon: BookOpen,
@@ -117,7 +117,7 @@ export default function ActivitiesSection() {
                         >
                           <activity.icon className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-xs font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
+                        <span className="text-sm font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
                           {activity.duration}
                         </span>
                       </div>
