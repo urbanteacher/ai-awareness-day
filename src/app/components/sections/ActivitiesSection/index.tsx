@@ -93,7 +93,7 @@ export default function ActivitiesSection() {
                 >
                   {/* Activity Card */}
                   <div 
-                    className="bg-gray-800 p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden border-2 border-gray-600 group"
+                    className="bg-gray-800 dark:bg-gray-700 p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden border-2 border-gray-600 dark:border-gray-500 group"
                     style={{
                       clipPath: 'polygon(0% 0%, 90% 0%, 100% 10%, 100% 100%, 10% 100%, 0% 90%)'
                     }}
