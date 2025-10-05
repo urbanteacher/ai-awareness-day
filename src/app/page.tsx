@@ -75,42 +75,42 @@ export default function Home() {
         {/* LAZY-LOADED SECTIONS - Below the fold for performance optimization */}
         <Suspense fallback={<SectionSkeleton />}>
           {/* BACKER SECTION - Partner logos and reach statistics */}
-          <SectionWrapper className="!pt-12 !pb-4 bg-gray-50">
+          <SectionWrapper className="!pt-12 !pb-4 bg-background">
             <BackerSection />
           </SectionWrapper>
-          
+
           {/* IMPLEMENTATION SECTION - Step-by-step guide */}
-          <SectionWrapper id="implementation" className="bg-white" padding="sm">
+          <SectionWrapper id="implementation" className="bg-background" padding="sm">
             <ImplementationSection />
           </SectionWrapper>
-          
+
           {/* COMMUNICATIONS SECTION - Marketing materials and templates */}
-          <SectionWrapper id="communications" className="bg-gray-50" padding="sm">
+          <SectionWrapper id="communications" className="bg-background" padding="sm">
             <CommunicationsSection />
           </SectionWrapper>
-          
+
           {/* ACTIVITIES SECTION - Interactive activities and resources */}
-          <SectionWrapper id="activities" className="bg-white" padding="sm">
+          <SectionWrapper id="activities" className="bg-background" padding="sm">
             <ActivitiesSection />
           </SectionWrapper>
-          
+
           {/* LIBRARY SECTION - Resource library and downloads */}
-          <SectionWrapper id="library" className="bg-gray-50" padding="sm">
+          <SectionWrapper id="library" className="bg-background" padding="sm">
             <LibrarySection />
           </SectionWrapper>
-          
+
           {/* DISPLAY BOARD SECTION - Visual mockup and examples */}
-          <SectionWrapper id="display-board" className="bg-white" padding="sm">
+          <SectionWrapper id="display-board" className="bg-background" padding="sm">
             <DisplayBoardMockup />
           </SectionWrapper>
-          
+
           {/* MARKETING SECTION - Social media and promotional content */}
-          <SectionWrapper id="marketing" className="bg-gray-50" padding="sm">
+          <SectionWrapper id="marketing" className="bg-background" padding="sm">
             <MarketingSection />
           </SectionWrapper>
-          
+
           {/* TOOLS SECTION - Additional tools and utilities */}
-          <SectionWrapper id="tools" className="bg-white" padding="sm">
+          <SectionWrapper id="tools" className="bg-background" padding="sm">
             <ToolsSection />
           </SectionWrapper>
         </Suspense>

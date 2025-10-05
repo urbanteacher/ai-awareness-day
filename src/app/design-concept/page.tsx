@@ -494,7 +494,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Color Palette */}
-        <SectionWrapper className="bg-gray-50">
+        <SectionWrapper className="bg-background">
           <Container>
             <SectionHeader
               title="🎨 Color Palette"
@@ -993,7 +993,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Typography Scale */}
-        <SectionWrapper className="bg-gray-50">
+        <SectionWrapper className="bg-background">
           <Container>
             <SectionHeader
               title="Typography Scale"
@@ -1039,7 +1039,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Technical Specifications */}
-        <SectionWrapper className="bg-gray-50">
+        <SectionWrapper className="bg-background">
           <Container>
             <SectionHeader
               title="⚙️ Technical Specifications"
