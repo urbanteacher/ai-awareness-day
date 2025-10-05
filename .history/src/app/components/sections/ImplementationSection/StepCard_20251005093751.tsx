@@ -67,7 +67,7 @@ export function StepCard({
             
             {/* Geometric Pattern */}
             <div className="absolute bottom-0 right-0 w-16 h-16 opacity-20">
-              <div className="w-full h-full bg-gray-800/30 rounded-full"></div>
+              <div className="w-full h-full bg-white/30 dark:bg-black/30 rounded-full"></div>
             </div>
           </div>
         </div>
