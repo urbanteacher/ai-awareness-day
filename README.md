@@ -56,14 +56,14 @@ A nationwide campaign website equipping students with critical AI skills through
 ### Installation
 
 1. **Clone the repository**
-   ```bash
+```bash
    git clone https://github.com/yourusername/ai-awareness-day-2026.git
    cd ai-awareness-day-2026
-   ```
+```
 
 2. **Install dependencies**
-   ```bash
-   npm install
+```bash
+npm install
    ```
 
 3. **Run the development server**
@@ -79,7 +79,7 @@ A nationwide campaign website equipping students with critical AI skills through
 ```bash
 npm run build
 npm start
-```
+   ```
 
 ## 📁 Project Structure
 
