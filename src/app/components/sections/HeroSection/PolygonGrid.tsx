@@ -12,7 +12,7 @@ export function PolygonGrid({ className = "" }: PolygonGridProps) {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className={`grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 justify-items-center ${className}`}
+      className={`grid grid-cols-3 gap-3 md:gap-6 justify-items-center ${className}`}
     >
       {themeConfigs.map((theme, index) => (
         <motion.div
@@ -39,8 +39,8 @@ export function PolygonGrid({ className = "" }: PolygonGridProps) {
         </motion.div>
       ))}
 
-      {/* Empty space for 6th position */}
-      <div className="w-24 h-24 md:w-32 md:h-32"></div>
+      {/* Empty space for 6th position in 3x2 grid */}
+      <div className="w-20 h-20 sm:w-24 sm:h-24"></div>
     </motion.div>
   )
 }
