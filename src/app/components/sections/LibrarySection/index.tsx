@@ -202,7 +202,7 @@ export default function LibrarySection() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true, amount: 0.3 }}
                           transition={{ duration: 0.4, delay: activityIndex * 0.1 }}
-                          className="bg-gray-100 dark:bg-gray-800 p-6 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden h-80 flex flex-col hover:scale-105 hover:shadow-2xl"
+                          className="bg-gray-800 dark:bg-gray-800 p-6 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden h-80 flex flex-col hover:scale-105 hover:shadow-2xl"
                           style={{
                             clipPath: "polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))"
                           }}
@@ -276,7 +276,7 @@ export default function LibrarySection() {
                                 {activity.tags.slice(0, 2).map((tag: string, tagIndex: number) => (
                                   <span 
                                     key={tagIndex}
-                                      className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded truncate max-w-[120px]"
+                                    className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded truncate max-w-[120px]"
                                     title={tag}
                                   >
                                     {tag.length > 15 ? `${tag.substring(0, 15)}...` : tag}

@@ -53,7 +53,7 @@ export function PolygonCard({
       </div>
 
       {/* Bottom section */}
-      <div className="absolute bottom-0 right-0 w-full h-2/5 bg-gray-200 dark:bg-gray-800 flex flex-col justify-end items-end p-2">
+      <div className="absolute bottom-0 right-0 w-full h-2/5 bg-gray-800 dark:bg-gray-800 flex flex-col justify-end items-end p-2">
         {children || (
           <>
             <span className="text-white text-xs leading-none hidden sm:block">AI</span>

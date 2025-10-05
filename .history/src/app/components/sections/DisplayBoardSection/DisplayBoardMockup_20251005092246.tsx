@@ -264,11 +264,11 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* Response Pocket */}
-          <div className="border-2 border-dashed border-gray-400 overflow-hidden p-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white relative" 
+          <div className="border-2 border-dashed border-gray-400 overflow-hidden p-4 bg-gray-800 dark:bg-gray-800 text-white relative" 
                style={{ clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
             <div className="flex items-center gap-2 mb-3">
               <MessageSquare className="w-5 h-5 text-green-400" />
-              <h3 className="font-bold text-gray-900 dark:text-white">Student Responses</h3>
+              <h3 className="font-bold text-white">Student Responses</h3>
             </div>
             <div className="bg-gray-700 p-4 rounded border-2 border-dashed border-green-400 text-center">
               <div className="space-y-2">
