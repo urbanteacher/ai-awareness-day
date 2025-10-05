@@ -143,7 +143,7 @@ export default function LibrarySection() {
                 className={`${
                   selectedTheme === theme.id
                     ? "bg-purple-600 hover:bg-purple-700 text-white"
-                    : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+                    : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
                 }`}
               >
                 <div className={`w-3 h-3 rounded-full ${theme.color} mr-2`} />
