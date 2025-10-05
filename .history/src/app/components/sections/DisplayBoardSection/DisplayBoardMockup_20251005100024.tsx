@@ -245,15 +245,15 @@ export default function DisplayBoardMockup() {
               <h3 className="font-bold text-gray-900 dark:text-white">This Week's Questions</h3>
             </div>
             <div className="space-y-2">
-              <div className="bg-red-900 p-2 rounded border-l-4 border-red-500">
+              <div className="bg-gray-800 p-2 rounded border-l-4 border-red-500">
                 <p className="text-xs font-semibold text-red-400">BE SAFE</p>
                 <p className="text-xs text-gray-300">How can we ensure AI tools are fair?</p>
               </div>
-              <div className="bg-blue-900 p-2 rounded border-l-4 border-blue-500">
+              <div className="bg-gray-800 p-2 rounded border-l-4 border-blue-500">
                 <p className="text-xs font-semibold text-blue-400">BE SMART</p>
                 <p className="text-xs text-gray-300">What are AI's strengths vs humans?</p>
               </div>
-              <div className="bg-green-900 p-2 rounded border-l-4 border-green-500">
+              <div className="bg-gray-800 p-2 rounded border-l-4 border-green-500">
                 <p className="text-xs font-semibold text-green-400">BE CREATIVE</p>
                 <p className="text-xs text-gray-300">How can AI enhance creativity?</p>
               </div>
