@@ -54,7 +54,7 @@ export function HeroContent() {
                     DAY
                   </motion.span>
                   <motion.span 
-                    className="text-2xl md:text-4xl font-thin leading-tight text-muted-foreground mt-2"
+                    className="text-2xl md:text-4xl font-thin leading-tight text-muted-foreground mt-2 self-end"
                     whileHover={{ scale: 1.1, y: -5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
