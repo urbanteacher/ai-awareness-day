@@ -11,9 +11,9 @@ interface PolygonCardProps {
 }
 
 const sizeClasses = {
-  small: 'w-20 h-20 sm:w-24 sm:h-24',
-  medium: 'w-32 h-32 sm:w-40 sm:h-40',
-  large: 'w-40 h-40 sm:w-48 sm:h-48'
+  small: 'w-32 h-32',
+  medium: 'w-40 h-40',
+  large: 'w-48 h-48'
 }
 
 export function PolygonCard({
@@ -49,16 +49,16 @@ export function PolygonCard({
 
       {/* Title section */}
       <div className="absolute top-0 left-0 w-full h-3/5 flex items-center justify-center">
-        <span className="text-white font-bold text-xs sm:text-sm">{title}</span>
+        <span className="text-white font-bold text-lg">{title}</span>
       </div>
 
       {/* Bottom section */}
       <div className="absolute bottom-0 right-0 w-full h-2/5 bg-gray-800 flex flex-col justify-end items-end p-2">
         {children || (
           <>
-            <span className="text-white text-xs leading-none">AI</span>
-            <span className="text-white text-xs leading-none">AWARENESS</span>
-            <span className="text-white text-xs leading-none">2026</span>
+            <span className="text-white text-[10px] sm:text-xs leading-none">AI</span>
+            <span className="text-white text-[10px] sm:text-xs leading-none">AWARENESS</span>
+            <span className="text-white text-[10px] sm:text-xs leading-none">2026</span>
           </>
         )}
       </div>
