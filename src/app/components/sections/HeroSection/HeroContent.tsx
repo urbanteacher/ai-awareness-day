@@ -53,14 +53,14 @@ export function HeroContent() {
                   >
                     DAY
                   </motion.span>
+                  <motion.span 
+                    className="text-2xl md:text-4xl font-thin leading-tight text-muted-foreground mt-2"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                    2026
+                  </motion.span>
                 </div>
-                <motion.span 
-                  className="absolute bottom-3 right-32 text-2xl md:text-4xl font-thin leading-tight text-muted-foreground"
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  2026
-                </motion.span>
               </motion.div>
         
               <motion.p
