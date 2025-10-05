@@ -56,9 +56,9 @@ export function PolygonCard({
       <div className="absolute bottom-0 right-0 w-full h-2/5 bg-gray-800 flex flex-col justify-end items-end p-2">
         {children || (
           <>
-            <span className="text-white text-[10px] sm:text-xs leading-none">AI</span>
-            <span className="text-white text-[10px] sm:text-xs leading-none">AWARENESS</span>
-            <span className="text-white text-[10px] sm:text-xs leading-none">2026</span>
+            <span className="text-white text-xs leading-none hidden sm:block">AI</span>
+            <span className="text-white text-xs leading-none hidden sm:block">AWARENESS</span>
+            <span className="text-white text-xs leading-none hidden sm:block">2026</span>
           </>
         )}
       </div>
