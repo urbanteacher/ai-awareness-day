@@ -34,7 +34,7 @@ export default function DisplayBoardMockup() {
         <div className="text-center mb-8 p-6 bg-blue-600 text-white rounded-lg border-2 border-blue-800">
           <div className="flex items-center justify-center gap-4 mb-4">
             {/* School Logo Placeholder */}
-            <div className="w-20 h-20 bg-card rounded-lg flex items-center justify-center border-2 border-blue-300 dark:border-blue-600">
+            <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center border-2 border-blue-300 dark:border-blue-600">
               <span className="text-xs font-bold text-blue-600 text-center">Your School<br/>Logo</span>
             </div>
             <div>
@@ -213,14 +213,14 @@ export default function DisplayBoardMockup() {
                   Use your phone camera to scan these QR codes and discover your school's AI policies and guidelines!
                 </p>
                 <div className="grid grid-cols-2 gap-2 mb-3">
-                  <div className="bg-card p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
-                    <div className="w-16 h-16 mx-auto mb-1 bg-card p-1 rounded flex items-center justify-center">
+                  <div className="bg-white dark:bg-gray-800 p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
+                    <div className="w-16 h-16 mx-auto mb-1 bg-white dark:bg-gray-700 p-1 rounded flex items-center justify-center">
                       <QrCode className="w-12 h-12 text-gray-800" />
                     </div>
                     <p className="text-xs text-gray-600 dark:text-gray-200">School Policy</p>
                   </div>
-                  <div className="bg-card p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
-                    <div className="w-16 h-16 mx-auto mb-1 bg-card p-1 rounded flex items-center justify-center">
+                  <div className="bg-white dark:bg-gray-800 p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
+                    <div className="w-16 h-16 mx-auto mb-1 bg-white dark:bg-gray-700 p-1 rounded flex items-center justify-center">
                       <QrCode className="w-12 h-12 text-gray-800" />
                     </div>
                     <p className="text-xs text-gray-600 dark:text-gray-200">AI Guidelines</p>

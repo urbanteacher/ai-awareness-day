@@ -28,13 +28,13 @@ export default function DisplayBoardMockup() {
       />
 
       {/* Main Display Board Container */}
-      <div className="bg-card border-4 border-gray-800 dark:border-gray-200 rounded-lg p-6 shadow-2xl">
+      <div className="bg-white dark:bg-black border-4 border-gray-800 dark:border-gray-200 rounded-lg p-6 shadow-2xl">
         
         {/* Central Header Section */}
         <div className="text-center mb-8 p-6 bg-blue-600 text-white rounded-lg border-2 border-blue-800">
           <div className="flex items-center justify-center gap-4 mb-4">
             {/* School Logo Placeholder */}
-            <div className="w-20 h-20 bg-card rounded-lg flex items-center justify-center border-2 border-blue-300 dark:border-blue-600">
+            <div className="w-20 h-20 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center border-2 border-blue-300 dark:border-blue-600">
               <span className="text-xs font-bold text-blue-600 text-center">Your School<br/>Logo</span>
             </div>
             <div>
@@ -57,7 +57,7 @@ export default function DisplayBoardMockup() {
               </div>
               <p className="text-sm opacity-90">Understanding AI safety</p>
             </div>
-            <div className="p-4 bg-gray-800 text-white relative">
+            <div className="p-4 bg-gray-800 dark:bg-gray-800 text-white relative">
             <div className="mb-3">
               <h4 className="font-semibold text-sm text-yellow-400 mb-1">💡 Did You Know?</h4>
               <p className="text-xs text-gray-300 bg-yellow-900/30 p-2 rounded border border-yellow-700/50">
@@ -86,7 +86,7 @@ export default function DisplayBoardMockup() {
               </div>
               <p className="text-sm opacity-90">Critical thinking about AI</p>
             </div>
-            <div className="p-4 bg-gray-800 text-white relative">
+            <div className="p-4 bg-gray-800 dark:bg-gray-800 text-white relative">
             <div className="mb-3">
               <h4 className="font-semibold text-sm text-yellow-400 mb-1">💡 Did You Know?</h4>
               <p className="text-xs text-gray-300 bg-yellow-900/30 p-2 rounded border border-yellow-700/50">
@@ -115,7 +115,7 @@ export default function DisplayBoardMockup() {
               </div>
               <p className="text-sm opacity-90">Using AI as a creative partner</p>
             </div>
-            <div className="p-4 bg-gray-800 text-white relative">
+            <div className="p-4 bg-gray-800 dark:bg-gray-800 text-white relative">
             <div className="mb-3">
               <h4 className="font-semibold text-sm text-yellow-400 mb-1">💡 Did You Know?</h4>
               <p className="text-xs text-gray-300 bg-yellow-900/30 p-2 rounded border border-yellow-700/50">
@@ -144,7 +144,7 @@ export default function DisplayBoardMockup() {
               </div>
               <p className="text-sm opacity-90">Ethical considerations</p>
             </div>
-            <div className="p-4 bg-gray-800 text-white relative">
+            <div className="p-4 bg-gray-800 dark:bg-gray-800 text-white relative">
             <div className="mb-3">
               <h4 className="font-semibold text-sm text-yellow-400 mb-1">💡 Did You Know?</h4>
               <p className="text-xs text-gray-300 bg-yellow-900/30 p-2 rounded border border-yellow-700/50">
@@ -173,7 +173,7 @@ export default function DisplayBoardMockup() {
               </div>
               <p className="text-sm opacity-90">Preparing for AI-integrated future</p>
             </div>
-            <div className="p-4 bg-gray-800 text-white relative">
+            <div className="p-4 bg-gray-800 dark:bg-gray-800 text-white relative">
             <div className="mb-3">
               <h4 className="font-semibold text-sm text-yellow-400 mb-1">💡 Did You Know?</h4>
               <p className="text-xs text-gray-300 bg-yellow-900/30 p-2 rounded border border-yellow-700/50">
@@ -213,14 +213,14 @@ export default function DisplayBoardMockup() {
                   Use your phone camera to scan these QR codes and discover your school's AI policies and guidelines!
                 </p>
                 <div className="grid grid-cols-2 gap-2 mb-3">
-                  <div className="bg-card p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
-                    <div className="w-16 h-16 mx-auto mb-1 bg-card p-1 rounded flex items-center justify-center">
+                  <div className="bg-white dark:bg-gray-800 p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
+                    <div className="w-16 h-16 mx-auto mb-1 bg-white dark:bg-gray-700 p-1 rounded flex items-center justify-center">
                       <QrCode className="w-12 h-12 text-gray-800" />
                     </div>
                     <p className="text-xs text-gray-600 dark:text-gray-200">School Policy</p>
                   </div>
-                  <div className="bg-card p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
-                    <div className="w-16 h-16 mx-auto mb-1 bg-card p-1 rounded flex items-center justify-center">
+                  <div className="bg-white dark:bg-gray-800 p-2 rounded border-2 border-dashed border-cyan-400 dark:border-cyan-600 text-center">
+                    <div className="w-16 h-16 mx-auto mb-1 bg-white dark:bg-gray-700 p-1 rounded flex items-center justify-center">
                       <QrCode className="w-12 h-12 text-gray-800" />
                     </div>
                     <p className="text-xs text-gray-600 dark:text-gray-200">AI Guidelines</p>
@@ -238,7 +238,7 @@ export default function DisplayBoardMockup() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           
           {/* Weekly Questions Box */}
-          <div className="border-2 border-gray-400 overflow-hidden p-4 bg-muted text-foreground relative" 
+          <div className="border-2 border-gray-400 overflow-hidden p-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white relative" 
                style={{ clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-5 h-5 text-yellow-400" />
@@ -264,7 +264,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* Response Pocket */}
-          <div className="border-2 border-dashed border-gray-400 overflow-hidden p-4 bg-muted text-foreground relative" 
+          <div className="border-2 border-dashed border-gray-400 overflow-hidden p-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white relative" 
                style={{ clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
             <div className="flex items-center gap-2 mb-3">
               <MessageSquare className="w-5 h-5 text-green-400" />
@@ -293,7 +293,7 @@ export default function DisplayBoardMockup() {
         </div>
 
         {/* AI Leaders Gallery */}
-        <div className="border-2 border-gray-400 overflow-hidden p-4 bg-gray-800 text-white mb-6 relative" 
+        <div className="border-2 border-gray-400 overflow-hidden p-4 bg-gray-800 dark:bg-gray-800 text-white mb-6 relative" 
              style={{ clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
           <div className="flex items-center gap-2 mb-3">
             <Star className="w-5 h-5 text-indigo-400" />
@@ -341,7 +341,7 @@ export default function DisplayBoardMockup() {
         </div>
 
          {/* Student Spotlight */}
-         <div className="border-2 border-gray-400 overflow-hidden p-4 bg-muted text-foreground mb-6 relative" 
+         <div className="border-2 border-gray-400 overflow-hidden p-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white mb-6 relative" 
               style={{ clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
            <div className="flex items-center gap-2 mb-3">
              <Users className="w-5 h-5 text-purple-400" />

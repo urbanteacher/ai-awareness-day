@@ -183,7 +183,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Hero Section Demo */}
-        <SectionWrapper className="bg-card">
+        <SectionWrapper className="bg-white dark:bg-gray-800">
           <Container>
             <SectionHeader
               title="🎨 Hero Section - Live Preview"
@@ -335,7 +335,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Polygon Cards */}
-        <SectionWrapper className="bg-card">
+        <SectionWrapper className="bg-white dark:bg-gray-800">
           <Container>
             <SectionHeader
               title="📐 Polygon Cards - All Variants"
@@ -422,7 +422,7 @@ export default function DesignConceptPage() {
         </SectionWrapper>
 
         {/* Annotated Diagram */}
-        <SectionWrapper className="bg-card">
+        <SectionWrapper className="bg-white dark:bg-gray-800">
           <Container>
             <SectionHeader
               title="📏 Polygon Shape Specifications"
@@ -440,16 +440,16 @@ export default function DesignConceptPage() {
                 />
                 
                 {/* Annotations */}
-                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-card px-3 py-1 rounded shadow-lg text-sm font-semibold">
+                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-3 py-1 rounded shadow-lg text-sm font-semibold">
                   Width: 160px (Medium)
                 </div>
-                <div className="absolute -right-16 top-1/2 transform -translate-y-1/2 bg-card px-3 py-1 rounded shadow-lg text-sm font-semibold">
+                <div className="absolute -right-16 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 px-3 py-1 rounded shadow-lg text-sm font-semibold">
                   Height: 160px
                 </div>
-                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-card px-3 py-1 rounded shadow-lg text-sm font-semibold">
+                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-3 py-1 rounded shadow-lg text-sm font-semibold">
                   25% Corner Cuts
                 </div>
-                <div className="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-card px-3 py-1 rounded shadow-lg text-sm font-semibold">
+                <div className="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 px-3 py-1 rounded shadow-lg text-sm font-semibold">
                   SVG Polygon
                 </div>
               </div>
@@ -516,7 +516,8 @@ export default function DesignConceptPage() {
                   {colorPalette.slice(0, 5).map((color, index) => (
                     <SectionCard key={index} className="overflow-hidden">
                       <div 
-                        className={`h-24 flex items-center justify-center text-white font-bold text-lg ${color.tw}`}
+                        className="h-24 flex items-center justify-center text-white font-bold text-lg"
+                        style={{ background: color.gradient }}
                       >
                         {color.name.split(' ')[0]}
                       </div>
@@ -536,7 +537,8 @@ export default function DesignConceptPage() {
                   {colorPalette.slice(5).map((color, index) => (
                     <SectionCard key={index} className="overflow-hidden">
                       <div 
-                        className={`h-24 flex items-center justify-center text-white font-bold text-lg ${color.tw || ''}`}
+                        className="h-24 flex items-center justify-center text-white font-bold text-lg"
+                        style={{ background: color.gradient || color.hex }}
                       >
                         {color.name.split(' ')[0]}
                       </div>
