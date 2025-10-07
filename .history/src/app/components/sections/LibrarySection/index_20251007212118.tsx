@@ -21,9 +21,9 @@ const iconMap = {
 
 export default function LibrarySection() {
   const [selectedTheme, setSelectedTheme] = useState("all")
-  const [selectedDifficulty, setSelectedDifficulty] = useState("all")
   const [selectedActivity, setSelectedActivity] = useState(null)
   const [expandedLibraries, setExpandedLibraries] = useState<Set<string>>(new Set())
+  const [tutorTimeFilter, setTutorTimeFilter] = useState("all")
   
   // Using static data from separate file
   const loading = false
@@ -41,10 +41,9 @@ export default function LibrarySection() {
   const filteredLibraries = activityLibraries
     .map(library => ({
       ...library,
-      activities: library.activities.filter(activity => 
-        (selectedTheme === "all" || activity.theme === selectedTheme) &&
-        (selectedDifficulty === "all" || activity.level === selectedDifficulty)
-      )
+      activities: selectedTheme === "all" 
+        ? library.activities 
+        : library.activities.filter(activity => activity.theme === selectedTheme)
     }))
     .sort((a, b) => {
       const aIndex = libraryOrder.indexOf(a.id)
@@ -136,7 +135,7 @@ export default function LibrarySection() {
           </div>
 
           {/* Theme Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
+          <div className="flex flex-wrap justify-center gap-3">
             {themes.map((theme) => (
               <Button
                 key={theme.id}
@@ -150,24 +149,6 @@ export default function LibrarySection() {
               >
                 <div className={`w-3 h-3 rounded-full ${theme.color} mr-2`} />
                 {theme.name}
-              </Button>
-            ))}
-          </div>
-
-          {/* Difficulty Filter */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {["all", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
-              <Button
-                key={difficulty}
-                variant={selectedDifficulty === difficulty ? "default" : "outline"}
-                onClick={() => setSelectedDifficulty(difficulty)}
-                className={`${
-                  selectedDifficulty === difficulty
-                    ? "bg-blue-600 hover:bg-white hover:text-blue-600 text-white"
-                    : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
-                }`}
-              >
-                {difficulty === "all" ? "All Levels" : difficulty}
               </Button>
             ))}
           </div>
