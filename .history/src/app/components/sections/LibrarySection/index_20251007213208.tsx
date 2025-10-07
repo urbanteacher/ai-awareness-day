@@ -180,7 +180,7 @@ export default function LibrarySection() {
               onClick={() => setShowCardDetails(!showCardDetails)}
               className="border-2 border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
             >
-              {showCardDetails ? "Show Less Details" : "Show Full Details"}
+              {showCardDetails ? "Hide Card Details" : "Show Card Details"}
             </Button>
           </div>
 

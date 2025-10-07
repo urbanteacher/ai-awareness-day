@@ -134,8 +134,6 @@ export default function MarketingSection() {
                                     {item.platform === 'Facebook' && <Facebook className="w-5 h-5 text-blue-600" />}
                                     {item.platform === 'LinkedIn' && <Linkedin className="w-5 h-5 text-blue-700" />}
                                     {item.platform === 'Instagram' && <Instagram className="w-5 h-5 text-pink-500" />}
-                                    {item.platform === 'TikTok' && <div className="w-5 h-5 bg-black rounded text-white flex items-center justify-center text-xs font-bold">TT</div>}
-                                    {item.platform === 'YouTube' && <Youtube className="w-5 h-5 text-red-500" />}
                                   </>
                                 )}
                                 <h4 className="font-bold text-white text-lg">
@@ -193,7 +191,7 @@ export default function MarketingSection() {
                           <Button
                             onClick={() => setShowAll(!showAll)}
                             variant="outline"
-                            className="border-gray-500 text-black hover:bg-gray-700 hover:border-gray-400"
+                            className="border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400"
                           >
                             <ChevronDown className={`w-4 h-4 mr-2 transition-transform ${showAll ? 'rotate-180' : ''}`} />
                             {showAll ? 'Show Less' : `Show More (${section.content.length - 4} more)`}
@@ -212,6 +210,50 @@ export default function MarketingSection() {
             </div>
           </div>
 
+          {/* Quick Actions */}
+          <div className="mt-16 text-center">
+            <div 
+              className="bg-gray-800 p-10 text-white max-w-6xl mx-auto relative overflow-hidden"
+              style={{ 
+                clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
+              }}
+            >
+              {/* Background gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+              
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold mb-4 text-white">
+                  Need More Content?
+                </h3>
+                <p className="text-gray-300 mb-6">
+                  Download our complete marketing kit with additional templates, graphics, and resources
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    size="lg" 
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                    onClick={() => downloadContent(marketingContent, 'ai-awareness-day-marketing-kit.json')}
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Download Complete Kit
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 font-semibold"
+                    onClick={() => copyToClipboard(JSON.stringify(marketingContent, null, 2))}
+                  >
+                    <Copy className="w-5 h-5 mr-2" />
+                    Copy All Content
+                  </Button>
+                </div>
+              </div>
+
+              {/* Decorative corner polygon */}
+              <div className="absolute top-2 right-2 w-6 h-6 bg-blue-400/20 rounded-sm" 
+                   style={{ clipPath: 'polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)' }}></div>
+            </div>
+          </div>
         </div>
       </div>
     </Container>

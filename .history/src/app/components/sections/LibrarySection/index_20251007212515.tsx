@@ -24,7 +24,6 @@ export default function LibrarySection() {
   const [selectedDifficulty, setSelectedDifficulty] = useState("all")
   const [selectedActivity, setSelectedActivity] = useState(null)
   const [expandedLibraries, setExpandedLibraries] = useState<Set<string>>(new Set())
-  const [showCardDetails, setShowCardDetails] = useState(true)
   
   // Using static data from separate file
   const loading = false
@@ -156,7 +155,7 @@ export default function LibrarySection() {
           </div>
 
           {/* Difficulty Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
+          <div className="flex flex-wrap justify-center gap-2">
             {["all", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
               <Button
                 key={difficulty}
@@ -171,17 +170,6 @@ export default function LibrarySection() {
                 {difficulty === "all" ? "All Levels" : difficulty}
               </Button>
             ))}
-          </div>
-
-          {/* Card Details Toggle */}
-          <div className="flex justify-center mb-6">
-            <Button
-              variant="outline"
-              onClick={() => setShowCardDetails(!showCardDetails)}
-              className="border-2 border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
-            >
-              {showCardDetails ? "Show Less Details" : "Show Full Details"}
-            </Button>
           </div>
 
           {/* Activity Libraries */}
@@ -317,35 +305,30 @@ export default function LibrarySection() {
                               </p>
                             </div>
 
-                            {/* Conditional Details Section */}
-                            {showCardDetails && (
-                              <>
-                                {/* Tags */}
-                                <div className="mt-4 space-y-2">
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-xs text-gray-400">Tags</span>
-                                    <div className="flex flex-wrap gap-1">
-                                      {activity.tags.slice(0, 2).map((tag: string, tagIndex: number) => (
-                                        <span 
-                                          key={tagIndex}
-                                          className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded truncate max-w-[120px]"
-                                          title={tag}
-                                        >
-                                          {tag.length > 15 ? `${tag.substring(0, 15)}...` : tag}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  </div>
+                            {/* Tags */}
+                            <div className="mt-4 space-y-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs text-gray-400">Tags</span>
+                                <div className="flex flex-wrap gap-1">
+                                  {activity.tags.slice(0, 2).map((tag: string, tagIndex: number) => (
+                                    <span 
+                                      key={tagIndex}
+                                      className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded truncate max-w-[120px]"
+                                      title={tag}
+                                    >
+                                      {tag.length > 15 ? `${tag.substring(0, 15)}...` : tag}
+                                    </span>
+                                  ))}
                                 </div>
+                              </div>
+                            </div>
 
-                                {/* View Details Link */}
-                                <div className="mt-4 mb-8">
-                                  <span className="text-purple-400 text-base font-medium group-hover:text-purple-300 transition-colors">
-                                    View Details →
-                                  </span>
-                                </div>
-                              </>
-                            )}
+                            {/* View Details Link */}
+                            <div className="mt-4 mb-8">
+                              <span className="text-purple-400 text-base font-medium group-hover:text-purple-300 transition-colors">
+                                View Details →
+                              </span>
+                            </div>
                           </div>
                         </motion.div>
                         ))}

@@ -9,7 +9,7 @@ const activityTypes = [
     id: "lesson-starters",
     title: "Lesson Starters",
     duration: "5 min",
-    description: "Minimal setup, maximum engagement",
+    description: "Minimal setup",
     icon: Clock,
     color: "from-blue-500 to-blue-600",
     features: [

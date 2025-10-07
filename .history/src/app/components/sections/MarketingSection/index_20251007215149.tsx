@@ -3,9 +3,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Copy, Download, Share2, Mail, Twitter, Facebook, Linkedin, Instagram, ChevronDown, Youtube } from "lucide-react"
+import { Copy, Download, Share2, Mail, Twitter, Facebook, Linkedin, Instagram, ChevronDown, Youtube, Users, BookOpen } from "lucide-react"
 import { Container, SectionHeader } from "@/components/ui"
 import { useState } from "react"
+import Link from "next/link"
 
 type ContentItem = 
   | { platform: string; text: string; hashtags: string }
@@ -212,6 +213,50 @@ export default function MarketingSection() {
             </div>
           </div>
 
+          {/* Training Support Section */}
+          <div className="mt-16 text-center">
+            <div 
+              className="bg-gray-800 p-10 text-white max-w-6xl mx-auto relative overflow-hidden"
+              style={{ 
+                clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
+              }}
+            >
+              {/* Background gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-blue-600/20"></div>
+              
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold mb-4 text-white">
+                  Need Help Getting Started?
+                </h3>
+                <p className="text-gray-300 mb-6">
+                  New to AI in education? We provide free training resources and support to help you integrate these tools into your teaching practice.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link href="/inclusion-guide">
+                    <Button 
+                      size="lg" 
+                      className="bg-green-600 hover:bg-green-700 text-white font-semibold"
+                    >
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      Get Training Support
+                    </Button>
+                  </Link>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 font-semibold"
+                  >
+                    <Users className="w-5 h-5 mr-2" />
+                    Join Teacher Community
+                  </Button>
+                </div>
+              </div>
+
+              {/* Decorative corner polygon */}
+              <div className="absolute top-2 right-2 w-6 h-6 bg-green-400/20 rounded-sm" 
+                   style={{ clipPath: 'polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)' }}></div>
+            </div>
+          </div>
         </div>
       </div>
     </Container>

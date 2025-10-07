@@ -348,8 +348,8 @@ export default function CommunicationsSection() {
                   <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 h-12 flex items-start">
                     <span className="line-clamp-2">{letter.title}</span>
                   </h3>
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-2 h-10 flex items-start">
-                    <span className="line-clamp-2">{letter.description}</span>
+                  <p className="text-gray-300 text-sm mb-4">
+                    {letter.description}
                   </p>
                   
                   <div className="bg-gray-700 p-4 rounded-lg mb-4 max-h-48 overflow-y-auto">

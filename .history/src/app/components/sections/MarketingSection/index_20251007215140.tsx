@@ -3,9 +3,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Copy, Download, Share2, Mail, Twitter, Facebook, Linkedin, Instagram, ChevronDown, Youtube } from "lucide-react"
+import { Copy, Download, Share2, Mail, Twitter, Facebook, Linkedin, Instagram, ChevronDown, Youtube, Users, BookOpen } from "lucide-react"
 import { Container, SectionHeader } from "@/components/ui"
 import { useState } from "react"
+import Link from "next/link"
 
 type ContentItem = 
   | { platform: string; text: string; hashtags: string }
