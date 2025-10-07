@@ -27,12 +27,12 @@ export default function DisplayBoardMockup() {
       <SectionHeader
         title="AI Awareness Day 2026 Display Board"
         subtitle="Interactive Learning Hub"
-        description="To get ready to celebrate AI Awareness Day, here is an example how you could design a display board in your school"
+        description="A comprehensive visual learning experience showcasing AI themes, student engagement, and educational resources"
         align="center"
       />
 
       {/* Main Display Board Container - Modern Design */}
-      <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 border-4 border-black dark:border-white rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 border-4 border-black rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -42,7 +42,7 @@ export default function DisplayBoardMockup() {
         
         {/* Central Header Section - Simplified Design */}
         <div className="relative mb-12">
-          <div className="bg-blue-600 text-white rounded-2xl p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
+          <div className="bg-blue-600 text-white rounded-2xl p-8 shadow-xl border-4 border-black relative overflow-hidden">
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
                 {/* School Logo Placeholder - Circle */}
@@ -66,7 +66,7 @@ export default function DisplayBoardMockup() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           
           {/* BE SAFE Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-red-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-red-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -84,14 +84,14 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Did You Know?</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     AI systems can be biased if trained on biased data. Always question the source and verify information before making important decisions!
                   </p>
                 </div>
@@ -99,9 +99,9 @@ export default function DisplayBoardMockup() {
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Weekly Question</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     How can we ensure AI tools we use are fair and unbiased?
                   </p>
                 </div>
@@ -110,7 +110,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE SMART Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-blue-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-blue-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -128,14 +128,14 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Did You Know?</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     AI can process information 1000x faster than humans, but humans are still better at creative problem-solving and understanding context!
                   </p>
                 </div>
@@ -143,9 +143,9 @@ export default function DisplayBoardMockup() {
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Weekly Question</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     What are the strengths and weaknesses of AI compared to human intelligence?
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE CREATIVE Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-green-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-green-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -172,14 +172,14 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Did You Know?</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     AI can generate art, music, and stories, but the most creative works come from human-AI collaboration and human imagination!
                   </p>
                 </div>
@@ -187,9 +187,9 @@ export default function DisplayBoardMockup() {
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Weekly Question</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     How can AI enhance your creative projects without replacing your unique voice?
                   </p>
                 </div>
@@ -198,7 +198,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE RESPONSIBLE Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-purple-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-purple-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -216,14 +216,14 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Did You Know?</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     Every AI decision affects real people. We must consider the impact of our AI choices and use technology responsibly!
                   </p>
                 </div>
@@ -231,9 +231,9 @@ export default function DisplayBoardMockup() {
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Weekly Question</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     What responsibilities do we have when using AI tools in our daily lives?
                   </p>
                 </div>
@@ -242,7 +242,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE FUTURE Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-orange-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-orange-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -260,14 +260,14 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Did You Know?</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready and competitive in the job market!
                   </p>
                 </div>
@@ -275,9 +275,9 @@ export default function DisplayBoardMockup() {
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Weekly Question</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700">
                     What AI skills do you want to develop to prepare for your future career?
                   </p>
                 </div>
@@ -286,7 +286,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* QR Code Challenges Panel - Modern Design */}
-          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400">
+          <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black hover:border-cyan-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -304,28 +304,28 @@ export default function DisplayBoardMockup() {
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <Globe className="w-4 h-4 text-cyan-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Scan QR Codes Below</h4>
+                    <h4 className="font-semibold text-sm text-gray-800">Scan QR Codes Below</h4>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                  <p className="text-sm text-gray-700 mb-4">
                     Use your phone camera to scan these QR codes and discover your school's AI policies and guidelines!
                   </p>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white dark:bg-gray-700 p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center">
+                    <div className="bg-white p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
+                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 rounded-lg flex items-center justify-center">
                         <QrCode className="w-8 h-8 text-cyan-600" />
                       </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">School Policy</p>
+                      <p className="text-xs text-gray-600 font-medium">School Policy</p>
                     </div>
-                    <div className="bg-white dark:bg-gray-700 p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center">
+                    <div className="bg-white p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
+                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 rounded-lg flex items-center justify-center">
                         <QrCode className="w-8 h-8 text-cyan-600" />
                       </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">AI Guidelines</p>
+                      <p className="text-xs text-gray-600 font-medium">AI Guidelines</p>
                     </div>
                   </div>
                 </div>
@@ -338,7 +338,7 @@ export default function DisplayBoardMockup() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           
           {/* Weekly Questions Box - Modern Design */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-yellow-400 transition-all duration-300 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-yellow-200 hover:border-yellow-400 transition-all duration-300 overflow-hidden">
             <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -347,35 +347,35 @@ export default function DisplayBoardMockup() {
                 <h3 className="text-xl font-bold">This Week's Questions</h3>
               </div>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Shield className="w-4 h-4 text-red-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE SAFE</p>
+                    <p className="text-sm font-semibold text-gray-800">BE SAFE</p>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">How can we ensure AI tools are fair?</p>
+                  <p className="text-sm text-gray-700">How can we ensure AI tools are fair?</p>
                 </div>
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Brain className="w-4 h-4 text-blue-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE SMART</p>
+                    <p className="text-sm font-semibold text-gray-800">BE SMART</p>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">What are AI's strengths vs humans?</p>
+                  <p className="text-sm text-gray-700">What are AI's strengths vs humans?</p>
                 </div>
                 <div className="p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
                     <Heart className="w-4 h-4 text-green-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE CREATIVE</p>
+                    <p className="text-sm font-semibold text-gray-800">BE CREATIVE</p>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">How can AI enhance creativity?</p>
+                  <p className="text-sm text-gray-700">How can AI enhance creativity?</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Response Pocket - Modern Design */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-green-400 transition-all duration-300 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-green-200 hover:border-green-400 transition-all duration-300 overflow-hidden">
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -384,19 +384,19 @@ export default function DisplayBoardMockup() {
                 <h3 className="text-xl font-bold">Student Responses</h3>
               </div>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-800">
+            <div className="p-6 bg-white">
               <div className="space-y-4">
                 <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"AI should be transparent about how it makes decisions" - Sarah</p>
+                  <p className="text-sm text-gray-700 italic">"AI should be transparent about how it makes decisions" - Sarah</p>
                 </div>
                 <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"Humans are better at understanding emotions" - Marcus</p>
+                  <p className="text-sm text-gray-700 italic">"Humans are better at understanding emotions" - Marcus</p>
                 </div>
                 <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"AI can help brainstorm ideas but I add the creativity" - Emma</p>
+                  <p className="text-sm text-gray-700 italic">"AI can help brainstorm ideas but I add the creativity" - Emma</p>
                 </div>
-                <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl text-center">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 italic">Students write answers on sticky notes and place them here</p>
+                <div className="bg-gray-100 p-3 rounded-xl text-center">
+                  <p className="text-xs text-gray-500 italic">Students write answers on sticky notes and place them here</p>
                 </div>
               </div>
             </div>
@@ -404,7 +404,7 @@ export default function DisplayBoardMockup() {
         </div>
 
         {/* AI Leaders Gallery - Simplified Design */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-indigo-400 transition-all duration-300 overflow-hidden mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-indigo-200 hover:border-indigo-400 transition-all duration-300 overflow-hidden mb-8">
           <div className="bg-indigo-500 text-white p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -413,40 +413,40 @@ export default function DisplayBoardMockup() {
               <h3 className="text-xl font-bold">AI Leaders & Innovators</h3>
             </div>
           </div>
-          <div className="p-6 bg-white dark:bg-gray-800">
+          <div className="p-6 bg-white">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               {/* Empty spaces for teacher to add AI leader photos */}
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
+              <div className="bg-gray-100 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-indigo-400 transition-colors">
+                <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <span className="text-2xl">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-sm text-gray-600 font-semibold">Add Photo</p>
+                <p className="text-xs text-gray-500">AI Leader</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
+              <div className="bg-gray-100 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-indigo-400 transition-colors">
+                <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <span className="text-2xl">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-sm text-gray-600 font-semibold">Add Photo</p>
+                <p className="text-xs text-gray-500">AI Leader</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
+              <div className="bg-gray-100 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-indigo-400 transition-colors">
+                <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <span className="text-2xl">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-sm text-gray-600 font-semibold">Add Photo</p>
+                <p className="text-xs text-gray-500">AI Leader</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
+              <div className="bg-gray-100 p-4 rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-indigo-400 transition-colors">
+                <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <span className="text-2xl">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-sm text-gray-600 font-semibold">Add Photo</p>
+                <p className="text-xs text-gray-500">AI Leader</p>
               </div>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+            <div className="bg-gray-100 p-4 rounded-xl text-center">
+              <p className="text-sm text-gray-600 italic">
                 Teachers: Add photos of famous AI leaders like Andrew Ng, Fei-Fei Li, Yann LeCun, Demis Hassabis, etc.
               </p>
             </div>
@@ -454,7 +454,7 @@ export default function DisplayBoardMockup() {
         </div>
 
          {/* Student Spotlight - Simplified Design */}
-         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8">
+         <div className="bg-white rounded-2xl shadow-lg border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8">
            <div className="bg-purple-500 text-white p-6">
              <div className="flex items-center gap-3 mb-4">
                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -463,29 +463,29 @@ export default function DisplayBoardMockup() {
                <h3 className="text-xl font-bold">Student Spotlight</h3>
              </div>
            </div>
-           <div className="p-6 bg-white dark:bg-gray-800">
+           <div className="p-6 bg-white">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                <div className="p-4 rounded-xl">
                  <div className="flex items-center gap-3">
-                   <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
-                     <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
+                   <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center">
+                     <Users className="w-6 h-6 text-purple-600" />
                    </div>
                    <div>
-                     <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">Sarah Chen</p>
-                     <p className="text-xs text-gray-600 dark:text-gray-400">Riverside High School</p>
-                     <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Created AI ethics presentation shared across 5 schools</p>
+                     <p className="font-semibold text-sm text-gray-800">Sarah Chen</p>
+                     <p className="text-xs text-gray-600">Riverside High School</p>
+                     <p className="text-xs text-gray-700 mt-1">Created AI ethics presentation shared across 5 schools</p>
                    </div>
                  </div>
                </div>
                <div className="p-4 rounded-xl">
                  <div className="flex items-center gap-3">
-                   <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
-                     <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
+                   <div className="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center">
+                     <Users className="w-6 h-6 text-purple-600" />
                    </div>
                    <div>
-                     <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">Marcus Johnson</p>
-                     <p className="text-xs text-gray-600 dark:text-gray-400">Valley Middle School</p>
-                     <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Developed chatbot to help students with homework</p>
+                     <p className="font-semibold text-sm text-gray-800">Marcus Johnson</p>
+                     <p className="text-xs text-gray-600">Valley Middle School</p>
+                     <p className="text-xs text-gray-700 mt-1">Developed chatbot to help students with homework</p>
                    </div>
                  </div>
                </div>

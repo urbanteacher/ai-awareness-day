@@ -1095,12 +1095,6 @@ export default function DesignConceptPage() {
                     Try Design Demo
                   </Button>
                 </Link>
-                <Link href="/display-board-demo">
-                  <Button size="lg" className="gap-2">
-                    <Monitor className="h-5 w-5" />
-                    Display Board Demo
-                  </Button>
-                </Link>
                 <Button variant="outline" size="lg" className="gap-2">
                   <Eye className="h-5 w-5" />
                   View Style Guide

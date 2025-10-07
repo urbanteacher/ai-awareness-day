@@ -178,12 +178,6 @@ export default function DesignConceptPage() {
                     Try Design Demo
                   </Button>
                 </Link>
-                <Link href="/display-board-demo">
-                  <Button size="sm" className="gap-2">
-                    <Monitor className="h-4 w-4" />
-                    Display Board Demo
-                  </Button>
-                </Link>
               </div>
               
                   <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black dark:text-white">
@@ -1093,12 +1087,6 @@ export default function DesignConceptPage() {
                   <Button size="lg" className="gap-2">
                     <Palette className="h-5 w-5" />
                     Try Design Demo
-                  </Button>
-                </Link>
-                <Link href="/display-board-demo">
-                  <Button size="lg" className="gap-2">
-                    <Monitor className="h-5 w-5" />
-                    Display Board Demo
                   </Button>
                 </Link>
                 <Button variant="outline" size="lg" className="gap-2">
