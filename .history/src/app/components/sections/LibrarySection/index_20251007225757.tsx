@@ -177,19 +177,13 @@ export default function LibrarySection() {
           </div>
 
           {/* Card Details Toggle */}
-          <div className="flex justify-center mb-6 px-4 sm:px-0">
+          <div className="flex justify-center mb-6">
             <Button
               variant="outline"
               onClick={() => setShowCardDetails(!showCardDetails)}
-              size="sm"
-              className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 border-2 border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+              className="border-2 border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
             >
-              <span className="hidden sm:inline">
-                {showCardDetails ? "Show Less Details" : "Show Full Details"}
-              </span>
-              <span className="sm:hidden">
-                {showCardDetails ? "Less Details" : "Full Details"}
-              </span>
+              {showCardDetails ? "Show Less Details" : "Show Full Details"}
             </Button>
           </div>
 
