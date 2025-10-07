@@ -38,13 +38,7 @@ export default function DisplayBoardMockup() {
       />
 
       {/* Main Display Board Container - Modern Design */}
-      <div className="bg-transparent border-4 border-black dark:border-white p-8 shadow-2xl relative overflow-hidden">
-        <div 
-          className="w-full h-full"
-          style={{
-            clipPath: "polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px))"
-          }}
-        >
+      <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 border-4 border-black dark:border-gray-600 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -54,13 +48,7 @@ export default function DisplayBoardMockup() {
         
         {/* Central Header Section - Simplified Design */}
         <div className="relative mb-12">
-          <div className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
-            <div 
-              className="w-full h-full"
-              style={{
-                clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))"
-              }}
-            >
+          <div className="bg-blue-600 text-white rounded-2xl p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
                 {/* School Logo Placeholder - Circle */}
@@ -77,7 +65,6 @@ export default function DisplayBoardMockup() {
                 </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
 
@@ -85,12 +72,7 @@ export default function DisplayBoardMockup() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           
           {/* BE SAFE Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-red-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-red-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -134,12 +116,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE SMART Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-blue-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-blue-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -183,12 +160,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE CREATIVE Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-green-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-green-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -232,12 +204,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE RESPONSIBLE Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-purple-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-purple-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -281,12 +248,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* BE FUTURE Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-orange-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-orange-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -330,12 +292,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* QR Code Challenges Panel - Modern Design */}
-          <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
-            }}
-          >
+          <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400">
             {/* Header */}
             <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 text-white p-6 relative">
               <div className="flex items-center gap-3 mb-3">
@@ -387,12 +344,7 @@ export default function DisplayBoardMockup() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           
           {/* Weekly Questions Box - Modern Design */}
-          <div 
-            className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-yellow-400 transition-all duration-300 overflow-hidden"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))"
-            }}
-          >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-yellow-400 transition-all duration-300 overflow-hidden">
             <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -429,12 +381,7 @@ export default function DisplayBoardMockup() {
           </div>
 
           {/* Response Pocket - Modern Design */}
-          <div 
-            className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-green-400 transition-all duration-300 overflow-hidden"
-            style={{
-              clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))"
-            }}
-          >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-green-400 transition-all duration-300 overflow-hidden">
             <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -463,12 +410,7 @@ export default function DisplayBoardMockup() {
         </div>
 
         {/* AI Leaders Gallery - Simplified Design */}
-        <div 
-          className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-indigo-400 transition-all duration-300 overflow-hidden mb-8"
-          style={{
-            clipPath: "polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px))"
-          }}
-        >
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-indigo-400 transition-all duration-300 overflow-hidden mb-8">
           <div className="bg-indigo-500 text-white p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -518,12 +460,7 @@ export default function DisplayBoardMockup() {
         </div>
 
          {/* Student Spotlight - Simplified Design */}
-         <div 
-           className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8"
-           style={{
-             clipPath: "polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px))"
-           }}
-         >
+         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8">
            <div className="bg-purple-500 text-white p-6">
              <div className="flex items-center gap-3 mb-4">
                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -562,7 +499,6 @@ export default function DisplayBoardMockup() {
            </div>
          </div>
 
-        </div>
       </div>
     </div>
   );

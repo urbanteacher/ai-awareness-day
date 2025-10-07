@@ -54,13 +54,12 @@ export default function DisplayBoardMockup() {
         
         {/* Central Header Section - Simplified Design */}
         <div className="relative mb-12">
-          <div className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
-            <div 
-              className="w-full h-full"
-              style={{
-                clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))"
-              }}
-            >
+          <div 
+            className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))"
+            }}
+          >
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
                 {/* School Logo Placeholder - Circle */}
@@ -76,7 +75,6 @@ export default function DisplayBoardMockup() {
                   <p className="text-xl opacity-90 font-medium">Know it, Question it, Use it Wisely</p>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>

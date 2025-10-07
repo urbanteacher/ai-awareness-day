@@ -77,7 +77,6 @@ export default function DisplayBoardMockup() {
                 </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
 

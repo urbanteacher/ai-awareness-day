@@ -38,13 +38,12 @@ export default function DisplayBoardMockup() {
       />
 
       {/* Main Display Board Container - Modern Design */}
-      <div className="bg-transparent border-4 border-black dark:border-white p-8 shadow-2xl relative overflow-hidden">
-        <div 
-          className="w-full h-full"
-          style={{
-            clipPath: "polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px))"
-          }}
-        >
+      <div 
+        className="bg-transparent border-4 border-black dark:border-white p-8 shadow-2xl relative overflow-hidden"
+        style={{
+          clipPath: "polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px))"
+        }}
+      >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -54,13 +53,12 @@ export default function DisplayBoardMockup() {
         
         {/* Central Header Section - Simplified Design */}
         <div className="relative mb-12">
-          <div className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
-            <div 
-              className="w-full h-full"
-              style={{
-                clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))"
-              }}
-            >
+          <div 
+            className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden"
+            style={{
+              clipPath: "polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))"
+            }}
+          >
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
                 {/* School Logo Placeholder - Circle */}
@@ -76,7 +74,6 @@ export default function DisplayBoardMockup() {
                   <p className="text-xl opacity-90 font-medium">Know it, Question it, Use it Wisely</p>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -518,12 +515,7 @@ export default function DisplayBoardMockup() {
         </div>
 
          {/* Student Spotlight - Simplified Design */}
-         <div 
-           className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8"
-           style={{
-             clipPath: "polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px))"
-           }}
-         >
+         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8">
            <div className="bg-purple-500 text-white p-6">
              <div className="flex items-center gap-3 mb-4">
                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -562,7 +554,6 @@ export default function DisplayBoardMockup() {
            </div>
          </div>
 
-        </div>
       </div>
     </div>
   );
