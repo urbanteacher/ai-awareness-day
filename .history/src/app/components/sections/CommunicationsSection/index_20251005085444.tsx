@@ -54,7 +54,7 @@ Best regards,
     id: "parent-letter",
     title: "Letter to Parents/Guardians",
     icon: Users,
-    description: "Inform parents about AI Awareness Day and encourage family involvement",
+    description: "Inform parents about AI Awareness Day and family involvement",
     content: `Dear Parents and Guardians,
 
 We are excited to announce our participation in AI Awareness Day 2026, taking place on [DATE]. This innovative educational initiative will help our students develop critical skills for navigating an AI-influenced world safely and responsibly.
