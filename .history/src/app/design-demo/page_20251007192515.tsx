@@ -1,0 +1,502 @@
+"use client"
+
+import { useState } from 'react'
+import { Suspense } from 'react'
+import { Navigation } from "@/components/navigation"
+import { SectionWrapper, Container, SectionHeader, Grid, SectionCard } from "@/components/ui"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Palette, Type, Shapes, Layout, Eye, Download, Code, Ruler, Settings, RotateCcw, Copy, Check } from "lucide-react"
+import Link from "next/link"
+
+// Design System Data
+const colorPalette = [
+  {
+    name: "Red Gradient (Safe)",
+    hex: "#ef4444 → #dc2626",
+    usage: "Safety theme, warnings, alerts",
+    gradient: "linear-gradient(135deg, #ef4444, #dc2626)",
+    tw: "bg-gradient-to-br from-red-500 to-red-600"
+  },
+  {
+    name: "Blue Gradient (Smart)",
+    hex: "#3b82f6 → #2563eb",
+    usage: "Intelligence theme, technology",
+    gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+    tw: "bg-gradient-to-br from-blue-500 to-blue-600"
+  },
+  {
+    name: "Green Gradient (Creative)",
+    hex: "#10b981 → #059669",
+    usage: "Innovation theme, growth, creativity",
+    gradient: "linear-gradient(135deg, #10b981, #059669)",
+    tw: "bg-gradient-to-br from-green-500 to-green-600"
+  },
+  {
+    name: "Purple Gradient (Responsible)",
+    hex: "#8b5cf6 → #7c3aed",
+    usage: "Ethics theme, responsibility",
+    gradient: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+    tw: "bg-gradient-to-br from-purple-500 to-purple-600"
+  },
+  {
+    name: "Orange Gradient (Future)",
+    hex: "#f97316 → #ea580c",
+    usage: "Future theme, progress, energy",
+    gradient: "linear-gradient(135deg, #f97316, #ea580c)",
+    tw: "bg-gradient-to-br from-orange-500 to-orange-600"
+  }
+]
+
+const cardThemes = [
+  {
+    name: "Safe (Red)",
+    color: "red",
+    gradient: "from-red-500 to-red-600",
+    theme: "BE SAFE",
+    dotColor: "bg-red-500"
+  },
+  {
+    name: "Smart (Blue)",
+    color: "blue", 
+    gradient: "from-blue-500 to-blue-600",
+    theme: "BE SMART",
+    dotColor: "bg-blue-500"
+  },
+  {
+    name: "Creative (Green)",
+    color: "green",
+    gradient: "from-green-500 to-green-600", 
+    theme: "BE CREATIVE",
+    dotColor: "bg-green-500"
+  },
+  {
+    name: "Responsible (Purple)",
+    color: "purple",
+    gradient: "from-purple-500 to-purple-600",
+    theme: "BE RESPONSIBLE", 
+    dotColor: "bg-purple-500"
+  },
+  {
+    name: "Future (Orange)",
+    color: "orange",
+    gradient: "from-orange-500 to-orange-600",
+    theme: "BE FUTURE",
+    dotColor: "bg-orange-500"
+  }
+]
+
+const cardSizes = [
+  {
+    name: "Small",
+    className: "h-64",
+    padding: "p-4",
+    titleSize: "text-lg",
+    descriptionSize: "text-xs"
+  },
+  {
+    name: "Medium (Default)",
+    className: "h-80", 
+    padding: "p-6",
+    titleSize: "text-xl",
+    descriptionSize: "text-sm"
+  },
+  {
+    name: "Large",
+    className: "h-96",
+    padding: "p-8", 
+    titleSize: "text-2xl",
+    descriptionSize: "text-base"
+  }
+]
+
+const cardVariations = [
+  {
+    name: "Split + Image",
+    description: "Split design combined with image content inside"
+  }
+]
+
+const difficultyLevels = [
+  {
+    name: "Beginner",
+    color: "green",
+    className: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+  },
+  {
+    name: "Intermediate", 
+    color: "yellow",
+    className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400"
+  },
+  {
+    name: "Advanced",
+    color: "red", 
+    className: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+  }
+]
+
+const layoutVariants = [
+  {
+    name: "Side by Side",
+    layout: "grid-cols-1 lg:grid-cols-2",
+    gap: "gap-12",
+    alignment: "items-start"
+  },
+  {
+    name: "Centered Stack",
+    layout: "grid-cols-1",
+    gap: "gap-8",
+    alignment: "items-center text-center"
+  },
+  {
+    name: "Wide Layout",
+    layout: "grid-cols-1 lg:grid-cols-3",
+    gap: "gap-16",
+    alignment: "items-center"
+  },
+  {
+    name: "Compact Grid",
+    layout: "grid-cols-1 md:grid-cols-2",
+    gap: "gap-6",
+    alignment: "items-start"
+  }
+]
+
+const backgroundVariants = [
+  {
+    name: "Gradient Background",
+    className: "bg-gradient-to-br from-purple-50 to-blue-50",
+    description: "Soft gradient background"
+  },
+  {
+    name: "Solid Background",
+    className: "bg-background",
+    description: "Clean solid background"
+  },
+  {
+    name: "Muted Background",
+    className: "bg-muted/30",
+    description: "Subtle muted background"
+  },
+  {
+    name: "Dark Background",
+    className: "bg-gray-900 text-white",
+    description: "Dark theme background"
+  }
+]
+
+interface DesignState {
+  selectedTheme: number
+  cardSize: number
+  difficultyLevel: number
+  layoutVariant: number
+  backgroundVariant: number
+  showPolygons: boolean
+  polygonSize: 'small' | 'medium' | 'large'
+  customTitle: string
+  customDescription: string
+  customTags: string[]
+  showCornerCut: boolean
+  cardStyle: 'default' | 'minimal' | 'bold'
+  cardVariation: number
+}
+
+export default function DesignDemoPage() {
+  const [designState, setDesignState] = useState<DesignState>({
+    selectedTheme: 1, // Smart (Blue)
+    cardSize: 1, // Medium
+    difficultyLevel: 0, // Beginner
+    layoutVariant: 0,
+    backgroundVariant: 0,
+    showPolygons: true,
+    polygonSize: 'medium',
+    customTitle: 'AI in Daily Life',
+    customDescription: 'Discuss how AI is already part of students\' daily routines',
+    customTags: ['discussion', 'everyday'],
+    showCornerCut: true,
+    cardStyle: 'default',
+    cardVariation: 0 // Default
+  })
+
+  const [copiedCode, setCopiedCode] = useState<string | null>(null)
+
+  const updateDesignState = (updates: Partial<DesignState>) => {
+    setDesignState(prev => ({ ...prev, ...updates }))
+  }
+
+  const resetToDefault = () => {
+    setDesignState({
+      selectedTheme: 1, // Smart (Blue)
+      cardSize: 1, // Medium
+      difficultyLevel: 0, // Beginner
+      layoutVariant: 0,
+      backgroundVariant: 0,
+      showPolygons: true,
+      polygonSize: 'medium',
+      customTitle: 'AI in Daily Life',
+      customDescription: 'Discuss how AI is already part of students\' daily routines',
+      customTags: ['discussion', 'everyday'],
+      showCornerCut: true,
+      cardStyle: 'default',
+      cardVariation: 0 // Default
+    })
+  }
+
+  const generateCode = () => {
+    const currentTheme = cardThemes[designState.selectedTheme]
+    const currentSize = cardSizes[designState.cardSize]
+    const currentDifficulty = difficultyLevels[designState.difficultyLevel]
+    const currentLayout = layoutVariants[designState.layoutVariant]
+    const currentBackground = backgroundVariants[designState.backgroundVariant]
+    
+    return `// Generated Activity Card Code
+<div className="${currentBackground.className}">
+  <div className="grid ${currentLayout.layout} ${currentLayout.gap} ${currentLayout.alignment}">
+    <div className="bg-gray-800 ${currentSize.className} p-6 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden flex flex-col hover:scale-105 hover:shadow-2xl"
+         style={{
+           clipPath: "${designState.showCornerCut ? 'polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))' : 'none'}"
+         }}>
+      
+      {/* Theme-colored top section */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-r ${currentTheme.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+        style={{
+          clipPath: 'polygon(0% 0%, calc(100% - 12px) 0%, 100% 12px, 100% 18%, 0% 18%)'
+        }}
+      />
+      
+      {/* Decorative Polygon Corner */}
+      ${designState.showCornerCut ? `
+      <div 
+        className="absolute top-0 right-0 w-8 h-8 bg-white/10 dark:bg-black/10"
+        style={{
+          clipPath: "polygon(100% 0, 0 0, 100% 100%)"
+        }}
+      />
+      ` : ''}
+      
+      {/* Activity Header */}
+      <div className="relative z-10 flex items-start justify-between mb-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full ${currentTheme.dotColor}" />
+          <span className="text-sm font-medium text-white">${currentTheme.theme}</span>
+        </div>
+        <span className="px-2 py-1 text-xs font-medium rounded-full ${currentDifficulty.className}">
+          ${currentDifficulty.name}
+        </span>
+      </div>
+
+      {/* Activity Content */}
+      <div className="relative z-10 flex-1 flex flex-col">
+        <div className="space-y-3 flex-1">
+          <h4 className="${currentSize.titleSize} font-bold text-white group-hover:text-purple-300 transition-colors leading-tight h-16 flex items-start mt-4">
+            <span className="line-clamp-2">${designState.customTitle}</span>
+          </h4>
+          <p className="text-white ${currentSize.descriptionSize} leading-relaxed line-clamp-2">
+            ${designState.customDescription}
+          </p>
+        </div>
+
+        {/* Activity Meta */}
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-400">General</span>
+          </div>
+          
+          <div className="flex flex-wrap gap-1">
+            ${designState.customTags.map(tag => `
+            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded truncate max-w-[120px]">
+              ${tag}
+            </span>
+            `).join('')}
+          </div>
+        </div>
+
+        {/* View Details Link */}
+        <div className="mt-2 pt-2 border-t border-gray-700">
+          <span className="text-purple-400 text-sm font-medium group-hover:text-purple-300 transition-colors ml-2">
+            View Details →
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`
+  }
+
+  const copyCode = async () => {
+    const code = generateCode()
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopiedCode(code)
+      setTimeout(() => setCopiedCode(null), 2000)
+    } catch (err) {
+      console.error('Failed to copy code:', err)
+    }
+  }
+
+  const currentLayout = layoutVariants[designState.layoutVariant]
+  const currentBackground = backgroundVariants[designState.backgroundVariant]
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      
+      <main>
+        {/* Header */}
+        <SectionWrapper className="bg-gradient-to-br from-purple-50 to-blue-50 pt-20 pb-16">
+          <Container>
+            <div className="text-center space-y-6">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Link href="/design-concept">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Design Spec
+                  </Button>
+                </Link>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black dark:text-white">
+                Activity Card Design Demo
+              </h1>
+              <p className="text-lg text-black dark:text-white">Interactive playground for testing polygon-shaped activity card designs</p>
+            </div>
+          </Container>
+        </SectionWrapper>
+
+
+        {/* Live Preview */}
+        <SectionWrapper className="bg-card">
+          <Container>
+            <SectionHeader
+              title="🎨 Live Preview - Activity Card"
+              description="See your activity card design changes in real-time"
+              titleColor="purple"
+              className="mb-8"
+            />
+            
+            <div className={`relative p-20 rounded-xl overflow-hidden ${currentBackground.className}`}>
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5" />
+              <div className="relative">
+                <div className={`grid ${currentLayout.layout} ${currentLayout.gap} ${currentLayout.alignment}`}>
+                  {/* Activity Card Preview - Different Variations */}
+                  {designState.cardVariation === 0 && (
+                    // Split + Image Card
+                    <div className="bg-gray-800 p-0 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden flex flex-col hover:scale-105 hover:shadow-2xl"
+                         style={{
+                           clipPath: designState.showCornerCut ? "polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))" : "none"
+                         }}>
+                      
+                      {/* Left side - Theme section with image */}
+                      <div 
+                        className={`flex-1 bg-gradient-to-br ${cardThemes[designState.selectedTheme].gradient} p-6 relative overflow-hidden`}
+                      >
+                        {/* Background image overlay */}
+                        <div 
+                          className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                          style={{
+                            backgroundImage: "url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop&crop=center')"
+                          }}
+                        />
+                        
+                        {/* Dark overlay for text readability */}
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
+                        
+                        {/* Decorative Polygon Corner */}
+                        {designState.showCornerCut && (
+                          <div 
+                            className="absolute top-0 right-0 w-8 h-8 bg-white/20"
+                            style={{
+                              clipPath: "polygon(100% 0, 0 0, 100% 100%)"
+                            }}
+                          />
+                        )}
+                        
+                        {/* Theme header */}
+                        <div className="relative z-10 flex items-center space-x-2 mb-4">
+                          <div className="w-3 h-3 rounded-full bg-white" />
+                          <span className="text-sm font-medium text-white">{cardThemes[designState.selectedTheme].theme}</span>
+                        </div>
+                        
+                        {/* Image content in theme section */}
+                        <div className="relative z-10 mb-4">
+                          <div className="w-full h-24 bg-white/20 rounded-lg overflow-hidden backdrop-blur-sm">
+                            <img 
+                              src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop&crop=center" 
+                              alt="AI Activity" 
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Title in theme section with difficulty badge */}
+                        <div className="relative z-10 flex items-start justify-between">
+                          <h4 className={`${cardSizes[designState.cardSize].titleSize} font-bold text-white leading-tight flex-1 mr-4`}>
+                            <span className="line-clamp-2">{designState.customTitle}</span>
+                          </h4>
+                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${difficultyLevels[designState.difficultyLevel].className} flex-shrink-0`}>
+                            {difficultyLevels[designState.difficultyLevel].name}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Right side - Content section */}
+                      <div className="bg-gray-800 p-6 flex-1 flex flex-col">
+
+                        {/* Description */}
+                        <div className="flex-1">
+                          <p className={`text-white text-base leading-relaxed line-clamp-3 h-16 flex items-start`}>
+                            <span className="line-clamp-3">{designState.customDescription}</span>
+                          </p>
+                        </div>
+
+                        {/* Tags */}
+                        <div className="mt-4 space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-400">Tags</span>
+                            <div className="flex flex-wrap gap-1">
+                              {designState.customTags.map((tag, index) => (
+                                <span key={index} className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded truncate max-w-[120px]">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* View Details Link */}
+                        <div className="mt-4 mb-8">
+                          <span className="text-purple-400 text-sm font-medium group-hover:text-purple-300 transition-colors">
+                            View Details →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </SectionWrapper>
+
+        {/* Code Output */}
+        <SectionWrapper className="bg-card">
+          <Container>
+            <SectionHeader
+              title="💻 Generated Code"
+              description="Copy the generated code for your current design"
+              titleColor="purple"
+              className="mb-8"
+            />
+            
+            <div className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+              <pre className="text-sm">
+                <code>{generateCode()}</code>
+              </pre>
+            </div>
+          </Container>
+        </SectionWrapper>
+      </main>
+    </div>
+  )
+}
