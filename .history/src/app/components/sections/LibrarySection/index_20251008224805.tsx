@@ -220,7 +220,7 @@ export default function LibrarySection() {
                       </div>
                     </div>
                     <div className="flex justify-start sm:justify-end">
-                      <Badge className="hidden sm:block text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500">
+                      <Badge className="text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500">
                         {library.duration}
                       </Badge>
                     </div>

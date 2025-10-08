@@ -220,7 +220,7 @@ export default function LibrarySection() {
                       </div>
                     </div>
                     <div className="flex justify-start sm:justify-end">
-                      <Badge className="hidden sm:block text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500">
+                      <Badge className="text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500">
                         {library.duration}
                       </Badge>
                     </div>
@@ -301,17 +301,9 @@ export default function LibrarySection() {
                             
                             {/* Title in theme section with difficulty */}
                             <div className="relative z-10 flex items-start justify-between">
-                              <div className="flex-1 mr-2 sm:mr-4">
-                                <h4 className="text-base sm:text-lg font-bold text-white leading-tight">
-                                  <span className="line-clamp-1 sm:line-clamp-2">
-                                    {activity.title}
-                                    {/* Duration badge - shown on mobile next to title */}
-                                    <span className="sm:hidden ml-2 text-[10px] font-bold text-white px-2 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
-                                      {library.duration}
-                                    </span>
-                                  </span>
-                                </h4>
-                              </div>
+                              <h4 className="text-base sm:text-lg font-bold text-white leading-tight flex-1 mr-2 sm:mr-4">
+                                <span className="line-clamp-1 sm:line-clamp-2">{activity.title}</span>
+                              </h4>
                               <div className="flex items-center space-x-1 text-yellow-400 flex-shrink-0">
                                 <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
                                 <span className="text-xs sm:text-sm font-medium text-white">{activity.level}</span>
