@@ -213,19 +213,13 @@ export default function LibrarySection() {
                         <library.icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        {/* Mobile: Title and duration on same line */}
-                        <div className="flex items-center space-x-2 sm:block">
-                          <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground leading-tight">
-                            <span className="line-clamp-1 sm:line-clamp-2">{library.title}</span>
-                          </h3>
-                          <Badge className="text-xs px-2 py-1 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500 sm:hidden">
-                            {library.duration}
-                          </Badge>
-                        </div>
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground leading-tight">
+                          <span className="line-clamp-1 sm:line-clamp-2">{library.title}</span>
+                        </h3>
                         <p className="text-sm sm:text-base text-muted-foreground line-clamp-2 sm:line-clamp-none">{library.description}</p>
                       </div>
                     </div>
-                    <div className="hidden sm:flex justify-end">
+                    <div className="flex justify-start sm:justify-end">
                       <Badge className="text-xs sm:text-sm lg:text-base px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 text-white border-transparent hover:opacity-90 bg-purple-600 dark:bg-purple-500">
                         {library.duration}
                       </Badge>
