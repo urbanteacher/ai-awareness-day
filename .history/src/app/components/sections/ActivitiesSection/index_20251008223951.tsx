@@ -117,6 +117,10 @@ export default function ActivitiesSection() {
                         >
                           <activity.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
+                        {/* Duration badge - hidden on mobile, shown on desktop */}
+                        <span className="hidden sm:block text-xs font-bold text-white px-3 py-1 rounded-full ml-auto" style={{ backgroundColor: '#7c3aed' }}>
+                          {activity.duration}
+                        </span>
                       </div>
                       
                       <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2 flex items-center gap-2">
