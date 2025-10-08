@@ -137,7 +137,7 @@ export default function LibrarySection() {
           </div>
 
           {/* Theme Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-start gap-2 sm:gap-3 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 sm:gap-3 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
             {themes.map((theme) => (
               <Button
                 key={theme.id}
@@ -157,7 +157,7 @@ export default function LibrarySection() {
           </div>
 
           {/* Difficulty Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-start gap-2 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
             {["all", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
               <Button
                 key={difficulty}
