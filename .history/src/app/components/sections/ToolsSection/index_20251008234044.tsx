@@ -450,9 +450,8 @@ export default function ToolsSection() {
                 </div>
                 
                 <div className="space-y-4">
-                  {/* Desktop: Show all tools */}
-                  <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    {categoryTools.map((tool, index) => (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    {getVisibleTools(categoryTools).map((tool, index) => (
                       <ToolCard
                         key={tool.title}
                         title={tool.title}
@@ -471,50 +470,27 @@ export default function ToolsSection() {
                     ))}
                   </div>
                   
-                  {/* Mobile: Show limited tools with toggle */}
-                  <div className="sm:hidden">
-                    <div className="grid grid-cols-1 gap-4">
-                      {getVisibleTools(categoryTools).map((tool, index) => (
-                        <ToolCard
-                          key={tool.title}
-                          title={tool.title}
-                          description={tool.description}
-                          category={tool.category}
-                          type={tool.type}
-                          status={tool.status}
-                          features={tool.features}
-                          icon={tool.icon}
-                          downloadUrl={(tool as any).downloadUrl}
-                          demoUrl={tool.demoUrl}
-                          docsUrl={tool.docsUrl}
-                          className="animate-in fade-in-0 slide-in-from-bottom-4"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        />
-                      ))}
+                  {/* Show More/Less Button for Mobile */}
+                  {categoryTools.length > 2 && (
+                    <div className="flex justify-center pt-4">
+                      <button
+                        onClick={() => toggleCategory(category)}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        {expandedCategories.has(category) ? (
+                          <>
+                            <ChevronUp className="w-4 h-4" />
+                            Show Less
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="w-4 h-4" />
+                            Show More ({categoryTools.length - 2} more)
+                          </>
+                        )}
+                      </button>
                     </div>
-                    
-                    {/* Show More/Less Button for Mobile Only */}
-                    {categoryTools.length > 2 && (
-                      <div className="flex justify-center pt-4">
-                        <button
-                          onClick={() => toggleCategory(category)}
-                          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-                        >
-                          {expandedCategories.has(category) ? (
-                            <>
-                              <ChevronUp className="w-4 h-4" />
-                              Show Less
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDown className="w-4 h-4" />
-                              Show More ({categoryTools.length - 2} more)
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </motion.div>
             )
