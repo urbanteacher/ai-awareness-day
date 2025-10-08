@@ -147,7 +147,7 @@ export default function LibrarySection() {
                 className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
                   selectedTheme === theme.id
                     ? "bg-purple-600 hover:bg-white hover:text-purple-600 text-white"
-                    : "border-gray-300 text-gray-900 dark:text-white hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+                    : "border-gray-300 text-gray-900 dark:text-gray-100 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
                 }`}
               >
                 <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${theme.color} mr-1 sm:mr-2`} />
@@ -167,7 +167,7 @@ export default function LibrarySection() {
                 className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
                   selectedDifficulty === difficulty
                     ? "bg-blue-600 hover:bg-white hover:text-blue-600 text-white"
-                    : "border-gray-300 text-gray-900 dark:text-white hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+                    : "border-gray-300 text-gray-900 dark:text-gray-100 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
                 }`}
               >
                 {difficulty === "all" ? "All" : difficulty === "Beginner" ? "Beginner" : difficulty === "Intermediate" ? "Inter." : "Advanced"}
