@@ -402,25 +402,21 @@ export default function CommunicationsSection() {
 
             {/* Show More/Show Less Button */}
             {sampleLetters.length > 4 && (
-              <div className="text-center mt-6 sm:mt-8">
+              <div className="text-center mt-8">
                 <Button
                   onClick={() => setShowAll(!showAll)}
                   variant="outline"
-                  size="sm"
-                  className="bg-card hover:bg-muted border-2 border-purple-200 hover:border-purple-300 dark:border-purple-700 dark:hover:border-purple-600 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 px-4 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300"
+                  className="bg-card hover:bg-muted border-2 border-purple-200 hover:border-purple-300 dark:border-purple-700 dark:hover:border-purple-600 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 px-8 py-3 rounded-lg font-medium transition-all duration-300"
                 >
                   {showAll ? (
                     <>
-                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                      <span className="text-sm sm:text-base">Show Less</span>
+                      <ChevronUp className="w-5 h-5 mr-2" />
+                      Show Less
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                      <span className="text-sm sm:text-base">
-                        <span className="hidden sm:inline">Show More Templates ({sampleLetters.length - 4} more)</span>
-                        <span className="sm:hidden">More ({sampleLetters.length - 4})</span>
-                      </span>
+                      <ChevronDown className="w-5 h-5 mr-2" />
+                      Show More Templates ({sampleLetters.length - 4} more)
                     </>
                   )}
                 </Button>

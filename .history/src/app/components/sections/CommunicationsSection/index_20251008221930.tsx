@@ -345,20 +345,20 @@ export default function CommunicationsSection() {
                     <letter.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   
-                  <h3 className="text-base sm:text-lg font-semibold text-white mb-2 line-clamp-2 h-10 sm:h-12 flex items-start">
+                  <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 h-12 flex items-start">
                     <span className="line-clamp-2">{letter.title}</span>
                   </h3>
-                  <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 h-8 sm:h-10 flex items-start">
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-2 h-10 flex items-start">
                     <span className="line-clamp-2">{letter.description}</span>
                   </p>
                   
-                  <div className="bg-gray-700 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4 max-h-32 sm:max-h-48 overflow-y-auto">
-                    <pre className="text-[10px] sm:text-xs text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
+                  <div className="bg-gray-700 p-4 rounded-lg mb-4 max-h-48 overflow-y-auto">
+                    <pre className="text-xs text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
                       {letter.content}
                     </pre>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex gap-2">
                     <Button 
                       size="sm" 
                       className="flex-1 bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
@@ -372,8 +372,8 @@ export default function CommunicationsSection() {
                         URL.revokeObjectURL(url);
                       }}
                     >
-                      <Download className="w-4 h-4 mr-1 sm:mr-2" />
-                      <span className="text-xs sm:text-sm">Download</span>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download
                     </Button>
                     <Button 
                       size="sm" 
@@ -384,13 +384,13 @@ export default function CommunicationsSection() {
                         alert('Template copied to clipboard!');
                       }}
                     >
-                      <span className="text-xs sm:text-sm">Copy Text</span>
+                      Copy Text
                     </Button>
                   </div>
                   
                   {/* Decorative corner polygon */}
                   <div 
-                    className="absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 bg-gray-600 opacity-50"
+                    className="absolute top-0 right-0 w-8 h-8 bg-gray-600 opacity-50"
                     style={{
                       clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 75%)'
                     }}
@@ -402,25 +402,21 @@ export default function CommunicationsSection() {
 
             {/* Show More/Show Less Button */}
             {sampleLetters.length > 4 && (
-              <div className="text-center mt-6 sm:mt-8">
+              <div className="text-center mt-8">
                 <Button
                   onClick={() => setShowAll(!showAll)}
                   variant="outline"
-                  size="sm"
-                  className="bg-card hover:bg-muted border-2 border-purple-200 hover:border-purple-300 dark:border-purple-700 dark:hover:border-purple-600 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 px-4 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300"
+                  className="bg-card hover:bg-muted border-2 border-purple-200 hover:border-purple-300 dark:border-purple-700 dark:hover:border-purple-600 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 px-8 py-3 rounded-lg font-medium transition-all duration-300"
                 >
                   {showAll ? (
                     <>
-                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                      <span className="text-sm sm:text-base">Show Less</span>
+                      <ChevronUp className="w-5 h-5 mr-2" />
+                      Show Less
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                      <span className="text-sm sm:text-base">
-                        <span className="hidden sm:inline">Show More Templates ({sampleLetters.length - 4} more)</span>
-                        <span className="sm:hidden">More ({sampleLetters.length - 4})</span>
-                      </span>
+                      <ChevronDown className="w-5 h-5 mr-2" />
+                      Show More Templates ({sampleLetters.length - 4} more)
                     </>
                   )}
                 </Button>
