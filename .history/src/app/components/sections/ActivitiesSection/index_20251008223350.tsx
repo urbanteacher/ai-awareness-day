@@ -117,7 +117,7 @@ export default function ActivitiesSection() {
                         >
                           <activity.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
-                        <span className="hidden sm:inline text-xs font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
+                        <span className="text-[10px] sm:text-xs font-bold text-white px-2 sm:px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
                           {activity.duration}
                         </span>
                       </div>
