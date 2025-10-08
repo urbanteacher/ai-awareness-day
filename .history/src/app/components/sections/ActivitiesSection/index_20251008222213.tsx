@@ -107,35 +107,35 @@ export default function ActivitiesSection() {
                     />
                     
                     {/* Icon and duration */}
-                    <div className="relative z-10 mb-3 sm:mb-4">
-                      <div className="flex items-center justify-between mb-2 sm:mb-3">
+                    <div className="relative z-10 mb-4">
+                      <div className="flex items-center justify-between mb-3">
                         <div 
-                          className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg`}
+                          className={`w-12 h-12 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg`}
                           style={{
                             clipPath: 'polygon(0% 0%, 75% 0%, 100% 25%, 100% 100%, 25% 100%, 0% 75%)'
                           }}
                         >
-                          <activity.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                          <activity.icon className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-[10px] sm:text-xs font-bold text-white px-2 sm:px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
+                        <span className="text-xs font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
                           {activity.duration}
                         </span>
                       </div>
                       
-                      <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
+                      <h3 className="text-lg font-semibold text-white mb-2">
                         {activity.title}
                       </h3>
-                      <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
+                      <p className="text-gray-300 text-sm mb-4">
                         {activity.description}
                       </p>
                     </div>
                     
                     {/* Features list - Show only 2 points on mobile */}
-                    <div className="space-y-1 sm:space-y-2">
+                    <div className="space-y-2">
                       {activity.features.slice(0, 2).map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-2">
-                          <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r ${activity.color} rounded-full`} />
-                          <span className="text-[10px] sm:text-xs text-gray-300">{feature}</span>
+                          <div className={`w-2 h-2 bg-gradient-to-r ${activity.color} rounded-full`} />
+                          <span className="text-xs text-gray-300">{feature}</span>
                         </div>
                       ))}
                       {/* Show remaining features on desktop */}
@@ -151,7 +151,7 @@ export default function ActivitiesSection() {
                     
                     {/* Decorative corner */}
                     <div 
-                      className="absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 opacity-20"
+                      className="absolute top-0 right-0 w-8 h-8 opacity-20"
                       style={{
                         clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 75%)'
                       }}

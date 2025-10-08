@@ -151,7 +151,7 @@ export default function ActivitiesSection() {
                     
                     {/* Decorative corner */}
                     <div 
-                      className="absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 opacity-20"
+                      className="absolute top-0 right-0 w-8 h-8 opacity-20"
                       style={{
                         clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 75%)'
                       }}

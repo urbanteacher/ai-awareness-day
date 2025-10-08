@@ -131,11 +131,11 @@ export default function ActivitiesSection() {
                     </div>
                     
                     {/* Features list - Show only 2 points on mobile */}
-                    <div className="space-y-1 sm:space-y-2">
+                    <div className="space-y-2">
                       {activity.features.slice(0, 2).map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-2">
-                          <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r ${activity.color} rounded-full`} />
-                          <span className="text-[10px] sm:text-xs text-gray-300">{feature}</span>
+                          <div className={`w-2 h-2 bg-gradient-to-r ${activity.color} rounded-full`} />
+                          <span className="text-xs text-gray-300">{feature}</span>
                         </div>
                       ))}
                       {/* Show remaining features on desktop */}
@@ -151,7 +151,7 @@ export default function ActivitiesSection() {
                     
                     {/* Decorative corner */}
                     <div 
-                      className="absolute top-0 right-0 w-6 h-6 sm:w-8 sm:h-8 opacity-20"
+                      className="absolute top-0 right-0 w-8 h-8 opacity-20"
                       style={{
                         clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 75%)'
                       }}
