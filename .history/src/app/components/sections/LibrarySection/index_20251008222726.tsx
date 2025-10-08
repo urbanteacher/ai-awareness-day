@@ -301,17 +301,9 @@ export default function LibrarySection() {
                             
                             {/* Title in theme section with difficulty */}
                             <div className="relative z-10 flex items-start justify-between">
-                              <div className="flex-1 mr-2 sm:mr-4">
-                                <h4 className="text-base sm:text-lg font-bold text-white leading-tight">
-                                  <span className="line-clamp-1 sm:line-clamp-2">{activity.title}</span>
-                                </h4>
-                                {/* Duration badge - shown on mobile next to title */}
-                                <div className="mt-1 sm:hidden">
-                                  <span className="text-[10px] font-bold text-white px-2 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
-                                    {library.duration}
-                                  </span>
-                                </div>
-                              </div>
+                              <h4 className="text-base sm:text-lg font-bold text-white leading-tight flex-1 mr-2 sm:mr-4">
+                                <span className="line-clamp-1 sm:line-clamp-2">{activity.title}</span>
+                              </h4>
                               <div className="flex items-center space-x-1 text-yellow-400 flex-shrink-0">
                                 <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
                                 <span className="text-xs sm:text-sm font-medium text-white">{activity.level}</span>
@@ -328,8 +320,8 @@ export default function LibrarySection() {
                               </p>
                             </div>
 
-                            {/* Extra spacing for mobile to make cards longer */}
-                            <div className="h-8 sm:hidden"></div>
+                            {/* Extra spacing for mobile to make cards longer - blank plan row */}
+                            <div className="h-16 sm:hidden"></div>
 
                             {/* Conditional Details Section */}
                             {showCardDetails && (

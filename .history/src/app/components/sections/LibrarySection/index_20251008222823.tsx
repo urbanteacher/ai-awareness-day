@@ -308,7 +308,7 @@ export default function LibrarySection() {
                                 {/* Duration badge - shown on mobile next to title */}
                                 <div className="mt-1 sm:hidden">
                                   <span className="text-[10px] font-bold text-white px-2 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
-                                    {library.duration}
+                                    {activity.duration}
                                   </span>
                                 </div>
                               </div>
