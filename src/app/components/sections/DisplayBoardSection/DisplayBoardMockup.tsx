@@ -75,8 +75,8 @@ export default function DisplayBoardMockup() {
           </div>
         </div>
 
-        {/* Six Theme Panels Grid - Modern Card Design */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Five Core Theme Panels Grid - Condensed Design */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
           
           {/* BE SAFE Panel - Modern Design */}
           <div 
@@ -86,43 +86,25 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Shield className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Shield className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">BE SAFE</h3>
-                  <p className="text-sm opacity-90">Understanding AI safety</p>
+                  <h3 className="text-lg font-bold">BE SAFE</h3>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    AI systems can be biased if trained on biased data. Always question the source and verify information before making important decisions!
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    How can we ensure AI tools we use are fair and unbiased?
-                  </p>
-                </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                AI systems can be biased if trained on biased data. Always question the source and verify information!
+              </p>
+              <div className="flex items-start gap-2">
+                <Sparkles className="w-3 h-3 text-red-600 mt-0.5" />
+                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI systems can be biased if trained on biased data. Always question the source and verify information!</p>
               </div>
             </div>
           </div>
@@ -135,43 +117,25 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Brain className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Brain className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">BE SMART</h3>
-                  <p className="text-sm opacity-90">Critical thinking about AI</p>
+                  <h3 className="text-lg font-bold">BE SMART</h3>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    AI can process information 1000x faster than humans, but humans are still better at creative problem-solving and understanding context!
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    What are the strengths and weaknesses of AI compared to human intelligence?
-                  </p>
-                </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                AI processes info 1000x faster than humans, but humans are better at creative problem-solving!
+              </p>
+              <div className="flex items-start gap-2">
+                <Brain className="w-3 h-3 text-blue-600 mt-0.5" />
+                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> ChatGPT was trained on 45TB of text data - that's equivalent to reading every book in a large library!</p>
               </div>
             </div>
           </div>
@@ -184,43 +148,25 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Heart className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Heart className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">BE CREATIVE</h3>
-                  <p className="text-sm opacity-90">Using AI as a creative partner</p>
+                  <h3 className="text-lg font-bold">BE CREATIVE</h3>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    AI can generate art, music, and stories, but the most creative works come from human-AI collaboration and human imagination!
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    How can AI enhance your creative projects without replacing your unique voice?
-                  </p>
-                </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                AI can generate art and music, but the most creative works come from human-AI collaboration!
+              </p>
+              <div className="flex items-start gap-2">
+                <Zap className="w-3 h-3 text-green-600 mt-0.5" />
+                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI can recognize patterns humans miss and generate creative solutions in seconds!</p>
               </div>
             </div>
           </div>
@@ -233,43 +179,25 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Award className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Award className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">BE RESPONSIBLE</h3>
-                  <p className="text-sm opacity-90">Ethical considerations</p>
+                  <h3 className="text-lg font-bold">BE RESPONSIBLE</h3>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    Every AI decision affects real people. We must consider the impact of our AI choices and use technology responsibly!
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    What responsibilities do we have when using AI tools in our daily lives?
-                  </p>
-                </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                Every AI decision affects real people. We must consider the impact and use technology responsibly!
+              </p>
+              <div className="flex items-start gap-2">
+                <Heart className="w-3 h-3 text-purple-600 mt-0.5" />
+                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI can process information 1 million times faster than humans, but we must use it ethically!</p>
               </div>
             </div>
           </div>
@@ -282,48 +210,30 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Zap className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Zap className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">BE FUTURE</h3>
-                  <p className="text-sm opacity-90">Preparing for AI-integrated future</p>
+                  <h3 className="text-lg font-bold">BE FUTURE</h3>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
             
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Did You Know?</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready and competitive in the job market!
-                  </p>
-                </div>
-                
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-blue-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Weekly Question</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    What AI skills do you want to develop to prepare for your future career?
-                  </p>
-                </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready!
+              </p>
+              <div className="flex items-start gap-2">
+                <Award className="w-3 h-3 text-orange-600 mt-0.5" />
+                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> The AI industry is growing 40% each year - learning AI skills now prepares you for tomorrow's jobs!</p>
               </div>
             </div>
           </div>
 
-          {/* QR Code Challenges Panel - Modern Design */}
+          {/* QR CHALLENGES Panel - Condensed Design */}
           <div 
             className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400"
             style={{
@@ -331,54 +241,40 @@ export default function DisplayBoardMockup() {
             }}
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 text-white p-6 relative">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <QrCode className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 text-white p-4 relative">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <QrCode className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">QR CHALLENGES</h3>
-                  <p className="text-sm opacity-90">Scan & Investigate School Policy</p>
+                  <h3 className="text-lg font-bold">QR CHALLENGES</h3>
+                  <p className="text-xs opacity-90">Scan & Investigate School Policy</p>
                 </div>
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-2 right-2 w-8 h-8 bg-white/10 rounded-full"></div>
-              <div className="absolute bottom-2 left-2 w-4 h-4 bg-white/10 rounded-full"></div>
             </div>
-            
+
             {/* Content */}
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Globe className="w-4 h-4 text-cyan-600" />
-                    <h4 className="font-semibold text-sm text-gray-800 dark:text-gray-200">Scan QR Codes Below</h4>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                    Use your phone camera to scan these QR codes and discover your school's AI policies and guidelines!
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white dark:bg-gray-700 p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center">
-                        <QrCode className="w-8 h-8 text-cyan-600" />
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">School Policy</p>
-                    </div>
-                    <div className="bg-white dark:bg-gray-700 p-3 rounded-xl border-2 border-dashed border-cyan-300 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center">
-                        <QrCode className="w-8 h-8 text-cyan-600" />
-                      </div>
-                      <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">AI Guidelines</p>
-                    </div>
-                  </div>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                Scan QR codes to discover your school's AI policies and guidelines!
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-cyan-50 dark:bg-cyan-900/20 p-2 rounded-lg border border-cyan-200 dark:border-cyan-800 text-center">
+                  <QrCode className="w-6 h-6 text-cyan-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">School Policy</p>
+                </div>
+                <div className="bg-cyan-50 dark:bg-cyan-900/20 p-2 rounded-lg border border-cyan-200 dark:border-cyan-800 text-center">
+                  <QrCode className="w-6 h-6 text-cyan-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-600 dark:text-gray-300 font-medium">AI Guidelines</p>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
-        {/* Interactive Corner - Modern Design */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        {/* Interactive Corner - Condensed Design - Hidden on Mobile */}
+        <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
           
           {/* Weekly Questions Box - Modern Design */}
           <div 
@@ -387,36 +283,27 @@ export default function DisplayBoardMockup() {
               clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))"
             }}
           >
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Star className="w-5 h-5" />
+            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Star className="w-4 h-4" />
                 </div>
-                <h3 className="text-xl font-bold">This Week's Questions</h3>
+                <h3 className="text-lg font-bold">This Week's Questions</h3>
               </div>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Shield className="w-4 h-4 text-red-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE SAFE</p>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">How can we ensure AI tools are fair?</p>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-3 h-3 text-red-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">How can we ensure AI tools are fair?</p>
                 </div>
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Brain className="w-4 h-4 text-blue-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE SMART</p>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">What are AI's strengths vs humans?</p>
+                <div className="flex items-center gap-2">
+                  <Brain className="w-3 h-3 text-blue-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">What are AI's strengths vs humans?</p>
                 </div>
-                <div className="p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Heart className="w-4 h-4 text-green-600" />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">BE CREATIVE</p>
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">How can AI enhance creativity?</p>
+                <div className="flex items-center gap-2">
+                  <Heart className="w-3 h-3 text-green-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">How can AI enhance creativity?</p>
                 </div>
               </div>
             </div>
@@ -429,127 +316,98 @@ export default function DisplayBoardMockup() {
               clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))"
             }}
           >
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5" />
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4" />
                 </div>
-                <h3 className="text-xl font-bold">Student Responses</h3>
+                <h3 className="text-lg font-bold">Student Responses</h3>
               </div>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-800">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"AI should be transparent about how it makes decisions" - Sarah</p>
-                </div>
-                <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"Humans are better at understanding emotions" - Marcus</p>
-                </div>
-                <div className="p-4 rounded-xl">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">"AI can help brainstorm ideas but I add the creativity" - Emma</p>
-                </div>
-                <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl text-center">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 italic">Students write answers on sticky notes and place them here</p>
+            <div className="p-4 bg-white dark:bg-gray-800">
+              <div className="space-y-2">
+                <p className="text-xs text-gray-700 dark:text-gray-300 italic">"AI should be transparent" - Sarah</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 italic">"Humans understand emotions better" - Marcus</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 italic">"AI helps brainstorm, I add creativity" - Emma</p>
+                <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg text-center mt-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 italic">Students write answers on sticky notes here</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* AI Leaders Gallery - Simplified Design */}
+        {/* AI Leaders Gallery - Condensed Design - Hidden on Mobile */}
         <div 
-          className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-indigo-400 transition-all duration-300 overflow-hidden mb-8"
+          className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
           style={{
-            clipPath: "polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px))"
+            clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
           }}
         >
-          <div className="bg-indigo-500 text-white p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                <Star className="w-5 h-5" />
+          <div className="bg-indigo-500 text-white p-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <Star className="w-4 h-4" />
               </div>
-              <h3 className="text-xl font-bold">AI Leaders & Innovators</h3>
+              <h3 className="text-lg font-bold">AI Leaders & Innovators</h3>
             </div>
           </div>
-          <div className="p-6 bg-white dark:bg-gray-800">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              {/* Empty spaces for teacher to add AI leader photos */}
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">📸</span>
+          <div className="p-4 bg-white dark:bg-gray-800">
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-center">
+                <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-2 flex items-center justify-center">
+                  <span className="text-lg">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">📸</span>
+              <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-center">
+                <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-2 flex items-center justify-center">
+                  <span className="text-lg">📸</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">📸</span>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-center hover:border-indigo-400 transition-colors">
-                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl">📸</span>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">AI Leader</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 font-semibold">Add Photo</p>
               </div>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300 italic">
-                Teachers: Add photos of famous AI leaders like Andrew Ng, Fei-Fei Li, Yann LeCun, Demis Hassabis, etc.
+            <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-center">
+              <p className="text-xs text-gray-600 dark:text-gray-300 italic">
+                Add photos of AI leaders like Andrew Ng, Fei-Fei Li, Yann LeCun, etc.
               </p>
             </div>
           </div>
         </div>
 
-         {/* Student Spotlight - Simplified Design */}
+         {/* Student Spotlight - Condensed Design - Hidden on Mobile */}
          <div 
-           className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden mb-8"
+           className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
            style={{
-             clipPath: "polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px))"
+             clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
            }}
          >
-           <div className="bg-purple-500 text-white p-6">
-             <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                 <Users className="w-5 h-5" />
+           <div className="bg-purple-500 text-white p-4">
+             <div className="flex items-center gap-2">
+               <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                 <Users className="w-4 h-4" />
                </div>
-               <h3 className="text-xl font-bold">Student Spotlight</h3>
+               <h3 className="text-lg font-bold">Student Spotlight</h3>
              </div>
            </div>
-           <div className="p-6 bg-white dark:bg-gray-800">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-               <div className="p-4 rounded-xl">
-                 <div className="flex items-center gap-3">
-                   <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
-                     <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-                   </div>
-                   <div>
-                     <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">Sarah Chen</p>
-                     <p className="text-xs text-gray-600 dark:text-gray-400">Riverside High School</p>
-                     <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Created AI ethics presentation shared across 5 schools</p>
-                   </div>
+           <div className="p-4 bg-white dark:bg-gray-800">
+             <div className="space-y-3">
+               <div className="flex items-center gap-2">
+                 <div className="w-8 h-8 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
+                   <Users className="w-4 h-4 text-purple-600 dark:text-purple-300" />
+                 </div>
+                 <div>
+                   <p className="font-semibold text-xs text-gray-800 dark:text-gray-200">Sarah Chen</p>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">Created AI ethics presentation</p>
                  </div>
                </div>
-               <div className="p-4 rounded-xl">
-                 <div className="flex items-center gap-3">
-                   <div className="w-12 h-12 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
-                     <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-                   </div>
-                   <div>
-                     <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">Marcus Johnson</p>
-                     <p className="text-xs text-gray-600 dark:text-gray-400">Valley Middle School</p>
-                     <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Developed chatbot to help students with homework</p>
-                   </div>
+               <div className="flex items-center gap-2">
+                 <div className="w-8 h-8 bg-purple-200 dark:bg-purple-800 rounded-full flex items-center justify-center">
+                   <Users className="w-4 h-4 text-purple-600 dark:text-purple-300" />
+                 </div>
+                 <div>
+                   <p className="font-semibold text-xs text-gray-800 dark:text-gray-200">Marcus Johnson</p>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">Developed homework chatbot</p>
                  </div>
                </div>
              </div>

@@ -3,7 +3,8 @@ import { Navigation } from "@/components/navigation"
 import { SectionWrapper, Container, SectionHeader, Grid, SectionCard } from "@/components/ui"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Palette, Type, Shapes, Layout, Eye, Download, Code, Ruler, Monitor } from "lucide-react"
+import { SplitImageCard } from "@/components/ui/split-image-card"
+import { ArrowLeft, Palette, Type, Shapes, Layout, Eye, Download, Code, Ruler, Monitor, Image } from "lucide-react"
 import Link from "next/link"
 
 // Design System Data
@@ -577,17 +578,17 @@ export default function DesignConceptPage() {
             
             {/* Library Section Activity Cards */}
             <div className="mb-12">
-              <h3 className="text-2xl font-bold mb-6">Library Section Activity Cards</h3>
+              <h3 className="text-2xl font-bold mb-6">Library Section Activity Cards (Old Version)</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {/* Sample Activity Card */}
-                <div className="bg-gray-800 p-6 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden h-80 flex flex-col hover:scale-105 hover:shadow-2xl"
+                <div className="bg-gray-800 p-6 border border-gray-600 group cursor-pointer relative overflow-hidden h-80 flex flex-col"
                      style={{
                        clipPath: "polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))"
                      }}>
                   {/* Theme-colored top section - 12% height */}
                   <div 
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-20"
                     style={{
                       clipPath: 'polygon(0% 0%, calc(100% - 12px) 0%, 100% 12px, 100% 18%, 0% 18%)'
                     }}
@@ -615,7 +616,7 @@ export default function DesignConceptPage() {
                   {/* Activity Content */}
                   <div className="relative z-10 flex-1 flex flex-col">
                     <div className="space-y-3 flex-1">
-                      <h4 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors leading-tight h-16 flex items-start mt-4">
+                      <h4 className="text-xl font-bold text-white leading-tight h-16 flex items-start mt-4">
                         <span className="line-clamp-2">AI in Daily Life</span>
                       </h4>
                       <p className="text-white text-sm leading-relaxed line-clamp-2">
@@ -641,7 +642,7 @@ export default function DesignConceptPage() {
 
                     {/* View Details Link */}
                     <div className="mt-2 pt-2 border-t border-gray-700">
-                      <span className="text-purple-400 text-sm font-medium group-hover:text-purple-300 transition-colors ml-2">
+                      <span className="text-purple-400 text-sm font-medium ml-2">
                         View Details →
                       </span>
                     </div>
@@ -649,13 +650,13 @@ export default function DesignConceptPage() {
                 </div>
 
                 {/* Sample Activity Card 2 - FUTURE Theme */}
-                <div className="bg-gray-800 p-6 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden h-80 flex flex-col hover:scale-105 hover:shadow-2xl"
+                <div className="bg-gray-800 p-6 border border-gray-600 group cursor-pointer relative overflow-hidden h-80 flex flex-col"
                      style={{
                        clipPath: "polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))"
                      }}>
                   {/* Theme-colored top section - FUTURE theme */}
                   <div 
-                    className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                    className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-20"
                     style={{
                       clipPath: 'polygon(0% 0%, calc(100% - 12px) 0%, 100% 12px, 100% 18%, 0% 18%)'
                     }}
@@ -683,7 +684,7 @@ export default function DesignConceptPage() {
                   {/* Activity Content */}
                   <div className="relative z-10 flex-1 flex flex-col">
                     <div className="space-y-3 flex-1">
-                      <h4 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors leading-tight h-16 flex items-start mt-4">
+                      <h4 className="text-xl font-bold text-white  leading-tight h-16 flex items-start mt-4">
                         <span className="line-clamp-2">AI Career Pathways</span>
                       </h4>
                       <p className="text-white text-sm leading-relaxed line-clamp-2">
@@ -709,7 +710,7 @@ export default function DesignConceptPage() {
 
                     {/* View Details Link */}
                     <div className="mt-2 pt-2 border-t border-gray-700">
-                      <span className="text-purple-400 text-sm font-medium group-hover:text-purple-300 transition-colors ml-2">
+                      <span className="text-purple-400 text-sm font-medium  ml-2">
                         View Details →
                       </span>
                     </div>
@@ -717,13 +718,13 @@ export default function DesignConceptPage() {
                 </div>
 
                 {/* Sample Activity Card 3 - SAFE Theme */}
-                <div className="bg-gray-800 p-6 border border-gray-600 hover:border-gray-500 transition-all duration-300 group cursor-pointer relative overflow-hidden h-80 flex flex-col hover:scale-105 hover:shadow-2xl"
+                <div className="bg-gray-800 p-6 border border-gray-600 group cursor-pointer relative overflow-hidden h-80 flex flex-col"
                      style={{
                        clipPath: "polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px))"
                      }}>
                   {/* Theme-colored top section - SAFE theme */}
                   <div 
-                    className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                    className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-20"
                     style={{
                       clipPath: 'polygon(0% 0%, calc(100% - 12px) 0%, 100% 12px, 100% 18%, 0% 18%)'
                     }}
@@ -751,7 +752,7 @@ export default function DesignConceptPage() {
                   {/* Activity Content */}
                   <div className="relative z-10 flex-1 flex flex-col">
                     <div className="space-y-3 flex-1">
-                      <h4 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors leading-tight h-16 flex items-start mt-4">
+                      <h4 className="text-xl font-bold text-white  leading-tight h-16 flex items-start mt-4">
                         <span className="line-clamp-2">AI Privacy Workshop</span>
                       </h4>
                       <p className="text-white text-sm leading-relaxed line-clamp-2">
@@ -777,7 +778,7 @@ export default function DesignConceptPage() {
 
                     {/* View Details Link */}
                     <div className="mt-2 pt-2 border-t border-gray-700">
-                      <span className="text-purple-400 text-sm font-medium group-hover:text-purple-300 transition-colors ml-2">
+                      <span className="text-purple-400 text-sm font-medium  ml-2">
                         View Details →
                       </span>
                     </div>
@@ -831,7 +832,7 @@ export default function DesignConceptPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {/* Sample Activity Type Card */}
-                <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <div className="group relative overflow-hidden rounded-lg border bg-card p-6">
                   <div className="space-y-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
@@ -865,18 +866,16 @@ export default function DesignConceptPage() {
                     </div>
                     
                     <div className="pt-2">
-                      <button className="w-full px-4 py-2 text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
+                      <button className="w-full px-4 py-2 text-sm border border-input bg-background rounded-md">
                         Start Activity →
                       </button>
                     </div>
                   </div>
                   
-                  {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 {/* Sample Activity Type Card 2 - Creative Activities */}
-                <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <div className="group relative overflow-hidden rounded-lg border bg-card p-6 ">
                   <div className="space-y-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
@@ -910,18 +909,16 @@ export default function DesignConceptPage() {
                     </div>
                     
                     <div className="pt-2">
-                      <button className="w-full px-4 py-2 text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
+                      <button className="w-full px-4 py-2 text-sm border border-input bg-background rounded-md">
                         Start Activity →
                       </button>
                     </div>
                   </div>
                   
-                  {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 {/* Sample Activity Type Card 3 - Responsible Activities */}
-                <div className="group relative overflow-hidden rounded-lg border bg-card p-6 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <div className="group relative overflow-hidden rounded-lg border bg-card p-6 ">
                   <div className="space-y-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
@@ -955,14 +952,12 @@ export default function DesignConceptPage() {
                     </div>
                     
                     <div className="pt-2">
-                      <button className="w-full px-4 py-2 text-sm border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
+                      <button className="w-full px-4 py-2 text-sm border border-input bg-background rounded-md">
                         Start Activity →
                       </button>
                     </div>
                   </div>
                   
-                  {/* Hover effect overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </div>
 
@@ -1003,6 +998,253 @@ export default function DesignConceptPage() {
                     <p className="text-sm text-muted-foreground font-mono">w-full | border | hover:bg-accent</p>
                   </div>
                 </SectionCard>
+              </div>
+            </div>
+          </Container>
+        </SectionWrapper>
+
+        {/* Split + Image Card Design System */}
+        <SectionWrapper className="bg-white dark:bg-gray-800">
+          <Container>
+            <SectionHeader
+              title="🖼️ Split + Image Card Design System"
+              description="Modern split-layout cards combining theme sections with image content and detailed information"
+              titleColor="purple"
+              className="mb-8"
+            />
+            
+            {/* Live Examples */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6">Live Examples - All Themes</h3>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                {/* Smart Theme Example */}
+                <SplitImageCard
+                  theme="smart"
+                  title="AI in Daily Life"
+                  description="Discuss how AI is already part of students' daily routines and explore the technology they use every day."
+                  difficulty="beginner"
+                  tags={["discussion", "everyday", "technology"]}
+                  imageUrl="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop&crop=center"
+                  backgroundImageUrl="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop&crop=center"
+                />
+
+                {/* Creative Theme Example */}
+                <SplitImageCard
+                  theme="creative"
+                  title="AI Art Workshop"
+                  description="Create digital art using AI tools and explore the intersection of human creativity and machine intelligence."
+                  difficulty="intermediate"
+                  tags={["art", "creativity", "hands-on"]}
+                  imageUrl="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400&h=200&fit=crop&crop=center"
+                  backgroundImageUrl="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop&crop=center"
+                />
+
+                {/* Safe Theme Example */}
+                <SplitImageCard
+                  theme="safe"
+                  title="AI Privacy Workshop"
+                  description="Learn about data privacy, safe AI usage practices, and how to protect personal information online."
+                  difficulty="intermediate"
+                  tags={["privacy", "security", "safety"]}
+                  imageUrl="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=200&fit=crop&crop=center"
+                  backgroundImageUrl="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=600&fit=crop&crop=center"
+                />
+
+                {/* Future Theme Example */}
+                <SplitImageCard
+                  theme="future"
+                  title="AI Career Pathways"
+                  description="Explore future career opportunities in AI and technology fields, including emerging roles and skills needed."
+                  difficulty="advanced"
+                  tags={["career", "future", "guidance"]}
+                  imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop&crop=center"
+                  backgroundImageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=center"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Layout Structure</h4>
+                    <p className="text-sm text-muted-foreground font-mono">Split layout: theme section (left) + content section (right)</p>
+                  </div>
+                </SectionCard>
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Theme Section</h4>
+                    <p className="text-sm text-muted-foreground font-mono">Gradient background + image overlay + theme indicator + title + difficulty badge</p>
+                  </div>
+                </SectionCard>
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Content Section</h4>
+                    <p className="text-sm text-muted-foreground font-mono">Description + tags + view details link</p>
+                  </div>
+                </SectionCard>
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Image Integration</h4>
+                    <p className="text-sm text-muted-foreground font-mono">Main image in theme section + optional background overlay</p>
+                  </div>
+                </SectionCard>
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Hover Effects</h4>
+                    <p className="text-sm text-muted-foreground font-mono">scale-105 | shadow-2xl | image scale | opacity changes</p>
+                  </div>
+                </SectionCard>
+                <SectionCard>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Responsive Design</h4>
+                    <p className="text-sm text-muted-foreground font-mono">Stacked on mobile | Side-by-side on desktop</p>
+                  </div>
+                </SectionCard>
+              </div>
+            </div>
+
+            {/* Design Specifications */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6">Design Specifications</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Theme Section Specs */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Theme Section (Left)</h4>
+                  <div className="space-y-3">
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <h5 className="font-medium mb-2">Background & Layout</h5>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Gradient background based on theme</li>
+                        <li>• Optional background image overlay (opacity: 20%)</li>
+                        <li>• Dark overlay for text readability (opacity: 30%)</li>
+                        <li>• Padding: 24px (p-6)</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <h5 className="font-medium mb-2">Content Elements</h5>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Theme indicator dot + label</li>
+                        <li>• Main image (h-24, rounded-lg, backdrop-blur)</li>
+                        <li>• Title (text-2xl, font-bold, white)</li>
+                        <li>• Difficulty badge (positioned absolutely)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Section Specs */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Content Section (Right)</h4>
+                  <div className="space-y-3">
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <h5 className="font-medium mb-2">Layout & Styling</h5>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Background: bg-gray-800</li>
+                        <li>• Padding: 24px (p-6)</li>
+                        <li>• Flex column layout</li>
+                        <li>• Height: matches theme section</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <h5 className="font-medium mb-2">Content Elements</h5>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Description (text-base, line-clamp-3)</li>
+                        <li>• Tags (bg-gray-700, text-gray-300)</li>
+                        <li>• View Details link (purple-400)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Theme Configuration */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6">Theme Configuration</h3>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left p-3 font-semibold">Theme</th>
+                      <th className="text-left p-3 font-semibold">Gradient</th>
+                      <th className="text-left p-3 font-semibold">Label</th>
+                      <th className="text-left p-3 font-semibold">Dot Color</th>
+                      <th className="text-left p-3 font-semibold">Difficulty Color</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="p-3 font-medium">Safe</td>
+                      <td className="p-3 text-muted-foreground font-mono">from-red-500 to-red-600</td>
+                      <td className="p-3 text-muted-foreground">BE SAFE</td>
+                      <td className="p-3 text-muted-foreground font-mono">bg-red-500</td>
+                      <td className="p-3 text-muted-foreground font-mono">red-100/red-800</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-3 font-medium">Smart</td>
+                      <td className="p-3 text-muted-foreground font-mono">from-blue-500 to-blue-600</td>
+                      <td className="p-3 text-muted-foreground">BE SMART</td>
+                      <td className="p-3 text-muted-foreground font-mono">bg-blue-500</td>
+                      <td className="p-3 text-muted-foreground font-mono">green-100/green-800</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-3 font-medium">Creative</td>
+                      <td className="p-3 text-muted-foreground font-mono">from-green-500 to-green-600</td>
+                      <td className="p-3 text-muted-foreground">BE CREATIVE</td>
+                      <td className="p-3 text-muted-foreground font-mono">bg-green-500</td>
+                      <td className="p-3 text-muted-foreground font-mono">yellow-100/yellow-800</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-3 font-medium">Responsible</td>
+                      <td className="p-3 text-muted-foreground font-mono">from-purple-500 to-purple-600</td>
+                      <td className="p-3 text-muted-foreground">BE RESPONSIBLE</td>
+                      <td className="p-3 text-muted-foreground font-mono">bg-purple-500</td>
+                      <td className="p-3 text-muted-foreground font-mono">orange-100/orange-800</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-3 font-medium">Future</td>
+                      <td className="p-3 text-muted-foreground font-mono">from-orange-500 to-orange-600</td>
+                      <td className="p-3 text-muted-foreground">BE FUTURE</td>
+                      <td className="p-3 text-muted-foreground font-mono">bg-orange-500</td>
+                      <td className="p-3 text-muted-foreground font-mono">blue-100/blue-800</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Usage Guidelines */}
+            <div className="mb-12">
+              <h3 className="text-2xl font-bold mb-6">Usage Guidelines</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-green-600">✅ Best Practices</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Use high-quality, relevant images (400x200px minimum)</li>
+                    <li>• Keep titles concise and descriptive (2 lines max)</li>
+                    <li>• Limit tags to 3-5 most relevant keywords</li>
+                    <li>• Choose appropriate difficulty levels</li>
+                    <li>• Ensure good contrast for text readability</li>
+                    <li>• Test hover effects and responsiveness</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-red-600">❌ Avoid</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Low-resolution or pixelated images</li>
+                    <li>• Overly long titles that break layout</li>
+                    <li>• Too many tags (clutters the design)</li>
+                    <li>• Inconsistent theme color usage</li>
+                    <li>• Poor contrast between text and background</li>
+                    <li>• Missing alt text for accessibility</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </Container>

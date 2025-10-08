@@ -11,6 +11,7 @@ export { Textarea } from './textarea'
 export { Label } from './label'
 export { ThemeToggle } from './theme-toggle'
 export { PolygonCard } from './polygon-card'
+export { SplitImageCard } from './split-image-card'
 export { Separator } from './separator'
 export { 
   DropdownMenu,
