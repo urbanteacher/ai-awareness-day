@@ -13,7 +13,7 @@ export function PolygonGrid({ className = "", size = 'medium' }: PolygonGridProp
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className={`grid grid-cols-3 ${size === 'extra-small' ? 'gap-2' : 'gap-4'} ${className}`}
+      className={`grid grid-cols-3 gap-4 ${className}`}
     >
       {themeConfigs.map((theme, index) => (
         <PolygonCard
@@ -25,12 +25,7 @@ export function PolygonGrid({ className = "", size = 'medium' }: PolygonGridProp
       ))}
 
       {/* Empty space for 6th position */}
-      <div className={`${
-        size === 'extra-small' ? 'w-24 h-24' : 
-        size === 'small' ? 'w-32 h-32' : 
-        size === 'large' ? 'w-48 h-48' : 
-        'w-40 h-40'
-      }`}></div>
+      <div className={`${size === 'small' ? 'w-32 h-32' : size === 'large' ? 'w-48 h-48' : 'w-40 h-40'}`}></div>
     </motion.div>
   )
 }

@@ -6,7 +6,7 @@ interface PolygonCardProps {
   gradient: string
   children?: ReactNode
   className?: string
-  size?: 'small' | 'medium' | 'large' | 'extra-small'
+  size?: 'small' | 'medium' | 'large'
   animated?: boolean
 }
 
