@@ -188,8 +188,8 @@ export function ToolCard({
                 asChild
               >
                 <a href={demoUrl || "#"} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Visit Website
+                  <Play className="mr-2 h-4 w-4" />
+                  Try Beta
                 </a>
               </Button>
             )}
