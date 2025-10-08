@@ -496,7 +496,7 @@ export default function ToolsSection() {
           })}
         </div>
 
-        {/* Call to Action - Mobile Friendly */}
+        {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -505,7 +505,7 @@ export default function ToolsSection() {
           className="text-center"
         >
           <div 
-            className="bg-gray-800 p-4 sm:p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
+            className="bg-gray-800 p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
             style={{ 
               clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
             }}
@@ -513,23 +513,23 @@ export default function ToolsSection() {
             {/* Background gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
             
-            <div className="relative z-10 space-y-4 sm:space-y-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-white">Need Help Getting Started?</h3>
-              <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto">
+            <div className="relative z-10 space-y-6">
+              <h3 className="text-2xl font-bold text-white">Need Help Getting Started?</h3>
+              <p className="text-gray-300 max-w-2xl mx-auto">
                 New to AI in education? We provide free training resources and support to help you integrate these tools into your teaching practice.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg transition-colors">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
                   Get Training Support
                 </button>
-                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 text-sm sm:text-base font-semibold rounded-lg transition-colors">
+                <button className="px-6 py-3 border border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 font-semibold rounded-lg transition-colors">
                   Join Teacher Community
                 </button>
               </div>
             </div>
 
             {/* Decorative corner polygon */}
-            <div className="absolute top-2 right-2 w-4 h-4 sm:w-6 sm:h-6 bg-blue-400/20 rounded-sm" 
+            <div className="absolute top-2 right-2 w-6 h-6 bg-blue-400/20 rounded-sm" 
                  style={{ clipPath: 'polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)' }}></div>
           </div>
         </motion.div>

@@ -333,8 +333,6 @@ const teacherTools = [
 ]
 
 export default function ToolsSection() {
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
-  
   // Group tools by category
   const toolsByCategory = teacherTools.reduce((acc, tool) => {
     if (!acc[tool.category]) {
@@ -352,21 +350,6 @@ export default function ToolsSection() {
     "Interactive Demos",
     "Professional Development"
   ]
-
-  const toggleCategory = (category: string) => {
-    const newExpanded = new Set(expandedCategories)
-    if (newExpanded.has(category)) {
-      newExpanded.delete(category)
-    } else {
-      newExpanded.add(category)
-    }
-    setExpandedCategories(newExpanded)
-  }
-
-  const getVisibleTools = (categoryTools: typeof teacherTools) => {
-    const isExpanded = expandedCategories.has(categoryTools[0]?.category || '')
-    return isExpanded ? categoryTools : categoryTools.slice(0, 2) // Show only 2 tools initially on mobile
-  }
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -412,91 +395,55 @@ export default function ToolsSection() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6 }}
               >
-                {/* Category Header with Polygon - Mobile Friendly */}
+                {/* Category Header with Polygon */}
                 <div 
-                  className="bg-gray-800 text-white p-4 sm:p-6 relative overflow-hidden cursor-pointer"
+                  className="bg-gray-800 text-white p-6 relative overflow-hidden"
                   style={{ 
                     clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
                   }}
-                  onClick={() => toggleCategory(category)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className="w-8 h-8 sm:w-12 sm:h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                        {getCategoryIcon(category)}
-                      </div>
-                      <div>
-                        <h3 className="text-lg sm:text-2xl font-bold text-white">{category}</h3>
-                        <p className="text-xs sm:text-base text-gray-300">
-                          {categoryTools.length} free tools ready to use
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                      {getCategoryIcon(category)}
                     </div>
-                    
-                    {/* Mobile Toggle Button */}
-                    <div className="sm:hidden">
-                      {expandedCategories.has(category) ? (
-                        <ChevronUp className="w-5 h-5 text-gray-300" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-300" />
-                      )}
+                    <div>
+                      <h3 className="text-2xl font-bold text-white">{category}</h3>
+                      <p className="text-gray-300">
+                        {categoryTools.length} free tools ready to use
+                      </p>
                     </div>
                   </div>
                   
                   {/* Decorative corner polygon */}
-                  <div className="absolute top-2 right-2 w-4 h-4 sm:w-6 sm:h-6 bg-blue-400/20 rounded-sm" 
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-blue-400/20 rounded-sm" 
                        style={{ clipPath: 'polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)' }}></div>
                 </div>
                 
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    {getVisibleTools(categoryTools).map((tool, index) => (
-                      <ToolCard
-                        key={tool.title}
-                        title={tool.title}
-                        description={tool.description}
-                        category={tool.category}
-                        type={tool.type}
-                        status={tool.status}
-                        features={tool.features}
-                        icon={tool.icon}
-                        downloadUrl={(tool as any).downloadUrl}
-                        demoUrl={tool.demoUrl}
-                        docsUrl={tool.docsUrl}
-                        className="animate-in fade-in-0 slide-in-from-bottom-4"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Show More/Less Button for Mobile */}
-                  {categoryTools.length > 2 && (
-                    <div className="flex justify-center pt-4">
-                      <button
-                        onClick={() => toggleCategory(category)}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-                      >
-                        {expandedCategories.has(category) ? (
-                          <>
-                            <ChevronUp className="w-4 h-4" />
-                            Show Less
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="w-4 h-4" />
-                            Show More ({categoryTools.length - 2} more)
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {categoryTools.map((tool, index) => (
+                    <ToolCard
+                      key={tool.title}
+                      title={tool.title}
+                      description={tool.description}
+                      category={tool.category}
+                      type={tool.type}
+                      status={tool.status}
+                      features={tool.features}
+                      icon={tool.icon}
+                      downloadUrl={(tool as any).downloadUrl}
+                      demoUrl={tool.demoUrl}
+                      docsUrl={tool.docsUrl}
+                      className="animate-in fade-in-0 slide-in-from-bottom-4"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    />
+                  ))}
                 </div>
               </motion.div>
             )
           })}
         </div>
 
-        {/* Call to Action - Mobile Friendly */}
+        {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -505,7 +452,7 @@ export default function ToolsSection() {
           className="text-center"
         >
           <div 
-            className="bg-gray-800 p-4 sm:p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
+            className="bg-gray-800 p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
             style={{ 
               clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
             }}
@@ -513,23 +460,23 @@ export default function ToolsSection() {
             {/* Background gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
             
-            <div className="relative z-10 space-y-4 sm:space-y-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-white">Need Help Getting Started?</h3>
-              <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto">
+            <div className="relative z-10 space-y-6">
+              <h3 className="text-2xl font-bold text-white">Need Help Getting Started?</h3>
+              <p className="text-gray-300 max-w-2xl mx-auto">
                 New to AI in education? We provide free training resources and support to help you integrate these tools into your teaching practice.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg transition-colors">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
                   Get Training Support
                 </button>
-                <button className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 text-sm sm:text-base font-semibold rounded-lg transition-colors">
+                <button className="px-6 py-3 border border-gray-500 text-white hover:bg-gray-700 hover:border-gray-400 font-semibold rounded-lg transition-colors">
                   Join Teacher Community
                 </button>
               </div>
             </div>
 
             {/* Decorative corner polygon */}
-            <div className="absolute top-2 right-2 w-4 h-4 sm:w-6 sm:h-6 bg-blue-400/20 rounded-sm" 
+            <div className="absolute top-2 right-2 w-6 h-6 bg-blue-400/20 rounded-sm" 
                  style={{ clipPath: 'polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%)' }}></div>
           </div>
         </motion.div>
