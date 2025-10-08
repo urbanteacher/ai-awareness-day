@@ -33,21 +33,21 @@ export function HeroContent() {
               >
                 <div className="flex flex-col items-start">
                   <motion.span 
-                    className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
+                    className="text-5xl md:text-7xl font-bold leading-tight"
                     whileHover={{ scale: 1.05, rotate: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 10 }}
                   >
                     AI
                   </motion.span>
                   <motion.span 
-                    className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
+                    className="text-5xl md:text-7xl font-bold leading-tight"
                     whileHover={{ scale: 1.05, rotate: -1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 10 }}
                   >
                     AWARENESS
                   </motion.span>
                   <motion.span 
-                    className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
+                    className="text-5xl md:text-7xl font-bold leading-tight"
                     whileHover={{ scale: 1.05, rotate: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 10 }}
                   >
@@ -55,7 +55,7 @@ export function HeroContent() {
                   </motion.span>
                 </div>
                 <motion.span 
-                  className="absolute bottom-3 right-32 text-lg sm:text-2xl md:text-4xl font-thin leading-tight text-muted-foreground"
+                  className="absolute bottom-3 right-32 text-2xl md:text-4xl font-thin leading-tight text-muted-foreground"
                   whileHover={{ scale: 1.1, y: -5 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
@@ -67,7 +67,7 @@ export function HeroContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg sm:text-2xl md:text-3xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Know it, Question it, Use it Wisely
