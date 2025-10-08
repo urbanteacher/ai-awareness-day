@@ -505,7 +505,7 @@ export default function ToolsSection() {
           className="text-center"
         >
           <div 
-            className="bg-gradient-to-r from-purple-700 to-purple-800 p-4 sm:p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
+            className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 sm:p-8 text-white max-w-4xl mx-auto relative overflow-hidden"
             style={{ 
               clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))' 
             }}
