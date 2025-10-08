@@ -235,7 +235,7 @@ export default function DisplayBoardMockup() {
 
           {/* QR CHALLENGES Panel - Condensed Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-cyan-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}

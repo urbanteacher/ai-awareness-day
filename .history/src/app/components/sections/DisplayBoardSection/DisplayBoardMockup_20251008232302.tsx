@@ -48,7 +48,7 @@ export default function DisplayBoardMockup() {
         
         {/* Central Header Section - Simplified Design */}
         <div className="relative mb-12">
-          <div className="bg-blue-600 text-white p-4 sm:p-8 shadow-xl border-2 sm:border-4 border-black dark:border-white relative overflow-hidden">
+          <div className="bg-blue-600 text-white p-8 shadow-xl border-4 border-black dark:border-white relative overflow-hidden">
             <div 
               className="w-full h-full"
               style={{
@@ -80,7 +80,7 @@ export default function DisplayBoardMockup() {
           
           {/* BE SAFE Panel - Modern Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-red-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-red-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
@@ -111,7 +111,7 @@ export default function DisplayBoardMockup() {
 
           {/* BE SMART Panel - Modern Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-blue-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-blue-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
@@ -142,7 +142,7 @@ export default function DisplayBoardMockup() {
 
           {/* BE CREATIVE Panel - Modern Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-green-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-green-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
@@ -173,7 +173,7 @@ export default function DisplayBoardMockup() {
 
           {/* BE RESPONSIBLE Panel - Modern Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-purple-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-purple-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
@@ -204,7 +204,7 @@ export default function DisplayBoardMockup() {
 
           {/* BE FUTURE Panel - Modern Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-orange-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-orange-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
@@ -235,7 +235,7 @@ export default function DisplayBoardMockup() {
 
           {/* QR CHALLENGES Panel - Condensed Design */}
           <div 
-            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border sm:border-2 border-black dark:border-white hover:border-cyan-400"
+            className="group relative bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-black dark:border-white hover:border-cyan-400"
             style={{
               clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
             }}
