@@ -108,30 +108,43 @@ export default function ActivitiesSection() {
                     
                     {/* Icon and duration */}
                     <div className="relative z-10 mb-3 sm:mb-4">
-                      <div className="flex items-center mb-2 sm:mb-3">
+                      {/* Mobile: Icon - Title - Duration in one line */}
+                      <div className="flex items-center space-x-2 sm:hidden mb-2">
                         <div 
-                          className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg`}
+                          className={`w-10 h-10 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg flex-shrink-0`}
                           style={{
                             clipPath: 'polygon(0% 0%, 75% 0%, 100% 25%, 100% 100%, 25% 100%, 0% 75%)'
                           }}
                         >
-                          <activity.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                          <activity.icon className="w-5 h-5 text-white" />
                         </div>
-                        <div className="flex-1 ml-3">
-                          <div className="flex items-center space-x-2">
-                            <h3 className="text-base sm:text-lg font-semibold text-white">
-                              {activity.title}
-                            </h3>
-                            {/* Duration badge - inline on mobile, separate on desktop */}
-                            <span className="text-[10px] sm:text-xs font-bold text-white px-2 py-1 rounded-full sm:hidden" style={{ backgroundColor: '#7c3aed' }}>
-                              {activity.duration}
-                            </span>
-                          </div>
-                        </div>
-                        {/* Duration badge - separate on desktop */}
-                        <span className="hidden sm:block text-xs font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
+                        <h3 className="text-base font-semibold text-white flex-1">
+                          {activity.title}
+                        </h3>
+                        <span className="text-[10px] font-bold text-white px-2 py-1 rounded-full flex-shrink-0" style={{ backgroundColor: '#7c3aed' }}>
                           {activity.duration}
                         </span>
+                      </div>
+
+                      {/* Desktop: Original layout */}
+                      <div className="hidden sm:block">
+                        <div className="flex items-center justify-between mb-3">
+                          <div 
+                            className={`w-12 h-12 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg`}
+                            style={{
+                              clipPath: 'polygon(0% 0%, 75% 0%, 100% 25%, 100% 100%, 25% 100%, 0% 75%)'
+                            }}
+                          >
+                            <activity.icon className="w-6 h-6 text-white" />
+                          </div>
+                          <span className="text-xs font-bold text-white px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
+                            {activity.duration}
+                          </span>
+                        </div>
+                        
+                        <h3 className="text-lg font-semibold text-white mb-2">
+                          {activity.title}
+                        </h3>
                       </div>
                       
                       <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
