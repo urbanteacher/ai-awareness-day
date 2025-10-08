@@ -108,7 +108,7 @@ export default function ActivitiesSection() {
                     
                     {/* Icon and duration */}
                     <div className="relative z-10 mb-3 sm:mb-4">
-                      <div className="flex items-center mb-2 sm:mb-3">
+                      <div className="flex items-center justify-between mb-2 sm:mb-3">
                         <div 
                           className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${activity.color} flex items-center justify-center rounded-lg`}
                           style={{
@@ -117,19 +117,13 @@ export default function ActivitiesSection() {
                         >
                           <activity.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
-                        {/* Duration badge - hidden on mobile, shown on desktop */}
-                        <span className="hidden sm:block text-xs font-bold text-white px-3 py-1 rounded-full ml-auto" style={{ backgroundColor: '#7c3aed' }}>
+                        <span className="text-[10px] sm:text-xs font-bold text-white px-2 sm:px-3 py-1 rounded-full" style={{ backgroundColor: '#7c3aed' }}>
                           {activity.duration}
                         </span>
                       </div>
                       
                       <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
-                        <span className="sm:hidden">
-                          {activity.title} - {activity.duration}
-                        </span>
-                        <span className="hidden sm:inline">
-                          {activity.title}
-                        </span>
+                        {activity.title}
                       </h3>
                       <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
                         {activity.description}
