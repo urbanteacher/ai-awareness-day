@@ -57,8 +57,8 @@ export default function DisplayBoardMockup() {
             >
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
-                {/* School Logo Placeholder - Circle - Hidden on Mobile */}
-                <div className="hidden sm:flex w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full items-center justify-center border-2 border-white/30 shadow-lg">
+                {/* School Logo Placeholder - Circle */}
+                <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg">
                   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                     <span className="text-blue-600 font-bold text-lg">LOGO</span>
                   </div>
@@ -102,9 +102,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 AI systems can be biased if trained on biased data. Always question the source and verify information!
               </p>
-              <div className="flex items-start gap-2">
-                <Sparkles className="w-3 h-3 text-red-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI systems can be biased if trained on biased data. Always question the source and verify information!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">How can we ensure AI tools are fair?</p>
               </div>
             </div>
           </div>
@@ -133,9 +133,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 AI processes info 1000x faster than humans, but humans are better at creative problem-solving!
               </p>
-              <div className="flex items-start gap-2">
-                <Brain className="w-3 h-3 text-blue-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> ChatGPT was trained on 45TB of text data - that's equivalent to reading every book in a large library!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">What are AI's strengths vs humans?</p>
               </div>
             </div>
           </div>
@@ -164,9 +164,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 AI can generate art and music, but the most creative works come from human-AI collaboration!
               </p>
-              <div className="flex items-start gap-2">
-                <Zap className="w-3 h-3 text-green-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI can recognize patterns humans miss and generate creative solutions in seconds!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">How can AI enhance creativity?</p>
               </div>
             </div>
           </div>
@@ -195,9 +195,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 Every AI decision affects real people. We must consider the impact and use technology responsibly!
               </p>
-              <div className="flex items-start gap-2">
-                <Heart className="w-3 h-3 text-purple-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> AI can process information 1 million times faster than humans, but we must use it ethically!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">What responsibilities do we have with AI?</p>
               </div>
             </div>
           </div>
@@ -226,9 +226,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready!
               </p>
-              <div className="flex items-start gap-2">
-                <Award className="w-3 h-3 text-orange-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> The AI industry is growing 40% each year - learning AI skills now prepares you for tomorrow's jobs!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">What AI skills do you want to develop?</p>
               </div>
             </div>
           </div>
@@ -273,37 +273,37 @@ export default function DisplayBoardMockup() {
 
         </div>
 
-        {/* Interactive Corner - Condensed Design - Hidden on Mobile */}
-        <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
+        {/* Interactive Corner - Condensed Design */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
           
-          {/* Weekly Questions Box - Modern Design */}
+          {/* Did You Know - Modern Design */}
           <div 
-            className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-yellow-400 transition-all duration-300 overflow-hidden"
+            className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white hover:border-purple-400 transition-all duration-300 overflow-hidden"
             style={{
               clipPath: "polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px))"
             }}
           >
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-4">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Star className="w-4 h-4" />
+                  <Lightbulb className="w-4 h-4" />
                 </div>
-                <h3 className="text-lg font-bold">This Week's Questions</h3>
+                <h3 className="text-lg font-bold">Did You Know?</h3>
               </div>
             </div>
             <div className="p-4 bg-white dark:bg-gray-800">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-3 h-3 text-red-600" />
-                  <p className="text-xs text-gray-700 dark:text-gray-300">How can we ensure AI tools are fair?</p>
+                  <Sparkles className="w-3 h-3 text-purple-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">AI can process information 1 million times faster than humans!</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Brain className="w-3 h-3 text-blue-600" />
-                  <p className="text-xs text-gray-700 dark:text-gray-300">What are AI's strengths vs humans?</p>
+                  <Brain className="w-3 h-3 text-purple-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">ChatGPT was trained on 45TB of text data!</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Heart className="w-3 h-3 text-green-600" />
-                  <p className="text-xs text-gray-700 dark:text-gray-300">How can AI enhance creativity?</p>
+                  <Zap className="w-3 h-3 text-purple-600" />
+                  <p className="text-xs text-gray-700 dark:text-gray-300">AI can recognize patterns humans miss!</p>
                 </div>
               </div>
             </div>
@@ -337,9 +337,9 @@ export default function DisplayBoardMockup() {
           </div>
         </div>
 
-        {/* AI Leaders Gallery - Condensed Design - Hidden on Mobile */}
+        {/* AI Leaders Gallery - Condensed Design */}
         <div 
-          className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
+          className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
           style={{
             clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
           }}
@@ -375,9 +375,9 @@ export default function DisplayBoardMockup() {
           </div>
         </div>
 
-         {/* Student Spotlight - Condensed Design - Hidden on Mobile */}
+         {/* Student Spotlight - Condensed Design */}
          <div 
-           className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
+           className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
            style={{
              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
            }}

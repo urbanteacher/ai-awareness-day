@@ -57,8 +57,8 @@ export default function DisplayBoardMockup() {
             >
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
-                {/* School Logo Placeholder - Circle - Hidden on Mobile */}
-                <div className="hidden sm:flex w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full items-center justify-center border-2 border-white/30 shadow-lg">
+                {/* School Logo Placeholder - Circle */}
+                <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg">
                   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                     <span className="text-blue-600 font-bold text-lg">LOGO</span>
                   </div>

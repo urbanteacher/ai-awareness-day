@@ -57,8 +57,8 @@ export default function DisplayBoardMockup() {
             >
             <div className="text-center">
               <div className="flex items-center justify-center gap-6 mb-6">
-                {/* School Logo Placeholder - Circle - Hidden on Mobile */}
-                <div className="hidden sm:flex w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full items-center justify-center border-2 border-white/30 shadow-lg">
+                {/* School Logo Placeholder - Circle */}
+                <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg">
                   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
                     <span className="text-blue-600 font-bold text-lg">LOGO</span>
                   </div>
@@ -226,9 +226,9 @@ export default function DisplayBoardMockup() {
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                 By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready!
               </p>
-              <div className="flex items-start gap-2">
-                <Award className="w-3 h-3 text-orange-600 mt-0.5" />
-                <p className="text-xs text-gray-600 dark:text-gray-400"><span className="font-semibold">Did you know:</span> The AI industry is growing 40% each year - learning AI skills now prepares you for tomorrow's jobs!</p>
+              <div className="flex items-center gap-2">
+                <Target className="w-3 h-3 text-blue-600" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">What AI skills do you want to develop?</p>
               </div>
             </div>
           </div>
@@ -273,8 +273,8 @@ export default function DisplayBoardMockup() {
 
         </div>
 
-        {/* Interactive Corner - Condensed Design - Hidden on Mobile */}
-        <div className="hidden sm:grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
+        {/* Interactive Corner - Condensed Design */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
           
           {/* Weekly Questions Box - Modern Design */}
           <div 
@@ -337,9 +337,9 @@ export default function DisplayBoardMockup() {
           </div>
         </div>
 
-        {/* AI Leaders Gallery - Condensed Design - Hidden on Mobile */}
+        {/* AI Leaders Gallery - Condensed Design */}
         <div 
-          className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
+          className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
           style={{
             clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
           }}
@@ -375,9 +375,9 @@ export default function DisplayBoardMockup() {
           </div>
         </div>
 
-         {/* Student Spotlight - Condensed Design - Hidden on Mobile */}
+         {/* Student Spotlight - Condensed Design */}
          <div 
-           className="hidden sm:block bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
+           className="bg-white dark:bg-gray-800 shadow-lg border-2 border-black dark:border-white overflow-hidden mb-6"
            style={{
              clipPath: "polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px))"
            }}

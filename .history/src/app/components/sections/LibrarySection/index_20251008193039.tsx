@@ -65,7 +65,7 @@ export default function LibrarySection() {
 
   const getVisibleActivities = (library: any) => {
     const isExpanded = expandedLibraries.has(library.id)
-    return isExpanded ? library.activities : library.activities.slice(0, 4) // Show 4 activities initially (extra row for mobile)
+    return isExpanded ? library.activities : library.activities.slice(0, 3) // Show 3 activities initially
   }
 
   // Show loading state while preserving exact styling
@@ -137,34 +137,35 @@ export default function LibrarySection() {
           </div>
 
           {/* Theme Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 sm:gap-3 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 px-4 sm:px-0">
             {themes.map((theme) => (
               <Button
                 key={theme.id}
                 variant={selectedTheme === theme.id ? "default" : "outline"}
                 onClick={() => setSelectedTheme(theme.id)}
                 size="sm"
-                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
+                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 ${
                   selectedTheme === theme.id
                     ? "bg-purple-600 hover:bg-white hover:text-purple-600 text-white"
                     : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
                 }`}
               >
                 <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${theme.color} mr-1 sm:mr-2`} />
-                <span className="text-xs sm:text-sm">{theme.name}</span>
+                <span className="hidden xs:inline">{theme.name}</span>
+                <span className="xs:hidden">{theme.name.split(' ')[0]}</span>
               </Button>
             ))}
           </div>
 
           {/* Difficulty Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-wrap justify-center gap-2 mb-6 px-4 sm:px-0">
             {["all", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
               <Button
                 key={difficulty}
                 variant={selectedDifficulty === difficulty ? "default" : "outline"}
                 onClick={() => setSelectedDifficulty(difficulty)}
                 size="sm"
-                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
+                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 ${
                   selectedDifficulty === difficulty
                     ? "bg-blue-600 hover:bg-white hover:text-blue-600 text-white"
                     : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
@@ -192,7 +193,7 @@ export default function LibrarySection() {
             {filteredLibraries.map((library) => {
               const visibleActivities = getVisibleActivities(library)
               const isExpanded = expandedLibraries.has(library.id)
-              const hasMoreActivities = library.activities.length > 4
+              const hasMoreActivities = library.activities.length > 3
 
               return (
                 <motion.div
@@ -356,19 +357,13 @@ export default function LibrarySection() {
 
                       {/* Show More/Less Button */}
                       {hasMoreActivities && (
-                        <div className="flex justify-center mt-6 sm:mt-8">
+                        <div className="flex justify-center mt-8">
                           <Button
                             variant="outline"
                             onClick={() => toggleLibraryExpansion(library.id)}
-                            size="sm"
-                            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 border-2 border-purple-200 hover:border-purple-300 text-purple-600 hover:text-purple-700 dark:border-purple-700 dark:hover:border-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
+                            className="border-2 border-purple-200 hover:border-purple-300 text-purple-600 hover:text-purple-700 dark:border-purple-700 dark:hover:border-purple-600 dark:text-purple-400 dark:hover:text-purple-300"
                           >
-                            <span className="hidden sm:inline">
-                              {isExpanded ? "Show Less" : `Show More (${library.activities.length - 4} more)`}
-                            </span>
-                            <span className="sm:hidden">
-                              {isExpanded ? "Less" : `More (${library.activities.length - 4})`}
-                            </span>
+                            {isExpanded ? "Show Less" : `Show More (${library.activities.length - 3} more)`}
                           </Button>
                         </div>
                       )}
@@ -384,23 +379,22 @@ export default function LibrarySection() {
           </div>
 
           {/* Inclusion Guide Button */}
-          <div className="text-center mt-8 sm:mt-12 mb-6 sm:mb-8">
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 sm:p-6 lg:p-8 rounded-2xl border-2 border-purple-200 shadow-lg">
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">
+          <div className="text-center mt-12 mb-8">
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-8 rounded-2xl border-2 border-purple-200 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 🎯 Essential Teacher Resource
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 max-w-2xl mx-auto">
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
                 Ensure every student can participate meaningfully in AI education with our comprehensive inclusion strategies and universal design principles.
               </p>
               <Button
                 asChild
-                size="sm"
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 sm:px-8 lg:px-12 py-2 sm:py-3 lg:py-4 rounded-full text-sm sm:text-base lg:text-lg font-semibold shadow-lg"
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
-                <a href="/inclusion-guide" className="flex items-center space-x-2 sm:space-x-3">
-                  <Heart className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
-                  <span className="hidden sm:inline">Inclusion Guide for Teachers</span>
-                  <span className="sm:hidden">Inclusion Guide</span>
+                <a href="/inclusion-guide" className="flex items-center space-x-3">
+                  <Heart className="w-6 h-6" />
+                  <span>Inclusion Guide for Teachers</span>
                 </a>
               </Button>
             </div>

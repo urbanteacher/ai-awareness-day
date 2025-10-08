@@ -137,14 +137,14 @@ export default function LibrarySection() {
           </div>
 
           {/* Theme Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 sm:gap-3 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-nowrap overflow-x-auto justify-start sm:justify-center gap-2 sm:gap-3 mb-6 px-4 sm:px-0 pb-2">
             {themes.map((theme) => (
               <Button
                 key={theme.id}
                 variant={selectedTheme === theme.id ? "default" : "outline"}
                 onClick={() => setSelectedTheme(theme.id)}
                 size="sm"
-                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
+                className={`text-xs sm:text-sm px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 ${
                   selectedTheme === theme.id
                     ? "bg-purple-600 hover:bg-white hover:text-purple-600 text-white"
                     : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
@@ -157,14 +157,14 @@ export default function LibrarySection() {
           </div>
 
           {/* Difficulty Filter */}
-          <div className="flex flex-wrap sm:flex-nowrap overflow-x-auto sm:overflow-x-visible justify-center gap-2 mb-6 px-4 sm:px-0 pb-2 scrollbar-hide">
+          <div className="flex flex-wrap justify-center gap-2 mb-6 px-4 sm:px-0">
             {["all", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
               <Button
                 key={difficulty}
                 variant={selectedDifficulty === difficulty ? "default" : "outline"}
                 onClick={() => setSelectedDifficulty(difficulty)}
                 size="sm"
-                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap flex-shrink-0 min-w-fit ${
+                className={`text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 ${
                   selectedDifficulty === difficulty
                     ? "bg-blue-600 hover:bg-white hover:text-blue-600 text-white"
                     : "border-gray-300 text-gray-700 dark:text-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
