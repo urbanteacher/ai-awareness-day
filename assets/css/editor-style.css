@@ -1,0 +1,27 @@
+/**
+ * Block editor styles – matches theme typography and colours.
+ * Loaded in the block editor (WordPress 5.9+).
+ */
+@import url('https://fonts.cdnfonts.com/css/intel-clear');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: #262626;
+  line-height: 1.6;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3 {
+  font-family: 'Intel Clear', sans-serif;
+  color: #171717;
+}
+
+.editor-styles-wrapper a {
+  color: #171717;
+}
+
+.editor-styles-wrapper a:hover {
+  color: #0a0a0a;
+}

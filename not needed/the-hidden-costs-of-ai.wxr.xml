@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/"
+>
+	<channel>
+		<title>AI Awareness Day</title>
+		<link>https://example.com</link>
+		<description>AI Awareness Day Resources</description>
+		<pubDate>Thu, 19 Feb 2026 12:00:00 +0000</pubDate>
+		<language>en</language>
+		<wp:wxr_version>1.2</wp:wxr_version>
+		<wp:base_site_url>https://example.com</wp:base_site_url>
+		<wp:base_blog_url>https://example.com</wp:base_blog_url>
+
+		<item>
+			<title>The Hidden Costs of AI</title>
+			<link>https://example.com/?resource=the-hidden-costs-of-ai</link>
+			<pubDate>Thu, 19 Feb 2026 12:00:00 +0000</pubDate>
+			<dc:creator>admin</dc:creator>
+			<guid isPermaLink="false">https://example.com/?resource=the-hidden-costs-of-ai</guid>
+			<description></description>
+			<content:encoded><![CDATA[]]></content:encoded>
+			<excerpt:encoded><![CDATA[5-minute starter exploring how AI relies on data centres, electricity, and water – and what that means for the planet.]]></excerpt:encoded>
+			<wp:post_id>0</wp:post_id>
+			<wp:post_date>2026-02-19 12:00:00</wp:post_date>
+			<wp:post_date_gmt>2026-02-19 12:00:00</wp:post_date_gmt>
+			<wp:comment_status>closed</wp:comment_status>
+			<wp:ping_status>closed</wp:ping_status>
+			<wp:post_name>the-hidden-costs-of-ai</wp:post_name>
+			<wp:status>publish</wp:status>
+			<wp:post_parent>0</wp:post_parent>
+			<wp:menu_order>0</wp:menu_order>
+			<wp:post_type>resource</wp:post_type>
+			<wp:post_password></wp:post_password>
+			<wp:is_sticky>0</wp:is_sticky>
+
+			<category domain="resource_type" nicename="lesson-starter">Lesson Starter</category>
+			<category domain="resource_principle" nicename="future">Future</category>
+			<category domain="resource_duration" nicename="5-min-lesson-starters">Lesson Starters (5-min)</category>
+			<category domain="activity_type" nicename="discussion">Discussion</category>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_subtitle</wp:meta_key>
+				<wp:meta_value><![CDATA[Quick 5-minute starter on the environmental footprint of AI and the data centres that power it.]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_duration</wp:meta_key>
+				<wp:meta_value><![CDATA[5 min]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_level</wp:meta_key>
+				<wp:meta_value><![CDATA[beginner]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_status</wp:meta_key>
+				<wp:meta_value><![CDATA[published]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_preparation</wp:meta_key>
+				<wp:meta_value><![CDATA[
+["Load slides 1–4 on the projector or board.","Optional: have one short article or graphic ready showing AI energy use or data centres."]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_key_definitions</wp:meta_key>
+				<wp:meta_value><![CDATA[
+[{"term":"Data Centre","definition":"A facility housing thousands of computer servers that store and process data. AI relies on massive data centres that use large amounts of electricity (for computing) and water (for cooling).","key_stage_adapted":false},{"term":"Carbon Footprint","definition":"The total greenhouse gas emissions caused by an activity. AI's carbon footprint comes from electricity generation, hardware manufacturing, and cooling systems in data centres.","key_stage_adapted":false}]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_learning_objectives</wp:meta_key>
+				<wp:meta_value><![CDATA[
+[{"objective":"Understand that AI runs in physical data centres that use electricity and water","assessable":true},{"objective":"Recognise that AI has a carbon footprint linked to energy use and hardware","assessable":true},{"objective":"Consider how to balance the benefits of AI with its environmental costs","assessable":true}]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_instructions</wp:meta_key>
+				<wp:meta_value><![CDATA[
+[{"step":1,"action":"Display Slide 1 (title) and briefly introduce the idea that AI has hidden environmental costs.","duration":"","resource_ref":"Slide 1","student_action":"","teacher_tip":""},{"step":2,"action":"Show Slide 2 (debate or starter question) and ask students to discuss in pairs.","duration":"60 seconds","resource_ref":"Slide 2","student_action":"Pair discussion","teacher_tip":"Listen for students who assume digital activities are \"free\" for the planet because they are online."},{"step":3,"action":"Display Slide 3 (Did You Know facts about data centres and emissions) and read the key points aloud.","duration":"","resource_ref":"Slide 3","student_action":"","teacher_tip":"Use simple comparisons (e.g. number of kettles or homes powered) to make the energy use feel concrete."},{"step":4,"action":"Show Slide 4 (reflection or answers) and highlight practical ways to use AI more thoughtfully.","duration":"","resource_ref":"Slide 4","student_action":"","teacher_tip":"Keep the tone balanced: the goal is not to scare students away from AI, but to promote informed, responsible use."}]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_discussion_prompts</wp:meta_key>
+				<wp:meta_value><![CDATA[
+["If every AI query used a bit of extra energy and water, when is it worth using AI and when is it not?","What are some examples where AI might be worth the environmental cost – and where it might not be?","How could schools, companies, or governments reduce the carbon footprint of AI systems?"]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_discussion_question</wp:meta_key>
+				<wp:meta_value><![CDATA[If you knew that using AI every day had a real carbon footprint, how would that change the way you choose to use it?]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_suggested_answers</wp:meta_key>
+				<wp:meta_value><![CDATA[
+["I might still use AI for tasks where it genuinely helps my learning or saves lots of time, but avoid using it just for fun when I am bored.","I would think twice before generating lots of unnecessary images, long chats, or repeated queries that I do not really need.","I could combine tasks into fewer, better-planned prompts instead of sending many small ones.","Sometimes AI can reduce other emissions – for example, by optimising delivery routes or helping design more efficient buildings.","In other cases, AI adds extra energy use on top of activities we would have done anyway, without giving much extra benefit.","A key question is: does using AI here create enough value to justify the extra energy and resources it uses?","Large tech companies can choose to power data centres with renewable energy and improve cooling systems.","Governments can set standards or incentives for lower-carbon data centres and transparent reporting of AI energy use.","Users can push for more transparency and choose tools that are open about their environmental impact."]
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_teacher_notes</wp:meta_key>
+				<wp:meta_value><![CDATA[Students often assume that anything 'online' is weightless and has no impact on the physical world. This starter helps them see that AI runs in real buildings full of hardware that use electricity and water. Keep the tone balanced: the aim is not to make students feel guilty for every search or prompt, but to encourage critical thinking about when AI genuinely adds value. Use concrete comparisons (such as powering homes or boiling kettles) to make the numbers meaningful. Encourage questions about who is responsible for reducing AI's carbon footprint – from individuals through to companies and governments.]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_differentiation</wp:meta_key>
+				<wp:meta_value><![CDATA[
+{"support":"Provide a simple diagram of a data centre and a short glossary of key terms. Check understanding in small groups and allow extra thinking time.","stretch":"Invite students to research one real example of a data centre or AI service and estimate its potential carbon footprint using public sources.","send":"Use visual supports and step-by-step explanations. Offer alternative ways to respond (spoken, written, or using sentence starters) for students who find open discussion challenging."}
+				]]></wp:meta_value>
+			</wp:postmeta>
+
+			<wp:postmeta>
+				<wp:meta_key>_aiad_extensions</wp:meta_key>
+				<wp:meta_value><![CDATA[
+[{"activity":"Ask students to design a short \"eco‑smart AI use\" poster or slide for your classroom, with 3 practical tips for using AI responsibly.","type":"next_lesson"}]
+				]]></wp:meta_value>
+			</wp:postmeta>
+		</item>
+	</channel>
+</rss>

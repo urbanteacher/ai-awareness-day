@@ -1,0 +1,356 @@
+<?php
+/**
+ * Single template for a Resource.
+ *
+ * @package AI_Awareness_Day
+ */
+
+get_header();
+?>
+
+<main id="main" role="main" class="single-resource">
+    <section class="section" class="pt-100">
+        <div class="container" style="max-width: 800px;">
+            <?php while ( have_posts() ) : the_post();
+                $types         = get_the_terms( get_the_ID(), 'resource_type' );
+                $themes        = get_the_terms( get_the_ID(), 'resource_principle' );
+                $durations     = get_the_terms( get_the_ID(), 'resource_duration' );
+                $type_name     = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
+                $theme_name    = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
+                $theme_slug    = $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '';
+                $theme_badge_id  = $theme_slug !== '' ? absint( get_theme_mod( 'aiad_badge_' . $theme_slug, 0 ) ) : 0;
+                $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
+                $duration_name = '';
+                if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
+                    $duration_name = aiad_duration_badge_label( $durations[0] );
+                } elseif ( $durations && ! is_wp_error( $durations ) ) {
+                    $duration_name = $durations[0]->name;
+                }
+                ?>
+                <?php
+                $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
+                $activity_names = $activity_terms && ! is_wp_error( $activity_terms ) ? wp_list_pluck( $activity_terms, 'name' ) : array();
+                $subtitle_meta  = get_post_meta( get_the_ID(), '_aiad_subtitle', true );
+                $duration_str   = get_post_meta( get_the_ID(), '_aiad_duration', true );
+                $level          = get_post_meta( get_the_ID(), '_aiad_level', true );
+                $level_labels   = array( 'beginner' => __( 'Beginner', 'ai-awareness-day' ), 'intermediate' => __( 'Intermediate', 'ai-awareness-day' ), 'advanced' => __( 'Advanced', 'ai-awareness-day' ) );
+                ?>
+                <article id="post-<?php the_ID(); ?>" <?php post_class( 'resource-activity-card' ); ?>>
+                    <header class="resource-activity-header">
+                        <h1 class="resource-activity-title">
+                            <?php if ( $theme_badge_src ) : ?>
+                                <span class="principle-badge resource-activity-title-badge" aria-hidden="true">
+                                    <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" aria-hidden="true" />
+                                </span>
+                            <?php endif; ?>
+                            <?php the_title(); ?>
+                        </h1>
+                        <?php
+                        $overview = $subtitle_meta !== '' ? $subtitle_meta : ( has_excerpt() ? get_the_excerpt() : '' );
+                        if ( $overview !== '' ) :
+                            ?>
+                            <p class="resource-activity-overview"><?php echo esc_html( $overview ); ?></p>
+                        <?php endif; ?>
+                        <div class="resource-activity-tags" role="list">
+                            <?php if ( $type_name ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $type_name ); ?></span>
+                            <?php endif; ?>
+                            <?php if ( $theme_name ) : ?>
+                                <span class="resource-tag resource-tag--theme"><?php echo esc_html( $theme_name ); ?></span>
+                            <?php endif; ?>
+                            <?php if ( $duration_str !== '' ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $duration_str ); ?></span>
+                            <?php elseif ( $duration_name ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $duration_name ); ?></span>
+                            <?php endif; ?>
+                            <?php if ( $level !== '' && isset( $level_labels[ $level ] ) ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $level_labels[ $level ] ); ?></span>
+                            <?php endif; ?>
+                            <?php foreach ( $activity_names as $act_name ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $act_name ); ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </header>
+                    <?php if ( has_post_thumbnail() ) : ?>
+                        <figure style="margin: 2rem 0; border-radius: var(--border-radius); overflow: hidden;">
+                            <?php the_post_thumbnail( 'large', array( 'style' => 'width:100%;height:auto;display:block;' ) ); ?>
+                        </figure>
+                    <?php endif; ?>
+                    <div class="entry-content" style="font-size: 1.05rem; line-height: 1.8;">
+                        <?php the_content(); ?>
+                    </div>
+                    <?php
+                    $resource_id = get_the_ID();
+                    $key_definitions    = (array) get_post_meta( $resource_id, '_aiad_key_definitions', true );
+                    $learning_obj       = get_post_meta( $resource_id, '_aiad_learning_objectives', true );
+                    $instructions       = get_post_meta( $resource_id, '_aiad_instructions', true );
+                    // Unserialize or decode if stored as string (WXR import / legacy can use PHP serialized or JSON)
+                    if ( is_string( $learning_obj ) && $learning_obj !== '' ) {
+                        if ( is_serialized( $learning_obj ) ) {
+                            $learning_obj = maybe_unserialize( $learning_obj );
+                        } elseif ( in_array( $learning_obj[0], array( '[', '{' ), true ) ) {
+                            $decoded = json_decode( $learning_obj, true );
+                            if ( is_array( $decoded ) ) {
+                                $learning_obj = $decoded;
+                            }
+                        }
+                    }
+                    if ( is_string( $instructions ) && $instructions !== '' ) {
+                        if ( is_serialized( $instructions ) ) {
+                            $instructions = maybe_unserialize( $instructions );
+                        } elseif ( in_array( $instructions[0], array( '[', '{' ), true ) ) {
+                            $decoded = json_decode( $instructions, true );
+                            if ( is_array( $decoded ) ) {
+                                $instructions = $decoded;
+                            }
+                        }
+                    }
+                    $discussion_prompts = get_post_meta( $resource_id, '_aiad_discussion_prompts', true );
+                    $discussion_q       = get_post_meta( $resource_id, '_aiad_discussion_question', true );
+                    $suggested_answers  = get_post_meta( $resource_id, '_aiad_suggested_answers', true );
+                    $teacher_notes      = get_post_meta( $resource_id, '_aiad_teacher_notes', true );
+                    $prep_raw           = get_post_meta( $resource_id, '_aiad_preparation', true );
+                    $preparation        = is_array( $prep_raw ) ? array_values( array_filter( $prep_raw, function ( $v ) { return is_string( $v ) && trim( $v ) !== ''; } ) ) : array();
+                    $differentiation    = (array) get_post_meta( $resource_id, '_aiad_differentiation', true );
+                    $ext_raw            = get_post_meta( $resource_id, '_aiad_extensions', true );
+                    $extensions         = is_array( $ext_raw ) ? array_values( array_filter( $ext_raw, function ( $e ) { return is_array( $e ) && trim( (string) ( isset( $e['activity'] ) ? $e['activity'] : '' ) ) !== ''; } ) ) : array();
+                    $res_raw            = get_post_meta( $resource_id, '_aiad_resources', true );
+                    $resources_list     = is_array( $res_raw ) ? array_values( array_filter( $res_raw, function ( $r ) { return is_array( $r ) && ( trim( (string) ( isset( $r['name'] ) ? $r['name'] : '' ) ) !== '' || trim( (string) ( isset( $r['url'] ) ? $r['url'] : '' ) ) !== '' ); } ) ) : array();
+                    $learning_obj  = aiad_normalise_learning_objectives( $learning_obj );
+                    $instructions   = aiad_normalise_instructions( $instructions );
+                    if ( is_string( $discussion_prompts ) ) {
+                        $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
+                    }
+                    $discussion_prompts = is_array( $discussion_prompts ) ? $discussion_prompts : array();
+                    if ( is_string( $suggested_answers ) ) {
+                        $suggested_answers = $suggested_answers !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $suggested_answers ) ) ) ) : array();
+                    }
+                    $suggested_answers = is_array( $suggested_answers ) ? $suggested_answers : array();
+                    $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || ! empty( $suggested_answers ) || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
+                    ?>
+                    <?php if ( ! empty( $preparation ) ) : ?>
+                        <section class="resource-section resource-section--preparation" class="mt-2rem" aria-labelledby="section-preparation">
+                            <h2 id="section-preparation" class="resource-section__title">
+                                <span class="resource-section__icon resource-section__icon--list" aria-hidden="true"></span>
+                                <?php esc_html_e( 'Preparation', 'ai-awareness-day' ); ?>
+                            </h2>
+                            <ul class="resource-list resource-list--preparation">
+                                <?php foreach ( $preparation as $item ) : ?>
+                                    <?php if ( is_string( $item ) && $item !== '' ) : ?>
+                                        <li><?php echo esc_html( $item ); ?></li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </section>
+                    <?php endif; ?>
+                    <div class="resource-sections resource-sections--rows" style="margin-top: 2.5rem;" id="resource-content-sections">
+                        <?php if ( $has_sections ) : ?>
+                            <?php /* Row 1: Learning objectives | Instructions */ ?>
+                            <div class="resource-sections-row">
+                                <div class="resource-section-cell resource-section-cell--left">
+                                    <?php if ( ! empty( $learning_obj ) ) : ?>
+                                        <section class="resource-section resource-section--objectives" aria-labelledby="section-objectives">
+                                            <h2 id="section-objectives" class="resource-section__title">
+                                                <span class="resource-section__icon resource-section__icon--target" aria-hidden="true"></span>
+                                                <?php esc_html_e( 'Learning objectives', 'ai-awareness-day' ); ?>
+                                            </h2>
+                                            <ul class="resource-list resource-list--objectives">
+                                                <?php foreach ( $learning_obj as $ob ) : ?>
+                                                    <?php
+                                                    $obj_text = is_array( $ob ) ? ( $ob['objective'] ?? '' ) : (string) $ob;
+                                                    $assess  = is_array( $ob ) && ! empty( $ob['assessable'] );
+                                                    if ( $obj_text === '' ) {
+                                                        continue;
+                                                    }
+                                                    ?>
+                                                    <li><?php echo wp_kses_post( $obj_text ); ?><?php if ( $assess ) : ?> <span class="resource-badge resource-badge--assessable" aria-label="<?php esc_attr_e( 'Assessable', 'ai-awareness-day' ); ?>"><?php esc_html_e( 'Assessable', 'ai-awareness-day' ); ?></span><?php endif; ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </section>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="resource-section-cell resource-section-cell--right">
+                                    <?php if ( ! empty( $instructions ) ) : ?>
+                                        <section class="resource-section resource-section--instructions" aria-labelledby="section-instructions">
+                                            <h2 id="section-instructions" class="resource-section__title">
+                                                <span class="resource-section__icon resource-section__icon--list" aria-hidden="true"></span>
+                                                <?php esc_html_e( 'Instructions', 'ai-awareness-day' ); ?>
+                                            </h2>
+                                            <ol class="resource-list resource-list--ordered resource-list--instructions">
+                                                <?php foreach ( $instructions as $step ) : ?>
+                                                    <?php
+                                                    $action   = is_array( $step ) ? ( $step['action'] ?? '' ) : (string) $step;
+                                                    $duration = is_array( $step ) ? ( $step['duration'] ?? '' ) : '';
+                                                    $res_ref  = is_array( $step ) ? ( $step['resource_ref'] ?? '' ) : '';
+                                                    $stu_act  = is_array( $step ) ? ( $step['student_action'] ?? '' ) : '';
+                                                    $tip      = is_array( $step ) ? ( $step['teacher_tip'] ?? '' ) : '';
+                                                    if ( $action === '' ) {
+                                                        continue;
+                                                    }
+                                                    ?>
+                                                    <li class="resource-instruction-step">
+                                                        <span class="resource-instruction-action"><?php echo wp_kses_post( $action ); ?></span>
+                                                        <?php if ( $duration !== '' ) : ?>
+                                                            <span class="resource-instruction-duration"><?php echo esc_html( $duration ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( $res_ref !== '' ) : ?>
+                                                            <span class="resource-instruction-ref"><?php echo esc_html( $res_ref ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( $stu_act !== '' ) : ?>
+                                                            <span class="resource-instruction-student"><?php echo esc_html( $stu_act ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( $tip !== '' ) : ?>
+                                                            <p class="resource-instruction-tip"><?php echo wp_kses_post( nl2br( $tip ) ); ?></p>
+                                                        <?php endif; ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ol>
+                                        </section>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <?php
+                            $diff_support = isset( $differentiation['support'] ) ? $differentiation['support'] : '';
+                            $diff_stretch = isset( $differentiation['stretch'] ) ? $differentiation['stretch'] : '';
+                            $diff_send    = isset( $differentiation['send'] ) ? $differentiation['send'] : '';
+                            $has_diff     = $diff_support !== '' || $diff_stretch !== '' || $diff_send !== '';
+                            ?>
+                            <?php /* Row 2: Key definitions | Differentiation */ ?>
+                            <?php if ( ! empty( $key_definitions ) || $has_diff ) : ?>
+                                <div class="resource-sections-row">
+                                    <div class="resource-section-cell resource-section-cell--left">
+                                        <?php if ( ! empty( $key_definitions ) ) : ?>
+                                            <section class="resource-section resource-section--definitions" aria-labelledby="section-definitions">
+                                                <h2 id="section-definitions" class="resource-section__title">
+                                                    <span class="resource-section__icon resource-section__icon--info" aria-hidden="true"></span>
+                                                    <?php esc_html_e( 'Key definitions', 'ai-awareness-day' ); ?>
+                                                </h2>
+                                                <dl class="resource-definitions">
+                                                    <?php foreach ( $key_definitions as $item ) : ?>
+                                                        <?php if ( is_array( $item ) && ( isset( $item['term'] ) || isset( $item['definition'] ) ) ) : ?>
+                                                            <?php
+                                                            $term      = isset( $item['term'] ) ? $item['term'] : '';
+                                                            $def       = isset( $item['definition'] ) ? $item['definition'] : '';
+                                                            $ks_adapted = ! empty( $item['key_stage_adapted'] );
+                                                            ?>
+                                                            <?php if ( $term !== '' || $def !== '' ) : ?>
+                                                                <div class="resource-definition">
+                                                                    <?php if ( $term !== '' ) : ?>
+                                                                        <dt><?php echo esc_html( $term ); ?><?php if ( $ks_adapted ) : ?> <span class="resource-badge resource-badge--ks-adapted" aria-label="<?php esc_attr_e( 'Key stage adapted', 'ai-awareness-day' ); ?>"><?php esc_html_e( 'Key stage adapted', 'ai-awareness-day' ); ?></span><?php endif; ?></dt>
+                                                                    <?php endif; ?>
+                                                                    <?php if ( $def !== '' ) : ?>
+                                                                        <dd><?php echo wp_kses_post( nl2br( $def ) ); ?></dd>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </dl>
+                                            </section>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="resource-section-cell resource-section-cell--right">
+                                        <?php if ( $has_diff ) : ?>
+                                            <section class="resource-section resource-section--differentiation" aria-labelledby="section-differentiation">
+                                                <h2 id="section-differentiation" class="resource-section__title">
+                                                    <span class="resource-section__icon resource-section__icon--lightbulb" aria-hidden="true"></span>
+                                                    <?php esc_html_e( 'Differentiation', 'ai-awareness-day' ); ?>
+                                                </h2>
+                                                <?php if ( $diff_support !== '' ) : ?>
+                                                    <p class="resource-diff-label"><?php esc_html_e( 'Support', 'ai-awareness-day' ); ?></p>
+                                                    <p class="resource-diff-content"><?php echo wp_kses_post( nl2br( $diff_support ) ); ?></p>
+                                                <?php endif; ?>
+                                                <?php if ( $diff_stretch !== '' ) : ?>
+                                                    <p class="resource-diff-label"><?php esc_html_e( 'Stretch', 'ai-awareness-day' ); ?></p>
+                                                    <p class="resource-diff-content"><?php echo wp_kses_post( nl2br( $diff_stretch ) ); ?></p>
+                                                <?php endif; ?>
+                                                <?php if ( $diff_send !== '' ) : ?>
+                                                    <p class="resource-diff-label"><?php esc_html_e( 'SEND', 'ai-awareness-day' ); ?></p>
+                                                    <p class="resource-diff-content"><?php echo wp_kses_post( nl2br( $diff_send ) ); ?></p>
+                                                <?php endif; ?>
+                                            </section>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ( ! empty( $extensions ) ) : ?>
+                                <div class="resource-sections-row resource-sections-row--full">
+                                    <div class="resource-section-cell resource-section-cell--full">
+                                        <section class="resource-section resource-section--extensions" aria-labelledby="section-extensions">
+                                            <h2 id="section-extensions" class="resource-section__title">
+                                                <span class="resource-section__icon resource-section__icon--lightbulb" aria-hidden="true"></span>
+                                                <?php esc_html_e( 'Extension activities', 'ai-awareness-day' ); ?>
+                                            </h2>
+                                            <ul class="resource-list resource-list--extensions">
+                                                <?php foreach ( $extensions as $ext ) : ?>
+                                                    <?php
+                                                    $act = is_array( $ext ) ? ( $ext['activity'] ?? '' ) : '';
+                                                    $typ = is_array( $ext ) && isset( $ext['type'] ) ? $ext['type'] : '';
+                                                    if ( $act === '' ) {
+                                                        continue;
+                                                    }
+                                                    $type_labels = array( 'homework' => __( 'Homework', 'ai-awareness-day' ), 'next_lesson' => __( 'Next lesson', 'ai-awareness-day' ), 'cross_curricular' => __( 'Cross-curricular', 'ai-awareness-day' ), 'independent' => __( 'Independent', 'ai-awareness-day' ) );
+                                                    ?>
+                                                    <li><?php echo wp_kses_post( $act ); ?><?php if ( $typ !== '' && isset( $type_labels[ $typ ] ) ) : ?> <span class="resource-badge"><?php echo esc_html( $type_labels[ $typ ] ); ?></span><?php endif; ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </section>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ( ! empty( $resources_list ) ) : ?>
+                                <div class="resource-sections-row resource-sections-row--full">
+                                    <div class="resource-section-cell resource-section-cell--full">
+                                        <section class="resource-section resource-section--resources" aria-labelledby="section-resources">
+                                            <h2 id="section-resources" class="resource-section__title">
+                                                <span class="resource-section__icon resource-section__icon--info" aria-hidden="true"></span>
+                                                <?php esc_html_e( 'Resources', 'ai-awareness-day' ); ?>
+                                            </h2>
+                                            <ul class="resource-list resource-list--resources">
+                                                <?php foreach ( $resources_list as $res ) : ?>
+                                                    <?php
+                                                    $rname = is_array( $res ) ? ( $res['name'] ?? '' ) : '';
+                                                    $rtype = is_array( $res ) && isset( $res['type'] ) ? $res['type'] : '';
+                                                    $rurl  = is_array( $res ) && isset( $res['url'] ) ? $res['url'] : '';
+                                                    $r_type_labels = array( 'slides' => __( 'Slides', 'ai-awareness-day' ), 'worksheet' => __( 'Worksheet', 'ai-awareness-day' ), 'handout' => __( 'Handout', 'ai-awareness-day' ), 'video' => __( 'Video', 'ai-awareness-day' ), 'link' => __( 'Link', 'ai-awareness-day' ), 'other' => __( 'Other', 'ai-awareness-day' ) );
+                                                    ?>
+                                                    <li>
+                                                        <?php if ( $rurl !== '' ) : ?><a href="<?php echo esc_url( $rurl ); ?>" target="_blank" rel="noopener"><?php endif; ?>
+                                                        <?php echo $rname !== '' ? esc_html( $rname ) : esc_html__( 'Resource', 'ai-awareness-day' ); ?>
+                                                        <?php if ( $rtype !== '' && isset( $r_type_labels[ $rtype ] ) ) : ?> <span class="resource-badge"><?php echo esc_html( $r_type_labels[ $rtype ] ); ?></span><?php endif; ?>
+                                                        <?php if ( $rurl !== '' ) : ?></a><?php endif; ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </section>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        <?php else : ?>
+                            <p class="resource-sections-empty" style="color: var(--text-muted, #6b7280); font-size: 0.95rem;">
+                                <?php esc_html_e( 'Add Preparation, Key definitions, Learning objectives, Instructions, Discussion prompts and Teacher notes in the "Resource content sections" box when editing this resource.', 'ai-awareness-day' ); ?>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                    $download_url = get_post_meta( get_the_ID(), '_resource_download_url', true );
+                    $download_label = $download_url && function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : __( 'Download', 'ai-awareness-day' );
+                    ?>
+                    <footer class="resource-activity-footer">
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'resource' ) ); ?>" class="resource-footer-btn resource-footer-btn--secondary"><?php esc_html_e( 'Back to Resources', 'ai-awareness-day' ); ?></a>
+                        <?php if ( $download_url ) : ?>
+                            <a href="<?php echo esc_url( $download_url ); ?>" class="resource-footer-btn resource-footer-btn--primary resource-download-link" data-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>" download target="_blank" rel="noopener">
+                                <?php echo esc_html( $download_label ); ?>
+                            </a>
+                        <?php endif; ?>
+                    </footer>
+                </article>
+            <?php endwhile; ?>
+        </div>
+    </section>
+</main>
+
+<?php get_footer(); ?>

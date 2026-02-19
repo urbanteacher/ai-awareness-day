@@ -1,0 +1,38 @@
+# Run WordPress with the AI Awareness Day theme
+# Usage: docker compose up -d
+# Then open http://localhost:8080 and complete WordPress setup.
+# In Appearance → Themes, activate "AI Awareness Day".
+
+services:
+  wordpress:
+    image: wordpress:6.5-php8.2-apache
+    ports:
+      - "9090:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      # Mount this theme into WordPress
+      - .:/var/www/html/wp-content/themes/ai-awareness-day
+      # Persist uploads so images survive container restarts
+      - wp_uploads:/var/www/html/wp-content/uploads
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - wp_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  wp_data:
+  wp_uploads:
