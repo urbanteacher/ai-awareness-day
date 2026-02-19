@@ -516,9 +516,9 @@ h1, h2, h3, h4, h5, h6 {
 
 #youtube .video-wrapper {
   position: relative;
-  width: 100%;
-  max-width: 450px;
-  padding-bottom: 56.25%;
+  width: 50%;
+  max-width: 50%;
+  padding-bottom: 28.125%; /* 56.25% of 50% for 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
 }
@@ -2659,3 +2659,5 @@ a.duration-badge:hover {
 }
 .pt-100 { padding-top: 100px; }
 .mt-2rem { margin-top: 2rem; }
+.mt-1-5rem { margin-top: 1.5rem; }
+.mb-2rem { margin-bottom: 2rem; }

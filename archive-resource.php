@@ -21,7 +21,7 @@ get_header();
             $theme_terms = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
             if ( $theme_terms && ! is_wp_error( $theme_terms ) ) :
                 ?>
-                <div class="resources-theme-badges fade-up" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+                <div class="resources-theme-badges fade-up mt-1-5rem mb-2rem">
                     <div class="themes-links">
                         <?php foreach ( $theme_terms as $term ) :
                             $url = add_query_arg( 'principle', $term->slug, $resources_url );
