@@ -23,7 +23,11 @@
                 }
                 $header_logo_url = $header_logo_id ? wp_get_attachment_image_url( $header_logo_id, 'full' ) : '';
                 if ( $header_logo_url ) : ?>
-                    <img src="<?php echo esc_url( $header_logo_url ); ?>" alt="<?php echo esc_attr( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>" class="site-logo__img" />
+                    <img src="<?php echo esc_url( $header_logo_url ); ?>" alt="<?php echo esc_attr( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>" class="site-logo__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <span class="site-logo__text" style="display: none;">
+                        <?php echo esc_html( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>
+                        <span class="site-logo__dot">.</span>
+                    </span>
                 <?php else : ?>
                     <span class="site-logo__text">
                         <?php echo esc_html( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>

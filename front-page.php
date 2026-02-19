@@ -30,7 +30,8 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     $hero_logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
                     $hero_logo_url = $hero_logo_id ? wp_get_attachment_image_url( $hero_logo_id, 'full' ) : '';
                     if ( $hero_logo_url ) :
-                        ?><img src="<?php echo esc_url( $hero_logo_url ); ?>" alt="<?php echo esc_attr( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>" class="hero-logo__img" /><?php
+                        ?><img src="<?php echo esc_url( $hero_logo_url ); ?>" alt="<?php echo esc_attr( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>" class="hero-logo__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+                        <span class="hero-logo__placeholder" aria-hidden="true" style="display: none;"><?php esc_html_e( 'Logo', 'ai-awareness-day' ); ?></span><?php
                     else :
                         ?><span class="hero-logo__placeholder" aria-hidden="true"><?php esc_html_e( 'Logo', 'ai-awareness-day' ); ?></span><?php
                     endif;
@@ -48,16 +49,35 @@ $text_alignment_class = aiad_get_text_alignment_class();
          SECTION 2: CAMPAIGN
          ============================================ -->
     <?php if ( aiad_is_section_visible( 'campaign' ) ) : ?>
-    <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="campaign">
+    <?php
+    $defaults = aiad_get_customizer_defaults();
+    $campaign_embed_src = esc_url( get_theme_mod( 'aiad_campaign_linkedin_embed_src', $defaults['aiad_campaign_linkedin_embed_src'] ) );
+    $campaign_has_embed = ! empty( $campaign_embed_src );
+    ?>
+    <section class="section <?php echo esc_attr( $text_alignment_class ); ?> <?php echo $campaign_has_embed ? 'campaign--split' : ''; ?>" id="campaign">
         <div class="container">
-            <div class="campaign-content fade-up">
-                <span class="section-label"><?php esc_html_e( 'Campaign', 'ai-awareness-day' ); ?></span>
-                <?php
-                $defaults = aiad_get_customizer_defaults();
-                ?>
-                <h2 class="section-title"><?php echo esc_html( aiad_get_theme_mod_default( 'aiad_campaign_title', $defaults['aiad_campaign_title'] ) ); ?></h2>
-                <p class="section-desc"><?php echo wp_kses_post( aiad_get_theme_mod_default( 'aiad_campaign_text', $defaults['aiad_campaign_text'] ) ); ?></p>
-                <p class="section-desc"><?php echo wp_kses_post( aiad_get_theme_mod_default( 'aiad_campaign_text_2', $defaults['aiad_campaign_text_2'] ) ); ?></p>
+            <div class="campaign-split<?php echo $campaign_has_embed ? '' : ' campaign-split--single'; ?>">
+                <div class="campaign-content fade-up">
+                    <span class="section-label"><?php esc_html_e( 'Campaign', 'ai-awareness-day' ); ?></span>
+                    <h2 class="section-title"><?php echo esc_html( aiad_get_theme_mod_default( 'aiad_campaign_title', $defaults['aiad_campaign_title'] ) ); ?></h2>
+                    <p class="section-desc"><?php echo wp_kses_post( aiad_get_theme_mod_default( 'aiad_campaign_text', $defaults['aiad_campaign_text'] ) ); ?></p>
+                    <p class="section-desc"><?php echo wp_kses_post( aiad_get_theme_mod_default( 'aiad_campaign_text_2', $defaults['aiad_campaign_text_2'] ) ); ?></p>
+                </div>
+                <?php if ( $campaign_has_embed ) : ?>
+                <div class="campaign-embed fade-up">
+                    <div class="campaign-embed__wrapper">
+                        <iframe
+                            src="<?php echo esc_url( $campaign_embed_src ); ?>"
+                            height="399"
+                            width="504"
+                            frameborder="0"
+                            allowfullscreen
+                            title="<?php esc_attr_e( 'Embedded LinkedIn post', 'ai-awareness-day' ); ?>"
+                            loading="lazy"
+                        ></iframe>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
 
             <!-- Momentum Section (Reach) -->
@@ -104,7 +124,10 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         <div class="partner-card fade-up stagger-<?php echo $index + 1; ?> <?php echo $is_hidden ? 'partner-card--hidden' : ''; ?>" data-partner-index="<?php echo $index; ?>">
                             <div class="partner-logo">
                                 <?php if ( $partner['logo'] ) : ?>
-                                    <img src="<?php echo esc_url( $partner['logo'] ); ?>" alt="<?php echo esc_attr( $partner['name'] ); ?>" class="partner-logo__img" />
+                                    <img src="<?php echo esc_url( $partner['logo'] ); ?>" alt="<?php echo esc_attr( $partner['name'] ); ?>" class="partner-logo__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                    <div class="partner-logo__placeholder" style="display: none;">
+                                        <span class="partner-logo__placeholder-text"><?php echo esc_html( substr( $partner['name'], 0, 2 ) ); ?></span>
+                                    </div>
                                 <?php else : ?>
                                     <div class="partner-logo__placeholder">
                                         <span class="partner-logo__placeholder-text"><?php echo esc_html( substr( $partner['name'], 0, 2 ) ); ?></span>
@@ -208,13 +231,21 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     );
                     $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
                     $badge_src = $badge_id ? wp_get_attachment_image_url( $badge_id, 'medium' ) : '';
+                    $has_badge_image = ! empty( $badge_src ) && $badge_id > 0;
                     ?>
                 <div class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>">
-                    <?php if ( $badge_src ) : ?>
-                        <div class="principle-badge">
-                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" aria-hidden="true" />
-                        </div>
-                    <?php endif; ?>
+                    <div class="principle-badge">
+                        <?php if ( $has_badge_image ) : ?>
+                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <div class="principle-badge__placeholder" aria-hidden="true" style="display: none;">
+                                <span class="principle-badge__placeholder-text"><?php echo esc_html( strtoupper( substr( $p['title'], 0, 1 ) ) ); ?></span>
+                            </div>
+                        <?php else : ?>
+                            <div class="principle-badge__placeholder" aria-hidden="true">
+                                <span class="principle-badge__placeholder-text"><?php echo esc_html( strtoupper( substr( $p['title'], 0, 1 ) ) ); ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     <h3><?php echo esc_html( $p['title'] ); ?></h3>
                     <p class="section-desc"><?php echo esc_html( $p['desc'] ); ?></p>
                 </div>
@@ -274,21 +305,38 @@ $text_alignment_class = aiad_get_text_alignment_class();
 
             <div class="toolkit-grid">
                 <?php
+                $newsletter_url     = esc_url_raw( get_theme_mod( 'aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ) );
+                $sample_letters_url = esc_url_raw( get_theme_mod( 'aiad_sample_letters_url', 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260219%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T134149Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=63e9e703294592ac0831c1514a8cb35998b38153e36dd02ad109ab57226d2625' ) );
                 $toolkit_items = array(
                     array(
                         'title' => __( 'Implementation Guide', 'ai-awareness-day' ),
                         'desc'  => __( 'Step-by-step instructions to run AI Awareness Day in your school.', 'ai-awareness-day' ),
                         'icon'  => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>',
+                        'url'   => '',
                     ),
                     array(
                         'title' => __( 'Sample Letters & Communications', 'ai-awareness-day' ),
                         'desc'  => __( 'Pre-written letters for parents, governors, and local press.', 'ai-awareness-day' ),
                         'icon'  => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
+                        'url'   => $sample_letters_url,
+                    ),
+                    array(
+                        'title' => __( 'Latest Newsletter', 'ai-awareness-day' ),
+                        'desc'  => __( 'Click to read the latest AI Awareness Day newsletter and updates.', 'ai-awareness-day' ),
+                        'icon'  => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
+                        'url'   => $newsletter_url,
                     ),
                 );
 
-                foreach ( $toolkit_items as $index => $item ) : ?>
+                foreach ( $toolkit_items as $index => $item ) :
+                    $card_url = ! empty( $item['url'] ) ? $item['url'] : '';
+                    $is_link  = $card_url !== '';
+                    ?>
+                <?php if ( $is_link ) : ?>
+                <a href="<?php echo esc_url( $card_url ); ?>" class="toolkit-card toolkit-card--link fade-up stagger-<?php echo $index + 1; ?>" target="_blank" rel="noopener noreferrer">
+                <?php else : ?>
                 <div class="toolkit-card fade-up stagger-<?php echo $index + 1; ?>">
+                <?php endif; ?>
                     <div class="toolkit-header">
                         <div class="toolkit-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -298,7 +346,11 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         <h3><?php echo esc_html( $item['title'] ); ?></h3>
                     </div>
                     <p class="section-desc"><?php echo esc_html( $item['desc'] ); ?></p>
+                <?php if ( $is_link ) : ?>
+                </a>
+                <?php else : ?>
                 </div>
+                <?php endif; ?>
                 <?php endforeach; ?>
             </div>
 
@@ -435,13 +487,17 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             $url = add_query_arg( 'principle', $term->slug, $resources_url );
                             $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $term->slug, 0 ) );
                             $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
+                            $has_theme_badge = ! empty( $theme_badge_src ) && $theme_badge_id > 0;
                             ?>
                             <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
-                                <?php if ( $theme_badge_src ) : ?>
-                                    <span class="theme-link__badge">
-                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" aria-hidden="true" />
-                                    </span>
-                                <?php endif; ?>
+                                <span class="theme-link__badge">
+                                    <?php if ( $has_theme_badge ) : ?>
+                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                        <span class="theme-link__badge-placeholder" aria-hidden="true" style="display: none;"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
+                                    <?php else : ?>
+                                        <span class="theme-link__badge-placeholder" aria-hidden="true"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
+                                    <?php endif; ?>
+                                </span>
                                 <span class="theme-link__label"><?php echo esc_html( $term->name ); ?></span>
                             </a>
                         <?php endforeach; ?>
@@ -553,9 +609,6 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                     <?php if ( $has_overlay ) : ?>
                                         <div class="resource-card__image-overlay" aria-hidden="true">
                                             <div class="resource-card__image-top">
-                                                <?php if ( $pill_duration ) : ?>
-                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html( $pill_duration ); ?></span>
-                                                <?php endif; ?>
                                                 <?php if ( $theme_name ) : ?>
                                                     <?php
                                                     $theme_slug = strtolower( $theme_name );
@@ -565,6 +618,9 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                                     }
                                                     ?>
                                                     <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
+                                                <?php endif; ?>
+                                                <?php if ( $pill_duration ) : ?>
+                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html( $pill_duration ); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -662,23 +718,23 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             <?php if ( $org_name || $meta_label ) : ?>
                                 <div class="resource-card__image-overlay" aria-hidden="true">
                                     <div class="resource-card__image-top">
+                                        <?php if ( $theme_name ) : ?>
+                                            <?php
+                                            $theme_slug = strtolower( $theme_name );
+                                            $pill_class = 'resource-card__pill--theme';
+                                            if ( in_array( $theme_slug, array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true ) ) {
+                                                $pill_class .= ' resource-card__pill--' . $theme_slug;
+                                            }
+                                            ?>
+                                            <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
+                                        <?php endif; ?>
                                         <?php if ( $org_name ) : ?>
                                             <span class="resource-card__pill resource-card__pill--org"><?php echo esc_html( $org_name ); ?></span>
                                         <?php endif; ?>
-                                            <?php if ( $theme_name ) : ?>
-                                                <?php
-                                                $theme_slug = strtolower( $theme_name );
-                                                $pill_class = 'resource-card__pill--theme';
-                                                if ( in_array( $theme_slug, array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true ) ) {
-                                                    $pill_class .= ' resource-card__pill--' . $theme_slug;
-                                                }
-                                                ?>
-                                                <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="resource-card__image-title"><?php the_title(); ?></div>
                                     </div>
-                                <?php endif; ?>
+                                    <div class="resource-card__image-title"><?php the_title(); ?></div>
+                                </div>
+                            <?php endif; ?>
                             </a>
                             <div class="resource-card__body">
                                 <?php if ( $org_name || $type_name || $theme_name ) : ?>
@@ -710,6 +766,29 @@ $text_alignment_class = aiad_get_text_alignment_class();
         <?php
         wp_reset_postdata();
     endif;
+    endif;
+
+    $linkedin_post_url = esc_url_raw( get_theme_mod( 'aiad_linkedin_post_url', '' ) );
+    if ( ! empty( $linkedin_post_url ) ) :
+        ?>
+    <!-- LinkedIn post card -->
+    <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="linkedin-post" aria-labelledby="linkedin-post-title">
+        <div class="container">
+            <div class="linkedin-card-wrapper fade-up">
+                <a href="<?php echo esc_url( $linkedin_post_url ); ?>" class="linkedin-card" target="_blank" rel="noopener noreferrer">
+                    <span class="linkedin-card__icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </span>
+                    <div class="linkedin-card__content">
+                        <h2 id="linkedin-post-title" class="linkedin-card__title"><?php esc_html_e( 'Latest from LinkedIn', 'ai-awareness-day' ); ?></h2>
+                        <p class="linkedin-card__desc"><?php esc_html_e( 'See our latest post and join the conversation.', 'ai-awareness-day' ); ?></p>
+                        <span class="linkedin-card__cta"><?php esc_html_e( 'View post on LinkedIn', 'ai-awareness-day' ); ?> →</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+        <?php
     endif;
     ?>
 

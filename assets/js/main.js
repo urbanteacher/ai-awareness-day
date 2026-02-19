@@ -332,7 +332,6 @@
         '.principle-badge__img',
         '.display-board-real img',
         '.display-board-examples__item img',
-        '.theme-link__badge-img',
         '.theme-card img',
     ].join(', ');
 
@@ -341,6 +340,8 @@
 
     themeImages.forEach((img) => {
         if (!img.src || img.classList.contains('is-broken')) return;
+        // Skip theme-link badge images - they have their own placeholder handling
+        if (img.classList.contains('theme-link__badge-img')) return;
 
         img.addEventListener('error', function onImgError() {
             this.classList.add('is-broken');

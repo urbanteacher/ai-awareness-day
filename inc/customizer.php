@@ -21,6 +21,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_campaign_section( $wp_customize );
     aiad_register_badges_section( $wp_customize );
     aiad_register_youtube_section( $wp_customize );
+    aiad_register_toolkit_section( $wp_customize );
     aiad_register_display_board_section( $wp_customize );
     aiad_register_contact_section( $wp_customize );
     aiad_register_social_section( $wp_customize );
@@ -168,6 +169,18 @@ function aiad_register_campaign_section( WP_Customize_Manager $wp_customize ): v
         'section' => 'aiad_campaign',
         'type'    => 'textarea',
     ) );
+
+    $wp_customize->add_setting( 'aiad_campaign_linkedin_embed_src', array(
+        'default'           => $defaults['aiad_campaign_linkedin_embed_src'],
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_campaign_linkedin_embed_src', array(
+        'label'       => __( 'LinkedIn embed URL', 'ai-awareness-day' ),
+        'description' => __( 'Optional. Paste the embed src URL of a LinkedIn post to show it next to the campaign text (e.g. from LinkedIn’s "Embed this post"). Leave empty for text only.', 'ai-awareness-day' ),
+        'section'     => 'aiad_campaign',
+        'type'        => 'url',
+    ) );
 }
 
 /**
@@ -277,6 +290,43 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
         'label'   => __( 'Section title', 'ai-awareness-day' ),
         'section' => 'aiad_youtube',
         'type'    => 'text',
+    ) );
+}
+
+/**
+ * Register Toolkit section (newsletter link for toolkit cards).
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): void {
+    $wp_customize->add_section( 'aiad_toolkit', array(
+        'title'       => __( 'Toolkit Section', 'ai-awareness-day' ),
+        'description' => __( 'Settings for the Plug-and-Play Toolkit section on the front page.', 'ai-awareness-day' ),
+        'priority'    => 32,
+    ) );
+
+    $wp_customize->add_setting( 'aiad_newsletter_url', array(
+        'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_newsletter_url', array(
+        'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
+        'description' => __( 'URL for the "Latest Newsletter" toolkit card. When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
+        'section'     => 'aiad_toolkit',
+        'type'        => 'url',
+    ) );
+
+    $wp_customize->add_setting( 'aiad_sample_letters_url', array(
+        'default'           => 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260219%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T134149Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=63e9e703294592ac0831c1514a8cb35998b38153e36dd02ad109ab57226d2625',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_sample_letters_url', array(
+        'label'       => __( 'Sample Letters & Communications URL', 'ai-awareness-day' ),
+        'description' => __( 'URL for the "Sample Letters & Communications" card (e.g. SLT approval letter PDF). When set, the card is clickable. If your link expires, paste a new one here.', 'ai-awareness-day' ),
+        'section'     => 'aiad_toolkit',
+        'type'        => 'url',
     ) );
 }
 
@@ -422,6 +472,24 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'label'   => __( 'Instagram URL', 'ai-awareness-day' ),
         'section' => 'aiad_social',
         'type'    => 'url',
+    ) );
+
+    $wp_customize->add_setting( 'aiad_linkedin_post_url', array(
+        'default'           => $defaults['aiad_linkedin_post_url'],
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+        'validate_callback' => function( $validity, $value ) {
+            if ( ! empty( $value ) && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
+                $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
+            }
+            return $validity;
+        },
+    ) );
+    $wp_customize->add_control( 'aiad_linkedin_post_url', array(
+        'label'       => __( 'Featured LinkedIn post URL', 'ai-awareness-day' ),
+        'description' => __( 'Optional. Paste the URL of a LinkedIn post to show a "Latest from LinkedIn" card on the front page. Leave empty to hide the card.', 'ai-awareness-day' ),
+        'section'     => 'aiad_social',
+        'type'        => 'url',
     ) );
 }
 

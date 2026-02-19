@@ -1,0 +1,54 @@
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+vendor/
+
+# WordPress core (not needed - we're only deploying theme files)
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# Development/backup files
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# Documentation and history (moved to not needed/)
+.history/
+not needed/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build files (if any)
+dist/
+build/

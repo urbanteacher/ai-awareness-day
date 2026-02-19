@@ -202,6 +202,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day (4th June 2026) is a new nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
         'aiad_campaign_text_2'    => __( 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.', 'ai-awareness-day' ),
+        'aiad_campaign_linkedin_embed_src' => 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7424392530743447552?compact=1',
         'aiad_youtube_url'        => '',
         'aiad_youtube_title'      => __( 'Watch', 'ai-awareness-day' ),
         'aiad_contact_title'      => __( 'Get Involved', 'ai-awareness-day' ),
@@ -209,6 +210,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_contact_email'      => '',
         'aiad_linkedin'           => 'https://www.linkedin.com/company/110126438/',
         'aiad_instagram'          => '#',
+        'aiad_linkedin_post_url'   => '',
     );
 }
 
