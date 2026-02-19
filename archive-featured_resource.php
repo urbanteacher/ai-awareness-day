@@ -10,7 +10,7 @@ get_header();
 ?>
 
 <main id="main" role="main" class="resources-archive featured-resources-archive">
-    <section class="section" class="pt-100">
+    <section class="section pt-100">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Handpicked resources', 'ai-awareness-day' ); ?></span>
             <h1 class="section-title"><?php esc_html_e( 'Curated resources', 'ai-awareness-day' ); ?></h1>

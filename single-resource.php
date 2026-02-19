@@ -9,7 +9,7 @@ get_header();
 ?>
 
 <main id="main" role="main" class="single-resource">
-    <section class="section" class="pt-100">
+    <section class="section pt-100">
         <div class="container" style="max-width: 800px;">
             <?php while ( have_posts() ) : the_post();
                 $types         = get_the_terms( get_the_ID(), 'resource_type' );

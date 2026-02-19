@@ -9,58 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Custom Customizer Control for SMTP Information
- */
-class AIAD_SMTP_Info_Control extends WP_Customize_Control {
-    /**
-     * Render the control's content.
-     */
-    public function render_content(): void {
-        ?>
-        <div class="aiad-smtp-info-control" style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 15px; margin: 15px 0;">
-            <h4 style="margin-top: 0; margin-bottom: 10px; color: #856404;">
-                📧 <?php esc_html_e( 'Email Delivery Setup Required', 'ai-awareness-day' ); ?>
-            </h4>
-            <p style="margin-bottom: 12px; color: #856404;">
-                <strong><?php esc_html_e( 'Important:', 'ai-awareness-day' ); ?></strong> 
-                <?php esc_html_e( 'For reliable email delivery, you need to install and configure the WP Mail SMTP plugin.', 'ai-awareness-day' ); ?>
-            </p>
-            <ol style="margin: 0; padding-left: 20px; color: #856404;">
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Go to', 'ai-awareness-day' ); ?> 
-                    <strong><?php esc_html_e( 'Plugins → Add New', 'ai-awareness-day' ); ?></strong>
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Search for', 'ai-awareness-day' ); ?> 
-                    <strong>"WP Mail SMTP"</strong>
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Click', 'ai-awareness-day' ); ?> 
-                    <strong><?php esc_html_e( 'Install Now', 'ai-awareness-day' ); ?></strong> 
-                    <?php esc_html_e( 'and', 'ai-awareness-day' ); ?> 
-                    <strong><?php esc_html_e( 'Activate', 'ai-awareness-day' ); ?></strong>
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Go to', 'ai-awareness-day' ); ?> 
-                    <strong><?php esc_html_e( 'WP Mail SMTP → Settings', 'ai-awareness-day' ); ?></strong>
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Configure with your hosting provider\'s SMTP settings (or use Gmail/SendGrid)', 'ai-awareness-day' ); ?>
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <?php esc_html_e( 'Send a test email to verify it works', 'ai-awareness-day' ); ?>
-                </li>
-            </ol>
-            <p style="margin-top: 12px; margin-bottom: 0; color: #856404; font-size: 13px;">
-                <em>
-                    <?php esc_html_e( 'Note: Without SMTP, emails may not be delivered or may go to spam. Your form will still save submissions to the database, but email notifications require SMTP configuration.', 'ai-awareness-day' ); ?>
-                </em>
-            </p>
-        </div>
-        <?php
-    }
-}
 
 /**
  * Main Customizer registration function.
@@ -366,6 +314,11 @@ function aiad_register_display_board_section( WP_Customize_Manager $wp_customize
 function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): void {
     $defaults = aiad_get_customizer_defaults();
 
+    // Define custom control class only in Customizer context (avoids fatal on front-end).
+    if ( ! class_exists( 'AIAD_SMTP_Info_Control' ) ) {
+        require_once AIAD_DIR . '/inc/customizer-smtp-control.php';
+    }
+
     $wp_customize->add_section( 'aiad_contact', array(
         'title'       => __( 'Get Involved Section', 'ai-awareness-day' ),
         'description' => __( 'Configure the contact form settings. IMPORTANT: For reliable email delivery, install the WP Mail SMTP plugin and configure SMTP settings. See instructions below.', 'ai-awareness-day' ),
@@ -419,7 +372,7 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
         'sanitize_callback' => '__return_empty_string',
     ) );
     $wp_customize->add_control( new AIAD_SMTP_Info_Control( $wp_customize, 'aiad_smtp_info', array(
-        'section' => 'aiad_contact',
+        'section'  => 'aiad_contact',
         'priority' => 20,
     ) ) );
 }

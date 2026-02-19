@@ -515,7 +515,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <span class="section-label"><?php esc_html_e( 'Free Resources', 'ai-awareness-day' ); ?></span>
                     <h2 class="section-title"><?php esc_html_e( 'Starter Slide', 'ai-awareness-day' ); ?></h2>
                     <p class="section-desc"><?php esc_html_e( 'One starter per theme: Safe, Smart, Creative, Responsible, Future. Add a download (PDF or PPTX) in the admin to show a download button.', 'ai-awareness-day' ); ?></p>
-                    <div class="resources-grid" class="mt-2rem">
+                    <div class="resources-grid" style="margin-top: 2rem;">
                         <?php
                         while ( $free_resources->have_posts() ) :
                             $free_resources->the_post();
@@ -553,6 +553,9 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                     <?php if ( $has_overlay ) : ?>
                                         <div class="resource-card__image-overlay" aria-hidden="true">
                                             <div class="resource-card__image-top">
+                                                <?php if ( $pill_duration ) : ?>
+                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html( $pill_duration ); ?></span>
+                                                <?php endif; ?>
                                                 <?php if ( $theme_name ) : ?>
                                                     <?php
                                                     $theme_slug = strtolower( $theme_name );
@@ -562,9 +565,6 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                                     }
                                                     ?>
                                                     <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
-                                                <?php endif; ?>
-                                                <?php if ( $pill_duration ) : ?>
-                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html( $pill_duration ); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -625,7 +625,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <p class="section-desc"><?php esc_html_e( 'A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day' ); ?></p>
                 </div>
 
-                <div class="resources-grid" class="mt-2rem">
+                <div class="resources-grid" style="margin-top: 2rem;">
                     <?php while ( $featured_resources->have_posts() ) : $featured_resources->the_post();
                         $types      = get_the_terms( get_the_ID(), 'resource_type' );
                         $themes     = get_the_terms( get_the_ID(), 'resource_principle' );
@@ -662,29 +662,29 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             <?php if ( $org_name || $meta_label ) : ?>
                                 <div class="resource-card__image-overlay" aria-hidden="true">
                                     <div class="resource-card__image-top">
-                                        <?php if ( $theme_name ) : ?>
-                                            <?php
-                                            $theme_slug = strtolower( $theme_name );
-                                            $pill_class = 'resource-card__pill--theme';
-                                            if ( in_array( $theme_slug, array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true ) ) {
-                                                $pill_class .= ' resource-card__pill--' . $theme_slug;
-                                            }
-                                            ?>
-                                            <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
-                                        <?php endif; ?>
                                         <?php if ( $org_name ) : ?>
                                             <span class="resource-card__pill resource-card__pill--org"><?php echo esc_html( $org_name ); ?></span>
                                         <?php endif; ?>
+                                            <?php if ( $theme_name ) : ?>
+                                                <?php
+                                                $theme_slug = strtolower( $theme_name );
+                                                $pill_class = 'resource-card__pill--theme';
+                                                if ( in_array( $theme_slug, array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true ) ) {
+                                                    $pill_class .= ' resource-card__pill--' . $theme_slug;
+                                                }
+                                                ?>
+                                                <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="resource-card__image-title"><?php the_title(); ?></div>
                                     </div>
-                                    <div class="resource-card__image-title"><?php the_title(); ?></div>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
                             </a>
                             <div class="resource-card__body">
                                 <?php if ( $org_name || $type_name || $theme_name ) : ?>
                                     <p class="resource-card__meta">
                                         <?php
-                                        $meta_parts = array_filter( array( $theme_name, $type_name, $org_name ) );
+                                        $meta_parts = array_filter( array( $org_name, $type_name, $theme_name ) );
                                         echo esc_html( implode( ' · ', $meta_parts ) );
                                         ?>
                                     </p>

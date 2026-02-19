@@ -9,7 +9,7 @@ get_header();
 ?>
 
 <main id="main" role="main" class="resources-archive">
-    <section class="section" class="pt-100">
+    <section class="section pt-100">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Free Resources', 'ai-awareness-day' ); ?></span>
             <h1 class="section-title"><?php post_type_archive_title(); ?></h1>
@@ -177,7 +177,7 @@ get_header();
                 </form>
             </div>
 
-            <div class="resources-loading" hidden aria-live="polite"><?php esc_html_e( 'Loading…', 'ai-awareness-day' ); ?></div>
+            <div class="resources-loading" style="display:none" aria-live="polite"><?php esc_html_e( 'Loading…', 'ai-awareness-day' ); ?></div>
             <div class="resources-grid">
             <?php if ( $resources->have_posts() ) : ?>
                     <?php while ( $resources->have_posts() ) : $resources->the_post();
@@ -253,7 +253,7 @@ get_header();
                 <?php wp_reset_postdata(); ?>
             <?php endif; ?>
             </div>
-            <p class="section-desc resources-empty-message"<?php echo $resources->have_posts() ? ' hidden' : ''; ?>><?php esc_html_e( 'No resources found. Add resources in the admin under Resources.', 'ai-awareness-day' ); ?></p>
+            <p class="section-desc resources-empty-message"<?php echo $resources->have_posts() ? ' style="display:none"' : ''; ?>><?php esc_html_e( 'No resources found. Add resources in the admin under Resources.', 'ai-awareness-day' ); ?></p>
 
             <?php
             // Use pretty URL when permalinks are enabled so the archive loads correctly (avoids ?post_type=... showing front page).
