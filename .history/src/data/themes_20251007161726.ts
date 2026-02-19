@@ -1,0 +1,42 @@
+export const themeConfigs = [
+  {
+    id: "safe",
+    title: "SAFE",
+    gradient: "linear-gradient(135deg, #ef4444, #dc2626)",
+    solidHex: "#ef4444",
+    borderHex: "#ef4444",
+    textHex: "#ef4444",
+  },
+  {
+    id: "smart", 
+    title: "SMART",
+    gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+    solidHex: "#3b82f6",
+    borderHex: "#3b82f6",
+    textHex: "#3b82f6",
+  },
+  {
+    id: "creative",
+    title: "CREATIVE", 
+    gradient: "linear-gradient(135deg, #10b981, #059669)",
+    solidHex: "#10b981",
+    borderHex: "#10b981",
+    textHex: "#10b981",
+  },
+  {
+    id: "responsible",
+    title: "RESPONSIBLE",
+    gradient: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+    solidHex: "#8b5cf6",
+    borderHex: "#8b5cf6",
+    textHex: "#8b5cf6",
+  },
+  {
+    id: "future",
+    title: "FUTURE",
+    gradient: "linear-gradient(135deg, #f97316, #ea580c)",
+    solidHex: "#f97316",
+    borderHex: "#f97316",
+    textHex: "#f97316",
+  },
+]
