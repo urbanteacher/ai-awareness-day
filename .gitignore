@@ -52,3 +52,14 @@ not needed/
 # Build files (if any)
 dist/
 build/
+
+# Next.js files (not needed for WordPress theme)
+package.json
+package-lock.json
+yarn.lock
+next.config.*
+tsconfig.json
+src/
+.next/
+postcss.config.*
+tailwind.config.*
