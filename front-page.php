@@ -656,7 +656,6 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             } elseif ( $durations && ! is_wp_error( $durations ) ) {
                                 $duration_name = $durations[0]->name;
                             }
-                            $download_url = get_post_meta( get_the_ID(), '_resource_download_url', true );
                             $duration_slug = $durations && ! is_wp_error( $durations ) ? $durations[0]->slug : '';
                             $session_cards = function_exists( 'aiad_explore_session_cards' ) ? aiad_explore_session_cards() : array();
                             $placeholder_text = __( 'Starter Slide', 'ai-awareness-day' );
@@ -704,12 +703,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                         <p class="resource-card__excerpt section-desc"><?php echo esc_html( get_the_excerpt() ); ?></p>
                                     <?php endif; ?>
                                     <p class="resource-card__action">
-                                        <?php if ( $download_url ) : ?>
-                                            <?php $download_label = function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : __( 'Download', 'ai-awareness-day' ); ?>
-                                            <a href="<?php echo esc_url( $download_url ); ?>" class="resource-card__link" download target="_blank" rel="noopener"><?php echo esc_html( $download_label ); ?> →</a>
-                                        <?php else : ?>
-                                            <a href="<?php the_permalink(); ?>" class="resource-card__link"><?php esc_html_e( 'View resource', 'ai-awareness-day' ); ?> →</a>
-                                        <?php endif; ?>
+                                        <a href="<?php the_permalink(); ?>" class="resource-card__link"><?php esc_html_e( 'View resource', 'ai-awareness-day' ); ?> →</a>
                                     </p>
                                 </div>
                             </article>
@@ -931,10 +925,44 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             <label for="org_type"><?php esc_html_e( 'Type *', 'ai-awareness-day' ); ?></label>
                             <select id="org_type" name="org_type" required>
                                 <option value=""><?php esc_html_e( 'Select...', 'ai-awareness-day' ); ?></option>
-                                <option value="sponsor"><?php esc_html_e( 'Sponsor', 'ai-awareness-day' ); ?></option>
-                                <option value="tech_company"><?php esc_html_e( 'Tech company', 'ai-awareness-day' ); ?></option>
-                                <option value="other"><?php esc_html_e( 'Other', 'ai-awareness-day' ); ?></option>
+                                <?php foreach ( aiad_get_organisation_type_options() as $value => $label ) : ?>
+                                    <option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></option>
+                                <?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <?php /* Optional checklist – shown per role */ ?>
+                        <div class="form-group form-group-role contact-checklist" data-role="teacher" style="display: none;">
+                            <p class="form-label-optional"><?php esc_html_e( 'Optional – what are you interested in?', 'ai-awareness-day' ); ?></p>
+                            <div class="checklist-options">
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="teacher_display_board"><span class="checklist-option__text"><?php esc_html_e( 'Interested in creating a display board', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="teacher_activity_day"><span class="checklist-option__text"><?php esc_html_e( 'I want to do an activity for the day', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="teacher_learn_ai"><span class="checklist-option__text"><?php esc_html_e( 'I want to learn more about AI', 'ai-awareness-day' ); ?></span></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-role contact-checklist" data-role="parent" style="display: none;">
+                            <p class="form-label-optional"><?php esc_html_e( 'Optional – what are you interested in?', 'ai-awareness-day' ); ?></p>
+                            <div class="checklist-options">
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="parent_support_child"><span class="checklist-option__text"><?php esc_html_e( 'I want to support my child in AI', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="parent_learn_ai"><span class="checklist-option__text"><?php esc_html_e( 'I want to learn more about AI', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="parent_school_take_part"><span class="checklist-option__text"><?php esc_html_e( 'I\'d like my child\'s school to take part', 'ai-awareness-day' ); ?></span></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-role contact-checklist" data-role="school_leader" style="display: none;">
+                            <p class="form-label-optional"><?php esc_html_e( 'Optional – what are you interested in?', 'ai-awareness-day' ); ?></p>
+                            <div class="checklist-options">
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="school_leader_staff_activity"><span class="checklist-option__text"><?php esc_html_e( 'I want my staff to do an activity', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="school_leader_logo_supporter"><span class="checklist-option__text"><?php esc_html_e( 'I want our logo as a supporter', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="school_leader_school_promote"><span class="checklist-option__text"><?php esc_html_e( 'I want our school to promote AI Awareness Day', 'ai-awareness-day' ); ?></span></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-role contact-checklist" data-role="organisation" style="display: none;">
+                            <p class="form-label-optional"><?php esc_html_e( 'Optional – what are you interested in?', 'ai-awareness-day' ); ?></p>
+                            <div class="checklist-options">
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="org_brand_sponsor"><span class="checklist-option__text"><?php esc_html_e( 'Brand Sponsor', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="org_theme_sponsor"><span class="checklist-option__text"><?php esc_html_e( 'Theme Sponsor', 'ai-awareness-day' ); ?></span></label>
+                                <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]" value="org_campaign_sponsor"><span class="checklist-option__text"><?php esc_html_e( 'Campaign Sponsor', 'ai-awareness-day' ); ?></span></label>
+                            </div>
                         </div>
 
                         <div class="form-group">

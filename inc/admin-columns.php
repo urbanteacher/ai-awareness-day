@@ -99,8 +99,9 @@ function aiad_form_submission_meta_box(): void {
     $subject = get_post_meta( $post->ID, '_submission_subject', true );
     $child_school = get_post_meta( $post->ID, '_submission_child_school', true );
     $role_title = get_post_meta( $post->ID, '_submission_role_title', true );
-    $organisation = get_post_meta( $post->ID, '_submission_organisation', true );
-    $org_type = get_post_meta( $post->ID, '_submission_org_type', true );
+    $organisation   = get_post_meta( $post->ID, '_submission_organisation', true );
+    $org_type       = get_post_meta( $post->ID, '_submission_org_type', true );
+    $checklist_keys = (array) get_post_meta( $post->ID, '_submission_checklist', true );
 
     $role_labels = array(
         'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
@@ -157,11 +158,39 @@ function aiad_form_submission_meta_box(): void {
             </tr>
             <?php endif; ?>
             <?php if ( $org_type ) : ?>
+            <?php
+            $org_type_display = $org_type;
+            if ( function_exists( 'aiad_get_organisation_type_options' ) ) {
+                $org_types = aiad_get_organisation_type_options();
+                if ( isset( $org_types[ $org_type ] ) ) {
+                    $org_type_display = $org_types[ $org_type ];
+                }
+            }
+            ?>
             <tr>
                 <th><?php esc_html_e( 'Organisation Type', 'ai-awareness-day' ); ?></th>
-                <td><?php echo esc_html( $org_type ); ?></td>
+                <td><?php echo esc_html( $org_type_display ); ?></td>
             </tr>
             <?php endif; ?>
+            <?php
+            if ( ! empty( $checklist_keys ) && function_exists( 'aiad_get_contact_checklist_labels' ) ) {
+                $checklist_labels = aiad_get_contact_checklist_labels();
+                $checklist_display = array();
+                foreach ( $checklist_keys as $key ) {
+                    if ( isset( $checklist_labels[ $key ] ) ) {
+                        $checklist_display[] = $checklist_labels[ $key ];
+                    }
+                }
+                if ( ! empty( $checklist_display ) ) :
+                    ?>
+            <tr>
+                <th><?php esc_html_e( 'Interested in', 'ai-awareness-day' ); ?></th>
+                <td><ul style="margin:0; padding-left:1.25rem;"><?php foreach ( $checklist_display as $label ) : ?><li><?php echo esc_html( $label ); ?></li><?php endforeach; ?></ul></td>
+            </tr>
+            <?php
+                endif;
+            }
+            ?>
             <?php if ( $message ) : ?>
             <tr>
                 <th><?php esc_html_e( 'Message', 'ai-awareness-day' ); ?></th>

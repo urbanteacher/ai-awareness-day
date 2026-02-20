@@ -1953,6 +1953,49 @@ a.toolkit-card.toolkit-card--link:hover {
   min-height: 120px;
 }
 
+.contact-form .contact-checklist {
+  grid-column: 1 / -1;
+}
+
+.contact-checklist .form-label-optional {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+.contact-checklist .checklist-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Override .form-group label so checklist rows stay horizontal and readable */
+.contact-checklist label.checklist-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-weight: normal;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 0;
+  text-align: left;
+  white-space: normal;
+  writing-mode: horizontal-tb;
+}
+
+.contact-checklist .checklist-option input[type="checkbox"] {
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.contact-checklist .checklist-option .checklist-option__text {
+  flex: 1;
+  min-width: 0;
+}
+
 .btn-submit {
   display: inline-flex;
   align-items: center;

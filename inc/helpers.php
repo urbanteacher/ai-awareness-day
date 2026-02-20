@@ -105,6 +105,23 @@ function aiad_key_stage_options(): array {
 }
 
 /**
+ * Organisation type options for Get Involved form (UK-focused).
+ * Returns slug => label for dropdown and display.
+ *
+ * @return array<string, string>
+ */
+function aiad_get_organisation_type_options(): array {
+    return array(
+        'charity'            => __( 'Charity', 'ai-awareness-day' ),
+        'public_body'        => __( 'Public body', 'ai-awareness-day' ),
+        'institution'        => __( 'Institution', 'ai-awareness-day' ),
+        'company'            => __( 'Company', 'ai-awareness-day' ),
+        'education_provider' => __( 'Education provider', 'ai-awareness-day' ),
+        'other'              => __( 'Other', 'ai-awareness-day' ),
+    );
+}
+
+/**
  * Extract YouTube video ID from URL (watch, youtu.be, or embed)
  */
 function aiad_youtube_video_id( string $url ): string {

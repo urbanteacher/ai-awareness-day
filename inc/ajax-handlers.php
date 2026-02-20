@@ -10,6 +10,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Get optional checklist option labels (for contact form and admin display).
+ *
+ * @return array<string, string> Map of option key => label.
+ */
+function aiad_get_contact_checklist_labels(): array {
+    return array(
+        'teacher_display_board'       => __( 'Interested in creating a display board', 'ai-awareness-day' ),
+        'teacher_activity_day'        => __( 'I want to do an activity for the day', 'ai-awareness-day' ),
+        'teacher_learn_ai'            => __( 'I want to learn more about AI', 'ai-awareness-day' ),
+        'parent_support_child'        => __( 'I want to support my child in AI', 'ai-awareness-day' ),
+        'parent_learn_ai'             => __( 'I want to learn more about AI', 'ai-awareness-day' ),
+        'parent_school_take_part'     => __( "I'd like my child's school to take part", 'ai-awareness-day' ),
+        'school_leader_staff_activity' => __( 'I want my staff to do an activity', 'ai-awareness-day' ),
+        'school_leader_logo_supporter' => __( 'I want our logo as a supporter', 'ai-awareness-day' ),
+        'school_leader_school_promote' => __( 'I want our school to promote AI Awareness Day', 'ai-awareness-day' ),
+        'org_brand_sponsor'           => __( 'Brand Sponsor', 'ai-awareness-day' ),
+        'org_theme_sponsor'           => __( 'Theme Sponsor', 'ai-awareness-day' ),
+        'org_campaign_sponsor'        => __( 'Campaign Sponsor', 'ai-awareness-day' ),
+    );
+}
+
+/**
  * AJAX Contact Form Handler
  */
 function aiad_handle_contact_form(): void {
@@ -32,6 +54,19 @@ function aiad_handle_contact_form(): void {
     $role_title    = sanitize_text_field( wp_unslash( $_POST['role_title'] ?? '' ) );
     $organisation  = sanitize_text_field( wp_unslash( $_POST['organisation'] ?? '' ) );
     $org_type      = sanitize_text_field( wp_unslash( $_POST['org_type'] ?? '' ) );
+
+    // Optional checklist (role-specific; only submitted checkboxes are sent)
+    $checklist_raw   = isset( $_POST['aiad_checklist'] ) && is_array( $_POST['aiad_checklist'] ) ? wp_unslash( $_POST['aiad_checklist'] ) : array();
+    $checklist_labels = aiad_get_contact_checklist_labels();
+    $checklist       = array();
+    $checklist_keys  = array();
+    foreach ( $checklist_raw as $key ) {
+        $key = sanitize_text_field( $key );
+        if ( isset( $checklist_labels[ $key ] ) ) {
+            $checklist[]      = $checklist_labels[ $key ];
+            $checklist_keys[] = $key;
+        }
+    }
 
     // Validate: all visible fields are compulsory
     if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) || empty( $message ) ) {
@@ -62,6 +97,10 @@ function aiad_handle_contact_form(): void {
     if ( $involved_as === 'organisation' && ( empty( $organisation ) || empty( $org_type ) ) ) {
         wp_send_json_error( array( 'message' => __( 'Please provide your organisation name and type.', 'ai-awareness-day' ) ) );
     }
+    $org_type_options = function_exists( 'aiad_get_organisation_type_options' ) ? aiad_get_organisation_type_options() : array();
+    if ( $involved_as === 'organisation' && $org_type && ! isset( $org_type_options[ $org_type ] ) ) {
+        $org_type = 'other';
+    }
 
     if ( ! is_email( $email ) ) {
         wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'ai-awareness-day' ) ) );
@@ -82,7 +121,6 @@ function aiad_handle_contact_form(): void {
     $body  = "Getting involved as: {$role_display}\n";
     $body .= "Name: {$first_name} {$last_name}\n";
     $body .= "Email: {$email}\n";
-
     if ( $involved_as === 'teacher' || $involved_as === 'school_leader' ) {
         $body .= "School: {$school_name}\n";
     }
@@ -98,10 +136,17 @@ function aiad_handle_contact_form(): void {
     if ( $involved_as === 'organisation' ) {
         $body .= "Organisation: {$organisation}\n";
         if ( $org_type ) {
-            $body .= "Type: {$org_type}\n";
+            $org_type_label = isset( $org_type_options[ $org_type ] ) ? $org_type_options[ $org_type ] : $org_type;
+            $body .= "Type: {$org_type_label}\n";
         }
     }
-    $body .= "\nMessage:\n{$message}\n";
+    if ( ! empty( $checklist ) ) {
+        $body .= "\nInterested in:\n";
+        foreach ( $checklist as $label ) {
+            $body .= "• {$label}\n";
+        }
+    }
+    $body .= "\nMessage:\n" . ( $message !== '' ? "\n{$message}\n" : "\n" );
 
     $site_name  = get_bloginfo( 'name' );
     $site_email = get_option( 'admin_email' );
@@ -146,6 +191,9 @@ function aiad_handle_contact_form(): void {
         if ( $org_type ) {
             update_post_meta( $submission_id, '_submission_org_type', $org_type );
         }
+        if ( ! empty( $checklist_keys ) ) {
+            update_post_meta( $submission_id, '_submission_checklist', $checklist_keys );
+        }
     }
 
     // Send email to admin
@@ -157,13 +205,9 @@ function aiad_handle_contact_form(): void {
         "Dear %s,\n\n" .
         "Thank you for getting in touch with AI Awareness Day!\n\n" .
         "We've received your submission and will be in touch soon.\n\n" .
-        "Getting involved as: %s\n" .
-        "%s\n\n" .
         "Best regards,\n" .
         "The AI Awareness Day Team",
-        $first_name,
-        $role_display,
-        $message ? "Your message: {$message}\n" : ''
+        $first_name
     );
 
     $user_headers = array(
