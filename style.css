@@ -658,8 +658,8 @@ a.duration-badge:hover {
 .explore-session-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   padding: 1.5rem 1rem;
   background: var(--green-900);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -696,19 +696,18 @@ a.duration-badge:hover {
 
 .explore-session-card .explore-session-icon {
   order: 1;
-  margin-bottom: 1rem;
-}
-
-.explore-session-card .explore-session-text {
-  order: 2;
-  flex: 1;
-  width: 100%;
   margin-bottom: 0.75rem;
 }
 
 .explore-session-card .explore-session-badge {
+  order: 2;
+  margin-bottom: 1rem;
+}
+
+.explore-session-card .explore-session-text {
   order: 3;
-  margin-top: auto;
+  flex: 1;
+  width: 100%;
 }
 
 .explore-session-icon {
@@ -728,6 +727,7 @@ a.duration-badge:hover {
   background: rgba(255, 255, 255, 0.15);
   transform: scale(1.05);
 }
+
 
 @media (min-width: 768px) {
   .explore-session-icon {
