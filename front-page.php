@@ -113,13 +113,14 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     }
 
                     $partners_count = count( $partners );
-                    $initial_show = 6; // Show first 6 partners initially
+                    $initial_show = 10; // Show first 10 partners at all times
                     
                     foreach ( $partners as $index => $partner ) :
                         if ( empty( $partner['name'] ) ) {
                             continue;
                         }
-                        $is_hidden = $index >= $initial_show;
+                        // Always show first 10 partners, hide only if more than 10 exist
+                        $is_hidden = $partners_count > $initial_show && $index >= $initial_show;
                         ?>
                         <div class="partner-card fade-up stagger-<?php echo $index + 1; ?> <?php echo $is_hidden ? 'partner-card--hidden' : ''; ?>" data-partner-index="<?php echo $index; ?>">
                             <div class="partner-logo">
@@ -133,6 +134,24 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
+                    
+                    <?php
+                    // Add dummy "Join the campaign" partner card that links to form
+                    $dummy_index = $partners_count;
+                    // Only hide dummy card if there are more than 10 partners (so first 10 + dummy = 11 total visible)
+                    $dummy_is_hidden = $partners_count > $initial_show;
+                    ?>
+                    <a href="#contact" class="partner-card partner-card--dummy fade-up stagger-<?php echo $dummy_index + 1; ?> <?php echo $dummy_is_hidden ? 'partner-card--hidden' : ''; ?>" data-partner-index="<?php echo $dummy_index; ?>">
+                        <div class="partner-logo">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gray-400);">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="12" y1="8" x2="12" y2="16"/>
+                                <line x1="8" y1="12" x2="16" y2="12"/>
+                            </svg>
+                        </div>
+                        <h3><?php esc_html_e( 'Join the campaign', 'ai-awareness-day' ); ?></h3>
+                        <p class="partner-stats"><?php esc_html_e( 'Complete form to join movement', 'ai-awareness-day' ); ?></p>
+                    </a>
                 </div>
                 
                 <?php if ( $partners_count > $initial_show ) : ?>

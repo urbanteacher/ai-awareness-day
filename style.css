@@ -4,7 +4,7 @@ Theme URI: https://aiawarenessday.org
 Author: AI Awareness Day Team
 Author URI: https://aiawarenessday.org
 Description: A modern, minimal WordPress theme for AI Awareness Day — a nationwide campaign for schools, students, and parents to explore AI through activities and discussions.
-Version: 1.1.5
+Version: 1.1.6
 Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 8.0
@@ -963,6 +963,39 @@ a.duration-badge:hover {
   justify-content: center;
   min-height: 80px;
   flex-shrink: 0;
+}
+
+.partner-card--dummy {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-style: dashed;
+  border-color: var(--gray-300);
+  background: var(--gray-50);
+  transition: all 0.3s ease;
+}
+
+.partner-card--dummy:hover {
+  border-color: var(--green-500);
+  background: var(--green-50);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.partner-card--dummy .partner-logo {
+  color: var(--gray-400);
+}
+
+.partner-card--dummy:hover .partner-logo {
+  color: var(--green-600);
+}
+
+.partner-card--dummy h3 {
+  color: var(--gray-600);
+}
+
+.partner-card--dummy:hover h3 {
+  color: var(--green-700);
 }
 
 .partner-logo__img {
