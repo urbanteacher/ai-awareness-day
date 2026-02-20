@@ -1008,6 +1008,31 @@ a.duration-badge:hover {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .campaign-embed__wrapper {
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  .campaign-embed__wrapper iframe {
+    min-height: 220px;
+    height: 260px;
+    max-height: 50vh;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .campaign-embed__wrapper {
+    padding: 0.35rem;
+  }
+
+  .campaign-embed__wrapper iframe {
+    min-height: 180px;
+    height: 220px;
+    max-height: 45vh;
+  }
+}
+
 /* ============================================
    SECTION: PRINCIPLES
    ============================================ */
