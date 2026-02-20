@@ -489,8 +489,8 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
                             $has_theme_badge = ! empty( $theme_badge_src ) && $theme_badge_id > 0;
                             ?>
-                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
-                                <span class="theme-link__badge">
+                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up" aria-label="<?php echo esc_attr( $term->name ); ?>">
+                                <span class="theme-link__badge" aria-hidden="true">
                                     <?php if ( $has_theme_badge ) : ?>
                                         <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                                         <span class="theme-link__badge-placeholder" aria-hidden="true" style="display: none;"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
