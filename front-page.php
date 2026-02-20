@@ -124,14 +124,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         <div class="partner-card fade-up stagger-<?php echo $index + 1; ?> <?php echo $is_hidden ? 'partner-card--hidden' : ''; ?>" data-partner-index="<?php echo $index; ?>">
                             <div class="partner-logo">
                                 <?php if ( $partner['logo'] ) : ?>
-                                    <img src="<?php echo esc_url( $partner['logo'] ); ?>" alt="<?php echo esc_attr( $partner['name'] ); ?>" class="partner-logo__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                    <div class="partner-logo__placeholder" style="display: none;">
-                                        <span class="partner-logo__placeholder-text"><?php echo esc_html( substr( $partner['name'], 0, 2 ) ); ?></span>
-                                    </div>
-                                <?php else : ?>
-                                    <div class="partner-logo__placeholder">
-                                        <span class="partner-logo__placeholder-text"><?php echo esc_html( substr( $partner['name'], 0, 2 ) ); ?></span>
-                                    </div>
+                                    <img src="<?php echo esc_url( $partner['logo'] ); ?>" alt="<?php echo esc_attr( $partner['name'] ); ?>" class="partner-logo__img" onerror="this.classList.add('is-broken');" />
                                 <?php endif; ?>
                             </div>
                             <h3><?php echo esc_html( $partner['name'] ); ?></h3>
