@@ -1,0 +1,142 @@
+/* ============================================
+   CSS VARIABLES & RESET
+   ============================================ */
+:root {
+  /* Badge colours (from AI Awareness 2026 badges) */
+  --badge-safe: #93c5fd;
+  --badge-smart: #fdba74;
+  --badge-creative: #c4b5fd;
+  --badge-responsible: #86efac;
+  --badge-future: #f9a8d4;
+  --badge-black: #000000;
+
+  /* Semantic palette (used for UI; accent = black to match badges) */
+  --green-50: #fafafa;
+  --green-100: #f0f0f0;
+  --green-200: #e5e5e5;
+  --green-300: #d4d4d4;
+  --green-400: #737373;
+  --green-500: #525252;
+  --green-600: #171717;
+  --green-700: #0a0a0a;
+  --green-800: #0a0a0a;
+  --green-900: #000000;
+
+  --white: #ffffff;
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+
+  --font-display: 'Intel Clear', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --section-padding: clamp(2.5rem, 5vw, 4rem) 0;
+  --container-width: min(1200px, 90vw);
+  --border-radius: 0;
+
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--gray-800);
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Broken image fallback: hide broken img, show placeholder icon */
+img.is-broken {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.broken-image-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  background: var(--gray-100);
+  color: var(--gray-400);
+  border-radius: 0;
+}
+
+.broken-image-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Keep parent layout when image is broken (e.g. partner logo, badge) */
+.site-logo,
+.hero-logo,
+.partner-logo,
+.principle-card .principle-badge,
+.theme-link,
+.display-board-real,
+.display-board-examples__item {
+  position: relative;
+}
+
+.partner-logo .broken-image-icon,
+.principle-card .principle-badge .broken-image-icon {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.theme-link .broken-image-icon {
+  width: 100%;
+  height: 100%;
+  min-height: 60px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--gray-900);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.container {
+  width: var(--container-width);
+  margin: 0 auto;
+}
+

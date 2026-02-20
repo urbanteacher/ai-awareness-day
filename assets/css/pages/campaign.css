@@ -1,0 +1,94 @@
+/* ============================================
+   SECTION: CAMPAIGN
+   ============================================ */
+.campaign-split {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+  padding: 0.5rem 0;
+}
+
+.campaign-split--single {
+  max-width: 100%;
+}
+
+@media screen and (min-width: 900px) {
+  .campaign--split .campaign-split {
+    grid-template-columns: 1fr minmax(320px, 504px);
+    gap: 3rem;
+    padding: 1rem 0;
+  }
+
+  .campaign--split .campaign-content {
+    padding-right: 1rem;
+  }
+
+  .campaign--split .campaign-embed {
+    position: sticky;
+    top: 8rem;
+    padding-left: 0.5rem;
+  }
+}
+
+.campaign-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.campaign-content .section-desc {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.campaign-embed__wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 504px;
+  margin: 0 auto;
+  padding: 0.75rem;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  background: #000000;
+}
+
+.campaign-embed__wrapper iframe {
+  display: block;
+  width: 100%;
+  min-height: 320px;
+  height: 399px;
+  max-height: 80vh;
+  border: 0;
+}
+
+@media screen and (max-width: 899px) {
+  .campaign-embed {
+    order: 1; /* text first, then embed when stacked */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .campaign-embed__wrapper {
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  .campaign-embed__wrapper iframe {
+    min-height: 220px;
+    height: 260px;
+    max-height: 50vh;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .campaign-embed__wrapper {
+    padding: 0.35rem;
+  }
+
+  .campaign-embed__wrapper iframe {
+    min-height: 180px;
+    height: 220px;
+    max-height: 45vh;
+  }
+}
+

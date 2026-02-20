@@ -1,0 +1,47 @@
+/* ============================================
+   FOOTER
+   ============================================ */
+.site-footer {
+  padding: 3rem 0;
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-social a {
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.footer-social a:hover {
+  background: var(--green-600);
+}
+
+.footer-social a svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--gray-700);
+  transition: var(--transition);
+}
+
+.footer-social a:hover svg {
+  fill: var(--white);
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
