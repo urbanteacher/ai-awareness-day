@@ -9,12 +9,14 @@
 
 /* Account for WordPress admin bar when logged in */
 .admin-bar .hero-section {
-  padding-top: 104px; /* 72px header + 32px admin bar */
+  padding-top: 104px;
+  /* 72px header + 32px admin bar */
 }
 
 @media screen and (max-width: 782px) {
   .admin-bar .hero-section {
-    padding-top: 118px; /* 72px header + 46px admin bar on mobile */
+    padding-top: 118px;
+    /* 72px header + 46px admin bar on mobile */
   }
 }
 
@@ -140,4 +142,3 @@
   margin: 0 auto;
   text-align: center;
 }
-

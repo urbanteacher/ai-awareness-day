@@ -16,12 +16,14 @@
 
 /* Position header below WordPress admin bar when logged in */
 .admin-bar .site-header {
-  top: 32px; /* Admin bar height on desktop */
+  top: 32px;
+  /* Admin bar height on desktop */
 }
 
 @media screen and (max-width: 782px) {
   .admin-bar .site-header {
-    top: 46px; /* Admin bar height on mobile */
+    top: 46px;
+    /* Admin bar height on mobile */
   }
 }
 
@@ -144,17 +146,28 @@
   transition: var(--transition);
 }
 
-.nav-toggle span:nth-child(1) { top: 8px; }
-.nav-toggle span:nth-child(2) { top: 15px; }
-.nav-toggle span:nth-child(3) { top: 22px; }
+.nav-toggle span:nth-child(1) {
+  top: 8px;
+}
+
+.nav-toggle span:nth-child(2) {
+  top: 15px;
+}
+
+.nav-toggle span:nth-child(3) {
+  top: 22px;
+}
 
 .nav-toggle.active span:nth-child(1) {
   transform: rotate(45deg);
   top: 15px;
 }
-.nav-toggle.active span:nth-child(2) { opacity: 0; }
+
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
 .nav-toggle.active span:nth-child(3) {
   transform: rotate(-45deg);
   top: 15px;
 }
-

@@ -86,11 +86,25 @@
   letter-spacing: 0.05em;
 }
 
-.principle-card--safe { --principle-accent: var(--badge-safe); }
-.principle-card--smart { --principle-accent: var(--badge-smart); }
-.principle-card--creative { --principle-accent: var(--badge-creative); }
-.principle-card--responsible { --principle-accent: var(--badge-responsible); }
-.principle-card--future { --principle-accent: var(--badge-future); }
+.principle-card--safe {
+  --principle-accent: var(--badge-safe);
+}
+
+.principle-card--smart {
+  --principle-accent: var(--badge-smart);
+}
+
+.principle-card--creative {
+  --principle-accent: var(--badge-creative);
+}
+
+.principle-card--responsible {
+  --principle-accent: var(--badge-responsible);
+}
+
+.principle-card--future {
+  --principle-accent: var(--badge-future);
+}
 
 .principle-card h3 {
   font-size: 1.15rem;
@@ -103,4 +117,3 @@
   margin-top: 0.5rem;
   max-width: none;
 }
-
