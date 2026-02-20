@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.1.6' );
+define( 'AIAD_VERSION', '1.1.7' );
 define( 'AIAD_DIR', get_template_directory() );
 define( 'AIAD_URI', get_template_directory_uri() );
 

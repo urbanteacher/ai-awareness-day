@@ -138,10 +138,10 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <?php
                     // Add dummy "Join the campaign" partner card that links to form
                     $dummy_index = $partners_count;
-                    // Only hide dummy card if there are more than 10 partners (so first 10 + dummy = 11 total visible)
-                    $dummy_is_hidden = $partners_count > $initial_show;
+                    // Always show dummy card - it's always visible regardless of partner count
+                    $dummy_is_hidden = false;
                     ?>
-                    <a href="#contact" class="partner-card partner-card--dummy fade-up stagger-<?php echo $dummy_index + 1; ?> <?php echo $dummy_is_hidden ? 'partner-card--hidden' : ''; ?>" data-partner-index="<?php echo $dummy_index; ?>">
+                    <a href="#contact" class="partner-card partner-card--dummy fade-up stagger-<?php echo $dummy_index + 1; ?>" data-partner-index="<?php echo $dummy_index; ?>">
                         <div class="partner-logo">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gray-400);">
                                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
