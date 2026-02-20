@@ -94,14 +94,19 @@ function aiad_scripts(): void {
     );
 
     // Main stylesheet (WordPress Theme Header - must load first for Safari compatibility)
+    // Use filemtime for better Safari cache busting
+    $style_version = file_exists( get_stylesheet_directory() . '/style.css' )
+        ? filemtime( get_stylesheet_directory() . '/style.css' )
+        : AIAD_VERSION;
     wp_enqueue_style(
         'aiad-style',
         get_stylesheet_uri(),
         array(),
-        AIAD_VERSION
+        $style_version
     );
 
     // Enqueue Modular CSS Files
+    // Safari requires proper cache busting - use filemtime for each file
     $css_files = array(
         'base/reset.css',
         'base/shared.css',
@@ -124,11 +129,16 @@ function aiad_scripts(): void {
     
     foreach ( $css_files as $file ) {
         $handle = 'aiad-' . str_replace( array( '/', '.css' ), array( '-', '' ), $file );
+        $file_path = AIAD_DIR . '/assets/css/' . $file;
+        // Use filemtime for Safari cache busting, fallback to version constant
+        $file_version = file_exists( $file_path )
+            ? filemtime( $file_path )
+            : AIAD_VERSION;
         wp_enqueue_style(
             $handle,
             AIAD_URI . '/assets/css/' . $file,
             array( 'aiad-style', 'aiad-intel-font', 'aiad-google-fonts' ),
-            AIAD_VERSION
+            $file_version
         );
     }
 
