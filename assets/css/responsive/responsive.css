@@ -5,9 +5,11 @@
   .principles-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .partners-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
+
   .contact-wrapper {
     grid-template-columns: 1fr;
     gap: 2.5rem;
@@ -15,21 +17,22 @@
 }
 
 @media (max-width: 768px) {
+
   /* Swap "By Theme" and "By Session Length" order on mobile */
   .toolkit-explore-themes {
     display: flex;
     flex-direction: column;
   }
-  
+
   /* "By session length" section - show first on mobile */
   .explore-subheading:last-of-type,
-  .explore-subheading:last-of-type + .explore-session-cards {
+  .explore-subheading:last-of-type+.explore-session-cards {
     order: 1;
   }
-  
+
   /* "By theme" section - show second on mobile */
   .explore-subheading:first-of-type,
-  .explore-subheading:first-of-type + .themes-links {
+  .explore-subheading:first-of-type+.themes-links {
     order: 2;
   }
 
@@ -53,7 +56,8 @@
 
   /* Shift mobile nav down to clear the admin bar (46px on mobile) */
   .admin-bar .main-navigation {
-    top: 118px; /* 72px header + 46px admin bar */
+    top: 118px;
+    /* 72px header + 46px admin bar */
   }
 
   .main-navigation.open {
@@ -77,29 +81,36 @@
     grid-template-columns: repeat(5, 1fr);
     gap: 0.5rem;
   }
+
   .principle-card {
     padding: 0.75rem 0.4rem;
   }
+
   .principle-card .principle-badge {
     min-height: 40px;
     margin-bottom: 0.35rem;
     padding: 0.25rem;
   }
+
   .principle-card .principle-badge__img {
     max-height: 40px;
   }
+
   .principle-card .principle-badge__placeholder {
     width: 40px;
     height: 40px;
   }
+
   .principle-card .principle-badge__placeholder-text {
     font-size: 1.1rem;
   }
+
   .principle-card h3 {
     font-size: 0.6rem;
     letter-spacing: 0.03em;
     line-height: 1.2;
   }
+
   .principle-card .section-desc {
     font-size: 0.55rem;
     margin-top: 0.2rem;
@@ -109,6 +120,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
   .partners-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
@@ -156,17 +168,21 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
   }
+
   #aim .section-title {
     font-size: 1.2rem;
   }
+
   #aim .fade-up {
     margin-bottom: 0.5rem;
   }
+
   .aims-list {
     grid-template-columns: 1fr;
     gap: 0.25rem;
     margin-top: 0.5rem;
   }
+
   /* Mobile: Remove boxes and checkmarks, show simple text list */
   .aim-item {
     background: transparent !important;
@@ -175,13 +191,16 @@
     gap: 0;
     display: block;
   }
+
   .aim-item:hover {
     transform: none;
     box-shadow: none;
   }
+
   .aim-item .aim-icon {
     display: none !important;
   }
+
   .aim-item .section-desc {
     font-size: 0.8125rem;
     line-height: 1.4;
@@ -193,45 +212,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .contact-wrapper {
-    gap: 2rem;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-form {
-    padding: 1.5rem;
-  }
-
-  /* Mobile form inputs: ensure readable size and proper spacing */
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    font-size: 16px; /* Prevent iOS zoom on focus */
-    padding: 0.875rem 1rem;
-    min-height: 48px; /* Touch-friendly */
-  }
-
-  .form-group textarea {
-    min-height: 120px;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .btn-submit {
-    min-height: 48px;
-    padding: 0.875rem 1.5rem;
-    font-size: 0.9rem;
-  }
+  /* Form styling consolidated in pages/get-involved.css */
 }
 
 @media (max-width: 480px) {
@@ -239,53 +220,67 @@
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
   }
+
   #aim .section-title {
     font-size: 1.1rem;
   }
+
   #aim .fade-up {
     margin-bottom: 0.4rem;
   }
+
   .aims-list {
     gap: 0.2rem;
     margin-top: 0.4rem;
   }
+
   /* Small mobile: Keep boxes/icons hidden, simple text list */
   .aim-item {
     padding: 0.2rem 0 !important;
   }
+
   .aim-item .section-desc {
     font-size: 0.75rem;
     line-height: 1.35;
   }
+
   .principles-grid {
     grid-template-columns: repeat(5, 1fr);
     gap: 0.4rem;
   }
+
   .principle-card {
     padding: 0.6rem 0.3rem;
   }
+
   .principle-card .principle-badge {
     min-height: 36px;
     margin-bottom: 0.3rem;
   }
+
   .principle-card .principle-badge__img {
     max-height: 36px;
   }
+
   .principle-card .principle-badge__placeholder {
     width: 36px;
     height: 36px;
   }
+
   .principle-card .principle-badge__placeholder-text {
     font-size: 1rem;
   }
+
   .principle-card h3 {
     font-size: 0.55rem;
     letter-spacing: 0.02em;
   }
+
   .principle-card .section-desc {
     font-size: 0.5rem;
     -webkit-line-clamp: 2;
   }
+
   .partners-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
@@ -299,19 +294,24 @@
   .partner-card {
     padding: 0.75rem 0.5rem;
   }
+
   .partner-card h3 {
     font-size: 0.7rem;
   }
+
   .partner-stats {
     font-size: 0.65rem;
   }
+
   .partner-logo {
     min-height: 36px;
     margin-bottom: 0.35rem;
   }
+
   .partner-logo__img {
     max-height: 36px;
   }
+
   .partner-logo__placeholder {
     height: 36px;
   }
@@ -347,4 +347,3 @@
     grid-column: span 1;
   }
 }
-
