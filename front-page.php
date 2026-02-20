@@ -607,8 +607,8 @@ $text_alignment_class = aiad_get_text_alignment_class();
                 ?>
                 <div id="free-resources" class="toolkit-free-resources fade-up" style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
                     <span class="section-label"><?php esc_html_e( 'Free Resources', 'ai-awareness-day' ); ?></span>
-                    <h2 class="section-title"><?php esc_html_e( 'Starter Slide', 'ai-awareness-day' ); ?></h2>
-                    <p class="section-desc"><?php esc_html_e( 'One starter per theme: Safe, Smart, Creative, Responsible, Future. Add a download (PDF or PPTX) in the admin to show a download button.', 'ai-awareness-day' ); ?></p>
+                    <h2 class="section-title"><?php esc_html_e( 'AI Awareness Activities', 'ai-awareness-day' ); ?></h2>
+                    <p class="section-desc"><?php esc_html_e( 'Free Resources', 'ai-awareness-day' ); ?></p>
                     <div class="resources-grid" style="margin-top: 2rem;">
                         <?php
                         while ( $free_resources->have_posts() ) :
