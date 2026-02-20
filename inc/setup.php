@@ -102,7 +102,8 @@ function aiad_scripts(): void {
         'aiad-style',
         get_stylesheet_uri(),
         array(),
-        $style_version
+        $style_version,
+        'all' // Explicit media type for Android Chrome compatibility
     );
 
     // Enqueue Modular CSS Files
@@ -138,7 +139,8 @@ function aiad_scripts(): void {
             $handle,
             AIAD_URI . '/assets/css/' . $file,
             array( 'aiad-style', 'aiad-intel-font', 'aiad-google-fonts' ),
-            $file_version
+            $file_version,
+            'all' // Explicit media type for Android Chrome compatibility
         );
     }
 
