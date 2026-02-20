@@ -487,14 +487,14 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <p class="section-desc"><?php esc_html_e( 'Discover the thematic areas that shape AI Awareness Day activities and discussions. Filter by theme or by session length.', 'ai-awareness-day' ); ?></p>
                 </div>
                 <?php
-                // Get resources archive URL - reconstruct properly to avoid localhost issues
-                $resources_archive = get_post_type_archive_link( 'resource' );
-                if ( $resources_archive ) {
-                    // Extract path from archive link and rebuild with current site URL
-                    $archive_path = parse_url( $resources_archive, PHP_URL_PATH );
-                    $resources_url = trailingslashit( home_url() ) . ltrim( $archive_path, '/' );
-                } else {
+                // Get resources archive URL - handle permalink structure properly
+                $permalink_structure = get_option( 'permalink_structure' );
+                if ( $permalink_structure ) {
+                    // Pretty permalinks enabled - use /resources/ URL
                     $resources_url = trailingslashit( home_url() ) . 'resources/';
+                } else {
+                    // Plain permalinks - use query string format
+                    $resources_url = add_query_arg( 'post_type', 'resource', home_url( '/' ) );
                 }
                 $theme_terms = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
                 if ( $theme_terms && ! is_wp_error( $theme_terms ) ) :
@@ -599,14 +599,14 @@ $text_alignment_class = aiad_get_text_alignment_class();
                 ),
             ) );
             if ( $free_resources->have_posts() ) :
-                // Get resources archive URL - reconstruct properly to avoid localhost issues
-                $resources_archive = get_post_type_archive_link( 'resource' );
-                if ( $resources_archive ) {
-                    // Extract path from archive link and rebuild with current site URL
-                    $archive_path = parse_url( $resources_archive, PHP_URL_PATH );
-                    $resources_archive_url = trailingslashit( home_url() ) . ltrim( $archive_path, '/' );
-                } else {
+                // Get resources archive URL - handle permalink structure properly
+                $permalink_structure = get_option( 'permalink_structure' );
+                if ( $permalink_structure ) {
+                    // Pretty permalinks enabled - use /resources/ URL
                     $resources_archive_url = trailingslashit( home_url() ) . 'resources/';
+                } else {
+                    // Plain permalinks - use query string format
+                    $resources_archive_url = add_query_arg( 'post_type', 'resource', home_url( '/' ) );
                 }
                 ?>
                 <div id="free-resources" class="toolkit-free-resources fade-up" style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
