@@ -641,7 +641,7 @@ a.duration-badge:hover {
 .explore-session-cards {
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
   background: var(--green-900);
   border-radius: 0;
@@ -650,7 +650,7 @@ a.duration-badge:hover {
 
 @media (min-width: 768px) {
   .explore-session-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
     padding: 1rem;
   }
