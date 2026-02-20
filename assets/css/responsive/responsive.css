@@ -15,6 +15,24 @@
 }
 
 @media (max-width: 768px) {
+  /* Swap "By Theme" and "By Session Length" order on mobile */
+  .toolkit-explore-themes {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* "By session length" section - show first on mobile */
+  .explore-subheading:last-of-type,
+  .explore-subheading:last-of-type + .explore-session-cards {
+    order: 1;
+  }
+  
+  /* "By theme" section - show second on mobile */
+  .explore-subheading:first-of-type,
+  .explore-subheading:first-of-type + .themes-links {
+    order: 2;
+  }
+
   .nav-toggle {
     display: block;
   }
