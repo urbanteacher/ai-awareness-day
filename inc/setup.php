@@ -93,13 +93,44 @@ function aiad_scripts(): void {
         null
     );
 
-    // Main stylesheet
+    // Main stylesheet (WordPress Theme Header - must load first for Safari compatibility)
     wp_enqueue_style(
         'aiad-style',
         get_stylesheet_uri(),
-        array( 'aiad-intel-font', 'aiad-google-fonts' ),
+        array(),
         AIAD_VERSION
     );
+
+    // Enqueue Modular CSS Files
+    $css_files = array(
+        'base/reset.css',
+        'base/shared.css',
+        'base/animations.css',
+        'base/wp-core.css',
+        'layout/navigation.css',
+        'layout/hero.css',
+        'layout/footer.css',
+        'components/principles.css',
+        'pages/campaign.css',
+        'pages/momentum.css',
+        'pages/themes.css',
+        'pages/aim.css',
+        'pages/toolkit.css',
+        'pages/get-involved.css',
+        'pages/resources-archive.css',
+        'responsive/mobile.css',
+        'responsive/responsive.css',
+    );
+    
+    foreach ( $css_files as $file ) {
+        $handle = 'aiad-' . str_replace( array( '/', '.css' ), array( '-', '' ), $file );
+        wp_enqueue_style(
+            $handle,
+            AIAD_URI . '/assets/css/' . $file,
+            array( 'aiad-style', 'aiad-intel-font', 'aiad-google-fonts' ),
+            AIAD_VERSION
+        );
+    }
 
     // Main script (defer on WordPress 6.3+ for better performance)
     $script_args = version_compare( get_bloginfo( 'version' ), '6.3', '>=' )
