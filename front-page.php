@@ -225,9 +225,17 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     'future'      => __( 'Preparing for an AI-shaped future with confidence.', 'ai-awareness-day' ),
                 );
                 foreach ( $principle_slugs as $index => $slug ) :
+                    // Get title: use customizer value if set and not empty, otherwise use default
+                    $title_mod = get_theme_mod( 'aiad_principle_title_' . $slug, '' );
+                    $title = ! empty( $title_mod ) ? $title_mod : ( isset( $principle_default_titles[ $slug ] ) ? $principle_default_titles[ $slug ] : ucfirst( $slug ) );
+                    
+                    // Get description: use customizer value if set and not empty, otherwise use default
+                    $desc_mod = get_theme_mod( 'aiad_principle_desc_' . $slug, '' );
+                    $desc = ! empty( $desc_mod ) ? $desc_mod : ( isset( $principle_default_descs[ $slug ] ) ? $principle_default_descs[ $slug ] : '' );
+                    
                     $p = array(
-                        'title' => get_theme_mod( 'aiad_principle_title_' . $slug, isset( $principle_default_titles[ $slug ] ) ? $principle_default_titles[ $slug ] : $slug ),
-                        'desc'  => get_theme_mod( 'aiad_principle_desc_' . $slug, isset( $principle_default_descs[ $slug ] ) ? $principle_default_descs[ $slug ] : '' ),
+                        'title' => $title,
+                        'desc'  => $desc,
                     );
                     $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
                     $badge_src = $badge_id ? wp_get_attachment_image_url( $badge_id, 'medium' ) : '';

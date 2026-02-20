@@ -1103,8 +1103,6 @@ a.duration-badge:hover {
   justify-content: center;
   min-height: 60px;
   line-height: 0;
-  user-select: none;
-  pointer-events: none;
 }
 
 .theme-link__badge-img {
@@ -1130,8 +1128,6 @@ a.duration-badge:hover {
   color: var(--gray-400);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  user-select: none;
-  pointer-events: none;
 }
 
 .theme-link__label {
