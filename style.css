@@ -1119,6 +1119,11 @@ a.duration-badge:hover {
   object-fit: contain;
 }
 
+/* Hide broken images in theme links */
+.theme-link__badge-img.is-broken {
+  display: none !important;
+}
+
 .theme-link__badge-placeholder {
   display: flex;
   align-items: center;

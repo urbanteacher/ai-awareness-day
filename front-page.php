@@ -253,14 +253,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
                 <div class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>">
                     <div class="principle-badge">
                         <?php if ( $has_badge_image ) : ?>
-                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.classList.add('is-broken'); this.nextElementSibling.style.display='flex';" />
-                            <div class="principle-badge__placeholder" aria-hidden="true" style="display: none;">
-                                <span class="principle-badge__placeholder-text"><?php echo esc_html( strtoupper( substr( $p['title'], 0, 1 ) ) ); ?></span>
-                            </div>
-                        <?php else : ?>
-                            <div class="principle-badge__placeholder" aria-hidden="true">
-                                <span class="principle-badge__placeholder-text"><?php echo esc_html( strtoupper( substr( $p['title'], 0, 1 ) ) ); ?></span>
-                            </div>
+                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.classList.add('is-broken');" />
                         <?php endif; ?>
                     </div>
                     <h3><?php echo esc_html( $p['title'] ); ?></h3>
@@ -519,14 +512,11 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             $has_theme_badge = ! empty( $theme_badge_src ) && $theme_badge_id > 0;
                             ?>
                             <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
-                                <span class="theme-link__badge">
-                                    <?php if ( $has_theme_badge ) : ?>
-                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                        <span class="theme-link__badge-placeholder" aria-hidden="true" style="display: none;"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
-                                    <?php else : ?>
-                                        <span class="theme-link__badge-placeholder" aria-hidden="true"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
-                                    <?php endif; ?>
-                                </span>
+                                <?php if ( $has_theme_badge ) : ?>
+                                    <span class="theme-link__badge">
+                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" onerror="this.classList.add('is-broken');" />
+                                    </span>
+                                <?php endif; ?>
                                 <span class="theme-link__label"><?php echo esc_html( $term->name ); ?></span>
                             </a>
                         <?php endforeach; ?>
