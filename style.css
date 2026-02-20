@@ -1678,6 +1678,10 @@ a.toolkit-card.toolkit-card--link:hover {
   cursor: pointer;
   transition: var(--transition);
   text-align: left;
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: none;
+  outline: none;
 }
 
 .display-board-steps__toggle:hover {

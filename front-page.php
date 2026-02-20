@@ -191,7 +191,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
             </div>
             <div class="video-wrapper video-wrapper--left">
                 <iframe
-                    src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_video_id ); ?>?rel=0&modestbranding=1"
+                    src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_video_id ); ?>?rel=0&modestbranding=1&autoplay=1&mute=1"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowfullscreen
                     loading="lazy"
