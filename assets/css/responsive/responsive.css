@@ -193,12 +193,44 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .contact-wrapper {
+    gap: 2rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
 
   .contact-form {
     padding: 1.5rem;
+  }
+
+  /* Mobile form inputs: ensure readable size and proper spacing */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 16px; /* Prevent iOS zoom on focus */
+    padding: 0.875rem 1rem;
+    min-height: 48px; /* Touch-friendly */
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-submit {
+    min-height: 48px;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
   }
 }
 
