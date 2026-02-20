@@ -145,26 +145,30 @@
     margin-bottom: 1rem;
   }
   .aims-list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-top: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
   }
+  /* Mobile: Remove boxes and checkmarks, show simple text list */
   .aim-item {
-    padding: 0.75rem 1rem;
-    gap: 0.6rem;
+    background: transparent !important;
+    border: none !important;
+    padding: 0.5rem 0 !important;
+    gap: 0;
+    display: block;
+  }
+  .aim-item:hover {
+    transform: none;
+    box-shadow: none;
   }
   .aim-item .aim-icon {
-    width: 28px;
-    height: 28px;
-    margin-top: 1px;
-  }
-  .aim-item .aim-icon svg {
-    width: 14px;
-    height: 14px;
+    display: none !important;
   }
   .aim-item .section-desc {
-    font-size: 0.8rem;
-    line-height: 1.4;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    padding-left: 0;
   }
 
   .themes-grid {
@@ -189,23 +193,16 @@
     font-size: 1.2rem;
   }
   .aims-list {
-    gap: 0.5rem;
-    margin-top: 0.75rem;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
   }
+  /* Small mobile: Keep boxes/icons hidden, simple text list */
   .aim-item {
-    padding: 0.5rem 0.75rem;
-    gap: 0.5rem;
-  }
-  .aim-item .aim-icon {
-    width: 24px;
-    height: 24px;
-  }
-  .aim-item .aim-icon svg {
-    width: 12px;
-    height: 12px;
+    padding: 0.4rem 0 !important;
   }
   .aim-item .section-desc {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
   .principles-grid {
     grid-template-columns: repeat(5, 1fr);
