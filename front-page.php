@@ -507,9 +507,20 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             if ( strpos( $url, 'localhost' ) !== false ) {
                                 $url = str_replace( parse_url( $url, PHP_URL_SCHEME ) . '://' . parse_url( $url, PHP_URL_HOST ), parse_url( home_url(), PHP_URL_SCHEME ) . '://' . parse_url( home_url(), PHP_URL_HOST ), $url );
                             }
-                            $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $term->slug, 0 ) );
-                            $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
-                            $has_theme_badge = ! empty( $theme_badge_src ) && $theme_badge_id > 0;
+                            // Map term slug to Customizer badge setting (normalize to lowercase)
+                            $badge_slug = strtolower( $term->slug );
+                            $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) );
+                            $theme_badge_src = '';
+                            $has_theme_badge = false;
+                            
+                            // Only use badge image if attachment exists and is valid
+                            if ( $theme_badge_id > 0 ) {
+                                $attachment = get_post( $theme_badge_id );
+                                if ( $attachment && wp_attachment_is_image( $theme_badge_id ) ) {
+                                    $theme_badge_src = wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' );
+                                    $has_theme_badge = ! empty( $theme_badge_src );
+                                }
+                            }
                             ?>
                             <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
                                 <?php if ( $has_theme_badge ) : ?>
