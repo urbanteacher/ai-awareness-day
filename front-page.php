@@ -477,7 +477,15 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <p class="section-desc"><?php esc_html_e( 'Discover the thematic areas that shape AI Awareness Day activities and discussions. Filter by theme or by session length.', 'ai-awareness-day' ); ?></p>
                 </div>
                 <?php
-                $resources_url = get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' );
+                // Get resources archive URL - reconstruct properly to avoid localhost issues
+                $resources_archive = get_post_type_archive_link( 'resource' );
+                if ( $resources_archive ) {
+                    // Extract path from archive link and rebuild with current site URL
+                    $archive_path = parse_url( $resources_archive, PHP_URL_PATH );
+                    $resources_url = trailingslashit( home_url() ) . ltrim( $archive_path, '/' );
+                } else {
+                    $resources_url = trailingslashit( home_url() ) . 'resources/';
+                }
                 $theme_terms = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
                 if ( $theme_terms && ! is_wp_error( $theme_terms ) ) :
                     ?>
@@ -485,12 +493,16 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     <div class="themes-links">
                         <?php foreach ( $theme_terms as $term ) :
                             $url = add_query_arg( 'principle', $term->slug, $resources_url );
+                            // Ensure URL uses site URL, not localhost (safety check)
+                            if ( strpos( $url, 'localhost' ) !== false ) {
+                                $url = str_replace( parse_url( $url, PHP_URL_SCHEME ) . '://' . parse_url( $url, PHP_URL_HOST ), parse_url( home_url(), PHP_URL_SCHEME ) . '://' . parse_url( home_url(), PHP_URL_HOST ), $url );
+                            }
                             $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $term->slug, 0 ) );
                             $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
                             $has_theme_badge = ! empty( $theme_badge_src ) && $theme_badge_id > 0;
                             ?>
-                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up" aria-label="<?php echo esc_attr( $term->name ); ?>">
-                                <span class="theme-link__badge" aria-hidden="true">
+                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
+                                <span class="theme-link__badge">
                                     <?php if ( $has_theme_badge ) : ?>
                                         <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                                         <span class="theme-link__badge-placeholder" aria-hidden="true" style="display: none;"><?php echo esc_html( strtoupper( substr( $term->name, 0, 1 ) ) ); ?></span>
@@ -521,6 +533,10 @@ $text_alignment_class = aiad_get_text_alignment_class();
                             }
                             $card = $session_cards[ $slug ];
                             $url  = add_query_arg( 'duration', $slug, $resources_url );
+                            // Ensure URL uses site URL, not localhost
+                            if ( strpos( $url, 'localhost' ) !== false ) {
+                                $url = str_replace( parse_url( $url, PHP_URL_SCHEME ) . '://' . parse_url( $url, PHP_URL_HOST ), parse_url( home_url(), PHP_URL_SCHEME ) . '://' . parse_url( home_url(), PHP_URL_HOST ), $url );
+                            }
                             $icon = isset( $card['icon'] ) ? $card['icon'] : 'book';
                             $icon_bg = isset( $card['icon_bg'] ) ? $card['icon_bg'] : '#c4b5fd';
                             ?>
@@ -565,7 +581,15 @@ $text_alignment_class = aiad_get_text_alignment_class();
                 ),
             ) );
             if ( $free_resources->have_posts() ) :
-                $resources_archive_url = get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' );
+                // Get resources archive URL - reconstruct properly to avoid localhost issues
+                $resources_archive = get_post_type_archive_link( 'resource' );
+                if ( $resources_archive ) {
+                    // Extract path from archive link and rebuild with current site URL
+                    $archive_path = parse_url( $resources_archive, PHP_URL_PATH );
+                    $resources_archive_url = trailingslashit( home_url() ) . ltrim( $archive_path, '/' );
+                } else {
+                    $resources_archive_url = trailingslashit( home_url() ) . 'resources/';
+                }
                 ?>
                 <div id="free-resources" class="toolkit-free-resources fade-up" style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
                     <span class="section-label"><?php esc_html_e( 'Free Resources', 'ai-awareness-day' ); ?></span>
