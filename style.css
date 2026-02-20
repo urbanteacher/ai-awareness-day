@@ -845,6 +845,11 @@ a.duration-badge:hover {
   object-fit: contain;
 }
 
+/* Hide broken images in principle badges */
+.principle-card .principle-badge__img.is-broken {
+  display: none !important;
+}
+
 .principle-card .principle-badge__placeholder {
   width: 120px;
   height: 120px;

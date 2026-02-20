@@ -238,13 +238,22 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         'desc'  => $desc,
                     );
                     $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
-                    $badge_src = $badge_id ? wp_get_attachment_image_url( $badge_id, 'medium' ) : '';
-                    $has_badge_image = ! empty( $badge_src ) && $badge_id > 0;
+                    $badge_src = '';
+                    $has_badge_image = false;
+                    
+                    // Only use badge image if attachment exists and is valid
+                    if ( $badge_id > 0 ) {
+                        $attachment = get_post( $badge_id );
+                        if ( $attachment && wp_attachment_is_image( $badge_id ) ) {
+                            $badge_src = wp_get_attachment_image_url( $badge_id, 'medium' );
+                            $has_badge_image = ! empty( $badge_src );
+                        }
+                    }
                     ?>
                 <div class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>">
                     <div class="principle-badge">
                         <?php if ( $has_badge_image ) : ?>
-                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.classList.add('is-broken'); this.nextElementSibling.style.display='flex';" />
                             <div class="principle-badge__placeholder" aria-hidden="true" style="display: none;">
                                 <span class="principle-badge__placeholder-text"><?php echo esc_html( strtoupper( substr( $p['title'], 0, 1 ) ) ); ?></span>
                             </div>
