@@ -379,12 +379,10 @@ $text_alignment_class = aiad_get_text_alignment_class();
                 $display_img_1_url = $display_img_1_id ? wp_get_attachment_image_url( $display_img_1_id, 'full' ) : '';
                 ?>
                 <div class="display-board-preview js-display-board-preview<?php echo $display_img_1_url ? ' display-board-preview--has-real' : ''; ?>" data-view="blueprint">
-                    <?php if ( $display_img_1_url ) : ?>
-                        <div class="display-board-flip-toggle" role="tablist" aria-label="<?php esc_attr_e( 'View blueprint or real example', 'ai-awareness-day' ); ?>">
-                            <button type="button" class="display-board-flip-btn is-active" role="tab" aria-selected="true" aria-controls="display-board-blueprint" id="tab-blueprint"><?php esc_html_e( 'Blueprint', 'ai-awareness-day' ); ?></button>
-                            <button type="button" class="display-board-flip-btn" role="tab" aria-selected="false" aria-controls="display-board-real" id="tab-real"><?php esc_html_e( 'Real example', 'ai-awareness-day' ); ?></button>
-                        </div>
-                    <?php endif; ?>
+                    <div class="display-board-flip-toggle" role="tablist" aria-label="<?php esc_attr_e( 'View blueprint or real example', 'ai-awareness-day' ); ?>">
+                        <button type="button" class="display-board-flip-btn is-active" role="tab" aria-selected="true" aria-controls="display-board-blueprint" id="tab-blueprint"><?php esc_html_e( 'Blueprint', 'ai-awareness-day' ); ?></button>
+                        <button type="button" class="display-board-flip-btn<?php echo $display_img_1_url ? '' : ' display-board-flip-btn--disabled'; ?>" role="tab" aria-selected="false" aria-controls="display-board-real" id="tab-real"<?php echo $display_img_1_url ? '' : ' disabled aria-disabled="true"'; ?>><?php esc_html_e( 'Real example', 'ai-awareness-day' ); ?></button>
+                    </div>
                     <div class="display-board-preview__view display-board-preview__view--blueprint" id="display-board-blueprint" role="tabpanel" aria-labelledby="tab-blueprint">
                 <div class="display-board-mockup" aria-label="<?php esc_attr_e( 'Display board layout guide', 'ai-awareness-day' ); ?>">
                     <div class="display-board-mockup__header">
@@ -439,13 +437,17 @@ $text_alignment_class = aiad_get_text_alignment_class();
                     </div>
                 </div>
                     </div>
-                    <?php if ( $display_img_1_url ) : ?>
-                        <div class="display-board-preview__view display-board-preview__view--real" id="display-board-real" role="tabpanel" aria-labelledby="tab-real" hidden>
+                    <div class="display-board-preview__view display-board-preview__view--real" id="display-board-real" role="tabpanel" aria-labelledby="tab-real"<?php echo $display_img_1_url ? '' : ' hidden'; ?>>
+                        <?php if ( $display_img_1_url ) : ?>
                             <div class="display-board-real">
                                 <img src="<?php echo esc_url( $display_img_1_url ); ?>" alt="<?php esc_attr_e( 'Example display board', 'ai-awareness-day' ); ?>" loading="lazy" />
                             </div>
-                        </div>
-                    <?php endif; ?>
+                        <?php else : ?>
+                            <div class="display-board-real" style="padding: 2rem; text-align: center; color: var(--gray-500);">
+                                <p><?php esc_html_e( 'No real example available. Upload an image in the Customizer to see it here.', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div class="display-board-steps">
@@ -457,6 +459,20 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         <li class="section-desc"><?php esc_html_e( "Include \"This week's question\" and leave space for student responses (e.g. sticky notes).", 'ai-awareness-day' ); ?></li>
                         <li class="section-desc"><?php esc_html_e( 'Optionally add AI leaders & innovators (photos and names) and a student spotlight for pupil work.', 'ai-awareness-day' ); ?></li>
                     </ol>
+                </div>
+
+                <div class="display-board-submit fade-up" style="margin-top: 2.5rem; text-align: center; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
+                    <h3 class="display-board-steps__title" style="margin-bottom: 1rem;"><?php esc_html_e( 'Submit your display board', 'ai-awareness-day' ); ?></h3>
+                    <p class="section-desc" style="margin-bottom: 1.5rem;"><?php esc_html_e( 'Share photos of your school\'s display board. Accepted formats: JPG, PNG, PDF.', 'ai-awareness-day' ); ?></p>
+                    <?php
+                    $contact_email = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
+                    $email_subject = rawurlencode( 'Our Schools Display' );
+                    $email_body = rawurlencode( 'Hello,\n\nPlease find attached photos of our school\'s AI Awareness Day display board.\n\nThank you!' );
+                    $mailto_link = 'mailto:' . esc_attr( $contact_email ) . '?subject=' . $email_subject . '&body=' . $email_body;
+                    ?>
+                    <a href="<?php echo esc_url( $mailto_link ); ?>" class="resource-filter-submit" style="display: inline-block;">
+                        <?php esc_html_e( 'Create a display board for your school', 'ai-awareness-day' ); ?>
+                    </a>
                 </div>
 
                 <?php
@@ -715,7 +731,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
             <div class="container">
                 <div class="fade-up">
                     <span class="section-label"><?php esc_html_e( 'Extra Resources', 'ai-awareness-day' ); ?></span>
-                    <h2 class="section-title"><?php esc_html_e( 'Curated Resources', 'ai-awareness-day' ); ?></h2>
+                    <h2 class="section-title"><?php esc_html_e( 'Handpicked Quality Resources', 'ai-awareness-day' ); ?></h2>
                     <p class="section-desc"><?php esc_html_e( 'A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day' ); ?></p>
                 </div>
 
