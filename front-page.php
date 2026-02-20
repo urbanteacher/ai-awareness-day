@@ -453,9 +453,9 @@ $text_alignment_class = aiad_get_text_alignment_class();
 
             <div class="display-board-steps-wrapper">
                 <div class="display-board-steps">
-                    <button type="button" class="display-board-steps__toggle" aria-expanded="true" aria-controls="display-board-steps-list">
+                    <button type="button" class="display-board-steps__toggle" aria-expanded="false" aria-controls="display-board-steps-list">
                         <span class="display-board-steps__title"><?php esc_html_e( 'How to create yours', 'ai-awareness-day' ); ?></span>
-                        <span class="display-board-steps__icon" aria-hidden="true">−</span>
+                        <span class="display-board-steps__icon" aria-hidden="true">+</span>
                     </button>
                     <div class="container">
                         <ol class="display-board-steps__list" id="display-board-steps-list">

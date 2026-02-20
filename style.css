@@ -508,6 +508,67 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--gray-50);
 }
 
+/* ============================================
+   MOBILE STANDARDS (max-width: 767px)
+   Base typography and spacing for phone/tablet
+   ============================================ */
+@media (max-width: 767px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.375rem, 5vw, 2.25rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-desc {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .hero-title-block h1 {
+    font-size: clamp(1.75rem, 6vw, 3rem);
+  }
+
+  .hero-title-block .hero-date {
+    font-size: clamp(0.875rem, 3vw, 1.25rem);
+  }
+
+  .hero-title-block p,
+  .hero-logo .section-desc {
+    font-size: 0.9375rem;
+  }
+
+  /* Touch targets: minimum 44px height for primary controls */
+  .display-board-steps__toggle,
+  .btn-submit,
+  .resource-filter-submit,
+  .nav-cta {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+
+  .section-title {
+    font-size: clamp(1.25rem, 5vw, 2rem);
+  }
+
+  .section-desc {
+    font-size: 0.875rem;
+  }
+}
+
 /* YouTube / Video section – left-aligned */
 #youtube .youtube-header {
   text-align: left;
@@ -579,29 +640,67 @@ a.duration-badge:hover {
 .explore-session-cards {
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   background: var(--green-900);
   border-radius: 0;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 @media (min-width: 768px) {
   .explore-session-cards {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
   }
 }
 
 .explore-session-card {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.5rem 0.75rem;
+  align-items: start;
+  padding: 0.75rem;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 0;
   text-decoration: none;
   color: var(--white);
   transition: var(--transition);
+}
+
+.explore-session-card .explore-session-icon {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.explore-session-card .explore-session-badge {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+}
+
+.explore-session-card .explore-session-text {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+@media (min-width: 768px) {
+  .explore-session-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .explore-session-card .explore-session-icon,
+  .explore-session-card .explore-session-badge,
+  .explore-session-card .explore-session-text {
+    grid-column: auto;
+    grid-row: auto;
+  }
 }
 
 .explore-session-card:hover {
@@ -610,8 +709,8 @@ a.duration-badge:hover {
 
 .explore-session-icon {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 0;
   display: flex;
   align-items: center;
@@ -619,9 +718,23 @@ a.duration-badge:hover {
   color: var(--white);
 }
 
+@media (min-width: 768px) {
+  .explore-session-icon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
 .explore-session-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
+}
+
+@media (min-width: 768px) {
+  .explore-session-icon svg {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .explore-session-text {
@@ -629,42 +742,156 @@ a.duration-badge:hover {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
 }
 
 .explore-session-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .explore-session-title {
+    font-size: 1.1rem;
+  }
 }
 
 .explore-session-desc {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: var(--gray-300);
-  line-height: 1.4;
+  line-height: 1.3;
+}
+
+@media (min-width: 768px) {
+  .explore-session-desc {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
 }
 
 .explore-session-badge {
   flex-shrink: 0;
-  padding: 0.45rem 1rem;
+  padding: 0.35rem 0.6rem;
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--white);
   background: #7c3aed;
   border-radius: 0;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .explore-session-badge {
+    padding: 0.45rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .explore-subheading {
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* All 4 session cards in one row on mobile */
+  .explore-session-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35rem;
+    padding: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .explore-session-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem 0.35rem;
+    gap: 0.35rem;
+  }
+
+  .explore-session-card .explore-session-icon,
+  .explore-session-card .explore-session-badge,
+  .explore-session-card .explore-session-text {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .explore-session-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .explore-session-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .explore-session-text {
+    order: 1;
+  }
+
+  .explore-session-badge {
+    order: 2;
+    padding: 0.2rem 0.35rem;
+    font-size: 0.55rem;
+  }
+
+  .explore-session-title {
+    font-size: 0.58rem;
+    line-height: 1.2;
+  }
+
+  .explore-session-desc {
+    font-size: 0.5rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 480px) {
-  .explore-session-card {
-    flex-wrap: wrap;
+  .explore-session-cards {
+    padding: 0.4rem;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
   }
+
+  .explore-session-card {
+    padding: 0.4rem 0.25rem;
+    gap: 0.25rem;
+  }
+
+  .explore-session-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .explore-session-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .explore-session-badge {
-    width: 100%;
-    text-align: center;
+    padding: 0.15rem 0.25rem;
+    font-size: 0.5rem;
+  }
+
+  .explore-session-title {
+    font-size: 0.52rem;
+  }
+
+  .explore-session-desc {
+    font-size: 0.45rem;
+    -webkit-line-clamp: 2;
   }
 }
 
@@ -1417,29 +1644,79 @@ a.toolkit-card.toolkit-card--link:hover {
   max-width: none;
 }
 
-/* Toolkit: responsive on narrow viewports */
-@media screen and (max-width: 640px) {
+/* Toolkit: responsive on narrow viewports — all cards in one row, reduced size */
+@media screen and (max-width: 768px) {
   .toolkit-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
   }
 
   .toolkit-card {
-    padding: 1.25rem;
+    padding: 0.6rem 0.5rem;
   }
 
   .toolkit-card .toolkit-header {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .toolkit-card .toolkit-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .toolkit-card .toolkit-icon svg {
+    width: 16px;
+    height: 16px;
   }
 
   .toolkit-card h3 {
-    font-size: 0.95rem;
+    font-size: 0.65rem;
+    text-align: center;
+    line-height: 1.25;
   }
 
   .toolkit-card .section-desc {
-    font-size: 1rem;
+    font-size: 0.6rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .toolkit-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .toolkit-card {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .toolkit-card .toolkit-header {
+    margin-bottom: 0.35rem;
+  }
+
+  .toolkit-card .toolkit-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .toolkit-card .toolkit-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .toolkit-card h3 {
+    font-size: 0.6rem;
+  }
+
+  .toolkit-card .section-desc {
+    font-size: 0.55rem;
   }
 }
 
@@ -1739,10 +2016,22 @@ a.toolkit-card.toolkit-card--link:hover {
   page-break-inside: avoid;
 }
 
+@media (max-width: 767px) {
+  .display-board-steps__list li.section-desc {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+  .display-board-steps__list {
+    padding-top: 0.75rem;
+    padding-left: 1.25rem;
+  }
+}
+
 .display-board-submit {
   margin-top: 2.5rem;
   padding-top: 2rem;
   border-top: 1px solid var(--gray-200);
+  min-width: 0;
 }
 
 .display-board-submit__content {
@@ -1769,21 +2058,75 @@ a.toolkit-card.toolkit-card--link:hover {
 .display-board-submit__button {
   justify-self: start;
   white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 767px) {
+  .display-board-submit {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 100%;
+  }
+
   .display-board-submit__content {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .display-board-submit__text {
     text-align: center;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .display-board-submit__text .display-board-steps__title {
+    font-size: 0.9rem;
+    padding-left: 0;
+  }
+
+  .display-board-submit__text .section-desc {
+    font-size: 0.875rem;
+    line-height: 1.45;
   }
 
   .display-board-submit__button {
     justify-self: stretch;
     text-align: center;
+    white-space: normal;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.875rem 1rem;
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .display-board-submit {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+  }
+
+  .display-board-submit__content {
+    gap: 0.75rem;
+  }
+
+  .display-board-submit__text .display-board-steps__title {
+    font-size: 0.85rem;
+  }
+
+  .display-board-submit__text .section-desc {
+    font-size: 0.8125rem;
+  }
+
+  .display-board-submit__button {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -1853,10 +2196,9 @@ a.toolkit-card.toolkit-card--link:hover {
     font-size: 0.65rem;
   }
 
+  /* Hide the five principle blocks (BE SAFE, BE SMART, etc.) on mobile — keeps blueprint shorter */
   .display-board-mockup__principles {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    display: none;
   }
 
   .display-board-mockup__block {
@@ -2293,6 +2635,21 @@ a.toolkit-card.toolkit-card--link:hover {
   max-width: none;
 }
 
+/* Partner Resources: match AI Awareness Activities card height and consistency (excerpt clamp, smaller text) */
+#partner-resources .resource-card__excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+#partner-resources .resource-card__meta {
+  font-size: 0.7rem;
+  margin-bottom: 0.35rem;
+}
+
 .resource-card__action {
   margin-top: 0.75rem;
 }
@@ -2333,6 +2690,235 @@ a.toolkit-card.toolkit-card--link:hover {
   .resource-card__pill {
     padding: 0.12rem 0.35rem;
     font-size: 0.6rem;
+  }
+}
+
+/* Free Resources (toolkit): three activity cards in one row on mobile */
+@media screen and (max-width: 768px) {
+  #free-resources .resources-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  #free-resources .resource-card {
+    min-width: 0;
+  }
+
+  #free-resources .resource-card__image-link {
+    aspect-ratio: 16/8;
+  }
+
+  #free-resources .resource-card__image-placeholder-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  #free-resources .resource-card__image-overlay {
+    padding: 0.35rem;
+  }
+
+  #free-resources .resource-card__image-top {
+    gap: 0.25rem;
+  }
+
+  #free-resources .resource-card__pill {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.5rem;
+  }
+
+  #free-resources .resource-card__image-title {
+    font-size: 0.55rem;
+  }
+
+  #free-resources .resource-card__body {
+    padding: 0.5rem 0.4rem;
+  }
+
+  #free-resources .resource-card__title {
+    font-size: 0.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  #free-resources .resource-card__title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #free-resources .resource-card__excerpt.section-desc {
+    font-size: 0.55rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #free-resources .resource-card__action {
+    margin-top: 0.35rem;
+  }
+
+  #free-resources .resource-card__link {
+    font-size: 0.55rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #free-resources .resources-grid {
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  #free-resources .resource-card__image-placeholder-text {
+    font-size: 0.55rem;
+  }
+
+  #free-resources .resource-card__body {
+    padding: 0.4rem 0.35rem;
+  }
+
+  #free-resources .resource-card__title {
+    font-size: 0.55rem;
+  }
+
+  #free-resources .resource-card__excerpt.section-desc {
+    font-size: 0.5rem;
+  }
+
+  #free-resources .resource-card__link {
+    font-size: 0.5rem;
+  }
+}
+
+/* Partner Resources: same three-in-a-row compact layout on mobile, match AI Awareness Activities */
+@media screen and (max-width: 768px) {
+  #partner-resources .section-title {
+    font-size: 1.1rem;
+  }
+
+  #partner-resources .section-desc {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0;
+  }
+
+  #partner-resources .resources-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem !important;
+  }
+
+  #partner-resources .resource-card {
+    min-width: 0;
+  }
+
+  #partner-resources .resource-card__image-link {
+    aspect-ratio: 16/8;
+  }
+
+  #partner-resources .resource-card__image-placeholder-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  #partner-resources .resource-card__image-overlay {
+    padding: 0.35rem;
+  }
+
+  #partner-resources .resource-card__image-top {
+    gap: 0.25rem;
+  }
+
+  #partner-resources .resource-card__pill {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.5rem;
+  }
+
+  #partner-resources .resource-card__image-title {
+    font-size: 0.55rem;
+  }
+
+  #partner-resources .resource-card__body {
+    padding: 0.5rem 0.4rem;
+  }
+
+  #partner-resources .resource-card__title {
+    font-size: 0.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  #partner-resources .resource-card__title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #partner-resources .resource-card__meta {
+    font-size: 0.5rem;
+    margin-bottom: 0.2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #partner-resources .resource-card__excerpt,
+  #partner-resources .resource-card__excerpt.section-desc {
+    font-size: 0.55rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #partner-resources .resource-card__action {
+    margin-top: 0.35rem;
+  }
+
+  #partner-resources .resource-card__link {
+    font-size: 0.55rem;
+  }
+
+  #partner-resources .duration-badge {
+    font-size: 0.5rem;
+    padding: 0.1rem 0.25rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #partner-resources .resources-grid {
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  #partner-resources .resource-card__image-placeholder-text {
+    font-size: 0.55rem;
+  }
+
+  #partner-resources .resource-card__body {
+    padding: 0.4rem 0.35rem;
+  }
+
+  #partner-resources .resource-card__title {
+    font-size: 0.55rem;
+  }
+
+  #partner-resources .resource-card__meta {
+    font-size: 0.45rem;
+  }
+
+  #partner-resources .resource-card__excerpt,
+  #partner-resources .resource-card__excerpt.section-desc {
+    font-size: 0.5rem;
+  }
+
+  #partner-resources .resource-card__link {
+    font-size: 0.5rem;
   }
 }
 
@@ -2550,14 +3136,105 @@ a.toolkit-card.toolkit-card--link:hover {
   }
 
   .principles-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .principle-card {
+    padding: 1rem 0.75rem;
+  }
+  .principle-card .principle-badge {
+    min-height: 56px;
+    margin-bottom: 0.5rem;
+    padding: 0.35rem;
+  }
+  .principle-card .principle-badge__img {
+    max-height: 56px;
+  }
+  .principle-card .principle-badge__placeholder {
+    width: 56px;
+    height: 56px;
+  }
+  .principle-card .principle-badge__placeholder-text {
+    font-size: 1.5rem;
+  }
+  .principle-card h3 {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .principle-card .section-desc {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+    line-height: 1.35;
   }
   .partners-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
 
+  .partner-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .partner-card h3 {
+    font-size: 0.7rem;
+    margin-bottom: 0.35rem;
+    min-height: calc(1.2em * 2);
+    max-height: calc(1.2em * 2);
+    height: calc(1.2em * 2);
+  }
+
+  .partner-stats {
+    font-size: 0.65rem;
+    line-height: 1.35;
+    min-height: calc(1.35em * 2);
+    max-height: calc(1.35em * 2);
+    height: calc(1.35em * 2);
+  }
+
+  .partner-logo {
+    min-height: 44px;
+    margin-bottom: 0.5rem;
+  }
+
+  .partner-logo__img {
+    max-height: 44px;
+  }
+
+  .partner-logo__placeholder {
+    height: 44px;
+  }
+
+  #aim .section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  #aim .section-title {
+    font-size: 1.35rem;
+  }
+  #aim .fade-up {
+    margin-bottom: 1rem;
+  }
   .aims-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .aim-item {
+    padding: 0.75rem 1rem;
+    gap: 0.6rem;
+  }
+  .aim-item .aim-icon {
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+  }
+  .aim-item .aim-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  .aim-item .section-desc {
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 
   .themes-grid {
@@ -2574,13 +3251,83 @@ a.toolkit-card.toolkit-card--link:hover {
 }
 
 @media (max-width: 480px) {
+  #aim .section {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  #aim .section-title {
+    font-size: 1.2rem;
+  }
+  .aims-list {
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .aim-item {
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+  }
+  .aim-item .aim-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .aim-item .aim-icon svg {
+    width: 12px;
+    height: 12px;
+  }
+  .aim-item .section-desc {
+    font-size: 0.75rem;
+  }
   .principles-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .principle-card {
+    padding: 0.75rem 0.5rem;
+  }
+  .principle-card .principle-badge {
+    min-height: 44px;
+    margin-bottom: 0.35rem;
+  }
+  .principle-card .principle-badge__img {
+    max-height: 44px;
+  }
+  .principle-card .principle-badge__placeholder {
+    width: 44px;
+    height: 44px;
+  }
+  .principle-card .principle-badge__placeholder-text {
+    font-size: 1.25rem;
+  }
+  .principle-card h3 {
+    font-size: 0.7rem;
+  }
+  .principle-card .section-desc {
+    font-size: 0.65rem;
   }
   .partners-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
   }
-  
+  .partner-card {
+    padding: 0.75rem 0.5rem;
+  }
+  .partner-card h3 {
+    font-size: 0.7rem;
+  }
+  .partner-stats {
+    font-size: 0.65rem;
+  }
+  .partner-logo {
+    min-height: 36px;
+    margin-bottom: 0.35rem;
+  }
+  .partner-logo__img {
+    max-height: 36px;
+  }
+  .partner-logo__placeholder {
+    height: 36px;
+  }
+
   .themes-grid {
     grid-template-columns: repeat(2, 1fr);
   }
