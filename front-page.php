@@ -237,18 +237,10 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         'title' => $title,
                         'desc'  => $desc,
                     );
+                    // Use same simple approach as display board images (which work reliably)
                     $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
-                    $badge_src = '';
-                    $has_badge_image = false;
-                    
-                    // Only use badge image if attachment exists and is valid
-                    if ( $badge_id > 0 ) {
-                        $attachment = get_post( $badge_id );
-                        if ( $attachment && wp_attachment_is_image( $badge_id ) ) {
-                            $badge_src = wp_get_attachment_image_url( $badge_id, 'medium' );
-                            $has_badge_image = ! empty( $badge_src );
-                        }
-                    }
+                    $badge_src = $badge_id ? wp_get_attachment_image_url( $badge_id, 'medium' ) : '';
+                    $has_badge_image = ! empty( $badge_src );
                     ?>
                 <div class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>">
                     <div class="principle-badge">
@@ -508,19 +500,11 @@ $text_alignment_class = aiad_get_text_alignment_class();
                                 $url = str_replace( parse_url( $url, PHP_URL_SCHEME ) . '://' . parse_url( $url, PHP_URL_HOST ), parse_url( home_url(), PHP_URL_SCHEME ) . '://' . parse_url( home_url(), PHP_URL_HOST ), $url );
                             }
                             // Map term slug to Customizer badge setting (normalize to lowercase)
+                            // Use same simple approach as display board images (which work reliably)
                             $badge_slug = strtolower( $term->slug );
                             $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) );
-                            $theme_badge_src = '';
-                            $has_theme_badge = false;
-                            
-                            // Only use badge image if attachment exists and is valid
-                            if ( $theme_badge_id > 0 ) {
-                                $attachment = get_post( $theme_badge_id );
-                                if ( $attachment && wp_attachment_is_image( $theme_badge_id ) ) {
-                                    $theme_badge_src = wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' );
-                                    $has_theme_badge = ! empty( $theme_badge_src );
-                                }
-                            }
+                            $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
+                            $has_theme_badge = ! empty( $theme_badge_src );
                             ?>
                             <a href="<?php echo esc_url( $url ); ?>" class="theme-link fade-up">
                                 <?php if ( $has_theme_badge ) : ?>
