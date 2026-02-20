@@ -26,7 +26,10 @@ get_header();
                     <div class="themes-links">
                         <?php foreach ( $theme_terms as $term ) :
                             $url = add_query_arg( 'principle', $term->slug, $featured_resources_url );
-                            $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $term->slug, 0 ) );
+                            // Map term slug to Customizer badge setting (normalize to lowercase)
+                            // Use same simple approach as display board images (which work reliably)
+                            $badge_slug = strtolower( $term->slug );
+                            $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) );
                             $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
                             ?>
                             <a href="<?php echo esc_url( $url ); ?>" class="theme-link">

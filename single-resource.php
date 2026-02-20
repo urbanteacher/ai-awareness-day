@@ -18,7 +18,10 @@ get_header();
                 $type_name     = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
                 $theme_name    = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
                 $theme_slug    = $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '';
-                $theme_badge_id  = $theme_slug !== '' ? absint( get_theme_mod( 'aiad_badge_' . $theme_slug, 0 ) ) : 0;
+                // Map term slug to Customizer badge setting (normalize to lowercase)
+                // Use same simple approach as display board images (which work reliably)
+                $badge_slug = $theme_slug !== '' ? strtolower( $theme_slug ) : '';
+                $theme_badge_id  = $badge_slug !== '' ? absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) ) : 0;
                 $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
                 $duration_name = '';
                 if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
