@@ -519,8 +519,8 @@ $text_alignment_class = aiad_get_text_alignment_class();
 
             <div id="themes" class="toolkit-explore-themes" style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
                 <div class="fade-up">
-                    <span class="section-label"><?php esc_html_e( 'Themes', 'ai-awareness-day' ); ?></span>
-                    <h2 class="section-title"><?php esc_html_e( 'Explore the Themes', 'ai-awareness-day' ); ?></h2>
+                    <span class="section-label"><?php esc_html_e( 'Activities', 'ai-awareness-day' ); ?></span>
+                    <h2 class="section-title"><?php esc_html_e( 'Personalised to you', 'ai-awareness-day' ); ?></h2>
                     <p class="section-desc"><?php esc_html_e( 'Discover the thematic areas that shape AI Awareness Day activities and discussions. Filter by theme or by session length.', 'ai-awareness-day' ); ?></p>
                 </div>
                 <?php
