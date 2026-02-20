@@ -179,6 +179,21 @@
     }
 
     // ============================================
+    // Display Board Steps: Toggle button
+    // ============================================
+    const displayBoardStepsToggle = document.querySelector('.display-board-steps__toggle');
+    if (displayBoardStepsToggle) {
+        const icon = displayBoardStepsToggle.querySelector('.display-board-steps__icon');
+        displayBoardStepsToggle.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', !isExpanded);
+            if (icon) {
+                icon.textContent = isExpanded ? '+' : '−';
+            }
+        });
+    }
+
+    // ============================================
     // Get Involved form: show/hide fields by role
     // ============================================
     const involvedAs = document.getElementById('involved_as');

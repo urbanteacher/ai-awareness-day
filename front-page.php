@@ -449,30 +449,47 @@ $text_alignment_class = aiad_get_text_alignment_class();
                         <?php endif; ?>
                     </div>
                 </div>
+            </div>
 
+            <div class="display-board-steps-wrapper">
                 <div class="display-board-steps">
-                    <h3 class="display-board-steps__title"><?php esc_html_e( 'How to create yours', 'ai-awareness-day' ); ?></h3>
-                    <ol class="display-board-steps__list">
-                        <li class="section-desc"><?php esc_html_e( 'Choose a wall, noticeboard, or display area in your school or staff room.', 'ai-awareness-day' ); ?></li>
-                        <li class="section-desc"><?php esc_html_e( 'Use the layout above as a template: create one panel per principle (Safe, Smart, Creative, Responsible, Future) with a key message and tips.', 'ai-awareness-day' ); ?></li>
-                        <li class="section-desc"><?php esc_html_e( 'Add a QR challenges area — link QR codes to your school\'s AI policy and to our AI guidelines or activities.', 'ai-awareness-day' ); ?></li>
-                        <li class="section-desc"><?php esc_html_e( "Include \"This week's question\" and leave space for student responses (e.g. sticky notes).", 'ai-awareness-day' ); ?></li>
-                        <li class="section-desc"><?php esc_html_e( 'Optionally add AI leaders & innovators (photos and names) and a student spotlight for pupil work.', 'ai-awareness-day' ); ?></li>
-                    </ol>
+                    <button type="button" class="display-board-steps__toggle" aria-expanded="true" aria-controls="display-board-steps-list">
+                        <span class="display-board-steps__title"><?php esc_html_e( 'How to create yours', 'ai-awareness-day' ); ?></span>
+                        <span class="display-board-steps__icon" aria-hidden="true">−</span>
+                    </button>
+                    <div class="container">
+                        <ol class="display-board-steps__list" id="display-board-steps-list">
+                            <li class="section-desc"><?php esc_html_e( 'Select a prominent wall, noticeboard, or display area in your school or staff room.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'Follow the blueprint layout: create five principle panels (Safe, Smart, Creative, Responsible, Future) each with a key message and practical tips.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'QR challenges: Set up QR codes for students to scan & investigate. Link to your school\'s AI policy and our AI guidelines or activities.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'Add interactive elements: Include facts, tips, or QR codes linking to games and quizzes using our interactive resources.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( "This week's questions: Add thought-provoking questions like \"How can we ensure AI tools are fair?\" with space for student responses.", 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'Student responses: Provide space for sticky notes or written answers where students can share their thoughts and ideas.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'AI leaders & innovators: Include photos and names of people working in AI.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'Set them a challenge: Ask students to find 3 living people working in AI and add their discoveries to the display.', 'ai-awareness-day' ); ?></li>
+                            <li class="section-desc"><?php esc_html_e( 'Student spotlight: Feature student work or projects to showcase pupil achievements and creativity.', 'ai-awareness-day' ); ?></li>
+                        </ol>
+                    </div>
                 </div>
+            </div>
 
-                <div class="display-board-submit fade-up" style="margin-top: 2.5rem; text-align: center; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
-                    <h3 class="display-board-steps__title" style="margin-bottom: 1rem;"><?php esc_html_e( 'Submit your display board', 'ai-awareness-day' ); ?></h3>
-                    <p class="section-desc" style="margin-bottom: 1.5rem;"><?php esc_html_e( 'Share photos of your school\'s display board. Accepted formats: JPG, PNG, PDF.', 'ai-awareness-day' ); ?></p>
-                    <?php
-                    $contact_email = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
-                    $email_subject = rawurlencode( 'Our Schools Display' );
-                    $email_body = rawurlencode( 'Hello,\n\nPlease find attached photos of our school\'s AI Awareness Day display board.\n\nThank you!' );
-                    $mailto_link = 'mailto:' . esc_attr( $contact_email ) . '?subject=' . $email_subject . '&body=' . $email_body;
-                    ?>
-                    <a href="<?php echo esc_url( $mailto_link ); ?>" class="resource-filter-submit" style="display: inline-block;">
-                        <?php esc_html_e( 'Create a display board for your school', 'ai-awareness-day' ); ?>
-                    </a>
+            <div class="container">
+                <div class="display-board-submit fade-up">
+                    <div class="display-board-submit__content">
+                        <div class="display-board-submit__text">
+                            <h3 class="display-board-steps__title"><?php esc_html_e( 'Submit your display board', 'ai-awareness-day' ); ?></h3>
+                            <p class="section-desc"><?php esc_html_e( 'Share photos of your school\'s display board. Accepted formats: JPG, PNG, PDF.', 'ai-awareness-day' ); ?></p>
+                        </div>
+                        <?php
+                        $contact_email = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
+                        $email_subject = rawurlencode( 'Our Schools Display' );
+                        $email_body = rawurlencode( 'Hello,\n\nPlease find attached photos of our school\'s AI Awareness Day display board.\n\nThank you!' );
+                        $mailto_link = 'mailto:' . esc_attr( $contact_email ) . '?subject=' . $email_subject . '&body=' . $email_body;
+                        ?>
+                        <a href="<?php echo esc_url( $mailto_link ); ?>" class="resource-filter-submit display-board-submit__button">
+                            <?php esc_html_e( 'Submit your display board design', 'ai-awareness-day' ); ?>
+                        </a>
+                    </div>
                 </div>
 
                 <?php
