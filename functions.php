@@ -25,6 +25,8 @@ require_once AIAD_DIR . '/inc/setup.php';
 require_once AIAD_DIR . '/inc/helpers.php';
 // Post types, taxonomies, and register_post_meta for resource (_aiad_key_stage, _aiad_subtitle, etc.)
 require_once AIAD_DIR . '/inc/post-types.php';
+// Field registry system for dynamic field rendering
+require_once AIAD_DIR . '/inc/field-registry.php';
 require_once AIAD_DIR . '/inc/customizer.php';
 require_once AIAD_DIR . '/inc/front-page-layout.php';
 require_once AIAD_DIR . '/inc/validation.php';

@@ -609,10 +609,9 @@ function aiad_import_resources_from_wxr_simple( string $file_path ) {
     }
 
     // Register namespaces
-    $wxr_version = aiad_get_wxr_version();
-    $xml->registerXPathNamespace( 'wp', 'http://wordpress.org/export/' . $wxr_version . '/' );
+    $xml->registerXPathNamespace( 'wp', 'http://wordpress.org/export/1.2/' );
     $xml->registerXPathNamespace( 'content', 'http://purl.org/rss/1.0/modules/content/' );
-    $xml->registerXPathNamespace( 'excerpt', 'http://wordpress.org/export/' . $wxr_version . '/excerpt/' );
+    $xml->registerXPathNamespace( 'excerpt', 'http://wordpress.org/export/1.2/excerpt/' );
 
     $counts = array( 'resource' => 0, 'featured_resource' => 0 );
 
@@ -713,47 +712,31 @@ function aiad_import_resources_from_wxr_simple( string $file_path ) {
         }
 
         // Import post meta
-        // Access postmeta elements using the wp namespace
-        $wp_namespace = 'http://wordpress.org/export/' . $wxr_version . '/';
-        $wp_children = $item->children( $wp_namespace );
-        
-        if ( isset( $wp_children->postmeta ) ) {
-            // Handle both single and multiple postmeta elements
-            $postmeta_elements = array();
-            foreach ( $wp_children->postmeta as $postmeta ) {
-                $postmeta_elements[] = $postmeta;
-            }
+        foreach ( $item->children( 'wp', true )->postmeta as $postmeta ) {
+            $meta_key   = (string) $postmeta->meta_key;
+            $meta_value = (string) $postmeta->meta_value;
             
-            foreach ( $postmeta_elements as $postmeta ) {
-                $meta_key   = isset( $postmeta->meta_key ) ? (string) $postmeta->meta_key : '';
-                $meta_value = isset( $postmeta->meta_value ) ? (string) $postmeta->meta_value : '';
-                
-                if ( empty( $meta_key ) ) {
-                    continue;
-                }
-                
-                // Skip internal WordPress meta
-                if ( strpos( $meta_key, '_edit_' ) === 0 || strpos( $meta_key, '_wp_' ) === 0 ) {
-                    continue;
-                }
-
-                // Support PHP-serialized meta (standard WXR) and JSON meta (more readable authoring).
-                if ( is_serialized( $meta_value ) ) {
-                    update_post_meta( $post_id, $meta_key, maybe_unserialize( $meta_value ) );
-                    continue;
-                }
-
-                $trimmed = ltrim( $meta_value );
-                if ( $trimmed !== '' && ( $trimmed[0] === '{' || $trimmed[0] === '[' ) ) {
-                    $decoded = json_decode( $meta_value, true );
-                    if ( json_last_error() === JSON_ERROR_NONE ) {
-                        update_post_meta( $post_id, $meta_key, $decoded );
-                        continue;
-                    }
-                }
-
-                update_post_meta( $post_id, $meta_key, $meta_value );
+            // Skip internal WordPress meta
+            if ( strpos( $meta_key, '_edit_' ) === 0 || strpos( $meta_key, '_wp_' ) === 0 ) {
+                continue;
             }
+
+            // Support PHP-serialized meta (standard WXR) and JSON meta (more readable authoring).
+            if ( is_serialized( $meta_value ) ) {
+                update_post_meta( $post_id, $meta_key, maybe_unserialize( $meta_value ) );
+                continue;
+            }
+
+            $trimmed = ltrim( $meta_value );
+            if ( $trimmed !== '' && ( $trimmed[0] === '{' || $trimmed[0] === '[' ) ) {
+                $decoded = json_decode( $meta_value, true );
+                if ( json_last_error() === JSON_ERROR_NONE ) {
+                    update_post_meta( $post_id, $meta_key, $decoded );
+                    continue;
+                }
+            }
+
+            update_post_meta( $post_id, $meta_key, $meta_value );
         }
 
         $counts[ $post_type ]++;

@@ -433,45 +433,31 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     // Meta field naming: _resource_download_url for resource post type download files
     $download_url    = get_post_meta( $post->ID, '_resource_download_url', true );
     $filename        = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
-    $subtitle        = get_post_meta( $post->ID, '_aiad_subtitle', true );
-    $duration_str    = get_post_meta( $post->ID, '_aiad_duration', true );
-    $level           = get_post_meta( $post->ID, '_aiad_level', true );
-    $status          = get_post_meta( $post->ID, '_aiad_status', true );
-    if ( $status === '' ) {
-        $status = get_post_status( $post->ID ) === 'publish' ? 'published' : 'draft';
-    }
 
     $theme_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
 
     echo '<div class="aiad-resource-details">';
 
-    // Subtitle (Activity Schema: one sentence, max 120 chars)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Subtitle', 'ai-awareness-day' ) . '</strong>';
-    echo '<input type="text" name="aiad_subtitle" value="' . esc_attr( $subtitle ) . '" class="large-text" maxlength="120" placeholder="' . esc_attr__( 'One sentence: what students will actually do', 'ai-awareness-day' ) . '" />';
-    echo '<p class="description">' . esc_html__( 'Max 120 characters.', 'ai-awareness-day' ) . '</p></div>';
+    // Render fields from registry (subtitle, duration, level, status)
+    $fields = aiad_get_section_fields( 'resource_details' );
+    foreach ( $fields as $meta_key => $config ) {
+        $value = get_post_meta( $post->ID, $meta_key, true );
+        
+        // Handle default values
+        if ( $value === '' && isset( $config['default'] ) ) {
+            $value = $config['default'];
+        }
+        
+        // Special handling for status field
+        if ( $meta_key === '_aiad_status' && $value === '' ) {
+            $value = get_post_status( $post->ID ) === 'publish' ? 'published' : 'draft';
+        }
 
-    // Duration string (Activity Schema: specific e.g. "5 min", "45 min")
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Duration', 'ai-awareness-day' ) . '</strong>';
-    echo '<input type="text" name="aiad_duration" value="' . esc_attr( $duration_str ) . '" class="regular-text" placeholder="' . esc_attr__( 'e.g. 5 min, 45 min, 2 x 50 min sessions', 'ai-awareness-day' ) . '" />';
-    echo '<p class="description">' . esc_html__( 'Be specific. Not "as specified".', 'ai-awareness-day' ) . '</p></div>';
-
-    // Level (Activity Schema: beginner, intermediate, advanced)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Level', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-radios">';
-    $levels = array( 'beginner' => __( 'Beginner', 'ai-awareness-day' ), 'intermediate' => __( 'Intermediate', 'ai-awareness-day' ), 'advanced' => __( 'Advanced', 'ai-awareness-day' ) );
-    foreach ( $levels as $slug => $label ) {
-        echo '<label><input type="radio" name="aiad_level" value="' . esc_attr( $slug ) . '" ' . checked( $level, $slug, false ) . ' /> ' . esc_html( $label ) . '</label> ';
+        $name = str_replace( '_aiad_', 'aiad_', $meta_key );
+        echo aiad_render_field( $config, $value, $name );
     }
-    echo '</div></div>';
 
-    // Status (Activity Schema: draft, in_review, published)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Status', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-radios">';
-    $statuses = array( 'draft' => __( 'Draft', 'ai-awareness-day' ), 'in_review' => __( 'In review', 'ai-awareness-day' ), 'published' => __( 'Published', 'ai-awareness-day' ) );
-    foreach ( $statuses as $slug => $label ) {
-        echo '<label><input type="radio" name="aiad_status" value="' . esc_attr( $slug ) . '" ' . checked( $status, $slug, false ) . ' /> ' . esc_html( $label ) . '</label> ';
-    }
-    echo '</div></div>';
-
-    // Format (radio)
+    // Format (radio) - Taxonomy field, not in registry
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-radios">';
     $current_type_slug = $current_type && ! is_wp_error( $current_type ) ? $current_type[0]->slug : '';
     foreach ( $type_terms as $term ) {
@@ -732,167 +718,54 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
 
     echo '<div class="aiad-content-sections-fields">';
 
-    // Preparation (required in schema)
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Preparation', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'What the teacher must have ready before the lesson. One concrete action per item.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_preparation">';
-    if ( empty( $preparation ) ) {
-        $preparation = array( '' );
-    }
-    foreach ( $preparation as $i => $val ) {
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_preparation[]" value="' . esc_attr( is_string( $val ) ? $val : '' ) . '" class="large-text" /> <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-row" data-name="aiad_preparation">' . esc_html__( 'Add item', 'ai-awareness-day' ) . '</button></div>';
+    // Render fields from registry
+    $fields = aiad_get_section_fields( 'content_sections' );
+    foreach ( $fields as $meta_key => $config ) {
+        $value = get_post_meta( $post->ID, $meta_key, true );
+        $name = str_replace( '_aiad_', 'aiad_', $meta_key );
+        $type = $config['type'] ?? 'text';
 
-    echo '<div class="aiad-cs-field aiad-repeatable-definitions" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Key definitions', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'Term, definition; tick if simplified for key stage.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-rows" data-name-prefix="aiad_key_definitions">';
-    if ( empty( $key_definitions ) ) {
-        $key_definitions = array( array( 'term' => '', 'definition' => '', 'key_stage_adapted' => false ) );
-    }
-    foreach ( $key_definitions as $i => $item ) {
-        $term   = is_array( $item ) && isset( $item['term'] ) ? $item['term'] : '';
-        $def    = is_array( $item ) && isset( $item['definition'] ) ? $item['definition'] : '';
-        $ks_adapt = ! empty( $item['key_stage_adapted'] );
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.75rem; padding: 0.5rem; background: #f6f7f7; border-radius: 4px;">';
-        echo '<label style="display:block; margin-bottom: 0.25rem;">' . esc_html__( 'Term', 'ai-awareness-day' ) . '</label>';
-        echo '<input type="text" name="aiad_key_definitions[' . (int) $i . '][term]" value="' . esc_attr( $term ) . '" class="regular-text" style="margin-bottom: 0.5rem;" /> ';
-        echo '<label style="display:block; margin-bottom: 0.25rem;">' . esc_html__( 'Definition', 'ai-awareness-day' ) . '</label>';
-        echo '<textarea name="aiad_key_definitions[' . (int) $i . '][definition]" rows="2" class="large-text" style="width:100%;">' . esc_textarea( $def ) . '</textarea>';
-        echo '<label style="display:inline-block; margin-left: 0.5rem;"><input type="checkbox" name="aiad_key_definitions[' . (int) $i . '][key_stage_adapted]" value="1" ' . checked( $ks_adapt, true, false ) . ' /> ' . esc_html__( 'Key stage adapted', 'ai-awareness-day' ) . '</label>';
-        echo ' <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button>';
-        echo '</div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-definition">' . esc_html__( 'Add definition', 'ai-awareness-day' ) . '</button></div>';
-
-    // Learning objectives: objective + assessable (min 2, max 5; Bloom's verb hint)
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Learning objectives', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'Start with a Bloom\'s verb (understand, recognise, analyse, evaluate, create, apply). Min 2, max 5.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_learning_objectives">';
-    if ( empty( $learning_obj ) ) {
-        $learning_obj = array( array( 'objective' => '', 'assessable' => false ) );
-    }
-    foreach ( $learning_obj as $i => $ob ) {
-        $obj_text = is_array( $ob ) ? ( $ob['objective'] ?? '' ) : (string) $ob;
-        $assess  = is_array( $ob ) && ! empty( $ob['assessable'] );
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem; padding: 0.35rem 0;">';
-        echo '<input type="text" name="aiad_learning_objectives[' . (int) $i . '][objective]" value="' . esc_attr( $obj_text ) . '" class="large-text" placeholder="' . esc_attr__( 'e.g. Understand that AI predicts patterns', 'ai-awareness-day' ) . '" /> ';
-        echo '<label><input type="checkbox" name="aiad_learning_objectives[' . (int) $i . '][assessable]" value="1" ' . checked( $assess, true, false ) . ' /> ' . esc_html__( 'Assessable', 'ai-awareness-day' ) . '</label>';
-        echo ' <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-row" data-name="aiad_learning_objectives">' . esc_html__( 'Add objective', 'ai-awareness-day' ) . '</button></div>';
-
-    // Instructions: rich steps (action, duration, resource_ref, student_action, teacher_tip)
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Instructions', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'Teacher script. At least one step should have a duration. Min 2 steps.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-list aiad-instruction-steps" data-name="aiad_instructions">';
-    if ( empty( $instructions ) ) {
-        $instructions = array( array( 'step' => 1, 'action' => '', 'duration' => '', 'resource_ref' => '', 'student_action' => '', 'teacher_tip' => '' ) );
-    }
-    foreach ( $instructions as $i => $step ) {
-        $st = is_array( $step ) ? $step : array( 'step' => $i + 1, 'action' => (string) $step );
-        $action   = isset( $st['action'] ) ? $st['action'] : '';
-        $duration = isset( $st['duration'] ) ? $st['duration'] : '';
-        $res_ref  = isset( $st['resource_ref'] ) ? $st['resource_ref'] : '';
-        $stu_act  = isset( $st['student_action'] ) ? $st['student_action'] : '';
-        $tip      = isset( $st['teacher_tip'] ) ? $st['teacher_tip'] : '';
-        $step_num = isset( $st['step'] ) ? (int) $st['step'] : ( $i + 1 );
-        echo '<div class="aiad-repeatable-row aiad-instruction-row" style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f7f7; border-radius: 4px;">';
-        echo '<label>Step <input type="number" name="aiad_instructions[' . (int) $i . '][step]" value="' . esc_attr( (string) $step_num ) . '" min="1" style="width:4em;" /></label> ';
-        echo '<label>' . esc_html__( 'Duration', 'ai-awareness-day' ) . ' <input type="text" name="aiad_instructions[' . (int) $i . '][duration]" value="' . esc_attr( $duration ) . '" placeholder="e.g. 60 seconds" style="width:10em;" /></label><br style="margin-bottom:0.5rem;" />';
-        echo '<label style="display:block; margin-top:0.35rem;">' . esc_html__( 'Action', 'ai-awareness-day' ) . '</label>';
-        echo '<textarea name="aiad_instructions[' . (int) $i . '][action]" rows="2" class="large-text" style="width:100%;">' . esc_textarea( $action ) . '</textarea>';
-        echo '<label style="display:block; margin-top:0.35rem;">' . esc_html__( 'Resource ref', 'ai-awareness-day' ) . ' <input type="text" name="aiad_instructions[' . (int) $i . '][resource_ref]" value="' . esc_attr( $res_ref ) . '" placeholder="e.g. Slide 6" class="regular-text" /></label>';
-        echo '<label style="display:block; margin-top:0.35rem;">' . esc_html__( 'Student action', 'ai-awareness-day' ) . ' <input type="text" name="aiad_instructions[' . (int) $i . '][student_action]" value="' . esc_attr( $stu_act ) . '" placeholder="e.g. Pair discussion" class="large-text" /></label>';
-        echo '<label style="display:block; margin-top:0.35rem;">' . esc_html__( 'Teacher tip', 'ai-awareness-day' ) . ' <textarea name="aiad_instructions[' . (int) $i . '][teacher_tip]" rows="1" class="large-text" style="width:100%;">' . esc_textarea( $tip ) . '</textarea></label>';
-        echo ' <button type="button" class="button button-small aiad-remove-row" style="margin-top:0.5rem;">' . esc_html__( 'Remove step', 'ai-awareness-day' ) . '</button>';
-        echo '</div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-instruction">' . esc_html__( 'Add step', 'ai-awareness-day' ) . '</button></div>';
-
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Discussion prompts', 'ai-awareness-day' ) . '</strong>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_discussion_prompts">';
-    if ( empty( $discussion_prompts ) ) {
-        $discussion_prompts = array( '' );
-    }
-    foreach ( $discussion_prompts as $i => $val ) {
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_discussion_prompts[]" value="' . esc_attr( $val ) . '" class="large-text" /> <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-row" data-name="aiad_discussion_prompts">' . esc_html__( 'Add prompt', 'ai-awareness-day' ) . '</button></div>';
-
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.25rem;"><label for="aiad_discussion_question"><strong>' . esc_html__( 'Discussion question', 'ai-awareness-day' ) . '</strong></label>';
-    echo '<input type="text" id="aiad_discussion_question" name="aiad_discussion_question" value="' . esc_attr( $discussion_q ) . '" class="large-text" style="width:100%;" /></div>';
-
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Suggested answers', 'ai-awareness-day' ) . '</strong>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_suggested_answers">';
-    if ( empty( $suggested_answers ) ) {
-        $suggested_answers = array( '' );
-    }
-    foreach ( $suggested_answers as $i => $val ) {
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_suggested_answers[]" value="' . esc_attr( $val ) . '" class="large-text" /> <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-row" data-name="aiad_suggested_answers">' . esc_html__( 'Add answer', 'ai-awareness-day' ) . '</button></div>';
-
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.25rem;"><label for="aiad_teacher_notes"><strong>' . esc_html__( 'Teacher notes (optional)', 'ai-awareness-day' ) . '</strong></label>';
-    echo '<p class="description">' . esc_html__( 'Optional background, misconceptions, and tips for teachers. This does not affect publishing.', 'ai-awareness-day' ) . '</p>';
-    echo '<textarea id="aiad_teacher_notes" name="aiad_teacher_notes" rows="5" class="large-text" style="width:100%;">' . esc_textarea( $teacher_notes ) . '</textarea></div>';
-
-    // Differentiation (support, stretch, send)
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Differentiation', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'How to adapt for different learners.', 'ai-awareness-day' ) . '</p>';
-    echo '<label style="display:block; margin-top:0.5rem;">' . esc_html__( 'Support (struggling)', 'ai-awareness-day' ) . '</label><textarea name="aiad_differentiation[support]" rows="2" class="large-text" style="width:100%;">' . esc_textarea( $diff_support ) . '</textarea>';
-    echo '<label style="display:block; margin-top:0.5rem;">' . esc_html__( 'Stretch (high ability)', 'ai-awareness-day' ) . '</label><textarea name="aiad_differentiation[stretch]" rows="2" class="large-text" style="width:100%;">' . esc_textarea( $diff_stretch ) . '</textarea>';
-    echo '<label style="display:block; margin-top:0.5rem;">' . esc_html__( 'SEND (additional needs)', 'ai-awareness-day' ) . '</label><textarea name="aiad_differentiation[send]" rows="2" class="large-text" style="width:100%;">' . esc_textarea( $diff_send ) . '</textarea></div>';
-
-    // Extension activities
-    $extension_types = array( 'homework' => __( 'Homework', 'ai-awareness-day' ), 'next_lesson' => __( 'Next lesson', 'ai-awareness-day' ), 'cross_curricular' => __( 'Cross-curricular', 'ai-awareness-day' ), 'independent' => __( 'Independent', 'ai-awareness-day' ) );
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Extension activities', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'Specific, actionable task + type.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_extensions">';
-    if ( empty( $extensions ) ) {
-        $extensions = array( array( 'activity' => '', 'type' => 'homework' ) );
-    }
-    foreach ( $extensions as $i => $ext ) {
-        $act = is_array( $ext ) ? ( $ext['activity'] ?? '' ) : '';
-        $typ = is_array( $ext ) && isset( $ext['type'] ) ? $ext['type'] : 'homework';
-        if ( ! array_key_exists( $typ, $extension_types ) ) {
-            $typ = 'homework';
+        // Normalize values for specific fields
+        if ( $meta_key === '_aiad_discussion_prompts' && is_string( $value ) ) {
+            $value = $value !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $value ) ) ) ) : array();
         }
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">';
-        echo '<input type="text" name="aiad_extensions[' . (int) $i . '][activity]" value="' . esc_attr( $act ) . '" class="large-text" placeholder="' . esc_attr__( 'Specific task', 'ai-awareness-day' ) . '" /> ';
-        echo '<select name="aiad_extensions[' . (int) $i . '][type]">';
-        foreach ( $extension_types as $k => $v ) {
-            echo '<option value="' . esc_attr( $k ) . '" ' . selected( $typ, $k, false ) . '>' . esc_html( $v ) . '</option>';
+        if ( $meta_key === '_aiad_suggested_answers' && is_string( $value ) ) {
+            $value = $value !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $value ) ) ) ) : array();
         }
-        echo '</select> <button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
-    }
-    echo '</div><button type="button" class="button aiad-add-extension">' . esc_html__( 'Add extension', 'ai-awareness-day' ) . '</button></div>';
+        if ( $meta_key === '_aiad_learning_objectives' ) {
+            $value = aiad_normalise_learning_objectives( $value );
+        }
+        if ( $meta_key === '_aiad_instructions' ) {
+            $value = aiad_normalise_instructions( $value );
+        }
+        if ( $meta_key === '_aiad_differentiation' && ! is_array( $value ) ) {
+            $value = array();
+        }
 
-    // Resources (name, type, url)
-    $resource_types = array( 'slides' => __( 'Slides', 'ai-awareness-day' ), 'worksheet' => __( 'Worksheet', 'ai-awareness-day' ), 'handout' => __( 'Handout', 'ai-awareness-day' ), 'video' => __( 'Video', 'ai-awareness-day' ), 'link' => __( 'Link', 'ai-awareness-day' ), 'other' => __( 'Other', 'ai-awareness-day' ) );
-    echo '<div class="aiad-cs-field" style="margin-bottom: 1.5rem;"><strong class="aiad-rd-label">' . esc_html__( 'Resources', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description">' . esc_html__( 'Slide deck, worksheet, etc. (optional link).', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-repeatable-list" data-name="aiad_resources">';
-    if ( empty( $resources ) ) {
-        $resources = array( array( 'name' => '', 'type' => 'other', 'url' => '' ) );
-    }
-    foreach ( $resources as $i => $res ) {
-        $name = is_array( $res ) ? ( $res['name'] ?? '' ) : '';
-        $type = is_array( $res ) && isset( $res['type'] ) ? $res['type'] : 'other';
-        $url  = is_array( $res ) && isset( $res['url'] ) ? $res['url'] : '';
-        if ( ! array_key_exists( $type, $resource_types ) ) {
-            $type = 'other';
+        // Render based on field type
+        switch ( $type ) {
+            case 'repeatable_text':
+                $value = is_array( $value ) ? $value : array();
+                echo aiad_render_repeatable_text_field( $config, $value, $name );
+                break;
+
+            case 'repeatable_object':
+                $value = is_array( $value ) ? $value : array();
+                echo aiad_render_repeatable_object_field( $config, $value, $name );
+                break;
+
+            case 'object':
+                $value = is_array( $value ) ? $value : array();
+                echo aiad_render_object_field( $config, $value, $name );
+                break;
+
+            default:
+                // Simple text/textarea fields
+                $value = is_string( $value ) ? $value : '';
+                echo aiad_render_field( $config, $value, $name );
+                break;
         }
-        echo '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">';
-        echo '<input type="text" name="aiad_resources[' . (int) $i . '][name]" value="' . esc_attr( $name ) . '" placeholder="' . esc_attr__( 'e.g. Slide deck', 'ai-awareness-day' ) . '" class="regular-text" /> ';
-        echo '<select name="aiad_resources[' . (int) $i . '][type]">';
-        foreach ( $resource_types as $k => $v ) {
-            echo '<option value="' . esc_attr( $k ) . '" ' . selected( $type, $k, false ) . '>' . esc_html( $v ) . '</option>';
-        }
-        echo '</select> <input type="url" name="aiad_resources[' . (int) $i . '][url]" value="' . esc_attr( $url ) . '" placeholder="URL" class="medium-text" /> ';
-        echo '<button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button></div>';
     }
-    echo '</div><button type="button" class="button aiad-add-resource">' . esc_html__( 'Add resource', 'ai-awareness-day' ) . '</button></div>';
 
     echo '</div>';
     // JavaScript is now externalized to assets/js/admin-meta-boxes.js

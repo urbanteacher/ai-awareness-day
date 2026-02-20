@@ -84,26 +84,10 @@ get_header();
                     </div>
                     <?php
                     $resource_id = get_the_ID();
-                    $key_definitions_raw = get_post_meta( $resource_id, '_aiad_key_definitions', true );
+                    $key_definitions    = (array) get_post_meta( $resource_id, '_aiad_key_definitions', true );
                     $learning_obj       = get_post_meta( $resource_id, '_aiad_learning_objectives', true );
                     $instructions       = get_post_meta( $resource_id, '_aiad_instructions', true );
                     // Unserialize or decode if stored as string (WXR import / legacy can use PHP serialized or JSON)
-                    if ( is_string( $key_definitions_raw ) && $key_definitions_raw !== '' ) {
-                        if ( is_serialized( $key_definitions_raw ) ) {
-                            $key_definitions = maybe_unserialize( $key_definitions_raw );
-                        } elseif ( in_array( $key_definitions_raw[0], array( '[', '{' ), true ) ) {
-                            $decoded = json_decode( $key_definitions_raw, true );
-                            if ( is_array( $decoded ) ) {
-                                $key_definitions = $decoded;
-                            } else {
-                                $key_definitions = array();
-                            }
-                        } else {
-                            $key_definitions = array();
-                        }
-                    } else {
-                        $key_definitions = is_array( $key_definitions_raw ) ? $key_definitions_raw : array();
-                    }
                     if ( is_string( $learning_obj ) && $learning_obj !== '' ) {
                         if ( is_serialized( $learning_obj ) ) {
                             $learning_obj = maybe_unserialize( $learning_obj );
@@ -129,22 +113,9 @@ get_header();
                     $suggested_answers  = get_post_meta( $resource_id, '_aiad_suggested_answers', true );
                     $teacher_notes      = get_post_meta( $resource_id, '_aiad_teacher_notes', true );
                     $prep_raw           = get_post_meta( $resource_id, '_aiad_preparation', true );
-                    // Unserialize preparation if needed
-                    if ( is_string( $prep_raw ) && $prep_raw !== '' && is_serialized( $prep_raw ) ) {
-                        $prep_raw = maybe_unserialize( $prep_raw );
-                    }
                     $preparation        = is_array( $prep_raw ) ? array_values( array_filter( $prep_raw, function ( $v ) { return is_string( $v ) && trim( $v ) !== ''; } ) ) : array();
-                    $diff_raw           = get_post_meta( $resource_id, '_aiad_differentiation', true );
-                    // Unserialize differentiation if needed
-                    if ( is_string( $diff_raw ) && $diff_raw !== '' && is_serialized( $diff_raw ) ) {
-                        $diff_raw = maybe_unserialize( $diff_raw );
-                    }
-                    $differentiation    = is_array( $diff_raw ) ? $diff_raw : array();
+                    $differentiation    = (array) get_post_meta( $resource_id, '_aiad_differentiation', true );
                     $ext_raw            = get_post_meta( $resource_id, '_aiad_extensions', true );
-                    // Unserialize extensions if needed
-                    if ( is_string( $ext_raw ) && $ext_raw !== '' && is_serialized( $ext_raw ) ) {
-                        $ext_raw = maybe_unserialize( $ext_raw );
-                    }
                     $extensions         = is_array( $ext_raw ) ? array_values( array_filter( $ext_raw, function ( $e ) { return is_array( $e ) && trim( (string) ( isset( $e['activity'] ) ? $e['activity'] : '' ) ) !== ''; } ) ) : array();
                     $res_raw            = get_post_meta( $resource_id, '_aiad_resources', true );
                     $resources_list     = is_array( $res_raw ) ? array_values( array_filter( $res_raw, function ( $r ) { return is_array( $r ) && ( trim( (string) ( isset( $r['name'] ) ? $r['name'] : '' ) ) !== '' || trim( (string) ( isset( $r['url'] ) ? $r['url'] : '' ) ) !== '' ); } ) ) : array();
