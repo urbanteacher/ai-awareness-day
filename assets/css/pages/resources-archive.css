@@ -480,12 +480,12 @@
     font-size: 0.5rem;
   }
 
-  /* Mobile: Hide title and company name in black overlay */
-  #partner-resources .resource-card__image-title {
+  /* Mobile: Hide org name and activity title in black box overlay */
+  #partner-resources .resource-card__pill--org {
     display: none !important;
   }
 
-  #partner-resources .resource-card__pill--org {
+  #partner-resources .resource-card__image-title {
     display: none !important;
   }
 
@@ -547,6 +547,15 @@
 
   #partner-resources .resource-card__image-placeholder-text {
     font-size: 0.55rem;
+  }
+
+  /* Small mobile: Keep org name and activity title hidden */
+  #partner-resources .resource-card__pill--org {
+    display: none !important;
+  }
+
+  #partner-resources .resource-card__image-title {
+    display: none !important;
   }
 
   #partner-resources .resource-card__body {
