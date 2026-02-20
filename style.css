@@ -495,7 +495,6 @@ h1, h2, h3, h4, h5, h6 {
   font-size: clamp(2rem, 4vw, 3rem);
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
-  color: red;
 }
 
 .section-desc {
