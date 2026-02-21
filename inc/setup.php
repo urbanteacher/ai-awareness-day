@@ -65,10 +65,11 @@ add_action('after_setup_theme', 'aiad_setup');
 /**
  * Flush rewrite rules on theme activation so /resources/ and /partners/ work without a manual Permalinks save.
  */
-function aiad_flush_rewrite_rules_on_activation(): void {
-    flush_rewrite_rules( false );
+function aiad_flush_rewrite_rules_on_activation(): void
+{
+    flush_rewrite_rules(false);
 }
-add_action( 'after_switch_theme', 'aiad_flush_rewrite_rules_on_activation' );
+add_action('after_switch_theme', 'aiad_flush_rewrite_rules_on_activation');
 
 /**
  * WordPress 6.9+ compatibility: classic theme block styles
@@ -135,15 +136,19 @@ function aiad_scripts(): void
             'layout/hero.css',
             'layout/footer.css',
             'components/principles.css',
+            'components/explore-sessions.css',
+            'components/section-green.css',
+            'components/display-board.css',
             'pages/campaign.css',
             'pages/momentum.css',
             'pages/themes.css',
             'pages/aim.css',
             'pages/toolkit.css',
-        'pages/get-involved.css',
-        'pages/resources-archive.css',
-        'pages/partners-archive.css',
-        'responsive/responsive.css',
+            'pages/get-involved.css',
+            'pages/resources-archive.css',
+            'pages/single-resource.css',
+            'pages/partners-archive.css',
+            'responsive/responsive.css',
             'responsive/mobile.css',
         );
         foreach ($css_files as $file) {
@@ -228,10 +233,10 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
 
         $output .= '<a';
         foreach ($atts as $attr => $value) {
-            if ( $attr === 'href' && $value === '' ) {
+            if ($attr === 'href' && $value === '') {
                 $value = '#';
             }
-            $output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
+            $output .= ' ' . $attr . '="' . esc_attr($value) . '"';
         }
         $output .= '>' . esc_html($item->title) . '</a>';
     }

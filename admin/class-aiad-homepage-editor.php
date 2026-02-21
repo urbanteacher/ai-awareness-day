@@ -227,15 +227,15 @@ class AIAD_Homepage_Editor {
     }
 
     /**
-     * Save Display Board tab (image URLs).
+     * Save Display Board tab (attachment IDs; same as Customizer).
      *
      * @return int Number of options updated.
      */
     private function save_display_board(): int {
         $keys = array(
-            'aiad_display_board_image_1' => 'esc_url_raw',
-            'aiad_display_board_image_2' => 'esc_url_raw',
-            'aiad_display_board_image_3' => 'esc_url_raw',
+            'aiad_display_board_image_1' => 'absint',
+            'aiad_display_board_image_2' => 'absint',
+            'aiad_display_board_image_3' => 'absint',
         );
         return $this->save_theme_mods( $keys );
     }
@@ -452,21 +452,20 @@ class AIAD_Homepage_Editor {
     }
 
     /**
-     * Render Display Board tab (image URLs — use media for consistency).
+     * Render Display Board tab (attachment IDs; same as Customizer).
      */
     private function render_display_tab(): void {
         $fields = array(
-            'aiad_display_board_image_1' => array( 'label' => __( 'Example display board 1', 'ai-awareness-day' ), 'type' => 'image_url', 'default' => '' ),
-            'aiad_display_board_image_2' => array( 'label' => __( 'Example display board 2', 'ai-awareness-day' ), 'type' => 'image_url', 'default' => '' ),
-            'aiad_display_board_image_3' => array( 'label' => __( 'Example display board 3', 'ai-awareness-day' ), 'type' => 'image_url', 'default' => '' ),
+            'aiad_display_board_image_1' => array( 'label' => __( 'Example display board 1', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
+            'aiad_display_board_image_2' => array( 'label' => __( 'Example display board 2', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
+            'aiad_display_board_image_3' => array( 'label' => __( 'Example display board 3', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
         );
         echo '<table class="form-table" role="presentation">';
         foreach ( $fields as $key => $config ) {
             $val = get_theme_mod( $key, $config['default'] );
+            $id = absint( is_numeric( $val ) ? $val : 0 );
             echo '<tr><th scope="row">' . esc_html( $config['label'] ) . '</th><td>';
-            if ( 'image_url' === $config['type'] ) {
-                $this->render_media_input( $key, $val, 'url' );
-            }
+            $this->render_media_input( $key, $id, 'image' );
             echo '</td></tr>';
         }
         echo '</table>';

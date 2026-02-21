@@ -91,7 +91,8 @@
 
 .hero-slogan {
   font-family: var(--font-display);
-  font-size: 13.5px;
+  font-size: 0.85rem;
+  /* 13.6px — converted from 13.5px to match rem convention */
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;

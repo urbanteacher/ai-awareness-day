@@ -1,0 +1,46 @@
+/* ============================================
+   COMPONENT: Section variant – green (colour theme modifier)
+   ============================================ */
+.section--green {
+  background: var(--green-900);
+  color: var(--white);
+}
+
+.section--green .section-label,
+.section--green .section-title,
+.section--green .aim-item,
+.section--green .aim-item p,
+.section--green .aim-item h3 {
+  color: inherit;
+}
+
+.section--green .section-label {
+  color: var(--green-300);
+}
+
+.section--green .section-title {
+  color: var(--white);
+}
+
+.section--green .aim-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.section--green .aim-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.section--green .aim-item .section-desc {
+  color: var(--gray-200);
+}
+
+.section--green .aim-item .aim-icon {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.section--green .aim-item .aim-icon svg {
+  stroke: var(--white);
+}

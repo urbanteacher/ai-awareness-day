@@ -10,7 +10,7 @@
   --badge-future: #f9a8d4;
   --badge-black: #000000;
 
-  /* Semantic palette (used for UI; accent = black to match badges) */
+  /* Brand palette: --green-* are monochrome (black/gray) for UI, not literal green. Kept for backward compatibility. */
   --green-50: #fafafa;
   --green-100: #f0f0f0;
   --green-200: #e5e5e5;
@@ -21,6 +21,20 @@
   --green-700: #0a0a0a;
   --green-800: #0a0a0a;
   --green-900: #000000;
+
+  /* Accent colours (actual green, purple, blue, amber for highlights and single-resource) */
+  --accent-green: #22c55e;
+  --accent-green-light: #dcfce7;
+  --accent-green-dark: #15803d;
+  --accent-purple: #7c3aed;
+  --accent-purple-mid: #6b21a8;
+  --accent-purple-dark: #5b1b8a;
+  --accent-purple-light: #f3e8ff;
+  --accent-blue: #2563eb;
+  --accent-blue-light: #dbeafe;
+  --accent-blue-dark: #1e40af;
+  --accent-amber-light: #fef9c3;
+  --accent-amber: #a16207;
 
   --white: #ffffff;
   --gray-50: #fafafa;

@@ -108,21 +108,22 @@
   width: 100%;
 }
 
-.nav-cta {
-  background: var(--green-600) !important;
-  color: var(--white) !important;
+/* Scoped to .main-navigation a.nav-cta — beats .main-navigation a specificity without !important */
+.main-navigation a.nav-cta {
+  background: var(--green-600);
+  color: var(--white);
   padding: 0.6rem 1.4rem;
   border-radius: 0;
-  font-weight: 600 !important;
+  font-weight: 600;
 }
 
-.nav-cta:hover {
-  background: var(--green-700) !important;
+.main-navigation a.nav-cta:hover {
+  background: var(--green-700);
   transform: translateY(-1px);
 }
 
-.nav-cta::after {
-  display: none !important;
+.main-navigation a.nav-cta::after {
+  display: none;
 }
 
 /* Mobile nav toggle */
@@ -170,4 +171,40 @@
 .nav-toggle.active span:nth-child(3) {
   transform: rotate(-45deg);
   top: 15px;
+}
+
+/* ── Mobile navigation (migrated from responsive.css) ── */
+@media screen and (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .main-navigation {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    transform: translateY(-120%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  /* Shift mobile nav down to clear the admin bar (46px on mobile) */
+  .admin-bar .main-navigation {
+    top: 118px;
+    /* 72px header + 46px admin bar */
+  }
+
+  .main-navigation.open {
+    transform: translateY(0);
+  }
+
+  .main-navigation ul {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 }

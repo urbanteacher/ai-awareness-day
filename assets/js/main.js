@@ -40,18 +40,13 @@
         const header = document.getElementById('site-header');
 
         if (header) {
-            let lastScroll = 0;
-
             window.addEventListener('scroll', () => {
                 const currentScroll = window.scrollY;
-
                 if (currentScroll > 50) {
                     header.classList.add('scrolled');
                 } else {
                     header.classList.remove('scrolled');
                 }
-
-                lastScroll = currentScroll;
             }, { passive: true });
         }
 
@@ -225,7 +220,7 @@
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // Client-side validation for required fields (including role-specific)
+                // Client-side validation (role-specific required fields). Keep in sync with server: inc/ajax-handlers.php → aiad_handle_contact_form().
                 const involvedAsVal = (form.querySelector('#involved_as') || {}).value || '';
                 const firstNameVal = (form.querySelector('#first_name') || {}).value || '';
                 const lastNameVal = (form.querySelector('#last_name') || {}).value || '';
@@ -288,7 +283,7 @@
                 const submitBtn = form.querySelector('.btn-submit');
                 const originalText = submitBtn.innerHTML;
 
-                // Loading state
+                // Loading state: static SVG only (safe for innerHTML). If adding dynamic content later, use createElement.
                 submitBtn.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
                     <path d="M21 12a9 9 0 11-6.219-8.56"></path>
@@ -378,24 +373,11 @@
 
         // ============================================
         // Partners: Show More Fallback
-        // (Runs only if Interactivity API isn't active on the button)
+        // Only run manual toggle when Interactivity API is not available.
         // ============================================
         const revealBtn = document.querySelector('.partners-reveal-btn');
         if (revealBtn) {
             revealBtn.addEventListener('click', () => {
-                // If Interactivity API (wp-interactive) is not present/active, 
-                // we handle the toggle manually.
-                const isInteractivityEnabled = revealBtn.closest('[data-wp-interactive]');
-
-                // If the Interactivity API has initialized, it will likely have 
-                // its own click handler. This is a very simple check.
-                // If the class 'active' hasn't been toggled by the API yet, 
-                // we can assume we might need to handle it, but wait—
-                // The Interactivity API might take a moment to bootstrap.
-                // We'll check if the 'partners-reveal-btn' has been clicked but 
-                // the context hasn't updated.
-
-                // To be safe, we only run this if the script module isn't loaded.
                 if (!window.wp || !window.wp.interactivity) {
                     const momentumSection = revealBtn.closest('.momentum-section');
                     if (momentumSection) {

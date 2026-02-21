@@ -22,6 +22,8 @@ $bundles = array(
         'layout/hero.css',
         'layout/footer.css',
         'components/principles.css',
+        'components/explore-sessions.css',
+        'components/section-green.css',
     ),
     'pages'  => array(
         'pages/campaign.css',
@@ -31,6 +33,7 @@ $bundles = array(
         'pages/toolkit.css',
         'pages/get-involved.css',
         'pages/resources-archive.css',
+        'pages/single-resource.css',
         'pages/partners-archive.css',
         'responsive/responsive.css',
         'responsive/mobile.css',

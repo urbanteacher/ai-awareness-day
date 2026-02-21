@@ -1,49 +1,145 @@
 /* ============================================
-   SECTION: AIM
+   SECTION: AIM — mobile-first
    ============================================ */
-.aims-list {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
+
+/* ── Mobile default: plain text list ─────── */
+#aim .section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
+#aim .section-title {
+  font-size: 1.2rem;
+}
+
+#aim .fade-up {
+  margin-bottom: 0.5rem;
+}
+
+.aims-list {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+}
+
+/* Mobile: no box, no icon — simple readable list */
 .aim-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  background: var(--white);
-  border-radius: 0;
-  border: 1px solid var(--gray-200);
-  transition: var(--transition);
+  display: block;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0;
+  gap: 0;
+  transition: none;
 }
 
 .aim-item:hover {
-  border-color: var(--green-300);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .aim-item .aim-icon {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 0;
-  background: var(--green-100);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-}
-
-.aim-item .aim-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--green-700);
+  display: none;
 }
 
 .aim-item .section-desc {
+  font-size: 0.8125rem;
+  line-height: 1.4;
   text-align: left;
   max-width: none;
+  margin: 0;
+  padding-left: 0;
 }
 
+/* ── Small mobile (≤ 480px) ──────────────── */
+@media screen and (max-width: 480px) {
+  #aim .section {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  #aim .section-title {
+    font-size: 1.1rem;
+  }
+
+  #aim .fade-up {
+    margin-bottom: 0.4rem;
+  }
+
+  .aims-list {
+    gap: 0.2rem;
+    margin-top: 0.4rem;
+  }
+
+  .aim-item {
+    padding: 0.2rem 0;
+  }
+
+  .aim-item .section-desc {
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+}
+
+/* ── Desktop: boxed card layout (≥ 769px) ── */
+@media screen and (min-width: 769px) {
+  #aim .section {
+    padding-top: unset;
+    padding-bottom: unset;
+  }
+
+  #aim .section-title {
+    font-size: unset;
+  }
+
+  #aim .fade-up {
+    margin-bottom: unset;
+  }
+
+  .aims-list {
+    margin-top: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .aim-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 0;
+    transition: var(--transition);
+  }
+
+  .aim-item:hover {
+    border-color: var(--green-300);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .aim-item .aim-icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+    background: var(--green-100);
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .aim-item .aim-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--green-700);
+  }
+
+  .aim-item .section-desc {
+    font-size: unset;
+    line-height: unset;
+    margin: unset;
+    padding-left: unset;
+  }
+}

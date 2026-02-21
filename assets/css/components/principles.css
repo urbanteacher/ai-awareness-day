@@ -1,8 +1,8 @@
 /* ============================================
-   SECTION: PRINCIPLES
+   COMPONENT: PRINCIPLES — mobile-first
    ============================================ */
 
-/* Our AI literacy box: same format as principle cards (badge + h3 + section-desc). Hidden by request. */
+/* Our AI literacy box is hidden by request */
 .principles-grid .ai-literacy-box {
   display: none !important;
 }
@@ -18,10 +18,11 @@
   display: none;
 }
 
+/* ── Mobile default: 3-column compact grid ── */
 .principles-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
   margin-top: 1.5rem;
 }
 
@@ -29,7 +30,7 @@
   background: var(--white);
   border: none;
   border-radius: 0;
-  padding: 1rem 0.75rem;
+  padding: 0.5rem 0.35rem;
   text-align: center;
   transition: var(--transition);
   position: relative;
@@ -60,21 +61,25 @@
   transform: scaleX(1);
 }
 
+/* ── Badge — mobile: 56px ────────────────── */
 .principle-card .principle-badge {
-  margin-bottom: 0.5rem;
-  min-height: 150px;
+  margin-bottom: 0.2rem;
+  min-height: 56px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 56px;
+  max-width: 56px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .principle-card .principle-badge__img {
   display: block;
   margin: 0 auto;
   max-width: 100%;
-  max-height: 150px;
+  max-height: 56px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -86,8 +91,8 @@
 }
 
 .principle-card .principle-badge__placeholder {
-  width: 150px;
-  height: 150px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,13 +102,14 @@
 
 .principle-card .principle-badge__placeholder-text {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--gray-400);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
+/* ── Accent colour tokens ────────────────── */
 .principle-card--safe {
   --principle-accent: var(--badge-safe);
 }
@@ -124,23 +130,147 @@
   --principle-accent: var(--badge-future);
 }
 
+/* ── Typography — mobile ─────────────────── */
 .principle-card h3 {
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  font-size: 0.6875rem;
+  /* 11px — was 0.5rem (8px), now readable */
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--gray-900);
-  line-height: 1.25;
+  line-height: 1.2;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
 }
 
 .principle-card .section-desc {
-  font-size: 0.8rem;
-  line-height: 1.3;
-  margin-top: 0.35rem;
+  font-size: 0.6875rem;
+  /* 11px — was 0.45rem (7px) */
+  line-height: 1.25;
+  margin-top: 0.15rem;
   max-width: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  /* standard property for compatibility */
+  overflow: hidden;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
+}
+
+/* ── Small mobile (≤ 480px): slightly tighter */
+@media (max-width: 480px) {
+  .principles-grid {
+    gap: 0.35rem;
+  }
+
+  .principle-card {
+    padding: 0.4rem 0.25rem;
+  }
+
+  .principle-card .principle-badge {
+    min-height: 48px;
+    width: 48px;
+    max-width: 48px;
+    margin-bottom: 0.15rem;
+  }
+
+  .principle-card .principle-badge__img {
+    max-height: 48px;
+  }
+
+  .principle-card .principle-badge__placeholder {
+    width: 48px;
+    height: 48px;
+  }
+
+  .principle-card .principle-badge__placeholder-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* ── Tablet (769–1024px): 3-col, normal gap ─ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .principles-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .principle-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .principle-card .principle-badge {
+    min-height: 120px;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .principle-card .principle-badge__img {
+    max-height: 120px;
+  }
+
+  .principle-card .principle-badge__placeholder {
+    width: 120px;
+    height: 120px;
+  }
+
+  .principle-card .principle-badge__placeholder-text {
+    font-size: 1.5rem;
+  }
+
+  .principle-card h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  .principle-card .section-desc {
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+  }
+}
+
+/* ── Desktop (≥ 1025px): 5-column full layout ── */
+@media (min-width: 1025px) {
+  .principles-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+
+  .principle-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .principle-card .principle-badge {
+    min-height: 150px;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .principle-card .principle-badge__img {
+    max-height: 150px;
+  }
+
+  .principle-card .principle-badge__placeholder {
+    width: 150px;
+    height: 150px;
+  }
+
+  .principle-card .principle-badge__placeholder-text {
+    font-size: 1.75rem;
+  }
+
+  .principle-card h3 {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  .principle-card .section-desc {
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+  }
 }

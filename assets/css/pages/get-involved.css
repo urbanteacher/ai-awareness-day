@@ -207,15 +207,9 @@
     padding: 1.25rem;
   }
 
+  /* Checkbox size already 1.5rem from 768px block — no repeat needed */
   .contact-checklist label.checklist-option {
     min-height: 3rem;
     font-size: 1rem;
-  }
-
-  .contact-checklist .checklist-option input[type="checkbox"] {
-    width: 1.5rem;
-    height: 1.5rem;
-    min-width: 1.5rem;
-    min-height: 1.5rem;
   }
 }

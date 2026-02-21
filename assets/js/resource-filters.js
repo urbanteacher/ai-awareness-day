@@ -109,6 +109,7 @@
             actionHtml = '<a href="' + escapeHtml( resource.permalink ) + '" class="resource-card__link">View resource →</a>';
         }
 
+        // Excerpt is escaped for XSS safety; any HTML in excerpts will appear as literal tags.
         var excerptHtml = resource.excerpt
             ? '<p class="resource-card__excerpt">' + escapeHtml( resource.excerpt ) + '</p>'
             : '';
@@ -205,6 +206,10 @@
             })
             .catch( function () {
                 showLoading( false );
+                if ( grid ) {
+                    grid.innerHTML = '<p class="resources-error-message" style="grid-column:1/-1; padding:1.5rem; text-align:center; color:#6b7280;">Something went wrong, please try again.</p>';
+                }
+                if ( emptyMessage ) emptyMessage.style.display = 'none';
             });
     }
 

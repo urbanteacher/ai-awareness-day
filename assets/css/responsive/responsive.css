@@ -2,9 +2,7 @@
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
-  .principles-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  /* Principle grid responsive → components/principles.css */
 
   .partners-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -36,38 +34,7 @@
     order: 2;
   }
 
-  .nav-toggle {
-    display: block;
-  }
-
-  .main-navigation {
-    position: fixed;
-    top: 72px;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.98);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    padding: 2rem;
-    transform: translateY(-120%);
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border-bottom: 1px solid var(--gray-200);
-  }
-
-  /* Shift mobile nav down to clear the admin bar (46px on mobile) */
-  .admin-bar .main-navigation {
-    top: 118px;
-    /* 72px header + 46px admin bar */
-  }
-
-  .main-navigation.open {
-    transform: translateY(0);
-  }
-
-  .main-navigation ul {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+  /* Mobile nav → layout/navigation.css */
 
   .hero-images-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -77,260 +44,21 @@
     grid-column: span 2;
   }
 
-  .principles-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
-  }
-
-  .principle-card {
-    padding: 0.5rem 0.35rem;
-  }
-
-  .principle-card .principle-badge {
-    min-height: 56px;
-    max-width: 56px;
-    width: 56px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 0.2rem;
-  }
-
-  .principle-card .principle-badge__img {
-    max-height: 56px;
-  }
-
-  .principle-card .principle-badge__placeholder {
-    width: 56px;
-    height: 56px;
-  }
-
-  .principle-card .principle-badge__placeholder-text {
-    font-size: 1.1rem;
-  }
-
-  .principle-card h3 {
-    font-size: 0.5rem;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-
-  .principle-card .section-desc {
-    font-size: 0.5rem;
-    margin-top: 0.15rem;
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-
-  .partners-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  /* Mobile: Limit to 3 partner tiles + 1 join tile (2x2 grid) */
-  .partner-card:not(.partner-card--dummy):nth-child(n+4) {
-    display: none !important;
-  }
-
-  .partner-card {
-    padding: 1rem 0.75rem;
-  }
-
-  .partner-card h3 {
-    font-size: 0.7rem;
-    margin-bottom: 0.35rem;
-    min-height: calc(1.2em * 2);
-    max-height: calc(1.2em * 2);
-    height: calc(1.2em * 2);
-  }
-
-  .partner-stats {
-    font-size: 0.65rem;
-    line-height: 1.35;
-    min-height: calc(1.35em * 2);
-    max-height: calc(1.35em * 2);
-    height: calc(1.35em * 2);
-  }
-
-  .partner-logo {
-    min-height: 44px;
-    margin-bottom: 0.5rem;
-  }
-
-  .partner-logo__img {
-    max-height: 44px;
-  }
-
-  .partner-logo__placeholder {
-    height: 44px;
-  }
-
-  #aim .section {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  #aim .section-title {
-    font-size: 1.2rem;
-  }
-
-  #aim .fade-up {
-    margin-bottom: 0.5rem;
-  }
-
-  .aims-list {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-    margin-top: 0.5rem;
-  }
-
-  /* Mobile: Remove boxes and checkmarks, show simple text list */
-  .aim-item {
-    background: transparent !important;
-    border: none !important;
-    padding: 0.25rem 0 !important;
-    gap: 0;
-    display: block;
-  }
-
-  .aim-item:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  .aim-item .aim-icon {
-    display: none !important;
-  }
-
-  .aim-item .section-desc {
-    font-size: 0.8125rem;
-    line-height: 1.4;
-    margin: 0;
-    padding-left: 0;
-  }
-
   .themes-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* Principle card responsive → components/principles.css */
+  /* Partner card responsive → pages/momentum.css */
+  /* Aim section responsive → pages/aim.css */
 
   /* Form styling consolidated in pages/get-involved.css */
 }
 
 @media (max-width: 480px) {
-  #aim .section {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-
-  #aim .section-title {
-    font-size: 1.1rem;
-  }
-
-  #aim .fade-up {
-    margin-bottom: 0.4rem;
-  }
-
-  .aims-list {
-    gap: 0.2rem;
-    margin-top: 0.4rem;
-  }
-
-  /* Small mobile: Keep boxes/icons hidden, simple text list */
-  .aim-item {
-    padding: 0.2rem 0 !important;
-  }
-
-  .aim-item .section-desc {
-    font-size: 0.75rem;
-    line-height: 1.35;
-  }
-
-  .principles-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.35rem;
-  }
-
-  .principle-card {
-    padding: 0.4rem 0.25rem;
-  }
-
-  .principle-card .principle-badge {
-    min-height: 48px;
-    max-width: 48px;
-    width: 48px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 0.15rem;
-  }
-
-  .principle-card .principle-badge__img {
-    max-height: 48px;
-  }
-
-  .principle-card .principle-badge__placeholder {
-    width: 48px;
-    height: 48px;
-  }
-
-  .principle-card .principle-badge__placeholder-text {
-    font-size: 0.9rem;
-  }
-
-  .principle-card h3 {
-    font-size: 0.45rem;
-    letter-spacing: 0.02em;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-
-  .principle-card .section-desc {
-    font-size: 0.45rem;
-    margin-top: 0.1rem;
-    -webkit-line-clamp: 2;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-
-  .partners-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-  }
-
-  /* Small mobile: Ensure only 3 partner tiles + 1 join tile show */
-  .partner-card:not(.partner-card--dummy):nth-child(n+4) {
-    display: none !important;
-  }
-
-  .partner-card {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .partner-card h3 {
-    font-size: 0.7rem;
-  }
-
-  .partner-stats {
-    font-size: 0.65rem;
-  }
-
-  .partner-logo {
-    min-height: 36px;
-    margin-bottom: 0.35rem;
-  }
-
-  .partner-logo__img {
-    max-height: 36px;
-  }
-
-  .partner-logo__placeholder {
-    height: 36px;
-  }
+  /* Aim section responsive rules → pages/aim.css */
+  /* Principle card responsive → components/principles.css */
+  /* Partner card responsive → pages/momentum.css */
 
   .themes-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -362,4 +90,39 @@
   .hero-images-grid .hero-img:nth-child(1) {
     grid-column: span 1;
   }
+}
+
+/* YouTube / Video section – left-aligned */
+#youtube .youtube-header {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+#youtube .video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+#youtube .video-wrapper--left {
+  margin: 0;
+}
+
+#youtube .video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.theme-link:hover {
+  border-color: var(--green-600);
+  color: var(--gray-900);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }

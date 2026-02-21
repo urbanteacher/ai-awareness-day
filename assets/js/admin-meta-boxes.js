@@ -8,6 +8,16 @@
 (function($) {
     'use strict';
 
+    // Next index is stored on the list/container to avoid duplicates when rows are removed from the middle.
+    function getNextIdx($el) {
+        var next = parseInt($el.data('aiad-next-idx'), 10);
+        if (isNaN(next)) {
+            next = $el.find('.aiad-repeatable-row').length;
+        }
+        $el.data('aiad-next-idx', next + 1);
+        return next;
+    }
+
     // Remove row handler
     $(document).on('click', '.aiad-remove-row', function() {
         var row = $(this).closest('.aiad-repeatable-row');
@@ -20,15 +30,22 @@
     $(document).on('click', '.aiad-add-row', function() {
         var name = $(this).data('name');
         var list = $(this).prev('.aiad-repeatable-list');
-        var idx = list.find('.aiad-repeatable-row').length;
+        var idx = getNextIdx(list);
         var html;
 
         if (name === 'aiad_preparation') {
-            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_preparation[]" value="" class="large-text" /> <button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
+            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +
+                '<input type="text" name="aiad_preparation[]" value="" class="large-text" /> ' +
+                '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         } else if (name === 'aiad_learning_objectives') {
-            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem; padding: 0.35rem 0;"><input type="text" name="aiad_learning_objectives[' + idx + '][objective]" value="" class="large-text" /> <label><input type="checkbox" name="aiad_learning_objectives[' + idx + '][assessable]" value="1" /> ' + aiadAdminMeta.assessableText + '</label> <button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
+            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem; padding: 0.35rem 0;">' +
+                '<input type="text" name="aiad_learning_objectives[' + idx + '][objective]" value="" class="large-text" /> ' +
+                '<label><input type="checkbox" name="aiad_learning_objectives[' + idx + '][assessable]" value="1" /> ' + aiadAdminMeta.assessableText + '</label> ' +
+                '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         } else {
-            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="' + name + '[]" value="" class="large-text" /> <button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
+            html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +
+                '<input type="text" name="' + name + '[]" value="" class="large-text" /> ' +
+                '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         }
         list.append(html);
     });
@@ -48,7 +65,7 @@
     // Add instruction handler
     $(document).on('click', '.aiad-add-instruction', function() {
         var list = $(this).prev('.aiad-repeatable-list');
-        var idx = list.find('.aiad-repeatable-row').length;
+        var idx = getNextIdx(list);
         var stepNum = idx + 1;
         var html = '<div class="aiad-repeatable-row aiad-instruction-row" style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f7f7; border-radius: 4px;">' +
             '<label>Step <input type="number" name="aiad_instructions[' + idx + '][step]" value="' + stepNum + '" min="1" style="width:4em;" /></label> ' +
@@ -65,18 +82,25 @@
     // Add extension handler
     $(document).on('click', '.aiad-add-extension', function() {
         var list = $(this).prev('.aiad-repeatable-list');
-        var idx = list.find('.aiad-repeatable-row').length;
+        var idx = getNextIdx(list);
         var opts = aiadAdminMeta.extensionOptions;
-        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_extensions[' + idx + '][activity]" value="" class="large-text" /> <select name="aiad_extensions[' + idx + '][type]">' + opts + '</select> <button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
+        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +
+            '<input type="text" name="aiad_extensions[' + idx + '][activity]" value="" class="large-text" /> ' +
+            '<select name="aiad_extensions[' + idx + '][type]">' + opts + '</select> ' +
+            '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         list.append(html);
     });
 
     // Add resource handler
     $(document).on('click', '.aiad-add-resource', function() {
         var list = $(this).prev('.aiad-repeatable-list');
-        var idx = list.find('.aiad-repeatable-row').length;
+        var idx = getNextIdx(list);
         var opts = aiadAdminMeta.resourceOptions;
-        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;"><input type="text" name="aiad_resources[' + idx + '][name]" value="" class="regular-text" /> <select name="aiad_resources[' + idx + '][type]">' + opts + '</select> <input type="url" name="aiad_resources[' + idx + '][url]" value="" class="medium-text" /> <button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
+        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +
+            '<input type="text" name="aiad_resources[' + idx + '][name]" value="" class="regular-text" /> ' +
+            '<select name="aiad_resources[' + idx + '][type]">' + opts + '</select> ' +
+            '<input type="url" name="aiad_resources[' + idx + '][url]" value="" class="medium-text" /> ' +
+            '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         list.append(html);
     });
 

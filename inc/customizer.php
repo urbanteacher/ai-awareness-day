@@ -115,7 +115,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
 
     $wp_customize->add_setting( 'aiad_hero_subtitle', array(
         'default'           => $defaults['aiad_hero_subtitle'],
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'sanitize_textarea_field',
         'transport'         => 'postMessage',
     ) );
     $wp_customize->add_control( 'aiad_hero_subtitle', array(
@@ -240,7 +240,7 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
 
         $wp_customize->add_setting( 'aiad_principle_desc_' . $slug, array(
             'default'           => $defaults['desc'],
-            'sanitize_callback' => 'sanitize_text_field',
+            'sanitize_callback' => 'sanitize_textarea_field',
             'transport'         => 'postMessage',
         ) );
         $wp_customize->add_control( 'aiad_principle_desc_' . $slug, array(
@@ -331,7 +331,7 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
     ) );
 
     $wp_customize->add_setting( 'aiad_sample_letters_url', array(
-        'default'           => 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260219%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T134149Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=63e9e703294592ac0831c1514a8cb35998b38153e36dd02ad109ab57226d2625',
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
     ) );
@@ -383,7 +383,7 @@ function aiad_register_time_resources_display_section( WP_Customize_Manager $wp_
     $wp_customize->add_section( 'aiad_time_resources_display', array(
         'title'       => __( 'Time Resources Display', 'ai-awareness-day' ),
         'description' => __( 'Images for the "By session length" cards (5 min, 15 min, 20 min, 30 min). Shown in the badge holder on mobile. Leave empty for placeholder.', 'ai-awareness-day' ),
-        'priority'    => 34,
+        'priority'    => 35,
     ) );
 
     $session_badge_slugs = array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
@@ -416,7 +416,7 @@ function aiad_register_display_board_section( WP_Customize_Manager $wp_customize
     $wp_customize->add_section( 'aiad_display_board', array(
         'title'       => __( 'Display board examples', 'ai-awareness-day' ),
         'description' => __( 'Optional images shown in the Toolkit display board guide. Upload photos of example boards to inspire teachers.', 'ai-awareness-day' ),
-        'priority'    => 35,
+        'priority'    => 36,
     ) );
 
     foreach ( array( 1, 2, 3 ) as $num ) {
@@ -613,7 +613,7 @@ function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_custo
         'sanitize_callback' => function( $value ) {
             return in_array( $value, array( 'left', 'center', 'right' ), true ) ? $value : 'left';
         },
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_text_alignment', array(
         'label'       => __( 'Default Text Alignment', 'ai-awareness-day' ),
@@ -633,7 +633,7 @@ function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_custo
         'sanitize_callback' => function( $value ) {
             return in_array( $value, array( 'narrow', 'standard', 'wide', 'full' ), true ) ? $value : 'standard';
         },
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_container_width', array(
         'label'       => __( 'Container Width', 'ai-awareness-day' ),
