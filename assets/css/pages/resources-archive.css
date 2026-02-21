@@ -101,7 +101,8 @@
   border: 1px solid var(--gray-200);
   border-radius: 0;
   overflow: hidden;
-  min-width: 0; /* allow grid item to shrink */
+  min-width: 0;
+  /* allow grid item to shrink */
 }
 
 .resource-card__image-link {
@@ -149,7 +150,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 0.75rem;
-  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%);
   pointer-events: none;
 }
 
@@ -318,21 +319,30 @@
     padding: 1rem;
   }
 
-  .resource-card__image-placeholder-text {
-    font-size: 1.5rem;
+  .resource-card__pill {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+    line-height: 1;
   }
 
-  .resource-card__title {
-    font-size: 1.05rem;
+  .resource-card__image-link {
+    aspect-ratio: 16/10;
+    /* Fixed: Taller aspect ratio to prevent pill overlap */
+  }
+
+  .resource-card__image-placeholder-text {
+    font-size: 1.25rem;
+  }
+
+  .resource-card__image-title {
+    font-size: 0.55rem;
+    line-height: 1.1;
   }
 
   .resource-card__excerpt.section-desc {
     font-size: 0.95rem;
-  }
-
-  .resource-card__pill {
-    padding: 0.12rem 0.35rem;
-    font-size: 0.6rem;
+    margin-bottom: 0.4rem;
+    /* Fixed: Reduced margin to bring link closer */
   }
 }
 
@@ -349,7 +359,8 @@
   }
 
   #free-resources .resource-card__image-link {
-    aspect-ratio: 16/8;
+    aspect-ratio: 16/10;
+    /* Fixed: Increased height to prevent overlap */
   }
 
   #free-resources .resource-card__image-placeholder-text {
@@ -366,12 +377,14 @@
   }
 
   #free-resources .resource-card__pill {
-    padding: 0.1rem 0.25rem;
-    font-size: 0.5rem;
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+    line-height: 1;
   }
 
   #free-resources .resource-card__image-title {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
+    line-height: 1.1;
   }
 
   #free-resources .resource-card__body {
@@ -394,6 +407,8 @@
     font-size: 0.55rem;
     line-height: 1.3;
     margin-top: 0.4rem;
+    margin-bottom: 0.25rem;
+    /* Fixed: Added small margin instead of inheriting large global section-desc margin */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -401,7 +416,8 @@
   }
 
   #free-resources .resource-card__action {
-    margin-top: 0.35rem;
+    margin-top: 0.2rem;
+    /* Adjusted: Closer to description */
   }
 
   #free-resources .resource-card__link {
@@ -429,10 +445,27 @@
 
   #free-resources .resource-card__excerpt.section-desc {
     font-size: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   #free-resources .resource-card__link {
     font-size: 0.5rem;
+  }
+
+  /* Fixed: Adjust pills and placeholder text to prevent overlap on small mobile */
+  #free-resources .resource-card__image-overlay {
+    padding: 0.25rem;
+  }
+
+  #free-resources .resource-card__pill {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+  }
+
+  #free-resources .resource-card__image-placeholder-text {
+    font-size: 0.5rem;
+    transform: translateY(2px);
+    /* Slightly shift text down to avoid pills */
   }
 }
 
@@ -459,7 +492,8 @@
   }
 
   #partner-resources .resource-card__image-link {
-    aspect-ratio: 16/8;
+    aspect-ratio: 16/10;
+    /* Fixed: Increased height to prevent overlap */
   }
 
   #partner-resources .resource-card__image-placeholder-text {
@@ -476,8 +510,9 @@
   }
 
   #partner-resources .resource-card__pill {
-    padding: 0.1rem 0.25rem;
-    font-size: 0.5rem;
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+    line-height: 1;
   }
 
   /* Mobile: Hide org name and activity title in black box overlay */
@@ -633,16 +668,20 @@
     align-items: stretch;
     padding: 1.5rem;
   }
+
   .resource-filter-group {
     min-width: 0;
   }
+
   .resource-filter-select {
     min-width: 0;
     width: 100%;
   }
+
   .resource-filter-group--submit .resource-filter-submit {
     width: 100%;
   }
+
   .featured-from-orgs__cta .resource-filter-submit {
     width: 100%;
   }
@@ -695,4 +734,3 @@
 .single-resource .resource-section.mt-2rem {
   margin-top: 2rem;
 }
-
