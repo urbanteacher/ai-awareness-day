@@ -18,8 +18,8 @@ $text_alignment_class = aiad_get_text_alignment_class();
     <?php
     foreach (aiad_get_front_page_sections() as $section_slug) {
         if (!aiad_is_section_visible($section_slug)) {
-            continue;
-        }
+                                continue;
+                            }
         get_template_part('template-parts/front-page/section', $section_slug);
     }
     ?>

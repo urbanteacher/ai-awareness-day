@@ -136,6 +136,26 @@ a.duration-badge:hover {
   margin-top: 0;
 }
 
+/* Explore subheadings (By theme, By session length) – below section title */
+.explore-subheading {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-700);
+}
+
+.explore-session-length-block {
+  margin-top: 2.5rem;
+}
+
+.explore-session-length-block .explore-subheading {
+  margin-top: 0;
+}
+
 /* Explore section: session length cards (dark strip + icon + title + description + badge) */
 .explore-session-cards {
   margin-top: 1rem;
@@ -156,11 +176,10 @@ a.duration-badge:hover {
 }
 
 .explore-session-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto;
-  gap: 0.5rem 0.75rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 0;
@@ -169,42 +188,63 @@ a.duration-badge:hover {
   transition: var(--transition);
 }
 
-.explore-session-card .explore-session-icon {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 .explore-session-card .explore-session-badge {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-  justify-self: start;
+  order: 1;
 }
 
 .explore-session-card .explore-session-text {
-  grid-column: 1 / -1;
-  grid-row: 2;
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.explore-session-card .explore-session-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--session-accent, rgba(255, 255, 255, 0.9));
+}
+
+.explore-session-status--live {
+  color: var(--session-accent, var(--white));
+  animation: explore-live-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes explore-live-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 @media (min-width: 768px) {
   .explore-session-card {
-    display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1.25rem;
     padding: 1rem 1.25rem;
   }
 
-  .explore-session-card .explore-session-icon,
-  .explore-session-card .explore-session-badge,
+  .explore-session-card .explore-session-badge {
+    order: 0;
+  }
+
   .explore-session-card .explore-session-text {
-    grid-column: auto;
-    grid-row: auto;
+    order: 0;
+    flex: 1;
+  }
+
+  .explore-session-card .explore-session-status {
+    font-size: 0.8rem;
   }
 }
 
 .explore-session-card:hover {
   background: rgba(255, 255, 255, 0.08);
+  outline: 2px solid var(--session-accent, var(--gray-400));
+  outline-offset: 2px;
 }
 
 .explore-session-icon {
@@ -243,6 +283,8 @@ a.duration-badge:hover {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .explore-session-title {
@@ -357,6 +399,8 @@ a.duration-badge:hover {
     gap: 0.1rem !important;
     width: 100% !important;
     padding: 0 0.1rem !important;
+    align-items: flex-start !important;
+    text-align: left !important;
   }
 
   .explore-session-title {

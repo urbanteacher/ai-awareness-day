@@ -32,7 +32,7 @@ function aiad_duration_badge_label( object|string $term_or_slug ): string {
  * Explore section: session length cards (icon, title, description, badge)
  * Keys match resource_duration slugs.
  *
- * @return array<string, array{title: string, description: string, badge_short: string, icon_bg: string, icon: string}>
+ * @return array<string, array{title: string, description: string, badge_short: string, icon_bg: string, icon: string, status?: string, status_live?: bool}>
  */
 function aiad_explore_session_cards(): array {
     return array(
@@ -42,6 +42,8 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '5 min',
             'icon_bg'     => '#93c5fd',
             'icon'        => 'clock',
+            'status'      => __( 'Live', 'ai-awareness-day' ),
+            'status_live' => true,
         ),
         '15-20-min-tutor-time' => array(
             'title'       => __( 'Tutor Time', 'ai-awareness-day' ),
@@ -49,6 +51,8 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '15-20 min',
             'icon_bg'     => '#86efac',
             'icon'        => 'people',
+            'status'      => __( 'Launching March 2026', 'ai-awareness-day' ),
+            'status_live' => false,
         ),
         '20-min-assemblies' => array(
             'title'       => __( 'Assemblies', 'ai-awareness-day' ),
@@ -56,13 +60,17 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '20 min',
             'icon_bg'     => '#c4b5fd',
             'icon'        => 'presentation',
+            'status'      => __( 'Launching April 2026', 'ai-awareness-day' ),
+            'status_live' => false,
         ),
         '30-45-min-after-school' => array(
-            'title'       => __( 'After-School Clubs', 'ai-awareness-day' ),
+            'title'       => __( 'After-School', 'ai-awareness-day' ),
             'description' => __( '30-45 minute hands-on projects and activities', 'ai-awareness-day' ),
             'badge_short' => '30-45 min',
             'icon_bg'     => '#fdba74',
             'icon'        => 'book',
+            'status'      => __( 'April 2026', 'ai-awareness-day' ),
+            'status_live' => false,
         ),
     );
 }

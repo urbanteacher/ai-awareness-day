@@ -302,10 +302,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $theme_terms = get_terms(array('taxonomy' => 'resource_principle', 'hide_empty' => false));
                 if ($theme_terms && !is_wp_error($theme_terms)):
                     ?>
-                    <p class="explore-subheading"
-                        style="margin-top: 2rem; margin-bottom: 0.75rem; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-700);">
-                        <?php esc_html_e('By theme', 'ai-awareness-day'); ?>
-                    </p>
+                    <p class="explore-subheading"><?php esc_html_e('By theme', 'ai-awareness-day'); ?></p>
                     <div class="themes-links">
                         <?php foreach ($theme_terms as $term):
                             $url = add_query_arg('principle', $term->slug, $resources_url);
@@ -341,66 +338,36 @@ if ( ! defined( 'ABSPATH' ) ) {
                 }
                 if (!empty($session_cards)):
                     ?>
-                    <p class="explore-subheading"
-                        style="margin-top: 2.5rem; margin-bottom: 0.75rem; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-700);">
-                        <?php esc_html_e('By session length', 'ai-awareness-day'); ?>
-                    </p>
-                    <div class="explore-session-cards">
-                        <?php
-                        foreach (array_keys($session_cards) as $slug):
-                            if (!in_array($slug, $duration_slugs, true)) {
-                                continue;
-                            }
-                            $card = $session_cards[$slug];
-                            $url = add_query_arg('duration', $slug, $resources_url);
-                            // Ensure URL uses site URL, not localhost
-                            if (strpos($url, 'localhost') !== false) {
-                                $url = str_replace(parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST), parse_url(home_url(), PHP_URL_SCHEME) . '://' . parse_url(home_url(), PHP_URL_HOST), $url);
-                            }
-                            $icon = isset($card['icon']) ? $card['icon'] : 'book';
-                            $icon_bg = isset($card['icon_bg']) ? $card['icon_bg'] : '#c4b5fd';
-                            ?>
-                            <a href="<?php echo esc_url($url); ?>" class="explore-session-card fade-up">
-                                <span class="explore-session-icon" style="background: <?php echo esc_attr($icon_bg); ?>">
-                                    <?php
-                                    if ($icon === 'clock'): ?>
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <polyline points="12 6 12 12 16 14"></polyline>
-                                        </svg>
-                                    <?php elseif ($icon === 'people'): ?>
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                        </svg>
-                                    <?php elseif ($icon === 'presentation'): ?>
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                                        </svg>
-                                    <?php else: ?>
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                            <line x1="8" y1="7" x2="16" y2="7"></line>
-                                            <line x1="8" y1="11" x2="16" y2="11"></line>
-                                        </svg>
-                                    <?php endif; ?>
-                                </span>
-                                <span class="explore-session-text">
-                                    <span class="explore-session-title"><?php echo esc_html($card['title']); ?></span>
-                                    <span class="explore-session-desc"><?php echo esc_html($card['description']); ?></span>
-                                </span>
-                                <span class="explore-session-badge"><?php echo esc_html($card['badge_short']); ?></span>
-                            </a>
-                        <?php endforeach; ?>
+                    <div class="explore-session-length-block fade-up">
+                        <p class="explore-subheading"><?php esc_html_e('By session length', 'ai-awareness-day'); ?></p>
+                        <div class="explore-session-cards">
+                            <?php
+                            foreach (array_keys($session_cards) as $slug):
+                                if (!in_array($slug, $duration_slugs, true)) {
+                                    continue;
+                                }
+                                $card = $session_cards[$slug];
+                                $url = add_query_arg('duration', $slug, $resources_url);
+                                if (strpos($url, 'localhost') !== false) {
+                                    $url = str_replace(parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST), parse_url(home_url(), PHP_URL_SCHEME) . '://' . parse_url(home_url(), PHP_URL_HOST), $url);
+                                }
+                                $icon = isset($card['icon']) ? $card['icon'] : 'book';
+                                $icon_bg = isset($card['icon_bg']) ? $card['icon_bg'] : '#c4b5fd';
+                                $status = isset($card['status']) ? $card['status'] : '';
+                                $status_live = !empty($card['status_live']);
+                                ?>
+                                <a href="<?php echo esc_url($url); ?>" class="explore-session-card fade-up" style="--session-accent: <?php echo esc_attr($icon_bg); ?>">
+                                    <span class="explore-session-text">
+                                        <span class="explore-session-title"><?php echo esc_html($card['title']); ?></span>
+                                        <?php if ($status): ?>
+                                            <span class="explore-session-status <?php echo $status_live ? 'explore-session-status--live' : ''; ?>"><?php echo esc_html($status); ?></span>
+                                        <?php endif; ?>
+                                        <span class="explore-session-desc"><?php echo esc_html($card['description']); ?></span>
+                                    </span>
+                                    <span class="explore-session-badge"><?php echo esc_html($card['badge_short']); ?></span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>
