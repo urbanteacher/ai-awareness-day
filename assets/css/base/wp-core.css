@@ -322,6 +322,44 @@
     min-width: 22px;
     font-size: 0.75rem;
   }
+
+  /* Mobile: remove numbers and bullets from resource lists and definitions */
+  ul.resource-list,
+  ol.resource-list,
+  .resource-list,
+  .resource-list--objectives,
+  .resource-list--ordered,
+  .resource-list--instructions,
+  .resource-list--preparation,
+  .resource-list--prompts,
+  .resource-list--answers {
+    list-style: none !important;
+    padding-left: 0 !important;
+  }
+
+  .resource-list li,
+  .resource-list--objectives li,
+  .resource-list--instructions li,
+  .resource-list--preparation li,
+  .resource-list--prompts li,
+  .resource-list--answers li {
+    padding-left: 0 !important;
+  }
+
+  .resource-list--objectives li::before,
+  .resource-list--instructions li::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  .resource-definition {
+    padding-left: 0 !important;
+  }
+
+  .resource-definition::before {
+    display: none !important;
+    content: none !important;
+  }
 }
 
 .resource-section {
