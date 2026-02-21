@@ -199,7 +199,7 @@
 }
 
 .resource-sections-row--prep-only .resource-sections-row {
-  padding: 1.5rem 0 2rem;
+  padding: 0.75rem 0 1rem;
   border-bottom: 1px solid var(--aiad-border, #e5e7eb);
 }
 
@@ -209,6 +209,10 @@
 
 .resource-sections-row--prep-only .resource-list li {
   margin-bottom: 0.625rem;
+}
+
+.resource-sections-row--prep-only .resource-section.mt-2rem {
+  margin-top: 0;
 }
 
 .resource-sections--rows {
