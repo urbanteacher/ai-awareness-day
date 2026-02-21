@@ -1,6 +1,18 @@
 /* ============================================
    SECTION: TOOLKIT
    ============================================ */
+
+/* Free Resources block: reduced top space below campaign/display board */
+#free-resources-section.section {
+  padding-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+#free-resources-section .toolkit-free-resources--section {
+  margin-top: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--gray-200);
+}
+
 .toolkit-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));

@@ -431,8 +431,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     $resources_archive_url = add_query_arg('post_type', 'resource', home_url('/'));
                 }
                 ?>
-                <div id="free-resources" class="toolkit-free-resources fade-up"
-                    style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
+                <div id="free-resources" class="toolkit-free-resources toolkit-free-resources--section fade-up">
                     <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>
                     <h2 class="section-title"><?php esc_html_e('AI Awareness Activities', 'ai-awareness-day'); ?></h2>
                     <div class="resources-grid" style="margin-top: 2rem;">

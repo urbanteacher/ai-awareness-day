@@ -1,6 +1,10 @@
 /* ============================================
    SECTION: THEMES
    ============================================ */
+#themes.section {
+  padding-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
 .themes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
