@@ -452,7 +452,9 @@
     overflow: hidden;
   }
 
+  .resources-archive .resource-card__excerpt,
   .resources-archive .resource-card__excerpt.section-desc,
+  .featured-resources-archive .resource-card__excerpt,
   .featured-resources-archive .resource-card__excerpt.section-desc {
     font-size: 0.55rem;
     line-height: 1.3;
@@ -497,7 +499,9 @@
     font-size: 0.55rem;
   }
 
+  .resources-archive .resource-card__excerpt,
   .resources-archive .resource-card__excerpt.section-desc,
+  .featured-resources-archive .resource-card__excerpt,
   .featured-resources-archive .resource-card__excerpt.section-desc {
     font-size: 0.5rem;
     margin-bottom: 0.2rem;
