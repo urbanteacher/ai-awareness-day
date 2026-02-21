@@ -326,18 +326,18 @@ a.duration-badge:hover {
 
 .explore-session-badge {
   flex-shrink: 0;
-  min-width: 4.5rem;
-  min-height: 2.25rem;
-  padding: 0.35rem 0.6rem;
+  min-width: 4rem;
+  min-height: 4rem;
+  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 800;
   letter-spacing: 0.04em;
   color: var(--white);
-  background: #7c3aed;
+  background: var(--session-accent, #7c3aed);
   border-radius: 0;
   text-align: center;
 }
@@ -350,9 +350,8 @@ a.duration-badge:hover {
 
 @media (min-width: 768px) {
   .explore-session-badge {
-    min-width: 5rem;
-    min-height: 2.5rem;
-    padding: 0.45rem 1rem;
+    min-width: 4.5rem;
+    min-height: 4.5rem;
     font-size: 0.8rem;
   }
 }
@@ -393,23 +392,23 @@ a.duration-badge:hover {
     /* Icons removed as per request */
   }
 
+  /* Time badges: match theme badges – full-bleed, no padding, angular, prominent */
   .explore-session-badge {
     order: 1 !important;
     display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background: var(--gray-100) !important;
-    color: var(--gray-600) !important;
-    padding: 0.25rem !important;
-    border-radius: 6px !important;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0 !important;
+    border-radius: 0 !important;
     margin-bottom: 0.4rem !important;
-    width: 72px !important;
-    min-width: 72px !important;
-    height: 44px !important;
-    min-height: 44px !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    height: 64px !important;
+    min-height: 64px !important;
     box-sizing: border-box;
     overflow: hidden;
-    border: 1px solid var(--gray-200);
+    border: none;
+    background: transparent;
   }
 
   .explore-session-badge__text {
@@ -420,7 +419,7 @@ a.duration-badge:hover {
     display: block !important;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   .explore-session-badge__img.is-broken {
@@ -433,13 +432,14 @@ a.duration-badge:hover {
     justify-content: center;
     width: 100%;
     height: 100%;
+    min-width: 0;
     font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gray-500);
-    background: var(--gray-50);
-    border: 1px dashed var(--gray-300);
-    border-radius: 4px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--gray-700);
+    background: var(--gray-200);
+    border: none;
+    border-radius: 0;
   }
 
   .explore-session-badge:has(.explore-session-badge__img:not(.is-broken)) .explore-session-badge-placeholder {
