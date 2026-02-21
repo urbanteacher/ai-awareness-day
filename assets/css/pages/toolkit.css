@@ -2,15 +2,20 @@
    SECTION: TOOLKIT
    ============================================ */
 
-/* Free Resources block: reduced top space below campaign/display board */
+/* Free Resources block: reduced top and bottom gap */
 #free-resources-section.section {
-  padding-top: clamp(1.25rem, 3vw, 2rem);
+  padding-top: clamp(0.75rem, 2vw, 1.25rem);
+  padding-bottom: clamp(1rem, 2.5vw, 1.5rem);
 }
 
 #free-resources-section .toolkit-free-resources--section {
   margin-top: 0;
-  padding-top: 1.25rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--gray-200);
+}
+
+#free-resources-section .resources-grid {
+  margin-top: 1.25rem;
 }
 
 .toolkit-grid {

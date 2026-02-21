@@ -2,7 +2,7 @@
    SECTION: THEMES
    ============================================ */
 #themes.section {
-  padding-bottom: clamp(1.25rem, 3vw, 2rem);
+  padding-bottom: clamp(0.75rem, 2vw, 1.25rem);
 }
 
 .themes-grid {

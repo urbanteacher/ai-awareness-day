@@ -434,7 +434,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div id="free-resources" class="toolkit-free-resources toolkit-free-resources--section fade-up">
                     <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>
                     <h2 class="section-title"><?php esc_html_e('AI Awareness Activities', 'ai-awareness-day'); ?></h2>
-                    <div class="resources-grid" style="margin-top: 2rem;">
+                    <div class="resources-grid">
                         <?php
                         while ($free_resources->have_posts()):
                             $free_resources->the_post();
