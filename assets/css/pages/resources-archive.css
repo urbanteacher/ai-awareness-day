@@ -105,6 +105,53 @@
   /* allow grid item to shrink */
 }
 
+/* Placeholder card in #free-resources: same grid as activity cards, links to archive */
+.resource-card--placeholder {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-style: dashed;
+  border-color: var(--gray-300);
+  background: var(--gray-50);
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.resource-card--placeholder:hover {
+  border-color: var(--green-500);
+  background: var(--green-50);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.resource-card__placeholder-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.resource-card__placeholder-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.resource-card--placeholder:hover .resource-card__placeholder-title {
+  color: var(--green-700);
+}
+
+.resource-card__placeholder-desc {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
 .resource-card__image-link {
   display: block;
   aspect-ratio: 16/10;
@@ -537,6 +584,19 @@
     margin-top: 1rem;
   }
 
+  #free-resources .resource-card--placeholder {
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  #free-resources .resource-card--placeholder .resource-card__placeholder-title {
+    font-size: 0.7rem;
+  }
+
+  #free-resources .resource-card--placeholder .resource-card__placeholder-desc {
+    font-size: 0.55rem;
+  }
+
   #free-resources .resource-card {
     min-width: 0;
   }
@@ -672,6 +732,19 @@
 
   #partner-resources .resource-card {
     min-width: 0;
+  }
+
+  #partner-resources .resource-card--placeholder {
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  #partner-resources .resource-card--placeholder .resource-card__placeholder-title {
+    font-size: 0.7rem;
+  }
+
+  #partner-resources .resource-card--placeholder .resource-card__placeholder-desc {
+    font-size: 0.55rem;
   }
 
   #partner-resources .resource-card__image-link {

@@ -2,9 +2,9 @@
    SECTION: PRINCIPLES
    ============================================ */
 
-/* Our AI literacy box: same format as principle cards (badge + h3 + section-desc) */
+/* Our AI literacy box: same format as principle cards (badge + h3 + section-desc). Hidden by request. */
 .principles-grid .ai-literacy-box {
-  min-height: 0;
+  display: none !important;
 }
 
 /* Desktop: span full width below the 5 principle cards */

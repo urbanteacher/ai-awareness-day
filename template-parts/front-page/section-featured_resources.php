@@ -115,6 +115,23 @@ $featured_resources = new WP_Query( array(
                                 </div>
                             </article>
                         <?php endwhile; ?>
+                        <?php
+                        $featured_archive_url = get_post_type_archive_link('featured_resource');
+                        if ( ! $featured_archive_url ) {
+                            $featured_archive_url = home_url( '/from-partners/' );
+                            if ( get_option( 'permalink_structure' ) === '' ) {
+                                $featured_archive_url = add_query_arg( 'post_type', 'featured_resource', home_url( '/' ) );
+                            }
+                        }
+                        ?>
+                        <a href="<?php echo esc_url( $featured_archive_url ); ?>"
+                            class="resource-card resource-card--placeholder fade-up"
+                            aria-label="<?php esc_attr_e( 'View all handpicked resources', 'ai-awareness-day' ); ?>">
+                            <div class="resource-card__placeholder-inner">
+                                <span class="resource-card__placeholder-title"><?php esc_html_e( 'View all handpicked resources', 'ai-awareness-day' ); ?></span>
+                                <span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse games & learning tools', 'ai-awareness-day' ); ?></span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </section>

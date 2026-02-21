@@ -20,14 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
                 <div class="toolkit-grid">
                     <?php
-                    $newsletter_url = esc_url_raw(get_theme_mod('aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched'));
+                    $implementation_guide_url = esc_url_raw(get_theme_mod('aiad_implementation_guide_url', ''));
                     $sample_letters_url = esc_url_raw(get_theme_mod('aiad_sample_letters_url', 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260219%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T134149Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=63e9e703294592ac0831c1514a8cb35998b38153e36dd02ad109ab57226d2625'));
+                    $newsletter_url = esc_url_raw(get_theme_mod('aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched'));
                     $toolkit_items = array(
                         array(
                             'title' => __('Implementation Guide', 'ai-awareness-day'),
                             'desc' => __('Step-by-step instructions to run AI Awareness Day in your school.', 'ai-awareness-day'),
                             'icon' => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>',
-                            'url' => '',
+                            'url' => $implementation_guide_url,
                         ),
                         array(
                             'title' => __('Sample Letters & Communications', 'ai-awareness-day'),
@@ -47,6 +48,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                         $card_url = !empty($item['url']) ? $item['url'] : '';
                         $is_link = $card_url !== '';
                         ?>
+                        <?php
+                        $toolkit_image_id = absint( get_theme_mod( 'aiad_toolkit_image_' . ( $index + 1 ), 0 ) );
+                        $toolkit_image_url = $toolkit_image_id ? wp_get_attachment_image_url( $toolkit_image_id, 'medium_large' ) : '';
+                        ?>
                         <?php if ($is_link): ?>
                             <a href="<?php echo esc_url($card_url); ?>"
                                 class="toolkit-card toolkit-card--link fade-up stagger-<?php echo $index + 1; ?>" target="_blank"
@@ -54,13 +59,16 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <?php else: ?>
                                 <div class="toolkit-card fade-up stagger-<?php echo $index + 1; ?>">
                                 <?php endif; ?>
+                                <div class="toolkit-card__image-wrap">
+                                    <?php if ( $toolkit_image_url ) : ?>
+                                        <img src="<?php echo esc_url( $toolkit_image_url ); ?>" alt="" class="toolkit-card__image" loading="lazy" />
+                                    <?php else : ?>
+                                        <div class="toolkit-card__image-placeholder" aria-hidden="true">
+                                            <span class="toolkit-card__image-placeholder-text"><?php esc_html_e( 'Add image', 'ai-awareness-day' ); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="toolkit-header">
-                                    <div class="toolkit-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <?php echo $item['icon']; ?>
-                                        </svg>
-                                    </div>
                                     <h3><?php echo esc_html($item['title']); ?></h3>
                                 </div>
                                 <p class="section-desc"><?php echo esc_html($item['desc']); ?></p>
@@ -71,10 +79,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
+    </div>
+</section>
 
-            <!-- Display board guide: layout mock-up + instructions for teachers -->
-            <div id="display-board" class="toolkit-display-board fade-up"
-                style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
+<!-- Display board: separate section -->
+<section id="display-board" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
+    <div class="container">
+            <div class="toolkit-display-board fade-up">
                 <span class="section-label"><?php esc_html_e('Display board', 'ai-awareness-day'); ?></span>
                 <h2 class="section-title">
                     <?php esc_html_e('Create a display board for your school', 'ai-awareness-day'); ?>
@@ -279,9 +290,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                     </div>
                 <?php endif; ?>
             </div>
+    </div>
+</section>
 
-            <div id="themes" class="toolkit-explore-themes"
-                style="margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--gray-200);">
+<!-- Activities / Time resources: By theme + By session length -->
+<section id="themes" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
+    <div class="container">
+            <div class="toolkit-explore-themes">
                 <div class="fade-up">
                     <span class="section-label"><?php esc_html_e('Activities', 'ai-awareness-day'); ?></span>
                     <h2 class="section-title"><?php esc_html_e('Personalised to you', 'ai-awareness-day'); ?></h2>
@@ -318,12 +333,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                             $has_theme_badge = !empty($theme_badge_src);
                             ?>
                             <a href="<?php echo esc_url($url); ?>" class="theme-link fade-up">
-                                <?php if ($has_theme_badge): ?>
-                                    <span class="theme-link__badge">
+                                <span class="theme-link__badge">
+                                    <?php if ($has_theme_badge): ?>
                                         <img src="<?php echo esc_url($theme_badge_src); ?>" alt="" aria-hidden="true"
                                             class="theme-link__badge-img" onerror="this.classList.add('is-broken');" />
-                                    </span>
-                                <?php endif; ?>
+                                    <?php else: ?>
+                                        <span class="theme-link__badge-placeholder" aria-hidden="true"><?php echo esc_html(mb_substr($term->name, 0, 1)); ?></span>
+                                    <?php endif; ?>
+                                </span>
                                 <span class="theme-link__label"><?php echo esc_html($term->name); ?></span>
                             </a>
                         <?php endforeach; ?>
@@ -355,6 +372,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 $icon_bg = isset($card['icon_bg']) ? $card['icon_bg'] : '#c4b5fd';
                                 $status = isset($card['status']) ? $card['status'] : '';
                                 $status_live = !empty($card['status_live']);
+                                $session_badge_id = absint(get_theme_mod('aiad_session_badge_' . $slug, 0));
+                                $session_badge_src = $session_badge_id ? wp_get_attachment_image_url($session_badge_id, 'thumbnail') : '';
+                                $has_session_badge = !empty($session_badge_src);
                                 ?>
                                 <a href="<?php echo esc_url($url); ?>" class="explore-session-card fade-up" style="--session-accent: <?php echo esc_attr($icon_bg); ?>">
                                     <span class="explore-session-text">
@@ -364,15 +384,26 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         <?php endif; ?>
                                         <span class="explore-session-desc"><?php echo esc_html($card['description']); ?></span>
                                     </span>
-                                    <span class="explore-session-badge"><?php echo esc_html($card['badge_short']); ?></span>
+                                    <span class="explore-session-badge">
+                                        <span class="explore-session-badge__text"><?php echo esc_html($card['badge_short']); ?></span>
+                                        <?php if ($has_session_badge): ?>
+                                            <img src="<?php echo esc_url($session_badge_src); ?>" alt="" class="explore-session-badge__img" aria-hidden="true" loading="lazy" onerror="this.classList.add('is-broken');" />
+                                        <?php endif; ?>
+                                        <span class="explore-session-badge-placeholder explore-session-badge-placeholder--fallback" aria-hidden="true"><?php echo esc_html(preg_match('/^\d+/', $card['badge_short'], $m) ? $m[0] : $card['badge_short']); ?></span>
+                                    </span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
                     </div>
                 <?php endif; ?>
             </div>
+    </div>
+</section>
 
-            <!-- Free Resources: 5-minute lesson starters only (one per theme) -->
+<!-- Free Resources: 5-minute lesson starters only (one per theme) -->
+<section id="free-resources-section" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
+    <div class="container">
+            <!-- Free Resources block (keep id for anchors) -->
             <?php
             $free_resources = new WP_Query(array(
                 'post_type' => 'resource',
@@ -475,11 +506,16 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 </div>
                             </article>
                         <?php endwhile; ?>
-                    </div>
-                    <p style="margin-top: 1.5rem;">
+                        <?php /* Placeholder card: mobile only, links to full resources archive */ ?>
                         <a href="<?php echo esc_url($resources_archive_url); ?>"
-                            class="resource-filter-submit"><?php esc_html_e('View all resources', 'ai-awareness-day'); ?></a>
-                    </p>
+                            class="resource-card resource-card--placeholder free-resources-placeholder--mobile fade-up"
+                            aria-label="<?php esc_attr_e('View all resources', 'ai-awareness-day'); ?>">
+                            <div class="resource-card__placeholder-inner">
+                                <span class="resource-card__placeholder-title"><?php esc_html_e('View all resources', 'ai-awareness-day'); ?></span>
+                                <span class="resource-card__placeholder-desc"><?php esc_html_e('Browse all activities', 'ai-awareness-day'); ?></span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
                 <?php
                 wp_reset_postdata();

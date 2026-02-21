@@ -342,6 +342,12 @@ a.duration-badge:hover {
   text-align: center;
 }
 
+/* Desktop: show text only; image holder content hidden */
+.explore-session-badge__img,
+.explore-session-badge-placeholder {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .explore-session-badge {
     min-width: 5rem;
@@ -392,21 +398,52 @@ a.duration-badge:hover {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    background: #7c3aed !important;
-    color: #ffffff !important;
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    padding: 0.4rem 0.5rem !important;
+    background: var(--gray-100) !important;
+    color: var(--gray-600) !important;
+    padding: 0.25rem !important;
     border-radius: 6px !important;
-    text-transform: uppercase !important;
-    line-height: 1 !important;
     margin-bottom: 0.4rem !important;
     width: 72px !important;
     min-width: 72px !important;
     height: 44px !important;
     min-height: 44px !important;
     box-sizing: border-box;
-    box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+
+  .explore-session-badge__text {
+    display: none !important;
+  }
+
+  .explore-session-badge__img {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .explore-session-badge__img.is-broken {
+    display: none !important;
+  }
+
+  .explore-session-badge-placeholder {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: 4px;
+  }
+
+  .explore-session-badge:has(.explore-session-badge__img:not(.is-broken)) .explore-session-badge-placeholder {
+    display: none !important;
   }
 
   .explore-session-text {

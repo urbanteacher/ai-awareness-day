@@ -278,7 +278,7 @@ get_header();
                 <?php endif; ?>
             </div>
             <p class="section-desc resources-empty-message" <?php echo $resources->have_posts() ? ' style="display:none"' : ''; ?>>
-                <?php esc_html_e('No resources found. Add resources in the admin under Resources.', 'ai-awareness-day'); ?>
+                <?php esc_html_e('We have decided to phase the resources in order in the lead-up to the campaign.', 'ai-awareness-day'); ?>
             </p>
 
             <?php

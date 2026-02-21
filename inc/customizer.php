@@ -22,6 +22,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_badges_section( $wp_customize );
     aiad_register_youtube_section( $wp_customize );
     aiad_register_toolkit_section( $wp_customize );
+    aiad_register_time_resources_display_section( $wp_customize );
     aiad_register_display_board_section( $wp_customize );
     aiad_register_contact_section( $wp_customize );
     aiad_register_social_section( $wp_customize );
@@ -317,14 +318,14 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
         'priority'    => 32,
     ) );
 
-    $wp_customize->add_setting( 'aiad_newsletter_url', array(
-        'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
+    $wp_customize->add_setting( 'aiad_implementation_guide_url', array(
+        'default'           => '',
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
     ) );
-    $wp_customize->add_control( 'aiad_newsletter_url', array(
-        'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
-        'description' => __( 'URL for the "Latest Newsletter" toolkit card. When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
+    $wp_customize->add_control( 'aiad_implementation_guide_url', array(
+        'label'       => __( 'Implementation Guide URL', 'ai-awareness-day' ),
+        'description' => __( 'URL for the "Implementation Guide" toolkit card (e.g. PDF or page). When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
         'section'     => 'aiad_toolkit',
         'type'        => 'url',
     ) );
@@ -340,6 +341,70 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
         'section'     => 'aiad_toolkit',
         'type'        => 'url',
     ) );
+
+    $wp_customize->add_setting( 'aiad_newsletter_url', array(
+        'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_newsletter_url', array(
+        'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
+        'description' => __( 'URL for the "Latest Newsletter" toolkit card. When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
+        'section'     => 'aiad_toolkit',
+        'type'        => 'url',
+    ) );
+
+    $toolkit_card_labels = array(
+        1 => __( 'Implementation Guide', 'ai-awareness-day' ),
+        2 => __( 'Sample Letters & Communications', 'ai-awareness-day' ),
+        3 => __( 'Latest Newsletter', 'ai-awareness-day' ),
+    );
+    foreach ( $toolkit_card_labels as $num => $label ) {
+        $wp_customize->add_setting( 'aiad_toolkit_image_' . $num, array(
+            'default'           => 0,
+            'sanitize_callback' => 'absint',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_toolkit_image_' . $num, array(
+            'label'       => sprintf( __( 'Card image: %s', 'ai-awareness-day' ), $label ),
+            'description' => __( 'Optional. Upload an image to show at the top of this toolkit card. Leave empty to show a placeholder.', 'ai-awareness-day' ),
+            'section'     => 'aiad_toolkit',
+            'mime_type'   => 'image',
+        ) ) );
+    }
+}
+
+/**
+ * Register Time Resources Display section (By session length badge images, mobile).
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_time_resources_display_section( WP_Customize_Manager $wp_customize ): void {
+    $wp_customize->add_section( 'aiad_time_resources_display', array(
+        'title'       => __( 'Time Resources Display', 'ai-awareness-day' ),
+        'description' => __( 'Images for the "By session length" cards (5 min, 15 min, 20 min, 30 min). Shown in the badge holder on mobile. Leave empty for placeholder.', 'ai-awareness-day' ),
+        'priority'    => 34,
+    ) );
+
+    $session_badge_slugs = array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
+    $session_badge_labels = array(
+        '5-min-lesson-starters'   => __( '5 min – image', 'ai-awareness-day' ),
+        '15-20-min-tutor-time'   => __( '15 min – image', 'ai-awareness-day' ),
+        '20-min-assemblies'      => __( '20 min – image', 'ai-awareness-day' ),
+        '30-45-min-after-school' => __( '30 min – image', 'ai-awareness-day' ),
+    );
+    foreach ( $session_badge_slugs as $sess_slug ) {
+        $wp_customize->add_setting( 'aiad_session_badge_' . $sess_slug, array(
+            'default'           => 0,
+            'sanitize_callback' => 'absint',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_session_badge_' . $sess_slug, array(
+            'label'     => isset( $session_badge_labels[ $sess_slug ] ) ? $session_badge_labels[ $sess_slug ] : $sess_slug,
+            'section'   => 'aiad_time_resources_display',
+            'mime_type' => 'image',
+        ) ) );
+    }
 }
 
 /**
