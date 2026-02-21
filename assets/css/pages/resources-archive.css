@@ -127,15 +127,11 @@
 .resource-card__image-placeholder {
   width: 100%;
   height: 100%;
-  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem;
-  overflow: hidden;
   background: linear-gradient(135deg, var(--green-600), var(--green-900));
   color: var(--white);
-  box-sizing: border-box;
 }
 
 .resource-card__image-placeholder-text {
@@ -145,14 +141,6 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.95;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-height: 1.15;
-  word-break: break-word;
 }
 
 .resource-card__image-overlay {
@@ -333,57 +321,11 @@
   }
 }
 
-/* Resources archive (and featured): same anti-overlap approach as homepage from 768px down */
-@media screen and (max-width: 768px) {
-  .resources-archive .resource-card--download .resource-card__image-link,
-  .resources-archive .resource-card--external .resource-card__image-link {
-    aspect-ratio: 16/10;
-    overflow: hidden;
-  }
-
-  .resources-archive .resource-card__image-placeholder {
-    padding: 0.25rem;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .resources-archive .resource-card__image-placeholder-text {
-    font-size: 0.6rem;
-    letter-spacing: 0.04em;
-    -webkit-line-clamp: 2;
-  }
-}
-
-/* Resources grid: 2 columns on mobile – same approach as #free-resources to prevent overlap */
+/* Resources grid: 2 columns on mobile (archives get 3-col from home-style block below) */
 @media screen and (max-width: 640px) {
   .resources-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
-  }
-
-  .resource-card {
-    min-width: 0;
-  }
-
-  .resource-card--download .resource-card__image-link,
-  .resource-card--external .resource-card__image-link {
-    aspect-ratio: 16/10;
-    overflow: hidden;
-  }
-
-  .resource-card__image-link {
-    aspect-ratio: 16/10;
-    overflow: hidden;
-  }
-
-  .resource-card__image-placeholder {
-    padding: 0.25rem;
-  }
-
-  .resource-card__image-placeholder-text {
-    font-size: 0.6rem;
-    letter-spacing: 0.04em;
-    -webkit-line-clamp: 2;
   }
 
   .resource-card__body {
@@ -394,6 +336,14 @@
     padding: 0.1rem 0.2rem;
     font-size: 0.45rem;
     line-height: 1;
+  }
+
+  .resource-card__image-link {
+    aspect-ratio: 16/10;
+  }
+
+  .resource-card__image-placeholder-text {
+    font-size: 1rem;
   }
 
   .resource-card__image-title {
@@ -432,6 +382,146 @@
   }
 }
 
+/* Resources archive + featured (handpicked): same filter-card setup as home #free-resources, mobile only */
+@media screen and (max-width: 768px) {
+  .resources-archive .resources-grid,
+  .featured-resources-archive .resources-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .resources-archive .resource-card,
+  .featured-resources-archive .resource-card {
+    min-width: 0;
+  }
+
+  .resources-archive .resource-card__image-link,
+  .featured-resources-archive .resource-card__image-link {
+    aspect-ratio: 16/10;
+  }
+
+  .resources-archive .resource-card__image-placeholder-text,
+  .featured-resources-archive .resource-card__image-placeholder-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  .resources-archive .resource-card__image-overlay,
+  .featured-resources-archive .resource-card__image-overlay {
+    padding: 0.35rem;
+  }
+
+  .resources-archive .resource-card__image-top,
+  .featured-resources-archive .resource-card__image-top {
+    gap: 0.25rem;
+  }
+
+  .resources-archive .resource-card__pill,
+  .featured-resources-archive .resource-card__pill {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+    line-height: 1;
+  }
+
+  .resources-archive .resource-card__image-title,
+  .featured-resources-archive .resource-card__image-title {
+    font-size: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .resources-archive .resource-card__body,
+  .featured-resources-archive .resource-card__body {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .resources-archive .resource-card__title,
+  .featured-resources-archive .resource-card__title {
+    font-size: 0.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .resources-archive .resource-card__title a,
+  .featured-resources-archive .resource-card__title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .resources-archive .resource-card__excerpt.section-desc,
+  .featured-resources-archive .resource-card__excerpt.section-desc {
+    font-size: 0.55rem;
+    line-height: 1.3;
+    margin-top: 0.4rem;
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .resources-archive .resource-card__action,
+  .featured-resources-archive .resource-card__action {
+    margin-top: 0.2rem;
+  }
+
+  .resources-archive .resource-card__link,
+  .featured-resources-archive .resource-card__link {
+    font-size: 0.55rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .resources-archive .resources-grid,
+  .featured-resources-archive .resources-grid {
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .resources-archive .resource-card__image-placeholder-text,
+  .featured-resources-archive .resource-card__image-placeholder-text {
+    font-size: 0.55rem;
+  }
+
+  .resources-archive .resource-card__body,
+  .featured-resources-archive .resource-card__body {
+    padding: 0.4rem 0.35rem;
+  }
+
+  .resources-archive .resource-card__title,
+  .featured-resources-archive .resource-card__title {
+    font-size: 0.55rem;
+  }
+
+  .resources-archive .resource-card__excerpt.section-desc,
+  .featured-resources-archive .resource-card__excerpt.section-desc {
+    font-size: 0.5rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .resources-archive .resource-card__link,
+  .featured-resources-archive .resource-card__link {
+    font-size: 0.5rem;
+  }
+
+  .resources-archive .resource-card__image-overlay,
+  .featured-resources-archive .resource-card__image-overlay {
+    padding: 0.25rem;
+  }
+
+  .resources-archive .resource-card__pill,
+  .featured-resources-archive .resource-card__pill {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.45rem;
+  }
+
+  .resources-archive .resource-card__image-placeholder-text,
+  .featured-resources-archive .resource-card__image-placeholder-text {
+    font-size: 0.5rem;
+  }
+}
+
 /* Free Resources (toolkit): three activity cards in one row on mobile */
 @media screen and (max-width: 768px) {
   #free-resources .resources-grid {
@@ -446,18 +536,12 @@
 
   #free-resources .resource-card__image-link {
     aspect-ratio: 16/10;
-    overflow: hidden;
-  }
-
-  #free-resources .resource-card__image-placeholder {
-    padding: 0.25rem;
-    min-height: 0;
+    /* Fixed: Increased height to prevent overlap */
   }
 
   #free-resources .resource-card__image-placeholder-text {
     font-size: 0.6rem;
     letter-spacing: 0.04em;
-    -webkit-line-clamp: 2;
   }
 
   #free-resources .resource-card__image-overlay {
@@ -525,7 +609,6 @@
 
   #free-resources .resource-card__image-placeholder-text {
     font-size: 0.55rem;
-    -webkit-line-clamp: 2;
   }
 
   #free-resources .resource-card__body {
