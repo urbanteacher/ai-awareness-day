@@ -137,10 +137,15 @@ a.duration-badge:hover {
   margin-top: 0;
 }
 
+/* #themes: tighter spacing below intro paragraph */
+#themes .section-desc {
+  margin-bottom: 0.5rem;
+}
+
 /* Explore subheadings (By theme, By session length) – below section title */
 .explore-subheading {
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.35rem;
   font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 700;
@@ -150,7 +155,7 @@ a.duration-badge:hover {
 }
 
 .explore-session-length-block {
-  margin-top: 2.5rem;
+  margin-top: 1rem;
 }
 
 .explore-session-length-block .explore-subheading {
@@ -159,7 +164,7 @@ a.duration-badge:hover {
 
 /* Explore section: session length cards (dark strip + icon + title + description + badge) */
 .explore-session-cards {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
@@ -422,13 +427,7 @@ a.duration-badge:hover {
   }
 
   .explore-session-desc {
-    font-size: 0.4rem !important;
-    color: var(--gray-500) !important;
-    line-height: 1.1 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+    display: none !important;
   }
 
   .explore-session-status {

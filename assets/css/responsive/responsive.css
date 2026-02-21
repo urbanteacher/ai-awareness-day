@@ -87,17 +87,17 @@
   }
 
   .principle-card .principle-badge {
-    min-height: 40px;
+    min-height: 56px;
     margin-bottom: 0.2rem;
   }
 
   .principle-card .principle-badge__img {
-    max-height: 40px;
+    max-height: 56px;
   }
 
   .principle-card .principle-badge__placeholder {
-    width: 40px;
-    height: 40px;
+    width: 56px;
+    height: 56px;
   }
 
   .principle-card .principle-badge__placeholder-text {
@@ -257,17 +257,17 @@
   }
 
   .principle-card .principle-badge {
-    min-height: 36px;
+    min-height: 48px;
     margin-bottom: 0.15rem;
   }
 
   .principle-card .principle-badge__img {
-    max-height: 36px;
+    max-height: 48px;
   }
 
   .principle-card .principle-badge__placeholder {
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
   }
 
   .principle-card .principle-badge__placeholder-text {
