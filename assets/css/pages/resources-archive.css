@@ -747,6 +747,15 @@
   max-width: 800px;
 }
 
+.single-resource .resource-activity-card {
+  padding: 1rem;
+}
+
+.single-resource .resource-activity-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+}
+
 .single-resource .resource-activity-card figure.resource-activity-figure {
   margin: 2rem 0;
   border-radius: var(--border-radius);
@@ -770,4 +779,15 @@
 
 .single-resource .resource-section.mt-2rem {
   margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .single-resource .resource-activity-card {
+    padding: 0.75rem;
+  }
+
+  .single-resource .resource-activity-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
 }
