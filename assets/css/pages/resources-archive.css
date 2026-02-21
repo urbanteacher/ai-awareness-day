@@ -333,6 +333,27 @@
   }
 }
 
+/* Resources archive (and featured): same anti-overlap approach as homepage from 768px down */
+@media screen and (max-width: 768px) {
+  .resources-archive .resource-card--download .resource-card__image-link,
+  .resources-archive .resource-card--external .resource-card__image-link {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+  }
+
+  .resources-archive .resource-card__image-placeholder {
+    padding: 0.25rem;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .resources-archive .resource-card__image-placeholder-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    -webkit-line-clamp: 2;
+  }
+}
+
 /* Resources grid: 2 columns on mobile – same approach as #free-resources to prevent overlap */
 @media screen and (max-width: 640px) {
   .resources-grid {
@@ -342,6 +363,12 @@
 
   .resource-card {
     min-width: 0;
+  }
+
+  .resource-card--download .resource-card__image-link,
+  .resource-card--external .resource-card__image-link {
+    aspect-ratio: 16/10;
+    overflow: hidden;
   }
 
   .resource-card__image-link {
