@@ -1,6 +1,23 @@
 /* ============================================
    SECTION: PRINCIPLES
    ============================================ */
+
+/* Our AI literacy box: same format as principle cards (badge + h3 + section-desc) */
+.principles-grid .ai-literacy-box {
+  min-height: 0;
+}
+
+/* Desktop: span full width below the 5 principle cards */
+@media (min-width: 769px) {
+  .principles-grid .ai-literacy-box {
+    grid-column: 1 / -1;
+  }
+}
+
+.principle-card.ai-literacy-box::before {
+  display: none;
+}
+
 .principles-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

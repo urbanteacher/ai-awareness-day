@@ -308,15 +308,28 @@
   color: var(--green-700);
 }
 
-/* Resources grid & cards: responsive on narrow viewports */
+/* Resources archive: mobile-friendly – less padding, content in columns */
+@media screen and (max-width: 767px) {
+  .resources-archive .section.pt-100 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .resources-archive .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Resources grid: 2 columns on mobile instead of single linear column */
 @media screen and (max-width: 640px) {
   .resources-grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
   }
 
   .resource-card__body {
-    padding: 1rem;
+    padding: 0.5rem 0.4rem;
   }
 
   .resource-card__pill {
@@ -327,11 +340,10 @@
 
   .resource-card__image-link {
     aspect-ratio: 16/10;
-    /* Fixed: Taller aspect ratio to prevent pill overlap */
   }
 
   .resource-card__image-placeholder-text {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .resource-card__image-title {
@@ -339,10 +351,34 @@
     line-height: 1.1;
   }
 
+  .resource-card__title {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .resource-card__title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   .resource-card__excerpt.section-desc {
-    font-size: 0.95rem;
-    margin-bottom: 0.4rem;
-    /* Fixed: Reduced margin to bring link closer */
+    font-size: 0.65rem;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .resource-card__action {
+    margin-top: 0.25rem;
+  }
+
+  .resource-card__link {
+    font-size: 0.65rem;
   }
 }
 
@@ -666,7 +702,8 @@
   .resource-filter-form {
     flex-direction: column;
     align-items: stretch;
-    padding: 1.5rem;
+    padding: 1rem;
+    gap: 1rem;
   }
 
   .resource-filter-group {

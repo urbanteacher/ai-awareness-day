@@ -74,7 +74,7 @@
 
 .resource-activity-overview {
   margin: 0 0 1rem 1.75rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--text-muted, #6b7280);
   line-height: 1.5;
 }
@@ -88,8 +88,8 @@
 
 .resource-tag {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.8125rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
   font-weight: 500;
   border-radius: 0;
   background: var(--resource-tag-bg, #f3f4f6);
@@ -106,7 +106,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--heading-color, inherit);
@@ -276,8 +276,9 @@
 
 @media (max-width: 768px) {
   .resource-sections-row {
-    grid-template-columns: 1fr;
-    padding-bottom: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 0 1.25rem;
   }
 }
 

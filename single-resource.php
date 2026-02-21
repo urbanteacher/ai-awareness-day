@@ -111,19 +111,25 @@ get_header();
                     $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || ! empty( $suggested_answers ) || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
                     ?>
                     <?php if ( ! empty( $preparation ) ) : ?>
-                        <section class="resource-section resource-section--preparation mt-2rem" aria-labelledby="section-preparation">
-                            <h2 id="section-preparation" class="resource-section__title">
-                                <span class="resource-section__icon resource-section__icon--list" aria-hidden="true"></span>
-                                <?php esc_html_e( 'Preparation', 'ai-awareness-day' ); ?>
-                            </h2>
-                            <ul class="resource-list resource-list--preparation">
-                                <?php foreach ( $preparation as $item ) : ?>
-                                    <?php if ( is_string( $item ) && $item !== '' ) : ?>
-                                        <li><?php echo esc_html( $item ); ?></li>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </ul>
-                        </section>
+                        <div class="resource-sections resource-sections--rows resource-sections-row--prep-only">
+                            <div class="resource-sections-row resource-sections-row--full">
+                                <div class="resource-section-cell resource-section-cell--full">
+                                    <section class="resource-section resource-section--preparation mt-2rem" aria-labelledby="section-preparation">
+                                        <h2 id="section-preparation" class="resource-section__title">
+                                            <span class="resource-section__icon resource-section__icon--list" aria-hidden="true"></span>
+                                            <?php esc_html_e( 'Preparation', 'ai-awareness-day' ); ?>
+                                        </h2>
+                                        <ul class="resource-list resource-list--preparation">
+                                            <?php foreach ( $preparation as $item ) : ?>
+                                                <?php if ( is_string( $item ) && $item !== '' ) : ?>
+                                                    <li><?php echo esc_html( $item ); ?></li>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
                     <?php endif; ?>
                     <div class="resource-sections resource-sections--rows" id="resource-content-sections">
                         <?php if ( $has_sections ) : ?>

@@ -78,7 +78,7 @@
   }
 
   .principles-grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.4rem;
   }
 
@@ -88,6 +88,10 @@
 
   .principle-card .principle-badge {
     min-height: 56px;
+    max-width: 56px;
+    width: 56px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 0.2rem;
   }
 
@@ -248,7 +252,7 @@
   }
 
   .principles-grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.35rem;
   }
 
@@ -258,6 +262,10 @@
 
   .principle-card .principle-badge {
     min-height: 48px;
+    max-width: 48px;
+    width: 48px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 0.15rem;
   }
 

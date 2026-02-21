@@ -57,6 +57,28 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <p class="section-desc"><?php echo esc_html( $p['desc'] ); ?></p>
                 </div>
             <?php endforeach; ?>
+
+            <div class="ai-literacy-box principle-card fade-up stagger-6">
+                <div class="principle-badge">
+                    <?php
+                    $literacy_logo_id = absint( get_theme_mod( 'aiad_ai_literacy_logo', 0 ) );
+                    if ( ! $literacy_logo_id ) {
+                        $literacy_logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+                    }
+                    $literacy_logo_src = $literacy_logo_id ? wp_get_attachment_image_url( $literacy_logo_id, 'medium' ) : '';
+                    if ( $literacy_logo_src ) :
+                        ?>
+                        <img src="<?php echo esc_url( $literacy_logo_src ); ?>" alt="" aria-hidden="true"
+                            class="principle-badge__img" onerror="this.classList.add('is-broken');" />
+                    <?php else : ?>
+                        <div class="principle-badge__placeholder" aria-hidden="true">
+                            <span class="principle-badge__placeholder-text"><?php esc_html_e( 'AI', 'ai-awareness-day' ); ?></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <h3><?php esc_html_e( 'Our AI literacy', 'ai-awareness-day' ); ?></h3>
+                <p class="section-desc"><?php esc_html_e( 'Our AI literacy contains these five principles.', 'ai-awareness-day' ); ?></p>
+            </div>
         </div>
     </div>
 </section>

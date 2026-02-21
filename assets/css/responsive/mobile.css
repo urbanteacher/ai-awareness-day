@@ -27,6 +27,11 @@ screen and (max-width: 768px) {
     margin-bottom: 1.5rem;
   }
 
+  /* Reduce large top padding on mobile for archive/single content sections */
+  .section.pt-100 {
+    padding-top: 1.5rem;
+  }
+
   .hero-title-block h1 {
     font-size: clamp(2rem, 7vw, 3rem);
     line-height: 1.05;

@@ -248,6 +248,18 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
             'type'    => 'textarea',
         ) );
     }
+
+    $wp_customize->add_setting( 'aiad_ai_literacy_logo', array(
+        'default'           => 0,
+        'sanitize_callback' => 'absint',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_ai_literacy_logo', array(
+        'label'       => __( 'Our AI Literacy logo', 'ai-awareness-day' ),
+        'description' => __( 'Badge image for the "Our AI literacy" card (6th cell in the principles grid). Leave empty to show an "AI" placeholder.', 'ai-awareness-day' ),
+        'section'     => 'aiad_badges',
+        'mime_type'   => 'image',
+    ) ) );
 }
 
 /**
