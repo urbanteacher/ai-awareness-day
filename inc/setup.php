@@ -63,6 +63,14 @@ function aiad_setup(): void
 add_action('after_setup_theme', 'aiad_setup');
 
 /**
+ * Flush rewrite rules on theme activation so /resources/ and /partners/ work without a manual Permalinks save.
+ */
+function aiad_flush_rewrite_rules_on_activation(): void {
+    flush_rewrite_rules( false );
+}
+add_action( 'after_switch_theme', 'aiad_flush_rewrite_rules_on_activation' );
+
+/**
  * WordPress 6.9+ compatibility: classic theme block styles
  *
  * WP 6.9 loads block styles on demand in classic themes, which can break layouts
