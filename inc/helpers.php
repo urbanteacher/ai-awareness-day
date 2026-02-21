@@ -48,10 +48,10 @@ function aiad_explore_session_cards(): array {
         '15-20-min-tutor-time' => array(
             'title'       => __( 'Tutor Time', 'ai-awareness-day' ),
             'description' => __( '15-20 minute group activities for form time', 'ai-awareness-day' ),
-            'badge_short' => '15-20 min',
+            'badge_short' => '15 min',
             'icon_bg'     => '#86efac',
             'icon'        => 'people',
-            'status'      => __( 'Launching March 2026', 'ai-awareness-day' ),
+            'status'      => __( 'March 2026', 'ai-awareness-day' ),
             'status_live' => false,
         ),
         '20-min-assemblies' => array(
@@ -60,13 +60,13 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '20 min',
             'icon_bg'     => '#c4b5fd',
             'icon'        => 'presentation',
-            'status'      => __( 'Launching April 2026', 'ai-awareness-day' ),
+            'status'      => __( 'April 2026', 'ai-awareness-day' ),
             'status_live' => false,
         ),
         '30-45-min-after-school' => array(
             'title'       => __( 'After-School', 'ai-awareness-day' ),
             'description' => __( '30-45 minute hands-on projects and activities', 'ai-awareness-day' ),
-            'badge_short' => '30-45 min',
+            'badge_short' => '30 min',
             'icon_bg'     => '#fdba74',
             'icon'        => 'book',
             'status'      => __( 'April 2026', 'ai-awareness-day' ),

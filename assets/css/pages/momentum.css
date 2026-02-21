@@ -237,18 +237,19 @@
   gap: 0.5rem;
   padding: 1.5rem 1.25rem;
   background: var(--white);
-  border: 1px solid var(--gray-200);
+  border: none;
   border-radius: 0;
   text-align: center;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: var(--transition);
   color: var(--gray-800);
   text-decoration: none;
 }
+
 
 @media screen and (max-width: 768px) {
   .themes-links {
@@ -269,11 +270,11 @@
     flex: 1 1 0;
     min-width: 0;
     padding: 0.6rem 0.1rem;
-    font-size: 0.72rem;
-    font-weight: 800;
-    border: 1px solid var(--gray-300);
+    font-size: 0.55rem;
+    font-weight: 700;
+    border: none;
     letter-spacing: 0.01em;
-    white-space: nowrap;
+    white-space: normal;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -282,6 +283,7 @@
     text-transform: uppercase;
     text-decoration: none;
   }
+
 
   .theme-link__label {
     display: block !important;
