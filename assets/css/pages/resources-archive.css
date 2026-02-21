@@ -127,11 +127,15 @@
 .resource-card__image-placeholder {
   width: 100%;
   height: 100%;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.35rem;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--green-600), var(--green-900));
   color: var(--white);
+  box-sizing: border-box;
 }
 
 .resource-card__image-placeholder-text {
@@ -141,6 +145,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.95;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.15;
+  word-break: break-word;
 }
 
 .resource-card__image-overlay {
@@ -321,11 +333,30 @@
   }
 }
 
-/* Resources grid: 2 columns on mobile instead of single linear column */
+/* Resources grid: 2 columns on mobile – same approach as #free-resources to prevent overlap */
 @media screen and (max-width: 640px) {
   .resources-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
+  }
+
+  .resource-card {
+    min-width: 0;
+  }
+
+  .resource-card__image-link {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+  }
+
+  .resource-card__image-placeholder {
+    padding: 0.25rem;
+  }
+
+  .resource-card__image-placeholder-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    -webkit-line-clamp: 2;
   }
 
   .resource-card__body {
@@ -336,14 +367,6 @@
     padding: 0.1rem 0.2rem;
     font-size: 0.45rem;
     line-height: 1;
-  }
-
-  .resource-card__image-link {
-    aspect-ratio: 16/10;
-  }
-
-  .resource-card__image-placeholder-text {
-    font-size: 1rem;
   }
 
   .resource-card__image-title {
@@ -396,12 +419,18 @@
 
   #free-resources .resource-card__image-link {
     aspect-ratio: 16/10;
-    /* Fixed: Increased height to prevent overlap */
+    overflow: hidden;
+  }
+
+  #free-resources .resource-card__image-placeholder {
+    padding: 0.25rem;
+    min-height: 0;
   }
 
   #free-resources .resource-card__image-placeholder-text {
     font-size: 0.6rem;
     letter-spacing: 0.04em;
+    -webkit-line-clamp: 2;
   }
 
   #free-resources .resource-card__image-overlay {
@@ -469,6 +498,7 @@
 
   #free-resources .resource-card__image-placeholder-text {
     font-size: 0.55rem;
+    -webkit-line-clamp: 2;
   }
 
   #free-resources .resource-card__body {
