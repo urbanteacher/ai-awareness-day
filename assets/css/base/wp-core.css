@@ -508,7 +508,7 @@
 /* Resource activity footer (Back + Download) */
 .resource-activity-footer {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 1rem;
   align-items: center;
   margin-top: 2.5rem;

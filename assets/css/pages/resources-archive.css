@@ -747,6 +747,19 @@
   max-width: 800px;
 }
 
+/* Clear fixed header on single resource: first section needs enough top padding on mobile */
+@media (max-width: 768px) {
+  .single-resource .section.pt-100 {
+    padding-top: 5.5rem; /* clears 72px fixed header */
+  }
+}
+
+@media (max-width: 782px) {
+  .admin-bar .single-resource .section.pt-100 {
+    padding-top: 7.5rem; /* clears 72px header + 46px admin bar */
+  }
+}
+
 .single-resource .resource-activity-card {
   padding: 1rem;
 }
@@ -794,5 +807,14 @@
   .single-resource .resource-activity-title {
     font-size: 1.25rem;
     gap: 0.5rem;
+  }
+
+  .single-resource .resource-activity-footer {
+    gap: 0.5rem;
+  }
+
+  .single-resource .resource-footer-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
   }
 }
