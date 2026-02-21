@@ -14,5 +14,6 @@ Text Domain: ai-awareness-day
 Tags: one-column, custom-menu, featured-images, theme-options, education, block-styles
 
 NOTE: This theme has migrated to a modular CSS architecture.
-All styles have been separated into /assets/css/.
+All styles live in /assets/css/ (modular files are canonical).
+Keep Version above in sync with AIAD_VERSION in functions.php.
 */

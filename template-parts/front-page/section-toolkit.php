@@ -201,7 +201,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <button type="button" class="display-board-steps__toggle" aria-expanded="false"
                         aria-controls="display-board-steps-list">
                         <span
-                            class="display-board-steps__title"><?php esc_html_e('How to create yours', 'ai-awareness-day'); ?></span>
+                            class="display-board-steps__title"><?php esc_html_e('How to create', 'ai-awareness-day'); ?></span>
                         <span class="display-board-steps__icon" aria-hidden="true">+</span>
                     </button>
                     <div class="container">
@@ -257,7 +257,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                         ?>
                         <a href="<?php echo esc_url($mailto_link); ?>"
                             class="resource-filter-submit display-board-submit__button">
-                            <?php esc_html_e('Submit your display board design', 'ai-awareness-day'); ?>
+                            <span class="display-board-submit__button-text"><?php esc_html_e('Submit your display board', 'ai-awareness-day'); ?></span>
+                            <span class="display-board-steps__icon" aria-hidden="true">+</span>
                         </a>
                     </div>
                 </div>

@@ -1,3 +1,4 @@
+/* SINGLE RESOURCE */
 /* ============================================
    SINGLE RESOURCE TEMPLATE
    Activity card, structured content, instructions, definitions, footer
@@ -270,7 +271,7 @@
 
 @media (max-width: 768px) {
   .resource-sections-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
     padding: 1rem 0 1.25rem;
   }

@@ -3,6 +3,9 @@
  * Build CSS bundles for production. Run from theme root: php scripts/build-css-bundles.php
  * Creates assets/css/bundles/base.css, layout.css, pages.css to reduce HTTP requests.
  *
+ * Source of truth: the modular files under assets/css/ are canonical. This script
+ * concatenates them; do not edit the bundle outputs by hand or they will drift.
+ *
  * @package AI_Awareness_Day
  */
 
