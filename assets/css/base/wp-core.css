@@ -101,15 +101,20 @@
   color: var(--resource-tag-theme-color, #1d4ed8);
 }
 
-/* Section headings with icons */
+/* Section headings with icons – responsive, wrap to prevent leaking off page */
 .resource-section__title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--heading-color, inherit);
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
 .resource-section__icon {
@@ -119,6 +124,7 @@
   width: 28px;
   height: 28px;
   min-width: 28px;
+  flex-shrink: 0;
   border-radius: 0;
   font-size: 0.875rem;
   font-weight: 700;
@@ -184,6 +190,25 @@
 #resource-content-sections {
   font-size: 0.8em;
   line-height: 1.65;
+}
+
+/* Preparation block: same size and style as Instructions / content sections for consistency */
+.resource-sections-row--prep-only {
+  font-size: 0.8em;
+  line-height: 1.65;
+}
+
+.resource-sections-row--prep-only .resource-sections-row {
+  padding: 1.5rem 0 2rem;
+  border-bottom: 1px solid var(--aiad-border, #e5e7eb);
+}
+
+.resource-sections-row--prep-only .resource-section__title {
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+}
+
+.resource-sections-row--prep-only .resource-list li {
+  margin-bottom: 0.625rem;
 }
 
 .resource-sections--rows {
@@ -279,6 +304,19 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     padding: 1rem 0 1.25rem;
+  }
+
+  .resource-section__title {
+    font-size: 0.8rem;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .resource-section__icon {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    font-size: 0.75rem;
   }
 }
 
