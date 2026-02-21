@@ -273,11 +273,13 @@
   color: var(--green-600);
 }
 
+/* Excerpt always smaller than title (applies with or without .section-desc class) */
+.resource-card__excerpt,
 .resource-card__excerpt.section-desc {
   text-align: left;
   max-width: none;
   margin-top: 0.75rem;
-  font-size: 0.95rem; /* smaller than title (1.15rem) so description never outweighs title */
+  font-size: 0.95rem; /* smaller than title (1.15rem) */
 }
 
 /* Partner Resources: match AI Awareness Activities card height and consistency (excerpt clamp, smaller text) */
