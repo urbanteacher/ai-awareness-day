@@ -15,32 +15,24 @@
     <header class="site-header" id="site-header">
         <div class="container header-inner">
 
-            <a href="<?php echo esc_url(home_url('/')); ?>" class="site-logo">
-                <?php if (has_custom_logo()): ?>
-                    <?php the_custom_logo(); ?>
-                <?php else:
-                    $defaults = aiad_get_customizer_defaults();
-                    $header_logo_id = absint(get_theme_mod('aiad_header_logo', 0));
-                    if (!$header_logo_id) {
-                        $header_logo_id = absint(get_theme_mod('aiad_hero_logo', 0));
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo">
+                <?php
+                $defaults = aiad_get_customizer_defaults();
+                $logo_html = '';
+                if ( has_custom_logo() ) {
+                    $logo_html = get_custom_logo();
+                } else {
+                    $logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+                    $logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
+                    $title = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] );
+                    if ( $logo_url ) {
+                        $logo_html = '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $title ) . '" class="site-logo__img" />';
+                    } else {
+                        $logo_html = '<span class="site-logo__text">' . esc_html( $title ) . '<span class="site-logo__dot">.</span></span>';
                     }
-                    $header_logo_url = $header_logo_id ? wp_get_attachment_image_url($header_logo_id, 'full') : '';
-                    if ($header_logo_url): ?>
-                        <img src="<?php echo esc_url($header_logo_url); ?>"
-                            alt="<?php echo esc_attr(aiad_get_theme_mod_default('aiad_hero_title', $defaults['aiad_hero_title'])); ?>"
-                            class="site-logo__img"
-                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                        <span class="site-logo__text" style="display: none;">
-                            <?php echo esc_html(aiad_get_theme_mod_default('aiad_hero_title', $defaults['aiad_hero_title'])); ?>
-                            <span class="site-logo__dot">.</span>
-                        </span>
-                    <?php else: ?>
-                        <span class="site-logo__text">
-                            <?php echo esc_html(aiad_get_theme_mod_default('aiad_hero_title', $defaults['aiad_hero_title'])); ?>
-                            <span class="site-logo__dot">.</span>
-                        </span>
-                    <?php endif;
-                endif; ?>
+                }
+                echo $logo_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- logo is built from escaped parts
+                ?>
             </a>
 
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"

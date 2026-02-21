@@ -377,52 +377,50 @@
         });
 
         // ============================================
-        // Partners: Reveal more partners
+        // Partners: Show More Fallback
+        // (Runs only if Interactivity API isn't active on the button)
         // ============================================
-        const partnersRevealBtn = document.getElementById('partners-reveal-btn');
-        if (partnersRevealBtn) {
-            const hiddenCards = document.querySelectorAll('.partner-card--hidden');
-            const revealText = partnersRevealBtn.querySelector('.reveal-text');
-            const hideText = partnersRevealBtn.querySelector('.hide-text');
+        const revealBtn = document.querySelector('.partners-reveal-btn');
+        if (revealBtn) {
+            revealBtn.addEventListener('click', () => {
+                // If Interactivity API (wp-interactive) is not present/active, 
+                // we handle the toggle manually.
+                const isInteractivityEnabled = revealBtn.closest('[data-wp-interactive]');
 
-            let isExpanded = false;
+                // If the Interactivity API has initialized, it will likely have 
+                // its own click handler. This is a very simple check.
+                // If the class 'active' hasn't been toggled by the API yet, 
+                // we can assume we might need to handle it, but wait—
+                // The Interactivity API might take a moment to bootstrap.
+                // We'll check if the 'partners-reveal-btn' has been clicked but 
+                // the context hasn't updated.
 
-            partnersRevealBtn.addEventListener('click', () => {
-                isExpanded = !isExpanded;
+                // To be safe, we only run this if the script module isn't loaded.
+                if (!window.wp || !window.wp.interactivity) {
+                    const momentumSection = revealBtn.closest('.momentum-section');
+                    if (momentumSection) {
+                        const isExpanded = revealBtn.classList.toggle('active');
+                        const cards = momentumSection.querySelectorAll('.partner-card:not(.partner-card--dummy)');
+                        const initialShow = 10;
 
-                hiddenCards.forEach((card, index) => {
-                    if (isExpanded) {
-                        // Show with fade-in animation
-                        setTimeout(() => {
-                            card.classList.remove('partner-card--hidden');
-                            card.style.opacity = '0';
-                            card.style.transform = 'translateY(20px)';
-                            requestAnimationFrame(() => {
-                                card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-                                card.style.opacity = '1';
-                                card.style.transform = 'translateY(0)';
-                            });
-                        }, index * 50);
-                    } else {
-                        // Hide with fade-out animation
-                        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(-10px)';
-                        setTimeout(() => {
-                            card.classList.add('partner-card--hidden');
-                        }, 300);
+                        cards.forEach((card, index) => {
+                            if (index >= initialShow) {
+                                card.classList.toggle('partner-card--hidden', !isExpanded);
+                            }
+                        });
+
+                        // Update icon rotation
+                        const icon = revealBtn.querySelector('svg');
+                        if (icon) {
+                            icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+                        }
+
+                        // Update text (simple fallback)
+                        const text = revealBtn.querySelector('.reveal-text');
+                        if (text) {
+                            text.textContent = isExpanded ? 'Show Less' : 'Show More Partners';
+                        }
                     }
-                });
-
-                // Update button text and icon
-                if (isExpanded) {
-                    revealText.style.display = 'none';
-                    hideText.style.display = 'inline';
-                    partnersRevealBtn.classList.add('active');
-                } else {
-                    revealText.style.display = 'inline';
-                    hideText.style.display = 'none';
-                    partnersRevealBtn.classList.remove('active');
                 }
             });
         }

@@ -22,8 +22,34 @@
       "defaultFontSizes": false,
       "lineHeight": true,
       "fontFamilies": [
-        { "slug": "display", "name": "Intel Clear", "fontFamily": "'Intel Clear', sans-serif" },
-        { "slug": "body", "name": "DM Sans", "fontFamily": "'DM Sans', sans-serif" }
+        {
+          "slug": "display",
+          "name": "Intel Clear",
+          "fontFamily": "'Intel Clear', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Intel Clear",
+              "fontWeight": "400 700",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [ "https://fonts.cdnfonts.com/s/18413/IntelClear-Light.woff" ]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "DM Sans",
+          "fontFamily": "'DM Sans', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "DM Sans",
+              "fontWeight": "400 700",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [ "https://fonts.gstatic.com/s/dmsans/v11/rP2Fp2K8z96vMv6_vg7m.woff2" ]
+            }
+          ]
+        }
       ],
       "fontSizes": [
         { "slug": "small", "size": "0.875rem", "name": "Small" },

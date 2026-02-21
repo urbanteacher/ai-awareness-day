@@ -9,22 +9,31 @@ get_header();
 ?>
 
 <main id="main" role="main" class="partners-archive">
-    <section class="section" style="padding-top: 100px;">
+    <section class="section section--top">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Partners', 'ai-awareness-day' ); ?></span>
             <h1 class="section-title"><?php esc_html_e( 'Teachers, Sponsors &amp; Partners', 'ai-awareness-day' ); ?></h1>
             <p class="section-desc"><?php esc_html_e( 'Schools, tech companies, sponsors, and educators supporting AI Awareness Day.', 'ai-awareness-day' ); ?></p>
 
             <?php
-            $type_filter = isset( $_GET['partner_type'] ) ? sanitize_text_field( $_GET['partner_type'] ) : '';
+            $type_filter = isset( $_GET['partner_type'] ) ? sanitize_text_field( wp_unslash( $_GET['partner_type'] ) ) : '';
+            $valid_slugs = array();
+            $partner_types = get_terms( array( 'taxonomy' => 'partner_type', 'hide_empty' => false ) );
+            if ( ! is_wp_error( $partner_types ) ) {
+                $valid_slugs = wp_list_pluck( $partner_types, 'slug' );
+            }
+            if ( $type_filter !== '' && ! in_array( $type_filter, $valid_slugs, true ) ) {
+                $type_filter = '';
+            }
+            // Capped at 100 for performance; add pagination (e.g. paginate_links) if partner count grows.
             $args = array(
                 'post_type'      => 'partner',
                 'post_status'    => 'publish',
-                'posts_per_page' => -1,
+                'posts_per_page' => 100,
                 'orderby'        => 'menu_order title',
                 'order'          => 'ASC',
             );
-            if ( $type_filter ) {
+            if ( $type_filter !== '' ) {
                 $args['tax_query'] = array(
                     array(
                         'taxonomy' => 'partner_type',
@@ -39,8 +48,8 @@ get_header();
             <?php
             $partner_archive_url = get_post_type_archive_link( 'partner' ) ?: home_url( '/partners/' );
             ?>
-            <div class="partner-filters fade-up" style="margin-bottom: 2rem;">
-                <form method="get" action="<?php echo esc_url( $partner_archive_url ); ?>" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+            <div class="partner-filters fade-up">
+                <form method="get" action="<?php echo esc_url( $partner_archive_url ); ?>">
                     <?php if ( ! get_option( 'permalink_structure' ) ) : ?>
                         <input type="hidden" name="post_type" value="partner" />
                     <?php endif; ?>
@@ -54,12 +63,12 @@ get_header();
                             <option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $type_filter, $term->slug ); ?>><?php echo esc_html( $term->name ); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit" class="btn-submit" style="width: auto; padding: 0.5rem 1.25rem;"><?php esc_html_e( 'Filter', 'ai-awareness-day' ); ?></button>
+                    <button type="submit" class="btn-submit"><?php esc_html_e( 'Filter', 'ai-awareness-day' ); ?></button>
                 </form>
             </div>
 
             <?php if ( $partners->have_posts() ) : ?>
-                <div class="partners-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2rem; align-items: center;">
+                <div class="partners-grid">
                     <?php while ( $partners->have_posts() ) : $partners->the_post();
                         $types = get_the_terms( get_the_ID(), 'partner_type' );
                         $type_name = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
@@ -67,16 +76,16 @@ get_header();
                         $tag = $url ? 'a' : 'div';
                         $attr = $url ? ' href="' . esc_url( $url ) . '" target="_blank" rel="noopener"' : '';
                         ?>
-                        <<?php echo $tag; ?> class="partner-logo fade-up"<?php echo $attr; ?> style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1rem; border-radius: var(--border-radius); transition: var(--transition);">
+                        <<?php echo esc_attr( $tag ); ?> class="partner-logo fade-up"<?php echo $attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attr is built from esc_url ?>>
                             <?php if ( has_post_thumbnail() ) : ?>
-                                <?php the_post_thumbnail( 'medium', array( 'style' => 'max-width: 160px; height: auto; max-height: 80px; object-fit: contain;' ) ); ?>
+                                <?php the_post_thumbnail( 'medium', array( 'class' => 'partner-logo__img' ) ); ?>
                             <?php else : ?>
-                                <span style="font-size: 1rem; font-weight: 600; color: var(--gray-700);"><?php the_title(); ?></span>
+                                <span class="partner-logo__name"><?php the_title(); ?></span>
                             <?php endif; ?>
                             <?php if ( $type_name ) : ?>
-                                <span style="font-size: 0.75rem; color: var(--gray-500);"><?php echo esc_html( $type_name ); ?></span>
+                                <span class="partner-logo__type"><?php echo esc_html( $type_name ); ?></span>
                             <?php endif; ?>
-                        </<?php echo $tag; ?>>
+                        </<?php echo esc_attr( $tag ); ?>>
                     <?php endwhile; ?>
                 </div>
                 <?php wp_reset_postdata(); ?>

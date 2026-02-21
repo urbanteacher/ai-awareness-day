@@ -1,0 +1,21 @@
+/**
+ * Font Fallbacks
+ * Provides @font-face declarations for cases where theme.json font loading
+ * might fail or is not supported in certain contexts.
+ */
+
+@font-face {
+    font-family: 'Intel Clear';
+    src: url('https://fonts.cdnfonts.com/s/18413/IntelClear-Light.woff') format('woff');
+    font-weight: 300 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url('https://fonts.gstatic.com/s/dmsans/v11/rP2Fp2K8z96vMv6_vg7m.woff2') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}

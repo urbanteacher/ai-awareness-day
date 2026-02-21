@@ -160,8 +160,8 @@ class AIAD_Homepage_Editor {
      */
     private function save_hero(): int {
         $keys = array(
-            'aiad_hero_logo'     => 'esc_url_raw',
-            'aiad_header_logo'   => 'esc_url_raw',
+            'aiad_hero_logo'     => 'absint',
+            'aiad_header_logo'   => 'absint',
             'aiad_hero_date'     => 'sanitize_text_field',
             'aiad_hero_title'    => 'sanitize_text_field',
             'aiad_hero_slogan'   => 'sanitize_text_field',

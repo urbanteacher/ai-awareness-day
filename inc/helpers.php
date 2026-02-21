@@ -170,6 +170,16 @@ function aiad_resource_download_label( string $url ): string {
  * @return array<int, array{objective: string, assessable: bool}>
  */
 function aiad_normalise_learning_objectives( $raw ): array {
+    if ( is_string( $raw ) && $raw !== '' ) {
+        if ( is_serialized( $raw ) ) {
+            $raw = maybe_unserialize( $raw );
+        } elseif ( isset( $raw[0] ) && in_array( $raw[0], array( '[', '{' ), true ) ) {
+            $decoded = json_decode( $raw, true );
+            if ( is_array( $decoded ) ) {
+                $raw = $decoded;
+            }
+        }
+    }
     if ( ! is_array( $raw ) ) {
         if ( is_string( $raw ) && $raw !== '' ) {
             $lines = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) ) );
@@ -191,17 +201,6 @@ function aiad_normalise_learning_objectives( $raw ): array {
         }
     }
     return $out;
-}
-
-/**
- * Get theme mod value with default (centralized defaults to avoid duplication).
- *
- * @param string $setting Setting name.
- * @param mixed  $default Default value if setting not found.
- * @return mixed Setting value or default.
- */
-function aiad_get_theme_mod_default( string $setting, $default = '' ) {
-    return get_theme_mod( $setting, $default );
 }
 
 /**
@@ -239,6 +238,16 @@ function aiad_get_customizer_defaults(): array {
  * @return array<int, array{step: int, action: string, duration?: string, resource_ref?: string, student_action?: string, teacher_tip?: string}>
  */
 function aiad_normalise_instructions( $raw ): array {
+    if ( is_string( $raw ) && $raw !== '' ) {
+        if ( is_serialized( $raw ) ) {
+            $raw = maybe_unserialize( $raw );
+        } elseif ( isset( $raw[0] ) && in_array( $raw[0], array( '[', '{' ), true ) ) {
+            $decoded = json_decode( $raw, true );
+            if ( is_array( $decoded ) ) {
+                $raw = $decoded;
+            }
+        }
+    }
     if ( ! is_array( $raw ) ) {
         if ( is_string( $raw ) && $raw !== '' ) {
             $lines = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) ) );

@@ -154,6 +154,7 @@ function aiad_validate_resource_on_save( int $post_id ): void {
     }
 
     update_post_meta( $post_id, '_aiad_status', 'in_review' );
-    set_transient( 'aiad_schema_validation_errors_' . $post_id, array_unique( $errors ), 60 );
+    // 300s TTL so admin has time to see the notice; optional: key by get_current_user_id() for user-scoped notices
+    set_transient( 'aiad_schema_validation_errors_' . $post_id, array_unique( $errors ), 300 );
 }
 add_action( 'save_post_resource', 'aiad_validate_resource_on_save', 20 );

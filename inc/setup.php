@@ -79,20 +79,12 @@ add_action('after_setup_theme', 'aiad_setup');
  */
 function aiad_scripts(): void
 {
-    // Intel Clear for titles
+    // Font fallbacks for non-block contexts
     wp_enqueue_style(
-        'aiad-intel-font',
-        'https://fonts.cdnfonts.com/css/intel-clear',
+        'aiad-fonts-fallback',
+        AIAD_URI . '/assets/css/base/fonts.css',
         array(),
-        null
-    );
-
-    // Google Fonts (body)
-    wp_enqueue_style(
-        'aiad-google-fonts',
-        'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap',
-        array(),
-        null
+        AIAD_VERSION
     );
 
     // Main stylesheet (WordPress Theme Header - must load first for Safari compatibility)
@@ -108,42 +100,56 @@ function aiad_scripts(): void
         'all' // Explicit media type for Android Chrome compatibility
     );
 
-    // Enqueue Modular CSS Files
-    // Safari requires proper cache busting - use filemtime for each file
-    $css_files = array(
-        'base/reset.css',
-        'base/shared.css',
-        'base/animations.css',
-        'base/wp-core.css',
-        'layout/navigation.css',
-        'layout/hero.css',
-        'layout/footer.css',
-        'components/principles.css',
-        'pages/campaign.css',
-        'pages/momentum.css',
-        'pages/themes.css',
-        'pages/aim.css',
-        'pages/toolkit.css',
+    // CSS: use 3 bundles if present (run build script or build step to generate), else enqueue modules
+    $bundles_dir = AIAD_DIR . '/assets/css/bundles';
+    $use_bundles = file_exists($bundles_dir . '/base.css');
+    if ($use_bundles) {
+        foreach (array('base', 'layout', 'pages') as $bundle) {
+            $path = $bundles_dir . '/' . $bundle . '.css';
+            if (file_exists($path)) {
+                $ver = filemtime($path) ?: AIAD_VERSION;
+                wp_enqueue_style(
+                    'aiad-bundle-' . $bundle,
+                    AIAD_URI . '/assets/css/bundles/' . $bundle . '.css',
+                    array('aiad-style'),
+                    $ver,
+                    'all'
+                );
+            }
+        }
+    } else {
+        $css_files = array(
+            'base/reset.css',
+            'base/shared.css',
+            'base/animations.css',
+            'base/wp-core.css',
+            'layout/navigation.css',
+            'layout/hero.css',
+            'layout/footer.css',
+            'components/principles.css',
+            'pages/campaign.css',
+            'pages/momentum.css',
+            'pages/themes.css',
+            'pages/aim.css',
+            'pages/toolkit.css',
         'pages/get-involved.css',
         'pages/resources-archive.css',
+        'pages/partners-archive.css',
         'responsive/responsive.css',
-        'responsive/mobile.css',
-    );
-
-    foreach ($css_files as $file) {
-        $handle = 'aiad-' . str_replace(array('/', '.css'), array('-', ''), $file);
-        $file_path = AIAD_DIR . '/assets/css/' . $file;
-        // Use filemtime for Safari cache busting, fallback to version constant
-        $file_version = file_exists($file_path)
-            ? filemtime($file_path)
-            : AIAD_VERSION;
-        wp_enqueue_style(
-            $handle,
-            AIAD_URI . '/assets/css/' . $file,
-            array('aiad-style'), // Remove external font dependencies to prevent blocked rendering
-            $file_version,
-            'all' // Explicit media type for Android Chrome compatibility
+            'responsive/mobile.css',
         );
+        foreach ($css_files as $file) {
+            $handle = 'aiad-' . str_replace(array('/', '.css'), array('-', ''), $file);
+            $file_path = AIAD_DIR . '/assets/css/' . $file;
+            $file_version = file_exists($file_path) ? filemtime($file_path) : AIAD_VERSION;
+            wp_enqueue_style(
+                $handle,
+                AIAD_URI . '/assets/css/' . $file,
+                array('aiad-style'),
+                $file_version,
+                'all'
+            );
+        }
     }
 
     // Main script (defer on WordPress 6.3+ for better performance)
@@ -158,13 +164,26 @@ function aiad_scripts(): void
         $script_args
     );
 
-    // Localize for AJAX
-    wp_localize_script('aiad-main', 'aiad_ajax', array(
-        'url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('aiad_contact_nonce'),
-        'filter_nonce' => wp_create_nonce('aiad_filter_nonce'),
-        'track_download_nonce' => wp_create_nonce('aiad_track_download_nonce'),
-    ));
+    // Localize for AJAX: only output nonces where they are used to reduce payload
+    $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
+    if (is_front_page()) {
+        $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
+    }
+    if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
+        $aiad_ajax['filter_nonce'] = wp_create_nonce('aiad_filter_nonce');
+        $aiad_ajax['track_download_nonce'] = wp_create_nonce('aiad_track_download_nonce');
+    }
+    wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
+
+    // Register Interactivity API module for Partners
+    if (function_exists('wp_enqueue_script_module')) {
+        wp_enqueue_script_module(
+            'aiad-partners',
+            AIAD_URI . '/assets/js/partners.js',
+            array('@wordpress/interactivity'),
+            AIAD_VERSION
+        );
+    }
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         wp_enqueue_script(
@@ -201,9 +220,10 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
 
         $output .= '<a';
         foreach ($atts as $attr => $value) {
-            if (!empty($value)) {
-                $output .= ' ' . $attr . '="' . $value . '"';
+            if ( $attr === 'href' && $value === '' ) {
+                $value = '#';
             }
+            $output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
         }
         $output .= '>' . esc_html($item->title) . '</a>';
     }

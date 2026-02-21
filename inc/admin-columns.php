@@ -60,7 +60,8 @@ function aiad_form_submission_sortable_columns( $columns ): array {
 add_filter( 'manage_edit-form_submission_sortable_columns', 'aiad_form_submission_sortable_columns' );
 
 /**
- * Handle sorting by email and role meta keys in the admin list table
+ * Handle sorting by email and role meta keys in the admin list table.
+ * meta_query with EXISTS ensures posts without the meta key still appear in results.
  */
 function aiad_form_submission_orderby( WP_Query $query ): void {
     if ( ! is_admin() || ! $query->is_main_query() ) {
@@ -73,20 +74,34 @@ function aiad_form_submission_orderby( WP_Query $query ): void {
     if ( $orderby === 'email' ) {
         $query->set( 'meta_key', '_submission_email' );
         $query->set( 'orderby', 'meta_value' );
+        $query->set( 'meta_query', array(
+            array(
+                'key'     => '_submission_email',
+                'compare' => 'EXISTS',
+            ),
+        ) );
     } elseif ( $orderby === 'role' ) {
         $query->set( 'meta_key', '_submission_involved_as' );
         $query->set( 'orderby', 'meta_value' );
+        $query->set( 'meta_query', array(
+            array(
+                'key'     => '_submission_involved_as',
+                'compare' => 'EXISTS',
+            ),
+        ) );
     }
 }
 add_action( 'pre_get_posts', 'aiad_form_submission_orderby' );
 
 /**
- * Display submission details in admin edit screen
+ * Display submission details in admin edit screen.
+ * Registered via add_meta_box so it only runs on the correct screen.
+ *
+ * @param WP_Post $post     Current post (add_meta_box passes this).
+ * @param array   $metabox  Meta box args (unused).
  */
-function aiad_form_submission_meta_box(): void {
-    global $post;
-
-    if ( $post->post_type !== 'form_submission' ) {
+function aiad_form_submission_meta_box( $post, $metabox = null ): void {
+    if ( ! $post || $post->post_type !== 'form_submission' ) {
         return;
     }
 
@@ -113,7 +128,6 @@ function aiad_form_submission_meta_box(): void {
 
     ?>
     <div class="form-submission-details" style="padding: 20px;">
-        <h3><?php esc_html_e( 'Submission Details', 'ai-awareness-day' ); ?></h3>
         <table class="form-table">
             <tr>
                 <th><?php esc_html_e( 'Name', 'ai-awareness-day' ); ?></th>
@@ -201,7 +215,17 @@ function aiad_form_submission_meta_box(): void {
     </div>
     <?php
 }
-add_action( 'edit_form_after_title', 'aiad_form_submission_meta_box' );
+function aiad_register_form_submission_meta_box(): void {
+    add_meta_box(
+        'aiad_form_submission_details',
+        __( 'Submission Details', 'ai-awareness-day' ),
+        'aiad_form_submission_meta_box',
+        'form_submission',
+        'normal',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'aiad_register_form_submission_meta_box' );
 
 /**
  * Add Downloads column to resource list table

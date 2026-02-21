@@ -664,3 +664,35 @@
   transform: translateX(3px);
 }
 
+/* ============================================
+   SINGLE RESOURCE (single-resource.php)
+   ============================================ */
+.single-resource .container.container--narrow {
+  max-width: 800px;
+}
+
+.single-resource .resource-activity-card figure.resource-activity-figure {
+  margin: 2rem 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.single-resource .resource-activity-card figure.resource-activity-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.single-resource .entry-content.entry-content--resource {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.single-resource .resource-sections.resource-sections--rows {
+  margin-top: 2.5rem;
+}
+
+.single-resource .resource-section.mt-2rem {
+  margin-top: 2rem;
+}
+

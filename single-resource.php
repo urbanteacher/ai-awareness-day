@@ -10,7 +10,7 @@ get_header();
 
 <main id="main" role="main" class="single-resource">
     <section class="section pt-100">
-        <div class="container" style="max-width: 800px;">
+        <div class="container container--narrow">
             <?php while ( have_posts() ) : the_post();
                 $types         = get_the_terms( get_the_ID(), 'resource_type' );
                 $themes        = get_the_terms( get_the_ID(), 'resource_principle' );
@@ -43,7 +43,7 @@ get_header();
                         <h1 class="resource-activity-title">
                             <?php if ( $theme_badge_src ) : ?>
                                 <span class="principle-badge resource-activity-title-badge" aria-hidden="true">
-                                    <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" aria-hidden="true" />
+                                    <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" class="principle-badge__img" aria-hidden="true" />
                                 </span>
                             <?php endif; ?>
                             <?php the_title(); ?>
@@ -75,11 +75,11 @@ get_header();
                         </div>
                     </header>
                     <?php if ( has_post_thumbnail() ) : ?>
-                        <figure style="margin: 2rem 0; border-radius: var(--border-radius); overflow: hidden;">
-                            <?php the_post_thumbnail( 'large', array( 'style' => 'width:100%;height:auto;display:block;' ) ); ?>
+                        <figure class="resource-activity-figure">
+                            <?php the_post_thumbnail( 'large', array( 'class' => 'resource-activity-figure__img' ) ); ?>
                         </figure>
                     <?php endif; ?>
-                    <div class="entry-content" style="font-size: 1.05rem; line-height: 1.8;">
+                    <div class="entry-content entry-content--resource">
                         <?php the_content(); ?>
                     </div>
                     <?php
@@ -87,27 +87,8 @@ get_header();
                     $key_definitions    = (array) get_post_meta( $resource_id, '_aiad_key_definitions', true );
                     $learning_obj       = get_post_meta( $resource_id, '_aiad_learning_objectives', true );
                     $instructions       = get_post_meta( $resource_id, '_aiad_instructions', true );
-                    // Unserialize or decode if stored as string (WXR import / legacy can use PHP serialized or JSON)
-                    if ( is_string( $learning_obj ) && $learning_obj !== '' ) {
-                        if ( is_serialized( $learning_obj ) ) {
-                            $learning_obj = maybe_unserialize( $learning_obj );
-                        } elseif ( in_array( $learning_obj[0], array( '[', '{' ), true ) ) {
-                            $decoded = json_decode( $learning_obj, true );
-                            if ( is_array( $decoded ) ) {
-                                $learning_obj = $decoded;
-                            }
-                        }
-                    }
-                    if ( is_string( $instructions ) && $instructions !== '' ) {
-                        if ( is_serialized( $instructions ) ) {
-                            $instructions = maybe_unserialize( $instructions );
-                        } elseif ( in_array( $instructions[0], array( '[', '{' ), true ) ) {
-                            $decoded = json_decode( $instructions, true );
-                            if ( is_array( $decoded ) ) {
-                                $instructions = $decoded;
-                            }
-                        }
-                    }
+                    $learning_obj       = aiad_normalise_learning_objectives( $learning_obj );
+                    $instructions       = aiad_normalise_instructions( $instructions );
                     $discussion_prompts = get_post_meta( $resource_id, '_aiad_discussion_prompts', true );
                     $discussion_q       = get_post_meta( $resource_id, '_aiad_discussion_question', true );
                     $suggested_answers  = get_post_meta( $resource_id, '_aiad_suggested_answers', true );
@@ -119,8 +100,6 @@ get_header();
                     $extensions         = is_array( $ext_raw ) ? array_values( array_filter( $ext_raw, function ( $e ) { return is_array( $e ) && trim( (string) ( isset( $e['activity'] ) ? $e['activity'] : '' ) ) !== ''; } ) ) : array();
                     $res_raw            = get_post_meta( $resource_id, '_aiad_resources', true );
                     $resources_list     = is_array( $res_raw ) ? array_values( array_filter( $res_raw, function ( $r ) { return is_array( $r ) && ( trim( (string) ( isset( $r['name'] ) ? $r['name'] : '' ) ) !== '' || trim( (string) ( isset( $r['url'] ) ? $r['url'] : '' ) ) !== '' ); } ) ) : array();
-                    $learning_obj  = aiad_normalise_learning_objectives( $learning_obj );
-                    $instructions   = aiad_normalise_instructions( $instructions );
                     if ( is_string( $discussion_prompts ) ) {
                         $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
                     }
@@ -132,7 +111,7 @@ get_header();
                     $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || ! empty( $suggested_answers ) || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
                     ?>
                     <?php if ( ! empty( $preparation ) ) : ?>
-                        <section class="resource-section resource-section--preparation" class="mt-2rem" aria-labelledby="section-preparation">
+                        <section class="resource-section resource-section--preparation mt-2rem" aria-labelledby="section-preparation">
                             <h2 id="section-preparation" class="resource-section__title">
                                 <span class="resource-section__icon resource-section__icon--list" aria-hidden="true"></span>
                                 <?php esc_html_e( 'Preparation', 'ai-awareness-day' ); ?>
@@ -146,7 +125,7 @@ get_header();
                             </ul>
                         </section>
                     <?php endif; ?>
-                    <div class="resource-sections resource-sections--rows" style="margin-top: 2.5rem;" id="resource-content-sections">
+                    <div class="resource-sections resource-sections--rows" id="resource-content-sections">
                         <?php if ( $has_sections ) : ?>
                             <?php /* Row 1: Learning objectives | Instructions */ ?>
                             <div class="resource-sections-row">

@@ -32,6 +32,15 @@ function aiad_get_contact_checklist_labels(): array {
 }
 
 /**
+ * Get client IP for rate limiting (REMOTE_ADDR only; no proxy headers).
+ *
+ * @return string
+ */
+function aiad_get_client_ip(): string {
+    return isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+}
+
+/**
  * AJAX Contact Form Handler
  */
 function aiad_handle_contact_form(): void {
@@ -42,6 +51,15 @@ function aiad_handle_contact_form(): void {
     if ( $honeypot !== '' ) {
         wp_send_json_error( array( 'message' => __( 'Invalid submission detected. Please refresh the page and try again.', 'ai-awareness-day' ) ) );
     }
+
+    // Rate limit: 3 submissions per IP per 5 minutes
+    $ip       = aiad_get_client_ip();
+    $limit_key = 'aiad_contact_limit_' . md5( $ip );
+    $count    = (int) get_transient( $limit_key );
+    if ( $count >= 3 ) {
+        wp_send_json_error( array( 'message' => __( 'Too many submissions from your address. Please try again in a few minutes.', 'ai-awareness-day' ) ) );
+    }
+    set_transient( $limit_key, $count + 1, 300 );
 
     $first_name    = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
     $last_name     = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
@@ -516,6 +534,15 @@ function aiad_track_download(): void {
         wp_send_json_error( array( 'message' => __( 'Invalid resource.', 'ai-awareness-day' ) ) );
     }
 
+    // Throttle: one count per IP per resource per 90 seconds
+    $ip         = aiad_get_client_ip();
+    $throttle_key = 'aiad_dl_' . md5( $ip . (string) $post_id );
+    if ( get_transient( $throttle_key ) ) {
+        $count = absint( get_post_meta( $post_id, '_aiad_download_count', true ) );
+        wp_send_json_success( array( 'count' => $count ) );
+    }
+
+    set_transient( $throttle_key, 1, 90 );
     $count = absint( get_post_meta( $post_id, '_aiad_download_count', true ) );
     $count++;
     update_post_meta( $post_id, '_aiad_download_count', $count );

@@ -4,7 +4,7 @@
         <div class="footer-social">
             <?php
             $defaults = aiad_get_customizer_defaults();
-            $linkedin_url = aiad_get_theme_mod_default( 'aiad_linkedin', $defaults['aiad_linkedin'] );
+            $linkedin_url = get_theme_mod( 'aiad_linkedin', $defaults['aiad_linkedin'] );
             if ( $linkedin_url && $linkedin_url !== '#' ) : ?>
             <a href="<?php echo esc_url( $linkedin_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -14,7 +14,7 @@
             <?php endif; ?>
 
             <?php
-            $instagram_url = aiad_get_theme_mod_default( 'aiad_instagram', $defaults['aiad_instagram'] );
+            $instagram_url = get_theme_mod( 'aiad_instagram', $defaults['aiad_instagram'] );
             if ( $instagram_url && $instagram_url !== '#' ) : ?>
             <a href="<?php echo esc_url( $instagram_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +25,7 @@
         </div>
 
         <p class="footer-copy">
-            &copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( aiad_get_theme_mod_default( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>. All rights reserved.
+            &copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>. All rights reserved.
         </p>
 
     </div>

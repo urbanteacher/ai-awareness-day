@@ -184,7 +184,7 @@ function aiad_export_featured_resources_to_wxr(): void {
         wp_die( esc_html__( 'No resources from partners found to export.', 'ai-awareness-day' ) );
     }
 
-    $filename = 'ai-awareness-day-partner-resources-' . date( 'Y-m-d-His' ) . '.xml';
+    $filename = 'ai-awareness-day-partner-resources-' . wp_date( 'Y-m-d-His' ) . '.xml';
 
     header( 'Content-Type: application/xml; charset=utf-8' );
     header( 'Content-Disposition: attachment; filename=' . $filename );
