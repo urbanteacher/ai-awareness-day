@@ -277,6 +277,7 @@
   text-align: left;
   max-width: none;
   margin-top: 0.75rem;
+  font-size: 0.95rem; /* smaller than title (1.15rem) so description never outweighs title */
 }
 
 /* Partner Resources: match AI Awareness Activities card height and consistency (excerpt clamp, smaller text) */
