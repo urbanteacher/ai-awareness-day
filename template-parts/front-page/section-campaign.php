@@ -41,7 +41,6 @@ $campaign_has_embed = !empty($campaign_embed_src);
         </div>
 
         <div id="reach" class="momentum-section fade-up"
-            style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--gray-200);"
             data-wp-interactive="aiad/partners" data-wp-context='{ "isExpanded": false }'>
             <div class="momentum-intro">
                 <span class="section-label"><?php esc_html_e('Traction', 'ai-awareness-day'); ?></span>

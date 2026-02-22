@@ -15,9 +15,10 @@
   padding: var(--section-padding);
 }
 
-.hero-section + .section {
-  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+.section + .section {
+  padding-top: 0;
 }
+
 
 .section-label {
   font-family: var(--font-display);

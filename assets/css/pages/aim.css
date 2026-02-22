@@ -3,11 +3,6 @@
    ============================================ */
 
 /* ── Mobile default: plain text list ─────── */
-#aim .section {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
 #aim .section-title {
   font-size: 1.2rem;
 }
@@ -53,11 +48,6 @@
 
 /* ── Small mobile (≤ 480px) ──────────────── */
 @media screen and (max-width: 480px) {
-  #aim .section {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-
   #aim .section-title {
     font-size: 1.1rem;
   }
@@ -83,11 +73,6 @@
 
 /* ── Desktop: boxed card layout (≥ 769px) ── */
 @media screen and (min-width: 769px) {
-  #aim .section {
-    padding-top: unset;
-    padding-bottom: unset;
-  }
-
   #aim .section-title {
     font-size: unset;
   }
