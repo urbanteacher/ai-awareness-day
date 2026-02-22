@@ -9,12 +9,8 @@ if (!defined('ABSPATH')) {
     return;
 }
 $defaults = aiad_get_customizer_defaults();
-$youtube_url = get_theme_mod('aiad_youtube_url', $defaults['aiad_youtube_url']);
-$youtube_video_id = function_exists('aiad_youtube_video_id') ? aiad_youtube_video_id($youtube_url) : '';
 $campaign_embed_src = esc_url(get_theme_mod('aiad_campaign_linkedin_embed_src', $defaults['aiad_campaign_linkedin_embed_src']));
-$has_youtube = !empty($youtube_video_id);
-$has_linkedin = !empty($campaign_embed_src);
-$campaign_has_embed = $has_youtube || $has_linkedin;
+$campaign_has_embed = !empty($campaign_embed_src);
 ?>
 <section
     class="section <?php echo esc_attr($text_alignment_class); ?> <?php echo $campaign_has_embed ? 'campaign--split' : ''; ?>"
@@ -36,17 +32,9 @@ $campaign_has_embed = $has_youtube || $has_linkedin;
             <?php if ($campaign_has_embed): ?>
                 <div class="campaign-embed fade-up">
                     <div class="campaign-embed__wrapper">
-                        <?php if ($has_youtube): ?>
-                            <iframe
-                                src="https://www.youtube.com/embed/<?php echo esc_attr($youtube_video_id); ?>?rel=0&modestbranding=1&autoplay=1&mute=1"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen loading="lazy" width="560" height="315"
-                                title="<?php echo esc_attr(get_theme_mod('aiad_youtube_title', $defaults['aiad_youtube_title']) ?: __('Campaign video', 'ai-awareness-day')); ?>"></iframe>
-                        <?php elseif ($has_linkedin): ?>
-                            <iframe src="<?php echo esc_url($campaign_embed_src); ?>" height="399" width="504" frameborder="0"
-                                allowfullscreen title="<?php esc_attr_e('Embedded LinkedIn post', 'ai-awareness-day'); ?>"
-                                loading="lazy"></iframe>
-                        <?php endif; ?>
+                        <iframe src="<?php echo esc_url($campaign_embed_src); ?>" height="399" width="504" frameborder="0"
+                            allowfullscreen title="<?php esc_attr_e('Embedded LinkedIn post', 'ai-awareness-day'); ?>"
+                            loading="lazy"></iframe>
                     </div>
                 </div>
             <?php endif; ?>

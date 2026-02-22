@@ -138,11 +138,6 @@ a {
   text-decoration: none;
   color: inherit;
   transition: var(--transition);
-  cursor: pointer;
-}
-
-a[href]:not([href=""]):not([href="#"]):not([href*="javascript:"]) {
-  cursor: pointer;
 }
 
 h1, h2, h3, h4, h5, h6 {
