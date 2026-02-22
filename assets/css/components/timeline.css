@@ -67,17 +67,37 @@
     50% { opacity: 0.85; }
 }
 
-/* Mobile: wrap stats to multiple lines if needed */
+/* Short labels hidden on desktop */
+.timeline-stats-bar__label--short {
+    display: none;
+}
+
+/* Mobile: single row with short labels */
 @media (max-width: 767px) {
     .timeline-stats-bar {
-        flex-wrap: wrap;
-        padding: 0.85rem 1rem;
-        gap: 0.4rem 0.6rem;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding: 0.75rem 0.85rem;
+        gap: 0.25rem;
         min-height: auto;
-        white-space: normal;
+        white-space: nowrap;
+        font-size: 0.72rem;
     }
 
     .timeline-stats-bar__sep {
+        display: inline;
+        opacity: 0.4;
+    }
+
+    .timeline-stats-bar__label--full {
+        display: none;
+    }
+
+    .timeline-stats-bar__label--short {
+        display: inline;
+    }
+
+    .timeline-stats-bar__icon {
         display: none;
     }
 }

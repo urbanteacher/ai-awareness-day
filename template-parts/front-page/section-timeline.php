@@ -42,19 +42,24 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
             <div class="timeline-stats-bar" role="status" aria-label="<?php esc_attr_e( 'Campaign stats', 'ai-awareness-day' ); ?>">
                 <span class="timeline-stats-bar__stat timeline-stats-bar__days <?php echo $days_urgent ? ' timeline-stats-bar__days--urgent' : ''; ?>">
                     <span class="timeline-stats-bar__icon" aria-hidden="true">⏱</span>
-                    <?php printf( esc_html__( '%s days to go', 'ai-awareness-day' ), '<span class="timeline-stats-bar__value">' . esc_html( (string) $days_to_go ) . '</span>' ); ?>
+                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $days_to_go ); ?></span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'days to go', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'days', 'ai-awareness-day' ); ?></span>
                 </span>
                 <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
                 <span class="timeline-stats-bar__stat">
-                    <?php printf( esc_html__( '%s schools registered', 'ai-awareness-day' ), '<span class="timeline-stats-bar__value">' . esc_html( (string) $schools ) . '</span>' ); ?>
+                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $schools ); ?></span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'schools registered', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'schools', 'ai-awareness-day' ); ?></span>
                 </span>
                 <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
                 <span class="timeline-stats-bar__stat">
-                    <?php printf( esc_html__( '%s free resources', 'ai-awareness-day' ), '<span class="timeline-stats-bar__value">' . esc_html( (string) $resources ) . '</span>' ); ?>
+                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $resources ); ?></span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'free resources', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'resources', 'ai-awareness-day' ); ?></span>
                 </span>
             </div>
 
-            <p class="section-desc"><?php esc_html_e( 'Follow the campaign as it grows — new resources, partners, and milestones.', 'ai-awareness-day' ); ?></p>
         </div>
 
         <div class="timeline" id="timeline-feed" data-offset="<?php echo esc_attr( (string) count( $entries ) ); ?>">
