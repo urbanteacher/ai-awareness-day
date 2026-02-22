@@ -228,6 +228,129 @@ function aiad_register_form_submission_meta_box(): void {
 add_action( 'add_meta_boxes', 'aiad_register_form_submission_meta_box' );
 
 /**
+ * Add Position column to Partners list table.
+ */
+function aiad_partner_admin_columns( array $columns ): array {
+    $new = array();
+    foreach ( $columns as $key => $label ) {
+        $new[ $key ] = $label;
+        if ( 'title' === $key ) {
+            $new['position'] = __( 'Position', 'ai-awareness-day' );
+        }
+    }
+    return $new;
+}
+add_filter( 'manage_partner_posts_columns', 'aiad_partner_admin_columns' );
+
+/**
+ * Output Position column content.
+ */
+function aiad_partner_admin_column_content( string $column, int $post_id ): void {
+    if ( 'position' === $column ) {
+        $order = get_post_field( 'menu_order', $post_id );
+        echo '<span class="aiad-partner-order" data-order="' . esc_attr( $order ) . '">' . esc_html( $order ) . '</span>';
+    }
+}
+add_action( 'manage_partner_posts_custom_column', 'aiad_partner_admin_column_content', 10, 2 );
+
+/**
+ * Make Position column sortable.
+ */
+function aiad_partner_sortable_columns( array $columns ): array {
+    $columns['position'] = 'menu_order';
+    return $columns;
+}
+add_filter( 'manage_edit-partner_sortable_columns', 'aiad_partner_sortable_columns' );
+
+/**
+ * Default Partners list to sort by position ascending.
+ */
+function aiad_partner_default_orderby( WP_Query $query ): void {
+    if ( ! is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+    if ( 'partner' !== $query->get( 'post_type' ) ) {
+        return;
+    }
+    if ( ! $query->get( 'orderby' ) ) {
+        $query->set( 'orderby', 'menu_order' );
+        $query->set( 'order', 'ASC' );
+    }
+}
+add_action( 'pre_get_posts', 'aiad_partner_default_orderby' );
+
+/**
+ * Add Position field to Quick Edit panel.
+ */
+function aiad_partner_quick_edit_field( string $column_name, string $post_type ): void {
+    if ( 'position' !== $column_name || 'partner' !== $post_type ) {
+        return;
+    }
+    ?>
+    <fieldset class="inline-edit-col-right">
+        <div class="inline-edit-col">
+            <label>
+                <span class="title"><?php esc_html_e( 'Position', 'ai-awareness-day' ); ?></span>
+                <input type="number" name="aiad_partner_menu_order" class="aiad-partner-menu-order" value="0" min="0" step="1" style="width:60px;">
+            </label>
+        </div>
+    </fieldset>
+    <?php
+}
+add_action( 'quick_edit_custom_box', 'aiad_partner_quick_edit_field', 10, 2 );
+
+/**
+ * Save Position from Quick Edit.
+ */
+function aiad_partner_save_menu_order( int $post_id ): void {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+    if ( isset( $_POST['aiad_partner_menu_order'] ) ) {
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->posts,
+            array( 'menu_order' => absint( $_POST['aiad_partner_menu_order'] ) ),
+            array( 'ID' => $post_id ),
+            array( '%d' ),
+            array( '%d' )
+        );
+    }
+}
+add_action( 'save_post_partner', 'aiad_partner_save_menu_order' );
+
+/**
+ * Enqueue JS to populate Quick Edit Position field from the row value.
+ */
+function aiad_partner_quick_edit_js( string $hook ): void {
+    if ( 'edit.php' !== $hook ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen || 'partner' !== $screen->post_type ) {
+        return;
+    }
+    ?>
+    <script>
+    jQuery( function( $ ) {
+        var $wp_inline_edit = inlineEditPost.edit;
+        inlineEditPost.edit = function( id ) {
+            $wp_inline_edit.apply( this, arguments );
+            var postId = ( typeof id === 'object' ) ? parseInt( this.getId( id ) ) : id;
+            var $row   = $( '#post-' + postId );
+            var order  = $row.find( '.aiad-partner-order' ).data( 'order' );
+            $( '#edit-' + postId ).find( '.aiad-partner-menu-order' ).val( order );
+        };
+    } );
+    </script>
+    <?php
+}
+add_action( 'admin_footer', 'aiad_partner_quick_edit_js' );
+
+/**
  * Add Downloads column to resource list table
  *
  * @param array $columns List table columns.
