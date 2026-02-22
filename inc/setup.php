@@ -209,6 +209,17 @@ function aiad_scripts(): void
         );
     }
 
+    // Enqueue resource sharing script on single resource pages
+    if (is_singular('resource')) {
+        wp_enqueue_script(
+            'aiad-resource-sharing',
+            AIAD_URI . '/assets/js/resource-sharing.js',
+            array('aiad-main'),
+            AIAD_VERSION,
+            true
+        );
+    }
+
     // Enqueue timeline assets on front page
     if (is_front_page()) {
         $timeline_css = AIAD_DIR . '/assets/css/components/timeline.css';

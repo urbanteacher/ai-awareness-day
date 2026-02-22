@@ -329,6 +329,30 @@ get_header();
                     ?>
                     <footer class="resource-activity-footer">
                         <a href="<?php echo esc_url( get_post_type_archive_link( 'resource' ) ); ?>" class="resource-footer-btn resource-footer-btn--secondary"><?php esc_html_e( 'Back to Resources', 'ai-awareness-day' ); ?></a>
+                        <?php
+                        // Share button with pre-written message
+                        $share_message = function_exists( 'aiad_get_share_message' ) ? aiad_get_share_message( 'resource', get_post() ) : '';
+                        $share_url = get_permalink();
+                        $share_title = get_the_title();
+                        ?>
+                        <button type="button" 
+                                class="resource-footer-btn resource-footer-btn--share resource-share-btn" 
+                                data-url="<?php echo esc_url( $share_url ); ?>"
+                                data-title="<?php echo esc_attr( $share_title ); ?>"
+                                data-text="<?php echo esc_attr( $share_message ); ?>"
+                                aria-label="<?php esc_attr_e( 'Share this resource', 'ai-awareness-day' ); ?>">
+                            <span class="resource-share-btn__icon" aria-hidden="true">
+                                <?php 
+                                // Reuse timeline share icon SVG function if available, otherwise inline SVG
+                                if ( function_exists( 'aiad_timeline_share_icon_svg' ) ) {
+                                    echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                } else {
+                                    echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+                                }
+                                ?>
+                            </span>
+                            <span class="resource-share-btn__label"><?php esc_html_e( 'Share', 'ai-awareness-day' ); ?></span>
+                        </button>
                         <?php if ( $download_url ) : ?>
                             <a href="<?php echo esc_url( $download_url ); ?>" class="resource-footer-btn resource-footer-btn--primary resource-download-link" data-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>" download target="_blank" rel="noopener">
                                 <?php echo esc_html( $download_label ); ?>

@@ -4,7 +4,13 @@
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php bloginfo('description'); ?>">
+    <?php
+    $og_data = function_exists('aiad_get_og_data') ? aiad_get_og_data() : null;
+    $meta_description = $og_data && isset($og_data['description']) 
+        ? $og_data['description'] 
+        : get_bloginfo('description');
+    ?>
+    <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
     <?php wp_head(); ?>
 </head>
