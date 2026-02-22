@@ -103,6 +103,19 @@
   overflow: hidden;
   min-width: 0;
   /* allow grid item to shrink */
+  position: relative;
+}
+
+.resource-card a {
+  cursor: pointer;
+}
+
+.resource-card__image-link {
+  cursor: pointer;
+}
+
+.resource-card__link {
+  cursor: pointer;
 }
 
 /* Placeholder card in #free-resources: same grid as activity cards, links to archive */
@@ -157,6 +170,9 @@
   aspect-ratio: 16/10;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
+  z-index: 2;
+  text-decoration: none;
 }
 
 /* Free and curated resource cards: image/placeholder area 40% smaller (60% of default height) */
@@ -199,6 +215,7 @@
   padding: 0.75rem;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%);
   pointer-events: none;
+  z-index: 0;
 }
 
 .resource-card__image-top {
@@ -280,6 +297,8 @@
 
 .resource-card__body {
   padding: 1.25rem;
+  position: relative;
+  z-index: 2;
 }
 
 .resource-card__org {
@@ -314,6 +333,9 @@
 .resource-card__title a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
 .resource-card__title a:hover {
@@ -346,16 +368,27 @@
 
 .resource-card__action {
   margin-top: 0.75rem;
+  position: relative;
+  z-index: 2;
 }
 
 .resource-card__link {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--green-600);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
 .resource-card__link:hover {
   color: var(--green-700);
+}
+
+.resource-card__title a {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
 /* Resources archive: mobile-friendly – less padding, content in columns */
