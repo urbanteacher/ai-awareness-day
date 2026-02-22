@@ -377,6 +377,10 @@
     display: none;
   }
 
+  .resource-badge {
+    display: none;
+  }
+
   /* Restore native list markers on mobile */
   .resource-list {
     list-style: disc !important;
