@@ -31,6 +31,10 @@ $resource_obj = wp_count_posts( 'resource' );
 if ( $resource_obj && isset( $resource_obj->publish ) ) {
     $resources = (int) $resource_obj->publish;
 }
+$featured_resource_obj = wp_count_posts( 'featured_resource' );
+if ( $featured_resource_obj && isset( $featured_resource_obj->publish ) ) {
+    $resources += (int) $featured_resource_obj->publish;
+}
 $days_urgent = $days_to_go > 0 && $days_to_go < 30;
 ?>
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="timeline">
