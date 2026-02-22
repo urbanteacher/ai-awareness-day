@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.3.1' );
+define( 'AIAD_VERSION', '1.3.2' );
 
 // Define theme paths after theme directory is registered (avoids wp_is_block_theme() notice in WP 6.8+).
 if ( ! defined( 'AIAD_DIR' ) ) {
