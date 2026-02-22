@@ -684,3 +684,39 @@
 .resource-share-btn__label {
   /* Text inherits from .resource-footer-btn */
 }
+
+/* Print button */
+.resource-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  /* Inherits all styles from .resource-footer-btn */
+}
+
+.resource-footer-btn--print {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.resource-footer-btn--print:hover {
+  background: var(--gray-200);
+  color: var(--gray-900);
+}
+
+.resource-print-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.resource-print-btn__icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
+
+.resource-print-btn__label {
+  /* Text inherits from .resource-footer-btn */
+}

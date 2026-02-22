@@ -68,6 +68,11 @@
         }
     }
     
+    function handleResourcePrint(btn) {
+        // Trigger browser print dialog
+        window.print();
+    }
+    
     function initResourceSharing() {
         // Attach click handlers to all share buttons
         var shareButtons = document.querySelectorAll('.resource-share-btn');
@@ -86,6 +91,21 @@
                 e.preventDefault();
                 e.stopPropagation();
                 handleResourceShare(newBtn);
+                return false;
+            });
+        });
+        
+        // Attach click handlers to all print buttons
+        var printButtons = document.querySelectorAll('.resource-print-btn');
+        printButtons.forEach(function(btn) {
+            // Remove any existing listeners to avoid duplicates
+            var newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleResourcePrint(newBtn);
                 return false;
             });
         });
