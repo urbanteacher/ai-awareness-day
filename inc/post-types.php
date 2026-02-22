@@ -311,24 +311,6 @@ function aiad_register_resource_meta(): void {
         },
     ) );
 
-    $array_sections = array( '_aiad_discussion_prompts' );
-    foreach ( $array_sections as $key ) {
-        register_post_meta( 'resource', $key, array(
-            'type'          => 'array',
-            'single'        => true,
-            'default'       => array(),
-            'show_in_rest'  => array(
-                'schema' => array(
-                    'type'  => 'array',
-                    'items' => array( 'type' => 'string' ),
-                ),
-            ),
-            'auth_callback' => function () {
-                return current_user_can( 'edit_posts' );
-            },
-        ) );
-    }
-
     register_post_meta( 'resource', '_aiad_learning_objectives', array(
         'type'          => 'array',
         'single'        => true,

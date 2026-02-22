@@ -692,7 +692,6 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
     $key_definitions    = (array) get_post_meta( $post->ID, '_aiad_key_definitions', true );
     $learning_obj      = get_post_meta( $post->ID, '_aiad_learning_objectives', true );
     $instructions      = get_post_meta( $post->ID, '_aiad_instructions', true );
-    $discussion_prompts = get_post_meta( $post->ID, '_aiad_discussion_prompts', true );
     $discussion_q      = get_post_meta( $post->ID, '_aiad_discussion_question', true );
     $teacher_notes     = get_post_meta( $post->ID, '_aiad_teacher_notes', true );
     $preparation       = (array) get_post_meta( $post->ID, '_aiad_preparation', true );
@@ -702,10 +701,6 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
 
     $learning_obj  = aiad_normalise_learning_objectives( $learning_obj );
     $instructions  = aiad_normalise_instructions( $instructions );
-    if ( is_string( $discussion_prompts ) ) {
-        $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
-    }
-    $discussion_prompts = is_array( $discussion_prompts ) ? $discussion_prompts : array();
     $diff_support = isset( $differentiation['support'] ) ? $differentiation['support'] : '';
     $diff_stretch = isset( $differentiation['stretch'] ) ? $differentiation['stretch'] : '';
     $diff_send    = isset( $differentiation['send'] ) ? $differentiation['send'] : '';
@@ -722,12 +717,6 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
         $type = $config['type'] ?? 'text';
 
         // Normalize values for specific fields
-        if ( $meta_key === '_aiad_discussion_prompts' && is_string( $value ) ) {
-            $value = $value !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $value ) ) ) ) : array();
-        }
-        if ( $meta_key === '_aiad_suggested_answers' && is_string( $value ) ) {
-            $value = $value !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $value ) ) ) ) : array();
-        }
         if ( $meta_key === '_aiad_learning_objectives' ) {
             $value = aiad_normalise_learning_objectives( $value );
         }
@@ -850,17 +839,6 @@ function aiad_save_resource_content_sections( int $post_id ): void {
         update_post_meta( $post_id, '_aiad_instructions', $steps );
     }
 
-    $array_keys = array(
-        '_aiad_discussion_prompts' => 'aiad_discussion_prompts',
-    );
-    foreach ( $array_keys as $meta_key => $post_key ) {
-        if ( isset( $_POST[ $post_key ] ) && is_array( $_POST[ $post_key ] ) ) {
-            $arr = array_values( array_filter( array_map( function ( $v ) {
-                return is_string( $v ) ? sanitize_text_field( wp_unslash( $v ) ) : '';
-            }, $_POST[ $post_key ] ) ) );
-            update_post_meta( $post_id, $meta_key, $arr );
-        }
-    }
 
     if ( isset( $_POST['aiad_discussion_question'] ) ) {
         update_post_meta( $post_id, '_aiad_discussion_question', sanitize_text_field( wp_unslash( $_POST['aiad_discussion_question'] ) ) );

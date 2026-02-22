@@ -88,7 +88,6 @@ get_header();
                     $instructions       = get_post_meta( $resource_id, '_aiad_instructions', true );
                     $learning_obj       = aiad_normalise_learning_objectives( $learning_obj );
                     $instructions       = aiad_normalise_instructions( $instructions );
-                    $discussion_prompts = get_post_meta( $resource_id, '_aiad_discussion_prompts', true );
                     $discussion_q       = get_post_meta( $resource_id, '_aiad_discussion_question', true );
                     $teacher_notes      = get_post_meta( $resource_id, '_aiad_teacher_notes', true );
                     $prep_raw           = get_post_meta( $resource_id, '_aiad_preparation', true );
@@ -98,11 +97,7 @@ get_header();
                     $extensions         = is_array( $ext_raw ) ? array_values( array_filter( $ext_raw, function ( $e ) { return is_array( $e ) && trim( (string) ( isset( $e['activity'] ) ? $e['activity'] : '' ) ) !== ''; } ) ) : array();
                     $res_raw            = get_post_meta( $resource_id, '_aiad_resources', true );
                     $resources_list     = is_array( $res_raw ) ? array_values( array_filter( $res_raw, function ( $r ) { return is_array( $r ) && ( trim( (string) ( isset( $r['name'] ) ? $r['name'] : '' ) ) !== '' || trim( (string) ( isset( $r['url'] ) ? $r['url'] : '' ) ) !== '' ); } ) ) : array();
-                    if ( is_string( $discussion_prompts ) ) {
-                        $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
-                    }
-                    $discussion_prompts = is_array( $discussion_prompts ) ? $discussion_prompts : array();
-                    $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
+                    $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || $discussion_q !== '' || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
                     ?>
                     <?php if ( ! empty( $preparation ) ) : ?>
                         <div class="resource-sections resource-sections--rows resource-sections-row--prep-only">
@@ -313,7 +308,7 @@ get_header();
                             <?php endif; ?>
                         <?php else : ?>
                             <p class="resource-sections-empty" style="color: var(--text-muted, #6b7280); font-size: 0.95rem;">
-                                <?php esc_html_e( 'Add Preparation, Key definitions, Learning objectives, Instructions, Discussion prompts and Teacher notes in the "Resource content sections" box when editing this resource.', 'ai-awareness-day' ); ?>
+                                <?php esc_html_e( 'Add Preparation, Key definitions, Learning objectives, Instructions and Teacher notes in the "Resource content sections" box when editing this resource.', 'ai-awareness-day' ); ?>
                             </p>
                         <?php endif; ?>
                     </div>

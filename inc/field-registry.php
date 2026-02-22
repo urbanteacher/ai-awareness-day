@@ -114,12 +114,6 @@ function aiad_get_field_registry(): array {
                 'meta_key'    => '_aiad_discussion_question',
                 'class'       => 'large-text',
             ),
-            '_aiad_discussion_prompts' => array(
-                'type'        => 'repeatable_text',
-                'label'       => __( 'Discussion prompts', 'ai-awareness-day' ),
-                'meta_key'    => '_aiad_discussion_prompts',
-                'add_button'  => __( 'Add prompt', 'ai-awareness-day' ),
-            ),
             '_aiad_teacher_notes' => array(
                 'type'        => 'textarea',
                 'label'       => __( 'Teacher notes (optional)', 'ai-awareness-day' ),

@@ -72,7 +72,7 @@ function aiad_validate_resource_activity_schema( int $post_id ): array {
             }
         }
     }
-    // Discussion question, prompts, and teacher notes are now optional
+    // Discussion question and teacher notes are now optional
     // and not part of the Activity Schema validation surface.
     $diff = get_post_meta( $post_id, '_aiad_differentiation', true );
     if ( is_array( $diff ) ) {
