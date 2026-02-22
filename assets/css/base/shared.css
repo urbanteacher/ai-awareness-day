@@ -23,6 +23,10 @@
   .section + .section {
     padding-top: 1.5rem;
   }
+
+  .hero-section + .section {
+    padding-top: 0.75rem;
+  }
 }
 
 

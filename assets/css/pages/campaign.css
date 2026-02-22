@@ -68,6 +68,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .campaign-split {
+    gap: 0.75rem;
+  }
+
   .campaign-embed__wrapper {
     max-width: 100%;
     padding: 0.5rem;
