@@ -342,6 +342,11 @@
     font-size: 0.75rem;
   }
 
+  .resource-tag {
+    font-size: 0.65em;
+    padding: 0.15rem 0.5rem;
+  }
+
   /* Restore native list markers on mobile */
   .resource-list {
     list-style: disc !important;
