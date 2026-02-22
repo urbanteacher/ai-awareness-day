@@ -196,7 +196,8 @@ function aiad_seed_partners(): void {
 
     update_option( 'aiad_partners_seeded', 'yes' );
 }
-add_action( 'init', 'aiad_seed_partners', 20 );
+// Disabled: Demo content seeding
+// add_action( 'init', 'aiad_seed_partners', 20 );
 
 /**
  * Seed default partner resources (interactive AI games and learning tools).
@@ -262,7 +263,8 @@ function aiad_seed_partner_resources(): void {
 
     update_option( 'aiad_partner_resources_seeded', 'yes' );
 }
-add_action( 'init', 'aiad_seed_partner_resources', 25 );
+// Disabled: Demo content seeding
+// add_action( 'init', 'aiad_seed_partner_resources', 25 );
 
 /**
  * Seed the 5 free lesson starters (one per theme: Safe, Smart, Creative, Responsible, Future).

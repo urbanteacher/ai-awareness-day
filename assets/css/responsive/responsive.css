@@ -15,6 +15,10 @@
 }
 
 @media (max-width: 768px) {
+  /* Keep partner cards 2×2 when viewport is reduced (override 1024px auto-fill) */
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   /* Swap "By Theme" and "By Session Length" order on mobile */
   .toolkit-explore-themes {

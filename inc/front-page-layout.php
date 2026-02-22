@@ -19,7 +19,7 @@ function aiad_get_front_page_sections(): array {
     $sections = array(
         'hero',
         'campaign',
-        'youtube',
+        'timeline',
         'principles',
         'aim',
         'toolkit',

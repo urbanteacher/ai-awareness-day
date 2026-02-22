@@ -154,13 +154,13 @@ a.duration-badge:hover {
   text-align: center;
 }
 
-/* Match .theme-link / .theme-link__label: same font size and weight as theme text */
+/* Match theme-link__label: same font size, weight, letter-spacing as theme cards */
 .explore-session-card .explore-session-title {
   font-family: var(--font-display);
-  font-size: 0.55rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
   line-height: 1.2;
   white-space: normal;
   min-height: 2.4em;
@@ -177,6 +177,15 @@ a.duration-badge:hover {
 
 .explore-session-icon {
   display: none;
+}
+
+/* Match theme-link at mobile: same size/weight as theme cards */
+@media (max-width: 767px) {
+  .explore-session-card .explore-session-title {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
 }
 
 /* ---- Desktop: 2-col, green strip, row layout, text badges ---- */
@@ -250,9 +259,7 @@ a.duration-badge:hover {
   }
 
   .explore-session-card .explore-session-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-size: 1.1rem;
     min-height: 0;
     color: inherit;
   }

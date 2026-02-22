@@ -1,0 +1,525 @@
+/* ============================================
+   COMPONENT: Live Timeline
+   Vertical timeline with marker line, icons, and cards.
+   Mobile-first: base = mobile, desktop = min-width: 768px.
+   ============================================ */
+
+/* ── Section header: LIVE (flashing black/red), title, stats ticker bar ─ */
+#timeline .section-label--live {
+    animation: timeline-live-flash 1.5s ease-in-out infinite;
+}
+
+@keyframes timeline-live-flash {
+    0%, 100% { color: #dc2626; }
+    50% { color: var(--gray-900); }
+}
+
+/* Stats ticker bar: full-width (of container) dark strip, three stats */
+.timeline-stats-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem 0.75rem;
+    margin: 1rem 0 1.25rem;
+    padding: 1rem 1.25rem;
+    min-height: 3rem;
+    background: var(--gray-900);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.timeline-stats-bar__stat {
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+}
+
+.timeline-stats-bar__icon {
+    margin-right: 0.35rem;
+    font-size: 0.95em;
+}
+
+.timeline-stats-bar__value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.timeline-stats-bar__sep {
+    color: var(--gray-400);
+    font-weight: 400;
+    user-select: none;
+    opacity: 0.6;
+}
+
+/* Days pulse when under 30 (subtle urgency) */
+.timeline-stats-bar__days--urgent .timeline-stats-bar__value {
+    animation: timeline-days-urgent-pulse 2s ease-in-out infinite;
+}
+
+@keyframes timeline-days-urgent-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* Mobile: wrap stats to multiple lines if needed */
+@media (max-width: 767px) {
+    .timeline-stats-bar {
+        flex-wrap: wrap;
+        padding: 0.85rem 1rem;
+        gap: 0.4rem 0.6rem;
+        min-height: auto;
+        white-space: normal;
+    }
+
+    .timeline-stats-bar__sep {
+        display: none;
+    }
+}
+
+/* ── Track: scroll contained in box so main page doesn't grow ────── */
+.timeline {
+    margin-top: 2rem;
+    position: relative;
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--gray-900);
+    border-radius: 0;
+    background: var(--gray-900);
+    padding: 0;
+}
+
+.timeline__track {
+    position: relative;
+    padding: 0;
+    width: 100%;
+}
+
+/* Icons and vertical line removed to save space */
+
+/* ── Entry ───────────────────────────────── */
+.timeline-entry {
+    position: relative;
+    padding-bottom: 0;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 0;
+    width: 100%;
+}
+
+.timeline-entry:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+/* Marker (icon) hidden to save space */
+.timeline-entry__marker {
+    display: none;
+}
+
+/* ── Body: card content; two-column on desktop when has media ─────── */
+.timeline-entry__body {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.timeline-entry__body:hover {
+    border-color: var(--gray-300);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.timeline-entry__text {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Header: badge + date ────────────────── */
+.timeline-entry__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-entry__badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--gray-900);
+    color: var(--white);
+    border-radius: 0;
+}
+
+.timeline-entry__date {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+/* ── Category (shown with title) ──────────── */
+.timeline-entry__category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+    margin: 0 0 0.25rem 0;
+}
+
+/* ── Title row: title + time on same line ──── */
+.timeline-entry__title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0;
+}
+
+.timeline-entry__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.timeline-entry__title-row .timeline-entry__date {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+
+/* ── Media block: image or video; capped on mobile ────────────────── */
+.timeline-entry__media {
+    margin: 0.75rem 0 0;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    min-height: 100px;
+    flex-shrink: 0;
+}
+
+.timeline-entry__media .timeline-entry__image,
+.timeline-entry__media .timeline-entry__video,
+.timeline-entry__media .timeline-entry__video-facade {
+    max-height: 200px;
+}
+
+.timeline-entry__image {
+    margin: 0;
+    line-height: 0;
+}
+
+.timeline-entry__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    min-height: 120px;
+    max-height: 200px;
+}
+
+/* Video embed (oEmbed fallback): responsive 16:9, capped */
+.timeline-entry__video {
+    margin: 0;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-height: 200px;
+}
+
+.timeline-entry__video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Lite YouTube facade: thumbnail + play button; click loads iframe */
+.timeline-entry__video-facade {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    cursor: pointer;
+    overflow: hidden;
+    background: var(--gray-900);
+}
+
+.timeline-entry__video-facade:focus {
+    outline: 2px solid var(--green-600);
+    outline-offset: 2px;
+}
+
+.timeline-entry__video-facade-thumb {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.timeline-entry__video-facade-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.timeline-entry__video-facade-play svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.timeline-entry__video-facade-play-bg {
+    fill: #f00;
+}
+
+.timeline-entry__video-facade-play path:not(.timeline-entry__video-facade-play-bg) {
+    fill: #fff;
+}
+
+.timeline-entry__video-facade.is-activated .timeline-entry__video-facade-thumb,
+.timeline-entry__video-facade.is-activated .timeline-entry__video-facade-play {
+    display: none;
+}
+
+.timeline-entry__video-facade iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.timeline-entry__content {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--gray-700);
+}
+
+.timeline-entry__content p:last-child {
+    margin-bottom: 0;
+}
+
+/* ── CTA link ────────────────────────────── */
+.timeline-entry__cta {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+}
+
+.timeline-entry__link {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--green-600);
+    text-decoration: none;
+}
+
+.timeline-entry__link:hover {
+    color: var(--green-700);
+}
+
+/* ── Actions row: Like, Share, Learn more (3 icons) ──────────────── */
+.timeline-entry__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    padding-left: 0;
+    padding-right: 0;
+    border-top: 1px solid var(--gray-200);
+}
+
+.timeline-entry__like,
+.timeline-entry__share,
+.timeline-entry__link--action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    background: transparent;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.timeline-entry__like:hover,
+.timeline-entry__share:hover,
+.timeline-entry__link--action:hover {
+    color: var(--gray-900);
+    background: var(--gray-50);
+}
+
+.timeline-entry__like:focus,
+.timeline-entry__share:focus,
+.timeline-entry__link--action:focus {
+    outline: 2px solid var(--green-600);
+    outline-offset: 2px;
+}
+
+.timeline-entry__like .timeline-entry__like-icon,
+.timeline-entry__share .timeline-entry__share-icon,
+.timeline-entry__link--action .timeline-entry__link-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.timeline-entry__link--action {
+    cursor: pointer;
+}
+
+.timeline-entry__link--action:hover {
+    color: var(--green-600);
+}
+
+.timeline-entry__like.is-liked {
+    color: var(--green-600);
+    background: var(--green-50);
+}
+
+.timeline-entry__like.is-liked .timeline-entry__like-icon {
+    color: var(--green-600);
+}
+
+/* ── Load more button area (branded like nav CTA) ───────────────── */
+.timeline__load-more {
+    margin-top: 1.5rem;
+    padding: 0;
+    text-align: left;
+}
+
+.timeline__load-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--green-600);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.timeline__load-btn:hover {
+    background: var(--green-700);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+.timeline__load-btn:focus {
+    outline: 2px solid var(--green-600);
+    outline-offset: 2px;
+}
+
+.timeline__load-btn .btn-action__icon {
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.9;
+}
+
+/* Loading state (set via JS) */
+.timeline__load-btn.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    transform: none;
+}
+
+/* ── Desktop: same stacked layout, video ~50% larger and full-bleed ──── */
+@media (min-width: 768px) {
+    .timeline__track {
+        padding: 0;
+    }
+
+    .timeline-entry__body {
+        padding: 0.75rem 1rem;
+    }
+
+    /* Media full-bleed: cancel body padding so video isn't boxed */
+    .timeline-entry__body--has-media .timeline-entry__media {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        margin-bottom: -0.75rem;
+        width: calc(100% + 2rem);
+        max-width: none;
+    }
+
+    /* Video ~50% larger on desktop (260px → 390px) */
+    .timeline-entry__body--has-media .timeline-entry__media .timeline-entry__video-facade,
+    .timeline-entry__body--has-media .timeline-entry__media .timeline-entry__video {
+        max-height: 390px;
+    }
+
+    .timeline-entry__title {
+        font-size: 1.05rem;
+    }
+
+    .timeline-entry__image img {
+        min-height: 180px;
+        max-height: 260px;
+    }
+
+    .timeline-entry__video {
+        max-height: 390px;
+    }
+
+    .timeline__load-more {
+        padding: 0;
+    }
+}
+
+/* ── Empty state ─────────────────────────── */
+.timeline--empty {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--gray-500);
+    font-size: 0.95rem;
+}

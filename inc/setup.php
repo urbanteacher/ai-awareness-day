@@ -181,6 +181,7 @@ function aiad_scripts(): void
     $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
     if (is_front_page()) {
         $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
+        $aiad_ajax['timeline_nonce'] = wp_create_nonce('aiad_timeline_nonce');
     }
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $aiad_ajax['filter_nonce'] = wp_create_nonce('aiad_filter_nonce');
@@ -205,6 +206,25 @@ function aiad_scripts(): void
             array('aiad-main'),
             AIAD_VERSION,
             $script_args
+        );
+    }
+
+    // Enqueue timeline assets on front page
+    if (is_front_page()) {
+        $timeline_css = AIAD_DIR . '/assets/css/components/timeline.css';
+        $timeline_js  = AIAD_DIR . '/assets/js/timeline.js';
+        wp_enqueue_style(
+            'aiad-timeline',
+            AIAD_URI . '/assets/css/components/timeline.css',
+            array('aiad-style'),
+            file_exists($timeline_css) ? filemtime($timeline_css) : AIAD_VERSION
+        );
+        wp_enqueue_script(
+            'aiad-timeline',
+            AIAD_URI . '/assets/js/timeline.js',
+            array('aiad-main'),
+            file_exists($timeline_js) ? filemtime($timeline_js) : AIAD_VERSION,
+            true
         );
     }
 }

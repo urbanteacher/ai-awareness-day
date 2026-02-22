@@ -11,23 +11,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'AIAD_VERSION', '1.3.1' );
-define( 'AIAD_DIR', get_template_directory() );
-define( 'AIAD_URI', get_template_directory_uri() );
 
+// Define theme paths after theme directory is registered (avoids wp_is_block_theme() notice in WP 6.8+).
+if ( ! defined( 'AIAD_DIR' ) ) {
+    define( 'AIAD_DIR', __DIR__ );
+}
+add_action( 'after_setup_theme', function () {
+    if ( ! defined( 'AIAD_URI' ) ) {
+        define( 'AIAD_URI', get_template_directory_uri() );
+    }
+}, 0 );
+
+$aiad_dir = AIAD_DIR;
 if ( is_admin() ) {
-    require_once AIAD_DIR . '/admin/class-aiad-homepage-editor.php';
-    require_once AIAD_DIR . '/inc/meta-boxes.php';
-    require_once AIAD_DIR . '/inc/admin-columns.php';
-    require_once AIAD_DIR . '/inc/import-export.php';
+    require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';
+    require_once $aiad_dir . '/inc/meta-boxes.php';
+    require_once $aiad_dir . '/inc/admin-columns.php';
+    require_once $aiad_dir . '/inc/import-export.php';
 }
 
-require_once AIAD_DIR . '/inc/setup.php';
-require_once AIAD_DIR . '/inc/helpers.php';
-// Post types, taxonomies, and register_post_meta for resource (_aiad_key_stage, _aiad_subtitle, etc.)
-require_once AIAD_DIR . '/inc/post-types.php';
-// Field registry system for dynamic field rendering
-require_once AIAD_DIR . '/inc/field-registry.php';
-require_once AIAD_DIR . '/inc/customizer.php';
-require_once AIAD_DIR . '/inc/front-page-layout.php';
-require_once AIAD_DIR . '/inc/validation.php';
-require_once AIAD_DIR . '/inc/ajax-handlers.php';
+require_once $aiad_dir . '/inc/setup.php';
+require_once $aiad_dir . '/inc/helpers.php';
+require_once $aiad_dir . '/inc/post-types.php';
+require_once $aiad_dir . '/inc/field-registry.php';
+require_once $aiad_dir . '/inc/customizer.php';
+require_once $aiad_dir . '/inc/front-page-layout.php';
+require_once $aiad_dir . '/inc/validation.php';
+require_once $aiad_dir . '/inc/ajax-handlers.php';
+require_once $aiad_dir . '/inc/timeline.php';
+
+/**
+ * Timeline Event Date Configuration
+ * 
+ * Change the event date for the timeline countdown by modifying the date below.
+ * Format: Y-m-d (e.g., '2026-06-04')
+ */
+add_filter( 'aiad_timeline_event_date', function() {
+    return '2026-06-04'; // Change this date to update the countdown
+} );
