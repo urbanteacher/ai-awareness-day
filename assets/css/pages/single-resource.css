@@ -108,6 +108,32 @@
   color: var(--resource-tag-theme-color, var(--accent-blue));
 }
 
+/* Theme-specific badge colors */
+.resource-tag--safe {
+  background: var(--badge-safe);
+  color: var(--badge-black);
+}
+
+.resource-tag--smart {
+  background: var(--badge-smart);
+  color: var(--badge-black);
+}
+
+.resource-tag--creative {
+  background: var(--badge-creative);
+  color: var(--badge-black);
+}
+
+.resource-tag--responsible {
+  background: var(--badge-responsible);
+  color: var(--badge-black);
+}
+
+.resource-tag--future {
+  background: var(--badge-future);
+  color: var(--badge-black);
+}
+
 /* Section headings with icons */
 .resource-section__title {
   display: flex;
@@ -345,6 +371,10 @@
   .resource-tag {
     font-size: 0.65em;
     padding: 0.15rem 0.5rem;
+  }
+
+  .resource-tag--level {
+    display: none;
   }
 
   /* Restore native list markers on mobile */

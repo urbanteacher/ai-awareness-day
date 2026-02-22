@@ -58,7 +58,7 @@ get_header();
                                 <span class="resource-tag"><?php echo esc_html( $type_name ); ?></span>
                             <?php endif; ?>
                             <?php if ( $theme_name ) : ?>
-                                <span class="resource-tag resource-tag--theme"><?php echo esc_html( $theme_name ); ?></span>
+                                <span class="resource-tag resource-tag--theme resource-tag--<?php echo esc_attr( $theme_slug ); ?>"><?php echo esc_html( $theme_name ); ?></span>
                             <?php endif; ?>
                             <?php if ( $duration_str !== '' ) : ?>
                                 <span class="resource-tag"><?php echo esc_html( $duration_str ); ?></span>
@@ -66,7 +66,7 @@ get_header();
                                 <span class="resource-tag"><?php echo esc_html( $duration_name ); ?></span>
                             <?php endif; ?>
                             <?php if ( $level !== '' && isset( $level_labels[ $level ] ) ) : ?>
-                                <span class="resource-tag"><?php echo esc_html( $level_labels[ $level ] ); ?></span>
+                                <span class="resource-tag resource-tag--level"><?php echo esc_html( $level_labels[ $level ] ); ?></span>
                             <?php endif; ?>
                             <?php foreach ( $activity_names as $act_name ) : ?>
                                 <span class="resource-tag"><?php echo esc_html( $act_name ); ?></span>
