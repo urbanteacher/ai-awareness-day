@@ -165,7 +165,7 @@
 }
 
 .resource-sections-row--prep-only .resource-sections-row {
-  padding: 0.75rem 0 1rem;
+  padding: 0 0 1.25rem;
   border-bottom: 1px solid var(--aiad-border, var(--gray-200));
 }
 
@@ -185,6 +185,13 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  margin-top: 0;
+}
+
+/* Consistent spacing between preparation and content sections */
+.resource-sections-row--prep-only + #resource-content-sections {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .resource-sections-row {
@@ -192,13 +199,17 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   align-items: start;
-  padding: 1.5rem 0 2rem;
+  padding: 1.25rem 0;
   border-bottom: 1px solid var(--aiad-border, var(--gray-200));
 }
 
 .resource-sections-row:last-child {
   padding-bottom: 0;
   border-bottom: none;
+}
+
+.resource-sections-row:first-child {
+  padding-top: 0;
 }
 
 .resource-section-cell {
@@ -269,11 +280,15 @@
   margin-bottom: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 767px) {
   .resource-sections-row {
     grid-template-columns: 1fr;
     gap: 1rem;
-    padding: 1rem 0 1.25rem;
+    padding: 1rem 0;
+  }
+  
+  .resource-sections-row:first-child {
+    padding-top: 0;
   }
 
   .resource-section__title {
@@ -287,6 +302,46 @@
     height: 22px;
     min-width: 22px;
     font-size: 0.75rem;
+  }
+
+  /* Restore native list markers on mobile */
+  .resource-list {
+    list-style: disc !important;
+    padding-left: 1.5rem !important;
+  }
+
+  .resource-list li {
+    padding-left: 0.25rem !important;
+    display: list-item !important;
+  }
+
+  .resource-list--objectives {
+    list-style: disc !important;
+    padding-left: 1.5rem !important;
+  }
+
+  .resource-list--objectives li {
+    display: list-item !important;
+    padding-left: 0.25rem !important;
+  }
+
+  .resource-list--objectives li::before {
+    display: none !important;
+  }
+
+  .resource-list--ordered,
+  .resource-list--instructions {
+    list-style: decimal !important;
+    padding-left: 1.5rem !important;
+  }
+
+  .resource-list--instructions li {
+    display: list-item !important;
+    padding-left: 0.25rem !important;
+  }
+
+  .resource-list--instructions li::before {
+    display: none !important;
   }
 }
 
