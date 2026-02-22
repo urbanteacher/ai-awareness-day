@@ -16,7 +16,13 @@
 }
 
 .section + .section {
-  padding-top: 0;
+  padding-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .section + .section {
+    padding-top: 1.5rem;
+  }
 }
 
 
