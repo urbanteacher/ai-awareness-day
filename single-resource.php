@@ -135,12 +135,11 @@ get_header();
                                                 <?php foreach ( $learning_obj as $ob ) : ?>
                                                     <?php
                                                     $obj_text = is_array( $ob ) ? ( $ob['objective'] ?? '' ) : (string) $ob;
-                                                    $assess  = is_array( $ob ) && ! empty( $ob['assessable'] );
                                                     if ( $obj_text === '' ) {
                                                         continue;
                                                     }
                                                     ?>
-                                                    <li><?php echo wp_kses_post( $obj_text ); ?><?php if ( $assess ) : ?> <span class="resource-badge resource-badge--assessable" aria-label="<?php esc_attr_e( 'Assessable', 'ai-awareness-day' ); ?>"><?php esc_html_e( 'Assessable', 'ai-awareness-day' ); ?></span><?php endif; ?></li>
+                                                    <li><?php echo wp_kses_post( $obj_text ); ?></li>
                                                 <?php endforeach; ?>
                                             </ul>
                                         </section>

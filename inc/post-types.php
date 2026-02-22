@@ -322,7 +322,6 @@ function aiad_register_resource_meta(): void {
                     'type'       => 'object',
                     'properties' => array(
                         'objective'  => array( 'type' => 'string' ),
-                        'assessable' => array( 'type' => 'boolean' ),
                     ),
                 ),
             ),

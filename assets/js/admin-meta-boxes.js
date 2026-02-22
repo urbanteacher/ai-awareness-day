@@ -40,7 +40,6 @@
         } else if (name === 'aiad_learning_objectives') {
             html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem; padding: 0.35rem 0;">' +
                 '<input type="text" name="aiad_learning_objectives[' + idx + '][objective]" value="" class="large-text" /> ' +
-                '<label><input type="checkbox" name="aiad_learning_objectives[' + idx + '][assessable]" value="1" /> ' + aiadAdminMeta.assessableText + '</label> ' +
                 '<button type="button" class="button button-small aiad-remove-row">' + aiadAdminMeta.removeText + '</button></div>';
         } else {
             html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +

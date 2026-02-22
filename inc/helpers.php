@@ -171,11 +171,11 @@ function aiad_resource_download_label( string $url ): string {
 }
 
 /**
- * Normalise learning objectives to array of { objective, assessable } (Activity Schema v1).
+ * Normalise learning objectives to array of { objective } (Activity Schema v1).
  * Used on frontend (single-resource.php) and in admin (meta box).
  *
  * @param mixed $raw Meta value.
- * @return array<int, array{objective: string, assessable: bool}>
+ * @return array<int, array{objective: string}>
  */
 function aiad_normalise_learning_objectives( $raw ): array {
     if ( is_string( $raw ) && $raw !== '' ) {
@@ -192,7 +192,7 @@ function aiad_normalise_learning_objectives( $raw ): array {
         if ( is_string( $raw ) && $raw !== '' ) {
             $lines = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $raw ) ) ) );
             return array_map( function ( $line ) {
-                return array( 'objective' => $line, 'assessable' => false );
+                return array( 'objective' => $line );
             }, $lines );
         }
         return array();
@@ -202,10 +202,9 @@ function aiad_normalise_learning_objectives( $raw ): array {
         if ( is_array( $item ) && isset( $item['objective'] ) ) {
             $out[] = array(
                 'objective'  => isset( $item['objective'] ) ? (string) $item['objective'] : '',
-                'assessable' => ! empty( $item['assessable'] ),
             );
         } elseif ( is_string( $item ) && $item !== '' ) {
-            $out[] = array( 'objective' => $item, 'assessable' => false );
+            $out[] = array( 'objective' => $item );
         }
     }
     return $out;

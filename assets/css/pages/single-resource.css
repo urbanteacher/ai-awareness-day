@@ -345,7 +345,6 @@
   color: var(--text-muted, var(--gray-500));
 }
 
-.resource-badge--assessable,
 .resource-badge--ks-adapted {
   background: var(--accent-blue-light);
   color: var(--accent-blue-dark);

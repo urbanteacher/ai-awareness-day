@@ -86,7 +86,6 @@ function aiad_get_field_registry(): array {
                 'meta_key'    => '_aiad_learning_objectives',
                 'fields'      => array(
                     'objective'  => array( 'type' => 'text', 'label' => __( 'Objective', 'ai-awareness-day' ), 'placeholder' => __( 'e.g. Understand that AI predicts patterns', 'ai-awareness-day' ) ),
-                    'assessable' => array( 'type' => 'checkbox', 'label' => __( 'Assessable', 'ai-awareness-day' ) ),
                 ),
                 'add_button'  => __( 'Add objective', 'ai-awareness-day' ),
                 'min'         => 2,

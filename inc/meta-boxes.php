@@ -665,7 +665,6 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
 
     wp_localize_script( 'aiad-admin-meta-boxes', 'aiadAdminMeta', array(
         'removeText'          => __( 'Remove', 'ai-awareness-day' ),
-        'assessableText'      => __( 'Assessable', 'ai-awareness-day' ),
         'termText'            => __( 'Term', 'ai-awareness-day' ),
         'definitionText'     => __( 'Definition', 'ai-awareness-day' ),
         'keyStageAdaptedText' => __( 'Key stage adapted', 'ai-awareness-day' ),
@@ -811,7 +810,6 @@ function aiad_save_resource_content_sections( int $post_id ): void {
             }
             $objs[] = array(
                 'objective'  => $obj,
-                'assessable' => ! empty( $item['assessable'] ),
             );
         }
         update_post_meta( $post_id, '_aiad_learning_objectives', $objs );
