@@ -321,6 +321,15 @@ function aiad_print_icon_svg(): string {
 }
 
 /**
+ * SVG icon for back button (arrow left).
+ *
+ * @return string SVG markup.
+ */
+function aiad_back_icon_svg(): string {
+    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
+}
+
+/**
  * Play button SVG for lite YouTube facade.
  *
  * @return string SVG markup.

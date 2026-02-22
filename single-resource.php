@@ -327,7 +327,37 @@ get_header();
                     $download_label = $download_url && function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : __( 'Download', 'ai-awareness-day' );
                     ?>
                     <footer class="resource-activity-footer">
-                        <a href="<?php echo esc_url( get_post_type_archive_link( 'resource' ) ); ?>" class="resource-footer-btn resource-footer-btn--secondary"><?php esc_html_e( 'Back to Resources', 'ai-awareness-day' ); ?></a>
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'resource' ) ); ?>" class="resource-footer-btn resource-footer-btn--secondary resource-back-btn">
+                            <span class="resource-back-btn__icon" aria-hidden="true">
+                                <?php
+                                if ( function_exists( 'aiad_back_icon_svg' ) ) {
+                                    echo aiad_back_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                } else {
+                                    echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
+                                }
+                                ?>
+                            </span>
+                            <span class="resource-back-btn__label"><?php esc_html_e( 'Back to Resources', 'ai-awareness-day' ); ?></span>
+                        </a>
+                        <?php if ( $download_url ) : ?>
+                            <a href="<?php echo esc_url( $download_url ); ?>" class="resource-footer-btn resource-footer-btn--primary resource-download-link" data-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>" download target="_blank" rel="noopener">
+                                <?php echo esc_html( $download_label ); ?>
+                            </a>
+                        <?php endif; ?>
+                        <button type="button"
+                                class="resource-footer-btn resource-footer-btn--print resource-print-btn"
+                                aria-label="<?php esc_attr_e( 'Print this resource', 'ai-awareness-day' ); ?>">
+                            <span class="resource-print-btn__icon" aria-hidden="true">
+                                <?php
+                                if ( function_exists( 'aiad_print_icon_svg' ) ) {
+                                    echo aiad_print_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                } else {
+                                    echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>';
+                                }
+                                ?>
+                            </span>
+                            <span class="resource-print-btn__label"><?php esc_html_e( 'Print', 'ai-awareness-day' ); ?></span>
+                        </button>
                         <?php
                         // Share button with pre-written message
                         $share_message = function_exists( 'aiad_get_share_message' ) ? aiad_get_share_message( 'resource', get_post() ) : '';
@@ -352,25 +382,6 @@ get_header();
                             </span>
                             <span class="resource-share-btn__label"><?php esc_html_e( 'Share', 'ai-awareness-day' ); ?></span>
                         </button>
-                        <button type="button"
-                                class="resource-footer-btn resource-footer-btn--print resource-print-btn"
-                                aria-label="<?php esc_attr_e( 'Print this resource', 'ai-awareness-day' ); ?>">
-                            <span class="resource-print-btn__icon" aria-hidden="true">
-                                <?php
-                                if ( function_exists( 'aiad_print_icon_svg' ) ) {
-                                    echo aiad_print_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                } else {
-                                    echo '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>';
-                                }
-                                ?>
-                            </span>
-                            <span class="resource-print-btn__label"><?php esc_html_e( 'Print', 'ai-awareness-day' ); ?></span>
-                        </button>
-                        <?php if ( $download_url ) : ?>
-                            <a href="<?php echo esc_url( $download_url ); ?>" class="resource-footer-btn resource-footer-btn--primary resource-download-link" data-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>" download target="_blank" rel="noopener">
-                                <?php echo esc_html( $download_label ); ?>
-                            </a>
-                        <?php endif; ?>
                     </footer>
                 </article>
             <?php endwhile; ?>
