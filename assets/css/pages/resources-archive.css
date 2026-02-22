@@ -982,10 +982,8 @@
 
 /* ============================================
    SINGLE RESOURCE (single-resource.php)
+   Full-width layout - styles moved to single-resource.css
    ============================================ */
-.single-resource .container.container--narrow {
-  max-width: 800px;
-}
 
 /* Clear fixed header on single resource: first section needs enough top padding on mobile */
 @media (max-width: 768px) {
