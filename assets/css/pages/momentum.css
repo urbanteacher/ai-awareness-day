@@ -12,6 +12,12 @@
   margin-bottom: 3rem;
 }
 
+@media screen and (max-width: 768px) {
+  .momentum-intro {
+    margin-bottom: 1rem;
+  }
+}
+
 .momentum-intro .section-title {
   margin-bottom: 1rem;
 }
