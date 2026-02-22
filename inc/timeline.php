@@ -526,8 +526,11 @@ function aiad_timeline_schools_registered_count(): int {
     if ( false !== $cached && is_numeric( $cached ) ) {
         return (int) $cached;
     }
+
     global $wpdb;
-    $count = (int) $wpdb->get_var( $wpdb->prepare(
+
+    // Count distinct school names from individual form submissions
+    $form_count = (int) $wpdb->get_var( $wpdb->prepare(
         "SELECT COUNT(DISTINCT pm.meta_value) FROM {$wpdb->postmeta} pm
         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
         WHERE p.post_type = %s AND p.post_status = 'publish'
@@ -535,6 +538,18 @@ function aiad_timeline_schools_registered_count(): int {
         'form_submission',
         '_submission_school_name'
     ) );
+
+    // Sum schools-in-portfolio from all published partner posts
+    $partner_count = (int) $wpdb->get_var( $wpdb->prepare(
+        "SELECT COALESCE(SUM(CAST(pm.meta_value AS UNSIGNED)), 0) FROM {$wpdb->postmeta} pm
+        INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+        WHERE p.post_type = %s AND p.post_status = 'publish'
+        AND pm.meta_key = %s AND pm.meta_value > 0",
+        'partner',
+        '_partner_school_count'
+    ) );
+
+    $count = $form_count + $partner_count;
     set_transient( $cache_key, $count, HOUR_IN_SECONDS );
     return $count;
 }
@@ -730,12 +745,13 @@ function aiad_timeline_check_submission_milestone(): void {
 add_action( 'save_post_form_submission', 'aiad_timeline_check_submission_milestone', 30 );
 
 /**
- * Invalidate schools count cache when a form submission is saved.
+ * Invalidate schools count cache when a form submission or partner is saved.
  */
 function aiad_timeline_invalidate_schools_count(): void {
     delete_transient( 'aiad_timeline_schools_count' );
 }
 add_action( 'save_post_form_submission', 'aiad_timeline_invalidate_schools_count', 5 );
+add_action( 'save_post_partner', 'aiad_timeline_invalidate_schools_count', 5 );
 
 /* ──────────────────────────────────────────────
    5. Query Helpers

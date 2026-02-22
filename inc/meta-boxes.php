@@ -64,12 +64,18 @@ function aiad_partner_stats_meta_box(): void {
 
 function aiad_partner_stats_meta_box_callback( $post ): void {
     wp_nonce_field( 'aiad_partner_stats_save', 'aiad_partner_stats_nonce' );
-    $stats = get_post_meta( $post->ID, '_partner_stats', true );
+    $stats        = get_post_meta( $post->ID, '_partner_stats', true );
+    $school_count = absint( get_post_meta( $post->ID, '_partner_school_count', true ) );
     ?>
     <p>
         <label for="partner_stats"><?php esc_html_e( 'Statistics/Description', 'ai-awareness-day' ); ?></label><br>
         <input type="text" id="partner_stats" name="partner_stats" value="<?php echo esc_attr( $stats ); ?>" style="width: 100%;" placeholder="<?php esc_attr_e( 'e.g., 32,000 students', 'ai-awareness-day' ); ?>">
-        <span class="description"><?php esc_html_e( 'Enter statistics or description to display on the Momentum section (e.g., "32,000 students", "20 schools across Bedfordshire")', 'ai-awareness-day' ); ?></span>
+        <span class="description"><?php esc_html_e( 'Displayed on the Traction section card (e.g. "32,000 students", "20 schools across Bedfordshire").', 'ai-awareness-day' ); ?></span>
+    </p>
+    <p>
+        <label for="partner_school_count"><strong><?php esc_html_e( 'Schools in portfolio', 'ai-awareness-day' ); ?></strong></label><br>
+        <input type="number" id="partner_school_count" name="partner_school_count" value="<?php echo esc_attr( $school_count ?: '' ); ?>" min="0" step="1" style="width: 100px;" placeholder="0">
+        <span class="description"><?php esc_html_e( 'For MATs and organisations: enter how many schools are in their catchment. This is added to the "Schools registered" total on the front page.', 'ai-awareness-day' ); ?></span>
     </p>
     <?php
 }
@@ -89,6 +95,10 @@ function aiad_partner_stats_save( $post_id ): void {
 
     if ( isset( $_POST['partner_stats'] ) ) {
         update_post_meta( $post_id, '_partner_stats', sanitize_text_field( wp_unslash( $_POST['partner_stats'] ) ) );
+    }
+
+    if ( isset( $_POST['partner_school_count'] ) ) {
+        update_post_meta( $post_id, '_partner_school_count', absint( $_POST['partner_school_count'] ) );
     }
 }
 add_action( 'add_meta_boxes', 'aiad_partner_stats_meta_box' );
