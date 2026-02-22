@@ -694,7 +694,6 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
     $instructions      = get_post_meta( $post->ID, '_aiad_instructions', true );
     $discussion_prompts = get_post_meta( $post->ID, '_aiad_discussion_prompts', true );
     $discussion_q      = get_post_meta( $post->ID, '_aiad_discussion_question', true );
-    $suggested_answers = get_post_meta( $post->ID, '_aiad_suggested_answers', true );
     $teacher_notes     = get_post_meta( $post->ID, '_aiad_teacher_notes', true );
     $preparation       = (array) get_post_meta( $post->ID, '_aiad_preparation', true );
     $differentiation   = (array) get_post_meta( $post->ID, '_aiad_differentiation', true );
@@ -707,11 +706,6 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
         $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
     }
     $discussion_prompts = is_array( $discussion_prompts ) ? $discussion_prompts : array();
-    if ( is_string( $suggested_answers ) ) {
-        $suggested_answers = $suggested_answers !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $suggested_answers ) ) ) ) : array();
-    }
-    $suggested_answers = is_array( $suggested_answers ) ? $suggested_answers : array();
-
     $diff_support = isset( $differentiation['support'] ) ? $differentiation['support'] : '';
     $diff_stretch = isset( $differentiation['stretch'] ) ? $differentiation['stretch'] : '';
     $diff_send    = isset( $differentiation['send'] ) ? $differentiation['send'] : '';
@@ -858,7 +852,6 @@ function aiad_save_resource_content_sections( int $post_id ): void {
 
     $array_keys = array(
         '_aiad_discussion_prompts' => 'aiad_discussion_prompts',
-        '_aiad_suggested_answers'   => 'aiad_suggested_answers',
     );
     foreach ( $array_keys as $meta_key => $post_key ) {
         if ( isset( $_POST[ $post_key ] ) && is_array( $_POST[ $post_key ] ) ) {

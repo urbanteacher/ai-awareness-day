@@ -90,7 +90,6 @@ get_header();
                     $instructions       = aiad_normalise_instructions( $instructions );
                     $discussion_prompts = get_post_meta( $resource_id, '_aiad_discussion_prompts', true );
                     $discussion_q       = get_post_meta( $resource_id, '_aiad_discussion_question', true );
-                    $suggested_answers  = get_post_meta( $resource_id, '_aiad_suggested_answers', true );
                     $teacher_notes      = get_post_meta( $resource_id, '_aiad_teacher_notes', true );
                     $prep_raw           = get_post_meta( $resource_id, '_aiad_preparation', true );
                     $preparation        = is_array( $prep_raw ) ? array_values( array_filter( $prep_raw, function ( $v ) { return is_string( $v ) && trim( $v ) !== ''; } ) ) : array();
@@ -103,11 +102,7 @@ get_header();
                         $discussion_prompts = $discussion_prompts !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $discussion_prompts ) ) ) ) : array();
                     }
                     $discussion_prompts = is_array( $discussion_prompts ) ? $discussion_prompts : array();
-                    if ( is_string( $suggested_answers ) ) {
-                        $suggested_answers = $suggested_answers !== '' ? array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', $suggested_answers ) ) ) ) : array();
-                    }
-                    $suggested_answers = is_array( $suggested_answers ) ? $suggested_answers : array();
-                    $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || ! empty( $suggested_answers ) || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
+                    $has_sections = ! empty( $preparation ) || ! empty( $key_definitions ) || ! empty( $learning_obj ) || ! empty( $instructions ) || ! empty( $discussion_prompts ) || $discussion_q !== '' || $teacher_notes !== '' || ! empty( $differentiation['support'] ) || ! empty( $differentiation['stretch'] ) || ! empty( $differentiation['send'] ) || ! empty( $extensions ) || ! empty( $resources_list );
                     ?>
                     <?php if ( ! empty( $preparation ) ) : ?>
                         <div class="resource-sections resource-sections--rows resource-sections-row--prep-only">

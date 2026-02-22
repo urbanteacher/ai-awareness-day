@@ -107,37 +107,6 @@
         });
 
         // ============================================
-        // Resource: toggle long suggested answers
-        // ============================================
-        const answerToggles = document.querySelectorAll('.resource-answers-toggle');
-
-        if (answerToggles.length) {
-            answerToggles.forEach((btn) => {
-                const targetId = btn.getAttribute('data-target');
-                if (!targetId) return;
-
-                const panel = document.getElementById(targetId);
-                if (!panel) return;
-
-                const showLabel = btn.dataset.labelShow || 'Show suggested answers';
-                const hideLabel = btn.dataset.labelHide || 'Hide suggested answers';
-
-                btn.addEventListener('click', () => {
-                    const isHidden = panel.hasAttribute('hidden');
-
-                    if (isHidden) {
-                        panel.removeAttribute('hidden');
-                    } else {
-                        panel.setAttribute('hidden', '');
-                    }
-
-                    btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-                    btn.textContent = isHidden ? hideLabel : showLabel;
-                });
-            });
-        }
-
-        // ============================================
         // Display board: flip between Blueprint and Real example
         // ============================================
         const displayBoardPreview = document.querySelector('.js-display-board-preview.display-board-preview--has-real');

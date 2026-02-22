@@ -311,7 +311,7 @@ function aiad_register_resource_meta(): void {
         },
     ) );
 
-    $array_sections = array( '_aiad_discussion_prompts', '_aiad_suggested_answers' );
+    $array_sections = array( '_aiad_discussion_prompts' );
     foreach ( $array_sections as $key ) {
         register_post_meta( 'resource', $key, array(
             'type'          => 'array',
