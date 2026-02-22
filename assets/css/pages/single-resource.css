@@ -50,8 +50,8 @@
 }
 
 .resource-activity-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-color, var(--gray-200));
 }
 
@@ -80,9 +80,9 @@
 
 .resource-activity-overview {
   margin: 0 0 1rem 1.75rem;
-  font-size: 0.875rem;
+  font-size: 0.8em;
   color: var(--text-muted, var(--gray-500));
-  line-height: 1.5;
+  line-height: 1.65;
 }
 
 .resource-activity-tags {
@@ -95,8 +95,9 @@
 .resource-tag {
   display: inline-block;
   padding: 0.2rem 0.6rem;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: 500;
+  line-height: 1.65;
   border-radius: 0;
   background: var(--resource-tag-bg, var(--gray-100));
   color: var(--resource-tag-color, var(--gray-700));
