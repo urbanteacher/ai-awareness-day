@@ -252,7 +252,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <?php
                         $contact_email = get_theme_mod('aiad_contact_email', get_option('admin_email'));
                         $email_subject = rawurlencode('Our Schools Display');
-                        $email_body = rawurlencode('Hello,\n\nPlease find attached photos of our school\'s AI Awareness Day display board.\n\nThank you!');
+                        $email_body = rawurlencode( "Hello,\n\nPlease find attached photos of our school's AI Awareness Day display board.\n\nThank you!" );
                         $mailto_link = 'mailto:' . esc_attr($contact_email) . '?subject=' . $email_subject . '&body=' . $email_body;
                         ?>
                         <a href="<?php echo esc_url($mailto_link); ?>"
