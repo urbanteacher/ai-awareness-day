@@ -297,15 +297,12 @@
 }
 
 .resource-instruction-duration,
+.resource-instruction-ref,
 .resource-instruction-student {
   display: inline-block;
   margin-right: 0.75rem;
   font-size: 0.9em;
   color: var(--text-muted, var(--gray-500));
-}
-
-.resource-instruction-ref {
-  display: none;
 }
 
 .resource-instruction-tip {
