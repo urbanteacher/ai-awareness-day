@@ -288,88 +288,50 @@
 }
 
 .resource-instruction-step {
-  margin-bottom: 1.25rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 1rem;
 }
 
-.resource-instruction-step:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.resource-instruction-action {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-/* Instruction metadata row */
 .resource-instruction-duration,
 .resource-instruction-ref,
 .resource-instruction-student {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+  display: inline-block;
   margin-right: 0.5rem;
-  margin-bottom: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 3px;
+  font-size: 0.8em;
+  color: var(--text-muted, var(--gray-500));
 }
 
-/* Duration badge - blue */
-.resource-instruction-duration {
-  background: var(--accent-blue-light, #dbeafe);
-  color: var(--accent-blue-dark, #1e40af);
+/* Desktop: Style metadata as distinct pills */
+@media screen and (min-width: 768px) {
+  .resource-instruction-duration,
+  .resource-instruction-ref,
+  .resource-instruction-student {
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .resource-instruction-duration {
+    background: var(--gray-100);
+    color: var(--gray-600);
+  }
+
+  .resource-instruction-ref {
+    background: var(--accent-purple-light, #f3e8ff);
+    color: var(--accent-purple-dark, #6b21a8);
+  }
+
+  .resource-instruction-student {
+    background: var(--accent-blue-light);
+    color: var(--accent-blue-dark);
+  }
 }
 
-.resource-instruction-duration::before {
-  content: "⏱";
-  font-size: 0.7rem;
-}
-
-/* Slide reference badge - purple */
-.resource-instruction-ref {
-  background: var(--accent-purple-light, #ede9fe);
-  color: var(--accent-purple-dark, #5b21b6);
-}
-
-.resource-instruction-ref::before {
-  content: "📊";
-  font-size: 0.7rem;
-}
-
-/* Student action badge - green */
-.resource-instruction-student {
-  background: var(--accent-green-light, #dcfce7);
-  color: var(--accent-green-dark, #166534);
-}
-
-.resource-instruction-student::before {
-  content: "👥";
-  font-size: 0.7rem;
-}
-
-/* Teacher tip - distinct box */
 .resource-instruction-tip {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   margin-bottom: 0;
-  padding: 0.75rem 1rem;
-  font-size: 0.85em;
+  font-size: 0.95em;
   font-style: italic;
-  color: var(--gray-600);
-  background: var(--accent-amber-light, #fef9c3);
-  border-left: 3px solid var(--accent-amber, #a16207);
-  border-radius: 0 4px 4px 0;
-}
-
-.resource-instruction-tip::before {
-  content: "💡 Teacher tip: ";
-  font-style: normal;
-  font-weight: 600;
-  color: var(--accent-amber, #a16207);
+  color: var(--text-muted, var(--gray-500));
 }
 
 .resource-badge {
