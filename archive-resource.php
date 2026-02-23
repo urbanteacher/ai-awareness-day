@@ -37,7 +37,7 @@ get_header();
                                 <?php if ($theme_badge_src): ?>
                                     <span class="theme-link__badge">
                                         <img src="<?php echo esc_url($theme_badge_src); ?>" alt="" aria-hidden="true"
-                                            class="theme-link__badge-img" aria-hidden="true" />
+                                            class="theme-link__badge-img" />
                                     </span>
                                 <?php endif; ?>
                                 <span class="theme-link__label"><?php echo esc_html($term->name); ?></span>
@@ -48,11 +48,11 @@ get_header();
             <?php endif; ?>
 
             <?php
-            $type_filter = isset($_GET['resource_type']) ? sanitize_text_field($_GET['resource_type']) : '';
-            $principle_filter = isset($_GET['principle']) ? sanitize_text_field($_GET['principle']) : '';
-            $duration_filter = isset($_GET['duration']) ? sanitize_text_field($_GET['duration']) : '';
-            $activity_filter = isset($_GET['activity_type']) ? sanitize_text_field($_GET['activity_type']) : '';
-            $key_stage_filter = isset($_GET['key_stage']) ? sanitize_text_field($_GET['key_stage']) : '';
+            $type_filter = isset($_GET['resource_type']) ? sanitize_text_field( wp_unslash($_GET['resource_type']) ) : '';
+            $principle_filter = isset($_GET['principle']) ? sanitize_text_field( wp_unslash($_GET['principle']) ) : '';
+            $duration_filter = isset($_GET['duration']) ? sanitize_text_field( wp_unslash($_GET['duration']) ) : '';
+            $activity_filter = isset($_GET['activity_type']) ? sanitize_text_field( wp_unslash($_GET['activity_type']) ) : '';
+            $key_stage_filter = isset($_GET['key_stage']) ? sanitize_text_field( wp_unslash($_GET['key_stage']) ) : '';
 
             $args = array(
                 'post_type' => 'resource',
