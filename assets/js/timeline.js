@@ -1,6 +1,6 @@
 /**
- * Timeline: AJAX "Load more" handler.
- * Fetches additional timeline entries and appends to the feed.
+ * Timeline: AJAX "Load more" and filter handlers.
+ * Fetches additional timeline entries and handles filtering.
  *
  * @package AI_Awareness_Day
  */
@@ -15,9 +15,75 @@
     var track  = feed ? feed.querySelector( '.timeline__track' ) : null;
     var btn    = document.getElementById( 'timeline-load-more' );
     var wrap   = btn ? btn.closest( '.timeline__load-more' ) : null;
+    var filters = document.querySelectorAll( '.timeline-filter-btn' );
+    var currentFilter = 'all';
 
     if ( ! feed || ! track ) {
         return;
+    }
+
+    // ─── Filter buttons ─────────
+    if ( filters.length > 0 ) {
+        filters.forEach( function ( filterBtn ) {
+            filterBtn.addEventListener( 'click', function () {
+                var filter = filterBtn.getAttribute( 'data-filter' ) || 'all';
+                if ( filter === currentFilter ) {
+                    return;
+                }
+
+                // Update active state
+                filters.forEach( function ( f ) { f.classList.remove( 'timeline-filter-btn--active' ); } );
+                filterBtn.classList.add( 'timeline-filter-btn--active' );
+
+                currentFilter = filter;
+
+                // Show loading state on track
+                track.innerHTML = '<div class="timeline-loading" style="text-align:center;padding:2rem;color:var(--gray-500);">Loading...</div>';
+
+                // Hide load more button during filter
+                if ( wrap ) {
+                    wrap.style.display = 'none';
+                }
+
+                var body = 'action=aiad_timeline_filter'
+                    + '&nonce=' + encodeURIComponent( aiad_ajax.timeline_nonce || '' )
+                    + '&filter=' + encodeURIComponent( filter );
+
+                fetch( aiad_ajax.url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body,
+                } )
+                    .then( function ( res ) { return res.json(); } )
+                    .then( function ( json ) {
+                        if ( json.success && json.data ) {
+                            if ( json.data.html ) {
+                                track.innerHTML = json.data.html;
+
+                                // Trigger fade-up animation
+                                track.offsetHeight;
+                                var newEntries = track.querySelectorAll( '.timeline-entry' );
+                                newEntries.forEach( function ( entry ) {
+                                    entry.classList.add( 'visible' );
+                                } );
+                            } else {
+                                track.innerHTML = '<div class="timeline-empty" style="text-align:center;padding:2rem;color:var(--gray-500);">No entries found.</div>';
+                            }
+
+                            // Reset offset
+                            feed.setAttribute( 'data-offset', String( json.data.count || 0 ) );
+
+                            // Show/hide load more button
+                            if ( wrap ) {
+                                wrap.style.display = json.data.has_more ? '' : 'none';
+                            }
+                        }
+                    } )
+                    .catch( function () {
+                        track.innerHTML = '<div class="timeline-error" style="text-align:center;padding:2rem;color:var(--red-600);">Error loading entries.</div>';
+                    } );
+            } );
+        } );
     }
 
     if ( btn ) {
@@ -34,7 +100,8 @@
 
         var body = 'action=aiad_timeline_load_more'
             + '&nonce=' + encodeURIComponent( aiad_ajax.timeline_nonce || '' )
-            + '&offset=' + encodeURIComponent( offset );
+            + '&offset=' + encodeURIComponent( offset )
+            + '&filter=' + encodeURIComponent( currentFilter );
 
         fetch( aiad_ajax.url, {
             method: 'POST',

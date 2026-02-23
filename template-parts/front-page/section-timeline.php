@@ -22,6 +22,10 @@ $has_more = $result['has_more'];
 if ( empty( $entries ) ) {
     return;
 }
+
+// Get available icon types for filtering
+$icon_options = aiad_timeline_icon_options();
+$show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
 ?>
 <?php
 $days_to_go   = function_exists( 'aiad_timeline_days_until_event' ) ? aiad_timeline_days_until_event() : 0;
@@ -65,6 +69,19 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
             </div>
 
         </div>
+
+        <?php if ( $show_filters ) : ?>
+        <div class="timeline-filters" role="group" aria-label="<?php esc_attr_e( 'Filter timeline updates', 'ai-awareness-day' ); ?>">
+            <button type="button" class="timeline-filter-btn timeline-filter-btn--active" data-filter="all">
+                <?php esc_html_e( 'All', 'ai-awareness-day' ); ?>
+            </button>
+            <?php foreach ( $icon_options as $value => $label ) : ?>
+                <button type="button" class="timeline-filter-btn" data-filter="<?php echo esc_attr( $value ); ?>">
+                    <?php echo esc_html( $label ); ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
 
         <div class="timeline" id="timeline-feed" data-offset="<?php echo esc_attr( (string) count( $entries ) ); ?>">
             <div class="timeline__track">

@@ -48,6 +48,8 @@
 .timeline-stats-bar__value {
     font-variant-numeric: tabular-nums;
     font-weight: 700;
+    color: #4ade80; /* Bright green to stand out */
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.5); /* Subtle glow */
 }
 
 .timeline-stats-bar__sep {
@@ -67,19 +69,71 @@
     50% { opacity: 0.85; }
 }
 
-/* Schools live flash (green pulse to show live updates) */
-.timeline-stats-bar__stat--schools .timeline-stats-bar__value {
-    animation: timeline-schools-live-flash 2s ease-in-out infinite;
-}
-
-@keyframes timeline-schools-live-flash {
-    0%, 100% { color: var(--white); }
-    50% { color: #4ade80; }
-}
-
 /* Short labels hidden on desktop */
 .timeline-stats-bar__label--short {
     display: none;
+}
+
+/* ── Filter buttons ─────────────────────────── */
+.timeline-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.25rem;
+    padding: 0;
+}
+
+.timeline-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.timeline-filter-btn:hover {
+    color: var(--gray-900);
+    border-color: var(--gray-400);
+    background: var(--gray-50);
+}
+
+.timeline-filter-btn:focus {
+    outline: 2px solid var(--green-600);
+    outline-offset: 2px;
+}
+
+.timeline-filter-btn--active {
+    color: var(--white);
+    background: var(--gray-900);
+    border-color: var(--gray-900);
+}
+
+.timeline-filter-btn--active:hover {
+    color: var(--white);
+    background: var(--gray-800);
+    border-color: var(--gray-800);
+}
+
+/* Mobile: filters smaller */
+@media (max-width: 767px) {
+    .timeline-filters {
+        gap: 0.35rem;
+    }
+
+    .timeline-filter-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.65rem;
+    }
 }
 
 /* Mobile: single row with short labels */

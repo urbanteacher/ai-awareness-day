@@ -768,16 +768,25 @@ add_action( 'save_post_partner', 'aiad_timeline_invalidate_schools_count', 5 );
  * Get timeline entries for display.
  * Pinned entries first (by date), then remaining entries by date.
  *
- * @param int $per_page Number of entries to return.
- * @param int $offset   Offset for pagination (excludes pinned on page > 1).
+ * @param int    $per_page Number of entries to return.
+ * @param int    $offset   Offset for pagination (excludes pinned on page > 1).
+ * @param string $filter   Filter by icon type (optional).
  * @return array{ entries: WP_Post[], has_more: bool }
  */
-function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0 ): array {
+function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $filter = '' ): array {
     $entries = array();
+
+    // Build meta query for filtering
+    $meta_query = array();
+    if ( ! empty( $filter ) && $filter !== 'all' ) {
+        $meta_query = array(
+            array( 'key' => '_aiad_timeline_icon', 'value' => $filter, 'compare' => '=' ),
+        );
+    }
 
     // First page: get pinned entries first
     if ( 0 === $offset ) {
-        $pinned = get_posts( array(
+        $pinned_args = array(
             'post_type'      => 'aiad_timeline',
             'post_status'    => 'publish',
             'posts_per_page' => 3, // Max 3 pinned items
@@ -786,7 +795,11 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0 ): array 
             'meta_query'     => array(
                 array( 'key' => '_aiad_timeline_pinned', 'value' => '1', 'compare' => '=' ),
             ),
-        ) );
+        );
+        if ( ! empty( $meta_query ) ) {
+            $pinned_args['meta_query'][] = $meta_query;
+        }
+        $pinned = get_posts( $pinned_args );
         $entries = $pinned;
     }
 
@@ -803,6 +816,10 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0 ): array 
             'order'          => 'DESC',
             'post__not_in'   => $exclude_ids,
         );
+
+        if ( ! empty( $meta_query ) ) {
+            $args['meta_query'] = $meta_query;
+        }
 
         $more_entries = get_posts( $args );
         $has_more = count( $more_entries ) > $remaining;
@@ -989,7 +1006,8 @@ function aiad_ajax_timeline_load_more(): void {
     }
 
     $offset = absint( $_POST['offset'] ?? 0 );
-    $result = aiad_get_timeline_entries( 4, $offset );
+    $filter = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
+    $result = aiad_get_timeline_entries( 4, $offset, $filter );
 
     $html = '';
     foreach ( $result['entries'] as $entry ) {
@@ -1004,6 +1022,32 @@ function aiad_ajax_timeline_load_more(): void {
 }
 add_action( 'wp_ajax_aiad_timeline_load_more', 'aiad_ajax_timeline_load_more' );
 add_action( 'wp_ajax_nopriv_aiad_timeline_load_more', 'aiad_ajax_timeline_load_more' );
+
+/* ──────────────────────────────────────────────
+   7. AJAX: Filter
+   ────────────────────────────────────────────── */
+
+function aiad_ajax_timeline_filter(): void {
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'aiad_timeline_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-awareness-day' ) ) );
+    }
+
+    $filter = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
+    $result = aiad_get_timeline_entries( 4, 0, $filter );
+
+    $html = '';
+    foreach ( $result['entries'] as $entry ) {
+        $html .= aiad_render_timeline_entry( $entry );
+    }
+
+    wp_send_json_success( array(
+        'html'     => $html,
+        'has_more' => $result['has_more'],
+        'count'    => count( $result['entries'] ),
+    ) );
+}
+add_action( 'wp_ajax_aiad_timeline_filter', 'aiad_ajax_timeline_filter' );
+add_action( 'wp_ajax_nopriv_aiad_timeline_filter', 'aiad_ajax_timeline_filter' );
 
 /* ──────────────────────────────────────────────
    7. AJAX: Like
