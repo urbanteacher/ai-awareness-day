@@ -399,27 +399,23 @@
         // ============================================
         // PowerPoint preview: click-to-load iframe
         // ============================================
-        document.querySelectorAll('.resource-pptx-preview').forEach(function (preview) {
-            const trigger = preview.querySelector('.resource-pptx-preview__trigger');
-            if (!trigger) return;
-            trigger.addEventListener('click', function () {
-                const embedUrl = preview.getAttribute('data-embed-url');
-                if (!embedUrl) return;
-                const wrap = preview.querySelector('.resource-pptx-preview__frame-wrap');
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.resource-pptx-preview__trigger');
+            if (!btn) return;
+            const embedUrl = btn.getAttribute('data-embed');
+            if (!embedUrl) return;
+            const wrap = btn.closest('.resource-pptx-preview__frame-wrap');
+            if (!wrap) return;
 
-                // Swap placeholder for skeleton + iframe
-                wrap.innerHTML =
-                    '<div class="resource-pptx-preview__skeleton" aria-hidden="true"></div>' +
-                    '<iframe src="' + embedUrl + '" class="resource-pptx-preview__iframe" frameborder="0" allowfullscreen title="Presentation preview"></iframe>';
-
-                preview.classList.add('resource-pptx-preview--loading');
-
-                const iframe = wrap.querySelector('iframe');
-                iframe.addEventListener('load', function () {
-                    preview.classList.remove('resource-pptx-preview--loading');
-                    preview.classList.add('resource-pptx-preview--loaded');
-                });
-            });
+            // Replace the button with the live iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = embedUrl;
+            iframe.className = 'resource-pptx-preview__iframe';
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.setAttribute('title', 'Presentation preview');
+            wrap.innerHTML = '';
+            wrap.appendChild(iframe);
         });
 
     } // End of init function

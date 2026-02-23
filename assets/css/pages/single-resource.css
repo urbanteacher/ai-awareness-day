@@ -803,7 +803,6 @@
    POWERPOINT PRESENTATION PREVIEW
    ============================================ */
 .resource-pptx-preview {
-  margin: 1.25rem 0 1.5rem;
   border: 1px solid var(--gray-200);
   overflow: hidden;
 }
@@ -812,10 +811,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   padding: 0.6rem 1rem;
   background: var(--gray-900);
   color: #fff;
-  gap: 1rem;
 }
 
 .resource-pptx-preview__label {
@@ -847,89 +846,66 @@
   border-color: var(--gray-400);
 }
 
+/* Frame wrap — holds either the trigger button or the live iframe */
 .resource-pptx-preview__frame-wrap {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 */
-  background: var(--gray-100);
-}
-
-/* Click-to-load placeholder */
-.resource-pptx-preview__placeholder {
-  position: absolute;
-  inset: 0;
+  aspect-ratio: 16 / 9;
+  background: var(--gray-900);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gray-900);
 }
 
+/* Trigger button (pre-load state) */
 .resource-pptx-preview__trigger {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   background: none;
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 2px solid rgba(255, 255, 255, 0.25);
   color: #fff;
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 1.25rem 2rem;
+  padding: 1.5rem 2.5rem;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
 
-.resource-pptx-preview__trigger:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.5);
+.resource-pptx-preview__trigger:hover,
+.resource-pptx-preview__trigger:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  outline: none;
 }
 
-/* Loading skeleton — shown after click, before iframe resolves */
-.resource-pptx-preview__skeleton {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
-  background-size: 200% 100%;
-  animation: pptx-skeleton 1.4s ease-in-out infinite;
-  display: none;
-}
-
-.resource-pptx-preview--loading .resource-pptx-preview__skeleton {
-  display: block;
-}
-
-@keyframes pptx-skeleton {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
+/* Live iframe (post-load state) */
 .resource-pptx-preview__iframe {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
-  display: none;
-}
-
-.resource-pptx-preview--loaded .resource-pptx-preview__iframe {
-  display: block;
 }
 
 @media screen and (max-width: 767px) {
   .resource-pptx-preview__toolbar {
     padding: 0.5rem 0.75rem;
   }
-
   .resource-pptx-preview__label {
     font-size: 0.72rem;
   }
-
   .resource-pptx-preview__download {
     font-size: 0.72rem;
     padding: 0.25rem 0.6rem;
   }
+  .resource-pptx-preview__trigger {
+    font-size: 0.8rem;
+    padding: 1.25rem 1.5rem;
+  }
 }
+
