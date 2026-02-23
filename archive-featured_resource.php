@@ -127,7 +127,7 @@ get_header();
                         </select>
                     </div>
                     <div class="resource-filter-group">
-                        <label for="duration" class="resource-filter-label"><?php esc_html_e( 'Session length', 'ai-awareness-day' ); ?></label>
+                        <label for="duration" class="resource-filter-label"><?php esc_html_e( 'Length', 'ai-awareness-day' ); ?></label>
                         <select id="duration" name="duration" class="resource-filter-select" data-filter="true">
                             <option value=""><?php esc_html_e( 'All session lengths', 'ai-awareness-day' ); ?></option>
                             <?php
@@ -140,7 +140,7 @@ get_header();
                         </select>
                     </div>
                     <div class="resource-filter-group">
-                        <label for="activity_type" class="resource-filter-label"><?php esc_html_e( 'Activity Type', 'ai-awareness-day' ); ?></label>
+                        <label for="activity_type" class="resource-filter-label"><?php esc_html_e( 'Activity', 'ai-awareness-day' ); ?></label>
                         <select id="activity_type" name="activity_type" class="resource-filter-select" data-filter="true">
                             <option value=""><?php esc_html_e( 'All activity types', 'ai-awareness-day' ); ?></option>
                             <?php
