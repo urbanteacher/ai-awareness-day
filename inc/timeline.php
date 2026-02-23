@@ -366,8 +366,8 @@ function aiad_render_youtube_facade( string $video_id, string $title = '' ): str
         return '';
     }
 
-    $yt_thumb = 'https://img.youtube.com/vi/' . esc_attr( $video_id ) . '/hqdefault.jpg';
-    $yt_title = ! empty( $title ) ? esc_attr( $title ) : esc_attr__( 'YouTube video', 'ai-awareness-day' );
+    $yt_thumb   = 'https://img.youtube.com/vi/' . $video_id . '/hqdefault.jpg';
+    $yt_title   = ! empty( $title ) ? $title : __( 'YouTube video', 'ai-awareness-day' );
     $aria_label = sprintf( __( 'Play video: %s', 'ai-awareness-day' ), $yt_title );
 
     ob_start();
@@ -568,20 +568,29 @@ function aiad_timeline_maybe_create_countdown_entries(): void {
     $weeks_until = (int) floor( $days_until / 7 );
 
     $beats = array( 12, 8, 6, 4, 2, 1 );
+
+    // One query to fetch all existing countdown entries instead of one per beat.
+    $existing_entries = get_posts( array(
+        'post_type'      => 'aiad_timeline',
+        'post_status'    => 'publish',
+        'posts_per_page' => count( $beats ),
+        'meta_query'     => array(
+            array( 'key' => '_aiad_timeline_auto_type', 'value' => 'countdown', 'compare' => '=' ),
+        ),
+    ) );
+    $existing_weeks = array();
+    foreach ( $existing_entries as $existing_post ) {
+        $w = (int) get_post_meta( $existing_post->ID, '_aiad_timeline_countdown_weeks', true );
+        if ( $w ) {
+            $existing_weeks[] = $w;
+        }
+    }
+
     foreach ( $beats as $weeks ) {
         if ( $weeks_until > $weeks ) {
             continue;
         }
-        $existing = get_posts( array(
-            'post_type'      => 'aiad_timeline',
-            'post_status'    => 'publish',
-            'posts_per_page' => 1,
-            'meta_query'     => array(
-                array( 'key' => '_aiad_timeline_auto_type', 'value' => 'countdown', 'compare' => '=' ),
-                array( 'key' => '_aiad_timeline_countdown_weeks', 'value' => $weeks, 'compare' => '=' ),
-            ),
-        ) );
-        if ( ! empty( $existing ) ) {
+        if ( in_array( $weeks, $existing_weeks, true ) ) {
             continue;
         }
         $title = $weeks === 1
@@ -620,16 +629,14 @@ function aiad_timeline_maybe_create_themes_complete_entry(): void {
     if ( ! $terms || is_wp_error( $terms ) || count( $terms ) < 5 ) {
         return;
     }
-    foreach ( $terms as $term ) {
-        $q = new WP_Query( array(
-            'post_type'      => 'resource',
-            'post_status'    => 'publish',
-            'posts_per_page' => 1,
-            'tax_query'      => array( array( 'taxonomy' => 'resource_principle', 'field' => 'term_id', 'terms' => $term->term_id ) ),
-        ) );
-        if ( ! $q->have_posts() ) {
-            return;
-        }
+    // Single query: terms with at least one published resource will have count > 0.
+    $populated_count = get_terms( array(
+        'taxonomy'   => 'resource_principle',
+        'hide_empty' => true,
+        'fields'     => 'count',
+    ) );
+    if ( is_wp_error( $populated_count ) || (int) $populated_count < count( $terms ) ) {
+        return;
     }
     $existing = get_posts( array(
         'post_type'      => 'aiad_timeline',
@@ -804,7 +811,15 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0 ): array 
         return array( 'entries' => $entries, 'has_more' => $has_more );
     }
 
-    return array( 'entries' => $entries, 'has_more' => true );
+    // Pinned entries fill the page; check if any non-pinned entries exist before claiming more.
+    $check = get_posts( array(
+        'post_type'      => 'aiad_timeline',
+        'post_status'    => 'publish',
+        'posts_per_page' => 1,
+        'post__not_in'   => wp_list_pluck( $entries, 'ID' ),
+        'fields'         => 'ids',
+    ) );
+    return array( 'entries' => $entries, 'has_more' => ! empty( $check ) );
 }
 
 /**

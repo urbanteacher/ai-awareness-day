@@ -272,7 +272,7 @@ add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
 function aiad_get_filter_counts( string $post_type, array $active_tax_query ): array {
     // Cache key includes version number (bumped on resource save) and active filters
     $version = (int) get_option( 'aiad_filter_counts_ver', 0 );
-    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( serialize( $active_tax_query ) );
+    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( wp_json_encode( $active_tax_query ) );
     $cached = get_transient( $cache_key );
     if ( is_array( $cached ) ) {
         return $cached;
@@ -333,8 +333,8 @@ function aiad_get_filter_counts( string $post_type, array $active_tax_query ): a
             $meta_query = array(
                 array(
                     'key'     => '_aiad_key_stage',
-                    'value'   => $ks,
-                    'compare' => 'LIKE', // Key stage is stored as array, use LIKE to match
+                    'value'   => '"' . $ks . '"', // Match exact serialised value; quotes prevent substring collisions (e.g. "ks3" vs "ks3-extended")
+                    'compare' => 'LIKE',
                 ),
             );
             $count_query = new WP_Query( array(
@@ -381,11 +381,13 @@ function aiad_ajax_filter_resources(): void {
     }
 
     $args = array(
-        'post_type'      => $post_type,
-        'post_status'    => 'publish',
-        'posts_per_page' => 200, // Limit to 200 resources for performance (can be increased if needed)
-        'orderby'        => 'title',
-        'order'          => 'ASC',
+        'post_type'              => $post_type,
+        'post_status'            => 'publish',
+        'posts_per_page'         => 200,
+        'orderby'                => 'title',
+        'order'                  => 'ASC',
+        'update_post_meta_cache' => true, // Prime all meta in one query — prevents N+1 inside the loop
+        'update_post_term_cache' => true, // Prime all term caches in one query
     );
 
     $tax_query = array();
@@ -445,7 +447,7 @@ function aiad_ajax_filter_resources(): void {
         foreach ( $key_stage as $ks ) {
             $meta_clauses[] = array(
                 'key'     => '_aiad_key_stage',
-                'value'   => $ks,
+                'value'   => '"' . $ks . '"', // Match exact serialised value to prevent substring false positives
                 'compare' => 'LIKE',
             );
         }

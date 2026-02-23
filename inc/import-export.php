@@ -187,7 +187,7 @@ function aiad_export_featured_resources_to_wxr(): void {
     $filename = 'ai-awareness-day-partner-resources-' . wp_date( 'Y-m-d-His' ) . '.xml';
 
     header( 'Content-Type: application/xml; charset=utf-8' );
-    header( 'Content-Disposition: attachment; filename=' . $filename );
+    header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
     header( 'Pragma: no-cache' );
     header( 'Expires: 0' );
 
@@ -249,11 +249,11 @@ function aiad_export_resources_to_wxr(): void {
     }
 
     // Generate filename with timestamp
-    $filename = 'ai-awareness-day-resources-' . date( 'Y-m-d-His' ) . '.xml';
+    $filename = 'ai-awareness-day-resources-' . wp_date( 'Y-m-d-His' ) . '.xml';
 
     // Set headers for download
     header( 'Content-Type: application/xml; charset=utf-8' );
-    header( 'Content-Disposition: attachment; filename=' . $filename );
+    header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
     header( 'Pragma: no-cache' );
     header( 'Expires: 0' );
 
@@ -309,7 +309,6 @@ function aiad_get_wxr_version(): string {
  * @param WP_Post $post Resource post object.
  */
 function aiad_export_resource_post( WP_Post $post ): void {
-    $post = get_post( $post->ID );
     setup_postdata( $post );
 
     // Get all post meta
@@ -431,7 +430,7 @@ function aiad_wxr_cdata( $str ): string {
         $str = (string) $str;
     }
     if ( ! seems_utf8( $str ) ) {
-        $str = utf8_encode( $str );
+        $str = mb_convert_encoding( $str, 'UTF-8', 'ISO-8859-1' ); // utf8_encode() removed in PHP 9
     }
     $str = '<![CDATA[' . str_replace( ']]>', ']]]]><![CDATA[>', $str ) . ']]>';
     return $str;

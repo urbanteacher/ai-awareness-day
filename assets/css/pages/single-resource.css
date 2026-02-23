@@ -156,7 +156,6 @@
   color: var(--heading-color, inherit);
   min-width: 0;
   overflow-wrap: break-word;
-  word-wrap: break-word;
   word-break: break-word;
   line-height: 1.25;
 }
@@ -734,9 +733,6 @@
   stroke: currentColor;
 }
 
-.resource-share-btn__label {
-  /* Text inherits from .resource-footer-btn */
-}
 
 /* Print button */
 .resource-print-btn {
@@ -770,9 +766,6 @@
   stroke: currentColor;
 }
 
-.resource-print-btn__label {
-  /* Text inherits from .resource-footer-btn */
-}
 
 /* Mobile: Hide text labels for share and print buttons, show icons only */
 @media screen and (max-width: 767px) {
@@ -889,9 +882,6 @@
     font-size: 0.72rem;
     padding: 0.25rem 0.6rem;
   }
-  .resource-pptx-preview__trigger {
-    font-size: 0.8rem;
-    padding: 1.25rem 1.5rem;
-  }
 }
+
 

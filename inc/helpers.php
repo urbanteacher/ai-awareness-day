@@ -216,7 +216,11 @@ function aiad_normalise_learning_objectives( $raw ): array {
  * @return array<string, mixed> Array of setting names => default values.
  */
 function aiad_get_customizer_defaults(): array {
-    return array(
+    static $defaults = null;
+    if ( null !== $defaults ) {
+        return $defaults;
+    }
+    $defaults = array(
         'aiad_hero_logo'         => '',
         'aiad_hero_slogan'        => __( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ),
         'aiad_hero_title'         => __( 'AI Awareness Day', 'ai-awareness-day' ),
@@ -235,6 +239,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_instagram'          => '#',
         'aiad_linkedin_post_url'   => '',
     );
+    return $defaults;
 }
 
 /**

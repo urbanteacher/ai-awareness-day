@@ -33,7 +33,7 @@ function aiad_partner_url_callback( WP_Post $post ): void {
     echo '<input type="url" id="partner_url" name="partner_url" value="' . esc_attr( $url ) . '" class="widefat"></p>';
 }
 function aiad_save_partner_url( int $post_id ): void {
-    if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( $_POST['aiad_partner_url_nonce'], 'aiad_partner_url_nonce' ) ) {
+    if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['aiad_partner_url_nonce'] ), 'aiad_partner_url_nonce' ) ) {
         return;
     }
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -102,7 +102,7 @@ function aiad_partner_stats_save( $post_id ): void {
     }
 }
 add_action( 'add_meta_boxes', 'aiad_partner_stats_meta_box' );
-add_action( 'save_post', 'aiad_partner_stats_save' );
+add_action( 'save_post_partner', 'aiad_partner_stats_save' );
 add_action( 'save_post_partner', 'aiad_save_partner_url' );
 
 /**
@@ -333,70 +333,6 @@ function aiad_seed_lesson_starters(): void {
 
     update_option( 'aiad_lesson_starters_seeded', 'yes' );
 }
-
-/**
- * Seed function for "How Does AI Actually 'Think'?" resource.
- * 
- * REMOVED: This resource is now imported via WXR file (how-does-ai-actually-think.wxr.xml).
- * The seed function has been removed to avoid hard-coded content in production.
- * 
- * To import: Use Resources → Import demo resources → Upload how-does-ai-actually-think.wxr.xml
- */
-function aiad_seed_how_does_ai_think_resource(): void {
-    // Function body removed - resource now imported via WXR file (how-does-ai-actually-think.wxr.xml)
-    return;
-}
-
-/**
- * Seed function for "Who's Really Behind the Screen?" resource.
- *
- * REMOVED: This resource is now imported via WXR file (whos-really-behind-the-screen.wxr.xml).
- * The seed function has been removed to avoid hard-coded content in production.
- *
- * To import: Use Resources → Import demo resources → Upload whos-really-behind-the-screen.wxr.xml
- */
-function aiad_seed_whos_really_behind_screen_resource(): void {
-    // Function body removed - resource now imported via WXR file (whos-really-behind-the-screen.wxr.xml)
-    return;
-}
-
-/**
- * Seed function for "The Hidden Costs of AI" resource.
- *
- * REMOVED: This resource is now imported via WXR file (the-hidden-costs-of-ai.wxr.xml).
- * The seed function has been removed to avoid hard-coded content in production.
- *
- * To import: Use Resources → Import demo resources → Upload the-hidden-costs-of-ai.wxr.xml
- */
-function aiad_seed_hidden_costs_of_ai_resource(): void {
-    // Function body removed - resource now imported via WXR file (the-hidden-costs-of-ai.wxr.xml)
-    return;
-}
-
-/**
- * Seed function for "Your AI-Ready Future" resource.
- *
- * REMOVED: This resource is now imported via WXR file (your-ai-ready-future.wxr.xml).
- * The seed function has been removed to avoid hard-coded content in production.
- *
- * To import: Use Resources → Import demo resources → Upload your-ai-ready-future.wxr.xml
- */
-function aiad_seed_your_ai_ready_future_resource(): void {
-    // Function body removed - resource now imported via WXR file (your-ai-ready-future.wxr.xml)
-    return;
-}
-
-/**
- * Seed function for "AI as Your Creative Partner" resource.
- * 
- * REMOVED: This resource is now imported via WXR file (ai-as-your-creative-partner.wxr.xml).
- * The seed function has been removed to avoid hard-coded content in production.
- * 
- * To import: Use Resources → Import demo resources → Upload ai-as-your-creative-partner.wxr.xml
- */
-
-/**
-
 
 /**
  * Remove default taxonomy meta boxes; unified Resource Details handles them.

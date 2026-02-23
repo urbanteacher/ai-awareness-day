@@ -379,7 +379,7 @@
 }
 
 /* Resources archive: mobile-friendly – less padding, content in columns */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .resources-archive .section.pt-100 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
@@ -747,7 +747,7 @@
   #partner-resources .resources-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    margin-top: 1rem !important;
+    margin-top: 1rem;
   }
 
   #partner-resources .resource-card {

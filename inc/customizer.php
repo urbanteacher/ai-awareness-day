@@ -9,6 +9,33 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * Customizer validate_callback: require a valid URL (or empty).
+ *
+ * @param WP_Error $validity
+ * @param mixed    $value
+ * @return WP_Error
+ */
+function aiad_customizer_validate_url( WP_Error $validity, $value ): WP_Error {
+    if ( ! empty( $value ) && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
+        $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
+    }
+    return $validity;
+}
+
+/**
+ * Customizer validate_callback: require a valid URL or '#' placeholder (or empty).
+ *
+ * @param WP_Error $validity
+ * @param mixed    $value
+ * @return WP_Error
+ */
+function aiad_customizer_validate_url_or_hash( WP_Error $validity, $value ): WP_Error {
+    if ( ! empty( $value ) && $value !== '#' && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
+        $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
+    }
+    return $validity;
+}
 
 /**
  * Main Customizer registration function.
@@ -280,12 +307,7 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
         'default'           => $defaults['aiad_youtube_url'],
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
-        'validate_callback' => function( $validity, $value ) {
-            if ( ! empty( $value ) && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-                $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
-            }
-            return $validity;
-        },
+        'validate_callback' => 'aiad_customizer_validate_url',
     ) );
     $wp_customize->add_control( 'aiad_youtube_url', array(
         'label'       => __( 'YouTube video URL', 'ai-awareness-day' ),
@@ -521,12 +543,7 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'default'           => $defaults['aiad_linkedin'],
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
-        'validate_callback' => function( $validity, $value ) {
-            if ( ! empty( $value ) && $value !== '#' && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-                $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
-            }
-            return $validity;
-        },
+        'validate_callback' => 'aiad_customizer_validate_url_or_hash',
     ) );
     $wp_customize->add_control( 'aiad_linkedin', array(
         'label'   => __( 'LinkedIn URL', 'ai-awareness-day' ),
@@ -538,12 +555,7 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'default'           => $defaults['aiad_instagram'],
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
-        'validate_callback' => function( $validity, $value ) {
-            if ( ! empty( $value ) && $value !== '#' && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-                $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
-            }
-            return $validity;
-        },
+        'validate_callback' => 'aiad_customizer_validate_url_or_hash',
     ) );
     $wp_customize->add_control( 'aiad_instagram', array(
         'label'   => __( 'Instagram URL', 'ai-awareness-day' ),
@@ -555,12 +567,7 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'default'           => $defaults['aiad_linkedin_post_url'],
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
-        'validate_callback' => function( $validity, $value ) {
-            if ( ! empty( $value ) && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-                $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
-            }
-            return $validity;
-        },
+        'validate_callback' => 'aiad_customizer_validate_url',
     ) );
     $wp_customize->add_control( 'aiad_linkedin_post_url', array(
         'label'       => __( 'Featured LinkedIn post URL', 'ai-awareness-day' ),
