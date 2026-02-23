@@ -358,7 +358,7 @@ add_action( 'admin_footer', 'aiad_partner_quick_edit_js' );
  */
 function aiad_resource_admin_columns( array $columns ): array {
     $columns['downloads'] = __( 'Downloads', 'ai-awareness-day' );
-    $columns['previews']  = __( 'Previews', 'ai-awareness-day' );
+    $columns['views']     = __( 'Views', 'ai-awareness-day' );
     return $columns;
 }
 add_filter( 'manage_resource_posts_columns', 'aiad_resource_admin_columns' );
@@ -374,8 +374,8 @@ function aiad_resource_admin_column_content( string $column, int $post_id ): voi
         $count = absint( get_post_meta( $post_id, '_aiad_download_count', true ) );
         echo esc_html( number_format_i18n( $count ) );
     }
-    if ( 'previews' === $column ) {
-        $count = absint( get_post_meta( $post_id, '_aiad_preview_count', true ) );
+    if ( 'views' === $column ) {
+        $count = absint( get_post_meta( $post_id, '_aiad_view_count', true ) );
         echo esc_html( number_format_i18n( $count ) );
     }
 }
@@ -389,7 +389,7 @@ add_action( 'manage_resource_posts_custom_column', 'aiad_resource_admin_column_c
  */
 function aiad_resource_sortable_columns( array $columns ): array {
     $columns['downloads'] = 'downloads';
-    $columns['previews']  = 'previews';
+    $columns['views']     = 'views';
     return $columns;
 }
 add_filter( 'manage_edit-resource_sortable_columns', 'aiad_resource_sortable_columns' );
@@ -410,8 +410,8 @@ function aiad_resource_admin_order_by_downloads( WP_Query $query ): void {
     if ( 'downloads' === $orderby ) {
         $query->set( 'meta_key', '_aiad_download_count' );
         $query->set( 'orderby', 'meta_value_num' );
-    } elseif ( 'previews' === $orderby ) {
-        $query->set( 'meta_key', '_aiad_preview_count' );
+    } elseif ( 'views' === $orderby ) {
+        $query->set( 'meta_key', '_aiad_view_count' );
         $query->set( 'orderby', 'meta_value_num' );
     }
 }

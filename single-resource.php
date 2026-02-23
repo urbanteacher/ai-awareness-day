@@ -81,7 +81,7 @@ get_header();
                             <div class="resource-activity-stats" aria-label="<?php esc_attr_e( 'Resource stats', 'ai-awareness-day' ); ?>">
                                 <?php
                                 $stat_downloads = absint( get_post_meta( get_the_ID(), '_aiad_download_count', true ) );
-                                $stat_previews  = absint( get_post_meta( get_the_ID(), '_aiad_preview_count', true ) );
+                                $stat_previews  = absint( get_post_meta( get_the_ID(), '_aiad_view_count', true ) );
                                 ?>
                                 <?php if ( $stat_downloads > 0 ) : ?>
                                     <span class="resource-stat">
@@ -92,7 +92,7 @@ get_header();
                                 <?php if ( $stat_previews > 0 ) : ?>
                                     <span class="resource-stat">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                        <?php echo esc_html( number_format_i18n( $stat_previews ) ); ?> <?php esc_html_e( 'previews', 'ai-awareness-day' ); ?>
+                                        <?php echo esc_html( number_format_i18n( $stat_previews ) ); ?> <?php esc_html_e( 'views', 'ai-awareness-day' ); ?>
                                     </span>
                                 <?php endif; ?>
                             </div>

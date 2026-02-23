@@ -378,20 +378,20 @@
 
         // ============================================
         // ============================================
-        // Presentation preview view tracking
+        // Resource page view tracking (fires once per page load)
         // ============================================
-        document.querySelectorAll('.resource-pptx-preview__iframe').forEach(function (iframe) {
-            iframe.addEventListener('load', function () {
-                const postId = iframe.closest('.resource-pptx-preview')?.getAttribute('data-post-id');
-                if (!postId || typeof aiad_ajax === 'undefined' || !aiad_ajax.track_preview_nonce) return;
-                fetch(aiad_ajax.url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'action=aiad_track_preview_view&post_id=' + encodeURIComponent(postId) +
-                          '&nonce=' + encodeURIComponent(aiad_ajax.track_preview_nonce),
-                }).catch(function () {}); // Silently fail - tracking is non-critical
-            }, { once: true });
-        });
+        (function () {
+            var card = document.querySelector('article.resource-activity-card');
+            if (!card || typeof aiad_ajax === 'undefined' || !aiad_ajax.track_view_nonce) return;
+            var postId = card.id.replace('post-', '');
+            if (!postId) return;
+            fetch(aiad_ajax.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=aiad_track_resource_view&post_id=' + encodeURIComponent(postId) +
+                      '&nonce=' + encodeURIComponent(aiad_ajax.track_view_nonce),
+            }).catch(function () {}); // Silently fail - tracking is non-critical
+        })();
 
         // Download tracking (fire-and-forget, does not block download)
         // ============================================

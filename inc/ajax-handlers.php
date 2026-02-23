@@ -553,13 +553,13 @@ add_action( 'wp_ajax_aiad_track_download', 'aiad_track_download' );
 add_action( 'wp_ajax_nopriv_aiad_track_download', 'aiad_track_download' );
 
 /**
- * AJAX: Track resource presentation preview view
+ * AJAX: Track resource page view
  *
- * Increments preview count when the Office Online iframe loads.
- * Throttled to one count per IP per resource per 90 seconds.
+ * Increments view count when a resource page is visited.
+ * Throttled to one count per IP per resource per 24 hours.
  */
-function aiad_track_preview_view(): void {
-    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'aiad_track_preview_nonce' ) ) {
+function aiad_track_resource_view(): void {
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'aiad_track_view_nonce' ) ) {
         wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-awareness-day' ) ) );
     }
 
@@ -569,18 +569,18 @@ function aiad_track_preview_view(): void {
     }
 
     $ip           = aiad_get_client_ip();
-    $throttle_key = 'aiad_pv_' . md5( $ip . (string) $post_id );
+    $throttle_key = 'aiad_rv_' . md5( $ip . (string) $post_id );
     if ( get_transient( $throttle_key ) ) {
-        $count = absint( get_post_meta( $post_id, '_aiad_preview_count', true ) );
+        $count = absint( get_post_meta( $post_id, '_aiad_view_count', true ) );
         wp_send_json_success( array( 'count' => $count ) );
     }
 
-    set_transient( $throttle_key, 1, 90 );
-    $count = absint( get_post_meta( $post_id, '_aiad_preview_count', true ) );
+    set_transient( $throttle_key, 1, DAY_IN_SECONDS );
+    $count = absint( get_post_meta( $post_id, '_aiad_view_count', true ) );
     $count++;
-    update_post_meta( $post_id, '_aiad_preview_count', $count );
+    update_post_meta( $post_id, '_aiad_view_count', $count );
 
     wp_send_json_success( array( 'count' => $count ) );
 }
-add_action( 'wp_ajax_aiad_track_preview_view', 'aiad_track_preview_view' );
-add_action( 'wp_ajax_nopriv_aiad_track_preview_view', 'aiad_track_preview_view' );
+add_action( 'wp_ajax_aiad_track_resource_view', 'aiad_track_resource_view' );
+add_action( 'wp_ajax_nopriv_aiad_track_resource_view', 'aiad_track_resource_view' );

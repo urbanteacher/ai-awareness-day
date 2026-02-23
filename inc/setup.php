@@ -189,7 +189,7 @@ function aiad_scripts(): void
     }
     if (is_singular('resource')) {
         $aiad_ajax['track_download_nonce'] = wp_create_nonce('aiad_track_download_nonce');
-        $aiad_ajax['track_preview_nonce']  = wp_create_nonce('aiad_track_preview_nonce');
+        $aiad_ajax['track_view_nonce']     = wp_create_nonce('aiad_track_view_nonce');
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
