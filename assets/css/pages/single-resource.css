@@ -882,6 +882,9 @@
     font-size: 0.72rem;
     padding: 0.25rem 0.6rem;
   }
+  .resource-pptx-preview__frame-wrap {
+    min-height: 320px;
+  }
 }
 
 
