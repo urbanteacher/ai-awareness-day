@@ -36,6 +36,11 @@ get_header();
                 $duration_str   = get_post_meta( get_the_ID(), '_aiad_duration', true );
                 $level          = get_post_meta( get_the_ID(), '_aiad_level', true );
                 $level_labels   = array( 'beginner' => __( 'Beginner', 'ai-awareness-day' ), 'intermediate' => __( 'Intermediate', 'ai-awareness-day' ), 'advanced' => __( 'Advanced', 'ai-awareness-day' ) );
+                $preview_download_url = get_post_meta( get_the_ID(), '_resource_download_url', true );
+                $pptx_ext = $preview_download_url ? strtolower( pathinfo( wp_parse_url( $preview_download_url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ) : '';
+                $pptx_embed_url = ( $pptx_ext === 'pptx' || $pptx_ext === 'ppt' )
+                    ? 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $preview_download_url )
+                    : '';
                 ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class( 'resource-activity-card' ); ?>>
                     <header class="resource-activity-header">
@@ -273,6 +278,35 @@ get_header();
                                                 <?php endforeach; ?>
                                             </ul>
                                         </section>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ( $pptx_embed_url ) : ?>
+                                <div class="resource-sections-row resource-sections-row--full">
+                                    <div class="resource-section-cell resource-section-cell--full">
+                                        <div class="resource-pptx-preview">
+                                            <div class="resource-pptx-preview__toolbar">
+                                                <span class="resource-pptx-preview__label">
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                    <?php esc_html_e( 'Presentation Preview', 'ai-awareness-day' ); ?>
+                                                </span>
+                                                <a href="<?php echo esc_url( $preview_download_url ); ?>" class="resource-pptx-preview__download" download target="_blank" rel="noopener noreferrer">
+                                                    <?php esc_html_e( 'Download slides', 'ai-awareness-day' ); ?>
+                                                </a>
+                                            </div>
+                                            <div class="resource-pptx-preview__frame-wrap">
+                                                <div class="resource-pptx-preview__skeleton" aria-hidden="true"></div>
+                                                <iframe
+                                                    src="<?php echo esc_url( $pptx_embed_url ); ?>"
+                                                    class="resource-pptx-preview__iframe"
+                                                    frameborder="0"
+                                                    allowfullscreen
+                                                    title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>"
+                                                    loading="lazy"
+                                                ></iframe>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endif; ?>
