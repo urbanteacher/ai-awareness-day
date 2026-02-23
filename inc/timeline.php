@@ -137,8 +137,8 @@ function aiad_timeline_editable_meta_config(): array {
         '_aiad_timeline_linkedin_url' => array(
             'type'        => 'url',
             'label'       => __( 'LinkedIn Post URL', 'ai-awareness-day' ),
-            'placeholder' => 'https://www.linkedin.com/posts/...',
-            'description' => __( 'LinkedIn post URL — will show as an embedded card.', 'ai-awareness-day' ),
+            'placeholder' => 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:...',
+            'description' => __( 'Paste the LinkedIn embed URL (from "Embed this post" option on LinkedIn). Format: linkedin.com/embed/feed/update/...', 'ai-awareness-day' ),
         ),
         '_aiad_timeline_link_url'    => array(
             'type'        => 'url',
@@ -958,7 +958,28 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
     $linkedin_url = get_post_meta( $entry->ID, '_aiad_timeline_linkedin_url', true );
     $yt_id        = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
     $video_embed  = ! empty( $video_url ) && empty( $yt_id ) ? wp_oembed_get( $video_url, array( 'width' => 600 ) ) : '';
-    $linkedin_embed = ! empty( $linkedin_url ) ? wp_oembed_get( $linkedin_url, array( 'width' => 600 ) ) : '';
+    
+    // LinkedIn embed: convert post URL to embed URL if needed
+    $linkedin_embed = '';
+    if ( ! empty( $linkedin_url ) ) {
+        // Check if it's already an embed URL
+        if ( strpos( $linkedin_url, '/embed/' ) !== false ) {
+            $linkedin_embed = $linkedin_url;
+        } else {
+            // Convert regular LinkedIn post URL to embed URL
+            // Format: https://www.linkedin.com/posts/... or https://www.linkedin.com/feed/update/urn:li:...
+            if ( preg_match( '#linkedin\.com/posts/([^/]+)/#', $linkedin_url, $matches ) ) {
+                // Extract post ID from activity URL
+                $linkedin_embed = $linkedin_url;
+            } elseif ( preg_match( '#linkedin\.com/feed/update/(urn:li:[^/]+)#', $linkedin_url, $matches ) ) {
+                // Convert to embed format
+                $linkedin_embed = 'https://www.linkedin.com/embed/feed/update/' . $matches[1];
+            } else {
+                $linkedin_embed = $linkedin_url;
+            }
+        }
+    }
+    
     $thumbnail    = get_the_post_thumbnail_url( $entry->ID, 'medium_large' );
     if ( ! $thumbnail ) {
         $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium' );
@@ -1052,9 +1073,9 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                 <div class="timeline-entry__media">
                     <?php if ( $use_lite_yt ) : ?>
                         <?php echo aiad_render_youtube_facade( $yt_id, get_the_title( $entry ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php elseif ( $show_linkedin && ! empty( $linkedin_embed ) ) : ?>
-                        <div class="timeline-entry__linkedin-embed wp-block-embed is-type-rich">
-                            <?php echo wp_kses( $linkedin_embed, aiad_timeline_oembed_allowed_html() ); ?>
+                    <?php elseif ( $show_linkedin ) : ?>
+                        <div class="timeline-entry__linkedin-embed">
+                            <iframe src="<?php echo esc_url( $linkedin_embed ); ?>" height="399" width="504" frameborder="0" allowfullscreen="" title="<?php echo esc_attr( get_the_title( $entry ) ); ?>"></iframe>
                         </div>
                     <?php elseif ( $show_video && ! empty( $video_embed ) ) : ?>
                         <div class="timeline-entry__video wp-block-embed is-type-video">
