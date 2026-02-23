@@ -223,7 +223,6 @@
   font-family: var(--font-display);
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   -webkit-backdrop-filter: blur(6px);

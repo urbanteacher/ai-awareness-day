@@ -33,7 +33,7 @@ function aiad_partner_url_callback( WP_Post $post ): void {
     echo '<input type="url" id="partner_url" name="partner_url" value="' . esc_attr( $url ) . '" class="widefat"></p>';
 }
 function aiad_save_partner_url( int $post_id ): void {
-    if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['aiad_partner_url_nonce'] ), 'aiad_partner_url_nonce' ) ) {
+    if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_partner_url_nonce'] ) ), 'aiad_partner_url_nonce' ) ) {
         return;
     }
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -81,7 +81,7 @@ function aiad_partner_stats_meta_box_callback( $post ): void {
 }
 
 function aiad_partner_stats_save( $post_id ): void {
-    if ( ! isset( $_POST['aiad_partner_stats_nonce'] ) || ! wp_verify_nonce( $_POST['aiad_partner_stats_nonce'], 'aiad_partner_stats_save' ) ) {
+    if ( ! isset( $_POST['aiad_partner_stats_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_partner_stats_nonce'] ) ), 'aiad_partner_stats_save' ) ) {
         return;
     }
 
@@ -138,7 +138,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
 }
 function aiad_save_featured_resource( int $post_id ): void {
-    if ( ! isset( $_POST['aiad_featured_resource_nonce'] ) || ! wp_verify_nonce( $_POST['aiad_featured_resource_nonce'], 'aiad_featured_resource_nonce' ) ) {
+    if ( ! isset( $_POST['aiad_featured_resource_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_nonce'] ) ), 'aiad_featured_resource_nonce' ) ) {
         return;
     }
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
