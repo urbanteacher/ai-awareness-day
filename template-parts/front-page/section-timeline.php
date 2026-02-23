@@ -51,7 +51,7 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
                     <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'days', 'ai-awareness-day' ); ?></span>
                 </span>
                 <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
-                <span class="timeline-stats-bar__stat">
+                <span class="timeline-stats-bar__stat timeline-stats-bar__stat--schools">
                     <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $schools ); ?></span>
                     <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'schools registered', 'ai-awareness-day' ); ?></span>
                     <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'schools', 'ai-awareness-day' ); ?></span>

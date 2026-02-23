@@ -67,6 +67,16 @@
     50% { opacity: 0.85; }
 }
 
+/* Schools live flash (green pulse to show live updates) */
+.timeline-stats-bar__stat--schools .timeline-stats-bar__value {
+    animation: timeline-schools-live-flash 2s ease-in-out infinite;
+}
+
+@keyframes timeline-schools-live-flash {
+    0%, 100% { color: var(--white); }
+    50% { color: #4ade80; }
+}
+
 /* Short labels hidden on desktop */
 .timeline-stats-bar__label--short {
     display: none;
