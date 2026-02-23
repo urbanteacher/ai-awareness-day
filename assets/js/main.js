@@ -377,6 +377,22 @@
         }
 
         // ============================================
+        // ============================================
+        // Presentation preview view tracking
+        // ============================================
+        document.querySelectorAll('.resource-pptx-preview__iframe').forEach(function (iframe) {
+            iframe.addEventListener('load', function () {
+                const postId = iframe.closest('.resource-pptx-preview')?.getAttribute('data-post-id');
+                if (!postId || typeof aiad_ajax === 'undefined' || !aiad_ajax.track_preview_nonce) return;
+                fetch(aiad_ajax.url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=aiad_track_preview_view&post_id=' + encodeURIComponent(postId) +
+                          '&nonce=' + encodeURIComponent(aiad_ajax.track_preview_nonce),
+                }).catch(function () {}); // Silently fail - tracking is non-critical
+            }, { once: true });
+        });
+
         // Download tracking (fire-and-forget, does not block download)
         // ============================================
         document.addEventListener('click', (e) => {

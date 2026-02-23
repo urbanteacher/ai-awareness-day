@@ -77,6 +77,26 @@ get_header();
                                 <span class="resource-tag"><?php echo esc_html( $act_name ); ?></span>
                             <?php endforeach; ?>
                         </div>
+                        <?php if ( get_option( 'aiad_show_resource_stats', 0 ) ) : ?>
+                            <div class="resource-activity-stats" aria-label="<?php esc_attr_e( 'Resource stats', 'ai-awareness-day' ); ?>">
+                                <?php
+                                $stat_downloads = absint( get_post_meta( get_the_ID(), '_aiad_download_count', true ) );
+                                $stat_previews  = absint( get_post_meta( get_the_ID(), '_aiad_preview_count', true ) );
+                                ?>
+                                <?php if ( $stat_downloads > 0 ) : ?>
+                                    <span class="resource-stat">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        <?php echo esc_html( number_format_i18n( $stat_downloads ) ); ?> <?php esc_html_e( 'downloads', 'ai-awareness-day' ); ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?php if ( $stat_previews > 0 ) : ?>
+                                    <span class="resource-stat">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <?php echo esc_html( number_format_i18n( $stat_previews ) ); ?> <?php esc_html_e( 'previews', 'ai-awareness-day' ); ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                     </header>
                     <?php if ( has_post_thumbnail() ) : ?>
                         <figure class="resource-activity-figure">
@@ -285,7 +305,7 @@ get_header();
                             <?php if ( $pptx_embed_url ) : ?>
                                 <div class="resource-sections-row resource-sections-row--full">
                                     <div class="resource-section-cell resource-section-cell--full">
-                                        <div class="resource-pptx-preview">
+                                        <div class="resource-pptx-preview" data-post-id="<?php echo esc_attr( (string) get_the_ID() ); ?>">
                                             <div class="resource-pptx-preview__toolbar">
                                                 <span class="resource-pptx-preview__label">
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>

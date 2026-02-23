@@ -461,3 +461,51 @@ function aiad_activity_type_terms(): void {
     update_option( 'aiad_activity_type_terms_seeded', true );
 }
 add_action( 'init', 'aiad_activity_type_terms', 22 );
+
+/**
+ * Resource Settings: submenu page under Resources in wp-admin.
+ */
+function aiad_resource_settings_menu(): void {
+    add_submenu_page(
+        'edit.php?post_type=resource',
+        __( 'Resource Settings', 'ai-awareness-day' ),
+        __( 'Settings', 'ai-awareness-day' ),
+        'manage_options',
+        'aiad-resource-settings',
+        'aiad_resource_settings_page'
+    );
+}
+add_action( 'admin_menu', 'aiad_resource_settings_menu' );
+
+function aiad_resource_settings_page(): void {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    if ( isset( $_POST['aiad_resource_settings_nonce'] ) &&
+         wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_resource_settings_nonce'] ) ), 'aiad_resource_settings_save' ) ) {
+        update_option( 'aiad_show_resource_stats', isset( $_POST['aiad_show_resource_stats'] ) ? 1 : 0 );
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'ai-awareness-day' ) . '</p></div>';
+    }
+    $show_stats = (bool) get_option( 'aiad_show_resource_stats', 0 );
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e( 'Resource Settings', 'ai-awareness-day' ); ?></h1>
+        <form method="post">
+            <?php wp_nonce_field( 'aiad_resource_settings_save', 'aiad_resource_settings_nonce' ); ?>
+            <table class="form-table" role="presentation">
+                <tr>
+                    <th scope="row"><?php esc_html_e( 'Show stats on resource pages', 'ai-awareness-day' ); ?></th>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="aiad_show_resource_stats" value="1" <?php checked( $show_stats ); ?> />
+                            <?php esc_html_e( 'Display download and preview counts in the resource header', 'ai-awareness-day' ); ?>
+                        </label>
+                        <p class="description"><?php esc_html_e( 'Recommended to enable once resources have meaningful engagement numbers.', 'ai-awareness-day' ); ?></p>
+                    </td>
+                </tr>
+            </table>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    <?php
+}

@@ -358,12 +358,13 @@ add_action( 'admin_footer', 'aiad_partner_quick_edit_js' );
  */
 function aiad_resource_admin_columns( array $columns ): array {
     $columns['downloads'] = __( 'Downloads', 'ai-awareness-day' );
+    $columns['previews']  = __( 'Previews', 'ai-awareness-day' );
     return $columns;
 }
 add_filter( 'manage_resource_posts_columns', 'aiad_resource_admin_columns' );
 
 /**
- * Output Downloads column content
+ * Output Downloads and Previews column content
  *
  * @param string $column  Column name.
  * @param int    $post_id Post ID.
@@ -373,23 +374,28 @@ function aiad_resource_admin_column_content( string $column, int $post_id ): voi
         $count = absint( get_post_meta( $post_id, '_aiad_download_count', true ) );
         echo esc_html( number_format_i18n( $count ) );
     }
+    if ( 'previews' === $column ) {
+        $count = absint( get_post_meta( $post_id, '_aiad_preview_count', true ) );
+        echo esc_html( number_format_i18n( $count ) );
+    }
 }
 add_action( 'manage_resource_posts_custom_column', 'aiad_resource_admin_column_content', 10, 2 );
 
 /**
- * Make Downloads column sortable
+ * Make Downloads and Previews columns sortable
  *
  * @param array $columns Sortable columns.
  * @return array
  */
 function aiad_resource_sortable_columns( array $columns ): array {
     $columns['downloads'] = 'downloads';
+    $columns['previews']  = 'previews';
     return $columns;
 }
 add_filter( 'manage_edit-resource_sortable_columns', 'aiad_resource_sortable_columns' );
 
 /**
- * Order by downloads in admin when requested
+ * Order by downloads or previews in admin when requested
  *
  * @param WP_Query $query Main query.
  */
@@ -400,10 +406,13 @@ function aiad_resource_admin_order_by_downloads( WP_Query $query ): void {
     if ( 'resource' !== ( $query->get( 'post_type' ) ?? '' ) ) {
         return;
     }
-    if ( 'downloads' !== ( $query->get( 'orderby' ) ?? '' ) ) {
-        return;
+    $orderby = $query->get( 'orderby' ) ?? '';
+    if ( 'downloads' === $orderby ) {
+        $query->set( 'meta_key', '_aiad_download_count' );
+        $query->set( 'orderby', 'meta_value_num' );
+    } elseif ( 'previews' === $orderby ) {
+        $query->set( 'meta_key', '_aiad_preview_count' );
+        $query->set( 'orderby', 'meta_value_num' );
     }
-    $query->set( 'meta_key', '_aiad_download_count' );
-    $query->set( 'orderby', 'meta_value_num' );
 }
 add_action( 'pre_get_posts', 'aiad_resource_admin_order_by_downloads' );
