@@ -396,6 +396,32 @@
                 body: body,
             }).catch(() => { }); // Silently fail - download tracking is non-critical
         });
+        // ============================================
+        // PowerPoint preview: click-to-load iframe
+        // ============================================
+        document.querySelectorAll('.resource-pptx-preview').forEach(function (preview) {
+            const trigger = preview.querySelector('.resource-pptx-preview__trigger');
+            if (!trigger) return;
+            trigger.addEventListener('click', function () {
+                const embedUrl = preview.getAttribute('data-embed-url');
+                if (!embedUrl) return;
+                const wrap = preview.querySelector('.resource-pptx-preview__frame-wrap');
+
+                // Swap placeholder for skeleton + iframe
+                wrap.innerHTML =
+                    '<div class="resource-pptx-preview__skeleton" aria-hidden="true"></div>' +
+                    '<iframe src="' + embedUrl + '" class="resource-pptx-preview__iframe" frameborder="0" allowfullscreen title="Presentation preview"></iframe>';
+
+                preview.classList.add('resource-pptx-preview--loading');
+
+                const iframe = wrap.querySelector('iframe');
+                iframe.addEventListener('load', function () {
+                    preview.classList.remove('resource-pptx-preview--loading');
+                    preview.classList.add('resource-pptx-preview--loaded');
+                });
+            });
+        });
+
     } // End of init function
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded

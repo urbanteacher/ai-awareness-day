@@ -285,7 +285,7 @@ get_header();
                             <?php if ( $pptx_embed_url ) : ?>
                                 <div class="resource-sections-row resource-sections-row--full">
                                     <div class="resource-section-cell resource-section-cell--full">
-                                        <div class="resource-pptx-preview">
+                                        <div class="resource-pptx-preview" data-embed-url="<?php echo esc_attr( $pptx_embed_url ); ?>">
                                             <div class="resource-pptx-preview__toolbar">
                                                 <span class="resource-pptx-preview__label">
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -296,15 +296,12 @@ get_header();
                                                 </a>
                                             </div>
                                             <div class="resource-pptx-preview__frame-wrap">
-                                                <div class="resource-pptx-preview__skeleton" aria-hidden="true"></div>
-                                                <iframe
-                                                    src="<?php echo esc_url( $pptx_embed_url ); ?>"
-                                                    class="resource-pptx-preview__iframe"
-                                                    frameborder="0"
-                                                    allowfullscreen
-                                                    title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>"
-                                                    loading="lazy"
-                                                ></iframe>
+                                                <div class="resource-pptx-preview__placeholder">
+                                                    <button type="button" class="resource-pptx-preview__trigger">
+                                                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                                        <?php esc_html_e( 'Preview slides', 'ai-awareness-day' ); ?>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
