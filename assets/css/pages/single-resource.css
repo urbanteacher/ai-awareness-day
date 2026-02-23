@@ -846,44 +846,14 @@
   border-color: var(--gray-400);
 }
 
-/* Frame wrap — holds either the trigger button or the live iframe */
+/* Frame wrap — 16:9 aspect ratio container for the iframe */
 .resource-pptx-preview__frame-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--gray-900);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--gray-100);
 }
 
-/* Trigger button (pre-load state) */
-.resource-pptx-preview__trigger {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  background: none;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 1.5rem 2.5rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.resource-pptx-preview__trigger:hover,
-.resource-pptx-preview__trigger:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.6);
-  outline: none;
-}
-
-/* Live iframe (post-load state) */
 .resource-pptx-preview__iframe {
   position: absolute;
   inset: 0;

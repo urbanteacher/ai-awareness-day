@@ -296,15 +296,14 @@ get_header();
                                                 </a>
                                             </div>
                                             <div class="resource-pptx-preview__frame-wrap">
-                                                <button
-                                                    type="button"
-                                                    class="resource-pptx-preview__trigger"
-                                                    data-embed="<?php echo esc_attr( $pptx_embed_url ); ?>"
-                                                    aria-label="<?php esc_attr_e( 'Load presentation preview', 'ai-awareness-day' ); ?>"
-                                                >
-                                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                                                    <?php esc_html_e( 'Preview slides', 'ai-awareness-day' ); ?>
-                                                </button>
+                                                <iframe
+                                                    src="<?php echo esc_url( $pptx_embed_url ); ?>"
+                                                    class="resource-pptx-preview__iframe"
+                                                    frameborder="0"
+                                                    allowfullscreen
+                                                    title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>"
+                                                    loading="lazy"
+                                                ></iframe>
                                             </div>
                                         </div>
                                     </div>

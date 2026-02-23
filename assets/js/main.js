@@ -396,28 +396,6 @@
                 body: body,
             }).catch(() => { }); // Silently fail - download tracking is non-critical
         });
-        // ============================================
-        // PowerPoint preview: click-to-load iframe
-        // ============================================
-        document.addEventListener('click', function (e) {
-            const btn = e.target.closest('.resource-pptx-preview__trigger');
-            if (!btn) return;
-            const embedUrl = btn.getAttribute('data-embed');
-            if (!embedUrl) return;
-            const wrap = btn.closest('.resource-pptx-preview__frame-wrap');
-            if (!wrap) return;
-
-            // Replace the button with the live iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = embedUrl;
-            iframe.className = 'resource-pptx-preview__iframe';
-            iframe.setAttribute('frameborder', '0');
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.setAttribute('title', 'Presentation preview');
-            wrap.innerHTML = '';
-            wrap.appendChild(iframe);
-        });
-
     } // End of init function
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
