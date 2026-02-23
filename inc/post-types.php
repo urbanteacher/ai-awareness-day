@@ -420,10 +420,10 @@ function aiad_duration_terms(): void {
         return;
     }
     $durations = array(
-        'Lesson Starters (5-min)'           => array( 'slug' => '5-min-lesson-starters' ),
-        'Tutor time plans (15–20 min)'      => array( 'slug' => '15-20-min-tutor-time' ),
-        'Assemblies (20-min)'               => array( 'slug' => '20-min-assemblies' ),
-        'After-school sessions (30–45 min)' => array( 'slug' => '30-45-min-after-school' ),
+        'Lesson Starter (5 min)'    => array( 'slug' => '5-min-lesson-starters' ),
+        'Tutor Time (15 min)'       => array( 'slug' => '15-20-min-tutor-time' ),
+        'Assembly (20 min)'        => array( 'slug' => '20-min-assemblies' ),
+        'After School (30 min)'    => array( 'slug' => '30-45-min-after-school' ),
     );
     foreach ( $durations as $name => $opts ) {
         if ( ! term_exists( $opts['slug'], 'resource_duration' ) ) {

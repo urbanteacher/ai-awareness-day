@@ -352,6 +352,32 @@
     height: 100%;
 }
 
+/* LinkedIn embed styling */
+.timeline-entry__linkedin-embed {
+    margin: 0;
+    padding: 1rem;
+    background: var(--white);
+    min-height: 200px;
+}
+
+.timeline-entry__linkedin-embed iframe {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Link card styling */
+.timeline-entry--link-card .timeline-entry__text {
+    position: relative;
+}
+
+.timeline-entry--link-card .timeline-entry__content::after {
+    content: ' →';
+    color: var(--green-600);
+    font-weight: 600;
+}
+
 /* Lite YouTube facade: thumbnail + play button; click loads iframe */
 .timeline-entry__video-facade {
     position: relative;

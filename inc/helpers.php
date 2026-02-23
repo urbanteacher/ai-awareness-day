@@ -20,10 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_duration_badge_label( object|string $term_or_slug ): string {
     $slug = is_object( $term_or_slug ) ? $term_or_slug->slug : $term_or_slug;
     $labels = array(
-        '5-min-lesson-starters'    => __( 'Lesson Starters (5-min)', 'ai-awareness-day' ),
-        '15-20-min-tutor-time'     => __( 'Tutor time plans (15–20 min)', 'ai-awareness-day' ),
-        '20-min-assemblies'        => __( 'Assemblies (20-min)', 'ai-awareness-day' ),
-        '30-45-min-after-school'   => __( 'After-school sessions (30–45 min)', 'ai-awareness-day' ),
+        '5-min-lesson-starters'    => __( 'Lesson Starter (5 min)', 'ai-awareness-day' ),
+        '15-20-min-tutor-time'     => __( 'Tutor Time (15 min)', 'ai-awareness-day' ),
+        '20-min-assemblies'        => __( 'Assembly (20 min)', 'ai-awareness-day' ),
+        '30-45-min-after-school'   => __( 'After School (30 min)', 'ai-awareness-day' ),
     );
     return isset( $labels[ $slug ] ) ? $labels[ $slug ] : ( is_object( $term_or_slug ) ? $term_or_slug->name : $term_or_slug );
 }
@@ -37,7 +37,7 @@ function aiad_duration_badge_label( object|string $term_or_slug ): string {
 function aiad_explore_session_cards(): array {
     return array(
         '5-min-lesson-starters' => array(
-            'title'       => __( 'Lesson Starters', 'ai-awareness-day' ),
+            'title'       => __( 'Lesson Starter', 'ai-awareness-day' ),
             'description' => __( 'Quick 5-minute AI discussions to kick off any lesson', 'ai-awareness-day' ),
             'badge_short' => '5 min',
             'icon_bg'     => '#93c5fd',
@@ -47,7 +47,7 @@ function aiad_explore_session_cards(): array {
         ),
         '15-20-min-tutor-time' => array(
             'title'       => __( 'Tutor Time', 'ai-awareness-day' ),
-            'description' => __( '15-20 minute group activities for form time', 'ai-awareness-day' ),
+            'description' => __( '15 minute group activities for form time', 'ai-awareness-day' ),
             'badge_short' => '15 min',
             'icon_bg'     => '#86efac',
             'icon'        => 'people',
@@ -55,8 +55,8 @@ function aiad_explore_session_cards(): array {
             'status_live' => false,
         ),
         '20-min-assemblies' => array(
-            'title'       => __( 'Assemblies', 'ai-awareness-day' ),
-            'description' => __( '20-minute whole-school presentations', 'ai-awareness-day' ),
+            'title'       => __( 'Assembly', 'ai-awareness-day' ),
+            'description' => __( '20 minute whole-school presentations', 'ai-awareness-day' ),
             'badge_short' => '20 min',
             'icon_bg'     => '#c4b5fd',
             'icon'        => 'presentation',
@@ -64,8 +64,8 @@ function aiad_explore_session_cards(): array {
             'status_live' => false,
         ),
         '30-45-min-after-school' => array(
-            'title'       => __( 'After-School', 'ai-awareness-day' ),
-            'description' => __( '30-45 minute hands-on projects and activities', 'ai-awareness-day' ),
+            'title'       => __( 'After School', 'ai-awareness-day' ),
+            'description' => __( '30 minute hands-on projects and activities', 'ai-awareness-day' ),
             'badge_short' => '30 min',
             'icon_bg'     => '#fdba74',
             'icon'        => 'book',

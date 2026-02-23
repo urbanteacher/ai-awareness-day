@@ -77,12 +77,16 @@ function aiad_register_timeline_meta(): void {
         '_aiad_timeline_pinned' => array( 'type' => 'boolean', 'default' => false ),
         // Icon key for rendering (e.g. 'resource', 'partner', 'announcement', 'milestone')
         '_aiad_timeline_icon' => array( 'type' => 'string', 'default' => 'announcement' ),
+        // Card type: 'default', 'video', 'link', 'linkedin'
+        '_aiad_timeline_card_type' => array( 'type' => 'string', 'default' => 'default' ),
         // Optional CTA link URL
         '_aiad_timeline_link_url' => array( 'type' => 'string', 'default' => '' ),
         // Optional CTA link label
         '_aiad_timeline_link_label' => array( 'type' => 'string', 'default' => '' ),
-        // Optional video URL (YouTube, Vimeo, etc.) — shown as embed in the timeline card
+        // Optional video URL (YouTube, Vimeo, LinkedIn video, etc.) — shown as embed in the timeline card
         '_aiad_timeline_video_url' => array( 'type' => 'string', 'default' => '' ),
+        // Optional LinkedIn post URL for embedded posts
+        '_aiad_timeline_linkedin_url' => array( 'type' => 'string', 'default' => '' ),
         // Like count (incremented via front-end AJAX)
         '_aiad_timeline_like_count' => array( 'type' => 'integer', 'default' => 0 ),
     );
@@ -113,16 +117,34 @@ add_action( 'init', 'aiad_register_timeline_meta', 15 );
  */
 function aiad_timeline_editable_meta_config(): array {
     return array(
+        '_aiad_timeline_card_type'   => array(
+            'type'        => 'select',
+            'label'       => __( 'Card Type', 'ai-awareness-day' ),
+            'description' => __( 'Choose what type of content this card displays.', 'ai-awareness-day' ),
+            'options'     => array(
+                'default'  => __( 'Standard (text + optional image)', 'ai-awareness-day' ),
+                'video'    => __( 'YouTube/Vimeo Video', 'ai-awareness-day' ),
+                'linkedin' => __( 'LinkedIn Post', 'ai-awareness-day' ),
+                'link'     => __( 'External Link Card', 'ai-awareness-day' ),
+            ),
+        ),
         '_aiad_timeline_video_url'   => array(
             'type'        => 'url',
-            'label'       => __( 'Video URL (optional)', 'ai-awareness-day' ),
+            'label'       => __( 'Video URL', 'ai-awareness-day' ),
             'placeholder' => 'https://www.youtube.com/watch?v=...',
             'description' => __( 'YouTube or Vimeo link — will be embedded in the card.', 'ai-awareness-day' ),
         ),
+        '_aiad_timeline_linkedin_url' => array(
+            'type'        => 'url',
+            'label'       => __( 'LinkedIn Post URL', 'ai-awareness-day' ),
+            'placeholder' => 'https://www.linkedin.com/posts/...',
+            'description' => __( 'LinkedIn post URL — will show as an embedded card.', 'ai-awareness-day' ),
+        ),
         '_aiad_timeline_link_url'    => array(
             'type'        => 'url',
-            'label'       => __( 'Link URL (optional)', 'ai-awareness-day' ),
+            'label'       => __( 'Link URL', 'ai-awareness-day' ),
             'placeholder' => 'https://...',
+            'description' => __( 'External link for "Learn more" button.', 'ai-awareness-day' ),
         ),
         '_aiad_timeline_link_label' => array(
             'type'        => 'text',
@@ -154,24 +176,57 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
     $source       = get_post_meta( $post->ID, '_aiad_timeline_source', true ) ?: 'manual';
     $pinned       = (bool) get_post_meta( $post->ID, '_aiad_timeline_pinned', true );
     $icon         = get_post_meta( $post->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
+    $card_type    = get_post_meta( $post->ID, '_aiad_timeline_card_type', true ) ?: 'default';
     $icon_options = aiad_timeline_icon_options();
     $editable     = aiad_timeline_editable_meta_config();
     ?>
     <p>
         <strong><?php esc_html_e( 'Visual (recommended):', 'ai-awareness-day' ); ?></strong><br>
-        <em><?php esc_html_e( 'Set a Featured Image (school logo, display board, faces, etc.) and/or add a Video URL below. The timeline card will show the image or video prominently.', 'ai-awareness-day' ); ?></em>
+        <em><?php esc_html_e( 'Set a Featured Image (school logo, display board, faces, etc.) and/or choose a card type below. The timeline card will show the content prominently.', 'ai-awareness-day' ); ?></em>
     </p>
     <?php
     foreach ( $editable as $meta_key => $field ) {
         $input_name = str_replace( '_aiad_timeline_', 'aiad_timeline_', $meta_key );
         $value      = get_post_meta( $post->ID, $meta_key, true );
-        $input_type = ( 'url' === $field['type'] ) ? 'url' : 'text';
+        $input_type = $field['type'];
+        
+        // Determine which card types this field should show for
+        $show_for = array();
+        if ( '_aiad_timeline_card_type' === $meta_key ) {
+            $show_for = array( 'all' ); // Always show
+        } elseif ( '_aiad_timeline_video_url' === $meta_key ) {
+            $show_for = array( 'video', 'default' );
+        } elseif ( '_aiad_timeline_linkedin_url' === $meta_key ) {
+            $show_for = array( 'linkedin' );
+        } elseif ( '_aiad_timeline_link_url' === $meta_key || '_aiad_timeline_link_label' === $meta_key ) {
+            $show_for = array( 'link', 'default', 'video', 'linkedin' );
+        } else {
+            $show_for = array( 'all' );
+        }
+        
+        $data_condition = '';
+        if ( ! in_array( 'all', $show_for, true ) ) {
+            $data_condition = implode( ',', $show_for );
+        }
+        
+        $wrapper_class = 'aiad-timeline-field-wrapper';
+        if ( '_aiad_timeline_card_type' !== $meta_key && $data_condition ) {
+            $wrapper_class .= ' aiad-timeline-field-conditional';
+        }
         ?>
-    <p>
+    <p class="<?php echo esc_attr( $wrapper_class ); ?>" data-show-for="<?php echo esc_attr( $data_condition ); ?>">
         <label for="<?php echo esc_attr( $input_name ); ?>"><strong><?php echo esc_html( $field['label'] ); ?></strong></label><br>
-        <input type="<?php echo esc_attr( $input_type ); ?>" id="<?php echo esc_attr( $input_name ); ?>" name="<?php echo esc_attr( $input_name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="widefat" placeholder="<?php echo esc_attr( $field['placeholder'] ?? '' ); ?>" />
+        <?php if ( 'select' === $input_type ) : ?>
+            <select id="<?php echo esc_attr( $input_name ); ?>" name="<?php echo esc_attr( $input_name ); ?>" class="widefat aiad-timeline-card-type-select">
+                <?php foreach ( $field['options'] as $opt_value => $opt_label ) : ?>
+                    <option value="<?php echo esc_attr( $opt_value ); ?>" <?php selected( $value, $opt_value ); ?>><?php echo esc_html( $opt_label ); ?></option>
+                <?php endforeach; ?>
+            </select>
+        <?php else : ?>
+            <input type="<?php echo esc_attr( ( 'url' === $input_type ) ? 'url' : 'text' ); ?>" id="<?php echo esc_attr( $input_name ); ?>" name="<?php echo esc_attr( $input_name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="widefat" placeholder="<?php echo esc_attr( $field['placeholder'] ?? '' ); ?>" />
+        <?php endif; ?>
         <?php if ( ! empty( $field['description'] ) ) : ?>
-            <em><?php echo esc_html( $field['description'] ); ?></em>
+            <em class="description"><?php echo esc_html( $field['description'] ); ?></em>
         <?php endif; ?>
     </p>
         <?php
@@ -195,6 +250,26 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
             <?php endforeach; ?>
         </select>
     </p>
+    <script>
+    jQuery(function($) {
+        function toggleTimelineFields() {
+            var cardType = $('.aiad-timeline-card-type-select').val();
+            $('.aiad-timeline-field-conditional').each(function() {
+                var showFor = $(this).data('show-for');
+                if (showFor) {
+                    var types = showFor.toString().split(',');
+                    if (types.indexOf(cardType) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                }
+            });
+        }
+        toggleTimelineFields();
+        $('.aiad-timeline-card-type-select').on('change', toggleTimelineFields);
+    });
+    </script>
     <?php
 }
 
@@ -228,6 +303,12 @@ function aiad_save_timeline_meta( int $post_id ): void {
         $raw = wp_unslash( $_POST[ $post_key ] );
         if ( 'url' === $field['type'] ) {
             update_post_meta( $post_id, $meta_key, esc_url_raw( $raw ) );
+        } elseif ( 'select' === $field['type'] && isset( $field['options'] ) ) {
+            // Validate select value against allowed options
+            $valid_options = array_keys( $field['options'] );
+            if ( in_array( $raw, $valid_options, true ) ) {
+                update_post_meta( $post_id, $meta_key, sanitize_text_field( $raw ) );
+            }
         } else {
             update_post_meta( $post_id, $meta_key, sanitize_text_field( $raw ) );
         }
@@ -867,24 +948,30 @@ function aiad_timeline_oembed_allowed_html(): array {
  * @return string HTML markup.
  */
 function aiad_render_timeline_entry( WP_Post $entry ): string {
-    $source     = get_post_meta( $entry->ID, '_aiad_timeline_source', true ) ?: 'manual';
-    $pinned     = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
-    $icon       = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $link_url   = get_post_meta( $entry->ID, '_aiad_timeline_link_url', true );
-    $link_label = get_post_meta( $entry->ID, '_aiad_timeline_link_label', true );
-    $video_url   = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
-    $yt_id       = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
-    $video_embed = ! empty( $video_url ) && empty( $yt_id ) ? wp_oembed_get( $video_url, array( 'width' => 600 ) ) : '';
-    $thumbnail   = get_the_post_thumbnail_url( $entry->ID, 'medium_large' );
+    $source       = get_post_meta( $entry->ID, '_aiad_timeline_source', true ) ?: 'manual';
+    $pinned       = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
+    $icon         = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
+    $card_type    = get_post_meta( $entry->ID, '_aiad_timeline_card_type', true ) ?: 'default';
+    $link_url     = get_post_meta( $entry->ID, '_aiad_timeline_link_url', true );
+    $link_label   = get_post_meta( $entry->ID, '_aiad_timeline_link_label', true );
+    $video_url    = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
+    $linkedin_url = get_post_meta( $entry->ID, '_aiad_timeline_linkedin_url', true );
+    $yt_id        = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
+    $video_embed  = ! empty( $video_url ) && empty( $yt_id ) ? wp_oembed_get( $video_url, array( 'width' => 600 ) ) : '';
+    $linkedin_embed = ! empty( $linkedin_url ) ? wp_oembed_get( $linkedin_url, array( 'width' => 600 ) ) : '';
+    $thumbnail    = get_the_post_thumbnail_url( $entry->ID, 'medium_large' );
     if ( ! $thumbnail ) {
         $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium' );
     }
-    $content    = get_the_content( null, false, $entry );
-    $show_video = ! empty( $yt_id ) || ! empty( $video_embed );
-    $show_image = ! $show_video && ! empty( $thumbnail );
-    $has_media  = $show_video || $show_image;
-    $has_rich   = $has_media || ! empty( $content );
-    $use_lite_yt = ! empty( $yt_id );
+    $content      = get_the_content( null, false, $entry );
+    
+    // Determine what media to show based on card type
+    $show_video    = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
+    $show_linkedin = 'linkedin' === $card_type && ! empty( $linkedin_embed );
+    $show_image    = ! $show_video && ! $show_linkedin && ! empty( $thumbnail );
+    $has_media     = $show_video || $show_linkedin || $show_image;
+    $has_rich      = $has_media || ! empty( $content );
+    $use_lite_yt   = ! empty( $yt_id );
 
     $classes = array( 'timeline-entry', 'fade-up' );
     if ( $pinned ) {
@@ -895,6 +982,15 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
     }
     if ( $has_rich ) {
         $classes[] = 'timeline-entry--rich';
+    }
+    if ( 'linkedin' === $card_type ) {
+        $classes[] = 'timeline-entry--linkedin';
+    }
+    if ( 'video' === $card_type ) {
+        $classes[] = 'timeline-entry--video';
+    }
+    if ( 'link' === $card_type ) {
+        $classes[] = 'timeline-entry--link-card';
     }
 
     $date_human = human_time_diff( get_post_timestamp( $entry ), time() );
@@ -956,6 +1052,10 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                 <div class="timeline-entry__media">
                     <?php if ( $use_lite_yt ) : ?>
                         <?php echo aiad_render_youtube_facade( $yt_id, get_the_title( $entry ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php elseif ( $show_linkedin && ! empty( $linkedin_embed ) ) : ?>
+                        <div class="timeline-entry__linkedin-embed wp-block-embed is-type-rich">
+                            <?php echo wp_kses( $linkedin_embed, aiad_timeline_oembed_allowed_html() ); ?>
+                        </div>
                     <?php elseif ( $show_video && ! empty( $video_embed ) ) : ?>
                         <div class="timeline-entry__video wp-block-embed is-type-video">
                             <?php echo wp_kses( $video_embed, aiad_timeline_oembed_allowed_html() ); ?>

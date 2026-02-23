@@ -91,7 +91,7 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
             </div>
 
             <?php if ( $has_more ) : ?>
-                <div class="timeline__load-more fade-up">
+                <div class="timeline__load-more">
                     <button type="button" class="btn-action timeline__load-btn" id="timeline-load-more">
                         <?php esc_html_e( 'Load more updates', 'ai-awareness-day' ); ?>
                         <span class="btn-action__icon" aria-hidden="true">+</span>

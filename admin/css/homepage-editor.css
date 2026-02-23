@@ -30,3 +30,36 @@
     height: auto;
     vertical-align: middle;
 }
+
+/* Resources tab specific styles */
+.aiad-homepage-editor-wrap h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.3em;
+}
+
+.aiad-homepage-editor-wrap h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1em;
+}
+
+.aiad-homepage-editor-wrap hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid #c3c4c7;
+}
+
+.aiad-homepage-editor-wrap .description {
+    color: #666;
+    font-style: normal;
+}
+
+.aiad-homepage-editor-wrap .form-table select {
+    min-width: 300px;
+    max-width: 100%;
+}
+
+.aiad-homepage-editor-wrap .button {
+    margin-right: 0.5rem;
+}

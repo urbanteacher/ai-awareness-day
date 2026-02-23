@@ -597,6 +597,7 @@ function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_custo
         'principles'        => __( 'Principles Section', 'ai-awareness-day' ),
         'aim'               => __( 'Aim Section', 'ai-awareness-day' ),
         'toolkit'           => __( 'Toolkit Section', 'ai-awareness-day' ),
+        'free_resources'    => __( 'Free Resources Section', 'ai-awareness-day' ),
         'featured_resources' => __( 'Featured Resources Section', 'ai-awareness-day' ),
         'contact'           => __( 'Get Involved Section', 'ai-awareness-day' ),
     );
@@ -676,7 +677,7 @@ function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_custo
         'label'       => __( 'Section Order', 'ai-awareness-day' ),
         'description' => sprintf(
             /* translators: %s: Default section order */
-            __( 'Comma-separated list of section slugs. Default: %s. Available sections: hero, campaign, timeline, principles, aim, toolkit, featured_resources, contact', 'ai-awareness-day' ),
+            __( 'Comma-separated list of section slugs. Default: %s. Available sections: hero, campaign, timeline, principles, aim, toolkit, free_resources, featured_resources, contact', 'ai-awareness-day' ),
             '<code>' . esc_html( $default_order ) . '</code>'
         ),
         'section'     => 'aiad_front_page_layout',

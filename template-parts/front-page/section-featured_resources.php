@@ -7,13 +7,38 @@
 if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
-$featured_resources = new WP_Query( array(
-            'post_type' => 'featured_resource',
-            'post_status' => 'publish',
-            'posts_per_page' => 3,
-            'orderby' => 'menu_order title',
-            'order' => 'ASC',
-        ));
+
+// Check if user has manually selected resources via Homepage Editor
+$selected_ids = array();
+for ( $i = 1; $i <= 3; $i++ ) {
+    $id = absint( get_theme_mod( 'aiad_homepage_handpicked_resource_' . $i, 0 ) );
+    if ( $id > 0 ) {
+        $selected_ids[] = $id;
+    }
+}
+
+// If manual selection exists, use it; otherwise fall back to automatic query
+if ( ! empty( $selected_ids ) ) {
+    $featured_resources = new WP_Query( array(
+        'post_type'      => 'featured_resource',
+        'post_status'    => 'publish',
+        'posts_per_page' => 3,
+        'post__in'       => $selected_ids,
+        'orderby'        => 'post__in',
+    ) );
+} else {
+    $featured_resources = new WP_Query( array(
+        'post_type'      => 'featured_resource',
+        'post_status'    => 'publish',
+        'posts_per_page' => 3,
+        'orderby'        => 'menu_order title',
+        'order'          => 'ASC',
+    ) );
+}
+
+// Get custom section title/description
+$section_title = get_theme_mod( 'aiad_handpicked_resources_title', __( 'Handpicked Quality Resources', 'ai-awareness-day' ) );
+$section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day' ) );
 
         if ($featured_resources->have_posts()):
             ?>
@@ -21,10 +46,10 @@ $featured_resources = new WP_Query( array(
                 <div class="container">
                     <div class="fade-up">
                         <span class="section-label"><?php esc_html_e('Extra Resources', 'ai-awareness-day'); ?></span>
-                        <h2 class="section-title"><?php esc_html_e('Handpicked Quality Resources', 'ai-awareness-day'); ?>
+                        <h2 class="section-title"><?php echo esc_html( $section_title ); ?>
                         </h2>
                         <p class="section-desc">
-                            <?php esc_html_e('A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day'); ?>
+                            <?php echo esc_html( $section_desc ); ?>
                         </p>
                     </div>
 

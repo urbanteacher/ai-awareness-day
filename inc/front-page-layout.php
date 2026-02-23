@@ -23,6 +23,7 @@ function aiad_get_front_page_sections(): array {
         'principles',
         'aim',
         'toolkit',
+        'free_resources',
         'featured_resources',
         'contact',
     );

@@ -3,7 +3,7 @@
    Mobile-first: base = mobile, desktop = min-width: 768px
    ============================================ */
 
-/* Duration badges (Lesson Starters (5-min) style) */
+/* Duration badges (Lesson Starter (5 min) style) */
 .duration-badge {
   display: inline-block;
   padding: 0.4rem 0.9rem;
@@ -231,7 +231,7 @@ a.duration-badge:hover {
     min-height: 4.5rem;
     padding: 0;
     font-family: var(--font-display);
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     color: var(--white);
