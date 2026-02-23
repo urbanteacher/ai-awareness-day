@@ -193,8 +193,8 @@ function aiad_scripts(): void
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
-    // Register Interactivity API module for Partners — front page only
-    if (is_front_page() && function_exists('wp_enqueue_script_module')) {
+    // Register Interactivity API module for Partners
+    if (function_exists('wp_enqueue_script_module')) {
         wp_enqueue_script_module(
             'aiad-partners',
             AIAD_URI . '/assets/js/partners.js',
@@ -220,7 +220,7 @@ function aiad_scripts(): void
             AIAD_URI . '/assets/js/resource-sharing.js',
             array('aiad-main'),
             AIAD_VERSION,
-            $script_args
+            true
         );
     }
 
@@ -245,17 +245,6 @@ function aiad_scripts(): void
 }
 add_action('wp_enqueue_scripts', 'aiad_scripts');
 
-/**
- * Preconnect to external font CDNs to reduce connection latency on mobile.
- */
-function aiad_resource_hints( array $urls, string $relation_type ): array {
-    if ( 'preconnect' === $relation_type ) {
-        $urls[] = array( 'href' => 'https://fonts.cdnfonts.com', 'crossorigin' => 'anonymous' );
-        $urls[] = array( 'href' => 'https://fonts.gstatic.com',  'crossorigin' => 'anonymous' );
-    }
-    return $urls;
-}
-add_filter( 'wp_resource_hints', 'aiad_resource_hints', 10, 2 );
 
 /**
  * Custom Walker for Navigation
