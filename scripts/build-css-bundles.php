@@ -27,6 +27,7 @@ $bundles = array(
         'components/principles.css',
         'components/explore-sessions.css',
         'components/section-green.css',
+        'components/display-board.css',
     ),
     'pages'  => array(
         'pages/campaign.css',
