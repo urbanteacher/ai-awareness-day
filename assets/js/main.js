@@ -41,6 +41,7 @@
         if (statsBar) {
             const statElements = statsBar.querySelectorAll('.timeline-stats-bar__stat');
             const valueElements = statsBar.querySelectorAll('.timeline-stats-bar__value');
+            let animationTriggered = false;
 
             // Animate counter from 0 to target value
             function animateCounter(element, targetValue, duration) {
@@ -76,35 +77,66 @@
                 requestAnimationFrame(updateCounter);
             }
 
+            // Trigger animation function
+            function triggerAnimation() {
+                if (animationTriggered) return;
+                animationTriggered = true;
+
+                // Add staggered animation class to each stat
+                statElements.forEach((stat, index) => {
+                    setTimeout(() => {
+                        stat.classList.add('animate-in');
+                    }, index * 100);
+                });
+
+                // Animate each counter with staggered delay
+                valueElements.forEach((valueEl, index) => {
+                    const targetValue = valueEl.textContent;
+                    setTimeout(() => {
+                        animateCounter(valueEl, targetValue, 1500);
+                    }, 300 + (index * 200));
+                });
+            }
+
+            // Check if element is already in viewport
+            function isInViewport(element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+
             // Intersection Observer for stats bar
             const statsObserver = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        // Add staggered animation class to each stat
-                        statElements.forEach((stat, index) => {
-                            setTimeout(() => {
-                                stat.classList.add('animate-in');
-                            }, index * 100);
-                        });
-
-                        // Animate each counter with staggered delay
-                        valueElements.forEach((valueEl, index) => {
-                            const targetValue = valueEl.textContent;
-                            setTimeout(() => {
-                                animateCounter(valueEl, targetValue, 1500);
-                            }, 300 + (index * 200));
-                        });
-
+                        triggerAnimation();
                         statsObserver.unobserve(entry.target);
                     }
                 });
             }, {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.3,
+                threshold: 0.1, // Lower threshold for better mobile support
             });
 
+            // Start observing
             statsObserver.observe(statsBar);
+
+            // Fallback: If element is already in viewport or after 3 seconds, trigger animation
+            if (isInViewport(statsBar)) {
+                triggerAnimation();
+            }
+
+            // Safety fallback: ensure stats are visible after 3 seconds max
+            setTimeout(() => {
+                if (!animationTriggered) {
+                    triggerAnimation();
+                }
+            }, 3000);
         }
 
         // ============================================
