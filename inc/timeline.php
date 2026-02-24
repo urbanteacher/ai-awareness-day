@@ -545,13 +545,9 @@ function aiad_create_timeline_entry( array $args ) {
         }
     }
 
-    // Strip emoji from title so they don't get URL-encoded into the post slug
-    $clean_title = preg_replace( '/[\x{1F000}-\x{1FFFF}\x{2600}-\x{27BF}]/u', '', $args['title'] );
-    $clean_title = trim( preg_replace( '/\s+/', ' ', $clean_title ) );
-
     $post_id = wp_insert_post( array(
         'post_type'    => 'aiad_timeline',
-        'post_title'   => sanitize_text_field( $clean_title ?: $args['title'] ),
+        'post_title'   => sanitize_text_field( $args['title'] ),
         'post_content' => wp_kses_post( $args['content'] ),
         'post_status'  => 'publish',
     ) );
