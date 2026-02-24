@@ -33,31 +33,32 @@ function aiad_sharing_should_output(): bool {
 /**
  * Get Open Graph data for current page.
  *
- * @return array<string, string> Array with 'title', 'description', 'image', 'url', 'type', 'site_name'.
+ * @return array<string, mixed> Array with 'title', 'description', 'image', 'image_id', 'url', 'type', 'site_name'.
  */
 function aiad_get_og_data(): array {
-	$defaults = aiad_get_customizer_defaults();
+	$defaults  = aiad_get_customizer_defaults();
 	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
-	
+
 	$data = array(
-		'title'     => '',
+		'title'       => '',
 		'description' => '',
-		'image'     => '',
-		'url'       => home_url( '/' ),
-		'type'      => 'website',
-		'site_name' => $site_name,
+		'image'       => '',
+		'image_id'    => 0,
+		'url'         => home_url( '/' ),
+		'type'        => 'website',
+		'site_name'   => $site_name,
 	);
 
 	// Front page
 	if ( is_front_page() ) {
-		$event_date = get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
+		$event_date    = get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
 		$data['title'] = $event_date
 			? sprintf( '%s — %s', $site_name, $event_date )
 			: $site_name;
-		
-		$campaign_text = get_theme_mod( 'aiad_campaign_text', $defaults['aiad_campaign_text'] );
-		$subtitle = get_theme_mod( 'aiad_hero_subtitle', $defaults['aiad_hero_subtitle'] );
-		$data['description'] = sprintf(
+
+		$campaign_text        = get_theme_mod( 'aiad_campaign_text', $defaults['aiad_campaign_text'] );
+		$subtitle             = get_theme_mod( 'aiad_hero_subtitle', $defaults['aiad_hero_subtitle'] );
+		$data['description']  = sprintf(
 			'%s %s',
 			$campaign_text ?: '',
 			$subtitle ?: get_bloginfo( 'description' )
@@ -66,26 +67,25 @@ function aiad_get_og_data(): array {
 		if ( strlen( $data['description'] ) > 160 ) {
 			$data['description'] = wp_trim_words( $data['description'], 25, '…' );
 		}
-		
-		// Hero logo
+
 		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
 		if ( $logo_id ) {
-			$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
+			$data['image_id'] = $logo_id;
+			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
 		} elseif ( has_custom_logo() ) {
-			$custom_logo_id = get_theme_mod( 'custom_logo' );
+			$custom_logo_id = absint( get_theme_mod( 'custom_logo' ) );
 			if ( $custom_logo_id ) {
-				$data['image'] = wp_get_attachment_image_url( $custom_logo_id, 'large' );
+				$data['image_id'] = $custom_logo_id;
+				$data['image']    = wp_get_attachment_image_url( $custom_logo_id, 'aiad_social' ) ?: '';
 			}
 		}
-		
-		return $data;
-	}
 
-	// Single resource
-	if ( is_singular( 'resource' ) ) {
+	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) || is_singular( 'aiad_timeline' ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
-		
+		$data['url']   = get_permalink( $post );
+		$data['type']  = 'article';
+
 		$subtitle = get_post_meta( $post->ID, '_aiad_subtitle', true );
 		if ( $subtitle ) {
 			$data['description'] = $subtitle;
@@ -94,84 +94,24 @@ function aiad_get_og_data(): array {
 		} else {
 			$data['description'] = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
 		}
-		
-		$data['url'] = get_permalink( $post );
-		$data['type'] = 'article';
-		
-		// Featured image or hero logo fallback
+
 		if ( has_post_thumbnail( $post ) ) {
-			$data['image'] = get_the_post_thumbnail_url( $post, 'large' );
+			$data['image_id'] = get_post_thumbnail_id( $post );
+			$data['image']    = wp_get_attachment_image_url( $data['image_id'], 'aiad_social' ) ?: '';
 		} else {
 			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
 			if ( $logo_id ) {
-				$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
+				$data['image_id'] = $logo_id;
+				$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
 			}
 		}
-		
-		return $data;
-	}
 
-	// Single partner
-	if ( is_singular( 'partner' ) ) {
-		global $post;
-		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
-		
-		if ( has_excerpt( $post ) ) {
-			$data['description'] = get_the_excerpt( $post );
-		} else {
-			$data['description'] = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
-		}
-		
-		$data['url'] = get_permalink( $post );
-		$data['type'] = 'article';
-		
-		// Featured image or hero logo fallback
-		if ( has_post_thumbnail( $post ) ) {
-			$data['image'] = get_the_post_thumbnail_url( $post, 'large' );
-		} else {
-			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-			if ( $logo_id ) {
-				$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
-			}
-		}
-		
-		return $data;
-	}
-
-	// Single timeline entry
-	if ( is_singular( 'aiad_timeline' ) ) {
-		global $post;
-		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
-		
-		if ( has_excerpt( $post ) ) {
-			$data['description'] = get_the_excerpt( $post );
-		} else {
-			$data['description'] = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
-		}
-		
-		$data['url'] = get_permalink( $post );
-		$data['type'] = 'article';
-		
-		// Featured image or hero logo fallback
-		if ( has_post_thumbnail( $post ) ) {
-			$data['image'] = get_the_post_thumbnail_url( $post, 'large' );
-		} else {
-			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-			if ( $logo_id ) {
-				$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
-			}
-		}
-		
-		return $data;
-	}
-
-	// Archive pages
-	if ( is_post_type_archive() ) {
-		$post_type = get_post_type();
+	} elseif ( is_post_type_archive() ) {
+		$post_type     = get_post_type();
 		$archive_title = post_type_archive_title( '', false );
 		$data['title'] = sprintf( '%s — %s', $archive_title ?: ucfirst( $post_type ), $site_name );
-		
-		// Curated descriptions per archive
+		$data['url']   = get_post_type_archive_link( $post_type );
+
 		if ( 'resource' === $post_type ) {
 			$data['description'] = __( 'Lesson starters, lesson activities, and assembly materials for AI Awareness Day.', 'ai-awareness-day' );
 		} elseif ( 'partner' === $post_type ) {
@@ -179,34 +119,32 @@ function aiad_get_og_data(): array {
 		} else {
 			$data['description'] = get_bloginfo( 'description' );
 		}
-		
-		$data['url'] = get_post_type_archive_link( $post_type );
-		
-		// Hero logo
+
 		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
 		if ( $logo_id ) {
-			$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
+			$data['image_id'] = $logo_id;
+			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
 		}
-		
-		return $data;
+
+	} else {
+		// Default fallback
+		$data['title']       = $site_name;
+		$data['description'] = get_bloginfo( 'description' );
+		$data['url']         = is_singular() ? get_permalink() : home_url( '/' );
+
+		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+		if ( $logo_id ) {
+			$data['image_id'] = $logo_id;
+			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+		}
 	}
 
-	// Default fallback
-	$data['title'] = $site_name;
-	$data['description'] = get_bloginfo( 'description' );
-	$data['url'] = is_singular() ? get_permalink() : home_url( '/' );
-	
-	$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-	if ( $logo_id ) {
-		$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
-	}
-	
-	// Ensure description is plain text (no HTML entities or stray whitespace)
+	// Normalise description: strip HTML and collapse whitespace for all contexts
 	if ( ! empty( $data['description'] ) ) {
 		$data['description'] = wp_strip_all_tags( $data['description'] );
 		$data['description'] = trim( preg_replace( '/\s+/', ' ', $data['description'] ) );
 	}
-	
+
 	return $data;
 }
 
@@ -322,15 +260,13 @@ function aiad_output_og_tags(): void {
 	
 	if ( ! empty( $og_data['image'] ) ) {
 		echo '<meta property="og:image" content="' . esc_url( $og_data['image'] ) . '" />' . "\n";
-		// Get actual image dimensions if available
-		$image_id = attachment_url_to_postid( $og_data['image'] );
+		$image_id = ! empty( $og_data['image_id'] ) ? (int) $og_data['image_id'] : 0;
 		if ( $image_id ) {
 			$image_meta = wp_get_attachment_metadata( $image_id );
-			if ( isset( $image_meta['width'] ) && isset( $image_meta['height'] ) ) {
+			if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
 				echo '<meta property="og:image:width" content="' . esc_attr( $image_meta['width'] ) . '" />' . "\n";
 				echo '<meta property="og:image:height" content="' . esc_attr( $image_meta['height'] ) . '" />' . "\n";
 			}
-			// Add image alt text for accessibility
 			$image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 			if ( $image_alt ) {
 				echo '<meta property="og:image:alt" content="' . esc_attr( $image_alt ) . '" />' . "\n";

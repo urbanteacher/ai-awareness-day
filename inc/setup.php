@@ -24,6 +24,7 @@ function aiad_setup(): void
     add_image_size('hero-large', 1200, 675, true);
     add_image_size('hero-small', 600, 450, true);
     add_image_size('theme-thumb', 400, 400, true);
+    add_image_size('aiad_social', 1200, 630, true); // OG / social share card (1.91:1)
 
     // Register navigation menus
     register_nav_menus(array(
