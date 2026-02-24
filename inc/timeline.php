@@ -33,12 +33,14 @@ function aiad_register_timeline_post_type(): void {
             'all_items'          => __( 'All Entries', 'ai-awareness-day' ),
             'search_items'       => __( 'Search Timeline', 'ai-awareness-day' ),
         ),
-        'public'       => false,
+        'public'       => true,
+        'publicly_queryable' => true,
         'show_ui'      => true,
         'show_in_menu' => true,
         'menu_icon'    => 'dashicons-backup',
         'supports'     => array( 'title', 'editor', 'thumbnail' ),
         'show_in_rest' => true,
+        'rewrite'      => array( 'slug' => 'timeline', 'with_front' => false ),
     ) );
 }
 add_action( 'init', 'aiad_register_timeline_post_type' );
@@ -1092,7 +1094,7 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
             $likes      = (int) get_post_meta( $entry->ID, '_aiad_timeline_like_count', true );
             $entry_url  = get_permalink( $entry );
             if ( ! $entry_url ) {
-                $entry_url = home_url( '/#timeline' );
+                $entry_url = home_url( '/' );
             }
             $entry_title = get_the_title( $entry );
             $link_label  = $link_label ?: __( 'Learn more', 'ai-awareness-day' );

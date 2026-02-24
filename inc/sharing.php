@@ -138,6 +138,33 @@ function aiad_get_og_data(): array {
 		return $data;
 	}
 
+	// Single timeline entry
+	if ( is_singular( 'aiad_timeline' ) ) {
+		global $post;
+		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
+		
+		if ( has_excerpt( $post ) ) {
+			$data['description'] = get_the_excerpt( $post );
+		} else {
+			$data['description'] = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
+		}
+		
+		$data['url'] = get_permalink( $post );
+		$data['type'] = 'article';
+		
+		// Featured image or hero logo fallback
+		if ( has_post_thumbnail( $post ) ) {
+			$data['image'] = get_the_post_thumbnail_url( $post, 'large' );
+		} else {
+			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+			if ( $logo_id ) {
+				$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
+			}
+		}
+		
+		return $data;
+	}
+
 	// Archive pages
 	if ( is_post_type_archive() ) {
 		$post_type = get_post_type();
