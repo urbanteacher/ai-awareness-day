@@ -80,7 +80,34 @@ function aiad_get_og_data(): array {
 			}
 		}
 
-	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) || is_singular( 'aiad_timeline' ) ) {
+	// Single timeline entry - dedicated branch with emoji-safe description
+	if ( is_singular( 'aiad_timeline' ) ) {
+		global $post;
+		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
+		$data['url']   = get_permalink( $post );
+		$data['type']  = 'article';
+
+		// Timeline entries: try content, fallback to title (common for auto-generated)
+		$content = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
+		// Strip emoji characters that break social parsers
+		$content = preg_replace( '/[\x{1F600}-\x{1F64F}]/u', '', $content );
+		$content = preg_replace( '/[\x{1F300}-\x{1F5FF}]/u', '', $content );
+		$content = preg_replace( '/[\x{1F680}-\x{1F6FF}]/u', '', $content );
+		$content = preg_replace( '/[\x{1F1E0}-\x{1F1FF}]/u', '', $content );
+		$data['description'] = ! empty( $content ) ? $content : get_the_title( $post );
+
+		if ( has_post_thumbnail( $post ) ) {
+			$data['image_id'] = get_post_thumbnail_id( $post );
+			$data['image']    = wp_get_attachment_image_url( $data['image_id'], 'aiad_social' ) ?: '';
+		} else {
+			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+			if ( $logo_id ) {
+				$data['image_id'] = $logo_id;
+				$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+			}
+		}
+
+	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
 		$data['url']   = get_permalink( $post );
@@ -262,10 +289,18 @@ function aiad_output_og_tags(): void {
 		echo '<meta property="og:image" content="' . esc_url( $og_data['image'] ) . '" />' . "\n";
 		$image_id = ! empty( $og_data['image_id'] ) ? (int) $og_data['image_id'] : 0;
 		if ( $image_id ) {
-			$image_meta = wp_get_attachment_metadata( $image_id );
-			if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
-				echo '<meta property="og:image:width" content="' . esc_attr( $image_meta['width'] ) . '" />' . "\n";
-				echo '<meta property="og:image:height" content="' . esc_attr( $image_meta['height'] ) . '" />' . "\n";
+			// Try to get the aiad_social crop dimensions first
+			$crop_size = image_get_intermediate_size( $image_id, 'aiad_social' );
+			if ( $crop_size && isset( $crop_size['width'], $crop_size['height'] ) ) {
+				echo '<meta property="og:image:width" content="' . esc_attr( $crop_size['width'] ) . '" />' . "\n";
+				echo '<meta property="og:image:height" content="' . esc_attr( $crop_size['height'] ) . '" />' . "\n";
+			} else {
+				// Fallback to full image dimensions if crop doesn't exist yet
+				$image_meta = wp_get_attachment_metadata( $image_id );
+				if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
+					echo '<meta property="og:image:width" content="' . esc_attr( $image_meta['width'] ) . '" />' . "\n";
+					echo '<meta property="og:image:height" content="' . esc_attr( $image_meta['height'] ) . '" />' . "\n";
+				}
 			}
 			$image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 			if ( $image_alt ) {
