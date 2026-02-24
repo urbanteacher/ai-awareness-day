@@ -243,7 +243,7 @@ function aiad_scripts(): void
     }
 
     // Enqueue timeline assets on front page and single timeline entry pages
-    if (is_front_page() || is_singular('timeline')) {
+    if ((is_front_page() || is_singular('timeline')) && !is_admin()) {
         $timeline_css = AIAD_DIR . '/assets/css/components/timeline.css';
         $timeline_js  = AIAD_DIR . '/assets/js/timeline.js';
         wp_enqueue_style(
@@ -262,7 +262,7 @@ function aiad_scripts(): void
     }
 
     // Enqueue single timeline entry styles
-    if (is_singular('timeline')) {
+    if (is_singular('timeline') && !is_admin()) {
         $single_timeline_css = AIAD_DIR . '/assets/css/pages/single-timeline.css';
         wp_enqueue_style(
             'aiad-single-timeline',
