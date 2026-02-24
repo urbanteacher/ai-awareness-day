@@ -15,6 +15,31 @@ define( 'AIAD_VERSION', '1.3.2' );
 // TEMPORARY: Force flush rewrite rules — DELETE AFTER ONE PAGE LOAD
 flush_rewrite_rules();
 
+// TEMPORARY DEBUG — remove after checking
+add_action( 'init', function() {
+    if ( isset( $_GET['debug_cpt'] ) && current_user_can( 'manage_options' ) ) {
+        $cpt = get_post_type_object( 'aiad_timeline' );
+        echo '<pre>';
+        echo 'CPT exists: ' . ( $cpt ? 'YES' : 'NO' ) . "\n";
+        if ( $cpt ) {
+            echo 'Public: ' . ( $cpt->public ? 'YES' : 'NO' ) . "\n";
+            echo 'Publicly queryable: ' . ( $cpt->publicly_queryable ? 'YES' : 'NO' ) . "\n";
+            echo 'Rewrite: ';
+            print_r( $cpt->rewrite );
+        }
+        echo "\n\n--- Timeline rewrite rules ---\n";
+        global $wp_rewrite;
+        $rules = $wp_rewrite->wp_rewrite_rules();
+        foreach ( $rules as $pattern => $query ) {
+            if ( strpos( $pattern, 'timeline' ) !== false || strpos( $pattern, 'aiad_timeline' ) !== false ) {
+                echo "$pattern => $query\n";
+            }
+        }
+        echo '</pre>';
+        die;
+    }
+}, 999 );
+
 // Define theme paths after theme directory is registered (avoids wp_is_block_theme() notice in WP 6.8+).
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', __DIR__ );
