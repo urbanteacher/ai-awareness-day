@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Check if user has manually selected resources via Homepage Editor
 $selected_ids = array();
 for ( $i = 1; $i <= 3; $i++ ) {
-    $id = absint( get_theme_mod( 'aiad_homepage_handpicked_resource_' . $i, 0 ) );
+    $id = absint( get_theme_mod( 'aiad_handpicked_resource_' . $i, 0 ) );
     if ( $id > 0 ) {
         $selected_ids[] = $id;
     }

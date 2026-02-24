@@ -36,7 +36,7 @@ get_header();
                 $duration_str   = get_post_meta( get_the_ID(), '_aiad_duration', true );
                 $level          = get_post_meta( get_the_ID(), '_aiad_level', true );
                 $level_labels        = array( 'beginner' => __( 'Beginner', 'ai-awareness-day' ), 'intermediate' => __( 'Intermediate', 'ai-awareness-day' ), 'advanced' => __( 'Advanced', 'ai-awareness-day' ) );
-                $preview_dl_url      = get_post_meta( get_the_ID(), '_resource_download_url', true );
+                $preview_dl_url      = get_post_meta( get_the_ID(), '_aiad_download_url', true );
                 $preview_ext         = $preview_dl_url ? strtolower( pathinfo( wp_parse_url( $preview_dl_url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ) : '';
                 $pptx_embed_url      = ( $preview_ext === 'pptx' || $preview_ext === 'ppt' )
                     ? 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $preview_dl_url )
@@ -365,7 +365,7 @@ get_header();
                         <?php endif; ?>
                     </div>
                     <?php
-                    $download_url = get_post_meta( get_the_ID(), '_resource_download_url', true );
+                    $download_url = get_post_meta( get_the_ID(), '_aiad_download_url', true );
                     $download_label = $download_url && function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : __( 'Download', 'ai-awareness-day' );
                     ?>
                     <footer class="resource-activity-footer">

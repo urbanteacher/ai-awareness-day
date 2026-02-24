@@ -378,8 +378,7 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     $current_duration = wp_get_object_terms( $post->ID, 'resource_duration' );
     $current_activities = wp_get_object_terms( $post->ID, 'activity_type' );
     $key_stages      = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
-    // Meta field naming: _resource_download_url for resource post type download files
-    $download_url    = get_post_meta( $post->ID, '_resource_download_url', true );
+    $download_url    = get_post_meta( $post->ID, '_aiad_download_url', true );
     $filename        = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
 
     $theme_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
@@ -456,7 +455,7 @@ function aiad_resource_details_callback( WP_Post $post ): void {
 
     // Download file
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Download file', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-download">';
-    echo '<input type="hidden" id="resource_download_url" name="resource_download_url" value="' . esc_attr( $download_url ) . '">';
+    echo '<input type="hidden" id="aiad_download_url" name="aiad_download_url" value="' . esc_attr( $download_url ) . '">';
     echo '<button type="button" class="button" id="aiad_upload_download_btn">' . esc_html__( 'Upload / Select PDF or PPTX', 'ai-awareness-day' ) . '</button> ';
     echo '<button type="button" class="button" id="aiad_remove_download_btn" style="' . ( $download_url ? '' : 'display:none;' ) . '">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button>';
     echo '<p id="aiad_download_filename" class="description" style="' . ( $filename ? '' : 'display:none;' ) . '">' . esc_html__( 'File:', 'ai-awareness-day' ) . ' <strong>' . esc_html( $filename ) . '</strong></p>';
@@ -514,8 +513,8 @@ function aiad_save_resource_details( int $post_id ): void {
     }
     wp_set_object_terms( $post_id, $activities, 'activity_type' );
 
-    if ( isset( $_POST['resource_download_url'] ) ) {
-        update_post_meta( $post_id, '_resource_download_url', esc_url_raw( wp_unslash( $_POST['resource_download_url'] ) ) );
+    if ( isset( $_POST['aiad_download_url'] ) ) {
+        update_post_meta( $post_id, '_aiad_download_url', esc_url_raw( wp_unslash( $_POST['aiad_download_url'] ) ) );
     }
 
     $key_stages = array();

@@ -160,9 +160,10 @@ add_action( 'init', 'aiad_register_post_types' );
  * Register post meta fields for resources.
  * 
  * Meta field naming conventions:
- * - Resource post type: _resource_* for download URLs, _aiad_* for resource-specific fields
+ * - Resource post type: _aiad_* prefix for all resource-specific fields (including _aiad_download_url)
  * - Featured resource post type: _featured_resource_* prefix (see inc/meta-boxes.php)
  * - Partner post type: _partner_* prefix (see inc/meta-boxes.php)
+ * - Timeline post type: _aiad_timeline_* prefix (see inc/timeline.php)
  * 
  * @see aiad_register_post_types() for post type definitions
  */
@@ -378,6 +379,69 @@ function aiad_register_resource_meta(): void {
     ) );
 }
 add_action( 'init', 'aiad_register_resource_meta', 15 );
+
+/**
+ * Migrate old meta keys to new naming convention.
+ * 
+ * Migrations:
+ * - _resource_download_url → _aiad_download_url (consistency with other resource meta)
+ * - aiad_homepage_handpicked_resource_* → aiad_handpicked_resource_* (simplified naming)
+ * - aiad_homepage_free_resource_* → aiad_free_resource_* (simplified naming)
+ * 
+ * @since 1.1.0
+ */
+function aiad_migrate_meta_keys(): void {
+    if ( get_option( 'aiad_meta_migration_complete' ) ) {
+        return;
+    }
+
+    // Migrate _resource_download_url → _aiad_download_url
+    $resources = get_posts( array(
+        'post_type'      => 'resource',
+        'posts_per_page' => -1,
+        'post_status'    => 'any',
+        'meta_key'       => '_resource_download_url',
+        'meta_compare'   => 'EXISTS',
+    ) );
+
+    foreach ( $resources as $post ) {
+        $old_value = get_post_meta( $post->ID, '_resource_download_url', true );
+        if ( $old_value ) {
+            // Only migrate if new key doesn't exist
+            $new_value = get_post_meta( $post->ID, '_aiad_download_url', true );
+            if ( ! $new_value ) {
+                update_post_meta( $post->ID, '_aiad_download_url', $old_value );
+            }
+            // Delete old key
+            delete_post_meta( $post->ID, '_resource_download_url' );
+        }
+    }
+
+    // Migrate theme_mod keys: aiad_homepage_handpicked_resource_* → aiad_handpicked_resource_*
+    for ( $i = 1; $i <= 3; $i++ ) {
+        $old_key = 'aiad_homepage_handpicked_resource_' . $i;
+        $new_key = 'aiad_handpicked_resource_' . $i;
+        $old_value = get_theme_mod( $old_key );
+        if ( $old_value && ! get_theme_mod( $new_key ) ) {
+            set_theme_mod( $new_key, $old_value );
+            remove_theme_mod( $old_key );
+        }
+    }
+
+    // Migrate theme_mod keys: aiad_homepage_free_resource_* → aiad_free_resource_*
+    for ( $i = 1; $i <= 6; $i++ ) {
+        $old_key = 'aiad_homepage_free_resource_' . $i;
+        $new_key = 'aiad_free_resource_' . $i;
+        $old_value = get_theme_mod( $old_key );
+        if ( $old_value && ! get_theme_mod( $new_key ) ) {
+            set_theme_mod( $new_key, $old_value );
+            remove_theme_mod( $old_key );
+        }
+    }
+
+    update_option( 'aiad_meta_migration_complete', true );
+}
+add_action( 'admin_init', 'aiad_migrate_meta_keys' );
 
 /**
  * Pre-populate Resource Type and Theme terms (Themes = Safe, Smart, Creative, Responsible, Future)

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Check if user has manually selected resources via Homepage Editor
 $selected_ids = array();
 for ( $i = 1; $i <= 6; $i++ ) {
-    $id = absint( get_theme_mod( 'aiad_homepage_free_resource_' . $i, 0 ) );
+    $id = absint( get_theme_mod( 'aiad_free_resource_' . $i, 0 ) );
     if ( $id > 0 ) {
         $selected_ids[] = $id;
     }
@@ -61,7 +61,7 @@ if ( $free_resources->have_posts() ):
                     } elseif ( $durations && ! is_wp_error( $durations ) ) {
                         $duration_name = $durations[0]->name;
                     }
-                    $download_url = get_post_meta( get_the_ID(), '_resource_download_url', true );
+                    $download_url = get_post_meta( get_the_ID(), '_aiad_download_url', true );
                     $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
                     $placeholder_type = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
                         ? $activity_terms[0]->name

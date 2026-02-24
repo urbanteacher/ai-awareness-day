@@ -280,7 +280,7 @@ class AIAD_Homepage_Editor {
         
         // Save handpicked resources (featured_resource post IDs)
         for ( $i = 1; $i <= 3; $i++ ) {
-            $key = 'aiad_homepage_handpicked_resource_' . $i;
+            $key = 'aiad_handpicked_resource_' . $i;
             if ( isset( $_POST[ $key ] ) ) {
                 $val = absint( $_POST[ $key ] );
                 set_theme_mod( $key, $val );
@@ -290,7 +290,7 @@ class AIAD_Homepage_Editor {
         
         // Save free resources (resource post IDs)
         for ( $i = 1; $i <= 6; $i++ ) {
-            $key = 'aiad_homepage_free_resource_' . $i;
+            $key = 'aiad_free_resource_' . $i;
             if ( isset( $_POST[ $key ] ) ) {
                 $val = absint( $_POST[ $key ] );
                 set_theme_mod( $key, $val );
@@ -579,7 +579,7 @@ class AIAD_Homepage_Editor {
         
         echo '<table class="form-table" role="presentation">';
         for ( $i = 1; $i <= 3; $i++ ) {
-            $key = 'aiad_homepage_handpicked_resource_' . $i;
+            $key = 'aiad_handpicked_resource_' . $i;
             $current_id = absint( get_theme_mod( $key, 0 ) );
             
             echo '<tr><th scope="row"><label for="' . esc_attr( $key ) . '">' . sprintf( esc_html__( 'Handpicked Resource %d', 'ai-awareness-day' ), $i ) . '</label></th><td>';
@@ -632,7 +632,7 @@ class AIAD_Homepage_Editor {
         
         echo '<table class="form-table" role="presentation">';
         for ( $i = 1; $i <= 6; $i++ ) {
-            $key = 'aiad_homepage_free_resource_' . $i;
+            $key = 'aiad_free_resource_' . $i;
             $current_id = absint( get_theme_mod( $key, 0 ) );
             
             echo '<tr><th scope="row"><label for="' . esc_attr( $key ) . '">' . sprintf( esc_html__( 'Free Resource %d', 'ai-awareness-day' ), $i ) . '</label></th><td>';

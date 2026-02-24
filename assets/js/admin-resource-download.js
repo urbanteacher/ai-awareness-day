@@ -38,7 +38,7 @@
         frame.on('select', function() {
             var att = frame.state().get('selection').first().toJSON();
             if (att && att.url) {
-                $('#resource_download_url').val(att.url);
+                $('#aiad_download_url').val(att.url);
                 var name = att.filename || att.url.split('/').pop().split('?')[0];
                 $('#aiad_download_filename strong').text(name);
                 $('#aiad_download_filename').show();
@@ -51,7 +51,7 @@
     // Remove button handler
     $('#aiad_remove_download_btn').on('click', function(e) {
         e.preventDefault();
-        $('#resource_download_url').val('');
+        $('#aiad_download_url').val('');
         $('#aiad_download_filename').hide();
         $(this).hide();
     });

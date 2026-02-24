@@ -481,7 +481,7 @@ function aiad_ajax_filter_resources(): void {
                 }
             }
 
-            $download_url  = get_post_meta( $id, '_resource_download_url', true );
+            $download_url  = get_post_meta( $id, '_aiad_download_url', true );
             $featured_url  = get_post_meta( $id, '_featured_resource_url', true );
 
             $thumbnail = get_the_post_thumbnail_url( $id, 'medium_large' );

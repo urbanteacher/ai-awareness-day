@@ -208,7 +208,7 @@ get_header();
                         } elseif ($durations && !is_wp_error($durations)) {
                             $duration_name = $durations[0]->name;
                         }
-                        $download_url = get_post_meta(get_the_ID(), '_resource_download_url', true);
+                        $download_url = get_post_meta(get_the_ID(), '_aiad_download_url', true);
                         $duration_slug = $durations && !is_wp_error($durations) ? $durations[0]->slug : '';
                         $session_cards = function_exists('aiad_explore_session_cards') ? aiad_explore_session_cards() : array();
                         $activity_terms = get_the_terms(get_the_ID(), 'activity_type');
