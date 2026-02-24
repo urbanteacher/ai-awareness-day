@@ -201,6 +201,12 @@ function aiad_get_og_data(): array {
 		$data['image'] = wp_get_attachment_image_url( $logo_id, 'large' );
 	}
 	
+	// Ensure description is plain text (no HTML entities or stray whitespace)
+	if ( ! empty( $data['description'] ) ) {
+		$data['description'] = wp_strip_all_tags( $data['description'] );
+		$data['description'] = trim( preg_replace( '/\s+/', ' ', $data['description'] ) );
+	}
+	
 	return $data;
 }
 
@@ -324,6 +330,11 @@ function aiad_output_og_tags(): void {
 				echo '<meta property="og:image:width" content="' . esc_attr( $image_meta['width'] ) . '" />' . "\n";
 				echo '<meta property="og:image:height" content="' . esc_attr( $image_meta['height'] ) . '" />' . "\n";
 			}
+			// Add image alt text for accessibility
+			$image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+			if ( $image_alt ) {
+				echo '<meta property="og:image:alt" content="' . esc_attr( $image_alt ) . '" />' . "\n";
+			}
 		}
 	}
 	
@@ -333,6 +344,15 @@ function aiad_output_og_tags(): void {
 	echo '<meta name="twitter:description" content="' . esc_attr( $og_data['description'] ) . '" />' . "\n";
 	if ( ! empty( $og_data['image'] ) ) {
 		echo '<meta name="twitter:image" content="' . esc_url( $og_data['image'] ) . '" />' . "\n";
+	}
+	
+	// Article metadata for singular posts (improves freshness signals)
+	if ( 'article' === $og_data['type'] && is_singular() ) {
+		global $post;
+		if ( $post ) {
+			echo '<meta property="article:published_time" content="' . esc_attr( get_the_date( 'c', $post ) ) . '" />' . "\n";
+			echo '<meta property="article:modified_time" content="' . esc_attr( get_the_modified_date( 'c', $post ) ) . '" />' . "\n";
+		}
 	}
 }
 add_action( 'wp_head', 'aiad_output_og_tags', 5 );
