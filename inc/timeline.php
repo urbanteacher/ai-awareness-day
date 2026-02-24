@@ -39,9 +39,9 @@ function aiad_register_timeline_post_type(): void {
         'show_ui'      => true,
         'show_in_menu' => true,
         'menu_icon'    => 'dashicons-backup',
-        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
         'show_in_rest' => true,
-        'rewrite'      => array( 'slug' => 'timeline' ),
+        'rewrite'      => array( 'slug' => 'timeline', 'with_front' => false ),
     ) );
 }
 add_action( 'init', 'aiad_register_timeline_post_type' );
