@@ -12,9 +12,9 @@
     }
 
     var feed   = document.getElementById( 'timeline-feed' );
-    var track  = feed ? feed.querySelector( '.timeline__track' ) : null;
+    var track  = feed ? feed.querySelector( '.timeline-feed__track' ) : null;
     var btn    = document.getElementById( 'timeline-load-more' );
-    var wrap   = btn ? btn.closest( '.timeline__load-more' ) : null;
+    var wrap   = btn ? btn.closest( '.timeline-feed__load-more' ) : null;
     var filters = document.querySelectorAll( '.timeline-filter-btn' );
     var currentFilter = 'all';
 

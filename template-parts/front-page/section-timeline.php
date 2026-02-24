@@ -83,16 +83,16 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
         </div>
         <?php endif; ?>
 
-        <div class="timeline" id="timeline-feed" data-offset="<?php echo esc_attr( (string) count( $entries ) ); ?>">
-            <div class="timeline__track">
+        <div class="timeline-feed" id="timeline-feed" data-offset="<?php echo esc_attr( (string) count( $entries ) ); ?>">
+            <div class="timeline-feed__track">
                 <?php foreach ( $entries as $entry ) : ?>
                     <?php echo aiad_render_timeline_entry( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — escaped inside renderer ?>
                 <?php endforeach; ?>
             </div>
 
             <?php if ( $has_more ) : ?>
-                <div class="timeline__load-more">
-                    <button type="button" class="btn-action timeline__load-btn" id="timeline-load-more">
+                <div class="timeline-feed__load-more">
+                    <button type="button" class="btn-action timeline-feed__load-btn" id="timeline-load-more">
                         <?php esc_html_e( 'Load more updates', 'ai-awareness-day' ); ?>
                         <span class="btn-action__icon" aria-hidden="true">+</span>
                     </button>

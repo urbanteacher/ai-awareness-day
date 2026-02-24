@@ -253,7 +253,7 @@
 }
 
 /* ── Track: scroll contained in box so main page doesn't grow ────── */
-.timeline {
+.timeline-feed {
     margin-top: 2rem;
     position: relative;
     max-height: 65vh;
@@ -266,7 +266,7 @@
     padding: 0;
 }
 
-.timeline__track {
+.timeline-feed__track {
     position: relative;
     padding: 0;
     width: 100%;
@@ -614,13 +614,13 @@
 }
 
 /* ── Load more button area (branded like nav CTA) ───────────────── */
-.timeline__load-more {
+.timeline-feed__load-more {
     margin-top: 1.5rem;
     padding: 0;
     text-align: left;
 }
 
-.timeline__load-btn {
+.timeline-feed__load-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -638,25 +638,25 @@
     transition: var(--transition);
 }
 
-.timeline__load-btn:hover {
+.timeline-feed__load-btn:hover {
     background: var(--green-700);
     color: var(--white);
     transform: translateY(-1px);
 }
 
-.timeline__load-btn:focus {
+.timeline-feed__load-btn:focus {
     outline: 2px solid var(--green-600);
     outline-offset: 2px;
 }
 
-.timeline__load-btn .btn-action__icon {
+.timeline-feed__load-btn .btn-action__icon {
     font-size: 1rem;
     line-height: 1;
     opacity: 0.9;
 }
 
 /* Loading state (set via JS) */
-.timeline__load-btn.is-loading {
+.timeline-feed__load-btn.is-loading {
     opacity: 0.6;
     pointer-events: none;
     transform: none;
@@ -664,7 +664,7 @@
 
 /* ── Desktop: same stacked layout, video ~50% larger and full-bleed ──── */
 @media (min-width: 768px) {
-    .timeline__track {
+    .timeline-feed__track {
         padding: 0;
     }
 
@@ -676,13 +676,13 @@
         font-size: 1.05rem;
     }
 
-    .timeline__load-more {
+    .timeline-feed__load-more {
         padding: 0;
     }
 }
 
 /* ── Empty state ─────────────────────────── */
-.timeline--empty {
+.timeline-feed--empty {
     text-align: center;
     padding: 3rem 0;
     color: var(--gray-500);
