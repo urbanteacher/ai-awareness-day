@@ -80,7 +80,7 @@ function aiad_get_og_data(): array {
 			}
 		}
 
-	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) || is_singular( 'aiad_timeline' ) ) {
+	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) || is_singular( 'timeline' ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
 		$data['url']   = get_permalink( $post );

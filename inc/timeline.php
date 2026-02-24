@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Hooked at priority 10 (runs inside aiad_register_post_types or separately).
  */
 function aiad_register_timeline_post_type(): void {
-    register_post_type( 'aiad_timeline', array(
+    register_post_type( 'timeline', array(
         'labels' => array(
             'name'               => __( 'Timeline', 'ai-awareness-day' ),
             'singular_name'      => __( 'Timeline Entry', 'ai-awareness-day' ),
@@ -40,7 +40,7 @@ function aiad_register_timeline_post_type(): void {
         'menu_icon'    => 'dashicons-backup',
         'supports'     => array( 'title', 'editor', 'thumbnail' ),
         'show_in_rest' => true,
-        'rewrite'      => array( 'slug' => 'timeline', 'with_front' => false ),
+        'rewrite'      => array( 'slug' => 'timeline' ),
     ) );
 }
 add_action( 'init', 'aiad_register_timeline_post_type' );
@@ -49,7 +49,7 @@ add_action( 'init', 'aiad_register_timeline_post_type' );
  * Register Category taxonomy for timeline entries (shown with the title on the front).
  */
 function aiad_register_timeline_category_taxonomy(): void {
-    register_taxonomy( 'timeline_category', 'aiad_timeline', array(
+    register_taxonomy( 'timeline_category', 'timeline', array(
         'labels'            => array(
             'name'          => __( 'Categories', 'ai-awareness-day' ),
             'singular_name' => __( 'Category', 'ai-awareness-day' ),
@@ -94,7 +94,7 @@ function aiad_register_timeline_meta(): void {
     );
 
     foreach ( $meta_fields as $key => $args ) {
-        register_post_meta( 'aiad_timeline', $key, array(
+        register_post_meta( 'timeline', $key, array(
             'type'          => $args['type'],
             'single'        => true,
             'default'       => $args['default'],
@@ -165,7 +165,7 @@ function aiad_timeline_meta_box(): void {
         'aiad_timeline_details',
         __( 'Entry Details', 'ai-awareness-day' ),
         'aiad_timeline_meta_box_callback',
-        'aiad_timeline',
+        'timeline',
         'side',
         'high'
     );
@@ -322,7 +322,7 @@ function aiad_save_timeline_meta( int $post_id ): void {
         update_post_meta( $post_id, '_aiad_timeline_source', 'manual' );
     }
 }
-add_action( 'save_post_aiad_timeline', 'aiad_save_timeline_meta' );
+add_action( 'save_post_timeline', 'aiad_save_timeline_meta' );
 
 /* ──────────────────────────────────────────────
    3. Icon Options & SVG Renderer
@@ -531,7 +531,7 @@ function aiad_create_timeline_entry( array $args ) {
     // Prevent duplicates: check if an auto entry with this related_id + auto_type already exists
     if ( $args['related_id'] > 0 && $args['auto_type'] !== '' ) {
         $existing = get_posts( array(
-            'post_type'      => 'aiad_timeline',
+            'post_type'      => 'timeline',
             'post_status'    => 'publish',
             'posts_per_page' => 1,
             'meta_query'     => array(
@@ -546,7 +546,7 @@ function aiad_create_timeline_entry( array $args ) {
     }
 
     $post_id = wp_insert_post( array(
-        'post_type'    => 'aiad_timeline',
+        'post_type'    => 'timeline',
         'post_title'   => sanitize_text_field( $args['title'] ),
         'post_content' => wp_kses_post( $args['content'] ),
         'post_status'  => 'publish',
@@ -654,7 +654,7 @@ function aiad_timeline_maybe_create_countdown_entries(): void {
 
     // One query to fetch all existing countdown entries instead of one per beat.
     $existing_entries = get_posts( array(
-        'post_type'      => 'aiad_timeline',
+        'post_type'      => 'timeline',
         'post_status'    => 'publish',
         'posts_per_page' => count( $beats ),
         'meta_query'     => array(
@@ -722,7 +722,7 @@ function aiad_timeline_maybe_create_themes_complete_entry(): void {
         return;
     }
     $existing = get_posts( array(
-        'post_type'      => 'aiad_timeline',
+        'post_type'      => 'timeline',
         'post_status'    => 'publish',
         'posts_per_page' => 1,
         'meta_query'     => array( array( 'key' => '_aiad_timeline_auto_type', 'value' => 'themes_complete', 'compare' => '=' ) ),
@@ -805,7 +805,7 @@ function aiad_timeline_check_submission_milestone(): void {
         if ( $total >= $threshold ) {
             // Check if this milestone entry already exists
             $existing = get_posts( array(
-                'post_type'      => 'aiad_timeline',
+                'post_type'      => 'timeline',
                 'post_status'    => 'publish',
                 'posts_per_page' => 1,
                 'title'          => sprintf( '%d sign-ups reached', $threshold ),
@@ -870,7 +870,7 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $
     // First page: get pinned entries first
     if ( 0 === $offset ) {
         $pinned_args = array(
-            'post_type'      => 'aiad_timeline',
+            'post_type'      => 'timeline',
             'post_status'    => 'publish',
             'posts_per_page' => 3, // Max 3 pinned items
             'orderby'        => 'date',
@@ -891,7 +891,7 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $
     if ( $remaining > 0 ) {
         $exclude_ids = wp_list_pluck( $entries, 'ID' );
         $args = array(
-            'post_type'      => 'aiad_timeline',
+            'post_type'      => 'timeline',
             'post_status'    => 'publish',
             'posts_per_page' => $remaining + 1, // +1 to check if more exist
             'offset'         => $offset > 0 ? $offset : 0,
@@ -913,7 +913,7 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $
 
     // Pinned entries fill the page; check if any non-pinned entries exist before claiming more.
     $check = get_posts( array(
-        'post_type'      => 'aiad_timeline',
+        'post_type'      => 'timeline',
         'post_status'    => 'publish',
         'posts_per_page' => 1,
         'post__not_in'   => wp_list_pluck( $entries, 'ID' ),
@@ -1191,7 +1191,7 @@ function aiad_ajax_timeline_like(): void {
     }
 
     $post = get_post( $entry_id );
-    if ( ! $post || $post->post_type !== 'aiad_timeline' ) {
+    if ( ! $post || $post->post_type !== 'timeline' ) {
         wp_send_json_error( array( 'message' => __( 'Invalid entry.', 'ai-awareness-day' ) ) );
     }
 
