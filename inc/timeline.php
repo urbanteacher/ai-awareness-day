@@ -35,6 +35,7 @@ function aiad_register_timeline_post_type(): void {
         ),
         'public'       => true,
         'publicly_queryable' => true,
+        'has_archive'  => 'timeline',
         'show_ui'      => true,
         'show_in_menu' => true,
         'menu_icon'    => 'dashicons-backup',
