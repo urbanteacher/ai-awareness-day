@@ -73,6 +73,20 @@ function aiad_flush_rewrite_rules_on_activation(): void
 add_action('after_switch_theme', 'aiad_flush_rewrite_rules_on_activation');
 
 /**
+ * Flush rewrite rules once whenever AIAD_VERSION changes.
+ * Fires on the first admin page load after a theme update so new CPT rewrite
+ * slugs (e.g. /timeline/) are registered without requiring a manual
+ * Settings → Permalinks → Save.
+ */
+add_action('admin_init', function (): void {
+    if (get_option('aiad_rewrite_version') === AIAD_VERSION) {
+        return;
+    }
+    flush_rewrite_rules(false);
+    update_option('aiad_rewrite_version', AIAD_VERSION);
+});
+
+/**
  * WordPress 6.9+ compatibility: classic theme block styles
  *
  * WP 6.9 loads block styles on demand in classic themes, which can break layouts

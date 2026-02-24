@@ -10,37 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.3.2' );
-
-// TEMPORARY: Force flush rewrite rules — DELETE AFTER ONE PAGE LOAD
-flush_rewrite_rules();
-
-// TEMPORARY DEBUG — remove after checking
-add_action( 'admin_notices', function() {
-    if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'debug-timeline' ) return;
-    
-    $cpt = get_post_type_object( 'aiad_timeline' );
-    echo '<div class="notice" style="white-space:pre;font-family:monospace;padding:20px;">';
-    echo 'CPT exists: ' . ( $cpt ? 'YES' : 'NO' ) . "\n";
-    if ( $cpt ) {
-        echo 'Public: ' . ( $cpt->public ? 'YES' : 'NO' ) . "\n";
-        echo 'Publicly queryable: ' . ( $cpt->publicly_queryable ? 'YES' : 'NO' ) . "\n";
-        echo 'Rewrite: ' . print_r( $cpt->rewrite, true ) . "\n";
-    }
-    
-    global $wp_rewrite;
-    $rules = $wp_rewrite->wp_rewrite_rules();
-    echo "\n--- Rewrite rules with 'timeline' ---\n";
-    $found = false;
-    foreach ( $rules as $pattern => $query ) {
-        if ( strpos( $pattern, 'timeline' ) !== false ) {
-            echo "$pattern => $query\n";
-            $found = true;
-        }
-    }
-    if ( ! $found ) echo "NONE FOUND\n";
-    echo '</div>';
-});
+define( 'AIAD_VERSION', '1.3.3' );
 
 // Define theme paths after theme directory is registered (avoids wp_is_block_theme() notice in WP 6.8+).
 if ( ! defined( 'AIAD_DIR' ) ) {
