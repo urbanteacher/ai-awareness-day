@@ -35,6 +35,79 @@
         });
 
         // ============================================
+        // Stats counter animation
+        // ============================================
+        const statsBar = document.querySelector('.timeline-stats-bar');
+        if (statsBar) {
+            const statElements = statsBar.querySelectorAll('.timeline-stats-bar__stat');
+            const valueElements = statsBar.querySelectorAll('.timeline-stats-bar__value');
+
+            // Animate counter from 0 to target value
+            function animateCounter(element, targetValue, duration) {
+                const startTime = performance.now();
+                const target = parseInt(targetValue, 10);
+
+                if (isNaN(target) || target === 0) {
+                    element.textContent = targetValue;
+                    element.classList.add('animated');
+                    return;
+                }
+
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Easing function for smooth animation
+                    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                    const currentValue = Math.floor(easeOutQuart * target);
+
+                    element.textContent = currentValue;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        element.textContent = targetValue;
+                        element.classList.remove('counting');
+                        element.classList.add('animated');
+                    }
+                }
+
+                element.classList.add('counting');
+                requestAnimationFrame(updateCounter);
+            }
+
+            // Intersection Observer for stats bar
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // Add staggered animation class to each stat
+                        statElements.forEach((stat, index) => {
+                            setTimeout(() => {
+                                stat.classList.add('animate-in');
+                            }, index * 100);
+                        });
+
+                        // Animate each counter with staggered delay
+                        valueElements.forEach((valueEl, index) => {
+                            const targetValue = valueEl.textContent;
+                            setTimeout(() => {
+                                animateCounter(valueEl, targetValue, 1500);
+                            }, 300 + (index * 200));
+                        });
+
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3,
+            });
+
+            statsObserver.observe(statsBar);
+        }
+
+        // ============================================
         // Header scroll state
         // ============================================
         const header = document.getElementById('site-header');

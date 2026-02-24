@@ -69,6 +69,78 @@
     50% { opacity: 0.85; }
 }
 
+/* ── Stats counter animation ─────────────────────────── */
+/* Initial state: hidden and scaled down */
+.timeline-stats-bar__stat {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* Animated state: visible with staggered delays */
+.timeline-stats-bar__stat.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-stats-bar__stat:nth-child(1) { transition-delay: 0.1s; }
+.timeline-stats-bar__stat:nth-child(2) { transition-delay: 0.25s; }
+.timeline-stats-bar__stat:nth-child(3) { transition-delay: 0.4s; }
+.timeline-stats-bar__stat:nth-child(4) { transition-delay: 0.55s; }
+.timeline-stats-bar__stat:nth-child(5) { transition-delay: 0.7s; }
+
+/* Fallback for when JS is disabled */
+.no-js .timeline-stats-bar__stat {
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+/* Counter value pop animation */
+.timeline-stats-bar__value {
+    display: inline-block;
+}
+
+.timeline-stats-bar__value.counting {
+    animation: counter-pop 0.3s ease-out;
+}
+
+@keyframes counter-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* Glow pulse animation for values after counting */
+.timeline-stats-bar__value.animated {
+    animation: value-glow-pulse 2s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+@keyframes value-glow-pulse {
+    0%, 100% { 
+        text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    }
+    50% { 
+        text-shadow: 0 0 15px rgba(74, 222, 128, 0.8), 0 0 25px rgba(74, 222, 128, 0.4);
+    }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .timeline-stats-bar__stat {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .timeline-stats-bar__value.counting {
+        animation: none;
+    }
+    .timeline-stats-bar__value.animated {
+        animation: none;
+    }
+}
+
 /* Short labels hidden on desktop */
 .timeline-stats-bar__label--short {
     display: none;
