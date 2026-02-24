@@ -147,6 +147,20 @@ get_header();
 						<?php endif; ?>
 						<?php esc_html_e( 'Back to timeline', 'ai-awareness-day' ); ?>
 					</a>
+					<button
+						type="button"
+						class="single-timeline-entry__share"
+						data-url="<?php echo esc_url( get_permalink() ); ?>"
+						data-title="<?php echo esc_attr( get_the_title() ); ?>"
+						aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>"
+					>
+						<?php if ( function_exists( 'aiad_timeline_share_icon_svg' ) ) : ?>
+							<span class="single-timeline-entry__share-icon" aria-hidden="true">
+								<?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							</span>
+						<?php endif; ?>
+						<?php esc_html_e( 'Share', 'ai-awareness-day' ); ?>
+					</button>
 				</nav>
 
 			</div>

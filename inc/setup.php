@@ -261,7 +261,7 @@ function aiad_scripts(): void
         );
     }
 
-    // Enqueue single timeline entry styles
+    // Enqueue single timeline entry styles and share script
     if (is_singular('timeline') && !is_admin()) {
         $single_timeline_css = AIAD_DIR . '/assets/css/pages/single-timeline.css';
         wp_enqueue_style(
@@ -269,6 +269,14 @@ function aiad_scripts(): void
             AIAD_URI . '/assets/css/pages/single-timeline.css',
             array('aiad-timeline'),
             file_exists($single_timeline_css) ? filemtime($single_timeline_css) : AIAD_VERSION
+        );
+        $single_timeline_js = AIAD_DIR . '/assets/js/single-timeline.js';
+        wp_enqueue_script(
+            'aiad-single-timeline',
+            AIAD_URI . '/assets/js/single-timeline.js',
+            array(),
+            file_exists($single_timeline_js) ? filemtime($single_timeline_js) : AIAD_VERSION,
+            true
         );
     }
 }
