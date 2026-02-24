@@ -109,6 +109,41 @@ function aiad_register_timeline_meta(): void {
 add_action( 'init', 'aiad_register_timeline_meta', 15 );
 
 /**
+ * Migrate existing posts from the old CPT slug (aiad_timeline) to the current slug (timeline).
+ *
+ * The CPT was renamed in v1.3.4. Any posts created before that rename are stored with
+ * post_type = 'aiad_timeline' in the database. Since that slug is no longer registered,
+ * those entries load without block editor support — no slug panel, no excerpt, no template.
+ * This one-time migration updates them so they behave like normal 'timeline' posts.
+ *
+ * @since 1.3.4
+ */
+function aiad_migrate_timeline_post_type(): void {
+    if ( get_option( 'aiad_timeline_cpt_migrated' ) ) {
+        return;
+    }
+    global $wpdb;
+    $ids = $wpdb->get_col( $wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s",
+        'aiad_timeline'
+    ) );
+    if ( $ids ) {
+        $wpdb->update(
+            $wpdb->posts,
+            array( 'post_type' => 'timeline' ),
+            array( 'post_type' => 'aiad_timeline' ),
+            array( '%s' ),
+            array( '%s' )
+        );
+        foreach ( $ids as $id ) {
+            clean_post_cache( (int) $id );
+        }
+    }
+    update_option( 'aiad_timeline_cpt_migrated', true );
+}
+add_action( 'admin_init', 'aiad_migrate_timeline_post_type' );
+
+/**
  * Config for editable timeline meta fields. Add a new entry here to get admin UI and save automatically;
  * then use the meta key in aiad_render_timeline_entry() if you want it on the front.
  *
