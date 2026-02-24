@@ -81,7 +81,7 @@ function aiad_get_og_data(): array {
 		}
 
 	// Single timeline entry - dedicated branch with emoji-safe description
-	if ( is_singular( 'aiad_timeline' ) ) {
+	} elseif ( is_singular( 'aiad_timeline' ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
 		$data['url']   = get_permalink( $post );
