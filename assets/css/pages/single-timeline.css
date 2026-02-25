@@ -1,28 +1,23 @@
 /* ============================================
    PAGE: Single Timeline Entry
-   Layout: dark hero → white body
+   Clean, modern, light layout
    ============================================ */
 
 .single-timeline {
 	background: var(--white);
+	padding: 2.5rem 1.25rem 4rem;
 }
 
-/* ── Hero: dark full-width header ── */
-.single-timeline-entry__hero {
-	background: var(--gray-900);
-	color: var(--white);
-	padding: 2.5rem 1.25rem 3rem;
-}
-
-.single-timeline-entry__hero-inner {
+/* ── Container ── */
+.single-timeline-entry__container {
 	max-width: 760px;
 	margin-inline: auto;
 	display: flex;
 	flex-direction: column;
-	gap: 1.25rem;
+	gap: 2rem;
 }
 
-/* Back link */
+/* ── Back link ── */
 .single-timeline-entry__back {
 	display: inline-flex;
 	align-items: center;
@@ -32,29 +27,26 @@
 	font-weight: 600;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	color: var(--green-400, #4ade80);
+	color: var(--gray-500);
 	text-decoration: none;
-	transition: opacity 0.15s ease;
+	transition: color 0.15s ease;
 	align-self: flex-start;
 }
 
 .single-timeline-entry__back:hover,
 .single-timeline-entry__back:focus-visible {
-	opacity: 0.75;
+	color: var(--green-600);
 	outline: 2px solid currentColor;
 	outline-offset: 3px;
 }
 
-.single-timeline-entry__back svg {
-	flex-shrink: 0;
-}
-
-/* Badge + date row */
-.single-timeline-entry__meta {
+/* ── Header ── */
+.single-timeline-entry__header {
 	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.5rem 0.75rem;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--gray-200);
 }
 
 .single-timeline-entry__badge {
@@ -65,62 +57,42 @@
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	padding: 0.25em 0.65em;
-	background: rgba(255, 255, 255, 0.12);
+	background: var(--gray-900);
 	color: var(--white);
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	align-self: flex-start;
 }
 
 .single-timeline-entry__badge--pinned {
 	background: var(--green-600);
-	border-color: var(--green-600);
 }
 
-.single-timeline-entry__date {
-	font-family: var(--font-display);
-	font-size: 0.78rem;
-	letter-spacing: 0.05em;
-	color: rgba(255, 255, 255, 0.55);
-}
-
-/* Title */
 .single-timeline-entry__title {
 	font-family: var(--font-display);
 	font-size: clamp(1.65rem, 4.5vw, 2.75rem);
 	font-weight: 700;
 	letter-spacing: -0.02em;
 	line-height: 1.15;
-	color: var(--white);
+	color: var(--gray-900);
 	margin: 0;
 	overflow-wrap: break-word;
 	word-break: break-word;
 }
 
-/* Excerpt: lead text below title */
+.single-timeline-entry__date {
+	font-size: 0.85rem;
+	color: var(--gray-500);
+}
+
 .single-timeline-entry__excerpt {
-	font-size: 1rem;
+	font-size: 1.05rem;
 	line-height: 1.7;
-	color: rgba(255, 255, 255, 0.7);
-	margin: 0;
-}
-
-/* ── Body: white content area ── */
-.single-timeline-entry__body {
-	background: var(--white);
-	padding: 2.5rem 1.25rem 3.5rem;
-}
-
-.single-timeline-entry__container {
-	max-width: 760px;
-	margin-inline: auto;
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
+	color: var(--gray-600);
+	margin: 0.25rem 0 0;
 }
 
 /* ── Media ── */
 .single-timeline-entry__media {
 	overflow: hidden;
-	border-radius: var(--border-radius);
 }
 
 .single-timeline-entry__media .timeline-entry__video-facade {
@@ -165,7 +137,6 @@
 	height: auto;
 	display: block;
 	object-fit: cover;
-	border-radius: var(--border-radius);
 }
 
 /* ── Content ── */
@@ -242,7 +213,7 @@
 	align-items: center;
 }
 
-/* ── Footer: share button ── */
+/* ── Footer: share ── */
 .single-timeline-entry__footer {
 	padding-top: 1.5rem;
 	border-top: 1px solid var(--gray-200);
@@ -277,20 +248,16 @@
 
 /* ── Mobile ── */
 @media (max-width: 600px) {
-	.single-timeline-entry__hero {
-		padding: 2rem 1rem 2.5rem;
+	.single-timeline {
+		padding: 1.5rem 1rem 3rem;
 	}
 
-	.single-timeline-entry__body {
-		padding: 2rem 1rem 3rem;
+	.single-timeline-entry__title {
+		font-size: clamp(1.4rem, 6vw, 1.9rem);
 	}
 
 	.single-timeline-entry__linkedin {
 		max-width: 100%;
 		aspect-ratio: 1 / 1.13;
-	}
-
-	.single-timeline-entry__title {
-		font-size: clamp(1.4rem, 6vw, 1.9rem);
 	}
 }
