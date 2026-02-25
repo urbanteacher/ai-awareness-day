@@ -22,9 +22,9 @@ $categories = get_terms( array(
 
 	<div class="tools-archive__hero">
 		<div class="container">
-			<span class="section-label"><?php esc_html_e( 'Free Tools', 'ai-awareness-day' ); ?></span>
-			<h1 class="tools-archive__title"><?php esc_html_e( 'Free AI Tools for Teachers', 'ai-awareness-day' ); ?></h1>
-			<p class="tools-archive__desc"><?php esc_html_e( 'No budget required — start using AI in your classroom today.', 'ai-awareness-day' ); ?></p>
+			<span class="section-label"><?php esc_html_e( 'AI Tools', 'ai-awareness-day' ); ?></span>
+			<h1 class="tools-archive__title"><?php esc_html_e( 'AI Tools for Teachers', 'ai-awareness-day' ); ?></h1>
+			<p class="tools-archive__desc"><?php esc_html_e( 'Our curated collection of trending AI tools designed to enhance your lessons.', 'ai-awareness-day' ); ?></p>
 
 			<?php if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) : ?>
 				<div class="tools-filter" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'ai-awareness-day' ); ?>">
@@ -77,7 +77,7 @@ $categories = get_terms( array(
 						<?php
 						printf(
 							/* translators: %d: number of tools */
-							esc_html( _n( '%d free tool ready to use', '%d free tools ready to use', $tools->found_posts, 'ai-awareness-day' ) ),
+							esc_html( _n( '%d tool', '%d tools', $tools->found_posts, 'ai-awareness-day' ) ),
 							(int) $tools->found_posts
 						);
 						?>
