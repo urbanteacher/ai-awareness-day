@@ -144,6 +144,19 @@ function aiad_migrate_timeline_post_type(): void {
 add_action( 'admin_init', 'aiad_migrate_timeline_post_type' );
 
 /**
+ * One-time flush of rewrite rules after the aiad_timeline → timeline CPT rename.
+ * Runs separately from the post migration so it fires even if migration already completed.
+ */
+function aiad_flush_timeline_rewrite_rules(): void {
+    if ( get_option( 'aiad_timeline_rewrite_flushed' ) ) {
+        return;
+    }
+    flush_rewrite_rules( false );
+    update_option( 'aiad_timeline_rewrite_flushed', true );
+}
+add_action( 'admin_init', 'aiad_flush_timeline_rewrite_rules' );
+
+/**
  * Config for editable timeline meta fields. Add a new entry here to get admin UI and save automatically;
  * then use the meta key in aiad_render_timeline_entry() if you want it on the front.
  *
