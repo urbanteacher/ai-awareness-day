@@ -141,8 +141,11 @@ function aiad_get_og_data(): array {
 				$description = $subtitle;
 			} elseif ( has_excerpt( $post ) ) {
 				$description = get_the_excerpt( $post );
-			} else {
+			} elseif ( ! empty( $post->post_content ) ) {
 				$description = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
+			} else {
+				// Last-resort fallback: use the post title so og:description is never empty
+				$description = get_the_title( $post );
 			}
 		}
 		
