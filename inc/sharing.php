@@ -108,10 +108,12 @@ function aiad_get_og_data(): array {
 		if ( 'timeline' === $post->post_type ) {
 			// For timeline entries, check various meta fields and content
 			$timeline_content = '';
-			
+
 			// Check if there's content in the main editor
 			if ( ! empty( $post->post_content ) ) {
-				$timeline_content = wp_strip_all_tags( $post->post_content );
+				// Replace block-level tags with a space so sentences don't merge
+				$raw              = preg_replace( '#</?(?:p|div|br|li|h[1-6]|blockquote)[^>]*>#i', ' ', $post->post_content );
+				$timeline_content = wp_strip_all_tags( $raw );
 			}
 			
 			// If no editor content, try to get description from meta fields
@@ -198,10 +200,13 @@ function aiad_get_og_data(): array {
 		}
 	}
 
-	// Normalise description: strip HTML and collapse whitespace for all contexts
+	// Normalise description: strip HTML, collapse whitespace, trim to 155 chars
 	if ( ! empty( $data['description'] ) ) {
 		$data['description'] = wp_strip_all_tags( $data['description'] );
 		$data['description'] = trim( preg_replace( '/\s+/', ' ', $data['description'] ) );
+		if ( mb_strlen( $data['description'] ) > 155 ) {
+			$data['description'] = mb_substr( $data['description'], 0, 152 ) . '…';
+		}
 	}
 
 	return $data;
