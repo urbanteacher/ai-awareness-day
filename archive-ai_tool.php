@@ -2,21 +2,20 @@
 /**
  * Archive template for AI Tools (free-tools/).
  *
- * Groups tools by tool_category, with a category filter bar at the top.
+ * Groups tools by tool_category, with a client-side JS category filter.
+ * No page reloads — filtering is handled by tools-filter.js.
  *
  * @package AI_Awareness_Day
  */
 
 get_header();
 
-$categories   = get_terms( array(
+$categories = get_terms( array(
 	'taxonomy'   => 'tool_category',
 	'hide_empty' => true,
 	'orderby'    => 'name',
 	'order'      => 'ASC',
 ) );
-
-$active_cat   = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_GET['category'] ) ) : '';
 ?>
 
 <main id="main" role="main" class="tools-archive">
@@ -29,15 +28,19 @@ $active_cat   = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_
 
 			<?php if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) : ?>
 				<div class="tools-filter" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'ai-awareness-day' ); ?>">
-					<a href="<?php echo esc_url( get_post_type_archive_link( 'ai_tool' ) ); ?>"
-					   class="tools-filter__btn <?php echo empty( $active_cat ) ? 'tools-filter__btn--active' : ''; ?>">
+					<button class="tools-filter__btn tools-filter__btn--active"
+					        data-filter="all"
+					        aria-pressed="true"
+					        type="button">
 						<?php esc_html_e( 'All', 'ai-awareness-day' ); ?>
-					</a>
+					</button>
 					<?php foreach ( $categories as $cat ) : ?>
-						<a href="<?php echo esc_url( add_query_arg( 'category', $cat->slug, get_post_type_archive_link( 'ai_tool' ) ) ); ?>"
-						   class="tools-filter__btn <?php echo ( $active_cat === $cat->slug ) ? 'tools-filter__btn--active' : ''; ?>">
+						<button class="tools-filter__btn"
+						        data-filter="<?php echo esc_attr( $cat->slug ); ?>"
+						        aria-pressed="false"
+						        type="button">
 							<?php echo esc_html( $cat->name ); ?>
-						</a>
+						</button>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
@@ -47,13 +50,7 @@ $active_cat   = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_
 	<div class="container tools-archive__body">
 
 		<?php
-		// If a category filter is active, show just that category
-		if ( $active_cat && ! empty( $categories ) && ! is_wp_error( $categories ) ) {
-			$filtered = array_filter( $categories, fn( $c ) => $c->slug === $active_cat );
-			$display_cats = array_values( $filtered );
-		} else {
-			$display_cats = is_array( $categories ) && ! is_wp_error( $categories ) ? $categories : array();
-		}
+		$display_cats = ( ! empty( $categories ) && ! is_wp_error( $categories ) ) ? $categories : array();
 
 		foreach ( $display_cats as $cat ) :
 			$tools = new WP_Query( array(
@@ -73,7 +70,7 @@ $active_cat   = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_
 				continue;
 			}
 			?>
-			<div class="tools-group fade-up">
+			<div class="tools-group fade-up" data-category="<?php echo esc_attr( $cat->slug ); ?>">
 				<div class="tools-group__header">
 					<h2 class="tools-group__title"><?php echo esc_html( $cat->name ); ?></h2>
 					<span class="tools-group__count">
@@ -96,7 +93,7 @@ $active_cat   = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_
 			<?php
 		endforeach;
 
-		// If no categories yet, fall back to ungrouped grid
+		// Fallback: no categories yet — show ungrouped grid
 		if ( empty( $display_cats ) ) :
 			$all_tools = new WP_Query( array(
 				'post_type'      => 'ai_tool',
