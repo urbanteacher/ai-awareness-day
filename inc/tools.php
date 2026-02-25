@@ -64,25 +64,206 @@ function aiad_register_tool_category_taxonomy(): void {
 add_action( 'init', 'aiad_register_tool_category_taxonomy', 10 );
 
 /**
- * Pre-seed default tool categories on first activation.
+ * Pre-seed default tool categories and all 18 tools on first load.
+ * Runs once; uses an option flag to prevent re-seeding.
  */
-function aiad_seed_tool_categories(): void {
-	$default_categories = array(
-		'content-creation'       => __( 'Content Creation', 'ai-awareness-day' ),
-		'visual-creative'        => __( 'Visual & Creative', 'ai-awareness-day' ),
-		'learning-platforms'     => __( 'Learning Platforms', 'ai-awareness-day' ),
-		'subject-specific'       => __( 'Subject-Specific', 'ai-awareness-day' ),
-		'interactive-demos'      => __( 'Interactive Demos', 'ai-awareness-day' ),
-		'professional-development' => __( 'Professional Development', 'ai-awareness-day' ),
+function aiad_seed_tools(): void {
+	if ( get_option( 'aiad_tools_seeded' ) ) {
+		return;
+	}
+
+	// ── Categories ──────────────────────────────────────
+	$categories = array(
+		'content-creation'         => 'Content Creation',
+		'visual-creative'          => 'Visual & Creative',
+		'learning-platforms'       => 'Learning Platforms',
+		'subject-specific'         => 'Subject-Specific',
+		'interactive-demos'        => 'Interactive Demos',
+		'professional-development' => 'Professional Development',
 	);
 
-	foreach ( $default_categories as $slug => $name ) {
-		if ( ! term_exists( $slug, 'tool_category' ) ) {
-			wp_insert_term( $name, 'tool_category', array( 'slug' => $slug ) );
+	$term_ids = array();
+	foreach ( $categories as $slug => $name ) {
+		$existing = term_exists( $slug, 'tool_category' );
+		if ( $existing ) {
+			$term_ids[ $slug ] = is_array( $existing ) ? (int) $existing['term_id'] : (int) $existing;
+		} else {
+			$inserted = wp_insert_term( $name, 'tool_category', array( 'slug' => $slug ) );
+			if ( ! is_wp_error( $inserted ) ) {
+				$term_ids[ $slug ] = (int) $inserted['term_id'];
+			}
 		}
 	}
+
+	// ── Tools data ──────────────────────────────────────
+	$tools = array(
+
+		// Content Creation
+		array(
+			'title'    => 'Claude.ai',
+			'category' => 'content-creation',
+			'use_case' => 'Lesson planning, differentiation, feedback',
+			'url'      => 'https://claude.ai',
+			'features' => "Lesson planning assistance\nDifferentiation strategies\nStudent feedback generation\nCurriculum support\nDetailed explanations",
+		),
+		array(
+			'title'    => 'ChatGPT',
+			'category' => 'content-creation',
+			'use_case' => 'Brainstorming, rubrics, simplifying texts',
+			'url'      => 'https://chat.openai.com',
+			'features' => "Brainstorming sessions\nRubric creation\nText simplification\nQuestion generation\nLesson idea support",
+		),
+		array(
+			'title'    => 'Perplexity AI',
+			'category' => 'content-creation',
+			'use_case' => 'Research with citations, fact-checking',
+			'url'      => 'https://www.perplexity.ai',
+			'features' => "Research with citations\nFact-checking capabilities\nSource verification\nReal-time web search\nAcademic research support",
+		),
+
+		// Visual & Creative
+		array(
+			'title'    => 'Canva Education',
+			'category' => 'visual-creative',
+			'use_case' => 'AI-powered design for presentations',
+			'url'      => 'https://www.canva.com/education/',
+			'features' => "AI-powered design suggestions\nEducational templates\nPresentation creation\nClassroom materials\nCollaborative editing",
+		),
+		array(
+			'title'    => 'Bing Create',
+			'category' => 'visual-creative',
+			'use_case' => 'Generate custom images for lessons',
+			'url'      => 'https://www.bing.com/create',
+			'features' => "AI image generation\nCustom lesson visuals\nEducational illustrations\nFree to use\nMicrosoft integration",
+		),
+		array(
+			'title'    => 'Adobe Express',
+			'category' => 'visual-creative',
+			'use_case' => 'Quick graphics and animations',
+			'url'      => 'https://www.adobe.com/express/',
+			'features' => "Quick graphics creation\nAnimation tools\nTemplates library\nFree educator plan\nSocial media assets",
+		),
+
+		// Learning Platforms
+		array(
+			'title'    => 'Scratch + AI',
+			'category' => 'learning-platforms',
+			'use_case' => 'Block-based AI programming',
+			'url'      => 'https://scratch.mit.edu',
+			'features' => "Block-based programming\nAI integration\nStudent-friendly interface\nFree projects library\nClassroom sharing",
+		),
+		array(
+			'title'    => 'Teachable Machine',
+			'category' => 'learning-platforms',
+			'use_case' => 'Train AI models without coding',
+			'url'      => 'https://teachablemachine.withgoogle.com',
+			'features' => "No coding required\nImage classification\nAudio recognition\nPose detection\nExportable models",
+		),
+		array(
+			'title'    => 'Machine Learning for Kids',
+			'category' => 'learning-platforms',
+			'use_case' => 'Hands-on ML projects',
+			'url'      => 'https://machinelearningforkids.co.uk',
+			'features' => "Age-appropriate projects\nScratch integration\nHands-on activities\nFree classroom accounts\nReady-made worksheets",
+		),
+
+		// Subject-Specific
+		array(
+			'title'    => 'Wolfram Alpha',
+			'category' => 'subject-specific',
+			'use_case' => 'Mathematics and science calculations',
+			'url'      => 'https://www.wolframalpha.com',
+			'features' => "Mathematical calculations\nScience problem solving\nStep-by-step solutions\nGraphing tools\nData analysis",
+		),
+		array(
+			'title'    => 'Grammarly',
+			'category' => 'subject-specific',
+			'use_case' => 'Writing assistance and feedback',
+			'url'      => 'https://www.grammarly.com',
+			'features' => "Writing assistance\nGrammar checking\nStyle suggestions\nTone detection\nPlagiarism detection",
+		),
+		array(
+			'title'    => 'Khan Academy',
+			'category' => 'subject-specific',
+			'use_case' => 'AI-powered personalized learning',
+			'url'      => 'https://www.khanacademy.org',
+			'features' => "Personalized learning paths\nAI-powered recommendations\nAdaptive practice\nProgress tracking\nFree for all students",
+		),
+
+		// Interactive Demos
+		array(
+			'title'    => 'Quick Draw',
+			'category' => 'interactive-demos',
+			'use_case' => 'AI learns to recognize drawings',
+			'url'      => 'https://quickdraw.withgoogle.com',
+			'features' => "Drawing recognition\nReal-time AI learning\nEducational games\nNo account needed\nPattern recognition demo",
+		),
+		array(
+			'title'    => 'Semantris',
+			'category' => 'interactive-demos',
+			'use_case' => 'Word association AI game',
+			'url'      => 'https://research.google.com/semantris/',
+			'features' => "Word association game\nAI-powered gameplay\nEducational fun\nLanguage understanding\nNo account needed",
+		),
+		array(
+			'title'    => 'AutoDraw',
+			'category' => 'interactive-demos',
+			'use_case' => 'AI-assisted drawing tool',
+			'url'      => 'https://www.autodraw.com',
+			'features' => "AI-assisted drawing\nShape recognition\nCreative assistance\nFree to use\nNo account needed",
+		),
+
+		// Professional Development
+		array(
+			'title'    => 'Elements of AI',
+			'category' => 'professional-development',
+			'use_case' => 'Free AI fundamentals course',
+			'url'      => 'https://www.elementsofai.com',
+			'features' => "Free AI fundamentals course\nSelf-paced learning\nCertificate of completion\nNo technical background needed\nAvailable in many languages",
+		),
+		array(
+			'title'    => 'AI4K12',
+			'category' => 'professional-development',
+			'use_case' => 'AI curriculum guidelines',
+			'url'      => 'https://ai4k12.org',
+			'features' => "AI curriculum guidelines\nGrade-level standards\nLearning progressions\nFree lesson plans\nTeacher resources",
+		),
+		array(
+			'title'    => 'Google AI Education',
+			'category' => 'professional-development',
+			'use_case' => 'Ready-to-use lesson plans',
+			'url'      => 'https://edu.google.com/intl/ALL_uk/for-educators/program-summaries/ai/',
+			'features' => "Ready-to-use lesson plans\nTeacher training materials\nClassroom activities\nFree resources\nCross-curricular support",
+		),
+	);
+
+	// ── Insert posts ─────────────────────────────────────
+	foreach ( $tools as $i => $tool ) {
+		$post_id = wp_insert_post( array(
+			'post_title'  => $tool['title'],
+			'post_status' => 'publish',
+			'post_type'   => 'ai_tool',
+			'menu_order'  => $i,
+		) );
+
+		if ( is_wp_error( $post_id ) || ! $post_id ) {
+			continue;
+		}
+
+		update_post_meta( $post_id, '_aiad_tool_url', esc_url_raw( $tool['url'] ) );
+		update_post_meta( $post_id, '_aiad_tool_status', 'available' );
+		update_post_meta( $post_id, '_aiad_tool_use_case', $tool['use_case'] );
+		update_post_meta( $post_id, '_aiad_tool_features', $tool['features'] );
+
+		$cat_slug = $tool['category'];
+		if ( isset( $term_ids[ $cat_slug ] ) ) {
+			wp_set_object_terms( $post_id, array( $term_ids[ $cat_slug ] ), 'tool_category' );
+		}
+	}
+
+	update_option( 'aiad_tools_seeded', true );
 }
-add_action( 'init', 'aiad_seed_tool_categories', 20 );
+add_action( 'init', 'aiad_seed_tools', 25 );
 
 /* ──────────────────────────────────────────────
    3. Meta Fields
