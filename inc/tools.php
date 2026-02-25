@@ -265,6 +265,215 @@ function aiad_seed_tools(): void {
 }
 add_action( 'init', 'aiad_seed_tools', 25 );
 
+/**
+ * Seed additional tools (v2) — new categories + 19 more tools.
+ * Runs once; guarded by aiad_tools_seeded_v2.
+ */
+function aiad_seed_tools_v2(): void {
+	if ( get_option( 'aiad_tools_seeded_v2' ) ) {
+		return;
+	}
+
+	// ── New categories ───────────────────────────────────
+	$new_categories = array(
+		'productivity-organization' => 'Productivity & Organisation',
+		'audio-video'               => 'Audio & Video',
+		'image-design'              => 'Image & Design',
+		'writing-communication'     => 'Writing & Communication',
+		'research-reading'          => 'Research & Reading',
+	);
+
+	$term_ids = array();
+	foreach ( $new_categories as $slug => $name ) {
+		$existing = term_exists( $slug, 'tool_category' );
+		if ( $existing ) {
+			$term_ids[ $slug ] = is_array( $existing ) ? (int) $existing['term_id'] : (int) $existing;
+		} else {
+			$inserted = wp_insert_term( $name, 'tool_category', array( 'slug' => $slug ) );
+			if ( ! is_wp_error( $inserted ) ) {
+				$term_ids[ $slug ] = (int) $inserted['term_id'];
+			}
+		}
+	}
+
+	// Also resolve existing content-creation term for the extra 3 tools
+	$existing_cc = term_exists( 'content-creation', 'tool_category' );
+	if ( $existing_cc ) {
+		$term_ids['content-creation'] = is_array( $existing_cc ) ? (int) $existing_cc['term_id'] : (int) $existing_cc;
+	}
+
+	// ── New tools ────────────────────────────────────────
+	$tools = array(
+
+		// Content Creation (3 more)
+		array(
+			'title'    => 'NotebookLM',
+			'category' => 'content-creation',
+			'use_case' => 'AI research notebook for lesson prep and notes',
+			'url'      => 'https://notebooklm.google.com',
+			'features' => "Upload documents and ask questions\nAI-generated summaries\nPodcast-style audio overviews\nSource-grounded answers\nFree with Google account",
+		),
+		array(
+			'title'    => 'Goblin Tools',
+			'category' => 'content-creation',
+			'use_case' => 'Simple AI tools for breaking down tasks',
+			'url'      => 'https://goblin.tools',
+			'features' => "Task breakdown for neurodivergent users\nMagic To Do list\nJudgement Remover for tone\nFormaliser for writing\nFree to use",
+		),
+		array(
+			'title'    => 'Gemini',
+			'category' => 'content-creation',
+			'use_case' => 'Google AI for lesson planning and content',
+			'url'      => 'https://gemini.google.com',
+			'features' => "Lesson planning assistance\nDocument and image understanding\nGoogle Workspace integration\nReal-time information access\nFree with Google account",
+		),
+
+		// Productivity & Organisation
+		array(
+			'title'    => 'Otter.ai',
+			'category' => 'productivity-organization',
+			'use_case' => 'AI meeting and lecture transcription',
+			'url'      => 'https://otter.ai',
+			'features' => "Real-time transcription\nMeeting summaries\nAction item detection\nSpeaker identification\nFree plan available",
+		),
+		array(
+			'title'    => 'Fireflies.ai',
+			'category' => 'productivity-organization',
+			'use_case' => 'Auto-record and transcribe meetings',
+			'url'      => 'https://fireflies.ai',
+			'features' => "Automatic meeting recording\nAI-generated notes\nSearchable transcripts\nIntegrates with Zoom, Teams, Meet\nFree plan available",
+		),
+		array(
+			'title'    => 'Notion AI',
+			'category' => 'productivity-organization',
+			'use_case' => 'AI-powered workspace for planning and writing',
+			'url'      => 'https://www.notion.so',
+			'features' => "AI writing and editing assistant\nAutomatic summaries\nAction item extraction\nFree-form note-taking\nTeam collaboration",
+		),
+
+		// Audio & Video
+		array(
+			'title'    => 'Descript',
+			'category' => 'audio-video',
+			'use_case' => 'Edit audio and video by editing text',
+			'url'      => 'https://www.descript.com',
+			'features' => "Text-based audio/video editing\nAI filler-word removal\nOverdub voice cloning\nScreen recording\nFree plan available",
+		),
+		array(
+			'title'    => 'ElevenLabs',
+			'category' => 'audio-video',
+			'use_case' => 'Realistic AI text-to-speech voices',
+			'url'      => 'https://elevenlabs.io',
+			'features' => "High-quality voice synthesis\nMultiple languages and accents\nCustom voice cloning\nAudiobook generation\nFree plan available",
+		),
+		array(
+			'title'    => 'CapCut',
+			'category' => 'audio-video',
+			'use_case' => 'AI video editing for classroom content',
+			'url'      => 'https://www.capcut.com',
+			'features' => "Auto captions and subtitles\nAI background removal\nTemplate-based editing\nText-to-video\nFree to use",
+		),
+		array(
+			'title'    => 'Whisper',
+			'category' => 'audio-video',
+			'use_case' => 'Open-source speech recognition and transcription',
+			'url'      => 'https://openai.com/research/whisper',
+			'features' => "Multilingual transcription\nHigh accuracy speech recognition\nOpen source and free\nNoise-robust\nDeveloper-friendly API",
+		),
+
+		// Image & Design
+		array(
+			'title'    => 'Remove.bg',
+			'category' => 'image-design',
+			'use_case' => 'Instantly remove image backgrounds with AI',
+			'url'      => 'https://www.remove.bg',
+			'features' => "One-click background removal\nHigh-resolution downloads\nBulk processing\nAPI access\nFree preview downloads",
+		),
+		array(
+			'title'    => 'Cleanup.pictures',
+			'category' => 'image-design',
+			'use_case' => 'Remove unwanted objects from photos',
+			'url'      => 'https://cleanup.pictures',
+			'features' => "AI object removal\nBrush to select area\nNo signup required\nFree to use\nHigh quality inpainting",
+		),
+		array(
+			'title'    => 'DALL-E',
+			'category' => 'image-design',
+			'use_case' => 'Generate images from text descriptions',
+			'url'      => 'https://openai.com/dall-e-3',
+			'features' => "Text-to-image generation\nImage editing and variations\nHigh-resolution outputs\nAvailable in ChatGPT\nCreative classroom visuals",
+		),
+
+		// Writing & Communication
+		array(
+			'title'    => 'DeepL',
+			'category' => 'writing-communication',
+			'use_case' => 'AI-powered language translation',
+			'url'      => 'https://www.deepl.com',
+			'features' => "High-accuracy translations\n30+ languages supported\nDocument translation\nTone and formality control\nFree plan available",
+		),
+		array(
+			'title'    => 'Hemingway Editor',
+			'category' => 'writing-communication',
+			'use_case' => 'Simplify and clarify written content',
+			'url'      => 'https://hemingwayapp.com',
+			'features' => "Readability grade scoring\nHighlights complex sentences\nPassive voice detection\nAdverb usage feedback\nFree online version",
+		),
+		array(
+			'title'    => 'Suno',
+			'category' => 'writing-communication',
+			'use_case' => 'Generate original songs and music with AI',
+			'url'      => 'https://suno.com',
+			'features' => "Text-to-song generation\nCustom lyrics and style\nVarious music genres\nFree plan available\nEngaging classroom activity",
+		),
+
+		// Research & Reading
+		array(
+			'title'    => 'Elicit',
+			'category' => 'research-reading',
+			'use_case' => 'AI research assistant for academic papers',
+			'url'      => 'https://elicit.com',
+			'features' => "Summarise academic papers\nLiterature review automation\nExtract key data from studies\nFree plan available\nCitation-backed answers",
+		),
+		array(
+			'title'    => 'SciSpace',
+			'category' => 'research-reading',
+			'use_case' => 'Understand and explain research papers',
+			'url'      => 'https://typeset.io',
+			'features' => "AI paper explanations\nAsk questions about any PDF\nLiterature search\nSimplified summaries\nFree plan available",
+		),
+	);
+
+	// ── Insert posts ─────────────────────────────────────
+	// Start menu_order after existing 18 tools
+	$offset = 18;
+	foreach ( $tools as $i => $tool ) {
+		$post_id = wp_insert_post( array(
+			'post_title'  => $tool['title'],
+			'post_status' => 'publish',
+			'post_type'   => 'ai_tool',
+			'menu_order'  => $offset + $i,
+		) );
+
+		if ( is_wp_error( $post_id ) || ! $post_id ) {
+			continue;
+		}
+
+		update_post_meta( $post_id, '_aiad_tool_url', esc_url_raw( $tool['url'] ) );
+		update_post_meta( $post_id, '_aiad_tool_status', 'available' );
+		update_post_meta( $post_id, '_aiad_tool_use_case', $tool['use_case'] );
+		update_post_meta( $post_id, '_aiad_tool_features', $tool['features'] );
+
+		$cat_slug = $tool['category'];
+		if ( isset( $term_ids[ $cat_slug ] ) ) {
+			wp_set_object_terms( $post_id, array( $term_ids[ $cat_slug ] ), 'tool_category' );
+		}
+	}
+
+	update_option( 'aiad_tools_seeded_v2', true );
+}
+add_action( 'init', 'aiad_seed_tools_v2', 26 );
+
 /* ──────────────────────────────────────────────
    3. Meta Fields
    ────────────────────────────────────────────── */
