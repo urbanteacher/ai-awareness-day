@@ -156,14 +156,42 @@ function aiad_get_og_data(): array {
 			$data['description'] = $description;
 		}
 
+		// Image: featured image first, then first image in content, then site logo
 		if ( has_post_thumbnail( $post ) ) {
 			$data['image_id'] = get_post_thumbnail_id( $post );
 			$data['image']    = wp_get_attachment_image_url( $data['image_id'], 'aiad_social' ) ?: '';
 		} else {
-			$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-			if ( $logo_id ) {
-				$data['image_id'] = $logo_id;
-				$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+			// Try to extract the first image from post content
+			$first_image_id = 0;
+			$blocks = parse_blocks( $post->post_content );
+			foreach ( $blocks as $block ) {
+				if ( 'core/image' === $block['blockName'] && ! empty( $block['attrs']['id'] ) ) {
+					$first_image_id = (int) $block['attrs']['id'];
+					break;
+				}
+			}
+			// Fallback: regex match any <img> src in rendered content
+			if ( ! $first_image_id ) {
+				preg_match( '/<img[^>]+src=["\']([^"\']+)/i', $post->post_content, $matches );
+				if ( ! empty( $matches[1] ) ) {
+					$first_image_id = attachment_url_to_postid( $matches[1] );
+					if ( ! $first_image_id ) {
+						// Use the URL directly even without an attachment ID
+						$data['image'] = $matches[1];
+					}
+				}
+			}
+			if ( $first_image_id ) {
+				$data['image_id'] = $first_image_id;
+				$data['image']    = wp_get_attachment_image_url( $first_image_id, 'aiad_social' ) ?: '';
+			}
+			// Final fallback: site logo
+			if ( empty( $data['image'] ) ) {
+				$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+				if ( $logo_id ) {
+					$data['image_id'] = $logo_id;
+					$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+				}
 			}
 		}
 
