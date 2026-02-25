@@ -242,6 +242,17 @@ function aiad_scripts(): void
         );
     }
 
+    // Enqueue tools CSS on front page and tools archive
+    if ( ( is_front_page() || is_post_type_archive( 'ai_tool' ) ) && ! is_admin() ) {
+        $tools_css = AIAD_DIR . '/assets/css/components/tools.css';
+        wp_enqueue_style(
+            'aiad-tools',
+            AIAD_URI . '/assets/css/components/tools.css',
+            array( 'aiad-style' ),
+            file_exists( $tools_css ) ? filemtime( $tools_css ) : AIAD_VERSION
+        );
+    }
+
     // Enqueue timeline assets on front page and single timeline entry pages
     if ((is_front_page() || is_singular('timeline')) && !is_admin()) {
         $timeline_css = AIAD_DIR . '/assets/css/components/timeline.css';
