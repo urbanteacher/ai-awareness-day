@@ -125,6 +125,18 @@
 	object-fit: cover;
 }
 
+/* ── Excerpt (summary/lead text from the Excerpt field) ── */
+.single-timeline-entry__excerpt {
+	margin: 1.5rem 0 0;
+	font-size: 1.05rem;
+	line-height: 1.8;
+	color: var(--gray-700);
+}
+
+.single-timeline-entry__excerpt p {
+	margin: 0;
+}
+
 /* ── Body content ── */
 .single-timeline-entry__content {
 	margin: 1.5rem 0;

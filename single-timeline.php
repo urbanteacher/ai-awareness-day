@@ -55,6 +55,7 @@ get_header();
 			: ucfirst( $icon );
 
 		$content = get_the_content();
+		$excerpt = has_excerpt() ? get_the_excerpt() : '';
 		?>
 
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry' ); ?>>
@@ -111,6 +112,12 @@ get_header();
 							</figure>
 
 						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+
+				<?php if ( ! empty( $excerpt ) ) : ?>
+					<div class="single-timeline-entry__excerpt">
+						<p><?php echo wp_kses_post( $excerpt ); ?></p>
 					</div>
 				<?php endif; ?>
 
