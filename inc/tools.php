@@ -520,7 +520,6 @@ function aiad_render_tool_meta_box( WP_Post $post ): void {
 	wp_nonce_field( 'aiad_tool_meta_save', 'aiad_tool_meta_nonce' );
 
 	$url      = get_post_meta( $post->ID, '_aiad_tool_url', true );
-	$status   = get_post_meta( $post->ID, '_aiad_tool_status', true ) ?: 'available';
 	$use_case = get_post_meta( $post->ID, '_aiad_tool_use_case', true );
 	$features = get_post_meta( $post->ID, '_aiad_tool_features', true );
 	?>
@@ -528,15 +527,6 @@ function aiad_render_tool_meta_box( WP_Post $post ): void {
 		<tr>
 			<th><label for="aiad_tool_url"><?php esc_html_e( 'Website URL', 'ai-awareness-day' ); ?></label></th>
 			<td><input type="url" id="aiad_tool_url" name="aiad_tool_url" value="<?php echo esc_attr( $url ); ?>" class="large-text" placeholder="https://example.com" /></td>
-		</tr>
-		<tr>
-			<th><label for="aiad_tool_status"><?php esc_html_e( 'Status', 'ai-awareness-day' ); ?></label></th>
-			<td>
-				<select id="aiad_tool_status" name="aiad_tool_status">
-					<option value="available" <?php selected( $status, 'available' ); ?>><?php esc_html_e( 'Available', 'ai-awareness-day' ); ?></option>
-					<option value="coming_soon" <?php selected( $status, 'coming_soon' ); ?>><?php esc_html_e( 'Coming Soon', 'ai-awareness-day' ); ?></option>
-				</select>
-			</td>
 		</tr>
 		<tr>
 			<th><label for="aiad_tool_use_case"><?php esc_html_e( 'Use Case', 'ai-awareness-day' ); ?></label></th>
@@ -569,10 +559,6 @@ function aiad_save_tool_meta( int $post_id ): void {
 	if ( isset( $_POST['aiad_tool_url'] ) ) {
 		update_post_meta( $post_id, '_aiad_tool_url', esc_url_raw( wp_unslash( $_POST['aiad_tool_url'] ) ) );
 	}
-	if ( isset( $_POST['aiad_tool_status'] ) ) {
-		$status = sanitize_text_field( wp_unslash( $_POST['aiad_tool_status'] ) );
-		update_post_meta( $post_id, '_aiad_tool_status', in_array( $status, array( 'available', 'coming_soon' ), true ) ? $status : 'available' );
-	}
 	if ( isset( $_POST['aiad_tool_use_case'] ) ) {
 		update_post_meta( $post_id, '_aiad_tool_use_case', sanitize_text_field( wp_unslash( $_POST['aiad_tool_use_case'] ) ) );
 	}
@@ -594,7 +580,6 @@ add_action( 'save_post_ai_tool', 'aiad_save_tool_meta' );
  */
 function aiad_render_tool_card( WP_Post $tool ): string {
 	$url      = get_post_meta( $tool->ID, '_aiad_tool_url', true );
-	$status   = get_post_meta( $tool->ID, '_aiad_tool_status', true ) ?: 'available';
 	$use_case = get_post_meta( $tool->ID, '_aiad_tool_use_case', true );
 	$features_raw = get_post_meta( $tool->ID, '_aiad_tool_features', true );
 
@@ -606,21 +591,14 @@ function aiad_render_tool_card( WP_Post $tool ): string {
 	$terms        = get_the_terms( $tool->ID, 'tool_category' );
 	$category     = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
 
-	$is_available = 'available' === $status;
-	$status_label = $is_available ? __( 'Available', 'ai-awareness-day' ) : __( 'Coming Soon', 'ai-awareness-day' );
-
 	ob_start();
 	?>
 	<div class="tool-card">
+		<?php if ( $category ) : ?>
 		<div class="tool-card__top">
-			<?php if ( $category ) : ?>
-				<span class="tool-card__category"><?php echo esc_html( $category ); ?></span>
-			<?php endif; ?>
-			<span class="tool-card__status tool-card__status--<?php echo esc_attr( $status ); ?>">
-				<span class="tool-card__status-dot" aria-hidden="true"></span>
-				<?php echo esc_html( $status_label ); ?>
-			</span>
+			<span class="tool-card__category"><?php echo esc_html( $category ); ?></span>
 		</div>
+		<?php endif; ?>
 
 		<h3 class="tool-card__title"><?php echo esc_html( get_the_title( $tool ) ); ?></h3>
 
