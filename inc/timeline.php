@@ -444,6 +444,15 @@ function aiad_timeline_link_icon_svg(): string {
 }
 
 /**
+ * SVG icon for the "view post" button (arrow right).
+ *
+ * @return string SVG markup.
+ */
+function aiad_timeline_view_post_icon_svg(): string {
+    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+}
+
+/**
  * SVG icon for print button.
  *
  * @return string SVG markup.
@@ -1161,6 +1170,9 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                         <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
                     </a>
                 <?php endif; ?>
+                <a href="<?php echo esc_url( $entry_url ); ?>" class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post" aria-label="<?php esc_attr_e( 'View full post', 'ai-awareness-day' ); ?>">
+                    <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+                </a>
             </div>
         </div>
     </article>
