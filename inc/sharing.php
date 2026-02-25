@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool True if we should output, false if SEO plugin is active.
  */
 function aiad_sharing_should_output(): bool {
-	// Skip if Yoast SEO is active
+	// Skip if Yoast SEO / Yoast SEO Premium is active
 	if ( defined( 'WPSEO_VERSION' ) ) {
 		return false;
 	}
@@ -25,6 +25,22 @@ function aiad_sharing_should_output(): bool {
 	}
 	// Skip if All in One SEO is active
 	if ( defined( 'AIOSEO_VERSION' ) ) {
+		return false;
+	}
+	// Skip if SEOPress is active
+	if ( defined( 'SEOPRESS_VERSION' ) ) {
+		return false;
+	}
+	// Skip if The SEO Framework is active
+	if ( defined( 'THE_SEO_FRAMEWORK_VERSION' ) ) {
+		return false;
+	}
+	// Skip if Slim SEO is active
+	if ( class_exists( 'Slim_SEO' ) ) {
+		return false;
+	}
+	// Skip if SmartCrawl (by WPMU DEV) is active
+	if ( defined( 'SMARTCRAWL_VERSION' ) ) {
 		return false;
 	}
 	return true;
@@ -86,13 +102,53 @@ function aiad_get_og_data(): array {
 		$data['url']   = get_permalink( $post );
 		$data['type']  = 'article';
 
-		$subtitle = get_post_meta( $post->ID, '_aiad_subtitle', true );
-		if ( $subtitle ) {
-			$data['description'] = $subtitle;
-		} elseif ( has_excerpt( $post ) ) {
-			$data['description'] = get_the_excerpt( $post );
+		// Get description - try multiple sources based on post type
+		$description = '';
+		
+		if ( 'timeline' === $post->post_type ) {
+			// For timeline entries, check various meta fields and content
+			$timeline_content = '';
+			
+			// Check if there's content in the main editor
+			if ( ! empty( $post->post_content ) ) {
+				$timeline_content = wp_strip_all_tags( $post->post_content );
+			}
+			
+			// If no editor content, try to get description from meta fields
+			if ( empty( $timeline_content ) ) {
+				// Try link label or video URL as fallback content indicators
+				$link_label = get_post_meta( $post->ID, '_aiad_timeline_link_label', true );
+				$video_url = get_post_meta( $post->ID, '_aiad_timeline_video_url', true );
+				$linkedin_url = get_post_meta( $post->ID, '_aiad_timeline_linkedin_url', true );
+				$card_type = get_post_meta( $post->ID, '_aiad_timeline_card_type', true );
+				
+				if ( ! empty( $link_label ) ) {
+					$timeline_content = $link_label;
+				} elseif ( ! empty( $video_url ) ) {
+					$timeline_content = __( 'Watch video', 'ai-awareness-day' );
+				} elseif ( ! empty( $linkedin_url ) ) {
+					$timeline_content = __( 'View LinkedIn post', 'ai-awareness-day' );
+				}
+			}
+			
+			// Last-resort fallback: use the post title so og:description is never empty
+			$description = ! empty( $timeline_content ) ? $timeline_content : get_the_title( $post );
+
 		} else {
-			$data['description'] = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
+			// For resources and partners, use subtitle meta field
+			$subtitle = get_post_meta( $post->ID, '_aiad_subtitle', true );
+			if ( $subtitle ) {
+				$description = $subtitle;
+			} elseif ( has_excerpt( $post ) ) {
+				$description = get_the_excerpt( $post );
+			} else {
+				$description = wp_trim_words( strip_shortcodes( $post->post_content ), 25, '…' );
+			}
+		}
+		
+		// Only set description if we have content
+		if ( ! empty( $description ) ) {
+			$data['description'] = $description;
 		}
 
 		if ( has_post_thumbnail( $post ) ) {
