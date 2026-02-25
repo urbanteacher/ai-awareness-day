@@ -2,8 +2,11 @@
 /**
  * Single template for a Timeline Entry (aiad_timeline CPT).
  *
- * Editorial layout inspired by template.html:
- * kicker → title → subtitle (excerpt) → separator → media → content → end mark → nav
+ * Provides a canonical, crawlable URL for each timeline entry so social
+ * platforms (Facebook, LinkedIn, X) can read per-entry OG meta tags
+ * instead of falling back to the homepage.
+ *
+ * Handles all card types: video/YouTube, LinkedIn embed, image, default.
  *
  * @package AI_Awareness_Day
  */
@@ -27,10 +30,10 @@ get_header();
 		$yt_id       = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
 		// Non-YouTube video: fall back to oEmbed
 		$video_embed = ! empty( $video_url ) && empty( $yt_id )
-			? wp_oembed_get( $video_url, array( 'width' => 640 ) )
+			? wp_oembed_get( $video_url, array( 'width' => 760 ) )
 			: '';
 
-		// Normalise LinkedIn URL to embed format
+		// Normalise LinkedIn URL to embed format (mirrors aiad_render_timeline_entry())
 		$linkedin_embed = '';
 		if ( ! empty( $linkedin_url ) ) {
 			if ( strpos( $linkedin_url, '/embed/' ) !== false ) {
@@ -58,29 +61,23 @@ get_header();
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry' ); ?>>
 			<div class="single-timeline-entry__container">
 
-				<!-- Kicker: badge · date -->
-				<div class="single-timeline-entry__kicker">
-					<span class="single-timeline-entry__badge single-timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>">
-						<?php echo esc_html( $badge_label ); ?>
-					</span>
-					<span class="single-timeline-entry__kicker-sep" aria-hidden="true">·</span>
-					<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
-						<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
-					</time>
-				</div>
+				<header class="single-timeline-entry__header">
+					<div class="single-timeline-entry__meta">
+						<?php if ( function_exists( 'aiad_timeline_icon_svg' ) ) : ?>
+							<span class="single-timeline-entry__icon single-timeline-entry__icon--<?php echo esc_attr( $icon ); ?>" aria-hidden="true">
+								<?php echo aiad_timeline_icon_svg( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is hardcoded ?>
+							</span>
+						<?php endif; ?>
+						<span class="single-timeline-entry__badge single-timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>">
+							<?php echo esc_html( $badge_label ); ?>
+						</span>
+						<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+							<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
+						</time>
+					</div>
+					<h1 class="single-timeline-entry__title"><?php the_title(); ?></h1>
+				</header>
 
-				<!-- Title -->
-				<h1 class="single-timeline-entry__title"><?php the_title(); ?></h1>
-
-				<!-- Subtitle: excerpt as italic lead text -->
-				<?php if ( ! empty( $excerpt ) ) : ?>
-					<div class="single-timeline-entry__subtitle"><?php echo wp_kses_post( $excerpt ); ?></div>
-				<?php endif; ?>
-
-				<!-- Separator line (byline role) -->
-				<div class="single-timeline-entry__separator" role="separator"></div>
-
-				<!-- Media -->
 				<?php if ( $has_media ) : ?>
 					<div class="single-timeline-entry__media">
 
@@ -118,15 +115,18 @@ get_header();
 					</div>
 				<?php endif; ?>
 
-				<!-- Body content with drop cap on first paragraph -->
+				<?php if ( ! empty( $excerpt ) ) : ?>
+					<div class="single-timeline-entry__excerpt">
+						<p><?php echo wp_kses_post( $excerpt ); ?></p>
+					</div>
+				<?php endif; ?>
+
 				<?php if ( ! empty( trim( $content ) ) ) : ?>
 					<div class="single-timeline-entry__content entry-content">
 						<?php the_content(); ?>
 					</div>
-					<div class="single-timeline-entry__end-mark" aria-hidden="true">&#9672; &#9672; &#9672;</div>
 				<?php endif; ?>
 
-				<!-- CTA -->
 				<?php if ( $link_url ) : ?>
 					<div class="single-timeline-entry__cta">
 						<a
@@ -145,7 +145,6 @@ get_header();
 					</div>
 				<?php endif; ?>
 
-				<!-- Back + Share nav -->
 				<nav class="single-timeline-entry__nav" aria-label="<?php esc_attr_e( 'Post navigation', 'ai-awareness-day' ); ?>">
 					<a href="<?php echo esc_url( home_url( '/#timeline' ) ); ?>" class="single-timeline-entry__back">
 						<?php if ( function_exists( 'aiad_back_icon_svg' ) ) : ?>
