@@ -150,19 +150,15 @@
 
     // ─── Like, Share, Lite YouTube facade (delegated on feed) ─────────
     feed.addEventListener( 'click', function ( e ) {
-        var likeBtn   = e.target.closest( '.timeline-entry__like' );
-        var shareBtn  = e.target.closest( '.timeline-entry__share' );
-        var expandBtn = e.target.closest( '.timeline-entry__expand' );
-        var facade    = e.target.closest( '.timeline-lite-yt' );
+        var likeBtn = e.target.closest( '.timeline-entry__like' );
+        var shareBtn = e.target.closest( '.timeline-entry__share' );
+        var facade = e.target.closest( '.timeline-lite-yt' );
         if ( likeBtn ) {
             e.preventDefault();
             handleLike( likeBtn );
         } else if ( shareBtn ) {
             e.preventDefault();
             handleShare( shareBtn );
-        } else if ( expandBtn ) {
-            e.preventDefault();
-            handleExpand( expandBtn );
         } else if ( facade && ! facade.classList.contains( 'is-activated' ) ) {
             e.preventDefault();
             activateLiteYt( facade );
@@ -189,22 +185,6 @@
         iframe.setAttribute( 'allowfullscreen', 'true' );
         facade.appendChild( iframe );
         facade.classList.add( 'is-activated' );
-    }
-
-    function handleExpand( btn ) {
-        var entry = btn.closest( '.timeline-entry' );
-        if ( ! entry ) { return; }
-        var fullContent = entry.querySelector( '.timeline-entry__full-content' );
-        var isExpanded = entry.classList.toggle( 'is-expanded' );
-        btn.setAttribute( 'aria-expanded', isExpanded ? 'true' : 'false' );
-        btn.setAttribute( 'aria-label', isExpanded ? 'Show less' : 'Read more' );
-        if ( fullContent ) {
-            if ( isExpanded ) {
-                fullContent.removeAttribute( 'hidden' );
-            } else {
-                fullContent.setAttribute( 'hidden', '' );
-            }
-        }
     }
 
     function handleLike( btn ) {

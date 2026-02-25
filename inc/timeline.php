@@ -444,15 +444,6 @@ function aiad_timeline_link_icon_svg(): string {
 }
 
 /**
- * SVG icon for the expand button (chevron down).
- *
- * @return string SVG markup.
- */
-function aiad_timeline_expand_icon_svg(): string {
-    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
-}
-
-/**
  * SVG icon for print button.
  *
  * @return string SVG markup.
@@ -1045,9 +1036,7 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
         $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium' );
     }
     $content      = get_the_content( null, false, $entry );
-    $excerpt      = get_the_excerpt( $entry );
-    $has_content  = ! empty( $content );
-
+    
     // Determine what media to show based on card type
     $show_video    = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
     $show_linkedin = 'linkedin' === $card_type && ! empty( $linkedin_embed );
@@ -1127,11 +1116,8 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                         <?php echo esc_html( $date_label ); ?>
                     </time>
                 </div>
-                <?php if ( ! empty( $excerpt ) ) : ?>
-                    <div class="timeline-entry__content timeline-entry__excerpt"><?php echo wp_kses_post( $excerpt ); ?></div>
-                <?php endif; ?>
-                <?php if ( $has_content ) : ?>
-                    <div class="timeline-entry__full-content" hidden><?php echo wp_kses_post( $content ); ?></div>
+                <?php if ( ! empty( $content ) ) : ?>
+                    <div class="timeline-entry__content"><?php echo wp_kses_post( $content ); ?></div>
                 <?php endif; ?>
             </div>
             <?php if ( $has_media ) : ?>
@@ -1170,11 +1156,6 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                 <button type="button" class="timeline-entry__share" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" data-url="<?php echo esc_url( $entry_url ); ?>" data-title="<?php echo esc_attr( $entry_title ); ?>" aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>">
                     <span class="timeline-entry__share-icon" aria-hidden="true"><?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
                 </button>
-                <?php if ( $has_content ) : ?>
-                    <button type="button" class="timeline-entry__expand" aria-expanded="false" aria-label="<?php esc_attr_e( 'Read more', 'ai-awareness-day' ); ?>">
-                        <span class="timeline-entry__expand-icon" aria-hidden="true"><?php echo aiad_timeline_expand_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                    </button>
-                <?php endif; ?>
                 <?php if ( $link_url ) : ?>
                     <a href="<?php echo esc_url( $link_url ); ?>" class="timeline-entry__link timeline-entry__link--action" aria-label="<?php echo esc_attr( $link_label ); ?>">
                         <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
