@@ -2,11 +2,7 @@
 /**
  * Single template for a Timeline Entry (aiad_timeline CPT).
  *
- * Provides a canonical, crawlable URL for each timeline entry so social
- * platforms (Facebook, LinkedIn, X) can read per-entry OG meta tags
- * instead of falling back to the homepage.
- *
- * Handles all card types: video/YouTube, LinkedIn embed, image, default.
+ * Modern layout: dark hero (back + badge + title + excerpt) → white body (media + content + CTA + nav).
  *
  * @package AI_Awareness_Day
  */
@@ -26,14 +22,11 @@ get_header();
 		$video_url    = get_post_meta( $post_id, '_aiad_timeline_video_url', true );
 		$linkedin_url = get_post_meta( $post_id, '_aiad_timeline_linkedin_url', true );
 
-		// YouTube: extract ID if present
 		$yt_id       = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
-		// Non-YouTube video: fall back to oEmbed
 		$video_embed = ! empty( $video_url ) && empty( $yt_id )
 			? wp_oembed_get( $video_url, array( 'width' => 760 ) )
 			: '';
 
-		// Normalise LinkedIn URL to embed format (mirrors aiad_render_timeline_entry())
 		$linkedin_embed = '';
 		if ( ! empty( $linkedin_url ) ) {
 			if ( strpos( $linkedin_url, '/embed/' ) !== false ) {
@@ -59,15 +52,19 @@ get_header();
 		?>
 
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry' ); ?>>
-			<div class="single-timeline-entry__container">
 
-				<header class="single-timeline-entry__header">
-					<div class="single-timeline-entry__meta">
-						<?php if ( function_exists( 'aiad_timeline_icon_svg' ) ) : ?>
-							<span class="single-timeline-entry__icon single-timeline-entry__icon--<?php echo esc_attr( $icon ); ?>" aria-hidden="true">
-								<?php echo aiad_timeline_icon_svg( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is hardcoded ?>
-							</span>
+			<!-- ── Dark hero: back link, badge, title, excerpt ── -->
+			<div class="single-timeline-entry__hero">
+				<div class="single-timeline-entry__hero-inner">
+
+					<a href="<?php echo esc_url( home_url( '/#timeline' ) ); ?>" class="single-timeline-entry__back">
+						<?php if ( function_exists( 'aiad_back_icon_svg' ) ) : ?>
+							<span aria-hidden="true"><?php echo aiad_back_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 						<?php endif; ?>
+						<?php esc_html_e( 'Back to timeline', 'ai-awareness-day' ); ?>
+					</a>
+
+					<div class="single-timeline-entry__meta">
 						<span class="single-timeline-entry__badge single-timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>">
 							<?php echo esc_html( $badge_label ); ?>
 						</span>
@@ -75,102 +72,101 @@ get_header();
 							<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
 						</time>
 					</div>
+
 					<h1 class="single-timeline-entry__title"><?php the_title(); ?></h1>
-				</header>
 
-				<?php if ( $has_media ) : ?>
-					<div class="single-timeline-entry__media">
+					<?php if ( ! empty( $excerpt ) ) : ?>
+						<p class="single-timeline-entry__excerpt"><?php echo wp_kses_post( $excerpt ); ?></p>
+					<?php endif; ?>
 
-						<?php if ( ! empty( $yt_id ) && function_exists( 'aiad_render_youtube_facade' ) ) : ?>
-							<?php echo aiad_render_youtube_facade( $yt_id, get_the_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</div>
+			</div>
 
-						<?php elseif ( $show_linkedin ) : ?>
-							<div class="single-timeline-entry__linkedin">
-								<iframe
-									src="<?php echo esc_url( $linkedin_embed ); ?>"
-									height="570"
-									width="100%"
-									frameborder="0"
-									allowfullscreen
-									title="<?php echo esc_attr( get_the_title() ); ?>"
-									loading="lazy"
-								></iframe>
-							</div>
+			<!-- ── White body: media, content, CTA, share ── -->
+			<div class="single-timeline-entry__body">
+				<div class="single-timeline-entry__container">
 
-						<?php elseif ( $show_video && ! empty( $video_embed ) ) : ?>
-							<div class="single-timeline-entry__video">
-								<?php
-								if ( function_exists( 'aiad_timeline_oembed_allowed_html' ) ) {
-									echo wp_kses( $video_embed, aiad_timeline_oembed_allowed_html() );
-								}
-								?>
-							</div>
+					<?php if ( $has_media ) : ?>
+						<div class="single-timeline-entry__media">
 
-						<?php elseif ( $show_image ) : ?>
-							<figure class="single-timeline-entry__figure">
-								<?php the_post_thumbnail( 'large', array( 'class' => 'single-timeline-entry__figure-img' ) ); ?>
-							</figure>
+							<?php if ( ! empty( $yt_id ) && function_exists( 'aiad_render_youtube_facade' ) ) : ?>
+								<?php echo aiad_render_youtube_facade( $yt_id, get_the_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
-						<?php endif; ?>
-					</div>
-				<?php endif; ?>
+							<?php elseif ( $show_linkedin ) : ?>
+								<div class="single-timeline-entry__linkedin">
+									<iframe
+										src="<?php echo esc_url( $linkedin_embed ); ?>"
+										height="570"
+										width="100%"
+										frameborder="0"
+										allowfullscreen
+										title="<?php echo esc_attr( get_the_title() ); ?>"
+										loading="lazy"
+									></iframe>
+								</div>
 
-				<?php if ( ! empty( $excerpt ) ) : ?>
-					<div class="single-timeline-entry__excerpt">
-						<p><?php echo wp_kses_post( $excerpt ); ?></p>
-					</div>
-				<?php endif; ?>
+							<?php elseif ( $show_video && ! empty( $video_embed ) ) : ?>
+								<div class="single-timeline-entry__video">
+									<?php
+									if ( function_exists( 'aiad_timeline_oembed_allowed_html' ) ) {
+										echo wp_kses( $video_embed, aiad_timeline_oembed_allowed_html() );
+									}
+									?>
+								</div>
 
-				<?php if ( ! empty( trim( $content ) ) ) : ?>
-					<div class="single-timeline-entry__content entry-content">
-						<?php the_content(); ?>
-					</div>
-				<?php endif; ?>
+							<?php elseif ( $show_image ) : ?>
+								<figure class="single-timeline-entry__figure">
+									<?php the_post_thumbnail( 'large', array( 'class' => 'single-timeline-entry__figure-img' ) ); ?>
+								</figure>
 
-				<?php if ( $link_url ) : ?>
-					<div class="single-timeline-entry__cta">
-						<a
-							href="<?php echo esc_url( $link_url ); ?>"
-							class="single-timeline-entry__cta-btn"
-							target="_blank"
-							rel="noopener noreferrer"
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( ! empty( trim( $content ) ) ) : ?>
+						<div class="single-timeline-entry__content entry-content">
+							<?php the_content(); ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( $link_url ) : ?>
+						<div class="single-timeline-entry__cta">
+							<a
+								href="<?php echo esc_url( $link_url ); ?>"
+								class="single-timeline-entry__cta-btn"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<?php echo esc_html( $link_label ); ?>
+								<?php if ( function_exists( 'aiad_timeline_link_icon_svg' ) ) : ?>
+									<span class="single-timeline-entry__cta-icon" aria-hidden="true">
+										<?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									</span>
+								<?php endif; ?>
+							</a>
+						</div>
+					<?php endif; ?>
+
+					<div class="single-timeline-entry__footer">
+						<button
+							type="button"
+							class="single-timeline-entry__share"
+							data-url="<?php echo esc_url( get_permalink() ); ?>"
+							data-title="<?php echo esc_attr( get_the_title() ); ?>"
+							aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>"
 						>
-							<?php echo esc_html( $link_label ); ?>
-							<?php if ( function_exists( 'aiad_timeline_link_icon_svg' ) ) : ?>
-								<span class="single-timeline-entry__cta-icon" aria-hidden="true">
-									<?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php if ( function_exists( 'aiad_timeline_share_icon_svg' ) ) : ?>
+								<span class="single-timeline-entry__share-icon" aria-hidden="true">
+									<?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								</span>
 							<?php endif; ?>
-						</a>
+							<?php esc_html_e( 'Share', 'ai-awareness-day' ); ?>
+						</button>
 					</div>
-				<?php endif; ?>
 
-				<nav class="single-timeline-entry__nav" aria-label="<?php esc_attr_e( 'Post navigation', 'ai-awareness-day' ); ?>">
-					<a href="<?php echo esc_url( home_url( '/#timeline' ) ); ?>" class="single-timeline-entry__back">
-						<?php if ( function_exists( 'aiad_back_icon_svg' ) ) : ?>
-							<span class="single-timeline-entry__back-icon" aria-hidden="true">
-								<?php echo aiad_back_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-							</span>
-						<?php endif; ?>
-						<?php esc_html_e( 'Back to timeline', 'ai-awareness-day' ); ?>
-					</a>
-					<button
-						type="button"
-						class="single-timeline-entry__share"
-						data-url="<?php echo esc_url( get_permalink() ); ?>"
-						data-title="<?php echo esc_attr( get_the_title() ); ?>"
-						aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>"
-					>
-						<?php if ( function_exists( 'aiad_timeline_share_icon_svg' ) ) : ?>
-							<span class="single-timeline-entry__share-icon" aria-hidden="true">
-								<?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-							</span>
-						<?php endif; ?>
-						<?php esc_html_e( 'Share', 'ai-awareness-day' ); ?>
-					</button>
-				</nav>
-
+				</div>
 			</div>
+
 		</article>
 
 	<?php endwhile; ?>
