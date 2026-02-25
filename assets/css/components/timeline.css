@@ -525,6 +525,29 @@
     margin-bottom: 0;
 }
 
+/* Full content: hidden until expanded */
+.timeline-entry__full-content {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--gray-700);
+}
+
+.timeline-entry__full-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Expand icon: rotates when expanded */
+.timeline-entry__expand-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.timeline-entry.is-expanded .timeline-entry__expand-icon {
+    transform: rotate(180deg);
+}
+
 /* ── CTA link ────────────────────────────── */
 .timeline-entry__cta {
     margin-top: 0.75rem;
@@ -558,6 +581,7 @@
 
 .timeline-entry__like,
 .timeline-entry__share,
+.timeline-entry__expand,
 .timeline-entry__link--action {
     display: inline-flex;
     align-items: center;
@@ -577,6 +601,7 @@
 
 .timeline-entry__like:hover,
 .timeline-entry__share:hover,
+.timeline-entry__expand:hover,
 .timeline-entry__link--action:hover {
     color: var(--gray-900);
     background: var(--gray-50);
@@ -584,6 +609,7 @@
 
 .timeline-entry__like:focus,
 .timeline-entry__share:focus,
+.timeline-entry__expand:focus,
 .timeline-entry__link--action:focus {
     outline: 2px solid var(--green-600);
     outline-offset: 2px;
@@ -591,6 +617,7 @@
 
 .timeline-entry__like .timeline-entry__like-icon,
 .timeline-entry__share .timeline-entry__share-icon,
+.timeline-entry__expand .timeline-entry__expand-icon,
 .timeline-entry__link--action .timeline-entry__link-icon {
     display: inline-flex;
     flex-shrink: 0;
