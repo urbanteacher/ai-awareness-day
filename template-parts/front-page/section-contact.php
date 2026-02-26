@@ -117,10 +117,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                                             class="checklist-option__text"><?php esc_html_e('Interested in creating a display board', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="teacher_activity_day"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want to do an activity for the day', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like to do an activity for the day', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="teacher_learn_ai"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want to learn more about AI', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like to learn more about AI', 'ai-awareness-day'); ?></span></label>
                                 </div>
                             </div>
                             <div class="form-group form-group-role contact-checklist" data-role="parent"
@@ -131,10 +131,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 <div class="checklist-options">
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="parent_support_child"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want to support my child in AI', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like to support my child with AI', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="parent_learn_ai"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want to learn more about AI', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like to learn more about AI', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="parent_school_take_part"><span
                                             class="checklist-option__text"><?php esc_html_e('I\'d like my child\'s school to take part', 'ai-awareness-day'); ?></span></label>
@@ -148,13 +148,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 <div class="checklist-options">
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="school_leader_staff_activity"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want my staff to do an activity', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like my staff to do an activity', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="school_leader_logo_supporter"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want our logo as a supporter', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like our logo displayed as a supporter', 'ai-awareness-day'); ?></span></label>
                                     <label class="checklist-option"><input type="checkbox" name="aiad_checklist[]"
                                             value="school_leader_school_promote"><span
-                                            class="checklist-option__text"><?php esc_html_e('I want our school to promote AI Awareness Day', 'ai-awareness-day'); ?></span></label>
+                                            class="checklist-option__text"><?php esc_html_e('I\'d like our school to promote AI Awareness Day', 'ai-awareness-day'); ?></span></label>
                                 </div>
                             </div>
                             <div class="form-group form-group-role contact-checklist" data-role="organisation"

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #1a1a1a;
+    --paper: #faf8f5;
+    --faded: #8a8578;
+    --accent: #b44a2d;
+    --rule: #d5d0c8;
+    --aside-bg: #f0ede8;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--faded);
+    font-style: italic;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  .byline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--faded);
+    letter-spacing: 0.5px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 48px;
+  }
+
+  p {
+    margin-bottom: 24px;
+  }
+
+  .drop-cap::first-letter {
+    float: left;
+    font-size: 68px;
+    line-height: 0.8;
+    font-weight: 500;
+    color: var(--accent);
+    padding-right: 8px;
+    padding-top: 6px;
+  }
+
+  h2 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 56px;
+    margin-bottom: 24px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pull-quote {
+    margin: 48px 0;
+    padding: 32px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pull-quote p {
+    font-size: 26px;
+    line-height: 1.4;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+
+  .aside {
+    background: var(--aside-bg);
+    padding: 24px 28px;
+    margin: 36px -12px;
+    border-radius: 2px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #4a4640;
+  }
+
+  .aside strong {
+    color: var(--ink);
+  }
+
+  em { font-style: italic; }
+  strong { font-weight: 500; }
+
+  .accent { color: var(--accent); }
+
+  .end-mark {
+    text-align: center;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--rule);
+    letter-spacing: 12px;
+  }
+
+  .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="kicker">Category &middot; Date</div>
+  <h1>Article Title</h1>
+  <div class="subtitle">A short subtitle or description of the piece.</div>
+  <div class="byline">Author name</div>
+
+  <p class="drop-cap">First paragraph with a drop cap. Replace this with your opening. The structure stays the same: kicker, title, subtitle, byline, then body sections built from h2 headings and paragraphs.</p>
+
+  <p>Second paragraph. Add or remove paragraphs and sections as needed.</p>
+
+  <h2>First Section Heading</h2>
+
+  <p>Body text for this section. Use <em>emphasis</em>, <strong>strong</strong>, or <span class="accent">accent</span> as needed. For numbers or stats use <span class="num">42%</span>.</p>
+
+  <p>Another paragraph in the same section.</p>
+
+  <div class="pull-quote">
+    <p>Optional pull quote. One key line highlighted between rules.</p>
+  </div>
+
+  <h2>Second Section Heading</h2>
+
+  <p>More body text.</p>
+
+  <div class="aside">
+    <strong>Optional aside:</strong> Callout or side note. Use for tension, definition, or emphasis.
+  </div>
+
+  <p>Paragraph after an aside.</p>
+
+  <h2>Third Section Heading</h2>
+
+  <p>Final section. Add or remove h2 blocks and paragraphs to match your piece.</p>
+
+  <div class="end-mark">&#9672; &#9672; &#9672;</div>
+
+</div>
+</body>
+</html>

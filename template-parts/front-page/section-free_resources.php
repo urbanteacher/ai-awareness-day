@@ -133,7 +133,7 @@ if ( $free_resources->have_posts() ):
                     aria-label="<?php esc_attr_e( 'View all free resources', 'ai-awareness-day' ); ?>">
                     <div class="resource-card__placeholder-inner">
                         <span class="resource-card__placeholder-title"><?php esc_html_e( 'View all free resources', 'ai-awareness-day' ); ?></span>
-                        <span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse all activities', 'ai-awareness-day' ); ?></span>
+                        <span class="resource-card__placeholder-desc"><?php esc_html_e( 'Explore activities', 'ai-awareness-day' ); ?></span>
                     </div>
                 </a>
             </div>
