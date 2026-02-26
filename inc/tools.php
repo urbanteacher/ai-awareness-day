@@ -611,14 +611,6 @@ function aiad_render_tool_card( WP_Post $tool ): string {
 				<?php foreach ( $shown as $feature ) : ?>
 					<li><?php echo esc_html( $feature ); ?></li>
 				<?php endforeach; ?>
-				<?php if ( $extra > 0 ) : ?>
-					<li class="tool-card__features-more">
-						<?php
-						/* translators: %d: number of extra features */
-						printf( esc_html( _n( '+%d more feature', '+%d more features', $extra, 'ai-awareness-day' ) ), (int) $extra );
-						?>
-					</li>
-				<?php endif; ?>
 			</ul>
 		<?php endif; ?>
 
