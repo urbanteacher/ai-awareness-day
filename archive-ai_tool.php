@@ -114,6 +114,13 @@ $categories = get_terms( array(
 		?>
 
 	</div>
+
+	<!-- Back to Homepage link -->
+	<div class="tools-archive__footer">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="tools-archive__back-home">
+			<?php esc_html_e( '← Back to Homepage', 'ai-awareness-day' ); ?>
+		</a>
+	</div>
 </main>
 
 <?php get_footer(); ?>
