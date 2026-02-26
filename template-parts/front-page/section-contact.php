@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div class="contact-wrapper">
 
                     <div class="contact-info fade-up">
-                        <span class="section-label"><?php esc_html_e('Get Involved', 'ai-awareness-day'); ?></span>
+                        <span class="section-label"><?php esc_html_e('Contact Us', 'ai-awareness-day'); ?></span>
                         <?php
                         $defaults = aiad_get_customizer_defaults();
                         ?>
