@@ -267,6 +267,14 @@
 		padding: 1.5rem 1rem 3rem;
 	}
 
+	/* Stack date under title on mobile */
+	.single-timeline-entry__title-row {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+	}
+
 	.single-timeline-entry__title {
 		font-size: clamp(1.4rem, 6vw, 1.9rem);
 	}
