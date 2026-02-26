@@ -212,23 +212,23 @@
 	font-weight: 600;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	color: var(--white);
-	background: var(--gray-900);
-	border: 1px solid var(--gray-900);
+	color: var(--gray-600);
+	background: var(--white);
+	border: 1px solid var(--gray-300);
 	text-decoration: none;
 	transition: var(--transition);
 }
 
 .tools-filter__btn:hover {
-	color: var(--white);
-	background: var(--gray-700);
-	border-color: var(--gray-700);
+	color: var(--gray-900);
+	border-color: var(--gray-400);
+	background: var(--gray-50);
 }
 
 .tools-filter__btn--active {
 	color: var(--white);
-	background: var(--green-600);
-	border-color: var(--green-600);
+	background: var(--gray-900);
+	border-color: var(--gray-900);
 }
 
 /* ── Archive body ── */
