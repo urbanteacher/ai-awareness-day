@@ -300,7 +300,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <div class="toolkit-explore-themes">
                 <div class="fade-up">
                     <span class="section-label"><?php esc_html_e('Activities', 'ai-awareness-day'); ?></span>
-                    <h2 class="section-title"><?php esc_html_e('Personalised to you', 'ai-awareness-day'); ?></h2>
+                    <h2 class="section-title"><?php esc_html_e('Personalised for you', 'ai-awareness-day'); ?></h2>
                     <p class="section-desc">
                         <?php esc_html_e('Discover the thematic areas that shape AI Awareness Day activities and discussions. Filter by theme or by session length.', 'ai-awareness-day'); ?>
                     </p>
