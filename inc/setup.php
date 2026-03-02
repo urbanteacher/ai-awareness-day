@@ -50,6 +50,9 @@ function aiad_setup(): void
         'flex-width' => true,
     ));
 
+    // Site icon / favicon
+    add_theme_support('site-icon');
+
     // Block editor: alignments, responsive embeds, block styles (WP 5.9+)
     add_theme_support('responsive-embeds');
     add_theme_support('align-wide');
