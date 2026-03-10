@@ -118,7 +118,7 @@ add_action( 'save_post_partner', 'aiad_save_partner_url' );
 function aiad_featured_resource_meta_box(): void {
     add_meta_box(
         'aiad_featured_resource',
-        __( 'External resource link & attribution', 'ai-awareness-day' ),
+        __( 'External resource link, theme & attribution', 'ai-awareness-day' ),
         'aiad_featured_resource_callback',
         'featured_resource',
         'normal'
@@ -136,6 +136,29 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     echo '<input type="text" id="featured_resource_org_name" name="featured_resource_org_name" value="' . esc_attr( $org_name ) . '" class="widefat" placeholder="e.g. STEM Learning"></p>';
     echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
+
+    // Theme / principle selector (Safe, Smart, Creative, Responsible, Future)
+    $principles = get_terms(
+        array(
+            'taxonomy'   => 'resource_principle',
+            'hide_empty' => false,
+        )
+    );
+    $current_principles = wp_get_object_terms( $post->ID, 'resource_principle', array( 'fields' => 'ids' ) );
+    echo '<p><label for="featured_resource_principle"><strong>' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong></label><br>';
+    if ( ! is_wp_error( $principles ) && ! empty( $principles ) ) {
+        echo '<select id="featured_resource_principle" name="featured_resource_principle" class="widefat">';
+        echo '<option value="">' . esc_html__( 'Select a theme (optional)', 'ai-awareness-day' ) . '</option>';
+        foreach ( $principles as $term ) {
+            $selected = ( ! empty( $current_principles ) && in_array( $term->term_id, $current_principles, true ) ) ? 'selected="selected"' : '';
+            echo '<option value="' . esc_attr( (string) $term->term_id ) . '" ' . $selected . '>' . esc_html( $term->name ) . '</option>';
+        }
+        echo '</select>';
+        echo '<em class="description">' . esc_html__( 'Used for the Safe / Smart / Creative / Responsible / Future pill and filters.', 'ai-awareness-day' ) . '</em>';
+    } else {
+        echo '<em class="description">' . esc_html__( 'No themes found. Add themes under Resources → Themes.', 'ai-awareness-day' ) . '</em>';
+    }
+    echo '</p>';
 }
 function aiad_save_featured_resource( int $post_id ): void {
     if ( ! isset( $_POST['aiad_featured_resource_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_nonce'] ) ), 'aiad_featured_resource_nonce' ) ) {
@@ -155,6 +178,17 @@ function aiad_save_featured_resource( int $post_id ): void {
     }
     if ( isset( $_POST['featured_resource_org_url'] ) ) {
         update_post_meta( $post_id, '_featured_resource_org_url', esc_url_raw( wp_unslash( $_POST['featured_resource_org_url'] ) ) );
+    }
+
+    // Save selected theme / principle
+    if ( isset( $_POST['featured_resource_principle'] ) ) {
+        $term_id = absint( $_POST['featured_resource_principle'] );
+        if ( $term_id > 0 ) {
+            wp_set_object_terms( $post_id, array( $term_id ), 'resource_principle' );
+        } else {
+            // If cleared, remove existing principle terms.
+            wp_set_object_terms( $post_id, array(), 'resource_principle' );
+        }
     }
 }
 add_action( 'add_meta_boxes', 'aiad_featured_resource_meta_box' );
