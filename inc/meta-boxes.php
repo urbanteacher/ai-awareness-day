@@ -130,12 +130,18 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     $url      = get_post_meta( $post->ID, '_featured_resource_url', true );
     $org_name = get_post_meta( $post->ID, '_featured_resource_org_name', true );
     $org_url  = get_post_meta( $post->ID, '_featured_resource_org_url', true );
+    $excerpt  = has_excerpt( $post ) ? $post->post_excerpt : '';
     echo '<p><label for="featured_resource_url">' . esc_html__( 'Resource URL *', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_url" name="featured_resource_url" value="' . esc_attr( $url ) . '" class="widefat" required placeholder="https://..."></p>';
     echo '<p><label for="featured_resource_org_name">' . esc_html__( 'Organisation name', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="text" id="featured_resource_org_name" name="featured_resource_org_name" value="' . esc_attr( $org_name ) . '" class="widefat" placeholder="e.g. STEM Learning"></p>';
     echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
+
+    // Short description / summary that maps to the post excerpt.
+    echo '<p><label for="featured_resource_excerpt"><strong>' . esc_html__( 'Short description', 'ai-awareness-day' ) . '</strong></label><br>';
+    echo '<textarea id="featured_resource_excerpt" name="featured_resource_excerpt" rows="3" class="widefat" placeholder="' . esc_attr__( 'One or two sentences shown on the card.', 'ai-awareness-day' ) . '">' . esc_textarea( $excerpt ) . '</textarea>';
+    echo '</p>';
 
     // Theme / principle selector (Safe, Smart, Creative, Responsible, Future)
     $principles = get_terms(
@@ -178,6 +184,17 @@ function aiad_save_featured_resource( int $post_id ): void {
     }
     if ( isset( $_POST['featured_resource_org_url'] ) ) {
         update_post_meta( $post_id, '_featured_resource_org_url', esc_url_raw( wp_unslash( $_POST['featured_resource_org_url'] ) ) );
+    }
+
+    // Save short description as the post excerpt.
+    if ( isset( $_POST['featured_resource_excerpt'] ) ) {
+        $excerpt = sanitize_text_field( wp_unslash( $_POST['featured_resource_excerpt'] ) );
+        wp_update_post(
+            array(
+                'ID'           => $post_id,
+                'post_excerpt' => $excerpt,
+            )
+        );
     }
 
     // Save selected theme / principle
