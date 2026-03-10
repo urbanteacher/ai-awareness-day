@@ -292,6 +292,20 @@ function aiad_seed_partner_resources(): void {
             'org'     => 'Amazon',
             'theme'   => 'future',
         ),
+        array(
+            'title'   => 'AI Quests',
+            'excerpt' => __( 'Hands-on classroom quests from Google Research that use experiments and activities to build AI literacy step by step.', 'ai-awareness-day' ),
+            'url'     => 'https://research.google/ai-quests/intl/en_gb',
+            'org'     => 'Google Research',
+            'theme'   => 'smart',
+        ),
+        array(
+            'title'   => 'Spot the Deepfake',
+            'excerpt' => __( 'Interactive lessons and quizzes that explain how deepfakes work and help students practise spotting manipulated media.', 'ai-awareness-day' ),
+            'url'     => 'https://www.spotdeepfakes.org/en-US',
+            'org'     => 'Microsoft',
+            'theme'   => 'safe',
+        ),
     );
 
     foreach ( $items as $item ) {
