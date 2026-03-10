@@ -130,18 +130,12 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     $url      = get_post_meta( $post->ID, '_featured_resource_url', true );
     $org_name = get_post_meta( $post->ID, '_featured_resource_org_name', true );
     $org_url  = get_post_meta( $post->ID, '_featured_resource_org_url', true );
-    $excerpt  = has_excerpt( $post ) ? $post->post_excerpt : '';
     echo '<p><label for="featured_resource_url">' . esc_html__( 'Resource URL *', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_url" name="featured_resource_url" value="' . esc_attr( $url ) . '" class="widefat" required placeholder="https://..."></p>';
     echo '<p><label for="featured_resource_org_name">' . esc_html__( 'Organisation name', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="text" id="featured_resource_org_name" name="featured_resource_org_name" value="' . esc_attr( $org_name ) . '" class="widefat" placeholder="e.g. STEM Learning"></p>';
     echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
-
-    // Short description / summary that maps to the post excerpt.
-    echo '<p><label for="featured_resource_excerpt"><strong>' . esc_html__( 'Short description', 'ai-awareness-day' ) . '</strong></label><br>';
-    echo '<textarea id="featured_resource_excerpt" name="featured_resource_excerpt" rows="3" class="widefat" placeholder="' . esc_attr__( 'One or two sentences shown on the card.', 'ai-awareness-day' ) . '">' . esc_textarea( $excerpt ) . '</textarea>';
-    echo '</p>';
 
     // Theme / principle selector (Safe, Smart, Creative, Responsible, Future)
     $principles = get_terms(
@@ -165,6 +159,29 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
         echo '<em class="description">' . esc_html__( 'No themes found. Add themes under Resources → Themes.', 'ai-awareness-day' ) . '</em>';
     }
     echo '</p>';
+
+    // Activity type selector (e.g. Game, Quiz, Creative Task)
+    $activity_terms = get_terms(
+        array(
+            'taxonomy'   => 'activity_type',
+            'hide_empty' => false,
+        )
+    );
+    $current_activities = wp_get_object_terms( $post->ID, 'activity_type', array( 'fields' => 'ids' ) );
+    echo '<p><label for="featured_resource_activity"><strong>' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</strong></label><br>';
+    if ( ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) ) {
+        echo '<select id="featured_resource_activity" name="featured_resource_activity" class="widefat">';
+        echo '<option value="">' . esc_html__( 'Select an activity type (optional)', 'ai-awareness-day' ) . '</option>';
+        foreach ( $activity_terms as $term ) {
+            $selected = ( ! empty( $current_activities ) && in_array( $term->term_id, $current_activities, true ) ) ? 'selected="selected"' : '';
+            echo '<option value="' . esc_attr( (string) $term->term_id ) . '" ' . $selected . '>' . esc_html( $term->name ) . '</option>';
+        }
+        echo '</select>';
+        echo '<em class="description">' . esc_html__( 'Used for the “Activity” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ) . '</em>';
+    } else {
+        echo '<em class="description">' . esc_html__( 'No activity types found. Add them under Resources → Activity types.', 'ai-awareness-day' ) . '</em>';
+    }
+    echo '</p>';
 }
 function aiad_save_featured_resource( int $post_id ): void {
     if ( ! isset( $_POST['aiad_featured_resource_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_nonce'] ) ), 'aiad_featured_resource_nonce' ) ) {
@@ -186,17 +203,6 @@ function aiad_save_featured_resource( int $post_id ): void {
         update_post_meta( $post_id, '_featured_resource_org_url', esc_url_raw( wp_unslash( $_POST['featured_resource_org_url'] ) ) );
     }
 
-    // Save short description as the post excerpt.
-    if ( isset( $_POST['featured_resource_excerpt'] ) ) {
-        $excerpt = sanitize_text_field( wp_unslash( $_POST['featured_resource_excerpt'] ) );
-        wp_update_post(
-            array(
-                'ID'           => $post_id,
-                'post_excerpt' => $excerpt,
-            )
-        );
-    }
-
     // Save selected theme / principle
     if ( isset( $_POST['featured_resource_principle'] ) ) {
         $term_id = absint( $_POST['featured_resource_principle'] );
@@ -205,6 +211,17 @@ function aiad_save_featured_resource( int $post_id ): void {
         } else {
             // If cleared, remove existing principle terms.
             wp_set_object_terms( $post_id, array(), 'resource_principle' );
+        }
+    }
+
+    // Save selected activity type
+    if ( isset( $_POST['featured_resource_activity'] ) ) {
+        $activity_term_id = absint( $_POST['featured_resource_activity'] );
+        if ( $activity_term_id > 0 ) {
+            wp_set_object_terms( $post_id, array( $activity_term_id ), 'activity_type' );
+        } else {
+            // If cleared, remove existing activity type terms.
+            wp_set_object_terms( $post_id, array(), 'activity_type' );
         }
     }
 }
