@@ -219,6 +219,7 @@ function aiad_seed_partner_resources(): void {
     }
 
     $items = array(
+        // Existing five seed resources
         array(
             'title'   => 'Quick, Draw!',
             'excerpt' => __( 'Draw everyday objects and watch as an AI tries to guess what you\'re sketching in real time. A fun way to see how machines learn from patterns.', 'ai-awareness-day' ),
@@ -254,6 +255,43 @@ function aiad_seed_partner_resources(): void {
             'org'     => 'BBC Bitesize',
             'theme'   => 'future',
         ),
+
+        // New handpicked resources (from interactive AI games & tools)
+        array(
+            'title'   => 'Teachable Machine',
+            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'ai-awareness-day' ),
+            'url'     => 'https://teachablemachine.withgoogle.com/',
+            'org'     => 'Google',
+            'theme'   => 'smart',
+        ),
+        array(
+            'title'   => 'Harmony Square',
+            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'ai-awareness-day' ),
+            'url'     => 'https://harmonysquare.game/en',
+            'org'     => 'U.S. Department of State & partners',
+            'theme'   => 'responsible',
+        ),
+        array(
+            'title'   => 'Emoji Scavenger Hunt',
+            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'ai-awareness-day' ),
+            'url'     => 'https://emojiscavengerhunt.withgoogle.com/',
+            'org'     => 'Google',
+            'theme'   => 'smart',
+        ),
+        array(
+            'title'   => 'FreddieMeter',
+            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'ai-awareness-day' ),
+            'url'     => 'https://freddiemeter.withyoutube.com/',
+            'org'     => 'YouTube & Google Creative Lab',
+            'theme'   => 'creative',
+        ),
+        array(
+            'title'   => 'Alexa Skill Blueprints',
+            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'ai-awareness-day' ),
+            'url'     => 'https://blueprints.amazon.com/',
+            'org'     => 'Amazon',
+            'theme'   => 'future',
+        ),
     );
 
     foreach ( $items as $item ) {
@@ -275,6 +313,81 @@ function aiad_seed_partner_resources(): void {
 }
 // Disabled: Demo content seeding
 // add_action( 'init', 'aiad_seed_partner_resources', 25 );
+
+/**
+ * Seed additional partner resources (interactive AI games and tools).
+ * Runs once on existing sites to add newer recommended resources.
+ */
+function aiad_seed_additional_partner_resources(): void {
+    if ( get_option( 'aiad_partner_resources_extended_seeded' ) === 'yes' ) {
+        return;
+    }
+
+    $items = array(
+        array(
+            'title'   => 'Teachable Machine',
+            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'ai-awareness-day' ),
+            'url'     => 'https://teachablemachine.withgoogle.com/',
+            'org'     => 'Google',
+            'theme'   => 'smart',
+        ),
+        array(
+            'title'   => 'Harmony Square',
+            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'ai-awareness-day' ),
+            'url'     => 'https://harmonysquare.game/en',
+            'org'     => 'U.S. Department of State & partners',
+            'theme'   => 'responsible',
+        ),
+        array(
+            'title'   => 'Emoji Scavenger Hunt',
+            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'ai-awareness-day' ),
+            'url'     => 'https://emojiscavengerhunt.withgoogle.com/',
+            'org'     => 'Google',
+            'theme'   => 'smart',
+        ),
+        array(
+            'title'   => 'FreddieMeter',
+            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'ai-awareness-day' ),
+            'url'     => 'https://freddiemeter.withyoutube.com/',
+            'org'     => 'YouTube & Google Creative Lab',
+            'theme'   => 'creative',
+        ),
+        array(
+            'title'   => 'Alexa Skill Blueprints',
+            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'ai-awareness-day' ),
+            'url'     => 'https://blueprints.amazon.com/',
+            'org'     => 'Amazon',
+            'theme'   => 'future',
+        ),
+    );
+
+    foreach ( $items as $item ) {
+        // Avoid duplicates by title.
+        $existing = get_page_by_title( $item['title'], OBJECT, 'featured_resource' );
+        if ( $existing ) {
+            continue;
+        }
+
+        $post_id = wp_insert_post( array(
+            'post_type'    => 'featured_resource',
+            'post_title'   => $item['title'],
+            'post_excerpt' => $item['excerpt'],
+            'post_status'  => 'publish',
+            'post_author'  => 1,
+        ) );
+
+        if ( $post_id && ! is_wp_error( $post_id ) ) {
+            update_post_meta( $post_id, '_featured_resource_url', $item['url'] );
+            update_post_meta( $post_id, '_featured_resource_org_name', $item['org'] );
+            if ( ! empty( $item['theme'] ) ) {
+                wp_set_object_terms( $post_id, array( $item['theme'] ), 'resource_principle' );
+            }
+        }
+    }
+
+    update_option( 'aiad_partner_resources_extended_seeded', 'yes' );
+}
+add_action( 'init', 'aiad_seed_additional_partner_resources', 26 );
 
 /**
  * Seed the 5 free lesson starters (one per theme: Safe, Smart, Creative, Responsible, Future).

@@ -738,10 +738,12 @@ function aiad_timeline_maybe_create_countdown_entries(): void {
             ? __( '1 week to go — book your slot', 'ai-awareness-day' )
             : sprintf( __( '%d weeks to go — book your slot', 'ai-awareness-day' ), $weeks );
         aiad_create_timeline_entry( array(
-            'title'          => $title,
-            'content'        => sprintf( __( 'AI Awareness Day is in %d week(s). Sign up and get your school involved.', 'ai-awareness-day' ), $weeks ),
-            'auto_type'      => 'countdown',
-            'icon'           => 'event',
+            'title'           => $title,
+            'content'         => sprintf( __( 'AI Awareness Day is in %d week(s). Sign up and get your school involved.', 'ai-awareness-day' ), $weeks ),
+            'auto_type'       => 'countdown',
+            'icon'            => 'signup',
+            'link_url'        => home_url( '#contact' ),
+            'link_label'      => __( 'Join the campaign →', 'ai-awareness-day' ),
             'countdown_weeks' => $weeks,
         ) );
     }
