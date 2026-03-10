@@ -27,7 +27,7 @@ $archive_url = get_post_type_archive_link( 'ai_tool' );
 $text_alignment_class = aiad_get_text_alignment_class();
 ?>
 
-<section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="free-tools">
+<section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="ai-tools">
 	<div class="container">
 		<div class="fade-up">
 			<span class="section-label"><?php esc_html_e( 'AI Tools', 'ai-awareness-day' ); ?></span>

@@ -1,9 +1,9 @@
 <?php
 /**
- * Free AI Tools: CPT, taxonomy, meta, admin UI, and rendering helpers.
+ * AI Tools: CPT, taxonomy, meta, admin UI, and rendering helpers.
  *
  * CPT slug:      ai_tool
- * Archive slug:  free-tools
+ * Archive slug:  ai-tools
  * Taxonomy:      tool_category
  *
  * @package AI_Awareness_Day
@@ -31,8 +31,8 @@ function aiad_register_ai_tool_post_type(): void {
 		),
 		'public'             => true,
 		'publicly_queryable' => true,
-		'has_archive'        => 'free-tools',
-		'rewrite'            => array( 'slug' => 'free-tools' ),
+		'has_archive'        => 'ai-tools',
+		'rewrite'            => array( 'slug' => 'ai-tools' ),
 		'show_ui'            => true,
 		'show_in_menu'       => true,
 		'menu_icon'          => 'dashicons-laptop',

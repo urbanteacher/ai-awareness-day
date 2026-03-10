@@ -84,9 +84,15 @@ ai-awareness-day/
 
 ## Docker (local development)
 
-- **Start:** `docker compose up -d` then open http://localhost:9090
-- **Uploads:** The `wp_uploads` volume persists media so images survive container restarts. If you had uploads before adding this volume, re-upload media or restore from backup.
-- **Login issues:** Use http://localhost:9090 (not 127.0.0.1). Clear site cookies or use a private window. The admin password was reset to `admin` (change it after logging in).
+- **What this does:** Runs WordPress + MySQL in Docker and mounts this theme into `wp-content/themes/ai-awareness-day`. You do **not** need PHP or MySQL installed locally.
+- **Start containers:**
+  - From the theme folder (where `docker-compose.yml` lives), run: `docker compose up -d`
+  - Then open `http://localhost:9090` in your browser
+- **First run:** WordPress will show the normal install screen. Choose a site title, username and password — the database connection is already configured by Docker.
+- **Activate the theme:** After install, go to **Appearance → Themes** and activate **“AI Awareness Day”**.
+- **Uploads:** The `wp_uploads` Docker volume persists `wp-content/uploads` so media survives container restarts.
+- **Stopping:** Run `docker compose down` in the same folder to stop everything.
+- **Login issues:** Always use `http://localhost:9090` (not `127.0.0.1`). Clear site cookies or use a private window if you see unexpected login behaviour.
 
 ### Resources page and “Apply filters” going to home
 
