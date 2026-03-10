@@ -255,8 +255,19 @@ get_header();
                                 <h2 class="resource-card__title">
                                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                 </h2>
-                                <?php if (has_excerpt()): ?>
-                                    <p class="resource-card__excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
+                                <?php
+                                $summary = '';
+                                if (has_excerpt()) {
+                                    $summary = get_the_excerpt();
+                                } else {
+                                    $content = get_the_content('');
+                                    if ($content) {
+                                        $summary = wp_trim_words(wp_strip_all_tags($content), 30);
+                                    }
+                                }
+                                if ($summary):
+                                    ?>
+                                    <p class="resource-card__excerpt"><?php echo esc_html($summary); ?></p>
                                 <?php endif; ?>
                                 <p class="resource-card__action">
                                     <?php if ($download_url): ?>
