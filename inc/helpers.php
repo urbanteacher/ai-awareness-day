@@ -12,6 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Default URL for the front-page "Sample Letters & Communications" toolkit card.
+ * Beehiiv S3 download links are presigned and expire (~7 days); update via
+ * Appearance → Customize → Toolkit Section, or switch to a Media Library file URL.
+ *
+ * @return string
+ */
+function aiad_default_sample_letters_url(): string {
+    return 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260319%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260319T223329Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=05e2285ef50dd5ad83811d9b9fca09329cff846027d6f74197b34d4e6ce82f79';
+}
+
+/**
  * Duration badge label (slug or term → "Lesson Starters (5-min)" style)
  *
  * @param object|string $term_or_slug WP_Term or duration slug.

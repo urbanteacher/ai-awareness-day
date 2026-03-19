@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <div class="toolkit-grid">
                     <?php
                     $implementation_guide_url = esc_url_raw(get_theme_mod('aiad_implementation_guide_url', ''));
-                    $sample_letters_url = esc_url_raw(get_theme_mod('aiad_sample_letters_url', 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260219%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T134149Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=63e9e703294592ac0831c1514a8cb35998b38153e36dd02ad109ab57226d2625'));
+                    $sample_letters_url = esc_url_raw( get_theme_mod( 'aiad_sample_letters_url', aiad_default_sample_letters_url() ) );
                     $newsletter_url = esc_url_raw(get_theme_mod('aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched'));
                     $toolkit_items = array(
                         array(

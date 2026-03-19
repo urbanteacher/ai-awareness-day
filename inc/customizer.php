@@ -353,13 +353,13 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
     ) );
 
     $wp_customize->add_setting( 'aiad_sample_letters_url', array(
-        'default'           => '',
+        'default'           => aiad_default_sample_letters_url(),
         'sanitize_callback' => 'esc_url_raw',
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_sample_letters_url', array(
         'label'       => __( 'Sample Letters & Communications URL', 'ai-awareness-day' ),
-        'description' => __( 'URL for the "Sample Letters & Communications" card (e.g. SLT approval letter PDF). When set, the card is clickable. If your link expires, paste a new one here.', 'ai-awareness-day' ),
+        'description' => __( 'URL for the "Sample Letters & Communications" card (e.g. SLT approval letter PDF). When set, the card is clickable. Avoid temporary/presigned file links (they expire); upload the PDF to Media Library and paste that URL, or use a stable page link.', 'ai-awareness-day' ),
         'section'     => 'aiad_toolkit',
         'type'        => 'url',
     ) );
