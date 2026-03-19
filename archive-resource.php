@@ -98,7 +98,7 @@ get_header();
                     array(
                         'key' => '_aiad_key_stage',
                         'value' => $key_stage_filter,
-                        'compare' => 'LIKE',
+                        'compare' => '=',
                     ),
                 );
             }
