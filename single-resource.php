@@ -461,25 +461,9 @@ get_header();
                                 aria-label="<?php esc_attr_e( 'Generate share image', 'ai-awareness-day' ); ?>">
                             <span class="resource-share-btn__label"><?php esc_html_e( 'Generate share image', 'ai-awareness-day' ); ?></span>
                         </button>
-                        <button type="button"
-                                class="resource-footer-btn resource-footer-btn--secondary resource-bookmark-btn"
-                                data-resource-id="<?php echo esc_attr((string) get_the_ID()); ?>"
-                                data-resource-title="<?php echo esc_attr( $share_title ); ?>"
-                                data-resource-url="<?php echo esc_url( $share_url ); ?>"
-                                aria-pressed="false"
-                                aria-label="<?php esc_attr_e('Save resource', 'ai-awareness-day'); ?>">
-                            <?php esc_html_e('Save', 'ai-awareness-day'); ?>
-                        </button>
                     </footer>
                 </article>
             <?php endwhile; ?>
-            <aside class="saved-resources-panel" data-saved-resources-panel hidden>
-                <div class="saved-resources-panel__header">
-                    <h2><?php esc_html_e( 'My saved resources', 'ai-awareness-day' ); ?></h2>
-                    <button type="button" class="saved-resources-panel__close" data-saved-resources-close aria-label="<?php esc_attr_e( 'Close saved resources', 'ai-awareness-day' ); ?>">×</button>
-                </div>
-                <ul class="saved-resources-panel__list" data-saved-resources-list></ul>
-            </aside>
     </section>
 </main>
 
