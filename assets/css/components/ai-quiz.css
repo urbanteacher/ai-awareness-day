@@ -1,0 +1,131 @@
+/* === AI Literacy Quiz === */
+
+.ai-quiz {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.ai-quiz__form {
+    margin-top: 2rem;
+}
+
+.ai-quiz__question {
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.ai-quiz__question--unanswered {
+    border-color: #f87171;
+    background: #fff7f7;
+}
+
+.ai-quiz__question legend {
+    font-weight: 600;
+    font-size: 0.975rem;
+    padding: 0 0.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--gray-900, #111827);
+}
+
+.ai-quiz__option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: background 0.15s;
+    margin-bottom: 0.25rem;
+}
+
+.ai-quiz__option:hover {
+    background: var(--gray-100, #f3f4f6);
+}
+
+.ai-quiz__option input[type="radio"] {
+    accent-color: var(--green-600, #16a34a);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.ai-quiz__option--correct {
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 600;
+}
+
+.ai-quiz__option--wrong {
+    background: #fee2e2;
+    color: #991b1b;
+    text-decoration: line-through;
+}
+
+.ai-quiz__option input[type="radio"]:disabled {
+    cursor: not-allowed;
+}
+
+.ai-quiz__actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.ai-quiz__submit {
+    /* inherits .resource-filter-submit styles */
+}
+
+.ai-quiz__reset {
+    background: transparent;
+    border: 1px solid var(--gray-300, #d1d5db);
+    color: var(--gray-700, #374151);
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.ai-quiz__reset:hover {
+    background: var(--gray-100, #f3f4f6);
+    border-color: var(--gray-400, #9ca3af);
+}
+
+.ai-quiz__result {
+    margin-top: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-height: 1.5em;
+    border-radius: 10px;
+    padding: 0;
+    transition: opacity 0.3s;
+}
+
+.ai-quiz__result--show {
+    padding: 1rem 1.25rem;
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.ai-quiz__result--warn {
+    padding: 0.75rem 1rem;
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .ai-quiz__question {
+        padding: 1rem;
+    }
+}

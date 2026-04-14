@@ -185,32 +185,37 @@
         // ============================================
         // Stats counter animation
         // ============================================
-        const statsBar = document.querySelector('.timeline-stats-bar');
-        if (statsBar) {
-            const statElements = statsBar.querySelectorAll('.timeline-stats-bar__stat');
-            const valueElements = statsBar.querySelectorAll('.timeline-stats-bar__value');
-            let animationTriggered = false;
+        function initStatsBarCounters() {
+            var statsBars = document.querySelectorAll('.timeline-stats-bar');
+            if (!statsBars.length) return;
 
-            // Animate counter from 0 to target value
+            function parseCounterTarget(rawValue) {
+                var cleaned = String(rawValue || '').trim();
+                var numeric = cleaned.replace(/[^\d-]/g, '');
+                var parsed = parseInt(numeric, 10);
+                return isNaN(parsed) ? null : parsed;
+            }
+
+            // Animate counter from 0 to target value.
             function animateCounter(element, targetValue, duration) {
-                const startTime = performance.now();
-                const target = parseInt(targetValue, 10);
+                var target = parseCounterTarget(targetValue);
+                var startTime = performance.now();
 
-                if (isNaN(target) || target === 0) {
+                if (target === null || target === 0) {
                     element.textContent = targetValue;
                     element.classList.add('animated');
                     return;
                 }
 
                 function updateCounter(currentTime) {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
+                    var elapsed = currentTime - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
 
-                    // Easing function for smooth animation
-                    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-                    const currentValue = Math.floor(easeOutQuart * target);
+                    // Easing function for smooth animation.
+                    var easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                    var currentValue = Math.floor(easeOutQuart * target);
 
-                    element.textContent = currentValue;
+                    element.textContent = String(currentValue);
 
                     if (progress < 1) {
                         requestAnimationFrame(updateCounter);
@@ -225,66 +230,82 @@
                 requestAnimationFrame(updateCounter);
             }
 
-            // Trigger animation function
-            function triggerAnimation() {
-                if (animationTriggered) return;
-                animationTriggered = true;
+            function setupStatsBar(statsBar) {
+                if (!statsBar || statsBar.dataset.counterInit === 'true') return;
+                statsBar.dataset.counterInit = 'true';
 
-                // Add staggered animation class to each stat
-                statElements.forEach((stat, index) => {
-                    setTimeout(() => {
-                        stat.classList.add('animate-in');
-                    }, index * 100);
-                });
+                var statElements = statsBar.querySelectorAll('.timeline-stats-bar__stat');
+                var valueElements = statsBar.querySelectorAll('.timeline-stats-bar__value');
+                var animationTriggered = false;
+                var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-                // Animate each counter with staggered delay
-                valueElements.forEach((valueEl, index) => {
-                    const targetValue = valueEl.textContent;
-                    setTimeout(() => {
-                        animateCounter(valueEl, targetValue, 1500);
-                    }, 300 + (index * 200));
-                });
-            }
+                function triggerAnimation() {
+                    if (animationTriggered) return;
+                    animationTriggered = true;
 
-            // Check if element is already in viewport
-            function isInViewport(element) {
-                const rect = element.getBoundingClientRect();
-                return (
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                );
-            }
+                    statElements.forEach(function (stat, index) {
+                        setTimeout(function () {
+                            stat.classList.add('animate-in');
+                        }, index * 100);
+                    });
 
-            // Intersection Observer for stats bar
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        triggerAnimation();
-                        statsObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1, // Lower threshold for better mobile support
-            });
-
-            // Start observing
-            statsObserver.observe(statsBar);
-
-            // Fallback: If element is already in viewport or after 3 seconds, trigger animation
-            if (isInViewport(statsBar)) {
-                triggerAnimation();
-            }
-
-            // Safety fallback: ensure stats are visible after 3 seconds max
-            setTimeout(() => {
-                if (!animationTriggered) {
-                    triggerAnimation();
+                    valueElements.forEach(function (valueEl, index) {
+                        var targetValue = valueEl.textContent;
+                        setTimeout(function () {
+                            if (prefersReducedMotion) {
+                                valueEl.textContent = targetValue;
+                                valueEl.classList.add('animated');
+                                return;
+                            }
+                            animateCounter(valueEl, targetValue, 1500);
+                        }, 300 + (index * 200));
+                    });
                 }
-            }, 3000);
+
+                if (typeof window.IntersectionObserver === 'undefined') {
+                    triggerAnimation();
+                    return;
+                }
+
+                var statsObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            triggerAnimation();
+                            statsObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1,
+                });
+
+                statsObserver.observe(statsBar);
+
+                setTimeout(function () {
+                    if (!animationTriggered) {
+                        triggerAnimation();
+                    }
+                }, 3000);
+            }
+
+            statsBars.forEach(setupStatsBar);
+        }
+
+        initStatsBarCounters();
+
+        // Support live-rendered content (e.g. preview/partial refresh) where
+        // timeline stats can be inserted after initial page load.
+        if (typeof window.MutationObserver !== 'undefined') {
+            var statsMutationObserver = new MutationObserver(function (mutations) {
+                var shouldRecheck = mutations.some(function (mutation) {
+                    return mutation.type === 'childList' && mutation.addedNodes && mutation.addedNodes.length > 0;
+                });
+                if (shouldRecheck) {
+                    initStatsBarCounters();
+                }
+            });
+            statsMutationObserver.observe(document.body, { childList: true, subtree: true });
         }
 
         // ============================================
@@ -556,6 +577,22 @@
                         formStatus.appendChild(msgSpan);
                         form.reset();
                         launchConfetti();
+
+                        // Update pledge counter if server returned updated count.
+                        if (data.data && typeof data.data.pledge_count !== 'undefined') {
+                            var pledgeWrap = document.querySelector('[data-pledge-counter]');
+                            if (pledgeWrap) {
+                                var countEl = pledgeWrap.querySelector('[data-pledge-count]');
+                                var fillEl  = pledgeWrap.querySelector('[data-pledge-fill]');
+                                var barEl   = pledgeWrap.querySelector('.pledge-counter__bar');
+                                var count   = parseInt(data.data.pledge_count, 10);
+                                var goal    = parseInt(pledgeWrap.getAttribute('data-goal') || data.data.pledge_goal, 10) || 500;
+                                var pct     = Math.min(100, Math.round((count / goal) * 100));
+                                if (countEl) countEl.textContent = count.toLocaleString();
+                                if (fillEl)  fillEl.style.width  = pct + '%';
+                                if (barEl)   barEl.setAttribute('aria-valuenow', String(count));
+                            }
+                        }
                     } else {
                         msgSpan.style.color = '#ef4444';
                         msgSpan.textContent = data.data.message;
@@ -687,6 +724,88 @@
                 body: body,
             }).catch(() => { }); // Silently fail - download tracking is non-critical
         });
+
+        // ============================================
+        // AI Literacy Quiz
+        // ============================================
+        (function initAiQuiz() {
+            var quiz = document.querySelector('[data-ai-quiz]');
+            if (!quiz) return;
+
+            var submitBtn = quiz.querySelector('[data-ai-quiz-submit]');
+            var resetBtn  = quiz.querySelector('[data-ai-quiz-reset]');
+            var resultEl  = quiz.querySelector('[data-ai-quiz-result]');
+            var questions = quiz.querySelectorAll('.ai-quiz__question');
+            if (!submitBtn || !resultEl || !questions.length) return;
+
+            var scores = [
+                '😬 Keep exploring — AI literacy is a journey! (0/5)',
+                '📚 Not bad! A little more learning and you\'ll be set. (1/5)',
+                '🧠 Good work! You\'ve got solid AI awareness. (2/5)',
+                '⭐ Great score! You really know your stuff. (3/5)',
+                '🏆 Excellent! Nearly there — one to brush up on. (4/5)',
+                '🎉 Perfect score! You\'re fully AI-literate and ready for June 4th! (5/5)',
+            ];
+
+            submitBtn.addEventListener('click', function () {
+                var correct = 0;
+                var allAnswered = true;
+
+                questions.forEach(function (q) {
+                    var expected = q.getAttribute('data-correct');
+                    var chosen   = q.querySelector('input[type="radio"]:checked');
+
+                    if (!chosen) {
+                        allAnswered = false;
+                        q.classList.add('ai-quiz__question--unanswered');
+                    } else {
+                        q.classList.remove('ai-quiz__question--unanswered');
+                        var isCorrect = chosen.value === expected;
+                        if (isCorrect) correct++;
+
+                        q.querySelectorAll('.ai-quiz__option').forEach(function (label) {
+                            var input = label.querySelector('input');
+                            label.classList.remove('ai-quiz__option--correct', 'ai-quiz__option--wrong');
+                            if (input.value === expected) {
+                                label.classList.add('ai-quiz__option--correct');
+                            } else if (input === chosen && !isCorrect) {
+                                label.classList.add('ai-quiz__option--wrong');
+                            }
+                            input.disabled = true;
+                        });
+                    }
+                });
+
+                if (!allAnswered) {
+                    resultEl.textContent = 'Please answer all five questions first.';
+                    resultEl.className = 'ai-quiz__result ai-quiz__result--warn';
+                    return;
+                }
+
+                resultEl.textContent = scores[correct] || scores[5];
+                resultEl.className   = 'ai-quiz__result ai-quiz__result--show';
+                submitBtn.style.display = 'none';
+                resetBtn.style.display  = '';
+            });
+
+            resetBtn.addEventListener('click', function () {
+                questions.forEach(function (q) {
+                    q.classList.remove('ai-quiz__question--unanswered');
+                    q.querySelectorAll('input[type="radio"]').forEach(function (input) {
+                        input.checked  = false;
+                        input.disabled = false;
+                    });
+                    q.querySelectorAll('.ai-quiz__option').forEach(function (label) {
+                        label.classList.remove('ai-quiz__option--correct', 'ai-quiz__option--wrong');
+                    });
+                });
+                resultEl.textContent    = '';
+                resultEl.className      = 'ai-quiz__result';
+                submitBtn.style.display = '';
+                resetBtn.style.display  = 'none';
+            });
+        })();
+
     } // End of init function
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded

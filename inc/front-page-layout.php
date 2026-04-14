@@ -26,6 +26,7 @@ function aiad_get_front_page_sections(): array {
         'free_resources',
         'featured_resources',
         'tools',
+        'ai_quiz',
         'contact',
     );
 

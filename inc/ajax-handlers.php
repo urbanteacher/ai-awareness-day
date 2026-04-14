@@ -247,12 +247,23 @@ function aiad_handle_contact_form(): void {
 
     $user_sent = wp_mail( $email, $user_subject, $user_body, $user_headers );
 
+    // Increment school pledge count for teachers and school leaders.
+    $pledge_count = aiad_maybe_increment_school_pledge_count( $involved_as );
+    $pledge_goal  = aiad_get_school_pledge_goal();
+
     if ( $admin_sent || $submission_id ) {
-        wp_send_json_success( array( 'message' => __( 'Thank you! We\'ll be in touch soon.', 'ai-awareness-day' ) ) );
+        wp_send_json_success( array(
+            'message'      => __( 'Thank you! We\'ll be in touch soon.', 'ai-awareness-day' ),
+            'pledge_count' => $pledge_count,
+            'pledge_goal'  => $pledge_goal,
+        ) );
     } else {
-        // Submission was saved but email failed - still show success to user
-        // Admin can check submissions in the database
-        wp_send_json_success( array( 'message' => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'ai-awareness-day' ) ) );
+        // Submission was saved but email failed — still show success to user.
+        wp_send_json_success( array(
+            'message'      => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'ai-awareness-day' ),
+            'pledge_count' => $pledge_count,
+            'pledge_goal'  => $pledge_goal,
+        ) );
     }
 }
 add_action( 'wp_ajax_aiad_contact', 'aiad_handle_contact_form' );

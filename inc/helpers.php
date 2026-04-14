@@ -222,6 +222,41 @@ function aiad_normalise_learning_objectives( $raw ): array {
 }
 
 /**
+ * Get total school pledges recorded from contact form submissions.
+ *
+ * @return int
+ */
+function aiad_get_school_pledge_count(): int {
+    return max( 0, (int) get_option( 'aiad_school_pledge_count', 0 ) );
+}
+
+/**
+ * Campaign target used for the pledge progress bar display.
+ *
+ * @return int
+ */
+function aiad_get_school_pledge_goal(): int {
+    return (int) apply_filters( 'aiad_school_pledge_goal', 500 );
+}
+
+/**
+ * Increment the school pledge count when a teacher or school leader submits the form.
+ * Returns the updated count.
+ *
+ * @param string $involved_as The role from the contact form.
+ * @return int Updated pledge count.
+ */
+function aiad_maybe_increment_school_pledge_count( string $involved_as ): int {
+    if ( ! in_array( $involved_as, array( 'teacher', 'school_leader' ), true ) ) {
+        return aiad_get_school_pledge_count();
+    }
+    $current = aiad_get_school_pledge_count();
+    $updated = $current + 1;
+    update_option( 'aiad_school_pledge_count', $updated, false );
+    return $updated;
+}
+
+/**
  * Get default values for customizer settings.
  *
  * @return array<string, mixed> Array of setting names => default values.
