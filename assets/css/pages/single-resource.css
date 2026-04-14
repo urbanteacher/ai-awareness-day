@@ -63,11 +63,16 @@
 }
 
 /* Theme-specific title colours — dark enough for AA contrast */
-[data-theme="safe"]        .resource-activity-title { color: #1d4ed8; } /* blue-700   */
-[data-theme="smart"]       .resource-activity-title { color: #c2410c; } /* orange-700 */
-[data-theme="creative"]    .resource-activity-title { color: #6d28d9; } /* violet-700 */
-[data-theme="responsible"] .resource-activity-title { color: #15803d; } /* green-700  */
-[data-theme="future"]      .resource-activity-title { color: #be185d; } /* pink-700   */
+[data-theme="safe"]        .resource-activity-title,
+[data-theme="safe"]        .resource-section__title { color: #1d4ed8 !important; } /* blue-700   */
+[data-theme="smart"]       .resource-activity-title,
+[data-theme="smart"]       .resource-section__title { color: #c2410c !important; } /* orange-700 */
+[data-theme="creative"]    .resource-activity-title,
+[data-theme="creative"]    .resource-section__title { color: #6d28d9 !important; } /* violet-700 */
+[data-theme="responsible"] .resource-activity-title,
+[data-theme="responsible"] .resource-section__title { color: #15803d !important; } /* green-700  */
+[data-theme="future"]      .resource-activity-title,
+[data-theme="future"]      .resource-section__title { color: #be185d !important; } /* pink-700   */
 
 .resource-activity-title-badge {
   display: inline-flex;
