@@ -148,7 +148,7 @@ get_header();
                     <div class="resource-sections resource-sections--rows" id="resource-content-sections">
                         <?php if ( $has_sections ) : ?>
                             <?php /* Row 1: Learning objectives | Instructions */ ?>
-                            <div class="resource-sections-row">
+                            <div class="resource-sections-row resource-sections-row--objectives-instructions">
                                 <div class="resource-section-cell resource-section-cell--left">
                                     <?php if ( ! empty( $learning_obj ) ) : ?>
                                         <section class="resource-section resource-section--objectives" aria-labelledby="section-objectives">
