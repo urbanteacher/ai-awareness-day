@@ -213,11 +213,6 @@
   text-decoration: none;
 }
 
-.hero-stats__icon {
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
 .hero-stats__value {
   display: block;
   font-family: var(--font-display);

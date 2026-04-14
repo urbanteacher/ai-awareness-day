@@ -75,40 +75,35 @@ if ( ! defined( 'ABSPATH' ) ) {
                                  + ( wp_count_posts( 'featured_resource' )->publish ?? 0 );
                 $partner_count   = wp_count_posts( 'partner' )->publish ?? 0;
                 $tool_count      = wp_count_posts( 'ai_tool' )->publish ?? 0;
-                $school_count    = function_exists( 'aiad_get_school_pledge_count' )
-                                 ? aiad_get_school_pledge_count()
+                $school_count    = function_exists( 'aiad_timeline_schools_registered_count' )
+                                 ? aiad_timeline_schools_registered_count()
                                  : (int) get_option( 'aiad_school_pledge_count', 0 );
                 $stats = array(
                     array(
                         'value' => $school_count,
                         'label' => __( 'Schools pledged', 'ai-awareness-day' ),
                         'url'   => '#contact',
-                        'icon'  => '🏫',
                     ),
                     array(
                         'value' => $resource_count,
                         'label' => __( 'Free resources', 'ai-awareness-day' ),
                         'url'   => get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' ),
-                        'icon'  => '📄',
                     ),
                     array(
                         'value' => $partner_count,
                         'label' => __( 'Partners', 'ai-awareness-day' ),
                         'url'   => get_post_type_archive_link( 'partner' ) ?: home_url( '/partners/' ),
-                        'icon'  => '🤝',
                     ),
                     array(
                         'value' => $tool_count,
                         'label' => __( 'AI tools', 'ai-awareness-day' ),
                         'url'   => home_url( '/ai-tools/' ),
-                        'icon'  => '🛠️',
                     ),
                 );
                 ?>
                 <div class="hero-stats">
                     <?php foreach ( $stats as $stat ) : ?>
                     <a href="<?php echo esc_url( $stat['url'] ); ?>" class="hero-stats__item">
-                        <span class="hero-stats__icon" aria-hidden="true"><?php echo esc_html( $stat['icon'] ); ?></span>
                         <span class="hero-stats__value"><?php echo esc_html( number_format_i18n( $stat['value'] ) ); ?></span>
                         <span class="hero-stats__label"><?php echo esc_html( $stat['label'] ); ?></span>
                     </a>
