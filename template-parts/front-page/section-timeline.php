@@ -39,6 +39,16 @@ $featured_resource_obj = wp_count_posts( 'featured_resource' );
 if ( $featured_resource_obj && isset( $featured_resource_obj->publish ) ) {
     $resources += (int) $featured_resource_obj->publish;
 }
+$partners = 0;
+$partner_obj = wp_count_posts( 'partner' );
+if ( $partner_obj && isset( $partner_obj->publish ) ) {
+    $partners = (int) $partner_obj->publish;
+}
+$updates = 0;
+$timeline_obj = wp_count_posts( 'timeline' );
+if ( $timeline_obj && isset( $timeline_obj->publish ) ) {
+    $updates = (int) $timeline_obj->publish;
+}
 $days_urgent = $days_to_go > 0 && $days_to_go < 30;
 ?>
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="timeline">
@@ -65,6 +75,18 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
                     <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $resources ); ?></span>
                     <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'free resources', 'ai-awareness-day' ); ?></span>
                     <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'resources', 'ai-awareness-day' ); ?></span>
+                </span>
+                <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
+                <span class="timeline-stats-bar__stat">
+                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $partners ); ?></span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'partners', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'partners', 'ai-awareness-day' ); ?></span>
+                </span>
+                <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
+                <span class="timeline-stats-bar__stat">
+                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $updates ); ?></span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'live updates', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'updates', 'ai-awareness-day' ); ?></span>
                 </span>
             </div>
 

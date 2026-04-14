@@ -54,7 +54,7 @@ get_header();
                                     <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" class="principle-badge__img" aria-hidden="true" />
                                 </span>
                             <?php endif; ?>
-                            <?php echo esc_html( get_the_title() ); ?>
+                            <span class="resource-activity-title-text"><?php echo esc_html( get_the_title() ); ?></span>
                         </h1>
                         <?php
                         $overview = $subtitle_meta !== '' ? $subtitle_meta : ( has_excerpt() ? get_the_excerpt() : '' );

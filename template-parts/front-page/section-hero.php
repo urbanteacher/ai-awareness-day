@@ -81,12 +81,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $stats = array(
                     array(
                         'value' => $school_count,
-                        'label' => __( 'Schools pledged', 'ai-awareness-day' ),
+                        'label' => __( 'Pledged', 'ai-awareness-day' ),
                         'url'   => '#contact',
                     ),
                     array(
                         'value' => $resource_count,
-                        'label' => __( 'Free resources', 'ai-awareness-day' ),
+                        'label' => __( 'Resources', 'ai-awareness-day' ),
                         'url'   => get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' ),
                     ),
                     array(
