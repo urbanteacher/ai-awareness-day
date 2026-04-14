@@ -406,6 +406,12 @@ get_header();
                                 <?php echo esc_html( $download_label ); ?>
                             </a>
                         <?php endif; ?>
+                        <?php if ( $preview_video_url !== '' ) : ?>
+                            <a href="<?php echo esc_url( $preview_video_url ); ?>" class="resource-footer-btn resource-footer-btn--primary" target="_blank" rel="noopener noreferrer">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="margin-right:0.4rem;flex-shrink:0"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+                                <?php esc_html_e( 'Watch on YouTube', 'ai-awareness-day' ); ?>
+                            </a>
+                        <?php endif; ?>
                         <button type="button"
                                 class="resource-footer-btn resource-footer-btn--print resource-print-btn"
                                 aria-label="<?php esc_attr_e( 'Print this resource', 'ai-awareness-day' ); ?>">

@@ -1,8 +1,8 @@
 <?php
 /**
  * Helper functions: duration badge, explore cards, get post by title, key stage options,
- * YouTube ID, resource content normalisers (learning objectives, instructions), and
- * resource download label (frontend + admin).
+ * YouTube ID, resource content normalisers (learning objectives, instructions),
+ * resource download label (frontend + admin), and resource video preview embed HTML.
  *
  * @package AI_Awareness_Day
  */
@@ -179,6 +179,43 @@ function aiad_resource_download_label( string $url ): string {
         return $m[1] === 'pdf' ? __( 'Download PDF', 'ai-awareness-day' ) : __( 'Download PPTX', 'ai-awareness-day' );
     }
     return __( 'Download', 'ai-awareness-day' );
+}
+
+/**
+ * Build embed HTML for optional resource video preview (oEmbed: YouTube, Vimeo, etc., or direct MP4/WebM/Ogg).
+ *
+ * @param string $url URL from post meta.
+ * @return string HTML or empty if not embeddable.
+ */
+function aiad_resource_preview_video_html( string $url ): string {
+    $url = esc_url_raw( trim( $url ) );
+    if ( $url === '' ) {
+        return '';
+    }
+
+    // Normalise YouTube Shorts URLs → standard watch URL so oEmbed works
+    // e.g. https://www.youtube.com/shorts/UNe2gLAFG8g → https://www.youtube.com/watch?v=UNe2gLAFG8g
+    $oembed_url = preg_replace(
+        '#youtube\.com/shorts/([a-zA-Z0-9_-]+)#',
+        'youtube.com/watch?v=$1',
+        $url
+    );
+
+    $embed = wp_oembed_get( $oembed_url, array( 'width' => 800 ) );
+    if ( is_string( $embed ) && $embed !== '' ) {
+        return $embed;
+    }
+
+    $path = (string) wp_parse_url( $url, PHP_URL_PATH );
+    $ext  = $path !== '' ? strtolower( pathinfo( $path, PATHINFO_EXTENSION ) ) : '';
+    if ( in_array( $ext, array( 'mp4', 'webm', 'ogg' ), true ) ) {
+        return sprintf(
+            '<video class="resource-preview-video-native" controls playsinline preload="metadata" src="%s"></video>',
+            esc_url( $url )
+        );
+    }
+
+    return '';
 }
 
 /**
