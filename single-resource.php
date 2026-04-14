@@ -41,6 +41,10 @@ get_header();
                 $pptx_embed_url      = ( $preview_ext === 'pptx' || $preview_ext === 'ppt' )
                     ? 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $preview_dl_url )
                     : '';
+                $preview_video_url   = (string) get_post_meta( get_the_ID(), '_aiad_preview_video_url', true );
+                $preview_video_html  = ( $preview_video_url !== '' && function_exists( 'aiad_resource_preview_video_html' ) )
+                    ? aiad_resource_preview_video_html( $preview_video_url )
+                    : '';
                 ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class( 'resource-activity-card' ); ?> <?php if ( $theme_slug ) : ?>data-theme="<?php echo esc_attr( $theme_slug ); ?>"<?php endif; ?>>
                     <header class="resource-activity-header">
@@ -302,28 +306,44 @@ get_header();
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ( $pptx_embed_url ) : ?>
+                            <?php if ( $preview_video_html || $pptx_embed_url ) : ?>
                                 <div class="resource-sections-row resource-sections-row--full">
                                     <div class="resource-section-cell resource-section-cell--full">
-                                        <div class="resource-pptx-preview" data-post-id="<?php echo esc_attr( (string) get_the_ID() ); ?>">
+                                        <div class="resource-pptx-preview<?php echo $preview_video_html ? ' resource-pptx-preview--video' : ''; ?>" data-post-id="<?php echo esc_attr( (string) get_the_ID() ); ?>">
                                             <div class="resource-pptx-preview__toolbar">
                                                 <span class="resource-pptx-preview__label">
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                                    <?php esc_html_e( 'Presentation Preview', 'ai-awareness-day' ); ?>
+                                                    <?php if ( $preview_video_html ) : ?>
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                                        <?php esc_html_e( 'Video preview', 'ai-awareness-day' ); ?>
+                                                    <?php else : ?>
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                                        <?php esc_html_e( 'Presentation preview', 'ai-awareness-day' ); ?>
+                                                    <?php endif; ?>
                                                 </span>
-                                                <a href="<?php echo esc_url( $preview_dl_url ); ?>" class="resource-pptx-preview__download" download target="_blank" rel="noopener noreferrer">
-                                                    <?php esc_html_e( 'Download slides', 'ai-awareness-day' ); ?>
-                                                </a>
+                                                <?php if ( $preview_dl_url ) : ?>
+                                                    <a href="<?php echo esc_url( $preview_dl_url ); ?>" class="resource-pptx-preview__download" download target="_blank" rel="noopener noreferrer">
+                                                        <?php echo esc_html( function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $preview_dl_url ) : __( 'Download', 'ai-awareness-day' ) ); ?>
+                                                    </a>
+                                                <?php endif; ?>
                                             </div>
-                                            <div class="resource-pptx-preview__frame-wrap">
-                                                <iframe
-                                                    src="<?php echo esc_url( $pptx_embed_url ); ?>"
-                                                    class="resource-pptx-preview__iframe"
-                                                    frameborder="0"
-                                                    allowfullscreen
-                                                    title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>"
-                                                    loading="lazy"
-                                                ></iframe>
+                                            <div class="resource-pptx-preview__frame-wrap<?php echo $preview_video_html ? ' resource-pptx-preview__frame-wrap--embed' : ''; ?>">
+                                                <?php if ( $preview_video_html ) : ?>
+                                                    <div class="resource-preview-embed">
+                                                        <?php
+                                                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML from wp_oembed_get() (trusted providers) or escaped <video> in aiad_resource_preview_video_html().
+                                                        echo $preview_video_html;
+                                                        ?>
+                                                    </div>
+                                                <?php else : ?>
+                                                    <iframe
+                                                        src="<?php echo esc_url( $pptx_embed_url ); ?>"
+                                                        class="resource-pptx-preview__iframe"
+                                                        frameborder="0"
+                                                        allowfullscreen
+                                                        title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>"
+                                                        loading="lazy"
+                                                    ></iframe>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
