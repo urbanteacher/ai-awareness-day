@@ -147,6 +147,16 @@
 
 .resource-list--resources a {
   overflow-wrap: anywhere;
+  color: var(--accent-blue, #2563eb);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  font-weight: 500;
+}
+
+.resource-list--resources a:hover {
+  color: var(--accent-blue-dark, #1d4ed8);
+  text-decoration-thickness: 2px;
 }
 
 .resource-activity-stats {
