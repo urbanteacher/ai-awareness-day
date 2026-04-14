@@ -967,13 +967,13 @@
   }
 }
 
-/* ── Section title: small uppercase label ────────────────── */
+/* ── Section title: uppercase label ─────────────────────── */
 .resource-section__title {
-  font-size: 0.65rem !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  color: var(--gray-400) !important;
+  color: var(--gray-900) !important;
   margin-bottom: 0.875rem !important;
   line-height: 1.2 !important;
 }
