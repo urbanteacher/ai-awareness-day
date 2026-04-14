@@ -1,64 +1,77 @@
-/* Resource edit screen: Resource Details meta box */
+/**
+ * Resource edit screen — Resource Details meta box.
+ * General admin chrome is in aiad-admin-common.css (loaded first).
+ * This file only adds resource-specific overrides: pill theme colours,
+ * download field, and the Details layout max-width.
+ *
+ * @package AI_Awareness_Day
+ */
+
+/* ─── Resource Details ───────────────────────────────────────── */
 .aiad-resource-details {
-    max-width: 640px;
+    max-width: 680px;
 }
 
-.aiad-rd-section {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #dcdcde;
-}
-
-.aiad-rd-section:last-child {
-    border-bottom: 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.aiad-rd-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.aiad-rd-radios label,
-.aiad-rd-checkboxes label {
-    margin-right: 1rem;
-    font-weight: normal;
-}
-
+/* ─── Theme pill selector ────────────────────────────────────── */
 .aiad-rd-pills {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    margin-top: 0.25rem;
 }
 
 .aiad-rd-pills .aiad-pill {
-    display: inline-block;
-    padding: 0.35em 0.75em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3em 0.75em;
     border-radius: 999px;
     border: 1px solid #8c8f94;
     background: #f0f0f1;
     cursor: pointer;
-    font-weight: normal;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.12s, border-color 0.12s;
+    user-select: none;
 }
 
-.aiad-rd-pills .aiad-pill input {
-    margin-right: 0.35em;
+.aiad-rd-pills .aiad-pill input[type="radio"] {
+    margin: 0;
 }
 
 .aiad-rd-pills .aiad-pill:has(input:checked) {
     border-width: 2px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-/* Theme pill colours (match front-end) */
-.aiad-rd-pills .aiad-pill--safe:has(input:checked) { background: #dbeafe; border-color: #3b82f6; }
-.aiad-rd-pills .aiad-pill--smart:has(input:checked) { background: #dcfce7; border-color: #22c55e; }
-.aiad-rd-pills .aiad-pill--creative:has(input:checked) { background: #fae8ff; border-color: #d946ef; }
-.aiad-rd-pills .aiad-pill--responsible:has(input:checked) { background: #fef3c7; border-color: #f59e0b; }
-.aiad-rd-pills .aiad-pill--future:has(input:checked) { background: #e0e7ff; border-color: #6366f1; }
+/* Theme colours (match front-end badges) */
+.aiad-rd-pills .aiad-pill--safe:has(input:checked)        { background: #dbeafe; border-color: #2563eb; }
+.aiad-rd-pills .aiad-pill--smart:has(input:checked)       { background: #dcfce7; border-color: #16a34a; }
+.aiad-rd-pills .aiad-pill--creative:has(input:checked)    { background: #fae8ff; border-color: #d946ef; }
+.aiad-rd-pills .aiad-pill--responsible:has(input:checked) { background: #fef3c7; border-color: #d97706; }
+.aiad-rd-pills .aiad-pill--future:has(input:checked)      { background: #e0e7ff; border-color: #4f46e5; }
+
+/* ─── Download / file field ──────────────────────────────────── */
+.aiad-rd-download {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.aiad-rd-download .aiad-download-url-display {
+    font-size: 0.78rem;
+    color: #646970;
+    word-break: break-all;
+}
 
 .aiad-rd-download .description {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: #646970;
+}
+
+/* ─── Video preview URL field ────────────────────────────────── */
+.aiad-rd-section--video input[type="url"] {
+    width: 100%;
+    box-sizing: border-box;
 }

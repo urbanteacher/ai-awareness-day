@@ -1,0 +1,440 @@
+/**
+ * AIAD Admin Common Styles
+ * Loaded on all theme CPT edit screens (resource, partner, featured_resource, timeline, ai_tool).
+ * Provides consistent meta box UI without touching WordPress core admin styles.
+ *
+ * @package AI_Awareness_Day
+ */
+
+/* ─── Design tokens ──────────────────────────────────────────── */
+:root {
+    --aiad-admin-border:      #dcdcde;
+    --aiad-admin-border-dark: #1e1e1e;
+    --aiad-admin-bg-subtle:   #f6f7f7;
+    --aiad-admin-bg-card:     #ffffff;
+    --aiad-admin-accent:      #2271b1;   /* WP admin blue */
+    --aiad-admin-red:         #d63638;
+    --aiad-admin-label-size:  0.72rem;
+    --aiad-admin-radius:      3px;
+}
+
+/* ─── Meta box container ──────────────────────────────────────── */
+.aiad-content-sections-fields,
+.aiad-resource-details {
+    max-width: 760px;
+}
+
+/* ─── Field section wrapper (.aiad-rd-section used in Details,
+       .aiad-cs-field used in Content Sections) ──────────────── */
+.aiad-rd-section,
+.aiad-cs-field {
+    margin: 0 0 0 0;
+    padding: 1.125rem 0 1.125rem 0;
+    border-top: 1px solid var(--aiad-admin-border);
+}
+
+.aiad-rd-section:first-child,
+.aiad-cs-field:first-child {
+    border-top: none;
+    padding-top: 0.25rem;
+}
+
+.aiad-rd-section:last-child,
+.aiad-cs-field:last-child {
+    border-bottom: 1px solid var(--aiad-admin-border);
+    margin-bottom: 1rem;
+}
+
+/* ─── Section label ───────────────────────────────────────────── */
+.aiad-rd-label,
+strong.aiad-rd-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+/* ─── Description / hint text ─────────────────────────────────── */
+.aiad-cs-field .description,
+.aiad-rd-section .description {
+    margin: 0.25rem 0 0.6rem;
+    font-size: 0.78rem;
+    color: #646970;
+    font-style: normal;
+}
+
+/* ─── Repeatable list container ───────────────────────────────── */
+.aiad-repeatable-list,
+.aiad-repeatable-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+}
+
+/* ─── Generic repeatable row ──────────────────────────────────── */
+.aiad-repeatable-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0 !important;    /* override inline styles */
+    padding: 0 !important;          /* override inline styles */
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.aiad-repeatable-row input.large-text,
+.aiad-repeatable-row input.regular-text {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ─── Definition rows (term + definition + checkbox) ─────────── */
+.aiad-repeatable-definitions .aiad-repeatable-row,
+.aiad-repeatable-rows .aiad-repeatable-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.875rem 1rem !important;
+    background: var(--aiad-admin-bg-subtle) !important;
+    border: 1px solid var(--aiad-admin-border) !important;
+    border-radius: var(--aiad-admin-radius) !important;
+}
+
+.aiad-repeatable-rows .aiad-repeatable-row label {
+    display: block;
+    margin-bottom: 0.2rem;
+    margin-top: 0.6rem;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+.aiad-repeatable-rows .aiad-repeatable-row label:first-child {
+    margin-top: 0;
+}
+
+.aiad-repeatable-rows .aiad-repeatable-row textarea,
+.aiad-repeatable-rows .aiad-repeatable-row input[type="text"] {
+    width: 100% !important;
+    box-sizing: border-box;
+    margin-bottom: 0 !important;
+}
+
+.aiad-repeatable-rows .aiad-repeatable-row label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+/* ─── Instruction step rows ───────────────────────────────────── */
+.aiad-instruction-row {
+    position: relative;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 0.875rem 1rem 0.875rem 3.25rem !important;
+    background: var(--aiad-admin-bg-subtle) !important;
+    border: 1px solid var(--aiad-admin-border) !important;
+    border-left: 3px solid var(--aiad-admin-border-dark) !important;
+    border-radius: var(--aiad-admin-radius) !important;
+    gap: 0 !important;
+    counter-increment: instruction-step;
+}
+
+/* Step number badge rendered via CSS counter */
+.aiad-repeatable-list.aiad-instruction-steps {
+    counter-reset: instruction-step;
+}
+
+.aiad-instruction-row::before {
+    content: counter(instruction-step);
+    position: absolute;
+    top: 0.875rem;
+    left: 0;
+    width: 2.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #1e1e1e;
+    line-height: 1.4;
+}
+
+.aiad-instruction-row label {
+    display: block;
+    margin-top: 0.6rem;
+    margin-bottom: 0.2rem;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+.aiad-instruction-row label:first-of-type {
+    margin-top: 0;
+}
+
+/* Inline row for Step number + Duration */
+.aiad-instruction-row > label:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-right: 1.5rem;
+}
+
+.aiad-instruction-row textarea,
+.aiad-instruction-row input[type="text"],
+.aiad-instruction-row input[type="number"] {
+    box-sizing: border-box;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+}
+
+.aiad-instruction-row input[type="number"] {
+    width: 4em !important;
+}
+
+.aiad-instruction-row input[type="text"].regular-text,
+.aiad-instruction-row input.regular-text {
+    width: 12em !important;
+}
+
+.aiad-instruction-row textarea,
+.aiad-instruction-row input[type="text"].large-text,
+.aiad-instruction-row input.large-text {
+    width: 100% !important;
+}
+
+/* Inline row (Step + Duration sit side by side) */
+.aiad-instruction-row > br {
+    display: none; /* Remove bare <br> line breaks from inline JS-generated HTML */
+}
+
+/* ─── Remove button ───────────────────────────────────────────── */
+button.aiad-remove-row {
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 0 !important;
+    padding: 2px 8px !important;
+    font-size: 0.72rem !important;
+    background: transparent !important;
+    border-color: var(--aiad-admin-border) !important;
+    color: var(--aiad-admin-red) !important;
+    border-radius: var(--aiad-admin-radius) !important;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+button.aiad-remove-row:hover {
+    background: #fef2f2 !important;
+    border-color: var(--aiad-admin-red) !important;
+}
+
+/* Remove button inside a card row: right-aligned at bottom */
+.aiad-repeatable-rows .aiad-repeatable-row button.aiad-remove-row,
+.aiad-instruction-row button.aiad-remove-row {
+    align-self: flex-end;
+    margin-top: 0.75rem !important;
+}
+
+/* ─── Add buttons ─────────────────────────────────────────────── */
+button.aiad-add-row,
+button.aiad-add-definition,
+button.aiad-add-instruction,
+button.aiad-add-extension,
+button.aiad-add-resource {
+    margin-top: 0.25rem;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    border-radius: var(--aiad-admin-radius) !important;
+}
+
+/* ─── Differentiation: three textarea cards side by side ─────── */
+.aiad-cs-field .aiad-diff-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.aiad-diff-cell label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+.aiad-diff-cell textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* ─── Extension rows ──────────────────────────────────────────── */
+.aiad-extension-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 0.75rem !important;
+    background: var(--aiad-admin-bg-subtle) !important;
+    border: 1px solid var(--aiad-admin-border) !important;
+    border-radius: var(--aiad-admin-radius) !important;
+    gap: 0 !important;
+}
+
+/* ─── Resource rows (name + type + url) ───────────────────────── */
+.aiad-resource-row {
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    padding: 0.625rem 0.75rem !important;
+    background: var(--aiad-admin-bg-subtle) !important;
+    border: 1px solid var(--aiad-admin-border) !important;
+    border-radius: var(--aiad-admin-radius) !important;
+}
+
+/* ─── Radio / checkbox groups ─────────────────────────────────── */
+.aiad-rd-radios label,
+.aiad-rd-checkboxes label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-right: 1rem;
+    font-size: 0.82rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* ─── Timeline meta box ───────────────────────────────────────── */
+#aiad-timeline-meta table.form-table th {
+    width: 8rem;
+    padding: 0.5rem 1rem 0.5rem 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+    vertical-align: top;
+}
+
+#aiad-timeline-meta table.form-table td {
+    padding: 0.5rem 0;
+    vertical-align: top;
+}
+
+#aiad-timeline-meta table.form-table tr {
+    border-top: 1px solid var(--aiad-admin-border);
+}
+
+#aiad-timeline-meta table.form-table tr:first-child {
+    border-top: none;
+}
+
+/* ─── Partner meta boxes ──────────────────────────────────────── */
+#aiad_partner_url p,
+#aiad_partner_stats p {
+    margin: 0 0 0.75rem;
+}
+
+#aiad_partner_url label,
+#aiad_partner_stats label,
+#aiad_partner_url strong,
+#aiad_partner_stats strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+/* ─── Featured Resource meta box ──────────────────────────────── */
+#aiad_featured_resource p {
+    margin: 0 0 0.875rem;
+}
+
+#aiad_featured_resource label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+/* ─── Form submission display table ───────────────────────────── */
+.aiad-submission-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.aiad-submission-table th {
+    width: 30%;
+    padding: 0.5rem 1rem 0.5rem 0;
+    font-size: var(--aiad-admin-label-size);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+    border-top: 1px solid var(--aiad-admin-border);
+    vertical-align: top;
+    text-align: left;
+}
+
+.aiad-submission-table td {
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--aiad-admin-border);
+    vertical-align: top;
+}
+
+.aiad-submission-table tr:first-child th,
+.aiad-submission-table tr:first-child td {
+    border-top: none;
+}
+
+/* ─── Resource Details: pill selector already in resource-editor.css
+       — just ensure consistent label style ───────────────────── */
+#aiad_resource_details .aiad-rd-label,
+#aiad_resource_details strong.aiad-rd-label {
+    font-size: var(--aiad-admin-label-size);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1e1e1e;
+}
+
+/* ─── Inline row: Step number + Duration (instruction header) ─── */
+.aiad-instruction-row .aiad-instr-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.aiad-instruction-row .aiad-instr-header label {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-transform: uppercase;
+    font-size: var(--aiad-admin-label-size);
+}
+
+/* ─── Utility: full-width inputs inside meta boxes ───────────── */
+.postbox input.large-text {
+    box-sizing: border-box;
+}

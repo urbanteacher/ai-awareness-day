@@ -587,8 +587,9 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     $current_duration = wp_get_object_terms( $post->ID, 'resource_duration' );
     $current_activities = wp_get_object_terms( $post->ID, 'activity_type' );
     $key_stages      = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
-    $download_url    = get_post_meta( $post->ID, '_aiad_download_url', true );
-    $filename        = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
+    $download_url       = get_post_meta( $post->ID, '_aiad_download_url', true );
+    $preview_video_url  = get_post_meta( $post->ID, '_aiad_preview_video_url', true );
+    $filename           = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
 
     $theme_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
 
@@ -670,6 +671,11 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     echo '<p id="aiad_download_filename" class="description" style="' . ( $filename ? '' : 'display:none;' ) . '">' . esc_html__( 'File:', 'ai-awareness-day' ) . ' <strong>' . esc_html( $filename ) . '</strong></p>';
     echo '</div></div>';
 
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Video preview (optional)', 'ai-awareness-day' ) . '</strong>';
+    echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html__( 'Paste a YouTube or Vimeo link, or a direct link to an MP4/WebM file hosted on your site. When set, this appears in the preview area instead of the Microsoft Office slide viewer (PPTX).', 'ai-awareness-day' ) . '</p>';
+    echo '<input type="url" name="aiad_preview_video_url" id="aiad_preview_video_url" class="widefat" value="' . esc_attr( is_string( $preview_video_url ) ? $preview_video_url : '' ) . '" placeholder="https://" autocomplete="off" />';
+    echo '</div>';
+
     // Key Stage (checkboxes)
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Key stage', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
     $key_stage_opts = aiad_key_stage_options();
@@ -724,6 +730,10 @@ function aiad_save_resource_details( int $post_id ): void {
 
     if ( isset( $_POST['aiad_download_url'] ) ) {
         update_post_meta( $post_id, '_aiad_download_url', esc_url_raw( wp_unslash( $_POST['aiad_download_url'] ) ) );
+    }
+
+    if ( isset( $_POST['aiad_preview_video_url'] ) ) {
+        update_post_meta( $post_id, '_aiad_preview_video_url', esc_url_raw( trim( wp_unslash( (string) $_POST['aiad_preview_video_url'] ) ) ) );
     }
 
     $key_stages = array();
@@ -1085,6 +1095,35 @@ function aiad_resource_download_admin_scripts( string $hook ): void {
     ) );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_download_admin_scripts' );
+
+/**
+ * Enqueue shared admin common CSS on all theme CPT edit screens.
+ * Provides consistent meta box styling across resource, partner,
+ * featured_resource, timeline, and ai_tool post types.
+ *
+ * @param string $hook Current admin page hook.
+ */
+function aiad_admin_common_styles( string $hook ): void {
+    if ( $hook !== 'post.php' && $hook !== 'post-new.php' ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen ) {
+        return;
+    }
+    $theme_cpts = array( 'resource', 'partner', 'featured_resource', 'timeline', 'ai_tool' );
+    if ( ! in_array( $screen->post_type, $theme_cpts, true ) ) {
+        return;
+    }
+    $css_path = AIAD_DIR . '/admin/css/aiad-admin-common.css';
+    wp_enqueue_style(
+        'aiad-admin-common',
+        AIAD_URI . '/admin/css/aiad-admin-common.css',
+        array(),
+        file_exists( $css_path ) ? filemtime( $css_path ) : AIAD_VERSION
+    );
+}
+add_action( 'admin_enqueue_scripts', 'aiad_admin_common_styles' );
 
 /**
  * Admin notice on Resource edit screen: Type, Theme and Session length are all set here.
