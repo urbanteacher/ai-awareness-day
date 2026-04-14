@@ -277,7 +277,8 @@
 
 .resource-sections-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Same two-column track for every row so gutters line up (do not mix with 2fr/3fr on one row only). */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
   padding: 1.25rem 0;
@@ -969,16 +970,8 @@
    no colour-coded backgrounds, compact steps
    ============================================ */
 
-/* Objectives | Instructions row: give instructions 60% of the space */
-.resource-sections-row--objectives-instructions {
-  grid-template-columns: 2fr 3fr;
-}
-
-@media screen and (max-width: 767px) {
-  .resource-sections-row--objectives-instructions {
-    grid-template-columns: 1fr;
-  }
-}
+/* Objectives | Instructions: same grid as other two-column rows — column split must match
+   row 2 (definitions | differentiation) or headings and gutters misalign. */
 
 /* ── Section title: uppercase label ─────────────────────── */
 .resource-section__title {
