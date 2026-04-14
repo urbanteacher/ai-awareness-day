@@ -953,8 +953,8 @@
 
 /* ============================================
    TEACHER-OPTIMISED SECTION DESIGN
-   Colour-coded sections, clearer hierarchy,
-   better instruction layout
+   Clean layout matching site style —
+   no colour-coded backgrounds, compact steps
    ============================================ */
 
 /* Objectives | Instructions row: give instructions 60% of the space */
@@ -968,194 +968,172 @@
   }
 }
 
-/* ── Section title: uppercase label style ────────────────── */
+/* ── Section title: small uppercase label ────────────────── */
 .resource-section__title {
   font-size: 0.65rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
-  color: var(--gray-500) !important;
+  color: var(--gray-400) !important;
   margin-bottom: 0.875rem !important;
   line-height: 1.2 !important;
 }
 
-/* ── Colour-coded left border + tint per section ─────────── */
+/* ── No colour-coded backgrounds — keep site's clean white ── */
 .resource-section--preparation,
 .resource-section--objectives,
 .resource-section--instructions,
 .resource-section--definitions,
 .resource-section--differentiation,
 .resource-section--extensions {
-  padding: 1rem 1.125rem;
-  border-left: 3px solid transparent;
-}
-
-.resource-section--preparation {
-  border-left-color: var(--accent-amber);
-  background: var(--accent-amber-light);
-}
-
-.resource-section--objectives {
-  border-left-color: var(--accent-green-dark);
-  background: var(--accent-green-light);
-}
-
-.resource-section--instructions {
-  border-left-color: var(--accent-purple);
-  background: var(--accent-purple-light);
-}
-
-.resource-section--definitions {
-  border-left-color: var(--accent-blue);
-  background: var(--accent-blue-light);
-}
-
-.resource-section--differentiation {
-  border-left-color: var(--accent-amber);
-  background: var(--accent-amber-light);
-}
-
-.resource-section--extensions {
-  border-left-color: var(--accent-green-dark);
-  background: var(--accent-green-light);
-}
-
-/* ── Section title colour matches its section ───────────── */
-.resource-section--preparation  .resource-section__title,
-.resource-section--differentiation .resource-section__title {
-  color: var(--accent-amber);
-}
-
-.resource-section--objectives .resource-section__title,
-.resource-section--extensions .resource-section__title {
-  color: var(--accent-green-dark);
-}
-
-.resource-section--instructions .resource-section__title {
-  color: var(--accent-purple-mid);
-}
-
-.resource-section--definitions .resource-section__title {
-  color: var(--accent-blue-dark);
-}
-
-/* ── Instruction step: each step as a self-contained block ── */
-.resource-list--instructions li.resource-instruction-step {
-  background: var(--white);
-  border: 1px solid rgba(124, 58, 237, 0.15);
-  padding: 0.875rem 1rem 0.875rem 3rem;
-  margin-bottom: 0.5rem;
-  position: relative;
-}
-
-/* Numbered badge sits flush left inside the step card */
-@media (min-width: 769px) {
-  .resource-list--instructions li.resource-instruction-step {
-    padding-left: 3.25rem;
-  }
-
-  .resource-list--instructions li.resource-instruction-step::before {
-    top: 0.875rem;
-    left: 0.875rem;
-    width: 1.625rem;
-    height: 1.625rem;
-    line-height: 1.625rem;
-    font-size: 0.75rem;
-    border-radius: 2px;
-  }
-}
-
-/* ── Teacher tip: amber callout box ─────────────────────── */
-.resource-instruction-tip,
-.resource-list--instructions .resource-instruction-tip {
-  display: block;
-  margin-top: 0.65rem !important;
-  padding: 0.55rem 0.8rem !important;
-  background: var(--accent-amber-light) !important;
-  border-left: 3px solid var(--accent-amber) !important;
-  font-style: normal !important;
-  font-size: 0.85em !important;
-  color: var(--gray-700) !important;
-  font-weight: 500 !important;
-}
-
-.resource-instruction-tip::before,
-.resource-list--instructions .resource-instruction-tip::before {
-  content: "💡 Teacher tip: ";
-  font-weight: 700;
-  color: var(--accent-amber);
-  font-style: normal;
-}
-
-/* ── Differentiation sub-labels: colour-coded ───────────── */
-.resource-diff-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gray-500);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  padding-bottom: 0.2rem;
-  margin-top: 1rem;
-}
-
-.resource-diff-content {
-  font-size: 0.9em;
-  line-height: 1.6;
-  color: var(--gray-700);
+  background: transparent;
+  border-left: none;
+  padding: 0;
 }
 
 /* ── Preparation list: checklist style ──────────────────── */
-.resource-section--preparation .resource-list--preparation,
 .resource-list--preparation {
   list-style: none !important;
   padding-left: 0 !important;
 }
 
-.resource-section--preparation .resource-list--preparation li,
 .resource-list--preparation li {
   display: block !important;
-  padding-left: 1.75rem !important;
+  padding-left: 1.5rem !important;
   position: relative !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.4rem !important;
 }
 
-.resource-section--preparation .resource-list--preparation li::before,
 .resource-list--preparation li::before {
   content: "✓" !important;
   display: block !important;
   position: absolute !important;
   left: 0 !important;
   top: 0.05em !important;
-  color: var(--accent-amber) !important;
+  color: var(--gray-400) !important;
   font-weight: 700 !important;
-  font-size: 1em !important;
+  font-size: 0.9em !important;
+}
+
+/* ── Instruction steps: compact timeline ─────────────────── */
+/* Remove card borders — steps flow naturally with the number badge */
+.resource-list--instructions {
+  padding-left: 0 !important;
+  counter-reset: resource-step;
+}
+
+.resource-list--instructions li.resource-instruction-step {
+  display: block !important;
+  position: relative;
+  padding-left: 2.5rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-right: 0 !important;
+  margin-bottom: 1.1rem !important;
+  background: transparent !important;
+  border: none !important;
+  list-style: none !important;
+}
+
+/* Number badge — matches existing purple style */
+.resource-list--instructions li.resource-instruction-step::before {
+  display: flex !important;
+  counter-increment: resource-step;
+  content: counter(resource-step) !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0.1em !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-radius: 2px !important;
+  background: var(--gray-900) !important;
+  color: var(--white) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.resource-instruction-action {
+  display: block;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+/* Pills: duration, ref, student action — stay inline below action */
+.resource-instruction-duration,
+.resource-instruction-ref,
+.resource-instruction-student {
+  display: inline-block;
+  margin-top: 0.3rem;
+  margin-right: 0.35rem;
+  font-size: 0.75em;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  color: var(--gray-600);
+  background: var(--gray-100);
+  vertical-align: middle;
+}
+
+.resource-instruction-ref {
+  background: var(--accent-purple-light);
+  color: var(--accent-purple-mid);
+}
+
+.resource-instruction-student {
+  background: var(--accent-blue-light);
+  color: var(--accent-blue-dark);
+}
+
+/* ── Teacher tip: subtle inline note, not a full block ───── */
+.resource-instruction-tip,
+.resource-list--instructions .resource-instruction-tip {
+  display: block !important;
+  margin-top: 0.4rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-left: none !important;
+  font-style: italic !important;
+  font-size: 0.85em !important;
+  color: var(--gray-500) !important;
+  font-weight: 400 !important;
+}
+
+.resource-instruction-tip::before,
+.resource-list--instructions .resource-instruction-tip::before {
+  content: "↳ " !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  color: var(--gray-400) !important;
+}
+
+/* ── Differentiation sub-labels ─────────────────────────── */
+.resource-diff-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.resource-diff-label:first-of-type {
+  margin-top: 0;
+}
+
+.resource-diff-content {
+  font-size: 0.92em;
+  line-height: 1.6;
+  color: var(--gray-700);
+  margin-bottom: 0.25rem;
 }
 
 /* ── Remove double margin from last section in a cell ────── */
 .resource-section-cell .resource-section {
   margin-bottom: 0;
-}
-
-/* ── Print: strip coloured tints for clean black-on-white ── */
-@media print {
-  .resource-section--preparation,
-  .resource-section--objectives,
-  .resource-section--instructions,
-  .resource-section--definitions,
-  .resource-section--differentiation,
-  .resource-section--extensions {
-    border-left-width: 2pt;
-    background: transparent !important;
-    padding: 0.5rem 0.75rem;
-  }
-
-  .resource-instruction-tip {
-    background: transparent !important;
-    border-left: 1pt solid #a16207;
-  }
-
-  .resource-list--instructions li.resource-instruction-step {
-    background: transparent !important;
-    border: 1pt solid #e5e7eb;
-  }
 }
