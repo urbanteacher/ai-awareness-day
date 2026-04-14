@@ -80,7 +80,7 @@ get_header();
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <?php the_post_thumbnail( 'medium', array( 'class' => 'partner-logo__img' ) ); ?>
                             <?php else : ?>
-                                <span class="partner-logo__name"><?php the_title(); ?></span>
+                                <span class="partner-logo__name"><?php echo esc_html( get_the_title() ); ?></span>
                             <?php endif; ?>
                             <?php if ( $type_name ) : ?>
                                 <span class="partner-logo__type"><?php echo esc_html( $type_name ); ?></span>

@@ -108,6 +108,7 @@
         } else {
             actionHtml = '<a href="' + escapeHtml( resource.permalink ) + '" class="resource-card__link">View resource →</a>';
         }
+        actionHtml += '<button type="button" class="resource-bookmark-btn" data-resource-id="' + escapeHtml( String( resource.id ) ) + '" data-resource-title="' + escapeHtml( resource.title ) + '" data-resource-url="' + escapeHtml( resource.permalink ) + '" aria-pressed="false" aria-label="Save resource">Save</button>';
 
         // Excerpt is escaped for XSS safety; any HTML in excerpts will appear as literal tags.
         var excerptHtml = resource.excerpt
@@ -136,13 +137,21 @@
 
     function updateGrid( resources ) {
         var html = resources.map( renderCard ).join( '' );
-        grid.innerHTML = html;
-        // Fade-up: trigger reflow for animation if CSS uses opacity/transform
-        grid.offsetHeight;
-        var cards = grid.querySelectorAll( '.resource-card' );
-        cards.forEach( function ( card, i ) {
-            card.style.animationDelay = ( i % 6 ) * 0.05 + 's';
-        });
+        function applyRender() {
+            grid.innerHTML = html;
+            document.dispatchEvent(new CustomEvent('aiad:resourcesRendered'));
+            // Fade-up: trigger reflow for animation if CSS uses opacity/transform
+            grid.offsetHeight;
+            var cards = grid.querySelectorAll( '.resource-card' );
+            cards.forEach( function ( card, i ) {
+                card.style.animationDelay = ( i % 6 ) * 0.05 + 's';
+            });
+        }
+        if (document.startViewTransition && window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.startViewTransition(applyRender);
+        } else {
+            applyRender();
+        }
     }
 
     function applyFilterCounts( filterCounts ) {

@@ -38,6 +38,27 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <p class="section-desc">
                     <?php echo esc_html( get_theme_mod( 'aiad_hero_subtitle', $defaults['aiad_hero_subtitle'] ) ); ?>
                 </p>
+                <?php
+                $event_date = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+                ?>
+                <div class="hero-countdown" data-event-date="<?php echo esc_attr( $event_date ); ?>" aria-live="polite">
+                    <div class="hero-countdown__item">
+                        <span class="hero-countdown__value" data-unit="days">0</span>
+                        <span class="hero-countdown__label"><?php esc_html_e( 'Days', 'ai-awareness-day' ); ?></span>
+                    </div>
+                    <div class="hero-countdown__item">
+                        <span class="hero-countdown__value" data-unit="hours">0</span>
+                        <span class="hero-countdown__label"><?php esc_html_e( 'Hours', 'ai-awareness-day' ); ?></span>
+                    </div>
+                    <div class="hero-countdown__item">
+                        <span class="hero-countdown__value" data-unit="minutes">0</span>
+                        <span class="hero-countdown__label"><?php esc_html_e( 'Minutes', 'ai-awareness-day' ); ?></span>
+                    </div>
+                    <div class="hero-countdown__item">
+                        <span class="hero-countdown__value" data-unit="seconds">0</span>
+                        <span class="hero-countdown__label"><?php esc_html_e( 'Seconds', 'ai-awareness-day' ); ?></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

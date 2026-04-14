@@ -22,6 +22,45 @@
         return;
     }
 
+    function renderTrackMessage( className, message ) {
+        track.replaceChildren();
+        var box = document.createElement( 'div' );
+        box.className = className;
+        box.style.textAlign = 'center';
+        box.style.padding = '2rem';
+        box.style.color = className.indexOf( 'error' ) !== -1 ? 'var(--red-600)' : 'var(--gray-500)';
+        box.textContent = message;
+        track.appendChild( box );
+    }
+
+    function extractTimelineEntries( html ) {
+        if ( ! html ) {
+            return [];
+        }
+        var parser = new DOMParser();
+        var doc = parser.parseFromString( html, 'text/html' );
+        return Array.prototype.slice.call( doc.querySelectorAll( '.timeline-entry' ) ).map( sanitizeEntryNode );
+    }
+
+    function sanitizeEntryNode( node ) {
+        var clone = node.cloneNode( true );
+        clone.querySelectorAll( 'script, style' ).forEach( function (el) { el.remove(); } );
+        clone.querySelectorAll( '*' ).forEach( function (el) {
+            Array.prototype.slice.call( el.attributes ).forEach( function (attr) {
+                var name = attr.name.toLowerCase();
+                var value = attr.value || '';
+                if ( name.indexOf( 'on' ) === 0 ) {
+                    el.removeAttribute( attr.name );
+                    return;
+                }
+                if ( ( name === 'href' || name === 'src' ) && value.trim().toLowerCase().indexOf( 'javascript:' ) === 0 ) {
+                    el.removeAttribute( attr.name );
+                }
+            } );
+        } );
+        return clone;
+    }
+
     // ─── Filter buttons ─────────
     if ( filters.length > 0 ) {
         filters.forEach( function ( filterBtn ) {
@@ -38,7 +77,7 @@
                 currentFilter = filter;
 
                 // Show loading state on track
-                track.innerHTML = '<div class="timeline-loading" style="text-align:center;padding:2rem;color:var(--gray-500);">Loading...</div>';
+                renderTrackMessage( 'timeline-loading', 'Loading...' );
 
                 // Hide load more button during filter
                 if ( wrap ) {
@@ -58,7 +97,11 @@
                     .then( function ( json ) {
                         if ( json.success && json.data ) {
                             if ( json.data.html ) {
-                                track.innerHTML = json.data.html;
+                                var entries = extractTimelineEntries( json.data.html );
+                                track.replaceChildren();
+                                entries.forEach( function ( entry ) {
+                                    track.appendChild( entry );
+                                } );
 
                                 // Trigger fade-up animation
                                 track.offsetHeight;
@@ -67,7 +110,7 @@
                                     entry.classList.add( 'visible' );
                                 } );
                             } else {
-                                track.innerHTML = '<div class="timeline-empty" style="text-align:center;padding:2rem;color:var(--gray-500);">No entries found.</div>';
+                                renderTrackMessage( 'timeline-empty', 'No entries found.' );
                             }
 
                             // Reset offset
@@ -80,7 +123,7 @@
                         }
                     } )
                     .catch( function () {
-                        track.innerHTML = '<div class="timeline-error" style="text-align:center;padding:2rem;color:var(--red-600);">Error loading entries.</div>';
+                        renderTrackMessage( 'timeline-error', 'Error loading entries.' );
                     } );
             } );
         } );
@@ -116,9 +159,7 @@
                 if ( json.success && json.data ) {
                     if ( json.data.html ) {
                         // Append new entries
-                        var temp = document.createElement( 'div' );
-                        temp.innerHTML = json.data.html;
-                        var newEntries = temp.querySelectorAll( '.timeline-entry' );
+                        var newEntries = extractTimelineEntries( json.data.html );
 
                         newEntries.forEach( function ( entry ) {
                             track.appendChild( entry );

@@ -10,43 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Check if SEO plugins are active and we should skip output.
- *
- * @return bool True if we should output, false if SEO plugin is active.
- */
-function aiad_sharing_should_output(): bool {
-	// Skip if Yoast SEO / Yoast SEO Premium is active
-	if ( defined( 'WPSEO_VERSION' ) ) {
-		return false;
-	}
-	// Skip if Rank Math is active
-	if ( defined( 'RANK_MATH_VERSION' ) ) {
-		return false;
-	}
-	// Skip if All in One SEO is active
-	if ( defined( 'AIOSEO_VERSION' ) ) {
-		return false;
-	}
-	// Skip if SEOPress is active
-	if ( defined( 'SEOPRESS_VERSION' ) ) {
-		return false;
-	}
-	// Skip if The SEO Framework is active
-	if ( defined( 'THE_SEO_FRAMEWORK_VERSION' ) ) {
-		return false;
-	}
-	// Skip if Slim SEO is active
-	if ( class_exists( 'Slim_SEO' ) ) {
-		return false;
-	}
-	// Skip if SmartCrawl (by WPMU DEV) is active
-	if ( defined( 'SMARTCRAWL_VERSION' ) ) {
-		return false;
-	}
-	return true;
-}
-
-/**
  * Get Open Graph data for current page.
  *
  * @return array<string, mixed> Array with 'title', 'description', 'image', 'image_id', 'url', 'type', 'site_name'.
@@ -332,7 +295,7 @@ function aiad_get_share_message( string $context, ?WP_Post $post = null ): strin
  * Output Open Graph and Twitter Card meta tags.
  */
 function aiad_output_og_tags(): void {
-	if ( ! aiad_sharing_should_output() ) {
+	if ( function_exists( 'aiad_seo_should_output' ) && ! aiad_seo_should_output() ) {
 		return;
 	}
 	

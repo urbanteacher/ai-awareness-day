@@ -30,3 +30,20 @@
 .stagger-8 { transition-delay: 0.65s; }
 .stagger-9 { transition-delay: 0.7s; }
 
+@supports selector(:has(*)) {
+  .resource-card,
+  .contact-form,
+  .saved-resources-panel {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  @starting-style {
+    .resource-card,
+    .contact-form,
+    .saved-resources-panel {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+}
+

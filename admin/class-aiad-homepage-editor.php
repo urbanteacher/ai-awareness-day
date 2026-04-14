@@ -57,32 +57,13 @@ class AIAD_Homepage_Editor {
             array(),
             AIAD_VERSION
         );
-        ob_start();
-        ?>
-        jQuery(function($) {
-            $(document).on('click', '.aiad-upload-media', function(e) {
-                e.preventDefault();
-                var btn = $(this), target = btn.data('target'), store = btn.data('store') || 'image';
-                var frame = wp.media({
-                    library: { type: 'image' },
-                    multiple: false
-                });
-                frame.on('select', function() {
-                    var att = frame.state().get('selection').first().toJSON();
-                    var val = store === 'url' ? (att.url || '') : (att.id || '');
-                    $('#' + target).val(val);
-                    var preview = btn.siblings('.aiad-media-preview');
-                    if (att.sizes && att.sizes.medium && att.sizes.medium.url) {
-                        preview.html('<img src="' + att.sizes.medium.url + '" alt="" aria-hidden="true" style="max-width:120px;height:auto;vertical-align:middle;" />').show();
-                    } else if (att.url) {
-                        preview.html('<img src="' + att.url + '" alt="" aria-hidden="true" style="max-width:120px;height:auto;vertical-align:middle;" />').show();
-                    }
-                });
-                frame.open();
-            });
-        });
-        <?php
-        wp_add_inline_script( 'jquery', ob_get_clean() );
+        wp_enqueue_script(
+            'aiad-homepage-editor',
+            AIAD_URI . '/admin/js/homepage-editor.js',
+            array( 'jquery' ),
+            AIAD_VERSION,
+            true
+        );
     }
 
     /**
@@ -308,7 +289,7 @@ class AIAD_Homepage_Editor {
         foreach ( $title_keys as $key => $sanitize ) {
             if ( isset( $_POST[ $key ] ) ) {
                 $raw = wp_unslash( $_POST[ $key ] );
-                $val = sanitize_textarea_field( $raw );
+                $val = 'sanitize_text_field' === $sanitize ? sanitize_text_field( $raw ) : sanitize_textarea_field( $raw );
                 set_theme_mod( $key, $val );
                 $n++;
             }

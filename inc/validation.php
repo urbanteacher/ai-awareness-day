@@ -134,6 +134,9 @@ function aiad_validate_resource_on_save( int $post_id ): void {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
         return;
     }
+    if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+        return;
+    }
     if ( get_post_type( $post_id ) !== 'resource' ) {
         return;
     }

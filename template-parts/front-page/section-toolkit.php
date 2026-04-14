@@ -98,19 +98,19 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $display_img_1_id = absint(get_theme_mod('aiad_display_board_image_1', 0));
                 $display_img_1_url = $display_img_1_id ? wp_get_attachment_image_url($display_img_1_id, 'full') : '';
                 ?>
-                <div class="display-board-preview js-display-board-preview<?php echo $display_img_1_url ? ' display-board-preview--has-real' : ''; ?>"
-                    data-view="blueprint">
+                <div class="display-board-preview js-display-board-preview<?php echo $display_img_1_url ? ' display-board-preview--has-real display-board-preview--real' : ''; ?>"
+                    data-view="<?php echo $display_img_1_url ? 'real' : 'blueprint'; ?>">
                     <div class="display-board-flip-toggle" role="tablist"
                         aria-label="<?php esc_attr_e('View blueprint or real example', 'ai-awareness-day'); ?>">
-                        <button type="button" class="display-board-flip-btn is-active" role="tab" aria-selected="true"
+                        <button type="button" class="display-board-flip-btn<?php echo $display_img_1_url ? '' : ' is-active'; ?>" role="tab" aria-selected="<?php echo $display_img_1_url ? 'false' : 'true'; ?>"
                             aria-controls="display-board-blueprint"
                             id="tab-blueprint"><?php esc_html_e('Blueprint', 'ai-awareness-day'); ?></button>
                         <button type="button"
-                            class="display-board-flip-btn<?php echo $display_img_1_url ? '' : ' display-board-flip-btn--disabled'; ?>"
-                            role="tab" aria-selected="false" aria-controls="display-board-real" id="tab-real" <?php echo $display_img_1_url ? '' : ' disabled aria-disabled="true"'; ?>><?php esc_html_e('Real example', 'ai-awareness-day'); ?></button>
+                            class="display-board-flip-btn<?php echo $display_img_1_url ? ' is-active' : ' display-board-flip-btn--disabled'; ?>"
+                            role="tab" aria-selected="<?php echo $display_img_1_url ? 'true' : 'false'; ?>" aria-controls="display-board-real" id="tab-real" <?php echo $display_img_1_url ? '' : ' disabled aria-disabled="true"'; ?>><?php esc_html_e('Real example', 'ai-awareness-day'); ?></button>
                     </div>
                     <div class="display-board-preview__view display-board-preview__view--blueprint"
-                        id="display-board-blueprint" role="tabpanel" aria-labelledby="tab-blueprint">
+                        id="display-board-blueprint" role="tabpanel" aria-labelledby="tab-blueprint" <?php echo $display_img_1_url ? ' hidden' : ''; ?>>
                         <div class="display-board-mockup"
                             aria-label="<?php esc_attr_e('Display board layout guide', 'ai-awareness-day'); ?>">
                             <div class="display-board-mockup__header">
@@ -493,7 +493,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 </a>
                                 <div class="resource-card__body">
                                     <h2 class="resource-card__title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                        <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>
                                     </h2>
                                     <?php if (has_excerpt()): ?>
                                         <p class="resource-card__excerpt section-desc"><?php echo esc_html(get_the_excerpt()); ?></p>

@@ -289,6 +289,7 @@ function aiad_partner_quick_edit_field( string $column_name, string $post_type )
     ?>
     <fieldset class="inline-edit-col-right">
         <div class="inline-edit-col">
+            <?php wp_nonce_field( 'aiad_partner_quick_edit', 'aiad_partner_quick_edit_nonce' ); ?>
             <label>
                 <span class="title"><?php esc_html_e( 'Position', 'ai-awareness-day' ); ?></span>
                 <input type="number" name="aiad_partner_menu_order" class="aiad-partner-menu-order" value="0" min="0" step="1" style="width:60px;">
@@ -310,13 +311,15 @@ function aiad_partner_save_menu_order( int $post_id ): void {
         return;
     }
     if ( isset( $_POST['aiad_partner_menu_order'] ) ) {
-        global $wpdb;
-        $wpdb->update(
-            $wpdb->posts,
-            array( 'menu_order' => absint( $_POST['aiad_partner_menu_order'] ) ),
-            array( 'ID' => $post_id ),
-            array( '%d' ),
-            array( '%d' )
+        $nonce = isset( $_POST['aiad_partner_quick_edit_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_partner_quick_edit_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'aiad_partner_quick_edit' ) ) {
+            return;
+        }
+        wp_update_post(
+            array(
+                'ID'         => $post_id,
+                'menu_order' => absint( wp_unslash( $_POST['aiad_partner_menu_order'] ) ),
+            )
         );
     }
 }

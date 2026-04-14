@@ -72,6 +72,70 @@
         // Trigger browser print dialog
         window.print();
     }
+
+    function handleSocialCard(btn) {
+        var title = btn.getAttribute('data-title') || 'AI Awareness Day';
+        var url = btn.getAttribute('data-url') || window.location.href;
+        var theme = btn.getAttribute('data-theme') || 'AI';
+        var keyStages = btn.getAttribute('data-key-stages') || '';
+
+        var canvas = document.createElement('canvas');
+        canvas.width = 1200;
+        canvas.height = 630;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        var gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+        gradient.addColorStop(0, '#0f172a');
+        gradient.addColorStop(1, '#166534');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#dcfce7';
+        ctx.font = '700 32px sans-serif';
+        ctx.fillText('AI Awareness Day Resource', 70, 100);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 58px sans-serif';
+        var words = title.split(/\s+/);
+        var line = '';
+        var y = 190;
+        words.forEach(function (w) {
+            var test = line ? (line + ' ' + w) : w;
+            if (ctx.measureText(test).width > 1060) {
+                ctx.fillText(line, 70, y);
+                line = w;
+                y += 72;
+            } else {
+                line = test;
+            }
+        });
+        if (line) ctx.fillText(line, 70, y);
+
+        ctx.fillStyle = '#bbf7d0';
+        ctx.font = '600 30px sans-serif';
+        if (theme) {
+            ctx.fillText('Theme: ' + theme, 70, 460);
+        }
+        if (keyStages) {
+            ctx.fillText('Key stages: ' + keyStages, 70, 510);
+        }
+
+        ctx.fillStyle = '#e5e7eb';
+        ctx.font = '500 20px sans-serif';
+        ctx.fillText(url, 70, 575);
+
+        canvas.toBlob(function (blob) {
+            if (!blob) return;
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'aiad-resource-card.png';
+            link.click();
+            setTimeout(function () {
+                URL.revokeObjectURL(link.href);
+            }, 1500);
+        }, 'image/png');
+    }
     
     function initResourceSharing() {
         // Attach click handlers to all share buttons
@@ -106,6 +170,18 @@
                 e.preventDefault();
                 e.stopPropagation();
                 handleResourcePrint(newBtn);
+                return false;
+            });
+        });
+
+        var socialCardButtons = document.querySelectorAll('.resource-social-card-btn');
+        socialCardButtons.forEach(function (btn) {
+            var newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSocialCard(newBtn);
                 return false;
             });
         });

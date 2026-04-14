@@ -204,7 +204,7 @@ function aiad_export_featured_resources_to_wxr(): void {
             <title><?php bloginfo_rss( 'name' ); ?></title>
             <link><?php bloginfo_rss( 'url' ); ?></link>
             <description><?php bloginfo_rss( 'description' ); ?></description>
-            <pubDate><?php echo esc_html( date( 'D, d M Y H:i:s +0000' ) ); ?></pubDate>
+            <pubDate><?php echo esc_html( gmdate( 'D, d M Y H:i:s +0000' ) ); ?></pubDate>
             <language><?php bloginfo_rss( 'language' ); ?></language>
             <wp:wxr_version><?php echo esc_html( aiad_get_wxr_version() ); ?></wp:wxr_version>
             <wp:base_site_url><?php echo esc_url( site_url() ); ?></wp:base_site_url>
@@ -271,7 +271,7 @@ function aiad_export_resources_to_wxr(): void {
             <title><?php bloginfo_rss( 'name' ); ?></title>
             <link><?php bloginfo_rss( 'url' ); ?></link>
             <description><?php bloginfo_rss( 'description' ); ?></description>
-            <pubDate><?php echo esc_html( date( 'D, d M Y H:i:s +0000' ) ); ?></pubDate>
+            <pubDate><?php echo esc_html( gmdate( 'D, d M Y H:i:s +0000' ) ); ?></pubDate>
             <language><?php bloginfo_rss( 'language' ); ?></language>
             <wp:wxr_version><?php echo esc_html( aiad_get_wxr_version() ); ?></wp:wxr_version>
             <wp:base_site_url><?php echo esc_url( site_url() ); ?></wp:base_site_url>
@@ -742,7 +742,7 @@ function aiad_import_resources_from_wxr_simple( string $file_path ) {
     }
 
     // Flush rewrite rules to ensure permalinks work
-    flush_rewrite_rules( false );
+    flush_rewrite_rules( true );
 
     return $counts;
 }

@@ -71,7 +71,7 @@ add_action('after_setup_theme', 'aiad_setup');
  */
 function aiad_flush_rewrite_rules_on_activation(): void
 {
-    flush_rewrite_rules(false);
+    flush_rewrite_rules(true);
 }
 add_action('after_switch_theme', 'aiad_flush_rewrite_rules_on_activation');
 
@@ -85,7 +85,7 @@ add_action('admin_init', function (): void {
     if (get_option('aiad_rewrite_version') === AIAD_VERSION) {
         return;
     }
-    flush_rewrite_rules(false);
+    flush_rewrite_rules(true);
     update_option('aiad_rewrite_version', AIAD_VERSION);
 });
 
@@ -305,6 +305,7 @@ function aiad_scripts(): void
             true
         );
     }
+
 }
 add_action('wp_enqueue_scripts', 'aiad_scripts');
 

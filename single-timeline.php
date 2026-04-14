@@ -27,12 +27,16 @@ get_header();
 
 		$linkedin_embed = '';
 		if ( ! empty( $linkedin_url ) ) {
-			if ( strpos( $linkedin_url, '/embed/' ) !== false ) {
-				$linkedin_embed = $linkedin_url;
-			} elseif ( preg_match( '#linkedin\.com/feed/update/(urn:li:[^/]+)#', $linkedin_url, $matches ) ) {
-				$linkedin_embed = 'https://www.linkedin.com/embed/feed/update/' . $matches[1];
-			} else {
-				$linkedin_embed = $linkedin_url;
+			$parsed = wp_parse_url( $linkedin_url );
+			$host   = isset( $parsed['host'] ) ? strtolower( (string) $parsed['host'] ) : '';
+			$path   = isset( $parsed['path'] ) ? (string) $parsed['path'] : '';
+			$is_linkedin_host = ( 'linkedin.com' === $host || str_ends_with( $host, '.linkedin.com' ) );
+			if ( $is_linkedin_host ) {
+				if ( 0 === strpos( $path, '/embed/feed/update/' ) ) {
+					$linkedin_embed = 'https://www.linkedin.com' . $path;
+				} elseif ( preg_match( '#/feed/update/(urn:li:[^/]+)#', $path, $matches ) ) {
+					$linkedin_embed = 'https://www.linkedin.com/embed/feed/update/' . $matches[1];
+				}
 			}
 		}
 
@@ -58,7 +62,7 @@ get_header();
 						<?php echo esc_html( $badge_label ); ?>
 					</span>
 					<div class="single-timeline-entry__title-row">
-						<h1 class="single-timeline-entry__title"><?php the_title(); ?></h1>
+						<h1 class="single-timeline-entry__title"><?php echo esc_html( get_the_title() ); ?></h1>
 						<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
 							<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
 						</time>

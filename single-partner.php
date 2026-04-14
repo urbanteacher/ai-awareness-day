@@ -20,7 +20,7 @@ get_header();
                     <?php if ( $type_name ) : ?>
                         <p class="section-label" style="margin-bottom: 0.5rem;"><?php echo esc_html( $type_name ); ?></p>
                     <?php endif; ?>
-                    <h1 class="section-title"><?php the_title(); ?></h1>
+                    <h1 class="section-title"><?php echo esc_html( get_the_title() ); ?></h1>
                     <?php if ( has_post_thumbnail() ) : ?>
                         <figure style="margin: 2rem auto; max-width: 240px;">
                             <?php if ( $url ) : ?>

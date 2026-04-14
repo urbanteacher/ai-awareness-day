@@ -91,7 +91,7 @@ if ( $free_resources->have_posts() ):
                                         ?>
                                         <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
                                     </div>
-                                    <div class="resource-card__image-title"><?php the_title(); ?></div>
+                                    <div class="resource-card__image-title"><?php echo esc_html( get_the_title() ); ?></div>
                                 </div>
                             <?php endif; ?>
                         </a>
@@ -108,7 +108,7 @@ if ( $free_resources->have_posts() ):
                                 <span class="duration-badge duration-badge--card"><?php echo esc_html( $duration_name ); ?></span>
                             <?php endif; ?>
                             <h2 class="resource-card__title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>
                             </h2>
                             <?php if ( has_excerpt() ): ?>
                                 <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>

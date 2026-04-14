@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool True if we should output, false if SEO plugin is active.
  */
 function aiad_seo_should_output(): bool {
-	// Skip if Yoast SEO is active
+	// Skip if Yoast SEO / Yoast SEO Premium is active
 	if ( defined( 'WPSEO_VERSION' ) ) {
 		return false;
 	}
@@ -25,6 +25,22 @@ function aiad_seo_should_output(): bool {
 	}
 	// Skip if All in One SEO is active
 	if ( defined( 'AIOSEO_VERSION' ) ) {
+		return false;
+	}
+	// Skip if SEOPress is active
+	if ( defined( 'SEOPRESS_VERSION' ) ) {
+		return false;
+	}
+	// Skip if The SEO Framework is active
+	if ( defined( 'THE_SEO_FRAMEWORK_VERSION' ) ) {
+		return false;
+	}
+	// Skip if Slim SEO is active
+	if ( class_exists( 'Slim_SEO' ) ) {
+		return false;
+	}
+	// Skip if SmartCrawl (by WPMU DEV) is active
+	if ( defined( 'SMARTCRAWL_VERSION' ) ) {
 		return false;
 	}
 	return true;

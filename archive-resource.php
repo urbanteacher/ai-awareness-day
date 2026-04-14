@@ -12,7 +12,7 @@ get_header();
     <section class="section pt-100">
         <div class="container">
             <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>
-            <h1 class="section-title"><?php post_type_archive_title(); ?></h1>
+            <h1 class="section-title"><?php echo esc_html( post_type_archive_title( '', false ) ); ?></h1>
             <p class="section-desc">
                 <?php esc_html_e('Lesson starters, lesson activities, and assembly materials for AI Awareness Day.', 'ai-awareness-day'); ?>
             </p>
@@ -53,6 +53,19 @@ get_header();
             $duration_filter = isset($_GET['duration']) ? sanitize_text_field( wp_unslash($_GET['duration']) ) : '';
             $activity_filter = isset($_GET['activity_type']) ? sanitize_text_field( wp_unslash($_GET['activity_type']) ) : '';
             $key_stage_filter = isset($_GET['key_stage']) ? sanitize_text_field( wp_unslash($_GET['key_stage']) ) : '';
+
+            if ( $type_filter && ! term_exists( $type_filter, 'resource_type' ) ) {
+                $type_filter = '';
+            }
+            if ( $principle_filter && ! term_exists( $principle_filter, 'resource_principle' ) ) {
+                $principle_filter = '';
+            }
+            if ( $duration_filter && ! term_exists( $duration_filter, 'resource_duration' ) ) {
+                $duration_filter = '';
+            }
+            if ( $activity_filter && ! term_exists( $activity_filter, 'activity_type' ) ) {
+                $activity_filter = '';
+            }
 
             $args = array(
                 'post_type' => 'resource',
@@ -97,8 +110,8 @@ get_header();
                 $args['meta_query'] = array(
                     array(
                         'key' => '_aiad_key_stage',
-                        'value' => $key_stage_filter,
-                        'compare' => '=',
+                        'value' => '"' . $key_stage_filter . '"',
+                        'compare' => 'LIKE',
                     ),
                 );
             }
@@ -253,7 +266,7 @@ get_header();
                             </a>
                             <div class="resource-card__body">
                                 <h2 class="resource-card__title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>
                                 </h2>
                                 <?php
                                 $summary = '';
@@ -281,6 +294,15 @@ get_header();
                                             class="resource-card__link"><?php esc_html_e('View resource', 'ai-awareness-day'); ?>
                                             →</a>
                                     <?php endif; ?>
+                                    <button type="button"
+                                        class="resource-bookmark-btn"
+                                        data-resource-id="<?php echo esc_attr((string) get_the_ID()); ?>"
+                                        data-resource-title="<?php echo esc_attr( get_the_title() ); ?>"
+                                        data-resource-url="<?php echo esc_url( get_permalink() ); ?>"
+                                        aria-pressed="false"
+                                        aria-label="<?php esc_attr_e('Save resource', 'ai-awareness-day'); ?>">
+                                        <?php esc_html_e('Save', 'ai-awareness-day'); ?>
+                                    </button>
                                 </p>
                             </div>
                         </article>
@@ -313,6 +335,14 @@ get_header();
                     </p>
                 </div>
             <?php endif; ?>
+
+            <aside class="saved-resources-panel" data-saved-resources-panel hidden>
+                <div class="saved-resources-panel__header">
+                    <h2><?php esc_html_e( 'My saved resources', 'ai-awareness-day' ); ?></h2>
+                    <button type="button" class="saved-resources-panel__close" data-saved-resources-close aria-label="<?php esc_attr_e( 'Close saved resources', 'ai-awareness-day' ); ?>">×</button>
+                </div>
+                <ul class="saved-resources-panel__list" data-saved-resources-list></ul>
+            </aside>
         </div>
     </section>
 </main>

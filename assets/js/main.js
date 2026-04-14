@@ -35,6 +35,154 @@
         });
 
         // ============================================
+        // Hero countdown
+        // ============================================
+        (function initHeroCountdown() {
+            var root = document.querySelector('.hero-countdown[data-event-date]');
+            if (!root) return;
+            var eventDate = root.getAttribute('data-event-date');
+            if (!eventDate) return;
+            var target = new Date(eventDate + 'T00:00:00');
+            if (isNaN(target.getTime())) return;
+
+            var daysEl = root.querySelector('[data-unit="days"]');
+            var hoursEl = root.querySelector('[data-unit="hours"]');
+            var minutesEl = root.querySelector('[data-unit="minutes"]');
+            var secondsEl = root.querySelector('[data-unit="seconds"]');
+            if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+            function pad(value) {
+                return String(value).padStart(2, '0');
+            }
+
+            function tick() {
+                var now = new Date();
+                var diff = target.getTime() - now.getTime();
+                if (diff <= 0) {
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                    return;
+                }
+                var totalSeconds = Math.floor(diff / 1000);
+                var days = Math.floor(totalSeconds / 86400);
+                var hours = Math.floor((totalSeconds % 86400) / 3600);
+                var minutes = Math.floor((totalSeconds % 3600) / 60);
+                var seconds = totalSeconds % 60;
+                daysEl.textContent = String(days);
+                hoursEl.textContent = pad(hours);
+                minutesEl.textContent = pad(minutes);
+                secondsEl.textContent = pad(seconds);
+            }
+
+            tick();
+            window.setInterval(tick, 1000);
+        })();
+
+        // ============================================
+        // Resource bookmarks (localStorage)
+        // ============================================
+        (function initResourceBookmarks() {
+            var STORAGE_KEY = 'aiad_saved_resources_v1';
+            var panel = document.querySelector('[data-saved-resources-panel]');
+            var panelList = panel ? panel.querySelector('[data-saved-resources-list]') : null;
+
+            function readSaved() {
+                try {
+                    var raw = window.localStorage.getItem(STORAGE_KEY);
+                    var parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (err) {
+                    return [];
+                }
+            }
+
+            function writeSaved(items) {
+                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+            }
+
+            function isSaved(id) {
+                return readSaved().some(function (item) { return String(item.id) === String(id); });
+            }
+
+            function updateButtons() {
+                document.querySelectorAll('.resource-bookmark-btn').forEach(function (btn) {
+                    var id = btn.getAttribute('data-resource-id');
+                    if (!id) return;
+                    var saved = isSaved(id);
+                    btn.setAttribute('aria-pressed', saved ? 'true' : 'false');
+                    btn.textContent = saved ? 'Saved' : 'Save';
+                });
+            }
+
+            function renderPanel() {
+                if (!panelList) return;
+                var saved = readSaved();
+                panelList.innerHTML = '';
+                if (saved.length === 0) {
+                    var empty = document.createElement('li');
+                    empty.textContent = 'No saved resources yet.';
+                    panelList.appendChild(empty);
+                    return;
+                }
+                saved.forEach(function (item) {
+                    var li = document.createElement('li');
+                    var link = document.createElement('a');
+                    link.href = item.url;
+                    link.textContent = item.title;
+                    li.appendChild(link);
+                    panelList.appendChild(li);
+                });
+            }
+
+            function openPanel() {
+                if (!panel) return;
+                panel.hidden = false;
+            }
+
+            function closePanel() {
+                if (!panel) return;
+                panel.hidden = true;
+            }
+
+            document.addEventListener('click', function (e) {
+                var btn = e.target.closest('.resource-bookmark-btn');
+                if (btn) {
+                    e.preventDefault();
+                    var id = btn.getAttribute('data-resource-id');
+                    var title = btn.getAttribute('data-resource-title') || 'Resource';
+                    var url = btn.getAttribute('data-resource-url') || '';
+                    if (!id || !url) return;
+                    var saved = readSaved();
+                    var exists = saved.some(function (item) { return String(item.id) === String(id); });
+                    if (exists) {
+                        saved = saved.filter(function (item) { return String(item.id) !== String(id); });
+                    } else {
+                        saved.unshift({ id: id, title: title, url: url });
+                    }
+                    writeSaved(saved.slice(0, 50));
+                    updateButtons();
+                    renderPanel();
+                    if (!exists) openPanel();
+                    return;
+                }
+
+                if (e.target.closest('[data-saved-resources-close]')) {
+                    e.preventDefault();
+                    closePanel();
+                }
+            });
+
+            document.addEventListener('aiad:resourcesRendered', function () {
+                updateButtons();
+            });
+
+            renderPanel();
+            updateButtons();
+        })();
+
+        // ============================================
         // Stats counter animation
         // ============================================
         const statsBar = document.querySelector('.timeline-stats-bar');
@@ -291,6 +439,27 @@
         const formStatus = document.getElementById('form-status');
 
         if (form && typeof aiad_ajax !== 'undefined') {
+            function launchConfetti() {
+                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    return;
+                }
+                var container = document.createElement('div');
+                container.className = 'aiad-confetti';
+                document.body.appendChild(container);
+                for (var i = 0; i < 26; i++) {
+                    var piece = document.createElement('span');
+                    piece.className = 'aiad-confetti__piece';
+                    piece.style.left = Math.round(Math.random() * 100) + '%';
+                    piece.style.background = ['#22c55e', '#10b981', '#84cc16', '#3b82f6', '#a855f7'][i % 5];
+                    piece.style.animationDelay = (Math.random() * 0.3) + 's';
+                    piece.style.transform = 'translateY(0) rotate(' + (Math.random() * 360) + 'deg)';
+                    container.appendChild(piece);
+                }
+                window.setTimeout(function () {
+                    container.remove();
+                }, 1800);
+            }
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -386,6 +555,7 @@
                         formStatus.textContent = '';
                         formStatus.appendChild(msgSpan);
                         form.reset();
+                        launchConfetti();
                     } else {
                         msgSpan.style.color = '#ef4444';
                         msgSpan.textContent = data.data.message;

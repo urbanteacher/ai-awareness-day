@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Default URL for the front-page "Sample Letters & Communications" toolkit card.
- * Beehiiv S3 download links are presigned and expire (~7 days); update via
- * Appearance → Customize → Toolkit Section, or switch to a Media Library file URL.
+ * Keep this empty in code so secrets/expiring presigned URLs are never committed.
+ * Set via Appearance > Customize > Toolkit Section (prefer Media Library URLs).
  *
  * @return string
  */
 function aiad_default_sample_letters_url(): string {
-    return 'https://beehiiv-publication-files.s3.amazonaws.com/uploads/downloadables/54845583-4adb-4ee9-8457-f9f4065c7216/a21336a3-e31b-4383-a127-6aada6856882/SLT%20APPROVAL.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQCMHTQSE2JGAGXHJ%2F20260319%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260319T223329Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=05e2285ef50dd5ad83811d9b9fca09329cff846027d6f74197b34d4e6ce82f79';
+    return '';
 }
 
 /**
@@ -240,7 +240,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day (4th June 2026) is a new nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
         'aiad_campaign_text_2'    => __( 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.', 'ai-awareness-day' ),
-        'aiad_campaign_linkedin_embed_src' => 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7424392530743447552?compact=1',
+        'aiad_campaign_linkedin_embed_src' => '',
         'aiad_youtube_url'        => '',
         'aiad_youtube_title'      => __( 'Watch', 'ai-awareness-day' ),
         'aiad_contact_title'      => __( 'Get Involved', 'ai-awareness-day' ),

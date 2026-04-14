@@ -353,6 +353,10 @@
 
 .resource-card__action {
   margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .resource-card__link {
@@ -376,6 +380,65 @@
 .resource-card__link[href=""] {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.resource-bookmark-btn {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  color: var(--gray-700);
+  padding: 0.3rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.resource-bookmark-btn[aria-pressed="true"] {
+  border-color: var(--green-600);
+  color: var(--green-700);
+  background: var(--green-50);
+}
+
+.saved-resources-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(360px, 92vw);
+  height: 100vh;
+  background: var(--white);
+  border-left: 1px solid var(--gray-200);
+  z-index: 9999;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.saved-resources-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.saved-resources-panel__close {
+  border: 1px solid var(--gray-300);
+  background: var(--white);
+  font-size: 1rem;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.saved-resources-panel__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.saved-resources-panel__list a {
+  color: var(--green-700);
+  font-size: 0.9rem;
 }
 
 /* Resources archive: mobile-friendly – less padding, content in columns */

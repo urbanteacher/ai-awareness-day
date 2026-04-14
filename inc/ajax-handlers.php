@@ -18,9 +18,9 @@ function aiad_get_contact_checklist_labels(): array {
     return array(
         'teacher_display_board'       => __( 'Interested in creating a display board', 'ai-awareness-day' ),
         'teacher_activity_day'        => __( 'I want to do an activity for the day', 'ai-awareness-day' ),
-        'teacher_learn_ai'            => __( 'I want to learn more about AI', 'ai-awareness-day' ),
+        'teacher_learn_ai'            => _x( 'I want to learn more about AI', 'Teacher checklist option', 'ai-awareness-day' ),
         'parent_support_child'        => __( 'I want to support my child in AI', 'ai-awareness-day' ),
-        'parent_learn_ai'             => __( 'I want to learn more about AI', 'ai-awareness-day' ),
+        'parent_learn_ai'             => _x( 'I want to learn more about AI', 'Parent checklist option', 'ai-awareness-day' ),
         'parent_school_take_part'     => __( "I'd like my child's school to take part", 'ai-awareness-day' ),
         'school_leader_staff_activity' => __( 'I want my staff to do an activity', 'ai-awareness-day' ),
         'school_leader_logo_supporter' => __( 'I want our logo as a supporter', 'ai-awareness-day' ),
@@ -41,6 +41,17 @@ function aiad_get_client_ip(): string {
 }
 
 /**
+ * Build a best-effort fingerprint for per-client throttling.
+ *
+ * @return string
+ */
+function aiad_get_client_fingerprint(): string {
+    $ip = aiad_get_client_ip();
+    $user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+    return md5( $ip . '|' . $user_agent );
+}
+
+/**
  * AJAX Contact Form Handler
  */
 function aiad_handle_contact_form(): void {
@@ -53,13 +64,11 @@ function aiad_handle_contact_form(): void {
     }
 
     // Rate limit: 3 submissions per IP per 5 minutes
-    $ip       = aiad_get_client_ip();
-    $limit_key = 'aiad_contact_limit_' . md5( $ip );
+    $limit_key = 'aiad_contact_limit_' . aiad_get_client_fingerprint();
     $count    = (int) get_transient( $limit_key );
     if ( $count >= 3 ) {
         wp_send_json_error( array( 'message' => __( 'Too many submissions from your address. Please try again in a few minutes.', 'ai-awareness-day' ) ) );
     }
-    set_transient( $limit_key, $count + 1, 300 );
 
     $first_name    = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
     $last_name     = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
@@ -124,6 +133,9 @@ function aiad_handle_contact_form(): void {
         wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'ai-awareness-day' ) ) );
     }
 
+    // Increment rate-limit counter only for valid submissions.
+    set_transient( $limit_key, $count + 1, 300 );
+
     $role_labels = array(
         'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
         'parent'        => __( 'Parent', 'ai-awareness-day' ),
@@ -177,7 +189,7 @@ function aiad_handle_contact_form(): void {
     $submission_data = array(
         'post_title'   => sprintf( '%s %s (%s)', $first_name, $last_name, $role_display ),
         'post_content' => $body,
-        'post_status'  => 'publish',
+        'post_status'  => 'private',
         'post_type'    => 'form_submission',
     );
 
@@ -212,6 +224,7 @@ function aiad_handle_contact_form(): void {
         if ( ! empty( $checklist_keys ) ) {
             update_post_meta( $submission_id, '_submission_checklist', $checklist_keys );
         }
+
     }
 
     // Send email to admin
@@ -272,7 +285,8 @@ add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
 function aiad_get_filter_counts( string $post_type, array $active_tax_query ): array {
     // Cache key includes version number (bumped on resource save) and active filters
     $version = (int) get_option( 'aiad_filter_counts_ver', 0 );
-    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( wp_json_encode( $active_tax_query ) );
+    $normalized_tax_query = aiad_normalize_tax_query_for_cache( $active_tax_query );
+    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( wp_json_encode( $normalized_tax_query ) );
     $cached = get_transient( $cache_key );
     if ( is_array( $cached ) ) {
         return $cached;
@@ -280,49 +294,72 @@ function aiad_get_filter_counts( string $post_type, array $active_tax_query ): a
 
     $taxonomies = array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' );
     $counts     = array();
-
-    // Process each taxonomy dimension
     foreach ( $taxonomies as $tax ) {
         $counts[ $tax ] = array();
-
-        // Build a tax_query WITHOUT this taxonomy (so we see what's available when this filter is changed)
-        // This allows us to show counts like "5 resources match Safe + Lesson Starter"
-        $reduced_query = array_filter( $active_tax_query, function( $clause ) use ( $tax ) {
-            return is_array( $clause ) && isset( $clause['taxonomy'] ) && $clause['taxonomy'] !== $tax;
-        } );
-
-        // Get all terms for this taxonomy (including empty ones, so counts show 0)
         $terms = get_terms( array( 'taxonomy' => $tax, 'hide_empty' => false ) );
-        if ( ! $terms || is_wp_error( $terms ) ) {
+        if ( $terms && ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $term ) {
+                $counts[ $tax ][ $term->slug ] = 0;
+            }
+        }
+    }
+
+    // Process each taxonomy with a single ID query + a single term-object query.
+    foreach ( $taxonomies as $tax ) {
+        $reduced_query = array_values(
+            array_filter(
+                $active_tax_query,
+                static function ( $clause ) use ( $tax ) {
+                    return is_array( $clause ) && isset( $clause['taxonomy'] ) && $clause['taxonomy'] !== $tax;
+                }
+            )
+        );
+        if ( count( $reduced_query ) > 1 ) {
+            $reduced_query['relation'] = 'AND';
+        }
+
+        $base_ids = get_posts(
+            array(
+                'post_type'              => $post_type,
+                'post_status'            => 'publish',
+                'posts_per_page'         => -1,
+                'fields'                 => 'ids',
+                'tax_query'              => $reduced_query,
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
+            )
+        );
+        if ( empty( $base_ids ) ) {
             continue;
         }
 
-        // Count resources for each term when combined with other active filters
-        foreach ( $terms as $term ) {
-            $term_query   = $reduced_query;
-            $term_query[] = array(
-                'taxonomy' => $tax,
-                'field'    => 'slug',
-                'terms'    => $term->slug,
-            );
-            // Add relation if multiple tax queries exist
-            if ( count( $term_query ) > 1 ) {
-                $term_query['relation'] = 'AND';
+        $term_rows = wp_get_object_terms(
+            $base_ids,
+            $tax,
+            array(
+                'fields' => 'all_with_object_id',
+            )
+        );
+        if ( is_wp_error( $term_rows ) || empty( $term_rows ) ) {
+            continue;
+        }
+
+        $seen_by_term = array();
+        foreach ( $term_rows as $row ) {
+            $slug = isset( $row->slug ) ? (string) $row->slug : '';
+            $object_id = isset( $row->object_id ) ? (int) $row->object_id : 0;
+            if ( '' === $slug || ! $object_id ) {
+                continue;
             }
+            if ( ! isset( $seen_by_term[ $slug ] ) ) {
+                $seen_by_term[ $slug ] = array();
+            }
+            $seen_by_term[ $slug ][ $object_id ] = true;
+        }
 
-            // Optimized query: only get IDs, no meta/term cache updates
-            $count_query = new WP_Query( array(
-                'post_type'               => $post_type,
-                'post_status'             => 'publish',
-                'posts_per_page'          => 1000, // Reasonable limit for count queries (using fields => 'ids' is lightweight)
-                'fields'                  => 'ids',
-                'tax_query'               => $term_query,
-                'no_found_rows'           => true,
-                'update_post_meta_cache'  => false,
-                'update_post_term_cache'  => false,
-            ) );
-
-            $counts[ $tax ][ $term->slug ] = $count_query->post_count;
+        foreach ( $seen_by_term as $slug => $post_ids_map ) {
+            $counts[ $tax ][ $slug ] = count( $post_ids_map );
         }
     }
 
@@ -330,31 +367,83 @@ function aiad_get_filter_counts( string $post_type, array $active_tax_query ): a
     if ( 'resource' === $post_type && function_exists( 'aiad_key_stage_options' ) ) {
         $counts['key_stage'] = array();
         foreach ( array_keys( aiad_key_stage_options() ) as $ks ) {
-            $meta_query = array(
-                array(
-                    'key'     => '_aiad_key_stage',
-                    'value'   => '"' . $ks . '"', // Match exact serialised value; quotes prevent substring collisions (e.g. "ks3" vs "ks3-extended")
-                    'compare' => 'LIKE',
-                ),
+            $counts['key_stage'][ $ks ] = 0;
+        }
+
+        $filtered_ids = get_posts(
+            array(
+                'post_type'              => $post_type,
+                'post_status'            => 'publish',
+                'posts_per_page'         => -1,
+                'fields'                 => 'ids',
+                'tax_query'              => $active_tax_query,
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
+            )
+        );
+
+        if ( ! empty( $filtered_ids ) ) {
+            global $wpdb;
+            $id_list = implode( ',', array_map( 'absint', $filtered_ids ) );
+            $rows = $wpdb->get_results(
+                "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_aiad_key_stage' AND post_id IN ($id_list)", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                ARRAY_A
             );
-            $count_query = new WP_Query( array(
-                'post_type'               => $post_type,
-                'post_status'             => 'publish',
-                'posts_per_page'          => 1000, // Reasonable limit for count queries
-                'fields'                  => 'ids',
-                'tax_query'               => $active_tax_query, // Apply active taxonomy filters
-                'meta_query'              => $meta_query, // Plus this key stage
-                'no_found_rows'           => true,
-                'update_post_meta_cache'  => false,
-                'update_post_term_cache'  => false,
-            ) );
-            $counts['key_stage'][ $ks ] = $count_query->post_count;
+
+            if ( is_array( $rows ) ) {
+                $valid_stages = array_keys( aiad_key_stage_options() );
+                foreach ( $rows as $row ) {
+                    $values = maybe_unserialize( $row['meta_value'] ?? '' );
+                    if ( ! is_array( $values ) ) {
+                        continue;
+                    }
+                    foreach ( array_unique( $values ) as $stage ) {
+                        if ( in_array( $stage, $valid_stages, true ) ) {
+                            $counts['key_stage'][ $stage ]++;
+                        }
+                    }
+                }
+            }
         }
     }
 
     // Cache results for 1 hour
     set_transient( $cache_key, $counts, HOUR_IN_SECONDS );
     return $counts;
+}
+
+/**
+ * Create stable ordering for tax_query cache keys.
+ *
+ * @param array $tax_query Tax query clauses.
+ * @return array
+ */
+function aiad_normalize_tax_query_for_cache( array $tax_query ): array {
+    $relation = isset( $tax_query['relation'] ) ? $tax_query['relation'] : '';
+    $clauses = array_values(
+        array_filter(
+            $tax_query,
+            static function ( $clause ) {
+                return is_array( $clause ) && isset( $clause['taxonomy'] );
+            }
+        )
+    );
+    usort(
+        $clauses,
+        static function ( $a, $b ) {
+            $a_tax = (string) ( $a['taxonomy'] ?? '' );
+            $b_tax = (string) ( $b['taxonomy'] ?? '' );
+            if ( $a_tax === $b_tax ) {
+                return strcmp( wp_json_encode( $a ), wp_json_encode( $b ) );
+            }
+            return strcmp( $a_tax, $b_tax );
+        }
+    );
+    if ( $relation ) {
+        $clauses['relation'] = $relation;
+    }
+    return $clauses;
 }
 
 /**

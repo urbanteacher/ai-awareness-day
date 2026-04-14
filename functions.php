@@ -12,15 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'AIAD_VERSION', '1.3.4' );
 
-// Define theme paths after theme directory is registered (avoids wp_is_block_theme() notice in WP 6.8+).
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', __DIR__ );
 }
-add_action( 'after_setup_theme', function () {
-    if ( ! defined( 'AIAD_URI' ) ) {
-        define( 'AIAD_URI', get_template_directory_uri() );
-    }
-}, 0 );
+if ( ! defined( 'AIAD_URI' ) ) {
+    define( 'AIAD_URI', get_template_directory_uri() );
+}
 
 $aiad_dir = AIAD_DIR;
 if ( is_admin() ) {

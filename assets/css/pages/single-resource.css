@@ -809,6 +809,64 @@
 }
 
 /* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .site-header,
+  .main-navigation,
+  .nav-toggle,
+  .resource-activity-footer,
+  .featured-from-orgs,
+  .resources-theme-badges,
+  footer,
+  #wpadminbar {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+  }
+
+  .single-resource .section.pt-100 {
+    padding: 0 !important;
+  }
+
+  .resource-activity-card {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .resource-activity-title {
+    font-size: 20pt;
+    margin-bottom: 0.4rem;
+  }
+
+  .entry-content,
+  .resource-sections,
+  .resource-list {
+    font-size: 11.5pt;
+    line-height: 1.55;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
+  }
+
+  .resource-download-link::after {
+    content: " " attr(href);
+    display: inline;
+    font-size: 9pt;
+  }
+}
+
+/* ============================================
    POWERPOINT PRESENTATION PREVIEW
    ============================================ */
 .resource-pptx-preview {

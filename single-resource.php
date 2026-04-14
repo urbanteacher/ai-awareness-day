@@ -50,7 +50,7 @@ get_header();
                                     <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" class="principle-badge__img" aria-hidden="true" />
                                 </span>
                             <?php endif; ?>
-                            <?php the_title(); ?>
+                            <?php echo esc_html( get_the_title() ); ?>
                         </h1>
                         <?php
                         $overview = $subtitle_meta !== '' ? $subtitle_meta : ( has_excerpt() ? get_the_excerpt() : '' );
@@ -405,6 +405,8 @@ get_header();
                         $share_message = function_exists( 'aiad_get_share_message' ) ? aiad_get_share_message( 'resource', get_post() ) : '';
                         $share_url = get_permalink();
                         $share_title = get_the_title();
+                        $key_stages_for_card = (array) get_post_meta( get_the_ID(), '_aiad_key_stage', true );
+                        $theme_for_card = $theme_name ? $theme_name : '';
                         ?>
                         <button type="button"
                                 class="resource-footer-btn resource-footer-btn--share resource-share-btn"
@@ -424,9 +426,34 @@ get_header();
                             </span>
                             <span class="resource-share-btn__label"><?php esc_html_e( 'Share', 'ai-awareness-day' ); ?></span>
                         </button>
+                        <button type="button"
+                                class="resource-footer-btn resource-footer-btn--share resource-social-card-btn"
+                                data-title="<?php echo esc_attr( $share_title ); ?>"
+                                data-url="<?php echo esc_url( $share_url ); ?>"
+                                data-theme="<?php echo esc_attr( $theme_for_card ); ?>"
+                                data-key-stages="<?php echo esc_attr( implode( ', ', $key_stages_for_card ) ); ?>"
+                                aria-label="<?php esc_attr_e( 'Generate share image', 'ai-awareness-day' ); ?>">
+                            <span class="resource-share-btn__label"><?php esc_html_e( 'Generate share image', 'ai-awareness-day' ); ?></span>
+                        </button>
+                        <button type="button"
+                                class="resource-footer-btn resource-footer-btn--secondary resource-bookmark-btn"
+                                data-resource-id="<?php echo esc_attr((string) get_the_ID()); ?>"
+                                data-resource-title="<?php echo esc_attr( $share_title ); ?>"
+                                data-resource-url="<?php echo esc_url( $share_url ); ?>"
+                                aria-pressed="false"
+                                aria-label="<?php esc_attr_e('Save resource', 'ai-awareness-day'); ?>">
+                            <?php esc_html_e('Save', 'ai-awareness-day'); ?>
+                        </button>
                     </footer>
                 </article>
             <?php endwhile; ?>
+            <aside class="saved-resources-panel" data-saved-resources-panel hidden>
+                <div class="saved-resources-panel__header">
+                    <h2><?php esc_html_e( 'My saved resources', 'ai-awareness-day' ); ?></h2>
+                    <button type="button" class="saved-resources-panel__close" data-saved-resources-close aria-label="<?php esc_attr_e( 'Close saved resources', 'ai-awareness-day' ); ?>">×</button>
+                </div>
+                <ul class="saved-resources-panel__list" data-saved-resources-list></ul>
+            </aside>
     </section>
 </main>
 
