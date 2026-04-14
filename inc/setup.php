@@ -187,11 +187,12 @@ function aiad_scripts(): void
     $script_args = version_compare(get_bloginfo('version'), '6.3', '>=')
         ? array('in_footer' => true, 'strategy' => 'defer')
         : true;
+    $main_js_path = AIAD_DIR . '/assets/js/main.js';
     wp_enqueue_script(
         'aiad-main',
         AIAD_URI . '/assets/js/main.js',
         array(),
-        AIAD_VERSION,
+        file_exists( $main_js_path ) ? filemtime( $main_js_path ) : AIAD_VERSION,
         $script_args
     );
 
