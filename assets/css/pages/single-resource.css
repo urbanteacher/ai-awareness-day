@@ -1139,7 +1139,7 @@
 }
 
 /* ── Instruction step collapse / reveal ─────────────────── */
-.resource-list--instructions.steps-collapsed li.resource-instruction-step:nth-child(n+4) {
+.resource-list--instructions.steps-collapsed li.resource-instruction-step:nth-child(n+3) {
   display: none !important;
 }
 

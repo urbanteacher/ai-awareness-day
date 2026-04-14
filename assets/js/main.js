@@ -817,7 +817,7 @@
 
     // ── Instruction step collapse (>3 steps → hide + reveal toggle) ──
     (function initInstructionCollapse() {
-        var VISIBLE = 3;
+        var VISIBLE = 2;
         var lists = document.querySelectorAll('.resource-list--instructions');
         lists.forEach(function (ol) {
             var steps = ol.querySelectorAll('li.resource-instruction-step');
