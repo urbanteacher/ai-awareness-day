@@ -219,7 +219,7 @@ get_header();
                             ?>
                             <?php /* Row 2: Key definitions | Differentiation */ ?>
                             <?php if ( ! empty( $key_definitions ) || $has_diff ) : ?>
-                                <div class="resource-sections-row">
+                                <div class="resource-sections-row resource-sections-row--objectives-instructions">
                                     <div class="resource-section-cell resource-section-cell--left">
                                         <?php if ( ! empty( $key_definitions ) ) : ?>
                                             <section class="resource-section resource-section--definitions" aria-labelledby="section-definitions">
