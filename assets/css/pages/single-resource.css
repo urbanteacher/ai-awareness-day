@@ -251,7 +251,8 @@
 }
 
 .resource-sections-row--prep-only .resource-section__title {
-  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  font-size: clamp(0.875rem, 2.4vw, 1.125rem);
+  font-weight: 800;
 }
 
 .resource-sections-row--prep-only .resource-list li {
@@ -399,7 +400,7 @@
   }
 
   .resource-section__title {
-    font-size: 0.8rem;
+    font-size: clamp(0.85rem, 2.6vw, 1.05rem) !important;
     gap: 0.35rem;
     margin-bottom: 0.75rem;
   }
@@ -974,9 +975,9 @@
 
 /* ── Section title: uppercase label ─────────────────────── */
 .resource-section__title {
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
+  font-size: clamp(0.875rem, 2.4vw, 1.125rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.07em !important;
   text-transform: uppercase !important;
   color: var(--gray-900) !important;
   margin-bottom: 0.875rem !important;
