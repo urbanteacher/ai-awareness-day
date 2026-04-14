@@ -201,7 +201,7 @@ function aiad_resource_preview_video_html( string $url ): string {
         $url
     );
 
-    $embed = wp_oembed_get( $oembed_url, array( 'width' => 800 ) );
+    $embed = wp_oembed_get( $oembed_url );
     if ( is_string( $embed ) && $embed !== '' ) {
         return $embed;
     }
