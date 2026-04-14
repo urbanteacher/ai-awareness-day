@@ -5,7 +5,8 @@
       "name": "WordPress (Docker)",
       "runtimeExecutable": "docker",
       "runtimeArgs": ["compose", "up"],
-      "port": 9091
+      "port": 8888,
+      "autoPort": false
     },
     {
       "name": "CSS Bundle Builder",
