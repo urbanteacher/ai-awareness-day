@@ -47,7 +47,7 @@
 .resource-activity-header {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-color, var(--gray-200));
+  border-bottom: 2px solid var(--gray-900);
 }
 
 .resource-activity-title {
@@ -234,7 +234,7 @@
 
 .resource-sections-row--prep-only .resource-sections-row {
   padding: 0 0 1.25rem;
-  border-bottom: 1px solid var(--aiad-border, var(--gray-200));
+  border-bottom: 2px solid var(--gray-900);
 }
 
 .resource-sections-row--prep-only .resource-section__title {
@@ -268,7 +268,7 @@
   gap: 1.5rem;
   align-items: start;
   padding: 1.25rem 0;
-  border-bottom: 1px solid var(--aiad-border, var(--gray-200));
+  border-bottom: 2px solid var(--gray-900);
 }
 
 .resource-sections-row:last-child {
@@ -644,7 +644,7 @@
   align-items: center;
   margin-top: 2.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color, var(--gray-200));
+  border-top: 2px solid var(--gray-900);
 }
 
 .resource-footer-btn {
