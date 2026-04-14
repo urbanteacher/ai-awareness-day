@@ -24,21 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <?php echo wp_kses_post(get_theme_mod('aiad_contact_desc', $defaults['aiad_contact_desc'])); ?>
                         </p>
 
-                        <?php
-                        $pledge_count = function_exists( 'aiad_get_school_pledge_count' ) ? aiad_get_school_pledge_count() : 0;
-                        $pledge_goal  = function_exists( 'aiad_get_school_pledge_goal' )  ? aiad_get_school_pledge_goal()  : 500;
-                        $pledge_pct   = $pledge_goal > 0 ? min( 100, round( ( $pledge_count / $pledge_goal ) * 100 ) ) : 0;
-                        ?>
-                        <div class="pledge-counter" data-pledge-counter data-goal="<?php echo esc_attr( (string) $pledge_goal ); ?>">
-                            <p class="pledge-counter__title"><?php esc_html_e( 'Schools pledged so far', 'ai-awareness-day' ); ?></p>
-                            <p class="pledge-counter__value">
-                                <span data-pledge-count><?php echo esc_html( number_format_i18n( $pledge_count ) ); ?></span>
-                                <span class="pledge-counter__target"> / <?php echo esc_html( number_format_i18n( $pledge_goal ) ); ?> <?php esc_html_e( 'goal', 'ai-awareness-day' ); ?></span>
-                            </p>
-                            <div class="pledge-counter__bar" role="progressbar" aria-valuemin="0" aria-valuemax="<?php echo esc_attr( (string) $pledge_goal ); ?>" aria-valuenow="<?php echo esc_attr( (string) $pledge_count ); ?>">
-                                <span class="pledge-counter__bar-fill" data-pledge-fill style="width:<?php echo esc_attr( (string) $pledge_pct ); ?>%;"></span>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="contact-form fade-up stagger-2">

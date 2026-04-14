@@ -245,19 +245,6 @@ function aiad_scripts(): void
         );
     }
 
-    // Enqueue AI quiz CSS on front page.
-    if ( is_front_page() && ! is_admin() ) {
-        $quiz_css = AIAD_DIR . '/assets/css/components/ai-quiz.css';
-        if ( file_exists( $quiz_css ) ) {
-            wp_enqueue_style(
-                'aiad-ai-quiz',
-                AIAD_URI . '/assets/css/components/ai-quiz.css',
-                array( 'aiad-style' ),
-                filemtime( $quiz_css )
-            );
-        }
-    }
-
     // Enqueue tools CSS on front page and tools archive
     if ( ( is_front_page() || is_post_type_archive( 'ai_tool' ) ) && ! is_admin() ) {
         $tools_css = AIAD_DIR . '/assets/css/components/tools.css';
