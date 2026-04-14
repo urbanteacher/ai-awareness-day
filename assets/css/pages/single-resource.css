@@ -1137,3 +1137,44 @@
 .resource-section-cell .resource-section {
   margin-bottom: 0;
 }
+
+/* ── Instruction step collapse / reveal ─────────────────── */
+.resource-list--instructions.steps-collapsed li.resource-instruction-step:nth-child(n+4) {
+  display: none !important;
+}
+
+.resource-steps-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.resource-steps-toggle:hover {
+  color: var(--gray-900);
+}
+
+.resource-steps-toggle__icon {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Print: always show all steps */
+@media print {
+  .resource-list--instructions.steps-collapsed li.resource-instruction-step {
+    display: block !important;
+  }
+  .resource-steps-toggle {
+    display: none !important;
+  }
+}

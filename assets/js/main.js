@@ -815,6 +815,44 @@
             });
         })();
 
+    // ── Instruction step collapse (>3 steps → hide + reveal toggle) ──
+    (function initInstructionCollapse() {
+        var VISIBLE = 3;
+        var lists = document.querySelectorAll('.resource-list--instructions');
+        lists.forEach(function (ol) {
+            var steps = ol.querySelectorAll('li.resource-instruction-step');
+            if (steps.length <= VISIBLE) return;
+
+            var hidden = steps.length - VISIBLE;
+
+            // Hide steps beyond the threshold
+            ol.classList.add('steps-collapsed');
+
+            // Build toggle button
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'resource-steps-toggle';
+            btn.setAttribute('aria-expanded', 'false');
+            btn.innerHTML =
+                '<span class="resource-steps-toggle__label">Show ' + hidden + ' more step' + (hidden > 1 ? 's' : '') + '</span>' +
+                '<svg class="resource-steps-toggle__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+
+            // Insert after the ol
+            ol.insertAdjacentElement('afterend', btn);
+
+            btn.addEventListener('click', function () {
+                var expanded = ol.classList.toggle('steps-collapsed');
+                // toggle returns true when class was ADDED (collapsed), false when removed (expanded)
+                var isCollapsed = ol.classList.contains('steps-collapsed');
+                btn.setAttribute('aria-expanded', String(!isCollapsed));
+                btn.querySelector('.resource-steps-toggle__label').textContent = isCollapsed
+                    ? 'Show ' + hidden + ' more step' + (hidden > 1 ? 's' : '')
+                    : 'Show fewer steps';
+                btn.querySelector('.resource-steps-toggle__icon').style.transform = isCollapsed ? '' : 'rotate(180deg)';
+            });
+        });
+    })();
+
     } // End of init function
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
