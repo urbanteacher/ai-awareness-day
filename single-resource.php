@@ -42,7 +42,7 @@ get_header();
                     ? 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $preview_dl_url )
                     : '';
                 ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class( 'resource-activity-card' ); ?>>
+                <article id="post-<?php the_ID(); ?>" <?php post_class( 'resource-activity-card' ); ?> <?php if ( $theme_slug ) : ?>data-theme="<?php echo esc_attr( $theme_slug ); ?>"<?php endif; ?>>
                     <header class="resource-activity-header">
                         <h1 class="resource-activity-title">
                             <?php if ( $theme_badge_src ) : ?>
