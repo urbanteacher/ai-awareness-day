@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "WordPress (Docker)",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "up"],
+      "port": 9091
+    },
+    {
+      "name": "CSS Bundle Builder",
+      "runtimeExecutable": "php",
+      "runtimeArgs": ["scripts/build-css-bundles.php"],
+      "port": null
+    }
+  ]
+}
