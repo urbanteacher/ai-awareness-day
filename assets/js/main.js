@@ -36,49 +36,58 @@
 
         // ============================================
         // Hero countdown
+        // Exposed as window.aiad.initHeroCountdown so it can be called again
+        // if the hero section is injected after DOMContentLoaded.
         // ============================================
-        (function initHeroCountdown() {
-            var root = document.querySelector('.hero-countdown[data-event-date]');
+        window.aiad = window.aiad || {};
+        window.aiad.initHeroCountdown = function initHeroCountdown() {
+            var root = document.querySelector('.hero-countdown[data-event-ts]');
             if (!root) return;
-            var eventDate = root.getAttribute('data-event-date');
-            if (!eventDate) return;
-            var target = new Date(eventDate + 'T00:00:00');
-            if (isNaN(target.getTime())) return;
 
-            var daysEl = root.querySelector('[data-unit="days"]');
-            var hoursEl = root.querySelector('[data-unit="hours"]');
+            // Prefer the server-emitted Unix ms timestamp — no date string parsing,
+            // no Safari/locale timezone ambiguity.
+            var tsAttr   = root.getAttribute('data-event-ts');
+            var targetMs = tsAttr ? parseInt(tsAttr, 10) : NaN;
+
+            // Fallback: parse date string with explicit UTC suffix.
+            if (isNaN(targetMs)) {
+                var dateStr = root.getAttribute('data-event-date');
+                if (!dateStr) return;
+                targetMs = Date.parse(dateStr + 'T00:00:00Z');
+                if (isNaN(targetMs)) return;
+            }
+
+            var daysEl    = root.querySelector('[data-unit="days"]');
+            var hoursEl   = root.querySelector('[data-unit="hours"]');
             var minutesEl = root.querySelector('[data-unit="minutes"]');
             var secondsEl = root.querySelector('[data-unit="seconds"]');
             if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
-            function pad(value) {
-                return String(value).padStart(2, '0');
-            }
+            function pad(v) { return String(v).padStart(2, '0'); }
+
+            var intervalId = null;
 
             function tick() {
-                var now = new Date();
-                var diff = target.getTime() - now.getTime();
+                var diff = targetMs - Date.now();
                 if (diff <= 0) {
-                    daysEl.textContent = '00';
-                    hoursEl.textContent = '00';
+                    daysEl.textContent    = '00';
+                    hoursEl.textContent   = '00';
                     minutesEl.textContent = '00';
                     secondsEl.textContent = '00';
+                    if (intervalId) { clearInterval(intervalId); intervalId = null; }
                     return;
                 }
                 var totalSeconds = Math.floor(diff / 1000);
-                var days = Math.floor(totalSeconds / 86400);
-                var hours = Math.floor((totalSeconds % 86400) / 3600);
-                var minutes = Math.floor((totalSeconds % 3600) / 60);
-                var seconds = totalSeconds % 60;
-                daysEl.textContent = String(days);
-                hoursEl.textContent = pad(hours);
-                minutesEl.textContent = pad(minutes);
-                secondsEl.textContent = pad(seconds);
+                daysEl.textContent    = String(Math.floor(totalSeconds / 86400));
+                hoursEl.textContent   = pad(Math.floor((totalSeconds % 86400) / 3600));
+                minutesEl.textContent = pad(Math.floor((totalSeconds % 3600) / 60));
+                secondsEl.textContent = pad(totalSeconds % 60);
             }
 
             tick();
-            window.setInterval(tick, 1000);
-        })();
+            intervalId = setInterval(tick, 1000);
+        };
+        window.aiad.initHeroCountdown();
 
         // ============================================
         // Resource bookmarks (localStorage)
