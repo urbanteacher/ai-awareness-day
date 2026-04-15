@@ -81,13 +81,20 @@ a.duration-badge:hover {
   min-height: 130px;
   padding: 0.5rem 0.1rem;
   gap: 0.25rem;
-  background: var(--white);
   border: none;
-  border-radius: 0;
+  border-radius: 4px;
   text-decoration: none;
-  color: var(--gray-900);
+  color: #ffffff;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Vibrant colours on mobile too */
+.explore-session-card:nth-child(1) { background: #2563eb; }
+.explore-session-card:nth-child(2) { background: #7c3aed; }
+.explore-session-card:nth-child(3) { background: #db2777; }
+.explore-session-card:nth-child(4) { background: #059669; }
 
 .explore-session-card .explore-session-badge {
   order: 1;
@@ -132,8 +139,8 @@ a.duration-badge:hover {
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--gray-700);
-  background: var(--gray-200);
+  color: #ffffff;
+  background: rgba(0,0,0,0.2);
   border: none;
   border-radius: 0;
 }
@@ -158,13 +165,13 @@ a.duration-badge:hover {
 .explore-session-card .explore-session-title {
   font-family: var(--font-display);
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.2;
   white-space: normal;
   min-height: 2.4em;
-  color: var(--gray-900);
+  color: #ffffff;
 }
 
 .explore-session-card .explore-session-desc {
@@ -188,7 +195,7 @@ a.duration-badge:hover {
   }
 }
 
-/* ---- Desktop: 2-col, green strip, row layout, text badges ---- */
+/* ---- Desktop: 2-col vibrant cards ---- */
 @media (min-width: 768px) {
   .explore-subheading {
     margin-top: 0.5rem;
@@ -203,8 +210,8 @@ a.duration-badge:hover {
     margin-top: 0.5rem;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
-    padding: 1rem;
-    background: var(--green-900);
+    padding: 0;
+    background: transparent;
   }
 
   .explore-session-card {
@@ -214,12 +221,30 @@ a.duration-badge:hover {
     gap: 1.25rem;
     padding: 1rem 1.25rem;
     min-height: 0;
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--white);
+    border-radius: 4px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Vibrant colour per card — matches stats card palette */
+  .explore-session-card:nth-child(1) { background: #2563eb; } /* Lesson Starter — blue   */
+  .explore-session-card:nth-child(2) { background: #7c3aed; } /* Tutor Time     — violet */
+  .explore-session-card:nth-child(3) { background: #db2777; } /* Assembly       — pink   */
+  .explore-session-card:nth-child(4) { background: #059669; } /* After School   — green  */
+
+  /* Shine overlay */
+  .explore-session-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
   }
 
   .explore-session-card:hover {
-    background: rgba(255, 255, 255, 0.08);
+    opacity: 0.92;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
   .explore-session-card .explore-session-badge {
@@ -234,11 +259,12 @@ a.duration-badge:hover {
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    color: var(--white);
-    background: var(--session-accent, #7c3aed);
+    color: #ffffff;
+    background: rgba(0,0,0,0.2);
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 3px;
   }
 
   .explore-session-card .explore-session-badge__text {
@@ -260,27 +286,30 @@ a.duration-badge:hover {
 
   .explore-session-card .explore-session-title {
     font-size: 1.1rem;
+    font-weight: 800;
     min-height: 0;
-    color: inherit;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
 
   .explore-session-card .explore-session-desc {
     display: block;
     font-size: 0.9rem;
     line-height: 1.4;
-    color: var(--gray-300);
+    color: rgba(255,255,255,0.85);
   }
 
   .explore-session-card .explore-session-status {
     display: inline;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--session-accent, rgba(255, 255, 255, 0.9));
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
   }
 
   .explore-session-card .explore-session-status--live {
-    color: var(--session-accent, var(--white));
+    color: #ffffff;
     animation: explore-live-blink 1.2s ease-in-out infinite;
   }
 
