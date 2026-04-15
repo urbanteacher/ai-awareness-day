@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $stats = array(
                     array(
                         'value' => $school_count,
-                        'label' => __( 'Pledged', 'ai-awareness-day' ),
+                        'label' => __( 'Schools', 'ai-awareness-day' ),
                         'url'   => '#contact',
                     ),
                     array(

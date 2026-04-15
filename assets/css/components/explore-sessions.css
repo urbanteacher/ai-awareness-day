@@ -101,7 +101,7 @@ a.duration-badge:hover {
   padding: 0;
   border-radius: 0;
   border: none;
-  background: transparent;
+  background: #2563eb;
   display: flex;
   align-items: stretch;
   justify-content: stretch;
@@ -140,9 +140,13 @@ a.duration-badge:hover {
 }
 
 /* Vibrant badge colours on mobile */
+.explore-session-card:nth-child(1) .explore-session-badge,
 .explore-session-card:nth-child(1) .explore-session-badge-placeholder { background: #2563eb; }
+.explore-session-card:nth-child(2) .explore-session-badge,
 .explore-session-card:nth-child(2) .explore-session-badge-placeholder { background: #7c3aed; }
+.explore-session-card:nth-child(3) .explore-session-badge,
 .explore-session-card:nth-child(3) .explore-session-badge-placeholder { background: #db2777; }
+.explore-session-card:nth-child(4) .explore-session-badge,
 .explore-session-card:nth-child(4) .explore-session-badge-placeholder { background: #059669; }
 
 /* Hide placeholder when image is present. No fallback for older browsers without :has(); optional: add .no-image on server when no img to show placeholder. */
