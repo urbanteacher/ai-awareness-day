@@ -36,6 +36,7 @@ require_once $aiad_dir . '/inc/front-page-layout.php';
 require_once $aiad_dir . '/inc/validation.php';
 require_once $aiad_dir . '/inc/ajax-handlers.php';
 require_once $aiad_dir . '/inc/timeline.php';
+require_once $aiad_dir . '/inc/dashboard.php';
 require_once $aiad_dir . '/inc/tools.php';
 require_once $aiad_dir . '/inc/sharing.php';
 require_once $aiad_dir . '/inc/seo.php';

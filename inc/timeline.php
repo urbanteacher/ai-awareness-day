@@ -853,43 +853,128 @@ function aiad_timeline_on_partner_publish( string $new_status, string $old_statu
 add_action( 'transition_post_status', 'aiad_timeline_on_partner_publish', 10, 3 );
 
 /**
+ * Milestone-specific messaging (title + content) for the timeline card.
+ * Each message is crafted for that stage of the campaign's growth.
+ *
+ * @param int $threshold The milestone number.
+ * @param int $goal      Campaign goal (default 500).
+ * @return array{ title: string, content: string }
+ */
+function aiad_milestone_messaging( int $threshold, int $goal = 500 ): array {
+    $pct = $goal > 0 ? (int) round( ( $threshold / $goal ) * 100 ) : 0;
+
+    $map = array(
+        10  => array(
+            'title'   => __( '10 schools have joined — the first wave is here', 'ai-awareness-day' ),
+            'content' => __( 'Ten schools have committed to running AI Awareness Day. Every movement starts somewhere — and this one just did.', 'ai-awareness-day' ),
+        ),
+        25  => array(
+            'title'   => __( '25 schools in — word is spreading', 'ai-awareness-day' ),
+            'content' => __( '25 schools have pledged. Word is travelling across staffrooms, and the momentum is building.', 'ai-awareness-day' ),
+        ),
+        50  => array(
+            'title'   => __( '50 schools pledged — a packed assembly hall', 'ai-awareness-day' ),
+            'content' => __( '50 schools committed. That\'s enough students to fill a large assembly hall with young people learning about AI. This is real.', 'ai-awareness-day' ),
+        ),
+        100 => array(
+            'title'   => __( '100 schools — AI Awareness Day is a movement', 'ai-awareness-day' ),
+            /* translators: %d: percentage of goal */
+            'content' => sprintf( __( '100 schools have joined — %d%% of our goal. What started as an idea is now a nationwide campaign taking shape.', 'ai-awareness-day' ), $pct ),
+        ),
+        250 => array(
+            'title'   => __( '250 schools committed — halfway there', 'ai-awareness-day' ),
+            /* translators: %d: percentage of goal */
+            'content' => sprintf( __( '250 schools pledged — %d%% of our target. Half a million young people will experience AI Awareness Day if every school follows through.', 'ai-awareness-day' ), $pct ),
+        ),
+        500 => array(
+            'title'   => __( '500 schools — we hit our goal. Now let\'s go further.', 'ai-awareness-day' ),
+            'content' => __( '500 schools have committed to AI Awareness Day. We reached our founding target. This is the biggest coordinated AI literacy event UK schools have ever seen — and we\'re just getting started.', 'ai-awareness-day' ),
+        ),
+        1000 => array(
+            'title'   => __( '1,000 schools — this is a national campaign', 'ai-awareness-day' ),
+            'content' => __( '1,000 schools. This is no longer an idea — it\'s a national campaign reaching hundreds of thousands of young people across the UK.', 'ai-awareness-day' ),
+        ),
+    );
+
+    if ( isset( $map[ $threshold ] ) ) {
+        return $map[ $threshold ];
+    }
+
+    // Fallback for any threshold not in the map
+    return array(
+        /* translators: %d: number of sign-ups */
+        'title'   => sprintf( __( '%d schools have joined the campaign', 'ai-awareness-day' ), $threshold ),
+        /* translators: 1: number, 2: percentage */
+        'content' => sprintf( __( 'The campaign has reached %1$d sign-ups — %2$d%% of our goal.', 'ai-awareness-day' ), $threshold, $pct ),
+    );
+}
+
+/**
+ * Send an email to the site admin when a milestone is hit.
+ *
+ * @param int    $threshold Milestone number reached.
+ * @param string $title     Timeline entry title.
+ */
+function aiad_send_milestone_email( int $threshold, string $title ): void {
+    $to      = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
+    $subject = sprintf( '[AI Awareness Day] Milestone reached: %d sign-ups! 🎉', $threshold );
+
+    $goal      = (int) apply_filters( 'aiad_school_pledge_goal', 500 );
+    $pct       = $goal > 0 ? (int) round( ( $threshold / $goal ) * 100 ) : 0;
+    $admin_url = admin_url( 'edit.php?post_type=timeline' );
+    $site_url  = home_url();
+
+    $body  = "🎉 Milestone reached: {$threshold} sign-ups\n\n";
+    $body .= "AI Awareness Day has hit {$threshold} sign-ups — {$pct}% of the {$goal}-school goal.\n\n";
+    $body .= "Timeline entry published: \"{$title}\"\n\n";
+    $body .= "View the timeline in the admin:\n{$admin_url}\n\n";
+    $body .= "View on the website:\n{$site_url}\n\n";
+    $body .= "---\nAI Awareness Day · " . get_bloginfo( 'name' );
+
+    $headers = array(
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+    );
+
+    wp_mail( $to, $subject, $body, $headers );
+}
+
+/**
  * Auto-generate timeline entry on milestone submission counts.
  * Runs after each form submission; only creates entry at specific thresholds.
+ * Also sends an email alert and records the milestone timestamp.
  */
 function aiad_timeline_check_submission_milestone(): void {
     $count = wp_count_posts( 'form_submission' );
     $total = (int) ( $count->publish ?? 0 );
+    $goal  = (int) apply_filters( 'aiad_school_pledge_goal', 500 );
 
     $milestones = array( 10, 25, 50, 100, 250, 500, 1000 );
     foreach ( $milestones as $threshold ) {
-        if ( $total >= $threshold ) {
-            // Check if this milestone entry already exists
-            $existing = get_posts( array(
-                'post_type'      => 'timeline',
-                'post_status'    => 'publish',
-                'posts_per_page' => 1,
-                'title'          => sprintf( '%d sign-ups reached', $threshold ),
-                'meta_query'     => array(
-                    array( 'key' => '_aiad_timeline_auto_type', 'value' => 'milestone', 'compare' => '=' ),
-                ),
-            ) );
-            if ( empty( $existing ) ) {
-                aiad_create_timeline_entry( array(
-                    'title'     => sprintf(
-                        /* translators: %d: number of sign-ups */
-                        __( '%d sign-ups reached!', 'ai-awareness-day' ),
-                        $threshold
-                    ),
-                    'content'   => sprintf(
-                        /* translators: %d: number */
-                        __( 'The campaign has reached %d sign-ups. The movement is growing.', 'ai-awareness-day' ),
-                        $threshold
-                    ),
-                    'auto_type' => 'milestone',
-                    'icon'      => 'milestone',
-                ) );
-            }
+        if ( $total < $threshold ) {
+            continue;
         }
+
+        // Use option flag — faster than a WP_Query on every submission
+        $flag_key = 'aiad_milestone_done_' . $threshold;
+        if ( get_option( $flag_key ) ) {
+            continue;
+        }
+
+        $messaging = aiad_milestone_messaging( $threshold, $goal );
+
+        aiad_create_timeline_entry( array(
+            'title'     => $messaging['title'],
+            'content'   => $messaging['content'],
+            'auto_type' => 'milestone',
+            'icon'      => 'milestone',
+        ) );
+
+        // Record milestone hit time and mark as done
+        update_option( $flag_key, current_time( 'mysql' ), false );
+
+        // Email alert
+        aiad_send_milestone_email( $threshold, $messaging['title'] );
     }
 }
 add_action( 'save_post_form_submission', 'aiad_timeline_check_submission_milestone', 30 );
