@@ -247,15 +247,6 @@ get_header();
 								<?php endif; ?>
                                 <p class="resource-card__action">
                                     <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer" class="resource-card__link"><?php esc_html_e( 'View resource', 'ai-awareness-day' ); ?> →</a>
-                                    <button type="button"
-                                        class="resource-bookmark-btn"
-                                        data-resource-id="<?php echo esc_attr((string) get_the_ID()); ?>"
-                                        data-resource-title="<?php echo esc_attr( get_the_title() ); ?>"
-                                        data-resource-url="<?php echo esc_url( get_permalink() ); ?>"
-                                        aria-pressed="false"
-                                        aria-label="<?php esc_attr_e('Save resource', 'ai-awareness-day'); ?>">
-                                        <?php esc_html_e('Save', 'ai-awareness-day'); ?>
-                                    </button>
                                 </p>
                             </div>
                         </article>
@@ -264,13 +255,6 @@ get_header();
             <?php endif; ?>
             </div>
             <p class="section-desc resources-empty-message"<?php echo $resources->have_posts() ? ' style="display:none"' : ''; ?>><?php esc_html_e( 'No resources found. Try changing the filters or add resources in the admin under Resources from partners.', 'ai-awareness-day' ); ?></p>
-            <aside class="saved-resources-panel" data-saved-resources-panel hidden>
-                <div class="saved-resources-panel__header">
-                    <h2><?php esc_html_e( 'My saved resources', 'ai-awareness-day' ); ?></h2>
-                    <button type="button" class="saved-resources-panel__close" data-saved-resources-close aria-label="<?php esc_attr_e( 'Close saved resources', 'ai-awareness-day' ); ?>">×</button>
-                </div>
-                <ul class="saved-resources-panel__list" data-saved-resources-list></ul>
-            </aside>
         </div>
     </section>
 </main>
