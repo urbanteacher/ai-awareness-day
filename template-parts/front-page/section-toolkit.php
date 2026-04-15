@@ -380,9 +380,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 <a href="<?php echo esc_url($url); ?>" class="explore-session-card fade-up" style="--session-accent: <?php echo esc_attr($icon_bg); ?>">
                                     <span class="explore-session-text">
                                         <span class="explore-session-title"><?php echo esc_html($card['title']); ?></span>
-                                        <?php if ($status): ?>
-                                            <span class="explore-session-status <?php echo $status_live ? 'explore-session-status--live' : ''; ?>"><?php echo esc_html($status); ?></span>
-                                        <?php endif; ?>
                                         <span class="explore-session-desc"><?php echo esc_html($card['description']); ?></span>
                                     </span>
                                     <span class="explore-session-badge">
