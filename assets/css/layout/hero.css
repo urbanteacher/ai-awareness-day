@@ -153,46 +153,29 @@
 }
 
 .hero-countdown__item {
-  border: none;
-  padding: 0.7rem 0.5rem 0.6rem;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  padding: 0.55rem 0.35rem;
   border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Vibrant colour per unit */
-.hero-countdown__item:nth-child(1) { background: #2563eb; } /* Days    — blue   */
-.hero-countdown__item:nth-child(2) { background: #7c3aed; } /* Hours   — violet */
-.hero-countdown__item:nth-child(3) { background: #db2777; } /* Minutes — pink   */
-.hero-countdown__item:nth-child(4) { background: #059669; } /* Seconds — green  */
-
-/* Subtle shine layer */
-.hero-countdown__item::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(255,255,255,0.14) 0%, transparent 60%);
-  pointer-events: none;
 }
 
 .hero-countdown__value {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 4.5vw, 2rem);
-  font-weight: 800;
-  color: #ffffff;
+  font-size: clamp(1.1rem, 4vw, 1.65rem);
+  font-weight: 700;
+  color: var(--gray-900);
   line-height: 1.1;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
 
 .hero-countdown__label {
   display: block;
-  margin-top: 0.25rem;
-  font-size: 0.6rem;
+  margin-top: 0.2rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.8);
+  color: var(--gray-500);
 }
 
 @media screen and (max-width: 640px) {
@@ -225,27 +208,44 @@
   gap: 0.2rem;
   min-height: 86px;
   padding: 0.65rem 0.4rem 0.55rem;
-  background: var(--white);
-  border: 1px solid var(--gray-200);
+  border: none;
   border-radius: 4px;
   text-decoration: none;
-  color: inherit;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+
+/* Vibrant colour per stat */
+.hero-stats__item:nth-child(1) { background: #2563eb; } /* Schools  — blue   */
+.hero-stats__item:nth-child(2) { background: #7c3aed; } /* Resources — violet */
+.hero-stats__item:nth-child(3) { background: #db2777; } /* Partners  — pink   */
+.hero-stats__item:nth-child(4) { background: #059669; } /* Updates   — green  */
+
+/* Subtle shine layer */
+.hero-stats__item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.14) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .hero-stats__item:hover {
-  border-color: var(--gray-400, #9ca3af);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   text-decoration: none;
 }
 
 .hero-stats__value {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1rem, 3.5vw, 1.4rem);
-  font-weight: 700;
-  color: var(--gray-900);
+  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+  font-weight: 800;
+  color: #ffffff;
   line-height: 1.1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
 
 .hero-stats__label {
@@ -255,7 +255,7 @@
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--gray-500);
+  color: rgba(255,255,255,0.85);
   text-align: center;
 }
 
