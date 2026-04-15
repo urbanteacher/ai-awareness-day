@@ -8,7 +8,7 @@
   --badge-creative: #c4b5fd;
   --badge-responsible: #86efac;
   --badge-future: #f9a8d4;
-  --badge-black: #000000;
+  --badge-black: #1e1e1e;
 
   /* Brand palette: --green-* are monochrome (black/gray) for UI, not literal green. Kept for backward compatibility. */
   --green-50: #fafafa;
@@ -17,10 +17,10 @@
   --green-300: #d4d4d4;
   --green-400: #737373;
   --green-500: #525252;
-  --green-600: #171717;
-  --green-700: #0a0a0a;
-  --green-800: #0a0a0a;
-  --green-900: #000000;
+  --green-600: #1e1e1e;
+  --green-700: #1e1e1e;
+  --green-800: #1e1e1e;
+  --green-900: #1e1e1e;
 
   /* Accent colours (actual green, purple, blue, amber for highlights and single-resource) */
   --accent-green: #22c55e;
@@ -46,7 +46,7 @@
   --gray-600: #525252;
   --gray-700: #404040;
   --gray-800: #262626;
-  --gray-900: #171717;
+  --gray-900: #1e1e1e;
 
   --font-display: 'Intel Clear', sans-serif;
   --font-body: 'DM Sans', sans-serif;
