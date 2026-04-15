@@ -320,10 +320,40 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
     public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0): void
     {
         $classes = implode(' ', $item->classes);
+
+        $item_title = isset($item->title) ? (string) $item->title : '';
+        $item_url   = isset($item->url) ? (string) $item->url : '';
+
         $output .= '<li class="' . esc_attr($classes) . '">';
 
+        // Keep nav wording/order consistent with existing menu slots:
+        // Toolkit slot -> Resources (Activities), Display board slot -> AI Tools.
+        if (
+            strcasecmp(trim($item_title), 'Toolkit') === 0 ||
+            strpos($item_url, '#toolkit') !== false
+        ) {
+            $item_title = __('Resources', 'ai-awareness-day');
+            $item_url   = home_url('/#themes');
+        }
+
+        // Legacy "Display board" now routes to AI Tools.
+        if (strcasecmp(trim($item_title), 'Display board') === 0 || strpos($item_url, '#display-board') !== false) {
+            $item_title = __('AI Tools', 'ai-awareness-day');
+            $item_url   = home_url('/#ai-tools');
+        }
+
+        // Resources menu item should jump to Activities section on front page.
+        if (
+            strcasecmp(trim($item_title), 'Resources') === 0 ||
+            strpos($item_url, '/resources') !== false ||
+            strpos($item_url, 'post_type=resource') !== false
+        ) {
+            $item_title = __('Resources', 'ai-awareness-day');
+            $item_url   = home_url('/#themes');
+        }
+
         $atts = array(
-            'href' => esc_url($item->url),
+            'href' => esc_url($item_url),
             'class' => '',
         );
 
@@ -339,7 +369,7 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
             }
             $output .= ' ' . $attr . '="' . esc_attr($value) . '"';
         }
-        $output .= '>' . esc_html($item->title) . '</a>';
+        $output .= '>' . esc_html($item_title) . '</a>';
     }
 }
 
@@ -352,8 +382,8 @@ function aiad_fallback_menu(): void
     echo '<li><a href="' . esc_url(home_url('/#campaign')) . '">' . esc_html__('Campaign', 'ai-awareness-day') . '</a></li>';
     echo '<li><a href="' . esc_url(home_url('/#reach')) . '">' . esc_html__('Reach', 'ai-awareness-day') . '</a></li>';
     echo '<li><a href="' . esc_url(home_url('/#aim')) . '">' . esc_html__('Aim', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#toolkit')) . '">' . esc_html__('Toolkit', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#display-board')) . '">' . esc_html__('Display board', 'ai-awareness-day') . '</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/#themes')) . '">' . esc_html__('Resources', 'ai-awareness-day') . '</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/#ai-tools')) . '">' . esc_html__('AI Tools', 'ai-awareness-day') . '</a></li>';
     echo '<li><a href="' . esc_url(home_url('/#contact')) . '" class="nav-cta">' . esc_html__('Get Involved', 'ai-awareness-day') . '</a></li>';
     echo '</ul>';
 }
