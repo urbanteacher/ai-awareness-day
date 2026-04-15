@@ -217,14 +217,6 @@ get_header();
                             <?php endif; ?>
                             </a>
                             <div class="resource-card__body">
-                                <?php if ( $org_name || $type_name || $theme_name ) : ?>
-                                    <p class="resource-card__meta">
-                                        <?php
-                                        $meta_parts = array_filter( array( $org_name, $type_name, $theme_name ) );
-                                        echo esc_html( implode( ' · ', $meta_parts ) );
-                                        ?>
-                                    </p>
-                                <?php endif; ?>
                                 <?php if ( $duration_name ) : ?>
                                     <span class="duration-badge duration-badge--card"><?php echo esc_html( $duration_name ); ?></span>
                                 <?php endif; ?>
