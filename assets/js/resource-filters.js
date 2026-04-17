@@ -5,14 +5,12 @@
 (function () {
     'use strict';
 
-    if ( typeof aiad_ajax === 'undefined' || ! aiad_ajax.url ) {
-        return;
-    }
-
     var form = document.querySelector( '.resource-filter-form' );
     var grid = document.querySelector( '.resources-grid' );
     var loadingEl = document.querySelector( '.resources-loading' );
     var emptyMessage = document.querySelector( '.resources-empty-message' );
+    var ajaxConfig = typeof aiad_ajax !== 'undefined' ? aiad_ajax : {};
+    var canUseAjax = !! ( ajaxConfig.url && ajaxConfig.filter_nonce );
 
     if ( ! form || ! grid ) {
         return;
@@ -26,7 +24,7 @@
         var selects = form.querySelectorAll( 'select[data-filter="true"]' );
         var data = {
             action: 'aiad_filter_resources',
-            filter_nonce: aiad_ajax.filter_nonce || '',
+            filter_nonce: ajaxConfig.filter_nonce || '',
             post_type: postType
         };
         selects.forEach( function (sel) {
@@ -187,11 +185,18 @@
     }
 
     function runFilter() {
+        // Fallback for stale/missing localized script data on live caches:
+        // submit as normal GET request so server-side archive filtering still works.
+        if ( ! canUseAjax ) {
+            form.submit();
+            return;
+        }
+
         var data = getFilterValues();
         showLoading( true );
         if ( emptyMessage ) emptyMessage.style.display = 'none';
 
-        fetch( aiad_ajax.url, {
+        fetch( ajaxConfig.url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: buildParams( data )

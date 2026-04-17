@@ -226,11 +226,12 @@ function aiad_scripts(): void
     }
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
+        $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';
         wp_enqueue_script(
             'aiad-resource-filters',
             AIAD_URI . '/assets/js/resource-filters.js',
             array('aiad-main'),
-            AIAD_VERSION,
+            file_exists( $resource_filters_js ) ? filemtime( $resource_filters_js ) : AIAD_VERSION,
             $script_args
         );
     }
