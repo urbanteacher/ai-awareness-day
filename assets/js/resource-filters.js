@@ -203,27 +203,28 @@
         })
             .then( function ( res ) { return res.json(); } )
             .then( function ( json ) {
+                if ( ! json || ! json.success || ! json.data ) {
+                    // Stale cached nonce on live can cause AJAX to fail even when config exists.
+                    // Fall back to server-rendered filtering so users are never stuck.
+                    form.submit();
+                    return;
+                }
                 showLoading( false );
-                if ( json.success && json.data ) {
-                    var resources = json.data.resources || [];
-                    updateGrid( resources );
-                    applyFilterCounts( json.data.filter_counts );
-                    var params = {};
-                    form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
-                        if ( sel.name && sel.value ) params[ sel.name ] = sel.value;
-                    });
-                    updateUrl( params );
-                    if ( emptyMessage ) {
-                        emptyMessage.style.display = resources.length === 0 ? 'block' : 'none';
-                    }
+                var resources = json.data.resources || [];
+                updateGrid( resources );
+                applyFilterCounts( json.data.filter_counts );
+                var params = {};
+                form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
+                    if ( sel.name && sel.value ) params[ sel.name ] = sel.value;
+                });
+                updateUrl( params );
+                if ( emptyMessage ) {
+                    emptyMessage.style.display = resources.length === 0 ? 'block' : 'none';
                 }
             })
             .catch( function () {
-                showLoading( false );
-                if ( grid ) {
-                    grid.innerHTML = '<p class="resources-error-message" style="grid-column:1/-1; padding:1.5rem; text-align:center; color:#6b7280;">Something went wrong, please try again.</p>';
-                }
-                if ( emptyMessage ) emptyMessage.style.display = 'none';
+                // Network/proxy/CDN edge failures should not block filtering.
+                form.submit();
             });
     }
 
@@ -236,10 +237,8 @@
     if ( clearLink ) {
         clearLink.addEventListener( 'click', function ( e ) {
             e.preventDefault();
-            form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
-                sel.value = '';
-            });
-            runFilter();
+            var clearHref = clearLink.getAttribute( 'href' );
+            window.location.href = clearHref || baseUrl.split( '?' )[ 0 ];
         });
     }
 
