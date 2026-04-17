@@ -117,6 +117,7 @@ get_header();
             }
 
             $resources = new WP_Query($args);
+            $has_resources = $resources->post_count > 0;
             ?>
 
             <div class="resource-filters fade-up">
@@ -301,7 +302,7 @@ get_header();
                     <?php wp_reset_postdata(); ?>
                 <?php endif; ?>
             </div>
-            <p class="section-desc resources-empty-message" <?php echo $resources->have_posts() ? ' style="display:none"' : ''; ?>>
+            <p class="section-desc resources-empty-message" <?php echo $has_resources ? ' style="display:none"' : ''; ?>>
                 <?php esc_html_e('We have decided to phase the resources in order in the lead-up to the campaign.', 'ai-awareness-day'); ?>
             </p>
 

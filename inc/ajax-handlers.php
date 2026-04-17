@@ -471,9 +471,8 @@ add_action( 'save_post_featured_resource', 'aiad_bump_filter_counts_version' );
  * AJAX handler: filter resources
  */
 function aiad_ajax_filter_resources(): void {
-    if ( ! isset( $_POST['filter_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['filter_nonce'] ) ), 'aiad_filter_nonce' ) ) {
-        wp_send_json_error( array( 'message' => __( 'Security check failed. Please refresh the page and try again.', 'ai-awareness-day' ) ) );
-    }
+    // No nonce required: this endpoint only returns public, published post data.
+    // A nonce would expire on cached pages and break filtering for all visitors.
 
     $post_type = sanitize_text_field( $_POST['post_type'] ?? 'resource' );
     if ( ! in_array( $post_type, array( 'resource', 'featured_resource' ), true ) ) {

@@ -178,28 +178,33 @@
 }
 
 .display-board-mockup__block--safe {
-    background: #2563eb;
+    background: transparent;
     border-color: #1d4ed8;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--smart {
-    background: #f97316;
+    background: transparent;
     border-color: #c2410c;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--creative {
-    background: #8b5cf6;
+    background: transparent;
     border-color: #6d28d9;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--responsible {
-    background: #22c55e;
+    background: transparent;
     border-color: #15803d;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--future {
-    background: #ec4899;
+    background: transparent;
     border-color: #be185d;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--safe .display-board-mockup__block-title,
@@ -207,7 +212,7 @@
 .display-board-mockup__block--creative .display-board-mockup__block-title,
 .display-board-mockup__block--responsible .display-board-mockup__block-title,
 .display-board-mockup__block--future .display-board-mockup__block-title {
-    color: #ffffff;
+    color: inherit;
 }
 
 .display-board-mockup__block--safe .display-board-mockup__block-hint,
@@ -215,18 +220,49 @@
 .display-board-mockup__block--creative .display-board-mockup__block-hint,
 .display-board-mockup__block--responsible .display-board-mockup__block-hint,
 .display-board-mockup__block--future .display-board-mockup__block-hint {
-    color: rgba(255, 255, 255, 0.95);
+    color: inherit;
+}
+
+.display-board-mockup__block--safe,
+.display-board-mockup__block--safe .display-board-mockup__block-title,
+.display-board-mockup__block--safe .display-board-mockup__block-hint {
+    color: #1d4ed8;
+}
+
+.display-board-mockup__block--smart,
+.display-board-mockup__block--smart .display-board-mockup__block-title,
+.display-board-mockup__block--smart .display-board-mockup__block-hint {
+    color: #c2410c;
+}
+
+.display-board-mockup__block--creative,
+.display-board-mockup__block--creative .display-board-mockup__block-title,
+.display-board-mockup__block--creative .display-board-mockup__block-hint {
+    color: #6d28d9;
+}
+
+.display-board-mockup__block--responsible,
+.display-board-mockup__block--responsible .display-board-mockup__block-title,
+.display-board-mockup__block--responsible .display-board-mockup__block-hint {
+    color: #15803d;
+}
+
+.display-board-mockup__block--future,
+.display-board-mockup__block--future .display-board-mockup__block-title,
+.display-board-mockup__block--future .display-board-mockup__block-hint {
+    color: #be185d;
 }
 
 .display-board-mockup__qr {
     padding: 0.75rem 1rem;
-    background: #0ea5a4;
+    background: transparent;
     border: 1px solid #0f766e;
+    border-width: 2px;
     border-radius: 0;
     margin-bottom: 1rem;
     font-size: 0.8rem;
     text-align: center;
-    color: #ffffff;
+    color: #0f766e;
 }
 
 .display-board-mockup__qr .display-board-mockup__block-title {
@@ -245,31 +281,52 @@
 }
 
 .display-board-mockup__block--questions {
-    background: #f59e0b;
+    background: transparent;
     border-color: #b45309;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--responses {
-    background: #14b8a6;
+    background: transparent;
     border-color: #0f766e;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--spotlight {
-    background: #6366f1;
+    background: transparent;
     border-color: #4338ca;
+    border-width: 2px;
 }
 
 .display-board-mockup__block--questions .display-board-mockup__block-title,
 .display-board-mockup__block--responses .display-board-mockup__block-title,
 .display-board-mockup__block--spotlight .display-board-mockup__block-title,
 .display-board-mockup__qr .display-board-mockup__block-title {
-    color: #ffffff;
+    color: inherit;
 }
 
 .display-board-mockup__block--questions .display-board-mockup__block-hint,
 .display-board-mockup__block--responses .display-board-mockup__block-hint,
 .display-board-mockup__block--spotlight .display-board-mockup__block-hint {
-    color: rgba(255, 255, 255, 0.95);
+    color: inherit;
+}
+
+.display-board-mockup__block--questions,
+.display-board-mockup__block--questions .display-board-mockup__block-title,
+.display-board-mockup__block--questions .display-board-mockup__block-hint {
+    color: #b45309;
+}
+
+.display-board-mockup__block--responses,
+.display-board-mockup__block--responses .display-board-mockup__block-title,
+.display-board-mockup__block--responses .display-board-mockup__block-hint {
+    color: #0f766e;
+}
+
+.display-board-mockup__block--spotlight,
+.display-board-mockup__block--spotlight .display-board-mockup__block-title,
+.display-board-mockup__block--spotlight .display-board-mockup__block-hint {
+    color: #4338ca;
 }
 
 /* ── Steps accordion ─────────────────────── */

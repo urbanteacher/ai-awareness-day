@@ -10,7 +10,7 @@
     var loadingEl = document.querySelector( '.resources-loading' );
     var emptyMessage = document.querySelector( '.resources-empty-message' );
     var ajaxConfig = typeof aiad_ajax !== 'undefined' ? aiad_ajax : {};
-    var canUseAjax = !! ( ajaxConfig.url && ajaxConfig.filter_nonce );
+    var canUseAjax = !! ajaxConfig.url;
 
     if ( ! form || ! grid ) {
         return;
