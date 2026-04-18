@@ -126,11 +126,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 <?php
                                 $principle_slugs = array('safe', 'smart', 'creative', 'responsible', 'future');
                                 $principle_labels = array(
-                                    'safe' => __('Be Safe', 'ai-awareness-day'),
-                                    'smart' => __('Be Smart', 'ai-awareness-day'),
-                                    'creative' => __('Be Creative', 'ai-awareness-day'),
-                                    'responsible' => __('Be Responsible', 'ai-awareness-day'),
-                                    'future' => __('Be Future', 'ai-awareness-day'),
+                                    'safe'        => __('Safe', 'ai-awareness-day'),
+                                    'smart'       => __('Smart', 'ai-awareness-day'),
+                                    'creative'    => __('Creative', 'ai-awareness-day'),
+                                    'responsible' => __('Responsible', 'ai-awareness-day'),
+                                    'future'      => __('Future', 'ai-awareness-day'),
                                 );
                                 foreach ($principle_slugs as $slug):
                                     $label = isset($principle_labels[$slug]) ? $principle_labels[$slug] : $slug;
