@@ -113,20 +113,18 @@ $campaign_has_embed = !empty($campaign_embed_src);
                     }
                     $card_class_attr = esc_attr(implode(' ', $card_classes));
                     $has_ai_url      = !empty($partner['provides_ai']) && $partner['card_href'] !== '';
-                    $ai_data_attrs   = '';
-                    if ($has_ai_url) {
-                        $ai_data_attrs = sprintf(
-                            'data-ai-url="%s" data-ai-name="%s" data-ai-logo="%s" data-ai-stats="%s"',
-                            esc_attr($partner['card_href']),
-                            esc_attr($partner['name']),
-                            esc_attr($partner['logo'] ?: ''),
-                            esc_attr($partner['stats'] ?: '')
-                        );
-                    }
+                    $tag_open  = $has_ai_url
+                        ? sprintf(
+                            '<a class="%s" data-partner-index="%d" href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s">',
+                            $card_class_attr,
+                            (int) $index,
+                            esc_url($partner['card_href']),
+                            esc_attr(sprintf(__('Visit %s — AI learning resources (opens in new tab)', 'ai-awareness-day'), $partner['name']))
+                        )
+                        : sprintf('<div class="%s" data-partner-index="%d">', $card_class_attr, (int) $index);
+                    $tag_close = $has_ai_url ? '</a>' : '</div>';
                     ?>
-                    <div class="<?php echo $card_class_attr; ?>"
-                        data-partner-index="<?php echo (int) $index; ?>"
-                        <?php echo $ai_data_attrs; ?>>
+                    <?php echo $tag_open; ?>
                         <div class="partner-logo">
                             <?php if ($partner['logo']): ?>
                                 <img src="<?php echo esc_url($partner['logo']); ?>"
@@ -140,7 +138,7 @@ $campaign_has_embed = !empty($campaign_embed_src);
                         <?php if (!empty($partner['provides_ai'])): ?>
                             <p class="partner-card__ai-hint"><?php esc_html_e('AI resources ↗', 'ai-awareness-day'); ?></p>
                         <?php endif; ?>
-                    </div>
+                    <?php echo $tag_close; ?>
                 <?php endforeach; ?>
 
                 <?php
