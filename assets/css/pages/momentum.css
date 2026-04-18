@@ -439,10 +439,9 @@ a.partner-card:hover {
     gap: 0.6rem;
   }
 
-  /* Ensure only 3 partner tiles + 1 join tile show on small mobile */
-  .partner-card:not(.partner-card--dummy):nth-child(n+4) {
-    display: none !important;
-  }
+  /* Visibility past the first N partners is controlled by .partner-card--hidden + JS
+   * (Show more / less). Do not use nth-child display:none here — it breaks the reveal
+   * on small phones because !important wins over toggled classes. */
 
   .partner-card {
     padding: 0.75rem 0.5rem;
