@@ -235,7 +235,8 @@ function aiad_partner_admin_columns( array $columns ): array {
     foreach ( $columns as $key => $label ) {
         $new[ $key ] = $label;
         if ( 'title' === $key ) {
-            $new['position'] = __( 'Position', 'ai-awareness-day' );
+            $new['position']    = __( 'Position', 'ai-awareness-day' );
+            $new['ai_resources'] = __( 'AI resources', 'ai-awareness-day' );
         }
     }
     return $new;
@@ -249,6 +250,19 @@ function aiad_partner_admin_column_content( string $column, int $post_id ): void
     if ( 'position' === $column ) {
         $order = get_post_field( 'menu_order', $post_id );
         echo '<span class="aiad-partner-order" data-order="' . esc_attr( $order ) . '">' . esc_html( $order ) . '</span>';
+    }
+    if ( 'ai_resources' === $column ) {
+        $flag = (string) get_post_meta( $post_id, '_partner_provides_ai_resources', true ) === '1';
+        $url  = (string) get_post_meta( $post_id, '_partner_ai_resources_url', true );
+        $home = (string) get_post_meta( $post_id, '_partner_url', true );
+        $href = $url !== '' ? $url : $home;
+        if ( $flag && $href !== '' ) {
+            echo '<span aria-hidden="true">✓</span> <a href="' . esc_url( $href ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Link', 'ai-awareness-day' ) . '</a>';
+        } elseif ( $flag ) {
+            echo '<span style="color:#b45309" title="' . esc_attr__( 'Checked — add Website URL or AI resources URL', 'ai-awareness-day' ) . '">!</span>';
+        } else {
+            echo '—';
+        }
     }
 }
 add_action( 'manage_partner_posts_custom_column', 'aiad_partner_admin_column_content', 10, 2 );

@@ -63,15 +63,41 @@ $campaign_has_embed = !empty($campaign_embed_src);
                 if ($partner_posts->have_posts()) {
                     while ($partner_posts->have_posts()) {
                         $partner_posts->the_post();
-                        $partner_stats = get_post_meta(get_the_ID(), '_partner_stats', true);
-                        $partners[] = array(
-                            'name' => get_the_title(),
-                            'stats' => $partner_stats ? $partner_stats : '',
-                            'logo' => get_the_post_thumbnail_url(get_the_ID(), 'medium'),
+                        $pid            = get_the_ID();
+                        $partner_url    = (string) get_post_meta($pid, '_partner_url', true);
+                        $ai_url         = (string) get_post_meta($pid, '_partner_ai_resources_url', true);
+                        $provides_ai    = (string) get_post_meta($pid, '_partner_provides_ai_resources', true) === '1';
+                        $card_href      = '';
+                        if ($provides_ai) {
+                            $card_href = $ai_url !== '' ? $ai_url : $partner_url;
+                        }
+                        $partner_stats = get_post_meta($pid, '_partner_stats', true);
+                        $partners[]    = array(
+                            'name'         => get_the_title(),
+                            'stats'        => $partner_stats ? $partner_stats : '',
+                            'logo'         => get_the_post_thumbnail_url($pid, 'medium'),
+                            'menu_order'   => (int) get_post_field('menu_order', $pid),
+                            'provides_ai'  => $provides_ai,
+                            'card_href'    => $card_href !== '' ? $card_href : '',
                         );
                     }
                     wp_reset_postdata();
                 }
+                usort(
+                    $partners,
+                    static function (array $a, array $b): int {
+                        $pa = ! empty($a['provides_ai']);
+                        $pb = ! empty($b['provides_ai']);
+                        if ($pa !== $pb) {
+                            return $pb <=> $pa;
+                        }
+                        $mo = (int) $a['menu_order'] <=> (int) $b['menu_order'];
+                        if ($mo !== 0) {
+                            return $mo;
+                        }
+                        return strcasecmp((string) $a['name'], (string) $b['name']);
+                    }
+                );
                 $partners_count = count($partners);
                 $initial_show = 10;
                 foreach ($partners as $index => $partner):
@@ -80,9 +106,31 @@ $campaign_has_embed = !empty($campaign_embed_src);
                     }
                     $is_initially_hidden = $index >= $initial_show;
                     $hidden_attr = $is_initially_hidden ? 'data-wp-class--partner-card--hidden="!context.isExpanded"' : '';
+                    $card_classes = array('partner-card', 'fade-up', 'stagger-' . ($index + 1));
+                    if (!empty($partner['provides_ai'])) {
+                        $card_classes[] = 'partner-card--ai-resources';
+                    }
+                    $card_class_attr = esc_attr(implode(' ', $card_classes));
+                    $is_link         = $partner['card_href'] !== '';
+                    $aria_label      = '';
+                    if ($is_link) {
+                        /* translators: %s: partner organisation name */
+                        $aria_label = sprintf(__('Visit %s — AI learning resources (opens in a new tab)', 'ai-awareness-day'), $partner['name']);
+                    }
                     ?>
-                    <div class="partner-card fade-up stagger-<?php echo $index + 1; ?>" <?php echo $hidden_attr; ?>
-                        data-partner-index="<?php echo $index; ?>">
+                    <?php if ($is_link) : ?>
+                    <a href="<?php echo esc_url($partner['card_href']); ?>"
+                        class="<?php echo $card_class_attr; ?>"
+                        <?php echo $hidden_attr; ?>
+                        data-partner-index="<?php echo (int) $index; ?>"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        aria-label="<?php echo esc_attr($aria_label); ?>">
+                    <?php else : ?>
+                    <div class="<?php echo $card_class_attr; ?>"
+                        <?php echo $hidden_attr; ?>
+                        data-partner-index="<?php echo (int) $index; ?>">
+                    <?php endif; ?>
                         <div class="partner-logo">
                             <?php if ($partner['logo']): ?>
                                 <img src="<?php echo esc_url($partner['logo']); ?>"
@@ -94,7 +142,10 @@ $campaign_has_embed = !empty($campaign_embed_src);
                         <?php if ($partner['stats']): ?>
                             <p class="partner-stats"><?php echo esc_html($partner['stats']); ?></p>
                         <?php endif; ?>
-                    </div>
+                        <?php if (!empty($partner['provides_ai'])): ?>
+                            <p class="partner-card__ai-hint"><?php esc_html_e('AI resources', 'ai-awareness-day'); ?></p>
+                        <?php endif; ?>
+                    <?php echo $is_link ? '</a>' : '</div>'; ?>
                 <?php endforeach; ?>
 
                 <?php

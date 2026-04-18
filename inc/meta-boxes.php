@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Meta field naming: Uses _partner_* prefix for partner post type fields.
  * - _partner_url: Partner website URL
  * - _partner_stats: Partner statistics/description
+ * - _partner_provides_ai_resources: '1' when partner links to AI learning resources (Reach grid).
+ * - _partner_ai_resources_url: Optional dedicated URL; if empty, Partner URL is used when the card is linked.
  */
 function aiad_partner_url_meta_box(): void {
     add_meta_box(
@@ -28,9 +30,16 @@ function aiad_partner_url_meta_box(): void {
 }
 function aiad_partner_url_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_partner_url_nonce', 'aiad_partner_url_nonce' );
-    $url = get_post_meta( $post->ID, '_partner_url', true );
+    $url            = get_post_meta( $post->ID, '_partner_url', true );
+    $provides_ai    = (string) get_post_meta( $post->ID, '_partner_provides_ai_resources', true ) === '1';
+    $ai_resources_url = (string) get_post_meta( $post->ID, '_partner_ai_resources_url', true );
     echo '<p><label for="partner_url">' . esc_html__( 'Website URL (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="partner_url" name="partner_url" value="' . esc_attr( $url ) . '" class="widefat"></p>';
+    echo '<p><label><input type="checkbox" id="partner_provides_ai_resources" name="partner_provides_ai_resources" value="1" ' . checked( $provides_ai, true, false ) . '> ';
+    echo esc_html__( 'Provides linked AI learning resources', 'ai-awareness-day' ) . '</label></p>';
+    echo '<p><label for="partner_ai_resources_url">' . esc_html__( 'AI resources URL (optional)', 'ai-awareness-day' ) . '</label><br>';
+    echo '<input type="url" id="partner_ai_resources_url" name="partner_ai_resources_url" value="' . esc_attr( $ai_resources_url ) . '" class="widefat" placeholder="' . esc_attr( __( 'Leave empty to use website URL above', 'ai-awareness-day' ) ) . '">';
+    echo '<span class="description">' . esc_html__( 'When checked, this partner appears first on the homepage Traction grid with a subtle highlight. The card links here, or to the website URL if this is empty.', 'ai-awareness-day' ) . '</span></p>';
 }
 function aiad_save_partner_url( int $post_id ): void {
     if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_partner_url_nonce'] ) ), 'aiad_partner_url_nonce' ) ) {
@@ -44,6 +53,19 @@ function aiad_save_partner_url( int $post_id ): void {
     }
     if ( isset( $_POST['partner_url'] ) ) {
         update_post_meta( $post_id, '_partner_url', esc_url_raw( wp_unslash( $_POST['partner_url'] ) ) );
+    }
+    if ( ! empty( $_POST['partner_provides_ai_resources'] ) ) {
+        update_post_meta( $post_id, '_partner_provides_ai_resources', '1' );
+    } else {
+        delete_post_meta( $post_id, '_partner_provides_ai_resources' );
+    }
+    if ( isset( $_POST['partner_ai_resources_url'] ) ) {
+        $ai_url = esc_url_raw( wp_unslash( $_POST['partner_ai_resources_url'] ) );
+        if ( $ai_url !== '' ) {
+            update_post_meta( $post_id, '_partner_ai_resources_url', $ai_url );
+        } else {
+            delete_post_meta( $post_id, '_partner_ai_resources_url' );
+        }
     }
 }
 add_action( 'add_meta_boxes', 'aiad_partner_url_meta_box' );
