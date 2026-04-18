@@ -1,130 +1,65 @@
 /* ============================================
-   SECTION: AIM — mobile-first
+   SECTION: AIM — 2-column grid, mobile-first
    ============================================ */
 
-/* ── Mobile default: plain text list ─────── */
-#aim .section-title {
-  font-size: 1.2rem;
-}
-
-#aim .fade-up {
-  margin-bottom: 0.5rem;
-}
-
 .aims-list {
-  margin-top: 0.5rem;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.25rem;
-}
-
-/* Mobile: no box, no icon — simple readable list */
-.aim-item {
-  display: block;
-  background: transparent;
-  border: none;
-  padding: 0.25rem 0;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0;
-  transition: none;
+  overflow: hidden;
 }
 
-.aim-item:hover {
-  border-color: transparent;
-  box-shadow: none;
+.aim-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: -1px 0 0 -1px;
 }
 
-.aim-item .aim-icon {
-  display: none;
+.aim-num {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.18);
+  letter-spacing: -0.02em;
+  min-width: 2rem;
+  padding-top: 0.1rem;
 }
 
-.aim-item .section-desc {
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  text-align: left;
-  max-width: none;
+.aim-text {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--gray-200);
   margin: 0;
-  padding-left: 0;
+  flex: 1;
 }
 
-/* ── Small mobile (≤ 480px) ──────────────── */
-@media screen and (max-width: 480px) {
-  #aim .section-title {
-    font-size: 1.1rem;
-  }
-
-  #aim .fade-up {
-    margin-bottom: 0.4rem;
-  }
-
-  .aims-list {
-    gap: 0.2rem;
-    margin-top: 0.4rem;
-  }
-
-  .aim-item {
-    padding: 0.2rem 0;
-  }
-
-  .aim-item .section-desc {
-    font-size: 0.75rem;
-    line-height: 1.35;
-  }
-}
-
-/* ── Desktop: boxed card layout (≥ 769px) ── */
-@media screen and (min-width: 769px) {
-  #aim .section-title {
-    font-size: unset;
-  }
-
-  #aim .fade-up {
-    margin-bottom: unset;
-  }
-
+/* ── Desktop (≥ 769px) ───────────────────── */
+@media (min-width: 769px) {
   .aims-list {
     margin-top: 2rem;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
   }
 
   .aim-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 0;
-    transition: var(--transition);
+    gap: 1.25rem;
+    padding: 1.25rem;
   }
 
-  .aim-item:hover {
-    border-color: var(--green-300);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  .aim-num {
+    font-size: 2rem;
+    min-width: 3rem;
+    padding-top: 0.05rem;
   }
 
-  .aim-item .aim-icon {
-    display: flex;
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border-radius: 0;
-    background: var(--green-100);
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-  }
-
-  .aim-item .aim-icon svg {
-    width: 18px;
-    height: 18px;
-    stroke: var(--green-700);
-  }
-
-  .aim-item .section-desc {
-    font-size: unset;
-    line-height: unset;
-    margin: unset;
-    padding-left: unset;
+  .aim-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 }
