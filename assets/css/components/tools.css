@@ -29,10 +29,15 @@
 }
 
 .tool-card:hover {
-	border-color: var(--gray-300);
-	border-left-color: var(--gray-400);
+	border-top-color: var(--gray-300);
+	border-right-color: var(--gray-300);
+	border-bottom-color: var(--gray-300);
 	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 	transform: translateY(-2px);
+}
+
+.tool-card:not([class*='tool-card--cat-']):hover {
+	border-left-color: var(--gray-400);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -41,13 +46,13 @@
 	}
 }
 
-/* Category accent (slug from tool_category) */
+/* Category accent: left stripe (solid = darkest stop of pill gradient) */
 .tool-card--cat-content-creation {
-	border-left-color: var(--accent-purple);
+	border-left-color: #5b21b8;
 }
 
 .tool-card--cat-visual-creative {
-	border-left-color: var(--accent-blue);
+	border-left-color: #1d4ed8;
 }
 
 .tool-card--cat-learning-platforms {
@@ -55,27 +60,31 @@
 }
 
 .tool-card--cat-subject-specific {
-	border-left-color: #0d9488;
+	border-left-color: #0f766e;
 }
 
 .tool-card--cat-interactive-demos {
-	border-left-color: var(--accent-amber);
+	border-left-color: #b45309;
 }
 
 .tool-card--cat-professional-development {
-	border-left-color: #6366f1;
+	border-left-color: #4338ca;
 }
 
 .tool-card--cat-productivity-organization {
-	border-left-color: var(--gray-600);
+	border-left-color: #404040;
 }
 
 .tool-card--cat-audio-video {
-	border-left-color: #db2777;
+	border-left-color: #be185d;
 }
 
 .tool-card--cat-research-reading {
-	border-left-color: var(--accent-blue-dark);
+	border-left-color: #1e3a8a;
+}
+
+.tool-card--cat-image-design {
+	border-left-color: #0e7490;
 }
 
 /* Top row: category */
@@ -87,6 +96,7 @@
 	flex-wrap: wrap;
 }
 
+/* Pill: gradient aligned with left accent (no flat black) */
 .tool-card__category {
 	font-family: var(--font-display);
 	font-size: 0.65rem;
@@ -94,9 +104,50 @@
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--white);
-	background: var(--gray-900);
 	padding: 0.2em 0.5em;
 	display: inline-block;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+	background: linear-gradient(135deg, #525252 0%, #2a2a2a 42%, #171717 100%);
+}
+
+.tool-card--cat-content-creation .tool-card__category {
+	background: linear-gradient(135deg, #9333ea 0%, var(--accent-purple) 38%, var(--accent-purple-dark) 100%);
+}
+
+.tool-card--cat-visual-creative .tool-card__category {
+	background: linear-gradient(135deg, #3b82f6 0%, var(--accent-blue) 38%, var(--accent-blue-dark) 100%);
+}
+
+.tool-card--cat-learning-platforms .tool-card__category {
+	background: linear-gradient(135deg, #22c55e 0%, #16a34a 38%, var(--accent-green-dark) 100%);
+}
+
+.tool-card--cat-subject-specific .tool-card__category {
+	background: linear-gradient(135deg, #14b8a6 0%, #0d9488 38%, #134e4a 100%);
+}
+
+.tool-card--cat-interactive-demos .tool-card__category {
+	background: linear-gradient(135deg, #ca8a04 0%, #a16207 38%, #713f12 100%);
+}
+
+.tool-card--cat-professional-development .tool-card__category {
+	background: linear-gradient(135deg, #6366f1 0%, #4f46e5 38%, #312e81 100%);
+}
+
+.tool-card--cat-productivity-organization .tool-card__category {
+	background: linear-gradient(135deg, #737373 0%, #404040 42%, #171717 100%);
+}
+
+.tool-card--cat-audio-video .tool-card__category {
+	background: linear-gradient(135deg, #ec4899 0%, #db2777 38%, #831843 100%);
+}
+
+.tool-card--cat-research-reading .tool-card__category {
+	background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 38%, #172554 100%);
+}
+
+.tool-card--cat-image-design .tool-card__category {
+	background: linear-gradient(135deg, #06b6d4 0%, #0891b2 38%, #164e63 100%);
 }
 
 /* Title */
