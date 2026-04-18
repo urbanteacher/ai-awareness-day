@@ -288,53 +288,23 @@
         });
 
         // ============================================
-        // Display board: flip between Blueprint and Real example
+        // Display board: 4-tab switcher
         // ============================================
-        const displayBoardPreview = document.querySelector('.js-display-board-preview.display-board-preview--has-real');
-        if (displayBoardPreview) {
-            const btnBlueprint = displayBoardPreview.querySelector('#tab-blueprint');
-            const btnReal = displayBoardPreview.querySelector('#tab-real');
-            const panelBlueprint = document.getElementById('display-board-blueprint');
-            const panelReal = document.getElementById('display-board-real');
-
-            function setView(view) {
-                const isReal = view === 'real';
-                displayBoardPreview.setAttribute('data-view', view);
-                displayBoardPreview.classList.toggle('display-board-preview--real', isReal);
-                if (btnBlueprint) {
-                    btnBlueprint.classList.toggle('is-active', !isReal);
-                    btnBlueprint.setAttribute('aria-selected', !isReal);
-                }
-                if (btnReal) {
-                    btnReal.classList.toggle('is-active', isReal);
-                    btnReal.setAttribute('aria-selected', isReal);
-                }
-                if (panelBlueprint) panelBlueprint.hidden = isReal;
-                if (panelReal) panelReal.hidden = !isReal;
-
-                // Toggle display-board-examples section
-                const examplesSection = document.querySelector('.display-board-examples');
-                if (examplesSection) {
-                    examplesSection.hidden = !isReal;
-                }
-            }
-
-            if (btnBlueprint) btnBlueprint.addEventListener('click', () => setView('blueprint'));
-            if (btnReal) btnReal.addEventListener('click', () => setView('real'));
-        }
-
-        // ============================================
-        // Display Board Steps: Toggle button
-        // ============================================
-        const displayBoardStepsToggle = document.querySelector('.display-board-steps__toggle');
-        if (displayBoardStepsToggle) {
-            const icon = displayBoardStepsToggle.querySelector('.display-board-steps__icon');
-            displayBoardStepsToggle.addEventListener('click', function () {
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !isExpanded);
-                if (icon) {
-                    icon.textContent = isExpanded ? '+' : '−';
-                }
+        const dbTabs = document.querySelector('.js-display-board-tabs');
+        if (dbTabs) {
+            const dbButtons = dbTabs.querySelectorAll('.display-board-tab');
+            const dbPanels  = dbTabs.querySelectorAll('.display-board-panel');
+            dbButtons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const target = btn.dataset.tab;
+                    dbButtons.forEach(function(b) {
+                        b.classList.toggle('is-active', b === btn);
+                        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+                    });
+                    dbPanels.forEach(function(p) {
+                        p.hidden = p.id !== 'dbt-panel-' + target;
+                    });
+                });
             });
         }
 
