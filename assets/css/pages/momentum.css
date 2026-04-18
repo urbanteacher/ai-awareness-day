@@ -520,6 +520,11 @@ a.partner-card:hover {
     display: none !important;
   }
 
+  /* Hide reveal button on mobile — nth-child rule above prevents it from working */
+  .partners-reveal-wrapper {
+    display: none;
+  }
+
   .partner-card {
     padding: 1rem 0.75rem;
   }
