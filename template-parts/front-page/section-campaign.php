@@ -134,7 +134,6 @@ $campaign_has_embed = !empty($campaign_embed_src);
                                     onerror="this.classList.add('is-broken');" />
                             <?php endif; ?>
                         </div>
-                        <h3><?php echo esc_html($partner['name']); ?></h3>
                         <?php if ($partner['stats']): ?>
                             <p class="partner-stats"><?php echo esc_html($partner['stats']); ?></p>
                         <?php endif; ?>
