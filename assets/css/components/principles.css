@@ -27,7 +27,7 @@
 }
 
 .principle-card {
-  background: var(--white);
+  background: transparent;
   border: none;
   border-radius: 0;
   padding: 0.5rem 0.35rem;
