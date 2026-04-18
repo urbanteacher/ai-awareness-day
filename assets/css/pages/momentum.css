@@ -73,7 +73,7 @@ a.partner-card:hover {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent-green);
+  color: var(--gray-900);
   line-height: 1.2;
 }
 
