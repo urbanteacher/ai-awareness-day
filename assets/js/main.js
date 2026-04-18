@@ -720,6 +720,38 @@
         });
     })();
 
+    // ============================================
+    // Aim list: show 3 on small screens, expand for rest
+    // ============================================
+    (function initAimListExpand() {
+        var list = document.getElementById('aims-list');
+        var btn = document.getElementById('aim-expand');
+        if (!list || !btn) {
+            return;
+        }
+
+        var labelMore = btn.getAttribute('data-label-more') || 'Show more';
+        var labelLess = btn.getAttribute('data-label-less') || 'Show less';
+
+        function revealAimsFromFourth() {
+            var items = list.querySelectorAll('.aim-item');
+            items.forEach(function (li, i) {
+                if (i >= 3) {
+                    li.classList.add('visible');
+                }
+            });
+        }
+
+        btn.addEventListener('click', function () {
+            var expanded = list.classList.toggle('aims-list--expanded');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            btn.textContent = expanded ? labelLess : labelMore;
+            if (expanded) {
+                revealAimsFromFourth();
+            }
+        });
+    })();
+
     } // End of init function
 
     // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded

@@ -42,6 +42,53 @@
   min-width: 0;
 }
 
+/* Mobile: show first 3 aims; expand control reveals the rest */
+.aims-expand-wrap {
+  display: none;
+}
+
+/* Viewport-wide: many phones/tablets report >768px CSS width — collapse until large desktop */
+@media (max-width: 1024px) {
+  .aims-list:not(.aims-list--expanded) .aim-item:nth-child(n + 4) {
+    display: none;
+  }
+
+  .aims-expand-wrap {
+    display: block;
+    text-align: center;
+    margin-top: 0.75rem;
+  }
+
+  .aims-expand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1.35rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .aims-expand:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.85);
+  }
+
+  .aims-expand:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 3px;
+  }
+}
+
 /* ── Tablet / desktop: two-column grid + roomier type ───────────────────── */
 @media (min-width: 769px) {
   .aims-list {
@@ -63,5 +110,12 @@
   .aim-text {
     font-size: 0.95rem;
     line-height: 1.6;
+  }
+}
+
+/* Wide screens only: show all aims without expand control */
+@media (min-width: 1025px) {
+  .aims-expand-wrap {
+    display: none !important;
   }
 }

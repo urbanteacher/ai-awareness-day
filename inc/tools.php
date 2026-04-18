@@ -586,14 +586,19 @@ function aiad_render_tool_card( WP_Post $tool ): string {
 	$features     = $features_raw ? array_filter( array_map( 'trim', explode( "\n", $features_raw ) ) ) : array();
 	$features     = array_values( $features );
 	$shown        = array_slice( $features, 0, 3 );
-	$extra        = count( $features ) - count( $shown );
 
 	$terms        = get_the_terms( $tool->ID, 'tool_category' );
-	$category     = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
+	$category     = ( $terms && ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0]->name : '';
+	$cat_slug     = ( $terms && ! is_wp_error( $terms ) && ! empty( $terms ) ) ? (string) $terms[0]->slug : '';
+
+	$card_classes = array( 'tool-card' );
+	if ( $cat_slug !== '' ) {
+		$card_classes[] = 'tool-card--cat-' . sanitize_html_class( $cat_slug );
+	}
 
 	ob_start();
 	?>
-	<div class="tool-card">
+	<div class="<?php echo esc_attr( implode( ' ', $card_classes ) ); ?>">
 		<?php if ( $category ) : ?>
 		<div class="tool-card__top">
 			<span class="tool-card__category"><?php echo esc_html( $category ); ?></span>
