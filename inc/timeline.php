@@ -1202,6 +1202,10 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
                     );
                     $category_label = $auto_type_labels[ $icon ] ?? '';
                 }
+                // Badge already shows the same taxonomy/icon label — skip redundant line.
+                if ( ! $pinned && $category_label !== '' && 0 === strcasecmp( trim( (string) $category_label ), trim( (string) $badge_label ) ) ) {
+                    $category_label = '';
+                }
                 if ( ! empty( $category_label ) ) :
                     ?>
                     <p class="timeline-entry__category"><?php echo esc_html( $category_label ); ?></p>

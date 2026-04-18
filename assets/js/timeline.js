@@ -124,6 +124,9 @@
                     } )
                     .catch( function () {
                         renderTrackMessage( 'timeline-error', 'Error loading entries.' );
+                        if ( wrap ) {
+                            wrap.style.display = '';
+                        }
                     } );
             } );
         } );
