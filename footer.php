@@ -1,6 +1,12 @@
 <footer class="site-footer" id="footer">
     <div class="container">
 
+        <?php if ( is_active_sidebar( 'footer_content' ) ) : ?>
+        <div class="footer-widgets">
+            <?php dynamic_sidebar( 'footer_content' ); ?>
+        </div>
+        <?php endif; ?>
+
         <?php
         $defaults      = aiad_get_customizer_defaults();
         $resource_links = array(

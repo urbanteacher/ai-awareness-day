@@ -303,6 +303,23 @@ add_action('wp_enqueue_scripts', 'aiad_scripts');
 
 
 /**
+ * Register widget areas.
+ */
+function aiad_widgets_init(): void {
+    register_sidebar( array(
+        'name'          => __( 'Footer Content', 'ai-awareness-day' ),
+        'id'            => 'footer_content',
+        'description'   => __( 'Add blocks here to appear at the top of the footer. Editable by staff via Appearance → Widgets.', 'ai-awareness-day' ),
+        'before_widget' => '<div class="footer-widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<p class="footer-widget__title">',
+        'after_title'   => '</p>',
+    ) );
+}
+add_action( 'widgets_init', 'aiad_widgets_init' );
+
+
+/**
  * Custom Walker for Navigation
  */
 class AIAD_Nav_Walker extends Walker_Nav_Menu
