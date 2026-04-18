@@ -1,6 +1,6 @@
 <?php
 /**
- * Front page section: Toolkit
+ * Front page section: Toolkit (display board + activities — toolkit cards moved to footer links)
  *
  * @package AI_Awareness_Day
  */
@@ -8,80 +8,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 ?>
-<section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="toolkit">
-    <div class="container">
-                <div class="fade-up">
-                    <span class="section-label"><?php esc_html_e('Toolkit', 'ai-awareness-day'); ?></span>
-                    <h2 class="section-title"><?php esc_html_e('Plug-and-Play Toolkit', 'ai-awareness-day'); ?></h2>
-                    <p class="section-desc">
-                        <?php esc_html_e('Everything your school needs to participate — ready to use, easy to adapt.', 'ai-awareness-day'); ?>
-                    </p>
-                </div>
-
-                <div class="toolkit-grid">
-                    <?php
-                    $implementation_guide_url = esc_url_raw(get_theme_mod('aiad_implementation_guide_url', ''));
-                    $sample_letters_url = esc_url_raw( get_theme_mod( 'aiad_sample_letters_url', aiad_default_sample_letters_url() ) );
-                    $newsletter_url = esc_url_raw(get_theme_mod('aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched'));
-                    $toolkit_items = array(
-                        array(
-                            'title' => __('Implementation Guide', 'ai-awareness-day'),
-                            'desc' => __('Step-by-step instructions to run AI Awareness Day in your school.', 'ai-awareness-day'),
-                            'icon' => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline>',
-                            'url' => $implementation_guide_url,
-                        ),
-                        array(
-                            'title' => __('Sample Letters & Communications', 'ai-awareness-day'),
-                            'desc' => __('Pre-written letters for parents, governors, and local press.', 'ai-awareness-day'),
-                            'icon' => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
-                            'url' => $sample_letters_url,
-                        ),
-                        array(
-                            'title' => __('Latest Newsletter', 'ai-awareness-day'),
-                            'desc' => __('Click to read the latest AI Awareness Day newsletter and updates.', 'ai-awareness-day'),
-                            'icon' => '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
-                            'url' => $newsletter_url,
-                        ),
-                    );
-
-                    foreach ($toolkit_items as $index => $item):
-                        $card_url = !empty($item['url']) ? $item['url'] : '';
-                        $is_link = $card_url !== '';
-                        ?>
-                        <?php
-                        $toolkit_image_id = absint( get_theme_mod( 'aiad_toolkit_image_' . ( $index + 1 ), 0 ) );
-                        $toolkit_image_url = $toolkit_image_id ? wp_get_attachment_image_url( $toolkit_image_id, 'medium_large' ) : '';
-                        ?>
-                        <?php if ($is_link): ?>
-                            <a href="<?php echo esc_url($card_url); ?>"
-                                class="toolkit-card toolkit-card--link fade-up stagger-<?php echo $index + 1; ?>" target="_blank"
-                                rel="noopener noreferrer">
-                            <?php else: ?>
-                                <div class="toolkit-card fade-up stagger-<?php echo $index + 1; ?>">
-                                <?php endif; ?>
-                                <div class="toolkit-card__image-wrap">
-                                    <?php if ( $toolkit_image_url ) : ?>
-                                        <img src="<?php echo esc_url( $toolkit_image_url ); ?>" alt="" class="toolkit-card__image" loading="lazy" />
-                                    <?php else : ?>
-                                        <div class="toolkit-card__image-placeholder" aria-hidden="true">
-                                            <span class="toolkit-card__image-placeholder-text"><?php esc_html_e( 'Add image', 'ai-awareness-day' ); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="toolkit-header">
-                                    <h3><?php echo esc_html($item['title']); ?></h3>
-                                </div>
-                                <p class="section-desc"><?php echo esc_html($item['desc']); ?></p>
-                                <?php if ($is_link): ?>
-                            </a>
-                        <?php else: ?>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </div>
-    </div>
-</section>
-
 <!-- Display board: separate section -->
 <section id="display-board" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
     <div class="container">

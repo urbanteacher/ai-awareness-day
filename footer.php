@@ -24,6 +24,23 @@
             <?php endif; ?>
         </div>
 
+        <?php
+        $footer_links = array(
+            __( 'Newsletter', 'ai-awareness-day' )              => get_theme_mod( 'aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
+            __( 'Press Release', 'ai-awareness-day' )           => get_theme_mod( 'aiad_press_release_url', '' ),
+            __( 'Asset Pack', 'ai-awareness-day' )              => get_theme_mod( 'aiad_asset_pack_url', '' ),
+            __( 'Implementation Guide', 'ai-awareness-day' )    => get_theme_mod( 'aiad_implementation_guide_url', '' ),
+            __( 'Sample Letters', 'ai-awareness-day' )          => get_theme_mod( 'aiad_sample_letters_url', aiad_default_sample_letters_url() ),
+        );
+        $active_links = array_filter( $footer_links );
+        if ( $active_links ) : ?>
+        <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">
+            <?php foreach ( $active_links as $label => $url ) : ?>
+                <a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $label ); ?></a>
+            <?php endforeach; ?>
+        </nav>
+        <?php endif; ?>
+
         <p class="footer-copy">
             &copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>. All rights reserved.
         </p>

@@ -371,7 +371,31 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
     ) );
     $wp_customize->add_control( 'aiad_newsletter_url', array(
         'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
-        'description' => __( 'URL for the "Latest Newsletter" toolkit card. When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
+        'description' => __( 'Shown as a footer link.', 'ai-awareness-day' ),
+        'section'     => 'aiad_toolkit',
+        'type'        => 'url',
+    ) );
+
+    $wp_customize->add_setting( 'aiad_press_release_url', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_press_release_url', array(
+        'label'       => __( 'Press Release URL', 'ai-awareness-day' ),
+        'description' => __( 'Shown as a footer link when set.', 'ai-awareness-day' ),
+        'section'     => 'aiad_toolkit',
+        'type'        => 'url',
+    ) );
+
+    $wp_customize->add_setting( 'aiad_asset_pack_url', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_asset_pack_url', array(
+        'label'       => __( 'Asset Pack URL', 'ai-awareness-day' ),
+        'description' => __( 'Shown as a footer link when set.', 'ai-awareness-day' ),
         'section'     => 'aiad_toolkit',
         'type'        => 'url',
     ) );

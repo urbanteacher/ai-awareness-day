@@ -40,6 +40,25 @@
   fill: var(--white);
 }
 
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.footer-links a {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--gray-900);
+}
+
 .footer-copy {
   font-size: 0.85rem;
   color: var(--gray-500);
