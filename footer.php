@@ -15,15 +15,16 @@
             __( 'Asset Pack', 'ai-awareness-day' )           => get_theme_mod( 'aiad_asset_pack_url', '' ),
             __( 'Implementation Guide', 'ai-awareness-day' ) => get_theme_mod( 'aiad_implementation_guide_url', '' ),
             __( 'Sample Letters', 'ai-awareness-day' )       => get_theme_mod( 'aiad_sample_letters_url', aiad_default_sample_letters_url() ),
-        );
-        $active_links = array_filter( $resource_links );
-        if ( $active_links ) : ?>
+        ); ?>
         <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">
-            <?php foreach ( $active_links as $label => $url ) : ?>
-                <a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $label ); ?></a>
-            <?php endforeach; ?>
+            <?php foreach ( $resource_links as $label => $url ) :
+                if ( $url ) : ?>
+                    <a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $label ); ?></a>
+                <?php else : ?>
+                    <span class="footer-links__pending"><?php echo esc_html( $label ); ?></span>
+                <?php endif;
+            endforeach; ?>
         </nav>
-        <?php endif; ?>
 
         <div class="footer-bottom">
             <p class="footer-copy">
