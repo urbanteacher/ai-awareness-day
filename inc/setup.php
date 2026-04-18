@@ -215,16 +215,6 @@ function aiad_scripts(): void
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
-    // Register Interactivity API module for Partners
-    if (function_exists('wp_enqueue_script_module')) {
-        wp_enqueue_script_module(
-            'aiad-partners',
-            AIAD_URI . '/assets/js/partners.js',
-            array('@wordpress/interactivity'),
-            AIAD_VERSION
-        );
-    }
-
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';
         wp_enqueue_script(

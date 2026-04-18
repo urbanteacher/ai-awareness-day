@@ -560,37 +560,37 @@
         });
 
         // ============================================
-        // Partners: Show More Fallback
-        // Only run manual toggle when Interactivity API is not available.
+        // Partners: Show more / less (vanilla — works on mobile where Interactivity
+        // may not bind; do not gate on window.wp.interactivity).
         // ============================================
         const revealBtn = document.querySelector('.partners-reveal-btn');
         if (revealBtn) {
             revealBtn.addEventListener('click', () => {
-                if (!window.wp || !window.wp.interactivity) {
-                    const momentumSection = revealBtn.closest('.momentum-section');
-                    if (momentumSection) {
-                        const isExpanded = revealBtn.classList.toggle('active');
-                        const cards = momentumSection.querySelectorAll('.partner-card:not(.partner-card--dummy)');
-                        const initialShow = 10;
+                const momentumSection = revealBtn.closest('.momentum-section');
+                if (!momentumSection) {
+                    return;
+                }
+                const initialShow = parseInt(revealBtn.getAttribute('data-initial-show') || '10', 10);
+                const labelMore = revealBtn.getAttribute('data-label-more') || 'Show More Partners';
+                const labelLess = revealBtn.getAttribute('data-label-less') || 'Show Less';
+                const isExpanded = revealBtn.classList.toggle('active');
+                revealBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
 
-                        cards.forEach((card, index) => {
-                            if (index >= initialShow) {
-                                card.classList.toggle('partner-card--hidden', !isExpanded);
-                            }
-                        });
-
-                        // Update icon rotation
-                        const icon = revealBtn.querySelector('svg');
-                        if (icon) {
-                            icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
-                        }
-
-                        // Update text (simple fallback)
-                        const text = revealBtn.querySelector('.reveal-text');
-                        if (text) {
-                            text.textContent = isExpanded ? 'Show Less' : 'Show More Partners';
-                        }
+                momentumSection.querySelectorAll('.partner-card:not(.partner-card--dummy)').forEach((card) => {
+                    const idx = parseInt(card.getAttribute('data-partner-index') || '-1', 10);
+                    if (idx >= initialShow) {
+                        card.classList.toggle('partner-card--hidden', !isExpanded);
                     }
+                });
+
+                const icon = revealBtn.querySelector('.partners-reveal-btn__chevron, svg');
+                if (icon) {
+                    icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+
+                const text = revealBtn.querySelector('.reveal-text');
+                if (text) {
+                    text.textContent = isExpanded ? labelLess : labelMore;
                 }
             });
         }

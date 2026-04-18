@@ -40,8 +40,7 @@ $campaign_has_embed = !empty($campaign_embed_src);
             <?php endif; ?>
         </div>
 
-        <div id="reach" class="momentum-section fade-up"
-            data-wp-interactive="aiad/partners" data-wp-context='{ "isExpanded": false }'>
+        <div id="reach" class="momentum-section fade-up">
             <div class="momentum-intro">
                 <span class="section-label"><?php esc_html_e('Traction', 'ai-awareness-day'); ?></span>
                 <h2 class="section-title"><?php esc_html_e('500,000 reach so far', 'ai-awareness-day'); ?></h2>
@@ -105,17 +104,19 @@ $campaign_has_embed = !empty($campaign_embed_src);
                         continue;
                     }
                     $is_initially_hidden = $index >= $initial_show;
-                    $hidden_attr = $is_initially_hidden ? 'data-wp-class--partner-card--hidden="!context.isExpanded"' : '';
                     $card_classes = array('partner-card', 'fade-up', 'stagger-' . ($index + 1));
                     if (!empty($partner['provides_ai'])) {
                         $card_classes[] = 'partner-card--ai-resources';
+                    }
+                    if ($is_initially_hidden) {
+                        $card_classes[] = 'partner-card--hidden';
                     }
                     $card_class_attr = esc_attr(implode(' ', $card_classes));
                     $has_ai_url      = !empty($partner['provides_ai']) && $partner['card_href'] !== '';
                     $ai_data_attrs   = '';
                     if ($has_ai_url) {
                         $ai_data_attrs = sprintf(
-                            'role="button" tabindex="0" data-ai-url="%s" data-ai-name="%s" data-ai-logo="%s" data-ai-stats="%s"',
+                            'data-ai-url="%s" data-ai-name="%s" data-ai-logo="%s" data-ai-stats="%s"',
                             esc_attr($partner['card_href']),
                             esc_attr($partner['name']),
                             esc_attr($partner['logo'] ?: ''),
@@ -124,7 +125,6 @@ $campaign_has_embed = !empty($campaign_embed_src);
                     }
                     ?>
                     <div class="<?php echo $card_class_attr; ?>"
-                        <?php echo $hidden_attr; ?>
                         data-partner-index="<?php echo (int) $index; ?>"
                         <?php echo $ai_data_attrs; ?>>
                         <div class="partner-logo">
@@ -168,13 +168,18 @@ $campaign_has_embed = !empty($campaign_embed_src);
 
             <?php if ($partners_count > $initial_show): ?>
                 <div class="partners-reveal-wrapper" style="text-align: center; margin-top: 2.5rem;">
-                    <button type="button" class="partners-reveal-btn" data-wp-on--click="actions.toggleReveal"
-                        data-wp-class--active="context.isExpanded">
-                        <span class="reveal-text" data-wp-text="state.revealText"></span>
+                    <button type="button"
+                        class="partners-reveal-btn"
+                        data-initial-show="<?php echo (int) $initial_show; ?>"
+                        data-label-more="<?php echo esc_attr(__('Show More Partners', 'ai-awareness-day')); ?>"
+                        data-label-less="<?php echo esc_attr(__('Show Less', 'ai-awareness-day')); ?>"
+                        aria-expanded="false">
+                        <span class="reveal-text"><?php esc_html_e('Show More Partners', 'ai-awareness-day'); ?></span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
+                            class="partners-reveal-btn__chevron"
                             style="margin-left: 0.5rem; transition: transform 0.3s;"
-                            data-wp-style--transform="context.isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'">
+                            aria-hidden="true">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
