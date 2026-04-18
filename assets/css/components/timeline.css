@@ -96,7 +96,7 @@
     outline-color: var(--accent-green);
 }
 
-/* Stats ticker bar: full-width (of container) dark strip (days, schools, resources, partners) */
+/* Stats ticker bar: full-width (of container) dark strip (days, schools, resources) */
 .timeline-stats-bar {
     display: flex;
     flex-wrap: nowrap;
@@ -166,11 +166,10 @@
 }
 
 /* Staggered delays using nth-of-type (counts span elements only) */
-/* Structure: stat(1) -> sep -> stat(2) -> sep -> stat(3) -> sep -> stat(4) */
+/* Structure: stat(1) -> sep -> stat(2) -> sep -> stat(3) */
 .timeline-stats-bar > span:nth-of-type(1) { transition-delay: 0.1s; }  /* 1st stat */
 .timeline-stats-bar > span:nth-of-type(3) { transition-delay: 0.25s; } /* 2nd stat */
 .timeline-stats-bar > span:nth-of-type(5) { transition-delay: 0.4s; }  /* 3rd stat */
-.timeline-stats-bar > span:nth-of-type(7) { transition-delay: 0.55s; } /* 4th stat */
 
 /* Fallback for when JS is disabled */
 .no-js .timeline-stats-bar__stat {
