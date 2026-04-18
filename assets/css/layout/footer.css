@@ -2,55 +2,50 @@
    FOOTER
    ============================================ */
 .site-footer {
-  padding: 4rem 0 2rem;
+  padding: 3rem 0 2rem;
   border-top: 1px solid var(--gray-200);
 }
 
-/* Three-column body */
-.footer-body {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--gray-200);
-}
-
-.footer-col {
+.footer-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 2rem;
+  margin-bottom: 2rem;
 }
 
-.footer-col__heading {
+.footer-links a {
   font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gray-600);
+  text-decoration: none;
   text-transform: uppercase;
-  color: var(--gray-900);
-  margin-bottom: 0.4rem;
+  transition: color 0.15s;
 }
 
-/* Brand column */
-.footer-brand {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
+.footer-links a:hover {
   color: var(--gray-900);
-  letter-spacing: -0.01em;
 }
 
-.footer-tagline {
-  font-size: 0.85rem;
-  color: var(--gray-500);
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gray-200);
+  gap: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--gray-400);
 }
 
 .footer-social {
   display: flex;
   gap: 0.75rem;
-  margin-top: 0.25rem;
 }
 
 .footer-social a {
@@ -78,61 +73,10 @@
   fill: var(--white);
 }
 
-/* Nav + resource link columns */
-.footer-col--nav a,
-.footer-col--resources a {
-  font-size: 0.875rem;
-  color: var(--gray-500);
-  text-decoration: none;
-  transition: color 0.15s;
-  line-height: 1.4;
-}
-
-.footer-col--nav a:hover,
-.footer-col--resources a:hover {
-  color: var(--gray-900);
-}
-
-/* Bottom bar */
-.footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 1.5rem;
-  gap: 1rem;
-}
-
-.footer-copy {
-  font-size: 0.8rem;
-  color: var(--gray-400);
-}
-
-.footer-bottom .footer-social {
-  margin-top: 0;
-}
-
 @media (max-width: 480px) {
   .footer-bottom {
     flex-direction: column;
     align-items: center;
     text-align: center;
-  }
-}
-
-/* Mobile: stack columns */
-@media (max-width: 768px) {
-  .footer-body {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  .footer-col--brand {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-body {
-    grid-template-columns: 1fr;
   }
 }
