@@ -144,7 +144,7 @@ $campaign_has_embed = !empty($campaign_embed_src);
                 <?php
                 $dummy_index = $partners_count;
                 ?>
-                <a href="#contact"
+                <div
                     class="partner-card partner-card--dummy fade-up stagger-<?php echo $dummy_index + 1; ?>"
                     data-partner-index="<?php echo $dummy_index; ?>">
                     <div class="partner-logo">
@@ -157,10 +157,17 @@ $campaign_has_embed = !empty($campaign_embed_src);
                         </svg>
                     </div>
                     <h3><?php esc_html_e('Join the campaign', 'ai-awareness-day'); ?></h3>
-                    <p class="partner-stats">
+                    <p class="partner-stats partner-card__dummy-desc" id="partner-dummy-desc-<?php echo (int) $dummy_index; ?>">
                         <?php esc_html_e('Complete form to join movement', 'ai-awareness-day'); ?>
                     </p>
-                </a>
+                    <a
+                        href="<?php echo esc_url( home_url( '/#contact' ) ); ?>"
+                        class="partner-card__dummy-cta"
+                        aria-describedby="partner-dummy-desc-<?php echo (int) $dummy_index; ?>">
+                        <?php esc_html_e('Complete form', 'ai-awareness-day'); ?>
+                        <span class="partner-card__dummy-cta-icon" aria-hidden="true">→</span>
+                    </a>
+                </div>
             </div>
 
             <?php if ($partners_count > $initial_show): ?>
