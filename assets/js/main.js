@@ -570,7 +570,7 @@
                 if (!momentumSection) {
                     return;
                 }
-                const initialShow = parseInt(revealBtn.getAttribute('data-initial-show') || '10', 10);
+                const initialShow = parseInt(revealBtn.getAttribute('data-initial-show') || '6', 10);
                 const labelMore = revealBtn.getAttribute('data-label-more') || 'Show More Partners';
                 const labelLess = revealBtn.getAttribute('data-label-less') || 'Show Less';
                 const isExpanded = revealBtn.classList.toggle('active');

@@ -98,7 +98,7 @@ $campaign_has_embed = !empty($campaign_embed_src);
                     }
                 );
                 $partners_count = count($partners);
-                $initial_show = 10;
+                $initial_show = 6;
                 foreach ($partners as $index => $partner):
                     if (empty($partner['name'])) {
                         continue;
