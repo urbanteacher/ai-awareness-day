@@ -9,7 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
+/**
+ * Public URL for the bundled single-resource WXR shipped in the theme (import/bbc-how-ai-actually-works.wxr.xml).
+ * Empty string if the file is missing.
+ *
+ * @return string
+ */
+function aiad_bundled_bbc_how_ai_wxr_url(): string {
+    $rel  = '/import/bbc-how-ai-actually-works.wxr.xml';
+    $path = get_template_directory() . $rel;
+    if ( ! file_exists( $path ) ) {
+        return '';
+    }
+    return get_template_directory_uri() . $rel;
+}
 
 /**
  * Resources → Import demo resources admin page.
@@ -105,6 +118,19 @@ function aiad_render_resource_export_page(): void {
     ?>
     <div class="wrap">
         <h1><?php esc_html_e( 'Export demo resources', 'ai-awareness-day' ); ?></h1>
+        <?php
+        $bundled_wxr = aiad_bundled_bbc_how_ai_wxr_url();
+        if ( $bundled_wxr !== '' ) :
+            ?>
+            <div class="notice notice-info">
+                <p>
+                    <strong><?php esc_html_e( 'Live / staging bundle', 'ai-awareness-day' ); ?></strong>
+                    —
+                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'bbc-how-ai-actually-works.wxr.xml', 'ai-awareness-day' ); ?></a>
+                    <?php esc_html_e( 'is included in the theme for importing the BBC Ideas tutor-time resource without using auto-seed. Same format as a full export.', 'ai-awareness-day' ); ?>
+                </p>
+            </div>
+        <?php endif; ?>
         <p><?php esc_html_e( 'Export all Resource posts to a WordPress WXR (.xml) file. This file can be imported on another WordPress site using the Import demo resources tool.', 'ai-awareness-day' ); ?></p>
         
         <?php if ( $total_resources > 0 ) : ?>
@@ -491,6 +517,19 @@ function aiad_render_resource_import_page(): void {
     ?>
     <div class="wrap">
         <h1><?php esc_html_e( 'Import demo resources', 'ai-awareness-day' ); ?></h1>
+        <?php
+        $bundled_wxr = aiad_bundled_bbc_how_ai_wxr_url();
+        if ( $bundled_wxr !== '' ) :
+            ?>
+            <div class="notice notice-info">
+                <p>
+                    <strong><?php esc_html_e( 'Live / staging bundle', 'ai-awareness-day' ); ?></strong>
+                    —
+                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'Download bbc-how-ai-actually-works.wxr.xml', 'ai-awareness-day' ); ?></a>
+                    <?php esc_html_e( '(BBC Ideas — How AI actually works, tutor time). Upload it below to add or update that resource by slug on any site running this theme.', 'ai-awareness-day' ); ?>
+                </p>
+            </div>
+        <?php endif; ?>
         <p><?php esc_html_e( 'Upload a WordPress WXR (.xml) file to import Resources and/or Resources from partners. Matching posts are created or updated by slug. You can use the Export tools (below) to generate WXR files from this site.', 'ai-awareness-day' ); ?></p>
         <?php if ( $message ) : ?>
             <div class="<?php echo $type === 'error' ? 'notice notice-error' : 'notice notice-success'; ?> is-dismissible">

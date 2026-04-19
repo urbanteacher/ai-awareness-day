@@ -24,6 +24,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-top: 1.5rem;
+  align-items: start;
 }
 
 /* Centre the lone 5th card on mobile 2-col only */
