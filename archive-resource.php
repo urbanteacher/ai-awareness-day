@@ -1,6 +1,6 @@
 <?php
 /**
- * Archive template for Resources (Lesson Starter, Lesson Activity, Assembly).
+ * Archive template for Resources (session length, theme, activity filters).
  *
  * @package AI_Awareness_Day
  */
@@ -48,15 +48,18 @@ get_header();
             <?php endif; ?>
 
             <?php
-            $type_filter = isset($_GET['resource_type']) ? sanitize_text_field( wp_unslash($_GET['resource_type']) ) : '';
             $principle_filter = isset($_GET['principle']) ? sanitize_text_field( wp_unslash($_GET['principle']) ) : '';
             $duration_filter = isset($_GET['duration']) ? sanitize_text_field( wp_unslash($_GET['duration']) ) : '';
+            $legacy_type_filter = isset($_GET['resource_type']) ? sanitize_text_field( wp_unslash($_GET['resource_type']) ) : '';
+            if ( $legacy_type_filter && $duration_filter === '' && function_exists( 'aiad_legacy_resource_type_slug_to_duration_slug' ) ) {
+                $mapped = aiad_legacy_resource_type_slug_to_duration_slug( $legacy_type_filter );
+                if ( $mapped ) {
+                    $duration_filter = $mapped;
+                }
+            }
             $activity_filter = isset($_GET['activity_type']) ? sanitize_text_field( wp_unslash($_GET['activity_type']) ) : '';
             $key_stage_filter = isset($_GET['key_stage']) ? sanitize_text_field( wp_unslash($_GET['key_stage']) ) : '';
 
-            if ( $type_filter && ! term_exists( $type_filter, 'resource_type' ) ) {
-                $type_filter = '';
-            }
             if ( $principle_filter && ! term_exists( $principle_filter, 'resource_principle' ) ) {
                 $principle_filter = '';
             }
@@ -75,13 +78,6 @@ get_header();
                 'order' => 'ASC',
             );
             $tax_query = array();
-            if ($type_filter) {
-                $tax_query[] = array(
-                    'taxonomy' => 'resource_type',
-                    'field' => 'slug',
-                    'terms' => $type_filter,
-                );
-            }
             if ($principle_filter) {
                 $tax_query[] = array(
                     'taxonomy' => 'resource_principle',
@@ -130,20 +126,6 @@ get_header();
                         <input type="hidden" name="post_type" value="resource" />
                     <?php endif; ?>
                     <div class="resource-filter-group">
-                        <label for="resource_type"
-                            class="resource-filter-label"><?php esc_html_e('Resource Type', 'ai-awareness-day'); ?></label>
-                        <select id="resource_type" name="resource_type" class="resource-filter-select"
-                            data-filter="true">
-                            <option value=""><?php esc_html_e('All types', 'ai-awareness-day'); ?></option>
-                            <?php
-                            $types = get_terms(array('taxonomy' => 'resource_type', 'hide_empty' => false));
-                            foreach ($types as $term):
-                                ?>
-                                <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($type_filter, $term->slug); ?>><?php echo esc_html($term->name); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="resource-filter-group">
                         <label for="principle"
                             class="resource-filter-label"><?php esc_html_e('Theme', 'ai-awareness-day'); ?></label>
                         <select id="principle" name="principle" class="resource-filter-select" data-filter="true">
@@ -158,7 +140,7 @@ get_header();
                     </div>
                     <div class="resource-filter-group">
                         <label for="duration"
-                            class="resource-filter-label"><?php esc_html_e('Length', 'ai-awareness-day'); ?></label>
+                            class="resource-filter-label"><?php esc_html_e('Session length', 'ai-awareness-day'); ?></label>
                         <select id="duration" name="duration" class="resource-filter-select" data-filter="true">
                             <option value=""><?php esc_html_e('All session lengths', 'ai-awareness-day'); ?></option>
                             <?php
@@ -211,27 +193,23 @@ get_header();
                 <?php if ($resources->have_posts()): ?>
                     <?php while ($resources->have_posts()):
                         $resources->the_post();
-                        $types = get_the_terms(get_the_ID(), 'resource_type');
                         $themes = get_the_terms(get_the_ID(), 'resource_principle');
                         $durations = get_the_terms(get_the_ID(), 'resource_duration');
-                        $type_name = $types && !is_wp_error($types) ? $types[0]->name : '';
+                        $duration_labels = ($durations && !is_wp_error($durations) && function_exists('aiad_resource_duration_term_labels'))
+                            ? aiad_resource_duration_term_labels($durations)
+                            : array();
                         $theme_name = $themes && !is_wp_error($themes) ? $themes[0]->name : '';
-                        $duration_name = '';
-                        if ($durations && !is_wp_error($durations) && function_exists('aiad_duration_badge_label')) {
-                            $duration_name = aiad_duration_badge_label($durations[0]);
-                        } elseif ($durations && !is_wp_error($durations)) {
-                            $duration_name = $durations[0]->name;
-                        }
+                        $duration_name = !empty($duration_labels) ? $duration_labels[0] : '';
                         $download_url = get_post_meta(get_the_ID(), '_aiad_download_url', true);
                         $duration_slug = $durations && !is_wp_error($durations) ? $durations[0]->slug : '';
                         $session_cards = function_exists('aiad_explore_session_cards') ? aiad_explore_session_cards() : array();
                         $activity_terms = get_the_terms(get_the_ID(), 'activity_type');
                         $placeholder_text = ($activity_terms && !is_wp_error($activity_terms) && !empty($activity_terms))
                             ? $activity_terms[0]->name
-                            : ($type_name ? $type_name : (($duration_slug && isset($session_cards[$duration_slug]['badge_short']))
+                            : (!empty($duration_labels) ? $duration_labels[0] : (($duration_slug && isset($session_cards[$duration_slug]['badge_short']))
                                 ? ucwords($session_cards[$duration_slug]['badge_short'])
                                 : ($duration_name ? $duration_name : '—')));
-                        $has_overlay = $type_name || $theme_name;
+                        $has_overlay = !empty($duration_labels) || $theme_name;
                         ?>
                         <article class="resource-card resource-card--download fade-up">
                             <a href="<?php the_permalink(); ?>" class="resource-card__image-link">
@@ -246,10 +224,9 @@ get_header();
                                 <?php if ($has_overlay): ?>
                                     <div class="resource-card__image-overlay" aria-hidden="true">
                                         <div class="resource-card__image-top">
-                                            <?php if ($type_name): ?>
-                                                <span
-                                                    class="resource-card__pill resource-card__pill--type"><?php echo esc_html($type_name); ?></span>
-                                            <?php endif; ?>
+                                            <?php foreach ($duration_labels as $slot_label) : ?>
+                                                <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html($slot_label); ?></span>
+                                            <?php endforeach; ?>
                                             <?php if ($theme_name): ?>
                                                 <?php
                                                 $theme_slug = strtolower($theme_name);

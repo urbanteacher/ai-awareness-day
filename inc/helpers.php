@@ -23,7 +23,7 @@ function aiad_default_sample_letters_url(): string {
 }
 
 /**
- * Duration badge label (slug or term → "Lesson Starters (5-min)" style)
+ * Duration badge label (slug or term → canonical label, e.g. "Lesson Starter (5 min)")
  *
  * @param object|string $term_or_slug WP_Term or duration slug.
  * @return string
@@ -37,6 +37,72 @@ function aiad_duration_badge_label( object|string $term_or_slug ): string {
         '30-45-min-after-school'   => __( 'After School (30 min)', 'ai-awareness-day' ),
     );
     return isset( $labels[ $slug ] ) ? $labels[ $slug ] : ( is_object( $term_or_slug ) ? $term_or_slug->name : $term_or_slug );
+}
+
+/**
+ * Map legacy Format (resource_type) term to Session length (resource_duration) slugs — used by one-time migration.
+ *
+ * @param WP_Term $term Term in resource_type taxonomy.
+ * @return string[] Duration term slugs.
+ */
+function aiad_resource_type_term_to_duration_slugs( WP_Term $term ): array {
+    $slug = $term->slug;
+    $name = strtolower( $term->name );
+
+    $by_slug = array(
+        'lesson-starter'    => array( '5-min-lesson-starters' ),
+        'lesson-starters'   => array( '5-min-lesson-starters' ),
+        'lesson-activity'   => array( '15-20-min-tutor-time' ),
+        'lesson-activities' => array( '15-20-min-tutor-time' ),
+        'assembly'          => array( '20-min-assemblies' ),
+    );
+    if ( isset( $by_slug[ $slug ] ) ) {
+        return $by_slug[ $slug ];
+    }
+    if ( false !== strpos( $name, 'lesson starter' ) || 'lesson starter' === $name ) {
+        return array( '5-min-lesson-starters' );
+    }
+    if ( false !== strpos( $name, 'lesson activity' ) || false !== strpos( $name, 'tutor' ) ) {
+        return array( '15-20-min-tutor-time' );
+    }
+    if ( false !== strpos( $name, 'assembly' ) ) {
+        return array( '20-min-assemblies' );
+    }
+    return array();
+}
+
+/**
+ * Legacy query/AJAX: old ?resource_type= slug → resource_duration slug (after Format merged into Session length).
+ *
+ * @param string $resource_type_slug Former resource_type term slug.
+ * @return string Duration slug or empty.
+ */
+function aiad_legacy_resource_type_slug_to_duration_slug( string $resource_type_slug ): string {
+    $resource_type_slug = sanitize_title( $resource_type_slug );
+    $map                = array(
+        'lesson-starter'    => '5-min-lesson-starters',
+        'lesson-starters'   => '5-min-lesson-starters',
+        'lesson-activity'   => '15-20-min-tutor-time',
+        'lesson-activities' => '15-20-min-tutor-time',
+        'assembly'          => '20-min-assemblies',
+    );
+    return isset( $map[ $resource_type_slug ] ) ? $map[ $resource_type_slug ] : '';
+}
+
+/**
+ * Display labels for multiple session-length terms (badge text).
+ *
+ * @param WP_Term[] $terms resource_duration terms.
+ * @return string[]
+ */
+function aiad_resource_duration_term_labels( array $terms ): array {
+    $out = array();
+    foreach ( $terms as $t ) {
+        if ( $t instanceof WP_Term ) {
+            $out[] = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $t ) : $t->name;
+        }
+    }
+    return array_values( array_unique( array_filter( $out ) ) );
 }
 
 /**

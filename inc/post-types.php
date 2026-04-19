@@ -14,18 +14,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_register_post_types(): void {
 
-    // Taxonomy: Resource Type (Lesson Starter, Lesson Activity, Assembly) – linked to Themes
-    register_taxonomy( 'resource_type', array( 'resource', 'featured_resource' ), array(
-        'labels'            => array(
-            'name'          => __( 'Resource Types', 'ai-awareness-day' ),
-            'singular_name' => __( 'Resource Type', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Resource Type', 'ai-awareness-day' ),
-            'description'   => __( 'Format of the resource. Used with Themes (Safe, Smart, Creative, Responsible, Future).', 'ai-awareness-day' ),
-        ),
-        'hierarchical'      => true,
-        'show_ui'           => true,
-        'show_admin_column' => true,
-    ) );
+    // Legacy Format taxonomy — registered only until one-time migration merges into Session length (resource_duration).
+    if ( ! get_option( 'aiad_resource_type_merged_v2' ) ) {
+        register_taxonomy(
+            'resource_type',
+            array( 'resource', 'featured_resource' ),
+            array(
+                'labels'            => array(
+                    'name'          => __( 'Resource Types (legacy)', 'ai-awareness-day' ),
+                    'singular_name' => __( 'Resource Type', 'ai-awareness-day' ),
+                ),
+                'hierarchical'      => true,
+                'public'            => false,
+                'show_ui'           => false,
+                'show_admin_column' => false,
+            )
+        );
+    }
 
     // Taxonomy: Themes (Safe, Smart, Creative, Responsible, Future) – same as site Themes section
     // Note: Taxonomy slug is 'resource_principle' but UI label is 'Themes' for clarity.
@@ -42,13 +47,13 @@ function aiad_register_post_types(): void {
         'show_admin_column' => true,
     ) );
 
-    // Taxonomy: Duration / Session length (5-min, 15-20 min, 20-min, 30-45 min)
+    // Taxonomy: Session length (slot + time — e.g. Lesson Starter 5 min, Assembly 20 min)
     register_taxonomy( 'resource_duration', array( 'resource', 'featured_resource' ), array(
         'labels'            => array(
             'name'          => __( 'Session length', 'ai-awareness-day' ),
             'singular_name' => __( 'Session length', 'ai-awareness-day' ),
             'add_new_item'  => __( 'Add New Session length', 'ai-awareness-day' ),
-            'description'   => __( 'Time allocated for this resource. Shown in the Explore section.', 'ai-awareness-day' ),
+            'description'   => __( 'Where this fits in the day and how long it runs (starter, tutor time, assembly, etc.).', 'ai-awareness-day' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -69,7 +74,7 @@ function aiad_register_post_types(): void {
         'show_in_rest'      => true,
     ) );
 
-    // CPT: Resource (Lesson starter, Lesson activity, Assembly)
+    // CPT: Resource (activities and materials; categorised by session length, theme, etc.)
     register_post_type( 'resource', array(
         'labels'       => array(
             'name'               => __( 'Resources', 'ai-awareness-day' ),
@@ -453,13 +458,6 @@ function aiad_default_terms(): void {
         return;
     }
 
-    $resource_types = array( 'Lesson Starter', 'Lesson Activity', 'Assembly' );
-    foreach ( $resource_types as $name ) {
-        if ( ! term_exists( $name, 'resource_type' ) ) {
-            wp_insert_term( $name, 'resource_type' );
-        }
-    }
-
     $themes = array( 'Safe', 'Smart', 'Creative', 'Responsible', 'Future' );
     foreach ( $themes as $name ) {
         if ( ! term_exists( $name, 'resource_principle' ) ) {
@@ -499,6 +497,184 @@ function aiad_duration_terms(): void {
     update_option( 'aiad_duration_terms_seeded', true );
 }
 add_action( 'init', 'aiad_duration_terms', 21 );
+
+/**
+ * One-time: merge old Format (resource_type) into Session length (resource_duration), then drop resource_type.
+ */
+function aiad_migrate_resource_type_into_session_length(): void {
+    if ( get_option( 'aiad_resource_type_merged_v2' ) ) {
+        return;
+    }
+    if ( ! taxonomy_exists( 'resource_duration' ) ) {
+        return;
+    }
+    if ( taxonomy_exists( 'resource_type' ) && function_exists( 'aiad_resource_type_term_to_duration_slugs' ) ) {
+        $ptypes = array( 'resource', 'featured_resource' );
+        foreach ( $ptypes as $pt ) {
+            $ids = get_posts(
+                array(
+                    'post_type'      => $pt,
+                    'post_status'    => 'any',
+                    'posts_per_page' => -1,
+                    'fields'         => 'ids',
+                )
+            );
+            foreach ( $ids as $post_id ) {
+                $old_types = wp_get_object_terms( $post_id, 'resource_type' );
+                if ( is_wp_error( $old_types ) ) {
+                    continue;
+                }
+                if ( empty( $old_types ) ) {
+                    wp_set_object_terms( $post_id, array(), 'resource_type' );
+                    continue;
+                }
+                $add_slugs = array();
+                foreach ( $old_types as $t ) {
+                    $add_slugs = array_merge( $add_slugs, aiad_resource_type_term_to_duration_slugs( $t ) );
+                }
+                $current = wp_get_object_terms( $post_id, 'resource_duration', array( 'fields' => 'slugs' ) );
+                if ( is_wp_error( $current ) ) {
+                    $current = array();
+                }
+                $merged = array_values( array_unique( array_merge( $current, $add_slugs ) ) );
+                wp_set_object_terms( $post_id, $merged, 'resource_duration' );
+                wp_set_object_terms( $post_id, array(), 'resource_type' );
+            }
+        }
+        $terms = get_terms(
+            array(
+                'taxonomy'   => 'resource_type',
+                'hide_empty' => false,
+            )
+        );
+        if ( ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $t ) {
+                wp_delete_term( (int) $t->term_id, 'resource_type' );
+            }
+        }
+        unregister_taxonomy_for_object_type( 'resource_type', 'resource' );
+        unregister_taxonomy_for_object_type( 'resource_type', 'featured_resource' );
+    }
+
+    update_option( 'aiad_resource_type_merged_v2', true );
+    if ( function_exists( 'aiad_bump_filter_counts_version' ) ) {
+        aiad_bump_filter_counts_version();
+    }
+}
+add_action( 'init', 'aiad_migrate_resource_type_into_session_length', 100 );
+
+/**
+ * One-time merge of duplicate "5 minute lesson starter" session-length terms into the canonical slug.
+ * Fixes sites where an extra term (e.g. "Lesson Starters (5-min)") was created manually or by an old import,
+ * so filters and admin radios show a single option and all resources resolve under one term.
+ */
+function aiad_merge_duplicate_resource_duration_terms(): void {
+    if ( get_option( 'aiad_duration_duplicate_merge_v1' ) ) {
+        return;
+    }
+    if ( ! taxonomy_exists( 'resource_duration' ) ) {
+        return;
+    }
+
+    $canonical = get_term_by( 'slug', '5-min-lesson-starters', 'resource_duration' );
+    if ( ! $canonical || is_wp_error( $canonical ) ) {
+        return;
+    }
+
+    $dup_slugs = array(
+        'lesson-starters-5-min',
+        'lesson-starters-5min',
+        'lesson-starter-5-min',
+        'lesson-starter-5min',
+    );
+    $dup_names_lower = array(
+        'lesson starters (5-min)',
+        'lesson starters (5 min)',
+        'lesson starter (5-min)',
+    );
+
+    $terms = get_terms(
+        array(
+            'taxonomy'   => 'resource_duration',
+            'hide_empty' => false,
+        )
+    );
+    if ( is_wp_error( $terms ) || empty( $terms ) ) {
+        update_option( 'aiad_duration_duplicate_merge_v1', true );
+        return;
+    }
+
+    $canonical_id = (int) $canonical->term_id;
+    $duplicate_ids  = array();
+
+    foreach ( $terms as $term ) {
+        if ( (int) $term->term_id === $canonical_id ) {
+            continue;
+        }
+        if ( in_array( $term->slug, $dup_slugs, true ) ) {
+            $duplicate_ids[] = (int) $term->term_id;
+            continue;
+        }
+        $n = mb_strtolower( trim( $term->name ), 'UTF-8' );
+        if ( in_array( $n, $dup_names_lower, true ) ) {
+            $duplicate_ids[] = (int) $term->term_id;
+        }
+    }
+    $duplicate_ids = array_unique( array_filter( $duplicate_ids ) );
+
+    foreach ( $duplicate_ids as $dup_id ) {
+        aiad_reassign_posts_from_term_to_term( $dup_id, $canonical_id, 'resource_duration' );
+        if ( function_exists( 'wp_delete_term' ) ) {
+            wp_delete_term( $dup_id, 'resource_duration' );
+        }
+    }
+
+    update_option( 'aiad_duration_duplicate_merge_v1', true );
+}
+
+/**
+ * Move all objects using $from_term_id to use $to_term_id for the given taxonomy (replaces in term list).
+ *
+ * @param int    $from_term_id Source term ID.
+ * @param int    $to_term_id   Target term ID.
+ * @param string $taxonomy     Taxonomy name.
+ */
+function aiad_reassign_posts_from_term_to_term( int $from_term_id, int $to_term_id, string $taxonomy ): void {
+    $tax = get_taxonomy( $taxonomy );
+    if ( ! $tax ) {
+        return;
+    }
+    foreach ( $tax->object_type as $post_type ) {
+        $post_ids = get_posts(
+            array(
+                'post_type'      => $post_type,
+                'posts_per_page'   => -1,
+                'fields'           => 'ids',
+                'post_status'      => 'any',
+                'suppress_filters' => true,
+                'tax_query'        => array(
+                    array(
+                        'taxonomy' => $taxonomy,
+                        'field'    => 'term_id',
+                        'terms'    => $from_term_id,
+                    ),
+                ),
+            )
+        );
+        foreach ( $post_ids as $post_id ) {
+            $current = wp_get_object_terms( $post_id, $taxonomy, array( 'fields' => 'ids' ) );
+            if ( is_wp_error( $current ) ) {
+                continue;
+            }
+            $current   = array_map( 'intval', $current );
+            $current   = array_values( array_unique( array_diff( $current, array( $from_term_id ) ) ) );
+            $current[] = $to_term_id;
+            $current   = array_values( array_unique( $current ) );
+            wp_set_object_terms( $post_id, $current, $taxonomy, false );
+        }
+    }
+}
+add_action( 'init', 'aiad_merge_duplicate_resource_duration_terms', 99 );
 
 /**
  * Pre-populate Activity Type terms

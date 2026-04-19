@@ -50,26 +50,22 @@ if ( $free_resources->have_posts() ):
             <div class="resources-grid" style="margin-top: 2rem;">
                 <?php while ( $free_resources->have_posts() ):
                     $free_resources->the_post();
-                    $types = get_the_terms( get_the_ID(), 'resource_type' );
                     $themes = get_the_terms( get_the_ID(), 'resource_principle' );
                     $durations = get_the_terms( get_the_ID(), 'resource_duration' );
-                    $type_name = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
+                    $duration_labels = ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_resource_duration_term_labels' ) )
+                        ? aiad_resource_duration_term_labels( $durations )
+                        : array();
                     $theme_name = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
-                    $duration_name = '';
-                    if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
-                        $duration_name = aiad_duration_badge_label( $durations[0] );
-                    } elseif ( $durations && ! is_wp_error( $durations ) ) {
-                        $duration_name = $durations[0]->name;
-                    }
                     $download_url = get_post_meta( get_the_ID(), '_aiad_download_url', true );
                     $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
                     $placeholder_type = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
                         ? $activity_terms[0]->name
-                        : ( $type_name ? $type_name : '—' );
+                        : ( ! empty( $duration_labels ) ? $duration_labels[0] : '—' );
                     ?>
                     <article class="resource-card fade-up">
                         <?php
-                        $meta_label = trim( $type_name . ( $type_name && $theme_name ? ' · ' : '' ) . $theme_name );
+                        $meta_parts_top = array_filter( array_merge( $duration_labels, $theme_name ? array( $theme_name ) : array() ) );
+                        $meta_label     = implode( ' · ', $meta_parts_top );
                         ?>
                         <a href="<?php the_permalink(); ?>" class="resource-card__image-link">
                             <?php if ( has_post_thumbnail() ): ?>
@@ -96,16 +92,10 @@ if ( $free_resources->have_posts() ):
                             <?php endif; ?>
                         </a>
                         <div class="resource-card__body">
-                            <?php if ( $type_name || $theme_name ): ?>
+                            <?php if ( ! empty( $duration_labels ) || $theme_name ): ?>
                                 <p class="resource-card__meta">
-                                    <?php
-                                    $meta_parts = array_filter( array( $type_name, $theme_name ) );
-                                    echo esc_html( implode( ' · ', $meta_parts ) );
-                                    ?>
+                                    <?php echo esc_html( $meta_label ); ?>
                                 </p>
-                            <?php endif; ?>
-                            <?php if ( $duration_name ): ?>
-                                <span class="duration-badge duration-badge--card"><?php echo esc_html( $duration_name ); ?></span>
                             <?php endif; ?>
                             <h2 class="resource-card__title">
                                 <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>

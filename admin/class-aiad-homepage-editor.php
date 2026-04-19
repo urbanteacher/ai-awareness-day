@@ -630,8 +630,12 @@ class AIAD_Homepage_Editor {
                 $preview = get_post( $current_id );
                 if ( $preview ) {
                     $duration_terms = get_the_terms( $current_id, 'resource_duration' );
-                    $duration = $duration_terms && ! is_wp_error( $duration_terms ) ? $duration_terms[0]->name : '';
-                    echo ' <span class="description">(' . esc_html( $duration ? $duration : 'No duration' ) . ')</span>';
+                    $duration_preview = '';
+                    if ( $duration_terms && ! is_wp_error( $duration_terms ) && function_exists( 'aiad_resource_duration_term_labels' ) ) {
+                        $labels = aiad_resource_duration_term_labels( $duration_terms );
+                        $duration_preview = ! empty( $labels ) ? implode( ' · ', $labels ) : '';
+                    }
+                    echo ' <span class="description">(' . esc_html( $duration_preview !== '' ? $duration_preview : __( 'No session length', 'ai-awareness-day' ) ) . ')</span>';
                 }
             }
             echo '</td></tr>';

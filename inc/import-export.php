@@ -240,7 +240,7 @@ function aiad_export_featured_resources_to_wxr(): void {
             foreach ( $resources as $resource ) {
                 aiad_export_resource_post( $resource );
             }
-            $taxonomies = array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' );
+            $taxonomies = array( 'resource_principle', 'resource_duration', 'activity_type' );
             foreach ( $taxonomies as $taxonomy ) {
                 aiad_export_taxonomy_terms( $taxonomy );
             }
@@ -310,7 +310,7 @@ function aiad_export_resources_to_wxr(): void {
             }
 
             // Export taxonomy terms
-            $taxonomies = array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' );
+            $taxonomies = array( 'resource_principle', 'resource_duration', 'activity_type' );
             foreach ( $taxonomies as $taxonomy ) {
                 aiad_export_taxonomy_terms( $taxonomy );
             }
@@ -341,7 +341,7 @@ function aiad_export_resource_post( WP_Post $post ): void {
     $post_meta = get_post_meta( $post->ID );
 
     // Get taxonomy terms
-    $taxonomies = array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' );
+    $taxonomies = array( 'resource_principle', 'resource_duration', 'activity_type' );
     $terms      = array();
     foreach ( $taxonomies as $taxonomy ) {
         $post_terms = wp_get_object_terms( $post->ID, $taxonomy );
@@ -713,7 +713,7 @@ function aiad_import_resources_from_wxr_simple( string $file_path ) {
             $name   = (string) $category;
             $slug   = (string) $category['nicename'];
             
-            if ( in_array( $domain, array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' ), true ) ) {
+            if ( in_array( $domain, array( 'resource_principle', 'resource_duration', 'activity_type' ), true ) ) {
                 // Try to get term by slug first (more reliable), then by name
                 $term = false;
                 if ( ! empty( $slug ) ) {

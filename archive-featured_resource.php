@@ -46,9 +46,15 @@ get_header();
             <?php endif; ?>
 
             <?php
-            $type_filter      = isset( $_GET['resource_type'] ) ? sanitize_text_field( wp_unslash( $_GET['resource_type'] ) ) : '';
             $principle_filter = isset( $_GET['principle'] ) ? sanitize_text_field( wp_unslash( $_GET['principle'] ) ) : '';
             $duration_filter  = isset( $_GET['duration'] ) ? sanitize_text_field( wp_unslash( $_GET['duration'] ) ) : '';
+            $legacy_type_filter = isset( $_GET['resource_type'] ) ? sanitize_text_field( wp_unslash( $_GET['resource_type'] ) ) : '';
+            if ( $legacy_type_filter && $duration_filter === '' && function_exists( 'aiad_legacy_resource_type_slug_to_duration_slug' ) ) {
+                $mapped = aiad_legacy_resource_type_slug_to_duration_slug( $legacy_type_filter );
+                if ( $mapped ) {
+                    $duration_filter = $mapped;
+                }
+            }
             $activity_filter  = isset( $_GET['activity_type'] ) ? sanitize_text_field( wp_unslash( $_GET['activity_type'] ) ) : '';
 
             $args = array(
@@ -59,13 +65,6 @@ get_header();
                 'order'          => 'ASC',
             );
             $tax_query = array();
-            if ( $type_filter ) {
-                $tax_query[] = array(
-                    'taxonomy' => 'resource_type',
-                    'field'    => 'slug',
-                    'terms'    => $type_filter,
-                );
-            }
             if ( $principle_filter ) {
                 $tax_query[] = array(
                     'taxonomy' => 'resource_principle',
@@ -104,18 +103,6 @@ get_header();
                         <input type="hidden" name="post_type" value="featured_resource" />
                     <?php endif; ?>
                     <div class="resource-filter-group">
-                        <label for="resource_type" class="resource-filter-label"><?php esc_html_e( 'Resource Type', 'ai-awareness-day' ); ?></label>
-                        <select id="resource_type" name="resource_type" class="resource-filter-select" data-filter="true">
-                            <option value=""><?php esc_html_e( 'All types', 'ai-awareness-day' ); ?></option>
-                            <?php
-                            $types = get_terms( array( 'taxonomy' => 'resource_type', 'hide_empty' => false ) );
-                            foreach ( $types as $term ) :
-                                ?>
-                                <option value="<?php echo esc_attr( $term->slug ); ?>" <?php selected( $type_filter, $term->slug ); ?>><?php echo esc_html( $term->name ); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="resource-filter-group">
                         <label for="principle" class="resource-filter-label"><?php esc_html_e( 'Theme', 'ai-awareness-day' ); ?></label>
                         <select id="principle" name="principle" class="resource-filter-select" data-filter="true">
                             <option value=""><?php esc_html_e( 'All themes', 'ai-awareness-day' ); ?></option>
@@ -128,7 +115,7 @@ get_header();
                         </select>
                     </div>
                     <div class="resource-filter-group">
-                        <label for="duration" class="resource-filter-label"><?php esc_html_e( 'Length', 'ai-awareness-day' ); ?></label>
+                        <label for="duration" class="resource-filter-label"><?php esc_html_e( 'Session length', 'ai-awareness-day' ); ?></label>
                         <select id="duration" name="duration" class="resource-filter-select" data-filter="true">
                             <option value=""><?php esc_html_e( 'All session lengths', 'ai-awareness-day' ); ?></option>
                             <?php
@@ -164,17 +151,13 @@ get_header();
             <div class="resources-grid">
             <?php if ( $resources->have_posts() ) : ?>
                     <?php while ( $resources->have_posts() ) : $resources->the_post();
-                        $types      = get_the_terms( get_the_ID(), 'resource_type' );
                         $themes     = get_the_terms( get_the_ID(), 'resource_principle' );
                         $durations  = get_the_terms( get_the_ID(), 'resource_duration' );
-                        $type_name  = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
+                        $duration_labels = ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_resource_duration_term_labels' ) )
+                            ? aiad_resource_duration_term_labels( $durations )
+                            : array();
                         $theme_name = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
-                        $duration_name = '';
-                        if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
-                            $duration_name = aiad_duration_badge_label( $durations[0] );
-                        } elseif ( $durations && ! is_wp_error( $durations ) ) {
-                            $duration_name = $durations[0]->name;
-                        }
+                        $duration_name = ! empty( $duration_labels ) ? $duration_labels[0] : '';
                         $url      = get_post_meta( get_the_ID(), '_featured_resource_url', true );
                         $org_name = get_post_meta( get_the_ID(), '_featured_resource_org_name', true );
                         $org_url  = get_post_meta( get_the_ID(), '_featured_resource_org_url', true );
@@ -182,11 +165,12 @@ get_header();
                         $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
                         $placeholder_type = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
                             ? $activity_terms[0]->name
-                            : ( $type_name ? $type_name : '—' );
+                            : ( ! empty( $duration_labels ) ? $duration_labels[0] : '—' );
                         ?>
                         <article class="resource-card resource-card--external fade-up">
                             <?php
-                        $meta_label = trim( $type_name . ( $type_name && $theme_name ? ' · ' : '' ) . $theme_name );
+                        $meta_parts_top = array_filter( array_merge( $duration_labels, $theme_name ? array( $theme_name ) : array() ) );
+                        $meta_label     = implode( ' · ', $meta_parts_top );
                             ?>
                             <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer" class="resource-card__image-link">
                                 <?php if ( has_post_thumbnail() ) : ?>
@@ -199,6 +183,9 @@ get_header();
                             <?php if ( $org_name || $meta_label ) : ?>
                                 <div class="resource-card__image-overlay" aria-hidden="true">
                                     <div class="resource-card__image-top">
+                                        <?php foreach ( $duration_labels as $slot_label ) : ?>
+                                            <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html( $slot_label ); ?></span>
+                                        <?php endforeach; ?>
                                         <?php if ( $org_name ) : ?>
                                             <span class="resource-card__pill resource-card__pill--org"><?php echo esc_html( $org_name ); ?></span>
                                         <?php endif; ?>

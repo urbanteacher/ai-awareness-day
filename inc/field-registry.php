@@ -29,14 +29,8 @@ function aiad_get_field_registry(): array {
                 'class'       => 'large-text',
                 'meta_key'    => '_aiad_subtitle',
             ),
-            '_aiad_duration' => array(
-                'type'        => 'text',
-                'label'       => __( 'Duration', 'ai-awareness-day' ),
-                'description' => __( 'Be specific. Not "as specified".', 'ai-awareness-day' ),
-                'placeholder' => __( 'e.g. 5 min, 45 min, 2 x 50 min sessions', 'ai-awareness-day' ),
-                'class'       => 'regular-text',
-                'meta_key'    => '_aiad_duration',
-            ),
+            // _aiad_duration removed from UI: timing comes from Session length (resource_duration) below.
+            // Meta remains registered in post-types for legacy content / REST; single template uses it only when no session-length terms are set.
             '_aiad_level' => array(
                 'type'        => 'radio',
                 'label'       => __( 'Level', 'ai-awareness-day' ),

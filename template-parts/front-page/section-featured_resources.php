@@ -56,17 +56,12 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                     <div class="resources-grid" style="margin-top: 2rem;">
                         <?php while ($featured_resources->have_posts()):
                             $featured_resources->the_post();
-                            $types = get_the_terms(get_the_ID(), 'resource_type');
                             $themes = get_the_terms(get_the_ID(), 'resource_principle');
                             $durations = get_the_terms(get_the_ID(), 'resource_duration');
-                            $type_name = $types && !is_wp_error($types) ? $types[0]->name : '';
+                            $duration_labels = ($durations && !is_wp_error($durations) && function_exists('aiad_resource_duration_term_labels'))
+                                ? aiad_resource_duration_term_labels($durations)
+                                : array();
                             $theme_name = $themes && !is_wp_error($themes) ? $themes[0]->name : '';
-                            $duration_name = '';
-                            if ($durations && !is_wp_error($durations) && function_exists('aiad_duration_badge_label')) {
-                                $duration_name = aiad_duration_badge_label($durations[0]);
-                            } elseif ($durations && !is_wp_error($durations)) {
-                                $duration_name = $durations[0]->name;
-                            }
                             $url = get_post_meta(get_the_ID(), '_featured_resource_url', true);
                             $org_name = get_post_meta(get_the_ID(), '_featured_resource_org_name', true);
                             $org_url = get_post_meta(get_the_ID(), '_featured_resource_org_url', true);
@@ -74,11 +69,12 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                             $activity_terms = get_the_terms(get_the_ID(), 'activity_type');
                             $placeholder_type = ($activity_terms && !is_wp_error($activity_terms) && !empty($activity_terms))
                                 ? $activity_terms[0]->name
-                                : ($type_name ? $type_name : '—');
+                                : (!empty($duration_labels) ? $duration_labels[0] : '—');
                             ?>
                             <article class="resource-card resource-card--external fade-up">
                                 <?php
-                                $meta_label = trim($type_name . ($type_name && $theme_name ? ' · ' : '') . $theme_name);
+                                $meta_parts_top = array_filter(array_merge($duration_labels, $theme_name ? array($theme_name) : array()));
+                                $meta_label = implode(' · ', $meta_parts_top);
                                 ?>
                                 <a href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener noreferrer"
                                     class="resource-card__image-link">
@@ -93,6 +89,9 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                                     <?php if ($org_name || $meta_label): ?>
                                         <div class="resource-card__image-overlay" aria-hidden="true">
                                             <div class="resource-card__image-top">
+                                                <?php foreach ($duration_labels as $slot_label) : ?>
+                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html($slot_label); ?></span>
+                                                <?php endforeach; ?>
                                                 <?php if ($theme_name): ?>
                                                     <?php
                                                     $theme_slug = strtolower($theme_name);
@@ -114,16 +113,17 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                                     <?php endif; ?>
                                 </a>
                                 <div class="resource-card__body">
-                                    <?php if ($org_name || $type_name || $theme_name): ?>
+                                    <?php if ($org_name || !empty($duration_labels) || $theme_name): ?>
                                         <p class="resource-card__meta">
                                             <?php
-                                            $meta_parts = array_filter(array($org_name, $type_name, $theme_name));
+                                            $meta_parts = array_filter(array_merge(
+                                                $org_name ? array($org_name) : array(),
+                                                $duration_labels,
+                                                $theme_name ? array($theme_name) : array()
+                                            ));
                                             echo esc_html(implode(' · ', $meta_parts));
                                             ?>
                                         </p>
-                                    <?php endif; ?>
-                                    <?php if ($duration_name): ?>
-                                        <span class="duration-badge duration-badge--card"><?php echo esc_html($duration_name); ?></span>
                                     <?php endif; ?>
                                     <h2 class="resource-card__title">
                                         <a href="<?php echo esc_url($link); ?>" target="_blank"

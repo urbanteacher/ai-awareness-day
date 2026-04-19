@@ -51,6 +51,8 @@
 
     function buildPlaceholderText( resource ) {
         if ( resource.activity_types && resource.activity_types.length > 0 ) return resource.activity_types[ 0 ];
+        if ( resource.duration_names && resource.duration_names.length > 0 ) return resource.duration_names[ 0 ];
+        if ( resource.type_names && resource.type_names.length > 0 ) return resource.type_names[ 0 ];
         if ( resource.type_name ) return resource.type_name;
         if ( resource.duration_name ) return resource.duration_name;
         if ( resource.org_name ) {
@@ -77,7 +79,7 @@
         var linkHref = isExternal ? ( resource.external_url || resource.permalink ) : resource.permalink;
         var linkTarget = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
         var placeholderText = buildPlaceholderText( resource );
-        var hasOverlay = !!( resource.type_name || resource.theme_name || resource.org_name );
+        var hasOverlay = !!( ( resource.duration_names && resource.duration_names.length ) || ( resource.type_names && resource.type_names.length ) || resource.type_name || resource.duration_name || resource.theme_name || resource.org_name );
 
         var imgHtml = resource.thumbnail
             ? '<img src="' + escapeHtml( resource.thumbnail ) + '" class="resource-card__image" alt="" aria-hidden="true" />'
@@ -86,8 +88,13 @@
         var overlayHtml = '';
         if ( hasOverlay ) {
             overlayHtml = '<div class="resource-card__image-overlay" aria-hidden="true"><div class="resource-card__image-top">';
-            if ( resource.type_name ) {
-                overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( resource.type_name ) + '</span>';
+            var slotLabels = ( resource.duration_names && resource.duration_names.length ) ? resource.duration_names : ( resource.type_names && resource.type_names.length ? resource.type_names : [] );
+            if ( slotLabels.length > 0 ) {
+                slotLabels.forEach( function ( name ) {
+                    overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( name ) + '</span>';
+                } );
+            } else if ( resource.type_name || resource.duration_name ) {
+                overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( resource.duration_name || resource.type_name ) + '</span>';
             }
             if ( resource.theme_name ) {
                 overlayHtml += '<span class="' + themePillClass( resource.theme_slug ) + '">' + escapeHtml( resource.theme_name ) + '</span>';
@@ -155,7 +162,6 @@
     function applyFilterCounts( filterCounts ) {
         if ( ! filterCounts ) return;
         var selectMap = {
-            resource_type: 'resource_type',
             resource_principle: 'principle',
             resource_duration: 'duration',
             activity_type: 'activity_type',

@@ -318,19 +318,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <?php
                         while ($free_resources->have_posts()):
                             $free_resources->the_post();
-                            $types = get_the_terms(get_the_ID(), 'resource_type');
                             $themes = get_the_terms(get_the_ID(), 'resource_principle');
                             $durations = get_the_terms(get_the_ID(), 'resource_duration');
-                            $type_name = $types && !is_wp_error($types) ? $types[0]->name : '';
+                            $duration_labels = ($durations && !is_wp_error($durations) && function_exists('aiad_resource_duration_term_labels'))
+                                ? aiad_resource_duration_term_labels($durations)
+                                : array();
                             $theme_name = $themes && !is_wp_error($themes) ? $themes[0]->name : '';
-                            $duration_name = '';
-                            if ($durations && !is_wp_error($durations) && function_exists('aiad_duration_badge_label')) {
-                                $duration_name = aiad_duration_badge_label($durations[0]);
-                            } elseif ($durations && !is_wp_error($durations)) {
-                                $duration_name = $durations[0]->name;
-                            }
-                            $duration_slug = $durations && !is_wp_error($durations) ? $durations[0]->slug : '';
-                            $session_cards = function_exists('aiad_explore_session_cards') ? aiad_explore_session_cards() : array();
                             $placeholder_text = __('Starter Slide', 'ai-awareness-day');
                             ?>
                             <article class="resource-card resource-card--download fade-up">
@@ -344,14 +337,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         </div>
                                     <?php endif; ?>
                                     <?php
-                                    $pill_duration = ($duration_slug && isset($session_cards[$duration_slug]['badge_short']))
-                                        ? ucwords($session_cards[$duration_slug]['badge_short'])
-                                        : ($duration_name ? $duration_name : '');
-                                    $has_overlay = $pill_duration || $theme_name;
+                                    $has_overlay = !empty($duration_labels) || $theme_name;
                                     ?>
                                     <?php if ($has_overlay): ?>
                                         <div class="resource-card__image-overlay" aria-hidden="true">
                                             <div class="resource-card__image-top">
+                                                <?php foreach ($duration_labels as $slot_label) : ?>
+                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html($slot_label); ?></span>
+                                                <?php endforeach; ?>
                                                 <?php if ($theme_name): ?>
                                                     <?php
                                                     $theme_slug = strtolower($theme_name);
@@ -362,10 +355,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                                                     ?>
                                                     <span
                                                         class="resource-card__pill <?php echo esc_attr($pill_class); ?>"><?php echo esc_html($theme_name); ?></span>
-                                                <?php endif; ?>
-                                                <?php if ($pill_duration): ?>
-                                                    <span
-                                                        class="resource-card__pill resource-card__pill--type"><?php echo esc_html($pill_duration); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>

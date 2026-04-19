@@ -11,10 +11,11 @@ get_header();
 <main id="main" role="main" class="single-resource">
     <section class="section pt-100">
         <?php while ( have_posts() ) : the_post();
-                $types         = get_the_terms( get_the_ID(), 'resource_type' );
                 $themes        = get_the_terms( get_the_ID(), 'resource_principle' );
                 $durations     = get_the_terms( get_the_ID(), 'resource_duration' );
-                $type_name     = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
+                $duration_labels = ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_resource_duration_term_labels' ) )
+                    ? aiad_resource_duration_term_labels( $durations )
+                    : array();
                 $theme_name    = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
                 $theme_slug    = $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '';
                 // Map term slug to Customizer badge setting (normalize to lowercase)
@@ -22,12 +23,6 @@ get_header();
                 $badge_slug = $theme_slug !== '' ? strtolower( $theme_slug ) : '';
                 $theme_badge_id  = $badge_slug !== '' ? absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) ) : 0;
                 $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
-                $duration_name = '';
-                if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
-                    $duration_name = aiad_duration_badge_label( $durations[0] );
-                } elseif ( $durations && ! is_wp_error( $durations ) ) {
-                    $duration_name = $durations[0]->name;
-                }
                 ?>
                 <?php
                 $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
@@ -63,16 +58,14 @@ get_header();
                             <p class="resource-activity-overview"><?php echo esc_html( $overview ); ?></p>
                         <?php endif; ?>
                         <div class="resource-activity-tags" role="list">
-                            <?php if ( $type_name ) : ?>
-                                <span class="resource-tag"><?php echo esc_html( $type_name ); ?></span>
-                            <?php endif; ?>
+                            <?php foreach ( $duration_labels as $slot_label ) : ?>
+                                <span class="resource-tag"><?php echo esc_html( $slot_label ); ?></span>
+                            <?php endforeach; ?>
                             <?php if ( $theme_name ) : ?>
                                 <span class="resource-tag resource-tag--theme resource-tag--<?php echo esc_attr( $theme_slug ); ?>"><?php echo esc_html( $theme_name ); ?></span>
                             <?php endif; ?>
-                            <?php if ( $duration_str !== '' ) : ?>
+                            <?php if ( $duration_str !== '' && empty( $duration_labels ) ) : ?>
                                 <span class="resource-tag"><?php echo esc_html( $duration_str ); ?></span>
-                            <?php elseif ( $duration_name ) : ?>
-                                <span class="resource-tag"><?php echo esc_html( $duration_name ); ?></span>
                             <?php endif; ?>
                             <?php if ( $level !== '' && isset( $level_labels[ $level ] ) ) : ?>
                                 <span class="resource-tag resource-tag--level"><?php echo esc_html( $level_labels[ $level ] ); ?></span>

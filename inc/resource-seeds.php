@@ -43,13 +43,11 @@ function aiad_seed_bbc_how_ai_works_tutor_resource(): void {
         return;
     }
 
-    wp_set_object_terms( $post_id, array( 'Lesson Activity' ), 'resource_type' );
     wp_set_object_terms( $post_id, array( 'smart' ), 'resource_principle' );
     wp_set_object_terms( $post_id, array( '15-20-min-tutor-time' ), 'resource_duration' );
     wp_set_object_terms( $post_id, array( 'video' ), 'activity_type' );
 
     update_post_meta( $post_id, '_aiad_subtitle', __( 'Watch, pause, and discuss: what AI is really doing when it “guesses” well.', 'ai-awareness-day' ) );
-    update_post_meta( $post_id, '_aiad_duration', __( '15 minutes', 'ai-awareness-day' ) );
     update_post_meta( $post_id, '_aiad_level', 'intermediate' );
     update_post_meta( $post_id, '_aiad_status', 'published' );
     update_post_meta( $post_id, '_aiad_key_stage', array( 'ks3', 'ks4', 'ks5' ) );

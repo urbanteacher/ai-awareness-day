@@ -204,6 +204,29 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
         echo '<em class="description">' . esc_html__( 'No activity types found. Add them under Resources → Activity types.', 'ai-awareness-day' ) . '</em>';
     }
     echo '</p>';
+
+    // Session length (resource_duration) — same slots as main resources
+    $duration_terms = get_terms(
+        array(
+            'taxonomy'   => 'resource_duration',
+            'hide_empty' => false,
+        )
+    );
+    $current_durations = wp_get_object_terms( $post->ID, 'resource_duration' );
+    echo '<p><strong>' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong></p>';
+    echo '<p class="description" style="margin-top:0;">' . esc_html__( 'Select all slots this resource fits.', 'ai-awareness-day' ) . '</p>';
+    echo '<div class="aiad-rd-checkboxes">';
+    $cur_dur_slugs = $current_durations && ! is_wp_error( $current_durations ) ? wp_list_pluck( $current_durations, 'slug' ) : array();
+    if ( ! is_wp_error( $duration_terms ) && ! empty( $duration_terms ) ) {
+        foreach ( $duration_terms as $term ) {
+            $label   = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term ) : $term->name;
+            $checked = in_array( $term->slug, $cur_dur_slugs, true );
+            echo '<label style="display:block;"><input type="checkbox" name="aiad_featured_resource_duration[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $checked, true, false ) . ' /> ' . esc_html( $label ) . '</label>';
+        }
+    } else {
+        echo '<em class="description">' . esc_html__( 'No session lengths found.', 'ai-awareness-day' ) . '</em>';
+    }
+    echo '</div>';
 }
 function aiad_save_featured_resource( int $post_id ): void {
     if ( ! isset( $_POST['aiad_featured_resource_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_nonce'] ) ), 'aiad_featured_resource_nonce' ) ) {
@@ -246,6 +269,24 @@ function aiad_save_featured_resource( int $post_id ): void {
             wp_set_object_terms( $post_id, array(), 'activity_type' );
         }
     }
+
+    $dur_slugs = array();
+    if ( ! empty( $_POST['aiad_featured_resource_duration'] ) && is_array( $_POST['aiad_featured_resource_duration'] ) ) {
+        $dur_term_list = get_terms(
+            array(
+                'taxonomy'   => 'resource_duration',
+                'hide_empty' => false,
+            )
+        );
+        $allowed = ( ! is_wp_error( $dur_term_list ) && is_array( $dur_term_list ) ) ? wp_list_pluck( $dur_term_list, 'slug' ) : array();
+        $dur_slugs = array_values(
+            array_intersect(
+                array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_featured_resource_duration'] ) ),
+                $allowed
+            )
+        );
+    }
+    wp_set_object_terms( $post_id, $dur_slugs, 'resource_duration' );
 }
 add_action( 'add_meta_boxes', 'aiad_featured_resource_meta_box' );
 add_action( 'save_post_featured_resource', 'aiad_save_featured_resource' );
@@ -544,7 +585,6 @@ function aiad_seed_lesson_starters(): void {
         ),
     );
 
-    $resource_type = 'Lesson Starter';
     $duration_slug = '5-min-lesson-starters';
 
     foreach ( $items as $item ) {
@@ -556,7 +596,6 @@ function aiad_seed_lesson_starters(): void {
             'post_author'  => 1,
         ) );
         if ( $post_id && ! is_wp_error( $post_id ) ) {
-            wp_set_object_terms( $post_id, array( $resource_type ), 'resource_type' );
             wp_set_object_terms( $post_id, array( $item['theme'] ), 'resource_principle' );
             wp_set_object_terms( $post_id, array( $duration_slug ), 'resource_duration' );
         }
@@ -569,15 +608,19 @@ function aiad_seed_lesson_starters(): void {
  * Remove default taxonomy meta boxes; unified Resource Details handles them.
  */
 function aiad_remove_default_taxonomy_boxes(): void {
-    remove_meta_box( 'resource_typediv', 'resource', 'side' );
+    if ( taxonomy_exists( 'resource_type' ) ) {
+        remove_meta_box( 'resource_typediv', 'resource', 'side' );
+        remove_meta_box( 'resource_typediv', 'featured_resource', 'side' );
+    }
     remove_meta_box( 'resource_principlediv', 'resource', 'side' );
     remove_meta_box( 'resource_durationdiv', 'resource', 'side' );
+    remove_meta_box( 'resource_durationdiv', 'featured_resource', 'side' );
     remove_meta_box( 'activity_typediv', 'resource', 'side' );
 }
 add_action( 'add_meta_boxes', 'aiad_remove_default_taxonomy_boxes', 99 );
 
 /**
- * Unified Resource Details meta box (Format, Theme, Session length, Activity type, Download, Key Stage)
+ * Unified Resource Details meta box (Theme, Session length, Activity type, Download, Key Stage)
  */
 function aiad_resource_details_meta_box(): void {
     add_meta_box(
@@ -599,12 +642,10 @@ add_action( 'add_meta_boxes', 'aiad_resource_details_meta_box' );
 function aiad_resource_details_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_resource_details_nonce', 'aiad_resource_details_nonce' );
 
-    $type_terms     = get_terms( array( 'taxonomy' => 'resource_type', 'hide_empty' => false ) );
     $theme_terms    = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
     $duration_terms = get_terms( array( 'taxonomy' => 'resource_duration', 'hide_empty' => false ) );
     $activity_terms = get_terms( array( 'taxonomy' => 'activity_type', 'hide_empty' => false ) );
 
-    $current_type     = wp_get_object_terms( $post->ID, 'resource_type' );
     $current_theme    = wp_get_object_terms( $post->ID, 'resource_principle' );
     $current_duration = wp_get_object_terms( $post->ID, 'resource_duration' );
     $current_activities = wp_get_object_terms( $post->ID, 'activity_type' );
@@ -636,18 +677,6 @@ function aiad_resource_details_callback( WP_Post $post ): void {
         echo aiad_render_field( $config, $value, $name );
     }
 
-    // Format (radio) - Taxonomy field, not in registry
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-radios">';
-    $current_type_slug = $current_type && ! is_wp_error( $current_type ) ? $current_type[0]->slug : '';
-    foreach ( $type_terms as $term ) {
-        if ( is_wp_error( $term ) ) {
-            continue;
-        }
-        $id = 'aiad_type_' . $term->slug;
-        echo '<label><input type="radio" name="aiad_resource_type" value="' . esc_attr( $term->slug ) . '" ' . checked( $current_type_slug, $term->slug, false ) . ' /> ' . esc_html( $term->name ) . '</label> ';
-    }
-    echo '</div></div>';
-
     // Theme (pill-style radios)
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-pills">';
     $current_theme_slug = $current_theme && ! is_wp_error( $current_theme ) ? $current_theme[0]->slug : '';
@@ -661,15 +690,18 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     }
     echo '</div></div>';
 
-    // Session length (radio)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-radios">';
-    $current_duration_slug = $current_duration && ! is_wp_error( $current_duration ) ? $current_duration[0]->slug : '';
+    // Session length (checkboxes — slot + time; select all that apply)
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong>';
+    echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html__( 'Select all slots this resource fits (e.g. both a 5-minute starter and a 20-minute assembly).', 'ai-awareness-day' ) . '</p>';
+    echo '<div class="aiad-rd-checkboxes">';
+    $current_duration_slugs = $current_duration && ! is_wp_error( $current_duration ) ? wp_list_pluck( $current_duration, 'slug' ) : array();
     foreach ( $duration_terms as $term ) {
         if ( is_wp_error( $term ) ) {
             continue;
         }
-        $label = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term ) : $term->name;
-        echo '<label><input type="radio" name="aiad_resource_duration" value="' . esc_attr( $term->slug ) . '" ' . checked( $current_duration_slug, $term->slug, false ) . ' /> ' . esc_html( $label ) . '</label> ';
+        $label   = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term ) : $term->name;
+        $checked = in_array( $term->slug, $current_duration_slugs, true );
+        echo '<label><input type="checkbox" name="aiad_resource_duration[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $checked, true, false ) . ' /> ' . esc_html( $label ) . '</label><br>';
     }
     echo '</div></div>';
 
@@ -729,20 +761,28 @@ function aiad_save_resource_details( int $post_id ): void {
         return;
     }
 
-    $type = isset( $_POST['aiad_resource_type'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_resource_type'] ) ) : '';
-    if ( $type ) {
-        wp_set_object_terms( $post_id, array( $type ), 'resource_type' );
-    }
-
     $principle = isset( $_POST['aiad_resource_principle'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_resource_principle'] ) ) : '';
     if ( $principle ) {
         wp_set_object_terms( $post_id, array( $principle ), 'resource_principle' );
     }
 
-    $duration = isset( $_POST['aiad_resource_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_resource_duration'] ) ) : '';
-    if ( $duration ) {
-        wp_set_object_terms( $post_id, array( $duration ), 'resource_duration' );
+    $duration_slugs = array();
+    if ( ! empty( $_POST['aiad_resource_duration'] ) && is_array( $_POST['aiad_resource_duration'] ) ) {
+        $dur_term_list = get_terms(
+            array(
+                'taxonomy'   => 'resource_duration',
+                'hide_empty' => false,
+            )
+        );
+        $allowed = ( ! is_wp_error( $dur_term_list ) && is_array( $dur_term_list ) ) ? wp_list_pluck( $dur_term_list, 'slug' ) : array();
+        $duration_slugs = array_values(
+            array_intersect(
+                array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_resource_duration'] ) ),
+                $allowed
+            )
+        );
     }
+    wp_set_object_terms( $post_id, $duration_slugs, 'resource_duration' );
 
     $activities = array();
     if ( ! empty( $_POST['aiad_activity_type'] ) && is_array( $_POST['aiad_activity_type'] ) ) {

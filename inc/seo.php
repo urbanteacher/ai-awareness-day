@@ -190,12 +190,12 @@ function aiad_get_educational_resource_schema( WP_Post $post ): array {
 		}
 	}
 	
-	// Learning resource type
-	$resource_types = get_the_terms( $post->ID, 'resource_type' );
-	if ( $resource_types && ! is_wp_error( $resource_types ) ) {
-		$type_names = wp_list_pluck( $resource_types, 'name' );
-		if ( ! empty( $type_names ) ) {
-			$schema['learningResourceType'] = count( $type_names ) === 1 ? $type_names[0] : $type_names;
+	// Session length / slot (unified taxonomy — replaces legacy "Format")
+	$session_terms = get_the_terms( $post->ID, 'resource_duration' );
+	if ( $session_terms && ! is_wp_error( $session_terms ) && function_exists( 'aiad_resource_duration_term_labels' ) ) {
+		$labels = aiad_resource_duration_term_labels( $session_terms );
+		if ( ! empty( $labels ) ) {
+			$schema['learningResourceType'] = count( $labels ) === 1 ? $labels[0] : $labels;
 		}
 	}
 	

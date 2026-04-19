@@ -277,7 +277,7 @@ add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
  * it counts how many resources match "Safe" + each available Resource Type.
  * 
  * Algorithm:
- * 1. For each taxonomy (resource_type, resource_principle, etc.):
+ * 1. For each taxonomy (resource_principle, resource_duration, etc.):
  *    - Remove that taxonomy from the active filters (reduced_query)
  *    - For each term in that taxonomy:
  *      - Add the term to reduced_query
@@ -291,7 +291,7 @@ add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
  * @param string $post_type       Post type slug ('resource' or 'featured_resource').
  * @param array  $active_tax_query Current tax_query array from active filters.
  * @return array Counts keyed by taxonomy => term_slug => count. Example:
- *               ['resource_type' => ['lesson-starter' => 5, 'assembly' => 3], ...]
+ *               ['resource_duration' => ['5-min-lesson-starters' => 5, ...], ...]
  */
 function aiad_get_filter_counts( string $post_type, array $active_tax_query ): array {
     // Cache key includes version number (bumped on resource save) and active filters
@@ -303,7 +303,7 @@ function aiad_get_filter_counts( string $post_type, array $active_tax_query ): a
         return $cached;
     }
 
-    $taxonomies = array( 'resource_type', 'resource_principle', 'resource_duration', 'activity_type' );
+    $taxonomies = array( 'resource_principle', 'resource_duration', 'activity_type' );
     $counts     = array();
     foreach ( $taxonomies as $tax ) {
         $counts[ $tax ] = array();
@@ -491,15 +491,6 @@ function aiad_ajax_filter_resources(): void {
 
     $tax_query = array();
 
-    $resource_type = sanitize_text_field( $_POST['resource_type'] ?? '' );
-    if ( $resource_type ) {
-        $tax_query[] = array(
-            'taxonomy' => 'resource_type',
-            'field'    => 'slug',
-            'terms'    => $resource_type,
-        );
-    }
-
     $principle = sanitize_text_field( $_POST['principle'] ?? '' );
     if ( $principle ) {
         $tax_query[] = array(
@@ -510,6 +501,10 @@ function aiad_ajax_filter_resources(): void {
     }
 
     $duration = sanitize_text_field( $_POST['duration'] ?? '' );
+    $legacy_type = sanitize_text_field( $_POST['resource_type'] ?? '' );
+    if ( ! $duration && $legacy_type && function_exists( 'aiad_legacy_resource_type_slug_to_duration_slug' ) ) {
+        $duration = aiad_legacy_resource_type_slug_to_duration_slug( $legacy_type );
+    }
     if ( $duration ) {
         $tax_query[] = array(
             'taxonomy' => 'resource_duration',
@@ -562,17 +557,16 @@ function aiad_ajax_filter_resources(): void {
             $query->the_post();
             $id = get_the_ID();
 
-            $types      = get_the_terms( $id, 'resource_type' );
             $themes     = get_the_terms( $id, 'resource_principle' );
             $durations  = get_the_terms( $id, 'resource_duration' );
             $activities = get_the_terms( $id, 'activity_type' );
 
-            $type_name = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
-            $theme_name = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
-            $duration_name = '';
-            if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_label' ) ) {
-                $duration_name = aiad_duration_badge_label( $durations[0] );
+            $duration_names = array();
+            if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_resource_duration_term_labels' ) ) {
+                $duration_names = aiad_resource_duration_term_labels( $durations );
             }
+            $duration_name = ! empty( $duration_names ) ? $duration_names[0] : '';
+            $theme_name = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
             $activity_names = array();
             if ( $activities && ! is_wp_error( $activities ) ) {
                 foreach ( $activities as $a ) {
@@ -592,7 +586,10 @@ function aiad_ajax_filter_resources(): void {
                 'permalink'      => get_permalink(),
                 'excerpt'        => get_the_excerpt(),
                 'thumbnail'      => $thumbnail ?: '',
-                'type_name'      => $type_name,
+                'type_name'      => $duration_name,
+                'type_names'     => $duration_names,
+                'duration_names' => $duration_names,
+                'duration_name'  => $duration_name,
                 'theme_name'     => $theme_name,
                 'theme_slug'     => $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '',
                 'duration_name'  => $duration_name,
