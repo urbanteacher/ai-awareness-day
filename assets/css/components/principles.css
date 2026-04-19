@@ -18,19 +18,27 @@
   display: none;
 }
 
-/* ── Mobile default: 3-column compact grid ── */
+/* ── Mobile default: 2-column grid ── */
 .principles-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
   margin-top: 1.5rem;
+}
+
+/* Centre the lone 5th card when it's the only item in its row */
+.principles-grid > .principle-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .principle-card {
   background: transparent;
   border: none;
   border-radius: 0;
-  padding: 0.5rem 0.35rem;
+  padding: 0.75rem 0.5rem;
   text-align: center;
   transition: var(--transition);
   position: relative;
@@ -61,16 +69,16 @@
   transform: scaleX(1);
 }
 
-/* ── Badge — mobile: 56px ────────────────── */
+/* ── Badge — mobile: 90px ────────────────── */
 .principle-card .principle-badge {
-  margin-bottom: 0.2rem;
-  min-height: 56px;
+  margin-bottom: 0.5rem;
+  min-height: 90px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  max-width: 56px;
+  width: 90px;
+  max-width: 90px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -79,7 +87,7 @@
   display: block;
   margin: 0 auto;
   max-width: 100%;
-  max-height: 56px;
+  max-height: 90px;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -91,8 +99,8 @@
 }
 
 .principle-card .principle-badge__placeholder {
-  width: 56px;
-  height: 56px;
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +110,7 @@
 
 .principle-card .principle-badge__placeholder-text {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--gray-400);
   text-transform: uppercase;
@@ -132,57 +140,19 @@
 
 /* ── Typography — mobile ─────────────────── */
 .principle-card h3 {
-  font-size: 0.6875rem;
-  /* 11px — was 0.5rem (8px), now readable */
-  letter-spacing: 0.02em;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--gray-900);
   line-height: 1.2;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
+  margin-bottom: 0.35rem;
 }
 
 .principle-card .section-desc {
-  font-size: 0.625rem;
-  /* 10px — reduced from 0.6875rem (11px) */
-  line-height: 1.25;
-  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: 0.25rem;
   max-width: none;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
-}
-
-/* ── Small mobile (≤ 480px): slightly tighter */
-@media (max-width: 480px) {
-  .principles-grid {
-    gap: 0.35rem;
-  }
-
-  .principle-card {
-    padding: 0.4rem 0.25rem;
-  }
-
-  .principle-card .principle-badge {
-    min-height: 48px;
-    width: 48px;
-    max-width: 48px;
-    margin-bottom: 0.15rem;
-  }
-
-  .principle-card .principle-badge__img {
-    max-height: 48px;
-  }
-
-  .principle-card .principle-badge__placeholder {
-    width: 48px;
-    height: 48px;
-  }
-
-  .principle-card .principle-badge__placeholder-text {
-    font-size: 0.9rem;
-  }
 }
 
 /* ── Tablet (769–1024px): 3-col, normal gap ─ */
