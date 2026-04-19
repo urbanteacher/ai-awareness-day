@@ -483,6 +483,14 @@
     gap: 0.6rem;
   }
 
+  /* Centre lone last card when it's the only item in its row */
+  .resources-grid > .resource-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .resource-card__body {
     padding: 0.5rem 0.4rem;
   }
@@ -1058,12 +1066,6 @@
   .featured-from-orgs__cta .resource-filter-submit {
     width: 100%;
   }
-}
-
-.btn-submit:hover {
-  background: var(--green-900);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .btn-submit svg {
