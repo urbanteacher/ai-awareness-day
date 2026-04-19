@@ -26,12 +26,14 @@
   margin-top: 1.5rem;
 }
 
-/* Centre the lone 5th card when it's the only item in its row */
-.principles-grid > .principle-card:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  max-width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+/* Centre the lone 5th card on mobile 2-col only */
+@media (max-width: 768px) {
+  .principles-grid > .principle-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .principle-card {
