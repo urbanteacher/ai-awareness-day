@@ -9,12 +9,12 @@
 
         <?php
         $defaults      = aiad_get_customizer_defaults();
+        $press_url = function_exists( 'aiad_get_press_release_public_url' ) ? aiad_get_press_release_public_url() : '';
         $resource_links = array(
             __( 'Newsletter', 'ai-awareness-day' )           => get_theme_mod( 'aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
-            __( 'Press Release', 'ai-awareness-day' )        => get_theme_mod( 'aiad_press_release_url', '' ),
+            __( 'Press Release', 'ai-awareness-day' )        => $press_url,
             __( 'Asset Pack', 'ai-awareness-day' )           => get_theme_mod( 'aiad_asset_pack_url', '' ),
             __( 'Implementation Guide', 'ai-awareness-day' ) => get_theme_mod( 'aiad_implementation_guide_url', '' ),
-            __( 'Sample Letters', 'ai-awareness-day' )       => get_theme_mod( 'aiad_sample_letters_url', aiad_default_sample_letters_url() ),
         ); ?>
         <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">
             <?php foreach ( $resource_links as $label => $url ) :

@@ -54,6 +54,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_contact_section( $wp_customize );
     aiad_register_social_section( $wp_customize );
     aiad_register_assets_pack_section( $wp_customize );
+    aiad_register_press_release_section( $wp_customize );
     aiad_register_front_page_layout_section( $wp_customize );
 }
 add_action( 'customize_register', 'aiad_customize_register' );
@@ -353,18 +354,6 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
         'type'        => 'url',
     ) );
 
-    $wp_customize->add_setting( 'aiad_sample_letters_url', array(
-        'default'           => aiad_default_sample_letters_url(),
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_sample_letters_url', array(
-        'label'       => __( 'Sample Letters & Communications URL', 'ai-awareness-day' ),
-        'description' => __( 'URL for the "Sample Letters & Communications" card (e.g. SLT approval letter PDF). When set, the card is clickable. Avoid temporary/presigned file links (they expire); upload the PDF to Media Library and paste that URL, or use a stable page link.', 'ai-awareness-day' ),
-        'section'     => 'aiad_toolkit',
-        'type'        => 'url',
-    ) );
-
     $wp_customize->add_setting( 'aiad_newsletter_url', array(
         'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
         'sanitize_callback' => 'esc_url_raw',
@@ -373,18 +362,6 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
     $wp_customize->add_control( 'aiad_newsletter_url', array(
         'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
         'description' => __( 'Shown as a footer link.', 'ai-awareness-day' ),
-        'section'     => 'aiad_toolkit',
-        'type'        => 'url',
-    ) );
-
-    $wp_customize->add_setting( 'aiad_press_release_url', array(
-        'default'           => '',
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_press_release_url', array(
-        'label'       => __( 'Press Release URL', 'ai-awareness-day' ),
-        'description' => __( 'Shown as a footer link when set.', 'ai-awareness-day' ),
         'section'     => 'aiad_toolkit',
         'type'        => 'url',
     ) );
@@ -403,7 +380,6 @@ function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): vo
 
     $toolkit_card_labels = array(
         1 => __( 'Implementation Guide', 'ai-awareness-day' ),
-        2 => __( 'Sample Letters & Communications', 'ai-awareness-day' ),
         3 => __( 'Latest Newsletter', 'ai-awareness-day' ),
     );
     foreach ( $toolkit_card_labels as $num => $label ) {
@@ -642,6 +618,43 @@ function aiad_register_assets_pack_section( WP_Customize_Manager $wp_customize )
             'mime_type'   => 'image',
         ) ) );
     }
+}
+
+/**
+ * Register Press Release section — downloadable file for the Press Release page.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_press_release_section( WP_Customize_Manager $wp_customize ): void {
+    $wp_customize->add_section(
+        'aiad_press_release',
+        array(
+            'title'       => __( 'Press Release', 'ai-awareness-day' ),
+            'description' => __( 'Upload the press release file (PDF recommended) for visitors to download from the Press Release page. The footer links to that page when it is published.', 'ai-awareness-day' ),
+            'priority'    => 39,
+        )
+    );
+
+    $wp_customize->add_setting(
+        'aiad_press_release_file',
+        array(
+            'default'           => 0,
+            'sanitize_callback' => 'absint',
+            'transport'         => 'refresh',
+        )
+    );
+    $wp_customize->add_control(
+        new WP_Customize_Media_Control(
+            $wp_customize,
+            'aiad_press_release_file',
+            array(
+                'label'       => __( 'Press release file', 'ai-awareness-day' ),
+                'description' => __( 'Typically a PDF. Shown on the Press Release page with a download button.', 'ai-awareness-day' ),
+                'section'     => 'aiad_press_release',
+                'mime_type'   => 'application/pdf',
+            )
+        )
+    );
 }
 
 /**

@@ -12,14 +12,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Default URL for the front-page "Sample Letters & Communications" toolkit card.
- * Keep this empty in code so secrets/expiring presigned URLs are never committed.
- * Set via Appearance > Customize > Toolkit Section (prefer Media Library URLs).
+ * Find the first page using the Press Release template.
+ *
+ * @return WP_Post|null
+ */
+function aiad_get_press_release_page(): ?WP_Post {
+	$pages = get_pages(
+		array(
+			'meta_key'    => '_wp_page_template',
+			'meta_value'  => 'template-press-release.php',
+			'number'      => 1,
+			'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
+		)
+	);
+	if ( empty( $pages ) ) {
+		return null;
+	}
+	return $pages[0];
+}
+
+/**
+ * Footer / nav URL for Press Release: prefer published page, then legacy Customizer URL, then direct file attachment.
  *
  * @return string
  */
-function aiad_default_sample_letters_url(): string {
-    return '';
+function aiad_get_press_release_public_url(): string {
+	$page = aiad_get_press_release_page();
+	if ( $page && 'publish' === $page->post_status ) {
+		return (string) get_permalink( $page );
+	}
+	$legacy = (string) get_theme_mod( 'aiad_press_release_url', '' );
+	if ( $legacy !== '' ) {
+		return $legacy;
+	}
+	$fid = absint( get_theme_mod( 'aiad_press_release_file', 0 ) );
+	return $fid ? (string) wp_get_attachment_url( $fid ) : '';
 }
 
 /**
