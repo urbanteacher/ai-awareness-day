@@ -342,9 +342,17 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <?php if ($has_overlay): ?>
                                         <div class="resource-card__image-overlay" aria-hidden="true">
                                             <div class="resource-card__image-top">
-                                                <?php foreach ($duration_labels as $slot_label) : ?>
-                                                    <span class="resource-card__pill resource-card__pill--type"><?php echo esc_html($slot_label); ?></span>
-                                                <?php endforeach; ?>
+                                                <?php
+                                                if ( $durations && ! is_wp_error( $durations ) ) :
+                                                    foreach ( $durations as $_dur_term ) :
+                                                        if ( function_exists( 'aiad_render_resource_card_duration_pill' ) ) {
+                                                            aiad_render_resource_card_duration_pill( $_dur_term );
+                                                        } else {
+                                                            echo '<span class="resource-card__pill resource-card__pill--type">' . esc_html( $_dur_term->name ) . '</span>';
+                                                        }
+                                                    endforeach;
+                                                endif;
+                                                ?>
                                                 <?php if ($theme_name): ?>
                                                     <?php
                                                     $theme_slug = strtolower($theme_name);

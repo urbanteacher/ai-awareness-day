@@ -562,8 +562,12 @@ function aiad_ajax_filter_resources(): void {
             $activities = get_the_terms( $id, 'activity_type' );
 
             $duration_names = array();
+            $duration_slugs = array();
             if ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_resource_duration_term_labels' ) ) {
                 $duration_names = aiad_resource_duration_term_labels( $durations );
+                foreach ( $durations as $dterm ) {
+                    $duration_slugs[] = $dterm->slug;
+                }
             }
             $duration_name = ! empty( $duration_names ) ? $duration_names[0] : '';
             $theme_name = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
@@ -589,10 +593,10 @@ function aiad_ajax_filter_resources(): void {
                 'type_name'      => $duration_name,
                 'type_names'     => $duration_names,
                 'duration_names' => $duration_names,
+                'duration_slugs' => $duration_slugs,
                 'duration_name'  => $duration_name,
                 'theme_name'     => $theme_name,
                 'theme_slug'     => $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '',
-                'duration_name'  => $duration_name,
                 'activity_types' => $activity_names,
                 'key_stages'     => array_values( array_intersect( $key_stage_meta, array_keys( aiad_key_stage_options() ) ) ),
                 'download_url'   => $download_url ?: '',

@@ -10,6 +10,8 @@
     var loadingEl = document.querySelector( '.resources-loading' );
     var emptyMessage = document.querySelector( '.resources-empty-message' );
     var ajaxConfig = typeof aiad_ajax !== 'undefined' ? aiad_ajax : {};
+    var cardConfig = typeof aiadResourceCard !== 'undefined' ? aiadResourceCard : {};
+    var durationPillParts = cardConfig.durationPillParts || {};
     var canUseAjax = !! ajaxConfig.url;
 
     if ( ! form || ! grid ) {
@@ -64,6 +66,19 @@
         return '—';
     }
 
+    function durationTypePillHtml( slug, fullName ) {
+        var parts = slug && durationPillParts[ slug ];
+        if ( parts && parts.slot && parts.time ) {
+            return (
+                '<span class="resource-card__pill resource-card__pill--type resource-card__pill--duration">' +
+                '<span class="resource-card__pill-slot">' + escapeHtml( parts.slot ) + '</span>' +
+                '<span class="resource-card__pill-time">' + escapeHtml( parts.time ) + '</span>' +
+                '</span>'
+            );
+        }
+        return '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( fullName ) + '</span>';
+    }
+
     function themePillClass( themeSlug ) {
         if ( ! themeSlug ) return 'resource-card__pill--theme';
         var slug = themeSlug.toLowerCase();
@@ -89,18 +104,21 @@
         if ( hasOverlay ) {
             overlayHtml = '<div class="resource-card__image-overlay" aria-hidden="true"><div class="resource-card__image-top">';
             var slotLabels = ( resource.duration_names && resource.duration_names.length ) ? resource.duration_names : ( resource.type_names && resource.type_names.length ? resource.type_names : [] );
+            var slotSlugs = ( resource.duration_slugs && resource.duration_slugs.length ) ? resource.duration_slugs : [];
             if ( slotLabels.length > 0 ) {
-                slotLabels.forEach( function ( name ) {
-                    overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( name ) + '</span>';
+                slotLabels.forEach( function ( name, i ) {
+                    var slug = slotSlugs[ i ] || '';
+                    overlayHtml += durationTypePillHtml( slug, name );
                 } );
             } else if ( resource.type_name || resource.duration_name ) {
-                overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( resource.duration_name || resource.type_name ) + '</span>';
+                var fallbackSlug = ( resource.duration_slugs && resource.duration_slugs[ 0 ] ) ? resource.duration_slugs[ 0 ] : '';
+                overlayHtml += durationTypePillHtml( fallbackSlug, resource.duration_name || resource.type_name );
             }
             if ( resource.theme_name ) {
                 overlayHtml += '<span class="' + themePillClass( resource.theme_slug ) + '">' + escapeHtml( resource.theme_name ) + '</span>';
             }
             if ( resource.org_name && isExternal ) {
-                overlayHtml += '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( resource.org_name ) + '</span>';
+                overlayHtml += '<span class="resource-card__pill resource-card__pill--org">' + escapeHtml( resource.org_name ) + '</span>';
             }
             overlayHtml += '</div></div>';
         }

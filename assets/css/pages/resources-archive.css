@@ -262,6 +262,30 @@
   color: var(--gray-900);
 }
 
+/* Stacked session-length label: short slot + time (avoids awkward wraps on narrow cards) */
+.resource-card__pill--duration {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.06rem;
+  line-height: 1.12;
+  text-align: center;
+  min-width: 0;
+}
+
+.resource-card__pill-slot,
+.resource-card__pill-time {
+  display: block;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.resource-card__pill-time {
+  font-size: 0.88em;
+  letter-spacing: 0.05em;
+  opacity: 0.95;
+}
+
 .resource-card__pill--theme {
   background: rgba(255, 255, 255, 0.9);
   color: var(--gray-900);

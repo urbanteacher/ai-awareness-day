@@ -40,6 +40,74 @@ function aiad_duration_badge_label( object|string $term_or_slug ): string {
 }
 
 /**
+ * Session length split for resource card pills (narrow/mobile): label + time on separate lines.
+ *
+ * @param object|string $term_or_slug WP_Term or resource_duration slug.
+ * @return array{slot: string, time: string}|null
+ */
+function aiad_duration_badge_parts( object|string $term_or_slug ): ?array {
+    $slug = is_object( $term_or_slug ) ? $term_or_slug->slug : $term_or_slug;
+    $map  = array(
+        '5-min-lesson-starters'  => array(
+            'slot' => __( 'Lesson Starter', 'ai-awareness-day' ),
+            'time' => __( '5 min', 'ai-awareness-day' ),
+        ),
+        '15-20-min-tutor-time'   => array(
+            'slot' => __( 'Tutor Time', 'ai-awareness-day' ),
+            'time' => __( '15 min', 'ai-awareness-day' ),
+        ),
+        '20-min-assemblies'      => array(
+            'slot' => __( 'Assembly', 'ai-awareness-day' ),
+            'time' => __( '20 min', 'ai-awareness-day' ),
+        ),
+        '30-45-min-after-school' => array(
+            'slot' => __( 'After School', 'ai-awareness-day' ),
+            'time' => __( '30 min', 'ai-awareness-day' ),
+        ),
+    );
+    return isset( $map[ $slug ] ) ? $map[ $slug ] : null;
+}
+
+/**
+ * JSON-serializable map for JS card rendering (wp_localize_script).
+ *
+ * @return array<string, array{slot: string, time: string}>
+ */
+function aiad_duration_badge_parts_map(): array {
+    $slugs = array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
+    $out   = array();
+    foreach ( $slugs as $slug ) {
+        $p = aiad_duration_badge_parts( $slug );
+        if ( $p ) {
+            $out[ $slug ] = $p;
+        }
+    }
+    return $out;
+}
+
+/**
+ * Echo session-length pill markup for resource cards (stacked slot + time when mappable).
+ *
+ * @param WP_Term|object|string $term_or_slug Duration term or slug.
+ */
+function aiad_render_resource_card_duration_pill( object|string $term_or_slug ): void {
+    $parts = aiad_duration_badge_parts( $term_or_slug );
+    if ( $parts ) {
+        echo '<span class="resource-card__pill resource-card__pill--type resource-card__pill--duration">';
+        echo '<span class="resource-card__pill-slot">' . esc_html( $parts['slot'] ) . '</span>';
+        echo '<span class="resource-card__pill-time">' . esc_html( $parts['time'] ) . '</span>';
+        echo '</span>';
+        return;
+    }
+    if ( is_object( $term_or_slug ) && isset( $term_or_slug->slug ) ) {
+        $full = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term_or_slug ) : (string) ( $term_or_slug->name ?? '' );
+    } else {
+        $full = (string) $term_or_slug;
+    }
+    echo '<span class="resource-card__pill resource-card__pill--type">' . esc_html( $full ) . '</span>';
+}
+
+/**
  * Map legacy Format (resource_type) term to Session length (resource_duration) slugs — used by one-time migration.
  *
  * @param WP_Term $term Term in resource_type taxonomy.
