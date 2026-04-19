@@ -25,6 +25,7 @@ if ( is_admin() ) {
     require_once $aiad_dir . '/inc/meta-boxes.php';
     require_once $aiad_dir . '/inc/admin-columns.php';
     require_once $aiad_dir . '/inc/import-export.php';
+    require_once $aiad_dir . '/inc/admin-assets-pack.php';
 }
 
 require_once $aiad_dir . '/inc/setup.php';
