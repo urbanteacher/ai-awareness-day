@@ -53,6 +53,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_display_board_section( $wp_customize );
     aiad_register_contact_section( $wp_customize );
     aiad_register_social_section( $wp_customize );
+    aiad_register_assets_pack_section( $wp_customize );
     aiad_register_front_page_layout_section( $wp_customize );
 }
 add_action( 'customize_register', 'aiad_customize_register' );
@@ -599,6 +600,48 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'section'     => 'aiad_social',
         'type'        => 'url',
     ) );
+}
+
+/**
+ * Register Assets Pack section — downloadable logo and email banners.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_assets_pack_section( WP_Customize_Manager $wp_customize ): void {
+    $wp_customize->add_section( 'aiad_assets_pack', array(
+        'title'       => __( 'Assets Pack', 'ai-awareness-day' ),
+        'description' => __( 'Upload the logo and email banners that teachers can download from the Assets Pack page.', 'ai-awareness-day' ),
+        'priority'    => 38,
+    ) );
+
+    $assets = array(
+        'aiad_asset_logo' => array(
+            'label'       => __( 'Logo (download)', 'ai-awareness-day' ),
+            'description' => __( 'The AI Awareness Day logo for schools to use in documents and presentations.', 'ai-awareness-day' ),
+        ),
+        'aiad_asset_banner_participating' => array(
+            'label'       => __( '"I\'m Participating" Email Banner', 'ai-awareness-day' ),
+            'description' => __( 'Banner teachers add to their email signature before the event.', 'ai-awareness-day' ),
+        ),
+        'aiad_asset_banner_participated' => array(
+            'label'       => __( '"I\'ve Participated" Email Banner', 'ai-awareness-day' ),
+            'description' => __( 'Banner teachers add to their email signature after the event.', 'ai-awareness-day' ),
+        ),
+    );
+
+    foreach ( $assets as $key => $labels ) {
+        $wp_customize->add_setting( $key, array(
+            'default'           => 0,
+            'sanitize_callback' => 'absint',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, $key, array(
+            'label'       => $labels['label'],
+            'description' => $labels['description'],
+            'section'     => 'aiad_assets_pack',
+            'mime_type'   => 'image',
+        ) ) );
+    }
 }
 
 /**

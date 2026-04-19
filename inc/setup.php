@@ -166,6 +166,7 @@ function aiad_scripts(): void
             'pages/resources-archive.css',
             'pages/single-resource.css',
             'pages/partners-archive.css',
+            'pages/assets-pack.css',
             'responsive/responsive.css',
             'responsive/mobile.css',
         );
