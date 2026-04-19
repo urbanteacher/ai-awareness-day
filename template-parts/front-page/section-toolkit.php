@@ -257,7 +257,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 ?>
                                 <a href="<?php echo esc_url($url); ?>" class="explore-session-card fade-up" style="--session-accent: <?php echo esc_attr($icon_bg); ?>">
                                     <span class="explore-session-text">
-                                        <span class="explore-session-title"><?php echo esc_html($card['title']); ?></span>
+                                        <span class="explore-session-title">
+                                            <span class="explore-session-title__full"><?php echo esc_html($card['title']); ?></span>
+                                            <?php if ( ! empty( $card['short_title'] ) ) : ?>
+                                                <span class="explore-session-title__short"><?php echo esc_html($card['short_title']); ?></span>
+                                            <?php endif; ?>
+                                        </span>
                                         <span class="explore-session-desc"><?php echo esc_html($card['description']); ?></span>
                                     </span>
                                     <span class="explore-session-badge">

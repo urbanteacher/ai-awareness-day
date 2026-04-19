@@ -10,6 +10,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Extract a YouTube video ID from common URL formats.
+ *
+ * @param string $url Video or page URL.
+ * @return string 11-character ID or empty string.
+ */
+function aiad_youtube_id_from_url( string $url ): string {
+	$url = trim( $url );
+	if ( $url === '' ) {
+		return '';
+	}
+	if ( preg_match( '#youtu\.be/([a-zA-Z0-9_-]{11})#', $url, $m ) ) {
+		return $m[1];
+	}
+	if ( preg_match( '#[?&]v=([a-zA-Z0-9_-]{11})#', $url, $m ) ) {
+		return $m[1];
+	}
+	if ( preg_match( '#/embed/([a-zA-Z0-9_-]{11})#', $url, $m ) ) {
+		return $m[1];
+	}
+	if ( preg_match( '#youtube\.com/shorts/([a-zA-Z0-9_-]{11})#', $url, $m ) ) {
+		return $m[1];
+	}
+	return '';
+}
+
+/**
+ * Open Graph image URL for a YouTube video (1280×720 when maxres is available).
+ *
+ * @param string $video_id 11-character ID.
+ * @return string HTTPS URL to i.ytimg.com.
+ */
+function aiad_youtube_og_thumbnail_url( string $video_id ): string {
+	if ( strlen( $video_id ) !== 11 ) {
+		return '';
+	}
+	return 'https://i.ytimg.com/vi/' . $video_id . '/maxresdefault.jpg';
+}
+
+/**
  * Get Open Graph data for current page.
  *
  * @return array<string, mixed> Array with 'title', 'description', 'image', 'image_id', 'url', 'type', 'site_name'.
@@ -23,6 +62,8 @@ function aiad_get_og_data(): array {
 		'description' => '',
 		'image'       => '',
 		'image_id'    => 0,
+		'image_alt'   => '',
+		'image_dims'  => array(), // [ width, height ] for external og:image (e.g. YouTube) when image_id is 0.
 		'url'         => home_url( '/' ),
 		'type'        => 'website',
 		'site_name'   => $site_name,
@@ -119,7 +160,7 @@ function aiad_get_og_data(): array {
 			$data['description'] = $description;
 		}
 
-		// Image: featured image first, then first image in content, then site logo
+		// Image: featured image → content image → YouTube poster (video resources) → site logo.
 		if ( has_post_thumbnail( $post ) ) {
 			$data['image_id'] = get_post_thumbnail_id( $post );
 			$data['image']    = wp_get_attachment_image_url( $data['image_id'], 'aiad_social' ) ?: '';
@@ -148,7 +189,24 @@ function aiad_get_og_data(): array {
 				$data['image_id'] = $first_image_id;
 				$data['image']    = wp_get_attachment_image_url( $first_image_id, 'aiad_social' ) ?: '';
 			}
-			// Final fallback: site logo
+			// Video-backed resource: use YouTube thumbnail so social cards are 16:9 (not a cropped site logo).
+			if ( empty( $data['image'] ) && 'resource' === $post->post_type ) {
+				$preview_video = get_post_meta( $post->ID, '_aiad_preview_video_url', true );
+				if ( is_string( $preview_video ) && $preview_video !== '' ) {
+					$yt_id = aiad_youtube_id_from_url( $preview_video );
+					if ( $yt_id !== '' ) {
+						$data['image']       = aiad_youtube_og_thumbnail_url( $yt_id );
+						$data['image_id']    = 0;
+						$data['image_dims']  = array( 1280, 720 );
+						$data['image_alt']   = sprintf(
+							/* translators: %s: resource title */
+							__( '%s — video thumbnail', 'ai-awareness-day' ),
+							get_the_title( $post )
+						);
+					}
+				}
+			}
+			// Final fallback: site logo (hard-cropped to aiad_social; can look awkward on X/LinkedIn)
 			if ( empty( $data['image'] ) ) {
 				$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
 				if ( $logo_id ) {
@@ -317,14 +375,20 @@ function aiad_output_og_tags(): void {
 		echo '<meta property="og:image" content="' . esc_url( $og_data['image'] ) . '" />' . "\n";
 		$image_id = ! empty( $og_data['image_id'] ) ? (int) $og_data['image_id'] : 0;
 		if ( $image_id ) {
-			$image_meta = wp_get_attachment_metadata( $image_id );
-			if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
-				echo '<meta property="og:image:width" content="' . esc_attr( $image_meta['width'] ) . '" />' . "\n";
-				echo '<meta property="og:image:height" content="' . esc_attr( $image_meta['height'] ) . '" />' . "\n";
+			$image_src = wp_get_attachment_image_src( $image_id, 'aiad_social' );
+			if ( $image_src ) {
+				echo '<meta property="og:image:width" content="' . esc_attr( $image_src[1] ) . '" />' . "\n";
+				echo '<meta property="og:image:height" content="' . esc_attr( $image_src[2] ) . '" />' . "\n";
 			}
 			$image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
 			if ( $image_alt ) {
 				echo '<meta property="og:image:alt" content="' . esc_attr( $image_alt ) . '" />' . "\n";
+			}
+		} elseif ( ! empty( $og_data['image_dims'] ) && is_array( $og_data['image_dims'] ) && count( $og_data['image_dims'] ) >= 2 ) {
+			echo '<meta property="og:image:width" content="' . esc_attr( (string) $og_data['image_dims'][0] ) . '" />' . "\n";
+			echo '<meta property="og:image:height" content="' . esc_attr( (string) $og_data['image_dims'][1] ) . '" />' . "\n";
+			if ( ! empty( $og_data['image_alt'] ) ) {
+				echo '<meta property="og:image:alt" content="' . esc_attr( $og_data['image_alt'] ) . '" />' . "\n";
 			}
 		}
 	}

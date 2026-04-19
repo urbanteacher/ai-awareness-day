@@ -165,6 +165,8 @@ a.duration-badge:hover {
   text-align: center;
 }
 
+.explore-session-title__short { display: none; }
+
 /* Match theme-link__label: same font size, weight, letter-spacing as theme cards */
 .explore-session-card .explore-session-title {
   font-family: var(--font-display);
@@ -197,6 +199,9 @@ a.duration-badge:hover {
     font-weight: 700;
     letter-spacing: 0.01em;
   }
+
+  .explore-session-title:has(.explore-session-title__short) .explore-session-title__full { display: none; }
+  .explore-session-title__short { display: inline; }
 }
 
 /* ---- Desktop: 2-col vibrant cards ---- */

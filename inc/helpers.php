@@ -49,6 +49,7 @@ function aiad_explore_session_cards(): array {
     return array(
         '5-min-lesson-starters' => array(
             'title'       => __( 'Lesson Starter', 'ai-awareness-day' ),
+            'short_title' => __( 'Starter', 'ai-awareness-day' ),
             'description' => __( 'Quick 5-minute AI discussions to kick off any lesson', 'ai-awareness-day' ),
             'badge_short' => '5 min',
             'icon_bg'     => '#93c5fd',
