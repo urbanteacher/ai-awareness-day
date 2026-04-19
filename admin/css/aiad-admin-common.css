@@ -1,6 +1,6 @@
 /**
  * AIAD Admin Common Styles
- * Loaded on all theme CPT edit screens (resource, partner, featured_resource, timeline, ai_tool).
+ * Loaded on theme CPT edit screens (resource, partner, featured_resource, timeline, ai_tool, form_submission).
  * Provides consistent meta box UI without touching WordPress core admin styles.
  *
  * @package AI_Awareness_Day

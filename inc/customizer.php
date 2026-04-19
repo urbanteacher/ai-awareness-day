@@ -109,7 +109,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     $wp_customize->add_setting( 'aiad_hero_slogan', array(
         'default'           => $defaults['aiad_hero_slogan'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_slogan', array(
         'label'   => __( 'Hero Slogan (under logo)', 'ai-awareness-day' ),
@@ -120,7 +120,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     $wp_customize->add_setting( 'aiad_hero_title', array(
         'default'           => $defaults['aiad_hero_title'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_title', array(
         'label'   => __( 'Hero Title', 'ai-awareness-day' ),
@@ -131,7 +131,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     $wp_customize->add_setting( 'aiad_hero_date', array(
         'default'           => $defaults['aiad_hero_date'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_date', array(
         'label'       => __( 'Event Date Text', 'ai-awareness-day' ),
@@ -143,7 +143,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     $wp_customize->add_setting( 'aiad_hero_subtitle', array(
         'default'           => $defaults['aiad_hero_subtitle'],
         'sanitize_callback' => 'sanitize_textarea_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_subtitle', array(
         'label'   => __( 'Hero Subtitle', 'ai-awareness-day' ),
@@ -168,7 +168,7 @@ function aiad_register_campaign_section( WP_Customize_Manager $wp_customize ): v
     $wp_customize->add_setting( 'aiad_campaign_title', array(
         'default'           => $defaults['aiad_campaign_title'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_campaign_title', array(
         'label'   => __( 'Campaign Title', 'ai-awareness-day' ),
@@ -179,7 +179,7 @@ function aiad_register_campaign_section( WP_Customize_Manager $wp_customize ): v
     $wp_customize->add_setting( 'aiad_campaign_text', array(
         'default'           => $defaults['aiad_campaign_text'],
         'sanitize_callback' => 'wp_kses_post',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_campaign_text', array(
         'label'   => __( 'Campaign Description', 'ai-awareness-day' ),
@@ -190,7 +190,7 @@ function aiad_register_campaign_section( WP_Customize_Manager $wp_customize ): v
     $wp_customize->add_setting( 'aiad_campaign_text_2', array(
         'default'           => $defaults['aiad_campaign_text_2'],
         'sanitize_callback' => 'wp_kses_post',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_campaign_text_2', array(
         'label'   => __( 'Campaign Paragraph 2', 'ai-awareness-day' ),
@@ -257,7 +257,7 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
         $wp_customize->add_setting( 'aiad_principle_title_' . $slug, array(
             'default'           => $defaults['title'],
             'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'postMessage',
+            'transport'         => 'refresh',
         ) );
         $wp_customize->add_control( 'aiad_principle_title_' . $slug, array(
             'label'   => sprintf( __( 'Principle "%s" title', 'ai-awareness-day' ), $defaults['title'] ),
@@ -268,7 +268,7 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
         $wp_customize->add_setting( 'aiad_principle_desc_' . $slug, array(
             'default'           => $defaults['desc'],
             'sanitize_callback' => 'sanitize_textarea_field',
-            'transport'         => 'postMessage',
+            'transport'         => 'refresh',
         ) );
         $wp_customize->add_control( 'aiad_principle_desc_' . $slug, array(
             'label'   => sprintf( __( 'Principle "%s" description', 'ai-awareness-day' ), $defaults['title'] ),
@@ -319,7 +319,7 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
     $wp_customize->add_setting( 'aiad_youtube_title', array(
         'default'           => $defaults['aiad_youtube_title'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_youtube_title', array(
         'label'   => __( 'Section title', 'ai-awareness-day' ),
@@ -495,13 +495,13 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
     $wp_customize->add_section( 'aiad_contact', array(
         'title'       => __( 'Get Involved Section', 'ai-awareness-day' ),
         'description' => __( 'Configure the contact form settings. IMPORTANT: For reliable email delivery, install the WP Mail SMTP plugin and configure SMTP settings. See instructions below.', 'ai-awareness-day' ),
-        'priority'    => 36,
+        'priority'    => 37,
     ) );
 
     $wp_customize->add_setting( 'aiad_contact_title', array(
         'default'           => $defaults['aiad_contact_title'],
         'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_contact_title', array(
         'label'   => __( 'Section Title', 'ai-awareness-day' ),
@@ -512,7 +512,7 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
     $wp_customize->add_setting( 'aiad_contact_desc', array(
         'default'           => $defaults['aiad_contact_desc'],
         'sanitize_callback' => 'wp_kses_post',
-        'transport'         => 'postMessage',
+        'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_contact_desc', array(
         'label'   => __( 'Contact Description', 'ai-awareness-day' ),

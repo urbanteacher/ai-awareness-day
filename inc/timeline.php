@@ -231,9 +231,10 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
     $icon_options = aiad_timeline_icon_options();
     $editable     = aiad_timeline_editable_meta_config();
     ?>
-    <p>
+    <div class="aiad-resource-details">
+    <p class="description" style="margin-top:0;">
         <strong><?php esc_html_e( 'Visual (recommended):', 'ai-awareness-day' ); ?></strong><br>
-        <em><?php esc_html_e( 'Set a Featured Image (school logo, display board, faces, etc.) and/or choose a card type below. The timeline card will show the content prominently.', 'ai-awareness-day' ); ?></em>
+        <?php esc_html_e( 'Set a Featured Image (school logo, display board, faces, etc.) and/or choose a card type below. The timeline card will show the content prominently.', 'ai-awareness-day' ); ?>
     </p>
     <?php
     foreach ( $editable as $meta_key => $field ) {
@@ -260,13 +261,13 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
             $data_condition = implode( ',', $show_for );
         }
         
-        $wrapper_class = 'aiad-timeline-field-wrapper';
+        $wrapper_class = 'aiad-timeline-field-wrapper aiad-rd-section';
         if ( '_aiad_timeline_card_type' !== $meta_key && $data_condition ) {
             $wrapper_class .= ' aiad-timeline-field-conditional';
         }
         ?>
-    <p class="<?php echo esc_attr( $wrapper_class ); ?>" data-show-for="<?php echo esc_attr( $data_condition ); ?>">
-        <label for="<?php echo esc_attr( $input_name ); ?>"><strong><?php echo esc_html( $field['label'] ); ?></strong></label><br>
+    <div class="<?php echo esc_attr( $wrapper_class ); ?>" data-show-for="<?php echo esc_attr( $data_condition ); ?>">
+        <label for="<?php echo esc_attr( $input_name ); ?>" class="aiad-rd-label"><?php echo esc_html( $field['label'] ); ?></label>
         <?php if ( 'select' === $input_type ) : ?>
             <select id="<?php echo esc_attr( $input_name ); ?>" name="<?php echo esc_attr( $input_name ); ?>" class="widefat aiad-timeline-card-type-select">
                 <?php foreach ( $field['options'] as $opt_value => $opt_label ) : ?>
@@ -277,30 +278,31 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
             <input type="<?php echo esc_attr( ( 'url' === $input_type ) ? 'url' : 'text' ); ?>" id="<?php echo esc_attr( $input_name ); ?>" name="<?php echo esc_attr( $input_name ); ?>" value="<?php echo esc_attr( $value ); ?>" class="widefat" placeholder="<?php echo esc_attr( $field['placeholder'] ?? '' ); ?>" />
         <?php endif; ?>
         <?php if ( ! empty( $field['description'] ) ) : ?>
-            <em class="description"><?php echo esc_html( $field['description'] ); ?></em>
+            <p class="description"><?php echo esc_html( $field['description'] ); ?></p>
         <?php endif; ?>
-    </p>
+    </div>
         <?php
     }
     ?>
-    <p>
-        <label><strong><?php esc_html_e( 'Source:', 'ai-awareness-day' ); ?></strong></label><br>
-        <em><?php echo esc_html( 'auto' === $source ? __( 'Auto-generated', 'ai-awareness-day' ) : __( 'Manual', 'ai-awareness-day' ) ); ?></em>
-    </p>
-    <p>
+    <div class="aiad-rd-section">
+        <strong class="aiad-rd-label"><?php esc_html_e( 'Source', 'ai-awareness-day' ); ?></strong>
+        <p class="description" style="margin-top:0;"><?php echo esc_html( 'auto' === $source ? __( 'Auto-generated', 'ai-awareness-day' ) : __( 'Manual', 'ai-awareness-day' ) ); ?></p>
+    </div>
+    <div class="aiad-rd-section">
         <label for="aiad_timeline_pinned">
             <input type="checkbox" id="aiad_timeline_pinned" name="aiad_timeline_pinned" value="1" <?php checked( $pinned ); ?> />
             <?php esc_html_e( 'Pin to top of timeline', 'ai-awareness-day' ); ?>
         </label>
-    </p>
-    <p>
-        <label for="aiad_timeline_icon"><strong><?php esc_html_e( 'Icon:', 'ai-awareness-day' ); ?></strong></label><br>
-        <select id="aiad_timeline_icon" name="aiad_timeline_icon">
+    </div>
+    <div class="aiad-rd-section">
+        <label for="aiad_timeline_icon" class="aiad-rd-label"><?php esc_html_e( 'Icon', 'ai-awareness-day' ); ?></label>
+        <select id="aiad_timeline_icon" name="aiad_timeline_icon" class="widefat">
             <?php foreach ( $icon_options as $value => $label ) : ?>
                 <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $icon, $value ); ?>><?php echo esc_html( $label ); ?></option>
             <?php endforeach; ?>
         </select>
-    </p>
+    </div>
+    </div>
     <script>
     jQuery(function($) {
         function toggleTimelineFields() {

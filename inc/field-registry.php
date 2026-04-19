@@ -53,6 +53,70 @@ function aiad_get_field_registry(): array {
                 'default'     => 'draft',
             ),
         ),
+        'ai_tool_details' => array(
+            '_aiad_tool_url' => array(
+                'type'        => 'url',
+                'label'       => __( 'Website URL', 'ai-awareness-day' ),
+                'placeholder' => 'https://example.com',
+                'class'       => 'large-text',
+                'meta_key'    => '_aiad_tool_url',
+            ),
+            '_aiad_tool_use_case' => array(
+                'type'        => 'text',
+                'label'       => __( 'Use Case', 'ai-awareness-day' ),
+                'description' => __( 'Short description shown on the card.', 'ai-awareness-day' ),
+                'placeholder' => __( 'e.g. Lesson planning, differentiation, feedback', 'ai-awareness-day' ),
+                'class'       => 'large-text',
+                'meta_key'    => '_aiad_tool_use_case',
+            ),
+            '_aiad_tool_features' => array(
+                'type'        => 'textarea',
+                'label'       => __( 'Key Features', 'ai-awareness-day' ),
+                'description' => __( 'One feature per line. First 3 are shown on cards; the rest appear as "+N more".', 'ai-awareness-day' ),
+                'rows'        => 5,
+                'placeholder' => __( 'One feature per line', 'ai-awareness-day' ),
+                'class'       => 'large-text',
+                'meta_key'    => '_aiad_tool_features',
+            ),
+        ),
+        'partner_details' => array(
+            '_partner_url' => array(
+                'type'        => 'url',
+                'label'       => __( 'Website URL (optional)', 'ai-awareness-day' ),
+                'class'       => 'large-text',
+                'meta_key'    => '_partner_url',
+            ),
+            '_partner_provides_ai_resources' => array(
+                'type'        => 'checkbox',
+                'label'       => __( 'Provides linked AI learning resources', 'ai-awareness-day' ),
+                'meta_key'    => '_partner_provides_ai_resources',
+            ),
+            '_partner_ai_resources_url' => array(
+                'type'        => 'url',
+                'label'       => __( 'AI resources URL (optional)', 'ai-awareness-day' ),
+                'description' => __( 'When checked, this partner appears first on the homepage Traction grid with a subtle highlight. The card links here, or to the website URL if this is empty.', 'ai-awareness-day' ),
+                'placeholder' => __( 'Leave empty to use website URL above', 'ai-awareness-day' ),
+                'class'       => 'large-text',
+                'meta_key'    => '_partner_ai_resources_url',
+            ),
+            '_partner_stats' => array(
+                'type'        => 'text',
+                'label'       => __( 'Statistics/Description', 'ai-awareness-day' ),
+                'description' => __( 'Displayed on the Traction section card (e.g. "32,000 students", "20 schools across Bedfordshire").', 'ai-awareness-day' ),
+                'placeholder' => __( 'e.g., 32,000 students', 'ai-awareness-day' ),
+                'class'       => 'large-text',
+                'meta_key'    => '_partner_stats',
+            ),
+            '_partner_school_count' => array(
+                'type'        => 'number',
+                'label'       => __( 'Schools in portfolio', 'ai-awareness-day' ),
+                'description' => __( 'For MATs and organisations: enter how many schools are in their catchment. This is added to the "Schools registered" total on the front page.', 'ai-awareness-day' ),
+                'min'         => 0,
+                'step'        => 1,
+                'class'       => 'small-text',
+                'meta_key'    => '_partner_school_count',
+            ),
+        ),
         'content_sections' => array(
             '_aiad_preparation' => array(
                 'type'        => 'repeatable_text',
@@ -184,12 +248,29 @@ function aiad_get_field_config( string $meta_key ): ?array {
 /**
  * Get all fields for a section
  *
- * @param string $section Section name ('resource_details' or 'content_sections')
+ * @param string $section Section name (e.g. resource_details, content_sections, partner_details).
  * @return array Field configurations
  */
 function aiad_get_section_fields( string $section ): array {
     $registry = aiad_get_field_registry();
     return $registry[ $section ] ?? array();
+}
+
+/**
+ * POST input name for a registry field (partner uses partner_*, resources use aiad_*).
+ *
+ * @param array  $config   Field config.
+ * @param string $meta_key Stored meta key.
+ * @return string
+ */
+function aiad_registry_field_post_name( array $config, string $meta_key ): string {
+    if ( ! empty( $config['input_name'] ) ) {
+        return $config['input_name'];
+    }
+    if ( strpos( $meta_key, '_partner_' ) === 0 ) {
+        return substr( $meta_key, 1 );
+    }
+    return str_replace( '_aiad_', 'aiad_', $meta_key );
 }
 
 /**
@@ -201,8 +282,8 @@ function aiad_get_section_fields( string $section ): array {
  * @return string Rendered HTML
  */
 function aiad_render_field( array $config, $value, string $name = '' ): string {
-    if ( empty( $name ) ) {
-        $name = str_replace( '_aiad_', 'aiad_', $config['meta_key'] );
+    if ( empty( $name ) && ! empty( $config['meta_key'] ) ) {
+        $name = aiad_registry_field_post_name( $config, $config['meta_key'] );
     }
 
     $type = $config['type'] ?? 'text';
@@ -213,7 +294,7 @@ function aiad_render_field( array $config, $value, string $name = '' ): string {
 
     $html = '<div class="aiad-rd-section">';
     
-    if ( ! empty( $label ) ) {
+    if ( ! empty( $label ) && 'checkbox' !== $type ) {
         $html .= '<strong class="aiad-rd-label">' . esc_html( $label ) . '</strong>';
     }
 
@@ -270,12 +351,15 @@ function aiad_render_field( array $config, $value, string $name = '' ): string {
 
         case 'number':
             $min = $config['min'] ?? '';
-            $attrs = 'name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '"';
+            $attrs = 'name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="' . esc_attr( $class ) . '"';
             if ( $min !== '' ) {
                 $attrs .= ' min="' . esc_attr( $min ) . '"';
             }
             if ( isset( $config['max'] ) ) {
                 $attrs .= ' max="' . esc_attr( $config['max'] ) . '"';
+            }
+            if ( isset( $config['step'] ) ) {
+                $attrs .= ' step="' . esc_attr( $config['step'] ) . '"';
             }
             $html .= '<input type="number" ' . $attrs . ' />';
             break;

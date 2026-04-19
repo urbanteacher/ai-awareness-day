@@ -519,31 +519,20 @@ add_action( 'add_meta_boxes', 'aiad_add_tool_meta_box' );
 function aiad_render_tool_meta_box( WP_Post $post ): void {
 	wp_nonce_field( 'aiad_tool_meta_save', 'aiad_tool_meta_nonce' );
 
-	$url      = get_post_meta( $post->ID, '_aiad_tool_url', true );
-	$use_case = get_post_meta( $post->ID, '_aiad_tool_use_case', true );
-	$features = get_post_meta( $post->ID, '_aiad_tool_features', true );
-	?>
-	<table class="form-table" style="margin-top:0">
-		<tr>
-			<th><label for="aiad_tool_url"><?php esc_html_e( 'Website URL', 'ai-awareness-day' ); ?></label></th>
-			<td><input type="url" id="aiad_tool_url" name="aiad_tool_url" value="<?php echo esc_attr( $url ); ?>" class="large-text" placeholder="https://example.com" /></td>
-		</tr>
-		<tr>
-			<th><label for="aiad_tool_use_case"><?php esc_html_e( 'Use Case', 'ai-awareness-day' ); ?></label></th>
-			<td>
-				<input type="text" id="aiad_tool_use_case" name="aiad_tool_use_case" value="<?php echo esc_attr( $use_case ); ?>" class="large-text" placeholder="<?php esc_attr_e( 'e.g. Lesson planning, differentiation, feedback', 'ai-awareness-day' ); ?>" />
-				<p class="description"><?php esc_html_e( 'Short description shown on the card.', 'ai-awareness-day' ); ?></p>
-			</td>
-		</tr>
-		<tr>
-			<th><label for="aiad_tool_features"><?php esc_html_e( 'Key Features', 'ai-awareness-day' ); ?></label></th>
-			<td>
-				<textarea id="aiad_tool_features" name="aiad_tool_features" class="large-text" rows="5" placeholder="<?php esc_attr_e( 'One feature per line', 'ai-awareness-day' ); ?>"><?php echo esc_textarea( $features ); ?></textarea>
-				<p class="description"><?php esc_html_e( 'One feature per line. First 3 are shown on cards; the rest appear as "+N more".', 'ai-awareness-day' ); ?></p>
-			</td>
-		</tr>
-	</table>
-	<?php
+	if ( ! function_exists( 'aiad_get_section_fields' ) || ! function_exists( 'aiad_render_field' ) ) {
+		return;
+	}
+
+	echo '<div class="aiad-resource-details">';
+	$fields = aiad_get_section_fields( 'ai_tool_details' );
+	foreach ( $fields as $meta_key => $config ) {
+		$value = get_post_meta( $post->ID, $meta_key, true );
+		$name  = function_exists( 'aiad_registry_field_post_name' )
+			? aiad_registry_field_post_name( $config, $meta_key )
+			: str_replace( '_aiad_', 'aiad_', $meta_key );
+		echo aiad_render_field( $config, $value, $name );
+	}
+	echo '</div>';
 }
 
 function aiad_save_tool_meta( int $post_id ): void {
@@ -556,14 +545,22 @@ function aiad_save_tool_meta( int $post_id ): void {
 		return;
 	}
 
-	if ( isset( $_POST['aiad_tool_url'] ) ) {
-		update_post_meta( $post_id, '_aiad_tool_url', esc_url_raw( wp_unslash( $_POST['aiad_tool_url'] ) ) );
-	}
-	if ( isset( $_POST['aiad_tool_use_case'] ) ) {
-		update_post_meta( $post_id, '_aiad_tool_use_case', sanitize_text_field( wp_unslash( $_POST['aiad_tool_use_case'] ) ) );
-	}
-	if ( isset( $_POST['aiad_tool_features'] ) ) {
-		update_post_meta( $post_id, '_aiad_tool_features', sanitize_textarea_field( wp_unslash( $_POST['aiad_tool_features'] ) ) );
+	if ( function_exists( 'aiad_get_section_fields' ) && function_exists( 'aiad_registry_field_post_name' ) ) {
+		$fields = aiad_get_section_fields( 'ai_tool_details' );
+		foreach ( $fields as $meta_key => $config ) {
+			$post_name = aiad_registry_field_post_name( $config, $meta_key );
+			if ( ! isset( $_POST[ $post_name ] ) ) {
+				continue;
+			}
+			$type = $config['type'] ?? 'text';
+			if ( 'url' === $type ) {
+				update_post_meta( $post_id, $meta_key, esc_url_raw( wp_unslash( $_POST[ $post_name ] ) ) );
+			} elseif ( 'textarea' === $type ) {
+				update_post_meta( $post_id, $meta_key, sanitize_textarea_field( wp_unslash( $_POST[ $post_name ] ) ) );
+			} else {
+				update_post_meta( $post_id, $meta_key, sanitize_text_field( wp_unslash( $_POST[ $post_name ] ) ) );
+			}
+		}
 	}
 }
 add_action( 'save_post_ai_tool', 'aiad_save_tool_meta' );

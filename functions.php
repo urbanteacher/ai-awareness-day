@@ -32,6 +32,7 @@ require_once $aiad_dir . '/inc/helpers.php';
 require_once $aiad_dir . '/inc/post-types.php';
 require_once $aiad_dir . '/inc/resource-seeds.php';
 require_once $aiad_dir . '/inc/field-registry.php';
+require_once $aiad_dir . '/inc/admin-taxonomy-fields.php';
 require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
 require_once $aiad_dir . '/inc/validation.php';

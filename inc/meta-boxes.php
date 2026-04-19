@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * - _partner_stats: Partner statistics/description
  * - _partner_provides_ai_resources: '1' when partner links to AI learning resources (Reach grid).
  * - _partner_ai_resources_url: Optional dedicated URL; if empty, Partner URL is used when the card is linked.
+ *
+ * Field definitions: partner_details in inc/field-registry.php.
  */
 function aiad_partner_url_meta_box(): void {
     add_meta_box(
@@ -28,18 +30,90 @@ function aiad_partner_url_meta_box(): void {
         'normal'
     );
 }
+/**
+ * Render partner meta fields from the partner_details registry subset.
+ *
+ * @param WP_Post $post      Partner post.
+ * @param string[] $meta_keys Meta keys to render (order preserved).
+ */
+function aiad_render_partner_section_fields( WP_Post $post, array $meta_keys ): void {
+    if ( ! function_exists( 'aiad_get_section_fields' ) || ! function_exists( 'aiad_render_field' ) ) {
+        return;
+    }
+    $fields = aiad_get_section_fields( 'partner_details' );
+    echo '<div class="aiad-resource-details">';
+    foreach ( $meta_keys as $meta_key ) {
+        if ( ! isset( $fields[ $meta_key ] ) ) {
+            continue;
+        }
+        $config = $fields[ $meta_key ];
+        $value  = get_post_meta( $post->ID, $meta_key, true );
+        if ( '_partner_school_count' === $meta_key && (int) $value === 0 ) {
+            $value = '';
+        }
+        echo aiad_render_field( $config, $value );
+    }
+    echo '</div>';
+}
+
+/**
+ * Save partner_details registry fields for the given meta keys.
+ *
+ * @param int      $post_id   Post ID.
+ * @param string[] $meta_keys Keys to persist.
+ */
+function aiad_save_partner_details_fields( int $post_id, array $meta_keys ): void {
+    if ( ! function_exists( 'aiad_get_section_fields' ) || ! function_exists( 'aiad_registry_field_post_name' ) ) {
+        return;
+    }
+    $fields = aiad_get_section_fields( 'partner_details' );
+    foreach ( $meta_keys as $meta_key ) {
+        if ( ! isset( $fields[ $meta_key ] ) ) {
+            continue;
+        }
+        $cfg       = $fields[ $meta_key ];
+        $post_name = aiad_registry_field_post_name( $cfg, $meta_key );
+        $type      = $cfg['type'] ?? 'text';
+
+        if ( 'checkbox' === $type ) {
+            if ( ! empty( $_POST[ $post_name ] ) ) {
+                update_post_meta( $post_id, $meta_key, '1' );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+            continue;
+        }
+
+        if ( ! isset( $_POST[ $post_name ] ) ) {
+            continue;
+        }
+
+        $raw = wp_unslash( $_POST[ $post_name ] );
+
+        switch ( $type ) {
+            case 'url':
+                $url = esc_url_raw( $raw );
+                if ( '_partner_ai_resources_url' === $meta_key && $url === '' ) {
+                    delete_post_meta( $post_id, $meta_key );
+                } else {
+                    update_post_meta( $post_id, $meta_key, $url );
+                }
+                break;
+            case 'number':
+                update_post_meta( $post_id, $meta_key, absint( $raw ) );
+                break;
+            default:
+                update_post_meta( $post_id, $meta_key, sanitize_text_field( $raw ) );
+        }
+    }
+}
+
 function aiad_partner_url_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_partner_url_nonce', 'aiad_partner_url_nonce' );
-    $url            = get_post_meta( $post->ID, '_partner_url', true );
-    $provides_ai    = (string) get_post_meta( $post->ID, '_partner_provides_ai_resources', true ) === '1';
-    $ai_resources_url = (string) get_post_meta( $post->ID, '_partner_ai_resources_url', true );
-    echo '<p><label for="partner_url">' . esc_html__( 'Website URL (optional)', 'ai-awareness-day' ) . '</label><br>';
-    echo '<input type="url" id="partner_url" name="partner_url" value="' . esc_attr( $url ) . '" class="widefat"></p>';
-    echo '<p><label><input type="checkbox" id="partner_provides_ai_resources" name="partner_provides_ai_resources" value="1" ' . checked( $provides_ai, true, false ) . '> ';
-    echo esc_html__( 'Provides linked AI learning resources', 'ai-awareness-day' ) . '</label></p>';
-    echo '<p><label for="partner_ai_resources_url">' . esc_html__( 'AI resources URL (optional)', 'ai-awareness-day' ) . '</label><br>';
-    echo '<input type="url" id="partner_ai_resources_url" name="partner_ai_resources_url" value="' . esc_attr( $ai_resources_url ) . '" class="widefat" placeholder="' . esc_attr( __( 'Leave empty to use website URL above', 'ai-awareness-day' ) ) . '">';
-    echo '<span class="description">' . esc_html__( 'When checked, this partner appears first on the homepage Traction grid with a subtle highlight. The card links here, or to the website URL if this is empty.', 'ai-awareness-day' ) . '</span></p>';
+    aiad_render_partner_section_fields(
+        $post,
+        array( '_partner_url', '_partner_provides_ai_resources', '_partner_ai_resources_url' )
+    );
 }
 function aiad_save_partner_url( int $post_id ): void {
     if ( ! isset( $_POST['aiad_partner_url_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_partner_url_nonce'] ) ), 'aiad_partner_url_nonce' ) ) {
@@ -51,22 +125,10 @@ function aiad_save_partner_url( int $post_id ): void {
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
         return;
     }
-    if ( isset( $_POST['partner_url'] ) ) {
-        update_post_meta( $post_id, '_partner_url', esc_url_raw( wp_unslash( $_POST['partner_url'] ) ) );
-    }
-    if ( ! empty( $_POST['partner_provides_ai_resources'] ) ) {
-        update_post_meta( $post_id, '_partner_provides_ai_resources', '1' );
-    } else {
-        delete_post_meta( $post_id, '_partner_provides_ai_resources' );
-    }
-    if ( isset( $_POST['partner_ai_resources_url'] ) ) {
-        $ai_url = esc_url_raw( wp_unslash( $_POST['partner_ai_resources_url'] ) );
-        if ( $ai_url !== '' ) {
-            update_post_meta( $post_id, '_partner_ai_resources_url', $ai_url );
-        } else {
-            delete_post_meta( $post_id, '_partner_ai_resources_url' );
-        }
-    }
+    aiad_save_partner_details_fields(
+        $post_id,
+        array( '_partner_url', '_partner_provides_ai_resources', '_partner_ai_resources_url' )
+    );
 }
 add_action( 'add_meta_boxes', 'aiad_partner_url_meta_box' );
 
@@ -86,20 +148,10 @@ function aiad_partner_stats_meta_box(): void {
 
 function aiad_partner_stats_meta_box_callback( $post ): void {
     wp_nonce_field( 'aiad_partner_stats_save', 'aiad_partner_stats_nonce' );
-    $stats        = get_post_meta( $post->ID, '_partner_stats', true );
-    $school_count = absint( get_post_meta( $post->ID, '_partner_school_count', true ) );
-    ?>
-    <p>
-        <label for="partner_stats"><?php esc_html_e( 'Statistics/Description', 'ai-awareness-day' ); ?></label><br>
-        <input type="text" id="partner_stats" name="partner_stats" value="<?php echo esc_attr( $stats ); ?>" style="width: 100%;" placeholder="<?php esc_attr_e( 'e.g., 32,000 students', 'ai-awareness-day' ); ?>">
-        <span class="description"><?php esc_html_e( 'Displayed on the Traction section card (e.g. "32,000 students", "20 schools across Bedfordshire").', 'ai-awareness-day' ); ?></span>
-    </p>
-    <p>
-        <label for="partner_school_count"><strong><?php esc_html_e( 'Schools in portfolio', 'ai-awareness-day' ); ?></strong></label><br>
-        <input type="number" id="partner_school_count" name="partner_school_count" value="<?php echo esc_attr( $school_count ?: '' ); ?>" min="0" step="1" style="width: 100px;" placeholder="0">
-        <span class="description"><?php esc_html_e( 'For MATs and organisations: enter how many schools are in their catchment. This is added to the "Schools registered" total on the front page.', 'ai-awareness-day' ); ?></span>
-    </p>
-    <?php
+    aiad_render_partner_section_fields(
+        $post,
+        array( '_partner_stats', '_partner_school_count' )
+    );
 }
 
 function aiad_partner_stats_save( $post_id ): void {
@@ -115,13 +167,10 @@ function aiad_partner_stats_save( $post_id ): void {
         return;
     }
 
-    if ( isset( $_POST['partner_stats'] ) ) {
-        update_post_meta( $post_id, '_partner_stats', sanitize_text_field( wp_unslash( $_POST['partner_stats'] ) ) );
-    }
-
-    if ( isset( $_POST['partner_school_count'] ) ) {
-        update_post_meta( $post_id, '_partner_school_count', absint( $_POST['partner_school_count'] ) );
-    }
+    aiad_save_partner_details_fields(
+        $post_id,
+        array( '_partner_stats', '_partner_school_count' )
+    );
 }
 add_action( 'add_meta_boxes', 'aiad_partner_stats_meta_box' );
 add_action( 'save_post_partner', 'aiad_partner_stats_save' );
@@ -152,6 +201,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     $url      = get_post_meta( $post->ID, '_featured_resource_url', true );
     $org_name = get_post_meta( $post->ID, '_featured_resource_org_name', true );
     $org_url  = get_post_meta( $post->ID, '_featured_resource_org_url', true );
+    echo '<div class="aiad-resource-details">';
     echo '<p><label for="featured_resource_url">' . esc_html__( 'Resource URL *', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_url" name="featured_resource_url" value="' . esc_attr( $url ) . '" class="widefat" required placeholder="https://..."></p>';
     echo '<p><label for="featured_resource_org_name">' . esc_html__( 'Organisation name', 'ai-awareness-day' ) . '</label><br>';
@@ -159,72 +209,37 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
 
-    // Theme / principle selector (Safe, Smart, Creative, Responsible, Future)
-    $principles = get_terms(
-        array(
-            'taxonomy'   => 'resource_principle',
-            'hide_empty' => false,
-        )
-    );
-    $current_principles = wp_get_object_terms( $post->ID, 'resource_principle', array( 'fields' => 'ids' ) );
-    echo '<p><label for="featured_resource_principle"><strong>' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong></label><br>';
-    if ( ! is_wp_error( $principles ) && ! empty( $principles ) ) {
-        echo '<select id="featured_resource_principle" name="featured_resource_principle" class="widefat">';
-        echo '<option value="">' . esc_html__( 'Select a theme (optional)', 'ai-awareness-day' ) . '</option>';
-        foreach ( $principles as $term ) {
-            $selected = ( ! empty( $current_principles ) && in_array( $term->term_id, $current_principles, true ) ) ? 'selected="selected"' : '';
-            echo '<option value="' . esc_attr( (string) $term->term_id ) . '" ' . $selected . '>' . esc_html( $term->name ) . '</option>';
-        }
-        echo '</select>';
-        echo '<em class="description">' . esc_html__( 'Used for the Safe / Smart / Creative / Responsible / Future pill and filters.', 'ai-awareness-day' ) . '</em>';
-    } else {
-        echo '<em class="description">' . esc_html__( 'No themes found. Add themes under Resources → Themes.', 'ai-awareness-day' ) . '</em>';
+    if ( function_exists( 'aiad_render_resource_principle_control' ) ) {
+        aiad_render_resource_principle_control(
+            $post->ID,
+            array(
+                'mode'        => 'select_single',
+                'input_name'  => 'aiad_featured_resource_principle',
+                'select_id'   => 'aiad_featured_resource_principle',
+                'description' => __( 'Used for the Safe / Smart / Creative / Responsible / Future pill and filters.', 'ai-awareness-day' ),
+            )
+        );
     }
-    echo '</p>';
-
-    // Activity type selector (e.g. Game, Quiz, Creative Task)
-    $activity_terms = get_terms(
-        array(
-            'taxonomy'   => 'activity_type',
-            'hide_empty' => false,
-        )
-    );
-    $current_activities = wp_get_object_terms( $post->ID, 'activity_type', array( 'fields' => 'ids' ) );
-    echo '<p><label for="featured_resource_activity"><strong>' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</strong></label><br>';
-    if ( ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) ) {
-        echo '<select id="featured_resource_activity" name="featured_resource_activity" class="widefat">';
-        echo '<option value="">' . esc_html__( 'Select an activity type (optional)', 'ai-awareness-day' ) . '</option>';
-        foreach ( $activity_terms as $term ) {
-            $selected = ( ! empty( $current_activities ) && in_array( $term->term_id, $current_activities, true ) ) ? 'selected="selected"' : '';
-            echo '<option value="' . esc_attr( (string) $term->term_id ) . '" ' . $selected . '>' . esc_html( $term->name ) . '</option>';
-        }
-        echo '</select>';
-        echo '<em class="description">' . esc_html__( 'Used for the “Activity” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ) . '</em>';
-    } else {
-        echo '<em class="description">' . esc_html__( 'No activity types found. Add them under Resources → Activity types.', 'ai-awareness-day' ) . '</em>';
+    if ( function_exists( 'aiad_render_activity_type_control' ) ) {
+        aiad_render_activity_type_control(
+            $post->ID,
+            array(
+                'mode'        => 'select_single',
+                'input_name'  => 'aiad_featured_resource_activity',
+                'select_id'   => 'aiad_featured_resource_activity',
+                'description' => __( 'Used for the “Activity” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ),
+            )
+        );
     }
-    echo '</p>';
-
-    // Session length (resource_duration) — same slots as main resources
-    $duration_terms = get_terms(
-        array(
-            'taxonomy'   => 'resource_duration',
-            'hide_empty' => false,
-        )
-    );
-    $current_durations = wp_get_object_terms( $post->ID, 'resource_duration' );
-    echo '<p><strong>' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong></p>';
-    echo '<p class="description" style="margin-top:0;">' . esc_html__( 'Select all slots this resource fits.', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-rd-checkboxes">';
-    $cur_dur_slugs = $current_durations && ! is_wp_error( $current_durations ) ? wp_list_pluck( $current_durations, 'slug' ) : array();
-    if ( ! is_wp_error( $duration_terms ) && ! empty( $duration_terms ) ) {
-        foreach ( $duration_terms as $term ) {
-            $label   = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term ) : $term->name;
-            $checked = in_array( $term->slug, $cur_dur_slugs, true );
-            echo '<label style="display:block;"><input type="checkbox" name="aiad_featured_resource_duration[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $checked, true, false ) . ' /> ' . esc_html( $label ) . '</label>';
-        }
-    } else {
-        echo '<em class="description">' . esc_html__( 'No session lengths found.', 'ai-awareness-day' ) . '</em>';
+    if ( function_exists( 'aiad_render_resource_duration_control' ) ) {
+        aiad_render_resource_duration_control(
+            $post->ID,
+            array(
+                'input_name'     => 'aiad_featured_resource_duration',
+                'description'    => __( 'Select all slots this resource fits.', 'ai-awareness-day' ),
+                'checkbox_block' => true,
+            )
+        );
     }
     echo '</div>';
 }
@@ -248,24 +263,22 @@ function aiad_save_featured_resource( int $post_id ): void {
         update_post_meta( $post_id, '_featured_resource_org_url', esc_url_raw( wp_unslash( $_POST['featured_resource_org_url'] ) ) );
     }
 
-    // Save selected theme / principle
-    if ( isset( $_POST['featured_resource_principle'] ) ) {
-        $term_id = absint( $_POST['featured_resource_principle'] );
-        if ( $term_id > 0 ) {
-            wp_set_object_terms( $post_id, array( $term_id ), 'resource_principle' );
+    if ( isset( $_POST['aiad_featured_resource_principle'] ) ) {
+        $slug      = sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_principle'] ) );
+        $allowed_p = function_exists( 'aiad_get_term_slugs_for_taxonomy' ) ? aiad_get_term_slugs_for_taxonomy( 'resource_principle' ) : array();
+        if ( $slug !== '' && in_array( $slug, $allowed_p, true ) ) {
+            wp_set_object_terms( $post_id, array( $slug ), 'resource_principle' );
         } else {
-            // If cleared, remove existing principle terms.
             wp_set_object_terms( $post_id, array(), 'resource_principle' );
         }
     }
 
-    // Save selected activity type
-    if ( isset( $_POST['featured_resource_activity'] ) ) {
-        $activity_term_id = absint( $_POST['featured_resource_activity'] );
-        if ( $activity_term_id > 0 ) {
-            wp_set_object_terms( $post_id, array( $activity_term_id ), 'activity_type' );
+    if ( isset( $_POST['aiad_featured_resource_activity'] ) ) {
+        $slug      = sanitize_text_field( wp_unslash( $_POST['aiad_featured_resource_activity'] ) );
+        $allowed_a = function_exists( 'aiad_get_term_slugs_for_taxonomy' ) ? aiad_get_term_slugs_for_taxonomy( 'activity_type' ) : array();
+        if ( $slug !== '' && in_array( $slug, $allowed_a, true ) ) {
+            wp_set_object_terms( $post_id, array( $slug ), 'activity_type' );
         } else {
-            // If cleared, remove existing activity type terms.
             wp_set_object_terms( $post_id, array(), 'activity_type' );
         }
     }
@@ -642,19 +655,10 @@ add_action( 'add_meta_boxes', 'aiad_resource_details_meta_box' );
 function aiad_resource_details_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_resource_details_nonce', 'aiad_resource_details_nonce' );
 
-    $theme_terms    = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
-    $duration_terms = get_terms( array( 'taxonomy' => 'resource_duration', 'hide_empty' => false ) );
-    $activity_terms = get_terms( array( 'taxonomy' => 'activity_type', 'hide_empty' => false ) );
-
-    $current_theme    = wp_get_object_terms( $post->ID, 'resource_principle' );
-    $current_duration = wp_get_object_terms( $post->ID, 'resource_duration' );
-    $current_activities = wp_get_object_terms( $post->ID, 'activity_type' );
     $key_stages      = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
     $download_url       = get_post_meta( $post->ID, '_aiad_download_url', true );
     $preview_video_url  = get_post_meta( $post->ID, '_aiad_preview_video_url', true );
     $filename           = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
-
-    $theme_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
 
     echo '<div class="aiad-resource-details">';
 
@@ -673,49 +677,33 @@ function aiad_resource_details_callback( WP_Post $post ): void {
             $value = get_post_status( $post->ID ) === 'publish' ? 'published' : 'draft';
         }
 
-        $name = str_replace( '_aiad_', 'aiad_', $meta_key );
+        $name = function_exists( 'aiad_registry_field_post_name' )
+            ? aiad_registry_field_post_name( $config, $meta_key )
+            : str_replace( '_aiad_', 'aiad_', $meta_key );
         echo aiad_render_field( $config, $value, $name );
     }
 
-    // Theme (pill-style radios)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-pills">';
-    $current_theme_slug = $current_theme && ! is_wp_error( $current_theme ) ? $current_theme[0]->slug : '';
-    foreach ( $theme_terms as $term ) {
-        if ( is_wp_error( $term ) ) {
-            continue;
-        }
-        $pill_class = in_array( $term->slug, $theme_slugs, true ) ? ' aiad-pill--' . $term->slug : '';
-        $id = 'aiad_theme_' . $term->slug;
-        echo '<label class="aiad-pill' . esc_attr( $pill_class ) . '"><input type="radio" name="aiad_resource_principle" value="' . esc_attr( $term->slug ) . '" ' . checked( $current_theme_slug, $term->slug, false ) . ' /> ' . esc_html( $term->name ) . '</label> ';
+    if ( function_exists( 'aiad_render_resource_principle_control' ) ) {
+        aiad_render_resource_principle_control(
+            $post->ID,
+            array(
+                'mode'       => 'pills',
+                'input_name' => 'aiad_resource_principle',
+            )
+        );
     }
-    echo '</div></div>';
-
-    // Session length (checkboxes — slot + time; select all that apply)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html__( 'Select all slots this resource fits (e.g. both a 5-minute starter and a 20-minute assembly).', 'ai-awareness-day' ) . '</p>';
-    echo '<div class="aiad-rd-checkboxes">';
-    $current_duration_slugs = $current_duration && ! is_wp_error( $current_duration ) ? wp_list_pluck( $current_duration, 'slug' ) : array();
-    foreach ( $duration_terms as $term ) {
-        if ( is_wp_error( $term ) ) {
-            continue;
-        }
-        $label   = function_exists( 'aiad_duration_badge_label' ) ? aiad_duration_badge_label( $term ) : $term->name;
-        $checked = in_array( $term->slug, $current_duration_slugs, true );
-        echo '<label><input type="checkbox" name="aiad_resource_duration[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $checked, true, false ) . ' /> ' . esc_html( $label ) . '</label><br>';
+    if ( function_exists( 'aiad_render_resource_duration_control' ) ) {
+        aiad_render_resource_duration_control( $post->ID, array() );
     }
-    echo '</div></div>';
-
-    // Activity type (checkboxes, multi-select)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
-    $current_activity_slugs = $current_activities && ! is_wp_error( $current_activities ) ? wp_list_pluck( $current_activities, 'slug' ) : array();
-    foreach ( $activity_terms as $term ) {
-        if ( is_wp_error( $term ) ) {
-            continue;
-        }
-        $checked = in_array( $term->slug, $current_activity_slugs, true );
-        echo '<label><input type="checkbox" name="aiad_activity_type[]" value="' . esc_attr( $term->slug ) . '" ' . checked( $checked, true, false ) . ' /> ' . esc_html( $term->name ) . '</label><br>';
+    if ( function_exists( 'aiad_render_activity_type_control' ) ) {
+        aiad_render_activity_type_control(
+            $post->ID,
+            array(
+                'mode'       => 'checkboxes',
+                'input_name' => 'aiad_activity_type',
+            )
+        );
     }
-    echo '</div></div>';
 
     // Download file
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Download file', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-download">';
@@ -743,6 +731,22 @@ function aiad_resource_details_callback( WP_Post $post ): void {
 }
 
 /**
+ * POST field name for resource meta keys (registry-backed or legacy `_aiad_*`).
+ *
+ * @param string $meta_key e.g. `_aiad_subtitle`, `_aiad_duration`.
+ * @return string e.g. `aiad_subtitle`.
+ */
+function aiad_resource_details_post_name( string $meta_key ): string {
+    if ( function_exists( 'aiad_get_field_config' ) && function_exists( 'aiad_registry_field_post_name' ) ) {
+        $cfg = aiad_get_field_config( $meta_key );
+        if ( is_array( $cfg ) ) {
+            return aiad_registry_field_post_name( $cfg, $meta_key );
+        }
+    }
+    return str_replace( '_aiad_', 'aiad_', $meta_key );
+}
+
+/**
  * Save Resource Details (terms, download URL, key stage)
  *
  * @param int $post_id Resource post ID.
@@ -761,24 +765,23 @@ function aiad_save_resource_details( int $post_id ): void {
         return;
     }
 
-    $principle = isset( $_POST['aiad_resource_principle'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_resource_principle'] ) ) : '';
-    if ( $principle ) {
-        wp_set_object_terms( $post_id, array( $principle ), 'resource_principle' );
+    if ( isset( $_POST['aiad_resource_principle'] ) ) {
+        $principle = sanitize_text_field( wp_unslash( $_POST['aiad_resource_principle'] ) );
+        $allowed_p = function_exists( 'aiad_get_term_slugs_for_taxonomy' ) ? aiad_get_term_slugs_for_taxonomy( 'resource_principle' ) : array();
+        if ( $principle !== '' && in_array( $principle, $allowed_p, true ) ) {
+            wp_set_object_terms( $post_id, array( $principle ), 'resource_principle' );
+        } else {
+            wp_set_object_terms( $post_id, array(), 'resource_principle' );
+        }
     }
 
     $duration_slugs = array();
     if ( ! empty( $_POST['aiad_resource_duration'] ) && is_array( $_POST['aiad_resource_duration'] ) ) {
-        $dur_term_list = get_terms(
-            array(
-                'taxonomy'   => 'resource_duration',
-                'hide_empty' => false,
-            )
-        );
-        $allowed = ( ! is_wp_error( $dur_term_list ) && is_array( $dur_term_list ) ) ? wp_list_pluck( $dur_term_list, 'slug' ) : array();
+        $allowed_d = function_exists( 'aiad_get_term_slugs_for_taxonomy' ) ? aiad_get_term_slugs_for_taxonomy( 'resource_duration' ) : array();
         $duration_slugs = array_values(
             array_intersect(
                 array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_resource_duration'] ) ),
-                $allowed
+                $allowed_d
             )
         );
     }
@@ -786,7 +789,13 @@ function aiad_save_resource_details( int $post_id ): void {
 
     $activities = array();
     if ( ! empty( $_POST['aiad_activity_type'] ) && is_array( $_POST['aiad_activity_type'] ) ) {
-        $activities = array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_activity_type'] ) );
+        $allowed_a = function_exists( 'aiad_get_term_slugs_for_taxonomy' ) ? aiad_get_term_slugs_for_taxonomy( 'activity_type' ) : array();
+        $activities = array_values(
+            array_intersect(
+                array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_activity_type'] ) ),
+                $allowed_a
+            )
+        );
     }
     wp_set_object_terms( $post_id, $activities, 'activity_type' );
 
@@ -805,20 +814,24 @@ function aiad_save_resource_details( int $post_id ): void {
     }
     update_post_meta( $post_id, '_aiad_key_stage', $key_stages );
 
-    if ( isset( $_POST['aiad_subtitle'] ) ) {
-        update_post_meta( $post_id, '_aiad_subtitle', sanitize_text_field( wp_unslash( $_POST['aiad_subtitle'] ) ) );
+    $pn_subtitle = aiad_resource_details_post_name( '_aiad_subtitle' );
+    if ( isset( $_POST[ $pn_subtitle ] ) ) {
+        update_post_meta( $post_id, '_aiad_subtitle', sanitize_text_field( wp_unslash( $_POST[ $pn_subtitle ] ) ) );
     }
-    if ( isset( $_POST['aiad_duration'] ) ) {
-        update_post_meta( $post_id, '_aiad_duration', sanitize_text_field( wp_unslash( $_POST['aiad_duration'] ) ) );
+    $pn_duration = aiad_resource_details_post_name( '_aiad_duration' );
+    if ( isset( $_POST[ $pn_duration ] ) ) {
+        update_post_meta( $post_id, '_aiad_duration', sanitize_text_field( wp_unslash( $_POST[ $pn_duration ] ) ) );
     }
-    if ( isset( $_POST['aiad_level'] ) ) {
-        $l = sanitize_text_field( wp_unslash( $_POST['aiad_level'] ) );
+    $pn_level = aiad_resource_details_post_name( '_aiad_level' );
+    if ( isset( $_POST[ $pn_level ] ) ) {
+        $l = sanitize_text_field( wp_unslash( $_POST[ $pn_level ] ) );
         if ( in_array( $l, array( 'beginner', 'intermediate', 'advanced' ), true ) ) {
             update_post_meta( $post_id, '_aiad_level', $l );
         }
     }
-    if ( isset( $_POST['aiad_status'] ) ) {
-        $s = sanitize_text_field( wp_unslash( $_POST['aiad_status'] ) );
+    $pn_status = aiad_resource_details_post_name( '_aiad_status' );
+    if ( isset( $_POST[ $pn_status ] ) ) {
+        $s = sanitize_text_field( wp_unslash( $_POST[ $pn_status ] ) );
         if ( in_array( $s, array( 'draft', 'in_review', 'published' ), true ) ) {
             update_post_meta( $post_id, '_aiad_status', $s );
         }
@@ -938,7 +951,9 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
     $fields = aiad_get_section_fields( 'content_sections' );
     foreach ( $fields as $meta_key => $config ) {
         $value = get_post_meta( $post->ID, $meta_key, true );
-        $name = str_replace( '_aiad_', 'aiad_', $meta_key );
+        $name  = function_exists( 'aiad_registry_field_post_name' )
+            ? aiad_registry_field_post_name( $config, $meta_key )
+            : str_replace( '_aiad_', 'aiad_', $meta_key );
         $type = $config['type'] ?? 'text';
 
         // Normalize values for specific fields
@@ -1161,7 +1176,7 @@ add_action( 'admin_enqueue_scripts', 'aiad_resource_download_admin_scripts' );
 /**
  * Enqueue shared admin common CSS on all theme CPT edit screens.
  * Provides consistent meta box styling across resource, partner,
- * featured_resource, timeline, and ai_tool post types.
+ * featured_resource, timeline, ai_tool, and form_submission post types.
  *
  * @param string $hook Current admin page hook.
  */
@@ -1173,7 +1188,7 @@ function aiad_admin_common_styles( string $hook ): void {
     if ( ! $screen ) {
         return;
     }
-    $theme_cpts = array( 'resource', 'partner', 'featured_resource', 'timeline', 'ai_tool' );
+    $theme_cpts = array( 'resource', 'partner', 'featured_resource', 'timeline', 'ai_tool', 'form_submission' );
     if ( ! in_array( $screen->post_type, $theme_cpts, true ) ) {
         return;
     }
@@ -1188,8 +1203,8 @@ function aiad_admin_common_styles( string $hook ): void {
 add_action( 'admin_enqueue_scripts', 'aiad_admin_common_styles' );
 
 /**
- * Admin notice on Resource edit screen: Type, Theme and Session length are all set here.
- * The sidebar items "Resource Types", "Themes", "Session length" are only for managing the options list.
+ * Admin notice on Resource edit screen: theme, session length, and activity are set in Resource Details.
+ * Taxonomy admin screens under Resources are for managing term lists only.
  */
 function aiad_resource_edit_screen_notice(): void {
     $screen = get_current_screen();
@@ -1199,7 +1214,7 @@ function aiad_resource_edit_screen_notice(): void {
     global $post;
     ?>
     <div class="notice notice-info is-dismissible" style="margin-top: 12px;">
-        <p><?php esc_html_e( 'Set Resource Type, Theme, and Session length on this page (in the boxes on the right, or below on mobile). The separate "Resource Types", "Themes", and "Session length" items in the Resources menu are only for managing the list of options (e.g. adding a new theme); you don’t need to open them when adding a resource.', 'ai-awareness-day' ); ?></p>
+        <p><?php esc_html_e( 'Set Theme, Session length, and Activity type in Resource Details on this page (and in the boxes on the right on desktop, or below on mobile). The Themes, Session length, and Activity type items under Resources are only for managing the list of options (for example, adding a new theme). You do not need to open those screens while editing a resource.', 'ai-awareness-day' ); ?></p>
     </div>
     <?php
     $schema_errors = $post && get_post_type( $post ) === 'resource' ? get_transient( 'aiad_schema_validation_errors_' . $post->ID ) : false;
