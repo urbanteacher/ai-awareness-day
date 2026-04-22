@@ -25,12 +25,18 @@ if ( ! $tools_query->have_posts() ) {
 
 $archive_url = get_post_type_archive_link( 'ai_tool' );
 $text_alignment_class = aiad_get_text_alignment_class();
+$published_tools_count = (int) ( wp_count_posts( 'ai_tool' )->publish ?? 0 );
+$tools_label = sprintf(
+	/* translators: %d: number of published AI tools. */
+	__( 'AI Tools (%d)', 'ai-awareness-day' ),
+	$published_tools_count
+);
 ?>
 
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="ai-tools">
 	<div class="container">
 		<div class="fade-up">
-			<span class="section-label"><?php esc_html_e( 'AI Tools', 'ai-awareness-day' ); ?></span>
+			<span class="section-label"><?php echo esc_html( $tools_label ); ?></span>
 			<h2 class="section-title"><?php esc_html_e( 'Start using AI in your classroom today', 'ai-awareness-day' ); ?></h2>
 			<p class="section-desc"><?php esc_html_e( 'Our curated collection of trending AI tools designed to enhance your lessons.', 'ai-awareness-day' ); ?></p>
 		</div>
