@@ -30,6 +30,37 @@ function aiad_get_assets_pack_page(): ?WP_Post {
 }
 
 /**
+ * Admin URL to open the Customizer focused on a section.
+ *
+ * @param string $section_id Section ID registered with the Customizer.
+ */
+function aiad_customizer_section_admin_url( string $section_id ): string {
+	return add_query_arg(
+		array(
+			'autofocus[section]' => $section_id,
+			'return'             => rawurlencode( admin_url() ),
+		),
+		admin_url( 'customize.php' )
+	);
+}
+
+/**
+ * Dashboard widget: edit (and optional view) links for a page.
+ */
+function aiad_echo_dashboard_page_edit_row( WP_Post $post, string $edit_link_text ): void {
+	$edit = get_edit_post_link( $post->ID );
+	$view = get_permalink( $post->ID );
+	if ( ! $edit ) {
+		return;
+	}
+	echo '<p><a href="' . esc_url( $edit ) . '">' . esc_html( $edit_link_text ) . '</a>';
+	if ( $view && 'publish' === $post->post_status ) {
+		echo ' · <a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'ai-awareness-day' ) . '</a>';
+	}
+	echo '</p>';
+}
+
+/**
  * Register the downloads dashboard widget.
  */
 function aiad_register_assets_pack_dashboard_widget(): void {
@@ -52,58 +83,31 @@ function aiad_render_assets_pack_dashboard_widget(): void {
 	$pr_page = function_exists( 'aiad_get_press_release_page' ) ? aiad_get_press_release_page() : null;
 
 	if ( current_user_can( 'edit_theme_options' ) ) {
-		$customize_assets = add_query_arg(
-			array(
-				'autofocus[section]' => 'aiad_assets_pack',
-				'return'             => rawurlencode( admin_url() ),
-			),
-			admin_url( 'customize.php' )
-		);
-		$customize_pr = add_query_arg(
-			array(
-				'autofocus[section]' => 'aiad_press_release',
-				'return'             => rawurlencode( admin_url() ),
-			),
-			admin_url( 'customize.php' )
-		);
+		echo '<p><strong>' . esc_html__( 'Footer links (Newsletter, Assets Pack page, Implementation Guide)', 'ai-awareness-day' ) . '</strong></p>';
+		echo '<p>' . esc_html__( 'These are URL fields only—not file uploads. Upload files in Assets Pack / Press Release below.', 'ai-awareness-day' ) . '</p>';
+		echo '<p><a class="button" href="' . esc_url( aiad_customizer_section_admin_url( 'aiad_footer_resource_links' ) ) . '">' . esc_html__( 'Customizer — Footer resource links', 'ai-awareness-day' ) . '</a></p>';
 
-		echo '<p><strong>' . esc_html__( 'Assets Pack', 'ai-awareness-day' ) . '</strong></p>';
-		echo '<p>' . esc_html__( 'Upload the logo and email banners (participating / participated) for the public Assets Pack page.', 'ai-awareness-day' ) . '</p>';
-		echo '<p><a class="button button-primary" href="' . esc_url( $customize_assets ) . '">' . esc_html__( 'Customizer — Assets Pack', 'ai-awareness-day' ) . '</a></p>';
+		echo '<p><strong>' . esc_html__( 'Assets Pack (uploads)', 'ai-awareness-day' ) . '</strong></p>';
+		echo '<p>' . esc_html__( 'Logo and email banners for the Assets Pack download page.', 'ai-awareness-day' ) . '</p>';
+		echo '<p><a class="button button-primary" href="' . esc_url( aiad_customizer_section_admin_url( 'aiad_assets_pack' ) ) . '">' . esc_html__( 'Customizer — Assets Pack files', 'ai-awareness-day' ) . '</a></p>';
 
-		echo '<p><strong>' . esc_html__( 'Press Release', 'ai-awareness-day' ) . '</strong></p>';
-		echo '<p>' . esc_html__( 'Upload the press release PDF (or file) for the Press Release page. The footer links to that page when published.', 'ai-awareness-day' ) . '</p>';
-		echo '<p><a class="button button-primary" href="' . esc_url( $customize_pr ) . '">' . esc_html__( 'Customizer — Press Release', 'ai-awareness-day' ) . '</a></p>';
+		echo '<p><strong>' . esc_html__( 'Press Release (upload)', 'ai-awareness-day' ) . '</strong></p>';
+		echo '<p>' . esc_html__( 'Press release PDF for the Press Release page. Footer uses the published page when possible.', 'ai-awareness-day' ) . '</p>';
+		echo '<p><a class="button button-primary" href="' . esc_url( aiad_customizer_section_admin_url( 'aiad_press_release' ) ) . '">' . esc_html__( 'Customizer — Press Release file', 'ai-awareness-day' ) . '</a></p>';
 	}
 
 	if ( current_user_can( 'edit_pages' ) ) {
 		echo '<p><strong>' . esc_html__( 'Public pages', 'ai-awareness-day' ) . '</strong></p>';
 
 		if ( $page ) {
-			$edit = get_edit_post_link( $page->ID );
-			$view = get_permalink( $page->ID );
-			if ( $edit ) {
-				echo '<p><a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit Assets Pack page', 'ai-awareness-day' ) . '</a>';
-				if ( $view && 'publish' === $page->post_status ) {
-					echo ' · <a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'ai-awareness-day' ) . '</a>';
-				}
-				echo '</p>';
-			}
+			aiad_echo_dashboard_page_edit_row( $page, __( 'Edit Assets Pack page', 'ai-awareness-day' ) );
 		} else {
 			echo '<p>' . esc_html__( 'No page uses the “Assets Pack” template yet.', 'ai-awareness-day' ) . ' ';
 			echo '<a href="' . esc_url( admin_url( 'post-new.php?post_type=page' ) ) . '">' . esc_html__( 'Add page', 'ai-awareness-day' ) . '</a></p>';
 		}
 
 		if ( $pr_page ) {
-			$edit = get_edit_post_link( $pr_page->ID );
-			$view = get_permalink( $pr_page->ID );
-			if ( $edit ) {
-				echo '<p><a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit Press Release page', 'ai-awareness-day' ) . '</a>';
-				if ( $view && 'publish' === $pr_page->post_status ) {
-					echo ' · <a href="' . esc_url( $view ) . '">' . esc_html__( 'View', 'ai-awareness-day' ) . '</a>';
-				}
-				echo '</p>';
-			}
+			aiad_echo_dashboard_page_edit_row( $pr_page, __( 'Edit Press Release page', 'ai-awareness-day' ) );
 		} else {
 			echo '<p>' . esc_html__( 'No page uses the “Press Release” template yet.', 'ai-awareness-day' ) . ' ';
 			echo '<a href="' . esc_url( admin_url( 'post-new.php?post_type=page' ) ) . '">' . esc_html__( 'Add page', 'ai-awareness-day' ) . '</a></p>';

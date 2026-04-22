@@ -40,14 +40,6 @@
 
   /* Mobile nav → layout/navigation.css */
 
-  .hero-images-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero-images-grid .hero-img:nth-child(1) {
-    grid-column: span 2;
-  }
-
   .themes-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -85,14 +77,6 @@
   .form-group select,
   .form-group textarea {
     padding: 0.75rem 0.875rem;
-  }
-
-  .hero-images-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-images-grid .hero-img:nth-child(1) {
-    grid-column: span 1;
   }
 }
 

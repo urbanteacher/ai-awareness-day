@@ -1,5 +1,5 @@
 /* ============================================
-   SECTION: HERO / IMAGES BLOCK
+   SECTION: HERO
    ============================================ */
 .hero-section {
   padding-top: 72px;
@@ -20,44 +20,14 @@
   }
 }
 
-.hero-images-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: clamp(1rem, 3vw, 2rem);
-}
-
-.hero-images-grid .hero-img {
-  border-radius: 0;
-  overflow: hidden;
-  aspect-ratio: 4/3;
-  position: relative;
-}
-
-.hero-images-grid .hero-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.hero-images-grid .hero-img:hover img {
-  transform: scale(1.05);
-}
-
-.hero-images-grid .hero-img:nth-child(1) {
-  grid-column: span 2;
-  aspect-ratio: 16/9;
-}
-
 .hero-title-block {
   text-align: center;
-  padding: var(--section-padding);
+  padding: clamp(4rem, 8vw, 7rem) 0 clamp(3rem, 6vw, 5rem);
 }
 
 .hero-logo {
   display: block;
-  margin: 0 auto 1.25rem auto;
+  margin: 0 auto 1.5rem auto;
   text-align: center;
 }
 
@@ -75,18 +45,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: min(1000px, 100%);
-  height: 400px;
+  width: min(400px, 100%);
+  height: 160px;
   max-width: 100%;
-  border: 2px dashed var(--gray-400);
+  border: 2px dashed var(--gray-300);
   color: var(--gray-400);
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   background: var(--gray-50);
   margin: 0 auto 0.25rem auto;
+  border-radius: 4px;
 }
 
 .hero-slogan {
@@ -105,19 +76,6 @@
   text-align: center;
 }
 
-.hero-title-block h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  letter-spacing: -0.03em;
-  margin-bottom: 0.5rem;
-}
-
-.hero-title-block h1 span {
-  background: linear-gradient(135deg, var(--green-900), var(--green-500));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .hero-title-block .hero-date {
   font-family: var(--font-display);
   font-size: clamp(1rem, 3.5vw, 1.625rem);
@@ -129,74 +87,111 @@
   text-align: center;
 }
 
-.hero-title-block p {
+/* Subtitle: front page uses .hero-subtitle; block pattern uses .section-desc */
+.hero-title-block .hero-subtitle,
+.hero-title-block .section-desc {
   font-size: clamp(1.05rem, 2vw, 1.2rem);
   color: var(--gray-500);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0.5rem auto 0;
   text-align: center;
+  line-height: 1.7;
 }
 
-.hero-logo .section-desc {
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
+/* ── Hero CTA buttons ─────────────────────────────────── */
+.hero-cta {
+  display: flex;
+  gap: 0.875rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2rem auto 0;
+}
+
+.hero-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hero-cta__btn--primary {
+  background: var(--gray-900);
+  color: var(--white);
+  border: 2px solid var(--gray-900);
+}
+
+.hero-cta__btn--primary:hover {
+  background: var(--gray-700);
+  border-color: var(--gray-700);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.hero-cta__btn--secondary {
+  background: transparent;
+  color: var(--gray-900);
+  border: 2px solid var(--gray-300);
+}
+
+.hero-cta__btn--secondary:hover {
+  border-color: var(--gray-900);
+  color: var(--gray-900);
+  transform: translateY(-2px);
 }
 
 .hero-countdown {
   display: grid;
-  grid-template-columns: repeat(4, minmax(70px, 1fr));
-  gap: 0.6rem;
-  margin: 1.25rem auto 0;
-  max-width: 560px;
+  grid-template-columns: repeat(4, minmax(80px, 1fr));
+  gap: 0.75rem;
+  margin: 2.5rem auto 0;
+  max-width: 600px;
 }
 
 .hero-countdown__item {
   border: 1px solid var(--gray-200);
   background: var(--white);
-  padding: 0.55rem 0.35rem;
-  border-radius: 4px;
+  padding: 1rem 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .hero-countdown__value {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 4vw, 1.65rem);
-  font-weight: 700;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 800;
   color: var(--gray-900);
   line-height: 1.1;
 }
 
 .hero-countdown__label {
   display: block;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--gray-500);
-}
-
-@media screen and (max-width: 640px) {
-  .hero-countdown {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 100%;
-    gap: 0.35rem;
-  }
-
-  .hero-countdown__item {
-    padding: 0.45rem 0.2rem;
-  }
+  color: var(--gray-400);
 }
 
 /* ── Hero stat blocks ─────────────────────────────────── */
 .hero-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.6rem;
+  gap: 0.75rem;
   margin: 0.75rem auto 0;
-  max-width: 560px;
+  max-width: 600px;
   align-items: stretch;
 }
 
@@ -206,22 +201,22 @@
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  min-height: 86px;
-  padding: 0.65rem 0.4rem 0.55rem;
+  min-height: 90px;
+  padding: 0.85rem 0.5rem 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   text-decoration: none;
-  color: #fff;
+  color: var(--white);
   position: relative;
   overflow: hidden;
   transition: opacity 0.15s, box-shadow 0.15s;
 }
 
 /* Vibrant colour per stat */
-.hero-stats__item:nth-child(1) { background: #2563eb; } /* Schools  — blue   */
-.hero-stats__item:nth-child(2) { background: #7c3aed; } /* Resources — violet */
-.hero-stats__item:nth-child(3) { background: #db2777; } /* Partners  — pink   */
-.hero-stats__item:nth-child(4) { background: #059669; } /* Updates   — green  */
+.hero-stats__item:nth-child(1) { background: var(--accent-blue); }
+.hero-stats__item:nth-child(2) { background: var(--accent-purple); }
+.hero-stats__item:nth-child(3) { background: var(--accent-rose); }
+.hero-stats__item:nth-child(4) { background: var(--accent-emerald); }
 
 /* Subtle shine layer */
 .hero-stats__item::after {
@@ -243,7 +238,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 3.5vw, 1.6rem);
   font-weight: 800;
-  color: #ffffff;
+  color: var(--white);
   line-height: 1.1;
   text-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
@@ -260,6 +255,26 @@
 }
 
 @media screen and (max-width: 640px) {
+  .hero-countdown {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 100%;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .hero-countdown__item {
+    padding: 0.65rem 0.25rem 0.5rem;
+  }
+
+  .hero-cta {
+    gap: 0.625rem;
+  }
+
+  .hero-cta__btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8rem;
+  }
+
   .hero-stats {
     grid-template-columns: repeat(4, 1fr);
     max-width: 100%;

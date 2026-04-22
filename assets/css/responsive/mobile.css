@@ -29,19 +29,14 @@
     padding-top: 1.5rem;
   }
 
-  .hero-title-block h1 {
-    font-size: clamp(2rem, 7vw, 3rem);
-    line-height: 1.05;
-    margin-bottom: 1rem;
-  }
-
   .hero-title-block .hero-date {
     font-size: clamp(0.95rem, 3.5vw, 1.25rem);
     margin-bottom: 1rem;
   }
 
-  .hero-title-block p,
-  .hero-logo .section-desc {
+  .hero-title-block .hero-slogan,
+  .hero-title-block .hero-subtitle,
+  .hero-title-block .section-desc {
     font-size: 1rem;
   }
 

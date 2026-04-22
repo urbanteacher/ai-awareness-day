@@ -151,7 +151,6 @@
   padding: 0.5rem 0;
   margin-bottom: 0;
   transition: color 0.2s;
-  pointer-events: auto;
   /* Minimum touch target for checkbox row */
   min-height: 2.75rem;
 }
@@ -168,7 +167,6 @@
   margin: 0;
   cursor: pointer;
   accent-color: var(--green-600);
-  pointer-events: auto;
   position: relative;
   z-index: 1;
   flex-shrink: 0;
@@ -187,12 +185,11 @@
   color: var(--white);
   border: none;
   padding: 1rem 2rem;
-  border-radius: 0;
+  border-radius: 4px;
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;

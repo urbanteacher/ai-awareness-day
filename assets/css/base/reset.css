@@ -35,6 +35,8 @@
   --accent-blue-dark: #1e40af;
   --accent-amber-light: #fef9c3;
   --accent-amber: #a16207;
+  --accent-rose: #db2777;
+  --accent-emerald: #059669;
 
   --white: #ffffff;
   --gray-50: #fafafa;
@@ -51,9 +53,9 @@
   --font-display: 'Intel Clear', sans-serif;
   --font-body: 'DM Sans', sans-serif;
 
-  --section-padding: clamp(1.5rem, 3vw, 2.5rem) 0;
-  --container-width: min(1200px, 90vw);
-  --border-radius: 0;
+  --section-padding: clamp(3rem, 6vw, 5rem) 0;
+  --container-width: min(1200px, 92vw);
+  --border-radius: 4px;
 
   --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -145,8 +147,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   color: var(--gray-900);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
 }
 
 .container {

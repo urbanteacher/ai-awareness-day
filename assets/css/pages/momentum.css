@@ -82,10 +82,6 @@ a.partner-card {
   cursor: pointer;
 }
 
-a.partner-card:hover {
-  color: inherit;
-}
-
 .partner-card__ai-hint {
   margin: 0.5rem 0 0;
   font-family: var(--font-display);
@@ -235,7 +231,7 @@ a.partner-card:hover {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: 4px;
   cursor: pointer;
   transition: var(--transition);
 }

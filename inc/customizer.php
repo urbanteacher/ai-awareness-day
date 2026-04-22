@@ -48,6 +48,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_campaign_section( $wp_customize );
     aiad_register_badges_section( $wp_customize );
     aiad_register_youtube_section( $wp_customize );
+    aiad_register_footer_resource_links_section( $wp_customize );
     aiad_register_toolkit_section( $wp_customize );
     aiad_register_time_resources_display_section( $wp_customize );
     aiad_register_display_board_section( $wp_customize );
@@ -331,52 +332,89 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
 }
 
 /**
- * Register Toolkit section (newsletter link for toolkit cards).
+ * Register Footer resource links — URLs for the site footer row (not file uploads).
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_footer_resource_links_section( WP_Customize_Manager $wp_customize ): void {
+    $wp_customize->add_section(
+        'aiad_footer_resource_links',
+        array(
+            'title'       => __( 'Footer resource links', 'ai-awareness-day' ),
+            'description' => __( 'These three settings only control text links in the site footer. They are not the downloadable files: upload logos and banners under “Assets Pack”, and the press release PDF under “Press Release”. The Press Release footer link uses your Press Release page when you publish it (see Press Release section).', 'ai-awareness-day' ),
+            'priority'    => 31,
+        )
+    );
+
+    $wp_customize->add_setting(
+        'aiad_newsletter_url',
+        array(
+            'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        )
+    );
+    $wp_customize->add_control(
+        'aiad_newsletter_url',
+        array(
+            'label'       => __( 'Newsletter (footer link)', 'ai-awareness-day' ),
+            'description' => __( 'Usually your Beehiiv or newsletter signup page. Appears as “Newsletter” in the footer.', 'ai-awareness-day' ),
+            'section'     => 'aiad_footer_resource_links',
+            'type'        => 'url',
+        )
+    );
+
+    $wp_customize->add_setting(
+        'aiad_asset_pack_url',
+        array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        )
+    );
+    $wp_customize->add_control(
+        'aiad_asset_pack_url',
+        array(
+            'label'       => __( 'Assets Pack page URL (footer link)', 'ai-awareness-day' ),
+            'description' => __( 'Paste the address of your published “Assets Pack” page (the page that lists logo and banner downloads). Upload the actual image files under “Assets Pack”, not here.', 'ai-awareness-day' ),
+            'section'     => 'aiad_footer_resource_links',
+            'type'        => 'url',
+        )
+    );
+
+    $wp_customize->add_setting(
+        'aiad_implementation_guide_url',
+        array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+        )
+    );
+    $wp_customize->add_control(
+        'aiad_implementation_guide_url',
+        array(
+            'label'       => __( 'Implementation Guide (footer link)', 'ai-awareness-day' ),
+            'description' => __( 'PDF or page URL shown as “Implementation Guide” in the footer.', 'ai-awareness-day' ),
+            'section'     => 'aiad_footer_resource_links',
+            'type'        => 'url',
+        )
+    );
+}
+
+/**
+ * Register Toolkit section — homepage toolkit card images only.
  *
  * @param WP_Customize_Manager $wp_customize Customizer manager instance.
  */
 function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section( 'aiad_toolkit', array(
-        'title'       => __( 'Toolkit Section', 'ai-awareness-day' ),
-        'description' => __( 'Settings for the Plug-and-Play Toolkit section on the front page.', 'ai-awareness-day' ),
-        'priority'    => 32,
-    ) );
-
-    $wp_customize->add_setting( 'aiad_implementation_guide_url', array(
-        'default'           => '',
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_implementation_guide_url', array(
-        'label'       => __( 'Implementation Guide URL', 'ai-awareness-day' ),
-        'description' => __( 'URL for the "Implementation Guide" toolkit card (e.g. PDF or page). When set, the card becomes a clickable link that opens in a new tab.', 'ai-awareness-day' ),
-        'section'     => 'aiad_toolkit',
-        'type'        => 'url',
-    ) );
-
-    $wp_customize->add_setting( 'aiad_newsletter_url', array(
-        'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_newsletter_url', array(
-        'label'       => __( 'Latest Newsletter URL', 'ai-awareness-day' ),
-        'description' => __( 'Shown as a footer link.', 'ai-awareness-day' ),
-        'section'     => 'aiad_toolkit',
-        'type'        => 'url',
-    ) );
-
-    $wp_customize->add_setting( 'aiad_asset_pack_url', array(
-        'default'           => '',
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_asset_pack_url', array(
-        'label'       => __( 'Asset Pack URL', 'ai-awareness-day' ),
-        'description' => __( 'Shown as a footer link when set.', 'ai-awareness-day' ),
-        'section'     => 'aiad_toolkit',
-        'type'        => 'url',
-    ) );
+    $wp_customize->add_section(
+        'aiad_toolkit',
+        array(
+            'title'       => __( 'Toolkit card images (homepage)', 'ai-awareness-day' ),
+            'description' => __( 'Optional images at the top of toolkit-related areas on the front page. Footer links are set under “Footer resource links”.', 'ai-awareness-day' ),
+            'priority'    => 32,
+        )
+    );
 
     $toolkit_card_labels = array(
         1 => __( 'Implementation Guide', 'ai-awareness-day' ),
@@ -585,8 +623,8 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
  */
 function aiad_register_assets_pack_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_assets_pack', array(
-        'title'       => __( 'Assets Pack', 'ai-awareness-day' ),
-        'description' => __( 'Upload the logo and email banners that teachers can download from the Assets Pack page.', 'ai-awareness-day' ),
+        'title'       => __( 'Assets Pack (file uploads)', 'ai-awareness-day' ),
+        'description' => __( 'Upload files here. Create a page using the “Assets Pack” template so visitors can download them, then add that page’s URL under “Footer resource links” → “Assets Pack page URL” so the footer points to the right place.', 'ai-awareness-day' ),
         'priority'    => 38,
     ) );
 
@@ -629,8 +667,8 @@ function aiad_register_press_release_section( WP_Customize_Manager $wp_customize
     $wp_customize->add_section(
         'aiad_press_release',
         array(
-            'title'       => __( 'Press Release', 'ai-awareness-day' ),
-            'description' => __( 'Upload the press release file (PDF recommended) for visitors to download from the Press Release page. The footer links to that page when it is published.', 'ai-awareness-day' ),
+            'title'       => __( 'Press Release (file upload)', 'ai-awareness-day' ),
+            'description' => __( 'Upload the press release PDF (or file) here. Create a page with the “Press Release” template and publish it—the footer “Press Release” link goes to that page. If there is no page yet, the theme may fall back to this file or an older URL.', 'ai-awareness-day' ),
             'priority'    => 39,
         )
     );
