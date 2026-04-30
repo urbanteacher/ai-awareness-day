@@ -533,26 +533,64 @@
         // Partners: Show more / less (vanilla — works on mobile where Interactivity
         // may not bind; do not gate on window.wp.interactivity).
         // ============================================
+        const momentumSection = document.getElementById('reach');
         const revealBtn = document.querySelector('.partners-reveal-btn');
+        const partnersLayoutMql = window.matchMedia('(min-width: 768px)');
+
+        function getPartnersInitialShow(section) {
+            const mob = parseInt(section.getAttribute('data-initial-show-mobile') || '8', 10);
+            const desk = parseInt(section.getAttribute('data-initial-show-desktop') || '10', 10);
+            return partnersLayoutMql.matches ? desk : mob;
+        }
+
+        function applyPartnersGridVisibility() {
+            if (!momentumSection) {
+                return;
+            }
+            const initialShow = getPartnersInitialShow(momentumSection);
+            if (revealBtn) {
+                revealBtn.setAttribute('data-initial-show', String(initialShow));
+            }
+            const isExpanded = revealBtn && revealBtn.classList.contains('active');
+            momentumSection.querySelectorAll('.partner-card:not(.partner-card--dummy)').forEach((card) => {
+                const idx = parseInt(card.getAttribute('data-partner-index') || '-1', 10);
+                if (isExpanded) {
+                    card.classList.remove('partner-card--hidden');
+                } else if (idx >= initialShow) {
+                    card.classList.add('partner-card--hidden');
+                } else {
+                    card.classList.remove('partner-card--hidden');
+                }
+            });
+        }
+
+        if (momentumSection) {
+            applyPartnersGridVisibility();
+            let partnersResizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(partnersResizeTimer);
+                partnersResizeTimer = setTimeout(applyPartnersGridVisibility, 150);
+            });
+            if (typeof partnersLayoutMql.addEventListener === 'function') {
+                partnersLayoutMql.addEventListener('change', applyPartnersGridVisibility);
+            } else if (typeof partnersLayoutMql.addListener === 'function') {
+                partnersLayoutMql.addListener(applyPartnersGridVisibility);
+            }
+        }
+
         if (revealBtn) {
             revealBtn.addEventListener('click', () => {
-                const momentumSection = revealBtn.closest('.momentum-section');
-                if (!momentumSection) {
+                const momentumEl = revealBtn.closest('.momentum-section');
+                if (!momentumEl) {
                     return;
                 }
-                const initialShow = parseInt(revealBtn.getAttribute('data-initial-show') || '6', 10);
+                revealBtn.classList.toggle('active');
+                const isExpanded = revealBtn.classList.contains('active');
+                revealBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+                applyPartnersGridVisibility();
+
                 const labelMore = revealBtn.getAttribute('data-label-more') || 'Show More Partners';
                 const labelLess = revealBtn.getAttribute('data-label-less') || 'Show Less';
-                const isExpanded = revealBtn.classList.toggle('active');
-                revealBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-
-                momentumSection.querySelectorAll('.partner-card:not(.partner-card--dummy)').forEach((card) => {
-                    const idx = parseInt(card.getAttribute('data-partner-index') || '-1', 10);
-                    if (idx >= initialShow) {
-                        card.classList.toggle('partner-card--hidden', !isExpanded);
-                    }
-                });
-
                 const icon = revealBtn.querySelector('.partners-reveal-btn__chevron, svg');
                 if (icon) {
                     icon.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';

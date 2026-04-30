@@ -11,6 +11,66 @@ if (!defined('ABSPATH')) {
 $defaults = aiad_get_customizer_defaults();
 $campaign_embed_src = esc_url(get_theme_mod('aiad_campaign_linkedin_embed_src', $defaults['aiad_campaign_linkedin_embed_src']));
 $campaign_has_embed = !empty($campaign_embed_src);
+
+$partner_posts = new WP_Query(array(
+    'post_type'      => 'partner',
+    'posts_per_page' => 50,
+    'orderby'        => 'menu_order title',
+    'order'          => 'ASC',
+    'post_status'    => 'publish',
+));
+$partners = array();
+if ($partner_posts->have_posts()) {
+    while ($partner_posts->have_posts()) {
+        $partner_posts->the_post();
+        $pid         = get_the_ID();
+        $partner_url = (string) get_post_meta($pid, '_partner_url', true);
+        $ai_url      = (string) get_post_meta($pid, '_partner_ai_resources_url', true);
+        $provides_ai = (string) get_post_meta($pid, '_partner_provides_ai_resources', true) === '1';
+        $card_href   = '';
+        if ($provides_ai) {
+            $card_href = $ai_url !== '' ? $ai_url : $partner_url;
+        }
+        $partner_stats = get_post_meta($pid, '_partner_stats', true);
+        $partners[]    = array(
+            'name'        => get_the_title(),
+            'stats'       => $partner_stats ? $partner_stats : '',
+            'logo'        => get_the_post_thumbnail_url($pid, 'medium'),
+            'menu_order'  => (int) get_post_field('menu_order', $pid),
+            'provides_ai' => $provides_ai,
+            'card_href'   => $card_href !== '' ? $card_href : '',
+        );
+    }
+    wp_reset_postdata();
+}
+usort(
+    $partners,
+    static function (array $a, array $b): int {
+        $pa = ! empty($a['provides_ai']);
+        $pb = ! empty($b['provides_ai']);
+        if ($pa !== $pb) {
+            return $pb <=> $pa;
+        }
+        $mo = (int) $a['menu_order'] <=> (int) $b['menu_order'];
+        if ($mo !== 0) {
+            return $mo;
+        }
+        return strcasecmp((string) $a['name'], (string) $b['name']);
+    }
+);
+$partners_count  = count($partners);
+$ai_partner_count = 0;
+foreach ($partners as $p) {
+    if (empty($p['name'])) {
+        continue;
+    }
+    if (!empty($p['provides_ai'])) {
+        $ai_partner_count++;
+    }
+}
+$initial_show_mobile  = max(8, $ai_partner_count);
+$initial_show_desktop = max(10, $ai_partner_count);
+$initial_show         = $initial_show_mobile;
 ?>
 <section
     class="section <?php echo esc_attr($text_alignment_class); ?> <?php echo $campaign_has_embed ? 'campaign--split' : ''; ?>"
@@ -40,7 +100,9 @@ $campaign_has_embed = !empty($campaign_embed_src);
             <?php endif; ?>
         </div>
 
-        <div id="reach" class="momentum-section fade-up">
+        <div id="reach" class="momentum-section fade-up"
+            data-initial-show-mobile="<?php echo (int) $initial_show_mobile; ?>"
+            data-initial-show-desktop="<?php echo (int) $initial_show_desktop; ?>">
             <div class="momentum-intro">
                 <span class="section-label"><?php esc_html_e('Traction', 'ai-awareness-day'); ?></span>
                 <h2 class="section-title"><?php esc_html_e('500,000 reach so far', 'ai-awareness-day'); ?></h2>
@@ -51,54 +113,6 @@ $campaign_has_embed = !empty($campaign_embed_src);
 
             <div class="partners-grid">
                 <?php
-                $partner_posts = new WP_Query(array(
-                    'post_type' => 'partner',
-                    'posts_per_page' => 50,
-                    'orderby' => 'menu_order title',
-                    'order' => 'ASC',
-                    'post_status' => 'publish',
-                ));
-                $partners = array();
-                if ($partner_posts->have_posts()) {
-                    while ($partner_posts->have_posts()) {
-                        $partner_posts->the_post();
-                        $pid            = get_the_ID();
-                        $partner_url    = (string) get_post_meta($pid, '_partner_url', true);
-                        $ai_url         = (string) get_post_meta($pid, '_partner_ai_resources_url', true);
-                        $provides_ai    = (string) get_post_meta($pid, '_partner_provides_ai_resources', true) === '1';
-                        $card_href      = '';
-                        if ($provides_ai) {
-                            $card_href = $ai_url !== '' ? $ai_url : $partner_url;
-                        }
-                        $partner_stats = get_post_meta($pid, '_partner_stats', true);
-                        $partners[]    = array(
-                            'name'         => get_the_title(),
-                            'stats'        => $partner_stats ? $partner_stats : '',
-                            'logo'         => get_the_post_thumbnail_url($pid, 'medium'),
-                            'menu_order'   => (int) get_post_field('menu_order', $pid),
-                            'provides_ai'  => $provides_ai,
-                            'card_href'    => $card_href !== '' ? $card_href : '',
-                        );
-                    }
-                    wp_reset_postdata();
-                }
-                usort(
-                    $partners,
-                    static function (array $a, array $b): int {
-                        $pa = ! empty($a['provides_ai']);
-                        $pb = ! empty($b['provides_ai']);
-                        if ($pa !== $pb) {
-                            return $pb <=> $pa;
-                        }
-                        $mo = (int) $a['menu_order'] <=> (int) $b['menu_order'];
-                        if ($mo !== 0) {
-                            return $mo;
-                        }
-                        return strcasecmp((string) $a['name'], (string) $b['name']);
-                    }
-                );
-                $partners_count = count($partners);
-                $initial_show = 6;
                 foreach ($partners as $index => $partner):
                     if (empty($partner['name'])) {
                         continue;
@@ -163,7 +177,7 @@ $campaign_has_embed = !empty($campaign_embed_src);
                 </a>
             </div>
 
-            <?php if ($partners_count > $initial_show): ?>
+            <?php if ($partners_count > $initial_show_mobile) : ?>
                 <div class="partners-reveal-wrapper" style="text-align: center; margin-top: 2.5rem;">
                     <button type="button"
                         class="partners-reveal-btn"
