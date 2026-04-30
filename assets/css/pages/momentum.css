@@ -49,7 +49,7 @@
 
 .partner-card {
   background: var(--white);
-  border: 1px solid var(--gray-200);
+  border: none;
   border-radius: 0;
   padding: 1.75rem 1.25rem;
   text-align: center;
@@ -73,7 +73,6 @@
   background:
     linear-gradient(145deg, rgba(34, 197, 94, 0.09) 0%, rgba(15, 118, 110, 0.06) 45%, var(--white) 100%),
     var(--white);
-  border-color: rgba(34, 197, 94, 0.35);
 }
 
 a.partner-card {
@@ -121,7 +120,6 @@ a.partner-card {
 }
 
 .partner-card:hover {
-  border-color: var(--green-300);
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
@@ -144,14 +142,12 @@ a.partner-card {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
-  border-style: dashed;
-  border-color: var(--gray-300);
+  border: none;
   background: var(--gray-50);
   transition: all 0.3s ease;
 }
 
 .partner-card--dummy:hover {
-  border-color: var(--green-500);
   background: var(--green-50);
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
