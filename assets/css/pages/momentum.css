@@ -70,9 +70,7 @@
 
 /* Homepage Traction: partners flagged as linking AI resources — subtle backdrop + hint */
 .partner-card--ai-resources {
-  background:
-    linear-gradient(145deg, rgba(34, 197, 94, 0.09) 0%, rgba(15, 118, 110, 0.06) 45%, var(--white) 100%),
-    var(--white);
+  background: var(--white);
 }
 
 a.partner-card {
@@ -113,7 +111,7 @@ a.partner-card {
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--green-500), var(--green-700));
+  background: var(--green-600);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
