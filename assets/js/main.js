@@ -34,6 +34,15 @@
             observer.observe(el);
         });
 
+        // Re-observe any .fade-up elements injected after page load (e.g. AJAX
+        // resource cards). resource-filters.js dispatches this event after every
+        // grid update so newly rendered cards get the same scroll-in animation.
+        document.addEventListener('aiad:resourcesRendered', () => {
+            document.querySelectorAll('.fade-up:not(.visible)').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+
         // ============================================
         // Hero countdown
         // Exposed as window.aiad.initHeroCountdown so it can be called again

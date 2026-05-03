@@ -90,7 +90,12 @@
 
     function renderCard( resource ) {
         var isExternal = !! ( resource.external_url && postType === 'featured_resource' );
-        var cardClass = isExternal ? 'resource-card resource-card--external fade-up' : 'resource-card resource-card--download fade-up';
+        // Render with 'visible' already set — AJAX-injected cards are never seen
+        // by the IntersectionObserver (set up at page load), so without 'visible'
+        // the fade-up class keeps them at opacity:0 permanently.
+        // @starting-style in animations.css handles the smooth entry animation
+        // for browsers that support it (Chrome 117+, Safari 17.5+).
+        var cardClass = isExternal ? 'resource-card resource-card--external fade-up visible' : 'resource-card resource-card--download fade-up visible';
         var linkHref = isExternal ? ( resource.external_url || resource.permalink ) : resource.permalink;
         var linkTarget = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
         var placeholderText = buildPlaceholderText( resource );
@@ -163,7 +168,7 @@
         function applyRender() {
             grid.innerHTML = html;
             document.dispatchEvent(new CustomEvent('aiad:resourcesRendered'));
-            // Fade-up: trigger reflow for animation if CSS uses opacity/transform
+            // Trigger reflow so CSS transitions start from the correct initial state.
             grid.offsetHeight;
             var cards = grid.querySelectorAll( '.resource-card' );
             cards.forEach( function ( card, i ) {
@@ -188,16 +193,31 @@
         Object.keys( selectMap ).forEach( function ( tax ) {
             var name = selectMap[ tax ];
             var sel = form.querySelector( 'select[name="' + name + '"]' );
-            if ( ! sel || ! filterCounts[ tax ] ) return;
-            var counts = filterCounts[ tax ];
+            if ( ! sel ) return;
+            var counts = filterCounts[ tax ] || {};
             Array.prototype.forEach.call( sel.options, function ( opt ) {
                 var slug = opt.value;
-                var count = slug ? ( counts[ slug ] !== undefined ? counts[ slug ] : -1 ) : -1;
+                if ( ! slug ) {
+                    // "All …" option — always reset to enabled/visible
+                    opt.disabled = false;
+                    opt.style.opacity = '1';
+                    return;
+                }
                 var label = opt.text.replace( /\s*\(\d+\)\s*$/, '' );
+                var count = counts[ slug ] !== undefined ? counts[ slug ] : -1;
                 if ( count >= 0 ) {
                     opt.textContent = label + ' (' + count + ')';
-                    opt.disabled = count === 0;
-                    opt.style.opacity = count === 0 ? '0.5' : '1';
+                    // Never disable the option that is currently selected — the user needs
+                    // to be able to change away from it even if the current combination
+                    // yields 0 results.
+                    opt.disabled = count === 0 && ! opt.selected;
+                    opt.style.opacity = ( count === 0 && ! opt.selected ) ? '0.5' : '1';
+                } else {
+                    // Term not returned in filter_counts (newly added term, or tax not
+                    // present in response) — reset to enabled so it is never stuck disabled.
+                    opt.textContent = label;
+                    opt.disabled = false;
+                    opt.style.opacity = '1';
                 }
             });
         });
@@ -255,6 +275,19 @@
     form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
         sel.addEventListener( 'change', runFilter );
     });
+
+    // Auto-run on page load when filters are pre-selected via URL params
+    // (e.g. clicking a theme badge link or arriving via a bookmarked URL).
+    // This ensures the other filter dropdowns always show live counts that
+    // reflect what is actually available within the current filter selection,
+    // rather than staying blank until the user manually changes a dropdown.
+    var hasPreselectedFilters = false;
+    form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
+        if ( sel.value ) hasPreselectedFilters = true;
+    });
+    if ( hasPreselectedFilters ) {
+        runFilter();
+    }
 
     // Clear filters link
     var clearLink = document.querySelector( '.resource-filters-clear' );
