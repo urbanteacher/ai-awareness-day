@@ -1,0 +1,245 @@
+/* ============================================
+   SECTION: GET STARTED NOW
+   ============================================ */
+
+.get-started-section {
+  background: var(--gray-50);
+}
+
+/* 3 time cards + 2 wider cards on the second row */
+.gs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+/* Last two cards span a wider proportion */
+.gs-card--assemblies,
+.gs-card--games {
+  grid-column: span 1;
+}
+
+/* ── Card base ─────────────────────────────── */
+.gs-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.gs-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
+  border-color: var(--gray-300);
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Time header (number + unit) ────────────── */
+.gs-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-bottom: 1.25rem;
+}
+
+.gs-card__time {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.gs-card__unit {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--gray-400);
+}
+
+/* Colour accent per session length */
+.gs-card--5min  .gs-card__time { color: #2563eb; }
+.gs-card--15min .gs-card__time { color: #7c3aed; }
+.gs-card--20min .gs-card__time { color: #db2777; }
+
+/* Left border accent stripe */
+.gs-card--5min  { border-left: 4px solid #2563eb; }
+.gs-card--15min { border-left: 4px solid #7c3aed; }
+.gs-card--20min { border-left: 4px solid #db2777; }
+
+/* ── Card body ──────────────────────────────── */
+.gs-card__body {
+  flex: 1;
+}
+
+.gs-card__type {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  margin-bottom: 0.4rem;
+}
+
+.gs-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.gs-card__desc {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+/* ── Format pills ───────────────────────────── */
+.gs-card__formats {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.gs-card__format-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  border-radius: 3px;
+}
+
+/* ── CTA link at bottom ─────────────────────── */
+.gs-card__cta {
+  display: inline-block;
+  margin-top: auto;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gray-900);
+  transition: letter-spacing 0.2s ease;
+}
+
+.gs-card:hover .gs-card__cta {
+  letter-spacing: 0.07em;
+}
+
+/* ── Live Assemblies card ────────────────────── */
+.gs-card--assemblies {
+  border-left: 4px solid #d97706; /* amber */
+  background: #fffbeb;
+}
+
+.gs-card--assemblies .gs-card__title {
+  color: #92400e;
+}
+
+.gs-card--assemblies .gs-card__cta {
+  color: #92400e;
+}
+
+.gs-card--assemblies:hover {
+  border-color: #d97706;
+}
+
+/* "Just Announced" badge */
+.gs-card__new-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #d97706;
+  color: #fff;
+  border-radius: 3px;
+  margin-bottom: 1.25rem;
+  align-self: flex-start;
+}
+
+/* ── AI Games card ──────────────────────────── */
+.gs-card--games {
+  border-left: 4px solid #059669; /* green */
+  background: var(--white);
+}
+
+.gs-card--games .gs-card__title {
+  color: var(--gray-900);
+}
+
+.gs-card--games:hover {
+  border-color: #059669;
+}
+
+/* ── Second row: make assemblies + games span wider ── */
+@media screen and (min-width: 769px) {
+  .gs-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  /* Push assemblies and games into a 2-column row below the 3 time cards */
+  .gs-card--assemblies {
+    grid-column: span 1;
+  }
+
+  .gs-card--games {
+    grid-column: span 2;
+  }
+}
+
+/* ── Tablet ─────────────────────────────────── */
+@media screen and (max-width: 768px) {
+  .gs-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.875rem;
+  }
+
+  .gs-card--20min,
+  .gs-card--assemblies,
+  .gs-card--games {
+    grid-column: span 2;
+  }
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media screen and (max-width: 480px) {
+  .gs-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .gs-card--20min,
+  .gs-card--assemblies,
+  .gs-card--games {
+    grid-column: span 1;
+  }
+
+  .gs-card {
+    padding: 1.25rem 1.25rem 1.25rem;
+  }
+}

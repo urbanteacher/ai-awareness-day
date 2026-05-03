@@ -157,6 +157,7 @@ function aiad_scripts(): void
             'components/explore-sessions.css',
             'components/section-green.css',
             'components/display-board.css',
+            'pages/get-started.css',
             'pages/campaign.css',
             'pages/momentum.css',
             'pages/themes.css',
