@@ -293,14 +293,30 @@ add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
  * @return array Counts keyed by taxonomy => term_slug => count. Example:
  *               ['resource_duration' => ['5-min-lesson-starters' => 5, ...], ...]
  */
-function aiad_get_filter_counts( string $post_type, array $active_tax_query ): array {
+function aiad_get_filter_counts( string $post_type, array $active_tax_query, array $active_key_stages = [] ): array {
     // Cache key includes version number (bumped on resource save) and active filters
     $version = (int) get_option( 'aiad_filter_counts_ver', 0 );
     $normalized_tax_query = aiad_normalize_tax_query_for_cache( $active_tax_query );
-    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( wp_json_encode( $normalized_tax_query ) );
+    $cache_key = 'aiad_fc_' . $post_type . '_' . $version . '_' . md5( wp_json_encode( $normalized_tax_query ) . wp_json_encode( $active_key_stages ) );
     $cached = get_transient( $cache_key );
     if ( is_array( $cached ) ) {
         return $cached;
+    }
+
+    // Build meta_query for active key_stage so taxonomy counts reflect the
+    // key_stage constraint — without this, "Responsible (2)" can show 2 even
+    // though 0 of those resources match the selected key stage.
+    $ks_meta_query = array();
+    if ( ! empty( $active_key_stages ) && 'resource' === $post_type ) {
+        $ks_clauses = array( 'relation' => 'OR' );
+        foreach ( $active_key_stages as $ks ) {
+            $ks_clauses[] = array(
+                'key'     => '_aiad_key_stage',
+                'value'   => '"' . $ks . '"',
+                'compare' => 'LIKE',
+            );
+        }
+        $ks_meta_query = $ks_clauses;
     }
 
     $taxonomies = array( 'resource_principle', 'resource_duration', 'activity_type' );
@@ -329,18 +345,20 @@ function aiad_get_filter_counts( string $post_type, array $active_tax_query ): a
             $reduced_query['relation'] = 'AND';
         }
 
-        $base_ids = get_posts(
-            array(
-                'post_type'              => $post_type,
-                'post_status'            => 'publish',
-                'posts_per_page'         => -1,
-                'fields'                 => 'ids',
-                'tax_query'              => $reduced_query,
-                'no_found_rows'          => true,
-                'update_post_meta_cache' => false,
-                'update_post_term_cache' => false,
-            )
+        $base_id_args = array(
+            'post_type'              => $post_type,
+            'post_status'            => 'publish',
+            'posts_per_page'         => -1,
+            'fields'                 => 'ids',
+            'tax_query'              => $reduced_query,
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
         );
+        if ( ! empty( $ks_meta_query ) ) {
+            $base_id_args['meta_query'] = $ks_meta_query;
+        }
+        $base_ids = get_posts( $base_id_args );
         if ( empty( $base_ids ) ) {
             continue;
         }
@@ -608,7 +626,7 @@ function aiad_ajax_filter_resources(): void {
         wp_reset_postdata();
     }
 
-    $counts = aiad_get_filter_counts( $post_type, $tax_query );
+    $counts = aiad_get_filter_counts( $post_type, $tax_query, $key_stage );
 
     wp_send_json_success( array(
         'resources'      => $results,

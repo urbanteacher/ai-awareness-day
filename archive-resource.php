@@ -237,10 +237,12 @@ get_header();
                                             ?>
                                             <?php if ($theme_name): ?>
                                                 <?php
-                                                $theme_slug = strtolower($theme_name);
+                                                // Use the actual term slug (not lowercased name) so colour
+                                                // classes are always reliable regardless of display name.
+                                                $theme_term_slug = ($themes && !is_wp_error($themes)) ? $themes[0]->slug : strtolower($theme_name);
                                                 $pill_class = 'resource-card__pill--theme';
-                                                if (in_array($theme_slug, array('safe', 'smart', 'creative', 'responsible', 'future'), true)) {
-                                                    $pill_class .= ' resource-card__pill--' . $theme_slug;
+                                                if (in_array($theme_term_slug, array('safe', 'smart', 'creative', 'responsible', 'future'), true)) {
+                                                    $pill_class .= ' resource-card__pill--' . $theme_term_slug;
                                                 }
                                                 ?>
                                                 <span
@@ -288,7 +290,7 @@ get_header();
                 <?php endif; ?>
             </div>
             <p class="section-desc resources-empty-message" <?php echo $has_resources ? ' style="display:none"' : ''; ?>>
-                <?php esc_html_e('We have decided to phase the resources in order in the lead-up to the campaign.', 'ai-awareness-day'); ?>
+                <?php esc_html_e('No resources found for the selected filters. Try adjusting or clearing your selection.', 'ai-awareness-day'); ?>
             </p>
 
             <?php
