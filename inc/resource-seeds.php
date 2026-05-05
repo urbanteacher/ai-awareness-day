@@ -186,3 +186,65 @@ function aiad_seed_bbc_how_ai_works_tutor_resource(): void {
     update_option( 'aiad_bbc_how_ai_works_resource_seeded', 'yes' );
 }
 add_action( 'init', 'aiad_seed_bbc_how_ai_works_tutor_resource', 27 );
+
+/**
+ * Seed Cyber Skills Live partner resources.
+ * Adds new external resources once on existing sites without duplicating posts.
+ */
+function aiad_seed_cyberskillslive_partner_resources(): void {
+    if ( get_option( 'aiad_cyberskillslive_partner_resources_seeded' ) === 'yes' ) {
+        return;
+    }
+
+    $items = array(
+        array(
+            'title'      => 'Defend the Rhino with AI',
+            'excerpt'    => __( 'An educational game where learners use data and machine learning to help rescue rhinos from poachers.', 'ai-awareness-day' ),
+            'url'        => 'https://cyberskillslive.com/activity/defend-the-rhino/',
+            'org'        => 'Cyber Skills Live',
+            'theme'      => 'responsible',
+            'duration'   => '30-45-min-after-school',
+            'activities' => array( 'game' ),
+        ),
+        array(
+            'title'      => 'The Unbelievably Creative AI Show',
+            'excerpt'    => __( 'A one-hour live stage show that gets audiences thinking critically and creatively about AI, art, and human imagination.', 'ai-awareness-day' ),
+            'url'        => 'https://cyberskillslive.com/unbelievably-creative/',
+            'org'        => 'Cyber Skills Live',
+            'theme'      => 'creative',
+            'duration'   => '30-45-min-after-school',
+            'activities' => array( 'presentation' ),
+        ),
+    );
+
+    foreach ( $items as $item ) {
+        $existing = aiad_get_post_by_title( $item['title'], 'featured_resource' );
+        if ( $existing ) {
+            continue;
+        }
+
+        $post_id = wp_insert_post(
+            array(
+                'post_type'    => 'featured_resource',
+                'post_title'   => $item['title'],
+                'post_excerpt' => $item['excerpt'],
+                'post_status'  => 'publish',
+                'post_author'  => 1,
+            ),
+            true
+        );
+
+        if ( ! $post_id || is_wp_error( $post_id ) ) {
+            continue;
+        }
+
+        update_post_meta( $post_id, '_featured_resource_url', $item['url'] );
+        update_post_meta( $post_id, '_featured_resource_org_name', $item['org'] );
+        wp_set_object_terms( $post_id, array( $item['theme'] ), 'resource_principle' );
+        wp_set_object_terms( $post_id, array( $item['duration'] ), 'resource_duration' );
+        wp_set_object_terms( $post_id, $item['activities'], 'activity_type' );
+    }
+
+    update_option( 'aiad_cyberskillslive_partner_resources_seeded', 'yes' );
+}
+add_action( 'init', 'aiad_seed_cyberskillslive_partner_resources', 28 );
