@@ -12,24 +12,13 @@ get_header();
     <section class="section section--top">
         <div class="container">
             <?php while ( have_posts() ) : the_post();
-                $types = get_the_terms( get_the_ID(), 'partner_type' );
-                $type_name = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
                 $url = get_post_meta( get_the_ID(), '_partner_url', true );
-                $stats = get_post_meta( get_the_ID(), '_partner_stats', true );
                 $intro = get_post_meta( get_the_ID(), '_partner_profile_intro', true );
                 $links = get_post_meta( get_the_ID(), '_partner_links', true );
                 $links = is_array( $links ) ? $links : array();
                 ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class( 'partner-bio' ); ?>>
-                    <header class="partner-bio__header fade-up">
-                        <?php if ( $type_name ) : ?>
-                            <p class="section-label"><?php echo esc_html( $type_name ); ?></p>
-                        <?php endif; ?>
-                        <h1 class="section-title partner-bio__title"><?php echo esc_html( get_the_title() ); ?></h1>
-                        <?php if ( $stats ) : ?>
-                            <p class="partner-bio__stats"><?php echo esc_html( (string) $stats ); ?></p>
-                        <?php endif; ?>
-                    </header>
+                    <h1 class="screen-reader-text"><?php echo esc_html( get_the_title() ); ?></h1>
 
                     <div class="partner-bio__card fade-up">
                         <?php if ( has_post_thumbnail() ) : ?>
@@ -46,9 +35,7 @@ get_header();
 
                         <?php if ( $intro ) : ?>
                             <p class="partner-bio__intro"><?php echo esc_html( (string) $intro ); ?></p>
-                        <?php endif; ?>
-
-                        <?php if ( get_the_content() ) : ?>
+                        <?php elseif ( get_the_content() ) : ?>
                             <div class="partner-bio__content entry-content">
                                 <?php the_content(); ?>
                             </div>
