@@ -1,0 +1,128 @@
+/**
+ * Single Partner page (single-partner.php)
+ * Keep styling consistent with shared section patterns.
+ */
+.single-partner .section.section--top {
+  padding-top: 100px;
+}
+
+.partner-bio {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.partner-bio__header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.partner-bio__title {
+  margin-bottom: 0.75rem;
+}
+
+.partner-bio__stats {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--gray-200);
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--gray-700);
+  font-weight: 600;
+}
+
+.partner-bio__card {
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  border-radius: 16px;
+  padding: clamp(1.25rem, 3.5vw, 2.25rem);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.partner-bio__logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.partner-bio__logo-img {
+  width: auto;
+  height: auto;
+  max-width: min(280px, 90%);
+  max-height: 120px;
+  object-fit: contain;
+  filter: saturate(1.02);
+}
+
+.partner-bio__content {
+  max-width: 70ch;
+  margin: 0 auto;
+  color: var(--gray-700);
+  line-height: 1.85;
+  font-size: 1.05rem;
+}
+
+.partner-bio__content p:first-child {
+  margin-top: 0;
+}
+
+.partner-bio__actions {
+  display: flex;
+  gap: 0.875rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* Override .btn-submit defaults (which are full-width) for this layout */
+.partner-bio__cta.btn-submit {
+  width: auto;
+  margin-top: 0;
+  padding: 0.9rem 1.5rem;
+}
+
+.partner-bio__back {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-700);
+  text-decoration: none;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+  transition: var(--transition);
+}
+
+.partner-bio__back:hover {
+  transform: translateY(-1px);
+  border-color: var(--gray-300);
+  background: var(--white);
+  text-decoration: none;
+}
+
+.partner-bio__back:focus-visible,
+.partner-bio__cta:focus-visible {
+  outline: 3px solid rgba(34, 197, 94, 0.35);
+  outline-offset: 3px;
+}
+
+@media screen and (max-width: 768px) {
+  .partner-bio__card {
+    border-radius: 14px;
+  }
+
+  .partner-bio__content {
+    font-size: 1rem;
+  }
+}
+
