@@ -72,9 +72,10 @@ get_header();
                     <?php while ( $partners->have_posts() ) : $partners->the_post();
                         $types = get_the_terms( get_the_ID(), 'partner_type' );
                         $type_name = $types && ! is_wp_error( $types ) ? $types[0]->name : '';
-                        $url = get_post_meta( get_the_ID(), '_partner_url', true );
-                        $tag = $url ? 'a' : 'div';
-                        $attr = $url ? ' href="' . esc_url( $url ) . '" target="_blank" rel="noopener"' : '';
+                        // Archive should always link to internal partner profile page.
+                        // External links (partner website) are shown on the single partner page.
+                        $tag  = 'a';
+                        $attr = ' href="' . esc_url( get_permalink() ) . '"';
                         ?>
                         <<?php echo esc_attr( $tag ); ?> class="partner-logo fade-up"<?php echo $attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $attr is built from esc_url ?>>
                             <?php if ( has_post_thumbnail() ) : ?>

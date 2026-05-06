@@ -103,4 +103,22 @@
         list.append(html);
     });
 
+    // Add partner link handler (repeatable object)
+    $(document).on('click', '.aiad-add-partner-link', function() {
+        var list = $(this).prev('.aiad-repeatable-list');
+        var idx = getNextIdx(list);
+        var themeOpts = aiadAdminMeta.partnerThemeOptions || '';
+        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">' +
+            '<label style="display:block; margin-bottom: 0.25rem; margin-top: 0.35rem;">Theme</label>' +
+            '<select name="partner_links[' + idx + '][theme]">' + themeOpts + '</select>' +
+            '<label style="display:block; margin-bottom: 0.25rem; margin-top: 0.35rem;">Title</label>' +
+            '<input type="text" name="partner_links[' + idx + '][title]" value="" class="large-text" placeholder="e.g. Introduction to Artificial Intelligence" />' +
+            '<label style="display:block; margin-bottom: 0.25rem; margin-top: 0.35rem;">Duration</label>' +
+            '<input type="text" name="partner_links[' + idx + '][duration]" value="" class="regular-text" placeholder="e.g. 30 mins, 1 hour" />' +
+            '<label style="display:block; margin-bottom: 0.25rem; margin-top: 0.35rem;">Link URL</label>' +
+            '<input type="url" name="partner_links[' + idx + '][url]" value="" class="medium-text" placeholder="https://…" /> ' +
+            '<button type="button" class="button button-small aiad-remove-row" style="margin-top:0.5rem;">' + aiadAdminMeta.removeText + '</button></div>';
+        list.append(html);
+    });
+
 })(jQuery);

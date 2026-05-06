@@ -86,6 +86,15 @@ function aiad_get_field_registry(): array {
                 'class'       => 'large-text',
                 'meta_key'    => '_partner_url',
             ),
+            '_partner_profile_intro' => array(
+                'type'        => 'textarea',
+                'label'       => __( 'Profile intro (optional)', 'ai-awareness-day' ),
+                'description' => __( 'Short intro shown near the top of the partner profile page. If empty, the page content is used as the description.', 'ai-awareness-day' ),
+                'placeholder' => __( 'One sentence summary of who they are and what they offer for AI Awareness Day.', 'ai-awareness-day' ),
+                'rows'        => 3,
+                'class'       => 'large-text',
+                'meta_key'    => '_partner_profile_intro',
+            ),
             '_partner_provides_ai_resources' => array(
                 'type'        => 'checkbox',
                 'label'       => __( 'Provides linked AI learning resources', 'ai-awareness-day' ),
@@ -115,6 +124,43 @@ function aiad_get_field_registry(): array {
                 'step'        => 1,
                 'class'       => 'small-text',
                 'meta_key'    => '_partner_school_count',
+            ),
+            '_partner_links' => array(
+                'type'        => 'repeatable_object',
+                'label'       => __( 'Partner resources & links (optional)', 'ai-awareness-day' ),
+                'description' => __( 'Add themed links to the partner’s own AI Awareness Day page, units, downloads, or activities. These show on the partner profile page grouped by theme.', 'ai-awareness-day' ),
+                'meta_key'    => '_partner_links',
+                'add_button'  => __( 'Add link', 'ai-awareness-day' ),
+                'fields'      => array(
+                    'theme' => array(
+                        'type'    => 'select',
+                        'label'   => __( 'Theme', 'ai-awareness-day' ),
+                        'options' => array(
+                            'safe'        => __( 'Safe', 'ai-awareness-day' ),
+                            'smart'       => __( 'Smart', 'ai-awareness-day' ),
+                            'creative'    => __( 'Creative', 'ai-awareness-day' ),
+                            'responsible' => __( 'Responsible', 'ai-awareness-day' ),
+                            'future'      => __( 'Future', 'ai-awareness-day' ),
+                        ),
+                    ),
+                    'title' => array(
+                        'type'        => 'text',
+                        'label'       => __( 'Title', 'ai-awareness-day' ),
+                        'placeholder' => __( 'e.g. Introduction to Artificial Intelligence', 'ai-awareness-day' ),
+                        'class'       => 'large-text',
+                    ),
+                    'duration' => array(
+                        'type'        => 'text',
+                        'label'       => __( 'Duration (optional)', 'ai-awareness-day' ),
+                        'placeholder' => __( 'e.g. 30 mins, 1 hour, 2 lessons', 'ai-awareness-day' ),
+                        'class'       => 'regular-text',
+                    ),
+                    'url' => array(
+                        'type'        => 'url',
+                        'label'       => __( 'Link URL', 'ai-awareness-day' ),
+                        'placeholder' => 'https://…',
+                    ),
+                ),
             ),
         ),
         'content_sections' => array(
@@ -554,6 +600,8 @@ function aiad_render_repeatable_object_field( array $config, array $values, stri
         $html .= '<button type="button" class="button aiad-add-extension">' . esc_html( $add_button ) . '</button>';
     } elseif ( $name === 'aiad_resources' ) {
         $html .= '<button type="button" class="button aiad-add-resource">' . esc_html( $add_button ) . '</button>';
+    } elseif ( $name === 'partner_links' ) {
+        $html .= '<button type="button" class="button aiad-add-partner-link">' . esc_html( $add_button ) . '</button>';
     } elseif ( $name === 'aiad_learning_objectives' ) {
         // Learning objectives uses aiad-add-row with data-name attribute
         $html .= '<button type="button" class="button aiad-add-row" data-name="' . esc_attr( $name ) . '">' . esc_html( $add_button ) . '</button>';

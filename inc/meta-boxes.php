@@ -51,7 +51,16 @@ function aiad_render_partner_section_fields( WP_Post $post, array $meta_keys ): 
         if ( '_partner_school_count' === $meta_key && (int) $value === 0 ) {
             $value = '';
         }
-        echo aiad_render_field( $config, $value );
+        $type = $config['type'] ?? 'text';
+        if ( 'repeatable_object' === $type && function_exists( 'aiad_render_repeatable_object_field' ) ) {
+            $name = function_exists( 'aiad_registry_field_post_name' )
+                ? aiad_registry_field_post_name( $config, $meta_key )
+                : substr( (string) $meta_key, 1 );
+            $val = is_array( $value ) ? $value : array();
+            echo aiad_render_repeatable_object_field( $config, $val, $name );
+        } else {
+            echo aiad_render_field( $config, $value );
+        }
     }
     echo '</div>';
 }
@@ -99,8 +108,55 @@ function aiad_save_partner_details_fields( int $post_id, array $meta_keys ): voi
                     update_post_meta( $post_id, $meta_key, $url );
                 }
                 break;
+            case 'textarea':
+                $text = is_string( $raw ) ? sanitize_textarea_field( $raw ) : '';
+                if ( $text === '' ) {
+                    delete_post_meta( $post_id, $meta_key );
+                } else {
+                    update_post_meta( $post_id, $meta_key, $text );
+                }
+                break;
             case 'number':
                 update_post_meta( $post_id, $meta_key, absint( $raw ) );
+                break;
+            case 'repeatable_object':
+                $items = array();
+                if ( is_array( $raw ) ) {
+                    $subfields = $cfg['fields'] ?? array();
+                    foreach ( $raw as $item ) {
+                        if ( ! is_array( $item ) ) {
+                            continue;
+                        }
+                        $out = array();
+                        foreach ( $subfields as $sub_key => $sub_cfg ) {
+                            $sub_type = $sub_cfg['type'] ?? 'text';
+                            $val = $item[ $sub_key ] ?? '';
+                            if ( ! is_string( $val ) ) {
+                                $val = '';
+                            }
+                            $val = wp_unslash( $val );
+                            if ( 'url' === $sub_type ) {
+                                $out[ $sub_key ] = esc_url_raw( $val );
+                            } else {
+                                $out[ $sub_key ] = sanitize_text_field( $val );
+                            }
+                        }
+                        $out = array_filter(
+                            $out,
+                            static fn( $v ) => is_string( $v ) && $v !== ''
+                        );
+                        // Keep item only if it has a URL or title (prevents empty rows).
+                        if ( empty( $out['url'] ) && empty( $out['title'] ) ) {
+                            continue;
+                        }
+                        $items[] = $out;
+                    }
+                }
+                if ( empty( $items ) ) {
+                    delete_post_meta( $post_id, $meta_key );
+                } else {
+                    update_post_meta( $post_id, $meta_key, array_values( $items ) );
+                }
                 break;
             default:
                 update_post_meta( $post_id, $meta_key, sanitize_text_field( $raw ) );
@@ -112,7 +168,7 @@ function aiad_partner_url_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_partner_url_nonce', 'aiad_partner_url_nonce' );
     aiad_render_partner_section_fields(
         $post,
-        array( '_partner_url', '_partner_provides_ai_resources', '_partner_ai_resources_url' )
+        array( '_partner_url', '_partner_profile_intro', '_partner_provides_ai_resources', '_partner_ai_resources_url', '_partner_links' )
     );
 }
 function aiad_save_partner_url( int $post_id ): void {
@@ -918,6 +974,62 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
     ) );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_content_meta_box_enqueue_scripts' );
+
+/**
+ * Enqueue repeatable-field admin JS for Partner edit screens.
+ *
+ * @param string $hook Current admin page hook.
+ */
+function aiad_partner_meta_box_enqueue_scripts( string $hook ): void {
+    if ( $hook !== 'post.php' && $hook !== 'post-new.php' ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen || $screen->post_type !== 'partner' ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'aiad-admin-meta-boxes',
+        AIAD_URI . '/assets/js/admin-meta-boxes.js',
+        array( 'jquery' ),
+        AIAD_VERSION,
+        true
+    );
+
+    $theme_opts = array(
+        'safe'        => __( 'Safe', 'ai-awareness-day' ),
+        'smart'       => __( 'Smart', 'ai-awareness-day' ),
+        'creative'    => __( 'Creative', 'ai-awareness-day' ),
+        'responsible' => __( 'Responsible', 'ai-awareness-day' ),
+        'future'      => __( 'Future', 'ai-awareness-day' ),
+    );
+    $theme_parts = array();
+    foreach ( $theme_opts as $k => $v ) {
+        $theme_parts[] = '<option value="' . esc_attr( $k ) . '">' . esc_html( $v ) . '</option>';
+    }
+
+    wp_localize_script(
+        'aiad-admin-meta-boxes',
+        'aiadAdminMeta',
+        array(
+            // Keep core strings for existing handlers.
+            'removeText'          => __( 'Remove', 'ai-awareness-day' ),
+            'termText'            => __( 'Term', 'ai-awareness-day' ),
+            'definitionText'     => __( 'Definition', 'ai-awareness-day' ),
+            'keyStageAdaptedText' => __( 'Key stage adapted', 'ai-awareness-day' ),
+            'durationText'       => __( 'Duration', 'ai-awareness-day' ),
+            'actionText'          => __( 'Action', 'ai-awareness-day' ),
+            'resourceRefText'     => __( 'Resource ref', 'ai-awareness-day' ),
+            'studentActionText'   => __( 'Student action', 'ai-awareness-day' ),
+            'teacherTipText'      => __( 'Teacher tip', 'ai-awareness-day' ),
+            'removeStepText'      => __( 'Remove step', 'ai-awareness-day' ),
+            // Partner-specific
+            'partnerThemeOptions' => implode( '', $theme_parts ),
+        )
+    );
+}
+add_action( 'admin_enqueue_scripts', 'aiad_partner_meta_box_enqueue_scripts' );
 
 /**
  * Callback: Resource content sections meta box
