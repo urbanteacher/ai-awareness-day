@@ -8,10 +8,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
+
+$hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
+    ? aiad_get_hero_partner_marquee_entries()
+    : array();
 ?>
 <section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero">
     <div class="container">
-        <div class="hero-title-block fade-up">
+        <div class="hero-title-block fade-up<?php echo ! empty( $hero_marquee ) ? ' hero-title-block--partner-marquee' : ''; ?>">
             <?php
             $defaults      = aiad_get_customizer_defaults();
             $hero_logo_id  = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
@@ -124,9 +128,6 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <?php
-            $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
-                ? aiad_get_hero_partner_marquee_entries()
-                : array();
             if ( ! empty( $hero_marquee ) ) :
                 $marquee_count = count( $hero_marquee );
                 // Slower when more logos so the strip does not feel frantic.
