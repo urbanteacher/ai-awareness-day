@@ -19,7 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             </p>
         </div>
 
-        <div class="principles-grid">
+        <div class="principles-grid" role="region"
+            aria-label="<?php echo esc_attr__( 'Core principles — swipe sideways to explore each card', 'ai-awareness-day' ); ?>">
             <?php
             $principle_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
             $principle_default_titles = array(

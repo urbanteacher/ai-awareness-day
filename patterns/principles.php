@@ -33,7 +33,8 @@
         <!-- /wp:group -->
 
         <!-- wp:group {"className":"principles-grid","layout":{"type":"grid","columnCount":null,"minimumColumnWidth":"280px"}} -->
-        <div class="wp-block-group principles-grid">
+        <div class="wp-block-group principles-grid" role="region"
+            aria-label="<?php echo esc_attr__( 'Core principles — swipe sideways to explore each card', 'ai-awareness-day' ); ?>">
             <?php
             $principle_slugs = array('safe', 'smart', 'creative', 'responsible', 'future');
             $principle_default_titles = array(
