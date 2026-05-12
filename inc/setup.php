@@ -217,6 +217,20 @@ function aiad_scripts(): void
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
+    // balloons-js (ES module): hero “live” moment + school registration success — front page only
+    if (is_front_page() && !is_admin()) {
+        $balloons_js = AIAD_DIR . '/assets/js/aiad-balloons.js';
+        if (file_exists($balloons_js)) {
+            wp_enqueue_script(
+                'aiad-balloons',
+                AIAD_URI . '/assets/js/aiad-balloons.js',
+                array('aiad-main'),
+                filemtime($balloons_js),
+                $script_args
+            );
+        }
+    }
+
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';
         wp_enqueue_script(
@@ -310,6 +324,21 @@ function aiad_scripts(): void
 }
 add_action('wp_enqueue_scripts', 'aiad_scripts');
 
+/**
+ * Load aiad-balloons as an ES module (static import of vendor balloons-js).
+ *
+ * @param string $tag    Full script tag HTML.
+ * @param string $handle Script handle.
+ * @param string $src    Script source URL (unused).
+ */
+function aiad_script_loader_tag_module(string $tag, string $handle, string $src): string
+{
+    if ($handle === 'aiad-balloons' && str_contains($tag, '<script ')) {
+        $tag = str_replace('<script ', '<script type="module" ', $tag);
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'aiad_script_loader_tag_module', 10, 3);
 
 /**
  * Register widget areas.

@@ -197,9 +197,12 @@
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     padding: 2rem;
-    transform: translateY(-120%);
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-bottom: 1px solid var(--gray-200);
+  }
+
+  .js .main-navigation {
+    transform: translateY(-120%);
   }
 
   /* Shift mobile nav down to clear the admin bar (46px on mobile) */
@@ -208,7 +211,7 @@
     /* 72px header + 46px admin bar */
   }
 
-  .main-navigation.open {
+  .js .main-navigation.open {
     transform: translateY(0);
   }
 

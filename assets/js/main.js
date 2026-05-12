@@ -75,10 +75,15 @@
             function pad(v) { return String(v).padStart(2, '0'); }
 
             var intervalId = null;
+            var countdownLiveDispatched = false;
 
             function tick() {
                 var diff = targetMs - Date.now();
                 if (diff <= 0) {
+                    if (!countdownLiveDispatched) {
+                        countdownLiveDispatched = true;
+                        document.dispatchEvent(new CustomEvent('aiad:countdownLive'));
+                    }
                     daysEl.textContent    = '00';
                     hoursEl.textContent   = '00';
                     minutesEl.textContent = '00';
@@ -346,27 +351,6 @@
         const formStatus = document.getElementById('form-status');
 
         if (form && typeof aiad_ajax !== 'undefined') {
-            function launchConfetti() {
-                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    return;
-                }
-                var container = document.createElement('div');
-                container.className = 'aiad-confetti';
-                document.body.appendChild(container);
-                for (var i = 0; i < 26; i++) {
-                    var piece = document.createElement('span');
-                    piece.className = 'aiad-confetti__piece';
-                    piece.style.left = Math.round(Math.random() * 100) + '%';
-                    piece.style.background = ['#22c55e', '#10b981', '#84cc16', '#3b82f6', '#a855f7'][i % 5];
-                    piece.style.animationDelay = (Math.random() * 0.3) + 's';
-                    piece.style.transform = 'translateY(0) rotate(' + (Math.random() * 360) + 'deg)';
-                    container.appendChild(piece);
-                }
-                window.setTimeout(function () {
-                    container.remove();
-                }, 1800);
-            }
-
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -462,7 +446,7 @@
                         formStatus.textContent = '';
                         formStatus.appendChild(msgSpan);
                         form.reset();
-                        launchConfetti();
+                        document.dispatchEvent(new CustomEvent('aiad:contactSuccess'));
 
                         // Update pledge counter if server returned updated count.
                         if (data.data && typeof data.data.pledge_count !== 'undefined') {
