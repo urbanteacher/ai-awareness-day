@@ -535,3 +535,46 @@ function aiad_normalise_instructions( $raw ): array {
     }
     return $out;
 }
+
+/**
+ * Published partners that have a featured image, for the front-page hero logo strip.
+ *
+ * @return array<int, array{title: string, href: string, img: string}>
+ */
+function aiad_get_hero_partner_marquee_entries(): array {
+    $query = new WP_Query(
+        apply_filters(
+            'aiad_hero_partner_marquee_query_args',
+            array(
+                'post_type'      => 'partner',
+                'posts_per_page' => 36,
+                'orderby'        => array(
+                    'menu_order' => 'ASC',
+                    'title'      => 'ASC',
+                ),
+                'post_status'    => 'publish',
+                'no_found_rows'  => true,
+            )
+        )
+    );
+    $out = array();
+    if ( ! $query->have_posts() ) {
+        wp_reset_postdata();
+        return $out;
+    }
+    while ( $query->have_posts() ) {
+        $query->the_post();
+        $id  = (int) get_the_ID();
+        $img = get_the_post_thumbnail_url( $id, 'medium' );
+        if ( ! $img ) {
+            continue;
+        }
+        $out[] = array(
+            'title' => get_the_title(),
+            'href'  => get_permalink( $id ),
+            'img'   => $img,
+        );
+    }
+    wp_reset_postdata();
+    return apply_filters( 'aiad_hero_partner_marquee_entries', $out );
+}
