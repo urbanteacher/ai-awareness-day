@@ -155,7 +155,11 @@
   font-size: 0.8rem;
   line-height: 1.4;
   margin-top: 0.25rem;
-  max-width: none;
+  /* Narrower measure than full card — avoids one short line spanning the whole tile */
+  max-width: min(13.5rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  text-wrap: balance;
 }
 
 /* ── Tablet (769–1024px): 3-col, normal gap ─ */
