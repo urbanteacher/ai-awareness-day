@@ -253,7 +253,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    gap: 0.875rem;
+    gap: 0.625rem;
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
@@ -274,15 +274,17 @@
   }
 
   .principles-grid > .principle-card {
-    flex: 0 0 min(17.5rem, calc(100vw - 3rem));
-    max-width: min(17.5rem, calc(100vw - 3rem));
+    /* Narrower tiles so the next principle peeks in (was ~17.5rem / 280px) */
+    flex: 0 0 min(13.75rem, calc(100vw - 4.5rem));
+    max-width: min(13.75rem, calc(100vw - 4.5rem));
+    padding: 0.65rem 0.45rem;
     scroll-snap-align: center;
     scroll-snap-stop: always;
   }
 
   .principles-grid > .principle-card:last-child:nth-child(odd) {
     grid-column: unset;
-    max-width: min(17.5rem, calc(100vw - 3rem));
+    max-width: min(13.75rem, calc(100vw - 4.5rem));
     margin-left: 0;
     margin-right: 0;
   }
