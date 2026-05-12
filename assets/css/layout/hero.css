@@ -187,7 +187,7 @@
 
 /* ── Hero partner logo strip (below stats row) ────────── */
 .hero-partner-marquee {
-  margin-top: 1.75rem;
+  margin-top: clamp(2.25rem, 4.5vw, 3rem);
   margin-bottom: 0;
   width: 100vw;
   max-width: 100vw;
