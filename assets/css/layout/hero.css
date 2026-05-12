@@ -192,7 +192,8 @@
 
 /* ── Hero partner logo strip (below stats row) ────────── */
 .hero-partner-marquee {
-  margin-top: 0;
+  /* Margin doubles the gap from stats row into the strip; padding frames the logos */
+  margin-top: clamp(1.35rem, 2.75vw, 2rem);
   margin-bottom: 0;
   padding-top: clamp(1.35rem, 2.75vw, 2rem);
   padding-bottom: clamp(1.35rem, 2.75vw, 2rem);
