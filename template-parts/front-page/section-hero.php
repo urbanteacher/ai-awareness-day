@@ -51,38 +51,6 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
 
             <?php
-            $event_date   = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
-            $event_ts_utc = strtotime( $event_date . ' 00:00:00 UTC' );
-            // UTC midnight as ms so JS never parses a date string (Safari/locale safe).
-            $event_ts_ms = false !== $event_ts_utc ? $event_ts_utc * 1000 : 0;
-            // Server-render days so the number shows before JS or if JS is blocked.
-            $days_until = false !== $event_ts_utc
-                ? max( 0, (int) floor( ( $event_ts_utc - time() ) / 86400 ) )
-                : 0;
-            ?>
-            <div class="hero-countdown"
-                data-event-date="<?php echo esc_attr( $event_date ); ?>"
-                data-event-ts="<?php echo esc_attr( (string) $event_ts_ms ); ?>"
-                aria-live="polite">
-                <div class="hero-countdown__item">
-                    <span class="hero-countdown__value" data-unit="days"><?php echo esc_html( (string) $days_until ); ?></span>
-                    <span class="hero-countdown__label"><?php esc_html_e( 'Days', 'ai-awareness-day' ); ?></span>
-                </div>
-                <div class="hero-countdown__item">
-                    <span class="hero-countdown__value" data-unit="hours">00</span>
-                    <span class="hero-countdown__label"><?php esc_html_e( 'Hours', 'ai-awareness-day' ); ?></span>
-                </div>
-                <div class="hero-countdown__item">
-                    <span class="hero-countdown__value" data-unit="minutes">00</span>
-                    <span class="hero-countdown__label"><?php esc_html_e( 'Minutes', 'ai-awareness-day' ); ?></span>
-                </div>
-                <div class="hero-countdown__item">
-                    <span class="hero-countdown__value" data-unit="seconds">00</span>
-                    <span class="hero-countdown__label"><?php esc_html_e( 'Seconds', 'ai-awareness-day' ); ?></span>
-                </div>
-            </div>
-
-            <?php
             $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                 ? aiad_get_hero_partner_marquee_entries()
                 : array();
@@ -117,6 +85,38 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
             </div>
             <?php endif; ?>
+
+            <?php
+            $event_date   = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+            $event_ts_utc = strtotime( $event_date . ' 00:00:00 UTC' );
+            // UTC midnight as ms so JS never parses a date string (Safari/locale safe).
+            $event_ts_ms = false !== $event_ts_utc ? $event_ts_utc * 1000 : 0;
+            // Server-render days so the number shows before JS or if JS is blocked.
+            $days_until = false !== $event_ts_utc
+                ? max( 0, (int) floor( ( $event_ts_utc - time() ) / 86400 ) )
+                : 0;
+            ?>
+            <div class="hero-countdown"
+                data-event-date="<?php echo esc_attr( $event_date ); ?>"
+                data-event-ts="<?php echo esc_attr( (string) $event_ts_ms ); ?>"
+                aria-live="polite">
+                <div class="hero-countdown__item">
+                    <span class="hero-countdown__value" data-unit="days"><?php echo esc_html( (string) $days_until ); ?></span>
+                    <span class="hero-countdown__label"><?php esc_html_e( 'Days', 'ai-awareness-day' ); ?></span>
+                </div>
+                <div class="hero-countdown__item">
+                    <span class="hero-countdown__value" data-unit="hours">00</span>
+                    <span class="hero-countdown__label"><?php esc_html_e( 'Hours', 'ai-awareness-day' ); ?></span>
+                </div>
+                <div class="hero-countdown__item">
+                    <span class="hero-countdown__value" data-unit="minutes">00</span>
+                    <span class="hero-countdown__label"><?php esc_html_e( 'Minutes', 'ai-awareness-day' ); ?></span>
+                </div>
+                <div class="hero-countdown__item">
+                    <span class="hero-countdown__value" data-unit="seconds">00</span>
+                    <span class="hero-countdown__label"><?php esc_html_e( 'Seconds', 'ai-awareness-day' ); ?></span>
+                </div>
+            </div>
 
             <?php
             // Live stat counts — pulled directly from WP so they stay current.
