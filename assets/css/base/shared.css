@@ -15,6 +15,11 @@
   padding: var(--section-padding);
 }
 
+/* Less air between hero (logo strip) and the next block (e.g. Campaign) */
+.hero-section + .section {
+  padding-top: clamp(1rem, 2.5vw, 1.75rem);
+}
+
 .section + .section {
   padding-top: 1rem;
 }
