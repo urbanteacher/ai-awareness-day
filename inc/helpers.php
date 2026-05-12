@@ -537,7 +537,7 @@ function aiad_normalise_instructions( $raw ): array {
 }
 
 /**
- * Published partners that have a featured image, for the front-page hero logo strip (above countdown).
+ * Published partners that have a featured image, for the front-page hero logo strip (below stats).
  *
  * @return array<int, array{title: string, href: string, img: string}>
  */
