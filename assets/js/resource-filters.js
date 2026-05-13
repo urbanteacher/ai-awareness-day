@@ -90,47 +90,37 @@
 
     function renderCard( resource ) {
         var isExternal = !! ( resource.external_url && postType === 'featured_resource' );
-        // Render with 'visible' already set — AJAX-injected cards are never seen
-        // by the IntersectionObserver (set up at page load), so without 'visible'
-        // the fade-up class keeps them at opacity:0 permanently.
-        // @starting-style in animations.css handles the smooth entry animation
-        // for browsers that support it (Chrome 117+, Safari 17.5+).
-        var cardClass = isExternal ? 'resource-card resource-card--external fade-up visible' : 'resource-card resource-card--download fade-up visible';
-        var linkHref = isExternal ? ( resource.external_url || resource.permalink ) : resource.permalink;
+        var linkHref   = isExternal ? ( resource.external_url || resource.permalink ) : resource.permalink;
         var linkTarget = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-        var placeholderText = buildPlaceholderText( resource );
-        var hasOverlay = !!( ( resource.duration_names && resource.duration_names.length ) || ( resource.type_names && resource.type_names.length ) || resource.type_name || resource.duration_name || resource.theme_name || resource.org_name );
 
-        var imgHtml = resource.thumbnail
-            ? '<img src="' + escapeHtml( resource.thumbnail ) + '" class="resource-card__image" alt="" aria-hidden="true" />'
-            : '<div class="resource-card__image-placeholder" aria-hidden="true"><span class="resource-card__image-placeholder-text">' + escapeHtml( placeholderText ) + '</span></div>';
+        // Theme class
+        var themeSlug   = ( resource.theme_slug || '' ).toLowerCase();
+        var validThemes = [ 'safe', 'smart', 'creative', 'responsible', 'future' ];
+        var themeClass  = validThemes.indexOf( themeSlug ) !== -1 ? ' resource-card--' + themeSlug : '';
+        var cardClass   = 'resource-card resource-card--pointed' + themeClass + ' fade-up visible';
 
-        var overlayHtml = '';
-        if ( hasOverlay ) {
-            overlayHtml = '<div class="resource-card__image-overlay" aria-hidden="true"><div class="resource-card__image-top">';
-            var slotLabels = ( resource.duration_names && resource.duration_names.length ) ? resource.duration_names : ( resource.type_names && resource.type_names.length ? resource.type_names : [] );
-            var slotSlugs = ( resource.duration_slugs && resource.duration_slugs.length ) ? resource.duration_slugs : [];
-            if ( slotLabels.length > 0 ) {
-                slotLabels.forEach( function ( name, i ) {
-                    var slug = slotSlugs[ i ] || '';
-                    overlayHtml += durationTypePillHtml( slug, name );
-                } );
-            } else if ( resource.type_name || resource.duration_name ) {
-                var fallbackSlug = ( resource.duration_slugs && resource.duration_slugs[ 0 ] ) ? resource.duration_slugs[ 0 ] : '';
-                overlayHtml += durationTypePillHtml( fallbackSlug, resource.duration_name || resource.type_name );
-            }
-            if ( resource.theme_name ) {
-                overlayHtml += '<span class="' + themePillClass( resource.theme_slug ) + '">' + escapeHtml( resource.theme_name ) + '</span>';
-            }
-            if ( resource.org_name && isExternal ) {
-                overlayHtml += '<span class="resource-card__pill resource-card__pill--org">' + escapeHtml( resource.org_name ) + '</span>';
-            }
-            overlayHtml += '</div></div>';
-        }
+        // Hero image (absolute fill inside clip-path hero)
+        var heroImgHtml = resource.thumbnail
+            ? '<img src="' + escapeHtml( resource.thumbnail ) + '" class="resource-card__hero-img" alt="" aria-hidden="true" />'
+            : '';
 
+        // Labels inside hero
+        var themeLabelHtml = resource.theme_name
+            ? '<span class="resource-card__theme-label" aria-hidden="true">' + escapeHtml( resource.theme_name.toUpperCase() ) + '</span>'
+            : '';
+
+        var formatLabel = resource.activity_types && resource.activity_types.length
+            ? resource.activity_types[ 0 ].toUpperCase()
+            : 'SLIDE';
+
+        var durationHtml = resource.duration_name
+            ? '<span class="resource-card__duration-label" aria-hidden="true">' + escapeHtml( resource.duration_name.toUpperCase() ) + '</span>'
+            : '';
+
+        // Action link
         var actionHtml = '';
         if ( isExternal ) {
-            actionHtml = '<a href="' + escapeHtml( resource.external_url || resource.permalink ) + '" class="resource-card__link" target="_blank" rel="noopener noreferrer">' + ( resource.org_name ? escapeHtml( resource.org_name ) + ' →' : 'Visit →' ) + '</a>';
+            actionHtml = '<a href="' + escapeHtml( resource.external_url || resource.permalink ) + '" class="resource-card__link" target="_blank" rel="noopener noreferrer">View resource →</a>';
         } else if ( resource.download_url ) {
             actionHtml = '<a href="' + escapeHtml( resource.download_url ) + '" class="resource-card__link resource-download-link" data-resource-id="' + escapeHtml( String( resource.id ) ) + '" download target="_blank" rel="noopener">' + escapeHtml( resource.download_label || 'Download' ) + ' →</a>';
         } else {
@@ -138,20 +128,29 @@
         }
         actionHtml += '<button type="button" class="resource-bookmark-btn" data-resource-id="' + escapeHtml( String( resource.id ) ) + '" data-resource-title="' + escapeHtml( resource.title ) + '" data-resource-url="' + escapeHtml( resource.permalink ) + '" aria-pressed="false" aria-label="Save resource">Save</button>';
 
-        // Excerpt is escaped for XSS safety; any HTML in excerpts will appear as literal tags.
         var excerptHtml = resource.excerpt
             ? '<p class="resource-card__excerpt">' + escapeHtml( resource.excerpt ) + '</p>'
             : '';
 
-        return '<article class="' + cardClass + '">' +
-            '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__image-link"' + linkTarget + '>' +
-            imgHtml + overlayHtml +
-            '</a>' +
-            '<div class="resource-card__body">' +
-            '<h2 class="resource-card__title"><a href="' + escapeHtml( linkHref ) + '"' + linkTarget + '>' + escapeHtml( resource.title ) + '</a></h2>' +
-            excerptHtml +
-            '<p class="resource-card__action">' + actionHtml + '</p>' +
-            '</div></article>';
+        return (
+            '<article class="' + cardClass + '">' +
+                '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__hero"' + linkTarget + ' aria-label="' + escapeHtml( resource.title ) + '">' +
+                    heroImgHtml +
+                    '<div class="resource-card__wedge" aria-hidden="true"></div>' +
+                    '<div class="resource-card__fade" aria-hidden="true"></div>' +
+                    themeLabelHtml +
+                    '<span class="resource-card__format" aria-hidden="true">' + escapeHtml( formatLabel ) + '</span>' +
+                    durationHtml +
+                    '<h3 class="resource-card__title-overlay">' + escapeHtml( resource.title ) + '</h3>' +
+                '</a>' +
+                '<div class="resource-card__body">' +
+                    '<span class="resource-card__format-label">' + escapeHtml( formatLabel ) + '</span>' +
+                    '<p class="resource-card__title-below">' + escapeHtml( resource.title ) + '</p>' +
+                    excerptHtml +
+                    '<p class="resource-card__action">' + actionHtml + '</p>' +
+                '</div>' +
+            '</article>'
+        );
     }
 
     function updateUrl( params ) {
