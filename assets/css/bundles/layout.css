@@ -1905,7 +1905,7 @@ a.duration-badge:hover {
 .resource-card--pointed .resource-card__format-label {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1966,7 +1966,7 @@ a.duration-badge:hover {
 
 .resource-card--pointed .resource-card__title-below {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.35;
   margin: 0 0 0.25rem;
@@ -1984,7 +1984,7 @@ a.duration-badge:hover {
 .resource-card--future  .resource-card__title-below { color: #db2777; }
 
 .resource-card--pointed .resource-card__excerpt {
-  font-size: 0.875rem;
+  font-size: 1.14rem;
   line-height: 1.6;
   color: var(--gray-600);
   margin: 0.25rem 0 0;
@@ -2059,11 +2059,11 @@ a.duration-badge:hover {
   }
 
   .resource-card--pointed .resource-card__title-below {
-    font-size: 0.85rem;
+    font-size: 1.1rem;
   }
 
   .resource-card--pointed .resource-card__excerpt {
-    font-size: 0.78rem;
+    font-size: 1.01rem;
     -webkit-line-clamp: 2;
   }
 }
