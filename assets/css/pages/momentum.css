@@ -306,6 +306,47 @@ a.partner-card {
   text-decoration: none;
 }
 
+.theme-link__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  line-height: 0;
+}
+
+.theme-link__badge-img {
+  display: block;
+  max-width: 100%;
+  max-height: 120px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hide broken images in theme links */
+.theme-link__badge-img.is-broken {
+  display: none !important;
+}
+
+.theme-link__badge-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: var(--gray-100);
+  border: 2px dashed var(--gray-300);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.theme-link__label {
+  display: block;
+}
 
 @media screen and (max-width: 768px) {
   .themes-links {
@@ -358,49 +399,6 @@ a.partner-card {
     display: none;
     /* Hide badges on mobile to save space */
   }
-}
-
-
-.theme-link__badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60px;
-  line-height: 0;
-}
-
-.theme-link__badge-img {
-  display: block;
-  max-width: 100%;
-  max-height: 120px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-}
-
-/* Hide broken images in theme links */
-.theme-link__badge-img.is-broken {
-  display: none !important;
-}
-
-.theme-link__badge-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  background: var(--gray-100);
-  border: 2px dashed var(--gray-300);
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--gray-400);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.theme-link__label {
-  display: block;
 }
 
 /* ── Partner card responsive (migrated from responsive.css) ── */
