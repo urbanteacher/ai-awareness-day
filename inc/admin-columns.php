@@ -18,8 +18,24 @@ function aiad_form_submission_columns( $columns ): array {
     $new_columns['title'] = __( 'Name', 'ai-awareness-day' );
     $new_columns['email'] = __( 'Email', 'ai-awareness-day' );
     $new_columns['role'] = __( 'Role', 'ai-awareness-day' );
+    $new_columns['interests'] = __( 'Interests', 'ai-awareness-day' );
+    $new_columns['chase_status'] = __( 'Status', 'ai-awareness-day' );
     $new_columns['date'] = $columns['date'];
     return $new_columns;
+}
+
+/**
+ * Allowed chase-up status keys and their human labels.
+ *
+ * @return array<string,string>
+ */
+function aiad_submission_status_options(): array {
+    return array(
+        'not_contacted' => __( 'Not contacted', 'ai-awareness-day' ),
+        'contacted'     => __( 'Contacted', 'ai-awareness-day' ),
+        'following_up'  => __( 'Following up', 'ai-awareness-day' ),
+        'done'          => __( 'Done', 'ai-awareness-day' ),
+    );
 }
 add_filter( 'manage_form_submission_posts_columns', 'aiad_form_submission_columns' );
 
@@ -44,6 +60,41 @@ function aiad_form_submission_column_content( $column, $post_id ): void {
             );
             $role_display = isset( $role_labels[ $involved_as ] ) ? $role_labels[ $involved_as ] : $involved_as;
             echo esc_html( $role_display );
+            break;
+        case 'interests':
+            $checklist_keys = (array) get_post_meta( $post_id, '_submission_checklist', true );
+            if ( empty( $checklist_keys ) || ! function_exists( 'aiad_get_contact_checklist_labels' ) ) {
+                echo '—';
+                break;
+            }
+            $labels = aiad_get_contact_checklist_labels();
+            $shown  = array();
+            foreach ( $checklist_keys as $key ) {
+                if ( isset( $labels[ $key ] ) ) {
+                    $shown[] = esc_html( $labels[ $key ] );
+                }
+            }
+            echo $shown ? implode( '<br>', $shown ) : '—';
+            break;
+        case 'chase_status':
+            $status  = (string) get_post_meta( $post_id, '_submission_chase_status', true );
+            if ( $status === '' ) {
+                $status = 'not_contacted';
+            }
+            $options = aiad_submission_status_options();
+            $label   = isset( $options[ $status ] ) ? $options[ $status ] : $status;
+            $colors  = array(
+                'not_contacted' => '#b45309',
+                'contacted'     => '#2563eb',
+                'following_up'  => '#7c3aed',
+                'done'          => '#16a34a',
+            );
+            $bg = isset( $colors[ $status ] ) ? $colors[ $status ] : '#666';
+            printf(
+                '<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:%s;color:#fff;font-size:11px;font-weight:600;">%s</span>',
+                esc_attr( $bg ),
+                esc_html( $label )
+            );
             break;
     }
 }
@@ -94,6 +145,121 @@ function aiad_form_submission_orderby( WP_Query $query ): void {
 add_action( 'pre_get_posts', 'aiad_form_submission_orderby' );
 
 /**
+ * Render an "Interest" filter dropdown above the submissions list table.
+ */
+function aiad_form_submission_interest_filter( string $post_type ): void {
+    if ( $post_type !== 'form_submission' ) {
+        return;
+    }
+    if ( function_exists( 'aiad_get_contact_checklist_labels' ) ) {
+        $current = isset( $_GET['interest'] ) ? sanitize_text_field( wp_unslash( $_GET['interest'] ) ) : '';
+        $labels  = aiad_get_contact_checklist_labels();
+        echo '<select name="interest"><option value="">' . esc_html__( 'All interests', 'ai-awareness-day' ) . '</option>';
+        foreach ( $labels as $key => $label ) {
+            printf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr( $key ),
+                selected( $current, $key, false ),
+                esc_html( $label )
+            );
+        }
+        echo '</select>';
+    }
+
+    if ( function_exists( 'aiad_get_organisation_type_options' ) ) {
+        $current_org = isset( $_GET['org_type'] ) ? sanitize_text_field( wp_unslash( $_GET['org_type'] ) ) : '';
+        $org_types   = aiad_get_organisation_type_options();
+        echo '<select name="org_type"><option value="">' . esc_html__( 'All organisation types', 'ai-awareness-day' ) . '</option>';
+        foreach ( $org_types as $key => $label ) {
+            printf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr( $key ),
+                selected( $current_org, $key, false ),
+                esc_html( $label )
+            );
+        }
+        echo '</select>';
+    }
+
+    $current_status = isset( $_GET['chase_status'] ) ? sanitize_text_field( wp_unslash( $_GET['chase_status'] ) ) : '';
+    $status_options = aiad_submission_status_options();
+    echo '<select name="chase_status"><option value="">' . esc_html__( 'All statuses', 'ai-awareness-day' ) . '</option>';
+    foreach ( $status_options as $key => $label ) {
+        printf(
+            '<option value="%s" %s>%s</option>',
+            esc_attr( $key ),
+            selected( $current_status, $key, false ),
+            esc_html( $label )
+        );
+    }
+    echo '</select>';
+}
+add_action( 'restrict_manage_posts', 'aiad_form_submission_interest_filter' );
+
+/**
+ * Apply the interest filter via meta_query when ?interest=<key> is present.
+ */
+function aiad_form_submission_filter_by_interest( WP_Query $query ): void {
+    if ( ! is_admin() || ! $query->is_main_query() ) {
+        return;
+    }
+    if ( $query->get( 'post_type' ) !== 'form_submission' ) {
+        return;
+    }
+
+    $meta_query = (array) $query->get( 'meta_query' );
+
+    $interest = isset( $_GET['interest'] ) ? sanitize_text_field( wp_unslash( $_GET['interest'] ) ) : '';
+    if ( $interest !== '' ) {
+        $meta_query[] = array(
+            'key'     => '_submission_checklist',
+            'value'   => '"' . $interest . '"',
+            'compare' => 'LIKE',
+        );
+    }
+
+    $org_type = isset( $_GET['org_type'] ) ? sanitize_text_field( wp_unslash( $_GET['org_type'] ) ) : '';
+    if ( $org_type !== '' ) {
+        $meta_query[] = array(
+            'key'   => '_submission_org_type',
+            'value' => $org_type,
+        );
+    }
+
+    $chase_status = isset( $_GET['chase_status'] ) ? sanitize_text_field( wp_unslash( $_GET['chase_status'] ) ) : '';
+    if ( $chase_status !== '' ) {
+        if ( $chase_status === 'not_contacted' ) {
+            // Treat missing meta or empty as not_contacted (default). Nested OR clause.
+            $meta_query[] = array(
+                'relation' => 'OR',
+                array(
+                    'key'     => '_submission_chase_status',
+                    'compare' => 'NOT EXISTS',
+                ),
+                array(
+                    'key'   => '_submission_chase_status',
+                    'value' => 'not_contacted',
+                ),
+                array(
+                    'key'   => '_submission_chase_status',
+                    'value' => '',
+                ),
+            );
+        } else {
+            $meta_query[] = array(
+                'key'   => '_submission_chase_status',
+                'value' => $chase_status,
+            );
+        }
+    }
+
+    if ( ! empty( $meta_query ) ) {
+        $query->set( 'meta_query', $meta_query );
+    }
+}
+add_action( 'pre_get_posts', 'aiad_form_submission_filter_by_interest' );
+
+/**
  * Display submission details in admin edit screen.
  * Registered via add_meta_box so it only runs on the correct screen.
  *
@@ -117,6 +283,13 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
     $organisation   = get_post_meta( $post->ID, '_submission_organisation', true );
     $org_type       = get_post_meta( $post->ID, '_submission_org_type', true );
     $checklist_keys = (array) get_post_meta( $post->ID, '_submission_checklist', true );
+    $chase_status   = (string) get_post_meta( $post->ID, '_submission_chase_status', true );
+    if ( $chase_status === '' ) {
+        $chase_status = 'not_contacted';
+    }
+    $chase_note     = (string) get_post_meta( $post->ID, '_submission_chase_note', true );
+
+    wp_nonce_field( 'aiad_submission_chase_save', 'aiad_submission_chase_nonce' );
 
     $role_labels = array(
         'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
@@ -129,6 +302,20 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
     ?>
     <div class="form-submission-details" style="padding: 20px;">
         <table class="form-table">
+            <tr>
+                <th><label for="aiad_submission_chase_status"><?php esc_html_e( 'Chase-up status', 'ai-awareness-day' ); ?></label></th>
+                <td>
+                    <select id="aiad_submission_chase_status" name="aiad_submission_chase_status">
+                        <?php foreach ( aiad_submission_status_options() as $key => $label ) : ?>
+                            <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $chase_status, $key ); ?>><?php echo esc_html( $label ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p>
+                        <label for="aiad_submission_chase_note" class="screen-reader-text"><?php esc_html_e( 'Internal note', 'ai-awareness-day' ); ?></label>
+                        <textarea id="aiad_submission_chase_note" name="aiad_submission_chase_note" rows="2" class="large-text" placeholder="<?php esc_attr_e( 'Internal notes (e.g. who emailed, what was sent)', 'ai-awareness-day' ); ?>"><?php echo esc_textarea( $chase_note ); ?></textarea>
+                    </p>
+                </td>
+            </tr>
             <tr>
                 <th><?php esc_html_e( 'Name', 'ai-awareness-day' ); ?></th>
                 <td><?php echo esc_html( $first_name . ' ' . $last_name ); ?></td>
@@ -226,6 +413,40 @@ function aiad_register_form_submission_meta_box(): void {
     );
 }
 add_action( 'add_meta_boxes', 'aiad_register_form_submission_meta_box' );
+
+/**
+ * Persist chase-up status + internal note on the form_submission edit screen.
+ */
+function aiad_save_form_submission_chase( int $post_id ): void {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+    if ( ! isset( $_POST['aiad_submission_chase_nonce'] ) ) {
+        return;
+    }
+    $nonce = sanitize_text_field( wp_unslash( $_POST['aiad_submission_chase_nonce'] ) );
+    if ( ! wp_verify_nonce( $nonce, 'aiad_submission_chase_save' ) ) {
+        return;
+    }
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+    if ( get_post_type( $post_id ) !== 'form_submission' ) {
+        return;
+    }
+
+    if ( isset( $_POST['aiad_submission_chase_status'] ) ) {
+        $allowed = array_keys( aiad_submission_status_options() );
+        $status  = sanitize_text_field( wp_unslash( $_POST['aiad_submission_chase_status'] ) );
+        if ( in_array( $status, $allowed, true ) ) {
+            update_post_meta( $post_id, '_submission_chase_status', $status );
+        }
+    }
+    if ( isset( $_POST['aiad_submission_chase_note'] ) ) {
+        update_post_meta( $post_id, '_submission_chase_note', sanitize_textarea_field( wp_unslash( $_POST['aiad_submission_chase_note'] ) ) );
+    }
+}
+add_action( 'save_post_form_submission', 'aiad_save_form_submission_chase' );
 
 /**
  * Add Position column to Partners list table.

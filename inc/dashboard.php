@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register the dashboard widget.
+ * Register the dashboard widgets.
  */
 function aiad_register_dashboard_widget(): void {
     wp_add_dashboard_widget(
@@ -20,8 +20,254 @@ function aiad_register_dashboard_widget(): void {
         __( '📊 AI Awareness Day — Campaign Analytics', 'ai-awareness-day' ),
         'aiad_dashboard_widget_callback'
     );
+    wp_add_dashboard_widget(
+        'aiad_resource_analytics',
+        __( '📚 Resource Analytics — Downloads & Views', 'ai-awareness-day' ),
+        'aiad_resource_analytics_widget_callback'
+    );
 }
 add_action( 'wp_dashboard_setup', 'aiad_register_dashboard_widget' );
+
+/**
+ * Aggregate resource analytics: total downloads, total views, resource counts.
+ *
+ * @return array{total_downloads:int,total_views:int,resources_with_downloads:int,resources_with_views:int,resource_count:int}
+ */
+function aiad_get_resource_analytics(): array {
+    global $wpdb;
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $total_downloads = (int) $wpdb->get_var(
+        "SELECT COALESCE(SUM(CAST(pm.meta_value AS UNSIGNED)),0)
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_aiad_download_count'
+           AND p.post_type = 'resource'
+           AND p.post_status = 'publish'"
+    );
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $total_views = (int) $wpdb->get_var(
+        "SELECT COALESCE(SUM(CAST(pm.meta_value AS UNSIGNED)),0)
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_aiad_view_count'
+           AND p.post_type = 'resource'
+           AND p.post_status = 'publish'"
+    );
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $resources_with_downloads = (int) $wpdb->get_var(
+        "SELECT COUNT(DISTINCT p.ID)
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_aiad_download_count'
+           AND CAST(pm.meta_value AS UNSIGNED) > 0
+           AND p.post_type = 'resource'
+           AND p.post_status = 'publish'"
+    );
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $resources_with_views = (int) $wpdb->get_var(
+        "SELECT COUNT(DISTINCT p.ID)
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_aiad_view_count'
+           AND CAST(pm.meta_value AS UNSIGNED) > 0
+           AND p.post_type = 'resource'
+           AND p.post_status = 'publish'"
+    );
+    $resource_count = (int) wp_count_posts( 'resource' )->publish;
+
+    return array(
+        'total_downloads'          => $total_downloads,
+        'total_views'              => $total_views,
+        'resources_with_downloads' => $resources_with_downloads,
+        'resources_with_views'     => $resources_with_views,
+        'resource_count'           => $resource_count,
+    );
+}
+
+/**
+ * Top N resources by a numeric meta key.
+ *
+ * @param string $meta_key e.g. _aiad_download_count
+ * @param int    $limit    Max results.
+ * @return array<int,array{id:int,title:string,count:int,url:string,edit:string}>
+ */
+function aiad_get_top_resources_by_meta( string $meta_key, int $limit = 5 ): array {
+    $q = new WP_Query( array(
+        'post_type'      => 'resource',
+        'post_status'    => 'publish',
+        'posts_per_page' => $limit,
+        'meta_key'       => $meta_key,
+        'orderby'        => 'meta_value_num',
+        'order'          => 'DESC',
+        'meta_query'     => array(
+            array(
+                'key'     => $meta_key,
+                'value'   => 0,
+                'compare' => '>',
+                'type'    => 'NUMERIC',
+            ),
+        ),
+    ) );
+    $out = array();
+    foreach ( $q->posts as $p ) {
+        $out[] = array(
+            'id'    => (int) $p->ID,
+            'title' => get_the_title( $p ),
+            'count' => (int) get_post_meta( $p->ID, $meta_key, true ),
+            'url'   => (string) get_permalink( $p ),
+            'edit'  => (string) get_edit_post_link( $p->ID ),
+        );
+    }
+    return $out;
+}
+
+/**
+ * Render the Resource Analytics dashboard widget.
+ */
+function aiad_resource_analytics_widget_callback(): void {
+    $stats = aiad_get_resource_analytics();
+    $top_downloads = aiad_get_top_resources_by_meta( '_aiad_download_count', 5 );
+    $top_views     = aiad_get_top_resources_by_meta( '_aiad_view_count', 5 );
+
+    $coverage_dl = $stats['resource_count'] > 0
+        ? round( ( $stats['resources_with_downloads'] / $stats['resource_count'] ) * 100 )
+        : 0;
+    $coverage_vw = $stats['resource_count'] > 0
+        ? round( ( $stats['resources_with_views'] / $stats['resource_count'] ) * 100 )
+        : 0;
+    ?>
+    <style>
+        #aiad_resource_analytics .aiad-ra-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        #aiad_resource_analytics .aiad-ra-stat__val {
+            font-size: 1.7rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #1e1e1e;
+        }
+        #aiad_resource_analytics .aiad-ra-stat__lbl {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: #646970;
+            margin-top: 0.2rem;
+            display: block;
+        }
+        #aiad_resource_analytics .aiad-ra-sub {
+            font-size: 0.72rem;
+            color: #646970;
+            margin-top: 0.1rem;
+        }
+        #aiad_resource_analytics .aiad-ra-section-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #1e1e1e;
+            margin: 0 0 0.4rem;
+        }
+        #aiad_resource_analytics .aiad-ra-list {
+            list-style: none;
+            margin: 0 0 0.75rem;
+            padding: 0;
+        }
+        #aiad_resource_analytics .aiad-ra-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #f0f0f1;
+            font-size: 0.85rem;
+        }
+        #aiad_resource_analytics .aiad-ra-list li:last-child { border-bottom: none; }
+        #aiad_resource_analytics .aiad-ra-list a {
+            color: #2271b1;
+            text-decoration: none;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #aiad_resource_analytics .aiad-ra-list .count {
+            font-weight: 700;
+            color: #1e1e1e;
+        }
+        #aiad_resource_analytics hr.aiad-ra-divider {
+            border: none;
+            border-top: 1px solid #dcdcde;
+            margin: 0.75rem 0;
+        }
+        #aiad_resource_analytics .aiad-ra-empty {
+            color: #646970;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+    </style>
+
+    <div class="aiad-ra-grid">
+        <div>
+            <span class="aiad-ra-stat__val"><?php echo esc_html( number_format( $stats['total_downloads'] ) ); ?></span>
+            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total downloads', 'ai-awareness-day' ); ?></span>
+            <p class="aiad-ra-sub">
+                <?php
+                /* translators: 1: count, 2: total resources, 3: coverage % */
+                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'ai-awareness-day' ), $stats['resources_with_downloads'], $stats['resource_count'], $coverage_dl ) );
+                ?>
+            </p>
+        </div>
+        <div>
+            <span class="aiad-ra-stat__val"><?php echo esc_html( number_format( $stats['total_views'] ) ); ?></span>
+            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total views', 'ai-awareness-day' ); ?></span>
+            <p class="aiad-ra-sub">
+                <?php
+                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'ai-awareness-day' ), $stats['resources_with_views'], $stats['resource_count'], $coverage_vw ) );
+                ?>
+            </p>
+        </div>
+    </div>
+
+    <hr class="aiad-ra-divider">
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top downloads', 'ai-awareness-day' ); ?></p>
+    <?php if ( empty( $top_downloads ) ) : ?>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No downloads recorded yet.', 'ai-awareness-day' ); ?></p>
+    <?php else : ?>
+        <ul class="aiad-ra-list">
+            <?php foreach ( $top_downloads as $row ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( $row['edit'] ); ?>"><?php echo esc_html( $row['title'] ); ?></a>
+                    <span class="count"><?php echo esc_html( number_format( $row['count'] ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top views', 'ai-awareness-day' ); ?></p>
+    <?php if ( empty( $top_views ) ) : ?>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No views recorded yet.', 'ai-awareness-day' ); ?></p>
+    <?php else : ?>
+        <ul class="aiad-ra-list">
+            <?php foreach ( $top_views as $row ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( $row['edit'] ); ?>"><?php echo esc_html( $row['title'] ); ?></a>
+                    <span class="count"><?php echo esc_html( number_format( $row['count'] ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <hr class="aiad-ra-divider">
+    <p style="margin:0;">
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=downloads&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by downloads →', 'ai-awareness-day' ); ?></a>
+        &nbsp;·&nbsp;
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=views&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by views →', 'ai-awareness-day' ); ?></a>
+    </p>
+    <?php
+}
 
 /**
  * Get submission counts broken down by role.
@@ -61,6 +307,98 @@ function aiad_get_submission_breakdown(): array {
     }
 
     return $roles;
+}
+
+/**
+ * Get submission counts broken down by chase-up status.
+ *
+ * @return array<string, int>
+ */
+function aiad_get_submission_chase_breakdown(): array {
+    global $wpdb;
+
+    $defaults = array(
+        'not_contacted' => 0,
+        'contacted'     => 0,
+        'following_up'  => 0,
+        'done'          => 0,
+    );
+
+    $total_q = new WP_Query( array(
+        'post_type'      => 'form_submission',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'no_found_rows'  => false,
+    ) );
+    $total = (int) $total_q->found_posts;
+    if ( $total === 0 ) {
+        return $defaults;
+    }
+
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $results = $wpdb->get_results(
+        "SELECT meta_value AS status, COUNT(*) AS cnt
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_submission_chase_status'
+           AND p.post_type = 'form_submission'
+           AND p.post_status = 'publish'
+         GROUP BY meta_value",
+        ARRAY_A
+    );
+
+    $set = 0;
+    foreach ( $results as $row ) {
+        $key = $row['status'];
+        if ( isset( $defaults[ $key ] ) ) {
+            $defaults[ $key ] = (int) $row['cnt'];
+            $set += (int) $row['cnt'];
+        }
+    }
+    // Submissions with no chase_status meta count as not_contacted (default).
+    $defaults['not_contacted'] += max( 0, $total - $set );
+
+    return $defaults;
+}
+
+/**
+ * Get tallies of how many submissions ticked each checklist interest.
+ *
+ * @return array<string, int>  Keyed by checklist slug, value = count.
+ */
+function aiad_get_submission_interest_breakdown(): array {
+    global $wpdb;
+
+    if ( ! function_exists( 'aiad_get_contact_checklist_labels' ) ) {
+        return array();
+    }
+    $labels = aiad_get_contact_checklist_labels();
+
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $rows = $wpdb->get_col(
+        "SELECT pm.meta_value
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE pm.meta_key = '_submission_checklist'
+           AND p.post_type = 'form_submission'
+           AND p.post_status = 'publish'"
+    );
+
+    $counts = array_fill_keys( array_keys( $labels ), 0 );
+    foreach ( $rows as $serialised ) {
+        $arr = maybe_unserialize( $serialised );
+        if ( ! is_array( $arr ) ) {
+            continue;
+        }
+        foreach ( $arr as $key ) {
+            if ( isset( $counts[ $key ] ) ) {
+                $counts[ $key ]++;
+            }
+        }
+    }
+    arsort( $counts );
+    return $counts;
 }
 
 /**
@@ -278,6 +616,67 @@ function aiad_dashboard_widget_callback(): void {
         <div class="aiad-dw-next-ms">
             🎉 All milestones reached! The campaign has exceeded 1,000 sign-ups.
         </div>
+    <?php endif; ?>
+
+    <hr class="aiad-dw-divider">
+    <?php
+    $chase = aiad_get_submission_chase_breakdown();
+    $chase_labels = function_exists( 'aiad_submission_status_options' ) ? aiad_submission_status_options() : array(
+        'not_contacted' => __( 'Not contacted', 'ai-awareness-day' ),
+        'contacted'     => __( 'Contacted', 'ai-awareness-day' ),
+        'following_up'  => __( 'Following up', 'ai-awareness-day' ),
+        'done'          => __( 'Done', 'ai-awareness-day' ),
+    );
+    $chase_colors = array(
+        'not_contacted' => '#b45309',
+        'contacted'     => '#2563eb',
+        'following_up'  => '#7c3aed',
+        'done'          => '#16a34a',
+    );
+    $chase_total = array_sum( $chase );
+    ?>
+    <p class="aiad-dw-section-title"><?php esc_html_e( 'Chase-up progress', 'ai-awareness-day' ); ?></p>
+    <ul class="aiad-dw-breakdown">
+        <?php foreach ( $chase_labels as $key => $label ) :
+            $val     = $chase[ $key ] ?? 0;
+            $bar_pct = $chase_total > 0 ? min( 100, round( ( $val / $chase_total ) * 100 ) ) : 0;
+            $color   = $chase_colors[ $key ] ?? '#2271b1';
+            $url     = add_query_arg( array( 'post_type' => 'form_submission', 'chase_status' => $key ), admin_url( 'edit.php' ) );
+        ?>
+            <li>
+                <span style="min-width:10rem;"><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a></span>
+                <div class="aiad-dw-breakdown__bar-wrap">
+                    <div class="aiad-dw-breakdown__bar" style="width:<?php echo esc_attr( $bar_pct ); ?>%;background:<?php echo esc_attr( $color ); ?>;"></div>
+                </div>
+                <span class="aiad-dw-breakdown__count"><?php echo esc_html( $val ); ?></span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <?php
+    $interests = aiad_get_submission_interest_breakdown();
+    $checklist_labels = function_exists( 'aiad_get_contact_checklist_labels' ) ? aiad_get_contact_checklist_labels() : array();
+    $interest_max = $interests ? max( $interests ) : 0;
+    ?>
+    <?php if ( $interests && $interest_max > 0 ) : ?>
+        <hr class="aiad-dw-divider">
+        <p class="aiad-dw-section-title"><?php esc_html_e( 'Interest demand', 'ai-awareness-day' ); ?></p>
+        <ul class="aiad-dw-breakdown">
+            <?php foreach ( $interests as $key => $val ) :
+                if ( $val === 0 ) { continue; }
+                $label   = $checklist_labels[ $key ] ?? $key;
+                $bar_pct = $interest_max > 0 ? min( 100, round( ( $val / $interest_max ) * 100 ) ) : 0;
+                $url     = add_query_arg( array( 'post_type' => 'form_submission', 'interest' => $key ), admin_url( 'edit.php' ) );
+            ?>
+                <li>
+                    <span style="min-width:14rem;"><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a></span>
+                    <div class="aiad-dw-breakdown__bar-wrap">
+                        <div class="aiad-dw-breakdown__bar" style="width:<?php echo esc_attr( $bar_pct ); ?>%;"></div>
+                    </div>
+                    <span class="aiad-dw-breakdown__count"><?php echo esc_html( $val ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     <?php endif; ?>
 
     <hr class="aiad-dw-divider">
