@@ -95,6 +95,7 @@
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 1.5rem;
   max-width: 100%;
+  align-items: start;
 }
 
 .resource-card {
@@ -500,19 +501,19 @@
   }
 }
 
-/* Resources grid: 2 columns on mobile (archives get 3-col from home-style block below) */
+/* Resources grid: single column on mobile for readable text */
 @media screen and (max-width: 640px) {
   .resources-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  /* Centre lone last card when it's the only item in its row */
+  /* Place the placeholder card side-by-side with the last card if it's the only odd one */
   .resources-grid > .resource-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
-    max-width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .resource-card__body {
@@ -722,8 +723,17 @@
   }
 
   #free-resources .resource-card--placeholder {
-    min-height: 0;
-    align-self: stretch;
+    min-height: 80px;
+    align-self: auto;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    background: transparent;
+    border-width: 2px;
+  }
+
+  #free-resources .resource-card--placeholder:hover {
+    background: var(--green-50);
+    box-shadow: none;
+    transform: none;
   }
 
   #free-resources .resource-card--placeholder .resource-card__placeholder-title {
@@ -1176,5 +1186,17 @@
   .single-resource .resource-footer-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
+  }
+}
+
+/* ── Mobile: force all resource-card grids to single column for readability ── */
+@media screen and (max-width: 640px) {
+  #free-resources .resources-grid,
+  #partner-resources .resources-grid,
+  .resources-archive .resources-grid,
+  .featured-resources-archive .resources-grid,
+  .resources-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
 }

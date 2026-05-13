@@ -362,6 +362,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 </a>
 
                                 <div class="resource-card__body">
+                                    <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
                                     <p class="resource-card__title-below"><?php echo esc_html( get_the_title() ); ?></p>
                                     <?php if ( has_excerpt() ): ?>
                                         <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>

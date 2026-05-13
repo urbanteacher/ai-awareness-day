@@ -1889,15 +1889,15 @@ a.duration-badge:hover {
   top: 1rem;
   left: 1.25rem;
   font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
-/* ---- Format word — bottom-left, raised to match DEMO (clears chamfer + sits higher) ---- */
+/* ---- Format word — bottom-left inside hero (desktop) ---- */
 .resource-card--pointed .resource-card__format {
   position: absolute;
   bottom: 3rem;
@@ -1910,6 +1910,11 @@ a.duration-badge:hover {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   pointer-events: none;
+}
+
+/* ---- Format label — body area (mobile only, hidden on desktop) ---- */
+.resource-card--pointed .resource-card__format-label {
+  display: none;
 }
 
 /* ---- Duration — bottom-right ---- */
@@ -2011,4 +2016,58 @@ a.duration-badge:hover {
 .resource-card--creative .resource-card__link { color: #9333ea; }
 .resource-card--responsible .resource-card__link { color: #16a34a; }
 .resource-card--future  .resource-card__link { color: #db2777; }
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .resource-card--pointed .resource-card__hero {
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+  }
+
+  .resource-card--pointed .resource-card__format {
+    display: none;
+  }
+
+  .resource-card--pointed .resource-card__format-label {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 0.15rem;
+  }
+
+  .resource-card--pointed .resource-card__theme-label {
+    font-size: 0.5rem;
+    top: 0.6rem;
+    left: 0.75rem;
+  }
+
+  .resource-card--pointed .resource-card__title-overlay {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .resource-card--pointed .resource-card__format {
+    font-size: 0.55rem;
+    bottom: 1.75rem;
+    left: 1.5rem;
+  }
+
+  .resource-card--pointed .resource-card__duration-label {
+    font-size: 0.6rem;
+    bottom: 0.6rem;
+    right: 0.75rem;
+  }
+
+  .resource-card--pointed .resource-card__title-below {
+    font-size: 1rem;
+  }
+
+  .resource-card--pointed .resource-card__excerpt {
+    font-size: 0.875rem;
+    -webkit-line-clamp: 3;
+  }
+}
 
