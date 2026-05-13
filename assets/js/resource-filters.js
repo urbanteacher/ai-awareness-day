@@ -141,7 +141,6 @@
         } else {
             actionHtml = '<a href="' + escapeHtml( resource.permalink ) + '" class="resource-card__link">View resource →</a>';
         }
-        actionHtml += '<button type="button" class="resource-bookmark-btn" data-resource-id="' + escapeHtml( String( resource.id ) ) + '" data-resource-title="' + escapeHtml( resource.title ) + '" data-resource-url="' + escapeHtml( resource.permalink ) + '" aria-pressed="false" aria-label="Save resource">Save</button>';
 
         var excerptHtml = resource.excerpt
             ? '<p class="resource-card__excerpt">' + escapeHtml( resource.excerpt ) + '</p>'
