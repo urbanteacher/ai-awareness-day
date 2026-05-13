@@ -270,18 +270,6 @@ get_header();
                                 if ($summary): ?>
                                     <p class="resource-card__excerpt"><?php echo esc_html($summary); ?></p>
                                 <?php endif; ?>
-                                <p class="resource-card__action">
-                                    <?php if ($download_url): ?>
-                                        <?php $download_label = function_exists('aiad_resource_download_label') ? aiad_resource_download_label($download_url) : __('Download', 'ai-awareness-day'); ?>
-                                        <a href="<?php echo esc_url($download_url); ?>"
-                                            class="resource-card__link resource-download-link"
-                                            data-resource-id="<?php echo esc_attr((string) get_the_ID()); ?>" download
-                                            target="_blank" rel="noopener"><?php echo esc_html($download_label); ?> →</a>
-                                    <?php else: ?>
-                                        <a href="<?php the_permalink(); ?>"
-                                            class="resource-card__link"><?php esc_html_e('View resource', 'ai-awareness-day'); ?> →</a>
-                                    <?php endif; ?>
-                                </p>
                             </div>
                         </article>
                     <?php endwhile; ?>

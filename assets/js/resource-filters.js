@@ -132,16 +132,6 @@
             ? '<span class="resource-card__duration-label" aria-hidden="true">' + escapeHtml( durationTimeOnly( resource.duration_name ) ) + '</span>'
             : '';
 
-        // Action link
-        var actionHtml = '';
-        if ( isExternal ) {
-            actionHtml = '<a href="' + escapeHtml( resource.external_url || resource.permalink ) + '" class="resource-card__link" target="_blank" rel="noopener noreferrer">View resource →</a>';
-        } else if ( resource.download_url ) {
-            actionHtml = '<a href="' + escapeHtml( resource.download_url ) + '" class="resource-card__link resource-download-link" data-resource-id="' + escapeHtml( String( resource.id ) ) + '" download target="_blank" rel="noopener">' + escapeHtml( resource.download_label || 'Download' ) + ' →</a>';
-        } else {
-            actionHtml = '<a href="' + escapeHtml( resource.permalink ) + '" class="resource-card__link">View resource →</a>';
-        }
-
         var excerptHtml = resource.excerpt
             ? '<p class="resource-card__excerpt">' + escapeHtml( resource.excerpt ) + '</p>'
             : '';
@@ -160,7 +150,6 @@
                     '<span class="resource-card__format-label">' + escapeHtml( formatLabel ) + '</span>' +
                     '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__title-below"' + linkTarget + '>' + escapeHtml( resource.title ) + '</a>' +
                     excerptHtml +
-                    '<p class="resource-card__action">' + actionHtml + '</p>' +
                 '</div>' +
             '</article>'
         );
