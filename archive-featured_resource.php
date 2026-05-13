@@ -128,9 +128,9 @@ get_header();
                         </select>
                     </div>
                     <div class="resource-filter-group">
-                        <label for="activity_type" class="resource-filter-label"><?php esc_html_e( 'Activity', 'ai-awareness-day' ); ?></label>
+                        <label for="activity_type" class="resource-filter-label"><?php esc_html_e( 'Format', 'ai-awareness-day' ); ?></label>
                         <select id="activity_type" name="activity_type" class="resource-filter-select" data-filter="true">
-                            <option value=""><?php esc_html_e( 'All activity types', 'ai-awareness-day' ); ?></option>
+                            <option value=""><?php esc_html_e( 'All formats', 'ai-awareness-day' ); ?></option>
                             <?php
                             $activity_terms = get_terms( array( 'taxonomy' => 'activity_type', 'hide_empty' => false ) );
                             if ( $activity_terms && ! is_wp_error( $activity_terms ) ) :

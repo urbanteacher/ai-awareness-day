@@ -288,7 +288,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
                 'mode'        => 'select_single',
                 'input_name'  => 'aiad_featured_resource_activity',
                 'select_id'   => 'aiad_featured_resource_activity',
-                'description' => __( 'Used for the “Activity” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ),
+                'description' => __( 'Used for the “Format” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ),
             )
         );
     }
@@ -724,7 +724,7 @@ function aiad_image_fetch_admin_scripts( string $hook ): void {
 add_action( 'admin_enqueue_scripts', 'aiad_image_fetch_admin_scripts' );
 
 /**
- * Unified Resource Details meta box (Theme, Session length, Activity type, Download, Key Stage)
+ * Unified Resource Details meta box (Theme, Session length, Format, Download, Key Stage)
  */
 function aiad_resource_details_meta_box(): void {
     add_meta_box(
@@ -1371,7 +1371,7 @@ function aiad_resource_edit_screen_notice(): void {
     global $post;
     ?>
     <div class="notice notice-info is-dismissible" style="margin-top: 12px;">
-        <p><?php esc_html_e( 'Set Theme, Session length, and Activity type in Resource Details on this page (and in the boxes on the right on desktop, or below on mobile). The Themes, Session length, and Activity type items under Resources are only for managing the list of options (for example, adding a new theme). You do not need to open those screens while editing a resource.', 'ai-awareness-day' ); ?></p>
+        <p><?php esc_html_e( 'Set Theme, Session length, and Format in Resource Details on this page (and in the boxes on the right on desktop, or below on mobile). The Themes, Session length, and Formats items under Resources are only for managing the list of options (for example, adding a new theme). You do not need to open those screens while editing a resource.', 'ai-awareness-day' ); ?></p>
     </div>
     <?php
     $schema_errors = $post && get_post_type( $post ) === 'resource' ? get_transient( 'aiad_schema_validation_errors_' . $post->ID ) : false;

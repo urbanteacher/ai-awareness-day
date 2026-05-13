@@ -60,12 +60,12 @@ function aiad_register_post_types(): void {
         'show_admin_column' => true,
     ) );
 
-    // Taxonomy: Activity Type (Discussion, Quiz, Video, Hands-On, etc.)
+    // Taxonomy: Format (Discussion, Quiz, Video, Hands-On, etc.) — registered as activity_type for back-compat
     register_taxonomy( 'activity_type', array( 'resource', 'featured_resource' ), array(
         'labels'            => array(
-            'name'          => __( 'Activity Types', 'ai-awareness-day' ),
-            'singular_name' => __( 'Activity Type', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Activity Type', 'ai-awareness-day' ),
+            'name'          => __( 'Formats', 'ai-awareness-day' ),
+            'singular_name' => __( 'Format', 'ai-awareness-day' ),
+            'add_new_item'  => __( 'Add New Format', 'ai-awareness-day' ),
             'description'   => __( 'What kind of activity is this? (Discussion, Quiz, Hands-on, etc.)', 'ai-awareness-day' ),
         ),
         'hierarchical'      => true,

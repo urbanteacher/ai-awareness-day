@@ -2395,11 +2395,15 @@ a.toolkit-card.toolkit-card--link:hover {
   margin: 2rem 0;
   border-radius: var(--border-radius);
   overflow: hidden;
+  aspect-ratio: 16 / 9;
+  max-height: 480px;
 }
 
 .single-resource .resource-activity-card figure.resource-activity-figure img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   display: block;
 }
 

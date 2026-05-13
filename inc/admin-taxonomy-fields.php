@@ -189,7 +189,7 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 		)
 	);
 	if ( is_wp_error( $activity_terms ) || empty( $activity_terms ) ) {
-		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No activity types found. Add them under Resources → Activity types.', 'ai-awareness-day' ) . '</p></div>';
+		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No formats found. Add them under Resources → Formats.', 'ai-awareness-day' ) . '</p></div>';
 		return;
 	}
 
@@ -200,10 +200,10 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 		if ( $current_activities && ! is_wp_error( $current_activities ) && ! empty( $current_activities ) ) {
 			$current_slug = $current_activities[0]->slug;
 		}
-		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select an activity type (optional)', 'ai-awareness-day' );
+		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select a format (optional)', 'ai-awareness-day' );
 		echo '<div class="aiad-rd-section">';
-		echo '<strong class="aiad-rd-label">' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</strong>';
-		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</label>';
+		echo '<strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong>';
+		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</label>';
 		echo '<select id="' . esc_attr( $args['select_id'] ) . '" name="' . esc_attr( $args['input_name'] ) . '" class="widefat">';
 		echo '<option value="">' . esc_html( $empty_label ) . '</option>';
 		foreach ( $activity_terms as $term ) {
@@ -224,7 +224,7 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 	$current_slugs = $current_activities && ! is_wp_error( $current_activities ) ? wp_list_pluck( $current_activities, 'slug' ) : array();
 	$name_with_array = $args['input_name'] . '[]';
 
-	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Activity type', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
+	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
 	foreach ( $activity_terms as $term ) {
 		if ( is_wp_error( $term ) ) {
 			continue;
