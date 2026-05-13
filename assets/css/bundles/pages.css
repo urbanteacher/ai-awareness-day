@@ -497,8 +497,8 @@ a.partner-card {
   }
 
   .theme-link__badge {
-    display: none;
-    /* Hide badges on mobile to save space */
+    display: flex;
+    min-height: 36px;
   }
 }
 
