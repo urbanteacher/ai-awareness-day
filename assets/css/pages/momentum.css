@@ -348,59 +348,6 @@ a.partner-card {
   display: block;
 }
 
-@media screen and (max-width: 768px) {
-  .themes-links {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 0.25rem;
-    padding-bottom: 0.25rem;
-    scrollbar-width: none;
-    /* Hide scrollbar for cleaner look */
-    -ms-overflow-style: none;
-  }
-
-  .themes-links::-webkit-scrollbar {
-    display: none;
-  }
-
-  .theme-link {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 0.6rem 0.1rem;
-    font-size: 0.55rem;
-    font-weight: 700;
-    border: none;
-    letter-spacing: 0.01em;
-    white-space: normal;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--white);
-    /* Resolved: mobile.css defines :hover with color: var(--gray-900);
-       Raise specificity here to win without !important */
-    color: var(--gray-900);
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-
-  /* Override hover color at higher specificity than mobile.css .theme-link:hover */
-  .themes-links .theme-link:hover {
-    color: var(--gray-900);
-  }
-
-
-  .theme-link__label {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .theme-link__badge {
-    display: flex;
-    min-height: 36px;
-  }
-}
-
 /* ── Partner card responsive (migrated from responsive.css) ── */
 
 @media screen and (max-width: 768px) {

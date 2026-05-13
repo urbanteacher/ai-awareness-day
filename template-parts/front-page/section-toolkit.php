@@ -195,6 +195,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 }
                 $theme_terms = get_terms(array('taxonomy' => 'resource_principle', 'hide_empty' => false));
                 if ($theme_terms && !is_wp_error($theme_terms)):
+                    $____aiad_dbg_theme = array();
                     ?>
                     <p class="explore-subheading"><?php esc_html_e('By theme', 'ai-awareness-day'); ?></p>
                     <div class="themes-links">
@@ -210,6 +211,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                             $theme_badge_id = absint(get_theme_mod('aiad_badge_' . $badge_slug, 0));
                             $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url($theme_badge_id, 'thumbnail') : '';
                             $has_theme_badge = !empty($theme_badge_src);
+                            $____aiad_dbg_theme[] = array(
+                                'slug'        => (string) $term->slug,
+                                'badge_id'    => (int) $theme_badge_id,
+                                'has_src'     => (bool) $has_theme_badge,
+                                'render_mode' => $has_theme_badge ? 'img' : 'placeholder',
+                            );
                             ?>
                             <a href="<?php echo esc_url($url); ?>" class="theme-link fade-up">
                                 <span class="theme-link__badge">
@@ -224,6 +231,33 @@ if ( ! defined( 'ABSPATH' ) ) {
                             </a>
                         <?php endforeach; ?>
                     </div>
+                    <?php
+                    // #region agent log
+                    $____aiad_ndjson = wp_json_encode(
+                        array(
+                            'sessionId'    => '5ed5d5',
+                            'hypothesisId' => 'H2,H5',
+                            'location'     => 'section-toolkit.php:after-themes-loop',
+                            'message'      => 'server theme-badge render summary',
+                            'timestamp'    => (int) round( microtime( true ) * 1000 ),
+                            'data'         => array(
+                                'site_host'    => (string) wp_parse_url( home_url(), PHP_URL_HOST ),
+                                'terms'        => $____aiad_dbg_theme,
+                                'wpUsingBund'  => file_exists( get_stylesheet_directory() . '/assets/css/bundles/base.css' ),
+                            ),
+                        )
+                    );
+                    $____paths = array(
+                        '/Users/m.martin/Desktop/DEMO/.cursor/debug-5ed5d5.log',
+                        ( getenv( 'HOME' ) ? getenv( 'HOME' ) . '/Desktop/DEMO/.cursor/debug-5ed5d5.log' : '' ),
+                    );
+                    foreach ( $____paths as $____p ) {
+                        if ( $____p !== '' ) {
+                            @file_put_contents( $____p, $____aiad_ndjson . "\n", FILE_APPEND );
+                        }
+                    }
+                    // #endregion
+                    ?>
                     <?php
                 endif;
                 $session_cards = function_exists('aiad_explore_session_cards') ? aiad_explore_session_cards() : array();
