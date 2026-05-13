@@ -70,80 +70,51 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                             $placeholder_type = ($activity_terms && !is_wp_error($activity_terms) && !empty($activity_terms))
                                 ? $activity_terms[0]->name
                                 : (!empty($duration_labels) ? $duration_labels[0] : '—');
+                            $theme_slug    = in_array( strtolower( $theme_name ), array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true )
+                                ? strtolower( $theme_name ) : '';
+                            $format_label  = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
+                                ? strtoupper( $activity_terms[0]->name ) : 'SLIDE';
+                            $duration_parts = ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_parts' ) )
+                                ? aiad_duration_badge_parts( $durations[0] ) : null;
+                            $duration_str  = $duration_parts ? strtoupper( $duration_parts['time'] ) : ( ! empty( $duration_labels ) ? strtoupper( $duration_labels[0] ) : '' );
+                            $article_class = 'resource-card resource-card--pointed fade-up';
+                            if ( $theme_slug ) {
+                                $article_class .= ' resource-card--' . $theme_slug;
+                            }
                             ?>
-                            <article class="resource-card resource-card--external fade-up">
-                                <?php
-                                $meta_parts_top = array_filter(array_merge($duration_labels, $theme_name ? array($theme_name) : array()));
-                                $meta_label = implode(' · ', $meta_parts_top);
-                                ?>
-                                <a href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener noreferrer"
-                                    class="resource-card__image-link">
-                                    <?php if (has_post_thumbnail()): ?>
-                                        <?php the_post_thumbnail('medium_large', array('class' => 'resource-card__image')); ?>
+                            <article class="<?php echo esc_attr( $article_class ); ?>">
+                                <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer"
+                                    class="resource-card__hero" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
+                                    <?php if ( has_post_thumbnail() ): ?>
+                                        <?php the_post_thumbnail( 'medium_large', array( 'class' => 'resource-card__hero-img' ) ); ?>
                                     <?php else: ?>
-                                        <div class="resource-card__image-placeholder" aria-hidden="true">
-                                            <span
-                                                class="resource-card__image-placeholder-text"><?php echo esc_html($placeholder_type); ?></span>
-                                        </div>
+                                        <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                                     <?php endif; ?>
-                                    <?php if ($org_name || $meta_label): ?>
-                                        <div class="resource-card__image-overlay" aria-hidden="true">
-                                            <div class="resource-card__image-top">
-                                                <?php
-                                                if ( $durations && ! is_wp_error( $durations ) ) :
-                                                    foreach ( $durations as $_dur_term ) :
-                                                        if ( function_exists( 'aiad_render_resource_card_duration_pill' ) ) {
-                                                            aiad_render_resource_card_duration_pill( $_dur_term );
-                                                        } else {
-                                                            echo '<span class="resource-card__pill resource-card__pill--type">' . esc_html( $_dur_term->name ) . '</span>';
-                                                        }
-                                                    endforeach;
-                                                endif;
-                                                ?>
-                                                <?php if ($theme_name): ?>
-                                                    <?php
-                                                    $theme_slug = strtolower($theme_name);
-                                                    $pill_class = 'resource-card__pill--theme';
-                                                    if (in_array($theme_slug, array('safe', 'smart', 'creative', 'responsible', 'future'), true)) {
-                                                        $pill_class .= ' resource-card__pill--' . $theme_slug;
-                                                    }
-                                                    ?>
-                                                    <span
-                                                        class="resource-card__pill <?php echo esc_attr($pill_class); ?>"><?php echo esc_html($theme_name); ?></span>
-                                                <?php endif; ?>
-                                                <?php if ($org_name): ?>
-                                                    <span
-                                                        class="resource-card__pill resource-card__pill--org"><?php echo esc_html($org_name); ?></span>
-                                                <?php endif; ?>
-                                            </div>
-                                            <div class="resource-card__image-title"><?php echo esc_html( get_the_title() ); ?></div>
-                                        </div>
+
+                                    <div class="resource-card__wedge" aria-hidden="true"></div>
+                                    <div class="resource-card__fade"  aria-hidden="true"></div>
+
+                                    <?php if ( $theme_name ): ?>
+                                        <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html( strtoupper( $theme_name ) ); ?></span>
                                     <?php endif; ?>
+
+                                    <span class="resource-card__format" aria-hidden="true"><?php echo esc_html( $format_label ); ?></span>
+
+                                    <?php if ( $duration_str ): ?>
+                                        <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html( $duration_str ); ?></span>
+                                    <?php endif; ?>
+
+                                    <h3 class="resource-card__title-overlay"><?php echo esc_html( get_the_title() ); ?></h3>
                                 </a>
+
                                 <div class="resource-card__body">
-                                    <?php if ($org_name || !empty($duration_labels) || $theme_name): ?>
-                                        <p class="resource-card__meta">
-                                            <?php
-                                            $meta_parts = array_filter(array_merge(
-                                                $org_name ? array($org_name) : array(),
-                                                $duration_labels,
-                                                $theme_name ? array($theme_name) : array()
-                                            ));
-                                            echo esc_html(implode(' · ', $meta_parts));
-                                            ?>
-                                        </p>
-                                    <?php endif; ?>
-                                    <h2 class="resource-card__title">
-                                        <a href="<?php echo esc_url($link); ?>" target="_blank"
-                                            rel="noopener noreferrer"><?php echo esc_html( get_the_title() ); ?></a>
-                                    </h2>
-                                    <?php if (has_excerpt()): ?>
-                                        <p class="resource-card__excerpt"><?php echo esc_html(get_the_excerpt()); ?></p>
+                                    <p class="resource-card__title-below"><?php echo esc_html( get_the_title() ); ?></p>
+                                    <?php if ( has_excerpt() ): ?>
+                                        <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                                     <?php endif; ?>
                                     <p class="resource-card__action">
-                                        <a href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener noreferrer"
-                                            class="resource-card__link"><?php esc_html_e('View resource', 'ai-awareness-day'); ?>
-                                            →</a>
+                                        <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer"
+                                            class="resource-card__link"><?php esc_html_e( 'View resource', 'ai-awareness-day' ); ?> →</a>
                                     </p>
                                 </div>
                             </article>

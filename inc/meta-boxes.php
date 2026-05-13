@@ -264,6 +264,11 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     echo '<input type="text" id="featured_resource_org_name" name="featured_resource_org_name" value="' . esc_attr( $org_name ) . '" class="widefat" placeholder="e.g. STEM Learning"></p>';
     echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
+    $img_keywords = get_post_meta( $post->ID, '_featured_resource_image_keywords', true );
+    echo '<p><label for="featured_resource_image_keywords">' . esc_html__( 'Card image keywords', 'ai-awareness-day' ) . '</label><br>';
+    echo '<input type="text" id="featured_resource_image_keywords" name="featured_resource_image_keywords" value="' . esc_attr( $img_keywords ) . '" class="widefat aiad-image-keywords-input" placeholder="e.g. rhino, wildlife, conservation"> ';
+    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'ai-awareness-day' ) . '</button>';
+    echo '<span class="aiad-fetch-image-status" style="margin-left:0.5rem;font-style:italic;"></span></p>';
 
     if ( function_exists( 'aiad_render_resource_principle_control' ) ) {
         aiad_render_resource_principle_control(
@@ -317,6 +322,9 @@ function aiad_save_featured_resource( int $post_id ): void {
     }
     if ( isset( $_POST['featured_resource_org_url'] ) ) {
         update_post_meta( $post_id, '_featured_resource_org_url', esc_url_raw( wp_unslash( $_POST['featured_resource_org_url'] ) ) );
+    }
+    if ( isset( $_POST['featured_resource_image_keywords'] ) ) {
+        update_post_meta( $post_id, '_featured_resource_image_keywords', sanitize_text_field( wp_unslash( $_POST['featured_resource_image_keywords'] ) ) );
     }
 
     if ( isset( $_POST['aiad_featured_resource_principle'] ) ) {
@@ -689,6 +697,33 @@ function aiad_remove_default_taxonomy_boxes(): void {
 add_action( 'add_meta_boxes', 'aiad_remove_default_taxonomy_boxes', 99 );
 
 /**
+ * Enqueue image-fetch script on featured_resource and resource edit screens.
+ *
+ * @param string $hook Current admin page hook.
+ */
+function aiad_image_fetch_admin_scripts( string $hook ): void {
+    if ( $hook !== 'post.php' && $hook !== 'post-new.php' ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen || ! in_array( $screen->post_type, array( 'featured_resource', 'resource' ), true ) ) {
+        return;
+    }
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'aiad-admin-image-fetch',
+        AIAD_URI . '/assets/js/admin-image-fetch.js',
+        array( 'jquery' ),
+        AIAD_VERSION,
+        true
+    );
+    wp_localize_script( 'aiad-admin-image-fetch', 'aiadImageFetch', array(
+        'nonce' => wp_create_nonce( 'aiad_fetch_card_image' ),
+    ) );
+}
+add_action( 'admin_enqueue_scripts', 'aiad_image_fetch_admin_scripts' );
+
+/**
  * Unified Resource Details meta box (Theme, Session length, Activity type, Download, Key Stage)
  */
 function aiad_resource_details_meta_box(): void {
@@ -760,6 +795,13 @@ function aiad_resource_details_callback( WP_Post $post ): void {
             )
         );
     }
+
+    // Card image keywords
+    $img_kw = get_post_meta( $post->ID, '_aiad_image_keywords', true );
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Card image keywords', 'ai-awareness-day' ) . '</strong>';
+    echo '<input type="text" name="aiad_image_keywords" value="' . esc_attr( $img_kw ) . '" class="widefat aiad-image-keywords-input" placeholder="e.g. classroom, students, AI, technology"> ';
+    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'ai-awareness-day' ) . '</button>';
+    echo '<span class="aiad-fetch-image-status" style="margin-left:0.5rem;font-style:italic;"></span></div>';
 
     // Download file
     echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Download file', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-download">';
@@ -855,6 +897,9 @@ function aiad_save_resource_details( int $post_id ): void {
     }
     wp_set_object_terms( $post_id, $activities, 'activity_type' );
 
+    if ( isset( $_POST['aiad_image_keywords'] ) ) {
+        update_post_meta( $post_id, '_aiad_image_keywords', sanitize_text_field( wp_unslash( $_POST['aiad_image_keywords'] ) ) );
+    }
     if ( isset( $_POST['aiad_download_url'] ) ) {
         update_post_meta( $post_id, '_aiad_download_url', esc_url_raw( wp_unslash( $_POST['aiad_download_url'] ) ) );
     }

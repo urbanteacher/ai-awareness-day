@@ -62,44 +62,43 @@ if ( $free_resources->have_posts() ):
                         ? $activity_terms[0]->name
                         : ( ! empty( $duration_labels ) ? $duration_labels[0] : '—' );
                     ?>
-                    <article class="resource-card fade-up">
-                        <?php
-                        $meta_parts_top = array_filter( array_merge( $duration_labels, $theme_name ? array( $theme_name ) : array() ) );
-                        $meta_label     = implode( ' · ', $meta_parts_top );
-                        ?>
-                        <a href="<?php the_permalink(); ?>" class="resource-card__image-link">
+                    <?php
+                    $theme_slug   = in_array( strtolower( $theme_name ), array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true )
+                        ? strtolower( $theme_name ) : '';
+                    $format_label = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
+                        ? strtoupper( $activity_terms[0]->name ) : 'SLIDE';
+                    $duration_str = ! empty( $duration_labels ) ? strtoupper( $duration_labels[0] ) : '';
+                    $article_class = 'resource-card resource-card--pointed fade-up';
+                    if ( $theme_slug ) {
+                        $article_class .= ' resource-card--' . $theme_slug;
+                    }
+                    ?>
+                    <article class="<?php echo esc_attr( $article_class ); ?>">
+                        <a href="<?php the_permalink(); ?>" class="resource-card__hero" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
                             <?php if ( has_post_thumbnail() ): ?>
-                                <?php the_post_thumbnail( 'medium_large', array( 'class' => 'resource-card__image' ) ); ?>
+                                <?php the_post_thumbnail( 'medium_large', array( 'class' => 'resource-card__hero-img' ) ); ?>
                             <?php else: ?>
-                                <div class="resource-card__image-placeholder" aria-hidden="true">
-                                    <span class="resource-card__image-placeholder-text"><?php echo esc_html( $placeholder_type ); ?></span>
-                                </div>
+                                <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                             <?php endif; ?>
+
+                            <div class="resource-card__wedge" aria-hidden="true"></div>
+                            <div class="resource-card__fade"  aria-hidden="true"></div>
+
                             <?php if ( $theme_name ): ?>
-                                <div class="resource-card__image-overlay" aria-hidden="true">
-                                    <div class="resource-card__image-top">
-                                        <?php
-                                        $theme_slug = strtolower( $theme_name );
-                                        $pill_class = 'resource-card__pill--theme';
-                                        if ( in_array( $theme_slug, array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true ) ) {
-                                            $pill_class .= ' resource-card__pill--' . $theme_slug;
-                                        }
-                                        ?>
-                                        <span class="resource-card__pill <?php echo esc_attr( $pill_class ); ?>"><?php echo esc_html( $theme_name ); ?></span>
-                                    </div>
-                                    <div class="resource-card__image-title"><?php echo esc_html( get_the_title() ); ?></div>
-                                </div>
+                                <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html( strtoupper( $theme_name ) ); ?></span>
                             <?php endif; ?>
+
+                            <span class="resource-card__format" aria-hidden="true"><?php echo esc_html( $format_label ); ?></span>
+
+                            <?php if ( $duration_str ): ?>
+                                <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html( $duration_str ); ?></span>
+                            <?php endif; ?>
+
+                            <h3 class="resource-card__title-overlay"><?php echo esc_html( get_the_title() ); ?></h3>
                         </a>
+
                         <div class="resource-card__body">
-                            <?php if ( ! empty( $duration_labels ) || $theme_name ): ?>
-                                <p class="resource-card__meta">
-                                    <?php echo esc_html( $meta_label ); ?>
-                                </p>
-                            <?php endif; ?>
-                            <h2 class="resource-card__title">
-                                <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>
-                            </h2>
+                            <p class="resource-card__title-below"><?php echo esc_html( get_the_title() ); ?></p>
                             <?php if ( has_excerpt() ): ?>
                                 <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                             <?php endif; ?>

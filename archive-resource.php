@@ -209,53 +209,47 @@ get_header();
                             : (!empty($duration_labels) ? $duration_labels[0] : (($duration_slug && isset($session_cards[$duration_slug]['badge_short']))
                                 ? ucwords($session_cards[$duration_slug]['badge_short'])
                                 : ($duration_name ? $duration_name : '—')));
-                        $has_overlay = !empty($duration_labels) || $theme_name;
+                        $theme_slug     = ($themes && !is_wp_error($themes)) ? $themes[0]->slug : strtolower($theme_name);
+                        if (!in_array($theme_slug, array('safe', 'smart', 'creative', 'responsible', 'future'), true)) {
+                            $theme_slug = '';
+                        }
+                        $format_label   = ($activity_terms && !is_wp_error($activity_terms) && !empty($activity_terms))
+                            ? strtoupper($activity_terms[0]->name) : 'SLIDE';
+                        $duration_parts = ($durations && !is_wp_error($durations) && function_exists('aiad_duration_badge_parts'))
+                            ? aiad_duration_badge_parts($durations[0]) : null;
+                        $duration_str   = $duration_parts ? strtoupper($duration_parts['time']) : (!empty($duration_labels) ? strtoupper($duration_labels[0]) : '');
+                        $article_class  = 'resource-card resource-card--pointed fade-up';
+                        if ($theme_slug) {
+                            $article_class .= ' resource-card--' . $theme_slug;
+                        }
                         ?>
-                        <article class="resource-card resource-card--download fade-up">
-                            <a href="<?php the_permalink(); ?>" class="resource-card__image-link">
+                        <article class="<?php echo esc_attr($article_class); ?>">
+                            <a href="<?php the_permalink(); ?>" class="resource-card__hero"
+                                aria-label="<?php echo esc_attr(get_the_title()); ?>">
                                 <?php if (has_post_thumbnail()): ?>
-                                    <?php the_post_thumbnail('medium_large', array('class' => 'resource-card__image')); ?>
+                                    <?php the_post_thumbnail('medium_large', array('class' => 'resource-card__hero-img')); ?>
                                 <?php else: ?>
-                                    <div class="resource-card__image-placeholder" aria-hidden="true">
-                                        <span
-                                            class="resource-card__image-placeholder-text"><?php echo esc_html($placeholder_text); ?></span>
-                                    </div>
+                                    <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                                 <?php endif; ?>
-                                <?php if ($has_overlay): ?>
-                                    <div class="resource-card__image-overlay" aria-hidden="true">
-                                        <div class="resource-card__image-top">
-                                            <?php
-                                            if ( $durations && ! is_wp_error( $durations ) ) :
-                                                foreach ( $durations as $_dur_term ) :
-                                                    if ( function_exists( 'aiad_render_resource_card_duration_pill' ) ) {
-                                                        aiad_render_resource_card_duration_pill( $_dur_term );
-                                                    } else {
-                                                        echo '<span class="resource-card__pill resource-card__pill--type">' . esc_html( $_dur_term->name ) . '</span>';
-                                                    }
-                                                endforeach;
-                                            endif;
-                                            ?>
-                                            <?php if ($theme_name): ?>
-                                                <?php
-                                                // Use the actual term slug (not lowercased name) so colour
-                                                // classes are always reliable regardless of display name.
-                                                $theme_term_slug = ($themes && !is_wp_error($themes)) ? $themes[0]->slug : strtolower($theme_name);
-                                                $pill_class = 'resource-card__pill--theme';
-                                                if (in_array($theme_term_slug, array('safe', 'smart', 'creative', 'responsible', 'future'), true)) {
-                                                    $pill_class .= ' resource-card__pill--' . $theme_term_slug;
-                                                }
-                                                ?>
-                                                <span
-                                                    class="resource-card__pill <?php echo esc_attr($pill_class); ?>"><?php echo esc_html($theme_name); ?></span>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
+
+                                <div class="resource-card__wedge" aria-hidden="true"></div>
+                                <div class="resource-card__fade"  aria-hidden="true"></div>
+
+                                <?php if ($theme_name): ?>
+                                    <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html(strtoupper($theme_name)); ?></span>
                                 <?php endif; ?>
+
+                                <span class="resource-card__format" aria-hidden="true"><?php echo esc_html($format_label); ?></span>
+
+                                <?php if ($duration_str): ?>
+                                    <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html($duration_str); ?></span>
+                                <?php endif; ?>
+
+                                <h3 class="resource-card__title-overlay"><?php echo esc_html(get_the_title()); ?></h3>
                             </a>
+
                             <div class="resource-card__body">
-                                <h2 class="resource-card__title">
-                                    <a href="<?php the_permalink(); ?>"><?php echo esc_html( get_the_title() ); ?></a>
-                                </h2>
+                                <p class="resource-card__title-below"><?php echo esc_html(get_the_title()); ?></p>
                                 <?php
                                 $summary = '';
                                 if (has_excerpt()) {
@@ -266,8 +260,7 @@ get_header();
                                         $summary = wp_trim_words(wp_strip_all_tags($content), 30);
                                     }
                                 }
-                                if ($summary):
-                                    ?>
+                                if ($summary): ?>
                                     <p class="resource-card__excerpt"><?php echo esc_html($summary); ?></p>
                                 <?php endif; ?>
                                 <p class="resource-card__action">
@@ -279,8 +272,7 @@ get_header();
                                             target="_blank" rel="noopener"><?php echo esc_html($download_label); ?> →</a>
                                     <?php else: ?>
                                         <a href="<?php the_permalink(); ?>"
-                                            class="resource-card__link"><?php esc_html_e('View resource', 'ai-awareness-day'); ?>
-                                            →</a>
+                                            class="resource-card__link"><?php esc_html_e('View resource', 'ai-awareness-day'); ?> →</a>
                                     <?php endif; ?>
                                 </p>
                             </div>

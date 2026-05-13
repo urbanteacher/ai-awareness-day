@@ -15,31 +15,44 @@
         // ============================================
         // Scroll-based fade-up animations
         // ============================================
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px 0px -60px 0px',
-            threshold: 0.1,
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+        let fadeUpObserver = null;
+        const fadeUpElements = document.querySelectorAll('.fade-up');
+        if (typeof IntersectionObserver === 'undefined') {
+            fadeUpElements.forEach((el) => {
+                el.classList.add('visible');
             });
-        }, observerOptions);
+        } else {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -60px 0px',
+                threshold: 0.1,
+            };
 
-        document.querySelectorAll('.fade-up').forEach((el) => {
-            observer.observe(el);
-        });
+            fadeUpObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        fadeUpObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            fadeUpElements.forEach((el) => {
+                fadeUpObserver.observe(el);
+            });
+        }
 
         // Re-observe any .fade-up elements injected after page load (e.g. AJAX
         // resource cards). resource-filters.js dispatches this event after every
         // grid update so newly rendered cards get the same scroll-in animation.
         document.addEventListener('aiad:resourcesRendered', () => {
-            document.querySelectorAll('.fade-up:not(.visible)').forEach((el) => {
-                observer.observe(el);
+            const pending = document.querySelectorAll('.fade-up:not(.visible)');
+            if (!fadeUpObserver) {
+                pending.forEach((el) => el.classList.add('visible'));
+                return;
+            }
+            pending.forEach((el) => {
+                fadeUpObserver.observe(el);
             });
         });
 
