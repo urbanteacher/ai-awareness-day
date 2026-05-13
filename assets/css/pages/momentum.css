@@ -353,6 +353,29 @@ a.partner-card {
   display: block;
 }
 
+@media screen and (max-width: 768px) {
+  .themes-links {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+  }
+
+  .theme-link {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.55rem;
+    gap: 0.35rem;
+  }
+
+  .theme-link__badge {
+    min-height: 0;
+  }
+
+  .theme-link__badge-img {
+    max-height: 64px;
+  }
+}
+
 /* ── Partner card responsive (migrated from responsive.css) ── */
 
 @media screen and (max-width: 768px) {

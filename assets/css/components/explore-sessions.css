@@ -42,7 +42,7 @@ a.duration-badge:hover {
 
 /* Explore subheadings (By theme, By session length) */
 .explore-subheading {
-  margin-top: 0.5rem;
+  margin-top: 0;
   margin-bottom: 0.35rem;
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -53,7 +53,7 @@ a.duration-badge:hover {
 }
 
 .explore-session-length-block {
-  margin-top: 1rem;
+  margin-top: 0;
 }
 
 .explore-session-length-block .explore-subheading {
@@ -79,13 +79,13 @@ a.duration-badge:hover {
   text-align: center;
   justify-content: flex-start;
   min-height: 130px;
-  padding: 0.5rem 0.1rem;
+  padding: 0;
   gap: 0.25rem;
-  background: #1e1e1e;
+  background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: 0;
   text-decoration: none;
-  color: #ffffff;
+  color: var(--gray-900, #111);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
@@ -94,18 +94,14 @@ a.duration-badge:hover {
 .explore-session-card .explore-session-badge {
   order: 1;
   margin-bottom: 0.4rem;
-  width: 64px;
-  min-width: 64px;
-  height: 64px;
-  min-height: 64px;
   padding: 0;
   border-radius: 0;
   border: none;
-  background: #2563eb;
+  background: transparent;
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
   box-sizing: border-box;
 }
 
@@ -115,9 +111,11 @@ a.duration-badge:hover {
 
 .explore-session-card .explore-session-badge__img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .explore-session-card .explore-session-badge__img.is-broken {
@@ -177,7 +175,7 @@ a.duration-badge:hover {
   line-height: 1.2;
   white-space: normal;
   min-height: 2.4em;
-  color: #ffffff;
+  color: var(--gray-900, #111);
 }
 
 .explore-session-card .explore-session-desc {
