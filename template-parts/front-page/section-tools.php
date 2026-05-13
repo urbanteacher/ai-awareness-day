@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $tools_query = new WP_Query( array(
 	'post_type'      => 'ai_tool',
 	'post_status'    => 'publish',
-	'posts_per_page' => 4,
+	'posts_per_page' => 3,
 	'orderby'        => 'menu_order date',
 	'order'          => 'ASC',
 ) );
