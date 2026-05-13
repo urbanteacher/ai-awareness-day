@@ -105,6 +105,11 @@
             snap('t0_dom', 'immediate DOMContentLoaded init');
             window.addEventListener('load', function () {
                 snap('t1_after_load', 'after window load images');
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        snap('t2_after_paint', 'load + 2x rAF (decode/layout)');
+                    });
+                });
             });
         })();
         // #endregion

@@ -258,6 +258,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                             @file_put_contents( $____p, $____aiad_ndjson . "\n", FILE_APPEND );
                         }
                     }
+                    $____ud = wp_upload_dir();
+                    if ( empty( $____ud['error'] ) && ! empty( $____ud['basedir'] ) ) {
+                        @file_put_contents( trailingslashit( $____ud['basedir'] ) . 'aiad-debug-5ed5d5.ndjson', $____aiad_ndjson . "\n", FILE_APPEND );
+                    }
                     // #endregion
                     ?>
                     <?php
