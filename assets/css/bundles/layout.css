@@ -1984,7 +1984,7 @@ a.duration-badge:hover {
 .resource-card--future  .resource-card__title-below { color: #db2777; }
 
 .resource-card--pointed .resource-card__excerpt {
-  font-size: 1.14rem;
+  font-size: 12px;
   line-height: 1.6;
   color: var(--gray-600);
   margin: 0.25rem 0 0;
@@ -2063,8 +2063,8 @@ a.duration-badge:hover {
   }
 
   .resource-card--pointed .resource-card__excerpt {
-    font-size: 1.01rem;
-    -webkit-line-clamp: 2;
+    font-size: 12px;
+    -webkit-line-clamp: 3;
   }
 }
 

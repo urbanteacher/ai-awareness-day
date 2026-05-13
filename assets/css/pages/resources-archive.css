@@ -121,8 +121,7 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  aspect-ratio: 1 / 1;
-  align-self: start;
+  align-self: stretch;
 }
 
 .resource-card--placeholder:hover {
@@ -678,12 +677,12 @@
   .resources-archive .resource-card__excerpt.section-desc,
   .featured-resources-archive .resource-card__excerpt,
   .featured-resources-archive .resource-card__excerpt.section-desc {
-    font-size: 0.55rem;
-    line-height: 1.3;
+    font-size: 12px;
+    line-height: 1.6;
     margin-top: 0.4rem;
     margin-bottom: 0.25rem;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -725,7 +724,7 @@
   .resources-archive .resource-card__excerpt.section-desc,
   .featured-resources-archive .resource-card__excerpt,
   .featured-resources-archive .resource-card__excerpt.section-desc {
-    font-size: 0.5rem;
+    font-size: 12px;
     margin-bottom: 0.2rem;
   }
 
@@ -760,8 +759,7 @@
   }
 
   #free-resources .resource-card--placeholder {
-    aspect-ratio: 1 / 1;
-    align-self: start;
+    align-self: stretch;
     clip-path: none;
     background: var(--gray-50);
     border-width: 2px;
@@ -903,8 +901,8 @@
   }
 
   #partner-resources .section-desc {
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 1.01rem;
+    line-height: 1.6;
     margin-bottom: 0;
   }
 
@@ -919,8 +917,7 @@
   }
 
   #partner-resources .resource-card--placeholder {
-    aspect-ratio: 1 / 1;
-    align-self: start;
+    align-self: stretch;
     clip-path: none;
     border-width: 2px;
   }
