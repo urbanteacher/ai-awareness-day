@@ -1363,6 +1363,27 @@ a.toolkit-card.toolkit-card--link:hover {
   color: var(--gray-500);
 }
 
+@media screen and (min-width: 769px) {
+  .resource-card--placeholder {
+    grid-column: 1 / -1;
+    width: 100%;
+    aspect-ratio: auto;
+    min-height: 0;
+    height: auto;
+    justify-self: stretch;
+    align-self: start;
+    padding: 0.75rem;
+  }
+
+  .resource-card--placeholder .resource-card__placeholder-title {
+    font-size: 1.4rem;
+  }
+
+  .resource-card--placeholder .resource-card__placeholder-desc {
+    font-size: 1.2rem;
+  }
+}
+
 .resource-card__image-link {
   display: block;
   aspect-ratio: 16/10;

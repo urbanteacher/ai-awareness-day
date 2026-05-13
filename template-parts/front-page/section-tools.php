@@ -46,15 +46,17 @@ $tools_label = sprintf(
 				<?php echo aiad_render_tool_card( get_post() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — escaped inside renderer ?>
 			<?php endwhile; ?>
 			<?php wp_reset_postdata(); ?>
-		</div>
 
-		<?php if ( $archive_url ) : ?>
-			<div class="tools-section__cta fade-up">
-				<a href="<?php echo esc_url( $archive_url ); ?>" class="btn-action">
-					<?php esc_html_e( 'View all tools', 'ai-awareness-day' ); ?>
-					<span class="btn-action__icon" aria-hidden="true">→</span>
+			<?php if ( $archive_url ) : ?>
+				<a href="<?php echo esc_url( $archive_url ); ?>"
+					class="resource-card resource-card--placeholder fade-up"
+					aria-label="<?php esc_attr_e( 'View all AI tools', 'ai-awareness-day' ); ?>">
+					<div class="resource-card__placeholder-inner">
+						<span class="resource-card__placeholder-title"><?php esc_html_e( 'View all AI tools', 'ai-awareness-day' ); ?></span>
+						<span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse the full collection', 'ai-awareness-day' ); ?></span>
+					</div>
 				</a>
-			</div>
-		<?php endif; ?>
+			<?php endif; ?>
+		</div>
 	</div>
 </section>

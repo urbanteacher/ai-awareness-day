@@ -219,15 +219,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                             );
                             ?>
                             <a href="<?php echo esc_url($url); ?>" class="theme-link">
-                                <span class="theme-link__badge">
-                                    <?php if ($has_theme_badge): ?>
+                                <?php if ($has_theme_badge): ?>
+                                    <span class="theme-link__badge">
                                         <img src="<?php echo esc_url($theme_badge_src); ?>" alt="" aria-hidden="true"
-                                            class="theme-link__badge-img" loading="eager" decoding="async" fetchpriority="low" onerror="this.classList.add('is-broken');" />
-                                        <span class="theme-link__badge-placeholder theme-link__badge-placeholder--img-fallback" aria-hidden="true"><?php echo esc_html(mb_substr($term->name, 0, 1)); ?></span>
-                                    <?php else: ?>
-                                        <span class="theme-link__badge-placeholder" aria-hidden="true"><?php echo esc_html(mb_substr($term->name, 0, 1)); ?></span>
-                                    <?php endif; ?>
-                                </span>
+                                            class="theme-link__badge-img" />
+                                    </span>
+                                <?php endif; ?>
                                 <span class="theme-link__label"><?php echo esc_html($term->name); ?></span>
                             </a>
                         <?php endforeach; ?>

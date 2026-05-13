@@ -157,6 +157,23 @@
   color: var(--gray-500);
 }
 
+@media screen and (min-width: 769px) {
+  .resource-card--placeholder {
+    width: 30%;
+    justify-self: center;
+    align-self: center;
+    padding: 0.5rem;
+  }
+
+  .resource-card--placeholder .resource-card__placeholder-title {
+    font-size: 0.7rem;
+  }
+
+  .resource-card--placeholder .resource-card__placeholder-desc {
+    font-size: 0.6rem;
+  }
+}
+
 .resource-card__image-link {
   display: block;
   aspect-ratio: 16/10;
