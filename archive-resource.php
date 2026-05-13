@@ -250,7 +250,7 @@ get_header();
 
                             <div class="resource-card__body">
                                 <span class="resource-card__format-label"><?php echo esc_html($format_label); ?></span>
-                                <p class="resource-card__title-below"><?php echo esc_html(get_the_title()); ?></p>
+                                <a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html(get_the_title()); ?></a>
                                 <?php
                                 $summary = '';
                                 if (has_excerpt()) {

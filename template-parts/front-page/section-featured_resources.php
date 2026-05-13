@@ -109,7 +109,7 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
 
                                 <div class="resource-card__body">
                                     <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
-                                    <p class="resource-card__title-below"><?php echo esc_html( get_the_title() ); ?></p>
+                                    <a href="<?php echo esc_url( $link ); ?>" class="resource-card__title-below" <?php if ( $url ) echo 'target="_blank" rel="noopener noreferrer"'; ?>><?php echo esc_html( get_the_title() ); ?></a>
                                     <?php if ( has_excerpt() ): ?>
                                         <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                                     <?php endif; ?>

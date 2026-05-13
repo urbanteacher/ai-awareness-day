@@ -145,7 +145,7 @@
                 '</a>' +
                 '<div class="resource-card__body">' +
                     '<span class="resource-card__format-label">' + escapeHtml( formatLabel ) + '</span>' +
-                    '<p class="resource-card__title-below">' + escapeHtml( resource.title ) + '</p>' +
+                    '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__title-below"' + linkTarget + '>' + escapeHtml( resource.title ) + '</a>' +
                     excerptHtml +
                     '<p class="resource-card__action">' + actionHtml + '</p>' +
                 '</div>' +
