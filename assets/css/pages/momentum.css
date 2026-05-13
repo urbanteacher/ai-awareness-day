@@ -328,6 +328,11 @@ a.partner-card {
   display: none !important;
 }
 
+/* When a Customizer image is present but fails to load, show letter fallback */
+.theme-link__badge:has(.theme-link__badge-img:not(.is-broken)) .theme-link__badge-placeholder--img-fallback {
+  display: none !important;
+}
+
 .theme-link__badge-placeholder {
   display: flex;
   align-items: center;

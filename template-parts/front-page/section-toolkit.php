@@ -223,6 +223,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <?php if ($has_theme_badge): ?>
                                         <img src="<?php echo esc_url($theme_badge_src); ?>" alt="" aria-hidden="true"
                                             class="theme-link__badge-img" onerror="this.classList.add('is-broken');" />
+                                        <span class="theme-link__badge-placeholder theme-link__badge-placeholder--img-fallback" aria-hidden="true"><?php echo esc_html(mb_substr($term->name, 0, 1)); ?></span>
                                     <?php else: ?>
                                         <span class="theme-link__badge-placeholder" aria-hidden="true"><?php echo esc_html(mb_substr($term->name, 0, 1)); ?></span>
                                     <?php endif; ?>
