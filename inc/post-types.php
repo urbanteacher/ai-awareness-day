@@ -633,6 +633,65 @@ function aiad_merge_duplicate_resource_duration_terms(): void {
 }
 
 /**
+ * One-time merge of duplicate "Assembly (20 min)" session-length terms into canonical 20-min-assemblies.
+ * Reassigns posts from duplicates to canonical, then deletes duplicates so filters and admin show a single option.
+ */
+function aiad_merge_duplicate_assembly_terms(): void {
+    if ( get_option( 'aiad_assembly_duplicate_merge_v1' ) ) {
+        return;
+    }
+    if ( ! taxonomy_exists( 'resource_duration' ) ) {
+        return;
+    }
+
+    $canonical = get_term_by( 'slug', '20-min-assemblies', 'resource_duration' );
+    if ( ! $canonical || is_wp_error( $canonical ) ) {
+        return;
+    }
+
+    $terms = get_terms(
+        array(
+            'taxonomy'   => 'resource_duration',
+            'hide_empty' => false,
+        )
+    );
+    if ( is_wp_error( $terms ) || empty( $terms ) ) {
+        update_option( 'aiad_assembly_duplicate_merge_v1', true );
+        return;
+    }
+
+    $canonical_id  = (int) $canonical->term_id;
+    $duplicate_ids = array();
+
+    foreach ( $terms as $term ) {
+        if ( (int) $term->term_id === $canonical_id ) {
+            continue;
+        }
+        $name_lower = mb_strtolower( trim( $term->name ), 'UTF-8' );
+        $slug_lower = mb_strtolower( $term->slug, 'UTF-8' );
+        if ( false !== strpos( $name_lower, 'assembly' ) || false !== strpos( $slug_lower, 'assembl' ) ) {
+            $duplicate_ids[] = (int) $term->term_id;
+        }
+    }
+    $duplicate_ids = array_unique( array_filter( $duplicate_ids ) );
+
+    foreach ( $duplicate_ids as $dup_id ) {
+        if ( function_exists( 'aiad_reassign_posts_from_term_to_term' ) ) {
+            aiad_reassign_posts_from_term_to_term( $dup_id, $canonical_id, 'resource_duration' );
+        }
+        if ( function_exists( 'wp_delete_term' ) ) {
+            wp_delete_term( $dup_id, 'resource_duration' );
+        }
+    }
+
+    update_option( 'aiad_assembly_duplicate_merge_v1', true );
+    if ( function_exists( 'aiad_bump_filter_counts_version' ) ) {
+        aiad_bump_filter_counts_version();
+    }
+}
+add_action( 'init', 'aiad_merge_duplicate_assembly_terms', 102 );
+
+/**
  * Move all objects using $from_term_id to use $to_term_id for the given taxonomy (replaces in term list).
  *
  * @param int    $from_term_id Source term ID.
