@@ -410,9 +410,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <?php if ( has_excerpt() ): ?>
                                         <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                                     <?php endif; ?>
-                                    <p class="resource-card__action">
-                                        <a href="<?php the_permalink(); ?>" class="resource-card__link"><?php esc_html_e( 'View resource', 'ai-awareness-day' ); ?> →</a>
-                                    </p>
                                 </div>
                             </article>
                         <?php endwhile; ?>
