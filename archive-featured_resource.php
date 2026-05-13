@@ -207,6 +207,7 @@ get_header();
                             </a>
 
                             <div class="resource-card__body">
+                                <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
                                 <a href="<?php echo esc_url( $link ); ?>" class="resource-card__title-below" <?php if ( $url ) echo 'target="_blank" rel="noopener noreferrer"'; ?>><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a>
                                 <?php
                                 $summary = '';
