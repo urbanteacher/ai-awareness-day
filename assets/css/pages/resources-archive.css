@@ -121,6 +121,8 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  aspect-ratio: 1 / 1;
+  align-self: start;
 }
 
 .resource-card--placeholder:hover {
@@ -714,10 +716,10 @@
   }
 
   #free-resources .resource-card--placeholder {
-    min-height: 80px;
-    align-self: auto;
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
-    background: transparent;
+    aspect-ratio: 1 / 1;
+    align-self: start;
+    clip-path: none;
+    background: var(--gray-50);
     border-width: 2px;
   }
 
@@ -873,8 +875,10 @@
   }
 
   #partner-resources .resource-card--placeholder {
-    min-height: 0;
-    align-self: stretch;
+    aspect-ratio: 1 / 1;
+    align-self: start;
+    clip-path: none;
+    border-width: 2px;
   }
 
   #partner-resources .resource-card--placeholder .resource-card__placeholder-title {
