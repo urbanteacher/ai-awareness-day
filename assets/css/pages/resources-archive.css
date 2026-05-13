@@ -848,7 +848,7 @@
   }
 
   #free-resources .resource-card__link {
-    font-size: 0.55rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -876,7 +876,7 @@
   }
 
   #free-resources .resource-card__link {
-    font-size: 0.5rem;
+    font-size: 0.78rem;
   }
 
   /* Fixed: Adjust pills and placeholder text to prevent overlap on small mobile */
@@ -997,7 +997,7 @@
   }
 
   #partner-resources .resource-card__link {
-    font-size: 0.55rem;
+    font-size: 0.78rem;
   }
 
   #partner-resources .duration-badge {
@@ -1040,7 +1040,7 @@
 
 
   #partner-resources .resource-card__link {
-    font-size: 0.5rem;
+    font-size: 0.78rem;
   }
 }
 

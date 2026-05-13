@@ -44,11 +44,26 @@
         }).join( '&' );
     }
 
+    function decodeEntities( text ) {
+        if ( ! text ) return '';
+        var t = document.createElement( 'textarea' );
+        t.innerHTML = text;
+        return t.value;
+    }
+
     function escapeHtml( text ) {
         if ( ! text ) return '';
         var div = document.createElement( 'div' );
-        div.textContent = text;
+        div.textContent = decodeEntities( text );
         return div.innerHTML;
+    }
+
+    function durationTimeOnly( name ) {
+        if ( ! name ) return '';
+        var m = name.match( /\(([^)]+)\)/ );
+        if ( m ) return m[ 1 ].toUpperCase();
+        var m2 = name.match( /(\d+(?:[–\-]\d+)?\s*min(?:ute)?s?)/i );
+        return m2 ? m2[ 1 ].toUpperCase() : name.toUpperCase();
     }
 
     function buildPlaceholderText( resource ) {
@@ -114,7 +129,7 @@
             : 'SLIDE';
 
         var durationHtml = resource.duration_name
-            ? '<span class="resource-card__duration-label" aria-hidden="true">' + escapeHtml( resource.duration_name.toUpperCase() ) + '</span>'
+            ? '<span class="resource-card__duration-label" aria-hidden="true">' + escapeHtml( durationTimeOnly( resource.duration_name ) ) + '</span>'
             : '';
 
         // Action link
@@ -139,7 +154,6 @@
                     '<div class="resource-card__wedge" aria-hidden="true"></div>' +
                     '<div class="resource-card__fade" aria-hidden="true"></div>' +
                     themeLabelHtml +
-                    '<span class="resource-card__format" aria-hidden="true">' + escapeHtml( formatLabel ) + '</span>' +
                     durationHtml +
                     '<h3 class="resource-card__title-overlay">' + escapeHtml( resource.title ) + '</h3>' +
                 '</a>' +

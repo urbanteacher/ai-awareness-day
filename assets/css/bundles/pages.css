@@ -2077,7 +2077,7 @@ a.toolkit-card.toolkit-card--link:hover {
   }
 
   #free-resources .resource-card__link {
-    font-size: 0.55rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -2105,7 +2105,7 @@ a.toolkit-card.toolkit-card--link:hover {
   }
 
   #free-resources .resource-card__link {
-    font-size: 0.5rem;
+    font-size: 0.78rem;
   }
 
   /* Fixed: Adjust pills and placeholder text to prevent overlap on small mobile */
@@ -2226,7 +2226,7 @@ a.toolkit-card.toolkit-card--link:hover {
   }
 
   #partner-resources .resource-card__link {
-    font-size: 0.55rem;
+    font-size: 0.78rem;
   }
 
   #partner-resources .duration-badge {
@@ -2269,7 +2269,7 @@ a.toolkit-card.toolkit-card--link:hover {
 
 
   #partner-resources .resource-card__link {
-    font-size: 0.5rem;
+    font-size: 0.78rem;
   }
 }
 

@@ -217,7 +217,15 @@ get_header();
                             ? strtoupper($activity_terms[0]->name) : 'SLIDE';
                         $duration_parts = ($durations && !is_wp_error($durations) && function_exists('aiad_duration_badge_parts'))
                             ? aiad_duration_badge_parts($durations[0]) : null;
-                        $duration_str   = $duration_parts ? strtoupper($duration_parts['time']) : (!empty($duration_labels) ? strtoupper($duration_labels[0]) : '');
+                        if ($duration_parts) {
+                            $duration_str = strtoupper($duration_parts['time']);
+                        } elseif (!empty($duration_labels) && preg_match('/\(([^)]+)\)/', $duration_labels[0], $m)) {
+                            $duration_str = strtoupper(trim($m[1]));
+                        } elseif (!empty($duration_labels) && preg_match('/(\d+(?:[\-–]\d+)?\s*min(?:ute)?s?)/i', $duration_labels[0], $m)) {
+                            $duration_str = strtoupper($m[1]);
+                        } else {
+                            $duration_str = '';
+                        }
                         $article_class  = 'resource-card resource-card--pointed fade-up';
                         if ($theme_slug) {
                             $article_class .= ' resource-card--' . $theme_slug;
@@ -239,18 +247,16 @@ get_header();
                                     <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html(strtoupper($theme_name)); ?></span>
                                 <?php endif; ?>
 
-                                <span class="resource-card__format" aria-hidden="true"><?php echo esc_html($format_label); ?></span>
-
                                 <?php if ($duration_str): ?>
                                     <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html($duration_str); ?></span>
                                 <?php endif; ?>
 
-                                <h3 class="resource-card__title-overlay"><?php echo esc_html(get_the_title()); ?></h3>
+                                <h3 class="resource-card__title-overlay"><?php echo esc_html(html_entity_decode(get_the_title(), ENT_QUOTES, 'UTF-8')); ?></h3>
                             </a>
 
                             <div class="resource-card__body">
                                 <span class="resource-card__format-label"><?php echo esc_html($format_label); ?></span>
-                                <a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html(get_the_title()); ?></a>
+                                <a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html(html_entity_decode(get_the_title(), ENT_QUOTES, 'UTF-8')); ?></a>
                                 <?php
                                 $summary = '';
                                 if (has_excerpt()) {
