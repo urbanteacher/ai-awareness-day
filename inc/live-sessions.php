@@ -668,9 +668,70 @@ function aiad_print_schedule_audience_filter_script(): void {
         });
         wireIcsButtons( root, '.aiad-schedule-card__ics', '.aiad-schedule-card' );
     }
+    function insertShareBar( root ) {
+        if ( root.querySelector('.aiad-schedule-share-bar') ) return;
+        var pageUrl   = window.location.href;
+        var pageTitle = document.title;
+        var copiedMsg = <?php echo wp_json_encode( __( 'Link copied!', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+        var bar = document.createElement('div');
+        bar.className = 'aiad-schedule-share-bar';
+        bar.setAttribute('role', 'region');
+        bar.setAttribute('aria-label', <?php echo wp_json_encode( __( 'Share this schedule', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>);
+        var status = document.createElement('span');
+        status.className = 'aiad-schedule-share-bar__status';
+        status.setAttribute('aria-live', 'polite');
+        function makeBtn( label, handler ) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'aiad-schedule-share-bar__btn';
+            btn.textContent = label;
+            btn.addEventListener('click', handler);
+            return btn;
+        }
+        // Native share (mobile)
+        if ( navigator.share ) {
+            bar.appendChild( makeBtn( <?php echo wp_json_encode( __( 'Share', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>, function(){
+                navigator.share({ title: pageTitle, url: pageUrl }).catch(function(){});
+            }) );
+        }
+        // Copy link
+        bar.appendChild( makeBtn( <?php echo wp_json_encode( __( 'Copy link', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>, function(){
+            if ( navigator.clipboard ) {
+                navigator.clipboard.writeText( pageUrl ).then(function(){
+                    status.textContent = copiedMsg;
+                    setTimeout(function(){ status.textContent = ''; }, 2500);
+                }).catch(function(){});
+            }
+        }) );
+        // X / Twitter
+        bar.appendChild( makeBtn( 'X', function(){
+            window.open( 'https://x.com/intent/tweet?url=' + encodeURIComponent(pageUrl) + '&text=' + encodeURIComponent(pageTitle), '_blank', 'noopener' );
+        }) );
+        // LinkedIn
+        bar.appendChild( makeBtn( 'LinkedIn', function(){
+            window.open( 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageUrl), '_blank', 'noopener' );
+        }) );
+        // Facebook
+        bar.appendChild( makeBtn( 'Facebook', function(){
+            window.open( 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl), '_blank', 'noopener' );
+        }) );
+        bar.appendChild( status );
+        // Insert after the audience tabs (or before the table/list) inside .container
+        var container = root.querySelector('.container') || root;
+        var table = container.querySelector('.aiad-schedule-table, .aiad-session-list');
+        if ( table ) {
+            container.insertBefore( bar, table );
+        } else {
+            container.appendChild( bar );
+        }
+    }
     document.querySelectorAll('.aiad-schedule-filter-root').forEach(function( root ){
         wireAudienceFilters( root );
         wireIcsButtons( root, '.aiad-schedule-item__ics', '.aiad-schedule-item' );
+        // Only inject share bar on archive (not homepage)
+        if ( ! root.classList.contains('aiad-schedule-home') ) {
+            insertShareBar( root );
+        }
     });
     var spotlight = document.getElementById('schedule');
     if ( spotlight && spotlight.classList.contains('aiad-schedule-home') ) {

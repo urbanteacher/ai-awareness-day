@@ -2613,8 +2613,23 @@ a.duration-badge:hover {
     border-bottom: 2px solid var(--gray-300, #d1d5db);
 }
 .aiad-schedule-cell-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
-.aiad-schedule-cell-provider { display: flex; align-items: center; gap: 0.5rem; }
-.aiad-schedule-cell-provider img { width: 28px; height: 28px; object-fit: contain; }
+.aiad-schedule-cell-provider {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    vertical-align: middle;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.aiad-schedule-cell-provider img,
+.aiad-schedule-cell-provider svg {
+    width: auto;
+    height: 28px;
+    max-width: 80px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
 .aiad-schedule-table__cta {
     display: inline-block;
     background: var(--green-600, #16a34a);
@@ -2649,4 +2664,46 @@ a.duration-badge:hover {
         color: var(--gray-500);
         margin-bottom: 0.1rem;
     }
+}
+
+/* ── Schedule archive: share bar ──────────────────────────── */
+.aiad-schedule-share-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+}
+.aiad-schedule-share-bar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.85rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--white, #fff);
+    color: var(--gray-700, #374151);
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+    min-height: 36px;
+}
+.aiad-schedule-share-bar__btn:hover {
+    border-color: var(--gray-400, #9ca3af);
+    color: var(--gray-900, #111827);
+}
+.aiad-schedule-share-bar__btn:focus-visible {
+    outline: 2px solid var(--accent-green, #16a34a);
+    outline-offset: 2px;
+}
+.aiad-schedule-share-bar__status {
+    font-size: 0.8rem;
+    color: var(--accent-green, #16a34a);
+    font-weight: 600;
+    min-height: 1em;
 }
