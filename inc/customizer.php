@@ -43,6 +43,23 @@ function aiad_customizer_validate_url_or_hash( WP_Error $validity, $value ): WP_
  * @param WP_Customize_Manager $wp_customize Customizer manager instance.
  */
 function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
+    // Register panels first so sections can be retrofitted into them.
+    $wp_customize->add_panel( 'aiad_panel_brand', array(
+        'title'       => __( 'Brand & Identity', 'ai-awareness-day' ),
+        'description' => __( 'Logos, badges, social profiles, and search-engine verification — everything that defines who the site is.', 'ai-awareness-day' ),
+        'priority'    => 25,
+    ) );
+    $wp_customize->add_panel( 'aiad_panel_front_page', array(
+        'title'       => __( 'Front Page Sections', 'ai-awareness-day' ),
+        'description' => __( 'Configure each homepage section: hero, campaign, video, themes, display board, get involved, and related layout settings.', 'ai-awareness-day' ),
+        'priority'    => 30,
+    ) );
+    $wp_customize->add_panel( 'aiad_panel_files', array(
+        'title'       => __( 'Files & Downloads', 'ai-awareness-day' ),
+        'description' => __( 'Upload asset packs, the press release PDF, and other downloadable files.', 'ai-awareness-day' ),
+        'priority'    => 38,
+    ) );
+
     aiad_register_header_section( $wp_customize );
     aiad_register_hero_section( $wp_customize );
     aiad_register_campaign_section( $wp_customize );
@@ -57,6 +74,34 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_assets_pack_section( $wp_customize );
     aiad_register_press_release_section( $wp_customize );
     aiad_register_front_page_layout_section( $wp_customize );
+
+    // Retrofit panel assignments so we don't have to edit each section's
+    // registration. Sections not listed here remain at the top level.
+    $assignments = array(
+        // Brand & Identity
+        'aiad_social'                 => 'aiad_panel_brand',
+        'aiad_badges'                 => 'aiad_panel_brand',
+        'aiad_seo_verify'             => 'aiad_panel_brand',
+        // Front Page Sections
+        'aiad_front_page_layout'      => 'aiad_panel_front_page',
+        'aiad_hero'                   => 'aiad_panel_front_page',
+        'aiad_campaign'               => 'aiad_panel_front_page',
+        'aiad_youtube'                => 'aiad_panel_front_page',
+        'aiad_time_resources_display' => 'aiad_panel_front_page',
+        'aiad_display_board'          => 'aiad_panel_front_page',
+        'aiad_contact'                => 'aiad_panel_front_page',
+        'aiad_toolkit'                => 'aiad_panel_front_page',
+        'aiad_footer_resource_links'  => 'aiad_panel_front_page',
+        // Files & Downloads
+        'aiad_assets_pack'            => 'aiad_panel_files',
+        'aiad_press_release'          => 'aiad_panel_files',
+    );
+    foreach ( $assignments as $section_id => $panel_id ) {
+        $section = $wp_customize->get_section( $section_id );
+        if ( $section ) {
+            $section->panel = $panel_id;
+        }
+    }
 }
 add_action( 'customize_register', 'aiad_customize_register' );
 
