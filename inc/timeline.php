@@ -1133,7 +1133,7 @@ function aiad_render_timeline_entry( WP_Post $entry ): string {
     if ( ! $thumbnail ) {
         $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium' );
     }
-    $content      = get_the_content( null, false, $entry );
+    $content      = apply_filters( 'the_content', get_the_content( null, false, $entry ) );
     
     // Determine what media to show based on card type
     $show_video    = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
