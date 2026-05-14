@@ -466,6 +466,31 @@ function aiad_output_json_ld_schemas(): void {
 add_action( 'wp_head', 'aiad_output_json_ld_schemas', 10 );
 
 /**
+ * Output search-engine verification <meta> tags from Customizer settings.
+ * Accepts either the raw token or the full meta tag pasted by the user —
+ * the regex pulls the content="…" value out either way.
+ */
+function aiad_output_search_verification_meta(): void {
+	$map = array(
+		'aiad_verify_google'    => 'google-site-verification',
+		'aiad_verify_bing'      => 'msvalidate.01',
+		'aiad_verify_pinterest' => 'p:domain_verify',
+	);
+	foreach ( $map as $setting => $meta_name ) {
+		$raw = trim( (string) get_theme_mod( $setting, '' ) );
+		if ( $raw === '' ) {
+			continue;
+		}
+		// If the user pasted the full meta tag, extract the content attribute.
+		if ( preg_match( '/content\s*=\s*["\']([^"\']+)["\']/i', $raw, $m ) ) {
+			$raw = $m[1];
+		}
+		echo '<meta name="' . esc_attr( $meta_name ) . '" content="' . esc_attr( $raw ) . '" />' . "\n";
+	}
+}
+add_action( 'wp_head', 'aiad_output_search_verification_meta', 1 );
+
+/**
  * Output canonical URL.
  */
 function aiad_output_canonical_url(): void {

@@ -624,6 +624,41 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         ) );
     }
 
+    // Search engine verification codes (Google / Bing / Pinterest).
+    $wp_customize->add_section( 'aiad_seo_verify', array(
+        'title'       => __( 'Search engine verification', 'ai-awareness-day' ),
+        'priority'    => 165,
+        'description' => __( 'Paste the verification token from each search engine. The corresponding <meta> tag is added to every page automatically.', 'ai-awareness-day' ),
+    ) );
+
+    $verify_fields = array(
+        'aiad_verify_google'    => array(
+            'label'       => __( 'Google Search Console', 'ai-awareness-day' ),
+            'description' => __( 'In Search Console, choose "HTML tag" method, then paste only the content value (the bit between quotes), or the whole meta tag.', 'ai-awareness-day' ),
+        ),
+        'aiad_verify_bing'      => array(
+            'label'       => __( 'Bing Webmaster Tools', 'ai-awareness-day' ),
+            'description' => __( 'Paste only the content value, or the whole meta tag.', 'ai-awareness-day' ),
+        ),
+        'aiad_verify_pinterest' => array(
+            'label'       => __( 'Pinterest', 'ai-awareness-day' ),
+            'description' => __( 'Paste only the content value, or the whole meta tag.', 'ai-awareness-day' ),
+        ),
+    );
+    foreach ( $verify_fields as $setting => $args ) {
+        $wp_customize->add_setting( $setting, array(
+            'default'           => '',
+            'sanitize_callback' => 'sanitize_text_field',
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( $setting, array(
+            'label'       => $args['label'],
+            'description' => $args['description'],
+            'section'     => 'aiad_seo_verify',
+            'type'        => 'text',
+        ) );
+    }
+
     $wp_customize->add_setting( 'aiad_linkedin_post_url', array(
         'default'           => $defaults['aiad_linkedin_post_url'],
         'sanitize_callback' => 'esc_url_raw',
