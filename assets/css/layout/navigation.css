@@ -202,7 +202,9 @@
   }
 
   .js .main-navigation {
-    transform: translateY(-120%);
+    transform: translateY(calc(-100% - 80px));
+    visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0s linear 0.4s;
   }
 
   /* Shift mobile nav down to clear the admin bar (46px on mobile) */
@@ -210,9 +212,15 @@
     top: 118px;
     /* 72px header + 46px admin bar */
   }
+  .admin-bar.js .main-navigation,
+  .js .admin-bar .main-navigation {
+    transform: translateY(calc(-100% - 130px));
+  }
 
   .js .main-navigation.open {
     transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0s linear 0s;
   }
 
   .main-navigation ul {
