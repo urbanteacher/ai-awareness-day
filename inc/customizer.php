@@ -602,6 +602,28 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
         'type'    => 'url',
     ) );
 
+    $extra_socials = array(
+        'aiad_twitter'  => __( 'X / Twitter URL', 'ai-awareness-day' ),
+        'aiad_facebook' => __( 'Facebook URL', 'ai-awareness-day' ),
+        'aiad_youtube'  => __( 'YouTube URL', 'ai-awareness-day' ),
+        'aiad_tiktok'   => __( 'TikTok URL', 'ai-awareness-day' ),
+        'aiad_github'   => __( 'GitHub URL', 'ai-awareness-day' ),
+    );
+    foreach ( $extra_socials as $setting => $label ) {
+        $wp_customize->add_setting( $setting, array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+            'transport'         => 'refresh',
+            'validate_callback' => 'aiad_customizer_validate_url_or_hash',
+        ) );
+        $wp_customize->add_control( $setting, array(
+            'label'       => $label,
+            'description' => __( 'Used in the Organization schema (sameAs) so Google can link your social profiles to your knowledge panel.', 'ai-awareness-day' ),
+            'section'     => 'aiad_social',
+            'type'        => 'url',
+        ) );
+    }
+
     $wp_customize->add_setting( 'aiad_linkedin_post_url', array(
         'default'           => $defaults['aiad_linkedin_post_url'],
         'sanitize_callback' => 'esc_url_raw',

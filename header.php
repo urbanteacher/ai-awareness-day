@@ -11,6 +11,9 @@
         : get_bloginfo('description');
     ?>
     <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
+    <meta name="theme-color" content="#16a34a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
     <?php wp_head(); ?>
 </head>
@@ -21,24 +24,30 @@
     <header class="site-header" id="site-header">
         <div class="container header-inner">
 
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
                 <?php
                 $defaults = aiad_get_customizer_defaults();
-                $logo_html = '';
+                $title    = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] );
+
+                $logo_url = '';
                 if ( has_custom_logo() ) {
-                    $logo_html = get_custom_logo();
-                } else {
-                    $logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-                    $logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'full' ) : '';
-                    $title = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] );
-                    if ( $logo_url ) {
-                        $logo_html = '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $title ) . '" class="site-logo__img" />';
-                    } else {
-                        $logo_html = '<span class="site-logo__text">' . esc_html( $title ) . '<span class="site-logo__dot">.</span></span>';
+                    $custom_logo_id = (int) get_theme_mod( 'custom_logo' );
+                    if ( $custom_logo_id ) {
+                        $logo_url = wp_get_attachment_image_url( $custom_logo_id, 'full' );
                     }
                 }
-                echo $logo_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- logo is built from escaped parts
+                if ( ! $logo_url ) {
+                    $logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+                    if ( $logo_id ) {
+                        $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
+                    }
+                }
+
+                if ( $logo_url ) {
+                    echo '<img src="' . esc_url( $logo_url ) . '" alt="" aria-hidden="true" class="site-logo__img" />';
+                }
                 ?>
+                <span class="site-logo__text"><?php echo esc_html( $title ); ?><span class="site-logo__dot">.</span></span>
             </a>
 
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"
@@ -66,3 +75,6 @@
 
         </div>
     </header>
+
+    <?php /* Breadcrumbs hidden for now — re-enable by uncommenting the line below. */ ?>
+    <?php /* if ( function_exists( 'aiad_render_breadcrumbs' ) ) { aiad_render_breadcrumbs(); } */ ?>

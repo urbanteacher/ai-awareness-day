@@ -54,46 +54,83 @@ function aiad_seo_should_output(): bool {
 function aiad_get_organization_schema(): array {
 	$defaults = aiad_get_customizer_defaults();
 	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
-	
+
 	$schema = array(
 		'@context' => 'https://schema.org',
 		'@type'    => 'Organization',
 		'name'     => $site_name,
 		'url'      => home_url( '/' ),
 	);
-	
-	// Logo
+
+	$description = get_bloginfo( 'description' );
+	if ( $description ) {
+		$schema['description'] = $description;
+	}
+
+	// Logo: prefer aiad_hero_logo → WP custom_logo → site_icon (favicon).
+	// Use ImageObject form per Google guidance (https://developers.google.com/search/docs/appearance/structured-data/organization).
 	$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+	if ( ! $logo_id && has_custom_logo() ) {
+		$logo_id = (int) get_theme_mod( 'custom_logo' );
+	}
+	if ( ! $logo_id && function_exists( 'get_site_icon_url' ) ) {
+		$logo_id = (int) get_option( 'site_icon' );
+	}
 	if ( $logo_id ) {
 		$logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
 		if ( $logo_url ) {
-			$schema['logo'] = $logo_url;
-		}
-	} elseif ( has_custom_logo() ) {
-		$custom_logo_id = get_theme_mod( 'custom_logo' );
-		if ( $custom_logo_id ) {
-			$logo_url = wp_get_attachment_image_url( $custom_logo_id, 'full' );
-			if ( $logo_url ) {
-				$schema['logo'] = $logo_url;
-			}
+			$meta = wp_get_attachment_metadata( $logo_id );
+			$schema['logo'] = array(
+				'@type'  => 'ImageObject',
+				'url'    => $logo_url,
+				'width'  => isset( $meta['width'] ) ? (int) $meta['width'] : 112,
+				'height' => isset( $meta['height'] ) ? (int) $meta['height'] : 112,
+			);
 		}
 	}
-	
-	// Social profiles
+
+	// Social profiles (sameAs) — each Customizer field below contributes.
+	$same_as_settings = array(
+		'aiad_linkedin', 'aiad_instagram', 'aiad_twitter', 'aiad_facebook',
+		'aiad_youtube', 'aiad_tiktok', 'aiad_github',
+	);
 	$same_as = array();
-	$linkedin = get_theme_mod( 'aiad_linkedin', $defaults['aiad_linkedin'] );
-	if ( $linkedin && $linkedin !== '#' ) {
-		$same_as[] = $linkedin;
-	}
-	$instagram = get_theme_mod( 'aiad_instagram', $defaults['aiad_instagram'] );
-	if ( $instagram && $instagram !== '#' ) {
-		$same_as[] = $instagram;
+	foreach ( $same_as_settings as $setting ) {
+		$val = get_theme_mod( $setting, $defaults[ $setting ] ?? '' );
+		if ( $val && $val !== '#' && filter_var( $val, FILTER_VALIDATE_URL ) ) {
+			$same_as[] = $val;
+		}
 	}
 	if ( ! empty( $same_as ) ) {
-		$schema['sameAs'] = $same_as;
+		$schema['sameAs'] = array_values( array_unique( $same_as ) );
 	}
-	
+
 	return $schema;
+}
+
+/**
+ * WebSite schema with SearchAction — eligible for the Google sitelinks search box.
+ *
+ * @return array<string, mixed>
+ */
+function aiad_get_website_schema(): array {
+	$defaults  = aiad_get_customizer_defaults();
+	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
+
+	return array(
+		'@context'        => 'https://schema.org',
+		'@type'           => 'WebSite',
+		'name'            => $site_name,
+		'url'             => home_url( '/' ),
+		'potentialAction' => array(
+			'@type'       => 'SearchAction',
+			'target'      => array(
+				'@type'       => 'EntryPoint',
+				'urlTemplate' => home_url( '/?s={search_term_string}' ),
+			),
+			'query-input' => 'required name=search_term_string',
+		),
+	);
 }
 
 /**
@@ -296,6 +333,37 @@ function aiad_get_breadcrumb_trail(): array {
 }
 
 /**
+ * Render a visible breadcrumb trail (skipped on the front page).
+ * Echoes nothing if the trail has fewer than 2 items.
+ */
+function aiad_render_breadcrumbs(): void {
+	if ( is_front_page() ) {
+		return;
+	}
+	$trail = aiad_get_breadcrumb_trail();
+	if ( count( $trail ) < 2 ) {
+		return;
+	}
+	$last_index = count( $trail ) - 1;
+	echo '<nav class="aiad-breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumb', 'ai-awareness-day' ) . '">';
+	echo '<div class="container"><ol class="aiad-breadcrumbs__list">';
+	foreach ( $trail as $i => $item ) {
+		$is_current = ( $i === $last_index );
+		echo '<li class="aiad-breadcrumbs__item' . ( $is_current ? ' is-current' : '' ) . '">';
+		if ( $is_current ) {
+			echo '<span aria-current="page">' . esc_html( $item['name'] ) . '</span>';
+		} else {
+			echo '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['name'] ) . '</a>';
+		}
+		if ( ! $is_current ) {
+			echo '<span class="aiad-breadcrumbs__sep" aria-hidden="true">/</span>';
+		}
+		echo '</li>';
+	}
+	echo '</ol></div></nav>';
+}
+
+/**
  * Get BreadcrumbList schema.
  *
  * @return array<string, mixed> BreadcrumbList schema array.
@@ -326,36 +394,6 @@ function aiad_get_breadcrumb_schema(): array {
 	);
 }
 
-/**
- * Render visible breadcrumb HTML.
- */
-function aiad_render_breadcrumbs(): void {
-	$trail = aiad_get_breadcrumb_trail();
-	
-	if ( empty( $trail ) || count( $trail ) < 2 ) {
-		return;
-	}
-	
-	$last_index = count( $trail ) - 1;
-	
-	echo '<nav aria-label="' . esc_attr__( 'Breadcrumbs', 'ai-awareness-day' ) . '" class="breadcrumbs">';
-	echo '<ul class="breadcrumbs__list">';
-	
-	foreach ( $trail as $index => $crumb ) {
-		$is_last = ( $index === $last_index );
-		
-		echo '<li class="breadcrumbs__item">';
-		if ( $is_last ) {
-			echo '<span class="breadcrumbs__current" aria-current="page">' . esc_html( $crumb['name'] ) . '</span>';
-		} else {
-			echo '<a href="' . esc_url( $crumb['url'] ) . '" class="breadcrumbs__link">' . esc_html( $crumb['name'] ) . '</a>';
-		}
-		echo '</li>';
-	}
-	
-	echo '</ul>';
-	echo '</nav>';
-}
 
 /**
  * Output JSON-LD structured data schemas.
@@ -372,7 +410,17 @@ function aiad_output_json_ld_schemas(): void {
 		echo wp_json_encode( $org_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
 		echo "\n" . '</script>' . "\n";
 	}
-	
+
+	// WebSite schema (with SearchAction) on the front page — eligible for sitelinks search box.
+	if ( is_front_page() ) {
+		$website_schema = aiad_get_website_schema();
+		if ( ! empty( $website_schema ) ) {
+			echo '<script type="application/ld+json">' . "\n";
+			echo wp_json_encode( $website_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+			echo "\n" . '</script>' . "\n";
+		}
+	}
+
 	// Event schema on front page
 	if ( is_front_page() ) {
 		$event_schema = aiad_get_event_schema();
