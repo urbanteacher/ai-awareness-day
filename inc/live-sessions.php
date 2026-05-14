@@ -668,9 +668,31 @@ function aiad_print_schedule_audience_filter_script(): void {
         });
         wireIcsButtons( root, '.aiad-schedule-card__ics', '.aiad-schedule-card' );
     }
+    function wireTableShare( root ) {
+        var copiedMsg = <?php echo wp_json_encode( __( 'Link copied', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE ); ?>;
+        root.querySelectorAll('.aiad-schedule-table__share').forEach(function( btn ){
+            btn.addEventListener('click', function(){
+                var url   = btn.getAttribute('data-share-url')   || '';
+                var title = btn.getAttribute('data-share-title') || '';
+                if ( ! url ) return;
+                if ( navigator.share ) {
+                    navigator.share({ title: title, url: url }).catch(function(){});
+                    return;
+                }
+                if ( navigator.clipboard && navigator.clipboard.writeText ) {
+                    var prev = btn.getAttribute('aria-label') || '';
+                    navigator.clipboard.writeText( url ).then(function(){
+                        btn.setAttribute('aria-label', copiedMsg);
+                        setTimeout(function(){ btn.setAttribute('aria-label', prev); }, 2200);
+                    }).catch(function(){});
+                }
+            });
+        });
+    }
     document.querySelectorAll('.aiad-schedule-filter-root').forEach(function( root ){
         wireAudienceFilters( root );
         wireIcsButtons( root, '.aiad-schedule-item__ics', '.aiad-schedule-item' );
+        wireTableShare( root );
     });
     var spotlight = document.getElementById('schedule');
     if ( spotlight && spotlight.classList.contains('aiad-schedule-home') ) {
@@ -749,3 +771,92 @@ function aiad_live_session_admin_column_content( string $column, int $post_id ):
     }
 }
 add_action( 'manage_live_session_posts_custom_column', 'aiad_live_session_admin_column_content', 10, 2 );
+
+/**
+ * Server-side ICS download endpoint.
+ *
+ * Registers /session-ics/{id}/ as a proper downloadable calendar file so that
+ * calendar apps can subscribe directly — no JS Blob required.
+ */
+function aiad_register_session_ics_rewrite(): void {
+    add_rewrite_rule(
+        '^session-ics/([0-9]+)/?$',
+        'index.php?session_ics_id=$matches[1]',
+        'top'
+    );
+}
+add_action( 'init', 'aiad_register_session_ics_rewrite' );
+
+function aiad_session_ics_query_var( array $vars ): array {
+    $vars[] = 'session_ics_id';
+    return $vars;
+}
+add_filter( 'query_vars', 'aiad_session_ics_query_var' );
+
+function aiad_session_ics_serve(): void {
+    $id = (int) get_query_var( 'session_ics_id' );
+    if ( ! $id ) {
+        return;
+    }
+
+    $post = get_post( $id );
+    if ( ! $post || $post->post_type !== 'live_session' ) {
+        status_header( 404 );
+        exit;
+    }
+
+    $title = get_the_title( $id );
+    $start = (string) get_post_meta( $id, '_session_start_time', true );
+    $end   = (string) get_post_meta( $id, '_session_end_time', true );
+    $url   = (string) get_post_meta( $id, '_session_registration_url', true );
+    $desc  = wp_strip_all_tags( $post->post_content ?: '' );
+
+    if ( ! $start ) {
+        status_header( 404 );
+        exit;
+    }
+
+    $ics_start = str_replace( array( '-', ':' ), '', $start ) . '00';
+    $ics_end   = $end ? str_replace( array( '-', ':' ), '', $end ) . '00' : $ics_start;
+    $dtstamp   = gmdate( 'Ymd\THis\Z' );
+    $uid       = $ics_start . '-' . $id . '@aiawarenessday.co.uk';
+
+    $esc = function ( string $s ): string {
+        return str_replace(
+            array( '\\', ';', ',', "\n" ),
+            array( '\\\\', '\\;', '\\,', '\\n' ),
+            $s
+        );
+    };
+
+    $lines = array(
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//AI Awareness Day//Schedule//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'UID:' . $uid,
+        'DTSTAMP:' . $dtstamp,
+        'DTSTART;TZID=Europe/London:' . $ics_start,
+        'DTEND;TZID=Europe/London:' . $ics_end,
+        'SUMMARY:' . $esc( $title ),
+        'DESCRIPTION:' . $esc( $desc . ( $url ? "\n\nJoin: $url" : '' ) ),
+    );
+    if ( $url ) {
+        $lines[] = 'URL:' . $url;
+    }
+    $lines[] = 'END:VEVENT';
+    $lines[] = 'END:VCALENDAR';
+
+    $filename = sanitize_title( $title ) . '.ics';
+
+    header( 'Content-Type: text/calendar; charset=utf-8' );
+    header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+    header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+    header( 'Pragma: no-cache' );
+
+    echo implode( "\r\n", $lines );
+    exit;
+}
+add_action( 'template_redirect', 'aiad_session_ics_serve' );

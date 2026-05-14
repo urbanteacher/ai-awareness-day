@@ -75,12 +75,23 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 : '';
                             $aud_slugs    = $session_audience_map[ $s->ID ] ?? array();
                             $aud_data     = implode( ' ', $aud_slugs );
+                            $title        = get_the_title( $s );
+                            $permalink    = get_permalink( $s );
+                            $ics_start    = $start ? str_replace( array( '-', ':' ), '', $start ) . '00' : '';
+                            $ics_end      = $end   ? str_replace( array( '-', ':' ), '', $end )   . '00' : $ics_start;
+                            $ics_url      = home_url( '/session-ics/' . $s->ID . '/' );
                         ?>
-                            <tr class="aiad-schedule-filter-item" data-audience="<?php echo esc_attr( $aud_data ); ?>">
+                            <tr class="aiad-schedule-filter-item"
+                                data-audience="<?php echo esc_attr( $aud_data ); ?>"
+                                data-ics-title="<?php echo esc_attr( $title ); ?>"
+                                data-ics-desc="<?php echo esc_attr( wp_strip_all_tags( $s->post_content ?: '' ) ); ?>"
+                                data-ics-start="<?php echo esc_attr( $ics_start ); ?>"
+                                data-ics-end="<?php echo esc_attr( $ics_end ); ?>"
+                                data-ics-url="<?php echo esc_attr( $reg_url ); ?>">
                                 <td class="aiad-schedule-cell-time"><?php echo esc_html( $time_range ); ?></td>
                                 <td>
-                                    <a href="<?php echo esc_url( get_permalink( $s ) ); ?>">
-                                        <?php echo esc_html( get_the_title( $s ) ); ?>
+                                    <a href="<?php echo esc_url( $permalink ); ?>">
+                                        <?php echo esc_html( $title ); ?>
                                     </a>
                                 </td>
                                 <td><?php echo esc_html( $aud_names ); ?></td>
@@ -93,12 +104,27 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo esc_html( $format ); ?></td>
-                                <td>
+                                <td class="aiad-schedule-cell-actions">
                                     <?php if ( $reg_url ) : ?>
                                         <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener">
                                             <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
                                         </a>
+                                    <?php else : ?>
+                                        <span class="aiad-schedule-table__cta aiad-schedule-table__cta--soon"><?php esc_html_e( 'Soon', 'ai-awareness-day' ); ?></span>
                                     <?php endif; ?>
+                                    <?php if ( $ics_start ) : ?>
+                                        <a class="aiad-schedule-table__ics"
+                                           href="<?php echo esc_url( $ics_url ); ?>"
+                                           aria-label="<?php echo esc_attr( sprintf( __( 'Add "%s" to calendar', 'ai-awareness-day' ), $title ) ); ?>">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                        </a>
+                                    <?php endif; ?>
+                                    <button type="button" class="aiad-schedule-table__share"
+                                        data-share-url="<?php echo esc_attr( $permalink ); ?>"
+                                        data-share-title="<?php echo esc_attr( $title ); ?>"
+                                        aria-label="<?php echo esc_attr( sprintf( __( 'Share "%s"', 'ai-awareness-day' ), $title ) ); ?>">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
