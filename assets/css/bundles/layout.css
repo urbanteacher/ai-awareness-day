@@ -2322,6 +2322,9 @@ a.duration-badge:hover {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.5rem;
     }
+    #schedule .aiad-schedule-cards .aiad-schedule-card:nth-child(3) {
+        display: none;
+    }
     .aiad-schedule-card {
         padding: 0.75rem 0.75rem 0.7rem;
         clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
