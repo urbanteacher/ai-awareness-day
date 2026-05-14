@@ -2680,23 +2680,103 @@ a.duration-badge:hover {
 @media (max-width: 768px) {
     .aiad-schedule-table thead { display: none; }
     .aiad-schedule-table,
-    .aiad-schedule-table tbody,
-    .aiad-schedule-table tr,
-    .aiad-schedule-table td { display: block; width: 100%; }
+    .aiad-schedule-table tbody { display: block; width: 100%; }
+
+    /* Each row becomes a card with a green left accent */
     .aiad-schedule-table tr {
-        border: 1px solid var(--gray-200);
-        border-radius: 6px;
-        margin-bottom: 0.6rem;
-        padding: 0.6rem;
-    }
-    .aiad-schedule-table td { border: none; padding: 0.2rem 0; }
-    .aiad-schedule-table td::before {
-        content: attr(data-label);
         display: block;
-        font-size: 0.7rem;
+        border-left: 3px solid var(--accent-green, #16a34a);
+        border-radius: 0 8px 8px 0;
+        border-top: 1px solid var(--gray-100, #f3f4f6);
+        border-right: 1px solid var(--gray-100, #f3f4f6);
+        border-bottom: 1px solid var(--gray-100, #f3f4f6);
+        margin-bottom: 0.75rem;
+        padding: 0.9rem 1rem 0.8rem;
+        background: var(--white, #fff);
+        box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05);
+    }
+    .aiad-schedule-table td {
+        display: block;
+        border: none;
+        padding: 0;
+        line-height: 1.4;
+    }
+    .aiad-schedule-table td::before { display: none; }
+
+    /* Time — green, bold, small caps */
+    .aiad-schedule-cell-time {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--green-700, #15803d);
+        letter-spacing: 0.04em;
+        margin-bottom: 0.3rem;
+    }
+
+    /* Title — large, prominent */
+    .aiad-schedule-table td:nth-child(2) {
+        font-size: 0.97rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.35rem;
+    }
+    .aiad-schedule-table td:nth-child(2) a {
+        color: var(--gray-900, #111827);
+        text-decoration: none;
+    }
+    .aiad-schedule-table td:nth-child(2) a:hover { text-decoration: underline; }
+
+    /* Audience — small uppercase label */
+    .aiad-schedule-table td:nth-child(3) {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: var(--gray-500);
-        margin-bottom: 0.1rem;
+        color: var(--gray-500, #6b7280);
+        margin-bottom: 0.3rem;
+    }
+
+    /* Provider — logo + name inline */
+    .aiad-schedule-cell-provider {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        height: auto;
+        max-width: none;
+        margin-bottom: 0.3rem;
+    }
+    .aiad-schedule-cell-provider img { height: 20px; max-width: 56px; }
+    .aiad-schedule-cell-provider span { font-size: 0.78rem; color: var(--gray-600, #4b5563); }
+
+    /* Format — muted small text */
+    .aiad-schedule-table td:nth-child(5) {
+        font-size: 0.72rem;
+        color: var(--gray-500, #6b7280);
+        margin-bottom: 0;
+    }
+
+    /* Actions — full-width row with separator */
+    .aiad-schedule-cell-actions {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+        margin-top: 0.7rem;
+        padding-top: 0.65rem;
+        border-top: 1px solid var(--gray-100, #f3f4f6);
+        white-space: normal;
+    }
+    .aiad-schedule-table__cta,
+    .aiad-schedule-table__cta--soon {
+        flex: 1;
+        text-align: center;
+        font-size: 0.78rem;
+        padding: 0.45rem 0.5rem;
+        min-width: 0;
+    }
+    .aiad-schedule-table__ics,
+    .aiad-schedule-table__share {
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
     }
 }
 
