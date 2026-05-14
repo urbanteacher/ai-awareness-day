@@ -243,7 +243,7 @@
    ============================================ */
 .hero-section {
   padding-top: 72px;
-  background: linear-gradient(180deg, var(--gray-100) 0%, var(--white) 100%);
+  background: var(--white);
   overflow: hidden;
 }
 
@@ -2155,28 +2155,23 @@ a.duration-badge:hover {
 /* ============================================
    LIVE SCHEDULE (homepage compact row + archive table)
    ============================================ */
-.aiad-schedule-row { padding: 1.5rem 0; }
-.aiad-schedule-row__head {
+.aiad-schedule-row__actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+}
+.aiad-schedule-tabs {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0.5rem;
+    padding: 0;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+    padding-bottom: 0.75rem;
 }
-.aiad-schedule-row__title {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0.25rem 0 0.15rem;
-    color: var(--gray-900);
-}
-.aiad-schedule-row__audiences {
-    font-size: 0.9rem;
-    color: var(--gray-600);
-    margin: 0;
-}
-.aiad-schedule-row__actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
-.aiad-schedule-row__toggle {
+.aiad-schedule-tab {
     background: var(--white, #fff);
     border: 1px solid var(--gray-300, #d1d5db);
     border-radius: 999px;
@@ -2184,19 +2179,38 @@ a.duration-badge:hover {
     font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--gray-800);
+    color: var(--gray-700);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    transition: background 0.15s, border-color 0.15s;
+    gap: 0.4rem;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.aiad-schedule-row__toggle:hover { background: var(--gray-50); border-color: var(--gray-400); }
-.aiad-schedule-row__chevron { transition: transform 0.2s; }
-.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__chevron { transform: rotate(180deg); }
-.aiad-schedule-row__toggle .aiad-schedule-row__toggle-label-hide { display: none; }
-.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__toggle-label-show { display: none; }
-.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__toggle-label-hide { display: inline; }
+.aiad-schedule-tab:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+    color: var(--gray-900);
+}
+.aiad-schedule-tab.is-active {
+    background: var(--gray-900, #111827);
+    border-color: var(--gray-900, #111827);
+    color: var(--white, #fff);
+}
+.aiad-schedule-tab__count {
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    padding: 0.05em 0.5em;
+    font-size: 0.78em;
+    font-weight: 700;
+}
+.aiad-schedule-tab.is-active .aiad-schedule-tab__count {
+    background: rgba(255, 255, 255, 0.2);
+}
+.aiad-schedule-row__empty {
+    margin: 1.5rem 0;
+    color: var(--gray-600);
+    font-style: italic;
+}
 .aiad-schedule-row__cta {
     font-family: var(--font-display);
     font-size: 0.9rem;
@@ -2206,33 +2220,76 @@ a.duration-badge:hover {
 }
 .aiad-schedule-row__cta:hover { text-decoration: underline; }
 .aiad-schedule-row__list {
-    margin-top: 1rem;
-    border-top: 1px solid var(--gray-200, #e5e7eb);
-    padding-top: 0.75rem;
+    margin-top: 0.75rem;
 }
 .aiad-schedule-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-.aiad-schedule-item {
+.aiad-schedule-list-head {
     display: grid;
-    grid-template-columns: 110px 1fr 180px 110px 70px;
+    grid-template-columns: 110px 1fr 200px 90px 100px;
     gap: 0.75rem;
     align-items: center;
-    padding: 0.55rem 0.6rem;
+    padding: 0.5rem 0.6rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-500, #6b7280);
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+}
+.aiad-schedule-item[hidden] { display: none !important; }
+.aiad-schedule-item {
+    display: grid;
+    grid-template-columns: 110px 1fr 200px 90px 100px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.7rem 0.6rem;
     border-radius: 6px;
     font-size: 0.9rem;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
 }
 .aiad-schedule-item:hover { background: var(--gray-50, #f9fafb); }
 .aiad-schedule-item__time { font-family: var(--font-display); font-weight: 700; color: var(--gray-900); }
 .aiad-schedule-item__title { font-weight: 600; color: var(--gray-900); text-decoration: none; display: block; }
 .aiad-schedule-item__title:hover { text-decoration: underline; }
 .aiad-schedule-item__audience { font-size: 0.78rem; color: var(--gray-600); display: block; margin-top: 0.1rem; }
-.aiad-schedule-item__provider { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--gray-700); }
-.aiad-schedule-item__logo { width: 24px; height: 24px; object-fit: contain; }
-.aiad-schedule-item__format { font-size: 0.75rem; color: var(--gray-500); }
+.aiad-schedule-item__format { font-size: 0.7rem; color: var(--gray-500); display: block; margin-top: 0.15rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
+
+.aiad-schedule-item__provider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+    color: var(--gray-800);
+}
+.aiad-schedule-item__logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--white, #fff);
+    border: 1px solid var(--gray-200, #e5e7eb);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.aiad-schedule-item__logo {
+    max-width: 36px;
+    max-height: 36px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+.aiad-schedule-item__partner-name { font-weight: 600; }
+.aiad-schedule-item__partner-name--tbc { color: var(--gray-500); font-style: italic; font-weight: 500; }
+
 .aiad-schedule-item__cta {
+    display: inline-block;
     text-align: center;
     background: var(--green-600, #16a34a);
     color: var(--white, #fff);
-    padding: 0.35rem 0.7rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 4px;
     font-size: 0.78rem;
     font-weight: 700;
@@ -2240,22 +2297,71 @@ a.duration-badge:hover {
     font-family: var(--font-display);
 }
 .aiad-schedule-item__cta:hover { background: var(--green-700, #15803d); }
+.aiad-schedule-item__cta--disabled {
+    background: var(--gray-200, #e5e7eb);
+    color: var(--gray-500, #6b7280);
+    pointer-events: none;
+}
+
+.aiad-schedule-item__ics {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--white, #fff);
+    border: 1px solid var(--gray-300, #d1d5db);
+    border-radius: 4px;
+    padding: 0.35rem 0.7rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.aiad-schedule-item__ics:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+}
+
+.aiad-schedule-tab.is-disabled,
+.aiad-schedule-tab[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--gray-50);
+    color: var(--gray-500);
+}
+.aiad-schedule-tab.is-disabled:hover,
+.aiad-schedule-tab[disabled]:hover {
+    background: var(--gray-50);
+    color: var(--gray-500);
+    border-color: var(--gray-300);
+}
+.aiad-schedule-tab__badge {
+    background: var(--amber-100, #fef3c7);
+    color: var(--amber-800, #92400e);
+    padding: 0.1em 0.5em;
+    border-radius: 999px;
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
 
 @media (max-width: 768px) {
+    .aiad-schedule-list-head { display: none; }
     .aiad-schedule-item {
-        grid-template-columns: 90px 1fr;
+        grid-template-columns: 90px 1fr auto;
         grid-template-areas:
-            "time title"
-            "time audience"
-            "provider provider"
-            "format cta";
-        row-gap: 0.25rem;
+            "time title    title"
+            "time provider provider"
+            "links links calendar";
+        row-gap: 0.4rem;
     }
     .aiad-schedule-item__time     { grid-area: time; align-self: start; }
     .aiad-schedule-item__body     { grid-area: title; }
     .aiad-schedule-item__provider { grid-area: provider; }
-    .aiad-schedule-item__format   { grid-area: format; }
-    .aiad-schedule-item__cta      { grid-area: cta; justify-self: end; }
+    .aiad-schedule-item__links    { grid-area: links; }
+    .aiad-schedule-item__calendar { grid-area: calendar; justify-self: end; }
 }
 
 /* Archive table */

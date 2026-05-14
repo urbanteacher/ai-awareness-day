@@ -3,7 +3,7 @@
    ============================================ */
 .hero-section {
   padding-top: 72px;
-  background: linear-gradient(180deg, var(--gray-100) 0%, var(--white) 100%);
+  background: var(--white);
   overflow: hidden;
 }
 

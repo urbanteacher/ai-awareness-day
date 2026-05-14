@@ -210,6 +210,127 @@ function aiad_save_live_session_meta( int $post_id ): void {
 add_action( 'save_post_live_session', 'aiad_save_live_session_meta' );
 
 /**
+ * One-time seeder: create the AI Awareness Day 2026 live sessions (and any
+ * missing Partner posts they depend on). Runs once, gated by an option.
+ * Edit or delete the posts in admin afterwards — re-running is harmless,
+ * the option prevents duplicates.
+ */
+function aiad_seed_live_sessions(): void {
+    if ( get_option( 'aiad_live_sessions_seeded_v1' ) ) {
+        return;
+    }
+    if ( ! post_type_exists( 'live_session' ) || ! post_type_exists( 'partner' ) ) {
+        return;
+    }
+
+    // Helper to find or create a partner by title.
+    $ensure_partner = function ( string $title ): int {
+        $existing = get_posts( array(
+            'post_type'   => 'partner',
+            'title'       => $title,
+            'numberposts' => 1,
+            'post_status' => 'any',
+        ) );
+        if ( ! empty( $existing ) ) {
+            return (int) $existing[0]->ID;
+        }
+        $id = wp_insert_post( array(
+            'post_type'   => 'partner',
+            'post_title'  => $title,
+            'post_status' => 'publish',
+        ) );
+        return is_wp_error( $id ) ? 0 : (int) $id;
+    };
+
+    $tech_she_can  = $ensure_partner( 'Tech She Can' );
+    $barefoot      = $ensure_partner( 'Barefoot' );
+    $stem_learning = $ensure_partner( 'STEM Learning' );
+
+    $sessions = array(
+        array(
+            'title'    => 'KS2 Assembly: AI in Our World',
+            'desc'     => 'Live KS2 assembly exploring how AI shapes everyday life. Session starts at 9:15.',
+            'start'    => '2026-06-04 09:00:00',
+            'end'      => '2026-06-04 10:00:00',
+            'audience' => array( 'ks2' ),
+            'partner'  => $tech_she_can,
+        ),
+        array(
+            'title'    => 'Barefoot Workshop Level 1 with Ben Davies',
+            'desc'     => 'Hands-on introductory AI workshop for KS1 pupils. Runs 13:00–13:45.',
+            'start'    => '2026-06-04 13:00:00',
+            'end'      => '2026-06-04 14:00:00',
+            'audience' => array( 'ks1' ),
+            'partner'  => $barefoot,
+        ),
+        array(
+            'title'    => 'KS3 Assembly: AI in Everyday Life',
+            'desc'     => 'Whole-school KS3 assembly: where AI already lives in our world.',
+            'start'    => '2026-06-04 14:00:00',
+            'end'      => '2026-06-04 15:00:00',
+            'audience' => array( 'ks3' ),
+            'partner'  => $tech_she_can,
+        ),
+        array(
+            'title'    => 'Barefoot Workshop Level 2 with Ben Davies',
+            'desc'     => 'Follow-up workshop for KS2: dig deeper into how AI learns. Runs 14:00–14:55.',
+            'start'    => '2026-06-04 14:00:00',
+            'end'      => '2026-06-04 15:00:00',
+            'audience' => array( 'ks2' ),
+            'partner'  => $barefoot,
+        ),
+        array(
+            'title'    => 'AI for ALL CPD (in partnership with Microsoft)',
+            'desc'     => 'CPD session for primary and secondary teachers across all specialisms.',
+            'start'    => '2026-06-04 15:30:00',
+            'end'      => '2026-06-04 17:00:00',
+            'audience' => array( 'teachers' ),
+            'partner'  => $tech_she_can,
+        ),
+        array(
+            'title'    => 'Secondary Teacher CPD',
+            'desc'     => 'STEM Learning CPD focused on KS4 teaching practice.',
+            'start'    => '2026-06-04 16:00:00',
+            'end'      => '2026-06-04 17:00:00',
+            'audience' => array( 'ks4' ),
+            'partner'  => $stem_learning,
+        ),
+        array(
+            'title'    => 'Careers in AI',
+            'desc'     => 'KS5 panel exploring careers and pathways into AI.',
+            'start'    => '2026-06-04 16:00:00',
+            'end'      => '2026-06-04 17:00:00',
+            'audience' => array( 'ks5' ),
+            'partner'  => 0, // TBC
+        ),
+    );
+
+    foreach ( $sessions as $s ) {
+        $start_iso = str_replace( ' ', 'T', substr( $s['start'], 0, 16 ) );
+        $end_iso   = str_replace( ' ', 'T', substr( $s['end'], 0, 16 ) );
+        $post_id   = wp_insert_post( array(
+            'post_type'    => 'live_session',
+            'post_title'   => $s['title'],
+            'post_content' => $s['desc'],
+            'post_status'  => 'publish',
+        ) );
+        if ( is_wp_error( $post_id ) || ! $post_id ) {
+            continue;
+        }
+        update_post_meta( $post_id, '_session_start_time', $start_iso );
+        update_post_meta( $post_id, '_session_end_time', $end_iso );
+        update_post_meta( $post_id, '_session_format', 'LIVE — MS Teams' );
+        update_post_meta( $post_id, '_session_partner_id', (int) $s['partner'] );
+        if ( ! empty( $s['audience'] ) ) {
+            wp_set_object_terms( $post_id, $s['audience'], 'session_audience' );
+        }
+    }
+
+    update_option( 'aiad_live_sessions_seeded_v1', true );
+}
+add_action( 'init', 'aiad_seed_live_sessions', 30 );
+
+/**
  * Get all live sessions ordered by start time ascending.
  *
  * @param int $limit -1 for all.
