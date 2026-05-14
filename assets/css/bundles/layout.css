@@ -2666,6 +2666,22 @@ a.duration-badge:hover {
     }
 }
 
+/* ── Schedule archive: footer share section ───────────────── */
+.aiad-schedule-footer {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200, #e5e7eb);
+}
+.aiad-schedule-footer__label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gray-400, #9ca3af);
+    margin: 0 0 0.65rem;
+}
+
 /* ── Schedule archive: share bar ──────────────────────────── */
 .aiad-schedule-share-bar {
     display: flex;

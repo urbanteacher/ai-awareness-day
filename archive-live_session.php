@@ -105,6 +105,31 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                     </tbody>
                 </table>
                 <p class="aiad-schedule-row__empty" hidden><?php esc_html_e( 'No sessions for this audience.', 'ai-awareness-day' ); ?></p>
+
+                <div class="aiad-schedule-footer">
+                    <p class="aiad-schedule-footer__label"><?php esc_html_e( 'Share this schedule', 'ai-awareness-day' ); ?></p>
+                    <div class="aiad-schedule-share-bar" role="region" aria-label="<?php esc_attr_e( 'Share this schedule', 'ai-awareness-day' ); ?>">
+                        <button type="button" class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--native" hidden>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            <?php esc_html_e( 'Share', 'ai-awareness-day' ); ?>
+                        </button>
+                        <button type="button" class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--copy">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            <?php esc_html_e( 'Copy link', 'ai-awareness-day' ); ?>
+                        </button>
+                        <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--x"
+                           href="https://x.com/intent/tweet?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>&text=<?php echo rawurlencode( 'AI Awareness Day — full live schedule' ); ?>"
+                           target="_blank" rel="noopener">X</a>
+                        <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--linkedin"
+                           href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>"
+                           target="_blank" rel="noopener">LinkedIn</a>
+                        <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--facebook"
+                           href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>"
+                           target="_blank" rel="noopener">Facebook</a>
+                        <span class="aiad-schedule-share-bar__status" aria-live="polite"></span>
+                    </div>
+                </div>
+
             <?php endif; ?>
         </div>
     </section>
