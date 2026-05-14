@@ -53,12 +53,12 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
 <section class="section section--alt aiad-schedule-row aiad-schedule-home" id="schedule">
     <div class="container">
         <div class="fade-up">
-            <span class="section-label"><?php esc_html_e( 'Live Sessions', 'ai-awareness-day' ); ?></span>
-            <h2 class="section-title"><?php esc_html_e( 'Session spotlight', 'ai-awareness-day' ); ?></h2>
+            <span class="section-label"><?php esc_html_e( 'AI Awareness Day — 4th June', 'ai-awareness-day' ); ?></span>
+            <h2 class="section-title"><?php esc_html_e( 'Live Streams', 'ai-awareness-day' ); ?></h2>
             <p class="section-desc">
                 <?php
                 esc_html_e(
-                    'On AI Awareness Day we run assemblies, classroom sessions, teacher CPD, and parents events. Three sessions below are chosen at random each time you load the page—the full schedule has every slot, filters, and join links.',
+                    'On AI Awareness Day we are delighted to be sharing a range of live streams from assemblies, classroom sessions, teacher CPD, and parents events.',
                     'ai-awareness-day'
                 );
                 ?>
