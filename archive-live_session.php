@@ -20,12 +20,22 @@ if ( ! empty( $sessions ) ) {
         }
     }
 }
+
+$session_audience_map = array();
+$audience_counts      = array();
+$audience_labels      = array();
+if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter_data' ) ) {
+    $audience_data        = aiad_get_schedule_audience_filter_data( $sessions );
+    $session_audience_map = $audience_data['session_audience_map'];
+    $audience_counts      = $audience_data['audience_counts'];
+    $audience_labels      = $audience_data['audience_labels'];
+}
 ?>
 <main id="main" role="main" class="container-width-standard schedule-archive">
-    <section class="section">
+    <section class="section aiad-schedule-filter-root">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Live Sessions', 'ai-awareness-day' ); ?></span>
-            <h1 class="section-title"><?php esc_html_e( 'AI Awareness Day — full live schedule', 'ai-awareness-day' ); ?></h1>
+            <h1 class="section-title schedule-archive__title"><?php esc_html_e( 'AI Awareness Day — full live schedule', 'ai-awareness-day' ); ?></h1>
             <?php if ( $event_date_label ) : ?>
                 <p class="section-desc"><?php echo esc_html( $event_date_label ); ?></p>
             <?php endif; ?>
@@ -33,6 +43,11 @@ if ( ! empty( $sessions ) ) {
             <?php if ( empty( $sessions ) ) : ?>
                 <p><?php esc_html_e( 'Sessions will be announced shortly.', 'ai-awareness-day' ); ?></p>
             <?php else : ?>
+                <?php
+                if ( function_exists( 'aiad_render_schedule_audience_tabs' ) ) {
+                    aiad_render_schedule_audience_tabs( $audience_labels, $audience_counts, count( $sessions ) );
+                }
+                ?>
                 <table class="aiad-schedule-table" aria-label="<?php esc_attr_e( 'Schedule of live sessions', 'ai-awareness-day' ); ?>">
                     <thead>
                         <tr>
@@ -58,8 +73,10 @@ if ( ! empty( $sessions ) ) {
                             $aud_names    = ( $aud_terms && ! is_wp_error( $aud_terms ) )
                                 ? implode( ', ', wp_list_pluck( $aud_terms, 'name' ) )
                                 : '';
+                            $aud_slugs    = $session_audience_map[ $s->ID ] ?? array();
+                            $aud_data     = implode( ' ', $aud_slugs );
                         ?>
-                            <tr>
+                            <tr class="aiad-schedule-filter-item" data-audience="<?php echo esc_attr( $aud_data ); ?>">
                                 <td class="aiad-schedule-cell-time"><?php echo esc_html( $time_range ); ?></td>
                                 <td>
                                     <a href="<?php echo esc_url( get_permalink( $s ) ); ?>">
@@ -87,9 +104,13 @@ if ( ! empty( $sessions ) ) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <p class="aiad-schedule-row__empty" hidden><?php esc_html_e( 'No sessions for this audience.', 'ai-awareness-day' ); ?></p>
             <?php endif; ?>
         </div>
     </section>
 </main>
 <?php
+if ( ! empty( $sessions ) && function_exists( 'aiad_print_schedule_audience_filter_script' ) ) {
+    aiad_print_schedule_audience_filter_script();
+}
 get_footer();

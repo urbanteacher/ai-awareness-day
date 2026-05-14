@@ -370,6 +370,206 @@ function aiad_format_session_time_range( string $start, string $end ): string {
 }
 
 /**
+ * Preferred order for session audience filter tabs (taxonomy slugs).
+ *
+ * @return string[]
+ */
+function aiad_get_session_audience_tab_order(): array {
+    return array( 'ks1', 'ks2', 'ks3', 'ks4', 'ks5', 'teachers', 'all' );
+}
+
+/**
+ * Build per-session audience slugs and tab labels/counts for schedule UIs.
+ *
+ * @param WP_Post[] $sessions Sessions from aiad_get_live_sessions().
+ * @return array{session_audience_map: array<int, string[]>, audience_counts: array<string, int>, audience_labels: array<string, string>}
+ */
+function aiad_get_schedule_audience_filter_data( array $sessions ): array {
+    $session_audience_map = array();
+    $audience_counts      = array();
+    $audience_labels      = array();
+
+    foreach ( $sessions as $s ) {
+        $terms = get_the_terms( $s->ID, 'session_audience' );
+        $slugs = array();
+        if ( $terms && ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $t ) {
+                $slugs[]                       = $t->slug;
+                $audience_labels[ $t->slug ]   = $t->name;
+                $audience_counts[ $t->slug ] = ( $audience_counts[ $t->slug ] ?? 0 ) + 1;
+            }
+        }
+        $session_audience_map[ $s->ID ] = $slugs;
+    }
+
+    $preferred_order = aiad_get_session_audience_tab_order();
+    uksort(
+        $audience_labels,
+        function ( $a, $b ) use ( $preferred_order ) {
+            $ai = array_search( $a, $preferred_order, true );
+            $bi = array_search( $b, $preferred_order, true );
+            $ai = $ai === false ? 99 : $ai;
+            $bi = $bi === false ? 99 : $bi;
+            return $ai - $bi;
+        }
+    );
+
+    return array(
+        'session_audience_map' => $session_audience_map,
+        'audience_counts'      => $audience_counts,
+        'audience_labels'      => $audience_labels,
+    );
+}
+
+/**
+ * Audience filters shared by the front-page schedule block and /schedule/ archive.
+ * Markup matches the Live Timeline filter row (timeline-filters / timeline-filter-btn).
+ *
+ * @param array<string, string> $audience_labels Slug => display name.
+ * @param array<string, int>    $audience_counts Retained for API compatibility; not displayed (timeline pills have no counts).
+ * @param int                   $session_count   Retained for API compatibility; not displayed.
+ */
+function aiad_render_schedule_audience_tabs( array $audience_labels, array $audience_counts, int $session_count ): void {
+    ?>
+    <div class="timeline-filters fade-up" role="group" aria-label="<?php esc_attr_e( 'Filter sessions by audience', 'ai-awareness-day' ); ?>">
+        <button type="button" class="timeline-filter-btn timeline-filter-btn--active" data-filter="all">
+            <?php esc_html_e( 'All', 'ai-awareness-day' ); ?>
+        </button>
+        <?php foreach ( $audience_labels as $slug => $name ) : ?>
+            <button type="button" class="timeline-filter-btn" data-filter="<?php echo esc_attr( $slug ); ?>">
+                <?php echo esc_html( $name ); ?>
+            </button>
+        <?php endforeach; ?>
+        <button type="button" class="timeline-filter-btn" disabled aria-disabled="true">
+            <?php esc_html_e( 'Parents', 'ai-awareness-day' ); ?>
+            <span class="timeline-filter-btn__suffix" aria-hidden="true"><?php esc_html_e( ' · Soon', 'ai-awareness-day' ); ?></span>
+        </button>
+    </div>
+    <?php
+}
+
+/**
+ * One inline script per page: schedule archive audience filters + ICS, and homepage spotlight ICS/share.
+ */
+function aiad_print_schedule_audience_filter_script(): void {
+    static $printed = false;
+    if ( $printed ) {
+        return;
+    }
+    $printed = true;
+    ?>
+<script>
+(function(){
+    function pad( n ){ return String(n).padStart(2, '0'); }
+    function nowStamp(){
+        var d = new Date();
+        return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate())
+             + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z';
+    }
+    function escapeICS( s ){
+        return String(s || '').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+    }
+    function downloadIcsFromHost( host ){
+        if ( ! host ) return;
+        var title  = host.getAttribute('data-ics-title') || 'AI Awareness Day session';
+        var desc   = host.getAttribute('data-ics-desc')  || '';
+        var start  = host.getAttribute('data-ics-start') || '';
+        var end    = host.getAttribute('data-ics-end')   || start;
+        var url    = host.getAttribute('data-ics-url')   || '';
+        if ( ! start ) return;
+        var ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//AI Awareness Day//Schedule//EN',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            'UID:' + start + '-' + Math.random().toString(36).slice(2) + '@aiawarenessday',
+            'DTSTAMP:' + nowStamp(),
+            'DTSTART;TZID=Europe/London:' + start,
+            'DTEND;TZID=Europe/London:' + end,
+            'SUMMARY:' + escapeICS(title),
+            'DESCRIPTION:' + escapeICS(desc + (url ? '\n\nJoin: ' + url : '')),
+            url ? 'URL:' + url : '',
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ].filter(Boolean).join('\r\n');
+        var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        var a    = document.createElement('a');
+        a.href     = URL.createObjectURL(blob);
+        a.download = title.replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.ics';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    }
+    function wireAudienceFilters( root ) {
+        var tabs  = root.querySelectorAll('.timeline-filter-btn');
+        var items = root.querySelectorAll('.aiad-schedule-filter-item');
+        var empty = root.querySelector('.aiad-schedule-row__empty');
+        tabs.forEach(function( tab ){
+            if ( tab.disabled ) return;
+            tab.addEventListener('click', function(){
+                var target = tab.getAttribute('data-filter') || 'all';
+                tabs.forEach(function( t ){
+                    if ( t.disabled ) return;
+                    var active = t === tab;
+                    t.classList.toggle('timeline-filter-btn--active', active);
+                });
+                var visibleCount = 0;
+                items.forEach(function( row ){
+                    var slugs = (row.getAttribute('data-audience') || '').split(/\s+/).filter(Boolean);
+                    var show  = target === 'all' || slugs.indexOf(target) !== -1;
+                    row.hidden = ! show;
+                    if ( show ) visibleCount++;
+                });
+                if ( empty ) empty.hidden = visibleCount > 0;
+            });
+        });
+    }
+    function wireIcsButtons( root, btnSel, hostSel ) {
+        root.querySelectorAll( btnSel ).forEach(function( btn ){
+            btn.addEventListener('click', function(){
+                var host = btn.closest( hostSel );
+                downloadIcsFromHost( host );
+            });
+        });
+    }
+    function wireScheduleSpotlight( root ) {
+        var copiedMsg = <?php echo wp_json_encode( __( 'Link copied', 'ai-awareness-day' ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE ); ?>;
+        root.querySelectorAll('.aiad-schedule-card__share').forEach(function( btn ){
+            btn.addEventListener('click', function(){
+                var url = btn.getAttribute('data-share-url') || '';
+                var title = btn.getAttribute('data-share-title') || '';
+                if ( ! url ) return;
+                if ( navigator.share ) {
+                    navigator.share({ title: title, text: title, url: url }).catch(function(){});
+                    return;
+                }
+                if ( navigator.clipboard && navigator.clipboard.writeText ) {
+                    var prev = btn.getAttribute('aria-label') || '';
+                    navigator.clipboard.writeText( url ).then(function(){
+                        btn.setAttribute('aria-label', copiedMsg);
+                        setTimeout(function(){ btn.setAttribute('aria-label', prev); }, 2200);
+                    }).catch(function(){});
+                }
+            });
+        });
+        wireIcsButtons( root, '.aiad-schedule-card__ics', '.aiad-schedule-card' );
+    }
+    document.querySelectorAll('.aiad-schedule-filter-root').forEach(function( root ){
+        wireAudienceFilters( root );
+        wireIcsButtons( root, '.aiad-schedule-item__ics', '.aiad-schedule-item' );
+    });
+    var spotlight = document.getElementById('schedule');
+    if ( spotlight && spotlight.classList.contains('aiad-schedule-home') ) {
+        wireScheduleSpotlight( spotlight );
+    }
+})();
+</script>
+    <?php
+}
+
+/**
  * Admin list columns for live_session.
  *
  * @param array<string,string> $cols

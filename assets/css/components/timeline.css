@@ -278,6 +278,28 @@
     border-color: var(--gray-800);
 }
 
+/* Muted suffix inside a pill (e.g. schedule “Parents · Soon”) */
+.timeline-filter-btn__suffix {
+    font-weight: 500;
+    opacity: 0.72;
+}
+
+.timeline-filter-btn:disabled,
+.timeline-filter-btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    border-color: var(--gray-300);
+}
+
+.timeline-filter-btn:disabled:hover,
+.timeline-filter-btn[disabled]:hover {
+    background: var(--gray-100);
+    color: var(--gray-500);
+    border-color: var(--gray-300);
+}
+
 /* Mobile: filters smaller and scrollable horizontally */
 @media (max-width: 767px) {
     .timeline-filters {

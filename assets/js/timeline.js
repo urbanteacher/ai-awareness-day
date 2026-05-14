@@ -15,7 +15,7 @@
     var track  = feed ? feed.querySelector( '.timeline-feed__track' ) : null;
     var btn    = document.getElementById( 'timeline-load-more' );
     var wrap   = btn ? btn.closest( '.timeline-feed__load-more' ) : null;
-    var filters = document.querySelectorAll( '.timeline-filter-btn' );
+    var filters = document.querySelectorAll( '#timeline .timeline-filter-btn' );
     var currentFilter = 'all';
 
     if ( ! feed || ! track ) {
