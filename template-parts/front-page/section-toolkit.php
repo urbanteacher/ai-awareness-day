@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <button type="button" class="display-board-tab<?php echo $default_tab === 'real' ? ' is-active' : ''; ?>"
                     role="tab" data-tab="real" id="dbt-btn-real"
                     aria-selected="<?php echo $default_tab === 'real' ? 'true' : 'false'; ?>"
-                    aria-controls="dbt-panel-real"><?php esc_html_e( 'Real example', 'ai-awareness-day' ); ?></button>
+                    aria-controls="dbt-panel-real"><?php esc_html_e( 'Example', 'ai-awareness-day' ); ?></button>
                 <?php endif; ?>
                 <button type="button" class="display-board-tab<?php echo $default_tab === 'blueprint' ? ' is-active' : ''; ?>"
                     role="tab" data-tab="blueprint" id="dbt-btn-blueprint"
