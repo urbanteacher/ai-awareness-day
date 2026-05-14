@@ -2317,6 +2317,61 @@ a.duration-badge:hover {
     }
 }
 
+@media (max-width: 640px) {
+    #schedule .aiad-schedule-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+    .aiad-schedule-card {
+        padding: 0.75rem 0.75rem 0.7rem;
+        clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .aiad-schedule-card__time {
+        font-size: 0.78rem;
+        margin-bottom: 0.3rem;
+    }
+    .aiad-schedule-card__heading {
+        font-size: 0.82rem;
+        margin-bottom: 0.25rem;
+    }
+    .aiad-schedule-card__ks {
+        font-size: 0.62rem;
+        margin-bottom: 0.5rem;
+    }
+    .aiad-schedule-card__org {
+        gap: 0.35rem;
+        padding-top: 0.5rem;
+        min-height: 2rem;
+    }
+    .aiad-schedule-card__logo-wrap {
+        width: 48px;
+        height: 24px;
+        padding: 2px 4px;
+    }
+    .aiad-schedule-card__org-name {
+        font-size: 0.72rem;
+    }
+    .aiad-schedule-card__actions {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+    }
+    .aiad-schedule-card__ics,
+    .aiad-schedule-card__share {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.65rem;
+        border-radius: 4px;
+        gap: 0;
+        flex: 1 1 0;
+        justify-content: center;
+    }
+    .aiad-schedule-card__ics-label,
+    .aiad-schedule-card__share-label {
+        display: none;
+    }
+}
+
 /* ── Single live session page ─────────────────────────────── */
 .session-single__back {
     display: inline-flex;
