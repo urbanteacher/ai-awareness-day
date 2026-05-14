@@ -256,10 +256,10 @@ function aiad_seed_live_sessions(): void {
             'partner'  => $tech_she_can,
         ),
         array(
-            'title'    => 'Barefoot Workshop Level 1 with Ben Davies',
-            'desc'     => 'Hands-on introductory AI workshop for KS1 pupils. Runs 13:00–13:45.',
+            'title'    => 'AI Explorers Live Lesson – Level 1 (Ages 5–7)',
+            'desc'     => 'Explores how data trains computers and evaluates AI-generated content. Delivered by Barefoot Computing. 45 minutes.',
             'start'    => '2026-06-04 13:00:00',
-            'end'      => '2026-06-04 14:00:00',
+            'end'      => '2026-06-04 13:45:00',
             'audience' => array( 'ks1' ),
             'partner'  => $barefoot,
         ),
@@ -272,10 +272,10 @@ function aiad_seed_live_sessions(): void {
             'partner'  => $tech_she_can,
         ),
         array(
-            'title'    => 'Barefoot Workshop Level 2 with Ben Davies',
-            'desc'     => 'Follow-up workshop for KS2: dig deeper into how AI learns. Runs 14:00–14:55.',
+            'title'    => 'AI Explorers Live Lesson – Level 2 (Ages 7–11)',
+            'desc'     => 'Examines AI\'s role in daily life, current applications, and misinformation. Delivered by Barefoot Computing. 55 minutes.',
             'start'    => '2026-06-04 14:00:00',
-            'end'      => '2026-06-04 15:00:00',
+            'end'      => '2026-06-04 14:55:00',
             'audience' => array( 'ks2' ),
             'partner'  => $barefoot,
         ),
@@ -329,6 +329,47 @@ function aiad_seed_live_sessions(): void {
     update_option( 'aiad_live_sessions_seeded_v1', true );
 }
 add_action( 'init', 'aiad_seed_live_sessions', 30 );
+
+/**
+ * One-time migration: correct Barefoot session titles/times seeded under old names.
+ */
+function aiad_migrate_barefoot_sessions(): void {
+    if ( get_option( 'aiad_barefoot_migration_v1' ) ) {
+        return;
+    }
+    $fixes = array(
+        'Barefoot Workshop Level 1 with Ben Davies' => array(
+            'title' => 'AI Explorers Live Lesson – Level 1 (Ages 5–7)',
+            'desc'  => 'Explores how data trains computers and evaluates AI-generated content. Delivered by Barefoot Computing. 45 minutes.',
+            'end'   => '2026-06-04T13:45',
+        ),
+        'Barefoot Workshop Level 2 with Ben Davies' => array(
+            'title' => 'AI Explorers Live Lesson – Level 2 (Ages 7–11)',
+            'desc'  => 'Examines AI\'s role in daily life, current applications, and misinformation. Delivered by Barefoot Computing. 55 minutes.',
+            'end'   => '2026-06-04T14:55',
+        ),
+    );
+    foreach ( $fixes as $old_title => $data ) {
+        $posts = get_posts( array(
+            'post_type'   => 'live_session',
+            'post_status' => 'publish',
+            'title'       => $old_title,
+            'numberposts' => 1,
+        ) );
+        if ( empty( $posts ) ) {
+            continue;
+        }
+        $id = $posts[0]->ID;
+        wp_update_post( array(
+            'ID'           => $id,
+            'post_title'   => $data['title'],
+            'post_content' => $data['desc'],
+        ) );
+        update_post_meta( $id, '_session_end_time', $data['end'] );
+    }
+    update_option( 'aiad_barefoot_migration_v1', true );
+}
+add_action( 'init', 'aiad_migrate_barefoot_sessions', 31 );
 
 /**
  * Get all live sessions ordered by start time ascending.
