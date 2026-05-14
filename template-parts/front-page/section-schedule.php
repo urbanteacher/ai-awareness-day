@@ -88,7 +88,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                 $reg_url      = (string) get_post_meta( $s->ID, '_session_registration_url', true );
                 $partner_id   = (int) get_post_meta( $s->ID, '_session_partner_id', true );
                 $partner      = $partner_id ? get_post( $partner_id ) : null;
-                $partner_logo = $partner_id ? get_the_post_thumbnail_url( $partner_id, 'thumbnail' ) : '';
+                $partner_logo = $partner_id ? get_the_post_thumbnail_url( $partner_id, 'medium' ) : '';
                 $slugs        = $session_audience_map[ $s->ID ] ?? array();
                 $aud_bits     = array();
                 foreach ( $slugs as $sl ) {

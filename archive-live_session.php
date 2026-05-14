@@ -68,7 +68,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                             $reg_url      = (string) get_post_meta( $s->ID, '_session_registration_url', true );
                             $partner_id   = (int) get_post_meta( $s->ID, '_session_partner_id', true );
                             $partner      = $partner_id ? get_post( $partner_id ) : null;
-                            $partner_logo = $partner_id ? get_the_post_thumbnail_url( $partner_id, 'thumbnail' ) : '';
+                            $partner_logo = $partner_id ? get_the_post_thumbnail_url( $partner_id, 'medium' ) : '';
                             $aud_terms    = get_the_terms( $s->ID, 'session_audience' );
                             $aud_names    = ( $aud_terms && ! is_wp_error( $aud_terms ) )
                                 ? implode( ', ', wp_list_pluck( $aud_terms, 'name' ) )
