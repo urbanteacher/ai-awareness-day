@@ -58,7 +58,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
             <p class="section-desc">
                 <?php
                 esc_html_e(
-                    'On AI Awareness Day we are delighted to be sharing a range of live streams from assemblies, classroom sessions, teacher CPD, and parents events.',
+                    'There are many ways to engage with AI Awareness Day. We have planned live streams across different age groups, themes, and topics.',
                     'ai-awareness-day'
                 );
                 ?>
