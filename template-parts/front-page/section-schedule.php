@@ -120,6 +120,11 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                 data-ics-start="<?php echo esc_attr( $ics_start ); ?>"
                 data-ics-end="<?php echo esc_attr( $ics_end ); ?>"
                 data-ics-url="<?php echo esc_attr( $reg_url ); ?>">
+                <?php if ( $partner_logo ) : ?>
+                    <div class="aiad-schedule-card__logo-wrap">
+                        <img class="aiad-schedule-card__logo" src="<?php echo esc_url( $partner_logo ); ?>" alt="" loading="lazy" decoding="async" />
+                    </div>
+                <?php endif; ?>
                 <p class="aiad-schedule-card__time"><?php echo esc_html( $time_range ); ?></p>
                 <h3 class="aiad-schedule-card__heading">
                     <a class="aiad-schedule-card__title" href="<?php echo esc_url( $permalink ); ?>">
@@ -129,18 +134,11 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                 <?php if ( $aud_line !== '' ) : ?>
                     <p class="aiad-schedule-card__ks"><?php echo esc_html( $aud_line ); ?></p>
                 <?php endif; ?>
-                <div class="aiad-schedule-card__org">
-                    <?php if ( $partner ) : ?>
-                        <?php if ( $partner_logo ) : ?>
-                            <span class="aiad-schedule-card__logo-wrap">
-                                <img class="aiad-schedule-card__logo" src="<?php echo esc_url( $partner_logo ); ?>" alt="" width="40" height="40" loading="lazy" decoding="async" />
-                            </span>
-                        <?php endif; ?>
-                        <span class="aiad-schedule-card__org-name"><?php echo esc_html( $partner->post_title ); ?></span>
-                    <?php else : ?>
-                        <span class="aiad-schedule-card__org-name aiad-schedule-card__org-name--tbc"><?php esc_html_e( 'Organisation TBC', 'ai-awareness-day' ); ?></span>
-                    <?php endif; ?>
-                </div>
+                <?php if ( $partner ) : ?>
+                    <p class="aiad-schedule-card__org-name"><?php echo esc_html( $partner->post_title ); ?></p>
+                <?php else : ?>
+                    <p class="aiad-schedule-card__org-name aiad-schedule-card__org-name--tbc"><?php esc_html_e( 'Organisation TBC', 'ai-awareness-day' ); ?></p>
+                <?php endif; ?>
                 <div class="aiad-schedule-card__actions">
                     <?php if ( $ics_start !== '' ) : ?>
                         <button type="button" class="aiad-schedule-card__ics" aria-label="<?php echo esc_attr( $ics_aria ); ?>">

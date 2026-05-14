@@ -2235,41 +2235,29 @@ a.duration-badge:hover {
     text-transform: uppercase;
     color: var(--gray-600, #4b5563);
 }
-.aiad-schedule-card__org {
+.aiad-schedule-card__logo-wrap {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
-    margin-top: auto;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--gray-100, #f3f4f6);
-    min-height: 2.75rem;
-}
-.aiad-schedule-card__logo-wrap {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 72px;
-    height: 36px;
-    border-radius: 6px;
-    background: var(--white, #fff);
-    border: 1px solid var(--gray-200, #e5e7eb);
-    flex-shrink: 0;
+    height: 52px;
+    margin-bottom: 0.85rem;
     overflow: hidden;
-    padding: 4px 6px;
 }
 .aiad-schedule-card__logo {
-    width: 100%;
-    height: 100%;
+    max-height: 44px;
+    max-width: 150px;
+    width: auto;
+    height: auto;
     object-fit: contain;
+    display: block;
 }
 .aiad-schedule-card__org-name {
-    font-size: 0.88rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: var(--gray-800, #1f2937);
+    color: var(--gray-500, #6b7280);
+    margin: auto 0 0.5rem;
     line-height: 1.3;
 }
 .aiad-schedule-card__org-name--tbc {
-    color: var(--gray-500, #6b7280);
     font-style: italic;
     font-weight: 500;
 }
@@ -2341,18 +2329,16 @@ a.duration-badge:hover {
         font-size: 0.62rem;
         margin-bottom: 0.5rem;
     }
-    .aiad-schedule-card__org {
-        gap: 0.35rem;
-        padding-top: 0.5rem;
-        min-height: 2rem;
-    }
     .aiad-schedule-card__logo-wrap {
-        width: 48px;
-        height: 24px;
-        padding: 2px 4px;
+        height: 36px;
+        margin-bottom: 0.55rem;
+    }
+    .aiad-schedule-card__logo {
+        max-height: 30px;
+        max-width: 100px;
     }
     .aiad-schedule-card__org-name {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
     }
     .aiad-schedule-card__actions {
         flex-direction: row;
