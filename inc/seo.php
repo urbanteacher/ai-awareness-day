@@ -146,18 +146,29 @@ function aiad_get_event_schema(): array {
 	unset( $organizer['@context'] );
 	
 	$schema = array(
-		'@context' => 'https://schema.org',
-		'@type'    => 'Event',
-		'name'     => 'AI Awareness Day',
-		'startDate' => $event_date,
-		'location' => array(
-			'@type' => 'Place',
+		'@context'            => 'https://schema.org',
+		'@type'               => 'Event',
+		'name'                => 'AI Awareness Day',
+		'alternateName'       => '#AIAwarenessDay',
+		'description'         => 'A nationwide UK campaign designed to build AI literacy across schools, with pupils, teachers and staff committing to at least one AI activity on the day.',
+		'startDate'           => $event_date,
+		'endDate'             => $event_date,
+		'eventAttendanceMode' => 'https://schema.org/MixedEventAttendanceMode',
+		'eventStatus'         => 'https://schema.org/EventScheduled',
+		'location'            => array(
+			'@type' => 'Country',
 			'name'  => 'United Kingdom',
 		),
-		'organizer' => $organizer,
-		'url'       => home_url( '/' ),
+		'organizer'           => $organizer,
+		'url'                 => home_url( '/' ),
+		'inLanguage'          => 'en-GB',
+		'isAccessibleForFree' => true,
+		'sameAs'              => array(
+			'https://www.wikidata.org/wiki/Q139799162',
+			home_url( '/' ),
+		),
 	);
-	
+
 	return $schema;
 }
 
