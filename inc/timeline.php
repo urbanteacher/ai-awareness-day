@@ -651,7 +651,7 @@ function aiad_timeline_event_date(): string {
  */
 function aiad_timeline_days_until_event(): int {
     $event_date = aiad_timeline_event_date();
-    $event_ts   = strtotime( $event_date . ' 23:59:59' );
+    $event_ts   = strtotime( $event_date . ' 00:00:00 UTC' );
     if ( ! $event_ts || $event_ts <= time() ) {
         return 0;
     }
