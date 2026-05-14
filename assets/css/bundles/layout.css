@@ -2532,157 +2532,63 @@ a.duration-badge:hover {
     }
 }
 
-/* ── Schedule archive: session row list ───────────────────── */
-.aiad-session-list {
-    list-style: none;
-    margin: 1rem 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.aiad-session-row {
-    display: grid;
-    grid-template-columns: 110px 1fr 180px 130px;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--gray-100, #f3f4f6);
-    transition: background 0.12s;
-}
-.aiad-session-row:first-child { border-top: 1px solid var(--gray-100, #f3f4f6); }
-.aiad-session-row:hover { background: var(--gray-50, #f9fafb); }
-
-.aiad-session-row__time {
-    font-family: var(--font-display);
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: var(--accent-green, #16a34a);
-    white-space: nowrap;
-    letter-spacing: 0.01em;
-}
-
-.aiad-session-row__title {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--gray-900, #111827);
-    text-decoration: none;
-    line-height: 1.35;
-    margin-bottom: 0.35rem;
-}
-.aiad-session-row__title:hover { text-decoration: underline; }
-
-.aiad-session-row__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-}
-
-.aiad-session-row__provider {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-.aiad-session-row__logo-wrap {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 32px;
-    border-radius: 5px;
-    border: 1px solid var(--gray-200, #e5e7eb);
-    background: var(--white, #fff);
-    padding: 4px 6px;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-.aiad-session-row__logo {
+/* Archive table (audience filters use shared .timeline-filters from timeline.css) */
+.aiad-schedule-table {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
 }
-.aiad-session-row__org {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--gray-700, #374151);
-    line-height: 1.25;
+.aiad-schedule-table th,
+.aiad-schedule-table td {
+    text-align: left;
+    padding: 0.7rem 0.6rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+    vertical-align: top;
 }
-
-.aiad-session-row__actions {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    justify-content: flex-end;
-}
-.aiad-session-row__join {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.4rem 0.9rem;
+.aiad-schedule-table th {
     font-family: var(--font-display);
     font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
-    text-decoration: none;
-    background: var(--gray-900, #111827);
-    color: var(--white, #fff);
-    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-    transition: opacity 0.15s;
+    letter-spacing: 0.06em;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-300, #d1d5db);
 }
-.aiad-session-row__join:hover { opacity: 0.8; color: var(--white, #fff); }
-.aiad-session-row__join--soon {
-    background: var(--gray-100, #f3f4f6);
-    color: var(--gray-400, #9ca3af);
-    clip-path: none;
-    border-radius: 3px;
-    cursor: default;
-}
-.aiad-session-row__ics {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border: 1px solid var(--gray-200, #e5e7eb);
-    background: var(--white, #fff);
+.aiad-schedule-cell-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
+.aiad-schedule-cell-provider { display: flex; align-items: center; gap: 0.5rem; }
+.aiad-schedule-cell-provider img { width: 28px; height: 28px; object-fit: contain; }
+.aiad-schedule-table__cta {
+    display: inline-block;
+    background: var(--green-600, #16a34a);
+    color: #fff;
+    padding: 0.35rem 0.9rem;
     border-radius: 4px;
-    cursor: pointer;
-    color: var(--gray-600, #4b5563);
-    transition: border-color 0.15s, color 0.15s;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
 }
-.aiad-session-row__ics:hover {
-    border-color: var(--gray-400, #9ca3af);
-    color: var(--gray-900, #111827);
-}
+.aiad-schedule-table__cta:hover { background: var(--green-700, #15803d); }
 
-@media (max-width: 900px) {
-    .aiad-session-row {
-        grid-template-columns: 90px 1fr;
-        grid-template-rows: auto auto;
+@media (max-width: 768px) {
+    .aiad-schedule-table thead { display: none; }
+    .aiad-schedule-table,
+    .aiad-schedule-table tbody,
+    .aiad-schedule-table tr,
+    .aiad-schedule-table td { display: block; width: 100%; }
+    .aiad-schedule-table tr {
+        border: 1px solid var(--gray-200);
+        border-radius: 6px;
+        margin-bottom: 0.6rem;
+        padding: 0.6rem;
     }
-    .aiad-session-row__provider {
-        grid-column: 2;
-        margin-top: 0.25rem;
+    .aiad-schedule-table td { border: none; padding: 0.2rem 0; }
+    .aiad-schedule-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--gray-500);
+        margin-bottom: 0.1rem;
     }
-    .aiad-session-row__actions {
-        grid-column: 1 / -1;
-        justify-content: flex-start;
-        padding-top: 0.5rem;
-        border-top: 1px solid var(--gray-100, #f3f4f6);
-        margin-top: 0.25rem;
-    }
-}
-
-@media (max-width: 600px) {
-    .aiad-session-row {
-        grid-template-columns: 1fr;
-        gap: 0.4rem;
-        padding: 0.9rem 0;
-    }
-    .aiad-session-row__time { color: var(--accent-green, #16a34a); }
-    .aiad-session-row__provider { grid-column: 1; }
-    .aiad-session-row__actions { grid-column: 1; border-top: none; padding-top: 0; }
 }
