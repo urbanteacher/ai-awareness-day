@@ -529,3 +529,27 @@ function aiad_output_canonical_url(): void {
 	}
 }
 add_action( 'wp_head', 'aiad_output_canonical_url', 1 );
+
+/**
+ * Persistent admin notice when "Discourage search engines from indexing this
+ * site" is enabled (Settings → Reading). This option silently noindexes every
+ * page on the site and is the most common cause of WP sites disappearing from
+ * Google. Shown to anyone who can change the setting, with a direct link to fix.
+ */
+function aiad_notice_search_engines_discouraged(): void {
+	if ( (int) get_option( 'blog_public', 1 ) !== 0 ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$fix_url = admin_url( 'options-reading.php' );
+	echo '<div class="notice notice-error"><p><strong>'
+		. esc_html__( 'Search engine indexing is currently DISABLED.', 'ai-awareness-day' )
+		. '</strong> '
+		. esc_html__( 'Your site is hidden from Google and other search engines because "Discourage search engines from indexing this site" is enabled.', 'ai-awareness-day' )
+		. ' <a href="' . esc_url( $fix_url ) . '">'
+		. esc_html__( 'Fix this now in Settings → Reading.', 'ai-awareness-day' )
+		. '</a></p></div>';
+}
+add_action( 'admin_notices', 'aiad_notice_search_engines_discouraged' );

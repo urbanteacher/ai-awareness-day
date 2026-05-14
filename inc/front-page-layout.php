@@ -19,6 +19,7 @@ function aiad_get_front_page_sections(): array {
     $sections = array(
         'hero',
         'campaign',
+        'schedule',
         'timeline',
         'principles',
         'aim',

@@ -2151,3 +2151,170 @@ a.duration-badge:hover {
     padding: 0.5rem 0;
   }
 }
+
+/* ============================================
+   LIVE SCHEDULE (homepage compact row + archive table)
+   ============================================ */
+.aiad-schedule-row { padding: 1.5rem 0; }
+.aiad-schedule-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.aiad-schedule-row__title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0.25rem 0 0.15rem;
+    color: var(--gray-900);
+}
+.aiad-schedule-row__audiences {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+.aiad-schedule-row__actions { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.aiad-schedule-row__toggle {
+    background: var(--white, #fff);
+    border: 1px solid var(--gray-300, #d1d5db);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.15s, border-color 0.15s;
+}
+.aiad-schedule-row__toggle:hover { background: var(--gray-50); border-color: var(--gray-400); }
+.aiad-schedule-row__chevron { transition: transform 0.2s; }
+.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__chevron { transform: rotate(180deg); }
+.aiad-schedule-row__toggle .aiad-schedule-row__toggle-label-hide { display: none; }
+.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__toggle-label-show { display: none; }
+.aiad-schedule-row__toggle[aria-expanded="true"] .aiad-schedule-row__toggle-label-hide { display: inline; }
+.aiad-schedule-row__cta {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--green-700, #15803d);
+    text-decoration: none;
+}
+.aiad-schedule-row__cta:hover { text-decoration: underline; }
+.aiad-schedule-row__list {
+    margin-top: 1rem;
+    border-top: 1px solid var(--gray-200, #e5e7eb);
+    padding-top: 0.75rem;
+}
+.aiad-schedule-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.aiad-schedule-item {
+    display: grid;
+    grid-template-columns: 110px 1fr 180px 110px 70px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.55rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+.aiad-schedule-item:hover { background: var(--gray-50, #f9fafb); }
+.aiad-schedule-item__time { font-family: var(--font-display); font-weight: 700; color: var(--gray-900); }
+.aiad-schedule-item__title { font-weight: 600; color: var(--gray-900); text-decoration: none; display: block; }
+.aiad-schedule-item__title:hover { text-decoration: underline; }
+.aiad-schedule-item__audience { font-size: 0.78rem; color: var(--gray-600); display: block; margin-top: 0.1rem; }
+.aiad-schedule-item__provider { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--gray-700); }
+.aiad-schedule-item__logo { width: 24px; height: 24px; object-fit: contain; }
+.aiad-schedule-item__format { font-size: 0.75rem; color: var(--gray-500); }
+.aiad-schedule-item__cta {
+    text-align: center;
+    background: var(--green-600, #16a34a);
+    color: var(--white, #fff);
+    padding: 0.35rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    font-family: var(--font-display);
+}
+.aiad-schedule-item__cta:hover { background: var(--green-700, #15803d); }
+
+@media (max-width: 768px) {
+    .aiad-schedule-item {
+        grid-template-columns: 90px 1fr;
+        grid-template-areas:
+            "time title"
+            "time audience"
+            "provider provider"
+            "format cta";
+        row-gap: 0.25rem;
+    }
+    .aiad-schedule-item__time     { grid-area: time; align-self: start; }
+    .aiad-schedule-item__body     { grid-area: title; }
+    .aiad-schedule-item__provider { grid-area: provider; }
+    .aiad-schedule-item__format   { grid-area: format; }
+    .aiad-schedule-item__cta      { grid-area: cta; justify-self: end; }
+}
+
+/* Archive table */
+.aiad-schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+}
+.aiad-schedule-table th,
+.aiad-schedule-table td {
+    text-align: left;
+    padding: 0.7rem 0.6rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+    vertical-align: top;
+}
+.aiad-schedule-table th {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-300, #d1d5db);
+}
+.aiad-schedule-cell-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
+.aiad-schedule-cell-provider { display: flex; align-items: center; gap: 0.5rem; }
+.aiad-schedule-cell-provider img { width: 28px; height: 28px; object-fit: contain; }
+.aiad-schedule-table__cta {
+    display: inline-block;
+    background: var(--green-600, #16a34a);
+    color: #fff;
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+}
+.aiad-schedule-table__cta:hover { background: var(--green-700, #15803d); }
+
+@media (max-width: 768px) {
+    .aiad-schedule-table thead { display: none; }
+    .aiad-schedule-table,
+    .aiad-schedule-table tbody,
+    .aiad-schedule-table tr,
+    .aiad-schedule-table td { display: block; width: 100%; }
+    .aiad-schedule-table tr {
+        border: 1px solid var(--gray-200);
+        border-radius: 6px;
+        margin-bottom: 0.6rem;
+        padding: 0.6rem;
+    }
+    .aiad-schedule-table td { border: none; padding: 0.2rem 0; }
+    .aiad-schedule-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: var(--gray-500);
+        margin-bottom: 0.1rem;
+    }
+}
