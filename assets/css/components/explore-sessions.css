@@ -92,6 +92,7 @@ a.duration-badge:hover {
 }
 
 .explore-session-card .explore-session-badge {
+  --explore-badge-chamfer: 8px;
   order: 1;
   margin-bottom: 0.4rem;
   padding: 0;
@@ -103,6 +104,7 @@ a.duration-badge:hover {
   justify-content: center;
   overflow: visible;
   box-sizing: border-box;
+  clip-path: polygon(0 0, calc(100% - var(--explore-badge-chamfer)) 0, 100% var(--explore-badge-chamfer), 100% 100%, var(--explore-badge-chamfer) 100%, 0 calc(100% - var(--explore-badge-chamfer)));
 }
 
 .explore-session-card .explore-session-badge__text {
@@ -241,6 +243,7 @@ a.duration-badge:hover {
   }
 
   .explore-session-card .explore-session-badge {
+    --explore-badge-chamfer: 12px;
     order: 0;
     margin-bottom: 0;
     width: auto;
@@ -256,9 +259,10 @@ a.duration-badge:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
+    border-radius: 0;
     position: relative;
     overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - var(--explore-badge-chamfer)) 0, 100% var(--explore-badge-chamfer), 100% 100%, var(--explore-badge-chamfer) 100%, 0 calc(100% - var(--explore-badge-chamfer)));
   }
 
   /* Vibrant badge colour per card */
@@ -274,6 +278,7 @@ a.duration-badge:hover {
     inset: 0;
     background: linear-gradient(160deg, rgba(255,255,255,0.18) 0%, transparent 60%);
     pointer-events: none;
+    clip-path: polygon(0 0, calc(100% - var(--explore-badge-chamfer)) 0, 100% var(--explore-badge-chamfer), 100% 100%, var(--explore-badge-chamfer) 100%, 0 calc(100% - var(--explore-badge-chamfer)));
   }
 
   .explore-session-card .explore-session-badge__text {
