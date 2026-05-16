@@ -76,9 +76,12 @@ function aiad_timeline_cover_modifier_class( string $icon, bool $pinned ): strin
  *
  * @return string HTML
  */
-function aiad_timeline_magazine_cover_layers_html(): string {
-    return '<span class="timeline-magazine__cover-wedge" aria-hidden="true"></span>'
-        . '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
+function aiad_timeline_magazine_cover_layers_html( bool $include_fade = true ): string {
+    $html = '<span class="timeline-magazine__cover-wedge" aria-hidden="true"></span>';
+    if ( $include_fade ) {
+        $html .= '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
+    }
+    return $html;
 }
 
 /**
@@ -176,7 +179,7 @@ function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
  * @param int     $max_words_total  Word budget across blocks.
  * @return string[] Plain-text paragraphs.
  */
-function aiad_timeline_magazine_hero_teaser_paragraphs( WP_Post $entry, int $max_paragraphs = 2, int $max_words_total = 42 ): array {
+function aiad_timeline_magazine_hero_teaser_paragraphs( WP_Post $entry, int $max_paragraphs = 6, int $max_words_total = 140 ): array {
     $source = get_the_excerpt( $entry );
     if ( $source ) {
         $source = wp_strip_all_tags( $source );
@@ -368,14 +371,12 @@ function aiad_render_timeline_magazine( array $entries ): string {
             <div class="timeline-magazine__hero-media">
                 <div class="timeline-magazine__hero-media-frame <?php echo esc_attr( $cover_mod ); ?>">
                     <?php echo aiad_timeline_entry_cover_visual( $hero, 'timeline-magazine', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php echo aiad_timeline_magazine_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php echo aiad_timeline_magazine_cover_layers_html( false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — no bottom dark fade on hero ?>
                     <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso, $date_full ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <div class="timeline-magazine__hero-media-overlay">
-                        <h3 class="timeline-magazine__hero-title"><?php echo esc_html( get_the_title( $hero ) ); ?></h3>
-                    </div>
                 </div>
             </div>
             <div class="timeline-magazine__hero-text">
+                <h3 class="timeline-magazine__hero-title"><?php echo esc_html( get_the_title( $hero ) ); ?></h3>
                 <?php if ( ! empty( $hero_teaser ) ) : ?>
                     <div class="timeline-magazine__hero-content timeline-entry__content">
                         <?php foreach ( $hero_teaser as $hero_para ) : ?>
