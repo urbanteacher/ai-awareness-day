@@ -92,6 +92,8 @@ function aiad_register_timeline_meta(): void {
         '_aiad_timeline_linkedin_url' => array( 'type' => 'string', 'default' => '' ),
         // Like count (incremented via front-end AJAX)
         '_aiad_timeline_like_count' => array( 'type' => 'integer', 'default' => 0 ),
+        // Cover when no featured image: '' (auto), 'gradient', 'tech'
+        '_aiad_timeline_cover_fallback' => array( 'type' => 'string', 'default' => '' ),
     );
 
     foreach ( $meta_fields as $key => $args ) {
@@ -158,11 +160,11 @@ add_action( 'admin_init', 'aiad_flush_timeline_rewrite_rules' );
 
 /**
  * Config for editable timeline meta fields. Add a new entry here to get admin UI and save automatically;
- * then use the meta key in aiad_render_timeline_entry() if you want it on the front.
+ * then use the meta key in timeline-layout renderers if you want it on the front.
  *
  * To add a new feature: 1) Add the meta key to $meta_fields in aiad_register_timeline_meta() above.
  * 2) Add an entry here (type: 'text' or 'url', label, optional placeholder/description).
- * 3) In aiad_render_timeline_entry(), get_post_meta( $entry->ID, $meta_key, true ) and output.
+ * 3) In inc/timeline-layouts.php renderers, get_post_meta( $entry->ID, $meta_key, true ) and output.
  *
  * @return array<string, array{ type: string, label: string, placeholder?: string, description?: string }>
  */
@@ -302,6 +304,19 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
             <?php endforeach; ?>
         </select>
     </div>
+    <?php
+    $cover_fallback = get_post_meta( $post->ID, '_aiad_timeline_cover_fallback', true );
+    $cover_options  = aiad_timeline_cover_fallback_options();
+    ?>
+    <div class="aiad-rd-section">
+        <label for="aiad_timeline_cover_fallback" class="aiad-rd-label"><?php esc_html_e( 'Cover when no featured image', 'ai-awareness-day' ); ?></label>
+        <select id="aiad_timeline_cover_fallback" name="aiad_timeline_cover_fallback" class="widefat">
+            <?php foreach ( $cover_options as $value => $label ) : ?>
+                <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $cover_fallback, $value ); ?>><?php echo esc_html( $label ); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description"><?php esc_html_e( 'Used if no Featured Image is set. Upload a Featured Image to use your own photo instead.', 'ai-awareness-day' ); ?></p>
+    </div>
     </div>
     <script>
     jQuery(function($) {
@@ -339,6 +354,14 @@ function aiad_save_timeline_meta( int $post_id ): void {
     }
 
     update_post_meta( $post_id, '_aiad_timeline_pinned', ! empty( $_POST['aiad_timeline_pinned'] ) );
+
+    if ( isset( $_POST['aiad_timeline_cover_fallback'] ) ) {
+        $cover = sanitize_text_field( wp_unslash( $_POST['aiad_timeline_cover_fallback'] ) );
+        $valid = array_keys( aiad_timeline_cover_fallback_options() );
+        if ( in_array( $cover, $valid, true ) ) {
+            update_post_meta( $post_id, '_aiad_timeline_cover_fallback', $cover );
+        }
+    }
 
     if ( isset( $_POST['aiad_timeline_icon'] ) ) {
         $icon = sanitize_text_field( wp_unslash( $_POST['aiad_timeline_icon'] ) );
@@ -390,11 +413,80 @@ function aiad_timeline_icon_options(): array {
         'resource'     => __( 'New Resource', 'ai-awareness-day' ),
         'partner'      => __( 'New Partner', 'ai-awareness-day' ),
         'signup'       => __( 'Sign-up / Submission', 'ai-awareness-day' ),
-        'milestone'    => __( 'Milestone', 'ai-awareness-day' ),
-        'media'        => __( 'Press / Media', 'ai-awareness-day' ),
+        'milestone'    => __( 'News', 'ai-awareness-day' ),
+        'media'        => __( 'CPD', 'ai-awareness-day' ),
         'event'        => __( 'Event', 'ai-awareness-day' ),
     );
 }
+
+/**
+ * Cover fallback options when no featured image is set.
+ *
+ * @return array<string, string>
+ */
+function aiad_timeline_cover_fallback_options(): array {
+    return array(
+        ''       => __( 'Auto (category gradient or tech)', 'ai-awareness-day' ),
+        'gradient' => __( 'Category gradient', 'ai-awareness-day' ),
+        'tech'     => __( 'Tech pattern', 'ai-awareness-day' ),
+    );
+}
+
+/**
+ * Resolve cover fallback mode for an icon + stored preference.
+ *
+ * @param string $icon     Timeline icon key.
+ * @param string $fallback Stored meta (empty = auto).
+ * @return string 'gradient' or 'tech'
+ */
+function aiad_timeline_resolve_cover_fallback( string $icon, string $fallback = '' ): string {
+    if ( 'tech' === $fallback ) {
+        return 'tech';
+    }
+    if ( 'gradient' === $fallback ) {
+        return 'gradient';
+    }
+    if ( in_array( $icon, array( 'milestone', 'signup', 'resource' ), true ) ) {
+        return 'tech';
+    }
+    return 'gradient';
+}
+
+/**
+ * Inner gradient/tech block (no wrapper figure).
+ *
+ * @param string $icon     Icon key for colour class.
+ * @param string $fallback Meta value.
+ * @param string $title    Entry title (decorative).
+ * @return string HTML
+ */
+function aiad_timeline_cover_fallback_inner_html( string $icon, string $fallback, string $title ): string {
+    $mode  = aiad_timeline_resolve_cover_fallback( $icon, $fallback );
+    $class = 'timeline-entry__cover-fallback timeline-entry__cover-fallback--minimal timeline-entry__cover-fallback--' . sanitize_html_class( $icon );
+    if ( 'tech' === $mode ) {
+        $class .= ' timeline-entry__cover-fallback--tech';
+    }
+    return sprintf(
+        '<div class="%1$s" role="img" aria-label="%2$s"></div>',
+        esc_attr( $class ),
+        esc_attr( $title )
+    );
+}
+
+/**
+ * Render gradient/tech cover when no featured image (legacy figure wrapper).
+ *
+ * @param string $icon     Icon key for colour class.
+ * @param string $fallback Meta value.
+ * @param string $title    Entry title (decorative).
+ * @return string HTML
+ */
+function aiad_render_timeline_cover_fallback( string $icon, string $fallback, string $title ): string {
+    return '<figure class="timeline-entry__image timeline-entry__image--fallback">'
+        . aiad_timeline_cover_fallback_inner_html( $icon, $fallback, $title )
+        . '</figure>';
+}
+
 
 /**
  * Render an inline SVG icon for a timeline entry.
@@ -542,15 +634,17 @@ function aiad_timeline_featured_badge_label( WP_Post $entry, bool $pinned, strin
     }
     $labels = array(
         'announcement' => __( 'Announcement', 'ai-awareness-day' ),
-        'media'       => __( 'Update', 'ai-awareness-day' ),
+        'media'       => __( 'CPD', 'ai-awareness-day' ),
         'resource'    => __( 'Resource', 'ai-awareness-day' ),
         'partner'     => __( 'Partner', 'ai-awareness-day' ),
         'event'       => __( 'Event', 'ai-awareness-day' ),
-        'milestone'   => __( 'Milestone', 'ai-awareness-day' ),
+        'milestone'   => __( 'News', 'ai-awareness-day' ),
         'signup'      => __( 'Sign-up', 'ai-awareness-day' ),
     );
     return $labels[ $icon ] ?? $labels['announcement'];
 }
+
+require_once __DIR__ . '/timeline-layouts.php';
 
 /* ──────────────────────────────────────────────
    4. Auto-Generation Hooks
@@ -634,6 +728,187 @@ function aiad_create_timeline_entry( array $args ) {
 
     return $post_id;
 }
+
+/**
+ * Find an auto timeline entry linked to another post.
+ *
+ * @param int    $related_id Related post ID.
+ * @param string $auto_type  Auto type key (e.g. live_session).
+ * @return int Timeline post ID or 0.
+ */
+function aiad_timeline_get_entry_by_related( int $related_id, string $auto_type ): int {
+    if ( $related_id <= 0 || $auto_type === '' ) {
+        return 0;
+    }
+
+    $existing = get_posts(
+        array(
+            'post_type'      => 'timeline',
+            'post_status'    => array( 'publish', 'draft', 'pending', 'future' ),
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_query'     => array(
+                'relation' => 'AND',
+                array(
+                    'key'     => '_aiad_timeline_related_id',
+                    'value'   => $related_id,
+                    'compare' => '=',
+                ),
+                array(
+                    'key'     => '_aiad_timeline_auto_type',
+                    'value'   => $auto_type,
+                    'compare' => '=',
+                ),
+            ),
+        )
+    );
+
+    return ! empty( $existing ) ? (int) $existing[0] : 0;
+}
+
+/**
+ * Copy partner logo onto a timeline entry when it has no featured image.
+ *
+ * @param int $timeline_id Timeline post ID.
+ * @param int $partner_id  Partner post ID.
+ */
+function aiad_timeline_set_featured_image_from_partner( int $timeline_id, int $partner_id ): void {
+    if ( $timeline_id <= 0 || $partner_id <= 0 || has_post_thumbnail( $timeline_id ) ) {
+        return;
+    }
+
+    $thumb_id = get_post_thumbnail_id( $partner_id );
+    if ( $thumb_id ) {
+        set_post_thumbnail( $timeline_id, $thumb_id );
+    }
+}
+
+/**
+ * Create or update a timeline entry for a live_session (schedule) post.
+ *
+ * @param int $session_id live_session post ID.
+ */
+function aiad_timeline_sync_live_session_entry( int $session_id ): void {
+    $session = get_post( $session_id );
+    if ( ! $session || $session->post_type !== 'live_session' ) {
+        return;
+    }
+
+    $timeline_id = aiad_timeline_get_entry_by_related( $session_id, 'live_session' );
+
+    if ( $session->post_status !== 'publish' ) {
+        if ( $timeline_id ) {
+            wp_update_post(
+                array(
+                    'ID'          => $timeline_id,
+                    'post_status' => 'draft',
+                )
+            );
+        }
+        return;
+    }
+
+    $start       = (string) get_post_meta( $session_id, '_session_start_time', true );
+    $end         = (string) get_post_meta( $session_id, '_session_end_time', true );
+    $format      = (string) get_post_meta( $session_id, '_session_format', true );
+    $reg_url     = (string) get_post_meta( $session_id, '_session_registration_url', true );
+    $partner_id  = (int) get_post_meta( $session_id, '_session_partner_id', true );
+    $time_range  = function_exists( 'aiad_format_session_time_range' )
+        ? aiad_format_session_time_range( $start, $end )
+        : '';
+    $content     = trim( (string) $session->post_content );
+    $intro_parts = array();
+
+    if ( $time_range ) {
+        $intro_parts[] = sprintf(
+            /* translators: %s: time range e.g. 10:00 – 11:00 */
+            __( 'Live at %s (UK time).', 'ai-awareness-day' ),
+            $time_range
+        );
+    }
+    if ( $format ) {
+        $intro_parts[] = $format;
+    }
+    if ( ! empty( $intro_parts ) ) {
+        $intro = '<p>' . esc_html( implode( ' ', $intro_parts ) ) . '</p>';
+        $content = $content ? $intro . "\n\n" . $content : $intro;
+    }
+
+    $link_url   = $reg_url ? $reg_url : ( get_permalink( $session_id ) ?: '' );
+    $link_label = $reg_url
+        ? __( 'Register →', 'ai-awareness-day' )
+        : __( 'View session →', 'ai-awareness-day' );
+
+    if ( $timeline_id ) {
+        wp_update_post(
+            array(
+                'ID'           => $timeline_id,
+                'post_title'   => $session->post_title,
+                'post_content' => $content,
+                'post_status'  => 'publish',
+            )
+        );
+        update_post_meta( $timeline_id, '_aiad_timeline_icon', 'event' );
+        update_post_meta( $timeline_id, '_aiad_timeline_source', 'auto' );
+        if ( $link_url ) {
+            update_post_meta( $timeline_id, '_aiad_timeline_link_url', esc_url_raw( $link_url ) );
+            update_post_meta( $timeline_id, '_aiad_timeline_link_label', $link_label );
+        }
+        aiad_timeline_set_featured_image_from_partner( $timeline_id, $partner_id );
+        return;
+    }
+
+    $new_id = aiad_create_timeline_entry(
+        array(
+            'title'      => $session->post_title,
+            'content'    => $content,
+            'auto_type'  => 'live_session',
+            'icon'       => 'event',
+            'related_id' => $session_id,
+            'link_url'   => $link_url,
+            'link_label' => $link_label,
+        )
+    );
+
+    if ( $new_id ) {
+        aiad_timeline_set_featured_image_from_partner( (int) $new_id, $partner_id );
+    }
+}
+
+/**
+ * One-time: sync all published live sessions into timeline EVENT entries.
+ */
+function aiad_timeline_backfill_live_session_entries(): void {
+    if ( get_option( 'aiad_timeline_live_sessions_synced_v1' ) ) {
+        return;
+    }
+    if ( ! function_exists( 'aiad_get_live_sessions' ) ) {
+        return;
+    }
+
+    foreach ( aiad_get_live_sessions( -1 ) as $session ) {
+        aiad_timeline_sync_live_session_entry( (int) $session->ID );
+    }
+
+    update_option( 'aiad_timeline_live_sessions_synced_v1', true );
+}
+add_action( 'init', 'aiad_timeline_backfill_live_session_entries', 35 );
+
+/**
+ * Keep timeline EVENT cards in sync when a live session is saved.
+ *
+ * @param int $post_id Session post ID.
+ */
+function aiad_timeline_on_live_session_save( int $post_id ): void {
+    if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+        return;
+    }
+    if ( get_post_type( $post_id ) !== 'live_session' ) {
+        return;
+    }
+    aiad_timeline_sync_live_session_entry( $post_id );
+}
+add_action( 'save_post_live_session', 'aiad_timeline_on_live_session_save', 25 );
 
 /**
  * Event date for countdown (Y-m-d). Filter to override.
@@ -767,40 +1042,6 @@ add_action( 'init', 'aiad_timeline_schedule_countdown_cron', 20 );
 add_action( 'aiad_timeline_countdown_daily', 'aiad_timeline_maybe_create_countdown_entries' );
 
 /**
- * Maybe create "all themes covered" milestone when resources exist for every theme.
- */
-function aiad_timeline_maybe_create_themes_complete_entry(): void {
-    $terms = get_terms( array( 'taxonomy' => 'resource_principle', 'hide_empty' => false ) );
-    if ( ! $terms || is_wp_error( $terms ) || count( $terms ) < 5 ) {
-        return;
-    }
-    // Single query: terms with at least one published resource will have count > 0.
-    $populated_count = get_terms( array(
-        'taxonomy'   => 'resource_principle',
-        'hide_empty' => true,
-        'fields'     => 'count',
-    ) );
-    if ( is_wp_error( $populated_count ) || (int) $populated_count < count( $terms ) ) {
-        return;
-    }
-    $existing = get_posts( array(
-        'post_type'      => 'timeline',
-        'post_status'    => 'publish',
-        'posts_per_page' => 1,
-        'meta_query'     => array( array( 'key' => '_aiad_timeline_auto_type', 'value' => 'themes_complete', 'compare' => '=' ) ),
-    ) );
-    if ( ! empty( $existing ) ) {
-        return;
-    }
-    aiad_create_timeline_entry( array(
-        'title'     => __( 'All themes covered', 'ai-awareness-day' ),
-        'content'   => __( 'We now have resources across all five themes: Safe, Smart, Creative, Responsible, and Future. Explore the toolkit.', 'ai-awareness-day' ),
-        'auto_type' => 'themes_complete',
-        'icon'      => 'milestone',
-    ) );
-}
-
-/**
  * Auto-generate timeline entry when a resource is published.
  */
 function aiad_timeline_on_resource_publish( string $new_status, string $old_status, WP_Post $post ): void {
@@ -825,7 +1066,6 @@ function aiad_timeline_on_resource_publish( string $new_status, string $old_stat
         'link_url'   => get_permalink( $post->ID ),
         'link_label' => __( 'View resource →', 'ai-awareness-day' ),
     ) );
-    aiad_timeline_maybe_create_themes_complete_entry();
 }
 add_action( 'transition_post_status', 'aiad_timeline_on_resource_publish', 10, 3 );
 
@@ -855,133 +1095,6 @@ function aiad_timeline_on_partner_publish( string $new_status, string $old_statu
 add_action( 'transition_post_status', 'aiad_timeline_on_partner_publish', 10, 3 );
 
 /**
- * Milestone-specific messaging (title + content) for the timeline card.
- * Each message is crafted for that stage of the campaign's growth.
- *
- * @param int $threshold The milestone number.
- * @param int $goal      Campaign goal (default 500).
- * @return array{ title: string, content: string }
- */
-function aiad_milestone_messaging( int $threshold, int $goal = 500 ): array {
-    $pct = $goal > 0 ? (int) round( ( $threshold / $goal ) * 100 ) : 0;
-
-    $map = array(
-        10  => array(
-            'title'   => __( '10 schools have joined — the first wave is here', 'ai-awareness-day' ),
-            'content' => __( 'Ten schools have committed to running AI Awareness Day. Every movement starts somewhere — and this one just did.', 'ai-awareness-day' ),
-        ),
-        25  => array(
-            'title'   => __( '25 schools in — word is spreading', 'ai-awareness-day' ),
-            'content' => __( '25 schools have pledged. Word is travelling across staffrooms, and the momentum is building.', 'ai-awareness-day' ),
-        ),
-        50  => array(
-            'title'   => __( '50 schools pledged — a packed assembly hall', 'ai-awareness-day' ),
-            'content' => __( '50 schools committed. That\'s enough students to fill a large assembly hall with young people learning about AI. This is real.', 'ai-awareness-day' ),
-        ),
-        100 => array(
-            'title'   => __( '100 schools — AI Awareness Day is a movement', 'ai-awareness-day' ),
-            /* translators: %d: percentage of goal */
-            'content' => sprintf( __( '100 schools have joined — %d%% of our goal. What started as an idea is now a nationwide campaign taking shape.', 'ai-awareness-day' ), $pct ),
-        ),
-        250 => array(
-            'title'   => __( '250 schools committed — halfway there', 'ai-awareness-day' ),
-            /* translators: %d: percentage of goal */
-            'content' => sprintf( __( '250 schools pledged — %d%% of our target. Half a million young people will experience AI Awareness Day if every school follows through.', 'ai-awareness-day' ), $pct ),
-        ),
-        500 => array(
-            'title'   => __( '500 schools — we hit our goal. Now let\'s go further.', 'ai-awareness-day' ),
-            'content' => __( '500 schools have committed to AI Awareness Day. We reached our founding target. This is the biggest coordinated AI literacy event UK schools have ever seen — and we\'re just getting started.', 'ai-awareness-day' ),
-        ),
-        1000 => array(
-            'title'   => __( '1,000 schools — this is a national campaign', 'ai-awareness-day' ),
-            'content' => __( '1,000 schools. This is no longer an idea — it\'s a national campaign reaching hundreds of thousands of young people across the UK.', 'ai-awareness-day' ),
-        ),
-    );
-
-    if ( isset( $map[ $threshold ] ) ) {
-        return $map[ $threshold ];
-    }
-
-    // Fallback for any threshold not in the map
-    return array(
-        /* translators: %d: number of sign-ups */
-        'title'   => sprintf( __( '%d schools have joined the campaign', 'ai-awareness-day' ), $threshold ),
-        /* translators: 1: number, 2: percentage */
-        'content' => sprintf( __( 'The campaign has reached %1$d sign-ups — %2$d%% of our goal.', 'ai-awareness-day' ), $threshold, $pct ),
-    );
-}
-
-/**
- * Send an email to the site admin when a milestone is hit.
- *
- * @param int    $threshold Milestone number reached.
- * @param string $title     Timeline entry title.
- */
-function aiad_send_milestone_email( int $threshold, string $title ): void {
-    $to      = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
-    $subject = sprintf( '[AI Awareness Day] Milestone reached: %d sign-ups! 🎉', $threshold );
-
-    $goal      = (int) apply_filters( 'aiad_school_pledge_goal', 500 );
-    $pct       = $goal > 0 ? (int) round( ( $threshold / $goal ) * 100 ) : 0;
-    $admin_url = admin_url( 'edit.php?post_type=timeline' );
-    $site_url  = home_url();
-
-    $body  = "🎉 Milestone reached: {$threshold} sign-ups\n\n";
-    $body .= "AI Awareness Day has hit {$threshold} sign-ups — {$pct}% of the {$goal}-school goal.\n\n";
-    $body .= "Timeline entry published: \"{$title}\"\n\n";
-    $body .= "View the timeline in the admin:\n{$admin_url}\n\n";
-    $body .= "View on the website:\n{$site_url}\n\n";
-    $body .= "---\nAI Awareness Day · " . get_bloginfo( 'name' );
-
-    $headers = array(
-        'Content-Type: text/plain; charset=UTF-8',
-        'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
-    );
-
-    wp_mail( $to, $subject, $body, $headers );
-}
-
-/**
- * Auto-generate timeline entry on milestone submission counts.
- * Runs after each form submission; only creates entry at specific thresholds.
- * Also sends an email alert and records the milestone timestamp.
- */
-function aiad_timeline_check_submission_milestone(): void {
-    $count = wp_count_posts( 'form_submission' );
-    $total = (int) ( $count->publish ?? 0 );
-    $goal  = (int) apply_filters( 'aiad_school_pledge_goal', 500 );
-
-    $milestones = array( 10, 25, 50, 100, 250, 500, 1000 );
-    foreach ( $milestones as $threshold ) {
-        if ( $total < $threshold ) {
-            continue;
-        }
-
-        // Use option flag — faster than a WP_Query on every submission
-        $flag_key = 'aiad_milestone_done_' . $threshold;
-        if ( get_option( $flag_key ) ) {
-            continue;
-        }
-
-        $messaging = aiad_milestone_messaging( $threshold, $goal );
-
-        aiad_create_timeline_entry( array(
-            'title'     => $messaging['title'],
-            'content'   => $messaging['content'],
-            'auto_type' => 'milestone',
-            'icon'      => 'milestone',
-        ) );
-
-        // Record milestone hit time and mark as done
-        update_option( $flag_key, current_time( 'mysql' ), false );
-
-        // Email alert
-        aiad_send_milestone_email( $threshold, $messaging['title'] );
-    }
-}
-add_action( 'save_post_form_submission', 'aiad_timeline_check_submission_milestone', 30 );
-
-/**
  * Invalidate schools count cache when a form submission or partner is saved.
  */
 function aiad_timeline_invalidate_schools_count(): void {
@@ -1003,6 +1116,63 @@ add_action( 'save_post_partner', 'aiad_timeline_invalidate_schools_count', 5 );
  * @param string $filter   Filter by icon type (optional).
  * @return array{ entries: WP_Post[], has_more: bool }
  */
+/**
+ * Max supporting cards under the magazine hero (desktop).
+ */
+function aiad_timeline_magazine_sub_count(): int {
+    return max( 0, (int) apply_filters( 'aiad_timeline_magazine_sub_count', 4 ) );
+}
+
+function aiad_timeline_feed_per_page(): int {
+    $default = 1 + aiad_timeline_magazine_sub_count();
+
+    return max( 1, (int) apply_filters( 'aiad_timeline_feed_per_page', $default ) );
+}
+
+/**
+ * Entries per page on the /timeline/ archive.
+ */
+function aiad_timeline_archive_per_page(): int {
+    return max( 1, (int) apply_filters( 'aiad_timeline_archive_per_page', 12 ) );
+}
+
+/**
+ * Query timeline posts for the archive (paginated, optional icon filter).
+ *
+ * @param int    $paged  Current page (1-based).
+ * @param string $filter Icon key or empty / all.
+ * @return array{ entries: WP_Post[], max_pages: int, found: int }
+ */
+function aiad_get_timeline_archive_entries( int $paged = 1, string $filter = '' ): array {
+    $per_page = aiad_timeline_archive_per_page();
+    $args     = array(
+        'post_type'      => 'timeline',
+        'post_status'    => 'publish',
+        'posts_per_page' => $per_page,
+        'paged'          => max( 1, $paged ),
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    );
+
+    if ( ! empty( $filter ) && 'all' !== $filter ) {
+        $args['meta_query'] = array(
+            array(
+                'key'     => '_aiad_timeline_icon',
+                'value'   => $filter,
+                'compare' => '=',
+            ),
+        );
+    }
+
+    $query = new WP_Query( $args );
+
+    return array(
+        'entries'    => $query->posts,
+        'max_pages'  => (int) $query->max_num_pages,
+        'found'      => (int) $query->found_posts,
+    );
+}
+
 function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $filter = '' ): array {
     $entries = array();
 
@@ -1090,216 +1260,6 @@ function aiad_timeline_oembed_allowed_html(): array {
     );
 }
 
-/**
- * Render a single timeline entry as HTML.
- *
- * @param WP_Post $entry Timeline post.
- * @return string HTML markup.
- */
-function aiad_render_timeline_entry( WP_Post $entry ): string {
-    $source       = get_post_meta( $entry->ID, '_aiad_timeline_source', true ) ?: 'manual';
-    $pinned       = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
-    $icon         = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $card_type    = get_post_meta( $entry->ID, '_aiad_timeline_card_type', true ) ?: 'default';
-    $link_url     = get_post_meta( $entry->ID, '_aiad_timeline_link_url', true );
-    $link_label   = get_post_meta( $entry->ID, '_aiad_timeline_link_label', true );
-    $video_url    = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
-    $linkedin_url = get_post_meta( $entry->ID, '_aiad_timeline_linkedin_url', true );
-    $yt_id        = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
-    $video_embed  = ! empty( $video_url ) && empty( $yt_id ) ? wp_oembed_get( $video_url, array( 'width' => 600 ) ) : '';
-    
-    // LinkedIn embed: convert post URL to embed URL if needed
-    $linkedin_embed = '';
-    if ( ! empty( $linkedin_url ) ) {
-        // Check if it's already an embed URL
-        if ( strpos( $linkedin_url, '/embed/' ) !== false ) {
-            $linkedin_embed = $linkedin_url;
-        } else {
-            // Convert regular LinkedIn post URL to embed URL
-            // Format: https://www.linkedin.com/posts/... or https://www.linkedin.com/feed/update/urn:li:...
-            if ( preg_match( '#linkedin\.com/posts/([^/]+)/#', $linkedin_url, $matches ) ) {
-                // Extract post ID from activity URL
-                $linkedin_embed = $linkedin_url;
-            } elseif ( preg_match( '#linkedin\.com/feed/update/(urn:li:[^/]+)#', $linkedin_url, $matches ) ) {
-                // Convert to embed format
-                $linkedin_embed = 'https://www.linkedin.com/embed/feed/update/' . $matches[1];
-            } else {
-                $linkedin_embed = $linkedin_url;
-            }
-        }
-    }
-    
-    $thumbnail    = get_the_post_thumbnail_url( $entry->ID, 'medium_large' );
-    if ( ! $thumbnail ) {
-        $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium' );
-    }
-    $content      = apply_filters( 'the_content', get_the_content( null, false, $entry ) );
-    
-    // Determine what media to show based on card type
-    $show_video    = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
-    $show_linkedin = 'linkedin' === $card_type && ! empty( $linkedin_embed );
-    $show_image    = ! $show_video && ! $show_linkedin && ! empty( $thumbnail );
-    $has_media     = $show_video || $show_linkedin || $show_image;
-    $has_rich      = $has_media || ! empty( $content );
-    $use_lite_yt   = ! empty( $yt_id );
-
-    $classes = array( 'timeline-entry', 'fade-up' );
-    if ( $pinned ) {
-        $classes[] = 'timeline-entry--pinned';
-    }
-    if ( 'auto' === $source ) {
-        $classes[] = 'timeline-entry--auto';
-    }
-    if ( $has_rich ) {
-        $classes[] = 'timeline-entry--rich';
-    }
-    if ( 'linkedin' === $card_type ) {
-        $classes[] = 'timeline-entry--linkedin';
-    }
-    if ( 'video' === $card_type ) {
-        $classes[] = 'timeline-entry--video';
-    }
-    if ( 'link' === $card_type ) {
-        $classes[] = 'timeline-entry--link-card';
-    }
-
-    $date_human = human_time_diff( get_post_timestamp( $entry ), time() );
-    /* translators: %s: human-readable time difference */
-    $date_label = sprintf( __( '%s ago', 'ai-awareness-day' ), $date_human );
-    $date_full  = get_the_date( 'j M Y', $entry );
-
-    ob_start();
-    ?>
-    <article class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>">
-        <div class="timeline-entry__marker">
-            <span class="timeline-entry__icon timeline-entry__icon--<?php echo esc_attr( $icon ); ?>">
-                <?php echo aiad_timeline_icon_svg( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is hardcoded ?>
-            </span>
-        </div>
-        <div class="timeline-entry__body<?php echo $has_media ? ' timeline-entry__body--has-media' : ''; ?>">
-            <div class="timeline-entry__text">
-                <?php
-                $badge_label = aiad_timeline_featured_badge_label( $entry, $pinned, $icon );
-                ?>
-                <div class="timeline-entry__header">
-                    <span class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>"><?php echo esc_html( $badge_label ); ?></span>
-                </div>
-                <?php
-                // Show category from taxonomy or derive from auto_type
-                $timeline_terms = get_the_terms( $entry->ID, 'timeline_category' );
-                $category_label = '';
-                if ( $timeline_terms && ! is_wp_error( $timeline_terms ) && ! empty( $timeline_terms ) ) {
-                    // Use first taxonomy term
-                    $category_label = $timeline_terms[0]->name;
-                } elseif ( 'auto' === $source && ! empty( $icon ) ) {
-                    // Fallback: derive from icon/auto_type
-                    $auto_type_labels = array(
-                        'resource'    => __( 'Resource', 'ai-awareness-day' ),
-                        'partner'     => __( 'Partner', 'ai-awareness-day' ),
-                        'milestone'   => __( 'Milestone', 'ai-awareness-day' ),
-                        'event'       => __( 'Event', 'ai-awareness-day' ),
-                        'announcement' => __( 'Announcement', 'ai-awareness-day' ),
-                        'media'       => __( 'Media', 'ai-awareness-day' ),
-                        'signup'      => __( 'Sign-up', 'ai-awareness-day' ),
-                    );
-                    $category_label = $auto_type_labels[ $icon ] ?? '';
-                }
-                // Badge already shows the same taxonomy/icon label — skip redundant line.
-                if ( ! $pinned && $category_label !== '' && 0 === strcasecmp( trim( (string) $category_label ), trim( (string) $badge_label ) ) ) {
-                    $category_label = '';
-                }
-                if ( ! empty( $category_label ) ) :
-                    ?>
-                    <p class="timeline-entry__category"><?php echo esc_html( $category_label ); ?></p>
-                <?php endif; ?>
-                <div class="timeline-entry__title-row">
-                    <h3 class="timeline-entry__title"><?php echo esc_html( get_the_title( $entry ) ); ?></h3>
-                    <time class="timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c', $entry ) ); ?>" title="<?php echo esc_attr( $date_full ); ?>">
-                        <?php echo esc_html( $date_label ); ?>
-                    </time>
-                </div>
-                <?php if ( ! empty( $content ) ) : ?>
-                    <div class="timeline-entry__content"><?php echo wp_kses_post( $content ); ?></div>
-                <?php endif; ?>
-            </div>
-            <?php if ( $has_media ) : ?>
-                <div class="timeline-entry__media">
-                    <?php if ( $use_lite_yt ) : ?>
-                        <?php echo aiad_render_youtube_facade( $yt_id, get_the_title( $entry ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php elseif ( $show_linkedin ) : ?>
-                        <div class="timeline-entry__linkedin-embed">
-                            <iframe src="<?php echo esc_url( $linkedin_embed ); ?>" height="399" width="504" frameborder="0" allowfullscreen="" title="<?php echo esc_attr( get_the_title( $entry ) ); ?>"></iframe>
-                        </div>
-                    <?php elseif ( $show_video && ! empty( $video_embed ) ) : ?>
-                        <div class="timeline-entry__video wp-block-embed is-type-video">
-                            <?php echo wp_kses( $video_embed, aiad_timeline_oembed_allowed_html() ); ?>
-                        </div>
-                    <?php else : ?>
-                        <figure class="timeline-entry__image">
-                            <img src="<?php echo esc_url( $thumbnail ); ?>" alt="" loading="lazy" />
-                        </figure>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
-            <?php
-            $likes      = (int) get_post_meta( $entry->ID, '_aiad_timeline_like_count', true );
-            $entry_url  = get_permalink( $entry );
-            if ( ! $entry_url ) {
-                $entry_url = home_url( '/' );
-            }
-            $entry_title = get_the_title( $entry );
-            $link_label  = $link_label ?: __( 'Learn more', 'ai-awareness-day' );
-            ?>
-            <div class="timeline-entry__actions" aria-label="<?php esc_attr_e( 'Actions', 'ai-awareness-day' ); ?>">
-                <button type="button" class="timeline-entry__like" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" aria-pressed="false" aria-label="<?php esc_attr_e( 'Like this update', 'ai-awareness-day' ); ?>">
-                    <span class="timeline-entry__like-icon" aria-hidden="true"><?php echo aiad_timeline_like_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                    <span class="timeline-entry__like-count"><?php echo esc_html( (string) $likes ); ?></span>
-                </button>
-                <button type="button" class="timeline-entry__share" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" data-url="<?php echo esc_url( $entry_url ); ?>" data-title="<?php echo esc_attr( $entry_title ); ?>" aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>">
-                    <span class="timeline-entry__share-icon" aria-hidden="true"><?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                </button>
-                <?php if ( $link_url ) : ?>
-                    <a href="<?php echo esc_url( $link_url ); ?>" class="timeline-entry__link timeline-entry__link--action" aria-label="<?php echo esc_attr( $link_label ); ?>">
-                        <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                    </a>
-                <?php endif; ?>
-                <a href="<?php echo esc_url( $entry_url ); ?>" class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post" aria-label="<?php esc_attr_e( 'View full post', 'ai-awareness-day' ); ?>">
-                    <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                </a>
-            </div>
-        </div>
-    </article>
-    <?php
-    return ob_get_clean();
-}
-
-/* ──────────────────────────────────────────────
-   6. AJAX: Load More
-   ────────────────────────────────────────────── */
-
-function aiad_ajax_timeline_load_more(): void {
-    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'aiad_timeline_nonce' ) ) {
-        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-awareness-day' ) ) );
-    }
-
-    $offset = absint( $_POST['offset'] ?? 0 );
-    $filter = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
-    $result = aiad_get_timeline_entries( 4, $offset, $filter );
-
-    $html = '';
-    foreach ( $result['entries'] as $entry ) {
-        $html .= aiad_render_timeline_entry( $entry );
-    }
-
-    wp_send_json_success( array(
-        'html'     => $html,
-        'has_more' => $result['has_more'],
-        'count'    => count( $result['entries'] ),
-    ) );
-}
-add_action( 'wp_ajax_aiad_timeline_load_more', 'aiad_ajax_timeline_load_more' );
-add_action( 'wp_ajax_nopriv_aiad_timeline_load_more', 'aiad_ajax_timeline_load_more' );
-
 /* ──────────────────────────────────────────────
    7. AJAX: Filter
    ────────────────────────────────────────────── */
@@ -1309,18 +1269,21 @@ function aiad_ajax_timeline_filter(): void {
         wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-awareness-day' ) ) );
     }
 
-    $filter = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
-    $result = aiad_get_timeline_entries( 4, 0, $filter );
+    $filter  = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
+    $archive = ! empty( $_POST['archive'] );
 
-    $html = '';
-    foreach ( $result['entries'] as $entry ) {
-        $html .= aiad_render_timeline_entry( $entry );
+    if ( $archive ) {
+        $result = aiad_get_timeline_archive_entries( 1, $filter );
+        $html   = aiad_render_timeline_archive_feed( $result['entries'] );
+    } else {
+        $per_page = aiad_timeline_feed_per_page();
+        $result   = aiad_get_timeline_entries( $per_page, 0, $filter );
+        $html     = aiad_render_timeline_feed_layouts( $result['entries'] );
     }
 
     wp_send_json_success( array(
-        'html'     => $html,
-        'has_more' => $result['has_more'],
-        'count'    => count( $result['entries'] ),
+        'html'  => $html,
+        'count' => count( $result['entries'] ),
     ) );
 }
 add_action( 'wp_ajax_aiad_timeline_filter', 'aiad_ajax_timeline_filter' );
@@ -1331,7 +1294,7 @@ add_action( 'wp_ajax_nopriv_aiad_timeline_filter', 'aiad_ajax_timeline_filter' )
    ────────────────────────────────────────────── */
 
 /**
- * Increment like count for a timeline entry. Uses same nonce as timeline load more.
+ * Increment like count for a timeline entry.
  * Rate limited: prevents the same visitor (by IP) from liking an entry more than once per 24 hours.
  */
 function aiad_ajax_timeline_like(): void {

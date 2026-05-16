@@ -206,6 +206,9 @@ function aiad_scripts(): void
         $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
         $aiad_ajax['timeline_nonce'] = wp_create_nonce('aiad_timeline_nonce');
     }
+    if ( is_post_type_archive( 'timeline' ) ) {
+        $aiad_ajax['timeline_nonce'] = wp_create_nonce( 'aiad_timeline_nonce' );
+    }
     if (is_singular('timeline')) {
         $aiad_ajax['timeline_nonce'] = wp_create_nonce('aiad_timeline_nonce');
     }
@@ -291,7 +294,7 @@ function aiad_scripts(): void
     $timeline_css_ver = file_exists( $timeline_css ) ? filemtime( $timeline_css ) : AIAD_VERSION;
     $timeline_js_ver  = file_exists( $timeline_js ) ? filemtime( $timeline_js ) : AIAD_VERSION;
 
-    if ( ( is_front_page() || is_singular( 'timeline' ) || is_post_type_archive( 'live_session' ) ) && ! is_admin() ) {
+    if ( ( is_front_page() || is_singular( 'timeline' ) || is_post_type_archive( 'timeline' ) || is_post_type_archive( 'live_session' ) ) && ! is_admin() ) {
         wp_enqueue_style(
             'aiad-timeline',
             AIAD_URI . '/assets/css/components/timeline.css',
@@ -300,8 +303,8 @@ function aiad_scripts(): void
         );
     }
 
-    // Timeline JS only where the AJAX feed exists (scoped to #timeline in the script).
-    if ( ( is_front_page() || is_singular( 'timeline' ) ) && ! is_admin() ) {
+    // Timeline JS only where the AJAX feed exists (#timeline-feed on front page + archive).
+    if ( ( is_front_page() || is_singular( 'timeline' ) || is_post_type_archive( 'timeline' ) ) && ! is_admin() ) {
         wp_enqueue_script(
             'aiad-timeline',
             AIAD_URI . '/assets/js/timeline.js',

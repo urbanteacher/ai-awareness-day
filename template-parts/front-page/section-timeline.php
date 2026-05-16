@@ -2,7 +2,7 @@
 /**
  * Template Part: Live Timeline section (front page).
  *
- * Displays pinned + recent timeline entries with "Load more" via AJAX.
+ * Displays pinned + recent timeline entries (mobile swipe + desktop magazine).
  * Include via get_template_part( 'template-parts/section', 'timeline' )
  * inside front-page.php, gated by aiad_is_section_visible( 'timeline' ).
  *
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $text_alignment_class = aiad_get_text_alignment_class();
-$result = aiad_get_timeline_entries( 2 );
-$entries = $result['entries'];
-$has_more = $result['has_more'];
+$per_page = function_exists( 'aiad_timeline_feed_per_page' ) ? aiad_timeline_feed_per_page() : 5;
+$result   = aiad_get_timeline_entries( $per_page );
+$entries  = $result['entries'];
 
 // Don't render the section if there are no entries at all
 if ( empty( $entries ) ) {
@@ -83,21 +83,20 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
         </div>
         <?php endif; ?>
 
-        <div class="timeline-feed" id="timeline-feed" data-offset="<?php echo esc_attr( (string) count( $entries ) ); ?>">
-            <div class="timeline-feed__track">
-                <?php foreach ( $entries as $entry ) : ?>
-                    <?php echo aiad_render_timeline_entry( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — escaped inside renderer ?>
-                <?php endforeach; ?>
-            </div>
+        <div class="timeline-feed" id="timeline-feed">
+            <?php echo aiad_render_timeline_feed_layouts( $entries ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+        </div>
 
-            <?php if ( $has_more ) : ?>
-                <div class="timeline-feed__load-more">
-                    <button type="button" class="btn-action timeline-feed__load-btn" id="timeline-load-more">
-                        <?php esc_html_e( 'Load more updates', 'ai-awareness-day' ); ?>
-                        <span class="btn-action__icon" aria-hidden="true">+</span>
-                    </button>
-                </div>
-            <?php endif; ?>
+        <?php
+        $timeline_archive_url = get_post_type_archive_link( 'timeline' );
+        if ( ! $timeline_archive_url ) {
+            $timeline_archive_url = home_url( '/timeline/' );
+        }
+        ?>
+        <div class="timeline-section__actions fade-up">
+            <a class="timeline-section__cta" href="<?php echo esc_url( $timeline_archive_url ); ?>">
+                <?php esc_html_e( 'View all updates →', 'ai-awareness-day' ); ?>
+            </a>
         </div>
     </div>
 </section>
