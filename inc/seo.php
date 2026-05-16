@@ -451,6 +451,8 @@ function aiad_get_timeline_article_schema( WP_Post $post ): array {
 		$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 30, '…' );
 	}
 
+	$author = array_merge( array(), $publisher );
+
 	$schema = array(
 		'@context'      => 'https://schema.org',
 		'@type'         => 'NewsArticle',
@@ -458,7 +460,7 @@ function aiad_get_timeline_article_schema( WP_Post $post ): array {
 		'url'           => get_permalink( $post ),
 		'datePublished' => get_the_date( 'c', $post ),
 		'dateModified'  => get_the_modified_date( 'c', $post ),
-		'author'        => $publisher,
+		'author'        => $author,
 		'publisher'     => $publisher,
 		'inLanguage'    => 'en-GB',
 	);
@@ -566,7 +568,8 @@ function aiad_get_partner_organization_schema( WP_Post $post ): array {
 	);
 	
 	// URL
-	$partner_url = get_post_meta( $post->ID, '_partner_url', true );
+	$partner_url_raw = (string) get_post_meta( $post->ID, '_partner_url', true );
+	$partner_url     = filter_var( $partner_url_raw, FILTER_VALIDATE_URL );
 	if ( $partner_url ) {
 		$schema['url'] = esc_url_raw( $partner_url );
 	}
@@ -849,9 +852,9 @@ function aiad_output_canonical_url(): void {
 		$post_type = get_post_type();
 		$canonical = get_post_type_archive_link( $post_type );
 	}
-	// Other archives
+	// Taxonomy, date, and other archives (get_permalink() is not valid here).
 	elseif ( is_archive() ) {
-		$canonical = get_permalink();
+		$canonical = aiad_get_current_request_canonical_url();
 	}
 	// Default (path-only; query strings stripped)
 	else {
