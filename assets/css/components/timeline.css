@@ -888,25 +888,7 @@
     );
 }
 
-/* Theme gradient on shell (visible behind / through photos) */
-.timeline-cover--announcement.timeline-magazine__hero-media-frame,
-.timeline-cover--announcement.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-.timeline-cover--resource.timeline-magazine__hero-media-frame,
-.timeline-cover--resource.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #0ea5e9, #0f172a); }
-.timeline-cover--partner.timeline-magazine__hero-media-frame,
-.timeline-cover--partner.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #10b981, #111827); }
-.timeline-cover--milestone.timeline-magazine__hero-media-frame,
-.timeline-cover--milestone.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #f59e0b, #292524); }
-.timeline-cover--media.timeline-magazine__hero-media-frame,
-.timeline-cover--media.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #f43f5e, #18181b); }
-.timeline-cover--event.timeline-magazine__hero-media-frame,
-.timeline-cover--event.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #6366f1, #0f172a); }
-.timeline-cover--signup.timeline-magazine__hero-media-frame,
-.timeline-cover--signup.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, #14b8a6, #111827); }
-.timeline-cover--pinned.timeline-magazine__hero-media-frame,
-.timeline-cover--pinned.timeline-magazine__card-media-link--chamfer { background: linear-gradient(135deg, var(--gray-700), var(--gray-900)); }
-
-/* Photo layer — inset fill like .resource-card__hero-img */
+/* Photo layer — full opacity, no colour overlays on featured images */
 .timeline-magazine__cover {
     margin: 0;
     padding: 0;
@@ -933,34 +915,7 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    opacity: 0.6;
-}
-
-/* Wedge + bottom fade (resource-card pointed pattern) */
-.timeline-magazine__cover-wedge {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    mix-blend-mode: overlay;
-    clip-path: polygon(0 0, 55% 0, 0 45%);
-    pointer-events: none;
-}
-
-.timeline-cover--announcement .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-.timeline-cover--resource .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
-.timeline-cover--partner .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #10b981, #059669); }
-.timeline-cover--milestone .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #f59e0b, #ea580c); }
-.timeline-cover--media .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #f43f5e, #e11d48); }
-.timeline-cover--event .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-.timeline-cover--signup .timeline-magazine__cover-wedge { background: linear-gradient(135deg, #14b8a6, #0d9488); }
-.timeline-cover--pinned .timeline-magazine__cover-wedge { background: linear-gradient(135deg, var(--gray-600), var(--gray-800)); }
-
-.timeline-magazine__cover-fade {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 100%);
-    pointer-events: none;
+    opacity: 1;
 }
 
 /* Partner pill (top-left) + time (top-right) — uses .timeline-entry__badge / .timeline-entry__date */
@@ -1022,16 +977,6 @@
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-}
-
-.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-wedge,
-.timeline-magazine__card-media-link--chamfer:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-wedge {
-    display: none;
-}
-
-.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade,
-.timeline-magazine__card-media-link--chamfer:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
-    display: none;
 }
 
 /* Safety: never let cover media escape the feed (broken layout on production) */
