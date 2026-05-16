@@ -88,19 +88,15 @@ function aiad_get_og_data(): array {
 			$data['description'] = wp_trim_words( $data['description'], 25, '…' );
 		}
 
-		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-		if ( $logo_id ) {
-			$data['image_id'] = $logo_id;
-			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
-		} elseif ( has_custom_logo() ) {
-			$custom_logo_id = absint( get_theme_mod( 'custom_logo' ) );
-			if ( $custom_logo_id ) {
-				$data['image_id'] = $custom_logo_id;
-				$data['image']    = wp_get_attachment_image_url( $custom_logo_id, 'aiad_social' ) ?: '';
-			}
+		$share_image = function_exists( 'aiad_get_social_share_image_data' )
+			? aiad_get_social_share_image_data()
+			: array( 'image_id' => 0, 'image' => '' );
+		if ( ! empty( $share_image['image'] ) ) {
+			$data['image_id'] = $share_image['image_id'];
+			$data['image']    = $share_image['image'];
 		}
 
-	} elseif ( is_singular( 'resource' ) || is_singular( 'partner' ) || is_singular( 'timeline' ) ) {
+	} elseif ( is_singular( array( 'resource', 'partner', 'timeline', 'live_session' ) ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );
 		$data['url']   = get_permalink( $post );
@@ -139,6 +135,13 @@ function aiad_get_og_data(): array {
 			
 			// Last-resort fallback: use the post title so og:description is never empty
 			$description = ! empty( $timeline_content ) ? $timeline_content : get_the_title( $post );
+
+		} elseif ( 'live_session' === $post->post_type ) {
+			if ( ! empty( $post->post_content ) ) {
+				$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 25, '…' );
+			} else {
+				$description = get_the_title( $post );
+			}
 
 		} else {
 			// For resources and partners, use subtitle meta field
@@ -206,12 +209,23 @@ function aiad_get_og_data(): array {
 					}
 				}
 			}
-			// Final fallback: site logo (hard-cropped to aiad_social; can look awkward on X/LinkedIn)
-			if ( empty( $data['image'] ) ) {
-				$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-				if ( $logo_id ) {
-					$data['image_id'] = $logo_id;
-					$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+			// Final fallback: Site Icon PNG (not hero GIF).
+			if ( empty( $data['image'] ) && function_exists( 'aiad_get_social_share_image_data' ) ) {
+				$share_image = aiad_get_social_share_image_data();
+				if ( ! empty( $share_image['image'] ) ) {
+					$data['image_id'] = $share_image['image_id'];
+					$data['image']    = $share_image['image'];
+				}
+			}
+		}
+
+		// Live session: partner logo when no featured image.
+		if ( empty( $data['image'] ) && 'live_session' === $post->post_type ) {
+			$partner_id = (int) get_post_meta( $post->ID, '_session_partner_id', true );
+			if ( $partner_id ) {
+				$partner_thumb = get_the_post_thumbnail_url( $partner_id, 'aiad_social' );
+				if ( $partner_thumb ) {
+					$data['image'] = $partner_thumb;
 				}
 			}
 		}
@@ -230,10 +244,12 @@ function aiad_get_og_data(): array {
 			$data['description'] = get_bloginfo( 'description' );
 		}
 
-		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-		if ( $logo_id ) {
-			$data['image_id'] = $logo_id;
-			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+		$share_image = function_exists( 'aiad_get_social_share_image_data' )
+			? aiad_get_social_share_image_data()
+			: array( 'image_id' => 0, 'image' => '' );
+		if ( ! empty( $share_image['image'] ) ) {
+			$data['image_id'] = $share_image['image_id'];
+			$data['image']    = $share_image['image'];
 		}
 
 	} else {
@@ -242,10 +258,12 @@ function aiad_get_og_data(): array {
 		$data['description'] = get_bloginfo( 'description' );
 		$data['url']         = is_singular() ? get_permalink() : home_url( '/' );
 
-		$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-		if ( $logo_id ) {
-			$data['image_id'] = $logo_id;
-			$data['image']    = wp_get_attachment_image_url( $logo_id, 'aiad_social' ) ?: '';
+		$share_image = function_exists( 'aiad_get_social_share_image_data' )
+			? aiad_get_social_share_image_data()
+			: array( 'image_id' => 0, 'image' => '' );
+		if ( ! empty( $share_image['image'] ) ) {
+			$data['image_id'] = $share_image['image_id'];
+			$data['image']    = $share_image['image'];
 		}
 	}
 

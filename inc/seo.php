@@ -90,6 +90,48 @@ function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
 }
 
 /**
+ * Social share image (Site Icon → custom logo → hero), aiad_social size when available.
+ *
+ * @return array{image_id: int, image: string}
+ */
+function aiad_get_social_share_image_data(): array {
+	$logo_id = aiad_get_schema_logo_attachment_id();
+	if ( ! $logo_id ) {
+		return array(
+			'image_id' => 0,
+			'image'    => '',
+		);
+	}
+	$url = wp_get_attachment_image_url( $logo_id, 'aiad_social' );
+	if ( ! $url ) {
+		$url = wp_get_attachment_image_url( $logo_id, 'full' );
+	}
+	return array(
+		'image_id' => $logo_id,
+		'image'    => $url ?: '',
+	);
+}
+
+/**
+ * Convert live_session datetime-local meta to ISO 8601 (Europe/London).
+ *
+ * @param string $datetime_local Value from _session_start_time / _session_end_time.
+ * @return string ISO 8601 or empty.
+ */
+function aiad_session_meta_to_iso( string $datetime_local ): string {
+	if ( $datetime_local === '' ) {
+		return '';
+	}
+	try {
+		$tz = new DateTimeZone( 'Europe/London' );
+		$dt = new DateTime( $datetime_local, $tz );
+		return $dt->format( DATE_ATOM );
+	} catch ( Exception $e ) {
+		return '';
+	}
+}
+
+/**
  * Get Organization schema data.
  *
  * @return array<string, mixed> Organization schema array.
@@ -228,6 +270,163 @@ function aiad_get_event_schema(): array {
 		$schema['image'] = array( $event_image['url'] );
 	}
 
+	return $schema;
+}
+
+/**
+ * Event schema for a single live_session post.
+ *
+ * @param WP_Post $post Live session post.
+ * @return array<string, mixed>
+ */
+function aiad_get_live_session_event_schema( WP_Post $post ): array {
+	$start_raw = (string) get_post_meta( $post->ID, '_session_start_time', true );
+	$end_raw   = (string) get_post_meta( $post->ID, '_session_end_time', true );
+	$reg_url   = (string) get_post_meta( $post->ID, '_session_registration_url', true );
+	$permalink = get_permalink( $post );
+
+	$start_iso = aiad_session_meta_to_iso( $start_raw );
+	$end_iso   = aiad_session_meta_to_iso( $end_raw );
+	if ( $start_iso && ! $end_iso ) {
+		$end_iso = $start_iso;
+	}
+	if ( ! $start_iso ) {
+		$event_date = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+		$start_iso  = $event_date . 'T00:00:00+01:00';
+		$end_iso    = $event_date . 'T23:59:59+01:00';
+	}
+
+	$organizer = aiad_get_organization_schema();
+	unset( $organizer['@context'] );
+
+	$performer = array(
+		'@type' => 'Organization',
+		'name'  => $organizer['name'] ?? 'AI Awareness Day',
+		'url'   => home_url( '/' ),
+	);
+	$partner_id = (int) get_post_meta( $post->ID, '_session_partner_id', true );
+	if ( $partner_id ) {
+		$partner_post = get_post( $partner_id );
+		if ( $partner_post ) {
+			$performer = array(
+				'@type' => 'Organization',
+				'name'  => $partner_post->post_title,
+			);
+			$partner_url = get_post_meta( $partner_id, '_partner_url', true );
+			if ( is_string( $partner_url ) && $partner_url !== '' ) {
+				$performer['url'] = esc_url_raw( $partner_url );
+			}
+		}
+	}
+
+	$description = has_excerpt( $post ) ? get_the_excerpt( $post ) : '';
+	if ( ! $description && ! empty( $post->post_content ) ) {
+		$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 40, '…' );
+	}
+	if ( ! $description ) {
+		$description = __( 'Live session for AI Awareness Day on 4 June 2026.', 'ai-awareness-day' );
+	}
+
+	$is_online  = $reg_url !== '';
+	$attendance = $is_online
+		? 'https://schema.org/OnlineEventAttendanceMode'
+		: 'https://schema.org/MixedEventAttendanceMode';
+
+	$location = $is_online
+		? array(
+			'@type' => 'VirtualLocation',
+			'name'  => __( 'Online live stream', 'ai-awareness-day' ),
+			'url'   => esc_url( $reg_url ),
+		)
+		: array(
+			'@type'   => 'Place',
+			'name'    => 'UK schools and online',
+			'address' => array(
+				'@type'          => 'PostalAddress',
+				'addressCountry' => 'GB',
+			),
+		);
+
+	$schema = array(
+		'@context'              => 'https://schema.org',
+		'@type'                 => 'Event',
+		'name'                  => get_the_title( $post ),
+		'description'           => $description,
+		'startDate'             => $start_iso,
+		'endDate'               => $end_iso,
+		'eventAttendanceMode'   => $attendance,
+		'eventStatus'           => 'https://schema.org/EventScheduled',
+		'location'              => $location,
+		'organizer'             => $organizer,
+		'performer'             => $performer,
+		'offers'                => array(
+			'@type'         => 'Offer',
+			'url'           => $reg_url ? esc_url( $reg_url ) : $permalink,
+			'price'         => '0',
+			'priceCurrency' => 'GBP',
+			'availability'  => 'https://schema.org/InStock',
+		),
+		'url'                   => $permalink,
+		'inLanguage'            => 'en-GB',
+		'isAccessibleForFree'   => true,
+	);
+
+	if ( has_post_thumbnail( $post ) ) {
+		$thumb = wp_get_attachment_image_url( get_post_thumbnail_id( $post ), 'full' );
+		if ( $thumb ) {
+			$schema['image'] = array( $thumb );
+		}
+	} elseif ( $partner_id ) {
+		$partner_thumb = get_the_post_thumbnail_url( $partner_id, 'full' );
+		if ( $partner_thumb ) {
+			$schema['image'] = array( $partner_thumb );
+		}
+	}
+	if ( empty( $schema['image'] ) ) {
+		$event_image = aiad_get_schema_image_object( array( 192, 192 ) );
+		if ( $event_image ) {
+			$schema['image'] = array( $event_image['url'] );
+		}
+	}
+
+	return $schema;
+}
+
+/**
+ * NewsArticle schema for timeline campaign updates.
+ *
+ * @param WP_Post $post Timeline post.
+ * @return array<string, mixed>
+ */
+function aiad_get_timeline_article_schema( WP_Post $post ): array {
+	$publisher = aiad_get_organization_schema();
+	unset( $publisher['@context'] );
+
+	$description = has_excerpt( $post ) ? get_the_excerpt( $post ) : '';
+	if ( ! $description && ! empty( $post->post_content ) ) {
+		$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 30, '…' );
+	}
+
+	$schema = array(
+		'@context'      => 'https://schema.org',
+		'@type'         => 'NewsArticle',
+		'headline'      => get_the_title( $post ),
+		'url'           => get_permalink( $post ),
+		'datePublished' => get_the_date( 'c', $post ),
+		'dateModified'  => get_the_modified_date( 'c', $post ),
+		'author'        => $publisher,
+		'publisher'     => $publisher,
+		'inLanguage'    => 'en-GB',
+	);
+	if ( $description ) {
+		$schema['description'] = $description;
+	}
+	if ( has_post_thumbnail( $post ) ) {
+		$thumb = wp_get_attachment_image_url( get_post_thumbnail_id( $post ), 'aiad_social' );
+		if ( $thumb ) {
+			$schema['image'] = array( $thumb );
+		}
+	}
 	return $schema;
 }
 
@@ -522,6 +721,28 @@ function aiad_output_json_ld_schemas(): void {
 			echo "\n" . '</script>' . "\n";
 		}
 	}
+
+	// Event schema on single live sessions
+	if ( is_singular( 'live_session' ) ) {
+		global $post;
+		$session_event_schema = aiad_get_live_session_event_schema( $post );
+		if ( ! empty( $session_event_schema ) ) {
+			echo '<script type="application/ld+json">' . "\n";
+			echo wp_json_encode( $session_event_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+			echo "\n" . '</script>' . "\n";
+		}
+	}
+
+	// NewsArticle schema on timeline updates
+	if ( is_singular( 'timeline' ) ) {
+		global $post;
+		$article_schema = aiad_get_timeline_article_schema( $post );
+		if ( ! empty( $article_schema ) ) {
+			echo '<script type="application/ld+json">' . "\n";
+			echo wp_json_encode( $article_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+			echo "\n" . '</script>' . "\n";
+		}
+	}
 	
 	// BreadcrumbList schema on all pages (except front page)
 	if ( ! is_front_page() ) {
@@ -623,3 +844,33 @@ function aiad_notice_search_engines_discouraged(): void {
 		. '</a></p></div>';
 }
 add_action( 'admin_notices', 'aiad_notice_search_engines_discouraged' );
+
+/**
+ * Remove author/user URLs from the XML sitemap (thin archive pages).
+ *
+ * @param WP_Sitemaps_Provider|false $provider Provider instance.
+ * @param string                     $name     Provider name.
+ * @return WP_Sitemaps_Provider|false
+ */
+function aiad_disable_users_sitemap( $provider, string $name ) {
+	if ( 'users' === $name ) {
+		return false;
+	}
+	return $provider;
+}
+add_filter( 'wp_sitemaps_add_provider', 'aiad_disable_users_sitemap', 10, 2 );
+
+/**
+ * Noindex low-value WordPress archives (author, media attachment).
+ *
+ * @param array<string, bool|string> $robots Robots directives.
+ * @return array<string, bool|string>
+ */
+function aiad_noindex_low_value_archives( array $robots ): array {
+	if ( is_author() || is_attachment() ) {
+		$robots['noindex']  = true;
+		$robots['nofollow'] = true;
+	}
+	return $robots;
+}
+add_filter( 'wp_robots', 'aiad_noindex_low_value_archives' );

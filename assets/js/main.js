@@ -56,64 +56,6 @@
             });
         });
 
-        // #region agent log
-        (function aiadDbgThemeLinks() {
-            function snap(runId, extra) {
-                var root = document.querySelector('#themes .themes-links');
-                if (!root) return;
-                var links = root.querySelectorAll('a.theme-link');
-                var out = [];
-                for (var i = 0; i < links.length; i++) {
-                    var a = links[i];
-                    var badge = a.querySelector('.theme-link__badge');
-                    var img = badge ? badge.querySelector('img.theme-link__badge-img') : null;
-                    var ph = badge ? badge.querySelector('.theme-link__badge-placeholder') : null;
-                    var cs = badge ? window.getComputedStyle(badge) : null;
-                    var acs = window.getComputedStyle(a);
-                    out.push({
-                        hrefQuery: (a.getAttribute('href') || '').split('principle=')[1] || '',
-                        hasImg: !!img,
-                        imgComplete: img ? img.complete : null,
-                        naturalW: img ? img.naturalWidth : null,
-                        imgBroken: !!(img && img.classList && img.classList.contains('is-broken')),
-                        linkOpacity: acs.opacity,
-                        fadeUpVisible: a.classList.contains('visible'),
-                        badgePresent: !!badge,
-                        badgeDisplay: cs ? cs.display : null,
-                        badgeVisibility: cs ? cs.visibility : null,
-                        badgeOverflow: cs ? cs.overflow : null,
-                        badgeH: cs ? cs.height : null,
-                        badgeW: cs ? cs.width : null,
-                        hasPlaceholder: !!ph,
-                        childEls: a.children.length,
-                    });
-                }
-                fetch('http://127.0.0.1:7829/ingest/df1a021b-1722-4e27-937e-801acecc5f70', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '5ed5d5' },
-                    body: JSON.stringify({
-                        sessionId: '5ed5d5',
-                        runId: runId || 't0',
-                        hypothesisId: 'H1,H3,H4',
-                        location: 'main.js:aiadDbgThemeLinks',
-                        message: extra || 'theme-link DOM snapshot',
-                        data: { innerWidth: window.innerWidth, devicePixelRatio: window.devicePixelRatio || 1, links: out },
-                        timestamp: Date.now(),
-                    }),
-                }).catch(function () {});
-            }
-            snap('t0_dom', 'immediate DOMContentLoaded init');
-            window.addEventListener('load', function () {
-                snap('t1_after_load', 'after window load images');
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                        snap('t2_after_paint', 'load + 2x rAF (decode/layout)');
-                    });
-                });
-            });
-        })();
-        // #endregion
-
         // ============================================
         // Hero countdown
         // Exposed as window.aiad.initHeroCountdown so it can be called again
