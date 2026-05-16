@@ -795,6 +795,7 @@
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    align-self: start;
 }
 
 .timeline-magazine__hero-media-frame,
@@ -937,21 +938,22 @@
 .timeline-magazine__hero {
     display: grid;
     gap: 1.5rem;
-    align-items: stretch;
+    align-items: start;
 }
 
 
-.timeline-magazine__hero-media-overlay {
+.timeline-magazine__hero-media-frame .timeline-magazine__hero-media-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 2;
-    height: 30%;
-    min-height: 5.5rem;
+    height: 42%;
+    min-height: 4.5rem;
+    max-height: 9rem;
     display: flex;
     align-items: flex-end;
-    padding: 0 1.5rem 2rem;
+    padding: 0 1.25rem 1.25rem;
     background: linear-gradient(
         to top,
         rgba(0, 0, 0, 0.9) 0%,
@@ -961,8 +963,7 @@
     pointer-events: none;
 }
 
-/* Fallback covers already use icon gradient — skip the dark title scrim */
-.timeline-magazine__hero-media:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
     background: none;
 }
 
@@ -1051,7 +1052,29 @@
 }
 
 .timeline-magazine__hero-content {
+    margin-top: 0;
+}
+
+.timeline-magazine__read-more {
+    display: inline-block;
     margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    text-decoration: none;
+}
+
+.timeline-magazine__read-more:hover {
+    text-decoration: underline;
+}
+
+#timeline .timeline-magazine__read-more {
+    color: var(--white);
+}
+
+#timeline .timeline-magazine__read-more:hover {
+    color: var(--gray-200);
 }
 
 .timeline-magazine__more {
@@ -1103,12 +1126,12 @@
     transform: scale(1.02);
 }
 
-.timeline-magazine__hero-media .timeline-magazine__cover-meta-badge {
+.timeline-magazine__hero-media-frame .timeline-magazine__cover-meta-badge {
     top: 0.75rem;
     left: 0.75rem;
 }
 
-.timeline-magazine__hero-media .timeline-magazine__cover-meta .timeline-entry__date {
+.timeline-magazine__hero-media-frame .timeline-magazine__cover-meta .timeline-entry__date {
     top: 0.75rem;
     right: calc(0.75rem + var(--timeline-date-inset-x5));
 }
@@ -1185,7 +1208,6 @@
     .timeline-magazine__hero-text {
         border-left: 2px solid var(--gray-900);
         padding-left: 2rem;
-        min-height: 100%;
     }
 
     .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {

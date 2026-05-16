@@ -298,7 +298,8 @@ function aiad_render_timeline_magazine( array $entries ): string {
     $date_label  = sprintf( __( '%s ago', 'ai-awareness-day' ), $date_human );
     $date_full   = get_the_date( 'j M Y', $hero );
     $date_iso    = get_the_date( 'c', $hero );
-    $content     = apply_filters( 'the_content', get_the_content( null, false, $hero ) );
+    $hero_permalink = get_permalink( $hero ) ?: '';
+    $hero_excerpt   = aiad_timeline_entry_excerpt_text( $hero );
 
     ob_start();
     ?>
@@ -308,15 +309,22 @@ function aiad_render_timeline_magazine( array $entries ): string {
                 <div class="timeline-magazine__hero-media-frame <?php echo esc_attr( $cover_mod ); ?>">
                     <?php echo aiad_timeline_entry_cover_visual( $hero, 'timeline-magazine', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php echo aiad_timeline_magazine_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                </div>
-                <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso, $date_full ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                <div class="timeline-magazine__hero-media-overlay">
-                    <h3 class="timeline-magazine__hero-title"><?php echo esc_html( get_the_title( $hero ) ); ?></h3>
+                    <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso, $date_full ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <div class="timeline-magazine__hero-media-overlay">
+                        <h3 class="timeline-magazine__hero-title"><?php echo esc_html( get_the_title( $hero ) ); ?></h3>
+                    </div>
                 </div>
             </div>
             <div class="timeline-magazine__hero-text">
-                <?php if ( $content ) : ?>
-                    <div class="timeline-magazine__hero-content timeline-entry__content"><?php echo wp_kses_post( $content ); ?></div>
+                <?php if ( $hero_excerpt ) : ?>
+                    <div class="timeline-magazine__hero-content timeline-entry__content">
+                        <p><?php echo esc_html( $hero_excerpt ); ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if ( $hero_permalink ) : ?>
+                    <a class="timeline-magazine__read-more" href="<?php echo esc_url( $hero_permalink ); ?>">
+                        <?php esc_html_e( 'Read full update →', 'ai-awareness-day' ); ?>
+                    </a>
                 <?php endif; ?>
                 <?php echo aiad_timeline_entry_actions_html( $hero ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
