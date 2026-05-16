@@ -993,6 +993,8 @@
     display: grid;
     gap: 1.5rem;
     align-items: start;
+    container-type: inline-size;
+    container-name: timeline-hero;
 }
 
 
@@ -1083,7 +1085,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    min-height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .timeline-magazine__hero-text .timeline-entry__header {
@@ -1091,13 +1094,28 @@
 }
 
 .timeline-magazine__hero-text .timeline-magazine__hero-content {
-    flex: 0 1 auto;
-    font-size: 1.26rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    font-size: 1.05rem;
     line-height: 1.5;
 }
 
 .timeline-magazine__hero-text .timeline-magazine__hero-content p {
-    margin: 0 0 0.65rem;
+    margin: 0 0 0.5rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+.timeline-magazine__hero-text .timeline-magazine__hero-content p:last-child {
+    margin-bottom: 0;
+    -webkit-line-clamp: 2;
+}
+
+#timeline .timeline-magazine__hero-text .timeline-magazine__hero-content {
+    color: rgba(255, 255, 255, 0.92);
 }
 
 .timeline-magazine__hero-text .timeline-entry__actions {
@@ -1107,6 +1125,11 @@
 
 .timeline-magazine__hero-content {
     margin-top: 0;
+}
+
+.timeline-magazine__hero-text .timeline-magazine__read-more,
+.timeline-magazine__hero-text .timeline-entry__actions {
+    flex-shrink: 0;
 }
 
 .timeline-magazine__read-more {
@@ -1264,6 +1287,10 @@
         padding-left: 2rem;
     }
 
+    #timeline .timeline-magazine__hero-text {
+        border-left-color: rgba(255, 255, 255, 0.35);
+    }
+
     .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
         font-size: 2rem;
     }
@@ -1271,6 +1298,12 @@
     .timeline-magazine__more {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.25rem;
+    }
+}
+
+@container timeline-hero (min-width: 600px) {
+    .timeline-magazine__hero-text {
+        max-height: calc(50cqw * 3 / 4);
     }
 }
 

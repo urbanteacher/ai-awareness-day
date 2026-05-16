@@ -169,6 +169,64 @@ function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
 }
 
 /**
+ * First paragraph(s) for magazine hero teaser (homepage), capped so copy fits the cover column.
+ *
+ * @param WP_Post $entry            Timeline post.
+ * @param int     $max_paragraphs   Max blocks to return.
+ * @param int     $max_words_total  Word budget across blocks.
+ * @return string[] Plain-text paragraphs.
+ */
+function aiad_timeline_magazine_hero_teaser_paragraphs( WP_Post $entry, int $max_paragraphs = 2, int $max_words_total = 42 ): array {
+    $source = get_the_excerpt( $entry );
+    if ( $source ) {
+        $source = wp_strip_all_tags( $source );
+    } else {
+        $source = wp_strip_all_tags( (string) get_post_field( 'post_content', $entry ) );
+    }
+    if ( '' === $source ) {
+        return array();
+    }
+
+    $blocks     = preg_split( '/\n\s*\n+/', trim( $source ) ) ?: array();
+    $paragraphs = array();
+    $words_used = 0;
+
+    foreach ( $blocks as $block ) {
+        $text = trim( wp_strip_all_tags( $block ) );
+        if ( '' === $text ) {
+            continue;
+        }
+        $remaining = $max_words_total - $words_used;
+        if ( $remaining <= 0 ) {
+            break;
+        }
+        $chunk = wp_trim_words( $text, $remaining, '' );
+        if ( '' === $chunk ) {
+            continue;
+        }
+        $paragraphs[] = $chunk;
+        $words_used    += str_word_count( $chunk );
+        if ( count( $paragraphs ) >= $max_paragraphs ) {
+            break;
+        }
+    }
+
+    if ( empty( $paragraphs ) ) {
+        return array( wp_trim_words( $source, $max_words_total, '…' ) );
+    }
+
+    $source_words = str_word_count( $source );
+    if ( $words_used < $source_words ) {
+        $last = count( $paragraphs ) - 1;
+        if ( ! str_ends_with( $paragraphs[ $last ], '…' ) ) {
+            $paragraphs[ $last ] = rtrim( $paragraphs[ $last ], " \t\n\r\0\x0B." ) . '…';
+        }
+    }
+
+    return $paragraphs;
+}
+
+/**
  * Render one mobile swipe slide (portrait: cover top, copy below).
  *
  * @param WP_Post $entry Timeline post.
@@ -301,7 +359,7 @@ function aiad_render_timeline_magazine( array $entries ): string {
     $date_full   = get_the_date( 'j M Y', $hero );
     $date_iso    = get_the_date( 'c', $hero );
     $hero_permalink = get_permalink( $hero ) ?: '';
-    $hero_excerpt   = aiad_timeline_entry_excerpt_text( $hero );
+    $hero_teaser    = aiad_timeline_magazine_hero_teaser_paragraphs( $hero );
 
     ob_start();
     ?>
@@ -318,9 +376,11 @@ function aiad_render_timeline_magazine( array $entries ): string {
                 </div>
             </div>
             <div class="timeline-magazine__hero-text">
-                <?php if ( $hero_excerpt ) : ?>
+                <?php if ( ! empty( $hero_teaser ) ) : ?>
                     <div class="timeline-magazine__hero-content timeline-entry__content">
-                        <p><?php echo esc_html( $hero_excerpt ); ?></p>
+                        <?php foreach ( $hero_teaser as $hero_para ) : ?>
+                            <p><?php echo esc_html( $hero_para ); ?></p>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
                 <?php if ( $hero_permalink ) : ?>
