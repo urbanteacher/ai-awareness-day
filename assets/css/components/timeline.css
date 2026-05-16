@@ -350,7 +350,7 @@
 .timeline-feed {
     margin-top: 2rem;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     border: 1px solid var(--gray-200);
     border-radius: 0;
     background: var(--gray-100);
@@ -789,19 +789,12 @@
     background: var(--white);
 }
 
-/* Chamfer shell — same layering as .resource-card--pointed .resource-card__hero */
+/* Chamfer shell — frame establishes size (avoid absolute frame; collapses parent on live) */
 .timeline-magazine__hero-media {
     position: relative;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
-    clip-path: polygon(
-        0 0,
-        calc(100% - var(--timeline-chamfer-hero)) 0,
-        100% var(--timeline-chamfer-hero),
-        100% 100%,
-        var(--timeline-chamfer-hero) 100%,
-        0 calc(100% - var(--timeline-chamfer-hero))
-    );
 }
 
 .timeline-magazine__hero-media-frame,
@@ -814,10 +807,17 @@
 }
 
 .timeline-magazine__hero-media-frame {
-    position: absolute;
-    inset: 0;
     width: 100%;
-    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+    clip-path: polygon(
+        0 0,
+        calc(100% - var(--timeline-chamfer-hero)) 0,
+        100% var(--timeline-chamfer-hero),
+        100% 100%,
+        var(--timeline-chamfer-hero) 100%,
+        0 calc(100% - var(--timeline-chamfer-hero))
+    );
 }
 
 .timeline-magazine__card-media-link--chamfer {
@@ -867,10 +867,14 @@
 }
 
 .timeline-magazine__hero-media-frame .timeline-magazine__cover-img,
-.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img {
+.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
+.timeline-magazine__hero-media-frame .timeline-magazine__cover img,
+.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover img {
     position: absolute;
     inset: 0;
+    display: block;
     width: 100%;
+    max-width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
@@ -994,9 +998,30 @@
     display: none;
 }
 
-.timeline-magazine__hero-media:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade,
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade,
 .timeline-magazine__card-media-link--chamfer:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
     display: none;
+}
+
+/* Safety: never let cover media escape the feed (broken layout on production) */
+.timeline-feed__body,
+.timeline-feed__desktop,
+.timeline-feed__mobile {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.timeline-magazine,
+.timeline-magazine__hero,
+.timeline-magazine__hero-media {
+    max-width: 100%;
+}
+
+.timeline-swipe__cover img,
+.timeline-swipe__cover-img {
+    display: block;
+    max-width: 100%;
 }
 
 .timeline-magazine__hero-text {
@@ -1068,11 +1093,13 @@
     min-height: 8.5rem;
 }
 
-.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img {
+.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
+.timeline-magazine__card-media-link--chamfer .timeline-magazine__cover img {
     transition: transform 0.3s ease;
 }
 
-.timeline-magazine__card-inner:hover .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img {
+.timeline-magazine__card-inner:hover .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
+.timeline-magazine__card-inner:hover .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover img {
     transform: scale(1.02);
 }
 

@@ -40,7 +40,7 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
 
     if ( ! empty( $thumbnail ) ) {
         return sprintf(
-            '<figure class="%1$s__cover"><img class="%1$s__cover-img" src="%2$s" alt="" loading="lazy" /></figure>',
+            '<figure class="%1$s__cover"><img class="%1$s__cover-img" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
             esc_attr( $wrapper ),
             esc_url( $thumbnail )
         );
