@@ -40,7 +40,7 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
 
     if ( ! empty( $thumbnail ) ) {
         return sprintf(
-            '<figure class="%1$s__cover"><img src="%2$s" alt="" loading="lazy" /></figure>',
+            '<figure class="%1$s__cover"><img class="%1$s__cover-img" src="%2$s" alt="" loading="lazy" /></figure>',
             esc_attr( $wrapper ),
             esc_url( $thumbnail )
         );
@@ -77,7 +77,8 @@ function aiad_timeline_cover_modifier_class( string $icon, bool $pinned ): strin
  * @return string HTML
  */
 function aiad_timeline_magazine_cover_layers_html(): string {
-    return '';
+    return '<span class="timeline-magazine__cover-wedge" aria-hidden="true"></span>'
+        . '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
 }
 
 /**
