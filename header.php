@@ -11,7 +11,7 @@
         : get_bloginfo('description');
     ?>
     <meta name="description" content="<?php echo esc_attr($meta_description); ?>">
-    <meta name="theme-color" content="#16a34a">
+    <meta name="theme-color" content="#ffffff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
