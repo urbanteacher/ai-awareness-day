@@ -18,8 +18,7 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
         <div class="hero-title-block fade-up<?php echo ! empty( $hero_marquee ) ? ' hero-title-block--partner-marquee' : ''; ?>">
             <?php
             $defaults      = aiad_get_customizer_defaults();
-            $hero_logo_id  = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-            $hero_logo_url = $hero_logo_id ? wp_get_attachment_image_url( $hero_logo_id, 'full' ) : '';
+            $hero_logo_url = aiad_get_logo_image_url( aiad_get_hero_logo_attachment_id(), 'full' );
             ?>
             <p class="hero-date">
                 <?php echo esc_html( get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] ) ); ?>

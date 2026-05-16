@@ -456,6 +456,85 @@ function aiad_maybe_increment_school_pledge_count( string $involved_as ): int {
 }
 
 /**
+ * Brand logo for header and on-page display (WordPress Site Identity first).
+ *
+ * Priority: Site Identity → Logo, Site Icon, legacy Header Logo, legacy Hero Logo.
+ *
+ * @return int Attachment ID or 0.
+ */
+function aiad_get_brand_logo_attachment_id(): int {
+	if ( has_custom_logo() ) {
+		$id = (int) get_theme_mod( 'custom_logo' );
+		if ( $id ) {
+			return $id;
+		}
+	}
+	$site_icon = (int) get_option( 'site_icon' );
+	if ( $site_icon ) {
+		return $site_icon;
+	}
+	$header_logo = absint( get_theme_mod( 'aiad_header_logo', 0 ) );
+	if ( $header_logo ) {
+		return $header_logo;
+	}
+	return absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+}
+
+/**
+ * Hero section logo: optional override, else brand logo.
+ *
+ * @return int Attachment ID or 0.
+ */
+function aiad_get_hero_logo_attachment_id(): int {
+	$hero_logo = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+	if ( $hero_logo ) {
+		return $hero_logo;
+	}
+	return aiad_get_brand_logo_attachment_id();
+}
+
+/**
+ * Principles “AI literacy” card logo: section override, else brand logo.
+ *
+ * @return int Attachment ID or 0.
+ */
+function aiad_get_literacy_logo_attachment_id(): int {
+	$literacy_logo = absint( get_theme_mod( 'aiad_ai_literacy_logo', 0 ) );
+	if ( $literacy_logo ) {
+		return $literacy_logo;
+	}
+	return aiad_get_brand_logo_attachment_id();
+}
+
+/**
+ * Schema / OG logo: Site Icon (square PNG) preferred, else brand logo.
+ *
+ * @return int Attachment ID or 0.
+ */
+function aiad_get_schema_logo_attachment_id(): int {
+	$site_icon = (int) get_option( 'site_icon' );
+	if ( $site_icon ) {
+		return $site_icon;
+	}
+	return aiad_get_brand_logo_attachment_id();
+}
+
+/**
+ * Attachment image URL for a logo ID.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size          Image size.
+ * @return string URL or empty.
+ */
+function aiad_get_logo_image_url( int $attachment_id, string $size = 'full' ): string {
+	if ( ! $attachment_id ) {
+		return '';
+	}
+	$url = wp_get_attachment_image_url( $attachment_id, $size );
+	return $url ? (string) $url : '';
+}
+
+/**
  * Get default values for customizer settings.
  *
  * @return array<string, mixed> Array of setting names => default values.

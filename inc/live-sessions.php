@@ -156,6 +156,7 @@ function aiad_live_session_meta_box_callback( WP_Post $post ): void {
         <div class="aiad-ls-full">
             <label for="aiad_session_registration_url"><?php esc_html_e( 'Registration / join URL', 'ai-awareness-day' ); ?></label>
             <input type="url" id="aiad_session_registration_url" name="aiad_session_registration_url" value="<?php echo esc_attr( $registration_url ); ?>" placeholder="https://" />
+            <p class="description"><?php esc_html_e( 'Full URL required for online sessions (e.g. https://teams.microsoft.com/…). Used for the join button and event schema.', 'ai-awareness-day' ); ?></p>
         </div>
     </div>
     <?php

@@ -122,8 +122,8 @@ function aiad_register_header_section( WP_Customize_Manager $wp_customize ): voi
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_header_logo', array(
-        'label'       => __( 'Header Logo', 'ai-awareness-day' ),
-        'description' => __( 'Logo image displayed in the header before the site title. If not set, the Hero Logo will be used.', 'ai-awareness-day' ),
+        'label'       => __( 'Header Logo (legacy)', 'ai-awareness-day' ),
+        'description' => __( 'Fallback only when Site Identity → Logo is empty. Prefer Appearance → Customize → Site Identity → Logo.', 'ai-awareness-day' ),
         'section'     => 'aiad_header',
         'mime_type'   => 'image',
     ) ) );
@@ -149,7 +149,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     ) );
     $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_hero_logo', array(
         'label'       => __( 'Hero Logo', 'ai-awareness-day' ),
-        'description' => __( 'Image shown above the date. Leave empty to show a placeholder.', 'ai-awareness-day' ),
+        'description' => __( 'Large image above the date. Leave empty to use Site Identity → Logo (or Site Icon). Clear an old GIF here to stop it overriding the main brand image.', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'mime_type'   => 'image',
     ) ) );
@@ -332,7 +332,7 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
     ) );
     $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_ai_literacy_logo', array(
         'label'       => __( 'Our AI Literacy logo', 'ai-awareness-day' ),
-        'description' => __( 'Badge image for the "Our AI literacy" card (6th cell in the principles grid). Leave empty to show an "AI" placeholder.', 'ai-awareness-day' ),
+        'description' => __( 'Badge for the "Our AI literacy" card. Leave empty to use the same brand logo as the header (Site Identity → Logo).', 'ai-awareness-day' ),
         'section'     => 'aiad_badges',
         'mime_type'   => 'image',
     ) ) );

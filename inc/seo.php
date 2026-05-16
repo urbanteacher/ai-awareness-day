@@ -47,28 +47,72 @@ function aiad_seo_should_output(): bool {
 }
 
 /**
- * Attachment ID used for schema logos and event images (PNG site icon preferred).
+ * Human-readable post type archive label (works on singular and archive views).
  *
- * @return int Attachment ID or 0.
+ * @param string $post_type Post type slug.
+ * @return string Label or empty.
  */
-function aiad_get_schema_logo_attachment_id(): int {
-	$site_icon = (int) get_option( 'site_icon' );
-	if ( $site_icon ) {
-		return $site_icon;
+function aiad_get_post_type_archive_label( string $post_type ): string {
+	$obj = get_post_type_object( $post_type );
+	if ( ! $obj || empty( $obj->labels->name ) ) {
+		return '';
 	}
-	if ( has_custom_logo() ) {
-		$custom_logo = (int) get_theme_mod( 'custom_logo' );
-		if ( $custom_logo ) {
-			return $custom_logo;
+	return (string) $obj->labels->name;
+}
+
+/**
+ * Normalise resource key stages from post meta (stored as a single array value).
+ *
+ * @param int $post_id Resource post ID.
+ * @return list<string>
+ */
+function aiad_get_resource_key_stages( int $post_id ): array {
+	$raw = get_post_meta( $post_id, '_aiad_key_stage', true );
+
+	if ( ! is_array( $raw ) ) {
+		if ( is_string( $raw ) && $raw !== '' ) {
+			$unserialized = maybe_unserialize( $raw );
+			$raw          = is_array( $unserialized ) ? $unserialized : array( $raw );
+		} else {
+			return array();
 		}
 	}
-	return absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+
+	// Flatten one level in case of legacy nested or double-encoded saves.
+	$stages = array();
+	foreach ( $raw as $item ) {
+		if ( is_array( $item ) ) {
+			foreach ( $item as $sub ) {
+				if ( is_string( $sub ) && $sub !== '' ) {
+					$stages[] = $sub;
+				}
+			}
+		} elseif ( is_string( $item ) && $item !== '' ) {
+			$stages[] = $item;
+		}
+	}
+
+	return array_values( array_unique( $stages ) );
+}
+
+/**
+ * Canonical URL for the current request path (query string stripped).
+ *
+ * @return string
+ */
+function aiad_get_current_request_canonical_url(): string {
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) $_SERVER['REQUEST_URI'] : '/';
+	$path        = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
+	if ( $path === '' ) {
+		$path = '/';
+	}
+	return home_url( $path );
 }
 
 /**
  * ImageObject for JSON-LD (Organization logo, Event image, etc.).
  *
- * @param string $image_size WP image size name or [width, height].
+ * @param string|array<int, int> $image_size WP image size name or [width, height].
  * @return array<string, mixed>|null
  */
 function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
@@ -90,7 +134,7 @@ function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
 }
 
 /**
- * Social share image (Site Icon → custom logo → hero), aiad_social size when available.
+ * Social share image (see aiad_get_schema_logo_attachment_id), aiad_social size when available.
  *
  * @return array{image_id: int, image: string}
  */
@@ -108,7 +152,7 @@ function aiad_get_social_share_image_data(): array {
 	}
 	return array(
 		'image_id' => $logo_id,
-		'image'    => $url ?: '',
+		'image'    => $url ? (string) $url : '',
 	);
 }
 
@@ -258,7 +302,6 @@ function aiad_get_event_schema(): array {
 		'isAccessibleForFree'   => true,
 		'sameAs'                => array(
 			'https://www.wikidata.org/wiki/Q139799162',
-			$event_url,
 		),
 	);
 
@@ -282,8 +325,9 @@ function aiad_get_event_schema(): array {
 function aiad_get_live_session_event_schema( WP_Post $post ): array {
 	$start_raw = (string) get_post_meta( $post->ID, '_session_start_time', true );
 	$end_raw   = (string) get_post_meta( $post->ID, '_session_end_time', true );
-	$reg_url   = (string) get_post_meta( $post->ID, '_session_registration_url', true );
-	$permalink = get_permalink( $post );
+	$reg_url_raw = (string) get_post_meta( $post->ID, '_session_registration_url', true );
+	$reg_url     = filter_var( $reg_url_raw, FILTER_VALIDATE_URL ) ? $reg_url_raw : '';
+	$permalink   = get_permalink( $post );
 
 	$start_iso = aiad_session_meta_to_iso( $start_raw );
 	$end_iso   = aiad_session_meta_to_iso( $end_raw );
@@ -330,7 +374,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 	$is_online  = $reg_url !== '';
 	$attendance = $is_online
 		? 'https://schema.org/OnlineEventAttendanceMode'
-		: 'https://schema.org/MixedEventAttendanceMode';
+		: 'https://schema.org/OfflineEventAttendanceMode';
 
 	$location = $is_online
 		? array(
@@ -340,7 +384,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		)
 		: array(
 			'@type'   => 'Place',
-			'name'    => 'UK schools and online',
+			'name'    => __( 'UK schools', 'ai-awareness-day' ),
 			'address' => array(
 				'@type'          => 'PostalAddress',
 				'addressCountry' => 'GB',
@@ -361,7 +405,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		'performer'             => $performer,
 		'offers'                => array(
 			'@type'         => 'Offer',
-			'url'           => $reg_url ? esc_url( $reg_url ) : $permalink,
+			'url'           => $reg_url !== '' ? esc_url( $reg_url ) : $permalink,
 			'price'         => '0',
 			'priceCurrency' => 'GBP',
 			'availability'  => 'https://schema.org/InStock',
@@ -487,8 +531,8 @@ function aiad_get_educational_resource_schema( WP_Post $post ): array {
 		$schema['description'] = get_the_excerpt( $post );
 	}
 	
-	// Educational level
-	$key_stages = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
+	// Educational level (_aiad_key_stage is registered as single array meta).
+	$key_stages = aiad_get_resource_key_stages( (int) $post->ID );
 	if ( ! empty( $key_stages ) ) {
 		$levels = aiad_map_key_stage_to_educational_level( $key_stages );
 		if ( ! empty( $levels ) ) {
@@ -559,13 +603,16 @@ function aiad_get_breadcrumb_trail(): array {
 	
 	// Archive pages
 	if ( is_post_type_archive() ) {
-		$post_type = get_post_type();
-		$archive_title = post_type_archive_title( '', false );
-		if ( $archive_title ) {
-			$trail[] = array(
-				'name' => $archive_title,
-				'url'  => get_post_type_archive_link( $post_type ),
-			);
+		$post_type    = (string) get_post_type();
+		$archive_link = get_post_type_archive_link( $post_type );
+		if ( $archive_link ) {
+			$archive_title = aiad_get_post_type_archive_label( $post_type );
+			if ( $archive_title !== '' ) {
+				$trail[] = array(
+					'name' => $archive_title,
+					'url'  => $archive_link,
+				);
+			}
 		}
 		return $trail;
 	}
@@ -575,12 +622,12 @@ function aiad_get_breadcrumb_trail(): array {
 		global $post;
 		$post_type = get_post_type( $post );
 		
-		// Add archive if post type has archive
+		// Archive crumb only when the post type has a public archive URL.
 		if ( post_type_exists( $post_type ) ) {
 			$archive_link = get_post_type_archive_link( $post_type );
 			if ( $archive_link ) {
-				$archive_title = post_type_archive_title( '', false );
-				if ( $archive_title ) {
+				$archive_title = aiad_get_post_type_archive_label( (string) $post_type );
+				if ( $archive_title !== '' ) {
 					$trail[] = array(
 						'name' => $archive_title,
 						'url'  => $archive_link,
@@ -671,6 +718,8 @@ function aiad_output_json_ld_schemas(): void {
 	if ( ! aiad_seo_should_output() ) {
 		return;
 	}
+
+	global $post;
 	
 	// Organization schema on all pages
 	$org_schema = aiad_get_organization_schema();
@@ -701,8 +750,7 @@ function aiad_output_json_ld_schemas(): void {
 	}
 	
 	// EducationalResource schema on single resources
-	if ( is_singular( 'resource' ) ) {
-		global $post;
+	if ( is_singular( 'resource' ) && $post instanceof WP_Post ) {
 		$resource_schema = aiad_get_educational_resource_schema( $post );
 		if ( ! empty( $resource_schema ) ) {
 			echo '<script type="application/ld+json">' . "\n";
@@ -712,8 +760,7 @@ function aiad_output_json_ld_schemas(): void {
 	}
 	
 	// Partner Organization schema on single partners
-	if ( is_singular( 'partner' ) ) {
-		global $post;
+	if ( is_singular( 'partner' ) && $post instanceof WP_Post ) {
 		$partner_schema = aiad_get_partner_organization_schema( $post );
 		if ( ! empty( $partner_schema ) ) {
 			echo '<script type="application/ld+json">' . "\n";
@@ -723,8 +770,7 @@ function aiad_output_json_ld_schemas(): void {
 	}
 
 	// Event schema on single live sessions
-	if ( is_singular( 'live_session' ) ) {
-		global $post;
+	if ( is_singular( 'live_session' ) && $post instanceof WP_Post ) {
 		$session_event_schema = aiad_get_live_session_event_schema( $post );
 		if ( ! empty( $session_event_schema ) ) {
 			echo '<script type="application/ld+json">' . "\n";
@@ -734,8 +780,7 @@ function aiad_output_json_ld_schemas(): void {
 	}
 
 	// NewsArticle schema on timeline updates
-	if ( is_singular( 'timeline' ) ) {
-		global $post;
+	if ( is_singular( 'timeline' ) && $post instanceof WP_Post ) {
 		$article_schema = aiad_get_timeline_article_schema( $post );
 		if ( ! empty( $article_schema ) ) {
 			echo '<script type="application/ld+json">' . "\n";
@@ -808,11 +853,9 @@ function aiad_output_canonical_url(): void {
 	elseif ( is_archive() ) {
 		$canonical = get_permalink();
 	}
-	// Default
+	// Default (path-only; query strings stripped)
 	else {
-		$canonical = home_url( add_query_arg( null, null ) );
-		// Remove query params for canonical
-		$canonical = strtok( $canonical, '?' );
+		$canonical = aiad_get_current_request_canonical_url();
 	}
 	
 	if ( $canonical ) {
@@ -852,7 +895,7 @@ add_action( 'admin_notices', 'aiad_notice_search_engines_discouraged' );
  * @param string                     $name     Provider name.
  * @return WP_Sitemaps_Provider|false
  */
-function aiad_disable_users_sitemap( $provider, string $name ) {
+function aiad_disable_users_sitemap( WP_Sitemaps_Provider|false $provider, string $name ): WP_Sitemaps_Provider|false {
 	if ( 'users' === $name ) {
 		return false;
 	}
@@ -925,7 +968,7 @@ function aiad_sync_llms_txt_to_document_root(): void {
 	}
 
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-	if ( false === file_put_contents( $dest, $contents ) ) {
+	if ( false === file_put_contents( $dest, $contents, LOCK_EX ) ) {
 		return;
 	}
 
@@ -934,6 +977,9 @@ function aiad_sync_llms_txt_to_document_root(): void {
 
 /**
  * Fallback: serve curated llms.txt through WordPress when no root file exists.
+ *
+ * Runs on init priority 0 and may exit before the rest of WordPress boots.
+ * This path is intentionally public plain text only — do not add auth or sensitive data here.
  */
 function aiad_maybe_serve_llms_txt(): void {
 	if ( php_sapi_name() === 'cli' ) {

@@ -29,19 +29,7 @@
                 $defaults = aiad_get_customizer_defaults();
                 $title    = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] );
 
-                $logo_url = '';
-                if ( has_custom_logo() ) {
-                    $custom_logo_id = (int) get_theme_mod( 'custom_logo' );
-                    if ( $custom_logo_id ) {
-                        $logo_url = wp_get_attachment_image_url( $custom_logo_id, 'full' );
-                    }
-                }
-                if ( ! $logo_url ) {
-                    $logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-                    if ( $logo_id ) {
-                        $logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
-                    }
-                }
+                $logo_url = aiad_get_logo_image_url( aiad_get_brand_logo_attachment_id(), 'full' );
 
                 if ( $logo_url ) {
                     echo '<img src="' . esc_url( $logo_url ) . '" alt="" aria-hidden="true" class="site-logo__img" />';

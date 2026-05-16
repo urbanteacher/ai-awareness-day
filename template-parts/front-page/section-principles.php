@@ -62,11 +62,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <div class="ai-literacy-box principle-card fade-up stagger-6">
                 <div class="principle-badge">
                     <?php
-                    $literacy_logo_id = absint( get_theme_mod( 'aiad_ai_literacy_logo', 0 ) );
-                    if ( ! $literacy_logo_id ) {
-                        $literacy_logo_id = absint( get_theme_mod( 'aiad_header_logo', 0 ) ) ?: absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-                    }
-                    $literacy_logo_src = $literacy_logo_id ? wp_get_attachment_image_url( $literacy_logo_id, 'medium' ) : '';
+                    $literacy_logo_src = aiad_get_logo_image_url( aiad_get_literacy_logo_attachment_id(), 'medium' );
                     if ( $literacy_logo_src ) :
                         ?>
                         <img src="<?php echo esc_url( $literacy_logo_src ); ?>" alt="" aria-hidden="true"

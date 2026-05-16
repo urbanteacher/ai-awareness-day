@@ -25,8 +25,7 @@ $defaults = aiad_get_customizer_defaults();
 
             <div class="hero-logo">
                 <?php
-                $hero_logo_id  = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-                $hero_logo_url = $hero_logo_id ? wp_get_attachment_image_url( $hero_logo_id, 'full' ) : '';
+                $hero_logo_url = aiad_get_logo_image_url( aiad_get_hero_logo_attachment_id(), 'full' );
                 if ( $hero_logo_url ) :
                     ?><img src="<?php echo esc_url( $hero_logo_url ); ?>"
                         alt="<?php echo esc_attr( get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>"

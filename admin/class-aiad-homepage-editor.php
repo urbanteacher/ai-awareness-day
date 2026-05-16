@@ -417,8 +417,8 @@ class AIAD_Homepage_Editor {
      */
     private function render_hero_tab(): void {
         $fields = array(
-            'aiad_hero_logo'     => array( 'label' => __( 'Hero Logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Image shown above the date.', 'ai-awareness-day' ) ),
-            'aiad_header_logo'   => array( 'label' => __( 'Header Logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Logo in the site header.', 'ai-awareness-day' ) ),
+            'aiad_hero_logo'     => array( 'label' => __( 'Hero Logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Optional large hero image. Empty = Site Identity → Logo. Clear old GIFs here.', 'ai-awareness-day' ) ),
+            'aiad_header_logo'   => array( 'label' => __( 'Header Logo (legacy)', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Fallback only if Site Identity → Logo is empty.', 'ai-awareness-day' ) ),
             'aiad_hero_date'     => array( 'label' => __( 'Event Date Text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Thursday 4th June 2026' ),
             'aiad_hero_title'    => array( 'label' => __( 'Hero Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day' ),
             'aiad_hero_slogan'   => array( 'label' => __( 'Hero Slogan', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Know it, Question it, Use it Wisely' ),
