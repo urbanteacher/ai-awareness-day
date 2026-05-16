@@ -661,10 +661,20 @@
 
 .timeline-swipe__media {
     position: relative;
-    flex: 1.35 1 0;
-    min-height: 42%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1.15 1 0;
+    min-height: 38%;
     overflow: hidden;
     background: var(--gray-200);
+}
+
+.timeline-swipe__media:has(.timeline-swipe__cover--fallback) {
+    flex: 0 0 auto;
+    min-height: 0;
+    max-height: 52%;
+    background: transparent;
 }
 
 .timeline-swipe__cover,
@@ -675,8 +685,19 @@
     object-fit: cover;
 }
 
+.timeline-swipe__cover--fallback {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    aspect-ratio: 4 / 3;
+    align-self: flex-start;
+}
+
 .timeline-swipe__cover--fallback .timeline-entry__cover-fallback {
-    min-height: 100%;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .timeline-swipe__panel {
@@ -725,15 +746,32 @@
     letter-spacing: 0.06em;
 }
 
+.timeline-swipe__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-shrink: 0;
+    padding: 0.6rem 1rem 0.7rem;
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+}
+
+#timeline .timeline-swipe__footer {
+    border-top-color: rgba(255, 255, 255, 0.12);
+    background: transparent;
+}
+
 .timeline-swipe__dots {
-    position: absolute;
-    bottom: 0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
+    position: static;
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .timeline-swipe__dot {
@@ -752,10 +790,26 @@
 }
 
 .timeline-swipe__counter {
-    margin: 0.5rem 0 0;
-    text-align: center;
+    margin: 0;
+    flex: 0 0 auto;
+    text-align: left;
     font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
     color: var(--gray-500);
+    white-space: nowrap;
+}
+
+#timeline .timeline-swipe__counter {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#timeline .timeline-swipe__dot {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+#timeline .timeline-swipe__dot.is-active {
+    background: var(--white);
 }
 
 .timeline-swipe__hint {
