@@ -1,0 +1,698 @@
+/* ============================================
+   COMPONENT: LIVE SCHEDULE
+   Homepage compact row + full archive table
+   ============================================ */
+
+.aiad-schedule-row__actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+#schedule .section-meta {
+    margin: 0.35rem 0 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-600, #4b5563);
+    font-family: var(--font-display);
+}
+
+/* Homepage spotlight: session cards — 2 columns phones & tablets, 3 on wide desktop */
+#schedule .aiad-schedule-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.aiad-schedule-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin: 0;
+    padding: 1.1rem 1.1rem 1.05rem;
+    background: var(--white, #fff);
+    border: none;
+    border-radius: 0;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 0.15s;
+    position: relative;
+}
+
+.aiad-schedule-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-green, #16a34a), var(--accent-blue, #0284c7));
+    pointer-events: none;
+}
+
+.aiad-schedule-card:hover {
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+}
+
+.aiad-schedule-card__time {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--green-700, #15803d);
+    letter-spacing: 0.02em;
+}
+
+.aiad-schedule-card__heading {
+    margin: 0 0 0.35rem;
+    font-size: 1.02rem;
+    line-height: 1.35;
+    font-weight: 700;
+}
+
+.aiad-schedule-card__title {
+    color: var(--gray-900, #111827);
+    text-decoration: none;
+}
+
+.aiad-schedule-card__title:hover {
+    text-decoration: underline;
+}
+
+.aiad-schedule-card__ks {
+    margin: 0 0 0.85rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-600, #4b5563);
+}
+
+.aiad-schedule-card__logo-wrap {
+    display: flex;
+    align-items: center;
+    height: 52px;
+    margin-bottom: 0.85rem;
+    overflow: hidden;
+}
+
+.aiad-schedule-card__logo {
+    max-height: 44px;
+    max-width: 150px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.aiad-schedule-card__org-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-500, #6b7280);
+    margin: auto 0 0.5rem;
+    line-height: 1.3;
+}
+
+.aiad-schedule-card__org-name--tbc {
+    font-style: italic;
+    font-weight: 500;
+}
+
+.aiad-schedule-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+}
+
+.aiad-schedule-card__ics,
+.aiad-schedule-card__share {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.65rem;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--gray-300, #d1d5db);
+    background: var(--white, #fff);
+    color: var(--gray-800, #1f2937);
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.aiad-schedule-card__ics:hover,
+.aiad-schedule-card__share:hover {
+    background: var(--gray-50, #f9fafb);
+    border-color: var(--gray-400, #9ca3af);
+}
+
+.aiad-schedule-card__ics:focus,
+.aiad-schedule-card__share:focus {
+    outline: 2px solid var(--green-600, #16a34a);
+    outline-offset: 2px;
+}
+
+.aiad-schedule-card__ics-label,
+.aiad-schedule-card__share-label {
+    white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+    #schedule .aiad-schedule-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    #schedule .aiad-schedule-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+    #schedule .aiad-schedule-cards .aiad-schedule-card:nth-child(3) {
+        display: none;
+    }
+    .aiad-schedule-card {
+        padding: 0.75rem 0.75rem 0.7rem;
+        clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .aiad-schedule-card__time {
+        font-size: 0.78rem;
+        margin-bottom: 0.3rem;
+    }
+    .aiad-schedule-card__heading {
+        font-size: 0.82rem;
+        margin-bottom: 0.25rem;
+    }
+    .aiad-schedule-card__ks {
+        font-size: 0.62rem;
+        margin-bottom: 0.5rem;
+    }
+    .aiad-schedule-card__logo-wrap {
+        height: 36px;
+        margin-bottom: 0.55rem;
+    }
+    .aiad-schedule-card__logo {
+        max-height: 30px;
+        max-width: 100px;
+    }
+    .aiad-schedule-card__org-name {
+        font-size: 0.68rem;
+    }
+    .aiad-schedule-card__actions {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+    }
+    .aiad-schedule-card__ics,
+    .aiad-schedule-card__share {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.65rem;
+        border-radius: 4px;
+        gap: 0;
+        flex: 1 1 0;
+        justify-content: center;
+    }
+    .aiad-schedule-card__ics-label,
+    .aiad-schedule-card__share-label {
+        display: none;
+    }
+}
+
+/* ── Single live session page ─────────────────────────────── */
+.session-single__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-500, #6b7280);
+    text-decoration: none;
+    margin-bottom: 1.75rem;
+    transition: color 0.15s;
+}
+.session-single__back:hover { color: var(--gray-900, #111827); }
+
+.session-single {
+    background: var(--white, #fff);
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+    position: relative;
+    padding: 2rem 2rem 1.75rem;
+}
+.session-single::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-green, #16a34a), var(--accent-blue, #0284c7));
+    pointer-events: none;
+}
+
+.session-single__header { margin-bottom: 1.5rem; }
+
+.session-single__time {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-green, #16a34a);
+    letter-spacing: 0.03em;
+    margin: 0 0 0.5rem;
+}
+
+.session-single__title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--gray-900, #111827);
+    margin: 0 0 0.75rem;
+}
+
+.session-single__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.session-tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    background: var(--gray-100, #f3f4f6);
+    color: var(--gray-700, #374151);
+}
+.session-tag--format {
+    background: var(--gray-900, #111827);
+    color: var(--white, #fff);
+}
+
+.session-single__body {
+    color: var(--gray-700, #374151);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1.75rem;
+    border-top: 1px solid var(--gray-100, #f3f4f6);
+    padding-top: 1.25rem;
+}
+
+.session-single__provider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray-100, #f3f4f6);
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+    margin-bottom: 1.5rem;
+}
+.session-single__logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 48px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-200, #e5e7eb);
+    background: var(--white, #fff);
+    padding: 6px 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.session-single__logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.session-single__provider-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gray-400, #9ca3af);
+    margin-bottom: 0.2rem;
+}
+.session-single__provider-name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-900, #111827);
+}
+
+.session-single__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+.session-single__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.25rem;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 0;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: opacity 0.15s, box-shadow 0.15s;
+}
+.session-single__btn--primary {
+    background: var(--gray-900, #111827);
+    color: var(--white, #fff);
+}
+.session-single__btn--primary:hover { opacity: 0.85; color: var(--white, #fff); }
+.session-single__btn--secondary {
+    background: var(--white, #fff);
+    color: var(--gray-800, #1f2937);
+    box-shadow: inset 0 0 0 1.5px var(--gray-300, #d1d5db);
+}
+.session-single__btn--secondary:hover {
+    box-shadow: inset 0 0 0 1.5px var(--gray-900, #111827);
+}
+.session-single__btn--soon {
+    background: var(--gray-100, #f3f4f6);
+    color: var(--gray-400, #9ca3af);
+    cursor: default;
+}
+
+@media (max-width: 640px) {
+    .session-single { padding: 1.25rem 1rem 1.1rem; }
+    .session-single__actions { flex-direction: column; }
+    .session-single__btn { justify-content: center; }
+}
+
+.aiad-schedule-row__empty {
+    margin: 1.5rem 0;
+    color: var(--gray-600);
+    font-style: italic;
+}
+.aiad-schedule-row__cta {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--green-700, #15803d);
+    text-decoration: none;
+}
+.aiad-schedule-row__cta:hover { text-decoration: underline; }
+.aiad-schedule-item[hidden],
+.aiad-schedule-filter-item[hidden] { display: none !important; }
+
+/* Full schedule archive: animated green accent on main heading */
+.schedule-archive .schedule-archive__title {
+    animation: schedule-archive-title-flash 1.85s ease-in-out infinite;
+    color: var(--gray-900, #111827);
+}
+
+@keyframes schedule-archive-title-flash {
+    0%,
+    100% {
+        color: var(--gray-900, #111827);
+        text-shadow: none;
+    }
+    50% {
+        color: var(--accent-green, #22c55e);
+        text-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .schedule-archive .schedule-archive__title {
+        animation: none;
+        color: var(--accent-green-dark, #15803d);
+    }
+}
+
+/* Archive table (audience filters use shared .timeline-filters from timeline.css) */
+.aiad-schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+}
+.aiad-schedule-table th,
+.aiad-schedule-table td {
+    text-align: left;
+    padding: 0.7rem 0.6rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+    vertical-align: top;
+}
+.aiad-schedule-table th {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-300, #d1d5db);
+}
+.aiad-schedule-cell-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
+.aiad-schedule-cell-provider {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    vertical-align: middle;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.aiad-schedule-cell-provider img,
+.aiad-schedule-cell-provider svg {
+    width: auto;
+    height: 28px;
+    max-width: 80px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
+.aiad-schedule-table__cta {
+    display: inline-block;
+    background: var(--green-600, #16a34a);
+    color: #fff;
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+}
+.aiad-schedule-table__cta:hover { background: var(--green-700, #15803d); }
+.aiad-schedule-table__cta--soon {
+    display: inline-block;
+    background: var(--gray-100, #f3f4f6);
+    color: var(--gray-400, #9ca3af);
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    cursor: default;
+}
+
+.aiad-schedule-cell-actions {
+    white-space: nowrap;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.aiad-schedule-table__ics,
+.aiad-schedule-table__share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--gray-500, #6b7280);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    text-decoration: none;
+    flex-shrink: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+.aiad-schedule-table__ics:hover,
+.aiad-schedule-table__share:hover {
+    border-color: var(--gray-400, #9ca3af);
+    color: var(--gray-900, #111827);
+    background: var(--gray-50, #f9fafb);
+}
+.aiad-schedule-table__ics:focus-visible,
+.aiad-schedule-table__share:focus-visible {
+    outline: 2px solid var(--accent-green, #16a34a);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .aiad-schedule-table thead { display: none; }
+    .aiad-schedule-table,
+    .aiad-schedule-table tbody { display: block; width: 100%; }
+
+    .aiad-schedule-table tr {
+        display: block;
+        border-left: 3px solid var(--accent-green, #16a34a);
+        border-radius: 0 8px 8px 0;
+        border-top: 1px solid var(--gray-100, #f3f4f6);
+        border-right: 1px solid var(--gray-100, #f3f4f6);
+        border-bottom: 1px solid var(--gray-100, #f3f4f6);
+        margin-bottom: 0.75rem;
+        padding: 0.9rem 1rem 0.8rem;
+        background: var(--white, #fff);
+        box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05);
+    }
+    .aiad-schedule-table td {
+        display: block;
+        border: none;
+        padding: 0;
+        line-height: 1.4;
+    }
+    .aiad-schedule-table td::before { display: none; }
+
+    .aiad-schedule-cell-time {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--green-700, #15803d);
+        letter-spacing: 0.04em;
+        margin-bottom: 0.3rem;
+    }
+
+    .aiad-schedule-table td:nth-child(2) {
+        font-size: 0.97rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.35rem;
+    }
+    .aiad-schedule-table td:nth-child(2) a {
+        color: var(--gray-900, #111827);
+        text-decoration: none;
+    }
+    .aiad-schedule-table td:nth-child(2) a:hover { text-decoration: underline; }
+
+    .aiad-schedule-table td:nth-child(3) {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--gray-500, #6b7280);
+        margin-bottom: 0.3rem;
+    }
+
+    .aiad-schedule-cell-provider {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        height: auto;
+        max-width: none;
+        margin-bottom: 0.3rem;
+    }
+    .aiad-schedule-cell-provider img { height: 20px; max-width: 56px; }
+    .aiad-schedule-cell-provider span { font-size: 0.78rem; color: var(--gray-600, #4b5563); }
+
+    .aiad-schedule-table td:nth-child(5) {
+        font-size: 0.72rem;
+        color: var(--gray-500, #6b7280);
+        margin-bottom: 0;
+    }
+
+    .aiad-schedule-cell-actions {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+        margin-top: 0.7rem;
+        padding-top: 0.65rem;
+        border-top: 1px solid var(--gray-100, #f3f4f6);
+        white-space: normal;
+    }
+    .aiad-schedule-table__cta,
+    .aiad-schedule-table__cta--soon {
+        flex: 1;
+        text-align: center;
+        font-size: 0.78rem;
+        padding: 0.45rem 0.5rem;
+        min-width: 0;
+    }
+    .aiad-schedule-table__ics,
+    .aiad-schedule-table__share {
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+    }
+}
+
+/* ── Schedule archive: footer share section ───────────────── */
+.aiad-schedule-footer {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200, #e5e7eb);
+}
+.aiad-schedule-footer__label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gray-400, #9ca3af);
+    margin: 0 0 0.65rem;
+}
+
+/* ── Schedule archive: share bar ──────────────────────────── */
+.aiad-schedule-share-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+}
+.aiad-schedule-share-bar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.85rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--white, #fff);
+    color: var(--gray-700, #374151);
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+    min-height: 36px;
+}
+.aiad-schedule-share-bar__btn:hover {
+    border-color: var(--gray-400, #9ca3af);
+    color: var(--gray-900, #111827);
+}
+.aiad-schedule-share-bar__btn:focus-visible {
+    outline: 2px solid var(--accent-green, #16a34a);
+    outline-offset: 2px;
+}
+.aiad-schedule-share-bar__status {
+    font-size: 0.8rem;
+    color: var(--accent-green, #16a34a);
+    font-weight: 600;
+    min-height: 1em;
+}

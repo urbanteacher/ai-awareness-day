@@ -24,12 +24,12 @@ $bundles = array(
         'layout/navigation.css',
         'layout/hero.css',
         'layout/footer.css',
-        'components/get-started.css',
         'components/principles.css',
         'components/explore-sessions.css',
         'components/section-green.css',
         'components/display-board.css',
         'components/resource-card-pointed.css',
+        'components/schedule.css',
     ),
     'pages'  => array(
         'pages/campaign.css',
@@ -42,6 +42,7 @@ $bundles = array(
         'pages/single-resource.css',
         'pages/partners-archive.css',
         'pages/single-partner.css',
+        'pages/assets-pack.css',
         'responsive/responsive.css',
         'responsive/mobile.css',
     ),
@@ -57,6 +58,8 @@ foreach ( $bundles as $name => $files ) {
         $path = $css_dir . '/' . $file;
         if ( file_exists( $path ) ) {
             $out .= "/* === " . $file . " === */\n" . file_get_contents( $path ) . "\n";
+        } else {
+            echo "WARNING: Missing source file: " . $file . " (skipped)\n";
         }
     }
     file_put_contents( $out_dir . '/' . $name . '.css', $out );

@@ -69,58 +69,172 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php endif; ?>
 
             <div class="display-board-panel" id="dbt-panel-blueprint" role="tabpanel" aria-labelledby="dbt-btn-blueprint"<?php echo $default_tab !== 'blueprint' ? ' hidden' : ''; ?>>
-                <div class="display-board-mockup" aria-label="<?php esc_attr_e( 'Display board layout guide', 'ai-awareness-day' ); ?>">
-                    <div class="display-board-mockup__header">
-                        <span class="display-board-mockup__logo"><?php esc_html_e( 'Logo', 'ai-awareness-day' ); ?></span>
-                        <div>
-                            <strong><?php esc_html_e( 'AI Awareness Day 2026', 'ai-awareness-day' ); ?></strong>
-                            <br><span class="display-board-mockup__tagline"><?php esc_html_e( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ); ?></span>
+                <div class="dbm" aria-label="<?php esc_attr_e( 'Display board layout guide', 'ai-awareness-day' ); ?>">
+
+                    <!-- Header -->
+                    <div class="dbm__header">
+                        <div class="dbm__header-logo"><span><?php esc_html_e( 'LOGO', 'ai-awareness-day' ); ?></span></div>
+                        <div class="dbm__header-text">
+                            <strong class="dbm__header-title"><?php esc_html_e( 'AI Awareness Day 2026', 'ai-awareness-day' ); ?></strong>
+                            <span class="dbm__header-tagline"><?php esc_html_e( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ); ?></span>
                         </div>
                     </div>
-                    <div class="display-board-mockup__principles">
-                        <?php
-                        $principle_slugs  = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
-                        $principle_labels = array(
-                            'safe'        => __( 'Safe', 'ai-awareness-day' ),
-                            'smart'       => __( 'Smart', 'ai-awareness-day' ),
-                            'creative'    => __( 'Creative', 'ai-awareness-day' ),
-                            'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-                            'future'      => __( 'Future', 'ai-awareness-day' ),
-                        );
-                        foreach ( $principle_slugs as $slug ) :
-                            $label = isset( $principle_labels[ $slug ] ) ? $principle_labels[ $slug ] : $slug;
-                        ?>
-                        <div class="display-board-mockup__block display-board-mockup__block--<?php echo esc_attr( $slug ); ?>">
-                            <span class="display-board-mockup__block-title"><?php echo esc_html( $label ); ?></span>
-                            <span class="display-board-mockup__block-hint"><?php esc_html_e( 'Key message + tips', 'ai-awareness-day' ); ?></span>
+
+                    <!-- 6 Theme Panels -->
+                    <div class="dbm__panels">
+
+                        <div class="dbm__panel dbm__panel--safe">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'SAFE', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'Protect your privacy and personal data when using AI tools.', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-fact"><span class="dbm__fact-label"><?php esc_html_e( 'Did you know:', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'AI systems can be biased if trained on biased data. Always question the source and verify information!', 'ai-awareness-day' ); ?></p>
+                            </div>
                         </div>
-                        <?php endforeach; ?>
+
+                        <div class="dbm__panel dbm__panel--smart">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'SMART', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'AI processes info faster than humans, but humans are better at creative problem-solving!', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-fact"><span class="dbm__fact-label"><?php esc_html_e( 'Did you know:', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'ChatGPT was trained on 45TB of text data — that\'s equivalent to reading every book in a large library!', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="dbm__panel dbm__panel--creative">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'CREATIVE', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'AI can generate art and music, but the most creative works come from human-AI collaboration!', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-fact"><span class="dbm__fact-label"><?php esc_html_e( 'Did you know:', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'AI can recognise patterns humans miss and generate creative solutions in seconds!', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="dbm__panel dbm__panel--responsible">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'RESPONSIBLE', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'Every AI decision affects real people. We must consider the impact and use technology responsibly!', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-fact"><span class="dbm__fact-label"><?php esc_html_e( 'Did you know:', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'AI can process information 1 million times faster than humans, but we must use it ethically!', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="dbm__panel dbm__panel--future">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'FUTURE', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'By 2030, 85% of jobs will require AI skills. Start learning now to be future-ready!', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-fact"><span class="dbm__fact-label"><?php esc_html_e( 'Did you know:', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'The AI industry is growing 40% each year — learning AI skills now prepares you for tomorrow\'s jobs!', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="dbm__panel dbm__panel--qr">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'QR CHALLENGES', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'Scan QR codes to discover your school\'s AI policies and guidelines!', 'ai-awareness-day' ); ?></p>
+                                <div class="dbm__qr-grid">
+                                    <div class="dbm__qr-item">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                                        <span><?php esc_html_e( 'School Policy', 'ai-awareness-day' ); ?></span>
+                                    </div>
+                                    <div class="dbm__qr-item">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                                        <span><?php esc_html_e( 'AI Guidelines', 'ai-awareness-day' ); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- .dbm__panels -->
+
+                    <!-- Interactive: Questions + Responses -->
+                    <div class="dbm__row">
+
+                        <div class="dbm__panel dbm__panel--questions">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( "This Week's Questions", 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <ul class="dbm__questions">
+                                    <li><?php esc_html_e( 'How can we ensure AI tools are fair?', 'ai-awareness-day' ); ?></li>
+                                    <li><?php esc_html_e( "What are AI's strengths vs humans?", 'ai-awareness-day' ); ?></li>
+                                    <li><?php esc_html_e( 'How can AI enhance creativity?', 'ai-awareness-day' ); ?></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="dbm__panel dbm__panel--responses">
+                            <div class="dbm__panel-header">
+                                <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'Student Responses', 'ai-awareness-day' ); ?></h3>
+                            </div>
+                            <div class="dbm__panel-body">
+                                <p class="dbm__panel-quote"><?php esc_html_e( '"AI should be transparent"', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-quote"><?php esc_html_e( '"Humans understand emotions better"', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-quote"><?php esc_html_e( '"AI helps brainstorm, I add creativity"', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__sticky-hint"><?php esc_html_e( 'Students write answers on sticky notes here', 'ai-awareness-day' ); ?></p>
+                            </div>
+                        </div>
+
+                    </div><!-- .dbm__row -->
+
+                    <!-- AI Leaders Gallery -->
+                    <div class="dbm__panel dbm__panel--leaders dbm__panel--wide">
+                        <div class="dbm__panel-header">
+                            <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                            <h3 class="dbm__panel-title"><?php esc_html_e( 'AI Leaders & Innovators', 'ai-awareness-day' ); ?></h3>
+                        </div>
+                        <div class="dbm__panel-body">
+                            <div class="dbm__gallery">
+                                <div class="dbm__gallery-item"><span aria-hidden="true">📸</span><p><?php esc_html_e( 'Add Photo', 'ai-awareness-day' ); ?></p></div>
+                                <div class="dbm__gallery-item"><span aria-hidden="true">📸</span><p><?php esc_html_e( 'Add Photo', 'ai-awareness-day' ); ?></p></div>
+                                <div class="dbm__gallery-item"><span aria-hidden="true">📸</span><p><?php esc_html_e( 'Add Photo', 'ai-awareness-day' ); ?></p></div>
+                            </div>
+                            <p class="dbm__gallery-hint"><?php esc_html_e( 'Add photos of AI leaders like Andrew Ng, Fei-Fei Li, Yann LeCun, etc. Set students the challenge: find 3 living people working in AI!', 'ai-awareness-day' ); ?></p>
+                        </div>
                     </div>
-                    <div class="display-board-mockup__qr">
-                        <span class="display-board-mockup__block-title"><?php esc_html_e( 'QR challenges', 'ai-awareness-day' ); ?></span>
-                        <span class="display-board-mockup__block-hint"><?php esc_html_e( 'Scan & investigate: School policy, AI guidelines', 'ai-awareness-day' ); ?></span>
+
+                    <!-- Student Spotlight -->
+                    <div class="dbm__panel dbm__panel--spotlight dbm__panel--wide">
+                        <div class="dbm__panel-header">
+                            <span class="dbm__panel-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                            <h3 class="dbm__panel-title"><?php esc_html_e( 'Student Spotlight', 'ai-awareness-day' ); ?></h3>
+                        </div>
+                        <div class="dbm__panel-body">
+                            <div class="dbm__spotlight">
+                                <div class="dbm__spotlight-item">
+                                    <div class="dbm__spotlight-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                                    <div>
+                                        <p class="dbm__spotlight-name"><?php esc_html_e( 'Student Name', 'ai-awareness-day' ); ?></p>
+                                        <p class="dbm__spotlight-work"><?php esc_html_e( 'Add student work or project here', 'ai-awareness-day' ); ?></p>
+                                    </div>
+                                </div>
+                                <div class="dbm__spotlight-item">
+                                    <div class="dbm__spotlight-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                                    <div>
+                                        <p class="dbm__spotlight-name"><?php esc_html_e( 'Student Name', 'ai-awareness-day' ); ?></p>
+                                        <p class="dbm__spotlight-work"><?php esc_html_e( 'Add student work or project here', 'ai-awareness-day' ); ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="display-board-mockup__row">
-                        <div class="display-board-mockup__block display-board-mockup__block--questions">
-                            <span class="display-board-mockup__block-title"><?php esc_html_e( "This week's questions", 'ai-awareness-day' ); ?></span>
-                            <span class="display-board-mockup__block-hint"><?php esc_html_e( 'e.g. How can we ensure AI tools are fair?', 'ai-awareness-day' ); ?></span>
-                        </div>
-                        <div class="display-board-mockup__block display-board-mockup__block--responses">
-                            <span class="display-board-mockup__block-title"><?php esc_html_e( 'Student responses', 'ai-awareness-day' ); ?></span>
-                            <span class="display-board-mockup__block-hint"><?php esc_html_e( 'Sticky notes / written answers here', 'ai-awareness-day' ); ?></span>
-                        </div>
-                    </div>
-                    <div class="display-board-mockup__row">
-                        <div class="display-board-mockup__block display-board-mockup__block--spotlight">
-                            <span class="display-board-mockup__block-title"><?php esc_html_e( 'AI leaders & innovators', 'ai-awareness-day' ); ?></span>
-                            <span class="display-board-mockup__block-hint"><?php esc_html_e( 'Photos + names', 'ai-awareness-day' ); ?></span>
-                        </div>
-                        <div class="display-board-mockup__block display-board-mockup__block--spotlight">
-                            <span class="display-board-mockup__block-title"><?php esc_html_e( 'Student spotlight', 'ai-awareness-day' ); ?></span>
-                            <span class="display-board-mockup__block-hint"><?php esc_html_e( 'Feature student work or projects', 'ai-awareness-day' ); ?></span>
-                        </div>
-                    </div>
-                </div>
+
+                </div><!-- .dbm -->
             </div>
 
             <div class="display-board-panel" id="dbt-panel-steps" role="tabpanel" aria-labelledby="dbt-btn-steps" hidden>

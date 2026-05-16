@@ -158,6 +158,7 @@ function aiad_scripts(): void
             'components/section-green.css',
             'components/display-board.css',
             'components/resource-card-pointed.css',
+            'components/schedule.css',
             'pages/campaign.css',
             'pages/momentum.css',
             'pages/themes.css',
@@ -441,3 +442,91 @@ function aiad_fallback_menu(): void
     echo '<li><a href="' . esc_url(home_url('/#contact')) . '" class="nav-cta">' . esc_html__('Get Involved', 'ai-awareness-day') . '</a></li>';
     echo '</ul>';
 }
+
+/**
+ * Favicon — one source of truth.
+ *
+ * Priority order:
+ *   1. WordPress Site Icon (set via Appearance → Customize → Site Identity) — WP outputs this via wp_head automatically.
+ *   2. Theme file fallback: drop favicon.png (512×512) into assets/images/favicon/ and it works everywhere.
+ *
+ * If WordPress has a site icon configured, this function does nothing (WP already handles it).
+ */
+function aiad_favicon_fallback(): void {
+    if ( get_site_icon_url() ) {
+        return; // WordPress site icon is set — WP handles the <link> tags.
+    }
+
+    $dir  = AIAD_DIR . '/assets/images/favicon/';
+    $uri  = get_template_directory_uri() . '/assets/images/favicon/';
+    $main = $dir . 'favicon.png';
+
+    if ( ! file_exists( $main ) ) {
+        return; // No favicon file yet — see assets/images/favicon/README.md
+    }
+
+    $main_url = esc_url( $uri . 'favicon.png' );
+
+    // 32px variant (optional, falls back to main)
+    $icon32_url = file_exists( $dir . 'favicon-32.png' )
+        ? esc_url( $uri . 'favicon-32.png' )
+        : $main_url;
+
+    // Apple Touch icon (optional, falls back to main)
+    $apple_url = file_exists( $dir . 'favicon-180.png' )
+        ? esc_url( $uri . 'favicon-180.png' )
+        : $main_url;
+
+    // .ico (optional)
+    $ico_url = file_exists( $dir . 'favicon.ico' )
+        ? esc_url( $uri . 'favicon.ico' )
+        : null;
+
+    echo '<link rel="icon" type="image/png" sizes="512x512" href="' . $main_url . '">' . "\n";
+    echo '<link rel="icon" type="image/png" sizes="32x32" href="' . $icon32_url . '">' . "\n";
+    echo '<link rel="apple-touch-icon" sizes="180x180" href="' . $apple_url . '">' . "\n";
+    if ( $ico_url ) {
+        echo '<link rel="shortcut icon" href="' . $ico_url . '">' . "\n";
+    }
+}
+add_action( 'wp_head', 'aiad_favicon_fallback', 1 );
+
+/**
+ * Admin notice: remind editors where to manage the favicon.
+ */
+function aiad_favicon_admin_notice(): void {
+    $screen = get_current_screen();
+    // Only show on Dashboard and Appearance screens.
+    if ( ! $screen || ! in_array( $screen->base, array( 'dashboard', 'appearance_page_custom-header', 'customize' ), true ) ) {
+        return;
+    }
+
+    $has_wp_icon    = (bool) get_option( 'site_icon' );
+    $has_theme_file = file_exists( AIAD_DIR . '/assets/images/favicon/favicon.png' );
+    $customize_url  = admin_url( 'customize.php?autofocus[section]=title_tagline' );
+    $theme_path     = 'wp-content/themes/ai-awareness-day/assets/images/favicon/favicon.png';
+
+    if ( $has_wp_icon ) {
+        // All good — favicon is set.
+        return;
+    }
+
+    if ( $has_theme_file ) {
+        $msg = sprintf(
+            /* translators: %s: Customizer URL */
+            __( '<strong>Favicon:</strong> Using theme fallback file (<code>%1$s</code>). To override with a different image, <a href="%2$s">set a Site Icon in the Customizer</a>.', 'ai-awareness-day' ),
+            esc_html( $theme_path ),
+            esc_url( $customize_url )
+        );
+        echo '<div class="notice notice-info"><p>' . $msg . '</p></div>';
+    } else {
+        $msg = sprintf(
+            /* translators: 1: theme file path, 2: Customizer URL */
+            __( '<strong>No favicon set.</strong> Drop a 512×512 PNG at <code>%1$s</code> — or <a href="%2$s">upload one via the Customizer → Site Identity</a>.', 'ai-awareness-day' ),
+            esc_html( $theme_path ),
+            esc_url( $customize_url )
+        );
+        echo '<div class="notice notice-warning"><p>' . $msg . '</p></div>';
+    }
+}
+add_action( 'admin_notices', 'aiad_favicon_admin_notice' );
