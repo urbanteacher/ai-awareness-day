@@ -874,3 +874,33 @@ function aiad_noindex_low_value_archives( array $robots ): array {
 	return $robots;
 }
 add_filter( 'wp_robots', 'aiad_noindex_low_value_archives' );
+
+/**
+ * Serve curated llms.txt from the theme (replaces thin Hostinger auto-generated lists).
+ *
+ * @see https://llmstxt.org/
+ */
+function aiad_maybe_serve_llms_txt(): void {
+	if ( php_sapi_name() === 'cli' ) {
+		return;
+	}
+	$uri = isset( $_SERVER['REQUEST_URI'] )
+		? (string) wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH )
+		: '';
+	if ( ! preg_match( '#^/llms\.txt/?$#', $uri ) ) {
+		return;
+	}
+	$file = AIAD_DIR . '/llms.txt';
+	if ( ! is_readable( $file ) ) {
+		return;
+	}
+	$contents = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	if ( false === $contents ) {
+		return;
+	}
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plain text file
+	echo $contents;
+	exit;
+}
+add_action( 'init', 'aiad_maybe_serve_llms_txt', 0 );
