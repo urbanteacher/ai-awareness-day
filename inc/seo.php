@@ -47,6 +47,49 @@ function aiad_seo_should_output(): bool {
 }
 
 /**
+ * Attachment ID used for schema logos and event images (PNG site icon preferred).
+ *
+ * @return int Attachment ID or 0.
+ */
+function aiad_get_schema_logo_attachment_id(): int {
+	$site_icon = (int) get_option( 'site_icon' );
+	if ( $site_icon ) {
+		return $site_icon;
+	}
+	if ( has_custom_logo() ) {
+		$custom_logo = (int) get_theme_mod( 'custom_logo' );
+		if ( $custom_logo ) {
+			return $custom_logo;
+		}
+	}
+	return absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+}
+
+/**
+ * ImageObject for JSON-LD (Organization logo, Event image, etc.).
+ *
+ * @param string $image_size WP image size name or [width, height].
+ * @return array<string, mixed>|null
+ */
+function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
+	$logo_id = aiad_get_schema_logo_attachment_id();
+	if ( ! $logo_id ) {
+		return null;
+	}
+	$logo_url = wp_get_attachment_image_url( $logo_id, $image_size );
+	if ( ! $logo_url ) {
+		return null;
+	}
+	$meta = wp_get_attachment_metadata( $logo_id );
+	return array(
+		'@type'  => 'ImageObject',
+		'url'    => $logo_url,
+		'width'  => isset( $meta['width'] ) ? (int) $meta['width'] : 512,
+		'height' => isset( $meta['height'] ) ? (int) $meta['height'] : 512,
+	);
+}
+
+/**
  * Get Organization schema data.
  *
  * @return array<string, mixed> Organization schema array.
@@ -67,26 +110,10 @@ function aiad_get_organization_schema(): array {
 		$schema['description'] = $description;
 	}
 
-	// Logo: prefer aiad_hero_logo → WP custom_logo → site_icon (favicon).
-	// Use ImageObject form per Google guidance (https://developers.google.com/search/docs/appearance/structured-data/organization).
-	$logo_id = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
-	if ( ! $logo_id && has_custom_logo() ) {
-		$logo_id = (int) get_theme_mod( 'custom_logo' );
-	}
-	if ( ! $logo_id && function_exists( 'get_site_icon_url' ) ) {
-		$logo_id = (int) get_option( 'site_icon' );
-	}
-	if ( $logo_id ) {
-		$logo_url = wp_get_attachment_image_url( $logo_id, 'full' );
-		if ( $logo_url ) {
-			$meta = wp_get_attachment_metadata( $logo_id );
-			$schema['logo'] = array(
-				'@type'  => 'ImageObject',
-				'url'    => $logo_url,
-				'width'  => isset( $meta['width'] ) ? (int) $meta['width'] : 112,
-				'height' => isset( $meta['height'] ) ? (int) $meta['height'] : 112,
-			);
-		}
+	// Logo: site icon → custom logo → hero (ImageObject per Google Organization guidance).
+	$logo = aiad_get_schema_image_object( 'full' );
+	if ( $logo ) {
+		$schema['logo'] = $logo;
 	}
 
 	// Social profiles (sameAs) — each Customizer field below contributes.
@@ -140,34 +167,66 @@ function aiad_get_website_schema(): array {
  */
 function aiad_get_event_schema(): array {
 	$event_date = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
-	
-	// Get organization schema and remove @context when nesting
+	$event_url  = home_url( '/' );
+
+	// ISO 8601 with UK timezone for clearer indexing of 4 June 2026.
+	$start_date = $event_date . 'T00:00:00+01:00';
+	$end_date   = $event_date . 'T23:59:59+01:00';
+
+	// Get organization schema and remove @context when nesting.
 	$organizer = aiad_get_organization_schema();
 	unset( $organizer['@context'] );
-	
+
+	$performer = array(
+		'@type' => 'Organization',
+		'name'  => $organizer['name'] ?? 'AI Awareness Day',
+		'url'   => $event_url,
+	);
+
 	$schema = array(
-		'@context'            => 'https://schema.org',
-		'@type'               => 'Event',
-		'name'                => 'AI Awareness Day',
-		'alternateName'       => '#AIAwarenessDay',
-		'description'         => 'A nationwide UK campaign designed to build AI literacy across schools, with pupils, teachers and staff committing to at least one AI activity on the day.',
-		'startDate'           => $event_date,
-		'endDate'             => $event_date,
-		'eventAttendanceMode' => 'https://schema.org/MixedEventAttendanceMode',
-		'eventStatus'         => 'https://schema.org/EventScheduled',
-		'location'            => array(
-			'@type' => 'Country',
-			'name'  => 'United Kingdom',
+		'@context'              => 'https://schema.org',
+		'@type'                 => 'Event',
+		'name'                  => 'AI Awareness Day',
+		'alternateName'         => array( '#AIAwarenessDay', 'National AI Awareness Day' ),
+		'description'           => 'A nationwide UK campaign designed to build AI literacy across schools, with pupils, teachers and staff committing to at least one AI activity on the day.',
+		'startDate'             => $start_date,
+		'endDate'               => $end_date,
+		'eventAttendanceMode'   => 'https://schema.org/MixedEventAttendanceMode',
+		'eventStatus'           => 'https://schema.org/EventScheduled',
+		'location'              => array(
+			'@type'   => 'Place',
+			'name'    => 'UK schools and online',
+			'address' => array(
+				'@type'          => 'PostalAddress',
+				'addressCountry' => 'GB',
+			),
 		),
-		'organizer'           => $organizer,
-		'url'                 => home_url( '/' ),
-		'inLanguage'          => 'en-GB',
-		'isAccessibleForFree' => true,
-		'sameAs'              => array(
+		'organizer'             => $organizer,
+		'performer'             => $performer,
+		'offers'                => array(
+			'@type'           => 'Offer',
+			'url'             => $event_url,
+			'price'           => '0',
+			'priceCurrency'   => 'GBP',
+			'availability'    => 'https://schema.org/InStock',
+			'validFrom'       => '2026-01-01',
+		),
+		'url'                   => $event_url,
+		'inLanguage'            => 'en-GB',
+		'isAccessibleForFree'   => true,
+		'sameAs'                => array(
 			'https://www.wikidata.org/wiki/Q139799162',
-			home_url( '/' ),
+			$event_url,
 		),
 	);
+
+	$event_image = aiad_get_schema_image_object( array( 192, 192 ) );
+	if ( ! $event_image ) {
+		$event_image = aiad_get_schema_image_object( 'full' );
+	}
+	if ( $event_image ) {
+		$schema['image'] = array( $event_image['url'] );
+	}
 
 	return $schema;
 }
