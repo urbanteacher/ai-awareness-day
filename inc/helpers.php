@@ -535,6 +535,25 @@ function aiad_get_logo_image_url( int $attachment_id, string $size = 'full' ): s
 }
 
 /**
+ * Default avatar when a user has no Gravatar (Site Identity / brand logo).
+ *
+ * @return string Public image URL or empty.
+ */
+function aiad_get_default_avatar_url(): string {
+	$logo_id = aiad_get_brand_logo_attachment_id();
+	if ( ! $logo_id ) {
+		return '';
+	}
+	foreach ( array( 'thumbnail', 'medium', 'full' ) as $size ) {
+		$url = aiad_get_logo_image_url( $logo_id, $size );
+		if ( '' !== $url ) {
+			return $url;
+		}
+	}
+	return '';
+}
+
+/**
  * Get default values for customizer settings.
  *
  * @return array<string, mixed> Array of setting names => default values.
