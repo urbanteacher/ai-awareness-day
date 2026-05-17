@@ -469,13 +469,8 @@ function aiad_register_engagement_dashboard_widget(): void {
 	);
 	wp_add_dashboard_widget(
 		'aiad_partner_engagement',
-		__( '🤝 Partner analytics — AI resources', 'ai-awareness-day' ),
+		__( '🤝 Partner analytics', 'ai-awareness-day' ),
 		'aiad_partner_engagement_widget_callback'
-	);
-	wp_add_dashboard_widget(
-		'aiad_homepage_outbound',
-		__( '🏠 Homepage — Handpicked, AI tools & hero partners', 'ai-awareness-day' ),
-		'aiad_homepage_outbound_widget_callback'
 	);
 }
 add_action( 'wp_dashboard_setup', 'aiad_register_engagement_dashboard_widget', 15 );
@@ -796,19 +791,28 @@ function aiad_schedule_engagement_widget_callback(): void {
  * Dashboard widget: partner AI resource clicks (Reach section).
  */
 function aiad_partner_engagement_widget_callback(): void {
-	$total_clicks  = aiad_sum_meta_for_post_type( 'partner', '_aiad_partner_ai_clicks' );
-	$partner_count = aiad_count_ai_resource_partners();
-	$top_partners  = aiad_get_top_ai_resource_partners( 5 );
-	$with_clicks   = 0;
-	foreach ( $top_partners as $row ) {
+	$total_ai_clicks   = aiad_sum_meta_for_post_type( 'partner', '_aiad_partner_ai_clicks' );
+	$total_marquee     = aiad_sum_meta_for_post_type( 'partner', '_aiad_partner_marquee_clicks' );
+	$partners_stat     = (int) get_option( 'aiad_hero_partners_stat_clicks', 0 );
+	$partner_count     = aiad_count_ai_resource_partners();
+	$top_ai_partners   = aiad_get_top_ai_resource_partners( 5 );
+	$top_marquee       = aiad_get_top_posts_for_type( 'partner', '_aiad_partner_marquee_clicks', 5 );
+	$with_ai_clicks    = 0;
+	foreach ( $top_ai_partners as $row ) {
 		if ( $row['count'] > 0 ) {
-			++$with_clicks;
+			++$with_ai_clicks;
 		}
 	}
 	?>
 	<style>
+		#aiad_partner_engagement .aiad-ce-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 0.5rem 0.75rem;
+			margin-bottom: 0.75rem;
+		}
 		#aiad_partner_engagement .aiad-ce-stat__val {
-			font-size: 1.7rem;
+			font-size: 1.35rem;
 			font-weight: 800;
 			line-height: 1;
 		}
@@ -850,27 +854,52 @@ function aiad_partner_engagement_widget_callback(): void {
 		#aiad_partner_engagement .aiad-ce-list a { color: #2271b1; text-decoration: none; }
 		#aiad_partner_engagement .aiad-ce-meta { font-size: 0.72rem; color: #646970; }
 		#aiad_partner_engagement .aiad-ce-count { font-weight: 700; white-space: nowrap; }
+		#aiad_partner_engagement .aiad-ce-empty {
+			color: #646970;
+			font-size: 0.85rem;
+			font-style: italic;
+			margin: 0;
+		}
+		@media (max-width: 782px) {
+			#aiad_partner_engagement .aiad-ce-grid { grid-template-columns: 1fr; }
+		}
 	</style>
 
-	<p class="aiad-ce-note"><?php esc_html_e( 'Clicks on partner cards in the Reach section that link to AI learning resources. More partner metrics can be added here later.', 'ai-awareness-day' ); ?></p>
+	<p class="aiad-ce-note"><?php esc_html_e( 'Homepage partner activity: Reach AI resource cards, hero logo marquee, and the Partners stat block.', 'ai-awareness-day' ); ?></p>
 
-	<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_clicks ) ); ?></span>
-	<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Total AI resource clicks', 'ai-awareness-day' ); ?></span>
-	<p class="aiad-ce-note" style="margin-top:0.35rem;">
+	<div class="aiad-ce-grid">
+		<div>
+			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_ai_clicks ) ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'AI resource clicks', 'ai-awareness-day' ); ?></span>
+		</div>
+		<div>
+			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_marquee ) ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hero logo clicks', 'ai-awareness-day' ); ?></span>
+		</div>
+		<div>
+			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $partners_stat ) ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'See all partners', 'ai-awareness-day' ); ?></span>
+		</div>
+	</div>
+
+	<p class="aiad-ce-note" style="margin-top:0;">
 		<?php
 		echo esc_html(
 			sprintf(
-				/* translators: 1: partners with AI resources flag, 2: partners with at least one tracked click */
-				__( '%1$d partners offer AI resources · %2$d with clicks recorded', 'ai-awareness-day' ),
+				/* translators: 1: partners with AI resources flag, 2: partners with at least one AI click */
+				__( '%1$d partners offer AI resources · %2$d with Reach clicks recorded', 'ai-awareness-day' ),
 				$partner_count,
-				$with_clicks
+				$with_ai_clicks
 			)
 		);
 		?>
 	</p>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked AI resource partners', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_partners, __( 'clicks', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Reach — AI resource partners', 'ai-awareness-day' ); ?></p>
+	<?php aiad_engagement_render_list( $top_ai_partners, __( 'clicks', 'ai-awareness-day' ) ); ?>
+
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Hero — partner logo marquee', 'ai-awareness-day' ); ?></p>
+	<?php aiad_engagement_render_list( $top_marquee, __( 'clicks', 'ai-awareness-day' ) ); ?>
 
 	<p style="margin:0.5rem 0 0;">
 		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=partner' ) ); ?>"><?php esc_html_e( 'All partners →', 'ai-awareness-day' ); ?></a>
@@ -878,110 +907,3 @@ function aiad_partner_engagement_widget_callback(): void {
 	<?php
 }
 
-/**
- * Dashboard widget: homepage handpicked resources, AI tools, hero partner marquee.
- */
-function aiad_homepage_outbound_widget_callback(): void {
-	$featured_total  = aiad_sum_meta_for_post_type( 'featured_resource', '_aiad_featured_resource_clicks' );
-	$tools_total     = aiad_sum_meta_for_post_type( 'ai_tool', '_aiad_tool_clicks' );
-	$marquee_total   = aiad_sum_meta_for_post_type( 'partner', '_aiad_partner_marquee_clicks' );
-	$partners_stat   = (int) get_option( 'aiad_hero_partners_stat_clicks', 0 );
-	$top_featured    = aiad_get_top_posts_for_type( 'featured_resource', '_aiad_featured_resource_clicks', 5 );
-	$top_tools       = aiad_get_top_posts_for_type( 'ai_tool', '_aiad_tool_clicks', 5 );
-	$top_marquee     = aiad_get_top_posts_for_type( 'partner', '_aiad_partner_marquee_clicks', 5 );
-	?>
-	<style>
-		#aiad_homepage_outbound .aiad-ce-grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: 0.5rem 0.75rem;
-			margin-bottom: 0.75rem;
-		}
-		#aiad_homepage_outbound .aiad-ce-stat__val {
-			font-size: 1.35rem;
-			font-weight: 800;
-			line-height: 1;
-		}
-		#aiad_homepage_outbound .aiad-ce-stat__lbl {
-			font-size: 0.65rem;
-			font-weight: 700;
-			letter-spacing: 0.06em;
-			text-transform: uppercase;
-			color: #646970;
-			display: block;
-			margin-top: 0.15rem;
-		}
-		#aiad_homepage_outbound .aiad-ce-note {
-			font-size: 0.78rem;
-			color: #646970;
-			margin: 0 0 0.5rem;
-		}
-		#aiad_homepage_outbound .aiad-ce-section-title {
-			font-size: 0.68rem;
-			font-weight: 700;
-			letter-spacing: 0.08em;
-			text-transform: uppercase;
-			margin: 0.75rem 0 0.35rem;
-		}
-		#aiad_homepage_outbound .aiad-ce-list {
-			list-style: none;
-			margin: 0 0 0.5rem;
-			padding: 0;
-		}
-		#aiad_homepage_outbound .aiad-ce-list li {
-			display: grid;
-			grid-template-columns: 1fr auto auto;
-			gap: 0.35rem 0.5rem;
-			padding: 0.3rem 0;
-			border-bottom: 1px solid #f0f0f1;
-			font-size: 0.85rem;
-		}
-		#aiad_homepage_outbound .aiad-ce-list li:last-child { border-bottom: none; }
-		#aiad_homepage_outbound .aiad-ce-list a { color: #2271b1; text-decoration: none; }
-		#aiad_homepage_outbound .aiad-ce-meta { font-size: 0.72rem; color: #646970; }
-		#aiad_homepage_outbound .aiad-ce-count { font-weight: 700; white-space: nowrap; }
-		#aiad_homepage_outbound .aiad-ce-empty {
-			color: #646970;
-			font-size: 0.85rem;
-			font-style: italic;
-			margin: 0;
-		}
-	</style>
-
-	<p class="aiad-ce-note"><?php esc_html_e( 'Front page only. Handpicked cards track outbound clicks; AI tools track “Visit website”; hero marquee tracks logo clicks; the Partners stat tracks “see all partners”.', 'ai-awareness-day' ); ?></p>
-
-	<div class="aiad-ce-grid">
-		<div>
-			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $featured_total ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Handpicked clicks', 'ai-awareness-day' ); ?></span>
-		</div>
-		<div>
-			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $tools_total ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'AI tool visits', 'ai-awareness-day' ); ?></span>
-		</div>
-		<div>
-			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $marquee_total ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hero logo clicks', 'ai-awareness-day' ); ?></span>
-		</div>
-		<div>
-			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $partners_stat ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Partners stat clicks', 'ai-awareness-day' ); ?></span>
-		</div>
-	</div>
-
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked handpicked resources', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_featured, __( 'clicks', 'ai-awareness-day' ) ); ?>
-
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most visited AI tools', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_tools, __( 'clicks', 'ai-awareness-day' ) ); ?>
-
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked hero partner logos', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_marquee, __( 'clicks', 'ai-awareness-day' ) ); ?>
-
-	<p style="margin:0.5rem 0 0;font-size:0.85rem;">
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ); ?>"><?php esc_html_e( 'Handpicked resources →', 'ai-awareness-day' ); ?></a>
-		&nbsp;·&nbsp;
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=ai_tool' ) ); ?>"><?php esc_html_e( 'AI tools →', 'ai-awareness-day' ); ?></a>
-	</p>
-	<?php
-}

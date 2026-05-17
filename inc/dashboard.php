@@ -25,6 +25,11 @@ function aiad_register_dashboard_widget(): void {
         __( '📚 Resource Analytics — Downloads & Views', 'ai-awareness-day' ),
         'aiad_resource_analytics_widget_callback'
     );
+    wp_add_dashboard_widget(
+        'aiad_ai_tool_analytics',
+        __( '🛠 AI Tools — Homepage visits', 'ai-awareness-day' ),
+        'aiad_ai_tool_analytics_widget_callback'
+    );
 }
 add_action( 'wp_dashboard_setup', 'aiad_register_dashboard_widget' );
 
@@ -128,6 +133,12 @@ function aiad_resource_analytics_widget_callback(): void {
     $stats = aiad_get_resource_analytics();
     $top_downloads = aiad_get_top_resources_by_meta( '_aiad_download_count', 5 );
     $top_views     = aiad_get_top_resources_by_meta( '_aiad_view_count', 5 );
+    $handpicked_total = function_exists( 'aiad_sum_meta_for_post_type' )
+        ? aiad_sum_meta_for_post_type( 'featured_resource', '_aiad_featured_resource_clicks' )
+        : 0;
+    $top_handpicked = function_exists( 'aiad_get_top_posts_for_type' )
+        ? aiad_get_top_posts_for_type( 'featured_resource', '_aiad_featured_resource_clicks', 5 )
+        : array();
 
     $coverage_dl = $stats['resource_count'] > 0
         ? round( ( $stats['resources_with_downloads'] / $stats['resource_count'] ) * 100 )
@@ -261,10 +272,139 @@ function aiad_resource_analytics_widget_callback(): void {
     <?php endif; ?>
 
     <hr class="aiad-ra-divider">
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Handpicked partner resources (homepage clicks)', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-ra-sub" style="margin:0 0 0.5rem;">
+        <?php esc_html_e( 'Outbound clicks on handpicked cards in the Extra Resources section.', 'ai-awareness-day' ); ?>
+        <strong><?php echo esc_html( number_format( $handpicked_total ) ); ?></strong>
+        <?php esc_html_e( 'total', 'ai-awareness-day' ); ?>
+    </p>
+    <?php if ( empty( $top_handpicked ) ) : ?>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No handpicked clicks recorded yet.', 'ai-awareness-day' ); ?></p>
+    <?php else : ?>
+        <ul class="aiad-ra-list">
+            <?php foreach ( $top_handpicked as $row ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( $row['edit'] ); ?>"><?php echo esc_html( $row['title'] ); ?></a>
+                    <span class="count"><?php echo esc_html( number_format( $row['count'] ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <hr class="aiad-ra-divider">
     <p style="margin:0;">
         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=downloads&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by downloads →', 'ai-awareness-day' ); ?></a>
         &nbsp;·&nbsp;
         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=views&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by views →', 'ai-awareness-day' ); ?></a>
+        &nbsp;·&nbsp;
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ); ?>"><?php esc_html_e( 'Handpicked resources →', 'ai-awareness-day' ); ?></a>
+    </p>
+    <?php
+}
+
+/**
+ * Dashboard widget: AI tool outbound clicks from the homepage.
+ */
+function aiad_ai_tool_analytics_widget_callback(): void {
+    $total_clicks = function_exists( 'aiad_sum_meta_for_post_type' )
+        ? aiad_sum_meta_for_post_type( 'ai_tool', '_aiad_tool_clicks' )
+        : 0;
+    $top_tools = function_exists( 'aiad_get_top_posts_for_type' )
+        ? aiad_get_top_posts_for_type( 'ai_tool', '_aiad_tool_clicks', 5 )
+        : array();
+    $tool_count = (int) ( wp_count_posts( 'ai_tool' )->publish ?? 0 );
+    ?>
+    <style>
+        #aiad_ai_tool_analytics .aiad-at-stat__val {
+            font-size: 1.7rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #1e1e1e;
+        }
+        #aiad_ai_tool_analytics .aiad-at-stat__lbl {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: #646970;
+            margin-top: 0.2rem;
+            display: block;
+        }
+        #aiad_ai_tool_analytics .aiad-at-note {
+            font-size: 0.78rem;
+            color: #646970;
+            margin: 0 0 0.75rem;
+        }
+        #aiad_ai_tool_analytics .aiad-at-section-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #1e1e1e;
+            margin: 0.75rem 0 0.35rem;
+        }
+        #aiad_ai_tool_analytics .aiad-at-list {
+            list-style: none;
+            margin: 0 0 0.5rem;
+            padding: 0;
+        }
+        #aiad_ai_tool_analytics .aiad-at-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #f0f0f1;
+            font-size: 0.85rem;
+        }
+        #aiad_ai_tool_analytics .aiad-at-list li:last-child { border-bottom: none; }
+        #aiad_ai_tool_analytics .aiad-at-list a {
+            color: #2271b1;
+            text-decoration: none;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #aiad_ai_tool_analytics .aiad-at-list .count { font-weight: 700; color: #1e1e1e; }
+        #aiad_ai_tool_analytics .aiad-at-empty {
+            color: #646970;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+    </style>
+
+    <p class="aiad-at-note"><?php esc_html_e( '“Visit website” clicks on AI tool cards on the homepage. Stats count from deploy onward.', 'ai-awareness-day' ); ?></p>
+
+    <span class="aiad-at-stat__val"><?php echo esc_html( number_format( $total_clicks ) ); ?></span>
+    <span class="aiad-at-stat__lbl"><?php esc_html_e( 'Total homepage visits', 'ai-awareness-day' ); ?></span>
+    <p class="aiad-at-note" style="margin-top:0.35rem;">
+        <?php
+        echo esc_html(
+            sprintf(
+                /* translators: %d: number of published AI tools */
+                __( '%d published tools', 'ai-awareness-day' ),
+                $tool_count
+            )
+        );
+        ?>
+    </p>
+
+    <p class="aiad-at-section-title"><?php esc_html_e( 'Most visited tools', 'ai-awareness-day' ); ?></p>
+    <?php if ( empty( $top_tools ) ) : ?>
+        <p class="aiad-at-empty"><?php esc_html_e( 'No visits recorded yet.', 'ai-awareness-day' ); ?></p>
+    <?php else : ?>
+        <ul class="aiad-at-list">
+            <?php foreach ( $top_tools as $row ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( $row['edit'] ); ?>"><?php echo esc_html( $row['title'] ); ?></a>
+                    <span class="count"><?php echo esc_html( number_format( $row['count'] ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <p style="margin:0.5rem 0 0;">
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=ai_tool' ) ); ?>"><?php esc_html_e( 'All AI tools →', 'ai-awareness-day' ); ?></a>
     </p>
     <?php
 }
