@@ -17,11 +17,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array<string, string>
  */
 function aiad_generator_embed_query_args(): array {
-	return array(
+	$args = array(
 		'rest_nonce' => wp_create_nonce( 'wp_rest' ),
 		'rest_root'  => esc_url_raw( rest_url( 'aiad/v1/certificate/' ) ),
 		'wp_url'     => esc_url_raw( home_url( '/' ) ),
 	);
+	$logo_url     = function_exists( 'aiad_certificate_brand_logo_url' )
+		? aiad_certificate_brand_logo_url()
+		: '';
+	if ( $logo_url !== '' ) {
+		$args['brand_logo'] = $logo_url;
+	}
+	return $args;
 }
 
 /**

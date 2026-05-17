@@ -378,6 +378,33 @@
             return '';
         }
 
+        function resolveBrandLogoUrl(boot) {
+            const embedLogo = EMBED_PARAMS.get('brand_logo');
+            if (embedLogo) return embedLogo;
+            return (boot && boot.brand_logo_url) || '';
+        }
+
+        async function fetchAllSubmissions() {
+            const perPage = 500;
+            let page = 1;
+            let all = [];
+            let total = 0;
+            let totalPages = 1;
+            while (page <= totalPages) {
+                const res = await aiadApiFetch('submissions?per_page=' + perPage + '&page=' + page);
+                if (!res.ok) {
+                    throw new Error('Submissions failed (' + res.status + ').' + aiadAuthHint(res.status));
+                }
+                const data = await res.json();
+                all = all.concat(data.submissions || []);
+                total = data.total != null ? data.total : all.length;
+                totalPages = data.total_pages != null ? data.total_pages : 1;
+                if ((data.submissions || []).length < perPage) break;
+                page++;
+            }
+            return { submissions: all, total };
+        }
+
         function formatDateInput(isoOrDisplay) {
             if (!isoOrDisplay) return '';
             const d = new Date(isoOrDisplay.includes('T') ? isoOrDisplay : isoOrDisplay + 'T12:00:00');
@@ -410,10 +437,18 @@
             const img = document.getElementById('brandLogoPreview');
             const ph = document.getElementById('brandLogoPlaceholder');
             if (url) {
-                img.src = url;
                 img.crossOrigin = 'anonymous';
-                img.hidden = false;
-                ph.hidden = true;
+                img.referrerPolicy = 'no-referrer-when-downgrade';
+                img.onload = () => {
+                    img.hidden = false;
+                    ph.hidden = true;
+                };
+                img.onerror = () => {
+                    img.hidden = true;
+                    img.removeAttribute('src');
+                    ph.hidden = false;
+                };
+                img.src = url;
             } else {
                 img.hidden = true;
                 img.removeAttribute('src');
@@ -609,23 +644,20 @@
             wpStatus.className = 'status';
 
             try {
-                const [bootRes, subRes] = await Promise.all([
+                const [bootRes, subResult] = await Promise.all([
                     aiadApiFetch('bootstrap'),
-                    aiadApiFetch('submissions?per_page=50'),
+                    fetchAllSubmissions(),
                 ]);
 
                 if (!bootRes.ok) {
                     throw new Error('Bootstrap failed (' + bootRes.status + ').' + aiadAuthHint(bootRes.status));
                 }
-                if (!subRes.ok) {
-                    throw new Error('Submissions failed (' + subRes.status + ').' + aiadAuthHint(subRes.status));
-                }
 
                 const boot = await bootRes.json();
-                const subData = await subRes.json();
-                submissions = subData.submissions || [];
+                submissions = subResult.submissions;
+                const totalCount = subResult.total;
 
-                setBrandLogo(boot.brand_logo_url || '');
+                setBrandLogo(resolveBrandLogoUrl(boot));
 
                 submissionSelect.innerHTML = '';
                 if (submissions.length === 0) {
@@ -653,7 +685,9 @@
                     }
                 }
 
-                wpStatus.textContent = 'Connected — ' + submissions.length + ' signup(s), brand logo ' + (boot.brand_logo_url ? 'loaded' : 'not set in WP');
+                const logoLoaded = !!resolveBrandLogoUrl(boot);
+                wpStatus.textContent = 'Connected — ' + totalCount + ' signup(s) loaded'
+                    + (logoLoaded ? ', site logo loaded' : ', site logo not set (Appearance → Customize → Site Identity)');
                 wpStatus.className = 'status status--ok';
             } catch (err) {
                 wpStatus.textContent = err.message || 'Could not reach WordPress.';
@@ -720,6 +754,8 @@
             document.getElementById('wpBaseRow').classList.add('form-row--hidden');
         }
         document.getElementById('certDate').value = new Date().toISOString().slice(0, 10);
+        const embedBrandLogo = EMBED_PARAMS.get('brand_logo');
+        if (embedBrandLogo) setBrandLogo(embedBrandLogo);
         onInvolvedAsChange();
         loadWordPress();
     </script>

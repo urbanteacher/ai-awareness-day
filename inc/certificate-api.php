@@ -139,19 +139,40 @@ function aiad_rest_thank_you_letter_copy( WP_REST_Request $request ): WP_REST_Re
 }
 
 /**
+ * Best URL for the site brand logo on certificates and letters.
+ *
+ * @return string
+ */
+function aiad_certificate_brand_logo_url(): string {
+	if ( ! function_exists( 'aiad_get_brand_logo_attachment_id' ) ) {
+		return '';
+	}
+	$logo_id = aiad_get_brand_logo_attachment_id();
+	if ( ! $logo_id ) {
+		return '';
+	}
+	foreach ( array( 'full', 'large', 'medium' ) as $size ) {
+		$url = function_exists( 'aiad_get_logo_image_url' )
+			? aiad_get_logo_image_url( $logo_id, $size )
+			: '';
+		if ( $url === '' ) {
+			$url = (string) wp_get_attachment_image_url( $logo_id, $size );
+		}
+		if ( $url !== '' ) {
+			return $url;
+		}
+	}
+	return '';
+}
+
+/**
  * GET /aiad/v1/certificate/bootstrap
  */
 function aiad_rest_certificate_bootstrap( WP_REST_Request $request ): WP_REST_Response { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
-	$logo_id = function_exists( 'aiad_get_brand_logo_attachment_id' )
+	$logo_id  = function_exists( 'aiad_get_brand_logo_attachment_id' )
 		? aiad_get_brand_logo_attachment_id()
 		: 0;
-	$logo_url = function_exists( 'aiad_get_logo_image_url' ) && $logo_id
-		? aiad_get_logo_image_url( $logo_id, 'medium' )
-		: '';
-
-	if ( $logo_url === '' && $logo_id ) {
-		$logo_url = (string) wp_get_attachment_image_url( $logo_id, 'medium' );
-	}
+	$logo_url = aiad_certificate_brand_logo_url();
 
 	return new WP_REST_Response(
 		array(
@@ -168,16 +189,19 @@ function aiad_rest_certificate_bootstrap( WP_REST_Request $request ): WP_REST_Re
  * GET /aiad/v1/certificate/submissions
  */
 function aiad_rest_certificate_submissions( WP_REST_Request $request ): WP_REST_Response {
-	$per_page = min( 50, max( 1, (int) $request->get_param( 'per_page' ) ) );
-	$search   = sanitize_text_field( (string) $request->get_param( 'search' ) );
+	$max_per_page = (int) apply_filters( 'aiad_certificate_submissions_per_page_max', 500 );
+	$per_page     = min( $max_per_page, max( 1, (int) $request->get_param( 'per_page' ) ) );
+	$page         = max( 1, (int) $request->get_param( 'page' ) );
+	$search       = sanitize_text_field( (string) $request->get_param( 'search' ) );
 
 	$args = array(
 		'post_type'              => 'form_submission',
 		'post_status'            => 'private',
 		'posts_per_page'         => $per_page,
+		'paged'                  => $page,
 		'orderby'                => 'date',
 		'order'                  => 'DESC',
-		'no_found_rows'          => true,
+		'no_found_rows'          => false,
 		'update_post_meta_cache' => true,
 	);
 
@@ -193,10 +217,16 @@ function aiad_rest_certificate_submissions( WP_REST_Request $request ): WP_REST_
 		}
 	}
 
+	$total       = (int) $query->found_posts;
+	$total_pages = (int) $query->max_num_pages;
+
 	return new WP_REST_Response(
 		array(
-			'submissions' => $rows,
-			'total'       => count( $rows ),
+			'submissions'  => $rows,
+			'total'        => $total,
+			'page'         => $page,
+			'per_page'     => $per_page,
+			'total_pages'  => $total_pages,
 		),
 		200
 	);
@@ -235,7 +265,11 @@ function aiad_register_certificate_rest_routes(): void {
 			'permission_callback' => 'aiad_certificate_api_can_read',
 			'args'                => array(
 				'per_page' => array(
-					'default'           => 20,
+					'default'           => 500,
+					'sanitize_callback' => 'absint',
+				),
+				'page'     => array(
+					'default'           => 1,
 					'sanitize_callback' => 'absint',
 				),
 				'search'   => array(
