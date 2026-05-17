@@ -804,6 +804,28 @@ function aiad_timeline_set_featured_image_from_partner( int $timeline_id, int $p
 }
 
 /**
+ * Copy live session featured image (or partner logo fallback) onto a timeline entry.
+ *
+ * @param int $timeline_id Timeline post ID.
+ * @param int $session_id  live_session post ID.
+ * @param int $partner_id  Partner post ID (optional).
+ */
+function aiad_timeline_set_featured_image_from_session( int $timeline_id, int $session_id, int $partner_id = 0 ): void {
+    if ( $timeline_id <= 0 || $session_id <= 0 || has_post_thumbnail( $timeline_id ) ) {
+        return;
+    }
+
+    $session_thumb = (int) get_post_thumbnail_id( $session_id );
+    if ( $session_thumb > 0 ) {
+        set_post_thumbnail( $timeline_id, $session_thumb );
+        delete_post_meta( $timeline_id, '_aiad_timeline_cover_fit' );
+        return;
+    }
+
+    aiad_timeline_set_featured_image_from_partner( $timeline_id, $partner_id );
+}
+
+/**
  * Create or update a timeline entry for a live_session (schedule) post.
  *
  * @param int $session_id live_session post ID.
@@ -874,7 +896,7 @@ function aiad_timeline_sync_live_session_entry( int $session_id ): void {
             update_post_meta( $timeline_id, '_aiad_timeline_link_url', esc_url_raw( $link_url ) );
             update_post_meta( $timeline_id, '_aiad_timeline_link_label', $link_label );
         }
-        aiad_timeline_set_featured_image_from_partner( $timeline_id, $partner_id );
+        aiad_timeline_set_featured_image_from_session( $timeline_id, $session_id, $partner_id );
         return;
     }
 
@@ -891,7 +913,7 @@ function aiad_timeline_sync_live_session_entry( int $session_id ): void {
     );
 
     if ( $new_id ) {
-        aiad_timeline_set_featured_image_from_partner( (int) $new_id, $partner_id );
+        aiad_timeline_set_featured_image_from_session( (int) $new_id, $session_id, $partner_id );
     }
 }
 

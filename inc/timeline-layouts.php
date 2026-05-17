@@ -36,6 +36,21 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
     $auto_type = get_post_meta( $entry->ID, '_aiad_timeline_auto_type', true );
     $related   = (int) get_post_meta( $entry->ID, '_aiad_timeline_related_id', true );
     if ( 'live_session' === $auto_type && $related > 0 ) {
+        $session_sizes = 'hero' === $size
+            ? array( 'large', 'medium_large', 'medium' )
+            : array( 'medium_large', 'medium', 'large' );
+
+        foreach ( $session_sizes as $img_size ) {
+            $session_url = get_the_post_thumbnail_url( $related, $img_size );
+            if ( $session_url ) {
+                return array(
+                    'url'           => $session_url,
+                    'fit'           => 'cover',
+                    'focal_post_id' => $related,
+                );
+            }
+        }
+
         $partner_id = (int) get_post_meta( $related, '_session_partner_id', true );
         if ( $partner_id > 0 ) {
             foreach ( array( 'medium_large', 'medium', 'large' ) as $img_size ) {
