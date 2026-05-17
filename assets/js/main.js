@@ -625,6 +625,23 @@
             }).catch(function () {}); // Silently fail - tracking is non-critical
         })();
 
+        // Blog post & timeline article view tracking
+        (function () {
+            if (typeof aiad_ajax === 'undefined' || !aiad_ajax.engagement_nonce) return;
+            var body = document.body;
+            if (!body || (!body.classList.contains('single-post') && !body.classList.contains('single-timeline'))) return;
+            var article = document.querySelector('article[id^="post-"]');
+            if (!article || !article.id) return;
+            var postId = article.id.replace('post-', '');
+            if (!postId) return;
+            fetch(aiad_ajax.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=aiad_track_engagement&post_id=' + encodeURIComponent(postId) +
+                      '&event=view&nonce=' + encodeURIComponent(aiad_ajax.engagement_nonce),
+            }).catch(function () {});
+        })();
+
         // Download tracking (fire-and-forget, does not block download)
         // ============================================
         document.addEventListener('click', (e) => {

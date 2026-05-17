@@ -300,15 +300,40 @@
         } );
     }
 
+    function trackEngagement( postId, event, targetUrl ) {
+        if ( ! postId || typeof aiad_ajax === 'undefined' || ! aiad_ajax.engagement_nonce ) {
+            return;
+        }
+        var body = 'action=aiad_track_engagement'
+            + '&nonce=' + encodeURIComponent( aiad_ajax.engagement_nonce )
+            + '&post_id=' + encodeURIComponent( postId )
+            + '&event=' + encodeURIComponent( event );
+        if ( targetUrl ) {
+            body += '&target_url=' + encodeURIComponent( targetUrl );
+        }
+        fetch( aiad_ajax.url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body,
+        } ).catch( function () {} );
+    }
+
     feed.addEventListener( 'click', function ( e ) {
         var likeBtn = e.target.closest( '.timeline-entry__like' );
         var shareBtn = e.target.closest( '.timeline-entry__share' );
+        var linkEl = e.target.closest( '.timeline-entry__link' );
         if ( likeBtn ) {
             e.preventDefault();
             handleLike( likeBtn );
         } else if ( shareBtn ) {
             e.preventDefault();
             handleShare( shareBtn );
+        } else if ( linkEl ) {
+            var entryFromLink = linkEl.getAttribute( 'data-entry-id' )
+                || ( linkEl.closest( '[data-entry-id]' ) && linkEl.closest( '[data-entry-id]' ).getAttribute( 'data-entry-id' ) );
+            if ( entryFromLink ) {
+                trackEngagement( entryFromLink, 'click', linkEl.href || '' );
+            }
         }
     } );
 
@@ -348,11 +373,15 @@
 
         if ( navigator.share && typeof navigator.share === 'function' ) {
             navigator.share( { title: title, text: title, url: url } ).then( function () {
+                trackEngagement( btn.getAttribute( 'data-entry-id' ), 'share' );
                 btn.setAttribute( 'aria-label', 'Shared!' );
                 setTimeout( function () { btn.setAttribute( 'aria-label', originalAria ); }, 2000 );
             } ).catch( function () { } );
         } else {
             copyToClipboard( url ).then( function ( ok ) {
+                if ( ok ) {
+                    trackEngagement( btn.getAttribute( 'data-entry-id' ), 'share' );
+                }
                 btn.setAttribute( 'aria-label', ok ? 'Link copied!' : 'Copy failed' );
                 setTimeout( function () { btn.setAttribute( 'aria-label', originalAria ); }, 2000 );
             } );

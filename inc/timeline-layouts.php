@@ -257,6 +257,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
         </button>
         <?php if ($link_url): ?>
             <a href="<?php echo esc_url($link_url); ?>" class="timeline-entry__link timeline-entry__link--action"
+                data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
                 aria-label="<?php echo esc_attr($link_label); ?>">
                 <span class="timeline-entry__link-icon"
                     aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
@@ -264,6 +265,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
         <?php endif; ?>
         <a href="<?php echo esc_url($entry_url); ?>"
             class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post"
+            data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
             aria-label="<?php esc_attr_e('View full post', 'ai-awareness-day'); ?>">
             <span class="timeline-entry__link-icon"
                 aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
