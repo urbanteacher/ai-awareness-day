@@ -734,6 +734,75 @@
     padding: 0;
 }
 
+/* Badge (top-left) + date (top-right) + title (bottom) on cover */
+.timeline-swipe__media .timeline-magazine__cover-fade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.timeline-swipe__media .timeline-magazine__cover-fade {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 0, 0, 0.45) 42%,
+        transparent 72%
+    );
+}
+
+.timeline-swipe__media .timeline-magazine__cover-meta {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.timeline-swipe__media .timeline-magazine__cover-meta-badge {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.75rem;
+    max-width: 58%;
+    line-height: 1.25;
+}
+
+.timeline-swipe__media .timeline-magazine__cover-meta .timeline-entry__badge {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.timeline-swipe__media .timeline-magazine__cover-meta .timeline-entry__date {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.75rem;
+    margin: 0;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--white);
+    text-shadow: none;
+}
+
+.timeline-swipe__media-overlay {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    width: 100%;
+    padding: 1.5rem 1rem 0.85rem;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.timeline-swipe__media-overlay .timeline-swipe__title {
+    margin: 0;
+    max-width: calc(100% - 5.5rem);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--white);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
 .timeline-swipe__media-hint {
     position: absolute;
     right: 0.75rem;
@@ -771,23 +840,6 @@
     border-top: 1px solid var(--gray-200);
     padding: 0.75rem 1rem 1rem;
     background: var(--white);
-}
-
-.timeline-swipe__panel .timeline-entry__header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.timeline-swipe__title {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.35;
-    color: var(--gray-900);
 }
 
 .timeline-swipe__excerpt {
@@ -920,6 +972,7 @@
     --timeline-chamfer-hero: 36px;
     --timeline-chamfer-card: 22px;
     --timeline-date-inset-step: 0.5rem;
+    --timeline-date-inset-x1: calc(var(--timeline-date-inset-step) * 1);
     --timeline-date-inset-x5: calc(var(--timeline-date-inset-step) * 5);
     padding: 1rem;
     background: var(--white);
@@ -1329,7 +1382,7 @@
 
 .timeline-magazine__card-media .timeline-magazine__cover-meta .timeline-entry__date {
     top: 0.45rem;
-    right: 0.5rem;
+    right: calc(0.5rem + var(--timeline-date-inset-x1));
     padding: 0.2rem 0.45rem;
     background: rgba(0, 0, 0, 0.55);
     color: var(--white);
