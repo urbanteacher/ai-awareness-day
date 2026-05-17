@@ -125,12 +125,6 @@
             margin-bottom: 28px;
             flex-shrink: 0;
         }
-        .cert-logos--brand-only {
-            grid-template-columns: 1fr;
-        }
-        .cert-logos--brand-only .cert-logo-cell--brand {
-            justify-content: center;
-        }
         .cert-logo-cell {
             display: flex;
             align-items: center;
@@ -310,7 +304,7 @@
 
         <div class="certificate-wrap">
             <div class="certificate" id="certificateNode">
-                <div class="cert-logos cert-logos--brand-only" id="certLogos">
+                <div class="cert-logos" id="certLogos">
                     <div class="cert-logo-cell cert-logo-cell--brand" id="brandLogoCell">
                         <span class="logo-placeholder" id="brandLogoPlaceholder">AIAD logo</span>
                         <img id="brandLogoPreview" class="brand-logo-img" alt="AI Awareness Day" hidden>
@@ -426,12 +420,8 @@
         }
 
         function setSchoolLogoLayout(showSchool) {
-            const logosRow = document.getElementById('certLogos');
-            const schoolCell = document.getElementById('schoolLogoCell');
-            const divider = document.getElementById('certLogoDivider');
-            schoolCell.hidden = !showSchool;
-            divider.hidden = !showSchool;
-            logosRow.classList.toggle('cert-logos--brand-only', !showSchool);
+            document.getElementById('schoolLogoCell').hidden = !showSchool;
+            document.getElementById('certLogoDivider').hidden = !showSchool;
         }
 
         function setSchoolLogo(url) {
