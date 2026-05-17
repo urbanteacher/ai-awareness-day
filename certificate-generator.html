@@ -125,6 +125,12 @@
             margin-bottom: 28px;
             flex-shrink: 0;
         }
+        .cert-logos--brand-only {
+            grid-template-columns: 1fr;
+        }
+        .cert-logos--brand-only .cert-logo-cell--brand {
+            justify-content: center;
+        }
         .cert-logo-cell {
             display: flex;
             align-items: center;
@@ -304,14 +310,14 @@
 
         <div class="certificate-wrap">
             <div class="certificate" id="certificateNode">
-                <div class="cert-logos">
+                <div class="cert-logos cert-logos--brand-only" id="certLogos">
                     <div class="cert-logo-cell cert-logo-cell--brand" id="brandLogoCell">
                         <span class="logo-placeholder" id="brandLogoPlaceholder">AIAD logo</span>
                         <img id="brandLogoPreview" class="brand-logo-img" alt="AI Awareness Day" hidden>
                     </div>
-                    <div class="cert-logo-divider" aria-hidden="true"></div>
-                    <div class="cert-logo-cell cert-logo-cell--school" id="schoolLogoCell">
-                        <span class="logo-placeholder" id="schoolLogoPlaceholder">School logo</span>
+                    <div class="cert-logo-divider" id="certLogoDivider" aria-hidden="true" hidden></div>
+                    <div class="cert-logo-cell cert-logo-cell--school" id="schoolLogoCell" hidden>
+                        <span class="logo-placeholder" id="schoolLogoPlaceholder" hidden>School logo</span>
                         <img id="schoolLogoPreview" class="school-logo-img" alt="" hidden>
                     </div>
                 </div>
@@ -419,18 +425,39 @@
             return d.toISOString().slice(0, 10);
         }
 
+        function setSchoolLogoLayout(showSchool) {
+            const logosRow = document.getElementById('certLogos');
+            const schoolCell = document.getElementById('schoolLogoCell');
+            const divider = document.getElementById('certLogoDivider');
+            schoolCell.hidden = !showSchool;
+            divider.hidden = !showSchool;
+            logosRow.classList.toggle('cert-logos--brand-only', !showSchool);
+        }
+
         function setSchoolLogo(url) {
             const img = document.getElementById('schoolLogoPreview');
             const ph = document.getElementById('schoolLogoPlaceholder');
-            if (url) {
-                img.src = url;
-                img.hidden = false;
-                ph.hidden = true;
-            } else {
+            if (!url) {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = false;
+                ph.hidden = true;
+                setSchoolLogoLayout(false);
+                return;
             }
+            img.crossOrigin = 'anonymous';
+            img.referrerPolicy = 'no-referrer-when-downgrade';
+            img.onload = () => {
+                img.hidden = false;
+                ph.hidden = true;
+                setSchoolLogoLayout(true);
+            };
+            img.onerror = () => {
+                img.hidden = true;
+                img.removeAttribute('src');
+                ph.hidden = true;
+                setSchoolLogoLayout(false);
+            };
+            img.src = url;
         }
 
         function setBrandLogo(url) {
