@@ -469,16 +469,26 @@ function aiad_timeline_resolve_cover_fallback( string $icon, string $fallback = 
  * @param string $title    Entry title (decorative).
  * @return string HTML
  */
-function aiad_timeline_cover_fallback_inner_html( string $icon, string $fallback, string $title ): string {
+function aiad_timeline_cover_fallback_inner_html( string $icon, string $fallback, string $title, bool $show_icon = false ): string {
     $mode  = aiad_timeline_resolve_cover_fallback( $icon, $fallback );
     $class = 'timeline-entry__cover-fallback timeline-entry__cover-fallback--minimal timeline-entry__cover-fallback--' . sanitize_html_class( $icon );
     if ( 'tech' === $mode ) {
         $class .= ' timeline-entry__cover-fallback--tech';
     }
+
+    $icon_html = '';
+    if ( $show_icon ) {
+        $icon_html = sprintf(
+            '<span class="timeline-entry__cover-fallback-icon" aria-hidden="true">%s</span>',
+            aiad_timeline_icon_svg( $icon ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        );
+    }
+
     return sprintf(
-        '<div class="%1$s" role="img" aria-label="%2$s"></div>',
+        '<div class="%1$s" role="img" aria-label="%2$s">%3$s</div>',
         esc_attr( $class ),
-        esc_attr( $title )
+        esc_attr( $title ),
+        $icon_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     );
 }
 

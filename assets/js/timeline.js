@@ -52,7 +52,7 @@
         var dotsWrap = swipe.querySelector( '.timeline-swipe__dots' );
         var counterCurrent = swipe.querySelector( '.timeline-swipe__counter-current' );
         var counterTotal = swipe.querySelector( '.timeline-swipe__counter-total' );
-        var hint = swipe.querySelector( '.timeline-swipe__hint' );
+        var mediaHints = swipe.querySelectorAll( '.timeline-swipe__media-hint' );
         var count = slides.length;
         var infinite = count >= 2;
 
@@ -123,8 +123,10 @@
             if ( counterCurrent ) {
                 counterCurrent.textContent = String( index + 1 );
             }
-            if ( hint && index > 0 ) {
-                hint.classList.add( 'is-hidden' );
+            if ( mediaHints.length && index > 0 ) {
+                mediaHints.forEach( function ( el ) {
+                    el.classList.add( 'is-hidden' );
+                } );
             }
         }
 

@@ -676,10 +676,18 @@
 }
 
 .timeline-swipe__media:has(.timeline-swipe__cover--fallback) {
-    flex: 0 0 auto;
-    min-height: 0;
-    max-height: 52%;
+    flex: 1.15 1 0;
+    min-height: 38%;
+    max-height: none;
     background: transparent;
+}
+
+.timeline-swipe__cover {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .timeline-swipe__cover,
@@ -697,18 +705,62 @@
 }
 
 .timeline-swipe__cover--fallback {
-    flex: 0 0 auto;
+    position: relative;
+    flex: 1 1 auto;
     width: 100%;
-    height: auto;
-    max-height: 100%;
+    min-height: 12rem;
+    height: 100%;
+    max-height: none;
     aspect-ratio: 4 / 3;
-    align-self: flex-start;
+    align-self: stretch;
+    overflow: hidden;
 }
 
 .timeline-swipe__cover--fallback .timeline-entry__cover-fallback {
-    min-height: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
     height: 100%;
     width: 100%;
+    max-height: none;
+}
+
+.timeline-swipe__cover--fallback .timeline-entry__cover-fallback--minimal {
+    min-height: 100%;
+    height: 100%;
+    max-height: none;
+    padding: 0;
+}
+
+.timeline-swipe__media-hint {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 4;
+    margin: 0;
+    padding: 0.5rem 0.9rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: rgba(0, 0, 0, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(6px);
+    pointer-events: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.timeline-swipe__media-hint.is-hidden {
+    display: none;
+}
+
+#timeline .timeline-swipe__media-hint {
+    color: var(--white);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .timeline-swipe__panel {
@@ -861,26 +913,7 @@
     background: var(--white);
 }
 
-.timeline-swipe__hint {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-    margin: 0;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--gray-700);
-    background: rgb(255 255 255 / 0.92);
-    pointer-events: none;
-}
-
-.timeline-swipe__hint.is-hidden {
-    display: none;
-}
+/* Legacy deck hint removed — use .timeline-swipe__media-hint on each slide */
 
 /* Desktop magazine — pointed chamfer (resource-card pattern) */
 .timeline-magazine {
@@ -1544,7 +1577,7 @@
         scroll-snap-type: none;
     }
 
-    .timeline-swipe__hint {
+    .timeline-swipe__media-hint {
         display: none;
     }
 }

@@ -68,12 +68,13 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
  */
 function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, string $size = 'thumb' ): string {
     $icon           = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $card_type      = get_post_meta( $entry->ID, '_aiad_timeline_card_type', true ) ?: 'default';
+    $pinned         = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
     $video_url      = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
     $yt_id          = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
     $cover_image    = aiad_timeline_entry_cover_image_data( $entry, $size );
     $cover_fallback = get_post_meta( $entry->ID, '_aiad_timeline_cover_fallback', true );
     $title          = get_the_title( $entry );
+    $is_swipe       = ( 'timeline-swipe' === $wrapper );
 
     if ( ! empty( $yt_id ) ) {
         $yt_thumb = 'https://img.youtube.com/vi/' . $yt_id . '/hqdefault.jpg';
@@ -99,15 +100,16 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
         );
     }
 
-    if ( in_array( $card_type, array( 'default', 'link' ), true ) ) {
-        return sprintf(
-            '<figure class="%1$s__cover %1$s__cover--fallback">%2$s</figure>',
-            esc_attr( $wrapper ),
-            aiad_timeline_cover_fallback_inner_html( $icon, (string) $cover_fallback, $title ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        );
-    }
+    $cover_mod = function_exists( 'aiad_timeline_cover_modifier_class' )
+        ? aiad_timeline_cover_modifier_class( $icon, $pinned )
+        : '';
 
-    return '';
+    return sprintf(
+        '<figure class="%1$s__cover %1$s__cover--fallback%2$s">%3$s</figure>',
+        esc_attr( $wrapper ),
+        $cover_mod ? ' ' . esc_attr( $cover_mod ) : '',
+        aiad_timeline_cover_fallback_inner_html( $icon, (string) $cover_fallback, $title, $is_swipe ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    );
 }
 
 /**
@@ -244,6 +246,7 @@ function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
     <article class="timeline-swipe__slide" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" aria-roledescription="slide">
         <div class="timeline-swipe__media">
             <?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-swipe', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <span class="timeline-swipe__media-hint" aria-hidden="true"><?php esc_html_e( 'Swipe', 'ai-awareness-day' ); ?> →</span>
         </div>
         <div class="timeline-swipe__panel">
             <div class="timeline-entry__header">
@@ -285,7 +288,6 @@ function aiad_render_timeline_swipe_deck( array $entries ): string {
             </p>
             <div class="timeline-swipe__dots" aria-hidden="true"></div>
         </div>
-        <p class="timeline-swipe__hint" aria-hidden="true"><?php esc_html_e( 'Swipe', 'ai-awareness-day' ); ?> →</p>
     </div>
     <?php
     return ob_get_clean();
