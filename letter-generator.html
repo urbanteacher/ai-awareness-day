@@ -120,16 +120,16 @@
             padding: 10px 14px;
             display: inline-block;
         }
+        .letter-date {
+            margin: 0 0 8px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
         .letter-title {
-            margin: 0 0 32px;
+            margin: 0 0 28px;
             font-size: 1.15rem;
             font-weight: 700;
             color: var(--green);
-        }
-        .letter-date {
-            margin: 0 0 28px;
-            font-size: 0.9rem;
-            color: var(--muted);
         }
         .letter-salutation {
             margin: 0 0 20px;
@@ -150,9 +150,14 @@
             margin-top: 36px;
             font-size: 0.95rem;
             line-height: 1.6;
+            font-style: italic;
+            color: var(--ink);
         }
         .letter-signoff p { margin: 0 0 4px; }
-        .letter-signoff p:last-child { font-weight: 600; margin-top: 8px; }
+        .letter-signoff .letter-signoff__team {
+            font-weight: 600;
+            margin-top: 10px;
+        }
         @media (max-width: 860px) {
             .letter { transform: scale(0.85); transform-origin: top center; margin-bottom: -140px; }
         }
@@ -203,8 +208,8 @@
                     <span class="letter-logo-placeholder" id="letterLogoPlaceholder">AIAD logo</span>
                     <img id="letterLogoPreview" alt="AI Awareness Day" hidden>
                 </div>
-                <h2 class="letter-title" id="letterTitle">AI Awareness Day 2026</h2>
                 <p class="letter-date" id="letterDateDisplay">—</p>
+                <h2 class="letter-title" id="letterTitle">AI Awareness Day 2026</h2>
                 <p class="letter-salutation">Dear <strong id="letterNameDisplay">Participant</strong>,</p>
                 <div class="letter-body" id="letterBody"></div>
                 <div class="letter-signoff" id="letterSignoff"></div>
@@ -270,9 +275,12 @@
             });
             const signEl = document.getElementById('letterSignoff');
             signEl.innerHTML = '';
-            (letterCopy.signoff || DEFAULT_COPY.signoff).forEach((line) => {
+            (letterCopy.signoff || DEFAULT_COPY.signoff).forEach((line, index, arr) => {
                 const p = document.createElement('p');
                 p.textContent = line;
+                if (index === arr.length - 1) {
+                    p.className = 'letter-signoff__team';
+                }
                 signEl.appendChild(p);
             });
         }
