@@ -306,12 +306,10 @@
             <div class="certificate" id="certificateNode">
                 <div class="cert-logos" id="certLogos">
                     <div class="cert-logo-cell cert-logo-cell--brand" id="brandLogoCell">
-                        <span class="logo-placeholder" id="brandLogoPlaceholder" hidden>AIAD logo</span>
                         <img id="brandLogoPreview" class="brand-logo-img" alt="AI Awareness Day" hidden>
                     </div>
                     <div class="cert-logo-divider" id="certLogoDivider" aria-hidden="true" hidden></div>
                     <div class="cert-logo-cell cert-logo-cell--school" id="schoolLogoCell" hidden>
-                        <span class="logo-placeholder" id="schoolLogoPlaceholder" hidden>School logo</span>
                         <img id="schoolLogoPreview" class="school-logo-img" alt="" hidden>
                     </div>
                 </div>
@@ -424,53 +422,49 @@
             document.getElementById('certLogoDivider').hidden = !showSchool;
         }
 
+        function showLoadedLogo(img, onShow) {
+            img.hidden = false;
+            if (typeof onShow === 'function') onShow();
+        }
+
         function setSchoolLogo(url) {
             const img = document.getElementById('schoolLogoPreview');
-            const ph = document.getElementById('schoolLogoPlaceholder');
             if (!url) {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = true;
                 setSchoolLogoLayout(false);
                 return;
             }
+            const onReady = () => showLoadedLogo(img, () => setSchoolLogoLayout(true));
             img.crossOrigin = 'anonymous';
             img.referrerPolicy = 'no-referrer-when-downgrade';
-            img.onload = () => {
-                img.hidden = false;
-                ph.hidden = true;
-                setSchoolLogoLayout(true);
-            };
+            img.onload = onReady;
             img.onerror = () => {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = true;
                 setSchoolLogoLayout(false);
             };
             img.src = url;
+            if (img.complete && img.naturalWidth > 0) onReady();
         }
 
         function setBrandLogo(url) {
             const img = document.getElementById('brandLogoPreview');
-            const ph = document.getElementById('brandLogoPlaceholder');
-            if (url) {
-                img.crossOrigin = 'anonymous';
-                img.referrerPolicy = 'no-referrer-when-downgrade';
-                img.onload = () => {
-                    img.hidden = false;
-                    ph.hidden = true;
-                };
-                img.onerror = () => {
-                    img.hidden = true;
-                    img.removeAttribute('src');
-                    ph.hidden = true;
-                };
-                img.src = url;
-            } else {
+            if (!url) {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = true;
+                return;
             }
+            const onReady = () => showLoadedLogo(img);
+            img.crossOrigin = 'anonymous';
+            img.referrerPolicy = 'no-referrer-when-downgrade';
+            img.onload = onReady;
+            img.onerror = () => {
+                img.hidden = true;
+                img.removeAttribute('src');
+            };
+            img.src = url;
+            if (img.complete && img.naturalWidth > 0) onReady();
         }
 
         function isTechOrganisation(orgType) {

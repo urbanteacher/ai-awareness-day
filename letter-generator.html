@@ -206,7 +206,6 @@
         <div class="letter-wrap">
             <article class="letter" id="letterNode" aria-label="Thank-you letter preview">
                 <div class="letter-logo" id="letterLogoCell" hidden>
-                    <span class="letter-logo-placeholder" id="letterLogoPlaceholder" hidden>AIAD logo</span>
                     <img id="letterLogoPreview" alt="AI Awareness Day" hidden>
                 </div>
                 <p class="letter-date" id="letterDateDisplay">—</p>
@@ -310,28 +309,26 @@
 
         function setBrandLogo(url) {
             const img = document.getElementById('letterLogoPreview');
-            const ph = document.getElementById('letterLogoPlaceholder');
             if (!url) {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = true;
                 setBrandLogoLayout(false);
                 return;
             }
-            img.crossOrigin = 'anonymous';
-            img.referrerPolicy = 'no-referrer-when-downgrade';
-            img.onload = () => {
+            const onReady = () => {
                 img.hidden = false;
-                ph.hidden = true;
                 setBrandLogoLayout(true);
             };
+            img.crossOrigin = 'anonymous';
+            img.referrerPolicy = 'no-referrer-when-downgrade';
+            img.onload = onReady;
             img.onerror = () => {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = true;
                 setBrandLogoLayout(false);
             };
             img.src = url;
+            if (img.complete && img.naturalWidth > 0) onReady();
         }
 
         function applyLetterCopy(copy) {
