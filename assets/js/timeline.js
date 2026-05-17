@@ -44,12 +44,30 @@
             return;
         }
 
+        viewport.querySelectorAll( '.timeline-swipe__slide--clone' ).forEach( function ( el ) {
+            el.remove();
+        } );
+
         var slides = viewport.querySelectorAll( '.timeline-swipe__slide' );
         var dotsWrap = swipe.querySelector( '.timeline-swipe__dots' );
         var counterCurrent = swipe.querySelector( '.timeline-swipe__counter-current' );
         var counterTotal = swipe.querySelector( '.timeline-swipe__counter-total' );
         var hint = swipe.querySelector( '.timeline-swipe__hint' );
         var count = slides.length;
+        var infinite = count >= 2;
+
+        if ( infinite ) {
+            var firstSlide = slides[0];
+            var lastSlide = slides[ count - 1 ];
+            var firstClone = firstSlide.cloneNode( true );
+            var lastClone = lastSlide.cloneNode( true );
+            firstClone.classList.add( 'timeline-swipe__slide--clone' );
+            lastClone.classList.add( 'timeline-swipe__slide--clone' );
+            firstClone.setAttribute( 'aria-hidden', 'true' );
+            lastClone.setAttribute( 'aria-hidden', 'true' );
+            viewport.insertBefore( lastClone, firstSlide );
+            viewport.appendChild( firstClone );
+        }
 
         if ( dotsWrap ) {
             dotsWrap.replaceChildren();
@@ -67,6 +85,35 @@
             counterTotal.textContent = String( count );
         }
 
+        function getSlideWidth() {
+            return viewport.clientWidth;
+        }
+
+        function getRawIndex() {
+            var slideWidth = getSlideWidth();
+            if ( slideWidth <= 0 ) {
+                return infinite ? 1 : 0;
+            }
+            return Math.round( viewport.scrollLeft / slideWidth );
+        }
+
+        function rawToLogical( raw ) {
+            if ( ! infinite ) {
+                return Math.min( count - 1, Math.max( 0, raw ) );
+            }
+            if ( raw <= 0 ) {
+                return count - 1;
+            }
+            if ( raw >= count + 1 ) {
+                return 0;
+            }
+            return raw - 1;
+        }
+
+        function logicalToRaw( logical ) {
+            return infinite ? logical + 1 : logical;
+        }
+
         function setActive( index ) {
             if ( dotsWrap ) {
                 dotsWrap.querySelectorAll( '.timeline-swipe__dot' ).forEach( function ( dot, i ) {
@@ -81,21 +128,98 @@
             }
         }
 
-        function syncFromScroll() {
-            var slideWidth = viewport.clientWidth;
-            if ( slideWidth <= 0 || count === 0 ) {
+        function normalizeInfiniteScroll() {
+            if ( ! infinite ) {
                 return;
             }
-            var index = Math.min( count - 1, Math.max( 0, Math.round( viewport.scrollLeft / slideWidth ) ) );
-            setActive( index );
+            var slideWidth = getSlideWidth();
+            if ( slideWidth <= 0 ) {
+                return;
+            }
+            var raw = getRawIndex();
+            var target = null;
+            if ( raw === 0 ) {
+                target = count * slideWidth;
+            } else if ( raw >= count + 1 ) {
+                target = slideWidth;
+            }
+            if ( target !== null ) {
+                viewport.scrollLeft = target;
+            }
+        }
+
+        function syncFromScroll() {
+            if ( count === 0 ) {
+                return;
+            }
+            setActive( rawToLogical( getRawIndex() ) );
+        }
+
+        var jumpTimer;
+        function onSwipeScroll() {
+            syncFromScroll();
+            if ( ! infinite ) {
+                return;
+            }
+            clearTimeout( jumpTimer );
+            jumpTimer = setTimeout( function () {
+                normalizeInfiniteScroll();
+                syncFromScroll();
+            }, 90 );
         }
 
         if ( viewport._aiadSwipeScroll ) {
             viewport.removeEventListener( 'scroll', viewport._aiadSwipeScroll );
         }
-        viewport._aiadSwipeScroll = syncFromScroll;
-        viewport.addEventListener( 'scroll', syncFromScroll, { passive: true } );
-        syncFromScroll();
+        viewport._aiadSwipeScroll = onSwipeScroll;
+        viewport.addEventListener( 'scroll', onSwipeScroll, { passive: true } );
+
+        if ( viewport._aiadSwipeScrollEnd ) {
+            viewport.removeEventListener( 'scrollend', viewport._aiadSwipeScrollEnd );
+        }
+        if ( 'onscrollend' in window ) {
+            viewport._aiadSwipeScrollEnd = function () {
+                normalizeInfiniteScroll();
+                syncFromScroll();
+            };
+            viewport.addEventListener( 'scrollend', viewport._aiadSwipeScrollEnd );
+        }
+
+        function scrollToLogical( logical, smooth ) {
+            var slideWidth = getSlideWidth();
+            if ( slideWidth <= 0 ) {
+                return;
+            }
+            viewport.scrollTo( {
+                left: logicalToRaw( logical ) * slideWidth,
+                behavior: smooth ? 'smooth' : 'auto',
+            } );
+        }
+
+        function setInitialPosition() {
+            if ( infinite ) {
+                var slideWidth = getSlideWidth();
+                if ( slideWidth > 0 ) {
+                    viewport.scrollLeft = slideWidth;
+                }
+            }
+            syncFromScroll();
+        }
+
+        setInitialPosition();
+        requestAnimationFrame( setInitialPosition );
+
+        if ( feed._aiadSwipeResize ) {
+            window.removeEventListener( 'resize', feed._aiadSwipeResize );
+        }
+        feed._aiadSwipeResize = function () {
+            if ( ! viewport.isConnected ) {
+                return;
+            }
+            var logical = rawToLogical( getRawIndex() );
+            scrollToLogical( logical, false );
+        };
+        window.addEventListener( 'resize', feed._aiadSwipeResize );
 
         if ( dotsWrap && ! dotsWrap._aiadDotsBound ) {
             dotsWrap._aiadDotsBound = true;
@@ -105,8 +229,7 @@
                     return;
                 }
                 var idx = parseInt( dot.dataset.index || '0', 10 );
-                var w = viewport.clientWidth;
-                viewport.scrollTo( { left: idx * w, behavior: 'smooth' } );
+                scrollToLogical( idx, true );
             } );
         }
     }

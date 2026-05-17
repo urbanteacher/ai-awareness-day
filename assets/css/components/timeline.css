@@ -659,6 +659,11 @@
     scroll-snap-stop: always;
 }
 
+/* Infinite-loop clones (prepended last / appended first) */
+.timeline-swipe__slide--clone {
+    pointer-events: none;
+}
+
 .timeline-swipe__media {
     position: relative;
     display: flex;
