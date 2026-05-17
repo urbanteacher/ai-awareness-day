@@ -486,8 +486,8 @@
 /* Mobile stacked meta — must follow stacked base rules (fixes cascade override). */
 @media (max-width: 600px) {
 	.single-timeline-entry--stacked .single-timeline-entry__meta-row {
-		--meta-profile-size: 0.625rem;
-		--meta-profile-line: 1.1;
+		--meta-profile-size: 0.6875rem;
+		--meta-profile-line: 1.15;
 		gap: 0.3rem;
 	}
 
@@ -508,7 +508,7 @@
 	}
 
 	.single-timeline-entry--stacked .single-timeline-entry__author-role {
-		font-size: 0.5625rem;
+		font-size: 0.625rem;
 		margin-top: 0.05rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
