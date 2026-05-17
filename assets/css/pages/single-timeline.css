@@ -523,12 +523,6 @@
 
 	.single-timeline-entry--stacked .single-timeline-entry__date {
 		padding: 0.28em 0.4em;
-		gap: 0.2rem;
-	}
-
-	.single-timeline-entry--stacked .single-timeline-entry__date::before {
-		width: 0.85em;
-		height: 0.85em;
 	}
 }
 
@@ -554,14 +548,12 @@
 	font-weight: 700;
 	line-height: var(--meta-profile-line);
 	padding: 0.35em 0.55em;
+	gap: 0;
 }
 
 .single-timeline-entry--stacked .single-timeline-entry__date::before {
-	width: 1em;
-	height: 1em;
-	opacity: 1;
+	display: none;
 }
-
 
 .single-timeline-entry--stacked .single-timeline-entry__media {
 	margin-top: 2rem;
