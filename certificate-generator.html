@@ -240,8 +240,8 @@
         }
         .cert-footer {
             flex-shrink: 0;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: flex-end;
             gap: 16px;
             margin-top: 12px;
@@ -249,6 +249,21 @@
             border-top: 1px solid var(--border);
             font-size: 0.75rem;
             color: var(--muted);
+        }
+        .cert-footer__date {
+            justify-self: start;
+        }
+        .cert-footer__id {
+            justify-self: end;
+            text-align: right;
+        }
+        .cert-footer__hashtag {
+            justify-self: center;
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 0.02em;
         }
         .cert-footer strong {
             color: var(--ink);
@@ -328,11 +343,12 @@
                 </div>
 
                 <footer class="cert-footer">
-                    <div>
+                    <div class="cert-footer__date">
                         <span>Date</span>
                         <strong id="dateDisplay">—</strong>
                     </div>
-                    <div style="text-align: right;">
+                    <p class="cert-footer__hashtag">#AiAwarenessDay26</p>
+                    <div class="cert-footer__id">
                         <span>Certificate ID</span>
                         <strong id="certIdDisplay">—</strong>
                     </div>
