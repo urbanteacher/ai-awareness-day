@@ -1035,7 +1035,7 @@
 /* Title + scrim on the cover image */
 .timeline-magazine__hero-media-frame .timeline-magazine__hero-media-overlay {
     position: absolute;
-    inset: auto 0 22%;
+    inset: auto 0 10%;
     z-index: 2;
     width: 100%;
     padding: 0 1.25rem;
