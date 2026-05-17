@@ -1386,7 +1386,7 @@ a.toolkit-card.toolkit-card--link:hover {
 }
 
 @media screen and (min-width: 769px) {
-  .resource-card--placeholder {
+  .resource-card--placeholder:not(.resource-card--placeholder-pointed) {
     grid-column: 1 / -1;
     width: 100%;
     aspect-ratio: auto;
@@ -1400,28 +1400,29 @@ a.toolkit-card.toolkit-card--link:hover {
     color: var(--white, #fff);
   }
 
-  .resource-card--placeholder:hover {
+  .resource-card--placeholder:not(.resource-card--placeholder-pointed):hover {
     border: none;
     background: #000;
     transform: none;
     box-shadow: none;
   }
 
-  .resource-card--placeholder .resource-card__placeholder-title {
+  .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-title {
     font-size: 1.05rem;
     color: var(--white, #fff);
   }
 
-  .resource-card--placeholder:hover .resource-card__placeholder-title {
+  .resource-card--placeholder:not(.resource-card--placeholder-pointed):hover .resource-card__placeholder-title {
     color: var(--white, #fff);
   }
 
-  .resource-card--placeholder .resource-card__placeholder-desc {
+  .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-desc {
     font-size: 0.9rem;
     color: var(--gray-300, #d4d4d4);
   }
 
-  .tools-grid .resource-card--placeholder {
+  .tools-grid .resource-card--placeholder,
+  .tools-grid .resource-card--placeholder-pointed {
     grid-column: auto;
     width: 100%;
     min-height: 100%;
@@ -1987,24 +1988,24 @@ a.toolkit-card.toolkit-card--link:hover {
     margin-top: 1rem;
   }
 
-  #free-resources .resource-card--placeholder {
+  #free-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) {
     align-self: stretch;
     clip-path: none;
     background: var(--gray-50);
     border-width: 2px;
   }
 
-  #free-resources .resource-card--placeholder:hover {
+  #free-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed):hover {
     background: var(--green-50);
     box-shadow: none;
     transform: none;
   }
 
-  #free-resources .resource-card--placeholder .resource-card__placeholder-title {
+  #free-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-title {
     font-size: 0.7rem;
   }
 
-  #free-resources .resource-card--placeholder .resource-card__placeholder-desc {
+  #free-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-desc {
     font-size: 0.55rem;
   }
 
@@ -2145,17 +2146,17 @@ a.toolkit-card.toolkit-card--link:hover {
     min-width: 0;
   }
 
-  #partner-resources .resource-card--placeholder {
+  #partner-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) {
     align-self: stretch;
     clip-path: none;
     border-width: 2px;
   }
 
-  #partner-resources .resource-card--placeholder .resource-card__placeholder-title {
+  #partner-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-title {
     font-size: 0.7rem;
   }
 
-  #partner-resources .resource-card--placeholder .resource-card__placeholder-desc {
+  #partner-resources .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-desc {
     font-size: 0.55rem;
   }
 

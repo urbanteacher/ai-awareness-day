@@ -1383,11 +1383,14 @@ a.duration-badge:hover {
   border-radius: 0;
   border: none;
   background: transparent;
-  display: flex;
+  display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   overflow: visible;
   box-sizing: border-box;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
   clip-path: polygon(0 0, calc(100% - var(--explore-badge-chamfer)) 0, 100% var(--explore-badge-chamfer), 100% 100%, var(--explore-badge-chamfer) 100%, 0 calc(100% - var(--explore-badge-chamfer)));
 }
 
@@ -1412,15 +1415,18 @@ a.duration-badge:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
+  box-sizing: border-box;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  padding: 0.35rem 0.6rem;
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
+  line-height: 1;
   color: #ffffff;
   border: none;
   border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - var(--explore-badge-chamfer)) 0, 100% var(--explore-badge-chamfer), 100% 100%, var(--explore-badge-chamfer) 100%, 0 calc(100% - var(--explore-badge-chamfer)));
 }
 
 /* Vibrant badge colours on mobile */
@@ -2367,6 +2373,341 @@ a.duration-badge:hover {
   .resource-card--pointed .resource-card__excerpt {
     font-size: 12px;
     -webkit-line-clamp: 3;
+  }
+}
+
+/* ---- View-all placeholders (free, partner, AI tools) ---- */
+#free-resources .resource-card--placeholder-pointed,
+#partner-resources .resource-card--placeholder-pointed,
+#ai-tools .resource-card--placeholder-pointed {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-self: start;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  text-decoration: none;
+  color: inherit;
+  min-height: 0;
+  overflow: visible;
+}
+
+#free-resources .resource-card--placeholder-pointed:hover,
+#partner-resources .resource-card--placeholder-pointed:hover,
+#ai-tools .resource-card--placeholder-pointed:hover {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Mobile: chamfered square hero (matches resource-card--pointed hero) */
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero,
+#ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  aspect-ratio: 1 / 1;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+  text-align: center;
+  background: linear-gradient(135deg, #374151, #111827);
+  border: none;
+  clip-path: polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px));
+  transition: filter 0.2s ease;
+}
+
+#free-resources .resource-card--placeholder-pointed:hover .resource-card__placeholder-hero,
+#partner-resources .resource-card--placeholder-pointed:hover .resource-card__placeholder-hero,
+#ai-tools .resource-card--placeholder-pointed:hover .resource-card__placeholder-hero {
+  filter: brightness(1.08);
+}
+
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title,
+#ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc,
+#ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Resource grids: white body below hero (matches pointed activity cards) */
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 1rem 0 0;
+  text-align: left;
+}
+
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.91rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 0.15rem;
+}
+
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--green-700);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-desc,
+#partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--gray-600);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Desktop: full-width black “View all” bar (free + partner resources only) */
+@media screen and (min-width: 769px) {
+  #free-resources .resource-card--placeholder-pointed,
+  #partner-resources .resource-card--placeholder-pointed {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    padding: 1rem 1.5rem;
+    background: var(--gray-900, #111);
+    color: #fff;
+    text-align: center;
+  }
+
+  #free-resources .resource-card--placeholder-pointed:hover,
+  #partner-resources .resource-card--placeholder-pointed:hover {
+    background: #000;
+    transform: none;
+    box-shadow: none;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero {
+    display: none;
+  }
+
+  /* AI tools: 4th column in tools-grid (see git cd37bfb — not a full-width bar) */
+  #ai-tools .resource-card--placeholder-pointed {
+    grid-column: auto;
+    width: 100%;
+    min-height: 100%;
+    align-self: stretch;
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    background: var(--gray-900, #111);
+    color: #fff;
+    text-align: center;
+    clip-path: polygon(0 0, calc(100% - 50px) 0, 100% 50px, 100% 100%, 50px 100%, 0 calc(100% - 50px));
+  }
+
+  #ai-tools .resource-card--placeholder-pointed:hover {
+    background: #000;
+    transform: none;
+    box-shadow: none;
+  }
+
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    clip-path: none;
+    background: transparent;
+    padding: 0;
+    filter: none;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0;
+    text-align: center;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label {
+    display: none;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below,
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #fff;
+    text-shadow: none;
+    display: block;
+    width: auto;
+    max-width: none;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-desc,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-desc,
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--gray-300, #d4d4d4);
+    text-shadow: none;
+    display: block;
+    width: auto;
+    max-width: none;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+  }
+}
+
+/* AI tools mobile: single dark card (matches .tool-card) */
+@media screen and (max-width: 768px) {
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero {
+    aspect-ratio: auto;
+    min-height: 100%;
+    align-self: stretch;
+    padding: 0.75rem 1rem 1.25rem 1rem;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    background: #1e1e1e;
+  }
+
+  #ai-tools .resource-card--placeholder-pointed {
+    align-self: stretch;
+  }
+
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title {
+    font-size: 0.75rem;
+    text-align: left;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc {
+    font-size: 0.65rem;
+    text-align: left;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title,
+  #ai-tools .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title {
+    font-size: 1rem;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc {
+    font-size: 0.75rem;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body {
+    padding: 0.5rem 0 0;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__format-label {
+    font-size: 0.7rem;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below {
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero {
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    padding: 0.75rem;
+    gap: 0.25rem;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-title {
+    font-size: 1rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-hero .resource-card__placeholder-desc {
+    font-size: 0.7rem;
+  }
+
+  #free-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below,
+  #partner-resources .resource-card--placeholder-pointed .resource-card__placeholder-body .resource-card__placeholder-title-below {
+    font-size: 1.1rem;
   }
 }
 

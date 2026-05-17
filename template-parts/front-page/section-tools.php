@@ -49,12 +49,12 @@ $tools_label = sprintf(
 
 			<?php if ( $archive_url ) : ?>
 				<a href="<?php echo esc_url( $archive_url ); ?>"
-					class="resource-card resource-card--placeholder fade-up"
+					class="resource-card resource-card--placeholder resource-card--placeholder-pointed ai-tools-placeholder--mobile fade-up"
 					aria-label="<?php esc_attr_e( 'View all AI tools', 'ai-awareness-day' ); ?>">
-					<div class="resource-card__placeholder-inner">
+					<span class="resource-card__placeholder-hero">
 						<span class="resource-card__placeholder-title"><?php esc_html_e( 'View all AI tools', 'ai-awareness-day' ); ?></span>
 						<span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse the full collection', 'ai-awareness-day' ); ?></span>
-					</div>
+					</span>
 				</a>
 			<?php endif; ?>
 		</div>

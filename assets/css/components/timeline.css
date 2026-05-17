@@ -10,8 +10,15 @@
 }
 
 @keyframes timeline-live-flash {
-    0%, 100% { color: #f87171; }
-    50% { color: #ffffff; }
+
+    0%,
+    100% {
+        color: #f87171;
+    }
+
+    50% {
+        color: #ffffff;
+    }
 }
 
 /* ── Night band: whole timeline section reads as a distinct “live” strip ─ */
@@ -110,8 +117,10 @@
 .timeline-stats-bar__value {
     font-variant-numeric: tabular-nums;
     font-weight: 700;
-    color: #4ade80; /* Bright green to stand out */
-    text-shadow: 0 0 8px rgba(74, 222, 128, 0.5); /* Subtle glow */
+    color: #4ade80;
+    /* Bright green to stand out */
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    /* Subtle glow */
 }
 
 .timeline-stats-bar__sep {
@@ -127,8 +136,15 @@
 }
 
 @keyframes timeline-days-urgent-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
 }
 
 /* ── Stats counter animation ─────────────────────────── */
@@ -147,9 +163,21 @@
 
 /* Staggered delays using nth-of-type (counts span elements only) */
 /* Structure: stat(1) -> sep -> stat(2) -> sep -> stat(3) */
-.timeline-stats-bar > span:nth-of-type(1) { transition-delay: 0.1s; }  /* 1st stat */
-.timeline-stats-bar > span:nth-of-type(3) { transition-delay: 0.25s; } /* 2nd stat */
-.timeline-stats-bar > span:nth-of-type(5) { transition-delay: 0.4s; }  /* 3rd stat */
+.timeline-stats-bar>span:nth-of-type(1) {
+    transition-delay: 0.1s;
+}
+
+/* 1st stat */
+.timeline-stats-bar>span:nth-of-type(3) {
+    transition-delay: 0.25s;
+}
+
+/* 2nd stat */
+.timeline-stats-bar>span:nth-of-type(5) {
+    transition-delay: 0.4s;
+}
+
+/* 3rd stat */
 
 /* Fallback for when JS is disabled */
 .no-js .timeline-stats-bar__stat {
@@ -168,9 +196,17 @@
 }
 
 @keyframes counter-pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Glow pulse animation for values after counting */
@@ -180,10 +216,13 @@
 }
 
 @keyframes value-glow-pulse {
-    0%, 100% { 
+
+    0%,
+    100% {
         text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
     }
-    50% { 
+
+    50% {
         text-shadow: 0 0 15px rgba(74, 222, 128, 0.8), 0 0 25px rgba(74, 222, 128, 0.4);
     }
 }
@@ -195,9 +234,11 @@
         transform: none;
         transition: none;
     }
+
     .timeline-stats-bar__value.counting {
         animation: none;
     }
+
     .timeline-stats-bar__value.animated {
         animation: none;
     }
@@ -302,11 +343,13 @@
         gap: 0.25rem;
         padding: 0.5rem 0.25rem;
         margin: 0.75rem 0;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
+        /* Firefox */
     }
 
     .timeline-filters::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
+        display: none;
+        /* Chrome/Safari */
     }
 
     .timeline-filter-btn {
@@ -386,7 +429,7 @@
         padding-bottom: 1rem;
     }
 
-    #timeline + #principles.section {
+    #timeline+#principles.section {
         padding-top: 0.75rem;
     }
 }
@@ -758,12 +801,10 @@
 }
 
 .timeline-swipe__media .timeline-magazine__cover-fade {
-    background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.88) 0%,
-        rgba(0, 0, 0, 0.45) 42%,
-        transparent 72%
-    );
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.88) 0%,
+            rgba(0, 0, 0, 0.45) 42%,
+            transparent 72%);
 }
 
 .timeline-swipe__media .timeline-magazine__cover-meta {
@@ -988,27 +1029,23 @@
     width: 100%;
     max-width: 100%;
     aspect-ratio: 4 / 3;
-    clip-path: polygon(
-        0 0,
-        calc(100% - var(--timeline-chamfer-hero)) 0,
-        100% var(--timeline-chamfer-hero),
-        100% 100%,
-        var(--timeline-chamfer-hero) 100%,
-        0 calc(100% - var(--timeline-chamfer-hero))
-    );
+    clip-path: polygon(0 0,
+            calc(100% - var(--timeline-chamfer-hero)) 0,
+            100% var(--timeline-chamfer-hero),
+            100% 100%,
+            var(--timeline-chamfer-hero) 100%,
+            0 calc(100% - var(--timeline-chamfer-hero)));
 }
 
 .timeline-magazine__card-media-link--chamfer {
     width: 100%;
     aspect-ratio: 1 / 1;
-    clip-path: polygon(
-        0 0,
-        calc(100% - var(--timeline-chamfer-card)) 0,
-        100% var(--timeline-chamfer-card),
-        100% 100%,
-        var(--timeline-chamfer-card) 100%,
-        0 calc(100% - var(--timeline-chamfer-card))
-    );
+    clip-path: polygon(0 0,
+            calc(100% - var(--timeline-chamfer-card)) 0,
+            100% var(--timeline-chamfer-card),
+            100% 100%,
+            var(--timeline-chamfer-card) 100%,
+            0 calc(100% - var(--timeline-chamfer-card)));
 }
 
 /* Photo layer — full opacity, no colour overlays on featured images */
@@ -1097,21 +1134,17 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.82) 0%,
-        rgba(0, 0, 0, 0.35) 38%,
-        transparent 68%
-    );
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.82) 0%,
+            rgba(0, 0, 0, 0.35) 38%,
+            transparent 68%);
     pointer-events: none;
 }
 
 .timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.5) 0%,
-        transparent 42%
-    );
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.5) 0%,
+            transparent 42%);
 }
 
 /* Partner pill (top-left) + time (top-right) — uses .timeline-entry__badge / .timeline-entry__date */
@@ -1364,12 +1397,10 @@
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.78) 0%,
-        rgba(0, 0, 0, 0.35) 38%,
-        transparent 58%
-    );
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.78) 0%,
+            rgba(0, 0, 0, 0.35) 38%,
+            transparent 58%);
     pointer-events: none;
 }
 
@@ -1403,12 +1434,10 @@
 }
 
 .timeline-magazine__hero-media-frame:not(:has(.timeline-magazine__cover--fallback)) .timeline-magazine__cover-scrim--top {
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.82) 0%,
-        rgba(0, 0, 0, 0.42) 34%,
-        transparent 54%
-    );
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.82) 0%,
+            rgba(0, 0, 0, 0.42) 34%,
+            transparent 54%);
 }
 
 .timeline-magazine__hero-media-frame .timeline-magazine__cover-meta-badge {

@@ -132,12 +132,16 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                         }
                         ?>
                         <a href="<?php echo esc_url( $featured_archive_url ); ?>"
-                            class="resource-card resource-card--placeholder fade-up"
+                            class="resource-card resource-card--placeholder resource-card--placeholder-pointed partner-resources-placeholder--mobile fade-up"
                             aria-label="<?php esc_attr_e( 'View all handpicked resources', 'ai-awareness-day' ); ?>">
-                            <div class="resource-card__placeholder-inner">
+                            <span class="resource-card__placeholder-hero" aria-hidden="true">
                                 <span class="resource-card__placeholder-title"><?php esc_html_e( 'View all handpicked resources', 'ai-awareness-day' ); ?></span>
+                            </span>
+                            <span class="resource-card__placeholder-body">
+                                <span class="resource-card__format-label"><?php esc_html_e( 'Archive', 'ai-awareness-day' ); ?></span>
+                                <span class="resource-card__placeholder-title-below"><?php esc_html_e( 'View all handpicked resources', 'ai-awareness-day' ); ?></span>
                                 <span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse games & learning tools', 'ai-awareness-day' ); ?></span>
-                            </div>
+                            </span>
                         </a>
                     </div>
                 </div>

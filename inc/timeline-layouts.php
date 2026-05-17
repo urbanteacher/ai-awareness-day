@@ -5,7 +5,7 @@
  * @package AI_Awareness_Day
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
@@ -16,49 +16,50 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string  $size  thumb | hero.
  * @return array{url: string, fit: string, focal_post_id: int} fit is 'cover' or 'contain'; focal_post_id is post used for focal meta.
  */
-function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 'thumb' ): array {
+function aiad_timeline_entry_cover_image_data(WP_Post $entry, string $size = 'thumb'): array
+{
     $sizes = 'hero' === $size
-        ? array( 'large', 'medium_large', 'medium' )
-        : array( 'medium_large', 'medium', 'large' );
+        ? array('large', 'medium_large', 'medium')
+        : array('medium_large', 'medium', 'large');
 
-    $cover_fit = get_post_meta( $entry->ID, '_aiad_timeline_cover_fit', true );
-    foreach ( $sizes as $img_size ) {
-        $url = get_the_post_thumbnail_url( $entry->ID, $img_size );
-        if ( $url ) {
+    $cover_fit = get_post_meta($entry->ID, '_aiad_timeline_cover_fit', true);
+    foreach ($sizes as $img_size) {
+        $url = get_the_post_thumbnail_url($entry->ID, $img_size);
+        if ($url) {
             return array(
-                'url'            => $url,
-                'fit'            => 'contain' === $cover_fit ? 'contain' : 'cover',
-                'focal_post_id'  => $entry->ID,
+                'url' => $url,
+                'fit' => 'contain' === $cover_fit ? 'contain' : 'cover',
+                'focal_post_id' => $entry->ID,
             );
         }
     }
 
-    $auto_type = get_post_meta( $entry->ID, '_aiad_timeline_auto_type', true );
-    $related   = (int) get_post_meta( $entry->ID, '_aiad_timeline_related_id', true );
-    if ( 'live_session' === $auto_type && $related > 0 ) {
+    $auto_type = get_post_meta($entry->ID, '_aiad_timeline_auto_type', true);
+    $related = (int) get_post_meta($entry->ID, '_aiad_timeline_related_id', true);
+    if ('live_session' === $auto_type && $related > 0) {
         $session_sizes = 'hero' === $size
-            ? array( 'large', 'medium_large', 'medium' )
-            : array( 'medium_large', 'medium', 'large' );
+            ? array('large', 'medium_large', 'medium')
+            : array('medium_large', 'medium', 'large');
 
-        foreach ( $session_sizes as $img_size ) {
-            $session_url = get_the_post_thumbnail_url( $related, $img_size );
-            if ( $session_url ) {
+        foreach ($session_sizes as $img_size) {
+            $session_url = get_the_post_thumbnail_url($related, $img_size);
+            if ($session_url) {
                 return array(
-                    'url'           => $session_url,
-                    'fit'           => 'cover',
+                    'url' => $session_url,
+                    'fit' => 'cover',
                     'focal_post_id' => $related,
                 );
             }
         }
 
-        $partner_id = (int) get_post_meta( $related, '_session_partner_id', true );
-        if ( $partner_id > 0 ) {
-            foreach ( array( 'medium_large', 'medium', 'large' ) as $img_size ) {
-                $logo = get_the_post_thumbnail_url( $partner_id, $img_size );
-                if ( $logo ) {
+        $partner_id = (int) get_post_meta($related, '_session_partner_id', true);
+        if ($partner_id > 0) {
+            foreach (array('medium_large', 'medium', 'large') as $img_size) {
+                $logo = get_the_post_thumbnail_url($partner_id, $img_size);
+                if ($logo) {
                     return array(
-                        'url'           => $logo,
-                        'fit'           => 'contain',
+                        'url' => $logo,
+                        'fit' => 'contain',
                         'focal_post_id' => $partner_id,
                     );
                 }
@@ -67,8 +68,8 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
     }
 
     return array(
-        'url'           => '',
-        'fit'           => 'cover',
+        'url' => '',
+        'fit' => 'cover',
         'focal_post_id' => $entry->ID,
     );
 }
@@ -81,49 +82,50 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
  * @param string  $size    thumb | hero.
  * @return string HTML
  */
-function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, string $size = 'thumb' ): string {
-    $icon           = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $pinned         = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
-    $video_url      = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
-    $yt_id          = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
-    $cover_image    = aiad_timeline_entry_cover_image_data( $entry, $size );
-    $cover_fallback = get_post_meta( $entry->ID, '_aiad_timeline_cover_fallback', true );
-    $title          = get_the_title( $entry );
-    $is_swipe       = ( 'timeline-swipe' === $wrapper );
+function aiad_timeline_entry_cover_visual(WP_Post $entry, string $wrapper, string $size = 'thumb'): string
+{
+    $icon = get_post_meta($entry->ID, '_aiad_timeline_icon', true) ?: 'announcement';
+    $pinned = (bool) get_post_meta($entry->ID, '_aiad_timeline_pinned', true);
+    $video_url = get_post_meta($entry->ID, '_aiad_timeline_video_url', true);
+    $yt_id = function_exists('aiad_youtube_video_id') ? aiad_youtube_video_id($video_url) : '';
+    $cover_image = aiad_timeline_entry_cover_image_data($entry, $size);
+    $cover_fallback = get_post_meta($entry->ID, '_aiad_timeline_cover_fallback', true);
+    $title = get_the_title($entry);
+    $is_swipe = ('timeline-swipe' === $wrapper);
 
-    if ( ! empty( $yt_id ) ) {
+    if (!empty($yt_id)) {
         $yt_thumb = 'https://img.youtube.com/vi/' . $yt_id . '/hqdefault.jpg';
         return sprintf(
             '<figure class="%1$s__cover %1$s__cover--video"><img src="%2$s" alt="" loading="lazy" /></figure>',
-            esc_attr( $wrapper ),
-            esc_url( $yt_thumb )
+            esc_attr($wrapper),
+            esc_url($yt_thumb)
         );
     }
 
-    if ( ! empty( $cover_image['url'] ) ) {
-        $fit_class  = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
-        $focal_id   = isset( $cover_image['focal_post_id'] ) ? (int) $cover_image['focal_post_id'] : $entry->ID;
-        $style_attr = function_exists( 'aiad_entry_figure_img_style_attr' )
-            ? aiad_entry_figure_img_style_attr( $focal_id, (string) $cover_image['fit'], 'feed' )
+    if (!empty($cover_image['url'])) {
+        $fit_class = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
+        $focal_id = isset($cover_image['focal_post_id']) ? (int) $cover_image['focal_post_id'] : $entry->ID;
+        $style_attr = function_exists('aiad_entry_figure_img_style_attr')
+            ? aiad_entry_figure_img_style_attr($focal_id, (string) $cover_image['fit'], 'feed')
             : '';
         return sprintf(
             '<figure class="%1$s__cover"><img class="%1$s__cover-img resource-activity-figure__img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600"%4$s /></figure>',
-            esc_attr( $wrapper ),
-            esc_url( $cover_image['url'] ),
-            esc_attr( $fit_class ),
+            esc_attr($wrapper),
+            esc_url($cover_image['url']),
+            esc_attr($fit_class),
             $style_attr // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
         );
     }
 
-    $cover_mod = function_exists( 'aiad_timeline_cover_modifier_class' )
-        ? aiad_timeline_cover_modifier_class( $icon, $pinned )
+    $cover_mod = function_exists('aiad_timeline_cover_modifier_class')
+        ? aiad_timeline_cover_modifier_class($icon, $pinned)
         : '';
 
     return sprintf(
         '<figure class="%1$s__cover %1$s__cover--fallback%2$s">%3$s</figure>',
-        esc_attr( $wrapper ),
-        $cover_mod ? ' ' . esc_attr( $cover_mod ) : '',
-        aiad_timeline_cover_fallback_inner_html( $icon, (string) $cover_fallback, $title, $is_swipe ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        esc_attr($wrapper),
+        $cover_mod ? ' ' . esc_attr($cover_mod) : '',
+        aiad_timeline_cover_fallback_inner_html($icon, (string) $cover_fallback, $title, $is_swipe) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     );
 }
 
@@ -134,11 +136,12 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
  * @param bool   $pinned Whether the entry is pinned.
  * @return string CSS class
  */
-function aiad_timeline_cover_modifier_class( string $icon, bool $pinned ): string {
-    if ( $pinned ) {
+function aiad_timeline_cover_modifier_class(string $icon, bool $pinned): string
+{
+    if ($pinned) {
         return 'timeline-cover--pinned';
     }
-    return 'timeline-cover--' . sanitize_html_class( $icon );
+    return 'timeline-cover--' . sanitize_html_class($icon);
 }
 
 /**
@@ -146,7 +149,8 @@ function aiad_timeline_cover_modifier_class( string $icon, bool $pinned ): strin
  *
  * @return string HTML
  */
-function aiad_timeline_magazine_cover_layers_html(): string {
+function aiad_timeline_magazine_cover_layers_html(): string
+{
     return '<span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top" aria-hidden="true"></span>'
         . '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
 }
@@ -156,7 +160,8 @@ function aiad_timeline_magazine_cover_layers_html(): string {
  *
  * @return string HTML
  */
-function aiad_timeline_swipe_cover_layers_html(): string {
+function aiad_timeline_swipe_cover_layers_html(): string
+{
     return '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
 }
 
@@ -173,15 +178,15 @@ function aiad_timeline_swipe_cover_date_html(
     string $date_iso,
     string $date_title = ''
 ): string {
-    $title_attr = $date_title ? ' title="' . esc_attr( $date_title ) . '"' : '';
+    $title_attr = $date_title ? ' title="' . esc_attr($date_title) . '"' : '';
 
     return sprintf(
         '<div class="timeline-magazine__cover-meta timeline-swipe__cover-meta" aria-hidden="true">'
         . '<time class="timeline-entry__date" datetime="%1$s"%2$s>%3$s</time>'
         . '</div>',
-        esc_attr( $date_iso ),
+        esc_attr($date_iso),
         $title_attr,
-        esc_html( $date_label )
+        esc_html($date_label)
     );
 }
 
@@ -205,18 +210,18 @@ function aiad_timeline_magazine_cover_meta_html(
     string $date_title = ''
 ): string {
     $badge_class = $pinned ? 'pinned' : $icon;
-    $title_attr  = $date_title ? ' title="' . esc_attr( $date_title ) . '"' : '';
+    $title_attr = $date_title ? ' title="' . esc_attr($date_title) . '"' : '';
 
     return sprintf(
         '<div class="timeline-magazine__cover-meta" aria-hidden="true">'
         . '<div class="timeline-magazine__cover-meta-badge"><span class="timeline-entry__badge timeline-entry__badge--%1$s">%2$s</span></div>'
         . '<time class="timeline-entry__date" datetime="%3$s"%4$s>%5$s</time>'
         . '</div>',
-        esc_attr( $badge_class ),
-        esc_html( $badge ),
-        esc_attr( $date_iso ),
+        esc_attr($badge_class),
+        esc_html($badge),
+        esc_attr($date_iso),
         $title_attr,
-        esc_html( $date_label )
+        esc_html($date_label)
     );
 }
 
@@ -226,31 +231,42 @@ function aiad_timeline_magazine_cover_meta_html(
  * @param WP_Post $entry Timeline post.
  * @return string HTML
  */
-function aiad_timeline_entry_actions_html( WP_Post $entry ): string {
-    $likes       = (int) get_post_meta( $entry->ID, '_aiad_timeline_like_count', true );
-    $link_url    = get_post_meta( $entry->ID, '_aiad_timeline_link_url', true );
-    $link_label  = get_post_meta( $entry->ID, '_aiad_timeline_link_label', true );
-    $entry_url   = get_permalink( $entry ) ?: home_url( '/' );
-    $entry_title = get_the_title( $entry );
-    $link_label  = $link_label ?: __( 'Learn more', 'ai-awareness-day' );
+function aiad_timeline_entry_actions_html(WP_Post $entry): string
+{
+    $likes = (int) get_post_meta($entry->ID, '_aiad_timeline_like_count', true);
+    $link_url = get_post_meta($entry->ID, '_aiad_timeline_link_url', true);
+    $link_label = get_post_meta($entry->ID, '_aiad_timeline_link_label', true);
+    $entry_url = get_permalink($entry) ?: home_url('/');
+    $entry_title = get_the_title($entry);
+    $link_label = $link_label ?: __('Learn more', 'ai-awareness-day');
 
     ob_start();
     ?>
-    <div class="timeline-entry__actions" aria-label="<?php esc_attr_e( 'Actions', 'ai-awareness-day' ); ?>">
-        <button type="button" class="timeline-entry__like" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" aria-pressed="false" aria-label="<?php esc_attr_e( 'Like this update', 'ai-awareness-day' ); ?>">
-            <span class="timeline-entry__like-icon" aria-hidden="true"><?php echo aiad_timeline_like_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-            <span class="timeline-entry__like-count"><?php echo esc_html( (string) $likes ); ?></span>
+    <div class="timeline-entry__actions" aria-label="<?php esc_attr_e('Actions', 'ai-awareness-day'); ?>">
+        <button type="button" class="timeline-entry__like" data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
+            aria-pressed="false" aria-label="<?php esc_attr_e('Like this update', 'ai-awareness-day'); ?>">
+            <span class="timeline-entry__like-icon"
+                aria-hidden="true"><?php echo aiad_timeline_like_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+            <span class="timeline-entry__like-count"><?php echo esc_html((string) $likes); ?></span>
         </button>
-        <button type="button" class="timeline-entry__share" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" data-url="<?php echo esc_url( $entry_url ); ?>" data-title="<?php echo esc_attr( $entry_title ); ?>" aria-label="<?php esc_attr_e( 'Share this update', 'ai-awareness-day' ); ?>">
-            <span class="timeline-entry__share-icon" aria-hidden="true"><?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+        <button type="button" class="timeline-entry__share" data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
+            data-url="<?php echo esc_url($entry_url); ?>" data-title="<?php echo esc_attr($entry_title); ?>"
+            aria-label="<?php esc_attr_e('Share this update', 'ai-awareness-day'); ?>">
+            <span class="timeline-entry__share-icon"
+                aria-hidden="true"><?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
         </button>
-        <?php if ( $link_url ) : ?>
-            <a href="<?php echo esc_url( $link_url ); ?>" class="timeline-entry__link timeline-entry__link--action" aria-label="<?php echo esc_attr( $link_label ); ?>">
-                <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+        <?php if ($link_url): ?>
+            <a href="<?php echo esc_url($link_url); ?>" class="timeline-entry__link timeline-entry__link--action"
+                aria-label="<?php echo esc_attr($link_label); ?>">
+                <span class="timeline-entry__link-icon"
+                    aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
             </a>
         <?php endif; ?>
-        <a href="<?php echo esc_url( $entry_url ); ?>" class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post" aria-label="<?php esc_attr_e( 'View full post', 'ai-awareness-day' ); ?>">
-            <span class="timeline-entry__link-icon" aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+        <a href="<?php echo esc_url($entry_url); ?>"
+            class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post"
+            aria-label="<?php esc_attr_e('View full post', 'ai-awareness-day'); ?>">
+            <span class="timeline-entry__link-icon"
+                aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
         </a>
     </div>
     <?php
@@ -263,13 +279,14 @@ function aiad_timeline_entry_actions_html( WP_Post $entry ): string {
  * @param WP_Post $entry Timeline post.
  * @return string
  */
-function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
-    $excerpt = get_the_excerpt( $entry );
-    if ( $excerpt ) {
-        return wp_strip_all_tags( $excerpt );
+function aiad_timeline_entry_excerpt_text(WP_Post $entry): string
+{
+    $excerpt = get_the_excerpt($entry);
+    if ($excerpt) {
+        return wp_strip_all_tags($excerpt);
     }
-    $content = get_post_field( 'post_content', $entry );
-    return wp_trim_words( wp_strip_all_tags( $content ), 40, '…' );
+    $content = get_post_field('post_content', $entry);
+    return wp_trim_words(wp_strip_all_tags($content), 40, '…');
 }
 
 /**
@@ -278,11 +295,12 @@ function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
  * @param WP_Post $entry Timeline post.
  * @return string
  */
-function aiad_timeline_swipe_excerpt_text( WP_Post $entry ): string {
-    $text = aiad_timeline_entry_excerpt_text( $entry );
-    $text = preg_replace( '/\s+/u', ' ', trim( $text ) );
+function aiad_timeline_swipe_excerpt_text(WP_Post $entry): string
+{
+    $text = aiad_timeline_entry_excerpt_text($entry);
+    $text = preg_replace('/\s+/u', ' ', trim($text));
 
-    return wp_trim_words( $text, 28, '…' );
+    return wp_trim_words($text, 28, '…');
 }
 
 /**
@@ -291,44 +309,49 @@ function aiad_timeline_swipe_excerpt_text( WP_Post $entry ): string {
  * @param WP_Post $entry Timeline post.
  * @return string HTML
  */
-function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
-    $pinned      = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
-    $icon        = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $badge       = aiad_timeline_featured_badge_label( $entry, $pinned, $icon );
-    $date_human  = human_time_diff( get_post_timestamp( $entry ), time() );
-    $date_label  = sprintf( __( '%s ago', 'ai-awareness-day' ), $date_human );
-    $date_full   = get_the_date( 'j M Y', $entry );
-    $entry_url   = get_permalink( $entry ) ?: '#';
-    $link_url    = get_post_meta( $entry->ID, '_aiad_timeline_link_url', true );
-    $link_label  = get_post_meta( $entry->ID, '_aiad_timeline_link_label', true ) ?: __( 'Learn more', 'ai-awareness-day' );
-    $cta_url     = $link_url ? $link_url : $entry_url;
+function aiad_render_timeline_swipe_slide(WP_Post $entry): string
+{
+    $pinned = (bool) get_post_meta($entry->ID, '_aiad_timeline_pinned', true);
+    $icon = get_post_meta($entry->ID, '_aiad_timeline_icon', true) ?: 'announcement';
+    $badge = aiad_timeline_featured_badge_label($entry, $pinned, $icon);
+    $date_human = human_time_diff(get_post_timestamp($entry), time());
+    $date_label = sprintf(__('%s ago', 'ai-awareness-day'), $date_human);
+    $date_full = get_the_date('j M Y', $entry);
+    $entry_url = get_permalink($entry) ?: '#';
+    $link_url = get_post_meta($entry->ID, '_aiad_timeline_link_url', true);
+    $link_label = get_post_meta($entry->ID, '_aiad_timeline_link_label', true) ?: __('Learn more', 'ai-awareness-day');
+    $cta_url = $link_url ? $link_url : $entry_url;
 
     ob_start();
     ?>
-    <article class="timeline-swipe__slide" data-entry-id="<?php echo esc_attr( (string) $entry->ID ); ?>" aria-roledescription="slide">
+    <article class="timeline-swipe__slide" data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
+        aria-roledescription="slide">
         <div class="timeline-swipe__media">
-            <?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-swipe', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo aiad_timeline_entry_cover_visual($entry, 'timeline-swipe', 'hero'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php echo aiad_timeline_swipe_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php
             echo aiad_timeline_swipe_cover_date_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $date_label,
-                get_the_date( 'c', $entry ),
+                get_the_date('c', $entry),
                 $date_full
             );
             ?>
             <div class="timeline-swipe__media-overlay">
-                <h3 class="timeline-swipe__title"><?php echo esc_html( get_the_title( $entry ) ); ?></h3>
+                <h3 class="timeline-swipe__title"><?php echo esc_html(get_the_title($entry)); ?></h3>
             </div>
-            <span class="timeline-swipe__media-hint" aria-hidden="true"><?php esc_html_e( 'Swipe', 'ai-awareness-day' ); ?> →</span>
+            <span class="timeline-swipe__media-hint" aria-hidden="true"><?php esc_html_e('Swipe', 'ai-awareness-day'); ?>
+                →</span>
         </div>
         <div class="timeline-swipe__panel">
             <div class="timeline-swipe__panel-header">
-                <span class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>"><?php echo esc_html( $badge ); ?></span>
+                <span
+                    class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr($pinned ? 'pinned' : $icon); ?>"><?php echo esc_html($badge); ?></span>
             </div>
-            <div class="timeline-swipe__excerpt"><?php echo esc_html( aiad_timeline_swipe_excerpt_text( $entry ) ); ?></div>
+            <div class="timeline-swipe__excerpt"><?php echo esc_html(aiad_timeline_swipe_excerpt_text($entry)); ?></div>
             <div class="timeline-swipe__panel-footer">
-                <?php echo aiad_timeline_entry_actions_html( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                <a href="<?php echo esc_url( $cta_url ); ?>" class="timeline-swipe__cta btn-action"><?php echo esc_html( $link_label ); ?></a>
+                <?php echo aiad_timeline_entry_actions_html($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <a href="<?php echo esc_url($cta_url); ?>"
+                    class="timeline-swipe__cta btn-action"><?php echo esc_html($link_label); ?></a>
             </div>
         </div>
     </article>
@@ -342,17 +365,19 @@ function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
  * @param WP_Post[] $entries Timeline posts.
  * @return string HTML
  */
-function aiad_render_timeline_swipe_deck( array $entries ): string {
-    if ( empty( $entries ) ) {
+function aiad_render_timeline_swipe_deck(array $entries): string
+{
+    if (empty($entries)) {
         return '';
     }
 
     ob_start();
     ?>
-    <div class="timeline-swipe" data-slide-count="<?php echo esc_attr( (string) count( $entries ) ); ?>">
-        <div class="timeline-swipe__viewport" tabindex="0" role="region" aria-label="<?php esc_attr_e( 'Campaign updates, swipe horizontally', 'ai-awareness-day' ); ?>">
-            <?php foreach ( $entries as $entry ) : ?>
-                <?php echo aiad_render_timeline_swipe_slide( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+    <div class="timeline-swipe" data-slide-count="<?php echo esc_attr((string) count($entries)); ?>">
+        <div class="timeline-swipe__viewport" tabindex="0" role="region"
+            aria-label="<?php esc_attr_e('Campaign updates, swipe horizontally', 'ai-awareness-day'); ?>">
+            <?php foreach ($entries as $entry): ?>
+                <?php echo aiad_render_timeline_swipe_slide($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php endforeach; ?>
         </div>
     </div>
@@ -366,33 +391,38 @@ function aiad_render_timeline_swipe_deck( array $entries ): string {
  * @param WP_Post $entry Timeline post.
  * @return string HTML
  */
-function aiad_render_timeline_magazine_row( WP_Post $entry ): string {
-    $pinned     = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
-    $icon       = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $badge      = aiad_timeline_featured_badge_label( $entry, $pinned, $icon );
-    $cover_mod  = aiad_timeline_cover_modifier_class( $icon, $pinned );
-    $date_human = human_time_diff( get_post_timestamp( $entry ), time() );
-    $date_label = sprintf( __( '%s ago', 'ai-awareness-day' ), $date_human );
-    $date_iso   = get_the_date( 'c', $entry );
-    $entry_url  = get_permalink( $entry ) ?: '#';
+function aiad_render_timeline_magazine_row(WP_Post $entry): string
+{
+    $pinned = (bool) get_post_meta($entry->ID, '_aiad_timeline_pinned', true);
+    $icon = get_post_meta($entry->ID, '_aiad_timeline_icon', true) ?: 'announcement';
+    $badge = aiad_timeline_featured_badge_label($entry, $pinned, $icon);
+    $cover_mod = aiad_timeline_cover_modifier_class($icon, $pinned);
+    $date_human = human_time_diff(get_post_timestamp($entry), time());
+    $date_label = sprintf(__('%s ago', 'ai-awareness-day'), $date_human);
+    $date_iso = get_the_date('c', $entry);
+    $entry_url = get_permalink($entry) ?: '#';
 
     ob_start();
     ?>
     <li class="timeline-magazine__card">
         <article class="timeline-magazine__card-inner">
             <div class="timeline-magazine__card-media">
-                <a href="<?php echo esc_url( $entry_url ); ?>" class="timeline-magazine__card-media-link timeline-magazine__card-media-link--chamfer <?php echo esc_attr( $cover_mod ); ?>" tabindex="-1" aria-hidden="true">
-                    <?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-magazine', 'thumb' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top" aria-hidden="true"></span>
+                <a href="<?php echo esc_url($entry_url); ?>"
+                    class="timeline-magazine__card-media-link timeline-magazine__card-media-link--chamfer <?php echo esc_attr($cover_mod); ?>"
+                    tabindex="-1" aria-hidden="true">
+                    <?php echo aiad_timeline_entry_cover_visual($entry, 'timeline-magazine', 'thumb'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top"
+                        aria-hidden="true"></span>
                 </a>
-                <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php echo aiad_timeline_magazine_cover_meta_html($badge, $icon, $pinned, $date_label, $date_iso); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
             <div class="timeline-magazine__card-body">
                 <h4 class="timeline-magazine__card-title">
-                    <a href="<?php echo esc_url( $entry_url ); ?>"><?php echo esc_html( get_the_title( $entry ) ); ?></a>
+                    <a href="<?php echo esc_url($entry_url); ?>"><?php echo esc_html(get_the_title($entry)); ?></a>
                 </h4>
-                <p class="timeline-magazine__card-excerpt"><?php echo esc_html( aiad_timeline_entry_excerpt_text( $entry ) ); ?></p>
-                <?php echo aiad_timeline_entry_actions_html( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <p class="timeline-magazine__card-excerpt">
+                    <?php echo esc_html(aiad_timeline_entry_excerpt_text($entry)); ?></p>
+                <?php echo aiad_timeline_entry_actions_html($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
         </article>
     </li>
@@ -406,55 +436,57 @@ function aiad_render_timeline_magazine_row( WP_Post $entry ): string {
  * @param WP_Post[] $entries Timeline posts.
  * @return string HTML
  */
-function aiad_render_timeline_magazine( array $entries ): string {
-    if ( empty( $entries ) ) {
+function aiad_render_timeline_magazine(array $entries): string
+{
+    if (empty($entries)) {
         return '';
     }
 
-    $hero  = $entries[0];
-    $subs  = function_exists( 'aiad_timeline_magazine_sub_count' ) ? aiad_timeline_magazine_sub_count() : 4;
-    $rest  = array_slice( $entries, 1, $subs );
-    $pinned      = (bool) get_post_meta( $hero->ID, '_aiad_timeline_pinned', true );
-    $icon        = get_post_meta( $hero->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
-    $badge       = aiad_timeline_featured_badge_label( $hero, $pinned, $icon );
-    $cover_mod   = aiad_timeline_cover_modifier_class( $icon, $pinned );
-    $date_human  = human_time_diff( get_post_timestamp( $hero ), time() );
-    $date_label  = sprintf( __( '%s ago', 'ai-awareness-day' ), $date_human );
-    $date_full   = get_the_date( 'j M Y', $hero );
-    $date_iso    = get_the_date( 'c', $hero );
-    $hero_permalink = get_permalink( $hero ) ?: '';
-    $hero_content   = apply_filters( 'the_content', get_post_field( 'post_content', $hero ) );
+    $hero = $entries[0];
+    $subs = function_exists('aiad_timeline_magazine_sub_count') ? aiad_timeline_magazine_sub_count() : 4;
+    $rest = array_slice($entries, 1, $subs);
+    $pinned = (bool) get_post_meta($hero->ID, '_aiad_timeline_pinned', true);
+    $icon = get_post_meta($hero->ID, '_aiad_timeline_icon', true) ?: 'announcement';
+    $badge = aiad_timeline_featured_badge_label($hero, $pinned, $icon);
+    $cover_mod = aiad_timeline_cover_modifier_class($icon, $pinned);
+    $date_human = human_time_diff(get_post_timestamp($hero), time());
+    $date_label = sprintf(__('%s ago', 'ai-awareness-day'), $date_human);
+    $date_full = get_the_date('j M Y', $hero);
+    $date_iso = get_the_date('c', $hero);
+    $hero_permalink = get_permalink($hero) ?: '';
+    $hero_content = apply_filters('the_content', get_post_field('post_content', $hero));
 
     ob_start();
     ?>
     <div class="timeline-magazine">
         <article class="timeline-magazine__hero">
             <div class="timeline-magazine__hero-media">
-                <div class="timeline-magazine__hero-media-frame <?php echo esc_attr( $cover_mod ); ?>">
-                    <?php echo aiad_timeline_entry_cover_visual( $hero, 'timeline-magazine', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <div class="timeline-magazine__hero-media-frame <?php echo esc_attr($cover_mod); ?>">
+                    <?php echo aiad_timeline_entry_cover_visual($hero, 'timeline-magazine', 'hero'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php echo aiad_timeline_magazine_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                    <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso, $date_full ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php echo aiad_timeline_magazine_cover_meta_html($badge, $icon, $pinned, $date_label, $date_iso, $date_full); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <div class="timeline-magazine__hero-media-overlay">
-                        <h3 class="timeline-magazine__hero-title"><?php echo esc_html( get_the_title( $hero ) ); ?></h3>
+                        <h3 class="timeline-magazine__hero-title"><?php echo esc_html(get_the_title($hero)); ?></h3>
                     </div>
                 </div>
             </div>
             <div class="timeline-magazine__hero-text">
-                <?php if ( $hero_content ) : ?>
-                    <div class="timeline-magazine__hero-content timeline-entry__content"><?php echo wp_kses_post( $hero_content ); ?></div>
+                <?php if ($hero_content): ?>
+                    <div class="timeline-magazine__hero-content timeline-entry__content">
+                        <?php echo wp_kses_post($hero_content); ?></div>
                 <?php endif; ?>
-                <?php if ( $hero_permalink ) : ?>
-                    <a class="timeline-magazine__read-more" href="<?php echo esc_url( $hero_permalink ); ?>">
-                        <?php esc_html_e( 'Read full update →', 'ai-awareness-day' ); ?>
+                <?php if ($hero_permalink): ?>
+                    <a class="timeline-magazine__read-more" href="<?php echo esc_url($hero_permalink); ?>">
+                        <?php esc_html_e('Read full update →', 'ai-awareness-day'); ?>
                     </a>
                 <?php endif; ?>
-                <?php echo aiad_timeline_entry_actions_html( $hero ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php echo aiad_timeline_entry_actions_html($hero); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
         </article>
-        <?php if ( ! empty( $rest ) ) : ?>
+        <?php if (!empty($rest)): ?>
             <ul class="timeline-magazine__more">
-                <?php foreach ( $rest as $entry ) : ?>
-                    <?php echo aiad_render_timeline_magazine_row( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php foreach ($rest as $entry): ?>
+                    <?php echo aiad_render_timeline_magazine_row($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
@@ -469,10 +501,11 @@ function aiad_render_timeline_magazine( array $entries ): string {
  * @param WP_Post[] $entries Timeline posts.
  * @return string HTML
  */
-function aiad_render_timeline_archive_feed( array $entries ): string {
-    if ( empty( $entries ) ) {
+function aiad_render_timeline_archive_feed(array $entries): string
+{
+    if (empty($entries)) {
         return '<div class="timeline-feed__body timeline-feed__body--archive"><p class="timeline-feed__empty">'
-            . esc_html__( 'No entries found.', 'ai-awareness-day' )
+            . esc_html__('No entries found.', 'ai-awareness-day')
             . '</p></div>';
     }
 
@@ -480,8 +513,8 @@ function aiad_render_timeline_archive_feed( array $entries ): string {
     ?>
     <div class="timeline-feed__body timeline-feed__body--archive">
         <ul class="timeline-archive__list">
-            <?php foreach ( $entries as $entry ) : ?>
-                <?php echo aiad_render_timeline_magazine_row( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php foreach ($entries as $entry): ?>
+                <?php echo aiad_render_timeline_magazine_row($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -495,19 +528,20 @@ function aiad_render_timeline_archive_feed( array $entries ): string {
  * @param WP_Post[] $entries Timeline posts.
  * @return string HTML
  */
-function aiad_render_timeline_feed_layouts( array $entries ): string {
-    if ( empty( $entries ) ) {
-        return '<div class="timeline-feed__body"><p class="timeline-feed__empty">' . esc_html__( 'No entries found.', 'ai-awareness-day' ) . '</p></div>';
+function aiad_render_timeline_feed_layouts(array $entries): string
+{
+    if (empty($entries)) {
+        return '<div class="timeline-feed__body"><p class="timeline-feed__empty">' . esc_html__('No entries found.', 'ai-awareness-day') . '</p></div>';
     }
 
     ob_start();
     ?>
     <div class="timeline-feed__body">
         <div class="timeline-feed__mobile">
-            <?php echo aiad_render_timeline_swipe_deck( $entries ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo aiad_render_timeline_swipe_deck($entries); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         </div>
         <div class="timeline-feed__desktop">
-            <?php echo aiad_render_timeline_magazine( $entries ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo aiad_render_timeline_magazine($entries); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         </div>
     </div>
     <?php
