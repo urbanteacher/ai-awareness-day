@@ -81,7 +81,9 @@
 
 /* ── Media ── */
 .single-timeline-entry__media {
+	position: relative;
 	overflow: hidden;
+	isolation: isolate;
 }
 
 .single-timeline-entry__media .timeline-entry__video-facade {

@@ -47,21 +47,44 @@
 	max-width: none;
 }
 
-/* Timeline single: contained within article column */
+/* Timeline single: contained within article column, taller frame (more image visible) */
 .single-timeline .single-timeline-entry__media .aiad-entry-figure,
-.single-timeline .single-timeline-entry__media .resource-activity-figure {
+.single-timeline .single-timeline-entry__media .resource-activity-figure,
+.single-timeline .single-timeline-entry__media .resource-activity-figure--timeline-single {
 	width: 100%;
 	margin: 0;
+	aspect-ratio: 3 / 2;
+	max-height: none;
+}
+
+.single-timeline .single-timeline-entry__media .resource-activity-figure__img,
+.single-timeline .single-timeline-entry__media .resource-activity-figure--timeline-single .resource-activity-figure__img {
+	object-position: center 50%;
+}
+
+.single-timeline .single-timeline-entry__media .resource-activity-figure--timeline-fallback {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	max-height: none;
+	overflow: hidden;
 }
 
 .single-timeline .resource-activity-figure--timeline-fallback .timeline-entry__cover-fallback {
-	position: absolute;
-	inset: 0;
+	position: relative;
+	inset: auto;
 	width: 100%;
 	height: 100%;
 	min-height: 100%;
 	max-height: none;
 	box-sizing: border-box;
+}
+
+.single-timeline .resource-activity-figure--timeline-fallback .timeline-entry__cover-fallback--minimal {
+	min-height: 100%;
+	height: 100%;
+	max-height: none;
+	padding: 0;
 }
 
 /* Inline images in post body (resource + timeline) */

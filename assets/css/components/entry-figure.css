@@ -62,14 +62,30 @@
 	object-position: center 50%;
 }
 
+/* Fallback gradient: contain inside figure (avoid absolute bleed to viewport) */
+.single-timeline .single-timeline-entry__media .resource-activity-figure--timeline-fallback {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	max-height: none;
+	overflow: hidden;
+}
+
 .single-timeline .resource-activity-figure--timeline-fallback .timeline-entry__cover-fallback {
-	position: absolute;
-	inset: 0;
+	position: relative;
+	inset: auto;
 	width: 100%;
 	height: 100%;
 	min-height: 100%;
 	max-height: none;
 	box-sizing: border-box;
+}
+
+.single-timeline .resource-activity-figure--timeline-fallback .timeline-entry__cover-fallback--minimal {
+	min-height: 100%;
+	height: 100%;
+	max-height: none;
+	padding: 0;
 }
 
 /* Inline images in post body (resource + timeline) */
