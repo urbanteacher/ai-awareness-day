@@ -360,11 +360,15 @@ function aiad_scripts(): void
     // Enqueue single timeline entry styles and share script
     if (is_singular('timeline') && !is_admin()) {
         $single_timeline_css = AIAD_DIR . '/assets/css/pages/single-timeline.css';
+        $single_timeline_ver = AIAD_VERSION;
+        if ( file_exists( $single_timeline_css ) ) {
+            $single_timeline_ver .= '.' . (string) filemtime( $single_timeline_css );
+        }
         wp_enqueue_style(
             'aiad-single-timeline',
             AIAD_URI . '/assets/css/pages/single-timeline.css',
             array( 'aiad-timeline', 'aiad-entry-figure' ),
-            file_exists($single_timeline_css) ? filemtime($single_timeline_css) : AIAD_VERSION
+            $single_timeline_ver
         );
         $single_timeline_js = AIAD_DIR . '/assets/js/single-timeline.js';
         wp_enqueue_script(
