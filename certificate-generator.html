@@ -306,7 +306,7 @@
             <div class="certificate" id="certificateNode">
                 <div class="cert-logos" id="certLogos">
                     <div class="cert-logo-cell cert-logo-cell--brand" id="brandLogoCell">
-                        <span class="logo-placeholder" id="brandLogoPlaceholder">AIAD logo</span>
+                        <span class="logo-placeholder" id="brandLogoPlaceholder" hidden>AIAD logo</span>
                         <img id="brandLogoPreview" class="brand-logo-img" alt="AI Awareness Day" hidden>
                     </div>
                     <div class="cert-logo-divider" id="certLogoDivider" aria-hidden="true" hidden></div>
@@ -463,13 +463,13 @@
                 img.onerror = () => {
                     img.hidden = true;
                     img.removeAttribute('src');
-                    ph.hidden = false;
+                    ph.hidden = true;
                 };
                 img.src = url;
             } else {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = false;
+                ph.hidden = true;
             }
         }
 

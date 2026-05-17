@@ -205,8 +205,8 @@
 
         <div class="letter-wrap">
             <article class="letter" id="letterNode" aria-label="Thank-you letter preview">
-                <div class="letter-logo" id="letterLogoCell">
-                    <span class="letter-logo-placeholder" id="letterLogoPlaceholder">AIAD logo</span>
+                <div class="letter-logo" id="letterLogoCell" hidden>
+                    <span class="letter-logo-placeholder" id="letterLogoPlaceholder" hidden>AIAD logo</span>
                     <img id="letterLogoPreview" alt="AI Awareness Day" hidden>
                 </div>
                 <p class="letter-date" id="letterDateDisplay">—</p>
@@ -247,7 +247,12 @@
         function aiadApiUrl(path) {
             const root = AIAD_REST.root
                 || (wpBaseInput.value.replace(/\/$/, '') + '/wp-json/aiad/v1/certificate/');
-            return root.replace(/\/$/, '') + '/' + String(path).replace(/^\//, '');
+            let finalUrl = root.replace(/\/$/, '') + '/' + String(path).replace(/^\//, '');
+            const parts = finalUrl.split('?');
+            if (parts.length > 2) {
+                finalUrl = parts[0] + '?' + parts.slice(1).join('&');
+            }
+            return finalUrl;
         }
 
         function aiadApiFetch(path) {
@@ -299,27 +304,34 @@
             return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
+        function setBrandLogoLayout(show) {
+            document.getElementById('letterLogoCell').hidden = !show;
+        }
+
         function setBrandLogo(url) {
             const img = document.getElementById('letterLogoPreview');
             const ph = document.getElementById('letterLogoPlaceholder');
-            if (url) {
-                img.crossOrigin = 'anonymous';
-                img.referrerPolicy = 'no-referrer-when-downgrade';
-                img.onload = () => {
-                    img.hidden = false;
-                    ph.hidden = true;
-                };
-                img.onerror = () => {
-                    img.hidden = true;
-                    img.removeAttribute('src');
-                    ph.hidden = false;
-                };
-                img.src = url;
-            } else {
+            if (!url) {
                 img.hidden = true;
                 img.removeAttribute('src');
-                ph.hidden = false;
+                ph.hidden = true;
+                setBrandLogoLayout(false);
+                return;
             }
+            img.crossOrigin = 'anonymous';
+            img.referrerPolicy = 'no-referrer-when-downgrade';
+            img.onload = () => {
+                img.hidden = false;
+                ph.hidden = true;
+                setBrandLogoLayout(true);
+            };
+            img.onerror = () => {
+                img.hidden = true;
+                img.removeAttribute('src');
+                ph.hidden = true;
+                setBrandLogoLayout(false);
+            };
+            img.src = url;
         }
 
         function applyLetterCopy(copy) {
