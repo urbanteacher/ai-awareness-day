@@ -41,20 +41,23 @@
 
 #timeline .timeline-filter-btn {
     color: var(--gray-200);
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 #timeline .timeline-filter-btn:hover {
     color: var(--white);
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 #timeline .timeline-filter-btn--active {
     color: var(--gray-900);
     background: var(--white);
     border-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 #timeline .timeline-filter-btn--active:hover {
@@ -218,24 +221,32 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.4rem 0.85rem;
     font-family: var(--font-display);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--gray-600);
-    background: var(--white);
-    border: 1px solid var(--gray-300);
-    border-radius: var(--border-radius);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 999px;
     cursor: pointer;
-    transition: var(--transition);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
 
 .timeline-filter-btn:hover {
     color: var(--gray-900);
-    border-color: var(--gray-400);
-    background: var(--gray-50);
+    border-color: var(--gray-300);
+    background: var(--white);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
 }
 
 .timeline-filter-btn:focus {
@@ -247,12 +258,16 @@
     color: var(--white);
     background: var(--gray-900);
     border-color: var(--gray-900);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transform: none;
 }
 
 .timeline-filter-btn--active:hover {
     color: var(--white);
     background: var(--gray-800);
     border-color: var(--gray-800);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+    transform: translateY(-1px);
 }
 
 /* Muted suffix inside a pill (e.g. schedule “Parents · Soon”) */
@@ -934,13 +949,19 @@
 
 /* Legacy deck hint removed — use .timeline-swipe__media-hint on each slide */
 
-/* Desktop magazine — pointed chamfer (resource-card pattern) */
+/* Magazine tokens — homepage grid + /timeline/ archive (no .timeline-magazine wrapper on archive) */
+.timeline-feed__body,
+.timeline-archive__list,
 .timeline-magazine {
     --timeline-chamfer-hero: 36px;
     --timeline-chamfer-card: 22px;
     --timeline-date-inset-step: 0.5rem;
     --timeline-date-inset-x1: calc(var(--timeline-date-inset-step) * 1);
     --timeline-date-inset-x5: calc(var(--timeline-date-inset-step) * 5);
+}
+
+/* Desktop magazine — pointed chamfer (resource-card pattern) */
+.timeline-magazine {
     padding: 1rem;
     background: var(--white);
 }
@@ -1105,18 +1126,31 @@
     position: absolute;
     top: 0.5rem;
     left: 0.5rem;
-    max-width: 62%;
+    right: auto;
+    bottom: auto;
+    z-index: 2;
+    max-width: calc(52% - 0.5rem);
     line-height: 1.25;
 }
 
 .timeline-magazine__cover-meta .timeline-entry__date {
     position: absolute;
     top: 0.5rem;
-    right: 1rem;
+    right: calc(0.5rem + var(--timeline-date-inset-x1, 0.5rem));
+    left: auto;
+    bottom: auto;
+    z-index: 2;
     margin: 0;
+    padding: 0.2rem 0.5rem;
     white-space: nowrap;
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--white);
+    background: rgba(0, 0, 0, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    text-shadow: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .timeline-magazine__hero {
@@ -1291,7 +1325,7 @@
     padding: 1.5rem 0 0;
     border-top: 1px solid var(--gray-200);
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
     grid-template-columns: 1fr;
 }
 
@@ -1305,15 +1339,16 @@
     height: 100%;
     overflow: hidden;
     border: 1px solid var(--gray-200);
-    border-radius: 0;
+    border-radius: 4px;
     background: var(--white);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .timeline-magazine__card-inner:hover {
     border-color: var(--gray-300);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
 }
 
 .timeline-magazine__card-media {
@@ -1345,15 +1380,12 @@
 .timeline-magazine__card-media .timeline-magazine__cover-meta-badge {
     top: 0.45rem;
     left: 0.45rem;
+    max-width: calc(48% - 0.45rem);
 }
 
 .timeline-magazine__card-media .timeline-magazine__cover-meta .timeline-entry__date {
     top: 0.45rem;
-    right: calc(0.5rem + var(--timeline-date-inset-x1));
-    padding: 0.2rem 0.45rem;
-    background: rgba(0, 0, 0, 0.55);
-    color: var(--white);
-    text-shadow: none;
+    right: calc(0.45rem + var(--timeline-date-inset-x1, 0.5rem));
 }
 
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
@@ -1439,6 +1471,22 @@
     overflow: hidden;
 }
 
+/* Mobile / narrow: shorter cover so title and actions stay in view */
+@media (max-width: 639px) {
+    .timeline-magazine__card-media .timeline-magazine__card-media-link--chamfer {
+        aspect-ratio: 16 / 10;
+        max-height: 11.5rem;
+    }
+
+    .timeline-magazine__card-media {
+        min-height: 0;
+    }
+
+    .timeline-archive__list {
+        gap: 1.15rem;
+    }
+}
+
 @media (min-width: 640px) {
     .timeline-magazine__card-inner {
         flex-direction: row;
@@ -1451,6 +1499,7 @@
 
     .timeline-magazine__card-media .timeline-magazine__card-media-link--chamfer {
         aspect-ratio: auto;
+        max-height: none;
         height: 100%;
         min-height: 7.25rem;
     }
@@ -1544,7 +1593,7 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .timeline-feed__body--archive {
@@ -1599,5 +1648,14 @@
 
     .timeline-swipe__media-hint {
         display: none;
+    }
+
+    .timeline-filter-btn,
+    .timeline-filter-btn:hover,
+    .timeline-filter-btn--active:hover,
+    .timeline-magazine__card-inner,
+    .timeline-magazine__card-inner:hover {
+        transform: none;
+        transition: none;
     }
 }
