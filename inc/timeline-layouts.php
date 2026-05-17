@@ -273,6 +273,19 @@ function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
 }
 
 /**
+ * Short plain-text blurb for mobile swipe panel (not full post body).
+ *
+ * @param WP_Post $entry Timeline post.
+ * @return string
+ */
+function aiad_timeline_swipe_excerpt_text( WP_Post $entry ): string {
+    $text = aiad_timeline_entry_excerpt_text( $entry );
+    $text = preg_replace( '/\s+/u', ' ', trim( $text ) );
+
+    return wp_trim_words( $text, 28, '…' );
+}
+
+/**
  * Render one mobile swipe slide (portrait: cover top, copy below).
  *
  * @param WP_Post $entry Timeline post.
@@ -312,9 +325,11 @@ function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
             <div class="timeline-swipe__panel-header">
                 <span class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>"><?php echo esc_html( $badge ); ?></span>
             </div>
-            <div class="timeline-swipe__excerpt"><?php echo esc_html( aiad_timeline_entry_excerpt_text( $entry ) ); ?></div>
-            <?php echo aiad_timeline_entry_actions_html( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-            <a href="<?php echo esc_url( $cta_url ); ?>" class="timeline-swipe__cta btn-action"><?php echo esc_html( $link_label ); ?></a>
+            <div class="timeline-swipe__excerpt"><?php echo esc_html( aiad_timeline_swipe_excerpt_text( $entry ) ); ?></div>
+            <div class="timeline-swipe__panel-footer">
+                <?php echo aiad_timeline_entry_actions_html( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <a href="<?php echo esc_url( $cta_url ); ?>" class="timeline-swipe__cta btn-action"><?php echo esc_html( $link_label ); ?></a>
+            </div>
         </div>
     </article>
     <?php

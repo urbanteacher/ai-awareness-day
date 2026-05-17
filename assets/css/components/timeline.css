@@ -829,26 +829,46 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     border-top: 1px solid var(--gray-200);
     padding: 0.75rem 1rem 1rem;
     background: var(--white);
 }
 
 .timeline-swipe__panel-header {
+    flex-shrink: 0;
     margin-bottom: 0.5rem;
 }
 
 .timeline-swipe__excerpt {
     flex: 1 1 auto;
     min-height: 0;
+    overflow-x: hidden;
     overflow-y: auto;
     margin: 0;
+    font-family: var(--font-body);
     font-size: 0.875rem;
     line-height: 1.5;
     color: var(--gray-800);
+    -webkit-overflow-scrolling: touch;
 }
 
-/* ~4 extra visible lines in the swipe panel on small screens */
+.timeline-swipe__panel-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.timeline-swipe__panel-footer .timeline-entry__actions {
+    margin-top: 0;
+    padding-top: 0.65rem;
+}
+
+.timeline-swipe__panel-footer .timeline-entry__content {
+    display: none;
+}
+
+/* Mobile: taller deck; excerpt scrolls between badge and pinned footer */
 @media (max-width: 767.98px) {
     .timeline-swipe__viewport {
         height: min(72dvh, 560px);
@@ -859,11 +879,10 @@
         flex: 1 1 0;
         min-height: 30%;
     }
+}
 
-    .timeline-swipe__excerpt {
-        min-height: calc(8 * 1.5em);
-        max-height: calc(11 * 1.5em);
-    }
+.timeline-swipe__panel-footer .timeline-swipe__cta {
+    margin-top: 0.65rem;
 }
 
 .timeline-swipe__cta {
