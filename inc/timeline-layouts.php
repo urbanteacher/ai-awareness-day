@@ -10,6 +10,52 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Resolve cover image URL + fit mode (featured image, or partner logo for live sessions).
+ *
+ * @param WP_Post $entry Timeline post.
+ * @param string  $size  thumb | hero.
+ * @return array{url: string, fit: string} fit is 'cover' or 'contain'.
+ */
+function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 'thumb' ): array {
+    $sizes = 'hero' === $size
+        ? array( 'large', 'medium_large', 'medium' )
+        : array( 'medium_large', 'medium', 'large' );
+
+    $cover_fit = get_post_meta( $entry->ID, '_aiad_timeline_cover_fit', true );
+    foreach ( $sizes as $img_size ) {
+        $url = get_the_post_thumbnail_url( $entry->ID, $img_size );
+        if ( $url ) {
+            return array(
+                'url' => $url,
+                'fit' => 'contain' === $cover_fit ? 'contain' : 'cover',
+            );
+        }
+    }
+
+    $auto_type = get_post_meta( $entry->ID, '_aiad_timeline_auto_type', true );
+    $related   = (int) get_post_meta( $entry->ID, '_aiad_timeline_related_id', true );
+    if ( 'live_session' === $auto_type && $related > 0 ) {
+        $partner_id = (int) get_post_meta( $related, '_session_partner_id', true );
+        if ( $partner_id > 0 ) {
+            foreach ( array( 'medium_large', 'medium', 'large' ) as $img_size ) {
+                $logo = get_the_post_thumbnail_url( $partner_id, $img_size );
+                if ( $logo ) {
+                    return array(
+                        'url' => $logo,
+                        'fit' => 'contain',
+                    );
+                }
+            }
+        }
+    }
+
+    return array(
+        'url' => '',
+        'fit' => 'cover',
+    );
+}
+
+/**
  * Cover visual for swipe / magazine (featured image or gradient/tech fallback).
  *
  * @param WP_Post $entry   Timeline post.
@@ -22,10 +68,7 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
     $card_type      = get_post_meta( $entry->ID, '_aiad_timeline_card_type', true ) ?: 'default';
     $video_url      = get_post_meta( $entry->ID, '_aiad_timeline_video_url', true );
     $yt_id          = function_exists( 'aiad_youtube_video_id' ) ? aiad_youtube_video_id( $video_url ) : '';
-    $thumbnail      = get_the_post_thumbnail_url( $entry->ID, 'hero' === $size ? 'large' : 'medium' );
-    if ( ! $thumbnail ) {
-        $thumbnail = get_the_post_thumbnail_url( $entry->ID, 'medium_large' );
-    }
+    $cover_image    = aiad_timeline_entry_cover_image_data( $entry, $size );
     $cover_fallback = get_post_meta( $entry->ID, '_aiad_timeline_cover_fallback', true );
     $title          = get_the_title( $entry );
 
@@ -38,11 +81,13 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
         );
     }
 
-    if ( ! empty( $thumbnail ) ) {
+    if ( ! empty( $cover_image['url'] ) ) {
+        $fit_class = 'contain' === $cover_image['fit'] ? ' timeline-cover-img--fit-contain' : '';
         return sprintf(
-            '<figure class="%1$s__cover"><img class="%1$s__cover-img" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
+            '<figure class="%1$s__cover"><img class="%1$s__cover-img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
             esc_attr( $wrapper ),
-            esc_url( $thumbnail )
+            esc_url( $cover_image['url'] ),
+            esc_attr( $fit_class )
         );
     }
 
@@ -165,64 +210,6 @@ function aiad_timeline_entry_excerpt_text( WP_Post $entry ): string {
     }
     $content = get_post_field( 'post_content', $entry );
     return wp_trim_words( wp_strip_all_tags( $content ), 40, '…' );
-}
-
-/**
- * First paragraph(s) for magazine hero teaser (homepage), capped so copy fits the cover column.
- *
- * @param WP_Post $entry            Timeline post.
- * @param int     $max_paragraphs   Max blocks to return.
- * @param int     $max_words_total  Word budget across blocks.
- * @return string[] Plain-text paragraphs.
- */
-function aiad_timeline_magazine_hero_teaser_paragraphs( WP_Post $entry, int $max_paragraphs = 6, int $max_words_total = 140 ): array {
-    $source = get_the_excerpt( $entry );
-    if ( $source ) {
-        $source = wp_strip_all_tags( $source );
-    } else {
-        $source = wp_strip_all_tags( (string) get_post_field( 'post_content', $entry ) );
-    }
-    if ( '' === $source ) {
-        return array();
-    }
-
-    $blocks     = preg_split( '/\n\s*\n+/', trim( $source ) ) ?: array();
-    $paragraphs = array();
-    $words_used = 0;
-
-    foreach ( $blocks as $block ) {
-        $text = trim( wp_strip_all_tags( $block ) );
-        if ( '' === $text ) {
-            continue;
-        }
-        $remaining = $max_words_total - $words_used;
-        if ( $remaining <= 0 ) {
-            break;
-        }
-        $chunk = wp_trim_words( $text, $remaining, '' );
-        if ( '' === $chunk ) {
-            continue;
-        }
-        $paragraphs[] = $chunk;
-        $words_used    += str_word_count( $chunk );
-        if ( count( $paragraphs ) >= $max_paragraphs ) {
-            break;
-        }
-    }
-
-    if ( empty( $paragraphs ) ) {
-        return array( wp_trim_words( $source, $max_words_total, '…' ) );
-    }
-
-    $source_words = str_word_count( $source );
-    if ( $words_used < $source_words ) {
-        $last = count( $paragraphs ) - 1;
-        if ( ! str_ends_with( $paragraphs[ $last ], '…' ) ) {
-            $paragraphs[ $last ] = rtrim( $paragraphs[ $last ], " \t\n\r\0\x0B." ) . '…';
-        }
-    }
-
-    return $paragraphs;
 }
 
 /**
@@ -358,7 +345,7 @@ function aiad_render_timeline_magazine( array $entries ): string {
     $date_full   = get_the_date( 'j M Y', $hero );
     $date_iso    = get_the_date( 'c', $hero );
     $hero_permalink = get_permalink( $hero ) ?: '';
-    $hero_teaser    = aiad_timeline_magazine_hero_teaser_paragraphs( $hero );
+    $hero_content   = apply_filters( 'the_content', get_post_field( 'post_content', $hero ) );
 
     ob_start();
     ?>
@@ -375,12 +362,8 @@ function aiad_render_timeline_magazine( array $entries ): string {
                 </div>
             </div>
             <div class="timeline-magazine__hero-text">
-                <?php if ( ! empty( $hero_teaser ) ) : ?>
-                    <div class="timeline-magazine__hero-content timeline-entry__content">
-                        <?php foreach ( $hero_teaser as $hero_para ) : ?>
-                            <p><?php echo esc_html( $hero_para ); ?></p>
-                        <?php endforeach; ?>
-                    </div>
+                <?php if ( $hero_content ) : ?>
+                    <div class="timeline-magazine__hero-content timeline-entry__content"><?php echo wp_kses_post( $hero_content ); ?></div>
                 <?php endif; ?>
                 <?php if ( $hero_permalink ) : ?>
                     <a class="timeline-magazine__read-more" href="<?php echo esc_url( $hero_permalink ); ?>">

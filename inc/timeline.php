@@ -780,6 +780,7 @@ function aiad_timeline_set_featured_image_from_partner( int $timeline_id, int $p
     $thumb_id = get_post_thumbnail_id( $partner_id );
     if ( $thumb_id ) {
         set_post_thumbnail( $timeline_id, $thumb_id );
+        update_post_meta( $timeline_id, '_aiad_timeline_cover_fit', 'contain' );
     }
 }
 
