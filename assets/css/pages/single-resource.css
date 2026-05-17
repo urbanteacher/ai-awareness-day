@@ -134,16 +134,7 @@
   word-break: break-word;
 }
 
-.single-resource .entry-content.entry-content--resource img,
-.single-resource .entry-content.entry-content--resource video {
-  max-width: 100%;
-  height: auto;
-}
-
-.single-resource .entry-content.entry-content--resource iframe,
-.single-resource .entry-content.entry-content--resource embed {
-  max-width: 100%;
-}
+/* Inline content images: see assets/css/components/entry-figure.css */
 
 .resource-list--resources a {
   overflow-wrap: anywhere;

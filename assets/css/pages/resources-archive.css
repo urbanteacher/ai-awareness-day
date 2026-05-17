@@ -1162,24 +1162,7 @@
   padding-bottom: 0.75rem;
 }
 
-.single-resource .resource-activity-card figure.resource-activity-figure {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  max-width: none;
-  overflow: hidden;
-  aspect-ratio: 16 / 7;
-  max-height: 520px;
-}
-
-.single-resource .resource-activity-card figure.resource-activity-figure img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-  display: block;
-}
+/* Entry figure sizing: see assets/css/components/entry-figure.css */
 
 .single-resource .entry-content.entry-content--resource {
   font-size: 1.05rem;

@@ -40,10 +40,17 @@ get_header();
 			}
 		}
 
-		$show_video    = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
-		$show_linkedin = 'linkedin' === $card_type && ! empty( $linkedin_embed );
-		$show_image    = ! $show_video && ! $show_linkedin && has_post_thumbnail();
-		$has_media     = $show_video || $show_linkedin || $show_image;
+		$show_video       = ( 'video' === $card_type || 'default' === $card_type ) && ( ! empty( $yt_id ) || ! empty( $video_embed ) );
+		$show_linkedin    = 'linkedin' === $card_type && ! empty( $linkedin_embed );
+		$cover_fallback   = get_post_meta( $post_id, '_aiad_timeline_cover_fallback', true );
+		$cover_data       = function_exists( 'aiad_timeline_entry_cover_image_data' )
+			? aiad_timeline_entry_cover_image_data( get_post(), 'hero' )
+			: array( 'url' => get_the_post_thumbnail_url( $post_id, 'large' ) ?: '', 'fit' => 'cover' );
+		$show_image       = ! $show_video && ! $show_linkedin && ! empty( $cover_data['url'] );
+		$show_fallback    = ! $show_video && ! $show_linkedin && ! $show_image
+			&& function_exists( 'aiad_timeline_cover_fallback_inner_html' );
+		$has_media        = $show_video || $show_linkedin || $show_image || $show_fallback;
+		$cover_fit_class  = ( $show_image && 'contain' === $cover_data['fit'] ) ? ' resource-activity-figure__img--fit-contain' : '';
 
 		$badge_label = function_exists( 'aiad_timeline_featured_badge_label' )
 			? aiad_timeline_featured_badge_label( get_post(), $pinned, $icon )
@@ -90,8 +97,21 @@ get_header();
 								?>
 							</div>
 						<?php elseif ( $show_image ) : ?>
-							<figure class="single-timeline-entry__figure">
-								<?php the_post_thumbnail( 'large', array( 'class' => 'single-timeline-entry__figure-img' ) ); ?>
+							<figure class="resource-activity-figure">
+								<img
+									class="resource-activity-figure__img<?php echo esc_attr( $cover_fit_class ); ?>"
+									src="<?php echo esc_url( $cover_data['url'] ); ?>"
+									alt=""
+									loading="lazy"
+									width="1200"
+									height="630"
+								/>
+							</figure>
+						<?php elseif ( $show_fallback ) : ?>
+							<figure class="resource-activity-figure resource-activity-figure--timeline-fallback timeline-cover--<?php echo esc_attr( sanitize_html_class( $icon ) ); ?>">
+								<?php
+								echo aiad_timeline_cover_fallback_inner_html( $icon, (string) $cover_fallback, get_the_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								?>
 							</figure>
 						<?php endif; ?>
 					</div>
@@ -99,7 +119,7 @@ get_header();
 
 				<!-- Content -->
 				<?php if ( ! empty( trim( $content ) ) ) : ?>
-					<div class="single-timeline-entry__content entry-content">
+					<div class="single-timeline-entry__content entry-content entry-content--timeline">
 						<?php the_content(); ?>
 					</div>
 				<?php endif; ?>

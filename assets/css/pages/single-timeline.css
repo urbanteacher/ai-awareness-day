@@ -116,17 +116,7 @@
 	border: 0;
 }
 
-.single-timeline-entry__figure {
-	margin: 0;
-	line-height: 0;
-}
-
-.single-timeline-entry__figure-img {
-	width: 100%;
-	height: auto;
-	display: block;
-	object-fit: cover;
-}
+/* Featured image frame: assets/css/components/entry-figure.css (resource master) */
 
 /* ── Content ── */
 .single-timeline-entry__content {

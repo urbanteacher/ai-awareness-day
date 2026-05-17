@@ -1,3 +1,85 @@
+/* === components/entry-figure.css === */
+/* ============================================
+   COMPONENT: Entry figure (master image holder)
+   Canonical pattern from single Resource pages.
+   Shared by resources, timeline singles, and feed covers.
+   ============================================ */
+
+.aiad-entry-figure,
+.resource-activity-figure {
+	margin: 0;
+	overflow: hidden;
+	aspect-ratio: 16 / 7;
+	max-height: 520px;
+	background: var(--gray-900, #111);
+	line-height: 0;
+}
+
+.aiad-entry-figure__img,
+.resource-activity-figure__img,
+.aiad-entry-figure img,
+.resource-activity-figure img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+	object-position: center 30%;
+}
+
+/* Partner logos / wide assets — shrink inside the frame */
+.aiad-entry-figure__img--fit-contain,
+.resource-activity-figure__img--fit-contain,
+.timeline-cover-img--fit-contain {
+	object-fit: contain;
+	object-position: center;
+	box-sizing: border-box;
+	padding: clamp(0.75rem, 6%, 1.5rem);
+	transform: none;
+}
+
+/* Resource single: full-bleed hero band */
+.single-resource .resource-activity-card .aiad-entry-figure,
+.single-resource .resource-activity-card .resource-activity-figure {
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	max-width: none;
+}
+
+/* Timeline single: contained within article column */
+.single-timeline .single-timeline-entry__media .aiad-entry-figure,
+.single-timeline .single-timeline-entry__media .resource-activity-figure {
+	width: 100%;
+	margin: 0;
+}
+
+.single-timeline .resource-activity-figure--timeline-fallback .timeline-entry__cover-fallback {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	max-height: none;
+	box-sizing: border-box;
+}
+
+/* Inline images in post body (resource + timeline) */
+.single-resource .entry-content.entry-content--resource img,
+.single-resource .entry-content.entry-content--resource video,
+.single-timeline .entry-content.entry-content--timeline img,
+.single-timeline .entry-content.entry-content--timeline video {
+	max-width: 100%;
+	height: auto;
+}
+
+.single-resource .entry-content.entry-content--resource iframe,
+.single-resource .entry-content.entry-content--resource embed,
+.single-timeline .entry-content.entry-content--timeline iframe,
+.single-timeline .entry-content.entry-content--timeline embed {
+	max-width: 100%;
+}
+
 /* === layout/navigation.css === */
 /* ============================================
    NAVIGATION

@@ -29,6 +29,7 @@ $bundles = array(
         'components/section-green.css',
         'components/display-board.css',
         'components/resource-card-pointed.css',
+        'components/entry-figure.css',
         'components/schedule.css',
     ),
     'pages'  => array(

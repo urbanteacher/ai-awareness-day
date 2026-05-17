@@ -158,6 +158,7 @@ function aiad_scripts(): void
             'components/section-green.css',
             'components/display-board.css',
             'components/resource-card-pointed.css',
+            'components/entry-figure.css',
             'components/schedule.css',
             'pages/campaign.css',
             'pages/momentum.css',
@@ -294,11 +295,23 @@ function aiad_scripts(): void
     $timeline_css_ver = file_exists( $timeline_css ) ? filemtime( $timeline_css ) : AIAD_VERSION;
     $timeline_js_ver  = file_exists( $timeline_js ) ? filemtime( $timeline_js ) : AIAD_VERSION;
 
+    $entry_figure_css = AIAD_DIR . '/assets/css/components/entry-figure.css';
+    $entry_figure_ver = file_exists( $entry_figure_css ) ? filemtime( $entry_figure_css ) : AIAD_VERSION;
+
     if ( ( is_front_page() || is_singular( 'timeline' ) || is_post_type_archive( 'timeline' ) || is_post_type_archive( 'live_session' ) ) && ! is_admin() ) {
+        if ( file_exists( $entry_figure_css ) ) {
+            wp_enqueue_style(
+                'aiad-entry-figure',
+                AIAD_URI . '/assets/css/components/entry-figure.css',
+                array( 'aiad-style' ),
+                $entry_figure_ver,
+                'all'
+            );
+        }
         wp_enqueue_style(
             'aiad-timeline',
             AIAD_URI . '/assets/css/components/timeline.css',
-            array( 'aiad-style' ),
+            array( file_exists( $entry_figure_css ) ? 'aiad-entry-figure' : 'aiad-style' ),
             $timeline_css_ver
         );
     }
@@ -314,13 +327,23 @@ function aiad_scripts(): void
         );
     }
 
+    if ( is_singular( 'resource' ) && ! is_admin() && file_exists( $entry_figure_css ) && ! wp_style_is( 'aiad-entry-figure', 'enqueued' ) ) {
+        wp_enqueue_style(
+            'aiad-entry-figure',
+            AIAD_URI . '/assets/css/components/entry-figure.css',
+            array( 'aiad-style' ),
+            $entry_figure_ver,
+            'all'
+        );
+    }
+
     // Enqueue single timeline entry styles and share script
     if (is_singular('timeline') && !is_admin()) {
         $single_timeline_css = AIAD_DIR . '/assets/css/pages/single-timeline.css';
         wp_enqueue_style(
             'aiad-single-timeline',
             AIAD_URI . '/assets/css/pages/single-timeline.css',
-            array('aiad-timeline'),
+            array( 'aiad-timeline', 'aiad-entry-figure' ),
             file_exists($single_timeline_css) ? filemtime($single_timeline_css) : AIAD_VERSION
         );
         $single_timeline_js = AIAD_DIR . '/assets/js/single-timeline.js';

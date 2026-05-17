@@ -82,9 +82,9 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
     }
 
     if ( ! empty( $cover_image['url'] ) ) {
-        $fit_class = 'contain' === $cover_image['fit'] ? ' timeline-cover-img--fit-contain' : '';
+        $fit_class = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
         return sprintf(
-            '<figure class="%1$s__cover"><img class="%1$s__cover-img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
+            '<figure class="%1$s__cover"><img class="%1$s__cover-img resource-activity-figure__img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
             esc_attr( $wrapper ),
             esc_url( $cover_image['url'] ),
             esc_attr( $fit_class )
