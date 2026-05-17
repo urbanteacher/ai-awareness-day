@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank-you letters — AI Awareness Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --ink: #111827;
+            --muted: #6b7280;
+            --green: #166534;
+            --border: #d1d5db;
+            --panel: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f4f4f5;
+            padding: 1.5rem;
+            color: var(--ink);
+            margin: 0;
+        }
+        .layout { max-width: 960px; margin: 0 auto; }
+        .controls {
+            background: var(--panel);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+        }
+        .controls h1 { margin: 0 0 0.35rem; font-size: 1.35rem; }
+        .controls .hint {
+            margin: 0 0 1.25rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .form-row { margin-bottom: 1rem; }
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .status { font-size: 0.85rem; color: var(--muted); margin-top: 0.35rem; }
+        .status--error { color: #b91c1c; }
+        .status--ok { color: var(--green); }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        button.primary, button.secondary {
+            flex: 1 1 200px;
+            border: none;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        button.primary {
+            background: var(--ink);
+            color: #fff;
+        }
+        button.secondary {
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--border);
+        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .letter-wrap {
+            background: #e5e7eb;
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        /* A4 portrait — fixed size for PDF capture */
+        .letter {
+            width: 794px;
+            min-height: 1123px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 56px 64px;
+            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--ink);
+            text-align: left;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+        .letter-logo {
+            margin-bottom: 28px;
+            min-height: 48px;
+        }
+        .letter-logo img {
+            max-height: 52px;
+            max-width: 220px;
+            object-fit: contain;
+        }
+        .letter-logo-placeholder {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            border: 2px dashed #9ca3af;
+            padding: 10px 14px;
+            display: inline-block;
+        }
+        .letter-title {
+            margin: 0 0 32px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .letter-date {
+            margin: 0 0 28px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        .letter-salutation {
+            margin: 0 0 20px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .letter-salutation strong {
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .letter-body p {
+            margin: 0 0 16px;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #374151;
+        }
+        .letter-signoff {
+            margin-top: 36px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .letter-signoff p { margin: 0 0 4px; }
+        .letter-signoff p:last-child { font-weight: 600; margin-top: 8px; }
+        @media (max-width: 860px) {
+            .letter { transform: scale(0.85); transform-origin: top center; margin-bottom: -140px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="controls">
+            <h1>Thank-you letters</h1>
+            <p class="hint">
+                Personalised letters for participants — name only, thanking them for their support of the AI Awareness Day 2026 campaign.
+                Loads signups from WordPress (admin login required on live sites).
+            </p>
+
+            <div class="form-row">
+                <label for="wpBase">WordPress site URL</label>
+                <input type="text" id="wpBase" value="http://localhost:8888" placeholder="https://ai-awareness-day.org">
+                <p class="status" id="wpStatus">Connect to load participants.</p>
+            </div>
+
+            <div class="form-row">
+                <label for="submissionSelect">Participant</label>
+                <select id="submissionSelect" disabled>
+                    <option value="">Loading…</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="letterDate">Letter date</label>
+                <input type="date" id="letterDate">
+            </div>
+
+            <div class="form-row">
+                <label for="recipientName">Name on letter (override)</label>
+                <input type="text" id="recipientName" placeholder="From signup" oninput="syncLetter()">
+            </div>
+
+            <div class="btn-row">
+                <button type="button" class="primary" id="downloadOneBtn" disabled onclick="downloadOnePdf()">Download this letter (PDF)</button>
+                <button type="button" class="secondary" id="downloadAllBtn" disabled onclick="downloadAllPdf()">Download all letters (one PDF)</button>
+            </div>
+            <p class="status" id="exportStatus"></p>
+        </div>
+
+        <div class="letter-wrap">
+            <article class="letter" id="letterNode" aria-label="Thank-you letter preview">
+                <div class="letter-logo" id="letterLogoCell">
+                    <span class="letter-logo-placeholder" id="letterLogoPlaceholder">AIAD logo</span>
+                    <img id="letterLogoPreview" alt="AI Awareness Day" hidden>
+                </div>
+                <h2 class="letter-title" id="letterTitle">AI Awareness Day 2026</h2>
+                <p class="letter-date" id="letterDateDisplay">—</p>
+                <p class="letter-salutation">Dear <strong id="letterNameDisplay">Participant</strong>,</p>
+                <div class="letter-body" id="letterBody"></div>
+                <div class="letter-signoff" id="letterSignoff"></div>
+            </article>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_WP = 'aiad_letter_wp_base';
+        const DEFAULT_COPY = {
+            title: 'AI Awareness Day 2026',
+            paragraphs: [
+                'Thank you for taking part in AI Awareness Day 2026.',
+                'We are deeply grateful for your participation and for the support and backing you have given our campaign. Your involvement strengthens our nationwide work to explore artificial intelligence in education and helps build a future where every learner and educator feels confident with AI.',
+                'Thank you again for standing with AI Awareness Day.',
+            ],
+            signoff: ['With warm thanks,', 'The AI Awareness Day team'],
+        };
+
+        let submissions = [];
+        let letterCopy = DEFAULT_COPY;
+
+        const wpBaseInput = document.getElementById('wpBase');
+        const wpStatus = document.getElementById('wpStatus');
+        const submissionSelect = document.getElementById('submissionSelect');
+        const exportStatus = document.getElementById('exportStatus');
+
+        function wpJsonBase() {
+            return wpBaseInput.value.replace(/\/$/, '') + '/wp-json/aiad/v1/certificate';
+        }
+
+        function formatLetterDate(iso) {
+            if (!iso) return '';
+            const d = new Date(iso.includes('T') ? iso : iso + 'T12:00:00');
+            if (isNaN(d.getTime())) return iso;
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function setBrandLogo(url) {
+            const img = document.getElementById('letterLogoPreview');
+            const ph = document.getElementById('letterLogoPlaceholder');
+            if (url) {
+                img.src = url;
+                img.crossOrigin = 'anonymous';
+                img.hidden = false;
+                ph.hidden = true;
+            } else {
+                img.hidden = true;
+                img.removeAttribute('src');
+                ph.hidden = false;
+            }
+        }
+
+        function applyLetterCopy(copy) {
+            letterCopy = copy || DEFAULT_COPY;
+            document.getElementById('letterTitle').textContent = letterCopy.title || DEFAULT_COPY.title;
+            const bodyEl = document.getElementById('letterBody');
+            bodyEl.innerHTML = '';
+            (letterCopy.paragraphs || DEFAULT_COPY.paragraphs).forEach((text) => {
+                const p = document.createElement('p');
+                p.textContent = text;
+                bodyEl.appendChild(p);
+            });
+            const signEl = document.getElementById('letterSignoff');
+            signEl.innerHTML = '';
+            (letterCopy.signoff || DEFAULT_COPY.signoff).forEach((line) => {
+                const p = document.createElement('p');
+                p.textContent = line;
+                signEl.appendChild(p);
+            });
+        }
+
+        function currentRow() {
+            const id = submissionSelect.value;
+            return submissions.find((s) => String(s.id) === String(id));
+        }
+
+        function syncLetter() {
+            const row = currentRow();
+            const nameInput = document.getElementById('recipientName').value.trim();
+            const name = nameInput || (row && row.full_name) || 'Participant';
+            const dateVal = document.getElementById('letterDate').value;
+
+            document.getElementById('letterNameDisplay').textContent = name;
+            document.getElementById('letterDateDisplay').textContent = dateVal
+                ? formatLetterDate(dateVal)
+                : formatLetterDate(new Date().toISOString());
+
+            if (row && row.thank_you_letter) {
+                applyLetterCopy(row.thank_you_letter);
+            }
+        }
+
+        function onSubmissionChange() {
+            const row = currentRow();
+            if (row) {
+                document.getElementById('recipientName').value = row.full_name || '';
+                if (row.submitted_at) {
+                    const d = new Date(row.submitted_at);
+                    if (!isNaN(d.getTime())) {
+                        document.getElementById('letterDate').value = d.toISOString().slice(0, 10);
+                    }
+                }
+            }
+            syncLetter();
+            document.getElementById('downloadOneBtn').disabled = submissions.length === 0;
+            document.getElementById('downloadAllBtn').disabled = submissions.length === 0;
+        }
+
+        function selectSubmissionFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('submission') || params.get('submission_id');
+            if (!id || !submissionSelect.options.length) return;
+            submissionSelect.value = String(id);
+            if (submissionSelect.value === String(id)) onSubmissionChange();
+        }
+
+        async function loadWordPress() {
+            const base = wpBaseInput.value.trim();
+            if (!base) {
+                wpStatus.textContent = 'Enter your WordPress URL.';
+                wpStatus.className = 'status status--error';
+                return;
+            }
+            localStorage.setItem(STORAGE_WP, base);
+            wpStatus.textContent = 'Loading…';
+            wpStatus.className = 'status';
+
+            try {
+                const [bootRes, subRes, copyRes] = await Promise.all([
+                    fetch(wpJsonBase() + '/bootstrap', { credentials: 'include' }),
+                    fetch(wpJsonBase() + '/submissions?per_page=50', { credentials: 'include' }),
+                    fetch(wpJsonBase() + '/thank-you-letter', { credentials: 'include' }),
+                ]);
+
+                if (!bootRes.ok) throw new Error('Could not load site data (' + bootRes.status + ')');
+                if (!subRes.ok) throw new Error('Could not load signups (' + subRes.status + '). Log in to WP admin.');
+
+                const boot = await bootRes.json();
+                const subData = await subRes.json();
+                submissions = subData.submissions || [];
+
+                if (copyRes.ok) {
+                    applyLetterCopy(await copyRes.json());
+                }
+
+                setBrandLogo(boot.brand_logo_url || '');
+
+                submissionSelect.innerHTML = '';
+                if (submissions.length === 0) {
+                    submissionSelect.innerHTML = '<option value="">No participants found</option>';
+                } else {
+                    submissions.forEach((row, i) => {
+                        const opt = document.createElement('option');
+                        opt.value = row.id;
+                        opt.textContent = (row.full_name || 'Unknown') + (row.school_name ? ' — ' + row.school_name : '');
+                        submissionSelect.appendChild(opt);
+                        if (i === 0) opt.selected = true;
+                    });
+                    submissionSelect.disabled = false;
+                    selectSubmissionFromUrl();
+                    if (!submissionSelect.value || submissionSelect.selectedIndex < 0) onSubmissionChange();
+                }
+
+                wpStatus.textContent = 'Connected — ' + submissions.length + ' participant(s)';
+                wpStatus.className = 'status status--ok';
+            } catch (err) {
+                wpStatus.textContent = err.message || 'Could not reach WordPress.';
+                wpStatus.className = 'status status--error';
+                submissionSelect.innerHTML = '<option value="">—</option>';
+                submissionSelect.disabled = true;
+            }
+        }
+
+        function renderLetterForRow(row) {
+            document.getElementById('recipientName').value = row.full_name || '';
+            if (row.thank_you_letter) applyLetterCopy(row.thank_you_letter);
+            syncLetter();
+        }
+
+        async function captureLetterCanvas() {
+            const node = document.getElementById('letterNode');
+            return html2canvas(node, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+            });
+        }
+
+        async function downloadOnePdf() {
+            const row = currentRow();
+            const btn = document.getElementById('downloadOneBtn');
+            btn.disabled = true;
+            exportStatus.textContent = 'Generating PDF…';
+            try {
+                const canvas = await captureLetterCanvas();
+                const img = canvas.toDataURL('image/png', 1);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                pdf.addImage(img, 'PNG', 0, 0, w, h);
+                const safe = document.getElementById('recipientName').value.trim().replace(/\s+/g, '-') || 'letter';
+                pdf.save('ai-awareness-day-thank-you-' + safe + '.pdf');
+                exportStatus.textContent = '';
+            } catch (e) {
+                exportStatus.textContent = 'PDF failed: ' + (e.message || e);
+            } finally {
+                btn.disabled = submissions.length === 0;
+            }
+        }
+
+        async function downloadAllPdf() {
+            if (!submissions.length) return;
+            const btn = document.getElementById('downloadAllBtn');
+            const oneBtn = document.getElementById('downloadOneBtn');
+            btn.disabled = true;
+            oneBtn.disabled = true;
+            exportStatus.textContent = 'Generating all letters… 0 / ' + submissions.length;
+
+            const savedName = document.getElementById('recipientName').value;
+            const savedSelect = submissionSelect.value;
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+
+                for (let i = 0; i < submissions.length; i++) {
+                    exportStatus.textContent = 'Generating… ' + (i + 1) + ' / ' + submissions.length;
+                    submissionSelect.value = String(submissions[i].id);
+                    renderLetterForRow(submissions[i]);
+                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                    const canvas = await captureLetterCanvas();
+                    const img = canvas.toDataURL('image/png', 1);
+                    if (i > 0) pdf.addPage();
+                    pdf.addImage(img, 'PNG', 0, 0, w, h);
+                }
+
+                pdf.save('ai-awareness-day-thank-you-letters-all.pdf');
+                exportStatus.textContent = 'Downloaded ' + submissions.length + ' letters in one PDF.';
+            } catch (e) {
+                exportStatus.textContent = 'Export failed: ' + (e.message || e);
+            } finally {
+                submissionSelect.value = savedSelect;
+                onSubmissionChange();
+                document.getElementById('recipientName').value = savedName;
+                syncLetter();
+                btn.disabled = submissions.length === 0;
+                oneBtn.disabled = submissions.length === 0;
+            }
+        }
+
+        wpBaseInput.addEventListener('change', loadWordPress);
+        submissionSelect.addEventListener('change', onSubmissionChange);
+        document.getElementById('letterDate').addEventListener('input', syncLetter);
+
+        if (window.location.protocol.startsWith('http')) {
+            wpBaseInput.value = window.location.origin;
+        } else {
+            const saved = localStorage.getItem(STORAGE_WP);
+            if (saved) wpBaseInput.value = saved;
+        }
+        document.getElementById('letterDate').value = new Date().toISOString().slice(0, 10);
+        applyLetterCopy(DEFAULT_COPY);
+        syncLetter();
+        loadWordPress();
+    </script>
+</body>
+</html>

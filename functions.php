@@ -39,6 +39,13 @@ require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
 require_once $aiad_dir . '/inc/validation.php';
 require_once $aiad_dir . '/inc/ajax-handlers.php';
+require_once $aiad_dir . '/inc/certificate-copy.php';
+require_once $aiad_dir . '/inc/letter-copy.php';
+require_once $aiad_dir . '/inc/certificate-api.php';
+if ( is_admin() ) {
+	require_once $aiad_dir . '/inc/certificate-admin.php';
+	require_once $aiad_dir . '/inc/letter-admin.php';
+}
 require_once $aiad_dir . '/inc/timeline.php';
 require_once $aiad_dir . '/inc/live-sessions.php';
 require_once $aiad_dir . '/inc/dashboard.php';
