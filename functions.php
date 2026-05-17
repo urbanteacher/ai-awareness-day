@@ -42,6 +42,7 @@ require_once $aiad_dir . '/inc/ajax-handlers.php';
 require_once $aiad_dir . '/inc/certificate-copy.php';
 require_once $aiad_dir . '/inc/letter-copy.php';
 require_once $aiad_dir . '/inc/certificate-api.php';
+require_once $aiad_dir . '/inc/generator-embed.php';
 if ( is_admin() ) {
 	require_once $aiad_dir . '/inc/certificate-admin.php';
 	require_once $aiad_dir . '/inc/letter-admin.php';

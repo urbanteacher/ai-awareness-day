@@ -57,6 +57,7 @@
         .status { font-size: 0.85rem; color: var(--muted); margin-top: 0.35rem; }
         .status--error { color: #b91c1c; }
         .status--ok { color: var(--green); }
+        .form-row--hidden { display: none; }
         .btn-row {
             display: flex;
             flex-wrap: wrap;
@@ -172,7 +173,7 @@
                 Loads signups from WordPress (admin login required on live sites).
             </p>
 
-            <div class="form-row">
+            <div class="form-row" id="wpBaseRow">
                 <label for="wpBase">WordPress site URL</label>
                 <input type="text" id="wpBase" value="http://localhost:8888" placeholder="https://ai-awareness-day.org">
                 <p class="status" id="wpStatus">Connect to load participants.</p>
@@ -236,9 +237,32 @@
         const wpStatus = document.getElementById('wpStatus');
         const submissionSelect = document.getElementById('submissionSelect');
         const exportStatus = document.getElementById('exportStatus');
+        const EMBED_PARAMS = new URLSearchParams(window.location.search);
+        const AIAD_REST = {
+            root: EMBED_PARAMS.get('rest_root') || '',
+            nonce: EMBED_PARAMS.get('rest_nonce') || '',
+            siteUrl: EMBED_PARAMS.get('wp_url') || '',
+        };
 
-        function wpJsonBase() {
-            return wpBaseInput.value.replace(/\/$/, '') + '/wp-json/aiad/v1/certificate';
+        function aiadApiUrl(path) {
+            const root = AIAD_REST.root
+                || (wpBaseInput.value.replace(/\/$/, '') + '/wp-json/aiad/v1/certificate/');
+            return root.replace(/\/$/, '') + '/' + String(path).replace(/^\//, '');
+        }
+
+        function aiadApiFetch(path) {
+            const headers = { Accept: 'application/json' };
+            if (AIAD_REST.nonce) {
+                headers['X-WP-Nonce'] = AIAD_REST.nonce;
+            }
+            return fetch(aiadApiUrl(path), { credentials: 'include', headers: headers });
+        }
+
+        function aiadAuthHint(status) {
+            if (status === 401 || status === 403) {
+                return ' Open from WP Admin → Form Submissions → Thank-you letters (while logged in).';
+            }
+            return '';
         }
 
         function formatLetterDate(iso) {
@@ -343,13 +367,17 @@
 
             try {
                 const [bootRes, subRes, copyRes] = await Promise.all([
-                    fetch(wpJsonBase() + '/bootstrap', { credentials: 'include' }),
-                    fetch(wpJsonBase() + '/submissions?per_page=50', { credentials: 'include' }),
-                    fetch(wpJsonBase() + '/thank-you-letter', { credentials: 'include' }),
+                    aiadApiFetch('bootstrap'),
+                    aiadApiFetch('submissions?per_page=50'),
+                    aiadApiFetch('thank-you-letter'),
                 ]);
 
-                if (!bootRes.ok) throw new Error('Could not load site data (' + bootRes.status + ')');
-                if (!subRes.ok) throw new Error('Could not load signups (' + subRes.status + '). Log in to WP admin.');
+                if (!bootRes.ok) {
+                    throw new Error('Could not load site data (' + bootRes.status + ').' + aiadAuthHint(bootRes.status));
+                }
+                if (!subRes.ok) {
+                    throw new Error('Could not load signups (' + subRes.status + ').' + aiadAuthHint(subRes.status));
+                }
 
                 const boot = await bootRes.json();
                 const subData = await subRes.json();
@@ -473,11 +501,16 @@
         submissionSelect.addEventListener('change', onSubmissionChange);
         document.getElementById('letterDate').addEventListener('input', syncLetter);
 
-        if (window.location.protocol.startsWith('http')) {
+        const saved = localStorage.getItem(STORAGE_WP);
+        if (AIAD_REST.siteUrl) {
+            wpBaseInput.value = AIAD_REST.siteUrl.replace(/\/$/, '');
+        } else if (window.location.protocol.startsWith('http')) {
             wpBaseInput.value = window.location.origin;
-        } else {
-            const saved = localStorage.getItem(STORAGE_WP);
-            if (saved) wpBaseInput.value = saved;
+        } else if (saved) {
+            wpBaseInput.value = saved;
+        }
+        if (AIAD_REST.rest_root) {
+            document.getElementById('wpBaseRow').classList.add('form-row--hidden');
         }
         document.getElementById('letterDate').value = new Date().toISOString().slice(0, 10);
         applyLetterCopy(DEFAULT_COPY);

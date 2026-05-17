@@ -10,14 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * URL to the static certificate tool (theme root).
+ * URL to the static certificate tool (theme root) with REST nonce for admin auth.
  */
 function aiad_certificate_generator_url( int $submission_id = 0 ): string {
-	$url = trailingslashit( get_template_directory_uri() ) . 'certificate-generator.html';
-	if ( $submission_id > 0 ) {
-		$url = add_query_arg( 'submission', $submission_id, $url );
-	}
-	return $url;
+	return aiad_generator_html_url( 'certificate-generator.html', $submission_id );
 }
 
 /**
