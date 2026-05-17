@@ -1500,19 +1500,31 @@ add_action('wp_ajax_nopriv_aiad_timeline_like', 'aiad_ajax_timeline_like');
  *
  * @return array{body: string, tags_html: string}
  */
-function aiad_timeline_single_split_tags_from_content(string $html): array
+function aiad_timeline_single_split_tags_from_content($html): array
 {
     $tags_html = '';
-    $body      = $html;
+    $body      = is_string($html) ? $html : '';
+
+    if ('' === $body) {
+        return array(
+            'body'      => '',
+            'tags_html' => '',
+        );
+    }
 
     if (preg_match('#<p[^>]*\bentry-content__tags\b[^>]*>.*?</p>#is', $body, $matches)) {
         $tags_html = $matches[0];
         $body      = (string) preg_replace('#<p[^>]*\bentry-content__tags\b[^>]*>.*?</p>#is', '', $body, 1);
-    } elseif (preg_match_all('#<p[^>]*>(.*?)</p>#is', $body, $paragraphs, PREG_SET_ORDER)) {
-        $last = end($paragraphs);
-        if ($last && preg_match('/^(?:#\w[\w-]*\s*)+$/u', trim(wp_strip_all_tags($last[1]))) {
-            $tags_html = $last[0];
-            $body      = (string) preg_replace('#' . preg_quote($last[0], '#') . '\s*$#s', '', $body, 1);
+    } else {
+        $paragraphs = array();
+        if (preg_match_all('#<p[^>]*>(.*?)</p>#is', $body, $paragraphs, PREG_SET_ORDER) && ! empty($paragraphs)) {
+            $last = $paragraphs[ count($paragraphs) - 1 ];
+            $last_text  = trim(wp_strip_all_tags($last[1]));
+            $tag_match  = $last_text !== '' ? preg_match('/^(?:#\w[\w-]*\s*)+$/u', $last_text) : 0;
+            if (1 === $tag_match) {
+                $tags_html = $last[0];
+                $body      = (string) preg_replace('#' . preg_quote($last[0], '#') . '\s*$#s', '', $body, 1);
+            }
         }
     }
 
@@ -1525,8 +1537,9 @@ function aiad_timeline_single_split_tags_from_content(string $html): array
 /**
  * Echo tags block at end of stacked single (after more-to-read, before footer).
  */
-function aiad_timeline_single_render_tags(string $tags_html): void
+function aiad_timeline_single_render_tags($tags_html): void
 {
+    $tags_html = is_string($tags_html) ? $tags_html : '';
     if ('' === trim($tags_html)) {
         return;
     }

@@ -60,18 +60,17 @@ get_header();
 			? aiad_timeline_featured_badge_label( get_post(), $pinned, $icon )
 			: ucfirst( $icon );
 
-		$raw_content = get_the_content();
-		$excerpt     = has_excerpt() ? get_the_excerpt() : '';
-
-		$filtered_content = apply_filters( 'the_content', $raw_content );
-		$content_parts      = function_exists( 'aiad_timeline_single_split_tags_from_content' )
+		$raw_content      = (string) get_post_field( 'post_content', $post_id );
+		$excerpt          = has_excerpt() ? get_the_excerpt() : '';
+		$filtered_content = (string) apply_filters( 'the_content', $raw_content );
+		$content_parts    = function_exists( 'aiad_timeline_single_split_tags_from_content' )
 			? aiad_timeline_single_split_tags_from_content( $filtered_content )
 			: array(
 				'body'      => $filtered_content,
 				'tags_html' => '',
 			);
-		$body_content = $content_parts['body'];
-		$tags_html    = $content_parts['tags_html'];
+		$body_content = isset( $content_parts['body'] ) ? (string) $content_parts['body'] : $filtered_content;
+		$tags_html    = isset( $content_parts['tags_html'] ) ? (string) $content_parts['tags_html'] : '';
 		?>
 
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry single-timeline-entry--stacked' ); ?>>
@@ -157,7 +156,7 @@ get_header();
 				<?php endif; ?>
 
 				<!-- Content (hashtags rendered after more-to-read) -->
-				<?php if ( ! empty( trim( $body_content ) ) ) : ?>
+				<?php if ( '' !== trim( $body_content ) ) : ?>
 					<div class="single-timeline-entry__content entry-content entry-content--timeline">
 						<?php echo $body_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filtered via the_content. ?>
 					</div>
