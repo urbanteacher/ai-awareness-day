@@ -340,12 +340,6 @@ function aiad_render_timeline_swipe_deck( array $entries ): string {
                 <?php echo aiad_render_timeline_swipe_slide( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php endforeach; ?>
         </div>
-        <div class="timeline-swipe__footer">
-            <p class="timeline-swipe__counter" aria-live="polite">
-                <span class="timeline-swipe__counter-current">1</span> / <span class="timeline-swipe__counter-total"><?php echo esc_html( (string) count( $entries ) ); ?></span>
-            </p>
-            <div class="timeline-swipe__dots" aria-hidden="true"></div>
-        </div>
     </div>
     <?php
     return ob_get_clean();
