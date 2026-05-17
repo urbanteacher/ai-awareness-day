@@ -1143,6 +1143,38 @@
     min-height: 8.5rem;
 }
 
+/* Sub-cards: top scrim so badge + date stay readable on light artwork */
+.timeline-magazine__cover-scrim--top {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.78) 0%,
+        rgba(0, 0, 0, 0.35) 38%,
+        transparent 58%
+    );
+    pointer-events: none;
+}
+
+.timeline-magazine__card-media .timeline-magazine__cover-meta {
+    z-index: 3;
+}
+
+.timeline-magazine__card-media .timeline-magazine__cover-meta-badge {
+    top: 0.45rem;
+    left: 0.45rem;
+}
+
+.timeline-magazine__card-media .timeline-magazine__cover-meta .timeline-entry__date {
+    top: 0.45rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.45rem;
+    background: rgba(0, 0, 0, 0.55);
+    color: var(--white);
+    text-shadow: none;
+}
+
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover img {
     transition: transform 0.3s ease;

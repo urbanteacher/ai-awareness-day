@@ -318,6 +318,7 @@ function aiad_render_timeline_magazine_row( WP_Post $entry ): string {
             <div class="timeline-magazine__card-media">
                 <a href="<?php echo esc_url( $entry_url ); ?>" class="timeline-magazine__card-media-link timeline-magazine__card-media-link--chamfer <?php echo esc_attr( $cover_mod ); ?>" tabindex="-1" aria-hidden="true">
                     <?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-magazine', 'thumb' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top" aria-hidden="true"></span>
                 </a>
                 <?php echo aiad_timeline_magazine_cover_meta_html( $badge, $icon, $pinned, $date_label, $date_iso ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
