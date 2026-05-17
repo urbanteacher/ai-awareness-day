@@ -1496,6 +1496,30 @@ add_action('wp_ajax_nopriv_aiad_timeline_like', 'aiad_ajax_timeline_like');
    ────────────────────────────────────────────── */
 
 /**
+ * Human-readable relative date (e.g. "1 day ago") for timeline singles.
+ *
+ * @param int|WP_Post|null $post Post ID or object.
+ */
+function aiad_timeline_human_date_label($post = null): string
+{
+    $post = get_post($post);
+    if (!$post) {
+        return '';
+    }
+
+    $timestamp = get_post_timestamp($post);
+    if (!$timestamp) {
+        return '';
+    }
+
+    return sprintf(
+        /* translators: %s: human time diff e.g. "3 hours", "1 day" */
+        __('%s ago', 'ai-awareness-day'),
+        human_time_diff($timestamp, time())
+    );
+}
+
+/**
  * Move the hashtag paragraph out of the body so it can sit after “More to read”.
  *
  * @return array{body: string, tags_html: string}
@@ -1601,7 +1625,13 @@ function aiad_timeline_single_render_related(int $post_id): void
                         ?>
                         <div class="single-timeline-entry__related-meta">
                             <p class="single-timeline-entry__related-date">
-                                <?php echo esc_html(get_the_date('j F Y')); ?>
+                                <?php
+                                echo esc_html(
+                                    function_exists('aiad_timeline_human_date_label')
+                                        ? aiad_timeline_human_date_label(get_the_ID())
+                                        : get_the_date('j F Y')
+                                );
+                                ?>
                             </p>
                             <p class="single-timeline-entry__related-headline">
                                 <?php the_title(); ?>

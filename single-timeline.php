@@ -94,8 +94,14 @@ get_header();
 							</div>
 						</div>
 					<?php endif; ?>
-					<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
-						<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
+					<?php
+					$date_label = function_exists( 'aiad_timeline_human_date_label' )
+						? aiad_timeline_human_date_label( $post_id )
+						: get_the_date( 'j F Y' );
+					$date_title = get_the_date( 'j F Y' );
+					?>
+					<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" title="<?php echo esc_attr( $date_title ); ?>">
+						<?php echo esc_html( $date_label ); ?>
 					</time>
 				</div>
 
