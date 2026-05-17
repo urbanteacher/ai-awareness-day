@@ -122,7 +122,8 @@ function aiad_timeline_cover_modifier_class( string $icon, bool $pinned ): strin
  * @return string HTML
  */
 function aiad_timeline_magazine_cover_layers_html(): string {
-    return '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
+    return '<span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top" aria-hidden="true"></span>'
+        . '<span class="timeline-magazine__cover-fade" aria-hidden="true"></span>';
 }
 
 /**
