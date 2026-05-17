@@ -13,7 +13,7 @@
         :root {
             --ink: #111827;
             --muted: #6b7280;
-            --green: #166534;
+            --gold: #b8860b;
             --border: #d1d5db;
             --panel: #ffffff;
         }
@@ -74,8 +74,30 @@
             margin-top: 0.35rem;
         }
         .status--error { color: #b91c1c; }
-        .status--ok { color: var(--green); }
+        .status--ok { color: var(--gold); }
         .form-row--hidden { display: none; }
+        .selected-summary {
+            font-size: 0.9rem;
+            color: var(--ink);
+            margin: 0.25rem 0 0.75rem;
+            line-height: 1.45;
+        }
+        .details-edit {
+            margin: 0 0 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.35rem 0.65rem 0.65rem;
+        }
+        .details-edit summary {
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--ink);
+            padding: 0.35rem 0;
+            list-style-position: outside;
+        }
+        .details-edit .form-row { margin-top: 0.65rem; margin-bottom: 0; }
+        .details-edit .form-row + .form-row { margin-top: 0.65rem; }
         button.primary {
             background: var(--ink);
             color: #fff;
@@ -187,7 +209,7 @@
             margin: 0 0 14px;
             font-size: clamp(0.95rem, 2vw, 1.1rem);
             font-weight: 600;
-            color: var(--green);
+            color: var(--gold);
         }
         .cert-lead {
             margin: 0 0 6px;
@@ -199,7 +221,7 @@
             font-size: clamp(1.35rem, 3.5vw, 1.85rem);
             font-style: italic;
             font-weight: 700;
-            color: var(--green);
+            color: var(--gold);
             border-bottom: 2px solid var(--ink);
             padding: 0 24px 6px;
             display: inline-block;
@@ -240,8 +262,8 @@
         <div class="controls">
             <h1>Participation certificate</h1>
             <p class="hint">
-                Loads signups from WordPress and your site logo from the server.
-                School logos come from matching <strong>Partners → School</strong> entries or a manual upload.
+                Choose a signup, then download. Name, school, date, and certificate wording come from the submission.
+                School logos match <strong>Partners → School</strong> or use a manual upload below.
             </p>
 
             <div class="form-row" id="wpBaseRow">
@@ -255,44 +277,24 @@
                 <select id="submissionSelect" disabled>
                     <option value="">Loading submissions…</option>
                 </select>
+                <p class="selected-summary" id="selectedSummary" hidden></p>
             </div>
 
-            <div class="form-row">
-                <label for="involvedAs">Participant type</label>
-                <select id="involvedAs" onchange="onInvolvedAsChange()">
-                    <option value="teacher">Teacher</option>
-                    <option value="school_leader">School leader</option>
-                    <option value="organisation">Organisation</option>
-                    <option value="parent">Parent / carer</option>
-                </select>
-            </div>
-
-            <div class="form-row" id="orgTypeRow" hidden>
-                <label for="orgType">Organisation type</label>
-                <select id="orgType" onchange="onInvolvedAsChange()">
-                    <option value="company">Company / tech</option>
-                    <option value="education_provider">Education provider</option>
-                    <option value="charity">Charity</option>
-                    <option value="public_body">Public body</option>
-                    <option value="institution">Institution</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-row">
-                <label for="recipientName">Name on certificate</label>
-                <input type="text" id="recipientName" placeholder="Participant name" oninput="syncFromForm()">
-            </div>
-
-            <div class="form-row">
-                <label for="schoolName">School / organisation</label>
-                <input type="text" id="schoolName" placeholder="School name" oninput="syncFromForm()">
-            </div>
-
-            <div class="form-row">
-                <label for="certDate">Date</label>
-                <input type="date" id="certDate" oninput="syncFromForm()">
-            </div>
+            <details class="details-edit">
+                <summary>Edit certificate details (optional)</summary>
+                <div class="form-row">
+                    <label for="recipientName">Name on certificate</label>
+                    <input type="text" id="recipientName" placeholder="From signup" oninput="syncFromForm()">
+                </div>
+                <div class="form-row">
+                    <label for="schoolName">School / organisation</label>
+                    <input type="text" id="schoolName" placeholder="From signup" oninput="syncFromForm()">
+                </div>
+                <div class="form-row">
+                    <label for="certDate">Date</label>
+                    <input type="date" id="certDate" oninput="syncFromForm()">
+                </div>
+            </details>
 
             <div class="form-row">
                 <label for="schoolLogo">Override school logo (optional)</label>
@@ -559,15 +561,31 @@
             };
         }
 
-        function getCurrentCertificateCopy() {
-            const involvedAs = document.getElementById('involvedAs').value;
-            const orgType = document.getElementById('orgType').value;
+        function currentSubmissionRow() {
             const id = submissionSelect.value;
-            const row = submissions.find((s) => String(s.id) === String(id));
+            return submissions.find((s) => String(s.id) === String(id));
+        }
+
+        function getCurrentCertificateCopy() {
+            const row = currentSubmissionRow();
+            const involvedAs = row?.involved_as || 'teacher';
+            const orgType = row?.org_type || 'company';
             if (row && row.certificate_copy) {
                 return normalizeCertificateCopy(row.certificate_copy, involvedAs, orgType);
             }
             return getCertificateCopyLocal(involvedAs, orgType);
+        }
+
+        function updateSelectedSummary(row) {
+            const el = document.getElementById('selectedSummary');
+            if (!row) {
+                el.hidden = true;
+                el.textContent = '';
+                return;
+            }
+            const parts = [row.full_name, row.school_name].filter(Boolean);
+            el.textContent = parts.length ? parts.join(' · ') : 'Selected signup';
+            el.hidden = false;
         }
 
         function applyCertificateCopy(copy) {
@@ -575,12 +593,6 @@
             document.getElementById('certEyebrow').textContent = copy.eyebrow || 'Certificate of participation';
             document.getElementById('certBody').textContent = typeof copy.body === 'string' ? copy.body : '';
             return copy.affiliation_prefix || copy.affiliationPrefix || 'from';
-        }
-
-        function onInvolvedAsChange() {
-            const involved = document.getElementById('involvedAs').value;
-            document.getElementById('orgTypeRow').hidden = involved !== 'organisation';
-            syncFromForm();
         }
 
         function syncFromForm() {
@@ -628,6 +640,7 @@
             const id = submissionSelect.value;
             const row = submissions.find((s) => String(s.id) === String(id));
             if (!row) {
+                updateSelectedSummary(null);
                 syncFromForm();
                 applySchoolLogoFromSelection();
                 return;
@@ -635,10 +648,8 @@
             document.getElementById('recipientName').value = row.full_name || '';
             document.getElementById('schoolName').value = row.school_name || '';
             document.getElementById('certDate').value = toDateInputValue(row.submitted_at);
-            document.getElementById('involvedAs').value = row.involved_as || 'teacher';
-            document.getElementById('orgType').value = row.org_type || 'company';
-            document.getElementById('orgTypeRow').hidden = row.involved_as !== 'organisation';
             certificateId = 'AIAD-' + row.id;
+            updateSelectedSummary(row);
             syncFromForm();
             applySchoolLogoFromSelection();
         }
@@ -767,7 +778,6 @@
         document.getElementById('certDate').value = new Date().toISOString().slice(0, 10);
         const embedBrandLogo = EMBED_PARAMS.get('brand_logo');
         if (embedBrandLogo) setBrandLogo(embedBrandLogo);
-        onInvolvedAsChange();
         loadWordPress();
     </script>
 </body>
