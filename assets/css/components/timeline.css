@@ -734,7 +734,7 @@
     padding: 0;
 }
 
-/* Badge (top-left) + date (top-right) + title (bottom) on cover */
+/* Date (top-right) + title (bottom) on cover; badge in panel */
 .timeline-swipe__media .timeline-magazine__cover-fade {
     position: absolute;
     inset: 0;
@@ -758,18 +758,7 @@
     pointer-events: none;
 }
 
-.timeline-swipe__media .timeline-magazine__cover-meta-badge {
-    position: absolute;
-    top: 0.65rem;
-    left: 0.75rem;
-    max-width: 58%;
-    line-height: 1.25;
-}
-
-.timeline-swipe__media .timeline-magazine__cover-meta .timeline-entry__badge {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
+.timeline-swipe__cover-meta .timeline-entry__date,
 .timeline-swipe__media .timeline-magazine__cover-meta .timeline-entry__date {
     position: absolute;
     top: 0.65rem;
@@ -842,6 +831,10 @@
     background: var(--white);
 }
 
+.timeline-swipe__panel-header {
+    margin-bottom: 0.5rem;
+}
+
 .timeline-swipe__excerpt {
     flex: 1 1 auto;
     min-height: 0;
@@ -850,6 +843,24 @@
     font-size: 0.875rem;
     line-height: 1.5;
     color: var(--gray-800);
+}
+
+/* ~4 extra visible lines in the swipe panel on small screens */
+@media (max-width: 767.98px) {
+    .timeline-swipe__viewport {
+        height: min(72dvh, 560px);
+    }
+
+    .timeline-swipe__media,
+    .timeline-swipe__media:has(.timeline-swipe__cover--fallback) {
+        flex: 1 1 0;
+        min-height: 30%;
+    }
+
+    .timeline-swipe__excerpt {
+        min-height: calc(8 * 1.5em);
+        max-height: calc(11 * 1.5em);
+    }
 }
 
 .timeline-swipe__cta {

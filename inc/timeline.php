@@ -1166,9 +1166,11 @@ function aiad_timeline_magazine_sub_count(): int {
 }
 
 function aiad_timeline_feed_per_page(): int {
-    $default = 1 + aiad_timeline_magazine_sub_count();
-
-    return max( 1, (int) apply_filters( 'aiad_timeline_feed_per_page', $default ) );
+    /**
+     * Front-page feed size. -1 = every published entry (full mobile swipe deck).
+     * Positive values cap total entries (e.g. 5 = 1 hero + 4 magazine subs on desktop).
+     */
+    return (int) apply_filters( 'aiad_timeline_feed_per_page', -1 );
 }
 
 /**
@@ -1223,6 +1225,46 @@ function aiad_get_timeline_entries( int $per_page = 4, int $offset = 0, string $
     if ( ! empty( $filter ) && $filter !== 'all' ) {
         $meta_query = array(
             array( 'key' => '_aiad_timeline_icon', 'value' => $filter, 'compare' => '=' ),
+        );
+    }
+
+    // Full feed (mobile swipe scrolls every entry).
+    if ( $per_page < 0 ) {
+        if ( $offset > 0 ) {
+            return array( 'entries' => array(), 'has_more' => false );
+        }
+
+        $pinned_args = array(
+            'post_type'      => 'timeline',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'meta_query'     => array(
+                array( 'key' => '_aiad_timeline_pinned', 'value' => '1', 'compare' => '=' ),
+            ),
+        );
+        if ( ! empty( $meta_query ) ) {
+            $pinned_args['meta_query'][] = $meta_query[0];
+        }
+        $pinned = get_posts( $pinned_args );
+
+        $rest_args = array(
+            'post_type'      => 'timeline',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'post__not_in'   => wp_list_pluck( $pinned, 'ID' ),
+        );
+        if ( ! empty( $meta_query ) ) {
+            $rest_args['meta_query'] = $meta_query;
+        }
+        $rest = get_posts( $rest_args );
+
+        return array(
+            'entries'  => array_merge( $pinned, $rest ),
+            'has_more' => false,
         );
     }
 

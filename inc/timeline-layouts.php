@@ -161,6 +161,31 @@ function aiad_timeline_swipe_cover_layers_html(): string {
 }
 
 /**
+ * Date only on mobile swipe cover (badge lives in panel).
+ *
+ * @param string $date_label Human-readable date.
+ * @param string $date_iso   ISO datetime attribute.
+ * @param string $date_title Optional full date for title attribute.
+ * @return string HTML
+ */
+function aiad_timeline_swipe_cover_date_html(
+    string $date_label,
+    string $date_iso,
+    string $date_title = ''
+): string {
+    $title_attr = $date_title ? ' title="' . esc_attr( $date_title ) . '"' : '';
+
+    return sprintf(
+        '<div class="timeline-magazine__cover-meta timeline-swipe__cover-meta" aria-hidden="true">'
+        . '<time class="timeline-entry__date" datetime="%1$s"%2$s>%3$s</time>'
+        . '</div>',
+        esc_attr( $date_iso ),
+        $title_attr,
+        esc_html( $date_label )
+    );
+}
+
+/**
  * Partner pill + time on magazine cover (original entry badge/date styles).
  *
  * @param string $badge      Badge label.
@@ -272,10 +297,7 @@ function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
             <?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-swipe', 'hero' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php echo aiad_timeline_swipe_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php
-            echo aiad_timeline_magazine_cover_meta_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                $badge,
-                $icon,
-                $pinned,
+            echo aiad_timeline_swipe_cover_date_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 $date_label,
                 get_the_date( 'c', $entry ),
                 $date_full
@@ -287,6 +309,9 @@ function aiad_render_timeline_swipe_slide( WP_Post $entry ): string {
             <span class="timeline-swipe__media-hint" aria-hidden="true"><?php esc_html_e( 'Swipe', 'ai-awareness-day' ); ?> →</span>
         </div>
         <div class="timeline-swipe__panel">
+            <div class="timeline-swipe__panel-header">
+                <span class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>"><?php echo esc_html( $badge ); ?></span>
+            </div>
             <div class="timeline-swipe__excerpt"><?php echo esc_html( aiad_timeline_entry_excerpt_text( $entry ) ); ?></div>
             <?php echo aiad_timeline_entry_actions_html( $entry ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <a href="<?php echo esc_url( $cta_url ); ?>" class="timeline-swipe__cta btn-action"><?php echo esc_html( $link_label ); ?></a>

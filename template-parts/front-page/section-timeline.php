@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $text_alignment_class = aiad_get_text_alignment_class();
-$per_page = function_exists( 'aiad_timeline_feed_per_page' ) ? aiad_timeline_feed_per_page() : 5;
+$per_page = function_exists( 'aiad_timeline_feed_per_page' ) ? aiad_timeline_feed_per_page() : -1;
 $result   = aiad_get_timeline_entries( $per_page );
 $entries  = $result['entries'];
 
