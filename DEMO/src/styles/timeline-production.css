@@ -1,0 +1,238 @@
+/* Mirrors WP #timeline section (assets/css/components/timeline.css) for the feeds demo shell. */
+
+.timeline-production.section {
+  background: #18181b;
+  color: #e4e4e7;
+  color-scheme: dark;
+  margin-left: calc(-1 * min(1rem, 4vw));
+  margin-right: calc(-1 * min(1rem, 4vw));
+  padding: 2.5rem min(1rem, 4vw) 2rem;
+}
+
+@media (min-width: 768px) {
+  .timeline-production.section {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.timeline-production .section-label--live {
+  animation: timeline-live-flash 1.5s ease-in-out infinite;
+  color: #4ade80;
+}
+
+@keyframes timeline-live-flash {
+  0%,
+  100% {
+    color: #f87171;
+  }
+  50% {
+    color: #ffffff;
+  }
+}
+
+.timeline-production .section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  display: block;
+}
+
+.timeline-production .section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.timeline-production .timeline-stats-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem 0.75rem;
+  margin: 1rem 0 1.25rem;
+  padding: 1rem 1.25rem;
+  min-height: 3rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.timeline-production .timeline-stats-bar__stat {
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.timeline-production .timeline-stats-bar__icon {
+  margin-right: 0.35rem;
+  font-size: 0.95em;
+}
+
+.timeline-production .timeline-stats-bar__value {
+  font-weight: 700;
+  color: #4ade80;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.timeline-production .timeline-stats-bar__sep {
+  color: #9ca3af;
+  font-weight: 400;
+  opacity: 0.6;
+  user-select: none;
+}
+
+.timeline-production .timeline-stats-bar__label--short {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .timeline-production .timeline-stats-bar__label--full {
+    display: none;
+  }
+
+  .timeline-production .timeline-stats-bar__label--short {
+    display: inline;
+  }
+
+  .timeline-production .timeline-stats-bar {
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+  }
+}
+
+.timeline-production .timeline-filters {
+  margin: 0.5rem 0 1.25rem;
+}
+
+.timeline-production .timeline-filter-btn {
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.timeline-production .timeline-filter-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.timeline-production .timeline-filter-btn--active {
+  color: #18181b;
+  background: #fff;
+  border-color: #fff;
+}
+
+.timeline-production .timeline-filter-btn--active:hover {
+  color: #18181b;
+  background: #f4f4f5;
+  border-color: #f4f4f5;
+}
+
+.timeline-production .timeline-filter-btn:focus {
+  outline-color: #4ade80;
+}
+
+.timeline-production .timeline-feed {
+  margin-top: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 0.65rem;
+}
+
+@media (min-width: 768px) {
+  .timeline-production .timeline-feed {
+    padding: 1rem;
+  }
+}
+
+.timeline-production .timeline-feed__empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #a1a1aa;
+  font-size: 0.95rem;
+}
+
+/* Feed content: white cards on dark band (matches WP timeline-entry__body) */
+.timeline-production .timeline-feed__content .space-y-6 {
+  background: #fff;
+  color: #18181b;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.timeline-production .timeline-feed__content .space-y-6 > ul {
+  margin-top: 0;
+  padding-top: 1.5rem;
+  border-top-color: #e5e7eb;
+  background: #f9fafb;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  margin-bottom: -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+.timeline-production .timeline-feed__content .md\:border-gray-900 {
+  border-color: #18181b;
+}
+
+.timeline-production .timeline-feed__content h3,
+.timeline-production .timeline-feed__content h4 {
+  color: #111827 !important;
+}
+
+.timeline-production .timeline-feed__content p {
+  color: #1f2937 !important;
+}
+
+.timeline-production .timeline-feed__content time,
+.timeline-production .timeline-feed__content .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.timeline-production .timeline-feed__content .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.timeline-production .timeline-feed__content .border-gray-100 {
+  border-color: #f3f4f6;
+}
+
+.timeline-production .timeline-feed__content .border-gray-200 {
+  border-color: #e5e7eb;
+}
+
+.timeline-production .timeline-feed__content article {
+  border-radius: 0;
+}
+
+/* Swipe deck counter only (not slide body copy) */
+.timeline-production .timeline-feed__content .md\:hidden > div > p.text-muted-foreground {
+  color: #d4d4d8 !important;
+}
+
+.timeline-production .timeline-feed__content .md\:hidden > div > p.text-muted-foreground span {
+  color: #a1a1aa !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-production .section-label--live {
+    animation: none;
+    color: #f87171;
+  }
+}

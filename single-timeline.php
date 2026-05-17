@@ -16,7 +16,7 @@ get_header();
 		$pinned       = (bool) get_post_meta( $post_id, '_aiad_timeline_pinned', true );
 		$card_type    = get_post_meta( $post_id, '_aiad_timeline_card_type', true ) ?: 'default';
 		$link_url     = get_post_meta( $post_id, '_aiad_timeline_link_url', true );
-		$link_label   = get_post_meta( $post_id, '_aiad_timeline_link_label', true ) ?: __( 'Learn more', 'ai-awareness-day' );
+		$link_label   = get_post_meta( $post_id, '_aiad_timeline_link_label', true ) ?: __( 'Join the campaign', 'ai-awareness-day' );
 		$video_url    = get_post_meta( $post_id, '_aiad_timeline_video_url', true );
 		$linkedin_url = get_post_meta( $post_id, '_aiad_timeline_linkedin_url', true );
 
@@ -60,28 +60,49 @@ get_header();
 			? aiad_timeline_featured_badge_label( get_post(), $pinned, $icon )
 			: ucfirst( $icon );
 
-		$content = get_the_content();
-		$excerpt = has_excerpt() ? get_the_excerpt() : '';
+		$raw_content = get_the_content();
+		$excerpt     = has_excerpt() ? get_the_excerpt() : '';
+
+		$filtered_content = apply_filters( 'the_content', $raw_content );
+		$content_parts      = function_exists( 'aiad_timeline_single_split_tags_from_content' )
+			? aiad_timeline_single_split_tags_from_content( $filtered_content )
+			: array(
+				'body'      => $filtered_content,
+				'tags_html' => '',
+			);
+		$body_content = $content_parts['body'];
+		$tags_html    = $content_parts['tags_html'];
 		?>
 
-		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry' ); ?>>
+		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry single-timeline-entry--stacked' ); ?>>
 			<div class="single-timeline-entry__container">
 
-				<!-- Header: badge → title + date → excerpt -->
-				<header class="single-timeline-entry__header">
-					<span class="single-timeline-entry__badge single-timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>">
-						<?php echo esc_html( $badge_label ); ?>
-					</span>
-					<div class="single-timeline-entry__title-row">
-						<h1 class="single-timeline-entry__title"><?php echo esc_html( get_the_title() ); ?></h1>
-						<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
-							<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
-						</time>
-					</div>
-					<?php if ( ! empty( $excerpt ) ) : ?>
-						<p class="single-timeline-entry__excerpt"><?php echo wp_kses_post( $excerpt ); ?></p>
+				<!-- Stacked layout: badge → title → author + date → media → excerpt -->
+				<span class="single-timeline-entry__badge single-timeline-entry__badge--outline single-timeline-entry__badge--<?php echo esc_attr( $pinned ? 'pinned' : $icon ); ?>">
+					<?php echo esc_html( $badge_label ); ?>
+				</span>
+				<h1 class="single-timeline-entry__title"><?php echo esc_html( get_the_title() ); ?></h1>
+				<div class="single-timeline-entry__meta-row">
+					<?php
+					$author_id = (int) get_post_field( 'post_author', $post_id );
+					if ( $author_id ) :
+						$author_name = get_the_author_meta( 'display_name', $author_id );
+						$author_bio  = get_the_author_meta( 'description', $author_id );
+						?>
+						<div class="single-timeline-entry__author">
+							<?php echo get_avatar( $author_id, 44, '', '', array( 'class' => 'single-timeline-entry__author-avatar' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<div class="single-timeline-entry__author-meta">
+								<p class="single-timeline-entry__author-name"><?php echo esc_html( $author_name ); ?></p>
+								<?php if ( ! empty( $author_bio ) ) : ?>
+									<p class="single-timeline-entry__author-role"><?php echo esc_html( wp_trim_words( $author_bio, 14 ) ); ?></p>
+								<?php endif; ?>
+							</div>
+						</div>
 					<?php endif; ?>
-				</header>
+					<time class="single-timeline-entry__date" datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+						<?php echo esc_html( get_the_date( 'j F Y' ) ); ?>
+					</time>
+				</div>
 
 				<!-- Media -->
 				<?php if ( $has_media ) : ?>
@@ -131,10 +152,14 @@ get_header();
 					</div>
 				<?php endif; ?>
 
-				<!-- Content -->
-				<?php if ( ! empty( trim( $content ) ) ) : ?>
+				<?php if ( ! empty( $excerpt ) ) : ?>
+					<p class="single-timeline-entry__excerpt"><?php echo wp_kses_post( $excerpt ); ?></p>
+				<?php endif; ?>
+
+				<!-- Content (hashtags rendered after more-to-read) -->
+				<?php if ( ! empty( trim( $body_content ) ) ) : ?>
 					<div class="single-timeline-entry__content entry-content entry-content--timeline">
-						<?php the_content(); ?>
+						<?php echo $body_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filtered via the_content. ?>
 					</div>
 				<?php endif; ?>
 
@@ -149,6 +174,18 @@ get_header();
 						</a>
 					</div>
 				<?php endif; ?>
+
+				<?php
+				if ( function_exists( 'aiad_timeline_single_render_related' ) ) {
+					aiad_timeline_single_render_related( $post_id );
+				}
+				?>
+
+				<?php
+				if ( function_exists( 'aiad_timeline_single_render_tags' ) ) {
+					aiad_timeline_single_render_tags( $tags_html );
+				}
+				?>
 
 				<!-- Footer: back (left) + share (right) -->
 				<div class="single-timeline-entry__footer">

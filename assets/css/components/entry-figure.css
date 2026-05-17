@@ -62,6 +62,13 @@
 	object-position: center 50%;
 }
 
+/* Stacked single: rounded 16:10 hero */
+.single-timeline-entry--stacked .single-timeline-entry__media .resource-activity-figure--timeline-single,
+.single-timeline-entry--stacked .single-timeline-entry__media .resource-activity-figure--timeline-fallback {
+	aspect-ratio: 16 / 10;
+	border-radius: 0.75rem;
+}
+
 /* Fallback gradient: contain inside figure (avoid absolute bleed to viewport) */
 .single-timeline .single-timeline-entry__media .resource-activity-figure--timeline-fallback {
 	position: relative;

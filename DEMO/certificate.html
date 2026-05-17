@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator — AI Awareness Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --ink: #111827;
+            --muted: #6b7280;
+            --green: #166534;
+            --border: #d1d5db;
+            --panel: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: #f4f4f5;
+            padding: 1.5rem;
+            color: var(--ink);
+            margin: 0;
+        }
+        .layout {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+        .controls {
+            background: var(--panel);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+        }
+        .controls h1 {
+            margin: 0 0 0.35rem;
+            font-size: 1.35rem;
+        }
+        .controls .hint {
+            margin: 0 0 1.25rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .form-row {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        input[type="file"] {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .status {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 0.35rem;
+        }
+        .status--error { color: #b91c1c; }
+        .status--ok { color: var(--green); }
+        button.primary {
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        button.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        button.primary:hover:not(:disabled) {
+            background: #374151;
+        }
+
+        /* Certificate — fixed layout, no overlapping footer */
+        .certificate-wrap {
+            background: #e5e7eb;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        .certificate {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 420px;
+            aspect-ratio: 297 / 210;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 8px solid var(--ink);
+            padding: 24px 32px 20px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            overflow: visible;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .cert-logos {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-shrink: 0;
+        }
+        .cert-logo-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 72px;
+        }
+        .cert-logo-cell--school {
+            justify-content: flex-end;
+        }
+        .cert-logo-cell--brand {
+            justify-content: flex-start;
+        }
+        .cert-logo-divider {
+            width: 1px;
+            height: 56px;
+            background: var(--border);
+        }
+        .brand-logo-img {
+            max-height: 56px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        .school-logo-img {
+            max-height: 72px;
+            max-width: 160px;
+            object-fit: contain;
+        }
+        .logo-placeholder {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            border: 2px dashed #9ca3af;
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+        .cert-main {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: min-content;
+            margin-top: 12px;
+            padding: 16px 0 8px;
+            overflow: visible;
+        }
+        .cert-headline {
+            margin: 0 0 8px;
+            color: var(--ink);
+        }
+        .cert-headline__primary {
+            display: block;
+            font-size: clamp(1.65rem, 4.5vw, 2.35rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+        .cert-type {
+            margin: 0 0 14px;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-weight: 600;
+            color: var(--green);
+        }
+        .cert-lead {
+            margin: 0 0 6px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .cert-recipient {
+            margin: 0 auto 8px;
+            font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+            font-style: italic;
+            font-weight: 700;
+            color: var(--green);
+            border-bottom: 2px solid var(--ink);
+            padding: 0 24px 6px;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .cert-school {
+            margin: 0 0 12px;
+            font-size: 0.9rem;
+        }
+        .cert-body {
+            margin: 0 auto 12px;
+            max-width: 520px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #374151;
+        }
+        .cert-footer {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+        .cert-footer strong {
+            color: var(--ink);
+            display: block;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="controls">
+            <h1>Participation certificate</h1>
+            <p class="hint">
+                Loads signups from WordPress and your site logo from the server.
+                School logos come from matching <strong>Partners → School</strong> entries or a manual upload.
+            </p>
+
+            <div class="form-row">
+                <label for="wpBase">WordPress site URL</label>
+                <input type="text" id="wpBase" value="http://localhost:8888" placeholder="https://ai-awareness-day.org">
+                <p class="status" id="wpStatus">Connect to load signups and brand logo.</p>
+            </div>
+
+            <div class="form-row">
+                <label for="submissionSelect">Signup from WordPress</label>
+                <select id="submissionSelect" disabled>
+                    <option value="">Loading submissions…</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="involvedAs">Participant type</label>
+                <select id="involvedAs" onchange="onInvolvedAsChange()">
+                    <option value="teacher">Teacher</option>
+                    <option value="school_leader">School leader</option>
+                    <option value="organisation">Organisation</option>
+                    <option value="parent">Parent / carer</option>
+                </select>
+            </div>
+
+            <div class="form-row" id="orgTypeRow" hidden>
+                <label for="orgType">Organisation type</label>
+                <select id="orgType" onchange="onInvolvedAsChange()">
+                    <option value="company">Company / tech</option>
+                    <option value="education_provider">Education provider</option>
+                    <option value="charity">Charity</option>
+                    <option value="public_body">Public body</option>
+                    <option value="institution">Institution</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="recipientName">Name on certificate</label>
+                <input type="text" id="recipientName" placeholder="Participant name" oninput="syncFromForm()">
+            </div>
+
+            <div class="form-row">
+                <label for="schoolName">School / organisation</label>
+                <input type="text" id="schoolName" placeholder="School name" oninput="syncFromForm()">
+            </div>
+
+            <div class="form-row">
+                <label for="certDate">Date</label>
+                <input type="date" id="certDate" oninput="syncFromForm()">
+            </div>
+
+            <div class="form-row">
+                <label for="schoolLogo">Override school logo (optional)</label>
+                <input type="file" id="schoolLogo" accept="image/*" onchange="onLogoUpload(event)">
+            </div>
+
+            <button type="button" class="primary" id="downloadBtn" onclick="generatePDF()">Download certificate as PDF</button>
+        </div>
+
+        <div class="certificate-wrap">
+            <div class="certificate" id="certificateNode">
+                <div class="cert-logos">
+                    <div class="cert-logo-cell cert-logo-cell--brand" id="brandLogoCell">
+                        <span class="logo-placeholder" id="brandLogoPlaceholder">AIAD logo</span>
+                        <img id="brandLogoPreview" class="brand-logo-img" alt="AI Awareness Day" hidden>
+                    </div>
+                    <div class="cert-logo-divider" aria-hidden="true"></div>
+                    <div class="cert-logo-cell cert-logo-cell--school" id="schoolLogoCell">
+                        <span class="logo-placeholder" id="schoolLogoPlaceholder">School logo</span>
+                        <img id="schoolLogoPreview" class="school-logo-img" alt="" hidden>
+                    </div>
+                </div>
+
+                <div class="cert-main">
+                    <h1 class="cert-headline">
+                        <span class="cert-headline__primary" id="certHeadlinePrimary">AI Awareness Day 2026</span>
+                    </h1>
+                    <p class="cert-type" id="certEyebrow">Certificate of participation</p>
+                    <p class="cert-lead">This certifies that</p>
+                    <p class="cert-recipient" id="certNameDisplay">Participant name</p>
+                    <p class="cert-school" id="certSchoolDisplay"></p>
+                    <p class="cert-body" id="certBody">has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.</p>
+                </div>
+
+                <footer class="cert-footer">
+                    <div>
+                        <span>Date</span>
+                        <strong id="dateDisplay">—</strong>
+                    </div>
+                    <div style="text-align: right;">
+                        <span>Certificate ID</span>
+                        <strong id="certIdDisplay">—</strong>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_WP = 'aiad_cert_wp_base';
+        let submissions = [];
+        let manualSchoolLogo = null;
+        let certificateId = 'AIAD-' + Date.now().toString(36).toUpperCase();
+
+        const wpBaseInput = document.getElementById('wpBase');
+        const wpStatus = document.getElementById('wpStatus');
+        const submissionSelect = document.getElementById('submissionSelect');
+
+        function wpJsonBase() {
+            return wpBaseInput.value.replace(/\/$/, '') + '/wp-json/aiad/v1/certificate';
+        }
+
+        function formatDateInput(isoOrDisplay) {
+            if (!isoOrDisplay) return '';
+            const d = new Date(isoOrDisplay.includes('T') ? isoOrDisplay : isoOrDisplay + 'T12:00:00');
+            if (isNaN(d.getTime())) return isoOrDisplay;
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function toDateInputValue(iso) {
+            if (!iso) return new Date().toISOString().slice(0, 10);
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return new Date().toISOString().slice(0, 10);
+            return d.toISOString().slice(0, 10);
+        }
+
+        function setSchoolLogo(url) {
+            const img = document.getElementById('schoolLogoPreview');
+            const ph = document.getElementById('schoolLogoPlaceholder');
+            if (url) {
+                img.src = url;
+                img.hidden = false;
+                ph.hidden = true;
+            } else {
+                img.hidden = true;
+                img.removeAttribute('src');
+                ph.hidden = false;
+            }
+        }
+
+        function setBrandLogo(url) {
+            const img = document.getElementById('brandLogoPreview');
+            const ph = document.getElementById('brandLogoPlaceholder');
+            if (url) {
+                img.src = url;
+                img.crossOrigin = 'anonymous';
+                img.hidden = false;
+                ph.hidden = true;
+            } else {
+                img.hidden = true;
+                img.removeAttribute('src');
+                ph.hidden = false;
+            }
+        }
+
+        function isTechOrganisation(orgType) {
+            return orgType === 'company' || orgType === 'education_provider';
+        }
+
+        /** Mirrors inc/certificate-copy.php when API copy is unavailable. */
+        function getCertificateCopyLocal(involvedAs, orgType) {
+            const defaultBody =
+                'has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+            const base = {
+                headline_primary: 'AI Awareness Day 2026',
+                eyebrow: 'Certificate of participation',
+                affiliation_prefix: 'from',
+                body: defaultBody,
+            };
+            if (involvedAs === 'teacher') {
+                return Object.assign({}, base, {
+                    body: 'has actively contributed to AI Awareness Day 2026 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                });
+            }
+            if (involvedAs === 'school_leader') {
+                return Object.assign({}, base, {
+                    body: 'has actively contributed to AI Awareness Day 2026 through their leadership and their school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                });
+            }
+            if (involvedAs === 'organisation') {
+                if (isTechOrganisation(orgType)) {
+                    return Object.assign({}, base, {
+                        body: 'has actively contributed to AI Awareness Day 2026 through their organisation\'s engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                    });
+                }
+                return Object.assign({}, base, {
+                    body: 'has actively contributed to AI Awareness Day 2026 through their organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                });
+            }
+            if (involvedAs === 'parent') {
+                return Object.assign({}, base, {
+                    affiliation_prefix: 'in support of',
+                    body: 'has actively contributed to AI Awareness Day 2026 as a parent or carer supporting their child\'s learning, as part of our nationwide exploration of artificial intelligence in education.',
+                });
+            }
+            return base;
+        }
+
+        function bodyTextFromCopy(copy, local) {
+            if (typeof copy.body === 'string' && copy.body.trim()) {
+                return copy.body;
+            }
+            const paragraphs = copyParagraphs(copy);
+            if (paragraphs.length === 0) {
+                return local.body;
+            }
+            return paragraphs.join(' ');
+        }
+
+        function headlineFromCopy(copy, local) {
+            if (copy.headline_primary || copy.headlinePrimary) {
+                return copy.headline_primary || copy.headlinePrimary || local.headline_primary;
+            }
+            const combined = copy.headline || '';
+            if (combined.includes(' Certificate')) {
+                return combined.slice(0, combined.lastIndexOf(' Certificate')).trim() || local.headline_primary;
+            }
+            return local.headline_primary;
+        }
+
+        function copyParagraphs(copy) {
+            const raw = copy.paragraphs || copy.body;
+            if (Array.isArray(raw) && raw.length) {
+                return raw;
+            }
+            if (raw && typeof raw === 'object') {
+                return Object.keys(raw)
+                    .sort()
+                    .map((key) => raw[key])
+                    .filter(Boolean);
+            }
+            return [];
+        }
+
+        function normalizeCertificateCopy(copy, involvedAs, orgType) {
+            const local = getCertificateCopyLocal(involvedAs, orgType);
+            if (!copy || typeof copy !== 'object') {
+                return local;
+            }
+            return {
+                headline_primary: headlineFromCopy(copy, local),
+                eyebrow: copy.eyebrow || local.eyebrow,
+                affiliation_prefix: copy.affiliation_prefix || copy.affiliationPrefix || local.affiliation_prefix,
+                body: bodyTextFromCopy(copy, local),
+            };
+        }
+
+        function getCurrentCertificateCopy() {
+            const involvedAs = document.getElementById('involvedAs').value;
+            const orgType = document.getElementById('orgType').value;
+            const id = submissionSelect.value;
+            const row = submissions.find((s) => String(s.id) === String(id));
+            if (row && row.certificate_copy) {
+                return normalizeCertificateCopy(row.certificate_copy, involvedAs, orgType);
+            }
+            return getCertificateCopyLocal(involvedAs, orgType);
+        }
+
+        function applyCertificateCopy(copy) {
+            document.getElementById('certHeadlinePrimary').textContent = copy.headline_primary || copy.headlinePrimary || 'AI Awareness Day 2026';
+            document.getElementById('certEyebrow').textContent = copy.eyebrow || 'Certificate of participation';
+            document.getElementById('certBody').textContent = typeof copy.body === 'string' ? copy.body : '';
+            return copy.affiliation_prefix || copy.affiliationPrefix || 'from';
+        }
+
+        function onInvolvedAsChange() {
+            const involved = document.getElementById('involvedAs').value;
+            document.getElementById('orgTypeRow').hidden = involved !== 'organisation';
+            syncFromForm();
+        }
+
+        function syncFromForm() {
+            const name = document.getElementById('recipientName').value.trim();
+            const school = document.getElementById('schoolName').value.trim();
+            const dateVal = document.getElementById('certDate').value;
+            const prefix = applyCertificateCopy(getCurrentCertificateCopy());
+
+            document.getElementById('certNameDisplay').textContent = name || 'Participant name';
+            document.getElementById('certSchoolDisplay').textContent = school
+                ? prefix + ' ' + school
+                : '';
+            document.getElementById('dateDisplay').textContent = dateVal
+                ? formatDateInput(dateVal)
+                : formatDateInput(new Date().toISOString());
+            document.getElementById('certIdDisplay').textContent = certificateId;
+        }
+
+        function onLogoUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) {
+                manualSchoolLogo = null;
+                applySchoolLogoFromSelection();
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                manualSchoolLogo = e.target.result;
+                setSchoolLogo(manualSchoolLogo);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function applySchoolLogoFromSelection() {
+            if (manualSchoolLogo) {
+                setSchoolLogo(manualSchoolLogo);
+                return;
+            }
+            const id = submissionSelect.value;
+            const row = submissions.find((s) => String(s.id) === String(id));
+            setSchoolLogo(row && row.school_logo_url ? row.school_logo_url : null);
+        }
+
+        function onSubmissionChange() {
+            const id = submissionSelect.value;
+            const row = submissions.find((s) => String(s.id) === String(id));
+            if (!row) {
+                syncFromForm();
+                applySchoolLogoFromSelection();
+                return;
+            }
+            document.getElementById('recipientName').value = row.full_name || '';
+            document.getElementById('schoolName').value = row.school_name || '';
+            document.getElementById('certDate').value = toDateInputValue(row.submitted_at);
+            document.getElementById('involvedAs').value = row.involved_as || 'teacher';
+            document.getElementById('orgType').value = row.org_type || 'company';
+            document.getElementById('orgTypeRow').hidden = row.involved_as !== 'organisation';
+            certificateId = 'AIAD-' + row.id;
+            syncFromForm();
+            applySchoolLogoFromSelection();
+        }
+
+        async function loadWordPress() {
+            const base = wpBaseInput.value.trim();
+            if (!base) {
+                wpStatus.textContent = 'Enter your WordPress URL.';
+                wpStatus.className = 'status status--error';
+                return;
+            }
+            localStorage.setItem(STORAGE_WP, base);
+            wpStatus.textContent = 'Loading from WordPress…';
+            wpStatus.className = 'status';
+
+            try {
+                const [bootRes, subRes] = await Promise.all([
+                    fetch(wpJsonBase() + '/bootstrap', { credentials: 'include' }),
+                    fetch(wpJsonBase() + '/submissions?per_page=30', { credentials: 'include' }),
+                ]);
+
+                if (!bootRes.ok) throw new Error('Bootstrap failed (' + bootRes.status + ')');
+                if (!subRes.ok) throw new Error('Submissions failed (' + subRes.status + '). Log in to WP admin on local/dev.');
+
+                const boot = await bootRes.json();
+                const subData = await subRes.json();
+                submissions = subData.submissions || [];
+
+                setBrandLogo(boot.brand_logo_url || '');
+
+                submissionSelect.innerHTML = '';
+                if (submissions.length === 0) {
+                    submissionSelect.innerHTML = '<option value="">No signups found</option>';
+                } else {
+                    submissions.forEach((row, i) => {
+                        const opt = document.createElement('option');
+                        opt.value = row.id;
+                        const roleLabels = {
+                            teacher: 'Teacher',
+                            school_leader: 'School',
+                            organisation: 'Org',
+                            parent: 'Parent',
+                        };
+                        const roleHint = roleLabels[row.involved_as] ? ' [' + roleLabels[row.involved_as] + ']' : '';
+                        const logoHint = row.school_logo_url ? ' ✓ logo' : (row.wants_logo_supporter ? ' (wants logo)' : '');
+                        opt.textContent = (row.full_name || 'Unknown') + ' — ' + (row.school_name || 'No school') + roleHint + logoHint;
+                        submissionSelect.appendChild(opt);
+                        if (i === 0) opt.selected = true;
+                    });
+                    submissionSelect.disabled = false;
+                    selectSubmissionFromUrl();
+                    if (!submissionSelect.value) {
+                        onSubmissionChange();
+                    }
+                }
+
+                wpStatus.textContent = 'Connected — ' + submissions.length + ' signup(s), brand logo ' + (boot.brand_logo_url ? 'loaded' : 'not set in WP');
+                wpStatus.className = 'status status--ok';
+            } catch (err) {
+                wpStatus.textContent = err.message || 'Could not reach WordPress.';
+                wpStatus.className = 'status status--error';
+                submissionSelect.innerHTML = '<option value="">—</option>';
+                submissionSelect.disabled = true;
+            }
+        }
+
+        async function generatePDF() {
+            const certNode = document.getElementById('certificateNode');
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            try {
+                const canvas = await html2canvas(certNode, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const w = certNode.offsetWidth;
+                const h = certNode.offsetHeight;
+                const pdf = new jsPDF({ orientation: w > h ? 'l' : 'p', unit: 'px', format: [w, h] });
+                pdf.addImage(imgData, 'PNG', 0, 0, w, h);
+                const safe = document.getElementById('recipientName').value.trim().replace(/\s+/g, '-') || 'certificate';
+                pdf.save('ai-awareness-day-' + safe + '.pdf');
+            } catch (e) {
+                alert('PDF failed: ' + (e.message || e));
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function getSubmissionIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('submission') || params.get('submission_id') || '';
+        }
+
+        function selectSubmissionFromUrl() {
+            const id = getSubmissionIdFromUrl();
+            if (!id || !submissionSelect.options.length) {
+                return;
+            }
+            submissionSelect.value = String(id);
+            if (submissionSelect.value === String(id)) {
+                onSubmissionChange();
+            }
+        }
+
+        wpBaseInput.addEventListener('change', loadWordPress);
+        submissionSelect.addEventListener('change', onSubmissionChange);
+
+        const saved = localStorage.getItem(STORAGE_WP);
+        if (window.location.protocol.startsWith('http')) {
+            wpBaseInput.value = window.location.origin;
+        }
+        if (saved && !window.location.protocol.startsWith('http')) {
+            wpBaseInput.value = saved;
+        }
+        document.getElementById('certDate').value = new Date().toISOString().slice(0, 10);
+        onInvolvedAsChange();
+        loadWordPress();
+    </script>
+</body>
+</html>

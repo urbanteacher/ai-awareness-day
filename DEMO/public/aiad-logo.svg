@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 56" fill="none" role="img" aria-label="AI Awareness Day">
+  <rect width="280" height="56" fill="none"/>
+  <text x="0" y="22" font-family="system-ui, Segoe UI, sans-serif" font-size="11" font-weight="700" letter-spacing="0.14em" fill="#166534">AI AWARENESS</text>
+  <text x="0" y="44" font-family="system-ui, Segoe UI, sans-serif" font-size="20" font-weight="800" fill="#111827">Day.</text>
+  <circle cx="248" cy="28" r="20" fill="#16a34a"/>
+  <path d="M240 28 L246 34 L258 22" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

@@ -1,0 +1,177 @@
+/* Certificate of participation — print / PDF export */
+
+.certificate-preview {
+  --cert-green: #16a34a;
+  --cert-green-dark: #166534;
+  --cert-ink: #111827;
+  --cert-muted: #6b7280;
+  font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: var(--cert-ink);
+}
+
+.certificate-preview__frame {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5% 7%;
+  overflow: visible;
+  background: #fff;
+  border: 3px solid var(--cert-green-dark);
+  box-shadow:
+    inset 0 0 0 1px rgba(22, 101, 52, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.certificate-preview__logos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.certificate-preview__content {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.certificate-preview__logo-slot {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  max-height: 88px;
+}
+
+.certificate-preview__logo-slot--school {
+  justify-content: flex-end;
+}
+
+.certificate-preview__aiad-logo {
+  max-height: 56px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.certificate-preview__school-logo {
+  max-height: 80px;
+  max-width: 200px;
+  width: auto;
+  object-fit: contain;
+}
+
+.certificate-preview__logo-placeholder {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cert-muted);
+  border: 2px dashed #d1d5db;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+}
+
+.certificate-preview__logo-divider {
+  width: 1px;
+  align-self: stretch;
+  min-height: 48px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #d1d5db 20%,
+    #d1d5db 80%,
+    transparent
+  );
+  flex-shrink: 0;
+}
+
+.certificate-preview__headline {
+  margin: 0 0 0.35rem;
+  color: var(--cert-ink);
+  text-align: center;
+}
+
+.certificate-preview__headline-primary {
+  font-size: clamp(1.5rem, 4.2vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.certificate-preview__type {
+  margin: 0 0 0.75rem;
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  font-weight: 600;
+  color: var(--cert-green-dark);
+  text-align: center;
+}
+
+.certificate-preview__lead {
+  margin: 0 0 0.35rem;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: var(--cert-muted);
+}
+
+.certificate-preview__name {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.35rem, 3.5vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--cert-green-dark);
+  text-align: center;
+}
+
+.certificate-preview__school {
+  margin: 0 0 1rem;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  color: var(--cert-ink);
+  text-align: center;
+}
+
+.certificate-preview__school strong {
+  font-weight: 700;
+}
+
+.certificate-preview__body {
+  margin: 0 auto 1rem;
+  max-width: 36em;
+  font-size: clamp(0.68rem, 1.15vw, 0.88rem);
+  line-height: 1.5;
+  text-align: center;
+  color: #374151;
+}
+
+.certificate-preview__date {
+  margin: 0 0 auto;
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+  font-weight: 600;
+  color: var(--cert-ink);
+}
+
+.certificate-preview__footer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: clamp(0.65rem, 1.1vw, 0.8rem);
+  color: var(--cert-muted);
+}
+
+.certificate-preview__id {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.certificate-preview__verify {
+  font-weight: 600;
+  color: var(--cert-green-dark);
+}

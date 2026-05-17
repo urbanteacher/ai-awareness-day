@@ -40,7 +40,7 @@ function aiad_register_timeline_post_type(): void
         'show_ui' => true,
         'show_in_menu' => true,
         'menu_icon' => 'dashicons-backup',
-        'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'custom-fields'),
+        'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'author', 'custom-fields'),
         'show_in_rest' => true,
         'rewrite' => array('slug' => 'timeline', 'with_front' => false),
     ));
@@ -1490,3 +1490,117 @@ function aiad_ajax_timeline_like(): void
 }
 add_action('wp_ajax_aiad_timeline_like', 'aiad_ajax_timeline_like');
 add_action('wp_ajax_nopriv_aiad_timeline_like', 'aiad_ajax_timeline_like');
+
+/* ──────────────────────────────────────────────
+   Single timeline template helpers (single-timeline.php)
+   ────────────────────────────────────────────── */
+
+/**
+ * Move the hashtag paragraph out of the body so it can sit after “More to read”.
+ *
+ * @return array{body: string, tags_html: string}
+ */
+function aiad_timeline_single_split_tags_from_content(string $html): array
+{
+    $tags_html = '';
+    $body      = $html;
+
+    if (preg_match('#<p[^>]*\bentry-content__tags\b[^>]*>.*?</p>#is', $body, $matches)) {
+        $tags_html = $matches[0];
+        $body      = (string) preg_replace('#<p[^>]*\bentry-content__tags\b[^>]*>.*?</p>#is', '', $body, 1);
+    } elseif (preg_match_all('#<p[^>]*>(.*?)</p>#is', $body, $paragraphs, PREG_SET_ORDER)) {
+        $last = end($paragraphs);
+        if ($last && preg_match('/^(?:#\w[\w-]*\s*)+$/u', trim(wp_strip_all_tags($last[1]))) {
+            $tags_html = $last[0];
+            $body      = (string) preg_replace('#' . preg_quote($last[0], '#') . '\s*$#s', '', $body, 1);
+        }
+    }
+
+    return array(
+        'body'      => trim($body),
+        'tags_html' => $tags_html,
+    );
+}
+
+/**
+ * Echo tags block at end of stacked single (after more-to-read, before footer).
+ */
+function aiad_timeline_single_render_tags(string $tags_html): void
+{
+    if ('' === trim($tags_html)) {
+        return;
+    }
+
+    if (false === strpos($tags_html, 'single-timeline-entry__tags')) {
+        $tags_html = str_replace(
+            'entry-content__tags',
+            'entry-content__tags single-timeline-entry__tags',
+            $tags_html
+        );
+    }
+
+    echo wp_kses_post($tags_html);
+}
+
+/**
+ * Related timeline entries markup for single template.
+ */
+function aiad_timeline_single_render_related(int $post_id): void
+{
+    $related_query = new WP_Query(
+        array(
+            'post_type'              => 'timeline',
+            'posts_per_page'         => 3,
+            'post__not_in'           => array($post_id),
+            'orderby'                => 'date',
+            'order'                  => 'DESC',
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        )
+    );
+
+    if (!$related_query->have_posts()) {
+        return;
+    }
+    ?>
+    <section class="single-timeline-entry__related" aria-labelledby="related-heading-timeline">
+        <h2 id="related-heading-timeline" class="single-timeline-entry__related-title">
+            <?php esc_html_e('More to read', 'ai-awareness-day'); ?>
+        </h2>
+        <ul class="single-timeline-entry__related-list">
+            <?php
+            while ($related_query->have_posts()) :
+                $related_query->the_post();
+                ?>
+                <li>
+                    <a href="<?php the_permalink(); ?>" class="single-timeline-entry__related-link">
+                        <?php
+                        if (has_post_thumbnail()) {
+                            the_post_thumbnail(
+                                'thumbnail',
+                                array(
+                                    'class' => 'single-timeline-entry__related-thumb',
+                                    'alt'   => '',
+                                )
+                            );
+                        }
+                        ?>
+                        <div class="single-timeline-entry__related-meta">
+                            <p class="single-timeline-entry__related-date">
+                                <?php echo esc_html(get_the_date('j F Y')); ?>
+                            </p>
+                            <p class="single-timeline-entry__related-headline">
+                                <?php the_title(); ?>
+                            </p>
+                        </div>
+                    </a>
+                </li>
+                <?php
+            endwhile;
+            wp_reset_postdata();
+            ?>
+        </ul>
+    </section>
+    <?php
+}
