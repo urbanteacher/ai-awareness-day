@@ -2131,19 +2131,43 @@ a.duration-badge:hover {
   text-decoration: none;
 }
 
-/* ---- Photo — full opacity, no colour overlays ---- */
+/* Theme gradient as hero background — visible when no thumbnail, tints behind image when one exists */
+.resource-card--safe    .resource-card__hero { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.resource-card--smart   .resource-card__hero { background: linear-gradient(135deg, #f97316, #ea580c); }
+.resource-card--creative .resource-card__hero { background: linear-gradient(135deg, #a855f7, #9333ea); }
+.resource-card--responsible .resource-card__hero { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.resource-card--future  .resource-card__hero { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+/* ---- Photo ---- */
 .resource-card--pointed .resource-card__hero-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 1;
+  opacity: 0.6;
 }
 
-.resource-card--pointed .resource-card__wedge,
+/* ---- Top-left gradient wedge — blends over the photo ---- */
+.resource-card--pointed .resource-card__wedge {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: overlay;
+  clip-path: polygon(0 0, 55% 0, 0 45%);
+}
+
+.resource-card--safe    .resource-card__wedge { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.resource-card--smart   .resource-card__wedge { background: linear-gradient(135deg, #f97316, #ea580c); }
+.resource-card--creative .resource-card__wedge { background: linear-gradient(135deg, #a855f7, #9333ea); }
+.resource-card--responsible .resource-card__wedge { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.resource-card--future  .resource-card__wedge { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+/* ---- Dark bottom fade for text legibility ---- */
 .resource-card--pointed .resource-card__fade {
-  display: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.70) 0%, rgba(0, 0, 0, 0.20) 40%, transparent 100%);
+  pointer-events: none;
 }
 
 /* ---- Theme label — top-left ---- */
