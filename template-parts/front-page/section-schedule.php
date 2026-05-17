@@ -115,6 +115,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                 );
                 ?>
             <li class="aiad-schedule-card"
+                data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
                 data-ics-title="<?php echo esc_attr( $title ); ?>"
                 data-ics-desc="<?php echo esc_attr( wp_strip_all_tags( $s->post_content ?: '' ) ); ?>"
                 data-ics-start="<?php echo esc_attr( $ics_start ); ?>"
@@ -140,6 +141,14 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                     <p class="aiad-schedule-card__org-name aiad-schedule-card__org-name--tbc"><?php esc_html_e( 'Organisation TBC', 'ai-awareness-day' ); ?></p>
                 <?php endif; ?>
                 <div class="aiad-schedule-card__actions">
+                    <?php if ( $reg_url !== '' ) : ?>
+                        <a class="aiad-schedule-card__join aiad-schedule-card__link--action"
+                           href="<?php echo esc_url( $reg_url ); ?>"
+                           data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
+                           target="_blank" rel="noopener">
+                            <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
+                        </a>
+                    <?php endif; ?>
                     <?php if ( $ics_start !== '' ) : ?>
                         <button type="button" class="aiad-schedule-card__ics" aria-label="<?php echo esc_attr( $ics_aria ); ?>">
                             <span aria-hidden="true">📅</span>

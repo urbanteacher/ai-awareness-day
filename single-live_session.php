@@ -53,6 +53,7 @@ $share_aria = sprintf(
             </a>
 
             <article class="session-single"
+                data-session-id="<?php echo esc_attr( (string) $post_id ); ?>"
                 data-ics-title="<?php echo esc_attr( $title ); ?>"
                 data-ics-desc="<?php echo esc_attr( wp_strip_all_tags( $content ?: '' ) ); ?>"
                 data-ics-start="<?php echo esc_attr( $ics_start ); ?>"
@@ -102,6 +103,7 @@ $share_aria = sprintf(
                     <?php if ( $reg_url !== '' ) : ?>
                         <a class="session-single__btn session-single__btn--primary"
                            href="<?php echo esc_url( $reg_url ); ?>"
+                           data-session-id="<?php echo esc_attr( (string) $post_id ); ?>"
                            target="_blank" rel="noopener">
                             <?php esc_html_e( 'Join session', 'ai-awareness-day' ); ?>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>

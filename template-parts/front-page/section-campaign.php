@@ -33,6 +33,7 @@ if ($partner_posts->have_posts()) {
         }
         $partner_stats = get_post_meta($pid, '_partner_stats', true);
         $partners[]    = array(
+            'id'          => $pid,
             'name'        => get_the_title(),
             'stats'       => $partner_stats ? $partner_stats : '',
             'logo'        => get_the_post_thumbnail_url($pid, 'medium'),
@@ -129,9 +130,10 @@ $initial_show         = $initial_show_mobile;
                     $has_ai_url      = !empty($partner['provides_ai']) && $partner['card_href'] !== '';
                     $tag_open  = $has_ai_url
                         ? sprintf(
-                            '<a class="%s" data-partner-index="%d" href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s">',
+                            '<a class="%s" data-partner-index="%d" data-partner-id="%d" href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s">',
                             $card_class_attr,
                             (int) $index,
+                            (int) $partner['id'],
                             esc_url($partner['card_href']),
                             esc_attr(sprintf(__('Visit %s — AI learning resources (opens in new tab)', 'ai-awareness-day'), $partner['name']))
                         )

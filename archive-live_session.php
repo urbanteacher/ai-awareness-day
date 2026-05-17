@@ -82,6 +82,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                             $ics_url      = home_url( '/session-ics/' . $s->ID . '/' );
                         ?>
                             <tr class="aiad-schedule-filter-item"
+                                data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
                                 data-audience="<?php echo esc_attr( $aud_data ); ?>"
                                 data-ics-title="<?php echo esc_attr( $title ); ?>"
                                 data-ics-desc="<?php echo esc_attr( wp_strip_all_tags( $s->post_content ?: '' ) ); ?>"
@@ -106,7 +107,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 <td><?php echo esc_html( $format ); ?></td>
                                 <td class="aiad-schedule-cell-actions">
                                     <?php if ( $reg_url ) : ?>
-                                        <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener">
+                                        <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener" data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>">
                                             <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
                                         </a>
                                     <?php else : ?>

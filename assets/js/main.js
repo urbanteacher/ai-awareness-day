@@ -629,10 +629,10 @@
         (function () {
             if (typeof aiad_ajax === 'undefined' || !aiad_ajax.engagement_nonce) return;
             var body = document.body;
-            if (!body || (!body.classList.contains('single-post') && !body.classList.contains('single-timeline'))) return;
-            var article = document.querySelector('article[id^="post-"]');
-            if (!article || !article.id) return;
-            var postId = article.id.replace('post-', '');
+            if (!body || (!body.classList.contains('single-post') && !body.classList.contains('single-timeline') && !body.classList.contains('single-live_session'))) return;
+            var article = document.querySelector('article.session-single[data-session-id], article[id^="post-"]');
+            if (!article) return;
+            var postId = article.getAttribute('data-session-id') || (article.id ? article.id.replace('post-', '') : '');
             if (!postId) return;
             fetch(aiad_ajax.url, {
                 method: 'POST',
