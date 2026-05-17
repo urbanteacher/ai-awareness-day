@@ -88,7 +88,7 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
         $fit_class  = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
         $focal_id   = isset( $cover_image['focal_post_id'] ) ? (int) $cover_image['focal_post_id'] : $entry->ID;
         $style_attr = function_exists( 'aiad_entry_figure_img_style_attr' )
-            ? aiad_entry_figure_img_style_attr( $focal_id, (string) $cover_image['fit'] )
+            ? aiad_entry_figure_img_style_attr( $focal_id, (string) $cover_image['fit'], 'feed' )
             : '';
         return sprintf(
             '<figure class="%1$s__cover"><img class="%1$s__cover-img resource-activity-figure__img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600"%4$s /></figure>',

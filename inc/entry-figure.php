@@ -12,22 +12,83 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Post meta key for thumbnail focal point ({ x, y } in 0–1).
+ * Legacy post meta key (migrated to feed key on read).
  */
 function aiad_thumbnail_focal_point_meta_key(): string {
 	return '_aiad_thumbnail_focal_point';
 }
 
 /**
+ * Focal meta key for homepage timeline cards (swipe / magazine).
+ */
+function aiad_thumbnail_focal_point_feed_meta_key(): string {
+	return '_aiad_thumbnail_focal_point_feed';
+}
+
+/**
+ * Focal meta key for single timeline / resource blog-style pages.
+ */
+function aiad_thumbnail_focal_point_single_meta_key(): string {
+	return '_aiad_thumbnail_focal_point_single';
+}
+
+/**
+ * Meta key for a display context.
+ *
+ * @param string $context feed|single
+ */
+function aiad_thumbnail_focal_point_meta_key_for_context( string $context ): string {
+	return 'single' === $context
+		? aiad_thumbnail_focal_point_single_meta_key()
+		: aiad_thumbnail_focal_point_feed_meta_key();
+}
+
+/**
  * Default focal point when none is saved (matches entry-figure.css).
  *
+ * @param string $context feed|single
  * @return array{x: float, y: float}
  */
-function aiad_default_thumbnail_focal_point(): array {
+function aiad_default_thumbnail_focal_point( string $context = 'feed' ): array {
+	if ( 'single' === $context ) {
+		return array(
+			'x' => 0.5,
+			'y' => 0.5,
+		);
+	}
+
 	return array(
 		'x' => 0.5,
 		'y' => 0.3,
 	);
+}
+
+/**
+ * Focal contexts available for a post type in admin.
+ *
+ * @param string $post_type timeline|resource|…
+ * @return string[] feed|single
+ */
+function aiad_thumbnail_focal_point_contexts_for_post_type( string $post_type ): array {
+	if ( 'timeline' === $post_type ) {
+		return array( 'feed', 'single' );
+	}
+	if ( 'resource' === $post_type ) {
+		return array( 'single' );
+	}
+	return array();
+}
+
+/**
+ * Admin label for a focal context.
+ *
+ * @param string $context feed|single
+ */
+function aiad_thumbnail_focal_point_context_label( string $context ): string {
+	if ( 'single' === $context ) {
+		return __( 'Blog post page', 'ai-awareness-day' );
+	}
+	return __( 'Homepage timeline cards', 'ai-awareness-day' );
 }
 
 /**
@@ -100,22 +161,26 @@ function aiad_register_thumbnail_focal_point_meta(): void {
 		),
 	);
 
+	$meta_args = array(
+		'type'              => 'object',
+		'single'            => true,
+		'show_in_rest'      => array(
+			'schema' => $schema,
+		),
+		'auth_callback'     => static function () {
+			return current_user_can( 'edit_posts' );
+		},
+		'sanitize_callback' => 'aiad_sanitize_focal_point_meta',
+	);
+
 	foreach ( array( 'timeline', 'resource' ) as $post_type ) {
-		register_post_meta(
-			$post_type,
+		foreach ( array(
+			aiad_thumbnail_focal_point_feed_meta_key(),
+			aiad_thumbnail_focal_point_single_meta_key(),
 			aiad_thumbnail_focal_point_meta_key(),
-			array(
-				'type'              => 'object',
-				'single'            => true,
-				'show_in_rest'      => array(
-					'schema' => $schema,
-				),
-				'auth_callback'     => static function () {
-					return current_user_can( 'edit_posts' );
-				},
-				'sanitize_callback' => 'aiad_sanitize_focal_point_meta',
-			)
-		);
+		) as $meta_key ) {
+			register_post_meta( $post_type, $meta_key, $meta_args );
+		}
 	}
 }
 add_action( 'init', 'aiad_register_thumbnail_focal_point_meta' );
@@ -123,13 +188,18 @@ add_action( 'init', 'aiad_register_thumbnail_focal_point_meta' );
 /**
  * Focal point for a post's featured image (post meta, then attachment meta).
  *
- * @param int $post_id Post ID.
+ * @param int    $post_id Post ID.
+ * @param string $context feed|single — homepage cards vs blog post page.
  * @return array{x: float, y: float}|null Null when unset (CSS default applies).
  */
-function aiad_get_post_thumbnail_focal_point( int $post_id ): ?array {
-	$meta_key = aiad_thumbnail_focal_point_meta_key();
+function aiad_get_post_thumbnail_focal_point( int $post_id, string $context = 'feed' ): ?array {
+	$keys = array( aiad_thumbnail_focal_point_meta_key_for_context( $context ) );
+	if ( 'feed' === $context ) {
+		$keys[] = aiad_thumbnail_focal_point_meta_key();
+	}
+	$keys[] = 'featured_image_focal_point';
 
-	foreach ( array( $meta_key, 'featured_image_focal_point' ) as $key ) {
+	foreach ( $keys as $key ) {
 		$point = aiad_normalize_focal_point( get_post_meta( $post_id, $key, true ) );
 		if ( $point ) {
 			return $point;
@@ -138,12 +208,17 @@ function aiad_get_post_thumbnail_focal_point( int $post_id ): ?array {
 
 	$thumb_id = (int) get_post_thumbnail_id( $post_id );
 	if ( $thumb_id > 0 ) {
-		foreach ( array( $meta_key, 'featured_image_focal_point' ) as $key ) {
+		foreach ( $keys as $key ) {
 			$point = aiad_normalize_focal_point( get_post_meta( $thumb_id, $key, true ) );
 			if ( $point ) {
 				return $point;
 			}
 		}
+	}
+
+	// Until a blog-specific focal is saved, inherit homepage/feed focal.
+	if ( 'single' === $context && ! get_post_meta( $post_id, aiad_thumbnail_focal_point_single_meta_key(), true ) ) {
+		return aiad_get_post_thumbnail_focal_point( $post_id, 'feed' );
 	}
 
 	return null;
@@ -171,14 +246,17 @@ function aiad_focal_point_inline_style( ?array $point ): string {
  *
  * @param int    $post_id Post whose featured image is shown.
  * @param string $fit     cover|contain — contain skips focal (logos).
+ * @param string $context feed|single
  * @return string HTML attribute fragment (leading space + style=) or empty.
  */
-function aiad_entry_figure_img_style_attr( int $post_id, string $fit = 'cover' ): string {
+function aiad_entry_figure_img_style_attr( int $post_id, string $fit = 'cover', string $context = 'feed' ): string {
 	if ( 'contain' === $fit ) {
 		return '';
 	}
 
-	$style = aiad_focal_point_inline_style( aiad_get_post_thumbnail_focal_point( $post_id ) );
+	$point = aiad_get_post_thumbnail_focal_point( $post_id, $context )
+		?? aiad_default_thumbnail_focal_point( $context );
+	$style = aiad_focal_point_inline_style( $point );
 	if ( $style === '' ) {
 		return '';
 	}
@@ -202,7 +280,8 @@ function aiad_entry_figure_thumbnail( int $post_id, string $size = 'large', arra
 
 	$classes = isset( $attrs['class'] ) ? (string) $attrs['class'] : 'resource-activity-figure__img';
 	$fit     = isset( $attrs['fit'] ) ? (string) $attrs['fit'] : 'cover';
-	unset( $attrs['fit'] );
+	$context = isset( $attrs['focal_context'] ) ? (string) $attrs['focal_context'] : 'single';
+	unset( $attrs['fit'], $attrs['focal_context'] );
 
 	$img_attrs = array_merge(
 		array(
@@ -215,7 +294,9 @@ function aiad_entry_figure_thumbnail( int $post_id, string $size = 'large', arra
 	$img_attrs['class'] = $classes;
 
 	$focal_style = aiad_focal_point_inline_style(
-		'contain' === $fit ? null : aiad_get_post_thumbnail_focal_point( $post_id )
+		'contain' === $fit
+			? null
+			: ( aiad_get_post_thumbnail_focal_point( $post_id, $context ) ?? aiad_default_thumbnail_focal_point( $context ) )
 	);
 	if ( $focal_style !== '' ) {
 		$existing = isset( $img_attrs['style'] ) ? (string) $img_attrs['style'] : '';
@@ -267,37 +348,38 @@ add_action( 'admin_enqueue_scripts', 'aiad_enqueue_thumbnail_focal_point_picker_
  *
  * @param WP_Post $post Post being edited.
  */
-function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
-	$point     = aiad_get_post_thumbnail_focal_point( $post->ID ) ?? aiad_default_thumbnail_focal_point();
-	$x_pct     = round( (float) $point['x'] * 100 );
-	$y_pct     = round( (float) $point['y'] * 100 );
-	$thumb_id  = (int) get_post_thumbnail_id( $post->ID );
-	$image_url = $thumb_id > 0 ? (string) wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
+function aiad_render_thumbnail_focal_point_picker_block( WP_Post $post, string $context, string $image_url ): void {
+	$point   = aiad_get_post_thumbnail_focal_point( $post->ID, $context )
+		?? aiad_default_thumbnail_focal_point( $context );
+	$x_pct   = round( (float) $point['x'] * 100 );
+	$y_pct   = round( (float) $point['y'] * 100 );
+	$default = aiad_default_thumbnail_focal_point( $context );
 	?>
-	<div class="aiad-rd-section aiad-focal-point-fields">
-		<strong class="aiad-rd-label"><?php esc_html_e( 'Image focal point', 'ai-awareness-day' ); ?></strong>
-		<p class="description" style="margin-top:0;">
-			<?php
-			echo wp_kses_post(
-				sprintf(
-					/* translators: %s: link to Focal Point Picker docs */
-					__( 'Drag on the image to choose what stays visible when cropped. Uses the same %s as the block editor.', 'ai-awareness-day' ),
-					'<a href="https://developer.wordpress.org/block-editor/reference-guides/components/focal-point-picker/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Focal Point Picker', 'ai-awareness-day' ) . '</a>'
-				)
-			);
-			?>
-		</p>
+	<div class="aiad-focal-point-context">
+		<strong class="aiad-rd-label"><?php echo esc_html( aiad_thumbnail_focal_point_context_label( $context ) ); ?></strong>
+		<?php if ( 'single' === $context ) : ?>
+			<p class="description" style="margin-top:0;">
+				<?php esc_html_e( 'Taller crop on the blog post page — drag to keep faces or headline text in view.', 'ai-awareness-day' ); ?>
+			</p>
+		<?php else : ?>
+			<p class="description" style="margin-top:0;">
+				<?php esc_html_e( 'Wide crop on homepage timeline cards (swipe + magazine).', 'ai-awareness-day' ); ?>
+			</p>
+		<?php endif; ?>
 		<div
 			class="aiad-focal-point-picker-root"
+			data-focal-context="<?php echo esc_attr( $context ); ?>"
 			data-image-url="<?php echo esc_url( $image_url ); ?>"
 			data-focal-point="<?php echo esc_attr( wp_json_encode( $point ) ); ?>"
+			data-default-x="<?php echo esc_attr( (string) $default['x'] ); ?>"
+			data-default-y="<?php echo esc_attr( (string) $default['y'] ); ?>"
 		>
 			<div class="aiad-focal-point-picker-mount"<?php echo $image_url ? '' : ' hidden'; ?>></div>
 			<p class="aiad-focal-point-picker-empty description"<?php echo $image_url ? ' hidden' : ''; ?>>
 				<?php esc_html_e( 'Set a Featured Image above, then drag to set the focal point.', 'ai-awareness-day' ); ?>
 			</p>
-			<input type="hidden" name="aiad_thumbnail_focal_x" value="<?php echo esc_attr( (string) $x_pct ); ?>" />
-			<input type="hidden" name="aiad_thumbnail_focal_y" value="<?php echo esc_attr( (string) $y_pct ); ?>" />
+			<input type="hidden" name="aiad_thumbnail_focal_<?php echo esc_attr( $context ); ?>_x" value="<?php echo esc_attr( (string) $x_pct ); ?>" />
+			<input type="hidden" name="aiad_thumbnail_focal_<?php echo esc_attr( $context ); ?>_y" value="<?php echo esc_attr( (string) $y_pct ); ?>" />
 			<p class="aiad-focal-point-picker-coords description">
 				<?php
 				printf(
@@ -309,10 +391,42 @@ function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
 				?>
 			</p>
 		</div>
-		<p class="description"><?php esc_html_e( 'Default is 50% / 30%. Only applies when the image uses cover cropping (not partner logos).', 'ai-awareness-day' ); ?></p>
 	</div>
 	<?php
 }
+
+function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
+	$contexts  = aiad_thumbnail_focal_point_contexts_for_post_type( $post->post_type );
+	$thumb_id  = (int) get_post_thumbnail_id( $post->ID );
+	$image_url = $thumb_id > 0 ? (string) wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
+
+	if ( empty( $contexts ) ) {
+		return;
+	}
+	?>
+	<div class="aiad-rd-section aiad-focal-point-fields">
+		<strong class="aiad-rd-label"><?php esc_html_e( 'Image focal point', 'ai-awareness-day' ); ?></strong>
+		<p class="description" style="margin-top:0;">
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* translators: %s: link to Focal Point Picker docs */
+					__( 'Separate focus for homepage cards vs the full blog post. Drag using the %s.', 'ai-awareness-day' ),
+					'<a href="https://developer.wordpress.org/block-editor/reference-guides/components/focal-point-picker/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Focal Point Picker', 'ai-awareness-day' ) . '</a>'
+				)
+			);
+			?>
+		</p>
+		<?php
+		foreach ( $contexts as $context ) {
+			aiad_render_thumbnail_focal_point_picker_block( $post, $context, $image_url );
+		}
+		?>
+		<p class="description"><?php esc_html_e( 'Only applies when the image uses cover cropping (not partner logos).', 'ai-awareness-day' ); ?></p>
+	</div>
+	<?php
+}
+
 
 /**
  * Save focal point from POST (timeline + resource meta boxes).
@@ -320,24 +434,39 @@ function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
  * @param int $post_id Post ID.
  */
 function aiad_save_thumbnail_focal_point_from_post( int $post_id ): void {
-	if ( ! isset( $_POST['aiad_thumbnail_focal_x'], $_POST['aiad_thumbnail_focal_y'] ) ) {
+	$post_type = get_post_type( $post_id );
+	if ( ! $post_type ) {
 		return;
 	}
 
-	$x = (int) $_POST['aiad_thumbnail_focal_x'];
-	$y = (int) $_POST['aiad_thumbnail_focal_y'];
+	foreach ( aiad_thumbnail_focal_point_contexts_for_post_type( $post_type ) as $context ) {
+		$x_key = 'aiad_thumbnail_focal_' . $context . '_x';
+		$y_key = 'aiad_thumbnail_focal_' . $context . '_y';
 
-	$point = aiad_normalize_focal_point(
-		array(
-			'x' => $x,
-			'y' => $y,
-		)
-	);
+		if ( ! isset( $_POST[ $x_key ], $_POST[ $y_key ] ) ) {
+			continue;
+		}
 
-	if ( ! $point ) {
+		$point = aiad_normalize_focal_point(
+			array(
+				'x' => (int) $_POST[ $x_key ],
+				'y' => (int) $_POST[ $y_key ],
+			)
+		);
+
+		$meta_key = aiad_thumbnail_focal_point_meta_key_for_context( $context );
+		if ( ! $point ) {
+			delete_post_meta( $post_id, $meta_key );
+			continue;
+		}
+
+		update_post_meta( $post_id, $meta_key, $point );
+	}
+
+	$feed_point = aiad_get_post_thumbnail_focal_point( $post_id, 'feed' );
+	if ( $feed_point ) {
+		update_post_meta( $post_id, aiad_thumbnail_focal_point_meta_key(), $feed_point );
+	} else {
 		delete_post_meta( $post_id, aiad_thumbnail_focal_point_meta_key() );
-		return;
 	}
-
-	update_post_meta( $post_id, aiad_thumbnail_focal_point_meta_key(), $point );
 }

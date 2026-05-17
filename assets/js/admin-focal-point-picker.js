@@ -12,6 +12,15 @@
 
 	const DEFAULT_POINT = { x: 0.5, y: 0.3 };
 
+	function defaultPointForRoot( root ) {
+		const x = parseFloat( root.dataset.defaultX );
+		const y = parseFloat( root.dataset.defaultY );
+		if ( ! Number.isNaN( x ) && ! Number.isNaN( y ) ) {
+			return { x, y };
+		}
+		return { ...DEFAULT_POINT };
+	}
+
 	function parsePoint( raw ) {
 		if ( ! raw ) {
 			return { ...DEFAULT_POINT };
@@ -109,8 +118,13 @@
 	function mountRoot( root ) {
 		const mountEl = root.querySelector( '.aiad-focal-point-picker-mount' );
 		const emptyEl = root.querySelector( '.aiad-focal-point-picker-empty' );
-		const inputX = root.querySelector( 'input[name="aiad_thumbnail_focal_x"]' );
-		const inputY = root.querySelector( 'input[name="aiad_thumbnail_focal_y"]' );
+		const context = root.dataset.focalContext || 'feed';
+		const inputX = root.querySelector(
+			'input[name="aiad_thumbnail_focal_' + context + '_x"]'
+		);
+		const inputY = root.querySelector(
+			'input[name="aiad_thumbnail_focal_' + context + '_y"]'
+		);
 		const coordsEl = root.querySelector( '.aiad-focal-point-picker-coords' );
 
 		if ( ! mountEl ) {
@@ -120,6 +134,9 @@
 		const imageUrl =
 			getFeaturedImageUrlFromEditor() || root.dataset.imageUrl || '';
 		let initialPoint = parsePoint( root.dataset.focalPoint );
+		if ( ! root.dataset.focalPoint ) {
+			initialPoint = defaultPointForRoot( root );
+		}
 		if ( inputX && inputY && inputX.value !== '' && inputY.value !== '' ) {
 			initialPoint = {
 				x: parseInt( inputX.value, 10 ) / 100,

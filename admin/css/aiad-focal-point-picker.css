@@ -3,6 +3,18 @@
 	margin-top: 0.75rem;
 }
 
+.aiad-focal-point-context {
+	margin-top: 1rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid #dcdcde;
+}
+
+.aiad-focal-point-context:first-of-type {
+	margin-top: 0.5rem;
+	padding-top: 0;
+	border-top: none;
+}
+
 .aiad-focal-point-picker-root {
 	margin-top: 0.5rem;
 }

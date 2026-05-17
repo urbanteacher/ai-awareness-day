@@ -104,10 +104,10 @@ get_header();
 							<?php
 							$focal_post_id = isset( $cover_data['focal_post_id'] ) ? (int) $cover_data['focal_post_id'] : $post_id;
 							$img_style     = function_exists( 'aiad_entry_figure_img_style_attr' )
-								? aiad_entry_figure_img_style_attr( $focal_post_id, (string) $cover_data['fit'] )
+								? aiad_entry_figure_img_style_attr( $focal_post_id, (string) $cover_data['fit'], 'single' )
 								: '';
 							?>
-							<figure class="resource-activity-figure">
+							<figure class="resource-activity-figure resource-activity-figure--timeline-single">
 								<img
 									class="resource-activity-figure__img<?php echo esc_attr( $cover_fit_class ); ?>"
 									src="<?php echo esc_url( $cover_data['url'] ); ?>"
