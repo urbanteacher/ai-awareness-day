@@ -22,6 +22,7 @@
 	height: 100%;
 	display: block;
 	object-fit: cover;
+	/* Default when no per-post focal point; overridden inline via _aiad_thumbnail_focal_point */
 	object-position: center 30%;
 }
 

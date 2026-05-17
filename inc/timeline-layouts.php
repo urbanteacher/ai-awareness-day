@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param WP_Post $entry Timeline post.
  * @param string  $size  thumb | hero.
- * @return array{url: string, fit: string} fit is 'cover' or 'contain'.
+ * @return array{url: string, fit: string, focal_post_id: int} fit is 'cover' or 'contain'; focal_post_id is post used for focal meta.
  */
 function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 'thumb' ): array {
     $sizes = 'hero' === $size
@@ -26,8 +26,9 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
         $url = get_the_post_thumbnail_url( $entry->ID, $img_size );
         if ( $url ) {
             return array(
-                'url' => $url,
-                'fit' => 'contain' === $cover_fit ? 'contain' : 'cover',
+                'url'            => $url,
+                'fit'            => 'contain' === $cover_fit ? 'contain' : 'cover',
+                'focal_post_id'  => $entry->ID,
             );
         }
     }
@@ -41,8 +42,9 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
                 $logo = get_the_post_thumbnail_url( $partner_id, $img_size );
                 if ( $logo ) {
                     return array(
-                        'url' => $logo,
-                        'fit' => 'contain',
+                        'url'           => $logo,
+                        'fit'           => 'contain',
+                        'focal_post_id' => $partner_id,
                     );
                 }
             }
@@ -50,8 +52,9 @@ function aiad_timeline_entry_cover_image_data( WP_Post $entry, string $size = 't
     }
 
     return array(
-        'url' => '',
-        'fit' => 'cover',
+        'url'           => '',
+        'fit'           => 'cover',
+        'focal_post_id' => $entry->ID,
     );
 }
 
@@ -82,12 +85,17 @@ function aiad_timeline_entry_cover_visual( WP_Post $entry, string $wrapper, stri
     }
 
     if ( ! empty( $cover_image['url'] ) ) {
-        $fit_class = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
+        $fit_class  = 'contain' === $cover_image['fit'] ? ' resource-activity-figure__img--fit-contain timeline-cover-img--fit-contain' : '';
+        $focal_id   = isset( $cover_image['focal_post_id'] ) ? (int) $cover_image['focal_post_id'] : $entry->ID;
+        $style_attr = function_exists( 'aiad_entry_figure_img_style_attr' )
+            ? aiad_entry_figure_img_style_attr( $focal_id, (string) $cover_image['fit'] )
+            : '';
         return sprintf(
-            '<figure class="%1$s__cover"><img class="%1$s__cover-img resource-activity-figure__img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600" /></figure>',
+            '<figure class="%1$s__cover"><img class="%1$s__cover-img resource-activity-figure__img%3$s" src="%2$s" alt="" loading="lazy" width="800" height="600"%4$s /></figure>',
             esc_attr( $wrapper ),
             esc_url( $cover_image['url'] ),
-            esc_attr( $fit_class )
+            esc_attr( $fit_class ),
+            $style_attr // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in helper.
         );
     }
 

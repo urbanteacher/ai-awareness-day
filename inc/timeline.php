@@ -317,6 +317,11 @@ function aiad_timeline_meta_box_callback( WP_Post $post ): void {
         </select>
         <p class="description"><?php esc_html_e( 'Used if no Featured Image is set. Upload a Featured Image to use your own photo instead.', 'ai-awareness-day' ); ?></p>
     </div>
+    <?php
+    if ( function_exists( 'aiad_render_thumbnail_focal_point_fields' ) ) {
+        aiad_render_thumbnail_focal_point_fields( $post );
+    }
+    ?>
     </div>
     <script>
     jQuery(function($) {
@@ -394,6 +399,10 @@ function aiad_save_timeline_meta( int $post_id ): void {
     $current_source = get_post_meta( $post_id, '_aiad_timeline_source', true );
     if ( empty( $current_source ) ) {
         update_post_meta( $post_id, '_aiad_timeline_source', 'manual' );
+    }
+
+    if ( function_exists( 'aiad_save_thumbnail_focal_point_from_post' ) ) {
+        aiad_save_thumbnail_focal_point_from_post( $post_id );
     }
 }
 add_action( 'save_post_timeline', 'aiad_save_timeline_meta' );

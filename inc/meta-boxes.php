@@ -825,6 +825,10 @@ function aiad_resource_details_callback( WP_Post $post ): void {
     }
     echo '</div></div>';
 
+    if ( function_exists( 'aiad_render_thumbnail_focal_point_fields' ) ) {
+        aiad_render_thumbnail_focal_point_fields( $post );
+    }
+
     echo '</div>';
 }
 
@@ -936,6 +940,10 @@ function aiad_save_resource_details( int $post_id ): void {
         if ( in_array( $s, array( 'draft', 'in_review', 'published' ), true ) ) {
             update_post_meta( $post_id, '_aiad_status', $s );
         }
+    }
+
+    if ( function_exists( 'aiad_save_thumbnail_focal_point_from_post' ) ) {
+        aiad_save_thumbnail_focal_point_from_post( $post_id );
     }
 }
 add_action( 'save_post_resource', 'aiad_save_resource_details' );

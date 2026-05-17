@@ -97,7 +97,17 @@ get_header();
                     </header>
                     <?php if ( has_post_thumbnail() ) : ?>
                         <figure class="resource-activity-figure">
-                            <?php the_post_thumbnail( 'large', array( 'class' => 'resource-activity-figure__img' ) ); ?>
+                            <?php
+                            if ( function_exists( 'aiad_entry_figure_thumbnail' ) ) {
+                                echo aiad_entry_figure_thumbnail( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                    get_the_ID(),
+                                    'large',
+                                    array( 'class' => 'resource-activity-figure__img' )
+                                );
+                            } else {
+                                the_post_thumbnail( 'large', array( 'class' => 'resource-activity-figure__img' ) );
+                            }
+                            ?>
                         </figure>
                     <?php endif; ?>
                     <div class="entry-content entry-content--resource">

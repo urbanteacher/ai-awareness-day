@@ -45,7 +45,11 @@ get_header();
 		$cover_fallback   = get_post_meta( $post_id, '_aiad_timeline_cover_fallback', true );
 		$cover_data       = function_exists( 'aiad_timeline_entry_cover_image_data' )
 			? aiad_timeline_entry_cover_image_data( get_post(), 'hero' )
-			: array( 'url' => get_the_post_thumbnail_url( $post_id, 'large' ) ?: '', 'fit' => 'cover' );
+			: array(
+				'url'           => get_the_post_thumbnail_url( $post_id, 'large' ) ?: '',
+				'fit'           => 'cover',
+				'focal_post_id' => $post_id,
+			);
 		$show_image       = ! $show_video && ! $show_linkedin && ! empty( $cover_data['url'] );
 		$show_fallback    = ! $show_video && ! $show_linkedin && ! $show_image
 			&& function_exists( 'aiad_timeline_cover_fallback_inner_html' );
@@ -97,6 +101,12 @@ get_header();
 								?>
 							</div>
 						<?php elseif ( $show_image ) : ?>
+							<?php
+							$focal_post_id = isset( $cover_data['focal_post_id'] ) ? (int) $cover_data['focal_post_id'] : $post_id;
+							$img_style     = function_exists( 'aiad_entry_figure_img_style_attr' )
+								? aiad_entry_figure_img_style_attr( $focal_post_id, (string) $cover_data['fit'] )
+								: '';
+							?>
 							<figure class="resource-activity-figure">
 								<img
 									class="resource-activity-figure__img<?php echo esc_attr( $cover_fit_class ); ?>"
@@ -105,6 +115,10 @@ get_header();
 									loading="lazy"
 									width="1200"
 									height="630"
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- style attr escaped in helper.
+									echo $img_style ? trim( $img_style ) : '';
+									?>
 								/>
 							</figure>
 						<?php elseif ( $show_fallback ) : ?>

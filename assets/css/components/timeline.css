@@ -744,12 +744,50 @@
 }
 
 .timeline-swipe__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 0.75rem;
     width: 100%;
-    justify-content: center;
+    padding: 0.65rem 1rem;
     text-transform: uppercase;
+    font-family: var(--font-display);
     font-size: 0.75rem;
+    font-weight: 700;
     letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--white);
+    background: var(--gray-900);
+    border: 1px solid var(--gray-900);
+    border-radius: var(--border-radius, 4px);
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.timeline-swipe__cta:hover,
+.timeline-swipe__cta:focus {
+    color: var(--white);
+    background: var(--gray-800);
+    border-color: var(--gray-800);
+    text-decoration: none;
+}
+
+.timeline-swipe__cta:focus {
+    outline: 2px solid var(--accent-green);
+    outline-offset: 2px;
+}
+
+/* #timeline sets light text; swipe panel is white — keep CTA readable */
+#timeline .timeline-swipe__cta {
+    color: var(--white);
+    background: var(--gray-900);
+    border-color: var(--gray-900);
+}
+
+#timeline .timeline-swipe__cta:hover,
+#timeline .timeline-swipe__cta:focus {
+    color: var(--white);
+    background: var(--gray-800);
+    border-color: var(--gray-800);
 }
 
 .timeline-swipe__footer {
