@@ -85,12 +85,13 @@ get_header();
 						$author_bio  = get_the_author_meta( 'description', $author_id );
 						?>
 						<div class="single-timeline-entry__author">
-							<span class="single-timeline-entry__author-avatar-wrap">
-								<?php
-								$avatar_default = function_exists( 'aiad_get_default_avatar_url' ) ? aiad_get_default_avatar_url() : '';
-								echo get_avatar( $author_id, 44, $avatar_default, '', array( 'class' => 'single-timeline-entry__author-avatar' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-								?>
-							</span>
+							<?php
+							if ( function_exists( 'aiad_timeline_single_author_avatar_html' ) ) {
+								echo aiad_timeline_single_author_avatar_html( $author_id, 44 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							} else {
+								echo get_avatar( $author_id, 44, '', '', array( 'class' => 'single-timeline-entry__author-avatar' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							}
+							?>
 							<div class="single-timeline-entry__author-meta">
 								<p class="single-timeline-entry__author-name"><?php echo esc_html( $author_name ); ?></p>
 								<?php if ( ! empty( $author_bio ) ) : ?>

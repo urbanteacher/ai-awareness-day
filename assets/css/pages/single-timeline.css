@@ -138,14 +138,18 @@
 	box-shadow: 0 0 0 1px var(--gray-200);
 }
 
-/* Pointed chamfer avatar (matches resource-card--placeholder-pointed) */
+/* Pointed chamfer avatar (matches resource-card--placeholder-pointed hero) */
 .single-timeline-entry--stacked .single-timeline-entry__author-avatar-wrap {
-	--avatar-chamfer: 11px;
+	--avatar-chamfer: 12px;
 	flex-shrink: 0;
 	width: 44px;
 	height: 44px;
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	overflow: hidden;
+	padding: 3px;
+	box-sizing: border-box;
 	background: linear-gradient(135deg, #374151, #111827);
 	clip-path: polygon(
 		0 0,
@@ -163,7 +167,8 @@
 	border-radius: 0;
 	border: none;
 	box-shadow: none;
-	object-fit: cover;
+	object-fit: contain;
+	object-position: center;
 }
 
 .single-timeline-entry__author-name {
@@ -496,9 +501,10 @@
 	}
 
 	.single-timeline-entry--stacked .single-timeline-entry__author-avatar-wrap {
-		--avatar-chamfer: 8px;
-		width: 32px;
-		height: 32px;
+		--avatar-chamfer: 9px;
+		width: 34px;
+		height: 34px;
+		padding: 2px;
 	}
 
 	.single-timeline-entry--stacked .single-timeline-entry__author-name {

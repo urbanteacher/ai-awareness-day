@@ -1520,6 +1520,49 @@ function aiad_timeline_human_date_label($post = null): string
 }
 
 /**
+ * Author avatar for stacked timeline single (site logo in pointed chamfer frame).
+ *
+ * @param int $user_id Author user ID (fallback when no brand logo).
+ * @param int $size    Image size in pixels.
+ */
+function aiad_timeline_single_author_avatar_html(int $user_id, int $size = 44): string
+{
+    $class = 'single-timeline-entry__author-avatar';
+    $wrap  = 'single-timeline-entry__author-avatar-wrap';
+
+    $logo_id = function_exists('aiad_get_brand_logo_attachment_id')
+        ? aiad_get_brand_logo_attachment_id()
+        : 0;
+
+    if ($logo_id) {
+        $img = wp_get_attachment_image(
+            $logo_id,
+            array($size, $size),
+            false,
+            array(
+                'class'    => $class,
+                'alt'      => '',
+                'loading'  => 'lazy',
+                'decoding' => 'async',
+            )
+        );
+        if ($img) {
+            return '<span class="' . esc_attr($wrap) . '">' . $img . '</span>';
+        }
+    }
+
+    $default = function_exists('aiad_get_default_avatar_url') ? aiad_get_default_avatar_url() : '';
+
+    return '<span class="' . esc_attr($wrap) . '">' . get_avatar(
+        $user_id,
+        $size,
+        $default,
+        '',
+        array('class' => $class)
+    ) . '</span>';
+}
+
+/**
  * Move the hashtag paragraph out of the body so it can sit after “More to read”.
  *
  * @return array{body: string, tags_html: string}
