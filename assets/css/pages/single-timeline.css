@@ -418,6 +418,48 @@
 		max-width: 100%;
 		aspect-ratio: 1 / 1.13;
 	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__meta-row {
+		flex-wrap: nowrap;
+		gap: 0.35rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__author {
+		gap: 0.5rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__author-avatar {
+		width: 32px;
+		height: 32px;
+		border-width: 1px;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__author-name {
+		font-size: 0.75rem;
+		line-height: 1.2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__author-role {
+		font-size: 0.65rem;
+		margin-top: 0.05rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__date {
+		font-size: 0.625rem;
+		padding: 0.35em 0.45em;
+		gap: 0.25rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__date::before {
+		width: 11px;
+		height: 11px;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -444,14 +486,32 @@
 
 .single-timeline-entry--stacked .single-timeline-entry__meta-row {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
+	justify-content: space-between;
 	gap: 0.75rem;
 	margin-top: 1rem;
 }
 
 .single-timeline-entry--stacked .single-timeline-entry__author {
 	margin-top: 0;
+	flex: 1;
+	min-width: 0;
+}
+
+.single-timeline-entry--stacked .single-timeline-entry__date {
+	background: var(--gray-900);
+	color: var(--white);
+	border: none;
+	border-radius: 4px;
+	box-shadow: none;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 0.45em 0.65em;
+}
+
+.single-timeline-entry--stacked .single-timeline-entry__date::before {
+	opacity: 1;
 }
 
 .single-timeline-entry--stacked .single-timeline-entry__author-avatar {
@@ -483,9 +543,6 @@
 	margin-top: 2.5rem;
 }
 
-.single-timeline-entry--stacked .single-timeline-entry__tags {
-	font-size: 0.9rem;
-	line-height: 1.6;
-	color: var(--gray-500);
-	margin: 1.25rem 0 0;
+.single-timeline-entry--stacked .single-timeline-entry__content .entry-content__tags {
+	display: none;
 }

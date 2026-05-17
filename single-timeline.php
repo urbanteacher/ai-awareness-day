@@ -60,17 +60,13 @@ get_header();
 			? aiad_timeline_featured_badge_label( get_post(), $pinned, $icon )
 			: ucfirst( $icon );
 
-		$raw_content      = (string) get_post_field( 'post_content', $post_id );
-		$excerpt          = has_excerpt() ? get_the_excerpt() : '';
-		$filtered_content = (string) apply_filters( 'the_content', $raw_content );
-		$content_parts    = function_exists( 'aiad_timeline_single_split_tags_from_content' )
-			? aiad_timeline_single_split_tags_from_content( $filtered_content )
-			: array(
-				'body'      => $filtered_content,
-				'tags_html' => '',
-			);
-		$body_content = isset( $content_parts['body'] ) ? (string) $content_parts['body'] : $filtered_content;
-		$tags_html    = isset( $content_parts['tags_html'] ) ? (string) $content_parts['tags_html'] : '';
+		$raw_content  = (string) get_post_field( 'post_content', $post_id );
+		$excerpt      = has_excerpt() ? get_the_excerpt() : '';
+		$body_content = (string) apply_filters( 'the_content', $raw_content );
+		if ( function_exists( 'aiad_timeline_single_split_tags_from_content' ) ) {
+			$content_parts = aiad_timeline_single_split_tags_from_content( $body_content );
+			$body_content  = isset( $content_parts['body'] ) ? (string) $content_parts['body'] : $body_content;
+		}
 		?>
 
 		<article id="post-<?php the_ID(); ?>" <?php post_class( 'single-timeline-entry single-timeline-entry--stacked' ); ?>>
@@ -155,7 +151,7 @@ get_header();
 					<p class="single-timeline-entry__excerpt"><?php echo wp_kses_post( $excerpt ); ?></p>
 				<?php endif; ?>
 
-				<!-- Content (hashtags rendered after more-to-read) -->
+				<!-- Content -->
 				<?php if ( '' !== trim( $body_content ) ) : ?>
 					<div class="single-timeline-entry__content entry-content entry-content--timeline">
 						<?php echo $body_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filtered via the_content. ?>
@@ -177,12 +173,6 @@ get_header();
 				<?php
 				if ( function_exists( 'aiad_timeline_single_render_related' ) ) {
 					aiad_timeline_single_render_related( $post_id );
-				}
-				?>
-
-				<?php
-				if ( function_exists( 'aiad_timeline_single_render_tags' ) ) {
-					aiad_timeline_single_render_tags( $tags_html );
 				}
 				?>
 
