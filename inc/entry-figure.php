@@ -226,14 +226,53 @@ function aiad_entry_figure_thumbnail( int $post_id, string $size = 'large', arra
 }
 
 /**
- * Admin fields: horizontal / vertical focal point (%).
+ * Enqueue FocalPointPicker for timeline and resource edit screens.
+ *
+ * @param string $hook Current admin page hook.
+ */
+function aiad_enqueue_thumbnail_focal_point_picker_admin( string $hook ): void {
+	if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+		return;
+	}
+
+	$screen = get_current_screen();
+	if ( ! $screen || ! in_array( $screen->post_type, array( 'timeline', 'resource' ), true ) ) {
+		return;
+	}
+
+	wp_enqueue_media();
+	wp_enqueue_style( 'wp-components' );
+
+	$css_path = AIAD_DIR . '/admin/css/aiad-focal-point-picker.css';
+	wp_enqueue_style(
+		'aiad-focal-point-picker',
+		AIAD_URI . '/admin/css/aiad-focal-point-picker.css',
+		array( 'wp-components' ),
+		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
+	);
+
+	$js_path = AIAD_DIR . '/assets/js/admin-focal-point-picker.js';
+	wp_enqueue_script(
+		'aiad-admin-focal-point-picker',
+		AIAD_URI . '/assets/js/admin-focal-point-picker.js',
+		array( 'wp-element', 'wp-components', 'wp-i18n' ),
+		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'aiad_enqueue_thumbnail_focal_point_picker_admin' );
+
+/**
+ * Admin fields: drag focal point picker + hidden coordinates for save.
  *
  * @param WP_Post $post Post being edited.
  */
 function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
-	$point   = aiad_get_post_thumbnail_focal_point( $post->ID ) ?? aiad_default_thumbnail_focal_point();
-	$x_pct   = round( (float) $point['x'] * 100 );
-	$y_pct   = round( (float) $point['y'] * 100 );
+	$point     = aiad_get_post_thumbnail_focal_point( $post->ID ) ?? aiad_default_thumbnail_focal_point();
+	$x_pct     = round( (float) $point['x'] * 100 );
+	$y_pct     = round( (float) $point['y'] * 100 );
+	$thumb_id  = (int) get_post_thumbnail_id( $post->ID );
+	$image_url = $thumb_id > 0 ? (string) wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
 	?>
 	<div class="aiad-rd-section aiad-focal-point-fields">
 		<strong class="aiad-rd-label"><?php esc_html_e( 'Image focal point', 'ai-awareness-day' ); ?></strong>
@@ -242,23 +281,35 @@ function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
 			echo wp_kses_post(
 				sprintf(
 					/* translators: %s: link to Focal Point Picker docs */
-					__( 'Sets which part of the Featured Image stays visible when cropped (object-position). Same idea as the block editor %s.', 'ai-awareness-day' ),
+					__( 'Drag on the image to choose what stays visible when cropped. Uses the same %s as the block editor.', 'ai-awareness-day' ),
 					'<a href="https://developer.wordpress.org/block-editor/reference-guides/components/focal-point-picker/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Focal Point Picker', 'ai-awareness-day' ) . '</a>'
 				)
 			);
 			?>
 		</p>
-		<p style="display:flex;gap:0.75rem;flex-wrap:wrap;margin:0.5rem 0 0;">
-			<label style="flex:1;min-width:6rem;">
-				<?php esc_html_e( 'Horizontal %', 'ai-awareness-day' ); ?><br>
-				<input type="number" name="aiad_thumbnail_focal_x" class="small-text" min="0" max="100" step="1" value="<?php echo esc_attr( (string) $x_pct ); ?>" />
-			</label>
-			<label style="flex:1;min-width:6rem;">
-				<?php esc_html_e( 'Vertical %', 'ai-awareness-day' ); ?><br>
-				<input type="number" name="aiad_thumbnail_focal_y" class="small-text" min="0" max="100" step="1" value="<?php echo esc_attr( (string) $y_pct ); ?>" />
-			</label>
-		</p>
-		<p class="description"><?php esc_html_e( 'Default is 50% / 30% (center, slightly above middle). Only applies when the image uses cover cropping.', 'ai-awareness-day' ); ?></p>
+		<div
+			class="aiad-focal-point-picker-root"
+			data-image-url="<?php echo esc_url( $image_url ); ?>"
+			data-focal-point="<?php echo esc_attr( wp_json_encode( $point ) ); ?>"
+		>
+			<div class="aiad-focal-point-picker-mount"<?php echo $image_url ? '' : ' hidden'; ?>></div>
+			<p class="aiad-focal-point-picker-empty description"<?php echo $image_url ? ' hidden' : ''; ?>>
+				<?php esc_html_e( 'Set a Featured Image above, then drag to set the focal point.', 'ai-awareness-day' ); ?>
+			</p>
+			<input type="hidden" name="aiad_thumbnail_focal_x" value="<?php echo esc_attr( (string) $x_pct ); ?>" />
+			<input type="hidden" name="aiad_thumbnail_focal_y" value="<?php echo esc_attr( (string) $y_pct ); ?>" />
+			<p class="aiad-focal-point-picker-coords description">
+				<?php
+				printf(
+					/* translators: 1: horizontal %, 2: vertical % */
+					esc_html__( '%1$s%% · %2$s%%', 'ai-awareness-day' ),
+					esc_html( (string) $x_pct ),
+					esc_html( (string) $y_pct )
+				);
+				?>
+			</p>
+		</div>
+		<p class="description"><?php esc_html_e( 'Default is 50% / 30%. Only applies when the image uses cover cropping (not partner logos).', 'ai-awareness-day' ); ?></p>
 	</div>
 	<?php
 }
