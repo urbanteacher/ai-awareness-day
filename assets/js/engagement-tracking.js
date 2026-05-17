@@ -1,14 +1,21 @@
 /**
- * Track schedule joins/clicks, session actions, and AI resource partner clicks.
+ * Track schedule joins/clicks, partner AI resources, handpicked resources,
+ * AI tools, hero partner marquee, and hero Partners stat.
  */
 ( function () {
     function track( postId, event, targetUrl ) {
-        if ( ! postId || typeof aiad_ajax === 'undefined' || ! aiad_ajax.engagement_nonce ) {
+        if ( typeof aiad_ajax === 'undefined' || ! aiad_ajax.engagement_nonce ) {
+            return;
+        }
+        if ( ! event ) {
+            return;
+        }
+        if ( event !== 'hero_partners_stat' && ! postId ) {
             return;
         }
         var body = 'action=aiad_track_engagement'
             + '&nonce=' + encodeURIComponent( aiad_ajax.engagement_nonce )
-            + '&post_id=' + encodeURIComponent( postId )
+            + '&post_id=' + encodeURIComponent( postId || 0 )
             + '&event=' + encodeURIComponent( event );
         if ( targetUrl ) {
             body += '&target_url=' + encodeURIComponent( targetUrl );
@@ -40,6 +47,32 @@
     document.addEventListener(
         'click',
         function ( e ) {
+            var heroStat = e.target.closest( 'a.hero-stats__item[data-track-engagement]' );
+            if ( heroStat ) {
+                track( 0, heroStat.getAttribute( 'data-track-engagement' ) || '' );
+                return;
+            }
+
+            var marqueeLink = e.target.closest( 'a.hero-partner-marquee__link[data-partner-id]' );
+            if ( marqueeLink ) {
+                track( marqueeLink.getAttribute( 'data-partner-id' ), 'marquee' );
+                return;
+            }
+
+            var featuredLink = e.target.closest(
+                '#partner-resources a[data-featured-resource-id]'
+            );
+            if ( featuredLink ) {
+                track( featuredLink.getAttribute( 'data-featured-resource-id' ), 'click' );
+                return;
+            }
+
+            var toolLink = e.target.closest( 'a.tool-card__link[data-tool-id]' );
+            if ( toolLink ) {
+                track( toolLink.getAttribute( 'data-tool-id' ), 'click' );
+                return;
+            }
+
             var partnerCard = e.target.closest( 'a.partner-card--ai-resources[data-partner-id]' );
             if ( partnerCard ) {
                 track( partnerCard.getAttribute( 'data-partner-id' ), 'click' );

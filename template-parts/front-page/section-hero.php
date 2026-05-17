@@ -106,9 +106,10 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                     'url'   => get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' ),
                 ),
                 array(
-                    'value' => $partner_count,
-                    'label' => __( 'Partners', 'ai-awareness-day' ),
-                    'url'   => get_post_type_archive_link( 'partner' ) ?: home_url( '/partners/' ),
+                    'value'  => $partner_count,
+                    'label'  => __( 'Partners', 'ai-awareness-day' ),
+                    'url'    => get_post_type_archive_link( 'partner' ) ?: home_url( '/partners/' ),
+                    'track'  => 'hero_partners_stat',
                 ),
                 array(
                     'value' => $tool_count,
@@ -119,7 +120,7 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
             ?>
             <div class="hero-stats">
                 <?php foreach ( $stats as $stat ) : ?>
-                <a href="<?php echo esc_url( $stat['url'] ); ?>" class="hero-stats__item">
+                <a href="<?php echo esc_url( $stat['url'] ); ?>" class="hero-stats__item"<?php echo ! empty( $stat['track'] ) ? ' data-track-engagement="' . esc_attr( $stat['track'] ) . '"' : ''; ?>>
                     <span class="hero-stats__value"><?php echo esc_html( number_format_i18n( $stat['value'] ) ); ?></span>
                     <span class="hero-stats__label"><?php echo esc_html( $stat['label'] ); ?></span>
                 </a>
@@ -141,7 +142,7 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                         <ul class="hero-partner-marquee__list">
                             <?php foreach ( $hero_marquee as $row ) : ?>
                             <li class="hero-partner-marquee__item">
-                                <a class="hero-partner-marquee__link" href="<?php echo esc_url( $row['href'] ); ?>">
+                                <a class="hero-partner-marquee__link" href="<?php echo esc_url( $row['href'] ); ?>" data-partner-id="<?php echo esc_attr( (string) $row['id'] ); ?>">
                                     <img class="hero-partner-marquee__img"
                                         src="<?php echo esc_url( $row['img'] ); ?>"
                                         alt="<?php echo esc_attr( $row['title'] ); ?>"

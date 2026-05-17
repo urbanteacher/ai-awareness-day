@@ -617,7 +617,7 @@ function aiad_render_tool_card( WP_Post $tool ): string {
 		<?php endif; ?>
 
 		<?php if ( $url ) : ?>
-			<a href="<?php echo esc_url( $url ); ?>" class="tool-card__link" target="_blank" rel="noopener noreferrer">
+			<a href="<?php echo esc_url( $url ); ?>" class="tool-card__link" data-tool-id="<?php echo esc_attr( (string) $tool->ID ); ?>" target="_blank" rel="noopener noreferrer">
 				<?php esc_html_e( 'Visit Website', 'ai-awareness-day' ); ?>
 				<span aria-hidden="true">→</span>
 			</a>

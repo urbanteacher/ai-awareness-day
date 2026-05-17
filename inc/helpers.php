@@ -618,7 +618,7 @@ function aiad_normalise_instructions( $raw ): array {
 /**
  * Published partners that have a featured image, for the front-page hero logo strip (below stats).
  *
- * @return array<int, array{title: string, href: string, img: string}>
+ * @return array<int, array{id: int, title: string, href: string, img: string}>
  */
 function aiad_get_hero_partner_marquee_entries(): array {
     $query = new WP_Query(
@@ -649,6 +649,7 @@ function aiad_get_hero_partner_marquee_entries(): array {
             continue;
         }
         $out[] = array(
+            'id'    => $id,
             'title' => get_the_title(),
             'href'  => get_permalink( $id ),
             'img'   => $img,

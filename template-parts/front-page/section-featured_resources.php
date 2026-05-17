@@ -92,7 +92,8 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                             ?>
                             <article class="<?php echo esc_attr( $article_class ); ?>">
                                 <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer"
-                                    class="resource-card__hero" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
+                                    class="resource-card__hero" data-featured-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>"
+                                    aria-label="<?php echo esc_attr( get_the_title() ); ?>">
                                     <?php if ( has_post_thumbnail() ): ?>
                                         <?php the_post_thumbnail( 'medium_large', array( 'class' => 'resource-card__hero-img' ) ); ?>
                                     <?php else: ?>
@@ -115,7 +116,7 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
 
                                 <div class="resource-card__body">
                                     <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
-                                    <a href="<?php echo esc_url( $link ); ?>" class="resource-card__title-below" <?php if ( $url ) echo 'target="_blank" rel="noopener noreferrer"'; ?>><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a>
+                                    <a href="<?php echo esc_url( $link ); ?>" class="resource-card__title-below" data-featured-resource-id="<?php echo esc_attr( (string) get_the_ID() ); ?>" <?php if ( $url ) echo 'target="_blank" rel="noopener noreferrer"'; ?>><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a>
                                     <?php if ( has_excerpt() ): ?>
                                         <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                                     <?php endif; ?>
