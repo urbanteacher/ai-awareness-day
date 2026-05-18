@@ -10,6 +10,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Public URL for a file under assets/images/ (e.g. logos/cas.png).
+ */
+function aiad_theme_image_uri( string $relative_path ): string {
+	$relative_path = ltrim( str_replace( '\\', '/', $relative_path ), '/' );
+	return trailingslashit( AIAD_URI ) . 'assets/images/' . $relative_path;
+}
+
+/**
+ * Filesystem path for a file under assets/images/.
+ */
+function aiad_theme_image_path( string $relative_path ): string {
+	$relative_path = ltrim( str_replace( '\\', '/', $relative_path ), '/' );
+	return AIAD_DIR . '/assets/images/' . $relative_path;
+}
+
+/**
+ * URL for a principle theme polygon SVG (safe, smart, creative, responsible, future).
+ */
+function aiad_principle_polygon_uri( string $slug ): string {
+	$slug = sanitize_title( $slug );
+	return aiad_theme_image_uri( 'polygon-shapes/' . $slug . '-polygon.svg' );
+}
+
+/**
  * CSS bundle groups for optional concat build (scripts/build-css-bundles.php).
  *
  * @return array<string, array<int, string>>
