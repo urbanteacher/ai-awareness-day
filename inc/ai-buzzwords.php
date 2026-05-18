@@ -117,11 +117,30 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 			<section class="aiad-bz-quiz" data-aiad-bz-quiz aria-labelledby="aiad-bz-quiz-heading">
 				<h3 id="aiad-bz-quiz-heading" class="aiad-bz-quiz__heading"><?php esc_html_e( 'Quick quiz: score out of 5', 'ai-awareness-day' ); ?></h3>
 				<p class="aiad-bz-quiz__intro"><?php esc_html_e( 'Five questions drawn from the glossary. Match each definition to the right buzzword.', 'ai-awareness-day' ); ?></p>
-				<div class="aiad-bz-quiz__panel" data-aiad-bz-quiz-panel hidden></div>
-				<p class="aiad-bz-quiz__progress" data-aiad-bz-quiz-progress aria-live="polite"></p>
-				<div class="aiad-bz-quiz__actions">
-					<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--primary" data-aiad-bz-quiz-start><?php esc_html_e( 'Start quiz', 'ai-awareness-day' ); ?></button>
+				<div class="aiad-bz-quiz__start-card" data-aiad-bz-quiz-start-card>
+					<p class="aiad-bz-quiz__start-eyebrow"><?php esc_html_e( 'Ready to test yourself?', 'ai-awareness-day' ); ?></p>
+					<ul class="aiad-bz-quiz__start-list">
+						<li><?php esc_html_e( 'Match each definition to a buzzword', 'ai-awareness-day' ); ?></li>
+						<li><?php esc_html_e( 'New random questions every time', 'ai-awareness-day' ); ?></li>
+						<li><?php esc_html_e( 'See your score out of 5 with a review', 'ai-awareness-day' ); ?></li>
+					</ul>
+					<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--cta" data-aiad-bz-quiz-start>
+						<?php esc_html_e( 'Start quiz', 'ai-awareness-day' ); ?>
+					</button>
 				</div>
+
+				<div class="aiad-bz-quiz__play" data-aiad-bz-quiz-play hidden>
+					<div class="aiad-bz-quiz__stepper" data-aiad-bz-quiz-stepper role="list" aria-label="<?php esc_attr_e( 'Quiz progress', 'ai-awareness-day' ); ?>"></div>
+					<p class="aiad-bz-quiz__progress" data-aiad-bz-quiz-progress aria-live="polite"></p>
+					<p class="aiad-bz-quiz__hint"><?php esc_html_e( 'Choose one answer, then tap the button below.', 'ai-awareness-day' ); ?></p>
+					<div class="aiad-bz-quiz__panel" data-aiad-bz-quiz-panel></div>
+					<div class="aiad-bz-quiz__actions">
+						<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--cta" data-aiad-bz-quiz-next>
+							<?php esc_html_e( 'Next question', 'ai-awareness-day' ); ?>
+						</button>
+					</div>
+				</div>
+
 				<div class="aiad-bz-quiz__results" data-aiad-bz-quiz-results hidden aria-live="polite"></div>
 			</section>
 		<?php endif; ?>

@@ -224,6 +224,10 @@
 }
 
 /* Quiz (5 questions, score /5) */
+[data-aiad-buzzwords] .aiad-bz-quiz [hidden] {
+	display: none !important;
+}
+
 [data-aiad-buzzwords] .aiad-bz-quiz {
 	margin-top: 2.5rem;
 	padding-top: 2rem;
@@ -244,12 +248,68 @@
 	line-height: 1.55;
 }
 
-[data-aiad-buzzwords] .aiad-bz-quiz__progress {
+[data-aiad-buzzwords] .aiad-bz-quiz__start-card {
+	padding: 1.5rem;
+	background: var(--aiad-bz-icon-bg);
+	border: 1.5px solid #333;
+	border-radius: 4px;
+	color: #fff;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__start-eyebrow {
 	margin: 0 0 0.75rem;
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: #fff;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__start-list {
+	margin: 0 0 1.25rem;
+	padding: 0 0 0 1.15rem;
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__start-list li {
+	margin-bottom: 0.35rem;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__stepper {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 1rem;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__step {
+	flex: 1;
+	height: 6px;
+	border-radius: 3px;
+	background: #e0e0e0;
+	transition: background 0.2s;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__step.is-done {
+	background: #86efac;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__step.is-current {
+	background: var(--aiad-bz-icon-bg);
+	box-shadow: 0 0 0 2px var(--aiad-bz-icon-bg), 0 0 0 4px #86efac;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__progress {
+	margin: 0 0 0.35rem;
 	font-size: 0.8rem;
 	font-weight: 600;
-	color: var(--aiad-bz-muted);
+	color: var(--aiad-bz-ink);
 	min-height: 1.25em;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__hint {
+	margin: 0 0 0.75rem;
+	font-size: 0.85rem;
+	color: var(--aiad-bz-muted);
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__panel {
@@ -314,6 +374,12 @@
 	background: #333;
 }
 
+[data-aiad-buzzwords] .aiad-bz-quiz__option:has(input:checked) {
+	border-color: #86efac;
+	background: #333;
+	box-shadow: 0 0 0 1px #86efac;
+}
+
 [data-aiad-buzzwords] .aiad-bz-quiz__option:has(input:focus-visible) {
 	outline: 2px solid #86efac;
 	outline-offset: 2px;
@@ -326,25 +392,67 @@
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
+	min-width: 10rem;
 	font-family: inherit;
-	font-size: 0.9rem;
-	font-weight: 600;
-	padding: 10px 20px;
-	border-radius: 999px;
+	font-size: 0.95rem;
+	font-weight: 700;
+	padding: 12px 24px;
+	border-radius: 4px;
 	cursor: pointer;
-	border: 1.5px solid transparent;
-	transition: background 0.15s, color 0.15s, border-color 0.15s;
+	border: 2px solid transparent;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
 }
 
-[data-aiad-buzzwords] .aiad-bz-quiz__btn--primary {
+[data-aiad-buzzwords] .aiad-bz-quiz__btn:active {
+	transform: translateY(1px);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--cta {
+	background: var(--aiad-bz-icon-bg);
+	color: #fff;
+	border-color: var(--aiad-bz-icon-bg);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--cta:hover {
+	background: #333;
+	border-color: #333;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--cta-inverse {
 	background: #fff;
 	color: var(--aiad-bz-icon-bg);
 	border-color: #fff;
 }
 
-[data-aiad-buzzwords] .aiad-bz-quiz__btn--primary:hover {
-	background: rgba(255, 255, 255, 0.9);
-	border-color: rgba(255, 255, 255, 0.9);
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--cta-inverse:hover {
+	background: rgba(255, 255, 255, 0.92);
+	border-color: rgba(255, 255, 255, 0.92);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__start-card .aiad-bz-quiz__btn--cta {
+	background: #fff;
+	color: var(--aiad-bz-icon-bg);
+	border-color: #fff;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__start-card .aiad-bz-quiz__btn--cta:hover {
+	background: rgba(255, 255, 255, 0.92);
+	border-color: rgba(255, 255, 255, 0.92);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__actions {
+	margin-top: 1rem;
+	padding-top: 0.25rem;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__results .aiad-bz-quiz__btn {
+	margin-top: 1.25rem;
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__btn:focus-visible {
@@ -360,6 +468,15 @@
 	border: 1.5px solid #333;
 	border-radius: 4px;
 	color: #fff;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__results-label {
+	margin: 0 0 0.35rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: rgba(255, 255, 255, 0.65);
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__score {

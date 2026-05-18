@@ -92,6 +92,7 @@
 		return 'Good time to explore the glossary above, then have another go.';
 	}
 
+
 	function initQuiz(root) {
 		var quizEl = root.querySelector('[data-aiad-bz-quiz]');
 		if (!quizEl || quizEl.getAttribute('data-aiad-bz-quiz-ready') === '1') {
@@ -99,13 +100,16 @@
 		}
 		quizEl.setAttribute('data-aiad-bz-quiz-ready', '1');
 
+		var startCard = quizEl.querySelector('[data-aiad-bz-quiz-start-card]');
+		var playEl = quizEl.querySelector('[data-aiad-bz-quiz-play]');
+		var stepper = quizEl.querySelector('[data-aiad-bz-quiz-stepper]');
 		var panel = quizEl.querySelector('[data-aiad-bz-quiz-panel]');
 		var progress = quizEl.querySelector('[data-aiad-bz-quiz-progress]');
 		var results = quizEl.querySelector('[data-aiad-bz-quiz-results]');
-		var actions = quizEl.querySelector('.aiad-bz-quiz__actions');
 		var startBtn = quizEl.querySelector('[data-aiad-bz-quiz-start]');
+		var nextBtn = quizEl.querySelector('[data-aiad-bz-quiz-next]');
 
-		if (!panel || !startBtn) {
+		if (!panel || !startBtn || !nextBtn || !playEl) {
 			return;
 		}
 
@@ -113,8 +117,54 @@
 			questions: [],
 			index: 0,
 			answers: [],
-			finished: false,
 		};
+
+		function buildStepper() {
+			if (!stepper) {
+				return;
+			}
+			var html = '';
+			var i;
+			for (i = 0; i < QUIZ_LENGTH; i++) {
+				html +=
+					'<span class="aiad-bz-quiz__step" role="listitem" data-step="' +
+					i +
+					'" aria-label="Question ' +
+					(i + 1) +
+					'"></span>';
+			}
+			stepper.innerHTML = html;
+		}
+
+		function updateStepper() {
+			if (!stepper) {
+				return;
+			}
+			var steps = stepper.querySelectorAll('.aiad-bz-quiz__step');
+			var i;
+			for (i = 0; i < steps.length; i++) {
+				steps[i].classList.remove('is-current', 'is-done');
+				if (i < state.index) {
+					steps[i].classList.add('is-done');
+				} else if (i === state.index) {
+					steps[i].classList.add('is-current');
+				}
+			}
+		}
+
+		function updateNextLabel() {
+			var isLast = state.index >= state.questions.length - 1;
+			nextBtn.textContent = isLast ? 'See my score' : 'Next question';
+		}
+
+		function showIdle() {
+			if (startCard) {
+				startCard.hidden = false;
+			}
+			playEl.hidden = true;
+			results.hidden = true;
+			panel.classList.remove('aiad-bz-quiz__panel--error');
+		}
 
 		function renderQuestion() {
 			var q = state.questions[state.index];
@@ -122,7 +172,7 @@
 				return;
 			}
 			var optsHtml = '';
-			q.options.forEach(function (opt, i) {
+			q.options.forEach(function (opt) {
 				optsHtml +=
 					'<label class="aiad-bz-quiz__option">' +
 					'<input type="radio" name="aiad-bz-q" value="' +
@@ -141,9 +191,12 @@
 				'<div class="aiad-bz-quiz__options">' +
 				optsHtml +
 				'</div></fieldset>';
+			panel.classList.remove('aiad-bz-quiz__panel--error');
 			if (progress) {
 				progress.textContent = 'Question ' + (state.index + 1) + ' of ' + QUIZ_LENGTH;
 			}
+			updateStepper();
+			updateNextLabel();
 		}
 
 		function showResults() {
@@ -154,10 +207,7 @@
 					score += 1;
 				}
 			}
-			panel.hidden = true;
-			if (progress) {
-				progress.textContent = '';
-			}
+			playEl.hidden = true;
 			var reviewHtml = '';
 			state.questions.forEach(function (q, idx) {
 				var ok = state.answers[idx] === q.answer;
@@ -173,6 +223,7 @@
 			});
 			results.hidden = false;
 			results.innerHTML =
+				'<p class="aiad-bz-quiz__results-label">Your score</p>' +
 				'<p class="aiad-bz-quiz__score"><span class="aiad-bz-quiz__score-num">' +
 				score +
 				'</span><span class="aiad-bz-quiz__score-denom">/5</span></p>' +
@@ -181,32 +232,30 @@
 				'</p>' +
 				'<ul class="aiad-bz-quiz__review">' +
 				reviewHtml +
-				'</ul>';
-			startBtn.textContent = 'Try again';
-			startBtn.hidden = false;
-			state.finished = true;
+				'</ul>' +
+				'<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--cta aiad-bz-quiz__btn--cta-inverse" data-aiad-bz-quiz-retry>Try again</button>';
+			var retryBtn = results.querySelector('[data-aiad-bz-quiz-retry]');
+			if (retryBtn) {
+				retryBtn.addEventListener('click', beginQuiz, { once: true });
+			}
+			results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 
-		function startQuiz() {
+		function beginQuiz() {
 			state.questions = buildQuizQuestions();
 			state.index = 0;
 			state.answers = [];
-			state.finished = false;
 			results.hidden = true;
-			panel.hidden = false;
-			startBtn.textContent = 'Next';
+			if (startCard) {
+				startCard.hidden = true;
+			}
+			playEl.hidden = false;
+			buildStepper();
 			renderQuestion();
+			playEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 
-		startBtn.addEventListener('click', function () {
-			if (state.finished) {
-				startQuiz();
-				return;
-			}
-			if (!state.questions.length) {
-				startQuiz();
-				return;
-			}
+		function advance() {
 			var selected = panel.querySelector('input[name="aiad-bz-q"]:checked');
 			if (!selected) {
 				panel.classList.add('aiad-bz-quiz__panel--error');
@@ -220,8 +269,21 @@
 				return;
 			}
 			showResults();
+		}
+
+		buildStepper();
+		showIdle();
+
+		startBtn.addEventListener('click', beginQuiz);
+		nextBtn.addEventListener('click', advance);
+
+		panel.addEventListener('change', function (e) {
+			if (e.target && e.target.name === 'aiad-bz-q') {
+				panel.classList.remove('aiad-bz-quiz__panel--error');
+			}
 		});
 	}
+
 
 	function hypeBar(n) {
 		var out = '';
