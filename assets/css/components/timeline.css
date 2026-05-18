@@ -1031,10 +1031,6 @@ a.timeline-magazine__hero-media-link {
     cursor: pointer;
 }
 
-a.timeline-magazine__hero-media-link:hover .timeline-magazine__hero-title {
-    text-decoration: underline;
-}
-
 a.timeline-magazine__hero-media-link:hover .timeline-magazine__cover-img:not(.timeline-cover-img--fit-contain),
 a.timeline-magazine__hero-media-link:hover .timeline-magazine__cover img:not(.timeline-cover-img--fit-contain) {
     transform: scale(1.02);
