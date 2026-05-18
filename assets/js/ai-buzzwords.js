@@ -27,6 +27,201 @@
 	];
 
 	var activeFilter = 'all';
+	var QUIZ_LENGTH = 5;
+
+	function shuffle(arr) {
+		var a = arr.slice();
+		var i = a.length;
+		var j;
+		var t;
+		while (i > 0) {
+			j = Math.floor(Math.random() * i);
+			i -= 1;
+			t = a[i];
+			a[i] = a[j];
+			a[j] = t;
+		}
+		return a;
+	}
+
+	function escapeHtml(str) {
+		return String(str)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;');
+	}
+
+	function buildQuizQuestions() {
+		var pool = shuffle(WORDS);
+		var picked = pool.slice(0, QUIZ_LENGTH);
+		return picked.map(function (word) {
+			var distractors = shuffle(
+				WORDS.filter(function (w) {
+					return w.word !== word.word;
+				})
+			).slice(0, 3);
+			var options = shuffle(
+				[word.word].concat(
+					distractors.map(function (w) {
+						return w.word;
+					})
+				)
+			);
+			return {
+				prompt: word.preview,
+				answer: word.word,
+				options: options,
+			};
+		});
+	}
+
+	function quizScoreMessage(score) {
+		if (score >= 5) {
+			return 'Brilliant — you know your 2026 AI vocabulary.';
+		}
+		if (score >= 4) {
+			return 'Strong work. One more pass through the glossary and you are set.';
+		}
+		if (score >= 3) {
+			return 'Solid start. Expand a few cards above and try again.';
+		}
+		if (score >= 2) {
+			return 'Keep going — skim the terms you missed, then retake the quiz.';
+		}
+		return 'Good time to explore the glossary above, then have another go.';
+	}
+
+	function initQuiz(root) {
+		var quizEl = root.querySelector('[data-aiad-bz-quiz]');
+		if (!quizEl || quizEl.getAttribute('data-aiad-bz-quiz-ready') === '1') {
+			return;
+		}
+		quizEl.setAttribute('data-aiad-bz-quiz-ready', '1');
+
+		var panel = quizEl.querySelector('[data-aiad-bz-quiz-panel]');
+		var progress = quizEl.querySelector('[data-aiad-bz-quiz-progress]');
+		var results = quizEl.querySelector('[data-aiad-bz-quiz-results]');
+		var actions = quizEl.querySelector('.aiad-bz-quiz__actions');
+		var startBtn = quizEl.querySelector('[data-aiad-bz-quiz-start]');
+
+		if (!panel || !startBtn) {
+			return;
+		}
+
+		var state = {
+			questions: [],
+			index: 0,
+			answers: [],
+			finished: false,
+		};
+
+		function renderQuestion() {
+			var q = state.questions[state.index];
+			if (!q) {
+				return;
+			}
+			var optsHtml = '';
+			q.options.forEach(function (opt, i) {
+				optsHtml +=
+					'<label class="aiad-bz-quiz__option">' +
+					'<input type="radio" name="aiad-bz-q" value="' +
+					escapeHtml(opt) +
+					'" required />' +
+					'<span>' +
+					escapeHtml(opt) +
+					'</span></label>';
+			});
+			panel.innerHTML =
+				'<fieldset class="aiad-bz-quiz__fieldset">' +
+				'<legend class="aiad-bz-quiz__legend">Which buzzword matches this definition?</legend>' +
+				'<p class="aiad-bz-quiz__prompt">' +
+				escapeHtml(q.prompt) +
+				'</p>' +
+				'<div class="aiad-bz-quiz__options">' +
+				optsHtml +
+				'</div></fieldset>';
+			if (progress) {
+				progress.textContent = 'Question ' + (state.index + 1) + ' of ' + QUIZ_LENGTH;
+			}
+		}
+
+		function showResults() {
+			var score = 0;
+			var i;
+			for (i = 0; i < state.questions.length; i++) {
+				if (state.answers[i] === state.questions[i].answer) {
+					score += 1;
+				}
+			}
+			panel.hidden = true;
+			if (progress) {
+				progress.textContent = '';
+			}
+			var reviewHtml = '';
+			state.questions.forEach(function (q, idx) {
+				var ok = state.answers[idx] === q.answer;
+				reviewHtml +=
+					'<li class="aiad-bz-quiz__review-item' +
+					(ok ? ' aiad-bz-quiz__review-item--ok' : ' aiad-bz-quiz__review-item--miss') +
+					'">' +
+					'<strong>' +
+					escapeHtml(q.answer) +
+					'</strong>' +
+					(ok ? '' : ' — you chose: ' + escapeHtml(state.answers[idx] || '—')) +
+					'</li>';
+			});
+			results.hidden = false;
+			results.innerHTML =
+				'<p class="aiad-bz-quiz__score"><span class="aiad-bz-quiz__score-num">' +
+				score +
+				'</span><span class="aiad-bz-quiz__score-denom">/5</span></p>' +
+				'<p class="aiad-bz-quiz__message">' +
+				escapeHtml(quizScoreMessage(score)) +
+				'</p>' +
+				'<ul class="aiad-bz-quiz__review">' +
+				reviewHtml +
+				'</ul>';
+			startBtn.textContent = 'Try again';
+			startBtn.hidden = false;
+			state.finished = true;
+		}
+
+		function startQuiz() {
+			state.questions = buildQuizQuestions();
+			state.index = 0;
+			state.answers = [];
+			state.finished = false;
+			results.hidden = true;
+			panel.hidden = false;
+			startBtn.textContent = 'Next';
+			renderQuestion();
+		}
+
+		startBtn.addEventListener('click', function () {
+			if (state.finished) {
+				startQuiz();
+				return;
+			}
+			if (!state.questions.length) {
+				startQuiz();
+				return;
+			}
+			var selected = panel.querySelector('input[name="aiad-bz-q"]:checked');
+			if (!selected) {
+				panel.classList.add('aiad-bz-quiz__panel--error');
+				return;
+			}
+			panel.classList.remove('aiad-bz-quiz__panel--error');
+			state.answers[state.index] = selected.value;
+			if (state.index < state.questions.length - 1) {
+				state.index += 1;
+				renderQuestion();
+				return;
+			}
+			showResults();
+		});
+	}
 
 	function hypeBar(n) {
 		var out = '';
@@ -127,6 +322,7 @@
 
 		renderFilters(root);
 		renderCards(root);
+		initQuiz(root);
 	}
 
 	function init() {

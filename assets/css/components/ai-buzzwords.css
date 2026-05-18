@@ -199,6 +199,189 @@
 	margin-top: 10px;
 }
 
+/* Quiz (5 questions, score /5) */
+[data-aiad-buzzwords] .aiad-bz-quiz {
+	margin-top: 2.5rem;
+	padding-top: 2rem;
+	border-top: 1.5px solid var(--aiad-bz-border);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__heading {
+	margin: 0 0 0.5rem;
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: var(--aiad-bz-ink);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__intro {
+	margin: 0 0 1.25rem;
+	font-size: 0.9rem;
+	color: var(--aiad-bz-muted);
+	line-height: 1.55;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__progress {
+	margin: 0 0 0.75rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--aiad-bz-muted);
+	min-height: 1.25em;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__panel {
+	margin-bottom: 1rem;
+	padding: 1.25rem;
+	background: #fafafa;
+	border: 1.5px solid var(--aiad-bz-border);
+	border-radius: 12px;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__panel--error {
+	border-color: #c44;
+	box-shadow: 0 0 0 2px rgba(204, 68, 68, 0.15);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__fieldset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__legend {
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--aiad-bz-muted);
+	margin-bottom: 0.75rem;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__prompt {
+	margin: 0 0 1rem;
+	font-size: 0.95rem;
+	line-height: 1.55;
+	color: var(--aiad-bz-ink);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__options {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__option {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 12px;
+	border: 1.5px solid #ddd;
+	border-radius: 8px;
+	background: #fff;
+	cursor: pointer;
+	font-size: 0.9rem;
+	line-height: 1.35;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__option:hover {
+	border-color: #999;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__option:has(input:focus-visible) {
+	outline: 2px solid var(--green-600, #0f6e56);
+	outline-offset: 2px;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__option input {
+	margin-top: 0.2rem;
+	flex-shrink: 0;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn {
+	font-family: inherit;
+	font-size: 0.9rem;
+	font-weight: 600;
+	padding: 10px 20px;
+	border-radius: 999px;
+	cursor: pointer;
+	border: 1.5px solid transparent;
+	transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--primary {
+	background: var(--aiad-bz-accent);
+	color: #fff;
+	border-color: var(--aiad-bz-accent);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn--primary:hover {
+	background: #2a2a4a;
+	border-color: #2a2a4a;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__btn:focus-visible {
+	outline: 2px solid var(--green-600, #0f6e56);
+	outline-offset: 2px;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__results {
+	margin-top: 1rem;
+	padding: 1.5rem;
+	text-align: center;
+	background: #f7f7f7;
+	border-radius: 12px;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__score {
+	margin: 0 0 0.5rem;
+	line-height: 1;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__score-num {
+	font-family: var(--font-display, inherit);
+	font-size: 2.75rem;
+	font-weight: 700;
+	color: var(--aiad-bz-accent);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__score-denom {
+	font-size: 1.35rem;
+	font-weight: 600;
+	color: var(--aiad-bz-muted);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__message {
+	margin: 0 0 1.25rem;
+	font-size: 0.95rem;
+	color: var(--aiad-bz-muted);
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__review {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__review-item {
+	padding: 0.5rem 0;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__review-item:last-child {
+	border-bottom: 0;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__review-item--ok strong {
+	color: #0f6e56;
+}
+
+[data-aiad-buzzwords] .aiad-bz-quiz__review-item--miss strong {
+	color: var(--aiad-bz-ink);
+}
+
 [data-aiad-buzzwords] .aiad-bz-credit {
 	font-size: 12px;
 	color: #aaa;

@@ -90,6 +90,7 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 			'title'       => __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-awareness-day' ),
 			'description' => __( 'From "agentic AI" to "vibe coding" — the terms everyone\'s talking about, explained in plain English with classroom angles.', 'ai-awareness-day' ),
 			'hide_intro'  => '0',
+			'quiz'        => '1',
 		),
 		is_array( $atts ) ? $atts : array(),
 		'aiad_buzzwords'
@@ -98,10 +99,11 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 	aiad_enqueue_buzzwords_assets();
 
 	$hide_intro = in_array( strtolower( (string) $atts['hide_intro'] ), array( '1', 'true', 'yes' ), true );
+	$show_quiz  = ! in_array( strtolower( (string) $atts['quiz'] ), array( '0', 'false', 'no' ), true );
 
 	ob_start();
 	?>
-	<div data-aiad-buzzwords class="aiad-buzzwords-widget" aria-label="<?php esc_attr_e( 'AI buzzwords glossary', 'ai-awareness-day' ); ?>">
+	<div data-aiad-buzzwords class="aiad-buzzwords-widget" aria-label="<?php esc_attr_e( 'AI buzzwords glossary', 'ai-awareness-day' ); ?>"<?php echo $show_quiz ? ' data-aiad-bz-quiz-enabled="1"' : ''; ?>>
 		<?php if ( ! $hide_intro ) : ?>
 			<div class="aiad-intro">
 				<h2><?php echo esc_html( $atts['title'] ); ?></h2>
@@ -111,6 +113,18 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 		<div class="aiad-filters" data-aiad-bz-filters></div>
 		<p class="aiad-count" data-aiad-bz-count></p>
 		<div class="aiad-grid" data-aiad-bz-grid></div>
+		<?php if ( $show_quiz ) : ?>
+			<section class="aiad-bz-quiz" data-aiad-bz-quiz aria-labelledby="aiad-bz-quiz-heading">
+				<h3 id="aiad-bz-quiz-heading" class="aiad-bz-quiz__heading"><?php esc_html_e( 'Quick quiz: score out of 5', 'ai-awareness-day' ); ?></h3>
+				<p class="aiad-bz-quiz__intro"><?php esc_html_e( 'Five questions drawn from the glossary. Match each definition to the right buzzword.', 'ai-awareness-day' ); ?></p>
+				<div class="aiad-bz-quiz__panel" data-aiad-bz-quiz-panel hidden></div>
+				<p class="aiad-bz-quiz__progress" data-aiad-bz-quiz-progress aria-live="polite"></p>
+				<div class="aiad-bz-quiz__actions">
+					<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--primary" data-aiad-bz-quiz-start><?php esc_html_e( 'Start quiz', 'ai-awareness-day' ); ?></button>
+				</div>
+				<div class="aiad-bz-quiz__results" data-aiad-bz-quiz-results hidden aria-live="polite"></div>
+			</section>
+		<?php endif; ?>
 		<p class="aiad-bz-credit">
 			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
 			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
@@ -154,7 +168,7 @@ function aiad_get_ai_buzzwords_timeline_content(): string {
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Below is an interactive glossary of <strong>15 buzzwords</strong> that matter for educators right now. Filter by theme, check the hype meter, and expand any card for a plain-English definition plus a <strong>classroom angle</strong> you can use in lessons or policy debates.</p>
+<p>Below is an interactive glossary of <strong>15 buzzwords</strong> that matter for educators right now. Filter by theme, check the hype meter, and expand any card for a plain-English definition plus a <strong>classroom angle</strong> you can use in lessons or policy debates. When you are ready, take the <strong>quick quiz</strong> at the end — five questions, scored out of 5.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
