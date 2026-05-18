@@ -724,6 +724,7 @@ require_once __DIR__ . '/timeline-layouts.php';
  *     @type int    $related_id Related post ID (0 if none).
  *     @type string $link_url   Optional CTA URL.
  *     @type string $link_label Optional CTA label.
+ *     @type string $post_name  Optional slug (e.g. new-resource-added-{resource-slug}).
  * }
  * @return int|false Post ID on success, false on failure or duplicate.
  */
@@ -738,6 +739,7 @@ function aiad_create_timeline_entry(array $args)
         'link_url' => '',
         'link_label' => '',
         'countdown_weeks' => 0,
+        'post_name' => '',
     );
     $args = wp_parse_args($args, $defaults);
 
@@ -762,12 +764,17 @@ function aiad_create_timeline_entry(array $args)
         }
     }
 
-    $post_id = wp_insert_post(array(
+    $insert = array(
         'post_type' => 'timeline',
         'post_title' => sanitize_text_field($args['title']),
         'post_content' => wp_kses_post($args['content']),
         'post_status' => 'publish',
-    ));
+    );
+    if (!empty($args['post_name'])) {
+        $insert['post_name'] = sanitize_title($args['post_name']);
+    }
+
+    $post_id = wp_insert_post($insert);
 
     if (!$post_id || is_wp_error($post_id)) {
         return false;
@@ -1139,33 +1146,220 @@ add_action('init', 'aiad_timeline_schedule_countdown_cron', 20);
 add_action('aiad_timeline_countdown_daily', 'aiad_timeline_maybe_create_countdown_entries');
 
 /**
- * Auto-generate timeline entry when a resource is published.
+ * Auto-type meta value for a resource announcement timeline entry.
  */
-function aiad_timeline_on_resource_publish(string $new_status, string $old_status, WP_Post $post): void
+function aiad_timeline_resource_announcement_auto_type(WP_Post $post): string
 {
-    if ($post->post_type !== 'resource' || $new_status !== 'publish' || $old_status === 'publish') {
-        return;
+    return $post->post_type === 'featured_resource' ? 'featured_resource' : 'resource';
+}
+
+/**
+ * Create a timeline announcement for a published resource or featured_resource.
+ *
+ * @return int|false Timeline post ID, false if skipped or failed.
+ */
+function aiad_timeline_maybe_create_resource_announcement(WP_Post $post)
+{
+    if (!in_array($post->post_type, array('resource', 'featured_resource'), true)) {
+        return false;
+    }
+    if ($post->post_status !== 'publish') {
+        return false;
+    }
+
+    $auto_type = aiad_timeline_resource_announcement_auto_type($post);
+    if (aiad_timeline_get_entry_by_related($post->ID, $auto_type)) {
+        return false;
     }
 
     $themes = get_the_terms($post->ID, 'resource_principle');
     $theme_name = $themes && !is_wp_error($themes) ? $themes[0]->name : '';
     $suffix = $theme_name ? sprintf(' (%s)', $theme_name) : '';
 
-    aiad_create_timeline_entry(array(
+    $content = $post->post_excerpt;
+    if (empty($content) && !empty($post->post_content)) {
+        $content = wp_trim_words(wp_strip_all_tags($post->post_content), 55);
+    }
+
+    if ($post->post_type === 'featured_resource') {
+        $link_url = get_post_meta($post->ID, '_featured_resource_url', true);
+        $link_label = __('Try it now →', 'ai-awareness-day');
+    } else {
+        $link_url = get_permalink($post->ID);
+        $link_label = __('View resource →', 'ai-awareness-day');
+    }
+
+    $timeline_slug = 'new-resource-added-' . $post->post_name;
+
+    return aiad_create_timeline_entry(array(
         'title' => sprintf(
             /* translators: %s: resource title */
             __('New resource added: %s', 'ai-awareness-day'),
             $post->post_title . $suffix
         ),
-        'content' => $post->post_excerpt,
-        'auto_type' => 'resource',
+        'content' => $content,
+        'auto_type' => $auto_type,
         'icon' => 'resource',
         'related_id' => $post->ID,
-        'link_url' => get_permalink($post->ID),
-        'link_label' => __('View resource →', 'ai-awareness-day'),
+        'link_url' => $link_url,
+        'link_label' => $link_label,
+        'post_name' => $timeline_slug,
     ));
 }
+
+/**
+ * Auto-generate timeline entry when a resource or featured_resource is published.
+ */
+function aiad_timeline_on_resource_publish(string $new_status, string $old_status, WP_Post $post): void
+{
+    if (!in_array($post->post_type, array('resource', 'featured_resource'), true)) {
+        return;
+    }
+    if ($new_status !== 'publish' || $old_status === 'publish') {
+        return;
+    }
+
+    aiad_timeline_maybe_create_resource_announcement($post);
+}
 add_action('transition_post_status', 'aiad_timeline_on_resource_publish', 10, 3);
+
+/**
+ * Backfill timeline announcements for resources published before the featured_resource hook existed.
+ */
+function aiad_timeline_backfill_resource_announcements(): void
+{
+    if (get_option('aiad_timeline_resource_announcements_backfilled') === 'yes') {
+        return;
+    }
+
+    foreach (array('resource', 'featured_resource') as $post_type) {
+        $ids = get_posts(
+            array(
+                'post_type' => $post_type,
+                'post_status' => 'publish',
+                'numberposts' => -1,
+                'fields' => 'ids',
+            )
+        );
+        foreach ($ids as $post_id) {
+            $resource = get_post((int) $post_id);
+            if ($resource instanceof WP_Post) {
+                aiad_timeline_maybe_create_resource_announcement($resource);
+            }
+        }
+    }
+
+    update_option('aiad_timeline_resource_announcements_backfilled', 'yes');
+}
+add_action('init', 'aiad_timeline_backfill_resource_announcements', 31);
+
+/**
+ * Trash mistaken blog posts that duplicate resource timeline announcements; store 301 targets.
+ */
+function aiad_timeline_migrate_resource_announcement_blog_posts(): void
+{
+    if (get_option('aiad_timeline_resource_blog_migrated') === 'yes') {
+        return;
+    }
+
+    $redirects = (array) get_option('aiad_timeline_blog_redirects', array());
+
+    $blog_posts = get_posts(
+        array(
+            'post_type' => 'post',
+            'post_status' => array('publish', 'draft', 'pending', 'future'),
+            'numberposts' => -1,
+        )
+    );
+
+    foreach ($blog_posts as $blog_post) {
+        if (!$blog_post instanceof WP_Post) {
+            continue;
+        }
+
+        $name = $blog_post->post_name;
+        $is_announcement = (0 === strpos($name, 'new-resource-added-'))
+            || (bool) preg_match('/^New [Rr]esource [Aa]dded:/', $blog_post->post_title);
+
+        if (!$is_announcement) {
+            continue;
+        }
+
+        $resource = null;
+        $resource_title = preg_replace('/^New [Rr]esource [Aa]dded:\s*/i', '', $blog_post->post_title);
+        $resource_title = trim((string) preg_replace('/\s*\([^)]+\)\s*$/', '', $resource_title));
+
+        if ($resource_title && function_exists('aiad_get_post_by_title')) {
+            $resource = aiad_get_post_by_title($resource_title, 'featured_resource');
+            if (!$resource) {
+                $resource = aiad_get_post_by_title($resource_title, 'resource');
+            }
+        }
+
+        if (!$resource && 0 === strpos($name, 'new-resource-added-')) {
+            $resource_slug = substr($name, strlen('new-resource-added-'));
+            $resource = get_page_by_path($resource_slug, OBJECT, 'featured_resource');
+            if (!$resource) {
+                $resource = get_page_by_path($resource_slug, OBJECT, 'resource');
+            }
+        }
+
+        $timeline_url = '';
+        if ($resource instanceof WP_Post) {
+            aiad_timeline_maybe_create_resource_announcement($resource);
+            $auto_type = aiad_timeline_resource_announcement_auto_type($resource);
+            $timeline_id = aiad_timeline_get_entry_by_related($resource->ID, $auto_type);
+            if ($timeline_id > 0) {
+                $timeline_url = get_permalink($timeline_id);
+            }
+        }
+
+        if ($timeline_url) {
+            $redirects[$name] = $timeline_url;
+        }
+
+        if ($blog_post->post_status === 'publish') {
+            wp_trash_post((int) $blog_post->ID);
+        }
+    }
+
+    update_option('aiad_timeline_blog_redirects', $redirects);
+    update_option('aiad_timeline_resource_blog_migrated', 'yes');
+}
+add_action('init', 'aiad_timeline_migrate_resource_announcement_blog_posts', 32);
+
+/**
+ * Redirect old root-level resource announcement blog URLs to /timeline/...
+ */
+function aiad_timeline_redirect_resource_announcement_blog_urls(): void
+{
+    if (is_admin()) {
+        return;
+    }
+
+    $uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
+    $path = trim((string) wp_parse_url($uri, PHP_URL_PATH), '/');
+    if ($path === '') {
+        return;
+    }
+
+    $redirects = (array) get_option('aiad_timeline_blog_redirects', array());
+    if (!empty($redirects[$path])) {
+        wp_safe_redirect($redirects[$path], 301);
+        exit;
+    }
+
+    if (0 !== strpos($path, 'new-resource-added-')) {
+        return;
+    }
+
+    $timeline = get_page_by_path($path, OBJECT, 'timeline');
+    if ($timeline instanceof WP_Post) {
+        wp_safe_redirect(get_permalink($timeline), 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'aiad_timeline_redirect_resource_announcement_blog_urls', 0);
 
 /**
  * Auto-generate timeline entry when a partner is published.
