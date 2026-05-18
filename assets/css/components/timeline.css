@@ -1141,6 +1141,17 @@
     pointer-events: none;
 }
 
+/* Gradient fallback: bottom fade only — no top scrim; title sits on the bottom edge */
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-scrim--top {
+    display: none;
+}
+
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.55) 0%,
+            transparent 55%);
+}
+
 /* Partner pill (top-left) + time (top-right) — uses .timeline-entry__badge / .timeline-entry__date */
 .timeline-magazine__cover-meta {
     position: absolute;
@@ -1380,7 +1391,7 @@
 }
 
 /* Sub-cards: top scrim so badge + date stay readable on light artwork */
-.timeline-magazine__cover-scrim--top {
+.timeline-magazine__card-media .timeline-magazine__cover-scrim--top {
     position: absolute;
     inset: 0;
     z-index: 1;
