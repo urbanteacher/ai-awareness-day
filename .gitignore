@@ -15,6 +15,12 @@ desktop.ini
 *.swo
 *~
 .cursor/
+.claude/
+.kilocodemodes
+
+# Stray screenshots at theme root (not theme assets)
+/Screenshot_*.jpg
+/Screenshot_*.png
 
 # Logs
 *.log
