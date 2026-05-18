@@ -222,6 +222,13 @@
 }
 
 /* Dark entry areas (some themes / blocks) */
-.entry-content--post [data-aiad-buzzwords] .aiad-card {
+.entry-content--post [data-aiad-buzzwords] .aiad-card,
+.entry-content--timeline [data-aiad-buzzwords] .aiad-card {
 	background: #fff;
+}
+
+.entry-content--timeline [data-aiad-buzzwords] {
+	max-width: none;
+	padding-left: 0;
+	padding-right: 0;
 }
