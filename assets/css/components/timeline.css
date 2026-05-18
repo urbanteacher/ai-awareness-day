@@ -1148,8 +1148,19 @@
 
 .timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
     background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.55) 0%,
-            transparent 55%);
+            rgba(0, 0, 0, 0.58) 0%,
+            rgba(0, 0, 0, 0.38) 30%,
+            transparent 62%);
+}
+
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
+    inset: auto 0 12%;
+    padding: 0 1.25rem 0.35rem;
+}
+
+.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
+    font-size: 1.32rem;
+    line-height: 1.3;
 }
 
 /* Partner pill (top-left) + time (top-right) — uses .timeline-entry__badge / .timeline-entry__date */
@@ -1555,6 +1566,14 @@
 
     .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
         font-size: 1.45rem;
+    }
+
+    .timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
+        inset: auto 0 14%;
+    }
+
+    .timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
+        font-size: 1.58rem;
     }
 
     .timeline-magazine__hero-text .timeline-magazine__hero-content {
