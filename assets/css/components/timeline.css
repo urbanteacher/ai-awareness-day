@@ -1141,12 +1141,6 @@
     pointer-events: none;
 }
 
-.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__cover-fade {
-    background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.5) 0%,
-            transparent 42%);
-}
-
 /* Partner pill (top-left) + time (top-right) — uses .timeline-entry__badge / .timeline-entry__date */
 .timeline-magazine__cover-meta {
     position: absolute;
@@ -1195,22 +1189,15 @@
 }
 
 
-/* Title + scrim on the cover image */
+/* Title + scrim on the cover image (bottom band; same for photo and gradient fallback) */
 .timeline-magazine__hero-media-frame .timeline-magazine__hero-media-overlay {
     position: absolute;
-    inset: auto 0 10%;
+    inset: auto 0 0;
     z-index: 2;
     width: 100%;
-    padding: 0 1.25rem;
+    padding: 1.25rem 1.25rem 1.15rem;
     pointer-events: none;
     box-sizing: border-box;
-}
-
-/* Gradient fallback: title sits in upper band (below badge/date), not on the bottom edge */
-.timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
-    inset: 3.25rem 0 auto;
-    bottom: auto;
-    padding: 0 1.25rem;
 }
 
 .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
@@ -1557,10 +1544,6 @@
 
     .timeline-magazine__hero-media-overlay .timeline-magazine__hero-title {
         font-size: 1.45rem;
-    }
-
-    .timeline-magazine__hero-media-frame:has(.timeline-magazine__cover--fallback) .timeline-magazine__hero-media-overlay {
-        inset: 3.75rem 0 auto;
     }
 
     .timeline-magazine__hero-text .timeline-magazine__hero-content {
