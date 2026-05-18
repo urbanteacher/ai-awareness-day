@@ -170,8 +170,12 @@ function aiad_get_llm_explainer_timeline_content(): string {
 [aiad_llm_explainer hide_intro="1"]
 <!-- /wp:shortcode -->
 
+<!-- wp:shortcode -->
+[aiad_llm_order_game]
+<!-- /wp:shortcode -->
+
 <!-- wp:paragraph -->
-<p><strong>How to use this with students:</strong> work through one step per lesson starter, or assign pairs to explain step 3 (attention) to the class using their own example sentence. Ask: <em>where could this model still get things wrong?</em> — that leads naturally into hallucinations and human-in-the-loop from the buzzwords list.</p>
+<p><strong>How to use this with students:</strong> work through one step per lesson starter, or assign pairs to explain step 3 (attention) to the class using their own example sentence. After the explainer, challenge pairs to <strong>sort the pipeline</strong> in the game below before you reveal the answer key. Ask: <em>where could this model still get things wrong?</em> — that leads naturally into hallucinations and human-in-the-loop from the buzzwords list.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
