@@ -55,6 +55,7 @@ require_once $aiad_dir . '/inc/engagement-tracking.php';
 require_once $aiad_dir . '/inc/tools.php';
 require_once $aiad_dir . '/inc/sharing.php';
 require_once $aiad_dir . '/inc/ai-buzzwords.php';
+require_once $aiad_dir . '/inc/ai-llm-explainer.php';
 require_once $aiad_dir . '/inc/seo.php';
 
 /**
