@@ -265,7 +265,7 @@
 			var cat = CATS[w.cat];
 			html += '<div class="aiad-card" id="aiad-card-' + idx + '" data-card-index="' + idx + '" role="button" tabindex="0" aria-expanded="false">';
 			html += '<div class="aiad-card-top">';
-			html += '<div class="aiad-icon" style="background:' + cat.bg + '"><span style="color:' + cat.text + ';font-weight:700;font-size:14px">' + w.word.charAt(0) + '</span></div>';
+			html += '<div class="aiad-icon" aria-hidden="true"><span>' + w.word.charAt(0) + '</span></div>';
 			html += '<div style="flex:1;min-width:0"><p class="aiad-card-title">' + w.word + '</p><div class="aiad-hype">' + hypeBar(w.hype) + '</div></div>';
 			html += '<span class="aiad-chevron" aria-hidden="true">&#8964;</span>';
 			html += '</div>';
