@@ -412,11 +412,19 @@
 		padding: 0 6px;
 	}
 
-	[data-aiad-llm] .nav-row {
+	[data-aiad-llm] .step-panel {
+		display: flex;
 		flex-direction: column;
 	}
 
-	[data-aiad-llm] .nav-row button {
+	[data-aiad-llm] .nav-row {
+		order: -1;
+		flex-direction: column-reverse;
+		margin-bottom: 1rem;
+	}
+
+	[data-aiad-llm] .nav-row button,
+	[data-aiad-llm] .nav-row .btn-primary {
 		width: 100%;
 	}
 }
