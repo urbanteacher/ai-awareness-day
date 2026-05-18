@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.3.21' );
+define( 'AIAD_VERSION', '1.3.22' );
 
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', __DIR__ );
@@ -28,6 +28,7 @@ if ( is_admin() ) {
     require_once $aiad_dir . '/inc/admin-assets-pack.php';
 }
 
+require_once $aiad_dir . '/inc/theme-assets.php';
 require_once $aiad_dir . '/inc/setup.php';
 require_once $aiad_dir . '/inc/helpers.php';
 require_once $aiad_dir . '/inc/entry-figure.php';

@@ -127,65 +127,9 @@ function aiad_scripts(): void
         'all' // Explicit media type for Android Chrome compatibility
     );
 
-    // CSS: use 3 bundles if present (run build script or build step to generate), else enqueue modules
-    $bundles_dir = AIAD_DIR . '/assets/css/bundles';
-    $use_bundles = file_exists($bundles_dir . '/base.css');
-    if ($use_bundles) {
-        foreach (array('base', 'layout', 'pages') as $bundle) {
-            $path = $bundles_dir . '/' . $bundle . '.css';
-            if (file_exists($path)) {
-                $ver = filemtime($path) ?: AIAD_VERSION;
-                wp_enqueue_style(
-                    'aiad-bundle-' . $bundle,
-                    AIAD_URI . '/assets/css/bundles/' . $bundle . '.css',
-                    array('aiad-style'),
-                    $ver,
-                    'all'
-                );
-            }
-        }
-    } else {
-        $css_files = array(
-            'base/reset.css',
-            'base/shared.css',
-            'base/animations.css',
-            'base/wp-core.css',
-            'layout/navigation.css',
-            'layout/hero.css',
-            'layout/footer.css',
-            'components/principles.css',
-            'components/explore-sessions.css',
-            'components/section-green.css',
-            'components/display-board.css',
-            'components/resource-card-pointed.css',
-            'components/entry-figure.css',
-            'components/schedule.css',
-            'pages/campaign.css',
-            'pages/momentum.css',
-            'pages/themes.css',
-            'pages/aim.css',
-            'pages/toolkit.css',
-            'pages/get-involved.css',
-            'pages/resources-archive.css',
-            'pages/single-resource.css',
-            'pages/partners-archive.css',
-            'pages/single-partner.css',
-            'pages/assets-pack.css',
-            'responsive/responsive.css',
-            'responsive/mobile.css',
-        );
-        foreach ($css_files as $file) {
-            $handle = 'aiad-' . str_replace(array('/', '.css'), array('-', ''), $file);
-            $file_path = AIAD_DIR . '/assets/css/' . $file;
-            $file_version = file_exists($file_path) ? filemtime($file_path) : AIAD_VERSION;
-            wp_enqueue_style(
-                $handle,
-                AIAD_URI . '/assets/css/' . $file,
-                array('aiad-style'),
-                $file_version,
-                'all'
-            );
-        }
+    // Modular CSS only (see assets/css/bundle-manifest.php). Optional bundles: scripts/build-css-bundles.php.
+    if ( function_exists( 'aiad_enqueue_modular_theme_styles' ) ) {
+        aiad_enqueue_modular_theme_styles();
     }
 
     // Main script (defer on WordPress 6.3+ for better performance)

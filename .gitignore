@@ -71,3 +71,6 @@ not needed/
 composer.lock
 
 # Theme-vendored JS (e.g. balloons-js ESM) lives under assets/js/vendor/
+
+# Generated CSS bundles (optional local build — not loaded by WordPress)
+assets/css/bundles/*.css
