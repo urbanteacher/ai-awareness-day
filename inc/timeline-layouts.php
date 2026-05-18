@@ -457,20 +457,33 @@ function aiad_render_timeline_magazine(array $entries): string
     $date_iso = get_the_date('c', $hero);
     $hero_permalink = get_permalink($hero) ?: '';
     $hero_content = apply_filters('the_content', get_post_field('post_content', $hero));
+    $hero_media_tag = $hero_permalink ? 'a' : 'div';
+    $hero_media_label = sprintf(
+        /* translators: %s: timeline entry title */
+        __('Read full update: %s', 'ai-awareness-day'),
+        get_the_title($hero)
+    );
 
     ob_start();
     ?>
     <div class="timeline-magazine">
         <article class="timeline-magazine__hero">
             <div class="timeline-magazine__hero-media">
-                <div class="timeline-magazine__hero-media-frame <?php echo esc_attr($cover_mod); ?>">
+                <<?php echo esc_html($hero_media_tag); ?>
+                    <?php if ($hero_permalink) : ?>
+                        href="<?php echo esc_url($hero_permalink); ?>"
+                    <?php endif; ?>
+                    class="timeline-magazine__hero-media-frame timeline-magazine__hero-media-link <?php echo esc_attr($cover_mod); ?>"
+                    <?php if ($hero_permalink) : ?>
+                        aria-label="<?php echo esc_attr($hero_media_label); ?>"
+                    <?php endif; ?>>
                     <?php echo aiad_timeline_entry_cover_visual($hero, 'timeline-magazine', 'hero'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php echo aiad_timeline_magazine_cover_layers_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <?php echo aiad_timeline_magazine_cover_meta_html($badge, $icon, $pinned, $date_label, $date_iso, $date_full); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                     <div class="timeline-magazine__hero-media-overlay">
                         <h3 class="timeline-magazine__hero-title"><?php echo esc_html(get_the_title($hero)); ?></h3>
                     </div>
-                </div>
+                </<?php echo esc_html($hero_media_tag); ?>>
             </div>
             <div class="timeline-magazine__hero-text">
                 <?php if ($hero_content): ?>

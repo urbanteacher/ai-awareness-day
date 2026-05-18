@@ -1017,12 +1017,32 @@
 }
 
 .timeline-magazine__hero-media-frame,
+.timeline-magazine__hero-media-link,
 .timeline-magazine__card-media-link--chamfer {
     position: relative;
     display: block;
     overflow: hidden;
     background: #111;
     text-decoration: none;
+}
+
+a.timeline-magazine__hero-media-link {
+    color: inherit;
+    cursor: pointer;
+}
+
+a.timeline-magazine__hero-media-link:hover .timeline-magazine__hero-title {
+    text-decoration: underline;
+}
+
+a.timeline-magazine__hero-media-link:hover .timeline-magazine__cover-img:not(.timeline-cover-img--fit-contain),
+a.timeline-magazine__hero-media-link:hover .timeline-magazine__cover img:not(.timeline-cover-img--fit-contain) {
+    transform: scale(1.02);
+}
+
+a.timeline-magazine__hero-media-link .timeline-magazine__cover-img,
+a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
+    transition: transform 0.3s ease;
 }
 
 .timeline-magazine__hero-media-frame {
@@ -1056,6 +1076,7 @@
 }
 
 .timeline-magazine__hero-media-frame .timeline-magazine__cover,
+.timeline-magazine__hero-media-link .timeline-magazine__cover,
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover {
     position: absolute;
     inset: 0;
@@ -1064,8 +1085,10 @@
 }
 
 .timeline-magazine__hero-media-frame .timeline-magazine__cover-img,
+.timeline-magazine__hero-media-link .timeline-magazine__cover-img,
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover-img,
 .timeline-magazine__hero-media-frame .timeline-magazine__cover img,
+.timeline-magazine__hero-media-link .timeline-magazine__cover img,
 .timeline-magazine__card-media-link--chamfer .timeline-magazine__cover img {
     position: absolute;
     inset: 0;
