@@ -35,6 +35,7 @@ return array(
 		'pages/single-resource.css',
 		'pages/partners-archive.css',
 		'pages/single-partner.css',
+		'pages/single-post.css',
 		'pages/assets-pack.css',
 		'responsive/responsive.css',
 		'responsive/mobile.css',
