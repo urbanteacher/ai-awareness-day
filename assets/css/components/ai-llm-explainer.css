@@ -412,15 +412,9 @@
 		padding: 0 6px;
 	}
 
-	[data-aiad-llm] .step-panel {
-		display: flex;
-		flex-direction: column;
-	}
-
 	[data-aiad-llm] .nav-row {
-		order: -1;
 		flex-direction: column-reverse;
-		margin-bottom: 1rem;
+		margin-top: 0.25rem;
 	}
 
 	[data-aiad-llm] .nav-row button,
