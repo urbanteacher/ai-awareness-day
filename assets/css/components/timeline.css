@@ -849,6 +849,23 @@
 }
 
 /* Top-left — keeps bottom title band clear (date stays top-right) */
+.timeline-swipe__slide {
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.timeline-swipe__slide:active {
+    transform: scale(0.985);
+}
+
+@keyframes swipe-hint-bounce {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(6px);
+    }
+}
+
 .timeline-swipe__media-hint {
     position: absolute;
     top: 0.65rem;
@@ -869,6 +886,7 @@
     backdrop-filter: blur(6px);
     pointer-events: none;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    animation: swipe-hint-bounce 1.6s ease-in-out infinite;
 }
 
 .timeline-swipe__media-hint.is-hidden {
@@ -986,6 +1004,106 @@
     color: var(--white);
     background: var(--gray-800);
     border-color: var(--gray-800);
+}
+
+/* Mobile swipe deck navigation, dots, and counter styling */
+.timeline-swipe__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+#timeline .timeline-swipe__nav {
+    background: rgba(0, 0, 0, 0.35);
+    border-top-color: rgba(255, 255, 255, 0.08);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    color: var(--gray-300);
+}
+
+.timeline-swipe__dots {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.timeline-swipe__dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--gray-300);
+    cursor: pointer;
+    transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.25s ease, border-radius 0.35s ease;
+}
+
+#timeline .timeline-swipe__dot {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.timeline-swipe__dot:hover {
+    background: var(--gray-500);
+}
+
+#timeline .timeline-swipe__dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.timeline-swipe__dot:focus {
+    outline: 2px solid var(--gray-900);
+    outline-offset: 2px;
+}
+
+#timeline .timeline-swipe__dot:focus {
+    outline-color: #4ade80;
+}
+
+/* Liquid indicator: active dot stretches into a sleek horizontal pill */
+.timeline-swipe__dot.is-active {
+    width: 22px;
+    border-radius: 99px;
+    background: var(--gray-900);
+}
+
+#timeline .timeline-swipe__dot.is-active {
+    background: #4ade80; /* Premium neon/tech green */
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+}
+
+.timeline-swipe__counter {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    color: var(--gray-500);
+}
+
+#timeline .timeline-swipe__counter {
+    color: var(--gray-400);
+}
+
+.timeline-swipe__counter-current {
+    color: var(--gray-900);
+}
+
+#timeline .timeline-swipe__counter-current {
+    color: #4ade80;
+}
+
+.timeline-swipe__counter-sep {
+    opacity: 0.45;
+    font-weight: 400;
 }
 
 /* Legacy deck hint removed — use .timeline-swipe__media-hint on each slide */

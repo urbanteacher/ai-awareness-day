@@ -96,11 +96,13 @@ function aiad_curriculum_quiz_shortcode( $atts = array() ): string {
 	<div
 		class="aiad-curriculum-quiz"
 		data-aiad-curriculum-quiz
-		aria-label="<?php esc_attr_e( 'Cross-curricular AI curriculum insight for teachers', 'ai-awareness-day' ); ?>"
+		aria-label="<?php esc_attr_e( 'Exploring digital and computing assessment across the key stages', 'ai-awareness-day' ); ?>"
 	>
 		<div data-cq-hub></div>
 
 		<div data-cq-main hidden>
+			<nav class="cq-ks-nav" data-cq-ks-tabs aria-label="<?php esc_attr_e( 'Key stage', 'ai-awareness-day' ); ?>"></nav>
+			<nav class="cq-stage-nav" data-cq-stage-nav aria-label="<?php esc_attr_e( 'Section', 'ai-awareness-day' ); ?>" hidden></nav>
 			<div class="cq-toolbar" role="toolbar" aria-label="<?php esc_attr_e( 'Session options', 'ai-awareness-day' ); ?>">
 				<label class="cq-toggle">
 					<input type="checkbox" data-cq-facilitator />
@@ -111,7 +113,6 @@ function aiad_curriculum_quiz_shortcode( $atts = array() ): string {
 					<?php esc_html_e( 'Team challenge prompts', 'ai-awareness-day' ); ?>
 				</label>
 			</div>
-			<nav class="cq-tabs" data-cq-tabs aria-label="<?php esc_attr_e( 'Key stage', 'ai-awareness-day' ); ?>"></nav>
 			<div class="cq-progress" data-cq-progress aria-hidden="true"></div>
 			<div data-cq-panel></div>
 		</div>
@@ -156,20 +157,52 @@ function aiad_get_curriculum_quiz_timeline_content(): string {
 	$buzz_url  = esc_url( home_url( '/timeline/' . aiad_buzzwords_post_slug() . '/' ) );
 	$llm_url   = esc_url( home_url( '/timeline/' . aiad_llm_explainer_post_slug() . '/' ) );
 
-	return '<!-- wp:paragraph -->
-<p>What does a <strong>modern, cross-curricular AI curriculum</strong> feel like at each key stage? This interactive experience lets you <strong>taste KS3, KS4, and KS5</strong> — read the objectives and content focus, then <strong>have a go</strong> at sample exam-style questions or <strong>reveal model answers</strong> with mark schemes, discussion prompts, and optional facilitator notes.</p>
+	return '<!-- wp:heading -->
+<h2 class="wp-block-heading">AI Awareness Day</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><strong>Exploring Digital &amp; Computing Assessment Across the Key Stages</strong></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Topics include ethics, bias, hallucinations, reliability, and classroom AI use — without referencing any specific exam board. Turn on <strong>facilitator notes</strong> for CPD, or <strong>team challenge prompts</strong> for a staff-room activity.</p>
+<p>Artificial intelligence is becoming part of everyday conversations in education. From online safety and misinformation to algorithms, automation and digital ethics, schools are increasingly exploring how emerging technologies connect to teaching, learning and assessment.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>However, this project is <strong>not</strong> about creating a new AI qualification or replacing the National Curriculum. Instead, AI Awareness Day has been designed to help teachers from <strong>all subject areas</strong> experience the style of modern digital, IT and Computer Science assessment using familiar classroom formats.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Why this matters</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Many teachers outside of Computing and IT are now encountering AI-generated content, misinformation, automated systems, digital safeguarding, and questions from students about emerging technologies. This experience builds confidence, encourages discussion, supports digital literacy, and helps staff explore how digital thinking develops across the key stages — without turning every teacher into a Computer Science specialist.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Interactive assessment experience</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Use the tool below to open each section: <strong>Online Safety &amp; Digital Awareness</strong> (overview), then <strong>KS2 Digital Awareness</strong>, <strong>KS3 Algorithms &amp; Programming Logic</strong>, <strong>KS4 Ethics &amp; Technology Evaluation</strong>, and <strong>KS5 Data Structures &amp; Emerging Technologies</strong>. Each section includes context for staff and interactive cards with try/reveal answers, mark scheme guidance, and optional facilitator or team prompts.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Exam board note:</strong> KS4 and KS5 samples are aligned to <strong>OCR</strong> and <strong>AQA</strong> GCSE/A level Computer Science specifications and published mark schemes (England). Tariffs vary — for example OCR GCSE impacts items are usually on <strong>Paper 1 (Computer systems)</strong> at <strong>6 or 8 marks</strong>; AQA uses <strong>6 marks</strong> on Paper 1 and <strong>up to 9 marks</strong> on Paper 2; OCR A level legal/ethical discuss items are typically <strong>9 marks</strong> on Component 01. Confirm entries with your computing department.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
 [aiad_curriculum_quiz]
 <!-- /wp:shortcode -->
 
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Staff-room idea</h3>
+<!-- /wp:heading -->
+
 <!-- wp:paragraph -->
-<p><strong>Staff-room idea:</strong> split into subject teams, work through one key stage, then compare how science, English, and citizenship would mark the same AI scenario differently. Pair with the <a href="' . $speed_url . '">AI speed quiz</a>, <a href="' . $llm_url . '">How LLMs work</a> explainer, or <a href="' . $buzz_url . '">15 buzzwords glossary</a> for a full AI Awareness Day session.</p>
+<p>Split into subject teams, work through one key stage, then compare how science, English, and citizenship would discuss the same digital scenario differently. Pair with the <a href="' . $speed_url . '">AI speed quiz</a>, <a href="' . $llm_url . '">How LLMs work</a> explainer, or <a href="' . $buzz_url . '">15 buzzwords glossary</a> for a full AI Awareness Day session.</p>
 <!-- /wp:paragraph -->';
 }
 
@@ -190,7 +223,7 @@ function aiad_set_curriculum_quiz_timeline_meta( int $post_id ): void {
  */
 function aiad_create_curriculum_quiz_timeline_entry(): int {
 	$slug  = aiad_curriculum_quiz_post_slug();
-	$title = __( 'Cross-Curricular AI Curriculum Insight for Teachers', 'ai-awareness-day' );
+	$title = __( 'Exploring Digital & Computing Assessment Across the Key Stages', 'ai-awareness-day' );
 
 	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
 	if ( $existing instanceof WP_Post ) {
@@ -202,7 +235,7 @@ function aiad_create_curriculum_quiz_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'KS3, KS4 and KS5 exam-style AI questions with facilitator notes, discussion prompts, and team challenges — for any subject teacher.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'Online safety overview plus KS2–KS5 digital and computing assessment experience — interactive cards for all subject teachers.', 'ai-awareness-day' ),
 			'post_content' => aiad_get_curriculum_quiz_timeline_content(),
 			'post_status'  => 'draft',
 			'post_author'  => 1,
@@ -266,3 +299,27 @@ function aiad_draft_new_interactive_timeline_entries(): void {
 	update_option( 'aiad_interactive_timeline_entries_drafted', 'yes' );
 }
 add_action( 'init', 'aiad_draft_new_interactive_timeline_entries', 33 );
+
+/**
+ * One-time: refresh timeline copy for assessment experience v2.
+ */
+function aiad_refresh_curriculum_quiz_timeline_copy(): void {
+	if ( get_option( 'aiad_curriculum_quiz_timeline_v3' ) === 'yes' ) {
+		return;
+	}
+
+	$post = get_page_by_path( aiad_curriculum_quiz_post_slug(), OBJECT, 'timeline' );
+	if ( $post instanceof WP_Post ) {
+		wp_update_post(
+			array(
+				'ID'           => (int) $post->ID,
+				'post_title'   => __( 'Exploring Digital & Computing Assessment Across the Key Stages', 'ai-awareness-day' ),
+				'post_excerpt' => __( 'Online safety overview plus KS2–KS5 digital and computing assessment experience — interactive cards for all subject teachers.', 'ai-awareness-day' ),
+				'post_content' => aiad_get_curriculum_quiz_timeline_content(),
+			)
+		);
+	}
+
+	update_option( 'aiad_curriculum_quiz_timeline_v3', 'yes' );
+}
+add_action( 'init', 'aiad_refresh_curriculum_quiz_timeline_copy', 34 );

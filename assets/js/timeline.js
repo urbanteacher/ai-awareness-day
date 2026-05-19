@@ -76,6 +76,8 @@
                 dot.type = 'button';
                 dot.className = 'timeline-swipe__dot' + ( i === 0 ? ' is-active' : '' );
                 dot.setAttribute( 'aria-label', 'Go to update ' + ( i + 1 ) );
+                dot.setAttribute( 'role', 'tab' );
+                dot.setAttribute( 'aria-selected', i === 0 ? 'true' : 'false' );
                 dot.dataset.index = String( i );
                 dotsWrap.appendChild( dot );
             }
@@ -117,7 +119,9 @@
         function setActive( index ) {
             if ( dotsWrap ) {
                 dotsWrap.querySelectorAll( '.timeline-swipe__dot' ).forEach( function ( dot, i ) {
-                    dot.classList.toggle( 'is-active', i === index );
+                    var isCurrent = ( i === index );
+                    dot.classList.toggle( 'is-active', isCurrent );
+                    dot.setAttribute( 'aria-selected', isCurrent ? 'true' : 'false' );
                 } );
             }
             if ( counterCurrent ) {
@@ -232,6 +236,31 @@
                 }
                 var idx = parseInt( dot.dataset.index || '0', 10 );
                 scrollToLogical( idx, true );
+            } );
+
+            dotsWrap.addEventListener( 'keydown', function ( e ) {
+                var activeDot = dotsWrap.querySelector( '.timeline-swipe__dot.is-active' );
+                if ( ! activeDot ) {
+                    return;
+                }
+                var idx = parseInt( activeDot.dataset.index || '0', 10 );
+                if ( e.key === 'ArrowRight' || e.key === 'ArrowDown' ) {
+                    e.preventDefault();
+                    var nextIdx = ( idx + 1 ) % count;
+                    scrollToLogical( nextIdx, true );
+                    var nextDot = dotsWrap.querySelector( '.timeline-swipe__dot[data-index="' + nextIdx + '"]' );
+                    if ( nextDot ) {
+                        nextDot.focus();
+                    }
+                } else if ( e.key === 'ArrowLeft' || e.key === 'ArrowUp' ) {
+                    e.preventDefault();
+                    var prevIdx = ( idx - 1 + count ) % count;
+                    scrollToLogical( prevIdx, true );
+                    var prevDot = dotsWrap.querySelector( '.timeline-swipe__dot[data-index="' + prevIdx + '"]' );
+                    if ( prevDot ) {
+                        prevDot.focus();
+                    }
+                }
             } );
         }
     }

@@ -316,7 +316,7 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
     if (false !== strpos($entry->post_content, '[aiad_speed_quiz')) {
         $cta = __('Take the speed quiz →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_curriculum_quiz')) {
-        $cta = __('Explore curriculum insight →', 'ai-awareness-day');
+        $cta = __('Explore assessment experience →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_llm_explainer')) {
         $cta = __('Try the 6-step explainer →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_buzzwords')) {
@@ -433,6 +433,12 @@ function aiad_render_timeline_swipe_deck(array $entries): string
             <?php foreach ($entries as $entry): ?>
                 <?php echo aiad_render_timeline_swipe_slide($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             <?php endforeach; ?>
+        </div>
+        <div class="timeline-swipe__nav">
+            <div class="timeline-swipe__dots" role="tablist" aria-label="<?php esc_attr_e('Select update to display', 'ai-awareness-day'); ?>"></div>
+            <div class="timeline-swipe__counter" aria-hidden="true">
+                <span class="timeline-swipe__counter-current">1</span> <span class="timeline-swipe__counter-sep">/</span> <span class="timeline-swipe__counter-total"><?php echo esc_attr((string) count($entries)); ?></span>
+            </div>
         </div>
     </div>
     <?php
