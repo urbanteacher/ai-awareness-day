@@ -164,6 +164,86 @@ function aiad_flush_timeline_rewrite_rules(): void
 add_action('admin_init', 'aiad_flush_timeline_rewrite_rules');
 
 /**
+ * One-time: remove Key Stage / curriculum assessment timeline entries (not needed on the feed).
+ */
+function aiad_trash_keystage_timeline_entries(): void
+{
+    if (get_option('aiad_keystage_timeline_trashed') === 'yes') {
+        return;
+    }
+
+    $shortcode_needles = array(
+        '[aiad_curriculum_quiz',
+        '[aiad_ict_curriculum',
+    );
+
+    $slug_needles = array(
+        'cross-curricular-ai-curriculum-quiz',
+        'ict-curriculum',
+        'ks2',
+        'ks3',
+        'ks4',
+        'ks5',
+        'key-stage',
+    );
+
+    $posts = get_posts(
+        array(
+            'post_type'      => 'timeline',
+            'post_status'    => array('publish', 'draft', 'pending', 'private', 'future'),
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+        )
+    );
+
+    foreach ($posts as $post_id) {
+        $post_id = (int) $post_id;
+        $post    = get_post($post_id);
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        $trash = false;
+
+        foreach ($shortcode_needles as $needle) {
+            if (false !== strpos($post->post_content, $needle)) {
+                $trash = true;
+                break;
+            }
+        }
+
+        if (!$trash) {
+            $slug = $post->post_name;
+            foreach ($slug_needles as $fragment) {
+                if ($slug !== '' && false !== strpos($slug, $fragment)) {
+                    $trash = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$trash) {
+            $title = strtolower($post->post_title);
+            if (
+                false !== strpos($title, 'key stage')
+                || preg_match('/\bks[2-5]\b/', $title)
+                || false !== strpos($title, 'curriculum assessment')
+                || false !== strpos($title, 'computing assessment across')
+            ) {
+                $trash = true;
+            }
+        }
+
+        if ($trash) {
+            wp_trash_post($post_id);
+        }
+    }
+
+    update_option('aiad_keystage_timeline_trashed', 'yes');
+}
+add_action('init', 'aiad_trash_keystage_timeline_entries', 35);
+
+/**
  * Config for editable timeline meta fields. Add a new entry here to get admin UI and save automatically;
  * then use the meta key in timeline-layout renderers if you want it on the front.
  *
