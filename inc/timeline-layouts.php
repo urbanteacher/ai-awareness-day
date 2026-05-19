@@ -276,6 +276,55 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
 }
 
 /**
+ * Whether a timeline entry embeds an interactive shortcode (no full body in feed hero).
+ *
+ * @param WP_Post $entry Timeline post.
+ */
+function aiad_timeline_entry_has_interactive_shortcode(WP_Post $entry): bool
+{
+    $needles = array(
+        '[aiad_buzzwords',
+        '[aiad_llm_explainer',
+        '[aiad_llm_order_game',
+        '[aiad_speed_quiz',
+    );
+    foreach ($needles as $needle) {
+        if (false !== strpos($entry->post_content, $needle)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Teaser HTML for magazine hero (excerpt + CTA instead of full interactive markup).
+ *
+ * @param WP_Post $entry Timeline post.
+ * @return string HTML
+ */
+function aiad_timeline_hero_teaser_html(WP_Post $entry): string
+{
+    if (!aiad_timeline_entry_has_interactive_shortcode($entry)) {
+        return (string) apply_filters('the_content', (string) get_post_field('post_content', $entry));
+    }
+
+    $excerpt = aiad_timeline_entry_excerpt_text($entry);
+    $url = get_permalink($entry) ?: '';
+    $cta = __('Open interactive activity →', 'ai-awareness-day');
+
+    if (false !== strpos($entry->post_content, '[aiad_speed_quiz')) {
+        $cta = __('Take the speed quiz →', 'ai-awareness-day');
+    } elseif (false !== strpos($entry->post_content, '[aiad_llm_explainer')) {
+        $cta = __('Try the 6-step explainer →', 'ai-awareness-day');
+    } elseif (false !== strpos($entry->post_content, '[aiad_buzzwords')) {
+        $cta = __('Explore the glossary →', 'ai-awareness-day');
+    }
+
+    return '<p>' . esc_html($excerpt) . '</p><p><a class="timeline-magazine__hero-cta" href="'
+        . esc_url($url) . '">' . esc_html($cta) . '</a></p>';
+}
+
+/**
  * Plain-text excerpt for cards.
  *
  * @param WP_Post $entry Timeline post.
@@ -456,7 +505,7 @@ function aiad_render_timeline_magazine(array $entries): string
     $date_full = get_the_date('j M Y', $hero);
     $date_iso = get_the_date('c', $hero);
     $hero_permalink = get_permalink($hero) ?: '';
-    $hero_content = apply_filters('the_content', get_post_field('post_content', $hero));
+    $hero_content = aiad_timeline_hero_teaser_html($hero);
     $hero_media_tag = $hero_permalink ? 'a' : 'div';
     $hero_media_label = sprintf(
         /* translators: %s: timeline entry title */

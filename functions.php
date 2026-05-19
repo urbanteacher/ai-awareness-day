@@ -57,6 +57,7 @@ require_once $aiad_dir . '/inc/sharing.php';
 require_once $aiad_dir . '/inc/ai-buzzwords.php';
 require_once $aiad_dir . '/inc/ai-llm-explainer.php';
 require_once $aiad_dir . '/inc/ai-llm-order-game.php';
+require_once $aiad_dir . '/inc/ai-speed-quiz.php';
 require_once $aiad_dir . '/inc/seo.php';
 
 /**

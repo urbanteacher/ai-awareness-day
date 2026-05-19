@@ -1,0 +1,399 @@
+/* Timed AI speed quiz (shortcode [aiad_speed_quiz]) */
+
+[data-aiad-speed-quiz] {
+	--sq-bg: #141414;
+	--sq-panel: #1c1c1c;
+	--sq-border: #2e2e2e;
+	--sq-text: #f5f5f5;
+	--sq-muted: #a3a3a3;
+	--sq-accent: #86efac;
+	--sq-warn: #fbbf24;
+	--sq-danger: #f87171;
+	font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+	max-width: 720px;
+	margin: 2rem auto;
+	padding: 0 1rem;
+	color: var(--sq-text);
+}
+
+[data-aiad-speed-quiz] .sq-card {
+	background: var(--sq-panel);
+	border: 1px solid var(--sq-border);
+	border-radius: 16px;
+	padding: 1.75rem 1.5rem;
+}
+
+[data-aiad-speed-quiz] .sq-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 12px;
+	border-radius: 999px;
+	border: 1px solid var(--sq-border);
+	background: #252525;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--sq-muted);
+	margin-bottom: 1rem;
+}
+
+[data-aiad-speed-quiz] .sq-title {
+	margin: 0 0 0.5rem;
+	font-size: clamp(1.35rem, 4vw, 1.65rem);
+	font-weight: 700;
+	line-height: 1.25;
+	color: var(--sq-text);
+}
+
+[data-aiad-speed-quiz] .sq-lead {
+	margin: 0 0 1.25rem;
+	font-size: 0.95rem;
+	line-height: 1.55;
+	color: var(--sq-muted);
+}
+
+[data-aiad-speed-quiz] .sq-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 8px;
+	margin-bottom: 1.5rem;
+}
+
+[data-aiad-speed-quiz] .sq-stat {
+	text-align: center;
+	padding: 0.75rem 0.35rem;
+	border: 1px solid var(--sq-border);
+	border-radius: 10px;
+	background: #222;
+}
+
+[data-aiad-speed-quiz] .sq-stat__val {
+	display: block;
+	font-size: 1.35rem;
+	font-weight: 700;
+	color: var(--sq-text);
+	line-height: 1.2;
+}
+
+[data-aiad-speed-quiz] .sq-stat__lbl {
+	display: block;
+	margin-top: 4px;
+	font-size: 0.7rem;
+	color: var(--sq-muted);
+	line-height: 1.3;
+}
+
+[data-aiad-speed-quiz] .sq-start-row {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+[data-aiad-speed-quiz] .sq-input {
+	flex: 1;
+	min-width: 12rem;
+	padding: 12px 14px;
+	border-radius: 10px;
+	border: 1px solid var(--sq-border);
+	background: #111;
+	color: var(--sq-text);
+	font-size: 0.95rem;
+	font-family: inherit;
+}
+
+[data-aiad-speed-quiz] .sq-input::placeholder {
+	color: #666;
+}
+
+[data-aiad-speed-quiz] .sq-input:focus {
+	outline: 2px solid var(--sq-accent);
+	outline-offset: 2px;
+	border-color: var(--sq-accent);
+}
+
+[data-aiad-speed-quiz] .sq-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 12px 22px;
+	border-radius: 10px;
+	font-size: 0.95rem;
+	font-weight: 700;
+	font-family: inherit;
+	cursor: pointer;
+	border: 1px solid var(--sq-border);
+	background: #2a2a2a;
+	color: var(--sq-text);
+	-webkit-appearance: none;
+	appearance: none;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+[data-aiad-speed-quiz] .sq-btn:hover {
+	background: #333;
+	border-color: #555;
+}
+
+[data-aiad-speed-quiz] .sq-btn--primary {
+	background: var(--sq-text);
+	color: #111;
+	border-color: var(--sq-text);
+}
+
+[data-aiad-speed-quiz] .sq-btn--primary:hover {
+	background: #e5e5e5;
+}
+
+[data-aiad-speed-quiz] .sq-btn:focus-visible {
+	outline: 2px solid var(--sq-accent);
+	outline-offset: 2px;
+}
+
+[data-aiad-speed-quiz] .sq-btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+[data-aiad-speed-quiz] [hidden] {
+	display: none !important;
+}
+
+/* Play */
+[data-aiad-speed-quiz] .sq-play-top {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 1rem;
+	flex-wrap: wrap;
+}
+
+[data-aiad-speed-quiz] .sq-meta {
+	font-size: 0.85rem;
+	color: var(--sq-muted);
+}
+
+[data-aiad-speed-quiz] .sq-meta strong {
+	color: var(--sq-text);
+}
+
+[data-aiad-speed-quiz] .sq-timer-bar {
+	height: 6px;
+	background: #333;
+	border-radius: 3px;
+	overflow: hidden;
+	margin-bottom: 1.25rem;
+}
+
+[data-aiad-speed-quiz] .sq-timer-fill {
+	height: 100%;
+	background: var(--sq-accent);
+	border-radius: 3px;
+	transition: width 0.1s linear;
+}
+
+[data-aiad-speed-quiz] .sq-timer-fill.is-low {
+	background: var(--sq-warn);
+}
+
+[data-aiad-speed-quiz] .sq-timer-fill.is-critical {
+	background: var(--sq-danger);
+}
+
+[data-aiad-speed-quiz] .sq-q-num {
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--sq-muted);
+	margin-bottom: 0.35rem;
+}
+
+[data-aiad-speed-quiz] .sq-question {
+	margin: 0 0 1rem;
+	font-size: 1.05rem;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+[data-aiad-speed-quiz] .sq-options {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+[data-aiad-speed-quiz] .sq-option {
+	display: block;
+	width: 100%;
+	text-align: left;
+	padding: 12px 14px;
+	border-radius: 10px;
+	border: 1px solid var(--sq-border);
+	background: #252525;
+	color: var(--sq-text);
+	font-size: 0.9rem;
+	line-height: 1.35;
+	cursor: pointer;
+	font-family: inherit;
+	transition: border-color 0.12s, background 0.12s;
+}
+
+[data-aiad-speed-quiz] .sq-option:hover:not(:disabled) {
+	border-color: #666;
+	background: #2e2e2e;
+}
+
+[data-aiad-speed-quiz] .sq-option:disabled {
+	cursor: default;
+}
+
+[data-aiad-speed-quiz] .sq-option.is-correct {
+	border-color: var(--sq-accent);
+	background: rgba(134, 239, 172, 0.12);
+}
+
+[data-aiad-speed-quiz] .sq-option.is-wrong {
+	border-color: var(--sq-danger);
+	background: rgba(248, 113, 113, 0.1);
+}
+
+[data-aiad-speed-quiz] .sq-flash {
+	margin-top: 0.75rem;
+	font-size: 0.85rem;
+	font-weight: 600;
+	min-height: 1.25em;
+}
+
+[data-aiad-speed-quiz] .sq-flash--ok {
+	color: var(--sq-accent);
+}
+
+[data-aiad-speed-quiz] .sq-flash--miss {
+	color: var(--sq-danger);
+}
+
+/* Results */
+[data-aiad-speed-quiz] .sq-results-score {
+	text-align: center;
+	margin-bottom: 1.25rem;
+}
+
+[data-aiad-speed-quiz] .sq-results-score__num {
+	font-size: 3rem;
+	font-weight: 800;
+	line-height: 1;
+	color: var(--sq-accent);
+}
+
+[data-aiad-speed-quiz] .sq-results-score__lbl {
+	font-size: 0.9rem;
+	color: var(--sq-muted);
+	margin-top: 0.35rem;
+}
+
+[data-aiad-speed-quiz] .sq-results-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+	margin-bottom: 1.25rem;
+}
+
+[data-aiad-speed-quiz] .sq-results-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 1.25rem;
+}
+
+[data-aiad-speed-quiz] .sq-leaderboard {
+	border-top: 1px solid var(--sq-border);
+	padding-top: 1.25rem;
+}
+
+[data-aiad-speed-quiz] .sq-leaderboard h4 {
+	margin: 0 0 0.75rem;
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+[data-aiad-speed-quiz] .sq-lb-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+[data-aiad-speed-quiz] .sq-lb-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--sq-border);
+	font-size: 0.85rem;
+}
+
+[data-aiad-speed-quiz] .sq-lb-item:last-child {
+	border-bottom: 0;
+}
+
+[data-aiad-speed-quiz] .sq-lb-rank {
+	width: 1.5rem;
+	font-weight: 700;
+	color: var(--sq-muted);
+}
+
+[data-aiad-speed-quiz] .sq-lb-name {
+	flex: 1;
+	font-weight: 600;
+}
+
+[data-aiad-speed-quiz] .sq-lb-score {
+	font-weight: 700;
+	color: var(--sq-accent);
+}
+
+[data-aiad-speed-quiz] .sq-lb-you {
+	background: rgba(134, 239, 172, 0.08);
+	margin: 0 -0.5rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	border-radius: 6px;
+}
+
+[data-aiad-speed-quiz] .sq-credit {
+	font-size: 12px;
+	color: #666;
+	margin-top: 1rem;
+	text-align: center;
+}
+
+.entry-content--timeline [data-aiad-speed-quiz] {
+	max-width: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+@media (max-width: 560px) {
+	[data-aiad-speed-quiz] .sq-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	[data-aiad-speed-quiz] .sq-results-grid {
+		grid-template-columns: 1fr;
+	}
+
+	[data-aiad-speed-quiz] .sq-start-row {
+		flex-direction: column;
+	}
+
+	[data-aiad-speed-quiz] .sq-btn {
+		width: 100%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-aiad-speed-quiz] .sq-timer-fill {
+		transition: none;
+	}
+}
