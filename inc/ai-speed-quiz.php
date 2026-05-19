@@ -272,7 +272,7 @@ function aiad_create_speed_quiz_timeline_entry(): int {
 			'post_name'    => $slug,
 			'post_excerpt' => __( '10 AI questions, 15 seconds each — score points, earn speed bonuses, and climb the leaderboard.', 'ai-awareness-day' ),
 			'post_content' => aiad_get_speed_quiz_timeline_content(),
-			'post_status'  => 'publish',
+			'post_status'  => 'draft',
 			'post_author'  => 1,
 		),
 		true
