@@ -435,7 +435,6 @@ function aiad_render_timeline_swipe_deck(array $entries): string
             <?php endforeach; ?>
         </div>
         <div class="timeline-swipe__nav">
-            <div class="timeline-swipe__dots" role="tablist" aria-label="<?php esc_attr_e('Select update to display', 'ai-awareness-day'); ?>"></div>
             <div class="timeline-swipe__counter" aria-hidden="true">
                 <span class="timeline-swipe__counter-current">1</span> <span class="timeline-swipe__counter-sep">/</span> <span class="timeline-swipe__counter-total"><?php echo esc_attr((string) count($entries)); ?></span>
             </div>
