@@ -434,7 +434,9 @@ get_header();
                         $share_message = function_exists( 'aiad_get_share_message' ) ? aiad_get_share_message( 'resource', get_post() ) : '';
                         $share_url = get_permalink();
                         $share_title = get_the_title();
-                        $key_stages_for_card = (array) get_post_meta( get_the_ID(), '_aiad_key_stage', true );
+                        $key_stages_for_card = function_exists( 'aiad_get_resource_key_stages' )
+                            ? aiad_get_resource_key_stages( (int) get_the_ID() )
+                            : array();
                         $theme_for_card = $theme_name ? $theme_name : '';
                         ?>
                         <button type="button"

@@ -61,41 +61,6 @@ function aiad_get_post_type_archive_label( string $post_type ): string {
 }
 
 /**
- * Normalise resource key stages from post meta (stored as a single array value).
- *
- * @param int $post_id Resource post ID.
- * @return list<string>
- */
-function aiad_get_resource_key_stages( int $post_id ): array {
-	$raw = get_post_meta( $post_id, '_aiad_key_stage', true );
-
-	if ( ! is_array( $raw ) ) {
-		if ( is_string( $raw ) && $raw !== '' ) {
-			$unserialized = maybe_unserialize( $raw );
-			$raw          = is_array( $unserialized ) ? $unserialized : array( $raw );
-		} else {
-			return array();
-		}
-	}
-
-	// Flatten one level in case of legacy nested or double-encoded saves.
-	$stages = array();
-	foreach ( $raw as $item ) {
-		if ( is_array( $item ) ) {
-			foreach ( $item as $sub ) {
-				if ( is_string( $sub ) && $sub !== '' ) {
-					$stages[] = $sub;
-				}
-			}
-		} elseif ( is_string( $item ) && $item !== '' ) {
-			$stages[] = $item;
-		}
-	}
-
-	return array_values( array_unique( $stages ) );
-}
-
-/**
  * Canonical URL for the current request path (query string stripped).
  *
  * @return string

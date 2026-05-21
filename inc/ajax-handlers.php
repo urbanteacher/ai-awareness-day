@@ -601,7 +601,9 @@ function aiad_ajax_filter_resources(): void {
 
             $thumbnail = get_the_post_thumbnail_url( $id, 'medium_large' );
 
-            $key_stage_meta = (array) get_post_meta( $id, '_aiad_key_stage', true );
+            $key_stage_meta = function_exists( 'aiad_get_resource_key_stages' )
+                ? aiad_get_resource_key_stages( $id )
+                : array();
             $results[] = array(
                 'id'             => $id,
                 'title'          => get_the_title(),
@@ -616,7 +618,7 @@ function aiad_ajax_filter_resources(): void {
                 'theme_name'     => $theme_name,
                 'theme_slug'     => $themes && ! is_wp_error( $themes ) ? $themes[0]->slug : '',
                 'activity_types' => $activity_names,
-                'key_stages'     => array_values( array_intersect( $key_stage_meta, array_keys( aiad_key_stage_options() ) ) ),
+                'key_stages'     => $key_stage_meta,
                 'download_url'   => $download_url ?: '',
                 'download_label' => $download_url && function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : '',
                 'external_url'   => $featured_url ?: '',

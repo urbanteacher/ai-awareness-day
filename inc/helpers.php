@@ -569,6 +569,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_hero_title'         => __( 'AI Awareness Day', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'Thursday 4th June 2026', 'ai-awareness-day' ),
         'aiad_event_date_ymd'     => '2026-06-04',
+        'aiad_show_breadcrumbs'   => false,
         'aiad_hero_subtitle'      => __( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
         'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day (4th June 2026) is a new nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
@@ -584,6 +585,55 @@ function aiad_get_customizer_defaults(): array {
         'aiad_linkedin_post_url'   => '',
     );
     return $defaults;
+}
+
+/**
+ * Normalise resource key stages from raw meta or POST input (flat list of slugs).
+ *
+ * @param mixed $raw Post meta value, POST array, or legacy encoded string.
+ * @return list<string>
+ */
+function aiad_normalize_resource_key_stages( $raw ): array {
+	if ( ! is_array( $raw ) ) {
+		if ( is_string( $raw ) && $raw !== '' ) {
+			$unserialized = maybe_unserialize( $raw );
+			$raw          = is_array( $unserialized ) ? $unserialized : array( $raw );
+		} else {
+			return array();
+		}
+	}
+
+	$allowed = function_exists( 'aiad_key_stage_options' ) ? array_keys( aiad_key_stage_options() ) : array();
+	$stages  = array();
+
+	foreach ( $raw as $item ) {
+		if ( is_array( $item ) ) {
+			foreach ( $item as $sub ) {
+				if ( is_string( $sub ) && $sub !== '' ) {
+					$stages[] = sanitize_text_field( $sub );
+				}
+			}
+		} elseif ( is_string( $item ) && $item !== '' ) {
+			$stages[] = sanitize_text_field( $item );
+		}
+	}
+
+	$stages = array_values( array_unique( $stages ) );
+	if ( ! empty( $allowed ) ) {
+		$stages = array_values( array_intersect( $stages, $allowed ) );
+	}
+
+	return $stages;
+}
+
+/**
+ * Resource key stages for a post (single flat array in meta).
+ *
+ * @param int $post_id Resource post ID.
+ * @return list<string>
+ */
+function aiad_get_resource_key_stages( int $post_id ): array {
+	return aiad_normalize_resource_key_stages( get_post_meta( $post_id, '_aiad_key_stage', true ) );
 }
 
 /**

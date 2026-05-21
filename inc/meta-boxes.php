@@ -746,7 +746,9 @@ add_action( 'add_meta_boxes', 'aiad_resource_details_meta_box' );
 function aiad_resource_details_callback( WP_Post $post ): void {
     wp_nonce_field( 'aiad_resource_details_nonce', 'aiad_resource_details_nonce' );
 
-    $key_stages      = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
+    $key_stages      = function_exists( 'aiad_get_resource_key_stages' )
+        ? aiad_get_resource_key_stages( (int) $post->ID )
+        : array();
     $download_url       = get_post_meta( $post->ID, '_aiad_download_url', true );
     $preview_video_url  = get_post_meta( $post->ID, '_aiad_preview_video_url', true );
     $filename           = $download_url ? basename( (string) wp_parse_url( $download_url, PHP_URL_PATH ) ) : '';
@@ -912,11 +914,9 @@ function aiad_save_resource_details( int $post_id ): void {
         update_post_meta( $post_id, '_aiad_preview_video_url', esc_url_raw( trim( wp_unslash( (string) $_POST['aiad_preview_video_url'] ) ) ) );
     }
 
-    $key_stages = array();
-    if ( ! empty( $_POST['aiad_key_stage'] ) && is_array( $_POST['aiad_key_stage'] ) ) {
-        $allowed = array_keys( aiad_key_stage_options() );
-        $key_stages = array_values( array_intersect( array_map( 'sanitize_text_field', wp_unslash( $_POST['aiad_key_stage'] ) ), $allowed ) );
-    }
+    $key_stages = function_exists( 'aiad_normalize_resource_key_stages' )
+        ? aiad_normalize_resource_key_stages( isset( $_POST['aiad_key_stage'] ) ? wp_unslash( $_POST['aiad_key_stage'] ) : array() )
+        : array();
     update_post_meta( $post_id, '_aiad_key_stage', $key_stages );
 
     $pn_subtitle = aiad_resource_details_post_name( '_aiad_subtitle' );

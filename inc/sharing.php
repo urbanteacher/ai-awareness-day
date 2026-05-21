@@ -299,7 +299,9 @@ function aiad_get_share_message( string $context, ?WP_Post $post = null ): strin
 			}
 			
 			// Get key stage
-			$key_stages = (array) get_post_meta( $post->ID, '_aiad_key_stage', true );
+			$key_stages = function_exists( 'aiad_get_resource_key_stages' )
+				? aiad_get_resource_key_stages( (int) $post->ID )
+				: array();
 			$key_stage_labels = array();
 			if ( function_exists( 'aiad_key_stage_options' ) && ! empty( $key_stages ) ) {
 				$ks_options = aiad_key_stage_options();

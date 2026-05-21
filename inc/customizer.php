@@ -112,8 +112,9 @@ add_action( 'customize_register', 'aiad_customize_register' );
  */
 function aiad_register_header_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_header', array(
-        'title'    => __( 'Header', 'ai-awareness-day' ),
-        'priority' => 29,
+        'title'       => __( 'Header', 'ai-awareness-day' ),
+        'description' => __( 'This theme uses the Customizer and classic templates—not the Site Editor under Appearance → Editor. Layout and branding are managed here and under Front Page Sections.', 'ai-awareness-day' ),
+        'priority'    => 29,
     ) );
 
     $wp_customize->add_setting( 'aiad_header_logo', array(
@@ -127,6 +128,21 @@ function aiad_register_header_section( WP_Customize_Manager $wp_customize ): voi
         'section'     => 'aiad_header',
         'mime_type'   => 'image',
     ) ) );
+
+    $defaults = aiad_get_customizer_defaults();
+    $wp_customize->add_setting( 'aiad_show_breadcrumbs', array(
+        'default'           => $defaults['aiad_show_breadcrumbs'],
+        'sanitize_callback' => function ( $value ) {
+            return (bool) $value;
+        },
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_show_breadcrumbs', array(
+        'label'       => __( 'Show breadcrumbs', 'ai-awareness-day' ),
+        'description' => __( 'Display the breadcrumb trail below the header on inner pages.', 'ai-awareness-day' ),
+        'section'     => 'aiad_header',
+        'type'        => 'checkbox',
+    ) );
 }
 
 /**
