@@ -146,7 +146,8 @@ class AIAD_Homepage_Editor {
         $keys = array(
             'aiad_hero_logo'     => 'absint',
             'aiad_header_logo'   => 'absint',
-            'aiad_hero_date'     => 'sanitize_text_field',
+            'aiad_hero_date'       => 'sanitize_text_field',
+            'aiad_event_date_ymd'  => 'aiad_sanitize_event_date_ymd',
             'aiad_hero_title'    => 'sanitize_text_field',
             'aiad_hero_slogan'   => 'sanitize_text_field',
             'aiad_hero_subtitle' => 'sanitize_textarea_field',
@@ -419,7 +420,13 @@ class AIAD_Homepage_Editor {
         $fields = array(
             'aiad_hero_logo'     => array( 'label' => __( 'Hero Logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Optional large hero image. Empty = Site Identity → Logo. Clear old GIFs here.', 'ai-awareness-day' ) ),
             'aiad_header_logo'   => array( 'label' => __( 'Header Logo (legacy)', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Fallback only if Site Identity → Logo is empty.', 'ai-awareness-day' ) ),
-            'aiad_hero_date'     => array( 'label' => __( 'Event Date Text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Thursday 4th June 2026' ),
+            'aiad_hero_date'      => array( 'label' => __( 'Event Date Text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Thursday 4th June 2026' ),
+            'aiad_event_date_ymd' => array(
+                'label'       => __( 'Event Date (countdown & SEO)', 'ai-awareness-day' ),
+                'type'        => 'text',
+                'default'     => '2026-06-04',
+                'description' => __( 'Format: Y-m-d (e.g. 2026-06-04)', 'ai-awareness-day' ),
+            ),
             'aiad_hero_title'    => array( 'label' => __( 'Hero Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day' ),
             'aiad_hero_slogan'   => array( 'label' => __( 'Hero Slogan', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Know it, Question it, Use it Wisely' ),
             'aiad_hero_subtitle' => array( 'label' => __( 'Hero Subtitle', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => 'A nationwide day for schools, students, and parents to explore AI together.' ),

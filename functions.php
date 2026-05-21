@@ -58,14 +58,5 @@ require_once $aiad_dir . '/inc/ai-buzzwords.php';
 require_once $aiad_dir . '/inc/ai-llm-explainer.php';
 require_once $aiad_dir . '/inc/ai-llm-order-game.php';
 require_once $aiad_dir . '/inc/ai-speed-quiz.php';
+require_once $aiad_dir . '/inc/ai-computing-curriculum-challenge.php';
 require_once $aiad_dir . '/inc/seo.php';
-
-/**
- * Timeline Event Date Configuration
- * 
- * Change the event date for the timeline countdown by modifying the date below.
- * Format: Y-m-d (e.g., '2026-06-04')
- */
-add_filter( 'aiad_timeline_event_date', function() {
-    return '2026-06-04'; // Change this date to update the countdown
-} );

@@ -54,7 +54,7 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
             </div>
 
             <?php
-            $event_date   = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+            $event_date   = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2026-06-04';
             $event_ts_utc = strtotime( $event_date . ' 00:00:00 UTC' );
             // UTC midnight as ms so JS never parses a date string (Safari/locale safe).
             $event_ts_ms = false !== $event_ts_utc ? $event_ts_utc * 1000 : 0;

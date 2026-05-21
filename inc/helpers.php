@@ -568,6 +568,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_hero_slogan'        => __( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ),
         'aiad_hero_title'         => __( 'AI Awareness Day', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'Thursday 4th June 2026', 'ai-awareness-day' ),
+        'aiad_event_date_ymd'     => '2026-06-04',
         'aiad_hero_subtitle'      => __( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
         'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day (4th June 2026) is a new nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
@@ -583,6 +584,24 @@ function aiad_get_customizer_defaults(): array {
         'aiad_linkedin_post_url'   => '',
     );
     return $defaults;
+}
+
+/**
+ * Sanitize event date for countdown / schema (Y-m-d).
+ *
+ * @param mixed $value Raw customizer value.
+ * @return string Valid date or default.
+ */
+function aiad_sanitize_event_date_ymd( $value ): string {
+    $value = sanitize_text_field( (string) $value );
+    if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ) {
+        $parts = array_map( 'intval', explode( '-', $value ) );
+        if ( checkdate( $parts[1], $parts[2], $parts[0] ) ) {
+            return $value;
+        }
+    }
+    $defaults = aiad_get_customizer_defaults();
+    return $defaults['aiad_event_date_ymd'];
 }
 
 /**

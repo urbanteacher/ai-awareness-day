@@ -1096,7 +1096,12 @@ add_action('save_post_live_session', 'aiad_timeline_on_live_session_save', 25);
  */
 function aiad_timeline_event_date(): string
 {
-    return apply_filters('aiad_timeline_event_date', '2026-06-04');
+    $defaults = aiad_get_customizer_defaults();
+    $date     = get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+    if ( function_exists( 'aiad_sanitize_event_date_ymd' ) ) {
+        $date = aiad_sanitize_event_date_ymd( $date );
+    }
+    return (string) apply_filters( 'aiad_timeline_event_date', $date );
 }
 
 /**

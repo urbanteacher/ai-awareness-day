@@ -252,7 +252,7 @@ function aiad_get_website_schema(): array {
  * @return array<string, mixed> Event schema array.
  */
 function aiad_get_event_schema(): array {
-	$event_date = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+	$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2026-06-04';
 	$event_url  = home_url( '/' );
 
 	// ISO 8601 with UK timezone for clearer indexing of 4 June 2026.
@@ -335,7 +335,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		$end_iso = $start_iso;
 	}
 	if ( ! $start_iso ) {
-		$event_date = apply_filters( 'aiad_timeline_event_date', '2026-06-04' );
+		$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2026-06-04';
 		$start_iso  = $event_date . 'T00:00:00+01:00';
 		$end_iso    = $event_date . 'T23:59:59+01:00';
 	}

@@ -2,7 +2,7 @@
  * Block editor styles – matches theme typography and colours.
  * Loaded in the block editor (WordPress 5.9+).
  * No @import: editor gets fonts via @font-face below to avoid render-blocking.
- * Hex values below match frontend tokens (not available in editor): --gray-800, --green-600, --green-700.
+ * Hex values below match frontend tokens: --gray-800, --green-600 (brand dark), --accent-green.
  */
 
 @font-face {
@@ -34,11 +34,11 @@ body {
 .editor-styles-wrapper h5,
 .editor-styles-wrapper h6 {
   font-family: 'Intel Clear', sans-serif;
-  color: #171717; /* --green-600 */
+  color: #1e1e1e; /* --green-600 brand dark */
 }
 
 .editor-styles-wrapper a {
-  color: #171717; /* --green-600 */
+  color: #1e1e1e; /* --green-600 brand dark */
 }
 
 .editor-styles-wrapper a:hover {
