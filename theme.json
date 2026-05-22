@@ -79,7 +79,7 @@
     },
     "elements": {
       "link": {
-        "color": { "text": "var(--wp--preset--color--green-600, #1e1e1e)" }
+        "color": { "text": "var(--wp--preset--color--accent-green, #22c55e)" }
       }
     }
   }

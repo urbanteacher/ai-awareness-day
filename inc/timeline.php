@@ -886,16 +886,20 @@ function aiad_create_timeline_entry(array $args)
  * @param string $auto_type  Auto type key (e.g. live_session).
  * @return int Timeline post ID or 0.
  */
-function aiad_timeline_get_entry_by_related(int $related_id, string $auto_type): int
+function aiad_timeline_get_entry_by_related(int $related_id, string $auto_type, ?array $post_statuses = null): int
 {
     if ($related_id <= 0 || $auto_type === '') {
         return 0;
     }
 
+    if (null === $post_statuses) {
+        $post_statuses = array('publish', 'draft', 'pending', 'future');
+    }
+
     $existing = get_posts(
         array(
             'post_type' => 'timeline',
-            'post_status' => array('publish', 'draft', 'pending', 'future'),
+            'post_status' => $post_statuses,
             'posts_per_page' => 1,
             'fields' => 'ids',
             'meta_query' => array(
@@ -915,6 +919,69 @@ function aiad_timeline_get_entry_by_related(int $related_id, string $auto_type):
     );
 
     return !empty($existing) ? (int) $existing[0] : 0;
+}
+
+/**
+ * Auto-type meta key for a related resource, featured resource, or partner post.
+ *
+ * @param WP_Post $post Related post.
+ * @return string Auto type slug or empty if unsupported.
+ */
+function aiad_timeline_related_auto_type(WP_Post $post): string
+{
+    if ('partner' === $post->post_type) {
+        return 'partner';
+    }
+    if (in_array($post->post_type, array('resource', 'featured_resource'), true)) {
+        return aiad_timeline_resource_announcement_auto_type($post);
+    }
+    return '';
+}
+
+/**
+ * Re-publish a linked timeline entry when its related post is published again.
+ *
+ * @param WP_Post $post Related resource, featured resource, or partner.
+ * @return bool True when an existing entry was restored to publish (skip creating a new one).
+ */
+function aiad_timeline_maybe_republish_related_entry(WP_Post $post): bool
+{
+    $auto_type = aiad_timeline_related_auto_type($post);
+    if ($auto_type === '') {
+        return false;
+    }
+
+    $timeline_id = aiad_timeline_get_entry_by_related($post->ID, $auto_type);
+    if ($timeline_id <= 0) {
+        $timeline_id = aiad_timeline_get_entry_by_related($post->ID, $auto_type, array('trash'));
+    }
+
+    if ($timeline_id <= 0) {
+        return false;
+    }
+
+    $timeline = get_post($timeline_id);
+    if (!$timeline instanceof WP_Post) {
+        return false;
+    }
+
+    if ($timeline->post_status === 'publish') {
+        return true;
+    }
+
+    if ($timeline->post_status === 'trash') {
+        wp_untrash_post($timeline_id);
+    }
+
+    $updated = wp_update_post(
+        array(
+            'ID'          => $timeline_id,
+            'post_status' => 'publish',
+        ),
+        true
+    );
+
+    return !is_wp_error($updated) && $updated > 0;
 }
 
 /**
@@ -1304,6 +1371,10 @@ function aiad_timeline_on_resource_publish(string $new_status, string $old_statu
         return;
     }
 
+    if (aiad_timeline_maybe_republish_related_entry($post)) {
+        return;
+    }
+
     aiad_timeline_maybe_create_resource_announcement($post);
 }
 add_action('transition_post_status', 'aiad_timeline_on_resource_publish', 10, 3);
@@ -1447,18 +1518,24 @@ function aiad_timeline_redirect_resource_announcement_blog_urls(): void
 add_action('template_redirect', 'aiad_timeline_redirect_resource_announcement_blog_urls', 0);
 
 /**
- * Auto-generate timeline entry when a partner is published.
+ * Create a timeline announcement for a published partner.
+ *
+ * @return int|false Timeline post ID, false if skipped or failed.
  */
-function aiad_timeline_on_partner_publish(string $new_status, string $old_status, WP_Post $post): void
+function aiad_timeline_maybe_create_partner_announcement(WP_Post $post)
 {
-    if ($post->post_type !== 'partner' || $new_status !== 'publish' || $old_status === 'publish') {
-        return;
+    if ($post->post_type !== 'partner' || $post->post_status !== 'publish') {
+        return false;
+    }
+
+    if (aiad_timeline_get_entry_by_related($post->ID, 'partner')) {
+        return false;
     }
 
     $types = get_the_terms($post->ID, 'partner_type');
     $type_name = $types && !is_wp_error($types) ? $types[0]->name : __('Partner', 'ai-awareness-day');
 
-    aiad_create_timeline_entry(array(
+    return aiad_create_timeline_entry(array(
         'title' => sprintf(
             /* translators: 1: partner name, 2: partner type */
             __('%1$s joined as %2$s', 'ai-awareness-day'),
@@ -1469,6 +1546,22 @@ function aiad_timeline_on_partner_publish(string $new_status, string $old_status
         'icon' => 'partner',
         'related_id' => $post->ID,
     ));
+}
+
+/**
+ * Auto-generate timeline entry when a partner is published.
+ */
+function aiad_timeline_on_partner_publish(string $new_status, string $old_status, WP_Post $post): void
+{
+    if ($post->post_type !== 'partner' || $new_status !== 'publish' || $old_status === 'publish') {
+        return;
+    }
+
+    if (aiad_timeline_maybe_republish_related_entry($post)) {
+        return;
+    }
+
+    aiad_timeline_maybe_create_partner_announcement($post);
 }
 add_action('transition_post_status', 'aiad_timeline_on_partner_publish', 10, 3);
 
@@ -1481,6 +1574,37 @@ function aiad_timeline_invalidate_schools_count(): void
 }
 add_action('save_post_form_submission', 'aiad_timeline_invalidate_schools_count', 5);
 add_action('save_post_partner', 'aiad_timeline_invalidate_schools_count', 5);
+
+/**
+ * Sync timeline entry status when its related post is unpublished or trashed.
+ */
+function aiad_timeline_on_related_post_unpublished(string $new_status, string $old_status, WP_Post $post): void
+{
+    if (!in_array($post->post_type, array('resource', 'featured_resource', 'partner'), true)) {
+        return;
+    }
+    if ($old_status !== 'publish' || $new_status === 'publish') {
+        return;
+    }
+
+    $auto_type = aiad_timeline_related_auto_type($post);
+    if ($auto_type === '') {
+        return;
+    }
+
+    $timeline_id = aiad_timeline_get_entry_by_related($post->ID, $auto_type);
+    if ($timeline_id > 0) {
+        if ('trash' === $new_status) {
+            wp_trash_post($timeline_id);
+        } else {
+            wp_update_post(array(
+                'ID'          => $timeline_id,
+                'post_status' => 'draft',
+            ));
+        }
+    }
+}
+add_action('transition_post_status', 'aiad_timeline_on_related_post_unpublished', 10, 3);
 
 /* ──────────────────────────────────────────────
    5. Query Helpers

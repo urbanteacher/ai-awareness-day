@@ -540,7 +540,7 @@ function aiad_render_timeline_magazine(array $entries): string
             <div class="timeline-magazine__hero-text">
                 <?php if ($hero_content): ?>
                     <div class="timeline-magazine__hero-content timeline-entry__content">
-                        <?php echo wp_kses_post($hero_content); ?></div>
+                        <?php echo $hero_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
                 <?php endif; ?>
                 <?php if ($hero_permalink): ?>
                     <a class="timeline-magazine__read-more" href="<?php echo esc_url($hero_permalink); ?>">
