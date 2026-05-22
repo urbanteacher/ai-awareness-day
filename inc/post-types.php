@@ -92,7 +92,7 @@ function aiad_register_post_types(): void {
         'show_in_rest' => true,
     ) );
 
-    // Taxonomy: Partner Type (Teacher, Sponsor, School, Tech Company)
+    // Taxonomy: Partner Type (Teacher, Sponsor, School, Tech Company, Charity, University, Institute)
     register_taxonomy( 'partner_type', array( 'partner' ), array(
         'labels'            => array(
             'name'          => __( 'Partner Types', 'ai-awareness-day' ),
@@ -103,7 +103,7 @@ function aiad_register_post_types(): void {
         'show_admin_column' => true,
     ) );
 
-    // CPT: Partner (Teachers, Sponsors, Schools, Tech companies – name + logo)
+    // CPT: Partner (Teachers, Sponsors, Schools, tech companies, charities, universities, institutes – name + logo)
     register_post_type( 'partner', array(
         'labels'       => array(
             'name'               => __( 'Partners', 'ai-awareness-day' ),
@@ -465,16 +465,38 @@ function aiad_default_terms(): void {
         }
     }
 
-    $partner_types = array( 'Teacher', 'Sponsor', 'School', 'Tech Company' );
-    foreach ( $partner_types as $name ) {
-        if ( ! term_exists( $name, 'partner_type' ) ) {
-            wp_insert_term( $name, 'partner_type' );
-        }
-    }
+    aiad_ensure_partner_type_terms();
 
     update_option( 'aiad_terms_seeded', true );
 }
 add_action( 'init', 'aiad_default_terms', 20 );
+
+/**
+ * Canonical partner type terms (inserted when missing — safe on existing sites).
+ */
+function aiad_get_partner_type_term_names(): array {
+    return array(
+        'Teacher',
+        'Sponsor',
+        'School',
+        'Tech Company',
+        'Charity',
+        'University',
+        'Institute',
+    );
+}
+
+/**
+ * Ensure all partner_type taxonomy terms exist.
+ */
+function aiad_ensure_partner_type_terms(): void {
+    foreach ( aiad_get_partner_type_term_names() as $name ) {
+        if ( ! term_exists( $name, 'partner_type' ) ) {
+            wp_insert_term( $name, 'partner_type' );
+        }
+    }
+}
+add_action( 'init', 'aiad_ensure_partner_type_terms', 21 );
 
 /**
  * Pre-populate Resource Duration terms (Explore section – badge format)

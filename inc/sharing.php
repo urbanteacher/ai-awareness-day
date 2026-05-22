@@ -239,7 +239,7 @@ function aiad_get_og_data(): array {
 		if ( 'resource' === $post_type ) {
 			$data['description'] = __( 'Lesson starters, lesson activities, and assembly materials for AI Awareness Day.', 'ai-awareness-day' );
 		} elseif ( 'partner' === $post_type ) {
-			$data['description'] = __( 'Schools, tech companies, sponsors, and educators supporting AI Awareness Day.', 'ai-awareness-day' );
+			$data['description'] = __( 'Schools, charities, universities, institutes, tech companies, sponsors, and educators supporting AI Awareness Day.', 'ai-awareness-day' );
 		} else {
 			$data['description'] = get_bloginfo( 'description' );
 		}

@@ -38,7 +38,7 @@ The **Get Involved** form adapts to the user type: **Teacher** (school name, sub
   - **Description** (main content)
   - **Download (PDF or PPTX)** – meta box: upload or select a PDF/PPTX; shows as a download button on the resource page and a link on the archive.
   Resources appear at `/resources/`. The **Explore the Themes** section on the homepage has “By theme” and “By session length” links that filter resources.
-- **Partners** (WP Admin → Partners): Add teachers, sponsors, schools, or tech companies with **Title**, **Featured image** (logo), optional **Partner URL** (meta box), and **Partner Type** (Teacher, Sponsor, School, Tech Company). These appear at `/partners/`.
+- **Partners** (WP Admin → Partners): Add teachers, sponsors, schools, tech companies, charities, universities, or institutes with **Title**, **Featured image** (logo), optional **Partner URL** (meta box), and **Partner Type** (Teacher, Sponsor, School, Tech Company, Charity, University, Institute). These appear at `/partners/`.
 
 - **Resources from partners** (WP Admin → Resources from partners): Feature resources from other organisations. For each entry set **Title**, **Description** (or excerpt), optional **Featured image**, and in the meta box: **Resource URL** (required – link to their PDF, page or toolkit), **Organisation name**, and optional **Organisation website**. These appear at `/from-partners/` and are also shown in a “From other organisations” block on the main Resources page. You can add or move partner resources via WXR: **Resources → Export demo resources** (section "Export Resources from partners") and **Resources → Import demo resources** (accepts WXR files containing Resources and/or Resources from partners).
 
