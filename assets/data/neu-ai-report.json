@@ -1,0 +1,160 @@
+{
+	"sourceUrl": "https://neu.org.uk/latest/press-releases/state-education-2026-ai",
+	"surveyNote": "NEU online survey, 5–16 February 2026. 9,408 teacher members in English state schools.",
+	"editorial": {
+		"standfirst": "The NEU's <em>State of Education: AI</em> survey exposes a fault line in English state schools: <strong>76%</strong> of teachers now use AI in their daily work, yet <strong>49%</strong> of schools have no AI policy for staff or pupils. The findings — drawn from 9,408 NEU members surveyed in February 2026 — point to rapid staff adoption, deepening concerns over pupil learning, and institutional lag on governance.",
+		"methodology": "Unless stated otherwise, figures are from the NEU release (February 2026). Training comparisons cite Sutton Trust polling (April 2025)."
+	},
+	"strings": {
+		"dataTableCaption": "Data table",
+		"downloadData": "Download chart data (CSV)",
+		"barChartLabel": "Bar chart",
+		"defaultChartLbl": "Share of teachers surveyed (%)"
+	},
+	"sections": [
+		{
+			"id": "adoption",
+			"title": "Staff adoption gathers pace",
+			"teacher": {
+				"prose": "<p>Teacher reliance on AI has risen sharply — from <strong>53%</strong> in 2025 to <strong>76%</strong> today — driven chiefly by workload pressure rather than institutional strategy. Most colleagues are self-taught; adoption is outpacing training and policy by a wide margin.</p><p>The pattern of use is revealing. AI has become a default tool for resource creation and planning, while marking remains largely human work. One respondent warned that without guidance, staff risk \"simply churning out sub-standard work\" in the rush to save time.</p>"
+			},
+			"leader": {
+				"prose": "<p>At <strong>76%</strong> regular use, AI is already embedded in everyday school practice — with or without leadership sign-off. The question is no longer whether staff will use these tools, but whether the school has a shared framework for doing so safely.</p><p>Adoption is concentrated in resource creation (<strong>61%</strong>) and lesson planning (<strong>41%</strong>), with administrative tasks at <strong>38%</strong>. Marking, at just <strong>7%</strong>, suggests teachers still treat assessment as a professional judgement call — for now.</p>"
+			},
+			"bars": [
+				{ "l": "Use AI regularly for day-to-day work", "pct": 76, "sub": "up from 53% in 2025" },
+				{ "l": "Resource creation (worksheets, quizzes)", "pct": 61 },
+				{ "l": "Lesson planning", "pct": 41 },
+				{ "l": "Administrative tasks", "pct": 38 },
+				{ "l": "Marking", "pct": 7 }
+			],
+			"note": "Source: NEU survey of 9,408 teacher members in English state schools (February 2026).",
+			"quote": {
+				"t": "Teachers are clearly desperate for workload relief. But without proper guidance, some are simply churning out sub-standard work.",
+				"c": "NEU survey respondent"
+			}
+		},
+		{
+			"id": "thinking",
+			"title": "Impact on pupil learning",
+			"teacher": {
+				"prose": "<p><strong>66%</strong> of secondary teachers say pupils' critical thinking has declined because of AI use — against <strong>28%</strong> in primary. The gap suggests the problem intensifies once pupils can access tools independently, often before they have learned to interrogate outputs.</p><p>NEU General Secretary Daniel Kebede argues that \"students must be able to think for themselves\" — yet the survey data shows reliance on AI is already affecting the skills assessments are meant to measure. Key Stage 3 may be the critical window for AI literacy and assessment redesign.</p>"
+			},
+			"leader": {
+				"prose": "<p>If two thirds of secondary teachers report declining critical thinking, this is a whole-school pedagogical issue — not a problem for individual classrooms to manage alone. Primary colleagues report the trend less acutely (<strong>28%</strong>), but the direction of travel is clear as access widens.</p><p>Leaders should ask a direct question: do current assessments still measure what you intend in a world where pupils can reach for AI at any moment? If not, what are they actually testing?</p>"
+			},
+			"split": [
+				{
+					"n": "66%",
+					"l": "Secondary teachers reporting a decline in pupils' critical thinking due to AI",
+					"pct": 66
+				},
+				{
+					"n": "28%",
+					"l": "Primary teachers reporting the same",
+					"pct": 28
+				}
+			],
+			"bars": [
+				{ "l": "Secondary: critical thinking declined", "pct": 66 },
+				{ "l": "Primary: critical thinking declined", "pct": 28 }
+			],
+			"chartLbl": "Teachers agreeing critical thinking has declined (due to AI use)",
+			"quote": {
+				"t": "Students must be able to think for themselves. This is at the heart of learning, but our survey shows a reliance on AI is having an effect on students' ability to think critically.",
+				"c": "Daniel Kebede, NEU General Secretary"
+			}
+		},
+		{
+			"id": "policy",
+			"title": "Governance and training gaps",
+			"teacher": {
+				"prose": "<p><strong>49%</strong> of schools have no AI policy for staff or pupils; <strong>66%</strong> lack guidance specifically on pupil use. Teachers are making daily professional judgement calls without institutional cover — a safeguarding as well as a workload issue.</p><p>Separate Sutton Trust research underlines the training deficit: just <strong>21%</strong> of state-school teachers had received formal AI training by April 2025, against <strong>45%</strong> in independent schools. Policy absence and training inequality are two sides of the same governance failure.</p>"
+			},
+			"leader": {
+				"prose": "<p>Nearly half of schools report no AI policy whatsoever — an urgent governance risk. In the absence of published guidance, staff and pupils improvise, and the school has no shared framework if something goes wrong.</p><p>The Sutton Trust gap (<strong>21%</strong> state vs <strong>45%</strong> independent for formal training) sits alongside the NEU's policy findings. Both point to structural under-investment rather than individual reluctance.</p>"
+			},
+			"policy": [
+				{
+					"n": "49%",
+					"l": "Schools with no AI policy for staff or pupils",
+					"pct": 49
+				},
+				{
+					"n": "66%",
+					"l": "Schools with no AI policy specifically for pupil use",
+					"pct": 66
+				}
+			],
+			"chartLbl": "Formal AI training (Sutton Trust, England — April 2025)",
+			"bars": [
+				{ "l": "State-school teachers with formal AI training", "pct": 21, "source": "Sutton Trust 2025" },
+				{ "l": "Independent-school teachers with formal AI training", "pct": 45, "source": "Sutton Trust 2025" }
+			],
+			"sourceNote": "Policy figures: NEU, February 2026. Training bars: Sutton Trust <em>Artificial advantage?</em> (Teacher Tapp polling, April 2025)."
+		},
+		{
+			"id": "tutor",
+			"title": "The government's AI tutor plan",
+			"teacher": {
+				"prose": "<p>Only <strong>14%</strong> of teachers support the Department for Education's plan to introduce AI tutors for disadvantaged pupils. <strong>49%</strong> oppose it outright; <strong>36%</strong> expressed no view when surveyed in February 2026, a week after the announcement.</p><p>Frontline concerns are consistent: AI cannot substitute for human empathy, professional judgement, or the relationships that make teaching work. Kebede has warned the government risks pupil development by deploying AI tutoring before long-term impacts are understood.</p>"
+			},
+			"leader": {
+				"prose": "<p>Before adopting any externally mandated AI tool, consult staff and assess pupil impact. What does it replace? What does it risk? Who is accountable if it gives incorrect information?</p><p>With <strong>14%</strong> support, <strong>49%</strong> opposition and <strong>36%</strong> undecided, the plan lacks a mandate from the profession. Opposition was strongest in special schools and pupil referral units — settings where the human relationship is often most critical.</p>"
+			},
+			"stats": [
+				{ "n": "14%", "l": "Support the AI tutor plan", "pct": 14 },
+				{ "n": "49%", "l": "Oppose the plan", "pct": 49 },
+				{ "n": "36%", "l": "Expressed no view either way", "pct": 36 }
+			],
+			"quote": {
+				"t": "AI cannot be used as a cheap sticking plaster for underfunded schools or a replacement for real support staff and qualified teachers.",
+				"c": "NEU survey respondents"
+			}
+		},
+		{
+			"id": "action",
+			"title": "What happens next",
+			"teacher": {
+				"prose": "<p>The NEU is calling for structural change — curriculum time for AI literacy, properly funded training, and pupil-facing policies written with the profession. In the meantime, three practical steps matter in the classroom.</p>",
+				"actions": [
+					{
+						"n": 1,
+						"title": "Push for AI literacy in the curriculum",
+						"body": "Request dedicated time to teach pupils about AI limitations — hallucinations, bias, and when not to trust outputs. Frame it as safeguarding as well as digital skills."
+					},
+					{
+						"n": 2,
+						"title": "Co-design your school AI policy",
+						"body": "Do not wait for a policy to land from above. Ask for a seat at the table. Strong policies are written with teachers, parents, and pupils — not by leadership alone."
+					},
+					{
+						"n": 3,
+						"title": "Make the case for training funding",
+						"body": "Use NEU and Sutton Trust data to argue for sustained CPD — not a one-off INSET. Formal training gaps between state and independent schools are an equity issue as well as a professional one."
+					}
+				]
+			},
+			"leader": {
+				"prose": "<p>Three governance actions leaders and governors can take this term — drawn from the NEU framework and the survey data above.</p>",
+				"actions": [
+					{
+						"n": 1,
+						"title": "Commission an AI literacy audit",
+						"body": "Find out what pupils and staff already know about AI limitations. The results often surprise — and give you evidence to argue for curriculum time."
+					},
+					{
+						"n": 2,
+						"title": "Publish a pupil-facing AI policy this term",
+						"body": "Two thirds of schools still lack a pupil-specific policy. Yours can be among the minority that does. Involve teachers, pupils, and parents in drafting — not only senior leadership."
+					},
+					{
+						"n": 3,
+						"title": "Budget for sustained AI CPD",
+						"body": "One INSET afternoon will not close the training gap. Commission a programme with a named lead and clear outcomes."
+					}
+				]
+			}
+		}
+	]
+}

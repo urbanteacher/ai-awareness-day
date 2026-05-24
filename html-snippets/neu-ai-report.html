@@ -1,0 +1,979 @@
+<!-- [aiad_neu_ai_report] -->
+<style>
+/* NEU AI Report ([aiad_neu_ai_report]) — FT-style editorial commentary + data */
+
+#aiad-neu-report {
+	--nr-ink: #1a1a1a;
+	--nr-muted: #555;
+	--nr-rule: #ccc;
+	--nr-accent-1: var(--accent-blue, #2563eb);
+	--nr-accent-2: var(--accent-purple, #7c3aed);
+	--nr-accent-3: var(--accent-rose, #db2777);
+	--nr-accent-4: var(--accent-emerald, #059669);
+	font-family: var(--font-body, 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+	max-width: none;
+	margin: 2.5rem 0;
+	padding: 0;
+	color: var(--nr-ink);
+	box-sizing: border-box;
+}
+
+#aiad-neu-report *,
+#aiad-neu-report *::before,
+#aiad-neu-report *::after {
+	box-sizing: border-box;
+}
+
+.entry-content--post #aiad-neu-report,
+.entry-content--timeline #aiad-neu-report {
+	font-size: 1.05rem;
+	line-height: 1.85;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+#aiad-neu-report .nr-intro {
+	margin-bottom: 2rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid var(--nr-rule);
+}
+
+#aiad-neu-report .nr-kicker {
+	font-family: var(--font-display, inherit);
+	font-size: 0.6875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: #888;
+	margin: 0 0 0.75rem;
+}
+
+#aiad-neu-report .nr-standfirst {
+	font-size: 1.125rem;
+	line-height: 1.55;
+	color: var(--nr-ink);
+	margin: 0;
+}
+
+#aiad-neu-report .nr-standfirst p {
+	margin: 0;
+}
+
+#aiad-neu-report .nr-standfirst em {
+	font-style: italic;
+}
+
+#aiad-neu-report .nr-scope {
+	font-size: 0.8125rem;
+	color: #888;
+	line-height: 1.55;
+	margin: 1rem 0 0;
+}
+
+#aiad-neu-report .nr-lens-label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+#aiad-neu-report .nr-lens-row {
+	display: flex;
+	gap: 0;
+	margin-bottom: 2rem;
+	border-bottom: 1px solid var(--nr-rule);
+}
+
+#aiad-neu-report .nr-lens-btn {
+	padding: 0.5rem 1rem 0.625rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
+	background: transparent;
+	color: var(--nr-muted);
+	transition: color 0.15s, border-color 0.15s;
+	font-family: inherit;
+}
+
+#aiad-neu-report .nr-lens-btn:hover {
+	color: var(--nr-ink);
+}
+
+#aiad-neu-report .nr-lens-btn[aria-pressed='true'] {
+	color: var(--nr-ink);
+	font-weight: 600;
+	border-bottom-color: var(--nr-ink);
+}
+
+#aiad-neu-report .nr-lens-btn:focus-visible {
+	outline: 2px solid var(--green-600, #0f6e56);
+	outline-offset: 2px;
+}
+
+#aiad-neu-report .nr-sections {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+#aiad-neu-report .nr-section {
+	padding: 2rem 0 0;
+	border-top: 1px solid var(--nr-rule);
+}
+
+#aiad-neu-report .nr-section:first-child {
+	border-top: none;
+	padding-top: 0;
+}
+
+#aiad-neu-report .nr-sec-heading {
+	margin: 0 0 1rem;
+}
+
+#aiad-neu-report .nr-sec-title {
+	font-family: var(--font-display, inherit);
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--nr-ink);
+	line-height: 1.25;
+	margin: 0;
+}
+
+#aiad-neu-report .nr-sec-body {
+	padding: 0;
+}
+
+#aiad-neu-report .nr-lc {
+	display: none;
+}
+
+#aiad-neu-report .nr-lc.is-active {
+	display: block;
+}
+
+#aiad-neu-report .nr-prose {
+	font-size: inherit;
+	line-height: inherit;
+	color: var(--nr-ink);
+	margin: 0 0 1.25rem;
+}
+
+#aiad-neu-report .nr-prose p {
+	margin: 0 0 1.25rem;
+}
+
+#aiad-neu-report .nr-prose p:last-child {
+	margin-bottom: 0;
+}
+
+#aiad-neu-report .nr-prose strong {
+	font-weight: 600;
+}
+
+#aiad-neu-report .nr-chart {
+	margin: 1.5rem 0;
+}
+
+#aiad-neu-report .nr-chart-lbl {
+	font-family: var(--font-display, inherit);
+	font-size: 0.6875rem;
+	font-weight: 700;
+	color: #888;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	margin: 0 0 0.75rem;
+}
+
+#aiad-neu-report .nr-figures {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	gap: 1.25rem 1.5rem;
+	margin: 0;
+	padding: 0;
+}
+
+#aiad-neu-report .nr-figure {
+	margin: 0;
+	padding: 0;
+}
+
+#aiad-neu-report .nr-figure-value {
+	font-family: var(--font-display, inherit);
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1;
+	margin: 0 0 0.35rem;
+	color: var(--nr-ink);
+}
+
+#aiad-neu-report .nr-figure--1 .nr-figure-value {
+	color: var(--nr-accent-1);
+}
+
+#aiad-neu-report .nr-figure--2 .nr-figure-value {
+	color: var(--nr-accent-2);
+}
+
+#aiad-neu-report .nr-figure--3 .nr-figure-value {
+	color: var(--nr-accent-3);
+}
+
+#aiad-neu-report .nr-figure--4 .nr-figure-value {
+	color: var(--nr-accent-4);
+}
+
+#aiad-neu-report .nr-figure-cap {
+	font-size: 0.8125rem;
+	line-height: 1.45;
+	color: var(--nr-muted);
+	margin: 0;
+}
+
+#aiad-neu-report .nr-bars {
+	display: flex;
+	flex-direction: column;
+	gap: 0.875rem;
+	margin: 0;
+}
+
+#aiad-neu-report .nr-bar-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-rows: auto auto;
+	gap: 0.25rem 0.75rem;
+	align-items: center;
+}
+
+#aiad-neu-report .nr-bar-lbl {
+	grid-column: 1 / -1;
+	font-size: 0.875rem;
+	color: var(--nr-ink);
+	line-height: 1.4;
+}
+
+#aiad-neu-report .nr-bar-track {
+	grid-column: 1;
+	height: 3px;
+	background: #e5e5e5;
+	overflow: hidden;
+}
+
+#aiad-neu-report .nr-bar-fill {
+	height: 3px;
+	width: 0%;
+	background: var(--nr-accent-1);
+	transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+	min-width: 0;
+	font-size: 0;
+	line-height: 0;
+	color: transparent;
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 1) .nr-bar-fill {
+	background: var(--nr-accent-1);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 2) .nr-bar-fill {
+	background: var(--nr-accent-2);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 3) .nr-bar-fill {
+	background: var(--nr-accent-3);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 4) .nr-bar-fill {
+	background: var(--nr-accent-4);
+}
+
+#aiad-neu-report .nr-bar-pct {
+	grid-column: 2;
+	grid-row: 2;
+	font-family: var(--font-display, inherit);
+	font-size: 0.875rem;
+	font-weight: 700;
+	color: var(--nr-ink);
+	text-align: right;
+	white-space: nowrap;
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 1) .nr-bar-pct {
+	color: var(--nr-accent-1);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 2) .nr-bar-pct {
+	color: var(--nr-accent-2);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 3) .nr-bar-pct {
+	color: var(--nr-accent-3);
+}
+
+#aiad-neu-report .nr-bar-row:nth-child(4n + 4) .nr-bar-pct {
+	color: var(--nr-accent-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#aiad-neu-report .nr-bar-fill {
+		transition: none;
+	}
+}
+
+#aiad-neu-report .nr-data-table-wrap {
+	margin-top: 0.5rem;
+}
+
+#aiad-neu-report .nr-quote {
+	border: none;
+	border-left: 3px solid var(--nr-ink);
+	padding: 0 0 0 1rem;
+	margin: 1.5rem 0;
+	font-size: 1rem;
+	color: var(--nr-ink);
+	line-height: 1.55;
+	font-style: normal;
+}
+
+#aiad-neu-report .nr-quote cite {
+	display: block;
+	font-style: normal;
+	font-size: 0.8125rem;
+	margin-top: 0.5rem;
+	font-weight: 400;
+	color: var(--nr-muted);
+}
+
+#aiad-neu-report .nr-actions {
+	margin: 1rem 0 0;
+	padding: 0 0 0 1.25rem;
+	list-style: decimal;
+}
+
+#aiad-neu-report .nr-actions li {
+	margin-bottom: 1rem;
+	padding-left: 0.25rem;
+	color: var(--nr-muted);
+	line-height: 1.6;
+}
+
+#aiad-neu-report .nr-actions li:last-child {
+	margin-bottom: 0;
+}
+
+#aiad-neu-report .nr-actions strong {
+	display: block;
+	color: var(--nr-ink);
+	font-weight: 600;
+	margin-bottom: 0.15rem;
+}
+
+#aiad-neu-report .nr-note,
+#aiad-neu-report .nr-source-note {
+	font-size: 0.8125rem;
+	color: #888;
+	line-height: 1.55;
+	margin: 1rem 0 0;
+	padding: 0;
+	background: none;
+	border: none;
+}
+
+#aiad-neu-report .nr-footer {
+	font-size: 0.8125rem;
+	color: #888;
+	margin-top: 2.5rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--nr-rule);
+	line-height: 1.6;
+	text-align: left;
+}
+
+#aiad-neu-report .nr-footer a {
+	color: var(--nr-ink);
+	text-decoration: underline;
+	text-underline-offset: 0.12em;
+}
+
+#aiad-neu-report .nr-footer a:hover {
+	color: var(--nr-muted);
+}
+
+@media (max-width: 500px) {
+	#aiad-neu-report .nr-figures {
+		grid-template-columns: 1fr;
+	}
+}
+
+</style>
+<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial"><div class="nr-intro"><p class="nr-kicker">Analysis</p><div id="aiad-neu-standfirst" class="nr-standfirst"></div><p class="nr-scope" id="aiad-neu-scope"></p></div><p class="nr-lens-label" id="aiad-neu-lens-label">View through the lens of:</p><div class="nr-lens-row" role="tablist"><button type="button" class="nr-lens-btn" data-lens="teacher" aria-pressed="true">Classroom teacher</button><button type="button" class="nr-lens-btn" data-lens="leader" aria-pressed="false">School leader / governor</button></div><div class="nr-sections" id="aiad-neu-sections"></div></div>
+<script>window.aiadNeuReportData={
+	"sourceUrl": "https://neu.org.uk/latest/press-releases/state-education-2026-ai",
+	"surveyNote": "NEU online survey, 5–16 February 2026. 9,408 teacher members in English state schools.",
+	"editorial": {
+		"standfirst": "The NEU's <em>State of Education: AI</em> survey exposes a fault line in English state schools: <strong>76%</strong> of teachers now use AI in their daily work, yet <strong>49%</strong> of schools have no AI policy for staff or pupils. The findings — drawn from 9,408 NEU members surveyed in February 2026 — point to rapid staff adoption, deepening concerns over pupil learning, and institutional lag on governance.",
+		"methodology": "Unless stated otherwise, figures are from the NEU release (February 2026). Training comparisons cite Sutton Trust polling (April 2025)."
+	},
+	"strings": {
+		"dataTableCaption": "Data table",
+		"downloadData": "Download chart data (CSV)",
+		"barChartLabel": "Bar chart",
+		"defaultChartLbl": "Share of teachers surveyed (%)"
+	},
+	"sections": [
+		{
+			"id": "adoption",
+			"title": "Staff adoption gathers pace",
+			"teacher": {
+				"prose": "<p>Teacher reliance on AI has risen sharply — from <strong>53%</strong> in 2025 to <strong>76%</strong> today — driven chiefly by workload pressure rather than institutional strategy. Most colleagues are self-taught; adoption is outpacing training and policy by a wide margin.</p><p>The pattern of use is revealing. AI has become a default tool for resource creation and planning, while marking remains largely human work. One respondent warned that without guidance, staff risk \"simply churning out sub-standard work\" in the rush to save time.</p>"
+			},
+			"leader": {
+				"prose": "<p>At <strong>76%</strong> regular use, AI is already embedded in everyday school practice — with or without leadership sign-off. The question is no longer whether staff will use these tools, but whether the school has a shared framework for doing so safely.</p><p>Adoption is concentrated in resource creation (<strong>61%</strong>) and lesson planning (<strong>41%</strong>), with administrative tasks at <strong>38%</strong>. Marking, at just <strong>7%</strong>, suggests teachers still treat assessment as a professional judgement call — for now.</p>"
+			},
+			"bars": [
+				{ "l": "Use AI regularly for day-to-day work", "pct": 76, "sub": "up from 53% in 2025" },
+				{ "l": "Resource creation (worksheets, quizzes)", "pct": 61 },
+				{ "l": "Lesson planning", "pct": 41 },
+				{ "l": "Administrative tasks", "pct": 38 },
+				{ "l": "Marking", "pct": 7 }
+			],
+			"note": "Source: NEU survey of 9,408 teacher members in English state schools (February 2026).",
+			"quote": {
+				"t": "Teachers are clearly desperate for workload relief. But without proper guidance, some are simply churning out sub-standard work.",
+				"c": "NEU survey respondent"
+			}
+		},
+		{
+			"id": "thinking",
+			"title": "Impact on pupil learning",
+			"teacher": {
+				"prose": "<p><strong>66%</strong> of secondary teachers say pupils' critical thinking has declined because of AI use — against <strong>28%</strong> in primary. The gap suggests the problem intensifies once pupils can access tools independently, often before they have learned to interrogate outputs.</p><p>NEU General Secretary Daniel Kebede argues that \"students must be able to think for themselves\" — yet the survey data shows reliance on AI is already affecting the skills assessments are meant to measure. Key Stage 3 may be the critical window for AI literacy and assessment redesign.</p>"
+			},
+			"leader": {
+				"prose": "<p>If two thirds of secondary teachers report declining critical thinking, this is a whole-school pedagogical issue — not a problem for individual classrooms to manage alone. Primary colleagues report the trend less acutely (<strong>28%</strong>), but the direction of travel is clear as access widens.</p><p>Leaders should ask a direct question: do current assessments still measure what you intend in a world where pupils can reach for AI at any moment? If not, what are they actually testing?</p>"
+			},
+			"split": [
+				{
+					"n": "66%",
+					"l": "Secondary teachers reporting a decline in pupils' critical thinking due to AI",
+					"pct": 66
+				},
+				{
+					"n": "28%",
+					"l": "Primary teachers reporting the same",
+					"pct": 28
+				}
+			],
+			"bars": [
+				{ "l": "Secondary: critical thinking declined", "pct": 66 },
+				{ "l": "Primary: critical thinking declined", "pct": 28 }
+			],
+			"chartLbl": "Teachers agreeing critical thinking has declined (due to AI use)",
+			"quote": {
+				"t": "Students must be able to think for themselves. This is at the heart of learning, but our survey shows a reliance on AI is having an effect on students' ability to think critically.",
+				"c": "Daniel Kebede, NEU General Secretary"
+			}
+		},
+		{
+			"id": "policy",
+			"title": "Governance and training gaps",
+			"teacher": {
+				"prose": "<p><strong>49%</strong> of schools have no AI policy for staff or pupils; <strong>66%</strong> lack guidance specifically on pupil use. Teachers are making daily professional judgement calls without institutional cover — a safeguarding as well as a workload issue.</p><p>Separate Sutton Trust research underlines the training deficit: just <strong>21%</strong> of state-school teachers had received formal AI training by April 2025, against <strong>45%</strong> in independent schools. Policy absence and training inequality are two sides of the same governance failure.</p>"
+			},
+			"leader": {
+				"prose": "<p>Nearly half of schools report no AI policy whatsoever — an urgent governance risk. In the absence of published guidance, staff and pupils improvise, and the school has no shared framework if something goes wrong.</p><p>The Sutton Trust gap (<strong>21%</strong> state vs <strong>45%</strong> independent for formal training) sits alongside the NEU's policy findings. Both point to structural under-investment rather than individual reluctance.</p>"
+			},
+			"policy": [
+				{
+					"n": "49%",
+					"l": "Schools with no AI policy for staff or pupils",
+					"pct": 49
+				},
+				{
+					"n": "66%",
+					"l": "Schools with no AI policy specifically for pupil use",
+					"pct": 66
+				}
+			],
+			"chartLbl": "Formal AI training (Sutton Trust, England — April 2025)",
+			"bars": [
+				{ "l": "State-school teachers with formal AI training", "pct": 21, "source": "Sutton Trust 2025" },
+				{ "l": "Independent-school teachers with formal AI training", "pct": 45, "source": "Sutton Trust 2025" }
+			],
+			"sourceNote": "Policy figures: NEU, February 2026. Training bars: Sutton Trust <em>Artificial advantage?</em> (Teacher Tapp polling, April 2025)."
+		},
+		{
+			"id": "tutor",
+			"title": "The government's AI tutor plan",
+			"teacher": {
+				"prose": "<p>Only <strong>14%</strong> of teachers support the Department for Education's plan to introduce AI tutors for disadvantaged pupils. <strong>49%</strong> oppose it outright; <strong>36%</strong> expressed no view when surveyed in February 2026, a week after the announcement.</p><p>Frontline concerns are consistent: AI cannot substitute for human empathy, professional judgement, or the relationships that make teaching work. Kebede has warned the government risks pupil development by deploying AI tutoring before long-term impacts are understood.</p>"
+			},
+			"leader": {
+				"prose": "<p>Before adopting any externally mandated AI tool, consult staff and assess pupil impact. What does it replace? What does it risk? Who is accountable if it gives incorrect information?</p><p>With <strong>14%</strong> support, <strong>49%</strong> opposition and <strong>36%</strong> undecided, the plan lacks a mandate from the profession. Opposition was strongest in special schools and pupil referral units — settings where the human relationship is often most critical.</p>"
+			},
+			"stats": [
+				{ "n": "14%", "l": "Support the AI tutor plan", "pct": 14 },
+				{ "n": "49%", "l": "Oppose the plan", "pct": 49 },
+				{ "n": "36%", "l": "Expressed no view either way", "pct": 36 }
+			],
+			"quote": {
+				"t": "AI cannot be used as a cheap sticking plaster for underfunded schools or a replacement for real support staff and qualified teachers.",
+				"c": "NEU survey respondents"
+			}
+		},
+		{
+			"id": "action",
+			"title": "What happens next",
+			"teacher": {
+				"prose": "<p>The NEU is calling for structural change — curriculum time for AI literacy, properly funded training, and pupil-facing policies written with the profession. In the meantime, three practical steps matter in the classroom.</p>",
+				"actions": [
+					{
+						"n": 1,
+						"title": "Push for AI literacy in the curriculum",
+						"body": "Request dedicated time to teach pupils about AI limitations — hallucinations, bias, and when not to trust outputs. Frame it as safeguarding as well as digital skills."
+					},
+					{
+						"n": 2,
+						"title": "Co-design your school AI policy",
+						"body": "Do not wait for a policy to land from above. Ask for a seat at the table. Strong policies are written with teachers, parents, and pupils — not by leadership alone."
+					},
+					{
+						"n": 3,
+						"title": "Make the case for training funding",
+						"body": "Use NEU and Sutton Trust data to argue for sustained CPD — not a one-off INSET. Formal training gaps between state and independent schools are an equity issue as well as a professional one."
+					}
+				]
+			},
+			"leader": {
+				"prose": "<p>Three governance actions leaders and governors can take this term — drawn from the NEU framework and the survey data above.</p>",
+				"actions": [
+					{
+						"n": 1,
+						"title": "Commission an AI literacy audit",
+						"body": "Find out what pupils and staff already know about AI limitations. The results often surprise — and give you evidence to argue for curriculum time."
+					},
+					{
+						"n": 2,
+						"title": "Publish a pupil-facing AI policy this term",
+						"body": "Two thirds of schools still lack a pupil-specific policy. Yours can be among the minority that does. Involve teachers, pupils, and parents in drafting — not only senior leadership."
+					},
+					{
+						"n": 3,
+						"title": "Budget for sustained AI CPD",
+						"body": "One INSET afternoon will not close the training gap. Commission a programme with a named lead and clear outcomes."
+					}
+				]
+			}
+		}
+	]
+};
+/**
+ * NEU State of Education: AI Report 2026 — FT-style editorial + data ([aiad_neu_ai_report])
+ */
+(function () {
+	'use strict';
+
+	var CONFIG = window.aiadNeuReportData || {};
+	var SECTIONS = CONFIG.sections || [];
+	var EDITORIAL = CONFIG.editorial || {};
+	var STRINGS = CONFIG.strings || {};
+	var activeLens = 'teacher';
+
+	var prefersReducedMotion =
+		typeof window.matchMedia === 'function' &&
+		window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	function el(id) {
+		return document.getElementById(id);
+	}
+
+	function escapeHtml(str) {
+		var d = document.createElement('div');
+		d.textContent = String(str);
+		return d.innerHTML;
+	}
+
+	function label(key, fallback) {
+		return STRINGS[key] || fallback;
+	}
+
+	function setLens(lens, btn) {
+		activeLens = lens;
+		document.querySelectorAll('#aiad-neu-report .nr-lens-btn').forEach(function (b) {
+			b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+		});
+		document.querySelectorAll('#aiad-neu-report .nr-lc').forEach(function (node) {
+			node.classList.remove('is-active');
+		});
+		document.querySelectorAll('#aiad-neu-report .nr-lc.l-' + lens).forEach(function (node) {
+			node.classList.add('is-active');
+		});
+		animateBars();
+	}
+
+	function animateBars() {
+		var fills = document.querySelectorAll('#aiad-neu-report .nr-bar-fill');
+		fills.forEach(function (node) {
+			var pct = parseInt(node.getAttribute('data-pct') || '0', 10);
+			if (isNaN(pct)) {
+				return;
+			}
+			var width = Math.min(pct, 100) + '%';
+			if (prefersReducedMotion) {
+				node.style.width = width;
+				return;
+			}
+			node.style.width = '0%';
+		});
+
+		if (prefersReducedMotion) {
+			return;
+		}
+
+		setTimeout(function () {
+			fills.forEach(function (node) {
+				var pct = parseInt(node.getAttribute('data-pct') || '0', 10);
+				if (!isNaN(pct)) {
+					node.style.width = Math.min(pct, 100) + '%';
+				}
+			});
+		}, 100);
+	}
+
+	function buildDataTable(sec, chartTitle, rows) {
+		if (!rows || !rows.length) {
+			return null;
+		}
+
+		var wrap = document.createElement('div');
+		wrap.className = 'nr-data-table-wrap';
+
+		var caption = document.createElement('caption');
+		caption.textContent =
+			label('dataTableCaption', 'Data table') + ': ' + sec.title + ' — ' + chartTitle;
+
+		var table = document.createElement('table');
+		table.className = 'nr-data-table screen-reader-text';
+		table.appendChild(caption);
+
+		var thead = document.createElement('thead');
+		thead.innerHTML =
+			'<tr><th scope="col">Metric</th><th scope="col">Value (%)</th><th scope="col">Source</th></tr>';
+		table.appendChild(thead);
+
+		var tbody = document.createElement('tbody');
+		rows.forEach(function (row) {
+			var tr = document.createElement('tr');
+			tr.innerHTML =
+				'<td>' +
+				escapeHtml(row.metric) +
+				'</td><td>' +
+				escapeHtml(String(row.pct)) +
+				'</td><td>' +
+				escapeHtml(row.source || 'NEU') +
+				'</td>';
+			tbody.appendChild(tr);
+		});
+		table.appendChild(tbody);
+		wrap.appendChild(table);
+		return wrap;
+	}
+
+	function rowsFromBars(sec) {
+		if (!sec.bars) {
+			return [];
+		}
+		return sec.bars.map(function (b) {
+			return {
+				metric: b.l + (b.sub ? ' (' + b.sub + ')' : ''),
+				pct: b.pct,
+				source: b.source || (sec.id === 'policy' ? 'Sutton Trust 2025' : 'NEU 2026'),
+			};
+		});
+	}
+
+	function rowsFromFigures(items) {
+		if (!items) {
+			return [];
+		}
+		return items.map(function (item) {
+			return {
+				metric: item.l,
+				pct: item.pct != null ? item.pct : parseInt(String(item.n).replace(/[^0-9]/g, ''), 10),
+				source: 'NEU 2026',
+			};
+		});
+	}
+
+	function appendProse(lc, ld) {
+		if (ld.prose) {
+			var prose = document.createElement('div');
+			prose.className = 'nr-prose';
+			prose.innerHTML = ld.prose;
+			lc.appendChild(prose);
+			return;
+		}
+
+		if (ld.insight || ld.extra) {
+			var fallback = document.createElement('div');
+			fallback.className = 'nr-prose';
+			var html = '';
+			if (ld.insight) {
+				html += '<p>' + ld.insight + '</p>';
+			}
+			if (ld.extra) {
+				html += '<p>' + escapeHtml(ld.extra) + '</p>';
+			}
+			fallback.innerHTML = html;
+			lc.appendChild(fallback);
+		}
+	}
+
+	function renderFigures(items) {
+		var row = document.createElement('div');
+		row.className = 'nr-figures';
+		items.forEach(function (item, index) {
+			var fig = document.createElement('figure');
+			fig.className = 'nr-figure nr-figure--' + ((index % 4) + 1);
+			var value = document.createElement('p');
+			value.className = 'nr-figure-value';
+			value.textContent = item.n || String(item.pct) + '%';
+			var cap = document.createElement('figcaption');
+			cap.className = 'nr-figure-cap';
+			cap.textContent = item.l;
+			fig.appendChild(value);
+			fig.appendChild(cap);
+			row.appendChild(fig);
+		});
+		return row;
+	}
+
+	function appendChartBlock(lc, sec, chartTitle, chartId, renderVisual, rows) {
+		var block = document.createElement('div');
+		block.className = 'nr-chart';
+
+		var chartLbl = document.createElement('p');
+		chartLbl.className = 'nr-chart-lbl';
+		chartLbl.id = chartId + '-lbl';
+		chartLbl.textContent = chartTitle;
+		block.appendChild(chartLbl);
+
+		var visual = renderVisual();
+		if (visual) {
+			visual.setAttribute('role', 'img');
+			visual.setAttribute('aria-labelledby', chartId + '-lbl');
+			block.appendChild(visual);
+		}
+
+		var table = buildDataTable(sec, chartTitle, rows);
+		if (table) {
+			block.appendChild(table);
+		}
+
+		lc.appendChild(block);
+	}
+
+	function renderEditorial() {
+		var standfirst = el('aiad-neu-standfirst');
+		if (standfirst && EDITORIAL.standfirst) {
+			standfirst.innerHTML = '<p>' + EDITORIAL.standfirst + '</p>';
+		}
+
+		var scope = el('aiad-neu-scope');
+		if (scope) {
+			var note = EDITORIAL.methodology || CONFIG.surveyNote || '';
+			if (note) {
+				scope.textContent = note;
+			}
+		}
+	}
+
+	function render() {
+		var wrap = el('aiad-neu-sections');
+		if (!wrap || !SECTIONS.length) {
+			return;
+		}
+
+		wrap.innerHTML = '';
+
+		SECTIONS.forEach(function (sec) {
+			var block = document.createElement('article');
+			block.className = 'nr-section';
+			block.id = 'nr-sec-' + sec.id;
+
+			var heading = document.createElement('header');
+			heading.className = 'nr-sec-heading';
+			heading.innerHTML =
+				'<h3 class="nr-sec-title" id="nr-head-' +
+				sec.id +
+				'">' +
+				escapeHtml(sec.title) +
+				'</h3>';
+
+			var body = document.createElement('div');
+			body.className = 'nr-sec-body';
+			body.id = 'nr-body-' + sec.id;
+			body.setAttribute('aria-labelledby', 'nr-head-' + sec.id);
+
+			['teacher', 'leader'].forEach(function (lens) {
+				var ld = sec[lens];
+				if (!ld) {
+					return;
+				}
+
+				var lc = document.createElement('div');
+				lc.className = 'nr-lc l-' + lens + (lens === activeLens ? ' is-active' : '');
+
+				appendProse(lc, ld);
+
+				if (sec.split) {
+					appendChartBlock(
+						lc,
+						sec,
+						'By phase',
+						'chart-' + sec.id + '-' + lens + '-split',
+						function () {
+							return renderFigures(sec.split);
+						},
+						rowsFromFigures(sec.split)
+					);
+				}
+
+				if (sec.bars) {
+					var barsTitle = sec.chartLbl || label('defaultChartLbl', 'Share of teachers surveyed (%)');
+					appendChartBlock(
+						lc,
+						sec,
+						barsTitle,
+						'chart-' + sec.id + '-' + lens + '-bars',
+						function () {
+							var bars = document.createElement('div');
+							bars.className = 'nr-bars';
+							sec.bars.forEach(function (b, bi) {
+								var row = document.createElement('div');
+								row.className = 'nr-bar-row';
+								var barLabel = b.l + (b.sub ? ' (' + b.sub + ')' : '');
+								row.innerHTML =
+									'<span class="nr-bar-lbl">' +
+									escapeHtml(barLabel) +
+									'</span><div class="nr-bar-track"><div class="nr-bar-fill" id="bf-' +
+									sec.id +
+									'-' +
+									lens +
+									'-' +
+									bi +
+									'" data-pct="' +
+									b.pct +
+									'" aria-hidden="true"></div></div><span class="nr-bar-pct">' +
+									b.pct +
+									'%</span>';
+								bars.appendChild(row);
+							});
+							return bars;
+						},
+						rowsFromBars(sec)
+					);
+
+					if (sec.note) {
+						var note = document.createElement('p');
+						note.className = 'nr-note';
+						note.textContent = sec.note;
+						lc.appendChild(note);
+					}
+				}
+
+				if (sec.policy) {
+					appendChartBlock(
+						lc,
+						sec,
+						'School policy (NEU)',
+						'chart-' + sec.id + '-' + lens + '-policy',
+						function () {
+							return renderFigures(sec.policy);
+						},
+						rowsFromFigures(sec.policy)
+					);
+				}
+
+				if (sec.stats) {
+					appendChartBlock(
+						lc,
+						sec,
+						'Views on the DfE AI tutor plan',
+						'chart-' + sec.id + '-' + lens + '-stats',
+						function () {
+							return renderFigures(sec.stats);
+						},
+						rowsFromFigures(sec.stats)
+					);
+				}
+
+				if (sec.quote) {
+					var quote = document.createElement('blockquote');
+					quote.className = 'nr-quote';
+					quote.innerHTML =
+						escapeHtml(sec.quote.t) + '<cite>— ' + escapeHtml(sec.quote.c) + '</cite>';
+					lc.appendChild(quote);
+				}
+
+				if (sec.sourceNote) {
+					var src = document.createElement('p');
+					src.className = 'nr-source-note';
+					src.innerHTML = sec.sourceNote;
+					lc.appendChild(src);
+				}
+
+				if (ld.actions) {
+					var list = document.createElement('ol');
+					list.className = 'nr-actions';
+					ld.actions.forEach(function (a) {
+						var item = document.createElement('li');
+						item.innerHTML =
+							'<strong>' + escapeHtml(a.title) + '</strong>' + escapeHtml(a.body);
+						list.appendChild(item);
+					});
+					lc.appendChild(list);
+				}
+
+				body.appendChild(lc);
+			});
+
+			block.appendChild(heading);
+			block.appendChild(body);
+			wrap.appendChild(block);
+		});
+
+		animateBars();
+	}
+
+	function bind() {
+		var root = el('aiad-neu-report');
+		if (!root || root.getAttribute('data-nr-bound') === '1') {
+			return;
+		}
+		root.setAttribute('data-nr-bound', '1');
+
+		document.querySelectorAll('#aiad-neu-report .nr-lens-btn').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				setLens(btn.getAttribute('data-lens'), btn);
+			});
+		});
+
+		renderEditorial();
+		render();
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', bind);
+	} else {
+		bind();
+	}
+})();
+
+</script>

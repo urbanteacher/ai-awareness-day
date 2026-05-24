@@ -289,6 +289,7 @@ function aiad_timeline_entry_has_interactive_shortcode(WP_Post $entry): bool
         '[aiad_speed_quiz',
         '[aiad_computing_curriculum',
         '[aiad_misinformation_detector',
+        '[aiad_neu_ai_report',
     );
     foreach ($needles as $needle) {
         if (false !== strpos($entry->post_content, $needle)) {
@@ -320,6 +321,8 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
         $cta = __('Try the curriculum challenge →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_misinformation_detector')) {
         $cta = __('Try the misinformation detector →', 'ai-awareness-day');
+    } elseif (false !== strpos($entry->post_content, '[aiad_neu_ai_report')) {
+        $cta = __('Explore the NEU data →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_llm_explainer')) {
         $cta = __('Try the 6-step explainer →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_buzzwords')) {
