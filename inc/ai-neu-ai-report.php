@@ -23,6 +23,51 @@ function aiad_post_content_has_neu_ai_report_shortcode( WP_Post $post ): bool {
 }
 
 /**
+ * Editorial headline for the NEU report (from theme JSON).
+ */
+function aiad_neu_ai_report_get_headline(): string {
+	if ( ! function_exists( 'aiad_neu_ai_report_get_config' ) ) {
+		return __( 'Unpacking the NEU AI Report', 'ai-awareness-day' );
+	}
+	$config = aiad_neu_ai_report_get_config();
+	$headline = $config['editorial']['headline'] ?? '';
+	return is_string( $headline ) && '' !== $headline
+		? $headline
+		: __( 'Unpacking the NEU AI Report', 'ai-awareness-day' );
+}
+
+/**
+ * Use the editorial headline for page/post titles when the shortcode is present.
+ *
+ * @param string $title Post title.
+ * @param int    $post_id Post ID.
+ */
+function aiad_neu_ai_report_filter_the_title( string $title, int $post_id = 0 ): string {
+	if ( is_admin() || ! $post_id ) {
+		return $title;
+	}
+	$post = get_post( $post_id );
+	if ( ! $post instanceof WP_Post || ! aiad_post_content_has_neu_ai_report_shortcode( $post ) ) {
+		return $title;
+	}
+	return aiad_neu_ai_report_get_headline();
+}
+add_filter( 'the_title', 'aiad_neu_ai_report_filter_the_title', 10, 2 );
+
+/**
+ * @param array<string, string> $parts Document title parts.
+ * @return array<string, string>
+ */
+function aiad_neu_ai_report_filter_document_title_parts( array $parts ): array {
+	if ( ! is_singular() || ! aiad_content_has_neu_ai_report_shortcode() ) {
+		return $parts;
+	}
+	$parts['title'] = aiad_neu_ai_report_get_headline();
+	return $parts;
+}
+add_filter( 'document_title_parts', 'aiad_neu_ai_report_filter_document_title_parts' );
+
+/**
  * Whether the current singular view should load NEU AI report assets.
  */
 function aiad_content_has_neu_ai_report_shortcode(): bool {
@@ -85,18 +130,31 @@ function aiad_enqueue_neu_ai_report_assets(): void {
 function aiad_neu_ai_report_shortcode( $atts = array() ): string {
 	$GLOBALS['aiad_neu_ai_report_shortcode_rendered'] = true;
 
-	shortcode_atts( array(), is_array( $atts ) ? $atts : array(), 'aiad_neu_ai_report' );
+	$atts = shortcode_atts(
+		array(
+			'headline' => 'auto',
+		),
+		is_array( $atts ) ? $atts : array(),
+		'aiad_neu_ai_report'
+	);
 
 	aiad_enqueue_neu_ai_report_assets();
 
-	$host = wp_parse_url( home_url(), PHP_URL_HOST ) ?: 'aiawarenessday.co.uk';
+	$host       = wp_parse_url( home_url(), PHP_URL_HOST ) ?: 'aiawarenessday.co.uk';
 	$source_url = 'https://neu.org.uk/latest/press-releases/state-education-2026-ai';
+	$headline   = aiad_neu_ai_report_get_headline();
+	$show_headline = ( '1' === $atts['headline'] ) || ( 'auto' !== $atts['headline'] && '0' !== $atts['headline'] && 'false' !== $atts['headline'] );
+	if ( 'auto' === $atts['headline'] ) {
+		$show_headline = ! is_singular();
+	}
 
 	ob_start();
 	?>
-	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php esc_attr_e( 'Unpacking the NEU AI Report', 'ai-awareness-day' ); ?>">
+	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php echo esc_attr( $headline ); ?>">
 		<div class="nr-intro">
-			<h2 id="aiad-neu-headline" class="nr-headline"><?php esc_html_e( 'Unpacking the NEU AI Report', 'ai-awareness-day' ); ?></h2>
+			<?php if ( $show_headline ) : ?>
+				<h2 id="aiad-neu-headline" class="nr-headline"><?php echo esc_html( $headline ); ?></h2>
+			<?php endif; ?>
 			<div id="aiad-neu-introduction" class="nr-introduction"></div>
 			<p class="nr-scope" id="aiad-neu-scope"></p>
 		</div>
