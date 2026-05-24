@@ -38,36 +38,57 @@
 	border-bottom: 1px solid var(--nr-rule);
 }
 
-#aiad-neu-report .nr-kicker {
+#aiad-neu-report .nr-headline {
 	font-family: var(--font-display, inherit);
-	font-size: 0.6875rem;
+	font-size: clamp(1.35rem, 3vw, 1.625rem);
 	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.12em;
-	color: #888;
-	margin: 0 0 0.75rem;
-}
-
-#aiad-neu-report .nr-standfirst {
-	font-size: 1.125rem;
-	line-height: 1.55;
+	line-height: 1.2;
 	color: var(--nr-ink);
-	margin: 0;
+	margin: 0 0 1.25rem;
 }
 
-#aiad-neu-report .nr-standfirst p {
+#aiad-neu-report .nr-introduction {
 	margin: 0;
+	color: var(--nr-ink);
 }
 
-#aiad-neu-report .nr-standfirst em {
+#aiad-neu-report .nr-introduction p {
+	margin: 0 0 1.25rem;
+}
+
+#aiad-neu-report .nr-introduction p:last-child {
+	margin-bottom: 0;
+}
+
+#aiad-neu-report .nr-introduction em {
 	font-style: italic;
+}
+
+#aiad-neu-report .nr-introduction a {
+	color: var(--green-700, #0f6e56);
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+#aiad-neu-report .nr-introduction a:hover {
+	color: var(--green-600, #128f6f);
 }
 
 #aiad-neu-report .nr-scope {
 	font-size: 0.8125rem;
 	color: #888;
 	line-height: 1.55;
-	margin: 1rem 0 0;
+	margin: 1.25rem 0 0;
+}
+
+#aiad-neu-report .nr-data-lead {
+	font-family: var(--font-display, inherit);
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.25;
+	color: var(--nr-ink);
+	margin: 2rem 0 1.25rem;
+	padding-top: 0.25rem;
 }
 
 #aiad-neu-report .nr-lens-label {
@@ -261,13 +282,13 @@
 
 #aiad-neu-report .nr-bar-track {
 	grid-column: 1;
-	height: 3px;
+	height: 6px;
 	background: #e5e5e5;
 	overflow: hidden;
 }
 
 #aiad-neu-report .nr-bar-fill {
-	height: 3px;
+	height: 6px;
 	width: 0%;
 	background: var(--nr-accent-1);
 	transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
@@ -412,13 +433,15 @@
 }
 
 </style>
-<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial"><div class="nr-intro"><p class="nr-kicker">Analysis</p><div id="aiad-neu-standfirst" class="nr-standfirst"></div><p class="nr-scope" id="aiad-neu-scope"></p></div><p class="nr-lens-label" id="aiad-neu-lens-label">View through the lens of:</p><div class="nr-lens-row" role="tablist"><button type="button" class="nr-lens-btn" data-lens="teacher" aria-pressed="true">Classroom teacher</button><button type="button" class="nr-lens-btn" data-lens="leader" aria-pressed="false">School leader / governor</button></div><div class="nr-sections" id="aiad-neu-sections"></div></div>
+<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial"><div class="nr-intro"><h2 id="aiad-neu-headline" class="nr-headline">Unpacking the NEU AI Report</h2><div id="aiad-neu-introduction" class="nr-introduction"></div><p class="nr-scope" id="aiad-neu-scope"></p></div><h2 id="aiad-neu-data-lead" class="nr-data-lead"></h2><p class="nr-lens-label" id="aiad-neu-lens-label">View through the lens of:</p><div class="nr-lens-row" role="tablist"><button type="button" class="nr-lens-btn" data-lens="teacher" aria-pressed="true">Classroom teacher</button><button type="button" class="nr-lens-btn" data-lens="leader" aria-pressed="false">School leader / governor</button></div><div class="nr-sections" id="aiad-neu-sections"></div></div>
 <script>window.aiadNeuReportData={
 	"sourceUrl": "https://neu.org.uk/latest/press-releases/state-education-2026-ai",
 	"surveyNote": "NEU online survey, 5–16 February 2026. 9,408 teacher members in English state schools.",
 	"editorial": {
-		"standfirst": "The NEU's <em>State of Education: AI</em> survey exposes a fault line in English state schools: <strong>76%</strong> of teachers now use AI in their daily work, yet <strong>49%</strong> of schools have no AI policy for staff or pupils. The findings — drawn from 9,408 NEU members surveyed in February 2026 — point to rapid staff adoption, deepening concerns over pupil learning, and institutional lag on governance.",
-		"methodology": "Unless stated otherwise, figures are from the NEU release (February 2026). Training comparisons cite Sutton Trust polling (April 2025)."
+		"headline": "Unpacking the NEU AI Report",
+		"introduction": "<p>As school leaders and educators, our daily reality is a constant balancing act. Budgets are stretched, class sizes are rising, and demand for special educational needs and disabilities (SEND) support continues to grow. Yet despite these pressures, we continue to do what schools have always done best: support young people.</p><p>Alongside these structural challenges, education has experienced an unprecedented expansion of digital technology over the past decade. Tablets, cloud platforms, automated assessment systems, learning analytics, and online classrooms are now deeply embedded in school life. More recently, generative artificial intelligence has accelerated that transformation even further, rapidly moving from novelty to everyday classroom reality.</p><p>The Department for Education (DfE) has increasingly framed AI as a tool that could reduce workload, improve efficiency, and support stretched school systems. In principle, many educators agree that AI has enormous potential. Used well, it can assist with planning, accessibility, differentiation, administration, and the creation of teaching resources.</p><p>However, the reality emerging inside schools is proving far more complex.</p><p>Recent research published in <em>Harvard Business Review</em> argues that AI does not necessarily reduce workload, but can instead intensify it by accelerating pace, increasing expectations, and expanding oversight responsibilities. In schools, this often intersects with a fragmented ecosystem of digital platforms that teachers must constantly manage, monitor, verify, and adapt to. Rather than simplifying work, technology can sometimes create a new form of &ldquo;platform fatigue,&rdquo; where administrative complexity grows alongside the promise of efficiency.</p><p>Inside the classroom, the challenges are evolving just as rapidly. Traditional plagiarism has shifted into something more difficult to detect and address, with students increasingly relying on generative AI tools to complete work on their behalf. While AI can absolutely support learning when used critically and responsibly, many educators are now raising concerns about cognitive over-reliance &mdash; where students begin outsourcing thinking itself rather than using AI to refine or challenge their ideas.</p><p>Those concerns are no longer anecdotal. The 2026 <em>State of Education</em> survey from the <a href=\"https://neu.org.uk/latest/press-releases/state-education-2026-ai\">National Education Union</a>, based on responses from more than 9,400 teachers in English state schools, found that two-thirds of secondary teachers believe students&rsquo; critical thinking skills are declining because of AI use. The same report found that AI usage among teachers has rapidly increased, with 76 per cent now using AI tools in their day-to-day work.</p><p>At the same time, educators are increasingly warning about the growth of low-quality AI-generated content &mdash; sometimes referred to as &ldquo;AI slop&rdquo; &mdash; filtering into online educational resources, revision materials, social media feeds, and classroom tools. This raises wider questions not only about accuracy, but about trust, digital literacy, and how young people evaluate knowledge in an AI-driven world.</p><p>This is what makes the NEU report so important. Rather than presenting AI as either a miracle solution or an existential threat, it offers a grounded and evidence-based snapshot of how teachers are actually experiencing this technological shift inside English state schools. The findings reveal a far more nuanced reality &mdash; one shaped by opportunity, pressure, uncertainty, and growing concern over the future of critical thinking, workload, and the role of human judgement in education.</p>",
+		"dataLead": "So what does the data actually tell us?",
+		"methodology": "Unless stated otherwise, figures below are from the NEU release (February 2026). Training comparisons cite Sutton Trust polling (April 2025)."
 	},
 	"strings": {
 		"dataTableCaption": "Data table",
@@ -606,7 +629,9 @@
 	function setLens(lens, btn) {
 		activeLens = lens;
 		document.querySelectorAll('#aiad-neu-report .nr-lens-btn').forEach(function (b) {
-			b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+			var active = b === btn;
+			b.setAttribute('aria-pressed', active ? 'true' : 'false');
+			b.setAttribute('aria-selected', active ? 'true' : 'false');
 		});
 		document.querySelectorAll('#aiad-neu-report .nr-lc').forEach(function (node) {
 			node.classList.remove('is-active');
@@ -780,9 +805,19 @@
 	}
 
 	function renderEditorial() {
-		var standfirst = el('aiad-neu-standfirst');
-		if (standfirst && EDITORIAL.standfirst) {
-			standfirst.innerHTML = '<p>' + EDITORIAL.standfirst + '</p>';
+		var headline = el('aiad-neu-headline');
+		if (headline && EDITORIAL.headline) {
+			headline.textContent = EDITORIAL.headline;
+		}
+
+		var introduction = el('aiad-neu-introduction');
+		if (introduction && EDITORIAL.introduction) {
+			introduction.innerHTML = EDITORIAL.introduction;
+		}
+
+		var dataLead = el('aiad-neu-data-lead');
+		if (dataLead && EDITORIAL.dataLead) {
+			dataLead.textContent = EDITORIAL.dataLead;
 		}
 
 		var scope = el('aiad-neu-scope');

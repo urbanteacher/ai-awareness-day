@@ -36,36 +36,57 @@
 	border-bottom: 1px solid var(--nr-rule);
 }
 
-#aiad-neu-report .nr-kicker {
+#aiad-neu-report .nr-headline {
 	font-family: var(--font-display, inherit);
-	font-size: 0.6875rem;
+	font-size: clamp(1.35rem, 3vw, 1.625rem);
 	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.12em;
-	color: #888;
-	margin: 0 0 0.75rem;
-}
-
-#aiad-neu-report .nr-standfirst {
-	font-size: 1.125rem;
-	line-height: 1.55;
+	line-height: 1.2;
 	color: var(--nr-ink);
-	margin: 0;
+	margin: 0 0 1.25rem;
 }
 
-#aiad-neu-report .nr-standfirst p {
+#aiad-neu-report .nr-introduction {
 	margin: 0;
+	color: var(--nr-ink);
 }
 
-#aiad-neu-report .nr-standfirst em {
+#aiad-neu-report .nr-introduction p {
+	margin: 0 0 1.25rem;
+}
+
+#aiad-neu-report .nr-introduction p:last-child {
+	margin-bottom: 0;
+}
+
+#aiad-neu-report .nr-introduction em {
 	font-style: italic;
+}
+
+#aiad-neu-report .nr-introduction a {
+	color: var(--green-700, #0f6e56);
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+#aiad-neu-report .nr-introduction a:hover {
+	color: var(--green-600, #128f6f);
 }
 
 #aiad-neu-report .nr-scope {
 	font-size: 0.8125rem;
 	color: #888;
 	line-height: 1.55;
-	margin: 1rem 0 0;
+	margin: 1.25rem 0 0;
+}
+
+#aiad-neu-report .nr-data-lead {
+	font-family: var(--font-display, inherit);
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.25;
+	color: var(--nr-ink);
+	margin: 2rem 0 1.25rem;
+	padding-top: 0.25rem;
 }
 
 #aiad-neu-report .nr-lens-label {

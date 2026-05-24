@@ -94,12 +94,14 @@ function aiad_neu_ai_report_shortcode( $atts = array() ): string {
 
 	ob_start();
 	?>
-	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php esc_attr_e( 'NEU State of Education AI report interactive data', 'ai-awareness-day' ); ?>">
+	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php esc_attr_e( 'Unpacking the NEU AI Report', 'ai-awareness-day' ); ?>">
 		<div class="nr-intro">
-			<p class="nr-kicker"><?php esc_html_e( 'Analysis', 'ai-awareness-day' ); ?></p>
-			<div id="aiad-neu-standfirst" class="nr-standfirst"></div>
+			<h2 id="aiad-neu-headline" class="nr-headline"><?php esc_html_e( 'Unpacking the NEU AI Report', 'ai-awareness-day' ); ?></h2>
+			<div id="aiad-neu-introduction" class="nr-introduction"></div>
 			<p class="nr-scope" id="aiad-neu-scope"></p>
 		</div>
+
+		<h2 id="aiad-neu-data-lead" class="nr-data-lead"></h2>
 
 		<p class="nr-lens-label" id="aiad-neu-lens-label"><?php esc_html_e( 'View through the lens of:', 'ai-awareness-day' ); ?></p>
 		<div class="nr-lens-row" role="tablist" aria-labelledby="aiad-neu-lens-label">

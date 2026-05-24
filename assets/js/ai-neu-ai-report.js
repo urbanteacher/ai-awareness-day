@@ -207,9 +207,19 @@
 	}
 
 	function renderEditorial() {
-		var standfirst = el('aiad-neu-standfirst');
-		if (standfirst && EDITORIAL.standfirst) {
-			standfirst.innerHTML = '<p>' + EDITORIAL.standfirst + '</p>';
+		var headline = el('aiad-neu-headline');
+		if (headline && EDITORIAL.headline) {
+			headline.textContent = EDITORIAL.headline;
+		}
+
+		var introduction = el('aiad-neu-introduction');
+		if (introduction && EDITORIAL.introduction) {
+			introduction.innerHTML = EDITORIAL.introduction;
+		}
+
+		var dataLead = el('aiad-neu-data-lead');
+		if (dataLead && EDITORIAL.dataLead) {
+			dataLead.textContent = EDITORIAL.dataLead;
 		}
 
 		var scope = el('aiad-neu-scope');
