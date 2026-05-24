@@ -202,3 +202,129 @@ function aiad_neu_ai_report_footer_assets(): void {
 	}
 }
 add_action( 'wp_footer', 'aiad_neu_ai_report_footer_assets', 1 );
+
+/**
+ * Timeline entry slug for the NEU report article.
+ */
+function aiad_neu_ai_report_post_slug(): string {
+	return 'unpacking-neu-ai-report-2026';
+}
+
+/**
+ * WordPress block content for the timeline entry (intro + shortcode).
+ */
+function aiad_get_neu_ai_report_timeline_content(): string {
+	return '<!-- wp:paragraph -->
+<p>The NEU&rsquo;s <em>State of Education: AI</em> survey of more than 9,400 teachers in English state schools is one of the clearest pictures yet of how AI is landing in classrooms — and where schools are being left without guidance.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:shortcode -->
+[aiad_neu_ai_report]
+<!-- /wp:shortcode -->';
+}
+
+/**
+ * Apply timeline meta for the NEU report entry.
+ */
+function aiad_set_neu_ai_report_timeline_meta( int $post_id ): void {
+	update_post_meta( $post_id, '_aiad_timeline_source', 'manual' );
+	update_post_meta( $post_id, '_aiad_timeline_icon', 'announcement' );
+	update_post_meta( $post_id, '_aiad_timeline_auto_type', '' );
+	update_post_meta( $post_id, '_aiad_timeline_related_id', 0 );
+}
+
+/**
+ * Create the NEU report timeline entry if missing.
+ *
+ * @return int Post ID or 0.
+ */
+function aiad_create_neu_ai_report_timeline_entry(): int {
+	$slug  = aiad_neu_ai_report_post_slug();
+	$title = aiad_neu_ai_report_get_headline();
+
+	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
+	if ( $existing instanceof WP_Post ) {
+		return (int) $existing->ID;
+	}
+
+	$post_id = wp_insert_post(
+		array(
+			'post_type'    => 'timeline',
+			'post_title'   => $title,
+			'post_name'    => $slug,
+			'post_excerpt' => __( 'Interactive analysis of the NEU State of Education: AI 2026 survey — teacher adoption, critical thinking, policy gaps, and views on the DfE AI tutor plan.', 'ai-awareness-day' ),
+			'post_content' => aiad_get_neu_ai_report_timeline_content(),
+			'post_status'  => 'publish',
+			'post_author'  => 1,
+		),
+		true
+	);
+
+	if ( ! $post_id || is_wp_error( $post_id ) ) {
+		return 0;
+	}
+
+	aiad_set_neu_ai_report_timeline_meta( (int) $post_id );
+	return (int) $post_id;
+}
+
+/**
+ * Trash the standalone page if the NEU shortcode was added there by mistake.
+ */
+function aiad_migrate_neu_report_page_to_timeline(): void {
+	if ( get_option( 'aiad_neu_ai_report_page_migrated' ) === 'yes' ) {
+		return;
+	}
+
+	$slug     = aiad_neu_ai_report_post_slug();
+	$timeline = get_page_by_path( $slug, OBJECT, 'timeline' );
+
+	$page_slugs = array( 'neu-ai-report-2026', $slug );
+	foreach ( $page_slugs as $page_slug ) {
+		$page = get_page_by_path( $page_slug, OBJECT, 'page' );
+		if ( ! $page instanceof WP_Post ) {
+			continue;
+		}
+		if ( ! aiad_post_content_has_neu_ai_report_shortcode( $page ) ) {
+			continue;
+		}
+		if ( $timeline instanceof WP_Post && (int) $timeline->ID !== (int) $page->ID ) {
+			wp_trash_post( (int) $page->ID );
+		}
+	}
+
+	update_option( 'aiad_neu_ai_report_page_migrated', 'yes' );
+}
+
+/**
+ * One-time seed: NEU report as a timeline entry (not a standalone page).
+ */
+function aiad_seed_neu_ai_report_timeline_entry(): void {
+	if ( get_option( 'aiad_neu_ai_report_timeline_seeded' ) === 'yes' ) {
+		aiad_migrate_neu_report_page_to_timeline();
+		return;
+	}
+
+	$slug  = aiad_neu_ai_report_post_slug();
+	$title = aiad_neu_ai_report_get_headline();
+
+	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {
+		update_option( 'aiad_neu_ai_report_timeline_seeded', 'yes' );
+		aiad_migrate_neu_report_page_to_timeline();
+		return;
+	}
+
+	if ( function_exists( 'aiad_get_post_by_title' ) && aiad_get_post_by_title( $title, 'timeline' ) ) {
+		update_option( 'aiad_neu_ai_report_timeline_seeded', 'yes' );
+		aiad_migrate_neu_report_page_to_timeline();
+		return;
+	}
+
+	if ( aiad_create_neu_ai_report_timeline_entry() ) {
+		update_option( 'aiad_neu_ai_report_timeline_seeded', 'yes' );
+		set_transient( 'aiad_flush_rewrites', 1, MINUTE_IN_SECONDS );
+	}
+
+	aiad_migrate_neu_report_page_to_timeline();
+}
+add_action( 'init', 'aiad_seed_neu_ai_report_timeline_entry', 33 );

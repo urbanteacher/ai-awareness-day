@@ -23,7 +23,8 @@
 }
 
 .entry-content--post #aiad-neu-report,
-.entry-content--timeline #aiad-neu-report {
+.entry-content--timeline #aiad-neu-report,
+.single-timeline-entry__content #aiad-neu-report {
 	font-size: 1.05rem;
 	line-height: 1.85;
 	margin-left: 0;
