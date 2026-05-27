@@ -35,7 +35,11 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
     <section class="section aiad-schedule-filter-root">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Live Sessions', 'ai-awareness-day' ); ?></span>
-            <h1 class="section-title schedule-archive__title"><?php esc_html_e( 'AI Awareness Day — full live schedule', 'ai-awareness-day' ); ?></h1>
+            <h1 class="section-title schedule-archive__title">
+                <?php esc_html_e( 'AI Awareness Day — Full', 'ai-awareness-day' ); ?>
+                <span class="schedule-archive__title-flash"><?php esc_html_e( 'Live', 'ai-awareness-day' ); ?></span>
+                <?php esc_html_e( 'Schedule', 'ai-awareness-day' ); ?>
+            </h1>
             <?php if ( $event_date_label ) : ?>
                 <p class="section-desc"><?php echo esc_html( $event_date_label ); ?></p>
             <?php endif; ?>

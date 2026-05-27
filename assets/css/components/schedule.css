@@ -419,8 +419,12 @@
 
 /* Full schedule archive: animated green accent on main heading */
 .schedule-archive .schedule-archive__title {
-    animation: schedule-archive-title-flash 1.85s ease-in-out infinite;
     color: var(--gray-900, #111827);
+}
+
+.schedule-archive .schedule-archive__title-flash {
+    display: inline-block;
+    animation: schedule-archive-title-flash 1.85s ease-in-out infinite;
 }
 
 @keyframes schedule-archive-title-flash {
@@ -436,7 +440,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .schedule-archive .schedule-archive__title {
+    .schedule-archive .schedule-archive__title-flash {
         animation: none;
         color: var(--accent-green-dark, #15803d);
     }
