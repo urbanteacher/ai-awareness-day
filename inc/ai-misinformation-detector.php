@@ -74,6 +74,44 @@ function aiad_enqueue_misinformation_detector_assets(): void {
 }
 
 /**
+ * Timeline headline for the misinformation detector article.
+ */
+function aiad_misinformation_detector_get_headline(): string {
+	return __( 'How good are you at detecting misinformation? The teacher challenge', 'ai-awareness-day' );
+}
+
+/**
+ * Use the editorial headline when the shortcode is on a timeline or post.
+ *
+ * @param string $title Post title.
+ * @param int    $post_id Post ID.
+ */
+function aiad_misinformation_detector_filter_the_title( string $title, int $post_id = 0 ): string {
+	if ( is_admin() || ! $post_id ) {
+		return $title;
+	}
+	$post = get_post( $post_id );
+	if ( ! $post instanceof WP_Post || ! aiad_post_content_has_misinformation_detector_shortcode( $post ) ) {
+		return $title;
+	}
+	return aiad_misinformation_detector_get_headline();
+}
+add_filter( 'the_title', 'aiad_misinformation_detector_filter_the_title', 10, 2 );
+
+/**
+ * @param array<string, string> $parts Document title parts.
+ * @return array<string, string>
+ */
+function aiad_misinformation_detector_filter_document_title_parts( array $parts ): array {
+	if ( ! is_singular() || ! aiad_content_has_misinformation_detector_shortcode() ) {
+		return $parts;
+	}
+	$parts['title'] = aiad_misinformation_detector_get_headline();
+	return $parts;
+}
+add_filter( 'document_title_parts', 'aiad_misinformation_detector_filter_document_title_parts' );
+
+/**
  * Shortcode: [aiad_misinformation_detector]
  *
  * @param array<string, string>|string $atts Attributes.
@@ -81,20 +119,37 @@ function aiad_enqueue_misinformation_detector_assets(): void {
 function aiad_misinformation_detector_shortcode( $atts = array() ): string {
 	$GLOBALS['aiad_misinformation_detector_shortcode_rendered'] = true;
 
-	shortcode_atts( array(), is_array( $atts ) ? $atts : array(), 'aiad_misinformation_detector' );
+	$atts = shortcode_atts(
+		array(
+			'hide_intro' => 'auto',
+		),
+		is_array( $atts ) ? $atts : array(),
+		'aiad_misinformation_detector'
+	);
+
+	$hide_intro = in_array( strtolower( (string) $atts['hide_intro'] ), array( '1', 'true', 'yes' ), true );
+	if ( 'auto' === $atts['hide_intro'] && is_singular() ) {
+		$hide_intro = true;
+	}
 
 	aiad_enqueue_misinformation_detector_assets();
 
 	ob_start();
 	?>
-	<div id="aiad-misinfo" class="aiad-misinformation-detector" aria-label="<?php esc_attr_e( 'Misinformation detector classroom activity', 'ai-awareness-day' ); ?>">
+	<div id="aiad-misinfo" class="aiad-misinformation-detector" aria-label="<?php echo esc_attr( aiad_misinformation_detector_get_headline() ); ?>">
+		<?php if ( ! $hide_intro ) : ?>
 		<div id="aiad-mi-intro" class="mi-card">
 			<p class="mi-kicker"><?php esc_html_e( 'AI Awareness Day · Media literacy', 'ai-awareness-day' ); ?></p>
-			<h2 class="mi-title"><?php esc_html_e( 'Misinformation detector', 'ai-awareness-day' ); ?></h2>
-			<p class="mi-lead"><?php esc_html_e( 'Six claims — headlines, AI outputs, and viral posts. Before you judge each one, log where you would check. Then pick a verdict and see the real answer, sources, and a discernment lesson.', 'ai-awareness-day' ); ?></p>
+			<h2 class="mi-title"><?php echo esc_html( aiad_misinformation_detector_get_headline() ); ?></h2>
+			<p class="mi-lead"><?php esc_html_e( 'Six real claims — genuine BBC headlines, AI-generated text, and viral posts. Check your sources, give your verdict, then see the truth revealed.', 'ai-awareness-day' ); ?></p>
 			<p class="mi-lead"><?php esc_html_e( '10 points for a correct verdict, plus 5 bonus points when you name two or more sources before answering.', 'ai-awareness-day' ); ?></p>
 			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'ai-awareness-day' ); ?></button>
 		</div>
+		<?php else : ?>
+		<div id="aiad-mi-intro" class="mi-card" hidden>
+			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'ai-awareness-day' ); ?></button>
+		</div>
+		<?php endif; ?>
 
 		<div id="aiad-mi-quiz" class="mi-quiz" hidden>
 			<div class="mi-progress-wrap">
@@ -108,6 +163,7 @@ function aiad_misinformation_detector_shortcode( $atts = array() ): string {
 				<span class="mi-type-pill" id="aiad-mi-type-pill"></span>
 				<p class="mi-claim" id="aiad-mi-claim"></p>
 				<p class="mi-source-lbl" id="aiad-mi-source"></p>
+				<p class="mi-context" id="aiad-mi-context" hidden></p>
 
 				<p class="mi-sources-title"><?php esc_html_e( 'Sources I would check', 'ai-awareness-day' ); ?></p>
 				<p class="mi-sources-hint" id="aiad-mi-sources-hint"><?php esc_html_e( 'Name at least one before choosing a verdict (two or more earns bonus points).', 'ai-awareness-day' ); ?></p>
@@ -215,3 +271,104 @@ function aiad_misinformation_detector_footer_assets(): void {
 	}
 }
 add_action( 'wp_footer', 'aiad_misinformation_detector_footer_assets', 1 );
+
+/**
+ * Timeline entry slug.
+ */
+function aiad_misinformation_detector_post_slug(): string {
+	return 'misinformation-detector-teachers';
+}
+
+/**
+ * WordPress block content for the timeline entry.
+ */
+function aiad_get_misinformation_detector_timeline_content(): string {
+	return '<!-- wp:paragraph -->
+<p>Staff rooms and WhatsApp groups are full of claims about AI in education — some accurate, some exaggerated, and some entirely invented. Before you forward the next screenshot or quote a chatbot in a policy meeting, how well can you tell the difference?</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>This interactive challenge presents <strong>six real-world examples</strong>: verified BBC headlines, AI hallucinations, viral social posts, and research shared out of context. Log the sources you would check, give your verdict, then see the truth revealed with links and a discernment lesson for each item.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:shortcode -->
+[aiad_misinformation_detector hide_intro="1"]
+<!-- /wp:shortcode -->
+
+<!-- wp:paragraph -->
+<p><strong>How to use this with students:</strong> run one item per tutor time or assembly starter. Ask pairs to agree on two sources before revealing the answer, then discuss the discernment lesson. Pair with our <a href="/timeline/15-ai-buzzwords-teachers-2026/">AI buzzwords glossary</a> for the language side of the same conversation.</p>
+<!-- /wp:paragraph -->';
+}
+
+/**
+ * Apply timeline meta for the misinformation detector entry.
+ */
+function aiad_set_misinformation_detector_timeline_meta( int $post_id ): void {
+	update_post_meta( $post_id, '_aiad_timeline_source', 'manual' );
+	update_post_meta( $post_id, '_aiad_timeline_icon', 'announcement' );
+	update_post_meta( $post_id, '_aiad_timeline_auto_type', '' );
+	update_post_meta( $post_id, '_aiad_timeline_related_id', 0 );
+}
+
+/**
+ * Create the misinformation detector timeline entry if missing.
+ *
+ * @return int Post ID or 0.
+ */
+function aiad_create_misinformation_detector_timeline_entry(): int {
+	$slug  = aiad_misinformation_detector_post_slug();
+	$title = aiad_misinformation_detector_get_headline();
+
+	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
+	if ( $existing instanceof WP_Post ) {
+		return (int) $existing->ID;
+	}
+
+	$post_id = wp_insert_post(
+		array(
+			'post_type'    => 'timeline',
+			'post_title'   => $title,
+			'post_name'    => $slug,
+			'post_excerpt' => __( 'Six-claim media literacy challenge for teachers: verify headlines, AI outputs, and viral posts before you share — with scoring, sources, and discernment habits.', 'ai-awareness-day' ),
+			'post_content' => aiad_get_misinformation_detector_timeline_content(),
+			'post_status'  => 'publish',
+			'post_author'  => 1,
+		),
+		true
+	);
+
+	if ( ! $post_id || is_wp_error( $post_id ) ) {
+		return 0;
+	}
+
+	aiad_set_misinformation_detector_timeline_meta( (int) $post_id );
+	return (int) $post_id;
+}
+
+/**
+ * One-time seed: misinformation detector timeline entry.
+ */
+function aiad_seed_misinformation_detector_timeline_entry(): void {
+	if ( get_option( 'aiad_misinformation_detector_timeline_seeded' ) === 'yes' ) {
+		return;
+	}
+
+	$slug  = aiad_misinformation_detector_post_slug();
+	$title = aiad_misinformation_detector_get_headline();
+
+	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {
+		update_option( 'aiad_misinformation_detector_timeline_seeded', 'yes' );
+		return;
+	}
+
+	if ( function_exists( 'aiad_get_post_by_title' ) && aiad_get_post_by_title( $title, 'timeline' ) ) {
+		update_option( 'aiad_misinformation_detector_timeline_seeded', 'yes' );
+		return;
+	}
+
+	if ( aiad_create_misinformation_detector_timeline_entry() ) {
+		update_option( 'aiad_misinformation_detector_timeline_seeded', 'yes' );
+		set_transient( 'aiad_flush_rewrites', 1, MINUTE_IN_SECONDS );
+	}
+}
+add_action( 'init', 'aiad_seed_misinformation_detector_timeline_entry', 34 );

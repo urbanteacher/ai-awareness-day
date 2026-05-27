@@ -49,6 +49,14 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                 }
                 ?>
                 <table class="aiad-schedule-table" aria-label="<?php esc_attr_e( 'Schedule of live sessions', 'ai-awareness-day' ); ?>">
+                    <colgroup>
+                        <col class="aiad-schedule-col aiad-schedule-col--time">
+                        <col class="aiad-schedule-col aiad-schedule-col--session">
+                        <col class="aiad-schedule-col aiad-schedule-col--audience">
+                        <col class="aiad-schedule-col aiad-schedule-col--provider">
+                        <col class="aiad-schedule-col aiad-schedule-col--format">
+                        <col class="aiad-schedule-col aiad-schedule-col--actions">
+                    </colgroup>
                     <thead>
                         <tr>
                             <th scope="col"><?php esc_html_e( 'Time', 'ai-awareness-day' ); ?></th>
@@ -97,35 +105,41 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 </td>
                                 <td><?php echo esc_html( $aud_names ); ?></td>
                                 <td class="aiad-schedule-cell-provider">
-                                    <?php if ( $partner_logo ) : ?>
-                                        <img src="<?php echo esc_url( $partner_logo ); ?>" alt="" aria-hidden="true" />
-                                    <?php endif; ?>
-                                    <?php if ( $partner ) : ?>
-                                        <span><?php echo esc_html( $partner->post_title ); ?></span>
-                                    <?php endif; ?>
+                                    <div class="aiad-schedule-cell-provider__inner">
+                                        <?php if ( $partner_logo ) : ?>
+                                            <span class="aiad-schedule-cell-provider__logo">
+                                                <img src="<?php echo esc_url( $partner_logo ); ?>" alt="" aria-hidden="true" />
+                                            </span>
+                                        <?php endif; ?>
+                                        <?php if ( $partner ) : ?>
+                                            <span class="aiad-schedule-cell-provider__name"><?php echo esc_html( $partner->post_title ); ?></span>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
-                                <td><?php echo esc_html( $format ); ?></td>
+                                <td class="aiad-schedule-cell-format"><?php echo esc_html( $format ); ?></td>
                                 <td class="aiad-schedule-cell-actions">
-                                    <?php if ( $reg_url ) : ?>
-                                        <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener" data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>">
-                                            <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
-                                        </a>
-                                    <?php else : ?>
-                                        <span class="aiad-schedule-table__cta aiad-schedule-table__cta--soon"><?php esc_html_e( 'Soon', 'ai-awareness-day' ); ?></span>
-                                    <?php endif; ?>
-                                    <?php if ( $ics_start ) : ?>
-                                        <a class="aiad-schedule-table__ics"
-                                           href="<?php echo esc_url( $ics_url ); ?>"
-                                           aria-label="<?php echo esc_attr( sprintf( __( 'Add "%s" to calendar', 'ai-awareness-day' ), $title ) ); ?>">
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                        </a>
-                                    <?php endif; ?>
-                                    <button type="button" class="aiad-schedule-table__share"
-                                        data-share-url="<?php echo esc_attr( $permalink ); ?>"
-                                        data-share-title="<?php echo esc_attr( $title ); ?>"
-                                        aria-label="<?php echo esc_attr( sprintf( __( 'Share "%s"', 'ai-awareness-day' ), $title ) ); ?>">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                                    </button>
+                                    <div class="aiad-schedule-cell-actions__inner">
+                                        <?php if ( $reg_url ) : ?>
+                                            <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener" data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>">
+                                                <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
+                                            </a>
+                                        <?php else : ?>
+                                            <span class="aiad-schedule-table__cta aiad-schedule-table__cta--soon"><?php esc_html_e( 'Soon', 'ai-awareness-day' ); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ( $ics_start ) : ?>
+                                            <a class="aiad-schedule-table__ics"
+                                               href="<?php echo esc_url( $ics_url ); ?>"
+                                               aria-label="<?php echo esc_attr( sprintf( __( 'Add "%s" to calendar', 'ai-awareness-day' ), $title ) ); ?>">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                            </a>
+                                        <?php endif; ?>
+                                        <button type="button" class="aiad-schedule-table__share"
+                                            data-share-url="<?php echo esc_attr( $permalink ); ?>"
+                                            data-share-title="<?php echo esc_attr( $title ); ?>"
+                                            aria-label="<?php echo esc_attr( sprintf( __( 'Share "%s"', 'ai-awareness-day' ), $title ) ); ?>">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

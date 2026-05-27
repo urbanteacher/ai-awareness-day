@@ -155,8 +155,30 @@
 #aiad-misinfo .mi-source-lbl {
 	font-size: 13px;
 	color: var(--mi-muted);
-	margin: 0 0 1rem;
+	margin: 0 0 0.75rem;
 	font-style: italic;
+}
+
+#aiad-misinfo .mi-context {
+	font-size: 13px;
+	color: var(--mi-muted);
+	line-height: 1.6;
+	margin: 0 0 1rem;
+	padding: 11px 14px;
+	background: var(--mi-panel);
+	border-radius: 8px;
+	border-left: 3px solid #ddd;
+}
+
+#aiad-misinfo .mi-reveal-sources a {
+	color: var(--mi-blue);
+	text-decoration: underline;
+}
+
+.entry-content--timeline #aiad-misinfo,
+.single-timeline-entry__content #aiad-misinfo {
+	max-width: none;
+	margin: 2rem 0;
 }
 
 #aiad-misinfo .mi-sources-title {

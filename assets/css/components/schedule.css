@@ -445,16 +445,23 @@
 /* Archive table (audience filters use shared .timeline-filters from timeline.css) */
 .aiad-schedule-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     margin-top: 0.5rem;
     font-size: 0.95rem;
 }
+.aiad-schedule-col--time { width: 11%; }
+.aiad-schedule-col--session { width: 26%; }
+.aiad-schedule-col--audience { width: 14%; }
+.aiad-schedule-col--provider { width: 18%; }
+.aiad-schedule-col--format { width: 15%; }
+.aiad-schedule-col--actions { width: 16%; }
 .aiad-schedule-table th,
 .aiad-schedule-table td {
     text-align: left;
     padding: 0.7rem 0.6rem;
     border-bottom: 1px solid var(--gray-200, #e5e7eb);
-    vertical-align: top;
+    vertical-align: middle;
 }
 .aiad-schedule-table th {
     font-family: var(--font-display);
@@ -464,23 +471,42 @@
     color: var(--gray-600);
     border-bottom: 2px solid var(--gray-300, #d1d5db);
 }
-.aiad-schedule-cell-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
-.aiad-schedule-cell-provider {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    vertical-align: middle;
-    line-height: 1.2;
+.aiad-schedule-cell-time {
+    font-family: var(--font-display);
+    font-weight: 700;
     white-space: nowrap;
 }
-.aiad-schedule-cell-provider img,
-.aiad-schedule-cell-provider svg {
+.aiad-schedule-cell-format {
+    font-size: 0.88rem;
+    color: var(--gray-600, #4b5563);
+    line-height: 1.35;
+}
+.aiad-schedule-cell-provider__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    line-height: 1.2;
+}
+.aiad-schedule-cell-provider__logo {
+    flex: 0 0 52px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 28px;
+}
+.aiad-schedule-cell-provider__logo img,
+.aiad-schedule-cell-provider__logo svg {
     width: auto;
     height: 28px;
-    max-width: 80px;
+    max-width: 52px;
     object-fit: contain;
-    flex-shrink: 0;
     display: block;
+}
+.aiad-schedule-cell-provider__name {
+    min-width: 0;
+    font-size: 0.88rem;
+    line-height: 1.3;
 }
 .aiad-schedule-table__cta {
     display: inline-block;
@@ -506,11 +532,11 @@
     cursor: default;
 }
 
-.aiad-schedule-cell-actions {
-    white-space: nowrap;
-    vertical-align: middle;
+.aiad-schedule-cell-actions__inner {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
     gap: 0.35rem;
 }
 .aiad-schedule-table__ics,
@@ -597,31 +623,35 @@
         margin-bottom: 0.3rem;
     }
 
-    .aiad-schedule-cell-provider {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        height: auto;
-        max-width: none;
+    .aiad-schedule-cell-provider__inner {
         margin-bottom: 0.3rem;
     }
-    .aiad-schedule-cell-provider img { height: 20px; max-width: 56px; }
-    .aiad-schedule-cell-provider span { font-size: 0.78rem; color: var(--gray-600, #4b5563); }
+    .aiad-schedule-cell-provider__logo {
+        flex-basis: 44px;
+        min-height: 22px;
+    }
+    .aiad-schedule-cell-provider__logo img {
+        height: 20px;
+        max-width: 44px;
+    }
+    .aiad-schedule-cell-provider__name {
+        font-size: 0.78rem;
+        color: var(--gray-600, #4b5563);
+    }
 
-    .aiad-schedule-table td:nth-child(5) {
+    .aiad-schedule-cell-format {
         font-size: 0.72rem;
         color: var(--gray-500, #6b7280);
         margin-bottom: 0;
     }
 
-    .aiad-schedule-cell-actions {
-        display: flex;
+    .aiad-schedule-cell-actions__inner {
+        justify-content: flex-start;
         flex-wrap: nowrap;
         gap: 0.4rem;
         margin-top: 0.7rem;
         padding-top: 0.65rem;
         border-top: 1px solid var(--gray-100, #f3f4f6);
-        white-space: normal;
     }
     .aiad-schedule-table__cta,
     .aiad-schedule-table__cta--soon {
