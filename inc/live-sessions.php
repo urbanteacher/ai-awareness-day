@@ -615,6 +615,18 @@ function aiad_print_schedule_audience_filter_script(): void {
         a.click();
         setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     }
+    function setScheduleRowVisible( row, show ) {
+        row.classList.toggle('aiad-schedule-filter-item--hidden', !show);
+        row.hidden = !show;
+        row.setAttribute('aria-hidden', show ? 'false' : 'true');
+        row.querySelectorAll('td').forEach(function( cell ){
+            if ( show ) {
+                cell.removeAttribute('hidden');
+            } else {
+                cell.setAttribute('hidden', '');
+            }
+        });
+    }
     function wireAudienceFilters( root ) {
         var tabs  = root.querySelectorAll('.timeline-filter-btn');
         var items = root.querySelectorAll('.aiad-schedule-filter-item');
@@ -632,7 +644,7 @@ function aiad_print_schedule_audience_filter_script(): void {
                 items.forEach(function( row ){
                     var slugs = (row.getAttribute('data-audience') || '').split(/\s+/).filter(Boolean);
                     var show  = target === 'all' || slugs.indexOf(target) !== -1;
-                    row.hidden = ! show;
+                    setScheduleRowVisible(row, show);
                     if ( show ) visibleCount++;
                 });
                 if ( empty ) empty.hidden = visibleCount > 0;

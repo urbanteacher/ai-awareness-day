@@ -415,15 +415,29 @@
 }
 .aiad-schedule-row__cta:hover { text-decoration: underline; }
 .aiad-schedule-item[hidden],
-.aiad-schedule-filter-item[hidden] { display: none !important; }
+.aiad-schedule-filter-item[hidden],
+.aiad-schedule-filter-item.aiad-schedule-filter-item--hidden {
+    display: none !important;
+}
+
+/* Mobile card layout breaks table-row [hidden]; hide cells too. */
+.aiad-schedule-filter-item[hidden] td,
+.aiad-schedule-filter-item.aiad-schedule-filter-item--hidden td {
+    display: none !important;
+}
 
 /* Full schedule archive: animated green accent on main heading */
 .schedule-archive .schedule-archive__title {
     color: var(--gray-900, #111827);
 }
 
+.schedule-archive .schedule-archive__title-lead::after,
+.schedule-archive .schedule-archive__title-flash::after {
+    content: '\00a0';
+}
+
 .schedule-archive .schedule-archive__title-flash {
-    display: inline-block;
+    display: inline;
     animation: schedule-archive-title-flash 1.85s ease-in-out infinite;
 }
 

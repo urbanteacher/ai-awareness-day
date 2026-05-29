@@ -36,9 +36,9 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Live Sessions', 'ai-awareness-day' ); ?></span>
             <h1 class="section-title schedule-archive__title">
-                <?php esc_html_e( 'AI Awareness Day — Full', 'ai-awareness-day' ); ?>
+                <span class="schedule-archive__title-lead"><?php esc_html_e( 'AI Awareness Day — Full', 'ai-awareness-day' ); ?></span>
                 <span class="schedule-archive__title-flash"><?php esc_html_e( 'Live', 'ai-awareness-day' ); ?></span>
-                <?php esc_html_e( 'Schedule', 'ai-awareness-day' ); ?>
+                <span class="schedule-archive__title-tail"><?php esc_html_e( 'Schedule', 'ai-awareness-day' ); ?></span>
             </h1>
             <?php if ( $event_date_label ) : ?>
                 <p class="section-desc"><?php echo esc_html( $event_date_label ); ?></p>
@@ -163,7 +163,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                             <?php esc_html_e( 'Copy link', 'ai-awareness-day' ); ?>
                         </button>
                         <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--x"
-                           href="https://x.com/intent/tweet?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>&text=<?php echo rawurlencode( 'AI Awareness Day — full live schedule' ); ?>"
+                           href="https://x.com/intent/tweet?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>&text=<?php echo rawurlencode( 'AI Awareness Day — Full Live Schedule' ); ?>"
                            target="_blank" rel="noopener">X</a>
                         <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--linkedin"
                            href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>"
