@@ -8,19 +8,35 @@
 get_header();
 ?>
 
-<main id="main" role="main" style="padding-top: 100px;">
-    <div class="container">
+<main id="main" role="main" class="page-default section">
+	<div class="container page-default__inner">
 
-        <?php while ( have_posts() ) : the_post(); ?>
-        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-            <h1 class="section-title" style="margin-bottom: 2rem;"><?php echo esc_html( get_the_title() ); ?></h1>
-            <div class="entry-content">
-                <?php the_content(); ?>
-            </div>
-        </article>
-        <?php endwhile; ?>
+		<?php
+		while ( have_posts() ) :
+			the_post();
+			?>
+			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+				<h1 class="section-title page-default__title"><?php the_title(); ?></h1>
+				<div class="entry-content">
+					<?php
+					the_content();
+					wp_link_pages(
+						array(
+							'before' => '<nav class="page-links" aria-label="' . esc_attr__( 'Page', 'ai-awareness-day' ) . '">' . esc_html__( 'Pages:', 'ai-awareness-day' ),
+							'after'  => '</nav>',
+						)
+					);
+					?>
+				</div>
+			</article>
+			<?php
+			if ( comments_open() || get_comments_number() ) {
+				comments_template();
+			}
+		endwhile;
+		?>
 
-    </div>
+	</div>
 </main>
 
 <?php get_footer(); ?>

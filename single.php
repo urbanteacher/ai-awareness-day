@@ -25,7 +25,15 @@ get_header();
 					</p>
 				</header>
 				<div class="entry-content entry-content--post">
-					<?php the_content(); ?>
+					<?php
+					the_content();
+					wp_link_pages(
+						array(
+							'before' => '<nav class="page-links" aria-label="' . esc_attr__( 'Page', 'ai-awareness-day' ) . '">' . esc_html__( 'Pages:', 'ai-awareness-day' ),
+							'after'  => '</nav>',
+						)
+					);
+					?>
 				</div>
 			</article>
 			<?php
@@ -35,6 +43,10 @@ get_header();
 					'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next', 'ai-awareness-day' ) . '</span><span class="nav-title">%title</span>',
 				)
 			);
+
+			if ( comments_open() || get_comments_number() ) {
+				comments_template();
+			}
 		endwhile;
 		?>
 	</div>
