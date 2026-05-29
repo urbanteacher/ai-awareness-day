@@ -38,16 +38,19 @@ assets/js/timeline.js                         ← Swipe sync, filter AJAX, like/
 - Section slug: `timeline` in `aiad_get_front_page_sections()` / `aiad_is_section_visible( 'timeline' )`
 - Rendered via `get_template_part( 'template-parts/front-page/section', 'timeline' )` in `front-page.php`
 
-## Live schedule ↔ EVENT filter
+## Manual entries only
 
-Each published **`live_session`** syncs to a timeline card via `aiad_timeline_sync_live_session_entry()`:
+Timeline entries are **created and managed manually** in the WordPress admin (Timeline → Add New). All automatic creation and syncing is disabled.
 
-- Icon `event` (shows under the **EVENT** filter pill)
-- `_aiad_timeline_auto_type` = `live_session`, `_aiad_timeline_related_id` = session ID
-- Body includes session time + format; CTA → registration URL or session page
-- Partner logo copied as featured image when set on the session
+The following automations were turned off (hooks commented out in `inc/timeline.php`; helper functions retained but dormant):
 
-Hooks: `save_post_live_session`. One-time backfill: `aiad_timeline_backfill_live_session_entries()` (option `aiad_timeline_live_sessions_synced_v1`).
+- **Live sessions:** `save_post_live_session` sync and one-time backfill (`aiad_timeline_sync_live_session_entry()`, `aiad_timeline_backfill_live_session_entries()`)
+- **Resources / featured resources:** publish announcements and backfill (`aiad_timeline_on_resource_publish()`, `aiad_timeline_backfill_resource_announcements()`)
+- **Partners:** publish announcements (`aiad_timeline_on_partner_publish()`)
+- **Countdown:** daily “weeks to go” cron (`aiad_timeline_maybe_create_countdown_entries()`); the scheduled event is cleared by `aiad_timeline_clear_countdown_cron()`
+- **Status syncing:** trashing/unpublishing a related post no longer changes its timeline card (`aiad_timeline_on_related_post_unpublished()`)
+
+Display helpers `aiad_timeline_event_date()` and `aiad_timeline_days_until_event()` remain active (used by hero, SEO, and the timeline section). To re-enable any automation, uncomment the relevant `add_action` line in `inc/timeline.php`.
 
 ## Removed auto-milestones
 
