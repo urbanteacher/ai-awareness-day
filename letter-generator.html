@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root {
             --ink: #111827;
@@ -128,9 +129,11 @@
         }
         .letter-title {
             margin: 0 0 28px;
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
         .letter-salutation {
             margin: 0 0 20px;
@@ -206,6 +209,7 @@
             <div class="btn-row">
                 <button type="button" class="primary" id="downloadOneBtn" disabled onclick="downloadOnePdf()">Download this letter (PDF)</button>
                 <button type="button" class="secondary" id="downloadAllBtn" disabled onclick="downloadAllPdf()">Download all letters (one PDF)</button>
+                <button type="button" class="secondary" id="downloadAllSeparateBtn" disabled onclick="downloadAllSeparatePdfs()">Download all letters (separate PDFs, ZIP)</button>
             </div>
             <p class="status" id="exportStatus"></p>
         </div>
@@ -230,11 +234,13 @@
         const DEFAULT_COPY = {
             title: 'AI Awareness Day 2026',
             paragraphs: [
-                'Thank you for taking part in AI Awareness Day 2026.',
-                'We are deeply grateful for your participation and for the support and backing you have given our campaign. Your involvement strengthens our nationwide work to explore artificial intelligence in education and helps build a future where every learner and educator feels confident with AI.',
-                'Thank you again for standing with AI Awareness Day.',
+                'Thank you for taking part in AI Awareness Day 2026. We are deeply grateful for your participation, and for the support and backing you have given our campaign.',
+                'The idea behind the day has always been simple: to build AI literacy across UK schools by asking every school to commit to just one activity — one conversation, one lesson, one assembly. This year, we rallied around a single, powerful message: Know it. Question it. Use it wisely.',
+                'Your involvement strengthens our nationwide work to explore artificial intelligence in education and helps build a future where every learner and educator feels confident with AI. Because of your support, that message reached classrooms across the country — and together, we are helping a generation of young people grow up curious, confident and thoughtful about the technology shaping their world.',
+                'We would love to see how you took part. Please do share any photos from your activities, or tag us in your posts using #AiAwarenessDay26 — we would be delighted to celebrate your work alongside others across the UK.',
+                'As a thank-you, we would be glad to send you a Certificate of Participation. If you reply to this email with your logo, we will personalise the certificate with your branding alongside ours. If we do not hear back, we will send a certificate featuring our branding only, so your contribution is still recognised.',
             ],
-            signoff: ['With warm thanks,', 'The AI Awareness Day team'],
+            signoff: ['With heartfelt thanks and humility,', 'The AI Awareness Day team'],
         };
 
         let submissions = [];
@@ -396,6 +402,7 @@
             syncLetter();
             document.getElementById('downloadOneBtn').disabled = submissions.length === 0;
             document.getElementById('downloadAllBtn').disabled = submissions.length === 0;
+            document.getElementById('downloadAllSeparateBtn').disabled = submissions.length === 0;
         }
 
         function selectSubmissionFromUrl() {
@@ -544,6 +551,79 @@
                 document.getElementById('recipientName').value = savedName;
                 syncLetter();
                 btn.disabled = submissions.length === 0;
+                oneBtn.disabled = submissions.length === 0;
+            }
+        }
+
+        function safeFilenameFromRow(row, index) {
+            const raw = (row.full_name || ('participant-' + (index + 1))).trim();
+            const slug = raw.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            return 'ai-awareness-day-thank-you-' + (slug || ('participant-' + (index + 1))) + '.pdf';
+        }
+
+        async function downloadAllSeparatePdfs() {
+            if (!submissions.length) return;
+            if (typeof window.JSZip === 'undefined') {
+                exportStatus.textContent = 'ZIP export failed: JSZip did not load (check network/CDN).';
+                return;
+            }
+            const btn = document.getElementById('downloadAllSeparateBtn');
+            const allBtn = document.getElementById('downloadAllBtn');
+            const oneBtn = document.getElementById('downloadOneBtn');
+            btn.disabled = true;
+            allBtn.disabled = true;
+            oneBtn.disabled = true;
+            exportStatus.textContent = 'Generating all letters… 0 / ' + submissions.length;
+
+            const savedName = document.getElementById('recipientName').value;
+            const savedSelect = submissionSelect.value;
+            const usedNames = new Map();
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const zip = new JSZip();
+
+                for (let i = 0; i < submissions.length; i++) {
+                    exportStatus.textContent = 'Generating… ' + (i + 1) + ' / ' + submissions.length;
+                    submissionSelect.value = String(submissions[i].id);
+                    renderLetterForRow(submissions[i]);
+                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                    const canvas = await captureLetterCanvas();
+                    const img = canvas.toDataURL('image/png', 1);
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const w = pdf.internal.pageSize.getWidth();
+                    const h = pdf.internal.pageSize.getHeight();
+                    pdf.addImage(img, 'PNG', 0, 0, w, h);
+
+                    let filename = safeFilenameFromRow(submissions[i], i);
+                    const count = (usedNames.get(filename) || 0) + 1;
+                    usedNames.set(filename, count);
+                    if (count > 1) {
+                        filename = filename.replace(/\.pdf$/, '-' + count + '.pdf');
+                    }
+                    zip.file(filename, pdf.output('blob'));
+                }
+
+                exportStatus.textContent = 'Packaging ZIP…';
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ai-awareness-day-thank-you-letters.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                exportStatus.textContent = 'Downloaded ZIP with ' + submissions.length + ' letters.';
+            } catch (e) {
+                exportStatus.textContent = 'ZIP export failed: ' + (e.message || e);
+            } finally {
+                submissionSelect.value = savedSelect;
+                onSubmissionChange();
+                document.getElementById('recipientName').value = savedName;
+                syncLetter();
+                btn.disabled = submissions.length === 0;
+                allBtn.disabled = submissions.length === 0;
                 oneBtn.disabled = submissions.length === 0;
             }
         }
