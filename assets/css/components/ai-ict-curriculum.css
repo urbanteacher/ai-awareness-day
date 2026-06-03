@@ -51,15 +51,13 @@
     box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
 }
 
-.ict-widget__title {
-    font-size: 1.85rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.5rem 0;
-    color: #f8fafc;
-    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* Intro sits outside the widget, on the page background, so it inherits the
+ * page text colour rather than the widget's light-on-dark palette. */
+.aiad-ict-curriculum-intro {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    max-width: 800px;
 }
 
 .ict-widget__lead {
@@ -945,6 +943,273 @@
 
 .ict-widget__credit a:hover {
     color: #cbd5e1;
+}
+
+/* --------------------------------------------------------------------------
+   Key Stage 4: Count-controlled loops (iteration)
+   -------------------------------------------------------------------------- */
+.ks4-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 720px) {
+    .ks4-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ks4-controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: -0.5rem;
+}
+
+.playground-btn--run:disabled {
+    background: #1e293b;
+    color: #475569;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Loop body highlight (shares the KS3 terminal trace look) */
+.ks4-line {
+    display: block;
+    padding-left: 0.5rem;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ks4-line.is-traced {
+    background: rgba(99, 102, 241, 0.15);
+    border-left-color: #6366f1;
+}
+
+/* Trace table card */
+.ks4-trace-card {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.ks4-trace-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+}
+
+.ks4-trace-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    letter-spacing: 0.02em;
+}
+
+.ks4-total-chip {
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+}
+
+.ks4-total-chip strong {
+    color: #a5b4fc;
+    margin-left: 0.25rem;
+}
+
+.ks4-trace-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    font-size: 0.85rem;
+}
+
+.ks4-trace-table th {
+    text-align: left;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ks4-trace-table td {
+    color: #e2e8f0;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ks4-trace-row {
+    animation: slideUp 0.3s ease-out;
+}
+
+.ks4-cell-total {
+    color: #34d399;
+    font-weight: 700;
+}
+
+.ks4-trace-hint {
+    margin: 0.85rem 0 0 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+.ks4-question {
+    margin-top: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Key Stage 5: Recursion & the call stack
+   -------------------------------------------------------------------------- */
+.ks5-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 720px) {
+    .ks5-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ks5-controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: -0.5rem;
+}
+
+.ks5-line {
+    display: block;
+    padding-left: 0.5rem;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ks5-line.is-traced {
+    background: rgba(99, 102, 241, 0.15);
+    border-left-color: #6366f1;
+}
+
+/* Call stack card */
+.ks5-stack-card {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.ks5-stack-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+}
+
+.ks5-stack-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    letter-spacing: 0.02em;
+}
+
+.ks5-phase-chip {
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    font-size: 0.72rem;
+    color: #a5b4fc;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+}
+
+.ks5-stack-frames {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 120px;
+    justify-content: flex-end;
+}
+
+.ks5-stack-empty {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+.ks5-frame {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3px solid #475569;
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    animation: slideUp 0.25s ease-out;
+}
+
+.ks5-frame.is-top {
+    border-left-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+}
+
+.ks5-frame.is-base {
+    border-left-color: #f59e0b;
+}
+
+.ks5-frame.is-returning {
+    border-left-color: #10b981;
+    color: #34d399;
+}
+
+.ks5-frame-name {
+    font-weight: 700;
+}
+
+.ks5-frame-return {
+    font-size: 0.78rem;
+    color: #34d399;
+    font-weight: 700;
+}
+
+.ks5-frame-tag {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.12);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+}
+
+.ks5-stack-hint {
+    margin: 0.85rem 0 0 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+.ks5-question {
+    margin-top: 1.5rem;
 }
 
 /* Common Utilities */
