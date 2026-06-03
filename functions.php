@@ -59,6 +59,7 @@ require_once $aiad_dir . '/inc/ai-llm-explainer.php';
 require_once $aiad_dir . '/inc/ai-llm-order-game.php';
 require_once $aiad_dir . '/inc/ai-speed-quiz.php';
 require_once $aiad_dir . '/inc/ai-computing-curriculum-challenge.php';
+require_once $aiad_dir . '/inc/ai-ict-curriculum.php';
 require_once $aiad_dir . '/inc/ai-misinformation-detector.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report-data.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report.php';
