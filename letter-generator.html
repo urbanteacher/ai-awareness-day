@@ -289,6 +289,30 @@
             return (boot && boot.brand_logo_url) || '';
         }
 
+        /**
+         * Title-case a personal name only when it looks unintentionally cased
+         * (all lowercase like "mark martin" or all uppercase like "JANE SMITH").
+         * Mixed case is left alone so McDonald, O'Brien, van der Berg etc.
+         * are not mangled. Handles apostrophes and hyphens.
+         */
+        function normalizeDisplayName(raw) {
+            if (typeof raw !== 'string') return raw;
+            const trimmed = raw.trim();
+            if (!trimmed) return trimmed;
+            const hasLower = /[a-z]/.test(trimmed);
+            const hasUpper = /[A-Z]/.test(trimmed);
+            if (hasLower && hasUpper) return trimmed;
+            return trimmed.toLowerCase().replace(/(^|[\s\-'])([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
+        }
+
+        function normalizeSubmissionNames(row) {
+            if (!row) return row;
+            if (row.first_name) row.first_name = normalizeDisplayName(row.first_name);
+            if (row.last_name)  row.last_name  = normalizeDisplayName(row.last_name);
+            if (row.full_name)  row.full_name  = normalizeDisplayName(row.full_name);
+            return row;
+        }
+
         async function fetchAllSubmissions() {
             const perPage = 500;
             let page = 1;
@@ -436,7 +460,7 @@
                 }
 
                 const boot = await bootRes.json();
-                submissions = subResult.submissions;
+                submissions = (subResult.submissions || []).map(normalizeSubmissionNames);
                 const totalCount = subResult.total;
 
                 if (copyRes.ok) {
