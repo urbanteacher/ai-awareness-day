@@ -34,10 +34,6 @@ function aiad_get_thank_you_letter_copy(): array {
 				'We would love to see how you took part. Please do share any photos from your activities, or tag us in your posts using #AiAwarenessDay26 — we would be delighted to celebrate your work alongside others across the UK.',
 				'ai-awareness-day'
 			),
-			__(
-				'As a thank-you, we would be glad to send you a Certificate of Participation. If you reply to this email with your logo, we will personalise the certificate with your branding alongside ours. If we do not hear back, we will send a certificate featuring our branding only, so your contribution is still recognised.',
-				'ai-awareness-day'
-			),
 		),
 		'signoff'    => array(
 			__( 'With heartfelt thanks and humility,', 'ai-awareness-day' ),
