@@ -110,3 +110,23 @@
 .single-timeline .entry-content.entry-content--timeline embed {
 	max-width: 100%;
 }
+
+/*
+ * Raw iframes pasted into editorial content (Custom HTML block) carry fixed
+ * width/height attributes, so max-width alone lets them dominate the page —
+ * especially vertical embeds like YouTube Shorts (9:16). Cap both width and
+ * height and centre, without forcing an aspect ratio, so portrait and
+ * landscape embeds both stay contained. Scoped to direct / paragraph children
+ * so it never hits core block embeds (figure.wp-block-embed > div > iframe),
+ * which already get an aspect ratio from the responsive-embeds theme support.
+ */
+.single-resource .entry-content.entry-content--resource > iframe,
+.single-resource .entry-content.entry-content--resource > p > iframe,
+.single-timeline .entry-content.entry-content--timeline > iframe,
+.single-timeline .entry-content.entry-content--timeline > p > iframe {
+	display: block;
+	max-width: 100%;
+	max-height: 80vh;
+	margin: 1.5rem auto;
+	border: 0;
+}
