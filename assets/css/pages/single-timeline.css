@@ -281,6 +281,31 @@
 	font-style: italic;
 }
 
+/* Cap vertical-format embeds (YouTube Shorts, TikTok, Reels) in post content
+   so a 9:16 video at full content width doesn't render ~1000px tall. */
+.single-timeline-entry__content .wp-block-embed.wp-embed-aspect-9-16,
+.single-timeline-entry__content .wp-block-embed.wp-embed-aspect-1-2,
+.single-timeline-entry__content .wp-block-embed.wp-embed-aspect-2-3,
+.single-timeline-entry__content .wp-block-embed.wp-embed-aspect-3-4 {
+	max-width: 340px;
+	margin-inline: auto;
+}
+
+/* Fallback for raw Shorts iframes not wrapped by Gutenberg's embed block. */
+.single-timeline-entry__content iframe[src*="youtube.com/embed/"],
+.single-timeline-entry__content iframe[src*="youtube-nocookie.com/embed/"] {
+	max-width: 100%;
+}
+
+.single-timeline-entry__content iframe[src*="/shorts/"] {
+	display: block;
+	max-width: 340px;
+	width: 100%;
+	aspect-ratio: 9 / 16;
+	height: auto;
+	margin-inline: auto;
+}
+
 /* ── More to read ── */
 .single-timeline-entry__related {
 	padding-top: 1.5rem;
