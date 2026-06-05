@@ -190,6 +190,13 @@
             </div>
 
             <div class="form-row">
+                <label for="roleFilter">Filter by role</label>
+                <select id="roleFilter" disabled>
+                    <option value="all">All participants</option>
+                </select>
+            </div>
+
+            <div class="form-row">
                 <label for="submissionSelect">Participant</label>
                 <select id="submissionSelect" disabled>
                     <option value="">Loading…</option>
@@ -248,6 +255,108 @@
         const wpBaseInput = document.getElementById('wpBase');
         const wpStatus = document.getElementById('wpStatus');
         const submissionSelect = document.getElementById('submissionSelect');
+        const roleFilterSelect = document.getElementById('roleFilter');
+
+        /**
+         * Bucket key used by the role filter. Organisations split into sub-buckets
+         * by org_type so charities, universities etc. can be picked individually.
+         */
+        function getRoleKey(row) {
+            if (!row) return 'unknown';
+            if (row.involved_as === 'organisation' && row.org_type) {
+                return 'org:' + row.org_type;
+            }
+            return row.involved_as || 'unknown';
+        }
+
+        function getRoleLabel(key) {
+            const labels = {
+                'teacher': 'Teachers',
+                'school_leader': 'School leaders',
+                'parent': 'Parents / carers',
+                'organisation': 'Organisations',
+                'org:company': 'Organisations — Companies',
+                'org:education_provider': 'Organisations — Education providers',
+                'org:charity': 'Organisations — Charities',
+                'org:university': 'Organisations — Universities',
+                'org:institute': 'Organisations — Institutes',
+                'unknown': 'Unspecified',
+            };
+            if (labels[key]) return labels[key];
+            if (key.indexOf('org:') === 0) {
+                const sub = key.slice(4).replace(/_/g, ' ');
+                return 'Organisations — ' + sub.charAt(0).toUpperCase() + sub.slice(1);
+            }
+            return key;
+        }
+
+        function buildRoleFilterOptions() {
+            const counts = new Map();
+            submissions.forEach((row) => {
+                const k = getRoleKey(row);
+                counts.set(k, (counts.get(k) || 0) + 1);
+            });
+            const previous = roleFilterSelect.value || 'all';
+            roleFilterSelect.innerHTML = '';
+            const allOpt = document.createElement('option');
+            allOpt.value = 'all';
+            allOpt.textContent = 'All participants (' + submissions.length + ')';
+            roleFilterSelect.appendChild(allOpt);
+
+            const primary = ['teacher', 'school_leader', 'parent'];
+            const orgKeys = [...counts.keys()].filter((k) => k.indexOf('org:') === 0).sort();
+            const others  = [...counts.keys()].filter((k) =>
+                primary.indexOf(k) === -1 && k.indexOf('org:') !== 0 && k !== 'organisation'
+            ).sort();
+            const ordered = [
+                ...primary.filter((k) => counts.has(k)),
+                ...(counts.has('organisation') ? ['organisation'] : []),
+                ...orgKeys,
+                ...others,
+            ];
+            ordered.forEach((k) => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = getRoleLabel(k) + ' (' + counts.get(k) + ')';
+                roleFilterSelect.appendChild(opt);
+            });
+            // Restore previous selection if still valid; otherwise default to "all".
+            if ([...roleFilterSelect.options].some((o) => o.value === previous)) {
+                roleFilterSelect.value = previous;
+            } else {
+                roleFilterSelect.value = 'all';
+            }
+            roleFilterSelect.disabled = submissions.length === 0;
+        }
+
+        function filteredSubmissions() {
+            const f = roleFilterSelect.value;
+            if (!f || f === 'all') return submissions;
+            return submissions.filter((row) => getRoleKey(row) === f);
+        }
+
+        function rebuildParticipantOptions() {
+            const list = filteredSubmissions();
+            submissionSelect.innerHTML = '';
+            if (list.length === 0) {
+                submissionSelect.innerHTML = '<option value="">No participants in this category</option>';
+                submissionSelect.disabled = true;
+            } else {
+                list.forEach((row, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = row.id;
+                    opt.textContent = (row.full_name || 'Unknown') + (row.school_name ? ' — ' + row.school_name : '');
+                    submissionSelect.appendChild(opt);
+                    if (i === 0) opt.selected = true;
+                });
+                submissionSelect.disabled = false;
+                onSubmissionChange();
+            }
+            const hasAny = list.length > 0;
+            document.getElementById('downloadOneBtn').disabled = !hasAny;
+            document.getElementById('downloadAllBtn').disabled = !hasAny;
+            document.getElementById('downloadAllSeparateBtn').disabled = !hasAny;
+        }
         const exportStatus = document.getElementById('exportStatus');
         const EMBED_PARAMS = new URLSearchParams(window.location.search);
         const AIAD_REST = {
@@ -468,20 +577,13 @@
 
                 setBrandLogo(resolveBrandLogoUrl(boot));
 
-                submissionSelect.innerHTML = '';
-                if (submissions.length === 0) {
-                    submissionSelect.innerHTML = '<option value="">No participants found</option>';
-                } else {
-                    submissions.forEach((row, i) => {
-                        const opt = document.createElement('option');
-                        opt.value = row.id;
-                        opt.textContent = (row.full_name || 'Unknown') + (row.school_name ? ' — ' + row.school_name : '');
-                        submissionSelect.appendChild(opt);
-                        if (i === 0) opt.selected = true;
-                    });
-                    submissionSelect.disabled = false;
+                buildRoleFilterOptions();
+                rebuildParticipantOptions();
+                if (submissions.length > 0) {
                     selectSubmissionFromUrl();
                     if (!submissionSelect.value || submissionSelect.selectedIndex < 0) onSubmissionChange();
+                } else {
+                    submissionSelect.innerHTML = '<option value="">No participants found</option>';
                 }
 
                 const logoLoaded = !!resolveBrandLogoUrl(boot);
@@ -551,15 +653,29 @@
             }
         }
 
+        function currentFilterLabel() {
+            const f = roleFilterSelect.value;
+            return (!f || f === 'all') ? '' : getRoleLabel(f);
+        }
+
+        function filenameSuffixForFilter() {
+            const f = roleFilterSelect.value;
+            if (!f || f === 'all') return 'all';
+            return f.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+
         async function downloadAllPdf() {
-            if (!submissions.length) return;
+            const list = filteredSubmissions();
+            if (!list.length) return;
             const btn = document.getElementById('downloadAllBtn');
             const oneBtn = document.getElementById('downloadOneBtn');
             const sepBtn = document.getElementById('downloadAllSeparateBtn');
             btn.disabled = true;
             oneBtn.disabled = true;
             sepBtn.disabled = true;
-            exportStatus.textContent = 'Generating all letters… 0 / ' + submissions.length;
+            const filterLabel = currentFilterLabel();
+            const scopeLabel = filterLabel ? ' (' + filterLabel + ')' : '';
+            exportStatus.textContent = 'Generating' + scopeLabel + '… 0 / ' + list.length;
 
             const savedName = document.getElementById('recipientName').value;
             const savedSelect = submissionSelect.value;
@@ -570,22 +686,21 @@
                 const w = pdf.internal.pageSize.getWidth();
                 const h = pdf.internal.pageSize.getHeight();
 
-                for (let i = 0; i < submissions.length; i++) {
-                    exportStatus.textContent = 'Generating… ' + (i + 1) + ' / ' + submissions.length;
-                    submissionSelect.value = String(submissions[i].id);
-                    renderLetterForRow(submissions[i]);
+                for (let i = 0; i < list.length; i++) {
+                    exportStatus.textContent = 'Generating' + scopeLabel + '… ' + (i + 1) + ' / ' + list.length;
+                    submissionSelect.value = String(list[i].id);
+                    renderLetterForRow(list[i]);
                     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
                     const canvas = await captureLetterCanvas({ scale: 1.5 });
                     const img = canvas.toDataURL('image/jpeg', 0.9);
                     releaseCanvas(canvas);
                     if (i > 0) pdf.addPage();
                     pdf.addImage(img, 'JPEG', 0, 0, w, h);
-                    // Yield to the event loop so the browser can reclaim memory between iterations.
                     await new Promise((r) => setTimeout(r, 0));
                 }
 
-                pdf.save('ai-awareness-day-thank-you-letters-all.pdf');
-                exportStatus.textContent = 'Downloaded ' + submissions.length + ' letters in one PDF.';
+                pdf.save('ai-awareness-day-thank-you-letters-' + filenameSuffixForFilter() + '.pdf');
+                exportStatus.textContent = 'Downloaded ' + list.length + ' letter(s)' + scopeLabel + ' in one PDF.';
             } catch (e) {
                 exportStatus.textContent = 'Export failed: ' + (e.message || e);
             } finally {
@@ -593,9 +708,10 @@
                 onSubmissionChange();
                 document.getElementById('recipientName').value = savedName;
                 syncLetter();
-                btn.disabled = submissions.length === 0;
-                oneBtn.disabled = submissions.length === 0;
-                sepBtn.disabled = submissions.length === 0;
+                const has = filteredSubmissions().length > 0;
+                btn.disabled = !has;
+                oneBtn.disabled = !has;
+                sepBtn.disabled = !has;
             }
         }
 
@@ -606,7 +722,8 @@
         }
 
         async function downloadAllSeparatePdfs() {
-            if (!submissions.length) return;
+            const list = filteredSubmissions();
+            if (!list.length) return;
             if (typeof window.JSZip === 'undefined') {
                 exportStatus.textContent = 'ZIP export failed: JSZip did not load (check network/CDN).';
                 return;
@@ -617,7 +734,9 @@
             btn.disabled = true;
             allBtn.disabled = true;
             oneBtn.disabled = true;
-            exportStatus.textContent = 'Generating all letters… 0 / ' + submissions.length;
+            const filterLabel = currentFilterLabel();
+            const scopeLabel = filterLabel ? ' (' + filterLabel + ')' : '';
+            exportStatus.textContent = 'Generating' + scopeLabel + '… 0 / ' + list.length;
 
             const savedName = document.getElementById('recipientName').value;
             const savedSelect = submissionSelect.value;
@@ -627,13 +746,11 @@
                 const { jsPDF } = window.jspdf;
                 const zip = new JSZip();
 
-                for (let i = 0; i < submissions.length; i++) {
-                    exportStatus.textContent = 'Generating… ' + (i + 1) + ' / ' + submissions.length;
-                    submissionSelect.value = String(submissions[i].id);
-                    renderLetterForRow(submissions[i]);
+                for (let i = 0; i < list.length; i++) {
+                    exportStatus.textContent = 'Generating' + scopeLabel + '… ' + (i + 1) + ' / ' + list.length;
+                    submissionSelect.value = String(list[i].id);
+                    renderLetterForRow(list[i]);
                     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-                    // Lower scale + JPEG keeps each PDF small enough that 100+
-                    // can coexist in memory before the zip is finalised.
                     const canvas = await captureLetterCanvas({ scale: 1.5 });
                     const img = canvas.toDataURL('image/jpeg', 0.9);
                     releaseCanvas(canvas);
@@ -642,16 +759,13 @@
                     const h = pdf.internal.pageSize.getHeight();
                     pdf.addImage(img, 'JPEG', 0, 0, w, h);
 
-                    let filename = safeFilenameFromRow(submissions[i], i);
+                    let filename = safeFilenameFromRow(list[i], i);
                     const count = (usedNames.get(filename) || 0) + 1;
                     usedNames.set(filename, count);
                     if (count > 1) {
                         filename = filename.replace(/\.pdf$/, '-' + count + '.pdf');
                     }
-                    // Feed the zip an ArrayBuffer (smaller GC footprint than blob)
-                    // and discard the intermediate PDF object before the next loop.
                     zip.file(filename, pdf.output('arraybuffer'));
-                    // Yield to the event loop so the browser can reclaim memory.
                     await new Promise((r) => setTimeout(r, 0));
                 }
 
@@ -659,32 +773,34 @@
                 const blob = await zip.generateAsync({
                     type: 'blob',
                     streamFiles: true,
-                    compression: 'STORE', // PDFs already compressed — skip re-deflate.
+                    compression: 'STORE',
                 });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'ai-awareness-day-thank-you-letters.zip';
+                a.download = 'ai-awareness-day-thank-you-letters-' + filenameSuffixForFilter() + '.zip';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
-                exportStatus.textContent = 'Downloaded ZIP with ' + submissions.length + ' letters.';
+                exportStatus.textContent = 'Downloaded ZIP with ' + list.length + ' letter(s)' + scopeLabel + '.';
             } catch (e) {
-                exportStatus.textContent = 'ZIP export failed: ' + (e.message || e) + ' — try generating in smaller batches (e.g. 50 at a time).';
+                exportStatus.textContent = 'ZIP export failed: ' + (e.message || e) + ' — try generating a smaller filter (e.g. one role at a time).';
             } finally {
                 submissionSelect.value = savedSelect;
                 onSubmissionChange();
                 document.getElementById('recipientName').value = savedName;
                 syncLetter();
-                btn.disabled = submissions.length === 0;
-                allBtn.disabled = submissions.length === 0;
-                oneBtn.disabled = submissions.length === 0;
+                const has = filteredSubmissions().length > 0;
+                btn.disabled = !has;
+                allBtn.disabled = !has;
+                oneBtn.disabled = !has;
             }
         }
 
         wpBaseInput.addEventListener('change', loadWordPress);
         submissionSelect.addEventListener('change', onSubmissionChange);
+        roleFilterSelect.addEventListener('change', rebuildParticipantOptions);
         document.getElementById('letterDate').addEventListener('input', syncLetter);
 
         const saved = localStorage.getItem(STORAGE_WP);
