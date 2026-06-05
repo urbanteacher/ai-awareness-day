@@ -47,6 +47,7 @@ require_once $aiad_dir . '/inc/generator-embed.php';
 if ( is_admin() ) {
 	require_once $aiad_dir . '/inc/certificate-admin.php';
 	require_once $aiad_dir . '/inc/letter-admin.php';
+	require_once $aiad_dir . '/inc/submissions-csv-export.php';
 }
 require_once $aiad_dir . '/inc/timeline.php';
 require_once $aiad_dir . '/inc/live-sessions.php';
