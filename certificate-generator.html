@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root {
             --ink: #111827;
@@ -116,6 +117,33 @@
         }
         button.primary:hover:not(:disabled) {
             background: #374151;
+        }
+        button.secondary {
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button.secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        button.secondary:hover:not(:disabled) {
+            background: #f3f4f6;
+        }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .btn-row button.primary,
+        .btn-row button.secondary {
+            flex: 1 1 220px;
         }
 
         /* Certificate — fixed layout, no overlapping footer */
@@ -323,7 +351,12 @@
                 <input type="file" id="schoolLogo" accept="image/*" onchange="onLogoUpload(event)">
             </div>
 
-            <button type="button" class="primary" id="downloadBtn" onclick="generatePDF()">Download certificate as PDF</button>
+            <div class="btn-row">
+                <button type="button" class="primary" id="downloadBtn" onclick="generatePDF()">Download this certificate (PDF)</button>
+                <button type="button" class="secondary" id="downloadAllBtn" disabled onclick="downloadAllCertificatesPdf()">Download all certificates (one PDF)</button>
+                <button type="button" class="secondary" id="downloadAllSeparateBtn" disabled onclick="downloadAllSeparateCertificates()">Download all certificates (separate PDFs, ZIP)</button>
+            </div>
+            <p class="status" id="exportStatus"></p>
         </div>
 
         <div class="certificate-wrap">
@@ -485,6 +518,11 @@
                 submissionSelect.disabled = false;
                 onSubmissionChange();
             }
+            const hasAny = list.length > 0;
+            const allBtn = document.getElementById('downloadAllBtn');
+            const sepBtn = document.getElementById('downloadAllSeparateBtn');
+            if (allBtn) allBtn.disabled = !hasAny;
+            if (sepBtn) sepBtn.disabled = !hasAny;
         }
         const EMBED_PARAMS = new URLSearchParams(window.location.search);
         const AIAD_REST = {
@@ -862,29 +900,195 @@
             }
         }
 
-        async function generatePDF() {
+        function releaseCanvas(canvas) {
+            if (!canvas) return;
+            try { canvas.width = 0; canvas.height = 0; } catch (_) {}
+        }
+
+        async function captureCertCanvas(opts) {
             const certNode = document.getElementById('certificateNode');
+            const scale = (opts && opts.scale) || 2;
+            return html2canvas(certNode, {
+                scale: scale,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+            });
+        }
+
+        function setExportStatus(text, cls) {
+            const el = document.getElementById('exportStatus');
+            if (!el) return;
+            el.textContent = text || '';
+            el.className = 'status' + (cls ? ' status--' + cls : '');
+        }
+
+        function currentFilterLabel() {
+            const f = roleFilterSelect.value;
+            return (!f || f === 'all') ? '' : getRoleLabel(f);
+        }
+
+        function filenameSuffixForFilter() {
+            const f = roleFilterSelect.value;
+            if (!f || f === 'all') return 'all';
+            return f.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+
+        function safeCertFilenameFromRow(row, index) {
+            const raw = (row.full_name || ('participant-' + (index + 1))).trim();
+            const slug = raw.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            return 'ai-awareness-day-certificate-' + (slug || ('participant-' + (index + 1))) + '.pdf';
+        }
+
+        async function generatePDF() {
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
             try {
-                const canvas = await html2canvas(certNode, {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                });
-                const imgData = canvas.toDataURL('image/png');
+                const canvas = await captureCertCanvas();
+                const imgData = canvas.toDataURL('image/jpeg', 0.92);
+                releaseCanvas(canvas);
                 const { jsPDF } = window.jspdf;
-                const w = certNode.offsetWidth;
-                const h = certNode.offsetHeight;
-                const pdf = new jsPDF({ orientation: w > h ? 'l' : 'p', unit: 'px', format: [w, h] });
-                pdf.addImage(imgData, 'PNG', 0, 0, w, h);
+                // Standardise to A4 landscape to match the on-screen 297×210 aspect ratio.
+                const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+                pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
                 const safe = document.getElementById('recipientName').value.trim().replace(/\s+/g, '-') || 'certificate';
-                pdf.save('ai-awareness-day-' + safe + '.pdf');
+                pdf.save('ai-awareness-day-certificate-' + safe + '.pdf');
+                setExportStatus('');
             } catch (e) {
-                alert('PDF failed: ' + (e.message || e));
+                setExportStatus('PDF failed: ' + (e.message || e), 'error');
             } finally {
                 btn.disabled = false;
+            }
+        }
+
+        /**
+         * Render the certificate as it would appear for a given submission row.
+         * Mirrors the side-effects of onSubmissionChange — we need the DOM to
+         * reflect this signup before the canvas is captured.
+         */
+        function renderCertForRow(row) {
+            submissionSelect.value = String(row.id);
+            onSubmissionChange();
+        }
+
+        async function downloadAllCertificatesPdf() {
+            const list = filteredSubmissions();
+            if (!list.length) return;
+            const btn = document.getElementById('downloadAllBtn');
+            const oneBtn = document.getElementById('downloadBtn');
+            const sepBtn = document.getElementById('downloadAllSeparateBtn');
+            btn.disabled = true;
+            oneBtn.disabled = true;
+            sepBtn.disabled = true;
+            const filterLabel = currentFilterLabel();
+            const scopeLabel = filterLabel ? ' (' + filterLabel + ')' : '';
+            setExportStatus('Generating' + scopeLabel + '… 0 / ' + list.length);
+
+            const savedSelect = submissionSelect.value;
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
+                const w = pdf.internal.pageSize.getWidth();
+                const h = pdf.internal.pageSize.getHeight();
+
+                for (let i = 0; i < list.length; i++) {
+                    setExportStatus('Generating' + scopeLabel + '… ' + (i + 1) + ' / ' + list.length);
+                    renderCertForRow(list[i]);
+                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                    const canvas = await captureCertCanvas({ scale: 1.5 });
+                    const img = canvas.toDataURL('image/jpeg', 0.9);
+                    releaseCanvas(canvas);
+                    if (i > 0) pdf.addPage('a4', 'landscape');
+                    pdf.addImage(img, 'JPEG', 0, 0, w, h);
+                    await new Promise((r) => setTimeout(r, 0));
+                }
+
+                pdf.save('ai-awareness-day-certificates-' + filenameSuffixForFilter() + '.pdf');
+                setExportStatus('Downloaded ' + list.length + ' certificate(s)' + scopeLabel + ' in one PDF.', 'ok');
+            } catch (e) {
+                setExportStatus('Export failed: ' + (e.message || e), 'error');
+            } finally {
+                submissionSelect.value = savedSelect;
+                onSubmissionChange();
+                const has = filteredSubmissions().length > 0;
+                btn.disabled = !has;
+                sepBtn.disabled = !has;
+                oneBtn.disabled = false;
+            }
+        }
+
+        async function downloadAllSeparateCertificates() {
+            const list = filteredSubmissions();
+            if (!list.length) return;
+            if (typeof window.JSZip === 'undefined') {
+                setExportStatus('ZIP export failed: JSZip did not load (check network/CDN).', 'error');
+                return;
+            }
+            const btn = document.getElementById('downloadAllSeparateBtn');
+            const allBtn = document.getElementById('downloadAllBtn');
+            const oneBtn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            allBtn.disabled = true;
+            oneBtn.disabled = true;
+            const filterLabel = currentFilterLabel();
+            const scopeLabel = filterLabel ? ' (' + filterLabel + ')' : '';
+            setExportStatus('Generating' + scopeLabel + '… 0 / ' + list.length);
+
+            const savedSelect = submissionSelect.value;
+            const usedNames = new Map();
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const zip = new JSZip();
+
+                for (let i = 0; i < list.length; i++) {
+                    setExportStatus('Generating' + scopeLabel + '… ' + (i + 1) + ' / ' + list.length);
+                    renderCertForRow(list[i]);
+                    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+                    const canvas = await captureCertCanvas({ scale: 1.5 });
+                    const img = canvas.toDataURL('image/jpeg', 0.9);
+                    releaseCanvas(canvas);
+                    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
+                    const w = pdf.internal.pageSize.getWidth();
+                    const h = pdf.internal.pageSize.getHeight();
+                    pdf.addImage(img, 'JPEG', 0, 0, w, h);
+
+                    let filename = safeCertFilenameFromRow(list[i], i);
+                    const count = (usedNames.get(filename) || 0) + 1;
+                    usedNames.set(filename, count);
+                    if (count > 1) filename = filename.replace(/\.pdf$/, '-' + count + '.pdf');
+                    zip.file(filename, pdf.output('arraybuffer'));
+                    await new Promise((r) => setTimeout(r, 0));
+                }
+
+                setExportStatus('Packaging ZIP…');
+                const blob = await zip.generateAsync({
+                    type: 'blob',
+                    streamFiles: true,
+                    compression: 'STORE',
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ai-awareness-day-certificates-' + filenameSuffixForFilter() + '.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                setExportStatus('Downloaded ZIP with ' + list.length + ' certificate(s)' + scopeLabel + '.', 'ok');
+            } catch (e) {
+                setExportStatus('ZIP export failed: ' + (e.message || e) + ' — try a smaller filter (e.g. one role at a time).', 'error');
+            } finally {
+                submissionSelect.value = savedSelect;
+                onSubmissionChange();
+                const has = filteredSubmissions().length > 0;
+                btn.disabled = !has;
+                allBtn.disabled = !has;
+                oneBtn.disabled = false;
             }
         }
 
