@@ -288,6 +288,13 @@
             </div>
 
             <div class="form-row">
+                <label for="roleFilter">Filter by role</label>
+                <select id="roleFilter" disabled>
+                    <option value="all">All signups</option>
+                </select>
+            </div>
+
+            <div class="form-row">
                 <label for="submissionSelect">Signup from WordPress</label>
                 <select id="submissionSelect" disabled>
                     <option value="">Loading submissions…</option>
@@ -366,6 +373,119 @@
         const wpBaseInput = document.getElementById('wpBase');
         const wpStatus = document.getElementById('wpStatus');
         const submissionSelect = document.getElementById('submissionSelect');
+        const roleFilterSelect = document.getElementById('roleFilter');
+
+        /**
+         * Bucket key used by the role filter. Organisations split into sub-buckets
+         * by org_type so charities, universities etc. can be picked individually.
+         */
+        function getRoleKey(row) {
+            if (!row) return 'unknown';
+            if (row.involved_as === 'organisation' && row.org_type) {
+                return 'org:' + row.org_type;
+            }
+            return row.involved_as || 'unknown';
+        }
+
+        function getRoleLabel(key) {
+            const labels = {
+                'teacher': 'Teachers',
+                'school_leader': 'School leaders',
+                'parent': 'Parents / carers',
+                'organisation': 'Organisations',
+                'org:company': 'Organisations — Companies',
+                'org:education_provider': 'Organisations — Education providers',
+                'org:charity': 'Organisations — Charities',
+                'org:university': 'Organisations — Universities',
+                'org:institute': 'Organisations — Institutes',
+                'unknown': 'Unspecified',
+            };
+            if (labels[key]) return labels[key];
+            if (key.indexOf('org:') === 0) {
+                const sub = key.slice(4).replace(/_/g, ' ');
+                return 'Organisations — ' + sub.charAt(0).toUpperCase() + sub.slice(1);
+            }
+            return key;
+        }
+
+        function buildRoleFilterOptions() {
+            const counts = new Map();
+            submissions.forEach((row) => {
+                const k = getRoleKey(row);
+                counts.set(k, (counts.get(k) || 0) + 1);
+            });
+            const previous = roleFilterSelect.value || 'all';
+            roleFilterSelect.innerHTML = '';
+            const allOpt = document.createElement('option');
+            allOpt.value = 'all';
+            allOpt.textContent = 'All signups (' + submissions.length + ')';
+            roleFilterSelect.appendChild(allOpt);
+
+            const primary = ['teacher', 'school_leader', 'parent'];
+            const orgKeys = [...counts.keys()].filter((k) => k.indexOf('org:') === 0).sort();
+            const others  = [...counts.keys()].filter((k) =>
+                primary.indexOf(k) === -1 && k.indexOf('org:') !== 0 && k !== 'organisation'
+            ).sort();
+            const ordered = [
+                ...primary.filter((k) => counts.has(k)),
+                ...(counts.has('organisation') ? ['organisation'] : []),
+                ...orgKeys,
+                ...others,
+            ];
+            ordered.forEach((k) => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = getRoleLabel(k) + ' (' + counts.get(k) + ')';
+                roleFilterSelect.appendChild(opt);
+            });
+            if ([...roleFilterSelect.options].some((o) => o.value === previous)) {
+                roleFilterSelect.value = previous;
+            } else {
+                roleFilterSelect.value = 'all';
+            }
+            roleFilterSelect.disabled = submissions.length === 0;
+        }
+
+        function filteredSubmissions() {
+            const f = roleFilterSelect.value;
+            if (!f || f === 'all') return submissions;
+            return submissions.filter((row) => getRoleKey(row) === f);
+        }
+
+        /**
+         * Preserves the existing label format on certificate signups:
+         *   "Full Name — School [Role] ✓ logo"
+         */
+        function participantOptionLabel(row) {
+            const roleLabels = {
+                teacher: 'Teacher',
+                school_leader: 'School',
+                organisation: 'Org',
+                parent: 'Parent',
+            };
+            const roleHint = roleLabels[row.involved_as] ? ' [' + roleLabels[row.involved_as] + ']' : '';
+            const logoHint = row.school_logo_url ? ' ✓ logo' : (row.wants_logo_supporter ? ' (wants logo)' : '');
+            return (row.full_name || 'Unknown') + ' — ' + (row.school_name || 'No school') + roleHint + logoHint;
+        }
+
+        function rebuildParticipantOptions() {
+            const list = filteredSubmissions();
+            submissionSelect.innerHTML = '';
+            if (list.length === 0) {
+                submissionSelect.innerHTML = '<option value="">No signups in this category</option>';
+                submissionSelect.disabled = true;
+            } else {
+                list.forEach((row, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = row.id;
+                    opt.textContent = participantOptionLabel(row);
+                    submissionSelect.appendChild(opt);
+                    if (i === 0) opt.selected = true;
+                });
+                submissionSelect.disabled = false;
+                onSubmissionChange();
+            }
+        }
         const EMBED_PARAMS = new URLSearchParams(window.location.search);
         const AIAD_REST = {
             root: EMBED_PARAMS.get('rest_root') || '',
@@ -721,30 +841,13 @@
 
                 setBrandLogo(resolveBrandLogoUrl(boot));
 
-                submissionSelect.innerHTML = '';
-                if (submissions.length === 0) {
-                    submissionSelect.innerHTML = '<option value="">No signups found</option>';
-                } else {
-                    submissions.forEach((row, i) => {
-                        const opt = document.createElement('option');
-                        opt.value = row.id;
-                        const roleLabels = {
-                            teacher: 'Teacher',
-                            school_leader: 'School',
-                            organisation: 'Org',
-                            parent: 'Parent',
-                        };
-                        const roleHint = roleLabels[row.involved_as] ? ' [' + roleLabels[row.involved_as] + ']' : '';
-                        const logoHint = row.school_logo_url ? ' ✓ logo' : (row.wants_logo_supporter ? ' (wants logo)' : '');
-                        opt.textContent = (row.full_name || 'Unknown') + ' — ' + (row.school_name || 'No school') + roleHint + logoHint;
-                        submissionSelect.appendChild(opt);
-                        if (i === 0) opt.selected = true;
-                    });
-                    submissionSelect.disabled = false;
+                buildRoleFilterOptions();
+                rebuildParticipantOptions();
+                if (submissions.length > 0) {
                     selectSubmissionFromUrl();
-                    if (!submissionSelect.value) {
-                        onSubmissionChange();
-                    }
+                    if (!submissionSelect.value) onSubmissionChange();
+                } else {
+                    submissionSelect.innerHTML = '<option value="">No signups found</option>';
                 }
 
                 const logoLoaded = !!resolveBrandLogoUrl(boot);
@@ -803,6 +906,7 @@
 
         wpBaseInput.addEventListener('change', loadWordPress);
         submissionSelect.addEventListener('change', onSubmissionChange);
+        roleFilterSelect.addEventListener('change', rebuildParticipantOptions);
 
         const saved = localStorage.getItem(STORAGE_WP);
         if (AIAD_REST.siteUrl) {
