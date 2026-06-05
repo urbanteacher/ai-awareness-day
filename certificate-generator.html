@@ -846,7 +846,10 @@
             }
             document.getElementById('recipientName').value = row.full_name || '';
             document.getElementById('schoolName').value = row.school_name || '';
-            document.getElementById('certDate').value = toDateInputValue(row.submitted_at);
+            // Leave the date as-is — a Certificate of Participation is dated by
+            // issue date (today, or whatever the editor has set), not by the
+            // participant's signup date. This also means a bulk export gives
+            // every certificate the same date.
             certificateId = 'AIAD-' + row.id;
             updateSelectedSummary(row);
             syncFromForm();
