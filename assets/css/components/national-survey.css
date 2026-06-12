@@ -121,6 +121,21 @@
 	gap: 0.5rem 1rem;
 }
 
+.aiad-survey__checkgroup--single {
+	grid-template-columns: 1fr;
+}
+
+.aiad-survey__section-note {
+	font-size: 0.875rem;
+	color: var(--wp--preset--color--mid-grey, #6b7280);
+	font-style: italic;
+	margin: 0 0 1.25rem;
+	padding: 0.75rem 1rem;
+	background: var(--wp--preset--color--off-white, #f9fafb);
+	border-left: 3px solid var(--wp--preset--color--primary, #0070c0);
+	border-radius: 0 6px 6px 0;
+}
+
 .aiad-survey__check-label,
 .aiad-survey__radio-label {
 	display: flex;
