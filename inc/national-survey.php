@@ -599,30 +599,74 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
-			<!-- ── STEP: contact ── Stay in touch (everyone) -->
+			<!-- ── STEP: contact ── School details & stay in touch (everyone) -->
 			<fieldset class="aiad-survey__step" data-step-id="contact">
 				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Stay in touch (optional)', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Your school &amp; stay in touch', 'ai-awareness-day' ); ?>
 				</legend>
 
 				<p class="aiad-survey__helper">
-					<?php esc_html_e( 'Leave your details if you\'d like early notice of 2027, or if we may quote your feedback (anonymised) in our national report or AAAI submission.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Help us understand which schools are engaging. These details are optional — leave your email if you\'d like early access to 2027 resources or we may quote your feedback (anonymised) in our national report.', 'ai-awareness-day' ); ?>
 				</p>
 
+				<!-- School name -->
 				<div class="aiad-survey__field">
-					<label class="aiad-survey__label" for="survey-name">
-						<?php esc_html_e( 'Your name', 'ai-awareness-day' ); ?>
+					<label class="aiad-survey__label" for="survey-school-name">
+						<?php esc_html_e( 'School name', 'ai-awareness-day' ); ?>
 					</label>
-					<input class="aiad-survey__input" type="text" id="survey-name" name="contact_name"
-						placeholder="<?php esc_attr_e( 'Optional', 'ai-awareness-day' ); ?>" maxlength="150" autocomplete="name" />
+					<input class="aiad-survey__input" type="text" id="survey-school-name" name="school_name"
+						placeholder="<?php esc_attr_e( 'e.g. Westfield Academy…', 'ai-awareness-day' ); ?>" maxlength="200" autocomplete="organization" />
 				</div>
 
+				<!-- School type -->
+				<div class="aiad-survey__field">
+					<label class="aiad-survey__label" for="survey-school-type">
+						<?php esc_html_e( 'School type', 'ai-awareness-day' ); ?>
+					</label>
+					<select class="aiad-survey__select" id="survey-school-type" name="school_type">
+						<option value=""><?php esc_html_e( '— Select —', 'ai-awareness-day' ); ?></option>
+						<option value="primary"><?php esc_html_e( 'Primary', 'ai-awareness-day' ); ?></option>
+						<option value="secondary"><?php esc_html_e( 'Secondary', 'ai-awareness-day' ); ?></option>
+						<option value="all_through"><?php esc_html_e( 'All-through (4–18)', 'ai-awareness-day' ); ?></option>
+						<option value="special"><?php esc_html_e( 'Special / Alternative Provision', 'ai-awareness-day' ); ?></option>
+						<option value="fe_college"><?php esc_html_e( 'FE College / Sixth Form', 'ai-awareness-day' ); ?></option>
+						<option value="mat_trust"><?php esc_html_e( 'MAT / Trust (multiple schools)', 'ai-awareness-day' ); ?></option>
+					</select>
+				</div>
+
+				<!-- Year groups taught -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						<?php esc_html_e( 'Which year groups did you engage with AI Awareness Day? (tick all that apply)', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__checkgroup">
+						<?php
+						$year_groups = array(
+							'eyfs'     => __( 'EYFS', 'ai-awareness-day' ),
+							'ks1'      => __( 'KS1 (Y1–Y2)', 'ai-awareness-day' ),
+							'ks2'      => __( 'KS2 (Y3–Y6)', 'ai-awareness-day' ),
+							'ks3'      => __( 'KS3 (Y7–Y9)', 'ai-awareness-day' ),
+							'ks4'      => __( 'KS4 (Y10–Y11)', 'ai-awareness-day' ),
+							'ks5'      => __( 'KS5 / 6th Form', 'ai-awareness-day' ),
+							'staff'    => __( 'Staff CPD only', 'ai-awareness-day' ),
+						);
+						foreach ( $year_groups as $val => $label ) :
+							?>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="year_groups[]" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__checkbox" />
+								<?php echo esc_html( $label ); ?>
+							</label>
+						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<!-- Email -->
 				<div class="aiad-survey__field">
 					<label class="aiad-survey__label" for="survey-email">
 						<?php esc_html_e( 'Email address', 'ai-awareness-day' ); ?>
 					</label>
 					<input class="aiad-survey__input" type="email" id="survey-email" name="contact_email"
-						placeholder="<?php esc_attr_e( 'Optional', 'ai-awareness-day' ); ?>" maxlength="200" autocomplete="email" />
+						placeholder="<?php esc_attr_e( 'Optional — for 2027 early access', 'ai-awareness-day' ); ?>" maxlength="200" autocomplete="email" />
 				</div>
 
 				<div class="aiad-survey__field">
@@ -710,9 +754,21 @@ function aiad_handle_survey_submission(): void {
 	$non_part_reason        = sanitize_text_field( wp_unslash( $_POST['non_part_reason'] ?? '' ) );
 	$staffroom_attitude     = sanitize_text_field( wp_unslash( $_POST['staffroom_attitude'] ?? '' ) );
 	$five_min_pledge        = sanitize_text_field( wp_unslash( $_POST['five_min_pledge'] ?? '' ) );
-	$contact_name           = sanitize_text_field( wp_unslash( $_POST['contact_name'] ?? '' ) );
+	$school_name            = sanitize_text_field( wp_unslash( $_POST['school_name'] ?? '' ) );
+	$school_type            = sanitize_text_field( wp_unslash( $_POST['school_type'] ?? '' ) );
 	$contact_email          = sanitize_email( wp_unslash( $_POST['contact_email'] ?? '' ) );
 	$perm_quote             = isset( $_POST['permission_quote'] ) ? '1' : '0';
+
+	$allowed_year_groups = array( 'eyfs', 'ks1', 'ks2', 'ks3', 'ks4', 'ks5', 'staff' );
+	$raw_year_groups = isset( $_POST['year_groups'] ) && is_array( $_POST['year_groups'] )
+		? array_map( 'sanitize_text_field', wp_unslash( $_POST['year_groups'] ) )
+		: array();
+	$year_groups = array_values( array_intersect( $raw_year_groups, $allowed_year_groups ) );
+
+	$allowed_school_types = array( 'primary', 'secondary', 'all_through', 'special', 'fe_college', 'mat_trust' );
+	if ( ! in_array( $school_type, $allowed_school_types, true ) ) {
+		$school_type = '';
+	}
 
 	// Validate required field
 	if ( empty( $role ) ) {
@@ -756,7 +812,8 @@ function aiad_handle_survey_submission(): void {
 
 	// Build a title for the admin list
 	$title = sprintf(
-		'%s — %s — %s',
+		'%s — %s — %s — %s',
+		$school_name ?: 'Unknown school',
 		$role ?: 'unknown',
 		$participated === 'yes' ? 'participant' : 'non-participant',
 		gmdate( 'Y-m-d H:i' )
@@ -801,8 +858,10 @@ function aiad_handle_survey_submission(): void {
 		'_survey_staffroom_attitude'    => $staffroom_attitude,
 		'_survey_five_min_pledge'       => $five_min_pledge,
 		'_survey_onboarding_needs'      => wp_json_encode( $onboarding_needs ),
-		// Contact
-		'_survey_contact_name'          => $contact_name,
+		// Contact / school details
+		'_survey_school_name'           => $school_name,
+		'_survey_school_type'           => $school_type,
+		'_survey_year_groups'           => wp_json_encode( $year_groups ),
 		'_survey_contact_email'         => $contact_email,
 		'_survey_permission_quote'      => $perm_quote,
 		'_survey_year'                  => '2026',
@@ -859,7 +918,9 @@ function aiad_survey_meta_box_render( WP_Post $post ): void {
 		'_survey_staffroom_attitude'    => __( 'Non-participant: staff room attitude', 'ai-awareness-day' ),
 		'_survey_five_min_pledge'       => __( 'Non-participant: 5-min pledge', 'ai-awareness-day' ),
 		'_survey_onboarding_needs'      => __( 'Non-participant: onboarding needs', 'ai-awareness-day' ),
-		'_survey_contact_name'          => __( 'Contact name', 'ai-awareness-day' ),
+		'_survey_school_name'           => __( 'School name', 'ai-awareness-day' ),
+		'_survey_school_type'           => __( 'School type', 'ai-awareness-day' ),
+		'_survey_year_groups'           => __( 'Year groups engaged', 'ai-awareness-day' ),
 		'_survey_contact_email'         => __( 'Contact email', 'ai-awareness-day' ),
 		'_survey_permission_quote'      => __( 'Quoting permission', 'ai-awareness-day' ),
 	);
@@ -1129,8 +1190,8 @@ function aiad_export_survey_csv(): void {
 		'Bottleneck (Q7)', 'Support modules 2027 (Q8)', 'Open feedback (Q9)',
 		// Non-participant track
 		'Non-part: reason', 'Non-part: staff room attitude', 'Non-part: 5-min pledge', 'Non-part: onboarding needs',
-		// Contact
-		'Contact name', 'Contact email', 'Quoting permission',
+		// Contact / school details
+		'School name', 'School type', 'Year groups', 'Contact email', 'Quoting permission',
 	);
 
 	$meta_keys = array(
@@ -1143,7 +1204,7 @@ function aiad_export_survey_csv(): void {
 		'_survey_staffroom_impact', '_survey_bottleneck',
 		'_survey_support_modules', '_survey_open_feedback',
 		'_survey_non_part_reason', '_survey_staffroom_attitude', '_survey_five_min_pledge', '_survey_onboarding_needs',
-		'_survey_contact_name', '_survey_contact_email', '_survey_permission_quote',
+		'_survey_school_name', '_survey_school_type', '_survey_year_groups', '_survey_contact_email', '_survey_permission_quote',
 	);
 
 	header( 'Content-Type: text/csv; charset=UTF-8' );
@@ -1172,3 +1233,511 @@ function aiad_export_survey_csv(): void {
 	exit;
 }
 add_action( 'admin_post_aiad_export_survey_csv', 'aiad_export_survey_csv' );
+
+// ---------------------------------------------------------------------------
+// Admin: custom list table columns
+// ---------------------------------------------------------------------------
+
+function aiad_survey_response_columns( array $cols ): array {
+	return array(
+		'cb'            => $cols['cb'] ?? '',
+		'title'         => __( 'Response', 'ai-awareness-day' ),
+		'school'        => __( 'School', 'ai-awareness-day' ),
+		'role'          => __( 'Role', 'ai-awareness-day' ),
+		'year_groups'   => __( 'Year groups', 'ai-awareness-day' ),
+		'participated'  => __( 'Participated?', 'ai-awareness-day' ),
+		'avg_rating'    => __( 'Avg rating', 'ai-awareness-day' ),
+		'date'          => __( 'Date', 'ai-awareness-day' ),
+	);
+}
+add_filter( 'manage_survey_response_posts_columns', 'aiad_survey_response_columns' );
+
+function aiad_survey_response_column_content( string $col, int $post_id ): void {
+	switch ( $col ) {
+		case 'school':
+			$name = (string) get_post_meta( $post_id, '_survey_school_name', true );
+			$type = (string) get_post_meta( $post_id, '_survey_school_type', true );
+			echo esc_html( $name ?: '—' );
+			if ( $type ) {
+				echo ' <span style="color:#888;font-size:11px;">(' . esc_html( $type ) . ')</span>';
+			}
+			break;
+		case 'role':
+			$map = array(
+				'teacher_primary'   => 'Teacher (Primary)',
+				'teacher_secondary' => 'Teacher (Secondary)',
+				'computing_lead'    => 'Computing Lead',
+				'slt_mat'           => 'SLT / MAT',
+				'alt_provision'     => 'Alt Provision',
+			);
+			$val = (string) get_post_meta( $post_id, '_survey_role', true );
+			echo esc_html( $map[ $val ] ?? $val ?: '—' );
+			break;
+		case 'year_groups':
+			$raw = (string) get_post_meta( $post_id, '_survey_year_groups', true );
+			$arr = $raw ? json_decode( $raw, true ) : array();
+			echo esc_html( is_array( $arr ) && $arr ? implode( ', ', array_map( 'strtoupper', $arr ) ) : '—' );
+			break;
+		case 'participated':
+			$val = (string) get_post_meta( $post_id, '_survey_participated', true );
+			if ( $val === 'yes' ) {
+				$scale = (string) get_post_meta( $post_id, '_survey_participation_scale', true );
+				$badge = '<span style="background:#dcfce7;color:#166534;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600;">Yes</span>';
+				echo wp_kses_post( $badge );
+				if ( $scale ) {
+					echo ' <span style="color:#888;font-size:11px;">' . esc_html( $scale ) . '</span>';
+				}
+			} elseif ( $val === 'no' ) {
+				echo '<span style="background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600;">No</span>';
+			} else {
+				echo '—';
+			}
+			break;
+		case 'avg_rating':
+			$fields = array(
+				'_survey_rating_student_empowerment',
+				'_survey_rating_critical_skepticism',
+				'_survey_rating_inclusivity',
+				'_survey_rating_plug_and_play',
+				'_survey_rating_student_access',
+				'_survey_rating_tech_delivery',
+			);
+			$vals = array_filter( array_map( function( $k ) use ( $post_id ) {
+				$v = (int) get_post_meta( $post_id, $k, true );
+				return $v > 0 ? $v : null;
+			}, $fields ) );
+			if ( $vals ) {
+				$avg = round( array_sum( $vals ) / count( $vals ), 1 );
+				$stars = str_repeat( '★', (int) round( $avg ) ) . str_repeat( '☆', 5 - (int) round( $avg ) );
+				echo '<span title="' . esc_attr( $avg . '/5' ) . '" style="color:#f59e0b;">' . esc_html( $stars ) . '</span> <span style="font-size:11px;color:#888;">' . esc_html( $avg ) . '</span>';
+			} else {
+				echo '<span style="color:#888;">—</span>';
+			}
+			break;
+	}
+}
+add_action( 'manage_survey_response_posts_custom_column', 'aiad_survey_response_column_content', 10, 2 );
+
+function aiad_survey_response_sortable_columns( array $cols ): array {
+	$cols['school']       = 'school';
+	$cols['participated'] = 'participated';
+	return $cols;
+}
+add_filter( 'manage_edit-survey_response_sortable_columns', 'aiad_survey_response_sortable_columns' );
+
+// ---------------------------------------------------------------------------
+// Admin: analytics page
+// ---------------------------------------------------------------------------
+
+function aiad_survey_register_analytics_page(): void {
+	add_submenu_page(
+		'edit.php?post_type=survey_response',
+		__( 'Survey Analytics', 'ai-awareness-day' ),
+		__( '📊 Analytics', 'ai-awareness-day' ),
+		'edit_posts',
+		'aiad-survey-analytics',
+		'aiad_survey_analytics_page'
+	);
+}
+add_action( 'admin_menu', 'aiad_survey_register_analytics_page' );
+
+function aiad_survey_analytics_page(): void {
+	global $wpdb;
+
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		wp_die( esc_html__( 'Permission denied.', 'ai-awareness-day' ) );
+	}
+
+	// Fetch all meta in one query
+	$post_ids = $wpdb->get_col(
+		"SELECT ID FROM {$wpdb->posts} WHERE post_type = 'survey_response' AND post_status = 'publish' ORDER BY post_date ASC"
+	);
+	$total = count( $post_ids );
+
+	if ( ! $total ) {
+		echo '<div class="wrap"><h1>' . esc_html__( 'Survey Analytics', 'ai-awareness-day' ) . '</h1>';
+		echo '<p>' . esc_html__( 'No responses yet.', 'ai-awareness-day' ) . '</p></div>';
+		return;
+	}
+
+	// Build aggregated data
+	$roles       = array();
+	$school_types = array();
+	$year_groups_tally = array();
+	$participated_yes = 0;
+	$participated_no  = 0;
+	$scales      = array();
+	$hopes       = array();
+	$lasting     = array();
+	$prep        = array();
+	$bottlenecks = array();
+	$support     = array();
+	$non_reasons = array();
+	$staffroom_attitudes = array();
+	$ratings_sum = array_fill_keys( array(
+		'rating_student_empowerment', 'rating_critical_skepticism', 'rating_inclusivity',
+		'rating_plug_and_play', 'rating_student_access', 'rating_tech_delivery',
+	), array( 'sum' => 0, 'count' => 0 ) );
+	$recent_feedback = array();
+
+	foreach ( $post_ids as $pid ) {
+		$meta = get_post_meta( (int) $pid );
+		$get  = function( string $key ) use ( $meta ): string {
+			return isset( $meta[ $key ][0] ) ? (string) $meta[ $key ][0] : '';
+		};
+
+		// Roles
+		$role = $get( '_survey_role' );
+		if ( $role ) $roles[ $role ] = ( $roles[ $role ] ?? 0 ) + 1;
+
+		// School types
+		$st = $get( '_survey_school_type' );
+		if ( $st ) $school_types[ $st ] = ( $school_types[ $st ] ?? 0 ) + 1;
+
+		// Year groups
+		$yg_raw = $get( '_survey_year_groups' );
+		$yg_arr = $yg_raw ? json_decode( $yg_raw, true ) : array();
+		if ( is_array( $yg_arr ) ) {
+			foreach ( $yg_arr as $yg ) {
+				$year_groups_tally[ $yg ] = ( $year_groups_tally[ $yg ] ?? 0 ) + 1;
+			}
+		}
+
+		// Participation
+		$part = $get( '_survey_participated' );
+		if ( $part === 'yes' ) $participated_yes++;
+		elseif ( $part === 'no' ) $participated_no++;
+
+		$scale = $get( '_survey_participation_scale' );
+		if ( $scale ) $scales[ $scale ] = ( $scales[ $scale ] ?? 0 ) + 1;
+
+		$hope = $get( '_survey_primary_hope' );
+		if ( $hope ) $hopes[ $hope ] = ( $hopes[ $hope ] ?? 0 ) + 1;
+
+		$le = $get( '_survey_lasting_effect' );
+		if ( $le ) $lasting[ $le ] = ( $lasting[ $le ] ?? 0 ) + 1;
+
+		$pt = $get( '_survey_prep_time' );
+		if ( $pt ) $prep[ $pt ] = ( $prep[ $pt ] ?? 0 ) + 1;
+
+		$bn = $get( '_survey_bottleneck' );
+		if ( $bn ) $bottlenecks[ $bn ] = ( $bottlenecks[ $bn ] ?? 0 ) + 1;
+
+		$sm_raw = $get( '_survey_support_modules' );
+		$sm_arr = $sm_raw ? json_decode( $sm_raw, true ) : array();
+		if ( is_array( $sm_arr ) ) {
+			foreach ( $sm_arr as $sm ) {
+				$support[ $sm ] = ( $support[ $sm ] ?? 0 ) + 1;
+			}
+		}
+
+		$nr = $get( '_survey_non_part_reason' );
+		if ( $nr ) $non_reasons[ $nr ] = ( $non_reasons[ $nr ] ?? 0 ) + 1;
+
+		$sa = $get( '_survey_staffroom_attitude' );
+		if ( $sa ) $staffroom_attitudes[ $sa ] = ( $staffroom_attitudes[ $sa ] ?? 0 ) + 1;
+
+		// Ratings
+		foreach ( array_keys( $ratings_sum ) as $rk ) {
+			$rv = (int) $get( '_survey_' . $rk );
+			if ( $rv >= 1 && $rv <= 5 ) {
+				$ratings_sum[ $rk ]['sum']   += $rv;
+				$ratings_sum[ $rk ]['count'] += 1;
+			}
+		}
+
+		// Recent feedback (last 5)
+		$fb = $get( '_survey_open_feedback' );
+		if ( $fb && count( $recent_feedback ) < 5 ) {
+			$recent_feedback[] = array(
+				'text'   => $fb,
+				'school' => $get( '_survey_school_name' ),
+				'role'   => $get( '_survey_role' ),
+			);
+		}
+	}
+
+	arsort( $roles );
+	arsort( $bottlenecks );
+	arsort( $support );
+
+	// Helper: render a horizontal bar chart
+	$bar = function( array $data, array $labels, int $total_n ) use ( $total ): string {
+		if ( ! $data ) return '<p style="color:#888">No data yet.</p>';
+		$out = '<div style="display:grid;gap:6px;margin-top:8px;">';
+		foreach ( $data as $key => $count ) {
+			$label = $labels[ $key ] ?? $key;
+			$pct   = $total_n > 0 ? round( ( $count / $total_n ) * 100 ) : 0;
+			$out  .= '<div>';
+			$out  .= '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px;"><span>' . esc_html( $label ) . '</span><span style="color:#888;">' . esc_html( $count ) . ' (' . esc_html( $pct ) . '%)</span></div>';
+			$out  .= '<div style="background:#e5e7eb;border-radius:4px;height:14px;overflow:hidden;"><div style="background:#0070c0;height:100%;width:' . esc_attr( $pct ) . '%;border-radius:4px;transition:width .4s;"></div></div>';
+			$out  .= '</div>';
+		}
+		return $out . '</div>';
+	};
+
+	$role_labels = array(
+		'teacher_primary'   => 'Classroom Teacher (Primary)',
+		'teacher_secondary' => 'Classroom Teacher (Secondary)',
+		'computing_lead'    => 'Computing Lead / HoD',
+		'slt_mat'           => 'SLT / MAT Digital Lead',
+		'alt_provision'     => 'Alt Provision / SEN',
+	);
+
+	$school_type_labels = array(
+		'primary'    => 'Primary',
+		'secondary'  => 'Secondary',
+		'all_through' => 'All-through',
+		'special'    => 'Special / Alt Provision',
+		'fe_college' => 'FE College / 6th Form',
+		'mat_trust'  => 'MAT / Trust',
+	);
+
+	$yg_labels = array(
+		'eyfs' => 'EYFS', 'ks1' => 'KS1', 'ks2' => 'KS2',
+		'ks3' => 'KS3', 'ks4' => 'KS4', 'ks5' => 'KS5 / 6th Form', 'staff' => 'Staff CPD',
+	);
+
+	$rating_labels = array(
+		'rating_student_empowerment' => 'Student Empowerment',
+		'rating_critical_skepticism' => 'Critical Scepticism',
+		'rating_inclusivity'         => 'Inclusivity & Access',
+		'rating_plug_and_play'       => 'Plug & Play Usability',
+		'rating_student_access'      => 'Student Accessibility',
+		'rating_tech_delivery'       => 'Technical Delivery',
+	);
+
+	$hope_labels = array(
+		'demystify'        => 'Demystify AI / reduce anxiety',
+		'confidence_skills' => 'Confidence & practical skills',
+		'digital_resilience' => 'Digital resilience / fact-checking',
+		'career_interest'  => 'Career interest / CS spark',
+	);
+
+	$bottleneck_labels = array(
+		'time'           => 'Time constraints',
+		'tech_barriers'  => 'Tech / firewall barriers',
+		'staff_hesitation' => 'Staff hesitation',
+		'physical_assets' => 'Lack of physical assets',
+	);
+
+	$support_labels = array(
+		'display_kits'    => 'Display Board Kits',
+		'cross_curricular' => 'Cross-Curricular Schemes of Work',
+		'cpd_pathways'    => 'Staff CPD Pathways',
+		'pta_packs'       => 'PTA Interactive Packs',
+	);
+
+	// Card CSS helper
+	$card = '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;margin-bottom:20px;">';
+	?>
+	<div class="wrap" style="max-width:1100px;">
+		<h1 style="margin-bottom:6px;">📊 <?php esc_html_e( 'National Survey 2026 — Analytics', 'ai-awareness-day' ); ?></h1>
+		<p style="color:#6b7280;margin-bottom:24px;">
+			<?php echo esc_html( sprintf( __( '%d total responses', 'ai-awareness-day' ), $total ) ); ?>
+			&nbsp;·&nbsp;
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response' ) ); ?>"><?php esc_html_e( 'View all responses', 'ai-awareness-day' ); ?></a>
+			&nbsp;·&nbsp;
+			<a href="<?php echo esc_url( add_query_arg( array( 'action' => 'aiad_export_survey_csv', '_wpnonce' => wp_create_nonce( 'aiad_export_survey_csv' ) ), admin_url( 'admin-post.php' ) ) ); ?>"><?php esc_html_e( 'Export CSV', 'ai-awareness-day' ); ?></a>
+		</p>
+
+		<!-- Top stats -->
+		<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+			<?php
+			$stats = array(
+				array( 'label' => __( 'Total responses', 'ai-awareness-day' ), 'value' => $total, 'color' => '#0070c0' ),
+				array( 'label' => __( 'Participants', 'ai-awareness-day' ), 'value' => $participated_yes, 'color' => '#059669' ),
+				array( 'label' => __( 'Non-participants', 'ai-awareness-day' ), 'value' => $participated_no, 'color' => '#dc2626' ),
+				array( 'label' => __( 'Schools named', 'ai-awareness-day' ), 'value' => count( array_filter( array_map( fn( $pid ) => get_post_meta( (int) $pid, '_survey_school_name', true ), $post_ids ) ) ), 'color' => '#7c3aed' ),
+			);
+			foreach ( $stats as $s ) :
+				?>
+				<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;text-align:center;">
+					<div style="font-size:2rem;font-weight:700;color:<?php echo esc_attr( $s['color'] ); ?>;"><?php echo esc_html( $s['value'] ); ?></div>
+					<div style="font-size:12px;color:#6b7280;margin-top:4px;"><?php echo esc_html( $s['label'] ); ?></div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+
+		<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+		<!-- Roles -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Respondents by role', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $roles, $role_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
+		<!-- School types -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'School type breakdown', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $school_types, $school_type_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
+		<!-- Year groups -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Year groups engaged', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php
+			arsort( $year_groups_tally );
+			echo $bar( $year_groups_tally, $yg_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput
+			?>
+		</div>
+
+		<!-- Participation scale -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Participation scale (participants)', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php
+			echo $bar( $scales, array( // phpcs:ignore WordPress.Security.EscapeOutput
+				'single_classroom' => 'Single classroom (< 30)',
+				'year_group'       => 'Year-group cohort (30–120)',
+				'whole_school'     => 'Whole school (120+)',
+			), $participated_yes );
+			?>
+		</div>
+
+		<!-- Primary hopes -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Primary hope (Q1)', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $hopes, $hope_labels, $participated_yes ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
+		<!-- Lasting effect -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Lasting classroom effect (Q3)', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php
+			echo $bar( $lasting, array( // phpcs:ignore WordPress.Security.EscapeOutput
+				'significant' => 'Significant — changed dynamic',
+				'moderate'    => 'Moderate awareness raised',
+				'none'        => 'No measurable effect',
+			), $participated_yes );
+			?>
+		</div>
+
+		<!-- Bottlenecks -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Biggest bottleneck (Q8)', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $bottlenecks, $bottleneck_labels, $participated_yes ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
+		<!-- Non-participant reasons -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Non-participant: barriers (Q1B)', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php
+			echo $bar( $non_reasons, array( // phpcs:ignore WordPress.Security.EscapeOutput
+				'timetable'       => 'Curriculum/timetable pressure',
+				'late_discovery'  => 'Late discovery',
+				'staff_confidence' => 'Lack of staff confidence',
+				'firewall'        => 'Tech / firewall restrictions',
+				'banned_policy'   => 'AI ban policy',
+			), $participated_no );
+			?>
+		</div>
+
+		<!-- Support modules 2027 -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Top 2027 support modules requested', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $support, $support_labels, $participated_yes ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
+		</div><!-- /grid -->
+
+		<!-- Star ratings -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 16px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Average Likert ratings (participants, out of 5)', 'ai-awareness-day' ); ?>
+			</h3>
+			<div style="display:grid;gap:10px;">
+			<?php foreach ( $ratings_sum as $rk => $rv ) : ?>
+				<?php
+				$avg = $rv['count'] > 0 ? round( $rv['sum'] / $rv['count'], 2 ) : 0;
+				$pct = $avg > 0 ? round( ( $avg / 5 ) * 100 ) : 0;
+				$label = $rating_labels[ $rk ] ?? $rk;
+				?>
+				<div>
+					<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px;">
+						<span><?php echo esc_html( $label ); ?></span>
+						<span style="font-weight:600;color:<?php echo $avg >= 4 ? '#059669' : ( $avg >= 3 ? '#d97706' : '#dc2626' ); ?>;">
+							<?php echo $rv['count'] > 0 ? esc_html( $avg . ' / 5' ) : esc_html__( 'No data', 'ai-awareness-day' ); ?>
+						</span>
+					</div>
+					<div style="background:#e5e7eb;border-radius:4px;height:16px;overflow:hidden;">
+						<div style="background:<?php echo $avg >= 4 ? '#059669' : ( $avg >= 3 ? '#d97706' : '#dc2626' ); ?>;height:100%;width:<?php echo esc_attr( $pct ); ?>%;border-radius:4px;"></div>
+					</div>
+					<div style="font-size:11px;color:#9ca3af;margin-top:2px;"><?php echo esc_html( $rv['count'] ); ?> <?php esc_html_e( 'responses', 'ai-awareness-day' ); ?></div>
+				</div>
+			<?php endforeach; ?>
+			</div>
+		</div>
+
+		<?php if ( $recent_feedback ) : ?>
+		<!-- Recent open feedback -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 16px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'Recent open feedback', 'ai-awareness-day' ); ?>
+			</h3>
+			<div style="display:grid;gap:12px;">
+			<?php foreach ( $recent_feedback as $fb ) : ?>
+				<div style="background:#f9fafb;border-left:3px solid #0070c0;padding:10px 14px;border-radius:0 6px 6px 0;">
+					<p style="margin:0 0 6px;font-style:italic;">"<?php echo esc_html( mb_substr( $fb['text'], 0, 300 ) . ( mb_strlen( $fb['text'] ) > 300 ? '…' : '' ) ); ?>"</p>
+					<p style="margin:0;font-size:11px;color:#6b7280;">
+						<?php
+						$by = array_filter( array( $fb['school'], $fb['role'] ) );
+						echo esc_html( $by ? '— ' . implode( ' · ', $by ) : '— Anonymous' );
+						?>
+					</p>
+				</div>
+			<?php endforeach; ?>
+			</div>
+		</div>
+		<?php endif; ?>
+
+	</div>
+	<?php
+}
+
+// ---------------------------------------------------------------------------
+// Auto-create the survey page if it doesn't exist
+// ---------------------------------------------------------------------------
+
+function aiad_maybe_create_survey_page(): void {
+	if ( get_option( 'aiad_survey_page_created' ) ) {
+		return;
+	}
+
+	// Check if a page with this slug already exists
+	$existing = get_page_by_path( 'national-survey-2026' );
+	if ( $existing ) {
+		update_option( 'aiad_survey_page_created', $existing->ID );
+		return;
+	}
+
+	$page_id = wp_insert_post( array(
+		'post_type'    => 'page',
+		'post_status'  => 'publish',
+		'post_title'   => __( 'National Survey 2026 — AI Awareness Day', 'ai-awareness-day' ),
+		'post_name'    => 'national-survey-2026',
+		'post_content' => '<!-- wp:shortcode -->[aiad_national_survey]<!-- /wp:shortcode -->',
+	) );
+
+	if ( $page_id && ! is_wp_error( $page_id ) ) {
+		update_option( 'aiad_survey_page_created', $page_id );
+	}
+}
+add_action( 'init', 'aiad_maybe_create_survey_page', 50 );
