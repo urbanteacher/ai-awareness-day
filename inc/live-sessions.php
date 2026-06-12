@@ -19,17 +19,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_register_live_session_cpt(): void {
     register_post_type( 'live_session', array(
         'labels'        => array(
-            'name'          => __( 'Live Sessions', 'ai-awareness-day' ),
-            'singular_name' => __( 'Live Session', 'ai-awareness-day' ),
-            'add_new'       => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Live Session', 'ai-awareness-day' ),
-            'edit_item'     => __( 'Edit Live Session', 'ai-awareness-day' ),
-            'view_item'     => __( 'View Live Session', 'ai-awareness-day' ),
-            'menu_name'     => __( 'Live Sessions', 'ai-awareness-day' ),
+            'name'               => __( 'Events', 'ai-awareness-day' ),
+            'singular_name'      => __( 'Event', 'ai-awareness-day' ),
+            'add_new'            => __( 'Add New', 'ai-awareness-day' ),
+            'add_new_item'       => __( 'Add New Event', 'ai-awareness-day' ),
+            'edit_item'          => __( 'Edit Event', 'ai-awareness-day' ),
+            'view_item'          => __( 'View Event', 'ai-awareness-day' ),
+            'all_items'          => __( 'All Events', 'ai-awareness-day' ),
+            'search_items'       => __( 'Search Events', 'ai-awareness-day' ),
+            'not_found'          => __( 'No events found.', 'ai-awareness-day' ),
+            'not_found_in_trash' => __( 'No events found in Trash.', 'ai-awareness-day' ),
+            'menu_name'          => __( 'Events', 'ai-awareness-day' ),
         ),
         'public'        => true,
-        'has_archive'   => 'schedule',
-        'rewrite'       => array( 'slug' => 'schedule' ),
+        'has_archive'   => 'events',
+        'rewrite'       => array( 'slug' => 'events' ),
         'menu_icon'     => 'dashicons-calendar-alt',
         'menu_position' => 22,
         'supports'      => array( 'title', 'editor', 'thumbnail' ),
@@ -50,6 +54,35 @@ function aiad_register_live_session_cpt(): void {
     ) );
 }
 add_action( 'init', 'aiad_register_live_session_cpt', 20 );
+
+/**
+ * Flush rewrite rules once after the slug change from /schedule/ to /events/.
+ */
+function aiad_flush_events_rewrite_once(): void {
+    if ( get_option( 'aiad_events_rewrite_flushed_v1' ) ) {
+        return;
+    }
+    flush_rewrite_rules( false );
+    update_option( 'aiad_events_rewrite_flushed_v1', true );
+}
+add_action( 'init', 'aiad_flush_events_rewrite_once', 99 );
+
+/**
+ * 301 redirect /schedule/ and /schedule/* to /events/ equivalents.
+ */
+function aiad_redirect_schedule_to_events(): void {
+    if ( is_admin() ) {
+        return;
+    }
+    $uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+    if ( strpos( $path, '/schedule' ) === 0 ) {
+        $new_path = preg_replace( '#^/schedule#', '/events', $path );
+        wp_safe_redirect( $new_path, 301 );
+        exit;
+    }
+}
+add_action( 'template_redirect', 'aiad_redirect_schedule_to_events', 5 );
 
 /**
  * Seed default audience terms once.
@@ -101,14 +134,11 @@ function aiad_live_session_meta_box_callback( WP_Post $post ): void {
 
     $start_time       = (string) get_post_meta( $post->ID, '_session_start_time', true );
     $end_time         = (string) get_post_meta( $post->ID, '_session_end_time', true );
+    $event_type       = (string) get_post_meta( $post->ID, '_session_event_type', true );
+    $location         = (string) get_post_meta( $post->ID, '_session_location', true );
     $format_label     = (string) get_post_meta( $post->ID, '_session_format', true );
     $registration_url = (string) get_post_meta( $post->ID, '_session_registration_url', true );
     $partner_id       = (int) get_post_meta( $post->ID, '_session_partner_id', true );
-
-    // Pre-fill format with sensible default.
-    if ( $format_label === '' ) {
-        $format_label = __( 'LIVE — MS Teams', 'ai-awareness-day' );
-    }
 
     $partners = get_posts( array(
         'post_type'      => 'partner',
@@ -138,8 +168,21 @@ function aiad_live_session_meta_box_callback( WP_Post $post ): void {
             <input type="datetime-local" id="aiad_session_end_time" name="aiad_session_end_time" value="<?php echo esc_attr( $end_time ); ?>" />
         </div>
         <div>
-            <label for="aiad_session_format"><?php esc_html_e( 'Format', 'ai-awareness-day' ); ?></label>
-            <input type="text" id="aiad_session_format" name="aiad_session_format" value="<?php echo esc_attr( $format_label ); ?>" placeholder="LIVE — MS Teams" />
+            <label for="aiad_session_event_type"><?php esc_html_e( 'Event type', 'ai-awareness-day' ); ?></label>
+            <select id="aiad_session_event_type" name="aiad_session_event_type">
+                <option value="online" <?php selected( $event_type, 'online' ); ?>><?php esc_html_e( 'Online / Live stream', 'ai-awareness-day' ); ?></option>
+                <option value="in_person" <?php selected( $event_type, 'in_person' ); ?>><?php esc_html_e( 'In person', 'ai-awareness-day' ); ?></option>
+                <option value="hybrid" <?php selected( $event_type, 'hybrid' ); ?>><?php esc_html_e( 'Hybrid', 'ai-awareness-day' ); ?></option>
+            </select>
+        </div>
+        <div>
+            <label for="aiad_session_location"><?php esc_html_e( 'Location / venue', 'ai-awareness-day' ); ?></label>
+            <input type="text" id="aiad_session_location" name="aiad_session_location" value="<?php echo esc_attr( $location ); ?>"
+                placeholder="<?php esc_attr_e( 'e.g. ExCeL London, or leave blank for online', 'ai-awareness-day' ); ?>" />
+        </div>
+        <div>
+            <label for="aiad_session_format"><?php esc_html_e( 'Format label', 'ai-awareness-day' ); ?></label>
+            <input type="text" id="aiad_session_format" name="aiad_session_format" value="<?php echo esc_attr( $format_label ); ?>" placeholder="e.g. Webinar · MS Teams" />
         </div>
         <div>
             <label for="aiad_session_partner_id"><?php esc_html_e( 'Provider (Partner)', 'ai-awareness-day' ); ?></label>
@@ -187,6 +230,8 @@ function aiad_save_live_session_meta( int $post_id ): void {
     $fields = array(
         'aiad_session_start_time'       => '_session_start_time',
         'aiad_session_end_time'         => '_session_end_time',
+        'aiad_session_event_type'       => '_session_event_type',
+        'aiad_session_location'         => '_session_location',
         'aiad_session_format'           => '_session_format',
         'aiad_session_registration_url' => '_session_registration_url',
         'aiad_session_partner_id'       => '_session_partner_id',
