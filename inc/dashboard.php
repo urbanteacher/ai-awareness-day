@@ -30,6 +30,11 @@ function aiad_register_dashboard_widget(): void {
         __( '🛠 AI Tools — Homepage visits', 'ai-awareness-day' ),
         'aiad_ai_tool_analytics_widget_callback'
     );
+    wp_add_dashboard_widget(
+        'aiad_survey_analytics',
+        __( '📋 National Survey 2026 — Response Summary', 'ai-awareness-day' ),
+        'aiad_survey_dashboard_widget_callback'
+    );
 }
 add_action( 'wp_dashboard_setup', 'aiad_register_dashboard_widget' );
 
@@ -824,6 +829,194 @@ function aiad_dashboard_widget_callback(): void {
         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=form_submission' ) ); ?>">View all submissions →</a>
         &nbsp;·&nbsp;
         <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=timeline' ) ); ?>">Manage timeline →</a>
+    </p>
+    <?php
+}
+
+// ---------------------------------------------------------------------------
+// Survey dashboard widget
+// ---------------------------------------------------------------------------
+
+function aiad_survey_dashboard_widget_callback(): void {
+    global $wpdb;
+
+    $total = (int) $wpdb->get_var( $wpdb->prepare(
+        "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = %s AND post_status = 'publish'",
+        'survey_response'
+    ) );
+
+    if ( $total === 0 ) {
+        echo '<p>No survey responses yet. <a href="' . esc_url( admin_url( 'edit.php?post_type=survey_response' ) ) . '">View survey responses →</a></p>';
+        return;
+    }
+
+    // Role breakdown
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $roles_raw = $wpdb->get_results( $wpdb->prepare(
+        "SELECT pm.meta_value AS val, COUNT(*) AS cnt
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE p.post_type = %s AND p.post_status = 'publish' AND pm.meta_key = '_survey_role'
+         GROUP BY pm.meta_value ORDER BY cnt DESC",
+        'survey_response'
+    ) );
+
+    // Would-return breakdown
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $return_raw = $wpdb->get_results( $wpdb->prepare(
+        "SELECT pm.meta_value AS val, COUNT(*) AS cnt
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE p.post_type = %s AND p.post_status = 'publish' AND pm.meta_key = '_survey_return_2027'
+         GROUP BY pm.meta_value ORDER BY cnt DESC",
+        'survey_response'
+    ) );
+
+    // Average star ratings
+    $rating_keys = array(
+        '_survey_rating_overall'    => 'Overall',
+        '_survey_rating_resources'  => 'Resources',
+        '_survey_rating_accessible' => 'Accessibility',
+        '_survey_rating_confidence' => 'Confidence',
+        '_survey_rating_age_range'  => 'Age range',
+    );
+    $averages = array();
+    foreach ( $rating_keys as $key => $label ) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $avg = (float) $wpdb->get_var( $wpdb->prepare(
+            "SELECT AVG(CAST(pm.meta_value AS DECIMAL(3,1)))
+             FROM {$wpdb->postmeta} pm
+             INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+             WHERE p.post_type = %s AND p.post_status = 'publish'
+               AND pm.meta_key = %s AND pm.meta_value > 0",
+            'survey_response',
+            $key
+        ) );
+        if ( $avg > 0 ) {
+            $averages[ $label ] = round( $avg, 1 );
+        }
+    }
+
+    // Top themes for 2027
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+    $themes_raw = $wpdb->get_results( $wpdb->prepare(
+        "SELECT pm.meta_value AS val FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+         WHERE p.post_type = %s AND p.post_status = 'publish' AND pm.meta_key = '_survey_themes_2027'",
+        'survey_response'
+    ) );
+    $theme_counts = array();
+    foreach ( $themes_raw as $row ) {
+        $arr = json_decode( $row->val, true );
+        if ( is_array( $arr ) ) {
+            foreach ( $arr as $t ) {
+                $theme_counts[ $t ] = ( $theme_counts[ $t ] ?? 0 ) + 1;
+            }
+        }
+    }
+    arsort( $theme_counts );
+
+    $role_labels = array(
+        'teacher'       => 'Teacher',
+        'school_leader' => 'School Leader',
+        'student'       => 'Student',
+        'parent'        => 'Parent / Carer',
+        'librarian'     => 'Librarian',
+        'organisation'  => 'Organisation',
+        'other'         => 'Other',
+    );
+    $return_labels = array(
+        'yes'      => 'Yes, definitely',
+        'probably' => 'Probably',
+        'unsure'   => 'Not sure yet',
+        'no'       => 'Probably not',
+    );
+    $theme_labels = array(
+        'ai_ethics'        => 'AI ethics & bias',
+        'ai_creativity'    => 'AI & creativity',
+        'ai_safety'        => 'AI safety & regulation',
+        'ai_jobs'          => 'AI & future careers',
+        'ai_environment'   => 'AI & environment',
+        'ai_health'        => 'AI in healthcare',
+        'ai_misinformation'=> 'Deepfakes & misinformation',
+        'ai_coding'        => 'AI & coding / CS',
+        'ai_primary'       => 'More primary content',
+        'ai_sixth_form'    => 'More post-16 content',
+        'theme_other'      => 'Other',
+    );
+
+    $bar_style = 'display:inline-block;height:10px;background:#0070c0;border-radius:3px;vertical-align:middle;margin-left:6px;';
+    ?>
+    <p style="font-size:2rem;font-weight:700;margin:0 0 4px;">
+        <?php echo esc_html( number_format_i18n( $total ) ); ?>
+        <span style="font-size:1rem;font-weight:400;color:#6b7280;"><?php esc_html_e( 'responses', 'ai-awareness-day' ); ?></span>
+    </p>
+
+    <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Respondents by role', 'ai-awareness-day' ); ?></h4>
+    <ul style="margin:0;padding:0;list-style:none;">
+        <?php foreach ( $roles_raw as $row ) :
+            $label = $role_labels[ $row->val ] ?? ucfirst( $row->val );
+            $pct   = $total > 0 ? round( ( (int) $row->cnt / $total ) * 100 ) : 0;
+            ?>
+            <li style="margin-bottom:4px;font-size:0.875rem;">
+                <span style="display:inline-block;min-width:130px;"><?php echo esc_html( $label ); ?></span>
+                <span style="<?php echo esc_attr( $bar_style ); ?>width:<?php echo esc_attr( $pct ); ?>px;"></span>
+                <span style="color:#6b7280;margin-left:4px;"><?php echo esc_html( $row->cnt ); ?> (<?php echo esc_html( $pct ); ?>%)</span>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <?php if ( ! empty( $averages ) ) : ?>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Average star ratings', 'ai-awareness-day' ); ?></h4>
+        <ul style="margin:0;padding:0;list-style:none;">
+            <?php foreach ( $averages as $label => $avg ) : ?>
+                <li style="margin-bottom:4px;font-size:0.875rem;">
+                    <span style="display:inline-block;min-width:130px;"><?php echo esc_html( $label ); ?></span>
+                    <strong><?php echo esc_html( $avg ); ?> / 5</strong>
+                    <span style="color:#f59e0b;margin-left:4px;"><?php echo str_repeat( '★', (int) round( $avg ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if ( ! empty( $theme_counts ) ) :
+        $top_themes = array_slice( $theme_counts, 0, 5, true );
+        $max_theme  = max( $top_themes );
+        ?>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Top themes for 2027', 'ai-awareness-day' ); ?></h4>
+        <ul style="margin:0;padding:0;list-style:none;">
+            <?php foreach ( $top_themes as $key => $count ) :
+                $label = $theme_labels[ $key ] ?? $key;
+                $pct   = $max_theme > 0 ? round( ( $count / $max_theme ) * 100 ) : 0;
+                ?>
+                <li style="margin-bottom:4px;font-size:0.875rem;">
+                    <span style="display:inline-block;min-width:180px;"><?php echo esc_html( $label ); ?></span>
+                    <span style="<?php echo esc_attr( $bar_style ); ?>width:<?php echo esc_attr( $pct ); ?>px;"></span>
+                    <span style="color:#6b7280;margin-left:4px;"><?php echo esc_html( $count ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if ( ! empty( $return_raw ) ) : ?>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Would return in 2027', 'ai-awareness-day' ); ?></h4>
+        <ul style="margin:0;padding:0;list-style:none;">
+            <?php foreach ( $return_raw as $row ) :
+                $label = $return_labels[ $row->val ] ?? $row->val;
+                $pct   = $total > 0 ? round( ( (int) $row->cnt / $total ) * 100 ) : 0;
+                ?>
+                <li style="margin-bottom:4px;font-size:0.875rem;">
+                    <span style="display:inline-block;min-width:130px;"><?php echo esc_html( $label ); ?></span>
+                    <span style="<?php echo esc_attr( $bar_style ); ?>width:<?php echo esc_attr( $pct ); ?>px;"></span>
+                    <span style="color:#6b7280;margin-left:4px;"><?php echo esc_html( $row->cnt ); ?> (<?php echo esc_html( $pct ); ?>%)</span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <hr style="margin:12px 0;">
+    <p style="margin:0;font-size:0.875rem;">
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response' ) ); ?>"><?php esc_html_e( 'View all responses →', 'ai-awareness-day' ); ?></a>
     </p>
     <?php
 }

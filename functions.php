@@ -65,3 +65,4 @@ require_once $aiad_dir . '/inc/ai-misinformation-detector.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report-data.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report.php';
 require_once $aiad_dir . '/inc/seo.php';
+require_once $aiad_dir . '/inc/national-survey.php';
