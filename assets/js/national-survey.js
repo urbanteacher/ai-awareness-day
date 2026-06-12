@@ -9,7 +9,7 @@
 (function () {
 	'use strict';
 
-	var PARTICIPANT_STEPS     = ['profile', 'gate', 'resource-friction', 'learning-efficacy', 'strategic-roadmap', 'contact'];
+	var PARTICIPANT_STEPS     = ['profile', 'gate', 'hopes', 'resource-friction', 'learning-efficacy', 'strategic-roadmap', 'contact'];
 	var NON_PARTICIPANT_STEPS = ['profile', 'gate', 'non-participant-a', 'non-participant-b', 'contact'];
 
 	function init() {

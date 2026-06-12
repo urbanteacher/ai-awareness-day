@@ -205,6 +205,103 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
+			<!-- ── STEP: hopes ── Part 1: Hopes, Attitudinal Shifts & Student Empowerment (participants only) -->
+			<fieldset class="aiad-survey__step" data-step-id="hopes" data-path="participant">
+				<legend class="aiad-survey__step-title">
+					<?php esc_html_e( 'Part 1 — Hopes, attitudinal shifts &amp; student empowerment', 'ai-awareness-day' ); ?>
+				</legend>
+
+				<p class="aiad-survey__section-note">
+					<?php esc_html_e( 'This section tracks whether the campaign succeeded in changing students\' mindsets from passive technology consumers to empowered, confident digital architects.', 'ai-awareness-day' ); ?>
+				</p>
+
+				<!-- Q1: Primary hope -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						1. <?php esc_html_e( 'What was your primary hope for your students when signing up for AI Awareness Day?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="primary_hope" value="demystify" class="aiad-survey__radio" />
+							<?php esc_html_e( 'To lower their anxiety and demystify how artificial intelligence works.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="primary_hope" value="confidence_skills" class="aiad-survey__radio" />
+							<?php esc_html_e( 'To give them the confidence and practical skills to use AI tools for creative problem solving.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="primary_hope" value="digital_resilience" class="aiad-survey__radio" />
+							<?php esc_html_e( 'To build their digital resilience and teach them to critically check for fake or biased information.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="primary_hope" value="career_interest" class="aiad-survey__radio" />
+							<?php esc_html_e( 'To spark their interest in computer science, machine learning, and future tech careers.', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+
+				<!-- Q2: Immediate effect Likert scales -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						2. <?php esc_html_e( 'Rate the immediate effect of the campaign day on your students\' confidence and learning habits (1 = Strongly Disagree, 5 = Strongly Agree):', 'ai-awareness-day' ); ?>
+					</p>
+
+					<?php
+					$empowerment_likerts = array(
+						'rating_student_empowerment' => __(
+							'Student Empowerment: Students showed greater confidence using AI tools as an active brainstorming partner rather than just a quick cheating shortcut.',
+							'ai-awareness-day'
+						),
+						'rating_critical_skepticism' => __(
+							'Critical Scepticism: The activities successfully gave students a healthy scepticism, helping them spot hallucinations and biased data trends.',
+							'ai-awareness-day'
+						),
+						'rating_inclusivity' => __(
+							'Inclusivity & Access: The jargon-free, interactive format gave non-technical and less confident students an equal voice in class discussions.',
+							'ai-awareness-day'
+						),
+					);
+					foreach ( $empowerment_likerts as $name => $label ) :
+						?>
+						<div class="aiad-survey__field aiad-survey__field--rating">
+							<p class="aiad-survey__label aiad-survey__label--rating"><?php echo esc_html( $label ); ?></p>
+							<div class="aiad-survey__stars" role="radiogroup" aria-label="<?php echo esc_attr( $label ); ?>">
+								<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
+									<label class="aiad-survey__star-label">
+										<input type="radio" name="<?php echo esc_attr( $name ); ?>"
+											value="<?php echo esc_attr( $i ); ?>"
+											class="aiad-survey__star-input" />
+										<span class="aiad-survey__star" aria-hidden="true">★</span>
+										<span class="screen-reader-text"><?php echo esc_html( $i ); ?></span>
+									</label>
+								<?php endfor; ?>
+							</div>
+						</div>
+					<?php endforeach; ?>
+				</div>
+
+				<!-- Q3: Lasting classroom effect -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						3. <?php esc_html_e( 'Did the campaign leave a lasting positive effect on your classroom environment?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="lasting_effect" value="significant" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Yes — it completely changed the dynamic. Students are now routinely questioning and checking text/image generator outputs.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="lasting_effect" value="moderate" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Moderate effect — it raised general awareness about data privacy, but students still treat algorithmic outputs as mostly correct.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="lasting_effect" value="none" class="aiad-survey__radio" />
+							<?php esc_html_e( 'No measurable effect — students enjoyed the drop-down activity but quickly went back to using AI as an unchecked pass-through answer generator.', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+			</fieldset>
+
 			<!-- ── STEP: resource-friction ── Part 2: Resource Friction (participants only) -->
 			<fieldset class="aiad-survey__step" data-step-id="resource-friction" data-path="participant">
 				<legend class="aiad-survey__step-title">
@@ -291,31 +388,10 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 					<?php esc_html_e( '"Know It, Question It, Use It Wisely" — how well did the campaign hit its core pedagogical aims?', 'ai-awareness-day' ); ?>
 				</p>
 
-				<!-- Q6: Critical thinking shift -->
+				<!-- Q6: Staff room / parental network impact -->
 				<div class="aiad-survey__field">
 					<p class="aiad-survey__label">
-						6. <?php esc_html_e( 'Following the campaign day activities, have you observed a shift in your students\' critical thinking around technology?', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__radio-group">
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="critical_thinking_shift" value="significant" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Significant change: Students are actively questioning chatbot outputs and checking for data bias/hallucinations.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="critical_thinking_shift" value="moderate" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Moderate change: Students are aware that AI is hiding in daily algorithms, but still treat outputs as objective truth.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="critical_thinking_shift" value="none" class="aiad-survey__radio" />
-							<?php esc_html_e( 'No change: Students continue to use AI tools as pass-through response generators without critical auditing.', 'ai-awareness-day' ); ?>
-						</label>
-					</div>
-				</div>
-
-				<!-- Q7: Staff room / parental network impact -->
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						7. <?php esc_html_e( 'How has the campaign impacted your staff room or parental network? (Select all that apply)', 'ai-awareness-day' ); ?>
+						6. <?php esc_html_e( 'How has the campaign impacted your staff room or parental network? (Select all that apply)', 'ai-awareness-day' ); ?>
 					</p>
 					<div class="aiad-survey__checkgroup aiad-survey__checkgroup--single">
 						<label class="aiad-survey__check-label">
@@ -626,8 +702,9 @@ function aiad_handle_survey_submission(): void {
 	$mat_la                 = sanitize_text_field( wp_unslash( $_POST['mat_la'] ?? '' ) );
 	$participated           = sanitize_text_field( wp_unslash( $_POST['participated'] ?? '' ) );
 	$participation_scale    = sanitize_text_field( wp_unslash( $_POST['participation_scale'] ?? '' ) );
+	$primary_hope           = sanitize_text_field( wp_unslash( $_POST['primary_hope'] ?? '' ) );
+	$lasting_effect         = sanitize_text_field( wp_unslash( $_POST['lasting_effect'] ?? '' ) );
 	$prep_time              = sanitize_text_field( wp_unslash( $_POST['prep_time'] ?? '' ) );
-	$critical_thinking      = sanitize_text_field( wp_unslash( $_POST['critical_thinking_shift'] ?? '' ) );
 	$bottleneck             = sanitize_text_field( wp_unslash( $_POST['bottleneck'] ?? '' ) );
 	$open_feedback          = sanitize_textarea_field( wp_unslash( $_POST['open_feedback'] ?? '' ) );
 	$non_part_reason        = sanitize_text_field( wp_unslash( $_POST['non_part_reason'] ?? '' ) );
@@ -663,7 +740,14 @@ function aiad_handle_survey_submission(): void {
 	$onboarding_needs = array_values( array_intersect( $raw_onboarding, $allowed_onboarding ) );
 
 	// Sanitise Likert ratings (1–5)
-	$likert_fields = array( 'rating_plug_and_play', 'rating_student_access', 'rating_tech_delivery' );
+	$likert_fields = array(
+		'rating_student_empowerment',
+		'rating_critical_skepticism',
+		'rating_inclusivity',
+		'rating_plug_and_play',
+		'rating_student_access',
+		'rating_tech_delivery',
+	);
 	$ratings = array();
 	foreach ( $likert_fields as $field ) {
 		$val = (int) ( $_POST[ $field ] ?? 0 );
@@ -695,14 +779,19 @@ function aiad_handle_survey_submission(): void {
 		// Gate
 		'_survey_participated'          => $participated,
 		'_survey_participation_scale'   => $participation_scale,
+		// Part 1 — Hopes & attitudinal shifts (participants)
+		'_survey_primary_hope'                  => $primary_hope,
+		'_survey_rating_student_empowerment'    => $ratings['rating_student_empowerment'],
+		'_survey_rating_critical_skepticism'    => $ratings['rating_critical_skepticism'],
+		'_survey_rating_inclusivity'            => $ratings['rating_inclusivity'],
+		'_survey_lasting_effect'                => $lasting_effect,
 		// Part 2 — Resource friction (participants)
-		'_survey_prep_time'             => $prep_time,
-		'_survey_rating_plug_and_play'  => $ratings['rating_plug_and_play'],
-		'_survey_rating_student_access' => $ratings['rating_student_access'],
-		'_survey_rating_tech_delivery'  => $ratings['rating_tech_delivery'],
+		'_survey_prep_time'                     => $prep_time,
+		'_survey_rating_plug_and_play'          => $ratings['rating_plug_and_play'],
+		'_survey_rating_student_access'         => $ratings['rating_student_access'],
+		'_survey_rating_tech_delivery'          => $ratings['rating_tech_delivery'],
 		// Part 3 — Learning efficacy (participants)
-		'_survey_critical_thinking'     => $critical_thinking,
-		'_survey_staffroom_impact'      => wp_json_encode( $staffroom_impact ),
+		'_survey_staffroom_impact'              => wp_json_encode( $staffroom_impact ),
 		// Part 4 — Strategic roadmap (participants)
 		'_survey_bottleneck'            => $bottleneck,
 		'_survey_support_modules'       => wp_json_encode( $support_modules ),
@@ -752,13 +841,17 @@ function aiad_survey_meta_box_render( WP_Post $post ): void {
 		'_survey_role'                  => __( 'Role', 'ai-awareness-day' ),
 		'_survey_mat_la'                => __( 'MAT / Local Authority', 'ai-awareness-day' ),
 		'_survey_participated'          => __( 'Participated on 4th June', 'ai-awareness-day' ),
-		'_survey_participation_scale'   => __( 'Participation scale', 'ai-awareness-day' ),
-		'_survey_prep_time'             => __( 'Prep time (Q4)', 'ai-awareness-day' ),
-		'_survey_rating_plug_and_play'  => __( 'Rating: plug & play usability', 'ai-awareness-day' ),
-		'_survey_rating_student_access' => __( 'Rating: student accessibility', 'ai-awareness-day' ),
-		'_survey_rating_tech_delivery'  => __( 'Rating: technical delivery', 'ai-awareness-day' ),
-		'_survey_critical_thinking'     => __( 'Critical thinking shift (Q6)', 'ai-awareness-day' ),
-		'_survey_staffroom_impact'      => __( 'Staff room / parental impact (Q7)', 'ai-awareness-day' ),
+		'_survey_participation_scale'           => __( 'Participation scale', 'ai-awareness-day' ),
+		'_survey_primary_hope'                  => __( 'Primary hope (Q1)', 'ai-awareness-day' ),
+		'_survey_rating_student_empowerment'    => __( 'Rating: student empowerment (Q2)', 'ai-awareness-day' ),
+		'_survey_rating_critical_skepticism'    => __( 'Rating: critical scepticism (Q2)', 'ai-awareness-day' ),
+		'_survey_rating_inclusivity'            => __( 'Rating: inclusivity & access (Q2)', 'ai-awareness-day' ),
+		'_survey_lasting_effect'                => __( 'Lasting classroom effect (Q3)', 'ai-awareness-day' ),
+		'_survey_prep_time'                     => __( 'Prep time (Q4)', 'ai-awareness-day' ),
+		'_survey_rating_plug_and_play'          => __( 'Rating: plug & play usability (Q5)', 'ai-awareness-day' ),
+		'_survey_rating_student_access'         => __( 'Rating: student accessibility (Q5)', 'ai-awareness-day' ),
+		'_survey_rating_tech_delivery'          => __( 'Rating: technical delivery (Q5)', 'ai-awareness-day' ),
+		'_survey_staffroom_impact'              => __( 'Staff room / parental impact (Q6)', 'ai-awareness-day' ),
 		'_survey_bottleneck'            => __( 'Biggest bottleneck (Q8)', 'ai-awareness-day' ),
 		'_survey_support_modules'       => __( 'Support modules for 2027 (Q9)', 'ai-awareness-day' ),
 		'_survey_open_feedback'         => __( 'Open feedback (Q10)', 'ai-awareness-day' ),
@@ -1024,18 +1117,30 @@ function aiad_export_survey_csv(): void {
 
 	$columns = array(
 		'ID', 'Date', 'Role', 'MAT / LA', 'Participated', 'Participation scale',
-		'Prep time', 'Rating: plug & play', 'Rating: student access', 'Rating: tech delivery',
-		'Critical thinking shift', 'Staff room impact', 'Bottleneck', 'Support modules 2027',
-		'Open feedback',
+		// Part 1 — Hopes
+		'Primary hope (Q1)',
+		'Rating: student empowerment (Q2)', 'Rating: critical scepticism (Q2)', 'Rating: inclusivity (Q2)',
+		'Lasting classroom effect (Q3)',
+		// Part 2 — Resource friction
+		'Prep time (Q4)', 'Rating: plug & play (Q5)', 'Rating: student access (Q5)', 'Rating: tech delivery (Q5)',
+		// Part 3 — Learning efficacy
+		'Staff room impact (Q6)',
+		// Part 4 — Strategic roadmap
+		'Bottleneck (Q7)', 'Support modules 2027 (Q8)', 'Open feedback (Q9)',
+		// Non-participant track
 		'Non-part: reason', 'Non-part: staff room attitude', 'Non-part: 5-min pledge', 'Non-part: onboarding needs',
+		// Contact
 		'Contact name', 'Contact email', 'Quoting permission',
 	);
 
 	$meta_keys = array(
 		'_survey_role', '_survey_mat_la', '_survey_participated', '_survey_participation_scale',
+		'_survey_primary_hope',
+		'_survey_rating_student_empowerment', '_survey_rating_critical_skepticism', '_survey_rating_inclusivity',
+		'_survey_lasting_effect',
 		'_survey_prep_time',
 		'_survey_rating_plug_and_play', '_survey_rating_student_access', '_survey_rating_tech_delivery',
-		'_survey_critical_thinking', '_survey_staffroom_impact', '_survey_bottleneck',
+		'_survey_staffroom_impact', '_survey_bottleneck',
 		'_survey_support_modules', '_survey_open_feedback',
 		'_survey_non_part_reason', '_survey_staffroom_attitude', '_survey_five_min_pledge', '_survey_onboarding_needs',
 		'_survey_contact_name', '_survey_contact_email', '_survey_permission_quote',
