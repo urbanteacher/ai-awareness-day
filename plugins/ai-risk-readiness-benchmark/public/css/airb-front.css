@@ -49,7 +49,7 @@
 	justify-content: space-between;
 	gap: 1rem;
 	flex-wrap: wrap;
-	padding: 0.85rem clamp(1.5rem, 4vw, 2.75rem);
+	padding: 0.85rem clamp(1rem, 4vw, 2.75rem);
 	background: var(--airb-brand);
 	color: var(--white, #ffffff);
 }
@@ -116,8 +116,10 @@
 
 /* Inner padding now lives on the body so the titlebar can sit flush */
 .airb__body {
-	padding: clamp(1.5rem, 4vw, 2.75rem);
+	padding: clamp(1rem, 4vw, 2.75rem);
 }
+
+/* Mobile gutter trim lives at the end of the file (see airb-mobile-gutters). */
 
 .airb h2,
 .airb h3,
@@ -2557,5 +2559,21 @@
 	.airb__results-actions,
 	.airb__cta-wrap {
 		display: none !important;
+	}
+}
+
+/* airb-mobile-gutters: trim the plugin's own padding on small screens so it
+   doesn't stack on top of the theme container gutter. Placed last so it wins. */
+@media (max-width: 540px) {
+	.airb__body {
+		padding: 1rem;
+	}
+	.airb__deck,
+	.airb__gauge,
+	.airb__hero-gauge,
+	.airb__benchmark,
+	.airb__panel,
+	.airb__results-two .airb__domain-bars {
+		padding: 1rem;
 	}
 }
