@@ -459,6 +459,20 @@
 		html += '<p class="airb__funnel-stage">' + esc(i18n.stage1) + '</p>';
 		html += '<h3 class="airb__panel-title">' + esc(i18n.resultsTitle) + '</h3>';
 		html += '<p class="airb__muted">' + esc(i18n.riskLevel) + ': <strong>' + esc(r.risk_level_label) + '</strong></p>';
+
+		// Hero score ring — animated circular gauge for the headline alignment score.
+		var alignBand = readinessBand(r.alignment_score);
+		html += '<div class="airb__scorering airb__scorering--' + alignBand + '" data-score="' + r.alignment_score + '">';
+		html += '<svg class="airb__scorering-svg" viewBox="0 0 120 120" aria-hidden="true">';
+		html += '<circle class="airb__scorering-track" cx="60" cy="60" r="52"></circle>';
+		html += '<circle class="airb__scorering-fill" cx="60" cy="60" r="52"></circle>';
+		html += '</svg>';
+		html += '<div class="airb__scorering-center">';
+		html += '<span class="airb__scorering-num" data-count="' + r.alignment_score + '">0</span>';
+		html += '<span class="airb__scorering-max">/ 100</span>';
+		html += '<span class="airb__scorering-label">' + esc(i18n.alignment) + '</span>';
+		html += '</div></div>';
+
 		html += '<div class="airb__cards">';
 		(r.role_result_cards || []).forEach(function (c) {
 			html += card(c.label, c.value, c.band);
@@ -618,6 +632,45 @@
 		document.getElementById('airb-print').addEventListener('click', printReport);
 		var emailBtn = document.getElementById('airb-email-report');
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
+
+		animateScoreRing();
+	}
+
+	function animateScoreRing() {
+		var ring = el.results.querySelector('.airb__scorering');
+		if (!ring) return;
+		var fill = ring.querySelector('.airb__scorering-fill');
+		var num = ring.querySelector('.airb__scorering-num');
+		var score = parseInt(ring.getAttribute('data-score'), 10) || 0;
+		var circ = 2 * Math.PI * 52; // matches r="52"
+		var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		if (fill) {
+			fill.style.strokeDasharray = circ;
+			fill.style.strokeDashoffset = reduce ? circ * (1 - score / 100) : circ;
+			if (!reduce) {
+				// Double rAF so the transition runs from the empty state.
+				requestAnimationFrame(function () {
+					requestAnimationFrame(function () {
+						fill.style.strokeDashoffset = circ * (1 - score / 100);
+					});
+				});
+			}
+		}
+
+		if (num) {
+			if (reduce) { num.textContent = score; return; }
+			var start = null;
+			var dur = 950;
+			function step(ts) {
+				if (start === null) start = ts;
+				var p = Math.min((ts - start) / dur, 1);
+				var eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+				num.textContent = Math.round(eased * score);
+				if (p < 1) requestAnimationFrame(step);
+			}
+			requestAnimationFrame(step);
+		}
 	}
 
 	function card(title, value, band) {

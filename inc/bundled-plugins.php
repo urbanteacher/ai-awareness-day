@@ -214,4 +214,6 @@ function aiad_maybe_sync_bundled_plugins(): void {
 		}
 	}
 }
-add_action( 'plugins_loaded', 'aiad_maybe_sync_bundled_plugins', 1 );
+// Theme functions.php loads after plugins_loaded, so that hook is too early.
+add_action( 'after_setup_theme', 'aiad_maybe_sync_bundled_plugins', 1 );
+aiad_maybe_sync_bundled_plugins();

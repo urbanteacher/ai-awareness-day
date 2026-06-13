@@ -87,9 +87,55 @@ function aiad_get_risk_benchmark_timeline_content(): string {
 		. '<li><strong>The DfE Alignment Score</strong> — a clear picture of your compliance standing against current DfE, ICO, KCSIE, JCQ and Ofqual guidance.</li>'
 		. '</ol><!-- /wp:list -->';
 
+	// ── School-wide dashboard ────────────────────────────────────────────
+	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">The school-wide dashboard</h2><!-- /wp:heading -->';
+
+	$blocks[] = '<!-- wp:paragraph --><p>Individual audits are useful — but the real power comes when teachers, students, parents and leaders have all taken part. Results are aggregated into a single whole-school picture, so leadership can see exactly where confidence outpaces competence. Here is what that looks like for an example school:</p><!-- /wp:paragraph -->';
+
+	$blocks[] = '<!-- wp:list --><ul class="wp-block-list">'
+		. '<li><strong>Teachers:</strong> 71%</li>'
+		. '<li><strong>Students:</strong> 58%</li>'
+		. '<li><strong>Parents:</strong> 49%</li>'
+		. '<li><strong>Leadership:</strong> 82%</li>'
+		. '</ul><!-- /wp:list -->';
+
+	$blocks[] = '<!-- wp:paragraph --><p><strong>Overall DfE AI Alignment Score: 65%</strong> &nbsp;·&nbsp; <strong>Risk level: Medium–High</strong></p><!-- /wp:paragraph -->';
+
+	$blocks[] = '<!-- wp:paragraph --><p><strong>Key exposure areas:</strong> Teacher Dependency · Output Verification · Governance Maturity</p><!-- /wp:paragraph -->';
+
+	$blocks[] = '<!-- wp:table --><figure class="wp-block-table"><table>'
+		. '<thead><tr><th>Risk area</th><th>Score</th></tr></thead>'
+		. '<tbody>'
+		. '<tr><td>Dependency</td><td>High</td></tr>'
+		. '<tr><td>Oversight</td><td>Medium</td></tr>'
+		. '<tr><td>Governance</td><td>Low</td></tr>'
+		. '<tr><td>Privacy</td><td>Low</td></tr>'
+		. '<tr><td>Safeguarding</td><td>Medium</td></tr>'
+		. '</tbody></table></figure><!-- /wp:table -->';
+
+	$blocks[] = '<!-- wp:paragraph --><p>Once your school has completed audits across all four groups, your live dashboard appears here:</p><!-- /wp:paragraph -->';
+
+	// Dashboard widget — placed strategically, before the killer metric and the live tool.
+	$blocks[] = '<!-- wp:shortcode -->[ai_risk_school_dashboard]<!-- /wp:shortcode -->';
+
+	// ── The killer metric ────────────────────────────────────────────────
+	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">The killer metric: the Human Oversight Ratio™</h2><!-- /wp:heading -->';
+
+	$blocks[] = '<!-- wp:paragraph --><p>If you measured only one thing, measure this. The Human Oversight Ratio™ asks a single, revealing question: <em>what percentage of AI-generated output do you modify before using it?</em> It is the clearest signal of whether AI is a tool people think with — or a shortcut they think instead of.</p><!-- /wp:paragraph -->';
+
+	$blocks[] = '<!-- wp:table --><figure class="wp-block-table"><table>'
+		. '<thead><tr><th>Modified before use</th><th>What it means</th></tr></thead>'
+		. '<tbody>'
+		. '<tr><td>0–10%</td><td>Critical reliance</td></tr>'
+		. '<tr><td>11–25%</td><td>High reliance</td></tr>'
+		. '<tr><td>26–50%</td><td>Moderate oversight</td></tr>'
+		. '<tr><td>51%+</td><td>Strong oversight</td></tr>'
+		. '</tbody></table></figure><!-- /wp:table -->';
+
+	// ── Audit your school for free (the live tool, at the bottom) ─────────
 	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">Audit your school for free</h2><!-- /wp:heading -->';
 
-	$blocks[] = '<!-- wp:paragraph --><p>Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your school’s actual AI exposure — start the benchmark below.</p><!-- /wp:paragraph -->';
+	$blocks[] = '<!-- wp:paragraph --><p>Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your school’s actual AI exposure — try the benchmark below.</p><!-- /wp:paragraph -->';
 
 	$blocks[] = '<!-- wp:shortcode -->[ai_risk_benchmark]<!-- /wp:shortcode -->';
 

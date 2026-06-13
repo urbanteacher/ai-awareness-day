@@ -291,6 +291,7 @@ function aiad_timeline_entry_has_interactive_shortcode(WP_Post $entry): bool
         '[aiad_misinformation_detector',
         '[aiad_neu_ai_report',
         '[aiad_risk_academy',
+        '[ai_risk_benchmark',
     );
     foreach ($needles as $needle) {
         if (false !== strpos($entry->post_content, $needle)) {
@@ -330,6 +331,8 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
         $cta = __('Explore the glossary →', 'ai-awareness-day');
     } elseif (false !== strpos($entry->post_content, '[aiad_risk_academy')) {
         $cta = __('Assess your school\'s AI risk →', 'ai-awareness-day');
+    } elseif (false !== strpos($entry->post_content, '[ai_risk_benchmark')) {
+        $cta = __('Start the free benchmark →', 'ai-awareness-day');
     }
 
     return '<p>' . esc_html($excerpt) . '</p><p><a class="timeline-magazine__hero-cta" href="'
