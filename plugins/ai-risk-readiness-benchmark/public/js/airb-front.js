@@ -70,6 +70,40 @@
 		return readinessLevel(pct).label;
 	}
 
+	function readinessBandColor(pct) {
+		var colors = {
+			strong: 'var(--airb-low)',
+			established: '#3a8fb0',
+			developing: 'var(--airb-mod)',
+			emerging: 'var(--airb-crit)',
+		};
+		return colors[readinessLevel(pct).slug] || 'var(--airb-text)';
+	}
+
+	function riskScoreColor(pct) {
+		if (pct >= 55) return 'var(--airb-crit)';
+		if (pct >= 40) return 'var(--airb-mod)';
+		return 'var(--airb-low)';
+	}
+
+	function dependencyColor(pct) {
+		if (pct >= 60) return 'var(--airb-crit)';
+		if (pct >= 35) return 'var(--airb-mod)';
+		return 'var(--airb-low)';
+	}
+
+	function roleShowsDependency(role) {
+		return role === 'teacher' || role === 'student';
+	}
+
+	function oversightGaugeValue(r) {
+		if (typeof r.human_oversight_ratio === 'number') return r.human_oversight_ratio;
+		if (typeof r.human_oversight_readiness === 'number' && r.human_oversight_readiness > 0) {
+			return r.human_oversight_readiness;
+		}
+		return null;
+	}
+
 	function sliderScore(pct) {
 		if (pct >= 51) return 0;
 		if (pct >= 26) return 1;
@@ -329,6 +363,21 @@
 		} catch (e) { /* private browsing */ }
 	}
 
+	var ROLE_ICONS = {
+		teacher: '<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+		student: '<path d="M12 14 4 9l8-5 8 5-8 5Z"/><path d="M12 14v6"/><path d="M8 11v4l4 2 4-2v-4"/>',
+		parent: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2"/><path d="M21 20c0-2-1.5-3.5-4-3.5"/>',
+		leader: '<path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/>',
+	};
+
+	function roleIconHtml(slug) {
+		var paths = ROLE_ICONS[slug];
+		if (!paths) return '';
+		return '<span class="airb__role-card-icon" aria-hidden="true">' +
+			'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+			paths + '</svg></span>';
+	}
+
 	function questionsForRole(role) {
 		return (cfg.questions || []).filter(function (q) { return q.role === role; });
 	}
@@ -348,7 +397,7 @@
 			if (done && typeof done.alignment === 'number') {
 				html += '<span class="airb__role-done">' + esc((i18n.roleDone || 'Done · {n}%').replace('{n}', String(done.alignment))) + '</span>';
 			}
-			html += '<span class="airb__role-card-icon" aria-hidden="true"></span>';
+			html += roleIconHtml(slug);
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
 			if (bench.title) html += '<span class="airb__role-card-sub">' + esc(bench.title) + '</span>';
 			if (bench.measures && bench.measures.length) {
@@ -562,32 +611,92 @@
 				slug: slug,
 				label: d.label,
 				readiness: d.readiness_percentage,
-				readiness_band_label: d.readiness_band_label,
-				band: d.band,
 			});
 		});
 		if (!scored.length) return '';
 		scored.sort(function (a, b) { return a.readiness - b.readiness; });
 		var weakest = scored.slice(0, 3);
-		var html = '<section class="airb__focus"><h4>' + esc(i18n.domainFocus || 'What to focus on') + '</h4><ul class="airb__focus-list">';
+		var html = '<div class="airb__res-panel airb__res-panel--focus"><h3>' + esc(i18n.domainFocus || 'What to focus on') + '</h3>';
 		weakest.forEach(function (item) {
 			var rec = domainRecs[item.slug] || '';
-			var bandLabelText = item.readiness_band_label || readinessBandLabel(item.readiness);
-			html += '<li class="airb__focus-item"><span class="airb__focus-dot" style="background:' + esc(domainColor(item.slug)) + '"></span>';
-			html += '<span><strong>' + esc(item.label) + ' — ' + item.readiness + '% (' + bandLabelText + ').</strong> ' + esc(rec) + '</span></li>';
+			var pct = Math.round(item.readiness);
+			html += '<div class="airb__res-rec"><span class="airb__res-rec-dot" style="background:' + esc(readinessBandColor(pct)) + '"></span>';
+			html += '<span><strong>' + esc(item.label) + ' — ' + pct + '%.</strong> ' + esc(rec) + '</span></div>';
 		});
-		return html + '</ul></section>';
+		return html + '</div>';
 	}
 
-	function domainBarsHtml(r) {
-		var bars = '';
+	function domainReadinessRowsHtml(r) {
+		var rows = '';
 		domainKeys.forEach(function (slug) {
 			var d = r.domain_scores[slug];
 			if (!d || !d.questions_answered) return;
-			bars += barHtml(slug, d.label, d.risk_percentage, d.band, false);
+			var pct = Math.round(d.readiness_percentage);
+			rows += '<div class="airb__res-row"><span class="airb__res-row-nm">' + esc(d.label) + '</span>';
+			rows += '<span class="airb__res-track"><i style="width:' + pct + '%;background:' + esc(readinessBandColor(pct)) + '"></i></span>';
+			rows += '<span class="airb__res-row-pc">' + pct + '%</span></div>';
 		});
-		if (!bars) return '';
-		return '<div class="airb__domain-bars"><h4>' + esc(i18n.domainScores) + '</h4>' + bars + '</div>';
+		if (!rows) return '';
+		return '<div class="airb__res-panel airb__res-panel--domains"><h3>' + esc(i18n.domainBreakdown || 'Domain breakdown') + '</h3>' + rows + '</div>';
+	}
+
+	function oversightPanelHtml(r) {
+		var val = oversightGaugeValue(r);
+		var html = '<div class="airb__res-panel airb__res-panel--gauge"><h3>' + esc(i18n.oversight) + '<span class="airb__tm">™</span></h3>';
+		if (val === null) {
+			html += '<p class="airb__res-na">' + esc(i18n.oversightNa || 'Not measured for this audience.') + '</p>';
+		} else {
+			var label = r.human_oversight_label || '';
+			var help = 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
+			html += '<div class="airb__res-gauge-wrap">' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%') + '</div>';
+			if (label) html += '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>';
+			html += '<p class="airb__gauge-help">' + esc(help) + '</p>';
+		}
+		return html + '</div>';
+	}
+
+	function resultsProfileHtml(r) {
+		var roleLbl = (cfg.roles || {})[state.role] || state.role;
+		var readiness = r.alignment_score;
+		var risk = Math.round(r.overall_risk_percentage);
+		var readinessLabel = (r.readiness_level_label || readinessBandLabel(readiness)).toUpperCase();
+		var depVal = roleShowsDependency(state.role) ? r.dependency_index : null;
+		var eyebrow = (i18n.resultsRoleResult || '{role} result').replace('{role}', roleLbl);
+
+		var html = '<section class="airb__res-profile">';
+		html += '<span class="airb__res-eyebrow"><span class="airb__res-eyebrow-dot" aria-hidden="true"></span>' + esc(eyebrow) + '</span>';
+		html += '<div class="airb__res-shead">';
+		html += '<h2 class="airb__res-title">' + esc(i18n.resultsProfileTitle || i18n.resultsTitle || 'Your AI Risk & Readiness profile') + '</h2>';
+		html += '<span class="airb__res-band" style="color:' + esc(readinessBandColor(readiness)) + '">' + esc(readinessLabel) + '</span>';
+		html += '</div>';
+
+		html += '<div class="airb__res-grid3">';
+		html += '<div class="airb__res-stat">';
+		html += '<div class="airb__res-stat-lab">' + esc(i18n.statReadiness || 'Readiness score') + '</div>';
+		html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(readiness)) + '" data-count="' + readiness + '">' + readiness + '%</div>';
+		html += '<div class="airb__res-stat-note">' + esc(i18n.statReadinessNote || 'Weighted across every domain in this audit.') + '</div>';
+		html += '</div>';
+
+		html += '<div class="airb__res-stat">';
+		html += '<div class="airb__res-stat-lab">' + esc(i18n.statRisk || 'AI risk score') + '</div>';
+		html += '<div class="airb__res-stat-big" style="color:' + esc(riskScoreColor(risk)) + '" data-count="' + risk + '">' + risk + '%</div>';
+		html += '<div class="airb__res-stat-note">' + esc(i18n.statRiskNote || 'Behavioural exposure — the inverse of readiness.') + '</div>';
+		html += '</div>';
+
+		html += '<div class="airb__res-stat">';
+		html += '<div class="airb__res-stat-lab">' + esc(i18n.dependency || 'AI Dependency Index') + '<span class="airb__tm">™</span></div>';
+		if (depVal === null) {
+			html += '<div class="airb__res-stat-big airb__res-stat-big--na">—</div>';
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNa || 'Not measured for this audience.') + '</div>';
+		} else {
+			html += '<div class="airb__res-stat-big" style="color:' + esc(dependencyColor(depVal)) + '" data-count="' + depVal + '">' + depVal + '</div>';
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNote || 'Higher means greater reliance on AI.') + '</div>';
+		}
+		html += '</div>';
+		html += '</div>';
+
+		html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
+		return html + '</section>';
 	}
 
 	function benchmarkHtml(r) {
@@ -662,18 +771,6 @@
 		return svg + '</svg>';
 	}
 
-	function oversightGaugeHtml(r) {
-		var val = (typeof r.human_oversight_ratio === 'number') ? r.human_oversight_ratio
-			: (typeof r.human_oversight_readiness === 'number' ? r.human_oversight_readiness : null);
-		if (val === null) return '';
-		val = Math.max(0, Math.min(100, val));
-		var label = r.human_oversight_label || '';
-		var help = 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
-		return '<section class="airb__gauge"><h4>' + esc(i18n.oversight) + '</h4>' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%')
-			+ (label ? '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>' : '')
-			+ '<p class="airb__gauge-help">' + esc(help) + '</p></section>';
-	}
-
 	// Static demo gauge on the intro hero (signature-metric preview).
 	function renderDemoGauge() {
 		var host = document.querySelector('[data-airb-demo-gauge]');
@@ -698,46 +795,13 @@
 		var r = state.results;
 		if (!r) return;
 
-		var alignBand = readinessBand(r.alignment_score);
-		var readinessLabel = r.readiness_level_label || readinessBandLabel(r.alignment_score);
-
 		var html = '<div class="airb__results">';
-		html += '<section class="airb__results-hero airb__results-hero--' + esc(alignBand) + '" data-score="' + r.alignment_score + '">';
-		html += '<div class="airb__results-hero-copy">';
-		html += '<span class="airb__results-eyebrow">' + esc(i18n.stage1) + '</span>';
-		html += '<h3 class="airb__results-headline">' + esc(i18n.resultsTitle) + '</h3>';
-		html += '<p class="airb__results-lead">' + esc(i18n.readinessLevel || 'Readiness level') + '</p>';
-		html += '<span class="airb__results-risk-pill airb__results-risk-pill--' + esc(alignBand) + '">' + esc(readinessLabel) + '</span>';
-		html += '</div>';
-		html += '<div class="airb__results-hero-score">';
-		html += '<div class="airb__results-scoreline">';
-		html += '<span class="airb__results-score-num" data-count="' + r.alignment_score + '">0</span>';
-		html += '<span class="airb__results-score-suffix">/100</span>';
-		html += '</div>';
-		html += '<p class="airb__results-score-label">' + esc(i18n.alignment) + '</p>';
-		html += '<div class="airb__results-meter" aria-hidden="true"><span class="airb__results-meter-fill"></span></div>';
-		html += '</div>';
-		html += '</section>';
-
-		html += '<div class="airb__cards airb__cards--bento">';
-		(r.role_result_cards || []).forEach(function (c) {
-			html += card(c);
-		});
-		html += '</div>';
-
-		var gaugeCol = oversightGaugeHtml(r);
-		var barsCol = domainBarsHtml(r);
-		if (gaugeCol && barsCol) {
-			html += '<div class="airb__results-two">' + gaugeCol + barsCol + '</div>';
-		} else {
-			html += gaugeCol + barsCol;
-		}
+		html += resultsProfileHtml(r);
+		html += focusDomainsHtml(r);
 
 		if (r.funnel_closing) {
 			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
 		}
-
-		html += focusDomainsHtml(r);
 
 		if (r.risk_heatmap && r.risk_heatmap.length) {
 			html += '<h4>' + esc(i18n.heatMap) + '</h4>' + heatmapHtml(r.risk_heatmap);
@@ -893,38 +957,31 @@
 		var emailBtn = document.getElementById('airb-email-report');
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
-		animateResultsHero();
+		animateResultsStats();
 		persistRoleCompletion(r.alignment_score);
 		updateAppbarCompletions();
 	}
 
-	function animateResultsHero() {
-		var hero = el.results.querySelector('.airb__results-hero');
-		if (!hero) return;
-		var score = parseInt(hero.getAttribute('data-score'), 10) || 0;
-		var num = hero.querySelector('.airb__results-score-num');
-		var fill = hero.querySelector('.airb__results-meter-fill');
+	function animateResultsStats() {
 		var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		if (fill) {
-			fill.style.width = score + '%';
-		}
-
-		if (num) {
-			num.textContent = score;
-			if (reduce) { return; }
+		el.results.querySelectorAll('.airb__res-stat-big[data-count]').forEach(function (num) {
+			var score = parseInt(num.getAttribute('data-count'), 10) || 0;
+			if (reduce) {
+				num.textContent = score + '%';
+				return;
+			}
 			var start = null;
-			var dur = 950;
+			var dur = 850;
 			function step(ts) {
 				if (start === null) start = ts;
 				var p = Math.min((ts - start) / dur, 1);
 				var eased = 1 - Math.pow(1 - p, 3);
-				num.textContent = Math.round(eased * score);
-				if (p < 1) { requestAnimationFrame(step); }
-				else { num.textContent = score; }
+				num.textContent = Math.round(eased * score) + '%';
+				if (p < 1) requestAnimationFrame(step);
+				else num.textContent = score + '%';
 			}
 			requestAnimationFrame(step);
-		}
+		});
 	}
 
 	function card(item) {
