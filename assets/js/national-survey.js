@@ -1,16 +1,16 @@
 /* National Survey 2026 — [aiad_national_survey]
  *
  * Step sequences:
- *   Participant path    : profile → gate → resource-friction → learning-efficacy → strategic-roadmap → contact
- *   Non-participant path: profile → gate → non-participant-a → non-participant-b → contact
+ *   Participant path    : profile → school-readiness → hopes → participant-feedback → contact
+ *   Non-participant path: profile → non-participant-a → school-readiness → contact
  *
- * Path is decided on the "gate" step based on the "participated" radio.
+ * Path is decided on the profile step based on the "participated" radio.
  */
 (function () {
 	'use strict';
 
-	var PARTICIPANT_STEPS     = ['profile', 'gate', 'hopes', 'resource-friction', 'learning-efficacy', 'strategic-roadmap', 'contact'];
-	var NON_PARTICIPANT_STEPS = ['profile', 'gate', 'non-participant-a', 'non-participant-b', 'contact'];
+	var PARTICIPANT_STEPS     = ['profile', 'school-readiness', 'hopes', 'participant-feedback', 'contact'];
+	var NON_PARTICIPANT_STEPS = ['profile', 'non-participant-a', 'school-readiness', 'contact'];
 
 	function init() {
 		var form        = document.getElementById('aiad-survey-form');
@@ -20,12 +20,41 @@
 		var nextBtn     = document.getElementById('aiad-survey-next');
 		var submitBtn   = document.getElementById('aiad-survey-submit');
 		var stepperEl   = document.getElementById('aiad-survey-stepper');
+		var progressEl  = document.getElementById('aiad-survey-progress');
 		var progressLbl = document.getElementById('aiad-survey-progress-label');
 
 		if (!form) return;
 
-		var sequence    = PARTICIPANT_STEPS.slice(); // default; overridden at gate
+		var sequence    = PARTICIPANT_STEPS.slice(); // default; overridden when leaving profile
 		var currentIdx  = 0;
+
+		function isParticipationScaleHidden() {
+			var scaleWrap = document.getElementById('survey-participation-scale-wrap');
+			return !scaleWrap || scaleWrap.style.display === 'none';
+		}
+
+		function shouldSkipField(input, allowHiddenSteps) {
+			if (input.closest('#survey-participation-scale-wrap') && isParticipationScaleHidden()) {
+				return true;
+			}
+			if (!allowHiddenSteps && input.offsetParent === null) {
+				return true;
+			}
+			return false;
+		}
+
+		function lockSequenceFromProfile() {
+			var profileEl = getStepEl('profile');
+			if (!profileEl) return false;
+
+			var participated = profileEl.querySelector('input[name="participated"]:checked');
+			if (!participated) {
+				return false;
+			}
+
+			sequence = participated.value === 'yes' ? PARTICIPANT_STEPS.slice() : NON_PARTICIPANT_STEPS.slice();
+			return true;
+		}
 
 		// ── Participation scale visibility ───────────────────────────────────
 		var scaleWrap = document.getElementById('survey-participation-scale-wrap');
@@ -34,16 +63,11 @@
 				if (scaleWrap) {
 					scaleWrap.style.display = this.value === 'yes' ? '' : 'none';
 				}
-				// Rebuild sequence and refresh button + stepper state
 				sequence = this.value === 'yes' ? PARTICIPANT_STEPS.slice() : NON_PARTICIPANT_STEPS.slice();
 				if (currentIdx > sequence.length - 1) {
 					currentIdx = sequence.length - 1;
 				}
-				buildStepper(sequence.length);
-				updateStepper(currentIdx);
-				var isLast = currentIdx === sequence.length - 1;
-				nextBtn.hidden   = isLast;
-				submitBtn.hidden = !isLast;
+				showStep(currentIdx);
 			});
 		});
 
@@ -76,7 +100,6 @@
 			return document.querySelector('.aiad-survey__step[data-step-id="' + stepId + '"]');
 		}
 
-		// Build one segment per step in the active path (rebuilds if the path length changes).
 		function buildStepper(total) {
 			if (!stepperEl || stepperEl.children.length === total) return;
 			var html = '';
@@ -99,8 +122,13 @@
 			}
 		}
 
+		function updateNavButtons() {
+			var isLast = currentIdx === sequence.length - 1;
+			nextBtn.hidden   = isLast;
+			submitBtn.hidden = !isLast;
+		}
+
 		function showStep(idx) {
-			// Hide all steps
 			document.querySelectorAll('.aiad-survey__step').forEach(function (el) {
 				el.hidden = true;
 				el.classList.remove('aiad-survey__step--active', 'aiad-survey__step--error');
@@ -111,45 +139,25 @@
 			if (el) {
 				el.hidden = false;
 				el.classList.add('aiad-survey__step--active');
-				// Move focus to the step so screen readers announce the new section.
 				el.setAttribute('tabindex', '-1');
 				el.focus({ preventScroll: true });
 				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			}
 
-			var total = sequence.length;
-			var humanStep = idx + 1;
-
-			// Progress
-			buildStepper(total);
+			buildStepper(sequence.length);
 			updateStepper(idx);
-			progressLbl.textContent = 'Step ' + humanStep + ' of ' + total;
-
-			// Back button
+			progressLbl.textContent = 'Step ' + (idx + 1) + ' of ' + sequence.length;
 			backBtn.hidden = idx === 0;
-
-			// Next vs Submit
-			var isLast = idx === sequence.length - 1;
-			nextBtn.hidden   = isLast;
-			submitBtn.hidden = !isLast;
-
+			updateNavButtons();
 			hideError();
 		}
 
 		// ── Validation ───────────────────────────────────────────────────────
-		function validateStep(idx) {
-			var stepId = sequence[idx];
-			var el = getStepEl(stepId);
-			if (!el) return true;
-
-			// Required radio groups — ignore any inside a hidden sub-section
-			// (e.g. the participation-scale question when "did not participate"
-			// is chosen). Validating a hidden required field would block Next
-			// forever, freezing the survey.
+		function validateStepElement(el, stepId, allowHiddenSteps) {
 			var radioGroups = {};
 			el.querySelectorAll('input[type="radio"][required]').forEach(function (r) {
-				if (r.offsetParent === null) {
-					return; // not rendered / hidden
+				if (shouldSkipField(r, allowHiddenSteps)) {
+					return;
 				}
 				radioGroups[r.name] = radioGroups[r.name] || [];
 				radioGroups[r.name].push(r);
@@ -164,16 +172,73 @@
 				}
 			}
 
-			// Gate step: must have a participated answer
-			if (stepId === 'gate') {
+			var firstEmpty = null;
+			el.querySelectorAll('input[type="text"][required], input[type="email"][required], textarea[required], select[required]').forEach(function (input) {
+				if (shouldSkipField(input, allowHiddenSteps)) {
+					return;
+				}
+				if (!input.value.trim()) {
+					firstEmpty = firstEmpty || input;
+				}
+			});
+			if (firstEmpty) {
+				el.classList.add('aiad-survey__step--error');
+				showError('Please fill in the required fields before continuing.');
+				firstEmpty.focus();
+				return false;
+			}
+
+			if (stepId === 'profile') {
 				var participated = el.querySelector('input[name="participated"]:checked');
 				if (!participated) {
 					el.classList.add('aiad-survey__step--error');
 					showError('Please tell us whether your school participated.');
 					return false;
 				}
-				// Lock in the sequence based on answer
-				sequence = participated.value === 'yes' ? PARTICIPANT_STEPS.slice() : NON_PARTICIPANT_STEPS.slice();
+			}
+
+			return true;
+		}
+
+		function validateStep(idx) {
+			var stepId = sequence[idx];
+			var el = getStepEl(stepId);
+			if (!el) return true;
+
+			if (!validateStepElement(el, stepId, false)) {
+				return false;
+			}
+
+			if (stepId === 'profile') {
+				lockSequenceFromProfile();
+				buildStepper(sequence.length);
+				updateStepper(idx);
+				updateNavButtons();
+			}
+
+			return true;
+		}
+
+		function validateAllSteps() {
+			if (!lockSequenceFromProfile()) {
+				currentIdx = 0;
+				showStep(0);
+				var profileEl = getStepEl('profile');
+				if (profileEl) {
+					validateStepElement(profileEl, 'profile', true);
+				}
+				return false;
+			}
+
+			for (var i = 0; i < sequence.length; i++) {
+				var stepId = sequence[i];
+				var el = getStepEl(stepId);
+				if (!el) continue;
+				if (!validateStepElement(el, stepId, true)) {
+					currentIdx = i;
+					showStep(i);
+					return false;
+				}
 			}
 
 			return true;
@@ -190,7 +255,6 @@
 			errorBox.textContent = '';
 		}
 
-		// Clear the panel error highlight as soon as the user answers.
 		form.addEventListener('change', function (e) {
 			var step = e.target.closest('.aiad-survey__step--error');
 			if (step) {
@@ -215,10 +279,32 @@
 			}
 		});
 
-		// ── Submit ───────────────────────────────────────────────────────────
+		form.addEventListener('keydown', function (e) {
+			if (e.key !== 'Enter') return;
+			if (e.target.tagName === 'TEXTAREA') return;
+			e.preventDefault();
+			if (currentIdx < sequence.length - 1) {
+				nextBtn.click();
+			} else if (!submitBtn.hidden) {
+				submitSurvey();
+			}
+		});
+
 		form.addEventListener('submit', function (e) {
 			e.preventDefault();
+		});
+
+		function submitSurvey() {
 			hideError();
+
+			if (currentIdx !== sequence.length - 1) {
+				showError('Please complete all steps before submitting.');
+				return;
+			}
+
+			if (!validateAllSteps()) {
+				return;
+			}
 
 			if (!window.aiadSurvey || !window.aiadSurvey.ajaxurl) {
 				showError('Configuration error. Please reload the page and try again.');
@@ -241,8 +327,7 @@
 				.then(function (json) {
 					if (json.success) {
 						form.hidden = true;
-						if (stepperEl) stepperEl.hidden = true;
-						document.querySelector('.aiad-survey__progress-label').hidden = true;
+						if (progressEl) progressEl.hidden = true;
 						success.hidden = false;
 					} else {
 						var msg = (json.data && json.data.message) ? json.data.message : 'Something went wrong. Please try again.';
@@ -256,9 +341,11 @@
 					submitBtn.disabled = false;
 					submitBtn.textContent = 'Submit survey';
 				});
-		});
+		}
 
-		// Initialise — hide all, then show first step; hide participation scale until "yes" chosen
+		submitBtn.addEventListener('click', submitSurvey);
+
+		// Initialise
 		document.querySelectorAll('.aiad-survey__step').forEach(function (el) {
 			el.hidden = true;
 		});

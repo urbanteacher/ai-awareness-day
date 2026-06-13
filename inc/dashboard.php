@@ -889,6 +889,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     $best_format_raw = $group_by_meta( '_survey_best_format' );
 
     // School maturity (everyone).
+    $curriculum_embedded_raw      = $group_by_meta( '_survey_curriculum_embedded' );
     $display_board_raw = $group_by_meta( '_survey_display_board' );
     $ai_policy_raw     = $group_by_meta( '_survey_ai_policy' );
     $maturity_labels   = array(
@@ -970,7 +971,8 @@ function aiad_survey_dashboard_widget_callback(): void {
         'teacher_primary'   => 'Teacher (Primary)',
         'teacher_secondary' => 'Teacher (Secondary / FE)',
         'computing_lead'    => 'Computing Lead / HoD',
-        'slt_mat'           => 'SLT / MAT Digital Lead',
+        'headteacher'       => 'Headteacher / School Leader',
+        'slt_mat'           => 'SLT / Digital Lead',
         'alt_provision'     => 'Alt Provision / SEN',
     );
     $module_labels = array(
@@ -1029,6 +1031,22 @@ function aiad_survey_dashboard_widget_callback(): void {
                     <span style="display:inline-block;min-width:170px;"><?php echo esc_html( $label ); ?></span>
                     <strong><?php echo esc_html( $avg ); ?> / 5</strong>
                     <span style="color:#f59e0b;margin-left:4px;"><?php echo str_repeat( '★', (int) round( $avg ) ); ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if ( ! empty( $curriculum_embedded_raw ) ) : ?>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'AI activities in curriculum', 'ai-awareness-day' ); ?></h4>
+        <ul style="margin:0;padding:0;list-style:none;">
+            <?php foreach ( $curriculum_embedded_raw as $row ) :
+                $label = $maturity_labels[ $row->val ] ?? ucfirst( $row->val );
+                $pct   = $total > 0 ? round( ( (int) $row->cnt / $total ) * 100 ) : 0;
+                ?>
+                <li style="margin-bottom:4px;font-size:0.875rem;">
+                    <span style="display:inline-block;min-width:170px;"><?php echo esc_html( $label ); ?></span>
+                    <span style="<?php echo esc_attr( $bar_style ); ?>width:<?php echo esc_attr( $pct ); ?>px;"></span>
+                    <span style="color:#6b7280;margin-left:4px;"><?php echo esc_html( $row->cnt ); ?> (<?php echo esc_html( $pct ); ?>%)</span>
                 </li>
             <?php endforeach; ?>
         </ul>

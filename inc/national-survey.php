@@ -92,15 +92,13 @@ function aiad_enqueue_national_survey_assets(): void {
 /**
  * Shortcode: [aiad_national_survey]
  *
- * Steps:
- *   1  – School profile (everyone)
- *   2  – Participation gate (everyone)
- *   3p – Resource Friction / Part 2 (participants)
- *   3n – Non-participant block A (non-participants)
- *   4p – Learning Efficacy / Part 3 (participants)
- *   4n – Non-participant block B (non-participants)
- *   5p – Strategic Roadmap / Part 4 (participants only)
- *   6  – Stay in touch (everyone)
+ * Steps (grouped multi-step UX — one theme per screen):
+ *   1 – School profile (everyone)
+ *   2 – School AI readiness (everyone)
+ *   3p – Hopes & student empowerment (participants)
+ *   3n – Understanding barriers (non-participants)
+ *   4p – Resources, impact & 2027 planning (participants)
+ *   4/5 – Stay in touch (everyone)
  *
  * @param array<string, string>|string $atts Unused.
  */
@@ -112,103 +110,77 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 	<div class="aiad-survey" id="aiad-national-survey" role="main" aria-label="<?php esc_attr_e( 'AI Awareness Day National Survey', 'ai-awareness-day' ); ?>">
 
 		<!-- Progress: segmented stepper (built by JS, one segment per step in the active path) -->
-		<div class="aiad-survey__stepper" id="aiad-survey-stepper" role="list" aria-hidden="true"></div>
-		<p class="aiad-survey__progress-label" id="aiad-survey-progress-label" aria-live="polite"></p>
+		<div class="aiad-survey__progress" id="aiad-survey-progress">
+			<div class="aiad-survey__stepper" id="aiad-survey-stepper" role="list" aria-hidden="true"></div>
+			<p class="aiad-survey__progress-label" id="aiad-survey-progress-label" aria-live="polite"></p>
+		</div>
 
 		<form class="aiad-survey__form" id="aiad-survey-form" novalidate>
 
 			<!-- ── STEP: profile ── Part 1: School Profile & Contextual Baselines -->
-			<fieldset class="aiad-survey__step" data-step-id="profile">
-				<legend class="aiad-survey__step-title">
+			<fieldset class="aiad-survey__step" data-step-id="profile" aria-labelledby="aiad-survey-step-profile-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-profile-title">
 					<?php esc_html_e( 'Part 1 — School profile', 'ai-awareness-day' ); ?>
-				</legend>
+				</h2>
 
-				<!-- Q1: Role -->
+				<?php
+				$year_groups = array(
+					'eyfs'  => __( 'EYFS', 'ai-awareness-day' ),
+					'ks1'   => __( 'KS1 (Y1–Y2)', 'ai-awareness-day' ),
+					'ks2'   => __( 'KS2 (Y3–Y6)', 'ai-awareness-day' ),
+					'ks3'   => __( 'KS3 (Y7–Y9)', 'ai-awareness-day' ),
+					'ks4'   => __( 'KS4 (Y10–Y11)', 'ai-awareness-day' ),
+					'ks5'   => __( 'KS5 / 6th Form', 'ai-awareness-day' ),
+					'staff' => __( 'Staff CPD only', 'ai-awareness-day' ),
+				);
+				?>
+
+				<!-- Q1: School type -->
 				<div class="aiad-survey__field">
-					<label class="aiad-survey__label" for="survey-role">
-						1. <?php esc_html_e( 'What is your role within your institution?', 'ai-awareness-day' ); ?>
-						<span class="aiad-survey__required" aria-hidden="true">*</span>
+					<label class="aiad-survey__label" for="survey-school-type">
+						1. <?php esc_html_e( 'School type', 'ai-awareness-day' ); ?>
 					</label>
-					<div class="aiad-survey__radio-group">
-						<?php
-						$roles = array(
-							'teacher_primary'   => __( 'Classroom Teacher (Primary)', 'ai-awareness-day' ),
-							'teacher_secondary' => __( 'Classroom Teacher (Secondary / FE)', 'ai-awareness-day' ),
-							'computing_lead'    => __( 'Computing Subject Lead / Head of Department', 'ai-awareness-day' ),
-							'slt_mat'           => __( 'Senior Leadership Team (SLT) / MAT Digital Strategy Lead', 'ai-awareness-day' ),
-							'alt_provision'     => __( 'Alternative Provision / SEN Support Specialist', 'ai-awareness-day' ),
-						);
-						foreach ( $roles as $val => $label ) :
-							?>
-							<label class="aiad-survey__radio-label">
-								<input type="radio" name="role" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__radio" required />
+					<select class="aiad-survey__select" id="survey-school-type" name="school_type">
+						<option value=""><?php esc_html_e( '— Select —', 'ai-awareness-day' ); ?></option>
+						<option value="primary"><?php esc_html_e( 'Primary', 'ai-awareness-day' ); ?></option>
+						<option value="secondary"><?php esc_html_e( 'Secondary', 'ai-awareness-day' ); ?></option>
+						<option value="all_through"><?php esc_html_e( 'All-through (4–18)', 'ai-awareness-day' ); ?></option>
+						<option value="special"><?php esc_html_e( 'Special / Alternative Provision', 'ai-awareness-day' ); ?></option>
+						<option value="fe_college"><?php esc_html_e( 'FE College / Sixth Form', 'ai-awareness-day' ); ?></option>
+						<option value="mat_trust"><?php esc_html_e( 'MAT / Trust (multiple schools)', 'ai-awareness-day' ); ?></option>
+					</select>
+				</div>
+
+				<!-- Q2: Year groups -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						2. <?php esc_html_e( 'Which year groups do you work with? (tick all that apply)', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__checkgroup">
+						<?php foreach ( $year_groups as $val => $label ) : ?>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="year_groups[]" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__checkbox" />
 								<?php echo esc_html( $label ); ?>
 							</label>
 						<?php endforeach; ?>
 					</div>
 				</div>
 
-				<!-- Q2: MAT / LA -->
+				<!-- Q3: Role -->
 				<div class="aiad-survey__field">
-					<label class="aiad-survey__label" for="survey-mat">
-						2. <?php esc_html_e( 'Which Multi-Academy Trust (MAT) or Local Authority is your school associated with?', 'ai-awareness-day' ); ?>
+					<label class="aiad-survey__label" for="survey-role">
+						3. <?php esc_html_e( 'What is your role within your institution?', 'ai-awareness-day' ); ?>
+						<span class="aiad-survey__required" aria-hidden="true">*</span>
 					</label>
-					<input class="aiad-survey__input" type="text" id="survey-mat" name="mat_la"
-						placeholder="<?php esc_attr_e( 'e.g. Oasis Community Learning, Essex LA…', 'ai-awareness-day' ); ?>" maxlength="200" />
+					<input class="aiad-survey__input" type="text" id="survey-role" name="role" required
+						placeholder="<?php esc_attr_e( 'e.g. Head teacher, Deputy, Computing lead', 'ai-awareness-day' ); ?>"
+						maxlength="200" autocomplete="organization-title" />
 				</div>
 
-				<!-- Q3: AI Awareness display board -->
+				<!-- Q4: Participation gate -->
 				<div class="aiad-survey__field">
 					<p class="aiad-survey__label">
-						3. <?php esc_html_e( 'Does your school have an AI Awareness display board or display space?', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__radio-group">
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="display_board" value="yes" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Yes — we have one on display.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="display_board" value="in_development" class="aiad-survey__radio" />
-							<?php esc_html_e( 'In development — we are putting one together.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="display_board" value="no" class="aiad-survey__radio" />
-							<?php esc_html_e( 'No — we do not have one.', 'ai-awareness-day' ); ?>
-						</label>
-					</div>
-				</div>
-
-				<!-- Q4: AI Awareness / AI-use policy -->
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						4. <?php esc_html_e( 'Does your school have an AI Awareness / AI-use policy?', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__radio-group">
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="ai_policy" value="yes" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Yes — we have a policy in place.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="ai_policy" value="in_development" class="aiad-survey__radio" />
-							<?php esc_html_e( 'In development — a policy is being written.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="ai_policy" value="no" class="aiad-survey__radio" />
-							<?php esc_html_e( 'No — we do not have one yet.', 'ai-awareness-day' ); ?>
-						</label>
-					</div>
-				</div>
-			</fieldset>
-
-			<!-- ── STEP: gate ── Participation gate -->
-			<fieldset class="aiad-survey__step" data-step-id="gate">
-				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Did your school take part?', 'ai-awareness-day' ); ?>
-				</legend>
-
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						<?php esc_html_e( 'Did your school or classroom participate in National AI Awareness Day on 4th June 2026?', 'ai-awareness-day' ); ?>
+						4. <?php esc_html_e( 'Did your school or classroom participate in National AI Awareness Day on 4th June 2026?', 'ai-awareness-day' ); ?>
 						<span class="aiad-survey__required" aria-hidden="true">*</span>
 					</p>
 					<div class="aiad-survey__radio-group">
@@ -223,7 +195,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 					</div>
 				</div>
 
-				<!-- Q5: Participation scale — only shown/required if "yes" (JS toggles visibility) -->
+				<!-- Q5: Participation scale — only shown if "yes" (JS toggles visibility) -->
 				<div class="aiad-survey__field" id="survey-participation-scale-wrap">
 					<p class="aiad-survey__label">
 						5. <?php esc_html_e( 'What was the approximate level of student participation in your school on 4th June?', 'ai-awareness-day' ); ?>
@@ -245,11 +217,85 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
+			<!-- ── STEP: school-readiness ── Display board & policy (everyone, separate from participation gate) -->
+			<fieldset class="aiad-survey__step" data-step-id="school-readiness" aria-labelledby="aiad-survey-step-school-readiness-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-school-readiness-title">
+					<?php esc_html_e( 'School AI readiness', 'ai-awareness-day' ); ?>
+				</h2>
+
+				<p class="aiad-survey__helper">
+					<?php esc_html_e( 'A quick snapshot of how AI Awareness is taking shape in your school — from the curriculum to corridors and classrooms.', 'ai-awareness-day' ); ?>
+				</p>
+
+				<!-- Q1: AI in curriculum -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						1. <?php esc_html_e( 'Have you embedded AI activities into your curriculum?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="curriculum_embedded" value="yes" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Yes — AI activities are part of our curriculum.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="curriculum_embedded" value="in_development" class="aiad-survey__radio" />
+							<?php esc_html_e( 'In development — we are starting to embed AI activities.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="curriculum_embedded" value="no" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Not yet — we have not embedded AI activities.', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+
+				<!-- Q2: Display board -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						2. <?php esc_html_e( 'As you may have seen through AI Awareness Day, does your school have or are you considering an AI Awareness display board to raise literacy within corridors or classrooms?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="display_board" value="yes" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Yes — we have one on display.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="display_board" value="in_development" class="aiad-survey__radio" />
+							<?php esc_html_e( 'In development — we are putting one together.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="display_board" value="no" class="aiad-survey__radio" />
+							<?php esc_html_e( 'No — we do not have one.', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+
+				<!-- Q3: AI policy -->
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						3. <?php esc_html_e( 'Does your school have an AI Awareness / AI-use policy?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="ai_policy" value="yes" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Yes — we have a policy in place.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="ai_policy" value="in_development" class="aiad-survey__radio" />
+							<?php esc_html_e( 'In development — a policy is being written.', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="ai_policy" value="no" class="aiad-survey__radio" />
+							<?php esc_html_e( 'No — we do not have one yet.', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+			</fieldset>
+
 			<!-- ── STEP: hopes ── Part 1: Hopes, Attitudinal Shifts & Student Empowerment (participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="hopes" data-path="participant">
-				<legend class="aiad-survey__step-title">
+			<fieldset class="aiad-survey__step" data-step-id="hopes" data-path="participant" aria-labelledby="aiad-survey-step-hopes-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-hopes-title">
 					<?php esc_html_e( 'Part 1 — Hopes, attitudinal shifts &amp; student empowerment', 'ai-awareness-day' ); ?>
-				</legend>
+				</h2>
 
 				<p class="aiad-survey__section-note">
 					<?php esc_html_e( 'This section tracks whether the campaign succeeded in changing students\' mindsets from passive technology consumers to empowered, confident digital architects.', 'ai-awareness-day' ); ?>
@@ -342,15 +388,19 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
-			<!-- ── STEP: resource-friction ── Part 2: Resource Friction (participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="resource-friction" data-path="participant">
-				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Part 2 — Resource friction &amp; classroom application', 'ai-awareness-day' ); ?>
-				</legend>
+			<!-- ── STEP: participant-feedback ── Resources, impact & 2027 (participants only) -->
+			<fieldset class="aiad-survey__step" data-step-id="participant-feedback" data-path="participant" aria-labelledby="aiad-survey-step-participant-feedback-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-participant-feedback-title">
+					<?php esc_html_e( 'Your experience &amp; planning for 2027', 'ai-awareness-day' ); ?>
+				</h2>
 
-				<p class="aiad-survey__section-note">
-					<?php esc_html_e( 'This section targets classroom execution reality — workload preservation and implementation speed.', 'ai-awareness-day' ); ?>
+				<p class="aiad-survey__helper">
+					<?php esc_html_e( 'Tell us how the resources worked in practice, what changed in your school, and what would help next time.', 'ai-awareness-day' ); ?>
 				</p>
+
+				<h3 class="aiad-survey__subsection-title">
+					<?php esc_html_e( 'Resources &amp; classroom delivery', 'ai-awareness-day' ); ?>
+				</h3>
 
 				<!-- Q4: Prep time -->
 				<div class="aiad-survey__field">
@@ -491,19 +541,12 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 						</label>
 					</div>
 				</div>
-			</fieldset>
 
-			<!-- ── STEP: learning-efficacy ── Part 3 (participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="learning-efficacy" data-path="participant">
-				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Part 3 — Learning efficacy', 'ai-awareness-day' ); ?>
-				</legend>
+				<h3 class="aiad-survey__subsection-title">
+					<?php esc_html_e( 'Staff room &amp; wider impact', 'ai-awareness-day' ); ?>
+				</h3>
 
-				<p class="aiad-survey__section-note">
-					<?php esc_html_e( '"Know It, Question It, Use It Wisely" — how well did the campaign hit its core pedagogical aims?', 'ai-awareness-day' ); ?>
-				</p>
-
-				<!-- Q6: Staff room / parental network impact -->
+				<!-- Staff room / parental network impact -->
 				<div class="aiad-survey__field">
 					<p class="aiad-survey__label">
 						9. <?php esc_html_e( 'How has the campaign impacted your staff room or parental network? (Select all that apply)', 'ai-awareness-day' ); ?>
@@ -527,15 +570,12 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 						</label>
 					</div>
 				</div>
-			</fieldset>
 
-			<!-- ── STEP: strategic-roadmap ── Part 4 (participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="strategic-roadmap" data-path="participant">
-				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Part 4 — Strategic roadmap for 2027', 'ai-awareness-day' ); ?>
-				</legend>
+				<h3 class="aiad-survey__subsection-title">
+					<?php esc_html_e( 'Planning for 2027', 'ai-awareness-day' ); ?>
+				</h3>
 
-				<!-- Q8: Bottleneck -->
+				<!-- Bottleneck -->
 				<div class="aiad-survey__field">
 					<p class="aiad-survey__label">
 						10. <?php esc_html_e( 'What was the single biggest bottleneck you faced when executing the day?', 'ai-awareness-day' ); ?>
@@ -597,10 +637,10 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 			</fieldset>
 
 			<!-- ── STEP: non-participant-a ── Part 1B block A (non-participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="non-participant-a" data-path="non-participant">
-				<legend class="aiad-survey__step-title">
+			<fieldset class="aiad-survey__step" data-step-id="non-participant-a" data-path="non-participant" aria-labelledby="aiad-survey-step-non-participant-a-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-non-participant-a-title">
 					<?php esc_html_e( 'Part 1B — Understanding the barriers', 'ai-awareness-day' ); ?>
-				</legend>
+				</h2>
 
 				<p class="aiad-survey__section-note">
 					<?php esc_html_e( 'Understanding why schools did not take part is just as important as hearing from those who did. Your answers directly shape the 2027 campaign.', 'ai-awareness-day' ); ?>
@@ -661,124 +701,29 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
-			<!-- ── STEP: non-participant-b ── Part 1B block B (non-participants only) -->
-			<fieldset class="aiad-survey__step" data-step-id="non-participant-b" data-path="non-participant">
-				<legend class="aiad-survey__step-title">
-					<?php esc_html_e( 'Part 1B — Looking ahead to 2027', 'ai-awareness-day' ); ?>
-				</legend>
-
-				<!-- Q1B-3: 5-minute pledge -->
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						3. <?php esc_html_e( 'The campaign uses a "Just One Activity" pledge model requiring only 5 minutes of classroom time. Would this low-barrier structure make you consider participating in 2027?', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__radio-group">
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="five_min_pledge" value="yes" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Yes — a 5-minute tutor group starter or assembly slot is highly realistic to fit into our timetable.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="five_min_pledge" value="no" class="aiad-survey__radio" />
-							<?php esc_html_e( 'No — even a 5-minute activity requires internal coordination and policy checks we cannot accommodate without formal notice.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__radio-label">
-							<input type="radio" name="five_min_pledge" value="unsure" class="aiad-survey__radio" />
-							<?php esc_html_e( 'Unsure — it depends entirely on whether the resource provides an explicit "plug-and-play" script for non-technical cover teachers.', 'ai-awareness-day' ); ?>
-						</label>
-					</div>
-				</div>
-
-				<!-- Q1B-4: What would help onboarding -->
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						4. <?php esc_html_e( 'What could the central campaign team provide over the next 12 months to make onboarding seamless for your school in 2027? (tick all that apply)', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__checkgroup aiad-survey__checkgroup--single">
-						<label class="aiad-survey__check-label">
-							<input type="checkbox" name="onboarding_needs[]" value="slt_toolkit" class="aiad-survey__checkbox" />
-							<?php esc_html_e( 'SLT Pledging Toolkits: Ready-made email templates and "business case" slide decks to secure formal sign-off from headteachers and governors.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__check-label">
-							<input type="checkbox" name="onboarding_needs[]" value="offline_packs" class="aiad-survey__checkbox" />
-							<?php esc_html_e( 'Off-line / "AI Unplugged" Resource Packs: Printed card games, sorting activities, and physical worksheets that teach AI logic without any devices or internet.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__check-label">
-							<input type="checkbox" name="onboarding_needs[]" value="prerecorded_assembly" class="aiad-survey__checkbox" />
-							<?php esc_html_e( 'Pre-recorded video assemblies: A completely hands-off, high-quality video file we can simply press play on, requiring zero teacher talking time.', 'ai-awareness-day' ); ?>
-						</label>
-						<label class="aiad-survey__check-label">
-							<input type="checkbox" name="onboarding_needs[]" value="early_term_mapping" class="aiad-survey__checkbox" />
-							<?php esc_html_e( 'Early Term Mapping: Releasing the 2027 date and curriculum alignments 6 months in advance so we can bake it directly into our autumn calendar planning.', 'ai-awareness-day' ); ?>
-						</label>
-					</div>
-				</div>
-			</fieldset>
-
 			<!-- ── STEP: contact ── School details & stay in touch (everyone) -->
-			<fieldset class="aiad-survey__step" data-step-id="contact">
-				<legend class="aiad-survey__step-title">
+			<fieldset class="aiad-survey__step" data-step-id="contact" aria-labelledby="aiad-survey-step-contact-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-contact-title">
 					<?php esc_html_e( 'Your school &amp; stay in touch', 'ai-awareness-day' ); ?>
-				</legend>
+				</h2>
 
 				<p class="aiad-survey__helper">
-					<?php esc_html_e( 'Help us understand which schools are engaging. These details are optional — leave your email if you\'d like early access to 2027 resources or we may quote your feedback (anonymised) in our national report.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'This survey is anonymous unless you choose to share your school name or email below. All fields on this step are optional — add contact details only if you would like 2027 early access or are happy for an anonymised quote to appear in our national report.', 'ai-awareness-day' ); ?>
 				</p>
 
 				<!-- School name -->
 				<div class="aiad-survey__field">
 					<label class="aiad-survey__label" for="survey-school-name">
-						<?php esc_html_e( 'School name', 'ai-awareness-day' ); ?>
+						<?php esc_html_e( 'School name (optional)', 'ai-awareness-day' ); ?>
 					</label>
 					<input class="aiad-survey__input" type="text" id="survey-school-name" name="school_name"
 						placeholder="<?php esc_attr_e( 'e.g. Westfield Academy…', 'ai-awareness-day' ); ?>" maxlength="200" autocomplete="organization" />
 				</div>
 
-				<!-- School type -->
-				<div class="aiad-survey__field">
-					<label class="aiad-survey__label" for="survey-school-type">
-						<?php esc_html_e( 'School type', 'ai-awareness-day' ); ?>
-					</label>
-					<select class="aiad-survey__select" id="survey-school-type" name="school_type">
-						<option value=""><?php esc_html_e( '— Select —', 'ai-awareness-day' ); ?></option>
-						<option value="primary"><?php esc_html_e( 'Primary', 'ai-awareness-day' ); ?></option>
-						<option value="secondary"><?php esc_html_e( 'Secondary', 'ai-awareness-day' ); ?></option>
-						<option value="all_through"><?php esc_html_e( 'All-through (4–18)', 'ai-awareness-day' ); ?></option>
-						<option value="special"><?php esc_html_e( 'Special / Alternative Provision', 'ai-awareness-day' ); ?></option>
-						<option value="fe_college"><?php esc_html_e( 'FE College / Sixth Form', 'ai-awareness-day' ); ?></option>
-						<option value="mat_trust"><?php esc_html_e( 'MAT / Trust (multiple schools)', 'ai-awareness-day' ); ?></option>
-					</select>
-				</div>
-
-				<!-- Year groups taught -->
-				<div class="aiad-survey__field">
-					<p class="aiad-survey__label">
-						<?php esc_html_e( 'Which year groups did you engage with AI Awareness Day? (tick all that apply)', 'ai-awareness-day' ); ?>
-					</p>
-					<div class="aiad-survey__checkgroup">
-						<?php
-						$year_groups = array(
-							'eyfs'     => __( 'EYFS', 'ai-awareness-day' ),
-							'ks1'      => __( 'KS1 (Y1–Y2)', 'ai-awareness-day' ),
-							'ks2'      => __( 'KS2 (Y3–Y6)', 'ai-awareness-day' ),
-							'ks3'      => __( 'KS3 (Y7–Y9)', 'ai-awareness-day' ),
-							'ks4'      => __( 'KS4 (Y10–Y11)', 'ai-awareness-day' ),
-							'ks5'      => __( 'KS5 / 6th Form', 'ai-awareness-day' ),
-							'staff'    => __( 'Staff CPD only', 'ai-awareness-day' ),
-						);
-						foreach ( $year_groups as $val => $label ) :
-							?>
-							<label class="aiad-survey__check-label">
-								<input type="checkbox" name="year_groups[]" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__checkbox" />
-								<?php echo esc_html( $label ); ?>
-							</label>
-						<?php endforeach; ?>
-					</div>
-				</div>
-
 				<!-- Email -->
 				<div class="aiad-survey__field">
 					<label class="aiad-survey__label" for="survey-email">
-						<?php esc_html_e( 'Email address', 'ai-awareness-day' ); ?>
+						<?php esc_html_e( 'Email address (optional)', 'ai-awareness-day' ); ?>
 					</label>
 					<input class="aiad-survey__input" type="email" id="survey-email" name="contact_email"
 						placeholder="<?php esc_attr_e( 'Optional — for 2027 early access', 'ai-awareness-day' ); ?>" maxlength="200" autocomplete="email" />
@@ -826,7 +771,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				<button type="button" class="aiad-survey__btn aiad-survey__btn--next" id="aiad-survey-next">
 					<?php esc_html_e( 'Next →', 'ai-awareness-day' ); ?>
 				</button>
-				<button type="submit" class="aiad-survey__btn aiad-survey__btn--submit" id="aiad-survey-submit" hidden>
+				<button type="button" class="aiad-survey__btn aiad-survey__btn--submit" id="aiad-survey-submit" hidden>
 					<?php esc_html_e( 'Submit survey', 'ai-awareness-day' ); ?>
 				</button>
 			</div>
@@ -886,9 +831,9 @@ function aiad_handle_survey_submission(): void {
 
 	// Sanitise scalar fields
 	$role                   = sanitize_text_field( wp_unslash( $_POST['role'] ?? '' ) );
-	$mat_la                 = sanitize_text_field( wp_unslash( $_POST['mat_la'] ?? '' ) );
 	$display_board          = sanitize_text_field( wp_unslash( $_POST['display_board'] ?? '' ) );
 	$ai_policy              = sanitize_text_field( wp_unslash( $_POST['ai_policy'] ?? '' ) );
+	$curriculum_embedded    = sanitize_text_field( wp_unslash( $_POST['curriculum_embedded'] ?? '' ) );
 	$participated           = sanitize_text_field( wp_unslash( $_POST['participated'] ?? '' ) );
 	$participation_scale    = sanitize_text_field( wp_unslash( $_POST['participation_scale'] ?? '' ) );
 	$primary_hope           = sanitize_text_field( wp_unslash( $_POST['primary_hope'] ?? '' ) );
@@ -900,7 +845,6 @@ function aiad_handle_survey_submission(): void {
 	$open_feedback          = sanitize_textarea_field( wp_unslash( $_POST['open_feedback'] ?? '' ) );
 	$non_part_reason        = sanitize_text_field( wp_unslash( $_POST['non_part_reason'] ?? '' ) );
 	$staffroom_attitude     = sanitize_text_field( wp_unslash( $_POST['staffroom_attitude'] ?? '' ) );
-	$five_min_pledge        = sanitize_text_field( wp_unslash( $_POST['five_min_pledge'] ?? '' ) );
 	$school_name            = sanitize_text_field( wp_unslash( $_POST['school_name'] ?? '' ) );
 	$school_type            = sanitize_text_field( wp_unslash( $_POST['school_type'] ?? '' ) );
 	$contact_email          = sanitize_email( wp_unslash( $_POST['contact_email'] ?? '' ) );
@@ -929,6 +873,9 @@ function aiad_handle_survey_submission(): void {
 	}
 	if ( ! in_array( $ai_policy, $allowed_maturity, true ) ) {
 		$ai_policy = '';
+	}
+	if ( ! in_array( $curriculum_embedded, $allowed_maturity, true ) ) {
+		$curriculum_embedded = '';
 	}
 
 	// Sanitise array fields — participant path
@@ -960,12 +907,6 @@ function aiad_handle_survey_submission(): void {
 	$useful_formats = array_values( array_intersect( $raw_useful, $allowed_useful_formats ) );
 
 	// Non-participant path
-	$allowed_onboarding = array( 'slt_toolkit', 'offline_packs', 'prerecorded_assembly', 'early_term_mapping' );
-	$raw_onboarding = isset( $_POST['onboarding_needs'] ) && is_array( $_POST['onboarding_needs'] )
-		? array_map( 'sanitize_text_field', wp_unslash( $_POST['onboarding_needs'] ) )
-		: array();
-	$onboarding_needs = array_values( array_intersect( $raw_onboarding, $allowed_onboarding ) );
-
 	// Communication preferences (everyone)
 	$allowed_comms = array( 'website_timeline', 'linkedin', 'newsletter' );
 	$raw_comms = isset( $_POST['comms_preference'] ) && is_array( $_POST['comms_preference'] )
@@ -991,7 +932,7 @@ function aiad_handle_survey_submission(): void {
 	// Build a title for the admin list
 	$title = sprintf(
 		'%s — %s — %s — %s',
-		$school_name ?: 'Unknown school',
+		$school_name ?: 'Anonymous',
 		$role ?: 'unknown',
 		$participated === 'yes' ? 'participant' : 'non-participant',
 		gmdate( 'Y-m-d H:i' )
@@ -1010,7 +951,7 @@ function aiad_handle_survey_submission(): void {
 	$meta = array(
 		// Part 1 — School profile
 		'_survey_role'                  => $role,
-		'_survey_mat_la'                => $mat_la,
+		'_survey_curriculum_embedded'   => $curriculum_embedded,
 		'_survey_display_board'         => $display_board,
 		'_survey_ai_policy'             => $ai_policy,
 		// Gate
@@ -1039,8 +980,6 @@ function aiad_handle_survey_submission(): void {
 		// Part 1B — Non-participant track
 		'_survey_non_part_reason'       => $non_part_reason,
 		'_survey_staffroom_attitude'    => $staffroom_attitude,
-		'_survey_five_min_pledge'       => $five_min_pledge,
-		'_survey_onboarding_needs'      => wp_json_encode( $onboarding_needs ),
 		// Contact / school details
 		'_survey_school_name'           => $school_name,
 		'_survey_school_type'           => $school_type,
@@ -1082,9 +1021,9 @@ add_action( 'add_meta_boxes', 'aiad_survey_add_meta_box' );
 function aiad_survey_meta_box_render( WP_Post $post ): void {
 	$fields = array(
 		'_survey_role'                  => __( 'Role', 'ai-awareness-day' ),
-		'_survey_mat_la'                => __( 'MAT / Local Authority', 'ai-awareness-day' ),
-		'_survey_display_board'         => __( 'AI Awareness display board (Q3)', 'ai-awareness-day' ),
-		'_survey_ai_policy'             => __( 'AI Awareness / AI-use policy (Q4)', 'ai-awareness-day' ),
+		'_survey_curriculum_embedded'   => __( 'AI activities in curriculum', 'ai-awareness-day' ),
+		'_survey_display_board'         => __( 'AI Awareness display board', 'ai-awareness-day' ),
+		'_survey_ai_policy'             => __( 'AI Awareness / AI-use policy', 'ai-awareness-day' ),
 		'_survey_participated'          => __( 'Participated on 4th June', 'ai-awareness-day' ),
 		'_survey_participation_scale'           => __( 'Participation scale', 'ai-awareness-day' ),
 		'_survey_primary_hope'                  => __( 'Primary hope (Q1)', 'ai-awareness-day' ),
@@ -1105,8 +1044,6 @@ function aiad_survey_meta_box_render( WP_Post $post ): void {
 		'_survey_open_feedback'         => __( 'Open feedback (Q12)', 'ai-awareness-day' ),
 		'_survey_non_part_reason'       => __( 'Non-participant: primary reason', 'ai-awareness-day' ),
 		'_survey_staffroom_attitude'    => __( 'Non-participant: staff room attitude', 'ai-awareness-day' ),
-		'_survey_five_min_pledge'       => __( 'Non-participant: 5-min pledge', 'ai-awareness-day' ),
-		'_survey_onboarding_needs'      => __( 'Non-participant: onboarding needs', 'ai-awareness-day' ),
 		'_survey_school_name'           => __( 'School name', 'ai-awareness-day' ),
 		'_survey_school_type'           => __( 'School type', 'ai-awareness-day' ),
 		'_survey_year_groups'           => __( 'Year groups engaged', 'ai-awareness-day' ),
@@ -1367,7 +1304,7 @@ function aiad_export_survey_csv(): void {
 	) );
 
 	$columns = array(
-		'ID', 'Date', 'Role', 'MAT / LA', 'AI display board (Q3)', 'AI policy (Q4)', 'Participated', 'Participation scale',
+		'ID', 'Date', 'Role', 'AI in curriculum', 'AI display board', 'AI policy', 'Participated', 'Participation scale',
 		// Part 1 — Hopes
 		'Primary hope (Q1)',
 		'Rating: student empowerment (Q2)', 'Rating: critical scepticism (Q2)', 'Rating: inclusivity (Q2)',
@@ -1380,13 +1317,13 @@ function aiad_export_survey_csv(): void {
 		// Part 4 — Strategic roadmap
 		'Bottleneck (Q10)', 'Support modules 2027 (Q11)', 'Open feedback (Q12)',
 		// Non-participant track
-		'Non-part: reason', 'Non-part: staff room attitude', 'Non-part: 5-min pledge', 'Non-part: onboarding needs',
+		'Non-part: reason', 'Non-part: staff room attitude',
 		// Contact / school details
 		'School name', 'School type', 'Year groups', 'Contact email', 'Preferred update channels', 'Quoting permission',
 	);
 
 	$meta_keys = array(
-		'_survey_role', '_survey_mat_la', '_survey_display_board', '_survey_ai_policy', '_survey_participated', '_survey_participation_scale',
+		'_survey_role', '_survey_curriculum_embedded', '_survey_display_board', '_survey_ai_policy', '_survey_participated', '_survey_participation_scale',
 		'_survey_primary_hope',
 		'_survey_rating_student_empowerment', '_survey_rating_critical_skepticism', '_survey_rating_inclusivity',
 		'_survey_lasting_effect',
@@ -1395,7 +1332,7 @@ function aiad_export_survey_csv(): void {
 		'_survey_materials_quality', '_survey_useful_formats', '_survey_best_format',
 		'_survey_staffroom_impact', '_survey_bottleneck',
 		'_survey_support_modules', '_survey_open_feedback',
-		'_survey_non_part_reason', '_survey_staffroom_attitude', '_survey_five_min_pledge', '_survey_onboarding_needs',
+		'_survey_non_part_reason', '_survey_staffroom_attitude',
 		'_survey_school_name', '_survey_school_type', '_survey_year_groups', '_survey_contact_email', '_survey_comms_preference', '_survey_permission_quote',
 	);
 
@@ -1459,7 +1396,8 @@ function aiad_survey_response_column_content( string $col, int $post_id ): void 
 				'teacher_primary'   => 'Teacher (Primary)',
 				'teacher_secondary' => 'Teacher (Secondary)',
 				'computing_lead'    => 'Computing Lead',
-				'slt_mat'           => 'SLT / MAT',
+				'headteacher'       => 'Headteacher / Leader',
+				'slt_mat'           => 'SLT / Digital Lead',
 				'alt_provision'     => 'Alt Provision',
 			);
 			$val = (string) get_post_meta( $post_id, '_survey_role', true );
@@ -1560,6 +1498,7 @@ function aiad_survey_analytics_page(): void {
 	$participated_no  = 0;
 	$display_board = array();
 	$ai_policy     = array();
+	$curriculum_embedded = array();
 	$scales      = array();
 	$hopes       = array();
 	$lasting     = array();
@@ -1611,6 +1550,9 @@ function aiad_survey_analytics_page(): void {
 
 		$ap = $get( '_survey_ai_policy' );
 		if ( $ap ) $ai_policy[ $ap ] = ( $ai_policy[ $ap ] ?? 0 ) + 1;
+
+		$ce = $get( '_survey_curriculum_embedded' );
+		if ( $ce ) $curriculum_embedded[ $ce ] = ( $curriculum_embedded[ $ce ] ?? 0 ) + 1;
 
 		$scale = $get( '_survey_participation_scale' );
 		if ( $scale ) $scales[ $scale ] = ( $scales[ $scale ] ?? 0 ) + 1;
@@ -1706,7 +1648,8 @@ function aiad_survey_analytics_page(): void {
 		'teacher_primary'   => 'Classroom Teacher (Primary)',
 		'teacher_secondary' => 'Classroom Teacher (Secondary)',
 		'computing_lead'    => 'Computing Lead / HoD',
-		'slt_mat'           => 'SLT / MAT Digital Lead',
+		'headteacher'       => 'Headteacher / School Leader',
+		'slt_mat'           => 'SLT / Digital Lead',
 		'alt_provision'     => 'Alt Provision / SEN',
 	);
 
@@ -1847,10 +1790,18 @@ function aiad_survey_analytics_page(): void {
 			?>
 		</div>
 
+		<!-- AI in curriculum -->
+		<?php echo $card; ?>
+			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
+				<?php esc_html_e( 'AI activities embedded in curriculum', 'ai-awareness-day' ); ?>
+			</h3>
+			<?php echo $bar( $curriculum_embedded, $maturity_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		</div>
+
 		<!-- AI Awareness display board -->
 		<?php echo $card; ?>
 			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
-				<?php esc_html_e( 'Has an AI Awareness display board (Q3)', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Has an AI Awareness display board', 'ai-awareness-day' ); ?>
 			</h3>
 			<?php echo $bar( $display_board, $maturity_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</div>
@@ -1858,7 +1809,7 @@ function aiad_survey_analytics_page(): void {
 		<!-- AI Awareness policy -->
 		<?php echo $card; ?>
 			<h3 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;">
-				<?php esc_html_e( 'Has an AI Awareness / AI-use policy (Q4)', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Has an AI Awareness / AI-use policy', 'ai-awareness-day' ); ?>
 			</h3>
 			<?php echo $bar( $ai_policy, $maturity_labels, $total ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</div>

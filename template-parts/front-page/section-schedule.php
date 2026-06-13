@@ -50,34 +50,7 @@ $audience_labels      = $audience_data['audience_labels'];
 $spotlight_pool = $sessions;
 shuffle( $spotlight_pool );
 $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight_pool ) ) );
-
-// Resolve the published national survey page URL for the inline CTA banner.
-$aiad_survey_url = '';
-$aiad_survey_pid = (int) get_option( 'aiad_survey_page_created' );
-if ( $aiad_survey_pid && 'publish' === get_post_status( $aiad_survey_pid ) ) {
-    $aiad_survey_url = (string) get_permalink( $aiad_survey_pid );
-} else {
-    $aiad_survey_page = get_page_by_path( 'national-survey-2026' );
-    if ( $aiad_survey_page && 'publish' === $aiad_survey_page->post_status ) {
-        $aiad_survey_url = (string) get_permalink( $aiad_survey_page );
-    }
-}
 ?>
-<?php if ( $aiad_survey_url !== '' ) : ?>
-<aside class="aiad-survey-banner" aria-label="<?php esc_attr_e( 'National survey', 'ai-awareness-day' ); ?>">
-    <div class="container aiad-survey-banner__inner fade-up">
-        <div class="aiad-survey-banner__text">
-            <span class="aiad-survey-banner__eyebrow"><?php esc_html_e( 'We want to hear from you', 'ai-awareness-day' ); ?></span>
-            <p class="aiad-survey-banner__title">
-                <?php esc_html_e( 'How did AI Awareness Day 2026 go for you? Share your experience and help shape 2027.', 'ai-awareness-day' ); ?>
-            </p>
-        </div>
-        <a class="aiad-survey-banner__cta" href="<?php echo esc_url( $aiad_survey_url ); ?>">
-            <?php esc_html_e( 'Take the 3-minute survey →', 'ai-awareness-day' ); ?>
-        </a>
-    </div>
-</aside>
-<?php endif; ?>
 <section class="section section--alt aiad-schedule-row aiad-schedule-home" id="schedule">
     <div class="container">
         <div class="fade-up">
