@@ -470,6 +470,51 @@
 		return html + '</section>';
 	}
 
+	// Zoned semicircle gauge for the Human Oversight Ratio — the band scale
+	// (critical / high / moderate / strong) is drawn into the arc itself.
+	function oversightGaugeHtml(r) {
+		var val = (typeof r.human_oversight_ratio === 'number') ? r.human_oversight_ratio
+			: (typeof r.human_oversight_readiness === 'number' ? r.human_oversight_readiness : null);
+		if (val === null) return '';
+		val = Math.max(0, Math.min(100, val));
+
+		var A0 = -120, A1 = 120, cx = 120, cy = 120, rr = 92;
+		function toAngle(v) { return A0 + (v / 100) * (A1 - A0); }
+		function polar(x, y, rad, deg) { var a = (deg - 90) * Math.PI / 180; return [x + rad * Math.cos(a), y + rad * Math.sin(a)]; }
+		function arc(x, y, rad, s, e) {
+			var p0 = polar(x, y, rad, s), p1 = polar(x, y, rad, e);
+			var large = (e - s) <= 180 ? 0 : 1;
+			return 'M ' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' A ' + rad + ' ' + rad + ' 0 ' + large + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
+		}
+		function zoneColor(v) {
+			if (v <= 10) return 'var(--airb-crit)';
+			if (v <= 25) return 'var(--airb-high)';
+			if (v <= 50) return 'var(--airb-mod)';
+			return 'var(--airb-low)';
+		}
+
+		var zones = [[0, 10], [10, 25], [25, 50], [50, 100]];
+		var na = toAngle(val);
+		var npt = polar(cx, cy, rr - 14, na);
+		var label = r.human_oversight_label || '';
+
+		var svg = '<svg viewBox="0 0 240 172" class="airb__gauge-svg" role="img" aria-label="' + esc(i18n.oversight) + ': ' + Math.round(val) + '%">';
+		svg += '<path d="' + arc(cx, cy, rr, A0, A1) + '" fill="none" stroke="var(--airb-border)" stroke-width="16" stroke-linecap="round"></path>';
+		zones.forEach(function (z, i) {
+			var cap = (i === 0 || i === zones.length - 1) ? 'round' : 'butt';
+			svg += '<path d="' + arc(cx, cy, rr, toAngle(z[0]), toAngle(z[1])) + '" fill="none" stroke="' + zoneColor(z[1] - 0.1) + '" stroke-width="16" stroke-linecap="' + cap + '"></path>';
+		});
+		svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + npt[0].toFixed(2) + '" y2="' + npt[1].toFixed(2) + '" stroke="var(--airb-brand)" stroke-width="3.5" stroke-linecap="round"></line>';
+		svg += '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="var(--airb-brand)"></circle>';
+		svg += '<text x="' + cx + '" y="' + (cy - 16) + '" text-anchor="middle" class="airb__gauge-num">' + Math.round(val) + '<tspan font-size="20">%</tspan></text>';
+		svg += '</svg>';
+
+		var help = 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
+		return '<section class="airb__gauge"><h4>' + esc(i18n.oversight) + '</h4>' + svg
+			+ (label ? '<p class="airb__gauge-band" style="color:' + zoneColor(val) + '">' + esc(label) + '</p>' : '')
+			+ '<p class="airb__gauge-help">' + esc(help) + '</p></section>';
+	}
+
 	function heatmapHtml(cells) {
 		if (!cells || !cells.length) return '';
 		var html = '<div class="airb__heatmap">';
@@ -511,6 +556,8 @@
 			html += card(c.label, c.value, c.band);
 		});
 		html += '</div>';
+
+		html += oversightGaugeHtml(r);
 
 		if (r.funnel_closing) {
 			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';

@@ -1501,6 +1501,50 @@
 	background: var(--airb-ink-2);
 }
 
+/* Human Oversight Ratio — zoned semicircle gauge */
+.airb__gauge {
+	margin: 1.5rem 0;
+	padding: 1.25rem;
+	border: 1px solid var(--airb-border);
+	border-radius: var(--airb-radius-card);
+	background: var(--airb-ink-2);
+	text-align: center;
+}
+
+.airb__gauge h4 {
+	margin: 0 0 0.25rem;
+}
+
+.airb__gauge-svg {
+	width: 100%;
+	max-width: 300px;
+	display: block;
+	margin: 0 auto;
+}
+
+.airb__gauge-num {
+	font-family: var(--font-display, 'Intel Clear', sans-serif);
+	font-weight: 700;
+	font-size: 44px;
+	fill: var(--airb-brand);
+}
+
+.airb__gauge-band {
+	font-family: var(--font-display, 'Intel Clear', sans-serif);
+	font-weight: 700;
+	font-size: 0.95rem;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	margin: 0.15rem 0 0;
+}
+
+.airb__gauge-help {
+	font-size: 0.8rem;
+	color: var(--airb-muted);
+	margin: 0.5rem auto 0;
+	max-width: 34rem;
+}
+
 .airb__benchmark h4 {
 	margin: 0 0 0.5rem;
 }
