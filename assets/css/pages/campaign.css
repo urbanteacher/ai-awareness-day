@@ -40,6 +40,10 @@
   text-align: left;
 }
 
+#survey-cta .survey-cta {
+  margin-top: 1.5rem;
+}
+
 .campaign-embed__wrapper {
   position: relative;
   width: 100%;
