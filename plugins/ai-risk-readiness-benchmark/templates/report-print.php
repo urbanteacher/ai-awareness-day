@@ -21,13 +21,14 @@ $config   = $airb_report_config;
 	<p class="airb-report__disclaimer"><?php echo esc_html( (string) ( $config['disclaimer'] ?? '' ) ); ?></p>
 
 	<h2><?php esc_html_e( 'Summary', 'ai-risk-benchmark' ); ?></h2>
+	<p><strong><?php esc_html_e( 'Readiness level:', 'ai-risk-benchmark' ); ?></strong> <?php echo esc_html( (string) ( $results['readiness_level_label'] ?? '' ) ); ?></p>
 	<p><strong><?php esc_html_e( 'Overall risk level:', 'ai-risk-benchmark' ); ?></strong> <?php echo esc_html( (string) ( $results['risk_level_label'] ?? '' ) ); ?></p>
 
 	<?php if ( ! empty( $results['role_result_cards'] ) ) : ?>
 		<h3><?php esc_html_e( 'Role-specific scores', 'ai-risk-benchmark' ); ?></h3>
 		<ul>
 			<?php foreach ( (array) $results['role_result_cards'] as $card ) : ?>
-				<li><?php echo esc_html( (string) ( $card['label'] ?? '' ) ); ?>: <strong><?php echo esc_html( (string) ( $card['value'] ?? '' ) ); ?></strong></li>
+				<li><?php echo esc_html( (string) ( $card['label'] ?? '' ) ); ?>: <strong><?php echo esc_html( (string) ( $card['value'] ?? '' ) ); ?></strong><?php if ( ! empty( $card['band_label'] ) ) : ?> <em>(<?php echo esc_html( (string) $card['band_label'] ); ?>)</em><?php endif; ?></li>
 			<?php endforeach; ?>
 		</ul>
 	<?php else : ?>

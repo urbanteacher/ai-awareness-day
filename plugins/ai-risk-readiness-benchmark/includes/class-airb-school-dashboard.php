@@ -123,7 +123,9 @@ class AIRB_School_Dashboard {
 		}
 
 		$role_scores = array();
-		$align_vals  = array();
+		$weights     = AIRB_Defaults::role_weights();
+		$weight_sum  = 0.0;
+		$weighted    = 0.0;
 
 		foreach ( $roles as $slug => $label ) {
 			if ( empty( $by_role[ $slug ] ) ) {
@@ -137,9 +139,11 @@ class AIRB_School_Dashboard {
 				continue;
 			}
 			$data    = $by_role[ $slug ];
-			$ready   = (int) round( $data['alignment_sum'] / $data['count'] );
-			$dep     = (int) round( $data['dependency_sum'] / $data['count'] );
-			$align_vals[] = $ready;
+			$ready = (int) round( $data['alignment_sum'] / $data['count'] );
+			$dep   = (int) round( $data['dependency_sum'] / $data['count'] );
+			$w     = (float) ( $weights[ $slug ] ?? 1.0 );
+			$weight_sum += $w;
+			$weighted   += $ready * $w;
 
 			$role_scores[ $slug ] = array(
 				'label'       => $label,
@@ -151,7 +155,7 @@ class AIRB_School_Dashboard {
 			);
 		}
 
-		$overall_alignment = $align_vals ? (int) round( array_sum( $align_vals ) / count( $align_vals ) ) : 0;
+		$overall_alignment = $weight_sum > 0 ? (int) round( $weighted / $weight_sum ) : 0;
 		$overall_risk      = 100 - $overall_alignment;
 		$overall_band      = AIRB_Scoring::risk_band( (float) $overall_risk );
 

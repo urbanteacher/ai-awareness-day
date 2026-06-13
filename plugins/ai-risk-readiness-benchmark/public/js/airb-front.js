@@ -10,11 +10,16 @@
 	var i18n = airbBenchmark.i18n;
 	var domains = cfg.domains || {};
 	var domainKeys = Object.keys(domains);
+	var domainColors = cfg.domain_colors || {};
+	var domainRecs = cfg.domain_recommendations || {};
+	var roleMeta = cfg.role_meta || {};
+	var STORAGE_KEY = 'airb_completed_roles_v1';
 
 	var state = {
 		phase: 'role',
 		role: '',
 		step: 0,
+		sections: [],
 		questions: [],
 		answers: {},
 		results: null,
@@ -50,6 +55,19 @@
 
 	function bandLabel(band) {
 		return band.charAt(0).toUpperCase() + band.slice(1);
+	}
+
+	function readinessLevel(pct) {
+		var r = Math.max(0, Math.min(100, parseInt(pct, 10) || 0));
+		var labels = (i18n.bandsReadiness || {});
+		if (r >= 75) return { slug: 'strong', label: labels.strong || 'Strong' };
+		if (r >= 60) return { slug: 'established', label: labels.established || 'Established' };
+		if (r >= 45) return { slug: 'developing', label: labels.developing || 'Developing' };
+		return { slug: 'emerging', label: labels.emerging || 'Emerging' };
+	}
+
+	function readinessBandLabel(pct) {
+		return readinessLevel(pct).label;
 	}
 
 	function sliderScore(pct) {
@@ -88,7 +106,7 @@
 	}
 
 	function readinessBand(readiness) {
-		return riskBand(Math.max(0, 100 - readiness));
+		return readinessLevel(readiness).slug;
 	}
 
 	function compositeDependency(role, answers, domainScores) {
@@ -128,37 +146,54 @@
 
 	function roleResultCards(role, results) {
 		var dom = results.domain_scores || {};
+		var riskLabel = displayRiskLabel(results.risk_level, results.overall_risk_percentage);
 		var cards = [];
 		if (role === 'teacher') {
+			var align = results.alignment_score;
+			var depBand = riskBand(results.dependency_index);
 			cards = [
-				{ label: 'Teacher AI Risk Score', value: Math.round(results.overall_risk_percentage) + '%', band: results.risk_level },
-				{ label: 'Teacher AI Readiness Score', value: results.alignment_score + '/100', band: readinessBand(results.alignment_score) },
-				{ label: 'AI Dependency Index™', value: results.dependency_index + '%', band: riskBand(results.dependency_index) },
-				{ label: 'Human Oversight Ratio™', value: results.human_oversight_label, band: results.risk_level },
+				{ label: 'Teacher AI Risk Score', value: Math.round(results.overall_risk_percentage) + '%', band: results.risk_level, tone: 'risk', band_label: riskLabel },
+				{ label: 'Teacher AI Readiness Score', value: align + '/100', band: readinessBand(align), tone: 'readiness', band_label: readinessBandLabel(align) },
+				{ label: 'AI Dependency Index™', value: results.dependency_index + '%', band: depBand, tone: 'risk', band_label: bandLabel(depBand) },
+				{ label: 'Human Oversight Ratio™', value: results.human_oversight_label, band: oversightBandFromLabel(results.human_oversight_label), tone: 'oversight' },
 			];
 		} else if (role === 'student') {
 			var lit = Math.round(dom.ai_literacy ? dom.ai_literacy.readiness_percentage : 0);
+			var sDepBand = riskBand(results.dependency_index);
 			cards = [
-				{ label: 'Student Learning Risk Score', value: Math.round(results.overall_risk_percentage) + '%', band: results.risk_level },
-				{ label: 'Student AI Dependency Score', value: results.dependency_index + '%', band: riskBand(results.dependency_index) },
-				{ label: 'Student AI Literacy Score', value: lit + '%', band: readinessBand(lit) },
+				{ label: 'Student Learning Risk Score', value: Math.round(results.overall_risk_percentage) + '%', band: results.risk_level, tone: 'risk', band_label: riskLabel },
+				{ label: 'Student AI Dependency Score', value: results.dependency_index + '%', band: sDepBand, tone: 'risk', band_label: bandLabel(sDepBand) },
+				{ label: 'Student AI Literacy Score', value: lit + '%', band: readinessBand(lit), tone: 'readiness', band_label: readinessBandLabel(lit) },
 			];
 		} else if (role === 'parent') {
 			var aware = Math.round(dom.ai_literacy ? dom.ai_literacy.readiness_percentage : results.alignment_score);
 			var safe = Math.round(dom.safeguarding ? dom.safeguarding.readiness_percentage : results.safeguarding_readiness);
+			var pAlign = results.alignment_score;
 			cards = [
-				{ label: 'Parent AI Awareness Score', value: aware + '%', band: readinessBand(aware) },
-				{ label: 'Parent Digital Safety Score', value: safe + '%', band: readinessBand(safe) },
-				{ label: 'Parent Readiness Score', value: results.alignment_score + '/100', band: readinessBand(results.alignment_score) },
+				{ label: 'Parent AI Awareness Score', value: aware + '%', band: readinessBand(aware), tone: 'readiness', band_label: readinessBandLabel(aware) },
+				{ label: 'Parent Digital Safety Score', value: safe + '%', band: readinessBand(safe), tone: 'readiness', band_label: readinessBandLabel(safe) },
+				{ label: 'Parent Readiness Score', value: pAlign + '/100', band: readinessBand(pAlign), tone: 'readiness', band_label: readinessBandLabel(pAlign) },
 			];
 		} else if (role === 'leader') {
+			var gov = results.governance_maturity;
+			var lSafe = results.safeguarding_readiness;
+			var lAlign = results.alignment_score;
 			cards = [
-				{ label: 'Governance Maturity Score', value: results.governance_maturity + '%', band: readinessBand(results.governance_maturity) },
-				{ label: 'Safeguarding Readiness Score', value: results.safeguarding_readiness + '%', band: readinessBand(results.safeguarding_readiness) },
-				{ label: 'DfE AI Alignment Score', value: results.alignment_score + '/100', band: readinessBand(results.alignment_score) },
+				{ label: 'Governance Maturity Score', value: gov + '%', band: readinessBand(gov), tone: 'readiness', band_label: readinessBandLabel(gov) },
+				{ label: 'Safeguarding Readiness Score', value: lSafe + '%', band: readinessBand(lSafe), tone: 'readiness', band_label: readinessBandLabel(lSafe) },
+				{ label: 'DfE AI Alignment Score', value: lAlign + '/100', band: readinessBand(lAlign), tone: 'readiness', band_label: readinessBandLabel(lAlign) },
 			];
 		}
 		return cards;
+	}
+
+	function oversightBandFromLabel(label) {
+		var text = String(label || '');
+		if (text.indexOf('Strong') >= 0) return 'low';
+		if (text.indexOf('Moderate') >= 0) return 'moderate';
+		if (text.indexOf('High') >= 0) return 'high';
+		if (text.indexOf('Critical') >= 0) return 'critical';
+		return 'moderate';
 	}
 
 	function keyExposureAreas(domainScores) {
@@ -193,12 +228,15 @@
 		domainKeys.forEach(function (slug) {
 			var avg = counts[slug] ? (sums[slug] / counts[slug]) / 3 * 100 : 0;
 			var band = riskBand(avg);
+			var readinessPct = Math.round((100 - avg) * 10) / 10;
 			domainScores[slug] = {
 				label: domains[slug],
 				risk_percentage: Math.round(avg * 10) / 10,
-				readiness_percentage: Math.round((100 - avg) * 10) / 10,
+				readiness_percentage: readinessPct,
 				band: band,
 				band_label: bandLabel(band),
+				readiness_band: readinessBand(readinessPct),
+				readiness_band_label: readinessBandLabel(readinessPct),
 				questions_answered: counts[slug],
 			};
 			if (counts[slug]) riskVals.push(avg);
@@ -221,6 +259,8 @@
 			role: role,
 			risk_level: oband,
 			risk_level_label: displayRiskLabel(oband, overall),
+			readiness_level: readinessBand(Math.round(100 - overall)),
+			readiness_level_label: readinessBandLabel(Math.round(100 - overall)),
 			alignment_score: Math.round(100 - overall),
 			dependency_index: depIndex,
 			human_oversight_ratio: oversight.pct,
@@ -247,19 +287,74 @@
 		el.error.textContent = '';
 	}
 
+	function oversightZoneColor(v) {
+		if (v <= 10) return 'var(--airb-crit)';
+		if (v <= 25) return 'var(--airb-high)';
+		if (v <= 50) return 'var(--airb-mod)';
+		return 'var(--airb-low)';
+	}
+
+	function domainColor(slug) {
+		return domainColors[slug] || 'var(--airb-accent-fill)';
+	}
+
+	function sectionsForRole(role) {
+		var sections = [];
+		var index = {};
+		questionsForRole(role).forEach(function (q) {
+			var key = q.section || 'General';
+			if (!index[key]) {
+				index[key] = { name: key, domain: q.domain, questions: [] };
+				sections.push(index[key]);
+			}
+			index[key].questions.push(q);
+		});
+		return sections;
+	}
+
+	function loadRoleCompletions() {
+		try {
+			return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+		} catch (e) {
+			return {};
+		}
+	}
+
+	function persistRoleCompletion(score) {
+		if (!state.role || typeof score !== 'number') return;
+		try {
+			var data = loadRoleCompletions();
+			data[state.role] = { alignment: score, ts: Date.now() };
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+		} catch (e) { /* private browsing */ }
+	}
+
 	function questionsForRole(role) {
 		return (cfg.questions || []).filter(function (q) { return q.role === role; });
 	}
 
 	function renderRole() {
+		var completions = loadRoleCompletions();
 		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.chooseRole) + '</h3><div class="airb__role-grid">';
 		var benchmarks = cfg.role_benchmarks || {};
 		Object.keys(cfg.roles || {}).forEach(function (slug) {
 			var active = state.role === slug ? ' is-selected' : '';
 			var bench = benchmarks[slug] || {};
-			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '">';
+			var meta = roleMeta[slug] || {};
+			var done = completions[slug];
+			var tint = meta.tint || 'var(--airb-ink-2)';
+			var accent = meta.accent || 'var(--airb-brand)';
+			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '" style="--role-tint:' + esc(tint) + ';--role-accent:' + esc(accent) + '">';
+			if (done && typeof done.alignment === 'number') {
+				html += '<span class="airb__role-done">' + esc((i18n.roleDone || 'Done · {n}%').replace('{n}', String(done.alignment))) + '</span>';
+			}
+			html += '<span class="airb__role-card-icon" aria-hidden="true"></span>';
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
 			if (bench.title) html += '<span class="airb__role-card-sub">' + esc(bench.title) + '</span>';
+			if (bench.measures && bench.measures.length) {
+				html += '<span class="airb__role-card-blurb">' + esc(bench.measures.slice(0, 2).join(' · ')) + '</span>';
+			}
+			html += '<span class="airb__role-card-go">' + esc(done ? (i18n.retakeAudit || 'Retake audit') : (i18n.startAudit || 'Start audit')) + ' →</span>';
 			html += '</button>';
 		});
 		html += '</div>';
@@ -297,36 +392,70 @@
 		});
 	}
 
-	function renderAuditQuestion() {
-		var q = state.questions[state.step];
-		if (!q) return;
-
-		var html = '<div class="airb__panel"><p class="airb__q-num">' + i18n.step + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.questions.length + '</p>';
-		if (q.section) {
-			html += '<p class="airb__audit-section">' + esc(q.section) + '</p>';
-		}
-		html += '<h3 class="airb__panel-title">' + esc(q.text) + '</h3>';
-		html += '<p class="airb__domain-tag">' + esc(domains[q.domain] || q.domain) + '</p>';
+	function questionInputHtml(q) {
+		var qid = q.id;
+		var html = '';
 
 		if (q.type === 'slider') {
-			var val = state.answers[q.id] !== undefined ? state.answers[q.id] : 50;
-			html += '<div class="airb__slider-wrap"><input type="range" class="airb__slider" id="airb-q-input" min="0" max="100" step="1" value="' + val + '" />';
-			html += '<output class="airb__slider-out" for="airb-q-input">' + val + '% ' + esc(i18n.modifyLabel) + '</output></div>';
+			var val = state.answers[qid] !== undefined ? state.answers[qid] : 50;
+			var numVal = parseInt(val, 10) || 0;
+			html += '<div class="airb__slider-wrap"><input type="range" class="airb__slider" id="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" min="0" max="100" step="1" value="' + val + '" />';
+			html += '<output class="airb__slider-out" for="airb-q-' + esc(qid) + '">' + val + '% ' + esc(i18n.modifyLabel) + '</output></div>';
+			html += '<p class="airb__slider-band" id="airb-band-' + esc(qid) + '" style="color:' + oversightZoneColor(numVal) + '">' + esc(oversightLabel(numVal)) + '</p>';
 		} else if (q.type === 'select') {
-			html += '<select class="airb__select" id="airb-q-input"><option value="">' + esc(i18n.required) + '</option>';
+			html += '<select class="airb__select" id="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '"><option value="">' + esc(i18n.required) + '</option>';
 			(q.options || []).forEach(function (o) {
-				var sel = state.answers[q.id] === o.value ? ' selected' : '';
+				var sel = state.answers[qid] === o.value ? ' selected' : '';
 				html += '<option value="' + esc(o.value) + '"' + sel + '>' + esc(o.label) + '</option>';
 			});
 			html += '</select>';
 		} else {
-			html += '<div class="airb__options">';
+			html += '<div class="airb__options airb__options--pills">';
 			(q.options || []).forEach(function (o) {
-				var checked = state.answers[q.id] === o.value ? ' checked' : '';
-				html += '<label class="airb__option"><input type="radio" name="airb-q" value="' + esc(o.value) + '"' + checked + ' />' + esc(o.label) + '</label>';
+				var checked = state.answers[qid] === o.value ? ' checked' : '';
+				html += '<label class="airb__option"><input type="radio" name="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" value="' + esc(o.value) + '"' + checked + ' />' + esc(o.label) + '</label>';
 			});
 			html += '</div>';
 		}
+		return html;
+	}
+
+	function bindSectionInputs(section) {
+		section.questions.forEach(function (q) {
+			var input = document.getElementById('airb-q-' + q.id);
+			if (!input) return;
+			if (input.type === 'range') {
+				var out = el.audit.querySelector('output[for="airb-q-' + q.id + '"]');
+				var band = document.getElementById('airb-band-' + q.id);
+				input.addEventListener('input', function () {
+					var n = parseInt(input.value, 10) || 0;
+					if (out) out.textContent = input.value + '% ' + i18n.modifyLabel;
+					if (band) {
+						band.textContent = oversightLabel(n);
+						band.style.color = oversightZoneColor(n);
+					}
+				});
+			}
+		});
+	}
+
+	function renderAuditSection() {
+		var section = state.sections[state.step];
+		if (!section) return;
+
+		var progPct = state.sections.length ? Math.round((state.step / state.sections.length) * 100) : 0;
+		var html = '<div class="airb__panel">';
+		html += '<div class="airb__prog" aria-hidden="true"><i style="width:' + progPct + '%"></i></div>';
+		html += '<p class="airb__q-num">' + esc(i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length + '</p>';
+		html += '<div class="airb__domtag"><span class="airb__domtag-sq" style="background:' + esc(domainColor(section.domain)) + '"></span>';
+		html += esc(section.name) + ' · ' + esc(domains[section.domain] || section.domain) + '</div>';
+
+		section.questions.forEach(function (q) {
+			html += '<div class="airb__q-block">';
+			html += '<p class="airb__q-title">' + esc(q.text) + '</p>';
+			html += questionInputHtml(q);
+			html += '</div>';
+		});
 		html += '</div>';
 
 		el.audit.innerHTML = html;
@@ -338,15 +467,11 @@
 		el.back.hidden = state.step === 0;
 		el.next.textContent = i18n.next;
 		el.progress.hidden = false;
-		updateStepper(state.questions.length, state.step);
-
-		var slider = document.getElementById('airb-q-input');
-		if (slider && slider.type === 'range') {
-			var out = el.audit.querySelector('.airb__slider-out');
-			slider.addEventListener('input', function () {
-				if (out) out.textContent = slider.value + '% ' + i18n.modifyLabel;
-			});
+		updateStepper(state.sections.length, state.step);
+		if (el.progressLbl) {
+			el.progressLbl.textContent = (i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length;
 		}
+		bindSectionInputs(section);
 	}
 
 	function isYoungRole() {
@@ -415,13 +540,40 @@
 		el.progress.hidden = true;
 	}
 
-	function barHtml(label, pct, band, invert) {
+	function barHtml(slug, label, pct, band, invert) {
 		var display = invert ? (100 - pct) : pct;
+		var color = domainColor(slug);
 		return '<div class="airb__bar-row airb__bar-row--' + band + '">' +
-			'<span class="airb__bar-label">' + esc(label) + '</span>' +
+			'<span class="airb__bar-label"><span class="airb__bar-dot" style="background:' + esc(color) + '"></span>' + esc(label) + '</span>' +
 			'<div class="airb__bar-track" role="progressbar" aria-valuenow="' + display + '" aria-valuemin="0" aria-valuemax="100">' +
-			'<div class="airb__bar-fill" style="width:' + display + '%"></div></div>' +
+			'<div class="airb__bar-fill" style="width:' + display + '%;background:' + esc(color) + '"></div></div>' +
 			'<span class="airb__bar-val">' + display + '% <span class="airb__bar-band">(' + esc(bandLabel(band)) + ')</span></span></div>';
+	}
+
+	function focusDomainsHtml(r) {
+		var scored = [];
+		domainKeys.forEach(function (slug) {
+			var d = r.domain_scores[slug];
+			if (!d || !d.questions_answered) return;
+			scored.push({
+				slug: slug,
+				label: d.label,
+				readiness: d.readiness_percentage,
+				readiness_band_label: d.readiness_band_label,
+				band: d.band,
+			});
+		});
+		if (!scored.length) return '';
+		scored.sort(function (a, b) { return a.readiness - b.readiness; });
+		var weakest = scored.slice(0, 3);
+		var html = '<section class="airb__focus"><h4>' + esc(i18n.domainFocus || 'What to focus on') + '</h4><ul class="airb__focus-list">';
+		weakest.forEach(function (item) {
+			var rec = domainRecs[item.slug] || '';
+			var bandLabelText = item.readiness_band_label || readinessBandLabel(item.readiness);
+			html += '<li class="airb__focus-item"><span class="airb__focus-dot" style="background:' + esc(domainColor(item.slug)) + '"></span>';
+			html += '<span><strong>' + esc(item.label) + ' — ' + item.readiness + '% (' + bandLabelText + ').</strong> ' + esc(rec) + '</span></li>';
+		});
+		return html + '</ul></section>';
 	}
 
 	function benchmarkHtml(r) {
@@ -487,10 +639,7 @@
 			return 'M ' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' A ' + rad + ' ' + rad + ' 0 ' + large + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
 		}
 		function zoneColor(v) {
-			if (v <= 10) return 'var(--airb-crit)';
-			if (v <= 25) return 'var(--airb-high)';
-			if (v <= 50) return 'var(--airb-mod)';
-			return 'var(--airb-low)';
+			return oversightZoneColor(v);
 		}
 
 		var zones = [[0, 10], [10, 25], [25, 50], [50, 100]];
@@ -531,15 +680,15 @@
 		if (!r) return;
 
 		var alignBand = readinessBand(r.alignment_score);
-		var riskBandCls = r.risk_level || 'moderate';
+		var readinessLabel = r.readiness_level_label || readinessBandLabel(r.alignment_score);
 
 		var html = '<div class="airb__results">';
 		html += '<section class="airb__results-hero airb__results-hero--' + esc(alignBand) + '" data-score="' + r.alignment_score + '">';
 		html += '<div class="airb__results-hero-copy">';
 		html += '<span class="airb__results-eyebrow">' + esc(i18n.stage1) + '</span>';
 		html += '<h3 class="airb__results-headline">' + esc(i18n.resultsTitle) + '</h3>';
-		html += '<p class="airb__results-lead">' + esc(i18n.riskLevel) + '</p>';
-		html += '<span class="airb__results-risk-pill airb__results-risk-pill--' + esc(riskBandCls) + '">' + esc(r.risk_level_label) + '</span>';
+		html += '<p class="airb__results-lead">' + esc(i18n.readinessLevel || 'Readiness level') + '</p>';
+		html += '<span class="airb__results-risk-pill airb__results-risk-pill--' + esc(alignBand) + '">' + esc(readinessLabel) + '</span>';
 		html += '</div>';
 		html += '<div class="airb__results-hero-score">';
 		html += '<div class="airb__results-scoreline">';
@@ -553,7 +702,7 @@
 
 		html += '<div class="airb__cards airb__cards--bento">';
 		(r.role_result_cards || []).forEach(function (c) {
-			html += card(c.label, c.value, c.band);
+			html += card(c);
 		});
 		html += '</div>';
 
@@ -562,6 +711,8 @@
 		if (r.funnel_closing) {
 			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
 		}
+
+		html += focusDomainsHtml(r);
 
 		if (r.risk_heatmap && r.risk_heatmap.length) {
 			html += '<h4>' + esc(i18n.heatMap) + '</h4>' + heatmapHtml(r.risk_heatmap);
@@ -642,7 +793,7 @@
 		domainKeys.forEach(function (slug) {
 			var d = r.domain_scores[slug];
 			if (!d || !d.questions_answered) return;
-			html += barHtml(d.label, d.risk_percentage, d.band, false);
+			html += barHtml(slug, d.label, d.risk_percentage, d.band, false);
 		});
 
 		html += benchmarkHtml(r);
@@ -716,6 +867,8 @@
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
 		animateResultsHero();
+		persistRoleCompletion(r.alignment_score);
+		updateAppbarCompletions();
 	}
 
 	function animateResultsHero() {
@@ -747,12 +900,16 @@
 		}
 	}
 
-	function card(title, value, band) {
-		return '<article class="airb__card airb__card--' + band + '">' +
-			'<span class="airb__card-title">' + esc(title) + '</span>' +
-			'<strong class="airb__card-value">' + esc(String(value)) + '</strong>' +
-			'<span class="airb__card-band">' + esc(bandLabel(band)) + '</span>' +
-			'</article>';
+	function card(item) {
+		var band = item.band || 'moderate';
+		var bandText = item.band_label || bandLabel(band);
+		var html = '<article class="airb__card airb__card--' + band + '">' +
+			'<span class="airb__card-title">' + esc(item.label) + '</span>' +
+			'<strong class="airb__card-value">' + esc(String(item.value)) + '</strong>';
+		if (item.tone !== 'oversight') {
+			html += '<span class="airb__card-band">' + esc(bandText) + '</span>';
+		}
+		return html + '</article>';
 	}
 
 	function updateStepper(total, idx) {
@@ -768,43 +925,47 @@
 		}
 	}
 
-	function saveCurrentAnswer() {
-		var q = state.questions[state.step];
-		if (!q) return true;
-		if (q.type === 'slider') {
-			var sl = document.getElementById('airb-q-input');
-			if (!sl) return false;
-			state.answers[q.id] = sl.value;
-			return true;
-		}
-		if (q.type === 'select') {
-			var sel = document.getElementById('airb-q-input');
-			if (!sel || !sel.value) return false;
-			state.answers[q.id] = sel.value;
-			return true;
-		}
-		var picked = el.audit.querySelector('input[name="airb-q"]:checked');
-		if (!picked) return false;
-		state.answers[q.id] = picked.value;
-		return true;
+	function saveSectionAnswers(section) {
+		if (!section) return false;
+		var complete = true;
+		section.questions.forEach(function (q) {
+			if (q.type === 'slider') {
+				var sl = document.getElementById('airb-q-' + q.id);
+				if (!sl) { complete = false; return; }
+				state.answers[q.id] = sl.value;
+				return;
+			}
+			if (q.type === 'select') {
+				var sel = document.getElementById('airb-q-' + q.id);
+				if (!sel || !sel.value) { complete = false; return; }
+				state.answers[q.id] = sel.value;
+				return;
+			}
+			var picked = el.audit.querySelector('input[name="airb-q-' + q.id + '"]:checked');
+			if (!picked) { complete = false; return; }
+			state.answers[q.id] = picked.value;
+		});
+		return complete;
 	}
 
 	function goNext() {
 		hideError();
 		if (state.phase === 'role') {
 			if (!state.role) { showError(i18n.chooseRole); return; }
-			state.questions = questionsForRole(state.role);
-			if (!state.questions.length) { showError(i18n.error); return; }
+			state.sections = sectionsForRole(state.role);
+			state.questions = state.sections.reduce(function (acc, s) { return acc.concat(s.questions); }, []);
+			if (!state.sections.length) { showError(i18n.error); return; }
 			state.phase = 'audit';
 			state.step = 0;
-			renderAuditQuestion();
+			renderAuditSection();
 			return;
 		}
 		if (state.phase === 'audit') {
-			if (!saveCurrentAnswer()) { showError(i18n.required); return; }
-			if (state.step < state.questions.length - 1) {
+			var section = state.sections[state.step];
+			if (!saveSectionAnswers(section)) { showError(i18n.required); return; }
+			if (state.step < state.sections.length - 1) {
 				state.step++;
-				renderAuditQuestion();
+				renderAuditSection();
 				return;
 			}
 			state.phase = 'contact';
@@ -843,9 +1004,9 @@
 	function goBack() {
 		hideError();
 		if (state.phase === 'audit' && state.step > 0) {
-			saveCurrentAnswer();
+			saveSectionAnswers(state.sections[state.step]);
 			state.step--;
-			renderAuditQuestion();
+			renderAuditSection();
 			return;
 		}
 		if (state.phase === 'audit' && state.step === 0) {
@@ -855,8 +1016,8 @@
 		}
 		if (state.phase === 'contact') {
 			state.phase = 'audit';
-			state.step = state.questions.length - 1;
-			renderAuditQuestion();
+			state.step = state.sections.length - 1;
+			renderAuditSection();
 		}
 	}
 
@@ -897,6 +1058,7 @@
 			'',
 			i18n.reportEmailRole + ': ' + roleLbl,
 			i18n.alignment + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '/100',
+			(i18n.readinessLevel || 'Readiness level') + ': ' + (r.readiness_level_label || '—'),
 			i18n.riskLevel + ': ' + (r.risk_level_label || '—'),
 		];
 
@@ -946,6 +1108,21 @@
 	if (el.back) el.back.addEventListener('click', goBack);
 	if (el.role) renderRole();
 
+	// App-bar completion pill: reflect how many of the 4 audits this device has done.
+	function updateAppbarCompletions() {
+		var root = document.getElementById('airb-benchmark');
+		var status = root && root.querySelector('.airb__appbar-status');
+		if (!status) return;
+		var done = Object.keys(loadRoleCompletions()).length;
+		var total = Object.keys(cfg.roles || {}).length || 4;
+		if (done > 0) {
+			status.innerHTML = '<span class="airb__appbar-dot" aria-hidden="true"></span>'
+				+ '<span class="airb__appbar-count">' + done + ' / ' + total + '</span> '
+				+ esc(i18n.auditsComplete || 'audits complete');
+		}
+	}
+	updateAppbarCompletions();
+
 	window.airbRenderSchoolDashboard = function (rollup, container) {
 		if (!rollup || !container) return;
 		var html = '<div class="airb__school-results">';
@@ -966,8 +1143,20 @@
 		});
 		html += '</div>';
 		html += '<div class="airb__cards">';
-		html += card('Overall DfE AI Alignment Score', rollup.overall_alignment + '%', rollup.overall_risk_level);
-		html += card('Risk level', rollup.overall_risk_label, rollup.overall_risk_level);
+		html += card({
+			label: 'Overall DfE AI Alignment Score',
+			value: rollup.overall_alignment + '%',
+			band: readinessBand(rollup.overall_alignment),
+			tone: 'readiness',
+			band_label: readinessBandLabel(rollup.overall_alignment),
+		});
+		html += card({
+			label: 'Risk level',
+			value: rollup.overall_risk_label,
+			band: rollup.overall_risk_level,
+			tone: 'risk',
+			band_label: rollup.overall_risk_label,
+		});
 		html += '</div>';
 		if (rollup.exposure_breakdown && rollup.exposure_breakdown.length) {
 			html += '<h4>Exposure breakdown</h4><table class="airb__exposure-table"><tbody>';

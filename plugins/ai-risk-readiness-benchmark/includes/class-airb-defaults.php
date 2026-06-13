@@ -47,6 +47,70 @@ class AIRB_Defaults {
 	}
 
 	/**
+	 * Per-domain colour identity (bars, tags, heatmap accents).
+	 *
+	 * @return array<string, string>
+	 */
+	public static function domain_colors(): array {
+		return array(
+			'safe_adoption'        => '#1B6B8C',
+			'human_oversight'      => '#15803d',
+			'ai_dependency'        => '#c2410c',
+			'privacy'              => '#7c3aed',
+			'safeguarding'         => '#b91c1c',
+			'assessment_integrity' => '#a16207',
+			'ai_literacy'          => '#2563eb',
+			'governance'           => '#475569',
+		);
+	}
+
+	/**
+	 * Short remediation copy for weakest domains on the results screen.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function domain_recommendations(): array {
+		return array(
+			'human_oversight'      => __( 'Build a habit of editing, verifying and challenging AI output before it is used.', 'ai-risk-benchmark' ),
+			'ai_dependency'        => __( 'Practise core tasks without AI first; use it to refine, not to originate.', 'ai-risk-benchmark' ),
+			'privacy'              => __( 'Never enter identifiable pupil, SEND or safeguarding data into public AI tools.', 'ai-risk-benchmark' ),
+			'ai_literacy'          => __( 'Cover hallucinations, limitations and clear no-go situations in training.', 'ai-risk-benchmark' ),
+			'safeguarding'         => __( 'Add AI and deepfake risks explicitly to safeguarding procedures.', 'ai-risk-benchmark' ),
+			'assessment_integrity' => __( 'Review assessment design against JCQ and Ofqual AI guidance.', 'ai-risk-benchmark' ),
+			'governance'           => __( 'Publish an AI policy, name a lead, and schedule an annual review.', 'ai-risk-benchmark' ),
+			'safe_adoption'        => __( 'Maintain an approved tool list and structured staff training.', 'ai-risk-benchmark' ),
+		);
+	}
+
+	/**
+	 * Role picker card accents.
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public static function role_meta(): array {
+		return array(
+			'teacher' => array( 'tint' => '#dcfce7', 'accent' => '#15803d' ),
+			'student' => array( 'tint' => '#dbeafe', 'accent' => '#2563eb' ),
+			'parent'  => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
+			'leader'  => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
+		);
+	}
+
+	/**
+	 * Weights for whole-school DfE alignment rollup.
+	 *
+	 * @return array<string, float>
+	 */
+	public static function role_weights(): array {
+		return array(
+			'teacher' => 1.2,
+			'student' => 1.0,
+			'parent'  => 0.9,
+			'leader'  => 1.4,
+		);
+	}
+
+	/**
 	 * Full default configuration.
 	 *
 	 * @return array<string, mixed>

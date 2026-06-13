@@ -76,45 +76,155 @@ class AIRB_Scoring {
 	 * @return array<int, array{key:string,label:string,value:string,band:string}>
 	 */
 	public static function role_result_cards( string $role, array $results ): array {
-		$dom = $results['domain_scores'] ?? array();
-		$cards = array();
+		$dom         = $results['domain_scores'] ?? array();
+		$risk_level  = (string) ( $results['risk_level'] ?? 'low' );
+		$overall_risk = (float) ( $results['overall_risk_percentage'] ?? 0 );
+		$risk_label  = self::display_risk_label( $risk_level, $overall_risk );
+		$cards       = array();
 
 		switch ( $role ) {
 			case 'teacher':
+				$align = (int) ( $results['alignment_score'] ?? 0 );
+				$dep   = (int) ( $results['dependency_index'] ?? 0 );
+				$dep_band = self::risk_band( (float) $dep );
 				$cards = array(
-					array( 'key' => 'risk', 'label' => __( 'Teacher AI Risk Score', 'ai-risk-benchmark' ), 'value' => (int) round( $results['overall_risk_percentage'] ?? 0 ) . '%', 'band' => (string) ( $results['risk_level'] ?? 'low' ) ),
-					array( 'key' => 'ready', 'label' => __( 'Teacher AI Readiness Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['alignment_score'] ?? 0 ) . '/100', 'band' => self::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) ) ),
-					array( 'key' => 'dep', 'label' => __( 'AI Dependency Index™', 'ai-risk-benchmark' ), 'value' => (int) ( $results['dependency_index'] ?? 0 ) . '%', 'band' => self::risk_band( (float) ( $results['dependency_index'] ?? 0 ) ) ),
-					array( 'key' => 'over', 'label' => __( 'Human Oversight Ratio™', 'ai-risk-benchmark' ), 'value' => (string) ( $results['human_oversight_label'] ?? '' ), 'band' => self::oversight_band_from_label( (string) ( $results['human_oversight_label'] ?? '' ) ) ),
+					array(
+						'key'        => 'risk',
+						'label'      => __( 'Teacher AI Risk Score', 'ai-risk-benchmark' ),
+						'value'      => (int) round( $overall_risk ) . '%',
+						'band'       => $risk_level,
+						'tone'       => 'risk',
+						'band_label' => $risk_label,
+					),
+					array(
+						'key'        => 'ready',
+						'label'      => __( 'Teacher AI Readiness Score', 'ai-risk-benchmark' ),
+						'value'      => $align . '/100',
+						'band'       => self::readiness_band( $align ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $align ),
+					),
+					array(
+						'key'        => 'dep',
+						'label'      => __( 'AI Dependency Index™', 'ai-risk-benchmark' ),
+						'value'      => $dep . '%',
+						'band'       => $dep_band,
+						'tone'       => 'risk',
+						'band_label' => self::band_label( $dep_band ),
+					),
+					array(
+						'key'   => 'over',
+						'label' => __( 'Human Oversight Ratio™', 'ai-risk-benchmark' ),
+						'value' => (string) ( $results['human_oversight_label'] ?? '' ),
+						'band'  => self::oversight_band_from_label( (string) ( $results['human_oversight_label'] ?? '' ) ),
+						'tone'  => 'oversight',
+					),
 				);
 				break;
 			case 'student':
 				$lit = (int) round( $dom['ai_literacy']['readiness_percentage'] ?? 0 );
+				$dep = (int) ( $results['dependency_index'] ?? 0 );
+				$dep_band = self::risk_band( (float) $dep );
 				$cards = array(
-					array( 'key' => 'risk', 'label' => __( 'Student Learning Risk Score', 'ai-risk-benchmark' ), 'value' => (int) round( $results['overall_risk_percentage'] ?? 0 ) . '%', 'band' => (string) ( $results['risk_level'] ?? 'low' ) ),
-					array( 'key' => 'dep', 'label' => __( 'Student AI Dependency Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['dependency_index'] ?? 0 ) . '%', 'band' => self::risk_band( (float) ( $results['dependency_index'] ?? 0 ) ) ),
-					array( 'key' => 'lit', 'label' => __( 'Student AI Literacy Score', 'ai-risk-benchmark' ), 'value' => $lit . '%', 'band' => self::readiness_band( $lit ) ),
+					array(
+						'key'        => 'risk',
+						'label'      => __( 'Student Learning Risk Score', 'ai-risk-benchmark' ),
+						'value'      => (int) round( $overall_risk ) . '%',
+						'band'       => $risk_level,
+						'tone'       => 'risk',
+						'band_label' => $risk_label,
+					),
+					array(
+						'key'        => 'dep',
+						'label'      => __( 'Student AI Dependency Score', 'ai-risk-benchmark' ),
+						'value'      => $dep . '%',
+						'band'       => $dep_band,
+						'tone'       => 'risk',
+						'band_label' => self::band_label( $dep_band ),
+					),
+					array(
+						'key'        => 'lit',
+						'label'      => __( 'Student AI Literacy Score', 'ai-risk-benchmark' ),
+						'value'      => $lit . '%',
+						'band'       => self::readiness_band( $lit ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $lit ),
+					),
 				);
 				break;
 			case 'parent':
-				$aware = (int) round( $dom['ai_literacy']['readiness_percentage'] ?? $results['alignment_score'] ?? 0 );
+				$aware  = (int) round( $dom['ai_literacy']['readiness_percentage'] ?? $results['alignment_score'] ?? 0 );
 				$safety = (int) round( $dom['safeguarding']['readiness_percentage'] ?? $results['safeguarding_readiness'] ?? 0 );
-				$cards = array(
-					array( 'key' => 'aware', 'label' => __( 'Parent AI Awareness Score', 'ai-risk-benchmark' ), 'value' => $aware . '%', 'band' => self::readiness_band( $aware ) ),
-					array( 'key' => 'safe', 'label' => __( 'Parent Digital Safety Score', 'ai-risk-benchmark' ), 'value' => $safety . '%', 'band' => self::readiness_band( $safety ) ),
-					array( 'key' => 'ready', 'label' => __( 'Parent Readiness Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['alignment_score'] ?? 0 ) . '/100', 'band' => self::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) ) ),
+				$align  = (int) ( $results['alignment_score'] ?? 0 );
+				$cards  = array(
+					array(
+						'key'        => 'aware',
+						'label'      => __( 'Parent AI Awareness Score', 'ai-risk-benchmark' ),
+						'value'      => $aware . '%',
+						'band'       => self::readiness_band( $aware ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $aware ),
+					),
+					array(
+						'key'        => 'safe',
+						'label'      => __( 'Parent Digital Safety Score', 'ai-risk-benchmark' ),
+						'value'      => $safety . '%',
+						'band'       => self::readiness_band( $safety ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $safety ),
+					),
+					array(
+						'key'        => 'ready',
+						'label'      => __( 'Parent Readiness Score', 'ai-risk-benchmark' ),
+						'value'      => $align . '/100',
+						'band'       => self::readiness_band( $align ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $align ),
+					),
 				);
 				break;
 			case 'leader':
+				$gov  = (int) ( $results['governance_maturity'] ?? 0 );
+				$safe = (int) ( $results['safeguarding_readiness'] ?? 0 );
+				$align = (int) ( $results['alignment_score'] ?? 0 );
 				$cards = array(
-					array( 'key' => 'gov', 'label' => __( 'Governance Maturity Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['governance_maturity'] ?? 0 ) . '%', 'band' => self::readiness_band( (int) ( $results['governance_maturity'] ?? 0 ) ) ),
-					array( 'key' => 'safe', 'label' => __( 'Safeguarding Readiness Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['safeguarding_readiness'] ?? 0 ) . '%', 'band' => self::readiness_band( (int) ( $results['safeguarding_readiness'] ?? 0 ) ) ),
-					array( 'key' => 'dfe', 'label' => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['alignment_score'] ?? 0 ) . '/100', 'band' => self::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) ) ),
+					array(
+						'key'        => 'gov',
+						'label'      => __( 'Governance Maturity Score', 'ai-risk-benchmark' ),
+						'value'      => $gov . '%',
+						'band'       => self::readiness_band( $gov ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $gov ),
+					),
+					array(
+						'key'        => 'safe',
+						'label'      => __( 'Safeguarding Readiness Score', 'ai-risk-benchmark' ),
+						'value'      => $safe . '%',
+						'band'       => self::readiness_band( $safe ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $safe ),
+					),
+					array(
+						'key'        => 'dfe',
+						'label'      => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+						'value'      => $align . '/100',
+						'band'       => self::readiness_band( $align ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $align ),
+					),
 				);
 				break;
 			default:
+				$align = (int) ( $results['alignment_score'] ?? 0 );
 				$cards = array(
-					array( 'key' => 'align', 'label' => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ), 'value' => (int) ( $results['alignment_score'] ?? 0 ) . '/100', 'band' => (string) ( $results['risk_level'] ?? 'low' ) ),
+					array(
+						'key'        => 'align',
+						'label'      => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+						'value'      => $align . '/100',
+						'band'       => self::readiness_band( $align ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $align ),
+					),
 				);
 		}
 
@@ -122,12 +232,37 @@ class AIRB_Scoring {
 	}
 
 	/**
-	 * Readiness score to band (inverted risk).
+	 * Readiness score to positive band slug.
 	 *
 	 * @param int $readiness Readiness 0-100.
 	 */
 	public static function readiness_band( int $readiness ): string {
-		return self::risk_band( (float) max( 0, 100 - $readiness ) );
+		if ( $readiness >= 75 ) {
+			return 'strong';
+		}
+		if ( $readiness >= 60 ) {
+			return 'established';
+		}
+		if ( $readiness >= 45 ) {
+			return 'developing';
+		}
+		return 'emerging';
+	}
+
+	/**
+	 * Human-readable readiness band label.
+	 *
+	 * @param int $readiness Readiness 0-100.
+	 */
+	public static function readiness_band_label( int $readiness ): string {
+		$labels = array(
+			'strong'      => __( 'Strong', 'ai-risk-benchmark' ),
+			'established' => __( 'Established', 'ai-risk-benchmark' ),
+			'developing'  => __( 'Developing', 'ai-risk-benchmark' ),
+			'emerging'    => __( 'Emerging', 'ai-risk-benchmark' ),
+		);
+		$band = self::readiness_band( $readiness );
+		return $labels[ $band ] ?? ucfirst( $band );
 	}
 
 	/**
@@ -395,12 +530,15 @@ class AIRB_Scoring {
 				$avg_risk = 0;
 			}
 			$band = self::risk_band( $avg_risk );
+			$readiness_pct = (int) round( 100 - $avg_risk );
 			$domain_scores[ $slug ] = array(
 				'label'                => $label,
 				'risk_percentage'      => round( $avg_risk, 1 ),
 				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
 				'band'                 => $band,
 				'band_label'           => self::band_label( $band ),
+				'readiness_band'       => self::readiness_band( $readiness_pct ),
+				'readiness_band_label' => self::readiness_band_label( $readiness_pct ),
 				'questions_answered'   => $count,
 			);
 			if ( $count > 0 ) {
@@ -440,6 +578,8 @@ class AIRB_Scoring {
 			'role'                    => $role,
 			'risk_level'              => $overall_band,
 			'risk_level_label'        => self::display_risk_label( $overall_band, $overall_risk ),
+			'readiness_level'         => self::readiness_band( $alignment_score ),
+			'readiness_level_label'   => self::readiness_band_label( $alignment_score ),
 			'alignment_score'         => $alignment_score,
 			'dependency_index'        => $dependency_index,
 			'human_oversight_ratio'   => $human_oversight_pct,
