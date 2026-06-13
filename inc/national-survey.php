@@ -177,7 +177,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 							<?php esc_html_e( 'Yes — we took part', 'ai-awareness-day' ); ?>
 						</label>
 						<label class="aiad-survey__radio-label">
-							<input type="radio" name="participated" value="no" class="aiad-survey__radio" id="survey-participated-no" />
+							<input type="radio" name="participated" value="no" class="aiad-survey__radio" id="survey-participated-no" required />
 							<?php esc_html_e( 'No — we did not participate', 'ai-awareness-day' ); ?>
 						</label>
 					</div>

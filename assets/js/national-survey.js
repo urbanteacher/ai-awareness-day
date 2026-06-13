@@ -34,8 +34,11 @@
 				if (scaleWrap) {
 					scaleWrap.style.display = this.value === 'yes' ? '' : 'none';
 				}
-				// Rebuild sequence when path is chosen
+				// Rebuild sequence and refresh button state
 				sequence = this.value === 'yes' ? PARTICIPANT_STEPS.slice() : NON_PARTICIPANT_STEPS.slice();
+				var isLast = currentIdx === sequence.length - 1;
+				nextBtn.hidden   = isLast;
+				submitBtn.hidden = !isLast;
 			});
 		});
 
