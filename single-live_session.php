@@ -21,6 +21,8 @@ $permalink  = get_permalink();
 $start      = (string) get_post_meta( $post_id, '_session_start_time', true );
 $end        = (string) get_post_meta( $post_id, '_session_end_time', true );
 $time_range = function_exists( 'aiad_format_session_time_range' ) ? aiad_format_session_time_range( $start, $end ) : '';
+$date_label = function_exists( 'aiad_format_session_date' ) ? aiad_format_session_date( $start ) : '';
+$is_past    = function_exists( 'aiad_session_is_past' ) && aiad_session_is_past( $post_id );
 $format     = (string) get_post_meta( $post_id, '_session_format', true );
 $reg_url    = (string) get_post_meta( $post_id, '_session_registration_url', true );
 $partner_id = (int) get_post_meta( $post_id, '_session_partner_id', true );
@@ -61,8 +63,15 @@ $share_aria = sprintf(
                 data-ics-url="<?php echo esc_attr( $reg_url ); ?>">
 
                 <header class="session-single__header">
-                    <?php if ( $time_range !== '' ) : ?>
-                        <p class="session-single__time"><?php echo esc_html( $time_range ); ?></p>
+                    <?php if ( $date_label !== '' || $time_range !== '' ) : ?>
+                        <div class="session-single__when">
+                            <?php if ( $date_label !== '' ) : ?>
+                                <p class="session-single__date"><?php echo esc_html( $date_label ); ?></p>
+                            <?php endif; ?>
+                            <?php if ( $time_range !== '' ) : ?>
+                                <p class="session-single__time"><?php echo esc_html( $time_range ); ?></p>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
 
                     <h1 class="session-single__title"><?php echo esc_html( $title ); ?></h1>
@@ -100,19 +109,19 @@ $share_aria = sprintf(
                 <?php endif; ?>
 
                 <footer class="session-single__actions">
-                    <?php if ( $reg_url !== '' ) : ?>
+                    <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $post_id ) ) : ?>
                         <a class="session-single__btn session-single__btn--primary"
                            href="<?php echo esc_url( $reg_url ); ?>"
                            data-session-id="<?php echo esc_attr( (string) $post_id ); ?>"
                            target="_blank" rel="noopener">
-                            <?php esc_html_e( 'Join session', 'ai-awareness-day' ); ?>
+                            <?php echo esc_html( aiad_session_cta_label( $post_id ) ); ?>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         </a>
-                    <?php else : ?>
+                    <?php elseif ( ! $is_past ) : ?>
                         <span class="session-single__btn session-single__btn--soon"><?php esc_html_e( 'Join link coming soon', 'ai-awareness-day' ); ?></span>
                     <?php endif; ?>
 
-                    <?php if ( $ics_start !== '' ) : ?>
+                    <?php if ( $ics_start !== '' && ! $is_past ) : ?>
                         <button type="button" class="session-single__btn session-single__btn--secondary session-single__ics"
                             aria-label="<?php echo esc_attr( sprintf( __( 'Add "%s" to calendar', 'ai-awareness-day' ), $title ) ); ?>">
                             <span aria-hidden="true">📅</span>

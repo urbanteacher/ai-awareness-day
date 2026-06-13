@@ -200,7 +200,7 @@ class AIRB_Defaults {
 	 */
 	private static function default_positioning(): array {
 		return array(
-			'headline'          => __( "The UK's First DfE-Aligned AI Risk & Readiness Benchmark for Schools", 'ai-risk-benchmark' ),
+			'headline'          => __( 'AI Risk & Readiness Benchmark for Schools', 'ai-risk-benchmark' ),
 			'tagline'           => __( 'Helping schools adopt AI safely, responsibly and with confidence.', 'ai-risk-benchmark' ),
 			'problem'           => __( 'Schools are under increasing pressure to adopt AI safely, but most guidance tells schools what they should do rather than helping them understand their actual level of exposure.', 'ai-risk-benchmark' ),
 			'problem_questions' => array(

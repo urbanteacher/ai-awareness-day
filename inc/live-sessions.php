@@ -461,6 +461,112 @@ function aiad_get_live_sessions( int $limit = -1 ): array {
 }
 
 /**
+ * Europe/London timezone for session datetimes.
+ */
+function aiad_session_timezone(): DateTimeZone {
+	return new DateTimeZone( 'Europe/London' );
+}
+
+/**
+ * Session end (or start if no end) as DateTime.
+ *
+ * @param int $post_id live_session post ID.
+ */
+function aiad_session_end_datetime( int $post_id ): ?DateTime {
+	$end   = (string) get_post_meta( $post_id, '_session_end_time', true );
+	$start = (string) get_post_meta( $post_id, '_session_start_time', true );
+	$raw   = $end !== '' ? $end : $start;
+	if ( $raw === '' ) {
+		return null;
+	}
+	try {
+		return new DateTime( $raw, aiad_session_timezone() );
+	} catch ( \Exception $e ) {
+		return null;
+	}
+}
+
+/**
+ * Whether a session's end time is in the past.
+ *
+ * @param int $post_id live_session post ID.
+ */
+function aiad_session_is_past( int $post_id ): bool {
+	$end = aiad_session_end_datetime( $post_id );
+	if ( ! $end ) {
+		return false;
+	}
+	$now = new DateTime( 'now', aiad_session_timezone() );
+	return $end < $now;
+}
+
+/**
+ * Keep only sessions that have not ended yet.
+ *
+ * @param WP_Post[] $sessions Sessions from aiad_get_live_sessions().
+ * @return WP_Post[]
+ */
+function aiad_filter_sessions_upcoming( array $sessions ): array {
+	return array_values(
+		array_filter(
+			$sessions,
+			static function ( $session ): bool {
+				return ! aiad_session_is_past( (int) $session->ID );
+			}
+		)
+	);
+}
+
+/**
+ * Archive list: upcoming sessions only (past sessions are not promoted).
+ *
+ * @param WP_Post[] $sessions Sessions from aiad_get_live_sessions().
+ * @return WP_Post[]
+ */
+function aiad_filter_sessions_for_archive( array $sessions ): array {
+	return aiad_filter_sessions_upcoming( $sessions );
+}
+
+/**
+ * Whether the session join URL should be shown (live sessions only).
+ *
+ * Registration URLs are live join links (Zoom/Teams), not recordings.
+ *
+ * @param int $post_id live_session post ID.
+ */
+function aiad_session_show_join_link( int $post_id ): bool {
+	if ( aiad_session_is_past( $post_id ) ) {
+		return false;
+	}
+	$url = (string) get_post_meta( $post_id, '_session_registration_url', true );
+	return $url !== '';
+}
+
+/**
+ * Join button label for live sessions.
+ *
+ * @param int $post_id live_session post ID.
+ */
+function aiad_session_cta_label( int $post_id ): string {
+	return __( 'Join', 'ai-awareness-day' );
+}
+
+/**
+ * Formatted calendar date for a session start (e.g. Wednesday 4 June 2026).
+ */
+function aiad_format_session_date( string $start ): string {
+	if ( $start === '' ) {
+		return '';
+	}
+	try {
+		$dt = new DateTime( $start, aiad_session_timezone() );
+		return $dt->format( 'l j F Y' );
+	} catch ( \Exception $e ) {
+		return '';
+	}
+}
+
+/**
  * Format a "10:00 – 11:00" range from start/end ISO datetimes.
  */
 function aiad_format_session_time_range( string $start, string $end ): string {

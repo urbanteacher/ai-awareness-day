@@ -2,9 +2,8 @@
 /**
  * Front page section: AI Awareness Day "What's On" spotlight.
  *
- * Post-event reframing of the live schedule. Shows three randomly chosen
- * sessions (new mix on each page load) as on-demand catch-up / CPD. Full list,
- * audience filters, and recording links live on the /schedule/ archive.
+ * Upcoming sessions only on the homepage (three random spotlight cards).
+ * Past sessions are not listed here or on /schedule/.
  *
  * @package AI_Awareness_Day
  */
@@ -16,7 +15,10 @@ if ( ! function_exists( 'aiad_get_live_sessions' ) ) {
     return;
 }
 
-$sessions = aiad_get_live_sessions( -1 );
+$all_sessions = aiad_get_live_sessions( -1 );
+$sessions     = function_exists( 'aiad_filter_sessions_upcoming' )
+    ? aiad_filter_sessions_upcoming( $all_sessions )
+    : $all_sessions;
 if ( empty( $sessions ) ) {
     return;
 }
@@ -24,18 +26,6 @@ if ( empty( $sessions ) ) {
 $archive_url = get_post_type_archive_link( 'live_session' );
 if ( ! $archive_url ) {
     $archive_url = home_url( '/schedule/' );
-}
-
-// Pick a single event date — use the earliest session start date.
-$event_date_label = '';
-$first_start      = (string) get_post_meta( $sessions[0]->ID, '_session_start_time', true );
-if ( $first_start !== '' ) {
-    try {
-        $dt = new DateTime( $first_start, new DateTimeZone( 'Europe/London' ) );
-        $event_date_label = $dt->format( 'l j F Y' );
-    } catch ( \Exception $e ) {
-        $event_date_label = '';
-    }
 }
 
 $audience_data         = function_exists( 'aiad_get_schedule_audience_filter_data' )
@@ -59,25 +49,11 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
             <p class="section-desc">
                 <?php
                 esc_html_e(
-                    'AI Awareness Day continues year-round. Catch up on session recordings and explore CPD activities, events, and conferences across different age groups, themes, and topics.',
+                    'Upcoming live sessions, CPD activities, events, and conferences across different age groups, themes, and topics.',
                     'ai-awareness-day'
                 );
                 ?>
             </p>
-            <?php if ( $event_date_label ) : ?>
-                <p class="section-meta">
-                    <?php
-                    echo esc_html(
-                        sprintf(
-                            /* translators: 1: formatted event date, 2: total number of published live sessions. */
-                            __( 'From AI Awareness Day, %1$s · %2$d sessions to catch up on', 'ai-awareness-day' ),
-                            $event_date_label,
-                            count( $sessions )
-                        )
-                    );
-                    ?>
-                </p>
-            <?php endif; ?>
         </div>
 
         <ul class="aiad-schedule-cards fade-up" role="list">
@@ -85,7 +61,9 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
             foreach ( $spotlight_sessions as $s ) :
                 $start        = (string) get_post_meta( $s->ID, '_session_start_time', true );
                 $end          = (string) get_post_meta( $s->ID, '_session_end_time', true );
+                $date_label   = function_exists( 'aiad_format_session_date' ) ? aiad_format_session_date( $start ) : '';
                 $time_range   = aiad_format_session_time_range( $start, $end );
+                $is_past      = function_exists( 'aiad_session_is_past' ) && aiad_session_is_past( $s->ID );
                 $reg_url      = (string) get_post_meta( $s->ID, '_session_registration_url', true );
                 $partner_id   = (int) get_post_meta( $s->ID, '_session_partner_id', true );
                 $partner      = $partner_id ? get_post( $partner_id ) : null;
@@ -127,7 +105,12 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                         <img class="aiad-schedule-card__logo" src="<?php echo esc_url( $partner_logo ); ?>" alt="" loading="lazy" decoding="async" />
                     </div>
                 <?php endif; ?>
-                <p class="aiad-schedule-card__time"><?php echo esc_html( $time_range ); ?></p>
+                <?php if ( $date_label !== '' ) : ?>
+                    <p class="aiad-schedule-card__date"><?php echo esc_html( $date_label ); ?></p>
+                <?php endif; ?>
+                <?php if ( $time_range !== '' ) : ?>
+                    <p class="aiad-schedule-card__time"><?php echo esc_html( $time_range ); ?></p>
+                <?php endif; ?>
                 <h3 class="aiad-schedule-card__heading">
                     <a class="aiad-schedule-card__title" href="<?php echo esc_url( $permalink ); ?>">
                         <?php echo esc_html( $title ); ?>
@@ -142,15 +125,15 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                     <p class="aiad-schedule-card__org-name aiad-schedule-card__org-name--tbc"><?php esc_html_e( 'Organisation TBC', 'ai-awareness-day' ); ?></p>
                 <?php endif; ?>
                 <div class="aiad-schedule-card__actions">
-                    <?php if ( $reg_url !== '' ) : ?>
+                    <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $s->ID ) ) : ?>
                         <a class="aiad-schedule-card__join aiad-schedule-card__link--action"
                            href="<?php echo esc_url( $reg_url ); ?>"
                            data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
                            target="_blank" rel="noopener">
-                            <?php esc_html_e( 'Watch recording', 'ai-awareness-day' ); ?>
+                            <?php echo esc_html( aiad_session_cta_label( $s->ID ) ); ?>
                         </a>
                     <?php endif; ?>
-                    <?php if ( $ics_start !== '' ) : ?>
+                    <?php if ( $ics_start !== '' && ! $is_past ) : ?>
                         <button type="button" class="aiad-schedule-card__ics" aria-label="<?php echo esc_attr( $ics_aria ); ?>">
                             <span aria-hidden="true">📅</span>
                             <span class="aiad-schedule-card__ics-label"><?php esc_html_e( 'Add to calendar', 'ai-awareness-day' ); ?></span>

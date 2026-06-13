@@ -12,7 +12,6 @@
 	var domainKeys = Object.keys(domains);
 	var domainColors = cfg.domain_colors || {};
 	var domainRecs = cfg.domain_recommendations || {};
-	var roleMeta = cfg.role_meta || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
 
 	var state = {
@@ -363,21 +362,6 @@
 		} catch (e) { /* private browsing */ }
 	}
 
-	var ROLE_ICONS = {
-		teacher: '<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
-		student: '<path d="M12 14 4 9l8-5 8 5-8 5Z"/><path d="M12 14v6"/><path d="M8 11v4l4 2 4-2v-4"/>',
-		parent: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2"/><path d="M21 20c0-2-1.5-3.5-4-3.5"/>',
-		leader: '<path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M9 21v-6h6v6"/>',
-	};
-
-	function roleIconHtml(slug) {
-		var paths = ROLE_ICONS[slug];
-		if (!paths) return '';
-		return '<span class="airb__role-card-icon" aria-hidden="true">' +
-			'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
-			paths + '</svg></span>';
-	}
-
 	function questionsForRole(role) {
 		return (cfg.questions || []).filter(function (q) { return q.role === role; });
 	}
@@ -389,15 +373,11 @@
 		Object.keys(cfg.roles || {}).forEach(function (slug) {
 			var active = state.role === slug ? ' is-selected' : '';
 			var bench = benchmarks[slug] || {};
-			var meta = roleMeta[slug] || {};
 			var done = completions[slug];
-			var tint = meta.tint || 'var(--airb-ink-2)';
-			var accent = meta.accent || 'var(--airb-brand)';
-			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '" style="--role-tint:' + esc(tint) + ';--role-accent:' + esc(accent) + '">';
+			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '">';
 			if (done && typeof done.alignment === 'number') {
 				html += '<span class="airb__role-done">' + esc((i18n.roleDone || 'Done · {n}%').replace('{n}', String(done.alignment))) + '</span>';
 			}
-			html += roleIconHtml(slug);
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
 			if (bench.title) html += '<span class="airb__role-card-sub">' + esc(bench.title) + '</span>';
 			if (bench.measures && bench.measures.length) {

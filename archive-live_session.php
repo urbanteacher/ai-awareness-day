@@ -7,6 +7,9 @@
 get_header();
 
 $sessions = function_exists( 'aiad_get_live_sessions' ) ? aiad_get_live_sessions( -1 ) : array();
+if ( function_exists( 'aiad_filter_sessions_for_archive' ) ) {
+    $sessions = aiad_filter_sessions_for_archive( $sessions );
+}
 
 $event_date_label = '';
 if ( ! empty( $sessions ) ) {
@@ -75,7 +78,9 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                         <?php foreach ( $sessions as $s ) :
                             $start        = (string) get_post_meta( $s->ID, '_session_start_time', true );
                             $end          = (string) get_post_meta( $s->ID, '_session_end_time', true );
+                            $date_label   = function_exists( 'aiad_format_session_date' ) ? aiad_format_session_date( $start ) : '';
                             $time_range   = aiad_format_session_time_range( $start, $end );
+                            $is_past      = function_exists( 'aiad_session_is_past' ) && aiad_session_is_past( $s->ID );
                             $format       = (string) get_post_meta( $s->ID, '_session_format', true );
                             $reg_url      = (string) get_post_meta( $s->ID, '_session_registration_url', true );
                             $partner_id   = (int) get_post_meta( $s->ID, '_session_partner_id', true );
@@ -101,7 +106,14 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 data-ics-start="<?php echo esc_attr( $ics_start ); ?>"
                                 data-ics-end="<?php echo esc_attr( $ics_end ); ?>"
                                 data-ics-url="<?php echo esc_attr( $reg_url ); ?>">
-                                <td class="aiad-schedule-cell-time"><?php echo esc_html( $time_range ); ?></td>
+                                <td class="aiad-schedule-cell-time">
+                                    <?php if ( $date_label !== '' ) : ?>
+                                        <span class="aiad-schedule-cell-date"><?php echo esc_html( $date_label ); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ( $time_range !== '' ) : ?>
+                                        <span class="aiad-schedule-cell-time-range"><?php echo esc_html( $time_range ); ?></span>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <a href="<?php echo esc_url( $permalink ); ?>">
                                         <?php echo esc_html( $title ); ?>
@@ -123,14 +135,14 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 <td class="aiad-schedule-cell-format"><?php echo esc_html( $format ); ?></td>
                                 <td class="aiad-schedule-cell-actions">
                                     <div class="aiad-schedule-cell-actions__inner">
-                                        <?php if ( $reg_url ) : ?>
+                                        <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $s->ID ) ) : ?>
                                             <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener" data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>">
-                                                <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
+                                                <?php echo esc_html( aiad_session_cta_label( $s->ID ) ); ?>
                                             </a>
-                                        <?php else : ?>
+                                        <?php elseif ( ! $is_past && ! $reg_url ) : ?>
                                             <span class="aiad-schedule-table__cta aiad-schedule-table__cta--soon"><?php esc_html_e( 'Soon', 'ai-awareness-day' ); ?></span>
                                         <?php endif; ?>
-                                        <?php if ( $ics_start ) : ?>
+                                        <?php if ( $ics_start && ! $is_past ) : ?>
                                             <a class="aiad-schedule-table__ics"
                                                href="<?php echo esc_url( $ics_url ); ?>"
                                                aria-label="<?php echo esc_attr( sprintf( __( 'Add "%s" to calendar', 'ai-awareness-day' ), $title ) ); ?>">

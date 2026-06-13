@@ -51,6 +51,16 @@ class AIRB_Config {
 					$changed = true;
 				}
 			}
+
+			$stored_headline = (string) ( $config['positioning']['headline'] ?? '' );
+			$inaccurate_headlines = array(
+				"The UK's First DfE-Aligned AI Risk & Readiness Benchmark for Schools",
+				'The UK\'s First DfE-Aligned AI Risk & Readiness Benchmark for Schools',
+			);
+			if ( in_array( $stored_headline, $inaccurate_headlines, true ) ) {
+				$config['positioning']['headline'] = (string) ( $defaults['positioning']['headline'] ?? '' );
+				$changed                           = true;
+			}
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 4 ) {

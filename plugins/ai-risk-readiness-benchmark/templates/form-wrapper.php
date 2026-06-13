@@ -40,11 +40,21 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__body">
 
 	<div class="airb__intro airb__hero">
+		<?php if ( ! empty( $framework['product_name'] ) ) : ?>
+			<p class="airb__brand airb__brand--hero"><?php echo esc_html( (string) $framework['product_name'] ); ?></p>
+		<?php endif; ?>
+
+		<aside class="airb__hero-gauge" aria-label="<?php esc_attr_e( 'Signature metric preview', 'ai-risk-benchmark' ); ?>">
+			<div class="airb__hero-gauge-copy">
+				<p class="airb__hero-gauge-tag"><?php esc_html_e( 'Signature metric', 'ai-risk-benchmark' ); ?></p>
+				<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio™', 'ai-risk-benchmark' ); ?></h3>
+				<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
+				<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
+			</div>
+			<div class="airb__hero-gauge-dial" data-airb-demo-gauge="34"></div>
+		</aside>
+
 		<div class="airb__hero-copy">
-			<p class="airb__eyebrow"><?php esc_html_e( 'DfE-aligned · England · Free educational self-assessment', 'ai-risk-benchmark' ); ?></p>
-			<?php if ( ! empty( $framework['product_name'] ) ) : ?>
-				<p class="airb__brand airb__brand--hero"><?php echo esc_html( (string) $framework['product_name'] ); ?></p>
-			<?php endif; ?>
 			<?php if ( ! empty( $framework['subtitle'] ) ) : ?>
 				<p class="airb__framework-sub"><?php echo esc_html( (string) $framework['subtitle'] ); ?></p>
 			<?php endif; ?>
@@ -52,55 +62,34 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 			<?php if ( ! empty( $framework['statement'] ) ) : ?>
 				<p class="airb__lead airb__lead--framework"><?php echo esc_html( (string) $framework['statement'] ); ?></p>
 			<?php endif; ?>
-
-			<?php if ( ! empty( $config['disclaimer'] ) ) : ?>
-				<p class="airb__disclaimer"><?php echo esc_html( (string) $config['disclaimer'] ); ?></p>
-			<?php endif; ?>
 			<?php if ( ! empty( $positioning['tagline'] ) ) : ?>
 				<p class="airb__tagline"><?php echo esc_html( (string) $positioning['tagline'] ); ?></p>
 			<?php endif; ?>
 		</div>
-
-		<aside class="airb__hero-gauge" aria-label="<?php esc_attr_e( 'Signature metric preview', 'ai-risk-benchmark' ); ?>">
-			<p class="airb__hero-gauge-tag"><?php esc_html_e( 'Signature metric', 'ai-risk-benchmark' ); ?></p>
-			<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio™', 'ai-risk-benchmark' ); ?></h3>
-			<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
-			<div class="airb__hero-gauge-dial" data-airb-demo-gauge="34"></div>
-			<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
-		</aside>
 	</div>
 
 	<section class="airb__deck" id="airb-deck" data-deck aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'How it works', 'ai-risk-benchmark' ); ?>" tabindex="0">
 		<div class="airb__deck-head">
 			<h3 class="airb__section-kicker"><?php esc_html_e( 'How it works', 'ai-risk-benchmark' ); ?></h3>
-			<p class="airb__muted"><?php esc_html_e( 'A quick tour — swipe or use the arrows.', 'ai-risk-benchmark' ); ?></p>
 		</div>
 
 		<div class="airb__deck-viewport">
 			<div class="airb__deck-track" data-deck-track>
 
-				<?php if ( ! empty( $positioning['problem'] ) || ! empty( $positioning['solution'] ) ) : ?>
+				<?php if ( ! empty( $positioning['problem'] ) ) : ?>
 				<article class="airb__slide" role="group" aria-roledescription="slide" aria-label="<?php esc_attr_e( 'The challenge', 'ai-risk-benchmark' ); ?>">
 					<div class="airb__slide-inner">
-						<?php if ( ! empty( $positioning['problem'] ) ) : ?>
-							<h4 class="airb__slide-title"><?php esc_html_e( 'The problem', 'ai-risk-benchmark' ); ?></h4>
-							<p class="airb__lead"><?php echo esc_html( (string) $positioning['problem'] ); ?></p>
-							<?php if ( $problem_questions ) : ?>
-								<ul class="airb__problem-list">
-									<?php foreach ( $problem_questions as $question ) : ?>
-										<li><?php echo esc_html( (string) $question ); ?></li>
-									<?php endforeach; ?>
-								</ul>
-							<?php endif; ?>
-							<?php if ( ! empty( $positioning['problem_closing'] ) ) : ?>
-								<p class="airb__lead"><?php echo esc_html( (string) $positioning['problem_closing'] ); ?></p>
-							<?php endif; ?>
+						<h4 class="airb__slide-title"><?php esc_html_e( 'The problem', 'ai-risk-benchmark' ); ?></h4>
+						<p class="airb__lead"><?php echo esc_html( (string) $positioning['problem'] ); ?></p>
+						<?php if ( $problem_questions ) : ?>
+							<ul class="airb__problem-list">
+								<?php foreach ( $problem_questions as $question ) : ?>
+									<li><?php echo esc_html( (string) $question ); ?></li>
+								<?php endforeach; ?>
+							</ul>
 						<?php endif; ?>
-						<?php if ( ! empty( $positioning['solution'] ) ) : ?>
-							<p class="airb__brand airb__slide-solution"><?php echo esc_html( (string) $positioning['solution'] ); ?></p>
-							<?php if ( ! empty( $positioning['solution_detail'] ) ) : ?>
-								<p class="airb__lead airb__lead--solution"><?php echo esc_html( (string) $positioning['solution_detail'] ); ?></p>
-							<?php endif; ?>
+						<?php if ( ! empty( $positioning['problem_closing'] ) ) : ?>
+							<p class="airb__lead"><?php echo esc_html( (string) $positioning['problem_closing'] ); ?></p>
 						<?php endif; ?>
 					</div>
 				</article>
@@ -297,12 +286,9 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__print-host" id="airb-print-host" hidden aria-hidden="true"></div>
 
 	<footer class="airb__footer">
-		<div class="airb__footer-main">
-			<p class="airb__footer-brand"><?php echo esc_html( (string) ( $framework['product_name'] ?? __( 'AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' ) ) ); ?></p>
-			<?php if ( ! empty( $config['disclaimer'] ) ) : ?>
-				<p class="airb__footer-disclaimer"><?php echo esc_html( (string) $config['disclaimer'] ); ?></p>
-			<?php endif; ?>
-		</div>
+		<?php if ( ! empty( $config['disclaimer'] ) ) : ?>
+			<p class="airb__footer-disclaimer"><?php echo esc_html( (string) $config['disclaimer'] ); ?></p>
+		<?php endif; ?>
 		<p class="airb__credit">
 			<?php esc_html_e( 'Produced by', 'ai-risk-benchmark' ); ?>
 			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-risk-benchmark' ); ?></strong>
