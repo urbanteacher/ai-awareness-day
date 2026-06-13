@@ -20,6 +20,7 @@ class AIRB_Activator {
 	public static function activate(): void {
 		AIRB_Database::create_table();
 		AIRB_Config::maybe_seed_defaults();
+		AIRB_Hub_Pages::maybe_seed();
 		flush_rewrite_rules();
 	}
 

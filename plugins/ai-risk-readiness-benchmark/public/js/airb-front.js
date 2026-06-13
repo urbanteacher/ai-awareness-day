@@ -12,6 +12,11 @@
 	var domainKeys = Object.keys(domains);
 	var domainColors = cfg.domain_colors || {};
 	var domainRecs = cfg.domain_recommendations || {};
+	var parentResult = cfg.parent_result || {};
+	var teacherResult = cfg.teacher_result || {};
+	var studentResult = cfg.student_result || {};
+	var leaderResult = cfg.leader_result || {};
+	var improvementHub = cfg.improvement_hub || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
 
 	var state = {
@@ -45,9 +50,16 @@
 		printHost: document.getElementById('airb-print-host'),
 		hero: document.querySelector('.airb__hero'),
 		deck: document.getElementById('airb-deck'),
+		root: document.getElementById('airb-benchmark'),
 	};
 
-	var introCollapsed = false;
+	function updateFlowChrome() {
+		if (!el.root) return;
+		var inFlow = !!(el.nav && !el.nav.hidden);
+		el.root.classList.toggle('airb--nav-dock', inFlow);
+		el.root.classList.toggle('airb--phase-audit', state.phase === 'audit');
+		el.root.classList.toggle('airb--intro-collapsed', introCollapsed);
+	}
 
 	function collapseIntro() {
 		if (introCollapsed) {
@@ -120,6 +132,96 @@
 
 	function roleShowsDependency(role) {
 		return role === 'teacher' || role === 'student';
+	}
+
+	function isParentRole() {
+		return state.role === 'parent';
+	}
+
+	function isTeacherRole() {
+		return state.role === 'teacher';
+	}
+
+	function isStudentRole() {
+		return state.role === 'student';
+	}
+
+	function isLeaderRole() {
+		return state.role === 'leader';
+	}
+
+	function parentDisplayDomainScores(role, answers) {
+		var defs = parentResult.display_domains || {};
+		var questionsById = {};
+		(cfg.questions || []).forEach(function (q) {
+			if (q.id) questionsById[q.id] = q;
+		});
+		var out = {};
+		Object.keys(defs).forEach(function (slug) {
+			var def = defs[slug];
+			var scores = [];
+			(def.questions || []).forEach(function (qid) {
+				if (!answers[qid] || !questionsById[qid]) return;
+				scores.push(scoreAnswer(questionsById[qid], answers[qid]));
+			});
+			if (!scores.length) return;
+			var avgRisk = (scores.reduce(function (a, b) { return a + b; }, 0) / scores.length) / 3 * 100;
+			var readiness = Math.round(100 - avgRisk);
+			out[slug] = {
+				label: def.label || slug,
+				metric_type: def.metric_type || 'score',
+				color: def.color || '#475569',
+				risk_percentage: Math.round(avgRisk * 10) / 10,
+				readiness_percentage: Math.round((100 - avgRisk) * 10) / 10,
+				band: riskBand(avgRisk),
+				readiness_band: readinessBand(readiness),
+				questions_answered: scores.length,
+			};
+		});
+		return out;
+	}
+
+	function parentOverallFromDisplay(parentDisplay) {
+		var riskValues = [];
+		Object.keys(parentDisplay || {}).forEach(function (slug) {
+			var dom = parentDisplay[slug];
+			if (!dom || !dom.questions_answered) return;
+			riskValues.push(dom.risk_percentage);
+		});
+		if (!riskValues.length) {
+			return { overall_risk: 0, alignment_score: 0, risk_level: 'low' };
+		}
+		var overall = riskValues.reduce(function (a, b) { return a + b; }, 0) / riskValues.length;
+		return {
+			overall_risk: Math.round(overall * 10) / 10,
+			alignment_score: Math.round(100 - overall),
+			risk_level: riskBand(overall),
+		};
+	}
+
+	function studentOverallFromDomains(domainScores) {
+		var slugs = ['ai_dependency', 'assessment_integrity', 'human_oversight', 'ai_literacy', 'privacy'];
+		var riskValues = [];
+		slugs.forEach(function (slug) {
+			var dom = domainScores[slug];
+			if (!dom || !dom.questions_answered) return;
+			riskValues.push(dom.risk_percentage);
+		});
+		if (!riskValues.length) {
+			return { overall_risk: 0, alignment_score: 0, risk_level: 'low' };
+		}
+		var overall = riskValues.reduce(function (a, b) { return a + b; }, 0) / riskValues.length;
+		return {
+			overall_risk: Math.round(overall * 10) / 10,
+			alignment_score: Math.round(100 - overall),
+			risk_level: riskBand(overall),
+		};
+	}
+
+	function parentBandSummary(readiness) {
+		var summaries = parentResult.band_summaries || {};
+		var slug = readinessBand(readiness);
+		return summaries[slug] || '';
 	}
 
 	function oversightGaugeValue(r) {
@@ -226,14 +328,20 @@
 				{ label: 'Student AI Literacy Score', value: lit + '%', band: readinessBand(lit), tone: 'readiness', band_label: readinessBandLabel(lit) },
 			];
 		} else if (role === 'parent') {
-			var aware = Math.round(dom.ai_literacy ? dom.ai_literacy.readiness_percentage : results.alignment_score);
-			var safe = Math.round(dom.safeguarding ? dom.safeguarding.readiness_percentage : results.safeguarding_readiness);
-			var pAlign = results.alignment_score;
-			cards = [
-				{ label: 'Parent AI Awareness Score', value: aware + '%', band: readinessBand(aware), tone: 'readiness', band_label: readinessBandLabel(aware) },
-				{ label: 'Parent Digital Safety Score', value: safe + '%', band: readinessBand(safe), tone: 'readiness', band_label: readinessBandLabel(safe) },
-				{ label: 'Parent Readiness Score', value: pAlign + '/100', band: readinessBand(pAlign), tone: 'readiness', band_label: readinessBandLabel(pAlign) },
-			];
+			var parentDisplay = results.parent_display_domains || {};
+			Object.keys(parentDisplay).forEach(function (slug) {
+				var dom = parentDisplay[slug];
+				if (!dom || !dom.questions_answered) return;
+				var isRisk = dom.metric_type === 'risk';
+				var value = Math.round(isRisk ? dom.risk_percentage : dom.readiness_percentage);
+				cards.push({
+					label: dom.label,
+					value: value + '%',
+					band: isRisk ? dom.band : readinessBand(value),
+					tone: isRisk ? 'risk' : 'readiness',
+					band_label: isRisk ? bandLabel(dom.band) : readinessBandLabel(value),
+				});
+			});
 		} else if (role === 'leader') {
 			var gov = results.governance_maturity;
 			var lSafe = results.safeguarding_readiness;
@@ -333,6 +441,28 @@
 			recommendations: recs,
 			key_exposure_areas: keyExposureAreas(domainScores),
 		};
+		if (role === 'parent') {
+			results.parent_display_domains = parentDisplayDomainScores(role, answers);
+			var parentOverall = parentOverallFromDisplay(results.parent_display_domains);
+			results.alignment_score = parentOverall.alignment_score;
+			results.overall_risk_percentage = parentOverall.overall_risk;
+			results.risk_level = parentOverall.risk_level;
+			results.risk_level_label = displayRiskLabel(parentOverall.risk_level, parentOverall.overall_risk);
+			results.readiness_level = readinessBand(parentOverall.alignment_score);
+			results.readiness_level_label = readinessBandLabel(parentOverall.alignment_score);
+			results.key_exposure_areas = [];
+		}
+		if (role === 'student') {
+			var studentOverall = studentOverallFromDomains(domainScores);
+			results.alignment_score = studentOverall.alignment_score;
+			results.overall_risk_percentage = studentOverall.overall_risk;
+			results.risk_level = studentOverall.risk_level;
+			results.risk_level_label = displayRiskLabel(studentOverall.risk_level, studentOverall.overall_risk);
+			results.readiness_level = readinessBand(studentOverall.alignment_score);
+			results.readiness_level_label = readinessBandLabel(studentOverall.alignment_score);
+			results.key_exposure_areas = [];
+			results.recommendations = [];
+		}
 		results.role_result_cards = roleResultCards(role, results);
 		return results;
 	}
@@ -446,6 +576,7 @@
 				renderRole();
 			});
 		});
+		updateFlowChrome();
 	}
 
 	function questionInputHtml(q) {
@@ -490,26 +621,44 @@
 						band.textContent = oversightLabel(n);
 						band.style.color = oversightZoneColor(n);
 					}
+					highlightNextButton();
 				});
 			}
 		});
+		el.audit.querySelectorAll('[data-airb-q]').forEach(function (input) {
+			input.addEventListener('change', highlightNextButton);
+		});
+	}
+
+	function highlightNextButton() {
+		if (!el.next || el.nav.hidden) return;
+		el.next.classList.add('airb__btn--ready');
+		window.setTimeout(function () {
+			el.next.classList.remove('airb__btn--ready');
+		}, 700);
 	}
 
 	function renderAuditSection() {
 		var section = state.sections[state.step];
 		if (!section) return;
 
-		var html = '<div class="airb__panel">';
+		var domainLabel = domains[section.domain] || section.domain;
+		var html = '<div class="airb__panel airb__panel--audit">';
+		html += '<header class="airb__audit-head">';
 		html += '<div class="airb__domtag"><span class="airb__domtag-sq" style="background:' + esc(domainColor(section.domain)) + '"></span>';
-		html += esc(section.name) + ' · ' + esc(domains[section.domain] || section.domain) + '</div>';
+		html += '<span class="airb__domtag-text">';
+		html += '<span class="airb__domtag-section">' + esc(section.name) + '</span>';
+		html += '<span class="airb__domtag-domain">' + esc(domainLabel) + '</span>';
+		html += '</span></div></header>';
 
+		html += '<div class="airb__audit-questions">';
 		section.questions.forEach(function (q) {
 			html += '<div class="airb__q-block">';
 			html += '<p class="airb__q-title">' + esc(q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
 		});
-		html += '</div>';
+		html += '</div></div>';
 
 		el.audit.innerHTML = html;
 		el.audit.hidden = false;
@@ -525,6 +674,10 @@
 			el.progressLbl.textContent = (i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length;
 		}
 		bindSectionInputs(section);
+		updateFlowChrome();
+		if (window.matchMedia('(max-width: 768px)').matches && el.progress) {
+			el.progress.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
 	}
 
 	function isYoungRole() {
@@ -586,7 +739,7 @@
 				html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
 			}
 
-			if (state.role === 'leader') {
+			if (state.role === 'leader' || state.role === 'teacher') {
 				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
 					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
 			}
@@ -611,6 +764,7 @@
 		el.nav.hidden = false;
 		el.next.textContent = i18n.submit;
 		el.progress.hidden = true;
+		updateFlowChrome();
 	}
 
 	function barHtml(slug, label, pct, band, invert) {
@@ -624,6 +778,21 @@
 	}
 
 	function focusDomainsHtml(r) {
+		if (isParentRole() || (isTeacherRole() && r.teacher_results) || (isStudentRole() && r.student_results) || (isLeaderRole() && r.leader_results)) {
+			if (isParentRole()) {
+			var topics = parentResult.focus_topics || [];
+			if (!topics.length) return '';
+			var html = '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--parent-focus"><h3>' + esc(i18n.domainFocus || 'What to focus on') + '</h3>';
+			topics.forEach(function (topic) {
+				html += '<div class="airb__res-rec airb__res-rec--parent">';
+				html += '<h4 class="airb__res-rec-title">' + esc(topic.label) + '</h4>';
+				html += '<p class="airb__res-rec-body">' + esc(topic.body) + '</p></div>';
+			});
+			return html + '</div>';
+			}
+			return '';
+		}
+
 		var scored = [];
 		domainKeys.forEach(function (slug) {
 			var d = r.domain_scores[slug];
@@ -648,6 +817,25 @@
 	}
 
 	function domainReadinessRowsHtml(r) {
+		if (isParentRole() && r.parent_display_domains) {
+			var rows = '';
+			var heading = parentResult.scores_heading || i18n.parentScores || i18n.domainBreakdown || 'Your scores';
+			Object.keys(r.parent_display_domains).forEach(function (slug) {
+				var d = r.parent_display_domains[slug];
+				if (!d || !d.questions_answered) return;
+				var isRisk = d.metric_type === 'risk';
+				var pct = Math.round(isRisk ? d.risk_percentage : d.readiness_percentage);
+				var color = isRisk ? riskScoreColor(pct) : (d.color || readinessBandColor(pct));
+				var barWidth = isRisk ? pct : pct;
+				rows += '<div class="airb__res-row' + (isRisk ? ' airb__res-row--risk' : '') + '">';
+				rows += '<span class="airb__res-row-nm">' + esc(d.label) + '</span>';
+				rows += '<span class="airb__res-track"><i style="width:' + barWidth + '%;background:' + esc(color) + '"></i></span>';
+				rows += '<span class="airb__res-row-pc" style="color:' + esc(color) + '">' + pct + '%</span></div>';
+			});
+			if (!rows) return '';
+			return '<div class="airb__res-panel airb__res-panel--domains"><h3>' + esc(heading) + '</h3>' + rows + '</div>';
+		}
+
 		var rows = '';
 		domainKeys.forEach(function (slug) {
 			var d = r.domain_scores[slug];
@@ -663,17 +851,441 @@
 
 	function oversightPanelHtml(r) {
 		var val = oversightGaugeValue(r);
+		var studentMode = isStudentRole() && !!r.student_results;
 		var html = '<div class="airb__res-panel airb__res-panel--gauge"><h3>' + esc(i18n.oversight) + '<span class="airb__tm">™</span></h3>';
 		if (val === null) {
 			html += '<p class="airb__res-na">' + esc(i18n.oversightNa || 'Not measured for this audience.') + '</p>';
 		} else {
 			var label = r.human_oversight_label || '';
-			var help = 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
+			var help = studentMode
+				? 'How often you check, edit or question AI answers before relying on them.'
+				: 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
 			html += '<div class="airb__res-gauge-wrap">' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%') + '</div>';
 			if (label) html += '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>';
 			html += '<p class="airb__gauge-help">' + esc(help) + '</p>';
 		}
 		return html + '</div>';
+	}
+
+	function parentPriorityFocusHtml() {
+		var focus = parentResult.priority_focus || {};
+		if (!focus.intro && !focus.title) return '';
+		var html = '<aside class="airb__insight airb__insight--parent">';
+		html += '<span class="airb__insight-label">' + esc(i18n.insightLabel || 'Your priority focus') + '</span>';
+		if (focus.intro && focus.title) {
+			html += '<p>' + esc(focus.intro) + ' ' + esc(focus.title) + '</p>';
+		} else if (focus.title) {
+			html += '<p>' + esc(focus.title) + '</p>';
+		} else if (focus.intro) {
+			html += '<p>' + esc(focus.intro) + '</p>';
+		}
+		if (focus.body) html += '<p>' + esc(focus.body) + '</p>';
+		return html + '</aside>';
+	}
+
+	function parentExposureListHtml() {
+		var areas = parentResult.exposure_areas || [];
+		if (!areas.length) return '';
+		var html = '<div class="airb__res-panel airb__res-panel--exposure"><h3>' + esc(i18n.exposure || 'Key exposure areas') + '</h3><ol class="airb__exposure-list">';
+		areas.forEach(function (item) {
+			html += '<li>' + esc(item) + '</li>';
+		});
+		return html + '</ol></div>';
+	}
+
+	function teacherResultsHtml(r) {
+		var tr = r.teacher_results;
+		if (!tr) return '';
+
+		var html = '';
+
+		if (tr.performance_headline) {
+			html += '<p class="airb__res-headline">' + esc(tr.performance_headline) + '</p>';
+		}
+
+		if (tr.strengths && tr.strengths.length) {
+			html += '<div class="airb__res-panel airb__res-panel--strengths">';
+			html += '<h3>' + esc(teacherResult.strengths_heading || 'What you\'re doing well') + '</h3>';
+			html += '<ul class="airb__strength-list">';
+			tr.strengths.forEach(function (item) {
+				html += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
+			});
+			html += '</ul></div>';
+		}
+
+		if (tr.opportunities && tr.opportunities.length) {
+			html += '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--teacher-opps">';
+			html += '<h3>' + esc(teacherResult.opportunities_heading || 'Opportunities to strengthen further') + '</h3>';
+			tr.opportunities.forEach(function (opp) {
+				html += '<div class="airb__res-rec airb__res-rec--teacher">';
+				html += '<h4 class="airb__res-rec-title">' + esc(opp.label) + ' (' + opp.pct + '%)</h4>';
+				if (opp.summary) html += '<p class="airb__res-rec-body">' + esc(opp.summary) + '</p>';
+				if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
+				html += '</div>';
+			});
+			html += '</div>';
+		}
+
+		if (tr.champion_pathway) {
+			var cp = tr.champion_pathway;
+			html += '<aside class="airb__insight airb__insight--teacher">';
+			html += '<span class="airb__insight-label">' + esc(cp.next_step_label || teacherResult.champion_pathway && teacherResult.champion_pathway.next_step_label || 'Recommended next step') + '</span>';
+			html += '<h4 class="airb__pathway-title">' + esc(cp.title) + '</h4>';
+			if (cp.intro) html += '<p>' + esc(cp.intro) + '</p>';
+			if (cp.roles && cp.roles.length) {
+				html += '<ul class="airb__pathway-list">';
+				cp.roles.forEach(function (role) {
+					html += '<li>' + esc(role) + '</li>';
+				});
+				html += '</ul>';
+			}
+			html += '</aside>';
+		} else if (tr.gap_pathway && tr.gap_pathway.items && tr.gap_pathway.items.length) {
+			html += '<aside class="airb__insight airb__insight--teacher airb__insight--gap">';
+			html += '<span class="airb__insight-label">' + esc(tr.gap_pathway.label || 'Recommended next step') + '</span>';
+			if (tr.gap_pathway.intro) html += '<p>' + esc(tr.gap_pathway.intro) + '</p>';
+			html += '<ul class="airb__pathway-list">';
+			tr.gap_pathway.items.forEach(function (item) {
+				html += '<li><strong>' + esc(item) + '</strong></li>';
+			});
+			html += '</ul></aside>';
+		}
+
+		var resources = tr.suggested_resources || [];
+		if (resources.length && tr.champion_pathway) {
+			html += '<div class="airb__res-panel airb__res-panel--resources">';
+			html += '<h3>' + esc(tr.champion_pathway.resources_heading || 'Suggested resources') + '</h3>';
+			html += '<ul class="airb__resource-list">';
+			resources.forEach(function (res) {
+				if (res.url) {
+					html += '<li><a href="' + esc(res.url) + '" target="_blank" rel="noopener">' + esc(res.label) + '</a></li>';
+				} else {
+					html += '<li>' + esc(res.label) + '</li>';
+				}
+			});
+			html += '</ul></div>';
+		}
+
+		if (tr.benchmark_summary) {
+			var bs = tr.benchmark_summary;
+			html += '<section class="airb__teacher-summary">';
+			html += '<h4>' + esc(bs.title || 'Teacher Benchmark Summary') + '</h4>';
+			if (bs.metrics && bs.metrics.length) {
+				html += '<table class="airb__summary-table"><tbody>';
+				bs.metrics.forEach(function (row) {
+					html += '<tr><th scope="row">' + esc(row.label) + '</th><td>' + esc(row.value) + '</td></tr>';
+				});
+				html += '</tbody></table>';
+			}
+			html += '</section>';
+		}
+
+		if (tr.school_impact) {
+			var si = tr.school_impact;
+			html += '<div class="airb__res-panel airb__res-panel--impact">';
+			html += '<h3>' + esc(si.heading || 'School impact') + '</h3>';
+			if (si.intro) html += '<p>' + esc(si.intro) + '</p>';
+			if (si.items && si.items.length) {
+				html += '<ul class="airb__impact-list">';
+				si.items.forEach(function (item) {
+					html += '<li>' + esc(item) + '</li>';
+				});
+				html += '</ul>';
+			}
+			if (si.closing) html += '<p class="airb__muted">' + esc(si.closing) + '</p>';
+			html += '</div>';
+		}
+
+		if (tr.school_contribution) {
+			var sc = tr.school_contribution;
+			html += '<div class="airb__res-panel airb__res-panel--contribution">';
+			html += '<h3>' + esc(sc.heading || 'School contribution') + '</h3>';
+			if (sc.intro) html += '<p>' + esc(sc.intro) + '</p>';
+			if (sc.items && sc.items.length) {
+				html += '<ul class="airb__impact-list">';
+				sc.items.forEach(function (item) {
+					html += '<li>' + esc(item) + '</li>';
+				});
+				html += '</ul>';
+			}
+			if (sc.closing) html += '<p class="airb__muted">' + esc(sc.closing) + '</p>';
+			html += '</div>';
+		}
+
+		if (tr.school_progress) {
+			var sp = tr.school_progress;
+			var progressCopy = teacherResult.school_progress || {};
+			html += '<div class="airb__res-panel airb__res-panel--progress">';
+			if (sp.whole_school_available && progressCopy.unlocked) {
+				html += '<p>' + esc(progressCopy.unlocked) + '</p>';
+			} else if (sp.has_school && progressCopy.with_count) {
+				html += '<p>' + esc(progressCopy.with_count
+					.replace('{n}', String(sp.teacher_responses))
+					.replace('{threshold}', String(sp.threshold))) + '</p>';
+			} else if (progressCopy.without_school) {
+				html += '<p class="airb__muted">' + esc(progressCopy.without_school) + '</p>';
+			}
+			html += '</div>';
+		}
+
+		if (tr.future_offer && tr.future_offer.body) {
+			html += '<aside class="airb__insight airb__insight--future">';
+			if (tr.future_offer.heading) {
+				html += '<span class="airb__insight-label">' + esc(tr.future_offer.heading) + '</span>';
+			}
+			html += '<p>' + esc(tr.future_offer.body) + '</p>';
+			html += '</aside>';
+		}
+
+		return html;
+	}
+
+	function studentResultsHtml(r) {
+		var sr = r.student_results;
+		if (!sr) return '';
+
+		var html = '';
+
+		if (sr.performance_headline) {
+			html += '<p class="airb__res-headline">' + esc(sr.performance_headline) + '</p>';
+		}
+
+		if (sr.learning_metrics && sr.learning_metrics.length) {
+			html += '<section class="airb__student-profile">';
+			html += '<h4>' + esc(sr.profile_title || studentResult.profile_title || 'Your AI Learning Profile') + '</h4>';
+			html += '<table class="airb__summary-table"><tbody>';
+			sr.learning_metrics.forEach(function (row) {
+				var val = row.value;
+				var color = row.type === 'risk' ? riskScoreColor(val) : readinessBandColor(val);
+				html += '<tr><th scope="row">' + esc(row.label) + '</th><td style="color:' + esc(color) + '">' + val + '%</td></tr>';
+			});
+			html += '</tbody></table></section>';
+		}
+
+		if (sr.strengths && sr.strengths.length) {
+			html += '<div class="airb__res-panel airb__res-panel--strengths">';
+			html += '<h3>' + esc(studentResult.strengths_heading || 'What you\'re doing well') + '</h3>';
+			html += '<ul class="airb__strength-list">';
+			sr.strengths.forEach(function (item) {
+				html += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
+			});
+			html += '</ul></div>';
+		}
+
+		if (sr.opportunities && sr.opportunities.length) {
+			html += '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--student-opps">';
+			html += '<h3>' + esc(studentResult.opportunities_heading || 'Opportunities to improve') + '</h3>';
+			sr.opportunities.forEach(function (opp) {
+				html += '<div class="airb__res-rec airb__res-rec--student">';
+				var title = opp.label;
+				if (typeof opp.pct === 'number') title += ' (' + opp.pct + '%)';
+				html += '<h4 class="airb__res-rec-title">' + esc(title) + '</h4>';
+				if (opp.summary) html += '<p class="airb__res-rec-body">' + esc(opp.summary) + '</p>';
+				if (opp.slug === 'privacy') {
+					if (opp.tips && opp.tips.length) {
+						html += '<ul class="airb__student-tips">';
+						opp.tips.forEach(function (tip) {
+							html += '<li>' + esc(tip) + '</li>';
+						});
+						html += '</ul>';
+					}
+					if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
+				} else {
+					if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
+					if (opp.tips && opp.tips.length) {
+						html += '<ul class="airb__student-tips">';
+						opp.tips.forEach(function (tip) {
+							html += '<li>' + esc(tip) + '</li>';
+						});
+						html += '</ul>';
+					}
+				}
+				html += '</div>';
+			});
+			html += '</div>';
+		}
+
+		if (sr.learning_challenge) {
+			var lc = sr.learning_challenge;
+			html += '<aside class="airb__insight airb__insight--student">';
+			html += '<span class="airb__insight-label">' + esc(lc.label || studentResult.learning_challenge && studentResult.learning_challenge.label || 'Recommended next step') + '</span>';
+			html += '<h4 class="airb__pathway-title">' + esc(lc.title || '') + '</h4>';
+			if (lc.intro) html += '<p>' + esc(lc.intro) + '</p>';
+			if (lc.steps && lc.steps.length) {
+				html += '<ul class="airb__pathway-list">';
+				lc.steps.forEach(function (step) {
+					html += '<li>' + esc(step) + '</li>';
+				});
+				html += '</ul>';
+			}
+			if (lc.closing) html += '<p class="airb__muted">' + esc(lc.closing) + '</p>';
+			html += '</aside>';
+		}
+
+		var resources = sr.student_resources || [];
+		if (resources.length) {
+			html += '<div class="airb__res-panel airb__res-panel--resources">';
+			html += '<h3>' + esc(studentResult.resources_heading || 'Free student resources') + '</h3>';
+			html += '<ul class="airb__resource-list">';
+			resources.forEach(function (res) {
+				if (res.url) {
+					html += '<li><a href="' + esc(res.url) + '" target="_blank" rel="noopener">' + esc(res.label) + '</a></li>';
+				} else {
+					html += '<li>' + esc(res.label) + '</li>';
+				}
+			});
+			html += '</ul></div>';
+		}
+
+		if (sr.school_contribution) {
+			var sc = sr.school_contribution;
+			html += '<div class="airb__res-panel airb__res-panel--contribution">';
+			html += '<h3>' + esc(sc.heading || 'School contribution') + '</h3>';
+			if (sc.body) html += '<p>' + esc(sc.body) + '</p>';
+			html += '</div>';
+		}
+
+		return html;
+	}
+
+	function leaderResultsHtml(r) {
+		var lr = r.leader_results;
+		if (!lr) return '';
+
+		var html = '';
+		var es = lr.executive_summary;
+
+		if (es) {
+			html += '<section class="airb__exec-summary">';
+			html += '<h3>' + esc(es.title || leaderResult.executive_title || 'Executive Summary') + '</h3>';
+			if (es.intro) html += '<p class="airb__exec-intro">' + esc(es.intro) + '</p>';
+
+			if (es.strengths && es.strengths.length) {
+				html += '<h4 class="airb__exec-sub">' + esc(es.strengths_heading || leaderResult.strengths_heading || 'Strengths include') + '</h4>';
+				html += '<ul class="airb__strength-list airb__strength-list--exec">';
+				es.strengths.forEach(function (item) {
+					html += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
+				});
+				html += '</ul>';
+			}
+
+			if (es.attention_areas && es.attention_areas.length) {
+				html += '<h4 class="airb__exec-sub">' + esc(es.attention_heading || leaderResult.attention_heading || 'Areas requiring attention') + '</h4>';
+				html += '<ul class="airb__attention-list">';
+				es.attention_areas.forEach(function (item) {
+					html += '<li><span class="airb__attention-mark" aria-hidden="true">⚠</span> ' + esc(item) + '</li>';
+				});
+				html += '</ul>';
+			}
+
+			html += '<div class="airb__exec-scores">';
+			html += '<p><strong>' + esc(i18n.dfeAlignment || 'Overall DfE Alignment Score') + ':</strong> ' + (es.alignment_score || r.alignment_score) + '%</p>';
+			if (es.risk_level_label) {
+				html += '<p><strong>' + esc(i18n.statRisk || 'Risk Level') + ':</strong> ' + esc(es.risk_level_label) + '</p>';
+			}
+			if (es.priority_action) {
+				html += '<p class="airb__exec-priority"><strong>' + esc(i18n.priorityAction || 'Priority Action') + ':</strong> ' + esc(es.priority_action) + '</p>';
+			}
+			html += '</div></section>';
+		}
+
+		if (lr.maturity) {
+			var mat = lr.maturity;
+			html += '<div class="airb__res-panel airb__res-panel--maturity">';
+			html += '<h3>' + esc(leaderResult.maturity_heading || 'Governance maturity') + '</h3>';
+			html += '<p class="airb__maturity-badge">' + esc(mat.label) + '</p>';
+			if (mat.description) html += '<p class="airb__muted">' + esc(mat.description) + '</p>';
+			html += '</div>';
+		}
+
+		if (lr.peer_benchmark) {
+			var pb = lr.peer_benchmark;
+			html += '<section class="airb__peer-benchmark">';
+			html += '<h4>' + esc(leaderResult.peer_benchmark_title || 'Benchmark against similar schools') + '</h4>';
+			html += '<table class="airb__summary-table airb__summary-table--peer"><tbody>';
+			html += '<tr><th scope="row">' + esc(i18n.yourScore || 'Your score') + '</th><td style="color:' + esc(readinessBandColor(pb.your_score)) + '">' + pb.your_score + '%</td></tr>';
+			html += '<tr><th scope="row">' + esc(pb.phase_label || 'Average school') + '</th><td>' + pb.average_score + '%</td></tr>';
+			html += '<tr><th scope="row">' + esc(i18n.topQuartile || 'Top Quartile Schools') + '</th><td>' + pb.top_quartile + '%</td></tr>';
+			html += '</tbody></table>';
+			if (pb.is_estimated) {
+				html += '<p class="airb__muted airb__peer-note">' + esc(i18n.peerEstimated || 'Comparison uses reference benchmarks until enough similar schools have completed the audit.') + '</p>';
+			} else if (typeof pb.percentile === 'number') {
+				html += '<p class="airb__muted airb__peer-note">' + esc((i18n.peerPercentile || 'Your score is ahead of {n}% of similar schools.').replace('{n}', String(pb.percentile))) + '</p>';
+			}
+			html += '</section>';
+		}
+
+		if (lr.focus_areas && lr.focus_areas.length) {
+			html += '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--leader-focus">';
+			html += '<h3>' + esc(leaderResult.focus_heading || 'Priority focus areas') + '</h3>';
+			lr.focus_areas.forEach(function (area) {
+				html += '<div class="airb__res-rec airb__res-rec--leader">';
+				html += '<h4 class="airb__res-rec-title">' + esc(area.label) + ' — ' + area.pct + '%</h4>';
+				if (area.summary) html += '<p class="airb__res-rec-body">' + esc(area.summary) + '</p>';
+				if (area.actions && area.actions.length) {
+					html += '<p class="airb__actions-label">' + esc(leaderResult.focus_actions_label || 'Recommended actions') + ':</p>';
+					html += '<ul class="airb__leader-actions">';
+					area.actions.forEach(function (act) {
+						html += '<li>' + esc(act) + '</li>';
+					});
+					html += '</ul>';
+				}
+				html += '</div>';
+			});
+			html += '</div>';
+		}
+
+		if (lr.risk_heatmap && lr.risk_heatmap.length) {
+			html += '<h4>' + esc(leaderResult.heatmap_heading || i18n.heatMap || 'Risk heat map') + '</h4>' + heatmapHtml(lr.risk_heatmap);
+		}
+
+		if (lr.next_steps) {
+			var ns = lr.next_steps;
+			html += '<section class="airb__next-steps">';
+			html += '<p class="airb__funnel-stage">' + esc(ns.title || 'Next steps') + '</p>';
+			html += '<h4>' + esc(ns.subtitle || 'Recommended for your school') + '</h4>';
+			if (ns.intro) html += '<p class="airb__muted">' + esc(ns.intro) + '</p>';
+			html += '<div class="airb__next-steps-grid">';
+			(ns.cards || []).forEach(function (card) {
+				html += '<article class="airb__next-step-card airb__next-step-card--' + esc(card.key || '') + '">';
+				html += '<h5>' + esc(card.title) + '</h5>';
+				if (card.body) html += '<p>' + esc(card.body) + '</p>';
+				if (card.key === 'whole_school_benchmark' && card.counts) {
+					html += '<ul class="airb__rollout-counts">';
+					html += '<li>' + esc(i18n.roleLeader || 'Leaders') + ': ' + (card.counts.leader || 0) + '</li>';
+					html += '<li>' + esc(i18n.roleTeacher || 'Teachers') + ': ' + (card.counts.teacher || 0) + '</li>';
+					html += '<li>' + esc(i18n.roleStudent || 'Students') + ': ' + (card.counts.student || 0) + '</li>';
+					html += '<li>' + esc(i18n.roleParent || 'Parents') + ': ' + (card.counts.parent || 0) + '</li>';
+					html += '</ul>';
+					if (!card.unlocked) {
+						var unlockCopy = (leaderResult.rollout_unlock_copy || 'Whole-school benchmarking unlocks after {threshold}+ responses.')
+							.replace('{threshold}', String(card.threshold || 20));
+						html += '<p class="airb__muted">' + esc(unlockCopy) + '</p>';
+					}
+				}
+				if (card.topics && card.topics.length) {
+					html += '<ul class="airb__leader-actions">';
+					card.topics.forEach(function (topic) {
+						html += '<li>' + esc(topic) + '</li>';
+					});
+					html += '</ul>';
+				}
+				if (card.deliverables && card.deliverables.length) {
+					html += '<ul class="airb__leader-actions">';
+					card.deliverables.forEach(function (item) {
+						html += '<li>' + esc(item) + '</li>';
+					});
+					html += '</ul>';
+				}
+				if (card.cta_url) {
+					html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(card.cta_url) + '" target="_blank" rel="noopener">' + esc(card.cta_text || 'Find out more') + '</a>';
+				}
+				html += '</article>';
+			});
+			html += '</div></section>';
+		}
+
+		return html;
 	}
 
 	function resultsProfileHtml(r) {
@@ -683,40 +1295,68 @@
 		var readinessLabel = (r.readiness_level_label || readinessBandLabel(readiness)).toUpperCase();
 		var depVal = roleShowsDependency(state.role) ? r.dependency_index : null;
 		var eyebrow = (i18n.resultsRoleResult || '{role} result').replace('{role}', roleLbl);
+		var parentMode = isParentRole();
+		var studentMode = isStudentRole() && !!r.student_results;
+		var leaderMode = isLeaderRole() && !!r.leader_results;
+		var bandSummary = parentMode ? parentBandSummary(readiness) : '';
 
-		var html = '<section class="airb__res-profile">';
+		var html = '<section class="airb__res-profile' + (parentMode ? ' airb__res-profile--parent' : '') + '">';
 		html += '<span class="airb__res-eyebrow"><span class="airb__res-eyebrow-dot" aria-hidden="true"></span>' + esc(eyebrow) + '</span>';
 		html += '<div class="airb__res-shead">';
 		html += '<h2 class="airb__res-title">' + esc(i18n.resultsProfileTitle || i18n.resultsTitle || 'Your AI Risk & Readiness profile') + '</h2>';
 		html += '<span class="airb__res-band" style="color:' + esc(readinessBandColor(readiness)) + '">' + esc(readinessLabel) + '</span>';
 		html += '</div>';
 
-		html += '<div class="airb__res-grid3">';
+		html += '<div class="airb__res-grid3' + (parentMode ? ' airb__res-grid3--two' : '') + '">';
 		html += '<div class="airb__res-stat">';
 		html += '<div class="airb__res-stat-lab">' + esc(i18n.statReadiness || 'Readiness score') + '</div>';
 		html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(readiness)) + '" data-count="' + readiness + '">' + readiness + '%</div>';
-		html += '<div class="airb__res-stat-note">' + esc(i18n.statReadinessNote || 'Weighted across every domain in this audit.') + '</div>';
+		if (!parentMode) {
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statReadinessNote || 'Weighted across every domain in this audit.') + '</div>';
+		}
 		html += '</div>';
 
 		html += '<div class="airb__res-stat">';
 		html += '<div class="airb__res-stat-lab">' + esc(i18n.statRisk || 'AI risk score') + '</div>';
 		html += '<div class="airb__res-stat-big" style="color:' + esc(riskScoreColor(risk)) + '" data-count="' + risk + '">' + risk + '%</div>';
-		html += '<div class="airb__res-stat-note">' + esc(i18n.statRiskNote || 'Behavioural exposure — the inverse of readiness.') + '</div>';
+		if (!parentMode) {
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statRiskNote || 'Behavioural exposure — the inverse of readiness.') + '</div>';
+		}
 		html += '</div>';
 
+		if (!parentMode) {
 		html += '<div class="airb__res-stat">';
+		if (leaderMode) {
+			html += '<div class="airb__res-stat-lab">' + esc(i18n.dfeAlignment || 'DfE Alignment Score') + '</div>';
+			html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(readiness)) + '" data-count="' + readiness + '">' + readiness + '%</div>';
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statDfeNote || 'Overall alignment with DfE AI guidance for schools.') + '</div>';
+		} else {
 		html += '<div class="airb__res-stat-lab">' + esc(i18n.dependency || 'AI Dependency Index') + '<span class="airb__tm">™</span></div>';
 		if (depVal === null) {
 			html += '<div class="airb__res-stat-big airb__res-stat-big--na">—</div>';
 			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNa || 'Not measured for this audience.') + '</div>';
 		} else {
-			html += '<div class="airb__res-stat-big" style="color:' + esc(dependencyColor(depVal)) + '" data-count="' + depVal + '">' + depVal + '</div>';
+			html += '<div class="airb__res-stat-big" style="color:' + esc(dependencyColor(depVal)) + '" data-count="' + depVal + '">' + depVal + '%</div>';
 			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNote || 'Higher means greater reliance on AI.') + '</div>';
 		}
+		}
 		html += '</div>';
+		}
 		html += '</div>';
 
-		html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
+		if (bandSummary) {
+			html += '<p class="airb__res-summary">' + esc(bandSummary) + '</p>';
+		}
+
+		if (parentMode) {
+			html += domainReadinessRowsHtml(r);
+		} else if (leaderMode) {
+			/* Governance content follows in leaderResultsHtml. */
+		} else if (isTeacherRole() || studentMode) {
+			html += '<div class="airb__res-two airb__res-two--teacher">' + oversightPanelHtml(r) + '</div>';
+		} else {
+			html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
+		}
 		return html + '</section>';
 	}
 
@@ -826,20 +1466,97 @@
 		return html + '</div>';
 	}
 
+	function guidedImprovementHtml(r) {
+		var gi = r.guided_improvement;
+		if (!gi) return '';
+		if ((!gi.blocks || !gi.blocks.length) && !gi.consultation) return '';
+
+		var kinds = improvementHub.resource_kinds || {};
+		var html = '<section class="airb__guided-improvement" aria-label="' + esc(gi.heading || i18n.guidedImprovement || 'Learn how to improve this score') + '">';
+		html += '<h3 class="airb__guided-title">' + esc(gi.heading || i18n.guidedImprovement || 'Learn how to improve this score') + '</h3>';
+		if (gi.intro) html += '<p class="airb__guided-intro">' + esc(gi.intro) + '</p>';
+
+		gi.blocks.forEach(function (block) {
+			html += '<article class="airb__guided-block">';
+			html += '<h4 class="airb__guided-metric">' + esc(block.label) + ': <span class="airb__guided-pct">' + block.score + '%</span></h4>';
+			if (block.why_heading) html += '<p class="airb__guided-why-label"><strong>' + esc(block.why_heading) + '</strong></p>';
+			if (block.why_body) html += '<p class="airb__guided-why">' + esc(block.why_body) + '</p>';
+			if (block.why_risks && block.why_risks.length) {
+				html += '<ul class="airb__guided-risks">';
+				block.why_risks.forEach(function (risk) {
+					html += '<li>' + esc(risk) + '</li>';
+				});
+				html += '</ul>';
+			}
+			if (block.actions_heading) html += '<p class="airb__guided-actions-label"><strong>' + esc(block.actions_heading) + '</strong></p>';
+			if (block.resources && block.resources.length) {
+				html += '<ul class="airb__guided-resources">';
+				block.resources.forEach(function (res) {
+					var kindLabel = kinds[res.kind] || res.kind || 'Read';
+					html += '<li><a href="' + esc(res.url) + '" class="airb__guided-link airb__guided-link--' + esc(res.kind || 'read') + '"><span class="airb__guided-kind">' + esc(kindLabel) + '</span> ' + esc(res.label) + '</a></li>';
+				});
+				html += '</ul>';
+			}
+			html += '</article>';
+		});
+
+		if (gi.consultation) {
+			var c = gi.consultation;
+			html += '<aside class="airb__guided-consult airb__insight airb__insight--consult">';
+			html += '<span class="airb__insight-label">' + esc(c.title) + '</span>';
+			if (c.intro) html += '<p>' + esc(c.intro) + '</p>';
+			if (c.items && c.items.length) {
+				html += '<ul class="airb__guided-risks">';
+				c.items.forEach(function (item) {
+					html += '<li>' + esc(item) + '</li>';
+				});
+				html += '</ul>';
+			}
+			if (c.closing) html += '<p class="airb__muted">' + esc(c.closing) + '</p>';
+			if (c.cta_url) {
+				html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(c.cta_url) + '">' + esc(c.cta_text || 'Book your free review') + '</a>';
+			}
+			html += '</aside>';
+		}
+
+		return html + '</section>';
+	}
+
 	function renderResults() {
 		var r = state.results;
 		if (!r) return;
+		var parentMode = isParentRole();
+		var teacherMode = isTeacherRole() && !!r.teacher_results;
+		var studentMode = isStudentRole() && !!r.student_results;
 
-		var html = '<div class="airb__results">';
+		var leaderMode = isLeaderRole() && !!r.leader_results;
+
+		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' : '') + (teacherMode ? ' airb__results--teacher' : '') + (studentMode ? ' airb__results--student' : '') + (leaderMode ? ' airb__results--leader' : '') + '">';
 		html += resultsProfileHtml(r);
-		html += focusDomainsHtml(r);
 
-		if (r.funnel_closing) {
-			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
+		if (teacherMode) {
+			html += teacherResultsHtml(r);
+		} else if (studentMode) {
+			html += studentResultsHtml(r);
+		} else if (leaderMode) {
+			html += leaderResultsHtml(r);
+		} else {
+			html += focusDomainsHtml(r);
 		}
 
-		if (r.risk_heatmap && r.risk_heatmap.length) {
-			html += '<h4>' + esc(i18n.heatMap) + '</h4>' + heatmapHtml(r.risk_heatmap);
+		html += guidedImprovementHtml(r);
+
+		if (parentMode) {
+			html += parentPriorityFocusHtml();
+			html += parentExposureListHtml();
+		} else if (!teacherMode && !studentMode && !leaderMode) {
+			if (r.funnel_closing) {
+				html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
+			}
+
+			if (r.risk_heatmap && r.risk_heatmap.length) {
+				html += '<h4>' + esc(i18n.heatMap) + '</h4>' + heatmapHtml(r.risk_heatmap);
+			}
 		}
 
 		if (r.leadership_report && r.leadership_report.show_full) {
@@ -864,7 +1581,7 @@
 			html += '</section>';
 		}
 
-		if (r.policy_generator) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.policy_generator) {
 			var pg = r.policy_generator;
 			html += '<article class="airb__policy-gen airb__pathway-card">';
 			html += '<span class="airb__pathway-badge airb__pathway-badge--policy">' + esc(i18n.policyGen) + '</span>';
@@ -873,7 +1590,7 @@
 			html += '</article>';
 		}
 
-		if (r.stage2_products && r.stage2_products.length) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.stage2_products && r.stage2_products.length) {
 			html += '<section class="airb__stage2"><p class="airb__funnel-stage">' + esc(i18n.stage2) + '</p>';
 			html += '<ul class="airb__stage2-list">';
 			r.stage2_products.forEach(function (item) {
@@ -882,13 +1599,15 @@
 			html += '</ul></section>';
 		}
 
-		if (r.key_exposure_areas && r.key_exposure_areas.length) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.key_exposure_areas && r.key_exposure_areas.length) {
 			html += '<h4>' + esc(i18n.exposure) + '</h4>' + exposureCardsHtml(r.key_exposure_areas);
 		}
 
-		html += benchmarkHtml(r);
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode) {
+			html += benchmarkHtml(r);
+		}
 
-		if (r.gateway && r.gateway.cards && r.gateway.cards.length) {
+		if (!teacherMode && !studentMode && !leaderMode && r.gateway && r.gateway.cards && r.gateway.cards.length) {
 			html += '<section class="airb__gateway">';
 			html += '<h4>' + esc(r.gateway.headline || i18n.gatewayTitle) + '</h4>';
 			if (r.gateway.intro) html += '<p class="airb__muted">' + esc(r.gateway.intro) + '</p>';
@@ -901,8 +1620,15 @@
 				html += '</article>';
 			});
 			html += '</div></section>';
-		} else if (i18n.shareResultsHint) {
-			html += '<p class="airb__muted airb__share-hint">' + esc(i18n.shareResultsHint) + '</p>';
+		} else {
+			var shareHint = parentMode
+				? (parentResult.share_hint || i18n.shareResultsHintParent || i18n.shareResultsHint)
+				: studentMode
+					? ((r.student_results && r.student_results.share_hint) || studentResult.share_hint || i18n.shareResultsHint)
+					: i18n.shareResultsHint;
+			if (shareHint) {
+				html += '<p class="airb__muted airb__share-hint">' + esc(shareHint) + '</p>';
+			}
 		}
 
 		html += '<div class="airb__results-actions">';
@@ -934,6 +1660,7 @@
 		el.contact.hidden = true;
 		el.nav.hidden = true;
 		el.progress.hidden = true;
+		updateFlowChrome();
 
 		var emailBtn = document.getElementById('airb-email-report');
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
@@ -1040,7 +1767,7 @@
 		}
 		if (state.phase === 'contact') {
 			if (!isYoungRole()) {
-				state.school = state.role === 'leader' ? ((document.getElementById('airb-school') || {}).value || '') : '';
+				state.school = (state.role === 'leader' || state.role === 'teacher') ? ((document.getElementById('airb-school') || {}).value || '') : '';
 				state.email = (document.getElementById('airb-email') || {}).value || '';
 				state.schoolPhase = (document.getElementById('airb-school-phase') || {}).value || '';
 				state.orgType = (document.getElementById('airb-org-type') || {}).value || '';
@@ -1063,6 +1790,7 @@
 			el.contact.hidden = true;
 			el.nav.hidden = true;
 			el.progress.hidden = true;
+			updateFlowChrome();
 			submitResults(function () { renderResults(); });
 		}
 	}
@@ -1155,9 +1883,13 @@
 			'',
 			(i18n.reportEmailRole || 'Role') + ': ' + roleLbl,
 			(i18n.readinessLevel || 'Readiness level') + ': ' + (r.readiness_level_label || '—'),
-			i18n.alignment + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '/100',
-			i18n.riskLevel + ': ' + (r.risk_level_label || '—'),
 		];
+		if (isParentRole()) {
+			lines.push((i18n.statReadiness || 'Readiness score') + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '%');
+		} else {
+			lines.push(i18n.alignment + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '/100');
+		}
+		lines.push(i18n.riskLevel + ': ' + (r.risk_level_label || '—'));
 
 		if (r.dependency_index != null) {
 			lines.push(i18n.dependency + ': ' + r.dependency_index + '%');

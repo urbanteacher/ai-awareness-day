@@ -49,7 +49,7 @@ class AIRB_Funnel {
 	 * @param array<string, mixed> $config  Plugin config.
 	 * @return array<string, mixed>
 	 */
-	public static function enrich( array $results, string $role, array $profile, array $config ): array {
+	public static function enrich( array $results, string $role, array $profile, array $config, string $school = '' ): array {
 		$domain_scores = (array) ( $results['domain_scores'] ?? array() );
 
 		$results['risk_heatmap']        = self::risk_heatmap( $domain_scores );
@@ -59,6 +59,47 @@ class AIRB_Funnel {
 		$results['consultation_pitch']  = self::consultation_pitch( $results, $role, $config );
 		$results['policy_generator']    = self::policy_generator_offer( $domain_scores, $profile, $config );
 		$results['aad_promo']           = self::aad_promo( $config );
+
+		if ( 'teacher' === $role ) {
+			$gap_products                 = $results['stage2_products'];
+			$results['funnel_closing']    = '';
+			$results['teacher_results']   = AIRB_Teacher_Results::build( $results, $school, $config, $gap_products );
+			$results['stage2_products']   = array();
+			if ( isset( $results['leadership_report'] ) ) {
+				$results['leadership_report']['show_full'] = false;
+			}
+		}
+
+		if ( 'student' === $role ) {
+			$results['funnel_closing']  = '';
+			$results['student_results'] = AIRB_Student_Results::build( $results );
+			$results['stage2_products'] = array();
+			$results['key_exposure_areas'] = array();
+			if ( isset( $results['leadership_report'] ) ) {
+				$results['leadership_report']['show_full'] = false;
+			}
+		}
+
+		if ( 'leader' === $role ) {
+			$policy_gen = $results['policy_generator'] ?? null;
+			$aad_promo  = $results['aad_promo'] ?? null;
+			$results['funnel_closing']    = '';
+			$results['leader_results']    = AIRB_Leader_Results::build(
+				$results,
+				$school,
+				$profile,
+				$config,
+				is_array( $policy_gen ) ? $policy_gen : null,
+				is_array( $aad_promo ) ? $aad_promo : null
+			);
+			$results['stage2_products']   = array();
+			$results['key_exposure_areas'] = array();
+			if ( isset( $results['leadership_report'] ) ) {
+				$results['leadership_report']['show_full'] = false;
+			}
+		}
+
+		$results['guided_improvement'] = AIRB_Improvement_Pathways::build( $role, $results );
 
 		return $results;
 	}
@@ -99,6 +140,10 @@ class AIRB_Funnel {
 	 * @param string               $role    Role.
 	 */
 	public static function stage1_closing( array $results, string $role ): string {
+		if ( in_array( $role, array( 'parent', 'teacher', 'student' ), true ) ) {
+			return '';
+		}
+
 		$areas = array();
 		$map   = array(
 			'governance'           => __( 'AI Policy', 'ai-risk-benchmark' ),
@@ -184,7 +229,7 @@ class AIRB_Funnel {
 			'risk_level_label'    => (string) ( $results['risk_level_label'] ?? '' ),
 			'high_risk_areas'     => $high_risk,
 			'recommended_actions' => $actions,
-			'show_full'           => in_array( $role, array( 'leader', 'teacher' ), true ),
+			'show_full'           => 'leader' === $role,
 		);
 
 		if ( $profile['school_phase'] || $profile['org_type'] ) {

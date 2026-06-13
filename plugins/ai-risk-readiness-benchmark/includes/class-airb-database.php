@@ -286,4 +286,108 @@ class AIRB_Database {
 
 		return $stats;
 	}
+
+	/**
+	 * Count consented submissions at a school, grouped by stakeholder role.
+	 *
+	 * @param string $school School name (partial match).
+	 * @return array<string, int>
+	 */
+	public static function count_school_responses_by_role( string $school ): array {
+		global $wpdb;
+		$table = self::table_name();
+		$roles = array( 'leader', 'teacher', 'student', 'parent' );
+		$out   = array();
+
+		foreach ( $roles as $role ) {
+			$out[ $role ] = self::count_submissions(
+				array(
+					'role'   => $role,
+					'school' => $school,
+				)
+			);
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Peer benchmark stats for leaders filtered by school phase (from stored answers).
+	 *
+	 * Returns null when sample is below BENCHMARK_MIN_SAMPLE; caller should use fallback.
+	 *
+	 * @param string   $role            Role slug (typically leader).
+	 * @param int|null $alignment_score Optional score for percentile.
+	 * @param string   $school_phase    School phase slug (primary, secondary, all_through).
+	 * @return array<string, mixed>|null
+	 */
+	public static function get_peer_benchmark_stats( string $role, ?int $alignment_score, string $school_phase ): ?array {
+		global $wpdb;
+		$table = self::table_name();
+		$role  = sanitize_key( $role );
+		$phase = sanitize_key( $school_phase );
+
+		if ( ! $phase ) {
+			return null;
+		}
+
+		$phase_pattern = '%"_school_phase":"' . $wpdb->esc_like( $phase ) . '"%';
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COUNT(*) AS n, AVG(alignment_score) AS alignment_score
+				FROM {$table}
+				WHERE consent = 1 AND role = %s AND answers LIKE %s",
+				$role,
+				$phase_pattern
+			),
+			ARRAY_A
+		);
+
+		$sample = isset( $row['n'] ) ? (int) $row['n'] : 0;
+		if ( $sample < self::BENCHMARK_MIN_SAMPLE ) {
+			return null;
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$scores = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT alignment_score FROM {$table}
+				WHERE consent = 1 AND role = %s AND answers LIKE %s
+				ORDER BY alignment_score ASC",
+				$role,
+				$phase_pattern
+			)
+		);
+
+		$top_quartile = (int) round( (float) $row['alignment_score'] );
+		if ( is_array( $scores ) && count( $scores ) > 0 ) {
+			$idx = (int) floor( 0.75 * ( count( $scores ) - 1 ) );
+			$top_quartile = (int) $scores[ max( 0, $idx ) ];
+		}
+
+		$stats = array(
+			'sample_size' => $sample,
+			'average'     => (int) round( (float) $row['alignment_score'] ),
+			'top_quartile'=> $top_quartile,
+			'is_estimated'=> false,
+		);
+
+		if ( null !== $alignment_score ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$below = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$table}
+					WHERE consent = 1 AND role = %s AND answers LIKE %s AND alignment_score <= %d",
+					$role,
+					$phase_pattern,
+					(int) $alignment_score
+				)
+			);
+			$stats['percentile'] = (int) round( ( $below / $sample ) * 100 );
+		}
+
+		return $stats;
+	}
 }

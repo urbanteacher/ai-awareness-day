@@ -203,35 +203,23 @@ class AIRB_Scoring {
 				);
 				break;
 			case 'parent':
-				$aware  = (int) round( $dom['ai_literacy']['readiness_percentage'] ?? $results['alignment_score'] ?? 0 );
-				$safety = (int) round( $dom['safeguarding']['readiness_percentage'] ?? $results['safeguarding_readiness'] ?? 0 );
-				$align  = (int) ( $results['alignment_score'] ?? 0 );
-				$cards  = array(
-					array(
-						'key'        => 'aware',
-						'label'      => __( 'Parent AI Awareness Score', 'ai-risk-benchmark' ),
-						'value'      => $aware . '%',
-						'band'       => self::readiness_band( $aware ),
-						'tone'       => 'readiness',
-						'band_label' => self::readiness_band_label( $aware ),
-					),
-					array(
-						'key'        => 'safe',
-						'label'      => __( 'Parent Digital Safety Score', 'ai-risk-benchmark' ),
-						'value'      => $safety . '%',
-						'band'       => self::readiness_band( $safety ),
-						'tone'       => 'readiness',
-						'band_label' => self::readiness_band_label( $safety ),
-					),
-					array(
-						'key'        => 'ready',
-						'label'      => __( 'Parent Readiness Score', 'ai-risk-benchmark' ),
-						'value'      => $align . '/100',
-						'band'       => self::readiness_band( $align ),
-						'tone'       => 'readiness',
-						'band_label' => self::readiness_band_label( $align ),
-					),
-				);
+				$parent_display = (array) ( $results['parent_display_domains'] ?? array() );
+				$cards          = array();
+				foreach ( $parent_display as $slug => $dom ) {
+					$metric_type = (string) ( $dom['metric_type'] ?? 'score' );
+					$is_risk     = 'risk' === $metric_type;
+					$value       = $is_risk
+						? (int) round( (float) ( $dom['risk_percentage'] ?? 0 ) )
+						: (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
+					$cards[]     = array(
+						'key'        => (string) $slug,
+						'label'      => (string) ( $dom['label'] ?? $slug ),
+						'value'      => $value . '%',
+						'band'       => $is_risk ? self::risk_band( (float) $value ) : self::readiness_band( $value ),
+						'tone'       => $is_risk ? 'risk' : 'readiness',
+						'band_label' => $is_risk ? self::band_label( self::risk_band( (float) $value ) ) : self::readiness_band_label( $value ),
+					);
+				}
 				break;
 			case 'leader':
 				$gov  = (int) ( $results['governance_maturity'] ?? 0 );
@@ -362,6 +350,89 @@ class AIRB_Scoring {
 			}
 		);
 		return array_slice( $rows, 0, $limit );
+	}
+
+	/**
+	 * Parent-facing domain scores grouped for the results screen.
+	 *
+	 * @param array<string, mixed> $answers Answers keyed by question id.
+	 * @param array<string, mixed> $config  Full config.
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function parent_display_domain_scores( array $answers, array $config ): array {
+		$parent_config = AIRB_Defaults::parent_result_config();
+		$questions_by_id = array();
+
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			$qid = (string) ( $question['id'] ?? '' );
+			if ( $qid ) {
+				$questions_by_id[ $qid ] = $question;
+			}
+		}
+
+		$out = array();
+		foreach ( (array) ( $parent_config['display_domains'] ?? array() ) as $slug => $def ) {
+			$scores = array();
+			foreach ( (array) ( $def['questions'] ?? array() ) as $qid ) {
+				if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
+					continue;
+				}
+				$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+			}
+			if ( ! $scores ) {
+				continue;
+			}
+			$avg_risk    = ( array_sum( $scores ) / count( $scores ) ) / 3 * 100;
+			$readiness   = (int) round( 100 - $avg_risk );
+			$band        = self::risk_band( $avg_risk );
+			$metric_type = (string) ( $def['metric_type'] ?? 'score' );
+			$out[ $slug ] = array(
+				'label'                => (string) ( $def['label'] ?? $slug ),
+				'metric_type'          => $metric_type,
+				'color'                => (string) ( $def['color'] ?? '#475569' ),
+				'risk_percentage'      => round( $avg_risk, 1 ),
+				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
+				'band'                 => $band,
+				'band_label'           => self::band_label( $band ),
+				'readiness_band'       => self::readiness_band( $readiness ),
+				'readiness_band_label' => self::readiness_band_label( $readiness ),
+				'questions_answered'   => count( $scores ),
+			);
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Parent overall readiness/risk derived from parent-facing metrics only.
+	 *
+	 * @param array<string, array<string, mixed>> $parent_display Parent display scores.
+	 * @return array{overall_risk:float,alignment_score:int,risk_level:string}
+	 */
+	public static function parent_overall_from_display( array $parent_display ): array {
+		$risk_values = array();
+		foreach ( $parent_display as $dom ) {
+			if ( empty( $dom['questions_answered'] ) ) {
+				continue;
+			}
+			$risk_values[] = (float) ( $dom['risk_percentage'] ?? 0 );
+		}
+
+		if ( ! $risk_values ) {
+			return array(
+				'overall_risk'    => 0.0,
+				'alignment_score' => 0,
+				'risk_level'      => 'low',
+			);
+		}
+
+		$overall_risk = array_sum( $risk_values ) / count( $risk_values );
+
+		return array(
+			'overall_risk'    => round( $overall_risk, 1 ),
+			'alignment_score' => (int) round( 100 - $overall_risk ),
+			'risk_level'      => self::risk_band( $overall_risk ),
+		);
 	}
 
 	/**
@@ -611,6 +682,28 @@ class AIRB_Scoring {
 		$human_oversight_label = $oversight['label'];
 
 		$key_exposure = self::key_exposure_areas( $domain_scores );
+
+		$parent_display = array();
+		if ( 'parent' === $role ) {
+			$parent_display = self::parent_display_domain_scores( $answers, $config );
+			$parent_overall = self::parent_overall_from_display( $parent_display );
+			$overall_risk   = (float) $parent_overall['overall_risk'];
+			$overall_band   = (string) $parent_overall['risk_level'];
+			$alignment_score = (int) $parent_overall['alignment_score'];
+			$key_exposure   = array();
+		}
+
+		if ( 'student' === $role ) {
+			$student_overall = AIRB_Student_Results::overall_from_student_domains(
+				array( 'domain_scores' => $domain_scores )
+			);
+			$overall_risk    = (float) $student_overall['overall_risk'];
+			$overall_band    = (string) $student_overall['risk_level'];
+			$alignment_score = (int) $student_overall['alignment_score'];
+			$key_exposure    = array();
+			$recommendations = array();
+		}
+
 		$result_payload = array(
 			'role'                    => $role,
 			'risk_level'              => $overall_band,
@@ -621,6 +714,7 @@ class AIRB_Scoring {
 			'domain_scores'           => $domain_scores,
 			'governance_maturity'     => $governance_mature,
 			'safeguarding_readiness'  => $safeguarding_ready,
+			'parent_display_domains'  => $parent_display,
 		);
 		$result_cards = self::role_result_cards( $role, $result_payload );
 
@@ -642,6 +736,7 @@ class AIRB_Scoring {
 			'domain_scores'           => $domain_scores,
 			'recommendations'         => $recommendations,
 			'key_exposure_areas'      => $key_exposure,
+			'parent_display_domains'  => $parent_display,
 			'role_result_cards'       => $result_cards,
 			'next_steps'              => AIRB_Pathway::match_next_steps( $role, $answers, $domain_scores, $result_payload, $config ),
 		);

@@ -57,7 +57,7 @@ class AIRB_Ajax {
 
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
-		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config );
+		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school );
 		$results['gateway'] = AIRB_Pathway::build_gateway( $role, $config, $school, $consent );
 
 		if ( ! empty( $results['aad_promo']['cta_url'] ) && is_array( $results['gateway'] ) ) {
@@ -101,6 +101,23 @@ class AIRB_Ajax {
 					'recommendations'        => $results['recommendations'],
 				)
 			);
+		}
+
+		if ( $consent && $school && ! empty( $results['leader_results'] ) ) {
+			$rollout = AIRB_Leader_Results::school_rollout_counts( $school );
+			$results['leader_results']['school_rollout'] = $rollout;
+			if ( ! empty( $results['leader_results']['next_steps']['cards'] ) ) {
+				foreach ( $results['leader_results']['next_steps']['cards'] as &$card ) {
+					if ( ! is_array( $card ) || 'whole_school_benchmark' !== ( $card['key'] ?? '' ) ) {
+						continue;
+					}
+					$card['counts']    = (array) ( $rollout['counts'] ?? array() );
+					$card['unlocked']  = ! empty( $rollout['is_unlocked'] );
+					$card['remaining'] = (int) ( $rollout['remaining'] ?? 0 );
+					$card['threshold'] = (int) ( $rollout['threshold'] ?? 20 );
+				}
+				unset( $card );
+			}
 		}
 
 		// Attach national benchmark comparison (null until the privacy-floor
@@ -272,6 +289,28 @@ class AIRB_Ajax {
 				(string) ( $results['policy_generator']['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ),
 				$role,
 				(string) ( $results['policy_generator']['cta_url'] ?? '' )
+			);
+		}
+
+		if ( ! empty( $results['leader_results']['next_steps']['cards'] ) && is_array( $results['leader_results']['next_steps']['cards'] ) ) {
+			foreach ( $results['leader_results']['next_steps']['cards'] as &$card ) {
+				if ( ! is_array( $card ) || empty( $card['cta_url'] ) ) {
+					continue;
+				}
+				$card['cta_url'] = self::resolve_cta_url(
+					(string) ( $card['title'] ?? '' ),
+					$role,
+					(string) ( $card['cta_url'] ?? '' )
+				);
+			}
+			unset( $card );
+		}
+
+		if ( ! empty( $results['guided_improvement']['consultation']['cta_url'] ) ) {
+			$results['guided_improvement']['consultation']['cta_url'] = self::resolve_cta_url(
+				(string) ( $results['guided_improvement']['consultation']['title'] ?? __( 'AI Readiness Review', 'ai-risk-benchmark' ) ),
+				$role,
+				(string) ( $results['guided_improvement']['consultation']['cta_url'] ?? '' )
 			);
 		}
 
