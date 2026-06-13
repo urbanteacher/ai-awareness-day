@@ -1775,6 +1775,95 @@
 	background: var(--airb-ink-2);
 }
 
+/* Hero split — copy left, signature-gauge preview card right */
+.airb__hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+	gap: 1.75rem;
+	align-items: center;
+}
+
+.airb__hero-copy { min-width: 0; }
+
+.airb__hero-gauge {
+	background: var(--airb-ink-2);
+	border: 1px solid var(--airb-border);
+	border-radius: var(--airb-radius-card);
+	padding: 1.25rem;
+	text-align: center;
+}
+
+.airb__hero-gauge-tag {
+	font-family: var(--font-display, 'Intel Clear', sans-serif);
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--airb-sage);
+	margin: 0;
+}
+
+.airb__hero-gauge-title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	margin: 0.15rem 0 0.1rem;
+	color: var(--airb-brand);
+}
+
+.airb__hero-gauge-sub {
+	font-size: 0.8rem;
+	color: var(--airb-muted);
+	margin: 0;
+}
+
+.airb__hero-gauge-dial .airb__gauge-svg {
+	max-width: 260px;
+	margin: 0.25rem auto 0;
+}
+
+.airb__hero-gauge-foot {
+	font-size: 0.75rem;
+	color: var(--airb-muted);
+	margin: 0.35rem 0 0;
+}
+
+@media (max-width: 720px) {
+	.airb__hero {
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+}
+
+/* Two-column results: gauge left, domain bars right */
+.airb__results-two {
+	display: grid;
+	grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+	gap: 1rem;
+	margin: 1.5rem 0;
+	align-items: start;
+}
+
+.airb__results-two .airb__gauge {
+	margin: 0;
+}
+
+.airb__results-two .airb__domain-bars {
+	background: var(--airb-ink-2);
+	border: 1px solid var(--airb-border);
+	border-radius: var(--airb-radius-card);
+	padding: 1.25rem;
+}
+
+.airb__results-two .airb__domain-bars h4 {
+	margin: 0 0 0.85rem;
+}
+
+@media (max-width: 640px) {
+	.airb__results-two {
+		grid-template-columns: 1fr;
+	}
+}
+
 /* Human Oversight Ratio — zoned semicircle gauge */
 .airb__gauge {
 	margin: 1.5rem 0;

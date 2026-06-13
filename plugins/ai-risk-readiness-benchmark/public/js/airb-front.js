@@ -446,7 +446,6 @@
 		var progPct = state.sections.length ? Math.round((state.step / state.sections.length) * 100) : 0;
 		var html = '<div class="airb__panel">';
 		html += '<div class="airb__prog" aria-hidden="true"><i style="width:' + progPct + '%"></i></div>';
-		html += '<p class="airb__q-num">' + esc(i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length + '</p>';
 		html += '<div class="airb__domtag"><span class="airb__domtag-sq" style="background:' + esc(domainColor(section.domain)) + '"></span>';
 		html += esc(section.name) + ' · ' + esc(domains[section.domain] || section.domain) + '</div>';
 
@@ -476,6 +475,10 @@
 
 	function isYoungRole() {
 		return state.role === 'student' || state.role === 'parent';
+	}
+
+	function isStaffRole() {
+		return state.role === 'teacher' || state.role === 'leader';
 	}
 
 	function yearGroupOptionsHtml() {
@@ -576,6 +579,17 @@
 		return html + '</ul></section>';
 	}
 
+	function domainBarsHtml(r) {
+		var bars = '';
+		domainKeys.forEach(function (slug) {
+			var d = r.domain_scores[slug];
+			if (!d || !d.questions_answered) return;
+			bars += barHtml(slug, d.label, d.risk_percentage, d.band, false);
+		});
+		if (!bars) return '';
+		return '<div class="airb__domain-bars"><h4>' + esc(i18n.domainScores) + '</h4>' + bars + '</div>';
+	}
+
 	function benchmarkHtml(r) {
 		var b = r.benchmark;
 		if (!b || !b.averages) return '';
@@ -622,14 +636,10 @@
 		return html + '</section>';
 	}
 
-	// Zoned semicircle gauge for the Human Oversight Ratio — the band scale
-	// (critical / high / moderate / strong) is drawn into the arc itself.
-	function oversightGaugeHtml(r) {
-		var val = (typeof r.human_oversight_ratio === 'number') ? r.human_oversight_ratio
-			: (typeof r.human_oversight_readiness === 'number' ? r.human_oversight_readiness : null);
-		if (val === null) return '';
+	// Reusable zoned semicircle gauge SVG for the Human Oversight Ratio — the band
+	// scale (critical / high / moderate / strong) is drawn into the arc itself.
+	function oversightGaugeSvg(val, aria) {
 		val = Math.max(0, Math.min(100, val));
-
 		var A0 = -120, A1 = 120, cx = 120, cy = 120, rr = 92;
 		function toAngle(v) { return A0 + (v / 100) * (A1 - A0); }
 		function polar(x, y, rad, deg) { var a = (deg - 90) * Math.PI / 180; return [x + rad * Math.cos(a), y + rad * Math.sin(a)]; }
@@ -638,30 +648,39 @@
 			var large = (e - s) <= 180 ? 0 : 1;
 			return 'M ' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' A ' + rad + ' ' + rad + ' 0 ' + large + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
 		}
-		function zoneColor(v) {
-			return oversightZoneColor(v);
-		}
-
 		var zones = [[0, 10], [10, 25], [25, 50], [50, 100]];
-		var na = toAngle(val);
-		var npt = polar(cx, cy, rr - 14, na);
-		var label = r.human_oversight_label || '';
-
-		var svg = '<svg viewBox="0 0 240 172" class="airb__gauge-svg" role="img" aria-label="' + esc(i18n.oversight) + ': ' + Math.round(val) + '%">';
+		var npt = polar(cx, cy, rr - 14, toAngle(val));
+		var svg = '<svg viewBox="0 0 240 172" class="airb__gauge-svg" role="img" aria-label="' + esc(aria || ('Human Oversight Ratio ' + Math.round(val) + '%')) + '">';
 		svg += '<path d="' + arc(cx, cy, rr, A0, A1) + '" fill="none" stroke="var(--airb-border)" stroke-width="16" stroke-linecap="round"></path>';
 		zones.forEach(function (z, i) {
 			var cap = (i === 0 || i === zones.length - 1) ? 'round' : 'butt';
-			svg += '<path d="' + arc(cx, cy, rr, toAngle(z[0]), toAngle(z[1])) + '" fill="none" stroke="' + zoneColor(z[1] - 0.1) + '" stroke-width="16" stroke-linecap="' + cap + '"></path>';
+			svg += '<path d="' + arc(cx, cy, rr, toAngle(z[0]), toAngle(z[1])) + '" fill="none" stroke="' + oversightZoneColor(z[1] - 0.1) + '" stroke-width="16" stroke-linecap="' + cap + '"></path>';
 		});
 		svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + npt[0].toFixed(2) + '" y2="' + npt[1].toFixed(2) + '" stroke="var(--airb-brand)" stroke-width="3.5" stroke-linecap="round"></line>';
 		svg += '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="var(--airb-brand)"></circle>';
 		svg += '<text x="' + cx + '" y="' + (cy - 16) + '" text-anchor="middle" class="airb__gauge-num">' + Math.round(val) + '<tspan font-size="20">%</tspan></text>';
-		svg += '</svg>';
+		return svg + '</svg>';
+	}
 
+	function oversightGaugeHtml(r) {
+		var val = (typeof r.human_oversight_ratio === 'number') ? r.human_oversight_ratio
+			: (typeof r.human_oversight_readiness === 'number' ? r.human_oversight_readiness : null);
+		if (val === null) return '';
+		val = Math.max(0, Math.min(100, val));
+		var label = r.human_oversight_label || '';
 		var help = 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
-		return '<section class="airb__gauge"><h4>' + esc(i18n.oversight) + '</h4>' + svg
-			+ (label ? '<p class="airb__gauge-band" style="color:' + zoneColor(val) + '">' + esc(label) + '</p>' : '')
+		return '<section class="airb__gauge"><h4>' + esc(i18n.oversight) + '</h4>' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%')
+			+ (label ? '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>' : '')
 			+ '<p class="airb__gauge-help">' + esc(help) + '</p></section>';
+	}
+
+	// Static demo gauge on the intro hero (signature-metric preview).
+	function renderDemoGauge() {
+		var host = document.querySelector('[data-airb-demo-gauge]');
+		if (!host) return;
+		var val = parseInt(host.getAttribute('data-airb-demo-gauge'), 10);
+		if (isNaN(val)) val = 34;
+		host.innerHTML = oversightGaugeSvg(val, 'Human Oversight Ratio example: ' + val + '%');
 	}
 
 	function heatmapHtml(cells) {
@@ -706,7 +725,13 @@
 		});
 		html += '</div>';
 
-		html += oversightGaugeHtml(r);
+		var gaugeCol = oversightGaugeHtml(r);
+		var barsCol = domainBarsHtml(r);
+		if (gaugeCol && barsCol) {
+			html += '<div class="airb__results-two">' + gaugeCol + barsCol + '</div>';
+		} else {
+			html += gaugeCol + barsCol;
+		}
 
 		if (r.funnel_closing) {
 			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
@@ -789,13 +814,6 @@
 			html += '</div></section>';
 		}
 
-		html += '<h4>' + esc(i18n.domainScores) + '</h4>';
-		domainKeys.forEach(function (slug) {
-			var d = r.domain_scores[slug];
-			if (!d || !d.questions_answered) return;
-			html += barHtml(slug, d.label, d.risk_percentage, d.band, false);
-		});
-
 		html += benchmarkHtml(r);
 
 		if (r.recommendations && r.recommendations.length) {
@@ -833,17 +851,26 @@
 				html += '</article>';
 			});
 			html += '</div></section>';
-		} else {
+		} else if (isStaffRole()) {
 			var cta = cfg.consultation_cta || {};
 			if (cta.url) {
 				html += '<p class="airb__cta-wrap"><a class="airb__btn airb__btn--primary" href="' + esc(cta.url) + '">' + esc(cta.title || cta.text) + '</a></p>';
 			}
+		} else if (i18n.shareResultsHint) {
+			html += '<p class="airb__muted airb__share-hint">' + esc(i18n.shareResultsHint) + '</p>';
 		}
 
 		html += '<div class="airb__results-actions">';
-		var reportMailto = buildReportRequestMailto();
-		if (reportMailto) {
-			html += '<a class="airb__btn airb__btn--primary airb__btn--premium" href="' + reportMailto + '" id="airb-request-report">' + esc(i18n.requestFullReport) + '</a>';
+		if (isStaffRole()) {
+			var reportMailto = buildReportRequestMailto();
+			if (reportMailto) {
+				html += '<a class="airb__btn airb__btn--primary airb__btn--premium" href="' + reportMailto + '" id="airb-request-report">' + esc(i18n.requestFullReport) + '</a>';
+			}
+		} else {
+			var shareMailto = buildShareResultsMailto();
+			if (shareMailto) {
+				html += '<a class="airb__btn airb__btn--ghost" href="' + shareMailto + '" id="airb-share-results">' + esc(i18n.shareWithSchool || 'Share results with your school') + '</a>';
+			}
 		}
 		if (state.email) {
 			html += '<button type="button" class="airb__btn airb__btn--ghost" id="airb-email-report">' + esc(i18n.emailReport) + '</button>';
@@ -1050,7 +1077,7 @@
 	function buildReportRequestMailto() {
 		var r = state.results;
 		var to = airbBenchmark.contactEmail || '';
-		if (!r || !to) return '';
+		if (!r || !to || !isStaffRole()) return '';
 
 		var roleLbl = (cfg.roles || {})[state.role] || state.role;
 		var lines = [
@@ -1075,6 +1102,33 @@
 
 		return 'mailto:' + to
 			+ '?subject=' + encodeURIComponent(i18n.reportEmailSubject)
+			+ '&body=' + encodeURIComponent(lines.join('\n'));
+	}
+
+	function buildShareResultsMailto() {
+		var r = state.results;
+		if (!r || isStaffRole()) return '';
+
+		var roleLbl = (cfg.roles || {})[state.role] || state.role;
+		var lines = [
+			i18n.shareEmailIntro || 'Hello, I completed the free AI Risk & Readiness Benchmark and wanted to share my results with the school.',
+			'',
+			(i18n.reportEmailRole || 'Role') + ': ' + roleLbl,
+			(i18n.readinessLevel || 'Readiness level') + ': ' + (r.readiness_level_label || '—'),
+			i18n.alignment + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '/100',
+			i18n.riskLevel + ': ' + (r.risk_level_label || '—'),
+		];
+
+		if (r.dependency_index != null) {
+			lines.push(i18n.dependency + ': ' + r.dependency_index + '%');
+		}
+		if (state.yearGroup) {
+			var yg = (i18n.yearGroups || {})[state.yearGroup] || state.yearGroup;
+			lines.push((i18n.yearGroupParent || i18n.yearGroup || 'Year group') + ': ' + yg);
+		}
+		lines.push('', i18n.shareEmailClosing || 'Please share this with the relevant teacher or school leader so our school can build the whole-school picture.');
+
+		return 'mailto:?subject=' + encodeURIComponent(i18n.shareEmailSubject || 'AI Risk Benchmark results to share with school')
 			+ '&body=' + encodeURIComponent(lines.join('\n'));
 	}
 
@@ -1122,6 +1176,7 @@
 		}
 	}
 	updateAppbarCompletions();
+	renderDemoGauge();
 
 	window.airbRenderSchoolDashboard = function (rollup, container) {
 		if (!rollup || !container) return;
