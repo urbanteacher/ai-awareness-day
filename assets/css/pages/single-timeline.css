@@ -457,7 +457,11 @@
 /* ── Mobile ── */
 @media (max-width: 600px) {
 	.single-timeline {
-		padding: 1.5rem 1rem 3rem;
+		padding: 0.5rem 0.875rem 1.5rem;
+	}
+
+	.single-timeline-entry__container {
+		gap: 1.1rem;
 	}
 
 	/* Stack date under title on mobile */
@@ -519,6 +523,31 @@
 		--meta-profile-size: 0.75rem;
 		--meta-profile-line: 1.2;
 		gap: 0.3rem;
+		margin-top: 0.6rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__title {
+		margin-top: 0.6rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__media {
+		margin-top: 1rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__excerpt {
+		margin-top: 0.85rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__content {
+		margin-top: 0.85rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__related {
+		margin-top: 1.25rem;
+	}
+
+	.single-timeline-entry--stacked .single-timeline-entry__cta {
+		margin-top: 1.25rem;
 	}
 
 	.single-timeline-entry--stacked .single-timeline-entry__author {
