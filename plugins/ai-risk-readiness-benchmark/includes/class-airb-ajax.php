@@ -110,8 +110,7 @@ class AIRB_Ajax {
 			isset( $results['alignment_score'] ) ? (int) $results['alignment_score'] : null
 		);
 
-		// Route every results CTA to a pre-addressed email with a per-offer subject,
-		// instead of placeholder site pages.
+		// Enquiry-only CTAs become mailto; real destination pages (homepage, resources) stay as links.
 		$results = self::apply_email_ctas( $results, $role );
 
 		wp_send_json_success(
@@ -163,9 +162,66 @@ class AIRB_Ajax {
 	}
 
 	/**
-	 * Rewrite every results-screen CTA to a pre-addressed email with a subject
-	 * specific to that offer. Leaves the AI Awareness Day promo card untouched
-	 * (it points to a real campaign page, not a placeholder).
+	 * Whether a configured CTA should become a mailto enquiry instead of the URL.
+	 *
+	 * Keeps homepage, resources and external guidance links intact.
+	 *
+	 * @param string $url Configured CTA URL.
+	 */
+	private static function cta_should_mailto( string $url ): bool {
+		$url = trim( $url );
+		if ( '' === $url ) {
+			return true;
+		}
+		if ( str_starts_with( $url, 'mailto:' ) ) {
+			return false;
+		}
+
+		$parsed = wp_parse_url( $url );
+		if ( ! is_array( $parsed ) || empty( $parsed['host'] ) ) {
+			return true;
+		}
+
+		$host = strtolower( (string) $parsed['host'] );
+		$path = '/' . trim( (string) ( $parsed['path'] ?? '' ), '/' );
+		if ( '/' === $path ) {
+			$path = '';
+		}
+
+		if ( ! str_contains( $host, 'aiawarenessday.co.uk' ) ) {
+			return false;
+		}
+
+		if ( '' === $path || str_starts_with( $path, '/resources' ) ) {
+			return false;
+		}
+
+		if ( function_exists( 'home_url' ) ) {
+			$home_host = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
+			if ( $home_host && $host === $home_host && ( '' === $path || str_starts_with( $path, '/resources' ) ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolve a CTA URL — mailto enquiry or preserved destination link.
+	 *
+	 * @param string $title    Offer title (mailto subject).
+	 * @param string $role     Respondent role.
+	 * @param string $existing Configured CTA URL.
+	 */
+	private static function resolve_cta_url( string $title, string $role, string $existing ): string {
+		if ( ! self::cta_should_mailto( $existing ) ) {
+			return $existing;
+		}
+		return self::mailto( $title, $role );
+	}
+
+	/**
+	 * Rewrite enquiry CTAs to pre-addressed email; preserve real destination URLs.
 	 *
 	 * @param array<string, mixed> $results Results payload.
 	 * @param string               $role    Respondent role.
@@ -177,18 +233,26 @@ class AIRB_Ajax {
 			if ( ! empty( $results[ $list_key ] ) && is_array( $results[ $list_key ] ) ) {
 				foreach ( $results[ $list_key ] as &$item ) {
 					if ( is_array( $item ) ) {
-						$item['cta_url'] = self::mailto( (string) ( $item['title'] ?? '' ), $role );
+						$item['cta_url'] = self::resolve_cta_url(
+							(string) ( $item['title'] ?? '' ),
+							$role,
+							(string) ( $item['cta_url'] ?? '' )
+						);
 					}
 				}
 				unset( $item );
 			}
 		}
 
-		// Gateway cards — all route to email.
+		// Gateway cards — enquiry routes to email; campaign pages stay linked.
 		if ( ! empty( $results['gateway']['cards'] ) && is_array( $results['gateway']['cards'] ) ) {
 			foreach ( $results['gateway']['cards'] as &$card ) {
 				if ( is_array( $card ) ) {
-					$card['cta_url'] = self::mailto( (string) ( $card['title'] ?? '' ), $role );
+					$card['cta_url'] = self::resolve_cta_url(
+						(string) ( $card['title'] ?? '' ),
+						$role,
+						(string) ( $card['cta_url'] ?? '' )
+					);
 				}
 			}
 			unset( $card );
@@ -197,10 +261,18 @@ class AIRB_Ajax {
 		// Single-offer blocks.
 		if ( ! empty( $results['consultation_pitch'] ) && is_array( $results['consultation_pitch'] ) ) {
 			$title = (string) ( $results['consultation_pitch']['headline'] ?? __( 'Free consultation', 'ai-risk-benchmark' ) );
-			$results['consultation_pitch']['cta_url'] = self::mailto( $title, $role );
+			$results['consultation_pitch']['cta_url'] = self::resolve_cta_url(
+				$title,
+				$role,
+				(string) ( $results['consultation_pitch']['cta_url'] ?? '' )
+			);
 		}
 		if ( ! empty( $results['policy_generator'] ) && is_array( $results['policy_generator'] ) ) {
-			$results['policy_generator']['cta_url'] = self::mailto( (string) ( $results['policy_generator']['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ), $role );
+			$results['policy_generator']['cta_url'] = self::resolve_cta_url(
+				(string) ( $results['policy_generator']['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ),
+				$role,
+				(string) ( $results['policy_generator']['cta_url'] ?? '' )
+			);
 		}
 
 		return $results;

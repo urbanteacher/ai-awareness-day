@@ -545,6 +545,28 @@
 		return html;
 	}
 
+	function staffProfileFieldsHtml() {
+		var hint = state.role === 'teacher' ? (i18n.profileHintTeacher || i18n.profileHint) : i18n.profileHint;
+		var html = '<div class="airb__contact-grid">';
+		html += '<div class="airb__contact-field">';
+		html += '<label class="airb__label" for="airb-school-phase">' + esc(i18n.schoolPhase) + '</label>';
+		html += '<select class="airb__select" id="airb-school-phase">';
+		html += '<option value="">' + esc(i18n.schoolPhaseChoose) + '</option>';
+		html += '<option value="primary"' + (state.schoolPhase === 'primary' ? ' selected' : '') + '>' + esc(i18n.schoolPhasePrimary) + '</option>';
+		html += '<option value="secondary"' + (state.schoolPhase === 'secondary' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseSecondary) + '</option>';
+		html += '<option value="all_through"' + (state.schoolPhase === 'all_through' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseAllThrough) + '</option>';
+		html += '</select></div>';
+		html += '<div class="airb__contact-field">';
+		html += '<label class="airb__label" for="airb-org-type">' + esc(i18n.orgType) + '</label>';
+		html += '<select class="airb__select" id="airb-org-type">';
+		html += '<option value="">' + esc(i18n.orgTypeChoose) + '</option>';
+		html += '<option value="standalone"' + (state.orgType === 'standalone' ? ' selected' : '') + '>' + esc(i18n.orgStandalone) + '</option>';
+		html += '<option value="mat"' + (state.orgType === 'mat' ? ' selected' : '') + '>' + esc(i18n.orgMat) + '</option>';
+		html += '</select></div></div>';
+		if (hint) html += '<p class="airb__muted airb__profile-hint">' + esc(hint) + '</p>';
+		return html;
+	}
+
 	function renderContact() {
 		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Almost done') + '</h3>';
 
@@ -558,25 +580,19 @@
 			html += '<label class="airb__label" for="airb-year-group">' + esc(ygLabel) + '</label>' +
 				'<select class="airb__select" id="airb-year-group">' + yearGroupOptionsHtml() + '</select>';
 		} else {
-			if (i18n.contactHint) html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
-			html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
-				'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+			if (state.role === 'teacher' && i18n.contactHintTeacher) {
+				html += '<p class="airb__muted">' + esc(i18n.contactHintTeacher) + '</p>';
+			} else if (i18n.contactHint) {
+				html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
+			}
+
+			if (state.role === 'leader') {
+				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
+					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+			}
 
 			if (state.role === 'leader' || state.role === 'teacher') {
-				html += '<label class="airb__label" for="airb-school-phase">' + esc(i18n.schoolPhase) + '</label>' +
-					'<select class="airb__select" id="airb-school-phase">' +
-					'<option value="">' + esc(i18n.schoolPhaseChoose) + '</option>' +
-					'<option value="primary"' + (state.schoolPhase === 'primary' ? ' selected' : '') + '>' + esc(i18n.schoolPhasePrimary) + '</option>' +
-					'<option value="secondary"' + (state.schoolPhase === 'secondary' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseSecondary) + '</option>' +
-					'<option value="all_through"' + (state.schoolPhase === 'all_through' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseAllThrough) + '</option>' +
-					'</select>' +
-					'<label class="airb__label" for="airb-org-type">' + esc(i18n.orgType) + '</label>' +
-					'<select class="airb__select" id="airb-org-type">' +
-					'<option value="">' + esc(i18n.orgTypeChoose) + '</option>' +
-					'<option value="standalone"' + (state.orgType === 'standalone' ? ' selected' : '') + '>' + esc(i18n.orgStandalone) + '</option>' +
-					'<option value="mat"' + (state.orgType === 'mat' ? ' selected' : '') + '>' + esc(i18n.orgMat) + '</option>' +
-					'</select>' +
-					'<p class="airb__muted airb__profile-hint">' + esc(i18n.profileHint) + '</p>';
+				html += staffProfileFieldsHtml();
 			}
 
 			html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
@@ -870,31 +886,11 @@
 			html += '<h4>' + esc(i18n.exposure) + '</h4>' + exposureCardsHtml(r.key_exposure_areas);
 		}
 
-		if (r.next_steps && r.next_steps.length) {
-			var principle = (cfg.after_audit && cfg.after_audit.principle) ? cfg.after_audit.principle : i18n.afterPrinciple;
-			html += '<section class="airb__pathway"><h4>' + esc(i18n.nextSteps) + '</h4>';
-			if (principle) html += '<p class="airb__principle airb__principle--inline">' + esc(principle) + '</p>';
-			html += '<div class="airb__pathway-list">';
-			r.next_steps.forEach(function (step) {
-				html += '<article class="airb__pathway-card">';
-				if (step.type_label) {
-					html += '<span class="airb__pathway-badge airb__pathway-badge--' + esc(step.offer_type || 'template') + '">' + esc(step.type_label) + '</span>';
-				}
-				html += '<h5>' + esc(step.title) + '</h5><p>' + esc(step.body) + '</p>';
-				if (step.cta_url) {
-					html += '<a class="airb__btn airb__btn--ghost airb__btn--sm" href="' + esc(step.cta_url) + '" target="_blank" rel="noopener">' + esc(step.cta_text || step.title) + '</a>';
-				}
-				html += '</article>';
-			});
-			html += '</div></section>';
-		}
-
 		html += benchmarkHtml(r);
 
 		if (r.recommendations && r.recommendations.length) {
 			html += '<h4>' + esc(i18n.recommendations) + '</h4><div class="airb__recs">';
 			r.recommendations.forEach(function (rec) {
-				if (r.next_steps && r.next_steps.some(function (s) { return s.title === rec.title; })) return;
 				html += '<div class="airb__rec"><h5>' + esc(rec.title) + '</h5><p>' + esc(rec.body) + '</p>';
 				if (rec.cta_url) {
 					html += '<a class="airb__btn airb__btn--ghost airb__btn--sm" href="' + esc(rec.cta_url) + '" target="_blank" rel="noopener">' + esc(rec.cta_text || rec.title) + '</a>';
@@ -907,7 +903,7 @@
 		if (r.consultation_pitch && r.consultation_pitch.cta_url) {
 			var pitch = r.consultation_pitch;
 			html += '<section class="airb__consultation">';
-			html += '<p class="airb__funnel-stage">' + esc(pitch.headline || i18n.stage4) + '</p>';
+			html += '<h4 class="airb__consultation-title">' + esc(pitch.headline || i18n.consultationTitle || i18n.stage4) + '</h4>';
 			html += '<p class="airb__consultation-msg">' + esc(pitch.message) + '</p>';
 			html += '<a class="airb__btn airb__btn--primary" href="' + esc(pitch.cta_url) + '">' + esc(pitch.cta_text) + '</a>';
 			html += '</section>';
@@ -1070,7 +1066,7 @@
 		}
 		if (state.phase === 'contact') {
 			if (!isYoungRole()) {
-				state.school = (document.getElementById('airb-school') || {}).value || '';
+				state.school = state.role === 'leader' ? ((document.getElementById('airb-school') || {}).value || '') : '';
 				state.email = (document.getElementById('airb-email') || {}).value || '';
 				state.schoolPhase = (document.getElementById('airb-school-phase') || {}).value || '';
 				state.orgType = (document.getElementById('airb-org-type') || {}).value || '';

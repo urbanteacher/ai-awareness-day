@@ -141,6 +141,22 @@ class AIRB_Config {
 			}
 			$config['version'] = 6;
 			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 7 ) {
+			self::patch_dfe_cta_urls( $config );
+			$config['version'] = 7;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 8 ) {
+			if ( is_array( $config['consultation_cta'] ?? null ) ) {
+				$config['consultation_cta']['title'] = __( 'Contact the AI Awareness Day team', 'ai-risk-benchmark' );
+				$config['consultation_cta']['text']  = __( 'Get support with your results', 'ai-risk-benchmark' );
+				$changed                             = true;
+			}
+			$config['version'] = 8;
+			$changed           = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;
@@ -148,6 +164,55 @@ class AIRB_Config {
 
 		if ( $changed ) {
 			update_option( AIRB_OPTION_CONFIG, $config, false );
+		}
+	}
+
+	/**
+	 * Point policy and data-protection CTAs at official DfE publications.
+	 *
+	 * @param array<string, mixed> $config Config (by reference).
+	 */
+	private static function patch_dfe_cta_urls( array &$config ): void {
+		$policy_url    = AIRB_Defaults::dfe_url_using_ai();
+		$checklist_url = AIRB_Defaults::dfe_url_generative_ai();
+
+		$patch_offer = static function ( array &$item ) use ( $policy_url, $checklist_url ): void {
+			$title = (string) ( $item['title'] ?? '' );
+			$id    = (string) ( $item['id'] ?? '' );
+
+			if ( 'leader_no_policy' === $id
+				|| false !== stripos( $title, 'AI Policy Generator' )
+				|| false !== stripos( $title, 'published AI policy' ) ) {
+				$item['cta_url'] = $policy_url;
+			}
+
+			if ( false !== stripos( $title, 'Data Protection Checklist' ) ) {
+				$item['cta_url'] = $checklist_url;
+			}
+		};
+
+		foreach ( array( 'recommendations', 'pathway_offers' ) as $list_key ) {
+			if ( empty( $config[ $list_key ] ) || ! is_array( $config[ $list_key ] ) ) {
+				continue;
+			}
+			foreach ( $config[ $list_key ] as &$item ) {
+				if ( is_array( $item ) ) {
+					$patch_offer( $item );
+				}
+			}
+			unset( $item );
+		}
+
+		if ( ! empty( $config['services']['items'] ) && is_array( $config['services']['items'] ) ) {
+			foreach ( $config['services']['items'] as &$service ) {
+				if ( ! is_array( $service ) ) {
+					continue;
+				}
+				if ( false !== stripos( (string) ( $service['label'] ?? '' ), 'Policy Generator' ) ) {
+					$service['url'] = $policy_url;
+				}
+			}
+			unset( $service );
 		}
 	}
 

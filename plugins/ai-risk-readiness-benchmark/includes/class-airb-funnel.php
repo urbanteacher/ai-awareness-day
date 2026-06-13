@@ -229,7 +229,7 @@ class AIRB_Funnel {
 	}
 
 	/**
-	 * Stage 4 — score-led consultation framing (not a sales pitch).
+	 * Support contact block for teachers and leaders after results.
 	 *
 	 * @param array<string, mixed> $results Results.
 	 * @param string               $role    Role.
@@ -241,39 +241,13 @@ class AIRB_Funnel {
 			return array();
 		}
 
-		$lines = array();
-		$domains = (array) ( $results['domain_scores'] ?? array() );
-
-		foreach ( array( 'human_oversight' => __( 'Human Oversight', 'ai-risk-benchmark' ), 'governance' => __( 'Governance', 'ai-risk-benchmark' ) ) as $slug => $label ) {
-			$dom = (array) ( $domains[ $slug ] ?? array() );
-			if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
-				continue;
-			}
-			$readiness = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
-			$lines[]   = sprintf(
-				'%d%% on %s',
-				$readiness,
-				$label
-			);
-		}
-
 		$cta = (array) ( $config['consultation_cta'] ?? array() );
 		$url = (string) ( $cta['url'] ?? '' );
 
-		if ( $lines ) {
-			$message = sprintf(
-				/* translators: %s: e.g. "42% on Human Oversight and 51% on Governance" */
-				__( 'Your benchmark shows %s. Let\'s walk through the findings together — not a sales pitch.', 'ai-risk-benchmark' ),
-				implode( ' ' . __( 'and', 'ai-risk-benchmark' ) . ' ', $lines )
-			);
-		} else {
-			$message = __( 'Your benchmark results are ready. Let\'s walk through the findings together — not a sales pitch.', 'ai-risk-benchmark' );
-		}
-
 		return array(
-			'headline' => __( 'Stage 4: Walk through your findings', 'ai-risk-benchmark' ),
-			'message'  => $message,
-			'cta_text' => (string) ( $cta['title'] ?? __( 'Book a free consultation', 'ai-risk-benchmark' ) ),
+			'headline' => __( 'Get support from the AI Awareness Day team', 'ai-risk-benchmark' ),
+			'message'  => __( 'Questions about your results or what to do next? Contact the AI Awareness Day team — we can help you interpret your scores and plan practical next steps for your school.', 'ai-risk-benchmark' ),
+			'cta_text' => (string) ( $cta['title'] ?? __( 'Contact the AI Awareness Day team', 'ai-risk-benchmark' ) ),
 			'cta_url'  => $url,
 		);
 	}
@@ -292,7 +266,7 @@ class AIRB_Funnel {
 		}
 
 		$services = (array) ( $config['services'] ?? array() );
-		$url      = 'https://aiawarenessday.co.uk/resources/';
+		$url      = AIRB_Defaults::dfe_url_using_ai();
 		foreach ( (array) ( $services['items'] ?? array() ) as $item ) {
 			if ( false !== stripos( (string) ( $item['label'] ?? '' ), 'Policy Generator' ) ) {
 				$url = (string) ( $item['url'] ?? $url );

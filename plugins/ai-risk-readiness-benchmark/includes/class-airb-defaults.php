@@ -14,6 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Defaults {
 
+	/** DfE — operational handbook (policies, acceptable use). */
+	public static function dfe_url_using_ai(): string {
+		return 'https://www.gov.uk/government/publications/using-ai-in-education-settings';
+	}
+
+	/** DfE — generative AI overview (data protection, DPIAs, risk). */
+	public static function dfe_url_generative_ai(): string {
+		return 'https://www.gov.uk/government/publications/generative-artificial-intelligence-ai-in-education';
+	}
+
 	/**
 	 * All benchmark domains.
 	 *
@@ -117,7 +127,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 6,
+			'version'             => 8,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -139,9 +149,9 @@ class AIRB_Defaults {
 			'services'         => self::default_services(),
 			'aad_2027'         => self::default_aad_2027(),
 			'consultation_cta' => array(
-				'title' => __( 'Book a free consultation', 'ai-risk-benchmark' ),
+				'title' => __( 'Contact the AI Awareness Day team', 'ai-risk-benchmark' ),
 				'url'   => 'https://aiawarenessday.co.uk/contact/',
-				'text'  => __( 'Discuss your results with our team', 'ai-risk-benchmark' ),
+				'text'  => __( 'Get support with your results', 'ai-risk-benchmark' ),
 			),
 			'gateway'          => self::default_gateway(),
 			'pathway_offers'   => self::default_pathway_offers(),
@@ -366,7 +376,7 @@ class AIRB_Defaults {
 			'headline' => __( 'When you need more support', 'ai-risk-benchmark' ),
 			'intro'    => __( 'The benchmark is free. Your report identifies gaps. Schools can then access:', 'ai-risk-benchmark' ),
 			'items'    => array(
-				array( 'label' => __( 'AI Policy Generator', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/resources/' ),
+				array( 'label' => __( 'AI Policy Generator', 'ai-risk-benchmark' ), 'url' => self::dfe_url_using_ai() ),
 				array( 'label' => __( 'AI Governance Toolkit', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/resources/' ),
 				array( 'label' => __( 'Teacher Training', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
 				array( 'label' => __( 'Assessment Integrity Reviews', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
@@ -439,7 +449,7 @@ class AIRB_Defaults {
 				'title'       => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
 				'body'        => __( 'Your governance score suggests policy foundations are not yet secure. Start with a whole-school AI use policy aligned to DfE expectations.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/resources/',
+				'cta_url'     => self::dfe_url_using_ai(),
 			),
 			array(
 				'roles'       => array( 'leader' ),
@@ -483,7 +493,7 @@ class AIRB_Defaults {
 				'title'       => __( 'AI Data Protection Checklist', 'ai-risk-benchmark' ),
 				'body'        => __( 'Privacy risk is elevated. Review what data enters AI tools and when a DPIA is required under UK GDPR.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Get the checklist', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/resources/',
+				'cta_url'     => self::dfe_url_generative_ai(),
 			),
 			array(
 				'roles'       => array( 'leader' ),
@@ -561,7 +571,7 @@ class AIRB_Defaults {
 					'title'         => __( 'You need a published AI policy', 'ai-risk-benchmark' ),
 					'body'          => __( 'Your audit shows the school does not yet have a reviewed AI policy. Start with our DfE-aligned AI Policy Generator and adapt it to your context.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/resources/',
+					'cta_url'       => self::dfe_url_using_ai(),
 				)
 			),
 			$offer(

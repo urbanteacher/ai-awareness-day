@@ -2418,6 +2418,15 @@
 	background: var(--airb-ink-2);
 }
 
+.airb__consultation-title {
+	margin: 0 0 0.5rem;
+	font-family: var(--font-display, 'Intel Clear', sans-serif);
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--airb-text);
+}
+
 .airb__consultation-msg {
 	margin: 0.5rem 0 1rem;
 	font-size: 0.95rem;
@@ -2427,6 +2436,22 @@
 .airb__profile-hint {
 	font-size: 0.8rem;
 	margin: 0.25rem 0 0.75rem;
+}
+
+.airb__contact-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 0.85rem;
+	margin-bottom: 0.5rem;
+}
+
+.airb__contact-field .airb__label:first-child {
+	margin-top: 0;
+}
+
+.airb__contact-field .airb__input,
+.airb__contact-field .airb__select {
+	margin-bottom: 0;
 }
 
 .airb__footer {
