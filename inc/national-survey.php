@@ -147,6 +147,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 						<option value="all_through"><?php esc_html_e( 'All-through (4–18)', 'ai-awareness-day' ); ?></option>
 						<option value="special"><?php esc_html_e( 'Special / Alternative Provision', 'ai-awareness-day' ); ?></option>
 						<option value="fe_college"><?php esc_html_e( 'FE College / Sixth Form', 'ai-awareness-day' ); ?></option>
+						<option value="higher_education"><?php esc_html_e( 'Higher Education', 'ai-awareness-day' ); ?></option>
 						<option value="mat_trust"><?php esc_html_e( 'MAT / Trust (multiple schools)', 'ai-awareness-day' ); ?></option>
 					</select>
 				</div>
@@ -856,7 +857,7 @@ function aiad_handle_survey_submission(): void {
 		: array();
 	$year_groups = array_values( array_intersect( $raw_year_groups, $allowed_year_groups ) );
 
-	$allowed_school_types = array( 'primary', 'secondary', 'all_through', 'special', 'fe_college', 'mat_trust' );
+	$allowed_school_types = array( 'primary', 'secondary', 'all_through', 'special', 'fe_college', 'higher_education', 'mat_trust' );
 	if ( ! in_array( $school_type, $allowed_school_types, true ) ) {
 		$school_type = '';
 	}
@@ -1659,6 +1660,7 @@ function aiad_survey_analytics_page(): void {
 		'all_through' => 'All-through',
 		'special'    => 'Special / Alt Provision',
 		'fe_college' => 'FE College / 6th Form',
+		'higher_education' => 'Higher Education',
 		'mat_trust'  => 'MAT / Trust',
 	);
 
