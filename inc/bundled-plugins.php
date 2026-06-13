@@ -89,10 +89,12 @@ function aiad_copy_dir( string $src, string $dest ): bool {
 
 /**
  * Copy one bundled plugin into wp-content/plugins when missing or outdated.
+ *
+ * @return bool True when files were copied; false when unchanged or copy failed.
  */
 function aiad_sync_bundled_plugin( string $slug, string $main_file ): bool {
-	$source_dir = aiad_bundled_plugin_source_dir( $slug );
-	$dest_dir   = aiad_bundled_plugin_dest_dir( $slug );
+	$source_dir  = aiad_bundled_plugin_source_dir( $slug );
+	$dest_dir    = aiad_bundled_plugin_dest_dir( $slug );
 	$source_main = trailingslashit( $source_dir ) . $main_file;
 	$dest_main   = trailingslashit( $dest_dir ) . $main_file;
 
@@ -108,7 +110,7 @@ function aiad_sync_bundled_plugin( string $slug, string $main_file ): bool {
 		|| ( $source_version && $source_version !== $installed );
 
 	if ( ! $needs_copy ) {
-		return true;
+		return false;
 	}
 
 	if ( ! aiad_copy_dir( $source_dir, $dest_dir ) ) {
@@ -124,8 +126,10 @@ function aiad_sync_bundled_plugin( string $slug, string $main_file ): bool {
 
 /**
  * Activate a bundled plugin if it is installed but inactive.
+ *
+ * @return bool True when activation was attempted and the plugin was previously inactive.
  */
-function aiad_activate_bundled_plugin( string $slug, string $main_file ): void {
+function aiad_activate_bundled_plugin( string $slug, string $main_file ): bool {
 	$plugin_file = $slug . '/' . $main_file;
 
 	if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -133,15 +137,16 @@ function aiad_activate_bundled_plugin( string $slug, string $main_file ): void {
 	}
 
 	if ( is_plugin_active( $plugin_file ) ) {
-		return;
+		return false;
 	}
 
 	$dest_main = trailingslashit( aiad_bundled_plugin_dest_dir( $slug ) ) . $main_file;
 	if ( ! is_readable( $dest_main ) ) {
-		return;
+		return false;
 	}
 
 	activate_plugin( $plugin_file, '', false, true );
+	return is_plugin_active( $plugin_file );
 }
 
 /**
@@ -155,10 +160,11 @@ function aiad_maybe_sync_bundled_plugins(): void {
 	$ran = true;
 
 	foreach ( aiad_bundled_plugins() as $slug => $main_file ) {
-		if ( ! aiad_sync_bundled_plugin( $slug, $main_file ) ) {
-			continue;
+		$copied    = aiad_sync_bundled_plugin( $slug, $main_file );
+		$activated = aiad_activate_bundled_plugin( $slug, $main_file );
+		if ( $copied || $activated ) {
+			set_transient( 'aiad_flush_rewrites', 1, MINUTE_IN_SECONDS );
 		}
-		aiad_activate_bundled_plugin( $slug, $main_file );
 	}
 }
 add_action( 'plugins_loaded', 'aiad_maybe_sync_bundled_plugins', 1 );
