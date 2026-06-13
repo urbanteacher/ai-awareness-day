@@ -43,7 +43,34 @@
 		progressLbl: document.getElementById('airb-progress-label'),
 		error: document.getElementById('airb-error'),
 		printHost: document.getElementById('airb-print-host'),
+		hero: document.querySelector('.airb__hero'),
+		deck: document.getElementById('airb-deck'),
 	};
+
+	var introCollapsed = false;
+
+	function collapseIntro() {
+		if (introCollapsed) {
+			return;
+		}
+		introCollapsed = true;
+		if (el.hero) {
+			el.hero.hidden = true;
+		}
+		if (el.deck) {
+			el.deck.hidden = true;
+		}
+	}
+
+	function expandIntro() {
+		introCollapsed = false;
+		if (el.hero) {
+			el.hero.hidden = false;
+		}
+		if (el.deck) {
+			el.deck.hidden = false;
+		}
+	}
 
 	function riskBand(pct) {
 		if (pct <= 30) return 'low';
@@ -1021,6 +1048,7 @@
 			if (!state.sections.length) { showError(i18n.error); return; }
 			state.phase = 'audit';
 			state.step = 0;
+			collapseIntro();
 			renderAuditSection();
 			return;
 		}
@@ -1075,6 +1103,7 @@
 		}
 		if (state.phase === 'audit' && state.step === 0) {
 			state.phase = 'role';
+			expandIntro();
 			renderRole();
 			return;
 		}

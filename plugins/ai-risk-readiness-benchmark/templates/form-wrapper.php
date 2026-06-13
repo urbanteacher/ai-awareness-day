@@ -40,10 +40,6 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__body">
 
 	<div class="airb__intro airb__hero">
-		<?php if ( ! empty( $framework['product_name'] ) ) : ?>
-			<p class="airb__brand airb__brand--hero"><?php echo esc_html( (string) $framework['product_name'] ); ?></p>
-		<?php endif; ?>
-
 		<aside class="airb__hero-gauge" aria-label="<?php esc_attr_e( 'Signature metric preview', 'ai-risk-benchmark' ); ?>">
 			<div class="airb__hero-gauge-copy">
 				<p class="airb__hero-gauge-tag"><?php esc_html_e( 'Signature metric', 'ai-risk-benchmark' ); ?></p>
@@ -58,12 +54,8 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 			<?php if ( ! empty( $framework['subtitle'] ) ) : ?>
 				<p class="airb__framework-sub"><?php echo esc_html( (string) $framework['subtitle'] ); ?></p>
 			<?php endif; ?>
-			<h2 class="airb__title"><?php echo esc_html( (string) ( $positioning['headline'] ?? __( 'AI Risk & Readiness Benchmark', 'ai-risk-benchmark' ) ) ); ?></h2>
 			<?php if ( ! empty( $framework['statement'] ) ) : ?>
 				<p class="airb__lead airb__lead--framework"><?php echo esc_html( (string) $framework['statement'] ); ?></p>
-			<?php endif; ?>
-			<?php if ( ! empty( $positioning['tagline'] ) ) : ?>
-				<p class="airb__tagline"><?php echo esc_html( (string) $positioning['tagline'] ); ?></p>
 			<?php endif; ?>
 		</div>
 	</div>

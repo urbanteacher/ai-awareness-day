@@ -153,7 +153,7 @@ class AIRB_Defaults {
 				array( 'label' => 'ICO AI & Data Protection Guidance', 'url' => 'https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/' ),
 				array( 'label' => 'JCQ AI Assessment Guidance', 'url' => 'https://www.jcq.org.uk/exams-office/malpractice/' ),
 				array( 'label' => 'Ofqual AI and Qualifications Guidance', 'url' => 'https://www.gov.uk/government/publications/regulating-artificial-intelligence-in-qualifications' ),
-				array( 'label' => "Ofsted's Approach to AI", 'url' => 'https://www.gov.uk/government/publications/ofsteds-approach-to-artificial-intelligence-ai-in-education' ),
+				array( 'label' => "Ofsted's Approach to AI", 'url' => 'https://www.gov.uk/government/publications/ofsteds-approach-to-ai' ),
 				array( 'label' => 'AI Opportunities Action Plan', 'url' => 'https://www.gov.uk/government/publications/ai-opportunities-action-plan' ),
 			),
 			'questions'        => AIRB_Questions::all(),

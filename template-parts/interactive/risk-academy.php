@@ -357,7 +357,7 @@ $show = isset( $aiad_risk_academy_show ) && is_array( $aiad_risk_academy_show )
 				<li><a href="https://www.gov.uk/government/publications/keeping-children-safe-in-education--2" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Keeping Children Safe in Education (KCSIE)', 'ai-awareness-day' ); ?></a></li>
 				<li><a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'ICO — AI & data protection (UK GDPR)', 'ai-awareness-day' ); ?></a></li>
 				<li><a href="https://www.jcq.org.uk/exams-office/malpractice/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'JCQ — AI use in assessments', 'ai-awareness-day' ); ?></a></li>
-				<li><a href="https://www.gov.uk/government/publications/ofsteds-approach-to-artificial-intelligence-ai-in-education" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ofsted\'s approach to AI', 'ai-awareness-day' ); ?></a></li>
+				<li><a href="https://www.gov.uk/government/publications/ofsteds-approach-to-ai" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ofsted\'s approach to AI', 'ai-awareness-day' ); ?></a></li>
 				<li><a href="https://www.gov.uk/government/publications/regulating-artificial-intelligence-in-qualifications" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ofqual — regulating AI in qualifications', 'ai-awareness-day' ); ?></a></li>
 			</ul>
 		</div>

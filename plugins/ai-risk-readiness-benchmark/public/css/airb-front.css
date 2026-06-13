@@ -400,30 +400,10 @@
 	color: var(--airb-text);
 }
 
-.airb__brand {
-	font-family: var(--font-display, 'Intel Clear', sans-serif);
-	font-size: 1.15rem;
-	font-weight: 700;
-	color: var(--airb-brand);
-	margin: 0 0 0.5rem;
-}
-
-.airb__tagline {
-	font-size: 0.9rem;
-	color: var(--airb-sage);
-	margin: 1rem 0 0;
-	font-style: italic;
-}
-
-.airb__brand--hero {
-	font-size: 1.35rem;
-	margin: 0;
-}
-
 .airb__framework-sub {
 	font-size: 0.95rem;
 	color: var(--airb-sage);
-	margin: 0 0 0.75rem;
+	margin: 0 0 0.5rem;
 	font-weight: 600;
 }
 
@@ -2007,7 +1987,6 @@
 	align-items: center;
 	background: var(--airb-ink-2);
 	border: 1px solid var(--airb-border);
-	border-left: 4px solid var(--airb-sage);
 	border-radius: var(--airb-radius-card);
 	padding: 1rem 1.15rem;
 	text-align: left;

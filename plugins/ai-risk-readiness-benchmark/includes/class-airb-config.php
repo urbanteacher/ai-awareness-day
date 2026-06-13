@@ -63,6 +63,20 @@ class AIRB_Config {
 			}
 		}
 
+		if ( is_array( $config['guidance_refs'] ?? null ) ) {
+			$withdrawn_ofsted_url = 'https://www.gov.uk/government/publications/ofsteds-approach-to-artificial-intelligence-ai-in-education';
+			$current_ofsted_url   = 'https://www.gov.uk/government/publications/ofsteds-approach-to-ai';
+			foreach ( $config['guidance_refs'] as $index => $ref ) {
+				if ( ! is_array( $ref ) ) {
+					continue;
+				}
+				if ( (string) ( $ref['url'] ?? '' ) === $withdrawn_ofsted_url ) {
+					$config['guidance_refs'][ $index ]['url'] = $current_ofsted_url;
+					$changed                                  = true;
+				}
+			}
+		}
+
 		if ( (int) ( $config['version'] ?? 0 ) < 4 ) {
 			$config['questions'] = AIRB_Questions::all();
 			$config['version']   = 4;
