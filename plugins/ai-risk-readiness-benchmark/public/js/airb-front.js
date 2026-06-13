@@ -888,27 +888,6 @@
 
 		html += benchmarkHtml(r);
 
-		if (r.recommendations && r.recommendations.length) {
-			html += '<h4>' + esc(i18n.recommendations) + '</h4><div class="airb__recs">';
-			r.recommendations.forEach(function (rec) {
-				html += '<div class="airb__rec"><h5>' + esc(rec.title) + '</h5><p>' + esc(rec.body) + '</p>';
-				if (rec.cta_url) {
-					html += '<a class="airb__btn airb__btn--ghost airb__btn--sm" href="' + esc(rec.cta_url) + '" target="_blank" rel="noopener">' + esc(rec.cta_text || rec.title) + '</a>';
-				}
-				html += '</div>';
-			});
-			html += '</div>';
-		}
-
-		if (r.consultation_pitch && r.consultation_pitch.cta_url) {
-			var pitch = r.consultation_pitch;
-			html += '<section class="airb__consultation">';
-			html += '<h4 class="airb__consultation-title">' + esc(pitch.headline || i18n.consultationTitle || i18n.stage4) + '</h4>';
-			html += '<p class="airb__consultation-msg">' + esc(pitch.message) + '</p>';
-			html += '<a class="airb__btn airb__btn--primary" href="' + esc(pitch.cta_url) + '">' + esc(pitch.cta_text) + '</a>';
-			html += '</section>';
-		}
-
 		if (r.gateway && r.gateway.cards && r.gateway.cards.length) {
 			html += '<section class="airb__gateway">';
 			html += '<h4>' + esc(r.gateway.headline || i18n.gatewayTitle) + '</h4>';
@@ -922,11 +901,6 @@
 				html += '</article>';
 			});
 			html += '</div></section>';
-		} else if (isStaffRole()) {
-			var cta = cfg.consultation_cta || {};
-			if (cta.url) {
-				html += '<p class="airb__cta-wrap"><a class="airb__btn airb__btn--primary" href="' + esc(cta.url) + '">' + esc(cta.title || cta.text) + '</a></p>';
-			}
 		} else if (i18n.shareResultsHint) {
 			html += '<p class="airb__muted airb__share-hint">' + esc(i18n.shareResultsHint) + '</p>';
 		}
