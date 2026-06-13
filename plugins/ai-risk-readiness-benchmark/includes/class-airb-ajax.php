@@ -184,10 +184,10 @@ class AIRB_Ajax {
 			}
 		}
 
-		// Gateway cards (skip the AAD promo card — real destination).
+		// Gateway cards — all route to email.
 		if ( ! empty( $results['gateway']['cards'] ) && is_array( $results['gateway']['cards'] ) ) {
 			foreach ( $results['gateway']['cards'] as &$card ) {
-				if ( is_array( $card ) && ( $card['key'] ?? '' ) !== 'aad_day' ) {
+				if ( is_array( $card ) ) {
 					$card['cta_url'] = self::mailto( (string) ( $card['title'] ?? '' ), $role );
 				}
 			}
