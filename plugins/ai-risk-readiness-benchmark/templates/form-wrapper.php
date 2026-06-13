@@ -40,24 +40,26 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__body">
 
 	<div class="airb__intro airb__hero">
-		<aside class="airb__hero-gauge" aria-label="<?php esc_attr_e( 'Signature metric preview', 'ai-risk-benchmark' ); ?>">
-			<div class="airb__hero-gauge-copy">
-				<p class="airb__hero-gauge-tag"><?php esc_html_e( 'Signature metric', 'ai-risk-benchmark' ); ?></p>
-				<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio™', 'ai-risk-benchmark' ); ?></h3>
-				<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
-				<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
+		<aside class="airb__hero-gauge" aria-label="<?php esc_attr_e( 'Benchmark overview', 'ai-risk-benchmark' ); ?>">
+			<?php if ( ! empty( $framework['subtitle'] ) || ! empty( $framework['statement'] ) ) : ?>
+				<div class="airb__hero-gauge-intro">
+					<?php if ( ! empty( $framework['subtitle'] ) ) : ?>
+						<p class="airb__framework-sub"><?php echo esc_html( (string) $framework['subtitle'] ); ?></p>
+					<?php endif; ?>
+					<?php if ( ! empty( $framework['statement'] ) ) : ?>
+						<p class="airb__lead airb__lead--framework"><?php echo esc_html( (string) $framework['statement'] ); ?></p>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
+			<div class="airb__hero-gauge-metric">
+				<div class="airb__hero-gauge-copy">
+					<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio™', 'ai-risk-benchmark' ); ?></h3>
+					<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
+					<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
+				</div>
+				<div class="airb__hero-gauge-dial" data-airb-demo-gauge="34"></div>
 			</div>
-			<div class="airb__hero-gauge-dial" data-airb-demo-gauge="34"></div>
 		</aside>
-
-		<div class="airb__hero-copy">
-			<?php if ( ! empty( $framework['subtitle'] ) ) : ?>
-				<p class="airb__framework-sub"><?php echo esc_html( (string) $framework['subtitle'] ); ?></p>
-			<?php endif; ?>
-			<?php if ( ! empty( $framework['statement'] ) ) : ?>
-				<p class="airb__lead airb__lead--framework"><?php echo esc_html( (string) $framework['statement'] ); ?></p>
-			<?php endif; ?>
-		</div>
 	</div>
 
 	<section class="airb__deck" id="airb-deck" data-deck aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'How it works', 'ai-risk-benchmark' ); ?>" tabindex="0">
