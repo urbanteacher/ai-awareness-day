@@ -117,7 +117,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 4,
+			'version'             => 6,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -131,7 +131,7 @@ class AIRB_Defaults {
 				'ai_literacy'          => __( 'Do users understand AI capabilities and limitations?', 'ai-risk-benchmark' ),
 				'governance'           => __( 'Does the school have policies, accountability and oversight?', 'ai-risk-benchmark' ),
 			),
-			'disclaimer'       => __( 'This tool is an educational self-assessment aligned to DfE, ICO, KCSIE, JCQ, Ofqual and Ofsted guidance for schools in England. It is not legal advice and does not replace safeguarding, data protection or legal counsel. It does not imply official endorsement.', 'ai-risk-benchmark' ),
+			'disclaimer'       => '',
 			'intro'            => __( 'Choose your role and complete a 10–15 minute audit. You will receive your DfE Alignment Score, signature metrics, a risk heat map, tailored recommendations and optional whole-school tracking. No student personal data is collected.', 'ai-risk-benchmark' ),
 			'role_benchmarks'  => self::default_role_benchmarks(),
 			'signature_metrics'=> self::default_signature_metrics(),

@@ -72,10 +72,6 @@ if ( empty( $rollup ) || ! is_array( $rollup ) ) {
 
 	<?php if ( ! empty( $rollup['key_exposure_areas'] ) ) : ?>
 		<h4><?php esc_html_e( 'Key exposure areas', 'ai-risk-benchmark' ); ?></h4>
-		<ul class="airb__exposure-list">
-			<?php foreach ( $rollup['key_exposure_areas'] as $area ) : ?>
-				<li><?php echo esc_html( (string) $area['label'] ); ?> — <?php echo esc_html( (string) $area['risk'] ); ?>% <?php esc_html_e( 'risk', 'ai-risk-benchmark' ); ?></li>
-			<?php endforeach; ?>
-		</ul>
+		<?php echo AIRB_Scoring::risk_cells_html( (array) $rollup['key_exposure_areas'], 'stat' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<?php endif; ?>
 </div>

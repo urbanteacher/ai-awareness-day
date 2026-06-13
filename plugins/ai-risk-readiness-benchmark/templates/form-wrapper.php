@@ -16,7 +16,6 @@ $positioning       = (array) ( $config['positioning'] ?? array() );
 $domains           = AIRB_Defaults::domains();
 $domain_desc       = (array) ( $config['domain_descriptions'] ?? array() );
 $guidance          = (array) ( $config['guidance_refs'] ?? array() );
-$roles             = AIRB_Defaults::roles();
 $role_benchmarks   = (array) ( $config['role_benchmarks'] ?? array() );
 $signature_metrics = (array) ( $config['signature_metrics'] ?? array() );
 $after_audit       = (array) ( $config['after_audit'] ?? array() );
@@ -85,20 +84,6 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 						<?php if ( ! empty( $positioning['problem_closing'] ) ) : ?>
 							<p class="airb__lead"><?php echo esc_html( (string) $positioning['problem_closing'] ); ?></p>
 						<?php endif; ?>
-					</div>
-				</article>
-				<?php endif; ?>
-
-				<?php if ( $roles ) : ?>
-				<article class="airb__slide" role="group" aria-roledescription="slide" aria-label="<?php esc_attr_e( 'Four stakeholder groups', 'ai-risk-benchmark' ); ?>">
-					<div class="airb__slide-inner">
-						<h4 class="airb__slide-title"><?php esc_html_e( 'Four stakeholder groups', 'ai-risk-benchmark' ); ?></h4>
-						<p class="airb__muted"><?php esc_html_e( 'Each group completes a tailored audit, scored against the same eight domains.', 'ai-risk-benchmark' ); ?></p>
-						<div class="airb__stakeholder-grid">
-							<?php foreach ( $roles as $slug => $label ) : ?>
-								<span class="airb__stakeholder"><?php echo esc_html( $label ); ?></span>
-							<?php endforeach; ?>
-						</div>
 					</div>
 				</article>
 				<?php endif; ?>
@@ -280,9 +265,6 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__print-host" id="airb-print-host" hidden aria-hidden="true"></div>
 
 	<footer class="airb__footer">
-		<?php if ( ! empty( $config['disclaimer'] ) ) : ?>
-			<p class="airb__footer-disclaimer"><?php echo esc_html( (string) $config['disclaimer'] ); ?></p>
-		<?php endif; ?>
 		<p class="airb__credit">
 			<?php esc_html_e( 'Produced by', 'ai-risk-benchmark' ); ?>
 			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-risk-benchmark' ); ?></strong>

@@ -15,6 +15,56 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_Scoring {
 
 	/**
+	 * Inline colour for risk percentage (matches front-end riskScoreColor).
+	 *
+	 * @param float $risk_pct Risk percentage 0-100.
+	 */
+	public static function risk_score_color( float $risk_pct ): string {
+		if ( $risk_pct >= 55 ) {
+			return 'var(--airb-crit)';
+		}
+		if ( $risk_pct >= 40 ) {
+			return 'var(--airb-mod)';
+		}
+		return 'var(--airb-low)';
+	}
+
+	/**
+	 * Card grid markup for domain risk cells (exposure areas, heatmap).
+	 *
+	 * @param array<int, array{label:string,risk:float|int}> $cells  Domain rows.
+	 * @param string                                         $variant stat|heat.
+	 */
+	public static function risk_cells_html( array $cells, string $variant = 'stat' ): string {
+		if ( empty( $cells ) ) {
+			return '';
+		}
+
+		$grid_class = 'stat' === $variant ? 'airb__res-grid3' : 'airb__heatmap';
+		$html       = '<div class="' . esc_attr( $grid_class ) . '">';
+
+		foreach ( $cells as $cell ) {
+			$label = (string) ( $cell['label'] ?? '' );
+			$risk  = (int) round( (float) ( $cell['risk'] ?? 0 ) );
+			$color = self::risk_score_color( $risk );
+
+			if ( 'stat' === $variant ) {
+				$html .= '<div class="airb__res-stat">';
+				$html .= '<div class="airb__res-stat-lab">' . esc_html( $label ) . '</div>';
+				$html .= '<div class="airb__res-stat-big" style="color:' . esc_attr( $color ) . '">' . esc_html( (string) $risk ) . '%</div>';
+				$html .= '</div>';
+			} else {
+				$html .= '<div class="airb__heat-cell" title="' . esc_attr( $label . ' — ' . $risk . '%' ) . '">';
+				$html .= '<span class="airb__heat-lab">' . esc_html( $label ) . '</span>';
+				$html .= '<span class="airb__heat-big" style="color:' . esc_attr( $color ) . '">' . esc_html( (string) $risk ) . '%</span>';
+				$html .= '</div>';
+			}
+		}
+
+		return $html . '</div>';
+	}
+
+	/**
 	 * Risk band thresholds.
 	 *
 	 * @param float $risk_pct Risk percentage 0-100.

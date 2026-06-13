@@ -499,23 +499,6 @@
 	margin-bottom: 0.3rem;
 }
 
-.airb__stakeholder-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-	gap: 0.5rem;
-	margin-bottom: 1rem;
-}
-
-.airb__stakeholder {
-	display: block;
-	text-align: center;
-	padding: 0.5rem 0.65rem;
-	border: 1px solid var(--airb-border);
-	border-radius: var(--airb-radius);
-	font-size: 0.85rem;
-	font-weight: 600;
-}
-
 .airb__domain-num {
 	color: var(--airb-amber);
 }
@@ -623,14 +606,6 @@
 	color: var(--airb-muted);
 }
 
-.airb__role-card-sub {
-	display: block;
-	font-size: 0.72rem;
-	color: var(--airb-muted);
-	margin-top: 0.2rem;
-	font-weight: 400;
-}
-
 .airb__role-detail {
 	margin-top: 1rem;
 	padding-top: 1rem;
@@ -708,17 +683,6 @@
 .airb__chip:focus-visible {
 	border-color: var(--airb-brand);
 	color: var(--airb-text);
-}
-
-.airb__exposure-list {
-	margin: 0 0 1rem;
-	padding-left: 1.25rem;
-	color: var(--airb-muted);
-	font-size: 0.9rem;
-}
-
-.airb__exposure-list li {
-	margin-bottom: 0.35rem;
 }
 
 .airb__school-link {
@@ -898,22 +862,6 @@
 	margin: 0 0 0.35rem;
 }
 
-.airb__prog {
-	height: 5px;
-	background: var(--airb-border);
-	border-radius: 99px;
-	overflow: hidden;
-	margin: 0 0 1rem;
-}
-
-.airb__prog i {
-	display: block;
-	height: 100%;
-	background: var(--airb-accent-fill);
-	border-radius: 99px;
-	transition: width 0.3s ease;
-}
-
 .airb__domtag {
 	display: inline-flex;
 	align-items: center;
@@ -982,16 +930,16 @@
 
 .airb__role-card {
 	position: relative;
-	background: var(--airb-ink-2);
-	border: 1.5px solid var(--airb-border);
+	background: var(--airb-brand);
+	border: 1.5px solid var(--airb-brand);
 	border-radius: 14px;
 	padding: 1.15rem 1rem 1rem;
-	color: var(--airb-text);
+	color: var(--white, #ffffff);
 	font: inherit;
 	font-weight: 600;
 	cursor: pointer;
 	text-align: left;
-	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease;
 	display: flex;
 	flex-direction: column;
 	gap: 0.35rem;
@@ -1004,7 +952,7 @@
 	font-size: 1.2rem;
 	font-weight: 700;
 	line-height: 1.25;
-	color: var(--airb-text);
+	color: var(--white, #ffffff);
 	margin: 0;
 }
 
@@ -1016,17 +964,25 @@
 	font-weight: 700;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	color: var(--airb-low);
-	background: rgba(21, 128, 61, 0.12);
+	color: var(--white, #ffffff);
+	background: rgba(34, 197, 94, 0.35);
 	border-radius: 6px;
 	padding: 0.2rem 0.45rem;
+}
+
+.airb__role-card-sub {
+	display: block;
+	font-size: 0.72rem;
+	color: rgba(255, 255, 255, 0.72);
+	margin-top: 0.2rem;
+	font-weight: 400;
 }
 
 .airb__role-card-blurb {
 	display: block;
 	font-size: 0.78rem;
 	font-weight: 500;
-	color: var(--airb-muted);
+	color: rgba(255, 255, 255, 0.78);
 	line-height: 1.4;
 	flex: 1;
 }
@@ -1036,18 +992,20 @@
 	margin-top: 0.5rem;
 	font-size: 0.78rem;
 	font-weight: 600;
-	color: var(--airb-text);
+	color: var(--airb-accent-fill);
 }
 
 .airb__role-card:hover {
-	border-color: var(--airb-brand);
+	border-color: var(--airb-accent-fill);
+	background: var(--gray-800, #262626);
 	transform: translateY(-2px);
-	box-shadow: 0 14px 30px -18px rgba(15, 24, 34, 0.25);
+	box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.45);
 }
 
 .airb__role-card.is-selected {
-	border-color: var(--airb-brand);
-	box-shadow: inset 0 0 0 1px var(--airb-brand);
+	border-color: var(--airb-accent-fill);
+	box-shadow: inset 0 0 0 1px var(--airb-accent-fill);
+	background: var(--gray-800, #262626);
 }
 
 .airb__options {
@@ -1486,7 +1444,7 @@
 	border-bottom: 1px solid var(--airb-border);
 	font-size: 0.86rem;
 	line-height: 1.5;
-	color: var(--airb-ink-2, var(--airb-text));
+	color: var(--airb-text);
 }
 
 .airb__res-rec:last-child {
@@ -2372,34 +2330,38 @@
 
 .airb__heatmap {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-	gap: 0.5rem;
+	grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+	gap: 0.85rem;
 	margin: 0.5rem 0 1.25rem;
 }
 
 .airb__heat-cell {
-	padding: 0.65rem 0.5rem;
-	border-radius: var(--airb-radius);
+	background: var(--white, #fff);
 	border: 1px solid var(--airb-border);
-	text-align: center;
-	font-size: 0.78rem;
+	border-radius: 14px;
+	padding: 1rem 1.1rem;
+	text-align: left;
 }
 
-.airb__heat-cell--low { background: rgba(21, 128, 61, 0.1); border-color: var(--airb-low); }
-.airb__heat-cell--moderate { background: rgba(161, 98, 7, 0.1); border-color: var(--airb-mod); }
-.airb__heat-cell--high { background: rgba(194, 65, 12, 0.1); border-color: var(--airb-high); }
-.airb__heat-cell--critical { background: rgba(185, 28, 28, 0.1); border-color: var(--airb-crit); }
-
-.airb__heat-label {
+.airb__heat-lab {
 	display: block;
+	font-size: 0.68rem;
 	font-weight: 600;
-	margin-bottom: 0.2rem;
-	line-height: 1.25;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--airb-muted);
+	line-height: 1.3;
+	margin-bottom: 0.35rem;
 }
 
-.airb__heat-val {
-	color: var(--airb-muted);
-	font-size: 0.72rem;
+.airb__heat-big {
+	display: block;
+	font-family: var(--font-display, 'Intel Clear', sans-serif);
+	font-size: clamp(1.75rem, 4vw, 2.2rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	font-variant-numeric: tabular-nums;
 }
 
 .airb__leadership-report {
@@ -2475,17 +2437,8 @@
 	border-radius: var(--airb-radius-card);
 }
 
-.airb__footer-disclaimer {
-	margin: 0;
-	width: 100%;
-	max-width: none;
-	font-size: 0.72rem;
-	line-height: 1.45;
-	color: var(--airb-muted);
-}
-
 .airb__credit {
-	margin: 0.55rem 0 0;
+	margin: 0;
 	font-size: 0.72rem;
 	color: var(--airb-muted);
 }

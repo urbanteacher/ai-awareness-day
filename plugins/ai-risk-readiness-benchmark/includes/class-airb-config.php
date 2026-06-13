@@ -77,10 +77,70 @@ class AIRB_Config {
 			}
 		}
 
+		$legacy_disclaimers = array(
+			'This tool is an educational self-assessment aligned to DfE, ICO, KCSIE, JCQ, Ofqual and Ofsted guidance for schools in England. It is not legal advice and does not replace safeguarding, data protection or legal counsel. It does not imply official endorsement.',
+			'Educational self-assessment only — not legal advice and not official endorsement. No student names or personal data are collected.',
+		);
+		if ( in_array( (string) ( $config['disclaimer'] ?? '' ), $legacy_disclaimers, true ) ) {
+			$config['disclaimer'] = '';
+			$changed              = true;
+		}
+
 		if ( (int) ( $config['version'] ?? 0 ) < 4 ) {
 			$config['questions'] = AIRB_Questions::all();
 			$config['version']   = 4;
 			$changed             = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 5 ) {
+			if ( ! empty( $config['questions'] ) && is_array( $config['questions'] ) ) {
+				$policy_labels = array(
+					'published' => __( 'Published & reviewed', 'ai-risk-benchmark' ),
+					'draft'     => __( 'In draft', 'ai-risk-benchmark' ),
+					'informal'  => __( 'Informal only', 'ai-risk-benchmark' ),
+				);
+				foreach ( $config['questions'] as &$question ) {
+					if ( (string) ( $question['id'] ?? '' ) !== 'l_policy' || empty( $question['options'] ) ) {
+						continue;
+					}
+					foreach ( $question['options'] as &$option ) {
+						$value = (string) ( $option['value'] ?? '' );
+						if ( isset( $policy_labels[ $value ] ) ) {
+							$option['label'] = $policy_labels[ $value ];
+						}
+					}
+					unset( $option );
+				}
+				unset( $question );
+			}
+			$config['version'] = 5;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 6 ) {
+			if ( ! empty( $config['questions'] ) && is_array( $config['questions'] ) ) {
+				$without_ai_labels = array(
+					'yes_easily' => __( 'Yes, easily', 'ai-risk-benchmark' ),
+					'yes_some'   => __( 'Yes, with effort', 'ai-risk-benchmark' ),
+					'difficult'  => __( 'Difficult', 'ai-risk-benchmark' ),
+					'no'         => __( 'Not realistically', 'ai-risk-benchmark' ),
+				);
+				foreach ( $config['questions'] as &$question ) {
+					if ( (string) ( $question['id'] ?? '' ) !== 't_without_ai' || empty( $question['options'] ) ) {
+						continue;
+					}
+					foreach ( $question['options'] as &$option ) {
+						$value = (string) ( $option['value'] ?? '' );
+						if ( isset( $without_ai_labels[ $value ] ) ) {
+							$option['label'] = $without_ai_labels[ $value ];
+						}
+					}
+					unset( $option );
+				}
+				unset( $question );
+			}
+			$config['version'] = 6;
+			$changed           = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;

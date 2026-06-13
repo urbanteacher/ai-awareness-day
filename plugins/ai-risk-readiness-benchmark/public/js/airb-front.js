@@ -499,9 +499,7 @@
 		var section = state.sections[state.step];
 		if (!section) return;
 
-		var progPct = state.sections.length ? Math.round((state.step / state.sections.length) * 100) : 0;
 		var html = '<div class="airb__panel">';
-		html += '<div class="airb__prog" aria-hidden="true"><i style="width:' + progPct + '%"></i></div>';
 		html += '<div class="airb__domtag"><span class="airb__domtag-sq" style="background:' + esc(domainColor(section.domain)) + '"></span>';
 		html += esc(section.name) + ' · ' + esc(domains[section.domain] || section.domain) + '</div>';
 
@@ -787,13 +785,27 @@
 		host.innerHTML = oversightGaugeSvg(val, 'Human Oversight Ratio example: ' + val + '%');
 	}
 
+	function exposureCardsHtml(cells) {
+		if (!cells || !cells.length) return '';
+		var html = '<div class="airb__res-grid3">';
+		cells.forEach(function (cell) {
+			var risk = Math.round(cell.risk);
+			html += '<div class="airb__res-stat">';
+			html += '<div class="airb__res-stat-lab">' + esc(cell.label) + '</div>';
+			html += '<div class="airb__res-stat-big" style="color:' + esc(riskScoreColor(risk)) + '">' + risk + '%</div>';
+			html += '</div>';
+		});
+		return html + '</div>';
+	}
+
 	function heatmapHtml(cells) {
 		if (!cells || !cells.length) return '';
 		var html = '<div class="airb__heatmap">';
 		cells.forEach(function (cell) {
-			html += '<div class="airb__heat-cell airb__heat-cell--' + esc(cell.band) + '" title="' + esc(cell.label) + ' — ' + cell.risk + '%">';
-			html += '<span class="airb__heat-label">' + esc(cell.label) + '</span>';
-			html += '<span class="airb__heat-val">' + cell.risk + '%</span></div>';
+			var risk = Math.round(cell.risk);
+			html += '<div class="airb__heat-cell" title="' + esc(cell.label) + ' — ' + risk + '%">';
+			html += '<span class="airb__heat-lab">' + esc(cell.label) + '</span>';
+			html += '<span class="airb__heat-big" style="color:' + esc(riskScoreColor(risk)) + '">' + risk + '%</span></div>';
 		});
 		return html + '</div>';
 	}
@@ -824,11 +836,7 @@
 			html += '</p>';
 			if (rep.school_profile) html += '<p class="airb__muted">' + esc(rep.school_profile) + '</p>';
 			if (rep.high_risk_areas && rep.high_risk_areas.length) {
-				html += '<h5>' + esc(i18n.highRiskAreas) + '</h5><ul class="airb__exposure-list">';
-				rep.high_risk_areas.forEach(function (a) {
-					html += '<li>' + esc(a.label) + ' — ' + a.risk + '%</li>';
-				});
-				html += '</ul>';
+				html += '<h5>' + esc(i18n.highRiskAreas) + '</h5>' + exposureCardsHtml(rep.high_risk_areas);
 			}
 			if (rep.recommended_actions && rep.recommended_actions.length) {
 				html += '<h5>' + esc(i18n.recommendedActions) + '</h5><ol class="airb__action-list">';
@@ -859,11 +867,7 @@
 		}
 
 		if (r.key_exposure_areas && r.key_exposure_areas.length) {
-			html += '<h4>' + esc(i18n.exposure) + '</h4><ul class="airb__exposure-list">';
-			r.key_exposure_areas.forEach(function (area) {
-				html += '<li>' + esc(area.label) + ' — ' + esc(String(area.risk)) + '%</li>';
-			});
-			html += '</ul>';
+			html += '<h4>' + esc(i18n.exposure) + '</h4>' + exposureCardsHtml(r.key_exposure_areas);
 		}
 
 		if (r.next_steps && r.next_steps.length) {
@@ -1287,11 +1291,7 @@
 			html += '</tbody></table>';
 		}
 		if (rollup.key_exposure_areas && rollup.key_exposure_areas.length) {
-			html += '<h4>Key exposure areas</h4><ul class="airb__exposure-list">';
-			rollup.key_exposure_areas.forEach(function (a) {
-				html += '<li>' + esc(a.label) + ' — ' + a.risk + '% risk</li>';
-			});
-			html += '</ul>';
+			html += '<h4>Key exposure areas</h4>' + exposureCardsHtml(rollup.key_exposure_areas);
 		}
 		html += '</div>';
 		container.innerHTML = html;

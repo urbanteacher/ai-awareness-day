@@ -60,9 +60,9 @@ class AIRB_Questions {
 				self::q( 't_ai_before_task', 'teacher', 'ai_dependency', __( 'Dependency', 'ai-risk-benchmark' ), __( 'How often do you use AI before attempting the task yourself?', 'ai-risk-benchmark' ), $f ),
 				self::q( 't_without_ai', 'teacher', 'ai_dependency', __( 'Dependency', 'ai-risk-benchmark' ), __( 'Could you teach effectively without AI for one week?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes_easily', 'label' => __( 'Yes, easily', 'ai-risk-benchmark' ), 'score' => 0 ),
-					array( 'value' => 'yes_some', 'label' => __( 'Yes, with some inconvenience', 'ai-risk-benchmark' ), 'score' => 1 ),
-					array( 'value' => 'difficult', 'label' => __( 'It would be difficult', 'ai-risk-benchmark' ), 'score' => 2 ),
-					array( 'value' => 'no', 'label' => __( 'No, not realistically', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'yes_some', 'label' => __( 'Yes, with effort', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'difficult', 'label' => __( 'Difficult', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'Not realistically', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 				self::q( 't_feedback_ai', 'teacher', 'ai_dependency', __( 'Dependency', 'ai-risk-benchmark' ), __( 'How often do you use AI to write pupil feedback?', 'ai-risk-benchmark' ), $f ),
 				self::q( 't_pupil_data', 'teacher', 'privacy', __( 'Privacy', 'ai-risk-benchmark' ), __( 'Have you entered student information into AI tools?', 'ai-risk-benchmark' ), array(
@@ -198,9 +198,9 @@ class AIRB_Questions {
 			// —— School leader ——
 			array(
 				self::q( 'l_policy', 'leader', 'governance', __( 'Governance', 'ai-risk-benchmark' ), __( 'Is there a published AI policy?', 'ai-risk-benchmark' ), array(
-					array( 'value' => 'published', 'label' => __( 'Yes, published and reviewed', 'ai-risk-benchmark' ), 'score' => 0 ),
-					array( 'value' => 'draft', 'label' => __( 'Draft or in progress', 'ai-risk-benchmark' ), 'score' => 1 ),
-					array( 'value' => 'informal', 'label' => __( 'Informal guidance only', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'published', 'label' => __( 'Published & reviewed', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'draft', 'label' => __( 'In draft', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'informal', 'label' => __( 'Informal only', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 				self::q( 'l_ai_lead', 'leader', 'governance', __( 'Governance', 'ai-risk-benchmark' ), __( 'Is there a named AI lead or owner?', 'ai-risk-benchmark' ), array(

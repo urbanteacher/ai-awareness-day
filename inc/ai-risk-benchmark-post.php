@@ -29,6 +29,13 @@ function aiad_risk_benchmark_get_headline(): string {
 }
 
 /**
+ * Timeline excerpt shown on the single timeline entry.
+ */
+function aiad_risk_benchmark_get_excerpt(): string {
+	return __( 'During the build-up to AI Awareness Day 2026, we received many enquiries about AI in schools. This article introduces our free AI Risk & Readiness Benchmark™ — a practical audit to measure adoption, dependency and readiness for you and your school.', 'ai-awareness-day' );
+}
+
+/**
  * Gutenberg block content for the launch article (article + embedded tool).
  */
 function aiad_get_risk_benchmark_timeline_content(): string {
@@ -132,10 +139,10 @@ function aiad_get_risk_benchmark_timeline_content(): string {
 		. '<tr><td>51%+</td><td>Strong oversight</td></tr>'
 		. '</tbody></table></figure><!-- /wp:table -->';
 
-	// ── Audit your school for free (the live tool, at the bottom) ─────────
-	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">Audit your school for free</h2><!-- /wp:heading -->';
+	// ── Free audit CTA (the live tool, at the bottom) ───────────────────
+	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html__( 'Audit yourself or your school for free', 'ai-awareness-day' ) . '</h2><!-- /wp:heading -->';
 
-	$blocks[] = '<!-- wp:paragraph --><p>Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your school’s actual AI exposure — try the benchmark below.</p><!-- /wp:paragraph -->';
+	$blocks[] = '<!-- wp:paragraph --><p>' . esc_html__( 'Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ) . '</p><!-- /wp:paragraph -->';
 
 	$blocks[] = '<!-- wp:shortcode -->[ai_risk_benchmark]<!-- /wp:shortcode -->';
 
@@ -171,7 +178,7 @@ function aiad_create_risk_benchmark_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'Most AI audits only measure adoption — the tech, the policies, the paperwork. They miss exposure: how dependent your teachers and students are becoming. Meet the UK’s first DfE-aligned AI Risk & Readiness Benchmark™, free for schools.', 'ai-awareness-day' ),
+			'post_excerpt' => aiad_risk_benchmark_get_excerpt(),
 			'post_content' => aiad_get_risk_benchmark_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,
@@ -247,7 +254,7 @@ function aiad_backfill_risk_benchmark_excerpt(): void {
 		wp_update_post(
 			array(
 				'ID'           => (int) $post->ID,
-				'post_excerpt' => __( 'Most AI audits only measure adoption — the tech, the policies, the paperwork. They miss exposure: how dependent your teachers and students are becoming. Meet the UK’s first DfE-aligned AI Risk & Readiness Benchmark™, free for schools.', 'ai-awareness-day' ),
+				'post_excerpt' => aiad_risk_benchmark_get_excerpt(),
 			),
 			true
 		);
@@ -256,3 +263,82 @@ function aiad_backfill_risk_benchmark_excerpt(): void {
 	update_option( 'aiad_risk_benchmark_excerpt_backfilled', 'yes' );
 }
 add_action( 'init', 'aiad_backfill_risk_benchmark_excerpt', 34 );
+
+/**
+ * One-time backfill: replace the legacy benchmark excerpt on the live article.
+ */
+function aiad_backfill_risk_benchmark_excerpt_v2(): void {
+	if ( get_option( 'aiad_risk_benchmark_excerpt_v2_backfilled' ) === 'yes' ) {
+		return;
+	}
+
+	$post = get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' );
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	$legacy = 'Most AI audits only measure adoption — the tech, the policies, the paperwork. They miss exposure: how dependent your teachers and students are becoming. Meet the UK’s first DfE-aligned AI Risk & Readiness Benchmark™, free for schools.';
+	$legacy_ascii = "Most AI audits only measure adoption — the tech, the policies, the paperwork. They miss exposure: how dependent your teachers and students are becoming. Meet the UK's first DfE-aligned AI Risk & Readiness Benchmark™, free for schools.";
+	$current = trim( (string) $post->post_excerpt );
+
+	if ( $current === $legacy || $current === $legacy_ascii || $current === '' ) {
+		wp_update_post(
+			array(
+				'ID'           => (int) $post->ID,
+				'post_excerpt' => aiad_risk_benchmark_get_excerpt(),
+			),
+			true
+		);
+	}
+
+	update_option( 'aiad_risk_benchmark_excerpt_v2_backfilled', 'yes' );
+}
+add_action( 'init', 'aiad_backfill_risk_benchmark_excerpt_v2', 34 );
+
+/**
+ * One-time backfill: update the audit CTA heading on the live benchmark article.
+ */
+function aiad_backfill_risk_benchmark_audit_heading(): void {
+	if ( get_option( 'aiad_risk_benchmark_audit_heading_backfilled' ) === 'yes' ) {
+		return;
+	}
+
+	$post = get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' );
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	$content = (string) $post->post_content;
+	$old     = 'Audit your school for free';
+	$new     = __( 'Audit yourself or your school for free', 'ai-awareness-day' );
+
+	if ( str_contains( $content, $old ) ) {
+		$content = str_replace( $old, $new, $content );
+		$content = str_replace(
+			'discover your school’s actual AI exposure — try the benchmark below.',
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			$content
+		);
+		$content = str_replace(
+			"discover your school's actual AI exposure — try the benchmark below.",
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			$content
+		);
+		$content = str_replace(
+			'discover your school’s actual AI exposure — start the benchmark below.',
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			$content
+		);
+
+		wp_update_post(
+			array(
+				'ID'           => (int) $post->ID,
+				'post_content' => $content,
+			),
+			true
+		);
+	}
+
+	update_option( 'aiad_risk_benchmark_audit_heading_backfilled', 'yes' );
+}
+add_action( 'init', 'aiad_backfill_risk_benchmark_audit_heading', 35 );
