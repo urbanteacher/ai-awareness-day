@@ -106,9 +106,9 @@ $initial_show         = $initial_show_mobile;
             data-initial-show-desktop="<?php echo (int) $initial_show_desktop; ?>">
             <div class="momentum-intro">
                 <span class="section-label"><?php esc_html_e('Traction', 'ai-awareness-day'); ?></span>
-                <h2 class="section-title"><?php esc_html_e('500,000 reach so far', 'ai-awareness-day'); ?></h2>
+                <h2 class="section-title"><?php esc_html_e('1,000,000 reach so far', 'ai-awareness-day'); ?></h2>
                 <p class="section-desc">
-                    <?php esc_html_e("The support for AI Awareness Day 2026 is growing fast. With schools now signing up across the UK, we estimate we're already reaching over 500,000 students and we're confident we'll hit 1 million in the coming months. We're thrilled to welcome our interested schools, charities, and partners. Together, we're building a national movement.", 'ai-awareness-day'); ?>
+                    <?php esc_html_e("The support for AI Awareness Day is growing fast. With the help of our partners — charities, edtech organisations, multi-academy trusts, a national broadcaster, and a multinational publishing and education company — sharing the campaign via social media, newsletters and more, we estimate we're already reaching over 1,000,000 students. Together, we're building a national movement.", 'ai-awareness-day'); ?>
                 </p>
             </div>
 

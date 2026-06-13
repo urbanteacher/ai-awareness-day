@@ -1,9 +1,10 @@
 <?php
 /**
- * Front page section: AI Awareness Day live schedule spotlight.
+ * Front page section: AI Awareness Day "What's On" spotlight.
  *
- * Shows three randomly chosen sessions (new mix on each page load). Full list,
- * audience filters, and join links live on the /schedule/ archive.
+ * Post-event reframing of the live schedule. Shows three randomly chosen
+ * sessions (new mix on each page load) as on-demand catch-up / CPD. Full list,
+ * audience filters, and recording links live on the /schedule/ archive.
  *
  * @package AI_Awareness_Day
  */
@@ -49,16 +50,43 @@ $audience_labels      = $audience_data['audience_labels'];
 $spotlight_pool = $sessions;
 shuffle( $spotlight_pool );
 $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight_pool ) ) );
+
+// Resolve the published national survey page URL for the inline CTA banner.
+$aiad_survey_url = '';
+$aiad_survey_pid = (int) get_option( 'aiad_survey_page_created' );
+if ( $aiad_survey_pid && 'publish' === get_post_status( $aiad_survey_pid ) ) {
+    $aiad_survey_url = (string) get_permalink( $aiad_survey_pid );
+} else {
+    $aiad_survey_page = get_page_by_path( 'national-survey-2026' );
+    if ( $aiad_survey_page && 'publish' === $aiad_survey_page->post_status ) {
+        $aiad_survey_url = (string) get_permalink( $aiad_survey_page );
+    }
+}
 ?>
+<?php if ( $aiad_survey_url !== '' ) : ?>
+<aside class="aiad-survey-banner" aria-label="<?php esc_attr_e( 'National survey', 'ai-awareness-day' ); ?>">
+    <div class="container aiad-survey-banner__inner fade-up">
+        <div class="aiad-survey-banner__text">
+            <span class="aiad-survey-banner__eyebrow"><?php esc_html_e( 'We want to hear from you', 'ai-awareness-day' ); ?></span>
+            <p class="aiad-survey-banner__title">
+                <?php esc_html_e( 'How did AI Awareness Day 2026 go for you? Share your experience and help shape 2027.', 'ai-awareness-day' ); ?>
+            </p>
+        </div>
+        <a class="aiad-survey-banner__cta" href="<?php echo esc_url( $aiad_survey_url ); ?>">
+            <?php esc_html_e( 'Take the 3-minute survey →', 'ai-awareness-day' ); ?>
+        </a>
+    </div>
+</aside>
+<?php endif; ?>
 <section class="section section--alt aiad-schedule-row aiad-schedule-home" id="schedule">
     <div class="container">
         <div class="fade-up">
-            <span class="section-label"><?php esc_html_e( 'AI Awareness Day — 4th June', 'ai-awareness-day' ); ?></span>
-            <h2 class="section-title"><?php esc_html_e( 'Live Streams', 'ai-awareness-day' ); ?></h2>
+            <span class="section-label"><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></span>
+            <h2 class="section-title"><?php esc_html_e( 'What’s On?', 'ai-awareness-day' ); ?></h2>
             <p class="section-desc">
                 <?php
                 esc_html_e(
-                    'There are many ways to engage with AI Awareness Day. We have planned live streams across different age groups, themes, and topics.',
+                    'AI Awareness Day continues year-round. Catch up on session recordings and explore CPD activities, events, and conferences across different age groups, themes, and topics.',
                     'ai-awareness-day'
                 );
                 ?>
@@ -69,7 +97,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                     echo esc_html(
                         sprintf(
                             /* translators: 1: formatted event date, 2: total number of published live sessions. */
-                            __( '%1$s · %2$d sessions', 'ai-awareness-day' ),
+                            __( 'From AI Awareness Day, %1$s · %2$d sessions to catch up on', 'ai-awareness-day' ),
                             $event_date_label,
                             count( $sessions )
                         )
@@ -146,7 +174,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                            href="<?php echo esc_url( $reg_url ); ?>"
                            data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
                            target="_blank" rel="noopener">
-                            <?php esc_html_e( 'Join', 'ai-awareness-day' ); ?>
+                            <?php esc_html_e( 'Watch recording', 'ai-awareness-day' ); ?>
                         </a>
                     <?php endif; ?>
                     <?php if ( $ics_start !== '' ) : ?>
@@ -169,7 +197,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
 
         <div class="aiad-schedule-row__actions fade-up">
             <a class="aiad-schedule-row__cta" href="<?php echo esc_url( $archive_url ); ?>">
-                <?php esc_html_e( 'View full schedule →', 'ai-awareness-day' ); ?>
+                <?php esc_html_e( 'Latest events, conferences, CPD &amp; courses — get ready for AI Awareness Day 2027 →', 'ai-awareness-day' ); ?>
             </a>
         </div>
     </div>

@@ -1,52 +1,93 @@
-/* National Survey 2026 — [aiad_national_survey] */
+/* National Survey — [aiad_national_survey]
+ * Styled to match the AI Buzzwords quiz: dark panels, mint-green accents,
+ * 4px radii, 1.5px borders, bordered option cards, bold CTA buttons.
+ */
 
 .aiad-survey {
+	--su-ink: #1a1a1a;
+	--su-panel: #1e1e1e;
+	--su-panel-2: #2a2a2a;
+	--su-border: #333;
+	--su-border-2: #444;
+	--su-accent: #86efac;
+	--su-text: rgba(255, 255, 255, 0.92);
+	--su-muted: rgba(255, 255, 255, 0.65);
+	--su-radius: 4px;
+
 	max-width: 720px;
 	margin: 0 auto;
 	padding: 0 0 3rem;
-	font-family: inherit;
+	font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
-/* Progress */
-.aiad-survey__progress {
-	height: 6px;
-	background: var(--wp--preset--color--light-grey, #e5e7eb);
-	border-radius: 3px;
-	overflow: hidden;
+.aiad-survey *,
+.aiad-survey *::before,
+.aiad-survey *::after {
+	box-sizing: border-box;
+}
+
+/* Progress — segmented stepper (one segment per step in the active path) */
+.aiad-survey__stepper {
+	display: flex;
+	gap: 8px;
 	margin-bottom: 0.5rem;
 }
 
-.aiad-survey__progress-bar {
-	height: 100%;
-	background: var(--wp--preset--color--primary, #0070c0);
+.aiad-survey__step-seg {
+	flex: 1;
+	height: 6px;
 	border-radius: 3px;
-	transition: width 0.35s ease;
+	background: #e0e0e0;
+	transition: background 0.2s, box-shadow 0.2s;
+}
+
+.aiad-survey__step-seg.is-done {
+	background: var(--su-accent);
+}
+
+.aiad-survey__step-seg.is-current {
+	background: var(--su-panel);
+	box-shadow: 0 0 0 2px var(--su-panel), 0 0 0 4px var(--su-accent);
 }
 
 .aiad-survey__progress-label {
-	font-size: 0.8125rem;
-	color: var(--wp--preset--color--mid-grey, #6b7280);
-	margin: 0 0 1.75rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--su-ink);
+	margin: 0 0 1rem;
 }
 
-/* Steps */
+/* Steps — each active step is a dark panel like the quiz question card */
 .aiad-survey__step {
 	display: none;
-	border: 0;
-	padding: 0;
-	margin: 0;
+	margin: 0 0 1rem;
+	padding: 1.5rem;
+	border: 1.5px solid var(--su-border);
+	border-radius: var(--su-radius);
+	background: var(--su-panel);
+	color: var(--su-text);
 }
 
 .aiad-survey__step--active {
 	display: block;
 }
 
+.aiad-survey__step:focus {
+	outline: none;
+}
+
+.aiad-survey__step--error {
+	border-color: #f87171;
+	box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.25);
+}
+
 .aiad-survey__step-title {
-	font-size: 1.375rem;
+	font-size: 1.25rem;
 	font-weight: 700;
-	color: var(--wp--preset--color--heading, #111827);
-	margin: 0 0 1.5rem;
+	color: #fff;
+	margin: 0 0 1.25rem;
 	padding: 0;
+	line-height: 1.3;
 }
 
 /* Fields */
@@ -54,59 +95,87 @@
 	margin-bottom: 1.5rem;
 }
 
+.aiad-survey__field:last-child {
+	margin-bottom: 0;
+}
+
 .aiad-survey__label {
 	display: block;
 	font-weight: 600;
-	font-size: 0.9375rem;
-	margin-bottom: 0.5rem;
-	color: var(--wp--preset--color--heading, #111827);
+	font-size: 0.95rem;
+	margin-bottom: 0.75rem;
+	color: #fff;
+	line-height: 1.45;
 }
 
 .aiad-survey__label--rating {
 	font-weight: 500;
-	margin-bottom: 0.375rem;
+	margin-bottom: 0.5rem;
+	color: var(--su-text);
 }
 
 .aiad-survey__required {
-	color: #dc2626;
+	color: #f87171;
 	margin-left: 2px;
 }
 
 .aiad-survey__helper {
 	font-size: 0.875rem;
-	color: var(--wp--preset--color--mid-grey, #6b7280);
+	color: var(--su-muted);
 	margin-bottom: 1.25rem;
+	line-height: 1.55;
 }
 
+.aiad-survey__section-note {
+	font-size: 0.875rem;
+	color: var(--su-muted);
+	margin: 0 0 1.25rem;
+	padding: 0.75rem 1rem;
+	background: rgba(255, 255, 255, 0.04);
+	border-left: 3px solid var(--su-accent);
+	border-radius: 0 var(--su-radius) var(--su-radius) 0;
+	line-height: 1.55;
+}
+
+/* Text inputs / selects / textarea */
 .aiad-survey__input,
 .aiad-survey__select,
 .aiad-survey__textarea {
 	width: 100%;
 	padding: 0.625rem 0.875rem;
-	border: 2px solid var(--wp--preset--color--border, #d1d5db);
-	border-radius: 8px;
+	border: 1.5px solid var(--su-border-2);
+	border-radius: var(--su-radius);
 	font-size: 1rem;
 	font-family: inherit;
-	color: var(--wp--preset--color--body, #374151);
-	background: #fff;
-	box-sizing: border-box;
-	transition: border-color 0.15s;
+	color: #fff;
+	background: var(--su-panel-2);
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.aiad-survey__input::placeholder,
+.aiad-survey__textarea::placeholder {
+	color: rgba(255, 255, 255, 0.4);
 }
 
 .aiad-survey__input:focus,
 .aiad-survey__select:focus,
 .aiad-survey__textarea:focus {
 	outline: none;
-	border-color: var(--wp--preset--color--primary, #0070c0);
-	box-shadow: 0 0 0 3px rgba(0, 112, 192, 0.15);
+	border-color: var(--su-accent);
+	box-shadow: 0 0 0 1px var(--su-accent);
 }
 
 .aiad-survey__select {
 	appearance: none;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath fill='%236b7280' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20'%3E%3Cpath fill='%23cbd5e1' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	background-position: right 0.75rem center;
 	padding-right: 2.5rem;
+}
+
+.aiad-survey__select option {
+	color: #1a1a1a;
+	background: #fff;
 }
 
 .aiad-survey__textarea {
@@ -114,36 +183,56 @@
 	min-height: 100px;
 }
 
-/* Checkboxes & radios */
+/* Option groups — radios & checkboxes styled as bordered cards */
 .aiad-survey__checkgroup {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: 0.5rem 1rem;
+	gap: 0.5rem;
 }
 
 .aiad-survey__checkgroup--single {
 	grid-template-columns: 1fr;
 }
 
-.aiad-survey__section-note {
-	font-size: 0.875rem;
-	color: var(--wp--preset--color--mid-grey, #6b7280);
-	font-style: italic;
-	margin: 0 0 1.25rem;
-	padding: 0.75rem 1rem;
-	background: var(--wp--preset--color--off-white, #f9fafb);
-	border-left: 3px solid var(--wp--preset--color--primary, #0070c0);
-	border-radius: 0 6px 6px 0;
+.aiad-survey__radio-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
 .aiad-survey__check-label,
 .aiad-survey__radio-label {
 	display: flex;
 	align-items: flex-start;
-	gap: 0.5rem;
+	gap: 0.625rem;
+	padding: 0.75rem 0.875rem;
+	border: 1.5px solid var(--su-border-2);
+	border-radius: var(--su-radius);
+	background: var(--su-panel-2);
 	font-size: 0.9375rem;
+	line-height: 1.4;
+	color: var(--su-text);
 	cursor: pointer;
-	color: var(--wp--preset--color--body, #374151);
+	transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.aiad-survey__check-label:hover,
+.aiad-survey__radio-label:hover {
+	border-color: #666;
+	background: #333;
+}
+
+.aiad-survey__check-label:has(input:checked),
+.aiad-survey__radio-label:has(input:checked) {
+	border-color: var(--su-accent);
+	background: #333;
+	box-shadow: 0 0 0 1px var(--su-accent);
+}
+
+.aiad-survey__check-label:has(input:focus-visible),
+.aiad-survey__radio-label:has(input:focus-visible) {
+	outline: 2px solid var(--su-accent);
+	outline-offset: 2px;
 }
 
 .aiad-survey__checkbox,
@@ -151,22 +240,17 @@
 	flex-shrink: 0;
 	width: 1.125rem;
 	height: 1.125rem;
-	margin-top: 2px;
-	accent-color: var(--wp--preset--color--primary, #0070c0);
+	margin-top: 1px;
+	accent-color: var(--su-accent);
 	cursor: pointer;
-}
-
-.aiad-survey__radio-group {
-	display: flex;
-	flex-direction: column;
-	gap: 0.625rem;
 }
 
 /* Star ratings */
 .aiad-survey__field--rating {
 	padding: 0.875rem 1rem;
-	background: var(--wp--preset--color--off-white, #f9fafb);
-	border-radius: 8px;
+	background: var(--su-panel-2);
+	border: 1.5px solid var(--su-border-2);
+	border-radius: var(--su-radius);
 }
 
 .aiad-survey__stars {
@@ -186,6 +270,11 @@
 	height: 0;
 }
 
+.aiad-survey__star-input:focus-visible + .aiad-survey__star {
+	outline: 2px solid var(--su-accent);
+	outline-offset: 2px;
+}
+
 .aiad-survey__star {
 	font-size: 2rem;
 	color: #d1d5db;
@@ -194,66 +283,65 @@
 	line-height: 1;
 }
 
-.aiad-survey__star-label:hover .aiad-survey__star,
-.aiad-survey__star-label:hover ~ .aiad-survey__star-label .aiad-survey__star {
-	color: #f59e0b;
-}
+/* JS controls selected/hover star colours inline (amber #f59e0b). */
 
-.aiad-survey__stars.has-value .aiad-survey__star-label.selected .aiad-survey__star,
-.aiad-survey__stars.has-value .aiad-survey__star-label.selected ~ .aiad-survey__star-label .aiad-survey__star {
-	color: #d1d5db;
-}
-
-.aiad-survey__star-label.selected .aiad-survey__star,
-.aiad-survey__star-label.selected ~ .aiad-survey__star-label:not(.selected) .aiad-survey__star {
-	color: #f59e0b;
-}
-
-/* Highlight selected stars with CSS sibling trick */
-.aiad-survey__stars:not(:hover) .aiad-survey__star-input:checked ~ * .aiad-survey__star {
-	color: #d1d5db;
-}
-
-/* Navigation */
+/* Navigation — sits on the page background, below the dark panel */
 .aiad-survey__nav {
 	display: flex;
 	gap: 1rem;
-	margin-top: 2rem;
+	margin-top: 1.5rem;
 	flex-wrap: wrap;
 }
 
 .aiad-survey__btn {
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
+	min-width: 9rem;
 	padding: 0.75rem 1.75rem;
 	border: 2px solid transparent;
-	border-radius: 8px;
-	font-size: 1rem;
-	font-weight: 600;
+	border-radius: var(--su-radius);
+	font-family: inherit;
+	font-size: 0.95rem;
+	font-weight: 700;
 	cursor: pointer;
-	transition: background 0.15s, color 0.15s, border-color 0.15s;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.aiad-survey__btn:active {
+	transform: translateY(1px);
+}
+
+.aiad-survey__btn:focus-visible {
+	outline: 2px solid var(--su-ink);
+	outline-offset: 2px;
 }
 
 .aiad-survey__btn--next,
 .aiad-survey__btn--submit {
-	background: var(--wp--preset--color--primary, #0070c0);
+	background: var(--su-panel);
 	color: #fff;
+	border-color: var(--su-panel);
 	margin-left: auto;
 }
 
 .aiad-survey__btn--next:hover,
 .aiad-survey__btn--submit:hover {
-	background: var(--wp--preset--color--primary-dark, #005a9e);
+	background: #333;
+	border-color: #333;
 }
 
 .aiad-survey__btn--back {
 	background: transparent;
-	color: var(--wp--preset--color--primary, #0070c0);
-	border-color: var(--wp--preset--color--primary, #0070c0);
+	color: var(--su-ink);
+	border-color: var(--su-ink);
 }
 
 .aiad-survey__btn--back:hover {
-	background: var(--wp--preset--color--primary, #0070c0);
+	background: var(--su-ink);
 	color: #fff;
 }
 
@@ -267,25 +355,30 @@
 	margin-top: 1rem;
 	padding: 0.75rem 1rem;
 	background: #fef2f2;
-	border: 1px solid #fca5a5;
-	border-radius: 8px;
+	border: 1.5px solid #fca5a5;
+	border-radius: var(--su-radius);
 	color: #b91c1c;
 	font-size: 0.9375rem;
 }
 
-/* Success */
+/* Success — dark panel echoing the quiz results card */
 .aiad-survey__success {
 	text-align: center;
-	padding: 3rem 1rem;
+	padding: 2.5rem 1.5rem;
+	border: 1.5px solid var(--su-border);
+	border-radius: var(--su-radius);
+	background: var(--su-panel);
+	color: var(--su-text);
 }
 
 .aiad-survey__success-icon {
 	width: 64px;
 	height: 64px;
 	border-radius: 50%;
-	background: var(--wp--preset--color--primary, #0070c0);
-	color: #fff;
+	background: var(--su-accent);
+	color: var(--su-panel);
 	font-size: 2rem;
+	font-weight: 700;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -295,12 +388,26 @@
 .aiad-survey__success-title {
 	font-size: 1.75rem;
 	font-weight: 700;
+	color: #fff;
 	margin-bottom: 0.75rem;
 }
 
 .aiad-survey__success-body {
 	font-size: 1.0625rem;
-	color: var(--wp--preset--color--mid-grey, #6b7280);
+	color: var(--su-muted);
+	margin: 0;
+}
+
+/* Credit — matches the quiz/glossary footer */
+.aiad-survey__credit {
+	margin-top: 1.5rem;
+	text-align: center;
+	font-size: 12px;
+	color: #888;
+}
+
+.aiad-survey__credit a {
+	color: #888;
 }
 
 /* Honeypot */
@@ -313,6 +420,10 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+	.aiad-survey__step {
+		padding: 1.25rem 1rem;
+	}
+
 	.aiad-survey__checkgroup {
 		grid-template-columns: 1fr;
 	}
@@ -324,10 +435,6 @@
 	.aiad-survey__btn {
 		width: 100%;
 		justify-content: center;
-	}
-
-	.aiad-survey__btn--next,
-	.aiad-survey__btn--submit {
 		margin-left: 0;
 	}
 }

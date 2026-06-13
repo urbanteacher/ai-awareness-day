@@ -19,7 +19,7 @@
 		var backBtn     = document.getElementById('aiad-survey-back');
 		var nextBtn     = document.getElementById('aiad-survey-next');
 		var submitBtn   = document.getElementById('aiad-survey-submit');
-		var progressBar = document.getElementById('aiad-survey-progress-bar');
+		var stepperEl   = document.getElementById('aiad-survey-stepper');
 		var progressLbl = document.getElementById('aiad-survey-progress-label');
 
 		if (!form) return;
@@ -34,8 +34,13 @@
 				if (scaleWrap) {
 					scaleWrap.style.display = this.value === 'yes' ? '' : 'none';
 				}
-				// Rebuild sequence and refresh button state
+				// Rebuild sequence and refresh button + stepper state
 				sequence = this.value === 'yes' ? PARTICIPANT_STEPS.slice() : NON_PARTICIPANT_STEPS.slice();
+				if (currentIdx > sequence.length - 1) {
+					currentIdx = sequence.length - 1;
+				}
+				buildStepper(sequence.length);
+				updateStepper(currentIdx);
 				var isLast = currentIdx === sequence.length - 1;
 				nextBtn.hidden   = isLast;
 				submitBtn.hidden = !isLast;
@@ -71,11 +76,34 @@
 			return document.querySelector('.aiad-survey__step[data-step-id="' + stepId + '"]');
 		}
 
+		// Build one segment per step in the active path (rebuilds if the path length changes).
+		function buildStepper(total) {
+			if (!stepperEl || stepperEl.children.length === total) return;
+			var html = '';
+			for (var i = 0; i < total; i++) {
+				html += '<span class="aiad-survey__step-seg" role="listitem"></span>';
+			}
+			stepperEl.innerHTML = html;
+		}
+
+		function updateStepper(idx) {
+			if (!stepperEl) return;
+			var segs = stepperEl.querySelectorAll('.aiad-survey__step-seg');
+			for (var i = 0; i < segs.length; i++) {
+				segs[i].classList.remove('is-done', 'is-current');
+				if (i < idx) {
+					segs[i].classList.add('is-done');
+				} else if (i === idx) {
+					segs[i].classList.add('is-current');
+				}
+			}
+		}
+
 		function showStep(idx) {
 			// Hide all steps
 			document.querySelectorAll('.aiad-survey__step').forEach(function (el) {
 				el.hidden = true;
-				el.classList.remove('aiad-survey__step--active');
+				el.classList.remove('aiad-survey__step--active', 'aiad-survey__step--error');
 			});
 
 			var stepId = sequence[idx];
@@ -83,6 +111,9 @@
 			if (el) {
 				el.hidden = false;
 				el.classList.add('aiad-survey__step--active');
+				// Move focus to the step so screen readers announce the new section.
+				el.setAttribute('tabindex', '-1');
+				el.focus({ preventScroll: true });
 				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			}
 
@@ -90,8 +121,8 @@
 			var humanStep = idx + 1;
 
 			// Progress
-			var pct = Math.round(((idx) / total) * 100);
-			progressBar.style.width = pct + '%';
+			buildStepper(total);
+			updateStepper(idx);
 			progressLbl.textContent = 'Step ' + humanStep + ' of ' + total;
 
 			// Back button
@@ -111,15 +142,22 @@
 			var el = getStepEl(stepId);
 			if (!el) return true;
 
-			// Required radio groups
+			// Required radio groups — ignore any inside a hidden sub-section
+			// (e.g. the participation-scale question when "did not participate"
+			// is chosen). Validating a hidden required field would block Next
+			// forever, freezing the survey.
 			var radioGroups = {};
 			el.querySelectorAll('input[type="radio"][required]').forEach(function (r) {
+				if (r.offsetParent === null) {
+					return; // not rendered / hidden
+				}
 				radioGroups[r.name] = radioGroups[r.name] || [];
 				radioGroups[r.name].push(r);
 			});
 			for (var name in radioGroups) {
 				var checked = radioGroups[name].some(function (r) { return r.checked; });
 				if (!checked) {
+					el.classList.add('aiad-survey__step--error');
 					showError('Please select an answer before continuing.');
 					radioGroups[name][0].focus();
 					return false;
@@ -130,6 +168,7 @@
 			if (stepId === 'gate') {
 				var participated = el.querySelector('input[name="participated"]:checked');
 				if (!participated) {
+					el.classList.add('aiad-survey__step--error');
 					showError('Please tell us whether your school participated.');
 					return false;
 				}
@@ -150,6 +189,15 @@
 			errorBox.hidden = true;
 			errorBox.textContent = '';
 		}
+
+		// Clear the panel error highlight as soon as the user answers.
+		form.addEventListener('change', function (e) {
+			var step = e.target.closest('.aiad-survey__step--error');
+			if (step) {
+				step.classList.remove('aiad-survey__step--error');
+				hideError();
+			}
+		});
 
 		// ── Navigation ───────────────────────────────────────────────────────
 		nextBtn.addEventListener('click', function () {
@@ -193,10 +241,9 @@
 				.then(function (json) {
 					if (json.success) {
 						form.hidden = true;
-						document.querySelector('.aiad-survey__progress').hidden = true;
+						if (stepperEl) stepperEl.hidden = true;
 						document.querySelector('.aiad-survey__progress-label').hidden = true;
 						success.hidden = false;
-						progressBar.style.width = '100%';
 					} else {
 						var msg = (json.data && json.data.message) ? json.data.message : 'Something went wrong. Please try again.';
 						showError(msg);
