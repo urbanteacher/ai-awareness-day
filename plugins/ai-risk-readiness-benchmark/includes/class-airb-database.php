@@ -1,0 +1,219 @@
+<?php
+/**
+ * Custom submissions table.
+ *
+ * @package AIRB
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Database layer.
+ */
+class AIRB_Database {
+
+	/**
+	 * Fully qualified table name.
+	 */
+	public static function table_name(): string {
+		global $wpdb;
+		return $wpdb->prefix . AIRB_TABLE;
+	}
+
+	/**
+	 * Create submissions table.
+	 */
+	public static function create_table(): void {
+		global $wpdb;
+
+		$table   = self::table_name();
+		$charset = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			role varchar(20) NOT NULL DEFAULT '',
+			school_name varchar(255) NOT NULL DEFAULT '',
+			email varchar(255) NOT NULL DEFAULT '',
+			consent tinyint(1) NOT NULL DEFAULT 0,
+			risk_level varchar(20) NOT NULL DEFAULT '',
+			alignment_score smallint(3) NOT NULL DEFAULT 0,
+			dependency_index smallint(3) NOT NULL DEFAULT 0,
+			human_oversight_label varchar(40) NOT NULL DEFAULT '',
+			privacy_risk smallint(3) NOT NULL DEFAULT 0,
+			safeguarding_readiness smallint(3) NOT NULL DEFAULT 0,
+			governance_maturity smallint(3) NOT NULL DEFAULT 0,
+			domain_scores longtext NOT NULL,
+			answers longtext NOT NULL,
+			recommendations longtext NOT NULL,
+			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (id),
+			KEY role (role),
+			KEY risk_level (risk_level),
+			KEY created_at (created_at)
+		) {$charset};";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Insert a submission row.
+	 *
+	 * @param array<string, mixed> $data Row data.
+	 * @return int Insert ID or 0.
+	 */
+	public static function insert( array $data ): int {
+		global $wpdb;
+
+		$defaults = array(
+			'role'                   => '',
+			'school_name'            => '',
+			'email'                  => '',
+			'consent'                => 0,
+			'risk_level'             => '',
+			'alignment_score'        => 0,
+			'dependency_index'       => 0,
+			'human_oversight_label'    => '',
+			'privacy_risk'           => 0,
+			'safeguarding_readiness' => 0,
+			'governance_maturity'    => 0,
+			'domain_scores'          => '{}',
+			'answers'                => '{}',
+			'recommendations'        => '[]',
+			'created_at'             => current_time( 'mysql' ),
+		);
+
+		$row = wp_parse_args( $data, $defaults );
+
+		$inserted = $wpdb->insert(
+			self::table_name(),
+			array(
+				'role'                   => sanitize_key( (string) $row['role'] ),
+				'school_name'            => sanitize_text_field( (string) $row['school_name'] ),
+				'email'                  => sanitize_email( (string) $row['email'] ),
+				'consent'                => (int) $row['consent'],
+				'risk_level'             => sanitize_text_field( (string) $row['risk_level'] ),
+				'alignment_score'        => (int) $row['alignment_score'],
+				'dependency_index'       => (int) $row['dependency_index'],
+				'human_oversight_label'  => sanitize_text_field( (string) $row['human_oversight_label'] ),
+				'privacy_risk'           => (int) $row['privacy_risk'],
+				'safeguarding_readiness' => (int) $row['safeguarding_readiness'],
+				'governance_maturity'    => (int) $row['governance_maturity'],
+				'domain_scores'          => wp_json_encode( $row['domain_scores'] ),
+				'answers'                => wp_json_encode( $row['answers'] ),
+				'recommendations'        => wp_json_encode( $row['recommendations'] ),
+				'created_at'             => $row['created_at'],
+			),
+			array( '%s', '%s', '%s', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+		);
+
+		return $inserted ? (int) $wpdb->insert_id : 0;
+	}
+
+	/**
+	 * Fetch submissions with optional filters.
+	 *
+	 * @param array<string, mixed> $args Query args.
+	 * @return array<int, object>
+	 */
+	public static function get_submissions( array $args = array() ): array {
+		global $wpdb;
+
+		$defaults = array(
+			'role'       => '',
+			'risk_level' => '',
+			'school'     => '',
+			'date_from'  => '',
+			'date_to'    => '',
+			'limit'      => 50,
+			'offset'     => 0,
+		);
+		$args  = wp_parse_args( $args, $defaults );
+		$table = self::table_name();
+
+		$clause = self::build_where( $args );
+		$vals   = $clause['vals'];
+
+		$sql = "SELECT * FROM {$table} WHERE " . $clause['where'] . ' ORDER BY created_at DESC LIMIT %d OFFSET %d';
+		$vals[] = (int) $args['limit'];
+		$vals[] = (int) $args['offset'];
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return $wpdb->get_results( $wpdb->prepare( $sql, $vals ) );
+	}
+
+	/**
+	 * Build a shared WHERE clause and bound values from filter args.
+	 *
+	 * @param array<string, mixed> $args Query args.
+	 * @return array{where:string, vals:array<int, mixed>}
+	 */
+	private static function build_where( array $args ): array {
+		global $wpdb;
+
+		$where = array( '1=1' );
+		$vals  = array();
+
+		if ( ! empty( $args['role'] ) ) {
+			$where[] = 'role = %s';
+			$vals[]  = sanitize_key( (string) $args['role'] );
+		}
+		if ( ! empty( $args['risk_level'] ) ) {
+			$where[] = 'risk_level = %s';
+			$vals[]  = sanitize_text_field( (string) $args['risk_level'] );
+		}
+		if ( ! empty( $args['school'] ) ) {
+			$where[] = 'school_name LIKE %s';
+			$vals[]  = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
+		}
+		if ( ! empty( $args['date_from'] ) ) {
+			$where[] = 'created_at >= %s';
+			$vals[]  = sanitize_text_field( (string) $args['date_from'] ) . ' 00:00:00';
+		}
+		if ( ! empty( $args['date_to'] ) ) {
+			$where[] = 'created_at <= %s';
+			$vals[]  = sanitize_text_field( (string) $args['date_to'] ) . ' 23:59:59';
+		}
+
+		return array(
+			'where' => implode( ' AND ', $where ),
+			'vals'  => $vals,
+		);
+	}
+
+	/**
+	 * Count submissions for filters.
+	 *
+	 * @param array<string, mixed> $args Query args.
+	 */
+	public static function count_submissions( array $args = array() ): int {
+		global $wpdb;
+
+		$table  = self::table_name();
+		$clause = self::build_where( $args );
+		$vals   = $clause['vals'];
+
+		$sql = "SELECT COUNT(*) FROM {$table} WHERE " . $clause['where'];
+		if ( $vals ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			return (int) $wpdb->get_var( $wpdb->prepare( $sql, $vals ) );
+		}
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $wpdb->get_var( $sql );
+	}
+
+	/**
+	 * Get one submission.
+	 *
+	 * @param int $id Submission ID.
+	 */
+	public static function get_submission( int $id ): ?object {
+		global $wpdb;
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
+		return $row ?: null;
+	}
+}

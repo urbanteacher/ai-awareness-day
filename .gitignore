@@ -80,3 +80,6 @@ composer.lock
 
 # Generated CSS bundles (optional local build — not loaded by WordPress)
 assets/css/bundles/*.css
+
+# Local signup export — contains PII, never commit
+scripts/_external.csv

@@ -66,3 +66,5 @@ require_once $aiad_dir . '/inc/ai-neu-ai-report-data.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report.php';
 require_once $aiad_dir . '/inc/seo.php';
 require_once $aiad_dir . '/inc/national-survey.php';
+require_once $aiad_dir . '/inc/schools-ai-risk-academy.php';
+require_once $aiad_dir . '/inc/ai-risk-benchmark-post.php';

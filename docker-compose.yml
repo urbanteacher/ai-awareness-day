@@ -28,6 +28,8 @@ services:
       - wp_uploads:/var/www/html/wp-content/uploads
       # Mount this theme into the container
       - ./:/var/www/html/wp-content/themes/ai-awareness-day
+      # Mount bundled plugins
+      - ./plugins/ai-risk-readiness-benchmark:/var/www/html/wp-content/plugins/ai-risk-readiness-benchmark
 
 volumes:
   db_data:
