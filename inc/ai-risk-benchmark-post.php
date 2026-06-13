@@ -149,13 +149,15 @@ function aiad_create_risk_benchmark_timeline_entry(): int {
  * Seed timeline entry (once).
  */
 function aiad_seed_risk_benchmark_timeline_entry(): void {
-	if ( get_option( 'aiad_risk_benchmark_timeline_seeded' ) === 'yes' ) {
+	$existing = get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' );
+	if ( $existing instanceof WP_Post ) {
+		update_option( 'aiad_risk_benchmark_timeline_seeded', 'yes' );
 		return;
 	}
 
-	if ( get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' ) ) {
-		update_option( 'aiad_risk_benchmark_timeline_seeded', 'yes' );
-		return;
+	if ( get_option( 'aiad_risk_benchmark_timeline_seeded' ) === 'yes' ) {
+		// Flag set but post missing (e.g. live deploy before plugin was active) — allow re-seed.
+		delete_option( 'aiad_risk_benchmark_timeline_seeded' );
 	}
 
 	// Only seed when the benchmark plugin (shortcode provider) is active.
