@@ -643,23 +643,28 @@
 		var num = ring.querySelector('.airb__scorering-num');
 		var score = parseInt(ring.getAttribute('data-score'), 10) || 0;
 		var circ = 2 * Math.PI * 52; // matches r="52"
+		var target = circ * (1 - score / 100);
 		var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+		// Always render the FINAL state first, so the gauge is correct even if the
+		// animation frame never fires (background tab / throttled rAF). The motion
+		// is pure enhancement layered on top.
 		if (fill) {
 			fill.style.strokeDasharray = circ;
-			fill.style.strokeDashoffset = reduce ? circ * (1 - score / 100) : circ;
-			if (!reduce) {
-				// Double rAF so the transition runs from the empty state.
-				requestAnimationFrame(function () {
-					requestAnimationFrame(function () {
-						fill.style.strokeDashoffset = circ * (1 - score / 100);
-					});
-				});
+			fill.style.strokeDashoffset = target;
+			if (!reduce && typeof fill.animate === 'function') {
+				try {
+					fill.animate(
+						[ { strokeDashoffset: circ }, { strokeDashoffset: target } ],
+						{ duration: 1050, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+					);
+				} catch ( e ) {}
 			}
 		}
 
 		if (num) {
-			if (reduce) { num.textContent = score; return; }
+			num.textContent = score; // final value up front
+			if (reduce) { return; }
 			var start = null;
 			var dur = 950;
 			function step(ts) {
@@ -667,7 +672,8 @@
 				var p = Math.min((ts - start) / dur, 1);
 				var eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
 				num.textContent = Math.round(eased * score);
-				if (p < 1) requestAnimationFrame(step);
+				if (p < 1) { requestAnimationFrame(step); }
+				else { num.textContent = score; }
 			}
 			requestAnimationFrame(step);
 		}
