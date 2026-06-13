@@ -55,14 +55,23 @@ class AIRB_Shortcode {
 		wp_enqueue_style( 'airb-front' );
 		wp_enqueue_script( 'airb-front' );
 		wp_enqueue_script( 'airb-deck' );
+		$contact_email = sanitize_email( (string) get_option( 'admin_email' ) );
+		if ( function_exists( 'get_theme_mod' ) ) {
+			$theme_email = sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) );
+			if ( $theme_email ) {
+				$contact_email = $theme_email;
+			}
+		}
+
 		wp_localize_script(
 			'airb-front',
 			'airbBenchmark',
 			array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'airb_benchmark_nonce' ),
-				'config'  => AIRB_Config::public_config(),
-				'i18n'    => array(
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( 'airb_benchmark_nonce' ),
+				'contactEmail' => $contact_email,
+				'config'       => AIRB_Config::public_config(),
+				'i18n'         => array(
 					'chooseRole'     => __( 'Choose your role', 'ai-risk-benchmark' ),
 					'next'           => __( 'Next', 'ai-risk-benchmark' ),
 					'back'           => __( 'Back', 'ai-risk-benchmark' ),
@@ -74,10 +83,34 @@ class AIRB_Shortcode {
 					'emailInvalid'   => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ),
 					'contactTitle'   => __( 'Almost done', 'ai-risk-benchmark' ),
 					'contactHint'    => __( 'Optional details help tailor your leadership report and AI Policy Generator.', 'ai-risk-benchmark' ),
+					'contactHintYoung' => __( 'Optionally choose your year group. We do not collect your name, school or email.', 'ai-risk-benchmark' ),
+					'contactHintParent' => __( 'Optionally choose your child\'s year group. We do not collect names, schools or email addresses.', 'ai-risk-benchmark' ),
+					'yearGroup'      => __( 'Year group (optional)', 'ai-risk-benchmark' ),
+					'yearGroupParent'=> __( 'Child\'s year group (optional)', 'ai-risk-benchmark' ),
+					'yearGroupChoose'=> __( 'Select year group…', 'ai-risk-benchmark' ),
+					'yearGroups'     => array(
+						'reception' => __( 'Reception', 'ai-risk-benchmark' ),
+						'year_1'    => __( 'Year 1', 'ai-risk-benchmark' ),
+						'year_2'    => __( 'Year 2', 'ai-risk-benchmark' ),
+						'year_3'    => __( 'Year 3', 'ai-risk-benchmark' ),
+						'year_4'    => __( 'Year 4', 'ai-risk-benchmark' ),
+						'year_5'    => __( 'Year 5', 'ai-risk-benchmark' ),
+						'year_6'    => __( 'Year 6', 'ai-risk-benchmark' ),
+						'year_7'    => __( 'Year 7', 'ai-risk-benchmark' ),
+						'year_8'    => __( 'Year 8', 'ai-risk-benchmark' ),
+						'year_9'    => __( 'Year 9', 'ai-risk-benchmark' ),
+						'year_10'   => __( 'Year 10', 'ai-risk-benchmark' ),
+						'year_11'   => __( 'Year 11', 'ai-risk-benchmark' ),
+						'year_12'   => __( 'Year 12', 'ai-risk-benchmark' ),
+						'year_13'   => __( 'Year 13', 'ai-risk-benchmark' ),
+					),
 					'emailOptional'  => __( 'Email (optional — to receive your report)', 'ai-risk-benchmark' ),
-					'consentLabel'   => __( 'I consent to my anonymised benchmark results being stored to help improve school AI readiness. No student personal data is collected.', 'ai-risk-benchmark' ),
-					'printReport'    => __( 'Download / print report', 'ai-risk-benchmark' ),
-					'emailReport'    => __( 'Email me this report', 'ai-risk-benchmark' ),
+					'requestFullReport' => __( 'Request full leadership report', 'ai-risk-benchmark' ),
+					'reportEmailSubject' => __( 'Interest: Full AI Risk Benchmark leadership report', 'ai-risk-benchmark' ),
+					'reportEmailIntro' => __( 'Hello, I completed the free AI Risk & Readiness Benchmark and would like the full leadership report.', 'ai-risk-benchmark' ),
+					'reportEmailRole' => __( 'Role', 'ai-risk-benchmark' ),
+					'reportEmailClosing' => __( 'Please contact me about the premium leadership report and next steps.', 'ai-risk-benchmark' ),
+					'emailReport'    => __( 'Email me this summary', 'ai-risk-benchmark' ),
 					'saved'          => __( 'Results saved.', 'ai-risk-benchmark' ),
 					'saving'         => __( 'Preparing your personalised results…', 'ai-risk-benchmark' ),
 					'emailed'        => __( 'Report sent to your email.', 'ai-risk-benchmark' ),
@@ -117,10 +150,11 @@ class AIRB_Shortcode {
 					'orgMat'         => __( 'MAT', 'ai-risk-benchmark' ),
 					'profileHint'    => __( 'Helps tailor your AI Policy Generator and leadership report.', 'ai-risk-benchmark' ),
 					'schoolOptional' => __( 'School name (optional)', 'ai-risk-benchmark' ),
+					'insightLabel'   => __( 'Your priority focus', 'ai-risk-benchmark' ),
 					'nextSteps'      => __( 'Recommended for you', 'ai-risk-benchmark' ),
 					'gatewayTitle'   => __( 'Your audit is the starting point', 'ai-risk-benchmark' ),
 					'viewSchool'     => __( 'View school-wide dashboard', 'ai-risk-benchmark' ),
-					'schoolHint'     => __( 'Enter your school name on the previous step (with consent) to unlock the whole-school view once all groups have completed audits.', 'ai-risk-benchmark' ),
+					'schoolHint'     => __( 'Enter your school name on the previous step to unlock the whole-school view once all groups have completed audits.', 'ai-risk-benchmark' ),
 					'benchmark'      => array(
 						'title'          => __( 'How you compare nationally', 'ai-risk-benchmark' ),
 						'percentilePre'  => __( 'Your alignment score is ahead of', 'ai-risk-benchmark' ),

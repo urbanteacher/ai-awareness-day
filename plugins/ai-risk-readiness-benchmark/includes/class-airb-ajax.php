@@ -52,6 +52,7 @@ class AIRB_Ajax {
 		$profile = array(
 			'school_phase' => sanitize_key( (string) ( $_POST['school_phase'] ?? '' ) ),
 			'org_type'     => sanitize_key( (string) ( $_POST['org_type'] ?? '' ) ),
+			'year_group'   => sanitize_key( (string) ( $_POST['year_group'] ?? '' ) ),
 		);
 
 		$config  = AIRB_Config::get();
@@ -75,6 +76,9 @@ class AIRB_Ajax {
 		}
 		if ( $profile['org_type'] ) {
 			$answers['_org_type'] = $profile['org_type'];
+		}
+		if ( $profile['year_group'] ) {
+			$answers['_year_group'] = $profile['year_group'];
 		}
 
 		$id = 0;
@@ -106,12 +110,100 @@ class AIRB_Ajax {
 			isset( $results['alignment_score'] ) ? (int) $results['alignment_score'] : null
 		);
 
+		// Route every results CTA to a pre-addressed email with a per-offer subject,
+		// instead of placeholder site pages.
+		$results = self::apply_email_ctas( $results, $role );
+
 		wp_send_json_success(
 			array(
 				'submission_id' => $id,
 				'results'       => $results,
 			)
 		);
+	}
+
+	/**
+	 * Contact address that results CTAs email. Honours a theme-set contact email
+	 * (Customizer `aiad_contact_email`); otherwise uses the campaign inbox.
+	 */
+	private static function contact_email(): string {
+		$email = '';
+		if ( function_exists( 'get_theme_mod' ) ) {
+			$email = sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) );
+		}
+		return $email ? $email : 'info@aiawarenessday.co.uk';
+	}
+
+	/**
+	 * Build a mailto: link for a given offer, with a per-offer subject and a
+	 * short prefilled body.
+	 *
+	 * @param string $title Offer/recommendation title (becomes the subject).
+	 * @param string $role  Respondent role, for context in the body.
+	 */
+	private static function mailto( string $title, string $role ): string {
+		$title = trim( wp_strip_all_tags( $title ) );
+		if ( '' === $title ) {
+			$title = __( 'AI Risk & Readiness Benchmark enquiry', 'ai-risk-benchmark' );
+		}
+		$role_labels = AIRB_Defaults::roles();
+		$role_label  = $role_labels[ $role ] ?? $role;
+
+		$subject = sprintf( /* translators: %s: offer name */ __( 'Benchmark follow-up: %s', 'ai-risk-benchmark' ), $title );
+		$body    = sprintf(
+			/* translators: 1: offer name, 2: role label */
+			__( "Hello,\n\nFollowing our AI Risk & Readiness Benchmark, we'd like to know more about \"%1\$s\".\n\nRole: %2\$s\nSchool / Trust:\nName:\n\nThank you.", 'ai-risk-benchmark' ),
+			$title,
+			$role_label
+		);
+
+		return 'mailto:' . self::contact_email()
+			. '?subject=' . rawurlencode( $subject )
+			. '&body=' . rawurlencode( $body );
+	}
+
+	/**
+	 * Rewrite every results-screen CTA to a pre-addressed email with a subject
+	 * specific to that offer. Leaves the AI Awareness Day promo card untouched
+	 * (it points to a real campaign page, not a placeholder).
+	 *
+	 * @param array<string, mixed> $results Results payload.
+	 * @param string               $role    Respondent role.
+	 * @return array<string, mixed>
+	 */
+	private static function apply_email_ctas( array $results, string $role ): array {
+		// Lists of {title, cta_url} items.
+		foreach ( array( 'recommendations', 'next_steps' ) as $list_key ) {
+			if ( ! empty( $results[ $list_key ] ) && is_array( $results[ $list_key ] ) ) {
+				foreach ( $results[ $list_key ] as &$item ) {
+					if ( is_array( $item ) ) {
+						$item['cta_url'] = self::mailto( (string) ( $item['title'] ?? '' ), $role );
+					}
+				}
+				unset( $item );
+			}
+		}
+
+		// Gateway cards (skip the AAD promo card — real destination).
+		if ( ! empty( $results['gateway']['cards'] ) && is_array( $results['gateway']['cards'] ) ) {
+			foreach ( $results['gateway']['cards'] as &$card ) {
+				if ( is_array( $card ) && ( $card['key'] ?? '' ) !== 'aad_day' ) {
+					$card['cta_url'] = self::mailto( (string) ( $card['title'] ?? '' ), $role );
+				}
+			}
+			unset( $card );
+		}
+
+		// Single-offer blocks.
+		if ( ! empty( $results['consultation_pitch'] ) && is_array( $results['consultation_pitch'] ) ) {
+			$title = (string) ( $results['consultation_pitch']['headline'] ?? __( 'Free consultation', 'ai-risk-benchmark' ) );
+			$results['consultation_pitch']['cta_url'] = self::mailto( $title, $role );
+		}
+		if ( ! empty( $results['policy_generator'] ) && is_array( $results['policy_generator'] ) ) {
+			$results['policy_generator']['cta_url'] = self::mailto( (string) ( $results['policy_generator']['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ), $role );
+		}
+
+		return $results;
 	}
 
 	/**

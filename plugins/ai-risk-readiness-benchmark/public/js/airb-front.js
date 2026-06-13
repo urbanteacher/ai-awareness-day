@@ -23,6 +23,7 @@
 		consent: false,
 		schoolPhase: '',
 		orgType: '',
+		yearGroup: '',
 	};
 
 	var el = {
@@ -335,7 +336,7 @@
 		el.results.hidden = true;
 		el.nav.hidden = false;
 		el.back.hidden = state.step === 0;
-		el.next.textContent = state.step === state.questions.length - 1 ? i18n.submit : i18n.next;
+		el.next.textContent = i18n.next;
 		el.progress.hidden = false;
 		updateStepper(state.questions.length, state.step);
 
@@ -348,32 +349,59 @@
 		}
 	}
 
-	function renderContact() {
-		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || i18n.schoolOptional) + '</h3>';
-		if (i18n.contactHint) html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
-		html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
-			'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+	function isYoungRole() {
+		return state.role === 'student' || state.role === 'parent';
+	}
 
-		if (state.role === 'leader' || state.role === 'teacher') {
-			html += '<label class="airb__label" for="airb-school-phase">' + esc(i18n.schoolPhase) + '</label>' +
-				'<select class="airb__select" id="airb-school-phase">' +
-				'<option value="">' + esc(i18n.schoolPhaseChoose) + '</option>' +
-				'<option value="primary"' + (state.schoolPhase === 'primary' ? ' selected' : '') + '>' + esc(i18n.schoolPhasePrimary) + '</option>' +
-				'<option value="secondary"' + (state.schoolPhase === 'secondary' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseSecondary) + '</option>' +
-				'<option value="all_through"' + (state.schoolPhase === 'all_through' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseAllThrough) + '</option>' +
-				'</select>' +
-				'<label class="airb__label" for="airb-org-type">' + esc(i18n.orgType) + '</label>' +
-				'<select class="airb__select" id="airb-org-type">' +
-				'<option value="">' + esc(i18n.orgTypeChoose) + '</option>' +
-				'<option value="standalone"' + (state.orgType === 'standalone' ? ' selected' : '') + '>' + esc(i18n.orgStandalone) + '</option>' +
-				'<option value="mat"' + (state.orgType === 'mat' ? ' selected' : '') + '>' + esc(i18n.orgMat) + '</option>' +
-				'</select>' +
-				'<p class="airb__muted airb__profile-hint">' + esc(i18n.profileHint) + '</p>';
+	function yearGroupOptionsHtml() {
+		var groups = i18n.yearGroups || {};
+		var html = '<option value="">' + esc(i18n.yearGroupChoose || 'Select year group…') + '</option>';
+		Object.keys(groups).forEach(function (key) {
+			var sel = state.yearGroup === key ? ' selected' : '';
+			html += '<option value="' + esc(key) + '"' + sel + '>' + esc(groups[key]) + '</option>';
+		});
+		return html;
+	}
+
+	function renderContact() {
+		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Almost done') + '</h3>';
+
+		if (isYoungRole()) {
+			if (state.role === 'parent' && i18n.contactHintParent) {
+				html += '<p class="airb__muted">' + esc(i18n.contactHintParent) + '</p>';
+			} else if (i18n.contactHintYoung) {
+				html += '<p class="airb__muted">' + esc(i18n.contactHintYoung) + '</p>';
+			}
+			var ygLabel = state.role === 'parent' ? (i18n.yearGroupParent || i18n.yearGroup) : i18n.yearGroup;
+			html += '<label class="airb__label" for="airb-year-group">' + esc(ygLabel) + '</label>' +
+				'<select class="airb__select" id="airb-year-group">' + yearGroupOptionsHtml() + '</select>';
+		} else {
+			if (i18n.contactHint) html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
+			html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
+				'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+
+			if (state.role === 'leader' || state.role === 'teacher') {
+				html += '<label class="airb__label" for="airb-school-phase">' + esc(i18n.schoolPhase) + '</label>' +
+					'<select class="airb__select" id="airb-school-phase">' +
+					'<option value="">' + esc(i18n.schoolPhaseChoose) + '</option>' +
+					'<option value="primary"' + (state.schoolPhase === 'primary' ? ' selected' : '') + '>' + esc(i18n.schoolPhasePrimary) + '</option>' +
+					'<option value="secondary"' + (state.schoolPhase === 'secondary' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseSecondary) + '</option>' +
+					'<option value="all_through"' + (state.schoolPhase === 'all_through' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseAllThrough) + '</option>' +
+					'</select>' +
+					'<label class="airb__label" for="airb-org-type">' + esc(i18n.orgType) + '</label>' +
+					'<select class="airb__select" id="airb-org-type">' +
+					'<option value="">' + esc(i18n.orgTypeChoose) + '</option>' +
+					'<option value="standalone"' + (state.orgType === 'standalone' ? ' selected' : '') + '>' + esc(i18n.orgStandalone) + '</option>' +
+					'<option value="mat"' + (state.orgType === 'mat' ? ' selected' : '') + '>' + esc(i18n.orgMat) + '</option>' +
+					'</select>' +
+					'<p class="airb__muted airb__profile-hint">' + esc(i18n.profileHint) + '</p>';
+			}
+
+			html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
+				'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
 		}
 
-		html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
-			'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />' +
-			'<label class="airb__consent"><input type="checkbox" id="airb-consent" ' + (state.consent ? 'checked' : '') + ' /> ' + esc(i18n.consentLabel) + '</label></div>';
+		html += '</div>';
 
 		el.contact.innerHTML = html;
 
@@ -382,7 +410,9 @@
 		el.audit.hidden = true;
 		el.results.hidden = true;
 		el.back.hidden = false;
+		el.nav.hidden = false;
 		el.next.textContent = i18n.submit;
+		el.progress.hidden = true;
 	}
 
 	function barHtml(label, pct, band, invert) {
@@ -455,32 +485,35 @@
 		var r = state.results;
 		if (!r) return;
 
-		var html = '<div class="airb__results">';
-		html += '<p class="airb__funnel-stage">' + esc(i18n.stage1) + '</p>';
-		html += '<h3 class="airb__panel-title">' + esc(i18n.resultsTitle) + '</h3>';
-		html += '<p class="airb__muted">' + esc(i18n.riskLevel) + ': <strong>' + esc(r.risk_level_label) + '</strong></p>';
-
-		// Hero score ring — animated circular gauge for the headline alignment score.
 		var alignBand = readinessBand(r.alignment_score);
-		html += '<div class="airb__scorering airb__scorering--' + alignBand + '" data-score="' + r.alignment_score + '">';
-		html += '<svg class="airb__scorering-svg" viewBox="0 0 120 120" aria-hidden="true">';
-		html += '<circle class="airb__scorering-track" cx="60" cy="60" r="52"></circle>';
-		html += '<circle class="airb__scorering-fill" cx="60" cy="60" r="52"></circle>';
-		html += '</svg>';
-		html += '<div class="airb__scorering-center">';
-		html += '<span class="airb__scorering-num" data-count="' + r.alignment_score + '">0</span>';
-		html += '<span class="airb__scorering-max">/ 100</span>';
-		html += '<span class="airb__scorering-label">' + esc(i18n.alignment) + '</span>';
-		html += '</div></div>';
+		var riskBandCls = r.risk_level || 'moderate';
 
-		html += '<div class="airb__cards">';
+		var html = '<div class="airb__results">';
+		html += '<section class="airb__results-hero airb__results-hero--' + esc(alignBand) + '" data-score="' + r.alignment_score + '">';
+		html += '<div class="airb__results-hero-copy">';
+		html += '<span class="airb__results-eyebrow">' + esc(i18n.stage1) + '</span>';
+		html += '<h3 class="airb__results-headline">' + esc(i18n.resultsTitle) + '</h3>';
+		html += '<p class="airb__results-lead">' + esc(i18n.riskLevel) + '</p>';
+		html += '<span class="airb__results-risk-pill airb__results-risk-pill--' + esc(riskBandCls) + '">' + esc(r.risk_level_label) + '</span>';
+		html += '</div>';
+		html += '<div class="airb__results-hero-score">';
+		html += '<div class="airb__results-scoreline">';
+		html += '<span class="airb__results-score-num" data-count="' + r.alignment_score + '">0</span>';
+		html += '<span class="airb__results-score-suffix">/100</span>';
+		html += '</div>';
+		html += '<p class="airb__results-score-label">' + esc(i18n.alignment) + '</p>';
+		html += '<div class="airb__results-meter" aria-hidden="true"><span class="airb__results-meter-fill"></span></div>';
+		html += '</div>';
+		html += '</section>';
+
+		html += '<div class="airb__cards airb__cards--bento">';
 		(r.role_result_cards || []).forEach(function (c) {
 			html += card(c.label, c.value, c.band);
 		});
 		html += '</div>';
 
 		if (r.funnel_closing) {
-			html += '<p class="airb__funnel-close">' + esc(r.funnel_closing) + '</p>';
+			html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
 		}
 
 		if (r.risk_heatmap && r.risk_heatmap.length) {
@@ -610,12 +643,15 @@
 		}
 
 		html += '<div class="airb__results-actions">';
-		html += '<button type="button" class="airb__btn airb__btn--ghost" id="airb-print">' + esc(i18n.printReport) + '</button>';
+		var reportMailto = buildReportRequestMailto();
+		if (reportMailto) {
+			html += '<a class="airb__btn airb__btn--primary airb__btn--premium" href="' + reportMailto + '" id="airb-request-report">' + esc(i18n.requestFullReport) + '</a>';
+		}
 		if (state.email) {
-			html += '<button type="button" class="airb__btn airb__btn--primary" id="airb-email-report">' + esc(i18n.emailReport) + '</button>';
+			html += '<button type="button" class="airb__btn airb__btn--ghost" id="airb-email-report">' + esc(i18n.emailReport) + '</button>';
 		}
 		html += '</div>';
-		if (state.school && state.consent) {
+		if (state.school && !isYoungRole()) {
 			html += '<p class="airb__school-link"><a class="airb__btn airb__btn--ghost airb__btn--sm" href="?school=' + encodeURIComponent(state.school) + '#airb-school-dashboard">' + esc(i18n.viewSchool) + '</a></p>';
 			html += '<p class="airb__muted airb__school-hint">' + esc(i18n.schoolHint) + '</p>';
 		}
@@ -629,48 +665,33 @@
 		el.nav.hidden = true;
 		el.progress.hidden = true;
 
-		document.getElementById('airb-print').addEventListener('click', printReport);
 		var emailBtn = document.getElementById('airb-email-report');
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
-		animateScoreRing();
+		animateResultsHero();
 	}
 
-	function animateScoreRing() {
-		var ring = el.results.querySelector('.airb__scorering');
-		if (!ring) return;
-		var fill = ring.querySelector('.airb__scorering-fill');
-		var num = ring.querySelector('.airb__scorering-num');
-		var score = parseInt(ring.getAttribute('data-score'), 10) || 0;
-		var circ = 2 * Math.PI * 52; // matches r="52"
-		var target = circ * (1 - score / 100);
+	function animateResultsHero() {
+		var hero = el.results.querySelector('.airb__results-hero');
+		if (!hero) return;
+		var score = parseInt(hero.getAttribute('data-score'), 10) || 0;
+		var num = hero.querySelector('.airb__results-score-num');
+		var fill = hero.querySelector('.airb__results-meter-fill');
 		var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-		// Always render the FINAL state first, so the gauge is correct even if the
-		// animation frame never fires (background tab / throttled rAF). The motion
-		// is pure enhancement layered on top.
 		if (fill) {
-			fill.style.strokeDasharray = circ;
-			fill.style.strokeDashoffset = target;
-			if (!reduce && typeof fill.animate === 'function') {
-				try {
-					fill.animate(
-						[ { strokeDashoffset: circ }, { strokeDashoffset: target } ],
-						{ duration: 1050, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
-					);
-				} catch ( e ) {}
-			}
+			fill.style.width = score + '%';
 		}
 
 		if (num) {
-			num.textContent = score; // final value up front
+			num.textContent = score;
 			if (reduce) { return; }
 			var start = null;
 			var dur = 950;
 			function step(ts) {
 				if (start === null) start = ts;
 				var p = Math.min((ts - start) / dur, 1);
-				var eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+				var eased = 1 - Math.pow(1 - p, 3);
 				num.textContent = Math.round(eased * score);
 				if (p < 1) { requestAnimationFrame(step); }
 				else { num.textContent = score; }
@@ -680,7 +701,11 @@
 	}
 
 	function card(title, value, band) {
-		return '<div class="airb__card airb__card--' + band + '"><span class="airb__card-title">' + esc(title) + '</span><strong class="airb__card-value">' + esc(String(value)) + '</strong></div>';
+		return '<article class="airb__card airb__card--' + band + '">' +
+			'<span class="airb__card-title">' + esc(title) + '</span>' +
+			'<strong class="airb__card-value">' + esc(String(value)) + '</strong>' +
+			'<span class="airb__card-band">' + esc(bandLabel(band)) + '</span>' +
+			'</article>';
 	}
 
 	function updateStepper(total, idx) {
@@ -740,15 +765,21 @@
 			return;
 		}
 		if (state.phase === 'contact') {
-			state.school = (document.getElementById('airb-school') || {}).value || '';
-			state.email = (document.getElementById('airb-email') || {}).value || '';
-			state.consent = !!(document.getElementById('airb-consent') || {}).checked;
-			state.schoolPhase = (document.getElementById('airb-school-phase') || {}).value || '';
-			state.orgType = (document.getElementById('airb-org-type') || {}).value || '';
-			if (state.consent && state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-				showError(i18n.emailInvalid);
-				return;
+			if (!isYoungRole()) {
+				state.school = (document.getElementById('airb-school') || {}).value || '';
+				state.email = (document.getElementById('airb-email') || {}).value || '';
+				state.schoolPhase = (document.getElementById('airb-school-phase') || {}).value || '';
+				state.orgType = (document.getElementById('airb-org-type') || {}).value || '';
+				if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+					showError(i18n.emailInvalid);
+					return;
+				}
+			} else {
+				state.school = '';
+				state.email = '';
+				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 			}
+			state.consent = false;
 			state.results = calculate(state.role, state.answers);
 			state.phase = 'results';
 			el.results.innerHTML = '<p class="airb__muted airb__loading">' + esc(i18n.saving || 'Preparing your results…') + '</p>';
@@ -793,6 +824,7 @@
 		body.append('consent', state.consent ? '1' : '0');
 		body.append('school_phase', state.schoolPhase);
 		body.append('org_type', state.orgType);
+		body.append('year_group', state.yearGroup);
 
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
@@ -807,41 +839,34 @@
 			});
 	}
 
-	function printReport() {
+	function buildReportRequestMailto() {
 		var r = state.results;
-		if (!r) return;
-		var w = window.open('', '_blank', 'width=800,height=900');
-		if (!w) return;
+		var to = airbBenchmark.contactEmail || '';
+		if (!r || !to) return '';
+
 		var roleLbl = (cfg.roles || {})[state.role] || state.role;
-		var html = '<!DOCTYPE html><html><head><title>AI Risk Benchmark Report</title><style>body{font-family:sans-serif;padding:2rem;max-width:720px;margin:0 auto}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:8px}</style></head><body>';
-		html += '<h1>AI Risk & Readiness Benchmark</h1><p><strong>Role:</strong> ' + esc(roleLbl) + '</p>';
-		html += '<p><strong>Alignment:</strong> ' + r.alignment_score + '/100 &mdash; <strong>Risk:</strong> ' + esc(r.risk_level_label) + '</p>';
-		html += '<p>' + esc(cfg.disclaimer || '') + '</p><h2>Domain scores</h2><table><tr><th>Domain</th><th>Risk %</th><th>Band</th></tr>';
-		domainKeys.forEach(function (slug) {
-			var d = r.domain_scores[slug];
-			if (!d || !d.questions_answered) return;
-			html += '<tr><td>' + esc(d.label) + '</td><td>' + d.risk_percentage + '</td><td>' + esc(d.band_label) + '</td></tr>';
-		});
-		html += '</table>';
-		if (r.next_steps && r.next_steps.length) {
-			html += '<h2>Recommended for you</h2>';
-			r.next_steps.forEach(function (step) {
-				html += '<h3>' + esc(step.title);
-				if (step.type_label) html += ' <small>(' + esc(step.type_label) + ')</small>';
-				html += '</h3><p>' + esc(step.body) + '</p>';
-			});
+		var lines = [
+			i18n.reportEmailIntro,
+			'',
+			i18n.reportEmailRole + ': ' + roleLbl,
+			i18n.alignment + ': ' + (r.alignment_score != null ? r.alignment_score : '—') + '/100',
+			i18n.riskLevel + ': ' + (r.risk_level_label || '—'),
+		];
+
+		if (r.dependency_index != null) {
+			lines.push(i18n.dependency + ': ' + r.dependency_index + '%');
 		}
-		if (r.recommendations && r.recommendations.length) {
-			html += '<h2>Recommendations</h2>';
-			r.recommendations.forEach(function (rec) {
-				html += '<h3>' + esc(rec.title) + '</h3><p>' + esc(rec.body) + '</p>';
-			});
+		if (state.school) {
+			lines.push(i18n.schoolOptional.replace(/\s*\([^)]*\)\s*/g, '').trim() + ': ' + state.school);
 		}
-		html += '</body></html>';
-		w.document.write(html);
-		w.document.close();
-		w.focus();
-		w.print();
+		if (state.email) {
+			lines.push('Email: ' + state.email);
+		}
+		lines.push('', i18n.reportEmailClosing);
+
+		return 'mailto:' + to
+			+ '?subject=' + encodeURIComponent(i18n.reportEmailSubject)
+			+ '&body=' + encodeURIComponent(lines.join('\n'));
 	}
 
 	function emailReport() {
