@@ -150,6 +150,46 @@ function aiad_activate_bundled_plugin( string $slug, string $main_file ): bool {
 }
 
 /**
+ * Load a bundled plugin directly from the theme when copy/activate is blocked on hosting.
+ */
+function aiad_load_bundled_plugin_from_theme( string $slug, string $main_file ): bool {
+	$source_main = trailingslashit( aiad_bundled_plugin_source_dir( $slug ) ) . $main_file;
+	if ( ! is_readable( $source_main ) ) {
+		return false;
+	}
+
+	if ( 'ai-risk-readiness-benchmark' === $slug ) {
+		if ( class_exists( 'AIRB_Plugin', false ) ) {
+			if ( class_exists( 'AIRB_Activator' ) && class_exists( 'AIRB_Database' ) ) {
+				global $wpdb;
+				$table = AIRB_Database::table_name();
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+					AIRB_Activator::activate();
+				}
+			}
+			return false;
+		}
+		if ( shortcode_exists( 'ai_risk_benchmark' ) ) {
+			return false;
+		}
+	}
+
+	require_once $source_main;
+
+	if ( 'ai-risk-readiness-benchmark' === $slug && class_exists( 'AIRB_Activator' ) && class_exists( 'AIRB_Database' ) ) {
+		global $wpdb;
+		$table = AIRB_Database::table_name();
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+			AIRB_Activator::activate();
+		}
+	}
+
+	return true;
+}
+
+/**
  * Sync and activate all bundled plugins after theme deploy.
  */
 function aiad_maybe_sync_bundled_plugins(): void {
@@ -163,6 +203,13 @@ function aiad_maybe_sync_bundled_plugins(): void {
 		$copied    = aiad_sync_bundled_plugin( $slug, $main_file );
 		$activated = aiad_activate_bundled_plugin( $slug, $main_file );
 		if ( $copied || $activated ) {
+			set_transient( 'aiad_flush_rewrites', 1, MINUTE_IN_SECONDS );
+		}
+	}
+
+	// Hosting often blocks copying into wp-content/plugins — load from theme instead.
+	foreach ( aiad_bundled_plugins() as $slug => $main_file ) {
+		if ( aiad_load_bundled_plugin_from_theme( $slug, $main_file ) ) {
 			set_transient( 'aiad_flush_rewrites', 1, MINUTE_IN_SECONDS );
 		}
 	}

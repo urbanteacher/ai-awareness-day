@@ -205,10 +205,6 @@ function aiad_create_risk_benchmark_timeline_entry(): int {
  * Repair or create the benchmark timeline entry (handles live posts with wrong slug).
  */
 function aiad_ensure_risk_benchmark_timeline_entry(): void {
-	if ( ! shortcode_exists( 'ai_risk_benchmark' ) ) {
-		return;
-	}
-
 	$slug    = aiad_risk_benchmark_post_slug();
 	$content = aiad_risk_benchmark_get_post_content();
 	$post    = aiad_find_risk_benchmark_timeline_post();
@@ -261,7 +257,7 @@ function aiad_ensure_risk_benchmark_timeline_entry(): void {
 function aiad_seed_risk_benchmark_timeline_entry(): void {
 	aiad_ensure_risk_benchmark_timeline_entry();
 }
-add_action( 'init', 'aiad_seed_risk_benchmark_timeline_entry', 33 );
+add_action( 'init', 'aiad_seed_risk_benchmark_timeline_entry', 99 );
 
 /**
  * 301 redirect title-derived benchmark slugs to the canonical /timeline/ai-risk-readiness-benchmark/ URL.
