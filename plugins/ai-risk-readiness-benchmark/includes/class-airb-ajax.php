@@ -99,6 +99,13 @@ class AIRB_Ajax {
 			);
 		}
 
+		// Attach national benchmark comparison (null until the privacy-floor
+		// sample size is reached for this role).
+		$results['benchmark'] = AIRB_Database::get_benchmark_stats(
+			$role,
+			isset( $results['alignment_score'] ) ? (int) $results['alignment_score'] : null
+		);
+
 		wp_send_json_success(
 			array(
 				'submission_id' => $id,

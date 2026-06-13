@@ -109,10 +109,15 @@ function aiad_get_og_data(): array {
 			// For timeline entries, check various meta fields and content
 			$timeline_content = '';
 
-			// Check if there's content in the main editor
-			if ( ! empty( $post->post_content ) ) {
-				// Replace block-level tags with a space so sentences don't merge
-				$raw              = preg_replace( '#</?(?:p|div|br|li|h[1-6]|blockquote)[^>]*>#i', ' ', $post->post_content );
+			// A hand-written excerpt is the most reliable description.
+			if ( has_excerpt( $post ) ) {
+				$timeline_content = get_the_excerpt( $post );
+			} elseif ( ! empty( $post->post_content ) ) {
+				// Strip shortcodes first so tool-only entries (e.g. [aiad_risk_academy])
+				// never leak a raw shortcode string into the meta description.
+				$raw              = strip_shortcodes( $post->post_content );
+				// Replace block-level tags with a space so sentences don't merge.
+				$raw              = preg_replace( '#</?(?:p|div|br|li|h[1-6]|blockquote)[^>]*>#i', ' ', $raw );
 				$timeline_content = wp_strip_all_tags( $raw );
 			}
 			

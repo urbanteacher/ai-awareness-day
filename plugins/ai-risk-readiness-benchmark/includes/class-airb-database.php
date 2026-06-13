@@ -216,4 +216,74 @@ class AIRB_Database {
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
 		return $row ?: null;
 	}
+
+	/**
+	 * Minimum number of stored submissions before national benchmarks are shown.
+	 * Below this, averages could de-anonymise a small cohort, so we suppress them.
+	 */
+	const BENCHMARK_MIN_SAMPLE = 8;
+
+	/**
+	 * National benchmark stats for a role (consented submissions only).
+	 *
+	 * Returns averages for each headline metric, the sample size, and — when a
+	 * reference alignment score is supplied — the percentile that score sits in.
+	 * Returns null when the sample is below BENCHMARK_MIN_SAMPLE (privacy floor).
+	 *
+	 * @param string   $role            Role slug to benchmark within.
+	 * @param int|null $alignment_score Optional score to compute a percentile for.
+	 * @return array<string, mixed>|null
+	 */
+	public static function get_benchmark_stats( string $role, ?int $alignment_score = null ): ?array {
+		global $wpdb;
+		$table = self::table_name();
+		$role  = sanitize_key( $role );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COUNT(*) AS n,
+					AVG(alignment_score) AS alignment_score,
+					AVG(dependency_index) AS dependency_index,
+					AVG(privacy_risk) AS privacy_risk,
+					AVG(safeguarding_readiness) AS safeguarding_readiness,
+					AVG(governance_maturity) AS governance_maturity
+				FROM {$table}
+				WHERE consent = 1 AND role = %s",
+				$role
+			),
+			ARRAY_A
+		);
+
+		$sample = isset( $row['n'] ) ? (int) $row['n'] : 0;
+		if ( $sample < self::BENCHMARK_MIN_SAMPLE ) {
+			return null;
+		}
+
+		$stats = array(
+			'sample_size' => $sample,
+			'averages'    => array(
+				'alignment_score'        => (int) round( (float) $row['alignment_score'] ),
+				'dependency_index'       => (int) round( (float) $row['dependency_index'] ),
+				'privacy_risk'           => (int) round( (float) $row['privacy_risk'] ),
+				'safeguarding_readiness' => (int) round( (float) $row['safeguarding_readiness'] ),
+				'governance_maturity'    => (int) round( (float) $row['governance_maturity'] ),
+			),
+		);
+
+		if ( null !== $alignment_score ) {
+			// Percentile = share of submissions this score meets or beats.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$below = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$table} WHERE consent = 1 AND role = %s AND alignment_score <= %d",
+					$role,
+					(int) $alignment_score
+				)
+			);
+			$stats['percentile'] = (int) round( ( $below / $sample ) * 100 );
+		}
+
+		return $stats;
+	}
 }

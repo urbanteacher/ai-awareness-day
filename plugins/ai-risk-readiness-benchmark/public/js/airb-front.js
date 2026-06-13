@@ -394,6 +394,52 @@
 			'<span class="airb__bar-val">' + display + '% <span class="airb__bar-band">(' + esc(bandLabel(band)) + ')</span></span></div>';
 	}
 
+	function benchmarkHtml(r) {
+		var b = r.benchmark;
+		if (!b || !b.averages) return '';
+
+		var i = i18n.benchmark || {};
+		// Metrics: key, label, higher-is-better?
+		var metrics = [
+			{ key: 'alignment_score', label: i18n.alignment, better: 'high', mine: r.alignment_score },
+			{ key: 'dependency_index', label: i18n.dependency, better: 'low', mine: r.dependency_index },
+			{ key: 'privacy_risk', label: i18n.privacy, better: 'low', mine: r.privacy_risk },
+			{ key: 'safeguarding_readiness', label: i18n.safeguarding, better: 'high', mine: r.safeguarding_readiness },
+			{ key: 'governance_maturity', label: i18n.governance, better: 'high', mine: r.governance_maturity }
+		];
+
+		var html = '<section class="airb__benchmark" aria-label="' + esc(i.title || 'National benchmark') + '">';
+		html += '<h4>' + esc(i.title || 'How you compare nationally') + '</h4>';
+
+		if (typeof b.percentile === 'number') {
+			html += '<p class="airb__benchmark-headline">' +
+				esc((i.percentilePre || 'Your alignment score is ahead of') + ' ') +
+				'<strong>' + b.percentile + '%</strong> ' +
+				esc(i.percentilePost || 'of schools benchmarked.') + '</p>';
+		}
+
+		html += '<div class="airb__benchmark-rows">';
+		metrics.forEach(function (m) {
+			if (typeof m.mine !== 'number') return;
+			var avg = b.averages[m.key];
+			if (typeof avg !== 'number') return;
+			var delta = m.mine - avg;
+			// "Good" direction: high-is-better wants positive delta; low-is-better wants negative.
+			var good = (m.better === 'high') ? (delta >= 0) : (delta <= 0);
+			var sign = delta > 0 ? '+' : '';
+			var cls = delta === 0 ? 'airb__benchmark-delta--flat' : (good ? 'airb__benchmark-delta--good' : 'airb__benchmark-delta--bad');
+			html += '<div class="airb__benchmark-row">' +
+				'<span class="airb__benchmark-metric">' + esc(m.label) + '</span>' +
+				'<span class="airb__benchmark-you">' + m.mine + '</span>' +
+				'<span class="airb__benchmark-avg">' + esc(i.avgShort || 'avg') + ' ' + avg + '</span>' +
+				'<span class="airb__benchmark-delta ' + cls + '">' + sign + delta + '</span>' +
+				'</div>';
+		});
+		html += '</div>';
+		html += '<p class="airb__benchmark-note">' + esc((i.sampleNote || 'Based on {n} consented submissions for your role.').replace('{n}', b.sample_size)) + '</p>';
+		return html + '</section>';
+	}
+
 	function heatmapHtml(cells) {
 		if (!cells || !cells.length) return '';
 		var html = '<div class="airb__heatmap">';
@@ -504,6 +550,8 @@
 			if (!d || !d.questions_answered) return;
 			html += barHtml(d.label, d.risk_percentage, d.band, false);
 		});
+
+		html += benchmarkHtml(r);
 
 		if (r.recommendations && r.recommendations.length) {
 			html += '<h4>' + esc(i18n.recommendations) + '</h4><div class="airb__recs">';

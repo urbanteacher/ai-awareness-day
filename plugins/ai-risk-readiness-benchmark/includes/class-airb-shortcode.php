@@ -121,6 +121,13 @@ class AIRB_Shortcode {
 					'gatewayTitle'   => __( 'Your audit is the starting point', 'ai-risk-benchmark' ),
 					'viewSchool'     => __( 'View school-wide dashboard', 'ai-risk-benchmark' ),
 					'schoolHint'     => __( 'Enter your school name on the previous step (with consent) to unlock the whole-school view once all groups have completed audits.', 'ai-risk-benchmark' ),
+					'benchmark'      => array(
+						'title'          => __( 'How you compare nationally', 'ai-risk-benchmark' ),
+						'percentilePre'  => __( 'Your alignment score is ahead of', 'ai-risk-benchmark' ),
+						'percentilePost' => __( 'of schools benchmarked for your role.', 'ai-risk-benchmark' ),
+						'avgShort'       => __( 'national avg', 'ai-risk-benchmark' ),
+						'sampleNote'     => __( 'Based on {n} consented submissions for your role. Updated live as more schools take part.', 'ai-risk-benchmark' ),
+					),
 				),
 			)
 		);

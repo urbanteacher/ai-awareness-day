@@ -26,6 +26,19 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 ?>
 <div class="airb" id="airb-benchmark" data-airb-root aria-label="<?php esc_attr_e( 'AI Risk & Readiness Benchmark', 'ai-risk-benchmark' ); ?>">
 
+	<div class="airb__appbar">
+		<span class="airb__appbar-brand">
+			<span class="airb__appbar-mark" aria-hidden="true">AI</span>
+			<span class="airb__appbar-name"><?php echo esc_html( (string) ( $framework['product_name'] ?? __( 'AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' ) ) ); ?></span>
+		</span>
+		<span class="airb__appbar-status">
+			<span class="airb__appbar-dot" aria-hidden="true"></span>
+			<?php esc_html_e( 'Free interactive assessment', 'ai-risk-benchmark' ); ?>
+		</span>
+	</div>
+
+	<div class="airb__body">
+
 	<div class="airb__intro">
 		<p class="airb__eyebrow"><?php esc_html_e( 'DfE-aligned · England · Free educational self-assessment', 'ai-risk-benchmark' ); ?></p>
 		<?php if ( ! empty( $framework['product_name'] ) ) : ?>
@@ -287,4 +300,6 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ?: 'aiawarenessday.co.uk' ); ?></a>
 		</p>
 	</footer>
+
+	</div><!-- .airb__body -->
 </div>

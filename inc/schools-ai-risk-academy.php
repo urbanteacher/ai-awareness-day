@@ -228,3 +228,31 @@ function aiad_seed_risk_academy_timeline_entry(): void {
 	}
 }
 add_action( 'init', 'aiad_seed_risk_academy_timeline_entry', 32 );
+
+/**
+ * One-time backfill: give the academy entry a proper excerpt if it predates
+ * the excerpt being added to the seeder. Without it, the SEO/OG description
+ * falls back to the post title instead of a meaningful summary.
+ */
+function aiad_backfill_risk_academy_excerpt(): void {
+	if ( get_option( 'aiad_risk_academy_excerpt_backfilled' ) === 'yes' ) {
+		return;
+	}
+
+	$post = get_page_by_path( aiad_risk_academy_post_slug(), OBJECT, 'timeline' );
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	if ( '' === trim( (string) $post->post_excerpt ) ) {
+		wp_update_post(
+			array(
+				'ID'           => $post->ID,
+				'post_excerpt' => __( 'A free mini-app for UK schools: assess AI exposure in your tasks, check student reliance, roll up a school risk level, and work through six DfE-aligned curriculum modules — all in the browser, nothing stored.', 'ai-awareness-day' ),
+			)
+		);
+	}
+
+	update_option( 'aiad_risk_academy_excerpt_backfilled', 'yes' );
+}
+add_action( 'init', 'aiad_backfill_risk_academy_excerpt', 33 );
