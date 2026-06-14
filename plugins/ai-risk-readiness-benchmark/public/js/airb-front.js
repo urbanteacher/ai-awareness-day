@@ -119,14 +119,16 @@
 	function updateFlowChrome() {
 		if (!el.root) return;
 		var inFlow = !!(el.nav && !el.nav.hidden);
-		var mobileShell = isMobileFlow() && (state.phase === 'role' || inFlow);
+		var mobileShell = isMobileFlow() && (state.phase === 'role' || state.phase === 'results' || inFlow);
 		el.root.classList.toggle('airb--nav-dock', inFlow);
 		el.root.classList.toggle('airb--mobile-flow', mobileShell);
 		el.root.classList.toggle('airb--phase-role', state.phase === 'role');
 		el.root.classList.toggle('airb--phase-audit', state.phase === 'audit');
+		el.root.classList.toggle('airb--phase-results', state.phase === 'results');
 		el.root.classList.toggle('airb--intro-collapsed', introCollapsed);
 		syncNavPlacement();
 		document.body.classList.toggle('airb-flow-active', state.phase === 'audit' || state.phase === 'contact');
+		document.body.classList.toggle('airb-results-active', state.phase === 'results');
 	}
 
 	function syncNavPlacement() {
@@ -1923,7 +1925,12 @@
 			});
 		}
 
-		var html = '<section class="airb__res-profile' + (parentMode ? ' airb__res-profile--parent' : '') + (studentMode ? ' airb__res-profile--student' : '') + '">';
+		var html = '<section class="airb__res-profile' +
+			(parentMode ? ' airb__res-profile--parent' : '') +
+			(studentMode ? ' airb__res-profile--student' : '') +
+			(leaderMode ? ' airb__res-profile--leader' : '') +
+			(teacherBenchmarkMode ? ' airb__res-profile--teacher' : '') +
+			'">';
 		html += '<span class="airb__res-eyebrow"><span class="airb__res-eyebrow-dot" aria-hidden="true"></span>' + esc(eyebrow) + '</span>';
 		html += '<div class="airb__res-shead">';
 		html += '<h2 class="airb__res-title">' + esc(

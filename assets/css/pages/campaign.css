@@ -82,13 +82,21 @@
 }
 
 @media screen and (max-width: 899px) {
+  #survey-cta .campaign-split {
+    gap: 1rem;
+  }
+
+  #survey-cta .campaign-content .section-desc {
+    margin-top: 0.75rem;
+  }
+
   #survey-cta .survey-cta-col {
     width: 100%;
   }
 
   #survey-cta .survey-cta {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     justify-content: stretch;
   }
 
@@ -109,6 +117,13 @@
   color: var(--white);
   padding-top: clamp(2rem, 4vw, 3rem);
   padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+@media screen and (max-width: 899px) {
+  #survey-cta {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
 }
 
 #survey-cta .section-label {
