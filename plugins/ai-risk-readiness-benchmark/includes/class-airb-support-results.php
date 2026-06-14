@@ -58,7 +58,7 @@ class AIRB_Support_Results {
 			'human_oversight_ratio'         => $ho_pct,
 			'data_protection_readiness'     => $data_protection,
 			'benchmark_summary'             => self::benchmark_summary( $results, $cfg, $ho_pct, $data_protection ),
-			'suggested_resources'           => (array) ( $cfg['suggested_resources'] ?? array() ),
+			'suggested_resources'           => AIRB_Defaults::support_suggested_resources(),
 			'next_steps'                    => self::next_steps( $gap, $opps, $cfg ),
 			'share_hint'                    => (string) ( $cfg['share_hint'] ?? '' ),
 		);
@@ -140,13 +140,13 @@ class AIRB_Support_Results {
 		$safe    = (int) round( (float) ( $results['domain_scores']['safe_adoption']['readiness_percentage'] ?? 100 ) );
 
 		if ( $privacy < 70 ) {
-			$items[] = __( 'AI Data Protection Checklist', 'ai-risk-benchmark' );
+			$items[] = __( 'DfE AI Compliance Checklist', 'ai-risk-benchmark' );
 		}
 		if ( $ho < 70 ) {
 			$items[] = __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' );
 		}
 		if ( $safe < 70 ) {
-			$items[] = __( 'AI Communications Framework', 'ai-risk-benchmark' );
+			$items[] = __( 'AI Privacy Guide for Schools', 'ai-risk-benchmark' );
 		}
 
 		if ( ! $items ) {
@@ -218,13 +218,14 @@ class AIRB_Support_Results {
 	 * @return array<string, mixed>
 	 */
 	private static function next_steps( ?array $gap, array $opps, array $cfg ): array {
+		$resources = AIRB_Defaults::support_suggested_resources();
 		if ( $gap && ! empty( $gap['items'] ) ) {
 			$hero = array(
 				'key'              => 'support_data_checklist',
 				'title'            => (string) ( $gap['items'][0] ?? __( 'Strengthen your AI practice', 'ai-risk-benchmark' ) ),
 				'body'             => (string) ( $gap['intro'] ?? '' ),
 				'understand_items' => (array) ( $gap['items'] ?? array() ),
-				'cta_text'         => __( 'Request resources', 'ai-risk-benchmark' ),
+				'cta_text'         => __( 'Request support', 'ai-risk-benchmark' ),
 			);
 		} else {
 			$first = $opps[0] ?? array();
@@ -233,7 +234,7 @@ class AIRB_Support_Results {
 				'title'            => (string) ( $first['label'] ?? __( 'Build your AI practice', 'ai-risk-benchmark' ) ),
 				'body'             => (string) ( $first['summary'] ?? __( 'Focus on the areas below to reduce operational and data risk.', 'ai-risk-benchmark' ) ),
 				'understand_items' => array(),
-				'cta_text'         => __( 'Request resources', 'ai-risk-benchmark' ),
+				'cta_text'         => __( 'Request support', 'ai-risk-benchmark' ),
 			);
 		}
 
@@ -241,6 +242,9 @@ class AIRB_Support_Results {
 			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
 			'hero'           => $hero,
 			'resource_links' => AIRB_Defaults::results_timeline_read_links( 'support_staff' ),
+			'hub_resources'  => $resources,
+			'hub_heading'    => __( 'Useful resources', 'ai-risk-benchmark' ),
+			'timeline_heading' => __( 'Benchmark outcomes', 'ai-risk-benchmark' ),
 		);
 	}
 }

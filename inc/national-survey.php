@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/** Survey schema version — v1.0 = launch; v1.1 = reach/impact questions (June 2026). */
+define( 'AIAD_SURVEY_VERSION', '1.1' );
+
 // ---------------------------------------------------------------------------
 // Post type
 // ---------------------------------------------------------------------------
@@ -98,7 +101,8 @@ function aiad_enqueue_national_survey_assets(): void {
  *   3p – Hopes & student empowerment (participants)
  *   3n – Understanding barriers (non-participants)
  *   4p – Resources, impact & 2027 planning (participants)
- *   4/5 – Stay in touch (everyone)
+ *   5  – Reach & impact (everyone; path-specific fields)
+ *   6  – Stay in touch (everyone)
  *
  * @param array<string, string>|string $atts Unused.
  */
@@ -702,6 +706,280 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 			</fieldset>
 
+			<!-- ── STEP: reach-impact ── Reach, confidence & next steps (everyone; path-specific fields) -->
+			<fieldset class="aiad-survey__step" data-step-id="reach-impact" aria-labelledby="aiad-survey-step-reach-impact-title">
+				<h2 class="aiad-survey__step-title" id="aiad-survey-step-reach-impact-title">
+					<?php esc_html_e( 'Reach &amp; impact', 'ai-awareness-day' ); ?>
+				</h2>
+
+				<p class="aiad-survey__helper">
+					<?php esc_html_e( 'A few quick questions to help us measure reach and plan for 2027.', 'ai-awareness-day' ); ?>
+				</p>
+
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label">
+						1. <?php esc_html_e( 'How did you hear about AI Awareness Day?', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="social" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Social media', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="email" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Email or newsletter', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="colleague" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Colleague or word of mouth', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="mat_trust" class="aiad-survey__radio" />
+							<?php esc_html_e( 'MAT / trust communication', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="dfe_org" class="aiad-survey__radio" />
+							<?php esc_html_e( 'DfE or other organisation', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="search" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Web search', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="hear_about" value="other" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Other', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+
+				<div class="aiad-survey__path-participant" hidden>
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							2. <?php esc_html_e( 'Before AI Awareness Day, how confident did you feel discussing AI in education?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<?php
+							$confidence_options = array(
+								'very'     => __( 'Very confident', 'ai-awareness-day' ),
+								'fairly'   => __( 'Fairly confident', 'ai-awareness-day' ),
+								'not_very' => __( 'Not very confident', 'ai-awareness-day' ),
+								'not'      => __( 'Not confident', 'ai-awareness-day' ),
+							);
+							foreach ( $confidence_options as $val => $label ) :
+								?>
+								<label class="aiad-survey__radio-label">
+									<input type="radio" name="confidence_before" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__radio" />
+									<?php echo esc_html( $label ); ?>
+								</label>
+							<?php endforeach; ?>
+						</div>
+					</div>
+
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							3. <?php esc_html_e( 'After taking part, how confident do you feel discussing AI in education?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<?php foreach ( $confidence_options as $val => $label ) : ?>
+								<label class="aiad-survey__radio-label">
+									<input type="radio" name="confidence_after" value="<?php echo esc_attr( $val ); ?>" class="aiad-survey__radio" />
+									<?php echo esc_html( $label ); ?>
+								</label>
+							<?php endforeach; ?>
+						</div>
+					</div>
+
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							4. <?php esc_html_e( 'As a result of AI Awareness Day, what is the one action you intend to take next?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="learn_more" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Learn more about AI', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="review_policy" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Review school policy', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="discuss_students" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Discuss AI with students', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="discuss_child" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Discuss AI with my child', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="safeguarding" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Improve safeguarding processes', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="assessment" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Review assessment approaches', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="explore_tools" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Explore AI tools', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="intended_action" value="no_action" class="aiad-survey__radio" />
+								<?php esc_html_e( 'No immediate action', 'ai-awareness-day' ); ?>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="aiad-survey__path-non-participant" hidden>
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							2. <?php esc_html_e( 'Had you heard of AI Awareness Day before today?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="heard_before" value="yes" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Yes', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="heard_before" value="no" class="aiad-survey__radio" />
+								<?php esc_html_e( 'No', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="heard_before" value="not_sure" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Not sure', 'ai-awareness-day' ); ?>
+							</label>
+						</div>
+					</div>
+
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							3. <?php esc_html_e( 'What concerns you most about AI in education?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="misinformation" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Misinformation and unreliable outputs', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="privacy" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Privacy and data protection', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="safeguarding" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Safeguarding and online harm', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="deepfakes" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Deepfakes and impersonation', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="integrity" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Academic integrity and cheating', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="bias" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Bias and fairness', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="top_concern" value="over_reliance" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Over-reliance on AI', 'ai-awareness-day' ); ?>
+							</label>
+						</div>
+					</div>
+
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							4. <?php esc_html_e( 'What support would help your school take part next year? (tick all that apply)', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__checkgroup aiad-survey__checkgroup--single">
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="training" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Staff training / CPD', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="policy" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Policy templates and governance guidance', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="parent_resources" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Parent guides and family resources', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="student_resources" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Student classroom resources', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="safeguarding" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Safeguarding guidance', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="case_studies" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Case studies from other schools', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__check-label">
+								<input type="checkbox" name="support_needed[]" value="webinars" class="aiad-survey__checkbox" />
+								<?php esc_html_e( 'Webinars or live briefings', 'ai-awareness-day' ); ?>
+							</label>
+						</div>
+					</div>
+
+					<div class="aiad-survey__field">
+						<p class="aiad-survey__label">
+							5. <?php esc_html_e( 'Would you participate in AI Awareness Day next year?', 'ai-awareness-day' ); ?>
+						</p>
+						<div class="aiad-survey__radio-group">
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="participate_next_year" value="definitely" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Definitely', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="participate_next_year" value="probably" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Probably', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="participate_next_year" value="maybe" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Maybe', 'ai-awareness-day' ); ?>
+							</label>
+							<label class="aiad-survey__radio-label">
+								<input type="radio" name="participate_next_year" value="unlikely" class="aiad-survey__radio" />
+								<?php esc_html_e( 'Unlikely', 'ai-awareness-day' ); ?>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="aiad-survey__field">
+					<p class="aiad-survey__label aiad-survey__label--recommend">
+						<span class="aiad-survey__recommend-label-participant" hidden>
+							5. <?php esc_html_e( 'How likely are you to recommend AI Awareness Day to another school or colleague?', 'ai-awareness-day' ); ?>
+						</span>
+						<span class="aiad-survey__recommend-label-non-participant" hidden>
+							6. <?php esc_html_e( 'How likely are you to recommend AI Awareness Day to another school or colleague?', 'ai-awareness-day' ); ?>
+						</span>
+					</p>
+					<div class="aiad-survey__radio-group">
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="recommend" value="definitely" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Definitely', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="recommend" value="probably" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Probably', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="recommend" value="maybe" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Maybe', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__radio-label">
+							<input type="radio" name="recommend" value="unlikely" class="aiad-survey__radio" />
+							<?php esc_html_e( 'Unlikely', 'ai-awareness-day' ); ?>
+						</label>
+					</div>
+				</div>
+
+				<input type="hidden" name="survey_version" value="<?php echo esc_attr( AIAD_SURVEY_VERSION ); ?>" />
+			</fieldset>
+
 			<!-- ── STEP: contact ── School details & stay in touch (everyone) -->
 			<fieldset class="aiad-survey__step" data-step-id="contact" aria-labelledby="aiad-survey-step-contact-title">
 				<h2 class="aiad-survey__step-title" id="aiad-survey-step-contact-title">
@@ -850,6 +1128,15 @@ function aiad_handle_survey_submission(): void {
 	$school_type            = sanitize_text_field( wp_unslash( $_POST['school_type'] ?? '' ) );
 	$contact_email          = sanitize_email( wp_unslash( $_POST['contact_email'] ?? '' ) );
 	$perm_quote             = isset( $_POST['permission_quote'] ) ? '1' : '0';
+	$survey_version         = sanitize_text_field( wp_unslash( $_POST['survey_version'] ?? AIAD_SURVEY_VERSION ) );
+	$hear_about             = sanitize_text_field( wp_unslash( $_POST['hear_about'] ?? '' ) );
+	$confidence_before      = sanitize_text_field( wp_unslash( $_POST['confidence_before'] ?? '' ) );
+	$confidence_after       = sanitize_text_field( wp_unslash( $_POST['confidence_after'] ?? '' ) );
+	$intended_action        = sanitize_text_field( wp_unslash( $_POST['intended_action'] ?? '' ) );
+	$heard_before           = sanitize_text_field( wp_unslash( $_POST['heard_before'] ?? '' ) );
+	$top_concern            = sanitize_text_field( wp_unslash( $_POST['top_concern'] ?? '' ) );
+	$participate_next_year  = sanitize_text_field( wp_unslash( $_POST['participate_next_year'] ?? '' ) );
+	$recommend              = sanitize_text_field( wp_unslash( $_POST['recommend'] ?? '' ) );
 
 	$allowed_year_groups = array( 'eyfs', 'ks1', 'ks2', 'ks3', 'ks4', 'ks5', 'staff' );
 	$raw_year_groups = isset( $_POST['year_groups'] ) && is_array( $_POST['year_groups'] )
@@ -914,6 +1201,55 @@ function aiad_handle_survey_submission(): void {
 		? array_map( 'sanitize_text_field', wp_unslash( $_POST['comms_preference'] ) )
 		: array();
 	$comms_preference = array_values( array_intersect( $raw_comms, $allowed_comms ) );
+
+	$allowed_hear_about = array( 'social', 'email', 'colleague', 'mat_trust', 'dfe_org', 'search', 'other' );
+	if ( ! in_array( $hear_about, $allowed_hear_about, true ) ) {
+		$hear_about = '';
+	}
+
+	$allowed_confidence = array( 'very', 'fairly', 'not_very', 'not' );
+	if ( ! in_array( $confidence_before, $allowed_confidence, true ) ) {
+		$confidence_before = '';
+	}
+	if ( ! in_array( $confidence_after, $allowed_confidence, true ) ) {
+		$confidence_after = '';
+	}
+
+	$allowed_intended_action = array(
+		'learn_more', 'review_policy', 'discuss_students', 'discuss_child',
+		'safeguarding', 'assessment', 'explore_tools', 'no_action',
+	);
+	if ( ! in_array( $intended_action, $allowed_intended_action, true ) ) {
+		$intended_action = '';
+	}
+
+	$allowed_heard_before = array( 'yes', 'no', 'not_sure' );
+	if ( ! in_array( $heard_before, $allowed_heard_before, true ) ) {
+		$heard_before = '';
+	}
+
+	$allowed_top_concern = array(
+		'misinformation', 'privacy', 'safeguarding', 'deepfakes', 'integrity', 'bias', 'over_reliance',
+	);
+	if ( ! in_array( $top_concern, $allowed_top_concern, true ) ) {
+		$top_concern = '';
+	}
+
+	$allowed_likelihood = array( 'definitely', 'probably', 'maybe', 'unlikely' );
+	if ( ! in_array( $participate_next_year, $allowed_likelihood, true ) ) {
+		$participate_next_year = '';
+	}
+	if ( ! in_array( $recommend, $allowed_likelihood, true ) ) {
+		$recommend = '';
+	}
+
+	$allowed_support_needed = array(
+		'training', 'policy', 'parent_resources', 'student_resources', 'safeguarding', 'case_studies', 'webinars',
+	);
+	$raw_support_needed = isset( $_POST['support_needed'] ) && is_array( $_POST['support_needed'] )
+		? array_map( 'sanitize_text_field', wp_unslash( $_POST['support_needed'] ) )
+		: array();
+	$support_needed = array_values( array_intersect( $raw_support_needed, $allowed_support_needed ) );
 
 	// Sanitise Likert ratings (1–5)
 	$likert_fields = array(
@@ -989,6 +1325,17 @@ function aiad_handle_survey_submission(): void {
 		'_survey_comms_preference'      => wp_json_encode( $comms_preference ),
 		'_survey_permission_quote'      => $perm_quote,
 		'_survey_year'                  => '2026',
+		'_survey_version'               => $survey_version ?: '1.1',
+		// Reach & impact (v1.1)
+		'_survey_hear_about'            => $hear_about,
+		'_survey_confidence_before'     => $confidence_before,
+		'_survey_confidence_after'      => $confidence_after,
+		'_survey_intended_action'       => $intended_action,
+		'_survey_heard_before'          => $heard_before,
+		'_survey_top_concern'           => $top_concern,
+		'_survey_support_needed'        => wp_json_encode( $support_needed ),
+		'_survey_participate_next_year' => $participate_next_year,
+		'_survey_recommend'             => $recommend,
 	);
 
 	foreach ( $meta as $key => $value ) {
@@ -1045,6 +1392,16 @@ function aiad_survey_meta_box_render( WP_Post $post ): void {
 		'_survey_open_feedback'         => __( 'Open feedback (Q12)', 'ai-awareness-day' ),
 		'_survey_non_part_reason'       => __( 'Non-participant: primary reason', 'ai-awareness-day' ),
 		'_survey_staffroom_attitude'    => __( 'Non-participant: staff room attitude', 'ai-awareness-day' ),
+		'_survey_version'               => __( 'Survey version', 'ai-awareness-day' ),
+		'_survey_hear_about'            => __( 'How heard about AAD', 'ai-awareness-day' ),
+		'_survey_confidence_before'     => __( 'Confidence before (participant)', 'ai-awareness-day' ),
+		'_survey_confidence_after'      => __( 'Confidence after (participant)', 'ai-awareness-day' ),
+		'_survey_intended_action'       => __( 'Intended next action (participant)', 'ai-awareness-day' ),
+		'_survey_heard_before'          => __( 'Heard before today (non-participant)', 'ai-awareness-day' ),
+		'_survey_top_concern'           => __( 'Top AI concern (non-participant)', 'ai-awareness-day' ),
+		'_survey_support_needed'        => __( 'Support needed for 2027 (non-participant)', 'ai-awareness-day' ),
+		'_survey_participate_next_year' => __( 'Participate next year (non-participant)', 'ai-awareness-day' ),
+		'_survey_recommend'             => __( 'Recommend to colleague', 'ai-awareness-day' ),
 		'_survey_school_name'           => __( 'School name', 'ai-awareness-day' ),
 		'_survey_school_type'           => __( 'School type', 'ai-awareness-day' ),
 		'_survey_year_groups'           => __( 'Year groups engaged', 'ai-awareness-day' ),
@@ -1319,6 +1676,9 @@ function aiad_export_survey_csv(): void {
 		'Bottleneck (Q10)', 'Support modules 2027 (Q11)', 'Open feedback (Q12)',
 		// Non-participant track
 		'Non-part: reason', 'Non-part: staff room attitude',
+		// Reach & impact (v1.1)
+		'Survey version', 'How heard about AAD', 'Confidence before', 'Confidence after', 'Intended next action',
+		'Heard before today', 'Top AI concern', 'Support needed 2027', 'Participate next year', 'Recommend',
 		// Contact / school details
 		'School name', 'School type', 'Year groups', 'Contact email', 'Preferred update channels', 'Quoting permission',
 	);
@@ -1334,6 +1694,8 @@ function aiad_export_survey_csv(): void {
 		'_survey_staffroom_impact', '_survey_bottleneck',
 		'_survey_support_modules', '_survey_open_feedback',
 		'_survey_non_part_reason', '_survey_staffroom_attitude',
+		'_survey_version', '_survey_hear_about', '_survey_confidence_before', '_survey_confidence_after', '_survey_intended_action',
+		'_survey_heard_before', '_survey_top_concern', '_survey_support_needed', '_survey_participate_next_year', '_survey_recommend',
 		'_survey_school_name', '_survey_school_type', '_survey_year_groups', '_survey_contact_email', '_survey_comms_preference', '_survey_permission_quote',
 	);
 

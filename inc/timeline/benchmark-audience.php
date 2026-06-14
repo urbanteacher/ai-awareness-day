@@ -23,10 +23,11 @@ function aiad_timeline_audience_taxonomy(): string {
  */
 function aiad_timeline_audience_role_options(): array {
 	return array(
-		'student' => __( 'Students', 'ai-awareness-day' ),
-		'parent'  => __( 'Parents & carers', 'ai-awareness-day' ),
-		'teacher' => __( 'Teachers', 'ai-awareness-day' ),
-		'leader'  => __( 'School leaders', 'ai-awareness-day' ),
+		'student'       => __( 'Students', 'ai-awareness-day' ),
+		'parent'        => __( 'Parents & carers', 'ai-awareness-day' ),
+		'teacher'       => __( 'Teachers', 'ai-awareness-day' ),
+		'leader'        => __( 'School leaders', 'ai-awareness-day' ),
+		'support_staff' => __( 'Education support staff', 'ai-awareness-day' ),
 	);
 }
 
@@ -310,7 +311,7 @@ function aiad_timeline_seeded_shuffle_posts( array $posts, int $seed ): array {
 /**
  * Build benchmark "More to read" links for a role from tagged timeline posts.
  *
- * @param string $role  student|parent|teacher|leader.
+ * @param string $role  student|parent|teacher|leader|support_staff.
  * @param int    $limit Max links.
  * @param int    $seed  Stable shuffle seed (e.g. submission ID).
  * @return array<int, array{label: string, url: string}>
@@ -323,6 +324,8 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 
 	$limit = max( 1, min( 6, $limit ) );
 	$seed  = 0 !== $seed ? $seed : (int) crc32( $role . '|' . gmdate( 'Y-m-d' ) );
+
+	$outcome_only = ( 'support_staff' === $role );
 
 	$pinned_query = new WP_Query(
 		array(
@@ -347,6 +350,30 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			),
 		)
 	);
+
+	if ( $outcome_only ) {
+		$chosen = array();
+		foreach ( $pinned_query->posts as $post ) {
+			if ( ! ( $post instanceof WP_Post ) ) {
+				continue;
+			}
+			$url = get_permalink( $post );
+			if ( ! is_string( $url ) || '' === $url ) {
+				continue;
+			}
+			$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
+			$chosen[] = array(
+				'label' => get_the_title( $post ),
+				'url'   => $url,
+				'image' => is_string( $image ) ? $image : '',
+			);
+			if ( count( $chosen ) >= $limit ) {
+				break;
+			}
+		}
+		wp_reset_postdata();
+		return $chosen;
+	}
 
 	$pool_query = new WP_Query(
 		array(
@@ -398,9 +425,11 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			continue;
 		}
 		$seen[ $post->ID ] = true;
+		$image             = get_the_post_thumbnail_url( $post, 'thumbnail' );
 		$chosen[]          = array(
 			'label' => get_the_title( $post ),
 			'url'   => $url,
+			'image' => is_string( $image ) ? $image : '',
 		);
 		if ( count( $chosen ) >= $limit ) {
 			break;

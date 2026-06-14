@@ -1239,6 +1239,7 @@
 	function interestFormButtonLabel() {
 		if (isParentRole()) return i18n.requestSupportParent || i18n.requestFullReport || 'Get support';
 		if (isStudentRole()) return i18n.requestSupportStudent || i18n.requestFullReport || 'Get support';
+		if (isSupportStaffRole()) return i18n.requestSupportSupport || i18n.requestFullReport || 'Request support';
 		return i18n.requestFullReport || 'Request support from AI Awareness Day';
 	}
 
@@ -1741,14 +1742,6 @@
 			bsHtml += '</ul></div>';
 			standInner += resultsAccordionHtml(bs.title || cfg.benchmark_summary_title || 'Score recap', bsHtml);
 		}
-		if (sr.suggested_resources && sr.suggested_resources.length) {
-			var resHtml = '<ul class="airb__resource-list">';
-			sr.suggested_resources.forEach(function (item) {
-				resHtml += '<li><a href="' + esc(item.url || '#') + '" target="_blank" rel="noopener noreferrer">' + esc(item.label || '') + '</a></li>';
-			});
-			resHtml += '</ul>';
-			standInner += resultsAccordionHtml(i18n.recommendedResources || 'Recommended resources', resHtml);
-		}
 		html += resultsStandZoneHtml(cfg.where_you_stand_heading || 'Where you stand', standInner);
 		html += resultsActionZoneHtml(sr.next_steps);
 		return html;
@@ -1849,18 +1842,29 @@
 		return html + '</div>';
 	}
 
-	function resultsResourceLinksHtml(links) {
+	function resultsResourceLinksHtml(links, options) {
+		options = options || {};
 		if (!links || !links.length) return '';
-		var html = '<ul class="airb__results-resource-links airb__leader-resource-links">';
+		var cardMode = options.cardMode !== false;
+		var html = '<ul class="airb__results-resource-links airb__leader-resource-links' + (cardMode ? ' airb__results-resource-links--cards' : '') + '">';
 		links.forEach(function (link) {
-			html += '<li>';
+			html += '<li class="airb__results-resource-item">';
 			if (link.external && link.url) {
-				html += '<a href="' + esc(link.url) + '" target="_blank" rel="noopener noreferrer">' + esc(link.label) + '</a>';
+				html += '<a class="airb__results-resource-card" href="' + esc(link.url) + '" target="_blank" rel="noopener noreferrer">';
 			} else if (link.prefill) {
-				html += '<button type="button" class="airb__results-resource-link airb__leader-resource-link" data-airb-open-interest="' + esc(link.prefill) + '">' + esc(link.label) + '</button>';
+				html += '<button type="button" class="airb__results-resource-card airb__results-resource-link airb__leader-resource-link" data-airb-open-interest="' + esc(link.prefill) + '">';
 			} else if (link.url) {
-				html += '<a href="' + esc(link.url) + '">' + esc(link.label) + '</a>';
+				html += '<a class="airb__results-resource-card" href="' + esc(link.url) + '"' + (link.external ? ' target="_blank" rel="noopener noreferrer"' : '') + '>';
+			} else {
+				return;
 			}
+			if (link.image) {
+				html += '<span class="airb__resource-link-media"><img class="airb__resource-link-thumb" src="' + esc(link.image) + '" alt="" loading="lazy" decoding="async" /></span>';
+			} else {
+				html += '<span class="airb__resource-link-media airb__resource-link-media--icon" aria-hidden="true"></span>';
+			}
+			html += '<span class="airb__resource-link-body"><span class="airb__resource-link-label">' + esc(link.label) + '</span></span>';
+			html += link.prefill ? '</button>' : '</a>';
 			html += '</li>';
 		});
 		return html + '</ul>';
@@ -1895,9 +1899,13 @@
 		}
 		html += '</article>';
 		if (nextSteps.resource_links && nextSteps.resource_links.length) {
-			html += '<h5 class="airb__results-read-more-heading">' + esc(i18n.moreToRead || 'More to read') + '</h5>';
+			html += '<h5 class="airb__results-read-more-heading">' + esc(nextSteps.timeline_heading || i18n.benchmarkOutcomes || 'Benchmark outcomes') + '</h5>';
 		}
 		html += resultsResourceLinksHtml(nextSteps.resource_links);
+		if (nextSteps.hub_resources && nextSteps.hub_resources.length) {
+			html += '<h5 class="airb__results-read-more-heading airb__results-read-more-heading--hub">' + esc(nextSteps.hub_heading || i18n.usefulResources || 'Useful resources') + '</h5>';
+			html += resultsResourceLinksHtml(nextSteps.hub_resources);
+		}
 		return html + '</section>';
 	}
 
@@ -2306,7 +2314,7 @@
 		} else if (isTeacherRole() && r.teacher_results) {
 			html += teacherDashboardHtml(r);
 		} else if (isSupportStaffRole() && r.support_results) {
-			html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
+			/* Benchmark metrics are in supportResultsHtml — avoid duplicate domain panels. */
 		} else if (!parentMode && !studentMode) {
 			html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
 		}
@@ -2420,7 +2428,7 @@
 	}
 
 	function guidedImprovementHtml(r) {
-		if (isParentRole() || isStudentRole() || isLeaderRole() || isTeacherRole()) return '';
+		if (isParentRole() || isStudentRole() || isLeaderRole() || isTeacherRole() || isSupportStaffRole()) return '';
 		var gi = r.guided_improvement;
 		if (r.parent_results && r.parent_results.suppress_improvement) return '';
 		if (!gi) return '';

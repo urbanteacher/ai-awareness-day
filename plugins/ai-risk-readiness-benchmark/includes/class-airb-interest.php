@@ -46,6 +46,8 @@ class AIRB_Interest {
 			'parent_sessions'        => 'parent_sessions',
 			'parent_school_take_part' => 'parent_school_take_part',
 			'student_share_school'   => 'student_share_school',
+			'support_data_checklist' => 'support_data_checklist',
+			'support_verification'   => 'support_verification_resources',
 		);
 	}
 
@@ -60,7 +62,7 @@ class AIRB_Interest {
 			'whole_school_cpd' => array(
 				'label'       => __( 'Whole-school staff CPD / training', 'ai-risk-benchmark' ),
 				'description' => __( 'Targeted training on your highest-risk domains from this audit.', 'ai-risk-benchmark' ),
-				'roles'       => array( 'teacher', 'leader' ),
+				'roles'       => array( 'teacher', 'leader', 'support_staff' ),
 			),
 			'ai_awareness_day' => array(
 				'label'       => __( 'Plan AI Awareness Day at our school', 'ai-risk-benchmark' ),
@@ -80,7 +82,7 @@ class AIRB_Interest {
 			'whole_school_benchmark' => array(
 				'label'       => __( 'Roll out the benchmark to all staff, students & parents', 'ai-risk-benchmark' ),
 				'description' => __( 'Build a complete whole-school AI readiness picture.', 'ai-risk-benchmark' ),
-				'roles'       => array( 'leader', 'teacher' ),
+				'roles'       => array( 'leader', 'teacher', 'support_staff' ),
 			),
 			'parent_sessions' => array(
 				'label'       => __( 'Parent awareness sessions', 'ai-risk-benchmark' ),
@@ -159,10 +161,31 @@ class AIRB_Interest {
 				'description' => __( 'Get support improving the areas flagged in your audit.', 'ai-risk-benchmark' ),
 				'roles'       => array( 'student' ),
 			),
+			// Education support staff (reception, office, HR, finance, exams, data, IT).
+			'support_data_checklist' => array(
+				'label'       => __( 'Data protection checklist & compliance resources', 'ai-risk-benchmark' ),
+				'description' => __( 'DfE-aligned guidance for handling pupil data, records and AI tools in admin roles.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'support_staff' ),
+			),
+			'support_verification_resources' => array(
+				'label'       => __( 'Verification & oversight resources for support staff', 'ai-risk-benchmark' ),
+				'description' => __( 'Practical checks when using AI for communications, reports, scheduling or records.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'support_staff' ),
+			),
+			'support_staff_cpd' => array(
+				'label'       => __( 'Staff CPD for non-teaching roles', 'ai-risk-benchmark' ),
+				'description' => __( 'Training focused on privacy, oversight and safe AI use in school operations.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'support_staff' ),
+			),
+			'support_school_rollout' => array(
+				'label'       => __( 'Help my school run the benchmark for all roles', 'ai-risk-benchmark' ),
+				'description' => __( 'Encourage teachers, leaders, students and parents to complete the audit.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'support_staff' ),
+			),
 			'further_information' => array(
 				'label'       => __( 'Further information about AI Awareness Day', 'ai-risk-benchmark' ),
 				'description' => __( 'General enquiry — we will respond by email.', 'ai-risk-benchmark' ),
-				'roles'       => array( 'teacher', 'leader', 'parent', 'student' ),
+				'roles'       => array( 'teacher', 'leader', 'parent', 'student', 'support_staff' ),
 			),
 		);
 	}
@@ -187,6 +210,9 @@ class AIRB_Interest {
 			'student' => array(
 				'student_share_school', 'student_school_programme', 'student_learn_ai',
 			),
+			'support_staff' => array(
+				'support_data_checklist', 'support_verification_resources', 'support_staff_cpd', 'support_school_rollout', 'further_information',
+			),
 		);
 
 		$label_overrides = array(
@@ -206,6 +232,24 @@ class AIRB_Interest {
 				'ai_awareness_day'       => array(
 					'label'       => __( 'Tell me about AI Awareness Day', 'ai-risk-benchmark' ),
 					'description' => __( 'Whole-school programme for teachers, leaders, students and parents.', 'ai-risk-benchmark' ),
+				),
+			),
+			'support_staff' => array(
+				'support_data_checklist' => array(
+					'label'       => __( 'Send me the data protection checklist', 'ai-risk-benchmark' ),
+					'description' => __( 'Matched to privacy and data-handling gaps from your audit.', 'ai-risk-benchmark' ),
+				),
+				'support_verification_resources' => array(
+					'label'       => __( 'Send verification & oversight resources', 'ai-risk-benchmark' ),
+					'description' => __( 'Checklists for reviewing AI-generated communications, records and reports.', 'ai-risk-benchmark' ),
+				),
+				'support_staff_cpd' => array(
+					'label'       => __( 'Book CPD for support staff', 'ai-risk-benchmark' ),
+					'description' => __( 'Training for reception, office, HR, finance, exams, data and IT teams.', 'ai-risk-benchmark' ),
+				),
+				'support_school_rollout' => array(
+					'label'       => __( 'Help roll out the benchmark at my school', 'ai-risk-benchmark' ),
+					'description' => __( 'Materials to encourage all roles to complete the audit.', 'ai-risk-benchmark' ),
 				),
 			),
 			'leader' => array(
@@ -348,6 +392,16 @@ class AIRB_Interest {
 						'stakeholder_role' => __( 'Which best describes you?', 'ai-risk-benchmark' ),
 					)
 				);
+			case 'support_staff':
+				return array_merge(
+					$base,
+					array(
+						'heading'     => __( 'Request support after your support-staff audit', 'ai-risk-benchmark' ),
+						'intro'       => __( 'Your results are above. Tell us what you need — we will email you with checklists, CPD options or help rolling out the benchmark at your school.', 'ai-risk-benchmark' ),
+						'score_label' => __( 'Your operational readiness score', 'ai-risk-benchmark' ),
+						'weak_label'  => __( 'Priority areas from your audit', 'ai-risk-benchmark' ),
+					)
+				);
 			default:
 				return array_merge(
 					$base,
@@ -488,11 +542,11 @@ class AIRB_Interest {
 		}
 		if ( 'support_staff' === $role ) {
 			return array(
-				'privacy'         => 'whole_school_cpd',
-				'human_oversight' => 'whole_school_cpd',
-				'safe_adoption'   => 'whole_school_cpd',
-				'ai_literacy'     => 'whole_school_cpd',
-				'ai_dependency'   => 'whole_school_cpd',
+				'privacy'         => 'support_data_checklist',
+				'human_oversight' => 'support_verification_resources',
+				'safe_adoption'   => 'support_verification_resources',
+				'ai_literacy'     => 'support_staff_cpd',
+				'ai_dependency'   => 'support_staff_cpd',
 			);
 		}
 		if ( 'teacher' === $role ) {
@@ -575,6 +629,14 @@ class AIRB_Interest {
 		}
 		if ( 'teacher' === $role && in_array( 'teacher_activity_day', $allowed, true ) && ! $suggested ) {
 			$suggested[] = 'teacher_activity_day';
+		}
+		if ( 'support_staff' === $role ) {
+			if ( ! $suggested && in_array( 'support_data_checklist', $allowed, true ) ) {
+				$suggested[] = 'support_data_checklist';
+			}
+			if ( in_array( 'support_school_rollout', $allowed, true ) ) {
+				$suggested[] = 'support_school_rollout';
+			}
 		}
 
 		return array_values( array_unique( $suggested ) );

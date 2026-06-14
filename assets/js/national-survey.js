@@ -1,16 +1,16 @@
 /* National Survey 2026 — [aiad_national_survey]
  *
  * Step sequences:
- *   Participant path    : profile → school-readiness → hopes → participant-feedback → contact
- *   Non-participant path: profile → non-participant-a → school-readiness → contact
+ *   Participant path    : profile → school-readiness → hopes → participant-feedback → reach-impact → contact
+ *   Non-participant path: profile → non-participant-a → school-readiness → reach-impact → contact
  *
  * Path is decided on the profile step based on the "participated" radio.
  */
 (function () {
 	'use strict';
 
-	var PARTICIPANT_STEPS     = ['profile', 'school-readiness', 'hopes', 'participant-feedback', 'contact'];
-	var NON_PARTICIPANT_STEPS = ['profile', 'non-participant-a', 'school-readiness', 'contact'];
+	var PARTICIPANT_STEPS     = ['profile', 'school-readiness', 'hopes', 'participant-feedback', 'reach-impact', 'contact'];
+	var NON_PARTICIPANT_STEPS = ['profile', 'non-participant-a', 'school-readiness', 'reach-impact', 'contact'];
 
 	function init() {
 		var form        = document.getElementById('aiad-survey-form');
@@ -37,10 +37,39 @@
 			if (input.closest('#survey-participation-scale-wrap') && isParticipationScaleHidden()) {
 				return true;
 			}
+			if (input.closest('.aiad-survey__path-participant[hidden], .aiad-survey__path-non-participant[hidden]')) {
+				return true;
+			}
 			if (!allowHiddenSteps && input.offsetParent === null) {
 				return true;
 			}
 			return false;
+		}
+
+		function isParticipantPath() {
+			var participated = document.querySelector('input[name="participated"]:checked');
+			return participated && participated.value === 'yes';
+		}
+
+		function toggleReachImpactPath() {
+			var participant = isParticipantPath();
+			var participantBlock = document.querySelector('.aiad-survey__path-participant');
+			var nonParticipantBlock = document.querySelector('.aiad-survey__path-non-participant');
+			var recommendParticipant = document.querySelector('.aiad-survey__recommend-label-participant');
+			var recommendNonParticipant = document.querySelector('.aiad-survey__recommend-label-non-participant');
+
+			if (participantBlock) {
+				participantBlock.hidden = !participant;
+			}
+			if (nonParticipantBlock) {
+				nonParticipantBlock.hidden = participant;
+			}
+			if (recommendParticipant) {
+				recommendParticipant.hidden = !participant;
+			}
+			if (recommendNonParticipant) {
+				recommendNonParticipant.hidden = participant;
+			}
 		}
 
 		function lockSequenceFromProfile() {
@@ -67,6 +96,7 @@
 				if (currentIdx > sequence.length - 1) {
 					currentIdx = sequence.length - 1;
 				}
+				toggleReachImpactPath();
 				showStep(currentIdx);
 			});
 		});
@@ -150,6 +180,10 @@
 			backBtn.hidden = idx === 0;
 			updateNavButtons();
 			hideError();
+
+			if (stepId === 'reach-impact') {
+				toggleReachImpactPath();
+			}
 		}
 
 		// ── Validation ───────────────────────────────────────────────────────
@@ -350,6 +384,7 @@
 			el.hidden = true;
 		});
 		if (scaleWrap) scaleWrap.style.display = 'none';
+		toggleReachImpactPath();
 		showStep(0);
 	}
 

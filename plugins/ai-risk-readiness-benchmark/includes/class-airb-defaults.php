@@ -481,32 +481,15 @@ class AIRB_Defaults {
 			'opportunities_heading'     => __( 'Priority focus', 'ai-risk-benchmark' ),
 			'share_hint'                => __( 'Share your results with your line manager or AI lead to help build a whole-school picture of operational AI use.', 'ai-risk-benchmark' ),
 			'default_gap_items'         => array(
-				__( 'AI Data Protection Checklist', 'ai-risk-benchmark' ),
-				__( 'AI Communications Framework', 'ai-risk-benchmark' ),
+				__( 'DfE AI Compliance Checklist', 'ai-risk-benchmark' ),
 				__( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ),
+				__( 'AI Privacy Guide for Schools', 'ai-risk-benchmark' ),
 			),
 			'gap_pathway' => array(
 				'next_step_label' => __( 'Recommended next step', 'ai-risk-benchmark' ),
 				'intro'           => __( 'Based on your results, we recommend focusing on:', 'ai-risk-benchmark' ),
 			),
-			'suggested_resources' => array(
-				array(
-					'label' => __( 'AI Data Protection Checklist', 'ai-risk-benchmark' ),
-					'url'   => self::contact_page_url(),
-				),
-				array(
-					'label' => __( 'AI Communications Framework', 'ai-risk-benchmark' ),
-					'url'   => 'https://aiawarenessday.co.uk/resources/',
-				),
-				array(
-					'label' => __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ),
-					'url'   => 'https://aiawarenessday.co.uk/resources/',
-				),
-				array(
-					'label' => __( 'DfE AI Guidance Briefing', 'ai-risk-benchmark' ),
-					'url'   => self::dfe_url_generative_ai(),
-				),
-			),
+			'suggested_resources' => self::support_suggested_resources(),
 		);
 	}
 
@@ -978,9 +961,11 @@ class AIRB_Defaults {
 			if ( $post instanceof WP_Post ) {
 				$permalink = get_permalink( $post );
 				if ( is_string( $permalink ) && '' !== $permalink ) {
+					$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
 					return array(
 						'label' => '' !== $label ? $label : get_the_title( $post ),
 						'url'   => $permalink,
+						'image' => is_string( $image ) ? $image : '',
 					);
 				}
 			}
@@ -990,10 +975,73 @@ class AIRB_Defaults {
 			return array(
 				'label' => '' !== $label ? $label : $url,
 				'url'   => $url,
+				'image' => '',
 			);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Hub intervention link with optional featured image for results cards.
+	 *
+	 * @param string $slug  Hub page slug.
+	 * @param string $label Display label.
+	 * @param string $role  Benchmark role for tracking.
+	 * @param string $ref   Weak domain ref slug.
+	 * @return array{label: string, url: string, image: string}
+	 */
+	public static function hub_resource_link( string $slug, string $label, string $role, string $ref = '' ): array {
+		$image = '';
+		if ( function_exists( 'get_page_by_path' ) ) {
+			$page = get_page_by_path( $slug, OBJECT, 'page' );
+			if ( $page instanceof WP_Post && has_post_thumbnail( $page ) ) {
+				$thumb = get_the_post_thumbnail_url( $page, 'thumbnail' );
+				if ( is_string( $thumb ) ) {
+					$image = $thumb;
+				}
+			}
+		}
+
+		return array(
+			'label' => $label,
+			'url'   => self::hub_tracking_url( $slug, $role, $ref ),
+			'image' => $image,
+		);
+	}
+
+	/**
+	 * Support staff results — curated hub resources (not generic homepage links).
+	 *
+	 * @return array<int, array{label: string, url: string, image: string}>
+	 */
+	public static function support_suggested_resources(): array {
+		return array(
+			self::hub_resource_link(
+				'dfe-ai-compliance-checklist',
+				__( 'DfE AI Compliance Checklist', 'ai-risk-benchmark' ),
+				'support_staff',
+				'privacy'
+			),
+			self::hub_resource_link(
+				'teacher-ai-privacy-guide',
+				__( 'AI Privacy Guide for Schools', 'ai-risk-benchmark' ),
+				'support_staff',
+				'privacy'
+			),
+			self::hub_resource_link(
+				'teacher-ai-verification-framework',
+				__( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ),
+				'support_staff',
+				'human_oversight'
+			),
+			array(
+				'label' => __( 'DfE Generative AI Guidance', 'ai-risk-benchmark' ),
+				'url'   => self::dfe_url_generative_ai(),
+				'image' => '',
+				'external' => true,
+			),
+		);
 	}
 
 	/**
@@ -1068,11 +1116,7 @@ class AIRB_Defaults {
 				),
 				array( 'slug' => 'beyond-the-holy-grail' ),
 			),
-			'support_staff' => array(
-				array( 'slug' => 'misinformation-detector-teachers' ),
-				array( 'slug' => 'how-does-a-large-language-model-work' ),
-				array( 'slug' => 'bbc-bitesize-ai-awareness-day-teaching-resources' ),
-			),
+			'support_staff' => array(),
 		);
 
 		$links = array();
@@ -1324,7 +1368,8 @@ class AIRB_Defaults {
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
-								array( 'kind' => 'read', 'label' => __( 'AI Data Protection Checklist', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
+								array( 'kind' => 'read', 'label' => __( 'DfE AI Compliance Checklist', 'ai-risk-benchmark' ), 'path' => 'dfe-ai-compliance-checklist' ),
+								array( 'kind' => 'read', 'label' => __( 'AI Privacy Guide for Schools', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-privacy-guide' ),
 							),
 						),
 						'human_oversight' => array(
@@ -1346,7 +1391,7 @@ class AIRB_Defaults {
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
-								array( 'kind' => 'read', 'label' => __( 'AI Communications Framework', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-lesson-planning-checklist' ),
+								array( 'kind' => 'read', 'label' => __( 'School AI Governance Guide', 'ai-risk-benchmark' ), 'path' => 'school-ai-governance' ),
 							),
 						),
 					),
