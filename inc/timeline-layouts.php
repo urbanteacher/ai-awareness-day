@@ -673,7 +673,7 @@ function aiad_render_timeline_magazine(array $entries): string
                         <?php echo esc_html($hero_cta['label']); ?>
                     </a>
                 <?php endif; ?>
-                <?php if ($hero_permalink): ?>
+                <?php if ($hero_permalink && ! $hero_cta) : ?>
                     <a class="timeline-magazine__read-more" href="<?php echo esc_url($hero_permalink); ?>">
                         <?php esc_html_e('Read full update →', 'ai-awareness-day'); ?>
                     </a>
