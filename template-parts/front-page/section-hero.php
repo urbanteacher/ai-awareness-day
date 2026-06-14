@@ -96,9 +96,10 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                              : (int) get_option( 'aiad_school_pledge_count', 0 );
             $stats = array(
                 array(
-                    'value' => $school_count,
-                    'label' => __( 'Schools', 'ai-awareness-day' ),
-                    'url'   => '#contact',
+                    'value'   => $school_count,
+                    'display' => '1000+',
+                    'label'   => __( 'Schools', 'ai-awareness-day' ),
+                    'url'     => '#contact',
                 ),
                 array(
                     'value' => $resource_count,
@@ -121,7 +122,13 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
             <div class="hero-stats">
                 <?php foreach ( $stats as $stat ) : ?>
                 <a href="<?php echo esc_url( $stat['url'] ); ?>" class="hero-stats__item"<?php echo ! empty( $stat['track'] ) ? ' data-track-engagement="' . esc_attr( $stat['track'] ) . '"' : ''; ?>>
-                    <span class="hero-stats__value"><?php echo esc_html( number_format_i18n( $stat['value'] ) ); ?></span>
+                    <span class="hero-stats__value"><?php
+                    echo esc_html(
+                        isset( $stat['display'] )
+                            ? $stat['display']
+                            : number_format_i18n( (int) $stat['value'] )
+                    );
+                    ?></span>
                     <span class="hero-stats__label"><?php echo esc_html( $stat['label'] ); ?></span>
                 </a>
                 <?php endforeach; ?>
