@@ -457,7 +457,7 @@ class AIRB_Database {
 	public static function count_school_responses_by_role( string $school ): array {
 		global $wpdb;
 		$table = self::table_name();
-		$roles = array( 'leader', 'teacher', 'student', 'parent' );
+		$roles = array( 'leader', 'teacher', 'support_staff', 'student', 'parent' );
 		$out   = array();
 
 		foreach ( $roles as $role ) {

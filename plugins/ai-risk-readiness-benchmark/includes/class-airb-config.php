@@ -157,6 +157,12 @@ class AIRB_Config {
 			}
 			$config['version'] = 8;
 			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 13 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$config['version']   = 13;
+			$changed             = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;
@@ -282,6 +288,7 @@ class AIRB_Config {
 			'teacher_result'        => AIRB_Defaults::teacher_result_config(),
 			'student_result'        => AIRB_Defaults::student_result_config(),
 			'leader_result'         => AIRB_Defaults::leader_result_config(),
+			'support_result'        => AIRB_Defaults::support_result_config(),
 			'improvement_hub'       => AIRB_Defaults::improvement_hub_config(),
 			'role_meta'             => AIRB_Defaults::role_meta(),
 			'questions'           => $config['questions'] ?? array(),

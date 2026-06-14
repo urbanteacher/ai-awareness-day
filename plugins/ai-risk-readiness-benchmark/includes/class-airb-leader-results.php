@@ -327,10 +327,11 @@ class AIRB_Leader_Results {
 		$school     = trim( $school );
 		$has_school = '' !== $school;
 		$counts     = array(
-			'leader'  => 0,
-			'teacher' => 0,
-			'student' => 0,
-			'parent'  => 0,
+			'leader'        => 0,
+			'teacher'       => 0,
+			'support_staff' => 0,
+			'student'       => 0,
+			'parent'        => 0,
 		);
 
 		if ( $has_school ) {

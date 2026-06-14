@@ -221,6 +221,51 @@ class AIRB_Scoring {
 					);
 				}
 				break;
+			case 'support_staff':
+				$align   = (int) ( $results['alignment_score'] ?? 0 );
+				$dep     = (int) ( $results['dependency_index'] ?? 0 );
+				$dep_band = self::risk_band( (float) $dep );
+				$ho_dom  = (array) ( $dom['human_oversight'] ?? array() );
+				$ho_pct  = (int) round( (float) ( $ho_dom['readiness_percentage'] ?? 0 ) );
+				if ( $ho_pct < 1 ) {
+					$ho_pct = (int) ( $results['human_oversight_ratio'] ?? 0 );
+				}
+				$dp_pct = (int) round( (float) ( $dom['privacy']['readiness_percentage'] ?? 0 ) );
+				$cards  = array(
+					array(
+						'key'        => 'ready',
+						'label'      => __( 'Readiness Score', 'ai-risk-benchmark' ),
+						'value'      => $align . '/100',
+						'band'       => self::readiness_band( $align ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $align ),
+					),
+					array(
+						'key'        => 'dep',
+						'label'      => __( 'Operational Dependency Index', 'ai-risk-benchmark' ),
+						'value'      => $dep . '%',
+						'band'       => $dep_band,
+						'tone'       => 'risk',
+						'band_label' => self::band_label( $dep_band ),
+					),
+					array(
+						'key'        => 'over',
+						'label'      => __( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
+						'value'      => $ho_pct . '%',
+						'band'       => self::readiness_band( $ho_pct ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $ho_pct ),
+					),
+					array(
+						'key'        => 'privacy',
+						'label'      => __( 'Data Protection Readiness', 'ai-risk-benchmark' ),
+						'value'      => $dp_pct . '%',
+						'band'       => self::readiness_band( $dp_pct ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $dp_pct ),
+					),
+				);
+				break;
 			case 'leader':
 				$gov  = (int) ( $results['governance_maturity'] ?? 0 );
 				$safe = (int) ( $results['safeguarding_readiness'] ?? 0 );
@@ -500,6 +545,7 @@ class AIRB_Scoring {
 		$qids = array(
 			'teacher' => array( 't_without_ai', 't_ai_before_task', 't_feedback_ai' ),
 			'student' => array( 's_attempt_first', 's_without_ai', 's_submitted_ai' ),
+			'support_staff' => array( 'ss_draft_comms', 'ss_without_ai', 'ss_task_approach' ),
 			'parent'  => array(),
 			'leader'  => array(),
 		);
@@ -507,6 +553,9 @@ class AIRB_Scoring {
 
 		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
 			if ( (string) ( $question['role'] ?? '' ) !== $role ) {
+				continue;
+			}
+			if ( ! self::question_applies_to_profile( $question, $answers ) ) {
 				continue;
 			}
 			$qid = (string) ( $question['id'] ?? '' );
@@ -541,6 +590,9 @@ class AIRB_Scoring {
 
 		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
 			if ( (string) ( $question['role'] ?? '' ) !== $role ) {
+				continue;
+			}
+			if ( ! self::question_applies_to_profile( $question, $answers ) ) {
 				continue;
 			}
 			$qid = (string) ( $question['id'] ?? '' );
@@ -640,6 +692,26 @@ class AIRB_Scoring {
 	}
 
 	/**
+	 * Whether a question applies for this submission (e.g. phase-gated leader items).
+	 *
+	 * @param array<string, mixed> $question Question config.
+	 * @param array<string, mixed> $answers  Answers including optional _school_phase.
+	 */
+	public static function question_applies_to_profile( array $question, array $answers ): bool {
+		$phases = (array) ( $question['show_for_phases'] ?? array() );
+		if ( empty( $phases ) ) {
+			return true;
+		}
+
+		$phase = sanitize_key( (string) ( $answers['_school_phase'] ?? '' ) );
+		if ( '' === $phase ) {
+			return false;
+		}
+
+		return in_array( $phase, $phases, true );
+	}
+
+	/**
 	 * Full scoring pass.
 	 *
 	 * @param string               $role    Role slug.
@@ -663,6 +735,9 @@ class AIRB_Scoring {
 
 		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
 			if ( (string) ( $question['role'] ?? '' ) !== $role ) {
+				continue;
+			}
+			if ( ! self::question_applies_to_profile( $question, $answers ) ) {
 				continue;
 			}
 			$qid = (string) ( $question['id'] ?? '' );

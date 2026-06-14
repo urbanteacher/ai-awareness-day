@@ -61,6 +61,16 @@ class AIRB_Ajax {
 			'year_group'   => sanitize_key( (string) ( $_POST['year_group'] ?? '' ) ),
 		);
 
+		if ( $profile['school_phase'] ) {
+			$answers['_school_phase'] = $profile['school_phase'];
+		}
+		if ( $profile['org_type'] ) {
+			$answers['_org_type'] = $profile['org_type'];
+		}
+		if ( $profile['year_group'] ) {
+			$answers['_year_group'] = $profile['year_group'];
+		}
+
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
 		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school );

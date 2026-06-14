@@ -125,7 +125,7 @@ class AIRB_Parent_Results {
 	 */
 	private static function confidence_block( array $results, array $cfg ): ?array {
 		$display = (array) ( $results['parent_display_domains'] ?? array() );
-		$dom     = (array) ( $display['parent_confidence'] ?? array() );
+		$dom     = (array) ( $display['homework_oversight'] ?? array() );
 		if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
 			return null;
 		}

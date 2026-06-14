@@ -394,7 +394,7 @@ class AIRB_Hub_Journey {
 				'title'     => __( 'What leading schools typically do', 'ai-risk-benchmark' ),
 				'min_score' => 75,
 				'items'     => array(
-					__( 'Benchmark all four stakeholder groups', 'ai-risk-benchmark' ),
+					__( 'Benchmark all five stakeholder groups', 'ai-risk-benchmark' ),
 					__( 'Maintain clear AI policies and oversight', 'ai-risk-benchmark' ),
 					__( 'Train staff on verification and safeguarding', 'ai-risk-benchmark' ),
 					__( 'Review AI readiness annually', 'ai-risk-benchmark' ),

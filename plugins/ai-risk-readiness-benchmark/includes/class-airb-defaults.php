@@ -83,10 +83,11 @@ class AIRB_Defaults {
 	 */
 	public static function roles(): array {
 		return array(
-			'teacher' => __( 'Teacher', 'ai-risk-benchmark' ),
-			'student' => __( 'Student', 'ai-risk-benchmark' ),
-			'parent'  => __( 'Parent / Carer', 'ai-risk-benchmark' ),
-			'leader'  => __( 'School Leader', 'ai-risk-benchmark' ),
+			'teacher'       => __( 'Teacher', 'ai-risk-benchmark' ),
+			'student'       => __( 'Student', 'ai-risk-benchmark' ),
+			'parent'        => __( 'Parent / Carer', 'ai-risk-benchmark' ),
+			'leader'        => __( 'School Leader', 'ai-risk-benchmark' ),
+			'support_staff' => __( 'Education Support Staff', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -134,41 +135,41 @@ class AIRB_Defaults {
 	public static function parent_result_config(): array {
 		return array(
 			'domain_weights' => array(
-				'parent_awareness'      => 0.20,
-				'home_ai_safety'        => 0.20,
-				'child_privacy_risk'    => 0.15,
-				'homework_support_risk' => 0.15,
-				'parent_confidence'     => 0.30,
+				'parent_awareness'     => 0.20,
+				'home_ai_safety'       => 0.20,
+				'homework_oversight'   => 0.20,
+				'parent_ai_dependency' => 0.20,
+				'school_partnership'   => 0.20,
 			),
 			'display_domains' => array(
 				'parent_awareness' => array(
 					'label'       => __( 'Parent Awareness Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
-					'questions'   => array( 'p_child_uses', 'p_know_tools' ),
+					'questions'   => array( 'p_child_uses', 'p_know_tools', 'p_child_unknown_use' ),
 					'color'       => '#1B6B8C',
 				),
 				'home_ai_safety' => array(
 					'label'       => __( 'Home AI Safety Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
-					'questions'   => array( 'p_discuss_use', 'p_deepfakes' ),
+					'questions'   => array( 'p_no_share', 'p_harm_response', 'p_home_ai_culture' ),
 					'color'       => '#15803d',
 				),
-				'child_privacy_risk' => array(
-					'label'       => __( 'Child Privacy Risk Score', 'ai-risk-benchmark' ),
-					'metric_type' => 'risk',
-					'questions'   => array( 'p_no_share' ),
-					'color'       => '#7c3aed',
-				),
-				'homework_support_risk' => array(
-					'label'       => __( 'Homework Support Risk Score', 'ai-risk-benchmark' ),
-					'metric_type' => 'risk',
-					'questions'   => array( 'p_cheating', 'p_spot_ai_hw' ),
+				'homework_oversight' => array(
+					'label'       => __( 'Homework Oversight Score', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'p_explain_own_words', 'p_check_suspicion', 'p_hw_first_response' ),
 					'color'       => '#a16207',
 				),
-				'parent_confidence' => array(
-					'label'       => __( 'Parent Confidence Score', 'ai-risk-benchmark' ),
+				'parent_ai_dependency' => array(
+					'label'       => __( 'Parent AI Dependency Score', 'ai-risk-benchmark' ),
+					'metric_type' => 'risk',
+					'questions'   => array( 'p_parent_ai_hw', 'p_parent_ai_comms' ),
+					'color'       => '#b45309',
+				),
+				'school_partnership' => array(
+					'label'       => __( 'School Partnership Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
-					'questions'   => array( 'p_equipped' ),
+					'questions'   => array( 'p_school_expectations', 'p_school_discuss' ),
 					'color'       => '#2563eb',
 				),
 			),
@@ -193,11 +194,11 @@ class AIRB_Defaults {
 			'advocate_title' => __( 'You\'re ahead of most parents', 'ai-risk-benchmark' ),
 			'advocate_intro' => __( 'You demonstrate strong awareness of how AI is used at home. The next step is helping your school see the whole picture.', 'ai-risk-benchmark' ),
 			'advocate_strength_labels' => array(
-				'child_privacy_risk'    => __( 'Privacy', 'ai-risk-benchmark' ),
-				'homework_support_risk' => __( 'Homework support', 'ai-risk-benchmark' ),
-				'home_ai_safety'        => __( 'AI safety', 'ai-risk-benchmark' ),
-				'parent_confidence'     => __( 'Responsible use', 'ai-risk-benchmark' ),
-				'parent_awareness'      => __( 'Parent awareness', 'ai-risk-benchmark' ),
+				'home_ai_safety'       => __( 'Home AI safety', 'ai-risk-benchmark' ),
+				'homework_oversight'   => __( 'Homework oversight', 'ai-risk-benchmark' ),
+				'parent_ai_dependency' => __( 'Balanced AI use', 'ai-risk-benchmark' ),
+				'school_partnership'   => __( 'School partnership', 'ai-risk-benchmark' ),
+				'parent_awareness'     => __( 'Parent awareness', 'ai-risk-benchmark' ),
 			),
 			'advocate_help_title' => __( 'Help your school', 'ai-risk-benchmark' ),
 			'advocate_strengths_label' => __( 'You demonstrate strong awareness of:', 'ai-risk-benchmark' ),
@@ -207,19 +208,19 @@ class AIRB_Defaults {
 				__( 'Ask about AI Awareness Day at your school', 'ai-risk-benchmark' ),
 			),
 			'confidence_copy' => array(
-				'title'           => __( 'Building your confidence', 'ai-risk-benchmark' ),
-				'impact_heading'  => __( 'Parents with lower confidence often report:', 'ai-risk-benchmark' ),
+				'title'           => __( 'Strengthening homework oversight', 'ai-risk-benchmark' ),
+				'impact_heading'  => __( 'Families with weaker homework oversight often report:', 'ai-risk-benchmark' ),
 				'impact_items'    => array(
-					__( 'uncertainty about which AI tools their children use', 'ai-risk-benchmark' ),
-					__( 'concern about homework and whether AI is doing the thinking', 'ai-risk-benchmark' ),
-					__( 'difficulty spotting AI-generated content', 'ai-risk-benchmark' ),
-					__( 'uncertainty about where school policies stand on AI use', 'ai-risk-benchmark' ),
+					__( 'not knowing when their child uses AI for schoolwork', 'ai-risk-benchmark' ),
+					__( 'using AI themselves as the first response when homework is hard', 'ai-risk-benchmark' ),
+					__( 'not asking children to explain AI-assisted work in their own words', 'ai-risk-benchmark' ),
+					__( 'uncertainty about what to do if they suspect AI-generated homework', 'ai-risk-benchmark' ),
 				),
-				'improve_heading' => __( 'To improve confidence:', 'ai-risk-benchmark' ),
+				'improve_heading' => __( 'Practical next steps:', 'ai-risk-benchmark' ),
 				'improve_items'   => array(
-					__( 'Ask your child to show you their favourite AI tool', 'ai-risk-benchmark' ),
-					__( 'Discuss when AI helps learning and when it gets in the way', 'ai-risk-benchmark' ),
-					__( 'Review school guidance on AI use together', 'ai-risk-benchmark' ),
+					__( 'Ask your child to explain one AI-assisted answer without looking at the screen', 'ai-risk-benchmark' ),
+					__( 'Agree when AI can help learning and when your child should try first', 'ai-risk-benchmark' ),
+					__( 'Check your school\'s homework and AI expectations together', 'ai-risk-benchmark' ),
 				),
 			),
 			'journey_next_steps' => array(
@@ -259,19 +260,24 @@ class AIRB_Defaults {
 			),
 			'focus_topics' => array(
 				array(
-					'slug'  => 'child_privacy_risk',
-					'label' => __( 'Child privacy', 'ai-risk-benchmark' ),
-					'body'  => __( 'Make sure your child does not enter their full name, school name, address, images, personal details, SEND information or safeguarding concerns into public AI tools.', 'ai-risk-benchmark' ),
-				),
-				array(
 					'slug'  => 'home_ai_safety',
 					'label' => __( 'Home AI safety', 'ai-risk-benchmark' ),
-					'body'  => __( 'Talk to your child about AI-generated images, fake profiles, deepfakes, bullying, impersonation and pressure to share private content.', 'ai-risk-benchmark' ),
+					'body'  => __( 'Talk about privacy, fake images and voice messages, and agree what your child should do if something online does not feel right.', 'ai-risk-benchmark' ),
 				),
 				array(
-					'slug'  => 'homework_support_risk',
-					'label' => __( 'Homework support', 'ai-risk-benchmark' ),
-					'body'  => __( 'AI should help your child understand, practise and check work — not replace their own thinking or produce work to submit as their own.', 'ai-risk-benchmark' ),
+					'slug'  => 'homework_oversight',
+					'label' => __( 'Homework oversight', 'ai-risk-benchmark' ),
+					'body'  => __( 'Ask your child to explain AI-assisted work in their own words. AI should support learning — not replace their thinking or produce work to submit as their own.', 'ai-risk-benchmark' ),
+				),
+				array(
+					'slug'  => 'parent_ai_dependency',
+					'label' => __( 'Parent AI use', 'ai-risk-benchmark' ),
+					'body'  => __( 'Using AI to do homework for your child can hide gaps in learning. Model trying first, then using AI to check or explain — not to produce the answer.', 'ai-risk-benchmark' ),
+				),
+				array(
+					'slug'  => 'school_partnership',
+					'label' => __( 'School partnership', 'ai-risk-benchmark' ),
+					'body'  => __( 'Find out your school\'s expectations for AI and homework. Schools need to know how AI is used at home to support pupils fairly.', 'ai-risk-benchmark' ),
 				),
 			),
 			'priority_focus' => array(
@@ -281,9 +287,10 @@ class AIRB_Defaults {
 			),
 			'scores_heading' => __( 'Your scores', 'ai-risk-benchmark' ),
 			'exposure_areas' => array(
-				__( 'Privacy and personal data', 'ai-risk-benchmark' ),
-				__( 'Deepfakes and AI-enabled harm', 'ai-risk-benchmark' ),
-				__( 'Homework becoming AI replacement rather than learning support', 'ai-risk-benchmark' ),
+				__( 'Hidden or unknown AI use at home', 'ai-risk-benchmark' ),
+				__( 'Parents using AI as a homework co-pilot', 'ai-risk-benchmark' ),
+				__( 'Weak verification — not asking children to explain AI-assisted work', 'ai-risk-benchmark' ),
+				__( 'Low awareness of school AI expectations', 'ai-risk-benchmark' ),
 			),
 			'share_hint' => __( 'These results are for you. Sharing them with your child\'s school can help build a whole-school picture of AI awareness across parents, students, teachers and leaders.', 'ai-risk-benchmark' ),
 			'interest_intros' => array(
@@ -335,6 +342,10 @@ class AIRB_Defaults {
 				'safe_adoption' => array(
 					'summary' => __( 'Assess benefits versus risks before introducing new AI tools with pupils.', 'ai-risk-benchmark' ),
 					'detail'  => __( 'A simple pre-use checklist — purpose, data, oversight and alternatives — reduces ad-hoc adoption.', 'ai-risk-benchmark' ),
+				),
+				'assessment_integrity' => array(
+					'summary' => __( 'Redesign tasks so pupils must demonstrate thinking AI cannot simply generate.', 'ai-risk-benchmark' ),
+					'detail'  => __( 'Assessment design is one of the strongest levers against undetected AI use — adapt tasks, not just policies.', 'ai-risk-benchmark' ),
 				),
 			),
 			'summary_title'           => __( 'Your summary', 'ai-risk-benchmark' ),
@@ -411,6 +422,90 @@ class AIRB_Defaults {
 			'gap_pathway' => array(
 				'next_step_label' => __( 'Recommended next step', 'ai-risk-benchmark' ),
 				'intro'           => __( 'Based on your results, we recommend focusing on:', 'ai-risk-benchmark' ),
+			),
+		);
+	}
+
+	/**
+	 * Education support staff results — operations, data and oversight focus.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function support_result_config(): array {
+		return array(
+			'headlines' => array(
+				'strong'      => __( 'You demonstrate strong AI readiness for an operations and data-handling role.', 'ai-risk-benchmark' ),
+				'established' => __( 'You show solid awareness with a few operational areas to strengthen.', 'ai-risk-benchmark' ),
+				'developing'  => __( 'You have a foundation to build on — focus on data protection, oversight and approved tools.', 'ai-risk-benchmark' ),
+				'emerging'    => __( 'There are important gaps in how AI is used in your operational role. Start with the priority focus below.', 'ai-risk-benchmark' ),
+			),
+			'strength_labels' => array(
+				'privacy'         => __( 'Strong data protection awareness', 'ai-risk-benchmark' ),
+				'human_oversight' => __( 'Strong verification of AI outputs', 'ai-risk-benchmark' ),
+				'safe_adoption'   => __( 'Clear use of approved tools and reporting routes', 'ai-risk-benchmark' ),
+				'ai_literacy'     => __( 'Good understanding of AI limitations', 'ai-risk-benchmark' ),
+				'low_dependency'  => __( 'Balanced operational use of AI', 'ai-risk-benchmark' ),
+			),
+			'opportunity_copy' => array(
+				'privacy' => array(
+					'focus_label' => __( 'Data Protection Awareness', 'ai-risk-benchmark' ),
+					'summary'     => __( 'Never enter pupil, HR or safeguarding information into public AI tools without approval.', 'ai-risk-benchmark' ),
+					'detail'      => __( 'Support staff often handle the highest volumes of sensitive data — clear rules and habits reduce ICO and safeguarding risk.', 'ai-risk-benchmark' ),
+				),
+				'human_oversight' => array(
+					'focus_label' => __( 'Human Oversight', 'ai-risk-benchmark' ),
+					'summary'     => __( 'Review and verify AI-generated emails, letters and reports before they are sent or acted on.', 'ai-risk-benchmark' ),
+					'detail'      => __( 'Automation bias is common in admin roles where AI saves time on communications.', 'ai-risk-benchmark' ),
+				),
+				'safe_adoption' => array(
+					'focus_label' => __( 'Safe Adoption', 'ai-risk-benchmark' ),
+					'summary'     => __( 'Use only approved tools and know how to report AI-related data or safeguarding issues.', 'ai-risk-benchmark' ),
+					'detail'      => __( 'Schools and trusts need consistent adoption rules across reception, finance, HR and operations teams.', 'ai-risk-benchmark' ),
+				),
+				'ai_literacy' => array(
+					'focus_label' => __( 'AI Literacy', 'ai-risk-benchmark' ),
+					'summary'     => __( 'Treat AI outputs as drafts that can be wrong — especially for factual or policy information.', 'ai-risk-benchmark' ),
+					'detail'      => __( 'Understanding limitations helps you challenge outputs before they reach parents, staff or regulators.', 'ai-risk-benchmark' ),
+				),
+				'ai_dependency' => array(
+					'focus_label' => __( 'Operational Dependency', 'ai-risk-benchmark' ),
+					'summary'     => __( 'Attempt tasks yourself before using AI; avoid starting every email or letter with a prompt.', 'ai-risk-benchmark' ),
+					'detail'      => __( 'Healthy independence keeps judgement sharp when AI is unavailable or wrong.', 'ai-risk-benchmark' ),
+				),
+			),
+			'summary_title'             => __( 'Your summary', 'ai-risk-benchmark' ),
+			'where_you_stand_heading'   => __( 'Where you stand', 'ai-risk-benchmark' ),
+			'hero_next_step_heading'    => __( 'Recommended next step', 'ai-risk-benchmark' ),
+			'benchmark_summary_title'   => __( 'Education Support Staff Benchmark — score recap', 'ai-risk-benchmark' ),
+			'strengths_heading'         => __( 'What you\'re doing well', 'ai-risk-benchmark' ),
+			'opportunities_heading'     => __( 'Priority focus', 'ai-risk-benchmark' ),
+			'share_hint'                => __( 'Share your results with your line manager or AI lead to help build a whole-school picture of operational AI use.', 'ai-risk-benchmark' ),
+			'default_gap_items'         => array(
+				__( 'AI Data Protection Checklist', 'ai-risk-benchmark' ),
+				__( 'AI Communications Framework', 'ai-risk-benchmark' ),
+				__( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ),
+			),
+			'gap_pathway' => array(
+				'next_step_label' => __( 'Recommended next step', 'ai-risk-benchmark' ),
+				'intro'           => __( 'Based on your results, we recommend focusing on:', 'ai-risk-benchmark' ),
+			),
+			'suggested_resources' => array(
+				array(
+					'label' => __( 'AI Data Protection Checklist', 'ai-risk-benchmark' ),
+					'url'   => self::contact_page_url(),
+				),
+				array(
+					'label' => __( 'AI Communications Framework', 'ai-risk-benchmark' ),
+					'url'   => 'https://aiawarenessday.co.uk/resources/',
+				),
+				array(
+					'label' => __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ),
+					'url'   => 'https://aiawarenessday.co.uk/resources/',
+				),
+				array(
+					'label' => __( 'DfE AI Guidance Briefing', 'ai-risk-benchmark' ),
+					'url'   => self::dfe_url_generative_ai(),
+				),
 			),
 		);
 	}
@@ -973,6 +1068,11 @@ class AIRB_Defaults {
 				),
 				array( 'slug' => 'beyond-the-holy-grail' ),
 			),
+			'support_staff' => array(
+				array( 'slug' => 'misinformation-detector-teachers' ),
+				array( 'slug' => 'how-does-a-large-language-model-work' ),
+				array( 'slug' => 'bbc-bitesize-ai-awareness-day-teaching-resources' ),
+			),
 		);
 
 		$links = array();
@@ -1151,11 +1251,23 @@ class AIRB_Defaults {
 				),
 				'parent' => array(
 					'parent_domains' => array(
+						'parent_awareness' => array(
+							'slug'         => 'parent_awareness',
+							'metric_label' => __( 'Parent Awareness Score', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'Understanding how, how often and for what purpose your child uses AI at home is the first step to guiding them safely.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
+								array( 'kind' => 'read', 'label' => __( 'Talking To Children About AI', 'ai-risk-benchmark' ), 'path' => 'talking-to-children-about-ai' ),
+							),
+						),
 						'home_ai_safety' => array(
 							'slug'         => 'home_ai_safety',
 							'metric_label' => __( 'Home AI Safety Score', 'ai-risk-benchmark' ),
 							'why_heading'  => $why,
-							'why_body'     => __( 'Many children use AI without discussing it with parents.', 'ai-risk-benchmark' ),
+							'why_body'     => __( 'Many children use AI without open family discussion. Privacy rules and harm response plans matter as much as awareness.', 'ai-risk-benchmark' ),
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
@@ -1165,34 +1277,11 @@ class AIRB_Defaults {
 								array( 'kind' => 'join', 'label' => __( 'Parent Webinar', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
 							),
 						),
-						'parent_awareness' => array(
-							'slug'         => 'parent_awareness',
-							'metric_label' => __( 'Parent Awareness Score', 'ai-risk-benchmark' ),
+						'homework_oversight' => array(
+							'slug'         => 'homework_oversight',
+							'metric_label' => __( 'Homework Oversight Score', 'ai-risk-benchmark' ),
 							'why_heading'  => $why,
-							'why_body'     => __( 'Understanding how your child uses AI at home is the first step to guiding them safely.', 'ai-risk-benchmark' ),
-							'why_risks'    => array(),
-							'actions_heading' => $improve,
-							'resources'    => array(
-								array( 'kind' => 'read', 'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
-								array( 'kind' => 'read', 'label' => __( 'Talking To Children About AI', 'ai-risk-benchmark' ), 'path' => 'talking-to-children-about-ai' ),
-							),
-						),
-						'child_privacy_risk' => array(
-							'slug'         => 'child_privacy',
-							'metric_label' => __( 'Child Privacy Risk Score', 'ai-risk-benchmark' ),
-							'why_heading'  => $why,
-							'why_body'     => __( 'Children may share names, photos and school details with AI tools without realising the risks.', 'ai-risk-benchmark' ),
-							'why_risks'    => array(),
-							'actions_heading' => $improve,
-							'resources'    => array(
-								array( 'kind' => 'read', 'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
-							),
-						),
-						'homework_support_risk' => array(
-							'slug'         => 'homework',
-							'metric_label' => __( 'Homework Support Risk Score', 'ai-risk-benchmark' ),
-							'why_heading'  => $why,
-							'why_body'     => __( 'AI should support learning — not replace your child\'s own thinking or effort.', 'ai-risk-benchmark' ),
+							'why_body'     => __( 'Asking children to explain AI-assisted work in their own words is one of the strongest signals of healthy oversight at home.', 'ai-risk-benchmark' ),
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
@@ -1200,16 +1289,78 @@ class AIRB_Defaults {
 								array( 'kind' => 'read', 'label' => __( 'Questions To Ask Your Child About AI', 'ai-risk-benchmark' ), 'path' => 'talking-to-children-about-ai' ),
 							),
 						),
-						'parent_confidence' => array(
-							'slug'         => 'confidence',
-							'metric_label' => __( 'Parent Confidence Score', 'ai-risk-benchmark' ),
+						'parent_ai_dependency' => array(
+							'slug'         => 'parent_ai_dependency',
+							'metric_label' => __( 'Parent AI Dependency Score', 'ai-risk-benchmark' ),
 							'why_heading'  => $why,
-							'why_body'     => __( 'Confidence grows with simple conversations, clear boundaries and knowing who to ask at school.', 'ai-risk-benchmark' ),
+							'why_body'     => __( 'When parents use AI as a homework co-pilot, children may learn to outsource thinking rather than build understanding.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'Parent AI Homework Guide', 'ai-risk-benchmark' ), 'path' => 'parent-ai-homework-guide' ),
+							),
+						),
+						'school_partnership' => array(
+							'slug'         => 'school_partnership',
+							'metric_label' => __( 'School Partnership Score', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'Schools need to know whether families understand AI homework rules — and parents need a clear route to raise concerns.', 'ai-risk-benchmark' ),
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
 								array( 'kind' => 'read', 'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
 								array( 'kind' => 'join', 'label' => __( 'Parent Webinar', 'ai-risk-benchmark' ), 'path' => 'parent-ai-safety' ),
+							),
+						),
+					),
+				),
+				'support_staff' => array(
+					'domains' => array(
+						'privacy' => array(
+							'slug'         => 'privacy',
+							'metric_label' => __( 'Data Protection Readiness', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'Office, HR and operations staff often handle pupil and staff data — public AI tools are high risk without approval.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'AI Data Protection Checklist', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
+							),
+						),
+						'human_oversight' => array(
+							'slug'         => 'human_oversight',
+							'metric_label' => __( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'Emails, letters and reports generated by AI must be reviewed before they leave your organisation.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
+							),
+						),
+						'safe_adoption' => array(
+							'slug'         => 'safe_adoption',
+							'metric_label' => __( 'Safe Adoption Score', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'Approved tool lists and clear reporting routes protect schools and trusts from shadow AI use.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'AI Communications Framework', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-lesson-planning-checklist' ),
+							),
+						),
+					),
+					'metrics' => array(
+						'ai_dependency' => array(
+							'slug'         => 'operational_dependency',
+							'score_type'   => 'dependency',
+							'metric_label' => __( 'Operational Dependency Index', 'ai-risk-benchmark' ),
+							'why_heading'  => $why,
+							'why_body'     => __( 'High reliance on AI for daily communications can hide gaps in judgement when tools are wrong or unavailable.', 'ai-risk-benchmark' ),
+							'why_risks'    => array(),
+							'actions_heading' => $improve,
+							'resources'    => array(
+								array( 'kind' => 'read', 'label' => __( 'Think First, Prompt Second Framework', 'ai-risk-benchmark' ), 'path' => 'think-first-prompt-second' ),
 							),
 						),
 					),
@@ -1487,7 +1638,8 @@ class AIRB_Defaults {
 			'teacher' => array( 'tint' => '#dcfce7', 'accent' => '#15803d' ),
 			'student' => array( 'tint' => '#dbeafe', 'accent' => '#2563eb' ),
 			'parent'  => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
-			'leader'  => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
+			'leader'        => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
+			'support_staff' => array( 'tint' => '#fef3c7', 'accent' => '#b45309' ),
 		);
 	}
 
@@ -1501,7 +1653,8 @@ class AIRB_Defaults {
 			'teacher' => 1.2,
 			'student' => 1.0,
 			'parent'  => 0.9,
-			'leader'  => 1.4,
+			'leader'        => 1.4,
+			'support_staff' => 1.1,
 		);
 	}
 
@@ -1512,7 +1665,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 8,
+			'version'             => 13,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -1527,7 +1680,7 @@ class AIRB_Defaults {
 				'governance'           => __( 'Does the school have policies, accountability and oversight?', 'ai-risk-benchmark' ),
 			),
 			'disclaimer'       => '',
-			'intro'            => __( 'Choose your role and complete a 10–15 minute audit. You will receive your DfE Alignment Score, signature metrics, a risk heat map, tailored recommendations and optional whole-school tracking. No student personal data is collected.', 'ai-risk-benchmark' ),
+			'intro'            => __( 'Choose your role and complete a 10–15 minute audit. You will receive your readiness score, signature metrics, tailored recommendations and optional whole-school tracking. No student personal data is collected.', 'ai-risk-benchmark' ),
 			'role_benchmarks'  => self::default_role_benchmarks(),
 			'signature_metrics'=> self::default_signature_metrics(),
 			'after_audit'      => self::default_after_audit(),
@@ -1654,17 +1807,17 @@ class AIRB_Defaults {
 				'title'    => __( 'Parent Benchmark', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'Awareness of your child\'s AI use', 'ai-risk-benchmark' ),
-					__( 'Safety conversations at home', 'ai-risk-benchmark' ),
-					__( 'Child privacy exposure', 'ai-risk-benchmark' ),
-					__( 'Homework integrity', 'ai-risk-benchmark' ),
-					__( 'Confidence to guide', 'ai-risk-benchmark' ),
+					__( 'Home AI safety and culture', 'ai-risk-benchmark' ),
+					__( 'Homework oversight behaviours', 'ai-risk-benchmark' ),
+					__( 'Your own AI use at home', 'ai-risk-benchmark' ),
+					__( 'Partnership with school', 'ai-risk-benchmark' ),
 				),
 				'outputs'  => array(
 					__( 'Parent Awareness Score', 'ai-risk-benchmark' ),
 					__( 'Home AI Safety Score', 'ai-risk-benchmark' ),
-					__( 'Child Privacy Risk Score', 'ai-risk-benchmark' ),
-					__( 'Homework Support Risk Score', 'ai-risk-benchmark' ),
-					__( 'Parent Confidence Score', 'ai-risk-benchmark' ),
+					__( 'Homework Oversight Score', 'ai-risk-benchmark' ),
+					__( 'Parent AI Dependency Score', 'ai-risk-benchmark' ),
+					__( 'School Partnership Score', 'ai-risk-benchmark' ),
 				),
 			),
 			'leader'  => array(
@@ -1680,6 +1833,22 @@ class AIRB_Defaults {
 					__( 'Governance Maturity Score', 'ai-risk-benchmark' ),
 					__( 'Safeguarding Readiness Score', 'ai-risk-benchmark' ),
 					__( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+				),
+			),
+			'support_staff' => array(
+				'title'    => __( 'Education Support Staff Benchmark', 'ai-risk-benchmark' ),
+				'measures' => array(
+					__( 'AI literacy & limitations', 'ai-risk-benchmark' ),
+					__( 'Human oversight of outputs', 'ai-risk-benchmark' ),
+					__( 'Operational dependency', 'ai-risk-benchmark' ),
+					__( 'Data protection', 'ai-risk-benchmark' ),
+					__( 'Safe adoption & reporting', 'ai-risk-benchmark' ),
+				),
+				'outputs'  => array(
+					__( 'Readiness Score', 'ai-risk-benchmark' ),
+					__( 'Operational Dependency Index', 'ai-risk-benchmark' ),
+					__( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
+					__( 'Data Protection Readiness', 'ai-risk-benchmark' ),
 				),
 			),
 		);
@@ -1953,7 +2122,7 @@ class AIRB_Defaults {
 					'id'            => 'leader_no_policy',
 					'roles'         => array( 'leader' ),
 					'question_id'   => 'l_policy',
-					'answer_values' => array( 'no', 'informal', 'draft' ),
+					'answer_values' => array( 'no', 'draft', 'published' ),
 					'offer_type'    => 'policy',
 					'priority'      => 95,
 					'title'         => __( 'You need a published AI policy', 'ai-risk-benchmark' ),
@@ -1981,7 +2150,7 @@ class AIRB_Defaults {
 					'id'            => 'leader_staff_training',
 					'roles'         => array( 'leader' ),
 					'question_id'   => 'l_staff_training',
-					'answer_values' => array( 'no', 'planned', 'some' ),
+					'answer_values' => array( 'none', 'under_50', 'fifty_75' ),
 					'offer_type'    => 'cpd',
 					'priority'      => 90,
 					'title'         => __( 'Staff AI risk CPD required', 'ai-risk-benchmark' ),

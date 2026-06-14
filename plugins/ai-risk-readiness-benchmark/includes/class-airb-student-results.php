@@ -172,7 +172,7 @@ class AIRB_Student_Results {
 	 * @return array{overall_risk:float,alignment_score:int,risk_level:string}
 	 */
 	public static function overall_from_student_domains( array $results ): array {
-		$slugs       = array( 'ai_dependency', 'assessment_integrity', 'human_oversight', 'ai_literacy', 'privacy' );
+		$slugs       = array( 'ai_dependency', 'assessment_integrity', 'human_oversight', 'ai_literacy', 'privacy', 'safeguarding' );
 		$domains     = (array) ( $results['domain_scores'] ?? array() );
 		$risk_values = array();
 

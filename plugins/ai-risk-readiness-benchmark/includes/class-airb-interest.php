@@ -20,7 +20,7 @@ class AIRB_Interest {
 	 * @return array<int, string>
 	 */
 	public static function supported_roles(): array {
-		return array( 'teacher', 'leader', 'parent', 'student' );
+		return array( 'teacher', 'leader', 'parent', 'student', 'support_staff' );
 	}
 
 	/**
@@ -467,6 +467,10 @@ class AIRB_Interest {
 			return array(
 				'parent_awareness'      => 'parent_support_child',
 				'home_ai_safety'        => 'parent_resources',
+				'homework_oversight'    => 'parent_support_child',
+				'parent_ai_dependency'  => 'parent_learn_ai',
+				'school_partnership'    => 'parent_share_with_school',
+				// Legacy display slugs (pre v1.30).
 				'child_privacy_risk'    => 'parent_support_child',
 				'homework_support_risk' => 'parent_support_child',
 				'parent_confidence'     => 'parent_learn_ai',
@@ -480,6 +484,15 @@ class AIRB_Interest {
 				'assessment_integrity' => 'student_teacher_help',
 				'human_oversight'      => 'student_learn_ai',
 				'ai_dependency'        => 'student_teacher_help',
+			);
+		}
+		if ( 'support_staff' === $role ) {
+			return array(
+				'privacy'         => 'whole_school_cpd',
+				'human_oversight' => 'whole_school_cpd',
+				'safe_adoption'   => 'whole_school_cpd',
+				'ai_literacy'     => 'whole_school_cpd',
+				'ai_dependency'   => 'whole_school_cpd',
 			);
 		}
 		if ( 'teacher' === $role ) {
