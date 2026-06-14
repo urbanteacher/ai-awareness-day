@@ -70,3 +70,4 @@ require_once $aiad_dir . '/inc/schools-ai-risk-academy.php';
 require_once $aiad_dir . '/inc/bundled-plugins.php';
 require_once $aiad_dir . '/inc/ai-risk-benchmark-post.php';
 require_once $aiad_dir . '/inc/hub-resource-page.php';
+require_once $aiad_dir . '/inc/airb-hub-timeline-seed.php';
