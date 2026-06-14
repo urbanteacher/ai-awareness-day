@@ -9,6 +9,8 @@
  * @var int                       $total
  * @var array<string, string>     $roles
  * @var array<string, int>        $stats
+ * @var object|null               $submission_detail
+ * @var array<int, object>        $submission_leads
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +35,54 @@ $export_url = wp_nonce_url(
 <div class="wrap">
 	<h1><?php esc_html_e( 'AI Risk Benchmark — Submissions', 'ai-risk-benchmark' ); ?></h1>
 	<p><?php esc_html_e( 'Every completed benchmark is stored with scores and role. School name and email are saved when provided.', 'ai-risk-benchmark' ); ?></p>
+
+	<?php if ( $submission_detail instanceof stdClass ) : ?>
+		<div class="card" style="max-width:960px;padding:1rem 1.25rem;margin:1rem 0;">
+			<h2 style="margin-top:0;"><?php printf( esc_html__( 'Submission #%d', 'ai-risk-benchmark' ), (int) $submission_detail->id ); ?></h2>
+			<p>
+				<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=airb-benchmark' ) ); ?>"><?php esc_html_e( 'Back to all submissions', 'ai-risk-benchmark' ); ?></a>
+				<?php if ( ! empty( $submission_leads ) ) : ?>
+					<a class="button" href="<?php echo esc_url( add_query_arg( array( 'page' => 'airb-leads', 'submission_id' => (int) $submission_detail->id ), admin_url( 'admin.php' ) ) ); ?>">
+						<?php printf( esc_html__( 'View %d linked lead(s)', 'ai-risk-benchmark' ), count( $submission_leads ) ); ?>
+					</a>
+				<?php endif; ?>
+			</p>
+			<table class="widefat striped">
+				<tbody>
+					<tr><th style="width:180px;"><?php esc_html_e( 'Date', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->created_at ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Role', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( $roles[ $submission_detail->role ] ?? $submission_detail->role ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'School', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->school_name ?: '—' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Email', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->email ?: '—' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Alignment', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->alignment_score ); ?>/100</td></tr>
+					<tr><th><?php esc_html_e( 'Risk', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( ucfirst( (string) $submission_detail->risk_level ) ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Dependency', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->dependency_index ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Human oversight', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->human_oversight_label ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Benchmark consent', 'ai-risk-benchmark' ); ?></th><td><?php echo (int) $submission_detail->consent ? esc_html__( 'Yes', 'ai-risk-benchmark' ) : esc_html__( 'No', 'ai-risk-benchmark' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Contact opt-in', 'ai-risk-benchmark' ); ?></th><td><?php echo (int) $submission_detail->contact_opt_in ? esc_html__( 'Yes', 'ai-risk-benchmark' ) : esc_html__( 'No', 'ai-risk-benchmark' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Session ID', 'ai-risk-benchmark' ); ?></th><td><code><?php echo esc_html( (string) $submission_detail->session_id ); ?></code></td></tr>
+				</tbody>
+			</table>
+			<?php if ( ! empty( $submission_leads ) ) : ?>
+				<h3><?php esc_html_e( 'Linked leads', 'ai-risk-benchmark' ); ?></h3>
+				<ul>
+					<?php foreach ( $submission_leads as $lead_row ) : ?>
+						<li>
+							<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'airb-leads', 'lead_id' => (int) $lead_row->id ), admin_url( 'admin.php' ) ) ); ?>">
+								<?php
+								printf(
+									esc_html__( 'Lead #%1$d — %2$s — %3$s', 'ai-risk-benchmark' ),
+									(int) $lead_row->id,
+									esc_html( (string) $lead_row->created_at ),
+									esc_html( (string) $lead_row->email )
+								);
+								?>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 
 	<div class="airb-admin-stats" style="display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0;">
 		<div class="card" style="padding:0.75rem 1rem;">
@@ -96,7 +146,11 @@ $export_url = wp_nonce_url(
 			<?php else : ?>
 				<?php foreach ( $rows as $row ) : ?>
 					<tr>
-						<td><?php echo esc_html( (string) $row->id ); ?></td>
+						<td>
+							<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'airb-benchmark', 'submission_id' => (int) $row->id ), admin_url( 'admin.php' ) ) ); ?>">
+								<?php echo esc_html( (string) $row->id ); ?>
+							</a>
+						</td>
 						<td><?php echo esc_html( (string) $row->created_at ); ?></td>
 						<td><?php echo esc_html( $roles[ $row->role ] ?? $row->role ); ?></td>
 						<td><?php echo esc_html( (string) $row->school_name ?: '—' ); ?></td>

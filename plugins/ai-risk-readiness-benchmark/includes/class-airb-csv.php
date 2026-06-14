@@ -144,6 +144,7 @@ class AIRB_Csv {
 				'Hub URL',
 				'Checklist Done',
 				'Checklist Total',
+				'Notes',
 				'Message',
 			)
 		);
@@ -175,6 +176,7 @@ class AIRB_Csv {
 					self::escape_cell( (string) $row->hub_url ),
 					$row->checklist_done,
 					$row->checklist_total,
+					self::escape_cell( (string) ( $row->notes ?? '' ) ),
 					self::escape_cell( (string) $row->message ),
 				)
 			);

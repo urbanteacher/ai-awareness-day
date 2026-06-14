@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_Leads {
 
 	/** @var int Schema version for dbDelta upgrades. */
-	const DB_VERSION = 1;
+	const DB_VERSION = 2;
 
 	/**
 	 * Allowed lead statuses.
@@ -76,6 +76,7 @@ class AIRB_Leads {
 			hub_url varchar(500) NOT NULL DEFAULT '',
 			checklist_done smallint(5) NOT NULL DEFAULT 0,
 			checklist_total smallint(5) NOT NULL DEFAULT 0,
+			notes longtext NOT NULL,
 			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
@@ -157,13 +158,14 @@ class AIRB_Leads {
 				'hub_url'               => esc_url_raw( (string) ( $data['hub_url'] ?? '' ) ),
 				'checklist_done'        => max( 0, (int) ( $data['checklist_done'] ?? 0 ) ),
 				'checklist_total'       => max( 0, (int) ( $data['checklist_total'] ?? 0 ) ),
+				'notes'                 => '',
 				'created_at'            => $now,
 				'updated_at'            => $now,
 			),
 			array(
 				'%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
 				'%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
-				'%s', '%s', '%s', '%d', '%d', '%s', '%s',
+				'%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s',
 			)
 		);
 
@@ -171,29 +173,71 @@ class AIRB_Leads {
 	}
 
 	/**
-	 * Update lead status.
+	 * Update lead status and optional internal notes.
+	 *
+	 * @param array<string, mixed> $data Fields to update (status, notes).
 	 */
-	public static function update_status( int $id, string $status ): bool {
+	public static function update( int $id, array $data ): bool {
 		global $wpdb;
 
-		$statuses = array_keys( self::statuses() );
-		$status   = sanitize_key( $status );
-		if ( ! in_array( $status, $statuses, true ) ) {
+		$fields = array(
+			'updated_at' => current_time( 'mysql' ),
+		);
+		$formats = array( '%s' );
+
+		if ( isset( $data['status'] ) ) {
+			$statuses = array_keys( self::statuses() );
+			$status   = sanitize_key( (string) $data['status'] );
+			if ( ! in_array( $status, $statuses, true ) ) {
+				return false;
+			}
+			$fields['status'] = $status;
+			$formats[]        = '%s';
+		}
+
+		if ( array_key_exists( 'notes', $data ) ) {
+			$fields['notes'] = sanitize_textarea_field( (string) $data['notes'] );
+			$formats[]       = '%s';
+		}
+
+		if ( count( $fields ) <= 1 ) {
 			return false;
 		}
 
 		$updated = $wpdb->update(
 			self::table_name(),
-			array(
-				'status'     => $status,
-				'updated_at' => current_time( 'mysql' ),
-			),
+			$fields,
 			array( 'id' => $id ),
-			array( '%s', '%s' ),
+			$formats,
 			array( '%d' )
 		);
 
 		return false !== $updated;
+	}
+
+	/**
+	 * Update lead status.
+	 */
+	public static function update_status( int $id, string $status ): bool {
+		return self::update( $id, array( 'status' => $status ) );
+	}
+
+	/**
+	 * Leads linked to a benchmark submission.
+	 *
+	 * @return array<int, object>
+	 */
+	public static function get_by_submission( int $submission_id ): array {
+		if ( $submission_id <= 0 ) {
+			return array();
+		}
+		return self::get_leads(
+			array(
+				'submission_id' => $submission_id,
+				'limit'         => 50,
+				'offset'        => 0,
+			)
+		);
 	}
 
 	/**
@@ -217,15 +261,16 @@ class AIRB_Leads {
 		global $wpdb;
 
 		$defaults = array(
-			'status'    => '',
-			'source'    => '',
-			'role'      => '',
-			'email'     => '',
-			'school'    => '',
-			'date_from' => '',
-			'date_to'   => '',
-			'limit'     => 50,
-			'offset'    => 0,
+			'status'        => '',
+			'source'        => '',
+			'role'          => '',
+			'email'         => '',
+			'school'        => '',
+			'submission_id' => 0,
+			'date_from'     => '',
+			'date_to'       => '',
+			'limit'         => 50,
+			'offset'        => 0,
 		);
 		$args  = wp_parse_args( $args, $defaults );
 		$table = self::table_name();
@@ -287,6 +332,154 @@ class AIRB_Leads {
 	}
 
 	/**
+	 * Count leads grouped by source (results vs hub).
+	 *
+	 * @return array<string, int>
+	 */
+	public static function count_by_source(): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			"SELECT source, COUNT(*) AS n FROM {$table} GROUP BY source ORDER BY n DESC",
+			ARRAY_A
+		);
+
+		$out = array(
+			'results' => 0,
+			'hub'     => 0,
+		);
+		foreach ( (array) $rows as $row ) {
+			$key = (string) $row['source'];
+			if ( isset( $out[ $key ] ) ) {
+				$out[ $key ] = (int) $row['n'];
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Count leads grouped by role.
+	 *
+	 * @return array<string, int>
+	 */
+	public static function count_by_role(): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			"SELECT role, COUNT(*) AS n FROM {$table} WHERE role != '' GROUP BY role ORDER BY n DESC",
+			ARRAY_A
+		);
+
+		$out = array();
+		foreach ( (array) $rows as $row ) {
+			$out[ (string) $row['role'] ] = (int) $row['n'];
+		}
+		return $out;
+	}
+
+	/**
+	 * Top hub pages by lead volume.
+	 *
+	 * @return array<int, array{slug:string, title:string, count:int}>
+	 */
+	public static function top_hub_pages( int $limit = 10 ): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		$limit = max( 1, min( 25, $limit ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT hub_page, hub_title, COUNT(*) AS n
+				FROM {$table}
+				WHERE source = 'hub' AND hub_page != ''
+				GROUP BY hub_page, hub_title
+				ORDER BY n DESC
+				LIMIT %d",
+				$limit
+			),
+			ARRAY_A
+		);
+
+		$out = array();
+		foreach ( (array) $rows as $row ) {
+			$out[] = array(
+				'slug'  => (string) $row['hub_page'],
+				'title' => (string) $row['hub_title'],
+				'count' => (int) $row['n'],
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Aggregate interest checkbox counts across all leads.
+	 *
+	 * @return array<string, int>
+	 */
+	public static function count_by_interest(): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_col( "SELECT interests FROM {$table} WHERE interests != '' AND interests != '[]'" );
+
+		$counts = array();
+		foreach ( (array) $rows as $json ) {
+			foreach ( self::decode_list( (string) $json ) as $slug ) {
+				if ( ! isset( $counts[ $slug ] ) ) {
+					$counts[ $slug ] = 0;
+				}
+				++$counts[ $slug ];
+			}
+		}
+
+		arsort( $counts );
+		return $counts;
+	}
+
+	/**
+	 * Schools with at least one lead (school or child_school field).
+	 *
+	 * @return array<int, array{name:string, count:int}>
+	 */
+	public static function list_schools_with_leads( int $limit = 25 ): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		$limit = max( 1, min( 100, $limit ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT school_name, COUNT(*) AS n FROM (
+					SELECT TRIM(school) AS school_name FROM {$table} WHERE school != ''
+					UNION ALL
+					SELECT TRIM(child_school) AS school_name FROM {$table} WHERE child_school != ''
+				) AS schools
+				WHERE school_name != ''
+				GROUP BY school_name
+				ORDER BY n DESC, school_name ASC
+				LIMIT %d",
+				$limit
+			),
+			ARRAY_A
+		);
+
+		$out = array();
+		foreach ( (array) $rows as $row ) {
+			$out[] = array(
+				'name'  => (string) $row['school_name'],
+				'count' => (int) $row['n'],
+			);
+		}
+		return $out;
+	}
+
+	/**
 	 * Build WHERE clause from filter args.
 	 *
 	 * @param array<string, mixed> $args Query args.
@@ -319,6 +512,10 @@ class AIRB_Leads {
 			$like    = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
 			$vals[]  = $like;
 			$vals[]  = $like;
+		}
+		if ( ! empty( $args['submission_id'] ) ) {
+			$where[] = 'submission_id = %d';
+			$vals[]  = (int) $args['submission_id'];
 		}
 		if ( ! empty( $args['date_from'] ) ) {
 			$where[] = 'created_at >= %s';
