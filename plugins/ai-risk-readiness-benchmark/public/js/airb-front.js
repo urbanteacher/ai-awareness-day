@@ -321,17 +321,20 @@
 		var bandLabel = readinessBandLabel(score);
 		var bandColor = readinessBandColor(score);
 		var bands = readinessBandDefinitions();
-		var aria = (i18n.readinessScaleAria || 'Readiness {score} out of 100, {band}')
+		var aria = (i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
 			.replace('{score}', String(score))
 			.replace('{band}', bandLabel);
 
 		var html = '<div class="airb__readiness-scale" role="img" aria-label="' + esc(aria) + '">';
 		html += '<div class="airb__readiness-scale-head">';
-		html += '<p class="airb__readiness-scale-kicker">' + esc(i18n.readinessScaleKicker || 'Readiness score') + '</p>';
+		html += '<p class="airb__readiness-scale-kicker">' + esc(i18n.readinessScaleKicker || 'Overall benchmark readiness') + '</p>';
 		html += '<div class="airb__readiness-scale-values">';
 		html += '<span class="airb__readiness-scale-score" style="color:' + esc(bandColor) + '">' + score + '%</span>';
 		html += '<span class="airb__readiness-scale-band" style="color:' + esc(bandColor) + '">' + esc(bandLabel.toUpperCase()) + '</span>';
 		html += '</div></div>';
+		html += '<p class="airb__readiness-scale-help airb__muted">' + esc(
+			i18n.readinessScaleNote || 'This score is calculated from your role-specific audit domains. Other metrics, such as dependency, oversight and governance, are shown separately.'
+		) + '</p>';
 
 		html += '<div class="airb__readiness-scale-track">';
 		bands.forEach(function (b) {

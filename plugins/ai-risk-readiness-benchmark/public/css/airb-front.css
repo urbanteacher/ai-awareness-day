@@ -1472,6 +1472,13 @@
 	color: var(--airb-muted);
 }
 
+.airb__readiness-scale-help {
+	margin: 0 0 0.75rem;
+	font-size: 0.88rem;
+	line-height: 1.45;
+	max-width: 42rem;
+}
+
 .airb__readiness-scale-values {
 	display: flex;
 	align-items: baseline;
