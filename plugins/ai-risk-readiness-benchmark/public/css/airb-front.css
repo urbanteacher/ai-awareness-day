@@ -1547,6 +1547,10 @@
 	margin-top: 0.1rem;
 }
 
+.airb__readiness-scale-lab-name-short {
+	display: none;
+}
+
 .airb__readiness-scale-note {
 	margin: 0.55rem 0 0;
 	font-size: 0.82rem;
@@ -1560,23 +1564,24 @@
 	}
 
 	.airb__readiness-scale-labels {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 0.2rem;
 	}
 
 	.airb__readiness-scale-lab {
-		flex: 0 1 auto !important;
+		flex: none !important;
 		min-width: 0;
-		display: inline-flex;
+		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 0.05rem;
-		padding: 0.35rem 0.55rem;
-		border-radius: 8px;
+		padding: 0.28rem 0.1rem;
+		border-radius: 6px;
 		color: #fff;
 		text-align: center;
+		overflow: hidden;
 	}
 
 	.airb__readiness-scale-lab--emerging {
@@ -1601,24 +1606,38 @@
 
 	.airb__readiness-scale-lab.is-active {
 		color: #fff;
-		box-shadow: 0 0 0 2px var(--white, #fff), 0 0 0 4px var(--airb-text);
+		box-shadow: 0 0 0 1px var(--white, #fff), 0 0 0 2px var(--airb-text);
 		font-weight: 700;
+	}
+
+	.airb__readiness-scale-lab-name-full {
+		display: none;
+	}
+
+	.airb__readiness-scale-lab-name-short {
+		display: block;
 	}
 
 	.airb__readiness-scale-lab-name {
 		display: block;
-		font-size: 0.68rem;
+		font-size: 0.56rem;
 		font-weight: 700;
-		line-height: 1.15;
+		line-height: 1.1;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	.airb__readiness-scale-lab-range {
 		display: block;
-		font-size: 0.6rem;
+		font-size: 0.5rem;
 		opacity: 0.92;
 		margin-top: 0;
-		line-height: 1.1;
+		line-height: 1.05;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 }
@@ -4461,6 +4480,16 @@
 		overflow: visible;
 		border-radius: 0;
 		margin-bottom: 0;
+	}
+
+	#airb-benchmark,
+	#airb-benchmark .airb__appbar {
+		scroll-margin-top: 5.5rem;
+	}
+
+	.admin-bar #airb-benchmark,
+	.admin-bar #airb-benchmark .airb__appbar {
+		scroll-margin-top: calc(5.5rem + 46px);
 	}
 
 	.airb.airb--mobile-flow .airb__hero,

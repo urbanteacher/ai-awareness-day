@@ -116,6 +116,15 @@
 		return window.matchMedia('(max-width: 768px)').matches;
 	}
 
+	function scrollFlowToTop() {
+		if (!isMobileFlow()) return;
+		var anchor = (el.root && el.root.querySelector('.airb__appbar')) || el.root;
+		if (!anchor) return;
+		window.requestAnimationFrame(function () {
+			anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+		});
+	}
+
 	function updateFlowChrome() {
 		if (!el.root) return;
 		var inFlow = !!(el.nav && !el.nav.hidden);
@@ -318,6 +327,22 @@
 		];
 	}
 
+	function readinessBandShortLabel(slug, fullLabel) {
+		var labels = i18n.bandsReadinessShort || {};
+		if (labels[slug]) return labels[slug];
+		if (fullLabel && /early/i.test(fullLabel)) {
+			return labels.earlyEstablished || 'Early est.';
+		}
+		var defaults = {
+			emerging: 'Emerg.',
+			developing: 'Dev.',
+			established: 'Est.',
+			strong: 'Str.',
+			leading: 'Lead.',
+		};
+		return defaults[slug] || fullLabel;
+	}
+
 	function readinessBandScaleHtml(score) {
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
 		var bandLabel = readinessBandLabel(score);
@@ -353,8 +378,12 @@
 			var span = b.max - b.min + 1;
 			var active = score >= b.min && score <= b.max;
 			var lab = active && score >= 60 && score <= 64 ? bandLabel : b.label;
-			html += '<span class="airb__readiness-scale-lab airb__readiness-scale-lab--' + b.slug + (active ? ' is-active' : '') + '" style="flex:' + span + ' 1 0">';
-			html += '<span class="airb__readiness-scale-lab-name">' + esc(lab) + '</span>';
+			var shortLab = readinessBandShortLabel(b.slug, lab);
+			html += '<span class="airb__readiness-scale-lab airb__readiness-scale-lab--' + b.slug + (active ? ' is-active' : '') + '" style="flex:' + span + ' 1 0" title="' + esc(lab + ' (' + b.min + '\u2013' + b.max + ')') + '">';
+			html += '<span class="airb__readiness-scale-lab-name">';
+			html += '<span class="airb__readiness-scale-lab-name-full">' + esc(lab) + '</span>';
+			html += '<span class="airb__readiness-scale-lab-name-short">' + esc(shortLab) + '</span>';
+			html += '</span>';
 			html += '<span class="airb__readiness-scale-lab-range">' + b.min + '\u2013' + b.max + '</span>';
 			html += '</span>';
 		});
@@ -1017,6 +1046,7 @@
 		}
 		bindSectionInputs(section);
 		updateFlowChrome();
+		scrollFlowToTop();
 	}
 
 	function isYoungRole() {
@@ -1125,6 +1155,7 @@
 		}
 		el.progress.hidden = true;
 		updateFlowChrome();
+		scrollFlowToTop();
 	}
 
 	function barHtml(slug, label, pct, band, invert) {
@@ -2329,6 +2360,7 @@
 		animateResultsStats();
 		persistRoleCompletion(r.alignment_score);
 		updateAppbarCompletions();
+		scrollFlowToTop();
 	}
 
 	function bindResultsTracking() {
@@ -2493,6 +2525,7 @@
 			el.nav.hidden = true;
 			el.progress.hidden = true;
 			updateFlowChrome();
+			scrollFlowToTop();
 			submitResults(function () { renderResults(); });
 		}
 	}
