@@ -214,7 +214,7 @@ class AIRB_Improvement_Pathways {
 			'items'    => (array) ( $cfg['items'] ?? array() ),
 			'closing'  => (string) ( $cfg['closing'] ?? __( 'No obligation.', 'ai-risk-benchmark' ) ),
 			'cta_text' => (string) ( $cfg['cta_text'] ?? __( 'Book your free review', 'ai-risk-benchmark' ) ),
-			'cta_url'  => AIRB_Defaults::hub_tracking_url( (string) ( $cfg['cta_path'] ?? 'contact' ), $role, 'consultation' ),
+			'cta_url'  => AIRB_Defaults::contact_tracking_url( $role, 'consultation' ),
 		);
 	}
 }

@@ -14,14 +14,40 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Defaults {
 
-	/** DfE — operational handbook (policies, acceptable use). */
+	/**
+	 * Campaign contact section on the homepage.
+	 */
+	public static function contact_page_url(): string {
+		return function_exists( 'home_url' ) ? home_url( '/#contact' ) : 'https://aiawarenessday.co.uk/#contact';
+	}
+
+	/**
+	 * Contact section with benchmark attribution query args.
+	 */
+	public static function contact_tracking_url( string $role, string $ref ): string {
+		$base = function_exists( 'home_url' ) ? home_url( '/' ) : 'https://aiawarenessday.co.uk/';
+		return add_query_arg(
+			array(
+				'airb_role' => sanitize_key( $role ),
+				'airb_ref'  => sanitize_key( $ref ),
+			),
+			$base
+		) . '#contact';
+	}
+
+	/** DfE — support materials collection (modules, leadership toolkit, safe use guidance). */
 	public static function dfe_url_using_ai(): string {
-		return 'https://www.gov.uk/government/publications/using-ai-in-education-settings';
+		return 'https://www.gov.uk/government/collections/using-ai-in-education-settings-support-materials';
 	}
 
 	/** DfE — generative AI overview (data protection, DPIAs, risk). */
 	public static function dfe_url_generative_ai(): string {
-		return 'https://www.gov.uk/government/publications/generative-artificial-intelligence-ai-in-education';
+		return 'https://www.gov.uk/government/publications/generative-artificial-intelligence-in-education';
+	}
+
+	/** DfE — product safety standards for generative AI tools. */
+	public static function dfe_url_product_safety(): string {
+		return 'https://www.gov.uk/government/publications/generative-ai-product-safety-standards';
 	}
 
 	/**
@@ -230,7 +256,7 @@ class AIRB_Defaults {
 			'suggested_resources' => array(
 				array(
 					'label' => __( 'Teacher Verification Framework', 'ai-risk-benchmark' ),
-					'url'   => 'https://aiawarenessday.co.uk/contact/',
+					'url'   => self::contact_page_url(),
 				),
 				array(
 					'label' => __( 'AI Lesson Planning Checklist', 'ai-risk-benchmark' ),
@@ -238,7 +264,7 @@ class AIRB_Defaults {
 				),
 				array(
 					'label' => __( 'DfE AI Guidance Update Briefing', 'ai-risk-benchmark' ),
-					'url'   => 'https://www.gov.uk/government/publications/generative-artificial-intelligence-ai-in-education',
+					'url'   => self::dfe_url_generative_ai(),
 				),
 				array(
 					'label' => __( 'AI Awareness Day Toolkit', 'ai-risk-benchmark' ),
@@ -540,7 +566,7 @@ class AIRB_Defaults {
 						__( 'DfE guidance', 'ai-risk-benchmark' ),
 					),
 					'cta_text' => __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ),
-					'cta_url'  => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'  => self::contact_page_url(),
 				),
 				'governance_review' => array(
 					'title' => __( 'Governance Review', 'ai-risk-benchmark' ),
@@ -553,7 +579,7 @@ class AIRB_Defaults {
 						__( 'Risk heat map', 'ai-risk-benchmark' ),
 					),
 					'cta_text' => __( 'Request Governance Review', 'ai-risk-benchmark' ),
-					'cta_url'  => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'  => self::contact_page_url(),
 				),
 			),
 			'rollout_unlock_copy' => __( 'Whole-school benchmarking unlocks after {threshold}+ responses.', 'ai-risk-benchmark' ),
@@ -1162,15 +1188,15 @@ class AIRB_Defaults {
 			'aad_2027'         => self::default_aad_2027(),
 			'consultation_cta' => array(
 				'title' => __( 'Contact the AI Awareness Day team', 'ai-risk-benchmark' ),
-				'url'   => 'https://aiawarenessday.co.uk/contact/',
+				'url'   => self::contact_page_url(),
 				'text'  => __( 'Get support with your results', 'ai-risk-benchmark' ),
 			),
 			'gateway'          => self::default_gateway(),
 			'pathway_offers'   => self::default_pathway_offers(),
 			'guidance_refs'    => array(
-				array( 'label' => 'DfE Generative AI in Education', 'url' => 'https://www.gov.uk/government/publications/generative-artificial-intelligence-ai-in-education' ),
-				array( 'label' => 'DfE Using AI in Education Settings', 'url' => 'https://www.gov.uk/government/publications/using-ai-in-education-settings' ),
-				array( 'label' => 'DfE Product Safety Expectations', 'url' => 'https://www.gov.uk/government/publications/generative-artificial-intelligence-ai-product-safety-expectations' ),
+				array( 'label' => 'DfE Generative AI in Education', 'url' => self::dfe_url_generative_ai() ),
+				array( 'label' => 'DfE Using AI in Education Settings', 'url' => self::dfe_url_using_ai() ),
+				array( 'label' => 'DfE Product Safety Expectations', 'url' => self::dfe_url_product_safety() ),
 				array( 'label' => 'Keeping Children Safe in Education (KCSIE)', 'url' => 'https://www.gov.uk/government/publications/keeping-children-safe-in-education--2' ),
 				array( 'label' => 'ICO AI & Data Protection Guidance', 'url' => 'https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/' ),
 				array( 'label' => 'JCQ AI Assessment Guidance', 'url' => 'https://www.jcq.org.uk/exams-office/malpractice/' ),
@@ -1393,10 +1419,10 @@ class AIRB_Defaults {
 			'items'    => array(
 				array( 'label' => __( 'AI Policy Templates (DfE)', 'ai-risk-benchmark' ), 'url' => self::dfe_url_using_ai() ),
 				array( 'label' => __( 'AI Governance Toolkit', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/resources/' ),
-				array( 'label' => __( 'Teacher Training', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
-				array( 'label' => __( 'Assessment Integrity Reviews', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
-				array( 'label' => __( 'Parent Awareness Sessions', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
-				array( 'label' => __( 'Annual Benchmark Reports', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
+				array( 'label' => __( 'Teacher Training', 'ai-risk-benchmark' ), 'url' => self::contact_page_url() ),
+				array( 'label' => __( 'Assessment Integrity Reviews', 'ai-risk-benchmark' ), 'url' => self::contact_page_url() ),
+				array( 'label' => __( 'Parent Awareness Sessions', 'ai-risk-benchmark' ), 'url' => self::contact_page_url() ),
+				array( 'label' => __( 'Annual Benchmark Reports', 'ai-risk-benchmark' ), 'url' => self::contact_page_url() ),
 			),
 		);
 	}
@@ -1449,7 +1475,7 @@ class AIRB_Defaults {
 				),
 			),
 			'cta_text' => __( 'Plan your AI Awareness Day', 'ai-risk-benchmark' ),
-			'cta_url'  => 'https://aiawarenessday.co.uk/contact/',
+			'cta_url'  => self::contact_page_url(),
 		);
 	}
 
@@ -1475,7 +1501,7 @@ class AIRB_Defaults {
 				'title'       => __( 'AI Governance Toolkit', 'ai-risk-benchmark' ),
 				'body'        => __( 'Critical governance gaps increase whole-school exposure. Access the toolkit or book a review with named ownership, training and annual review cycles.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'AI Governance Toolkit', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 			array(
 				'roles'       => array( 'teacher', 'leader' ),
@@ -1486,7 +1512,7 @@ class AIRB_Defaults {
 				'title'       => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
 				'body'        => __( 'Low human oversight suggests staff may be deferring to AI outputs. Build a verify-before-you-trust habit across departments.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Staff verification training', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 			array(
 				'roles'       => array( 'teacher' ),
@@ -1519,7 +1545,7 @@ class AIRB_Defaults {
 				'title'       => __( 'DPIA review support', 'ai-risk-benchmark' ),
 				'body'        => __( 'Work with your DPO to complete or refresh DPIAs for pupil-facing AI tools — we can help scope the review.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Book DPIA support', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 			array(
 				'roles'       => array( 'leader', 'teacher' ),
@@ -1530,7 +1556,7 @@ class AIRB_Defaults {
 				'title'       => __( 'JCQ-Aligned Assessment Review Pack', 'ai-risk-benchmark' ),
 				'body'        => __( 'Assessment exposure appears high. Review supervision, device access and JCQ malpractice expectations.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'JCQ-Aligned Assessment Review Pack', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 			array(
 				'roles'       => array( 'leader' ),
@@ -1541,7 +1567,7 @@ class AIRB_Defaults {
 				'title'       => __( 'Parent AI Safety session', 'ai-risk-benchmark' ),
 				'body'        => __( 'Parent and pupil AI literacy gaps widen home-school risk. A parent-facing session on tools, deepfakes and verification helps close the loop.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Book parent webinar', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 			array(
 				'roles'       => array( 'leader' ),
@@ -1552,7 +1578,7 @@ class AIRB_Defaults {
 				'title'       => __( 'Safeguarding & AI policy addendum', 'ai-risk-benchmark' ),
 				'body'        => __( 'Embed AI-enabled risks (deepfakes, grooming vectors, harmful content) in your KCSIE-aligned procedures.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Safeguarding policy support', 'ai-risk-benchmark' ),
-				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'     => self::contact_page_url(),
 			),
 		);
 	}
@@ -1600,7 +1626,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Assign an AI lead', 'ai-risk-benchmark' ),
 					'body'          => __( 'DfE guidance expects clear ownership. A short consultation can help you define the AI lead role, reporting lines and review cadence.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book leadership session', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1614,7 +1640,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Staff AI risk CPD required', 'ai-risk-benchmark' ),
 					'body'          => __( 'Staff are not yet consistently trained on verification and AI risks. Book whole-staff CPD aligned to your benchmark gaps.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book staff CPD', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1628,7 +1654,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Data protection review needed', 'ai-risk-benchmark' ),
 					'body'          => __( 'AI tool use should be mapped against UK GDPR. We can help you scope DPIAs and acceptable-use rules for staff.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book data protection review', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1642,7 +1668,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Update safeguarding for AI risks', 'ai-risk-benchmark' ),
 					'body'          => __( 'AI-related safeguarding should be explicit in your procedures. We provide a policy addendum and staff briefing outline.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Safeguarding policy addendum', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			// Teacher — training & practice gaps.
@@ -1657,7 +1683,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Reduce AI dependency in teaching', 'ai-risk-benchmark' ),
 					'body'          => __( 'Your responses suggest high reliance on AI. Training on independent planning, verification habits and when not to use AI will strengthen classroom practice.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book teacher training', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1673,7 +1699,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Verification training recommended', 'ai-risk-benchmark' ),
 					'body'          => __( 'You rarely modify AI outputs before use. The Teacher Verification Framework builds a practical check-before-you-share workflow.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Verification framework training', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1687,7 +1713,7 @@ class AIRB_Defaults {
 					'title'         => __( 'Pupil data & AI training', 'ai-risk-benchmark' ),
 					'body'          => __( 'Entering pupil data into AI tools creates GDPR and safeguarding exposure. Staff training and a clear acceptable-use policy are essential.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book data-safe AI training', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			$offer(
@@ -1701,7 +1727,7 @@ class AIRB_Defaults {
 					'title'         => __( 'AI literacy CPD for staff', 'ai-risk-benchmark' ),
 					'body'          => __( 'Understanding hallucinations and limitations is foundational. CPD covers classroom-ready explanations pupils can apply.', 'ai-risk-benchmark' ),
 					'cta_text'      => __( 'Book AI literacy CPD', 'ai-risk-benchmark' ),
-					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+					'cta_url'       => self::contact_page_url(),
 				)
 			),
 			array(
@@ -1715,7 +1741,7 @@ class AIRB_Defaults {
 				'title'      => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
 				'body'       => __( 'Human oversight scores suggest verification habits need strengthening across your practice.', 'ai-risk-benchmark' ),
 				'cta_text'   => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
-				'cta_url'    => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'    => self::contact_page_url(),
 			),
 			// Metric triggers.
 			array(
@@ -1729,7 +1755,7 @@ class AIRB_Defaults {
 				'title'      => __( 'Whole-school dependency review', 'ai-risk-benchmark' ),
 				'body'       => __( 'Benchmark signals elevated AI dependency. A consultation helps you plan culture, policy and CPD to restore independent thinking.', 'ai-risk-benchmark' ),
 				'cta_text'   => __( 'Book dependency review', 'ai-risk-benchmark' ),
-				'cta_url'    => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'    => self::contact_page_url(),
 			),
 		);
 	}
@@ -1753,13 +1779,13 @@ class AIRB_Defaults {
 				'title'    => __( 'Book targeted CPD', 'ai-risk-benchmark' ),
 				'body'     => __( 'Turn your highest-risk domains into practical staff training — verification, data protection, safeguarding and assessment integrity.', 'ai-risk-benchmark' ),
 				'cta_text' => __( 'Explore CPD options', 'ai-risk-benchmark' ),
-				'cta_url'  => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'  => self::contact_page_url(),
 			),
 			'book_consultation' => array(
 				'title'    => __( 'Book a free consultation', 'ai-risk-benchmark' ),
 				'body'     => __( 'Need an AI policy, governance review or whole-school plan? We help schools move from benchmark results to confident, DfE-aligned action.', 'ai-risk-benchmark' ),
 				'cta_text' => __( 'Discuss your results', 'ai-risk-benchmark' ),
-				'cta_url'  => 'https://aiawarenessday.co.uk/contact/',
+				'cta_url'  => self::contact_page_url(),
 			),
 		);
 	}

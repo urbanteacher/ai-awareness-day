@@ -44,13 +44,104 @@ class AIRB_Questions {
 	}
 
 	/**
+	 * Alternate phrasing for repeat audits — same question id and scoring.
+	 *
+	 * @return array<string, array<int, string>>
+	 */
+	private static function text_variants(): array {
+		return array(
+			// Parent
+			'p_child_uses'  => array(
+				__( 'Are AI apps or chatbots part of your child\'s homework or free time?', 'ai-risk-benchmark' ),
+				__( 'Has your child used tools like ChatGPT or similar at home?', 'ai-risk-benchmark' ),
+			),
+			'p_know_tools'  => array(
+				__( 'Could you name the AI tools your child uses most often?', 'ai-risk-benchmark' ),
+				__( 'How clearly do you know which AI apps your child has access to?', 'ai-risk-benchmark' ),
+			),
+			'p_discuss_use' => array(
+				__( 'How often do you talk with your child about using AI responsibly?', 'ai-risk-benchmark' ),
+				__( 'Have you had a conversation about when AI is — and is not — appropriate?', 'ai-risk-benchmark' ),
+			),
+			'p_cheating'    => array(
+				__( 'Do you know how AI can affect homework honesty and academic integrity?', 'ai-risk-benchmark' ),
+				__( 'Are you confident about where AI help crosses the line into cheating?', 'ai-risk-benchmark' ),
+			),
+			'p_spot_ai_hw'  => array(
+				__( 'Would you notice if homework looked AI-generated rather than your child\'s own work?', 'ai-risk-benchmark' ),
+				__( 'How confident are you spotting work that may have come from an AI tool?', 'ai-risk-benchmark' ),
+			),
+			'p_no_share'    => array(
+				__( 'Do you know what personal details your child should never enter into AI tools?', 'ai-risk-benchmark' ),
+				__( 'Are you clear on which information is unsafe to share with public AI apps?', 'ai-risk-benchmark' ),
+			),
+			'p_deepfakes'   => array(
+				__( 'Have you talked with your child about deepfakes, scams and AI-enabled online harm?', 'ai-risk-benchmark' ),
+				__( 'Does your family discuss fake images, voice clones and other AI safety risks?', 'ai-risk-benchmark' ),
+			),
+			'p_equipped'    => array(
+				__( 'Do you feel confident supporting your child to use AI safely at home?', 'ai-risk-benchmark' ),
+				__( 'How prepared do you feel to advise your child on responsible AI use?', 'ai-risk-benchmark' ),
+			),
+			// Teacher
+			't_verify'      => array(
+				__( 'Before you use AI output with pupils, do you check it is accurate and appropriate?', 'ai-risk-benchmark' ),
+				__( 'Do you review AI-generated content before sharing it in class?', 'ai-risk-benchmark' ),
+			),
+			't_cross_ref'   => array(
+				__( 'How often do you check AI answers against trusted sources or your own knowledge?', 'ai-risk-benchmark' ),
+				__( 'Do you compare AI suggestions with textbooks, schemes of work or colleagues?', 'ai-risk-benchmark' ),
+			),
+			't_ai_before_task' => array(
+				__( 'How often do you reach for AI before trying the task yourself?', 'ai-risk-benchmark' ),
+				__( 'Do you typically use AI first, or only after your own initial attempt?', 'ai-risk-benchmark' ),
+			),
+			't_pupil_data'  => array(
+				__( 'Have you ever typed pupil names, marks or other student information into a public AI tool?', 'ai-risk-benchmark' ),
+				__( 'Have identifiable pupil details ever been entered into AI tools you use?', 'ai-risk-benchmark' ),
+			),
+			't_hallucinations' => array(
+				__( 'Do you understand that AI can invent facts and how to explain that to pupils?', 'ai-risk-benchmark' ),
+				__( 'Are you confident teaching pupils that AI outputs can be wrong or made up?', 'ai-risk-benchmark' ),
+			),
+			't_when_not'    => array(
+				__( 'Can you identify tasks where AI should not be used in your classroom?', 'ai-risk-benchmark' ),
+				__( 'Are you clear on situations where using AI would be inappropriate for pupils?', 'ai-risk-benchmark' ),
+			),
+			't_feedback_ai' => array(
+				__( 'How often do you draft pupil feedback using AI before personalising it?', 'ai-risk-benchmark' ),
+				__( 'Do you rely on AI to write or rewrite comments on pupils\' work?', 'ai-risk-benchmark' ),
+			),
+		);
+	}
+
+	/**
+	 * Attach alternate phrasing to questions that define variants.
+	 *
+	 * @param array<int, array<string, mixed>> $questions Question rows.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function attach_text_variants( array $questions ): array {
+		$variants = self::text_variants();
+		foreach ( $questions as &$question ) {
+			$id = (string) ( $question['id'] ?? '' );
+			if ( $id && isset( $variants[ $id ] ) ) {
+				$question['text_variants'] = $variants[ $id ];
+			}
+		}
+		unset( $question );
+		return $questions;
+	}
+
+	/**
 	 * Complete question set.
 	 *
 	 * @return array<int, array<string, mixed>>
 	 */
 	public static function all(): array {
 		$f = self::freq();
-		return array_merge(
+		return self::attach_text_variants(
+			array_merge(
 			// —— Teacher ——
 			array(
 				self::q( 't_modify_pct', 'teacher', 'human_oversight', __( 'Human Oversight', 'ai-risk-benchmark' ), __( 'What percentage of AI-generated content do you modify before using it?', 'ai-risk-benchmark' ), array(), 'slider' ),
@@ -261,6 +352,7 @@ class AIRB_Questions {
 					array( 'value' => 'no', 'label' => __( 'Not yet', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 			)
+		)
 		);
 	}
 }

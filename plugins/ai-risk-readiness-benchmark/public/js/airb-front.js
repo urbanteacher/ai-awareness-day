@@ -19,6 +19,7 @@
 	var improvementHub = cfg.improvement_hub || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
 	var SESSION_KEY = 'airb_session_id_v1';
+	var VARIANT_KEY = 'airb_audit_variant_v1';
 	var introCollapsed = false;
 
 	var state = {
@@ -133,6 +134,48 @@
 		}
 	}
 
+	function auditVariantSeed(role) {
+		try {
+			var key = VARIANT_KEY + '_' + role;
+			var n = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+			localStorage.setItem(key, String(n));
+			return n;
+		} catch (e) {
+			return Date.now();
+		}
+	}
+
+	function variantIndexForQuestion(seed, qid, count) {
+		if (count < 2) {
+			return 0;
+		}
+		var h = 0;
+		var s = String(seed) + ':' + qid;
+		for (var i = 0; i < s.length; i++) {
+			h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+		}
+		return Math.abs(h) % count;
+	}
+
+	function questionDisplayText(q, seed) {
+		var variants = q.text_variants || [];
+		if (!variants.length) {
+			return q.text;
+		}
+		var pool = [q.text].concat(variants);
+		return pool[variantIndexForQuestion(seed, q.id, pool.length)] || q.text;
+	}
+
+	function applyQuestionCopyVariants(role) {
+		var seed = auditVariantSeed(role);
+		state.variantSeed = seed;
+		state.sections.forEach(function (section) {
+			section.questions.forEach(function (q) {
+				q.displayText = questionDisplayText(q, seed);
+			});
+		});
+	}
+
 	function beginAudit() {
 		try {
 			hideError();
@@ -146,6 +189,7 @@
 				showError(i18n.error);
 				return false;
 			}
+			applyQuestionCopyVariants(state.role);
 			state.phase = 'audit';
 			state.step = 0;
 			state.answers = {};
@@ -764,7 +808,7 @@
 		html += '<div class="airb__audit-questions">';
 		section.questions.forEach(function (q) {
 			html += '<div class="airb__q-block">';
-			html += '<p class="airb__q-title">' + esc(q.text) + '</p>';
+			html += '<p class="airb__q-title">' + esc(q.displayText || q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
 		});
@@ -1378,7 +1422,8 @@
 					html += '</ul>';
 				}
 				if (card.cta_url) {
-					html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(card.cta_url) + '" target="_blank" rel="noopener">' + esc(card.cta_text || 'Find out more') + '</a>';
+					var cardTarget = card.cta_url.indexOf('mailto:') === 0 ? '' : ' target="_blank" rel="noopener noreferrer"';
+					html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(card.cta_url) + '"' + cardTarget + '>' + esc(card.cta_text || 'Find out more') + '</a>';
 				}
 				html += '</article>';
 			});
@@ -1608,7 +1653,7 @@
 					var kindLabel = kinds[res.kind] || res.kind || 'Read';
 					var linkUrl = appendSessionToUrl(res.url || '');
 					var pillar = block.slug || '';
-					html += '<li><a href="' + esc(linkUrl) + '" class="airb__guided-link airb__guided-link--' + esc(res.kind || 'read') + '" data-airb-track="guided" data-airb-pillar="' + esc(pillar) + '" data-airb-kind="' + esc(res.kind || 'read') + '" data-airb-label="' + esc(res.label || '') + '"><span class="airb__guided-kind">' + esc(kindLabel) + '</span> ' + esc(res.label) + '</a></li>';
+					html += '<li><a href="' + esc(linkUrl) + '" class="airb__guided-link airb__guided-link--' + esc(res.kind || 'read') + '" target="_blank" rel="noopener noreferrer" data-airb-track="guided" data-airb-pillar="' + esc(pillar) + '" data-airb-kind="' + esc(res.kind || 'read') + '" data-airb-label="' + esc(res.label || '') + '"><span class="airb__guided-kind">' + esc(kindLabel) + '</span> ' + esc(res.label) + '</a></li>';
 				});
 				html += '</ul>';
 			}
@@ -1629,7 +1674,8 @@
 			}
 			if (c.closing) html += '<p class="airb__muted">' + esc(c.closing) + '</p>';
 			if (c.cta_url) {
-				html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(appendSessionToUrl(c.cta_url)) + '" data-airb-track="consultation">' + esc(c.cta_text || 'Book your free review') + '</a>';
+				var consultTarget = c.cta_url.indexOf('mailto:') === 0 ? '' : ' target="_blank" rel="noopener noreferrer"';
+				html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(appendSessionToUrl(c.cta_url)) + '"' + consultTarget + ' data-airb-track="consultation">' + esc(c.cta_text || 'Book your free review') + '</a>';
 			}
 			html += '</aside>';
 		}

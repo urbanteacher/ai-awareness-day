@@ -214,25 +214,27 @@ class AIRB_Ajax {
 			return true;
 		}
 
-		$host = strtolower( (string) $parsed['host'] );
-		$path = '/' . trim( (string) ( $parsed['path'] ?? '' ), '/' );
+		$host     = strtolower( (string) $parsed['host'] );
+		$path     = '/' . trim( (string) ( $parsed['path'] ?? '' ), '/' );
+		$fragment = strtolower( (string) ( $parsed['fragment'] ?? '' ) );
 		if ( '/' === $path ) {
 			$path = '';
 		}
 
 		if ( ! str_contains( $host, 'aiawarenessday.co.uk' ) ) {
-			return false;
-		}
-
-		if ( '' === $path || str_starts_with( $path, '/resources' ) ) {
-			return false;
-		}
-
-		if ( function_exists( 'home_url' ) ) {
-			$home_host = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
-			if ( $home_host && $host === $home_host && ( '' === $path || str_starts_with( $path, '/resources' ) ) ) {
+			if ( function_exists( 'home_url' ) ) {
+				$home_host = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
+				if ( ! $home_host || $host !== $home_host ) {
+					return false;
+				}
+			} else {
 				return false;
 			}
+		}
+
+		// Homepage, resources, contact section, and legacy /contact paths stay as links.
+		if ( '' === $path || str_starts_with( $path, '/resources' ) || '/contact' === $path || 'contact' === $fragment ) {
+			return false;
 		}
 
 		return true;

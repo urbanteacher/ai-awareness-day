@@ -40,7 +40,11 @@ function aiad_hub_resource_badge_label( ?WP_Post $post = null ): string {
 	}
 
 	$audience = 'all';
-	if ( $post instanceof WP_Post && class_exists( 'AIRB_Defaults' ) ) {
+	if (
+		$post instanceof WP_Post
+		&& class_exists( 'AIRB_Defaults' )
+		&& method_exists( 'AIRB_Defaults', 'hub_audience_for_slug' )
+	) {
 		$audience = AIRB_Defaults::hub_audience_for_slug( $post->post_name );
 	}
 

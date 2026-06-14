@@ -386,7 +386,7 @@ class AIRB_Leader_Results {
 			'body'     => (string) ( $aad_block['intro'] ?? __( 'A one-day programme for leaders, staff, students and parents.', 'ai-risk-benchmark' ) ),
 			'topics'   => (array) ( $aad_block['topics'] ?? array() ),
 			'cta_text' => (string) ( $aad_promo['cta_text'] ?? $aad_block['cta_text'] ?? __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ) ),
-			'cta_url'  => (string) ( $aad_promo['cta_url'] ?? $aad_block['cta_url'] ?? 'https://aiawarenessday.co.uk/' ),
+			'cta_url'  => (string) ( $aad_promo['cta_url'] ?? $aad_block['cta_url'] ?? AIRB_Defaults::contact_page_url() ),
 		);
 
 		$gov_block = (array) ( $blocks['governance_review'] ?? array() );
@@ -396,7 +396,7 @@ class AIRB_Leader_Results {
 			'body'      => (string) ( $gov_block['body'] ?? __( 'Receive a detailed report with policy recommendations and a risk heat map.', 'ai-risk-benchmark' ) ),
 			'deliverables' => (array) ( $gov_block['deliverables'] ?? array() ),
 			'cta_text'  => (string) ( $gov_block['cta_text'] ?? __( 'Request Governance Review', 'ai-risk-benchmark' ) ),
-			'cta_url'   => (string) ( $gov_block['cta_url'] ?? 'https://aiawarenessday.co.uk/contact/' ),
+			'cta_url'   => AIRB_Defaults::contact_page_url(),
 		);
 
 		return array(
