@@ -129,8 +129,8 @@ class AIRB_Interest {
 				'roles'       => array( 'parent' ),
 			),
 			'parent_share_with_school' => array(
-				'label'       => __( 'Share my benchmark results with my child\'s school', 'ai-risk-benchmark' ),
-				'description' => __( 'Help your school build a whole-family picture of AI awareness.', 'ai-risk-benchmark' ),
+				'label'       => __( 'Help build my school\'s AI readiness picture', 'ai-risk-benchmark' ),
+				'description' => __( 'When parents, students, teachers and leaders all complete the benchmark, schools see the whole picture — dependency, privacy, verification and training needs.', 'ai-risk-benchmark' ),
 				'roles'       => array( 'parent' ),
 			),
 			'parent_ambassador' => array(
@@ -334,8 +334,8 @@ class AIRB_Interest {
 				return array_merge(
 					$base,
 					array(
-						'heading'          => __( 'Tell us how AI Awareness Day can support your school', 'ai-risk-benchmark' ),
-						'intro'            => __( 'Your leadership audit results are above. Open “What happens after the audit?” for ideas, then select what you need — we will email you with next steps.', 'ai-risk-benchmark' ),
+						'heading'          => __( 'Request support for your school', 'ai-risk-benchmark' ),
+						'intro'            => __( 'Select what you need below — we will email you with next steps. Your benchmark scores are included automatically.', 'ai-risk-benchmark' ),
 						'stakeholder_role' => __( 'Which best describes you?', 'ai-risk-benchmark' ),
 					)
 				);

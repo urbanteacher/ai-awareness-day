@@ -137,15 +137,13 @@ class AIRB_Hub_Interest {
 	 * @return array<string, string>
 	 */
 	public static function form_labels( string $role, string $page_title ): array {
+		unset( $page_title );
 		$labels = AIRB_Interest::form_labels( $role );
-		$labels['heading'] = __( 'Get support on this topic', 'ai-risk-benchmark' );
-		/* translators: %s: hub page title */
-		$labels['intro'] = sprintf(
-			__( 'You are reading %s. Tell us what support you need — we will email you with next steps. If you completed the benchmark, we will include your scores when available.', 'ai-risk-benchmark' ),
-			$page_title
-		);
-		$labels['context_label'] = __( 'Topic you were reading', 'ai-risk-benchmark' );
+		$labels['heading']         = __( 'Contact AI Awareness Day', 'ai-risk-benchmark' );
+		$labels['intro']           = __( 'Optional — tell us if you need further guidance, sessions or whole-school support.', 'ai-risk-benchmark' );
+		$labels['context_label']   = __( 'Topic you were reading', 'ai-risk-benchmark' );
 		$labels['benchmark_label'] = __( 'From your benchmark', 'ai-risk-benchmark' );
+		$labels['submit']          = __( 'Send message', 'ai-risk-benchmark' );
 		return $labels;
 	}
 
@@ -203,6 +201,7 @@ class AIRB_Hub_Interest {
 			'fields'    => AIRB_Interest::fields_for_role( $role ),
 			'options'   => AIRB_Interest::options_for_role( $role ),
 			'benchmarkUrl' => AIRB_Defaults::benchmark_page_url(),
+			'journey'   => AIRB_Hub_Journey::static_config( $slug, $role, get_the_title( $post ) ),
 		);
 	}
 
@@ -246,8 +245,8 @@ class AIRB_Hub_Interest {
 		if ( ! self::is_hub_page() ) {
 			return;
 		}
-		echo '<section class="airb-hub-interest-wrap" id="airb-hub-interest" aria-label="' . esc_attr__( 'Request support', 'ai-risk-benchmark' ) . '">';
-		echo '<div class="airb-hub-interest-mount airb__interest" data-airb-hub-interest-mount></div>';
+		echo '<section class="airb-hub-journey-wrap" id="airb-hub-interest" aria-label="' . esc_attr__( 'Your improvement journey', 'ai-risk-benchmark' ) . '">';
+		echo '<div class="airb-hub-journey-mount" data-airb-hub-journey-mount></div>';
 		echo '</section>';
 	}
 

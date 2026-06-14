@@ -90,7 +90,12 @@ class AIRB_Hub_Pages {
 					'interestRequired' => __( 'Please select at least one option.', 'ai-risk-benchmark' ),
 					'error'            => __( 'Something went wrong. Please try again.', 'ai-risk-benchmark' ),
 					'sending'          => __( 'Sending…', 'ai-risk-benchmark' ),
-					'loading'          => __( 'Loading your benchmark context…', 'ai-risk-benchmark' ),
+					'loading'          => __( 'Loading your improvement journey…', 'ai-risk-benchmark' ),
+					'stepDone'         => __( 'Done', 'ai-risk-benchmark' ),
+					'stepCurrent'      => __( 'In progress', 'ai-risk-benchmark' ),
+					'stepTodo'         => __( 'To do', 'ai-risk-benchmark' ),
+					'noBenchmark'      => __( 'Complete the benchmark to personalise your next steps.', 'ai-risk-benchmark' ),
+					'startBenchmark'   => __( 'Take the benchmark', 'ai-risk-benchmark' ),
 				),
 			)
 		);
@@ -102,7 +107,7 @@ class AIRB_Hub_Pages {
 				'i18n'         => array(
 					'progressLabel'   => __( 'Completed', 'ai-risk-benchmark' ),
 					'emailSlt'        => __( 'Email my checklist to my SLT', 'ai-risk-benchmark' ),
-					'emailTeam'       => __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ),
+					'emailTeam'       => __( 'Need further support?', 'ai-risk-benchmark' ),
 					'reset'           => __( 'Reset', 'ai-risk-benchmark' ),
 					'ragGreen'        => __( 'On track', 'ai-risk-benchmark' ),
 					'ragAmber'        => __( 'Some gaps remain', 'ai-risk-benchmark' ),

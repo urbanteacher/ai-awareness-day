@@ -3,7 +3,7 @@
  * Plugin Name:       AI Risk & Readiness Benchmark
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       DfE-aligned AI Risk & Readiness Benchmark for UK schools. Shortcodes: [ai_risk_benchmark] [ai_risk_school_dashboard]
- * Version:           1.18.13
+ * Version:           1.24.7
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIRB_VERSION', '1.23.0' );
+define( 'AIRB_VERSION', '1.24.7' );
 define( 'AIRB_PLUGIN_FILE', __FILE__ );
 define( 'AIRB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIRB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -40,6 +40,7 @@ require_once AIRB_PLUGIN_DIR . 'includes/class-airb-improvement-pathways.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-content.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-events.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-interest.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-journey.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-interest.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-pages.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-activator.php';

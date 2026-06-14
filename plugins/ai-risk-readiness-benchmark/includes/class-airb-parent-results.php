@@ -35,6 +35,7 @@ class AIRB_Parent_Results {
 			'advocate'              => 'high' === $tier ? self::advocate_block( $results, $cfg ) : null,
 			'confidence'            => self::confidence_block( $results, $cfg ),
 			'next_steps'            => self::next_steps( $tier, $cfg ),
+			'resource_links'        => (array) ( $cfg['resource_links'] ?? array() ),
 		);
 	}
 
@@ -158,11 +159,15 @@ class AIRB_Parent_Results {
 		$block  = (array) ( $blocks[ $tier ] ?? $blocks['medium'] ?? array() );
 
 		return array(
-			'title'    => (string) ( $block['title'] ?? __( 'Suggested next steps', 'ai-risk-benchmark' ) ),
-			'intro'    => (string) ( $block['intro'] ?? '' ),
-			'items'    => (array) ( $block['items'] ?? array() ),
-			'cta_key'  => (string) ( $block['cta_key'] ?? '' ),
-			'cta_text' => (string) ( $block['cta_text'] ?? '' ),
+			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero'           => array(
+				'key'              => (string) ( $block['cta_key'] ?? 'parent_resources' ),
+				'title'            => (string) ( $block['title'] ?? __( 'Suggested next steps', 'ai-risk-benchmark' ) ),
+				'body'             => (string) ( $block['intro'] ?? '' ),
+				'understand_items' => (array) ( $block['items'] ?? array() ),
+				'cta_text'         => (string) ( $block['cta_text'] ?? __( 'Get parent guides', 'ai-risk-benchmark' ) ),
+			),
+			'resource_links' => (array) ( $cfg['resource_links'] ?? array() ),
 		);
 	}
 }

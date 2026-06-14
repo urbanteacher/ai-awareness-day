@@ -49,6 +49,43 @@ class AIRB_Student_Results {
 			'student_resources'     => (array) ( $cfg['student_resources'] ?? array() ),
 			'school_contribution'   => (array) ( $cfg['school_contribution'] ?? array() ),
 			'share_hint'            => (string) ( $cfg['share_hint'] ?? '' ),
+			'next_steps'            => self::next_steps( $cfg ),
+		);
+	}
+
+	/**
+	 * @param array<string, mixed> $cfg Config.
+	 * @return array<string, mixed>
+	 */
+	private static function next_steps( array $cfg ): array {
+		$lc = (array) ( $cfg['learning_challenge'] ?? array() );
+		$wc = (array) ( $cfg['weekly_challenge'] ?? array() );
+
+		return array(
+			'hero_heading' => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero'         => array(
+				'key'              => 'retake',
+				'title'            => (string) ( $wc['title'] ?? $lc['title'] ?? __( 'Your next challenge', 'ai-risk-benchmark' ) ),
+				'body'             => trim( (string) ( $wc['intro'] ?? $lc['intro'] ?? '' ) . ' ' . (string) ( $wc['retake_note'] ?? '' ) ),
+				'understand_items' => (array) ( $wc['items'] ?? $lc['steps'] ?? array() ),
+				'cta_text'         => (string) ( $cfg['retake_cta'] ?? __( 'Retake the benchmark', 'ai-risk-benchmark' ) ),
+				'cta_url'          => AIRB_Defaults::benchmark_page_url(),
+				'cta_type'         => 'link',
+			),
+			'resource_links' => array(
+				array(
+					'label' => __( 'Student AI Study Skills', 'ai-risk-benchmark' ),
+					'url'   => AIRB_Defaults::hub_page_url( 'student-ai-study-skills' ),
+				),
+				array(
+					'label' => __( 'Think First, Prompt Second', 'ai-risk-benchmark' ),
+					'url'   => AIRB_Defaults::hub_page_url( 'think-first-prompt-second' ),
+				),
+				array(
+					'label' => __( 'How to check AI answers', 'ai-risk-benchmark' ),
+					'url'   => AIRB_Defaults::hub_page_url( 'how-to-check-ai-answers' ),
+				),
+			),
 		);
 	}
 
@@ -301,7 +338,7 @@ class AIRB_Student_Results {
 		return array(
 			'slug'         => $slug,
 			'title'        => (string) ( $type['title'] ?? '' ),
-			'brand'        => (string) ( $cfg['learner_types_brand'] ?? __( 'AI Learner Types™', 'ai-risk-benchmark' ) ),
+			'brand'        => (string) ( $cfg['learner_types_brand'] ?? __( 'AI Learner Types', 'ai-risk-benchmark' ) ),
 			'description'  => (string) ( $type['description'] ?? '' ),
 			'focus_heading'=> (string) ( $type['focus_heading'] ?? __( 'Focus:', 'ai-risk-benchmark' ) ),
 			'focus_items'  => (array) ( $type['focus_items'] ?? array() ),

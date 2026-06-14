@@ -370,7 +370,6 @@ class AIRB_Leader_Results {
 		?array $aad_promo,
 		array $cfg
 	): array {
-		$cards   = array();
 		$blocks  = (array) ( $cfg['next_step_blocks'] ?? array() );
 		$services = (array) ( $config['services']['items'] ?? array() );
 		$policy_url = AIRB_Defaults::dfe_url_using_ai();
@@ -393,46 +392,39 @@ class AIRB_Leader_Results {
 		);
 
 		$policy_block = (array) ( $blocks['policy_support'] ?? array() );
-		$cards[] = array(
-			'key'      => 'policy_support',
-			'title'    => (string) ( $policy_support['title'] ?? $policy_block['title'] ?? __( 'Develop your AI policy', 'ai-risk-benchmark' ) ),
-			'body'     => (string) ( $policy_block['body'] ?? __( 'Adapt the official DfE AI policy template to your school. Contact the AI Awareness Day team if you need support.', 'ai-risk-benchmark' ) ),
-			'cta_text' => (string) ( $policy_support['cta_text'] ?? $policy_block['cta_text'] ?? __( 'View DfE AI policy template', 'ai-risk-benchmark' ) ),
-			'cta_url'  => (string) ( $policy_support['cta_url'] ?? $policy_url ),
-		);
-
 		$benchmark_block = (array) ( $blocks['whole_school_benchmark'] ?? array() );
-		$cards[] = array(
-			'key'              => 'whole_school_benchmark',
-			'title'            => (string) ( $benchmark_block['title'] ?? __( 'Whole-School AI Benchmark', 'ai-risk-benchmark' ) ),
-			'body'             => (string) ( $benchmark_block['body'] ?? __( 'Build a complete whole-school AI readiness picture across every stakeholder group.', 'ai-risk-benchmark' ) ),
-			'unlock_benefits'  => (array) ( $cfg['rollout_unlock_benefits'] ?? array() ),
-			'counts'           => (array) ( $progress['counts'] ?? array() ),
-			'threshold'        => (int) ( $progress['threshold'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
-			'unlocked'         => ! empty( $progress['is_unlocked'] ),
-			'remaining'        => (int) ( $progress['remaining'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
-			'unlock_copy'      => (string) ( $cfg['rollout_unlock_copy'] ?? '' ),
-		);
-
 		$aad_block = (array) ( $blocks['ai_awareness_day'] ?? array() );
 		$aad_cfg   = (array) ( $config['aad_2027'] ?? array() );
-		$cards[] = array(
-			'key'      => 'ai_awareness_day',
-			'title'    => (string) ( $aad_promo['title'] ?? $aad_block['title'] ?? __( 'AI Awareness Day', 'ai-risk-benchmark' ) ),
-			'body'     => (string) ( $aad_block['intro'] ?? __( 'A one-day programme for leaders, staff, students and parents.', 'ai-risk-benchmark' ) ),
-			'topics'   => (array) ( $aad_block['topics'] ?? array() ),
-			'cta_text' => (string) ( $aad_promo['cta_text'] ?? $aad_block['cta_text'] ?? __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ) ),
-			'cta_url'  => (string) ( $aad_promo['cta_url'] ?? $aad_block['cta_url'] ?? AIRB_Defaults::interest_form_url( 'ai_awareness_day' ) ),
+
+		$resource_links = array(
+			array(
+				'label'    => (string) ( $policy_support['cta_text'] ?? $policy_block['cta_text'] ?? __( 'View DfE AI policy template', 'ai-risk-benchmark' ) ),
+				'url'      => (string) ( $policy_support['cta_url'] ?? $policy_url ),
+				'external' => true,
+			),
+			array(
+				'label'   => (string) ( $benchmark_block['link_label'] ?? __( 'Roll out the whole-school benchmark', 'ai-risk-benchmark' ) ),
+				'prefill' => 'whole_school_benchmark',
+			),
+			array(
+				'label'   => (string) ( $aad_promo['cta_text'] ?? $aad_block['cta_text'] ?? __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ) ),
+				'prefill' => 'ai_awareness_day',
+			),
 		);
 
 		return array(
-			'title'              => (string) ( $cfg['next_steps_title'] ?? __( 'Next steps', 'ai-risk-benchmark' ) ),
-			'subtitle'           => (string) ( $cfg['next_steps_subtitle'] ?? __( 'Recommended for your school', 'ai-risk-benchmark' ) ),
-			'intro'              => (string) ( $cfg['next_steps_intro'] ?? __( 'Based on your benchmark results:', 'ai-risk-benchmark' ) ),
-			'hero_heading'       => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Recommended next step', 'ai-risk-benchmark' ) ),
-			'secondary_heading'  => (string) ( $cfg['secondary_resources_heading'] ?? __( 'Other resources', 'ai-risk-benchmark' ) ),
-			'hero'               => $hero,
-			'cards'              => $cards,
+			'hero_heading'  => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero'          => $hero,
+			'resource_links'=> $resource_links,
+			'rollout'       => array(
+				'title'           => (string) ( $benchmark_block['title'] ?? __( 'Whole-School AI Benchmark', 'ai-risk-benchmark' ) ),
+				'unlock_benefits' => (array) ( $cfg['rollout_unlock_benefits'] ?? array() ),
+				'counts'          => (array) ( $progress['counts'] ?? array() ),
+				'threshold'       => (int) ( $progress['threshold'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
+				'unlocked'        => ! empty( $progress['is_unlocked'] ),
+				'remaining'       => (int) ( $progress['remaining'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
+				'unlock_copy'     => (string) ( $cfg['rollout_unlock_copy'] ?? '' ),
+			),
 		);
 	}
 }

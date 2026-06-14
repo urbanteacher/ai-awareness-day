@@ -57,6 +57,7 @@ class AIRB_Teacher_Results {
 			'school_impact'        => (array) ( $cfg['school_impact'] ?? array() ),
 			'school_progress'      => $progress,
 			'future_offer'         => self::future_offer( $progress, $cfg ),
+			'next_steps'           => self::next_steps( $champion, $gap, $opps, $cfg, $progress ),
 		);
 	}
 
@@ -177,26 +178,26 @@ class AIRB_Teacher_Results {
 		}
 
 		return array(
-			'title'   => (string) ( $cfg['benchmark_summary_title'] ?? __( 'Teacher Benchmark Summary', 'ai-risk-benchmark' ) ),
+			'title'   => (string) ( $cfg['benchmark_summary_title'] ?? __( 'Teacher Benchmark — score recap', 'ai-risk-benchmark' ) ),
 			'metrics' => array(
 				array(
-					'label' => AIRB_Scoring::alignment_score_label(),
+					'label' => __( 'Readiness score', 'ai-risk-benchmark' ),
 					'value' => (int) ( $results['alignment_score'] ?? 0 ) . '%',
 				),
 				array(
-					'label' => __( 'AI Dependency Index™', 'ai-risk-benchmark' ),
+					'label' => __( 'AI risk score', 'ai-risk-benchmark' ),
+					'value' => (int) round( (float) ( $results['overall_risk_percentage'] ?? 0 ) ) . '%',
+				),
+				array(
+					'label' => __( 'AI Dependency Index', 'ai-risk-benchmark' ),
 					'value' => (int) ( $results['dependency_index'] ?? 0 ) . '%',
 				),
 				array(
-					'label' => __( 'Human Oversight Ratio™', 'ai-risk-benchmark' ),
+					'label' => __( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
 					'value' => $oversight . '%',
 				),
 				array(
-					'label' => __( 'Risk Level', 'ai-risk-benchmark' ),
-					'value' => (string) ( $results['risk_level_label'] ?? '' ),
-				),
-				array(
-					'label' => __( 'Benchmark Rating', 'ai-risk-benchmark' ),
+					'label' => __( 'Benchmark rating', 'ai-risk-benchmark' ),
 					'value' => (string) ( $results['readiness_level_label'] ?? '' ),
 				),
 			),
@@ -303,6 +304,73 @@ class AIRB_Teacher_Results {
 			'label' => (string) ( $gap['next_step_label'] ?? __( 'Recommended next step', 'ai-risk-benchmark' ) ),
 			'intro' => (string) ( $gap['intro'] ?? '' ),
 			'items' => array_slice( $items, 0, 2 ),
+		);
+	}
+
+	/**
+	 * Primary action + resource links for the results action zone.
+	 *
+	 * @param array<string, mixed>|null     $champion   Champion pathway.
+	 * @param array<string, mixed>|null     $gap        Gap pathway.
+	 * @param array<int, array<string, mixed>> $opps    Opportunities.
+	 * @param array<string, mixed>          $cfg        Config.
+	 * @param array<string, mixed>          $progress   School progress.
+	 * @return array<string, mixed>
+	 */
+	private static function next_steps( ?array $champion, ?array $gap, array $opps, array $cfg, array $progress ): array {
+		if ( $champion ) {
+			$hero = array(
+				'key'              => 'teacher_activity_day',
+				'title'            => (string) ( $champion['title'] ?? __( 'AI Champion Pathway', 'ai-risk-benchmark' ) ),
+				'body'             => (string) ( $champion['intro'] ?? '' ),
+				'understand_items' => (array) ( $champion['roles'] ?? array() ),
+				'cta_text'         => __( 'Request classroom resources', 'ai-risk-benchmark' ),
+			);
+		} elseif ( $gap && ! empty( $gap['items'] ) ) {
+			$hero = array(
+				'key'              => 'whole_school_cpd',
+				'title'            => __( 'Strengthen your AI practice', 'ai-risk-benchmark' ),
+				'body'             => (string) ( $gap['intro'] ?? '' ),
+				'understand_items' => (array) ( $gap['items'] ?? array() ),
+				'cta_text'         => __( 'Request CPD', 'ai-risk-benchmark' ),
+			);
+		} else {
+			$first_opp = $opps[0] ?? array();
+			$hero      = array(
+				'key'              => 'whole_school_cpd',
+				'title'            => (string) ( $first_opp['label'] ?? __( 'Build your AI practice', 'ai-risk-benchmark' ) ),
+				'body'             => (string) ( $first_opp['summary'] ?? __( 'Focus on the areas below to reduce risk and model responsible AI use.', 'ai-risk-benchmark' ) ),
+				'understand_items' => array(),
+				'cta_text'         => __( 'Request CPD', 'ai-risk-benchmark' ),
+			);
+		}
+
+		$links = array(
+			array(
+				'label'    => __( 'Teacher Verification Framework', 'ai-risk-benchmark' ),
+				'url'      => AIRB_Defaults::hub_page_url( 'teacher-ai-verification-framework' ),
+				'external' => false,
+			),
+			array(
+				'label'    => __( 'AI Lesson Planning Checklist', 'ai-risk-benchmark' ),
+				'url'      => AIRB_Defaults::hub_page_url( 'teacher-ai-lesson-planning-checklist' ),
+				'external' => false,
+			),
+			array(
+				'label'   => __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ),
+				'prefill' => 'ai_awareness_day',
+			),
+		);
+
+		return array(
+			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero'           => $hero,
+			'resource_links' => $links,
+			'rollout'        => array(
+				'title'     => __( 'Whole-school teacher benchmark', 'ai-risk-benchmark' ),
+				'progress'  => $progress,
+				'copy'      => (array) ( $cfg['school_progress'] ?? array() ),
+			),
 		);
 	}
 }

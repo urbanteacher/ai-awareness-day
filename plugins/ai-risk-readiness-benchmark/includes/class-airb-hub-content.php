@@ -89,7 +89,7 @@ class AIRB_Hub_Content {
 
 		$items = (array) ( $support['items'] ?? array() );
 		if ( $items ) {
-			$cta_label = (string) ( $support['item_cta'] ?? __( 'Request support on this topic', 'ai-risk-benchmark' ) );
+			$cta_label = (string) ( $support['item_cta'] ?? __( 'Get further support', 'ai-risk-benchmark' ) );
 			foreach ( $items as $item ) {
 				$item  = (array) $item;
 				$label = (string) ( $item['label'] ?? '' );
@@ -101,7 +101,7 @@ class AIRB_Hub_Content {
 				$blocks[] = '<!-- wp:paragraph --><p><strong>' . esc_html( $label ) . '</strong> — <a href="' . esc_url( $link ) . '">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
 			}
 		} else {
-			$cta_label = (string) ( $support['cta'] ?? __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ) );
+			$cta_label = (string) ( $support['cta'] ?? __( 'Need further support?', 'ai-risk-benchmark' ) );
 			$blocks[]  = '<!-- wp:paragraph --><p><a href="#airb-hub-interest">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
 		}
 

@@ -156,7 +156,7 @@ class AIRB_Scoring {
 					),
 					array(
 						'key'        => 'dep',
-						'label'      => __( 'AI Dependency Index™', 'ai-risk-benchmark' ),
+						'label'      => __( 'AI Dependency Index', 'ai-risk-benchmark' ),
 						'value'      => $dep . '%',
 						'band'       => $dep_band,
 						'tone'       => 'risk',
@@ -164,7 +164,7 @@ class AIRB_Scoring {
 					),
 					array(
 						'key'   => 'over',
-						'label' => __( 'Human Oversight Ratio™', 'ai-risk-benchmark' ),
+						'label' => __( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
 						'value' => (string) ( $results['human_oversight_label'] ?? '' ),
 						'band'  => self::oversight_band_from_label( (string) ( $results['human_oversight_label'] ?? '' ) ),
 						'tone'  => 'oversight',
@@ -315,14 +315,14 @@ class AIRB_Scoring {
 	 * Branded label for the governance maturity score on leader results.
 	 */
 	public static function governance_maturity_label(): string {
-		return __( 'Governance Maturity™', 'ai-risk-benchmark' );
+		return __( 'Governance Maturity', 'ai-risk-benchmark' );
 	}
 
 	/**
 	 * User-facing label for the overall alignment score (not a compliance claim).
 	 */
 	public static function alignment_score_label(): string {
-		return __( 'DfE Readiness Alignment™', 'ai-risk-benchmark' );
+		return __( 'DfE Readiness Alignment', 'ai-risk-benchmark' );
 	}
 
 	/**

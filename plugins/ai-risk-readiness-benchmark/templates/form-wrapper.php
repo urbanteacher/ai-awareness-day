@@ -52,7 +52,7 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 			<?php endif; ?>
 			<div class="airb__hero-gauge-metric">
 				<div class="airb__hero-gauge-copy">
-					<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio™', 'ai-risk-benchmark' ); ?></h3>
+					<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio', 'ai-risk-benchmark' ); ?></h3>
 					<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
 					<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
 				</div>

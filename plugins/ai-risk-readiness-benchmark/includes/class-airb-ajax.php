@@ -483,6 +483,16 @@ class AIRB_Ajax {
 			}
 		}
 
+		$page_title = '';
+		if ( $page_slug && function_exists( 'get_page_by_path' ) ) {
+			$page = get_page_by_path( $page_slug, OBJECT, 'page' );
+			if ( $page instanceof WP_Post ) {
+				$page_title = get_the_title( $page );
+			}
+		}
+
+		$journey_context = AIRB_Hub_Journey::context_from_results( $page_slug, $sub_role, $results, $page_title );
+
 		$weak = AIRB_Interest::weak_domain_labels( $results, $sub_role );
 		$suggested = AIRB_Hub_Interest::suggested_for_hub( $page_slug, $ref, $sub_role );
 		$merged = array_values( array_unique( array_merge(
@@ -503,6 +513,7 @@ class AIRB_Ajax {
 					'school'          => sanitize_text_field( (string) ( $row->school_name ?? '' ) ),
 					'weak_domains'    => $weak,
 					'suggested'       => $merged,
+					'journey_context' => $journey_context,
 				),
 			)
 		);

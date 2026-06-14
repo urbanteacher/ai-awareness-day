@@ -179,7 +179,26 @@ class AIRB_Defaults {
 				'strong'      => __( 'You are well placed to support safe, honest and independent AI use at home. Share what works with your child\'s school to help others.', 'ai-risk-benchmark' ),
 				'leading'     => __( 'You demonstrate strong AI awareness at home. Consider sharing your approach with your child\'s school and encouraging other families to take part.', 'ai-risk-benchmark' ),
 			),
+			'summary_title'           => __( 'Your summary', 'ai-risk-benchmark' ),
+			'where_you_stand_heading' => __( 'Where you stand', 'ai-risk-benchmark' ),
+			'hero_next_step_heading'  => __( 'Your next step', 'ai-risk-benchmark' ),
+			'domains_accordion_title' => __( 'Your domain scores', 'ai-risk-benchmark' ),
+			'focus_accordion_title'   => __( 'What to focus on', 'ai-risk-benchmark' ),
 			'peer_benchmark_title' => __( 'Parent benchmark comparison', 'ai-risk-benchmark' ),
+			'resource_links'       => array(
+				array(
+					'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'parent-ai-safety' ),
+				),
+				array(
+					'label' => __( 'Supporting Homework in the AI Era', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'parent-ai-homework-guide' ),
+				),
+				array(
+					'label'   => __( 'Share results with school', 'ai-risk-benchmark' ),
+					'prefill' => 'parent_share_with_school',
+				),
+			),
 			'peer_benchmark_fallback' => array(
 				'average'      => 58,
 				'top_quartile' => 82,
@@ -331,6 +350,11 @@ class AIRB_Defaults {
 					'detail'  => __( 'A simple pre-use checklist — purpose, data, oversight and alternatives — reduces ad-hoc adoption.', 'ai-risk-benchmark' ),
 				),
 			),
+			'summary_title'           => __( 'Your summary', 'ai-risk-benchmark' ),
+			'where_you_stand_heading' => __( 'Where you stand', 'ai-risk-benchmark' ),
+			'hero_next_step_heading'  => __( 'Your next step', 'ai-risk-benchmark' ),
+			'domains_accordion_title' => __( 'Domain breakdown', 'ai-risk-benchmark' ),
+			'benchmark_accordion_title' => __( 'Teacher benchmark summary', 'ai-risk-benchmark' ),
 			'strengths_heading'     => __( 'What you\'re doing well', 'ai-risk-benchmark' ),
 			'opportunities_heading' => __( 'Opportunities to strengthen further', 'ai-risk-benchmark' ),
 			'share_hint'            => __( 'Share your results with your SLT or colleagues to help build your school\'s whole-school AI picture.', 'ai-risk-benchmark' ),
@@ -364,14 +388,14 @@ class AIRB_Defaults {
 					'url'   => 'https://aiawarenessday.co.uk/',
 				),
 			),
-			'benchmark_summary_title' => __( 'Teacher Benchmark Summary', 'ai-risk-benchmark' ),
+			'benchmark_summary_title' => __( 'Teacher Benchmark — score recap', 'ai-risk-benchmark' ),
 			'school_contribution' => array(
 				'heading' => __( 'School contribution', 'ai-risk-benchmark' ),
 				'intro'   => __( 'Your result contributes to your school\'s:', 'ai-risk-benchmark' ),
 				'items'   => array(
 					__( 'DfE Alignment Score', 'ai-risk-benchmark' ),
-					__( 'AI Dependency Index™', 'ai-risk-benchmark' ),
-					__( 'Human Oversight Benchmark™', 'ai-risk-benchmark' ),
+					__( 'AI Dependency Index', 'ai-risk-benchmark' ),
+					__( 'Human Oversight Benchmark', 'ai-risk-benchmark' ),
 				),
 				'closing' => __( 'Encourage colleagues to complete the assessment to build a more accurate whole-school picture.', 'ai-risk-benchmark' ),
 			),
@@ -412,7 +436,7 @@ class AIRB_Defaults {
 	public static function student_result_config(): array {
 		return array(
 			'profile_title' => __( 'Your AI Learning Profile', 'ai-risk-benchmark' ),
-			'learner_types_brand' => __( 'AI Learner Types™', 'ai-risk-benchmark' ),
+			'learner_types_brand' => __( 'AI Learner Types', 'ai-risk-benchmark' ),
 			'peer_benchmark_title' => __( 'Students like you', 'ai-risk-benchmark' ),
 			'peer_benchmark_fallback' => array(
 				'average'      => 51,
@@ -488,6 +512,12 @@ class AIRB_Defaults {
 				'healthy_habits' => __( 'You are developing healthy AI habits', 'ai-risk-benchmark' ),
 				'honest_work'    => __( 'You are thinking about honest use of AI in your work', 'ai-risk-benchmark' ),
 			),
+			'summary_title'           => __( 'Your summary', 'ai-risk-benchmark' ),
+			'where_you_stand_heading' => __( 'Where you stand', 'ai-risk-benchmark' ),
+			'hero_next_step_heading'  => __( 'Your next step', 'ai-risk-benchmark' ),
+			'retake_cta'              => __( 'Retake the benchmark', 'ai-risk-benchmark' ),
+			'journey_accordion_title' => __( 'Your AI learning journey', 'ai-risk-benchmark' ),
+			'opportunities_accordion_title' => __( 'Opportunities to improve', 'ai-risk-benchmark' ),
 			'strengths_heading'     => __( 'What you\'re doing well', 'ai-risk-benchmark' ),
 			'opportunities_heading' => __( 'Opportunities to improve', 'ai-risk-benchmark' ),
 			'opportunity_topics'    => array(
@@ -632,6 +662,7 @@ class AIRB_Defaults {
 				'default'     => array( 'average' => 62, 'top_quartile' => 84 ),
 			),
 			'focus_heading' => __( 'Priority focus areas', 'ai-risk-benchmark' ),
+			'where_you_stand_heading' => __( 'Where your school stands', 'ai-risk-benchmark' ),
 			'focus_actions_label' => __( 'Recommended actions', 'ai-risk-benchmark' ),
 			'likely_impact_intro' => __( 'Schools with scores at this level often experience:', 'ai-risk-benchmark' ),
 			'hero_understand_label' => __( 'Understand:', 'ai-risk-benchmark' ),
@@ -774,8 +805,8 @@ class AIRB_Defaults {
 					),
 					'deliverables' => array(
 						__( 'DfE Readiness Alignment review', 'ai-risk-benchmark' ),
-						__( 'AI Dependency Index™', 'ai-risk-benchmark' ),
-						__( 'Human Oversight Benchmark™', 'ai-risk-benchmark' ),
+						__( 'AI Dependency Index', 'ai-risk-benchmark' ),
+						__( 'Human Oversight Benchmark', 'ai-risk-benchmark' ),
 						__( 'Policy recommendations', 'ai-risk-benchmark' ),
 						__( 'Risk heat map', 'ai-risk-benchmark' ),
 					),
@@ -1494,8 +1525,8 @@ class AIRB_Defaults {
 				'outputs'  => array(
 					__( 'Teacher AI Risk Score', 'ai-risk-benchmark' ),
 					__( 'Teacher AI Readiness Score', 'ai-risk-benchmark' ),
-					__( 'AI Dependency Index™', 'ai-risk-benchmark' ),
-					__( 'Human Oversight Ratio™', 'ai-risk-benchmark' ),
+					__( 'AI Dependency Index', 'ai-risk-benchmark' ),
+					__( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
 				),
 			),
 			'student' => array(
@@ -1556,7 +1587,7 @@ class AIRB_Defaults {
 	private static function default_signature_metrics(): array {
 		return array(
 			'dependency' => array(
-				'title'   => __( 'AI Dependency Index™', 'ai-risk-benchmark' ),
+				'title'   => __( 'AI Dependency Index', 'ai-risk-benchmark' ),
 				'tagline' => __( 'Your signature measure — reliance, independent thinking and verification combined.', 'ai-risk-benchmark' ),
 				'measures'=> array(
 					__( 'Reliance on AI', 'ai-risk-benchmark' ),
@@ -1567,7 +1598,7 @@ class AIRB_Defaults {
 				),
 			),
 			'oversight'  => array(
-				'title'   => __( 'Human Oversight Ratio™', 'ai-risk-benchmark' ),
+				'title'   => __( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
 				'tagline' => __( 'The killer metric — what percentage of AI-generated output do you modify before using it?', 'ai-risk-benchmark' ),
 				'bands'   => array(
 					array( 'range' => '0–10%', 'label' => __( 'Critical reliance', 'ai-risk-benchmark' ) ),
@@ -1645,7 +1676,7 @@ class AIRB_Defaults {
 	private static function default_aad_2027(): array {
 		return array(
 			'enabled'  => true,
-			'headline' => __( 'AI Awareness Day™', 'ai-risk-benchmark' ),
+			'headline' => __( 'AI Awareness Day', 'ai-risk-benchmark' ),
 			'intro'    => __( 'A school-wide AI awareness programme shaped by your benchmark results.', 'ai-risk-benchmark' ),
 			'sessions' => array(
 				array(
