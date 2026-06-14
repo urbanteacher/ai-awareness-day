@@ -195,14 +195,70 @@
 		return pool[variantIndexForQuestion(seed, q.id, pool.length)] || q.text;
 	}
 
-	function applyQuestionCopyVariants(role) {
+	function seededRng(seed, salt) {
+		var h = 0;
+		var s = String(seed) + ':' + salt;
+		for (var i = 0; i < s.length; i++) {
+			h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+		}
+		var n = Math.abs(h) || 1;
+		return function () {
+			n = (n * 1664525 + 1013904223) >>> 0;
+			return n / 4294967296;
+		};
+	}
+
+	function shuffleWithRng(list, rng) {
+		var arr = list.slice();
+		for (var i = arr.length - 1; i > 0; i--) {
+			var j = Math.floor(rng() * (i + 1));
+			var tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+		}
+		return arr;
+	}
+
+	function cloneSections(sections) {
+		return sections.map(function (section) {
+			return {
+				name: section.name,
+				domain: section.domain,
+				questions: section.questions.map(function (q) {
+					var copy = Object.assign({}, q);
+					if (q.text_variants) {
+						copy.text_variants = q.text_variants.slice();
+					}
+					if (q.options) {
+						copy.options = q.options.map(function (opt) {
+							return Object.assign({}, opt);
+						});
+					}
+					return copy;
+				}),
+			};
+		});
+	}
+
+	function applyAuditPresentation(role) {
 		var seed = auditVariantSeed(role);
 		state.variantSeed = seed;
+		state.sections = cloneSections(state.sections);
+
 		state.sections.forEach(function (section) {
 			section.questions.forEach(function (q) {
 				q.displayText = questionDisplayText(q, seed);
 			});
+			section.questions = shuffleWithRng(section.questions, seededRng(seed, 'q:' + section.name));
 		});
+
+		if (seed > 1) {
+			state.sections = shuffleWithRng(state.sections, seededRng(seed, 'sections'));
+		}
+
+		state.questions = state.sections.reduce(function (acc, s) {
+			return acc.concat(s.questions);
+		}, []);
 	}
 
 	function beginAudit() {
@@ -213,12 +269,11 @@
 				return false;
 			}
 			state.sections = sectionsForRole(state.role);
-			state.questions = state.sections.reduce(function (acc, s) { return acc.concat(s.questions); }, []);
 			if (!state.sections.length) {
 				showError(i18n.error);
 				return false;
 			}
-			applyQuestionCopyVariants(state.role);
+			applyAuditPresentation(state.role);
 			state.phase = 'audit';
 			state.step = 0;
 			state.answers = {};

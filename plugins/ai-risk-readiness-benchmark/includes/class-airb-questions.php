@@ -112,6 +112,124 @@ class AIRB_Questions {
 				__( 'How often do you draft pupil feedback using AI before personalising it?', 'ai-risk-benchmark' ),
 				__( 'Do you rely on AI to write or rewrite comments on pupils\' work?', 'ai-risk-benchmark' ),
 			),
+			't_modify_pct'  => array(
+				__( 'Roughly how much AI-generated material do you edit before using it with pupils?', 'ai-risk-benchmark' ),
+				__( 'What share of AI output do you change before it reaches pupils or colleagues?', 'ai-risk-benchmark' ),
+			),
+			't_challenge'   => array(
+				__( 'When AI advice looks wrong, do you push back and correct it?', 'ai-risk-benchmark' ),
+				__( 'Do you question AI recommendations that do not seem right?', 'ai-risk-benchmark' ),
+			),
+			't_without_ai'  => array(
+				__( 'Could you manage a normal week of teaching without leaning on AI tools?', 'ai-risk-benchmark' ),
+				__( 'If AI were unavailable for a week, could you still teach effectively?', 'ai-risk-benchmark' ),
+			),
+			't_send_data'   => array(
+				__( 'Have SEND or other sensitive pupil details ever been entered into an AI tool?', 'ai-risk-benchmark' ),
+				__( 'Has confidential pupil information about SEND or vulnerability been shared with AI?', 'ai-risk-benchmark' ),
+			),
+			't_data_risks'  => array(
+				__( 'How well do you understand data-protection risks when using AI at school?', 'ai-risk-benchmark' ),
+				__( 'Are you clear on personal-data risks when using AI tools professionally?', 'ai-risk-benchmark' ),
+			),
+			't_safe_adoption' => array(
+				__( 'Before adopting a new AI tool with pupils, do you weigh benefits against risks?', 'ai-risk-benchmark' ),
+				__( 'Do you assess pros and cons before introducing a new AI tool to pupils?', 'ai-risk-benchmark' ),
+			),
+			// Student
+			's_attempt_first' => array(
+				__( 'Do you try the work yourself before asking AI for help?', 'ai-risk-benchmark' ),
+				__( 'Do you make an attempt on your own before turning to AI?', 'ai-risk-benchmark' ),
+			),
+			's_without_ai'  => array(
+				__( 'Could you finish this kind of assignment without using AI?', 'ai-risk-benchmark' ),
+				__( 'If AI were not available, could you still complete the work?', 'ai-risk-benchmark' ),
+			),
+			's_submitted_ai' => array(
+				__( 'Have you ever handed in AI-written work as if it were your own?', 'ai-risk-benchmark' ),
+				__( 'Have you submitted AI-generated answers without saying so?', 'ai-risk-benchmark' ),
+			),
+			's_verify'      => array(
+				__( 'Do you check AI answers before submitting work?', 'ai-risk-benchmark' ),
+				__( 'Do you review what AI gives you before you hand it in?', 'ai-risk-benchmark' ),
+			),
+			's_textbooks'   => array(
+				__( 'Do you double-check AI answers against books, notes or other sources?', 'ai-risk-benchmark' ),
+				__( 'Do you compare AI answers with textbooks or class materials?', 'ai-risk-benchmark' ),
+			),
+			's_spot_mistakes' => array(
+				__( 'Have you noticed when AI gives wrong or misleading answers?', 'ai-risk-benchmark' ),
+				__( 'Can you spot errors or mistakes in AI responses?', 'ai-risk-benchmark' ),
+			),
+			's_how_ai_works' => array(
+				__( 'Do you understand what AI can and cannot do reliably?', 'ai-risk-benchmark' ),
+				__( 'Do you know the main limits of how AI tools work?', 'ai-risk-benchmark' ),
+			),
+			's_wrong'       => array(
+				__( 'Do you know AI can be wrong — and do you act on that?', 'ai-risk-benchmark' ),
+				__( 'When AI might be incorrect, do you verify before trusting it?', 'ai-risk-benchmark' ),
+			),
+			's_personal_info' => array(
+				__( 'Have you shared private details (name, school, photos) with AI tools?', 'ai-risk-benchmark' ),
+				__( 'Have you ever typed personal information into a public AI app?', 'ai-risk-benchmark' ),
+			),
+			's_privacy_risks' => array(
+				__( 'Do you understand why sharing personal data with AI can be risky?', 'ai-risk-benchmark' ),
+				__( 'Are you aware of privacy risks when using AI tools?', 'ai-risk-benchmark' ),
+			),
+			// Leader
+			'l_policy'      => array(
+				__( 'Does your school have a clear, published policy on AI use?', 'ai-risk-benchmark' ),
+				__( 'Is AI use covered in a formal policy that staff can access?', 'ai-risk-benchmark' ),
+			),
+			'l_ai_lead'     => array(
+				__( 'Is someone clearly responsible for AI oversight in your school?', 'ai-risk-benchmark' ),
+				__( 'Has the school appointed a lead or owner for AI governance?', 'ai-risk-benchmark' ),
+			),
+			'l_annual_review' => array(
+				__( 'Does leadership review AI use and risks on a regular basis?', 'ai-risk-benchmark' ),
+				__( 'Is AI governance reviewed by senior leaders at least annually?', 'ai-risk-benchmark' ),
+			),
+			'l_safeguarding' => array(
+				__( 'Are AI-related safeguarding risks reflected in school procedures?', 'ai-risk-benchmark' ),
+				__( 'Do safeguarding policies explicitly cover AI-related harm?', 'ai-risk-benchmark' ),
+			),
+			'l_deepfakes'   => array(
+				__( 'Do safeguarding procedures cover deepfakes and AI-enabled abuse?', 'ai-risk-benchmark' ),
+				__( 'Are deepfake and AI manipulation risks addressed in safeguarding?', 'ai-risk-benchmark' ),
+			),
+			'l_dp_review'   => array(
+				__( 'Have you completed privacy impact assessments for pupil-facing AI tools?', 'ai-risk-benchmark' ),
+				__( 'Are DPIAs in place where pupils use AI systems?', 'ai-risk-benchmark' ),
+			),
+			'l_approved_tools' => array(
+				__( 'Is there a clear list of AI tools staff and pupils may use?', 'ai-risk-benchmark' ),
+				__( 'Are approved AI tools communicated to staff and students?', 'ai-risk-benchmark' ),
+			),
+			'l_staff_training' => array(
+				__( 'Have staff received training on AI risks and how to verify outputs?', 'ai-risk-benchmark' ),
+				__( 'Is AI risk awareness part of staff CPD in your school?', 'ai-risk-benchmark' ),
+			),
+			'l_incidents'   => array(
+				__( 'Are AI-related incidents logged and reviewed by leadership?', 'ai-risk-benchmark' ),
+				__( 'Does the school track and learn from AI-related incidents?', 'ai-risk-benchmark' ),
+			),
+			'l_assessment_review' => array(
+				__( 'Are assessments checked for vulnerability to AI-assisted cheating?', 'ai-risk-benchmark' ),
+				__( 'Do you review how AI could affect the integrity of assessments?', 'ai-risk-benchmark' ),
+			),
+			'l_jcq'         => array(
+				__( 'Is JCQ guidance on AI understood by staff who need it?', 'ai-risk-benchmark' ),
+				__( 'Do relevant teams understand JCQ rules on AI in assessments?', 'ai-risk-benchmark' ),
+			),
+			'l_safe_adoption' => array(
+				__( 'Are new AI tools formally assessed before the school adopts them?', 'ai-risk-benchmark' ),
+				__( 'Is there a structured check before rolling out new AI tools?', 'ai-risk-benchmark' ),
+			),
+			'l_literacy'    => array(
+				__( 'Is AI literacy taught or discussed through curriculum or tutor time?', 'ai-risk-benchmark' ),
+				__( 'Do pupils learn about responsible AI use as part of school provision?', 'ai-risk-benchmark' ),
+			),
 		);
 	}
 
