@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Database {
 
+	/** @var int Schema version for dbDelta upgrades. */
+	const DB_VERSION = 2;
+
 	/**
 	 * Fully qualified table name.
 	 */
@@ -33,10 +36,12 @@ class AIRB_Database {
 
 		$sql = "CREATE TABLE {$table} (
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			session_id varchar(64) NOT NULL DEFAULT '',
 			role varchar(20) NOT NULL DEFAULT '',
 			school_name varchar(255) NOT NULL DEFAULT '',
 			email varchar(255) NOT NULL DEFAULT '',
 			consent tinyint(1) NOT NULL DEFAULT 0,
+			contact_opt_in tinyint(1) NOT NULL DEFAULT 0,
 			risk_level varchar(20) NOT NULL DEFAULT '',
 			alignment_score smallint(3) NOT NULL DEFAULT 0,
 			dependency_index smallint(3) NOT NULL DEFAULT 0,
@@ -49,6 +54,7 @@ class AIRB_Database {
 			recommendations longtext NOT NULL,
 			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
+			KEY session_id (session_id),
 			KEY role (role),
 			KEY risk_level (risk_level),
 			KEY created_at (created_at)
@@ -56,6 +62,21 @@ class AIRB_Database {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+	}
+
+	/**
+	 * Run schema upgrades on existing installs.
+	 */
+	public static function maybe_upgrade(): void {
+		$stored = (int) get_option( 'airb_db_version', 0 );
+		if ( $stored >= self::DB_VERSION ) {
+			return;
+		}
+		self::create_table();
+		if ( class_exists( 'AIRB_Events' ) ) {
+			AIRB_Events::create_table();
+		}
+		update_option( 'airb_db_version', self::DB_VERSION, false );
 	}
 
 	/**
@@ -68,10 +89,12 @@ class AIRB_Database {
 		global $wpdb;
 
 		$defaults = array(
+			'session_id'             => '',
 			'role'                   => '',
 			'school_name'            => '',
 			'email'                  => '',
 			'consent'                => 0,
+			'contact_opt_in'         => 0,
 			'risk_level'             => '',
 			'alignment_score'        => 0,
 			'dependency_index'       => 0,
@@ -90,10 +113,12 @@ class AIRB_Database {
 		$inserted = $wpdb->insert(
 			self::table_name(),
 			array(
+				'session_id'             => sanitize_text_field( substr( (string) $row['session_id'], 0, 64 ) ),
 				'role'                   => sanitize_key( (string) $row['role'] ),
 				'school_name'            => sanitize_text_field( (string) $row['school_name'] ),
 				'email'                  => sanitize_email( (string) $row['email'] ),
 				'consent'                => (int) $row['consent'],
+				'contact_opt_in'         => (int) $row['contact_opt_in'],
 				'risk_level'             => sanitize_text_field( (string) $row['risk_level'] ),
 				'alignment_score'        => (int) $row['alignment_score'],
 				'dependency_index'       => (int) $row['dependency_index'],
@@ -106,7 +131,7 @@ class AIRB_Database {
 				'recommendations'        => wp_json_encode( $row['recommendations'] ),
 				'created_at'             => $row['created_at'],
 			),
-			array( '%s', '%s', '%s', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
 		);
 
 		return $inserted ? (int) $wpdb->insert_id : 0;
@@ -127,6 +152,7 @@ class AIRB_Database {
 			'school'     => '',
 			'date_from'  => '',
 			'date_to'    => '',
+			'consent'    => null,
 			'limit'      => 50,
 			'offset'     => 0,
 		);
@@ -176,11 +202,59 @@ class AIRB_Database {
 			$where[] = 'created_at <= %s';
 			$vals[]  = sanitize_text_field( (string) $args['date_to'] ) . ' 23:59:59';
 		}
+		if ( null !== $args['consent'] && '' !== $args['consent'] ) {
+			$where[] = 'consent = %d';
+			$vals[]  = (int) $args['consent'];
+		}
 
 		return array(
 			'where' => implode( ' AND ', $where ),
 			'vals'  => $vals,
 		);
+	}
+
+	/**
+	 * Submission counts grouped by role.
+	 *
+	 * @return array<string, int>
+	 */
+	public static function count_by_role(): array {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows  = $wpdb->get_results(
+			"SELECT role, COUNT(*) AS n FROM {$table} GROUP BY role ORDER BY n DESC",
+			ARRAY_A
+		);
+
+		$out = array();
+		foreach ( (array) $rows as $row ) {
+			$out[ (string) $row['role'] ] = (int) $row['n'];
+		}
+		return $out;
+	}
+
+	/**
+	 * Count submissions flagged for follow-up contact.
+	 */
+	public static function count_contact_opt_ins(): int {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE consent = 1 AND contact_opt_in = 1" );
+	}
+
+	/**
+	 * Count submissions with a school name stored.
+	 */
+	public static function count_with_school(): int {
+		global $wpdb;
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE school_name != ''" );
 	}
 
 	/**
@@ -224,7 +298,7 @@ class AIRB_Database {
 	const BENCHMARK_MIN_SAMPLE = 8;
 
 	/**
-	 * National benchmark stats for a role (consented submissions only).
+	 * National benchmark stats for a role.
 	 *
 	 * Returns averages for each headline metric, the sample size, and — when a
 	 * reference alignment score is supplied — the percentile that score sits in.
@@ -249,7 +323,7 @@ class AIRB_Database {
 					AVG(safeguarding_readiness) AS safeguarding_readiness,
 					AVG(governance_maturity) AS governance_maturity
 				FROM {$table}
-				WHERE consent = 1 AND role = %s",
+				WHERE role = %s",
 				$role
 			),
 			ARRAY_A
@@ -276,7 +350,7 @@ class AIRB_Database {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$table} WHERE consent = 1 AND role = %s AND alignment_score <= %d",
+					"SELECT COUNT(*) FROM {$table} WHERE role = %s AND alignment_score <= %d",
 					$role,
 					(int) $alignment_score
 				)
@@ -288,7 +362,7 @@ class AIRB_Database {
 	}
 
 	/**
-	 * Count consented submissions at a school, grouped by stakeholder role.
+	 * Count submissions at a school, grouped by stakeholder role.
 	 *
 	 * @param string $school School name (partial match).
 	 * @return array<string, int>
@@ -338,7 +412,7 @@ class AIRB_Database {
 			$wpdb->prepare(
 				"SELECT COUNT(*) AS n, AVG(alignment_score) AS alignment_score
 				FROM {$table}
-				WHERE consent = 1 AND role = %s AND answers LIKE %s",
+				WHERE role = %s AND answers LIKE %s",
 				$role,
 				$phase_pattern
 			),
@@ -354,7 +428,7 @@ class AIRB_Database {
 		$scores = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT alignment_score FROM {$table}
-				WHERE consent = 1 AND role = %s AND answers LIKE %s
+				WHERE role = %s AND answers LIKE %s
 				ORDER BY alignment_score ASC",
 				$role,
 				$phase_pattern
@@ -379,7 +453,7 @@ class AIRB_Database {
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$table}
-					WHERE consent = 1 AND role = %s AND answers LIKE %s AND alignment_score <= %d",
+					WHERE role = %s AND answers LIKE %s AND alignment_score <= %d",
 					$role,
 					$phase_pattern,
 					(int) $alignment_score

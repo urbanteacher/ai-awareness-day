@@ -49,6 +49,15 @@ class AIRB_Admin {
 
 		add_submenu_page(
 			'airb-benchmark',
+			__( 'Funnel & events', 'ai-risk-benchmark' ),
+			__( 'Funnel & events', 'ai-risk-benchmark' ),
+			'manage_options',
+			'airb-funnel',
+			array( __CLASS__, 'render_funnel' )
+		);
+
+		add_submenu_page(
+			'airb-benchmark',
 			__( 'School Dashboard', 'ai-risk-benchmark' ),
 			__( 'School Dashboard', 'ai-risk-benchmark' ),
 			'manage_options',
@@ -99,8 +108,45 @@ class AIRB_Admin {
 		$rows  = AIRB_Database::get_submissions( $filters );
 		$total = AIRB_Database::count_submissions( $filters );
 		$roles = AIRB_Defaults::roles();
+		$stats = array(
+			'total'       => AIRB_Database::count_submissions( array() ),
+			'with_school' => AIRB_Database::count_with_school(),
+		);
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';
+	}
+
+	/**
+	 * Funnel metrics and event log.
+	 */
+	public static function render_funnel(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$per_page = 50;
+		$paged    = max( 1, (int) ( $_GET['paged'] ?? 1 ) );
+
+		$filters = array(
+			'event_type' => sanitize_key( (string) ( $_GET['event_type'] ?? '' ) ),
+			'role'       => sanitize_key( (string) ( $_GET['role'] ?? '' ) ),
+			'date_from'  => sanitize_text_field( (string) ( $_GET['date_from'] ?? '' ) ),
+			'date_to'    => sanitize_text_field( (string) ( $_GET['date_to'] ?? '' ) ),
+			'limit'      => $per_page,
+			'offset'     => ( $paged - 1 ) * $per_page,
+		);
+
+		$event_counts   = AIRB_Events::count_by_type( $filters );
+		$role_counts    = AIRB_Database::count_by_role();
+		$weak_domains = AIRB_Events::weak_domain_counts();
+		$events       = AIRB_Events::get_events( $filters );
+		$total_events = AIRB_Events::count_events( $filters );
+		$total_subs   = AIRB_Database::count_submissions( array() );
+		$event_labels   = AIRB_Events::event_labels();
+		$roles          = AIRB_Defaults::roles();
+		$domains        = AIRB_Defaults::domains();
+
+		include AIRB_PLUGIN_DIR . 'admin/views/funnel.php';
 	}
 
 	/**

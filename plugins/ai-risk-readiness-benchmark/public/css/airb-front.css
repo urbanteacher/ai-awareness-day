@@ -1137,7 +1137,22 @@
 	gap: 0.5rem;
 	font-size: 0.88rem;
 	color: var(--airb-muted);
-	margin-top: 0.5rem;
+	margin-top: 0.75rem;
+}
+
+.airb__consent-group {
+	border: 0;
+	margin: 1rem 0 0;
+	padding: 0;
+}
+
+.airb__consent-group .airb__label {
+	margin-top: 0;
+}
+
+.airb__consent-hint {
+	margin: 0.25rem 0 0.5rem 1.35rem;
+	font-size: 0.82rem;
 }
 
 .airb__consent input {

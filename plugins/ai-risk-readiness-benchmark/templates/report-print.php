@@ -18,7 +18,9 @@ $config   = $airb_report_config;
 	<h1><?php esc_html_e( 'AI Risk & Readiness Benchmark Report', 'ai-risk-benchmark' ); ?></h1>
 	<p><strong><?php esc_html_e( 'Role:', 'ai-risk-benchmark' ); ?></strong> <?php echo esc_html( $role_lbl ); ?></p>
 	<p><strong><?php esc_html_e( 'Date:', 'ai-risk-benchmark' ); ?></strong> <?php echo esc_html( gmdate( 'j F Y' ) ); ?></p>
-	<p class="airb-report__disclaimer"><?php echo esc_html( (string) ( $config['disclaimer'] ?? '' ) ); ?></p>
+	<?php if ( ! empty( $config['disclaimer'] ) ) : ?>
+		<p class="airb-report__disclaimer"><?php echo esc_html( (string) $config['disclaimer'] ); ?></p>
+	<?php endif; ?>
 
 	<h2><?php esc_html_e( 'Summary', 'ai-risk-benchmark' ); ?></h2>
 	<p><strong><?php esc_html_e( 'Readiness level:', 'ai-risk-benchmark' ); ?></strong> <?php echo esc_html( (string) ( $results['readiness_level_label'] ?? '' ) ); ?></p>

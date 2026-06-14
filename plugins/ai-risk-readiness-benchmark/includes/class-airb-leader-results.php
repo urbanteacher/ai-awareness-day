@@ -25,7 +25,7 @@ class AIRB_Leader_Results {
 	 * @param string               $school           School name from submission.
 	 * @param array<string, string> $profile         School profile (phase, org_type).
 	 * @param array<string, mixed> $config           Plugin config.
-	 * @param array<string, mixed>|null $policy_gen  Policy generator offer.
+	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE template).
 	 * @param array<string, mixed>|null $aad_promo   AI Awareness Day promo.
 	 * @return array<string, mixed>
 	 */
@@ -34,7 +34,7 @@ class AIRB_Leader_Results {
 		string $school,
 		array $profile,
 		array $config,
-		?array $policy_gen = null,
+		?array $policy_support = null,
 		?array $aad_promo = null
 	): array {
 		$cfg       = AIRB_Defaults::leader_result_config();
@@ -51,7 +51,7 @@ class AIRB_Leader_Results {
 			'peer_benchmark'    => $peer,
 			'focus_areas'       => $focus,
 			'risk_heatmap'      => (array) ( $results['risk_heatmap'] ?? array() ),
-			'next_steps'        => self::next_steps( $results, $config, $profile, $progress, $policy_gen, $aad_promo, $cfg ),
+			'next_steps'        => self::next_steps( $results, $config, $profile, $progress, $policy_support, $aad_promo, $cfg ),
 			'school_rollout'    => $progress,
 		);
 	}
@@ -333,7 +333,7 @@ class AIRB_Leader_Results {
 	 * @param array<string, mixed>      $config      Config.
 	 * @param array<string, string>     $profile     Profile.
 	 * @param array<string, mixed>      $progress    School rollout.
-	 * @param array<string, mixed>|null $policy_gen  Policy offer.
+	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE template).
 	 * @param array<string, mixed>|null $aad_promo   AAD offer.
 	 * @param array<string, mixed>      $cfg         Leader config.
 	 * @return array<string, mixed>
@@ -343,7 +343,7 @@ class AIRB_Leader_Results {
 		array $config,
 		array $profile,
 		array $progress,
-		?array $policy_gen,
+		?array $policy_support,
 		?array $aad_promo,
 		array $cfg
 	): array {
@@ -352,19 +352,19 @@ class AIRB_Leader_Results {
 		$services = (array) ( $config['services']['items'] ?? array() );
 		$policy_url = AIRB_Defaults::dfe_url_using_ai();
 		foreach ( $services as $item ) {
-			if ( false !== stripos( (string) ( $item['label'] ?? '' ), 'Policy Generator' ) ) {
+			if ( false !== stripos( (string) ( $item['label'] ?? '' ), 'AI Policy' ) ) {
 				$policy_url = (string) ( $item['url'] ?? $policy_url );
 				break;
 			}
 		}
 
-		$policy_block = (array) ( $blocks['policy_generator'] ?? array() );
+		$policy_block = (array) ( $blocks['policy_support'] ?? array() );
 		$cards[] = array(
-			'key'      => 'policy_generator',
-			'title'    => (string) ( $policy_gen['title'] ?? $policy_block['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ),
-			'body'     => (string) ( $policy_block['body'] ?? __( 'Create or refresh your school AI policy aligned to DfE guidance.', 'ai-risk-benchmark' ) ),
-			'cta_text' => (string) ( $policy_gen['cta_text'] ?? $policy_block['cta_text'] ?? __( 'Start AI Policy Generator', 'ai-risk-benchmark' ) ),
-			'cta_url'  => (string) ( $policy_gen['cta_url'] ?? $policy_url ),
+			'key'      => 'policy_support',
+			'title'    => (string) ( $policy_support['title'] ?? $policy_block['title'] ?? __( 'Develop your AI policy', 'ai-risk-benchmark' ) ),
+			'body'     => (string) ( $policy_block['body'] ?? __( 'Adapt the official DfE AI policy template to your school. Contact the AI Awareness Day team if you need support.', 'ai-risk-benchmark' ) ),
+			'cta_text' => (string) ( $policy_support['cta_text'] ?? $policy_block['cta_text'] ?? __( 'View DfE AI policy template', 'ai-risk-benchmark' ) ),
+			'cta_url'  => (string) ( $policy_support['cta_url'] ?? $policy_url ),
 		);
 
 		$benchmark_block = (array) ( $blocks['whole_school_benchmark'] ?? array() );

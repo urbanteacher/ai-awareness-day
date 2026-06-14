@@ -29,7 +29,7 @@ An educational self-assessment tool for teachers, students, parents and school l
 1. Upload the `ai-risk-readiness-benchmark` folder to `/wp-content/plugins/`.
 2. Activate the plugin through the **Plugins** menu.
 3. Add the shortcode `[ai_risk_benchmark]` to any page or post.
-4. Optionally add `[ai_risk_school_dashboard]` on a page for whole-school roll-up (requires consented submissions per role).
+4. Optionally add `[ai_risk_school_dashboard]` on a page for whole-school roll-up (requires submissions per role).
 5. Visit **AI Risk Benchmark → Settings** to edit questions, scoring, positioning copy and recommendations.
 
 == Docker (this theme repo) ==
@@ -44,7 +44,7 @@ Symlink or copy the plugin into your WordPress plugins directory, or mount `plug
 
 `[ai_risk_benchmark]` — individual stakeholder audit (teacher, student, parent, leader)
 
-`[ai_risk_school_dashboard]` or `[ai_risk_school_dashboard school="Your School Name"]` — school-wide readiness view aggregated from consented submissions
+`[ai_risk_school_dashboard]` or `[ai_risk_school_dashboard school="Your School Name"]` — school-wide readiness view aggregated from benchmark submissions
 
 == Admin ==
 

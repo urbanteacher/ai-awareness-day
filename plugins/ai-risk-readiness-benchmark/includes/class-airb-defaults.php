@@ -33,7 +33,7 @@ class AIRB_Defaults {
 		return array(
 			'safe_adoption'         => __( 'Safe Adoption', 'ai-risk-benchmark' ),
 			'human_oversight'       => __( 'Human Oversight', 'ai-risk-benchmark' ),
-			'ai_dependency'         => __( 'AI Dependency', 'ai-risk-benchmark' ),
+			'ai_dependency'         => __( 'Independent Practice', 'ai-risk-benchmark' ),
 			'privacy'               => __( 'Privacy & Data Protection', 'ai-risk-benchmark' ),
 			'safeguarding'          => __( 'Safeguarding', 'ai-risk-benchmark' ),
 			'assessment_integrity'  => __( 'Assessment Integrity', 'ai-risk-benchmark' ),
@@ -408,7 +408,7 @@ class AIRB_Defaults {
 				'safeguarding'         => __( 'Safeguarding', 'ai-risk-benchmark' ),
 				'governance'           => __( 'Governance Consistency', 'ai-risk-benchmark' ),
 				'safe_adoption'        => __( 'Safe Adoption', 'ai-risk-benchmark' ),
-				'ai_dependency'        => __( 'AI Dependency', 'ai-risk-benchmark' ),
+				'ai_dependency'        => __( 'Independent Practice', 'ai-risk-benchmark' ),
 			),
 			'maturity_levels' => array(
 				array( 'slug' => 'emerging', 'label' => __( 'Emerging', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 25 ),
@@ -519,10 +519,10 @@ class AIRB_Defaults {
 			'next_steps_subtitle' => __( 'Recommended for your school', 'ai-risk-benchmark' ),
 			'next_steps_intro'    => __( 'Based on your benchmark results:', 'ai-risk-benchmark' ),
 			'next_step_blocks' => array(
-				'policy_generator' => array(
-					'title'    => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
-					'body'     => __( 'Create or refresh your school AI policy aligned to DfE guidance.', 'ai-risk-benchmark' ),
-					'cta_text' => __( 'Start AI Policy Generator', 'ai-risk-benchmark' ),
+				'policy_support' => array(
+					'title'    => __( 'Develop your AI policy', 'ai-risk-benchmark' ),
+					'body'     => __( 'Adapt the official DfE AI policy template to your school. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' ),
+					'cta_text' => __( 'View DfE AI policy template', 'ai-risk-benchmark' ),
 				),
 				'whole_school_benchmark' => array(
 					'title' => __( 'Whole-School AI Benchmark', 'ai-risk-benchmark' ),
@@ -573,6 +573,27 @@ class AIRB_Defaults {
 			return $path;
 		}
 		return function_exists( 'home_url' ) ? home_url( '/' . $path . '/' ) : 'https://aiawarenessday.co.uk/' . $path . '/';
+	}
+
+	/**
+	 * Hub page URL with benchmark attribution query args.
+	 *
+	 * @param string $path Hub slug path.
+	 * @param string $role Respondent role.
+	 * @param string $ref  Weak pillar / domain reference slug.
+	 */
+	public static function hub_tracking_url( string $path, string $role, string $ref ): string {
+		$url = self::hub_page_url( $path );
+		if ( '' === trim( $path, '/' ) || str_starts_with( trim( $path ), 'http' ) ) {
+			return $url;
+		}
+		return add_query_arg(
+			array(
+				'airb_role' => sanitize_key( $role ),
+				'airb_ref'  => sanitize_key( $ref ),
+			),
+			$url
+		);
 	}
 
 	/**
@@ -642,7 +663,6 @@ class AIRB_Defaults {
 							'actions_heading' => $improve,
 							'resources'    => array(
 								array( 'kind' => 'read', 'label' => __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
-								array( 'kind' => 'watch', 'label' => __( '10-minute Teacher Verification Masterclass', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
 								array( 'kind' => 'download', 'label' => __( 'AI Lesson Planning Checklist', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-lesson-planning-checklist' ),
 								array( 'kind' => 'join', 'label' => __( 'AI Awareness Day Teacher Session', 'ai-risk-benchmark' ), 'path' => 'ai-awareness-day' ),
 							),
@@ -668,7 +688,7 @@ class AIRB_Defaults {
 							'actions_heading' => $improve,
 							'resources'    => array(
 								array( 'kind' => 'read', 'label' => __( 'DfE AI Guidance Briefing', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-assessment-guide' ),
-								array( 'kind' => 'watch', 'label' => __( 'AI Limitations Explained', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-assessment-guide' ),
+								array( 'kind' => 'read', 'label' => __( 'How AI Gets Things Wrong', 'ai-risk-benchmark' ), 'path' => 'teacher-ai-verification-framework' ),
 							),
 						),
 						'assessment_integrity' => array(
@@ -688,7 +708,7 @@ class AIRB_Defaults {
 						'ai_dependency' => array(
 							'slug'         => 'ai_dependency',
 							'score_type'   => 'dependency',
-							'metric_label' => __( 'AI Dependency Index™', 'ai-risk-benchmark' ),
+							'metric_label' => __( 'AI Dependency Risk', 'ai-risk-benchmark' ),
 							'why_heading'  => $why,
 							'why_body'     => __( 'High dependency can reduce independent professional judgement and model over-reliance for pupils.', 'ai-risk-benchmark' ),
 							'why_risks'    => array(),
@@ -831,7 +851,7 @@ class AIRB_Defaults {
 							'why_risks'    => array(),
 							'actions_heading' => $improve,
 							'resources'    => array(
-								array( 'kind' => 'read', 'label' => __( 'AI Policy Generator', 'ai-risk-benchmark' ), 'path' => 'ai-policy-generator' ),
+								array( 'kind' => 'read', 'label' => __( 'School AI Policy (DfE template & support)', 'ai-risk-benchmark' ), 'path' => 'ai-policy-generator' ),
 								array( 'kind' => 'download', 'label' => __( 'Governance Checklist', 'ai-risk-benchmark' ), 'path' => 'school-ai-governance' ),
 								array( 'kind' => 'read', 'label' => __( 'Leadership Toolkit', 'ai-risk-benchmark' ), 'path' => 'school-ai-governance' ),
 								array( 'kind' => 'join', 'label' => __( 'Free Consultation', 'ai-risk-benchmark' ), 'path' => 'contact' ),
@@ -902,7 +922,7 @@ class AIRB_Defaults {
 			array(
 				'slug'    => 'teacher-ai-verification-framework',
 				'title'   => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Verify Before You Trust — a practical framework for checking AI outputs before classroom use.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Verify Before You Trust™ — a DfE-aligned framework for checking AI outputs before classroom use.', 'ai-risk-benchmark' ),
 				'audience'=> 'teacher',
 			),
 			array(
@@ -932,7 +952,7 @@ class AIRB_Defaults {
 			array(
 				'slug'    => 'think-first-prompt-second',
 				'title'   => __( 'Think First, Prompt Second', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'A simple framework for attempting work yourself before asking AI for help.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Think First, Prompt Second™ — a student framework for using AI responsibly and protecting independent learning.', 'ai-risk-benchmark' ),
 				'audience'=> 'student',
 			),
 			array(
@@ -950,7 +970,7 @@ class AIRB_Defaults {
 			array(
 				'slug'    => 'parent-ai-safety',
 				'title'   => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Support your child\'s safe and healthy use of AI at home.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Helping your child use AI safely and responsibly at home.', 'ai-risk-benchmark' ),
 				'audience'=> 'parent',
 			),
 			array(
@@ -973,32 +993,56 @@ class AIRB_Defaults {
 			),
 			array(
 				'slug'    => 'ai-policy-generator',
-				'title'   => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Create or refresh your school AI policy aligned to DfE guidance.', 'ai-risk-benchmark' ),
+				'title'   => __( 'School AI Policy: DfE Templates & Support', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Adapt the official DfE AI policy template to your school, with support from the AI Awareness Day team.', 'ai-risk-benchmark' ),
 				'audience'=> 'leader',
 			),
 			array(
 				'slug'    => 'school-ai-governance',
 				'title'   => __( 'School AI Governance', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Governance checklist, leadership toolkit and accountability frameworks.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'DfE-aligned governance checklist for leadership, policy, staff and pupils.', 'ai-risk-benchmark' ),
 				'audience'=> 'leader',
 			),
 			array(
 				'slug'    => 'dfe-ai-compliance-checklist',
 				'title'   => __( 'DfE AI Compliance Checklist', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Track alignment with DfE, ICO, KCSIE and assessment guidance.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'A practical review framework for school leaders — governance, safeguarding and readiness.', 'ai-risk-benchmark' ),
 				'audience'=> 'leader',
 			),
 			array(
 				'slug'    => 'ai-risk-register',
 				'title'   => __( 'AI Risk Register', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Template for recording and reviewing AI risks across your school.', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Identify, assign ownership and track controls for AI-related risks.', 'ai-risk-benchmark' ),
 				'audience'=> 'leader',
 			),
 			array(
 				'slug'    => 'ai-awareness-day',
-				'title'   => __( 'AI Awareness Day', 'ai-risk-benchmark' ),
-				'excerpt' => __( 'Whole-school programme for leaders, staff, students and parents.', 'ai-risk-benchmark' ),
+				'title'   => __( 'AI Awareness Day Framework', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Whole-school programme for leaders, staff, students and parents — built on your benchmark data.', 'ai-risk-benchmark' ),
+				'audience'=> 'all',
+			),
+			array(
+				'slug'    => 'annual-benchmark-review',
+				'title'   => __( 'Annual AI Benchmark Review', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'For leaders: why to reassess annually, what good improvement looks like, and how to evidence progress.', 'ai-risk-benchmark' ),
+				'audience'=> 'leader',
+			),
+			array(
+				'slug'    => 'ai-champion-programme',
+				'title'   => __( 'AI Champion Programme', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Build internal AI leadership — five levels from AI Aware to School AI Lead.', 'ai-risk-benchmark' ),
+				'audience'=> 'teacher',
+			),
+			array(
+				'slug'    => 'school-ai-maturity',
+				'title'   => __( 'School AI Maturity Framework', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'For leaders: Emerging → Leading maturity bands linked to your alignment score and priority interventions.', 'ai-risk-benchmark' ),
+				'audience'=> 'leader',
+			),
+			array(
+				'slug'    => 'national-benchmark-report',
+				'title'   => __( 'UK School AI Benchmark Report', 'ai-risk-benchmark' ),
+				'excerpt' => __( 'Anonymised national trends, risks and insights from participating UK schools.', 'ai-risk-benchmark' ),
 				'audience'=> 'all',
 			),
 		);
@@ -1010,7 +1054,7 @@ class AIRB_Defaults {
 				'slug'    => (string) $page['slug'],
 				'title'   => (string) $page['title'],
 				'excerpt' => $excerpt,
-				'content' => self::hub_page_content( (string) $page['title'], $excerpt, $benchmark_cta ),
+				'content' => AIRB_Hub_Content::for_slug( (string) $page['slug'], $excerpt, $benchmark_cta ),
 			);
 		}
 
@@ -1018,22 +1062,11 @@ class AIRB_Defaults {
 	}
 
 	/**
-	 * Default Gutenberg content for a hub page.
+	 * @deprecated Use AIRB_Hub_Content::for_slug().
 	 */
 	private static function hub_page_content( string $title, string $excerpt, string $benchmark_cta ): string {
-		$blocks   = array();
-		$blocks[] = '<!-- wp:paragraph --><p>' . esc_html( $excerpt ) . '</p><!-- /wp:paragraph -->';
-		$blocks[] = '<!-- wp:paragraph --><p>' . esc_html__( 'This resource supports the AI Risk & Readiness Benchmark™ — use it after your audit to improve the areas where you scored lowest.', 'ai-risk-benchmark' ) . '</p><!-- /wp:paragraph -->';
-		$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html__( 'What you\'ll find here', 'ai-risk-benchmark' ) . '</h2><!-- /wp:heading -->';
-		$blocks[] = '<!-- wp:list --><ul class="wp-block-list">'
-			. '<li>' . esc_html__( 'Practical guidance aligned to UK school expectations', 'ai-risk-benchmark' ) . '</li>'
-			. '<li>' . esc_html__( 'Downloadable tools and checklists', 'ai-risk-benchmark' ) . '</li>'
-			. '<li>' . esc_html__( 'Links to AI Awareness Day sessions and support', 'ai-risk-benchmark' ) . '</li>'
-			. '</ul><!-- /wp:list -->';
-		$blocks[] = '<!-- wp:paragraph --><p><em>' . esc_html__( 'Content on this page can be expanded in the WordPress editor — frameworks, videos and downloads can be added here.', 'ai-risk-benchmark' ) . '</em></p><!-- /wp:paragraph -->';
-		$blocks[] = '<!-- wp:paragraph --><p><a href="' . esc_url( self::benchmark_page_url() ) . '">' . esc_html( $benchmark_cta ) . '</a></p><!-- /wp:paragraph -->';
-
-		return implode( "\n\n", $blocks );
+		unset( $title );
+		return AIRB_Hub_Content::for_slug( '', $excerpt, $benchmark_cta );
 	}
 
 	/**
@@ -1323,7 +1356,7 @@ class AIRB_Defaults {
 			'headline' => __( 'When you need more support', 'ai-risk-benchmark' ),
 			'intro'    => __( 'The benchmark is free. Your report identifies gaps. Schools can then access:', 'ai-risk-benchmark' ),
 			'items'    => array(
-				array( 'label' => __( 'AI Policy Generator', 'ai-risk-benchmark' ), 'url' => self::dfe_url_using_ai() ),
+				array( 'label' => __( 'AI Policy Templates (DfE)', 'ai-risk-benchmark' ), 'url' => self::dfe_url_using_ai() ),
 				array( 'label' => __( 'AI Governance Toolkit', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/resources/' ),
 				array( 'label' => __( 'Teacher Training', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
 				array( 'label' => __( 'Assessment Integrity Reviews', 'ai-risk-benchmark' ), 'url' => 'https://aiawarenessday.co.uk/contact/' ),
@@ -1393,9 +1426,9 @@ class AIRB_Defaults {
 				'priority'    => 70,
 				'domain'      => 'governance',
 				'min_band'    => 'high',
-				'title'       => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
-				'body'        => __( 'Your governance score suggests policy foundations are not yet secure. Start with a whole-school AI use policy aligned to DfE expectations.', 'ai-risk-benchmark' ),
-				'cta_text'    => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
+				'title'       => __( 'Develop your AI policy', 'ai-risk-benchmark' ),
+				'body'        => __( 'Your governance score suggests policy foundations are not yet secure. Adapt the official DfE AI policy template into a whole-school AI use policy aligned to DfE expectations.', 'ai-risk-benchmark' ),
+				'cta_text'    => __( 'View DfE AI policy template', 'ai-risk-benchmark' ),
 				'cta_url'     => self::dfe_url_using_ai(),
 			),
 			array(
@@ -1516,8 +1549,8 @@ class AIRB_Defaults {
 					'offer_type'    => 'policy',
 					'priority'      => 95,
 					'title'         => __( 'You need a published AI policy', 'ai-risk-benchmark' ),
-					'body'          => __( 'Your audit shows the school does not yet have a reviewed AI policy. Start with our DfE-aligned AI Policy Generator and adapt it to your context.', 'ai-risk-benchmark' ),
-					'cta_text'      => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
+					'body'          => __( 'Your audit shows the school does not yet have a reviewed AI policy. Start with the official DfE AI policy template and adapt it to your context — contact the AI Awareness Day team if you need support.', 'ai-risk-benchmark' ),
+					'cta_text'      => __( 'View DfE AI policy template', 'ai-risk-benchmark' ),
 					'cta_url'       => self::dfe_url_using_ai(),
 				)
 			),
@@ -1677,7 +1710,7 @@ class AIRB_Defaults {
 			'intro'             => __( 'Your audit is the gateway — not the end point. Re-audit annually to track progress, book CPD for your highest-risk domains, and access support when gaps need closing.', 'ai-risk-benchmark' ),
 			'track_progress'    => array(
 				'title'    => __( 'Track progress over time', 'ai-risk-benchmark' ),
-				'body'     => __( 'Save your school name and consent, then re-run the benchmark each term. Your school-wide dashboard shows whether readiness is improving across teachers, students, parents and leaders.', 'ai-risk-benchmark' ),
+				'body'     => __( 'Save your school name, then re-run the benchmark each term. Your school-wide dashboard shows whether readiness is improving across teachers, students, parents and leaders.', 'ai-risk-benchmark' ),
 				'cta_text' => __( 'View school dashboard', 'ai-risk-benchmark' ),
 				'cta_url'  => '',
 			),

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Roll up consented submissions by school and role.
+ * Roll up submissions by school and role.
  */
 class AIRB_School_Dashboard {
 
@@ -47,7 +47,7 @@ class AIRB_School_Dashboard {
 		$rows = $wpdb->get_results(
 			"SELECT school_name, COUNT(*) AS submission_count, COUNT(DISTINCT role) AS roles_covered
 			FROM {$table}
-			WHERE consent = 1 AND school_name != ''
+			WHERE school_name != ''
 			GROUP BY school_name
 			ORDER BY submission_count DESC
 			LIMIT 200",
@@ -75,7 +75,7 @@ class AIRB_School_Dashboard {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE consent = 1 AND LOWER(school_name) = LOWER(%s) ORDER BY created_at DESC",
+				"SELECT * FROM {$table} WHERE LOWER(school_name) = LOWER(%s) ORDER BY created_at DESC",
 				$school_name
 			)
 		);
@@ -307,7 +307,7 @@ class AIRB_School_Dashboard {
 		if ( ! $rollup ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No consented benchmark results found for this school yet. Complete audits from each stakeholder group first.', 'ai-risk-benchmark' ),
+					'message' => __( 'No benchmark results found for this school yet. Complete audits from each stakeholder group first.', 'ai-risk-benchmark' ),
 				)
 			);
 		}

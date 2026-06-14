@@ -22,7 +22,7 @@ class AIRB_Funnel {
 	public static function stage2_products(): array {
 		return array(
 			'governance'           => array(
-				'product' => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
+				'product' => __( 'Develop your AI policy (DfE template)', 'ai-risk-benchmark' ),
 				'reason'  => __( 'Low governance score', 'ai-risk-benchmark' ),
 			),
 			'human_oversight'      => array(
@@ -57,7 +57,7 @@ class AIRB_Funnel {
 		$results['stage2_products']     = self::matched_stage2_products( $domain_scores );
 		$results['leadership_report']   = self::leadership_report( $results, $role, $profile );
 		$results['consultation_pitch']  = self::consultation_pitch( $results, $role, $config );
-		$results['policy_generator']    = self::policy_generator_offer( $domain_scores, $profile, $config );
+		$results['policy_support']      = self::policy_support_offer( $domain_scores, $profile, $config );
 		$results['aad_promo']           = self::aad_promo( $config );
 
 		if ( 'teacher' === $role ) {
@@ -81,7 +81,7 @@ class AIRB_Funnel {
 		}
 
 		if ( 'leader' === $role ) {
-			$policy_gen = $results['policy_generator'] ?? null;
+			$policy_gen = $results['policy_support'] ?? null;
 			$aad_promo  = $results['aad_promo'] ?? null;
 			$results['funnel_closing']    = '';
 			$results['leader_results']    = AIRB_Leader_Results::build(
@@ -149,7 +149,7 @@ class AIRB_Funnel {
 			'governance'           => __( 'AI Policy', 'ai-risk-benchmark' ),
 			'human_oversight'      => __( 'Staff Training', 'ai-risk-benchmark' ),
 			'assessment_integrity' => __( 'Assessment Controls', 'ai-risk-benchmark' ),
-			'ai_dependency'        => __( 'AI Dependency', 'ai-risk-benchmark' ),
+			'ai_dependency'        => __( 'Independent Practice', 'ai-risk-benchmark' ),
 			'privacy'              => __( 'Data Protection', 'ai-risk-benchmark' ),
 		);
 		$band_rank = array( 'low' => 0, 'moderate' => 1, 'high' => 2, 'critical' => 3 );
@@ -252,7 +252,7 @@ class AIRB_Funnel {
 		$band_rank = array( 'low' => 0, 'moderate' => 1, 'high' => 2, 'critical' => 3 );
 
 		if ( self::domain_at_least( $domains, 'governance', 'moderate' ) ) {
-			$actions[] = __( 'Implement or refresh your AI policy (AI Policy Generator)', 'ai-risk-benchmark' );
+			$actions[] = __( 'Implement or refresh your AI policy (adapt the DfE AI policy template)', 'ai-risk-benchmark' );
 		}
 		if ( self::domain_at_least( $domains, 'human_oversight', 'moderate' ) ) {
 			$actions[] = __( 'Train staff on verification and human oversight', 'ai-risk-benchmark' );
@@ -298,14 +298,14 @@ class AIRB_Funnel {
 	}
 
 	/**
-	 * Policy Generator offer when governance is weak.
+	 * AI policy support offer (official DfE template) when governance is weak.
 	 *
 	 * @param array<string, array<string, mixed>> $domain_scores Scores.
 	 * @param array<string, string>               $profile       Profile.
 	 * @param array<string, mixed>                  $config        Config.
 	 * @return array<string, string>|null
 	 */
-	public static function policy_generator_offer( array $domain_scores, array $profile, array $config ): ?array {
+	public static function policy_support_offer( array $domain_scores, array $profile, array $config ): ?array {
 		if ( ! self::domain_at_least( $domain_scores, 'governance', 'moderate' ) ) {
 			return null;
 		}
@@ -313,7 +313,7 @@ class AIRB_Funnel {
 		$services = (array) ( $config['services'] ?? array() );
 		$url      = AIRB_Defaults::dfe_url_using_ai();
 		foreach ( (array) ( $services['items'] ?? array() ) as $item ) {
-			if ( false !== stripos( (string) ( $item['label'] ?? '' ), 'Policy Generator' ) ) {
+			if ( false !== stripos( (string) ( $item['label'] ?? '' ), 'AI Policy' ) ) {
 				$url = (string) ( $item['url'] ?? $url );
 				break;
 			}
@@ -323,15 +323,15 @@ class AIRB_Funnel {
 		$body        = $profile_txt
 			? sprintf(
 				/* translators: %s: school profile e.g. "Secondary · Standalone school" */
-				__( 'Audit complete — school profile identified (%s). Generate a draft AI policy tailored to your phase, structure, usage patterns and governance maturity — not a static PDF.', 'ai-risk-benchmark' ),
+				__( 'Audit complete — school profile identified (%s). The DfE publishes a free AI policy template you can adapt to your phase, structure and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' ),
 				$profile_txt
 			)
-			: __( 'Audit complete. Generate a draft AI policy tailored to your school phase, structure, teacher and student AI usage, governance maturity and assessment approach.', 'ai-risk-benchmark' );
+			: __( 'Audit complete. Adapt the official DfE AI policy template to your school phase, structure, AI usage and governance maturity. Contact the AI Awareness Day team if you need support tailoring it.', 'ai-risk-benchmark' );
 
 		return array(
-			'title'    => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
+			'title'    => __( 'Develop your AI policy', 'ai-risk-benchmark' ),
 			'body'     => $body,
-			'cta_text' => __( 'Start AI Policy Generator', 'ai-risk-benchmark' ),
+			'cta_text' => __( 'View DfE AI policy template', 'ai-risk-benchmark' ),
 			'cta_url'  => $url,
 		);
 	}

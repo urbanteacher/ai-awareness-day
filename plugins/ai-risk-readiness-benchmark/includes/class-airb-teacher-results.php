@@ -42,7 +42,7 @@ class AIRB_Teacher_Results {
 		$opps      = self::detect_opportunities( $results, $cfg );
 		$champion  = self::champion_pathway( $results, $cfg, $tier );
 		$progress  = self::school_progress( $school );
-		$gap       = $champion ? null : self::format_gap_products( $gap_products, $cfg );
+		$gap       = $champion ? null : self::format_gap_recommendations( $results, $gap_products, $cfg );
 
 		return array(
 			'performance_tier'     => $tier,
@@ -67,13 +67,13 @@ class AIRB_Teacher_Results {
 		$alignment = (int) ( $results['alignment_score'] ?? 0 );
 		$risk      = (float) ( $results['overall_risk_percentage'] ?? 100 );
 
-		if ( $alignment >= 75 && $risk <= 30 ) {
+		if ( $alignment >= 76 && $risk <= 30 ) {
 			return 'strong';
 		}
-		if ( $alignment >= 60 ) {
+		if ( $alignment >= 51 ) {
 			return 'established';
 		}
-		if ( $alignment >= 45 ) {
+		if ( $alignment >= 26 ) {
 			return 'developing';
 		}
 		return 'emerging';
@@ -182,9 +182,10 @@ class AIRB_Teacher_Results {
 	 * @return array<string, mixed>
 	 */
 	private static function benchmark_summary( array $results, array $cfg ): array {
-		$oversight = (int) ( $results['human_oversight_readiness'] ?? 0 );
-		if ( $oversight < 1 && isset( $results['human_oversight_ratio'] ) ) {
-			$oversight = (int) $results['human_oversight_ratio'];
+		$ho_domain = (array) ( $results['domain_scores']['human_oversight'] ?? array() );
+		$oversight = (int) round( (float) ( $ho_domain['readiness_percentage'] ?? 0 ) );
+		if ( $oversight < 1 ) {
+			$oversight = (int) ( $results['human_oversight_ratio'] ?? 0 );
 		}
 
 		return array(
@@ -266,27 +267,54 @@ class AIRB_Teacher_Results {
 	}
 
 	/**
+	 * Build priority recommendations from behavioural risk (dependency + privacy).
+	 *
+	 * @param array<string, mixed>              $results  Scored results.
+	 * @param array<int, array<string, string>> $products Stage-2 fallback products.
+	 * @return array<int, string>
+	 */
+	private static function gap_recommendation_items( array $results, array $products ): array {
+		$items   = array();
+		$dep     = (int) ( $results['dependency_index'] ?? 0 );
+		$privacy = (int) round(
+			(float) ( ( $results['domain_scores']['privacy']['readiness_percentage'] ?? 100 ) )
+		);
+
+		if ( $dep >= 40 ) {
+			$items[] = __( 'Verify Before You Trust Framework', 'ai-risk-benchmark' );
+		}
+		if ( $privacy < 70 ) {
+			$items[] = __( 'AI Data Protection Checklist', 'ai-risk-benchmark' );
+		}
+
+		if ( ! $items ) {
+			foreach ( $products as $product ) {
+				$name = (string) ( $product['product'] ?? '' );
+				if ( $name ) {
+					$items[] = $name;
+				}
+			}
+		}
+
+		return array_values( array_unique( array_filter( $items ) ) );
+	}
+
+	/**
+	 * @param array<string, mixed>              $results  Scored results.
 	 * @param array<int, array<string, string>> $products Stage-2 gap products.
 	 * @param array<string, mixed>              $cfg      Teacher config.
 	 * @return array<string, mixed>|null
 	 */
-	private static function format_gap_products( array $products, array $cfg ): ?array {
-		if ( ! $products ) {
-			return null;
-		}
-		$gap = (array) ( $cfg['gap_pathway'] ?? array() );
-		$items = array();
-		foreach ( $products as $product ) {
-			$items[] = (string) ( $product['product'] ?? '' );
-		}
-		$items = array_values( array_filter( $items ) );
+	private static function format_gap_recommendations( array $results, array $products, array $cfg ): ?array {
+		$items = self::gap_recommendation_items( $results, $products );
 		if ( ! $items ) {
 			return null;
 		}
+		$gap = (array) ( $cfg['gap_pathway'] ?? array() );
 		return array(
 			'label' => (string) ( $gap['next_step_label'] ?? __( 'Recommended next step', 'ai-risk-benchmark' ) ),
 			'intro' => (string) ( $gap['intro'] ?? '' ),
-			'items' => $items,
+			'items' => array_slice( $items, 0, 2 ),
 		);
 	}
 }

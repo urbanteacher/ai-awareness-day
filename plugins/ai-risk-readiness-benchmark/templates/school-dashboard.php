@@ -15,7 +15,7 @@ $school = $airb_school_name ?? '';
 <div class="airb airb--dashboard" id="airb-school-dashboard" data-airb-school-dashboard>
 	<div class="airb__intro">
 		<h2 class="airb__title"><?php esc_html_e( 'School-wide AI Risk & Readiness Dashboard', 'ai-risk-benchmark' ); ?></h2>
-		<p class="airb__lead"><?php esc_html_e( 'See how teachers, students, parents and leaders compare — once each group has completed the benchmark with consent.', 'ai-risk-benchmark' ); ?></p>
+		<p class="airb__lead"><?php esc_html_e( 'See how teachers, students, parents and leaders compare — once each group has completed the benchmark.', 'ai-risk-benchmark' ); ?></p>
 	</div>
 
 	<form class="airb__panel airb__school-lookup" id="airb-school-lookup-form">

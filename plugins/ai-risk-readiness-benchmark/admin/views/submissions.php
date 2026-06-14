@@ -3,6 +3,12 @@
  * Admin submissions table.
  *
  * @package AIRB
+ *
+ * @var array<string, mixed>      $filters
+ * @var array<int, object>        $rows
+ * @var int                       $total
+ * @var array<string, string>     $roles
+ * @var array<string, int>        $stats
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +32,18 @@ $export_url = wp_nonce_url(
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'AI Risk Benchmark — Submissions', 'ai-risk-benchmark' ); ?></h1>
-	<p><?php esc_html_e( 'GDPR-friendly: only submissions where consent was given are stored. No student personal data is collected.', 'ai-risk-benchmark' ); ?></p>
+	<p><?php esc_html_e( 'Every completed benchmark is stored with scores and role. School name and email are saved when provided.', 'ai-risk-benchmark' ); ?></p>
+
+	<div class="airb-admin-stats" style="display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0;">
+		<div class="card" style="padding:0.75rem 1rem;">
+			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['total'] ?? 0 ) ); ?></strong>
+			<span><?php esc_html_e( 'Total completions', 'ai-risk-benchmark' ); ?></span>
+		</div>
+		<div class="card" style="padding:0.75rem 1rem;">
+			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['with_school'] ?? 0 ) ); ?></strong>
+			<span><?php esc_html_e( 'With school name', 'ai-risk-benchmark' ); ?></span>
+		</div>
+	</div>
 
 	<form method="get" class="airb-admin-filters">
 		<input type="hidden" name="page" value="airb-benchmark" />
@@ -47,9 +64,10 @@ $export_url = wp_nonce_url(
 		<input type="date" name="date_to" value="<?php echo esc_attr( $filters['date_to'] ); ?>" />
 		<?php submit_button( __( 'Filter', 'ai-risk-benchmark' ), 'secondary', '', false ); ?>
 		<a class="button" href="<?php echo esc_url( $export_url ); ?>"><?php esc_html_e( 'Export CSV', 'ai-risk-benchmark' ); ?></a>
+		<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=airb-funnel' ) ); ?>"><?php esc_html_e( 'Funnel & events', 'ai-risk-benchmark' ); ?></a>
 	</form>
 
-	<p><?php printf( esc_html__( '%d submission(s)', 'ai-risk-benchmark' ), (int) $total ); ?></p>
+	<p><?php printf( esc_html__( '%d submission(s) matching filters', 'ai-risk-benchmark' ), (int) $total ); ?></p>
 
 	<table class="widefat striped">
 		<thead>
@@ -72,7 +90,7 @@ $export_url = wp_nonce_url(
 						<td><?php echo esc_html( (string) $row->id ); ?></td>
 						<td><?php echo esc_html( (string) $row->created_at ); ?></td>
 						<td><?php echo esc_html( $roles[ $row->role ] ?? $row->role ); ?></td>
-						<td><?php echo esc_html( (string) $row->school_name ); ?></td>
+						<td><?php echo esc_html( (string) $row->school_name ?: '—' ); ?></td>
 						<td><?php echo esc_html( ucfirst( (string) $row->risk_level ) ); ?></td>
 						<td><?php echo esc_html( (string) $row->alignment_score ); ?>/100</td>
 						<td><?php echo esc_html( (string) $row->human_oversight_label ); ?></td>
@@ -83,7 +101,8 @@ $export_url = wp_nonce_url(
 	</table>
 
 	<?php
-	$total_pages = (int) ceil( $total / $per_page );
+	$per_page    = (int) ( $filters['limit'] ?? 50 );
+	$total_pages = (int) ceil( $total / max( 1, $per_page ) );
 	if ( $total_pages > 1 ) :
 		$pagination = paginate_links(
 			array(

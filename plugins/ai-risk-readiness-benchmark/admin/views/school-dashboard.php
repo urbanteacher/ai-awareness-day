@@ -13,7 +13,7 @@ $roles = AIRB_Defaults::roles();
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'School-wide dashboard', 'ai-risk-benchmark' ); ?></h1>
-	<p><?php esc_html_e( 'Aggregates consented benchmark submissions by school and stakeholder role.', 'ai-risk-benchmark' ); ?></p>
+	<p><?php esc_html_e( 'Aggregates benchmark submissions by school and stakeholder role.', 'ai-risk-benchmark' ); ?></p>
 
 	<form method="get" class="airb-admin-filters">
 		<input type="hidden" name="page" value="airb-school-dashboard" />
@@ -82,6 +82,6 @@ $roles = AIRB_Defaults::roles();
 
 		<p class="description"><?php esc_html_e( 'Front-end shortcode:', 'ai-risk-benchmark' ); ?> <code>[ai_risk_school_dashboard school="<?php echo esc_attr( $rollup['school_name'] ); ?>"]</code></p>
 	<?php elseif ( $school ) : ?>
-		<p><em><?php esc_html_e( 'No consented submissions found for this school.', 'ai-risk-benchmark' ); ?></em></p>
+		<p><em><?php esc_html_e( 'No submissions found for this school.', 'ai-risk-benchmark' ); ?></em></p>
 	<?php endif; ?>
 </div>

@@ -1,0 +1,193 @@
+/**
+ * AIRB interactive checklist styling.
+ * Scoped under .airb-checklist to avoid clashing with theme styles.
+ */
+.airb-checklist {
+	margin: 1.5rem 0;
+	padding: 1.25rem 1.25rem 0.5rem;
+	border: 1px solid rgba(15, 23, 42, 0.12);
+	border-radius: 14px;
+	background: #fff;
+}
+
+.airb-checklist__section {
+	margin: 1.25rem 0 0.5rem;
+	font-size: 1.15rem;
+}
+
+.airb-checklist__section:first-child {
+	margin-top: 0;
+}
+
+.airb-checklist__group {
+	margin: 1rem 0 0.4rem;
+	font-size: 1rem;
+	color: #334155;
+}
+
+.airb-checklist__list {
+	list-style: none;
+	margin: 0 0 0.75rem;
+	padding: 0;
+}
+
+.airb-checklist__item {
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.airb-checklist__item:last-child {
+	border-bottom: 0;
+}
+
+.airb-checklist__label {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.65rem;
+	padding: 0.6rem 0.25rem;
+	cursor: pointer;
+	line-height: 1.45;
+}
+
+.airb-checklist__cb {
+	flex: 0 0 auto;
+	width: 1.2rem;
+	height: 1.2rem;
+	margin-top: 0.1rem;
+	accent-color: #15803d;
+	cursor: pointer;
+}
+
+.airb-checklist__text {
+	flex: 1 1 auto;
+	color: #1e293b;
+}
+
+.airb-checklist__item.is-checked .airb-checklist__text {
+	color: #64748b;
+	text-decoration: line-through;
+}
+
+/* Controls ----------------------------------------------------------- */
+.airb-checklist__controls {
+	margin-top: 0.75rem;
+	padding-top: 1rem;
+	border-top: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.airb-checklist__count {
+	margin: 0 0 0.4rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: #0f172a;
+}
+
+.airb-checklist__bar {
+	position: relative;
+	height: 10px;
+	border-radius: 999px;
+	background: rgba(15, 23, 42, 0.08);
+	overflow: hidden;
+}
+
+.airb-checklist__bar-fill {
+	display: block;
+	height: 100%;
+	width: 0;
+	border-radius: 999px;
+	background: linear-gradient(90deg, #16a34a, #15803d);
+	transition: width 0.3s ease;
+}
+
+.airb-checklist__rag {
+	display: inline-block;
+	margin-top: 0.6rem;
+	padding: 0.2rem 0.7rem;
+	border-radius: 999px;
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.airb-checklist__rag.is-green {
+	background: rgba(22, 163, 74, 0.14);
+	color: #15803d;
+}
+
+.airb-checklist__rag.is-amber {
+	background: rgba(217, 119, 6, 0.14);
+	color: #b45309;
+}
+
+.airb-checklist__rag.is-red {
+	background: rgba(220, 38, 38, 0.14);
+	color: #b91c1c;
+}
+
+.airb-checklist__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin: 1rem 0 0.75rem;
+}
+
+.airb-checklist__btn {
+	display: inline-block;
+	padding: 0.55rem 1rem;
+	border-radius: 10px;
+	border: 1px solid transparent;
+	font-size: 0.9rem;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.airb-checklist__btn--primary {
+	background: #15803d;
+	color: #fff;
+}
+
+.airb-checklist__btn--primary:hover {
+	background: #166534;
+}
+
+.airb-checklist__btn--team {
+	background: #1d4ed8;
+	color: #fff;
+}
+
+.airb-checklist__btn--team:hover {
+	background: #1e40af;
+}
+
+.airb-checklist__btn--ghost {
+	background: transparent;
+	border-color: rgba(15, 23, 42, 0.2);
+	color: #334155;
+}
+
+.airb-checklist__btn--ghost:hover {
+	border-color: rgba(15, 23, 42, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+	.airb-checklist {
+		background: #0f172a;
+		border-color: rgba(148, 163, 184, 0.25);
+	}
+
+	.airb-checklist__text {
+		color: #e2e8f0;
+	}
+
+	.airb-checklist__group {
+		color: #cbd5e1;
+	}
+
+	.airb-checklist__count {
+		color: #f1f5f9;
+	}
+}

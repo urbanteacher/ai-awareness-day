@@ -181,8 +181,7 @@ class AIRB_Config {
 			$id    = (string) ( $item['id'] ?? '' );
 
 			if ( 'leader_no_policy' === $id
-				|| false !== stripos( $title, 'AI Policy Generator' )
-				|| false !== stripos( $title, 'published AI policy' ) ) {
+				|| false !== stripos( $title, 'AI policy' ) ) {
 				$item['cta_url'] = $policy_url;
 			}
 
@@ -208,7 +207,7 @@ class AIRB_Config {
 				if ( ! is_array( $service ) ) {
 					continue;
 				}
-				if ( false !== stripos( (string) ( $service['label'] ?? '' ), 'Policy Generator' ) ) {
+				if ( false !== stripos( (string) ( $service['label'] ?? '' ), 'AI Policy' ) ) {
 					$service['url'] = $policy_url;
 				}
 			}

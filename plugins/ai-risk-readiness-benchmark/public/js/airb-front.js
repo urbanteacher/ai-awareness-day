@@ -18,6 +18,7 @@
 	var leaderResult = cfg.leader_result || {};
 	var improvementHub = cfg.improvement_hub || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
+	var SESSION_KEY = 'airb_session_id_v1';
 	var introCollapsed = false;
 
 	var state = {
@@ -30,7 +31,6 @@
 		results: null,
 		school: '',
 		email: '',
-		consent: false,
 		schoolPhase: '',
 		orgType: '',
 		yearGroup: '',
@@ -55,7 +55,43 @@
 		root: document.getElementById('airb-benchmark'),
 	};
 
-	var introCollapsed = false;
+	function getSessionId() {
+		try {
+			var id = localStorage.getItem(SESSION_KEY);
+			if (!id) {
+				id = 'ses_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 11);
+				localStorage.setItem(SESSION_KEY, id);
+			}
+			return id;
+		} catch (e) {
+			return 'ses_' + Date.now().toString(36);
+		}
+	}
+
+	function appendSessionToUrl(url) {
+		if (!url || url.indexOf('mailto:') === 0) return url;
+		var sep = url.indexOf('?') >= 0 ? '&' : '?';
+		return url + sep + 'airb_session=' + encodeURIComponent(getSessionId());
+	}
+
+	function trackEvent(eventType, metadata) {
+		if (!airbBenchmark.ajaxurl || !eventType) return;
+		var body = new FormData();
+		body.append('action', 'airb_track_event');
+		body.append('nonce', airbBenchmark.nonce);
+		body.append('session_id', getSessionId());
+		body.append('event_type', eventType);
+		body.append('role', state.role || '');
+		if (state.submissionId) {
+			body.append('submission_id', String(state.submissionId));
+		}
+		body.append('metadata', JSON.stringify(metadata || {}));
+		if (navigator.sendBeacon) {
+			navigator.sendBeacon(airbBenchmark.ajaxurl, body);
+			return;
+		}
+		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin', keepalive: true }).catch(function () {});
+	}
 
 	function isMobileFlow() {
 		return window.matchMedia('(max-width: 768px)').matches;
@@ -181,9 +217,9 @@
 	function readinessLevel(pct) {
 		var r = Math.max(0, Math.min(100, parseInt(pct, 10) || 0));
 		var labels = (i18n.bandsReadiness || {});
-		if (r >= 75) return { slug: 'strong', label: labels.strong || 'Strong' };
-		if (r >= 60) return { slug: 'established', label: labels.established || 'Established' };
-		if (r >= 45) return { slug: 'developing', label: labels.developing || 'Developing' };
+		if (r >= 76) return { slug: 'strong', label: labels.strong || 'Strong' };
+		if (r >= 51) return { slug: 'established', label: labels.established || 'Established' };
+		if (r >= 26) return { slug: 'developing', label: labels.developing || 'Developing' };
 		return { slug: 'emerging', label: labels.emerging || 'Emerging' };
 	}
 
@@ -308,6 +344,10 @@
 	}
 
 	function oversightGaugeValue(r) {
+		var ho = r.domain_scores && r.domain_scores.human_oversight;
+		if (ho && ho.questions_answered) {
+			return Math.round(ho.readiness_percentage);
+		}
 		if (typeof r.human_oversight_ratio === 'number') return r.human_oversight_ratio;
 		if (typeof r.human_oversight_readiness === 'number' && r.human_oversight_readiness > 0) {
 			return r.human_oversight_readiness;
@@ -384,9 +424,8 @@
 		});
 		if (!vals.length) return { pct: null, label: 'Not assessed', readiness: 0 };
 		var readiness = Math.round(vals.reduce(function (a, b) { return a + b; }, 0) / vals.length);
-		var label = modifyPct !== null ? oversightLabel(modifyPct) :
-			(readiness >= 51 ? 'Strong oversight' : readiness >= 26 ? 'Moderate oversight' : readiness >= 11 ? 'High reliance' : 'Critical reliance');
-		return { pct: modifyPct, label: label, readiness: readiness };
+		var label = oversightLabel(readiness);
+		return { pct: readiness, label: label, readiness: readiness };
 	}
 
 	function roleResultCards(role, results) {
@@ -927,7 +966,29 @@
 			rows += '<span class="airb__res-row-pc">' + pct + '%</span></div>';
 		});
 		if (!rows) return '';
-		return '<div class="airb__res-panel airb__res-panel--domains"><h3>' + esc(i18n.domainBreakdown || 'Domain breakdown') + '</h3>' + rows + '</div>';
+		return '<div class="airb__res-panel airb__res-panel--domains"><h3>' + esc(i18n.readinessBreakdown || 'Readiness breakdown') + '</h3>' + rows + '</div>';
+	}
+
+	function riskIndicatorsHtml(r) {
+		if (isParentRole() || (isLeaderRole() && !!r.leader_results)) return '';
+
+		var rows = '';
+		var dep = r.dependency_index;
+		if (roleShowsDependency(state.role) && typeof dep === 'number') {
+			rows += '<div class="airb__res-row airb__res-row--risk">';
+			rows += '<span class="airb__res-row-nm">' + esc(i18n.dependencyRisk || 'AI Dependency Risk') + '</span>';
+			rows += '<span class="airb__res-track"><i style="width:' + dep + '%;background:' + esc(dependencyColor(dep)) + '"></i></span>';
+			rows += '<span class="airb__res-row-pc" style="color:' + esc(dependencyColor(dep)) + '">' + dep + '%</span></div>';
+		}
+
+		var risk = Math.round(r.overall_risk_percentage || 0);
+		rows += '<div class="airb__res-row airb__res-row--risk">';
+		rows += '<span class="airb__res-row-nm">' + esc(i18n.statRisk || 'AI risk score') + '</span>';
+		rows += '<span class="airb__res-track"><i style="width:' + risk + '%;background:' + esc(riskScoreColor(risk)) + '"></i></span>';
+		rows += '<span class="airb__res-row-pc" style="color:' + esc(riskScoreColor(risk)) + '">' + risk + '%</span></div>';
+
+		if (!rows) return '';
+		return '<div class="airb__res-panel airb__res-panel--domains airb__res-panel--risk"><h3>' + esc(i18n.riskIndicators || 'Risk indicators') + '</h3>' + rows + '</div>';
 	}
 
 	function oversightPanelHtml(r) {
@@ -1380,7 +1441,7 @@
 			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNa || 'Not measured for this audience.') + '</div>';
 		} else {
 			html += '<div class="airb__res-stat-big" style="color:' + esc(dependencyColor(depVal)) + '" data-count="' + depVal + '">' + depVal + '%</div>';
-			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNote || 'Higher means greater reliance on AI.') + '</div>';
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNote || 'Risk indicator — higher means greater reliance on AI.') + '</div>';
 		}
 		}
 		html += '</div>';
@@ -1397,6 +1458,7 @@
 			/* Governance content follows in leaderResultsHtml. */
 		} else if (isTeacherRole() || studentMode) {
 			html += domainReadinessRowsHtml(r);
+			html += riskIndicatorsHtml(r);
 			if (isTeacherRole() && r.teacher_results && r.teacher_results.benchmark_summary) {
 				var tbs = r.teacher_results.benchmark_summary;
 				html += summaryMetricsSectionHtml(
@@ -1453,7 +1515,7 @@
 				'</div>';
 		});
 		html += '</div>';
-		html += '<p class="airb__benchmark-note">' + esc((i.sampleNote || 'Based on {n} consented submissions for your role.').replace('{n}', b.sample_size)) + '</p>';
+		html += '<p class="airb__benchmark-note">' + esc((i.sampleNote || 'Based on {n} submissions for your role.').replace('{n}', b.sample_size)) + '</p>';
 		return html + '</section>';
 	}
 
@@ -1544,7 +1606,9 @@
 				html += '<ul class="airb__guided-resources">';
 				block.resources.forEach(function (res) {
 					var kindLabel = kinds[res.kind] || res.kind || 'Read';
-					html += '<li><a href="' + esc(res.url) + '" class="airb__guided-link airb__guided-link--' + esc(res.kind || 'read') + '"><span class="airb__guided-kind">' + esc(kindLabel) + '</span> ' + esc(res.label) + '</a></li>';
+					var linkUrl = appendSessionToUrl(res.url || '');
+					var pillar = block.slug || '';
+					html += '<li><a href="' + esc(linkUrl) + '" class="airb__guided-link airb__guided-link--' + esc(res.kind || 'read') + '" data-airb-track="guided" data-airb-pillar="' + esc(pillar) + '" data-airb-kind="' + esc(res.kind || 'read') + '" data-airb-label="' + esc(res.label || '') + '"><span class="airb__guided-kind">' + esc(kindLabel) + '</span> ' + esc(res.label) + '</a></li>';
 				});
 				html += '</ul>';
 			}
@@ -1565,7 +1629,7 @@
 			}
 			if (c.closing) html += '<p class="airb__muted">' + esc(c.closing) + '</p>';
 			if (c.cta_url) {
-				html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(c.cta_url) + '">' + esc(c.cta_text || 'Book your free review') + '</a>';
+				html += '<a class="airb__btn airb__btn--primary airb__btn--sm" href="' + esc(appendSessionToUrl(c.cta_url)) + '" data-airb-track="consultation">' + esc(c.cta_text || 'Book your free review') + '</a>';
 			}
 			html += '</aside>';
 		}
@@ -1632,8 +1696,8 @@
 			html += '</section>';
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.policy_generator) {
-			var pg = r.policy_generator;
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.policy_support) {
+			var pg = r.policy_support;
 			html += '<article class="airb__policy-gen airb__pathway-card">';
 			html += '<span class="airb__pathway-badge airb__pathway-badge--policy">' + esc(i18n.policyGen) + '</span>';
 			html += '<h5>' + esc(pg.title) + '</h5><p>' + esc(pg.body) + '</p>';
@@ -1711,9 +1775,51 @@
 		var emailBtn = document.getElementById('airb-email-report');
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
+		bindResultsTracking();
+
 		animateResultsStats();
 		persistRoleCompletion(r.alignment_score);
 		updateAppbarCompletions();
+	}
+
+	function bindResultsTracking() {
+		trackEvent('results_viewed', {
+			alignment_score: state.results && state.results.alignment_score,
+			submission_id: state.submissionId || 0,
+		});
+
+		el.results.querySelectorAll('[data-airb-track="guided"]').forEach(function (link) {
+			link.addEventListener('click', function () {
+				trackEvent('guided_resource_click', {
+					pillar: link.getAttribute('data-airb-pillar') || '',
+					kind: link.getAttribute('data-airb-kind') || '',
+					label: link.getAttribute('data-airb-label') || '',
+					url: link.getAttribute('href') || '',
+				});
+			});
+		});
+
+		var shareBtn = document.getElementById('airb-share-results');
+		if (shareBtn) {
+			shareBtn.addEventListener('click', function () {
+				trackEvent('share_click', {});
+			});
+		}
+
+		var reportBtn = document.getElementById('airb-request-report');
+		if (reportBtn) {
+			reportBtn.addEventListener('click', function () {
+				trackEvent('report_request_click', {});
+			});
+		}
+
+		el.results.querySelectorAll('[data-airb-track="consultation"]').forEach(function (link) {
+			link.addEventListener('click', function () {
+				trackEvent('consultation_click', {
+					url: link.getAttribute('href') || '',
+				});
+			});
+		});
 	}
 
 	function animateResultsStats() {
@@ -1819,7 +1925,7 @@
 				state.email = '';
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 			}
-			state.consent = false;
+
 			state.results = calculate(state.role, state.answers);
 			state.phase = 'results';
 			el.results.innerHTML = '<p class="airb__muted airb__loading">' + esc(i18n.saving || 'Preparing your results…') + '</p>';
@@ -1865,7 +1971,7 @@
 		body.append('answers', JSON.stringify(state.answers));
 		body.append('school_name', state.school);
 		body.append('email', state.email);
-		body.append('consent', state.consent ? '1' : '0');
+		body.append('session_id', getSessionId());
 		body.append('school_phase', state.schoolPhase);
 		body.append('org_type', state.orgType);
 		body.append('year_group', state.yearGroup);
@@ -1875,6 +1981,9 @@
 			.then(function (json) {
 				if (json.success && json.data && json.data.results) {
 					state.results = json.data.results;
+				}
+				if (json.success && json.data && json.data.submission_id) {
+					state.submissionId = parseInt(json.data.submission_id, 10) || 0;
 				}
 				if (done) done();
 			})
@@ -1988,8 +2097,10 @@
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
-				if (json.success) showError(i18n.emailed);
-				else showError((json.data && json.data.message) || i18n.error);
+				if (json.success) {
+					trackEvent('email_report', { email: state.email });
+					showError(i18n.emailed);
+				} else showError((json.data && json.data.message) || i18n.error);
 			})
 			.catch(function () { showError(i18n.error); });
 	}

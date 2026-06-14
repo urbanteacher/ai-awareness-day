@@ -133,13 +133,13 @@ class AIRB_Student_Results {
 	private static function performance_tier( array $results ): string {
 		$alignment = (int) ( $results['alignment_score'] ?? 0 );
 
-		if ( $alignment >= 75 ) {
+		if ( $alignment >= 76 ) {
 			return 'strong';
 		}
-		if ( $alignment >= 55 ) {
+		if ( $alignment >= 51 ) {
 			return 'established';
 		}
-		if ( $alignment >= 40 ) {
+		if ( $alignment >= 26 ) {
 			return 'developing';
 		}
 		return 'emerging';

@@ -88,11 +88,10 @@ class AIRB_Pathway {
 	 *
 	 * @param string               $role    Role slug.
 	 * @param array<string, mixed> $config  Plugin config.
-	 * @param string               $school  School name from submission.
-	 * @param bool                 $consent Consent flag.
+	 * @param string               $school School name from submission.
 	 * @return array<string, mixed>|null
 	 */
-	public static function build_gateway( string $role, array $config, string $school = '', bool $consent = false ): ?array {
+	public static function build_gateway( string $role, array $config, string $school = '' ): ?array {
 		if ( ! in_array( $role, array( 'teacher', 'leader' ), true ) ) {
 			return null;
 		}
@@ -109,7 +108,7 @@ class AIRB_Pathway {
 				continue;
 			}
 			$url = (string) ( $item['cta_url'] ?? '' );
-			if ( 'track_progress' === $key && $school && $consent ) {
+			if ( 'track_progress' === $key && $school ) {
 				$url = add_query_arg( 'school', rawurlencode( $school ), $url ? $url : self::default_track_url() ) . '#airb-school-dashboard';
 			}
 			$cards[] = array(

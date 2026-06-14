@@ -22,6 +22,8 @@ class AIRB_Ajax {
 		add_action( 'wp_ajax_nopriv_airb_submit_benchmark', array( __CLASS__, 'submit' ) );
 		add_action( 'wp_ajax_airb_email_report', array( __CLASS__, 'email_report' ) );
 		add_action( 'wp_ajax_nopriv_airb_email_report', array( __CLASS__, 'email_report' ) );
+		add_action( 'wp_ajax_airb_track_event', array( __CLASS__, 'track_event' ) );
+		add_action( 'wp_ajax_nopriv_airb_track_event', array( __CLASS__, 'track_event' ) );
 	}
 
 	/**
@@ -41,7 +43,7 @@ class AIRB_Ajax {
 
 		$role    = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
 		$answers = isset( $_POST['answers'] ) ? json_decode( wp_unslash( (string) $_POST['answers'] ), true ) : array();
-		$consent = ! empty( $_POST['consent'] );
+		$session_id = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
 
 		if ( ! $role || ! is_array( $answers ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid submission.', 'ai-risk-benchmark' ) ) );
@@ -58,7 +60,7 @@ class AIRB_Ajax {
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
 		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school );
-		$results['gateway'] = AIRB_Pathway::build_gateway( $role, $config, $school, $consent );
+		$results['gateway'] = AIRB_Pathway::build_gateway( $role, $config, $school );
 
 		if ( ! empty( $results['aad_promo']['cta_url'] ) && is_array( $results['gateway'] ) ) {
 			$promo = $results['aad_promo'];
@@ -81,29 +83,42 @@ class AIRB_Ajax {
 			$answers['_year_group'] = $profile['year_group'];
 		}
 
-		$id = 0;
-		if ( $consent ) {
-			$id = AIRB_Database::insert(
+		$id = AIRB_Database::insert(
+			array(
+				'session_id'             => $session_id,
+				'role'                   => $role,
+				'school_name'            => $school,
+				'email'                  => $email,
+				'consent'                => 1,
+				'contact_opt_in'         => 0,
+				'risk_level'             => $results['risk_level'],
+				'alignment_score'        => $results['alignment_score'],
+				'dependency_index'       => $results['dependency_index'],
+				'human_oversight_label'  => $results['human_oversight_label'],
+				'privacy_risk'           => $results['privacy_risk'],
+				'safeguarding_readiness' => $results['safeguarding_readiness'],
+				'governance_maturity'    => $results['governance_maturity'],
+				'domain_scores'          => $results['domain_scores'],
+				'answers'                => $answers,
+				'recommendations'        => $results['recommendations'],
+			)
+		);
+
+		if ( $id && $session_id ) {
+			AIRB_Events::insert(
 				array(
-					'role'                   => $role,
-					'school_name'            => $school,
-					'email'                  => $email,
-					'consent'                => 1,
-					'risk_level'             => $results['risk_level'],
-					'alignment_score'        => $results['alignment_score'],
-					'dependency_index'       => $results['dependency_index'],
-					'human_oversight_label'  => $results['human_oversight_label'],
-					'privacy_risk'           => $results['privacy_risk'],
-					'safeguarding_readiness' => $results['safeguarding_readiness'],
-					'governance_maturity'    => $results['governance_maturity'],
-					'domain_scores'          => $results['domain_scores'],
-					'answers'                => $answers,
-					'recommendations'        => $results['recommendations'],
+					'session_id'    => $session_id,
+					'submission_id' => $id,
+					'event_type'    => 'benchmark_completed',
+					'role'          => $role,
+					'metadata'      => array(
+						'alignment_score' => (int) ( $results['alignment_score'] ?? 0 ),
+					),
 				)
 			);
 		}
 
-		if ( $consent && $school && ! empty( $results['leader_results'] ) ) {
+		if ( $school && ! empty( $results['leader_results'] ) ) {
 			$rollout = AIRB_Leader_Results::school_rollout_counts( $school );
 			$results['leader_results']['school_rollout'] = $rollout;
 			if ( ! empty( $results['leader_results']['next_steps']['cards'] ) ) {
@@ -284,11 +299,11 @@ class AIRB_Ajax {
 				(string) ( $results['consultation_pitch']['cta_url'] ?? '' )
 			);
 		}
-		if ( ! empty( $results['policy_generator'] ) && is_array( $results['policy_generator'] ) ) {
-			$results['policy_generator']['cta_url'] = self::resolve_cta_url(
-				(string) ( $results['policy_generator']['title'] ?? __( 'AI Policy Generator', 'ai-risk-benchmark' ) ),
+		if ( ! empty( $results['policy_support'] ) && is_array( $results['policy_support'] ) ) {
+			$results['policy_support']['cta_url'] = self::resolve_cta_url(
+				(string) ( $results['policy_support']['title'] ?? __( 'Develop your AI policy', 'ai-risk-benchmark' ) ),
 				$role,
-				(string) ( $results['policy_generator']['cta_url'] ?? '' )
+				(string) ( $results['policy_support']['cta_url'] ?? '' )
 			);
 		}
 
@@ -364,5 +379,42 @@ class AIRB_Ajax {
 		set_transient( $rate_key, $count + 1, HOUR_IN_SECONDS );
 
 		wp_send_json_success( array( 'message' => __( 'Report sent.', 'ai-risk-benchmark' ) ) );
+	}
+
+	/**
+	 * Record a front-end funnel event (anonymous session).
+	 */
+	public static function track_event(): void {
+		self::verify_nonce();
+
+		$event_type = sanitize_key( (string) ( $_POST['event_type'] ?? '' ) );
+		$session_id = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
+		$role       = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
+		$submission = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+		$metadata   = isset( $_POST['metadata'] ) ? json_decode( wp_unslash( (string) $_POST['metadata'] ), true ) : array();
+
+		if ( ! $event_type || ! $session_id ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid event.', 'ai-risk-benchmark' ) ) );
+		}
+
+		if ( ! is_array( $metadata ) ) {
+			$metadata = array();
+		}
+
+		$id = AIRB_Events::insert(
+			array(
+				'session_id'    => $session_id,
+				'submission_id' => $submission,
+				'event_type'    => $event_type,
+				'role'          => $role,
+				'metadata'      => $metadata,
+			)
+		);
+
+		if ( ! $id ) {
+			wp_send_json_error( array( 'message' => __( 'Could not record event.', 'ai-risk-benchmark' ) ) );
+		}
+
+		wp_send_json_success( array( 'event_id' => $id ) );
 	}
 }

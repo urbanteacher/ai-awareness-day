@@ -275,13 +275,13 @@ class AIRB_Scoring {
 	 * @param int $readiness Readiness 0-100.
 	 */
 	public static function readiness_band( int $readiness ): string {
-		if ( $readiness >= 75 ) {
+		if ( $readiness >= 76 ) {
 			return 'strong';
 		}
-		if ( $readiness >= 60 ) {
+		if ( $readiness >= 51 ) {
 			return 'established';
 		}
-		if ( $readiness >= 45 ) {
+		if ( $readiness >= 26 ) {
 			return 'developing';
 		}
 		return 'emerging';
@@ -517,23 +517,12 @@ class AIRB_Scoring {
 		}
 
 		$readiness = (int) round( array_sum( $readiness_vals ) / count( $readiness_vals ) );
-
-		if ( null !== $modify_pct ) {
-			$label = self::human_oversight_label( $modify_pct );
-		} elseif ( $readiness >= 51 ) {
-			$label = __( 'Strong oversight', 'ai-risk-benchmark' );
-		} elseif ( $readiness >= 26 ) {
-			$label = __( 'Moderate oversight', 'ai-risk-benchmark' );
-		} elseif ( $readiness >= 11 ) {
-			$label = __( 'High reliance', 'ai-risk-benchmark' );
-		} else {
-			$label = __( 'Critical reliance', 'ai-risk-benchmark' );
-		}
+		$label     = self::human_oversight_label( $readiness );
 
 		return array(
 			'readiness' => $readiness,
 			'label'     => $label,
-			'pct'       => $modify_pct,
+			'pct'       => $readiness,
 		);
 	}
 
@@ -678,8 +667,13 @@ class AIRB_Scoring {
 
 		$recommendations = self::match_recommendations( $domain_scores, (array) ( $config['recommendations'] ?? array() ), $role );
 
-		$human_oversight_pct   = $oversight['pct'];
-		$human_oversight_label = $oversight['label'];
+		$human_oversight_pct   = (int) ( $oversight['readiness'] ?? 0 );
+		$human_oversight_label = (string) ( $oversight['label'] ?? '' );
+		$ho_domain             = (array) ( $domain_scores['human_oversight'] ?? array() );
+		if ( (int) ( $ho_domain['questions_answered'] ?? 0 ) > 0 ) {
+			$human_oversight_pct   = (int) round( (float) ( $ho_domain['readiness_percentage'] ?? $human_oversight_pct ) );
+			$human_oversight_label = self::human_oversight_label( $human_oversight_pct );
+		}
 
 		$key_exposure = self::key_exposure_areas( $domain_scores );
 

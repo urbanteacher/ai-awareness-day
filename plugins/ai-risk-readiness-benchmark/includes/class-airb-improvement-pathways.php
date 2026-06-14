@@ -50,7 +50,7 @@ class AIRB_Improvement_Pathways {
 		);
 
 		if ( 'leader' === $role && ! empty( $cfg['leader_consultation'] ) ) {
-			$out['consultation'] = self::consultation_block( (array) $cfg['leader_consultation'] );
+			$out['consultation'] = self::consultation_block( (array) $cfg['leader_consultation'], $role );
 		}
 
 		return $out;
@@ -80,7 +80,7 @@ class AIRB_Improvement_Pathways {
 			if ( $readiness >= self::WEAK_READINESS_MAX ) {
 				continue;
 			}
-			$blocks[] = self::format_block( (array) $pillar, $readiness, 'readiness' );
+			$blocks[] = self::format_block( (array) $pillar, $readiness, 'readiness', $role );
 		}
 
 		foreach ( (array) ( $role_cfg['metrics'] ?? array() ) as $metric_slug => $pillar ) {
@@ -99,11 +99,11 @@ class AIRB_Improvement_Pathways {
 			if ( 'risk' === $type && $score < ( 100 - self::WEAK_READINESS_MAX ) ) {
 				continue;
 			}
-			$blocks[] = self::format_block( $pillar, $score, $type );
+			$blocks[] = self::format_block( $pillar, $score, $type, $role );
 		}
 
 		if ( 'parent' === $role ) {
-			$blocks = array_merge( $blocks, self::parent_display_blocks( $results, $role_cfg ) );
+			$blocks = array_merge( $blocks, self::parent_display_blocks( $results, $role_cfg, $role ) );
 		}
 
 		return $blocks;
@@ -134,7 +134,7 @@ class AIRB_Improvement_Pathways {
 	 * @param array<string, mixed> $role_cfg Role hub config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function parent_display_blocks( array $results, array $role_cfg ): array {
+	private static function parent_display_blocks( array $results, array $role_cfg, string $role ): array {
 		$blocks  = array();
 		$display = (array) ( $results['parent_display_domains'] ?? array() );
 		$map     = (array) ( $role_cfg['parent_domains'] ?? array() );
@@ -150,11 +150,11 @@ class AIRB_Improvement_Pathways {
 				if ( $value < ( 100 - self::WEAK_READINESS_MAX ) ) {
 					continue;
 				}
-				$blocks[] = self::format_block( (array) $pillar, $value, 'risk' );
+				$blocks[] = self::format_block( (array) $pillar, $value, 'risk', $role );
 			} elseif ( $value >= self::WEAK_READINESS_MAX ) {
 				continue;
 			} else {
-				$blocks[] = self::format_block( (array) $pillar, $value, 'readiness' );
+				$blocks[] = self::format_block( (array) $pillar, $value, 'readiness', $role );
 			}
 		}
 
@@ -165,16 +165,19 @@ class AIRB_Improvement_Pathways {
 	 * @param array<string, mixed> $pillar Pillar config.
 	 * @param int                    $score  Display score.
 	 * @param string                 $type   readiness|dependency|risk.
+	 * @param string                 $role   Role slug for tracking URLs.
 	 * @return array<string, mixed>
 	 */
-	private static function format_block( array $pillar, int $score, string $type ): array {
+	private static function format_block( array $pillar, int $score, string $type, string $role ): array {
+		$ref       = (string) ( $pillar['slug'] ?? '' );
 		$resources = array();
 		foreach ( (array) ( $pillar['resources'] ?? array() ) as $res ) {
 			$res = (array) $res;
 			$resources[] = array(
 				'kind'  => (string) ( $res['kind'] ?? 'read' ),
 				'label' => (string) ( $res['label'] ?? '' ),
-				'url'   => AIRB_Defaults::hub_page_url( (string) ( $res['path'] ?? '' ) ),
+				'url'   => AIRB_Defaults::hub_tracking_url( (string) ( $res['path'] ?? '' ), $role, $ref ),
+				'path'  => (string) ( $res['path'] ?? '' ),
 			);
 		}
 
@@ -200,17 +203,18 @@ class AIRB_Improvement_Pathways {
 	}
 
 	/**
-	 * @param array<string, mixed> $cfg Consultation config.
+	 * @param array<string, mixed> $cfg  Consultation config.
+	 * @param string               $role Role slug.
 	 * @return array<string, mixed>
 	 */
-	private static function consultation_block( array $cfg ): array {
+	private static function consultation_block( array $cfg, string $role ): array {
 		return array(
 			'title'    => (string) ( $cfg['title'] ?? __( 'Book a free 30-minute AI Readiness Review', 'ai-risk-benchmark' ) ),
 			'intro'    => (string) ( $cfg['intro'] ?? '' ),
 			'items'    => (array) ( $cfg['items'] ?? array() ),
 			'closing'  => (string) ( $cfg['closing'] ?? __( 'No obligation.', 'ai-risk-benchmark' ) ),
 			'cta_text' => (string) ( $cfg['cta_text'] ?? __( 'Book your free review', 'ai-risk-benchmark' ) ),
-			'cta_url'  => AIRB_Defaults::hub_page_url( (string) ( $cfg['cta_path'] ?? 'contact' ) ),
+			'cta_url'  => AIRB_Defaults::hub_tracking_url( (string) ( $cfg['cta_path'] ?? 'contact' ), $role, 'consultation' ),
 		);
 	}
 }
