@@ -36,10 +36,13 @@ if ( $aiad_survey_url === '' ) {
             <div class="campaign-content fade-up">
                 <span class="section-label"><?php esc_html_e( 'Have your say', 'ai-awareness-day' ); ?></span>
                 <h2 class="section-title">
-                    <?php esc_html_e( 'AI Awareness Day 2026 has happened — now it’s time to hear your voice.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'Help shape AI Awareness Day 2027', 'ai-awareness-day' ); ?>
                 </h2>
                 <p class="section-desc">
-                    <?php esc_html_e( 'Tell us how it went for your school or organisation and help shape AI Awareness Day 2027. It takes around 3 minutes.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'Whether you took part in AI Awareness Day or not, we want to hear directly from the educators, school leaders, and computing specialists who made 4 June 2026 such a historic day — and from those who didn’t quite make it this year.', 'ai-awareness-day' ); ?>
+                </p>
+                <p class="section-desc">
+                    <?php esc_html_e( 'Whether you ran a whole-school assembly or never heard about us until now, your feedback is the most important data we have. Tell us what worked, what got in the way, and what you need from us to make 2027 even bigger.', 'ai-awareness-day' ); ?>
                 </p>
                 <div class="hero-cta survey-cta">
                     <a class="hero-cta__btn hero-cta__btn--primary" href="<?php echo esc_url( $aiad_survey_url ); ?>">

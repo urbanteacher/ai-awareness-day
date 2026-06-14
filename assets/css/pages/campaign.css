@@ -44,8 +44,68 @@
   margin-top: 1.5rem;
 }
 
+@media screen and (max-width: 768px) {
+  #survey-cta .survey-cta {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  #survey-cta .survey-cta .hero-cta__btn {
+    display: flex;
+    width: 100%;
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
 #survey-cta {
-  padding-bottom: clamp(0.5rem, 1.25vw, 1rem);
+  background: #000;
+  color: var(--white);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+#survey-cta .container {
+  width: 100%;
+  max-width: none;
+  padding-left: clamp(1.25rem, 4vw, 2.5rem);
+  padding-right: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+#survey-cta .campaign-content {
+  width: 100%;
+  max-width: none;
+}
+
+#survey-cta .section-label {
+  color: var(--gray-400);
+}
+
+#survey-cta .section-title {
+  color: var(--white);
+}
+
+#survey-cta .section-desc {
+  color: var(--gray-300);
+  max-width: none;
+}
+
+#survey-cta .section-desc + .section-desc {
+  margin-top: 1.25rem;
+}
+
+#survey-cta .hero-cta__btn--primary {
+  background: var(--white);
+  color: var(--gray-900);
+  border-color: var(--white);
+}
+
+#survey-cta .hero-cta__btn--primary:hover {
+  background: var(--gray-200);
+  border-color: var(--gray-200);
+  color: var(--gray-900);
 }
 
 #survey-cta + #campaign {
