@@ -22,6 +22,8 @@ class AIRB_Hub_Pages {
 
 	private const PATCH_HUB_CONTACT_CTA = 'airb_hub_contact_cta_v1';
 
+	private const PATCH_HUB_INTEREST_HASH = 'airb_hub_interest_hash_v2';
+
 	/**
 	 * Register front-end hooks (interactive checklist assets).
 	 */
@@ -139,6 +141,7 @@ class AIRB_Hub_Pages {
 			self::maybe_remove_embedded_benchmark();
 			self::maybe_upgrade_intervention_content();
 			self::maybe_fix_hub_contact_cta_links();
+			self::maybe_fix_hub_interest_hash_links();
 			return;
 		}
 
@@ -155,6 +158,7 @@ class AIRB_Hub_Pages {
 		self::maybe_remove_embedded_benchmark();
 		self::maybe_upgrade_intervention_content();
 		self::maybe_fix_hub_contact_cta_links();
+		self::maybe_fix_hub_interest_hash_links();
 	}
 
 	/**
@@ -295,6 +299,52 @@ class AIRB_Hub_Pages {
 		}
 
 		update_option( self::PATCH_HUB_CONTACT_CTA, 'yes', false );
+	}
+
+	/**
+	 * Replace broken #airb-hub-interest?prefill= hash links with data-prefill anchors.
+	 */
+	public static function maybe_fix_hub_interest_hash_links(): void {
+		if ( get_option( self::PATCH_HUB_INTEREST_HASH ) === 'yes' ) {
+			return;
+		}
+
+		if ( ! function_exists( 'get_page_by_path' ) || ! function_exists( 'wp_update_post' ) ) {
+			return;
+		}
+
+		foreach ( AIRB_Defaults::hub_page_definitions() as $def ) {
+			$slug = sanitize_title( (string) ( $def['slug'] ?? '' ) );
+			if ( ! $slug || ! in_array( $slug, AIRB_Hub_Content::intervention_slugs(), true ) ) {
+				continue;
+			}
+
+			$existing = get_page_by_path( $slug, OBJECT, 'page' );
+			if ( ! $existing instanceof WP_Post ) {
+				continue;
+			}
+
+			$current = (string) $existing->post_content;
+			if ( false === strpos( $current, '#airb-hub-interest?' ) ) {
+				continue;
+			}
+
+			$content = (string) ( $def['content'] ?? '' );
+			if ( ! $content ) {
+				$excerpt = (string) ( $def['excerpt'] ?? $existing->post_excerpt );
+				$cta     = __( 'Take the free AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' );
+				$content = AIRB_Hub_Content::for_slug( $slug, $excerpt, $cta );
+			}
+
+			wp_update_post(
+				array(
+					'ID'           => (int) $existing->ID,
+					'post_content' => $content,
+				)
+			);
+		}
+
+		update_option( self::PATCH_HUB_INTEREST_HASH, 'yes', false );
 	}
 
 	/**

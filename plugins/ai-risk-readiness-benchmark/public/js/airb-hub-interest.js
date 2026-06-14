@@ -10,6 +10,7 @@
 	var journey = hub.journey || {};
 	var SESSION_KEY = 'airb_session_id_v1';
 	var SNAPSHOT_KEY = 'airb_results_snapshot_v1';
+	var pendingPrefill = '';
 
 	window.airbHubInterestState = window.airbHubInterestState || {
 		checklistDone: 0,
@@ -58,16 +59,45 @@
 
 	function getPrefillFromUrl() {
 		var hash = window.location.hash || '';
-		if (hash.indexOf('airb-hub-interest') !== 0 && hash.indexOf('#airb-hub-interest') !== 0) {
-			var params = new URLSearchParams(window.location.search);
-			return params.get('prefill') || '';
+		if (hash.indexOf('airb-hub-interest') >= 0 && hash.indexOf('?') >= 0) {
+			var q = hash.split('?').slice(1).join('?');
+			try {
+				var fromHash = new URLSearchParams(q).get('prefill') || '';
+				if (fromHash) return fromHash;
+			} catch (e) {
+				/* ignore */
+			}
 		}
-		var q = hash.split('?')[1] || '';
 		try {
-			return new URLSearchParams(q).get('prefill') || '';
-		} catch (e) {
+			return new URLSearchParams(window.location.search).get('prefill') || '';
+		} catch (e2) {
 			return '';
 		}
+	}
+
+	function isHubInterestHash() {
+		return (window.location.hash || '').indexOf('airb-hub-interest') >= 0;
+	}
+
+	function prefillFromLink(link) {
+		if (!link) return '';
+		var fromData = link.getAttribute('data-airb-hub-prefill');
+		if (fromData) return fromData;
+		var href = link.getAttribute('href') || '';
+		if (href.indexOf('?') >= 0) {
+			try {
+				return new URLSearchParams(href.split('?').slice(1).join('?')).get('prefill') || '';
+			} catch (e) {
+				return '';
+			}
+		}
+		return '';
+	}
+
+	function cleanHubInterestHash() {
+		if (!window.history || !window.history.replaceState || !isHubInterestHash()) return;
+		var path = window.location.pathname + window.location.search + '#airb-hub-interest';
+		window.history.replaceState(null, '', path);
 	}
 
 	function loadSnapshot() {
@@ -350,7 +380,10 @@
 		mount.innerHTML = html;
 		bindJourneyInteractions(mount, context, j, jc);
 		bindPrefillLinks();
-		applyPrefill(getPrefillFromUrl());
+		applyPrefill(pendingPrefill || getPrefillFromUrl());
+		if (isHubInterestHash()) {
+			navigateToHubInterest(pendingPrefill || getPrefillFromUrl(), false);
+		}
 	}
 
 	function bindJourneyInteractions(mount, context, j, jc) {
@@ -384,33 +417,44 @@
 
 	function applyPrefill(prefill) {
 		if (!prefill) return;
+		pendingPrefill = prefill;
 		var section = document.getElementById('airb-hub-interest');
 		if (!section) return;
 		var details = section.querySelector('.airb-hub-support');
 		if (details) details.open = true;
+		var applied = false;
 		section.querySelectorAll('input[name="interests[]"]').forEach(function (input) {
-			if (input.value === prefill) input.checked = true;
+			if (input.value === prefill) {
+				input.checked = true;
+				applied = true;
+			}
 		});
+		if (applied) pendingPrefill = '';
+	}
+
+	function navigateToHubInterest(prefill, smooth) {
+		var section = document.getElementById('airb-hub-interest');
+		if (!section) return false;
+		if (prefill) pendingPrefill = prefill;
+		var details = section.querySelector('.airb-hub-support');
+		if (details) details.open = true;
+		try {
+			section.scrollIntoView({ behavior: smooth === false ? 'auto' : 'smooth', block: 'start' });
+		} catch (e) {
+			section.scrollIntoView(true);
+		}
+		applyPrefill(prefill || pendingPrefill || '');
+		cleanHubInterestHash();
+		return true;
 	}
 
 	function bindPrefillLinks() {
-		document.querySelectorAll('a[href^="#airb-hub-interest"]').forEach(function (link) {
+		document.querySelectorAll('a[href^="#airb-hub-interest"], a[data-airb-hub-prefill]').forEach(function (link) {
+			if (link._airbHubPrefillBound) return;
+			link._airbHubPrefillBound = true;
 			link.addEventListener('click', function (e) {
 				e.preventDefault();
-				var href = link.getAttribute('href') || '';
-				var prefill = '';
-				if (href.indexOf('?') >= 0) {
-					try {
-						prefill = new URLSearchParams(href.split('?')[1]).get('prefill') || '';
-					} catch (err) { /* ignore */ }
-				}
-				var section = document.getElementById('airb-hub-interest');
-				if (section) {
-					var details = section.querySelector('.airb-hub-support');
-					if (details) details.open = true;
-					section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				}
-				applyPrefill(prefill);
+				navigateToHubInterest(prefillFromLink(link));
 			});
 		});
 	}
@@ -557,6 +601,11 @@
 	}
 
 	function init() {
+		bindPrefillLinks();
+		if (isHubInterestHash()) {
+			navigateToHubInterest(getPrefillFromUrl(), false);
+		}
+
 		var mount = document.querySelector('[data-airb-hub-journey-mount]');
 		if (!mount || !hub.pageSlug) return;
 
@@ -572,13 +621,13 @@
 		init();
 	}
 
-	window.airbHubInterestScroll = function (prefill) {
-		var section = document.getElementById('airb-hub-interest');
-		if (section) {
-			var details = section.querySelector('.airb-hub-support');
-			if (details) details.open = true;
-			section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	window.addEventListener('hashchange', function () {
+		if (isHubInterestHash()) {
+			navigateToHubInterest(getPrefillFromUrl());
 		}
-		applyPrefill(prefill || '');
+	});
+
+	window.airbHubInterestScroll = function (prefill) {
+		navigateToHubInterest(prefill || '');
 	};
 })();

@@ -64,6 +64,28 @@ class AIRB_Hub_Content {
 	}
 
 	/**
+	 * HTML attributes for hub interest anchors (prefill via data attribute — hash query breaks native scroll).
+	 *
+	 * @param string $prefill Interest checkbox slug.
+	 */
+	private static function hub_interest_link_attrs( string $prefill = '' ): string {
+		$prefill = sanitize_key( $prefill );
+		if ( '' === $prefill ) {
+			return '';
+		}
+		return ' data-airb-hub-prefill="' . esc_attr( $prefill ) . '"';
+	}
+
+	/**
+	 * Build an opening anchor tag for the on-page hub interest form.
+	 *
+	 * @param string $prefill Interest checkbox slug.
+	 */
+	private static function hub_interest_link_open( string $prefill = '' ): string {
+		return '<a href="#airb-hub-interest"' . self::hub_interest_link_attrs( $prefill ) . '>';
+	}
+
+	/**
 	 * "Wider Support & Development" funnel block — appears on every hub page
 	 * unless the framework sets `'support' => false`. Restores per-area
 	 * contact ("email") doorways for guidance and support.
@@ -97,8 +119,7 @@ class AIRB_Hub_Content {
 					continue;
 				}
 				$prefill  = sanitize_key( (string) ( $item['interest'] ?? '' ) );
-				$link     = '#airb-hub-interest' . ( $prefill ? '?prefill=' . rawurlencode( $prefill ) : '' );
-				$blocks[] = '<!-- wp:paragraph --><p><strong>' . esc_html( $label ) . '</strong> — <a href="' . esc_url( $link ) . '">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
+				$blocks[] = '<!-- wp:paragraph --><p><strong>' . esc_html( $label ) . '</strong> — ' . self::hub_interest_link_open( $prefill ) . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
 			}
 		} else {
 			$cta_label = (string) ( $support['cta'] ?? __( 'Need further support?', 'ai-risk-benchmark' ) );
@@ -2582,19 +2603,17 @@ class AIRB_Hub_Content {
 			$train_h = (string) ( $training['heading'] ?? __( 'What training exists?', 'ai-risk-benchmark' ) );
 			$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html( $train_h ) . '</h2><!-- /wp:heading -->';
 			if ( ! empty( $training['label'] ) ) {
-				$path = (string) ( $training['path'] ?? '' );
-				$url  = '';
+				$path    = (string) ( $training['path'] ?? '' );
+				$prefill = '';
 				if ( 'contact' === $path ) {
 					$prefill = sanitize_key( (string) ( $training['interest'] ?? $training['prefill'] ?? '' ) );
 					if ( ! $prefill && $page_slug && class_exists( 'AIRB_Hub_Interest' ) ) {
 						$slug_map = AIRB_Hub_Interest::slug_interest_map();
 						$prefill  = sanitize_key( (string) ( $slug_map[ $page_slug ] ?? 'further_information' ) );
 					}
-					$url = '#airb-hub-interest' . ( $prefill ? '?prefill=' . rawurlencode( $prefill ) : '' );
+					$blocks[] = '<!-- wp:paragraph --><p><strong>' . self::hub_interest_link_open( $prefill ) . esc_html( (string) $training['label'] ) . '</a></strong></p><!-- /wp:paragraph -->';
 				} elseif ( $path ) {
 					$url = AIRB_Defaults::hub_page_url( $path );
-				}
-				if ( $url ) {
 					$blocks[] = '<!-- wp:paragraph --><p><strong><a href="' . esc_url( $url ) . '">' . esc_html( (string) $training['label'] ) . '</a></strong></p><!-- /wp:paragraph -->';
 				} else {
 					$blocks[] = '<!-- wp:paragraph --><p><strong>' . esc_html( (string) $training['label'] ) . '</strong></p><!-- /wp:paragraph -->';
