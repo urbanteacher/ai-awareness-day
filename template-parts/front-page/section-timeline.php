@@ -29,7 +29,6 @@ $show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
 ?>
 <?php
 $days_to_go   = function_exists( 'aiad_timeline_days_until_event' ) ? aiad_timeline_days_until_event() : 0;
-$schools      = function_exists( 'aiad_timeline_schools_registered_count' ) ? aiad_timeline_schools_registered_count() : 0;
 $resources    = 0;
 $resource_obj = wp_count_posts( 'resource' );
 if ( $resource_obj && isset( $resource_obj->publish ) ) {
@@ -56,8 +55,8 @@ $days_urgent = $days_to_go > 0 && $days_to_go < 30;
                 </span>
                 <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
                 <span class="timeline-stats-bar__stat timeline-stats-bar__stat--schools">
-                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $schools ); ?></span>
-                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'schools registered', 'ai-awareness-day' ); ?></span>
+                    <span class="timeline-stats-bar__value">1000+</span>
+                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'schools reached', 'ai-awareness-day' ); ?></span>
                     <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'schools', 'ai-awareness-day' ); ?></span>
                 </span>
                 <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
