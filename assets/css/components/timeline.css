@@ -1384,7 +1384,7 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
     padding: 0.65rem 1.25rem;
     font-family: var(--font-display);
     font-size: 0.9rem;
@@ -1395,6 +1395,8 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
     text-decoration: none;
     border-radius: 4px;
     transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    align-self: flex-start;
 }
 
 .timeline-magazine__hero-cta:hover,
@@ -1639,6 +1641,11 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
         position: relative;
     }
 
+    .timeline-magazine__hero-text .timeline-magazine__hero-content--teaser {
+        max-height: none;
+        overflow: visible;
+    }
+
     .timeline-magazine__hero-text .timeline-magazine__hero-content::after {
         content: '';
         position: absolute;
@@ -1648,6 +1655,14 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
         height: 2.5em;
         pointer-events: none;
         background: linear-gradient(to bottom, transparent, var(--white));
+    }
+
+    .timeline-magazine__hero-text .timeline-magazine__hero-content--teaser::after {
+        display: none;
+    }
+
+    #timeline .timeline-magazine__hero-text .timeline-magazine__hero-content::after {
+        background: linear-gradient(to bottom, transparent, var(--gray-900));
     }
 
     .timeline-magazine__more {

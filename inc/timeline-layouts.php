@@ -302,6 +302,50 @@ function aiad_timeline_entry_has_interactive_shortcode(WP_Post $entry): bool
 }
 
 /**
+ * CTA label + URL for interactive timeline hero entries (benchmark, quiz, etc.).
+ *
+ * @param WP_Post $entry Timeline post.
+ * @return array{url: string, label: string}|null
+ */
+function aiad_timeline_hero_interactive_cta(WP_Post $entry): ?array
+{
+    if (!aiad_timeline_entry_has_interactive_shortcode($entry)) {
+        return null;
+    }
+
+    $url = get_permalink($entry) ?: '';
+    if ($url === '') {
+        return null;
+    }
+
+    $label = __('Open interactive activity →', 'ai-awareness-day');
+    $content = (string) $entry->post_content;
+
+    if (false !== strpos($content, '[aiad_speed_quiz')) {
+        $label = __('Take the speed quiz →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_computing_curriculum')) {
+        $label = __('Try the curriculum challenge →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_misinformation_detector')) {
+        $label = __('Try the misinformation detector →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_neu_ai_report')) {
+        $label = __('Explore the NEU data →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_llm_explainer')) {
+        $label = __('Try the 6-step explainer →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_buzzwords')) {
+        $label = __('Explore the glossary →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[aiad_risk_academy')) {
+        $label = __('Assess your school\'s AI risk →', 'ai-awareness-day');
+    } elseif (false !== strpos($content, '[ai_risk_benchmark')) {
+        $label = __('Start the free benchmark →', 'ai-awareness-day');
+    }
+
+    return array(
+        'url'   => $url,
+        'label' => $label,
+    );
+}
+
+/**
  * Teaser HTML for magazine hero (excerpt + CTA instead of full interactive markup).
  *
  * @param WP_Post $entry Timeline post.
@@ -314,29 +358,11 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
     }
 
     $excerpt = aiad_timeline_entry_excerpt_text($entry);
-    $url = get_permalink($entry) ?: '';
-    $cta = __('Open interactive activity →', 'ai-awareness-day');
-
-    if (false !== strpos($entry->post_content, '[aiad_speed_quiz')) {
-        $cta = __('Take the speed quiz →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_computing_curriculum')) {
-        $cta = __('Try the curriculum challenge →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_misinformation_detector')) {
-        $cta = __('Try the misinformation detector →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_neu_ai_report')) {
-        $cta = __('Explore the NEU data →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_llm_explainer')) {
-        $cta = __('Try the 6-step explainer →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_buzzwords')) {
-        $cta = __('Explore the glossary →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[aiad_risk_academy')) {
-        $cta = __('Assess your school\'s AI risk →', 'ai-awareness-day');
-    } elseif (false !== strpos($entry->post_content, '[ai_risk_benchmark')) {
-        $cta = __('Start the free benchmark →', 'ai-awareness-day');
+    if ($excerpt === '') {
+        return '';
     }
 
-    return '<p>' . esc_html($excerpt) . '</p><p><a class="timeline-magazine__hero-cta" href="'
-        . esc_url($url) . '">' . esc_html($cta) . '</a></p>';
+    return '<p>' . esc_html($excerpt) . '</p>';
 }
 
 /**
@@ -604,6 +630,11 @@ function aiad_render_timeline_magazine(array $entries): string
     $date_iso = get_the_date('c', $hero);
     $hero_permalink = get_permalink($hero) ?: '';
     $hero_content = aiad_timeline_hero_teaser_html($hero);
+    $hero_cta = aiad_timeline_hero_interactive_cta($hero);
+    $hero_content_class = 'timeline-magazine__hero-content timeline-entry__content';
+    if ($hero_cta) {
+        $hero_content_class .= ' timeline-magazine__hero-content--teaser';
+    }
     $hero_media_tag = $hero_permalink ? 'a' : 'div';
     $hero_media_label = sprintf(
         /* translators: %s: timeline entry title */
@@ -634,8 +665,13 @@ function aiad_render_timeline_magazine(array $entries): string
             </div>
             <div class="timeline-magazine__hero-text">
                 <?php if ($hero_content): ?>
-                    <div class="timeline-magazine__hero-content timeline-entry__content">
+                    <div class="<?php echo esc_attr($hero_content_class); ?>">
                         <?php echo $hero_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+                <?php endif; ?>
+                <?php if ($hero_cta) : ?>
+                    <a class="timeline-magazine__hero-cta" href="<?php echo esc_url($hero_cta['url']); ?>">
+                        <?php echo esc_html($hero_cta['label']); ?>
+                    </a>
                 <?php endif; ?>
                 <?php if ($hero_permalink): ?>
                     <a class="timeline-magazine__read-more" href="<?php echo esc_url($hero_permalink); ?>">
