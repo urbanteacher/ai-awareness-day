@@ -152,6 +152,9 @@ class AIRB_Ajax {
 			$results['interest_form'] = $form;
 		}
 
+		$read_seed = $id ? (int) $id : (int) crc32( $session_id . '|' . $role );
+		AIRB_Defaults::patch_results_timeline_read_links( $results, $role, $read_seed );
+
 		wp_send_json_success(
 			array(
 				'submission_id' => $id,

@@ -72,20 +72,7 @@ class AIRB_Student_Results {
 				'cta_url'          => AIRB_Defaults::benchmark_page_url(),
 				'cta_type'         => 'link',
 			),
-			'resource_links' => array(
-				array(
-					'label' => __( 'Student AI Study Skills', 'ai-risk-benchmark' ),
-					'url'   => AIRB_Defaults::hub_page_url( 'student-ai-study-skills' ),
-				),
-				array(
-					'label' => __( 'Think First, Prompt Second', 'ai-risk-benchmark' ),
-					'url'   => AIRB_Defaults::hub_page_url( 'think-first-prompt-second' ),
-				),
-				array(
-					'label' => __( 'How to check AI answers', 'ai-risk-benchmark' ),
-					'url'   => AIRB_Defaults::hub_page_url( 'how-to-check-ai-answers' ),
-				),
-			),
+			'resource_links' => AIRB_Defaults::results_timeline_read_links( 'student' ),
 		);
 	}
 

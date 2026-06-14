@@ -396,21 +396,7 @@ class AIRB_Leader_Results {
 		$aad_block = (array) ( $blocks['ai_awareness_day'] ?? array() );
 		$aad_cfg   = (array) ( $config['aad_2027'] ?? array() );
 
-		$resource_links = array(
-			array(
-				'label'    => (string) ( $policy_support['cta_text'] ?? $policy_block['cta_text'] ?? __( 'View DfE AI policy template', 'ai-risk-benchmark' ) ),
-				'url'      => (string) ( $policy_support['cta_url'] ?? $policy_url ),
-				'external' => true,
-			),
-			array(
-				'label'   => (string) ( $benchmark_block['link_label'] ?? __( 'Roll out the whole-school benchmark', 'ai-risk-benchmark' ) ),
-				'prefill' => 'whole_school_benchmark',
-			),
-			array(
-				'label'   => (string) ( $aad_promo['cta_text'] ?? $aad_block['cta_text'] ?? __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ) ),
-				'prefill' => 'ai_awareness_day',
-			),
-		);
+		$resource_links = AIRB_Defaults::results_timeline_read_links( 'leader' );
 
 		return array(
 			'hero_heading'  => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),

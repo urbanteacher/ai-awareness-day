@@ -29,3 +29,4 @@ require_once __DIR__ . '/timeline/entries.php';
 require_once __DIR__ . '/timeline/query.php';
 require_once __DIR__ . '/timeline/ajax.php';
 require_once __DIR__ . '/timeline/single-helpers.php';
+require_once __DIR__ . '/timeline/benchmark-audience.php';

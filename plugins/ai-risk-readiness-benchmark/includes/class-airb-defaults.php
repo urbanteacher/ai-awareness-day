@@ -185,20 +185,7 @@ class AIRB_Defaults {
 			'domains_accordion_title' => __( 'Your domain scores', 'ai-risk-benchmark' ),
 			'focus_accordion_title'   => __( 'What to focus on', 'ai-risk-benchmark' ),
 			'peer_benchmark_title' => __( 'Parent benchmark comparison', 'ai-risk-benchmark' ),
-			'resource_links'       => array(
-				array(
-					'label' => __( 'Parent AI Safety Guide', 'ai-risk-benchmark' ),
-					'url'   => self::hub_page_url( 'parent-ai-safety' ),
-				),
-				array(
-					'label' => __( 'Supporting Homework in the AI Era', 'ai-risk-benchmark' ),
-					'url'   => self::hub_page_url( 'parent-ai-homework-guide' ),
-				),
-				array(
-					'label'   => __( 'Share results with school', 'ai-risk-benchmark' ),
-					'prefill' => 'parent_share_with_school',
-				),
-			),
+			'resource_links'       => self::results_timeline_read_links( 'parent' ),
 			'peer_benchmark_fallback' => array(
 				'average'      => 58,
 				'top_quartile' => 82,
@@ -878,6 +865,125 @@ class AIRB_Defaults {
 			}
 		}
 		return self::hub_page_url( '' ) . '#airb-benchmark';
+	}
+
+	/**
+	 * Resolve one timeline entry for benchmark results "More to read" links.
+	 *
+	 * @param array{slug?: string, url?: string, label?: string} $item Slug and optional fallback URL/label.
+	 * @return array{label: string, url: string}|null
+	 */
+	public static function timeline_read_link( array $item ): ?array {
+		$label = (string) ( $item['label'] ?? '' );
+		$url   = (string) ( $item['url'] ?? '' );
+		$slug  = (string) ( $item['slug'] ?? '' );
+
+		if ( '' !== $slug && function_exists( 'get_page_by_path' ) ) {
+			$post = get_page_by_path( $slug, OBJECT, 'timeline' );
+			if ( $post instanceof WP_Post ) {
+				$permalink = get_permalink( $post );
+				if ( is_string( $permalink ) && '' !== $permalink ) {
+					return array(
+						'label' => '' !== $label ? $label : get_the_title( $post ),
+						'url'   => $permalink,
+					);
+				}
+			}
+		}
+
+		if ( '' !== $url ) {
+			return array(
+				'label' => '' !== $label ? $label : $url,
+				'url'   => $url,
+			);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Role-specific timeline articles shown after the results action zone.
+	 *
+	 * @param string $role teacher|student|parent|leader.
+	 * @return array<int, array{label: string, url: string}>
+	 */
+	public static function results_timeline_read_links( string $role, int $seed = 0 ): array {
+		if ( function_exists( 'aiad_timeline_benchmark_read_links' ) ) {
+			$links = aiad_timeline_benchmark_read_links( $role, 3, $seed );
+			if ( ! empty( $links ) ) {
+				return $links;
+			}
+		}
+
+		return self::results_timeline_read_links_fallback( $role );
+	}
+
+	/**
+	 * Patch role-specific results payloads with seeded timeline read links.
+	 *
+	 * @param array<string, mixed> $results Results payload (by reference).
+	 * @param string               $role    Benchmark role.
+	 * @param int                  $seed    Stable shuffle seed.
+	 */
+	public static function patch_results_timeline_read_links( array &$results, string $role, int $seed ): void {
+		$links = self::results_timeline_read_links( $role, $seed );
+		if ( empty( $links ) ) {
+			return;
+		}
+
+		$key = $role . '_results';
+		if ( ! empty( $results[ $key ]['next_steps'] ) && is_array( $results[ $key ]['next_steps'] ) ) {
+			$results[ $key ]['next_steps']['resource_links'] = $links;
+		}
+
+		if ( 'parent' === $role && ! empty( $results['parent_results'] ) && is_array( $results['parent_results'] ) ) {
+			$results['parent_results']['resource_links'] = $links;
+		}
+	}
+
+	/**
+	 * Hardcoded fallback when no audience-tagged timeline posts exist yet.
+	 *
+	 * @param string $role Benchmark role.
+	 * @return array<int, array{label: string, url: string}>
+	 */
+	private static function results_timeline_read_links_fallback( string $role ): array {
+		$role    = sanitize_key( $role );
+		$presets = array(
+			'student' => array(
+				array( 'slug' => 'stop-asking-if-students-should-use-ai-start-asking-how-students-perspective' ),
+				array( 'slug' => 'ai-mental-health-student-perspective-student-voice' ),
+				array( 'slug' => 'the-future-of-ai-through-a-students-perspective' ),
+			),
+			'parent'  => array(
+				array( 'slug' => 'parent-tips' ),
+				array( 'slug' => 'bbc-bitesize-ai-awareness-day-teaching-resources' ),
+				array( 'slug' => 'parent-zone' ),
+			),
+			'teacher' => array(
+				array( 'slug' => 'misinformation-detector-teachers' ),
+				array( 'slug' => '15-ai-buzzwords-teachers-2026' ),
+				array( 'slug' => 'how-does-a-large-language-model-work' ),
+			),
+			'leader'  => array(
+				array( 'slug' => 'ai-micro-credentials-and-short-courses' ),
+				array(
+					'slug' => '🔥🔥teachers-have-you-heard-of-ai-agents-yet🔥🔥',
+					'url'  => home_url( '/timeline/%f0%9f%94%a5%f0%9f%94%a5teachers-have-you-heard-of-ai-agents-yet%f0%9f%94%a5%f0%9f%94%a5/' ),
+				),
+				array( 'slug' => 'beyond-the-holy-grail' ),
+			),
+		);
+
+		$links = array();
+		foreach ( (array) ( $presets[ $role ] ?? array() ) as $item ) {
+			$link = self::timeline_read_link( $item );
+			if ( null !== $link ) {
+				$links[] = $link;
+			}
+		}
+
+		return $links;
 	}
 
 	/**

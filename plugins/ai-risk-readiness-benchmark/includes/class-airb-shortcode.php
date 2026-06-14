@@ -219,6 +219,7 @@ class AIRB_Shortcode {
 					'governanceMaturity' => AIRB_Scoring::governance_maturity_label(),
 					'likelyImpact'       => __( 'Likely impact', 'ai-risk-benchmark' ),
 					'recommendedNextStep'=> __( 'Recommended next step', 'ai-risk-benchmark' ),
+					'moreToRead'         => __( 'More to read', 'ai-risk-benchmark' ),
 					'otherResources'     => __( 'Other resources', 'ai-risk-benchmark' ),
 					'whatYouUnlock'      => __( 'What you\'ll unlock', 'ai-risk-benchmark' ),
 					'domainScores'   => __( 'Domain scores', 'ai-risk-benchmark' ),

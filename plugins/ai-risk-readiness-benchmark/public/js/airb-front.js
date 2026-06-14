@@ -1731,6 +1731,9 @@
 			html += '<button type="button" class="airb__btn airb__btn--primary airb__btn--hero" data-airb-open-interest="' + esc(hero.key || 'governance_review') + '">' + esc(hero.cta_text || 'Request support') + '</button>';
 		}
 		html += '</article>';
+		if (nextSteps.resource_links && nextSteps.resource_links.length) {
+			html += '<h5 class="airb__results-read-more-heading">' + esc(i18n.moreToRead || 'More to read') + '</h5>';
+		}
 		html += resultsResourceLinksHtml(nextSteps.resource_links);
 		return html + '</section>';
 	}

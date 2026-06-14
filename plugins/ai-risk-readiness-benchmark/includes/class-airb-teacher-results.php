@@ -345,22 +345,7 @@ class AIRB_Teacher_Results {
 			);
 		}
 
-		$links = array(
-			array(
-				'label'    => __( 'Teacher Verification Framework', 'ai-risk-benchmark' ),
-				'url'      => AIRB_Defaults::hub_page_url( 'teacher-ai-verification-framework' ),
-				'external' => false,
-			),
-			array(
-				'label'    => __( 'AI Lesson Planning Checklist', 'ai-risk-benchmark' ),
-				'url'      => AIRB_Defaults::hub_page_url( 'teacher-ai-lesson-planning-checklist' ),
-				'external' => false,
-			),
-			array(
-				'label'   => __( 'Plan AI Awareness Day', 'ai-risk-benchmark' ),
-				'prefill' => 'ai_awareness_day',
-			),
-		);
+		$links = AIRB_Defaults::results_timeline_read_links( 'teacher' );
 
 		return array(
 			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),

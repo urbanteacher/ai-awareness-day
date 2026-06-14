@@ -105,6 +105,36 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
             </p>
         </div>
         <div class="aiad-rd-section">
+            <strong class="aiad-rd-label"><?php esc_html_e('Benchmark results', 'ai-awareness-day'); ?></strong>
+            <p class="description" style="margin-top:0;">
+                <?php esc_html_e('Tag who should see this in the AI Risk Benchmark “More to read” links after they finish the audit. You can select more than one.', 'ai-awareness-day'); ?>
+            </p>
+            <?php
+            $audience_roles = function_exists('aiad_timeline_audience_role_options')
+                ? aiad_timeline_audience_role_options()
+                : array();
+            $assigned = wp_get_object_terms($post->ID, 'timeline_audience', array('fields' => 'slugs'));
+            if (is_wp_error($assigned)) {
+                $assigned = array();
+            }
+            $outcome_pinned = (bool) get_post_meta($post->ID, '_airb_benchmark_outcome_pin', true);
+            foreach ($audience_roles as $role_slug => $role_label) :
+                ?>
+                <label style="display:block;margin:0.35rem 0 0;">
+                    <input type="checkbox" name="aiad_timeline_audience[]"
+                        value="<?php echo esc_attr($role_slug); ?>" <?php checked(in_array($role_slug, $assigned, true)); ?> />
+                    <?php echo esc_html($role_label); ?>
+                </label>
+                <?php
+            endforeach;
+            ?>
+            <label style="display:block;margin:0.65rem 0 0;">
+                <input type="checkbox" id="aiad_timeline_benchmark_pin" name="aiad_timeline_benchmark_pin"
+                    value="1" <?php checked($outcome_pinned); ?> />
+                <?php esc_html_e('Pin in benchmark results (always show when audience matches)', 'ai-awareness-day'); ?>
+            </label>
+        </div>
+        <div class="aiad-rd-section">
             <label for="aiad_timeline_pinned">
                 <input type="checkbox" id="aiad_timeline_pinned" name="aiad_timeline_pinned" value="1" <?php checked($pinned); ?> />
                 <?php esc_html_e('Pin to top of timeline', 'ai-awareness-day'); ?>
@@ -226,6 +256,27 @@ function aiad_save_timeline_meta(int $post_id): void
     if (function_exists('aiad_save_thumbnail_focal_point_from_post')) {
         aiad_save_thumbnail_focal_point_from_post($post_id);
     }
+
+    if (taxonomy_exists('timeline_audience') && isset($_POST['aiad_timeline_audience'])) {
+        $raw = wp_unslash($_POST['aiad_timeline_audience']);
+        $roles = function_exists('aiad_timeline_audience_role_options')
+            ? array_keys(aiad_timeline_audience_role_options())
+            : array();
+        $selected = array();
+        if (is_array($raw)) {
+            foreach ($raw as $value) {
+                $slug = sanitize_key((string) $value);
+                if (in_array($slug, $roles, true)) {
+                    $selected[] = $slug;
+                }
+            }
+        }
+        wp_set_object_terms($post_id, $selected, 'timeline_audience', false);
+    } elseif (taxonomy_exists('timeline_audience')) {
+        wp_set_object_terms($post_id, array(), 'timeline_audience', false);
+    }
+
+    update_post_meta($post_id, '_airb_benchmark_outcome_pin', !empty($_POST['aiad_timeline_benchmark_pin']));
 }
 add_action('save_post_timeline', 'aiad_save_timeline_meta');
 

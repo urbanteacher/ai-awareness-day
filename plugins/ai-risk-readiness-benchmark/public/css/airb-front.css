@@ -3268,12 +3268,23 @@
 
 .airb__leader-resource-links,
 .airb__results-resource-links {
-	margin: 0.85rem 0 0;
+	margin: 0.35rem 0 0;
 	padding: 0;
 	list-style: none;
 	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 1.25rem;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.45rem;
+}
+
+.airb__results-read-more-heading {
+	margin: 1rem 0 0;
+	font-family: var(--font-display, inherit);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--airb-muted, #64748b);
 }
 
 .airb__leader-resource-links a,
