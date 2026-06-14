@@ -101,17 +101,37 @@
 			});
 		});
 
-		// ── Year groups visibility (hide for HE/FE/MAT) ──────────────────────
+		// ── Year groups visibility (adaptive for HE/FE/MAT) ───────────────────
 		var schoolTypeSelect = document.getElementById('survey-school-type');
 		var yearGroupsWrap = document.getElementById('survey-year-groups-wrap');
-		if (schoolTypeSelect && yearGroupsWrap) {
+		var heLevelsWrap = document.getElementById('survey-he-levels-wrap');
+		if (schoolTypeSelect && yearGroupsWrap && heLevelsWrap) {
 			schoolTypeSelect.addEventListener('change', function () {
-				// Hide year groups for institutions that don't use KS stages
-				var hideYearGroups = ['higher_education', 'fe_college', 'mat_trust'].indexOf(this.value) !== -1;
-				yearGroupsWrap.style.display = hideYearGroups ? 'none' : '';
-				// Clear checkboxes when hidden to avoid submitting nonsensical data
-				if (hideYearGroups) {
+				var type = this.value;
+				// Higher Education: show undergrad/postgrad, hide school year groups
+				if (type === 'higher_education') {
+					yearGroupsWrap.style.display = 'none';
+					heLevelsWrap.style.display = '';
 					yearGroupsWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+						cb.checked = false;
+					});
+				}
+				// FE College / MAT: hide both (they need custom options we don't have yet)
+				else if (type === 'fe_college' || type === 'mat_trust') {
+					yearGroupsWrap.style.display = 'none';
+					heLevelsWrap.style.display = 'none';
+					yearGroupsWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+						cb.checked = false;
+					});
+					heLevelsWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+						cb.checked = false;
+					});
+				}
+				// Primary/Secondary/All-through/Special: show school year groups, hide HE
+				else {
+					yearGroupsWrap.style.display = '';
+					heLevelsWrap.style.display = 'none';
+					heLevelsWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
 						cb.checked = false;
 					});
 				}

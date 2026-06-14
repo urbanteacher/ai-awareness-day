@@ -156,7 +156,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 					</select>
 				</div>
 
-				<!-- Q2: Year groups -->
+				<!-- Q2a: Year groups (schools) -->
 				<div class="aiad-survey__field" id="survey-year-groups-wrap">
 					<p class="aiad-survey__label">
 						2. <?php esc_html_e( 'Which year groups do you work with? (tick all that apply)', 'ai-awareness-day' ); ?>
@@ -168,6 +168,27 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 								<?php echo esc_html( $label ); ?>
 							</label>
 						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<!-- Q2b: HE levels (only shown when Higher Education selected) -->
+				<div class="aiad-survey__field" id="survey-he-levels-wrap" style="display:none;">
+					<p class="aiad-survey__label">
+						2. <?php esc_html_e( 'Which levels do you work with? (tick all that apply)', 'ai-awareness-day' ); ?>
+					</p>
+					<div class="aiad-survey__checkgroup">
+						<label class="aiad-survey__check-label">
+							<input type="checkbox" name="year_groups[]" value="undergraduate" class="aiad-survey__checkbox" />
+							<?php esc_html_e( 'Undergraduate (Years 1–4)', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__check-label">
+							<input type="checkbox" name="year_groups[]" value="postgraduate" class="aiad-survey__checkbox" />
+							<?php esc_html_e( 'Postgraduate (Master\'s / PhD)', 'ai-awareness-day' ); ?>
+						</label>
+						<label class="aiad-survey__check-label">
+							<input type="checkbox" name="year_groups[]" value="staff" class="aiad-survey__checkbox" />
+							<?php esc_html_e( 'Staff CPD only', 'ai-awareness-day' ); ?>
+						</label>
 					</div>
 				</div>
 
