@@ -21,6 +21,7 @@ class AIRB_Admin {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_post_airb_save_settings', array( __CLASS__, 'save_settings' ) );
 		add_action( 'admin_post_airb_reset_defaults', array( __CLASS__, 'reset_defaults' ) );
+		add_action( 'admin_post_airb_update_lead_status', array( __CLASS__, 'update_lead_status' ) );
 		add_action( 'admin_init', array( __CLASS__, 'maybe_export_csv' ) );
 	}
 
@@ -45,6 +46,15 @@ class AIRB_Admin {
 			'manage_options',
 			'airb-benchmark',
 			array( __CLASS__, 'render_submissions' )
+		);
+
+		add_submenu_page(
+			'airb-benchmark',
+			__( 'Leads', 'ai-risk-benchmark' ),
+			__( 'Leads', 'ai-risk-benchmark' ),
+			'manage_options',
+			'airb-leads',
+			array( __CLASS__, 'render_leads' )
 		);
 
 		add_submenu_page(
@@ -82,6 +92,9 @@ class AIRB_Admin {
 		if ( isset( $_GET['airb_export'] ) && 'csv' === $_GET['airb_export'] ) {
 			AIRB_Csv::export();
 		}
+		if ( isset( $_GET['airb_export'] ) && 'leads_csv' === $_GET['airb_export'] ) {
+			AIRB_Csv::export_leads();
+		}
 	}
 
 	/**
@@ -109,11 +122,76 @@ class AIRB_Admin {
 		$total = AIRB_Database::count_submissions( $filters );
 		$roles = AIRB_Defaults::roles();
 		$stats = array(
-			'total'       => AIRB_Database::count_submissions( array() ),
-			'with_school' => AIRB_Database::count_with_school(),
+			'total'            => AIRB_Database::count_submissions( array() ),
+			'with_school'      => AIRB_Database::count_with_school(),
+			'benchmark_consent'=> AIRB_Database::count_submissions( array( 'consent' => 1 ) ),
+			'contact_opt_ins'  => AIRB_Database::count_contact_opt_ins(),
 		);
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';
+	}
+
+	/**
+	 * Leads list and detail.
+	 */
+	public static function render_leads(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$per_page = 50;
+		$paged    = max( 1, (int) ( $_GET['paged'] ?? 1 ) );
+
+		$filters = array(
+			'status'    => sanitize_key( (string) ( $_GET['status'] ?? '' ) ),
+			'source'    => sanitize_key( (string) ( $_GET['source'] ?? '' ) ),
+			'role'      => sanitize_key( (string) ( $_GET['role'] ?? '' ) ),
+			'school'    => sanitize_text_field( (string) ( $_GET['school'] ?? '' ) ),
+			'date_from' => sanitize_text_field( (string) ( $_GET['date_from'] ?? '' ) ),
+			'date_to'   => sanitize_text_field( (string) ( $_GET['date_to'] ?? '' ) ),
+			'limit'     => $per_page,
+			'offset'    => ( $paged - 1 ) * $per_page,
+		);
+
+		$detail_id = max( 0, (int) ( $_GET['lead_id'] ?? 0 ) );
+		$detail    = $detail_id ? AIRB_Leads::get( $detail_id ) : null;
+		$rows      = AIRB_Leads::get_leads( $filters );
+		$total     = AIRB_Leads::count_leads( $filters );
+		$roles     = AIRB_Defaults::roles();
+		$statuses  = AIRB_Leads::statuses();
+		$status_counts = AIRB_Leads::count_by_status();
+
+		include AIRB_PLUGIN_DIR . 'admin/views/leads.php';
+	}
+
+	/**
+	 * Update lead status from admin.
+	 */
+	public static function update_lead_status(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Unauthorized', 'ai-risk-benchmark' ) );
+		}
+		check_admin_referer( 'airb_update_lead_status' );
+
+		$id     = max( 0, (int) ( $_POST['lead_id'] ?? 0 ) );
+		$status = sanitize_key( (string) ( $_POST['status'] ?? '' ) );
+
+		if ( $id && AIRB_Leads::update_status( $id, $status ) ) {
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'page'    => 'airb-leads',
+						'lead_id' => $id,
+						'updated' => '1',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit;
+		}
+
+		wp_safe_redirect( admin_url( 'admin.php?page=airb-leads' ) );
+		exit;
 	}
 
 	/**

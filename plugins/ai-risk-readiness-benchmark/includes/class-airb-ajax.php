@@ -93,8 +93,8 @@ class AIRB_Ajax {
 				'role'                   => $role,
 				'school_name'            => $school,
 				'email'                  => $email,
-				'consent'                => 1,
-				'contact_opt_in'         => 0,
+				'consent'                => ! empty( $_POST['consent'] ) ? 1 : 0,
+				'contact_opt_in'         => ! empty( $_POST['contact_opt_in'] ) ? 1 : 0,
 				'risk_level'             => $results['risk_level'],
 				'alignment_score'        => $results['alignment_score'],
 				'dependency_index'       => $results['dependency_index'],
@@ -421,6 +421,15 @@ class AIRB_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Could not send your request. Please try again.', 'ai-risk-benchmark' ) ) );
 		}
 
+		$lead_id = AIRB_Leads::insert(
+			array_merge(
+				$payload,
+				array(
+					'session_id' => $session_id,
+				)
+			)
+		);
+
 		set_transient( $rate_key, $count + 1, 5 * MINUTE_IN_SECONDS );
 
 		if ( $session_id ) {
@@ -431,12 +440,16 @@ class AIRB_Ajax {
 					'event_type'    => 'hub' === $payload['source'] ? 'hub_interest_submitted' : 'interest_submitted',
 					'role'          => $role,
 					'metadata'      => array(
+						'lead_id'           => $lead_id,
 						'interests'         => $interests,
 						'email'             => $email,
+						'name'              => $name,
 						'stakeholder_role'  => $stakeholder_role,
 						'school'            => $school,
 						'hub_page'          => $payload['hub_page'],
 						'hub_ref'           => $payload['hub_ref'],
+						'checklist_done'    => (int) $payload['checklist_done'],
+						'checklist_total'   => (int) $payload['checklist_total'],
 					),
 				)
 			);
@@ -445,6 +458,7 @@ class AIRB_Ajax {
 		wp_send_json_success(
 			array(
 				'message' => AIRB_Interest::form_labels( $role )['success'],
+				'lead_id' => $lead_id,
 			)
 		);
 	}

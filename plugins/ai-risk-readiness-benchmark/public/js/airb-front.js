@@ -36,6 +36,8 @@
 		schoolPhase: '',
 		orgType: '',
 		yearGroup: '',
+		consent: false,
+		contactOptIn: false,
 	};
 
 	var el = {
@@ -1075,6 +1077,29 @@
 			'</div>';
 	}
 
+	function consentFieldsHtml() {
+		var html = '<div class="airb__consent">';
+		html += '<div class="airb__consent-group">';
+		html += '<label class="airb__label" for="airb-consent">';
+		html += '<input type="checkbox" id="airb-consent"' + (state.consent ? ' checked' : '') + ' /> ';
+		html += esc(i18n.consentBenchmark || 'Store my results anonymously to improve national benchmarks');
+		html += '</label>';
+		if (i18n.consentBenchmarkHint) {
+			html += '<p class="airb__consent-hint">' + esc(i18n.consentBenchmarkHint) + '</p>';
+		}
+		html += '</div>';
+		if (!isYoungRole()) {
+			html += '<div class="airb__consent-group">';
+			html += '<label class="airb__label" for="airb-contact-opt-in">';
+			html += '<input type="checkbox" id="airb-contact-opt-in"' + (state.contactOptIn ? ' checked' : '') + ' /> ';
+			html += esc(i18n.consentContact || 'Contact me about support and next steps');
+			html += '</label>';
+			html += '</div>';
+		}
+		html += '</div>';
+		return html;
+	}
+
 	function renderContact() {
 		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Almost done') + '</h3>';
 		html += roleSummaryHtml();
@@ -1109,6 +1134,8 @@
 		}
 
 		html += '</div>';
+
+		html += consentFieldsHtml();
 
 		el.contact.innerHTML = html;
 
@@ -2475,6 +2502,10 @@
 				state.email = '';
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 			}
+			var consentEl = document.getElementById('airb-consent');
+			var optInEl = document.getElementById('airb-contact-opt-in');
+			state.consent = !!(consentEl && consentEl.checked);
+			state.contactOptIn = !!(optInEl && optInEl.checked);
 
 			state.results = calculate(state.role, state.answers);
 			state.phase = 'results';
@@ -2525,6 +2556,8 @@
 		body.append('school_phase', state.schoolPhase);
 		body.append('org_type', state.orgType);
 		body.append('year_group', state.yearGroup);
+		body.append('consent', state.consent ? '1' : '0');
+		body.append('contact_opt_in', state.contactOptIn ? '1' : '0');
 
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })

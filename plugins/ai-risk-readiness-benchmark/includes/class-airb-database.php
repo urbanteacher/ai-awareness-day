@@ -76,6 +76,10 @@ class AIRB_Database {
 		if ( class_exists( 'AIRB_Events' ) ) {
 			AIRB_Events::create_table();
 		}
+		if ( class_exists( 'AIRB_Leads' ) ) {
+			AIRB_Leads::create_table();
+			update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
+		}
 		update_option( 'airb_db_version', self::DB_VERSION, false );
 	}
 
@@ -359,7 +363,7 @@ class AIRB_Database {
 					AVG(safeguarding_readiness) AS safeguarding_readiness,
 					AVG(governance_maturity) AS governance_maturity
 				FROM {$table}
-				WHERE role = %s",
+				WHERE role = %s AND consent = 1",
 				$role
 			),
 			ARRAY_A
@@ -373,7 +377,7 @@ class AIRB_Database {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$scores = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT alignment_score FROM {$table} WHERE role = %s ORDER BY alignment_score ASC",
+				"SELECT alignment_score FROM {$table} WHERE role = %s AND consent = 1 ORDER BY alignment_score ASC",
 				$role
 			)
 		);
@@ -402,7 +406,7 @@ class AIRB_Database {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$table} WHERE role = %s AND alignment_score <= %d",
+					"SELECT COUNT(*) FROM {$table} WHERE role = %s AND consent = 1 AND alignment_score <= %d",
 					$role,
 					(int) $alignment_score
 				)
@@ -464,7 +468,7 @@ class AIRB_Database {
 			$wpdb->prepare(
 				"SELECT COUNT(*) AS n, AVG(alignment_score) AS alignment_score
 				FROM {$table}
-				WHERE role = %s AND answers LIKE %s",
+				WHERE role = %s AND consent = 1 AND answers LIKE %s",
 				$role,
 				$phase_pattern
 			),
@@ -480,7 +484,7 @@ class AIRB_Database {
 		$scores = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT alignment_score FROM {$table}
-				WHERE role = %s AND answers LIKE %s
+				WHERE role = %s AND consent = 1 AND answers LIKE %s
 				ORDER BY alignment_score ASC",
 				$role,
 				$phase_pattern
@@ -505,7 +509,7 @@ class AIRB_Database {
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$table}
-					WHERE role = %s AND answers LIKE %s AND alignment_score <= %d",
+					WHERE role = %s AND consent = 1 AND answers LIKE %s AND alignment_score <= %d",
 					$role,
 					$phase_pattern,
 					(int) $alignment_score

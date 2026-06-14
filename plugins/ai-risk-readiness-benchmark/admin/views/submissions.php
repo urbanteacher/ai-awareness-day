@@ -43,6 +43,14 @@ $export_url = wp_nonce_url(
 			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['with_school'] ?? 0 ) ); ?></strong>
 			<span><?php esc_html_e( 'With school name', 'ai-risk-benchmark' ); ?></span>
 		</div>
+		<div class="card" style="padding:0.75rem 1rem;">
+			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['benchmark_consent'] ?? 0 ) ); ?></strong>
+			<span><?php esc_html_e( 'Benchmark consent', 'ai-risk-benchmark' ); ?></span>
+		</div>
+		<div class="card" style="padding:0.75rem 1rem;">
+			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['contact_opt_ins'] ?? 0 ) ); ?></strong>
+			<span><?php esc_html_e( 'Contact opt-ins', 'ai-risk-benchmark' ); ?></span>
+		</div>
 	</div>
 
 	<form method="get" class="airb-admin-filters">
@@ -65,6 +73,7 @@ $export_url = wp_nonce_url(
 		<?php submit_button( __( 'Filter', 'ai-risk-benchmark' ), 'secondary', '', false ); ?>
 		<a class="button" href="<?php echo esc_url( $export_url ); ?>"><?php esc_html_e( 'Export CSV', 'ai-risk-benchmark' ); ?></a>
 		<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=airb-funnel' ) ); ?>"><?php esc_html_e( 'Funnel & events', 'ai-risk-benchmark' ); ?></a>
+		<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=airb-leads' ) ); ?>"><?php esc_html_e( 'Leads', 'ai-risk-benchmark' ); ?></a>
 	</form>
 
 	<p><?php printf( esc_html__( '%d submission(s) matching filters', 'ai-risk-benchmark' ), (int) $total ); ?></p>

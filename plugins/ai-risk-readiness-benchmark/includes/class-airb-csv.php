@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_Csv {
 
 	/**
-	 * Stream CSV download.
+	 * Stream submissions CSV download.
 	 */
 	public static function export(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -80,6 +80,102 @@ class AIRB_Csv {
 					$row->privacy_risk,
 					$row->safeguarding_readiness,
 					$row->governance_maturity,
+				)
+			);
+		}
+
+		fclose( $out );
+		exit;
+	}
+
+	/**
+	 * Stream leads CSV download.
+	 */
+	public static function export_leads(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Unauthorized', 'ai-risk-benchmark' ) );
+		}
+
+		check_admin_referer( 'airb_export_leads_csv' );
+
+		$args = array(
+			'status'    => sanitize_key( (string) ( $_GET['status'] ?? '' ) ),
+			'source'    => sanitize_key( (string) ( $_GET['source'] ?? '' ) ),
+			'role'      => sanitize_key( (string) ( $_GET['role'] ?? '' ) ),
+			'school'    => sanitize_text_field( (string) ( $_GET['school'] ?? '' ) ),
+			'date_from' => sanitize_text_field( (string) ( $_GET['date_from'] ?? '' ) ),
+			'date_to'   => sanitize_text_field( (string) ( $_GET['date_to'] ?? '' ) ),
+			'limit'     => 10000,
+			'offset'    => 0,
+		);
+
+		$rows     = AIRB_Leads::get_leads( $args );
+		$statuses = AIRB_Leads::statuses();
+
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=airb-leads-' . gmdate( 'Y-m-d' ) . '.csv' );
+
+		$out = fopen( 'php://output', 'w' );
+		fwrite( $out, "\xEF\xBB\xBF" );
+
+		fputcsv(
+			$out,
+			array(
+				'ID',
+				'Date',
+				'Status',
+				'Source',
+				'Role',
+				'Name',
+				'Email',
+				'School',
+				'Child School',
+				'Submission ID',
+				'Session ID',
+				'Alignment Score',
+				'Risk Level',
+				'Readiness Label',
+				'Stakeholder Role',
+				'Year Group',
+				'Interests',
+				'Weak Domains',
+				'Hub Page',
+				'Hub Ref',
+				'Hub URL',
+				'Checklist Done',
+				'Checklist Total',
+				'Message',
+			)
+		);
+
+		foreach ( $rows as $row ) {
+			fputcsv(
+				$out,
+				array(
+					$row->id,
+					$row->created_at,
+					$statuses[ $row->status ] ?? $row->status,
+					$row->source,
+					$row->role,
+					self::escape_cell( (string) $row->name ),
+					self::escape_cell( (string) $row->email ),
+					self::escape_cell( (string) $row->school ),
+					self::escape_cell( (string) $row->child_school ),
+					$row->submission_id,
+					self::escape_cell( (string) $row->session_id ),
+					$row->alignment_score,
+					$row->risk_level,
+					self::escape_cell( (string) $row->readiness_level_label ),
+					$row->stakeholder_role,
+					$row->year_group,
+					self::escape_cell( implode( '; ', AIRB_Leads::decode_list( (string) $row->interests ) ) ),
+					self::escape_cell( implode( '; ', AIRB_Leads::decode_list( (string) $row->weak_domains ) ) ),
+					$row->hub_page,
+					$row->hub_ref,
+					self::escape_cell( (string) $row->hub_url ),
+					$row->checklist_done,
+					$row->checklist_total,
+					self::escape_cell( (string) $row->message ),
 				)
 			);
 		}
