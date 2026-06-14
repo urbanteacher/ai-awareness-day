@@ -20,11 +20,13 @@ class AIRB_Hub_Pages {
 
 	private const PATCH_INTERVENTION = 'airb_hub_intervention_v19';
 
+	private const PATCH_HUB_CONTACT_CTA = 'airb_hub_contact_cta_v1';
+
 	/**
 	 * Register front-end hooks (interactive checklist assets).
 	 */
 	public static function register(): void {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_hub_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_hub_assets' ), 25 );
 	}
 
 	/**
@@ -136,6 +138,7 @@ class AIRB_Hub_Pages {
 		if ( get_option( self::OPTION ) === 'yes' ) {
 			self::maybe_remove_embedded_benchmark();
 			self::maybe_upgrade_intervention_content();
+			self::maybe_fix_hub_contact_cta_links();
 			return;
 		}
 
@@ -151,6 +154,7 @@ class AIRB_Hub_Pages {
 		update_option( self::OPTION, 'yes', false );
 		self::maybe_remove_embedded_benchmark();
 		self::maybe_upgrade_intervention_content();
+		self::maybe_fix_hub_contact_cta_links();
 	}
 
 	/**
@@ -243,6 +247,54 @@ class AIRB_Hub_Pages {
 		}
 
 		update_option( self::PATCH_INTERVENTION, 'yes', false );
+	}
+
+	/**
+	 * Point "Book / contact" training CTAs at the on-page hub interest form.
+	 */
+	public static function maybe_fix_hub_contact_cta_links(): void {
+		if ( get_option( self::PATCH_HUB_CONTACT_CTA ) === 'yes' ) {
+			return;
+		}
+
+		if ( ! function_exists( 'get_page_by_path' ) || ! function_exists( 'wp_update_post' ) ) {
+			return;
+		}
+
+		$contact_path = trailingslashit( (string) parse_url( AIRB_Defaults::hub_page_url( 'contact' ), PHP_URL_PATH ) );
+
+		foreach ( AIRB_Defaults::hub_page_definitions() as $def ) {
+			$slug = sanitize_title( (string) ( $def['slug'] ?? '' ) );
+			if ( ! $slug || ! in_array( $slug, AIRB_Hub_Content::intervention_slugs(), true ) ) {
+				continue;
+			}
+
+			$existing = get_page_by_path( $slug, OBJECT, 'page' );
+			if ( ! $existing instanceof WP_Post ) {
+				continue;
+			}
+
+			$current = (string) $existing->post_content;
+			if ( false === strpos( $current, $contact_path ) && false === strpos( $current, '/contact/' ) ) {
+				continue;
+			}
+
+			$excerpt = (string) ( $def['excerpt'] ?? $existing->post_excerpt );
+			$content = (string) ( $def['content'] ?? '' );
+			if ( ! $content ) {
+				$cta     = __( 'Take the free AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' );
+				$content = AIRB_Hub_Content::for_slug( $slug, $excerpt, $cta );
+			}
+
+			wp_update_post(
+				array(
+					'ID'           => (int) $existing->ID,
+					'post_content' => $content,
+				)
+			);
+		}
+
+		update_option( self::PATCH_HUB_CONTACT_CTA, 'yes', false );
 	}
 
 	/**

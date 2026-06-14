@@ -14,3 +14,74 @@
 .single-timeline-entry--hub .single-timeline-entry__footer {
 	margin-top: 2.5rem;
 }
+
+/* Improvement journey — dark band (matches benchmark interest / submission forms) */
+.single-timeline-entry--hub #airb-hub-interest.airb-hub-journey-wrap {
+	--airb-interest-bg: var(--gray-900, #1e1e1e);
+	--airb-interest-surface: rgba(0, 0, 0, 0.35);
+	--airb-interest-surface-2: var(--gray-800, #262626);
+	--airb-interest-text: var(--white, #ffffff);
+	--airb-interest-muted: var(--gray-400, #a3a3a3);
+	--airb-interest-border: rgba(255, 255, 255, 0.12);
+	--airb-interest-accent: var(--accent-green, #22c55e);
+
+	margin-top: 0;
+	padding: 1.75rem 1.5rem 2rem;
+	border: 1px solid var(--airb-interest-border);
+	border-radius: var(--border-radius, 4px);
+	background: var(--airb-interest-bg);
+	color: var(--airb-interest-text);
+	color-scheme: dark;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+	scroll-margin-top: 1.5rem;
+}
+
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-section-title,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-subtitle,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-next-intro,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-focus-line,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-overall-line,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-action-item,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-action-text,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-leading-list li,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-school-list li,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-school p,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-ladder-item,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-support-summary {
+	color: var(--airb-interest-text);
+}
+
+.single-timeline-entry--hub #airb-hub-interest .airb__muted {
+	color: var(--airb-interest-muted);
+}
+
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-action-item a,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-pathway-step a,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-ladder-item a {
+	color: var(--airb-interest-accent);
+}
+
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-focus-score {
+	background: var(--airb-interest-surface);
+	border-color: var(--airb-interest-border);
+}
+
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-next-step,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-pathway,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-leading,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-school,
+.single-timeline-entry--hub #airb-hub-interest .airb-hub-support {
+	border-color: var(--airb-interest-border);
+}
+
+@media (min-width: 640px) {
+	.single-timeline-entry--hub #airb-hub-interest.airb-hub-journey-wrap {
+		padding: 2rem 1.75rem 2.25rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.single-timeline-entry--hub #airb-hub-interest.airb-hub-journey-wrap {
+		border-radius: 0;
+	}
+}

@@ -4334,6 +4334,8 @@
 /* Post-results interest form + hub contextual form — theme night band (homepage timeline black) */
 .airb .airb__interest,
 .airb-hub-interest-wrap,
+.airb-hub-journey-wrap,
+#airb-hub-interest,
 #airb-interest.airb__interest {
 	--airb-interest-bg: var(--gray-900, #1e1e1e);
 	--airb-interest-surface: rgba(0, 0, 0, 0.35);

@@ -30,7 +30,7 @@ class AIRB_Hub_Content {
 	public static function for_slug( string $slug, string $excerpt, string $benchmark_cta ): string {
 		$frameworks = self::frameworks();
 		$def        = $frameworks[ $slug ] ?? self::generic_framework( $slug, $excerpt );
-		return self::render( $def, $benchmark_cta );
+		return self::render( $def, $benchmark_cta, $slug );
 	}
 
 	/**
@@ -2401,7 +2401,7 @@ class AIRB_Hub_Content {
 	/**
 	 * @param array<string, mixed> $def Framework definition.
 	 */
-	private static function render( array $def, string $benchmark_cta ): string {
+	private static function render( array $def, string $benchmark_cta, string $page_slug = '' ): string {
 		$blocks = array();
 
 		$blocks[] = '<!-- ' . esc_html( self::CONTENT_VERSION_MARKER ) . ' -->';
@@ -2583,7 +2583,17 @@ class AIRB_Hub_Content {
 			$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html( $train_h ) . '</h2><!-- /wp:heading -->';
 			if ( ! empty( $training['label'] ) ) {
 				$path = (string) ( $training['path'] ?? '' );
-				$url  = $path ? AIRB_Defaults::hub_page_url( $path ) : '';
+				$url  = '';
+				if ( 'contact' === $path ) {
+					$prefill = sanitize_key( (string) ( $training['interest'] ?? $training['prefill'] ?? '' ) );
+					if ( ! $prefill && $page_slug && class_exists( 'AIRB_Hub_Interest' ) ) {
+						$slug_map = AIRB_Hub_Interest::slug_interest_map();
+						$prefill  = sanitize_key( (string) ( $slug_map[ $page_slug ] ?? 'further_information' ) );
+					}
+					$url = '#airb-hub-interest' . ( $prefill ? '?prefill=' . rawurlencode( $prefill ) : '' );
+				} elseif ( $path ) {
+					$url = AIRB_Defaults::hub_page_url( $path );
+				}
 				if ( $url ) {
 					$blocks[] = '<!-- wp:paragraph --><p><strong><a href="' . esc_url( $url ) . '">' . esc_html( (string) $training['label'] ) . '</a></strong></p><!-- /wp:paragraph -->';
 				} else {
