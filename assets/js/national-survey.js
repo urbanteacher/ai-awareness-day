@@ -101,6 +101,23 @@
 			});
 		});
 
+		// ── Year groups visibility (hide for HE/FE/MAT) ──────────────────────
+		var schoolTypeSelect = document.getElementById('survey-school-type');
+		var yearGroupsWrap = document.getElementById('survey-year-groups-wrap');
+		if (schoolTypeSelect && yearGroupsWrap) {
+			schoolTypeSelect.addEventListener('change', function () {
+				// Hide year groups for institutions that don't use KS stages
+				var hideYearGroups = ['higher_education', 'fe_college', 'mat_trust'].indexOf(this.value) !== -1;
+				yearGroupsWrap.style.display = hideYearGroups ? 'none' : '';
+				// Clear checkboxes when hidden to avoid submitting nonsensical data
+				if (hideYearGroups) {
+					yearGroupsWrap.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+						cb.checked = false;
+					});
+				}
+			});
+		}
+
 		// ── Star rating interaction ──────────────────────────────────────────
 		document.querySelectorAll('.aiad-survey__stars').forEach(function (group) {
 			var labels = Array.from(group.querySelectorAll('.aiad-survey__star-label'));

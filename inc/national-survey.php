@@ -157,7 +157,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				</div>
 
 				<!-- Q2: Year groups -->
-				<div class="aiad-survey__field">
+				<div class="aiad-survey__field" id="survey-year-groups-wrap">
 					<p class="aiad-survey__label">
 						2. <?php esc_html_e( 'Which year groups do you work with? (tick all that apply)', 'ai-awareness-day' ); ?>
 					</p>
