@@ -44,7 +44,7 @@ if ( $aiad_survey_url === '' ) {
             </div>
             <div class="survey-cta-col fade-up">
                 <div class="hero-cta survey-cta">
-                    <a class="hero-cta__btn hero-cta__btn--primary" href="<?php echo esc_url( $aiad_survey_url ); ?>">
+                    <a class="hero-cta__btn hero-cta__btn--primary hero-cta__btn--pointed" href="<?php echo esc_url( $aiad_survey_url ); ?>">
                         <?php esc_html_e( 'Take the 3-minute survey', 'ai-awareness-day' ); ?>
                     </a>
                 </div>

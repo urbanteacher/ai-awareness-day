@@ -49,7 +49,7 @@
 
 @media screen and (min-width: 900px) {
   #survey-cta .survey-split {
-    grid-template-columns: 1fr minmax(240px, 320px);
+    grid-template-columns: 1fr minmax(11.375rem, calc(22rem * 0.7));
     gap: 3rem;
     align-items: center;
   }
@@ -68,9 +68,16 @@
   #survey-cta .survey-cta .hero-cta__btn {
     display: flex;
     width: 100%;
+    max-width: none;
+    margin-inline: 0;
     justify-content: center;
     text-align: center;
     white-space: normal;
+  }
+
+  #survey-cta .hero-cta__btn--pointed {
+    --survey-btn-chamfer: calc(50px * 0.7);
+    padding: calc(2rem * 0.7) calc(1.5rem * 0.7);
   }
 }
 
@@ -83,10 +90,17 @@
   #survey-cta .survey-cta .hero-cta__btn {
     display: flex;
     width: 100%;
-    flex: 1 1 100%;
+    max-width: calc(22rem * 0.7);
+    margin-inline: auto;
+    flex: 0 0 auto;
     justify-content: center;
     text-align: center;
     white-space: normal;
+  }
+
+  #survey-cta .hero-cta__btn--pointed {
+    --survey-btn-chamfer: clamp(calc(24px * 0.7), calc(7vw * 0.7), calc(36px * 0.7));
+    padding: calc(1.5rem * 0.7) calc(1.25rem * 0.7);
   }
 }
 
@@ -115,7 +129,48 @@
   border-color: var(--white);
 }
 
-#survey-cta .hero-cta__btn--primary:hover {
+#survey-cta .hero-cta__btn--pointed {
+  --survey-btn-scale: 0.7;
+  --survey-btn-text-scale: 0.7;
+  --survey-btn-chamfer: clamp(calc(28px * var(--survey-btn-scale)), calc(9vw * var(--survey-btn-scale)), calc(44px * var(--survey-btn-scale)));
+  border-radius: 0;
+  border: none;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--survey-btn-chamfer)) 0,
+    100% var(--survey-btn-chamfer),
+    100% 100%,
+    var(--survey-btn-chamfer) 100%,
+    0 calc(100% - var(--survey-btn-chamfer))
+  );
+  background: var(--white);
+  color: var(--gray-900);
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: calc(22rem * var(--survey-btn-scale));
+  min-height: unset;
+  margin-inline: auto;
+  padding: calc(1.75rem * var(--survey-btn-scale)) calc(1.35rem * var(--survey-btn-scale));
+  font-size: clamp(
+    calc(2rem * var(--survey-btn-scale) * var(--survey-btn-text-scale)),
+    calc(4vw * var(--survey-btn-scale) * var(--survey-btn-text-scale)),
+    calc(3rem * var(--survey-btn-scale) * var(--survey-btn-text-scale))
+  );
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.2));
+}
+
+#survey-cta .hero-cta__btn--pointed:hover {
+  background: var(--gray-100);
+  border-color: transparent;
+  color: var(--gray-900);
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.25));
+}
+
+#survey-cta .hero-cta__btn--primary:not(.hero-cta__btn--pointed):hover {
   background: var(--gray-200);
   border-color: var(--gray-200);
   color: var(--gray-900);
