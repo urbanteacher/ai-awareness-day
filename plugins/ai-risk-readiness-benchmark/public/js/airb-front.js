@@ -18,6 +18,7 @@
 	var leaderResult = cfg.leader_result || {};
 	var improvementHub = cfg.improvement_hub || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
+	var introCollapsed = false;
 
 	var state = {
 		phase: 'role',
@@ -48,17 +49,99 @@
 		progressLbl: document.getElementById('airb-progress-label'),
 		error: document.getElementById('airb-error'),
 		printHost: document.getElementById('airb-print-host'),
+		navSlot: document.getElementById('airb-nav-slot'),
 		hero: document.querySelector('.airb__hero'),
 		deck: document.getElementById('airb-deck'),
 		root: document.getElementById('airb-benchmark'),
 	};
 
+	var introCollapsed = false;
+
+	function isMobileFlow() {
+		return window.matchMedia('(max-width: 768px)').matches;
+	}
+
 	function updateFlowChrome() {
 		if (!el.root) return;
 		var inFlow = !!(el.nav && !el.nav.hidden);
+		var mobileShell = isMobileFlow() && (state.phase === 'role' || inFlow);
 		el.root.classList.toggle('airb--nav-dock', inFlow);
+		el.root.classList.toggle('airb--mobile-flow', mobileShell);
+		el.root.classList.toggle('airb--phase-role', state.phase === 'role');
 		el.root.classList.toggle('airb--phase-audit', state.phase === 'audit');
 		el.root.classList.toggle('airb--intro-collapsed', introCollapsed);
+		syncNavPlacement();
+		document.body.classList.toggle('airb-flow-active', state.phase === 'audit' || state.phase === 'contact');
+	}
+
+	function syncNavPlacement() {
+		if (!el.nav) return;
+		var inlineHost = null;
+		if (isMobileFlow() && !el.nav.hidden) {
+			if (state.phase === 'audit') inlineHost = el.audit;
+			if (state.phase === 'contact') inlineHost = el.contact;
+		}
+		el.nav.classList.toggle('airb__nav--inline', !!inlineHost);
+		if (inlineHost) {
+			if (el.error) {
+				inlineHost.appendChild(el.error);
+			}
+			inlineHost.appendChild(el.nav);
+		} else {
+			if (el.navSlot) {
+				el.navSlot.appendChild(el.nav);
+			}
+			if (el.error && el.navSlot && el.navSlot.parentNode) {
+				el.navSlot.parentNode.insertBefore(el.error, el.navSlot);
+			}
+		}
+	}
+
+	function beginAudit() {
+		try {
+			hideError();
+			if (!state.role) {
+				showError(i18n.chooseRole);
+				return false;
+			}
+			state.sections = sectionsForRole(state.role);
+			state.questions = state.sections.reduce(function (acc, s) { return acc.concat(s.questions); }, []);
+			if (!state.sections.length) {
+				showError(i18n.error);
+				return false;
+			}
+			state.phase = 'audit';
+			state.step = 0;
+			state.answers = {};
+			collapseIntro();
+			renderAuditSection();
+			return true;
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB beginAudit failed', err);
+			}
+			showError(i18n.error || 'Something went wrong. Please refresh and try again.');
+			return false;
+		}
+	}
+
+	function bindRoleCardActions() {
+		if (!el.root || el.root.dataset.airbRoleBound === '1') {
+			return;
+		}
+		el.root.dataset.airbRoleBound = '1';
+		el.root.addEventListener('click', function (e) {
+			if (state.phase !== 'role') {
+				return;
+			}
+			var btn = e.target.closest('.airb__role-card[data-role]');
+			if (!btn || !el.role || !el.role.contains(btn)) {
+				return;
+			}
+			e.preventDefault();
+			state.role = btn.getAttribute('data-role') || '';
+			beginAudit();
+		});
 	}
 
 	function collapseIntro() {
@@ -468,13 +551,24 @@
 	}
 
 	function showError(msg) {
+		if (!el.error) return;
 		el.error.textContent = msg;
 		el.error.hidden = false;
+		if (el.root) {
+			el.root.classList.add('airb--show-error');
+		}
+		window.requestAnimationFrame(function () {
+			el.error.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		});
 	}
 
 	function hideError() {
+		if (!el.error) return;
 		el.error.hidden = true;
 		el.error.textContent = '';
+		if (el.root) {
+			el.root.classList.remove('airb--show-error');
+		}
 	}
 
 	function oversightZoneColor(v) {
@@ -544,38 +638,15 @@
 			html += '</button>';
 		});
 		html += '</div>';
-		if (state.role && benchmarks[state.role]) {
-			var b = benchmarks[state.role];
-			html += '<div class="airb__role-detail">';
-			if (b.measures && b.measures.length) {
-				html += '<p class="airb__role-detail-label">' + esc(i18n.measures) + '</p><ul class="airb__role-detail-list">';
-				b.measures.forEach(function (m) { html += '<li>' + esc(m) + '</li>'; });
-				html += '</ul>';
-			}
-			if (b.outputs && b.outputs.length) {
-				html += '<p class="airb__role-detail-label">' + esc(i18n.outputs) + '</p><ul class="airb__role-detail-list airb__role-detail-list--outputs">';
-				b.outputs.forEach(function (o) { html += '<li>' + esc(o) + '</li>'; });
-				html += '</ul>';
-			}
-			html += '</div>';
-		}
 		html += '</div>';
 		el.role.innerHTML = html;
 		el.role.hidden = false;
 		el.audit.hidden = true;
 		el.contact.hidden = true;
 		el.results.hidden = true;
-		el.nav.hidden = false;
+		el.nav.hidden = true;
 		el.back.hidden = true;
-		el.next.textContent = i18n.next;
 		el.progress.hidden = true;
-
-		el.role.querySelectorAll('[data-role]').forEach(function (btn) {
-			btn.addEventListener('click', function () {
-				state.role = btn.getAttribute('data-role');
-				renderRole();
-			});
-		});
 		updateFlowChrome();
 	}
 
@@ -667,7 +738,9 @@
 		el.results.hidden = true;
 		el.nav.hidden = false;
 		el.back.hidden = state.step === 0;
-		el.next.textContent = i18n.next;
+		if (el.next) {
+			el.next.textContent = i18n.next;
+		}
 		el.progress.hidden = false;
 		updateStepper(state.sections.length, state.step);
 		if (el.progressLbl) {
@@ -675,9 +748,6 @@
 		}
 		bindSectionInputs(section);
 		updateFlowChrome();
-		if (window.matchMedia('(max-width: 768px)').matches && el.progress) {
-			el.progress.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		}
 	}
 
 	function isYoungRole() {
@@ -720,8 +790,17 @@
 		return html;
 	}
 
+	function roleSummaryHtml() {
+		var roleLabel = (cfg.roles || {})[state.role] || state.role;
+		return '<div class="airb__contact-role">' +
+			'<span class="airb__label" id="airb-contact-role-label">' + esc(i18n.yourRole || 'Your role') + '</span>' +
+			'<p class="airb__contact-role-value" id="airb-contact-role" aria-labelledby="airb-contact-role-label">' + esc(roleLabel) + '</p>' +
+			'</div>';
+	}
+
 	function renderContact() {
 		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Almost done') + '</h3>';
+		html += roleSummaryHtml();
 
 		if (isYoungRole()) {
 			if (state.role === 'parent' && i18n.contactHintParent) {
@@ -762,7 +841,9 @@
 		el.results.hidden = true;
 		el.back.hidden = false;
 		el.nav.hidden = false;
-		el.next.textContent = i18n.submit;
+		if (el.next) {
+			el.next.textContent = i18n.submit;
+		}
 		el.progress.hidden = true;
 		updateFlowChrome();
 	}
@@ -893,6 +974,74 @@
 		return html + '</ol></div>';
 	}
 
+	function strengthsSectionHtml(strengths, heading) {
+		if (!strengths || !strengths.length) return '';
+		var html = '<section class="airb__strengths">';
+		html += '<h3 class="airb__strengths-title">' + esc(heading) + '</h3>';
+		html += '<div class="airb__strength-grid">';
+		strengths.forEach(function (item) {
+			html += '<article class="airb__strength-card">';
+			html += '<span class="airb__strength-mark" aria-hidden="true">✓</span>';
+			html += '<p class="airb__strength-text">' + esc(item) + '</p>';
+			html += '</article>';
+		});
+		return html + '</div></section>';
+	}
+
+	function opportunitiesSectionHtml(opportunities, heading, variant) {
+		if (!opportunities || !opportunities.length) return '';
+		var html = '<section class="airb__opportunities' + (variant ? ' airb__opportunities--' + variant : '') + '">';
+		html += '<h3 class="airb__opportunities-title">' + esc(heading) + '</h3>';
+		html += '<div class="airb__opportunity-grid">';
+		opportunities.forEach(function (opp) {
+			html += '<article class="airb__opportunity-card">';
+			html += '<header class="airb__opportunity-head">';
+			html += '<h4 class="airb__opportunity-label">' + esc(opp.label) + '</h4>';
+			if (typeof opp.pct === 'number') {
+				html += '<span class="airb__opportunity-pct">' + opp.pct + '%</span>';
+			}
+			html += '</header>';
+			if (opp.summary) {
+				html += '<p class="airb__opportunity-summary">' + esc(opp.summary) + '</p>';
+			}
+			var tipsHtml = '';
+			if (opp.tips && opp.tips.length) {
+				tipsHtml += '<ul class="airb__opportunity-tips">';
+				opp.tips.forEach(function (tip) {
+					tipsHtml += '<li>' + esc(tip) + '</li>';
+				});
+				tipsHtml += '</ul>';
+			}
+			var detailHtml = opp.detail ? '<p class="airb__opportunity-detail">' + esc(opp.detail) + '</p>' : '';
+			if (variant === 'student' && opp.slug !== 'privacy') {
+				html += detailHtml + tipsHtml;
+			} else {
+				html += tipsHtml + detailHtml;
+			}
+			html += '</article>';
+		});
+		return html + '</div></section>';
+	}
+
+	function summaryMetricsSectionHtml(metrics, title, options) {
+		if (!metrics || !metrics.length) return '';
+		options = options || {};
+		var sectionClass = 'airb__summary-metrics' + (options.modifier ? ' airb__summary-metrics--' + options.modifier : '');
+		var html = '<section class="' + sectionClass + '">';
+		if (title) {
+			html += '<h4 class="airb__summary-metrics-title">' + esc(title) + '</h4>';
+		}
+		html += '<div class="airb__summary-grid">';
+		metrics.forEach(function (row) {
+			html += '<div class="airb__summary-metric">';
+			html += '<span class="airb__summary-metric-lab">' + esc(row.label) + '</span>';
+			var valStyle = row.color ? ' style="color:' + esc(row.color) + '"' : '';
+			html += '<span class="airb__summary-metric-val"' + valStyle + '>' + esc(row.value) + '</span>';
+			html += '</div>';
+		});
+		return html + '</div></section>';
+	}
+
 	function teacherResultsHtml(r) {
 		var tr = r.teacher_results;
 		if (!tr) return '';
@@ -904,26 +1053,15 @@
 		}
 
 		if (tr.strengths && tr.strengths.length) {
-			html += '<div class="airb__res-panel airb__res-panel--strengths">';
-			html += '<h3>' + esc(teacherResult.strengths_heading || 'What you\'re doing well') + '</h3>';
-			html += '<ul class="airb__strength-list">';
-			tr.strengths.forEach(function (item) {
-				html += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
-			});
-			html += '</ul></div>';
+			html += strengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
 		}
 
 		if (tr.opportunities && tr.opportunities.length) {
-			html += '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--teacher-opps">';
-			html += '<h3>' + esc(teacherResult.opportunities_heading || 'Opportunities to strengthen further') + '</h3>';
-			tr.opportunities.forEach(function (opp) {
-				html += '<div class="airb__res-rec airb__res-rec--teacher">';
-				html += '<h4 class="airb__res-rec-title">' + esc(opp.label) + ' (' + opp.pct + '%)</h4>';
-				if (opp.summary) html += '<p class="airb__res-rec-body">' + esc(opp.summary) + '</p>';
-				if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
-				html += '</div>';
-			});
-			html += '</div>';
+			html += opportunitiesSectionHtml(
+				tr.opportunities,
+				teacherResult.opportunities_heading || 'Opportunities to strengthen further',
+				'teacher'
+			);
 		}
 
 		if (tr.champion_pathway) {
@@ -966,77 +1104,6 @@
 			html += '</ul></div>';
 		}
 
-		if (tr.benchmark_summary) {
-			var bs = tr.benchmark_summary;
-			html += '<section class="airb__teacher-summary">';
-			html += '<h4>' + esc(bs.title || 'Teacher Benchmark Summary') + '</h4>';
-			if (bs.metrics && bs.metrics.length) {
-				html += '<table class="airb__summary-table"><tbody>';
-				bs.metrics.forEach(function (row) {
-					html += '<tr><th scope="row">' + esc(row.label) + '</th><td>' + esc(row.value) + '</td></tr>';
-				});
-				html += '</tbody></table>';
-			}
-			html += '</section>';
-		}
-
-		if (tr.school_impact) {
-			var si = tr.school_impact;
-			html += '<div class="airb__res-panel airb__res-panel--impact">';
-			html += '<h3>' + esc(si.heading || 'School impact') + '</h3>';
-			if (si.intro) html += '<p>' + esc(si.intro) + '</p>';
-			if (si.items && si.items.length) {
-				html += '<ul class="airb__impact-list">';
-				si.items.forEach(function (item) {
-					html += '<li>' + esc(item) + '</li>';
-				});
-				html += '</ul>';
-			}
-			if (si.closing) html += '<p class="airb__muted">' + esc(si.closing) + '</p>';
-			html += '</div>';
-		}
-
-		if (tr.school_contribution) {
-			var sc = tr.school_contribution;
-			html += '<div class="airb__res-panel airb__res-panel--contribution">';
-			html += '<h3>' + esc(sc.heading || 'School contribution') + '</h3>';
-			if (sc.intro) html += '<p>' + esc(sc.intro) + '</p>';
-			if (sc.items && sc.items.length) {
-				html += '<ul class="airb__impact-list">';
-				sc.items.forEach(function (item) {
-					html += '<li>' + esc(item) + '</li>';
-				});
-				html += '</ul>';
-			}
-			if (sc.closing) html += '<p class="airb__muted">' + esc(sc.closing) + '</p>';
-			html += '</div>';
-		}
-
-		if (tr.school_progress) {
-			var sp = tr.school_progress;
-			var progressCopy = teacherResult.school_progress || {};
-			html += '<div class="airb__res-panel airb__res-panel--progress">';
-			if (sp.whole_school_available && progressCopy.unlocked) {
-				html += '<p>' + esc(progressCopy.unlocked) + '</p>';
-			} else if (sp.has_school && progressCopy.with_count) {
-				html += '<p>' + esc(progressCopy.with_count
-					.replace('{n}', String(sp.teacher_responses))
-					.replace('{threshold}', String(sp.threshold))) + '</p>';
-			} else if (progressCopy.without_school) {
-				html += '<p class="airb__muted">' + esc(progressCopy.without_school) + '</p>';
-			}
-			html += '</div>';
-		}
-
-		if (tr.future_offer && tr.future_offer.body) {
-			html += '<aside class="airb__insight airb__insight--future">';
-			if (tr.future_offer.heading) {
-				html += '<span class="airb__insight-label">' + esc(tr.future_offer.heading) + '</span>';
-			}
-			html += '<p>' + esc(tr.future_offer.body) + '</p>';
-			html += '</aside>';
-		}
-
 		return html;
 	}
 
@@ -1051,58 +1118,30 @@
 		}
 
 		if (sr.learning_metrics && sr.learning_metrics.length) {
-			html += '<section class="airb__student-profile">';
-			html += '<h4>' + esc(sr.profile_title || studentResult.profile_title || 'Your AI Learning Profile') + '</h4>';
-			html += '<table class="airb__summary-table"><tbody>';
-			sr.learning_metrics.forEach(function (row) {
-				var val = row.value;
-				var color = row.type === 'risk' ? riskScoreColor(val) : readinessBandColor(val);
-				html += '<tr><th scope="row">' + esc(row.label) + '</th><td style="color:' + esc(color) + '">' + val + '%</td></tr>';
+			var profileMetrics = sr.learning_metrics.map(function (row) {
+				return {
+					label: row.label,
+					value: row.value + '%',
+					color: row.type === 'risk' ? riskScoreColor(row.value) : readinessBandColor(row.value),
+				};
 			});
-			html += '</tbody></table></section>';
+			html += summaryMetricsSectionHtml(
+				profileMetrics,
+				sr.profile_title || studentResult.profile_title || 'Your AI Learning Profile',
+				{ modifier: 'student' }
+			);
 		}
 
 		if (sr.strengths && sr.strengths.length) {
-			html += '<div class="airb__res-panel airb__res-panel--strengths">';
-			html += '<h3>' + esc(studentResult.strengths_heading || 'What you\'re doing well') + '</h3>';
-			html += '<ul class="airb__strength-list">';
-			sr.strengths.forEach(function (item) {
-				html += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
-			});
-			html += '</ul></div>';
+			html += strengthsSectionHtml(sr.strengths, studentResult.strengths_heading || 'What you\'re doing well');
 		}
 
 		if (sr.opportunities && sr.opportunities.length) {
-			html += '<div class="airb__res-panel airb__res-panel--focus airb__res-panel--student-opps">';
-			html += '<h3>' + esc(studentResult.opportunities_heading || 'Opportunities to improve') + '</h3>';
-			sr.opportunities.forEach(function (opp) {
-				html += '<div class="airb__res-rec airb__res-rec--student">';
-				var title = opp.label;
-				if (typeof opp.pct === 'number') title += ' (' + opp.pct + '%)';
-				html += '<h4 class="airb__res-rec-title">' + esc(title) + '</h4>';
-				if (opp.summary) html += '<p class="airb__res-rec-body">' + esc(opp.summary) + '</p>';
-				if (opp.slug === 'privacy') {
-					if (opp.tips && opp.tips.length) {
-						html += '<ul class="airb__student-tips">';
-						opp.tips.forEach(function (tip) {
-							html += '<li>' + esc(tip) + '</li>';
-						});
-						html += '</ul>';
-					}
-					if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
-				} else {
-					if (opp.detail) html += '<p class="airb__res-rec-detail">' + esc(opp.detail) + '</p>';
-					if (opp.tips && opp.tips.length) {
-						html += '<ul class="airb__student-tips">';
-						opp.tips.forEach(function (tip) {
-							html += '<li>' + esc(tip) + '</li>';
-						});
-						html += '</ul>';
-					}
-				}
-				html += '</div>';
-			});
-			html += '</div>';
+			html += opportunitiesSectionHtml(
+				sr.opportunities,
+				studentResult.opportunities_heading || 'Opportunities to improve',
+				'student'
+			);
 		}
 
 		if (sr.learning_challenge) {
@@ -1307,6 +1346,10 @@
 		html += '<span class="airb__res-band" style="color:' + esc(readinessBandColor(readiness)) + '">' + esc(readinessLabel) + '</span>';
 		html += '</div>';
 
+		if (isTeacherRole() || studentMode) {
+			html += oversightPanelHtml(r);
+		}
+
 		html += '<div class="airb__res-grid3' + (parentMode ? ' airb__res-grid3--two' : '') + '">';
 		html += '<div class="airb__res-stat">';
 		html += '<div class="airb__res-stat-lab">' + esc(i18n.statReadiness || 'Readiness score') + '</div>';
@@ -1353,7 +1396,15 @@
 		} else if (leaderMode) {
 			/* Governance content follows in leaderResultsHtml. */
 		} else if (isTeacherRole() || studentMode) {
-			html += '<div class="airb__res-two airb__res-two--teacher">' + oversightPanelHtml(r) + '</div>';
+			html += domainReadinessRowsHtml(r);
+			if (isTeacherRole() && r.teacher_results && r.teacher_results.benchmark_summary) {
+				var tbs = r.teacher_results.benchmark_summary;
+				html += summaryMetricsSectionHtml(
+					tbs.metrics,
+					tbs.title || 'Teacher Benchmark Summary',
+					{ modifier: 'teacher' }
+				);
+			}
 		} else {
 			html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
 		}
@@ -1620,27 +1671,22 @@
 				html += '</article>';
 			});
 			html += '</div></section>';
-		} else {
-			var shareHint = parentMode
-				? (parentResult.share_hint || i18n.shareResultsHintParent || i18n.shareResultsHint)
-				: studentMode
-					? ((r.student_results && r.student_results.share_hint) || studentResult.share_hint || i18n.shareResultsHint)
-					: i18n.shareResultsHint;
-			if (shareHint) {
-				html += '<p class="airb__muted airb__share-hint">' + esc(shareHint) + '</p>';
-			}
+		}
+
+		var shareHint = shareResultsHintText(r);
+		if (shareHint) {
+			html += '<p class="airb__muted airb__share-hint">' + esc(shareHint) + '</p>';
 		}
 
 		html += '<div class="airb__results-actions">';
+		var shareMailto = buildShareResultsMailto();
+		if (shareMailto) {
+			html += '<a class="airb__btn airb__btn--primary airb__btn--share" href="' + shareMailto + '" id="airb-share-results">' + esc(i18n.shareWithSchool || 'Share results with your school') + '</a>';
+		}
 		if (isStaffRole()) {
 			var reportMailto = buildReportRequestMailto();
 			if (reportMailto) {
 				html += '<a class="airb__btn airb__btn--primary airb__btn--premium" href="' + reportMailto + '" id="airb-request-report">' + esc(i18n.requestFullReport) + '</a>';
-			}
-		} else {
-			var shareMailto = buildShareResultsMailto();
-			if (shareMailto) {
-				html += '<a class="airb__btn airb__btn--ghost" href="' + shareMailto + '" id="airb-share-results">' + esc(i18n.shareWithSchool || 'Share results with your school') + '</a>';
 			}
 		}
 		if (state.email) {
@@ -1743,14 +1789,7 @@
 	function goNext() {
 		hideError();
 		if (state.phase === 'role') {
-			if (!state.role) { showError(i18n.chooseRole); return; }
-			state.sections = sectionsForRole(state.role);
-			state.questions = state.sections.reduce(function (acc, s) { return acc.concat(s.questions); }, []);
-			if (!state.sections.length) { showError(i18n.error); return; }
-			state.phase = 'audit';
-			state.step = 0;
-			collapseIntro();
-			renderAuditSection();
+			beginAudit();
 			return;
 		}
 		if (state.phase === 'audit') {
@@ -1805,7 +1844,9 @@
 		}
 		if (state.phase === 'audit' && state.step === 0) {
 			state.phase = 'role';
-			expandIntro();
+			if (!isMobileFlow()) {
+				expandIntro();
+			}
 			renderRole();
 			return;
 		}
@@ -1842,6 +1883,22 @@
 			});
 	}
 
+	function shareResultsHintText(r) {
+		if (isParentRole()) {
+			return parentResult.share_hint || i18n.shareResultsHintParent || i18n.shareResultsHint || '';
+		}
+		if (isStudentRole()) {
+			return (r && r.student_results && r.student_results.share_hint) || studentResult.share_hint || i18n.shareResultsHint || '';
+		}
+		if (isTeacherRole()) {
+			return teacherResult.share_hint || i18n.shareResultsHintTeacher || i18n.shareResultsHint || '';
+		}
+		if (isLeaderRole()) {
+			return leaderResult.share_hint || i18n.shareResultsHintLeader || i18n.shareResultsHintTeacher || i18n.shareResultsHint || '';
+		}
+		return i18n.shareResultsHint || '';
+	}
+
 	function buildReportRequestMailto() {
 		var r = state.results;
 		var to = airbBenchmark.contactEmail || '';
@@ -1875,11 +1932,26 @@
 
 	function buildShareResultsMailto() {
 		var r = state.results;
-		if (!r || isStaffRole()) return '';
+		if (!r) return '';
 
 		var roleLbl = (cfg.roles || {})[state.role] || state.role;
+		var intro = i18n.shareEmailIntro || 'Hello, I completed the free AI Risk & Readiness Benchmark and wanted to share my results with the school.';
+		var closing = i18n.shareEmailClosing || 'Please share this with the relevant teacher or school leader so our school can build the whole-school picture.';
+		if (isTeacherRole()) {
+			intro = i18n.shareEmailIntroTeacher || intro;
+			closing = i18n.shareEmailClosingTeacher || closing;
+		} else if (isLeaderRole()) {
+			intro = i18n.shareEmailIntroLeader || intro;
+			closing = i18n.shareEmailClosingLeader || closing;
+		} else if (isStudentRole()) {
+			intro = i18n.shareEmailIntroStudent || intro;
+			closing = i18n.shareEmailClosingStudent || closing;
+		} else if (isParentRole()) {
+			intro = i18n.shareEmailIntroParent || intro;
+			closing = i18n.shareEmailClosingParent || closing;
+		}
 		var lines = [
-			i18n.shareEmailIntro || 'Hello, I completed the free AI Risk & Readiness Benchmark and wanted to share my results with the school.',
+			intro,
 			'',
 			(i18n.reportEmailRole || 'Role') + ': ' + roleLbl,
 			(i18n.readinessLevel || 'Readiness level') + ': ' + (r.readiness_level_label || '—'),
@@ -1898,7 +1970,7 @@
 			var yg = (i18n.yearGroups || {})[state.yearGroup] || state.yearGroup;
 			lines.push((i18n.yearGroupParent || i18n.yearGroup || 'Year group') + ': ' + yg);
 		}
-		lines.push('', i18n.shareEmailClosing || 'Please share this with the relevant teacher or school leader so our school can build the whole-school picture.');
+		lines.push('', closing);
 
 		return 'mailto:?subject=' + encodeURIComponent(i18n.shareEmailSubject || 'AI Risk Benchmark results to share with school')
 			+ '&body=' + encodeURIComponent(lines.join('\n'));
@@ -1932,7 +2004,13 @@
 
 	if (el.next) el.next.addEventListener('click', goNext);
 	if (el.back) el.back.addEventListener('click', goBack);
-	if (el.role) renderRole();
+	bindRoleCardActions();
+	if (el.role) {
+		if (isMobileFlow()) {
+			collapseIntro();
+		}
+		renderRole();
+	}
 
 	// App-bar completion pill: reflect how many of the 4 audits this device has done.
 	function updateAppbarCompletions() {

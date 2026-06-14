@@ -214,6 +214,7 @@ class AIRB_Defaults {
 			),
 			'strengths_heading'     => __( 'What you\'re doing well', 'ai-risk-benchmark' ),
 			'opportunities_heading' => __( 'Opportunities to strengthen further', 'ai-risk-benchmark' ),
+			'share_hint'            => __( 'Share your results with your SLT or colleagues to help build your school\'s whole-school AI picture.', 'ai-risk-benchmark' ),
 			'champion_pathway' => array(
 				'title'             => __( 'AI Champion Pathway', 'ai-risk-benchmark' ),
 				'intro'             => __( 'Based on your results, you demonstrate strong AI awareness and responsible usage behaviours. You may be well placed to:', 'ai-risk-benchmark' ),
@@ -398,6 +399,7 @@ class AIRB_Defaults {
 			),
 			'strengths_heading' => __( 'Strengths include', 'ai-risk-benchmark' ),
 			'attention_heading' => __( 'Areas requiring attention', 'ai-risk-benchmark' ),
+			'share_hint'        => __( 'Share these results with your governing body or leadership team to align on next steps.', 'ai-risk-benchmark' ),
 			'domain_labels' => array(
 				'ai_literacy'          => __( 'AI Literacy', 'ai-risk-benchmark' ),
 				'privacy'              => __( 'Data Protection Awareness', 'ai-risk-benchmark' ),
@@ -571,6 +573,22 @@ class AIRB_Defaults {
 			return $path;
 		}
 		return function_exists( 'home_url' ) ? home_url( '/' . $path . '/' ) : 'https://aiawarenessday.co.uk/' . $path . '/';
+	}
+
+	/**
+	 * Canonical URL for the embedded benchmark (timeline entry when available).
+	 */
+	public static function benchmark_page_url(): string {
+		if ( function_exists( 'get_page_by_path' ) ) {
+			$timeline = get_page_by_path( 'ai-risk-readiness-benchmark', OBJECT, 'timeline' );
+			if ( $timeline instanceof WP_Post ) {
+				$url = get_permalink( $timeline );
+				if ( is_string( $url ) && '' !== $url ) {
+					return $url;
+				}
+			}
+		}
+		return self::hub_page_url( '' ) . '#airb-benchmark';
 	}
 
 	/**
@@ -1013,8 +1031,7 @@ class AIRB_Defaults {
 			. '<li>' . esc_html__( 'Links to AI Awareness Day sessions and support', 'ai-risk-benchmark' ) . '</li>'
 			. '</ul><!-- /wp:list -->';
 		$blocks[] = '<!-- wp:paragraph --><p><em>' . esc_html__( 'Content on this page can be expanded in the WordPress editor — frameworks, videos and downloads can be added here.', 'ai-risk-benchmark' ) . '</em></p><!-- /wp:paragraph -->';
-		$blocks[] = '<!-- wp:shortcode -->[ai_risk_benchmark]<!-- /wp:shortcode -->';
-		$blocks[] = '<!-- wp:paragraph --><p><a href="' . esc_url( self::hub_page_url( '' ) ) . '#airb-benchmark">' . esc_html( $benchmark_cta ) . '</a></p><!-- /wp:paragraph -->';
+		$blocks[] = '<!-- wp:paragraph --><p><a href="' . esc_url( self::benchmark_page_url() ) . '">' . esc_html( $benchmark_cta ) . '</a></p><!-- /wp:paragraph -->';
 
 		return implode( "\n\n", $blocks );
 	}

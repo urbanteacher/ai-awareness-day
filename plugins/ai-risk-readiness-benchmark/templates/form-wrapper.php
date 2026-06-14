@@ -255,12 +255,14 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<div class="airb__screen" id="airb-screen-contact" hidden></div>
 	<div class="airb__screen" id="airb-screen-results" hidden></div>
 
+	<div class="airb__error" id="airb-error" role="alert" hidden></div>
+
+	<div class="airb__nav-slot" id="airb-nav-slot">
 	<div class="airb__nav" id="airb-nav" hidden>
 		<button type="button" class="airb__btn airb__btn--ghost" id="airb-back" hidden><?php esc_html_e( 'Back', 'ai-risk-benchmark' ); ?></button>
 		<button type="button" class="airb__btn airb__btn--primary" id="airb-next"><?php esc_html_e( 'Next', 'ai-risk-benchmark' ); ?></button>
 	</div>
-
-	<div class="airb__error" id="airb-error" role="alert" hidden></div>
+	</div>
 
 	<div class="airb__print-host" id="airb-print-host" hidden aria-hidden="true"></div>
 
