@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_Leads {
 
 	/** @var int Schema version for dbDelta upgrades. */
-	const DB_VERSION = 2;
+	const DB_VERSION = 3;
 
 	/**
 	 * Allowed lead statuses.
@@ -60,7 +60,9 @@ class AIRB_Leads {
 			name varchar(255) NOT NULL DEFAULT '',
 			email varchar(255) NOT NULL DEFAULT '',
 			school varchar(255) NOT NULL DEFAULT '',
+			school_key varchar(255) NOT NULL DEFAULT '',
 			child_school varchar(255) NOT NULL DEFAULT '',
+			child_school_key varchar(255) NOT NULL DEFAULT '',
 			message longtext NOT NULL,
 			alignment_score smallint(3) NOT NULL DEFAULT 0,
 			risk_level varchar(20) NOT NULL DEFAULT '',
@@ -86,6 +88,8 @@ class AIRB_Leads {
 			KEY status (status),
 			KEY role (role),
 			KEY email (email),
+			KEY school_key (school_key),
+			KEY child_school_key (child_school_key),
 			KEY created_at (created_at)
 		) {$charset};";
 
@@ -102,7 +106,51 @@ class AIRB_Leads {
 			return;
 		}
 		self::create_table();
+		if ( $stored < 3 ) {
+			self::backfill_school_keys();
+		}
 		update_option( 'airb_leads_db_version', self::DB_VERSION, false );
+	}
+
+	/**
+	 * Populate school_key columns for existing lead rows.
+	 */
+	public static function backfill_school_keys(): void {
+		global $wpdb;
+
+		if ( ! class_exists( 'AIRB_School_Dashboard' ) ) {
+			return;
+		}
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			"SELECT id, school, child_school FROM {$table} WHERE school != '' OR child_school != ''"
+		);
+
+		foreach ( (array) $rows as $row ) {
+			$update  = array();
+			$formats = array();
+
+			if ( (string) $row->school ) {
+				$update['school_key'] = AIRB_School_Dashboard::school_key_for( (string) $row->school );
+				$formats[]            = '%s';
+			}
+			if ( (string) $row->child_school ) {
+				$update['child_school_key'] = AIRB_School_Dashboard::school_key_for( (string) $row->child_school );
+				$formats[]                  = '%s';
+			}
+
+			if ( $update ) {
+				$wpdb->update(
+					$table,
+					$update,
+					array( 'id' => (int) $row->id ),
+					$formats,
+					array( '%d' )
+				);
+			}
+		}
 	}
 
 	/**
@@ -131,6 +179,11 @@ class AIRB_Leads {
 
 		$now = current_time( 'mysql' );
 
+		$school       = sanitize_text_field( (string) ( $data['school'] ?? '' ) );
+		$child_school = sanitize_text_field( (string) ( $data['child_school'] ?? '' ) );
+		$school_key   = $school ? AIRB_School_Dashboard::school_key_for( $school ) : '';
+		$child_key    = $child_school ? AIRB_School_Dashboard::school_key_for( $child_school ) : '';
+
 		$inserted = $wpdb->insert(
 			self::table_name(),
 			array(
@@ -141,8 +194,10 @@ class AIRB_Leads {
 				'role'                  => sanitize_key( (string) ( $data['role'] ?? '' ) ),
 				'name'                  => sanitize_text_field( (string) ( $data['name'] ?? '' ) ),
 				'email'                 => sanitize_email( (string) ( $data['email'] ?? '' ) ),
-				'school'                => sanitize_text_field( (string) ( $data['school'] ?? '' ) ),
-				'child_school'          => sanitize_text_field( (string) ( $data['child_school'] ?? '' ) ),
+				'school'                => $school,
+				'school_key'            => $school_key,
+				'child_school'          => $child_school,
+				'child_school_key'      => $child_key,
 				'message'               => sanitize_textarea_field( (string) ( $data['message'] ?? '' ) ),
 				'alignment_score'       => max( 0, min( 100, (int) ( $data['alignment_score'] ?? 0 ) ) ),
 				'risk_level'            => sanitize_key( (string) ( $data['risk_level'] ?? '' ) ),
@@ -163,7 +218,7 @@ class AIRB_Leads {
 				'updated_at'            => $now,
 			),
 			array(
-				'%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
+				'%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
 				'%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
 				'%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s',
 			)
@@ -452,17 +507,17 @@ class AIRB_Leads {
 
 		$table = self::table_name();
 		$limit = max( 1, min( 100, $limit ) );
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT school_name, COUNT(*) AS n FROM (
-					SELECT TRIM(school) AS school_name FROM {$table} WHERE school != ''
+				"SELECT school_key, COUNT(*) AS n FROM (
+					SELECT school_key FROM {$table} WHERE school_key != ''
 					UNION ALL
-					SELECT TRIM(child_school) AS school_name FROM {$table} WHERE child_school != ''
-				) AS schools
-				WHERE school_name != ''
-				GROUP BY school_name
-				ORDER BY n DESC, school_name ASC
+					SELECT child_school_key AS school_key FROM {$table} WHERE child_school_key != ''
+				) AS keyed
+				GROUP BY school_key
+				ORDER BY n DESC
 				LIMIT %d",
 				$limit
 			),
@@ -471,11 +526,31 @@ class AIRB_Leads {
 
 		$out = array();
 		foreach ( (array) $rows as $row ) {
+			$key = (string) $row['school_key'];
+			if ( '' === $key ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$display = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COALESCE(NULLIF(school, ''), child_school)
+					FROM {$table}
+					WHERE school_key = %s OR child_school_key = %s
+					ORDER BY id DESC
+					LIMIT 1",
+					$key,
+					$key
+				)
+			);
+
 			$out[] = array(
-				'name'  => (string) $row['school_name'],
+				'name'  => $display ? (string) $display : $key,
+				'key'   => $key,
 				'count' => (int) $row['n'],
 			);
 		}
+
 		return $out;
 	}
 
@@ -508,10 +583,19 @@ class AIRB_Leads {
 			$vals[]  = '%' . $wpdb->esc_like( sanitize_email( (string) $args['email'] ) ) . '%';
 		}
 		if ( ! empty( $args['school'] ) ) {
-			$where[] = '(school LIKE %s OR child_school LIKE %s)';
-			$like    = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
-			$vals[]  = $like;
-			$vals[]  = $like;
+			$school_key = AIRB_School_Dashboard::school_key_for( (string) $args['school'] );
+			$like       = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
+			if ( $school_key ) {
+				$where[] = '(school_key = %s OR child_school_key = %s OR school LIKE %s OR child_school LIKE %s)';
+				$vals[]  = $school_key;
+				$vals[]  = $school_key;
+				$vals[]  = $like;
+				$vals[]  = $like;
+			} else {
+				$where[] = '(school LIKE %s OR child_school LIKE %s)';
+				$vals[]  = $like;
+				$vals[]  = $like;
+			}
 		}
 		if ( ! empty( $args['submission_id'] ) ) {
 			$where[] = 'submission_id = %d';

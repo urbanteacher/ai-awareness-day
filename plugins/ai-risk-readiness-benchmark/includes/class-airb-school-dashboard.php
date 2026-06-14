@@ -24,14 +24,22 @@ class AIRB_School_Dashboard {
 	}
 
 	/**
-	 * Normalize school name for grouping.
+	 * Normalize school name for grouping (case-insensitive key).
 	 *
 	 * @param string $name School name.
 	 */
 	public static function normalize_school( string $name ): string {
 		$name = trim( wp_strip_all_tags( $name ) );
+		$name = str_replace( array( '’', '‘', '`' ), "'", $name );
 		$name = preg_replace( '/\s+/', ' ', $name ) ?? $name;
 		return strtolower( $name );
+	}
+
+	/**
+	 * Stable grouping key for a school display name.
+	 */
+	public static function school_key_for( string $name ): string {
+		return substr( self::normalize_school( $name ), 0, 255 );
 	}
 
 	/**
@@ -45,11 +53,24 @@ class AIRB_School_Dashboard {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results(
-			"SELECT school_name, COUNT(*) AS submission_count, COUNT(DISTINCT role) AS roles_covered
-			FROM {$table}
-			WHERE school_name != ''
-			GROUP BY school_name
-			ORDER BY submission_count DESC
+			"SELECT k.school_key, k.submission_count, k.roles_covered, s.school_name
+			FROM (
+				SELECT school_key, COUNT(*) AS submission_count, COUNT(DISTINCT role) AS roles_covered
+				FROM {$table}
+				WHERE school_key != ''
+				GROUP BY school_key
+			) k
+			INNER JOIN (
+				SELECT t1.school_key, t1.school_name
+				FROM {$table} t1
+				INNER JOIN (
+					SELECT school_key, MAX(id) AS max_id
+					FROM {$table}
+					WHERE school_key != ''
+					GROUP BY school_key
+				) t2 ON t1.id = t2.max_id
+			) s ON k.school_key = s.school_key
+			ORDER BY k.submission_count DESC
 			LIMIT 200",
 			ARRAY_A
 		);
@@ -71,18 +92,25 @@ class AIRB_School_Dashboard {
 			return null;
 		}
 
-		$table = AIRB_Database::table_name();
+		$school_key = self::school_key_for( $school_name );
+		$table      = AIRB_Database::table_name();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE LOWER(school_name) = LOWER(%s) ORDER BY created_at DESC",
-				$school_name
+				"SELECT * FROM {$table}
+				WHERE school_key = %s
+				OR (school_key = '' AND LOWER(TRIM(school_name)) = %s)
+				ORDER BY created_at DESC",
+				$school_key,
+				$school_key
 			)
 		);
 
 		if ( ! $rows ) {
 			return null;
 		}
+
+		$display_name = trim( (string) ( $rows[0]->school_name ?? $school_name ) );
 
 		$roles         = AIRB_Defaults::roles();
 		$by_role       = array();
@@ -191,7 +219,7 @@ class AIRB_School_Dashboard {
 		);
 
 		return array(
-			'school_name'              => $school_name,
+			'school_name'              => $display_name,
 			'roles'                    => $role_scores,
 			'roles_complete'           => $roles_complete,
 			'roles_total'              => count( $roles ),

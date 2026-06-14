@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_Database {
 
 	/** @var int Schema version for dbDelta upgrades. */
-	const DB_VERSION = 2;
+	const DB_VERSION = 3;
 
 	/**
 	 * Fully qualified table name.
@@ -39,6 +39,7 @@ class AIRB_Database {
 			session_id varchar(64) NOT NULL DEFAULT '',
 			role varchar(20) NOT NULL DEFAULT '',
 			school_name varchar(255) NOT NULL DEFAULT '',
+			school_key varchar(255) NOT NULL DEFAULT '',
 			email varchar(255) NOT NULL DEFAULT '',
 			consent tinyint(1) NOT NULL DEFAULT 0,
 			contact_opt_in tinyint(1) NOT NULL DEFAULT 0,
@@ -56,6 +57,7 @@ class AIRB_Database {
 			PRIMARY KEY  (id),
 			KEY session_id (session_id),
 			KEY role (role),
+			KEY school_key (school_key),
 			KEY risk_level (risk_level),
 			KEY created_at (created_at)
 		) {$charset};";
@@ -78,9 +80,46 @@ class AIRB_Database {
 		}
 		if ( class_exists( 'AIRB_Leads' ) ) {
 			AIRB_Leads::create_table();
-			update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
+		}
+		if ( $stored < 3 ) {
+			self::backfill_school_keys();
+			if ( class_exists( 'AIRB_Leads' ) ) {
+				AIRB_Leads::backfill_school_keys();
+				update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
+			}
 		}
 		update_option( 'airb_db_version', self::DB_VERSION, false );
+	}
+
+	/**
+	 * Populate school_key for existing submission rows.
+	 */
+	public static function backfill_school_keys(): void {
+		global $wpdb;
+
+		if ( ! class_exists( 'AIRB_School_Dashboard' ) ) {
+			return;
+		}
+
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			"SELECT id, school_name FROM {$table} WHERE school_name != '' AND school_key = ''"
+		);
+
+		foreach ( (array) $rows as $row ) {
+			$key = AIRB_School_Dashboard::school_key_for( (string) $row->school_name );
+			if ( '' === $key ) {
+				continue;
+			}
+			$wpdb->update(
+				$table,
+				array( 'school_key' => $key ),
+				array( 'id' => (int) $row->id ),
+				array( '%s' ),
+				array( '%d' )
+			);
+		}
 	}
 
 	/**
@@ -114,12 +153,16 @@ class AIRB_Database {
 
 		$row = wp_parse_args( $data, $defaults );
 
+		$school_name = sanitize_text_field( (string) $row['school_name'] );
+		$school_key  = $school_name ? AIRB_School_Dashboard::school_key_for( $school_name ) : '';
+
 		$inserted = $wpdb->insert(
 			self::table_name(),
 			array(
 				'session_id'             => sanitize_text_field( substr( (string) $row['session_id'], 0, 64 ) ),
 				'role'                   => sanitize_key( (string) $row['role'] ),
-				'school_name'            => sanitize_text_field( (string) $row['school_name'] ),
+				'school_name'            => $school_name,
+				'school_key'             => $school_key,
 				'email'                  => sanitize_email( (string) $row['email'] ),
 				'consent'                => (int) $row['consent'],
 				'contact_opt_in'         => (int) $row['contact_opt_in'],
@@ -135,7 +178,7 @@ class AIRB_Database {
 				'recommendations'        => wp_json_encode( $row['recommendations'] ),
 				'created_at'             => $row['created_at'],
 			),
-			array( '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
 		);
 
 		return $inserted ? (int) $wpdb->insert_id : 0;
@@ -195,8 +238,16 @@ class AIRB_Database {
 			$vals[]  = sanitize_text_field( (string) $args['risk_level'] );
 		}
 		if ( ! empty( $args['school'] ) ) {
-			$where[] = 'school_name LIKE %s';
-			$vals[]  = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
+			$school_key = AIRB_School_Dashboard::school_key_for( (string) $args['school'] );
+			$like       = '%' . $wpdb->esc_like( sanitize_text_field( (string) $args['school'] ) ) . '%';
+			if ( $school_key ) {
+				$where[] = '(school_key = %s OR school_name LIKE %s)';
+				$vals[]  = $school_key;
+				$vals[]  = $like;
+			} else {
+				$where[] = 'school_name LIKE %s';
+				$vals[]  = $like;
+			}
 		}
 		if ( ! empty( $args['date_from'] ) ) {
 			$where[] = 'created_at >= %s';
