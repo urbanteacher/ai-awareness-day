@@ -1,0 +1,16 @@
+/* ============================================
+   PAGE: Benchmark hub resources (AIRB)
+   Extends single-timeline stacked layout.
+   ============================================ */
+
+.single-timeline-entry--hub .single-timeline-entry__content .wp-block-heading:first-child {
+	margin-top: 0;
+}
+
+.single-timeline-entry--hub .single-timeline-entry__content .airb-checklist {
+	margin: 1.5rem 0 2rem;
+}
+
+.single-timeline-entry--hub .single-timeline-entry__footer {
+	margin-top: 2.5rem;
+}

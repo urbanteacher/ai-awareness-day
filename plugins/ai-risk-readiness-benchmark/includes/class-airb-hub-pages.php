@@ -18,7 +18,7 @@ class AIRB_Hub_Pages {
 
 	private const PATCH_NO_BENCHMARK = 'airb_hub_pages_no_benchmark_v1';
 
-	private const PATCH_INTERVENTION = 'airb_hub_intervention_v17';
+	private const PATCH_INTERVENTION = 'airb_hub_intervention_v18';
 
 	/**
 	 * Register front-end hooks (interactive checklist assets).

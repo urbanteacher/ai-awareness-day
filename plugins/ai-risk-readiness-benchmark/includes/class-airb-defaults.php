@@ -912,13 +912,38 @@ class AIRB_Defaults {
 	}
 
 	/**
-	 * Hub page definitions for one-time seeding.
-	 *
+	 * Audience key for a hub page slug.
+	 */
+	public static function hub_audience_for_slug( string $slug ): string {
+		$slug = sanitize_title( $slug );
+		foreach ( self::hub_page_seed_rows() as $page ) {
+			if ( (string) ( $page['slug'] ?? '' ) === $slug ) {
+				return (string) ( $page['audience'] ?? 'all' );
+			}
+		}
+		return 'all';
+	}
+
+	/**
+	 * Badge label for a hub page audience.
+	 */
+	public static function hub_audience_badge_label( string $audience ): string {
+		$labels = array(
+			'teacher' => __( 'Teacher resource', 'ai-risk-benchmark' ),
+			'student' => __( 'Student resource', 'ai-risk-benchmark' ),
+			'parent'  => __( 'Parent resource', 'ai-risk-benchmark' ),
+			'leader'  => __( 'Leadership resource', 'ai-risk-benchmark' ),
+			'all'     => __( 'School resource', 'ai-risk-benchmark' ),
+		);
+
+		return $labels[ $audience ] ?? $labels['all'];
+	}
+
+	/**
 	 * @return array<int, array<string, string>>
 	 */
-	public static function hub_page_definitions(): array {
-		$benchmark_cta = __( 'Take the free AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' );
-		$pages         = array(
+	private static function hub_page_seed_rows(): array {
+		return array(
 			array(
 				'slug'    => 'teacher-ai-verification-framework',
 				'title'   => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
@@ -1046,6 +1071,16 @@ class AIRB_Defaults {
 				'audience'=> 'all',
 			),
 		);
+	}
+
+	/**
+	 * Hub page definitions for one-time seeding.
+	 *
+	 * @return array<int, array<string, string>>
+	 */
+	public static function hub_page_definitions(): array {
+		$benchmark_cta = __( 'Take the free AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' );
+		$pages         = self::hub_page_seed_rows();
 
 		$out = array();
 		foreach ( $pages as $page ) {

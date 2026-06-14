@@ -18,7 +18,7 @@ class AIRB_Hub_Content {
 	public const LEGACY_PLACEHOLDER_MARKER = 'Content on this page can be expanded in the WordPress editor';
 
 	/** Content version marker — used by hub page patch upgrades. */
-	public const CONTENT_VERSION_MARKER = 'airb-intervention-v16';
+	public const CONTENT_VERSION_MARKER = 'airb-intervention-v18';
 
 	/**
 	 * Build page content for a hub slug.
@@ -2413,11 +2413,6 @@ class AIRB_Hub_Content {
 		$blocks = array();
 
 		$blocks[] = '<!-- ' . esc_html( self::CONTENT_VERSION_MARKER ) . ' -->';
-
-		$headline = (string) ( $def['headline'] ?? '' );
-		if ( $headline ) {
-			$blocks[] = '<!-- wp:heading {"level":1} --><h1 class="wp-block-heading">' . esc_html( $headline ) . '</h1><!-- /wp:heading -->';
-		}
 
 		if ( ! empty( $def['subtitle'] ) ) {
 			$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html( (string) $def['subtitle'] ) . '</h2><!-- /wp:heading -->';
