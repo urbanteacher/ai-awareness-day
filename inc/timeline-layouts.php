@@ -340,6 +340,66 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
 }
 
 /**
+ * Strip shortcodes/tags and collapse whitespace for timeline card excerpts.
+ *
+ * @param string $text Raw excerpt or content fragment.
+ */
+function aiad_timeline_normalize_excerpt_text(string $text): string
+{
+    $text = strip_shortcodes($text);
+    $text = wp_strip_all_tags($text);
+    $text = preg_replace('/\s+/u', ' ', trim($text));
+
+    return is_string($text) ? $text : '';
+}
+
+/**
+ * Plain-language blurb when a timeline entry body is an interactive shortcode only.
+ *
+ * @param WP_Post $entry Timeline post.
+ */
+function aiad_timeline_interactive_excerpt_fallback(WP_Post $entry): string
+{
+    $content = (string) get_post_field('post_content', $entry);
+
+    if (false !== strpos($content, '[ai_risk_benchmark')) {
+        if (function_exists('aiad_risk_benchmark_get_excerpt')) {
+            return aiad_risk_benchmark_get_excerpt();
+        }
+        return __(
+            'Free audit for teachers, students, parents and school leaders. Measure AI adoption, dependency and readiness at your school.',
+            'ai-awareness-day'
+        );
+    }
+    if (false !== strpos($content, '[aiad_risk_academy')) {
+        return __(
+            'Structured CPD to help school leaders assess and reduce AI-related risk across your community.',
+            'ai-awareness-day'
+        );
+    }
+    if (false !== strpos($content, '[aiad_speed_quiz')) {
+        return __('Quick interactive quiz — test how well you spot AI facts from fiction.', 'ai-awareness-day');
+    }
+    if (false !== strpos($content, '[aiad_computing_curriculum')) {
+        return __('Interactive challenge linking AI concepts to the computing curriculum.', 'ai-awareness-day');
+    }
+    if (false !== strpos($content, '[aiad_misinformation_detector')) {
+        return __('Practice spotting misleading AI-generated claims and health misinformation.', 'ai-awareness-day');
+    }
+    if (false !== strpos($content, '[aiad_neu_ai_report')) {
+        return __('Explore NEU survey data on how teachers are using AI in schools.', 'ai-awareness-day');
+    }
+    if (false !== strpos($content, '[aiad_llm_explainer') || false !== strpos($content, '[aiad_llm_order_game')) {
+        return __('Step-by-step explainer — see how large language models generate text.', 'ai-awareness-day');
+    }
+    if (false !== strpos($content, '[aiad_buzzwords')) {
+        return __('Plain-English glossary of common AI terms for staff, students and parents.', 'ai-awareness-day');
+    }
+
+    return __('Open the interactive activity on the full update page.', 'ai-awareness-day');
+}
+
+/**
  * Plain-text excerpt for cards.
  *
  * @param WP_Post $entry Timeline post.
@@ -347,12 +407,26 @@ function aiad_timeline_hero_teaser_html(WP_Post $entry): string
  */
 function aiad_timeline_entry_excerpt_text(WP_Post $entry): string
 {
-    $excerpt = get_the_excerpt($entry);
-    if ($excerpt) {
-        return wp_strip_all_tags($excerpt);
+    $manual = aiad_timeline_normalize_excerpt_text((string) get_post_field('post_excerpt', $entry));
+    if ($manual !== '') {
+        return $manual;
     }
-    $content = get_post_field('post_content', $entry);
-    return wp_trim_words(wp_strip_all_tags($content), 40, '…');
+
+    $generated = aiad_timeline_normalize_excerpt_text((string) get_the_excerpt($entry));
+    if ($generated !== '') {
+        return $generated;
+    }
+
+    $content = aiad_timeline_normalize_excerpt_text((string) get_post_field('post_content', $entry));
+    if ($content !== '') {
+        return wp_trim_words($content, 40, '…');
+    }
+
+    if (aiad_timeline_entry_has_interactive_shortcode($entry)) {
+        return aiad_timeline_interactive_excerpt_fallback($entry);
+    }
+
+    return '';
 }
 
 /**
@@ -413,7 +487,12 @@ function aiad_render_timeline_swipe_slide(WP_Post $entry): string
                 <span
                     class="timeline-entry__badge timeline-entry__badge--<?php echo esc_attr($pinned ? 'pinned' : $icon); ?>"><?php echo esc_html($badge); ?></span>
             </div>
-            <div class="timeline-swipe__excerpt"><?php echo esc_html(aiad_timeline_swipe_excerpt_text($entry)); ?></div>
+            <?php
+            $swipe_excerpt = aiad_timeline_swipe_excerpt_text($entry);
+            if ($swipe_excerpt !== '') :
+                ?>
+            <div class="timeline-swipe__excerpt"><?php echo esc_html($swipe_excerpt); ?></div>
+            <?php endif; ?>
             <div class="timeline-swipe__panel-footer">
                 <?php echo aiad_timeline_entry_actions_html($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <a href="<?php echo esc_url($cta_url); ?>"
@@ -486,8 +565,12 @@ function aiad_render_timeline_magazine_row(WP_Post $entry): string
                 <h4 class="timeline-magazine__card-title">
                     <a href="<?php echo esc_url($entry_url); ?>"><?php echo esc_html(get_the_title($entry)); ?></a>
                 </h4>
-                <p class="timeline-magazine__card-excerpt">
-                    <?php echo esc_html(aiad_timeline_entry_excerpt_text($entry)); ?></p>
+                <?php
+                $card_excerpt = aiad_timeline_entry_excerpt_text($entry);
+                if ($card_excerpt !== '') :
+                    ?>
+                <p class="timeline-magazine__card-excerpt"><?php echo esc_html($card_excerpt); ?></p>
+                <?php endif; ?>
                 <?php echo aiad_timeline_entry_actions_html($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
         </article>
