@@ -32,18 +32,17 @@ if ( $aiad_survey_url === '' ) {
 ?>
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="survey-cta" aria-label="<?php esc_attr_e( 'National survey', 'ai-awareness-day' ); ?>">
     <div class="container">
-        <div class="campaign-split campaign-split--single">
+        <div class="campaign-split survey-split">
             <div class="campaign-content fade-up">
                 <span class="section-label"><?php esc_html_e( 'Have your say', 'ai-awareness-day' ); ?></span>
                 <h2 class="section-title">
                     <?php esc_html_e( 'Help shape AI Awareness Day 2027', 'ai-awareness-day' ); ?>
                 </h2>
                 <p class="section-desc">
-                    <?php esc_html_e( 'Whether you took part in AI Awareness Day or not, we want to hear directly from the educators, school leaders, and computing specialists who made 4 June 2026 such a historic day — and from those who didn’t quite make it this year.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'Whether you took part in AI Awareness Day or not, we want to hear from the educators, school leaders, and computing specialists who made 4 June 2026 such a historic day — and from those who didn’t quite make it this year. Whether you ran a whole-school assembly or never heard about us until now, tell us what worked, what got in the way, and what you need from us to make 2027 even bigger.', 'ai-awareness-day' ); ?>
                 </p>
-                <p class="section-desc">
-                    <?php esc_html_e( 'Whether you ran a whole-school assembly or never heard about us until now, your feedback is the most important data we have. Tell us what worked, what got in the way, and what you need from us to make 2027 even bigger.', 'ai-awareness-day' ); ?>
-                </p>
+            </div>
+            <div class="survey-cta-col fade-up">
                 <div class="hero-cta survey-cta">
                     <a class="hero-cta__btn hero-cta__btn--primary" href="<?php echo esc_url( $aiad_survey_url ); ?>">
                         <?php esc_html_e( 'Take the 3-minute survey', 'ai-awareness-day' ); ?>
