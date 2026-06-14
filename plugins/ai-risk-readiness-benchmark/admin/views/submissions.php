@@ -57,8 +57,6 @@ $export_url = wp_nonce_url(
 					<tr><th><?php esc_html_e( 'Risk', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( ucfirst( (string) $submission_detail->risk_level ) ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Dependency', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->dependency_index ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Human oversight', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->human_oversight_label ); ?></td></tr>
-					<tr><th><?php esc_html_e( 'Benchmark consent', 'ai-risk-benchmark' ); ?></th><td><?php echo (int) $submission_detail->consent ? esc_html__( 'Yes', 'ai-risk-benchmark' ) : esc_html__( 'No', 'ai-risk-benchmark' ); ?></td></tr>
-					<tr><th><?php esc_html_e( 'Contact opt-in', 'ai-risk-benchmark' ); ?></th><td><?php echo (int) $submission_detail->contact_opt_in ? esc_html__( 'Yes', 'ai-risk-benchmark' ) : esc_html__( 'No', 'ai-risk-benchmark' ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Session ID', 'ai-risk-benchmark' ); ?></th><td><code><?php echo esc_html( (string) $submission_detail->session_id ); ?></code></td></tr>
 				</tbody>
 			</table>
@@ -92,14 +90,6 @@ $export_url = wp_nonce_url(
 		<div class="card" style="padding:0.75rem 1rem;">
 			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['with_school'] ?? 0 ) ); ?></strong>
 			<span><?php esc_html_e( 'With school name', 'ai-risk-benchmark' ); ?></span>
-		</div>
-		<div class="card" style="padding:0.75rem 1rem;">
-			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['benchmark_consent'] ?? 0 ) ); ?></strong>
-			<span><?php esc_html_e( 'Benchmark consent', 'ai-risk-benchmark' ); ?></span>
-		</div>
-		<div class="card" style="padding:0.75rem 1rem;">
-			<strong style="font-size:1.4rem;"><?php echo esc_html( (string) ( $stats['contact_opt_ins'] ?? 0 ) ); ?></strong>
-			<span><?php esc_html_e( 'Contact opt-ins', 'ai-risk-benchmark' ); ?></span>
 		</div>
 	</div>
 

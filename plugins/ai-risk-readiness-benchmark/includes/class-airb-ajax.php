@@ -93,8 +93,6 @@ class AIRB_Ajax {
 				'role'                   => $role,
 				'school_name'            => $school,
 				'email'                  => $email,
-				'consent'                => ! empty( $_POST['consent'] ) ? 1 : 0,
-				'contact_opt_in'         => ! empty( $_POST['contact_opt_in'] ) ? 1 : 0,
 				'risk_level'             => $results['risk_level'],
 				'alignment_score'        => $results['alignment_score'],
 				'dependency_index'       => $results['dependency_index'],

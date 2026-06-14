@@ -136,8 +136,6 @@ class AIRB_Database {
 			'role'                   => '',
 			'school_name'            => '',
 			'email'                  => '',
-			'consent'                => 0,
-			'contact_opt_in'         => 0,
 			'risk_level'             => '',
 			'alignment_score'        => 0,
 			'dependency_index'       => 0,
@@ -164,8 +162,6 @@ class AIRB_Database {
 				'school_name'            => $school_name,
 				'school_key'             => $school_key,
 				'email'                  => sanitize_email( (string) $row['email'] ),
-				'consent'                => (int) $row['consent'],
-				'contact_opt_in'         => (int) $row['contact_opt_in'],
 				'risk_level'             => sanitize_text_field( (string) $row['risk_level'] ),
 				'alignment_score'        => (int) $row['alignment_score'],
 				'dependency_index'       => (int) $row['dependency_index'],
@@ -178,7 +174,7 @@ class AIRB_Database {
 				'recommendations'        => wp_json_encode( $row['recommendations'] ),
 				'created_at'             => $row['created_at'],
 			),
-			array( '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
 		);
 
 		return $inserted ? (int) $wpdb->insert_id : 0;
@@ -199,7 +195,6 @@ class AIRB_Database {
 			'school'     => '',
 			'date_from'  => '',
 			'date_to'    => '',
-			'consent'    => null,
 			'limit'      => 50,
 			'offset'     => 0,
 		);
@@ -257,10 +252,6 @@ class AIRB_Database {
 			$where[] = 'created_at <= %s';
 			$vals[]  = sanitize_text_field( (string) $args['date_to'] ) . ' 23:59:59';
 		}
-		if ( null !== $args['consent'] && '' !== $args['consent'] ) {
-			$where[] = 'consent = %d';
-			$vals[]  = (int) $args['consent'];
-		}
 
 		return array(
 			'where' => implode( ' AND ', $where ),
@@ -288,17 +279,6 @@ class AIRB_Database {
 			$out[ (string) $row['role'] ] = (int) $row['n'];
 		}
 		return $out;
-	}
-
-	/**
-	 * Count submissions flagged for follow-up contact.
-	 */
-	public static function count_contact_opt_ins(): int {
-		global $wpdb;
-
-		$table = self::table_name();
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE consent = 1 AND contact_opt_in = 1" );
 	}
 
 	/**
@@ -414,7 +394,7 @@ class AIRB_Database {
 					AVG(safeguarding_readiness) AS safeguarding_readiness,
 					AVG(governance_maturity) AS governance_maturity
 				FROM {$table}
-				WHERE role = %s AND consent = 1",
+				WHERE role = %s",
 				$role
 			),
 			ARRAY_A
@@ -428,7 +408,7 @@ class AIRB_Database {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$scores = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT alignment_score FROM {$table} WHERE role = %s AND consent = 1 ORDER BY alignment_score ASC",
+				"SELECT alignment_score FROM {$table} WHERE role = %s ORDER BY alignment_score ASC",
 				$role
 			)
 		);
@@ -457,7 +437,7 @@ class AIRB_Database {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$table} WHERE role = %s AND consent = 1 AND alignment_score <= %d",
+					"SELECT COUNT(*) FROM {$table} WHERE role = %s AND alignment_score <= %d",
 					$role,
 					(int) $alignment_score
 				)
@@ -519,7 +499,7 @@ class AIRB_Database {
 			$wpdb->prepare(
 				"SELECT COUNT(*) AS n, AVG(alignment_score) AS alignment_score
 				FROM {$table}
-				WHERE role = %s AND consent = 1 AND answers LIKE %s",
+				WHERE role = %s AND answers LIKE %s",
 				$role,
 				$phase_pattern
 			),
@@ -535,7 +515,7 @@ class AIRB_Database {
 		$scores = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT alignment_score FROM {$table}
-				WHERE role = %s AND consent = 1 AND answers LIKE %s
+				WHERE role = %s AND answers LIKE %s
 				ORDER BY alignment_score ASC",
 				$role,
 				$phase_pattern
@@ -560,7 +540,7 @@ class AIRB_Database {
 			$below = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$table}
-					WHERE role = %s AND consent = 1 AND answers LIKE %s AND alignment_score <= %d",
+					WHERE role = %s AND answers LIKE %s AND alignment_score <= %d",
 					$role,
 					$phase_pattern,
 					(int) $alignment_score

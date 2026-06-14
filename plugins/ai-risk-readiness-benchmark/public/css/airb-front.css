@@ -1194,34 +1194,6 @@
 	font-size: 0.9rem;
 }
 
-.airb__consent {
-	display: flex;
-	align-items: flex-start;
-	gap: 0.5rem;
-	font-size: 0.88rem;
-	color: var(--airb-muted);
-	margin-top: 0.75rem;
-}
-
-.airb__consent-group {
-	border: 0;
-	margin: 1rem 0 0;
-	padding: 0;
-}
-
-.airb__consent-group .airb__label {
-	margin-top: 0;
-}
-
-.airb__consent-hint {
-	margin: 0.25rem 0 0.5rem 1.35rem;
-	font-size: 0.82rem;
-}
-
-.airb__consent input {
-	margin-top: 0.2rem;
-}
-
 .airb__nav {
 	display: flex;
 	gap: 0.75rem;
@@ -1579,6 +1551,76 @@
 	margin: 0.55rem 0 0;
 	font-size: 0.82rem;
 	line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+	.airb__readiness-scale-track {
+		height: 14px;
+		margin-bottom: 0.65rem;
+	}
+
+	.airb__readiness-scale-labels {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.airb__readiness-scale-lab {
+		flex: 0 1 auto !important;
+		min-width: 0;
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.05rem;
+		padding: 0.35rem 0.55rem;
+		border-radius: 8px;
+		color: #fff;
+		text-align: center;
+	}
+
+	.airb__readiness-scale-lab--emerging {
+		background: var(--airb-crit);
+	}
+
+	.airb__readiness-scale-lab--developing {
+		background: var(--airb-mod);
+	}
+
+	.airb__readiness-scale-lab--established {
+		background: #3a8fb0;
+	}
+
+	.airb__readiness-scale-lab--strong {
+		background: var(--airb-low);
+	}
+
+	.airb__readiness-scale-lab--leading {
+		background: #15803d;
+	}
+
+	.airb__readiness-scale-lab.is-active {
+		color: #fff;
+		box-shadow: 0 0 0 2px var(--white, #fff), 0 0 0 4px var(--airb-text);
+		font-weight: 700;
+	}
+
+	.airb__readiness-scale-lab-name {
+		display: block;
+		font-size: 0.68rem;
+		font-weight: 700;
+		line-height: 1.15;
+		white-space: nowrap;
+	}
+
+	.airb__readiness-scale-lab-range {
+		display: block;
+		font-size: 0.6rem;
+		opacity: 0.92;
+		margin-top: 0;
+		line-height: 1.1;
+		white-space: nowrap;
+	}
 }
 
 .airb__res-grid3 {
@@ -4018,6 +4060,13 @@
 	grid-template-columns: 1fr 1fr;
 	gap: 0 0.85rem;
 	margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+	.airb__contact-grid {
+		grid-template-columns: 1fr;
+		gap: 0.75rem 0;
+	}
 }
 
 .airb__contact-field .airb__label:first-child {

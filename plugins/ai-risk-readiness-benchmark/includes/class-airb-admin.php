@@ -127,8 +127,6 @@ class AIRB_Admin {
 		$stats = array(
 			'total'            => AIRB_Database::count_submissions( array() ),
 			'with_school'      => AIRB_Database::count_with_school(),
-			'benchmark_consent'=> AIRB_Database::count_submissions( array( 'consent' => 1 ) ),
-			'contact_opt_ins'  => AIRB_Database::count_contact_opt_ins(),
 		);
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';

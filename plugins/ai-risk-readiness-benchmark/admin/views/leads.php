@@ -253,7 +253,6 @@ $total_leads = array_sum( $status_counts );
 					<p class="description">
 						<?php esc_html_e( 'School:', 'ai-risk-benchmark' ); ?> <?php echo esc_html( (string) $submission->school_name ?: '—' ); ?>
 						· <?php esc_html_e( 'Email:', 'ai-risk-benchmark' ); ?> <?php echo esc_html( (string) $submission->email ?: '—' ); ?>
-						· <?php esc_html_e( 'Consent:', 'ai-risk-benchmark' ); ?> <?php echo (int) $submission->consent ? esc_html__( 'Yes', 'ai-risk-benchmark' ) : esc_html__( 'No', 'ai-risk-benchmark' ); ?>
 					</p>
 				</div>
 			<?php endif; ?>
