@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIRB_VERSION', '1.18.16' );
+define( 'AIRB_VERSION', '1.23.0' );
 define( 'AIRB_PLUGIN_FILE', __FILE__ );
 define( 'AIRB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIRB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -35,9 +35,12 @@ require_once AIRB_PLUGIN_DIR . 'includes/class-airb-funnel.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-teacher-results.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-student-results.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-leader-results.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-parent-results.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-improvement-pathways.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-content.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-events.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-interest.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-interest.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-pages.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-activator.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-shortcode.php';
@@ -85,6 +88,7 @@ final class AIRB_Plugin {
 		AIRB_School_Dashboard::register();
 		AIRB_Ajax::register();
 		AIRB_Hub_Pages::register();
+		AIRB_Hub_Interest::register();
 		AIRB_Hub_Pages::maybe_seed();
 
 		if ( is_admin() ) {

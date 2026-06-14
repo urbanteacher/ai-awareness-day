@@ -18,7 +18,7 @@ class AIRB_Hub_Content {
 	public const LEGACY_PLACEHOLDER_MARKER = 'Content on this page can be expanded in the WordPress editor';
 
 	/** Content version marker — used by hub page patch upgrades. */
-	public const CONTENT_VERSION_MARKER = 'airb-intervention-v18';
+	public const CONTENT_VERSION_MARKER = 'airb-intervention-v19';
 
 	/**
 	 * Build page content for a hub slug.
@@ -59,17 +59,8 @@ class AIRB_Hub_Content {
 	 * @param string $area Development / support area label.
 	 */
 	private static function area_contact_link( string $area ): string {
-		$area = trim( wp_strip_all_tags( $area ) );
-		/* translators: %s: development area. */
-		$subject = $area ? sprintf( __( 'AI Awareness Day — %s enquiry', 'ai-risk-benchmark' ), $area ) : __( 'AI Awareness Day — support enquiry', 'ai-risk-benchmark' );
-		/* translators: %s: development area. */
-		$body = $area
-			? sprintf( __( 'Hello, I would like more information, guidance and support on: %s. Please contact me to discuss our benchmark results, next steps, and how AI Awareness Day can help our school.', 'ai-risk-benchmark' ), $area )
-			: __( 'Hello, I would like more information, guidance and support on improving our school\'s AI readiness, and how AI Awareness Day can help.', 'ai-risk-benchmark' );
-
-		return 'mailto:' . self::contact_email()
-			. '?subject=' . rawurlencode( $subject )
-			. '&body=' . rawurlencode( $body );
+		unset( $area );
+		return '#airb-hub-interest';
 	}
 
 	/**
@@ -98,19 +89,20 @@ class AIRB_Hub_Content {
 
 		$items = (array) ( $support['items'] ?? array() );
 		if ( $items ) {
-			$cta_label = (string) ( $support['item_cta'] ?? __( 'Contact us for guidance and support', 'ai-risk-benchmark' ) );
+			$cta_label = (string) ( $support['item_cta'] ?? __( 'Request support on this topic', 'ai-risk-benchmark' ) );
 			foreach ( $items as $item ) {
 				$item  = (array) $item;
 				$label = (string) ( $item['label'] ?? '' );
 				if ( '' === $label ) {
 					continue;
 				}
-				$link     = self::area_contact_link( $label );
+				$prefill  = sanitize_key( (string) ( $item['interest'] ?? '' ) );
+				$link     = '#airb-hub-interest' . ( $prefill ? '?prefill=' . rawurlencode( $prefill ) : '' );
 				$blocks[] = '<!-- wp:paragraph --><p><strong>' . esc_html( $label ) . '</strong> — <a href="' . esc_url( $link ) . '">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
 			}
 		} else {
-			$cta_label = (string) ( $support['cta'] ?? __( 'Contact the AI Awareness team', 'ai-risk-benchmark' ) );
-			$blocks[]  = '<!-- wp:paragraph --><p><a href="' . esc_url( self::area_contact_link( '' ) ) . '">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
+			$cta_label = (string) ( $support['cta'] ?? __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ) );
+			$blocks[]  = '<!-- wp:paragraph --><p><a href="#airb-hub-interest">' . esc_html( $cta_label ) . '</a></p><!-- /wp:paragraph -->';
 		}
 
 		return $blocks;

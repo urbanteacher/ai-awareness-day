@@ -136,6 +136,21 @@ $total_pages = max( 1, (int) ceil( $total_events / max( 1, (int) $filters['limit
 					$meta = array();
 				}
 				$meta_preview = wp_json_encode( $meta );
+				if ( in_array( (string) $event->event_type, array( 'interest_submitted', 'hub_interest_submitted' ), true ) ) {
+					$parts = array();
+					if ( ! empty( $meta['stakeholder_role'] ) ) {
+						$parts[] = (string) $meta['stakeholder_role'];
+					}
+					if ( ! empty( $meta['school'] ) ) {
+						$parts[] = (string) $meta['school'];
+					}
+					if ( ! empty( $meta['interests'] ) && is_array( $meta['interests'] ) ) {
+						$parts[] = implode( ', ', array_map( 'strval', $meta['interests'] ) );
+					}
+					if ( $parts ) {
+						$meta_preview = implode( ' · ', $parts );
+					}
+				}
 				if ( is_string( $meta_preview ) && strlen( $meta_preview ) > 120 ) {
 					$meta_preview = substr( $meta_preview, 0, 117 ) . '…';
 				}

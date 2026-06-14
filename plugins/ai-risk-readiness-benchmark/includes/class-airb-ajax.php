@@ -24,6 +24,10 @@ class AIRB_Ajax {
 		add_action( 'wp_ajax_nopriv_airb_email_report', array( __CLASS__, 'email_report' ) );
 		add_action( 'wp_ajax_airb_track_event', array( __CLASS__, 'track_event' ) );
 		add_action( 'wp_ajax_nopriv_airb_track_event', array( __CLASS__, 'track_event' ) );
+		add_action( 'wp_ajax_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
+		add_action( 'wp_ajax_nopriv_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
+		add_action( 'wp_ajax_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
+		add_action( 'wp_ajax_nopriv_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
 	}
 
 	/**
@@ -142,8 +146,13 @@ class AIRB_Ajax {
 			isset( $results['alignment_score'] ) ? (int) $results['alignment_score'] : null
 		);
 
-		// Enquiry-only CTAs become mailto; real destination pages (homepage, resources) stay as links.
-		$results = self::apply_email_ctas( $results, $role );
+		// Enquiry CTAs scroll to the in-results interest form instead of mailto / generic contact.
+		$results = self::apply_interest_ctas( $results, $role );
+
+		$form = AIRB_Interest::build_form_payload( $results, $role );
+		if ( $form ) {
+			$results['interest_form'] = $form;
+		}
 
 		wp_send_json_success(
 			array(
@@ -154,59 +163,20 @@ class AIRB_Ajax {
 	}
 
 	/**
-	 * Contact address that results CTAs email. Honours a theme-set contact email
-	 * (Customizer `aiad_contact_email`); otherwise uses the campaign inbox.
-	 */
-	private static function contact_email(): string {
-		$email = '';
-		if ( function_exists( 'get_theme_mod' ) ) {
-			$email = sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) );
-		}
-		return $email ? $email : 'info@aiawarenessday.co.uk';
-	}
-
-	/**
-	 * Build a mailto: link for a given offer, with a per-offer subject and a
-	 * short prefilled body.
-	 *
-	 * @param string $title Offer/recommendation title (becomes the subject).
-	 * @param string $role  Respondent role, for context in the body.
-	 */
-	private static function mailto( string $title, string $role ): string {
-		$title = trim( wp_strip_all_tags( $title ) );
-		if ( '' === $title ) {
-			$title = __( 'AI Risk & Readiness Benchmark enquiry', 'ai-risk-benchmark' );
-		}
-		$role_labels = AIRB_Defaults::roles();
-		$role_label  = $role_labels[ $role ] ?? $role;
-
-		$subject = sprintf( /* translators: %s: offer name */ __( 'Benchmark follow-up: %s', 'ai-risk-benchmark' ), $title );
-		$body    = sprintf(
-			/* translators: 1: offer name, 2: role label */
-			__( "Hello,\n\nFollowing our AI Risk & Readiness Benchmark, we'd like to know more about \"%1\$s\".\n\nRole: %2\$s\nSchool / Trust:\nName:\n\nThank you.", 'ai-risk-benchmark' ),
-			$title,
-			$role_label
-		);
-
-		return 'mailto:' . self::contact_email()
-			. '?subject=' . rawurlencode( $subject )
-			. '&body=' . rawurlencode( $body );
-	}
-
-	/**
-	 * Whether a configured CTA should become a mailto enquiry instead of the URL.
-	 *
-	 * Keeps homepage, resources and external guidance links intact.
+	 * Whether a CTA should open the in-results interest form.
 	 *
 	 * @param string $url Configured CTA URL.
 	 */
-	private static function cta_should_mailto( string $url ): bool {
+	private static function cta_should_use_interest_form( string $url ): bool {
 		$url = trim( $url );
-		if ( '' === $url ) {
+		if ( '' === $url || str_starts_with( $url, 'mailto:' ) ) {
 			return true;
 		}
-		if ( str_starts_with( $url, 'mailto:' ) ) {
-			return false;
+		if ( str_starts_with( $url, '#airb-interest' ) ) {
+			return true;
+		}
+		if ( str_contains( $url, '#contact' ) || str_contains( $url, '/contact' ) ) {
+			return true;
 		}
 
 		$parsed = wp_parse_url( $url );
@@ -214,63 +184,74 @@ class AIRB_Ajax {
 			return true;
 		}
 
-		$host     = strtolower( (string) $parsed['host'] );
-		$path     = '/' . trim( (string) ( $parsed['path'] ?? '' ), '/' );
-		$fragment = strtolower( (string) ( $parsed['fragment'] ?? '' ) );
-		if ( '/' === $path ) {
-			$path = '';
-		}
-
-		if ( ! str_contains( $host, 'aiawarenessday.co.uk' ) ) {
-			if ( function_exists( 'home_url' ) ) {
-				$home_host = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
-				if ( ! $home_host || $host !== $home_host ) {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		}
-
-		// Homepage, resources, contact section, and legacy /contact paths stay as links.
-		if ( '' === $path || str_starts_with( $path, '/resources' ) || '/contact' === $path || 'contact' === $fragment ) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	/**
-	 * Resolve a CTA URL — mailto enquiry or preserved destination link.
-	 *
-	 * @param string $title    Offer title (mailto subject).
-	 * @param string $role     Respondent role.
-	 * @param string $existing Configured CTA URL.
+	 * Infer interest checkbox from offer title when no card key is available.
 	 */
-	private static function resolve_cta_url( string $title, string $role, string $existing ): string {
-		if ( ! self::cta_should_mailto( $existing ) ) {
+	private static function infer_interest_prefill( string $title ): string {
+		$title = strtolower( wp_strip_all_tags( $title ) );
+		if ( str_contains( $title, 'awareness day' ) ) {
+			return 'ai_awareness_day';
+		}
+		if ( str_contains( $title, 'policy' ) ) {
+			return 'policy_support';
+		}
+		if ( str_contains( $title, 'cpd' ) || str_contains( $title, 'training' ) ) {
+			return 'whole_school_cpd';
+		}
+		if ( str_contains( $title, 'governance' ) || str_contains( $title, 'consultation' ) || str_contains( $title, 'review' ) ) {
+			return 'governance_review';
+		}
+		if ( str_contains( $title, 'parent' ) || str_contains( $title, 'webinar' ) ) {
+			return 'parent_sessions';
+		}
+		if ( str_contains( $title, 'child' ) || str_contains( $title, 'carer' ) ) {
+			return 'parent_support_child';
+		}
+		if ( str_contains( $title, 'student' ) || str_contains( $title, 'pupil' ) ) {
+			return 'student_share_school';
+		}
+		if ( str_contains( $title, 'whole-school' ) || str_contains( $title, 'whole school' ) || str_contains( $title, 'benchmark' ) ) {
+			return 'whole_school_benchmark';
+		}
+		return 'further_information';
+	}
+
+	/**
+	 * Resolve enquiry CTA to interest form anchor.
+	 *
+	 * @param string $title    Offer title.
+	 * @param string $existing Configured CTA URL.
+	 * @param string $key      Optional card/offer key.
+	 */
+	private static function resolve_interest_cta( string $title, string $existing, string $key = '' ): string {
+		if ( ! self::cta_should_use_interest_form( $existing ) ) {
 			return $existing;
 		}
-		return self::mailto( $title, $role );
+		$map     = AIRB_Interest::gateway_prefill_map();
+		$prefill = $map[ $key ] ?? self::infer_interest_prefill( $title );
+		return AIRB_Interest::form_anchor( $prefill );
 	}
 
 	/**
-	 * Rewrite enquiry CTAs to pre-addressed email; preserve real destination URLs.
+	 * Rewrite enquiry CTAs to the in-results interest form; preserve real destination URLs.
 	 *
 	 * @param array<string, mixed> $results Results payload.
 	 * @param string               $role    Respondent role.
 	 * @return array<string, mixed>
 	 */
-	private static function apply_email_ctas( array $results, string $role ): array {
-		// Lists of {title, cta_url} items.
+	private static function apply_interest_ctas( array $results, string $role ): array {
+		unset( $role );
 		foreach ( array( 'recommendations', 'next_steps' ) as $list_key ) {
 			if ( ! empty( $results[ $list_key ] ) && is_array( $results[ $list_key ] ) ) {
 				foreach ( $results[ $list_key ] as &$item ) {
 					if ( is_array( $item ) ) {
-						$item['cta_url'] = self::resolve_cta_url(
+						$item['cta_url'] = self::resolve_interest_cta(
 							(string) ( $item['title'] ?? '' ),
-							$role,
-							(string) ( $item['cta_url'] ?? '' )
+							(string) ( $item['cta_url'] ?? '' ),
+							(string) ( $item['key'] ?? '' )
 						);
 					}
 				}
@@ -278,35 +259,50 @@ class AIRB_Ajax {
 			}
 		}
 
-		// Gateway cards — enquiry routes to email; campaign pages stay linked.
 		if ( ! empty( $results['gateway']['cards'] ) && is_array( $results['gateway']['cards'] ) ) {
 			foreach ( $results['gateway']['cards'] as &$card ) {
-				if ( is_array( $card ) ) {
-					$card['cta_url'] = self::resolve_cta_url(
-						(string) ( $card['title'] ?? '' ),
-						$role,
-						(string) ( $card['cta_url'] ?? '' )
-					);
+				if ( ! is_array( $card ) ) {
+					continue;
 				}
+				$key = (string) ( $card['key'] ?? '' );
+				if ( 'track_progress' === $key ) {
+					continue;
+				}
+				$card['cta_url'] = self::resolve_interest_cta(
+					(string) ( $card['title'] ?? '' ),
+					(string) ( $card['cta_url'] ?? '' ),
+					$key
+				);
 			}
 			unset( $card );
 		}
 
-		// Single-offer blocks.
 		if ( ! empty( $results['consultation_pitch'] ) && is_array( $results['consultation_pitch'] ) ) {
 			$title = (string) ( $results['consultation_pitch']['headline'] ?? __( 'Free consultation', 'ai-risk-benchmark' ) );
-			$results['consultation_pitch']['cta_url'] = self::resolve_cta_url(
+			$results['consultation_pitch']['cta_url'] = self::resolve_interest_cta(
 				$title,
-				$role,
-				(string) ( $results['consultation_pitch']['cta_url'] ?? '' )
+				(string) ( $results['consultation_pitch']['cta_url'] ?? '' ),
+				'book_consultation'
 			);
 		}
 		if ( ! empty( $results['policy_support'] ) && is_array( $results['policy_support'] ) ) {
-			$results['policy_support']['cta_url'] = self::resolve_cta_url(
+			$results['policy_support']['cta_url'] = self::resolve_interest_cta(
 				(string) ( $results['policy_support']['title'] ?? __( 'Develop your AI policy', 'ai-risk-benchmark' ) ),
-				$role,
-				(string) ( $results['policy_support']['cta_url'] ?? '' )
+				(string) ( $results['policy_support']['cta_url'] ?? '' ),
+				'policy_support'
 			);
+		}
+
+		if ( ! empty( $results['leader_results']['next_steps']['hero'] ) && is_array( $results['leader_results']['next_steps']['hero'] ) ) {
+			$hero = &$results['leader_results']['next_steps']['hero'];
+			if ( ! empty( $hero['cta_url'] ) ) {
+				$hero['cta_url'] = self::resolve_interest_cta(
+					(string) ( $hero['title'] ?? '' ),
+					(string) ( $hero['cta_url'] ?? '' ),
+					(string) ( $hero['key'] ?? 'governance_review' )
+				);
+			}
+			unset( $hero );
 		}
 
 		if ( ! empty( $results['leader_results']['next_steps']['cards'] ) && is_array( $results['leader_results']['next_steps']['cards'] ) ) {
@@ -314,24 +310,202 @@ class AIRB_Ajax {
 				if ( ! is_array( $card ) || empty( $card['cta_url'] ) ) {
 					continue;
 				}
-				$card['cta_url'] = self::resolve_cta_url(
+				$card['cta_url'] = self::resolve_interest_cta(
 					(string) ( $card['title'] ?? '' ),
-					$role,
-					(string) ( $card['cta_url'] ?? '' )
+					(string) ( $card['cta_url'] ?? '' ),
+					(string) ( $card['key'] ?? '' )
 				);
 			}
 			unset( $card );
 		}
 
 		if ( ! empty( $results['guided_improvement']['consultation']['cta_url'] ) ) {
-			$results['guided_improvement']['consultation']['cta_url'] = self::resolve_cta_url(
+			$results['guided_improvement']['consultation']['cta_url'] = self::resolve_interest_cta(
 				(string) ( $results['guided_improvement']['consultation']['title'] ?? __( 'AI Readiness Review', 'ai-risk-benchmark' ) ),
-				$role,
-				(string) ( $results['guided_improvement']['consultation']['cta_url'] ?? '' )
+				(string) ( $results['guided_improvement']['consultation']['cta_url'] ?? '' ),
+				'book_consultation'
 			);
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Submit post-benchmark interest form.
+	 */
+	public static function submit_interest(): void {
+		self::verify_nonce();
+
+		$role           = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
+		$name           = sanitize_text_field( (string) ( $_POST['name'] ?? '' ) );
+		$email          = sanitize_email( (string) ( $_POST['email'] ?? '' ) );
+		$school         = sanitize_text_field( (string) ( $_POST['school'] ?? '' ) );
+		$child_school   = sanitize_text_field( (string) ( $_POST['child_school'] ?? '' ) );
+		$message        = sanitize_textarea_field( (string) ( $_POST['message'] ?? '' ) );
+		$submission     = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+		$session_id     = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
+		$score          = max( 0, min( 100, (int) ( $_POST['alignment_score'] ?? 0 ) ) );
+		$risk_level     = sanitize_key( (string) ( $_POST['risk_level'] ?? '' ) );
+		$risk_label     = sanitize_text_field( (string) ( $_POST['risk_level_label'] ?? '' ) );
+		$readiness_label = sanitize_text_field( (string) ( $_POST['readiness_level_label'] ?? '' ) );
+		$year_group      = sanitize_key( (string) ( $_POST['year_group'] ?? '' ) );
+		$stakeholder_role = sanitize_key( (string) ( $_POST['stakeholder_role'] ?? '' ) );
+		$interests      = isset( $_POST['interests'] ) ? json_decode( wp_unslash( (string) $_POST['interests'] ), true ) : array();
+		$weak_domains   = isset( $_POST['weak_domains'] ) ? json_decode( wp_unslash( (string) $_POST['weak_domains'] ), true ) : array();
+
+		if ( ! in_array( $role, AIRB_Interest::supported_roles(), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'ai-risk-benchmark' ) ) );
+		}
+
+		$parent_tier = '';
+		if ( 'parent' === $role ) {
+			$parent_score = max( 0, min( 100, (int) ( $_POST['alignment_score'] ?? 0 ) ) );
+			$parent_tier  = AIRB_Parent_Results::journey_tier( $parent_score );
+		}
+
+		$fields = AIRB_Interest::fields_for_role( $role );
+		if ( ! empty( $fields['email_required'] ) && ! is_email( $email ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ) ) );
+		}
+		if ( ! is_array( $interests ) || ! $interests ) {
+			wp_send_json_error( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
+		}
+
+		$allowed   = array_column( AIRB_Interest::options_for_role( $role, $parent_tier ), 'slug' );
+		$interests = array_values( array_intersect( array_map( 'sanitize_key', $interests ), $allowed ) );
+		if ( ! $interests ) {
+			wp_send_json_error( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
+		}
+
+		$fingerprint = md5(
+			( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' )
+			. '|'
+			. ( isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '' )
+		);
+		$rate_key = 'airb_interest_rate_' . $fingerprint;
+		$count    = (int) get_transient( $rate_key );
+		if ( $count >= 5 ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Too many requests. Please try again in a few minutes.', 'ai-risk-benchmark' ) ),
+				429
+			);
+		}
+
+		$payload = array(
+			'role'                  => $role,
+			'name'                  => $name,
+			'email'                 => $email,
+			'school'                => $school,
+			'child_school'          => $child_school,
+			'message'               => $message,
+			'submission_id'         => $submission,
+			'alignment_score'       => $score,
+			'risk_level'            => $risk_level,
+			'risk_level_label'      => $risk_label,
+			'readiness_level_label' => $readiness_label,
+			'year_group'            => $year_group,
+			'stakeholder_role'      => $stakeholder_role,
+			'interests'             => $interests,
+			'weak_domains'          => is_array( $weak_domains ) ? array_map( 'sanitize_text_field', $weak_domains ) : array(),
+			'source'                => sanitize_key( (string) ( $_POST['source'] ?? 'results' ) ),
+			'hub_page'              => sanitize_key( (string) ( $_POST['hub_page'] ?? '' ) ),
+			'hub_title'             => sanitize_text_field( (string) ( $_POST['hub_title'] ?? '' ) ),
+			'hub_ref'               => sanitize_key( (string) ( $_POST['hub_ref'] ?? '' ) ),
+			'hub_url'               => esc_url_raw( (string) ( $_POST['hub_url'] ?? '' ) ),
+			'checklist_done'        => max( 0, (int) ( $_POST['checklist_done'] ?? 0 ) ),
+			'checklist_total'       => max( 0, (int) ( $_POST['checklist_total'] ?? 0 ) ),
+		);
+
+		$sent = AIRB_Interest::send_notification( $payload );
+		if ( ! $sent ) {
+			wp_send_json_error( array( 'message' => __( 'Could not send your request. Please try again.', 'ai-risk-benchmark' ) ) );
+		}
+
+		set_transient( $rate_key, $count + 1, 5 * MINUTE_IN_SECONDS );
+
+		if ( $session_id ) {
+			AIRB_Events::insert(
+				array(
+					'session_id'    => $session_id,
+					'submission_id' => $submission,
+					'event_type'    => 'hub' === $payload['source'] ? 'hub_interest_submitted' : 'interest_submitted',
+					'role'          => $role,
+					'metadata'      => array(
+						'interests'         => $interests,
+						'email'             => $email,
+						'stakeholder_role'  => $stakeholder_role,
+						'school'            => $school,
+						'hub_page'          => $payload['hub_page'],
+						'hub_ref'           => $payload['hub_ref'],
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => AIRB_Interest::form_labels( $role )['success'],
+			)
+		);
+	}
+
+	/**
+	 * Load benchmark submission context for hub interest form (session lookup).
+	 */
+	public static function get_hub_context(): void {
+		self::verify_nonce();
+
+		$session_id = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
+		$role       = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
+		$page_slug  = sanitize_key( (string) ( $_POST['hub_page'] ?? '' ) );
+		$ref        = sanitize_key( (string) ( $_POST['hub_ref'] ?? '' ) );
+
+		if ( ! $session_id ) {
+			wp_send_json_success( array( 'submission' => null ) );
+		}
+
+		$row = AIRB_Database::get_latest_submission_by_session( $session_id, $role );
+		if ( ! $row && $role ) {
+			$row = AIRB_Database::get_latest_submission_by_session( $session_id, '' );
+		}
+
+		if ( ! $row ) {
+			wp_send_json_success( array( 'submission' => null ) );
+		}
+
+		$results = AIRB_Hub_Interest::results_from_submission( $row );
+		$sub_role = sanitize_key( (string) ( $row->role ?? '' ) );
+
+		if ( 'parent' === $sub_role ) {
+			$answers = json_decode( (string) ( $row->answers ?? '{}' ), true );
+			if ( is_array( $answers ) ) {
+				$results['parent_display_domains'] = AIRB_Scoring::parent_display_domain_scores( $answers, AIRB_Config::get() );
+			}
+		}
+
+		$weak = AIRB_Interest::weak_domain_labels( $results, $sub_role );
+		$suggested = AIRB_Hub_Interest::suggested_for_hub( $page_slug, $ref, $sub_role );
+		$merged = array_values( array_unique( array_merge(
+			$suggested,
+			AIRB_Interest::suggested_from_results( $results, $sub_role )
+		) ) );
+		$allowed = array_column( AIRB_Interest::options_for_role( $sub_role ), 'slug' );
+		$merged  = array_values( array_intersect( $merged, $allowed ) );
+
+		wp_send_json_success(
+			array(
+				'submission' => array(
+					'id'              => (int) $row->id,
+					'role'            => $sub_role,
+					'alignment_score' => (int) ( $row->alignment_score ?? 0 ),
+					'risk_level'      => (string) ( $row->risk_level ?? '' ),
+					'email'           => sanitize_email( (string) ( $row->email ?? '' ) ),
+					'school'          => sanitize_text_field( (string) ( $row->school_name ?? '' ) ),
+					'weak_domains'    => $weak,
+					'suggested'       => $merged,
+				),
+			)
+		);
 	}
 
 	/**

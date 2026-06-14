@@ -16,7 +16,7 @@ class AIRB_Improvement_Pathways {
 
 	private const WEAK_READINESS_MAX = 70;
 	private const WEAK_DEPENDENCY_MIN = 40;
-	private const MAX_BLOCKS         = 4;
+	private const MAX_BLOCKS         = 1;
 
 	/**
 	 * Build guided improvement section for results.
@@ -180,6 +180,7 @@ class AIRB_Improvement_Pathways {
 				'path'  => (string) ( $res['path'] ?? '' ),
 			);
 		}
+		$resources = array_slice( $resources, 0, 1 );
 
 		$sort = $score;
 		if ( 'readiness' === $type ) {
@@ -214,7 +215,7 @@ class AIRB_Improvement_Pathways {
 			'items'    => (array) ( $cfg['items'] ?? array() ),
 			'closing'  => (string) ( $cfg['closing'] ?? __( 'No obligation.', 'ai-risk-benchmark' ) ),
 			'cta_text' => (string) ( $cfg['cta_text'] ?? __( 'Book your free review', 'ai-risk-benchmark' ) ),
-			'cta_url'  => AIRB_Defaults::contact_tracking_url( $role, 'consultation' ),
+			'cta_url'  => AIRB_Defaults::interest_form_url( 'governance_review' ),
 		);
 	}
 }

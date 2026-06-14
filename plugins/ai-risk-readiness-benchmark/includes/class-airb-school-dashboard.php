@@ -146,12 +146,13 @@ class AIRB_School_Dashboard {
 			$weighted   += $ready * $w;
 
 			$role_scores[ $slug ] = array(
-				'label'       => $label,
-				'readiness'    => $ready,
-				'dependency'   => $dep,
-				'submissions'  => $data['count'],
-				'status'       => 'complete',
-				'risk_level'   => self::dominant_risk_band( $data['risk_levels'] ),
+				'label'                  => $label,
+				'readiness'              => $ready,
+				'readiness_band_label'   => AIRB_Scoring::readiness_band_label( $ready ),
+				'dependency'             => $dep,
+				'submissions'            => $data['count'],
+				'status'                 => 'complete',
+				'risk_level'             => self::dominant_risk_band( $data['risk_levels'] ),
 			);
 		}
 
@@ -195,12 +196,61 @@ class AIRB_School_Dashboard {
 			'roles_complete'           => $roles_complete,
 			'roles_total'              => count( $roles ),
 			'overall_alignment'        => $overall_alignment,
+			'overall_readiness_band'   => AIRB_Scoring::readiness_band_label( $overall_alignment ),
 			'overall_risk_level'       => $overall_band,
 			'overall_risk_label'       => AIRB_Scoring::display_risk_label( $overall_band, (float) $overall_risk ),
+			'alignment_score_label'    => AIRB_Scoring::alignment_score_label(),
+			'alignment_disclaimer'     => AIRB_Scoring::alignment_score_disclaimer(),
 			'key_exposure_areas'       => $exposure,
-			'exposure_breakdown'     => $breakdown,
+			'exposure_breakdown'       => $breakdown,
+			'recommended_priorities'   => self::recommend_priorities( $exposure, $role_scores ),
 			'total_submissions'        => count( $rows ),
 		);
+	}
+
+	/**
+	 * Turn highest-risk domains and role gaps into school-wide priority actions.
+	 *
+	 * @param array<int, array<string, mixed>> $exposure     Top exposure areas.
+	 * @param array<string, array<string, mixed>> $role_scores Per-role scores.
+	 * @return array<int, string>
+	 */
+	private static function recommend_priorities( array $exposure, array $role_scores ): array {
+		$priority_map = array(
+			'ai_literacy'          => __( 'Staff AI literacy training', 'ai-risk-benchmark' ),
+			'ai_dependency'        => __( 'Independent practice & verification programme', 'ai-risk-benchmark' ),
+			'human_oversight'      => __( 'Human oversight & verification training', 'ai-risk-benchmark' ),
+			'privacy'              => __( 'AI privacy & data protection review', 'ai-risk-benchmark' ),
+			'governance'           => __( 'Governance review & policy support', 'ai-risk-benchmark' ),
+			'safeguarding'         => __( 'AI safeguarding focus', 'ai-risk-benchmark' ),
+			'assessment_integrity' => __( 'Assessment integrity training', 'ai-risk-benchmark' ),
+			'safe_adoption'        => __( 'Safe adoption guidance for staff', 'ai-risk-benchmark' ),
+		);
+
+		$priorities = array();
+		foreach ( $exposure as $area ) {
+			$slug = (string) ( $area['slug'] ?? '' );
+			if ( isset( $priority_map[ $slug ] ) ) {
+				$priorities[] = $priority_map[ $slug ];
+			}
+		}
+
+		if ( empty( $role_scores['parent']['submissions'] ) ) {
+			$priorities[] = __( 'Parent awareness sessions', 'ai-risk-benchmark' );
+		}
+		if ( empty( $role_scores['student']['submissions'] ) ) {
+			$priorities[] = __( 'Student benchmark roll-out', 'ai-risk-benchmark' );
+		}
+		if ( empty( $role_scores['teacher']['submissions'] ) ) {
+			$priorities[] = __( 'Staff benchmark roll-out', 'ai-risk-benchmark' );
+		}
+		if ( empty( $role_scores['leader']['submissions'] ) ) {
+			$priorities[] = __( 'Senior leadership benchmark', 'ai-risk-benchmark' );
+		} elseif ( null !== ( $role_scores['leader']['readiness'] ?? null ) && (int) $role_scores['leader']['readiness'] < 60 ) {
+			$priorities[] = __( 'Senior leadership governance review', 'ai-risk-benchmark' );
+		}
+
+		return array_values( array_unique( array_slice( $priorities, 0, 5 ) ) );
 	}
 
 	/**
@@ -212,7 +262,7 @@ class AIRB_School_Dashboard {
 	 */
 	private static function exposure_breakdown( array $domain_totals, array $domain_counts ): array {
 		$short = array(
-			'ai_dependency'        => __( 'Dependency', 'ai-risk-benchmark' ),
+			'ai_dependency'        => __( 'Independent Practice', 'ai-risk-benchmark' ),
 			'human_oversight'      => __( 'Oversight', 'ai-risk-benchmark' ),
 			'governance'           => __( 'Governance', 'ai-risk-benchmark' ),
 			'privacy'              => __( 'Privacy', 'ai-risk-benchmark' ),

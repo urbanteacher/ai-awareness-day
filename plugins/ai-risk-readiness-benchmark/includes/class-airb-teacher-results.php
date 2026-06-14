@@ -64,19 +64,7 @@ class AIRB_Teacher_Results {
 	 * @param array<string, mixed> $results Results.
 	 */
 	private static function performance_tier( array $results ): string {
-		$alignment = (int) ( $results['alignment_score'] ?? 0 );
-		$risk      = (float) ( $results['overall_risk_percentage'] ?? 100 );
-
-		if ( $alignment >= 76 && $risk <= 30 ) {
-			return 'strong';
-		}
-		if ( $alignment >= 51 ) {
-			return 'established';
-		}
-		if ( $alignment >= 26 ) {
-			return 'developing';
-		}
-		return 'emerging';
+		return AIRB_Scoring::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) );
 	}
 
 	/**
@@ -160,8 +148,8 @@ class AIRB_Teacher_Results {
 	 */
 	private static function champion_pathway( array $results, array $cfg, string $tier ): ?array {
 		$pathway = (array) ( $cfg['champion_pathway'] ?? array() );
-		$eligible = in_array( $tier, array( 'strong', 'established' ), true )
-			&& (int) ( $results['alignment_score'] ?? 0 ) >= 75;
+		$eligible = in_array( $tier, array( 'leading', 'strong' ), true )
+			&& (int) ( $results['alignment_score'] ?? 0 ) >= 80;
 
 		if ( ! $eligible ) {
 			return null;
@@ -192,7 +180,7 @@ class AIRB_Teacher_Results {
 			'title'   => (string) ( $cfg['benchmark_summary_title'] ?? __( 'Teacher Benchmark Summary', 'ai-risk-benchmark' ) ),
 			'metrics' => array(
 				array(
-					'label' => __( 'DfE Alignment', 'ai-risk-benchmark' ),
+					'label' => AIRB_Scoring::alignment_score_label(),
 					'value' => (int) ( $results['alignment_score'] ?? 0 ) . '%',
 				),
 				array(

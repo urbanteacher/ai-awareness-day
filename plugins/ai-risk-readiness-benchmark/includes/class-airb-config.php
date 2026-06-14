@@ -264,16 +264,8 @@ class AIRB_Config {
 	public static function public_config(): array {
 		$config = self::get();
 
-		// Route the static consultation CTA to email instead of a placeholder page.
 		$cta = (array) ( $config['consultation_cta'] ?? array() );
-		$cta_title = (string) ( $cta['title'] ?? __( 'Book a free consultation', 'ai-risk-benchmark' ) );
-		$email = function_exists( 'get_theme_mod' ) ? sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) ) : '';
-		if ( ! $email ) {
-			$email = 'info@aiawarenessday.co.uk';
-		}
-		$cta['url'] = 'mailto:' . $email
-			. '?subject=' . rawurlencode( sprintf( /* translators: %s: offer name */ __( 'Benchmark follow-up: %s', 'ai-risk-benchmark' ), $cta_title ) )
-			. '&body=' . rawurlencode( __( "Hello,\n\nFollowing our AI Risk & Readiness Benchmark, we'd like to book a consultation.\n\nSchool / Trust:\nName:\n\nThank you.", 'ai-risk-benchmark' ) );
+		$cta['url'] = AIRB_Defaults::interest_form_url( 'governance_review' );
 
 		return array(
 			'disclaimer'          => (string) ( $config['disclaimer'] ?? '' ),

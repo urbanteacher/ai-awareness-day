@@ -67,7 +67,7 @@ $roles = AIRB_Defaults::roles();
 			</tbody>
 		</table>
 
-		<h3><?php esc_html_e( 'Overall DfE AI Alignment Score', 'ai-risk-benchmark' ); ?></h3>
+		<h3><?php echo esc_html( AIRB_Scoring::alignment_score_label() ); ?></h3>
 		<p><strong style="font-size:1.5rem"><?php echo esc_html( (string) $rollup['overall_alignment'] ); ?>%</strong>
 			— <?php echo esc_html( (string) $rollup['overall_risk_label'] ); ?></p>
 

@@ -292,7 +292,43 @@ class AIRB_Database {
 	}
 
 	/**
-	 * Minimum number of stored submissions before national benchmarks are shown.
+	 * Latest submission for an anonymous session (optionally filtered by role).
+	 *
+	 * @param string $session_id Session id.
+	 * @param string $role       Optional role filter.
+	 */
+	public static function get_latest_submission_by_session( string $session_id, string $role = '' ): ?object {
+		global $wpdb;
+		$session_id = sanitize_text_field( substr( $session_id, 0, 64 ) );
+		if ( '' === $session_id ) {
+			return null;
+		}
+
+		$table = self::table_name();
+		if ( $role ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$row = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$table} WHERE session_id = %s AND role = %s ORDER BY id DESC LIMIT 1",
+					$session_id,
+					sanitize_key( $role )
+				)
+			);
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$row = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$table} WHERE session_id = %s ORDER BY id DESC LIMIT 1",
+					$session_id
+				)
+			);
+		}
+
+		return $row ?: null;
+	}
+
+	/**
+	 * National benchmark stats for a role.
 	 * Below this, averages could de-anonymise a small cohort, so we suppress them.
 	 */
 	const BENCHMARK_MIN_SAMPLE = 8;
@@ -334,8 +370,24 @@ class AIRB_Database {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$scores = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT alignment_score FROM {$table} WHERE role = %s ORDER BY alignment_score ASC",
+				$role
+			)
+		);
+
+		$top_quartile = (int) round( (float) $row['alignment_score'] );
+		if ( is_array( $scores ) && count( $scores ) > 0 ) {
+			$idx          = (int) floor( 0.75 * ( count( $scores ) - 1 ) );
+			$top_quartile = (int) $scores[ max( 0, $idx ) ];
+		}
+
 		$stats = array(
 			'sample_size' => $sample,
+			'average'     => (int) round( (float) $row['alignment_score'] ),
+			'top_quartile'=> $top_quartile,
 			'averages'    => array(
 				'alignment_score'        => (int) round( (float) $row['alignment_score'] ),
 				'dependency_index'       => (int) round( (float) $row['dependency_index'] ),

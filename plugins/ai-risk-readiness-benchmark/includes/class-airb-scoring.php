@@ -244,7 +244,7 @@ class AIRB_Scoring {
 					),
 					array(
 						'key'        => 'dfe',
-						'label'      => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+						'label'      => AIRB_Scoring::alignment_score_label(),
 						'value'      => $align . '/100',
 						'band'       => self::readiness_band( $align ),
 						'tone'       => 'readiness',
@@ -257,7 +257,7 @@ class AIRB_Scoring {
 				$cards = array(
 					array(
 						'key'        => 'align',
-						'label'      => __( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+						'label'      => AIRB_Scoring::alignment_score_label(),
 						'value'      => $align . '/100',
 						'band'       => self::readiness_band( $align ),
 						'tone'       => 'readiness',
@@ -275,13 +275,16 @@ class AIRB_Scoring {
 	 * @param int $readiness Readiness 0-100.
 	 */
 	public static function readiness_band( int $readiness ): string {
-		if ( $readiness >= 76 ) {
+		if ( $readiness >= 90 ) {
+			return 'leading';
+		}
+		if ( $readiness >= 75 ) {
 			return 'strong';
 		}
-		if ( $readiness >= 51 ) {
+		if ( $readiness >= 60 ) {
 			return 'established';
 		}
-		if ( $readiness >= 26 ) {
+		if ( $readiness >= 40 ) {
 			return 'developing';
 		}
 		return 'emerging';
@@ -293,7 +296,12 @@ class AIRB_Scoring {
 	 * @param int $readiness Readiness 0-100.
 	 */
 	public static function readiness_band_label( int $readiness ): string {
+		if ( $readiness >= 60 && $readiness <= 64 ) {
+			return __( 'Early Established', 'ai-risk-benchmark' );
+		}
+
 		$labels = array(
+			'leading'     => __( 'Leading', 'ai-risk-benchmark' ),
 			'strong'      => __( 'Strong', 'ai-risk-benchmark' ),
 			'established' => __( 'Established', 'ai-risk-benchmark' ),
 			'developing'  => __( 'Developing', 'ai-risk-benchmark' ),
@@ -301,6 +309,27 @@ class AIRB_Scoring {
 		);
 		$band = self::readiness_band( $readiness );
 		return $labels[ $band ] ?? ucfirst( $band );
+	}
+
+	/**
+	 * Branded label for the governance maturity score on leader results.
+	 */
+	public static function governance_maturity_label(): string {
+		return __( 'Governance Maturity™', 'ai-risk-benchmark' );
+	}
+
+	/**
+	 * User-facing label for the overall alignment score (not a compliance claim).
+	 */
+	public static function alignment_score_label(): string {
+		return __( 'DfE Readiness Alignment™', 'ai-risk-benchmark' );
+	}
+
+	/**
+	 * Disclaimer shown alongside alignment scores.
+	 */
+	public static function alignment_score_disclaimer(): string {
+		return __( 'This is an educational benchmark score and not a compliance assessment.', 'ai-risk-benchmark' );
 	}
 
 	/**
@@ -410,28 +439,53 @@ class AIRB_Scoring {
 	 * @return array{overall_risk:float,alignment_score:int,risk_level:string}
 	 */
 	public static function parent_overall_from_display( array $parent_display ): array {
-		$risk_values = array();
-		foreach ( $parent_display as $dom ) {
+		$config  = AIRB_Defaults::parent_result_config();
+		$weights = (array) ( $config['domain_weights'] ?? array() );
+
+		$weighted_sum = 0.0;
+		$weight_total = 0.0;
+
+		foreach ( $parent_display as $slug => $dom ) {
 			if ( empty( $dom['questions_answered'] ) ) {
 				continue;
 			}
-			$risk_values[] = (float) ( $dom['risk_percentage'] ?? 0 );
+			$weight = (float) ( $weights[ $slug ] ?? 0 );
+			if ( $weight <= 0 ) {
+				continue;
+			}
+			$is_risk   = ( 'risk' === ( $dom['metric_type'] ?? 'score' ) );
+			$readiness = (float) ( $is_risk ? ( 100 - ( $dom['risk_percentage'] ?? 0 ) ) : ( $dom['readiness_percentage'] ?? 0 ) );
+			$weighted_sum += $readiness * $weight;
+			$weight_total += $weight;
 		}
 
-		if ( ! $risk_values ) {
-			return array(
-				'overall_risk'    => 0.0,
-				'alignment_score' => 0,
-				'risk_level'      => 'low',
-			);
+		if ( $weight_total <= 0 ) {
+			$risk_values = array();
+			foreach ( $parent_display as $dom ) {
+				if ( empty( $dom['questions_answered'] ) ) {
+					continue;
+				}
+				$risk_values[] = (float) ( $dom['risk_percentage'] ?? 0 );
+			}
+			if ( ! $risk_values ) {
+				return array(
+					'overall_risk'    => 0.0,
+					'alignment_score' => 0,
+					'risk_level'      => 'low',
+				);
+			}
+			$overall_risk = array_sum( $risk_values ) / count( $risk_values );
+		} else {
+			$alignment    = $weighted_sum / $weight_total;
+			$overall_risk = 100 - $alignment;
 		}
 
-		$overall_risk = array_sum( $risk_values ) / count( $risk_values );
+		$overall_risk = round( $overall_risk, 1 );
 
 		return array(
-			'overall_risk'    => round( $overall_risk, 1 ),
+			'overall_risk'    => $overall_risk,
 			'alignment_score' => (int) round( 100 - $overall_risk ),
-			'risk_level'      => self::risk_band( $overall_risk ),
+			'risk_level'      => self::risk_band( (float) $overall_risk ),
 		);
 	}
 

@@ -25,6 +25,10 @@ class AIRB_Events {
 		'consultation_click',
 		'report_request_click',
 		'email_report',
+		'interest_submitted',
+		'hub_interest_submitted',
+		'leader_next_step_click',
+		'gateway_click',
 	);
 
 	/**
@@ -281,13 +285,17 @@ class AIRB_Events {
 	 */
 	public static function event_labels(): array {
 		return array(
-			'benchmark_completed'     => __( 'Benchmark completed (stored)', 'ai-risk-benchmark' ),
+			'benchmark_completed'       => __( 'Benchmark completed (stored)', 'ai-risk-benchmark' ),
 			'results_viewed'            => __( 'Results viewed', 'ai-risk-benchmark' ),
 			'guided_resource_click'     => __( 'Guided resource click', 'ai-risk-benchmark' ),
 			'share_click'               => __( 'Share with school', 'ai-risk-benchmark' ),
 			'consultation_click'        => __( 'Consultation CTA', 'ai-risk-benchmark' ),
 			'report_request_click'      => __( 'Full report request', 'ai-risk-benchmark' ),
 			'email_report'              => __( 'Email report sent', 'ai-risk-benchmark' ),
+			'interest_submitted'        => __( 'Interest form submitted (results)', 'ai-risk-benchmark' ),
+			'hub_interest_submitted'    => __( 'Interest form submitted (hub)', 'ai-risk-benchmark' ),
+			'leader_next_step_click'    => __( 'Leader next-step CTA', 'ai-risk-benchmark' ),
+			'gateway_click'             => __( 'Gateway CTA click', 'ai-risk-benchmark' ),
 		);
 	}
 }

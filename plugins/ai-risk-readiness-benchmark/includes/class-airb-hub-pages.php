@@ -18,19 +18,19 @@ class AIRB_Hub_Pages {
 
 	private const PATCH_NO_BENCHMARK = 'airb_hub_pages_no_benchmark_v1';
 
-	private const PATCH_INTERVENTION = 'airb_hub_intervention_v18';
+	private const PATCH_INTERVENTION = 'airb_hub_intervention_v19';
 
 	/**
 	 * Register front-end hooks (interactive checklist assets).
 	 */
 	public static function register(): void {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_checklist_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_hub_assets' ) );
 	}
 
 	/**
-	 * Enqueue interactive checklist assets on intervention hub pages only.
+	 * Enqueue checklist + contextual interest form on intervention hub pages.
 	 */
-	public static function enqueue_checklist_assets(): void {
+	public static function enqueue_hub_assets(): void {
 		if ( ! function_exists( 'is_page' ) || ! is_page() ) {
 			return;
 		}
@@ -45,17 +45,54 @@ class AIRB_Hub_Pages {
 		}
 
 		wp_enqueue_style(
+			'airb-front',
+			AIRB_PLUGIN_URL . 'public/css/airb-front.css',
+			array(),
+			AIRB_VERSION
+		);
+		wp_enqueue_style(
+			'airb-hub-interest',
+			AIRB_PLUGIN_URL . 'public/css/airb-hub-interest.css',
+			array( 'airb-front' ),
+			AIRB_VERSION
+		);
+		wp_enqueue_style(
 			'airb-checklist',
 			AIRB_PLUGIN_URL . 'public/css/airb-checklist.css',
 			array(),
 			AIRB_VERSION
 		);
 		wp_enqueue_script(
-			'airb-checklist',
-			AIRB_PLUGIN_URL . 'public/js/airb-checklist.js',
+			'airb-hub-interest',
+			AIRB_PLUGIN_URL . 'public/js/airb-hub-interest.js',
 			array(),
 			AIRB_VERSION,
 			true
+		);
+		wp_enqueue_script(
+			'airb-checklist',
+			AIRB_PLUGIN_URL . 'public/js/airb-checklist.js',
+			array( 'airb-hub-interest' ),
+			AIRB_VERSION,
+			true
+		);
+
+		$config = AIRB_Hub_Interest::client_config( $post );
+		wp_localize_script(
+			'airb-hub-interest',
+			'airbHubInterest',
+			array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'airb_benchmark_nonce' ),
+				'config'  => $config ? $config : array(),
+				'i18n'    => array(
+					'emailInvalid'     => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ),
+					'interestRequired' => __( 'Please select at least one option.', 'ai-risk-benchmark' ),
+					'error'            => __( 'Something went wrong. Please try again.', 'ai-risk-benchmark' ),
+					'sending'          => __( 'Sending…', 'ai-risk-benchmark' ),
+					'loading'          => __( 'Loading your benchmark context…', 'ai-risk-benchmark' ),
+				),
+			)
 		);
 		wp_localize_script(
 			'airb-checklist',
@@ -65,7 +102,7 @@ class AIRB_Hub_Pages {
 				'i18n'         => array(
 					'progressLabel'   => __( 'Completed', 'ai-risk-benchmark' ),
 					'emailSlt'        => __( 'Email my checklist to my SLT', 'ai-risk-benchmark' ),
-					'emailTeam'       => __( 'Send to the AI Awareness team', 'ai-risk-benchmark' ),
+					'emailTeam'       => __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ),
 					'reset'           => __( 'Reset', 'ai-risk-benchmark' ),
 					'ragGreen'        => __( 'On track', 'ai-risk-benchmark' ),
 					'ragAmber'        => __( 'Some gaps remain', 'ai-risk-benchmark' ),
@@ -78,6 +115,13 @@ class AIRB_Hub_Pages {
 				),
 			)
 		);
+	}
+
+	/**
+	 * @deprecated Use enqueue_hub_assets().
+	 */
+	public static function enqueue_checklist_assets(): void {
+		self::enqueue_hub_assets();
 	}
 
 	/**

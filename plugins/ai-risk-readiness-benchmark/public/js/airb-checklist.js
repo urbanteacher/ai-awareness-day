@@ -117,8 +117,24 @@
 		actions.appendChild(sltBtn);
 
 		if (contactEmail) {
-			var teamBtn = el('a', 'airb-checklist__btn airb-checklist__btn--team', t('emailTeam', 'Send to the AI Awareness team'));
-			teamBtn.setAttribute('role', 'button');
+			var teamBtn = el('button', 'airb-checklist__btn airb-checklist__btn--team', t('emailTeam', 'Request support from AI Awareness Day'));
+			teamBtn.type = 'button';
+			teamBtn.addEventListener('click', function () {
+				var c = counts();
+				window.airbHubInterestState.checklistDone = c.done;
+				window.airbHubInterestState.checklistTotal = c.total;
+				if (typeof window.airbHubInterestScroll === 'function') {
+					window.airbHubInterestScroll('');
+				}
+				setTimeout(function () {
+					var msg = document.querySelector('.airb-hub-interest-form textarea[name="interest_message"]');
+					if (!msg || msg.value) return;
+					var pct = c.total ? Math.round((c.done / c.total) * 100) : 0;
+					var heading = (document.querySelector('h1') && document.querySelector('h1').textContent.trim()) || document.title;
+					msg.value = t('emailIntro', 'Here is my progress against this AI readiness checklist:') + '\n\n'
+						+ heading + ': ' + c.done + '/' + c.total + ' (' + pct + '%)';
+				}, 400);
+			});
 			actions.appendChild(teamBtn);
 		}
 
@@ -187,8 +203,10 @@
 			}
 			sltBtn.href = buildMailto('');
 			if (typeof teamBtn !== 'undefined' && teamBtn) {
-				teamBtn.href = buildMailto(contactEmail);
+				/* teamBtn uses hub interest form — counts synced on click */
 			}
+			window.airbHubInterestState.checklistDone = c.done;
+			window.airbHubInterestState.checklistTotal = c.total;
 		}
 
 		update();

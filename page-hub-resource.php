@@ -41,6 +41,8 @@ get_header();
 					?>
 				</div>
 
+				<?php do_action( 'airb_after_hub_resource_content' ); ?>
+
 				<div class="single-timeline-entry__footer">
 					<a href="<?php echo esc_url( aiad_hub_resource_back_url() ); ?>" class="single-timeline-entry__back">
 						<?php if ( function_exists( 'aiad_back_icon_svg' ) ) : ?>

@@ -18,6 +18,7 @@ class AIRB_Student_Results {
 	private const STRENGTH_VERIFICATION_MIN = 45;
 	private const OPPORTUNITY_MAX           = 85;
 	private const HABITS_ALIGNMENT_MIN      = 45;
+	private const DISPLAY_SCORE_MIN         = 5;
 
 	/**
 	 * Build the full student results payload.
@@ -31,18 +32,67 @@ class AIRB_Student_Results {
 		$tier      = self::performance_tier( $results );
 		$strengths = self::detect_strengths( $results, $cfg, $metrics );
 		$opps      = self::detect_opportunities( $results, $cfg, $metrics );
+		$journey   = self::learning_journey( (int) ( $results['alignment_score'] ?? 0 ), $cfg, $metrics );
 
 		return array(
-			'performance_tier'     => $tier,
-			'performance_headline' => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
-			'profile_title'        => (string) ( $cfg['profile_title'] ?? __( 'Your AI Learning Profile', 'ai-risk-benchmark' ) ),
-			'learning_metrics'     => $metrics,
-			'strengths'            => $strengths,
-			'opportunities'        => $opps,
-			'learning_challenge'   => (array) ( $cfg['learning_challenge'] ?? array() ),
-			'student_resources'    => (array) ( $cfg['student_resources'] ?? array() ),
-			'school_contribution'  => (array) ( $cfg['school_contribution'] ?? array() ),
-			'share_hint'           => (string) ( $cfg['share_hint'] ?? '' ),
+			'performance_tier'      => $tier,
+			'performance_headline'  => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
+			'profile_title'         => (string) ( $cfg['profile_title'] ?? __( 'Your AI Learning Profile', 'ai-risk-benchmark' ) ),
+			'learning_metrics'      => $metrics,
+			'learner_type'          => self::learner_type( $results, $metrics, $cfg ),
+			'learning_journey'      => $journey,
+			'peer_benchmark'        => self::peer_benchmark( $results, $cfg ),
+			'strengths'             => $strengths,
+			'opportunities'         => $opps,
+			'learning_challenge'    => (array) ( $cfg['learning_challenge'] ?? array() ),
+			'weekly_challenge'      => (array) ( $cfg['weekly_challenge'] ?? array() ),
+			'student_resources'     => (array) ( $cfg['student_resources'] ?? array() ),
+			'school_contribution'   => (array) ( $cfg['school_contribution'] ?? array() ),
+			'share_hint'            => (string) ( $cfg['share_hint'] ?? '' ),
+		);
+	}
+
+	/**
+	 * Floor raw percentages so students never see a harsh 0%.
+	 *
+	 * @param int $raw Raw 0-100 score.
+	 */
+	public static function display_score( int $raw ): int {
+		$raw = max( 0, min( 100, $raw ) );
+		if ( $raw < self::DISPLAY_SCORE_MIN ) {
+			return self::DISPLAY_SCORE_MIN;
+		}
+		return $raw;
+	}
+
+	/**
+	 * Student-friendly skill band label (distinct from school readiness bands).
+	 *
+	 * @param int $score Display score 0-100.
+	 * @return array{slug:string,label:string}
+	 */
+	public static function skill_band( int $score ): array {
+		$score  = self::display_score( $score );
+		$levels = array(
+			array( 'slug' => 'beginning', 'label' => __( 'Beginning', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
+			array( 'slug' => 'developing', 'label' => __( 'Developing', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
+			array( 'slug' => 'emerging', 'label' => __( 'Emerging', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
+			array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
+			array( 'slug' => 'advanced', 'label' => __( 'Advanced', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
+		);
+
+		foreach ( $levels as $level ) {
+			if ( $score >= (int) $level['min'] && $score <= (int) $level['max'] ) {
+				return array(
+					'slug'  => (string) $level['slug'],
+					'label' => (string) $level['label'],
+				);
+			}
+		}
+
+		return array(
+			'slug'  => 'beginning',
+			'label' => __( 'Beginning', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -55,40 +105,40 @@ class AIRB_Student_Results {
 	public static function learning_metrics( array $results ): array {
 		$domains     = (array) ( $results['domain_scores'] ?? array() );
 		$dependency  = (int) ( $results['dependency_index'] ?? 0 );
-		$independent = max( 0, min( 100, 100 - $dependency ) );
+		$independent = self::display_score( max( 0, min( 100, 100 - $dependency ) ) );
 
-		return array(
+		$metrics = array(
 			array(
-				'slug'  => 'independent_thinking',
-				'label' => __( 'Independent Thinking', 'ai-risk-benchmark' ),
-				'value' => $independent,
-				'type'  => 'score',
+				'slug'       => 'independent_thinking',
+				'label'      => __( 'Independent Thinking', 'ai-risk-benchmark' ),
+				'value'      => $independent,
+				'type'       => 'score',
+				'skill_band' => self::skill_band( $independent ),
 			),
 			array(
-				'slug'  => 'ai_dependency',
-				'label' => __( 'AI Dependency', 'ai-risk-benchmark' ),
-				'value' => $dependency,
-				'type'  => 'risk',
+				'slug'       => 'verification_skills',
+				'label'      => __( 'Verification Skills', 'ai-risk-benchmark' ),
+				'value'      => self::display_score( (int) round( (float) ( $domains['human_oversight']['readiness_percentage'] ?? 0 ) ) ),
+				'type'       => 'score',
+				'skill_band' => self::skill_band( (int) round( (float) ( $domains['human_oversight']['readiness_percentage'] ?? 0 ) ) ),
 			),
 			array(
-				'slug'  => 'verification_skills',
-				'label' => __( 'Verification Skills', 'ai-risk-benchmark' ),
-				'value' => (int) round( (float) ( $domains['human_oversight']['readiness_percentage'] ?? 0 ) ),
-				'type'  => 'score',
+				'slug'       => 'privacy_awareness',
+				'label'      => __( 'Privacy Awareness', 'ai-risk-benchmark' ),
+				'value'      => self::display_score( (int) round( (float) ( $domains['privacy']['readiness_percentage'] ?? 0 ) ) ),
+				'type'       => 'score',
+				'skill_band' => self::skill_band( (int) round( (float) ( $domains['privacy']['readiness_percentage'] ?? 0 ) ) ),
 			),
 			array(
-				'slug'  => 'privacy_awareness',
-				'label' => __( 'Privacy Awareness', 'ai-risk-benchmark' ),
-				'value' => (int) round( (float) ( $domains['privacy']['readiness_percentage'] ?? 0 ) ),
-				'type'  => 'score',
-			),
-			array(
-				'slug'  => 'ai_literacy',
-				'label' => __( 'AI Literacy', 'ai-risk-benchmark' ),
-				'value' => (int) round( (float) ( $domains['ai_literacy']['readiness_percentage'] ?? 0 ) ),
-				'type'  => 'score',
+				'slug'       => 'ai_literacy',
+				'label'      => __( 'AI Literacy', 'ai-risk-benchmark' ),
+				'value'      => self::display_score( (int) round( (float) ( $domains['ai_literacy']['readiness_percentage'] ?? 0 ) ) ),
+				'type'       => 'score',
+				'skill_band' => self::skill_band( (int) round( (float) ( $domains['ai_literacy']['readiness_percentage'] ?? 0 ) ) ),
 			),
 		);
+
+		return $metrics;
 	}
 
 	/**
@@ -118,12 +168,143 @@ class AIRB_Student_Results {
 			);
 		}
 
-		$overall_risk = array_sum( $risk_values ) / count( $risk_values );
+		$overall_risk    = array_sum( $risk_values ) / count( $risk_values );
+		$alignment_score = self::display_score( (int) round( 100 - $overall_risk ) );
 
 		return array(
-			'overall_risk'    => round( $overall_risk, 1 ),
-			'alignment_score' => (int) round( 100 - $overall_risk ),
+			'overall_risk'    => round( 100 - $alignment_score, 1 ),
+			'alignment_score' => $alignment_score,
 			'risk_level'      => AIRB_Scoring::risk_band( $overall_risk ),
+		);
+	}
+
+	/**
+	 * @param array<string, mixed> $results Results.
+	 * @param array<string, mixed> $cfg     Config.
+	 * @return array<string, mixed>
+	 */
+	private static function peer_benchmark( array $results, array $cfg ): array {
+		$score    = (int) ( $results['alignment_score'] ?? 0 );
+		$stats    = AIRB_Database::get_benchmark_stats( 'student', $score );
+		$fallback = (array) ( $cfg['peer_benchmark_fallback'] ?? array() );
+
+		if ( $stats ) {
+			return array(
+				'your_score'    => $score,
+				'average_score' => (int) ( $stats['average'] ?? $stats['averages']['alignment_score'] ?? 51 ),
+				'top_quartile'  => (int) ( $stats['top_quartile'] ?? 78 ),
+				'sample_size'   => (int) ( $stats['sample_size'] ?? 0 ),
+				'percentile'    => isset( $stats['percentile'] ) ? (int) $stats['percentile'] : null,
+				'is_estimated'  => false,
+			);
+		}
+
+		return array(
+			'your_score'    => $score,
+			'average_score' => (int) ( $fallback['average'] ?? 51 ),
+			'top_quartile'  => (int) ( $fallback['top_quartile'] ?? 78 ),
+			'sample_size'   => 0,
+			'percentile'    => null,
+			'is_estimated'  => true,
+		);
+	}
+
+	/**
+	 * Progression path for gamified learning journey.
+	 *
+	 * @param int                              $score   Overall alignment.
+	 * @param array<string, mixed>             $cfg     Config.
+	 * @param array<int, array<string, mixed>> $metrics Learning metrics.
+	 * @return array<string, mixed>
+	 */
+	private static function learning_journey( int $score, array $cfg, array $metrics ): array {
+		$levels = (array) ( $cfg['journey_levels'] ?? array() );
+		$current = self::skill_band( $score );
+		$next    = null;
+		$found   = false;
+
+		foreach ( $levels as $level ) {
+			$slug = (string) ( $level['slug'] ?? '' );
+			if ( $found ) {
+				$next = array(
+					'slug'  => $slug,
+					'label' => (string) ( $level['label'] ?? '' ),
+				);
+				break;
+			}
+			if ( $slug === $current['slug'] ) {
+				$found = true;
+			}
+		}
+
+		$focus = array();
+		$by_slug = array();
+		foreach ( $metrics as $metric ) {
+			$by_slug[ (string) ( $metric['slug'] ?? '' ) ] = $metric;
+		}
+		$focus_map = (array) ( $cfg['journey_focus_map'] ?? array() );
+		foreach ( $focus_map as $slug => $label ) {
+			$value = (int) ( $by_slug[ $slug ]['value'] ?? 100 );
+			if ( $value < 61 ) {
+				$focus[] = (string) $label;
+			}
+		}
+		if ( ! $focus ) {
+			$focus = (array) ( $cfg['journey_focus_default'] ?? array() );
+		}
+
+		return array(
+			'title'          => (string) ( $cfg['journey_title'] ?? __( 'Your AI Learning Journey', 'ai-risk-benchmark' ) ),
+			'current_label'  => (string) $current['label'],
+			'current_slug'   => (string) $current['slug'],
+			'next_label'     => $next ? (string) $next['label'] : '',
+			'next_slug'      => $next ? (string) $next['slug'] : '',
+			'focus_heading'  => (string) ( $cfg['journey_focus_heading'] ?? __( 'To get there:', 'ai-risk-benchmark' ) ),
+			'focus_items'    => array_slice( $focus, 0, 4 ),
+			'retake_note'    => (string) ( $cfg['journey_retake_note'] ?? __( 'Retake the benchmark to see your progress.', 'ai-risk-benchmark' ) ),
+		);
+	}
+
+	/**
+	 * AI Learner Types™ profile from behavioural patterns.
+	 *
+	 * @param array<string, mixed>             $results Results.
+	 * @param array<int, array<string, mixed>> $metrics Metrics.
+	 * @param array<string, mixed>             $cfg     Config.
+	 * @return array<string, mixed>
+	 */
+	private static function learner_type( array $results, array $metrics, array $cfg ): array {
+		$types   = (array) ( $cfg['learner_types'] ?? array() );
+		$by_slug = array();
+		foreach ( $metrics as $metric ) {
+			$by_slug[ (string) ( $metric['slug'] ?? '' ) ] = $metric;
+		}
+
+		$dependency  = (int) ( $results['dependency_index'] ?? 0 );
+		$verify      = (int) ( $by_slug['verification_skills']['value'] ?? 0 );
+		$literacy    = (int) ( $by_slug['ai_literacy']['value'] ?? 0 );
+		$independent = (int) ( $by_slug['independent_thinking']['value'] ?? 0 );
+
+		$slug = 'ai_assistant_user';
+		if ( $dependency >= 55 ) {
+			$slug = 'over_reliant';
+		} elseif ( $dependency >= 40 && $literacy < 50 ) {
+			$slug = 'early_explorer';
+		} elseif ( $verify >= 55 && $dependency <= 45 ) {
+			$slug = 'confident_checker';
+		} elseif ( $independent >= 55 && $dependency <= 40 ) {
+			$slug = 'ai_assistant_user';
+		}
+
+		$type = (array) ( $types[ $slug ] ?? $types['ai_assistant_user'] ?? array() );
+
+		return array(
+			'slug'         => $slug,
+			'title'        => (string) ( $type['title'] ?? '' ),
+			'brand'        => (string) ( $cfg['learner_types_brand'] ?? __( 'AI Learner Types™', 'ai-risk-benchmark' ) ),
+			'description'  => (string) ( $type['description'] ?? '' ),
+			'focus_heading'=> (string) ( $type['focus_heading'] ?? __( 'Focus:', 'ai-risk-benchmark' ) ),
+			'focus_items'  => (array) ( $type['focus_items'] ?? array() ),
 		);
 	}
 
@@ -131,18 +312,7 @@ class AIRB_Student_Results {
 	 * @param array<string, mixed> $results Results.
 	 */
 	private static function performance_tier( array $results ): string {
-		$alignment = (int) ( $results['alignment_score'] ?? 0 );
-
-		if ( $alignment >= 76 ) {
-			return 'strong';
-		}
-		if ( $alignment >= 51 ) {
-			return 'established';
-		}
-		if ( $alignment >= 26 ) {
-			return 'developing';
-		}
-		return 'emerging';
+		return AIRB_Scoring::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) );
 	}
 
 	/**
@@ -185,6 +355,7 @@ class AIRB_Student_Results {
 	 * @return array<int, array<string, mixed>>
 	 */
 	private static function detect_opportunities( array $results, array $cfg, array $metrics ): array {
+		unset( $metrics );
 		$domains = (array) ( $results['domain_scores'] ?? array() );
 		$topics  = (array) ( $cfg['opportunity_topics'] ?? array() );
 		$out     = array();
@@ -199,7 +370,7 @@ class AIRB_Student_Results {
 					$dep = (int) ( $results['dependency_index'] ?? 0 );
 					if ( $dep > ( 100 - self::OPPORTUNITY_MAX ) ) {
 						$show = true;
-						$pct  = null === $pct ? max( 0, 100 - $dep ) : min( $pct, max( 0, 100 - $dep ) );
+						$pct  = null === $pct ? self::display_score( max( 0, 100 - $dep ) ) : min( $pct, self::display_score( max( 0, 100 - $dep ) ) );
 					}
 					continue;
 				}
@@ -207,7 +378,7 @@ class AIRB_Student_Results {
 				if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
 					continue;
 				}
-				$readiness = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
+				$readiness = self::display_score( (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) ) );
 				if ( $readiness < self::OPPORTUNITY_MAX ) {
 					$show = true;
 					$pct  = null === $pct ? $readiness : min( $pct, $readiness );

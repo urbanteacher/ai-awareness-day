@@ -99,7 +99,21 @@ class AIRB_Funnel {
 			}
 		}
 
-		$results['guided_improvement'] = AIRB_Improvement_Pathways::build( $role, $results );
+		if ( 'parent' === $role ) {
+			$results['funnel_closing']  = '';
+			$results['parent_results']  = AIRB_Parent_Results::build( $results );
+			$results['stage2_products'] = array();
+			$results['key_exposure_areas'] = array();
+			if ( isset( $results['leadership_report'] ) ) {
+				$results['leadership_report']['show_full'] = false;
+			}
+		}
+
+		if ( ! in_array( $role, array( 'parent', 'student' ), true ) ) {
+			$results['guided_improvement'] = AIRB_Improvement_Pathways::build( $role, $results );
+		} else {
+			$results['guided_improvement'] = array();
+		}
 
 		return $results;
 	}

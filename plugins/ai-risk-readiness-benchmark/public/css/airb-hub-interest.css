@@ -1,0 +1,25 @@
+/* Hub page wrapper for contextual interest form — dark block distinct from article content */
+.airb-hub-interest-wrap {
+	margin-top: 2.5rem;
+	padding-top: 0;
+	border-top: none;
+}
+
+.single-timeline-entry--hub .airb-hub-interest-wrap {
+	max-width: 42rem;
+}
+
+.airb-hub-interest-wrap .airb__interest {
+	margin-top: 0;
+}
+
+.airb-hub-interest-ref {
+	text-transform: capitalize;
+	font-size: 0.88rem;
+	color: var(--gray-400, #a3a3a3);
+}
+
+/* Hub pages sit on a light article — add breathing room above the dark form block */
+.single-timeline-entry--hub .airb-hub-interest-wrap {
+	margin-top: 3rem;
+}
