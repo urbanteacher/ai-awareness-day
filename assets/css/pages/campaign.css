@@ -42,6 +42,9 @@
 
 #survey-cta .survey-cta {
   margin-top: 1.5rem;
+  justify-content: flex-start;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 @media screen and (max-width: 768px) {
@@ -67,18 +70,6 @@
   padding-bottom: clamp(2rem, 4vw, 3rem);
 }
 
-#survey-cta .container {
-  width: 100%;
-  max-width: none;
-  padding-left: clamp(1.25rem, 4vw, 2.5rem);
-  padding-right: clamp(1.25rem, 4vw, 2.5rem);
-}
-
-#survey-cta .campaign-content {
-  width: 100%;
-  max-width: none;
-}
-
 #survey-cta .section-label {
   color: var(--gray-400);
 }
@@ -89,7 +80,6 @@
 
 #survey-cta .section-desc {
   color: var(--gray-300);
-  max-width: none;
 }
 
 #survey-cta .section-desc + .section-desc {
