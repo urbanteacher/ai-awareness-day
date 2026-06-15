@@ -137,7 +137,7 @@ class AIRB_Shortcode {
 					'statDepNoteSupport' => __( 'Reliance on AI for communications and administration.', 'ai-risk-benchmark' ),
 					'recommendedResources' => __( 'Recommended resources', 'ai-risk-benchmark' ),
 					'usefulResources' => __( 'Useful resources', 'ai-risk-benchmark' ),
-					'benchmarkOutcomes' => __( 'Benchmark outcomes', 'ai-risk-benchmark' ),
+					'benchmarkOutcomes' => __( 'Further reading and support articles', 'ai-risk-benchmark' ),
 					'shareResultsHintParent' => __( 'These results are for you. Sharing them with your child\'s school can help build a whole-school picture of AI awareness across parents, students, teachers and leaders.', 'ai-risk-benchmark' ),
 					'shareEmailSubject' => __( 'AI Risk Benchmark results to share with school', 'ai-risk-benchmark' ),
 					'shareEmailIntro'  => __( 'Hello, I completed the free AI Risk & Readiness Benchmark and wanted to share my results with the school.', 'ai-risk-benchmark' ),

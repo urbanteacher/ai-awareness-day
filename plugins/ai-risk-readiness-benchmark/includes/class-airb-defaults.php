@@ -976,8 +976,9 @@ class AIRB_Defaults {
 				$permalink = get_permalink( $post );
 				if ( is_string( $permalink ) && '' !== $permalink ) {
 					$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
+					$title = wp_specialchars_decode( get_the_title( $post ), ENT_QUOTES );
 					return array(
-						'label' => '' !== $label ? $label : get_the_title( $post ),
+						'label' => '' !== $label ? wp_specialchars_decode( $label, ENT_QUOTES ) : $title,
 						'url'   => $permalink,
 						'image' => is_string( $image ) ? $image : '',
 					);

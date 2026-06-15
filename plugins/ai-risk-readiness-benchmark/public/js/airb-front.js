@@ -1922,7 +1922,7 @@
 		}
 		html += '</article>';
 		if (nextSteps.resource_links && nextSteps.resource_links.length) {
-			html += '<h5 class="airb__results-read-more-heading">' + esc(nextSteps.timeline_heading || i18n.benchmarkOutcomes || 'Benchmark outcomes') + '</h5>';
+			html += '<h5 class="airb__results-read-more-heading">' + esc(nextSteps.timeline_heading || i18n.benchmarkOutcomes || 'Further reading and support articles') + '</h5>';
 		}
 		html += resultsResourceLinksHtml(nextSteps.resource_links);
 		if (nextSteps.hub_resources && nextSteps.hub_resources.length) {

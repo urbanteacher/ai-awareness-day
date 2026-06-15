@@ -10,6 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Decode timeline post titles for plain-text UI labels (avoids &#8216; showing in cards).
+ */
+function aiad_timeline_post_link_label( WP_Post $post ): string {
+	return wp_specialchars_decode( (string) get_the_title( $post ), ENT_QUOTES );
+}
+
+/**
  * Audience taxonomy slug.
  */
 function aiad_timeline_audience_taxonomy(): string {
@@ -363,7 +370,7 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			}
 			$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
 			$chosen[] = array(
-				'label' => get_the_title( $post ),
+				'label' => aiad_timeline_post_link_label( $post ),
 				'url'   => $url,
 				'image' => is_string( $image ) ? $image : '',
 			);
@@ -427,7 +434,7 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 		$seen[ $post->ID ] = true;
 		$image             = get_the_post_thumbnail_url( $post, 'thumbnail' );
 		$chosen[]          = array(
-			'label' => get_the_title( $post ),
+			'label' => aiad_timeline_post_link_label( $post ),
 			'url'   => $url,
 			'image' => is_string( $image ) ? $image : '',
 		);

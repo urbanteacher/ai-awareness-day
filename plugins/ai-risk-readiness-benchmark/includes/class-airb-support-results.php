@@ -244,7 +244,7 @@ class AIRB_Support_Results {
 			'resource_links' => AIRB_Defaults::results_timeline_read_links( 'support_staff' ),
 			'hub_resources'  => $resources,
 			'hub_heading'    => __( 'Useful resources', 'ai-risk-benchmark' ),
-			'timeline_heading' => __( 'Benchmark outcomes', 'ai-risk-benchmark' ),
+			'timeline_heading' => __( 'Further reading and support articles', 'ai-risk-benchmark' ),
 		);
 	}
 }
