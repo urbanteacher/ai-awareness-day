@@ -39,10 +39,11 @@ class AIRB_Defaults {
 	 */
 	public static function roles(): array {
 		return array(
-			'teacher' => __( 'Teacher', 'ai-risk-benchmark' ),
-			'student' => __( 'Student', 'ai-risk-benchmark' ),
-			'parent'  => __( 'Parent / Carer', 'ai-risk-benchmark' ),
-			'leader'  => __( 'School Leader', 'ai-risk-benchmark' ),
+			'teacher'       => __( 'Teacher', 'ai-risk-benchmark' ),
+			'student'       => __( 'Student', 'ai-risk-benchmark' ),
+			'parent'        => __( 'Parent / Carer', 'ai-risk-benchmark' ),
+			'leader'        => __( 'School Leader', 'ai-risk-benchmark' ),
+			'support_staff' => __( 'Support Staff', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -89,10 +90,11 @@ class AIRB_Defaults {
 	 */
 	public static function role_meta(): array {
 		return array(
-			'teacher' => array( 'tint' => '#dcfce7', 'accent' => '#15803d' ),
-			'student' => array( 'tint' => '#dbeafe', 'accent' => '#2563eb' ),
-			'parent'  => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
-			'leader'  => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
+			'teacher'       => array( 'tint' => '#dcfce7', 'accent' => '#15803d' ),
+			'student'       => array( 'tint' => '#dbeafe', 'accent' => '#2563eb' ),
+			'parent'        => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
+			'leader'        => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
+			'support_staff' => array( 'tint' => '#fff7ed', 'accent' => '#ea580c' ),
 		);
 	}
 
@@ -103,10 +105,11 @@ class AIRB_Defaults {
 	 */
 	public static function role_weights(): array {
 		return array(
-			'teacher' => 1.2,
-			'student' => 1.0,
-			'parent'  => 0.9,
-			'leader'  => 1.4,
+			'teacher'       => 1.2,
+			'student'       => 1.0,
+			'parent'        => 0.9,
+			'leader'        => 1.4,
+			'support_staff' => 1.0,
 		);
 	}
 
@@ -269,7 +272,7 @@ class AIRB_Defaults {
 					__( 'Parent Readiness Score', 'ai-risk-benchmark' ),
 				),
 			),
-			'leader'  => array(
+			'leader'        => array(
 				'title'    => __( 'School Leader Benchmark', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'Governance', 'ai-risk-benchmark' ),
@@ -282,6 +285,21 @@ class AIRB_Defaults {
 					__( 'Governance Maturity Score', 'ai-risk-benchmark' ),
 					__( 'Safeguarding Readiness Score', 'ai-risk-benchmark' ),
 					__( 'DfE AI Alignment Score', 'ai-risk-benchmark' ),
+				),
+			),
+			'support_staff' => array(
+				'title'    => __( 'Support Staff Benchmark', 'ai-risk-benchmark' ),
+				'measures' => array(
+					__( 'AI Dependency', 'ai-risk-benchmark' ),
+					__( 'Human Oversight', 'ai-risk-benchmark' ),
+					__( 'Privacy Awareness', 'ai-risk-benchmark' ),
+					__( 'Safeguarding Awareness', 'ai-risk-benchmark' ),
+					__( 'AI Literacy', 'ai-risk-benchmark' ),
+				),
+				'outputs'  => array(
+					__( 'Support Staff AI Risk Score', 'ai-risk-benchmark' ),
+					__( 'Privacy & Data Risk Score', 'ai-risk-benchmark' ),
+					__( 'Safeguarding Readiness Score', 'ai-risk-benchmark' ),
 				),
 			),
 		);
@@ -431,7 +449,7 @@ class AIRB_Defaults {
 	private static function default_recommendations(): array {
 		return array(
 			array(
-				'roles'       => array( 'leader', 'teacher' ),
+				'roles'       => array( 'leader', 'teacher', 'support_staff' ),
 				'offer_type'  => 'template',
 				'priority'    => 70,
 				'domain'      => 'governance',
@@ -453,12 +471,12 @@ class AIRB_Defaults {
 				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
 			),
 			array(
-				'roles'       => array( 'teacher', 'leader' ),
+				'roles'       => array( 'teacher', 'leader', 'support_staff' ),
 				'offer_type'  => 'training',
 				'priority'    => 75,
 				'domain'      => 'human_oversight',
 				'min_band'    => 'high',
-				'title'       => __( 'Teacher AI Verification Framework', 'ai-risk-benchmark' ),
+				'title'       => __( 'Staff AI Verification Framework', 'ai-risk-benchmark' ),
 				'body'        => __( 'Low human oversight suggests staff may be deferring to AI outputs. Build a verify-before-you-trust habit across departments.', 'ai-risk-benchmark' ),
 				'cta_text'    => __( 'Staff verification training', 'ai-risk-benchmark' ),
 				'cta_url'     => 'https://aiawarenessday.co.uk/contact/',
@@ -475,7 +493,7 @@ class AIRB_Defaults {
 				'cta_url'     => 'https://aiawarenessday.co.uk/',
 			),
 			array(
-				'roles'       => array( 'leader', 'teacher' ),
+				'roles'       => array( 'leader', 'teacher', 'support_staff' ),
 				'offer_type'  => 'template',
 				'priority'    => 72,
 				'domain'      => 'privacy',
@@ -705,6 +723,49 @@ class AIRB_Defaults {
 				'body'       => __( 'Benchmark signals elevated AI dependency. A consultation helps you plan culture, policy and CPD to restore independent thinking.', 'ai-risk-benchmark' ),
 				'cta_text'   => __( 'Book dependency review', 'ai-risk-benchmark' ),
 				'cta_url'    => 'https://aiawarenessday.co.uk/contact/',
+			),
+			// Support staff pathway offers.
+			$offer(
+				array(
+					'id'            => 'ss_pupil_data',
+					'roles'         => array( 'support_staff' ),
+					'question_id'   => 'ss_pupil_data',
+					'answer_values' => array( 'yes', 'unsure' ),
+					'offer_type'    => 'training',
+					'priority'      => 88,
+					'title'         => __( 'Pupil data & AI training for support staff', 'ai-risk-benchmark' ),
+					'body'          => __( 'Entering pupil data into AI tools creates GDPR and safeguarding exposure. Clear acceptable-use guidance for all school staff is essential.', 'ai-risk-benchmark' ),
+					'cta_text'      => __( 'Book data-safe AI training', 'ai-risk-benchmark' ),
+					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+				)
+			),
+			$offer(
+				array(
+					'id'            => 'ss_approved_tools',
+					'roles'         => array( 'support_staff' ),
+					'question_id'   => 'ss_approved_tools',
+					'answer_values' => array( 'unsure', 'no' ),
+					'offer_type'    => 'policy',
+					'priority'      => 82,
+					'title'         => __( 'AI acceptable-use policy for staff', 'ai-risk-benchmark' ),
+					'body'          => __( 'All school staff should know which AI tools are approved and why. An accessible policy and briefing session close this gap quickly.', 'ai-risk-benchmark' ),
+					'cta_text'      => __( 'AI Policy Generator', 'ai-risk-benchmark' ),
+					'cta_url'       => 'https://aiawarenessday.co.uk/resources/',
+				)
+			),
+			$offer(
+				array(
+					'id'            => 'ss_safeguarding',
+					'roles'         => array( 'support_staff' ),
+					'question_id'   => 'ss_safeguarding',
+					'answer_values' => array( 'basic', 'no' ),
+					'offer_type'    => 'cpd',
+					'priority'      => 78,
+					'title'         => __( 'AI safeguarding awareness for support staff', 'ai-risk-benchmark' ),
+					'body'          => __( 'Support staff often have direct pupil contact. Understanding AI-related safeguarding risks — including deepfakes — is part of your safeguarding responsibility.', 'ai-risk-benchmark' ),
+					'cta_text'      => __( 'Book safeguarding CPD', 'ai-risk-benchmark' ),
+					'cta_url'       => 'https://aiawarenessday.co.uk/contact/',
+				)
 			),
 		);
 	}

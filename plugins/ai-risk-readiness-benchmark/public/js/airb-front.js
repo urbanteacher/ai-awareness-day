@@ -93,7 +93,7 @@
 	}
 
 	function roleShowsDependency(role) {
-		return role === 'teacher' || role === 'student';
+		return role === 'teacher' || role === 'student' || role === 'support_staff';
 	}
 
 	function oversightGaugeValue(r) {
@@ -216,6 +216,16 @@
 				{ label: 'Governance Maturity Score', value: gov + '%', band: readinessBand(gov), tone: 'readiness', band_label: readinessBandLabel(gov) },
 				{ label: 'Safeguarding Readiness Score', value: lSafe + '%', band: readinessBand(lSafe), tone: 'readiness', band_label: readinessBandLabel(lSafe) },
 				{ label: 'DfE AI Alignment Score', value: lAlign + '/100', band: readinessBand(lAlign), tone: 'readiness', band_label: readinessBandLabel(lAlign) },
+			];
+		} else if (role === 'support_staff') {
+			var dom = results.domain_scores || {};
+			var ssRisk = Math.round(results.overall_risk_percentage);
+			var ssPriv = Math.round(dom.privacy ? dom.privacy.readiness_percentage : results.alignment_score);
+			var ssSafe = results.safeguarding_readiness;
+			cards = [
+				{ label: 'Support Staff AI Risk Score', value: ssRisk + '%', band: results.risk_level, tone: 'risk', band_label: displayRiskLabel(results.risk_level, ssRisk) },
+				{ label: 'Privacy & Data Risk Score', value: ssPriv + '%', band: readinessBand(ssPriv), tone: 'readiness', band_label: readinessBandLabel(ssPriv) },
+				{ label: 'Safeguarding Readiness Score', value: ssSafe + '%', band: readinessBand(ssSafe), tone: 'readiness', band_label: readinessBandLabel(ssSafe) },
 			];
 		}
 		return cards;

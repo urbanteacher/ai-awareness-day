@@ -166,7 +166,7 @@ function aiad_timeline_single_render_related(int $post_id): void
     ?>
     <section class="single-timeline-entry__related" aria-labelledby="related-heading-timeline">
         <h2 id="related-heading-timeline" class="single-timeline-entry__related-title">
-            <?php esc_html_e('More to read', 'ai-awareness-day'); ?>
+            <?php esc_html_e('Suggested Readings', 'ai-awareness-day'); ?>
         </h2>
         <ul class="single-timeline-entry__related-list">
             <?php

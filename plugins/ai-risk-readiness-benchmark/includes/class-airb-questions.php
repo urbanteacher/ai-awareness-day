@@ -195,6 +195,54 @@ class AIRB_Questions {
 					array( 'value' => 'no', 'label' => __( 'Not yet', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 			),
+			// —— Support staff ——
+			array(
+				self::q( 'ss_modify_pct', 'support_staff', 'human_oversight', __( 'Human Oversight', 'ai-risk-benchmark' ), __( 'What percentage of AI-generated content do you modify before using it at work?', 'ai-risk-benchmark' ), array(), 'slider' ),
+				self::q( 'ss_verify', 'support_staff', 'human_oversight', __( 'Human Oversight', 'ai-risk-benchmark' ), __( 'Do you verify AI outputs before acting on them or sharing them?', 'ai-risk-benchmark' ), $f ),
+				self::q( 'ss_ai_tasks', 'support_staff', 'ai_dependency', __( 'Dependency', 'ai-risk-benchmark' ), __( 'How often do you use AI for your daily work tasks?', 'ai-risk-benchmark' ), $f ),
+				self::q( 'ss_without_ai', 'support_staff', 'ai_dependency', __( 'Dependency', 'ai-risk-benchmark' ), __( 'Could you carry out your main tasks without AI for one week?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_easily', 'label' => __( 'Yes, easily', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'yes_some',   'label' => __( 'Yes, with some inconvenience', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'difficult',  'label' => __( 'It would be difficult', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',         'label' => __( 'No, not realistically', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_pupil_data', 'support_staff', 'privacy', __( 'Privacy', 'ai-risk-benchmark' ), __( 'Have you entered pupil information or personal data into AI tools?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'never',    'label' => __( 'Never', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'unsure',   'label' => __( 'Not sure / might have', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'yes_anon', 'label' => __( 'Yes, but anonymised only', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes',      'label' => __( 'Yes, identifiable data', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_data_risks', 'support_staff', 'privacy', __( 'Privacy', 'ai-risk-benchmark' ), __( 'Do you understand personal data risks when using AI at work?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes',    'label' => __( 'Yes, clearly', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'Mostly', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'basic',  'label' => __( 'Basic awareness', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',     'label' => __( 'Limited', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_safeguarding', 'support_staff', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Are you aware of AI-related safeguarding risks involving pupils?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes',   'label' => __( 'Yes, and I know what to do', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'aware', 'label' => __( 'Generally aware', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'basic', 'label' => __( 'Basic awareness only', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',    'label' => __( 'Not really', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_deepfakes', 'support_staff', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Do you know what deepfakes are and how to respond if you encounter one involving a pupil?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes',    'label' => __( 'Yes, clear on what to do', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'Mostly', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'basic',  'label' => __( 'Basic awareness', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',     'label' => __( 'Not really', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_hallucinations', 'support_staff', 'ai_literacy', __( 'AI Literacy', 'ai-risk-benchmark' ), __( 'Do you understand that AI can produce inaccurate or misleading outputs?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes',    'label' => __( 'Yes, and I always check', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'Yes, generally', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'basic',  'label' => __( 'I had not thought about it', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',     'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_approved_tools', 'support_staff', 'safe_adoption', __( 'Safe Use', 'ai-risk-benchmark' ), __( 'Do you only use AI tools that have been approved by your school?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes',    'label' => __( 'Yes, always', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'Mostly', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Not sure which are approved', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no',     'label' => __( 'No approved list exists', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+			),
 			// —— School leader ——
 			array(
 				self::q( 'l_policy', 'leader', 'governance', __( 'Governance', 'ai-risk-benchmark' ), __( 'Is there a published AI policy?', 'ai-risk-benchmark' ), array(
