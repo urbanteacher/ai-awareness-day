@@ -21,7 +21,7 @@ $roles         = aiad_benchmark_promo_roles();
 					<?php esc_html_e( 'New · Free for UK schools', 'ai-awareness-day' ); ?>
 				</p>
 				<h2 class="benchmark-promo__title">
-					<?php esc_html_e( "Assess your school's AI usage", 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Audit your AI usage', 'ai-awareness-day' ); ?>
 				</h2>
 				<p class="benchmark-promo__desc">
 					<?php esc_html_e( 'Take the AI Risk & Readiness Benchmark™ — a free interactive audit to measure adoption, dependency and readiness across your whole school community.', 'ai-awareness-day' ); ?>
