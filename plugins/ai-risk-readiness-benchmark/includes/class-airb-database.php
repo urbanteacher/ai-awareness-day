@@ -551,4 +551,130 @@ class AIRB_Database {
 
 		return $stats;
 	}
+
+	/**
+	 * Delete one submission and unlink related leads/events.
+	 *
+	 * @param int $id Submission ID.
+	 */
+	public static function delete_submission( int $id ): bool {
+		if ( $id <= 0 ) {
+			return false;
+		}
+
+		self::unlink_related( array( $id ) );
+
+		global $wpdb;
+		$deleted = $wpdb->delete( self::table_name(), array( 'id' => $id ), array( '%d' ) );
+
+		return false !== $deleted && $deleted > 0;
+	}
+
+	/**
+	 * Delete multiple submissions by ID.
+	 *
+	 * @param array<int, int> $ids Submission IDs.
+	 */
+	public static function delete_submissions( array $ids ): int {
+		$ids = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'intval', $ids ),
+					static function ( int $id ): bool {
+						return $id > 0;
+					}
+				)
+			)
+		);
+
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		self::unlink_related( $ids );
+
+		global $wpdb;
+		$table        = self::table_name();
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
+
+		return is_int( $deleted ) ? $deleted : 0;
+	}
+
+	/**
+	 * Delete submissions, optionally limited to current admin filters.
+	 *
+	 * @param array<string, mixed> $args Filter args (role, risk_level, school, date_from, date_to).
+	 */
+	public static function delete_all_submissions( array $args = array() ): int {
+		global $wpdb;
+
+		$table = self::table_name();
+		$args  = array_intersect_key(
+			$args,
+			array_flip( array( 'role', 'risk_level', 'school', 'date_from', 'date_to' ) )
+		);
+
+		if ( self::has_submission_filters( $args ) ) {
+			$clause = self::build_where( $args );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE " . $clause['where'], $clause['vals'] ) );
+
+			return self::delete_submissions( array_map( 'intval', (array) $ids ) );
+		}
+
+		self::unlink_all_related();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$deleted = $wpdb->query( "DELETE FROM {$table}" );
+
+		return is_int( $deleted ) ? $deleted : 0;
+	}
+
+	/**
+	 * Whether filter args would narrow the submission query.
+	 *
+	 * @param array<string, mixed> $args Filter args.
+	 */
+	private static function has_submission_filters( array $args ): bool {
+		foreach ( array( 'role', 'risk_level', 'school', 'date_from', 'date_to' ) as $key ) {
+			if ( ! empty( $args[ $key ] ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Unlink leads and events from the given submission IDs.
+	 *
+	 * @param array<int, int> $ids Submission IDs.
+	 */
+	private static function unlink_related( array $ids ): void {
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		if ( class_exists( 'AIRB_Leads' ) ) {
+			AIRB_Leads::unlink_submissions( $ids );
+		}
+		if ( class_exists( 'AIRB_Events' ) ) {
+			AIRB_Events::unlink_submissions( $ids );
+		}
+	}
+
+	/**
+	 * Unlink all leads and events that reference any submission.
+	 */
+	private static function unlink_all_related(): void {
+		if ( class_exists( 'AIRB_Leads' ) ) {
+			AIRB_Leads::unlink_all_submissions();
+		}
+		if ( class_exists( 'AIRB_Events' ) ) {
+			AIRB_Events::unlink_all_submissions();
+		}
+	}
 }

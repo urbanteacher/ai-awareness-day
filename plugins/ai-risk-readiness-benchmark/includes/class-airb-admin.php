@@ -22,6 +22,7 @@ class AIRB_Admin {
 		add_action( 'admin_post_airb_save_settings', array( __CLASS__, 'save_settings' ) );
 		add_action( 'admin_post_airb_reset_defaults', array( __CLASS__, 'reset_defaults' ) );
 		add_action( 'admin_post_airb_update_lead', array( __CLASS__, 'update_lead' ) );
+		add_action( 'admin_post_airb_delete_submissions', array( __CLASS__, 'delete_submissions' ) );
 		add_action( 'admin_init', array( __CLASS__, 'maybe_export_csv' ) );
 	}
 
@@ -128,8 +129,114 @@ class AIRB_Admin {
 			'total'            => AIRB_Database::count_submissions( array() ),
 			'with_school'      => AIRB_Database::count_with_school(),
 		);
+		$has_filters = self::has_submission_filters( $filters );
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';
+	}
+
+	/**
+	 * Delete one, selected, filtered, or all submissions from admin.
+	 */
+	public static function delete_submissions(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Unauthorized', 'ai-risk-benchmark' ) );
+		}
+		check_admin_referer( 'airb_delete_submissions' );
+
+		$action       = sanitize_key( (string) ( $_POST['airb_delete_action'] ?? '' ) );
+		$redirect_args = self::submission_redirect_args_from_post();
+		$deleted      = 0;
+
+		if ( 'single' === $action ) {
+			$id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+			if ( $id && AIRB_Database::delete_submission( $id ) ) {
+				$deleted = 1;
+				unset( $redirect_args['submission_id'] );
+			}
+		} elseif ( 'bulk' === $action ) {
+			$bulk = sanitize_key( (string) ( $_POST['bulk_action'] ?? '' ) );
+			if ( 'delete' === $bulk ) {
+				$ids     = array_map( 'intval', (array) ( $_POST['submission_ids'] ?? array() ) );
+				$deleted = AIRB_Database::delete_submissions( $ids );
+			} else {
+				wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+				exit;
+			}
+		} elseif ( 'filtered' === $action ) {
+			$deleted = AIRB_Database::delete_all_submissions( self::submission_filters_from_post() );
+		} elseif ( 'all' === $action ) {
+			$confirm = sanitize_text_field( (string) ( $_POST['delete_all_confirm'] ?? '' ) );
+			if ( 'DELETE ALL' === $confirm ) {
+				$deleted = AIRB_Database::delete_all_submissions();
+				$redirect_args = array( 'page' => 'airb-benchmark' );
+			}
+		}
+
+		if ( $deleted > 0 ) {
+			$redirect_args['deleted'] = $deleted;
+		} elseif ( in_array( $action, array( 'single', 'bulk', 'filtered', 'all' ), true ) ) {
+			$redirect_args['delete_error'] = '1';
+		}
+
+		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
+	 * Filter args for submission delete/query from POST.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function submission_filters_from_post(): array {
+		return array(
+			'role'       => sanitize_key( (string) ( $_POST['role'] ?? '' ) ),
+			'risk_level' => sanitize_text_field( (string) ( $_POST['risk_level'] ?? '' ) ),
+			'school'     => sanitize_text_field( (string) ( $_POST['school'] ?? '' ) ),
+			'date_from'  => sanitize_text_field( (string) ( $_POST['date_from'] ?? '' ) ),
+			'date_to'    => sanitize_text_field( (string) ( $_POST['date_to'] ?? '' ) ),
+		);
+	}
+
+	/**
+	 * Preserve list filters when redirecting after delete.
+	 *
+	 * @return array<string, string|int>
+	 */
+	private static function submission_redirect_args_from_post(): array {
+		$args = array( 'page' => 'airb-benchmark' );
+
+		foreach ( self::submission_filters_from_post() as $key => $value ) {
+			if ( '' !== $value ) {
+				$args[ $key ] = $value;
+			}
+		}
+
+		$paged = max( 1, (int) ( $_POST['paged'] ?? 1 ) );
+		if ( $paged > 1 ) {
+			$args['paged'] = $paged;
+		}
+
+		$submission_id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+		if ( $submission_id > 0 ) {
+			$args['submission_id'] = $submission_id;
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Whether submission list filters are active.
+	 *
+	 * @param array<string, mixed> $filters Filter args.
+	 */
+	private static function has_submission_filters( array $filters ): bool {
+		foreach ( array( 'role', 'risk_level', 'school', 'date_from', 'date_to' ) as $key ) {
+			if ( ! empty( $filters[ $key ] ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
