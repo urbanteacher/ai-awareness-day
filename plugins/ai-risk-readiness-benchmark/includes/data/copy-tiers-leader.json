@@ -1,0 +1,543 @@
+{
+  "_meta": {
+    "role": "leader",
+    "version": "1.0.0",
+    "schema_note": "Leader uses governance_maturity instead of dependency, and peer_benchmark instead of personal metrics. Readiness bands match teacher/support for consistency across staff roles.",
+    "description": "Copy tiers for school leader benchmark results. Audience: headteachers, deputy heads, SLT, governors. Language: governance, accountability, legal duty."
+  },
+
+  "readiness_bands": {
+    "emerging": {
+      "min": 0, "max": 39,
+      "label": "Emerging",
+      "sub_label": "Critical — act now",
+      "color_ramp": "red",
+      "consequence": "Your school has significant AI risk exposure. Without leadership action, staff are likely using AI tools without consistent safeguards, oversight, or policy guidance in place.",
+      "urgent_action": "Complete your AI data protection review with your DPO before the next staff AI tool use."
+    },
+    "developing": {
+      "min": 40, "max": 59,
+      "label": "Developing",
+      "sub_label": "Concern — review needed",
+      "color_ramp": "amber",
+      "consequence": "Your school has foundational AI awareness but gaps remain in policy, staff practice and oversight. Without focused action, risk exposure will grow as AI use increases.",
+      "urgent_action": "Appoint an AI lead if you have not already and set a policy review date this term."
+    },
+    "established": {
+      "min": 60, "max": 74,
+      "label": "Established",
+      "sub_label": "On the right track",
+      "color_ramp": "blue",
+      "consequence": "Your school has solid AI governance foundations in place. Focus now on the areas where practice is still inconsistent or policy is not fully embedded.",
+      "urgent_action": null
+    },
+    "strong": {
+      "min": 75, "max": 89,
+      "label": "Strong",
+      "sub_label": "Leading your sector",
+      "color_ramp": "green",
+      "consequence": "Your school demonstrates strong AI readiness across most domains. You are ahead of most schools — priority now is closing remaining gaps and maintaining standards as AI tools evolve.",
+      "urgent_action": null
+    },
+    "leading": {
+      "min": 90, "max": 100,
+      "label": "Leading",
+      "sub_label": "Sector benchmark",
+      "color_ramp": "green",
+      "consequence": "Your school is operating at the highest level of AI readiness. Your governance, safeguarding and oversight practices represent a model other schools can learn from.",
+      "urgent_action": null
+    }
+  },
+
+  "governance_maturity": {
+    "critical": {
+      "min": 0, "max": 29,
+      "label": "Not yet in place",
+      "signal": "No consistent policy or oversight",
+      "consequence": "No consistent policy, AI lead or oversight process exists. Staff and pupils have no clear standard for AI use and the school has no documented position on AI governance.",
+      "tone": "critical"
+    },
+    "developing": {
+      "min": 30, "max": 49,
+      "label": "Gaps in policy & practice",
+      "signal": "Gaps in policy & practice",
+      "consequence": "Initial awareness exists but staff practice and oversight are inconsistent across the school.",
+      "tone": "warning"
+    },
+    "partial": {
+      "min": 50, "max": 64,
+      "label": "Partially embedded",
+      "signal": "Policy exists — practice inconsistent",
+      "consequence": "Policy exists but is not consistently followed or understood by all staff. Some departments are ahead of others.",
+      "tone": "neutral"
+    },
+    "mostly": {
+      "min": 65, "max": 79,
+      "label": "Mostly embedded",
+      "signal": "Good structures — minor gaps",
+      "consequence": "Good governance structures are in place. Focus on closing gaps in practice and ensuring annual review cycles are met.",
+      "tone": "positive"
+    },
+    "full": {
+      "min": 80, "max": 100,
+      "label": "Fully embedded",
+      "signal": "Governance fully embedded",
+      "consequence": "Governance is strong, regularly reviewed and well understood across the school. A model for other schools to follow.",
+      "tone": "positive"
+    }
+  },
+
+  "ai_risk_exposure": {
+    "critical": {
+      "min": 80, "max": 100,
+      "signal": "Critical exposure",
+      "consequence": "Your school has very high AI risk across multiple domains. Immediate leadership action is required before risk materialises into a safeguarding or compliance incident.",
+      "tone": "critical"
+    },
+    "high": {
+      "min": 60, "max": 79,
+      "signal": "High exposure",
+      "consequence": "Significant risk across key domains. Most schools at Emerging stage sit in this range. Focused action on your top two domains will have the biggest impact.",
+      "tone": "warning"
+    },
+    "moderate": {
+      "min": 40, "max": 59,
+      "signal": "Moderate exposure",
+      "consequence": "Some domains are well managed but others carry meaningful risk. Targeted improvement in your weakest areas will move your overall score significantly.",
+      "tone": "neutral"
+    },
+    "low": {
+      "min": 20, "max": 39,
+      "signal": "Low exposure",
+      "consequence": "Your school is managing AI risk well across most areas. Remaining exposure is concentrated in one or two domains — review these specifically.",
+      "tone": "positive"
+    },
+    "minimal": {
+      "min": 0, "max": 19,
+      "signal": "Minimal exposure",
+      "consequence": "AI risk is well controlled across all domains. Maintain your current standards and schedule an annual review to stay ahead as tools evolve.",
+      "tone": "positive"
+    }
+  },
+
+  "bias_readiness": {
+    "critical": {
+      "min": 0, "max": 25,
+      "signal": "Bias awareness gap",
+      "consequence": "Your school has not yet assessed whether AI tools could produce unfair or discriminatory outputs affecting pupils. This is a safeguarding and Public Sector Equality Duty risk.",
+      "tone": "critical"
+    },
+    "low": {
+      "min": 26, "max": 49,
+      "signal": "Limited bias oversight",
+      "consequence": "AI tools can reflect and reinforce bias against pupils based on race, gender, SEND status and other protected characteristics. Without a policy-level response this risk is unmanaged.",
+      "tone": "warning"
+    },
+    "developing": {
+      "min": 50, "max": 75,
+      "signal": "Developing bias oversight",
+      "consequence": "Some awareness of AI bias exists at school level but it is not yet embedded in policy or practice. Build this into your AI governance framework and next safeguarding review.",
+      "tone": "neutral"
+    },
+    "strong": {
+      "min": 76, "max": 100,
+      "signal": "Strong bias oversight",
+      "consequence": "Your school actively assesses whether AI outputs could be unfair or discriminatory before they affect pupils. This is above the standard of most schools at your phase.",
+      "tone": "positive"
+    }
+  },
+
+  "urgent_action": {
+    "data_protection_zero": {
+      "trigger": "data_protection === 0",
+      "title": "Complete your AI data protection review with your DPO",
+      "body": "Your data protection score is 0%. Pupil data may be entering AI tools without a DPIA or approved tool list in place — this is your highest-priority legal and safeguarding risk right now."
+    },
+    "safeguarding_zero": {
+      "trigger": "safeguarding === 0",
+      "title": "Update your safeguarding policy to cover AI-enabled harm",
+      "body": "Your safeguarding score is 0%. DSL and pastoral teams may not be equipped to recognise or respond to deepfake or AI-enabled incidents — this needs to be addressed before your next KCSIE review."
+    },
+    "both_critical": {
+      "trigger": "data_protection === 0 && safeguarding === 0",
+      "title": "Meet with your DPO and DSL this week",
+      "body": "Both data protection and safeguarding are at critical level. These are your two highest-priority legal and pastoral risks and should be addressed together as a matter of urgency."
+    },
+    "governance_critical": {
+      "trigger": "governance < 30",
+      "title": "Appoint an AI lead and begin drafting your school AI policy",
+      "body": "Your governance score is critically low. Without an AI lead or policy in place, there is no consistent standard for how staff and pupils use AI across the school."
+    },
+    "human_oversight_critical": {
+      "trigger": "human_oversight < 33",
+      "title": "Introduce a whole-school AI verification standard",
+      "body": "Staff are using AI regularly but there is no consistent check before outputs reach pupils. Some departments are likely passing AI-generated content directly into lessons without review."
+    },
+    "assessment_critical": {
+      "trigger": "assessment_integrity < 33",
+      "title": "Conduct a JCQ-aligned assessment review before the next exam season",
+      "body": "Your assessment controls may not yet reflect current JCQ and Ofqual expectations. Inconsistent rules across departments put your school at risk of malpractice incidents."
+    },
+    "all_strong": {
+      "trigger": "overall >= 75",
+      "title": "Share your results with governors and schedule your next annual review",
+      "body": "Your school is performing well across all domains. The next step is embedding AI governance into your annual review cycle and reporting to governors."
+    }
+  },
+
+  "domains": {
+    "data_protection_awareness": {
+      "label": "Data protection awareness",
+      "description": "Whether staff understand what pupil data can enter AI tools and whether a DPIA and approved tool list are in place.",
+      "focus_card": {
+        "critical": {
+          "summary": "Staff may not consistently understand what pupil data can enter AI tools. Without a DPIA and approved tool list, your school has no documented basis for lawful processing under UK GDPR.",
+          "impact": [
+            "Staff choosing AI tools individually without data review",
+            "Pupil names, SEND data or safeguarding notes potentially entering third-party AI",
+            "No audit trail if an ICO complaint or subject access request is raised"
+          ],
+          "actions": [
+            "Complete the AI data protection checklist with your DPO",
+            "Publish clear staff guidance on what data can enter AI tools",
+            "Review your approved tool list against ICO expectations"
+          ]
+        },
+        "high": {
+          "summary": "Data protection awareness is inconsistent across the school. Some staff understand the risks but practice varies by department.",
+          "impact": [],
+          "actions": [
+            "Audit which AI tools are currently in use across the school",
+            "Clarify data handling rules with your DPO",
+            "Update your approved tool guidance and share with all staff"
+          ]
+        },
+        "moderate": {
+          "summary": "Most staff understand data protection basics but gaps remain in documentation or approved tool coverage.",
+          "impact": [],
+          "actions": [
+            "Complete or refresh your DPIA for pupil-facing AI tools",
+            "Confirm your approved tool list is current and accessible to all staff"
+          ]
+        }
+      }
+    },
+    "safeguarding": {
+      "label": "Safeguarding",
+      "description": "Whether safeguarding procedures cover AI-specific harms — deepfakes, impersonation and synthetic content — in line with KCSIE.",
+      "focus_card": {
+        "critical": {
+          "summary": "Safeguarding procedures may not yet cover AI-specific harms. KCSIE expects DSLs to understand deepfakes, AI-enabled impersonation and synthetic content as part of online safety provision.",
+          "impact": [
+            "Online safety procedures in place but AI-specific harms not covered",
+            "DSL and pastoral teams may not recognise deepfake or AI impersonation incidents",
+            "No AI scenario training means staff may not know how to respond or report"
+          ],
+          "actions": [
+            "Update your safeguarding policy to include AI-enabled harm",
+            "Train your DSL and pastoral teams on deepfake risks",
+            "Add AI scenarios to annual safeguarding training"
+          ]
+        },
+        "high": {
+          "summary": "Safeguarding covers some AI risks but not consistently. DSL awareness may be limited to general online safety rather than AI-specific scenarios.",
+          "impact": [],
+          "actions": [
+            "Review your safeguarding policy against current KCSIE AI guidance",
+            "Brief your DSL on deepfake and impersonation risks",
+            "Add at least one AI scenario to your next safeguarding training session"
+          ]
+        },
+        "moderate": {
+          "summary": "Core AI safeguarding risks are covered. Focus on keeping pace as new AI-enabled harms emerge.",
+          "impact": [],
+          "actions": [
+            "Schedule an annual review of AI content in your safeguarding policy",
+            "Confirm all pastoral staff have received AI scenario training"
+          ]
+        }
+      }
+    },
+    "human_oversight": {
+      "label": "Human oversight",
+      "description": "Whether staff are consistently verifying AI outputs before they reach pupils or appear in school communications.",
+      "focus_card": {
+        "critical": {
+          "summary": "Staff are using AI regularly but verification is inconsistent across departments. Some departments are likely passing AI output to pupils without checking it first.",
+          "impact": [
+            "Inconsistent staff practice across departments",
+            "Over-trust in AI outputs without verification",
+            "Uncertainty about appropriate classroom use"
+          ],
+          "actions": [
+            "Introduce a whole-school AI verification standard",
+            "Embed the Verify Before You Trust framework in CPD",
+            "Require sign-off on AI-generated materials before classroom use"
+          ]
+        },
+        "high": {
+          "summary": "Most staff verify AI outputs but practice is not yet consistent across all departments or year groups.",
+          "impact": [],
+          "actions": [
+            "Audit verification practice across departments",
+            "Share the Verify Before You Trust framework with remaining staff",
+            "Add AI verification to your next CPD cycle"
+          ]
+        },
+        "moderate": {
+          "summary": "Staff are generally verifying AI outputs. Focus on maintaining standards and supporting newer staff.",
+          "impact": [],
+          "actions": [
+            "Include AI verification in induction for new staff",
+            "Review practice annually as part of your AI governance cycle"
+          ]
+        }
+      }
+    },
+    "assessment_integrity": {
+      "label": "Assessment controls",
+      "description": "Whether assessment controls reflect current JCQ and Ofqual expectations for AI use in assessed work.",
+      "focus_card": {
+        "critical": {
+          "summary": "Assessment controls may not yet reflect current JCQ and Ofqual expectations. AI rules are likely inconsistent across departments.",
+          "impact": [
+            "Inconsistent AI rules communicated across year groups and subjects",
+            "Malpractice risk if pupils are unclear on what is permitted",
+            "Potential JCQ compliance gap"
+          ],
+          "actions": [
+            "Conduct a JCQ-aligned assessment review across departments",
+            "Update malpractice and exam supervision procedures",
+            "Communicate AI rules clearly and consistently to all pupils"
+          ]
+        },
+        "high": {
+          "summary": "Some departments have updated assessment controls but practice is not consistent school-wide.",
+          "impact": [],
+          "actions": [
+            "Identify which departments have not yet reviewed their AI assessment guidance",
+            "Share a standard template for communicating AI rules to pupils",
+            "Confirm malpractice procedures are up to date"
+          ]
+        },
+        "moderate": {
+          "summary": "Assessment controls are broadly aligned with JCQ expectations. Maintain awareness of guidance updates.",
+          "impact": [],
+          "actions": [
+            "Schedule an annual JCQ alignment check",
+            "Confirm all new staff are briefed on current AI assessment rules"
+          ]
+        }
+      }
+    },
+    "governance_consistency": {
+      "label": "Governance consistency",
+      "description": "Whether AI governance is documented, owned by a named lead, and consistently applied across the school.",
+      "focus_card": {
+        "critical": {
+          "summary": "No consistent policy, AI lead or oversight process exists. Staff and pupils have no clear standard for AI use and the school has no documented governance position.",
+          "impact": [
+            "No named AI lead or ownership of AI risk",
+            "Staff making individual decisions without a policy framework",
+            "No governor visibility of AI risk or school AI use"
+          ],
+          "actions": [
+            "Appoint an AI lead from your SLT",
+            "Begin drafting a school AI policy using the DfE framework",
+            "Set a date for your first formal AI governance review"
+          ]
+        },
+        "high": {
+          "summary": "Some governance structures are in place but they are not consistently applied. Policy may exist on paper without reaching staff practice.",
+          "impact": [],
+          "actions": [
+            "Review whether your current AI policy is understood and followed by staff",
+            "Assign ownership of AI governance to a named SLT member",
+            "Set a calendar date for annual AI policy review"
+          ]
+        },
+        "moderate": {
+          "summary": "Governance foundations are in place. Focus on embedding practice and ensuring all staff know what the policy requires.",
+          "impact": [],
+          "actions": [
+            "Communicate your AI policy clearly to all staff",
+            "Include AI governance in your next staff briefing cycle",
+            "Confirm governor awareness of your current AI position"
+          ]
+        }
+      }
+    },
+    "bias_awareness": {
+      "label": "Bias & fairness oversight",
+      "description": "Whether the school has assessed whether AI tools could produce unfair or discriminatory outputs affecting pupils.",
+      "focus_card": {
+        "critical": {
+          "summary": "Your school has not yet assessed whether AI tools could produce biased or discriminatory outputs. This is a safeguarding concern and a Public Sector Equality Duty risk.",
+          "impact": [
+            "AI outputs potentially disadvantaging pupils by race, gender, SEND status or other protected characteristics",
+            "No policy-level response to AI bias risk",
+            "Potential PSED breach if AI is used in pupil assessment or grouping decisions"
+          ],
+          "actions": [
+            "Add AI bias to your next safeguarding policy review",
+            "Brief staff that AI outputs can reflect discriminatory patterns",
+            "Introduce a bias check as part of your AI verification standard"
+          ]
+        },
+        "high": {
+          "summary": "Some awareness of AI bias exists at leadership level but it is not embedded in policy or staff practice.",
+          "impact": [],
+          "actions": [
+            "Include bias awareness in your next staff AI CPD session",
+            "Add AI bias to your approved tool assessment criteria",
+            "Raise AI fairness in your next governor AI briefing"
+          ]
+        },
+        "moderate": {
+          "summary": "Bias awareness is developing. Build it into your governance framework and annual review cycle.",
+          "impact": [],
+          "actions": [
+            "Reference PSED compliance in your school AI policy",
+            "Include bias checking in your Verify Before You Trust framework",
+            "Monitor for AI outputs that could disadvantage particular pupil groups"
+          ]
+        }
+      }
+    },
+    "ai_literacy": {
+      "label": "AI literacy",
+      "description": "Staff confidence and understanding of how AI tools work, where they fail and what their outputs can be trusted for.",
+      "focus_card": {
+        "critical": {
+          "summary": "Staff AI literacy across the school is low. Without a shared understanding of how AI works and fails, verification and oversight practices will not improve on their own.",
+          "impact": [
+            "Staff unable to recognise AI hallucination or confident errors",
+            "No shared vocabulary for discussing AI risk at department level",
+            "Difficult to enforce policy when staff do not understand the underlying tools"
+          ],
+          "actions": [
+            "Schedule a whole-school AI literacy session this term",
+            "Share a plain-English guide to AI limitations with all staff",
+            "Make AI literacy a standing item in your next CPD calendar"
+          ]
+        },
+        "high": {
+          "summary": "Basic AI awareness exists but gaps remain in understanding how tools fail, hallucinate or reflect bias.",
+          "impact": [],
+          "actions": [
+            "Focus CPD on common AI failure modes — hallucination, bias, confident errors",
+            "Identify staff with stronger AI literacy to support colleagues",
+            "Include AI literacy outcomes in your school improvement plan"
+          ]
+        },
+        "moderate": {
+          "summary": "Staff AI literacy is reasonable. Deepen understanding of bias and failure modes across all departments.",
+          "impact": [],
+          "actions": [
+            "Commission targeted AI literacy CPD for departments with lower scores",
+            "Build AI literacy assessment into your annual staff review cycle"
+          ]
+        }
+      }
+    }
+  },
+
+  "whole_school_unlock": {
+    "zero": {
+      "intro": "You have completed the leader audit. When your staff, students and parents complete theirs, you will unlock aggregated school data — including teacher AI dependency, student verification skills and parent awareness gaps.",
+      "cta": "Roll out to your school community"
+    },
+    "started": {
+      "intro": "You are getting started. Keep sharing — your whole-school data unlocks at 20 responses and will show you where the real gaps are across all groups.",
+      "cta": "Encourage more responses"
+    },
+    "nearly": {
+      "intro": "Nearly there. A few more responses and your aggregated school data will be ready — including a full risk heatmap across all roles.",
+      "cta": "Share again to reach 20"
+    },
+    "unlocked": {
+      "intro": "Your whole-school benchmark is now live. Use this data in your governor report and annual AI review.",
+      "cta": "View school dashboard"
+    }
+  },
+
+  "peer_benchmark": {
+    "secondary": { "avg": 62, "top_quartile": 84, "label": "Average secondary school" },
+    "primary":   { "avg": 58, "top_quartile": 80, "label": "Average primary school" },
+    "all_through": { "avg": 61, "top_quartile": 82, "label": "Average all-through school" },
+    "mat":       { "avg": 65, "top_quartile": 86, "label": "Average MAT school" }
+  },
+
+  "strengths": {
+    "data_protection_76": "Clear data protection governance — staff understand what pupil data can and cannot enter AI tools.",
+    "safeguarding_76": "Safeguarding procedures cover AI-specific harms including deepfakes and AI-enabled impersonation.",
+    "human_oversight_76": "Strong whole-school verification standards — AI output is reviewed before reaching pupils.",
+    "assessment_integrity_76": "Assessment controls are aligned with JCQ expectations and consistently communicated to pupils.",
+    "governance_consistency_76": "AI governance is documented, owned and embedded in school practice.",
+    "ai_literacy_76": "Staff AI literacy is strong — a foundation for effective verification and oversight.",
+    "bias_awareness_76": "Your school actively assesses whether AI outputs could be unfair or discriminatory to pupils."
+  },
+
+  "cta": {
+    "emerging": {
+      "title": "Governance review & readiness consultation",
+      "description": "A structured review with an AI readiness specialist — covering where your risks sit, what to prioritise and what your school needs to move from Emerging to Established.",
+      "includes": [
+        "DfE alignment review",
+        "Policy recommendations",
+        "Risk heat map walkthrough",
+        "Staff CPD planning"
+      ],
+      "tags": ["DfE alignment review", "Policy recommendations", "Risk heat map", "CPD planning"],
+      "button": "Request governance review"
+    },
+    "developing": {
+      "title": "School AI policy & governance build",
+      "description": "You have awareness but need structured governance. This session will produce a draft school AI policy, an approved tool list and a 90-day action plan for your SLT.",
+      "includes": [
+        "AI policy draft",
+        "Approved tool list",
+        "90-day SLT action plan",
+        "Governor briefing template"
+      ],
+      "tags": ["AI policy draft", "Approved tool list", "90-day action plan", "Governor briefing"],
+      "button": "Book a policy session"
+    },
+    "established": {
+      "title": "Whole-school CPD programme",
+      "description": "Your governance is in place — now build staff confidence and consistency. A targeted CPD programme based on your highest-risk domains across the whole school.",
+      "includes": [
+        "Domain-targeted CPD sessions",
+        "Verify Before You Trust staff training",
+        "Assessment integrity workshop",
+        "AI literacy programme"
+      ],
+      "tags": ["Domain CPD", "Verify Before You Trust", "Assessment integrity", "AI literacy"],
+      "button": "Book whole-school CPD"
+    },
+    "strong": {
+      "title": "AI Champion programme",
+      "description": "Your school is ready to build internal expertise. The AI Champion Programme develops teacher leads who can sustain AI readiness from within.",
+      "includes": [
+        "AI Champion cohort training",
+        "Internal audit toolkit",
+        "Governor reporting template",
+        "Annual review framework"
+      ],
+      "tags": ["Champion cohort", "Internal audit", "Governor reporting", "Annual review"],
+      "button": "Start the champion programme"
+    },
+    "leading": {
+      "title": "National benchmark & case study",
+      "description": "Your school is operating at the highest level. Contribute to the UK School AI Benchmark 2027 and share your approach with the wider sector.",
+      "includes": [
+        "National benchmark submission",
+        "Case study feature",
+        "Sector leadership profile",
+        "Annual Leaders Cohort invitation"
+      ],
+      "tags": ["National benchmark", "Case study", "Sector leadership", "Leaders cohort"],
+      "button": "Join the leading schools cohort"
+    }
+  }
+}

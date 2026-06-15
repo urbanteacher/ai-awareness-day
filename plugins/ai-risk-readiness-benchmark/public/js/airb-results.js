@@ -305,6 +305,210 @@ function parentFocusTopicsHtml(focusAreas, opts) {
     return html;
 }
 
+/**
+ * Teacher focus area cards (accordion guidance, optional bias note on safeguarding).
+ *
+ * @param {Array<object>} focusAreas
+ * @param {object|null} biasHealth
+ * @param {object} opts
+ */
+function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!focusAreas || !focusAreas.length) return '';
+    var practiceHeading = opts.practiceHeading || 'In practice this means';
+    var html = '';
+    focusAreas.forEach(function (area) {
+        var badge = opts.leaderFocusBadge ? opts.leaderFocusBadge(area.pct) : { slug: 'attention', text: (area.pct || 0) + '%' };
+        var severity = opts.leaderFocusSeverity ? opts.leaderFocusSeverity(area.pct) : 'moderate';
+        html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
+        html += '<div class="airb__focus-card-header">';
+        html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
+        html += '<span class="airb__focus-badge airb__focus-badge--' + escFn(badge.slug) + '">' + escFn(badge.text) + '</span>';
+        html += '</div>';
+        if (area.summary) {
+            html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
+        }
+        if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null && opts.teacherBiasEqualityFocusNote) {
+            var biasNote = opts.teacherBiasEqualityFocusNote(biasHealth.score);
+            if (biasNote) {
+                html += '<p class="airb__focus-card-bias-note">' + escFn(biasNote) + '</p>';
+            }
+        }
+        var guidance = '';
+        if (area.likely_impact && area.likely_impact.length) {
+            guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
+            guidance += '<div class="airb__focus-practice-title">' + escFn(practiceHeading) + '</div>';
+            area.likely_impact.forEach(function (item) {
+                guidance += '<div class="airb__teacher-focus-impact">' + escFn(item) + '</div>';
+            });
+            guidance += '</div>';
+        }
+        if (area.actions && area.actions.length) {
+            area.actions.forEach(function (item, idx) {
+                guidance += '<div class="airb__teacher-action-row">';
+                guidance += '<span class="airb__teacher-action-num">' + (idx + 1) + '</span>';
+                guidance += '<span class="airb__teacher-action-text">' + escFn(item) + '</span>';
+                guidance += '</div>';
+            });
+        }
+        if (guidance && opts.focusGuidanceAccordionHtml) {
+            html += opts.focusGuidanceAccordionHtml(opts.guidanceToggle || 'Tips & steps to try', guidance);
+        }
+        html += '</div>';
+    });
+    return html;
+}
+
+/**
+ * Support-staff focus area cards.
+ *
+ * @param {Array<object>} focusAreas
+ * @param {object} opts
+ */
+function supportFocusAreasHtml(focusAreas, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!focusAreas || !focusAreas.length) return '';
+    var html = '';
+    focusAreas.forEach(function (area) {
+        var severity = opts.supportFocusSeverity
+            ? opts.supportFocusSeverity(area.pct, area.severity)
+            : (area.severity || 'moderate');
+        html += '<div class="airb__focus-card airb__support-focus-card airb__focus-card--' + severity + '">';
+        html += '<div class="airb__focus-card-header">';
+        html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
+        html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + '">' + escFn(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
+        html += '</div>';
+        if (area.summary) html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
+        var guidance = '';
+        if (area.challenge_bullets && area.challenge_bullets.length) {
+            guidance += '<div class="airb__support-focus-challenge airb__support-focus-challenge--' + severity + '">';
+            if (area.challenge_heading) {
+                guidance += '<div class="airb__support-focus-challenge-title">' + escFn(area.challenge_heading) + '</div>';
+            }
+            area.challenge_bullets.forEach(function (item) {
+                guidance += '<div class="airb__support-focus-challenge-item">' + escFn(item) + '</div>';
+            });
+            guidance += '</div>';
+        }
+        if (area.actions && area.actions.length) {
+            area.actions.forEach(function (item, idx) {
+                guidance += '<div class="airb__support-action-row">';
+                guidance += '<span class="airb__support-action-num">' + (idx + 1) + '</span>';
+                guidance += '<span class="airb__support-action-text">' + escFn(item) + '</span>';
+                guidance += '</div>';
+            });
+        }
+        if (guidance && opts.focusGuidanceAccordionHtml) {
+            var supportGuidanceLabel = area.challenge_heading || opts.guidanceToggle || 'Tips & steps to try';
+            html += opts.focusGuidanceAccordionHtml(supportGuidanceLabel, guidance);
+        }
+        html += '</div>';
+    });
+    return html;
+}
+
+/**
+ * Leader focus area cards (split badge, list-style practice/actions).
+ *
+ * @param {Array<object>} focusAreas
+ * @param {object|null} biasHealth
+ * @param {object} labelCfg
+ * @param {object} opts
+ */
+function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
+    opts = opts || {};
+    labelCfg = labelCfg || {};
+    var escFn = opts.esc || esc;
+    if (!focusAreas || !focusAreas.length) return '';
+    var practiceHeading = labelCfg.focus_practice_heading || opts.focusPracticeHeading || 'What this means in practice';
+    var practiceHeadingShort = labelCfg.focus_practice_heading_short || opts.focusPracticeHeadingShort || 'In practice this means';
+    var actionsHeading = labelCfg.focus_actions_heading || opts.focusActionsHeading || 'Actions';
+    var html = '';
+    focusAreas.forEach(function (area) {
+        var severity = opts.leaderFocusSeverity ? opts.leaderFocusSeverity(area.pct) : 'moderate';
+        var badge = opts.leaderFocusBadge ? opts.leaderFocusBadge(area.pct) : { slug: 'attention', core: '', detail: '' };
+        var showPractice = area.likely_impact && area.likely_impact.length;
+        html += '<div class="airb__focus-card airb__focus-card--' + severity + '">';
+        html += '<div class="airb__focus-card-header">';
+        html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
+        html += '<span class="airb__focus-badge airb__focus-badge--' + escFn(badge.slug) + '">';
+        html += '<span class="airb__focus-badge-core">' + escFn(badge.core) + '</span>';
+        if (badge.detail) {
+            html += '<span class="airb__focus-badge-detail">' + escFn(badge.detail) + '</span>';
+        }
+        html += '</span></div>';
+        if (area.summary) {
+            html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
+        }
+        if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null && opts.leaderBiasEqualityFocusNote) {
+            var biasNote = opts.leaderBiasEqualityFocusNote(biasHealth.score);
+            if (biasNote) {
+                html += '<p class="airb__focus-card-bias-note">' + escFn(biasNote) + '</p>';
+            }
+        }
+        var guidance = '';
+        if (showPractice) {
+            guidance += '<div class="airb__focus-practice">';
+            guidance += '<div class="airb__focus-practice-title">' + (opts.leaderResponsiveLabel ? opts.leaderResponsiveLabel(practiceHeading, practiceHeadingShort) : escFn(practiceHeading)) + '</div>';
+            guidance += '<ul class="airb__focus-practice-list">';
+            area.likely_impact.forEach(function (item) {
+                guidance += '<li>' + escFn(item) + '</li>';
+            });
+            guidance += '</ul></div>';
+        }
+        if (area.actions && area.actions.length) {
+            guidance += '<div class="airb__focus-practice airb__focus-actions">';
+            guidance += '<div class="airb__focus-practice-title">' + escFn(actionsHeading) + '</div>';
+            guidance += '<ul class="airb__focus-practice-list">';
+            area.actions.forEach(function (item) {
+                guidance += '<li>' + escFn(item) + '</li>';
+            });
+            guidance += '</ul></div>';
+        }
+        if (guidance && opts.focusGuidanceAccordionHtml) {
+            html += opts.focusGuidanceAccordionHtml(opts.guidanceToggle || 'Tips & steps to try', guidance);
+        }
+        html += '</div>';
+    });
+    return html;
+}
+
+/**
+ * Oversight gauge panel (shared across staff/public roles).
+ *
+ * @param {object} opts
+ * @param {number} opts.value
+ * @param {string} opts.signal
+ * @param {string} opts.consequence
+ * @param {string} [opts.title]
+ * @param {string} [opts.gaugeSvg]
+ */
+function oversightGaugePanelHtml(opts) {
+    opts = opts || {};
+    var val = Math.round(opts.value || 0);
+    var signal = esc(opts.signal || '');
+    var help = esc(opts.consequence || '');
+    var title = esc(opts.title || 'Human oversight');
+    var zoneColor = oversightZoneColor(val);
+    var html = '<div class="airb__res-panel airb__res-panel--gauge" data-oversight-value="' + val + '">';
+    html += '<h3>' + title + '</h3>';
+    html += '<div class="airb__res-gauge-wrap">';
+    if (opts.gaugeSvg) {
+        html += opts.gaugeSvg;
+    }
+    html += '</div>';
+    if (signal) {
+        html += '<p class="airb__gauge-band" style="color:' + zoneColor + '">' + signal + '</p>';
+    }
+    if (help) {
+        html += '<p class="airb__gauge-help">' + help + '</p>';
+    }
+    html += '</div>';
+    return html;
+}
+
 // ---------------------------------------------------------------------------
 // Strength list
 // ---------------------------------------------------------------------------
@@ -530,6 +734,10 @@ AIRB.Results = {
     domainBarListHtml: domainBarListHtml,
     focusCardHtml: focusCardHtml,
     parentFocusTopicsHtml: parentFocusTopicsHtml,
+    teacherFocusAreasHtml: teacherFocusAreasHtml,
+    supportFocusAreasHtml: supportFocusAreasHtml,
+    leaderFocusAreasHtml: leaderFocusAreasHtml,
+    oversightGaugePanelHtml: oversightGaugePanelHtml,
     strengthRowHtml: strengthRowHtml,
     strengthListHtml: strengthListHtml,
     peerBenchmarkRowHtml: peerBenchmarkRowHtml,

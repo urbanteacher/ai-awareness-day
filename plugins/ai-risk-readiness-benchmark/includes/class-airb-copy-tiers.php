@@ -155,6 +155,14 @@ class AIRB_Copy_Tiers {
 			$overlay['focus_tiers'] = $this->domains_to_focus_tiers();
 		}
 
+		if ( ! empty( $this->data['governance_maturity'] ) && 'leader' === $this->role ) {
+			$overlay['copy_tiers']['governance'] = $this->governance_maturity_to_legacy();
+		}
+
+		if ( ! empty( $this->data['ai_risk_exposure'] ) && 'leader' === $this->role ) {
+			$overlay['copy_tiers']['risk'] = $this->tier_section_to_legacy( 'ai_risk_exposure' );
+		}
+
 		if ( ! empty( $this->data['risk'] ) ) {
 			$overlay['copy_tiers']['risk'] = $this->tier_section_to_legacy( 'risk' );
 		}
@@ -262,6 +270,91 @@ class AIRB_Copy_Tiers {
 			$json['domains'] = $domains;
 		}
 
+		if ( 'leader' === $role ) {
+			if ( empty( $json['readiness_bands'] ) ) {
+				$json['readiness_bands'] = self::leader_readiness_bands_seed();
+			}
+			$json = self::merge_teacher_shared_sections( $json );
+		}
+
+		return $json;
+	}
+
+	/**
+	 * Leader readiness bands (sourced from leader_result_config metric_signals + hero labels).
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private static function leader_readiness_bands_seed(): array {
+		return array(
+			'emerging'    => array(
+				'min'           => 0,
+				'max'           => 39,
+				'label'         => 'Critical · Act now',
+				'sub_label'     => 'Critical',
+				'color_ramp'    => 'red',
+				'consequence'   => 'Your school has significant AI risk exposure. Without leadership action, staff are likely using AI tools without consistent safeguards, oversight, or policy guidance in place.',
+				'urgent_action' => 'Prioritise your two weakest domains and brief SLT this term.',
+			),
+			'developing'  => array(
+				'min'           => 40,
+				'max'           => 59,
+				'label'         => 'Concern · Review needed',
+				'sub_label'     => 'Concern',
+				'color_ramp'    => 'amber',
+				'consequence'   => 'Awareness is growing, but governance and oversight need strengthening before AI use scales.',
+				'urgent_action' => 'Address governance gaps before expanding approved AI tools.',
+			),
+			'established' => array(
+				'min'           => 60,
+				'max'           => 74,
+				'label'         => 'Established',
+				'sub_label'     => 'On the right track',
+				'color_ramp'    => 'blue',
+				'consequence'   => 'Solid foundations are in place — embed consistent practice across all staff groups.',
+				'urgent_action' => null,
+			),
+			'strong'      => array(
+				'min'           => 75,
+				'max'           => 89,
+				'label'         => 'Strong',
+				'sub_label'     => 'Strong position',
+				'color_ramp'    => 'green',
+				'consequence'   => 'Strong readiness — focus on sustaining consistency as AI use evolves.',
+				'urgent_action' => null,
+			),
+			'leading'     => array(
+				'min'           => 90,
+				'max'           => 100,
+				'label'         => 'Leading',
+				'sub_label'     => 'Sector benchmark',
+				'color_ramp'    => 'green',
+				'consequence'   => 'Your school demonstrates mature, governed AI adoption — maintain oversight as tools change.',
+				'urgent_action' => null,
+			),
+		);
+	}
+
+	/**
+	 * Leader shares oversight/dependency copy with staff roles (no separate tier file keys).
+	 *
+	 * @param array<string, mixed> $json Partial JSON.
+	 * @return array<string, mixed>
+	 */
+	private static function merge_teacher_shared_sections( array $json ): array {
+		$teacher_path = AIRB_PLUGIN_DIR . 'includes/data/copy-tiers-teacher.json';
+		if ( ! is_readable( $teacher_path ) ) {
+			return $json;
+		}
+		$teacher = json_decode( (string) file_get_contents( $teacher_path ), true );
+		if ( ! is_array( $teacher ) ) {
+			return $json;
+		}
+		foreach ( array( 'oversight', 'dependency' ) as $section ) {
+			if ( empty( $json[ $section ] ) && ! empty( $teacher[ $section ] ) ) {
+				$json[ $section ] = $teacher[ $section ];
+			}
+		}
 		return $json;
 	}
 
@@ -388,6 +481,30 @@ class AIRB_Copy_Tiers {
 			}
 		}
 		return '';
+	}
+
+	/**
+	 * Leader governance maturity band (JSON schema).
+	 *
+	 * @param int $score 0–100.
+	 * @return array<string, mixed>
+	 */
+	public function governance_maturity( int $score ): array {
+		$tiers = (array) ( $this->data['governance_maturity'] ?? array() );
+		foreach ( $tiers as $tier ) {
+			if ( ! is_array( $tier ) ) {
+				continue;
+			}
+			if ( $score >= (int) ( $tier['min'] ?? 0 ) && $score <= (int) ( $tier['max'] ?? 100 ) ) {
+				return $tier;
+			}
+		}
+		return array(
+			'label'       => '',
+			'signal'      => '',
+			'consequence' => '',
+			'tone'        => 'neutral',
+		);
 	}
 
 	public function share_text( int $score ): string {
@@ -534,6 +651,55 @@ class AIRB_Copy_Tiers {
 					'actions'       => (array) ( $block['actions'] ?? array() ),
 				);
 			}
+		}
+
+		if ( 'leader' === $this->role ) {
+			foreach ( self::leader_domain_slug_aliases() as $json_key => $php_slug ) {
+				if ( isset( $out[ $json_key ] ) && ! isset( $out[ $php_slug ] ) ) {
+					$out[ $php_slug ] = $out[ $json_key ];
+				}
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Map V1 leader JSON domain keys to legacy PHP/scoring slugs.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function leader_domain_slug_aliases(): array {
+		return array(
+			'data_protection_awareness' => 'privacy',
+			'governance_consistency'    => 'governance',
+			'bias_awareness'            => 'bias_equality',
+		);
+	}
+
+	/**
+	 * @return array<string, array{signal:string,tone:string,consequence:string}>
+	 */
+	private function governance_maturity_to_legacy(): array {
+		$out   = array();
+		$tiers = (array) ( $this->data['governance_maturity'] ?? array() );
+		$map   = array(
+			'critical'   => 'not_in_place',
+			'developing' => 'gaps',
+			'partial'    => 'partial',
+			'mostly'     => 'mostly',
+			'full'       => 'full',
+		);
+		foreach ( $tiers as $key => $tier ) {
+			if ( ! is_array( $tier ) ) {
+				continue;
+			}
+			$legacy_key = $map[ $key ] ?? $key;
+			$out[ $legacy_key ] = array(
+				'signal'      => (string) ( $tier['label'] ?? $tier['signal'] ?? '' ),
+				'tone'        => (string) ( $tier['tone'] ?? 'neutral' ),
+				'consequence' => (string) ( $tier['consequence'] ?? '' ),
+			);
 		}
 		return $out;
 	}

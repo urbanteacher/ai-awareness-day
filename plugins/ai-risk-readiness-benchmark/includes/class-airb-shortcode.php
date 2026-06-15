@@ -63,7 +63,7 @@ class AIRB_Shortcode {
 		wp_register_script(
 			'airb-roles',
 			AIRB_PLUGIN_URL . 'public/js/airb-roles.js',
-			array( 'airb-results' ),
+			array( 'airb-core', 'airb-results' ),
 			AIRB_VERSION,
 			true
 		);

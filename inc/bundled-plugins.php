@@ -102,6 +102,7 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-airb-copy-tiers.php',
 			'includes/class-airb-components.php',
 			'includes/data/copy-tiers-teacher.json',
+			'includes/data/copy-tiers-leader.json',
 			'admin/views/submissions.php',
 			'includes/class-airb-admin.php',
 		),

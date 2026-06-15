@@ -794,6 +794,29 @@ class AIRB_Config {
 			AIRB_Copy_Tiers::export_missing_json_files();
 		}
 
+		if ( (int) ( $config['version'] ?? 0 ) < 41 ) {
+			AIRB_Copy_Tiers::export_missing_json_files();
+			$config['version'] = 41;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 42 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! empty( $default_leader ) ) {
+				if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+					$config['leader_result'] = $default_leader;
+				} else {
+					foreach ( array( 'copy_tiers', 'focus_tiers', 'focus_topics' ) as $key ) {
+						if ( ! empty( $default_leader[ $key ] ) ) {
+							$config['leader_result'][ $key ] = $default_leader[ $key ];
+						}
+					}
+				}
+			}
+			$config['version'] = 42;
+			$changed           = true;
+		}
+
 		if ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;

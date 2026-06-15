@@ -177,6 +177,9 @@
 	}
 
 	function questionApplies(q, answers) {
+		if (window.AIRB && AIRB.Audit && AIRB.Audit.questionApplies) {
+			return AIRB.Audit.questionApplies(q, answers, profilePhase);
+		}
 		answers = answers || state.answers || {};
 		var unless = q.show_unless_answer || {};
 		var depQid;
@@ -1159,6 +1162,17 @@
 	}
 
 	function teacherFocusAreasHtml(focusAreas, biasHealth) {
+		if (window.AIRB && AIRB.Results && AIRB.Results.teacherFocusAreasHtml) {
+			return AIRB.Results.teacherFocusAreasHtml(focusAreas, biasHealth, {
+				esc: esc,
+				practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+				leaderFocusBadge: leaderFocusBadge,
+				leaderFocusSeverity: leaderFocusSeverity,
+				teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
+				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			});
+		}
 		if (!focusAreas || !focusAreas.length) return '';
 		var practiceHeading = teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means';
 		var html = '';
@@ -2205,6 +2219,14 @@
 	}
 
 	function supportFocusAreasHtml(focusAreas) {
+		if (window.AIRB && AIRB.Results && AIRB.Results.supportFocusAreasHtml) {
+			return AIRB.Results.supportFocusAreasHtml(focusAreas, {
+				esc: esc,
+				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+				supportFocusSeverity: supportFocusSeverity,
+				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			});
+		}
 		if (!focusAreas || !focusAreas.length) return '';
 		var html = '';
 		focusAreas.forEach(function (area) {
@@ -2865,6 +2887,9 @@
 	}
 
 	function sectionsForRole(role) {
+		if (window.AIRB && AIRB.Audit && AIRB.Audit.sectionsForRole) {
+			return AIRB.Audit.sectionsForRole(role, cfg, state.answers, profilePhase);
+		}
 		var sections = [];
 		var index = {};
 		questionsForRole(role).forEach(function (q) {
@@ -2927,6 +2952,9 @@
 	}
 
 	function questionsForRole(role) {
+		if (window.AIRB && AIRB.Audit && AIRB.Audit.questionsForRole) {
+			return AIRB.Audit.questionsForRole(role, cfg, state.answers, profilePhase);
+		}
 		return (cfg.questions || []).filter(function (q) {
 			return q.role === role && questionApplies(q, state.answers);
 		});
@@ -4135,6 +4163,20 @@
 
 	function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg) {
 		labelCfg = labelCfg || leaderResult;
+		if (window.AIRB && AIRB.Results && AIRB.Results.leaderFocusAreasHtml) {
+			return AIRB.Results.leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, {
+				esc: esc,
+				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+				focusPracticeHeading: i18n.focusPracticeHeading || 'What this means in practice',
+				focusPracticeHeadingShort: i18n.focusPracticeHeadingShort || 'In practice this means',
+				focusActionsHeading: i18n.focusActionsHeading || 'Actions',
+				leaderFocusBadge: leaderFocusBadge,
+				leaderFocusSeverity: leaderFocusSeverity,
+				leaderBiasEqualityFocusNote: leaderBiasEqualityFocusNote,
+				leaderResponsiveLabel: leaderResponsiveLabel,
+				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			});
+		}
 		if (!focusAreas || !focusAreas.length) {
 			return '';
 		}
@@ -5667,6 +5709,10 @@
 	};
 
 	if (window.AIRB) {
+		window._airbRenderContact = renderContact;
+		window._airbRenderRole = renderRole;
+		window._airbProfilePhase = profilePhase;
+		AIRB.registerRuntime({ state: state, el: el, cfg: cfg, i18n: i18n });
 		AIRB.Audit.beginAudit = beginAudit;
 		AIRB.Roles.renderResults = renderResults;
 		AIRB.Roles.publicResultsHtml = publicResultsHtml;
