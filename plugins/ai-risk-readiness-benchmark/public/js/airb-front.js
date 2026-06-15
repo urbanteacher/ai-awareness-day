@@ -1036,13 +1036,33 @@
 		}
 	}
 
-	function persistRoleCompletion(score) {
-		if (!state.role || typeof score !== 'number') return;
+	function persistRoleCompletion(resultsOrScore) {
+		if (!state.role) return;
+		var entry = { ts: Date.now() };
+		if (typeof resultsOrScore === 'number') {
+			entry.alignment = resultsOrScore;
+			entry.readiness_label = readinessBandLabel(resultsOrScore);
+		} else if (resultsOrScore && typeof resultsOrScore === 'object') {
+			if (typeof resultsOrScore.alignment_score !== 'number') return;
+			entry.alignment = resultsOrScore.alignment_score;
+			entry.readiness_label = resultsOrScore.readiness_level_label || readinessBandLabel(resultsOrScore.alignment_score);
+			entry.risk_level = resultsOrScore.risk_level || '';
+		} else {
+			return;
+		}
 		try {
 			var data = loadRoleCompletions();
-			data[state.role] = { alignment: score, ts: Date.now() };
+			data[state.role] = entry;
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 		} catch (e) { /* private browsing */ }
+	}
+
+	function roleCompletionSummary(done) {
+		if (!done || typeof done.alignment !== 'number') return '';
+		var band = done.readiness_label || readinessBandLabel(done.alignment);
+		return (i18n.roleLastResult || 'Your last result: {n}% · {band}')
+			.replace('{n}', String(done.alignment))
+			.replace('{band}', band);
 	}
 
 	function questionsForRole(role) {
@@ -1088,7 +1108,7 @@
 
 	function renderRole() {
 		var completions = loadRoleCompletions();
-		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.chooseRole) + '</h3><div class="airb__role-grid">';
+		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.chooseRoleHeading || i18n.chooseRole) + '</h3><div class="airb__role-grid">';
 		var benchmarks = cfg.role_benchmarks || {};
 		Object.keys(cfg.roles || {}).forEach(function (slug) {
 			var active = state.role === slug ? ' is-selected' : '';
@@ -1096,12 +1116,13 @@
 			var done = completions[slug];
 			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '">';
 			if (done && typeof done.alignment === 'number') {
-				html += '<span class="airb__role-done">' + esc((i18n.roleDone || 'Done · {n}%').replace('{n}', String(done.alignment))) + '</span>';
+				html += '<span class="airb__role-done">' + esc((i18n.roleDoneScore || '{n}%').replace('{n}', String(done.alignment))) + '</span>';
+				html += '<span class="airb__role-card-result">' + esc(roleCompletionSummary(done)) + '</span>';
 			}
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
-			if (bench.title) html += '<span class="airb__role-card-sub">' + esc(bench.title) + '</span>';
-			if (bench.measures && bench.measures.length) {
-				html += '<span class="airb__role-card-blurb">' + esc(bench.measures.slice(0, 2).join(' · ')) + '</span>';
+			var tagline = bench.tagline || i18n.roleCardTagline || '';
+			if (tagline && !(done && typeof done.alignment === 'number')) {
+				html += '<span class="airb__role-card-blurb">' + esc(tagline) + '</span>';
 			}
 			html += '<span class="airb__role-card-go">' + esc(done ? (i18n.retakeAudit || 'Retake audit') : (i18n.startAudit || 'Start audit')) + ' →</span>';
 			html += '</button>';
@@ -2616,7 +2637,7 @@
 		fetchSchoolSnapshot();
 
 		animateResultsStats();
-		persistRoleCompletion(r.alignment_score);
+		persistRoleCompletion(r);
 		updateAppbarCompletions();
 		scrollFlowToTop();
 	}

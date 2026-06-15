@@ -1061,6 +1061,15 @@
 	padding: 0.2rem 0.45rem;
 }
 
+.airb__role-card-result {
+	display: block;
+	margin-top: 0.35rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: rgba(255, 255, 255, 0.92);
+	line-height: 1.35;
+}
+
 .airb__role-card-sub {
 	display: block;
 	font-size: 0.72rem;
@@ -3295,7 +3304,8 @@
 	width: 100%;
 }
 
-.airb__results-resource-card {
+/* Card layout — same pattern as timeline “More to read” related links */
+.airb__results-resource-links--cards .airb__results-resource-card {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
@@ -3307,13 +3317,23 @@
 	text-decoration: none;
 	color: inherit;
 	text-align: left;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.airb__results-resource-card:hover,
-.airb__results-resource-card:focus-visible {
+.airb__results-resource-links--cards .airb__results-resource-card:hover,
+.airb__results-resource-links--cards .airb__results-resource-card:focus-visible {
 	border-color: var(--airb-brand, #2563eb);
 	box-shadow: 0 4px 14px rgba(15, 24, 34, 0.08);
+}
+
+.entry-content--timeline #airb-benchmark .airb__results-resource-links--cards .airb__results-resource-card,
+.single-timeline-entry__content #airb-benchmark .airb__results-resource-links--cards .airb__results-resource-card {
+	color: inherit;
+	text-decoration: none;
 }
 
 .airb__resource-link-media {
@@ -3351,6 +3371,21 @@
 
 .airb__resource-link-body {
 	min-width: 0;
+	flex: 1;
+}
+
+.airb__results-resource-links--cards .airb__resource-link-label {
+	font-family: var(--font-display, inherit);
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--gray-900, var(--airb-ink, #0f1822));
+	line-height: 1.35;
+	text-decoration: none;
+}
+
+.airb__results-resource-links--cards .airb__results-resource-card:hover .airb__resource-link-label,
+.airb__results-resource-links--cards .airb__results-resource-card:focus-visible .airb__resource-link-label {
+	color: var(--green-600, var(--airb-brand, #2563eb));
 }
 
 .airb__resource-link-label {
@@ -3368,10 +3403,11 @@
 	margin-top: 1.1rem;
 }
 
-.airb__leader-resource-links a,
-.airb__leader-resource-link,
-.airb__results-resource-links a,
-.airb__results-resource-link {
+/* Plain text resource links only — not card layout */
+.airb__leader-resource-links:not(.airb__results-resource-links--cards) a,
+.airb__results-resource-links:not(.airb__results-resource-links--cards) a,
+.airb__leader-resource-link:not(.airb__results-resource-card),
+.airb__results-resource-link:not(.airb__results-resource-card) {
 	font-size: 0.9rem;
 	font-weight: 600;
 	color: var(--airb-brand, #2563eb);

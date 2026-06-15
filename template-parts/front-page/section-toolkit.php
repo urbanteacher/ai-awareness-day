@@ -286,6 +286,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
 </section>
 
+<?php get_template_part( 'template-parts/front-page/part', 'benchmark-promo' ); ?>
+
 <!-- Activities / Time resources: By theme + By session length -->
 <section id="themes" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
     <div class="container">

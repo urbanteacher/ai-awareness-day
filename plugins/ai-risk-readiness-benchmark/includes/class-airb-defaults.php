@@ -1710,7 +1710,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 13,
+			'version'             => 14,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -1819,6 +1819,7 @@ class AIRB_Defaults {
 		return array(
 			'teacher' => array(
 				'title'    => __( 'Teacher Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free online check — test your classroom AI habits', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'AI Dependency', 'ai-risk-benchmark' ),
 					__( 'Human Oversight', 'ai-risk-benchmark' ),
@@ -1835,6 +1836,7 @@ class AIRB_Defaults {
 			),
 			'student' => array(
 				'title'    => __( 'Student Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free online check — test your learning and thinking skills', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'Learning Dependency', 'ai-risk-benchmark' ),
 					__( 'Critical Thinking', 'ai-risk-benchmark' ),
@@ -1850,6 +1852,7 @@ class AIRB_Defaults {
 			),
 			'parent'  => array(
 				'title'    => __( 'Parent Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free online check — test your awareness at home', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'Awareness of your child\'s AI use', 'ai-risk-benchmark' ),
 					__( 'Home AI safety and culture', 'ai-risk-benchmark' ),
@@ -1867,6 +1870,7 @@ class AIRB_Defaults {
 			),
 			'leader'  => array(
 				'title'    => __( 'School Leader Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free online check — test your school\'s AI readiness', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'Governance', 'ai-risk-benchmark' ),
 					__( 'Safeguarding', 'ai-risk-benchmark' ),
@@ -1882,6 +1886,7 @@ class AIRB_Defaults {
 			),
 			'support_staff' => array(
 				'title'    => __( 'Education Support Staff Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free online check — test your day-to-day AI practice', 'ai-risk-benchmark' ),
 				'measures' => array(
 					__( 'AI literacy & limitations', 'ai-risk-benchmark' ),
 					__( 'Human oversight of outputs', 'ai-risk-benchmark' ),

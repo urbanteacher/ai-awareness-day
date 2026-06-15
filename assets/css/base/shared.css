@@ -8,7 +8,8 @@
 #aim,
 #toolkit,
 #contact,
-#display-board {
+#display-board,
+#benchmark-audit {
   scroll-margin-top: 7rem; /* ~112px: clears fixed header (and admin bar when logged in) so section-label stays visible */
 }
 
