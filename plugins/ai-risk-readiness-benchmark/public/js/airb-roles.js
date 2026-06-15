@@ -249,11 +249,39 @@
 
     /**
      * Build teacher priority focus areas HTML.
+     * Prefers server-computed focus_areas (full copy + guidance); falls back to client domain build.
      *
-     * @param {object} r  Full results payload from server
+     * @param {object} r         Full results payload from server
+     * @param {object} renderOpts Optional render helpers from airb-front.js
      * @returns {string}  HTML
      */
-    R.teacherFocusAreas = function (r) {
+    R.teacherFocusAreas = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var tr = r.teacher_results || {};
+        var trCfg = renderOpts.teacherResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
+        var heading = trCfg.focus_section_heading || 'Priority focus areas — what to strengthen';
+        var headingShort = trCfg.focus_section_heading_short || 'Priority focus areas';
+        var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : null;
+
+        if (focusAreas && focusAreas.length && Results.teacherFocusAreasHtml) {
+            var stackOpts = {
+                esc: esc,
+                guidanceOpen: true,
+                practiceHeading: trCfg.focus_practice_heading_short || 'In practice this means',
+            };
+            for (var key in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, key)) {
+                    stackOpts[key] = renderOpts[key];
+                }
+            }
+            var stack = Results.teacherFocusAreasHtml(focusAreas, tr.bias_health, stackOpts);
+            if (!stack) return '';
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(heading, headingShort)
+                : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+            return labelHtml + '<div class="airb__leader-focus-stack">' + stack + '</div>';
+        }
+
         var domains  = r.domain_scores || {};
         var html     = '';
         var focusCount = 0;
@@ -268,33 +296,36 @@
             'bias_awareness'
         ];
 
+        var cardOpts = {
+            variant: 'teacher',
+            guidanceOpen: true,
+            guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
+            guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+        };
+
         TEACHER_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 75 || focusCount >= 3) return;
 
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('teacher', key, score);
-            html += Results.focusCardHtml({
+            html += Results.focusCardHtml(Object.assign({}, cardOpts, {
                 title      : focus.label,
                 score      : score,
                 severity   : focus.severity,
                 summary    : focus.summary,
                 impact     : focus.impact,
                 actions    : focus.actions,
-                variant    : 'teacher',
-            });
+            }));
             focusCount++;
         });
 
         if (!html) return '';
 
-        var trCfg = (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
-        var heading = trCfg.focus_section_heading || 'Priority focus areas — what to strengthen';
-
-        return '<div class="airb__section airb__teacher-focus-section">'
-             + '<h3 class="airb__section__title airb__benchmark-card-heading">' + esc(heading) + '</h3>'
-             + '<div class="airb__leader-focus-stack">' + html + '</div>'
-             + '</div>';
+        var labelHtml = renderOpts.sectionLabelHtml
+            ? renderOpts.sectionLabelHtml(heading, headingShort)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return labelHtml + '<div class="airb__leader-focus-stack">' + html + '</div>';
     };
 
     // -------------------------------------------------------------------------

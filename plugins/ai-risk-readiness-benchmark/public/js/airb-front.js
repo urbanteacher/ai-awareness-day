@@ -3707,7 +3707,18 @@
 
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherFocusAreas) {
-				html += AIRB.Roles.teacherFocusAreas(r);
+				html += AIRB.Roles.teacherFocusAreas(r, {
+					esc: esc,
+					teacherResult: teacherResult,
+					sectionLabelHtml: leaderSectionLabel,
+					practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+					guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+					guidanceOpen: true,
+					leaderFocusBadge: leaderFocusBadge,
+					leaderFocusSeverity: leaderFocusSeverity,
+					teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
+					focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+				});
 			} else {
 				var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
 				if (focusAreas && focusAreas.length) {
@@ -3844,10 +3855,10 @@
 			innerHtml + '</details>';
 	}
 
-	function focusGuidanceAccordionHtml(summary, innerHtml) {
+	function focusGuidanceAccordionHtml(summary, innerHtml, isOpen) {
 		if (!innerHtml) return '';
 		var label = summary || i18n.focusGuidanceToggle || 'Tips & steps to try';
-		return '<details class="' + resultsAccordionClass() + ' airb__focus-guidance-accordion">' +
+		return '<details class="' + resultsAccordionClass() + ' airb__focus-guidance-accordion"' + (isOpen !== false ? ' open' : '') + '>' +
 			'<summary>' + esc(label) + '</summary>' +
 			'<div class="airb__focus-guidance-body">' + innerHtml + '</div>' +
 			'</details>';
