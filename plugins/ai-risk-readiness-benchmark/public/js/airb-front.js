@@ -25,7 +25,7 @@
 		results: null,
 		school: '',
 		email: '',
-		consent: false,
+		consent: true,
 		schoolPhase: '',
 		orgType: '',
 		yearGroup: '',
@@ -1071,7 +1071,7 @@
 				state.email = '';
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 			}
-			state.consent = false;
+			state.consent = true;
 			state.results = calculate(state.role, state.answers);
 			state.phase = 'results';
 			el.results.innerHTML = '<p class="airb__muted airb__loading">' + esc(i18n.saving || 'Preparing your results…') + '</p>';
