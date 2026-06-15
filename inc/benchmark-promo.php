@@ -23,7 +23,7 @@ function aiad_benchmark_promo_is_available(): bool {
  */
 function aiad_get_benchmark_start_url( string $role = '' ): string {
 	if ( ! aiad_benchmark_promo_is_available() ) {
-		return home_url( '/timeline/ai-risk-readiness-benchmark/#airb-benchmark' );
+		return home_url( '/timeline/student-parent-teacher-or-school-leader-audit-your-ai-usage-with-our-ai-risk-readiness-benchmark/#airb-benchmark' );
 	}
 
 	$url = AIRB_Defaults::benchmark_page_url();

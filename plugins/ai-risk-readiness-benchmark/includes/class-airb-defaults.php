@@ -930,15 +930,29 @@ class AIRB_Defaults {
 	}
 
 	/**
+	 * Timeline slugs that may host the embedded benchmark (newest first).
+	 *
+	 * @return string[]
+	 */
+	public static function benchmark_page_slugs(): array {
+		return array(
+			'student-parent-teacher-or-school-leader-audit-your-ai-usage-with-our-ai-risk-readiness-benchmark',
+			'ai-risk-readiness-benchmark',
+		);
+	}
+
+	/**
 	 * Canonical URL for the embedded benchmark (timeline entry when available).
 	 */
 	public static function benchmark_page_url(): string {
 		if ( function_exists( 'get_page_by_path' ) ) {
-			$timeline = get_page_by_path( 'ai-risk-readiness-benchmark', OBJECT, 'timeline' );
-			if ( $timeline instanceof WP_Post ) {
-				$url = get_permalink( $timeline );
-				if ( is_string( $url ) && '' !== $url ) {
-					return $url;
+			foreach ( self::benchmark_page_slugs() as $slug ) {
+				$timeline = get_page_by_path( $slug, OBJECT, 'timeline' );
+				if ( $timeline instanceof WP_Post ) {
+					$url = get_permalink( $timeline );
+					if ( is_string( $url ) && '' !== $url ) {
+						return $url;
+					}
 				}
 			}
 		}
