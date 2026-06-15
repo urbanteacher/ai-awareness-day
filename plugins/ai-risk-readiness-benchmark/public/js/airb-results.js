@@ -486,7 +486,13 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
             guidance += '</ul></div>';
         }
         if (guidance && opts.focusGuidanceAccordionHtml) {
-            html += opts.focusGuidanceAccordionHtml(opts.guidanceToggle || 'Tips & steps to try', guidance);
+            html += opts.focusGuidanceAccordionHtml(
+                opts.guidanceToggle || 'Tips & steps to try',
+                guidance,
+                opts.guidanceOpen !== false
+            );
+        } else if (guidance) {
+            html += guidance;
         }
         html += '</div>';
     });

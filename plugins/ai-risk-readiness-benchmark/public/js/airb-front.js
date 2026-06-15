@@ -4361,22 +4361,69 @@
 		);
 	}
 
+	function leaderFocusRenderOpts() {
+		return {
+			esc: esc,
+			leaderResult: leaderResult,
+			sectionLabelHtml: leaderSectionLabel,
+			guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+			guidanceOpen: true,
+			focusPracticeHeading: i18n.focusPracticeHeading || 'What this means in practice',
+			focusPracticeHeadingShort: i18n.focusPracticeHeadingShort || 'In practice this means',
+			focusActionsHeading: i18n.focusActionsHeading || 'Actions',
+			leaderFocusBadge: leaderFocusBadge,
+			leaderFocusSeverity: leaderFocusSeverity,
+			leaderBiasEqualityFocusNote: leaderBiasEqualityFocusNote,
+			leaderResponsiveLabel: leaderResponsiveLabel,
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+		};
+	}
+
 	function leaderResultsHtml(r) {
 		var lr = r.leader_results;
 		if (!lr) return '';
 
-		var es = lr.executive_summary;
-		var html = leaderUrgentActionHtml(es ? es.priority_action_detail : null);
+		var html = '';
+		try {
+			if (window.AIRB && AIRB.Roles && AIRB.Roles.leaderUrgentAction) {
+				html += AIRB.Roles.leaderUrgentAction(r, { urgentActionHtml: leaderUrgentActionHtml });
+			} else {
+				var es = lr.executive_summary;
+				html += leaderUrgentActionHtml(es ? es.priority_action_detail : null);
+			}
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB leaderUrgentAction failed', err);
+			}
+			var esFallback = lr.executive_summary;
+			html += leaderUrgentActionHtml(esFallback ? esFallback.priority_action_detail : null);
+		}
+
 		if (lr.peer_benchmark) {
 			html += leaderPeerBenchmarkBarHtml(lr.peer_benchmark);
 		}
 
-		if (lr.focus_areas && lr.focus_areas.length) {
-			html += leaderSectionLabel(
-				leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
-				leaderResult.focus_section_heading_short || 'Priority focus areas'
-			);
-			html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
+		try {
+			if (window.AIRB && AIRB.Roles && AIRB.Roles.leaderFocusAreas) {
+				html += AIRB.Roles.leaderFocusAreas(r, leaderFocusRenderOpts());
+			} else if (lr.focus_areas && lr.focus_areas.length) {
+				html += leaderSectionLabel(
+					leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
+					leaderResult.focus_section_heading_short || 'Priority focus areas'
+				);
+				html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
+			}
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB leaderFocusAreas failed', err);
+			}
+			if (lr.focus_areas && lr.focus_areas.length) {
+				html += leaderSectionLabel(
+					leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
+					leaderResult.focus_section_heading_short || 'Priority focus areas'
+				);
+				html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
+			}
 		}
 
 		if (lr.risk_heatmap && lr.risk_heatmap.length) {

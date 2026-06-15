@@ -387,11 +387,40 @@
     // Leader focus areas
     // -------------------------------------------------------------------------
 
-    R.leaderFocusAreas = function (r) {
-        var domains = r.domain_scores || {};
-        var html    = '';
-        var focusCount = 0;
+    /**
+     * Build leader priority focus areas HTML.
+     * Prefers server-computed focus_areas; falls back to client domain build.
+     *
+     * @param {object} r
+     * @param {object} renderOpts
+     * @returns {string}
+     */
+    R.leaderFocusAreas = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var lr = r.leader_results || {};
+        var labelCfg = renderOpts.leaderResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.leader_result) || {};
+        var heading = labelCfg.focus_section_heading || labelCfg.focus_heading || 'Priority focus areas — what to fix and how';
+        var headingShort = labelCfg.focus_section_heading_short || 'Priority focus areas';
+        var focusAreas = lr.focus_areas && lr.focus_areas.length ? lr.focus_areas : null;
 
+        if (focusAreas && focusAreas.length && Results.leaderFocusAreasHtml) {
+            var stackOpts = { guidanceOpen: true };
+            for (var optKey in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
+                    stackOpts[optKey] = renderOpts[optKey];
+                }
+            }
+            var stack = Results.leaderFocusAreasHtml(focusAreas, lr.bias_health, labelCfg, stackOpts);
+            if (!stack) return '';
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(heading, headingShort)
+                : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+            return labelHtml + '<div class="airb__leader-focus-stack">' + stack + '</div>';
+        }
+
+        var domains = r.domain_scores || {};
+        var html = '';
+        var focusCount = 0;
         var LEADER_DOMAINS = [
             'data_protection_awareness',
             'safeguarding',
@@ -401,52 +430,72 @@
             'bias_awareness',
             'ai_literacy'
         ];
+        var cardOpts = {
+            variant: 'leader',
+            guidanceOpen: true,
+            guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
+            guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+        };
 
         LEADER_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 75 || focusCount >= 4) return;
-
+            if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('leader', key, score);
-            html += Results.focusCardHtml({
-                title      : focus.label,
-                score      : score,
-                severity   : focus.severity,
-                summary    : focus.summary,
-                impact     : focus.impact,
-                actions    : focus.actions,
-                variant    : 'leader',
-            });
+            html += Results.focusCardHtml(Object.assign({}, cardOpts, {
+                title: focus.label,
+                score: score,
+                severity: focus.severity,
+                summary: focus.summary,
+                impact: focus.impact,
+                actions: focus.actions,
+            }));
             focusCount++;
         });
 
         if (!html) return '';
 
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Priority focus areas — what to fix and how</h3>'
-             + html
-             + '</div>';
+        var labelHtml = renderOpts.sectionLabelHtml
+            ? renderOpts.sectionLabelHtml(heading, headingShort)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return labelHtml + '<div class="airb__leader-focus-stack">' + html + '</div>';
     };
 
     // -------------------------------------------------------------------------
     // Leader urgent action panel
     // -------------------------------------------------------------------------
 
-    R.leaderUrgentAction = function (r) {
-        var domains = r.domain_scores || {};
-        var overall = Math.round(r.alignment_score || 0);
-        var action  = resolveLeaderUrgentAction(domains, overall);
-        if (!action) return '';
+    /**
+     * Leader urgent action — prefers server executive_summary.priority_action_detail.
+     *
+     * @param {object} r
+     * @param {object} renderOpts  { urgentActionHtml(detail) }
+     * @returns {string}
+     */
+    R.leaderUrgentAction = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var lr = r.leader_results || {};
+        var detail = lr.executive_summary && lr.executive_summary.priority_action_detail
+            ? lr.executive_summary.priority_action_detail
+            : null;
 
-        return '<div class="airb__card airb__urgent-action">'
-             + '<div class="airb__urgent-action__label">Your single most urgent action</div>'
-             + '<div class="airb__urgent-action__inner">'
-             + '<div class="airb__urgent-action__icon" aria-hidden="true"></div>'
-             + '<div>'
-             + '<p class="airb__urgent-action__title">' + esc(action.title || '') + '</p>'
-             + '<p class="airb__urgent-action__body">' + esc(action.body || action.rationale || '') + '</p>'
-             + '</div>'
-             + '</div>'
-             + '</div>';
+        if (detail && detail.title && renderOpts.urgentActionHtml) {
+            return renderOpts.urgentActionHtml(detail);
+        }
+
+        if (renderOpts.urgentActionHtml) {
+            var domains = r.domain_scores || {};
+            var overall = Math.round(r.alignment_score || 0);
+            var action = resolveLeaderUrgentAction(domains, overall);
+            if (action && action.title) {
+                return renderOpts.urgentActionHtml({
+                    title: action.title,
+                    rationale: action.body || action.rationale || '',
+                });
+            }
+        }
+
+        return '';
     };
 
     // -------------------------------------------------------------------------
