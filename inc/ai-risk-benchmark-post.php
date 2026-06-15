@@ -22,6 +22,42 @@ function aiad_risk_benchmark_post_slug(): string {
 }
 
 /**
+ * Resolve the public URL for whichever timeline post hosts the benchmark tool.
+ *
+ * Priority order:
+ *  1. Admin override via Customizer (aiad_benchmark_promo_url).
+ *  2. The known seeded slug.
+ *  3. DB search for any published timeline post containing [ai_risk_benchmark].
+ *
+ * @return string URL or empty string if unresolvable.
+ */
+function aiad_get_benchmark_url(): string {
+	$override = (string) get_theme_mod( 'aiad_benchmark_promo_url', '' );
+	if ( $override ) {
+		return $override;
+	}
+
+	$seeded = get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' );
+	if ( $seeded instanceof WP_Post && 'publish' === $seeded->post_status ) {
+		return (string) get_permalink( $seeded );
+	}
+
+	global $wpdb;
+	$post_id = (int) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT ID FROM {$wpdb->posts}
+			 WHERE post_type = %s AND post_status = 'publish'
+			   AND post_content LIKE %s
+			 ORDER BY post_date DESC LIMIT 1",
+			'timeline',
+			'%[ai_risk_benchmark]%'
+		)
+	);
+
+	return $post_id ? (string) get_permalink( $post_id ) : '';
+}
+
+/**
  * Timeline headline / post title.
  */
 function aiad_risk_benchmark_get_headline(): string {
