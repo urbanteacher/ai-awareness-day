@@ -43,5 +43,5 @@ function aiad_generator_html_url( string $filename, int $submission_id = 0 ): st
 	if ( $submission_id > 0 ) {
 		$args['submission'] = (string) $submission_id;
 	}
-	return add_query_arg( $args, trailingslashit( get_template_directory_uri() ) . ltrim( $filename, '/' ) );
+	return add_query_arg( $args, trailingslashit( get_template_directory_uri() ) . 'archive/theme/generators/' . ltrim( $filename, '/' ) );
 }

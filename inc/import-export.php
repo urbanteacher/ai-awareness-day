@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string
  */
 function aiad_bundled_bbc_how_ai_wxr_url(): string {
-    $rel  = '/import/bbc-how-ai-actually-works.wxr.xml';
+    $rel  = '/archive/theme/import/bbc-how-ai-actually-works.wxr.xml';
     $path = get_template_directory() . $rel;
     if ( ! file_exists( $path ) ) {
         return '';

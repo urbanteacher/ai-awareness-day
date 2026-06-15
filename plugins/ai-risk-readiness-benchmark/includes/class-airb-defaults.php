@@ -62,7 +62,7 @@ class AIRB_Defaults {
 			return array();
 		}
 
-		$archive_file = AIRB_PLUGIN_DIR . 'archive/includes/data/' . $map[ $role ];
+		$archive_file = ( defined( 'AIRB_ARCHIVE_DIR' ) ? AIRB_ARCHIVE_DIR : AIRB_PLUGIN_DIR . 'archive/' ) . 'includes/data/' . $map[ $role ];
 		$legacy_file  = AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
 		$tier_file    = is_readable( $archive_file ) ? $archive_file : $legacy_file;
 		if ( ! is_readable( $tier_file ) ) {

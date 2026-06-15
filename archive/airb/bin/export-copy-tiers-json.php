@@ -2,7 +2,7 @@
 /**
  * CLI helper: export copy-tiers JSON from legacy PHP tier files.
  *
- * Usage (from WordPress root): wp eval-file wp-content/plugins/ai-risk-readiness-benchmark/archive/bin/export-copy-tiers-json.php
+ * Usage (from WordPress root): wp eval-file wp-content/themes/ai-awareness-day/archive/airb/bin/export-copy-tiers-json.php
  *
  * @package AIRB
  */
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			return json_encode( $data, $options ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 		}
 	}
-	define( 'AIRB_PLUGIN_DIR', dirname( __DIR__, 2 ) . '/' );
+	define( 'AIRB_PLUGIN_DIR', dirname( __DIR__, 3 ) . '/plugins/ai-risk-readiness-benchmark/' );
 	define( 'AIRB_USE_JSON_COPY', false );
 	require_once AIRB_PLUGIN_DIR . 'includes/class-airb-copy-tiers.php';
 }

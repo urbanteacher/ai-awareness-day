@@ -1,6 +1,8 @@
 # AIRB archive
 
-Legacy and superseded files kept here instead of deleting them during the Phase 2 migration.
+Legacy and superseded plugin files kept here instead of deleting them during the Phase 2 migration.
+
+Location: repository root `archive/airb/` (loaders use `AIRB_ARCHIVE_DIR`).
 
 **Do not enqueue or require from this folder in production** unless you are restoring old behaviour for reference or one-off migration scripts.
 
@@ -35,5 +37,5 @@ Removed symbols:
 One-time CLI helper to generate JSON from the archived PHP tier files.
 
 ```bash
-wp eval-file wp-content/plugins/ai-risk-readiness-benchmark/archive/bin/export-copy-tiers-json.php
+wp eval-file wp-content/plugins/ai-risk-readiness-benchmark/../archive/airb/bin/export-copy-tiers-json.php
 ```
