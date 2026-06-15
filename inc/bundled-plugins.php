@@ -88,13 +88,17 @@ function aiad_copy_dir( string $src, string $dest ): bool {
 }
 
 /**
- * Sentinel asset paths used to detect stale plugin copies when the header version was not bumped.
+ * Sentinel paths used to detect stale plugin copies when the header version was not bumped.
  *
- * @return array<string, string> slug => path relative to plugin root
+ * @return array<string, array<int, string>> slug => paths relative to plugin root
  */
 function aiad_bundled_plugin_sentinel_files(): array {
 	return array(
-		'ai-risk-readiness-benchmark' => 'public/js/airb-front.js',
+		'ai-risk-readiness-benchmark' => array(
+			'public/js/airb-front.js',
+			'admin/views/submissions.php',
+			'includes/class-airb-admin.php',
+		),
 	);
 }
 
@@ -124,11 +128,17 @@ function aiad_bundled_plugin_is_stale( string $slug, string $main_file ): bool {
 
 	$sentinels = aiad_bundled_plugin_sentinel_files();
 	if ( isset( $sentinels[ $slug ] ) ) {
-		$relative  = $sentinels[ $slug ];
-		$source_js = trailingslashit( $source_dir ) . $relative;
-		$dest_js   = trailingslashit( $dest_dir ) . $relative;
-		if ( is_readable( $source_js ) && is_readable( $dest_js ) ) {
-			return (int) filemtime( $source_js ) > (int) filemtime( $dest_js );
+		foreach ( (array) $sentinels[ $slug ] as $relative ) {
+			$source_file = trailingslashit( $source_dir ) . $relative;
+			$dest_file   = trailingslashit( $dest_dir ) . $relative;
+			if ( is_readable( $source_file ) && ! is_readable( $dest_file ) ) {
+				return true;
+			}
+			if ( is_readable( $source_file ) && is_readable( $dest_file ) ) {
+				if ( (int) filemtime( $source_file ) > (int) filemtime( $dest_file ) ) {
+					return true;
+				}
+			}
 		}
 	}
 

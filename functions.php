@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.3.32' );
+define( 'AIAD_VERSION', '1.3.33' );
 
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', __DIR__ );
