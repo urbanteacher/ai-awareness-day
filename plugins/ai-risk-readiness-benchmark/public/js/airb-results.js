@@ -308,7 +308,11 @@ function parentFocusTopicsHtml(focusAreas, opts) {
         }
         if (guidance && opts.focusGuidanceAccordionHtml) {
             var parentGuidanceLabel = area.challenge_heading || (opts.i18n && opts.i18n.focusGuidanceToggle) || 'Tips & steps to try';
-            html += opts.focusGuidanceAccordionHtml(parentGuidanceLabel, guidance);
+            html += opts.focusGuidanceAccordionHtml(
+                parentGuidanceLabel,
+                guidance,
+                opts.guidanceOpen !== false
+            );
         } else if (guidance) {
             html += guidance;
         }
@@ -420,7 +424,13 @@ function supportFocusAreasHtml(focusAreas, opts) {
         }
         if (guidance && opts.focusGuidanceAccordionHtml) {
             var supportGuidanceLabel = area.challenge_heading || opts.guidanceToggle || 'Tips & steps to try';
-            html += opts.focusGuidanceAccordionHtml(supportGuidanceLabel, guidance);
+            html += opts.focusGuidanceAccordionHtml(
+                supportGuidanceLabel,
+                guidance,
+                opts.guidanceOpen !== false
+            );
+        } else if (guidance) {
+            html += guidance;
         }
         html += '</div>';
     });
@@ -585,6 +595,130 @@ function teacherStrengthListHtml(strengths, opts) {
             html += '<p class="airb__teacher-strength-detail">' + escFn(detail) + '</p>';
         }
         html += '</div></div>';
+    });
+    return html;
+}
+
+/**
+ * Support strength rows — legacy airb__support-strength-* markup.
+ */
+function supportStrengthListHtml(strengths, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!strengths || !strengths.length) return '';
+    var html = '';
+    strengths.forEach(function (item) {
+        var title = '';
+        var detail = '';
+        if (typeof item === 'string') {
+            var parts = item.split(' — ');
+            title = parts[0] || item;
+            detail = parts[1] || '';
+        } else if (item) {
+            title = item.title || '';
+            detail = item.detail || item.description || '';
+        }
+        if (!title) return;
+        html += '<div class="airb__support-strength-row">';
+        html += '<span class="airb__support-strength-tick" aria-hidden="true">✓</span>';
+        html += '<div class="airb__support-strength-copy">';
+        html += '<p class="airb__support-strength-title">' + escFn(title) + '</p>';
+        if (detail) html += '<p class="airb__support-strength-detail">' + escFn(detail) + '</p>';
+        html += '</div></div>';
+    });
+    return html;
+}
+
+/**
+ * Student strength rows — legacy airb__student-strength-* markup.
+ */
+function studentStrengthListHtml(strengths, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!strengths || !strengths.length) return '';
+    var html = '';
+    strengths.forEach(function (item) {
+        var title = typeof item === 'string' ? item : (item.title || '');
+        var detail = typeof item === 'object' && item ? (item.detail || item.description || '') : '';
+        if (!title) return;
+        html += '<div class="airb__student-strength-row">';
+        html += '<span class="airb__student-strength-tick" aria-hidden="true">✓</span>';
+        html += '<div class="airb__student-strength-copy">';
+        html += '<p class="airb__student-strength-title">' + escFn(title) + '</p>';
+        if (detail) html += '<p class="airb__student-strength-detail">' + escFn(detail) + '</p>';
+        html += '</div></div>';
+    });
+    return html;
+}
+
+/**
+ * Public strength rows — legacy airb__public-strength-* markup.
+ */
+function publicStrengthListHtml(strengths, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!strengths || !strengths.length) return '';
+    var html = '';
+    strengths.forEach(function (item) {
+        var title = typeof item === 'string' ? item : (item.title || '');
+        var detail = typeof item === 'object' && item ? (item.detail || item.description || '') : '';
+        if (!title) return;
+        html += '<div class="airb__public-strength-row">';
+        html += '<span class="airb__public-strength-tick" aria-hidden="true">✓</span>';
+        html += '<div class="airb__public-strength-copy">';
+        html += '<p class="airb__public-strength-title">' + escFn(title) + '</p>';
+        if (detail) html += '<p class="airb__public-strength-detail">' + escFn(detail) + '</p>';
+        html += '</div></div>';
+    });
+    return html;
+}
+
+/**
+ * Student focus area cards.
+ */
+function studentFocusAreasHtml(focusAreas, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!focusAreas || !focusAreas.length) return '';
+    var html = '';
+    focusAreas.forEach(function (area) {
+        var badge = opts.studentFocusBadge ? opts.studentFocusBadge(area) : { className: 'developing', text: (area.pct || 0) + '%' };
+        html += '<div class="airb__student-focus-card">';
+        html += '<div class="airb__student-focus-header">';
+        html += '<h4 class="airb__student-focus-title">' + escFn(area.label) + '</h4>';
+        html += '<span class="airb__student-skill-badge airb__student-skill-badge--' + escFn(badge.className) + '">' + escFn(badge.text) + '</span>';
+        html += '</div>';
+        if (area.summary) html += '<p class="airb__student-focus-summary">' + escFn(area.summary) + '</p>';
+        var guidance = '';
+        if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
+            guidance += '<div class="airb__student-focus-challenge">';
+            guidance += '<div class="airb__student-focus-challenge-title">' + escFn(area.challenge_heading) + '</div>';
+            if (area.challenge_body) guidance += '<p class="airb__student-focus-challenge-body">' + escFn(area.challenge_body) + '</p>';
+            if (area.challenge_bullets && area.challenge_bullets.length) {
+                area.challenge_bullets.forEach(function (item) {
+                    guidance += '<div class="airb__student-focus-challenge-bullet">' + escFn(item) + '</div>';
+                });
+            }
+            guidance += '</div>';
+        }
+        if (area.actions && area.actions.length) {
+            area.actions.forEach(function (item, idx) {
+                guidance += '<div class="airb__student-action-row">';
+                guidance += '<span class="airb__student-action-num">' + (idx + 1) + '</span>';
+                guidance += '<span class="airb__student-action-text">' + escFn(item) + '</span>';
+                guidance += '</div>';
+            });
+        }
+        if (guidance && opts.focusGuidanceAccordionHtml) {
+            html += opts.focusGuidanceAccordionHtml(
+                area.challenge_heading || opts.guidanceToggle || 'Tips & steps to try',
+                guidance,
+                opts.guidanceOpen !== false
+            );
+        } else if (guidance) {
+            html += guidance;
+        }
+        html += '</div>';
     });
     return html;
 }
@@ -800,6 +934,10 @@ AIRB.Results = {
     strengthRowHtml: strengthRowHtml,
     strengthListHtml: strengthListHtml,
     teacherStrengthListHtml: teacherStrengthListHtml,
+    supportStrengthListHtml: supportStrengthListHtml,
+    studentStrengthListHtml: studentStrengthListHtml,
+    publicStrengthListHtml: publicStrengthListHtml,
+    studentFocusAreasHtml: studentFocusAreasHtml,
     peerBenchmarkRowHtml: peerBenchmarkRowHtml,
     ctaBlockHtml: ctaBlockHtml,
     sharePanelHtml: sharePanelHtml,

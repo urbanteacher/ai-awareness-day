@@ -518,173 +518,298 @@
     };
 
     // -------------------------------------------------------------------------
-    // Support staff focus areas
+    // Support staff focus areas + strengths
     // -------------------------------------------------------------------------
 
-    R.supportFocusAreas = function (r) {
-        var domains = r.domain_scores || {};
-        var html    = '';
-        var focusCount = 0;
+    function supportFocusAreasFromResults(sr) {
+        if (!sr) return null;
+        if (sr.focus_areas && sr.focus_areas.length) return sr.focus_areas;
+        if (sr.opportunities && sr.opportunities.length) {
+            return sr.opportunities.slice(0, 4).map(function (opp) {
+                return {
+                    label: opp.label,
+                    pct: opp.pct,
+                    summary: opp.summary,
+                    actions: opp.detail ? [opp.detail] : [],
+                };
+            });
+        }
+        return null;
+    }
 
-        var SUPPORT_DOMAINS = [
-            'safeguarding',
-            'privacy_data_protection',
-            'human_oversight',
-            'ai_literacy',
-            'bias_awareness'
-        ];
+    R.supportStrengths = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var sr = r.support_results || {};
+        var cfg = renderOpts.supportResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.support_result) || {};
+        var strengths = (sr.strength_items && sr.strength_items.length) ? sr.strength_items : sr.strengths;
+        if (!strengths || !strengths.length || !Results.supportStrengthListHtml) return '';
+        var heading = cfg.strengths_heading || 'What you\'re doing well';
+        var headingHtml = renderOpts.cardHeadingHtml
+            ? renderOpts.cardHeadingHtml(heading)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return '<div class="airb__support-strength-card">' + headingHtml + Results.supportStrengthListHtml(strengths, renderOpts) + '</div>';
+    };
+
+    R.supportFocusAreas = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var sr = r.support_results || {};
+        var cfg = renderOpts.supportResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.support_result) || {};
+        var heading = cfg.focus_section_heading || 'Priority focus areas — what to strengthen';
+        var headingShort = cfg.focus_section_heading_short || 'Priority focus areas';
+        var focusAreas = supportFocusAreasFromResults(sr);
+
+        if (focusAreas && focusAreas.length && Results.supportFocusAreasHtml) {
+            var stackOpts = { guidanceOpen: true };
+            for (var optKey in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
+                    stackOpts[optKey] = renderOpts[optKey];
+                }
+            }
+            var stack = Results.supportFocusAreasHtml(focusAreas, stackOpts);
+            if (!stack) return '';
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(heading, headingShort)
+                : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+            return labelHtml + '<div class="airb__support-focus-stack">' + stack + '</div>';
+        }
+
+        var domains = r.domain_scores || {};
+        var html = '';
+        var focusCount = 0;
+        var SUPPORT_DOMAINS = ['safeguarding', 'privacy_data_protection', 'human_oversight', 'ai_literacy', 'bias_awareness'];
+        var cardOpts = {
+            variant: 'support',
+            guidanceOpen: true,
+            guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
+            guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+        };
 
         SUPPORT_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 75 || focusCount >= 3) return;
-
+            if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('support', key, score);
-            html += Results.focusCardHtml({
-                title      : focus.label,
-                score      : score,
-                severity   : focus.severity,
-                summary    : focus.summary,
-                impact     : focus.impact,
+            html += Results.focusCardHtml(Object.assign({}, cardOpts, {
+                title: focus.label,
+                score: score,
+                severity: focus.severity,
+                summary: focus.summary,
+                impact: focus.impact,
                 impactTitle: 'In your role this matters because',
-                actions    : focus.actions
-            });
+                actions: focus.actions,
+            }));
             focusCount++;
         });
 
         if (!html) return '';
-
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Priority focus areas — what to strengthen</h3>'
-             + html
-             + '</div>';
+        var labelHtml = renderOpts.sectionLabelHtml
+            ? renderOpts.sectionLabelHtml(heading, headingShort)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return labelHtml + '<div class="airb__support-focus-stack">' + html + '</div>';
     };
 
     // -------------------------------------------------------------------------
-    // Student focus areas
+    // Student focus areas + strengths
     // -------------------------------------------------------------------------
 
-    R.studentFocusAreas = function (r) {
-        var domains = r.domain_scores || {};
-        var html    = '';
-        var focusCount = 0;
+    function studentFocusAreasFromResults(sr) {
+        if (!sr) return null;
+        if (sr.focus_areas && sr.focus_areas.length) return sr.focus_areas;
+        if (sr.opportunities && sr.opportunities.length) {
+            return sr.opportunities.map(function (opp) {
+                return {
+                    label: opp.label,
+                    pct: opp.pct,
+                    summary: opp.summary,
+                    actions: opp.tips || [],
+                };
+            });
+        }
+        return null;
+    }
 
-        var STUDENT_DOMAINS = [
-            'independent_thinking',
-            'privacy_awareness',
-            'verification_skills',
-            'ai_literacy'
-        ];
+    R.studentStrengths = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var sr = r.student_results || {};
+        var cfg = renderOpts.studentResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.student_result) || {};
+        var strengths = (sr.strength_items && sr.strength_items.length) ? sr.strength_items : sr.strengths;
+        if (!strengths || !strengths.length || !Results.studentStrengthListHtml) return '';
+        var heading = cfg.strengths_heading || 'What you\'re doing well';
+        var headingHtml = renderOpts.cardHeadingHtml
+            ? renderOpts.cardHeadingHtml(heading)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return '<div class="airb__student-strength-card">' + headingHtml + Results.studentStrengthListHtml(strengths, renderOpts) + '</div>';
+    };
+
+    R.studentFocusAreas = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var sr = r.student_results || {};
+        var cfg = renderOpts.studentResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.student_result) || {};
+        var focusAreas = studentFocusAreasFromResults(sr);
+
+        if (focusAreas && focusAreas.length && Results.studentFocusAreasHtml) {
+            var stackOpts = { guidanceOpen: true };
+            for (var optKey in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
+                    stackOpts[optKey] = renderOpts[optKey];
+                }
+            }
+            var stack = Results.studentFocusAreasHtml(focusAreas, stackOpts);
+            if (!stack) return '';
+            var focusCount = focusAreas.length;
+            var focusHeading = (cfg.focus_section_heading || 'Where to improve — areas to focus on').replace(/\d+/, String(focusCount));
+            if (focusHeading.indexOf(String(focusCount)) === -1) {
+                focusHeading = (cfg.focus_section_heading_short || 'Where to improve') + ' — ' + focusCount + ' ' + (focusCount === 1 ? 'area' : 'areas') + ' to focus on';
+            }
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(focusHeading, cfg.focus_section_heading_short || 'Where to improve')
+                : '<h3 class="airb__benchmark-card-heading">' + esc(focusHeading) + '</h3>';
+            return labelHtml + '<div class="airb__student-focus-stack">' + stack + '</div>';
+        }
+
+        var domains = r.domain_scores || {};
+        var html = '';
+        var focusCount = 0;
+        var STUDENT_DOMAINS = ['independent_thinking', 'privacy_awareness', 'verification_skills', 'ai_literacy'];
 
         STUDENT_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 75 || focusCount >= 2) return;
-
+            if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('student', key, score);
             html += Results.focusCardHtml({
-                title        : focus.label,
-                score        : score,
-                severity     : focus.severity,
-                summary      : focus.summary,
-                impact       : focus.impact,
-                impactTitle  : 'Your learning challenge',
-                actions      : focus.actions,
-                badgeText    : (focus.severity === 'critical' ? 'Needs attention' : 'Take care') + ' · ' + score + '%'
+                title: focus.label,
+                score: score,
+                severity: focus.severity,
+                summary: focus.summary,
+                impact: focus.impact,
+                impactTitle: 'Your learning challenge',
+                actions: focus.actions,
+                badgeText: (focus.severity === 'critical' ? 'Needs attention' : 'Take care') + ' · ' + score + '%',
             });
             focusCount++;
         });
 
         if (!html) return '';
-
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Where to improve — ' + focusCount + ' area' + (focusCount > 1 ? 's' : '') + ' to focus on</h3>'
-             + html
-             + '</div>';
+        var heading = 'Where to improve — ' + focusCount + ' area' + (focusCount > 1 ? 's' : '') + ' to focus on';
+        var labelHtml = renderOpts.sectionLabelHtml
+            ? renderOpts.sectionLabelHtml(heading, cfg.focus_section_heading_short || 'Where to improve')
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return labelHtml + '<div class="airb__student-focus-stack">' + html + '</div>';
     };
 
     // -------------------------------------------------------------------------
     // Parent focus topics
     // -------------------------------------------------------------------------
 
-    R.parentFocusTopics = function (r) {
-        var domains = r.domain_scores || {};
-        var html    = '';
-        var focusCount = 0;
+    R.parentFocusTopics = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var pr = r.parent_results || {};
+        if (pr.journey_tier === 'high') return '';
 
-        var PARENT_DOMAINS = [
-            'deepfake_risk_awareness',
-            'homework_support',
-            'home_ai_safety',
-            'parent_awareness'
-        ];
+        var cfg = renderOpts.parentResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.parent_result) || {};
+        var heading = cfg.focus_section_heading || 'Focus topics — what to tackle at home';
+        var headingShort = cfg.focus_section_heading_short || 'Focus topics';
+        var focusAreas = pr.focus_areas && pr.focus_areas.length ? pr.focus_areas : null;
 
-        PARENT_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
-            if (score === null || score >= 65 || focusCount >= 2) return;
+        if (focusAreas && focusAreas.length && Results.parentFocusTopicsHtml) {
+            var stackOpts = { guidanceOpen: true, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
+            for (var optKey in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
+                    stackOpts[optKey] = renderOpts[optKey];
+                }
+            }
+            var stack = Results.parentFocusTopicsHtml(focusAreas, stackOpts);
+            if (!stack) return '';
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(heading, headingShort)
+                : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+            return labelHtml + '<div class="airb__parent-topic-stack">' + stack + '</div>';
+        }
 
-            var focus = resolveDomainFocus('parent', key, score);
-            html += Results.focusCardHtml({
-                title     : focus.label,
-                score     : score,
-                severity  : focus.severity,
-                summary   : focus.summary,
-                impact    : focus.impact,
-                impactTitle: 'What your child may encounter',
-                actions   : focus.actions,
-                badgeText : (score <= 34 ? 'Low awareness' : 'Needs attention') + ' · ' + score + '%'
-            });
-            focusCount++;
-        });
+        if (renderOpts.legacyFocusHtml) {
+            var legacy = renderOpts.legacyFocusHtml(r);
+            if (legacy) {
+                return (renderOpts.sectionLabelHtml
+                    ? renderOpts.sectionLabelHtml(headingShort, headingShort)
+                    : '') + legacy;
+            }
+        }
 
-        if (!html) return '';
-
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Focus topics — what to tackle at home</h3>'
-             + html
-             + '</div>';
+        return '';
     };
 
     // -------------------------------------------------------------------------
-    // Public focus areas
+    // Public focus areas + strengths
     // -------------------------------------------------------------------------
 
-    R.publicFocusAreas = function (r) {
-        var domains = r.domain_scores || {};
-        var html    = '';
-        var focusCount = 0;
+    R.publicStrengths = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var pr = r.public_results || {};
+        var cfg = renderOpts.publicResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.public_result) || {};
+        var strengths = pr.strengths;
+        if (!strengths || !strengths.length || !Results.publicStrengthListHtml) return '';
+        var heading = cfg.strengths_heading || 'What you\'re doing well';
+        var headingHtml = renderOpts.cardHeadingHtml
+            ? renderOpts.cardHeadingHtml(heading)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return '<div class="airb__public-strength-card">' + headingHtml + Results.publicStrengthListHtml(strengths, renderOpts) + '</div>';
+    };
 
-        var PUBLIC_DOMAINS = [
-            'data_privacy',
-            'deepfake_scam_awareness',
-            'workplace_ai',
-            'verification',
-            'emotional_social',
-            'personal_ai_use'
-        ];
+    R.publicFocusAreas = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var pr = r.public_results || {};
+        if (pr.suppress_improvement) return '';
+
+        var cfg = renderOpts.publicResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.public_result) || {};
+        var heading = cfg.focus_section_heading || 'Priority focus areas';
+        var headingShort = cfg.focus_section_heading_short || 'Priority focus';
+        var focusAreas = pr.focus_areas && pr.focus_areas.length ? pr.focus_areas : null;
+
+        if (focusAreas && focusAreas.length && Results.parentFocusTopicsHtml) {
+            var stackOpts = { guidanceOpen: true, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
+            for (var optKey in renderOpts) {
+                if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
+                    stackOpts[optKey] = renderOpts[optKey];
+                }
+            }
+            var stack = Results.parentFocusTopicsHtml(focusAreas, stackOpts);
+            if (!stack) return '';
+            var labelHtml = renderOpts.sectionLabelHtml
+                ? renderOpts.sectionLabelHtml(heading, headingShort)
+                : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+            return labelHtml + '<div class="airb__parent-topic-stack">' + stack + '</div>';
+        }
+
+        var domains = r.domain_scores || {};
+        var html = '';
+        var focusCount = 0;
+        var PUBLIC_DOMAINS = ['data_privacy', 'deepfake_scam_awareness', 'workplace_ai', 'verification', 'emotional_social', 'personal_ai_use'];
 
         PUBLIC_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 70 || focusCount >= 3) return;
-
+            if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('public', key, score);
             html += Results.focusCardHtml({
-                title     : focus.label,
-                score     : score,
-                severity  : focus.severity,
-                summary   : focus.summary,
-                impact    : focus.impact,
+                title: focus.label,
+                score: score,
+                severity: focus.severity,
+                summary: focus.summary,
+                impact: focus.impact,
                 impactTitle: 'What this means for you',
-                actions   : focus.actions,
-                badgeText : (focus.severity === 'critical' ? 'At risk' : 'Needs work') + ' · ' + score + '%'
+                actions: focus.actions,
+                variant: 'public',
+                badgeText: (focus.severity === 'critical' ? 'At risk' : 'Needs work') + ' · ' + score + '%',
             });
             focusCount++;
         });
 
         if (!html) return '';
-
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Priority focus areas</h3>'
-             + html
-             + '</div>';
+        var labelHtml = renderOpts.sectionLabelHtml
+            ? renderOpts.sectionLabelHtml(heading, headingShort)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
+        return labelHtml + '<div class="airb__parent-topic-stack">' + html + '</div>';
     };
 
     // -------------------------------------------------------------------------
