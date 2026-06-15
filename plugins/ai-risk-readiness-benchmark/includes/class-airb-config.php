@@ -681,6 +681,93 @@ class AIRB_Config {
 			}
 			$config['version'] = 34;
 			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 35 ) {
+			$role_band_keys = array(
+				'teacher_result' => array( 'hero_bands' ),
+				'leader_result'  => array( 'hero_bands' ),
+				'support_result' => array( 'hero_bands' ),
+				'student_result' => array( 'journey_levels' ),
+				'parent_result'  => array( 'awareness_levels' ),
+			);
+			foreach ( $role_band_keys as $role_key => $keys ) {
+				$default_role = (array) ( $defaults[ $role_key ] ?? array() );
+				if ( ! isset( $config[ $role_key ] ) || ! is_array( $config[ $role_key ] ) ) {
+					$config[ $role_key ] = $default_role;
+					$changed             = true;
+					continue;
+				}
+				foreach ( $keys as $key ) {
+					if ( ! empty( $default_role[ $key ] ) ) {
+						$config[ $role_key ][ $key ] = $default_role[ $key ];
+						$changed                     = true;
+					}
+				}
+			}
+			$config['version'] = 35;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 36 ) {
+			$role_copy_keys = array(
+				'student_result' => array( 'copy_tiers', 'retake_at_risk_heading' ),
+				'parent_result'  => array( 'copy_tiers' ),
+			);
+			foreach ( $role_copy_keys as $role_key => $keys ) {
+				$default_role = (array) ( $defaults[ $role_key ] ?? array() );
+				if ( ! isset( $config[ $role_key ] ) || ! is_array( $config[ $role_key ] ) ) {
+					$config[ $role_key ] = $default_role;
+					$changed             = true;
+					continue;
+				}
+				foreach ( $keys as $key ) {
+					if ( ! empty( $default_role[ $key ] ) ) {
+						$config[ $role_key ][ $key ] = $default_role[ $key ];
+						$changed                     = true;
+					}
+				}
+			}
+			$config['version'] = 36;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 37 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$default_public      = AIRB_Defaults::public_result_config();
+			if ( ! isset( $config['public_result'] ) || ! is_array( $config['public_result'] ) ) {
+				$config['public_result'] = $default_public;
+			} else {
+				foreach ( array( 'display_domains', 'section_metrics', 'domain_weights', 'hero_bands', 'copy_tiers', 'focus_topics' ) as $key ) {
+					if ( ! empty( $default_public[ $key ] ) ) {
+						$config['public_result'][ $key ] = $default_public[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 37;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 38 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$config['version']   = 38;
+			$changed             = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 39 ) {
+			$default_public = AIRB_Defaults::public_result_config();
+			if ( ! isset( $config['public_result'] ) || ! is_array( $config['public_result'] ) ) {
+				$config['public_result'] = $default_public;
+			} else {
+				foreach ( array_keys( $default_public ) as $key ) {
+					if ( ! empty( $default_public[ $key ] ) ) {
+						$config['public_result'][ $key ] = $default_public[ $key ];
+					}
+				}
+			}
+			$config['version'] = 39;
+			$changed           = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;
@@ -805,6 +892,7 @@ class AIRB_Config {
 			'parent_result'         => AIRB_Defaults::parent_result_config(),
 			'teacher_result'        => AIRB_Defaults::teacher_result_config(),
 			'student_result'        => AIRB_Defaults::student_result_config(),
+			'public_result'         => AIRB_Defaults::public_result_config(),
 			'leader_result'         => AIRB_Defaults::leader_result_config(),
 			'support_result'        => AIRB_Defaults::support_result_config(),
 			'improvement_hub'       => AIRB_Defaults::improvement_hub_config(),

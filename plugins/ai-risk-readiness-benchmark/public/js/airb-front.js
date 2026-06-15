@@ -13,6 +13,7 @@
 	var domainColors = cfg.domain_colors || {};
 	var domainRecs = cfg.domain_recommendations || {};
 	var parentResult = cfg.parent_result || {};
+	var publicResult = cfg.public_result || {};
 	var teacherResult = cfg.teacher_result || {};
 	var studentResult = cfg.student_result || {};
 	var supportResult = cfg.support_result || {};
@@ -177,6 +178,16 @@
 	}
 
 	function questionApplies(q, answers) {
+		answers = answers || state.answers || {};
+		var unless = q.show_unless_answer || {};
+		var depQid;
+		for (depQid in unless) {
+			if (!Object.prototype.hasOwnProperty.call(unless, depQid)) continue;
+			var depVal = answers[depQid] !== undefined ? String(answers[depQid]) : '';
+			if (depVal && unless[depQid].indexOf(depVal) >= 0) {
+				return false;
+			}
+		}
 		var phases = q.show_for_phases || [];
 		if (!phases.length) {
 			return true;
@@ -191,11 +202,50 @@
 		return phases.indexOf(phase) >= 0;
 	}
 
+	function sectionAnswersDraft(section) {
+		var draft = Object.assign({}, state.answers);
+		if (!section) return draft;
+		section.questions.forEach(function (q) {
+			if (q.type === 'slider') {
+				var sl = document.getElementById('airb-q-' + q.id);
+				if (sl) draft[q.id] = sl.value;
+				return;
+			}
+			if (q.type === 'select') {
+				var sel = document.getElementById('airb-q-' + q.id);
+				if (sel && sel.value) draft[q.id] = sel.value;
+				return;
+			}
+			var picked = el.audit && el.audit.querySelector('input[name="airb-q-' + q.id + '"]:checked');
+			if (picked) draft[q.id] = picked.value;
+		});
+		return draft;
+	}
+
+	function refreshSectionConditionalVisibility(section) {
+		if (!section || !el.audit) return;
+		var draft = sectionAnswersDraft(section);
+		section.questions.forEach(function (q) {
+			var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
+			if (!block) return;
+			var applies = questionApplies(q, draft);
+			block.hidden = !applies;
+			if (!applies) {
+				delete state.answers[q.id];
+				block.querySelectorAll('input:checked').forEach(function (inp) {
+					inp.checked = false;
+				});
+				var sel = block.querySelector('select');
+				if (sel) sel.value = '';
+			}
+		});
+	}
+
 	function pruneInapplicableAnswers() {
 		if (!state.role) return;
 		(cfg.questions || []).forEach(function (q) {
 			if (q.role !== state.role) return;
-			if (!questionApplies(q) && state.answers[q.id] !== undefined) {
+			if (!questionApplies(q, state.answers) && state.answers[q.id] !== undefined) {
 				delete state.answers[q.id];
 			}
 		});
@@ -406,44 +456,84 @@
 		return band.charAt(0).toUpperCase() + band.slice(1);
 	}
 
-	function readinessLevel(pct) {
+	function readinessLevel(pct, role) {
+		role = role || state.role || 'leader';
+		if (role === 'student') {
+			return studentSkillBand(pct);
+		}
+		if (role === 'parent') {
+			return parentAwarenessBand(pct);
+		}
 		var r = Math.max(0, Math.min(100, parseInt(pct, 10) || 0));
-		var labels = (i18n.bandsReadiness || {});
-		if (r >= 90) return { slug: 'leading', label: labels.leading || 'Leading' };
-		if (r >= 75) return { slug: 'strong', label: labels.strong || 'Strong' };
-		if (r >= 60) return { slug: 'established', label: labels.established || 'Established' };
-		if (r >= 40) return { slug: 'developing', label: labels.developing || 'Developing' };
-		return { slug: 'emerging', label: labels.emerging || 'Emerging' };
+		var bands = roleHeroBandDefinitions(role);
+		for (var i = 0; i < bands.length; i++) {
+			var band = bands[i];
+			if (r >= band.min && r <= band.max) {
+				return { slug: band.slug, label: band.label };
+			}
+		}
+		return { slug: bands[0].slug, label: bands[0].label };
 	}
 
-	function readinessBandLabel(pct) {
+	function readinessBandLabel(pct, role) {
+		role = role || state.role || 'leader';
 		var r = Math.max(0, Math.min(100, parseInt(pct, 10) || 0));
-		if (r >= 60 && r <= 64) {
+		if ((role === 'leader' || role === 'teacher' || role === 'support_staff') && r >= 60 && r <= 64) {
 			return (i18n.bandsReadiness && i18n.bandsReadiness.earlyEstablished) || 'Early Established';
 		}
-		return readinessLevel(pct).label;
+		return readinessLevel(pct, role).label;
 	}
 
-	function readinessBandColor(pct) {
+	function readinessBandColor(pct, role) {
 		var colors = {
 			leading: '#15803d',
 			strong: 'var(--airb-low)',
 			established: '#3a8fb0',
 			developing: 'var(--airb-mod)',
 			emerging: 'var(--airb-crit)',
+			beginning: '#a32d2d',
+			advanced: '#15803d',
+			confident: '#1d9e75',
+			aware: '#0c6b8a',
+			just_starting: '#a32d2d',
+			well_prepared: '#15803d',
 		};
-		return colors[readinessLevel(pct).slug] || 'var(--airb-text)';
+		return colors[readinessLevel(pct, role).slug] || 'var(--airb-text)';
 	}
 
-	function readinessBandDefinitions() {
+	function roleHeroBandDefinitions(role) {
+		role = role || state.role || 'leader';
+		if (role === 'student') {
+			return studentBandDefinitions();
+		}
+		if (role === 'parent') {
+			return parentBandDefinitions();
+		}
+		if (role === 'public') {
+			return publicResult.hero_bands && publicResult.hero_bands.length
+				? publicResult.hero_bands
+				: readinessBandDefinitionsLegacy();
+		}
+		var cfg = role === 'teacher' ? teacherResult : role === 'support_staff' ? supportResult : role === 'public' ? publicResult : leaderResult;
+		if (cfg && cfg.hero_bands && cfg.hero_bands.length) {
+			return cfg.hero_bands;
+		}
+		return readinessBandDefinitionsLegacy();
+	}
+
+	function readinessBandDefinitionsLegacy() {
 		var labels = i18n.bandsReadiness || {};
 		return [
-			{ slug: 'emerging', label: labels.emerging || 'Emerging', min: 0, max: 39 },
-			{ slug: 'developing', label: labels.developing || 'Developing', min: 40, max: 59 },
+			{ slug: 'emerging', label: labels.emerging || 'Emerging', min: 0, max: 39, tone: 'alarm' },
+			{ slug: 'developing', label: labels.developing || 'Developing', min: 40, max: 59, tone: 'concern' },
 			{ slug: 'established', label: labels.established || 'Established', min: 60, max: 74 },
 			{ slug: 'strong', label: labels.strong || 'Strong', min: 75, max: 89 },
 			{ slug: 'leading', label: labels.leading || 'Leading', min: 90, max: 100 },
 		];
+	}
+
+	function readinessBandDefinitions(role) {
+		return roleHeroBandDefinitions(role);
 	}
 
 	function readinessBandShortLabel(slug, fullLabel) {
@@ -453,13 +543,63 @@
 			return labels.earlyEstablished || 'Early est.';
 		}
 		var defaults = {
-			emerging: 'Emerg.',
-			developing: 'Dev.',
+			emerging: 'At risk',
+			developing: 'Concern',
 			established: 'Est.',
 			strong: 'Str.',
 			leading: 'Lead.',
 		};
 		return defaults[slug] || fullLabel;
+	}
+
+	function studentBandShortLabel(slug, fullLabel) {
+		var labels = i18n.studentJourneyShort || {};
+		if (labels[slug]) return labels[slug];
+		var defaults = {
+			beginning: 'Attention',
+			developing: 'Take care',
+			emerging: 'Aware',
+			confident: 'Conf.',
+			advanced: 'Adv.',
+		};
+		return defaults[slug] || fullLabel;
+	}
+
+	function parentBandShortLabel(slug, fullLabel) {
+		var labels = i18n.parentAwarenessShort || {};
+		if (labels[slug]) return labels[slug];
+		var defaults = {
+			just_starting: 'Needs help',
+			developing: 'Gaps',
+			aware: 'Aware',
+			confident: 'Conf.',
+			well_prepared: 'Prepared',
+		};
+		return defaults[slug] || fullLabel;
+	}
+
+	function publicBandShortLabel(slug, fullLabel) {
+		var defaults = {
+			at_risk: 'At risk',
+			take_care: 'Take care',
+			aware: 'Aware',
+			confident: 'Confident',
+			advanced: 'Advanced',
+		};
+		return defaults[slug] || fullLabel;
+	}
+
+	function publicHeroBarShortLabelFn(role) {
+		if (role === 'public') return publicBandShortLabel;
+		if (role === 'parent') return parentBandShortLabel;
+		if (role === 'student') return studentBandShortLabel;
+		return readinessBandShortLabel;
+	}
+
+	function heroBarBandLabelHtml(band, shortLabelFn) {
+		var shortLabel = band.label_short || shortLabelFn(band.slug, band.label);
+		var toneClass = band.tone ? ' airb__hero-bar-lab--' + band.tone : '';
+		return '<span class="airb__hero-bar-lab' + toneClass + '">' + leaderResponsiveLabel(band.label, shortLabel) + '</span>';
 	}
 
 	function readinessBandPillHtml(slug, label) {
@@ -610,17 +750,21 @@
 
 	function leaderReadinessHeroHtml(score, uiHero) {
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
-		var bandLabel = readinessBandLabel(score);
-		var bandSlug = readinessLevel(score).slug;
+		var bandLabel = readinessBandLabel(score, state.role);
+		var bandSlug = readinessLevel(score, state.role).slug;
 		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
 			? leaderUiMetric(uiHero, 'readiness', bandSlug)
 			: leaderMetricSignals('readiness', bandSlug);
 		var tone = heroSig.tone || 'neutral';
-		var bands = readinessBandDefinitions();
-		var signalLine = leaderSignalLine(bandLabel, heroSig.signal);
-		var kicker = leaderResult.metric_labels && leaderResult.metric_labels.readiness
-			? leaderResult.metric_labels.readiness
-			: (i18n.readinessScaleKicker || 'Overall benchmark readiness');
+		var bands = roleHeroBandDefinitions(state.role);
+		var signalLine = state.role === 'public'
+			? bandLabel
+			: leaderSignalLine(bandLabel, heroSig.signal);
+		var kicker = state.role === 'public'
+			? (publicResult.hero_metric_label || 'Overall AI safety score')
+			: (leaderResult.metric_labels && leaderResult.metric_labels.readiness
+				? leaderResult.metric_labels.readiness
+				: (i18n.readinessScaleKicker || 'Overall benchmark readiness'));
 
 		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
 			(i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
@@ -649,10 +793,143 @@
 		html += '</div>';
 		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
 		bands.forEach(function (b) {
-			html += '<span>' + esc(b.label) + '</span>';
+			html += heroBarBandLabelHtml(b, publicHeroBarShortLabelFn(state.role));
 		});
 		html += '</div></div>';
 		return html;
+	}
+
+	function publicSummaryMetricColor(slug) {
+		if (slug === 'good') return '#3B6D11';
+		if (slug === 'developing') return '#185FA5';
+		if (slug === 'attention') return '#854F0B';
+		return '#A32D2D';
+	}
+
+	function publicSummaryMetricsGridHtml(metrics) {
+		if (!metrics || !metrics.length) return '';
+		var html = '<div class="airb__public-metric-grid">';
+		metrics.forEach(function (row) {
+			var pct = parseInt(row.value, 10) || 0;
+			var badge = row.badge || {};
+			var color = publicSummaryMetricColor(badge.slug || 'developing');
+			html += '<div class="airb__public-metric-cell">';
+			html += '<div class="airb__public-metric-lbl">' + esc(row.label) + '</div>';
+			html += '<div class="airb__public-metric-val" style="color:' + esc(color) + '">' + pct + '%</div>';
+			if (badge.label) {
+				html += '<div class="airb__public-metric-sub" style="color:' + esc(color) + '">' + esc(badge.label) + '</div>';
+			}
+			if (badge.note) {
+				html += '<p class="airb__public-metric-desc">' + esc(badge.note) + '</p>';
+			}
+			html += '</div>';
+		});
+		return html + '</div>';
+	}
+
+	function publicDomainBadgeClass(slug) {
+		if (slug === 'good') return 'good';
+		if (slug === 'risk') return 'critical';
+		if (slug === 'developing') return 'developing';
+		return 'moderate';
+	}
+
+	function publicDomainScoresCardHtml(domainRows) {
+		if (!domainRows || !domainRows.length) return '';
+		var rows = '';
+		domainRows.forEach(function (row) {
+			var pct = parseInt(row.pct, 10) || 0;
+			var color = row.color || readinessBandColor(pct);
+			var badge = row.badge || { slug: 'developing', label: 'Developing' };
+			rows += '<div class="airb__public-domain-row">';
+			rows += '<span class="airb__public-domain-label">' + esc(row.label) + '</span>';
+			rows += '<div class="airb__public-domain-bar-wrap"><div class="airb__public-domain-bar" style="width:' + pct + '%;background:' + esc(color) + '"></div></div>';
+			rows += '<span class="airb__public-domain-val" style="color:' + esc(color) + '">' + pct + '%</span>';
+			rows += '<span class="airb__public-domain-badge airb__public-domain-badge--' + publicDomainBadgeClass(badge.slug) + '">' + esc(badge.label) + '</span>';
+			rows += '</div>';
+		});
+		if (!rows) return '';
+		var headingShort = publicResult.domains_section_heading_short || '5 domains';
+		return '<div class="airb__public-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
+	}
+
+	function publicStrengthsSectionHtml(strengths, heading) {
+		if (!strengths || !strengths.length) return '';
+		var html = '<div class="airb__public-strength-card">';
+		html += benchmarkCardHeadingHtml(heading);
+		strengths.forEach(function (item) {
+			var title = typeof item === 'string' ? item : (item.title || '');
+			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
+			if (!title) return;
+			html += '<div class="airb__public-strength-row">';
+			html += '<span class="airb__public-strength-tick" aria-hidden="true">✓</span>';
+			html += '<div class="airb__public-strength-copy">';
+			html += '<p class="airb__public-strength-title">' + esc(title) + '</p>';
+			if (detail) html += '<p class="airb__public-strength-detail">' + esc(detail) + '</p>';
+			html += '</div></div>';
+		});
+		return html + '</div>';
+	}
+
+	function publicShareCardHtml(pr) {
+		if (!pr || !pr.share) return '';
+		var share = pr.share;
+		var html = '<div class="airb__public-share-card">';
+		html += '<div class="airb__public-share-kicker">' + esc(publicResult.share_section_kicker || 'Share your results') + '</div>';
+		html += '<h4 class="airb__public-share-title">' + esc(publicResult.share_section_title || 'Most people don\'t know how they really use AI') + '</h4>';
+		html += '<p class="airb__public-share-body">' + esc(publicResult.share_section_body || '') + '</p>';
+		html += '<div class="airb__public-share-preview">';
+		html += '<div class="airb__public-share-preview-lbl">' + esc(publicResult.share_preview_label || 'Your shareable result') + '</div>';
+		html += '<div class="airb__public-share-preview-headline">' + esc(share.headline || '') + '</div>';
+		if (share.subline) {
+			html += '<div class="airb__public-share-preview-sub">' + esc(share.subline) + '</div>';
+		}
+		html += '</div>';
+		html += '<div class="airb__public-share-actions">';
+		html += '<button type="button" class="airb__btn airb__public-share-btn airb__public-share-btn--primary" id="airb-public-share-social">' + esc(publicResult.share_cta_primary || 'Share on social') + ' ↗</button>';
+		html += '<button type="button" class="airb__btn airb__public-share-btn airb__public-share-btn--secondary" data-airb-public-retake="1">' + esc(publicResult.share_cta_retake || i18n.retakeAudit || 'Retake the benchmark') + ' ↗</button>';
+		html += '<button type="button" class="airb__btn airb__public-share-btn airb__public-share-btn--secondary" data-airb-open-interest="public_resources">' + esc(publicResult.share_cta_guide || 'Get your safety guide') + ' ↗</button>';
+		html += '</div></div>';
+		return html;
+	}
+
+	function restartPublicAudit() {
+		state.phase = 'role';
+		state.step = 0;
+		state.answers = {};
+		state.results = null;
+		state.submissionId = 0;
+		renderRole();
+	}
+
+	function bindPublicRetakeTriggers() {
+		el.results.querySelectorAll('[data-airb-public-retake]').forEach(function (btn) {
+			btn.addEventListener('click', function (e) {
+				e.preventDefault();
+				restartPublicAudit();
+			});
+		});
+		var shareBtn = document.getElementById('airb-public-share-social');
+		if (shareBtn) {
+			shareBtn.addEventListener('click', function () {
+				var text = buildShareScoreText(state.results);
+				if (!text) return;
+				if (navigator.share) {
+					navigator.share({ text: text, url: (window.location.href || '').split('#')[0] }).catch(function () {});
+					trackEvent('share_click', { channel: 'native' });
+					return;
+				}
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text).then(function () {
+						shareBtn.textContent = (i18n.copiedResult || 'Copied!') + ' ↗';
+						trackEvent('share_copy', { channel: 'clipboard' });
+						setTimeout(function () {
+							shareBtn.textContent = (publicResult.share_cta_primary || 'Share on social') + ' ↗';
+						}, 2000);
+					});
+				}
+			});
+		}
 	}
 
 	function leaderSupportingCardHtml(opts) {
@@ -789,9 +1066,87 @@
 		return 'exemplary';
 	}
 
+	function publicOversightCopy(pct) {
+		if (pct >= 90) {
+			return {
+				signal: 'Exemplary checking habit',
+				consequence: 'You review and question almost everything AI produces before acting on it. That puts you well ahead of most people.',
+				tone: 'positive',
+			};
+		}
+		if (pct >= 76) {
+			return {
+				signal: 'Strong checking habit',
+				consequence: 'You review most AI output before using it. Keep this habit — it is your strongest protection against AI errors and misinformation.',
+				tone: 'positive',
+			};
+		}
+		if (pct >= 51) {
+			return {
+				signal: 'Moderate checking habit',
+				consequence: 'You check some AI output but not consistently. Anything you act on — especially facts, advice or decisions — should always be verified first.',
+				tone: 'neutral',
+			};
+		}
+		if (pct >= 26) {
+			return {
+				signal: 'Low checking habit',
+				consequence: 'A significant amount of AI output is going unchecked. This increases your risk of acting on errors, bias or misinformation.',
+				tone: 'warning',
+			};
+		}
+		return {
+			signal: 'At risk — not checking AI output',
+			consequence: 'You are acting on AI output without meaningful review. AI tools make confident mistakes — without checking, those mistakes become yours.',
+			tone: 'critical',
+		};
+	}
+
+	function studentOversightCopy(pct) {
+		if (pct >= 90) {
+			return {
+				signal: 'Excellent checking habit',
+				consequence: 'You check, edit or question almost all AI answers before relying on them. This is exactly the right habit — keep it.',
+				tone: 'positive',
+			};
+		}
+		if (pct >= 76) {
+			return {
+				signal: 'Good checking habit',
+				consequence: 'You usually check AI answers before using them. Make this a consistent habit across all your work, not just the important stuff.',
+				tone: 'positive',
+			};
+		}
+		if (pct >= 51) {
+			return {
+				signal: 'Developing checking habit',
+				consequence: 'You check some AI answers but not always. Get into the habit of questioning every AI response — especially for schoolwork.',
+				tone: 'neutral',
+			};
+		}
+		if (pct >= 26) {
+			return {
+				signal: 'Needs attention',
+				consequence: 'You are relying on AI answers without checking them often enough. AI gets things wrong — and if you do not catch it, the mistake becomes yours.',
+				tone: 'warning',
+			};
+		}
+		return {
+			signal: 'At risk — not checking AI answers',
+			consequence: 'You are using AI answers without meaningful review. This puts your work and your learning at risk.',
+			tone: 'critical',
+		};
+	}
+
 	function oversightUiCopy(r, pct) {
 		var teacherOversight = isTeacherRole() && r.teacher_results && r.teacher_results.ui ? r.teacher_results.ui.oversight : null;
 		if (teacherOversight && teacherOversight.signal) return teacherOversight;
+		if (isPublicRole()) {
+			return publicOversightCopy(pct);
+		}
+		if (isStudentRole()) {
+			return studentOversightCopy(pct);
+		}
 		var tier = oversightTierFromPct(pct);
 		var tiers = (teacherResult.copy_tiers || {}).oversight || {};
 		var block = tiers[tier] || {};
@@ -1192,11 +1547,11 @@
 	function readinessBandScaleHtml(score, opts) {
 		opts = opts || {};
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
-		var bandLabel = readinessBandLabel(score);
-		var bandSlug = readinessLevel(score).slug;
-		var bandColor = readinessBandColor(score);
+		var bandLabel = readinessBandLabel(score, state.role);
+		var bandSlug = readinessLevel(score, state.role).slug;
+		var bandColor = readinessBandColor(score, state.role);
 		var heroSig = opts.leaderHero ? leaderMetricSignals('readiness', bandSlug) : null;
-		var bands = readinessBandDefinitions();
+		var bands = roleHeroBandDefinitions(state.role);
 		var aria = (i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
 			.replace('{score}', String(score))
 			.replace('{band}', bandLabel);
@@ -1233,7 +1588,7 @@
 			var span = b.max - b.min + 1;
 			var mid = Math.round((b.min + b.max) / 2);
 			var active = score >= b.min && score <= b.max;
-			html += '<span class="airb__readiness-scale-seg airb__readiness-scale-seg--' + b.slug + (active ? ' is-active' : '') + '" style="flex:' + span + ' 1 0;background:' + esc(readinessBandColor(mid)) + '" title="' + esc(b.label + ' (' + b.min + '\u2013' + b.max + ')') + '"></span>';
+			html += '<span class="airb__readiness-scale-seg airb__readiness-scale-seg--' + b.slug + (active ? ' is-active' : '') + '" style="flex:' + span + ' 1 0;background:' + esc(readinessBandColor(mid, state.role)) + '" title="' + esc(b.label + ' (' + b.min + '\u2013' + b.max + ')') + '"></span>';
 		});
 		html += '<span class="airb__readiness-scale-marker" style="left:' + score + '%;" aria-hidden="true"></span>';
 		html += '</div>';
@@ -1242,8 +1597,10 @@
 		bands.forEach(function (b) {
 			var span = b.max - b.min + 1;
 			var active = score >= b.min && score <= b.max;
-			var lab = active && score >= 60 && score <= 64 ? bandLabel : b.label;
-			var shortLab = readinessBandShortLabel(b.slug, lab);
+			var lab = active && score >= 60 && score <= 64 && (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff')
+				? ((i18n.bandsReadiness && i18n.bandsReadiness.earlyEstablished) || 'Early Established')
+				: (b.label_short || b.label);
+			var shortLab = b.label_short || readinessBandShortLabel(b.slug, lab);
 			html += '<span class="airb__readiness-scale-lab airb__readiness-scale-lab--' + b.slug + (active ? ' is-active' : '') + '" style="flex:' + span + ' 1 0" title="' + esc(lab + ' (' + b.min + '\u2013' + b.max + ')') + '">';
 			html += '<span class="airb__readiness-scale-lab-name">';
 			html += '<span class="airb__readiness-scale-lab-name-full">' + esc(lab) + '</span>';
@@ -1296,9 +1653,9 @@
 	function studentSkillBand(pct) {
 		var score = studentDisplayScore(pct);
 		var levels = (studentResult.journey_levels || [
-			{ slug: 'beginning', label: 'At risk', min: 0, max: 20 },
-			{ slug: 'developing', label: 'Building', min: 21, max: 40 },
-			{ slug: 'emerging', label: 'Stable', min: 41, max: 60 },
+			{ slug: 'beginning', label: 'Needs attention', min: 0, max: 20, tone: 'alarm' },
+			{ slug: 'developing', label: 'Take care', min: 21, max: 40, tone: 'concern' },
+			{ slug: 'emerging', label: 'Aware', min: 41, max: 60 },
 			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
 			{ slug: 'advanced', label: 'Advanced', min: 81, max: 100 },
 		]);
@@ -1307,7 +1664,7 @@
 				return { slug: levels[i].slug, label: levels[i].label };
 			}
 		}
-		return { slug: 'beginning', label: 'At risk' };
+		return { slug: 'beginning', label: 'Needs attention' };
 	}
 
 	function studentSkillBandLabel(pct) {
@@ -1328,9 +1685,9 @@
 
 	function studentBandDefinitions() {
 		return studentResult.journey_levels || [
-			{ slug: 'beginning', label: 'At risk', min: 0, max: 20 },
-			{ slug: 'developing', label: 'Building', min: 21, max: 40 },
-			{ slug: 'emerging', label: 'Stable', min: 41, max: 60 },
+			{ slug: 'beginning', label: 'Needs attention', min: 0, max: 20, tone: 'alarm' },
+			{ slug: 'developing', label: 'Take care', min: 21, max: 40, tone: 'concern' },
+			{ slug: 'emerging', label: 'Aware', min: 41, max: 60 },
 			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
 			{ slug: 'advanced', label: 'Advanced', min: 81, max: 100 },
 		];
@@ -1387,7 +1744,7 @@
 		html += '</div>';
 		html += '<div class="airb__student-hero-bar-labels" aria-hidden="true">';
 		bands.forEach(function (b) {
-			html += '<span>' + esc(b.label) + '</span>';
+			html += heroBarBandLabelHtml(b, studentBandShortLabel);
 		});
 		html += '</div></div>';
 		return html;
@@ -1526,7 +1883,7 @@
 		var shareLabel = studentResult.share_cta_primary || i18n.shareWithSchool || 'Share with school';
 		var retakeLabel = studentResult.share_cta_secondary || studentResult.retake_cta || i18n.studentRetake || 'Retake the benchmark';
 		var heading = atRisk
-			? (studentResult.retake_at_risk_heading || i18n.studentRetakeAtRiskHeading || 'At risk — build your skills first')
+			? (studentResult.retake_at_risk_heading || i18n.studentRetakeAtRiskHeading || 'Needs attention — build your skills first')
 			: '';
 		var body = atRisk
 			? (studentResult.retake_at_risk_body || i18n.studentRetakeAtRiskBody || 'You scored below 35%, which puts you in the at-risk band. Explore the articles and study resources above before you retake.')
@@ -1566,8 +1923,8 @@
 
 	function parentBandDefinitions() {
 		return parentResult.awareness_levels || [
-			{ slug: 'just_starting', label: 'Just starting', min: 0, max: 20 },
-			{ slug: 'developing', label: 'Developing', min: 21, max: 40 },
+			{ slug: 'just_starting', label: 'Your child needs your help', min: 0, max: 20, tone: 'alarm' },
+			{ slug: 'developing', label: 'Some gaps at home', min: 21, max: 40, tone: 'concern' },
 			{ slug: 'aware', label: 'Aware', min: 41, max: 60 },
 			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
 			{ slug: 'well_prepared', label: 'Well prepared', min: 81, max: 100 },
@@ -1582,7 +1939,7 @@
 				return { slug: levels[i].slug, label: levels[i].label };
 			}
 		}
-		return { slug: 'developing', label: 'Developing' };
+		return { slug: 'just_starting', label: 'Your child needs your help' };
 	}
 
 	function parentSignalLine(bandLabel, signal) {
@@ -1640,7 +1997,7 @@
 		html += '</div>';
 		html += '<div class="airb__parent-hero-bar-labels" aria-hidden="true">';
 		bands.forEach(function (b) {
-			html += '<span>' + esc(b.label) + '</span>';
+			html += heroBarBandLabelHtml(b, parentBandShortLabel);
 		});
 		html += '</div></div>';
 		return html;
@@ -1648,7 +2005,9 @@
 
 	function parentHomeMetricsSectionHtml(metrics) {
 		if (!metrics || !metrics.length) return '';
-		var headingShort = parentResult.metrics_section_heading_short || '5 home safety scores';
+		var headingShort = isPublicRole()
+			? (publicResult.metrics_section_heading_short || '5 area scores')
+			: (parentResult.metrics_section_heading_short || '5 home safety scores');
 		var html = '<div class="airb__parent-metrics-card">';
 		html += benchmarkCardHeadingHtml(headingShort);
 		metrics.forEach(function (row) {
@@ -1772,13 +2131,13 @@
 
 	function supportReadinessHeroHtml(score, uiHero) {
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
-		var bandLabel = readinessBandLabel(score);
-		var bandSlug = readinessLevel(score).slug;
+		var bandLabel = readinessBandLabel(score, state.role);
+		var bandSlug = readinessLevel(score, state.role).slug;
 		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
 			? leaderUiMetric(uiHero, 'readiness', bandSlug)
 			: leaderMetricSignals('readiness', bandSlug);
 		var tone = heroSig.tone || 'neutral';
-		var bands = readinessBandDefinitions();
+		var bands = roleHeroBandDefinitions(state.role);
 		var signalLine = leaderSignalLine(bandLabel, heroSig.signal);
 		var kicker = supportResult.hero_metric_label || i18n.statReadiness || 'Overall readiness';
 
@@ -1807,7 +2166,7 @@
 		html += '</div>';
 		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
 		bands.forEach(function (b) {
-			html += '<span>' + esc(b.label) + '</span>';
+			html += heroBarBandLabelHtml(b, readinessBandShortLabel);
 		});
 		html += '</div></div>';
 		return html;
@@ -2003,6 +2362,10 @@
 		return state.role === 'parent';
 	}
 
+	function isPublicRole() {
+		return state.role === 'public';
+	}
+
 	function isTeacherRole() {
 		return state.role === 'teacher';
 	}
@@ -2066,6 +2429,76 @@
 			};
 		});
 		return out;
+	}
+
+	function publicDisplayDomainScores(answers) {
+		var defs = publicResult.display_domains || {};
+		var questionsById = {};
+		(cfg.questions || []).forEach(function (q) {
+			if (q.id) questionsById[q.id] = q;
+		});
+		var out = {};
+		Object.keys(defs).forEach(function (slug) {
+			var def = defs[slug];
+			var scores = [];
+			(def.questions || []).forEach(function (qid) {
+				if (!answers[qid] || !questionsById[qid]) return;
+				scores.push(scoreAnswer(questionsById[qid], answers[qid]));
+			});
+			if (!scores.length) return;
+			var avgRisk = (scores.reduce(function (a, b) { return a + b; }, 0) / scores.length) / 3 * 100;
+			var readiness = Math.round(100 - avgRisk);
+			out[slug] = {
+				label: def.label || slug,
+				metric_type: def.metric_type || 'score',
+				color: def.color || '#475569',
+				risk_percentage: Math.round(avgRisk * 10) / 10,
+				readiness_percentage: Math.round((100 - avgRisk) * 10) / 10,
+				band: riskBand(avgRisk),
+				readiness_band: readinessBand(readiness),
+				questions_answered: scores.length,
+			};
+		});
+		return out;
+	}
+
+	function publicOverallFromDisplay(publicDisplay) {
+		var weights = publicResult.domain_weights || {};
+		var weightedSum = 0;
+		var weightTotal = 0;
+		Object.keys(publicDisplay || {}).forEach(function (slug) {
+			var dom = publicDisplay[slug];
+			if (!dom || !dom.questions_answered) return;
+			var weight = parseFloat(weights[slug] || 0);
+			if (!weight) return;
+			var readiness = dom.readiness_percentage;
+			weightedSum += readiness * weight;
+			weightTotal += weight;
+		});
+		if (!weightTotal) {
+			var riskValues = [];
+			Object.keys(publicDisplay || {}).forEach(function (slug) {
+				var dom = publicDisplay[slug];
+				if (!dom || !dom.questions_answered) return;
+				riskValues.push(dom.risk_percentage);
+			});
+			if (!riskValues.length) {
+				return { overall_risk: 0, alignment_score: 0, risk_level: 'low' };
+			}
+			var overall = riskValues.reduce(function (a, b) { return a + b; }, 0) / riskValues.length;
+			return {
+				overall_risk: Math.round(overall * 10) / 10,
+				alignment_score: Math.round(100 - overall),
+				risk_level: riskBand(overall),
+			};
+		}
+		var alignment = weightedSum / weightTotal;
+		var overallRisk = 100 - alignment;
+		return {
+			overall_risk: Math.round(overallRisk * 10) / 10,
+			alignment_score: Math.round(alignment),
+			risk_level: riskBand(overallRisk),
+		};
 	}
 
 	function parentOverallFromDisplay(parentDisplay) {
@@ -2193,7 +2626,7 @@
 	}
 
 	function compositeDependency(role, answers, domainScores) {
-		var extra = { teacher: ['t_without_ai', 't_ai_before_task', 't_feedback_ai'], student: ['s_attempt_first', 's_without_ai', 's_submitted_ai'], support_staff: ['ss_draft_comms', 'ss_without_ai', 'ss_task_approach'] };
+		var extra = { teacher: ['t_without_ai', 't_ai_before_task', 't_feedback_ai'], student: ['s_attempt_first', 's_without_ai', 's_submitted_ai'], support_staff: ['ss_draft_comms', 'ss_without_ai', 'ss_task_approach'], public: ['pub_use_dependency', 'pub_social_advice', 'pub_social_relationship'] };
 		var scores = [];
 		(cfg.questions || []).forEach(function (q) {
 			if (q.role !== role || !answers[q.id]) return;
@@ -2285,6 +2718,20 @@
 				{ label: 'Human Oversight Ratio', value: hoPct + '%', band: readinessBand(hoPct), tone: 'readiness', band_label: readinessBandLabel(hoPct) },
 				{ label: 'Data Protection Readiness', value: dpPct + '%', band: readinessBand(dpPct), tone: 'readiness', band_label: readinessBandLabel(dpPct) },
 			];
+		} else if (role === 'public') {
+			var publicDisplay = results.public_display_domains || {};
+			Object.keys(publicDisplay).forEach(function (slug) {
+				var dom = publicDisplay[slug];
+				if (!dom || !dom.questions_answered) return;
+				var value = Math.round(dom.readiness_percentage);
+				cards.push({
+					label: dom.label,
+					value: value + '%',
+					band: readinessBand(value),
+					tone: 'readiness',
+					band_label: readinessBandLabel(value, 'public'),
+				});
+			});
 		}
 		return cards;
 	}
@@ -2401,6 +2848,18 @@
 		if (role === 'support_staff') {
 			results.support_display_domains = supportDisplayDomainScores(answers);
 		}
+		if (role === 'public') {
+			results.public_display_domains = publicDisplayDomainScores(answers);
+			var publicOverall = publicOverallFromDisplay(results.public_display_domains);
+			results.alignment_score = publicOverall.alignment_score;
+			results.overall_risk_percentage = publicOverall.overall_risk;
+			results.risk_level = publicOverall.risk_level;
+			results.risk_level_label = displayRiskLabel(publicOverall.risk_level, publicOverall.overall_risk);
+			results.readiness_level = readinessLevel(publicOverall.alignment_score, 'public').slug;
+			results.readiness_level_label = readinessBandLabel(publicOverall.alignment_score, 'public');
+			results.key_exposure_areas = [];
+			results.recommendations = [];
+		}
 		results.role_result_cards = roleResultCards(role, results);
 		return results;
 	}
@@ -2508,7 +2967,7 @@
 
 	function questionsForRole(role) {
 		return (cfg.questions || []).filter(function (q) {
-			return q.role === role && questionApplies(q);
+			return q.role === role && questionApplies(q, state.answers);
 		});
 	}
 
@@ -2630,7 +3089,10 @@
 			}
 		});
 		el.audit.querySelectorAll('[data-airb-q]').forEach(function (input) {
-			input.addEventListener('change', highlightNextButton);
+			input.addEventListener('change', function () {
+				refreshSectionConditionalVisibility(section);
+				highlightNextButton();
+			});
 		});
 	}
 
@@ -2657,7 +3119,8 @@
 
 		html += '<div class="airb__audit-questions">';
 		section.questions.forEach(function (q) {
-			html += '<div class="airb__q-block">';
+			var applies = questionApplies(q, state.answers);
+			html += '<div class="airb__q-block" data-airb-qid="' + esc(q.id) + '"' + (applies ? '' : ' hidden') + '>';
 			html += '<p class="airb__q-title">' + esc(q.displayText || q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
@@ -2680,6 +3143,7 @@
 			el.progressLbl.textContent = (i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length;
 		}
 		bindSectionInputs(section);
+		refreshSectionConditionalVisibility(section);
 		updateFlowChrome();
 		scrollFlowToTop();
 	}
@@ -2810,6 +3274,8 @@
 				html += '<p class="airb__muted">' + esc(i18n.contactHintTeacher) + '</p>';
 			} else if (state.role === 'support_staff' && i18n.contactHintSupport) {
 				html += '<p class="airb__muted">' + esc(i18n.contactHintSupport) + '</p>';
+			} else if (isPublicRole() && i18n.contactHintPublic) {
+				html += '<p class="airb__muted">' + esc(i18n.contactHintPublic) + '</p>';
 			} else if (i18n.contactHint) {
 				html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
 			}
@@ -2823,8 +3289,13 @@
 				html += staffProfileFieldsHtml();
 			}
 
-			html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
-				'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
+			if (!isPublicRole()) {
+				html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
+					'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
+			} else {
+				html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
+					'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
+			}
 		}
 
 		html += '</div>';
@@ -3059,6 +3530,49 @@
 
 		html += parentShareCardHtml(pr);
 		html += parentHelpSupportHtml(pr);
+		return benchmarkResultsBodyHtml(html);
+	}
+
+	function publicHelpSupportHtml(pr) {
+		if (!pr) return '';
+		var links = pr.resource_links || [];
+		if (!links.length) return '';
+		return benchmarkHelpSupportHtml(
+			{ resource_links: links },
+			publicResult.help_support_heading || i18n.helpSupportHeading || 'Further reading',
+			publicResult.help_support_heading_short || i18n.helpSupportHeadingShort || 'Read more'
+		);
+	}
+
+	function publicResultsHtml(r) {
+		var pr = r.public_results;
+		if (!pr) return '';
+
+		var cfg = publicResult;
+		var html = '';
+
+		if (pr.domain_rows && pr.domain_rows.length) {
+			html += leaderSectionLabel(
+				cfg.domains_section_heading || 'Your scores — 5 domains',
+				cfg.domains_section_heading_short || '5 domains'
+			);
+			html += publicDomainScoresCardHtml(pr.domain_rows);
+		}
+
+		if (pr.strengths && pr.strengths.length) {
+			html += publicStrengthsSectionHtml(pr.strengths, cfg.strengths_heading || 'What you\'re doing well');
+		}
+
+		if (!pr.suppress_improvement && pr.focus_areas && pr.focus_areas.length) {
+			html += leaderSectionLabel(
+				cfg.focus_section_heading || 'Priority focus areas',
+				cfg.focus_section_heading_short || 'Priority focus'
+			);
+			html += '<div class="airb__parent-topic-stack">' + parentFocusTopicsHtml(pr.focus_areas) + '</div>';
+		}
+
+		html += publicShareCardHtml(pr);
+		html += publicHelpSupportHtml(pr);
 		return benchmarkResultsBodyHtml(html);
 	}
 
@@ -3838,7 +4352,9 @@
 		var risk = Math.round(r.overall_risk_percentage);
 		var depVal = roleShowsDependency(state.role) ? r.dependency_index : null;
 		var parentMode = isParentRole();
+		var publicMode = isPublicRole() && !!r.public_results;
 		var parentResults = r.parent_results;
+		var publicResults = r.public_results;
 		var studentMode = isStudentRole() && !!r.student_results;
 		var studentResults = r.student_results;
 		var leaderMode = isLeaderRole() && !!r.leader_results;
@@ -3847,6 +4363,8 @@
 		var supportResults = r.support_results;
 		var eyebrow = studentMode
 			? (i18n.studentResultsEyebrow || 'Student · AI skills benchmark')
+			: publicMode
+				? (i18n.publicResultsEyebrow || 'Public · AI risk & readiness benchmark')
 			: parentMode
 				? (i18n.parentResultsEyebrow || 'Parent / carer · AI awareness benchmark')
 				: supportBenchmarkMode
@@ -3862,6 +4380,7 @@
 
 		var html = '<section class="airb__res-profile' +
 			(parentMode ? ' airb__res-profile--parent' : '') +
+			(publicMode ? ' airb__res-profile--public' : '') +
 			(studentMode ? ' airb__res-profile--student' : '') +
 			(leaderMode ? ' airb__res-profile--leader' : '') +
 			(teacherBenchmarkMode ? ' airb__res-profile--teacher' : '') +
@@ -3870,6 +4389,7 @@
 		var profileTitle = teacherBenchmarkMode ? (i18n.teacherResultsTitle || i18n.leaderResultsTitle || 'Your results') :
 			supportBenchmarkMode ? (supportResult.profile_title || i18n.supportResultsTitle || 'Your results') :
 			studentMode ? (i18n.studentResultsTitle || 'Your learning profile') :
+			publicMode ? (i18n.publicResultsTitle || publicResult.profile_title || 'Your AI safety profile') :
 			parentMode ? (i18n.parentResultsTitle || parentResult.profile_title || 'Your home AI picture') :
 			leaderMode ? (i18n.leaderResultsTitle || 'Your results') :
 			(i18n.resultsProfileTitle || i18n.resultsTitle || 'Your AI Risk & Readiness profile');
@@ -3899,6 +4419,10 @@
 			var pUiHero = parentResults.ui && parentResults.ui.hero ? parentResults.ui.hero : null;
 			html += parentReadinessHeroHtml(readiness, pUiHero);
 			html += parentHomeMetricsSectionHtml(parentResults.home_metrics);
+		} else if (publicMode && publicResults) {
+			var pubUiHero = publicResults.ui && publicResults.ui.hero ? publicResults.ui.hero : null;
+			html += leaderReadinessHeroHtml(readiness, pubUiHero);
+			html += publicSummaryMetricsGridHtml(publicResults.summary_metrics);
 		} else if (supportBenchmarkMode && supportResults) {
 			var supUiHero = supportResults.ui && supportResults.ui.hero ? supportResults.ui.hero : null;
 			html += supportReadinessHeroHtml(readiness, supUiHero);
@@ -4078,10 +4602,15 @@
 		ctx.fillStyle = '#1e1e1e';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
+		var numStr = String(Math.round(val));
+		var numY = cy - (16 * scale);
 		ctx.font = 'bold ' + Math.round(42 * scale) + 'px system-ui, -apple-system, Segoe UI, sans-serif';
-		ctx.fillText(String(Math.round(val)), cx, cy - (16 * scale));
+		ctx.fillText(numStr, cx, numY);
+		var numWidth = ctx.measureText(numStr).width;
 		ctx.font = '600 ' + Math.round(20 * scale) + 'px system-ui, -apple-system, Segoe UI, sans-serif';
-		ctx.fillText('%', cx + (34 * scale), cy - (10 * scale));
+		ctx.textAlign = 'left';
+		ctx.fillText('%', cx + (numWidth / 2) + (10 * scale), cy - (26 * scale));
+		ctx.textAlign = 'center';
 	}
 
 	function wrapCanvasText(ctx, text, maxWidth, maxLines) {
@@ -4304,7 +4833,10 @@
 		});
 		svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + npt[0].toFixed(2) + '" y2="' + npt[1].toFixed(2) + '" stroke="var(--airb-brand)" stroke-width="3.5" stroke-linecap="round"></line>';
 		svg += '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="var(--airb-brand)"></circle>';
-		svg += '<text x="' + cx + '" y="' + (cy - 16) + '" text-anchor="middle" class="airb__gauge-num">' + Math.round(val) + '<tspan font-size="20">%</tspan></text>';
+		svg += '<text x="' + cx + '" y="' + (cy - 16) + '" text-anchor="middle" class="airb__gauge-num">';
+		svg += '<tspan>' + Math.round(val) + '</tspan>';
+		svg += '<tspan font-size="0.45em" baseline-shift="super" dx="0.12em">%</tspan>';
+		svg += '</text>';
 		return svg + '</svg>';
 	}
 
@@ -4343,9 +4875,10 @@
 	}
 
 	function guidedImprovementHtml(r) {
-		if (isParentRole() || isStudentRole() || isLeaderRole() || isTeacherRole() || isSupportStaffRole()) return '';
+		if (isParentRole() || isPublicRole() || isStudentRole() || isLeaderRole() || isTeacherRole() || isSupportStaffRole()) return '';
 		var gi = r.guided_improvement;
 		if (r.parent_results && r.parent_results.suppress_improvement) return '';
+		if (r.public_results && r.public_results.suppress_improvement) return '';
 		if (!gi) return '';
 		if ((!gi.blocks || !gi.blocks.length) && !gi.consultation) return '';
 
@@ -4403,14 +4936,15 @@
 		var r = state.results;
 		if (!r) return;
 		var parentMode = isParentRole();
+		var publicMode = isPublicRole() && !!r.public_results;
 		var teacherMode = isTeacherRole() && !!r.teacher_results;
 		var studentMode = isStudentRole() && !!r.student_results;
 
 		var leaderMode = isLeaderRole() && !!r.leader_results;
 		var supportMode = isSupportStaffRole() && !!r.support_results;
-		var benchmarkResultsMode = studentMode || teacherMode || leaderMode || parentMode || supportMode;
+		var benchmarkResultsMode = studentMode || teacherMode || leaderMode || parentMode || publicMode || supportMode;
 
-		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' : '') + (teacherMode ? ' airb__results--teacher' : '') + (studentMode ? ' airb__results--student' : '') + (leaderMode ? ' airb__results--leader' : '') + (supportMode ? ' airb__results--support' : '') + '">';
+		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' : '') + (publicMode ? ' airb__results--public' : '') + (teacherMode ? ' airb__results--teacher' : '') + (studentMode ? ' airb__results--student' : '') + (leaderMode ? ' airb__results--leader' : '') + (supportMode ? ' airb__results--support' : '') + '">';
 		html += resultsProfileHtml(r);
 
 		if (teacherMode) {
@@ -4423,6 +4957,8 @@
 			html += supportResultsHtml(r);
 		} else if (parentMode) {
 			html += parentResultsHtml(r);
+		} else if (publicMode) {
+			html += publicResultsHtml(r);
 		} else {
 			html += focusDomainsHtml(r);
 		}
@@ -4541,6 +5077,7 @@
 		bindInterestForm();
 		bindInterestTriggers();
 		bindStudentRetakeTriggers();
+		bindPublicRetakeTriggers();
 		fetchSchoolSnapshot();
 
 		animateResultsStats();
@@ -4663,8 +5200,13 @@
 
 	function saveSectionAnswers(section) {
 		if (!section) return false;
+		var draft = sectionAnswersDraft(section);
 		var complete = true;
 		section.questions.forEach(function (q) {
+			if (!questionApplies(q, draft)) {
+				delete state.answers[q.id];
+				return;
+			}
 			if (q.type === 'slider') {
 				var sl = document.getElementById('airb-q-' + q.id);
 				if (!sl) { complete = false; return; }

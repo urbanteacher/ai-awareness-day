@@ -14,12 +14,12 @@ return array(
 	'copy_tiers'    => array(
 		'readiness' => array(
 			'just_starting' => array(
-				'signal'      => __( 'Just starting', 'ai-risk-benchmark' ),
+				'signal'      => __( 'Start tonight', 'ai-risk-benchmark' ),
 				'tone'        => 'urgent',
 				'consequence' => __( 'There are important gaps in your awareness of how children use AI at home. Start with the guidance below and talk openly with your child about their AI use.', 'ai-risk-benchmark' ),
 			),
 			'developing' => array(
-				'signal'      => __( 'Building awareness', 'ai-risk-benchmark' ),
+				'signal'      => __( 'Close the gaps', 'ai-risk-benchmark' ),
 				'tone'        => 'warning',
 				'consequence' => __( 'You have a reasonable awareness of how your child uses AI but some important areas need attention at home — particularly homework boundaries and online safety risks.', 'ai-risk-benchmark' ),
 			),

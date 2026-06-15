@@ -171,13 +171,7 @@ class AIRB_Student_Results {
 	 */
 	public static function skill_band( int $score ): array {
 		$score  = self::display_score( $score );
-		$levels = array(
-			array( 'slug' => 'beginning', 'label' => __( 'At risk', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
-			array( 'slug' => 'developing', 'label' => __( 'Building', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
-			array( 'slug' => 'emerging', 'label' => __( 'Stable', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
-			array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
-			array( 'slug' => 'advanced', 'label' => __( 'Advanced', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
-		);
+		$levels = AIRB_Defaults::student_journey_levels();
 
 		foreach ( $levels as $level ) {
 			if ( $score >= (int) $level['min'] && $score <= (int) $level['max'] ) {
@@ -190,7 +184,7 @@ class AIRB_Student_Results {
 
 		return array(
 			'slug'  => 'beginning',
-			'label' => __( 'At risk', 'ai-risk-benchmark' ),
+			'label' => __( 'Needs attention', 'ai-risk-benchmark' ),
 		);
 	}
 

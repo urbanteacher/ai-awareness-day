@@ -56,13 +56,7 @@ class AIRB_Parent_Results {
 	 */
 	public static function awareness_band( int $score ): array {
 		$score  = max( 0, min( 100, $score ) );
-		$levels = array(
-			array( 'slug' => 'just_starting', 'label' => __( 'Just starting', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
-			array( 'slug' => 'developing', 'label' => __( 'Developing', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
-			array( 'slug' => 'aware', 'label' => __( 'Aware', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
-			array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
-			array( 'slug' => 'well_prepared', 'label' => __( 'Well prepared', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
-		);
+		$levels = AIRB_Defaults::parent_awareness_levels();
 
 		foreach ( $levels as $level ) {
 			if ( $score >= (int) $level['min'] && $score <= (int) $level['max'] ) {

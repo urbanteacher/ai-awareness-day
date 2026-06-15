@@ -221,6 +221,24 @@ class AIRB_Scoring {
 					);
 				}
 				break;
+			case 'public':
+				$public_display = (array) ( $results['public_display_domains'] ?? array() );
+				$cards          = array();
+				foreach ( $public_display as $slug => $dom ) {
+					if ( empty( $dom['questions_answered'] ) ) {
+						continue;
+					}
+					$value   = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
+					$cards[] = array(
+						'key'        => (string) $slug,
+						'label'      => (string) ( $dom['label'] ?? $slug ),
+						'value'      => $value . '%',
+						'band'       => self::readiness_band( $value ),
+						'tone'       => 'readiness',
+						'band_label' => self::readiness_band_label( $value ),
+					);
+				}
+				break;
 			case 'support_staff':
 				$align   = (int) ( $results['alignment_score'] ?? 0 );
 				$dep     = (int) ( $results['dependency_index'] ?? 0 );
@@ -573,6 +591,118 @@ class AIRB_Scoring {
 	}
 
 	/**
+	 * Public benchmark display metrics — five audit sections.
+	 *
+	 * @param array<string, mixed> $answers Answer map.
+	 * @param array<string, mixed> $config  Plugin config.
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function public_display_domain_scores( array $answers, array $config ): array {
+		$public_config   = AIRB_Defaults::public_result_config();
+		$questions_by_id = array();
+
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			$qid = (string) ( $question['id'] ?? '' );
+			if ( $qid ) {
+				$questions_by_id[ $qid ] = $question;
+			}
+		}
+
+		$out = array();
+		foreach ( (array) ( $public_config['display_domains'] ?? array() ) as $slug => $def ) {
+			$scores = array();
+			foreach ( (array) ( $def['questions'] ?? array() ) as $qid ) {
+				if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
+					continue;
+				}
+				$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+			}
+			if ( ! $scores ) {
+				continue;
+			}
+			$avg_risk  = ( array_sum( $scores ) / count( $scores ) ) / 3 * 100;
+			$readiness = (int) round( 100 - $avg_risk );
+			$band      = self::risk_band( $avg_risk );
+			$out[ $slug ] = array(
+				'label'                => (string) ( $def['label'] ?? $slug ),
+				'metric_type'          => (string) ( $def['metric_type'] ?? 'score' ),
+				'color'                => (string) ( $def['color'] ?? '#475569' ),
+				'risk_percentage'      => round( $avg_risk, 1 ),
+				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
+				'band'                 => $band,
+				'band_label'           => self::band_label( $band ),
+				'readiness_band'       => self::readiness_band( $readiness ),
+				'readiness_band_label' => self::readiness_band_label( $readiness ),
+				'questions_answered'   => count( $scores ),
+			);
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Public overall readiness/risk derived from section metrics only.
+	 *
+	 * @param array<string, array<string, mixed>> $public_display Public display scores.
+	 * @return array{overall_risk:float,alignment_score:int,risk_level:string}
+	 */
+	public static function public_overall_from_display( array $public_display ): array {
+		$config  = AIRB_Defaults::public_result_config();
+		$weights = (array) ( $config['domain_weights'] ?? array() );
+
+		$weighted_sum = 0.0;
+		$weight_total = 0.0;
+
+		foreach ( $public_display as $slug => $row ) {
+			if ( empty( $row['questions_answered'] ) ) {
+				continue;
+			}
+			$weight = (float) ( $weights[ $slug ] ?? 0 );
+			if ( $weight <= 0 ) {
+				continue;
+			}
+			$is_risk   = 'risk' === ( $row['metric_type'] ?? '' );
+			$readiness = $is_risk
+				? ( 100 - (float) ( $row['risk_percentage'] ?? 0 ) )
+				: (float) ( $row['readiness_percentage'] ?? 0 );
+			$weighted_sum += $readiness * $weight;
+			$weight_total += $weight;
+		}
+
+		if ( $weight_total <= 0 ) {
+			$risk_values = array();
+			foreach ( $public_display as $row ) {
+				if ( empty( $row['questions_answered'] ) ) {
+					continue;
+				}
+				$risk_values[] = (float) ( $row['risk_percentage'] ?? 0 );
+			}
+			if ( ! $risk_values ) {
+				return array(
+					'overall_risk'    => 0.0,
+					'alignment_score' => 0,
+					'risk_level'      => 'low',
+				);
+			}
+			$overall = array_sum( $risk_values ) / count( $risk_values );
+			return array(
+				'overall_risk'    => $overall,
+				'alignment_score' => (int) round( 100 - $overall ),
+				'risk_level'      => self::risk_band( $overall ),
+			);
+		}
+
+		$alignment = (int) round( $weighted_sum / $weight_total );
+		$overall   = 100 - $alignment;
+
+		return array(
+			'overall_risk'    => (float) $overall,
+			'alignment_score' => $alignment,
+			'risk_level'      => self::risk_band( $overall ),
+		);
+	}
+
+	/**
 	 * Parent overall readiness/risk derived from parent-facing metrics only.
 	 *
 	 * @param array<string, array<string, mixed>> $parent_display Parent display scores.
@@ -643,6 +773,7 @@ class AIRB_Scoring {
 			'support_staff' => array( 'ss_draft_comms', 'ss_without_ai', 'ss_task_approach' ),
 			'parent'  => array(),
 			'leader'  => array(),
+			'public'  => array( 'pub_use_dependency', 'pub_social_advice', 'pub_social_relationship' ),
 		);
 		$scores = array();
 
@@ -793,6 +924,14 @@ class AIRB_Scoring {
 	 * @param array<string, mixed> $answers  Answers including optional _school_phase.
 	 */
 	public static function question_applies_to_profile( array $question, array $answers ): bool {
+		$unless = (array) ( $question['show_unless_answer'] ?? array() );
+		foreach ( $unless as $dep_qid => $values ) {
+			$dep_val = isset( $answers[ $dep_qid ] ) ? (string) $answers[ $dep_qid ] : '';
+			if ( '' !== $dep_val && in_array( $dep_val, (array) $values, true ) ) {
+				return false;
+			}
+		}
+
 		$phases = (array) ( $question['show_for_phases'] ?? array() );
 		if ( empty( $phases ) ) {
 			return true;
@@ -912,6 +1051,17 @@ class AIRB_Scoring {
 			$key_exposure   = array();
 		}
 
+		$public_display = array();
+		if ( 'public' === $role ) {
+			$public_display  = self::public_display_domain_scores( $answers, $config );
+			$public_overall  = self::public_overall_from_display( $public_display );
+			$overall_risk    = (float) $public_overall['overall_risk'];
+			$overall_band    = (string) $public_overall['risk_level'];
+			$alignment_score = (int) $public_overall['alignment_score'];
+			$key_exposure    = array();
+			$recommendations = array();
+		}
+
 		$support_display = array();
 		if ( 'support_staff' === $role ) {
 			$support_display = self::support_display_domain_scores( $answers, $config );
@@ -940,6 +1090,7 @@ class AIRB_Scoring {
 			'safeguarding_readiness'  => $safeguarding_ready,
 			'bias_readiness'          => $bias_readiness,
 			'parent_display_domains'  => $parent_display,
+			'public_display_domains'  => $public_display,
 			'support_display_domains' => $support_display,
 		);
 		$result_cards = self::role_result_cards( $role, $result_payload );
@@ -964,6 +1115,7 @@ class AIRB_Scoring {
 			'recommendations'         => $recommendations,
 			'key_exposure_areas'      => $key_exposure,
 			'parent_display_domains'  => $parent_display,
+			'public_display_domains'  => $public_display,
 			'support_display_domains' => $support_display,
 			'role_result_cards'       => $result_cards,
 			'next_steps'              => AIRB_Pathway::match_next_steps( $role, $answers, $domain_scores, $result_payload, $config ),

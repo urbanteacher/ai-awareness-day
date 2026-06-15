@@ -745,6 +745,123 @@ class AIRB_Questions {
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
+			),
+			// —— Public (general adult) ——
+			array(
+				self::q( 'pub_use_frequency', 'public', 'ai_dependency', __( 'Personal AI use', 'ai-risk-benchmark' ), __( 'How often do you use AI tools — such as ChatGPT, Copilot, Gemini or similar?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'daily', 'label' => __( 'Every day', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'few_week', 'label' => __( 'A few times a week', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'occasionally', 'label' => __( 'Occasionally', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'rarely', 'label' => __( 'Rarely or never — but I want to understand it', 'ai-risk-benchmark' ), 'score' => 2 ),
+				) ),
+				self::q( 'pub_use_tasks', 'public', 'ai_dependency', __( 'Personal AI use', 'ai-risk-benchmark' ), __( 'If you use AI tools, what do you mainly use them for?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'writing', 'label' => __( 'Writing, editing or summarising', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'research', 'label' => __( 'Research or finding information', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'work', 'label' => __( 'Work tasks — reports, emails, planning', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'personal', 'label' => __( 'Personal decisions — health, finances, relationships', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'entertainment', 'label' => __( 'Entertainment or general curiosity', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'none', 'label' => __( 'I don\'t use AI for any of these', 'ai-risk-benchmark' ), 'score' => 0 ),
+				), 'radio', array(
+					'show_unless_answer' => array(
+						'pub_use_frequency' => array( 'rarely' ),
+					),
+				) ),
+				self::q( 'pub_use_trust', 'public', 'human_oversight', __( 'Personal AI use', 'ai-risk-benchmark' ), __( 'When an AI tool gives you an answer, how much do you trust it?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'trust_act', 'label' => __( 'I trust it and usually act on it directly', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'trust_sometimes', 'label' => __( 'I trust it but sometimes check it', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'starting_point', 'label' => __( 'I treat it as a starting point and always verify', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sceptical', 'label' => __( 'I\'m generally sceptical and check everything', 'ai-risk-benchmark' ), 'score' => 0 ),
+				) ),
+				self::q( 'pub_use_dependency', 'public', 'ai_dependency', __( 'Personal AI use', 'ai-risk-benchmark' ), __( 'If your usual AI tool was unavailable for a week, how would that affect you?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'significantly', 'label' => __( 'Significantly — I rely on it for important tasks', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'somewhat', 'label' => __( 'Somewhat — it would slow me down', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'not_much', 'label' => __( 'Not much — I could manage fine without it', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'not_at_all', 'label' => __( 'Not at all — I don\'t rely on it', 'ai-risk-benchmark' ), 'score' => 0 ),
+				) ),
+				self::q( 'pub_verify_check', 'public', 'human_oversight', __( 'Verification', 'ai-risk-benchmark' ), __( 'When AI gives you a fact, statistic or recommendation, what do you usually do?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'use_given', 'label' => __( 'Use it as given — I trust the source', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'sometimes', 'label' => __( 'Sometimes check it, depending on how important it is', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'always_check', 'label' => __( 'Always check it against another source before using it', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'own_view', 'label' => __( 'I form my own view first then use AI to challenge it', 'ai-risk-benchmark' ), 'score' => 0 ),
+				) ),
+				self::q( 'pub_verify_hallucination', 'public', 'ai_literacy', __( 'Verification', 'ai-risk-benchmark' ), __( 'Are you aware that AI tools can confidently produce information that is completely made up?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_factor', 'label' => __( 'Yes — I know this and factor it into how I use AI', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'heard', 'label' => __( 'I\'ve heard of it but I\'m not sure how common it is', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'didnt_know', 'label' => __( 'I didn\'t know AI could do that', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'dont_think', 'label' => __( 'I don\'t think the tools I use do this', 'ai-risk-benchmark' ), 'score' => 2 ),
+				) ),
+				self::q( 'pub_verify_bias', 'public', 'ai_literacy', __( 'Verification', 'ai-risk-benchmark' ), __( 'Do you think the AI tools you use could reflect bias — for example, in how they describe different groups of people?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_watch', 'label' => __( 'Yes — I actively watch for this', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'possibly', 'label' => __( 'Possibly — I haven\'t really thought about it', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'not_significant', 'label' => __( 'I don\'t think bias is a significant issue', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'not_sure', 'label' => __( 'I\'m not sure what bias in AI means', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_verify_deepfake', 'public', 'ai_literacy', __( 'Verification', 'ai-risk-benchmark' ), __( 'How confident are you in spotting AI-generated images, videos or audio that are designed to look real?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'very', 'label' => __( 'Very confident — I can usually tell', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'fairly', 'label' => __( 'Fairly confident — I look for signs', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'not_very', 'label' => __( 'Not very confident — I find it difficult', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'didnt_know', 'label' => __( 'I didn\'t know AI could generate convincing fake content', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_data_sharing', 'public', 'privacy', __( 'Data & privacy', 'ai-risk-benchmark' ), __( 'Have you ever entered personal information — your name, address, financial details or health information — into an AI tool?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no_careful', 'label' => __( 'No — I\'m careful not to share personal details', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'occasionally', 'label' => __( 'Occasionally, but only when I thought it was necessary', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes_regular', 'label' => __( 'Yes — fairly regularly', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'not_sure', 'label' => __( 'I\'m not sure what counts as personal information', 'ai-risk-benchmark' ), 'score' => 2 ),
+				) ),
+				self::q( 'pub_data_third_party', 'public', 'privacy', __( 'Data & privacy', 'ai-risk-benchmark' ), __( 'Are you aware that most public AI tools store your conversations and may use them to train future models?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_read', 'label' => __( 'Yes — I read the terms or already knew this', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'had_feeling', 'label' => __( 'I had a feeling but wasn\'t certain', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'didnt_know', 'label' => __( 'I didn\'t know that', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'assumed_private', 'label' => __( 'I assumed my conversations were private', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_data_others', 'public', 'privacy', __( 'Data & privacy', 'ai-risk-benchmark' ), __( 'Have you ever shared information about another person — a colleague, friend or family member — with an AI tool without their knowledge?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no', 'label' => __( 'No — I wouldn\'t share someone else\'s information', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'once_twice', 'label' => __( 'Once or twice, but nothing sensitive', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes_advice', 'label' => __( 'Yes — to help write a message or get advice', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'didnt_realise', 'label' => __( 'I didn\'t realise that could be a problem', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_data_scam', 'public', 'privacy', __( 'Data & privacy', 'ai-risk-benchmark' ), __( 'Are you aware that AI is now being used to create convincing scam messages, fake voices and fraudulent calls?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_alert', 'label' => __( 'Yes — I know what to look for and stay alert', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'heard_unsure', 'label' => __( 'I\'ve heard about it but I\'m not sure how to spot it', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'didnt_know', 'label' => __( 'I didn\'t know AI was being used for scams', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'received', 'label' => __( 'I\'ve already received something I think was AI-generated', 'ai-risk-benchmark' ), 'score' => 1 ),
+				) ),
+				self::q( 'pub_work_policy', 'public', 'governance', __( 'Workplace AI', 'ai-risk-benchmark' ), __( 'Does your employer have a policy on using AI tools at work?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_know', 'label' => __( 'Yes — and I know what it says', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'think_not_read', 'label' => __( 'I think there is one but I haven\'t read it', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'not_aware', 'label' => __( 'Not that I know of', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'self_employed', 'label' => __( 'I\'m self-employed or this doesn\'t apply to me', 'ai-risk-benchmark' ), 'score' => 0 ),
+				) ),
+				self::q( 'pub_work_data', 'public', 'privacy', __( 'Workplace AI', 'ai-risk-benchmark' ), __( 'Have you used a personal or public AI tool for a work task that involved confidential or client information?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no', 'label' => __( 'No — I keep work data out of personal AI tools', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'occasionally', 'label' => __( 'Occasionally — it seemed harmless at the time', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'yes_regularly', 'label' => __( 'Yes — fairly regularly to help with my work', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'wasnt_aware', 'label' => __( 'I wasn\'t aware this could be a problem', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_work_disclosure', 'public', 'governance', __( 'Workplace AI', 'ai-risk-benchmark' ), __( 'If you used AI to help produce work — a report, email or presentation — would you disclose that to your employer or client?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'always', 'label' => __( 'Yes — I always say when AI has contributed', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sometimes', 'label' => __( 'Sometimes, if I think it\'s significant', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'no', 'label' => __( 'No — I treat it like using any other tool', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'havent_thought', 'label' => __( 'I haven\'t thought about it', 'ai-risk-benchmark' ), 'score' => 2 ),
+				) ),
+				self::q( 'pub_social_advice', 'public', 'ai_dependency', __( 'Emotional & social', 'ai-risk-benchmark' ), __( 'Have you used AI to help with a personal decision — such as a relationship issue, health concern or financial choice?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no', 'label' => __( 'No — I wouldn\'t use AI for personal decisions', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'once_twice', 'label' => __( 'Once or twice, just to get a different perspective', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes_helpful', 'label' => __( 'Yes — I find it helpful for thinking things through', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'regularly', 'label' => __( 'Regularly — it\'s often my first port of call', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'pub_social_relationship', 'public', 'ai_dependency', __( 'Emotional & social', 'ai-risk-benchmark' ), __( 'Do you ever feel a sense of connection or companionship with an AI tool?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no_tool', 'label' => __( 'No — I see AI as a tool, not a companion', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sometimes_natural', 'label' => __( 'Sometimes it feels like a natural conversation', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes_easier', 'label' => __( 'Yes — I find it easier to talk to than some people', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'never_thought', 'label' => __( 'I\'ve never thought about it', 'ai-risk-benchmark' ), 'score' => 1 ),
+				) ),
+				self::q( 'pub_social_news', 'public', 'ai_literacy', __( 'Emotional & social', 'ai-risk-benchmark' ), __( 'Do you use AI tools to help you understand news, current events or political issues?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'no_traditional', 'label' => __( 'No — I use traditional news sources for this', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sometimes_summary', 'label' => __( 'Sometimes, to get a summary or explanation', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'yes_often', 'label' => __( 'Yes — it\'s often how I find out what\'s happening', 'ai-risk-benchmark' ), 'score' => 3 ),
+					array( 'value' => 'yes_aware_bias', 'label' => __( 'Yes — and I\'m aware AI may present a particular view', 'ai-risk-benchmark' ), 'score' => 0 ),
+				) ),
 			)
 		)
 		);

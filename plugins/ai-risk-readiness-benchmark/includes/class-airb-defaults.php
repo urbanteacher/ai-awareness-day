@@ -88,6 +88,7 @@ class AIRB_Defaults {
 			'parent'        => __( 'Parent / Carer', 'ai-risk-benchmark' ),
 			'leader'        => __( 'School Leader', 'ai-risk-benchmark' ),
 			'support_staff' => __( 'Education Support Staff', 'ai-risk-benchmark' ),
+			'public'        => __( 'General Public', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -124,6 +125,153 @@ class AIRB_Defaults {
 			'assessment_integrity' => __( 'Review assessment design against JCQ and Ofqual AI guidance.', 'ai-risk-benchmark' ),
 			'governance'           => __( 'Publish an AI policy, name a lead, and schedule an annual review.', 'ai-risk-benchmark' ),
 			'safe_adoption'        => __( 'Maintain an approved tool list and structured staff training.', 'ai-risk-benchmark' ),
+		);
+	}
+
+	/**
+	 * Readiness hero scale for teacher, leader and support (5 bands).
+	 *
+	 * @param string $role teacher|leader|support_staff
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function readiness_hero_bands( string $role = 'leader' ): array {
+		$role   = sanitize_key( $role );
+		$band_1 = 'leader' === $role
+			? __( 'Critical · Act now', 'ai-risk-benchmark' )
+			: __( 'At risk · Act now', 'ai-risk-benchmark' );
+
+		return array(
+			array(
+				'slug'        => 'emerging',
+				'label'       => $band_1,
+				'label_short' => 'leader' === $role ? __( 'Critical', 'ai-risk-benchmark' ) : __( 'At risk', 'ai-risk-benchmark' ),
+				'min'         => 0,
+				'max'         => 39,
+				'tone'        => 'alarm',
+			),
+			array(
+				'slug'        => 'developing',
+				'label'       => __( 'Concern · Review needed', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Concern', 'ai-risk-benchmark' ),
+				'min'         => 40,
+				'max'         => 59,
+				'tone'        => 'concern',
+			),
+			array(
+				'slug'        => 'established',
+				'label'       => __( 'Established', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Est.', 'ai-risk-benchmark' ),
+				'min'         => 60,
+				'max'         => 74,
+			),
+			array(
+				'slug'        => 'strong',
+				'label'       => __( 'Strong', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Str.', 'ai-risk-benchmark' ),
+				'min'         => 75,
+				'max'         => 89,
+			),
+			array(
+				'slug'        => 'leading',
+				'label'       => __( 'Leading', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Lead.', 'ai-risk-benchmark' ),
+				'min'         => 90,
+				'max'         => 100,
+			),
+		);
+	}
+
+	/**
+	 * Student journey / hero scale (5 bands).
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function student_journey_levels(): array {
+		return array(
+			array(
+				'slug'        => 'beginning',
+				'label'       => __( 'Needs attention', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Attention', 'ai-risk-benchmark' ),
+				'min'         => 0,
+				'max'         => 20,
+				'tone'        => 'alarm',
+			),
+			array(
+				'slug'        => 'developing',
+				'label'       => __( 'Take care', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Take care', 'ai-risk-benchmark' ),
+				'min'         => 21,
+				'max'         => 40,
+				'tone'        => 'concern',
+			),
+			array(
+				'slug'        => 'emerging',
+				'label'       => __( 'Aware', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
+				'min'         => 41,
+				'max'         => 60,
+			),
+			array(
+				'slug'        => 'confident',
+				'label'       => __( 'Confident', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Conf.', 'ai-risk-benchmark' ),
+				'min'         => 61,
+				'max'         => 80,
+			),
+			array(
+				'slug'        => 'advanced',
+				'label'       => __( 'Advanced', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Adv.', 'ai-risk-benchmark' ),
+				'min'         => 81,
+				'max'         => 100,
+			),
+		);
+	}
+
+	/**
+	 * Parent home-awareness hero scale (5 bands).
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function parent_awareness_levels(): array {
+		return array(
+			array(
+				'slug'        => 'just_starting',
+				'label'       => __( 'Your child needs your help', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Needs help', 'ai-risk-benchmark' ),
+				'min'         => 0,
+				'max'         => 20,
+				'tone'        => 'alarm',
+			),
+			array(
+				'slug'        => 'developing',
+				'label'       => __( 'Some gaps at home', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Gaps', 'ai-risk-benchmark' ),
+				'min'         => 21,
+				'max'         => 40,
+				'tone'        => 'concern',
+			),
+			array(
+				'slug'        => 'aware',
+				'label'       => __( 'Aware', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
+				'min'         => 41,
+				'max'         => 60,
+			),
+			array(
+				'slug'        => 'confident',
+				'label'       => __( 'Confident', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Conf.', 'ai-risk-benchmark' ),
+				'min'         => 61,
+				'max'         => 80,
+			),
+			array(
+				'slug'        => 'well_prepared',
+				'label'       => __( 'Well prepared', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Prepared', 'ai-risk-benchmark' ),
+				'min'         => 81,
+				'max'         => 100,
+			),
 		);
 	}
 
@@ -304,9 +452,169 @@ class AIRB_Defaults {
 				'medium' => __( 'Choose the parent guides or sessions that would help you most. We can also help you share results with your child\'s school.', 'ai-risk-benchmark' ),
 				'low'    => __( 'Choose the support that would help you most — we\'ll email practical guides to build your confidence at home.', 'ai-risk-benchmark' ),
 			),
+			'awareness_levels' => self::parent_awareness_levels(),
 		);
 
 		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/parent-copy-tiers.php';
+
+		return array_merge( $base, $tier_data );
+	}
+
+	/**
+	 * Public benchmark hero scale — At risk through Advanced.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function public_safety_levels(): array {
+		return array(
+			array(
+				'slug'        => 'at_risk',
+				'label'       => __( 'At risk — significant gaps in your AI habits', 'ai-risk-benchmark' ),
+				'label_short' => __( 'At risk', 'ai-risk-benchmark' ),
+				'min'         => 0,
+				'max'         => 39,
+				'tone'        => 'alarm',
+			),
+			array(
+				'slug'        => 'take_care',
+				'label'       => __( 'Take care — some risks in your AI habits', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Take care', 'ai-risk-benchmark' ),
+				'min'         => 40,
+				'max'         => 59,
+				'tone'        => 'concern',
+			),
+			array(
+				'slug'        => 'aware',
+				'label'       => __( 'Aware — reasonable habits with room to improve', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
+				'min'         => 60,
+				'max'         => 74,
+			),
+			array(
+				'slug'        => 'confident',
+				'label'       => __( 'Confident — strong AI safety habits', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Confident', 'ai-risk-benchmark' ),
+				'min'         => 75,
+				'max'         => 89,
+			),
+			array(
+				'slug'        => 'advanced',
+				'label'       => __( 'Advanced — leading personal AI practice', 'ai-risk-benchmark' ),
+				'label_short' => __( 'Advanced', 'ai-risk-benchmark' ),
+				'min'         => 90,
+				'max'         => 100,
+			),
+		);
+	}
+
+	/**
+	 * General public benchmark — personal AI use, verification, privacy, workplace and social.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function public_result_config(): array {
+		$base = array(
+			'domain_weights' => array(
+				'personal_ai_use'  => 0.20,
+				'verification'     => 0.20,
+				'data_privacy'     => 0.20,
+				'workplace_ai'     => 0.20,
+				'emotional_social' => 0.20,
+			),
+			'display_domains' => array(
+				'personal_ai_use' => array(
+					'label'       => __( 'Personal AI use habits', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'pub_use_frequency', 'pub_use_tasks', 'pub_use_trust', 'pub_use_dependency' ),
+					'color'       => '#378ADD',
+				),
+				'verification' => array(
+					'label'       => __( 'Verification & critical thinking', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'pub_verify_check', 'pub_verify_hallucination', 'pub_verify_bias', 'pub_verify_deepfake' ),
+					'color'       => '#639922',
+				),
+				'data_privacy' => array(
+					'label'       => __( 'Data & privacy', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'pub_data_sharing', 'pub_data_third_party', 'pub_data_others', 'pub_data_scam' ),
+					'color'       => '#E24B4A',
+				),
+				'workplace_ai' => array(
+					'label'       => __( 'Workplace AI', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'pub_work_policy', 'pub_work_data', 'pub_work_disclosure' ),
+					'color'       => '#EF9F27',
+				),
+				'emotional_social' => array(
+					'label'       => __( 'Emotional & social AI use', 'ai-risk-benchmark' ),
+					'metric_type' => 'score',
+					'questions'   => array( 'pub_social_advice', 'pub_social_relationship', 'pub_social_news' ),
+					'color'       => '#378ADD',
+				),
+			),
+			'summary_metrics' => array(
+				array(
+					'slug'   => 'ai_dependency',
+					'source' => 'personal_ai_use',
+					'label'  => __( 'AI dependency', 'ai-risk-benchmark' ),
+					'mode'   => 'readiness',
+				),
+				array(
+					'slug'   => 'verification_habit',
+					'source' => 'verification',
+					'label'  => __( 'Verification habit', 'ai-risk-benchmark' ),
+					'mode'   => 'readiness',
+				),
+				array(
+					'slug'   => 'data_risk_exposure',
+					'source' => 'data_privacy',
+					'label'  => __( 'Data risk exposure', 'ai-risk-benchmark' ),
+					'mode'   => 'risk',
+				),
+			),
+			'section_metrics' => array(
+				array(
+					'slug'     => 'personal_ai_use',
+					'source'   => 'personal_ai_use',
+					'label'    => __( 'Personal AI use', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'How you use AI day to day', 'ai-risk-benchmark' ),
+					'icon'     => 'device',
+				),
+				array(
+					'slug'     => 'verification',
+					'source'   => 'verification',
+					'label'    => __( 'Verification', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'How you check what AI tells you', 'ai-risk-benchmark' ),
+					'icon'     => 'verify',
+				),
+				array(
+					'slug'     => 'data_privacy',
+					'source'   => 'data_privacy',
+					'label'    => __( 'Data & privacy', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'What you share and protect', 'ai-risk-benchmark' ),
+					'icon'     => 'shield',
+				),
+				array(
+					'slug'     => 'workplace_ai',
+					'source'   => 'workplace_ai',
+					'label'    => __( 'Workplace AI', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'How AI intersects with your work', 'ai-risk-benchmark' ),
+					'icon'     => 'briefcase',
+				),
+				array(
+					'slug'     => 'emotional_social',
+					'source'   => 'emotional_social',
+					'label'    => __( 'Emotional & social', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'AI in personal life and relationships', 'ai-risk-benchmark' ),
+					'icon'     => 'heart',
+				),
+			),
+			'hero_bands' => self::public_safety_levels(),
+			'resource_links' => self::results_timeline_read_links( 'public' ),
+		);
+
+		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/public-copy-tiers.php';
 
 		return array_merge( $base, $tier_data );
 	}
@@ -526,6 +834,7 @@ class AIRB_Defaults {
 				'next_step_label' => __( 'Recommended next step', 'ai-risk-benchmark' ),
 				'intro'           => __( 'Based on your results, we recommend focusing on:', 'ai-risk-benchmark' ),
 			),
+			'hero_bands' => self::readiness_hero_bands( 'teacher' ),
 		);
 
 		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/teacher-copy-tiers.php';
@@ -604,6 +913,7 @@ class AIRB_Defaults {
 				'next_step_label' => __( 'Recommended next step', 'ai-risk-benchmark' ),
 				'intro'           => __( 'Based on your results, we recommend focusing on:', 'ai-risk-benchmark' ),
 			),
+			'hero_bands' => self::readiness_hero_bands( 'support_staff' ),
 			'suggested_resources' => self::support_suggested_resources(),
 		);
 
@@ -629,13 +939,7 @@ class AIRB_Defaults {
 			'journey_title' => __( 'Your AI Learning Journey', 'ai-risk-benchmark' ),
 			'journey_focus_heading' => __( 'To get there:', 'ai-risk-benchmark' ),
 			'journey_retake_note' => __( 'Progress unlocks when you retake the benchmark.', 'ai-risk-benchmark' ),
-			'journey_levels' => array(
-				array( 'slug' => 'beginning', 'label' => __( 'At risk', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
-				array( 'slug' => 'developing', 'label' => __( 'Building', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
-				array( 'slug' => 'emerging', 'label' => __( 'Stable', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
-				array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
-				array( 'slug' => 'advanced', 'label' => __( 'Advanced', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
-			),
+			'journey_levels' => self::student_journey_levels(),
 			'journey_focus_map' => array(
 				'verification_skills' => __( 'Improve verification', 'ai-risk-benchmark' ),
 				'ai_literacy'       => __( 'Improve AI literacy', 'ai-risk-benchmark' ),
@@ -1182,6 +1486,7 @@ class AIRB_Defaults {
 			),
 			'rollout_unlock_copy' => __( 'Unlocks after {threshold} responses from your school community.', 'ai-risk-benchmark' ),
 			'heatmap_heading'     => __( 'Risk heat map', 'ai-risk-benchmark' ),
+			'hero_bands'          => self::readiness_hero_bands( 'leader' ),
 		);
 
 		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/leader-copy-tiers.php';
@@ -1393,6 +1698,10 @@ class AIRB_Defaults {
 
 		if ( 'parent' === $role && ! empty( $results['parent_results'] ) && is_array( $results['parent_results'] ) ) {
 			$results['parent_results']['resource_links'] = $links;
+		}
+
+		if ( 'public' === $role && ! empty( $results['public_results'] ) && is_array( $results['public_results'] ) ) {
+			$results['public_results']['resource_links'] = $links;
 		}
 	}
 
@@ -1998,6 +2307,7 @@ class AIRB_Defaults {
 			'parent'  => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
 			'leader'        => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
 			'support_staff' => array( 'tint' => '#fef3c7', 'accent' => '#b45309' ),
+			'public'        => array( 'tint' => '#e6f1fb', 'accent' => '#185fa5' ),
 		);
 	}
 
@@ -2013,6 +2323,7 @@ class AIRB_Defaults {
 			'parent'  => 0.9,
 			'leader'        => 1.4,
 			'support_staff' => 1.1,
+			'public'        => 0,
 		);
 	}
 
@@ -2023,7 +2334,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 34,
+			'version'             => 39,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -2212,6 +2523,24 @@ class AIRB_Defaults {
 					__( 'Operational Dependency Index', 'ai-risk-benchmark' ),
 					__( 'Human Oversight Ratio', 'ai-risk-benchmark' ),
 					__( 'Data Protection Readiness', 'ai-risk-benchmark' ),
+				),
+			),
+			'public' => array(
+				'title'    => __( 'Public AI Benchmark', 'ai-risk-benchmark' ),
+				'tagline'  => __( 'Free check — how safely, critically and independently do you use AI?', 'ai-risk-benchmark' ),
+				'measures' => array(
+					__( 'Personal AI use', 'ai-risk-benchmark' ),
+					__( 'Verification & critical thinking', 'ai-risk-benchmark' ),
+					__( 'Data & privacy', 'ai-risk-benchmark' ),
+					__( 'Workplace AI', 'ai-risk-benchmark' ),
+					__( 'Emotional & social use', 'ai-risk-benchmark' ),
+				),
+				'outputs'  => array(
+					__( 'Overall AI readiness', 'ai-risk-benchmark' ),
+					__( 'Personal AI use score', 'ai-risk-benchmark' ),
+					__( 'Verification score', 'ai-risk-benchmark' ),
+					__( 'Data & privacy score', 'ai-risk-benchmark' ),
+					__( 'Workplace AI score', 'ai-risk-benchmark' ),
 				),
 			),
 		);

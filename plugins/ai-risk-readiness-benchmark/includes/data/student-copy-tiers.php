@@ -13,12 +13,12 @@ return array(
 	'copy_tiers' => array(
 		'readiness' => array(
 			'beginning' => array(
-				'signal'      => __( 'Getting started', 'ai-risk-benchmark' ),
+				'signal'      => __( 'Focus here first', 'ai-risk-benchmark' ),
 				'tone'        => 'urgent',
 				'consequence' => __( 'There is lots to learn about using AI well. Start with the guidance below — it is designed to help, not judge.', 'ai-risk-benchmark' ),
 			),
 			'developing' => array(
-				'signal'      => __( 'Building skills', 'ai-risk-benchmark' ),
+				'signal'      => __( 'Keep building', 'ai-risk-benchmark' ),
 				'tone'        => 'warning',
 				'consequence' => __( 'You are learning how to use AI — the tips below will help you build confidence, independence and safer habits.', 'ai-risk-benchmark' ),
 			),
@@ -99,7 +99,7 @@ return array(
 	'share_cta_primary'     => __( 'Add your school', 'ai-risk-benchmark' ),
 	'share_cta_secondary'   => __( 'Retake the benchmark', 'ai-risk-benchmark' ),
 	'retake_at_risk_threshold' => 35,
-	'retake_at_risk_heading' => __( 'At risk — build your skills first', 'ai-risk-benchmark' ),
+	'retake_at_risk_heading' => __( 'Needs attention — build your skills first', 'ai-risk-benchmark' ),
 	'retake_at_risk_body'    => __( 'You scored below 35%, which puts you in the at-risk band. Explore the articles and study resources above before you retake — they are chosen to help you improve the areas that matter most.', 'ai-risk-benchmark' ),
 	'retake_body_default'    => __( 'When you are ready, retake the benchmark to see how your AI skills have improved.', 'ai-risk-benchmark' ),
 	'strength_tiers' => array(
