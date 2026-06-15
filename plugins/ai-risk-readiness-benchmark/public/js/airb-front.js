@@ -1117,12 +1117,14 @@
 			html += '<button type="button" class="airb__role-card' + active + '" data-role="' + esc(slug) + '">';
 			if (done && typeof done.alignment === 'number') {
 				html += '<span class="airb__role-done">' + esc((i18n.roleDoneScore || '{n}%').replace('{n}', String(done.alignment))) + '</span>';
-				html += '<span class="airb__role-card-result">' + esc(roleCompletionSummary(done)) + '</span>';
 			}
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
 			var tagline = bench.tagline || i18n.roleCardTagline || '';
-			if (tagline && !(done && typeof done.alignment === 'number')) {
+			if (tagline) {
 				html += '<span class="airb__role-card-blurb">' + esc(tagline) + '</span>';
+			}
+			if (done && typeof done.alignment === 'number') {
+				html += '<span class="airb__role-card-result">' + esc(roleCompletionSummary(done)) + '</span>';
 			}
 			html += '<span class="airb__role-card-go">' + esc(done ? (i18n.retakeAudit || 'Retake audit') : (i18n.startAudit || 'Start audit')) + ' →</span>';
 			html += '</button>';

@@ -187,6 +187,27 @@ class AIRB_Config {
 			}
 			$config['version'] = 14;
 			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 15 ) {
+			$default_roles = (array) ( $defaults['role_benchmarks'] ?? array() );
+			if ( ! isset( $config['role_benchmarks'] ) || ! is_array( $config['role_benchmarks'] ) ) {
+				$config['role_benchmarks'] = $default_roles;
+			} else {
+				foreach ( $default_roles as $role => $role_defaults ) {
+					if ( ! is_array( $role_defaults ) || empty( $role_defaults['tagline'] ) ) {
+						continue;
+					}
+					if ( ! isset( $config['role_benchmarks'][ $role ] ) || ! is_array( $config['role_benchmarks'][ $role ] ) ) {
+						$config['role_benchmarks'][ $role ] = $role_defaults;
+					} else {
+						$config['role_benchmarks'][ $role ]['tagline'] = $role_defaults['tagline'];
+					}
+					$changed = true;
+				}
+			}
+			$config['version'] = 15;
+			$changed           = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;
