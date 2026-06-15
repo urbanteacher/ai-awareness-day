@@ -17,6 +17,8 @@
 	var teacherResult = cfg.teacher_result || {};
 	var studentResult = cfg.student_result || {};
 	var supportResult = cfg.support_result || {};
+	var leaderResult = cfg.leader_result || {};
+	var improvementHub = cfg.improvement_hub || {};
 	var copyTiersRegistry = cfg.copy_tiers || {};
 	var STORAGE_KEY = 'airb_completed_roles_v1';
 	var SESSION_KEY = 'airb_session_id_v1';
@@ -762,10 +764,15 @@
 		var signalLine = state.role === 'public'
 			? bandLabel
 			: leaderSignalLine(bandLabel, heroSig.signal);
+		var heroCfg = state.role === 'teacher' ? teacherResult
+			: state.role === 'support_staff' ? supportResult
+			: state.role === 'student' ? studentResult
+			: state.role === 'parent' ? parentResult
+			: leaderResult;
 		var kicker = state.role === 'public'
 			? (publicResult.hero_metric_label || 'Overall AI safety score')
-			: (leaderResult.metric_labels && leaderResult.metric_labels.readiness
-				? leaderResult.metric_labels.readiness
+			: (heroCfg.metric_labels && heroCfg.metric_labels.readiness
+				? heroCfg.metric_labels.readiness
 				: (i18n.readinessScaleKicker || 'Overall benchmark readiness'));
 
 		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
