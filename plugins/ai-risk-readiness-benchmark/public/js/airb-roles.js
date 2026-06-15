@@ -332,47 +332,54 @@
     // Teacher strengths
     // -------------------------------------------------------------------------
 
-    R.teacherStrengths = function (r) {
-        var domains = r.domain_scores || {};
-        var tiers   = tiersFor('teacher');
-        var strMap  = tiers.strengths || {};
-        var rows    = [];
-
-        var STRENGTH_DOMAINS = [
-            'safe_adoption', 'human_oversight', 'independent_practice',
-            'privacy_data_protection', 'safeguarding', 'assessment_integrity',
-            'ai_literacy', 'bias_awareness'
-        ];
-
-        STRENGTH_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key, r);
-            if (score === null || score < 76) return;
-
-            var strengthKey = strengthTierKey(key);
-            // Find the highest threshold copy
-            var thresholds = [100, 90, 76];
-            var copy = '';
-            for (var i = 0; i < thresholds.length; i++) {
-                if (score >= thresholds[i]) {
-                    copy = strMap[strengthKey + '_' + thresholds[i]] || '';
-                    if (copy) break;
-                }
-            }
-            if (!copy) return;
-
-            // Split "Title — description" format
-            var parts = copy.split(' — ');
-            rows.push({ title: parts[0], description: parts[1] || '' });
-        });
-
-        if (!rows.length || !Results.strengthListHtml) return '';
-
-        var trCfg = (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
+    R.teacherStrengths = function (r, renderOpts) {
+        renderOpts = renderOpts || {};
+        var tr = r.teacher_results || {};
+        var trCfg = renderOpts.teacherResult || (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
         var heading = trCfg.strengths_heading || 'What you\'re doing well';
+        var strengths = tr.strengths && tr.strengths.length ? tr.strengths : null;
+        var rows = [];
+
+        if (!strengths) {
+            var domains = r.domain_scores || {};
+            var tiers   = tiersFor('teacher');
+            var strMap  = tiers.strengths || {};
+            var STRENGTH_DOMAINS = [
+                'safe_adoption', 'human_oversight', 'independent_practice',
+                'privacy_data_protection', 'safeguarding', 'assessment_integrity',
+                'ai_literacy', 'bias_awareness'
+            ];
+
+            STRENGTH_DOMAINS.forEach(function (key) {
+                var score = domainReadinessScore(domains, key, r);
+                if (score === null || score < 76) return;
+
+                var strengthKey = strengthTierKey(key);
+                var thresholds = [100, 90, 76];
+                var copy = '';
+                for (var i = 0; i < thresholds.length; i++) {
+                    if (score >= thresholds[i]) {
+                        copy = strMap[strengthKey + '_' + thresholds[i]] || '';
+                        if (copy) break;
+                    }
+                }
+                if (!copy) return;
+
+                var parts = copy.split(' — ');
+                rows.push({ title: parts[0], description: parts[1] || '' });
+            });
+        }
+
+        var items = strengths || rows;
+        if (!items.length || !Results.teacherStrengthListHtml) return '';
+
+        var headingHtml = renderOpts.cardHeadingHtml
+            ? renderOpts.cardHeadingHtml(heading)
+            : '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>';
 
         return '<div class="airb__teacher-strength-card">'
-             + '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>'
-             + Results.strengthListHtml(rows)
+             + headingHtml
+             + Results.teacherStrengthListHtml(items, renderOpts)
              + '</div>';
     };
 

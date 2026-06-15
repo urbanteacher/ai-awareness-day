@@ -3692,7 +3692,11 @@
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherStrengths) {
-				html += AIRB.Roles.teacherStrengths(r);
+				html += AIRB.Roles.teacherStrengths(r, {
+					esc: esc,
+					teacherResult: teacherResult,
+					cardHeadingHtml: benchmarkCardHeadingHtml,
+				});
 			} else if (tr.strengths && tr.strengths.length) {
 				html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
 			}

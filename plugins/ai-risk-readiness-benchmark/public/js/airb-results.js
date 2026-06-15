@@ -549,6 +549,41 @@ function strengthRowHtml(opts) {
 }
 
 /**
+ * Teacher strength rows — matches legacy airb__teacher-strength-* markup.
+ *
+ * @param {Array<string|object>} strengths
+ * @param {object} opts  { esc }
+ */
+function teacherStrengthListHtml(strengths, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    if (!strengths || !strengths.length) return '';
+    var html = '';
+    strengths.forEach(function (item) {
+        var title = '';
+        var detail = '';
+        if (typeof item === 'string') {
+            var parts = item.split(' — ');
+            title = parts[0] || item;
+            detail = parts[1] || '';
+        } else if (item) {
+            title = item.title || '';
+            detail = item.detail || item.description || '';
+        }
+        if (!title) return;
+        html += '<div class="airb__teacher-strength-row">';
+        html += '<span class="airb__teacher-strength-tick" aria-hidden="true">✓</span>';
+        html += '<div class="airb__teacher-strength-copy">';
+        html += '<p class="airb__teacher-strength-title">' + escFn(title) + '</p>';
+        if (detail) {
+            html += '<p class="airb__teacher-strength-detail">' + escFn(detail) + '</p>';
+        }
+        html += '</div></div>';
+    });
+    return html;
+}
+
+/**
  * @param {Array<object>} strengths  Array of strengthRowHtml() opts
  */
 function strengthListHtml(strengths) {
@@ -758,6 +793,7 @@ AIRB.Results = {
     oversightGaugePanelHtml: oversightGaugePanelHtml,
     strengthRowHtml: strengthRowHtml,
     strengthListHtml: strengthListHtml,
+    teacherStrengthListHtml: teacherStrengthListHtml,
     peerBenchmarkRowHtml: peerBenchmarkRowHtml,
     ctaBlockHtml: ctaBlockHtml,
     sharePanelHtml: sharePanelHtml,
