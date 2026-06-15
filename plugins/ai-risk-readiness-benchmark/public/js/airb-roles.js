@@ -46,15 +46,25 @@
 		return role;
 	}
 
-	/** Leader JSON domain keys → scoring slugs in domain_scores. */
-	var LEADER_SCORE_SLUG = {
+	/** JSON domain keys → scoring slugs in domain_scores. */
+	var SCORE_SLUG = {
+		independent_practice: 'ai_dependency',
+		privacy_data_protection: 'privacy',
 		data_protection_awareness: 'privacy',
 		governance_consistency: 'governance',
 		bias_awareness: 'bias_equality',
 	};
 
-	function domainReadinessScore(domains, key) {
-		var scoreKey = LEADER_SCORE_SLUG[key] || key;
+	/** JSON strength keys → copy-tiers strengths map keys. */
+	var STRENGTH_SLUG = {
+		privacy_data_protection: 'privacy',
+	};
+
+	function domainReadinessScore(domains, key, results) {
+		if (key === 'bias_awareness' && results && results.bias_readiness != null) {
+			return Math.round(results.bias_readiness);
+		}
+		var scoreKey = SCORE_SLUG[key] || key;
 		var d = domains[scoreKey];
 		if (d == null) {
 			return null;
@@ -71,6 +81,10 @@
 			}
 		}
 		return null;
+	}
+
+	function strengthTierKey(domainKey) {
+		return STRENGTH_SLUG[domainKey] || domainKey;
 	}
 
 	// -------------------------------------------------------------------------
@@ -255,9 +269,10 @@
         ];
 
         TEACHER_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score >= 75 || focusCount >= 3) return;
 
+            if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('teacher', key, score);
             html += Results.focusCardHtml({
                 title      : focus.label,
@@ -273,9 +288,12 @@
 
         if (!html) return '';
 
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">Priority focus areas — what to strengthen</h3>'
-             + html
+        var trCfg = (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
+        var heading = trCfg.focus_section_heading || 'Priority focus areas — what to strengthen';
+
+        return '<div class="airb__section airb__teacher-focus-section">'
+             + '<h3 class="airb__section__title airb__benchmark-card-heading">' + esc(heading) + '</h3>'
+             + '<div class="airb__leader-focus-stack">' + html + '</div>'
              + '</div>';
     };
 
@@ -296,15 +314,16 @@
         ];
 
         STRENGTH_DOMAINS.forEach(function (key) {
-            var score = domainReadinessScore(domains, key);
+            var score = domainReadinessScore(domains, key, r);
             if (score === null || score < 76) return;
 
+            var strengthKey = strengthTierKey(key);
             // Find the highest threshold copy
             var thresholds = [100, 90, 76];
             var copy = '';
             for (var i = 0; i < thresholds.length; i++) {
                 if (score >= thresholds[i]) {
-                    copy = strMap[key + '_' + thresholds[i]] || '';
+                    copy = strMap[strengthKey + '_' + thresholds[i]] || '';
                     if (copy) break;
                 }
             }
@@ -315,10 +334,13 @@
             rows.push({ title: parts[0], description: parts[1] || '' });
         });
 
-        if (!rows.length) return '';
+        if (!rows.length || !Results.strengthListHtml) return '';
 
-        return '<div class="airb__section">'
-             + '<h3 class="airb__section__title">What you\'re doing well</h3>'
+        var trCfg = (window.airbBenchmark && airbBenchmark.config && airbBenchmark.config.teacher_result) || {};
+        var heading = trCfg.strengths_heading || 'What you\'re doing well';
+
+        return '<div class="airb__teacher-strength-card">'
+             + '<h3 class="airb__benchmark-card-heading">' + esc(heading) + '</h3>'
              + Results.strengthListHtml(rows)
              + '</div>';
     };

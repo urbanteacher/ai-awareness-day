@@ -1101,7 +1101,7 @@
 		if (isPublicRole()) resultCfg = publicResult;
 		else if (isStudentRole()) resultCfg = studentResult;
 		else if (isLeaderRole()) resultCfg = leaderResult;
-		else if (isSupportRole()) resultCfg = supportResult;
+		else if (isSupportStaffRole()) resultCfg = supportResult;
 		else if (isParentRole()) resultCfg = parentResult;
 
 		var tiers = (resultCfg.copy_tiers || {}).oversight || {};
@@ -3683,17 +3683,46 @@
 		if (!tr) return '';
 
 		var html = '';
-		if (tr.strengths && tr.strengths.length) {
-			html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
+		try {
+			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherStrengths) {
+				html += AIRB.Roles.teacherStrengths(r);
+			} else if (tr.strengths && tr.strengths.length) {
+				html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
+			}
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB teacherStrengths failed', err);
+			}
+			if (tr.strengths && tr.strengths.length) {
+				html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
+			}
 		}
 
-		var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
-		if (focusAreas && focusAreas.length) {
-			html += leaderSectionLabel(
-				teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
-				teacherResult.focus_section_heading_short || 'Priority focus areas'
-			);
-			html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreas, tr.bias_health) + '</div>';
+		try {
+			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherFocusAreas) {
+				html += AIRB.Roles.teacherFocusAreas(r);
+			} else {
+				var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
+				if (focusAreas && focusAreas.length) {
+					html += leaderSectionLabel(
+						teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
+						teacherResult.focus_section_heading_short || 'Priority focus areas'
+					);
+					html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreas, tr.bias_health) + '</div>';
+				}
+			}
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB teacherFocusAreas failed', err);
+			}
+			var focusAreasFallback = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
+			if (focusAreasFallback && focusAreasFallback.length) {
+				html += leaderSectionLabel(
+					teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
+					teacherResult.focus_section_heading_short || 'Priority focus areas'
+				);
+				html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreasFallback, tr.bias_health) + '</div>';
+			}
 		}
 
 		if (tr.next_steps && tr.next_steps.rollout) {
@@ -4676,6 +4705,24 @@
 	function renderResults() {
 		var r = state.results;
 		if (!r) return;
+		try {
+			renderResultsBody(r);
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB renderResults failed', err);
+			}
+			el.results.innerHTML = '<div class="airb__panel"><p class="airb__error">' + esc(i18n.error || 'Something went wrong. Please try again.') + '</p></div>';
+			el.results.hidden = false;
+			el.role.hidden = true;
+			el.audit.hidden = true;
+			el.contact.hidden = true;
+			el.nav.hidden = true;
+			el.progress.hidden = true;
+			updateFlowChrome();
+		}
+	}
+
+	function renderResultsBody(r) {
 		var parentMode = isParentRole();
 		var publicMode = isPublicRole() && !!r.public_results;
 		var teacherMode = isTeacherRole() && !!r.teacher_results;
@@ -5089,21 +5136,30 @@
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
-				if (json.success && json.data && json.data.results) {
-					state.results = json.data.results;
-				} else if (state.results && state.role && roleShowsInterestForm(state.role)) {
-					var shells = airbBenchmark.interestForms || {};
-					if (shells[state.role]) {
-						mergeInterestFormShell(state.results, shells[state.role]);
+				try {
+					if (json.success && json.data && json.data.results) {
+						state.results = json.data.results;
+					} else if (state.results && state.role && roleShowsInterestForm(state.role)) {
+						var shells = airbBenchmark.interestForms || {};
+						if (shells[state.role]) {
+							mergeInterestFormShell(state.results, shells[state.role]);
+						}
+					}
+					if (json.success && json.data && json.data.submission_id) {
+						state.submissionId = parseInt(json.data.submission_id, 10) || 0;
+					}
+					persistResultsSnapshot();
+				} catch (err) {
+					if (window.console && console.error) {
+						console.error('AIRB submitResults handler failed', err);
 					}
 				}
-				if (json.success && json.data && json.data.submission_id) {
-					state.submissionId = parseInt(json.data.submission_id, 10) || 0;
-				}
-				persistResultsSnapshot();
 				if (done) done();
 			})
-			.catch(function () {
+			.catch(function (err) {
+				if (window.console && console.error) {
+					console.error('AIRB submitResults request failed', err);
+				}
 				if (state.results && state.role && roleShowsInterestForm(state.role)) {
 					var shells = airbBenchmark.interestForms || {};
 					if (shells[state.role]) {
