@@ -1,0 +1,202 @@
+{
+    "_meta": {
+        "role": "support",
+        "version": "1.0.0",
+        "description": "Migrated from support-copy-tiers.php"
+    },
+    "readiness_bands": {
+        "emerging": {
+            "min": 0,
+            "max": 39,
+            "label": "Action needed",
+            "sub_label": "Action needed",
+            "color_ramp": "red",
+            "consequence": "There are important gaps in how AI is used in your operational role. Start with data protection and safeguarding awareness — your role puts you in contact with sensitive pupil information.",
+            "urgent_action": null
+        },
+        "developing": {
+            "min": 40,
+            "max": 59,
+            "label": "Progress being made",
+            "sub_label": "Progress being made",
+            "color_ramp": "amber",
+            "consequence": "You have foundational AI awareness in place. Two areas need attention — particularly around data protection and safeguarding — where your role puts you in contact with sensitive pupil information.",
+            "urgent_action": null
+        },
+        "established": {
+            "min": 60,
+            "max": 74,
+            "label": "Solid foundations",
+            "sub_label": "Solid foundations",
+            "color_ramp": "blue",
+            "consequence": "You show solid operational AI awareness with a few areas to strengthen. Keep focusing on data handling and knowing when to escalate concerns.",
+            "urgent_action": null
+        },
+        "strong": {
+            "min": 75,
+            "max": 89,
+            "label": "Strong position",
+            "sub_label": "Strong position",
+            "color_ramp": "green",
+            "consequence": "You demonstrate strong AI readiness for an operations and data-handling role. Sustain your habits as tools and school policies evolve.",
+            "urgent_action": null
+        },
+        "leading": {
+            "min": 90,
+            "max": 100,
+            "label": "Leading practice",
+            "sub_label": "Leading practice",
+            "color_ramp": "green",
+            "consequence": "You model responsible AI use in a support role — share your approach with colleagues and help build whole-school consistency.",
+            "urgent_action": null
+        }
+    },
+    "domains": {
+        "safeguarding": {
+            "label": "safeguarding",
+            "description": "",
+            "focus_card": {
+                "critical": {
+                    "summary": "Support staff often work directly with vulnerable pupils or hold sensitive information. AI-specific safeguarding risks — such as deepfakes, impersonation and AI-generated content — may not yet be part of your awareness.",
+                    "impact": [],
+                    "actions": [
+                        "Attend your school's next safeguarding update — check if it covers AI scenarios",
+                        "Know your DSL's name and when to refer a concern to them",
+                        "If a pupil mentions something AI-related that worries you, treat it as a safeguarding concern"
+                    ]
+                },
+                "moderate": {
+                    "summary": "Your awareness of AI-specific safeguarding risks could be stronger. Knowing how to recognise and report AI-enabled harm is part of your duty of care.",
+                    "impact": [],
+                    "actions": [
+                        "Ask your DSL whether AI scenarios are covered in your next safeguarding briefing",
+                        "If something AI-related worries you, report it — do not wait until you are certain"
+                    ]
+                },
+                "developing": {
+                    "summary": "You have some safeguarding awareness — keep building confidence in recognising and escalating AI-related concerns.",
+                    "impact": [],
+                    "actions": [
+                        "Review your school's reporting route for online safety and AI-related incidents",
+                        "Share any AI concerns with your DSL promptly"
+                    ]
+                }
+            }
+        },
+        "privacy": {
+            "label": "privacy",
+            "description": "",
+            "focus_card": {
+                "critical": {
+                    "summary": "Support staff regularly handle pupil records, SEND information and sensitive communications. Entering any of this into a public AI tool — even to help draft a message — is a UK GDPR risk your school is responsible for.",
+                    "impact": [],
+                    "actions": [
+                        "Never enter pupil names, SEND details or sensitive data into a public AI tool",
+                        "Only use AI tools that appear on your school's approved list",
+                        "If you're unsure whether something is safe to share with AI, ask your line manager or DPO"
+                    ]
+                },
+                "moderate": {
+                    "summary": "Data protection habits need strengthening. Even small amounts of pupil information in AI tools can create GDPR exposure for your school.",
+                    "impact": [],
+                    "actions": [
+                        "Check your school's approved AI tool list before each new use case",
+                        "Redact or anonymise information before using AI to help with drafting"
+                    ]
+                },
+                "developing": {
+                    "summary": "Your data protection awareness is developing — tighten habits around what enters AI tools.",
+                    "impact": [],
+                    "actions": [
+                        "Never paste pupil records or SEND information into public AI tools",
+                        "Ask your DPO or line manager if you are unsure about a specific task"
+                    ]
+                }
+            }
+        },
+        "human_oversight": {
+            "label": "human_oversight",
+            "description": "",
+            "focus_card": {
+                "critical": {
+                    "summary": "AI-generated emails, letters and reports need careful review before they are sent or acted on.",
+                    "impact": [],
+                    "actions": [
+                        "Always read and edit AI drafts before sending to parents or external contacts",
+                        "Verify factual claims in AI-generated content against a trusted source"
+                    ]
+                },
+                "moderate": {
+                    "summary": "Build a consistent habit of reviewing AI outputs — especially for communications that leave the school.",
+                    "impact": [],
+                    "actions": [
+                        "Treat every AI draft as a starting point, not a finished document"
+                    ]
+                },
+                "developing": {
+                    "summary": "Keep strengthening your verification habits as AI use grows in your role.",
+                    "impact": [],
+                    "actions": [
+                        "Pause before sending any AI-assisted communication and check names, facts and tone"
+                    ]
+                }
+            }
+        },
+        "safe_adoption": {
+            "label": "safe_adoption",
+            "description": "",
+            "focus_card": {
+                "critical": {
+                    "summary": "Use only approved tools and know how to report AI-related data or safeguarding issues.",
+                    "impact": [],
+                    "actions": [
+                        "Check your school's approved AI tool list before using any new tool",
+                        "Know how to report AI-related data protection or safeguarding concerns"
+                    ]
+                },
+                "moderate": {
+                    "summary": "Strengthen habits around approved tools and escalation routes.",
+                    "impact": [],
+                    "actions": [
+                        "Confirm approval status before using AI for a new task"
+                    ]
+                },
+                "developing": {
+                    "summary": "Keep using approved tools and reporting routes consistently.",
+                    "impact": [],
+                    "actions": [
+                        "Share any unapproved AI tool use with your line manager"
+                    ]
+                }
+            }
+        },
+        "ai_literacy": {
+            "label": "ai_literacy",
+            "description": "",
+            "focus_card": {
+                "critical": {
+                    "summary": "Treat AI outputs as drafts that can be wrong — especially for factual or policy information.",
+                    "impact": [],
+                    "actions": [
+                        "Question AI outputs that sound authoritative but may be incorrect",
+                        "Do not rely on AI for statutory guidance or policy wording without verification"
+                    ]
+                },
+                "moderate": {
+                    "summary": "Build confidence in recognising when AI may be inaccurate or inappropriate for your task.",
+                    "impact": [],
+                    "actions": [
+                        "Cross-check important facts before acting on AI-generated information"
+                    ]
+                },
+                "developing": {
+                    "summary": "Keep building your understanding of what AI can and cannot do reliably.",
+                    "impact": [],
+                    "actions": [
+                        "When AI output surprises you, verify it before sharing or acting on it"
+                    ]
+                }
+            }
+        }
+    }
+}

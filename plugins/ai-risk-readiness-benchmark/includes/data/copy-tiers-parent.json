@@ -1,0 +1,130 @@
+{
+    "_meta": {
+        "role": "parent",
+        "version": "1.0.0",
+        "description": "Migrated from parent-copy-tiers.php"
+    },
+    "readiness_bands": {
+        "just_starting": {
+            "min": 0,
+            "max": 39,
+            "label": "Start tonight",
+            "sub_label": "Start tonight",
+            "color_ramp": "red",
+            "consequence": "There are important gaps in your awareness of how children use AI at home. Start with the guidance below and talk openly with your child about their AI use.",
+            "urgent_action": null
+        },
+        "developing": {
+            "min": 40,
+            "max": 54,
+            "label": "Close the gaps",
+            "sub_label": "Close the gaps",
+            "color_ramp": "amber",
+            "consequence": "You have a reasonable awareness of how your child uses AI but some important areas need attention at home — particularly homework boundaries and online safety risks.",
+            "urgent_action": null
+        },
+        "aware": {
+            "min": 55,
+            "max": 69,
+            "label": "Growing awareness",
+            "sub_label": "Growing awareness",
+            "color_ramp": "amber",
+            "consequence": "You have some awareness of AI risks, but there are still areas where more guidance would help you support your child safely.",
+            "urgent_action": null
+        },
+        "confident": {
+            "min": 70,
+            "max": 84,
+            "label": "Confident",
+            "sub_label": "Confident",
+            "color_ramp": "blue",
+            "consequence": "You have a solid foundation for guiding your child's AI use. Keep conversations going and revisit the focus areas below as tools and risks evolve.",
+            "urgent_action": null
+        },
+        "well_prepared": {
+            "min": 85,
+            "max": 100,
+            "label": "Well prepared",
+            "sub_label": "Well prepared",
+            "color_ramp": "green",
+            "consequence": "You are well placed to support safe, honest and independent AI use at home. Share what works with your child's school to help other families.",
+            "urgent_action": null
+        }
+    },
+    "domains": {
+        "online_risk": {
+            "label": "online_risk",
+            "description": "",
+            "focus_card": {
+                "low": {
+                    "summary": "Deepfakes are AI-generated images, videos or audio that look real but are fake. They can be used to bully, manipulate or scam — and young people are increasingly targeted. Most parents aren't yet aware of this risk.",
+                    "impact": [],
+                    "actions": [
+                        "Talk to your child about what deepfakes are and show them an example",
+                        "Agree that if something looks wrong they come to you first, not respond",
+                        "Know your school's reporting process for online safety incidents"
+                    ]
+                },
+                "attention": {
+                    "summary": "Your awareness of deepfakes and AI-generated harm could be stronger. Talk with your child about what to do if something online does not feel right.",
+                    "impact": [],
+                    "actions": [
+                        "Ask your child if they have seen anything online that looked fake",
+                        "Agree a simple rule: come to you before sharing or responding"
+                    ]
+                }
+            }
+        },
+        "homework_boundaries": {
+            "label": "homework_boundaries",
+            "description": "",
+            "focus_card": {
+                "low": {
+                    "summary": "It may not be clear at home what AI your child can and can't use for schoolwork. Without a shared understanding, AI can become a shortcut that gets in the way of your child's learning — and could break school rules.",
+                    "impact": [],
+                    "actions": [
+                        "Ask your child what AI rules their school has for homework",
+                        "Agree a simple rule at home — try yourself first, then use AI to check",
+                        "If unsure what's allowed, contact the school for their AI guidance"
+                    ]
+                },
+                "attention": {
+                    "summary": "Homework oversight at home could be stronger. Clear boundaries help your child learn with AI rather than rely on it.",
+                    "impact": [],
+                    "actions": [
+                        "Ask your child to explain one AI-assisted answer in their own words",
+                        "Check your school's homework and AI expectations together"
+                    ]
+                }
+            }
+        },
+        "parent_ai_use": {
+            "label": "parent_ai_use",
+            "description": "",
+            "focus_card": {
+                "low": {
+                    "summary": "Using AI to do homework for your child can hide gaps in learning. Model trying first, then using AI to check or explain — not to produce the answer.",
+                    "impact": [],
+                    "actions": [
+                        "Try supporting without AI first when homework is hard",
+                        "Use AI to explain concepts, not to write submissions for your child"
+                    ]
+                }
+            }
+        },
+        "home_safety": {
+            "label": "home_safety",
+            "description": "",
+            "focus_card": {
+                "attention": {
+                    "summary": "Talk about privacy, fake images and voice messages, and agree what your child should do if something online does not feel right.",
+                    "impact": [],
+                    "actions": [
+                        "Discuss what personal information should never be shared with AI tools",
+                        "Agree who your child should tell if something online feels wrong"
+                    ]
+                }
+            }
+        }
+    }
+}

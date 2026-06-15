@@ -58,7 +58,17 @@ class AIRB_Student_Results {
 			'profile_title'         => (string) ( $cfg['profile_title'] ?? __( 'Your learning profile', 'ai-risk-benchmark' ) ),
 			'ui'                    => $ui,
 			'learning_metrics'      => $metrics,
-			'bias_health'           => self::bias_health( $results, $cfg ),
+			'bias_health'           => AIRB_Components::bias_health(
+				$results,
+				$cfg,
+				array(
+					'role'       => 'student',
+					'score'      => self::display_score( (int) ( $results['bias_readiness'] ?? 0 ) ),
+					'band_label' => (string) ( self::skill_band( self::display_score( (int) ( $results['bias_readiness'] ?? 0 ) ) )['label'] ?? '' ),
+					'subtitle'   => __( 'Fairness · protected characteristics · online safety', 'ai-risk-benchmark' ),
+					'callout'    => __( 'AI tools can produce unfair or stereotypical answers about groups of people. Learning to spot this helps you use AI more safely and fairly.', 'ai-risk-benchmark' ),
+				)
+			),
 			'learner_type'          => self::learner_type( $results, $metrics, $cfg ),
 			'learning_journey'      => $journey,
 			'peer_benchmark'        => self::peer_benchmark( $results, $cfg ),
@@ -514,31 +524,5 @@ class AIRB_Student_Results {
 		}
 
 		return $out;
-	}
-
-	/**
-	 * Bias & fairness readiness from dedicated student bias questions.
-	 *
-	 * @param array<string, mixed> $results Results.
-	 * @param array<string, mixed> $cfg     Student config.
-	 * @return array<string, mixed>|null
-	 */
-	private static function bias_health( array $results, array $cfg ): ?array {
-		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
-			return null;
-		}
-
-		$score     = (int) $results['bias_readiness'];
-		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
-		$band      = self::skill_band( self::display_score( $score ) );
-
-		return array(
-			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
-			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Fairness · protected characteristics · online safety', 'ai-risk-benchmark' ) ),
-			'score'        => self::display_score( $score ),
-			'band_label'   => (string) ( $band['label'] ?? '' ),
-			'show_callout' => $score < $threshold,
-			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'AI tools can produce unfair or stereotypical answers about groups of people. Learning to spot this helps you use AI more safely and fairly.', 'ai-risk-benchmark' ) ),
-		);
 	}
 }

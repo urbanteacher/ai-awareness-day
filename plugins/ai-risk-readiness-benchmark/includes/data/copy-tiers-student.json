@@ -1,0 +1,170 @@
+{
+    "_meta": {
+        "role": "student",
+        "version": "1.0.0",
+        "description": "Migrated from student-copy-tiers.php"
+    },
+    "readiness_bands": {
+        "beginning": {
+            "min": 0,
+            "max": 39,
+            "label": "Focus here first",
+            "sub_label": "Focus here first",
+            "color_ramp": "red",
+            "consequence": "There is lots to learn about using AI well. Start with the guidance below — it is designed to help, not judge.",
+            "urgent_action": null
+        },
+        "developing": {
+            "min": 40,
+            "max": 54,
+            "label": "Keep building",
+            "sub_label": "Keep building",
+            "color_ramp": "amber",
+            "consequence": "You are learning how to use AI — the tips below will help you build confidence, independence and safer habits.",
+            "urgent_action": null
+        },
+        "emerging": {
+            "min": 55,
+            "max": 69,
+            "label": "Growing awareness",
+            "sub_label": "Growing awareness",
+            "color_ramp": "blue",
+            "consequence": "You show moderate reliance on AI and reasonable awareness. Small changes to how you use AI could strengthen your learning even further.",
+            "urgent_action": null
+        },
+        "confident": {
+            "min": 70,
+            "max": 84,
+            "label": "Good awareness",
+            "sub_label": "Good awareness",
+            "color_ramp": "blue",
+            "consequence": "You have good AI awareness and healthy habits in most areas. Focus on the skills below where you can still grow.",
+            "urgent_action": null
+        },
+        "advanced": {
+            "min": 85,
+            "max": 100,
+            "label": "Strong skills",
+            "sub_label": "Strong skills",
+            "color_ramp": "green",
+            "consequence": "You are building strong AI learning habits — keep verifying, thinking independently and protecting your privacy.",
+            "urgent_action": null
+        }
+    },
+    "bias_readiness": {
+        "critical": {
+            "min": 0,
+            "max": 25,
+            "signal": "Important gap",
+            "consequence": "AI tools can produce unfair or stereotypical answers about groups of people. Learning to spot this is an important part of using AI safely.",
+            "tone": "urgent"
+        },
+        "high": {
+            "min": 0,
+            "max": 100,
+            "signal": "Needs attention",
+            "consequence": "You may not yet check whether AI answers are fair to everyone. This is a skill worth building — unfair AI outputs can harm people.",
+            "tone": "warning"
+        },
+        "moderate": {
+            "min": 51,
+            "max": 75,
+            "signal": "Building awareness",
+            "consequence": "You have some awareness of AI bias but do not always check for unfair answers. Keep practising — it gets easier.",
+            "tone": "warning"
+        },
+        "low": {
+            "min": 26,
+            "max": 50,
+            "signal": "Good awareness",
+            "consequence": "You understand that AI can be unfair and think about this when you use it. Keep checking as you encounter new tools and topics.",
+            "tone": "positive"
+        }
+    },
+    "domains": {
+        "think_first": {
+            "label": "think_first",
+            "description": "",
+            "focus_card": {
+                "emerging": {
+                    "summary": "You may be using AI before giving yourself a real chance to think. The best students use AI to check and improve their thinking — not to replace it. Your ideas are the part AI can't do for you.",
+                    "impact": [],
+                    "actions": [
+                        "Try the task yourself first — even if your answer feels incomplete",
+                        "Use AI to check or improve what you wrote, not to write it for you",
+                        "Ask your teacher to explain anything you don't understand rather than asking AI"
+                    ]
+                },
+                "developing": {
+                    "summary": "You sometimes reach for AI before attempting work yourself. Build a habit of trying first — then use AI to strengthen your thinking.",
+                    "impact": [],
+                    "actions": [
+                        "Try the task yourself first — even if your answer feels incomplete",
+                        "Use AI to check or improve what you wrote, not to write it for you"
+                    ]
+                }
+            }
+        },
+        "privacy": {
+            "label": "privacy",
+            "description": "",
+            "focus_card": {
+                "emerging": {
+                    "summary": "You may not always think about what information is safe to share with AI tools. Anything you type into a public AI tool could be stored and used by the company that runs it.",
+                    "impact": [],
+                    "actions": [
+                        "Keep personal details out of AI tools — use \"a student\" not your name",
+                        "Only use AI tools your school has approved",
+                        "If something feels wrong or uncomfortable, tell a teacher"
+                    ]
+                },
+                "developing": {
+                    "summary": "You have some privacy awareness but may still share more than you should. Be careful about personal details in public AI tools.",
+                    "impact": [],
+                    "actions": [
+                        "Keep personal details out of AI tools — use \"a student\" not your name",
+                        "Only use AI tools your school has approved"
+                    ]
+                }
+            }
+        },
+        "verify": {
+            "label": "verify",
+            "description": "",
+            "focus_card": {
+                "emerging": {
+                    "summary": "Checking AI answers before you trust them is a skill worth building. AI can sound confident even when it is wrong.",
+                    "impact": [],
+                    "actions": [
+                        "Check AI answers against trusted sources",
+                        "Explain the answer in your own words",
+                        "If you cannot explain it yourself, you may not fully understand it yet"
+                    ]
+                }
+            }
+        },
+        "fairness": {
+            "label": "fairness",
+            "description": "",
+            "focus_card": {
+                "emerging": {
+                    "summary": "AI tools can produce answers that are unfair or stereotypical about groups of people. Learning to spot this helps you use AI more safely — and helps protect others.",
+                    "impact": [],
+                    "actions": [
+                        "Ask: \"Could this answer upset or exclude someone?\"",
+                        "Compare AI answers with what you learn in school about fairness and respect",
+                        "Tell a teacher if you see AI content that seems discriminatory"
+                    ]
+                },
+                "developing": {
+                    "summary": "You are starting to think about fairness in AI answers. Keep practising — checking for bias becomes a habit over time.",
+                    "impact": [],
+                    "actions": [
+                        "Question answers that sound like stereotypes",
+                        "Use trusted sources to check facts about people and cultures"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -96,6 +96,12 @@ function aiad_bundled_plugin_sentinel_files(): array {
 	return array(
 		'ai-risk-readiness-benchmark' => array(
 			'public/js/airb-front.js',
+			'public/js/airb-core.js',
+			'public/js/airb-results.js',
+			'public/js/airb-share.js',
+			'includes/class-airb-copy-tiers.php',
+			'includes/class-airb-components.php',
+			'includes/data/copy-tiers-teacher.json',
 			'admin/views/submissions.php',
 			'includes/class-airb-admin.php',
 		),

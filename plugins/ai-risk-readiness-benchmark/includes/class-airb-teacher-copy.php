@@ -165,6 +165,22 @@ class AIRB_Teacher_Copy {
 	 * @return array<string, mixed>
 	 */
 	public static function focus_block( string $slug, int $pct, array $cfg ): array {
+		if ( class_exists( 'AIRB_Copy_Tiers', false ) && AIRB_Copy_Tiers::use_json_copy() ) {
+			$tiers = AIRB_Copy_Tiers::for_role( 'teacher' );
+			$focus = $tiers->domain_focus( $slug, $pct );
+			if ( empty( $focus['summary'] ) && 'ai_dependency' === $slug ) {
+				$focus = $tiers->domain_focus( 'independent_practice', $pct );
+			}
+			if ( ! empty( $focus['summary'] ) ) {
+				return array(
+					'summary'       => (string) $focus['summary'],
+					'likely_impact' => array_values( array_filter( (array) ( $focus['impact'] ?? array() ) ) ),
+					'actions'       => (array) ( $focus['actions'] ?? array() ),
+					'tier'          => (string) ( $focus['severity'] ?? self::focus_tier( $pct ) ),
+				);
+			}
+		}
+
 		$tier     = self::focus_tier( $pct );
 		$tiered   = (array) ( ( $cfg['focus_tiers'][ $slug ] ?? array() )[ $tier ] ?? array() );
 		$fallback = (array) ( $cfg['opportunity_copy'][ $slug ] ?? array() );

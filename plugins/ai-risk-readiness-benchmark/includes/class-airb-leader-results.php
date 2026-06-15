@@ -51,7 +51,15 @@ class AIRB_Leader_Results {
 			'maturity'          => $maturity,
 			'peer_benchmark'    => $peer,
 			'focus_areas'       => $focus,
-			'bias_health'       => self::bias_health( $results, $cfg ),
+			'bias_health'       => AIRB_Components::bias_health(
+				$results,
+				$cfg,
+				array(
+					'role'     => 'leader',
+					'subtitle' => __( 'Safeguarding · protected characteristics · PSED', 'ai-risk-benchmark' ),
+					'callout'  => __( 'Your school has not yet assessed whether AI tools could produce unfair or discriminatory outputs. This is a safeguarding and equality duty risk.', 'ai-risk-benchmark' ),
+				)
+			),
 			'risk_heatmap'      => (array) ( $results['risk_heatmap'] ?? array() ),
 			'next_steps'        => self::next_steps( $results, $config, $profile, $progress, $policy_support, $aad_promo, $cfg ),
 			'school_rollout'    => $progress,
@@ -105,31 +113,6 @@ class AIRB_Leader_Results {
 			'slug'        => $slug,
 			'label'       => $label,
 			'description' => (string) ( $descriptions[ $slug ] ?? '' ),
-		);
-	}
-
-	/**
-	 * Bias & equality readiness within safeguarding (composite of l_bias_* questions).
-	 *
-	 * @param array<string, mixed> $results Scored results.
-	 * @param array<string, mixed> $cfg     Leader config.
-	 * @return array<string, mixed>|null
-	 */
-	private static function bias_health( array $results, array $cfg ): ?array {
-		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
-			return null;
-		}
-
-		$score     = (int) $results['bias_readiness'];
-		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
-
-		return array(
-			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
-			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Safeguarding · protected characteristics · PSED', 'ai-risk-benchmark' ) ),
-			'score'        => $score,
-			'band_label'   => AIRB_Scoring::readiness_band_label( $score ),
-			'show_callout' => $score < $threshold,
-			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'Your school has not yet assessed whether AI tools could produce unfair or discriminatory outputs. This is a safeguarding and equality duty risk.', 'ai-risk-benchmark' ) ),
 		);
 	}
 

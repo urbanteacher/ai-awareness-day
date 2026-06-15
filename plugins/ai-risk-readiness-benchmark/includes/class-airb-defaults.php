@@ -43,6 +43,40 @@ class AIRB_Defaults {
 		) . '#contact';
 	}
 
+	/**
+	 * Load role tier copy: legacy PHP arrays merged with JSON registry overlay.
+	 *
+	 * @param string $role teacher|leader|student|parent|support|public
+	 * @return array<string, mixed>
+	 */
+	public static function role_tier_data( string $role ): array {
+		$map = array(
+			'teacher' => 'teacher-copy-tiers.php',
+			'leader'  => 'leader-copy-tiers.php',
+			'student' => 'student-copy-tiers.php',
+			'parent'  => 'parent-copy-tiers.php',
+			'support' => 'support-copy-tiers.php',
+			'public'  => 'public-copy-tiers.php',
+		);
+		if ( ! isset( $map[ $role ] ) ) {
+			return array();
+		}
+
+		/** @var array<string, mixed> $php */
+		$php = require AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
+
+		if ( ! class_exists( 'AIRB_Copy_Tiers', false ) || ! AIRB_Copy_Tiers::use_json_copy() ) {
+			return $php;
+		}
+
+		$overlay = AIRB_Copy_Tiers::for_role( $role )->to_legacy_overlay();
+		if ( empty( $overlay ) ) {
+			return $php;
+		}
+
+		return array_replace_recursive( $php, $overlay );
+	}
+
 	/** DfE — support materials collection (modules, leadership toolkit, safe use guidance). */
 	public static function dfe_url_using_ai(): string {
 		return 'https://www.gov.uk/government/collections/using-ai-in-education-settings-support-materials';
@@ -455,7 +489,7 @@ class AIRB_Defaults {
 			'awareness_levels' => self::parent_awareness_levels(),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/parent-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'parent' );
 
 		return array_merge( $base, $tier_data );
 	}
@@ -614,7 +648,7 @@ class AIRB_Defaults {
 			'resource_links' => self::results_timeline_read_links( 'public' ),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/public-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'public' );
 
 		return array_merge( $base, $tier_data );
 	}
@@ -837,7 +871,7 @@ class AIRB_Defaults {
 			'hero_bands' => self::readiness_hero_bands( 'teacher' ),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/teacher-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'teacher' );
 
 		return array_merge( $base, $tier_data );
 	}
@@ -917,7 +951,7 @@ class AIRB_Defaults {
 			'suggested_resources' => self::support_suggested_resources(),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/support-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'support' );
 
 		return array_merge( $base, $tier_data );
 	}
@@ -1118,7 +1152,7 @@ class AIRB_Defaults {
 			'share_hint' => __( 'These results are for you. You can share them with a teacher if you want help with any of the areas above.', 'ai-risk-benchmark' ),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/student-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'student' );
 
 		return array_merge( $base, $tier_data );
 	}
@@ -1489,7 +1523,7 @@ class AIRB_Defaults {
 			'hero_bands'          => self::readiness_hero_bands( 'leader' ),
 		);
 
-		$tier_data = require AIRB_PLUGIN_DIR . 'includes/data/leader-copy-tiers.php';
+		$tier_data = self::role_tier_data( 'leader' );
 
 		return array_merge( $base, $tier_data );
 	}

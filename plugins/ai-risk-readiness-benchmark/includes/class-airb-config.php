@@ -768,7 +768,33 @@ class AIRB_Config {
 			}
 			$config['version'] = 39;
 			$changed           = true;
-		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 40 ) {
+			$role_keys = array( 'teacher_result', 'leader_result', 'student_result', 'parent_result', 'support_result', 'public_result' );
+			foreach ( $role_keys as $role_key ) {
+				$default_role = (array) ( $defaults[ $role_key ] ?? array() );
+				if ( empty( $default_role ) ) {
+					continue;
+				}
+				if ( ! isset( $config[ $role_key ] ) || ! is_array( $config[ $role_key ] ) ) {
+					$config[ $role_key ] = $default_role;
+					$changed             = true;
+					continue;
+				}
+				foreach ( array( 'copy_tiers', 'focus_tiers', 'focus_topics' ) as $key ) {
+					if ( ! empty( $default_role[ $key ] ) ) {
+						$config[ $role_key ][ $key ] = $default_role[ $key ];
+						$changed                   = true;
+					}
+				}
+			}
+			$config['version'] = 40;
+			$changed           = true;
+			AIRB_Copy_Tiers::export_missing_json_files();
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;
 		}
@@ -897,6 +923,7 @@ class AIRB_Config {
 			'support_result'        => AIRB_Defaults::support_result_config(),
 			'improvement_hub'       => AIRB_Defaults::improvement_hub_config(),
 			'role_meta'             => AIRB_Defaults::role_meta(),
+			'copy_tiers'            => AIRB_Copy_Tiers::registry_for_js(),
 			'questions'           => $config['questions'] ?? array(),
 			'recommendations'     => $config['recommendations'] ?? array(),
 			'guidance_refs'       => $config['guidance_refs'] ?? array(),

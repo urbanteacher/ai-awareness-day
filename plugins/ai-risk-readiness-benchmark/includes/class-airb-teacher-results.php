@@ -55,7 +55,15 @@ class AIRB_Teacher_Results {
 			'next_steps'           => self::next_steps( $results, $champion, $gap, $opps, $cfg, $progress ),
 			'ui'                   => AIRB_Teacher_Copy::resolve_ui( $results, $cfg ),
 			'peer_benchmark'       => self::peer_benchmark( $results, $cfg ),
-			'bias_health'          => self::bias_health( $results, $cfg ),
+			'bias_health'          => AIRB_Components::bias_health(
+				$results,
+				$cfg,
+				array(
+					'role'     => 'teacher',
+					'subtitle' => __( 'Fairness · protected characteristics · equality duty', 'ai-risk-benchmark' ),
+					'callout'  => __( 'You have not yet built a consistent habit of checking AI outputs for bias or unfairness before they reach pupils. This is both a safeguarding concern and an equality duty risk.', 'ai-risk-benchmark' ),
+				)
+			),
 		);
 	}
 
@@ -360,31 +368,6 @@ class AIRB_Teacher_Results {
 				) ),
 				'progress'     => $progress,
 			),
-		);
-	}
-
-	/**
-	 * Bias & equality readiness (composite of t_bias_* questions).
-	 *
-	 * @param array<string, mixed> $results Scored results.
-	 * @param array<string, mixed> $cfg     Teacher config.
-	 * @return array<string, mixed>|null
-	 */
-	private static function bias_health( array $results, array $cfg ): ?array {
-		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
-			return null;
-		}
-
-		$score     = (int) $results['bias_readiness'];
-		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
-
-		return array(
-			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
-			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Fairness · protected characteristics · equality duty', 'ai-risk-benchmark' ) ),
-			'score'        => $score,
-			'band_label'   => AIRB_Scoring::readiness_band_label( $score ),
-			'show_callout' => $score < $threshold,
-			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'You have not yet built a consistent habit of checking AI outputs for bias or unfairness before they reach pupils. This is both a safeguarding concern and an equality duty risk.', 'ai-risk-benchmark' ) ),
 		);
 	}
 

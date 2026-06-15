@@ -1,0 +1,427 @@
+{
+  "_meta": {
+    "role": "public",
+    "version": "1.0.0",
+    "description": "Copy tiers for general public benchmark results. Premise: user already uses AI. Language avoids professional jargon — plain English throughout."
+  },
+
+  "readiness_bands": {
+    "at_risk": {
+      "min": 0, "max": 29,
+      "label": "At risk",
+      "sub_label": "Act now — significant gaps in your AI habits",
+      "color_ramp": "red",
+      "consequence": "Your AI habits carry significant risk. Personal data, work information and your ability to spot misinformation are all likely exposed. Small changes will make a big difference.",
+      "urgent_action": "Stop entering personal or work information into public AI tools until you have read the data and privacy guidance below."
+    },
+    "take_care": {
+      "min": 30, "max": 54,
+      "label": "Take care",
+      "sub_label": "Some risks in your AI habits",
+      "color_ramp": "amber",
+      "consequence": "You use AI regularly but some of your habits could leave you exposed — particularly around data privacy, scams and workplace use. Small changes will make a big difference.",
+      "urgent_action": null
+    },
+    "aware": {
+      "min": 55, "max": 69,
+      "label": "Aware",
+      "sub_label": "Good awareness, some gaps remain",
+      "color_ramp": "blue",
+      "consequence": "You have good AI awareness and healthy habits in most areas. Focus on closing the gaps the audit has identified.",
+      "urgent_action": null
+    },
+    "confident": {
+      "min": 70, "max": 84,
+      "label": "Confident",
+      "sub_label": "Strong AI habits",
+      "color_ramp": "green",
+      "consequence": "You use AI with a good level of awareness and healthy habits. Keep your verification and privacy practices strong as AI tools become more capable.",
+      "urgent_action": null
+    },
+    "advanced": {
+      "min": 85, "max": 100,
+      "label": "Advanced",
+      "sub_label": "Sector benchmark — share your approach",
+      "color_ramp": "green",
+      "consequence": "You are using AI with exemplary awareness, healthy habits and strong critical thinking. Most people are not at this level — share your results and help others get there.",
+      "urgent_action": null
+    }
+  },
+
+  "oversight": {
+    "exemplary": {
+      "min": 90, "max": 100,
+      "signal": "Exemplary checking habit",
+      "consequence": "You review and question almost everything AI produces before acting on it. That puts you well ahead of most people.",
+      "tone": "positive"
+    },
+    "strong": {
+      "min": 76, "max": 89,
+      "signal": "Strong checking habit",
+      "consequence": "You review most AI output before using it. Keep this habit — it is your strongest protection against AI errors and misinformation.",
+      "tone": "positive"
+    },
+    "moderate": {
+      "min": 51, "max": 75,
+      "signal": "Moderate checking habit",
+      "consequence": "You check some AI output but not consistently. Anything you act on — especially facts, advice or decisions — should always be verified first.",
+      "tone": "neutral"
+    },
+    "low": {
+      "min": 26, "max": 50,
+      "signal": "Low checking habit",
+      "consequence": "A significant amount of AI output is going unchecked. This increases your risk of acting on errors, bias or misinformation.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 0, "max": 25,
+      "signal": "At risk — not checking AI output",
+      "consequence": "You are acting on AI output without meaningful review. AI tools make confident mistakes — without checking, those mistakes become yours.",
+      "tone": "critical"
+    }
+  },
+
+  "dependency": {
+    "minimal": {
+      "min": 0, "max": 19,
+      "signal": "Minimal reliance",
+      "consequence": "You use AI purposefully and as a complement to your own thinking. This is the healthiest pattern of use.",
+      "tone": "positive"
+    },
+    "low": {
+      "min": 20, "max": 39,
+      "signal": "Low reliance",
+      "consequence": "You generally think things through yourself before using AI. Keep this habit.",
+      "tone": "positive"
+    },
+    "moderate": {
+      "min": 40, "max": 59,
+      "signal": "Moderate reliance",
+      "consequence": "AI is becoming a first resort for some tasks. Try forming your own view first, then use AI to test or improve it.",
+      "tone": "neutral"
+    },
+    "high": {
+      "min": 60, "max": 79,
+      "signal": "Moderate-high reliance",
+      "consequence": "AI is frequently your first port of call. This reduces your independent thinking and leaves you more vulnerable when AI gets things wrong.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 80, "max": 100,
+      "signal": "High reliance",
+      "consequence": "You rely heavily on AI for decisions, information and tasks. Without strong verification habits, this level of reliance carries significant risk.",
+      "tone": "critical"
+    }
+  },
+
+  "bias_readiness": {
+    "strong": {
+      "min": 76, "max": 100,
+      "signal": "Strong bias awareness",
+      "consequence": "You actively consider whether AI outputs could be biased or unfair before acting on them.",
+      "tone": "positive"
+    },
+    "developing": {
+      "min": 50, "max": 75,
+      "signal": "Developing bias awareness",
+      "consequence": "Some awareness of AI bias exists. Build a habit of asking whether AI outputs could be unfair or one-sided before acting on them.",
+      "tone": "neutral"
+    },
+    "low": {
+      "min": 26, "max": 49,
+      "signal": "Limited bias awareness",
+      "consequence": "AI tools can reflect the biases of their training data — producing skewed views on people, politics, history and social issues. Being aware of this protects your own thinking.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 0, "max": 25,
+      "signal": "Bias awareness gap",
+      "consequence": "AI tools can confidently produce biased, one-sided or discriminatory content. Without awareness of this, it is easy to accept and repeat those biases without realising.",
+      "tone": "critical"
+    }
+  },
+
+  "domains": {
+    "personal_ai_use": {
+      "label": "Personal AI use",
+      "description": "How safely and independently you use AI tools in everyday life.",
+      "focus_card": {
+        "critical": {
+          "summary": "Your personal AI use habits carry significant risk — high dependency and low verification are the most common pattern at this score.",
+          "impact": [
+            "Acting on AI errors or misinformation without realising",
+            "Personal decisions influenced by biased or incomplete AI output",
+            "No consistent habit of forming your own view first"
+          ],
+          "actions": [
+            "Treat AI as a second opinion, not a first answer",
+            "Form your own view before opening an AI tool",
+            "Notice which tasks you reach for AI on automatically — try those without it first"
+          ]
+        },
+        "high": {
+          "summary": "AI is becoming a first resort for some personal tasks. Build the habit of thinking first.",
+          "impact": [],
+          "actions": [
+            "Attempt tasks independently before using AI",
+            "Use AI to check or improve your own thinking, not replace it",
+            "Set one AI-free day per week"
+          ]
+        },
+        "moderate": {
+          "summary": "Personal AI use is generally reasonable but some habits need strengthening.",
+          "impact": [],
+          "actions": [
+            "Identify the tasks where you default to AI and build independence there first",
+            "Use AI to challenge your thinking rather than confirm it"
+          ]
+        }
+      }
+    },
+    "verification": {
+      "label": "Verification & critical thinking",
+      "description": "How consistently you check AI outputs before acting on them.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI output is going unchecked before you act on it. AI tools make confident mistakes — errors in facts, dates, names, statistics and advice are common.",
+          "impact": [
+            "Acting on incorrect or hallucinated information",
+            "Sharing AI-generated misinformation with others",
+            "Decisions made on biased or incomplete AI output"
+          ],
+          "actions": [
+            "Never act on an AI fact, statistic or recommendation without checking it first",
+            "Use a second source — a news site, official body or reference book — to verify",
+            "Ask yourself: what would I think if I had not asked AI first?"
+          ]
+        },
+        "high": {
+          "summary": "Verification is inconsistent. Some AI output is being acted on without a check.",
+          "impact": [],
+          "actions": [
+            "Make verification a non-negotiable step for anything important",
+            "Be especially sceptical of specific numbers, dates and named sources",
+            "Ask AI to cite its sources — then check the sources exist"
+          ]
+        },
+        "moderate": {
+          "summary": "You usually check AI output but not consistently. Aim for a reliable verification habit.",
+          "impact": [],
+          "actions": [
+            "Build a simple rule — anything you act on gets checked first",
+            "Pay extra attention to AI output on health, finance, legal and political topics"
+          ]
+        }
+      }
+    },
+    "data_privacy": {
+      "label": "Data & privacy",
+      "description": "What personal and work information you share with AI tools, and whether you understand the risks.",
+      "focus_card": {
+        "critical": {
+          "summary": "Personal information — yours and other people's — is entering public AI tools. Most people don't realise these conversations are stored and may be used to train future models.",
+          "impact": [
+            "Your name, address, health details or finances stored on third-party servers",
+            "Information about others shared without their knowledge or consent",
+            "No way to delete what has already been shared once processed"
+          ],
+          "actions": [
+            "Treat AI tools like a public space — never share anything you wouldn't say out loud",
+            "Turn off chat history in your AI tool settings where possible",
+            "Never share another person's details with AI without their knowledge"
+          ]
+        },
+        "high": {
+          "summary": "Some personal information is entering AI tools. Tighten what you share.",
+          "impact": [],
+          "actions": [
+            "Review what you have shared in recent AI conversations",
+            "Set a personal rule on what categories of information you will never share",
+            "Check privacy settings in the AI tools you use most"
+          ]
+        },
+        "moderate": {
+          "summary": "Data habits are reasonable but gaps remain — particularly around sharing information about others.",
+          "impact": [],
+          "actions": [
+            "Never share another person's information without their permission",
+            "Confirm which AI tools you use store your data and for how long"
+          ]
+        }
+      }
+    },
+    "workplace_ai": {
+      "label": "Workplace AI",
+      "description": "How AI intersects with your work — including data handling, policy awareness and disclosure.",
+      "focus_card": {
+        "critical": {
+          "summary": "Work data — including client information and confidential documents — may be entering personal AI tools without your employer's knowledge.",
+          "impact": [
+            "Confidential client or business data stored on third-party AI servers",
+            "Potential breach of employment contract or professional duty of confidentiality",
+            "No employer awareness of how AI is being used for work tasks"
+          ],
+          "actions": [
+            "Find out if your employer has an AI policy and read it",
+            "Never paste confidential client or company data into a public AI tool",
+            "If AI contributed significantly to work output, consider disclosing it"
+          ]
+        },
+        "high": {
+          "summary": "Workplace AI use is inconsistent with good data practice. Some work data is at risk.",
+          "impact": [],
+          "actions": [
+            "Identify which AI tools are approved by your employer and use only those",
+            "Treat all client and company data as off-limits for public AI tools",
+            "Ask your line manager or IT team for guidance if unsure"
+          ]
+        },
+        "moderate": {
+          "summary": "Most workplace AI use is sensible but some habits need tightening.",
+          "impact": [],
+          "actions": [
+            "Confirm your employer's AI policy covers the tools you currently use",
+            "Make data confidentiality a non-negotiable line in your AI use"
+          ]
+        }
+      }
+    },
+    "emotional_social": {
+      "label": "Emotional & social AI use",
+      "description": "How AI fits into your personal decisions, relationships and understanding of the world.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI is playing a significant role in personal decisions and how you understand the world. This level of reliance carries risks that are easy to miss.",
+          "impact": [
+            "Personal decisions influenced by AI with no independent perspective",
+            "World view shaped by AI outputs that may reflect bias or political slant",
+            "Risk of emotional dependency on AI interaction"
+          ],
+          "actions": [
+            "For personal decisions, always seek a human perspective alongside AI",
+            "For news and current events, use original sources not AI summaries",
+            "Notice if AI interaction is replacing human connection — that is worth reflecting on"
+          ]
+        },
+        "high": {
+          "summary": "AI is becoming a significant source of advice and information in personal areas of life.",
+          "impact": [],
+          "actions": [
+            "Balance AI input with human perspectives on important personal decisions",
+            "Be aware that AI may reflect particular political or social views",
+            "Use original news sources for current events rather than AI summaries"
+          ]
+        },
+        "moderate": {
+          "summary": "Emotional and social AI use is generally reasonable. Stay alert to growing dependency.",
+          "impact": [],
+          "actions": [
+            "Maintain human sources of advice for significant personal decisions",
+            "Check AI news summaries against original reporting periodically"
+          ]
+        }
+      }
+    },
+    "deepfake_scam_awareness": {
+      "label": "Deepfake & scam awareness",
+      "description": "Whether you are aware of AI-generated fake content and how to protect yourself.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI is now being used to create convincing fake voices, videos and messages — including scam calls that sound like family members and fake invoices. Most people cannot reliably spot them.",
+          "impact": [
+            "Vulnerable to AI voice cloning scams impersonating family or colleagues",
+            "Unable to identify AI-generated fake images or video",
+            "No process for verifying unexpected urgent requests"
+          ],
+          "actions": [
+            "If you receive an unexpected urgent call, message or request — pause and verify independently",
+            "Agree a safe word with close family members to verify identity in suspicious calls",
+            "Report AI-generated scam content to Action Fraud (UK)"
+          ]
+        },
+        "high": {
+          "summary": "Awareness of AI-generated fake content is limited. Scam risk is elevated.",
+          "impact": [],
+          "actions": [
+            "Learn the current patterns of AI voice cloning and deepfake scams",
+            "Establish a family verification process for unexpected urgent requests",
+            "Stay updated — scam techniques change faster than most awareness"
+          ]
+        },
+        "moderate": {
+          "summary": "Some awareness of deepfake and scam risk exists. Sharpen your ability to respond.",
+          "impact": [],
+          "actions": [
+            "Practise spotting AI-generated images and audio",
+            "Make sure family members — especially older relatives — know about voice cloning scams"
+          ]
+        }
+      }
+    }
+  },
+
+  "strengths": {
+    "verification_76": "You question what AI tells you — the most important habit to have.",
+    "verification_90": "You verify almost everything AI tells you before acting on it. That puts you well ahead of most people.",
+    "data_privacy_76": "You keep personal information out of AI tools — a habit most people haven't built yet.",
+    "workplace_ai_76": "You handle work data carefully around AI tools.",
+    "deepfake_76": "Good awareness of AI-generated fake content and scam risks.",
+    "bias_awareness_76": "You actively consider whether AI outputs could be biased or one-sided.",
+    "emotional_social_76": "You maintain healthy boundaries between AI and personal decision-making."
+  },
+
+  "cta": {
+    "at_risk": {
+      "title": "Personal AI safety guide",
+      "description": "A plain-English guide to the risks your results flagged — covering data privacy, scam awareness and verification habits.",
+      "includes": [
+        "Data and privacy quick guide",
+        "Deepfake and scam awareness briefing",
+        "Verification habit builder",
+        "Workplace AI rules summary"
+      ],
+      "button": "Get your safety guide"
+    },
+    "take_care": {
+      "title": "AI habits improvement guide",
+      "description": "Practical steps to close the gaps your audit identified — focused on your two or three weakest areas.",
+      "includes": [
+        "Priority area action plans",
+        "Verification checklist",
+        "Data privacy rules",
+        "Scam awareness update"
+      ],
+      "button": "Get your improvement guide"
+    },
+    "aware": {
+      "title": "Share your results",
+      "description": "You have good AI awareness. Help people around you find out where they stand — the benchmark takes 3 minutes and is free.",
+      "includes": [],
+      "button": "Share on social"
+    },
+    "confident": {
+      "title": "Share your results",
+      "description": "You scored well. Most people are not at this level — share your score and encourage others to find out theirs.",
+      "includes": [],
+      "button": "Share on social"
+    },
+    "advanced": {
+      "title": "Join the national benchmark",
+      "description": "Your results place you among the most AI-aware members of the public. Contribute to the UK AI Awareness benchmark and help set the standard.",
+      "includes": [
+        "National benchmark contribution",
+        "Sector comparison data",
+        "Annual AI Awareness report"
+      ],
+      "button": "Join the advanced cohort"
+    }
+  },
+
+  "share": {
+    "at_risk": "I scored {score}% on the AI Risk & Readiness Benchmark — At risk. My biggest gap is {top_gap}. Find out yours (it's free) →",
+    "take_care": "I scored {score}% on the AI Risk & Readiness Benchmark — Take care. Some risks in my AI habits. My biggest gap is {top_gap}. Find out yours →",
+    "aware": "I scored {score}% on the AI Risk & Readiness Benchmark — Aware. How do your AI habits compare? Find out (free, 3 mins) →",
+    "confident": "I scored {score}% on the AI Risk & Readiness Benchmark — Confident. Most people don't know how safely they use AI. Find out yours →",
+    "advanced": "I scored {score}% on the AI Risk & Readiness Benchmark — Advanced. I'm in the top tier. How do your AI habits compare? →"
+  }
+}

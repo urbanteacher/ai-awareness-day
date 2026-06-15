@@ -33,9 +33,44 @@ class AIRB_Shortcode {
 			AIRB_VERSION
 		);
 		wp_register_script(
+			'airb-core',
+			AIRB_PLUGIN_URL . 'public/js/airb-core.js',
+			array(),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-results',
+			AIRB_PLUGIN_URL . 'public/js/airb-results.js',
+			array( 'airb-core' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-share',
+			AIRB_PLUGIN_URL . 'public/js/airb-share.js',
+			array( 'airb-core' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-audit',
+			AIRB_PLUGIN_URL . 'public/js/airb-audit.js',
+			array( 'airb-core' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-roles',
+			AIRB_PLUGIN_URL . 'public/js/airb-roles.js',
+			array( 'airb-results' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
 			'airb-front',
 			AIRB_PLUGIN_URL . 'public/js/airb-front.js',
-			array(),
+			array( 'airb-audit', 'airb-roles', 'airb-share', 'airb-results' ),
 			AIRB_VERSION,
 			true
 		);

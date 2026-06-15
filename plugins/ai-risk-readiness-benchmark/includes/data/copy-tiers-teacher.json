@@ -1,0 +1,508 @@
+{
+  "_meta": {
+    "role": "teacher",
+    "version": "1.0.0",
+    "description": "Copy tiers for teacher benchmark results. All band keys are evaluated top-to-bottom — first match wins. Scores are readiness percentages (0-100) unless noted."
+  },
+
+  "readiness_bands": {
+    "emerging": {
+      "min": 0, "max": 39,
+      "label": "Emerging",
+      "sub_label": "At risk — act now",
+      "color_ramp": "red",
+      "consequence": "Your AI practice has significant gaps. Focus on building safer habits before expanding your use of AI tools in the classroom.",
+      "urgent_action": "Review your data protection habits and speak to your DPO before using AI tools with pupil data."
+    },
+    "developing": {
+      "min": 40, "max": 59,
+      "label": "Developing",
+      "sub_label": "Concern — review needed",
+      "color_ramp": "amber",
+      "consequence": "You have foundational awareness but some areas need strengthening. Targeted improvement in your weakest domains will make a meaningful difference.",
+      "urgent_action": "Address your two lowest-scoring domains before the next term."
+    },
+    "established": {
+      "min": 60, "max": 74,
+      "label": "Established",
+      "sub_label": "On the right track",
+      "color_ramp": "blue",
+      "consequence": "You are demonstrating responsible AI practice in most areas. Focus now on the domains where your habits are still inconsistent.",
+      "urgent_action": null
+    },
+    "strong": {
+      "min": 75, "max": 89,
+      "label": "Strong",
+      "sub_label": "Strong position",
+      "color_ramp": "green",
+      "consequence": "You are demonstrating good AI governance behaviours — sustain consistency as tools evolve.",
+      "urgent_action": null
+    },
+    "leading": {
+      "min": 90, "max": 100,
+      "label": "Leading",
+      "sub_label": "Sector benchmark",
+      "color_ramp": "green",
+      "consequence": "You are demonstrating exemplary AI practice. You are well placed to support colleagues and contribute to school AI policy.",
+      "urgent_action": null
+    }
+  },
+
+  "oversight": {
+    "exemplary": {
+      "min": 90, "max": 100,
+      "signal": "Exemplary oversight",
+      "consequence": "You are reviewing and adapting almost all AI output before use. This is the standard all teachers should aim for — share your approach with colleagues.",
+      "tone": "positive"
+    },
+    "strong": {
+      "min": 76, "max": 89,
+      "signal": "Strong oversight",
+      "consequence": "Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.",
+      "tone": "positive"
+    },
+    "moderate": {
+      "min": 51, "max": 75,
+      "signal": "Moderate oversight",
+      "consequence": "You are reviewing most AI output but some content is going unchecked. Aim to review everything before it reaches pupils.",
+      "tone": "neutral"
+    },
+    "low": {
+      "min": 26, "max": 50,
+      "signal": "Low oversight",
+      "consequence": "A significant portion of AI output is going unreviewed. Inconsistent checking means errors are likely reaching pupils or colleagues.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 0, "max": 25,
+      "signal": "Critical reliance",
+      "consequence": "Most AI output is going directly to pupils without meaningful review. Errors, bias or inappropriate content are likely reaching your classroom unchecked.",
+      "tone": "critical"
+    }
+  },
+
+  "dependency": {
+    "minimal": {
+      "min": 0, "max": 19,
+      "signal": "Minimal reliance",
+      "consequence": "AI is used purposefully and as a complement to your own judgement, not a replacement.",
+      "tone": "positive"
+    },
+    "low": {
+      "min": 20, "max": 39,
+      "signal": "Low reliance",
+      "consequence": "You are generally attempting tasks independently before using AI. Keep this habit as tools become more capable.",
+      "tone": "positive"
+    },
+    "moderate": {
+      "min": 40, "max": 59,
+      "signal": "Moderate reliance",
+      "consequence": "Build habits of independent work before reaching for AI tools.",
+      "tone": "neutral"
+    },
+    "high": {
+      "min": 60, "max": 79,
+      "signal": "Moderate-high reliance",
+      "consequence": "AI is becoming a first resort in several areas. Build habits of independent thinking before reaching for AI tools.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 80, "max": 100,
+      "signal": "High reliance",
+      "consequence": "You are frequently reaching for AI before attempting tasks independently. This limits your professional judgement and pupils may be modelling the same habit.",
+      "tone": "critical"
+    }
+  },
+
+  "bias_readiness": {
+    "strong": {
+      "min": 76, "max": 100,
+      "signal": "Strong bias awareness",
+      "consequence": "You actively consider whether AI outputs could be unfair or discriminatory before using them with pupils.",
+      "tone": "positive"
+    },
+    "developing": {
+      "min": 50, "max": 75,
+      "signal": "Developing bias awareness",
+      "consequence": "Some awareness of AI bias exists but it is not consistently applied. Build a habit of asking whether AI outputs could disadvantage particular groups of pupils.",
+      "tone": "neutral"
+    },
+    "low": {
+      "min": 26, "max": 49,
+      "signal": "Limited bias awareness",
+      "consequence": "AI tools can reflect and reinforce bias against pupils based on race, gender, SEND status and other characteristics. This is a safeguarding and equality duty concern.",
+      "tone": "warning"
+    },
+    "critical": {
+      "min": 0, "max": 25,
+      "signal": "Bias awareness gap",
+      "consequence": "Your school has not yet assessed whether AI tools could produce unfair or discriminatory outputs affecting pupils. This is a safeguarding and equality duty risk.",
+      "tone": "critical"
+    }
+  },
+
+  "domains": {
+    "safe_adoption": {
+      "label": "Safe adoption",
+      "description": "Whether AI tools are assessed for appropriateness and safety before use with pupils or colleagues.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI tools are being used without a safety assessment. Before using any AI tool with pupils, assess it against your school's approved list and DfE guidance.",
+          "impact": [
+            "Unapproved tools potentially processing pupil data",
+            "No consistent standard for which tools are classroom-safe",
+            "Risk of pupils encountering harmful or inappropriate AI output"
+          ],
+          "actions": [
+            "Check every AI tool against your school's approved list before use",
+            "If no approved list exists, raise this with your line manager or AI lead",
+            "Do not introduce new AI tools to pupils without prior approval"
+          ]
+        },
+        "high": {
+          "summary": "Tool assessment is inconsistent. Some AI tools enter classroom use without a full safety check.",
+          "impact": [],
+          "actions": [
+            "Adopt the habit of checking tools before use, not after",
+            "Ask your school AI lead for the current approved tool list",
+            "Flag any tools you're unsure about rather than assuming they're safe"
+          ]
+        },
+        "moderate": {
+          "summary": "Most tools are assessed but some slip through without a full check.",
+          "impact": [],
+          "actions": [
+            "Make tool approval a non-negotiable step before classroom introduction",
+            "Confirm your school's approved list is current"
+          ]
+        }
+      }
+    },
+    "human_oversight": {
+      "label": "Human oversight",
+      "description": "How consistently AI outputs are checked, cross-referenced and modified before reaching pupils.",
+      "focus_card": {
+        "critical": {
+          "summary": "Most AI output is going directly to pupils or colleagues without meaningful review. Errors, bias or inappropriate content are likely reaching your classroom unchecked.",
+          "impact": [
+            "AI errors presented to pupils as fact",
+            "Biased or inappropriate content not caught before classroom use",
+            "No professional judgement applied between AI and pupil"
+          ],
+          "actions": [
+            "Review every piece of AI-generated content before sharing it with pupils",
+            "Use the Verify Before You Trust framework as a daily habit",
+            "Flag any AI errors you catch to colleagues so the whole department learns"
+          ]
+        },
+        "high": {
+          "summary": "A significant portion of AI output is going unreviewed. Inconsistent checking means errors are likely reaching pupils or colleagues.",
+          "impact": [],
+          "actions": [
+            "Set a personal rule — nothing AI-generated goes to pupils without at least one read-through",
+            "Cross-reference AI factual claims with a trusted source",
+            "Modify AI output so it reflects your own voice and judgement"
+          ]
+        },
+        "moderate": {
+          "summary": "You are reviewing most AI output but some content is going unchecked.",
+          "impact": [],
+          "actions": [
+            "Build a habit of reading all AI output before sharing",
+            "Pay particular attention to factual claims and pupil-specific content",
+            "Use the Verify Before You Trust checklist as a quick sense-check"
+          ]
+        }
+      }
+    },
+    "independent_practice": {
+      "label": "Independent practice",
+      "description": "How often you attempt tasks without AI first, and your ability to work effectively without AI support.",
+      "focus_card": {
+        "critical": {
+          "summary": "You are frequently using AI before attempting tasks independently. This limits your professional judgement and may be modelling unhealthy AI habits for pupils.",
+          "impact": [
+            "Core tasks being delegated to AI rather than attempted first",
+            "Reduced ability to work confidently without AI support",
+            "Risk of over-reliance spreading to pupil practice"
+          ],
+          "actions": [
+            "Attempt all planning and marking tasks independently before using AI",
+            "Use AI to refine your first draft, not to produce it",
+            "Set one AI-free day per week to rebuild independent habits"
+          ]
+        },
+        "high": {
+          "summary": "AI is becoming a first resort in some areas. Build habits of independent work before reaching for AI tools.",
+          "impact": [],
+          "actions": [
+            "Practise core tasks without AI first — use it to refine, not to originate",
+            "Notice which tasks you reach for AI on immediately and attempt those first independently",
+            "Track your AI-free output over a fortnight"
+          ]
+        },
+        "moderate": {
+          "summary": "Independent practice is reasonable but inconsistent.",
+          "impact": [],
+          "actions": [
+            "Practise core tasks without AI first — use it to refine, not to originate",
+            "Identify the two or three tasks you most rely on AI for and build independence there first"
+          ]
+        }
+      }
+    },
+    "privacy_data_protection": {
+      "label": "Privacy & data protection",
+      "description": "Whether identifiable pupil data, SEND information or safeguarding details are kept out of public AI tools.",
+      "focus_card": {
+        "critical": {
+          "summary": "Identifiable pupil data may be entering public AI tools. This is a UK GDPR risk and a safeguarding concern.",
+          "impact": [
+            "Pupil names or details entered into ChatGPT or similar tools",
+            "SEND or safeguarding information potentially stored on third-party servers",
+            "No clear personal rule for what data is and is not safe to enter"
+          ],
+          "actions": [
+            "Stop entering any identifiable pupil data into public AI tools immediately",
+            "Check your school's approved tool list and use only those",
+            "Ask your DPO what data handling rules apply to AI tools you currently use"
+          ]
+        },
+        "high": {
+          "summary": "Data protection awareness is inconsistent. Some pupil information may be entering AI tools without certainty it is safe.",
+          "impact": [],
+          "actions": [
+            "Never enter identifiable pupil, SEND or safeguarding data into public AI tools",
+            "Review which tools you use against your school's approved list",
+            "If unsure whether a tool is safe, ask your DPO before using it"
+          ]
+        },
+        "moderate": {
+          "summary": "You have reasonable data awareness but some uncertainty remains about what is and is not safe.",
+          "impact": [],
+          "actions": [
+            "Never enter identifiable pupil, SEND or safeguarding data into public AI tools",
+            "Confirm your school's approved tool list is up to date and follow it consistently"
+          ]
+        }
+      }
+    },
+    "safeguarding": {
+      "label": "Safeguarding",
+      "description": "Awareness of AI-enabled harms — deepfakes, impersonation and synthetic content — and how to respond.",
+      "focus_card": {
+        "critical": {
+          "summary": "You may not be aware of AI-specific safeguarding risks. These are now part of the online safety landscape all teachers need to understand.",
+          "impact": [
+            "Unable to recognise AI-enabled harm disclosures from pupils",
+            "No knowledge of reporting process for deepfake or impersonation incidents",
+            "Pupils may be experiencing AI-enabled harm without teacher awareness"
+          ],
+          "actions": [
+            "Complete your school's online safety training if it covers AI scenarios",
+            "Speak to your DSL about what to do if a pupil reports a deepfake incident",
+            "Know the signs that a pupil may be experiencing AI-enabled harm"
+          ]
+        },
+        "high": {
+          "summary": "General online safety awareness is in place but AI-specific scenarios may not yet be fully understood.",
+          "impact": [],
+          "actions": [
+            "Familiarise yourself with deepfake and AI impersonation risks",
+            "Know your school's reporting process for AI-related safeguarding concerns",
+            "Attend any available DSL-led briefing on AI and online safety"
+          ]
+        },
+        "moderate": {
+          "summary": "Core AI safeguarding awareness is in place. Keep pace as new AI-enabled harms emerge.",
+          "impact": [],
+          "actions": [
+            "Stay current with KCSIE updates covering AI-enabled harm",
+            "Confirm all pastoral staff have received AI scenario training"
+          ]
+        }
+      }
+    },
+    "assessment_integrity": {
+      "label": "Assessment integrity",
+      "description": "Understanding of JCQ and school rules around AI use in assessed work, and consistent application of those rules.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI rules in assessed work may not be clearly understood or consistently applied. Pupils may be unclear on what is and is not acceptable.",
+          "impact": [
+            "Inconsistent AI rules communicated across classes",
+            "Risk of malpractice incidents due to unclear boundaries",
+            "Potential JCQ compliance gap"
+          ],
+          "actions": [
+            "Read your school's current AI policy on assessed work",
+            "Communicate AI boundaries clearly to all classes before the next assessment",
+            "Check your practice against current JCQ guidance"
+          ]
+        },
+        "high": {
+          "summary": "Assessment boundaries are understood in principle but not always applied consistently.",
+          "impact": [],
+          "actions": [
+            "Clarify your school's AI rules for all assessed work you set",
+            "Brief pupils explicitly on what AI use is and is not permitted in your subject",
+            "Update your malpractice awareness in line with current JCQ guidance"
+          ]
+        },
+        "moderate": {
+          "summary": "Assessment integrity is reasonable but some inconsistency remains in how AI rules are communicated.",
+          "impact": [],
+          "actions": [
+            "Make AI boundaries explicit at the start of every assessed task",
+            "Ensure your practice is consistent with your department's approach",
+            "Stay current with JCQ guidance updates"
+          ]
+        }
+      }
+    },
+    "ai_literacy": {
+      "label": "AI literacy",
+      "description": "Understanding of how AI tools work, where they fail, and what their outputs can and cannot be trusted for.",
+      "focus_card": {
+        "critical": {
+          "summary": "Understanding of how AI tools work and where they fail appears limited. Without this foundation, safe and effective AI use is difficult to sustain.",
+          "impact": [
+            "Unable to recognise AI hallucination or confident errors",
+            "No basis for judging when AI output can and cannot be trusted",
+            "Risk of modelling uncritical AI use to pupils"
+          ],
+          "actions": [
+            "Complete a short AI literacy course this term",
+            "Read your school's AI guidance if available",
+            "Explore how large language models work and where they commonly produce errors"
+          ]
+        },
+        "high": {
+          "summary": "You have basic AI awareness but gaps in understanding how tools fail, hallucinate or reflect bias.",
+          "impact": [],
+          "actions": [
+            "Learn the common failure modes of AI tools — hallucination, bias, confident errors",
+            "Apply this knowledge when verifying AI outputs",
+            "Share what you learn with colleagues"
+          ]
+        },
+        "moderate": {
+          "summary": "AI literacy is reasonable. Deepen your understanding of bias and failure modes.",
+          "impact": [],
+          "actions": [
+            "Read about how AI bias affects educational contexts specifically",
+            "Test AI tools on edge cases to see where they fail",
+            "Discuss AI limitations openly with pupils"
+          ]
+        }
+      }
+    },
+    "bias_awareness": {
+      "label": "Bias awareness",
+      "description": "Whether AI outputs are checked for potential bias or unfairness before use with pupils.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI tools can reflect and reinforce bias against pupils based on race, gender, SEND status and other characteristics. This has not yet been addressed in your practice.",
+          "impact": [
+            "AI outputs potentially disadvantaging particular groups of pupils",
+            "No check in place before biased content reaches the classroom",
+            "Potential breach of Public Sector Equality Duty"
+          ],
+          "actions": [
+            "Before using AI output with pupils, ask: could this disadvantage any group?",
+            "Flag any AI output that describes different groups unevenly or unfairly",
+            "Raise AI bias as a topic in your next department or safeguarding meeting"
+          ]
+        },
+        "high": {
+          "summary": "Some awareness of AI bias exists but it is not consistently applied before classroom use.",
+          "impact": [],
+          "actions": [
+            "Build a habit of checking AI output for bias before sharing with pupils",
+            "Pay particular attention to AI outputs about people, history and social topics",
+            "Ask your school AI lead whether bias checking is part of your AI policy"
+          ]
+        },
+        "moderate": {
+          "summary": "Bias awareness is developing. Make it a consistent part of your verification habit.",
+          "impact": [],
+          "actions": [
+            "Add a bias check to your existing Verify Before You Trust process",
+            "Discuss AI bias with pupils as part of AI literacy lessons"
+          ]
+        }
+      }
+    }
+  },
+
+  "strengths": {
+    "safe_adoption_100": "Thoughtful assessment of AI tools before use — safe adoption 100%.",
+    "safe_adoption_76": "You assess AI tools before introducing them — a habit many teachers skip.",
+    "human_oversight_90": "Exemplary oversight — you review and adapt almost all AI output before use.",
+    "human_oversight_76": "Strong human oversight of AI outputs — above the threshold that signals meaningful review.",
+    "independent_practice_76": "Consistent independent thinking before reaching for AI — your professional judgement leads.",
+    "privacy_76": "Strong awareness of pupil data risks in AI tools.",
+    "safeguarding_76": "Good awareness of AI-enabled safeguarding risks.",
+    "assessment_integrity_100": "Clear understanding of AI rules in assessed work.",
+    "ai_literacy_76": "Strong understanding of AI limitations and appropriate use.",
+    "bias_awareness_76": "You actively consider whether AI outputs could be unfair to particular groups of pupils."
+  },
+
+  "cta": {
+    "emerging": {
+      "title": "AI awareness session",
+      "description": "Build the foundational knowledge and habits your practice needs. A focused session covering safe adoption, verification and data protection basics.",
+      "includes": [
+        "Safe adoption fundamentals",
+        "Verify Before You Trust introduction",
+        "Data protection in AI tools",
+        "Assessment integrity basics"
+      ],
+      "button": "Book an awareness session"
+    },
+    "developing": {
+      "title": "Targeted CPD on your priority domains",
+      "description": "Your results show specific gaps. A targeted CPD session will address your two or three weakest domains with practical classroom strategies.",
+      "includes": [
+        "Domain-specific workshop",
+        "Practical verification techniques",
+        "Classroom AI habit-building",
+        "Assessment integrity update"
+      ],
+      "button": "Book targeted CPD"
+    },
+    "established": {
+      "title": "Classroom resources aligned to your results",
+      "description": "Your practice is solid — supplement it with resources matched to your audit. Lesson activities, prompts and materials aligned to your priority domains.",
+      "includes": [
+        "Domain-aligned classroom resources",
+        "AI literacy activities for pupils",
+        "Verification prompt cards",
+        "Assessment guidance summary"
+      ],
+      "button": "Request classroom resources"
+    },
+    "strong": {
+      "title": "AI Champion pathway",
+      "description": "You demonstrate strong AI awareness and responsible practice. You may be well placed to support colleagues, shape school policy and lead from within.",
+      "includes": [
+        "Champion cohort access",
+        "Colleague support toolkit",
+        "Policy contribution framework",
+        "AI Awareness Day activities"
+      ],
+      "button": "Start the champion pathway"
+    },
+    "leading": {
+      "title": "Lead and share your practice",
+      "description": "Your results place you among the strongest AI practitioners in the sector. Share your approach, support colleagues and contribute to the national benchmark.",
+      "includes": [
+        "National benchmark contribution",
+        "Case study feature",
+        "Champion cohort leadership",
+        "Sector peer network"
+      ],
+      "button": "Join the leading teachers cohort"
+    }
+  }
+}
