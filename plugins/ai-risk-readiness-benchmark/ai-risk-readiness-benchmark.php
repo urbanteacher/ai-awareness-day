@@ -3,7 +3,7 @@
  * Plugin Name:       AI Risk & Readiness Benchmark
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       DfE-aligned AI Risk & Readiness Benchmark for UK schools. Shortcodes: [ai_risk_benchmark] [ai_risk_school_dashboard]
- * Version:           1.32.1
+ * Version:           1.32.7
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day

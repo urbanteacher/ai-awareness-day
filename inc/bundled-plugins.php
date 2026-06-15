@@ -88,6 +88,54 @@ function aiad_copy_dir( string $src, string $dest ): bool {
 }
 
 /**
+ * Sentinel asset paths used to detect stale plugin copies when the header version was not bumped.
+ *
+ * @return array<string, string> slug => path relative to plugin root
+ */
+function aiad_bundled_plugin_sentinel_files(): array {
+	return array(
+		'ai-risk-readiness-benchmark' => 'public/js/airb-front.js',
+	);
+}
+
+/**
+ * Whether the bundled plugin in wp-content/plugins is older than the theme copy.
+ */
+function aiad_bundled_plugin_is_stale( string $slug, string $main_file ): bool {
+	$source_dir  = aiad_bundled_plugin_source_dir( $slug );
+	$dest_dir    = aiad_bundled_plugin_dest_dir( $slug );
+	$source_main = trailingslashit( $source_dir ) . $main_file;
+	$dest_main   = trailingslashit( $dest_dir ) . $main_file;
+
+	if ( ! is_readable( $source_main ) ) {
+		return false;
+	}
+
+	if ( ! is_readable( $dest_main ) ) {
+		return true;
+	}
+
+	$source_version = aiad_bundled_plugin_version( $source_main );
+	$installed      = aiad_bundled_plugin_version( $dest_main );
+
+	if ( $source_version && $source_version !== $installed ) {
+		return true;
+	}
+
+	$sentinels = aiad_bundled_plugin_sentinel_files();
+	if ( isset( $sentinels[ $slug ] ) ) {
+		$relative  = $sentinels[ $slug ];
+		$source_js = trailingslashit( $source_dir ) . $relative;
+		$dest_js   = trailingslashit( $dest_dir ) . $relative;
+		if ( is_readable( $source_js ) && is_readable( $dest_js ) ) {
+			return (int) filemtime( $source_js ) > (int) filemtime( $dest_js );
+		}
+	}
+
+	return false;
+}
+
+/**
  * Copy one bundled plugin into wp-content/plugins when missing or outdated.
  *
  * @return bool True when files were copied; false when unchanged or copy failed.
@@ -102,14 +150,7 @@ function aiad_sync_bundled_plugin( string $slug, string $main_file ): bool {
 		return false;
 	}
 
-	$source_version = aiad_bundled_plugin_version( $source_main );
-	$option_key     = 'aiad_bundled_plugin_' . $slug . '_version';
-	$installed      = aiad_bundled_plugin_version( $dest_main );
-
-	$needs_copy = ! is_readable( $dest_main )
-		|| ( $source_version && $source_version !== $installed );
-
-	if ( ! $needs_copy ) {
+	if ( ! aiad_bundled_plugin_is_stale( $slug, $main_file ) ) {
 		return false;
 	}
 
@@ -117,6 +158,8 @@ function aiad_sync_bundled_plugin( string $slug, string $main_file ): bool {
 		return false;
 	}
 
+	$source_version = aiad_bundled_plugin_version( $source_main );
+	$option_key     = 'aiad_bundled_plugin_' . $slug . '_version';
 	if ( $source_version ) {
 		update_option( $option_key, $source_version, false );
 	}
