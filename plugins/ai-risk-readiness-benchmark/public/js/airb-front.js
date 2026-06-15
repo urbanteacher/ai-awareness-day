@@ -4969,7 +4969,7 @@
 			html += '<div id="airb-school-snapshot" class="airb__school-snapshot" aria-live="polite" hidden></div>';
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !supportMode) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !supportMode && !publicMode) {
 			if (r.funnel_closing) {
 				html += '<aside class="airb__insight"><span class="airb__insight-label">' + esc(i18n.insightLabel) + '</span><p>' + esc(r.funnel_closing) + '</p></aside>';
 			}
@@ -5001,7 +5001,7 @@
 			html += '</section>';
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.policy_support) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !publicMode && r.policy_support) {
 			var pg = r.policy_support;
 			html += '<article class="airb__policy-gen airb__pathway-card">';
 			html += '<span class="airb__pathway-badge airb__pathway-badge--policy">' + esc(i18n.policyGen) + '</span>';
@@ -5010,7 +5010,7 @@
 			html += '</article>';
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.stage2_products && r.stage2_products.length) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !publicMode && r.stage2_products && r.stage2_products.length) {
 			html += '<section class="airb__stage2"><p class="airb__funnel-stage">' + esc(i18n.stage2) + '</p>';
 			html += '<ul class="airb__stage2-list">';
 			r.stage2_products.forEach(function (item) {
@@ -5019,11 +5019,11 @@
 			html += '</ul></section>';
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && r.key_exposure_areas && r.key_exposure_areas.length) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !publicMode && r.key_exposure_areas && r.key_exposure_areas.length) {
 			html += '<h4>' + esc(i18n.exposure) + '</h4>' + exposureCardsHtml(r.key_exposure_areas);
 		}
 
-		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !supportMode) {
+		if (!parentMode && !teacherMode && !studentMode && !leaderMode && !supportMode && !publicMode) {
 			html += benchmarkHtml(r);
 		}
 
