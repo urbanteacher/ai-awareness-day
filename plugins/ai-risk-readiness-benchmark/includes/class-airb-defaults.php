@@ -74,6 +74,8 @@ class AIRB_Defaults {
 			return $php;
 		}
 
+		unset( $php['copy_tiers'], $php['focus_tiers'] );
+
 		return array_replace_recursive( $php, $overlay );
 	}
 

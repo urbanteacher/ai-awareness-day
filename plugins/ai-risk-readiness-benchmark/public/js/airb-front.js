@@ -862,24 +862,6 @@
 		return '<div class="airb__public-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
 	}
 
-	function publicStrengthsSectionHtml(strengths, heading) {
-		if (!strengths || !strengths.length) return '';
-		var html = '<div class="airb__public-strength-card">';
-		html += benchmarkCardHeadingHtml(heading);
-		strengths.forEach(function (item) {
-			var title = typeof item === 'string' ? item : (item.title || '');
-			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
-			if (!title) return;
-			html += '<div class="airb__public-strength-row">';
-			html += '<span class="airb__public-strength-tick" aria-hidden="true">✓</span>';
-			html += '<div class="airb__public-strength-copy">';
-			html += '<p class="airb__public-strength-title">' + esc(title) + '</p>';
-			if (detail) html += '<p class="airb__public-strength-detail">' + esc(detail) + '</p>';
-			html += '</div></div>';
-		});
-		return html + '</div>';
-	}
-
 	function publicShareCardHtml(pr) {
 		if (!pr || !pr.share) return '';
 		var share = pr.share;
@@ -1148,81 +1130,6 @@
 		if (!rows) return '';
 		var headingShort = teacherResult.domains_section_heading_short || 'By domain';
 		return '<div class="airb__teacher-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
-	}
-
-	function teacherStrengthsSectionHtml(strengths, heading) {
-		if (!strengths || !strengths.length) return '';
-		var html = '<div class="airb__teacher-strength-card">';
-		html += benchmarkCardHeadingHtml(heading);
-		strengths.forEach(function (item) {
-			var title = typeof item === 'string' ? item : (item.title || '');
-			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
-			if (!title) return;
-			html += '<div class="airb__teacher-strength-row">';
-			html += '<span class="airb__teacher-strength-tick" aria-hidden="true">✓</span>';
-			html += '<div class="airb__teacher-strength-copy">';
-			html += '<p class="airb__teacher-strength-title">' + esc(title) + '</p>';
-			if (detail) html += '<p class="airb__teacher-strength-detail">' + esc(detail) + '</p>';
-			html += '</div></div>';
-		});
-		return html + '</div>';
-	}
-
-	function teacherFocusAreasHtml(focusAreas, biasHealth) {
-		if (window.AIRB && AIRB.Results && AIRB.Results.teacherFocusAreasHtml) {
-			return AIRB.Results.teacherFocusAreasHtml(focusAreas, biasHealth, {
-				esc: esc,
-				practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
-				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
-				leaderFocusBadge: leaderFocusBadge,
-				leaderFocusSeverity: leaderFocusSeverity,
-				teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
-				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
-			});
-		}
-		if (!focusAreas || !focusAreas.length) return '';
-		var practiceHeading = teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means';
-		var html = '';
-		focusAreas.forEach(function (area) {
-			var badge = leaderFocusBadge(area.pct);
-			var severity = leaderFocusSeverity(area.pct);
-			html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
-			html += '<div class="airb__focus-card-header">';
-			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__focus-badge airb__focus-badge--' + badge.slug + '">' + esc(badge.text) + '</span>';
-			html += '</div>';
-			if (area.summary) {
-				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
-			}
-			if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null) {
-				var biasNote = teacherBiasEqualityFocusNote(biasHealth.score);
-				if (biasNote) {
-					html += '<p class="airb__focus-card-bias-note">' + esc(biasNote) + '</p>';
-				}
-			}
-			var guidance = '';
-			if (area.likely_impact && area.likely_impact.length) {
-				guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
-				guidance += '<div class="airb__focus-practice-title">' + esc(practiceHeading) + '</div>';
-				area.likely_impact.forEach(function (item) {
-					guidance += '<div class="airb__teacher-focus-impact">' + esc(item) + '</div>';
-				});
-				guidance += '</div>';
-			}
-			if (area.actions && area.actions.length) {
-				area.actions.forEach(function (item, idx) {
-					guidance += '<div class="airb__teacher-action-row">';
-					guidance += '<span class="airb__teacher-action-num">' + (idx + 1) + '</span>';
-					guidance += '<span class="airb__teacher-action-text">' + esc(item) + '</span>';
-					guidance += '</div>';
-				});
-			}
-			if (guidance) {
-				html += focusGuidanceAccordionHtml(i18n.focusGuidanceToggle || 'Tips & steps to try', guidance);
-			}
-			html += '</div>';
-		});
-		return html;
 	}
 
 	function teacherRolloutCardHtml(ro) {
@@ -1744,24 +1651,6 @@
 		return html + '</div>';
 	}
 
-	function studentStrengthsSectionHtml(strengths, heading) {
-		if (!strengths || !strengths.length) return '';
-		var html = '<div class="airb__student-strength-card">';
-		html += benchmarkCardHeadingHtml(heading);
-		strengths.forEach(function (item) {
-			var title = typeof item === 'string' ? item : (item.title || '');
-			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
-			if (!title) return;
-			html += '<div class="airb__student-strength-row">';
-			html += '<span class="airb__student-strength-tick" aria-hidden="true">✓</span>';
-			html += '<div class="airb__student-strength-copy">';
-			html += '<p class="airb__student-strength-title">' + esc(title) + '</p>';
-			if (detail) html += '<p class="airb__student-strength-detail">' + esc(detail) + '</p>';
-			html += '</div></div>';
-		});
-		return html + '</div>';
-	}
-
 	function studentFocusBadge(area) {
 		var band = area.skill_band && area.skill_band.label ? area.skill_band : studentSkillBand(area.pct);
 		var badgeClass = studentSkillBadgeClass(band.slug);
@@ -1769,50 +1658,6 @@
 			className: badgeClass,
 			text: band.label + ' · ' + (parseInt(area.pct, 10) || 0) + '%',
 		};
-	}
-
-	function studentFocusAreasHtml(focusAreas) {
-		if (!focusAreas || !focusAreas.length) return '';
-		var html = '';
-		focusAreas.forEach(function (area) {
-			var badge = studentFocusBadge(area);
-			html += '<div class="airb__student-focus-card">';
-			html += '<div class="airb__student-focus-header">';
-			html += '<h4 class="airb__student-focus-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__student-skill-badge airb__student-skill-badge--' + badge.className + '">' + esc(badge.text) + '</span>';
-			html += '</div>';
-			if (area.summary) {
-				html += '<p class="airb__student-focus-summary">' + esc(area.summary) + '</p>';
-			}
-			var guidance = '';
-			if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
-				guidance += '<div class="airb__student-focus-challenge">';
-				guidance += '<div class="airb__student-focus-challenge-title">' + esc(area.challenge_heading) + '</div>';
-				if (area.challenge_body) {
-					guidance += '<p class="airb__student-focus-challenge-body">' + esc(area.challenge_body) + '</p>';
-				}
-				if (area.challenge_bullets && area.challenge_bullets.length) {
-					area.challenge_bullets.forEach(function (item) {
-						guidance += '<div class="airb__student-focus-challenge-bullet">' + esc(item) + '</div>';
-					});
-				}
-				guidance += '</div>';
-			}
-			if (area.actions && area.actions.length) {
-				area.actions.forEach(function (item, idx) {
-					guidance += '<div class="airb__student-action-row">';
-					guidance += '<span class="airb__student-action-num">' + (idx + 1) + '</span>';
-					guidance += '<span class="airb__student-action-text">' + esc(item) + '</span>';
-					guidance += '</div>';
-				});
-			}
-			if (guidance) {
-				var guidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
-				html += focusGuidanceAccordionHtml(guidanceLabel, guidance);
-			}
-			html += '</div>';
-		});
-		return html;
 	}
 
 	function studentResourceIconClass(icon) {
@@ -2010,58 +1855,6 @@
 		return badge.label + ' · ' + (parseInt(area.pct, 10) || 0) + '%';
 	}
 
-	function parentFocusTopicsHtml(focusAreas) {
-		if (window.AIRB && AIRB.Results && AIRB.Results.parentFocusTopicsHtml) {
-			return AIRB.Results.parentFocusTopicsHtml(focusAreas, {
-				esc: esc,
-				parentFocusBadge: parentFocusBadge,
-				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
-				i18n: i18n,
-			});
-		}
-		if (!focusAreas || !focusAreas.length) return '';
-		var html = '';
-		focusAreas.forEach(function (area) {
-			var severity = area.severity || (area.badge && area.badge.slug === 'risk' ? 'risk' : 'attention');
-			html += '<div class="airb__parent-topic-card airb__parent-topic-card--' + esc(severity) + '">';
-			html += '<div class="airb__parent-topic-header">';
-			html += '<h4 class="airb__parent-topic-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + esc((area.badge && area.badge.slug) || 'attention') + '">' + esc(parentFocusBadge(area)) + '</span>';
-			html += '</div>';
-			if (area.summary) {
-				html += '<p class="airb__parent-topic-summary">' + esc(area.summary) + '</p>';
-			}
-			var guidance = '';
-			if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
-				guidance += '<div class="airb__parent-topic-challenge airb__parent-topic-challenge--' + esc(severity) + '">';
-				guidance += '<div class="airb__parent-topic-challenge-title">' + esc(area.challenge_heading) + '</div>';
-				if (area.challenge_body) {
-					guidance += '<p class="airb__parent-topic-challenge-body">' + esc(area.challenge_body) + '</p>';
-				}
-				if (area.challenge_bullets && area.challenge_bullets.length) {
-					area.challenge_bullets.forEach(function (item) {
-						guidance += '<div class="airb__parent-topic-challenge-bullet">' + esc(item) + '</div>';
-					});
-				}
-				guidance += '</div>';
-			}
-			if (area.actions && area.actions.length) {
-				area.actions.forEach(function (item, idx) {
-					guidance += '<div class="airb__parent-action-row">';
-					guidance += '<span class="airb__parent-action-num">' + (idx + 1) + '</span>';
-					guidance += '<span class="airb__parent-action-text">' + esc(item) + '</span>';
-					guidance += '</div>';
-				});
-			}
-			if (guidance) {
-				var parentGuidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
-				html += focusGuidanceAccordionHtml(parentGuidanceLabel, guidance);
-			}
-			html += '</div>';
-		});
-		return html;
-	}
-
 	function parentConversationStartersHtml(starters, intro) {
 		if (!starters || !starters.length) return '';
 		var headingShort = parentResult.conversation_section_heading_short || 'Conversation starters';
@@ -2201,75 +1994,10 @@
 		return '<div class="airb__support-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
 	}
 
-	function supportStrengthsSectionHtml(strengths, heading) {
-		if (!strengths || !strengths.length) return '';
-		var html = '<div class="airb__support-strength-card">';
-		html += benchmarkCardHeadingHtml(heading);
-		strengths.forEach(function (item) {
-			var title = typeof item === 'string' ? item : (item.title || '');
-			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
-			if (!title) return;
-			html += '<div class="airb__support-strength-row">';
-			html += '<span class="airb__support-strength-tick" aria-hidden="true">✓</span>';
-			html += '<div class="airb__support-strength-copy">';
-			html += '<p class="airb__support-strength-title">' + esc(title) + '</p>';
-			if (detail) html += '<p class="airb__support-strength-detail">' + esc(detail) + '</p>';
-			html += '</div></div>';
-		});
-		return html + '</div>';
-	}
-
 	function supportFocusSeverity(pct, severity) {
 		if (severity === 'critical' || pct < 35) return 'critical';
 		if (pct < 45) return 'moderate';
 		return 'attention';
-	}
-
-	function supportFocusAreasHtml(focusAreas) {
-		if (window.AIRB && AIRB.Results && AIRB.Results.supportFocusAreasHtml) {
-			return AIRB.Results.supportFocusAreasHtml(focusAreas, {
-				esc: esc,
-				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
-				supportFocusSeverity: supportFocusSeverity,
-				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
-			});
-		}
-		if (!focusAreas || !focusAreas.length) return '';
-		var html = '';
-		focusAreas.forEach(function (area) {
-			var severity = supportFocusSeverity(area.pct, area.severity);
-			html += '<div class="airb__focus-card airb__support-focus-card airb__focus-card--' + severity + '">';
-			html += '<div class="airb__focus-card-header">';
-			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + '">' + esc(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
-			html += '</div>';
-			if (area.summary) html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
-			var guidance = '';
-			if (area.challenge_bullets && area.challenge_bullets.length) {
-				guidance += '<div class="airb__support-focus-challenge airb__support-focus-challenge--' + severity + '">';
-				if (area.challenge_heading) {
-					guidance += '<div class="airb__support-focus-challenge-title">' + esc(area.challenge_heading) + '</div>';
-				}
-				area.challenge_bullets.forEach(function (item) {
-					guidance += '<div class="airb__support-focus-challenge-item">' + esc(item) + '</div>';
-				});
-				guidance += '</div>';
-			}
-			if (area.actions && area.actions.length) {
-				area.actions.forEach(function (item, idx) {
-					guidance += '<div class="airb__support-action-row">';
-					guidance += '<span class="airb__support-action-num">' + (idx + 1) + '</span>';
-					guidance += '<span class="airb__support-action-text">' + esc(item) + '</span>';
-					guidance += '</div>';
-				});
-			}
-			if (guidance) {
-				var supportGuidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
-				html += focusGuidanceAccordionHtml(supportGuidanceLabel, guidance);
-			}
-			html += '</div>';
-		});
-		return html;
 	}
 
 	function supportRolloutCardHtml(ro) {
@@ -3504,18 +3232,6 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.parentFocusTopics) {
 				html += AIRB.Roles.parentFocusTopics(r, parentFocusRenderOpts());
-			} else if (pr.journey_tier !== 'high' && pr.focus_areas && pr.focus_areas.length) {
-				html += leaderSectionLabel(
-					parentResult.focus_section_heading || 'Focus topics — what to tackle at home',
-					parentResult.focus_section_heading_short || 'Focus topics'
-				);
-				html += '<div class="airb__parent-topic-stack">' + parentFocusTopicsHtml(pr.focus_areas) + '</div>';
-			} else if (pr.journey_tier !== 'high') {
-				var legacyFocus = parentFocusDomainsHtml(r);
-				if (legacyFocus) {
-					html += leaderSectionLabel(parentResult.focus_section_heading_short || 'Focus topics', parentResult.focus_section_heading_short || 'Focus topics');
-					html += legacyFocus;
-				}
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB parentFocusTopics failed', err);
@@ -3561,8 +3277,6 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.publicStrengths) {
 				html += AIRB.Roles.publicStrengths(r, publicFocusRenderOpts());
-			} else if (pr.strengths && pr.strengths.length) {
-				html += publicStrengthsSectionHtml(pr.strengths, publicResult.strengths_heading || 'What you\'re doing well');
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB publicStrengths failed', err);
@@ -3571,12 +3285,6 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.publicFocusAreas) {
 				html += AIRB.Roles.publicFocusAreas(r, publicFocusRenderOpts());
-			} else if (!pr.suppress_improvement && pr.focus_areas && pr.focus_areas.length) {
-				html += leaderSectionLabel(
-					publicResult.focus_section_heading || 'Priority focus areas',
-					publicResult.focus_section_heading_short || 'Priority focus'
-				);
-				html += '<div class="airb__parent-topic-stack">' + parentFocusTopicsHtml(pr.focus_areas) + '</div>';
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB publicFocusAreas failed', err);
@@ -3707,58 +3415,21 @@
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherStrengths) {
-				html += AIRB.Roles.teacherStrengths(r, {
-					esc: esc,
-					teacherResult: teacherResult,
-					cardHeadingHtml: benchmarkCardHeadingHtml,
-				});
-			} else if (tr.strengths && tr.strengths.length) {
-				html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
+				html += AIRB.Roles.teacherStrengths(r, teacherStrengthRenderOpts());
 			}
 		} catch (err) {
 			if (window.console && console.error) {
 				console.error('AIRB teacherStrengths failed', err);
 			}
-			if (tr.strengths && tr.strengths.length) {
-				html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
-			}
 		}
 
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherFocusAreas) {
-				html += AIRB.Roles.teacherFocusAreas(r, {
-					esc: esc,
-					teacherResult: teacherResult,
-					sectionLabelHtml: leaderSectionLabel,
-					practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
-					guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
-					guidanceOpen: true,
-					leaderFocusBadge: leaderFocusBadge,
-					leaderFocusSeverity: leaderFocusSeverity,
-					teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
-					focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
-				});
-			} else {
-				var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
-				if (focusAreas && focusAreas.length) {
-					html += leaderSectionLabel(
-						teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
-						teacherResult.focus_section_heading_short || 'Priority focus areas'
-					);
-					html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreas, tr.bias_health) + '</div>';
-				}
+				html += AIRB.Roles.teacherFocusAreas(r, teacherFocusRenderOpts());
 			}
 		} catch (err) {
 			if (window.console && console.error) {
 				console.error('AIRB teacherFocusAreas failed', err);
-			}
-			var focusAreasFallback = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
-			if (focusAreasFallback && focusAreasFallback.length) {
-				html += leaderSectionLabel(
-					teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
-					teacherResult.focus_section_heading_short || 'Priority focus areas'
-				);
-				html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreasFallback, tr.bias_health) + '</div>';
 			}
 		}
 
@@ -3773,6 +3444,29 @@
 		html += teacherPathwayCtaHtml(tr.next_steps);
 		html += teacherHelpSupportHtml(tr.next_steps);
 		return benchmarkResultsBodyHtml(html);
+	}
+
+	function teacherStrengthRenderOpts() {
+		return {
+			esc: esc,
+			teacherResult: teacherResult,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+		};
+	}
+
+	function teacherFocusRenderOpts() {
+		return {
+			esc: esc,
+			teacherResult: teacherResult,
+			sectionLabelHtml: leaderSectionLabel,
+			practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+			guidanceOpen: true,
+			leaderFocusBadge: leaderFocusBadge,
+			leaderFocusSeverity: leaderFocusSeverity,
+			teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+		};
 	}
 
 	function supportFocusRenderOpts() {
@@ -3835,37 +3529,14 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.supportStrengths) {
 				html += AIRB.Roles.supportStrengths(r, supportFocusRenderOpts());
-			} else {
-				var strengths = sr.strength_items && sr.strength_items.length ? sr.strength_items : sr.strengths;
-				if (strengths && strengths.length) {
-					html += supportStrengthsSectionHtml(strengths, supportResult.strengths_heading || 'What you\'re doing well');
-				}
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB supportStrengths failed', err);
-			var strengthsFallback = sr.strength_items && sr.strength_items.length ? sr.strength_items : sr.strengths;
-			if (strengthsFallback && strengthsFallback.length) {
-				html += supportStrengthsSectionHtml(strengthsFallback, supportResult.strengths_heading || 'What you\'re doing well');
-			}
 		}
 
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.supportFocusAreas) {
 				html += AIRB.Roles.supportFocusAreas(r, supportFocusRenderOpts());
-			} else {
-				var focusAreas = sr.focus_areas && sr.focus_areas.length ? sr.focus_areas : null;
-				if (!focusAreas && sr.opportunities && sr.opportunities.length) {
-					focusAreas = sr.opportunities.slice(0, 4).map(function (opp) {
-						return { label: opp.label, pct: opp.pct, summary: opp.summary, actions: opp.detail ? [opp.detail] : [] };
-					});
-				}
-				if (focusAreas && focusAreas.length) {
-					html += leaderSectionLabel(
-						supportResult.focus_section_heading || 'Priority focus areas — what to strengthen',
-						supportResult.focus_section_heading_short || 'Priority focus areas'
-					);
-					html += '<div class="airb__support-focus-stack">' + supportFocusAreasHtml(focusAreas) + '</div>';
-				}
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB supportFocusAreas failed', err);
@@ -3892,11 +3563,6 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.studentStrengths) {
 				html += AIRB.Roles.studentStrengths(r, studentFocusRenderOpts());
-			} else {
-				var strengths = sr.strength_items && sr.strength_items.length ? sr.strength_items : sr.strengths;
-				if (strengths && strengths.length) {
-					html += studentStrengthsSectionHtml(strengths, studentResult.strengths_heading || 'What you\'re doing well');
-				}
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB studentStrengths failed', err);
@@ -3905,22 +3571,6 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.studentFocusAreas) {
 				html += AIRB.Roles.studentFocusAreas(r, studentFocusRenderOpts());
-			} else {
-				var focusAreas = sr.focus_areas && sr.focus_areas.length ? sr.focus_areas : null;
-				if (!focusAreas && sr.opportunities && sr.opportunities.length) {
-					focusAreas = sr.opportunities.map(function (opp) {
-						return { label: opp.label, pct: opp.pct, summary: opp.summary, actions: opp.tips || [] };
-					});
-				}
-				if (focusAreas && focusAreas.length) {
-					var focusCount = focusAreas.length;
-					var focusHeading = (studentResult.focus_section_heading || 'Where to improve — areas to focus on').replace(/\d+/, String(focusCount));
-					if (focusHeading.indexOf(String(focusCount)) === -1) {
-						focusHeading = (studentResult.focus_section_heading_short || 'Where to improve') + ' — ' + focusCount + ' ' + (focusCount === 1 ? 'area' : 'areas') + ' to focus on';
-					}
-					html += leaderSectionLabel(focusHeading, studentResult.focus_section_heading_short || 'Where to improve');
-					html += '<div class="airb__student-focus-stack">' + studentFocusAreasHtml(focusAreas) + '</div>';
-				}
 			}
 		} catch (err) {
 			if (window.console && console.error) console.error('AIRB studentFocusAreas failed', err);
@@ -4300,79 +3950,6 @@
 		return html + '</section>';
 	}
 
-	function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg) {
-		labelCfg = labelCfg || leaderResult;
-		if (window.AIRB && AIRB.Results && AIRB.Results.leaderFocusAreasHtml) {
-			return AIRB.Results.leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, {
-				esc: esc,
-				guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
-				focusPracticeHeading: i18n.focusPracticeHeading || 'What this means in practice',
-				focusPracticeHeadingShort: i18n.focusPracticeHeadingShort || 'In practice this means',
-				focusActionsHeading: i18n.focusActionsHeading || 'Actions',
-				leaderFocusBadge: leaderFocusBadge,
-				leaderFocusSeverity: leaderFocusSeverity,
-				leaderBiasEqualityFocusNote: leaderBiasEqualityFocusNote,
-				leaderResponsiveLabel: leaderResponsiveLabel,
-				focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
-			});
-		}
-		if (!focusAreas || !focusAreas.length) {
-			return '';
-		}
-		var practiceHeading = labelCfg.focus_practice_heading || i18n.focusPracticeHeading || 'What this means in practice';
-		var practiceHeadingShort = labelCfg.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means';
-		var actionsHeading = labelCfg.focus_actions_heading || i18n.focusActionsHeading || 'Actions';
-		var html = '';
-		focusAreas.forEach(function (area) {
-			var severity = leaderFocusSeverity(area.pct);
-			var badge = leaderFocusBadge(area.pct);
-			var showPractice = area.likely_impact && area.likely_impact.length;
-			html += '<div class="airb__focus-card airb__focus-card--' + severity + '">';
-			html += '<div class="airb__focus-card-header">';
-			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__focus-badge airb__focus-badge--' + badge.slug + '">';
-			html += '<span class="airb__focus-badge-core">' + esc(badge.core) + '</span>';
-			if (badge.detail) {
-				html += '<span class="airb__focus-badge-detail">' + esc(badge.detail) + '</span>';
-			}
-			html += '</span>';
-			html += '</div>';
-			if (area.summary) {
-				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
-			}
-			if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null) {
-				var biasNote = leaderBiasEqualityFocusNote(biasHealth.score);
-				if (biasNote) {
-					html += '<p class="airb__focus-card-bias-note">' + esc(biasNote) + '</p>';
-				}
-			}
-			var guidance = '';
-			if (showPractice) {
-				guidance += '<div class="airb__focus-practice">';
-				guidance += '<div class="airb__focus-practice-title">' + leaderResponsiveLabel(practiceHeading, practiceHeadingShort) + '</div>';
-				guidance += '<ul class="airb__focus-practice-list">';
-				area.likely_impact.forEach(function (item) {
-					guidance += '<li>' + esc(item) + '</li>';
-				});
-				guidance += '</ul></div>';
-			}
-			if (area.actions && area.actions.length) {
-				guidance += '<div class="airb__focus-practice airb__focus-actions">';
-				guidance += '<div class="airb__focus-practice-title">' + esc(actionsHeading) + '</div>';
-				guidance += '<ul class="airb__focus-practice-list">';
-				area.actions.forEach(function (item) {
-					guidance += '<li>' + esc(item) + '</li>';
-				});
-				guidance += '</ul></div>';
-			}
-			if (guidance) {
-				html += focusGuidanceAccordionHtml(i18n.focusGuidanceToggle || 'Tips & steps to try', guidance);
-			}
-			html += '</div>';
-		});
-		return html;
-	}
-
 	function leaderHeatmapCardHtml(cells) {
 		if (!cells || !cells.length) return '';
 		var title = leaderResult.heatmap_card_title || i18n.heatmapCardTitle || 'Risk heat map — all domains';
@@ -4494,23 +4071,10 @@
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.leaderFocusAreas) {
 				html += AIRB.Roles.leaderFocusAreas(r, leaderFocusRenderOpts());
-			} else if (lr.focus_areas && lr.focus_areas.length) {
-				html += leaderSectionLabel(
-					leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
-					leaderResult.focus_section_heading_short || 'Priority focus areas'
-				);
-				html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
 			}
 		} catch (err) {
 			if (window.console && console.error) {
 				console.error('AIRB leaderFocusAreas failed', err);
-			}
-			if (lr.focus_areas && lr.focus_areas.length) {
-				html += leaderSectionLabel(
-					leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
-					leaderResult.focus_section_heading_short || 'Priority focus areas'
-				);
-				html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
 			}
 		}
 
