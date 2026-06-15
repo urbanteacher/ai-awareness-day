@@ -478,12 +478,724 @@
 		return { label: i18n.riskModerate || 'Moderate', slug: 'moderate' };
 	}
 
+	function leaderFocusBadge(pct) {
+		var badge = focusRiskBadge(pct);
+		var core = badge.slug === 'high' ? (i18n.riskHighLong || 'High risk') : badge.label;
+		if (badge.slug === 'high') {
+			core = i18n.riskHigh || 'High';
+		}
+		return {
+			slug: badge.slug,
+			text: core + ' · ' + pct + '%',
+			core: core,
+			detail: ' · ' + pct + '%',
+		};
+	}
+
+	function leaderFocusSeverity(pct) {
+		var score = Math.max(0, Math.min(100, parseInt(pct, 10) || 0));
+		if (score <= 25) return 'critical';
+		if (score <= 40) return 'high';
+		return 'moderate';
+	}
+
+	function heatmapExposureBadge(risk) {
+		risk = Math.max(0, Math.min(100, Math.round(parseFloat(risk) || 0)));
+		var band = riskBand(risk);
+		var labels = {
+			critical: i18n.riskCritical || 'critical',
+			high: i18n.riskHigh || 'high',
+			moderate: i18n.riskModerate || 'moderate',
+			low: i18n.riskLow || 'low',
+		};
+		return {
+			slug: band,
+			text: risk + '% ' + (labels[band] || band),
+			short: String(risk) + '%',
+		};
+	}
+
+	function heatmapBarColor(risk) {
+		risk = Math.round(parseFloat(risk) || 0);
+		if (risk > 80) return '#e24b4a';
+		if (risk > 50) return '#ef9f27';
+		if (risk > 30) return '#378add';
+		return '#3b6d11';
+	}
+
+	function leaderSectionDivider() {
+		return '<div class="airb__leader-section-divider" aria-hidden="true"></div>';
+	}
+
+	function leaderResponsiveLabel(longText, shortText) {
+		shortText = shortText || longText;
+		return '<span class="airb__lbl-long">' + esc(longText) + '</span>' +
+			'<span class="airb__lbl-short">' + esc(shortText) + '</span>';
+	}
+
+	function leaderSectionLabel(longText, shortText) {
+		if (!longText) return '';
+		return '<h3 class="airb__leader-section-label">' + leaderResponsiveLabel(longText, shortText) + '</h3>';
+	}
+
+	function metricToneClass(tone) {
+		var allowed = { urgent: true, warning: true, neutral: true, positive: true };
+		return allowed[tone] ? tone : 'neutral';
+	}
+
+	function leaderMetricSignals(type, slug) {
+		var bag = (leaderResult.metric_signals || {})[type] || {};
+		var entry = bag[slug] || {};
+		return {
+			signal: entry.signal || '',
+			tone: metricToneClass(entry.tone || 'neutral'),
+			consequence: entry.consequence || '',
+		};
+	}
+
+	function leaderGovernanceLevel(score) {
+		var levels = leaderResult.maturity_levels || [];
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		for (var i = 0; i < levels.length; i++) {
+			var min = parseInt(levels[i].min, 10) || 0;
+			var max = parseInt(levels[i].max, 10) || 100;
+			if (score >= min && score <= max) {
+				return levels[i];
+			}
+		}
+		return levels[0] || { slug: 'emerging', label: 'Emerging' };
+	}
+
+	function leaderMetricCardHtml(opts) {
+		opts = opts || {};
+		var tone = metricToneClass(opts.tone || 'neutral');
+		var pctDisplay = opts.pct === '—' ? '—' : (String(opts.pct) + '%');
+		var html = '<div class="airb__res-stat airb__metric-card airb__metric-card--leader airb__metric-card--tone-' + tone + (opts.higherIsWorse ? ' airb__metric-card--risk' : '') + '">';
+		html += '<div class="airb__metric-card-lab">' + esc(opts.label || '') + '</div>';
+		html += '<div class="airb__metric-card-score-row">';
+		if (opts.pct === '—') {
+			html += '<span class="airb__metric-card-pct airb__res-stat-big--na">—</span>';
+		} else {
+			html += '<span class="airb__metric-card-pct" style="color:' + esc(opts.pctColor || 'inherit') + '">' + pctDisplay + '</span>';
+		}
+		if (opts.signal) {
+			html += '<span class="airb__metric-signal airb__metric-signal--' + tone + '">' + esc(opts.signal) + '</span>';
+		}
+		html += '</div>';
+		if (opts.note) {
+			html += '<p class="airb__metric-card-note airb__muted">' + esc(opts.note) + '</p>';
+		}
+		if (opts.consequence) {
+			html += '<p class="airb__metric-card-consequence">' + esc(opts.consequence) + '</p>';
+		}
+		return html + '</div>';
+	}
+
+	function leaderSignalLine(bandLabel, signal) {
+		if (!signal) return bandLabel || '';
+		var tail = signal.charAt(0).toLowerCase() + signal.slice(1);
+		return bandLabel ? (bandLabel + ' — ' + tail) : signal;
+	}
+
+	function leaderUiMetric(uiBlock, type, slug) {
+		if (uiBlock && (uiBlock.signal || uiBlock.consequence)) {
+			return {
+				signal: uiBlock.signal || '',
+				tone: metricToneClass(uiBlock.tone || 'neutral'),
+				consequence: uiBlock.consequence || '',
+			};
+		}
+		return leaderMetricSignals(type, slug);
+	}
+
+	function leaderReadinessHeroHtml(score, uiHero) {
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var bandLabel = readinessBandLabel(score);
+		var bandSlug = readinessLevel(score).slug;
+		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
+			? leaderUiMetric(uiHero, 'readiness', bandSlug)
+			: leaderMetricSignals('readiness', bandSlug);
+		var tone = heroSig.tone || 'neutral';
+		var bands = readinessBandDefinitions();
+		var signalLine = leaderSignalLine(bandLabel, heroSig.signal);
+		var kicker = leaderResult.metric_labels && leaderResult.metric_labels.readiness
+			? leaderResult.metric_labels.readiness
+			: (i18n.readinessScaleKicker || 'Overall benchmark readiness');
+
+		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
+			(i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
+				.replace('{score}', String(score))
+				.replace('{band}', signalLine || bandLabel)
+		) + '">';
+		html += '<div class="airb__leader-hero-head">';
+		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__leader-hero-meta">';
+		if (heroSig.signal) {
+			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(signalLine) + '</div>';
+			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
+			html += '<div class="airb__leader-hero-band">' + esc(bandLabel) + '</div>';
+			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
+			html += '</div>';
+		}
+		html += '<div class="airb__leader-hero-kicker">' + esc(kicker) + '</div>';
+		html += '</div></div>';
+		if (heroSig.consequence) {
+			html += '<p class="airb__leader-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+		}
+		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
+		});
+		html += '</div>';
+		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span>' + esc(b.label) + '</span>';
+		});
+		html += '</div></div>';
+		return html;
+	}
+
+	function leaderSupportingCardHtml(opts) {
+		opts = opts || {};
+		var tone = metricToneClass(opts.tone || 'warning');
+		var html = '<div class="airb__leader-support-card airb__leader-support-card--tone-' + tone + '">';
+		html += '<div class="airb__leader-support-label">' + esc(opts.label || '') + '</div>';
+		if (opts.pct === '—') {
+			html += '<div class="airb__leader-support-pct airb__leader-support-pct--na">—</div>';
+		} else {
+			html += '<div class="airb__leader-support-pct">' + opts.pct + '%</div>';
+		}
+		if (opts.signal) {
+			html += '<div class="airb__leader-support-signal">' + esc(opts.signal) + '</div>';
+		}
+		if (opts.consequence) {
+			html += '<p class="airb__leader-support-note">' + esc(opts.consequence) + '</p>';
+		}
+		return html + '</div>';
+	}
+
+	function teacherDependencyTier(dep) {
+		dep = parseInt(dep, 10);
+		if (isNaN(dep)) dep = 0;
+		if (dep >= 80) return 'high';
+		if (dep >= 60) return 'moderate_high';
+		if (dep >= 40) return 'moderate';
+		if (dep >= 20) return 'low';
+		return 'minimal';
+	}
+
+	function teacherUiMetric(uiBlock, type, slug) {
+		if (uiBlock && (uiBlock.signal || uiBlock.consequence)) {
+			return {
+				signal: uiBlock.signal || '',
+				tone: metricToneClass(uiBlock.tone || 'neutral'),
+				consequence: uiBlock.consequence || '',
+			};
+		}
+		if (type === 'risk') {
+			return leaderMetricSignals('risk', slug);
+		}
+		var bag = (teacherResult.metric_signals || {})[type] || {};
+		var entry = bag[slug] || {};
+		return {
+			signal: entry.signal || '',
+			tone: metricToneClass(entry.tone || 'neutral'),
+			consequence: entry.consequence || '',
+		};
+	}
+
+	function teacherBiasMetricSignals(slug) {
+		var bag = (teacherResult.copy_tiers || {}).bias || (teacherResult.metric_signals || {}).bias || {};
+		var entry = bag[slug] || {};
+		return {
+			signal: entry.signal || '',
+			tone: metricToneClass(entry.tone || 'neutral'),
+			consequence: entry.consequence || '',
+		};
+	}
+
+	function teacherBiasEqualityFocusNote(score) {
+		score = parseInt(score, 10);
+		if (isNaN(score) || score >= 50) return '';
+		var tiers = teacherResult.focus_tiers && teacherResult.focus_tiers.bias_equality;
+		if (!tiers) return '';
+		var block = tiers[leaderBiasTier(score)] || {};
+		return block.summary || '';
+	}
+
+	function teacherSupportingMetricsHtml(r, risk) {
+		var ui = r.teacher_results && r.teacher_results.ui ? r.teacher_results.ui : null;
+		var labels = teacherResult.metric_labels || {};
+		var riskLvl = r.risk_level || riskBand(risk);
+		var riskSig = ui && ui.risk_card ? teacherUiMetric(ui.risk_card, 'risk', riskLvl) : leaderMetricSignals('risk', riskLvl);
+		var dep = r.dependency_index;
+		var depTier = teacherDependencyTier(dep);
+		var depSig = ui && ui.dependency_card ? teacherUiMetric(ui.dependency_card, 'dependency', depTier) : teacherUiMetric(null, 'dependency', depTier);
+		var hoVal = oversightGaugeValue(r);
+		var hoUi = ui && ui.oversight ? ui.oversight : null;
+		var hoSig = hoUi && hoUi.signal ? hoUi : { signal: r.human_oversight_label || '', tone: 'positive', consequence: teacherResult.oversight_metric_note || '' };
+		var biasScore = r.bias_readiness != null ? r.bias_readiness : null;
+		var hasBias = biasScore !== null;
+		var html = '<div class="airb__teacher-metric-grid' + (hasBias ? ' airb__teacher-metric-grid--with-bias' : '') + '">';
+		html += '<div class="airb__teacher-metric-cell airb__teacher-metric-cell--tone-' + (riskSig.tone || 'neutral') + '">';
+		html += '<div class="airb__teacher-metric-lbl">' + esc(labels.risk || i18n.leaderMetricRisk || 'AI risk exposure') + '</div>';
+		html += '<div class="airb__teacher-metric-val" style="color:' + esc(riskScoreColor(risk)) + '">' + risk + '%</div>';
+		html += '<div class="airb__teacher-metric-sub" style="color:' + esc(riskScoreColor(risk)) + '">' + esc(riskSig.signal || displayRiskLabel(riskLvl, risk)) + '</div>';
+		if (riskSig.consequence) html += '<p class="airb__teacher-metric-desc">' + esc(riskSig.consequence) + '</p>';
+		html += '</div>';
+		html += '<div class="airb__teacher-metric-cell airb__teacher-metric-cell--tone-' + (depSig.tone || 'warning') + '">';
+		html += '<div class="airb__teacher-metric-lbl">' + esc(labels.dependency || i18n.dependency || 'AI Dependency Index') + '</div>';
+		if (dep === null || dep === undefined) {
+			html += '<div class="airb__teacher-metric-val airb__teacher-metric-val--na">—</div>';
+		} else {
+			html += '<div class="airb__teacher-metric-val" style="color:' + esc(dependencyColor(dep)) + '">' + dep + '%</div>';
+			html += '<div class="airb__teacher-metric-sub" style="color:' + esc(dependencyColor(dep)) + '">' + esc(depSig.signal || '') + '</div>';
+			if (depSig.consequence) html += '<p class="airb__teacher-metric-desc">' + esc(depSig.consequence) + '</p>';
+		}
+		html += '</div>';
+		if (hoVal !== null) {
+			html += '<div class="airb__teacher-metric-cell airb__teacher-metric-cell--tone-' + metricToneClass(hoSig.tone || 'positive') + '">';
+			html += '<div class="airb__teacher-metric-lbl">' + esc(i18n.humanOversightRatio || 'Human Oversight Ratio') + '</div>';
+			html += '<div class="airb__teacher-metric-val" style="color:' + esc(oversightZoneColor(hoVal)) + '">' + hoVal + '%</div>';
+			html += '<div class="airb__teacher-metric-sub" style="color:' + esc(oversightZoneColor(hoVal)) + '">' + esc(hoSig.signal || '') + '</div>';
+			html += '<p class="airb__teacher-metric-desc">' + esc(teacherResult.oversight_metric_note || 'Share of AI output reviewed or changed before use.') + '</p>';
+			html += '</div>';
+		}
+		if (hasBias) {
+			var biasLvl = leaderBiasTier(biasScore);
+			var biasSig = ui && ui.bias_card
+				? teacherUiMetric(ui.bias_card, 'bias', biasLvl)
+				: teacherBiasMetricSignals(biasLvl);
+			var biasHealth = r.teacher_results && r.teacher_results.bias_health ? r.teacher_results.bias_health : null;
+			var biasConsequence = biasSig.consequence || '';
+			if (!biasConsequence && biasHealth && biasHealth.show_callout && biasHealth.callout) {
+				biasConsequence = biasHealth.callout;
+			}
+			html += '<div class="airb__teacher-metric-cell airb__teacher-metric-cell--tone-' + metricToneClass(biasSig.tone || 'neutral') + '">';
+			html += '<div class="airb__teacher-metric-lbl">' + esc(labels.bias || i18n.biasReadiness || 'Bias & equality readiness') + '</div>';
+			html += '<div class="airb__teacher-metric-val" style="color:' + esc(readinessBandColor(biasScore)) + '">' + biasScore + '%</div>';
+			html += '<div class="airb__teacher-metric-sub" style="color:' + esc(readinessBandColor(biasScore)) + '">' + esc(biasSig.signal || (biasHealth && biasHealth.band_label) || '') + '</div>';
+			if (biasConsequence) html += '<p class="airb__teacher-metric-desc">' + esc(biasConsequence) + '</p>';
+			html += '</div>';
+		}
+		return html + '</div>';
+	}
+
+	function oversightTierFromPct(pct) {
+		if (pct <= 10) return 'critical';
+		if (pct <= 25) return 'high';
+		if (pct <= 50) return 'moderate';
+		if (pct <= 75) return 'strong';
+		return 'exemplary';
+	}
+
+	function oversightUiCopy(r, pct) {
+		var teacherOversight = isTeacherRole() && r.teacher_results && r.teacher_results.ui ? r.teacher_results.ui.oversight : null;
+		if (teacherOversight && teacherOversight.signal) return teacherOversight;
+		var tier = oversightTierFromPct(pct);
+		var tiers = (teacherResult.copy_tiers || {}).oversight || {};
+		var block = tiers[tier] || {};
+		return {
+			signal: block.signal || r.human_oversight_label || oversightLabel(pct),
+			consequence: block.consequence || '',
+			tone: block.tone || 'neutral',
+		};
+	}
+
+	function benchmarkOversightGaugeSectionHtml(r) {
+		var panel = oversightPanelHtml(r);
+		if (!panel) return '';
+		return '<div class="airb__benchmark-oversight-section airb__teacher-oversight-section">' + panel + '</div>';
+	}
+
+	function teacherOversightGaugeSectionHtml(r) {
+		return benchmarkOversightGaugeSectionHtml(r);
+	}
+
+	function teacherDomainSectionHtml(r) {
+		var rows = '';
+		var domainHints = teacherResult.domain_descriptions || {};
+		domainKeys.forEach(function (slug) {
+			var d = r.domain_scores[slug];
+			if (!d || !d.questions_answered) return;
+			var pct = Math.round(d.readiness_percentage);
+			var color = readinessBandColor(pct);
+			var hint = domainHints[slug] || '';
+			rows += '<div class="airb__teacher-domain-row">';
+			rows += '<span class="airb__teacher-domain-label"' + (hint ? ' title="' + esc(hint) + '"' : '') + '>' + esc(d.label) + '</span>';
+			rows += '<div class="airb__teacher-domain-bar-wrap"><div class="airb__teacher-domain-bar" style="width:' + pct + '%;background:' + esc(color) + '"></div></div>';
+			rows += '<span class="airb__teacher-domain-val" style="color:' + esc(color) + '">' + pct + '%</span>';
+			rows += '</div>';
+		});
+		if (!rows) return '';
+		var headingShort = teacherResult.domains_section_heading_short || 'By domain';
+		return '<div class="airb__teacher-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
+	}
+
+	function teacherStrengthsSectionHtml(strengths, heading) {
+		if (!strengths || !strengths.length) return '';
+		var html = '<div class="airb__teacher-strength-card">';
+		html += benchmarkCardHeadingHtml(heading);
+		strengths.forEach(function (item) {
+			var title = typeof item === 'string' ? item : (item.title || '');
+			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
+			if (!title) return;
+			html += '<div class="airb__teacher-strength-row">';
+			html += '<span class="airb__teacher-strength-tick" aria-hidden="true">✓</span>';
+			html += '<div class="airb__teacher-strength-copy">';
+			html += '<p class="airb__teacher-strength-title">' + esc(title) + '</p>';
+			if (detail) html += '<p class="airb__teacher-strength-detail">' + esc(detail) + '</p>';
+			html += '</div></div>';
+		});
+		return html + '</div>';
+	}
+
+	function teacherFocusAreasHtml(focusAreas, biasHealth) {
+		if (!focusAreas || !focusAreas.length) return '';
+		var practiceHeading = teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means';
+		var html = '';
+		focusAreas.forEach(function (area) {
+			var badge = leaderFocusBadge(area.pct);
+			var severity = leaderFocusSeverity(area.pct);
+			html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
+			html += '<div class="airb__focus-card-header">';
+			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
+			html += '<span class="airb__focus-badge airb__focus-badge--' + badge.slug + '">' + esc(badge.text) + '</span>';
+			html += '</div>';
+			if (area.summary) {
+				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
+			}
+			if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null) {
+				var biasNote = teacherBiasEqualityFocusNote(biasHealth.score);
+				if (biasNote) {
+					html += '<p class="airb__focus-card-bias-note">' + esc(biasNote) + '</p>';
+				}
+			}
+			var guidance = '';
+			if (area.likely_impact && area.likely_impact.length) {
+				guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
+				guidance += '<div class="airb__focus-practice-title">' + esc(practiceHeading) + '</div>';
+				area.likely_impact.forEach(function (item) {
+					guidance += '<div class="airb__teacher-focus-impact">' + esc(item) + '</div>';
+				});
+				guidance += '</div>';
+			}
+			if (area.actions && area.actions.length) {
+				area.actions.forEach(function (item, idx) {
+					guidance += '<div class="airb__teacher-action-row">';
+					guidance += '<span class="airb__teacher-action-num">' + (idx + 1) + '</span>';
+					guidance += '<span class="airb__teacher-action-text">' + esc(item) + '</span>';
+					guidance += '</div>';
+				});
+			}
+			if (guidance) {
+				html += focusGuidanceAccordionHtml(i18n.focusGuidanceToggle || 'Tips & steps to try', guidance);
+			}
+			html += '</div>';
+		});
+		return html;
+	}
+
+	function teacherRolloutCardHtml(ro) {
+		if (!ro) return '';
+		var html = leaderRolloutCardHtml(ro);
+		return html.replace('airb__leader-rollout-card', 'airb__leader-rollout-card airb__leader-rollout-card--teacher');
+	}
+
+	function teacherPathwayCtaHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.hero) return '';
+		var hero = nextSteps.hero;
+		var heading = nextSteps.hero_heading || teacherResult.hero_next_step_heading || 'Your next step';
+		var headingShort = nextSteps.hero_next_step_heading_short || teacherResult.hero_next_step_heading_short || 'Your next step';
+		var deliverables = hero.deliverables && hero.deliverables.length ? hero.deliverables : (hero.understand_items || []);
+		var isPathway = !!(hero.pathway_kicker || (hero.secondary_cta_text && hero.secondary_key));
+		var html = '<article class="' + (isPathway ? 'airb__teacher-pathway-card' : 'airb__leader-cta-card') + '">';
+		if (hero.pathway_kicker) {
+			html += '<div class="airb__teacher-pathway-kicker">' + esc(hero.pathway_kicker) + '</div>';
+		}
+		html += '<h4 class="' + (isPathway ? 'airb__teacher-pathway-title' : 'airb__leader-cta-title') + '">' + esc(hero.title) + '</h4>';
+		if (hero.body) {
+			html += '<p class="' + (isPathway ? 'airb__teacher-pathway-body' : 'airb__leader-cta-body') + '">' + esc(hero.body) + '</p>';
+		}
+		if (deliverables.length) {
+			html += '<div class="' + (isPathway ? 'airb__teacher-pathway-deliverables' : 'airb__leader-cta-deliverables') + '" role="list">';
+			deliverables.forEach(function (item) {
+				if (isPathway) {
+					html += '<div class="airb__teacher-pathway-item" role="listitem"><span class="airb__teacher-pathway-arrow" aria-hidden="true">→</span><span>' + esc(item) + '</span></div>';
+				} else {
+					html += '<span class="airb__leader-cta-deliverable" role="listitem">' + esc(item) + '</span>';
+				}
+			});
+			html += '</div>';
+		}
+		html += '<div class="airb__teacher-pathway-actions">';
+		html += '<button type="button" class="airb__btn airb__btn--premium' + (isPathway ? ' airb__teacher-pathway-btn airb__teacher-pathway-btn--primary' : ' airb__leader-cta-btn') + '" data-airb-open-interest="' + esc(hero.key || 'whole_school_cpd') + '">' + esc(hero.cta_text || 'Request support') + '</button>';
+		if (hero.secondary_cta_text && hero.secondary_key) {
+			html += '<button type="button" class="airb__btn airb__teacher-pathway-btn airb__teacher-pathway-btn--secondary" data-airb-open-interest="' + esc(hero.secondary_key) + '">' + esc(hero.secondary_cta_text) + '</button>';
+		}
+		html += '</div></article>';
+		return html;
+	}
+
+	function benchmarkCardHeadingHtml(text) {
+		return '<h3 class="airb__benchmark-card-heading">' + esc(text) + '</h3>';
+	}
+
+	function benchmarkResultsBodyHtml(html) {
+		return html ? '<div class="airb__benchmark-results-body">' + html + '</div>' : '';
+	}
+
+	function benchmarkHelpSupportHtml(nextSteps, heading, headingShort) {
+		if (!nextSteps || !nextSteps.resource_links || !nextSteps.resource_links.length) return '';
+		heading = heading || i18n.helpSupportHeading || 'Further reading and tips to guide you';
+		headingShort = headingShort || i18n.helpSupportHeadingShort || 'Read more & tips';
+		return '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+			leaderSectionLabel(heading, headingShort) +
+			resultsResourceLinksHtml(nextSteps.resource_links, { cardMode: true }) +
+			'</section>';
+	}
+
+	function teacherHelpSupportHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.resource_links || !nextSteps.resource_links.length) return '';
+		return benchmarkHelpSupportHtml(
+			nextSteps,
+			nextSteps.help_support_heading || teacherResult.help_support_heading,
+			nextSteps.help_support_heading_short || teacherResult.help_support_heading_short
+		);
+	}
+
+	function studentHelpSupportHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.resource_links || !nextSteps.resource_links.length) return '';
+		return benchmarkHelpSupportHtml(
+			nextSteps,
+			nextSteps.help_support_heading || studentResult.help_support_heading,
+			nextSteps.help_support_heading_short || studentResult.help_support_heading_short
+		);
+	}
+
+	function teacherPeerBenchmarkHtml(tr) {
+		if (!tr || !tr.peer_benchmark) return '';
+		var pb = tr.peer_benchmark;
+		var avgGap = typeof pb.gap_vs_average === 'number' ? pb.gap_vs_average : ((parseInt(pb.average_score, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
+		var topGap = typeof pb.gap_vs_top_quartile === 'number' ? pb.gap_vs_top_quartile : ((parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
+		var yourColor = readinessBandColor(parseInt(pb.your_score, 10) || 0);
+		if (avgGap <= 0 && topGap <= 0) {
+			yourColor = 'var(--airb-good, #1d9e75)';
+		}
+		return peerBenchmarkBarHtml(pb, {
+			cfg: teacherResult,
+			yourScoreColor: yourColor,
+			comparisonLabel: teacherResult.peer_comparison_label || i18n.teacherPeerComparison || 'How you compare to other teachers',
+			comparisonLabelShort: teacherResult.peer_comparison_label_short || i18n.peerComparisonShort || 'How you compare',
+			youLabel: teacherResult.peer_you_label || i18n.peerYou || 'You',
+			avgLong: teacherResult.peer_average_label || i18n.teacherNationalAverage || 'National average',
+			avgShort: teacherResult.peer_average_label_short || i18n.teacherNationalAverageShort || 'Nat. avg',
+			avgMobile: teacherResult.peer_average_label_short || i18n.teacherNationalAverageShort || 'Nat. avg',
+			topLabel: i18n.teacherTopQuartileShort || i18n.studentTopQuartileShort || 'Top quartile',
+			estimatedNote: i18n.teacherPeerEstimated || i18n.peerEstimated || 'Comparison uses reference benchmarks until enough teachers have completed the audit.',
+			percentileTemplate: i18n.teacherPeerPercentile || '',
+		});
+	}
+
+	function studentPeerBenchmarkHtml(sr) {
+		if (!sr || !sr.peer_benchmark) return '';
+		var pb = sr.peer_benchmark;
+		var avgGap = (parseInt(pb.average_score, 10) || 0) - (parseInt(pb.your_score, 10) || 0);
+		var topGap = (parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0);
+		var yourColor = studentSkillColor(parseInt(pb.your_score, 10) || 0);
+		if (avgGap <= 0 && topGap <= 0) {
+			yourColor = 'var(--airb-good, #1d9e75)';
+		}
+		return peerBenchmarkBarHtml(pb, {
+			cfg: studentResult,
+			yourScoreColor: yourColor,
+			comparisonLabel: studentResult.peer_comparison_label || i18n.studentPeerComparison || 'How you compare to other students',
+			comparisonLabelShort: studentResult.peer_comparison_label_short || i18n.peerComparisonShort || 'How you compare',
+			youLabel: studentResult.peer_you_label || i18n.peerYou || 'You',
+			avgLong: i18n.studentAverage || 'Average students',
+			avgShort: 'Avg students',
+			avgMobile: 'Avg students',
+			topLabel: i18n.studentTopQuartileShort || 'Top quartile',
+			estimatedNote: i18n.studentPeerEstimated || i18n.peerEstimated || 'Comparison uses reference benchmarks until enough students have completed the audit.',
+			percentileTemplate: i18n.studentPeerPercentile || '',
+		});
+	}
+
+	function leaderBiasTier(score) {
+		score = parseInt(score, 10) || 0;
+		if (score < 25) return 'critical';
+		if (score < 50) return 'high';
+		if (score < 75) return 'moderate';
+		return 'low';
+	}
+
+	function leaderBiasEqualityFocusNote(score) {
+		score = parseInt(score, 10);
+		if (isNaN(score) || score >= 50) return '';
+		var tiers = leaderResult.focus_tiers && leaderResult.focus_tiers.bias_equality;
+		if (!tiers) return '';
+		var block = tiers[leaderBiasTier(score)] || {};
+		return block.summary || '';
+	}
+
+	function leaderSupportingMetricsHtml(r, risk) {
+		var metricLabels = leaderResult.metric_labels || {};
+		var ui = r.leader_results && r.leader_results.ui ? r.leader_results.ui : null;
+		var riskLvl = r.risk_level || riskBand(risk);
+		var riskSig = ui && ui.risk_card ? leaderUiMetric(ui.risk_card, 'risk', riskLvl) : leaderMetricSignals('risk', riskLvl);
+		var govScore = r.governance_maturity != null ? r.governance_maturity : null;
+		var biasScore = r.bias_readiness != null ? r.bias_readiness : null;
+		var hasBias = biasScore !== null;
+		var html = '<div class="airb__leader-support-grid' + (hasBias ? ' airb__leader-support-grid--three' : '') + '">';
+		html += leaderSupportingCardHtml({
+			label: metricLabels.risk || i18n.leaderMetricRisk || 'AI risk exposure',
+			pct: risk,
+			signal: riskSig.signal || displayRiskLabel(riskLvl, risk),
+			tone: riskSig.tone,
+			consequence: riskSig.consequence || leaderResult.risk_score_note || '',
+		});
+		if (govScore === null) {
+			html += leaderSupportingCardHtml({
+				label: metricLabels.governance || i18n.governanceMaturity || 'Governance maturity',
+				pct: '—',
+				tone: 'warning',
+			});
+		} else {
+			var govLvl = leaderGovernanceLevel(govScore);
+			var govSig = ui && ui.governance_card
+				? leaderUiMetric(ui.governance_card, 'governance', govLvl.slug)
+				: leaderMetricSignals('governance', govLvl.slug);
+			html += leaderSupportingCardHtml({
+				label: metricLabels.governance || i18n.governanceMaturity || 'Governance maturity',
+				pct: govScore,
+				signal: govSig.signal,
+				tone: govSig.tone,
+				consequence: govSig.consequence,
+			});
+		}
+		if (hasBias) {
+			var biasLvl = leaderBiasTier(biasScore);
+			var biasSig = ui && ui.bias_card
+				? leaderUiMetric(ui.bias_card, 'bias', biasLvl)
+				: leaderMetricSignals('bias', biasLvl);
+			var biasHealth = r.leader_results && r.leader_results.bias_health ? r.leader_results.bias_health : null;
+			var biasConsequence = biasSig.consequence || '';
+			if (!biasConsequence && biasHealth && biasHealth.show_callout && biasHealth.callout) {
+				biasConsequence = biasHealth.callout;
+			}
+			html += leaderSupportingCardHtml({
+				label: metricLabels.bias || i18n.biasReadiness || 'Bias & equality readiness',
+				pct: biasScore,
+				signal: biasSig.signal || (biasHealth && biasHealth.band_label) || '',
+				tone: biasSig.tone,
+				consequence: biasConsequence,
+			});
+		}
+		return html + '</div>';
+	}
+
+	function peerGapText(gap, kind, cfg) {
+		cfg = cfg || leaderResult;
+		gap = parseInt(gap, 10);
+		if (isNaN(gap)) gap = 0;
+		var tpl;
+		if (kind === 'top') {
+			if (gap > 0) {
+				tpl = cfg.peer_gap_below_top || i18n.peerGapBelowTop || '{n} points below top quartile';
+			} else if (gap < 0) {
+				tpl = cfg.peer_gap_above_top || i18n.peerGapAboveTop || '{n} points above top quartile';
+			} else {
+				return cfg.peer_gap_at_top || i18n.peerGapAtTop || 'In line with top quartile';
+			}
+		} else {
+			if (gap > 0) {
+				tpl = cfg.peer_gap_below_average || i18n.peerGapBelowAverage || '{n} points below average';
+			} else if (gap < 0) {
+				tpl = cfg.peer_gap_above_average || i18n.peerGapAboveAverage || '{n} points above average';
+			} else {
+				return cfg.peer_gap_at_average || i18n.peerGapAtAverage || 'In line with average';
+			}
+		}
+		return tpl.replace('{n}', String(Math.abs(gap)));
+	}
+
+	function peerBenchmarkBarHtml(pb, opts) {
+		opts = opts || {};
+		if (!pb) return '';
+		var cfg = opts.cfg || leaderResult;
+		var avgGap = typeof pb.gap_vs_average === 'number' ? pb.gap_vs_average : ((parseInt(pb.average_score, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
+		var topGap = typeof pb.gap_vs_top_quartile === 'number' ? pb.gap_vs_top_quartile : ((parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
+		var yourColor = opts.yourScoreColor || (avgGap > 0 ? 'var(--airb-crit, #a32d2d)' : (topGap <= 0 ? 'var(--airb-good, #1d9e75)' : 'inherit'));
+		var avgLong = String(opts.avgLong || pb.phase_label || i18n.parentAverage || 'Average');
+		var avgShort = opts.avgShort || avgLong.replace(/^Average\s+/i, 'Avg ');
+		var avgMobile = opts.avgMobile || cfg.peer_phase_short || i18n.avgSchool || avgShort;
+		var topLabel = opts.topLabel || i18n.topQuartile || 'Top quartile';
+		var gapAvg = peerGapText(avgGap, 'average', cfg);
+		var gapTop = peerGapText(topGap, 'top', cfg);
+		var gapTopShortTpl = cfg.peer_gap_below_top_short || i18n.peerGapBelowTopShort || '{n} below top quartile';
+		var gapTopShort = topGap > 0
+			? gapTopShortTpl.replace('{n}', String(topGap))
+			: (topGap < 0
+				? (cfg.peer_gap_above_top_short || '{n} above top quartile').replace('{n}', String(Math.abs(topGap)))
+				: (cfg.peer_gap_at_top_short || 'In line with top quartile'));
+		var comparisonLong = opts.comparisonLabel || cfg.peer_comparison_label || i18n.peerComparisonLabel || 'How you compare';
+		var comparisonShort = opts.comparisonLabelShort || cfg.peer_comparison_label_short || i18n.peerComparisonShort || 'How you compare';
+		var youLabel = opts.youLabel || cfg.peer_you_label || i18n.peerYou || 'You';
+		var estimatedNote = opts.estimatedNote || i18n.peerEstimated || 'Comparison uses reference benchmarks until enough responses have been collected.';
+		var html = '<section class="airb__leader-peer">';
+		html += '<div class="airb__leader-peer-inner">';
+		html += '<div class="airb__leader-peer-scores">';
+		html += '<span class="airb__leader-peer-label">' + leaderResponsiveLabel(comparisonLong, comparisonShort) + '</span>';
+		html += '<div class="airb__leader-peer-row">';
+		html += '<div class="airb__leader-peer-stat"><div class="airb__leader-peer-val" style="color:' + esc(yourColor) + '">' + pb.your_score + '%</div><div class="airb__leader-peer-sub">' + esc(youLabel) + '</div></div>';
+		html += '<span class="airb__leader-peer-divider" aria-hidden="true"></span>';
+		html += '<div class="airb__leader-peer-stat"><div class="airb__leader-peer-val">' + pb.average_score + '%</div><div class="airb__leader-peer-sub"><span class="airb__peer-phase-long">' + esc(avgShort) + '</span><span class="airb__peer-phase-short">' + esc(avgMobile) + '</span></div></div>';
+		html += '<span class="airb__leader-peer-divider" aria-hidden="true"></span>';
+		html += '<div class="airb__leader-peer-stat"><div class="airb__leader-peer-val airb__leader-peer-val--top">' + pb.top_quartile + '%</div><div class="airb__leader-peer-sub">' + esc(topLabel) + '</div></div>';
+		html += '</div>';
+		html += '<p class="airb__leader-peer-gaps-combined">' + esc(gapAvg + ' · ' + gapTopShort) + '</p>';
+		html += '</div>';
+		html += '<div class="airb__leader-peer-gaps">';
+		html += '<div class="airb__leader-peer-gap-primary">' + esc(gapAvg) + '</div>';
+		html += '<div class="airb__leader-peer-gap-secondary">' + esc(gapTop) + '</div>';
+		html += '</div></div>';
+		if (pb.is_estimated) {
+			html += '<p class="airb__muted airb__peer-note">' + esc(estimatedNote) + '</p>';
+		} else if (typeof pb.percentile === 'number' && opts.percentileTemplate) {
+			html += '<p class="airb__muted airb__peer-note">' + esc(opts.percentileTemplate.replace('{n}', String(pb.percentile))) + '</p>';
+		}
+		return html + '</section>';
+	}
+
+	function leaderPeerBenchmarkBarHtml(pb) {
+		return peerBenchmarkBarHtml(pb, {});
+	}
+
+	function leaderUrgentActionHtml(detail) {
+		if (!detail || !detail.title) return '';
+		var html = '<section class="airb__leader-urgent">';
+		html += '<h3 class="airb__leader-urgent-heading">' + leaderResponsiveLabel(
+			leaderResult.urgent_action_heading || i18n.urgentActionHeading || 'Your single most urgent action',
+			leaderResult.urgent_action_heading_short || i18n.urgentActionHeadingShort || 'Your most urgent action'
+		) + '</h3>';
+		html += '<div class="airb__leader-urgent-body">';
+		html += '<span class="airb__leader-urgent-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>';
+		html += '<div class="airb__leader-urgent-copy">';
+		html += '<p class="airb__leader-urgent-title">' + esc(detail.title) + '</p>';
+		if (detail.rationale) {
+			html += '<p class="airb__leader-urgent-rationale">' + esc(detail.rationale) + '</p>';
+		}
+		html += '</div></div></section>';
+		return html;
+	}
+
 	function readinessBandScaleHtml(score, opts) {
 		opts = opts || {};
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
 		var bandLabel = readinessBandLabel(score);
 		var bandSlug = readinessLevel(score).slug;
 		var bandColor = readinessBandColor(score);
+		var heroSig = opts.leaderHero ? leaderMetricSignals('readiness', bandSlug) : null;
 		var bands = readinessBandDefinitions();
 		var aria = (i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
 			.replace('{score}', String(score))
@@ -503,7 +1215,11 @@
 			html += '<span class="airb__readiness-scale-band" style="color:' + esc(bandColor) + '">' + esc(bandLabel.toUpperCase()) + '</span>';
 			html += '</div>';
 		} else {
-			html += readinessBandPillHtml(bandSlug, bandLabel);
+			if (opts.leaderHero && heroSig && heroSig.signal) {
+				html += '<span class="airb__metric-signal airb__metric-signal--' + heroSig.tone + '">' + esc(heroSig.signal) + '</span>';
+			} else {
+				html += readinessBandPillHtml(bandSlug, bandLabel);
+			}
 		}
 		html += '</div>';
 		if (!opts.hero) {
@@ -543,6 +1259,9 @@
 		}
 
 		if (opts.hero) {
+			if (opts.leaderHero && heroSig && heroSig.consequence) {
+				html += '<p class="airb__score-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+			}
 			html += '<p class="airb__readiness-scale-help airb__muted">' + esc(
 				i18n.readinessScaleNote || 'This score is calculated from your role-specific audit domains. Other metrics, such as dependency, oversight and governance, are shown separately.'
 			) + '</p>';
@@ -577,9 +1296,9 @@
 	function studentSkillBand(pct) {
 		var score = studentDisplayScore(pct);
 		var levels = (studentResult.journey_levels || [
-			{ slug: 'beginning', label: 'Beginning', min: 0, max: 20 },
-			{ slug: 'developing', label: 'Developing', min: 21, max: 40 },
-			{ slug: 'emerging', label: 'Emerging', min: 41, max: 60 },
+			{ slug: 'beginning', label: 'At risk', min: 0, max: 20 },
+			{ slug: 'developing', label: 'Building', min: 21, max: 40 },
+			{ slug: 'emerging', label: 'Stable', min: 41, max: 60 },
 			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
 			{ slug: 'advanced', label: 'Advanced', min: 81, max: 100 },
 		]);
@@ -588,19 +1307,661 @@
 				return { slug: levels[i].slug, label: levels[i].label };
 			}
 		}
-		return { slug: 'beginning', label: 'Beginning' };
+		return { slug: 'beginning', label: 'At risk' };
+	}
+
+	function studentSkillBandLabel(pct) {
+		return studentSkillBand(pct).label;
 	}
 
 	function studentSkillColor(pct) {
 		var slug = studentSkillBand(pct).slug;
 		var colors = {
-			beginning: 'var(--airb-crit)',
-			developing: 'var(--airb-mod)',
-			emerging: '#3a8fb0',
-			confident: 'var(--airb-low)',
+			beginning: '#a32d2d',
+			developing: '#185fa5',
+			emerging: '#0c6b8a',
+			confident: '#1d9e75',
 			advanced: '#15803d',
 		};
-		return colors[slug] || readinessBandColor(pct);
+		return colors[slug] || '#64748b';
+	}
+
+	function studentBandDefinitions() {
+		return studentResult.journey_levels || [
+			{ slug: 'beginning', label: 'At risk', min: 0, max: 20 },
+			{ slug: 'developing', label: 'Building', min: 21, max: 40 },
+			{ slug: 'emerging', label: 'Stable', min: 41, max: 60 },
+			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
+			{ slug: 'advanced', label: 'Advanced', min: 81, max: 100 },
+		];
+	}
+
+	function studentSignalLine(bandLabel, signal) {
+		if (!signal) return bandLabel;
+		return bandLabel + ' — ' + signal;
+	}
+
+	function studentSkillBadgeClass(slug) {
+		if (slug === 'advanced') return 'advanced';
+		if (slug === 'confident') return 'confident';
+		if (slug === 'developing') return 'developing';
+		if (slug === 'beginning') return 'beginning';
+		return 'emerging';
+	}
+
+	function studentReadinessHeroHtml(score, uiHero) {
+		score = studentDisplayScore(score);
+		var band = studentSkillBand(score);
+		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
+			? { signal: uiHero.signal || '', tone: metricToneClass(uiHero.tone || 'neutral'), consequence: uiHero.consequence || '' }
+			: { signal: '', tone: 'neutral', consequence: '' };
+		var tone = heroSig.tone || 'neutral';
+		var bands = studentBandDefinitions();
+		var signalLine = studentSignalLine(band.label, heroSig.signal);
+		var kicker = studentResult.hero_metric_label || i18n.studentSkillLevel || 'Overall AI skills level';
+
+		var html = '<div class="airb__student-hero airb__student-hero--tone-' + tone + '" role="img" aria-label="' + esc(
+			(i18n.studentSkillLevel || 'Overall AI skills level') + ' ' + score + '%, ' + (signalLine || band.label)
+		) + '">';
+		html += '<div class="airb__student-hero-head">';
+		html += '<span class="airb__student-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__student-hero-meta">';
+		if (heroSig.signal) {
+			html += '<div class="airb__student-hero-signal airb__student-hero-signal--desktop">' + esc(signalLine) + '</div>';
+			html += '<div class="airb__student-hero-signal-mobile" aria-hidden="true">';
+			html += '<div class="airb__leader-hero-band">' + esc(band.label) + '</div>';
+			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
+			html += '</div>';
+		} else {
+			html += '<div class="airb__student-hero-signal airb__student-hero-signal--desktop">' + esc(band.label) + '</div>';
+		}
+		html += '<div class="airb__student-hero-kicker">' + esc(kicker) + '</div>';
+		html += '</div></div>';
+		if (heroSig.consequence) {
+			html += '<p class="airb__student-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+		}
+		html += '<div class="airb__student-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span class="airb__student-hero-seg airb__student-hero-seg--' + b.slug + (band.slug === b.slug ? ' is-active' : '') + '"></span>';
+		});
+		html += '</div>';
+		html += '<div class="airb__student-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span>' + esc(b.label) + '</span>';
+		});
+		html += '</div></div>';
+		return html;
+	}
+
+	function studentSkillsSectionHtml(metrics) {
+		if (!metrics || !metrics.length) return '';
+		var heading = studentResult.skills_section_heading_short || studentResult.skills_section_heading || 'Core skills';
+		var html = '<div class="airb__student-skills-card">';
+		html += benchmarkCardHeadingHtml(heading);
+		metrics.forEach(function (row) {
+			var pct = parseInt(row.value, 10) || 0;
+			var band = row.skill_band && row.skill_band.label ? row.skill_band : studentSkillBand(pct);
+			var badgeClass = studentSkillBadgeClass(band.slug);
+			var color = studentSkillColor(pct);
+			html += '<div class="airb__student-skill-row">';
+			html += '<span class="airb__student-skill-label">' + esc(row.label) + '</span>';
+			html += '<div class="airb__student-skill-bar-wrap"><div class="airb__student-skill-bar" style="width:' + pct + '%;background:' + esc(color) + '"></div></div>';
+			html += '<span class="airb__student-skill-val" style="color:' + esc(color) + '">' + pct + '%</span>';
+			html += '<span class="airb__student-skill-badge airb__student-skill-badge--' + badgeClass + '">' + esc(band.label) + '</span>';
+			html += '</div>';
+		});
+		return html + '</div>';
+	}
+
+	function studentStrengthsSectionHtml(strengths, heading) {
+		if (!strengths || !strengths.length) return '';
+		var html = '<div class="airb__student-strength-card">';
+		html += benchmarkCardHeadingHtml(heading);
+		strengths.forEach(function (item) {
+			var title = typeof item === 'string' ? item : (item.title || '');
+			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
+			if (!title) return;
+			html += '<div class="airb__student-strength-row">';
+			html += '<span class="airb__student-strength-tick" aria-hidden="true">✓</span>';
+			html += '<div class="airb__student-strength-copy">';
+			html += '<p class="airb__student-strength-title">' + esc(title) + '</p>';
+			if (detail) html += '<p class="airb__student-strength-detail">' + esc(detail) + '</p>';
+			html += '</div></div>';
+		});
+		return html + '</div>';
+	}
+
+	function studentFocusBadge(area) {
+		var band = area.skill_band && area.skill_band.label ? area.skill_band : studentSkillBand(area.pct);
+		var badgeClass = studentSkillBadgeClass(band.slug);
+		return {
+			className: badgeClass,
+			text: band.label + ' · ' + (parseInt(area.pct, 10) || 0) + '%',
+		};
+	}
+
+	function studentFocusAreasHtml(focusAreas) {
+		if (!focusAreas || !focusAreas.length) return '';
+		var html = '';
+		focusAreas.forEach(function (area) {
+			var badge = studentFocusBadge(area);
+			html += '<div class="airb__student-focus-card">';
+			html += '<div class="airb__student-focus-header">';
+			html += '<h4 class="airb__student-focus-title">' + esc(area.label) + '</h4>';
+			html += '<span class="airb__student-skill-badge airb__student-skill-badge--' + badge.className + '">' + esc(badge.text) + '</span>';
+			html += '</div>';
+			if (area.summary) {
+				html += '<p class="airb__student-focus-summary">' + esc(area.summary) + '</p>';
+			}
+			var guidance = '';
+			if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
+				guidance += '<div class="airb__student-focus-challenge">';
+				guidance += '<div class="airb__student-focus-challenge-title">' + esc(area.challenge_heading) + '</div>';
+				if (area.challenge_body) {
+					guidance += '<p class="airb__student-focus-challenge-body">' + esc(area.challenge_body) + '</p>';
+				}
+				if (area.challenge_bullets && area.challenge_bullets.length) {
+					area.challenge_bullets.forEach(function (item) {
+						guidance += '<div class="airb__student-focus-challenge-bullet">' + esc(item) + '</div>';
+					});
+				}
+				guidance += '</div>';
+			}
+			if (area.actions && area.actions.length) {
+				area.actions.forEach(function (item, idx) {
+					guidance += '<div class="airb__student-action-row">';
+					guidance += '<span class="airb__student-action-num">' + (idx + 1) + '</span>';
+					guidance += '<span class="airb__student-action-text">' + esc(item) + '</span>';
+					guidance += '</div>';
+				});
+			}
+			if (guidance) {
+				var guidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
+				html += focusGuidanceAccordionHtml(guidanceLabel, guidance);
+			}
+			html += '</div>';
+		});
+		return html;
+	}
+
+	function studentResourceIconClass(icon) {
+		var map = { book: 'book', shield: 'shield', brain: 'brain' };
+		return map[icon] || 'book';
+	}
+
+	function studentResourcesSectionHtml(resources, intro) {
+		if (!resources || !resources.length) return '';
+		var heading = studentResult.resources_section_heading || 'Study resources';
+		var headingShort = studentResult.resources_section_heading_short || heading;
+		var html = leaderSectionDivider();
+		html += leaderSectionLabel(heading, headingShort);
+		html += '<div class="airb__student-resources-card">';
+		if (intro) {
+			html += '<p class="airb__student-resources-intro">' + esc(intro) + '</p>';
+		}
+		html += '<div class="airb__student-resource-list">';
+		resources.forEach(function (res) {
+			if (!res.url) return;
+			html += '<a class="airb__student-resource-row" href="' + esc(res.url) + '" target="_blank" rel="noopener noreferrer">';
+			html += '<span class="airb__student-resource-icon airb__student-resource-icon--' + esc(studentResourceIconClass(res.icon)) + '" aria-hidden="true"></span>';
+			html += '<span class="airb__student-resource-body">';
+			html += '<span class="airb__student-resource-label">' + esc(res.label) + '</span>';
+			if (res.description) {
+				html += '<span class="airb__student-resource-desc">' + esc(res.description) + '</span>';
+			}
+			html += '</span>';
+			html += '<span class="airb__student-resource-arrow" aria-hidden="true">→</span>';
+			html += '</a>';
+		});
+		return html + '</div></div>';
+	}
+
+	function studentRetakeCardHtml(sr, score) {
+		if (!sr) return '';
+		score = studentDisplayScore(parseInt(score, 10) || 0);
+		var threshold = parseInt(studentResult.retake_at_risk_threshold, 10);
+		if (isNaN(threshold)) threshold = 35;
+		var atRisk = score < threshold;
+		var retakeUrl = (sr.next_steps && sr.next_steps.hero && sr.next_steps.hero.cta_url) ? sr.next_steps.hero.cta_url : '';
+		var shareLabel = studentResult.share_cta_primary || i18n.shareWithSchool || 'Share with school';
+		var retakeLabel = studentResult.share_cta_secondary || studentResult.retake_cta || i18n.studentRetake || 'Retake the benchmark';
+		var heading = atRisk
+			? (studentResult.retake_at_risk_heading || i18n.studentRetakeAtRiskHeading || 'At risk — build your skills first')
+			: '';
+		var body = atRisk
+			? (studentResult.retake_at_risk_body || i18n.studentRetakeAtRiskBody || 'You scored below 35%, which puts you in the at-risk band. Explore the articles and study resources above before you retake.')
+			: (studentResult.retake_body_default || i18n.studentRetakeBody || 'When you are ready, retake the benchmark to see how your AI skills have improved.');
+		var html = '<div class="airb__student-share-card airb__student-retake-card' + (atRisk ? ' airb__student-retake-card--at-risk' : '') + '">';
+		if (atRisk && heading) {
+			html += '<h4 class="airb__student-retake-heading">' + esc(heading) + '</h4>';
+		}
+		if (body) {
+			html += '<p class="airb__student-retake-body">' + esc(body) + '</p>';
+		}
+		html += '<div class="airb__student-share-actions">';
+		var shareMailto = buildShareResultsMailto();
+		if (shareMailto) {
+			html += '<a class="airb__btn airb__btn--primary airb__student-share-btn airb__student-share-btn--primary" href="' + esc(shareMailto) + '" id="airb-share-results">' + esc(shareLabel) + ' ↗</a>';
+		} else {
+			html += '<button type="button" class="airb__btn airb__btn--primary airb__student-share-btn airb__student-share-btn--primary" data-airb-open-interest="student_share_school">' + esc(shareLabel) + ' ↗</button>';
+		}
+		if (retakeUrl) {
+			html += '<a class="airb__btn airb__student-share-btn airb__student-share-btn--secondary" href="' + esc(retakeUrl) + '">' + esc(retakeLabel) + ' ↗</a>';
+		} else {
+			html += '<button type="button" class="airb__btn airb__student-share-btn airb__student-share-btn--secondary" data-airb-student-retake="benchmark">' + esc(retakeLabel) + ' ↗</button>';
+		}
+		html += '</div></div>';
+		return html;
+	}
+
+	function restartStudentAudit(focusSchool) {
+		hideError();
+		state.role = 'student';
+		state.results = null;
+		state.submissionId = 0;
+		state.studentFocusSchool = !!focusSchool;
+		collapseIntro();
+		startAuditQuestions();
+	}
+
+	function parentBandDefinitions() {
+		return parentResult.awareness_levels || [
+			{ slug: 'just_starting', label: 'Just starting', min: 0, max: 20 },
+			{ slug: 'developing', label: 'Developing', min: 21, max: 40 },
+			{ slug: 'aware', label: 'Aware', min: 41, max: 60 },
+			{ slug: 'confident', label: 'Confident', min: 61, max: 80 },
+			{ slug: 'well_prepared', label: 'Well prepared', min: 81, max: 100 },
+		];
+	}
+
+	function parentAwarenessBand(score) {
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var levels = parentBandDefinitions();
+		for (var i = 0; i < levels.length; i++) {
+			if (score >= levels[i].min && score <= levels[i].max) {
+				return { slug: levels[i].slug, label: levels[i].label };
+			}
+		}
+		return { slug: 'developing', label: 'Developing' };
+	}
+
+	function parentSignalLine(bandLabel, signal) {
+		if (!signal) return bandLabel;
+		return bandLabel + ' — ' + signal;
+	}
+
+	function parentMetricColor(badgeSlug, pct) {
+		if (badgeSlug === 'good') return '#639922';
+		if (badgeSlug === 'risk') return '#e24b4a';
+		if (badgeSlug === 'attention') return '#ef9f27';
+		return '#378add';
+	}
+
+	function parentMetricTextColor(badgeSlug) {
+		if (badgeSlug === 'good') return '#3b6d11';
+		if (badgeSlug === 'risk') return '#a32d2d';
+		if (badgeSlug === 'attention') return '#854f0b';
+		return '#185fa5';
+	}
+
+	function parentReadinessHeroHtml(score, uiHero) {
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var band = parentAwarenessBand(score);
+		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
+			? { signal: uiHero.signal || '', tone: metricToneClass(uiHero.tone || 'warning'), consequence: uiHero.consequence || '' }
+			: { signal: '', tone: 'warning', consequence: '' };
+		var tone = heroSig.tone || 'warning';
+		var bands = parentBandDefinitions();
+		var signalLine = parentSignalLine(band.label, heroSig.signal);
+		var kicker = parentResult.hero_metric_label || i18n.parentAwarenessLevel || 'Overall home AI awareness';
+
+		var html = '<div class="airb__parent-hero airb__parent-hero--tone-' + tone + '" role="img" aria-label="' + esc(
+			kicker + ' ' + score + '%, ' + (signalLine || band.label)
+		) + '">';
+		html += '<div class="airb__parent-hero-head">';
+		html += '<span class="airb__parent-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__parent-hero-meta">';
+		html += '<div class="airb__parent-hero-signal airb__parent-hero-signal--desktop">' + esc(signalLine || band.label) + '</div>';
+		html += '<div class="airb__parent-hero-signal-mobile" aria-hidden="true">';
+		html += '<div class="airb__leader-hero-band">' + esc(band.label) + '</div>';
+		if (heroSig.signal) {
+			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
+		}
+		html += '</div>';
+		html += '<div class="airb__parent-hero-kicker">' + esc(kicker) + '</div>';
+		html += '</div></div>';
+		if (heroSig.consequence) {
+			html += '<p class="airb__parent-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+		}
+		html += '<div class="airb__parent-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span class="airb__parent-hero-seg airb__parent-hero-seg--' + b.slug + (band.slug === b.slug ? ' is-active' : '') + '"></span>';
+		});
+		html += '</div>';
+		html += '<div class="airb__parent-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span>' + esc(b.label) + '</span>';
+		});
+		html += '</div></div>';
+		return html;
+	}
+
+	function parentHomeMetricsSectionHtml(metrics) {
+		if (!metrics || !metrics.length) return '';
+		var headingShort = parentResult.metrics_section_heading_short || '5 home safety scores';
+		var html = '<div class="airb__parent-metrics-card">';
+		html += benchmarkCardHeadingHtml(headingShort);
+		metrics.forEach(function (row) {
+			var pct = parseInt(row.value, 10) || 0;
+			var badge = row.badge || { slug: 'developing', label: 'Building' };
+			var barColor = parentMetricColor(badge.slug, pct);
+			var textColor = parentMetricTextColor(badge.slug);
+			html += '<div class="airb__parent-metric-row">';
+			html += '<span class="airb__parent-metric-icon airb__parent-metric-icon--' + esc(row.icon || 'eye') + ' airb__parent-metric-icon--' + esc(badge.slug) + '" aria-hidden="true"></span>';
+			html += '<div class="airb__parent-metric-copy">';
+			html += '<div class="airb__parent-metric-label">' + esc(row.label) + '</div>';
+			if (row.subtitle) html += '<div class="airb__parent-metric-sub">' + esc(row.subtitle) + '</div>';
+			html += '</div>';
+			html += '<div class="airb__parent-metric-bar-col">';
+			html += '<div class="airb__parent-metric-bar-wrap"><div class="airb__parent-metric-bar" style="width:' + pct + '%;background:' + esc(barColor) + '"></div></div>';
+			html += '<div class="airb__parent-metric-pct" style="color:' + esc(textColor) + '">' + pct + '%</div>';
+			html += '</div>';
+			html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + esc(badge.slug) + '">' + esc(badge.label) + '</span>';
+			html += '</div>';
+		});
+		return html + '</div>';
+	}
+
+	function parentFocusBadge(area) {
+		var badge = area.badge || { slug: 'attention', label: 'Needs attention' };
+		return badge.label + ' · ' + (parseInt(area.pct, 10) || 0) + '%';
+	}
+
+	function parentFocusTopicsHtml(focusAreas) {
+		if (!focusAreas || !focusAreas.length) return '';
+		var html = '';
+		focusAreas.forEach(function (area) {
+			var severity = area.severity || (area.badge && area.badge.slug === 'risk' ? 'risk' : 'attention');
+			html += '<div class="airb__parent-topic-card airb__parent-topic-card--' + esc(severity) + '">';
+			html += '<div class="airb__parent-topic-header">';
+			html += '<h4 class="airb__parent-topic-title">' + esc(area.label) + '</h4>';
+			html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + esc((area.badge && area.badge.slug) || 'attention') + '">' + esc(parentFocusBadge(area)) + '</span>';
+			html += '</div>';
+			if (area.summary) {
+				html += '<p class="airb__parent-topic-summary">' + esc(area.summary) + '</p>';
+			}
+			var guidance = '';
+			if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
+				guidance += '<div class="airb__parent-topic-challenge airb__parent-topic-challenge--' + esc(severity) + '">';
+				guidance += '<div class="airb__parent-topic-challenge-title">' + esc(area.challenge_heading) + '</div>';
+				if (area.challenge_body) {
+					guidance += '<p class="airb__parent-topic-challenge-body">' + esc(area.challenge_body) + '</p>';
+				}
+				if (area.challenge_bullets && area.challenge_bullets.length) {
+					area.challenge_bullets.forEach(function (item) {
+						guidance += '<div class="airb__parent-topic-challenge-bullet">' + esc(item) + '</div>';
+					});
+				}
+				guidance += '</div>';
+			}
+			if (area.actions && area.actions.length) {
+				area.actions.forEach(function (item, idx) {
+					guidance += '<div class="airb__parent-action-row">';
+					guidance += '<span class="airb__parent-action-num">' + (idx + 1) + '</span>';
+					guidance += '<span class="airb__parent-action-text">' + esc(item) + '</span>';
+					guidance += '</div>';
+				});
+			}
+			if (guidance) {
+				var parentGuidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
+				html += focusGuidanceAccordionHtml(parentGuidanceLabel, guidance);
+			}
+			html += '</div>';
+		});
+		return html;
+	}
+
+	function parentConversationStartersHtml(starters, intro) {
+		if (!starters || !starters.length) return '';
+		var headingShort = parentResult.conversation_section_heading_short || 'Conversation starters';
+		var html = '<div class="airb__parent-convo-card">';
+		html += benchmarkCardHeadingHtml(headingShort);
+		if (intro) {
+			html += '<p class="airb__parent-convo-intro">' + esc(intro) + '</p>';
+		}
+		starters.forEach(function (item) {
+			html += '<div class="airb__parent-convo-item">';
+			html += '<span class="airb__parent-convo-icon" aria-hidden="true"></span>';
+			html += '<div class="airb__parent-convo-copy">';
+			html += '<p class="airb__parent-convo-question">' + esc(item.question || '') + '</p>';
+			if (item.hint) html += '<p class="airb__parent-convo-hint">' + esc(item.hint) + '</p>';
+			html += '</div></div>';
+		});
+		return html + '</div>';
+	}
+
+	function parentShareCardHtml(pr) {
+		if (!pr) return '';
+		var advocate = pr.advocate;
+		var body = parentResult.share_section_body || '';
+		if (advocate && advocate.intro) {
+			body = advocate.intro + (body ? ' ' + body : '');
+		}
+		var html = '<div class="airb__parent-share-card">';
+		html += '<div class="airb__parent-share-kicker">' + esc(parentResult.share_section_kicker || 'Share with your school') + '</div>';
+		html += '<h4 class="airb__parent-share-title">' + esc((advocate && advocate.title) || parentResult.share_section_title || 'Help your school support your child better') + '</h4>';
+		html += '<p class="airb__parent-share-body">' + esc(body) + '</p>';
+		if (advocate && advocate.strengths && advocate.strengths.length) {
+			html += '<ul class="airb__parent-share-strengths">';
+			advocate.strengths.forEach(function (item) {
+				html += '<li>' + esc(item) + '</li>';
+			});
+			html += '</ul>';
+		}
+		html += '<div class="airb__parent-share-actions">';
+		var mailto = buildShareResultsMailto();
+		if (mailto) {
+			html += '<a class="airb__btn airb__parent-share-btn airb__parent-share-btn--primary" href="' + esc(mailto) + '">' + esc(parentResult.share_cta_primary || i18n.parentShareSchool || 'Share with school') + ' ↗</a>';
+		} else {
+			html += '<button type="button" class="airb__btn airb__parent-share-btn airb__parent-share-btn--primary" data-airb-open-interest="parent_share_with_school">' + esc(parentResult.share_cta_primary || i18n.parentShareSchool || 'Share with school') + ' ↗</button>';
+		}
+		html += '<button type="button" class="airb__btn airb__parent-share-btn airb__parent-share-btn--secondary" data-airb-open-interest="parent_resources">' + esc(parentResult.share_cta_secondary || i18n.parentSafetyGuide || 'Parent safety guide') + ' ↗</button>';
+		html += '</div></div>';
+		return html;
+	}
+
+	function supportReadinessHeroHtml(score, uiHero) {
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var bandLabel = readinessBandLabel(score);
+		var bandSlug = readinessLevel(score).slug;
+		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
+			? leaderUiMetric(uiHero, 'readiness', bandSlug)
+			: leaderMetricSignals('readiness', bandSlug);
+		var tone = heroSig.tone || 'neutral';
+		var bands = readinessBandDefinitions();
+		var signalLine = leaderSignalLine(bandLabel, heroSig.signal);
+		var kicker = supportResult.hero_metric_label || i18n.statReadiness || 'Overall readiness';
+
+		var html = '<div class="airb__support-hero airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
+			kicker + ' ' + score + '%, ' + (signalLine || bandLabel)
+		) + '">';
+		html += '<div class="airb__leader-hero-head">';
+		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__leader-hero-meta">';
+		if (heroSig.signal) {
+			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(signalLine) + '</div>';
+			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
+			html += '<div class="airb__leader-hero-band">' + esc(bandLabel) + '</div>';
+			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
+			html += '</div>';
+		}
+		html += '<div class="airb__leader-hero-kicker">' + esc(kicker) + '</div>';
+		html += '</div></div>';
+		if (heroSig.consequence) {
+			html += '<p class="airb__leader-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+		}
+		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
+		});
+		html += '</div>';
+		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span>' + esc(b.label) + '</span>';
+		});
+		html += '</div></div>';
+		return html;
+	}
+
+	function supportMetricGridHtml(r, sr) {
+		var signals = sr && sr.metric_signals ? sr.metric_signals : {};
+		var risk = Math.round(r.overall_risk_percentage || 0);
+		var roleRisk = typeof sr.role_specific_risk === 'number' ? sr.role_specific_risk : risk;
+		var riskCard = signals.risk_exposure || {};
+		var roleCard = signals.role_risk || {};
+		var html = '<div class="airb__support-metric-grid">';
+		html += '<div class="airb__support-metric-cell airb__support-metric-cell--tone-' + metricToneClass(riskCard.tone || 'warning') + '">';
+		html += '<div class="airb__support-metric-lbl">' + esc(i18n.leaderMetricRisk || i18n.statRisk || 'AI risk exposure') + '</div>';
+		html += '<div class="airb__support-metric-val" style="color:' + esc(riskScoreColor(risk)) + '">' + risk + '%</div>';
+		html += '<div class="airb__support-metric-sub" style="color:' + esc(riskScoreColor(risk)) + '">' + esc(riskCard.signal || displayRiskLabel(r.risk_level, risk)) + '</div>';
+		if (riskCard.consequence) html += '<p class="airb__support-metric-desc">' + esc(riskCard.consequence) + '</p>';
+		html += '</div>';
+		html += '<div class="airb__support-metric-cell airb__support-metric-cell--tone-' + metricToneClass(roleCard.tone || 'urgent') + '">';
+		html += '<div class="airb__support-metric-lbl">' + esc(i18n.supportRoleRisk || 'Role-specific risk') + '</div>';
+		html += '<div class="airb__support-metric-val" style="color:' + esc(riskScoreColor(roleRisk)) + '">' + roleRisk + '%</div>';
+		html += '<div class="airb__support-metric-sub" style="color:' + esc(riskScoreColor(roleRisk)) + '">' + esc(roleCard.signal || i18n.supportRoleRiskSignal || 'Higher in your role') + '</div>';
+		if (roleCard.consequence) html += '<p class="airb__support-metric-desc">' + esc(roleCard.consequence) + '</p>';
+		html += '</div></div>';
+		return html;
+	}
+
+	function supportDomainBadgeClass(slug) {
+		if (slug === 'good') return 'good';
+		if (slug === 'critical') return 'critical';
+		return 'moderate';
+	}
+
+	function supportDomainsSectionHtml(domainRows) {
+		if (!domainRows || !domainRows.length) return '';
+		var rows = '';
+		domainRows.forEach(function (row) {
+			var pct = parseInt(row.pct, 10) || 0;
+			var color = readinessBandColor(pct);
+			var badge = row.badge || { slug: 'moderate', label: 'Needs work' };
+			rows += '<div class="airb__support-domain-row">';
+			rows += '<span class="airb__support-domain-label">' + esc(row.label) + '</span>';
+			rows += '<div class="airb__support-domain-bar-wrap"><div class="airb__support-domain-bar" style="width:' + pct + '%;background:' + esc(color) + '"></div></div>';
+			rows += '<span class="airb__support-domain-val" style="color:' + esc(color) + '">' + pct + '%</span>';
+			rows += '<span class="airb__support-domain-badge airb__support-domain-badge--' + supportDomainBadgeClass(badge.slug) + '">' + esc(badge.label) + '</span>';
+			rows += '</div>';
+		});
+		if (!rows) return '';
+		var headingShort = supportResult.domains_section_heading_short || 'By domain';
+		return '<div class="airb__support-domain-card">' + benchmarkCardHeadingHtml(headingShort) + rows + '</div>';
+	}
+
+	function supportStrengthsSectionHtml(strengths, heading) {
+		if (!strengths || !strengths.length) return '';
+		var html = '<div class="airb__support-strength-card">';
+		html += benchmarkCardHeadingHtml(heading);
+		strengths.forEach(function (item) {
+			var title = typeof item === 'string' ? item : (item.title || '');
+			var detail = typeof item === 'object' && item ? (item.detail || '') : '';
+			if (!title) return;
+			html += '<div class="airb__support-strength-row">';
+			html += '<span class="airb__support-strength-tick" aria-hidden="true">✓</span>';
+			html += '<div class="airb__support-strength-copy">';
+			html += '<p class="airb__support-strength-title">' + esc(title) + '</p>';
+			if (detail) html += '<p class="airb__support-strength-detail">' + esc(detail) + '</p>';
+			html += '</div></div>';
+		});
+		return html + '</div>';
+	}
+
+	function supportFocusSeverity(pct, severity) {
+		if (severity === 'critical' || pct < 35) return 'critical';
+		if (pct < 45) return 'moderate';
+		return 'attention';
+	}
+
+	function supportFocusAreasHtml(focusAreas) {
+		if (!focusAreas || !focusAreas.length) return '';
+		var html = '';
+		focusAreas.forEach(function (area) {
+			var severity = supportFocusSeverity(area.pct, area.severity);
+			html += '<div class="airb__focus-card airb__support-focus-card airb__focus-card--' + severity + '">';
+			html += '<div class="airb__focus-card-header">';
+			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
+			html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + '">' + esc(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
+			html += '</div>';
+			if (area.summary) html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
+			var guidance = '';
+			if (area.challenge_bullets && area.challenge_bullets.length) {
+				guidance += '<div class="airb__support-focus-challenge airb__support-focus-challenge--' + severity + '">';
+				if (area.challenge_heading) {
+					guidance += '<div class="airb__support-focus-challenge-title">' + esc(area.challenge_heading) + '</div>';
+				}
+				area.challenge_bullets.forEach(function (item) {
+					guidance += '<div class="airb__support-focus-challenge-item">' + esc(item) + '</div>';
+				});
+				guidance += '</div>';
+			}
+			if (area.actions && area.actions.length) {
+				area.actions.forEach(function (item, idx) {
+					guidance += '<div class="airb__support-action-row">';
+					guidance += '<span class="airb__support-action-num">' + (idx + 1) + '</span>';
+					guidance += '<span class="airb__support-action-text">' + esc(item) + '</span>';
+					guidance += '</div>';
+				});
+			}
+			if (guidance) {
+				var supportGuidanceLabel = area.challenge_heading || i18n.focusGuidanceToggle || 'Tips & steps to try';
+				html += focusGuidanceAccordionHtml(supportGuidanceLabel, guidance);
+			}
+			html += '</div>';
+		});
+		return html;
+	}
+
+	function supportRolloutCardHtml(ro) {
+		if (!ro) return '';
+		var html = leaderRolloutCardHtml(ro);
+		return html.replace('airb__leader-rollout-card', 'airb__leader-rollout-card airb__leader-rollout-card--support');
+	}
+
+	function supportCtaCardHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.hero) return '';
+		var hero = nextSteps.hero;
+		var deliverables = hero.deliverables && hero.deliverables.length ? hero.deliverables : (hero.understand_items || []);
+		var html = '<article class="airb__support-cta-card">';
+		if (hero.pathway_kicker) {
+			html += '<div class="airb__support-cta-kicker">' + esc(hero.pathway_kicker) + '</div>';
+		}
+		html += '<h4 class="airb__support-cta-title">' + esc(hero.title) + '</h4>';
+		if (hero.body) html += '<p class="airb__support-cta-body">' + esc(hero.body) + '</p>';
+		if (deliverables.length) {
+			html += '<div class="airb__support-cta-deliverables" role="list">';
+			deliverables.forEach(function (item) {
+				html += '<span class="airb__support-cta-deliverable" role="listitem">' + esc(item) + '</span>';
+			});
+			html += '</div>';
+		}
+		html += '<div class="airb__support-cta-actions">';
+		html += '<button type="button" class="airb__btn airb__btn--premium airb__support-cta-btn airb__support-cta-btn--primary" data-airb-open-interest="' + esc(hero.key || 'support_cpd') + '">' + esc(hero.cta_text || 'Book CPD session') + ' ↗</button>';
+		if (hero.secondary_cta_text && hero.secondary_key) {
+			html += '<button type="button" class="airb__btn airb__support-cta-btn airb__support-cta-btn--secondary" data-airb-open-interest="' + esc(hero.secondary_key) + '">' + esc(hero.secondary_cta_text) + ' ↗</button>';
+		}
+		html += '</div></article>';
+		return html;
+	}
+
+	function supportHelpSupportHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.resource_links || !nextSteps.resource_links.length) return '';
+		return benchmarkHelpSupportHtml(
+			nextSteps,
+			nextSteps.help_support_heading || supportResult.help_support_heading,
+			nextSteps.help_support_heading_short || supportResult.help_support_heading_short
+		);
 	}
 
 	function studentLearnerTypeHtml(sr) {
@@ -652,6 +2013,28 @@
 
 	function isLeaderRole() {
 		return state.role === 'leader';
+	}
+
+	function supportDisplayDomainScores(answers) {
+		var qid = 'ss_report_issue';
+		var question = null;
+		(cfg.questions || []).forEach(function (q) {
+			if (q.id === qid) question = q;
+		});
+		if (!question || !answers[qid]) return {};
+		var score = scoreAnswer(question, answers[qid]);
+		var avgRisk = score / 3 * 100;
+		var readiness = Math.round(100 - avgRisk);
+		return {
+			safeguarding: {
+				label: i18n.safeguarding || 'Safeguarding awareness',
+				risk_percentage: Math.round(avgRisk * 10) / 10,
+				readiness_percentage: Math.round((100 - avgRisk) * 10) / 10,
+				band: riskBand(avgRisk),
+				readiness_band: readinessBand(readiness),
+				questions_answered: 1,
+			},
+		};
 	}
 
 	function parentDisplayDomainScores(role, answers) {
@@ -1010,10 +2393,13 @@
 			results.overall_risk_percentage = studentOverall.overall_risk;
 			results.risk_level = studentOverall.risk_level;
 			results.risk_level_label = displayRiskLabel(studentOverall.risk_level, studentOverall.overall_risk);
-			results.readiness_level = readinessBand(studentOverall.alignment_score);
-			results.readiness_level_label = readinessBandLabel(studentOverall.alignment_score);
+			results.readiness_level = studentSkillBand(studentOverall.alignment_score).slug;
+			results.readiness_level_label = studentSkillBandLabel(studentOverall.alignment_score);
 			results.key_exposure_areas = [];
 			results.recommendations = [];
+		}
+		if (role === 'support_staff') {
+			results.support_display_domains = supportDisplayDomainScores(answers);
 		}
 		results.role_result_cards = roleResultCards(role, results);
 		return results;
@@ -1047,6 +2433,13 @@
 		return 'var(--airb-low)';
 	}
 
+	function oversightZoneColorHex(v) {
+		if (v <= 10) return '#b91c1c';
+		if (v <= 25) return '#c2410c';
+		if (v <= 50) return '#a16207';
+		return '#15803d';
+	}
+
 	function domainColor(slug) {
 		return domainColors[slug] || 'var(--airb-accent-fill)';
 	}
@@ -1073,16 +2466,27 @@
 		}
 	}
 
+	function roleCompletionBandLabel(roleSlug, alignment, storedLabel) {
+		if (roleSlug === 'student') {
+			return studentSkillBandLabel(alignment);
+		}
+		return storedLabel || readinessBandLabel(alignment);
+	}
+
 	function persistRoleCompletion(resultsOrScore) {
 		if (!state.role) return;
 		var entry = { ts: Date.now() };
 		if (typeof resultsOrScore === 'number') {
 			entry.alignment = resultsOrScore;
-			entry.readiness_label = readinessBandLabel(resultsOrScore);
+			entry.readiness_label = roleCompletionBandLabel(state.role, resultsOrScore, '');
 		} else if (resultsOrScore && typeof resultsOrScore === 'object') {
 			if (typeof resultsOrScore.alignment_score !== 'number') return;
 			entry.alignment = resultsOrScore.alignment_score;
-			entry.readiness_label = resultsOrScore.readiness_level_label || readinessBandLabel(resultsOrScore.alignment_score);
+			entry.readiness_label = roleCompletionBandLabel(
+				state.role,
+				resultsOrScore.alignment_score,
+				resultsOrScore.readiness_level_label || ''
+			);
 			entry.risk_level = resultsOrScore.risk_level || '';
 		} else {
 			return;
@@ -1094,9 +2498,9 @@
 		} catch (e) { /* private browsing */ }
 	}
 
-	function roleCompletionSummary(done) {
+	function roleCompletionSummary(done, roleSlug) {
 		if (!done || typeof done.alignment !== 'number') return '';
-		var band = done.readiness_label || readinessBandLabel(done.alignment);
+		var band = roleCompletionBandLabel(roleSlug, done.alignment, done.readiness_label);
 		return (i18n.roleLastResult || 'Your last result: {n}% · {band}')
 			.replace('{n}', String(done.alignment))
 			.replace('{band}', band);
@@ -1161,7 +2565,7 @@
 				html += '<span class="airb__role-card-blurb">' + esc(tagline) + '</span>';
 			}
 			if (done && typeof done.alignment === 'number') {
-				html += '<span class="airb__role-card-result">' + esc(roleCompletionSummary(done)) + '</span>';
+				html += '<span class="airb__role-card-result">' + esc(roleCompletionSummary(done, slug)) + '</span>';
 			}
 			html += '<span class="airb__role-card-go">' + esc(done ? (i18n.retakeAudit || 'Retake audit') : (i18n.startAudit || 'Start audit')) + ' →</span>';
 			html += '</button>';
@@ -1296,6 +2700,46 @@
 		return !!(r && r.interest_form && r.interest_form.options && r.interest_form.options.length);
 	}
 
+	function roleShowsInterestForm(role) {
+		return role === 'teacher' || role === 'leader' || role === 'parent' || role === 'support_staff';
+	}
+
+	function resolveInterestPrefill(slug) {
+		slug = String(slug || '').trim();
+		if (!slug) return '';
+		var map = airbBenchmark.interestPrefillMap || {};
+		return map[slug] || slug;
+	}
+
+	function mergeInterestFormShell(results, shell) {
+		if (!results || !shell || hasInterestForm(results)) return results;
+		var merged = JSON.parse(JSON.stringify(shell));
+		merged.summary = {
+			score: results.alignment_score != null ? results.alignment_score : 0,
+			readiness_label: results.readiness_level_label || '',
+			risk_level: results.risk_level || '',
+			risk_level_label: results.risk_level_label || '',
+		};
+		if (results.interest_form && results.interest_form.weak_domains) {
+			merged.weak_domains = results.interest_form.weak_domains;
+		}
+		results.interest_form = merged;
+		return results;
+	}
+
+	function ensureInterestFormRendered() {
+		if (!state.results || !state.role || !roleShowsInterestForm(state.role)) return false;
+		var shells = airbBenchmark.interestForms || {};
+		if (!hasInterestForm(state.results) && shells[state.role]) {
+			mergeInterestFormShell(state.results, shells[state.role]);
+		}
+		if (!hasInterestForm(state.results) || !el.results) return false;
+		if (document.getElementById('airb-interest')) return true;
+		el.results.insertAdjacentHTML('beforeend', interestFormHtml(state.results));
+		bindInterestForm();
+		return !!document.getElementById('airb-interest');
+	}
+
 	function interestFormButtonLabel() {
 		if (isParentRole()) return i18n.requestSupportParent || i18n.requestFullReport || 'Get support';
 		if (isStudentRole()) return i18n.requestSupportStudent || i18n.requestFullReport || 'Get support';
@@ -1354,6 +2798,13 @@
 			var ygLabel = state.role === 'parent' ? (i18n.yearGroupParent || i18n.yearGroup) : i18n.yearGroup;
 			html += '<label class="airb__label" for="airb-year-group">' + esc(ygLabel) + '</label>' +
 				'<select class="airb__select" id="airb-year-group">' + yearGroupOptionsHtml() + '</select>';
+			if (state.role === 'student') {
+				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional || 'School name (optional)') + '</label>' +
+					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+				if (i18n.studentSchoolHint) {
+					html += '<p class="airb__muted">' + esc(i18n.studentSchoolHint) + '</p>';
+				}
+			}
 		} else {
 			if (state.role === 'teacher' && i18n.contactHintTeacher) {
 				html += '<p class="airb__muted">' + esc(i18n.contactHintTeacher) + '</p>';
@@ -1391,6 +2842,13 @@
 		}
 		el.progress.hidden = true;
 		updateFlowChrome();
+		if (state.studentFocusSchool) {
+			var schoolInput = document.getElementById('airb-school');
+			if (schoolInput && schoolInput.focus) {
+				schoolInput.focus();
+			}
+			state.studentFocusSchool = false;
+		}
 		scrollFlowToTop();
 	}
 
@@ -1456,11 +2914,13 @@
 		}
 
 		var rows = '';
+		var domainHints = (isTeacherRole() && teacherResult.domain_descriptions) ? teacherResult.domain_descriptions : {};
 		domainKeys.forEach(function (slug) {
 			var d = r.domain_scores[slug];
 			if (!d || !d.questions_answered) return;
 			var pct = Math.round(d.readiness_percentage);
-			rows += '<div class="airb__res-row"><span class="airb__res-row-nm">' + esc(d.label) + '</span>';
+			var hint = domainHints[slug] || '';
+			rows += '<div class="airb__res-row"><span class="airb__res-row-nm"' + (hint ? ' title="' + esc(hint) + '"' : '') + '>' + esc(d.label) + '</span>';
 			rows += '<span class="airb__res-track"><i style="width:' + pct + '%;background:' + esc(readinessBandColor(pct)) + '"></i></span>';
 			rows += '<span class="airb__res-row-pc">' + pct + '%</span></div>';
 		});
@@ -1494,21 +2954,35 @@
 		return '<div class="airb__res-panel airb__res-panel--domains airb__res-panel--risk"><h3>' + esc(heading) + '</h3>' + rows + '</div>';
 	}
 
-	function oversightPanelHtml(r) {
+	function oversightPanelHtml(r, opts) {
+		opts = opts || {};
 		var val = oversightGaugeValue(r);
 		var studentMode = isStudentRole() && !!r.student_results;
-		var html = '<div class="airb__res-panel airb__res-panel--gauge"><h3>' + esc(i18n.oversight) + '</h3>';
+		var supportMode = isSupportStaffRole() && !!r.support_results;
+		var html = '<div class="airb__res-panel airb__res-panel--gauge" data-oversight-value="' + Math.round(val) + '"><h3>' + esc(i18n.oversight) + '</h3>';
 		if (val === null) {
+			if (!opts.showNa) return '';
 			html += '<p class="airb__res-na">' + esc(i18n.oversightNa || 'Not measured for this audience.') + '</p>';
-		} else {
-			var label = r.human_oversight_label || '';
-			var help = studentMode
-				? 'How often you check, edit or question AI answers before relying on them.'
-				: 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.';
-			html += '<div class="airb__res-gauge-wrap">' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%') + '</div>';
-			if (label) html += '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>';
-			html += '<p class="airb__gauge-help">' + esc(help) + '</p>';
+			return html + '</div>';
 		}
+		var oversightCopy = oversightUiCopy(r, val);
+		var label = oversightCopy.signal || (r.human_oversight_label || '');
+		var help = studentMode
+			? 'How often you check, edit or question AI answers before relying on them.'
+			: supportMode
+				? 'Share of AI output reviewed or changed before use in emails, letters and reports.'
+				: (oversightCopy.consequence
+					? oversightCopy.consequence
+					: 'Share of AI output reviewed or changed before use. Below 26% signals reliance without meaningful human review.');
+		html += '<div class="airb__res-gauge-wrap">' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%') + '</div>';
+		if (label) html += '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>';
+		html += '<p class="airb__gauge-help">' + esc(help) + '</p>';
+		html += '<div class="airb__gauge-share">';
+		html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--sm airb__gauge-share-btn" data-airb-share-oversight-gauge data-oversight-value="' + Math.round(val) + '">';
+		html += esc(i18n.shareOversightGauge || 'Share as image');
+		html += '</button>';
+		html += '<p class="airb__muted airb__gauge-share-status" data-airb-gauge-share-status hidden role="status" aria-live="polite"></p>';
+		html += '</div>';
 		return html + '</div>';
 	}
 
@@ -1542,43 +3016,50 @@
 		return html + '</div></div>';
 	}
 
+	function parentHelpSupportHtml(pr) {
+		if (!pr) return '';
+		var links = (pr.next_steps && pr.next_steps.resource_links && pr.next_steps.resource_links.length)
+			? pr.next_steps.resource_links
+			: (pr.resource_links || []);
+		if (!links.length) return '';
+		return benchmarkHelpSupportHtml(
+			{ resource_links: links },
+			parentResult.help_support_heading || i18n.helpSupportHeading || 'Further reading and tips to guide you',
+			parentResult.help_support_heading_short || i18n.helpSupportHeadingShort || 'Read more & tips'
+		);
+	}
+
 	function parentResultsHtml(r) {
 		var pr = r.parent_results;
-		if (!pr) return parentFocusDomainsHtml(r);
+		if (!pr) return '';
 
 		var cfg = parentResult;
-		var summaryExtra = parentAdvocateSummaryHtml(pr.advocate) + parentConfidenceSummaryHtml(pr.confidence);
-		var html = summaryExtra ? resultsSummaryZoneHtml({
-			title: cfg.summary_title || 'Your summary',
-			extraHtml: summaryExtra
-		}) : '';
+		var html = '';
 
-		var standInner = '';
-		if (pr.peer_benchmark) {
-			standInner += peerBenchmarkBlockHtml(pr.peer_benchmark, {
-				heading: cfg.peer_benchmark_title || 'Parent benchmark comparison',
-				averageLabel: i18n.parentAverage || 'Average parent',
-				percentileTemplate: (i18n.peerPercentile || 'Your score is ahead of {n}% of similar schools.').replace('similar schools', 'parents'),
-				estimatedNote: i18n.peerEstimated || 'Comparison uses reference benchmarks until enough parents have completed the audit.'
-			});
+		if (pr.journey_tier !== 'high' && pr.focus_areas && pr.focus_areas.length) {
+			html += leaderSectionLabel(
+				cfg.focus_section_heading || 'Focus topics — what to tackle at home',
+				cfg.focus_section_heading_short || 'Focus topics'
+			);
+			html += '<div class="airb__parent-topic-stack">' + parentFocusTopicsHtml(pr.focus_areas) + '</div>';
+		} else if (pr.journey_tier !== 'high') {
+			var legacyFocus = parentFocusDomainsHtml(r);
+			if (legacyFocus) {
+				html += leaderSectionLabel(cfg.focus_section_heading_short || 'Focus topics', cfg.focus_section_heading_short || 'Focus topics');
+				html += legacyFocus;
+			}
 		}
-		var domainsHtml = domainReadinessRowsHtml(r);
-		if (domainsHtml) {
-			standInner += resultsAccordionHtml(cfg.domains_accordion_title || 'Your domain scores', domainsHtml);
+
+		var starters = pr.conversation_starters && pr.conversation_starters.length
+			? pr.conversation_starters
+			: (cfg.conversation_starters || []);
+		if (starters.length) {
+			html += parentConversationStartersHtml(starters, cfg.conversation_section_intro || '');
 		}
-		var focusHtml = parentFocusDomainsHtml(r);
-		if (focusHtml) {
-			standInner += resultsAccordionHtml(cfg.focus_accordion_title || i18n.domainFocus || 'What to focus on', focusHtml);
-		}
-		if (pr.confidence) {
-			standInner += resultsAccordionHtml(pr.confidence.title || 'Building your confidence', parentConfidenceDetailHtml(pr.confidence));
-		}
-		if (pr.advocate) {
-			standInner += resultsAccordionHtml(pr.advocate.title || 'Help your school', parentAdvocateDetailHtml(pr.advocate));
-		}
-		html += resultsStandZoneHtml(cfg.where_you_stand_heading || 'Where you stand', standInner);
-		html += resultsActionZoneHtml(pr.next_steps);
-		return html;
+
+		html += parentShareCardHtml(pr);
+		html += parentHelpSupportHtml(pr);
+		return benchmarkResultsBodyHtml(html);
 	}
 
 	function parentPriorityFocusHtml() {
@@ -1682,35 +3163,15 @@
 	}
 
 	function teacherDashboardHtml(r) {
-		var tr = r.teacher_results;
-		if (!tr || !isTeacherRole()) return '';
+		if (!r || !isTeacherRole()) return '';
 
 		var html = '<section class="airb__teacher-dashboard" aria-label="' + esc(i18n.teacherScoreBreakdown || 'Score breakdown') + '">';
-		html += '<h3 class="airb__benchmark-section-title">' + esc(i18n.teacherScoreBreakdown || 'Score breakdown') + '</h3>';
-		html += '<p class="airb__benchmark-bridge airb__muted">' + esc(i18n.teacherBreakdownIntro || 'The same metrics as above — shown by domain and in detail.') + '</p>';
-
-		var gaugeHtml = oversightPanelHtml(r);
 		var domainsHtml = domainReadinessRowsHtml(r, i18n.readinessScoreByDomain || 'Readiness score — by domain');
-
-		if (gaugeHtml || domainsHtml) {
-			html += '<div class="airb__res-two">';
-			html += gaugeHtml || '<div></div>';
-			html += domainsHtml || '<div></div>';
-			html += '</div>';
+		if (domainsHtml) {
+			html += domainsHtml;
 		}
-
 		var risksHtml = riskIndicatorsHtml(r, i18n.riskScoreDetail || 'AI risk score & AI Dependency Index — detail');
 		if (risksHtml) html += risksHtml;
-
-		if (tr.benchmark_summary && tr.benchmark_summary.metrics && tr.benchmark_summary.metrics.length) {
-			var tbs = tr.benchmark_summary;
-			html += summaryMetricsSectionHtml(
-				tbs.metrics,
-				tbs.title || i18n.teacherBenchmarkRecap || teacherResult.benchmark_summary_title || 'Teacher Benchmark — score recap',
-				{ modifier: 'teacher' }
-			);
-		}
-
 		return html + '</section>';
 	}
 
@@ -1718,58 +3179,31 @@
 		var tr = r.teacher_results;
 		if (!tr) return '';
 
-		var cfg = teacherResult;
-		var attention = (tr.opportunities || []).map(function (opp) {
-			return opp.label + (typeof opp.pct === 'number' ? ' (' + opp.pct + '%)' : '');
-		});
-		var priority = tr.gap_pathway && tr.gap_pathway.items && tr.gap_pathway.items.length ? tr.gap_pathway.items[0] : null;
-
-		var html = resultsSummaryZoneHtml({
-			title: cfg.summary_title || 'Your summary',
-			intro: tr.performance_headline,
-			strengths: tr.strengths,
-			strengthsHeading: cfg.strengths_heading || 'What you\'re doing well',
-			attention: attention,
-			attentionHeading: cfg.opportunities_heading || 'Opportunities to strengthen further',
-			priority: priority
-		});
-
-		var standInner = '';
-		if (tr.school_contribution && tr.school_contribution.heading) {
-			var sc = tr.school_contribution;
-			var scHtml = '<div class="airb__res-panel airb__res-panel--contribution">';
-			scHtml += '<p>' + esc(sc.intro || '') + '</p>';
-			if (sc.items && sc.items.length) {
-				scHtml += '<ul class="airb__resource-list">';
-				sc.items.forEach(function (item) { scHtml += '<li>' + esc(item) + '</li>'; });
-				scHtml += '</ul>';
-			}
-			if (sc.closing) scHtml += '<p class="airb__muted">' + esc(sc.closing) + '</p>';
-			scHtml += '</div>';
-			standInner += resultsAccordionHtml(sc.heading, scHtml);
+		var html = '';
+		if (tr.strengths && tr.strengths.length) {
+			html += teacherStrengthsSectionHtml(tr.strengths, teacherResult.strengths_heading || 'What you\'re doing well');
 		}
-		if (tr.school_impact && tr.school_impact.heading) {
-			var si = tr.school_impact;
-			var siHtml = '<div class="airb__res-panel airb__res-panel--contribution">';
-			siHtml += '<p>' + esc(si.intro || '') + '</p>';
-			if (si.items && si.items.length) {
-				siHtml += '<ul class="airb__resource-list">';
-				si.items.forEach(function (item) { siHtml += '<li>' + esc(item) + '</li>'; });
-				siHtml += '</ul>';
-			}
-			if (si.closing) siHtml += '<p class="airb__muted">' + esc(si.closing) + '</p>';
-			siHtml += '</div>';
-			standInner += resultsAccordionHtml(si.heading, siHtml);
-		}
-		if (tr.next_steps && tr.next_steps.rollout) {
-			standInner += resultsAccordionHtml(
-				tr.next_steps.rollout.title || 'Whole-school teacher benchmark',
-				teacherRolloutAccordionBody(tr.next_steps.rollout)
+
+		var focusAreas = tr.focus_areas && tr.focus_areas.length ? tr.focus_areas : tr.opportunities;
+		if (focusAreas && focusAreas.length) {
+			html += leaderSectionLabel(
+				teacherResult.focus_section_heading || 'Priority focus areas — what to strengthen',
+				teacherResult.focus_section_heading_short || 'Priority focus areas'
 			);
+			html += '<div class="airb__leader-focus-stack">' + teacherFocusAreasHtml(focusAreas, tr.bias_health) + '</div>';
 		}
-		html += resultsStandZoneHtml(cfg.where_you_stand_heading || 'Where you stand', standInner);
-		html += resultsActionZoneHtml(tr.next_steps);
-		return html;
+
+		if (tr.next_steps && tr.next_steps.rollout) {
+			html += leaderSectionLabel(
+				teacherResult.rollout_section_heading || 'Your next unlock — whole-school picture',
+				teacherResult.rollout_section_heading_short || 'Your next unlock'
+			);
+			html += teacherRolloutCardHtml(tr.next_steps.rollout);
+		}
+
+		html += teacherPathwayCtaHtml(tr.next_steps);
+		html += teacherHelpSupportHtml(tr.next_steps);
+		return benchmarkResultsBodyHtml(html);
 	}
 
 	function supportResultsHtml(r) {
@@ -1777,34 +3211,43 @@
 		if (!sr) return '';
 
 		var cfg = supportResult;
-		var attention = (sr.opportunities || []).map(function (opp) {
-			return opp.label + (typeof opp.pct === 'number' ? ' (' + opp.pct + '%)' : '');
-		});
-		var priority = sr.gap_pathway && sr.gap_pathway.items && sr.gap_pathway.items.length ? sr.gap_pathway.items[0] : null;
+		var html = '';
 
-		var html = resultsSummaryZoneHtml({
-			title: cfg.summary_title || 'Your summary',
-			intro: sr.performance_headline,
-			strengths: sr.strengths,
-			strengthsHeading: cfg.strengths_heading || 'What you\'re doing well',
-			attention: attention,
-			attentionHeading: cfg.opportunities_heading || 'Priority focus',
-			priority: priority
-		});
-
-		var standInner = '';
-		if (sr.benchmark_summary && sr.benchmark_summary.metrics) {
-			var bs = sr.benchmark_summary;
-			var bsHtml = '<div class="airb__res-panel airb__res-panel--recap"><ul class="airb__recap-list">';
-			bs.metrics.forEach(function (m) {
-				bsHtml += '<li><strong>' + esc(m.label) + ':</strong> ' + esc(String(m.value)) + '</li>';
-			});
-			bsHtml += '</ul></div>';
-			standInner += resultsAccordionHtml(bs.title || cfg.benchmark_summary_title || 'Score recap', bsHtml);
+		var strengths = sr.strength_items && sr.strength_items.length ? sr.strength_items : sr.strengths;
+		if (strengths && strengths.length) {
+			html += supportStrengthsSectionHtml(strengths, cfg.strengths_heading || 'What you\'re doing well');
 		}
-		html += resultsStandZoneHtml(cfg.where_you_stand_heading || 'Where you stand', standInner);
-		html += resultsActionZoneHtml(sr.next_steps);
-		return html;
+
+		var focusAreas = sr.focus_areas && sr.focus_areas.length ? sr.focus_areas : null;
+		if (!focusAreas && sr.opportunities && sr.opportunities.length) {
+			focusAreas = sr.opportunities.slice(0, 4).map(function (opp) {
+				return {
+					label: opp.label,
+					pct: opp.pct,
+					summary: opp.summary,
+					actions: opp.detail ? [opp.detail] : [],
+				};
+			});
+		}
+		if (focusAreas && focusAreas.length) {
+			html += leaderSectionLabel(
+				cfg.focus_section_heading || 'Priority focus areas — what to strengthen',
+				cfg.focus_section_heading_short || 'Priority focus areas'
+			);
+			html += '<div class="airb__support-focus-stack">' + supportFocusAreasHtml(focusAreas) + '</div>';
+		}
+
+		if (sr.next_steps && sr.next_steps.rollout) {
+			html += leaderSectionLabel(
+				cfg.rollout_section_heading || 'Your next unlock — whole-school picture',
+				cfg.rollout_section_heading_short || 'Your next unlock'
+			);
+			html += supportRolloutCardHtml(sr.next_steps.rollout);
+		}
+
+		html += supportCtaCardHtml(sr.next_steps);
+		html += supportHelpSupportHtml(sr.next_steps);
+		return benchmarkResultsBodyHtml(html);
 	}
 
 	function studentResultsHtml(r) {
@@ -1812,57 +3255,38 @@
 		if (!sr) return '';
 
 		var cfg = studentResult;
-		var html = resultsSummaryZoneHtml({
-			title: cfg.summary_title || 'Your summary',
-			intro: sr.performance_headline,
-			strengths: sr.strengths,
-			strengthsHeading: cfg.strengths_heading || 'What you\'re doing well'
-		});
+		var strengths = sr.strength_items && sr.strength_items.length ? sr.strength_items : sr.strengths;
+		var html = '';
 
-		var standInner = '';
-		if (sr.peer_benchmark) {
-			standInner += peerBenchmarkBlockHtml(sr.peer_benchmark, {
-				heading: cfg.peer_benchmark_title || 'Students like you',
-				averageLabel: i18n.studentAverage || 'Average students',
-				percentileTemplate: i18n.studentPeerPercentile || 'You scored higher than {n}% of students who completed this benchmark.',
-				estimatedNote: i18n.studentPeerEstimated || i18n.peerEstimated || 'Comparison uses reference benchmarks until enough students have completed the audit.'
+		if (strengths && strengths.length) {
+			html += studentStrengthsSectionHtml(strengths, cfg.strengths_heading || 'What you\'re doing well');
+		}
+
+		var focusAreas = sr.focus_areas && sr.focus_areas.length ? sr.focus_areas : null;
+		if (!focusAreas && sr.opportunities && sr.opportunities.length) {
+			focusAreas = sr.opportunities.map(function (opp) {
+				return {
+					label: opp.label,
+					pct: opp.pct,
+					summary: opp.summary,
+					actions: opp.tips || [],
+				};
 			});
 		}
-		if (sr.learning_journey && sr.learning_journey.current_label) {
-			var lj = sr.learning_journey;
-			var ljHtml = '<section class="airb__learning-journey">';
-			ljHtml += '<div class="airb__journey-steps">';
-			ljHtml += '<div class="airb__journey-step airb__journey-step--current"><span class="airb__journey-label">' + esc(i18n.journeyCurrent || 'Current') + '</span><strong>' + esc(lj.current_label) + '</strong></div>';
-			if (lj.next_label) {
-				ljHtml += '<div class="airb__journey-arrow" aria-hidden="true">→</div>';
-				ljHtml += '<div class="airb__journey-step airb__journey-step--next"><span class="airb__journey-label">' + esc(i18n.journeyNext || 'Next') + '</span><strong>' + esc(lj.next_label) + '</strong></div>';
+		if (focusAreas && focusAreas.length) {
+			var focusCount = focusAreas.length;
+			var focusHeading = (cfg.focus_section_heading || 'Where to improve — areas to focus on')
+				.replace(/\d+/, String(focusCount));
+			if (focusHeading.indexOf(String(focusCount)) === -1) {
+				focusHeading = (cfg.focus_section_heading_short || 'Where to improve') + ' — ' + focusCount + ' ' + (focusCount === 1 ? 'area' : 'areas') + ' to focus on';
 			}
-			ljHtml += '</div>';
-			if (lj.focus_items && lj.focus_items.length) {
-				ljHtml += '<ul class="airb__journey-focus">';
-				lj.focus_items.forEach(function (item) {
-					ljHtml += '<li><span class="airb__strength-mark" aria-hidden="true">✓</span> ' + esc(item) + '</li>';
-				});
-				ljHtml += '</ul>';
-			}
-			if (lj.retake_note) ljHtml += '<p class="airb__muted">' + esc(lj.retake_note) + '</p>';
-			ljHtml += '</section>';
-			standInner += resultsAccordionHtml(cfg.journey_accordion_title || lj.title || 'Your AI learning journey', ljHtml);
+			html += leaderSectionLabel(focusHeading, cfg.focus_section_heading_short || 'Where to improve');
+			html += '<div class="airb__student-focus-stack">' + studentFocusAreasHtml(focusAreas) + '</div>';
 		}
-		if (sr.opportunities && sr.opportunities.length) {
-			standInner += resultsAccordionHtml(
-				cfg.opportunities_accordion_title || cfg.opportunities_heading || 'Opportunities to improve',
-				opportunitiesSectionHtml(sr.opportunities, '', 'student')
-			);
-		}
-		if (sr.school_contribution && sr.school_contribution.heading) {
-			var sc = sr.school_contribution;
-			var scHtml = '<div class="airb__res-panel airb__res-panel--contribution"><p>' + esc(sc.body || '') + '</p></div>';
-			standInner += resultsAccordionHtml(sc.heading, scHtml);
-		}
-		html += resultsStandZoneHtml(cfg.where_you_stand_heading || 'Where you stand', standInner);
-		html += resultsActionZoneHtml(sr.next_steps);
-		return html;
+
+		html += studentHelpSupportHtml(sr.next_steps);
+		html += studentRetakeCardHtml(sr, r.alignment_score);
+		return benchmarkResultsBodyHtml(html);
 	}
 
 	function resultsZoneClass(modifier) {
@@ -1881,6 +3305,15 @@
 			innerHtml + '</details>';
 	}
 
+	function focusGuidanceAccordionHtml(summary, innerHtml) {
+		if (!innerHtml) return '';
+		var label = summary || i18n.focusGuidanceToggle || 'Tips & steps to try';
+		return '<details class="' + resultsAccordionClass() + ' airb__focus-guidance-accordion">' +
+			'<summary>' + esc(label) + '</summary>' +
+			'<div class="airb__focus-guidance-body">' + innerHtml + '</div>' +
+			'</details>';
+	}
+
 	function peerBenchmarkBlockHtml(pb, opts) {
 		opts = opts || {};
 		if (!pb) return '';
@@ -1891,7 +3324,7 @@
 		html += '<table class="airb__summary-table airb__summary-table--peer"><tbody>';
 		html += '<tr><th scope="row">' + esc(i18n.yourScore || 'Your score') + '</th><td style="color:' + esc(readinessBandColor(pb.your_score)) + '">' + pb.your_score + '%</td></tr>';
 		html += '<tr><th scope="row">' + esc(pb.phase_label || opts.averageLabel || i18n.parentAverage || 'Average') + '</th><td>' + pb.average_score + '%</td></tr>';
-		html += '<tr><th scope="row">' + esc(i18n.topQuartile || 'Top quartile') + '</th><td>' + pb.top_quartile + '%</td></tr>';
+		html += '<tr><th scope="row">' + esc(opts.topQuartileLabel || i18n.topQuartile || 'Top quartile') + '</th><td>' + pb.top_quartile + '%</td></tr>';
 		html += '</tbody></table>';
 		if (pb.is_estimated) {
 			html += '<p class="airb__muted airb__peer-note">' + esc(opts.estimatedNote || i18n.peerEstimated || 'Comparison uses reference benchmarks until enough responses have been collected.') + '</p>';
@@ -1902,32 +3335,71 @@
 		return html + '</div>';
 	}
 
+	function resolveResourceLinkUrl(link) {
+		if (!link) return '';
+		if (link.url) return String(link.url);
+		var slug = link.slug ? String(link.slug) : '';
+		if (!slug) return '';
+		var paths = airbBenchmark.timelineReadPaths || {};
+		return paths[slug] || '';
+	}
+
 	function resultsResourceLinksHtml(links, options) {
 		options = options || {};
 		if (!links || !links.length) return '';
 		var cardMode = options.cardMode !== false;
-		var html = '<ul class="airb__results-resource-links airb__leader-resource-links' + (cardMode ? ' airb__results-resource-links--cards' : '') + '">';
+		var leaderGrid = !!options.leaderGrid;
+		var html = '<ul class="airb__results-resource-links airb__leader-resource-links' +
+			(cardMode ? ' airb__results-resource-links--cards' : '') +
+			(leaderGrid ? ' airb__results-resource-links--leader-grid' : '') + '">';
 		links.forEach(function (link) {
+			var url = resolveResourceLinkUrl(link);
+			var prefill = link.prefill ? String(link.prefill) : '';
+			if (!url && !prefill) return;
+
 			html += '<li class="airb__results-resource-item">';
-			if (link.external && link.url) {
-				html += '<a class="airb__results-resource-card" href="' + esc(link.url) + '" target="_blank" rel="noopener noreferrer">';
-			} else if (link.prefill) {
-				html += '<button type="button" class="airb__results-resource-card airb__results-resource-link airb__leader-resource-link" data-airb-open-interest="' + esc(link.prefill) + '">';
-			} else if (link.url) {
-				html += '<a class="airb__results-resource-card" href="' + esc(link.url) + '"' + (link.external ? ' target="_blank" rel="noopener noreferrer"' : '') + '>';
-			} else {
-				return;
+			if (link.external && url) {
+				html += '<a class="airb__results-resource-card" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">';
+			} else if (prefill) {
+				html += '<button type="button" class="airb__results-resource-card airb__results-resource-link airb__leader-resource-link" data-airb-open-interest="' + esc(prefill) + '">';
+			} else if (url) {
+				html += '<a class="airb__results-resource-card" href="' + esc(url) + '"' + (link.external ? ' target="_blank" rel="noopener noreferrer"' : '') + '>';
 			}
 			if (link.image) {
 				html += '<span class="airb__resource-link-media"><img class="airb__resource-link-thumb" src="' + esc(link.image) + '" alt="" loading="lazy" decoding="async" /></span>';
 			} else {
 				html += '<span class="airb__resource-link-media airb__resource-link-media--icon" aria-hidden="true"></span>';
 			}
-			html += '<span class="airb__resource-link-body"><span class="airb__resource-link-label">' + esc(link.label) + '</span></span>';
+			html += '<span class="airb__resource-link-body"><span class="airb__resource-link-label">' + escText(link.label) + '</span></span>';
 			html += link.prefill ? '</button>' : '</a>';
 			html += '</li>';
 		});
 		return html + '</ul>';
+	}
+
+	function leaderGovernanceCtaHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.hero) return '';
+		var hero = nextSteps.hero;
+		var heading = nextSteps.hero_heading || leaderResult.hero_next_step_heading || i18n.recommendedNextStep || 'Your next step';
+		var headingShort = leaderResult.hero_next_step_heading_short || 'Your next step';
+		var html = '<article class="airb__leader-cta-card">';
+		html += '<h4 class="airb__leader-cta-title">' + esc(hero.title) + '</h4>';
+		if (hero.body) {
+			html += '<p class="airb__leader-cta-body">' + esc(hero.body) + '</p>';
+		}
+		if (hero.deliverables && hero.deliverables.length) {
+			html += '<div class="airb__leader-cta-deliverables" role="list">';
+			hero.deliverables.forEach(function (item) {
+				html += '<span class="airb__leader-cta-deliverable" role="listitem">' + esc(item) + '</span>';
+			});
+			html += '</div>';
+		}
+		if (hero.cta_type === 'link' && hero.cta_url) {
+			html += '<a class="airb__btn airb__btn--premium airb__leader-cta-btn" href="' + esc(hero.cta_url) + '">' + esc(hero.cta_text || 'Continue') + '</a>';
+		} else {
+			html += '<button type="button" class="airb__btn airb__btn--premium airb__leader-cta-btn" data-airb-open-interest="' + esc(hero.key || 'governance_review') + '">' + esc(hero.cta_text || 'Request support') + '</button>';
+		}
+		return html + '</article>';
 	}
 
 	function resultsActionZoneHtml(nextSteps, zoneOpts) {
@@ -1968,10 +3440,12 @@
 			html += '<button type="button" class="airb__btn airb__btn--primary airb__btn--hero" data-airb-open-interest="' + esc(hero.key || 'governance_review') + '">' + esc(hero.cta_text || 'Request support') + '</button>';
 		}
 		html += '</article>';
-		if (nextSteps.resource_links && nextSteps.resource_links.length) {
-			html += '<h5 class="airb__results-read-more-heading">' + esc(nextSteps.timeline_heading || i18n.benchmarkOutcomes || 'Further reading and support articles') + '</h5>';
+		if (!leaderCta) {
+			if (nextSteps.resource_links && nextSteps.resource_links.length) {
+				html += '<h5 class="airb__results-read-more-heading">' + esc(nextSteps.timeline_heading || i18n.benchmarkOutcomes || 'Further reading and support articles') + '</h5>';
+			}
+			html += resultsResourceLinksHtml(nextSteps.resource_links);
 		}
-		html += resultsResourceLinksHtml(nextSteps.resource_links);
 		if (nextSteps.hub_resources && nextSteps.hub_resources.length) {
 			html += '<h5 class="airb__results-read-more-heading airb__results-read-more-heading--hub">' + esc(nextSteps.hub_heading || i18n.usefulResources || 'Useful resources') + '</h5>';
 			html += resultsResourceLinksHtml(nextSteps.hub_resources);
@@ -2184,36 +3658,139 @@
 		return html + '</section>';
 	}
 
-	function leaderFocusAreasHtml(focusAreas) {
-		if (!focusAreas || !focusAreas.length) return '';
+	function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg) {
+		labelCfg = labelCfg || leaderResult;
+		if (!focusAreas || !focusAreas.length) {
+			return '';
+		}
+		var practiceHeading = labelCfg.focus_practice_heading || i18n.focusPracticeHeading || 'What this means in practice';
+		var practiceHeadingShort = labelCfg.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means';
+		var actionsHeading = labelCfg.focus_actions_heading || i18n.focusActionsHeading || 'Actions';
 		var html = '';
 		focusAreas.forEach(function (area) {
-			var badge = focusRiskBadge(area.pct);
-			html += '<div class="airb__focus-area airb__res-rec airb__res-rec--leader">';
-			html += '<div class="airb__focus-area-header">';
-			html += '<h4 class="airb__focus-area-title">' + esc(area.label) + '</h4>';
-			html += '<span class="airb__risk-badge airb__risk-badge--' + badge.slug + '">' + esc(badge.label) + ' — ' + area.pct + '%</span>';
+			var severity = leaderFocusSeverity(area.pct);
+			var badge = leaderFocusBadge(area.pct);
+			var showPractice = area.likely_impact && area.likely_impact.length;
+			html += '<div class="airb__focus-card airb__focus-card--' + severity + '">';
+			html += '<div class="airb__focus-card-header">';
+			html += '<h4 class="airb__focus-card-title">' + esc(area.label) + '</h4>';
+			html += '<span class="airb__focus-badge airb__focus-badge--' + badge.slug + '">';
+			html += '<span class="airb__focus-badge-core">' + esc(badge.core) + '</span>';
+			if (badge.detail) {
+				html += '<span class="airb__focus-badge-detail">' + esc(badge.detail) + '</span>';
+			}
+			html += '</span>';
 			html += '</div>';
-			if (area.summary) html += '<p class="airb__focus-area-desc">' + esc(area.summary) + '</p>';
-			if (area.likely_impact && area.likely_impact.length) {
-				html += '<div class="airb__impact-box">';
-				html += '<p class="airb__impact-title">' + esc(i18n.likelyImpact || 'Likely impact at this level') + '</p>';
-				html += '<ul class="airb__impact-list">';
+			if (area.summary) {
+				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
+			}
+			if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null) {
+				var biasNote = leaderBiasEqualityFocusNote(biasHealth.score);
+				if (biasNote) {
+					html += '<p class="airb__focus-card-bias-note">' + esc(biasNote) + '</p>';
+				}
+			}
+			var guidance = '';
+			if (showPractice) {
+				guidance += '<div class="airb__focus-practice">';
+				guidance += '<div class="airb__focus-practice-title">' + leaderResponsiveLabel(practiceHeading, practiceHeadingShort) + '</div>';
+				guidance += '<ul class="airb__focus-practice-list">';
 				area.likely_impact.forEach(function (item) {
-					html += '<li>' + esc(item) + '</li>';
+					guidance += '<li>' + esc(item) + '</li>';
 				});
-				html += '</ul></div>';
+				guidance += '</ul></div>';
 			}
 			if (area.actions && area.actions.length) {
-				html += '<ul class="airb__actions-list airb__actions-list--numbered">';
-				area.actions.forEach(function (act, idx) {
-					html += '<li><span class="airb__action-num">' + (idx + 1) + '</span><span>' + esc(act) + '</span></li>';
+				guidance += '<div class="airb__focus-practice airb__focus-actions">';
+				guidance += '<div class="airb__focus-practice-title">' + esc(actionsHeading) + '</div>';
+				guidance += '<ul class="airb__focus-practice-list">';
+				area.actions.forEach(function (item) {
+					guidance += '<li>' + esc(item) + '</li>';
 				});
-				html += '</ul>';
+				guidance += '</ul></div>';
+			}
+			if (guidance) {
+				html += focusGuidanceAccordionHtml(i18n.focusGuidanceToggle || 'Tips & steps to try', guidance);
 			}
 			html += '</div>';
 		});
 		return html;
+	}
+
+	function leaderHeatmapCardHtml(cells) {
+		if (!cells || !cells.length) return '';
+		var title = leaderResult.heatmap_card_title || i18n.heatmapCardTitle || 'Risk heat map — all domains';
+		var titleShort = leaderResult.heatmap_card_title_short || i18n.heatmapCardTitleShort || 'Risk heat map';
+		var help = leaderResult.heatmap_card_help || i18n.heatmapCardHelp || 'Showing risk exposure %. Higher = more risk in that area.';
+		var html = '<div class="airb__leader-heatmap-card">';
+		html += '<h4 class="airb__leader-heatmap-title">' + leaderResponsiveLabel(title, titleShort) + '</h4>';
+		html += '<p class="airb__leader-heatmap-help airb__muted">' + esc(help) + '</p>';
+		html += '<div class="airb__leader-heatmap-rows">';
+		cells.forEach(function (cell) {
+			var risk = Math.round(cell.risk);
+			var badge = heatmapExposureBadge(risk);
+			var barColor = heatmapBarColor(risk);
+			html += '<div class="airb__leader-hm-row">';
+			html += '<span class="airb__leader-hm-label">' + esc(cell.label) + '</span>';
+			html += '<div class="airb__leader-hm-bar-wrap"><div class="airb__leader-hm-bar" style="width:' + risk + '%;background:' + esc(barColor) + '"></div></div>';
+			html += '<span class="airb__focus-badge airb__focus-badge--' + badge.slug + ' airb__leader-hm-badge">';
+			html += '<span class="airb__hm-badge-full">' + esc(badge.text) + '</span>';
+			html += '<span class="airb__hm-badge-short">' + esc(badge.short) + '</span>';
+			html += '</span>';
+			html += '</div>';
+		});
+		return html + '</div></div>';
+	}
+
+	function leaderRolloutCardHtml(ro) {
+		if (!ro) return '';
+		var intro = ro.intro || leaderResult.rollout_intro || '';
+		var introShort = ro.intro_short || leaderResult.rollout_intro_short || 'Get your whole-school picture when staff, students and parents complete their audits.';
+		var threshold = ro.threshold || 20;
+		var counts = ro.counts || {};
+		var total = typeof ro.total === 'number' ? ro.total : 0;
+		var lockedItems = ro.locked_items && ro.locked_items.length
+			? ro.locked_items
+			: (leaderResult.rollout_locked_items || []);
+		var html = '<div class="airb__leader-rollout-card">';
+		if (intro) {
+			html += '<p class="airb__leader-rollout-intro">' + leaderResponsiveLabel(intro, introShort) + '</p>';
+		}
+		if (lockedItems.length) {
+			html += '<div class="airb__leader-rollout-locks">';
+			lockedItems.forEach(function (item) {
+				var key = item.count_key || 'total';
+				var n = key === 'total' ? total : (parseInt(counts[key], 10) || 0);
+				html += '<div class="airb__leader-rollout-lock">';
+				html += '<span class="airb__leader-rollout-lock-icon" aria-hidden="true">🔒</span>';
+				html += '<div class="airb__leader-rollout-lock-copy">';
+				html += '<div class="airb__leader-rollout-lock-label">' + esc(item.label || '') + '</div>';
+				html += '<div class="airb__leader-rollout-lock-count">';
+				html += '<span class="airb__rollout-count-long">' + n + ' of ' + threshold + ' ' + esc(i18n.responsesLabel || 'responses') + '</span>';
+				html += '<span class="airb__rollout-count-short">' + n + ' / ' + threshold + ' ' + esc(i18n.responsesLabel || 'responses') + '</span>';
+				html += '</div>';
+				html += '</div></div>';
+			});
+			html += '</div>';
+		}
+		if (ro.rollout_note) {
+			html += '<p class="airb__leader-rollout-note airb__leader-rollout-progress">' + esc(ro.rollout_note) + '</p>';
+		} else if (!ro.unlocked && ro.unlock_copy) {
+			html += '<p class="airb__leader-rollout-note airb__muted">' + esc(
+				ro.unlock_copy.replace('{threshold}', String(threshold)).replace('{remaining}', String(ro.remaining || threshold))
+			) + '</p>';
+		}
+		html += '<button type="button" class="airb__btn airb__btn--secondary airb__btn--rollout-full" data-airb-open-interest="whole_school_benchmark">' + esc(ro.rollout_cta || leaderResult.rollout_rollout_cta || i18n.rolloutBenchmark || 'Roll out to your school community') + '</button>';
+		return html + '</div>';
+	}
+
+	function leaderHelpSupportHtml(nextSteps) {
+		if (!nextSteps || !nextSteps.resource_links || !nextSteps.resource_links.length) return '';
+		return benchmarkHelpSupportHtml(
+			nextSteps,
+			nextSteps.help_support_heading || leaderResult.help_support_heading,
+			nextSteps.help_support_heading_short || leaderResult.help_support_heading_short
+		);
 	}
 
 	function leaderResultsHtml(r) {
@@ -2221,43 +3798,38 @@
 		if (!lr) return '';
 
 		var es = lr.executive_summary;
-		var html = resultsSummaryZoneHtml({
-			title: es ? (es.title || leaderResult.executive_title || 'Executive Summary') : '',
-			intro: es ? es.intro : '',
-			strengths: es ? es.strengths : [],
-			strengthsHeading: es ? (es.strengths_heading || leaderResult.strengths_heading || 'Strengths include') : '',
-			attention: es ? es.attention_areas : [],
-			attentionHeading: es ? (es.attention_heading || leaderResult.attention_heading || 'Areas requiring attention') : '',
-			priority: es ? es.priority_action : null,
-			leaderStyle: true
-		});
-		html += leaderMaturityCardHtml(lr.maturity);
-
-		var standInner = '';
+		var html = leaderUrgentActionHtml(es ? es.priority_action_detail : null);
 		if (lr.peer_benchmark) {
-			var pb = lr.peer_benchmark;
-			standInner += peerBenchmarkBlockHtml(pb, {
-				heading: leaderResult.peer_benchmark_title || 'Benchmark against similar schools',
-				averageLabel: pb.phase_label || 'Average school'
-			});
+			html += leaderPeerBenchmarkBarHtml(lr.peer_benchmark);
 		}
+
 		if (lr.focus_areas && lr.focus_areas.length) {
-			html += '<div class="airb__section-divider">' + esc((leaderResult.focus_heading || 'Priority focus areas') + ' (' + lr.focus_areas.length + ')') + '</div>';
-			html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas) + '</div>';
-		}
-		if (lr.risk_heatmap && lr.risk_heatmap.length) {
-			standInner += resultsAccordionHtml(leaderResult.heatmap_heading || i18n.heatMap || 'Risk heat map', heatmapHtml(lr.risk_heatmap), true);
-		}
-		if (lr.next_steps && lr.next_steps.rollout) {
-			standInner += resultsAccordionHtml(
-				lr.next_steps.rollout.title || 'Whole-School AI Benchmark',
-				leaderRolloutAccordionBody(lr.next_steps.rollout),
-				true
+			html += leaderSectionLabel(
+				leaderResult.focus_section_heading || leaderResult.focus_heading || 'Priority focus areas — what to fix and how',
+				leaderResult.focus_section_heading_short || 'Priority focus areas'
 			);
+			html += '<div class="airb__leader-focus-stack">' + leaderFocusAreasHtml(lr.focus_areas, lr.bias_health) + '</div>';
 		}
-		html += resultsStandZoneHtml(leaderResult.where_you_stand_heading || 'Where your school stands', standInner);
-		html += resultsActionZoneHtml(lr.next_steps, { leaderCta: true });
-		return html;
+
+		if (lr.risk_heatmap && lr.risk_heatmap.length) {
+			html += leaderSectionLabel(
+				leaderResult.heatmap_section_heading || 'Full risk picture',
+				leaderResult.heatmap_section_heading_short || 'Full risk picture'
+			);
+			html += leaderHeatmapCardHtml(lr.risk_heatmap);
+		}
+
+		if (lr.next_steps && lr.next_steps.rollout) {
+			html += leaderSectionLabel(
+				leaderResult.rollout_section_heading || 'Your next unlock — whole-school picture',
+				leaderResult.rollout_section_heading_short || 'Your next unlock'
+			);
+			html += leaderRolloutCardHtml(lr.next_steps.rollout);
+		}
+
+		html += leaderGovernanceCtaHtml(lr.next_steps);
+		html += leaderHelpSupportHtml(lr.next_steps);
+		return benchmarkResultsBodyHtml(html);
 	}
 
 	function resultsProfileHtml(r) {
@@ -2265,15 +3837,22 @@
 		var readiness = r.alignment_score;
 		var risk = Math.round(r.overall_risk_percentage);
 		var depVal = roleShowsDependency(state.role) ? r.dependency_index : null;
-		var eyebrow = (i18n.resultsRoleResult || '{role} result').replace('{role}', roleLbl);
 		var parentMode = isParentRole();
+		var parentResults = r.parent_results;
 		var studentMode = isStudentRole() && !!r.student_results;
 		var studentResults = r.student_results;
 		var leaderMode = isLeaderRole() && !!r.leader_results;
 		var teacherBenchmarkMode = isTeacherRole() && !!r.teacher_results;
 		var supportBenchmarkMode = isSupportStaffRole() && !!r.support_results;
 		var supportResults = r.support_results;
-		var bandSummary = parentMode ? parentBandSummary(readiness) : '';
+		var eyebrow = studentMode
+			? (i18n.studentResultsEyebrow || 'Student · AI skills benchmark')
+			: parentMode
+				? (i18n.parentResultsEyebrow || 'Parent / carer · AI awareness benchmark')
+				: supportBenchmarkMode
+					? (i18n.supportResultsEyebrow || 'Support staff · AI risk & readiness benchmark')
+					: (i18n.resultsRoleResult || '{role} result').replace('{role}', roleLbl);
+		var bandSummary = parentMode && !parentResults ? parentBandSummary(readiness) : '';
 		var indepVal = null;
 		if (studentMode && studentResults && studentResults.learning_metrics) {
 			studentResults.learning_metrics.forEach(function (m) {
@@ -2288,128 +3867,95 @@
 			(teacherBenchmarkMode ? ' airb__res-profile--teacher' : '') +
 			(supportBenchmarkMode ? ' airb__res-profile--support' : '') +
 			'">';
+		var profileTitle = teacherBenchmarkMode ? (i18n.teacherResultsTitle || i18n.leaderResultsTitle || 'Your results') :
+			supportBenchmarkMode ? (supportResult.profile_title || i18n.supportResultsTitle || 'Your results') :
+			studentMode ? (i18n.studentResultsTitle || 'Your learning profile') :
+			parentMode ? (i18n.parentResultsTitle || parentResult.profile_title || 'Your home AI picture') :
+			leaderMode ? (i18n.leaderResultsTitle || 'Your results') :
+			(i18n.resultsProfileTitle || i18n.resultsTitle || 'Your AI Risk & Readiness profile');
 		html += '<span class="airb__res-eyebrow"><span class="airb__res-eyebrow-dot" aria-hidden="true"></span>' + esc(eyebrow) + '</span>';
 		html += '<div class="airb__res-shead">';
-		html += '<h2 class="airb__res-title">' + esc(
-			teacherBenchmarkMode ? (i18n.teacherResultsTitle || 'Teacher Benchmark results') :
-			(supportBenchmarkMode ? (i18n.supportResultsTitle || 'Education Support Staff Profile') :
-			(studentMode ? (i18n.studentResultsTitle || 'Your AI learning results') : (i18n.resultsProfileTitle || i18n.resultsTitle || 'Your AI Risk & Readiness profile')))
-		) + '</h2>';
+		html += '<h2 class="airb__res-title">' + esc(profileTitle) + '</h2>';
 		html += '</div>';
-		html += leaderMode ? readinessBandScaleHtml(readiness, { hero: true }) : readinessBandScaleHtml(readiness);
+		if (leaderMode) {
+			var uiHero = r.leader_results && r.leader_results.ui ? r.leader_results.ui.hero : null;
+			html += leaderReadinessHeroHtml(readiness, uiHero);
+			html += leaderSupportingMetricsHtml(r, risk);
+		} else if (teacherBenchmarkMode) {
+			var tr = r.teacher_results;
+			var tUiHero = tr && tr.ui ? tr.ui.hero : null;
+			html += leaderReadinessHeroHtml(readiness, tUiHero);
+			html += teacherPeerBenchmarkHtml(tr);
+			html += teacherSupportingMetricsHtml(r, risk);
+			html += teacherOversightGaugeSectionHtml(r);
+			html += teacherDomainSectionHtml(r);
+		} else if (studentMode && studentResults) {
+			var sUiHero = studentResults.ui && studentResults.ui.hero ? studentResults.ui.hero : null;
+			html += studentReadinessHeroHtml(readiness, sUiHero);
+			html += studentPeerBenchmarkHtml(studentResults);
+			html += benchmarkOversightGaugeSectionHtml(r);
+			html += studentSkillsSectionHtml(studentResults.learning_metrics || []);
+		} else if (parentMode && parentResults) {
+			var pUiHero = parentResults.ui && parentResults.ui.hero ? parentResults.ui.hero : null;
+			html += parentReadinessHeroHtml(readiness, pUiHero);
+			html += parentHomeMetricsSectionHtml(parentResults.home_metrics);
+		} else if (supportBenchmarkMode && supportResults) {
+			var supUiHero = supportResults.ui && supportResults.ui.hero ? supportResults.ui.hero : null;
+			html += supportReadinessHeroHtml(readiness, supUiHero);
+			html += supportMetricGridHtml(r, supportResults);
+			html += benchmarkOversightGaugeSectionHtml(r);
+			html += supportDomainsSectionHtml(supportResults.domain_rows);
+		} else {
+		html += readinessBandScaleHtml(readiness);
 
-		if (teacherBenchmarkMode) {
-			html += '<div class="airb__benchmark-overall">';
-			html += '<h3 class="airb__benchmark-section-title">' + esc(i18n.teacherOverallScores || 'Overall scores') + '</h3>';
-			html += '<p class="airb__benchmark-bridge airb__muted">' + esc(i18n.teacherOverallIntro || 'Headline scores for your Teacher Benchmark — score breakdown follows below.') + '</p>';
-		}
-
-		if (supportBenchmarkMode && supportResults) {
-			html += '<div class="airb__benchmark-overall">';
-			html += '<h3 class="airb__benchmark-section-title">' + esc(i18n.supportOverallScores || 'Overall scores') + '</h3>';
-			html += '<p class="airb__benchmark-bridge airb__muted">' + esc(i18n.supportOverallIntro || 'Headline scores for operations, oversight and data protection — detail follows below.') + '</p>';
-		}
-
-		if (studentMode && studentResults) {
-			html += studentLearningProfileHtml(studentResults);
-			html += studentLearnerTypeHtml(studentResults);
-		}
-
-		html += '<div class="airb__res-grid3' + (parentMode ? ' airb__res-grid3--two' : '') + (studentMode ? ' airb__res-grid3--student airb__res-grid3--two' : '') + (leaderMode ? ' airb__res-grid3--leader-metrics' : '') + '">';
+		html += '<div class="airb__res-grid3' + (parentMode ? ' airb__res-grid3--two' : '') + '">';
 		html += '<div class="airb__res-stat airb__metric-card">';
-		html += '<div class="airb__res-stat-lab">' + esc(studentMode ? (i18n.statLearningReadiness || 'Learning readiness') : (i18n.statReadiness || 'Readiness score')) + '</div>';
+		html += '<div class="airb__res-stat-lab">' + esc(i18n.statReadiness || 'Readiness score') + '</div>';
 		html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(readiness)) + '" data-count="' + readiness + '">' + readiness + '%</div>';
-		if (!parentMode && !studentMode && !leaderMode) {
-			html += '<div class="airb__res-stat-note">' + esc(
-				teacherBenchmarkMode ? (i18n.statReadinessNoteTeacher || 'Overall score — see readiness breakdown below.') :
-				(i18n.statReadinessNote || 'Weighted across every domain in this audit.')
-			) + '</div>';
-		} else if (studentMode) {
-			html += '<div class="airb__res-stat-note">' + esc(readinessBandLabel(readiness)) + '</div>';
-		} else if (leaderMode) {
-			html += '<div class="airb__res-stat-note airb__res-stat-note--pill">' + readinessBandPillHtml(readinessLevel(readiness).slug, readinessBandLabel(readiness)) + '</div>';
+		if (!parentMode && !teacherBenchmarkMode) {
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statReadinessNote || 'Weighted across every domain in this audit.') + '</div>';
 		}
 		html += '</div>';
 
-		if (!studentMode && !supportBenchmarkMode) {
+		if (!teacherBenchmarkMode) {
 		html += '<div class="airb__res-stat airb__metric-card">';
 		html += '<div class="airb__res-stat-lab">' + esc(i18n.statRisk || 'AI risk score') + '</div>';
 		html += '<div class="airb__res-stat-big" style="color:' + esc(riskScoreColor(risk)) + '" data-count="' + risk + '">' + risk + '%</div>';
-		if (!parentMode && !leaderMode) {
-			html += '<div class="airb__res-stat-note">' + esc(
-				teacherBenchmarkMode ? (i18n.statRiskNoteTeacher || 'Inverse of readiness — see detail below.') :
-				(i18n.statRiskNote || 'Behavioural exposure — the inverse of readiness.')
-			) + '</div>';
+		if (!parentMode) {
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statRiskNote || 'Behavioural exposure — the inverse of readiness.') + '</div>';
 		}
 		html += '</div>';
 		}
 
-		if (!parentMode) {
+		if (!parentMode && !teacherBenchmarkMode) {
 		html += '<div class="airb__res-stat airb__metric-card">';
-		if (leaderMode) {
-			var govScore = r.governance_maturity != null ? r.governance_maturity : null;
-			html += '<div class="airb__res-stat-lab">' + esc(i18n.governanceMaturity || 'Governance Maturity') + '</div>';
-			if (govScore === null) {
-				html += '<div class="airb__res-stat-big airb__res-stat-big--na">—</div>';
-			} else {
-				html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(govScore)) + '" data-count="' + govScore + '">' + govScore + '%</div>';
-				html += '<div class="airb__res-stat-note airb__res-stat-note--pill">' + readinessBandPillHtml(readinessLevel(govScore).slug, readinessBandLabel(govScore)) + '</div>';
-			}
-		} else if (studentMode) {
-			html += '<div class="airb__res-stat-lab">' + esc(i18n.independentThinking || 'Independent Thinking') + '</div>';
-			if (indepVal === null) {
-				html += '<div class="airb__res-stat-big airb__res-stat-big--na">—</div>';
-			} else {
-				html += '<div class="airb__res-stat-big" style="color:' + esc(studentSkillColor(indepVal)) + '" data-count="' + indepVal + '">' + indepVal + '%</div>';
-				html += '<div class="airb__res-stat-note">' + esc(studentSkillBand(indepVal).label) + '</div>';
-			}
-		} else {
-		html += '<div class="airb__res-stat-lab">' + esc(supportBenchmarkMode ? (i18n.operationalDependency || 'Operational Dependency Index') : (i18n.dependency || 'AI Dependency Index')) + '</div>';
+		html += '<div class="airb__res-stat-lab">' + esc(i18n.dependency || 'AI Dependency Index') + '</div>';
 		if (depVal === null) {
 			html += '<div class="airb__res-stat-big airb__res-stat-big--na">—</div>';
 			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNa || 'Not measured for this audience.') + '</div>';
 		} else {
 			html += '<div class="airb__res-stat-big" style="color:' + esc(dependencyColor(depVal)) + '" data-count="' + depVal + '">' + depVal + '%</div>';
-			html += '<div class="airb__res-stat-note">' + esc(
-				supportBenchmarkMode ? (i18n.statDepNoteSupport || 'Reliance on AI for communications and administration.') :
-				(teacherBenchmarkMode ? (i18n.statDepNoteTeacher || 'Same metric as in score recap below.') :
-				(i18n.statDepNote || 'Risk indicator — higher means greater reliance on AI.'))
-			) + '</div>';
-		}
+			html += '<div class="airb__res-stat-note">' + esc(i18n.statDepNote || 'Risk indicator — higher means greater reliance on AI.') + '</div>';
 		}
 		html += '</div>';
 		}
 		html += '</div>';
-
-		if (supportBenchmarkMode && supportResults) {
-			html += '<div class="airb__res-grid3 airb__res-grid3--support">';
-			html += '<div class="airb__res-stat">';
-			html += '<div class="airb__res-stat-lab">' + esc(i18n.humanOversightRatio || 'Human Oversight Ratio') + '</div>';
-			html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(supportResults.human_oversight_ratio || 0)) + '">' + (supportResults.human_oversight_ratio || 0) + '%</div>';
-			html += '</div>';
-			html += '<div class="airb__res-stat">';
-			html += '<div class="airb__res-stat-lab">' + esc(i18n.dataProtectionReadiness || 'Data Protection Readiness') + '</div>';
-			html += '<div class="airb__res-stat-big" style="color:' + esc(readinessBandColor(supportResults.data_protection_readiness || 0)) + '">' + (supportResults.data_protection_readiness || 0) + '%</div>';
-			html += '</div>';
-			html += '</div>';
 		}
 
-		if (teacherBenchmarkMode || supportBenchmarkMode) {
-			html += '</div>';
-		}
-
-		if (bandSummary) {
+		if (bandSummary && !parentMode) {
 			html += '<p class="airb__res-summary">' + esc(bandSummary) + '</p>';
 		}
 
 		if (leaderMode) {
 			/* Governance content follows in leaderResultsHtml. */
-		} else if (isTeacherRole() && r.teacher_results) {
-			html += teacherDashboardHtml(r);
-		} else if (isSupportStaffRole() && r.support_results) {
-			/* Benchmark metrics are in supportResultsHtml — avoid duplicate domain panels. */
+		} else if (teacherBenchmarkMode) {
+			/* Domains render in teacherDomainSectionHtml above. */
+		} else if (parentMode && parentResults) {
+			/* Metrics render in parentHomeMetricsSectionHtml above. */
+		} else if (supportBenchmarkMode && supportResults) {
+			/* Domains render in supportDomainsSectionHtml above; body in supportResultsHtml. */
 		} else if (!parentMode && !studentMode) {
-			html += '<div class="airb__res-two">' + oversightPanelHtml(r) + domainReadinessRowsHtml(r) + '</div>';
+			html += '<div class="airb__res-two">' + oversightPanelHtml(r, { showNa: true }) + domainReadinessRowsHtml(r) + '</div>';
 		}
 		return html + '</section>';
 	}
@@ -2462,23 +4008,299 @@
 
 	// Reusable zoned semicircle gauge SVG for the Human Oversight Ratio — the band
 	// scale (critical / high / moderate / strong) is drawn into the arc itself.
-	function oversightGaugeSvg(val, aria) {
+	function oversightGaugeGeometry(val) {
 		val = Math.max(0, Math.min(100, val));
 		var A0 = -120, A1 = 120, cx = 120, cy = 120, rr = 92;
 		function toAngle(v) { return A0 + (v / 100) * (A1 - A0); }
-		function polar(x, y, rad, deg) { var a = (deg - 90) * Math.PI / 180; return [x + rad * Math.cos(a), y + rad * Math.sin(a)]; }
+		function polar(x, y, rad, deg) {
+			var a = (deg - 90) * Math.PI / 180;
+			return [x + rad * Math.cos(a), y + rad * Math.sin(a)];
+		}
 		function arc(x, y, rad, s, e) {
 			var p0 = polar(x, y, rad, s), p1 = polar(x, y, rad, e);
 			var large = (e - s) <= 180 ? 0 : 1;
 			return 'M ' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' A ' + rad + ' ' + rad + ' 0 ' + large + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
 		}
-		var zones = [[0, 10], [10, 25], [25, 50], [50, 100]];
-		var npt = polar(cx, cy, rr - 14, toAngle(val));
-		var svg = '<svg viewBox="0 0 240 172" class="airb__gauge-svg" role="img" aria-label="' + esc(aria || ('Human Oversight Ratio ' + Math.round(val) + '%')) + '">';
-		svg += '<path d="' + arc(cx, cy, rr, A0, A1) + '" fill="none" stroke="var(--airb-border)" stroke-width="16" stroke-linecap="round"></path>';
+		return {
+			val: val,
+			A0: A0,
+			A1: A1,
+			cx: cx,
+			cy: cy,
+			rr: rr,
+			toAngle: toAngle,
+			polar: polar,
+			arc: arc,
+			zones: [[0, 10], [10, 25], [25, 50], [50, 100]],
+		};
+	}
+
+	function drawOversightGaugeOnCanvas(ctx, geom, scale) {
+		scale = scale || 1;
+		var cx = geom.cx * scale;
+		var cy = geom.cy * scale;
+		var rr = geom.rr * scale;
+		var val = geom.val;
+		var lineW = 16 * scale;
+		var zones = geom.zones;
+
+		function strokeArc(s, e, color, cap) {
+			var start = (geom.toAngle(s) - 90) * Math.PI / 180;
+			var end = (geom.toAngle(e) - 90) * Math.PI / 180;
+			ctx.beginPath();
+			ctx.strokeStyle = color;
+			ctx.lineWidth = lineW;
+			ctx.lineCap = cap || 'butt';
+			ctx.arc(cx, cy, rr, start, end);
+			ctx.stroke();
+		}
+
+		strokeArc(0, 100, '#e8e8e8', 'round');
 		zones.forEach(function (z, i) {
 			var cap = (i === 0 || i === zones.length - 1) ? 'round' : 'butt';
-			svg += '<path d="' + arc(cx, cy, rr, toAngle(z[0]), toAngle(z[1])) + '" fill="none" stroke="' + oversightZoneColor(z[1] - 0.1) + '" stroke-width="16" stroke-linecap="' + cap + '"></path>';
+			strokeArc(z[0], z[1], oversightZoneColorHex(z[1] - 0.1), cap);
+		});
+
+		var npt = geom.polar(cx, cy, rr - (14 * scale), geom.toAngle(val));
+		ctx.beginPath();
+		ctx.strokeStyle = '#1e1e1e';
+		ctx.lineWidth = 3.5 * scale;
+		ctx.lineCap = 'round';
+		ctx.moveTo(cx, cy);
+		ctx.lineTo(npt[0], npt[1]);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.fillStyle = '#1e1e1e';
+		ctx.arc(cx, cy, 7 * scale, 0, Math.PI * 2);
+		ctx.fill();
+
+		ctx.fillStyle = '#1e1e1e';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.font = 'bold ' + Math.round(42 * scale) + 'px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(String(Math.round(val)), cx, cy - (16 * scale));
+		ctx.font = '600 ' + Math.round(20 * scale) + 'px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText('%', cx + (34 * scale), cy - (10 * scale));
+	}
+
+	function wrapCanvasText(ctx, text, maxWidth, maxLines) {
+		if (!text) return [];
+		var words = String(text).split(/\s+/);
+		var lines = [];
+		var line = '';
+		words.forEach(function (word) {
+			var test = line ? line + ' ' + word : word;
+			if (ctx.measureText(test).width > maxWidth && line) {
+				lines.push(line);
+				line = word;
+			} else {
+				line = test;
+			}
+		});
+		if (line) lines.push(line);
+		if (maxLines && lines.length > maxLines) {
+			lines = lines.slice(0, maxLines);
+			lines[maxLines - 1] = lines[maxLines - 1].replace(/\s+\S*$/, '') + '…';
+		}
+		return lines;
+	}
+
+	function buildOversightSharePngBlob(panel) {
+		var titleEl = panel.querySelector('h3');
+		var bandEl = panel.querySelector('.airb__gauge-band');
+		var helpEl = panel.querySelector('.airb__gauge-help');
+		var val = parseInt(panel.getAttribute('data-oversight-value'), 10);
+		if (isNaN(val)) {
+			var btn = panel.querySelector('[data-oversight-value]');
+			val = btn ? parseInt(btn.getAttribute('data-oversight-value'), 10) : NaN;
+		}
+		if (isNaN(val)) {
+			var numEl = panel.querySelector('.airb__gauge-num');
+			val = numEl ? parseInt(numEl.textContent, 10) : 0;
+		}
+		var title = titleEl ? titleEl.textContent.trim() : (i18n.oversight || 'Human Oversight Ratio');
+		var band = bandEl ? bandEl.textContent.trim() : '';
+		var help = helpEl ? helpEl.textContent.trim() : '';
+		var roleLbl = ((cfg.roles || {})[state.role] || state.role || '').trim();
+		var eyebrow = (i18n.shareOversightEyebrow || 'AI Awareness Day · {role} benchmark').replace('{role}', roleLbl || 'Benchmark');
+		var siteLabel = i18n.shareSiteLabel || 'aiawarenessday.co.uk';
+		var siteUrl = i18n.shareSiteUrl || 'https://aiawarenessday.co.uk/';
+		var width = 1200;
+		var height = 630;
+		var canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		var ctx = canvas.getContext('2d');
+		if (!ctx) return Promise.reject(new Error('canvas_unsupported'));
+
+		ctx.fillStyle = '#f4f7f6';
+		ctx.fillRect(0, 0, width, height);
+		ctx.fillStyle = '#ffffff';
+		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
+		ctx.fill();
+		ctx.strokeStyle = '#e2e8e4';
+		ctx.lineWidth = 2;
+		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
+		ctx.stroke();
+
+		ctx.fillStyle = '#1e1e1e';
+		ctx.fillRect(56, 56, width - 112, 56);
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '600 24px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+		ctx.fillText(eyebrow, 80, 84);
+
+		ctx.fillStyle = '#1e1e1e';
+		ctx.font = '700 40px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(title, 80, 150);
+
+		var gaugeGeom = oversightGaugeGeometry(val);
+		ctx.save();
+		ctx.translate(250, 250);
+		ctx.scale(1.55, 1.55);
+		drawOversightGaugeOnCanvas(ctx, gaugeGeom, 1);
+		ctx.restore();
+
+		var textX = 560;
+		var bandColor = oversightZoneColorHex(val);
+		ctx.fillStyle = bandColor;
+		ctx.font = '700 34px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(band || oversightLabel(val), textX, 250);
+
+		ctx.fillStyle = '#4b5563';
+		ctx.font = '500 24px system-ui, -apple-system, Segoe UI, sans-serif';
+		var lines = wrapCanvasText(ctx, help, width - textX - 80, 4);
+		lines.forEach(function (line, idx) {
+			ctx.fillText(line, textX, 310 + (idx * 34));
+		});
+
+		ctx.fillStyle = '#6b7280';
+		ctx.font = '500 20px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(siteLabel, 80, height - 72);
+		ctx.textAlign = 'right';
+		ctx.fillText(i18n.shareOversightTagline || 'Free AI Risk & Readiness Benchmark', width - 80, height - 72);
+
+		return canvasToPngBlob(canvas);
+	}
+
+	function roundRect(ctx, x, y, w, h, r) {
+		r = Math.min(r, w / 2, h / 2);
+		ctx.beginPath();
+		ctx.moveTo(x + r, y);
+		ctx.arcTo(x + w, y, x + w, y + h, r);
+		ctx.arcTo(x + w, y + h, x, y + h, r);
+		ctx.arcTo(x, y + h, x, y, r);
+		ctx.arcTo(x, y, x + w, y, r);
+		ctx.closePath();
+	}
+
+	function canvasToPngBlob(canvas) {
+		return new Promise(function (resolve, reject) {
+			if (!canvas || !canvas.toBlob) {
+				reject(new Error('canvas_unsupported'));
+				return;
+			}
+			canvas.toBlob(function (blob) {
+				if (blob) resolve(blob);
+				else reject(new Error('export_failed'));
+			}, 'image/png', 1);
+		});
+	}
+
+	function downloadPngBlob(blob, filename) {
+		var url = URL.createObjectURL(blob);
+		var link = document.createElement('a');
+		link.href = url;
+		link.download = filename;
+		link.rel = 'noopener';
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+	}
+
+	function oversightShareFilename(val) {
+		return 'human-oversight-ratio-' + Math.round(val) + 'pct.png';
+	}
+
+	function setGaugeShareStatus(panel, message) {
+		var status = panel.querySelector('[data-airb-gauge-share-status]');
+		if (!status) return;
+		if (message) {
+			status.textContent = message;
+			status.hidden = false;
+		} else {
+			status.textContent = '';
+			status.hidden = true;
+		}
+	}
+
+	function shareOversightGaugeImage(btn) {
+		var panel = btn.closest('.airb__res-panel--gauge');
+		if (!panel || btn.disabled) return;
+		var val = parseInt(btn.getAttribute('data-oversight-value'), 10) || 0;
+		var defaultLabel = btn.textContent.trim();
+		var sharingLabel = i18n.shareOversightGaugeSharing || 'Creating image…';
+		var doneLabel = i18n.shareOversightGaugeDone || 'Image ready';
+		var errorLabel = i18n.shareOversightGaugeError || 'Could not create image. Try again.';
+		btn.disabled = true;
+		btn.textContent = sharingLabel;
+		setGaugeShareStatus(panel, sharingLabel);
+
+		buildOversightSharePngBlob(panel).then(function (blob) {
+			var file = new File([blob], oversightShareFilename(val), { type: 'image/png' });
+			var shareText = (i18n.shareOversightShareText || 'My Human Oversight Ratio from the AI Awareness Day benchmark: {pct}% — {band}.')
+				.replace('{pct}', String(Math.round(val)))
+				.replace('{band}', (panel.querySelector('.airb__gauge-band') || {}).textContent || '')
+				.trim();
+			var shareUrl = i18n.shareSiteUrl || airbBenchmark.homeUrl || window.location.href;
+			var shareTitle = i18n.oversight || 'Human Oversight Ratio';
+
+			if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+				return navigator.share({
+					files: [file],
+					title: shareTitle,
+					text: shareText,
+					url: shareUrl,
+				}).catch(function (err) {
+					if (err && err.name === 'AbortError') return;
+					downloadPngBlob(blob, oversightShareFilename(val));
+				});
+			}
+			downloadPngBlob(blob, oversightShareFilename(val));
+		}).then(function () {
+			setGaugeShareStatus(panel, doneLabel);
+			trackEvent('oversight_gauge_share', { value: val, role: state.role });
+		}).catch(function () {
+			setGaugeShareStatus(panel, errorLabel);
+		}).finally(function () {
+			btn.disabled = false;
+			btn.textContent = defaultLabel;
+			setTimeout(function () { setGaugeShareStatus(panel, ''); }, 2500);
+		});
+	}
+
+	function bindOversightGaugeShare() {
+		if (!el.results) return;
+		el.results.querySelectorAll('[data-airb-share-oversight-gauge]').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				shareOversightGaugeImage(btn);
+			});
+		});
+	}
+
+	function oversightGaugeSvg(val, aria) {
+		val = Math.max(0, Math.min(100, val));
+		var geom = oversightGaugeGeometry(val);
+		var cx = geom.cx, cy = geom.cy, rr = geom.rr;
+		var npt = geom.polar(cx, cy, rr - 14, geom.toAngle(val));
+		var svg = '<svg viewBox="0 0 240 172" class="airb__gauge-svg" role="img" aria-label="' + esc(aria || ('Human Oversight Ratio ' + Math.round(val) + '%')) + '">';
+		svg += '<path d="' + geom.arc(cx, cy, rr, geom.A0, geom.A1) + '" fill="none" stroke="var(--airb-border)" stroke-width="16" stroke-linecap="round"></path>';
+		geom.zones.forEach(function (z, i) {
+			var cap = (i === 0 || i === geom.zones.length - 1) ? 'round' : 'butt';
+			svg += '<path d="' + geom.arc(cx, cy, rr, geom.toAngle(z[0]), geom.toAngle(z[1])) + '" fill="none" stroke="' + oversightZoneColor(z[1] - 0.1) + '" stroke-width="16" stroke-linecap="' + cap + '"></path>';
 		});
 		svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + npt[0].toFixed(2) + '" y2="' + npt[1].toFixed(2) + '" stroke="var(--airb-brand)" stroke-width="3.5" stroke-linecap="round"></line>';
 		svg += '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="var(--airb-brand)"></circle>';
@@ -2586,6 +4408,7 @@
 
 		var leaderMode = isLeaderRole() && !!r.leader_results;
 		var supportMode = isSupportStaffRole() && !!r.support_results;
+		var benchmarkResultsMode = studentMode || teacherMode || leaderMode || parentMode || supportMode;
 
 		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' : '') + (teacherMode ? ' airb__results--teacher' : '') + (studentMode ? ' airb__results--student' : '') + (leaderMode ? ' airb__results--leader' : '') + (supportMode ? ' airb__results--support' : '') + '">';
 		html += resultsProfileHtml(r);
@@ -2668,23 +4491,33 @@
 			html += benchmarkHtml(r);
 		}
 
-		html += interestFormHtml(r);
-
-		var shareHint = shareResultsHintText(r);
-		if (shareHint) {
-			html += '<p class="airb__muted airb__share-hint">' + esc(shareHint) + '</p>';
+		if (roleShowsInterestForm(state.role)) {
+			if (!hasInterestForm(r)) {
+				var shells = airbBenchmark.interestForms || {};
+				if (shells[state.role]) {
+					mergeInterestFormShell(r, shells[state.role]);
+				}
+			}
+			html += interestFormHtml(r);
 		}
 
-		html += '<div class="airb__results-actions">';
-		html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--copy-result" id="airb-copy-result">' + esc(i18n.copyResult || 'Copy result') + '</button>';
-		var shareMailto = buildShareResultsMailto();
-		if (shareMailto) {
-			html += '<a class="airb__btn airb__btn--primary airb__btn--share" href="' + shareMailto + '" id="airb-share-results">' + esc(i18n.shareWithSchool || 'Share results with your school') + '</a>';
+		if (!benchmarkResultsMode) {
+			var shareHint = shareResultsHintText(r);
+			if (shareHint) {
+				html += '<p class="airb__muted airb__share-hint">' + esc(shareHint) + '</p>';
+			}
+
+			html += '<div class="airb__results-actions">';
+			html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--copy-result" id="airb-copy-result">' + esc(i18n.copyResult || 'Copy result') + '</button>';
+			var shareMailto = buildShareResultsMailto();
+			if (shareMailto) {
+				html += '<a class="airb__btn airb__btn--primary airb__btn--share" href="' + shareMailto + '" id="airb-share-results">' + esc(i18n.shareWithSchool || 'Share results with your school') + '</a>';
+			}
+			if (!hasInterestForm(r) && state.email) {
+				html += '<button type="button" class="airb__btn airb__btn--ghost" id="airb-email-report">' + esc(i18n.emailReport) + '</button>';
+			}
+			html += '</div>';
 		}
-		if (!hasInterestForm(r) && state.email) {
-			html += '<button type="button" class="airb__btn airb__btn--ghost" id="airb-email-report">' + esc(i18n.emailReport) + '</button>';
-		}
-		html += '</div>';
 		if (state.school && !isStaffRole()) {
 			html += '<p class="airb__school-link"><a class="airb__btn airb__btn--ghost airb__btn--sm" href="?school=' + encodeURIComponent(state.school) + '#airb-school-dashboard">' + esc(i18n.viewSchool) + '</a></p>';
 			html += '<p class="airb__muted airb__school-hint">' + esc(i18n.schoolHint) + '</p>';
@@ -2704,8 +4537,10 @@
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
 		bindResultsTracking();
+		bindOversightGaugeShare();
 		bindInterestForm();
 		bindInterestTriggers();
+		bindStudentRetakeTriggers();
 		fetchSchoolSnapshot();
 
 		animateResultsStats();
@@ -2892,9 +4727,13 @@
 					return;
 				}
 			} else {
-				state.school = '';
-				state.email = '';
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
+				if (state.role === 'student') {
+					state.school = (document.getElementById('airb-school') || {}).value || '';
+				} else {
+					state.school = '';
+				}
+				state.email = '';
 			}
 
 			syncProfileIntoAnswers();
@@ -2969,6 +4808,11 @@
 			.then(function (json) {
 				if (json.success && json.data && json.data.results) {
 					state.results = json.data.results;
+				} else if (state.results && state.role && roleShowsInterestForm(state.role)) {
+					var shells = airbBenchmark.interestForms || {};
+					if (shells[state.role]) {
+						mergeInterestFormShell(state.results, shells[state.role]);
+					}
 				}
 				if (json.success && json.data && json.data.submission_id) {
 					state.submissionId = parseInt(json.data.submission_id, 10) || 0;
@@ -2977,6 +4821,12 @@
 				if (done) done();
 			})
 			.catch(function () {
+				if (state.results && state.role && roleShowsInterestForm(state.role)) {
+					var shells = airbBenchmark.interestForms || {};
+					if (shells[state.role]) {
+						mergeInterestFormShell(state.results, shells[state.role]);
+					}
+				}
 				if (done) done();
 			});
 	}
@@ -3128,18 +4978,41 @@
 	}
 
 	function scrollToInterestForm(prefill) {
+		if (!ensureInterestFormRendered()) {
+			window.alert(i18n.interestFormScrollError || 'The request form could not be opened. Refresh the page and try again.');
+			return;
+		}
 		var section = document.getElementById('airb-interest');
-		if (!section) return;
+		if (!section) {
+			window.alert(i18n.interestFormScrollError || 'The request form could not be opened. Refresh the page and try again.');
+			return;
+		}
+		var details = section.closest('details');
+		if (details) details.open = true;
+		prefill = resolveInterestPrefill(prefill);
 		if (prefill) {
 			section.querySelectorAll('input[name="interests[]"]').forEach(function (input) {
-				if (input.value === prefill) input.checked = true;
+				input.checked = input.value === prefill;
 			});
 		}
+		section.classList.add('is-targeted');
+		setTimeout(function () { section.classList.remove('is-targeted'); }, 2400);
 		section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		var focusTarget = section.querySelector('input[name="interests[]"]:checked') || section.querySelector('input[name="interest_email"]') || section.querySelector('.airb__interest-submit');
 		if (focusTarget && focusTarget.focus) {
 			focusTarget.focus({ preventScroll: true });
 		}
+		trackEvent('interest_form_open', { prefill: prefill || '', role: state.role || '' });
+	}
+
+	function bindStudentRetakeTriggers() {
+		el.results.querySelectorAll('[data-airb-student-retake]').forEach(function (btn) {
+			btn.addEventListener('click', function (e) {
+				e.preventDefault();
+				var mode = btn.getAttribute('data-airb-student-retake') || '';
+				restartStudentAudit(mode === 'school');
+			});
+		});
 	}
 
 	function bindInterestTriggers() {
@@ -3401,6 +5274,18 @@
 			.catch(function () { showError(i18n.error); });
 	}
 
+	function decodeHtmlEntities(str) {
+		var text = String(str == null ? '' : str);
+		if (!text || text.indexOf('&') === -1) return text;
+		var el = document.createElement('textarea');
+		el.innerHTML = text;
+		return el.value;
+	}
+
+	function escText(str) {
+		return esc(decodeHtmlEntities(str));
+	}
+
 	function esc(str) {
 		return String(str)
 			.replace(/&/g, '&amp;')
@@ -3413,9 +5298,7 @@
 	if (el.back) el.back.addEventListener('click', goBack);
 	bindRoleCardActions();
 	if (el.role) {
-		if (isMobileFlow()) {
-			collapseIntro();
-		}
+		collapseIntro();
 		renderRole();
 	}
 

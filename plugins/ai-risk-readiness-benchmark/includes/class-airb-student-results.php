@@ -19,38 +19,110 @@ class AIRB_Student_Results {
 	private const OPPORTUNITY_MAX           = 85;
 	private const HABITS_ALIGNMENT_MIN      = 45;
 	private const DISPLAY_SCORE_MIN         = 5;
+	private const FOCUS_AREA_MAX            = 4;
 
 	/**
 	 * Build the full student results payload.
 	 *
 	 * @param array<string, mixed> $results Results.
+	 * @param string               $school  Optional school name from submission.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results ): array {
-		$cfg       = AIRB_Defaults::student_result_config();
-		$metrics   = self::learning_metrics( $results );
-		$tier      = self::performance_tier( $results );
-		$strengths = self::detect_strengths( $results, $cfg, $metrics );
-		$opps      = self::detect_opportunities( $results, $cfg, $metrics );
-		$journey   = self::learning_journey( (int) ( $results['alignment_score'] ?? 0 ), $cfg, $metrics );
+	public static function build( array $results, string $school = '' ): array {
+		$cfg                 = AIRB_Defaults::student_result_config();
+		$metrics             = self::learning_metrics( $results );
+		$score               = (int) ( $results['alignment_score'] ?? 0 );
+		$skill_band          = self::skill_band( $score );
+		$strength_items      = AIRB_Student_Copy::strength_statements( $results, $metrics, $cfg );
+		$legacy_strengths    = self::detect_strengths( $results, $cfg, $metrics );
+		$opps                = self::detect_opportunities( $results, $cfg, $metrics );
+		$focus_areas         = self::build_focus_areas( $opps, $metrics, $cfg );
+		$journey             = self::learning_journey( $score, $cfg, $metrics );
+		$ui                  = AIRB_Student_Copy::resolve_ui( $results, $cfg );
+		$school_progress     = AIRB_Student_Copy::school_progress( $school );
+
+		$strength_titles = array();
+		foreach ( $strength_items as $item ) {
+			if ( ! empty( $item['title'] ) ) {
+				$strength_titles[] = (string) $item['title'];
+			}
+		}
+		if ( ! $strength_titles ) {
+			$strength_titles = $legacy_strengths;
+		}
 
 		return array(
-			'performance_tier'      => $tier,
-			'performance_headline'  => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
-			'profile_title'         => (string) ( $cfg['profile_title'] ?? __( 'Your AI Learning Profile', 'ai-risk-benchmark' ) ),
+			'performance_tier'      => (string) ( $skill_band['slug'] ?? 'beginning' ),
+			'performance_headline'  => (string) ( $ui['hero']['consequence'] ?? ( $cfg['headlines'][ $skill_band['slug'] ?? '' ] ?? '' ) ),
+			'skill_band'            => $skill_band,
+			'profile_title'         => (string) ( $cfg['profile_title'] ?? __( 'Your learning profile', 'ai-risk-benchmark' ) ),
+			'ui'                    => $ui,
 			'learning_metrics'      => $metrics,
+			'bias_health'           => self::bias_health( $results, $cfg ),
 			'learner_type'          => self::learner_type( $results, $metrics, $cfg ),
 			'learning_journey'      => $journey,
 			'peer_benchmark'        => self::peer_benchmark( $results, $cfg ),
-			'strengths'             => $strengths,
+			'strengths'             => $strength_titles,
+			'strength_items'        => $strength_items,
 			'opportunities'         => $opps,
+			'focus_areas'           => $focus_areas,
 			'learning_challenge'    => (array) ( $cfg['learning_challenge'] ?? array() ),
 			'weekly_challenge'      => (array) ( $cfg['weekly_challenge'] ?? array() ),
 			'student_resources'     => (array) ( $cfg['student_resources'] ?? array() ),
 			'school_contribution'   => (array) ( $cfg['school_contribution'] ?? array() ),
+			'school_progress'       => $school_progress,
 			'share_hint'            => (string) ( $cfg['share_hint'] ?? '' ),
 			'next_steps'            => self::next_steps( $cfg ),
 		);
+	}
+
+	/**
+	 * Focus cards for the weakest student skill areas.
+	 *
+	 * @param array<int, array<string, mixed>> $opps    Opportunity rows.
+	 * @param array<int, array<string, mixed>> $metrics Learning metrics.
+	 * @param array<string, mixed>             $cfg     Config.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function build_focus_areas( array $opps, array $metrics, array $cfg ): array {
+		$label_map = (array) ( $cfg['focus_label_map'] ?? array() );
+		$by_slug   = array();
+		foreach ( $metrics as $metric ) {
+			$by_slug[ (string) ( $metric['slug'] ?? '' ) ] = $metric;
+		}
+
+		usort(
+			$opps,
+			static function ( $a, $b ) {
+				$a_pct = isset( $a['pct'] ) ? (int) $a['pct'] : 100;
+				$b_pct = isset( $b['pct'] ) ? (int) $b['pct'] : 100;
+				return $a_pct <=> $b_pct;
+			}
+		);
+
+		$out = array();
+		foreach ( array_slice( $opps, 0, self::FOCUS_AREA_MAX ) as $opp ) {
+			$slug        = (string) ( $opp['slug'] ?? '' );
+			$map         = (array) ( $label_map[ $slug ] ?? array() );
+			$metric_slug = (string) ( $map['metric'] ?? '' );
+			$metric      = (array) ( $by_slug[ $metric_slug ] ?? array() );
+			$pct         = isset( $metric['value'] ) ? (int) $metric['value'] : ( isset( $opp['pct'] ) ? (int) $opp['pct'] : 0 );
+			$band        = ! empty( $metric['skill_band'] ) ? (array) $metric['skill_band'] : self::skill_band( $pct );
+			$label       = (string) ( $metric['label'] ?? $opp['label'] ?? '' );
+			$block       = AIRB_Student_Copy::focus_block( $opp, $cfg );
+
+			$out[] = array_merge(
+				$block,
+				array(
+					'slug'       => $slug,
+					'label'      => $label,
+					'pct'        => $pct,
+					'skill_band' => $band,
+				)
+			);
+		}
+
+		return $out;
 	}
 
 	/**
@@ -72,7 +144,9 @@ class AIRB_Student_Results {
 				'cta_url'          => AIRB_Defaults::benchmark_page_url(),
 				'cta_type'         => 'link',
 			),
-			'resource_links' => AIRB_Defaults::results_timeline_read_links( 'student' ),
+			'resource_links'             => AIRB_Defaults::results_timeline_read_links( 'student' ),
+			'help_support_heading'       => (string) ( $cfg['help_support_heading'] ?? __( 'Further reading and tips to guide you', 'ai-risk-benchmark' ) ),
+			'help_support_heading_short' => (string) ( $cfg['help_support_heading_short'] ?? __( 'Read more & tips', 'ai-risk-benchmark' ) ),
 		);
 	}
 
@@ -98,9 +172,9 @@ class AIRB_Student_Results {
 	public static function skill_band( int $score ): array {
 		$score  = self::display_score( $score );
 		$levels = array(
-			array( 'slug' => 'beginning', 'label' => __( 'Beginning', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
-			array( 'slug' => 'developing', 'label' => __( 'Developing', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
-			array( 'slug' => 'emerging', 'label' => __( 'Emerging', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
+			array( 'slug' => 'beginning', 'label' => __( 'At risk', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
+			array( 'slug' => 'developing', 'label' => __( 'Building', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
+			array( 'slug' => 'emerging', 'label' => __( 'Stable', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
 			array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
 			array( 'slug' => 'advanced', 'label' => __( 'Advanced', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
 		);
@@ -116,7 +190,7 @@ class AIRB_Student_Results {
 
 		return array(
 			'slug'  => 'beginning',
-			'label' => __( 'Beginning', 'ai-risk-benchmark' ),
+			'label' => __( 'At risk', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -161,6 +235,17 @@ class AIRB_Student_Results {
 				'skill_band' => self::skill_band( (int) round( (float) ( $domains['ai_literacy']['readiness_percentage'] ?? 0 ) ) ),
 			),
 		);
+
+		if ( array_key_exists( 'bias_readiness', $results ) && null !== $results['bias_readiness'] ) {
+			$bias_score = self::display_score( (int) $results['bias_readiness'] );
+			$metrics[]  = array(
+				'slug'       => 'bias_fairness',
+				'label'      => __( 'Bias & fairness awareness', 'ai-risk-benchmark' ),
+				'value'      => $bias_score,
+				'type'       => 'score',
+				'skill_band' => self::skill_band( $bias_score ),
+			);
+		}
 
 		return $metrics;
 	}
@@ -398,6 +483,17 @@ class AIRB_Student_Results {
 					}
 					continue;
 				}
+				if ( 'bias_readiness' === $trigger ) {
+					if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
+						continue;
+					}
+					$readiness = self::display_score( (int) $results['bias_readiness'] );
+					if ( $readiness < self::OPPORTUNITY_MAX ) {
+						$show = true;
+						$pct  = null === $pct ? $readiness : min( $pct, $readiness );
+					}
+					continue;
+				}
 				$dom = (array) ( $domains[ $trigger ] ?? array() );
 				if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
 					continue;
@@ -424,5 +520,31 @@ class AIRB_Student_Results {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Bias & fairness readiness from dedicated student bias questions.
+	 *
+	 * @param array<string, mixed> $results Results.
+	 * @param array<string, mixed> $cfg     Student config.
+	 * @return array<string, mixed>|null
+	 */
+	private static function bias_health( array $results, array $cfg ): ?array {
+		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
+			return null;
+		}
+
+		$score     = (int) $results['bias_readiness'];
+		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
+		$band      = self::skill_band( self::display_score( $score ) );
+
+		return array(
+			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
+			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Fairness · protected characteristics · online safety', 'ai-risk-benchmark' ) ),
+			'score'        => self::display_score( $score ),
+			'band_label'   => (string) ( $band['label'] ?? '' ),
+			'show_callout' => $score < $threshold,
+			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'AI tools can produce unfair or stereotypical answers about groups of people. Learning to spot this helps you use AI more safely and fairly.', 'ai-risk-benchmark' ) ),
+		);
 	}
 }

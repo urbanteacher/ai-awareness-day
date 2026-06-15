@@ -72,7 +72,7 @@ class AIRB_Funnel {
 
 		if ( 'student' === $role ) {
 			$results['funnel_closing']  = '';
-			$results['student_results'] = AIRB_Student_Results::build( $results );
+			$results['student_results'] = AIRB_Student_Results::build( $results, $school );
 			$results['stage2_products'] = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {
@@ -112,7 +112,7 @@ class AIRB_Funnel {
 		if ( 'support_staff' === $role ) {
 			$gap_products                 = $results['stage2_products'];
 			$results['funnel_closing']    = '';
-			$results['support_results']   = AIRB_Support_Results::build( $results, $config );
+			$results['support_results']   = AIRB_Support_Results::build( $results, $config, $school );
 			$results['stage2_products']   = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {

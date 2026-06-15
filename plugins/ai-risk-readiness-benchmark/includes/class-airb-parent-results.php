@@ -18,25 +18,200 @@ class AIRB_Parent_Results {
 	private const LOW_SCORE_THRESHOLD       = 40;
 	private const CONFIDENCE_FOCUS_MAX      = 75;
 	private const STRENGTH_READINESS_MIN    = 70;
+	private const FOCUS_MAX                 = 75;
 
 	/**
 	 * @param array<string, mixed> $results Scored results (incl. parent_display_domains).
 	 * @return array<string, mixed>
 	 */
 	public static function build( array $results ): array {
-		$cfg   = AIRB_Defaults::parent_result_config();
-		$score = (int) ( $results['alignment_score'] ?? 0 );
-		$tier  = self::journey_tier( $score );
+		$cfg            = AIRB_Defaults::parent_result_config();
+		$score          = (int) ( $results['alignment_score'] ?? 0 );
+		$tier           = self::journey_tier( $score );
+		$home_metrics   = self::home_metrics( $results, $cfg );
+		$focus_areas    = self::build_focus_areas( $home_metrics, $results, $cfg );
+		$ui             = AIRB_Parent_Copy::resolve_ui( $results, $cfg );
+		$conversations  = AIRB_Parent_Copy::conversation_starters( $focus_areas, $cfg );
 
 		return array(
-			'journey_tier'          => $tier,
-			'suppress_improvement'  => 'high' === $tier,
-			'peer_benchmark'        => self::peer_benchmark( $results, $cfg ),
-			'advocate'              => 'high' === $tier ? self::advocate_block( $results, $cfg ) : null,
-			'confidence'            => self::confidence_block( $results, $cfg ),
-			'next_steps'            => self::next_steps( $tier, $cfg ),
-			'resource_links'        => (array) ( $cfg['resource_links'] ?? array() ),
+			'journey_tier'           => $tier,
+			'suppress_improvement'   => 'high' === $tier,
+			'ui'                     => $ui,
+			'home_metrics'           => $home_metrics,
+			'focus_areas'            => $focus_areas,
+			'conversation_starters'  => $conversations,
+			'peer_benchmark'         => self::peer_benchmark( $results, $cfg ),
+			'advocate'               => 'high' === $tier ? self::advocate_block( $results, $cfg ) : null,
+			'confidence'             => self::confidence_block( $results, $cfg ),
+			'next_steps'             => self::next_steps( $tier, $cfg ),
+			'resource_links'         => (array) ( $cfg['resource_links'] ?? array() ),
 		);
+	}
+
+	/**
+	 * Parent-facing awareness band (distinct from school readiness bands).
+	 *
+	 * @param int $score Alignment score 0-100.
+	 * @return array{slug:string,label:string}
+	 */
+	public static function awareness_band( int $score ): array {
+		$score  = max( 0, min( 100, $score ) );
+		$levels = array(
+			array( 'slug' => 'just_starting', 'label' => __( 'Just starting', 'ai-risk-benchmark' ), 'min' => 0, 'max' => 20 ),
+			array( 'slug' => 'developing', 'label' => __( 'Developing', 'ai-risk-benchmark' ), 'min' => 21, 'max' => 40 ),
+			array( 'slug' => 'aware', 'label' => __( 'Aware', 'ai-risk-benchmark' ), 'min' => 41, 'max' => 60 ),
+			array( 'slug' => 'confident', 'label' => __( 'Confident', 'ai-risk-benchmark' ), 'min' => 61, 'max' => 80 ),
+			array( 'slug' => 'well_prepared', 'label' => __( 'Well prepared', 'ai-risk-benchmark' ), 'min' => 81, 'max' => 100 ),
+		);
+
+		foreach ( $levels as $level ) {
+			if ( $score >= (int) $level['min'] && $score <= (int) $level['max'] ) {
+				return array(
+					'slug'  => (string) $level['slug'],
+					'label' => (string) $level['label'],
+				);
+			}
+		}
+
+		return array(
+			'slug'  => 'developing',
+			'label' => __( 'Developing', 'ai-risk-benchmark' ),
+		);
+	}
+
+	/**
+	 * Presentation metrics for the parent home safety card.
+	 *
+	 * @param array<string, mixed> $results Results.
+	 * @param array<string, mixed> $cfg     Config.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function home_metrics( array $results, array $cfg ): array {
+		$display = (array) ( $results['parent_display_domains'] ?? array() );
+		$defs    = (array) ( $cfg['home_metrics'] ?? array() );
+		$out     = array();
+
+		foreach ( $defs as $def ) {
+			if ( ! is_array( $def ) ) {
+				continue;
+			}
+			$source = (string) ( $def['source'] ?? $def['slug'] ?? '' );
+			$pct    = self::metric_readiness( $display, $source );
+			if ( null === $pct ) {
+				continue;
+			}
+			$badge = AIRB_Parent_Copy::metric_badge( $pct );
+			$out[] = array(
+				'slug'       => (string) ( $def['slug'] ?? $source ),
+				'label'      => (string) ( $def['label'] ?? '' ),
+				'subtitle'   => (string) ( $def['subtitle'] ?? '' ),
+				'icon'       => (string) ( $def['icon'] ?? 'eye' ),
+				'value'      => $pct,
+				'badge'      => $badge,
+				'focus_slug' => (string) ( $def['focus_slug'] ?? '' ),
+				'source'     => $source,
+			);
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Focus cards for the weakest home metrics.
+	 *
+	 * @param array<int, array<string, mixed>> $metrics Home metrics.
+	 * @param array<string, mixed>             $results Results.
+	 * @param array<string, mixed>             $cfg     Config.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function build_focus_areas( array $metrics, array $results, array $cfg ): array {
+		$slug_map = (array) ( $cfg['focus_slug_map'] ?? array() );
+		$topics   = array();
+		foreach ( (array) ( $cfg['focus_topics'] ?? array() ) as $topic ) {
+			if ( ! is_array( $topic ) || empty( $topic['slug'] ) ) {
+				continue;
+			}
+			$topics[ (string) $topic['slug'] ] = $topic;
+		}
+
+		$weak = array();
+		foreach ( $metrics as $metric ) {
+			$pct = (int) ( $metric['value'] ?? 100 );
+			if ( $pct >= self::FOCUS_MAX ) {
+				continue;
+			}
+			$source     = (string) ( $metric['source'] ?? $metric['slug'] ?? '' );
+			$focus_slug = (string) ( $metric['focus_slug'] ?? ( $slug_map[ $source ] ?? $slug_map[ (string) ( $metric['slug'] ?? '' ) ] ?? '' ) );
+			if ( ! $focus_slug && isset( $topics[ $source ] ) ) {
+				$focus_slug = $source;
+			}
+			if ( ! $focus_slug ) {
+				continue;
+			}
+			$topic = (array) ( $topics[ $source ] ?? array() );
+			$weak[] = array(
+				'slug'       => $source,
+				'focus_slug' => $focus_slug,
+				'label'      => (string) ( $metric['label'] ?? $topic['label'] ?? '' ),
+				'pct'        => $pct,
+				'badge'      => (array) ( $metric['badge'] ?? AIRB_Parent_Copy::metric_badge( $pct ) ),
+				'summary'    => (string) ( $topic['body'] ?? '' ),
+			);
+		}
+
+		$display = (array) ( $results['parent_display_domains'] ?? array() );
+		foreach ( array( 'parent_ai_dependency' ) as $extra_slug ) {
+			$pct = self::metric_readiness( $display, $extra_slug );
+			if ( null === $pct || $pct >= self::FOCUS_MAX ) {
+				continue;
+			}
+			$already = false;
+			foreach ( $weak as $row ) {
+				if ( (string) ( $row['slug'] ?? '' ) === $extra_slug ) {
+					$already = true;
+					break;
+				}
+			}
+			if ( $already ) {
+				continue;
+			}
+			$topic = (array) ( $topics[ $extra_slug ] ?? array() );
+			$weak[] = array(
+				'slug'       => $extra_slug,
+				'focus_slug' => (string) ( $slug_map[ $extra_slug ] ?? 'parent_ai_use' ),
+				'label'      => (string) ( $topic['label'] ?? '' ),
+				'pct'        => $pct,
+				'badge'      => AIRB_Parent_Copy::metric_badge( $pct ),
+				'summary'    => (string) ( $topic['body'] ?? '' ),
+			);
+		}
+
+		usort(
+			$weak,
+			static function ( $a, $b ) {
+				return ( $a['pct'] ?? 100 ) <=> ( $b['pct'] ?? 100 );
+			}
+		);
+
+		$out = array();
+		foreach ( array_slice( $weak, 0, 2 ) as $area ) {
+			$out[] = array_merge( $area, AIRB_Parent_Copy::focus_block( $area, $cfg ) );
+		}
+
+		return $out;
+	}
+
+	/**
+	 * @param array<string, mixed> $display Parent display domains.
+	 * @param string               $slug    Domain slug.
+	 */
+	private static function metric_readiness( array $display, string $slug ): ?int {
+		$dom = (array) ( $display[ $slug ] ?? array() );
+		if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
+			return null;
+		}
+		$is_risk = ( 'risk' === ( $dom['metric_type'] ?? 'score' ) );
+		return (int) round( (float) ( $is_risk ? ( 100 - ( $dom['risk_percentage'] ?? 0 ) ) : ( $dom['readiness_percentage'] ?? 0 ) ) );
 	}
 
 	/**
@@ -96,15 +271,11 @@ class AIRB_Parent_Results {
 		$strengths = array();
 
 		foreach ( $labels as $slug => $label ) {
-			$dom = (array) ( $display[ $slug ] ?? array() );
-			if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
+			$pct = self::metric_readiness( $display, (string) $slug );
+			if ( null === $pct || $pct < self::STRENGTH_READINESS_MIN ) {
 				continue;
 			}
-			$is_risk    = ( 'risk' === ( $dom['metric_type'] ?? 'score' ) );
-			$readiness  = (int) round( (float) ( $is_risk ? ( 100 - ( $dom['risk_percentage'] ?? 0 ) ) : ( $dom['readiness_percentage'] ?? 0 ) ) );
-			if ( $readiness >= self::STRENGTH_READINESS_MIN ) {
-				$strengths[] = (string) $label;
-			}
+			$strengths[] = (string) $label;
 		}
 
 		return array(
@@ -124,25 +295,19 @@ class AIRB_Parent_Results {
 	 * @return array<string, mixed>|null
 	 */
 	private static function confidence_block( array $results, array $cfg ): ?array {
-		$display = (array) ( $results['parent_display_domains'] ?? array() );
-		$dom     = (array) ( $display['homework_oversight'] ?? array() );
-		if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
-			return null;
-		}
-
-		$readiness = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
-		if ( $readiness >= self::CONFIDENCE_FOCUS_MAX ) {
+		$readiness = self::metric_readiness( (array) ( $results['parent_display_domains'] ?? array() ), 'homework_oversight' );
+		if ( null === $readiness || $readiness >= self::CONFIDENCE_FOCUS_MAX ) {
 			return null;
 		}
 
 		$copy = (array) ( $cfg['confidence_copy'] ?? array() );
 
 		return array(
-			'title'          => (string) ( $copy['title'] ?? __( 'Building your confidence', 'ai-risk-benchmark' ) ),
+			'title'          => (string) ( $copy['title'] ?? __( 'Strengthening homework oversight', 'ai-risk-benchmark' ) ),
 			'score'          => $readiness,
-			'impact_heading' => (string) ( $copy['impact_heading'] ?? __( 'Parents with lower confidence often report:', 'ai-risk-benchmark' ) ),
+			'impact_heading' => (string) ( $copy['impact_heading'] ?? __( 'Families with weaker homework oversight often report:', 'ai-risk-benchmark' ) ),
 			'impact_items'   => (array) ( $copy['impact_items'] ?? array() ),
-			'improve_heading'=> (string) ( $copy['improve_heading'] ?? __( 'To improve confidence:', 'ai-risk-benchmark' ) ),
+			'improve_heading'=> (string) ( $copy['improve_heading'] ?? __( 'Practical next steps:', 'ai-risk-benchmark' ) ),
 			'improve_items'  => (array) ( $copy['improve_items'] ?? array() ),
 		);
 	}

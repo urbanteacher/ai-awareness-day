@@ -10,10 +10,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Decode timeline post titles for plain-text UI labels (avoids &#8216; showing in cards).
+ * Decode timeline post titles for plain-text UI labels (avoids &#8211; showing in cards).
+ */
+function aiad_timeline_decode_text( string $text ): string {
+	$text = wp_specialchars_decode( $text, ENT_QUOTES );
+	return html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+}
+
+/**
+ * Plain-text label for a timeline post in benchmark result cards.
  */
 function aiad_timeline_post_link_label( WP_Post $post ): string {
-	return wp_specialchars_decode( (string) get_the_title( $post ), ENT_QUOTES );
+	return aiad_timeline_decode_text( (string) get_the_title( $post ) );
 }
 
 /**
@@ -372,6 +380,7 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			$chosen[] = array(
 				'label' => aiad_timeline_post_link_label( $post ),
 				'url'   => $url,
+				'slug'  => $post->post_name,
 				'image' => is_string( $image ) ? $image : '',
 			);
 			if ( count( $chosen ) >= $limit ) {
@@ -446,4 +455,24 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 	wp_reset_postdata();
 
 	return $chosen;
+}
+
+/**
+ * Slug → absolute URL map for benchmark read-link front-end fallbacks.
+ *
+ * @return array<string, string>
+ */
+function aiad_timeline_benchmark_read_paths_for_frontend(): array {
+	$out = array();
+	foreach ( aiad_timeline_benchmark_audience_launch_map() as $items ) {
+		foreach ( (array) $items as $item ) {
+			$slug = (string) ( $item['slug'] ?? '' );
+			$path = (string) ( $item['path'] ?? '' );
+			if ( '' === $slug || '' === $path ) {
+				continue;
+			}
+			$out[ $slug ] = home_url( $path );
+		}
+	}
+	return $out;
 }

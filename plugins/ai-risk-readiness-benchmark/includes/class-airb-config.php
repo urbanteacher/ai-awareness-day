@@ -208,6 +208,479 @@ class AIRB_Config {
 			}
 			$config['version'] = 15;
 			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 16 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array( 'metric_labels', 'metric_signals', 'risk_score_note' ) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 16;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 17 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'metric_signals',
+					'urgent_action_heading',
+					'peer_comparison_label',
+					'peer_you_label',
+					'peer_gap_below_average',
+					'peer_gap_above_average',
+					'peer_gap_at_average',
+					'peer_gap_below_top',
+					'peer_gap_above_top',
+					'default_priority_rationale',
+					'priority_rationales',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 17;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 18 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'focus_copy',
+					'focus_section_heading',
+					'focus_practice_heading',
+					'heatmap_section_heading',
+					'heatmap_card_title',
+					'heatmap_card_help',
+					'rollout_section_heading',
+					'rollout_intro',
+					'rollout_rollout_cta',
+					'rollout_locked_items',
+					'help_support_heading',
+					'next_step_blocks',
+					'hero_next_step_heading',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 18;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 19 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'peer_comparison_label_short',
+					'peer_phase_short',
+					'peer_gap_below_top_short',
+					'urgent_action_heading_short',
+					'focus_section_heading_short',
+					'focus_practice_heading_short',
+					'heatmap_card_title_short',
+					'rollout_section_heading_short',
+					'rollout_intro_short',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 19;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 20 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'focus_tiers',
+					'priority_scenarios',
+					'rollout_tiers',
+					'readiness_cta_tiers',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 20;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 21 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'help_support_heading',
+					'help_support_heading_short',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 21;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 22 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$default_leader    = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'bias_health_title',
+					'bias_health_subtitle',
+					'bias_health_callout_threshold',
+					'bias_health_callout',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 22;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 23 ) {
+			$default_teacher = (array) ( $defaults['teacher_result'] ?? array() );
+			if ( ! isset( $config['teacher_result'] ) || ! is_array( $config['teacher_result'] ) ) {
+				$config['teacher_result'] = $default_teacher;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'domain_descriptions',
+					'strength_tiers',
+					'focus_tiers',
+					'focus_actions_heading',
+					'rollout_tiers',
+					'readiness_cta_tiers',
+					'headlines',
+					'rollout_locked_items',
+					'oversight_metric_note',
+					'oversight_card_suffix',
+					'domains_section_heading',
+					'domains_section_heading_short',
+					'strengths_heading_short',
+				) as $key ) {
+					if ( ! empty( $default_teacher[ $key ] ) ) {
+						$config['teacher_result'][ $key ] = $default_teacher[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 23;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 24 ) {
+			$default_student = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'strength_tiers',
+					'focus_tiers',
+					'focus_label_map',
+					'hero_metric_label',
+					'skills_section_heading',
+					'skills_section_heading_short',
+					'focus_section_heading',
+					'focus_section_heading_short',
+					'resources_section_heading',
+					'resources_section_heading_short',
+					'resources_section_intro',
+					'share_section_kicker',
+					'share_section_title',
+					'share_section_body',
+					'share_count_label',
+					'share_unlock_label',
+					'share_unlock_value',
+					'share_cta_primary',
+					'share_cta_secondary',
+					'strengths_heading_short',
+					'profile_title',
+					'student_resources',
+				) as $key ) {
+					if ( ! empty( $default_student[ $key ] ) ) {
+						$config['student_result'][ $key ] = $default_student[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 24;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 25 ) {
+			$default_parent = (array) ( $defaults['parent_result'] ?? array() );
+			if ( ! isset( $config['parent_result'] ) || ! is_array( $config['parent_result'] ) ) {
+				$config['parent_result'] = $default_parent;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'home_metrics',
+					'focus_tiers',
+					'focus_slug_map',
+					'conversation_starters',
+					'profile_title',
+					'hero_metric_label',
+					'metrics_section_heading',
+					'metrics_section_heading_short',
+					'focus_section_heading',
+					'focus_section_heading_short',
+					'conversation_section_heading',
+					'conversation_section_heading_short',
+					'conversation_section_intro',
+					'share_section_kicker',
+					'share_section_title',
+					'share_section_body',
+					'share_cta_primary',
+					'share_cta_secondary',
+					'display_domains',
+				) as $key ) {
+					if ( ! empty( $default_parent[ $key ] ) ) {
+						$config['parent_result'][ $key ] = $default_parent[ $key ];
+						$changed                        = true;
+					}
+				}
+			}
+			$config['version'] = 25;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 26 ) {
+			$default_support = (array) ( $defaults['support_result'] ?? array() );
+			if ( ! isset( $config['support_result'] ) || ! is_array( $config['support_result'] ) ) {
+				$config['support_result'] = $default_support;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'metric_signals',
+					'strength_tiers',
+					'focus_tiers',
+					'domain_rows',
+					'cta_hero',
+					'profile_title',
+					'hero_metric_label',
+					'domains_section_heading',
+					'domains_section_heading_short',
+					'focus_section_heading',
+					'focus_section_heading_short',
+					'rollout_section_heading',
+					'rollout_section_heading_short',
+					'rollout_intro',
+					'rollout_intro_short',
+					'rollout_rollout_cta',
+					'rollout_locked_items',
+					'strengths_heading_short',
+					'help_support_heading',
+					'help_support_heading_short',
+					'opportunity_copy',
+				) as $key ) {
+					if ( ! empty( $default_support[ $key ] ) ) {
+						$config['support_result'][ $key ] = $default_support[ $key ];
+						$changed                         = true;
+					}
+				}
+			}
+			$config['version'] = 26;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 27 ) {
+			$default_leader = (array) ( $defaults['leader_result'] ?? array() );
+			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
+				$config['leader_result'] = $default_leader;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'focus_tiers',
+				) as $key ) {
+					if ( ! empty( $default_leader[ $key ] ) ) {
+						$config['leader_result'][ $key ] = $default_leader[ $key ];
+						$changed                         = true;
+					}
+				}
+				if ( ! empty( $default_leader['metric_labels']['bias'] ) ) {
+					if ( ! isset( $config['leader_result']['metric_labels'] ) || ! is_array( $config['leader_result']['metric_labels'] ) ) {
+						$config['leader_result']['metric_labels'] = array();
+					}
+					$config['leader_result']['metric_labels']['bias'] = $default_leader['metric_labels']['bias'];
+					$changed                                          = true;
+				}
+			}
+			$config['version'] = 27;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 28 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$default_student     = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'focus_tiers',
+					'metric_labels',
+					'bias_health_title',
+					'bias_health_subtitle',
+					'bias_health_callout_threshold',
+					'bias_health_callout',
+					'bias_section_heading',
+					'bias_section_heading_short',
+					'skills_section_heading',
+					'skills_section_heading_short',
+					'strength_tiers',
+					'focus_label_map',
+					'opportunity_topics',
+					'journey_focus_map',
+				) as $key ) {
+					if ( ! empty( $default_student[ $key ] ) ) {
+						$config['student_result'][ $key ] = $default_student[ $key ];
+						$changed                          = true;
+					}
+				}
+			}
+			$config['version'] = 28;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 29 ) {
+			$default_student = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} elseif ( ! empty( $default_student['journey_levels'] ) ) {
+				$config['student_result']['journey_levels'] = $default_student['journey_levels'];
+				$changed                                    = true;
+			}
+			$config['version'] = 29;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 30 ) {
+			$default_student = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} else {
+				foreach ( array( 'help_support_heading', 'help_support_heading_short' ) as $key ) {
+					if ( ! empty( $default_student[ $key ] ) ) {
+						$config['student_result'][ $key ] = $default_student[ $key ];
+						$changed                          = true;
+					}
+				}
+			}
+			$config['version'] = 30;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 31 ) {
+			if ( ! empty( $config['student_result']['journey_levels'] ) && is_array( $config['student_result']['journey_levels'] ) ) {
+				foreach ( $config['student_result']['journey_levels'] as $idx => $level ) {
+					if ( ! is_array( $level ) || 'developing' !== ( $level['slug'] ?? '' ) ) {
+						continue;
+					}
+					$config['student_result']['journey_levels'][ $idx ]['label'] = __( 'Building', 'ai-risk-benchmark' );
+					$changed                                                     = true;
+				}
+			}
+			$config['version'] = 31;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 32 ) {
+			$default_student = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} else {
+				foreach ( array( 'skills_section_heading', 'skills_section_heading_short' ) as $key ) {
+					if ( ! empty( $default_student[ $key ] ) ) {
+						$config['student_result'][ $key ] = $default_student[ $key ];
+						$changed                          = true;
+					}
+				}
+			}
+			$config['version'] = 32;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 33 ) {
+			$default_student = (array) ( $defaults['student_result'] ?? array() );
+			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
+				$config['student_result'] = $default_student;
+			} else {
+				foreach ( array(
+					'retake_at_risk_threshold',
+					'retake_at_risk_heading',
+					'retake_at_risk_body',
+					'retake_body_default',
+				) as $key ) {
+					if ( array_key_exists( $key, $default_student ) ) {
+						$config['student_result'][ $key ] = $default_student[ $key ];
+						$changed                          = true;
+					}
+				}
+			}
+			$config['version'] = 33;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 34 ) {
+			$config['questions'] = AIRB_Questions::all();
+			$default_teacher = (array) ( $defaults['teacher_result'] ?? array() );
+			if ( ! isset( $config['teacher_result'] ) || ! is_array( $config['teacher_result'] ) ) {
+				$config['teacher_result'] = $default_teacher;
+			} else {
+				foreach ( array(
+					'copy_tiers',
+					'focus_tiers',
+					'metric_labels',
+					'bias_health_title',
+					'bias_health_subtitle',
+					'bias_health_callout_threshold',
+					'bias_health_callout',
+				) as $key ) {
+					if ( ! empty( $default_teacher[ $key ] ) ) {
+						$config['teacher_result'][ $key ] = $default_teacher[ $key ];
+						$changed                          = true;
+					}
+				}
+			}
+			$config['version'] = 34;
+			$changed           = true;
 		} elseif ( (int) ( $config['version'] ?? 0 ) < (int) ( $defaults['version'] ?? 0 ) ) {
 			$config['version'] = (int) $defaults['version'];
 			$changed           = true;

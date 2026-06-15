@@ -48,6 +48,13 @@ class AIRB_Interest {
 			'student_share_school'   => 'student_share_school',
 			'support_data_checklist' => 'support_data_checklist',
 			'support_verification'   => 'support_verification_resources',
+			'teacher_awareness'      => 'teacher_awareness',
+			'teacher_champion'       => 'ai_awareness_day',
+			'teacher_activity_day'   => 'teacher_activity_day',
+			'teacher_learn_ai'       => 'teacher_learn_ai',
+			'whole_school_cpd'       => 'whole_school_cpd',
+			'whole_school_benchmark' => 'whole_school_benchmark',
+			'support_cpd'            => 'support_staff_cpd',
 		);
 	}
 
@@ -92,6 +99,16 @@ class AIRB_Interest {
 			'teacher_activity_day' => array(
 				'label'       => __( 'Run an AI Awareness Day activity in my class', 'ai-risk-benchmark' ),
 				'description' => __( 'Classroom resources and activities aligned to the campaign.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'teacher' ),
+			),
+			'teacher_awareness' => array(
+				'label'       => __( 'Book an AI awareness session', 'ai-risk-benchmark' ),
+				'description' => __( 'Foundational session covering safe adoption, verification and data protection basics.', 'ai-risk-benchmark' ),
+				'roles'       => array( 'teacher' ),
+			),
+			'teacher_champion' => array(
+				'label'       => __( 'Join the AI Champion pathway', 'ai-risk-benchmark' ),
+				'description' => __( 'Support colleagues, shape school policy and lead responsible AI practice.', 'ai-risk-benchmark' ),
 				'roles'       => array( 'teacher' ),
 			),
 			'teacher_learn_ai' => array(
@@ -200,7 +217,7 @@ class AIRB_Interest {
 		$tier = sanitize_key( $tier );
 
 		$role_order = array(
-			'teacher' => array( 'teacher_activity_day', 'whole_school_cpd', 'whole_school_benchmark', 'ai_awareness_day' ),
+			'teacher' => array( 'teacher_awareness', 'teacher_activity_day', 'whole_school_cpd', 'whole_school_benchmark', 'ai_awareness_day' ),
 			'leader'  => array( 'whole_school_benchmark', 'governance_review', 'whole_school_cpd', 'ai_awareness_day' ),
 			'parent'  => array(
 				'high'   => array( 'parent_share_with_school', 'parent_school_take_part', 'parent_ambassador' ),
@@ -217,6 +234,10 @@ class AIRB_Interest {
 
 		$label_overrides = array(
 			'teacher' => array(
+				'teacher_awareness'      => array(
+					'label'       => __( 'Book an AI awareness session', 'ai-risk-benchmark' ),
+					'description' => __( 'Foundational CPD covering safe adoption, verification and data protection basics.', 'ai-risk-benchmark' ),
+				),
 				'teacher_activity_day'   => array(
 					'label'       => __( 'I want classroom resources', 'ai-risk-benchmark' ),
 					'description' => __( 'Lesson activities, prompts and materials aligned to your audit results.', 'ai-risk-benchmark' ),
@@ -447,6 +468,22 @@ class AIRB_Interest {
 					'show_stakeholder_role'  => in_array( $role, array( 'teacher', 'leader' ), true ),
 				);
 		}
+	}
+
+	/**
+	 * Static interest form shell for front-end fallback when AJAX omits the payload.
+	 *
+	 * @param string $role Role slug.
+	 * @return array<string, mixed>|null
+	 */
+	public static function form_shell_for_frontend( string $role ): ?array {
+		return self::build_form_payload(
+			array(
+				'alignment_score' => 0,
+				'domain_scores'   => array(),
+			),
+			$role
+		);
 	}
 
 	/**

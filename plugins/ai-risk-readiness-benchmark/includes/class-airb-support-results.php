@@ -14,19 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Support_Results {
 
-	private const STRENGTH_MIN = 85;
+	private const FOCUS_MAX       = 75;
+	private const FOCUS_AREA_MAX  = 4;
 
 	/**
 	 * @param array<string, mixed> $results Scored results.
 	 * @param array<string, mixed> $config  Plugin config.
+	 * @param string               $school  Optional school name from submission.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results, array $config ): array {
-		$cfg       = AIRB_Defaults::support_result_config();
-		$tier      = AIRB_Scoring::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) );
-		$strengths = self::detect_strengths( $results, $cfg );
-		$opps      = self::detect_opportunities( $results, $cfg );
-		$gap       = self::format_gap_recommendations( $results, $cfg );
+	public static function build( array $results, array $config, string $school = '' ): array {
+		$cfg            = AIRB_Defaults::support_result_config();
+		$tier           = AIRB_Scoring::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) );
+		$strengths      = self::detect_strengths( $results, $cfg );
+		$opps           = self::detect_opportunities( $results, $cfg );
+		$gap            = self::format_gap_recommendations( $results, $cfg );
+		$progress       = AIRB_Support_Copy::school_progress( $school );
+		$domain_rows    = self::domain_rows( $results, $cfg );
+		$strength_items = AIRB_Support_Copy::strength_statements( $results, $cfg );
+		$focus_areas    = self::focus_areas_from_opportunities( $opps, $cfg );
 
 		$ho_domain = (array) ( $results['domain_scores']['human_oversight'] ?? array() );
 		$ho_pct    = (int) round( (float) ( $ho_domain['readiness_percentage'] ?? 0 ) );
@@ -39,29 +45,127 @@ class AIRB_Support_Results {
 		);
 
 		return array(
-			'performance_tier'              => $tier,
-			'performance_headline'          => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
-			'strengths'                     => $strengths,
-			'opportunities'                 => $opps,
-			'priority_focus'                => array_slice(
+			'performance_tier'             => $tier,
+			'performance_headline'         => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
+			'ui'                           => AIRB_Support_Copy::resolve_ui( $results, $cfg ),
+			'metric_signals'               => AIRB_Support_Copy::metric_signals( $results, $cfg ),
+			'domain_rows'                  => $domain_rows,
+			'strengths'                    => $strengths,
+			'strength_items'               => $strength_items,
+			'opportunities'                => $opps,
+			'focus_areas'                  => $focus_areas,
+			'priority_focus'               => array_slice(
 				array_map(
-					static function ( $opp ) {
-						return (string) ( $opp['label'] ?? '' );
+					static function ( $area ) {
+						return (string) ( $area['label'] ?? '' );
 					},
-					$opps
+					$focus_areas
 				),
 				0,
-				3
+				self::FOCUS_AREA_MAX
 			),
-			'gap_pathway'                   => $gap,
-			'operational_dependency_index'  => (int) ( $results['dependency_index'] ?? 0 ),
-			'human_oversight_ratio'         => $ho_pct,
-			'data_protection_readiness'     => $data_protection,
-			'benchmark_summary'             => self::benchmark_summary( $results, $cfg, $ho_pct, $data_protection ),
-			'suggested_resources'           => AIRB_Defaults::support_suggested_resources(),
-			'next_steps'                    => self::next_steps( $gap, $opps, $cfg ),
-			'share_hint'                    => (string) ( $cfg['share_hint'] ?? '' ),
+			'gap_pathway'                  => $gap,
+			'operational_dependency_index' => (int) ( $results['dependency_index'] ?? 0 ),
+			'human_oversight_ratio'        => $ho_pct,
+			'data_protection_readiness'    => $data_protection,
+			'role_specific_risk'           => self::role_specific_risk( $results ),
+			'school_progress'              => $progress,
+			'benchmark_summary'            => self::benchmark_summary( $results, $cfg, $ho_pct, $data_protection ),
+			'suggested_resources'          => AIRB_Defaults::support_suggested_resources(),
+			'next_steps'                   => self::next_steps( $gap, $opps, $cfg, $progress ),
+			'share_hint'                   => (string) ( $cfg['share_hint'] ?? '' ),
 		);
+	}
+
+	/**
+	 * Role-specific risk — highest exposure among privacy and safeguarding.
+	 *
+	 * @param array<string, mixed> $results Results.
+	 */
+	public static function role_specific_risk( array $results ): int {
+		$domains = (array) ( $results['domain_scores'] ?? array() );
+		$display = (array) ( $results['support_display_domains'] ?? array() );
+		$risks   = array();
+
+		if ( isset( $domains['privacy'] ) ) {
+			$risks[] = (int) round( (float) ( $domains['privacy']['risk_percentage'] ?? 0 ) );
+		}
+		if ( isset( $display['safeguarding'] ) ) {
+			$risks[] = (int) round( (float) ( $display['safeguarding']['risk_percentage'] ?? 0 ) );
+		}
+
+		if ( ! $risks ) {
+			return (int) round( (float) ( $results['overall_risk_percentage'] ?? 0 ) );
+		}
+
+		return max( $risks );
+	}
+
+	/**
+	 * Domain readiness rows for the results screen.
+	 *
+	 * @param array<string, mixed> $results Results.
+	 * @param array<string, mixed> $cfg     Config.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function domain_rows( array $results, array $cfg ): array {
+		$domains = (array) ( $results['domain_scores'] ?? array() );
+		$display = (array) ( $results['support_display_domains'] ?? array() );
+		$defs    = (array) ( $cfg['domain_rows'] ?? array() );
+		$rows    = array();
+
+		foreach ( $defs as $def ) {
+			if ( ! is_array( $def ) ) {
+				continue;
+			}
+			$slug   = (string) ( $def['slug'] ?? '' );
+			$source = (string) ( $def['source'] ?? 'domain' );
+			$dom    = 'support_display' === $source
+				? (array) ( $display[ $slug ] ?? array() )
+				: (array) ( $domains[ $slug ] ?? array() );
+
+			if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
+				continue;
+			}
+
+			$pct   = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
+			$badge = AIRB_Support_Copy::domain_badge( $pct );
+			$rows[] = array(
+				'slug'  => $slug,
+				'label' => (string) ( $def['label'] ?? $dom['label'] ?? $slug ),
+				'pct'   => $pct,
+				'badge' => $badge,
+			);
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * @param array<int, array<string, mixed>> $opps Opportunities.
+	 * @param array<string, mixed>             $cfg  Config.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function focus_areas_from_opportunities( array $opps, array $cfg ): array {
+		$out = array();
+		foreach ( array_slice( $opps, 0, self::FOCUS_AREA_MAX ) as $opp ) {
+			$slug  = (string) ( $opp['focus_slug'] ?? $opp['slug'] ?? '' );
+			$pct   = (int) ( $opp['pct'] ?? 0 );
+			$block = AIRB_Support_Copy::focus_block( $opp, $cfg );
+			$badge = AIRB_Support_Copy::domain_badge( $pct );
+			$out[] = array(
+				'slug'              => $slug,
+				'label'             => (string) ( $opp['label'] ?? '' ),
+				'pct'               => $pct,
+				'summary'           => (string) ( $block['summary'] ?? '' ),
+				'challenge_heading' => (string) ( $block['challenge_heading'] ?? '' ),
+				'challenge_bullets' => (array) ( $block['challenge_bullets'] ?? array() ),
+				'actions'           => (array) ( $block['actions'] ?? array() ),
+				'severity'          => (string) ( $block['severity'] ?? 'moderate' ),
+				'badge_text'        => AIRB_Support_Copy::focus_badge_text( $pct, $badge ),
+			);
+		}
+		return $out;
 	}
 
 	/**
@@ -70,21 +174,17 @@ class AIRB_Support_Results {
 	 * @return array<int, string>
 	 */
 	private static function detect_strengths( array $results, array $cfg ): array {
-		$labels  = (array) ( $cfg['strength_labels'] ?? array() );
-		$domains = (array) ( $results['domain_scores'] ?? array() );
-		$out     = array();
-
-		foreach ( array( 'privacy', 'human_oversight', 'safe_adoption', 'ai_literacy' ) as $slug ) {
-			$pct = (int) round( (float) ( $domains[ $slug ]['readiness_percentage'] ?? 0 ) );
-			if ( $pct >= self::STRENGTH_MIN && ! empty( $labels[ $slug ] ) ) {
-				$out[] = (string) $labels[ $slug ];
-			}
-		}
-		if ( (int) ( $results['dependency_index'] ?? 100 ) <= 35 && ! empty( $labels['low_dependency'] ) ) {
-			$out[] = (string) $labels['low_dependency'];
-		}
-
-		return array_values( array_filter( $out ) );
+		$items = AIRB_Support_Copy::strength_statements( $results, $cfg );
+		return array_values(
+			array_filter(
+				array_map(
+					static function ( $item ) {
+						return (string) ( $item['title'] ?? '' );
+					},
+					$items
+				)
+			)
+		);
 	}
 
 	/**
@@ -94,27 +194,37 @@ class AIRB_Support_Results {
 	 */
 	private static function detect_opportunities( array $results, array $cfg ): array {
 		$domains = (array) ( $results['domain_scores'] ?? array() );
+		$display = (array) ( $results['support_display_domains'] ?? array() );
 		$copy    = (array) ( $cfg['opportunity_copy'] ?? array() );
 		$scored  = array();
 
-		foreach ( $domains as $slug => $dom ) {
+		$candidates = array(
+			array( 'slug' => 'safeguarding', 'dom' => (array) ( $display['safeguarding'] ?? array() ), 'focus_slug' => 'safeguarding' ),
+			array( 'slug' => 'privacy', 'dom' => (array) ( $domains['privacy'] ?? array() ), 'focus_slug' => 'privacy' ),
+			array( 'slug' => 'human_oversight', 'dom' => (array) ( $domains['human_oversight'] ?? array() ), 'focus_slug' => 'human_oversight' ),
+			array( 'slug' => 'safe_adoption', 'dom' => (array) ( $domains['safe_adoption'] ?? array() ), 'focus_slug' => 'safe_adoption' ),
+			array( 'slug' => 'ai_literacy', 'dom' => (array) ( $domains['ai_literacy'] ?? array() ), 'focus_slug' => 'ai_literacy' ),
+		);
+
+		foreach ( $candidates as $row ) {
+			$slug = (string) ( $row['slug'] ?? '' );
+			$dom  = (array) ( $row['dom'] ?? array() );
 			if ( (int) ( $dom['questions_answered'] ?? 0 ) < 1 ) {
 				continue;
 			}
 			$pct = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
-			if ( $pct >= self::STRENGTH_MIN ) {
+			if ( $pct >= self::FOCUS_MAX ) {
 				continue;
 			}
 			$topic = (array) ( $copy[ $slug ] ?? array() );
-			if ( ! $topic ) {
-				continue;
-			}
+			$focus = (string) ( $row['focus_slug'] ?? $slug );
 			$scored[] = array(
-				'slug'    => (string) $slug,
-				'label'   => (string) ( $topic['focus_label'] ?? $dom['label'] ?? $slug ),
-				'pct'     => $pct,
-				'summary' => (string) ( $topic['summary'] ?? '' ),
-				'detail'  => (string) ( $topic['detail'] ?? '' ),
+				'slug'       => $slug,
+				'focus_slug' => $focus,
+				'label'      => (string) ( $topic['focus_label'] ?? $dom['label'] ?? $slug ),
+				'pct'        => $pct,
+				'summary'    => (string) ( $topic['summary'] ?? '' ),
+				'detail'     => (string) ( $topic['detail'] ?? '' ),
 			);
 		}
 
@@ -212,39 +322,44 @@ class AIRB_Support_Results {
 	}
 
 	/**
-	 * @param array<string, mixed>|null     $gap  Gap pathway.
-	 * @param array<int, array<string, mixed>> $opps Opportunities.
-	 * @param array<string, mixed>          $cfg  Config.
+	 * @param array<string, mixed>|null        $gap      Gap pathway.
+	 * @param array<int, array<string, mixed>>   $opps     Opportunities.
+	 * @param array<string, mixed>               $cfg      Config.
+	 * @param array<string, mixed>               $progress School progress.
 	 * @return array<string, mixed>
 	 */
-	private static function next_steps( ?array $gap, array $opps, array $cfg ): array {
-		$resources = AIRB_Defaults::support_suggested_resources();
-		if ( $gap && ! empty( $gap['items'] ) ) {
-			$hero = array(
-				'key'              => 'support_data_checklist',
-				'title'            => (string) ( $gap['items'][0] ?? __( 'Strengthen your AI practice', 'ai-risk-benchmark' ) ),
-				'body'             => (string) ( $gap['intro'] ?? '' ),
-				'understand_items' => (array) ( $gap['items'] ?? array() ),
-				'cta_text'         => __( 'Request support', 'ai-risk-benchmark' ),
-			);
-		} else {
-			$first = $opps[0] ?? array();
-			$hero  = array(
-				'key'              => 'support_data_checklist',
-				'title'            => (string) ( $first['label'] ?? __( 'Build your AI practice', 'ai-risk-benchmark' ) ),
-				'body'             => (string) ( $first['summary'] ?? __( 'Focus on the areas below to reduce operational and data risk.', 'ai-risk-benchmark' ) ),
-				'understand_items' => array(),
-				'cta_text'         => __( 'Request support', 'ai-risk-benchmark' ),
-			);
-		}
+	private static function next_steps( ?array $gap, array $opps, array $cfg, array $progress ): array {
+		unset( $gap, $opps );
+
+		$hero      = (array) ( $cfg['cta_hero'] ?? array() );
+		$threshold = (int) ( $progress['threshold'] ?? 20 );
+		$support_n = (int) ( $progress['support_responses'] ?? 0 );
+		$teacher_n = (int) ( $progress['teacher_responses'] ?? 0 );
 
 		return array(
-			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
-			'hero'           => $hero,
-			'resource_links' => AIRB_Defaults::results_timeline_read_links( 'support_staff' ),
-			'hub_resources'  => $resources,
-			'hub_heading'    => __( 'Useful resources', 'ai-risk-benchmark' ),
-			'timeline_heading' => __( 'Further reading and support articles', 'ai-risk-benchmark' ),
+			'hero_heading'                 => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Recommended next step', 'ai-risk-benchmark' ) ),
+			'hero'                         => $hero,
+			'resource_links'               => AIRB_Defaults::results_timeline_read_links( 'support_staff' ),
+			'hub_resources'                => AIRB_Defaults::support_suggested_resources(),
+			'hub_heading'                  => __( 'Useful resources', 'ai-risk-benchmark' ),
+			'timeline_heading'             => __( 'Further reading and support articles', 'ai-risk-benchmark' ),
+			'help_support_heading'         => (string) ( $cfg['help_support_heading'] ?? __( 'Further reading and tips to guide you', 'ai-risk-benchmark' ) ),
+			'help_support_heading_short'   => (string) ( $cfg['help_support_heading_short'] ?? __( 'Read more & tips', 'ai-risk-benchmark' ) ),
+			'rollout'                      => array(
+				'intro'        => (string) ( $cfg['rollout_intro'] ?? '' ),
+				'intro_short'  => (string) ( $cfg['rollout_intro_short'] ?? '' ),
+				'threshold'    => $threshold,
+				'counts'       => array(
+					'support' => $support_n,
+					'teacher' => $teacher_n,
+				),
+				'total'        => $support_n,
+				'unlocked'     => ! empty( $progress['whole_school_available'] ),
+				'remaining'    => max( 0, $threshold - $support_n ),
+				'rollout_cta'  => (string) ( $cfg['rollout_rollout_cta'] ?? __( 'Encourage colleagues to take the benchmark', 'ai-risk-benchmark' ) ),
+				'locked_items' => (array) ( $cfg['rollout_locked_items'] ?? array() ),
+				'progress'     => $progress,
+			),
 		);
 	}
 }

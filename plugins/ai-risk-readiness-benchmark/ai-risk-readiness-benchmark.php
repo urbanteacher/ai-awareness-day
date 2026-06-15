@@ -3,7 +3,7 @@
  * Plugin Name:       AI Risk & Readiness Benchmark
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       DfE-aligned AI Risk & Readiness Benchmark for UK schools. Shortcodes: [ai_risk_benchmark] [ai_risk_school_dashboard]
- * Version:           1.32.9
+ * Version:           1.40.2
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIRB_VERSION', '1.32.9' );
+define( 'AIRB_VERSION', '1.41.1' );
 define( 'AIRB_PLUGIN_FILE', __FILE__ );
 define( 'AIRB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIRB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -32,10 +32,15 @@ require_once AIRB_PLUGIN_DIR . 'includes/class-airb-scoring.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-questions.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-pathway.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-funnel.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-teacher-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-teacher-results.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-student-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-student-results.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-leader-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-leader-results.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-parent-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-parent-results.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-support-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-support-results.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-improvement-pathways.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-hub-content.php';

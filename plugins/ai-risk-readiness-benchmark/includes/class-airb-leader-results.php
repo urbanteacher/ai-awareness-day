@@ -51,9 +51,11 @@ class AIRB_Leader_Results {
 			'maturity'          => $maturity,
 			'peer_benchmark'    => $peer,
 			'focus_areas'       => $focus,
+			'bias_health'       => self::bias_health( $results, $cfg ),
 			'risk_heatmap'      => (array) ( $results['risk_heatmap'] ?? array() ),
 			'next_steps'        => self::next_steps( $results, $config, $profile, $progress, $policy_support, $aad_promo, $cfg ),
 			'school_rollout'    => $progress,
+			'ui'                => AIRB_Leader_Copy::resolve_ui( $results, $cfg ),
 		);
 	}
 
@@ -107,6 +109,31 @@ class AIRB_Leader_Results {
 	}
 
 	/**
+	 * Bias & equality readiness within safeguarding (composite of l_bias_* questions).
+	 *
+	 * @param array<string, mixed> $results Scored results.
+	 * @param array<string, mixed> $cfg     Leader config.
+	 * @return array<string, mixed>|null
+	 */
+	private static function bias_health( array $results, array $cfg ): ?array {
+		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
+			return null;
+		}
+
+		$score     = (int) $results['bias_readiness'];
+		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
+
+		return array(
+			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
+			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Safeguarding · protected characteristics · PSED', 'ai-risk-benchmark' ) ),
+			'score'        => $score,
+			'band_label'   => AIRB_Scoring::readiness_band_label( $score ),
+			'show_callout' => $score < $threshold,
+			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'Your school has not yet assessed whether AI tools could produce unfair or discriminatory outputs. This is a safeguarding and equality duty risk.', 'ai-risk-benchmark' ) ),
+		);
+	}
+
+	/**
 	 * @param array<string, mixed>             $results   Results.
 	 * @param array<string, mixed>             $cfg       Config.
 	 * @param array<string, mixed>             $readiness Readiness context (alignment).
@@ -127,28 +154,34 @@ class AIRB_Leader_Results {
 		$band   = (string) ( $readiness['band'] ?? 'developing' );
 		$intro  = (string) ( $intros[ $band ] ?? $intros['developing'] ?? '' );
 
-		$priority = (string) ( $cfg['default_priority_action'] ?? '' );
-		if ( $focus ) {
-			$first = $focus[0];
-			$actions = (array) ( $cfg['priority_actions'] ?? array() );
-			$slug    = (string) ( $first['slug'] ?? '' );
-			if ( isset( $actions[ $slug ] ) ) {
-				$priority = (string) $actions[ $slug ];
-			}
-		}
+		$priority = self::priority_action_detail( $results, $focus, $cfg, (string) ( $cfg['default_priority_action'] ?? '' ) );
 
 		return array(
-			'title'             => (string) ( $cfg['executive_title'] ?? __( 'Executive Summary', 'ai-risk-benchmark' ) ),
-			'intro'             => $intro,
-			'strengths'         => $strengths,
-			'attention_areas'   => $attention,
-			'alignment_score'   => (int) ( $results['alignment_score'] ?? 0 ),
-			'readiness_label'   => (string) ( $readiness['band_label'] ?? '' ),
-			'risk_level_label'  => (string) ( $results['risk_level_label'] ?? '' ),
-			'priority_action'   => $priority,
-			'strengths_heading' => (string) ( $cfg['strengths_heading'] ?? __( 'Strengths include', 'ai-risk-benchmark' ) ),
-			'attention_heading' => (string) ( $cfg['attention_heading'] ?? __( 'Areas requiring attention', 'ai-risk-benchmark' ) ),
+			'title'                  => (string) ( $cfg['executive_title'] ?? __( 'Executive Summary', 'ai-risk-benchmark' ) ),
+			'intro'                  => $intro,
+			'strengths'              => $strengths,
+			'attention_areas'        => $attention,
+			'alignment_score'        => (int) ( $results['alignment_score'] ?? 0 ),
+			'readiness_label'        => (string) ( $readiness['band_label'] ?? '' ),
+			'risk_level_label'       => (string) ( $results['risk_level_label'] ?? '' ),
+			'priority_action'        => (string) ( $priority['title'] ?? '' ),
+			'priority_action_detail' => $priority,
+			'strengths_heading'      => (string) ( $cfg['strengths_heading'] ?? __( 'Strengths include', 'ai-risk-benchmark' ) ),
+			'attention_heading'      => (string) ( $cfg['attention_heading'] ?? __( 'Areas requiring attention', 'ai-risk-benchmark' ) ),
 		);
+	}
+
+	/**
+	 * Single urgent action with plain-English rationale for the top results section.
+	 *
+	 * @param array<string, mixed>             $results          Scored results.
+	 * @param array<int, array<string, mixed>> $focus            Focus areas.
+	 * @param array<string, mixed>             $cfg              Leader config.
+	 * @param string                           $default_priority Fallback action title.
+	 * @return array<string, mixed>
+	 */
+	private static function priority_action_detail( array $results, array $focus, array $cfg, string $default_priority ): array {
+		return AIRB_Leader_Copy::priority_detail( $results, $focus, $cfg );
 	}
 
 	/**
@@ -240,7 +273,6 @@ class AIRB_Leader_Results {
 	 */
 	private static function focus_areas( array $results, array $cfg ): array {
 		$domains = (array) ( $results['domain_scores'] ?? array() );
-		$copy    = (array) ( $cfg['focus_copy'] ?? array() );
 		$labels  = (array) ( $cfg['domain_labels'] ?? array() );
 		$scored  = array();
 
@@ -252,8 +284,8 @@ class AIRB_Leader_Results {
 			if ( $pct >= self::FOCUS_MAX ) {
 				continue;
 			}
-			$topic = (array) ( $copy[ $slug ] ?? array() );
-			if ( ! $topic ) {
+			$topic = AIRB_Leader_Copy::focus_block( (string) $slug, $pct, $cfg );
+			if ( ! $topic['summary'] && empty( $topic['actions'] ) ) {
 				continue;
 			}
 			$scored[] = array(
@@ -263,6 +295,7 @@ class AIRB_Leader_Results {
 				'summary'       => (string) ( $topic['summary'] ?? '' ),
 				'likely_impact' => (array) ( $topic['likely_impact'] ?? array() ),
 				'actions'       => (array) ( $topic['actions'] ?? array() ),
+				'tier'          => (string) ( $topic['tier'] ?? '' ),
 			);
 		}
 
@@ -292,28 +325,62 @@ class AIRB_Leader_Results {
 		$phase_label = (string) ( $labels[ $phase ] ?? __( 'Similar Schools', 'ai-risk-benchmark' ) );
 
 		if ( $stats ) {
-			return array(
-				'your_score'      => $score,
-				'phase_label'     => $phase_label,
-				'average_score'   => (int) ( $stats['average'] ?? 0 ),
-				'top_quartile'    => (int) ( $stats['top_quartile'] ?? 0 ),
-				'sample_size'     => (int) ( $stats['sample_size'] ?? 0 ),
-				'percentile'      => isset( $stats['percentile'] ) ? (int) $stats['percentile'] : null,
-				'is_estimated'    => ! empty( $stats['is_estimated'] ),
+			return self::peer_benchmark_payload(
+				$score,
+				$phase_label,
+				(int) ( $stats['average'] ?? 0 ),
+				(int) ( $stats['top_quartile'] ?? 0 ),
+				(int) ( $stats['sample_size'] ?? 0 ),
+				isset( $stats['percentile'] ) ? (int) $stats['percentile'] : null,
+				! empty( $stats['is_estimated'] )
 			);
 		}
 
 		$fallbacks = (array) ( $cfg['peer_benchmark_fallback'] ?? array() );
 		$fallback  = (array) ( $fallbacks[ $phase ] ?? $fallbacks['default'] ?? array() );
 
+		return self::peer_benchmark_payload(
+			$score,
+			$phase_label,
+			(int) ( $fallback['average'] ?? 62 ),
+			(int) ( $fallback['top_quartile'] ?? 84 ),
+			0,
+			null,
+			true
+		);
+	}
+
+	/**
+	 * Peer benchmark row with gap vs average and top quartile.
+	 *
+	 * @param int      $your_score    School score.
+	 * @param string   $phase_label   Phase label.
+	 * @param int      $average       Peer average.
+	 * @param int      $top_quartile  Top quartile score.
+	 * @param int      $sample_size   Sample size.
+	 * @param int|null $percentile    Percentile if known.
+	 * @param bool     $is_estimated  Whether benchmarks are estimated.
+	 * @return array<string, mixed>
+	 */
+	private static function peer_benchmark_payload(
+		int $your_score,
+		string $phase_label,
+		int $average,
+		int $top_quartile,
+		int $sample_size,
+		?int $percentile,
+		bool $is_estimated
+	): array {
 		return array(
-			'your_score'    => $score,
-			'phase_label'   => $phase_label,
-			'average_score' => (int) ( $fallback['average'] ?? 62 ),
-			'top_quartile'  => (int) ( $fallback['top_quartile'] ?? 84 ),
-			'sample_size'   => 0,
-			'percentile'    => null,
-			'is_estimated'  => true,
+			'your_score'          => $your_score,
+			'phase_label'         => $phase_label,
+			'average_score'       => $average,
+			'top_quartile'        => $top_quartile,
+			'sample_size'         => $sample_size,
+			'percentile'          => $percentile,
+			'is_estimated'        => $is_estimated,
+			'gap_vs_average'      => $average - $your_score,
+			'gap_vs_top_quartile' => $top_quartile - $your_score,
 		);
 	}
 
@@ -381,15 +448,15 @@ class AIRB_Leader_Results {
 			}
 		}
 
-		$gov_block = (array) ( $blocks['governance_review'] ?? array() );
+		$gov_block = AIRB_Leader_Copy::cta_hero( $results, $cfg );
 		$hero      = array(
-			'key'              => 'governance_review',
-			'title'            => (string) ( $gov_block['title'] ?? __( 'Governance Review & Readiness Consultation', 'ai-risk-benchmark' ) ),
-			'body'             => (string) ( $gov_block['body'] ?? __( 'Understand where your risks sit, what action to prioritise, and what support your school needs.', 'ai-risk-benchmark' ) ),
-			'understand_items' => (array) ( $gov_block['understand_items'] ?? array() ),
+			'key'              => (string) ( $gov_block['key'] ?? 'governance_review' ),
+			'title'            => (string) ( $gov_block['title'] ?? '' ),
+			'body'             => (string) ( $gov_block['body'] ?? '' ),
+			'understand_items' => array(),
 			'deliverables'     => (array) ( $gov_block['deliverables'] ?? array() ),
-			'cta_text'         => (string) ( $gov_block['cta_text'] ?? __( 'Request Governance Review', 'ai-risk-benchmark' ) ),
-			'cta_url'          => AIRB_Defaults::interest_form_url( 'governance_review' ),
+			'cta_text'         => (string) ( $gov_block['cta_text'] ?? __( 'Request support', 'ai-risk-benchmark' ) ),
+			'cta_url'          => (string) ( $gov_block['cta_url'] ?? AIRB_Defaults::interest_form_url( 'governance_review' ) ),
 		);
 
 		$policy_block = (array) ( $blocks['policy_support'] ?? array() );
@@ -398,6 +465,7 @@ class AIRB_Leader_Results {
 		$aad_cfg   = (array) ( $config['aad_2027'] ?? array() );
 
 		$resource_links = AIRB_Defaults::results_timeline_read_links( 'leader' );
+		$rollout_copy   = AIRB_Leader_Copy::rollout_copy( $progress, $cfg );
 
 		return array(
 			'hero_heading'  => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
@@ -405,13 +473,22 @@ class AIRB_Leader_Results {
 			'resource_links'=> $resource_links,
 			'rollout'       => array(
 				'title'           => (string) ( $benchmark_block['title'] ?? __( 'Whole-School AI Benchmark', 'ai-risk-benchmark' ) ),
+				'intro'           => (string) ( $rollout_copy['intro'] ?? ( $cfg['rollout_intro'] ?? '' ) ),
+				'intro_short'     => (string) ( $cfg['rollout_intro_short'] ?? '' ),
+				'rollout_note'    => (string) ( $rollout_copy['note'] ?? '' ),
+				'rollout_tier'    => (string) ( $rollout_copy['tier'] ?? '' ),
 				'unlock_benefits' => (array) ( $cfg['rollout_unlock_benefits'] ?? array() ),
+				'locked_items'    => (array) ( $cfg['rollout_locked_items'] ?? array() ),
 				'counts'          => (array) ( $progress['counts'] ?? array() ),
+				'total'           => (int) ( $progress['total'] ?? 0 ),
 				'threshold'       => (int) ( $progress['threshold'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
 				'unlocked'        => ! empty( $progress['is_unlocked'] ),
 				'remaining'       => (int) ( $progress['remaining'] ?? self::SCHOOL_TOTAL_THRESHOLD ),
 				'unlock_copy'     => (string) ( $cfg['rollout_unlock_copy'] ?? '' ),
+				'rollout_cta'     => (string) ( $cfg['rollout_rollout_cta'] ?? __( 'Roll out to your school community', 'ai-risk-benchmark' ) ),
 			),
+			'help_support_heading' => (string) ( $cfg['help_support_heading'] ?? __( 'Further reading and tips to guide you', 'ai-risk-benchmark' ) ),
+			'help_support_heading_short' => (string) ( $cfg['help_support_heading_short'] ?? __( 'Read more & tips', 'ai-risk-benchmark' ) ),
 		);
 	}
 }

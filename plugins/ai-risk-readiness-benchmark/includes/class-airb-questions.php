@@ -165,6 +165,14 @@ class AIRB_Questions {
 				__( 'How often do you redesign tasks so pupils must show thinking beyond what AI can easily produce?', 'ai-risk-benchmark' ),
 				__( 'How often do you adapt tasks to require student thinking that AI cannot simply generate?', 'ai-risk-benchmark' ),
 			),
+			't_bias_awareness' => array(
+				__( 'Do you know that AI tools can produce biased or unfair outputs that could affect pupils?', 'ai-risk-benchmark' ),
+				__( 'Are you aware that AI answers can disadvantage pupils based on background, identity or protected characteristics?', 'ai-risk-benchmark' ),
+			),
+			't_bias_action' => array(
+				__( 'When you use AI with or for pupils, do you check outputs for bias or unfairness?', 'ai-risk-benchmark' ),
+				__( 'Before sharing AI-generated content with pupils, do you look for stereotypical or discriminatory language?', 'ai-risk-benchmark' ),
+			),
 			't_spot_subtle' => array(
 				__( 'When AI gives a plausible-sounding answer, how confident are you that you could spot a subtle error?', 'ai-risk-benchmark' ),
 				__( 'How confident are you spotting a subtle mistake in an AI answer that sounds correct?', 'ai-risk-benchmark' ),
@@ -205,6 +213,14 @@ class AIRB_Questions {
 			's_report_ai_harm' => array(
 				__( 'If someone used AI to create a fake image, voice note or message about another student, would you know how to report it?', 'ai-risk-benchmark' ),
 				__( 'Would you know how to report AI-generated fake content that harms another student?', 'ai-risk-benchmark' ),
+			),
+			's_bias_awareness' => array(
+				__( 'Do you know that AI tools can treat some groups of people unfairly or reflect bias?', 'ai-risk-benchmark' ),
+				__( 'Are you aware that AI answers can be unfair to people based on their background, identity or characteristics?', 'ai-risk-benchmark' ),
+			),
+			's_bias_action' => array(
+				__( 'When you use AI for schoolwork, do you think about whether its answers could be unfair to certain groups?', 'ai-risk-benchmark' ),
+				__( 'Do you check AI outputs for unfair or stereotypical content before using them?', 'ai-risk-benchmark' ),
 			),
 			's_verify'      => array(
 				__( 'Do you check AI answers before submitting work?', 'ai-risk-benchmark' ),
@@ -258,6 +274,14 @@ class AIRB_Questions {
 			'l_deepfakes'   => array(
 				__( 'Do safeguarding procedures cover deepfakes and AI-enabled abuse?', 'ai-risk-benchmark' ),
 				__( 'Are deepfake and AI manipulation risks addressed in safeguarding?', 'ai-risk-benchmark' ),
+			),
+			'l_bias_awareness' => array(
+				__( 'Do staff know that AI tools can reflect or reinforce bias against certain groups of pupils?', 'ai-risk-benchmark' ),
+				__( 'Has your school considered whether AI outputs could disadvantage pupils based on their background or characteristics?', 'ai-risk-benchmark' ),
+			),
+			'l_bias_action' => array(
+				__( 'Is there a check in place to catch AI outputs that could be unfair to particular pupils?', 'ai-risk-benchmark' ),
+				__( 'Do staff have guidance on spotting biased or discriminatory AI outputs before they affect pupils?', 'ai-risk-benchmark' ),
 			),
 			'l_dp_review'   => array(
 				__( 'Before pupils use AI tools, has your school checked privacy and data-protection risks?', 'ai-risk-benchmark' ),
@@ -394,6 +418,18 @@ class AIRB_Questions {
 					array( 'value' => 'no', 'label' => __( 'No — I don\'t know of an approved list', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 				self::q( 't_redesign_beyond_ai', 'teacher', 'assessment_integrity', __( 'Assessment design', 'ai-risk-benchmark' ), __( 'How often do you redesign tasks specifically to require student thinking beyond what AI can easily produce?', 'ai-risk-benchmark' ), $f ),
+				self::q( 't_bias_awareness', 'teacher', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'Do you know that AI tools can produce biased or unfair outputs that could affect pupils?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — I understand AI can be biased', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'I have heard of it', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Not sure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No — I had not considered this', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 't_bias_action', 'teacher', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'When you use AI with or for pupils, do you check outputs for bias or unfairness?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — I check for this routinely', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sometimes', 'label' => __( 'Sometimes', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'rarely', 'label' => __( 'Rarely', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No — I have not thought about it', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 			),
 			// —— Student ——
 			array(
@@ -448,6 +484,18 @@ class AIRB_Questions {
 					array( 'value' => 'probably', 'label' => __( 'Probably', 'ai-risk-benchmark' ), 'score' => 1 ),
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 's_bias_awareness', 'student', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'Do you know that AI tools can treat some groups of people unfairly or reflect bias?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — I know AI can be biased', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'I have heard of it', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Not sure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No — I did not know', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 's_bias_action', 'student', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'When you use AI for schoolwork, do you check whether its answers could be unfair to certain groups of people?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — I think about this', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'sometimes', 'label' => __( 'Sometimes', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'rarely', 'label' => __( 'Rarely', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No — I have not thought about it', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 			),
 			// —— Parent ——
@@ -548,6 +596,18 @@ class AIRB_Questions {
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 				self::q( 'l_deepfakes', 'leader', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Are deepfakes and AI-enabled harms covered in safeguarding procedures?', 'ai-risk-benchmark' ), $f ),
+				self::q( 'l_bias_awareness', 'leader', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Are staff aware that AI tools can produce biased or discriminatory outputs affecting pupils?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — covered in training or policy', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'some', 'label' => __( 'Some staff are aware', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'planned', 'label' => __( 'Not yet, but planned', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'Not considered', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'l_bias_action', 'leader', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'When AI tools are used with or about pupils, is there a process to check outputs for bias or unfairness?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes', 'label' => __( 'Yes — a clear review process exists', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'informal', 'label' => __( 'Informally, depends on the teacher', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'planned', 'label' => __( 'Not yet, but planned', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No process in place', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 				self::q( 'l_dp_review', 'leader', 'privacy', __( 'Data Protection', 'ai-risk-benchmark' ), __( 'Before pupils use AI tools, has your school checked privacy and data-protection risks?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes, where needed', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'started', 'label' => __( 'Started', 'ai-risk-benchmark' ), 'score' => 1 ),

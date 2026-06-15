@@ -14,14 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Teacher_Results {
 
-	/** Readiness % at or above which a domain counts as a strength. */
-	private const STRENGTH_MIN = 85;
-
-	/** Dependency index at or below which low-dependency is a strength. */
-	private const DEPENDENCY_STRENGTH_MAX = 25;
-
-	/** Alignment at or above which DfE alignment is listed as a strength. */
-	private const ALIGNMENT_STRENGTH_MIN = 85;
+	/** Readiness % below which a domain may appear as a focus opportunity. */
+	private const FOCUS_MAX = 75;
 
 	/** Minimum teacher responses at a school before whole-school benchmark unlocks. */
 	private const SCHOOL_RESPONSE_THRESHOLD = 20;
@@ -49,6 +43,7 @@ class AIRB_Teacher_Results {
 			'performance_headline' => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
 			'strengths'            => $strengths,
 			'opportunities'        => $opps,
+			'focus_areas'          => self::focus_areas_from_opportunities( $opps, $cfg ),
 			'champion_pathway'     => $champion,
 			'gap_pathway'          => $gap,
 			'suggested_resources'  => (array) ( $cfg['suggested_resources'] ?? array() ),
@@ -57,8 +52,35 @@ class AIRB_Teacher_Results {
 			'school_impact'        => (array) ( $cfg['school_impact'] ?? array() ),
 			'school_progress'      => $progress,
 			'future_offer'         => self::future_offer( $progress, $cfg ),
-			'next_steps'           => self::next_steps( $champion, $gap, $opps, $cfg, $progress ),
+			'next_steps'           => self::next_steps( $results, $champion, $gap, $opps, $cfg, $progress ),
+			'ui'                   => AIRB_Teacher_Copy::resolve_ui( $results, $cfg ),
+			'peer_benchmark'       => self::peer_benchmark( $results, $cfg ),
+			'bias_health'          => self::bias_health( $results, $cfg ),
 		);
+	}
+
+	/**
+	 * Map opportunities to leader-style focus area rows for the results UI.
+	 *
+	 * @param array<int, array<string, mixed>> $opps Opportunities.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function focus_areas_from_opportunities( array $opps, array $cfg ): array {
+		$out = array();
+		foreach ( $opps as $opp ) {
+			$slug  = (string) ( $opp['slug'] ?? '' );
+			$pct   = (int) ( $opp['pct'] ?? 0 );
+			$block = AIRB_Teacher_Copy::focus_block( $slug, $pct, $cfg );
+			$out[] = array(
+				'slug'          => $slug,
+				'label'         => (string) ( $opp['label'] ?? '' ),
+				'pct'           => $pct,
+				'summary'       => (string) ( $block['summary'] ?? '' ),
+				'likely_impact' => (array) ( $block['likely_impact'] ?? array() ),
+				'actions'       => (array) ( $block['actions'] ?? array() ),
+			);
+		}
+		return $out;
 	}
 
 	/**
@@ -74,30 +96,7 @@ class AIRB_Teacher_Results {
 	 * @return array<int, string>
 	 */
 	private static function detect_strengths( array $results, array $cfg ): array {
-		$labels   = (array) ( $cfg['strength_labels'] ?? array() );
-		$domains  = (array) ( $results['domain_scores'] ?? array() );
-		$out      = array();
-
-		if ( (int) ( $domains['ai_literacy']['readiness_percentage'] ?? 0 ) >= self::STRENGTH_MIN ) {
-			$out[] = (string) ( $labels['ai_literacy'] ?? '' );
-		}
-		if ( (int) ( $results['dependency_index'] ?? 100 ) <= self::DEPENDENCY_STRENGTH_MAX ) {
-			$out[] = (string) ( $labels['low_dependency'] ?? '' );
-		}
-		if ( (int) ( $domains['privacy']['readiness_percentage'] ?? 0 ) >= self::STRENGTH_MIN ) {
-			$out[] = (string) ( $labels['privacy'] ?? '' );
-		}
-		if ( (int) ( $results['alignment_score'] ?? 0 ) >= self::ALIGNMENT_STRENGTH_MIN ) {
-			$out[] = (string) ( $labels['dfe_alignment'] ?? '' );
-		}
-		if ( (int) ( $domains['safe_adoption']['readiness_percentage'] ?? 0 ) >= self::STRENGTH_MIN ) {
-			$out[] = (string) ( $labels['safe_adoption'] ?? '' );
-		}
-		if ( (int) ( $domains['human_oversight']['readiness_percentage'] ?? 0 ) >= self::STRENGTH_MIN ) {
-			$out[] = (string) ( $labels['human_oversight'] ?? '' );
-		}
-
-		return array_values( array_filter( $out ) );
+		return AIRB_Teacher_Copy::strength_statements( $results, $cfg );
 	}
 
 	/**
@@ -115,19 +114,26 @@ class AIRB_Teacher_Results {
 				continue;
 			}
 			$pct = (int) round( (float) ( $dom['readiness_percentage'] ?? 0 ) );
-			if ( $pct >= self::STRENGTH_MIN ) {
+			if ( $pct >= self::FOCUS_MAX ) {
 				continue;
 			}
-			$topic = (array) ( $copy[ $slug ] ?? array() );
-			if ( ! $topic ) {
+			$block = AIRB_Teacher_Copy::focus_block( (string) $slug, $pct, $cfg );
+			if ( empty( $block['summary'] ) ) {
+				$topic = (array) ( $copy[ $slug ] ?? array() );
+				if ( ! $topic ) {
+					continue;
+				}
+				$block['summary'] = (string) ( $topic['summary'] ?? '' );
+			}
+			if ( empty( $block['summary'] ) ) {
 				continue;
 			}
 			$scored[] = array(
 				'slug'    => (string) $slug,
 				'label'   => (string) ( $dom['label'] ?? $slug ),
 				'pct'     => $pct,
-				'summary' => (string) ( $topic['summary'] ?? '' ),
-				'detail'  => (string) ( $topic['detail'] ?? '' ),
+				'summary' => (string) $block['summary'],
+				'detail'  => '',
 			);
 		}
 
@@ -317,45 +323,111 @@ class AIRB_Teacher_Results {
 	 * @param array<string, mixed>          $progress   School progress.
 	 * @return array<string, mixed>
 	 */
-	private static function next_steps( ?array $champion, ?array $gap, array $opps, array $cfg, array $progress ): array {
-		if ( $champion ) {
-			$hero = array(
-				'key'              => 'teacher_activity_day',
-				'title'            => (string) ( $champion['title'] ?? __( 'AI Champion Pathway', 'ai-risk-benchmark' ) ),
-				'body'             => (string) ( $champion['intro'] ?? '' ),
-				'understand_items' => (array) ( $champion['roles'] ?? array() ),
-				'cta_text'         => __( 'Request classroom resources', 'ai-risk-benchmark' ),
-			);
-		} elseif ( $gap && ! empty( $gap['items'] ) ) {
-			$hero = array(
-				'key'              => 'whole_school_cpd',
-				'title'            => __( 'Strengthen your AI practice', 'ai-risk-benchmark' ),
-				'body'             => (string) ( $gap['intro'] ?? '' ),
-				'understand_items' => (array) ( $gap['items'] ?? array() ),
-				'cta_text'         => __( 'Request CPD', 'ai-risk-benchmark' ),
-			);
-		} else {
-			$first_opp = $opps[0] ?? array();
-			$hero      = array(
-				'key'              => 'whole_school_cpd',
-				'title'            => (string) ( $first_opp['label'] ?? __( 'Build your AI practice', 'ai-risk-benchmark' ) ),
-				'body'             => (string) ( $first_opp['summary'] ?? __( 'Focus on the areas below to reduce risk and model responsible AI use.', 'ai-risk-benchmark' ) ),
-				'understand_items' => array(),
-				'cta_text'         => __( 'Request CPD', 'ai-risk-benchmark' ),
+	private static function next_steps( array $results, ?array $champion, ?array $gap, array $opps, array $cfg, array $progress ): array {
+		unset( $champion, $gap, $opps );
+
+		$hero         = AIRB_Teacher_Copy::cta_hero( $results, $cfg );
+		$links        = AIRB_Defaults::results_timeline_read_links( 'teacher' );
+		$progress     = (array) $progress;
+		$threshold    = (int) ( $progress['threshold'] ?? self::SCHOOL_RESPONSE_THRESHOLD );
+		$n            = (int) ( $progress['teacher_responses'] ?? 0 );
+		$rollout_copy = AIRB_Teacher_Copy::rollout_copy( $progress, $cfg );
+		$rollout_note = (string) ( $rollout_copy['note'] ?? '' );
+
+		return array(
+			'hero_heading'              => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero_next_step_heading_short' => (string) ( $cfg['hero_next_step_heading_short'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
+			'hero'                      => $hero,
+			'resource_links'            => $links,
+			'help_support_heading'      => (string) ( $cfg['help_support_heading'] ?? __( 'Further reading and tips to guide you', 'ai-risk-benchmark' ) ),
+			'help_support_heading_short'=> (string) ( $cfg['help_support_heading_short'] ?? __( 'Read more & tips', 'ai-risk-benchmark' ) ),
+			'rollout'                   => array(
+				'title'        => __( 'Whole-school teacher benchmark', 'ai-risk-benchmark' ),
+				'intro'        => (string) ( $rollout_copy['intro'] ?? ( $cfg['rollout_intro'] ?? '' ) ),
+				'intro_short'  => (string) ( $cfg['rollout_intro_short'] ?? '' ),
+				'rollout_note' => $rollout_note,
+				'threshold'    => $threshold,
+				'counts'       => array( 'teacher' => $n ),
+				'total'        => $n,
+				'unlocked'     => ! empty( $progress['whole_school_available'] ),
+				'remaining'    => (int) ( $progress['responses_remaining'] ?? max( 0, $threshold - $n ) ),
+				'rollout_cta'  => (string) ( $cfg['rollout_rollout_cta'] ?? __( 'Encourage colleagues to take the benchmark', 'ai-risk-benchmark' ) ),
+				'locked_items' => (array) ( $cfg['rollout_locked_items'] ?? array(
+					array(
+						'label'     => __( 'Colleague responses', 'ai-risk-benchmark' ),
+						'count_key' => 'teacher',
+					),
+				) ),
+				'progress'     => $progress,
+			),
+		);
+	}
+
+	/**
+	 * Bias & equality readiness (composite of t_bias_* questions).
+	 *
+	 * @param array<string, mixed> $results Scored results.
+	 * @param array<string, mixed> $cfg     Teacher config.
+	 * @return array<string, mixed>|null
+	 */
+	private static function bias_health( array $results, array $cfg ): ?array {
+		if ( ! array_key_exists( 'bias_readiness', $results ) || null === $results['bias_readiness'] ) {
+			return null;
+		}
+
+		$score     = (int) $results['bias_readiness'];
+		$threshold = (int) ( $cfg['bias_health_callout_threshold'] ?? 50 );
+
+		return array(
+			'title'        => (string) ( $cfg['bias_health_title'] ?? AIRB_Scoring::bias_readiness_label() ),
+			'subtitle'     => (string) ( $cfg['bias_health_subtitle'] ?? __( 'Fairness · protected characteristics · equality duty', 'ai-risk-benchmark' ) ),
+			'score'        => $score,
+			'band_label'   => AIRB_Scoring::readiness_band_label( $score ),
+			'show_callout' => $score < $threshold,
+			'callout'      => (string) ( $cfg['bias_health_callout'] ?? __( 'You have not yet built a consistent habit of checking AI outputs for bias or unfairness before they reach pupils. This is both a safeguarding concern and an equality duty risk.', 'ai-risk-benchmark' ) ),
+		);
+	}
+
+	/**
+	 * National teacher benchmark comparison (live stats or reference fallback).
+	 *
+	 * @param array<string, mixed> $results Results.
+	 * @param array<string, mixed> $cfg     Config.
+	 * @return array<string, mixed>
+	 */
+	private static function peer_benchmark( array $results, array $cfg ): array {
+		$score    = (int) ( $results['alignment_score'] ?? 0 );
+		$stats    = AIRB_Database::get_benchmark_stats( 'teacher', $score );
+		$fallback = (array) ( $cfg['peer_benchmark_fallback'] ?? array() );
+
+		if ( $stats ) {
+			$average = (int) ( $stats['average'] ?? $stats['averages']['alignment_score'] ?? 55 );
+			$top     = (int) ( $stats['top_quartile'] ?? 79 );
+
+			return array(
+				'your_score'          => $score,
+				'average_score'       => $average,
+				'top_quartile'        => $top,
+				'sample_size'         => (int) ( $stats['sample_size'] ?? 0 ),
+				'percentile'          => isset( $stats['percentile'] ) ? (int) $stats['percentile'] : null,
+				'is_estimated'        => false,
+				'gap_vs_average'      => $average - $score,
+				'gap_vs_top_quartile' => $top - $score,
 			);
 		}
 
-		$links = AIRB_Defaults::results_timeline_read_links( 'teacher' );
+		$average = (int) ( $fallback['average'] ?? 55 );
+		$top     = (int) ( $fallback['top_quartile'] ?? 79 );
 
 		return array(
-			'hero_heading'   => (string) ( $cfg['hero_next_step_heading'] ?? __( 'Your next step', 'ai-risk-benchmark' ) ),
-			'hero'           => $hero,
-			'resource_links' => $links,
-			'rollout'        => array(
-				'title'     => __( 'Whole-school teacher benchmark', 'ai-risk-benchmark' ),
-				'progress'  => $progress,
-				'copy'      => (array) ( $cfg['school_progress'] ?? array() ),
-			),
+			'your_score'          => $score,
+			'average_score'       => $average,
+			'top_quartile'        => $top,
+			'sample_size'         => 0,
+			'percentile'          => null,
+			'is_estimated'        => true,
+			'gap_vs_average'      => $average - $score,
+			'gap_vs_top_quartile' => $top - $score,
 		);
 	}
 }

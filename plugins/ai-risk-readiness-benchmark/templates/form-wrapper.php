@@ -61,6 +61,36 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 		</aside>
 	</div>
 
+	<div class="airb__screen" id="airb-screen-role">
+		<?php
+		$airb_roles = AIRB_Defaults::roles();
+		if ( $airb_roles ) :
+			?>
+		<div class="airb__panel">
+			<h3 class="airb__panel-title"><?php esc_html_e( 'Choose your role in school — click a card below to start your free audit', 'ai-risk-benchmark' ); ?></h3>
+			<div class="airb__role-grid">
+				<?php
+				foreach ( $airb_roles as $airb_role_slug => $airb_role_label ) :
+					$airb_bench    = (array) ( $role_benchmarks[ $airb_role_slug ] ?? array() );
+					$airb_tagline  = (string) ( $airb_bench['tagline'] ?? __( 'Free online assessment — test your AI awareness', 'ai-risk-benchmark' ) );
+					?>
+				<button type="button" class="airb__role-card" data-role="<?php echo esc_attr( (string) $airb_role_slug ); ?>">
+					<span class="airb__role-card-title"><?php echo esc_html( (string) $airb_role_label ); ?></span>
+					<?php if ( '' !== $airb_tagline ) : ?>
+					<span class="airb__role-card-blurb"><?php echo esc_html( $airb_tagline ); ?></span>
+					<?php endif; ?>
+					<span class="airb__role-card-go"><?php esc_html_e( 'Start audit', 'ai-risk-benchmark' ); ?> →</span>
+				</button>
+					<?php
+				endforeach;
+				?>
+			</div>
+		</div>
+			<?php
+		endif;
+		?>
+	</div>
+
 	<section class="airb__deck" id="airb-deck" data-deck aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'How it works', 'ai-risk-benchmark' ); ?>" tabindex="0">
 		<div class="airb__deck-head">
 			<h3 class="airb__section-kicker"><?php esc_html_e( 'How it works', 'ai-risk-benchmark' ); ?></h3>
@@ -250,7 +280,6 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 		<p class="airb__progress-label" id="airb-progress-label" aria-live="polite"></p>
 	</div>
 
-	<div class="airb__screen" id="airb-screen-role"></div>
 	<div class="airb__screen" id="airb-screen-audit" hidden></div>
 	<div class="airb__screen" id="airb-screen-contact" hidden></div>
 	<div class="airb__screen" id="airb-screen-results" hidden></div>

@@ -364,6 +364,60 @@ class AIRB_Scoring {
 	}
 
 	/**
+	 * Branded label for bias & equality readiness on leader results.
+	 */
+	public static function bias_readiness_label(): string {
+		return __( 'Bias & equality readiness', 'ai-risk-benchmark' );
+	}
+
+	/**
+	 * Composite readiness from leader bias awareness + action questions.
+	 *
+	 * @param string               $role    Role slug.
+	 * @param array<string, mixed> $answers Answers.
+	 * @param array<string, mixed> $config  Full config.
+	 */
+	public static function bias_readiness_score( string $role, array $answers, array $config ): ?int {
+		$bias_ids_by_role = array(
+			'leader'  => array( 'l_bias_awareness', 'l_bias_action' ),
+			'student' => array( 's_bias_awareness', 's_bias_action' ),
+			'teacher' => array( 't_bias_awareness', 't_bias_action' ),
+		);
+
+		if ( ! isset( $bias_ids_by_role[ $role ] ) ) {
+			return null;
+		}
+
+		$bias_ids = $bias_ids_by_role[ $role ];
+		$questions   = array();
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			$qid = (string) ( $question['id'] ?? '' );
+			if ( in_array( $qid, $bias_ids, true ) ) {
+				$questions[ $qid ] = $question;
+			}
+		}
+
+		$risk_scores = array();
+		foreach ( $bias_ids as $qid ) {
+			if ( ! array_key_exists( $qid, $answers ) || empty( $questions[ $qid ] ) ) {
+				continue;
+			}
+			if ( ! self::question_applies_to_profile( $questions[ $qid ], $answers ) ) {
+				continue;
+			}
+			$risk_scores[] = self::score_answer( $questions[ $qid ], $answers[ $qid ] );
+		}
+
+		if ( empty( $risk_scores ) ) {
+			return null;
+		}
+
+		$avg_risk = array_sum( $risk_scores ) / count( $risk_scores );
+
+		return (int) round( 100 - ( $avg_risk / 3 * 100 ) );
+	}
+
+	/**
 	 * User-facing label for the overall alignment score (not a compliance claim).
 	 */
 	public static function alignment_score_label(): string {
@@ -475,6 +529,47 @@ class AIRB_Scoring {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Support staff display metrics — safeguarding awareness from reporting question.
+	 *
+	 * @param array<string, mixed> $answers Answer map.
+	 * @param array<string, mixed> $config  Plugin config.
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function support_display_domain_scores( array $answers, array $config ): array {
+		$questions_by_id = array();
+
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			$qid = (string) ( $question['id'] ?? '' );
+			if ( $qid ) {
+				$questions_by_id[ $qid ] = $question;
+			}
+		}
+
+		$qid = 'ss_report_issue';
+		if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
+			return array();
+		}
+
+		$score     = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+		$avg_risk  = $score / 3 * 100;
+		$readiness = (int) round( 100 - $avg_risk );
+		$band      = self::risk_band( $avg_risk );
+
+		return array(
+			'safeguarding' => array(
+				'label'                => __( 'Safeguarding awareness', 'ai-risk-benchmark' ),
+				'risk_percentage'      => round( $avg_risk, 1 ),
+				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
+				'band'                 => $band,
+				'band_label'           => self::band_label( $band ),
+				'readiness_band'       => self::readiness_band( $readiness ),
+				'readiness_band_label' => self::readiness_band_label( $readiness ),
+				'questions_answered'   => 1,
+			),
+		);
 	}
 
 	/**
@@ -793,6 +888,7 @@ class AIRB_Scoring {
 		$privacy_risk       = (int) round( $domain_scores['privacy']['risk_percentage'] ?? 0 );
 		$safeguarding_ready = (int) round( $domain_scores['safeguarding']['readiness_percentage'] ?? 0 );
 		$governance_mature  = (int) round( $domain_scores['governance']['readiness_percentage'] ?? 0 );
+		$bias_readiness     = self::bias_readiness_score( $role, $answers, $config );
 
 		$recommendations = self::match_recommendations( $domain_scores, (array) ( $config['recommendations'] ?? array() ), $role );
 
@@ -816,6 +912,11 @@ class AIRB_Scoring {
 			$key_exposure   = array();
 		}
 
+		$support_display = array();
+		if ( 'support_staff' === $role ) {
+			$support_display = self::support_display_domain_scores( $answers, $config );
+		}
+
 		if ( 'student' === $role ) {
 			$student_overall = AIRB_Student_Results::overall_from_student_domains(
 				array( 'domain_scores' => $domain_scores )
@@ -837,7 +938,9 @@ class AIRB_Scoring {
 			'domain_scores'           => $domain_scores,
 			'governance_maturity'     => $governance_mature,
 			'safeguarding_readiness'  => $safeguarding_ready,
+			'bias_readiness'          => $bias_readiness,
 			'parent_display_domains'  => $parent_display,
+			'support_display_domains' => $support_display,
 		);
 		$result_cards = self::role_result_cards( $role, $result_payload );
 
@@ -855,11 +958,13 @@ class AIRB_Scoring {
 			'privacy_risk'            => $privacy_risk,
 			'safeguarding_readiness'  => $safeguarding_ready,
 			'governance_maturity'     => $governance_mature,
+			'bias_readiness'          => $bias_readiness,
 			'overall_risk_percentage' => round( $overall_risk, 1 ),
 			'domain_scores'           => $domain_scores,
 			'recommendations'         => $recommendations,
 			'key_exposure_areas'      => $key_exposure,
 			'parent_display_domains'  => $parent_display,
+			'support_display_domains' => $support_display,
 			'role_result_cards'       => $result_cards,
 			'next_steps'              => AIRB_Pathway::match_next_steps( $role, $answers, $domain_scores, $result_payload, $config ),
 		);
