@@ -177,7 +177,9 @@ class AIRB_Copy_Tiers {
 	 * @return array<string, mixed>
 	 */
 	public static function build_json_from_php( string $role ): array {
-		$file = AIRB_PLUGIN_DIR . 'includes/data/' . $role . '-copy-tiers.php';
+		$archive_file = AIRB_PLUGIN_DIR . 'archive/includes/data/' . $role . '-copy-tiers.php';
+		$legacy_file  = AIRB_PLUGIN_DIR . 'includes/data/' . $role . '-copy-tiers.php';
+		$file         = is_readable( $archive_file ) ? $archive_file : $legacy_file;
 		if ( ! file_exists( $file ) ) {
 			return array();
 		}

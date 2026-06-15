@@ -62,8 +62,15 @@ class AIRB_Defaults {
 			return array();
 		}
 
+		$archive_file = AIRB_PLUGIN_DIR . 'archive/includes/data/' . $map[ $role ];
+		$legacy_file  = AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
+		$tier_file    = is_readable( $archive_file ) ? $archive_file : $legacy_file;
+		if ( ! is_readable( $tier_file ) ) {
+			return array();
+		}
+
 		/** @var array<string, mixed> $php */
-		$php = require AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
+		$php = require $tier_file;
 
 		if ( ! class_exists( 'AIRB_Copy_Tiers', false ) || ! AIRB_Copy_Tiers::use_json_copy() ) {
 			return $php;
