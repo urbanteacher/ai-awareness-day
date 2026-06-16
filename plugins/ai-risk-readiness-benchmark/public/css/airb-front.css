@@ -3326,7 +3326,7 @@
 }
 
 .airb__leader-hero-consequence {
-	margin: 0.15rem 0 1rem;
+	margin: 0.2rem 0 1.25rem;
 	font-size: 0.82rem;
 	line-height: 1.5;
 }
@@ -3340,7 +3340,7 @@
 
 .airb__leader-hero-seg {
 	flex: 1;
-	height: 5px;
+	height: 7px;
 	border-radius: 2px;
 	background: currentColor;
 	opacity: 0.22;
@@ -3375,6 +3375,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 0.25rem;
+	margin-top: 0.2rem;
 	font-size: 0.62rem;
 	opacity: 0.95;
 }
