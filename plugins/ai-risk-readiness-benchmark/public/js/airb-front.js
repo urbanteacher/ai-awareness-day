@@ -801,6 +801,35 @@
 
 	function heroBandBarHtml(bands, bandSlug, score, avgScore, role) {
 		var html = '';
+		var segWidth = bands && bands.length ? (100 / bands.length) : 20;
+
+		function markerLeft(pct) {
+			if (pct == null || !bands || !bands.length) return pct;
+			var idx = -1;
+			for (var i = 0; i < bands.length; i++) {
+				var b = bands[i] || {};
+				var min = parseInt(b.min, 10);
+				var max = parseInt(b.max, 10);
+				if (isNaN(min)) min = 0;
+				if (isNaN(max)) max = 100;
+				if (pct >= min && pct <= max) {
+					idx = i;
+					break;
+				}
+			}
+			if (idx < 0) {
+				idx = pct < (parseInt((bands[0] || {}).min, 10) || 0) ? 0 : (bands.length - 1);
+			}
+			var band = bands[idx] || {};
+			var min2 = parseInt(band.min, 10);
+			var max2 = parseInt(band.max, 10);
+			if (isNaN(min2)) min2 = 0;
+			if (isNaN(max2)) max2 = 100;
+			var denom = Math.max(1, (max2 - min2));
+			var posInSeg = (pct - min2) / denom;
+			posInSeg = Math.max(0, Math.min(1, posInSeg));
+			return (idx * segWidth) + (posInSeg * segWidth);
+		}
 
 		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
 		bands.forEach(function (b) {
@@ -811,11 +840,11 @@
 
 		if (avgScore !== null) {
 			html += '<span class="airb__leader-hero-marker airb__leader-hero-marker--avg"'
-				+ ' style="left:' + avgScore + '%"'
+				+ ' style="left:' + markerLeft(avgScore) + '%"'
 				+ ' aria-hidden="true"></span>';
 		}
 
-		html += '<span class="airb__leader-hero-marker" style="left:' + score + '%" aria-hidden="true"></span>';
+		html += '<span class="airb__leader-hero-marker" style="left:' + markerLeft(score) + '%" aria-hidden="true"></span>';
 		html += '</div>';
 
 		var shortLabelFn = publicHeroBarShortLabelFn(role);
