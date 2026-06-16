@@ -3320,12 +3320,13 @@
 
 .airb__leader-hero-kicker {
 	font-size: 0.72rem;
-	margin-top: 0.15rem;
+	margin-top: 0.25rem;
+	margin-bottom: 0.4rem;
 	opacity: 0.9;
 }
 
 .airb__leader-hero-consequence {
-	margin: 0 0 0.75rem;
+	margin: 0.15rem 0 1rem;
 	font-size: 0.82rem;
 	line-height: 1.5;
 }
