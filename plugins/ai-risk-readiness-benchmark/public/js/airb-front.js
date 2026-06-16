@@ -799,6 +799,29 @@
 		};
 	}
 
+	function heroVariantClass(copy) {
+		// Map existing tones to redesign variants.
+		// urgent => red, warning => amber, neutral => blue, positive => green
+		if (copy.tone === 'urgent') return 'hero--red';
+		if (copy.tone === 'warning') return 'hero--amber';
+		if (copy.tone === 'positive') return 'hero--green';
+		return 'hero--blue';
+	}
+
+	function heroBandLabelText(role, band) {
+		var slug = (band && band.slug) || '';
+		var full = (band && band.label) || '';
+
+		if (role === 'student') return full || slug;
+		if (role === 'parent') return full || slug;
+		if (role === 'public') return full || slug;
+
+		// Leader/teacher/support: special-case first two labels to match redesign.
+		if (slug === 'emerging') return 'Critical · act now';
+		if (slug === 'developing') return 'Concern';
+		return full || slug;
+	}
+
 	function heroBandBarHtml(bands, bandSlug, score, avgScore, role) {
 		var html = '';
 		var segWidth = bands && bands.length ? (100 / bands.length) : 20;
@@ -831,26 +854,22 @@
 			return (idx * segWidth) + (posInSeg * segWidth);
 		}
 
-		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
+		html += '<div class="bar" aria-hidden="true">';
 		bands.forEach(function (b) {
-			var cls = 'airb__leader-hero-seg airb__leader-hero-seg--' + b.slug;
-			if (bandSlug === b.slug) cls += ' is-active';
-			html += '<span class="' + cls + '"></span>';
+			var cls = 'bar__seg' + (bandSlug === b.slug ? ' bar__seg--active' : '');
+			html += '<div class="' + cls + '"></div>';
 		});
 
 		if (avgScore !== null) {
-			html += '<span class="airb__leader-hero-marker airb__leader-hero-marker--avg"'
-				+ ' style="left:' + markerLeft(avgScore) + '%"'
-				+ ' aria-hidden="true"></span>';
+			html += '<div class="bar__marker bar__marker--avg" style="left:' + markerLeft(avgScore) + '%" aria-hidden="true"></div>';
 		}
 
-		html += '<span class="airb__leader-hero-marker" style="left:' + markerLeft(score) + '%" aria-hidden="true"></span>';
+		html += '<div class="bar__marker" style="left:' + markerLeft(score) + '%" aria-hidden="true"></div>';
 		html += '</div>';
 
-		var shortLabelFn = publicHeroBarShortLabelFn(role);
-		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
+		html += '<div class="bar__labels" aria-hidden="true">';
 		bands.forEach(function (b) {
-			html += heroBarBandLabelHtml(b, shortLabelFn);
+			html += '<span>' + esc(heroBandLabelText(role, b)) + '</span>';
 		});
 		html += '</div>';
 
@@ -858,19 +877,14 @@
 	}
 
 	function heroHeadHtml(score, copy) {
-		var html = '<div class="airb__leader-hero-head">';
-		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
-		html += '<div class="airb__leader-hero-meta">';
-
+		var html = '<div class="hero__top">';
+		html += '<span class="hero__score">' + score + '%</span>';
+		html += '<div class="hero__meta">';
 		if (copy.signal) {
-			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(copy.signalLine) + '</div>';
-			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
-			html += '<div class="airb__leader-hero-band">' + esc(copy.bandLabel) + '</div>';
-			html += '<div class="airb__leader-hero-action">' + esc(copy.signal) + '</div>';
-			html += '</div>';
+			html += '<div class="hero__signal">' + esc(copy.signal) + '</div>';
 		}
-
-		html += '<div class="airb__leader-hero-kicker">' + esc(copy.kicker) + '</div>';
+		html += '<div class="hero__band">' + esc(copy.bandLabel) + '</div>';
+		html += '<div class="hero__kicker">' + esc(copy.kicker) + '</div>';
 		html += '</div></div>';
 		return html;
 	}
@@ -891,20 +905,16 @@
 			.replace('{score}', String(score))
 			.replace('{band}', copy.signalLine || copy.bandLabel);
 
-		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + copy.tone + '"'
+		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + copy.tone + ' hero ' + heroVariantClass(copy) + '"'
 			+ ' role="img" aria-label="' + esc(ariaLabel) + '">';
 
 		html += heroHeadHtml(score, copy);
 
-		if (copy.consequence && role !== 'public') {
-			html += '<p class="airb__leader-hero-consequence">' + esc(copy.consequence) + '</p>';
+		if (copy.consequence) {
+			html += '<p class="hero__consequence">' + esc(copy.consequence) + '</p>';
 		}
 
 		html += heroBandBarHtml(bands, copy.bandSlug, score, avgScore, role);
-
-		if (copy.consequence && role === 'public') {
-			html += '<p class="airb__leader-hero-consequence airb__public-hero-consequence">' + esc(copy.consequence) + '</p>';
-		}
 
 		html += '</div>';
 		return html;
