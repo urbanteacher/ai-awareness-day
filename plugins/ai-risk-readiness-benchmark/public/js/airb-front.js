@@ -792,19 +792,24 @@
 		}
 		html += '<div class="airb__leader-hero-kicker">' + esc(kicker) + '</div>';
 		html += '</div></div>';
-		if (heroSig.consequence) {
+		if (heroSig.consequence && state.role !== 'public') {
 			html += '<p class="airb__leader-hero-consequence">' + esc(heroSig.consequence) + '</p>';
 		}
 		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
 		bands.forEach(function (b) {
 			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
 		});
+		html += '<span class="airb__leader-hero-marker" style="left:' + score + '%" aria-hidden="true"></span>';
 		html += '</div>';
 		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
 		bands.forEach(function (b) {
 			html += heroBarBandLabelHtml(b, publicHeroBarShortLabelFn(state.role));
 		});
-		html += '</div></div>';
+		html += '</div>';
+		if (heroSig.consequence && state.role === 'public') {
+			html += '<p class="airb__leader-hero-consequence airb__public-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+		}
+		html += '</div>';
 		return html;
 	}
 

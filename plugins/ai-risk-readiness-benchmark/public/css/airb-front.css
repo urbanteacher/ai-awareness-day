@@ -3331,6 +3331,7 @@
 }
 
 .airb__leader-hero-bar {
+	position: relative;
 	display: flex;
 	gap: 4px;
 	margin-bottom: 0.35rem;
@@ -3346,6 +3347,19 @@
 
 .airb__leader-hero-seg.is-active {
 	opacity: 1;
+}
+
+.airb__leader-hero-marker {
+	position: absolute;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	background: var(--white, #fff);
+	border: 3px solid var(--airb-brand, #1B6B8C);
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
+	z-index: 2;
 }
 
 .airb__leader-hero-bar-labels {
@@ -9424,6 +9438,14 @@ body.airb-flow-active .airb__footer {
 .airb__results--public .airb__res-profile--public .airb__leader-hero {
 	padding: 0.85rem 1rem;
 	margin-bottom: 0;
+}
+
+.airb__results--public .airb__public-hero-consequence {
+	margin: 0.75rem 0 0;
+	padding-top: 0.65rem;
+	border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+	font-size: 0.84rem;
+	line-height: 1.55;
 }
 
 .airb__public-metric-grid {
