@@ -752,8 +752,10 @@
 		return leaderMetricSignals(type, slug);
 	}
 
-	function leaderReadinessHeroHtml(score, uiHero) {
+	function leaderReadinessHeroHtml(score, uiHero, opts) {
+		opts = opts || {};
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var avgScore = opts.avg_score == null ? null : Math.max(0, Math.min(100, parseInt(opts.avg_score, 10) || 0));
 		var bandLabel = readinessBandLabel(score, state.role);
 		var bandSlug = readinessLevel(score, state.role).slug;
 		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
@@ -799,6 +801,9 @@
 		bands.forEach(function (b) {
 			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
 		});
+		if (avgScore !== null) {
+			html += '<span class="airb__leader-hero-marker airb__leader-hero-marker--avg" style="left:' + avgScore + '%;border-color:' + esc(readinessBandColor(avgScore, state.role)) + '" aria-hidden="true"></span>';
+		}
 		html += '<span class="airb__leader-hero-marker" style="left:' + score + '%" aria-hidden="true"></span>';
 		html += '</div>';
 		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
@@ -4162,7 +4167,9 @@
 		} else if (teacherBenchmarkMode) {
 			var tr = r.teacher_results;
 			var tUiHero = tr && tr.ui ? tr.ui.hero : null;
-			html += leaderReadinessHeroHtml(readiness, tUiHero);
+			var pb = tr && tr.peer_benchmark ? tr.peer_benchmark : null;
+			var avgScore = pb ? (pb.average_score != null ? pb.average_score : (pb.national_average != null ? pb.national_average : pb.national_avg)) : null;
+			html += leaderReadinessHeroHtml(readiness, tUiHero, { avg_score: avgScore });
 			html += teacherPeerBenchmarkHtml(tr);
 			html += teacherSupportingMetricsHtml(r, risk);
 			html += teacherOversightGaugeSectionHtml(r);

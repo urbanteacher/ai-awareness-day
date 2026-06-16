@@ -3363,6 +3363,14 @@
 	z-index: 2;
 }
 
+.airb__leader-hero-marker--avg {
+	width: 12px;
+	height: 12px;
+	border-width: 2px;
+	box-shadow: 0 0 0 1px var(--white, #fff), 0 1px 4px rgba(0, 0, 0, 0.15);
+	opacity: 0.95;
+}
+
 .airb__leader-hero-bar-labels {
 	display: flex;
 	justify-content: space-between;
