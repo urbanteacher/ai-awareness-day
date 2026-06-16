@@ -752,171 +752,59 @@
 		return leaderMetricSignals(type, slug);
 	}
 
-	// ---------------------------------------------------------------------------
-	// leaderReadinessHeroHtml — refactored
-	// ---------------------------------------------------------------------------
-
-	function resolveKicker(role) {
-		var ROLE_RESULT_MAP = {
-			teacher: teacherResult,
-			support_staff: supportResult,
-			student: studentResult,
-			parent: parentResult,
-		};
-
-		if (role === 'public') {
-			return publicResult.hero_metric_label || 'Overall AI safety score';
-		}
-
-		var cfg = ROLE_RESULT_MAP[role] || leaderResult;
-		return (cfg.metric_labels && cfg.metric_labels.readiness)
-			? cfg.metric_labels.readiness
-			: (i18n.readinessScaleKicker || 'Overall benchmark readiness');
-	}
-
-	function resolveHeroCopy(score, uiHero, role) {
-		var bandLabel = readinessBandLabel(score, role);
-		var bandSlug = readinessLevel(score, role).slug;
-
-		// Signal + consequence: prefer server ui.hero, fall back to JSON copy tiers.
-		var sig = (uiHero && (uiHero.signal || uiHero.consequence))
+	function leaderReadinessHeroHtml(score, uiHero) {
+		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
+		var bandLabel = readinessBandLabel(score, state.role);
+		var bandSlug = readinessLevel(score, state.role).slug;
+		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
 			? leaderUiMetric(uiHero, 'readiness', bandSlug)
 			: leaderMetricSignals('readiness', bandSlug);
-
-		// Signal line: public shows band label only; all others show band + action.
-		var signalLine = (role === 'public')
+		var tone = heroSig.tone || 'neutral';
+		var bands = roleHeroBandDefinitions(state.role);
+		var signalLine = state.role === 'public'
 			? bandLabel
-			: leaderSignalLine(bandLabel, sig.signal);
+			: leaderSignalLine(bandLabel, heroSig.signal);
+		var heroCfg = state.role === 'teacher' ? teacherResult
+			: state.role === 'support_staff' ? supportResult
+			: state.role === 'student' ? studentResult
+			: state.role === 'parent' ? parentResult
+			: leaderResult;
+		var kicker = state.role === 'public'
+			? (publicResult.hero_metric_label || 'Overall AI safety score')
+			: (heroCfg.metric_labels && heroCfg.metric_labels.readiness
+				? heroCfg.metric_labels.readiness
+				: (i18n.readinessScaleKicker || 'Overall benchmark readiness'));
 
-		return {
-			signal: sig.signal || '',
-			consequence: sig.consequence || '',
-			kicker: resolveKicker(role),
-			tone: sig.tone || 'neutral',
-			bandLabel: bandLabel,
-			bandSlug: bandSlug,
-			signalLine: signalLine,
-		};
-	}
-
-	function heroVariantClass(copy) {
-		// Map existing tones to redesign variants.
-		// urgent => red, warning => amber, neutral => blue, positive => green
-		if (copy.tone === 'urgent') return 'hero--red';
-		if (copy.tone === 'warning') return 'hero--amber';
-		if (copy.tone === 'positive') return 'hero--green';
-		return 'hero--blue';
-	}
-
-	function heroBandLabelText(role, band) {
-		var slug = (band && band.slug) || '';
-		var full = (band && band.label) || '';
-
-		if (role === 'student') return full || slug;
-		if (role === 'parent') return full || slug;
-		if (role === 'public') return full || slug;
-
-		// Leader/teacher/support: special-case first two labels to match redesign.
-		if (slug === 'emerging') return 'Critical · act now';
-		if (slug === 'developing') return 'Concern';
-		return full || slug;
-	}
-
-	function heroBandBarHtml(bands, bandSlug, score, avgScore, role) {
-		var html = '';
-		var segWidth = bands && bands.length ? (100 / bands.length) : 20;
-
-		function markerLeft(pct) {
-			if (pct == null || !bands || !bands.length) return pct;
-			var idx = -1;
-			for (var i = 0; i < bands.length; i++) {
-				var b = bands[i] || {};
-				var min = parseInt(b.min, 10);
-				var max = parseInt(b.max, 10);
-				if (isNaN(min)) min = 0;
-				if (isNaN(max)) max = 100;
-				if (pct >= min && pct <= max) {
-					idx = i;
-					break;
-				}
-			}
-			if (idx < 0) {
-				idx = pct < (parseInt((bands[0] || {}).min, 10) || 0) ? 0 : (bands.length - 1);
-			}
-			var band = bands[idx] || {};
-			var min2 = parseInt(band.min, 10);
-			var max2 = parseInt(band.max, 10);
-			if (isNaN(min2)) min2 = 0;
-			if (isNaN(max2)) max2 = 100;
-			var denom = Math.max(1, (max2 - min2));
-			var posInSeg = (pct - min2) / denom;
-			posInSeg = Math.max(0, Math.min(1, posInSeg));
-			return (idx * segWidth) + (posInSeg * segWidth);
+		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
+			(i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
+				.replace('{score}', String(score))
+				.replace('{band}', signalLine || bandLabel)
+		) + '">';
+		html += '<div class="airb__leader-hero-head">';
+		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__leader-hero-meta">';
+		if (heroSig.signal) {
+			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(signalLine) + '</div>';
+			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
+			html += '<div class="airb__leader-hero-band">' + esc(bandLabel) + '</div>';
+			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
+			html += '</div>';
 		}
-
-		html += '<div class="bar" aria-hidden="true">';
-		bands.forEach(function (b) {
-			var cls = 'bar__seg' + (bandSlug === b.slug ? ' bar__seg--active' : '');
-			html += '<div class="' + cls + '"></div>';
-		});
-
-		if (avgScore !== null) {
-			html += '<div class="bar__marker bar__marker--avg" style="left:' + markerLeft(avgScore) + '%" aria-hidden="true"></div>';
-		}
-
-		html += '<div class="bar__marker" style="left:' + markerLeft(score) + '%" aria-hidden="true"></div>';
-		html += '</div>';
-
-		html += '<div class="bar__labels" aria-hidden="true">';
-		bands.forEach(function (b) {
-			html += '<span>' + esc(heroBandLabelText(role, b)) + '</span>';
-		});
-		html += '</div>';
-
-		return html;
-	}
-
-	function heroHeadHtml(score, copy) {
-		var html = '<div class="hero__top">';
-		html += '<span class="hero__score">' + score + '%</span>';
-		html += '<div class="hero__meta">';
-		if (copy.signal) {
-			html += '<div class="hero__signal">' + esc(copy.signal) + '</div>';
-		}
-		html += '<div class="hero__band">' + esc(copy.bandLabel) + '</div>';
-		html += '<div class="hero__kicker">' + esc(copy.kicker) + '</div>';
+		html += '<div class="airb__leader-hero-kicker">' + esc(kicker) + '</div>';
 		html += '</div></div>';
-		return html;
-	}
-
-	function leaderReadinessHeroHtml(score, uiHero, opts) {
-		opts = opts || {};
-		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
-
-		var role = opts.role || state.role;
-		var avgScore = opts.avg_score == null
-			? null
-			: Math.max(0, Math.min(100, parseInt(opts.avg_score, 10) || 0));
-
-		var copy = resolveHeroCopy(score, uiHero, role);
-		var bands = roleHeroBandDefinitions(role);
-
-		var ariaLabel = (i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
-			.replace('{score}', String(score))
-			.replace('{band}', copy.signalLine || copy.bandLabel);
-
-		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + copy.tone + ' hero ' + heroVariantClass(copy) + '"'
-			+ ' role="img" aria-label="' + esc(ariaLabel) + '">';
-
-		html += heroHeadHtml(score, copy);
-
-		if (copy.consequence) {
-			html += '<p class="hero__consequence">' + esc(copy.consequence) + '</p>';
+		if (heroSig.consequence) {
+			html += '<p class="airb__leader-hero-consequence">' + esc(heroSig.consequence) + '</p>';
 		}
-
-		html += heroBandBarHtml(bands, copy.bandSlug, score, avgScore, role);
-
+		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
+		});
 		html += '</div>';
+		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += heroBarBandLabelHtml(b, publicHeroBarShortLabelFn(state.role));
+		});
+		html += '</div></div>';
 		return html;
 	}
 
@@ -4269,9 +4157,7 @@
 		} else if (teacherBenchmarkMode) {
 			var tr = r.teacher_results;
 			var tUiHero = tr && tr.ui ? tr.ui.hero : null;
-			var pb = tr && tr.peer_benchmark ? tr.peer_benchmark : null;
-			var avgScore = pb ? (pb.average_score != null ? pb.average_score : (pb.national_average != null ? pb.national_average : pb.national_avg)) : null;
-			html += leaderReadinessHeroHtml(readiness, tUiHero, { avg_score: avgScore });
+			html += leaderReadinessHeroHtml(readiness, tUiHero);
 			html += teacherPeerBenchmarkHtml(tr);
 			html += teacherSupportingMetricsHtml(r, risk);
 			html += teacherOversightGaugeSectionHtml(r);
