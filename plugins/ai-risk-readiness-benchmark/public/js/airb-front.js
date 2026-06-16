@@ -752,68 +752,131 @@
 		return leaderMetricSignals(type, slug);
 	}
 
+	// ---------------------------------------------------------------------------
+	// leaderReadinessHeroHtml — refactored
+	// ---------------------------------------------------------------------------
+
+	function resolveKicker(role) {
+		var ROLE_RESULT_MAP = {
+			teacher: teacherResult,
+			support_staff: supportResult,
+			student: studentResult,
+			parent: parentResult,
+		};
+
+		if (role === 'public') {
+			return publicResult.hero_metric_label || 'Overall AI safety score';
+		}
+
+		var cfg = ROLE_RESULT_MAP[role] || leaderResult;
+		return (cfg.metric_labels && cfg.metric_labels.readiness)
+			? cfg.metric_labels.readiness
+			: (i18n.readinessScaleKicker || 'Overall benchmark readiness');
+	}
+
+	function resolveHeroCopy(score, uiHero, role) {
+		var bandLabel = readinessBandLabel(score, role);
+		var bandSlug = readinessLevel(score, role).slug;
+
+		// Signal + consequence: prefer server ui.hero, fall back to JSON copy tiers.
+		var sig = (uiHero && (uiHero.signal || uiHero.consequence))
+			? leaderUiMetric(uiHero, 'readiness', bandSlug)
+			: leaderMetricSignals('readiness', bandSlug);
+
+		// Signal line: public shows band label only; all others show band + action.
+		var signalLine = (role === 'public')
+			? bandLabel
+			: leaderSignalLine(bandLabel, sig.signal);
+
+		return {
+			signal: sig.signal || '',
+			consequence: sig.consequence || '',
+			kicker: resolveKicker(role),
+			tone: sig.tone || 'neutral',
+			bandLabel: bandLabel,
+			bandSlug: bandSlug,
+			signalLine: signalLine,
+		};
+	}
+
+	function heroBandBarHtml(bands, bandSlug, score, avgScore, role) {
+		var html = '';
+
+		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
+		bands.forEach(function (b) {
+			var cls = 'airb__leader-hero-seg airb__leader-hero-seg--' + b.slug;
+			if (bandSlug === b.slug) cls += ' is-active';
+			html += '<span class="' + cls + '"></span>';
+		});
+
+		if (avgScore !== null) {
+			html += '<span class="airb__leader-hero-marker airb__leader-hero-marker--avg"'
+				+ ' style="left:' + avgScore + '%"'
+				+ ' aria-hidden="true"></span>';
+		}
+
+		html += '<span class="airb__leader-hero-marker" style="left:' + score + '%" aria-hidden="true"></span>';
+		html += '</div>';
+
+		var shortLabelFn = publicHeroBarShortLabelFn(role);
+		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
+		bands.forEach(function (b) {
+			html += heroBarBandLabelHtml(b, shortLabelFn);
+		});
+		html += '</div>';
+
+		return html;
+	}
+
+	function heroHeadHtml(score, copy) {
+		var html = '<div class="airb__leader-hero-head">';
+		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
+		html += '<div class="airb__leader-hero-meta">';
+
+		if (copy.signal) {
+			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(copy.signalLine) + '</div>';
+			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
+			html += '<div class="airb__leader-hero-band">' + esc(copy.bandLabel) + '</div>';
+			html += '<div class="airb__leader-hero-action">' + esc(copy.signal) + '</div>';
+			html += '</div>';
+		}
+
+		html += '<div class="airb__leader-hero-kicker">' + esc(copy.kicker) + '</div>';
+		html += '</div></div>';
+		return html;
+	}
+
 	function leaderReadinessHeroHtml(score, uiHero, opts) {
 		opts = opts || {};
 		score = Math.max(0, Math.min(100, parseInt(score, 10) || 0));
-		var avgScore = opts.avg_score == null ? null : Math.max(0, Math.min(100, parseInt(opts.avg_score, 10) || 0));
-		var bandLabel = readinessBandLabel(score, state.role);
-		var bandSlug = readinessLevel(score, state.role).slug;
-		var heroSig = uiHero && (uiHero.signal || uiHero.consequence)
-			? leaderUiMetric(uiHero, 'readiness', bandSlug)
-			: leaderMetricSignals('readiness', bandSlug);
-		var tone = heroSig.tone || 'neutral';
-		var bands = roleHeroBandDefinitions(state.role);
-		var signalLine = state.role === 'public'
-			? bandLabel
-			: leaderSignalLine(bandLabel, heroSig.signal);
-		var heroCfg = state.role === 'teacher' ? teacherResult
-			: state.role === 'support_staff' ? supportResult
-			: state.role === 'student' ? studentResult
-			: state.role === 'parent' ? parentResult
-			: leaderResult;
-		var kicker = state.role === 'public'
-			? (publicResult.hero_metric_label || 'Overall AI safety score')
-			: (heroCfg.metric_labels && heroCfg.metric_labels.readiness
-				? heroCfg.metric_labels.readiness
-				: (i18n.readinessScaleKicker || 'Overall benchmark readiness'));
 
-		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + tone + '" role="img" aria-label="' + esc(
-			(i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
-				.replace('{score}', String(score))
-				.replace('{band}', signalLine || bandLabel)
-		) + '">';
-		html += '<div class="airb__leader-hero-head">';
-		html += '<span class="airb__leader-hero-pct">' + score + '%</span>';
-		html += '<div class="airb__leader-hero-meta">';
-		if (heroSig.signal) {
-			html += '<div class="airb__leader-hero-signal airb__leader-hero-signal--desktop">' + esc(signalLine) + '</div>';
-			html += '<div class="airb__leader-hero-signal-mobile" aria-hidden="true">';
-			html += '<div class="airb__leader-hero-band">' + esc(bandLabel) + '</div>';
-			html += '<div class="airb__leader-hero-action">' + esc(heroSig.signal) + '</div>';
-			html += '</div>';
+		var role = opts.role || state.role;
+		var avgScore = opts.avg_score == null
+			? null
+			: Math.max(0, Math.min(100, parseInt(opts.avg_score, 10) || 0));
+
+		var copy = resolveHeroCopy(score, uiHero, role);
+		var bands = roleHeroBandDefinitions(role);
+
+		var ariaLabel = (i18n.readinessScaleAria || 'Overall benchmark readiness {score} out of 100, {band}')
+			.replace('{score}', String(score))
+			.replace('{band}', copy.signalLine || copy.bandLabel);
+
+		var html = '<div class="airb__leader-hero airb__leader-hero--tone-' + copy.tone + '"'
+			+ ' role="img" aria-label="' + esc(ariaLabel) + '">';
+
+		html += heroHeadHtml(score, copy);
+
+		if (copy.consequence && role !== 'public') {
+			html += '<p class="airb__leader-hero-consequence">' + esc(copy.consequence) + '</p>';
 		}
-		html += '<div class="airb__leader-hero-kicker">' + esc(kicker) + '</div>';
-		html += '</div></div>';
-		if (heroSig.consequence && state.role !== 'public') {
-			html += '<p class="airb__leader-hero-consequence">' + esc(heroSig.consequence) + '</p>';
+
+		html += heroBandBarHtml(bands, copy.bandSlug, score, avgScore, role);
+
+		if (copy.consequence && role === 'public') {
+			html += '<p class="airb__leader-hero-consequence airb__public-hero-consequence">' + esc(copy.consequence) + '</p>';
 		}
-		html += '<div class="airb__leader-hero-bar" aria-hidden="true">';
-		bands.forEach(function (b) {
-			html += '<span class="airb__leader-hero-seg airb__leader-hero-seg--' + b.slug + (bandSlug === b.slug ? ' is-active' : '') + '"></span>';
-		});
-		if (avgScore !== null) {
-			html += '<span class="airb__leader-hero-marker airb__leader-hero-marker--avg" style="left:' + avgScore + '%;border-color:' + esc(readinessBandColor(avgScore, state.role)) + '" aria-hidden="true"></span>';
-		}
-		html += '<span class="airb__leader-hero-marker" style="left:' + score + '%" aria-hidden="true"></span>';
-		html += '</div>';
-		html += '<div class="airb__leader-hero-bar-labels" aria-hidden="true">';
-		bands.forEach(function (b) {
-			html += heroBarBandLabelHtml(b, publicHeroBarShortLabelFn(state.role));
-		});
-		html += '</div>';
-		if (heroSig.consequence && state.role === 'public') {
-			html += '<p class="airb__leader-hero-consequence airb__public-hero-consequence">' + esc(heroSig.consequence) + '</p>';
-		}
+
 		html += '</div>';
 		return html;
 	}
