@@ -307,6 +307,7 @@
             <h1>Participation certificate</h1>
             <p class="hint">
                 Choose a signup, then download. Name, school, date, and certificate wording come from the submission.
+                Use <strong>Whole school</strong> when the certificate should show the school name only (no individual).
                 School logos match <strong>Partners → School</strong> or use a manual upload below.
             </p>
 
@@ -331,14 +332,23 @@
                 <p class="selected-summary" id="selectedSummary" hidden></p>
             </div>
 
+            <div class="form-row">
+                <label for="recipientMode">Certificate for</label>
+                <select id="recipientMode" onchange="onRecipientModeChange()">
+                    <option value="individual">Individual (name and school)</option>
+                    <option value="school_only">Whole school (school name only)</option>
+                </select>
+                <p class="status" id="recipientModeHint">Shows the participant name with the school on a second line.</p>
+            </div>
+
             <details class="details-edit">
                 <summary>Edit certificate details (optional)</summary>
-                <div class="form-row">
+                <div class="form-row form-row--hidden" id="recipientNameRow">
                     <label for="recipientName">Name on certificate</label>
                     <input type="text" id="recipientName" placeholder="From signup" oninput="syncFromForm()">
                 </div>
                 <div class="form-row">
-                    <label for="schoolName">School / organisation</label>
+                    <label for="schoolName" id="schoolNameLabel">School / organisation</label>
                     <input type="text" id="schoolName" placeholder="From signup" oninput="syncFromForm()">
                 </div>
                 <div class="form-row">
@@ -379,7 +389,7 @@
                     <p class="cert-type" id="certEyebrow">Certificate of participation</p>
                     <p class="cert-lead">This certifies that</p>
                     <p class="cert-recipient" id="certNameDisplay">Participant name</p>
-                    <p class="cert-school" id="certSchoolDisplay"></p>
+                    <p class="cert-school" id="certSchoolDisplay" hidden></p>
                     <p class="cert-body" id="certBody">has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.</p>
                 </div>
 
@@ -400,6 +410,7 @@
 
     <script>
         const STORAGE_WP = 'aiad_cert_wp_base';
+        const STORAGE_RECIPIENT_MODE = 'aiad_cert_recipient_mode';
         let submissions = [];
         let manualSchoolLogo = null;
         let certificateId = 'AIAD-' + Date.now().toString(36).toUpperCase();
@@ -672,6 +683,67 @@
             return orgType === 'company' || orgType === 'education_provider';
         }
 
+        function getRecipientMode() {
+            const el = document.getElementById('recipientMode');
+            return el && el.value === 'school_only' ? 'school_only' : 'individual';
+        }
+
+        function isSchoolOnlyMode() {
+            return getRecipientMode() === 'school_only';
+        }
+
+        function getSchoolBodyLocal(involvedAs, orgType) {
+            const defaultBody =
+                'has actively contributed to AI Awareness Day 2026 through participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+            if (involvedAs === 'teacher' || involvedAs === 'school_leader') {
+                return 'has actively contributed to AI Awareness Day 2026 through the school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+            }
+            if (involvedAs === 'organisation') {
+                if (isTechOrganisation(orgType)) {
+                    return 'has actively contributed to AI Awareness Day 2026 through the organisation\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                }
+                return 'has actively contributed to AI Awareness Day 2026 through the organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+            }
+            if (involvedAs === 'parent') {
+                return 'has actively contributed to AI Awareness Day 2026 as part of our nationwide exploration of artificial intelligence in education, supporting confident and responsible AI use for learners and families.';
+            }
+            return defaultBody;
+        }
+
+        function resolveCertificateBody(copy, involvedAs, orgType, mode) {
+            if (mode === 'school_only') {
+                return copy.school_body || copy.schoolBody || getSchoolBodyLocal(involvedAs, orgType);
+            }
+            return typeof copy.body === 'string' ? copy.body : '';
+        }
+
+        function updateRecipientModeUi() {
+            const schoolOnly = isSchoolOnlyMode();
+            const nameRow = document.getElementById('recipientNameRow');
+            const schoolLabel = document.getElementById('schoolNameLabel');
+            const hint = document.getElementById('recipientModeHint');
+            if (nameRow) nameRow.classList.toggle('form-row--hidden', schoolOnly);
+            if (schoolLabel) {
+                schoolLabel.textContent = schoolOnly ? 'School name on certificate' : 'School / organisation';
+            }
+            if (hint) {
+                hint.textContent = schoolOnly
+                    ? 'Shows the school name only, with whole-school certificate wording.'
+                    : 'Shows the participant name with the school on a second line.';
+            }
+        }
+
+        function onRecipientModeChange() {
+            localStorage.setItem(STORAGE_RECIPIENT_MODE, getRecipientMode());
+            updateRecipientModeUi();
+            const row = currentSubmissionRow();
+            if (row) {
+                onSubmissionChange();
+            } else {
+                syncFromForm();
+            }
+        }
+
         /** Mirrors inc/certificate-copy.php when API copy is unavailable. */
         function getCertificateCopyLocal(involvedAs, orgType) {
             const defaultBody =
@@ -750,13 +822,16 @@
         function normalizeCertificateCopy(copy, involvedAs, orgType) {
             const local = getCertificateCopyLocal(involvedAs, orgType);
             if (!copy || typeof copy !== 'object') {
-                return local;
+                return Object.assign({}, local, {
+                    school_body: getSchoolBodyLocal(involvedAs, orgType),
+                });
             }
             return {
                 headline_primary: headlineFromCopy(copy, local),
                 eyebrow: copy.eyebrow || local.eyebrow,
                 affiliation_prefix: copy.affiliation_prefix || copy.affiliationPrefix || local.affiliation_prefix,
                 body: bodyTextFromCopy(copy, local),
+                school_body: copy.school_body || copy.schoolBody || getSchoolBodyLocal(involvedAs, orgType),
             };
         }
 
@@ -772,7 +847,7 @@
             if (row && row.certificate_copy) {
                 return normalizeCertificateCopy(row.certificate_copy, involvedAs, orgType);
             }
-            return getCertificateCopyLocal(involvedAs, orgType);
+            return normalizeCertificateCopy(null, involvedAs, orgType);
         }
 
         function updateSelectedSummary(row) {
@@ -782,28 +857,46 @@
                 el.textContent = '';
                 return;
             }
-            const parts = [row.full_name, row.school_name].filter(Boolean);
+            const parts = isSchoolOnlyMode()
+                ? [row.school_name].filter(Boolean)
+                : [row.full_name, row.school_name].filter(Boolean);
             el.textContent = parts.length ? parts.join(' · ') : 'Selected signup';
             el.hidden = false;
         }
 
-        function applyCertificateCopy(copy) {
+        function applyCertificateCopy(copy, mode) {
+            const row = currentSubmissionRow();
+            const involvedAs = row?.involved_as || 'teacher';
+            const orgType = row?.org_type || 'company';
+            mode = mode || getRecipientMode();
             document.getElementById('certHeadlinePrimary').textContent = copy.headline_primary || copy.headlinePrimary || 'AI Awareness Day 2026';
             document.getElementById('certEyebrow').textContent = copy.eyebrow || 'Certificate of participation';
-            document.getElementById('certBody').textContent = typeof copy.body === 'string' ? copy.body : '';
+            document.getElementById('certBody').textContent = resolveCertificateBody(copy, involvedAs, orgType, mode);
             return copy.affiliation_prefix || copy.affiliationPrefix || 'from';
         }
 
         function syncFromForm() {
+            const mode = getRecipientMode();
             const name = document.getElementById('recipientName').value.trim();
             const school = document.getElementById('schoolName').value.trim();
             const dateVal = document.getElementById('certDate').value;
-            const prefix = applyCertificateCopy(getCurrentCertificateCopy());
+            const copy = getCurrentCertificateCopy();
+            const prefix = applyCertificateCopy(copy, mode);
+            const schoolLine = document.getElementById('certSchoolDisplay');
 
-            document.getElementById('certNameDisplay').textContent = name || 'Participant name';
-            document.getElementById('certSchoolDisplay').textContent = school
-                ? prefix + ' ' + school
-                : '';
+            if (mode === 'school_only') {
+                document.getElementById('certNameDisplay').textContent = school || 'School name';
+                if (schoolLine) {
+                    schoolLine.textContent = '';
+                    schoolLine.hidden = true;
+                }
+            } else {
+                document.getElementById('certNameDisplay').textContent = name || 'Participant name';
+                if (schoolLine) {
+                    schoolLine.hidden = !school;
+                    schoolLine.textContent = school ? prefix + ' ' + school : '';
+                }
+            }
             document.getElementById('dateDisplay').textContent = dateVal
                 ? formatDateInput(dateVal)
                 : formatDateInput(new Date().toISOString());
@@ -846,6 +939,9 @@
             }
             document.getElementById('recipientName').value = row.full_name || '';
             document.getElementById('schoolName').value = row.school_name || '';
+            if (isSchoolOnlyMode() && row.school_name) {
+                document.getElementById('recipientName').value = row.school_name;
+            }
             // Leave the date as-is — a Certificate of Participation is dated by
             // issue date (today, or whatever the editor has set), not by the
             // participant's signup date. This also means a bulk export gives
@@ -972,8 +1068,8 @@
         }
 
         function safeCertFilenameFromRow(row, index) {
-            const raw = (row.full_name || ('participant-' + (index + 1))).trim();
-            const slug = raw.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            const raw = (isSchoolOnlyMode() ? row.school_name : row.full_name) || ('participant-' + (index + 1));
+            const slug = String(raw).trim().replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
             return 'ai-awareness-day-certificate-' + (slug || ('participant-' + (index + 1))) + '.pdf';
         }
 
@@ -990,7 +1086,10 @@
                 const w = pdf.internal.pageSize.getWidth();
                 const h = pdf.internal.pageSize.getHeight();
                 pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
-                const safe = document.getElementById('recipientName').value.trim().replace(/\s+/g, '-') || 'certificate';
+                const safeSource = isSchoolOnlyMode()
+                    ? document.getElementById('schoolName').value.trim()
+                    : document.getElementById('recipientName').value.trim();
+                const safe = safeSource.replace(/\s+/g, '-') || 'certificate';
                 pdf.save('ai-awareness-day-certificate-' + safe + '.pdf');
                 setExportStatus('');
             } catch (e) {
@@ -1160,6 +1259,11 @@
             document.getElementById('wpBaseRow').classList.add('form-row--hidden');
         }
         document.getElementById('certDate').value = new Date().toISOString().slice(0, 10);
+        const savedMode = localStorage.getItem(STORAGE_RECIPIENT_MODE);
+        if (savedMode === 'school_only' || savedMode === 'individual') {
+            document.getElementById('recipientMode').value = savedMode;
+        }
+        updateRecipientModeUi();
         const embedBrandLogo = EMBED_PARAMS.get('brand_logo');
         if (embedBrandLogo) setBrandLogo(embedBrandLogo);
         loadWordPress();

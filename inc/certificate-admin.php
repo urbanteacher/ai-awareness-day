@@ -41,7 +41,7 @@ function aiad_render_certificate_admin_page(): void {
 	<div class="wrap aiad-certificate-admin-wrap">
 		<h1><?php esc_html_e( 'Participation certificates', 'ai-awareness-day' ); ?></h1>
 		<p class="description">
-			<?php esc_html_e( 'Pick a signup from the list (or open a submission and choose “Certificate”). Logos and copy load from this WordPress site.', 'ai-awareness-day' ); ?>
+			<?php esc_html_e( 'Pick a signup from the list (or open a submission and choose “Certificate”). Choose Individual or Whole school before downloading. Logos and copy load from this WordPress site.', 'ai-awareness-day' ); ?>
 		</p>
 		<iframe
 			title="<?php esc_attr_e( 'Certificate generator', 'ai-awareness-day' ); ?>"

@@ -19,11 +19,55 @@ function aiad_certificate_is_tech_organisation( string $org_type ): bool {
 }
 
 /**
+ * Whole-school certificate body (school name only — no individual line).
+ *
+ * @param string $involved_as teacher|school_leader|organisation|parent|''.
+ * @param string $org_type    Organisation type slug when involved_as is organisation.
+ */
+function aiad_get_certificate_school_body( string $involved_as, string $org_type = '' ): string {
+	$default = __(
+		'has actively contributed to AI Awareness Day 2026 through participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+		'ai-awareness-day'
+	);
+
+	switch ( $involved_as ) {
+		case 'teacher':
+		case 'school_leader':
+			return __(
+				'has actively contributed to AI Awareness Day 2026 through the school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+				'ai-awareness-day'
+			);
+
+		case 'organisation':
+			if ( aiad_certificate_is_tech_organisation( $org_type ) ) {
+				return __(
+					'has actively contributed to AI Awareness Day 2026 through the organisation\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+					'ai-awareness-day'
+				);
+			}
+
+			return __(
+				'has actively contributed to AI Awareness Day 2026 through the organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+				'ai-awareness-day'
+			);
+
+		case 'parent':
+			return __(
+				'has actively contributed to AI Awareness Day 2026 as part of our nationwide exploration of artificial intelligence in education, supporting confident and responsible AI use for learners and families.',
+				'ai-awareness-day'
+			);
+
+		default:
+			return $default;
+	}
+}
+
+/**
  * Certificate copy blocks for a participant role.
  *
  * @param string $involved_as teacher|school_leader|organisation|parent|''.
  * @param string $org_type    Organisation type slug when involved_as is organisation.
- * @return array{headline_primary:string,eyebrow:string,affiliation_prefix:string,body:string}
+ * @return array{headline_primary:string,eyebrow:string,affiliation_prefix:string,body:string,school_body:string}
  */
 function aiad_get_certificate_copy( string $involved_as, string $org_type = '' ): array {
 	$default_body = __(
@@ -40,7 +84,7 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 
 	switch ( $involved_as ) {
 		case 'teacher':
-			return array_merge(
+			$copy = array_merge(
 				$base,
 				array(
 					'body' => __(
@@ -49,9 +93,10 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 					),
 				)
 			);
+			break;
 
 		case 'school_leader':
-			return array_merge(
+			$copy = array_merge(
 				$base,
 				array(
 					'body' => __(
@@ -60,10 +105,11 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 					),
 				)
 			);
+			break;
 
 		case 'organisation':
 			if ( aiad_certificate_is_tech_organisation( $org_type ) ) {
-				return array_merge(
+				$copy = array_merge(
 					$base,
 					array(
 						'body' => __(
@@ -72,9 +118,10 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 						),
 					)
 				);
+				break;
 			}
 
-			return array_merge(
+			$copy = array_merge(
 				$base,
 				array(
 					'body' => __(
@@ -83,9 +130,10 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 					),
 				)
 			);
+			break;
 
 		case 'parent':
-			return array_merge(
+			$copy = array_merge(
 				$base,
 				array(
 					'affiliation_prefix' => __( 'in support of', 'ai-awareness-day' ),
@@ -95,10 +143,20 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 					),
 				)
 			);
+			break;
 
 		default:
-			return $base;
+			$copy = $base;
+			break;
 	}
+
+	if ( ! isset( $copy ) ) {
+		$copy = $base;
+	}
+
+	$copy['school_body'] = aiad_get_certificate_school_body( $involved_as, $org_type );
+
+	return $copy;
 }
 
 /**
@@ -114,5 +172,6 @@ function aiad_certificate_copy_for_rest( string $involved_as, string $org_type =
 	$copy['affiliationPrefix'] = $copy['affiliation_prefix'];
 	$copy['headlinePrimary']   = $copy['headline_primary'];
 	$copy['headline']          = $copy['headline_primary'];
+	$copy['schoolBody']        = $copy['school_body'];
 	return $copy;
 }
