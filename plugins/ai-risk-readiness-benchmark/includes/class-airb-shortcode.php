@@ -189,6 +189,8 @@ class AIRB_Shortcode {
 					'submit'         => __( 'See results', 'ai-risk-benchmark' ),
 					'step'           => __( 'Step', 'ai-risk-benchmark' ),
 					'section'        => __( 'Section', 'ai-risk-benchmark' ),
+					'question'       => __( 'Question', 'ai-risk-benchmark' ),
+					'questions'      => __( 'Questions', 'ai-risk-benchmark' ),
 					'of'             => __( 'of', 'ai-risk-benchmark' ),
 					'required'       => __( 'Please answer this question before continuing.', 'ai-risk-benchmark' ),
 					'emailInvalid'   => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ),

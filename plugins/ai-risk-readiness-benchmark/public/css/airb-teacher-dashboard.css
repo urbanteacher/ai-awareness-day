@@ -2252,6 +2252,74 @@
 }
 
 @media (max-width: 560px) {
+	.benchmark-certificate-layout {
+		gap: 0.75rem;
+	}
+
+	.benchmark-certificate-grid,
+	.benchmark-certificate-preview-wrap {
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.benchmark-certificate-preview-wrap {
+		padding: 0.45rem;
+		overflow: visible;
+	}
+
+	.certificate-preview {
+		min-width: 0;
+	}
+
+	.certificate-preview__frame {
+		border-width: 3px;
+		padding: 0.8rem 0.75rem;
+		box-shadow: none;
+	}
+
+	.certificate-preview__headline {
+		font-size: 1rem;
+		line-height: 1.18;
+	}
+
+	.certificate-preview__headline-primary {
+		display: block;
+		white-space: normal;
+		overflow-wrap: anywhere;
+		font-size: 1rem;
+	}
+
+	.certificate-preview__lead,
+	.certificate-preview__school,
+	.certificate-preview__body,
+	.certificate-preview__recognition {
+		margin-top: 0.55rem;
+		max-width: 100%;
+		font-size: 0.86rem;
+		line-height: 1.35;
+	}
+
+	.certificate-preview__name {
+		font-size: 1.4rem;
+		overflow-wrap: anywhere;
+	}
+
+	.certificate-preview__date {
+		margin-top: 0.75rem;
+		font-size: 0.9rem;
+	}
+
+	.certificate-preview__footer {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.45rem;
+		margin-top: 0.75rem;
+		padding-top: 0.65rem;
+		font-size: 0.68rem;
+		overflow-wrap: anywhere;
+	}
+
 	.airb__results--teacher .teacher-dash-core, .airb__results--student .teacher-dash-core, .airb__results--parent .teacher-dash-core, .airb__results--leader .teacher-dash-core, .airb__results--support .teacher-dash-core, .airb__results--public .teacher-dash-core {
 		padding: 0.8rem 0.75rem 0.9rem;
 	}

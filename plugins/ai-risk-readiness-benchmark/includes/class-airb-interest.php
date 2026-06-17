@@ -98,7 +98,7 @@ class AIRB_Interest {
 			),
 			'teacher_activity_day' => array(
 				'label'       => __( 'Run an AI Awareness Day activity in my class', 'ai-risk-benchmark' ),
-				'description' => __( 'Classroom resources and activities aligned to the campaign.', 'ai-risk-benchmark' ),
+				'description' => __( 'Literacy display board materials and classroom activities aligned to the campaign.', 'ai-risk-benchmark' ),
 				'roles'       => array( 'teacher' ),
 			),
 			'teacher_awareness' => array(
@@ -239,8 +239,8 @@ class AIRB_Interest {
 					'description' => __( 'Foundational CPD covering safe adoption, verification and data protection basics.', 'ai-risk-benchmark' ),
 				),
 				'teacher_activity_day'   => array(
-					'label'       => __( 'I want classroom resources', 'ai-risk-benchmark' ),
-					'description' => __( 'Lesson activities, prompts and materials aligned to your audit results.', 'ai-risk-benchmark' ),
+					'label'       => __( 'I want to create a literacy display board', 'ai-risk-benchmark' ),
+					'description' => __( 'Printable materials and prompts to build an AI literacy display in your classroom or corridor.', 'ai-risk-benchmark' ),
 				),
 				'whole_school_cpd'       => array(
 					'label'       => __( 'I want CPD', 'ai-risk-benchmark' ),
@@ -401,7 +401,7 @@ class AIRB_Interest {
 					array(
 						'heading'          => __( 'Request support for your school', 'ai-risk-benchmark' ),
 						'intro'            => __( 'Select what you need below — we will email you with next steps. Your benchmark scores are included automatically.', 'ai-risk-benchmark' ),
-						'stakeholder_role' => __( 'Which best describes you?', 'ai-risk-benchmark' ),
+						'stakeholder_role' => __( 'Job title', 'ai-risk-benchmark' ),
 					)
 				);
 			case 'teacher':
@@ -410,7 +410,7 @@ class AIRB_Interest {
 					array(
 						'heading'          => __( 'Tell us how AI Awareness Day can support you and your school', 'ai-risk-benchmark' ),
 						'intro'            => __( 'Your audit results are above. Open “What happens after the audit?” for ideas, then tick what you need — we will email you with CPD, resources or whole-school options.', 'ai-risk-benchmark' ),
-						'stakeholder_role' => __( 'Which best describes you?', 'ai-risk-benchmark' ),
+						'stakeholder_role' => __( 'Job title', 'ai-risk-benchmark' ),
 					)
 				);
 			case 'support_staff':

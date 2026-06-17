@@ -30,6 +30,7 @@
 		phase: 'role',
 		role: '',
 		step: 0,
+		questionStep: 0,
 		sections: [],
 		questions: [],
 		answers: {},
@@ -122,13 +123,43 @@
 		return window.matchMedia('(max-width: 768px)').matches;
 	}
 
-	function scrollFlowToTop() {
-		if (!isMobileFlow()) return;
-		var anchor = (el.root && el.root.querySelector('.airb__appbar')) || el.root;
-		if (!anchor) return;
+	function scrollBenchmarkToTop() {
+		if (!el.root) return;
+		if (state.phase === 'role' || state.phase === 'results') {
+			if (!isMobileFlow()) return;
+		}
+		function applyScroll() {
+			var anchor = null;
+			if (state.phase === 'audit' && el.progress && !el.progress.hidden) {
+				anchor = el.progress;
+			} else if (state.phase === 'audit' || state.phase === 'leader_profile') {
+				anchor = (el.audit && el.audit.querySelector('.airb__audit-head')) || el.audit;
+			} else if (state.phase === 'contact') {
+				anchor = el.contact;
+			} else {
+				anchor = el.root.querySelector('.airb__appbar') || el.root;
+			}
+			if (!anchor) return;
+			try {
+				anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+			} catch (err) { /* ignore */ }
+			var rect = anchor.getBoundingClientRect();
+			var adminBar = document.getElementById('wpadminbar');
+			var offset = (adminBar ? adminBar.offsetHeight : 0) + (isMobileFlow() ? 72 : 28);
+			if (rect.top < 0 || rect.top > offset + 8) {
+				window.scrollTo({
+					top: Math.max(0, rect.top + window.pageYOffset - offset),
+					behavior: 'auto',
+				});
+			}
+		}
 		window.requestAnimationFrame(function () {
-			anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+			window.requestAnimationFrame(applyScroll);
 		});
+	}
+
+	function scrollFlowToTop() {
+		scrollBenchmarkToTop();
 	}
 
 	function updateFlowChrome() {
@@ -137,6 +168,7 @@
 		var mobileShell = isMobileFlow() && (state.phase === 'role' || state.phase === 'results' || inFlow);
 		el.root.classList.toggle('airb--nav-dock', inFlow);
 		el.root.classList.toggle('airb--mobile-flow', mobileShell);
+		el.root.classList.toggle('airb--single-question', state.phase === 'audit');
 		el.root.classList.toggle('airb--phase-role', state.phase === 'role');
 		el.root.classList.toggle('airb--phase-audit', state.phase === 'audit' || state.phase === 'leader_profile');
 		el.root.classList.toggle('airb--phase-results', state.phase === 'results');
@@ -209,6 +241,86 @@
 		return phases.indexOf(phase) >= 0;
 	}
 
+	function visibleQuestionsInSection(section, answers) {
+		return (section && section.questions ? section.questions : []).filter(function (q) {
+			return questionApplies(q, answers);
+		});
+	}
+
+	function auditQuestionCounts(sections, answers, step) {
+		sections = sections || [];
+		answers = answers || {};
+		var total = 0;
+		var offsetBeforeSection = 0;
+		sections.forEach(function (section, index) {
+			var count = visibleQuestionsInSection(section, answers).length;
+			total += count;
+			if (index < step) {
+				offsetBeforeSection += count;
+			}
+		});
+		var currentSection = sections[step] || null;
+		return {
+			total: total,
+			offsetBeforeSection: offsetBeforeSection,
+			countInSection: visibleQuestionsInSection(currentSection, answers).length,
+		};
+	}
+
+	function questionNumberLabel(globalIndex, total) {
+		var label = i18n.question || 'Question';
+		var ofWord = i18n.of || 'of';
+		return label + ' ' + globalIndex + ' ' + ofWord + ' ' + total;
+	}
+
+	function auditProgressLabel(counts) {
+		if (!counts || !counts.total) {
+			return '';
+		}
+		if (usesSingleQuestionFlow()) {
+			return questionNumberLabel(counts.offsetBeforeSection + state.questionStep + 1, counts.total);
+		}
+		if (counts.countInSection <= 1) {
+			return questionNumberLabel(counts.offsetBeforeSection + 1, counts.total);
+		}
+		var start = counts.offsetBeforeSection + 1;
+		var end = counts.offsetBeforeSection + counts.countInSection;
+		var questionsLabel = i18n.questions || 'Questions';
+		var ofWord = i18n.of || 'of';
+		return questionsLabel + ' ' + start + '\u2013' + end + ' ' + ofWord + ' ' + counts.total;
+	}
+
+	function usesSingleQuestionFlow() {
+		return state.phase === 'audit';
+	}
+
+	function visibleQuestionsForCurrentSection(answers) {
+		var section = state.sections[state.step];
+		return visibleQuestionsInSection(section, answers || state.answers);
+	}
+
+	function clampQuestionStep(visibleCount) {
+		if (!visibleCount) {
+			state.questionStep = 0;
+			return;
+		}
+		if (state.questionStep >= visibleCount) {
+			state.questionStep = visibleCount - 1;
+		}
+		if (state.questionStep < 0) {
+			state.questionStep = 0;
+		}
+	}
+
+	function syncAuditProgressUi(sections, answers, step) {
+		var counts = auditQuestionCounts(sections, answers, step);
+		updateAuditProgressStepper(sections, answers, step);
+		if (el.progressLbl) {
+			el.progressLbl.textContent = auditProgressLabel(counts);
+		}
+		return counts;
+	}
+
 	function sectionAnswersDraft(section) {
 		var draft = Object.assign({}, state.answers);
 		if (!section) return draft;
@@ -232,6 +344,46 @@
 	function refreshSectionConditionalVisibility(section) {
 		if (!section || !el.audit) return;
 		var draft = sectionAnswersDraft(section);
+		var step = state.sections.indexOf(section);
+		if (step < 0) {
+			step = state.step;
+		}
+		var visible = section.questions.filter(function (q) {
+			return questionApplies(q, draft);
+		});
+
+		if (usesSingleQuestionFlow()) {
+			section.questions.forEach(function (q) {
+				var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
+				if (!block) return;
+				var applies = questionApplies(q, draft);
+				if (!applies) {
+					delete state.answers[q.id];
+					block.querySelectorAll('input:checked').forEach(function (inp) {
+						inp.checked = false;
+					});
+					var sel = block.querySelector('select');
+					if (sel) sel.value = '';
+				}
+			});
+			visible = section.questions.filter(function (q) {
+				return questionApplies(q, draft);
+			});
+			clampQuestionStep(visible.length);
+			section.questions.forEach(function (q) {
+				var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
+				if (!block) return;
+				var applies = questionApplies(q, draft);
+				if (!applies) {
+					block.hidden = true;
+					return;
+				}
+				block.hidden = visible.indexOf(q) !== state.questionStep;
+			});
+			syncAuditProgressUi(state.sections, draft, step);
+			return;
+		}
+
 		section.questions.forEach(function (q) {
 			var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
 			if (!block) return;
@@ -246,17 +398,16 @@
 				if (sel) sel.value = '';
 			}
 		});
-		var visible = section.questions.filter(function (q) {
-			return questionApplies(q, draft);
-		});
+		var counts = auditQuestionCounts(state.sections, draft, step);
 		section.questions.forEach(function (q) {
 			var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
 			if (!block) return;
 			var meta = block.querySelector('.airb__q-meta');
 			if (!meta) return;
 			var pos = visible.indexOf(q);
-			meta.textContent = pos >= 0 && visible.length > 1 ? 'Question ' + (pos + 1) + ' of ' + visible.length : '';
-			meta.hidden = !(pos >= 0 && visible.length > 1);
+			var globalIndex = counts.offsetBeforeSection + pos + 1;
+			meta.textContent = pos >= 0 && counts.total > 1 ? questionNumberLabel(globalIndex, counts.total) : '';
+			meta.hidden = !(pos >= 0 && counts.total > 1);
 		});
 	}
 
@@ -410,6 +561,7 @@
 		applyAuditPresentation(state.role);
 		state.phase = 'audit';
 		state.step = 0;
+		state.questionStep = 0;
 		if (!Object.keys(state.answers).length) {
 			state.answers = {};
 		}
@@ -2983,14 +3135,17 @@
 		html += '</header>';
 
 		html += '<div class="airb__audit-questions">';
-		var visibleQuestions = section.questions.filter(function (q) {
-			return questionApplies(q, state.answers);
-		});
+		var visibleQuestions = visibleQuestionsInSection(section, state.answers);
+		clampQuestionStep(visibleQuestions.length);
+		var questionCounts = auditQuestionCounts(state.sections, state.answers, state.step);
+		var singleQuestion = usesSingleQuestionFlow();
 		section.questions.forEach(function (q) {
 			var applies = questionApplies(q, state.answers);
-			html += '<div class="airb__q-block" data-airb-qid="' + esc(q.id) + '"' + (applies ? '' : ' hidden') + '>';
-			var qIndex = visibleQuestions.indexOf(q) + 1;
-			html += '<p class="airb__q-meta"' + (applies && visibleQuestions.length > 1 ? '' : ' hidden') + '>' + (applies && visibleQuestions.length > 1 ? 'Question ' + qIndex + ' of ' + visibleQuestions.length : '') + '</p>';
+			var qIndex = visibleQuestions.indexOf(q);
+			var showQuestion = applies && (!singleQuestion || qIndex === state.questionStep);
+			html += '<div class="airb__q-block" data-airb-qid="' + esc(q.id) + '"' + (showQuestion ? '' : ' hidden') + '>';
+			var globalIndex = questionCounts.offsetBeforeSection + qIndex + 1;
+			html += '<p class="airb__q-meta"' + (applies && questionCounts.total > 1 && !singleQuestion ? '' : ' hidden') + '>' + (applies && questionCounts.total > 1 && !singleQuestion ? questionNumberLabel(globalIndex, questionCounts.total) : '') + '</p>';
 			html += '<p class="airb__q-title">' + esc(q.displayText || q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
@@ -3003,19 +3158,17 @@
 		el.contact.hidden = true;
 		el.results.hidden = true;
 		el.nav.hidden = false;
-		el.back.hidden = state.step === 0;
+		el.back.hidden = state.step === 0 && (!singleQuestion || state.questionStep === 0);
 		if (el.next) {
 			el.next.textContent = i18n.next;
 		}
 		el.progress.hidden = false;
-		updateStepper(state.sections.length, state.step);
-		if (el.progressLbl) {
-			el.progressLbl.textContent = (i18n.section || 'Section') + ' ' + (state.step + 1) + ' ' + i18n.of + ' ' + state.sections.length;
-		}
+		syncAuditProgressUi(state.sections, state.answers, state.step);
 		bindSectionInputs(section);
 		refreshSectionConditionalVisibility(section);
 		updateFlowChrome();
-		scrollFlowToTop();
+		scrollBenchmarkToTop();
+		window.setTimeout(scrollBenchmarkToTop, 60);
 	}
 
 	function isYoungRole() {
@@ -5359,6 +5512,25 @@
 		return html + '</article>';
 	}
 
+	function updateAuditProgressStepper(sections, answers, step) {
+		if (!el.stepper) return;
+		var counts = auditQuestionCounts(sections, answers, step);
+		if (usesSingleQuestionFlow()) {
+			var currentGlobal = counts.offsetBeforeSection + state.questionStep + 1;
+			var pct = counts.total ? Math.round((currentGlobal / counts.total) * 100) : 0;
+			el.stepper.className = 'airb__stepper airb__stepper--bar';
+			el.stepper.innerHTML = '<span class="airb__progress-fill" style="width:' + pct + '%" role="progressbar" aria-valuenow="' + currentGlobal + '" aria-valuemin="1" aria-valuemax="' + counts.total + '"></span>';
+			return;
+		}
+		el.stepper.className = 'airb__stepper';
+		var html = '';
+		for (var i = 0; i < counts.total; i++) {
+			var cls = i < counts.offsetBeforeSection ? 'is-done' : (i < counts.offsetBeforeSection + counts.countInSection ? 'is-current' : '');
+			html += '<span class="airb__seg ' + cls + '" role="listitem"></span>';
+		}
+		el.stepper.innerHTML = html;
+	}
+
 	function updateStepper(total, idx) {
 		if (!el.stepper) return;
 		var html = '';
@@ -5370,6 +5542,28 @@
 		if (el.progressLbl) {
 			el.progressLbl.textContent = i18n.step + ' ' + (idx + 1) + ' ' + i18n.of + ' ' + total;
 		}
+	}
+
+	function saveQuestionAnswer(q) {
+		if (!q || !questionApplies(q, state.answers)) {
+			return true;
+		}
+		if (q.type === 'slider') {
+			var sl = document.getElementById('airb-q-' + q.id);
+			if (!sl) return false;
+			state.answers[q.id] = sl.value;
+			return true;
+		}
+		if (q.type === 'select') {
+			var sel = document.getElementById('airb-q-' + q.id);
+			if (!sel || !sel.value) return false;
+			state.answers[q.id] = sel.value;
+			return true;
+		}
+		var picked = el.audit && el.audit.querySelector('input[name="airb-q-' + q.id + '"]:checked');
+		if (!picked) return false;
+		state.answers[q.id] = picked.value;
+		return true;
 	}
 
 	function saveSectionAnswers(section) {
@@ -5419,9 +5613,23 @@
 		}
 		if (state.phase === 'audit') {
 			var section = state.sections[state.step];
+			if (usesSingleQuestionFlow()) {
+				var visible = visibleQuestionsForCurrentSection();
+				var currentQ = visible[state.questionStep];
+				if (!currentQ || !saveQuestionAnswer(currentQ)) {
+					showError(i18n.required);
+					return;
+				}
+				if (state.questionStep < visible.length - 1) {
+					state.questionStep++;
+					renderAuditSection();
+					return;
+				}
+			}
 			if (!saveSectionAnswers(section)) { showError(i18n.required); return; }
 			if (state.step < state.sections.length - 1) {
 				state.step++;
+				state.questionStep = 0;
 				renderAuditSection();
 				return;
 			}
@@ -5480,9 +5688,28 @@
 
 	function goBack() {
 		hideError();
+		if (state.phase === 'audit' && usesSingleQuestionFlow()) {
+			var section = state.sections[state.step];
+			var visible = visibleQuestionsForCurrentSection();
+			var currentQ = visible[state.questionStep];
+			if (currentQ) {
+				saveQuestionAnswer(currentQ);
+			}
+			if (state.questionStep > 0) {
+				state.questionStep--;
+				renderAuditSection();
+				return;
+			}
+		}
 		if (state.phase === 'audit' && state.step > 0) {
 			saveSectionAnswers(state.sections[state.step]);
 			state.step--;
+			if (usesSingleQuestionFlow()) {
+				var prevVisible = visibleQuestionsInSection(state.sections[state.step], state.answers);
+				state.questionStep = Math.max(0, prevVisible.length - 1);
+			} else {
+				state.questionStep = 0;
+			}
 			renderAuditSection();
 			return;
 		}
@@ -6004,7 +6231,7 @@
 		html += '<div class="airb__teacher-follow-up-copy">';
 		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
 		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
-		html += '<p class="airb__interest-intro">You have seen your results — tell us if you would like CPD, classroom resources, or a whole-school rollout.</p>';
+		html += '<p class="airb__interest-intro">You have seen your results — tell us if you would like CPD, a literacy display board, or a whole-school rollout.</p>';
 		html += '</div></div>';
 
 		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
@@ -6066,8 +6293,8 @@
 		if (!stakeholderRoles || !Object.keys(stakeholderRoles).length) return '';
 		var datalistId = 'airb-stakeholder-role-options';
 		var html = '<label class="airb__field airb__field--full airb__teacher-follow-up-stakeholder">';
-		html += '<span class="airb__label">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</span>';
-		html += '<input class="airb__input" type="text" id="airb-stakeholder-role" name="stakeholder_role" list="' + esc(datalistId) + '" autocomplete="organization-title" placeholder="e.g. Teacher, Head of Department">';
+		html += '<span class="airb__label">' + esc(labels.stakeholder_role || 'Job title') + '</span>';
+		html += '<input class="airb__input" type="text" id="airb-stakeholder-role" name="stakeholder_role" list="' + esc(datalistId) + '" autocomplete="organization-title" placeholder="e.g. Teacher, Head of Department, SENCO">';
 		html += '<datalist id="' + esc(datalistId) + '">';
 		Object.keys(stakeholderRoles).forEach(function (key) {
 			html += '<option value="' + esc(stakeholderRoles[key]) + '"></option>';

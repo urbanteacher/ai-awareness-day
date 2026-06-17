@@ -1564,7 +1564,7 @@
 			accent: '#2563eb',
 			soft: '#dbeafe',
 			ink: '#172554',
-			scene: roleDashboardCopy(dashboard, 'scene', dashboardKey, 'Lesson planning table'),
+			scene: roleDashboardCopy(dashboard, 'scene', dashboardKey, 'Feedback:'),
 			headline: roleDashboardCopy(dashboard, 'headline', tier, headline(results, tr)),
 			scoreLabel: trCfg.metric_labels && trCfg.metric_labels.readiness
 				? trCfg.metric_labels.readiness

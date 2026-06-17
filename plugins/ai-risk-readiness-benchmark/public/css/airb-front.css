@@ -828,6 +828,32 @@
 	margin: 0 0 1rem;
 }
 
+#airb-progress {
+	scroll-margin-top: 5.5rem;
+}
+
+.airb.airb--single-question .airb__stepper.airb__stepper--bar {
+	display: block;
+	height: 6px;
+	margin-bottom: 0.55rem;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.18);
+	overflow: hidden;
+	gap: 0;
+}
+
+.airb.airb--single-question .airb__progress-fill {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: var(--airb-accent-fill, #22c55e);
+	transition: width 0.2s ease;
+}
+
+.airb.airb--single-question.airb--phase-audit .airb__audit-note {
+	display: none;
+}
+
 .airb__panel {
 	background: var(--airb-ink-2);
 	border: 1px solid var(--airb-border);
@@ -8976,6 +9002,24 @@
 		margin-bottom: 0.45rem;
 	}
 
+	.airb.airb--mobile-flow .airb__stepper.airb__stepper--bar {
+		display: block;
+		height: 6px;
+		margin-bottom: 0.55rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.18);
+		overflow: hidden;
+		gap: 0;
+	}
+
+	.airb.airb--mobile-flow .airb__progress-fill {
+		display: block;
+		height: 100%;
+		border-radius: inherit;
+		background: var(--airb-accent-fill, #22c55e);
+		transition: width 0.2s ease;
+	}
+
 	.airb.airb--mobile-flow .airb__seg {
 		height: 5px;
 	}
@@ -9002,6 +9046,10 @@
 		margin-top: 0.55rem;
 		font-size: 0.76rem;
 		line-height: 1.35;
+	}
+
+	.airb.airb--mobile-flow.airb--phase-audit .airb__audit-note {
+		display: none;
 	}
 
 	.airb.airb--phase-audit .airb__domtag {
@@ -9628,6 +9676,217 @@ body.airb-flow-active .airb__footer {
 .airb__public-domain-badge--developing { background: #e6f1fb; color: #185fa5; }
 .airb__public-domain-badge--moderate { background: #faeeda; color: #854f0b; }
 .airb__public-domain-badge--critical { background: #fcebeb; color: #a32d2d; }
+
+@media (max-width: 540px) {
+	.airb__summary-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.5rem;
+		background: transparent;
+		border: 0;
+		border-radius: 0;
+		overflow: visible;
+	}
+
+	.airb__summary-metric {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+		min-height: 5.75rem;
+		padding: 0.65rem 0.7rem;
+		border: 1px solid var(--airb-border);
+		border-radius: 10px;
+		background: var(--white, #fff);
+	}
+
+	.airb__summary-metric:last-child {
+		border-bottom: 1px solid var(--airb-border);
+	}
+
+	.airb__summary-metric-lab {
+		font-size: 0.68rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+	}
+
+	.airb__summary-metric-val {
+		font-size: 1.35rem;
+		text-align: left;
+	}
+
+	.airb__res-panel--domains {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
+
+	.airb__res-panel--domains h3 {
+		grid-column: 1 / -1;
+		margin-bottom: 0;
+	}
+
+	.airb__res-panel--domains .airb__res-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 0.35rem 0.5rem;
+		align-items: center;
+		min-height: 5.25rem;
+		margin: 0;
+		padding: 0.65rem 0.7rem;
+		border: 1px solid var(--airb-border);
+		border-radius: 10px;
+		background: var(--white, #fff);
+	}
+
+	.airb__res-panel--domains .airb__res-row-nm {
+		flex: none;
+		font-size: 0.74rem;
+		font-weight: 700;
+		line-height: 1.25;
+	}
+
+	.airb__res-panel--domains .airb__res-track {
+		grid-column: 1 / -1;
+		width: 100%;
+		height: 6px;
+	}
+
+	.airb__res-panel--domains .airb__res-row-pc {
+		min-width: 2.25rem;
+		font-size: 0.8rem;
+	}
+
+	.airb__teacher-domain-card,
+	.airb__parent-metrics-card,
+	.airb__support-domain-card,
+	.airb__public-domain-card {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.5rem;
+		padding: 0.75rem;
+	}
+
+	.airb__teacher-domain-card .airb__benchmark-card-heading,
+	.airb__parent-metrics-card .airb__benchmark-card-heading,
+	.airb__support-domain-card .airb__benchmark-card-heading,
+	.airb__public-domain-card .airb__benchmark-card-heading {
+		grid-column: 1 / -1;
+		margin-bottom: 0;
+	}
+
+	.airb__parent-metric-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 0.35rem 0.45rem;
+		align-items: start;
+		min-height: 6.25rem;
+		padding: 0.65rem 0.7rem;
+		border: 1px solid var(--airb-border, #e2e8f0);
+		border-radius: 10px;
+		background: var(--white, #fff);
+	}
+
+	.airb__parent-metric-row:last-child {
+		border-bottom: 1px solid var(--airb-border, #e2e8f0);
+	}
+
+	.airb__parent-metric-icon {
+		display: none;
+	}
+
+	.airb__parent-metric-copy {
+		min-width: 0;
+	}
+
+	.airb__parent-metric-label {
+		font-size: 0.74rem;
+		font-weight: 700;
+		line-height: 1.25;
+	}
+
+	.airb__parent-metric-sub {
+		font-size: 0.65rem;
+		line-height: 1.25;
+	}
+
+	.airb__parent-metric-badge {
+		order: 0;
+		max-width: 100%;
+		padding: 0.08rem 0.4rem;
+		font-size: 0.58rem;
+		white-space: normal;
+		text-align: right;
+	}
+
+	.airb__parent-metric-bar-col {
+		grid-column: 1 / -1;
+		order: 0;
+		width: 100%;
+	}
+
+	.airb__parent-metric-pct {
+		font-size: 1.25rem;
+		font-weight: 700;
+		text-align: left;
+	}
+
+	.airb__teacher-domain-row,
+	.airb__support-domain-row,
+	.airb__public-domain-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 0.35rem 0.45rem;
+		align-items: center;
+		min-height: 5.35rem;
+		padding: 0.65rem 0.7rem;
+		border: 1px solid var(--airb-border, #e2e8f0);
+		border-radius: 10px;
+		background: var(--white, #fff);
+	}
+
+	.airb__teacher-domain-row:last-child,
+	.airb__support-domain-row:last-child,
+	.airb__public-domain-row:last-child {
+		border-bottom: 1px solid var(--airb-border, #e2e8f0);
+	}
+
+	.airb__teacher-domain-label,
+	.airb__support-domain-label,
+	.airb__public-domain-label {
+		min-width: 0;
+		margin: 0;
+		font-size: 0.7rem;
+		font-weight: 700;
+		line-height: 1.25;
+	}
+
+	.airb__teacher-domain-bar-wrap,
+	.airb__support-domain-bar-wrap,
+	.airb__public-domain-bar-wrap {
+		grid-column: 1 / -1;
+		order: 3;
+		width: 100%;
+		height: 6px;
+	}
+
+	.airb__teacher-domain-val,
+	.airb__support-domain-val,
+	.airb__public-domain-val {
+		min-width: 2.1rem;
+		font-size: 0.75rem;
+		order: 2;
+	}
+
+	.airb__support-domain-badge,
+	.airb__public-domain-badge {
+		grid-column: 1 / -1;
+		justify-self: start;
+		order: 4;
+		font-size: 0.62rem;
+		padding: 0.08rem 0.4rem;
+	}
+}
 
 .airb__public-strength-row {
 	display: flex;

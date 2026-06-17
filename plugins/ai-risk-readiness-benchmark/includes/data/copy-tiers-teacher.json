@@ -143,7 +143,7 @@
 
   "dashboard": {
     "scene": {
-      "default": "Lesson planning table",
+      "default": "Feedback:",
       "human_oversight": "Resource verification desk",
       "assessment_integrity": "Assessment redesign table",
       "safeguarding": "Safeguarding response route",
@@ -543,15 +543,15 @@
       "button": "Book targeted CPD"
     },
     "established": {
-      "title": "Classroom resources aligned to your results",
-      "description": "Your practice is solid — supplement it with resources matched to your audit. Lesson activities, prompts and materials aligned to your priority domains.",
+      "title": "Literacy display board for your classroom",
+      "description": "Your practice is solid — bring AI literacy into the room with a display board matched to your audit. Printable materials, pupil prompts and verification habits aligned to your priority domains.",
       "includes": [
-        "Domain-aligned classroom resources",
-        "AI literacy activities for pupils",
-        "Verification prompt cards",
+        "AI literacy display board pack",
+        "Pupil-facing prompt cards",
+        "Verification habit prompts",
         "Assessment guidance summary"
       ],
-      "button": "Request classroom resources"
+      "button": "Request a literacy display board"
     },
     "strong": {
       "title": "AI Champion pathway",
