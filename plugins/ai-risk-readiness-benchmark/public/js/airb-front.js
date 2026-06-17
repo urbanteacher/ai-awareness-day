@@ -4566,6 +4566,36 @@
 		var teacherBenchmarkMode = isTeacherRole() && !!r.teacher_results;
 		var supportBenchmarkMode = isSupportStaffRole() && !!r.support_results;
 		var supportResults = r.support_results;
+		var dashboardMode = !!state.dashboardModel && (
+			leaderMode ||
+			teacherBenchmarkMode ||
+			studentMode ||
+			parentMode ||
+			publicMode ||
+			supportBenchmarkMode
+		);
+
+		if (dashboardMode) {
+			if (leaderMode && window.AIRB && AIRB.LeaderDashboard && AIRB.LeaderDashboard.coreSummaryHtml) {
+				return AIRB.LeaderDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+			if (teacherBenchmarkMode && window.AIRB && AIRB.TeacherDashboard && AIRB.TeacherDashboard.coreSummaryHtml) {
+				return AIRB.TeacherDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+			if (studentMode && window.AIRB && AIRB.StudentDashboard && AIRB.StudentDashboard.coreSummaryHtml) {
+				return AIRB.StudentDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+			if (parentMode && window.AIRB && AIRB.ParentDashboard && AIRB.ParentDashboard.coreSummaryHtml) {
+				return AIRB.ParentDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+			if (publicMode && window.AIRB && AIRB.PublicDashboard && AIRB.PublicDashboard.coreSummaryHtml) {
+				return AIRB.PublicDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+			if (supportBenchmarkMode && window.AIRB && AIRB.SupportDashboard && AIRB.SupportDashboard.coreSummaryHtml) {
+				return AIRB.SupportDashboard.coreSummaryHtml(state.dashboardModel);
+			}
+		}
+
 		var eyebrow = studentMode
 			? (i18n.studentResultsEyebrow || 'Student · AI skills benchmark')
 			: publicMode
@@ -4704,6 +4734,8 @@
 			/* Metrics render in parentHomeMetricsSectionHtml above. */
 		} else if (supportBenchmarkMode && supportResults) {
 			/* Domains render in supportDomainsSectionHtml above; body in supportResultsHtml. */
+		} else if (publicMode && publicResults) {
+			/* Public dashboard/focus content follows in publicResultsHtml. */
 		} else if (!parentMode && !studentMode) {
 			html += '<div class="airb__res-two">' + oversightPanelHtml(r, { showNa: true }) + domainReadinessRowsHtml(r) + '</div>';
 		}
