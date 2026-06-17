@@ -1196,6 +1196,75 @@
 		emotional_social: 'Keep perspective when using AI for emotional or social advice.',
 	};
 
+	var PUBLIC_FOCUS_FALLBACKS = {
+		personal_ai_use: {
+			summary: 'AI is useful, but it should not become the first step for every task.',
+			likely_impact: [
+				'AI may become the default before you have tried the task yourself',
+				'You may trust fluent answers without checking whether they fit the situation',
+			],
+			actions: [
+				'Try the task yourself first, then use AI to improve or check it',
+				'Pause before acting on AI advice in high-stakes situations',
+			],
+		},
+		verification: {
+			summary: 'You may be trusting AI outputs too readily. Build a simple checking habit before acting on important answers.',
+			likely_impact: [
+				'Confident but incorrect AI answers may influence decisions',
+				'Deepfake, scam or biased content may be harder to spot',
+			],
+			actions: [
+				'Check important AI answers against a trusted source',
+				'Look for original sources before sharing AI-generated claims',
+			],
+		},
+		data_privacy: {
+			summary: 'Some sensitive information may be reaching AI tools. Tighten what you share.',
+			likely_impact: [
+				'Personal, work or family details may be stored by third-party tools',
+				'Information about other people may be shared without their consent',
+			],
+			actions: [
+				'Remove names, addresses, health details and workplace data from prompts',
+				'Check privacy settings in the AI tools you use most',
+			],
+		},
+		workplace_ai: {
+			summary: 'Workplace AI use needs clearer boundaries around data, policy and disclosure.',
+			likely_impact: [
+				'Confidential work or client data may enter public AI tools',
+				'AI-generated work may be shared without the transparency your employer expects',
+			],
+			actions: [
+				'Check whether your employer has an AI policy',
+				'Never paste confidential client or company data into public AI tools',
+			],
+		},
+		emotional_social: {
+			summary: 'AI can be helpful, but it should not replace human perspective for personal decisions.',
+			likely_impact: [
+				'Personal choices may be shaped by AI without independent advice',
+				'AI summaries may narrow how you understand news or relationships',
+			],
+			actions: [
+				'Seek a human perspective alongside AI for important personal decisions',
+				'Check AI summaries against original sources for current events',
+			],
+		},
+		deepfake_scam_awareness: {
+			summary: 'AI is now used to create convincing fake voices, videos and scam messages. Awareness needs to translate into a response plan.',
+			likely_impact: [
+				'Voice cloning scams may impersonate family members or colleagues',
+				'Urgent fake messages may pressure you to respond before checking',
+			],
+			actions: [
+				'Pause and verify unexpected urgent requests independently',
+				'Agree a safe word or verification route with close family members',
+			],
+		},
+	};
+
 	function publicHeadline(pr) {
 		var ui = pr && pr.ui && pr.ui.hero ? pr.ui.hero : null;
 		if (ui && ui.consequence) return ui.consequence;
@@ -1262,13 +1331,15 @@
 			if (!impact.length && area.challenge_body) {
 				impact = [area.challenge_body];
 			}
+			var slug = area.focus_slug || area.slug || '';
+			var fallback = PUBLIC_FOCUS_FALLBACKS[slug] || PUBLIC_FOCUS_FALLBACKS[area.slug] || PUBLIC_FOCUS_FALLBACKS[area.focus_slug] || {};
 			return {
 				label: area.label || '',
 				pct: clampPct(area.pct),
-				summary: area.summary || '',
-				likely_impact: impact,
-				actions: area.actions || [],
-				slug: area.slug || area.focus_slug || '',
+				summary: area.summary || fallback.summary || '',
+				likely_impact: impact.length ? impact : (fallback.likely_impact || []),
+				actions: (area.actions && area.actions.length) ? area.actions : (fallback.actions || []),
+				slug: slug,
 			};
 		});
 	}
