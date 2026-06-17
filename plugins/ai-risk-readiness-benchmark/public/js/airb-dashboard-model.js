@@ -290,7 +290,7 @@
 		out.sort(function (a, b) {
 			return (a.pct || 0) - (b.pct || 0);
 		});
-		return out.slice(0, 3);
+		return out;
 	}
 
 	function mapResources(nextSteps) {

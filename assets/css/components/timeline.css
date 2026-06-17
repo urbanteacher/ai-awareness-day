@@ -1662,7 +1662,7 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
     }
 
     #timeline .timeline-magazine__hero-text .timeline-magazine__hero-content::after {
-        background: linear-gradient(to bottom, transparent, var(--gray-900));
+        background: linear-gradient(to bottom, transparent, var(--white));
     }
 
     .timeline-magazine__more {
