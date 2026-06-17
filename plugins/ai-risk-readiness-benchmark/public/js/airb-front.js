@@ -3574,9 +3574,9 @@
 			cardHeadingHtml: benchmarkCardHeadingHtml,
 			practiceHeading: parentResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'Areas to improve',
 			tipsHeading: 'Practical next steps',
-			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 75,
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			hideFocusSummary: true,
 			resourcesHtml: function () {
 				var pr = state.results && state.results.parent_results;
 				var links = (pr && pr.resource_links) ? pr.resource_links : [];
@@ -3678,6 +3678,7 @@
 			focusGuidanceMax: 50,
 			focusStackIntro: 'These cards expand your lowest domain scores into privacy risks and habits to tighten.',
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			hideFocusSummary: true,
 			resourcesHtml: function () {
 				var pr = state.results && state.results.public_results;
 				var links = (pr && pr.resource_links) ? pr.resource_links : [];
@@ -3897,6 +3898,7 @@
 			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 75,
 			guidanceToggleClassroom: 'View classroom impact',
+			hideFocusSummary: true,
 			leaderFocusBadge: leaderFocusBadge,
 			leaderFocusSeverity: leaderFocusSeverity,
 			teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
@@ -3975,8 +3977,8 @@
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
 			practiceHeading: parentResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'Areas to improve',
 			tipsHeading: 'Practical next steps',
-			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 75,
+			hideFocusSummary: true,
 			i18n: i18n,
 			legacyFocusHtml: parentFocusDomainsHtml,
 		};
@@ -4052,8 +4054,10 @@
 			tipsHeading: 'Practical next steps',
 			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 75,
+			guidanceToggleOperational: 'View operational impact',
 			focusStackIntro: 'These cards expand the lowest domain scores into operational impact and recommended actions.',
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			hideFocusSummary: true,
 			resourcesHtml: function () {
 				var sr = state.results && state.results.support_results;
 				var nextSteps = sr && sr.next_steps;
@@ -4132,6 +4136,7 @@
 			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 70,
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			hideFocusSummary: true,
 			resourcesHtml: function () {
 				var sr = state.results && state.results.student_results;
 				var nextSteps = sr && sr.next_steps;
@@ -4791,8 +4796,10 @@
 			tipsHeading: 'Practical next steps',
 			guidanceToggle: 'View areas to improve',
 			focusGuidanceMax: 70,
+			guidanceToggleGovernance: 'View governance impact',
 			focusStackIntro: 'These cards expand the lowest domain scores into governance impact and recommended actions.',
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			hideFocusSummary: true,
 			resourcesHtml: function () {
 				var lr = state.results && state.results.leader_results;
 				var nextSteps = lr && lr.next_steps;

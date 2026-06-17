@@ -126,7 +126,6 @@ class AIRB_Parent_Results {
 	private static function build_focus_areas( array $metrics, array $results, array $cfg, array $answers = array(), array $config = array() ): array {
 		$slug_map = (array) ( $cfg['focus_slug_map'] ?? array() );
 		$topics   = array();
-		$display  = (array) ( $cfg['display_domains'] ?? array() );
 		foreach ( (array) ( $cfg['focus_topics'] ?? array() ) as $topic ) {
 			if ( ! is_array( $topic ) || empty( $topic['slug'] ) ) {
 				continue;
@@ -134,54 +133,42 @@ class AIRB_Parent_Results {
 			$topics[ (string) $topic['slug'] ] = $topic;
 		}
 
-		$weak = array();
+		$metric_by_source = array();
 		foreach ( $metrics as $metric ) {
-			$pct = (int) ( $metric['value'] ?? 100 );
-			if ( $pct >= self::FOCUS_MAX ) {
+			if ( ! is_array( $metric ) ) {
 				continue;
 			}
-			$source     = (string) ( $metric['source'] ?? $metric['slug'] ?? '' );
-			$focus_slug = (string) ( $metric['focus_slug'] ?? ( $slug_map[ $source ] ?? $source ) );
-			if ( ! $focus_slug && isset( $topics[ $source ] ) ) {
-				$focus_slug = $source;
+			$source = (string) ( $metric['source'] ?? $metric['slug'] ?? '' );
+			if ( $source ) {
+				$metric_by_source[ $source ] = $metric;
 			}
+		}
+
+		$display     = (array) ( $results['parent_display_domains'] ?? array() );
+		$domain_defs = (array) ( $cfg['display_domains'] ?? array() );
+		$weak        = array();
+
+		foreach ( array_keys( $domain_defs ) as $source ) {
+			$source = (string) $source;
+			$pct    = self::metric_readiness( $display, $source );
+			if ( null === $pct || $pct >= self::FOCUS_MAX ) {
+				continue;
+			}
+
+			$metric     = (array) ( $metric_by_source[ $source ] ?? array() );
+			$def        = (array) ( $domain_defs[ $source ] ?? array() );
+			$focus_slug = (string) ( $metric['focus_slug'] ?? ( $slug_map[ $source ] ?? $source ) );
 			if ( ! $focus_slug ) {
 				continue;
 			}
+
 			$topic = (array) ( $topics[ $source ] ?? array() );
 			$weak[] = array(
 				'slug'       => $source,
 				'focus_slug' => $focus_slug,
-				'label'      => (string) ( $metric['label'] ?? $topic['label'] ?? '' ),
+				'label'      => (string) ( $metric['label'] ?? $topic['label'] ?? $def['label'] ?? '' ),
 				'pct'        => $pct,
 				'badge'      => (array) ( $metric['badge'] ?? AIRB_Parent_Copy::metric_badge( $pct ) ),
-				'summary'    => (string) ( $topic['body'] ?? '' ),
-			);
-		}
-
-		$display = (array) ( $results['parent_display_domains'] ?? array() );
-		foreach ( array( 'parent_ai_dependency' ) as $extra_slug ) {
-			$pct = self::metric_readiness( $display, $extra_slug );
-			if ( null === $pct || $pct >= self::FOCUS_MAX ) {
-				continue;
-			}
-			$already = false;
-			foreach ( $weak as $row ) {
-				if ( (string) ( $row['slug'] ?? '' ) === $extra_slug ) {
-					$already = true;
-					break;
-				}
-			}
-			if ( $already ) {
-				continue;
-			}
-			$topic = (array) ( $topics[ $extra_slug ] ?? array() );
-			$weak[] = array(
-				'slug'       => $extra_slug,
-				'focus_slug' => (string) ( $slug_map[ $extra_slug ] ?? $extra_slug ),
-				'label'      => (string) ( $topic['label'] ?? '' ),
-				'pct'        => $pct,
-				'badge'      => AIRB_Parent_Copy::metric_badge( $pct ),
 				'summary'    => (string) ( $topic['body'] ?? '' ),
 			);
 		}

@@ -281,7 +281,7 @@ function parentFocusTopicsHtml(focusAreas, opts) {
         html += '<h4 class="airb__parent-topic-title">' + escFn(area.label) + '</h4>';
         html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + escFn((area.badge && area.badge.slug) || 'attention') + '">' + escFn(opts.parentFocusBadge ? opts.parentFocusBadge(area) : '') + '</span>';
         html += '</div>';
-        if (area.summary) {
+        if (area.summary && !opts.hideFocusSummary) {
             html += '<p class="airb__parent-topic-summary">' + escFn(area.summary) + '</p>';
         }
         var guidance = '';
@@ -356,7 +356,7 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
             html += '<span class="airb__focus-badge ' + toneClass + '">' + escFn(toneLabel) + '</span>';
             html += '</div>';
         }
-        if (area.summary) {
+        if (area.summary && !opts.hideFocusSummary) {
             html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
         }
         if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null && opts.teacherBiasEqualityFocusNote) {
@@ -434,7 +434,7 @@ function supportFocusAreasHtml(focusAreas, opts) {
         html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
         html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + '">' + escFn(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
         html += '</div>';
-        if (area.summary) html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
+        if (area.summary && !opts.hideFocusSummary) html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
         var guidance = '';
         if (area.challenge_bullets && area.challenge_bullets.length) {
             guidance += '<div class="airb__support-focus-challenge airb__support-focus-challenge--' + severity + '">';
@@ -499,7 +499,7 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
             html += '<span class="airb__focus-badge-detail">' + escFn(badge.detail) + '</span>';
         }
         html += '</span></div>';
-        if (area.summary) {
+        if (area.summary && !opts.hideFocusSummary) {
             html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
         }
         if (area.slug === 'safeguarding' && biasHealth && biasHealth.score != null && opts.leaderBiasEqualityFocusNote) {
@@ -969,13 +969,137 @@ function focusStackGuidanceInnerHtml(area, opts) {
 }
 
 /** Accordion wrapper for a focus area; collapsed by default unless opts.guidanceOpen is true. */
-function focusGuidanceAccordionForArea(area, opts) {
+function focusGuidanceToggleLabel(domain, opts) {
+    opts = opts || {};
+    if (typeof opts.guidanceToggleForDomain === 'function') {
+        return opts.guidanceToggleForDomain(domain);
+    }
+    if (opts.guidanceToggleClassroom) {
+        return opts.guidanceToggleClassroom;
+    }
+    if (opts.guidanceToggleGovernance) {
+        return opts.guidanceToggleGovernance;
+    }
+    if (opts.guidanceToggleOperational) {
+        return opts.guidanceToggleOperational;
+    }
+    if (opts.guidanceToggleImpact) {
+        return opts.guidanceToggleImpact;
+    }
+    var label = (domain && domain.label) ? String(domain.label) : 'guidance';
+    return 'View ' + label.toLowerCase() + ' impact';
+}
+
+function focusGuidanceAccordionForArea(area, opts, domain) {
     opts = opts || {};
     var guidance = focusStackGuidanceInnerHtml(area, opts);
     if (!guidance || !opts.focusGuidanceAccordionHtml) return '';
     var openGuidance = opts.guidanceOpen === true;
-    var label = opts.guidanceToggle || 'View areas to improve';
+    var label = opts.guidanceToggle || focusGuidanceToggleLabel(domain, opts);
     return opts.focusGuidanceAccordionHtml(label, guidance, openGuidance);
+}
+
+function normaliseKey(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+}
+
+var DOMAIN_FOCUS_ALIASES = {
+    assessment_design: ['assessment_integrity'],
+    bias_and_equality: ['bias_equality', 'bias_readiness'],
+    bias_equality: ['bias_and_equality', 'bias_readiness'],
+    data_and_privacy: ['privacy', 'privacy_data_protection'],
+    deepfake_and_scam_awareness: ['online_risk', 'online_risk_awareness', 'deepfake_scam_awareness'],
+    independent_practice: ['ai_dependency'],
+    parent_ai_dependency: ['ai_dependency'],
+    personal_ai_use: ['ai_dependency'],
+    privacy: ['privacy_data_protection', 'data_and_privacy'],
+    verification: ['human_oversight', 'verification_habit'],
+    workplace_ai: ['workplace_ai_use'],
+};
+
+function expandFocusKeys(keys) {
+    var out = [];
+    (keys || []).forEach(function (key) {
+        if (!key || out.indexOf(key) !== -1) return;
+        out.push(key);
+        (DOMAIN_FOCUS_ALIASES[key] || []).forEach(function (alias) {
+            var normalised = normaliseKey(alias);
+            if (normalised && out.indexOf(normalised) === -1) {
+                out.push(normalised);
+            }
+        });
+    });
+    return out;
+}
+
+function focusAreaForDomain(domain, focusAreas) {
+    var domainKeys = expandFocusKeys([
+        normaliseKey(domain.key),
+        normaliseKey(domain.slug),
+        normaliseKey(domain.label)
+    ].filter(Boolean));
+
+    for (var i = 0; i < (focusAreas || []).length; i++) {
+        var area = focusAreas[i] || {};
+        var areaKeys = expandFocusKeys([
+            normaliseKey(area.key),
+            normaliseKey(area.slug),
+            normaliseKey(area.focus_slug),
+            normaliseKey(area.label)
+        ].filter(Boolean));
+
+        for (var d = 0; d < domainKeys.length; d++) {
+            if (areaKeys.indexOf(domainKeys[d]) !== -1) {
+                return area;
+            }
+        }
+    }
+
+    return null;
+}
+
+function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
+    opts = opts || {};
+    if (!domains || !domains.length) return '';
+    var escFn = opts.esc || esc;
+    var toneMap = opts.toneMap || {};
+    var defaultTone = toneMap.practice || {
+        border: '',
+        bg: '',
+        text: '',
+        label: '',
+        bar: '#64748b'
+    };
+    var accordionOpts = Object.assign({}, opts);
+    var html = '<div class="benchmark-domain-grid benchmark-domain-grid--with-guidance">';
+
+    domains.forEach(function (domain) {
+        var tone = toneMap[domain.tone] || defaultTone;
+        var area = focusAreaForDomain(domain, focusAreas);
+        var hasGuidance = !!(area && ((area.likely_impact && area.likely_impact.length) || (area.challenge_bullets && area.challenge_bullets.length) || (area.challenge_body) || (area.actions && area.actions.length)));
+
+        html += '<section class="benchmark-metric-card ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + '">';
+        html += '<div class="benchmark-metric-card__header">';
+        html += '<h3 class="benchmark-metric-card__title">' + escFn(domain.label) + '</h3>';
+        html += '<span class="benchmark-metric-card__badge ' + (tone.bg || '') + ' ' + (tone.text || '') + '">' + escFn(tone.label || '') + '</span>';
+        html += '</div>';
+        html += '<div class="benchmark-metric-card__body">';
+        html += '<p class="benchmark-metric-card__value">' + escFn(domain.value) + '%</p>';
+        html += '</div>';
+        html += '<div class="benchmark-metric-card__bar"><span style="width:' + escFn(domain.value) + '%;background:' + escFn(tone.bar || '#64748b') + '"></span></div>';
+
+        if (hasGuidance) {
+            html += focusGuidanceAccordionForArea(area, accordionOpts, domain);
+        }
+
+        html += '</section>';
+    });
+
+    return html + '</div>';
 }
 
 /** HTML escape — prefers AIRB.esc from airb-core.js */
@@ -998,7 +1122,9 @@ AIRB.Results = {
     domainBarListHtml: domainBarListHtml,
     focusCardHtml: focusCardHtml,
     focusStackGuidanceInnerHtml: focusStackGuidanceInnerHtml,
+    focusGuidanceToggleLabel: focusGuidanceToggleLabel,
     focusGuidanceAccordionForArea: focusGuidanceAccordionForArea,
+    domainGridWithGuidanceHtml: domainGridWithGuidanceHtml,
     parentFocusTopicsHtml: parentFocusTopicsHtml,
     teacherFocusAreasHtml: teacherFocusAreasHtml,
     supportFocusAreasHtml: supportFocusAreasHtml,

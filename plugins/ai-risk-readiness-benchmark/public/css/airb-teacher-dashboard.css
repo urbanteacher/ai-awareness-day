@@ -113,7 +113,7 @@
 
 .airb__results--teacher .benchmark-metric-card__body, .airb__results--student .benchmark-metric-card__body, .airb__results--parent .benchmark-metric-card__body, .airb__results--leader .benchmark-metric-card__body, .airb__results--support .benchmark-metric-card__body, .airb__results--public .benchmark-metric-card__body {
 	display: block;
-	margin-top: auto;
+	margin-top: 1.25rem;
 	padding-top: 0.65rem;
 }
 
@@ -147,6 +147,56 @@
 	display: block;
 	height: 100%;
 	border-radius: 999px;
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__results-accordion, .airb__results--student .benchmark-metric-card .airb__results-accordion, .airb__results--parent .benchmark-metric-card .airb__results-accordion, .airb__results--leader .benchmark-metric-card .airb__results-accordion, .airb__results--support .benchmark-metric-card .airb__results-accordion, .airb__results--public .benchmark-metric-card .airb__results-accordion {
+	margin: 0.75rem 0 0;
+	border: 0;
+	border-top: 1px solid #e2e8f0;
+	border-radius: 0;
+	background: transparent;
+	overflow: hidden;
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__results-accordion > summary, .airb__results--student .benchmark-metric-card .airb__results-accordion > summary, .airb__results--parent .benchmark-metric-card .airb__results-accordion > summary, .airb__results--leader .benchmark-metric-card .airb__results-accordion > summary, .airb__results--support .benchmark-metric-card .airb__results-accordion > summary, .airb__results--public .benchmark-metric-card .airb__results-accordion > summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	gap: 0.5rem;
+	padding: 0.55rem 0 0;
+	font-weight: 700;
+	font-size: 0.66rem;
+	cursor: pointer;
+	list-style: none;
+	color: #64748b;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__results-accordion > summary::after, .airb__results--student .benchmark-metric-card .airb__results-accordion > summary::after, .airb__results--parent .benchmark-metric-card .airb__results-accordion > summary::after, .airb__results--leader .benchmark-metric-card .airb__results-accordion > summary::after, .airb__results--support .benchmark-metric-card .airb__results-accordion > summary::after, .airb__results--public .benchmark-metric-card .airb__results-accordion > summary::after {
+	content: '';
+	display: block;
+	flex: none;
+	width: 0.42rem;
+	height: 0.42rem;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(45deg) translateY(-0.1rem);
+	opacity: 0.75;
+	transition: transform 0.15s ease;
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--student .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--parent .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--leader .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--support .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--public .benchmark-metric-card .airb__results-accordion[open] > summary::after {
+	transform: rotate(-135deg) translateY(0.1rem);
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--student .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--parent .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--leader .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--support .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--public .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker {
+	display: none;
+}
+
+.airb__results--teacher .benchmark-metric-card .airb__focus-guidance-body, .airb__results--student .benchmark-metric-card .airb__focus-guidance-body, .airb__results--parent .benchmark-metric-card .airb__focus-guidance-body, .airb__results--leader .benchmark-metric-card .airb__focus-guidance-body, .airb__results--support .benchmark-metric-card .airb__focus-guidance-body, .airb__results--public .benchmark-metric-card .airb__focus-guidance-body {
+	padding: 0.45rem 0 0.15rem;
 }
 
 .airb__results--teacher .border-emerald-300,

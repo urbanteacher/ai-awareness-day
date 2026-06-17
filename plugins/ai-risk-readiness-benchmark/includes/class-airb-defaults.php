@@ -378,7 +378,7 @@ class AIRB_Defaults {
 				array(
 					'slug'       => 'parent_awareness',
 					'source'     => 'parent_awareness',
-					'label'    => __( 'Parent awareness', 'ai-risk-benchmark' ),
+					'label'    => __( 'Awareness', 'ai-risk-benchmark' ),
 					'subtitle' => __( 'Know what AI tools are being used', 'ai-risk-benchmark' ),
 					'icon'     => 'eye',
 					'focus_slug' => 'parent_awareness',
@@ -507,6 +507,11 @@ class AIRB_Defaults {
 			),
 			'focus_topics' => array(
 				array(
+					'slug'  => 'parent_awareness',
+					'label' => __( 'Awareness', 'ai-risk-benchmark' ),
+					'body'  => __( 'Talk openly with your child about which AI tools they use, how often, and for what purpose. Visibility is the first step to guiding them safely.', 'ai-risk-benchmark' ),
+				),
+				array(
 					'slug'  => 'home_ai_safety',
 					'label' => __( 'Home AI safety', 'ai-risk-benchmark' ),
 					'body'  => __( 'Talk about privacy, fake images and voice messages, and agree what your child should do if something online does not feel right.', 'ai-risk-benchmark' ),
@@ -571,6 +576,8 @@ class AIRB_Defaults {
 		);
 
 		$tier_data = self::role_tier_data( 'parent' );
+		// Tier files may ship legacy home_metrics (5 cards); keep canonical six-metric layout from $base.
+		unset( $tier_data['home_metrics'] );
 
 		return array_merge( $base, $tier_data );
 	}

@@ -87,6 +87,52 @@
         }
     },
     "domains": {
+        "parent_awareness": {
+            "label": "parent_awareness",
+            "description": "",
+            "focus_card": {
+                "low": {
+                    "summary": "You may not yet have a clear picture of how your child uses AI at home. Start with an open conversation about which tools they use and what for.",
+                    "impact": [],
+                    "actions": [
+                        "Ask which AI tools they use on phones, laptops or at school",
+                        "Find out whether they use AI for homework, games or social content",
+                        "Agree to check in again after a week of noticing their habits"
+                    ]
+                },
+                "attention": {
+                    "summary": "Your awareness of your child's AI use could be stronger. A short, calm check-in will help you spot gaps early.",
+                    "impact": [],
+                    "actions": [
+                        "Ask them to show you one AI tool they use most often",
+                        "Talk about what they would do if something online did not feel right"
+                    ]
+                }
+            }
+        },
+        "school_partnership": {
+            "label": "school_partnership",
+            "description": "",
+            "focus_card": {
+                "low": {
+                    "summary": "Find out your school's expectations for AI and homework. Schools need to know how AI is used at home to support pupils fairly.",
+                    "impact": [],
+                    "actions": [
+                        "Ask your child's teacher what the school's AI rules are",
+                        "Check whether the school has shared parent guidance on AI",
+                        "Agree how you will raise concerns if homework expectations are unclear"
+                    ]
+                },
+                "attention": {
+                    "summary": "Your link with school expectations could be stronger. A shared understanding helps your child use AI safely for homework.",
+                    "impact": [],
+                    "actions": [
+                        "Read any AI or homework guidance the school has sent home",
+                        "Ask one teacher how families should support safe AI use"
+                    ]
+                }
+            }
+        },
         "online_risk_awareness": {
             "label": "online_risk",
             "description": "",

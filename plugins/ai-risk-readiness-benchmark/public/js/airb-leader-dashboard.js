@@ -163,8 +163,15 @@
 		return html;
 	};
 
-	function domainGridHtml(domains) {
+	function domainGridHtml(model, opts) {
+		var domains = model.domains || [];
 		if (!domains || !domains.length) return '';
+		if (Results.domainGridWithGuidanceHtml) {
+			return Results.domainGridWithGuidanceHtml(domains, model.focusAreas || [], Object.assign({}, opts || {}, {
+				esc: esc,
+				toneMap: TONE_MAP,
+			}));
+		}
 		var html = '<div class="benchmark-domain-grid">';
 		domains.forEach(function (domain) {
 			var tone = TONE_MAP[domain.tone] || TONE_MAP.practice;
@@ -173,12 +180,9 @@
 			html += '<h3 class="benchmark-metric-card__title">' + esc(domain.label) + '</h3>';
 			html += '<span class="benchmark-metric-card__badge ' + tone.bg + ' ' + tone.text + '">' + esc(tone.label) + '</span>';
 			html += '</div>';
-			html += '<div class="benchmark-metric-card__body">';
-			html += '<p class="benchmark-metric-card__value">' + domain.value + '%</p>';
-			if (domain.prompt) {
-				html += '<p class="benchmark-metric-card__prompt ' + tone.text + '">' + esc(domain.prompt) + '</p>';
-			}
-			html += '</div>';
+        html += '<div class="benchmark-metric-card__body">';
+        html += '<p class="benchmark-metric-card__value">' + domain.value + '%</p>';
+        html += '</div>';
 			html += '<div class="benchmark-metric-card__bar"><span style="width:' + domain.value + '%;background:' + tone.bar + '"></span></div>';
 			html += '</section>';
 		});
@@ -226,39 +230,6 @@
 		return html;
 	}
 
-	function focusStackHtml(model, r, opts) {
-		if (!model.focusAreas || !model.focusAreas.length) return '';
-		var heading = 'Lowest domain drivers';
-		var intro = opts.focusStackIntro || 'These cards expand the lowest domain scores into governance impact and recommended actions.';
-		var html = '<div class="demo-airb teacher-dash-focus-wrap">';
-		html += '<h3 class="airb__leader-section-label"><span class="airb__lbl-long">' + esc(heading) + '</span></h3>';
-		html += '<p class="airb__focus-stack-intro">' + esc(intro) + '</p>';
-		html += '<div class="airb__leader-focus-stack">';
-
-		model.focusAreas.forEach(function (area) {
-			var severity = focusSeverity(area.pct);
-			var tone = matchingDomainTone(area, model.domains);
-			var hasGuidance = (area.likely_impact && area.likely_impact.length) || (area.actions && area.actions.length);
-
-			html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
-			html += '<div class="airb__focus-card-header"><h4 class="airb__focus-card-title">' + esc(area.label) + '</h4></div>';
-			html += '<div class="airb__focus-score-row">';
-			html += '<p class="airb__focus-card-score">' + (area.pct || 0) + '%</p>';
-			html += '<span class="airb__focus-badge ' + tone.bg + ' ' + tone.text + '">' + esc(tone.label) + '</span>';
-			html += '</div>';
-			if (area.summary) {
-				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
-			}
-			if (hasGuidance && opts.focusGuidanceAccordionHtml && AIRB.Results && AIRB.Results.focusGuidanceAccordionForArea) {
-				html += AIRB.Results.focusGuidanceAccordionForArea(area, opts);
-			}
-			html += '</div>';
-		});
-
-		html += '</div></div>';
-		return html;
-	}
-
 	function guidanceCtaHtml(model) {
 		if (!model.priority) return '';
 		return '<article class="demo-airb airb__leader-cta-card">' +
@@ -282,9 +253,8 @@
 		html += '</div>';
 		if (model.domains && model.domains.length) {
 			html += '<h3 class="teacher-dash-domain-heading">Domain breakdown & key signals</h3>';
-			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model.domains) + '</div>';
+			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model, opts) + '</div>';
 		}
-		html += focusStackHtml(model, r, opts);
 		html += '</section>';
 		html += guidanceCtaHtml(model);
 		html += '</div>';

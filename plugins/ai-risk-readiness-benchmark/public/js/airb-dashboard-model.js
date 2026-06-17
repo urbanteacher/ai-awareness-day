@@ -72,6 +72,14 @@
 		return Math.max(0, Math.min(100, n));
 	}
 
+	function normaliseKey(value) {
+		return String(value || '')
+			.toLowerCase()
+			.replace(/&/g, 'and')
+			.replace(/[^a-z0-9]+/g, '_')
+			.replace(/^_+|_+$/g, '');
+	}
+
 	function config() {
 		return (window.airbBenchmark && airbBenchmark.config) || {};
 	}
@@ -163,6 +171,53 @@
 		if (pct >= 75) return 'secure';
 		if (pct >= 50) return 'practice';
 		return 'attention';
+	}
+
+	function focusAreaMatchesDomain(area, domain) {
+		var keys = [
+			domain.key,
+			domain.slug,
+			domain.label,
+			SCORE_SLUG[domain.key || ''],
+		].filter(Boolean).map(normaliseKey);
+		var areaKeys = [
+			area.key,
+			area.slug,
+			area.focus_slug,
+			area.label,
+		].filter(Boolean).map(normaliseKey);
+
+		return keys.some(function (key) {
+			return areaKeys.indexOf(key) !== -1;
+		});
+	}
+
+	function supplementFocusAreas(focusAreas, domains, priorities, focusMax) {
+		var out = (focusAreas || []).slice();
+		var max = focusMax == null ? 75 : focusMax;
+		(domains || []).forEach(function (domain) {
+			var key = domain.key || '';
+			var pct = domain.value;
+			if (!key || pct == null || pct >= max) return;
+			var exists = out.some(function (area) {
+				return focusAreaMatchesDomain(area, domain);
+			});
+			if (exists) return;
+			var fallback = (priorities && priorities[key]) || '';
+			if (!fallback) return;
+			out.push({
+				label: domain.label || key,
+				pct: clampPct(pct),
+				summary: '',
+				likely_impact: [fallback],
+				actions: [],
+				challenge_heading: '',
+				slug: key,
+			});
+		});
+		return out.sort(function (a, b) {
+			return (a.pct || 0) - (b.pct || 0);
+		});
 	}
 
 	function readinessBand(score) {
@@ -716,7 +771,7 @@
 
 	function mapParentFocusAreas(pr) {
 		var areas = (pr && pr.focus_areas) || [];
-		return areas.map(function (area) {
+		var out = areas.map(function (area) {
 			var impact = area.likely_impact || area.challenge_bullets || area.impact || [];
 			if (!impact.length && area.challenge_body) {
 				impact = [area.challenge_body];
@@ -733,6 +788,36 @@
 				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || area.focus_slug || '',
 			};
+		});
+
+		return out;
+	}
+
+	function supplementParentFocusAreas(focusAreas, domains) {
+		var focusMax = 75;
+		var bySlug = {};
+		(focusAreas || []).forEach(function (area) {
+			if (area.slug) bySlug[area.slug] = area;
+		});
+		(domains || []).forEach(function (domain) {
+			var key = domain.key || '';
+			var pct = domain.value;
+			if (!key || pct == null || pct >= focusMax || bySlug[key]) return;
+			var fallback = PARENT_GUIDANCE_PRIORITIES[key] || '';
+			bySlug[key] = {
+				label: domain.label || key,
+				pct: clampPct(pct),
+				summary: fallback,
+				likely_impact: fallback ? [fallback] : [],
+				actions: [],
+				challenge_heading: '',
+				slug: key,
+			};
+		});
+		return Object.keys(bySlug).map(function (slug) {
+			return bySlug[slug];
+		}).sort(function (a, b) {
+			return (a.pct || 0) - (b.pct || 0);
 		});
 	}
 
@@ -1434,7 +1519,7 @@
 		var homeworkValue = homework ? clampPct(homework.value) : parentDomainValue('homework_oversight', homeMetrics, results.parent_display_domains);
 		var partnershipValue = partnership ? clampPct(partnership.value) : parentDomainValue('school_partnership', homeMetrics, results.parent_display_domains);
 		var nextSteps = pr.next_steps || {};
-		var focusAreas = mapParentFocusAreas(pr);
+		var focusAreas = supplementParentFocusAreas(mapParentFocusAreas(pr), domains);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = prCfg.dashboard || {};
@@ -1498,7 +1583,7 @@
 		var domains = mapStudentDomains(metrics, results);
 		var independent = metricBySlug(metrics, 'independent_thinking');
 		var verification = metricBySlug(metrics, 'verification_skills');
-		var focusAreas = mapStudentFocusAreas(sr, results);
+		var focusAreas = supplementFocusAreas(mapStudentFocusAreas(sr, results), domains, STUDENT_GUIDANCE_PRIORITIES, 75);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = srCfg.dashboard || {};
@@ -1564,7 +1649,7 @@
 			? clampPct(results.safeguarding_readiness)
 			: domainReadinessScore(results.domain_scores || {}, 'safeguarding', results);
 		var nextSteps = lr.next_steps || {};
-		var focusAreas = mapLeaderFocusAreas(lr, results);
+		var focusAreas = supplementFocusAreas(mapLeaderFocusAreas(lr, results), domains, LEADER_GUIDANCE_PRIORITIES, 75);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = lrCfg.dashboard || {};
@@ -1627,7 +1712,7 @@
 		var dep = results.dependency_index != null ? clampPct(results.dependency_index) : null;
 		var oversight = oversightPct(results);
 		var domains = mapDomains(results, cfg);
-		var focusAreas = mapFocusAreas(tr, results);
+		var focusAreas = supplementFocusAreas(mapFocusAreas(tr, results), domains, GUIDANCE_PRIORITIES, 75);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = trCfg.dashboard || {};
@@ -1701,7 +1786,7 @@
 			: null;
 		var domains = mapSupportDomains(sr, results);
 		var nextSteps = sr.next_steps || {};
-		var focusAreas = mapSupportFocusAreas(sr);
+		var focusAreas = supplementFocusAreas(mapSupportFocusAreas(sr), domains, SUPPORT_GUIDANCE_PRIORITIES, 75);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = srCfg.dashboard || {};
@@ -1775,7 +1860,7 @@
 				dataPrivacy = clampPct(privacyMetric.value);
 			}
 		}
-		var focusAreas = mapPublicFocusAreas(pr);
+		var focusAreas = supplementFocusAreas(mapPublicFocusAreas(pr), domains, PUBLIC_GUIDANCE_PRIORITIES, 75);
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = prCfg.dashboard || {};
