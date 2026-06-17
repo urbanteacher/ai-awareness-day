@@ -318,8 +318,9 @@ class AIRB_Ajax {
 					'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
 					'assessment'             => $assessment,
 					'copy'                   => array(
-						'headline_primary' => $copy['headline_primary'],
-						'body'             => $copy['body'],
+						'headline_primary'   => $copy['headline_primary'],
+						'headline_secondary' => $copy['headline_secondary'] ?? '',
+						'body'               => $copy['body'],
 					),
 				),
 			)

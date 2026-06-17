@@ -32,7 +32,8 @@
 	}
 
 	var FALLBACK_COPY = {
-		headline_primary: 'AI Risk & Readiness Benchmark\u2122 Certificate',
+		headline_primary: 'AI Risk & Readiness Benchmark\u2122',
+		headline_secondary: 'Certificate',
 		body: 'has completed the AI Risk & Readiness Benchmark\u2122 and submitted evidence of a real action linked to AI Awareness Day.',
 		name_placeholder: 'Example: Alex Teacher',
 	};
@@ -70,9 +71,52 @@
 		return date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
 	}
 
+	function splitCertificateTitle(title) {
+		title = String(title || '').trim();
+		var suffix = ' Certificate';
+		if (title.length > suffix.length && title.slice(-suffix.length) === suffix) {
+			return {
+				primary: title.slice(0, -suffix.length),
+				secondary: 'Certificate',
+			};
+		}
+		return { primary: title, secondary: '' };
+	}
+
+	function certificateHeadlines(model, role) {
+		var copy = roleCopy(role);
+		if (copy.headline_secondary) {
+			return {
+				primary: copy.headline_primary || FALLBACK_COPY.headline_primary,
+				secondary: copy.headline_secondary,
+			};
+		}
+		if (model && model.certificateTitle) {
+			return splitCertificateTitle(model.certificateTitle);
+		}
+		if (copy.headline_primary) {
+			return splitCertificateTitle(copy.headline_primary);
+		}
+		return {
+			primary: FALLBACK_COPY.headline_primary,
+			secondary: FALLBACK_COPY.headline_secondary,
+		};
+	}
+
 	function certificateTitle(model, role) {
-		if (model && model.certificateTitle) return model.certificateTitle;
-		return roleCopy(role).headline_primary || FALLBACK_COPY.headline_primary;
+		var lines = certificateHeadlines(model, role);
+		return lines.secondary ? lines.primary + ' ' + lines.secondary : lines.primary;
+	}
+
+	function certificateHeadlineHtml(model, role) {
+		var lines = certificateHeadlines(model, role);
+		var html = '<h1 class="certificate-preview__headline">';
+		html += '<span class="certificate-preview__headline-primary">' + esc(lines.primary) + '</span>';
+		if (lines.secondary) {
+			html += '<span class="certificate-preview__headline-secondary">' + esc(lines.secondary) + '</span>';
+		}
+		html += '</h1>';
+		return html;
 	}
 
 	function certificateBody(model, role) {
@@ -96,10 +140,11 @@
 	}
 
 	function previewHtml(data) {
+		var role = data.role || roleFromRuntime();
 		return '<div class="certificate-preview certificate-preview--compact" data-airb-certificate-preview>' +
 			'<div class="certificate-preview__frame">' +
 			'<div class="certificate-preview__content">' +
-			'<h1 class="certificate-preview__headline"><span class="certificate-preview__headline-primary">' + esc(data.title) + '</span></h1>' +
+			certificateHeadlineHtml({ certificateTitle: data.title }, role) +
 			'<p class="certificate-preview__lead">This certifies that</p>' +
 			'<p class="certificate-preview__name">' + esc(data.participantName || 'Name pending') + '</p>' +
 			'<p class="certificate-preview__body">' + esc(data.body) + '</p>' +
@@ -176,6 +221,7 @@
 		var name = ((panel.querySelector('[data-airb-certificate-name]') || {}).value || '').trim();
 		previewWrap.innerHTML = previewHtml({
 			title: certificateTitle(null, role),
+			role: role,
 			participantName: name || 'Name pending',
 			body: certificateBody(null, role),
 			awardedAt: '',
@@ -275,6 +321,7 @@
 		};
 		var preview = {
 			title: title,
+			role: role,
 			participantName: participantName,
 			body: certificateBody(model, role),
 			awardedAt: cert.awardedAt || '',
@@ -323,7 +370,8 @@
 		var previewWrap = panel.querySelector('.benchmark-certificate-preview-wrap');
 		if (previewWrap) {
 			previewWrap.innerHTML = previewHtml({
-				title: copy.headline_primary || certificateTitle(null, role),
+				title: certificateTitle(null, role),
+				role: role,
 				participantName: cert.participant_name,
 				body: copy.body || certificateBody(null, role),
 				awardedAt: cert.awarded_at,

@@ -34,10 +34,11 @@ class AIRB_Certificate_Copy {
 		$role  = self::normalize_role( $role );
 		$all   = self::definitions();
 		$copy  = $all[ $role ] ?? $all['teacher'];
-		$title = __( 'AI Risk & Readiness Benchmark™ Certificate', 'ai-risk-benchmark' );
+		$headline = self::headline_lines();
 
 		return array(
-			'headline_primary'      => $title,
+			'headline_primary'      => $headline['headline_primary'],
+			'headline_secondary'    => $headline['headline_secondary'],
 			'body'                  => $copy['body'],
 			'name_placeholder'      => $copy['name_placeholder'],
 			'evidence_action_label' => $copy['evidence_action_label'],
@@ -55,12 +56,13 @@ class AIRB_Certificate_Copy {
 	 * @return array<string, array{headline_primary: string, body: string, name_placeholder: string}>
 	 */
 	public static function all_for_front(): array {
-		$title = __( 'AI Risk & Readiness Benchmark™ Certificate', 'ai-risk-benchmark' );
-		$out   = array();
+		$headline = self::headline_lines();
+		$out      = array();
 
 		foreach ( self::definitions() as $role => $copy ) {
 			$out[ $role ] = array(
-				'headline_primary'            => $title,
+				'headline_primary'            => $headline['headline_primary'],
+				'headline_secondary'          => $headline['headline_secondary'],
 				'body'                        => $copy['body'],
 				'name_placeholder'            => $copy['name_placeholder'],
 				'evidence_action_label'       => $copy['evidence_action_label'],
@@ -77,6 +79,18 @@ class AIRB_Certificate_Copy {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Certificate title split across two lines for compact preview layouts.
+	 *
+	 * @return array{headline_primary: string, headline_secondary: string}
+	 */
+	private static function headline_lines(): array {
+		return array(
+			'headline_primary'   => __( 'AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' ),
+			'headline_secondary' => __( 'Certificate', 'ai-risk-benchmark' ),
+		);
 	}
 
 	/**
