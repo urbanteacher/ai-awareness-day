@@ -349,18 +349,22 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
         var domainTone = dashboardLayout ? matchingDashboardDomainTone(area, domainList) : null;
         var toneLabel = domainTone ? domainTone.label : badge.text;
         var toneClass = domainTone ? domainTone.className : ('airb__focus-badge--' + escFn(badge.slug));
+        var belowThreshold = isBelowFocusGuidanceMax(focusAreaPct(area), opts);
+        var belowCardClass = belowThreshold ? ' airb__focus-card--below-threshold' : '';
+        var belowBadgeClass = belowThreshold ? ' airb__focus-badge--below-threshold' : '';
+        var areaOpts = Object.assign({}, opts, { belowThreshold: belowThreshold });
 
-        html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
+        html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + belowCardClass + '">';
         html += '<div class="airb__focus-card-header">';
         html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
         if (!dashboardLayout) {
-            html += '<span class="airb__focus-badge ' + toneClass + '">' + escFn(badge.text) + '</span>';
+            html += '<span class="airb__focus-badge ' + toneClass + belowBadgeClass + '">' + escFn(badge.text) + '</span>';
         }
         html += '</div>';
         if (dashboardLayout) {
             html += '<div class="airb__focus-score-row">';
-            html += '<p class="airb__focus-card-score">' + (area.pct || 0) + '%</p>';
-            html += '<span class="airb__focus-badge ' + toneClass + '">' + escFn(toneLabel) + '</span>';
+            html += '<p class="airb__focus-card-score' + (belowThreshold ? ' airb__focus-card-score--below-threshold' : '') + '">' + (area.pct || 0) + '%</p>';
+            html += '<span class="airb__focus-badge ' + toneClass + belowBadgeClass + '">' + escFn(toneLabel) + '</span>';
             html += '</div>';
         }
         if (area.summary && !opts.hideFocusSummary) {
@@ -372,31 +376,14 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
                 html += '<p class="airb__focus-card-bias-note">' + escFn(biasNote) + '</p>';
             }
         }
-        var guidance = '';
-        if (area.likely_impact && area.likely_impact.length) {
-            guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
-            guidance += '<div class="airb__focus-practice-title">' + escFn(practiceHeading) + '</div>';
-            area.likely_impact.forEach(function (item) {
-                guidance += '<div class="airb__teacher-focus-impact">' + escFn(item) + '</div>';
-            });
-            guidance += '</div>';
-        }
-        if (area.actions && area.actions.length) {
-            area.actions.forEach(function (item, idx) {
-                guidance += '<div class="airb__teacher-action-row">';
-                guidance += '<span class="airb__teacher-action-num">' + (idx + 1) + '</span>';
-                guidance += '<span class="airb__teacher-action-text">' + escFn(item) + '</span>';
-                guidance += '</div>';
-            });
-        }
-        if (guidance && opts.focusGuidanceAccordionHtml) {
-            html += opts.focusGuidanceAccordionHtml(
+        var guidance = focusStackGuidanceInnerHtml(area, areaOpts);
+        if (guidance) {
+            html += focusGuidanceAccordionMarkup(
+                areaOpts,
                 dashboardLayout ? (opts.guidanceToggleClassroom || 'View classroom impact') : (opts.guidanceToggle || 'Tips & steps to try'),
                 guidance,
-                opts.guidanceOpen === true
+                belowThreshold
             );
-        } else if (guidance) {
-            html += guidance;
         }
         html += '</div>';
     });
@@ -436,20 +423,24 @@ function supportFocusAreasHtml(focusAreas, opts) {
         var severity = opts.supportFocusSeverity
             ? opts.supportFocusSeverity(area.pct, area.severity)
             : (area.severity || 'moderate');
-        html += '<div class="airb__focus-card airb__support-focus-card airb__focus-card--' + severity + '">';
+        var belowThreshold = isBelowFocusGuidanceMax(focusAreaPct(area), opts);
+        var belowCardClass = belowThreshold ? ' airb__focus-card--below-threshold' : '';
+        var belowBadgeClass = belowThreshold ? ' airb__focus-badge--below-threshold' : '';
+        var areaOpts = Object.assign({}, opts, { belowThreshold: belowThreshold });
+        html += '<div class="airb__focus-card airb__support-focus-card airb__focus-card--' + severity + belowCardClass + '">';
         html += '<div class="airb__focus-card-header">';
         html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
-        html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + '">' + escFn(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
+        html += '<span class="airb__focus-badge airb__focus-badge--' + (severity === 'critical' ? 'critical' : 'moderate') + belowBadgeClass + '">' + escFn(area.badge_text || ((area.pct || 0) + '%')) + '</span>';
         html += '</div>';
         if (area.summary && !opts.hideFocusSummary) html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
         var guidance = '';
         if (area.challenge_bullets && area.challenge_bullets.length) {
             guidance += '<div class="airb__support-focus-challenge airb__support-focus-challenge--' + severity + '">';
             if (area.challenge_heading) {
-                guidance += '<div class="airb__support-focus-challenge-title">' + escFn(area.challenge_heading) + '</div>';
+                guidance += '<div class="airb__support-focus-challenge-title' + (belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + escFn(area.challenge_heading) + '</div>';
             }
             area.challenge_bullets.forEach(function (item) {
-                guidance += '<div class="airb__support-focus-challenge-item">' + escFn(item) + '</div>';
+                guidance += '<div class="airb__support-focus-challenge-item' + (belowThreshold ? ' airb__teacher-focus-impact--below-threshold' : '') + '">' + escFn(item) + '</div>';
             });
             guidance += '</div>';
         }
@@ -461,15 +452,9 @@ function supportFocusAreasHtml(focusAreas, opts) {
                 guidance += '</div>';
             });
         }
-        if (guidance && opts.focusGuidanceAccordionHtml) {
+        if (guidance) {
             var supportGuidanceLabel = area.challenge_heading || opts.guidanceToggle || 'Tips & steps to try';
-            html += opts.focusGuidanceAccordionHtml(
-                supportGuidanceLabel,
-                guidance,
-                opts.guidanceOpen === true
-            );
-        } else if (guidance) {
-            html += guidance;
+            html += focusGuidanceAccordionMarkup(areaOpts, supportGuidanceLabel, guidance, belowThreshold);
         }
         html += '</div>';
     });
@@ -497,13 +482,17 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
         var severity = opts.leaderFocusSeverity ? opts.leaderFocusSeverity(area.pct) : 'moderate';
         var badge = opts.leaderFocusBadge ? opts.leaderFocusBadge(area.pct) : { slug: 'attention', core: '', detail: '' };
         var showPractice = area.likely_impact && area.likely_impact.length;
-        html += '<div class="airb__focus-card airb__focus-card--' + severity + '">';
+        var belowThreshold = isBelowFocusGuidanceMax(focusAreaPct(area), opts);
+        var belowCardClass = belowThreshold ? ' airb__focus-card--below-threshold' : '';
+        var belowBadgeClass = belowThreshold ? ' airb__focus-badge--below-threshold' : '';
+        var areaOpts = Object.assign({}, opts, { belowThreshold: belowThreshold });
+        html += '<div class="airb__focus-card airb__focus-card--' + severity + belowCardClass + '">';
         html += '<div class="airb__focus-card-header">';
         html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
-        html += '<span class="airb__focus-badge airb__focus-badge--' + escFn(badge.slug) + '">';
-        html += '<span class="airb__focus-badge-core">' + escFn(badge.core) + '</span>';
+        html += '<span class="airb__focus-badge airb__focus-badge--' + escFn(badge.slug) + belowBadgeClass + '">';
+        html += '<span class="airb__focus-badge-core' + (belowThreshold ? ' airb__focus-badge-core--below-threshold' : '') + '">' + escFn(badge.core) + '</span>';
         if (badge.detail) {
-            html += '<span class="airb__focus-badge-detail">' + escFn(badge.detail) + '</span>';
+            html += '<span class="airb__focus-badge-detail' + (belowThreshold ? ' airb__focus-badge-detail--below-threshold' : '') + '">' + escFn(badge.detail) + '</span>';
         }
         html += '</span></div>';
         if (area.summary && !opts.hideFocusSummary) {
@@ -518,10 +507,10 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
         var guidance = '';
         if (showPractice) {
             guidance += '<div class="airb__focus-practice">';
-            guidance += '<div class="airb__focus-practice-title">' + (opts.leaderResponsiveLabel ? opts.leaderResponsiveLabel(practiceHeading, practiceHeadingShort) : escFn(practiceHeading)) + '</div>';
+            guidance += '<div class="airb__focus-practice-title' + (belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + (opts.leaderResponsiveLabel ? opts.leaderResponsiveLabel(practiceHeading, practiceHeadingShort) : escFn(practiceHeading)) + '</div>';
             guidance += '<ul class="airb__focus-practice-list">';
             area.likely_impact.forEach(function (item) {
-                guidance += '<li>' + escFn(item) + '</li>';
+                guidance += '<li class="' + (belowThreshold ? 'airb__focus-practice-list-item--below-threshold' : '') + '">' + escFn(item) + '</li>';
             });
             guidance += '</ul></div>';
         }
@@ -534,14 +523,13 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
             });
             guidance += '</ul></div>';
         }
-        if (guidance && opts.focusGuidanceAccordionHtml) {
-            html += opts.focusGuidanceAccordionHtml(
+        if (guidance) {
+            html += focusGuidanceAccordionMarkup(
+                areaOpts,
                 opts.guidanceToggle || 'Tips & steps to try',
                 guidance,
-                opts.guidanceOpen === true
+                belowThreshold
             );
-        } else if (guidance) {
-            html += guidance;
         }
         html += '</div>';
     });
