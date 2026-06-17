@@ -649,7 +649,7 @@ class AIRB_Database {
 	}
 
 	/**
-	 * Unlink leads/events and remove certificates from the given submission IDs.
+	 * Unlink events, delete linked leads, and remove certificates from the given submission IDs.
 	 *
 	 * @param array<int, int> $ids Submission IDs.
 	 */
@@ -659,7 +659,7 @@ class AIRB_Database {
 		}
 
 		if ( class_exists( 'AIRB_Leads' ) ) {
-			AIRB_Leads::unlink_submissions( $ids );
+			AIRB_Leads::delete_by_submissions( $ids );
 		}
 		if ( class_exists( 'AIRB_Events' ) ) {
 			AIRB_Events::unlink_submissions( $ids );
@@ -670,11 +670,11 @@ class AIRB_Database {
 	}
 
 	/**
-	 * Unlink all leads/events and remove certificates that reference any submission.
+	 * Unlink all events, delete all linked leads, and remove certificates that reference any submission.
 	 */
 	private static function unlink_all_related(): void {
 		if ( class_exists( 'AIRB_Leads' ) ) {
-			AIRB_Leads::unlink_all_submissions();
+			AIRB_Leads::delete_all_submission_leads();
 		}
 		if ( class_exists( 'AIRB_Events' ) ) {
 			AIRB_Events::unlink_all_submissions();

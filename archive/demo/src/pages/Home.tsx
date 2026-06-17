@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom'
 
 const DEMOS = [
   {
+    to: '/benchmark-dashboards',
+    name: 'Benchmark dashboards',
+    blurb:
+      'Stakeholder result dashboard concepts for teacher, student, parent, leader, support staff, and public views.',
+  },
+  {
     to: '/cards',
     name: 'Activity cards',
     blurb: 'Ten card style variants for free resources — baseline, editorial, brand badges, and more.',

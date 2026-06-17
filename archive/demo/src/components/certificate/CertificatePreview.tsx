@@ -48,7 +48,9 @@ export const CertificatePreview = forwardRef<HTMLDivElement, CertificatePreviewP
             <h1 className="certificate-preview__headline">
               <span className="certificate-preview__headline-primary">{data.copy.headlinePrimary}</span>
             </h1>
-            <p className="certificate-preview__type">{data.copy.eyebrow}</p>
+            {data.copy.eyebrow ? (
+              <p className="certificate-preview__type">{data.copy.eyebrow}</p>
+            ) : null}
 
           <p className="certificate-preview__lead">This certifies that</p>
           <p className="certificate-preview__name">{displayName}</p>
@@ -61,11 +63,12 @@ export const CertificatePreview = forwardRef<HTMLDivElement, CertificatePreviewP
           <p className="certificate-preview__body">{data.copy.body}</p>
 
           {dateLabel ? (
-            <p className="certificate-preview__date">Awarded on {dateLabel}</p>
+            <p className="certificate-preview__date">Awarded: {dateLabel}</p>
           ) : null}
 
             <footer className="certificate-preview__footer">
-              <span className="certificate-preview__id">ID: {data.certificateId}</span>
+              <span className="certificate-preview__id">Certificate ID: {data.certificateId}</span>
+              <span className="certificate-preview__issuer">Issued by: AI Awareness Day</span>
               <span className="certificate-preview__verify">ai-awareness-day.org</span>
             </footer>
           </div>

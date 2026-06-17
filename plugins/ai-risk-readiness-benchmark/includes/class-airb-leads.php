@@ -664,6 +664,40 @@ class AIRB_Leads {
 	}
 
 	/**
+	 * Delete leads linked to deleted submissions.
+	 *
+	 * @param array<int, int> $submission_ids Submission IDs.
+	 */
+	public static function delete_by_submissions( array $submission_ids ): void {
+		$submission_ids = array_values(
+			array_unique(
+				array_filter(
+					array_map( 'intval', $submission_ids ),
+					static function ( int $id ): bool {
+						return $id > 0;
+					}
+				)
+			)
+		);
+
+		if ( empty( $submission_ids ) ) {
+			return;
+		}
+
+		global $wpdb;
+		$table        = self::table_name();
+		$placeholders = implode( ',', array_fill( 0, count( $submission_ids ), '%d' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table} WHERE submission_id IN ({$placeholders})",
+				$submission_ids
+			)
+		);
+	}
+
+	/**
 	 * Clear submission_id on all leads that reference a submission.
 	 */
 	public static function unlink_all_submissions(): void {
@@ -672,5 +706,16 @@ class AIRB_Leads {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$wpdb->query( "UPDATE {$table} SET submission_id = 0 WHERE submission_id > 0" );
+	}
+
+	/**
+	 * Delete all leads linked to any submission.
+	 */
+	public static function delete_all_submission_leads(): void {
+		global $wpdb;
+		$table = self::table_name();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$table} WHERE submission_id > 0" );
 	}
 }

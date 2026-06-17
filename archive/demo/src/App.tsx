@@ -5,6 +5,7 @@ import { BlogLayoutsDemo } from '@/pages/BlogLayoutsDemo'
 import { FeedStylesDemo } from '@/pages/FeedStylesDemo'
 import { AliImamDemo } from '@/pages/AliImamDemo'
 import { BalloonsDemo } from '@/pages/BalloonsDemo'
+import { BenchmarkDashboardsDemo } from '@/pages/BenchmarkDashboardsDemo'
 import { CertificateDemo } from '@/pages/CertificateDemo'
 import { ComponentryDemo } from '@/pages/ComponentryDemo'
 import { CultDemo } from '@/pages/CultDemo'
@@ -32,6 +33,7 @@ export default function App() {
       <Route path="/componentry" element={<ComponentryDemo />} />
       <Route path="/balloons" element={<BalloonsDemo />} />
       <Route path="/certificate" element={<CertificateDemo />} />
+      <Route path="/benchmark-dashboards" element={<BenchmarkDashboardsDemo />} />
     </Routes>
   )
 }

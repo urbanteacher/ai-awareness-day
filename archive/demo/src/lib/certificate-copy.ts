@@ -9,7 +9,8 @@ export type InvolvedAs =
 
 export type CertificateCopy = {
   headlinePrimary: string
-  eyebrow: string
+  /** Optional sub-headline under the title (hidden when empty). */
+  eyebrow?: string
   affiliationPrefix: string
   body: string
 }
