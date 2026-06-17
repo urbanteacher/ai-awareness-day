@@ -3101,7 +3101,7 @@
 				}
 			}
 
-			if (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff') {
+			if (state.role === 'teacher' || state.role === 'support_staff') {
 				html += staffProfileFieldsHtml();
 			}
 
@@ -5393,7 +5393,17 @@
 			el.progress.hidden = true;
 			updateFlowChrome();
 			scrollFlowToTop();
-			submitResults(function () { renderResults(); });
+			var resultsRendered = false;
+			var resultsFallbackTimer = window.setTimeout(function () {
+				if (state.phase !== 'results' || resultsRendered) return;
+				resultsRendered = true;
+				renderResults();
+			}, 3000);
+			submitResults(function () {
+				window.clearTimeout(resultsFallbackTimer);
+				resultsRendered = true;
+				renderResults();
+			});
 		}
 	}
 
