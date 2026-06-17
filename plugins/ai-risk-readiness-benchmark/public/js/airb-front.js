@@ -4576,27 +4576,8 @@
 
 		if (model && window.AIRB && AIRB.LeaderDashboard && AIRB.LeaderDashboard.render) {
 			var renderOpts = leaderDashboardRenderOpts();
-			if (lr.risk_heatmap && lr.risk_heatmap.length) {
-				renderOpts.heatmapHtml = function () {
-					return leaderSectionLabel(
-						leaderResult.heatmap_section_heading || 'Full risk picture',
-						leaderResult.heatmap_section_heading_short || 'Full risk picture'
-					) + leaderHeatmapCardHtml(lr.risk_heatmap);
-				};
-			}
-			if (lr.next_steps && lr.next_steps.rollout) {
-				renderOpts.rolloutSectionHtml = function () {
-					return leaderSectionLabel(
-						leaderResult.rollout_section_heading || 'Your next unlock — whole-school picture',
-						leaderResult.rollout_section_heading_short || 'Your next unlock'
-					) + leaderRolloutCardHtml(lr.next_steps.rollout);
-				};
-			}
-			if (lr.next_steps) {
-				renderOpts.governanceCtaHtml = function () {
-					return leaderGovernanceCtaHtml(lr.next_steps);
-				};
-			}
+			// Keep the leader dashboard "progress" panel focused on certificate progress.
+			// Heatmap/rollout/governance CTA live in the overview/resources panels.
 			return AIRB.LeaderDashboard.render(r, model, renderOpts);
 		}
 

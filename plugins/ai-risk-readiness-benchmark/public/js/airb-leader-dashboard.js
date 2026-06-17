@@ -143,7 +143,7 @@
 		html += '<div class="teacher-dash-core__stripe" aria-hidden="true"></div>';
 		html += '<div class="teacher-dash-core__body">';
 		html += '<div class="teacher-dash-core__copy">';
-		html += '<p class="teacher-dash-core__eyebrow">' + esc(model.label) + ' · ' + esc(model.audience) + '</p>';
+		html += '<p class="teacher-dash-core__eyebrow">' + esc(model.audience || '') + '</p>';
 		html += '<div class="teacher-dash-core__score-row">';
 		html += '<p class="teacher-dash-core__score-label">' + esc(model.scoreLabel) + '</p>';
 		html += '<p class="teacher-dash-core__score" style="color:' + esc(band.color) + '">' + model.score + '</p>';

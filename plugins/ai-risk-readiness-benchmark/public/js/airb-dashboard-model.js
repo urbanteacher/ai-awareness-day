@@ -1496,7 +1496,7 @@
 
 		return {
 			role: 'leader',
-			label: 'School Leader',
+			label: '',
 			audience: 'Governance view',
 			accent: '#475569',
 			soft: '#e2e8f0',
