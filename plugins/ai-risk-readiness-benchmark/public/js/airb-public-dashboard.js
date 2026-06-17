@@ -168,15 +168,17 @@
 			}));
 		}
 		var html = '<div class="benchmark-domain-grid">';
+		var focusMax = (Results.focusGuidanceMaxFromOpts && Results.focusGuidanceMaxFromOpts(opts)) || parseInt(opts.focusGuidanceMax, 10) || 70;
 		domains.forEach(function (domain) {
 			var tone = TONE_MAP[domain.tone] || TONE_MAP.practice;
-			html += '<section class="benchmark-metric-card ' + tone.border + '">';
+			var belowThreshold = domain.value < focusMax;
+			html += '<section class="benchmark-metric-card ' + tone.border + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
 			html += '<div class="benchmark-metric-card__header">';
 			html += '<h3 class="benchmark-metric-card__title">' + esc(domain.label) + '</h3>';
-			html += '<span class="benchmark-metric-card__badge ' + tone.bg + ' ' + tone.text + '">' + esc(tone.label) + '</span>';
+			html += '<span class="benchmark-metric-card__badge ' + tone.bg + ' ' + tone.text + (belowThreshold ? ' benchmark-metric-card__badge--below-threshold' : '') + '">' + esc(tone.label) + '</span>';
 			html += '</div>';
         html += '<div class="benchmark-metric-card__body">';
-        html += '<p class="benchmark-metric-card__value">' + domain.value + '%</p>';
+        html += '<p class="benchmark-metric-card__value' + (belowThreshold ? ' benchmark-metric-card__value--below-threshold' : '') + '">' + domain.value + '%</p>';
         html += '</div>';
 			html += '<div class="benchmark-metric-card__bar"><span style="width:' + domain.value + '%;background:' + tone.bar + '"></span></div>';
 			html += '</section>';

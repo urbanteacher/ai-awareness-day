@@ -297,16 +297,18 @@
             'bias_awareness'
         ];
 
+        var focusMax = renderOpts.focusGuidanceMax != null ? parseInt(renderOpts.focusGuidanceMax, 10) : 75;
         var cardOpts = {
             variant: 'teacher',
             guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+            focusGuidanceMax: focusMax,
         };
 
         TEACHER_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 75 || focusCount >= 3) return;
+            if (score === null || score >= focusMax || focusCount >= 3) return;
 
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('teacher', key, score);
@@ -431,16 +433,18 @@
             'bias_awareness',
             'ai_literacy'
         ];
+        var focusMax = renderOpts.focusGuidanceMax != null ? parseInt(renderOpts.focusGuidanceMax, 10) : 70;
         var cardOpts = {
             variant: 'leader',
             guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+            focusGuidanceMax: focusMax,
         };
 
         LEADER_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 75 || focusCount >= 4) return;
+            if (score === null || score >= focusMax || focusCount >= 4) return;
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('leader', key, score);
             html += Results.focusCardHtml(Object.assign({}, cardOpts, {
@@ -578,16 +582,18 @@
         var html = '';
         var focusCount = 0;
         var SUPPORT_DOMAINS = ['safeguarding', 'privacy_data_protection', 'human_oversight', 'ai_literacy', 'bias_awareness'];
+        var focusMax = renderOpts.focusGuidanceMax != null ? parseInt(renderOpts.focusGuidanceMax, 10) : 75;
         var cardOpts = {
             variant: 'support',
             guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+            focusGuidanceMax: focusMax,
         };
 
         SUPPORT_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 75 || focusCount >= 3) return;
+            if (score === null || score >= focusMax || focusCount >= 3) return;
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('support', key, score);
             html += Results.focusCardHtml(Object.assign({}, cardOpts, {
@@ -673,12 +679,21 @@
         var focusCount = 0;
         var STUDENT_DOMAINS = ['independent_thinking', 'privacy_awareness', 'verification_skills', 'ai_literacy'];
 
+        var focusMax = renderOpts.focusGuidanceMax != null ? parseInt(renderOpts.focusGuidanceMax, 10) : 70;
+        var studentCardOpts = {
+            variant: 'student',
+            guidanceOpen: false,
+            guidanceToggle: renderOpts.guidanceToggle || 'View areas to improve',
+            guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+            focusGuidanceMax: focusMax,
+        };
+
         STUDENT_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 75 || focusCount >= 2) return;
+            if (score === null || score >= focusMax || focusCount >= 2) return;
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('student', key, score);
-            html += Results.focusCardHtml({
+            html += Results.focusCardHtml(Object.assign({}, studentCardOpts, {
                 title: focus.label,
                 score: score,
                 severity: focus.severity,
@@ -687,7 +702,7 @@
                 impactTitle: 'Your learning challenge',
                 actions: focus.actions,
                 badgeText: (focus.severity === 'critical' ? 'Needs attention' : 'Take care') + ' · ' + score + '%',
-            });
+            }));
             focusCount++;
         });
 
@@ -787,12 +802,21 @@
         var focusCount = 0;
         var PUBLIC_DOMAINS = ['data_privacy', 'deepfake_scam_awareness', 'workplace_ai', 'verification', 'emotional_social', 'personal_ai_use'];
 
+        var focusMax = renderOpts.focusGuidanceMax != null ? parseInt(renderOpts.focusGuidanceMax, 10) : 50;
+        var publicCardOpts = {
+            variant: 'public',
+            guidanceOpen: false,
+            guidanceToggle: renderOpts.guidanceToggle || 'View areas to improve',
+            guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
+            focusGuidanceMax: focusMax,
+        };
+
         PUBLIC_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 50 || focusCount >= 6) return;
+            if (score === null || score >= focusMax || focusCount >= 6) return;
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('public', key, score);
-            html += Results.focusCardHtml({
+            html += Results.focusCardHtml(Object.assign({}, publicCardOpts, {
                 title: focus.label,
                 score: score,
                 severity: focus.severity,
@@ -800,9 +824,8 @@
                 impact: focus.impact,
                 impactTitle: 'What this means for you',
                 actions: focus.actions,
-                variant: 'public',
                 badgeText: (focus.severity === 'critical' ? 'At risk' : 'Needs work') + ' · ' + score + '%',
-            });
+            }));
             focusCount++;
         });
 

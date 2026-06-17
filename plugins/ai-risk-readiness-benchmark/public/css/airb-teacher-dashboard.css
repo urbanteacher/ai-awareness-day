@@ -149,6 +149,32 @@
 	color: #dc2626;
 }
 
+.airb__results--teacher .airb__focus-card-score--below-threshold, .airb__results--student .airb__focus-card-score--below-threshold, .airb__results--parent .airb__focus-card-score--below-threshold, .airb__results--leader .airb__focus-card-score--below-threshold, .airb__results--support .airb__focus-card-score--below-threshold, .airb__results--public .airb__focus-card-score--below-threshold {
+	color: #dc2626;
+}
+
+.airb__results--teacher .airb__focus-badge--below-threshold, .airb__results--student .airb__focus-badge--below-threshold, .airb__results--parent .airb__focus-badge--below-threshold, .airb__results--leader .airb__focus-badge--below-threshold, .airb__results--support .airb__focus-badge--below-threshold, .airb__results--public .airb__focus-badge--below-threshold,
+.airb__results--teacher .airb__parent-metric-badge--below-threshold, .airb__results--student .airb__parent-metric-badge--below-threshold, .airb__results--parent .airb__parent-metric-badge--below-threshold, .airb__results--leader .airb__parent-metric-badge--below-threshold, .airb__results--support .airb__parent-metric-badge--below-threshold, .airb__results--public .airb__parent-metric-badge--below-threshold,
+.airb__results--teacher .airb__student-skill-badge--below-threshold, .airb__results--student .airb__student-skill-badge--below-threshold, .airb__results--parent .airb__student-skill-badge--below-threshold, .airb__results--leader .airb__student-skill-badge--below-threshold, .airb__results--support .airb__student-skill-badge--below-threshold, .airb__results--public .airb__student-skill-badge--below-threshold {
+	color: #dc2626 !important;
+	background: #fef2f2 !important;
+}
+
+.airb__results--teacher .airb__focus-badge-core--below-threshold, .airb__results--student .airb__focus-badge-core--below-threshold, .airb__results--parent .airb__focus-badge-core--below-threshold, .airb__results--leader .airb__focus-badge-core--below-threshold, .airb__results--support .airb__focus-badge-core--below-threshold, .airb__results--public .airb__focus-badge-core--below-threshold,
+.airb__results--teacher .airb__focus-badge-detail--below-threshold, .airb__results--student .airb__focus-badge-detail--below-threshold, .airb__results--parent .airb__focus-badge-detail--below-threshold, .airb__results--leader .airb__focus-badge-detail--below-threshold, .airb__results--support .airb__focus-badge-detail--below-threshold, .airb__results--public .airb__focus-badge-detail--below-threshold {
+	color: #dc2626;
+}
+
+.airb__results--teacher .airb__focus-practice-title--below-threshold, .airb__results--student .airb__focus-practice-title--below-threshold, .airb__results--parent .airb__focus-practice-title--below-threshold, .airb__results--leader .airb__focus-practice-title--below-threshold, .airb__results--support .airb__focus-practice-title--below-threshold, .airb__results--public .airb__focus-practice-title--below-threshold {
+	color: #dc2626;
+}
+
+.airb__results--teacher .airb__parent-topic-challenge-bullet--below-threshold, .airb__results--student .airb__parent-topic-challenge-bullet--below-threshold, .airb__results--parent .airb__parent-topic-challenge-bullet--below-threshold, .airb__results--leader .airb__parent-topic-challenge-bullet--below-threshold, .airb__results--support .airb__parent-topic-challenge-bullet--below-threshold, .airb__results--public .airb__parent-topic-challenge-bullet--below-threshold,
+.airb__results--teacher .airb__focus-practice-list-item--below-threshold, .airb__results--student .airb__focus-practice-list-item--below-threshold, .airb__results--parent .airb__focus-practice-list-item--below-threshold, .airb__results--leader .airb__focus-practice-list-item--below-threshold, .airb__results--support .airb__focus-practice-list-item--below-threshold, .airb__results--public .airb__focus-practice-list-item--below-threshold {
+	color: #dc2626;
+	font-weight: 600;
+}
+
 .airb__results--teacher .benchmark-metric-card__prompt, .airb__results--student .benchmark-metric-card__prompt, .airb__results--parent .benchmark-metric-card__prompt, .airb__results--leader .benchmark-metric-card__prompt, .airb__results--support .benchmark-metric-card__prompt, .airb__results--public .benchmark-metric-card__prompt {
 	margin: 0.35rem 0 0;
 	max-width: none;
