@@ -8964,6 +8964,13 @@
 		border-bottom: 1px solid var(--airb-border);
 	}
 
+	.airb.airb--mobile-flow.airb--phase-results .airb__appbar,
+	.airb.airb--mobile-flow.airb--phase-results .airb__progress {
+		position: static;
+		top: auto;
+		z-index: auto;
+	}
+
 	.airb.airb--mobile-flow .airb__stepper {
 		gap: 4px;
 		margin-bottom: 0.45rem;

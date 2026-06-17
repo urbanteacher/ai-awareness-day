@@ -2177,6 +2177,49 @@
 }
 
 @media (max-width: 560px) {
+	.airb__results--teacher .teacher-dash-core, .airb__results--student .teacher-dash-core, .airb__results--parent .teacher-dash-core, .airb__results--leader .teacher-dash-core, .airb__results--support .teacher-dash-core, .airb__results--public .teacher-dash-core {
+		padding: 0.8rem 0.75rem 0.9rem;
+	}
+
+	.airb__results--teacher .teacher-dash-core__body, .airb__results--student .teacher-dash-core__body, .airb__results--parent .teacher-dash-core__body, .airb__results--leader .teacher-dash-core__body, .airb__results--support .teacher-dash-core__body, .airb__results--public .teacher-dash-core__body {
+		display: block;
+	}
+
+	.airb__results--teacher .teacher-dash-core__icon, .airb__results--student .teacher-dash-core__icon, .airb__results--parent .teacher-dash-core__icon, .airb__results--leader .teacher-dash-core__icon, .airb__results--support .teacher-dash-core__icon, .airb__results--public .teacher-dash-core__icon {
+		display: none;
+	}
+
+	.airb__results--teacher .teacher-dash-core__score-row, .airb__results--student .teacher-dash-core__score-row, .airb__results--parent .teacher-dash-core__score-row, .airb__results--leader .teacher-dash-core__score-row, .airb__results--support .teacher-dash-core__score-row, .airb__results--public .teacher-dash-core__score-row {
+		margin-top: 0.35rem;
+		gap: 0.2rem 0.45rem;
+	}
+
+	.airb__results--teacher .teacher-dash-core__score, .airb__results--student .teacher-dash-core__score, .airb__results--parent .teacher-dash-core__score, .airb__results--leader .teacher-dash-core__score, .airb__results--support .teacher-dash-core__score, .airb__results--public .teacher-dash-core__score {
+		font-size: 2.5rem;
+	}
+
+	.airb__results--teacher .teacher-dash-core__band, .airb__results--student .teacher-dash-core__band, .airb__results--parent .teacher-dash-core__band, .airb__results--leader .teacher-dash-core__band, .airb__results--support .teacher-dash-core__band, .airb__results--public .teacher-dash-core__band {
+		font-size: 1.35rem;
+	}
+
+	.airb__results--teacher .teacher-dash-core__motif, .airb__results--student .teacher-dash-core__motif, .airb__results--parent .teacher-dash-core__motif, .airb__results--leader .teacher-dash-core__motif, .airb__results--support .teacher-dash-core__motif, .airb__results--public .teacher-dash-core__motif {
+		margin-top: 0.6rem;
+		padding: 0.6rem 0.7rem;
+	}
+
+	.airb__results--teacher .teacher-dash-peer, .airb__results--student .teacher-dash-peer, .airb__results--parent .teacher-dash-peer, .airb__results--leader .teacher-dash-peer, .airb__results--support .teacher-dash-peer, .airb__results--public .teacher-dash-peer {
+		margin-top: 0.55rem;
+		padding: 0.55rem;
+	}
+
+	.airb__results--teacher .teacher-dash-peer__grid, .airb__results--student .teacher-dash-peer__grid, .airb__results--parent .teacher-dash-peer__grid, .airb__results--leader .teacher-dash-peer__grid, .airb__results--support .teacher-dash-peer__grid, .airb__results--public .teacher-dash-peer__grid {
+		gap: 0.3rem;
+	}
+
+	.airb__results--teacher .teacher-dash-peer__stat, .airb__results--student .teacher-dash-peer__stat, .airb__results--parent .teacher-dash-peer__stat, .airb__results--leader .teacher-dash-peer__stat, .airb__results--support .teacher-dash-peer__stat, .airb__results--public .teacher-dash-peer__stat {
+		padding: 0.35rem 0.4rem;
+	}
+
 	.airb__results--teacher .benchmark-domain-grid, .airb__results--student .benchmark-domain-grid, .airb__results--parent .benchmark-domain-grid, .airb__results--leader .benchmark-domain-grid, .airb__results--support .benchmark-domain-grid, .airb__results--public .benchmark-domain-grid {
 		grid-template-columns: 1fr;
 	}
