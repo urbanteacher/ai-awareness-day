@@ -304,7 +304,7 @@ class AIRB_Events {
 	}
 
 	/**
-	 * Clear submission_id on events linked to deleted submissions.
+	 * Delete events linked to deleted submissions.
 	 *
 	 * @param array<int, int> $submission_ids Submission IDs.
 	 */
@@ -331,20 +331,20 @@ class AIRB_Events {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$table} SET submission_id = 0 WHERE submission_id IN ({$placeholders})",
+				"DELETE FROM {$table} WHERE submission_id IN ({$placeholders})",
 				$submission_ids
 			)
 		);
 	}
 
 	/**
-	 * Clear submission_id on all events that reference a submission.
+	 * Delete all events that reference a submission.
 	 */
 	public static function unlink_all_submissions(): void {
 		global $wpdb;
 		$table = self::table_name();
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$wpdb->query( "UPDATE {$table} SET submission_id = 0 WHERE submission_id > 0" );
+		$wpdb->query( "DELETE FROM {$table} WHERE submission_id > 0" );
 	}
 }

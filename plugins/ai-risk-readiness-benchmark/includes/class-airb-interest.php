@@ -767,7 +767,7 @@ class AIRB_Interest {
 				$interest_lines[] = (string) $role_options[ $slug ];
 			}
 		}
-		$stakeholder      = sanitize_key( (string) ( $data['stakeholder_role'] ?? '' ) );
+		$stakeholder      = sanitize_text_field( substr( (string) ( $data['stakeholder_role'] ?? '' ), 0, 40 ) );
 		$stakeholder_opts = self::stakeholder_role_options();
 
 		$subject_name = $school ? $school : ( $child_school ? $child_school : ( $name ? $name : __( 'Unknown', 'ai-risk-benchmark' ) ) );
@@ -780,8 +780,13 @@ class AIRB_Interest {
 
 		$body  = "Benchmark support request\n\n";
 		$body .= "Role: {$role_label}\n";
-		if ( $stakeholder && isset( $stakeholder_opts[ $stakeholder ] ) ) {
-			$body .= 'Position: ' . $stakeholder_opts[ $stakeholder ] . "\n";
+		if ( $stakeholder ) {
+			$key = sanitize_key( $stakeholder );
+			if ( isset( $stakeholder_opts[ $key ] ) ) {
+				$body .= 'Position: ' . $stakeholder_opts[ $key ] . "\n";
+			} else {
+				$body .= 'Position: ' . $stakeholder . "\n";
+			}
 		}
 		if ( $name ) {
 			$body .= "Name: {$name}\n";

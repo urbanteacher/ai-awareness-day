@@ -530,7 +530,22 @@ class AIRB_Ajax {
 		$risk_label     = sanitize_text_field( (string) ( $_POST['risk_level_label'] ?? '' ) );
 		$readiness_label = sanitize_text_field( (string) ( $_POST['readiness_level_label'] ?? '' ) );
 		$year_group      = sanitize_key( (string) ( $_POST['year_group'] ?? '' ) );
-		$stakeholder_role = sanitize_key( (string) ( $_POST['stakeholder_role'] ?? '' ) );
+		$stakeholder_raw  = sanitize_text_field( (string) ( $_POST['stakeholder_role'] ?? '' ) );
+		$stakeholder_role = substr( $stakeholder_raw, 0, 40 );
+		if ( $stakeholder_role ) {
+			$stakeholder_opts = AIRB_Interest::stakeholder_role_options();
+			$key = sanitize_key( $stakeholder_role );
+			if ( isset( $stakeholder_opts[ $key ] ) ) {
+				$stakeholder_role = $key;
+			} else {
+				foreach ( $stakeholder_opts as $opt_key => $label ) {
+					if ( 0 === strcasecmp( (string) $label, $stakeholder_role ) ) {
+						$stakeholder_role = (string) $opt_key;
+						break;
+					}
+				}
+			}
+		}
 		$interests      = isset( $_POST['interests'] ) ? json_decode( wp_unslash( (string) $_POST['interests'] ), true ) : array();
 		$weak_domains   = isset( $_POST['weak_domains'] ) ? json_decode( wp_unslash( (string) $_POST['weak_domains'] ), true ) : array();
 

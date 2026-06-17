@@ -5907,16 +5907,16 @@
 		html += '</fieldset>';
 
 		if (fields.show_stakeholder_role && form.stakeholder_roles) {
-			html += '<fieldset class="airb__interest-stakeholder airb__teacher-follow-up-stakeholder">';
-			html += '<legend class="airb__interest-legend">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</legend>';
-			var roleKeys = Object.keys(form.stakeholder_roles);
-			roleKeys.forEach(function (key, index) {
-				var inputId = 'airb-stakeholder-' + key;
-				html += '<label class="airb__interest-option airb__interest-option--radio" for="' + esc(inputId) + '">';
-				html += '<input type="radio" id="' + esc(inputId) + '" name="stakeholder_role" value="' + esc(key) + '"' + (index === 0 ? ' checked' : '') + '>';
-				html += '<span class="airb__interest-option-text">' + esc(form.stakeholder_roles[key]) + '</span></label>';
+			var datalistId = 'airb-stakeholder-role-options';
+			html += '<div class="airb__field airb__teacher-follow-up-stakeholder">';
+			html += '<label class="airb__label" for="airb-stakeholder-role">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</label>';
+			html += '<input class="airb__input" type="text" id="airb-stakeholder-role" name="stakeholder_role" list="' + esc(datalistId) + '" autocomplete="organization-title">';
+			html += '<datalist id="' + esc(datalistId) + '">';
+			Object.keys(form.stakeholder_roles).forEach(function (key) {
+				html += '<option value="' + esc(form.stakeholder_roles[key]) + '"></option>';
 			});
-			html += '</fieldset>';
+			html += '</datalist>';
+			html += '</div>';
 		}
 
 		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
@@ -6349,8 +6349,8 @@
 		body.append('risk_level_label', r.risk_level_label || '');
 		body.append('readiness_level_label', r.readiness_level_label || '');
 		body.append('year_group', state.yearGroup || '');
-		var stakeholderInput = form.querySelector('input[name="stakeholder_role"]:checked');
-		body.append('stakeholder_role', stakeholderInput ? stakeholderInput.value : '');
+		var stakeholderValue = ((form.querySelector('input[name="stakeholder_role"]') || {}).value || '').trim();
+		body.append('stakeholder_role', stakeholderValue);
 		body.append('interests', JSON.stringify(interests));
 		body.append('weak_domains', JSON.stringify((r.interest_form && r.interest_form.weak_domains) || []));
 

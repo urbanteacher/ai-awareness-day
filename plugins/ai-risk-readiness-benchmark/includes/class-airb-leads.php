@@ -204,7 +204,7 @@ class AIRB_Leads {
 				'risk_level_label'      => sanitize_text_field( (string) ( $data['risk_level_label'] ?? '' ) ),
 				'readiness_level_label' => sanitize_text_field( (string) ( $data['readiness_level_label'] ?? '' ) ),
 				'year_group'            => sanitize_key( (string) ( $data['year_group'] ?? '' ) ),
-				'stakeholder_role'      => sanitize_key( (string) ( $data['stakeholder_role'] ?? '' ) ),
+				'stakeholder_role'      => sanitize_text_field( substr( (string) ( $data['stakeholder_role'] ?? '' ), 0, 40 ) ),
 				'interests'             => wp_json_encode( array_values( $interests ) ),
 				'weak_domains'          => wp_json_encode( array_values( $weak_domains ) ),
 				'hub_page'              => sanitize_key( (string) ( $data['hub_page'] ?? '' ) ),
