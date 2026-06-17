@@ -59,19 +59,19 @@
 }
 
 /* ── Demo AIRB component skin (.demo-airb wrapper) ── */
-.airb__results--teacher .demo-airb, .airb__results--student .demo-airb, .airb__results--parent .demo-airb, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb {
+.airb__results--teacher .demo-airb, .airb__results--student .demo-airb, .airb__results--parent .demo-airb, .airb__results--leader .demo-airb, .airb__results--support .demo-airb, .airb__results--public .demo-airb {
 	--airb-border: #e2e8f0;
 	--airb-muted: #64748b;
 	--white: #fff;
 }
 
-.airb__results--teacher .benchmark-domain-grid, .airb__results--student .benchmark-domain-grid, .airb__results--parent .benchmark-domain-grid, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-domain-grid {
+.airb__results--teacher .benchmark-domain-grid, .airb__results--student .benchmark-domain-grid, .airb__results--parent .benchmark-domain-grid, .airb__results--leader .benchmark-domain-grid, .airb__results--support .benchmark-domain-grid, .airb__results--public .benchmark-domain-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .benchmark-metric-card, .airb__results--student .benchmark-metric-card, .airb__results--parent .benchmark-metric-card, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card {
+.airb__results--teacher .benchmark-metric-card, .airb__results--student .benchmark-metric-card, .airb__results--parent .benchmark-metric-card, .airb__results--leader .benchmark-metric-card, .airb__results--support .benchmark-metric-card, .airb__results--public .benchmark-metric-card {
 	display: flex;
 	min-height: 6rem;
 	min-width: 0;
@@ -83,14 +83,14 @@
 	padding: 0.7rem;
 }
 
-.airb__results--teacher .benchmark-metric-card__header, .airb__results--student .benchmark-metric-card__header, .airb__results--parent .benchmark-metric-card__header, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__header {
+.airb__results--teacher .benchmark-metric-card__header, .airb__results--student .benchmark-metric-card__header, .airb__results--parent .benchmark-metric-card__header, .airb__results--leader .benchmark-metric-card__header, .airb__results--support .benchmark-metric-card__header, .airb__results--public .benchmark-metric-card__header {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 0.45rem;
 }
 
-.airb__results--teacher .benchmark-metric-card__title, .airb__results--student .benchmark-metric-card__title, .airb__results--parent .benchmark-metric-card__title, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__title {
+.airb__results--teacher .benchmark-metric-card__title, .airb__results--student .benchmark-metric-card__title, .airb__results--parent .benchmark-metric-card__title, .airb__results--leader .benchmark-metric-card__title, .airb__results--support .benchmark-metric-card__title, .airb__results--public .benchmark-metric-card__title {
 	margin: 0;
 	min-width: 0;
 	font-size: 0.82rem;
@@ -99,7 +99,7 @@
 	color: #020617;
 }
 
-.airb__results--teacher .benchmark-metric-card__badge, .airb__results--student .benchmark-metric-card__badge, .airb__results--parent .benchmark-metric-card__badge, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__badge {
+.airb__results--teacher .benchmark-metric-card__badge, .airb__results--student .benchmark-metric-card__badge, .airb__results--parent .benchmark-metric-card__badge, .airb__results--leader .benchmark-metric-card__badge, .airb__results--support .benchmark-metric-card__badge, .airb__results--public .benchmark-metric-card__badge {
 	width: fit-content;
 	flex: none;
 	border-radius: 0.35rem;
@@ -111,13 +111,13 @@
 	letter-spacing: 0.04em;
 }
 
-.airb__results--teacher .benchmark-metric-card__body, .airb__results--student .benchmark-metric-card__body, .airb__results--parent .benchmark-metric-card__body, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__body {
+.airb__results--teacher .benchmark-metric-card__body, .airb__results--student .benchmark-metric-card__body, .airb__results--parent .benchmark-metric-card__body, .airb__results--leader .benchmark-metric-card__body, .airb__results--support .benchmark-metric-card__body, .airb__results--public .benchmark-metric-card__body {
 	display: block;
 	margin-top: auto;
 	padding-top: 0.65rem;
 }
 
-.airb__results--teacher .benchmark-metric-card__value, .airb__results--student .benchmark-metric-card__value, .airb__results--parent .benchmark-metric-card__value, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__value {
+.airb__results--teacher .benchmark-metric-card__value, .airb__results--student .benchmark-metric-card__value, .airb__results--parent .benchmark-metric-card__value, .airb__results--leader .benchmark-metric-card__value, .airb__results--support .benchmark-metric-card__value, .airb__results--public .benchmark-metric-card__value {
 	margin: 0;
 	font-size: 1.55rem;
 	font-weight: 650;
@@ -126,7 +126,7 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .benchmark-metric-card__prompt, .airb__results--student .benchmark-metric-card__prompt, .airb__results--parent .benchmark-metric-card__prompt, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__prompt {
+.airb__results--teacher .benchmark-metric-card__prompt, .airb__results--student .benchmark-metric-card__prompt, .airb__results--parent .benchmark-metric-card__prompt, .airb__results--leader .benchmark-metric-card__prompt, .airb__results--support .benchmark-metric-card__prompt, .airb__results--public .benchmark-metric-card__prompt {
 	margin: 0.35rem 0 0;
 	max-width: none;
 	text-align: left;
@@ -135,7 +135,7 @@
 	line-height: 1.18;
 }
 
-.airb__results--teacher .benchmark-metric-card__bar, .airb__results--student .benchmark-metric-card__bar, .airb__results--parent .benchmark-metric-card__bar, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__bar {
+.airb__results--teacher .benchmark-metric-card__bar, .airb__results--student .benchmark-metric-card__bar, .airb__results--parent .benchmark-metric-card__bar, .airb__results--leader .benchmark-metric-card__bar, .airb__results--support .benchmark-metric-card__bar, .airb__results--public .benchmark-metric-card__bar {
 	height: 0.3rem;
 	margin-top: 0.65rem;
 	overflow: hidden;
@@ -143,7 +143,7 @@
 	background: #f1f5f9;
 }
 
-.airb__results--teacher .benchmark-metric-card__bar > span, .airb__results--student .benchmark-metric-card__bar > span, .airb__results--parent .benchmark-metric-card__bar > span, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-metric-card__bar > span {
+.airb__results--teacher .benchmark-metric-card__bar > span, .airb__results--student .benchmark-metric-card__bar > span, .airb__results--parent .benchmark-metric-card__bar > span, .airb__results--leader .benchmark-metric-card__bar > span, .airb__results--support .benchmark-metric-card__bar > span, .airb__results--public .benchmark-metric-card__bar > span {
 	display: block;
 	height: 100%;
 	border-radius: 999px;
@@ -177,7 +177,7 @@
 .airb__results--student .text-rose-800,
 .airb__results--parent .text-rose-800 { color: #9f1239; }
 
-.airb__results--teacher .demo-airb .airb__leader-section-label, .airb__results--student .demo-airb .airb__leader-section-label, .airb__results--parent .demo-airb .airb__leader-section-label, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-section-label {
+.airb__results--teacher .demo-airb .airb__leader-section-label, .airb__results--student .demo-airb .airb__leader-section-label, .airb__results--parent .demo-airb .airb__leader-section-label, .airb__results--leader .demo-airb .airb__leader-section-label, .airb__results--support .demo-airb .airb__leader-section-label, .airb__results--public .demo-airb .airb__leader-section-label {
 	margin: 0 0 0.45rem;
 	padding-bottom: 0.5rem;
 	border-bottom: 1px solid var(--airb-border);
@@ -188,7 +188,7 @@
 	color: var(--airb-muted);
 }
 
-.airb__results--teacher .demo-airb .airb__focus-stack-intro, .airb__results--student .demo-airb .airb__focus-stack-intro, .airb__results--parent .demo-airb .airb__focus-stack-intro, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-stack-intro {
+.airb__results--teacher .demo-airb .airb__focus-stack-intro, .airb__results--student .demo-airb .airb__focus-stack-intro, .airb__results--parent .demo-airb .airb__focus-stack-intro, .airb__results--leader .demo-airb .airb__focus-stack-intro, .airb__results--support .demo-airb .airb__focus-stack-intro, .airb__results--public .demo-airb .airb__focus-stack-intro {
 	margin: 0 0 0.65rem;
 	max-width: 58rem;
 	font-size: 0.82rem;
@@ -196,12 +196,12 @@
 	color: var(--airb-muted);
 }
 
-.airb__results--teacher .demo-airb .airb__leader-focus-stack, .airb__results--student .demo-airb .airb__leader-focus-stack, .airb__results--parent .demo-airb .airb__leader-focus-stack, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-focus-stack {
+.airb__results--teacher .demo-airb .airb__leader-focus-stack, .airb__results--student .demo-airb .airb__leader-focus-stack, .airb__results--parent .demo-airb .airb__leader-focus-stack, .airb__results--leader .demo-airb .airb__leader-focus-stack, .airb__results--support .demo-airb .airb__leader-focus-stack, .airb__results--public .demo-airb .airb__leader-focus-stack {
 	display: grid;
 	gap: 0.65rem;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card, .airb__results--student .demo-airb .airb__focus-card, .airb__results--parent .demo-airb .airb__focus-card, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card {
+.airb__results--teacher .demo-airb .airb__focus-card, .airb__results--student .demo-airb .airb__focus-card, .airb__results--parent .demo-airb .airb__focus-card, .airb__results--leader .demo-airb .airb__focus-card, .airb__results--support .demo-airb .airb__focus-card, .airb__results--public .demo-airb .airb__focus-card {
 	background: var(--white);
 	border: 1px solid var(--airb-border);
 	border-radius: 8px;
@@ -212,27 +212,27 @@
 	margin-bottom: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-focus-card, .airb__results--student .demo-airb .airb__teacher-focus-card, .airb__results--parent .demo-airb .airb__teacher-focus-card, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-focus-card {
+.airb__results--teacher .demo-airb .airb__teacher-focus-card, .airb__results--student .demo-airb .airb__teacher-focus-card, .airb__results--parent .demo-airb .airb__teacher-focus-card, .airb__results--leader .demo-airb .airb__teacher-focus-card, .airb__results--support .demo-airb .airb__teacher-focus-card, .airb__results--public .demo-airb .airb__teacher-focus-card {
 	border-left: none;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--critical, .airb__results--student .demo-airb .airb__focus-card--critical, .airb__results--parent .demo-airb .airb__focus-card--critical, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--critical {
+.airb__results--teacher .demo-airb .airb__focus-card--critical, .airb__results--student .demo-airb .airb__focus-card--critical, .airb__results--parent .demo-airb .airb__focus-card--critical, .airb__results--leader .demo-airb .airb__focus-card--critical, .airb__results--support .demo-airb .airb__focus-card--critical, .airb__results--public .demo-airb .airb__focus-card--critical {
 	border-color: #fda4af;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--high, .airb__results--student .demo-airb .airb__focus-card--high, .airb__results--parent .demo-airb .airb__focus-card--high, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--high {
+.airb__results--teacher .demo-airb .airb__focus-card--high, .airb__results--student .demo-airb .airb__focus-card--high, .airb__results--parent .demo-airb .airb__focus-card--high, .airb__results--leader .demo-airb .airb__focus-card--high, .airb__results--support .demo-airb .airb__focus-card--high, .airb__results--public .demo-airb .airb__focus-card--high {
 	border-color: #fbbf24;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--moderate, .airb__results--student .demo-airb .airb__focus-card--moderate, .airb__results--parent .demo-airb .airb__focus-card--moderate, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--moderate {
+.airb__results--teacher .demo-airb .airb__focus-card--moderate, .airb__results--student .demo-airb .airb__focus-card--moderate, .airb__results--parent .demo-airb .airb__focus-card--moderate, .airb__results--leader .demo-airb .airb__focus-card--moderate, .airb__results--support .demo-airb .airb__focus-card--moderate, .airb__results--public .demo-airb .airb__focus-card--moderate {
 	border-color: #cbd5e1;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card-header, .airb__results--student .demo-airb .airb__focus-card-header, .airb__results--parent .demo-airb .airb__focus-card-header, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card-header {
+.airb__results--teacher .demo-airb .airb__focus-card-header, .airb__results--student .demo-airb .airb__focus-card-header, .airb__results--parent .demo-airb .airb__focus-card-header, .airb__results--leader .demo-airb .airb__focus-card-header, .airb__results--support .demo-airb .airb__focus-card-header, .airb__results--public .demo-airb .airb__focus-card-header {
 	margin-bottom: 0.25rem;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card-title, .airb__results--student .demo-airb .airb__focus-card-title, .airb__results--parent .demo-airb .airb__focus-card-title, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card-title {
+.airb__results--teacher .demo-airb .airb__focus-card-title, .airb__results--student .demo-airb .airb__focus-card-title, .airb__results--parent .demo-airb .airb__focus-card-title, .airb__results--leader .demo-airb .airb__focus-card-title, .airb__results--support .demo-airb .airb__focus-card-title, .airb__results--public .demo-airb .airb__focus-card-title {
 	margin: 0;
 	min-width: 0;
 	font-size: 0.84rem;
@@ -241,7 +241,7 @@
 	color: #0f172a;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-badge, .airb__results--student .demo-airb .airb__focus-badge, .airb__results--parent .demo-airb .airb__focus-badge, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-badge {
+.airb__results--teacher .demo-airb .airb__focus-badge, .airb__results--student .demo-airb .airb__focus-badge, .airb__results--parent .demo-airb .airb__focus-badge, .airb__results--leader .demo-airb .airb__focus-badge, .airb__results--support .demo-airb .airb__focus-badge, .airb__results--public .demo-airb .airb__focus-badge {
 	display: inline-block;
 	width: fit-content;
 	font-size: 0.62rem;
@@ -254,14 +254,14 @@
 	letter-spacing: 0.04em;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-score-row, .airb__results--student .demo-airb .airb__focus-score-row, .airb__results--parent .demo-airb .airb__focus-score-row, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-score-row {
+.airb__results--teacher .demo-airb .airb__focus-score-row, .airb__results--student .demo-airb .airb__focus-score-row, .airb__results--parent .demo-airb .airb__focus-score-row, .airb__results--leader .demo-airb .airb__focus-score-row, .airb__results--support .demo-airb .airb__focus-score-row, .airb__results--public .demo-airb .airb__focus-score-row {
 	display: flex;
 	align-items: center;
 	gap: 0.45rem;
 	margin: 0.1rem 0 0.35rem;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card-score, .airb__results--student .demo-airb .airb__focus-card-score, .airb__results--parent .demo-airb .airb__focus-card-score, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card-score {
+.airb__results--teacher .demo-airb .airb__focus-card-score, .airb__results--student .demo-airb .airb__focus-card-score, .airb__results--parent .demo-airb .airb__focus-card-score, .airb__results--leader .demo-airb .airb__focus-card-score, .airb__results--support .demo-airb .airb__focus-card-score, .airb__results--public .demo-airb .airb__focus-card-score {
 	margin: 0;
 	font-size: 1.65rem;
 	font-weight: 650;
@@ -270,7 +270,7 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card-summary, .airb__results--student .demo-airb .airb__focus-card-summary, .airb__results--parent .demo-airb .airb__focus-card-summary, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card-summary {
+.airb__results--teacher .demo-airb .airb__focus-card-summary, .airb__results--student .demo-airb .airb__focus-card-summary, .airb__results--parent .demo-airb .airb__focus-card-summary, .airb__results--leader .demo-airb .airb__focus-card-summary, .airb__results--support .demo-airb .airb__focus-card-summary, .airb__results--public .demo-airb .airb__focus-card-summary {
 	display: -webkit-box;
 	margin: 0 0 0.55rem;
 	overflow: hidden;
@@ -281,18 +281,18 @@
 	color: var(--airb-muted);
 }
 
-.airb__results--teacher .demo-airb .airb__focus-practice, .airb__results--student .demo-airb .airb__focus-practice, .airb__results--parent .demo-airb .airb__focus-practice, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-practice {
+.airb__results--teacher .demo-airb .airb__focus-practice, .airb__results--student .demo-airb .airb__focus-practice, .airb__results--parent .demo-airb .airb__focus-practice, .airb__results--leader .demo-airb .airb__focus-practice, .airb__results--support .demo-airb .airb__focus-practice, .airb__results--public .demo-airb .airb__focus-practice {
 	background: #faeeda;
 	border-radius: 8px;
 	padding: 0.45rem 0.5rem;
 	margin-bottom: 0.35rem;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--student .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--critical .airb__focus-practice {
+.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--student .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--leader .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--support .demo-airb .airb__focus-card--critical .airb__focus-practice, .airb__results--public .demo-airb .airb__focus-card--critical .airb__focus-practice {
 	background: #fcebeb;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-practice-title, .airb__results--student .demo-airb .airb__focus-practice-title, .airb__results--parent .demo-airb .airb__focus-practice-title, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-practice-title {
+.airb__results--teacher .demo-airb .airb__focus-practice-title, .airb__results--student .demo-airb .airb__focus-practice-title, .airb__results--parent .demo-airb .airb__focus-practice-title, .airb__results--leader .demo-airb .airb__focus-practice-title, .airb__results--support .demo-airb .airb__focus-practice-title, .airb__results--public .demo-airb .airb__focus-practice-title {
 	font-size: 0.62rem;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -301,28 +301,28 @@
 	margin-bottom: 0.25rem;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--student .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--critical .airb__focus-practice-title {
+.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--student .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--leader .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--support .demo-airb .airb__focus-card--critical .airb__focus-practice-title, .airb__results--public .demo-airb .airb__focus-card--critical .airb__focus-practice-title {
 	color: #a32d2d;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-focus-impact, .airb__results--student .demo-airb .airb__teacher-focus-impact, .airb__results--parent .demo-airb .airb__teacher-focus-impact, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-focus-impact {
+.airb__results--teacher .demo-airb .airb__teacher-focus-impact, .airb__results--student .demo-airb .airb__teacher-focus-impact, .airb__results--parent .demo-airb .airb__teacher-focus-impact, .airb__results--leader .demo-airb .airb__teacher-focus-impact, .airb__results--support .demo-airb .airb__teacher-focus-impact, .airb__results--public .demo-airb .airb__teacher-focus-impact {
 	font-size: 0.68rem;
 	color: #633806;
 	padding: 0.06rem 0 0.06rem 0.65rem;
 	position: relative;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--student .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact {
+.airb__results--teacher .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--student .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--parent .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--leader .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--support .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact, .airb__results--public .demo-airb .airb__focus-card--critical .airb__teacher-focus-impact {
 	color: #791f1f;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-focus-impact::before, .airb__results--student .demo-airb .airb__teacher-focus-impact::before, .airb__results--parent .demo-airb .airb__teacher-focus-impact::before, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-focus-impact::before {
+.airb__results--teacher .demo-airb .airb__teacher-focus-impact::before, .airb__results--student .demo-airb .airb__teacher-focus-impact::before, .airb__results--parent .demo-airb .airb__teacher-focus-impact::before, .airb__results--leader .demo-airb .airb__teacher-focus-impact::before, .airb__results--support .demo-airb .airb__teacher-focus-impact::before, .airb__results--public .demo-airb .airb__teacher-focus-impact::before {
 	content: '·';
 	position: absolute;
 	left: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-action-row, .airb__results--student .demo-airb .airb__teacher-action-row, .airb__results--parent .demo-airb .airb__teacher-action-row, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-action-row {
+.airb__results--teacher .demo-airb .airb__teacher-action-row, .airb__results--student .demo-airb .airb__teacher-action-row, .airb__results--parent .demo-airb .airb__teacher-action-row, .airb__results--leader .demo-airb .airb__teacher-action-row, .airb__results--support .demo-airb .airb__teacher-action-row, .airb__results--public .demo-airb .airb__teacher-action-row {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.35rem;
@@ -330,11 +330,11 @@
 	border-bottom: 1px solid var(--airb-border);
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-action-row:last-child, .airb__results--student .demo-airb .airb__teacher-action-row:last-child, .airb__results--parent .demo-airb .airb__teacher-action-row:last-child, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-action-row:last-child {
+.airb__results--teacher .demo-airb .airb__teacher-action-row:last-child, .airb__results--student .demo-airb .airb__teacher-action-row:last-child, .airb__results--parent .demo-airb .airb__teacher-action-row:last-child, .airb__results--leader .demo-airb .airb__teacher-action-row:last-child, .airb__results--support .demo-airb .airb__teacher-action-row:last-child, .airb__results--public .demo-airb .airb__teacher-action-row:last-child {
 	border-bottom: none;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-action-num, .airb__results--student .demo-airb .airb__teacher-action-num, .airb__results--parent .demo-airb .airb__teacher-action-num, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-action-num {
+.airb__results--teacher .demo-airb .airb__teacher-action-num, .airb__results--student .demo-airb .airb__teacher-action-num, .airb__results--parent .demo-airb .airb__teacher-action-num, .airb__results--leader .demo-airb .airb__teacher-action-num, .airb__results--support .demo-airb .airb__teacher-action-num, .airb__results--public .demo-airb .airb__teacher-action-num {
 	width: 1rem;
 	height: 1rem;
 	border-radius: 50%;
@@ -348,13 +348,13 @@
 	flex-shrink: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-action-text, .airb__results--student .demo-airb .airb__teacher-action-text, .airb__results--parent .demo-airb .airb__teacher-action-text, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-action-text {
+.airb__results--teacher .demo-airb .airb__teacher-action-text, .airb__results--student .demo-airb .airb__teacher-action-text, .airb__results--parent .demo-airb .airb__teacher-action-text, .airb__results--leader .demo-airb .airb__teacher-action-text, .airb__results--support .demo-airb .airb__teacher-action-text, .airb__results--public .demo-airb .airb__teacher-action-text {
 	font-size: 0.68rem;
 	color: var(--airb-muted);
 	line-height: 1.32;
 }
 
-.airb__results--teacher .demo-airb .airb__results-accordion, .airb__results--student .demo-airb .airb__results-accordion, .airb__results--parent .demo-airb .airb__results-accordion, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-accordion {
+.airb__results--teacher .demo-airb .airb__results-accordion, .airb__results--student .demo-airb .airb__results-accordion, .airb__results--parent .demo-airb .airb__results-accordion, .airb__results--leader .demo-airb .airb__results-accordion, .airb__results--support .demo-airb .airb__results-accordion, .airb__results--public .demo-airb .airb__results-accordion {
 	margin: auto 0 0;
 	border: 0;
 	border-top: 1px solid var(--airb-border);
@@ -363,7 +363,7 @@
 	overflow: hidden;
 }
 
-.airb__results--teacher .demo-airb .airb__results-accordion > summary, .airb__results--student .demo-airb .airb__results-accordion > summary, .airb__results--parent .demo-airb .airb__results-accordion > summary, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-accordion > summary {
+.airb__results--teacher .demo-airb .airb__results-accordion > summary, .airb__results--student .demo-airb .airb__results-accordion > summary, .airb__results--parent .demo-airb .airb__results-accordion > summary, .airb__results--leader .demo-airb .airb__results-accordion > summary, .airb__results--support .demo-airb .airb__results-accordion > summary, .airb__results--public .demo-airb .airb__results-accordion > summary {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -379,7 +379,7 @@
 	letter-spacing: 0.04em;
 }
 
-.airb__results--teacher .demo-airb .airb__results-accordion > summary::after, .airb__results--student .demo-airb .airb__results-accordion > summary::after, .airb__results--parent .demo-airb .airb__results-accordion > summary::after, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-accordion > summary::after {
+.airb__results--teacher .demo-airb .airb__results-accordion > summary::after, .airb__results--student .demo-airb .airb__results-accordion > summary::after, .airb__results--parent .demo-airb .airb__results-accordion > summary::after, .airb__results--leader .demo-airb .airb__results-accordion > summary::after, .airb__results--support .demo-airb .airb__results-accordion > summary::after, .airb__results--public .demo-airb .airb__results-accordion > summary::after {
 	content: '';
 	display: block;
 	flex: none;
@@ -395,31 +395,31 @@
 	transition: transform 0.15s ease;
 }
 
-.airb__results--teacher .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--student .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--parent .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-accordion[open] > summary::after {
+.airb__results--teacher .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--student .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--parent .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--leader .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--support .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--public .demo-airb .airb__results-accordion[open] > summary::after {
 	content: '';
 	transform: rotate(-135deg) translateY(0.1rem);
 }
 
-.airb__results--teacher .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--student .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--parent .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-accordion > summary::-webkit-details-marker {
+.airb__results--teacher .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--student .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--parent .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--leader .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--support .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--public .demo-airb .airb__results-accordion > summary::-webkit-details-marker {
 	display: none;
 }
 
-.airb__results--teacher .demo-airb .airb__focus-guidance-body, .airb__results--student .demo-airb .airb__focus-guidance-body, .airb__results--parent .demo-airb .airb__focus-guidance-body, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__focus-guidance-body {
+.airb__results--teacher .demo-airb .airb__focus-guidance-body, .airb__results--student .demo-airb .airb__focus-guidance-body, .airb__results--parent .demo-airb .airb__focus-guidance-body, .airb__results--leader .demo-airb .airb__focus-guidance-body, .airb__results--support .demo-airb .airb__focus-guidance-body, .airb__results--public .demo-airb .airb__focus-guidance-body {
 	padding: 0.45rem 0 0.15rem;
 }
 
 .airb__results--teacher .demo-airb.airb__resources-panel,, .airb__results--student .demo-airb.airb__resources-panel,
-.airb__results--teacher .demo-airb .airb__resources-panel, .airb__results--student .demo-airb .airb__resources-panel, .airb__results--parent .demo-airb .airb__resources-panel, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resources-panel {
+.airb__results--teacher .demo-airb .airb__resources-panel, .airb__results--student .demo-airb .airb__resources-panel, .airb__results--parent .demo-airb .airb__resources-panel, .airb__results--leader .demo-airb .airb__resources-panel, .airb__results--support .demo-airb .airb__resources-panel, .airb__results--public .demo-airb .airb__resources-panel {
 	display: grid;
 	gap: 0.8rem;
 }
 
-.airb__results--teacher .demo-airb .airb__resources-header, .airb__results--student .demo-airb .airb__resources-header, .airb__results--parent .demo-airb .airb__resources-header, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resources-header {
+.airb__results--teacher .demo-airb .airb__resources-header, .airb__results--student .demo-airb .airb__resources-header, .airb__results--parent .demo-airb .airb__resources-header, .airb__results--leader .demo-airb .airb__resources-header, .airb__results--support .demo-airb .airb__resources-header, .airb__results--public .demo-airb .airb__resources-header {
 	display: grid;
 	gap: 0.2rem;
 }
 
-.airb__results--teacher .demo-airb .airb__resources-intro, .airb__results--student .demo-airb .airb__resources-intro, .airb__results--parent .demo-airb .airb__resources-intro, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resources-intro {
+.airb__results--teacher .demo-airb .airb__resources-intro, .airb__results--student .demo-airb .airb__resources-intro, .airb__results--parent .demo-airb .airb__resources-intro, .airb__results--leader .demo-airb .airb__resources-intro, .airb__results--support .demo-airb .airb__resources-intro, .airb__results--public .demo-airb .airb__resources-intro {
 	margin: 0;
 	color: #475569;
 	font-size: 0.88rem;
@@ -427,7 +427,7 @@
 }
 
 .airb__results--teacher .demo-airb .airb__leader-resource-links,, .airb__results--student .demo-airb .airb__leader-resource-links,
-.airb__results--teacher .demo-airb .airb__results-resource-links, .airb__results--student .demo-airb .airb__results-resource-links, .airb__results--parent .demo-airb .airb__results-resource-links, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-links {
+.airb__results--teacher .demo-airb .airb__results-resource-links, .airb__results--student .demo-airb .airb__results-resource-links, .airb__results--parent .demo-airb .airb__results-resource-links, .airb__results--leader .demo-airb .airb__results-resource-links, .airb__results--support .demo-airb .airb__results-resource-links, .airb__results--public .demo-airb .airb__results-resource-links {
 	margin: 0.55rem 0 0;
 	padding: 0;
 	list-style: none;
@@ -437,11 +437,11 @@
 	gap: 0.7rem;
 }
 
-.airb__results--teacher .demo-airb .airb__results-resource-item, .airb__results--student .demo-airb .airb__results-resource-item, .airb__results--parent .demo-airb .airb__results-resource-item, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-item {
+.airb__results--teacher .demo-airb .airb__results-resource-item, .airb__results--student .demo-airb .airb__results-resource-item, .airb__results--parent .demo-airb .airb__results-resource-item, .airb__results--leader .demo-airb .airb__results-resource-item, .airb__results--support .demo-airb .airb__results-resource-item, .airb__results--public .demo-airb .airb__results-resource-item {
 	width: 100%;
 }
 
-.airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--parent .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-links--cards .airb__results-resource-card {
+.airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--parent .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--leader .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--support .demo-airb .airb__results-resource-links--cards .airb__results-resource-card, .airb__results--public .demo-airb .airb__results-resource-links--cards .airb__results-resource-card {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.6rem;
@@ -461,7 +461,7 @@
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.airb__results--teacher .demo-airb .airb__results-resource-card--featured, .airb__results--student .demo-airb .airb__results-resource-card--featured, .airb__results--parent .demo-airb .airb__results-resource-card--featured, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-card--featured {
+.airb__results--teacher .demo-airb .airb__results-resource-card--featured, .airb__results--student .demo-airb .airb__results-resource-card--featured, .airb__results--parent .demo-airb .airb__results-resource-card--featured, .airb__results--leader .demo-airb .airb__results-resource-card--featured, .airb__results--support .demo-airb .airb__results-resource-card--featured, .airb__results--public .demo-airb .airb__results-resource-card--featured {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr) auto;
 	align-items: center;
@@ -478,12 +478,12 @@
 .airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:hover,, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:hover,
 .airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:focus-visible,, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:focus-visible,
 .airb__results--teacher .demo-airb .airb__results-resource-card--featured:hover,, .airb__results--student .demo-airb .airb__results-resource-card--featured:hover,
-.airb__results--teacher .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--student .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--parent .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-card--featured:focus-visible {
+.airb__results--teacher .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--student .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--parent .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--leader .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--support .demo-airb .airb__results-resource-card--featured:focus-visible, .airb__results--public .demo-airb .airb__results-resource-card--featured:focus-visible {
 	border-color: #2563eb;
 	box-shadow: 0 4px 14px rgba(15, 24, 34, 0.08);
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-media, .airb__results--student .demo-airb .airb__resource-link-media, .airb__results--parent .demo-airb .airb__resource-link-media, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-media {
+.airb__results--teacher .demo-airb .airb__resource-link-media, .airb__results--student .demo-airb .airb__resource-link-media, .airb__results--parent .demo-airb .airb__resource-link-media, .airb__results--leader .demo-airb .airb__resource-link-media, .airb__results--support .demo-airb .airb__resource-link-media, .airb__results--public .demo-airb .airb__resource-link-media {
 	flex: none;
 	width: 44px;
 	height: 44px;
@@ -495,12 +495,12 @@
 	justify-content: center;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-media--icon, .airb__results--student .demo-airb .airb__resource-link-media--icon, .airb__results--parent .demo-airb .airb__resource-link-media--icon, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-media--icon {
+.airb__results--teacher .demo-airb .airb__resource-link-media--icon, .airb__results--student .demo-airb .airb__resource-link-media--icon, .airb__results--parent .demo-airb .airb__resource-link-media--icon, .airb__results--leader .demo-airb .airb__resource-link-media--icon, .airb__results--support .demo-airb .airb__resource-link-media--icon, .airb__results--public .demo-airb .airb__resource-link-media--icon {
 	background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
 	position: relative;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-media--icon::before, .airb__results--student .demo-airb .airb__resource-link-media--icon::before, .airb__results--parent .demo-airb .airb__resource-link-media--icon::before, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-media--icon::before {
+.airb__results--teacher .demo-airb .airb__resource-link-media--icon::before, .airb__results--student .demo-airb .airb__resource-link-media--icon::before, .airb__results--parent .demo-airb .airb__resource-link-media--icon::before, .airb__results--leader .demo-airb .airb__resource-link-media--icon::before, .airb__results--support .demo-airb .airb__resource-link-media--icon::before, .airb__results--public .demo-airb .airb__resource-link-media--icon::before {
 	content: '';
 	width: 22px;
 	height: 26px;
@@ -509,21 +509,21 @@
 	box-shadow: inset 0 0 0 1px rgba(180, 83, 9, 0.25);
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-thumb, .airb__results--student .demo-airb .airb__resource-link-thumb, .airb__results--parent .demo-airb .airb__resource-link-thumb, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-thumb {
+.airb__results--teacher .demo-airb .airb__resource-link-thumb, .airb__results--student .demo-airb .airb__resource-link-thumb, .airb__results--parent .demo-airb .airb__resource-link-thumb, .airb__results--leader .demo-airb .airb__resource-link-thumb, .airb__results--support .demo-airb .airb__resource-link-thumb, .airb__results--public .demo-airb .airb__resource-link-thumb {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 	display: block;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-body, .airb__results--student .demo-airb .airb__resource-link-body, .airb__results--parent .demo-airb .airb__resource-link-body, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-body {
+.airb__results--teacher .demo-airb .airb__resource-link-body, .airb__results--student .demo-airb .airb__resource-link-body, .airb__results--parent .demo-airb .airb__resource-link-body, .airb__results--leader .demo-airb .airb__resource-link-body, .airb__results--support .demo-airb .airb__resource-link-body, .airb__results--public .demo-airb .airb__resource-link-body {
 	min-width: 0;
 	flex: 1;
 	display: grid;
 	gap: 0.18rem;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-kicker, .airb__results--student .demo-airb .airb__resource-link-kicker, .airb__results--parent .demo-airb .airb__resource-link-kicker, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-kicker {
+.airb__results--teacher .demo-airb .airb__resource-link-kicker, .airb__results--student .demo-airb .airb__resource-link-kicker, .airb__results--parent .demo-airb .airb__resource-link-kicker, .airb__results--leader .demo-airb .airb__resource-link-kicker, .airb__results--support .demo-airb .airb__resource-link-kicker, .airb__results--public .demo-airb .airb__resource-link-kicker {
 	color: #2563eb;
 	font-size: 0.68rem;
 	font-weight: 800;
@@ -532,7 +532,7 @@
 }
 
 .airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__resource-link-label,, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__resource-link-label,
-.airb__results--teacher .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--student .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--parent .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-card--featured .airb__resource-link-label {
+.airb__results--teacher .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--student .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--parent .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--leader .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--support .demo-airb .airb__results-resource-card--featured .airb__resource-link-label, .airb__results--public .demo-airb .airb__results-resource-card--featured .airb__resource-link-label {
 	font-size: 0.86rem;
 	font-weight: 600;
 	color: #0f172a;
@@ -540,14 +540,14 @@
 	text-decoration: none;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-description, .airb__results--student .demo-airb .airb__resource-link-description, .airb__results--parent .demo-airb .airb__resource-link-description, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-description {
+.airb__results--teacher .demo-airb .airb__resource-link-description, .airb__results--student .demo-airb .airb__resource-link-description, .airb__results--parent .demo-airb .airb__resource-link-description, .airb__results--leader .demo-airb .airb__resource-link-description, .airb__results--support .demo-airb .airb__resource-link-description, .airb__results--public .demo-airb .airb__resource-link-description {
 	color: #475569;
 	font-size: 0.76rem;
 	font-weight: 500;
 	line-height: 1.35;
 }
 
-.airb__results--teacher .demo-airb .airb__resource-link-arrow, .airb__results--student .demo-airb .airb__resource-link-arrow, .airb__results--parent .demo-airb .airb__resource-link-arrow, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__resource-link-arrow {
+.airb__results--teacher .demo-airb .airb__resource-link-arrow, .airb__results--student .demo-airb .airb__resource-link-arrow, .airb__results--parent .demo-airb .airb__resource-link-arrow, .airb__results--leader .demo-airb .airb__resource-link-arrow, .airb__results--support .demo-airb .airb__resource-link-arrow, .airb__results--public .demo-airb .airb__resource-link-arrow {
 	flex: none;
 	width: 1rem;
 	height: 1rem;
@@ -558,17 +558,17 @@
 .airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:hover .airb__resource-link-label,, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:hover .airb__resource-link-label,
 .airb__results--teacher .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:focus-visible .airb__resource-link-label,, .airb__results--student .demo-airb .airb__results-resource-links--cards .airb__results-resource-card:focus-visible .airb__resource-link-label,
 .airb__results--teacher .demo-airb .airb__results-resource-card--featured:hover .airb__resource-link-label,, .airb__results--student .demo-airb .airb__results-resource-card--featured:hover .airb__resource-link-label,
-.airb__results--teacher .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--student .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--parent .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label {
+.airb__results--teacher .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--student .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--parent .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--leader .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--support .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label, .airb__results--public .demo-airb .airb__results-resource-card--featured:focus-visible .airb__resource-link-label {
 	color: #2563eb;
 }
 
-.airb__results--teacher .demo-airb .airb__breaking-resource, .airb__results--student .demo-airb .airb__breaking-resource, .airb__results--parent .demo-airb .airb__breaking-resource, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__breaking-resource {
+.airb__results--teacher .demo-airb .airb__breaking-resource, .airb__results--student .demo-airb .airb__breaking-resource, .airb__results--parent .demo-airb .airb__breaking-resource, .airb__results--leader .demo-airb .airb__breaking-resource, .airb__results--support .demo-airb .airb__breaking-resource, .airb__results--public .demo-airb .airb__breaking-resource {
 	display: grid;
 	gap: 0.45rem;
 	padding-top: 0.2rem;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-card, .airb__results--student .demo-airb .airb__teacher-strength-card, .airb__results--parent .demo-airb .airb__teacher-strength-card, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-card {
+.airb__results--teacher .demo-airb .airb__teacher-strength-card, .airb__results--student .demo-airb .airb__teacher-strength-card, .airb__results--parent .demo-airb .airb__teacher-strength-card, .airb__results--leader .demo-airb .airb__teacher-strength-card, .airb__results--support .demo-airb .airb__teacher-strength-card, .airb__results--public .demo-airb .airb__teacher-strength-card {
 	background: var(--white);
 	border: 1px solid var(--airb-border);
 	border-radius: 8px;
@@ -576,7 +576,7 @@
 	margin-bottom: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__benchmark-card-heading, .airb__results--student .demo-airb .airb__benchmark-card-heading, .airb__results--parent .demo-airb .airb__benchmark-card-heading, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__benchmark-card-heading {
+.airb__results--teacher .demo-airb .airb__benchmark-card-heading, .airb__results--student .demo-airb .airb__benchmark-card-heading, .airb__results--parent .demo-airb .airb__benchmark-card-heading, .airb__results--leader .demo-airb .airb__benchmark-card-heading, .airb__results--support .demo-airb .airb__benchmark-card-heading, .airb__results--public .demo-airb .airb__benchmark-card-heading {
 	margin: 0 0 0.45rem;
 	padding-bottom: 0.35rem;
 	border-bottom: 1px solid var(--airb-border);
@@ -587,13 +587,13 @@
 	color: var(--airb-muted);
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-grid, .airb__results--student .demo-airb .airb__teacher-strength-grid, .airb__results--parent .demo-airb .airb__teacher-strength-grid, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-grid {
+.airb__results--teacher .demo-airb .airb__teacher-strength-grid, .airb__results--student .demo-airb .airb__teacher-strength-grid, .airb__results--parent .demo-airb .airb__teacher-strength-grid, .airb__results--leader .demo-airb .airb__teacher-strength-grid, .airb__results--support .demo-airb .airb__teacher-strength-grid, .airb__results--public .demo-airb .airb__teacher-strength-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-row, .airb__results--student .demo-airb .airb__teacher-strength-row, .airb__results--parent .demo-airb .airb__teacher-strength-row, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-row {
+.airb__results--teacher .demo-airb .airb__teacher-strength-row, .airb__results--student .demo-airb .airb__teacher-strength-row, .airb__results--parent .demo-airb .airb__teacher-strength-row, .airb__results--leader .demo-airb .airb__teacher-strength-row, .airb__results--support .demo-airb .airb__teacher-strength-row, .airb__results--public .demo-airb .airb__teacher-strength-row {
 	min-width: 0;
 	border: 1px solid var(--airb-border);
 	border-radius: 8px;
@@ -601,13 +601,13 @@
 	padding: 0.7rem;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-heading, .airb__results--student .demo-airb .airb__teacher-strength-heading, .airb__results--parent .demo-airb .airb__teacher-strength-heading, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-heading {
+.airb__results--teacher .demo-airb .airb__teacher-strength-heading, .airb__results--student .demo-airb .airb__teacher-strength-heading, .airb__results--parent .demo-airb .airb__teacher-strength-heading, .airb__results--leader .demo-airb .airb__teacher-strength-heading, .airb__results--support .demo-airb .airb__teacher-strength-heading, .airb__results--public .demo-airb .airb__teacher-strength-heading {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-tick, .airb__results--student .demo-airb .airb__teacher-strength-tick, .airb__results--parent .demo-airb .airb__teacher-strength-tick, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-tick {
+.airb__results--teacher .demo-airb .airb__teacher-strength-tick, .airb__results--student .demo-airb .airb__teacher-strength-tick, .airb__results--parent .demo-airb .airb__teacher-strength-tick, .airb__results--leader .demo-airb .airb__teacher-strength-tick, .airb__results--support .demo-airb .airb__teacher-strength-tick, .airb__results--public .demo-airb .airb__teacher-strength-tick {
 	width: 1.25rem;
 	height: 1.25rem;
 	border-radius: 50%;
@@ -621,7 +621,7 @@
 	flex-shrink: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-title, .airb__results--student .demo-airb .airb__teacher-strength-title, .airb__results--parent .demo-airb .airb__teacher-strength-title, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-title {
+.airb__results--teacher .demo-airb .airb__teacher-strength-title, .airb__results--student .demo-airb .airb__teacher-strength-title, .airb__results--parent .demo-airb .airb__teacher-strength-title, .airb__results--leader .demo-airb .airb__teacher-strength-title, .airb__results--support .demo-airb .airb__teacher-strength-title, .airb__results--public .demo-airb .airb__teacher-strength-title {
 	margin: 0;
 	font-size: 0.82rem;
 	font-weight: 600;
@@ -629,11 +629,11 @@
 	color: #0f172a;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-score, .airb__results--student .demo-airb .airb__teacher-strength-score, .airb__results--parent .demo-airb .airb__teacher-strength-score, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-score {
+.airb__results--teacher .demo-airb .airb__teacher-strength-score, .airb__results--student .demo-airb .airb__teacher-strength-score, .airb__results--parent .demo-airb .airb__teacher-strength-score, .airb__results--leader .demo-airb .airb__teacher-strength-score, .airb__results--support .demo-airb .airb__teacher-strength-score, .airb__results--public .demo-airb .airb__teacher-strength-score {
 	margin-top: 0.65rem;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-value, .airb__results--student .demo-airb .airb__teacher-strength-value, .airb__results--parent .demo-airb .airb__teacher-strength-value, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-value {
+.airb__results--teacher .demo-airb .airb__teacher-strength-value, .airb__results--student .demo-airb .airb__teacher-strength-value, .airb__results--parent .demo-airb .airb__teacher-strength-value, .airb__results--leader .demo-airb .airb__teacher-strength-value, .airb__results--support .demo-airb .airb__teacher-strength-value, .airb__results--public .demo-airb .airb__teacher-strength-value {
 	margin: 0;
 	font-size: 1.45rem;
 	font-weight: 650;
@@ -642,7 +642,7 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .demo-airb .airb__teacher-strength-detail, .airb__results--student .demo-airb .airb__teacher-strength-detail, .airb__results--parent .demo-airb .airb__teacher-strength-detail, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-detail {
+.airb__results--teacher .demo-airb .airb__teacher-strength-detail, .airb__results--student .demo-airb .airb__teacher-strength-detail, .airb__results--parent .demo-airb .airb__teacher-strength-detail, .airb__results--leader .demo-airb .airb__teacher-strength-detail, .airb__results--support .demo-airb .airb__teacher-strength-detail, .airb__results--public .demo-airb .airb__teacher-strength-detail {
 	margin: 0.35rem 0 0;
 	font-size: 0.72rem;
 	font-weight: 650;
@@ -651,7 +651,7 @@
 	text-transform: lowercase;
 }
 
-.airb__results--teacher .demo-airb .airb__leader-cta-card, .airb__results--student .demo-airb .airb__leader-cta-card, .airb__results--parent .demo-airb .airb__leader-cta-card, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-cta-card {
+.airb__results--teacher .demo-airb .airb__leader-cta-card, .airb__results--student .demo-airb .airb__leader-cta-card, .airb__results--parent .demo-airb .airb__leader-cta-card, .airb__results--leader .demo-airb .airb__leader-cta-card, .airb__results--support .demo-airb .airb__leader-cta-card, .airb__results--public .demo-airb .airb__leader-cta-card {
 	background: #eaf3de;
 	border: 1px solid #c5dc9e;
 	border-left: 3px solid #3b6d11;
@@ -662,7 +662,7 @@
 	margin-bottom: 0;
 }
 
-.airb__results--teacher .demo-airb .airb__leader-cta-title, .airb__results--student .demo-airb .airb__leader-cta-title, .airb__results--parent .demo-airb .airb__leader-cta-title, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-cta-title {
+.airb__results--teacher .demo-airb .airb__leader-cta-title, .airb__results--student .demo-airb .airb__leader-cta-title, .airb__results--parent .demo-airb .airb__leader-cta-title, .airb__results--leader .demo-airb .airb__leader-cta-title, .airb__results--support .demo-airb .airb__leader-cta-title, .airb__results--public .demo-airb .airb__leader-cta-title {
 	margin: 0 0 0.35rem;
 	font-size: 0.92rem;
 	font-weight: 700;
@@ -670,20 +670,20 @@
 	color: #2d5010;
 }
 
-.airb__results--teacher .demo-airb .airb__leader-cta-body, .airb__results--student .demo-airb .airb__leader-cta-body, .airb__results--parent .demo-airb .airb__leader-cta-body, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-cta-body {
+.airb__results--teacher .demo-airb .airb__leader-cta-body, .airb__results--student .demo-airb .airb__leader-cta-body, .airb__results--parent .demo-airb .airb__leader-cta-body, .airb__results--leader .demo-airb .airb__leader-cta-body, .airb__results--support .demo-airb .airb__leader-cta-body, .airb__results--public .demo-airb .airb__leader-cta-body {
 	margin: 0 0 0.7rem;
 	font-size: 0.78rem;
 	line-height: 1.45;
 	color: #3b6d11;
 }
 
-.airb__results--teacher .demo-airb .airb__leader-cta-btn, .airb__results--student .demo-airb .airb__leader-cta-btn, .airb__results--parent .demo-airb .airb__leader-cta-btn, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-cta-btn {
+.airb__results--teacher .demo-airb .airb__leader-cta-btn, .airb__results--student .demo-airb .airb__leader-cta-btn, .airb__results--parent .demo-airb .airb__leader-cta-btn, .airb__results--leader .demo-airb .airb__leader-cta-btn, .airb__results--support .demo-airb .airb__leader-cta-btn, .airb__results--public .demo-airb .airb__leader-cta-btn {
 	width: 100%;
 	justify-content: center;
 	margin-top: 0.15rem;
 }
 
-.airb__results--teacher .demo-airb .airb__btn, .airb__results--student .demo-airb .airb__btn, .airb__results--parent .demo-airb .airb__btn, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__btn {
+.airb__results--teacher .demo-airb .airb__btn, .airb__results--student .demo-airb .airb__btn, .airb__results--parent .demo-airb .airb__btn, .airb__results--leader .demo-airb .airb__btn, .airb__results--support .demo-airb .airb__btn, .airb__results--public .demo-airb .airb__btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -700,23 +700,21 @@
 	transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.airb__results--teacher .demo-airb .airb__btn--premium, .airb__results--student .demo-airb .airb__btn--premium, .airb__results--parent .demo-airb .airb__btn--premium, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__btn--premium {
+.airb__results--teacher .demo-airb .airb__btn--premium, .airb__results--student .demo-airb .airb__btn--premium, .airb__results--parent .demo-airb .airb__btn--premium, .airb__results--leader .demo-airb .airb__btn--premium, .airb__results--support .demo-airb .airb__btn--premium, .airb__results--public .demo-airb .airb__btn--premium {
 	background: #3b6d11;
 	border-color: #3b6d11;
 	color: #fff;
 }
 
-.airb__results--teacher .demo-airb .airb__btn--premium:hover, .airb__results--student .demo-airb .airb__btn--premium:hover, .airb__results--parent .demo-airb .airb__btn--premium:hover, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__btn--premium:hover {
+.airb__results--teacher .demo-airb .airb__btn--premium:hover, .airb__results--student .demo-airb .airb__btn--premium:hover, .airb__results--parent .demo-airb .airb__btn--premium:hover, .airb__results--leader .demo-airb .airb__btn--premium:hover, .airb__results--support .demo-airb .airb__btn--premium:hover, .airb__results--public .demo-airb .airb__btn--premium:hover {
 	background: #2d5010;
 	border-color: #2d5010;
 	color: #fff;
 }
 
 /* ── Core summary (demo CoreSummary) ── */
-.airb__results--teacher .teacher-dash-core, .airb__results--student .teacher-dash-core, .airb__results--parent .teacher-dash-core, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core {
-	position: sticky;
-	top: 0;
-	z-index: 20;
+.airb__results--teacher .teacher-dash-core, .airb__results--student .teacher-dash-core, .airb__results--parent .teacher-dash-core, .airb__results--leader .teacher-dash-core, .airb__results--support .teacher-dash-core, .airb__results--public .teacher-dash-core {
+	position: relative;
 	overflow: hidden;
 	border-radius: 8px;
 	border: 1px solid #e2e8f0;
@@ -727,7 +725,7 @@
 	margin-bottom: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-core__stripe, .airb__results--student .teacher-dash-core__stripe, .airb__results--parent .teacher-dash-core__stripe, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__stripe {
+.airb__results--teacher .teacher-dash-core__stripe, .airb__results--student .teacher-dash-core__stripe, .airb__results--parent .teacher-dash-core__stripe, .airb__results--leader .teacher-dash-core__stripe, .airb__results--support .teacher-dash-core__stripe, .airb__results--public .teacher-dash-core__stripe {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -736,7 +734,7 @@
 	background: linear-gradient(90deg, #dc2626 0%, #f59e0b 25%, #eab308 50%, #22c55e 75%, #16a34a 100%);
 }
 
-.airb__results--teacher .teacher-dash-core__body, .airb__results--student .teacher-dash-core__body, .airb__results--parent .teacher-dash-core__body, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__body {
+.airb__results--teacher .teacher-dash-core__body, .airb__results--student .teacher-dash-core__body, .airb__results--parent .teacher-dash-core__body, .airb__results--leader .teacher-dash-core__body, .airb__results--support .teacher-dash-core__body, .airb__results--public .teacher-dash-core__body {
 	margin-top: 0.25rem;
 	display: flex;
 	align-items: flex-start;
@@ -744,7 +742,7 @@
 	gap: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-core__eyebrow, .airb__results--student .teacher-dash-core__eyebrow, .airb__results--parent .teacher-dash-core__eyebrow, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__eyebrow {
+.airb__results--teacher .teacher-dash-core__eyebrow, .airb__results--student .teacher-dash-core__eyebrow, .airb__results--parent .teacher-dash-core__eyebrow, .airb__results--leader .teacher-dash-core__eyebrow, .airb__results--support .teacher-dash-core__eyebrow, .airb__results--public .teacher-dash-core__eyebrow {
 	margin: 0;
 	font-size: 0.75rem;
 	font-weight: 600;
@@ -753,7 +751,7 @@
 	color: var(--teacher-dash-accent);
 }
 
-.airb__results--teacher .teacher-dash-core__score-row, .airb__results--student .teacher-dash-core__score-row, .airb__results--parent .teacher-dash-core__score-row, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__score-row {
+.airb__results--teacher .teacher-dash-core__score-row, .airb__results--student .teacher-dash-core__score-row, .airb__results--parent .teacher-dash-core__score-row, .airb__results--leader .teacher-dash-core__score-row, .airb__results--support .teacher-dash-core__score-row, .airb__results--public .teacher-dash-core__score-row {
 	margin-top: 0.5rem;
 	display: flex;
 	flex-wrap: wrap;
@@ -761,7 +759,7 @@
 	gap: 0.35rem 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-core__score-label, .airb__results--student .teacher-dash-core__score-label, .airb__results--parent .teacher-dash-core__score-label, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__score-label {
+.airb__results--teacher .teacher-dash-core__score-label, .airb__results--student .teacher-dash-core__score-label, .airb__results--parent .teacher-dash-core__score-label, .airb__results--leader .teacher-dash-core__score-label, .airb__results--support .teacher-dash-core__score-label, .airb__results--public .teacher-dash-core__score-label {
 	width: 100%;
 	margin: 0;
 	font-size: 0.875rem;
@@ -772,12 +770,12 @@
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher .teacher-dash-core__score-label, .airb__results--student .teacher-dash-core__score-label, .airb__results--parent .teacher-dash-core__score-label, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__score-label {
+	.airb__results--teacher .teacher-dash-core__score-label, .airb__results--student .teacher-dash-core__score-label, .airb__results--parent .teacher-dash-core__score-label, .airb__results--leader .teacher-dash-core__score-label, .airb__results--support .teacher-dash-core__score-label, .airb__results--public .teacher-dash-core__score-label {
 		width: auto;
 	}
 }
 
-.airb__results--teacher .teacher-dash-core__score, .airb__results--student .teacher-dash-core__score, .airb__results--parent .teacher-dash-core__score, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__score {
+.airb__results--teacher .teacher-dash-core__score, .airb__results--student .teacher-dash-core__score, .airb__results--parent .teacher-dash-core__score, .airb__results--leader .teacher-dash-core__score, .airb__results--support .teacher-dash-core__score, .airb__results--public .teacher-dash-core__score {
 	margin: 0;
 	font-size: 3rem;
 	font-weight: 600;
@@ -785,32 +783,32 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .teacher-dash-core__denom, .airb__results--student .teacher-dash-core__denom, .airb__results--parent .teacher-dash-core__denom, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__denom {
+.airb__results--teacher .teacher-dash-core__denom, .airb__results--student .teacher-dash-core__denom, .airb__results--parent .teacher-dash-core__denom, .airb__results--leader .teacher-dash-core__denom, .airb__results--support .teacher-dash-core__denom, .airb__results--public .teacher-dash-core__denom {
 	margin: 0 0 0.15rem;
 	font-size: 0.875rem;
 	font-weight: 600;
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-core__band, .airb__results--student .teacher-dash-core__band, .airb__results--parent .teacher-dash-core__band, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__band {
+.airb__results--teacher .teacher-dash-core__band, .airb__results--student .teacher-dash-core__band, .airb__results--parent .teacher-dash-core__band, .airb__results--leader .teacher-dash-core__band, .airb__results--support .teacher-dash-core__band, .airb__results--public .teacher-dash-core__band {
 	margin: 0 0 0.15rem;
 	font-size: 1.4625rem;
 	font-weight: 600;
 	line-height: 1.15;
 }
 
-.airb__results--teacher .teacher-dash-core__risk, .airb__results--student .teacher-dash-core__risk, .airb__results--parent .teacher-dash-core__risk, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__risk {
+.airb__results--teacher .teacher-dash-core__risk, .airb__results--student .teacher-dash-core__risk, .airb__results--parent .teacher-dash-core__risk, .airb__results--leader .teacher-dash-core__risk, .airb__results--support .teacher-dash-core__risk, .airb__results--public .teacher-dash-core__risk {
 	margin: 0.5rem 0 0;
 	font-size: 0.875rem;
 	font-weight: 500;
 	color: var(--teacher-dash-ink);
 }
 
-.airb__results--teacher .teacher-dash-core__risk strong, .airb__results--student .teacher-dash-core__risk strong, .airb__results--parent .teacher-dash-core__risk strong, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__risk strong {
+.airb__results--teacher .teacher-dash-core__risk strong, .airb__results--student .teacher-dash-core__risk strong, .airb__results--parent .teacher-dash-core__risk strong, .airb__results--leader .teacher-dash-core__risk strong, .airb__results--support .teacher-dash-core__risk strong, .airb__results--public .teacher-dash-core__risk strong {
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .teacher-dash-core__icon, .airb__results--student .teacher-dash-core__icon, .airb__results--parent .teacher-dash-core__icon, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__icon {
+.airb__results--teacher .teacher-dash-core__icon, .airb__results--student .teacher-dash-core__icon, .airb__results--parent .teacher-dash-core__icon, .airb__results--leader .teacher-dash-core__icon, .airb__results--support .teacher-dash-core__icon, .airb__results--public .teacher-dash-core__icon {
 	flex: none;
 	display: grid;
 	place-items: center;
@@ -824,7 +822,7 @@
 	font-weight: 700;
 }
 
-.airb__results--teacher .teacher-dash-core__motif, .airb__results--student .teacher-dash-core__motif, .airb__results--parent .teacher-dash-core__motif, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__motif {
+.airb__results--teacher .teacher-dash-core__motif, .airb__results--student .teacher-dash-core__motif, .airb__results--parent .teacher-dash-core__motif, .airb__results--leader .teacher-dash-core__motif, .airb__results--support .teacher-dash-core__motif, .airb__results--public .teacher-dash-core__motif {
 	margin-top: 1rem;
 	padding: 0.75rem 1rem;
 	border-radius: 8px;
@@ -832,7 +830,7 @@
 	background: var(--teacher-dash-soft);
 }
 
-.airb__results--teacher .teacher-dash-core__motif p, .airb__results--student .teacher-dash-core__motif p, .airb__results--parent .teacher-dash-core__motif p, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-core__motif p {
+.airb__results--teacher .teacher-dash-core__motif p, .airb__results--student .teacher-dash-core__motif p, .airb__results--parent .teacher-dash-core__motif p, .airb__results--leader .teacher-dash-core__motif p, .airb__results--support .teacher-dash-core__motif p, .airb__results--public .teacher-dash-core__motif p {
 	margin: 0;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -840,27 +838,27 @@
 	color: var(--teacher-dash-ink);
 }
 
-.airb__results--teacher .teacher-dash-readiness, .airb__results--student .teacher-dash-readiness, .airb__results--parent .teacher-dash-readiness, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness {
+.airb__results--teacher .teacher-dash-readiness, .airb__results--student .teacher-dash-readiness, .airb__results--parent .teacher-dash-readiness, .airb__results--leader .teacher-dash-readiness, .airb__results--support .teacher-dash-readiness, .airb__results--public .teacher-dash-readiness {
 	margin-top: 1rem;
 }
 
-.airb__results--teacher .teacher-dash-readiness__track, .airb__results--student .teacher-dash-readiness__track, .airb__results--parent .teacher-dash-readiness__track, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness__track {
+.airb__results--teacher .teacher-dash-readiness__track, .airb__results--student .teacher-dash-readiness__track, .airb__results--parent .teacher-dash-readiness__track, .airb__results--leader .teacher-dash-readiness__track, .airb__results--support .teacher-dash-readiness__track, .airb__results--public .teacher-dash-readiness__track {
 	display: flex;
 	gap: 0.25rem;
 }
 
-.airb__results--teacher .teacher-dash-readiness__seg, .airb__results--student .teacher-dash-readiness__seg, .airb__results--parent .teacher-dash-readiness__seg, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness__seg {
+.airb__results--teacher .teacher-dash-readiness__seg, .airb__results--student .teacher-dash-readiness__seg, .airb__results--parent .teacher-dash-readiness__seg, .airb__results--leader .teacher-dash-readiness__seg, .airb__results--support .teacher-dash-readiness__seg, .airb__results--public .teacher-dash-readiness__seg {
 	height: 0.75rem;
 	flex: 1;
 	border-radius: 2px;
 	opacity: 0.22;
 }
 
-.airb__results--teacher .teacher-dash-readiness__seg.is-active, .airb__results--student .teacher-dash-readiness__seg.is-active, .airb__results--parent .teacher-dash-readiness__seg.is-active, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness__seg.is-active {
+.airb__results--teacher .teacher-dash-readiness__seg.is-active, .airb__results--student .teacher-dash-readiness__seg.is-active, .airb__results--parent .teacher-dash-readiness__seg.is-active, .airb__results--leader .teacher-dash-readiness__seg.is-active, .airb__results--support .teacher-dash-readiness__seg.is-active, .airb__results--public .teacher-dash-readiness__seg.is-active {
 	opacity: 1;
 }
 
-.airb__results--teacher .teacher-dash-readiness__labels, .airb__results--student .teacher-dash-readiness__labels, .airb__results--parent .teacher-dash-readiness__labels, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness__labels {
+.airb__results--teacher .teacher-dash-readiness__labels, .airb__results--student .teacher-dash-readiness__labels, .airb__results--parent .teacher-dash-readiness__labels, .airb__results--leader .teacher-dash-readiness__labels, .airb__results--support .teacher-dash-readiness__labels, .airb__results--public .teacher-dash-readiness__labels {
 	margin-top: 0.375rem;
 	display: flex;
 	justify-content: space-between;
@@ -870,13 +868,13 @@
 	font-weight: 600;
 }
 
-.airb__results--teacher .teacher-dash-readiness__labels span, .airb__results--student .teacher-dash-readiness__labels span, .airb__results--parent .teacher-dash-readiness__labels span, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-readiness__labels span {
+.airb__results--teacher .teacher-dash-readiness__labels span, .airb__results--student .teacher-dash-readiness__labels span, .airb__results--parent .teacher-dash-readiness__labels span, .airb__results--leader .teacher-dash-readiness__labels span, .airb__results--support .teacher-dash-readiness__labels span, .airb__results--public .teacher-dash-readiness__labels span {
 	flex: 1;
 	text-align: center;
 }
 
 /* ── Peer comparison (demo PeerComparisonBar) ── */
-.airb__results--teacher .teacher-dash-peer, .airb__results--student .teacher-dash-peer, .airb__results--parent .teacher-dash-peer, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer {
+.airb__results--teacher .teacher-dash-peer, .airb__results--student .teacher-dash-peer, .airb__results--parent .teacher-dash-peer, .airb__results--leader .teacher-dash-peer, .airb__results--support .teacher-dash-peer, .airb__results--public .teacher-dash-peer {
 	margin-top: 0.75rem;
 	padding: 0.65rem;
 	border-radius: 8px;
@@ -884,7 +882,7 @@
 	background: #f8fafc;
 }
 
-.airb__results--teacher .teacher-dash-peer__head, .airb__results--student .teacher-dash-peer__head, .airb__results--parent .teacher-dash-peer__head, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__head {
+.airb__results--teacher .teacher-dash-peer__head, .airb__results--student .teacher-dash-peer__head, .airb__results--parent .teacher-dash-peer__head, .airb__results--leader .teacher-dash-peer__head, .airb__results--support .teacher-dash-peer__head, .airb__results--public .teacher-dash-peer__head {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -892,7 +890,7 @@
 	gap: 0.25rem 0.5rem;
 }
 
-.airb__results--teacher .teacher-dash-peer__label, .airb__results--student .teacher-dash-peer__label, .airb__results--parent .teacher-dash-peer__label, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__label {
+.airb__results--teacher .teacher-dash-peer__label, .airb__results--student .teacher-dash-peer__label, .airb__results--parent .teacher-dash-peer__label, .airb__results--leader .teacher-dash-peer__label, .airb__results--support .teacher-dash-peer__label, .airb__results--public .teacher-dash-peer__label {
 	margin: 0;
 	font-size: 0.75rem;
 	font-weight: 600;
@@ -901,7 +899,7 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-peer__gaps, .airb__results--student .teacher-dash-peer__gaps, .airb__results--parent .teacher-dash-peer__gaps, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__gaps {
+.airb__results--teacher .teacher-dash-peer__gaps, .airb__results--student .teacher-dash-peer__gaps, .airb__results--parent .teacher-dash-peer__gaps, .airb__results--leader .teacher-dash-peer__gaps, .airb__results--support .teacher-dash-peer__gaps, .airb__results--public .teacher-dash-peer__gaps {
 	margin: 0;
 	font-size: 0.7rem;
 	font-weight: 500;
@@ -909,14 +907,14 @@
 	color: #475569;
 }
 
-.airb__results--teacher .teacher-dash-peer__grid, .airb__results--student .teacher-dash-peer__grid, .airb__results--parent .teacher-dash-peer__grid, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__grid {
+.airb__results--teacher .teacher-dash-peer__grid, .airb__results--student .teacher-dash-peer__grid, .airb__results--parent .teacher-dash-peer__grid, .airb__results--leader .teacher-dash-peer__grid, .airb__results--support .teacher-dash-peer__grid, .airb__results--public .teacher-dash-peer__grid {
 	margin-top: 0.5rem;
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 0.4rem;
 }
 
-.airb__results--teacher .teacher-dash-peer__stat, .airb__results--student .teacher-dash-peer__stat, .airb__results--parent .teacher-dash-peer__stat, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__stat {
+.airb__results--teacher .teacher-dash-peer__stat, .airb__results--student .teacher-dash-peer__stat, .airb__results--parent .teacher-dash-peer__stat, .airb__results--leader .teacher-dash-peer__stat, .airb__results--support .teacher-dash-peer__stat, .airb__results--public .teacher-dash-peer__stat {
 	min-width: 0;
 	padding: 0.42rem 0.5rem;
 	border-radius: 6px;
@@ -924,7 +922,7 @@
 	box-shadow: inset 0 0 0 1px #e2e8f0;
 }
 
-.airb__results--teacher .teacher-dash-peer__stat-label, .airb__results--student .teacher-dash-peer__stat-label, .airb__results--parent .teacher-dash-peer__stat-label, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__stat-label {
+.airb__results--teacher .teacher-dash-peer__stat-label, .airb__results--student .teacher-dash-peer__stat-label, .airb__results--parent .teacher-dash-peer__stat-label, .airb__results--leader .teacher-dash-peer__stat-label, .airb__results--support .teacher-dash-peer__stat-label, .airb__results--public .teacher-dash-peer__stat-label {
 	margin: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -936,7 +934,7 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-peer__stat-value, .airb__results--student .teacher-dash-peer__stat-value, .airb__results--parent .teacher-dash-peer__stat-value, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__stat-value {
+.airb__results--teacher .teacher-dash-peer__stat-value, .airb__results--student .teacher-dash-peer__stat-value, .airb__results--parent .teacher-dash-peer__stat-value, .airb__results--leader .teacher-dash-peer__stat-value, .airb__results--support .teacher-dash-peer__stat-value, .airb__results--public .teacher-dash-peer__stat-value {
 	margin: 0.2rem 0 0;
 	font-size: 1.15rem;
 	font-weight: 600;
@@ -944,7 +942,7 @@
 	font-variant-numeric: tabular-nums;
 }
 
-.airb__results--teacher .teacher-dash-peer__bar, .airb__results--student .teacher-dash-peer__bar, .airb__results--parent .teacher-dash-peer__bar, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__bar {
+.airb__results--teacher .teacher-dash-peer__bar, .airb__results--student .teacher-dash-peer__bar, .airb__results--parent .teacher-dash-peer__bar, .airb__results--leader .teacher-dash-peer__bar, .airb__results--support .teacher-dash-peer__bar, .airb__results--public .teacher-dash-peer__bar {
 	position: relative;
 	margin-top: 0.5rem;
 	height: 0.38rem;
@@ -952,7 +950,7 @@
 	background: #e2e8f0;
 }
 
-.airb__results--teacher .teacher-dash-peer__bar-fill, .airb__results--student .teacher-dash-peer__bar-fill, .airb__results--parent .teacher-dash-peer__bar-fill, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__bar-fill {
+.airb__results--teacher .teacher-dash-peer__bar-fill, .airb__results--student .teacher-dash-peer__bar-fill, .airb__results--parent .teacher-dash-peer__bar-fill, .airb__results--leader .teacher-dash-peer__bar-fill, .airb__results--support .teacher-dash-peer__bar-fill, .airb__results--public .teacher-dash-peer__bar-fill {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -960,7 +958,7 @@
 	border-radius: 999px;
 }
 
-.airb__results--teacher .teacher-dash-peer__bar-mark, .airb__results--student .teacher-dash-peer__bar-mark, .airb__results--parent .teacher-dash-peer__bar-mark, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__bar-mark {
+.airb__results--teacher .teacher-dash-peer__bar-mark, .airb__results--student .teacher-dash-peer__bar-mark, .airb__results--parent .teacher-dash-peer__bar-mark, .airb__results--leader .teacher-dash-peer__bar-mark, .airb__results--support .teacher-dash-peer__bar-mark, .airb__results--public .teacher-dash-peer__bar-mark {
 	position: absolute;
 	top: 50%;
 	width: 1px;
@@ -969,11 +967,11 @@
 	background: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-peer__bar-mark--top, .airb__results--student .teacher-dash-peer__bar-mark--top, .airb__results--parent .teacher-dash-peer__bar-mark--top, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__bar-mark--top {
+.airb__results--teacher .teacher-dash-peer__bar-mark--top, .airb__results--student .teacher-dash-peer__bar-mark--top, .airb__results--parent .teacher-dash-peer__bar-mark--top, .airb__results--leader .teacher-dash-peer__bar-mark--top, .airb__results--support .teacher-dash-peer__bar-mark--top, .airb__results--public .teacher-dash-peer__bar-mark--top {
 	background: #16a34a;
 }
 
-.airb__results--teacher .teacher-dash-peer__scale, .airb__results--student .teacher-dash-peer__scale, .airb__results--parent .teacher-dash-peer__scale, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-peer__scale {
+.airb__results--teacher .teacher-dash-peer__scale, .airb__results--student .teacher-dash-peer__scale, .airb__results--parent .teacher-dash-peer__scale, .airb__results--leader .teacher-dash-peer__scale, .airb__results--support .teacher-dash-peer__scale, .airb__results--public .teacher-dash-peer__scale {
 	margin-top: 0.25rem;
 	display: flex;
 	justify-content: space-between;
@@ -983,14 +981,14 @@
 }
 
 /* ── Dashboard shell (tabs + panels) ── */
-.airb__results--teacher .teacher-dash-section, .airb__results--student .teacher-dash-section, .airb__results--parent .teacher-dash-section, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-section {
+.airb__results--teacher .teacher-dash-section, .airb__results--student .teacher-dash-section, .airb__results--parent .teacher-dash-section, .airb__results--leader .teacher-dash-section, .airb__results--support .teacher-dash-section, .airb__results--public .teacher-dash-section {
 	margin-top: 0.35rem;
 	border-radius: 8px;
 	border: 1px solid #e2e8f0;
 	background: #fff;
 }
 
-.airb__results--teacher .teacher-dash-tabs, .airb__results--student .teacher-dash-tabs, .airb__results--parent .teacher-dash-tabs, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-tabs {
+.airb__results--teacher .teacher-dash-tabs, .airb__results--student .teacher-dash-tabs, .airb__results--parent .teacher-dash-tabs, .airb__results--leader .teacher-dash-tabs, .airb__results--support .teacher-dash-tabs, .airb__results--public .teacher-dash-tabs {
 	display: flex;
 	gap: 0.25rem;
 	overflow-x: auto;
@@ -999,11 +997,11 @@
 	scrollbar-width: none;
 }
 
-.airb__results--teacher .teacher-dash-tabs::-webkit-scrollbar, .airb__results--student .teacher-dash-tabs::-webkit-scrollbar, .airb__results--parent .teacher-dash-tabs::-webkit-scrollbar, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-tabs::-webkit-scrollbar {
+.airb__results--teacher .teacher-dash-tabs::-webkit-scrollbar, .airb__results--student .teacher-dash-tabs::-webkit-scrollbar, .airb__results--parent .teacher-dash-tabs::-webkit-scrollbar, .airb__results--leader .teacher-dash-tabs::-webkit-scrollbar, .airb__results--support .teacher-dash-tabs::-webkit-scrollbar, .airb__results--public .teacher-dash-tabs::-webkit-scrollbar {
 	display: none;
 }
 
-.airb__results--teacher .teacher-dash-tab, .airb__results--student .teacher-dash-tab, .airb__results--parent .teacher-dash-tab, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-tab {
+.airb__results--teacher .teacher-dash-tab, .airb__results--student .teacher-dash-tab, .airb__results--parent .teacher-dash-tab, .airb__results--leader .teacher-dash-tab, .airb__results--support .teacher-dash-tab, .airb__results--public .teacher-dash-tab {
 	flex: none;
 	min-height: 3rem;
 	padding: 0.625rem 1rem;
@@ -1017,32 +1015,32 @@
 	cursor: pointer;
 }
 
-.airb__results--teacher .teacher-dash-tab.is-active, .airb__results--student .teacher-dash-tab.is-active, .airb__results--parent .teacher-dash-tab.is-active, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-tab.is-active {
+.airb__results--teacher .teacher-dash-tab.is-active, .airb__results--student .teacher-dash-tab.is-active, .airb__results--parent .teacher-dash-tab.is-active, .airb__results--leader .teacher-dash-tab.is-active, .airb__results--support .teacher-dash-tab.is-active, .airb__results--public .teacher-dash-tab.is-active {
 	border-bottom-color: #020617;
 	color: #020617;
 }
 
-.airb__results--teacher .teacher-dash-tab:hover, .airb__results--student .teacher-dash-tab:hover, .airb__results--parent .teacher-dash-tab:hover, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-tab:hover {
+.airb__results--teacher .teacher-dash-tab:hover, .airb__results--student .teacher-dash-tab:hover, .airb__results--parent .teacher-dash-tab:hover, .airb__results--leader .teacher-dash-tab:hover, .airb__results--support .teacher-dash-tab:hover, .airb__results--public .teacher-dash-tab:hover {
 	color: #1e293b;
 }
 
-.airb__results--teacher .teacher-dash-panels, .airb__results--student .teacher-dash-panels, .airb__results--parent .teacher-dash-panels, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-panels {
+.airb__results--teacher .teacher-dash-panels, .airb__results--student .teacher-dash-panels, .airb__results--parent .teacher-dash-panels, .airb__results--leader .teacher-dash-panels, .airb__results--support .teacher-dash-panels, .airb__results--public .teacher-dash-panels {
 	padding: 1rem;
 }
 
-.airb__results--teacher .teacher-dash-stack, .airb__results--student .teacher-dash-stack, .airb__results--parent .teacher-dash-stack, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-stack {
+.airb__results--teacher .teacher-dash-stack, .airb__results--student .teacher-dash-stack, .airb__results--parent .teacher-dash-stack, .airb__results--leader .teacher-dash-stack, .airb__results--support .teacher-dash-stack, .airb__results--public .teacher-dash-stack {
 	display: grid;
 	gap: 1rem;
 }
 
-.airb__results--teacher .teacher-dash-card, .airb__results--student .teacher-dash-card, .airb__results--parent .teacher-dash-card, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-card {
+.airb__results--teacher .teacher-dash-card, .airb__results--student .teacher-dash-card, .airb__results--parent .teacher-dash-card, .airb__results--leader .teacher-dash-card, .airb__results--support .teacher-dash-card, .airb__results--public .teacher-dash-card {
 	border-radius: 8px;
 	border: 1px solid #e2e8f0;
 	background: #fff;
 	padding: 1rem;
 }
 
-.airb__results--teacher .teacher-dash-scene, .airb__results--student .teacher-dash-scene, .airb__results--parent .teacher-dash-scene, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-scene {
+.airb__results--teacher .teacher-dash-scene, .airb__results--student .teacher-dash-scene, .airb__results--parent .teacher-dash-scene, .airb__results--leader .teacher-dash-scene, .airb__results--support .teacher-dash-scene, .airb__results--public .teacher-dash-scene {
 	margin: 0;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -1051,7 +1049,7 @@
 	color: var(--teacher-dash-accent);
 }
 
-.airb__results--teacher .teacher-dash-headline, .airb__results--student .teacher-dash-headline, .airb__results--parent .teacher-dash-headline, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-headline {
+.airb__results--teacher .teacher-dash-headline, .airb__results--student .teacher-dash-headline, .airb__results--parent .teacher-dash-headline, .airb__results--leader .teacher-dash-headline, .airb__results--support .teacher-dash-headline, .airb__results--public .teacher-dash-headline {
 	margin: 0.5rem 0 0;
 	font-size: 1.25rem;
 	font-weight: 600;
@@ -1060,12 +1058,12 @@
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher .teacher-dash-headline, .airb__results--student .teacher-dash-headline, .airb__results--parent .teacher-dash-headline, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-headline {
+	.airb__results--teacher .teacher-dash-headline, .airb__results--student .teacher-dash-headline, .airb__results--parent .teacher-dash-headline, .airb__results--leader .teacher-dash-headline, .airb__results--support .teacher-dash-headline, .airb__results--public .teacher-dash-headline {
 		font-size: 1.5rem;
 	}
 }
 
-.airb__results--teacher .teacher-dash-metric, .airb__results--student .teacher-dash-metric, .airb__results--parent .teacher-dash-metric, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-metric {
+.airb__results--teacher .teacher-dash-metric, .airb__results--student .teacher-dash-metric, .airb__results--parent .teacher-dash-metric, .airb__results--leader .teacher-dash-metric, .airb__results--support .teacher-dash-metric, .airb__results--public .teacher-dash-metric {
 	margin-top: 1rem;
 	padding: 0.75rem;
 	border-radius: 8px;
@@ -1073,7 +1071,7 @@
 	background: #f8fafc;
 }
 
-.airb__results--teacher .teacher-dash-metric__label, .airb__results--student .teacher-dash-metric__label, .airb__results--parent .teacher-dash-metric__label, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-metric__label {
+.airb__results--teacher .teacher-dash-metric__label, .airb__results--student .teacher-dash-metric__label, .airb__results--parent .teacher-dash-metric__label, .airb__results--leader .teacher-dash-metric__label, .airb__results--support .teacher-dash-metric__label, .airb__results--public .teacher-dash-metric__label {
 	margin: 0;
 	font-size: 0.75rem;
 	font-weight: 600;
@@ -1082,7 +1080,7 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-metric__value, .airb__results--student .teacher-dash-metric__value, .airb__results--parent .teacher-dash-metric__value, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-metric__value {
+.airb__results--teacher .teacher-dash-metric__value, .airb__results--student .teacher-dash-metric__value, .airb__results--parent .teacher-dash-metric__value, .airb__results--leader .teacher-dash-metric__value, .airb__results--support .teacher-dash-metric__value, .airb__results--public .teacher-dash-metric__value {
 	margin: 0.25rem 0 0;
 	font-size: 2.25rem;
 	font-weight: 600;
@@ -1091,23 +1089,23 @@
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher .teacher-dash-metric__value, .airb__results--student .teacher-dash-metric__value, .airb__results--parent .teacher-dash-metric__value, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-metric__value {
+	.airb__results--teacher .teacher-dash-metric__value, .airb__results--student .teacher-dash-metric__value, .airb__results--parent .teacher-dash-metric__value, .airb__results--leader .teacher-dash-metric__value, .airb__results--support .teacher-dash-metric__value, .airb__results--public .teacher-dash-metric__value {
 		font-size: 2.5rem;
 	}
 }
 
-.airb__results--teacher .teacher-dash-metric__note, .airb__results--student .teacher-dash-metric__note, .airb__results--parent .teacher-dash-metric__note, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-metric__note {
+.airb__results--teacher .teacher-dash-metric__note, .airb__results--student .teacher-dash-metric__note, .airb__results--parent .teacher-dash-metric__note, .airb__results--leader .teacher-dash-metric__note, .airb__results--support .teacher-dash-metric__note, .airb__results--public .teacher-dash-metric__note {
 	margin: 0.5rem 0 0;
 	font-size: 0.875rem;
 	line-height: 1.5;
 	color: #475569;
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale, .airb__results--student .teacher-dash-dependency-scale, .airb__results--parent .teacher-dash-dependency-scale, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale {
+.airb__results--teacher .teacher-dash-dependency-scale, .airb__results--student .teacher-dash-dependency-scale, .airb__results--parent .teacher-dash-dependency-scale, .airb__results--leader .teacher-dash-dependency-scale, .airb__results--support .teacher-dash-dependency-scale, .airb__results--public .teacher-dash-dependency-scale {
 	margin-top: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale__track, .airb__results--student .teacher-dash-dependency-scale__track, .airb__results--parent .teacher-dash-dependency-scale__track, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale__track {
+.airb__results--teacher .teacher-dash-dependency-scale__track, .airb__results--student .teacher-dash-dependency-scale__track, .airb__results--parent .teacher-dash-dependency-scale__track, .airb__results--leader .teacher-dash-dependency-scale__track, .airb__results--support .teacher-dash-dependency-scale__track, .airb__results--public .teacher-dash-dependency-scale__track {
 	position: relative;
 	height: 0.75rem;
 	overflow: visible;
@@ -1115,7 +1113,7 @@
 	background: linear-gradient(90deg, #16a34a 0%, #eab308 50%, #dc2626 100%);
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale__marker, .airb__results--student .teacher-dash-dependency-scale__marker, .airb__results--parent .teacher-dash-dependency-scale__marker, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale__marker {
+.airb__results--teacher .teacher-dash-dependency-scale__marker, .airb__results--student .teacher-dash-dependency-scale__marker, .airb__results--parent .teacher-dash-dependency-scale__marker, .airb__results--leader .teacher-dash-dependency-scale__marker, .airb__results--support .teacher-dash-dependency-scale__marker, .airb__results--public .teacher-dash-dependency-scale__marker {
 	position: absolute;
 	top: 50%;
 	width: 0.875rem;
@@ -1127,7 +1125,7 @@
 	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale__labels, .airb__results--student .teacher-dash-dependency-scale__labels, .airb__results--parent .teacher-dash-dependency-scale__labels, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale__labels {
+.airb__results--teacher .teacher-dash-dependency-scale__labels, .airb__results--student .teacher-dash-dependency-scale__labels, .airb__results--parent .teacher-dash-dependency-scale__labels, .airb__results--leader .teacher-dash-dependency-scale__labels, .airb__results--support .teacher-dash-dependency-scale__labels, .airb__results--public .teacher-dash-dependency-scale__labels {
 	margin-top: 0.375rem;
 	display: flex;
 	justify-content: space-between;
@@ -1137,15 +1135,15 @@
 	line-height: 1.2;
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale__labels span:first-child, .airb__results--student .teacher-dash-dependency-scale__labels span:first-child, .airb__results--parent .teacher-dash-dependency-scale__labels span:first-child, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale__labels span:first-child {
+.airb__results--teacher .teacher-dash-dependency-scale__labels span:first-child, .airb__results--student .teacher-dash-dependency-scale__labels span:first-child, .airb__results--parent .teacher-dash-dependency-scale__labels span:first-child, .airb__results--leader .teacher-dash-dependency-scale__labels span:first-child, .airb__results--support .teacher-dash-dependency-scale__labels span:first-child, .airb__results--public .teacher-dash-dependency-scale__labels span:first-child {
 	color: #15803d;
 }
 
-.airb__results--teacher .teacher-dash-dependency-scale__labels span:last-child, .airb__results--student .teacher-dash-dependency-scale__labels span:last-child, .airb__results--parent .teacher-dash-dependency-scale__labels span:last-child, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-dependency-scale__labels span:last-child {
+.airb__results--teacher .teacher-dash-dependency-scale__labels span:last-child, .airb__results--student .teacher-dash-dependency-scale__labels span:last-child, .airb__results--parent .teacher-dash-dependency-scale__labels span:last-child, .airb__results--leader .teacher-dash-dependency-scale__labels span:last-child, .airb__results--support .teacher-dash-dependency-scale__labels span:last-child, .airb__results--public .teacher-dash-dependency-scale__labels span:last-child {
 	color: #b91c1c;
 }
 
-.airb__results--teacher .teacher-dash-domain-heading, .airb__results--student .teacher-dash-domain-heading, .airb__results--parent .teacher-dash-domain-heading, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-domain-heading {
+.airb__results--teacher .teacher-dash-domain-heading, .airb__results--student .teacher-dash-domain-heading, .airb__results--parent .teacher-dash-domain-heading, .airb__results--leader .teacher-dash-domain-heading, .airb__results--support .teacher-dash-domain-heading, .airb__results--public .teacher-dash-domain-heading {
 	margin: 1rem 0 0;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -1154,21 +1152,21 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-domain-grid-wrap, .airb__results--student .teacher-dash-domain-grid-wrap, .airb__results--parent .teacher-dash-domain-grid-wrap, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-domain-grid-wrap {
+.airb__results--teacher .teacher-dash-domain-grid-wrap, .airb__results--student .teacher-dash-domain-grid-wrap, .airb__results--parent .teacher-dash-domain-grid-wrap, .airb__results--leader .teacher-dash-domain-grid-wrap, .airb__results--support .teacher-dash-domain-grid-wrap, .airb__results--public .teacher-dash-domain-grid-wrap {
 	margin-top: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-focus-wrap, .airb__results--student .teacher-dash-focus-wrap, .airb__results--parent .teacher-dash-focus-wrap, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-focus-wrap {
+.airb__results--teacher .teacher-dash-focus-wrap, .airb__results--student .teacher-dash-focus-wrap, .airb__results--parent .teacher-dash-focus-wrap, .airb__results--leader .teacher-dash-focus-wrap, .airb__results--support .teacher-dash-focus-wrap, .airb__results--public .teacher-dash-focus-wrap {
 	margin-top: 1rem;
 }
 
 /* ── Progress passport + certificate (certificate.css) ── */
-.airb__results--teacher .benchmark-passport-grid, .airb__results--student .benchmark-passport-grid, .airb__results--parent .benchmark-passport-grid, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-passport-grid {
+.airb__results--teacher .benchmark-passport-grid, .airb__results--student .benchmark-passport-grid, .airb__results--parent .benchmark-passport-grid, .airb__results--leader .benchmark-passport-grid, .airb__results--support .benchmark-passport-grid, .airb__results--public .benchmark-passport-grid {
 	display: grid;
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .teacher-dash-progress-head, .airb__results--student .teacher-dash-progress-head, .airb__results--parent .teacher-dash-progress-head, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-progress-head {
+.airb__results--teacher .teacher-dash-progress-head, .airb__results--student .teacher-dash-progress-head, .airb__results--parent .teacher-dash-progress-head, .airb__results--leader .teacher-dash-progress-head, .airb__results--support .teacher-dash-progress-head, .airb__results--public .teacher-dash-progress-head {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-end;
@@ -1176,14 +1174,14 @@
 	gap: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-progress-title, .airb__results--student .teacher-dash-progress-title, .airb__results--parent .teacher-dash-progress-title, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-progress-title {
+.airb__results--teacher .teacher-dash-progress-title, .airb__results--student .teacher-dash-progress-title, .airb__results--parent .teacher-dash-progress-title, .airb__results--leader .teacher-dash-progress-title, .airb__results--support .teacher-dash-progress-title, .airb__results--public .teacher-dash-progress-title {
 	margin: 0.25rem 0 0;
 	font-size: 1.125rem;
 	font-weight: 600;
 	color: #020617;
 }
 
-.airb__results--teacher .teacher-dash-progress-stamp, .airb__results--student .teacher-dash-progress-stamp, .airb__results--parent .teacher-dash-progress-stamp, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-progress-stamp {
+.airb__results--teacher .teacher-dash-progress-stamp, .airb__results--student .teacher-dash-progress-stamp, .airb__results--parent .teacher-dash-progress-stamp, .airb__results--leader .teacher-dash-progress-stamp, .airb__results--support .teacher-dash-progress-stamp, .airb__results--public .teacher-dash-progress-stamp {
 	margin: 0;
 	padding: 0.25rem 0.625rem;
 	border-radius: 6px;
@@ -1194,7 +1192,7 @@
 	color: #475569;
 }
 
-.airb__results--teacher .teacher-dash-progress-bar, .airb__results--student .teacher-dash-progress-bar, .airb__results--parent .teacher-dash-progress-bar, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-progress-bar {
+.airb__results--teacher .teacher-dash-progress-bar, .airb__results--student .teacher-dash-progress-bar, .airb__results--parent .teacher-dash-progress-bar, .airb__results--leader .teacher-dash-progress-bar, .airb__results--support .teacher-dash-progress-bar, .airb__results--public .teacher-dash-progress-bar {
 	margin-top: 1rem;
 	height: 0.5rem;
 	overflow: hidden;
@@ -1202,26 +1200,26 @@
 	background: #f1f5f9;
 }
 
-.airb__results--teacher .teacher-dash-progress-bar > span, .airb__results--student .teacher-dash-progress-bar > span, .airb__results--parent .teacher-dash-progress-bar > span, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-progress-bar > span {
+.airb__results--teacher .teacher-dash-progress-bar > span, .airb__results--student .teacher-dash-progress-bar > span, .airb__results--parent .teacher-dash-progress-bar > span, .airb__results--leader .teacher-dash-progress-bar > span, .airb__results--support .teacher-dash-progress-bar > span, .airb__results--public .teacher-dash-progress-bar > span {
 	display: block;
 	height: 100%;
 	border-radius: inherit;
 	background: var(--teacher-dash-accent);
 }
 
-.airb__results--teacher .teacher-dash-passport-step, .airb__results--student .teacher-dash-passport-step, .airb__results--parent .teacher-dash-passport-step, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step {
+.airb__results--teacher .teacher-dash-passport-step, .airb__results--student .teacher-dash-passport-step, .airb__results--parent .teacher-dash-passport-step, .airb__results--leader .teacher-dash-passport-step, .airb__results--support .teacher-dash-passport-step, .airb__results--public .teacher-dash-passport-step {
 	border-radius: 8px;
 	border: 1px solid #e2e8f0;
 	padding: 0.75rem;
 }
 
-.airb__results--teacher .teacher-dash-passport-step__head, .airb__results--student .teacher-dash-passport-step__head, .airb__results--parent .teacher-dash-passport-step__head, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step__head {
+.airb__results--teacher .teacher-dash-passport-step__head, .airb__results--student .teacher-dash-passport-step__head, .airb__results--parent .teacher-dash-passport-step__head, .airb__results--leader .teacher-dash-passport-step__head, .airb__results--support .teacher-dash-passport-step__head, .airb__results--public .teacher-dash-passport-step__head {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .teacher-dash-passport-step__icon, .airb__results--student .teacher-dash-passport-step__icon, .airb__results--parent .teacher-dash-passport-step__icon, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step__icon {
+.airb__results--teacher .teacher-dash-passport-step__icon, .airb__results--student .teacher-dash-passport-step__icon, .airb__results--parent .teacher-dash-passport-step__icon, .airb__results--leader .teacher-dash-passport-step__icon, .airb__results--support .teacher-dash-passport-step__icon, .airb__results--public .teacher-dash-passport-step__icon {
 	display: grid;
 	place-items: center;
 	width: 1.75rem;
@@ -1232,7 +1230,7 @@
 	font-weight: 600;
 }
 
-.airb__results--teacher .teacher-dash-passport-step__status, .airb__results--student .teacher-dash-passport-step__status, .airb__results--parent .teacher-dash-passport-step__status, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step__status {
+.airb__results--teacher .teacher-dash-passport-step__status, .airb__results--student .teacher-dash-passport-step__status, .airb__results--parent .teacher-dash-passport-step__status, .airb__results--leader .teacher-dash-passport-step__status, .airb__results--support .teacher-dash-passport-step__status, .airb__results--public .teacher-dash-passport-step__status {
 	font-size: 0.65rem;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -1240,7 +1238,7 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-passport-step h4, .airb__results--student .teacher-dash-passport-step h4, .airb__results--parent .teacher-dash-passport-step h4, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step h4 {
+.airb__results--teacher .teacher-dash-passport-step h4, .airb__results--student .teacher-dash-passport-step h4, .airb__results--parent .teacher-dash-passport-step h4, .airb__results--leader .teacher-dash-passport-step h4, .airb__results--support .teacher-dash-passport-step h4, .airb__results--public .teacher-dash-passport-step h4 {
 	margin: 0.5rem 0 0;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -1248,32 +1246,32 @@
 	color: #020617;
 }
 
-.airb__results--teacher .teacher-dash-passport-step p, .airb__results--student .teacher-dash-passport-step p, .airb__results--parent .teacher-dash-passport-step p, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-passport-step p {
+.airb__results--teacher .teacher-dash-passport-step p, .airb__results--student .teacher-dash-passport-step p, .airb__results--parent .teacher-dash-passport-step p, .airb__results--leader .teacher-dash-passport-step p, .airb__results--support .teacher-dash-passport-step p, .airb__results--public .teacher-dash-passport-step p {
 	margin: 0.25rem 0 0;
 	font-size: 0.75rem;
 	line-height: 1.45;
 	color: #475569;
 }
 
-.airb__results--teacher .benchmark-certificate-layout, .airb__results--student .benchmark-certificate-layout, .airb__results--parent .benchmark-certificate-layout, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-certificate-layout {
+.airb__results--teacher .benchmark-certificate-layout, .airb__results--student .benchmark-certificate-layout, .airb__results--parent .benchmark-certificate-layout, .airb__results--leader .benchmark-certificate-layout, .airb__results--support .benchmark-certificate-layout, .airb__results--public .benchmark-certificate-layout {
 	display: grid;
 	gap: 1rem;
 }
 
-.airb__results--teacher .benchmark-certificate-stats, .airb__results--student .benchmark-certificate-stats, .airb__results--parent .benchmark-certificate-stats, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-certificate-stats {
+.airb__results--teacher .benchmark-certificate-stats, .airb__results--student .benchmark-certificate-stats, .airb__results--parent .benchmark-certificate-stats, .airb__results--leader .benchmark-certificate-stats, .airb__results--support .benchmark-certificate-stats, .airb__results--public .benchmark-certificate-stats {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 0.5rem;
 }
 
-.airb__results--teacher .benchmark-certificate-stats > div, .airb__results--student .benchmark-certificate-stats > div, .airb__results--parent .benchmark-certificate-stats > div, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-certificate-stats > div {
+.airb__results--teacher .benchmark-certificate-stats > div, .airb__results--student .benchmark-certificate-stats > div, .airb__results--parent .benchmark-certificate-stats > div, .airb__results--leader .benchmark-certificate-stats > div, .airb__results--support .benchmark-certificate-stats > div, .airb__results--public .benchmark-certificate-stats > div {
 	padding: 0.625rem;
 	border-radius: 8px;
 	border: 1px solid #e2e8f0;
 	background: #fff;
 }
 
-.airb__results--teacher .benchmark-certificate-stats span, .airb__results--student .benchmark-certificate-stats span, .airb__results--parent .benchmark-certificate-stats span, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-certificate-stats span {
+.airb__results--teacher .benchmark-certificate-stats span, .airb__results--student .benchmark-certificate-stats span, .airb__results--parent .benchmark-certificate-stats span, .airb__results--leader .benchmark-certificate-stats span, .airb__results--support .benchmark-certificate-stats span, .airb__results--public .benchmark-certificate-stats span {
 	display: block;
 	font-size: 0.75rem;
 	font-weight: 600;
@@ -1282,7 +1280,7 @@
 	color: #64748b;
 }
 
-.airb__results--teacher .benchmark-certificate-stats strong, .airb__results--student .benchmark-certificate-stats strong, .airb__results--parent .benchmark-certificate-stats strong, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-certificate-stats strong {
+.airb__results--teacher .benchmark-certificate-stats strong, .airb__results--student .benchmark-certificate-stats strong, .airb__results--parent .benchmark-certificate-stats strong, .airb__results--leader .benchmark-certificate-stats strong, .airb__results--support .benchmark-certificate-stats strong, .airb__results--public .benchmark-certificate-stats strong {
 	display: block;
 	margin-top: 0.25rem;
 	font-size: 1.25rem;
@@ -1291,14 +1289,14 @@
 	color: #020617;
 }
 
-.airb__results--teacher .teacher-dash-cert-note, .airb__results--student .teacher-dash-cert-note, .airb__results--parent .teacher-dash-cert-note, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-cert-note {
+.airb__results--teacher .teacher-dash-cert-note, .airb__results--student .teacher-dash-cert-note, .airb__results--parent .teacher-dash-cert-note, .airb__results--leader .teacher-dash-cert-note, .airb__results--support .teacher-dash-cert-note, .airb__results--public .teacher-dash-cert-note {
 	margin: 0.25rem 0 0;
 	font-size: 0.75rem;
 	line-height: 1.45;
 	color: #64748b;
 }
 
-.airb__results--teacher .teacher-dash-cert-lock, .airb__results--student .teacher-dash-cert-lock, .airb__results--parent .teacher-dash-cert-lock, .airb__results--leader , .airb__results--support , .airb__results--public .teacher-dash-cert-lock {
+.airb__results--teacher .teacher-dash-cert-lock, .airb__results--student .teacher-dash-cert-lock, .airb__results--parent .teacher-dash-cert-lock, .airb__results--leader .teacher-dash-cert-lock, .airb__results--support .teacher-dash-cert-lock, .airb__results--public .teacher-dash-cert-lock {
 	margin-top: 0.5rem;
 	width: 100%;
 	opacity: 0.7;
@@ -1896,13 +1894,13 @@
 	border: 0;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-head {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.75rem;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon {
 	flex: none;
 	width: 1.25rem;
 	height: 1.25rem;
@@ -1910,18 +1908,18 @@
 	color: var(--airb-interest-accent);
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-icon svg {
 	display: block;
 	width: 100%;
 	height: 100%;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-copy {
 	min-width: 0;
 	flex: 1;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-eyebrow {
 	margin: 0;
 	font-size: 0.75rem;
 	font-weight: 600;
@@ -1930,7 +1928,7 @@
 	color: var(--airb-interest-accent);
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-heading {
 	margin: 0.25rem 0 0;
 	font-size: 1.125rem;
 	font-weight: 600;
@@ -1938,18 +1936,18 @@
 	color: #020617;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-intro {
 	margin: 0.5rem 0 0;
 	font-size: 0.875rem;
 	line-height: 1.625;
 	color: #475569;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-form {
 	margin-top: 1rem;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-options {
 	display: grid;
 	gap: 0.5rem;
 	margin: 0;
@@ -1957,13 +1955,13 @@
 	border: none;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-legend {
 	font-size: 0.875rem;
 	font-weight: 600;
 	color: #334155;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option {
 	display: flex;
 	align-items: flex-start;
 	gap: 0.75rem;
@@ -1976,7 +1974,7 @@
 	transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked) , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked) {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked), .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option:has(input:checked) {
 	border-color: var(--airb-interest-accent);
 	background: #eff6ff;
 }
@@ -1994,13 +1992,13 @@
 	accent-color: var(--airb-interest-accent);
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-text {
 	display: block;
 	min-width: 0;
 	flex: 1;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-label {
 	display: block;
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -2008,7 +2006,7 @@
 	color: #020617;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__interest-option-desc {
 	display: block;
 	margin-top: 0.125rem;
 	font-size: 0.875rem;
@@ -2017,7 +2015,7 @@
 	color: #475569;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 0.5rem;
@@ -2027,17 +2025,17 @@
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder {
+	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-legend {
 	grid-column: 1 / -1;
 	margin: 0 0 0.25rem;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio {
 	align-items: center;
 	min-height: 3rem;
 	padding: 0.5rem 0.75rem;
@@ -2047,11 +2045,11 @@
 	color: #334155;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-stakeholder .airb__interest-option--radio input {
 	margin-top: 0;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 0.75rem;
@@ -2059,16 +2057,16 @@
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields {
+	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-fields .airb__field--full {
 	grid-column: 1 / -1;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__field , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__field {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__field, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__field {
 	display: block;
 	margin: 0;
 }
@@ -2090,7 +2088,7 @@
 	font-weight: 400;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__textarea {
 	min-height: 5rem;
 	resize: vertical;
 }
@@ -2107,14 +2105,14 @@
 	box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__label , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__label {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__label, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__label {
 	display: block;
 	font-size: 0.875rem;
 	font-weight: 600;
 	color: #334155;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -2133,28 +2131,28 @@
 	text-transform: none;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit:hover {
 	background: #eff6ff;
 }
 
-.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon {
+.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up .airb__teacher-follow-up-submit-icon {
 	width: 1rem;
 	height: 1rem;
 	flex: none;
 }
 
 @media (min-width: 640px) {
-	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up , .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up {
+	.airb__results--teacher-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--student-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--parent-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--leader-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--support-dash #airb-interest.airb__teacher-dash-follow-up, .airb__results--public-dash #airb-interest.airb__teacher-dash-follow-up {
 		padding: 1.25rem;
 	}
 }
 
 @media (min-width: 768px) {
-	.airb__results--teacher .demo-airb .airb__leader-focus-stack, .airb__results--student .demo-airb .airb__leader-focus-stack, .airb__results--parent .demo-airb .airb__leader-focus-stack, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__leader-focus-stack {
+	.airb__results--teacher .demo-airb .airb__leader-focus-stack, .airb__results--student .demo-airb .airb__leader-focus-stack, .airb__results--parent .demo-airb .airb__leader-focus-stack, .airb__results--leader .demo-airb .airb__leader-focus-stack, .airb__results--support .demo-airb .airb__leader-focus-stack, .airb__results--public .demo-airb .airb__leader-focus-stack {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 
-	.airb__results--teacher .benchmark-passport-grid, .airb__results--student .benchmark-passport-grid, .airb__results--parent .benchmark-passport-grid, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-passport-grid {
+	.airb__results--teacher .benchmark-passport-grid, .airb__results--student .benchmark-passport-grid, .airb__results--parent .benchmark-passport-grid, .airb__results--leader .benchmark-passport-grid, .airb__results--support .benchmark-passport-grid, .airb__results--public .benchmark-passport-grid {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 	}
 }
@@ -2173,17 +2171,17 @@
 
 @media (max-width: 760px) {
 	.airb__results--teacher .demo-airb .airb__leader-resource-links, .airb__results--student .demo-airb .airb__leader-resource-links,
-	.airb__results--teacher .demo-airb .airb__results-resource-links, .airb__results--student .demo-airb .airb__results-resource-links, .airb__results--parent .demo-airb .airb__results-resource-links, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__results-resource-links {
+	.airb__results--teacher .demo-airb .airb__results-resource-links, .airb__results--student .demo-airb .airb__results-resource-links, .airb__results--parent .demo-airb .airb__results-resource-links, .airb__results--leader .demo-airb .airb__results-resource-links, .airb__results--support .demo-airb .airb__results-resource-links, .airb__results--public .demo-airb .airb__results-resource-links {
 		grid-template-columns: 1fr;
 	}
 }
 
 @media (max-width: 560px) {
-	.airb__results--teacher .benchmark-domain-grid, .airb__results--student .benchmark-domain-grid, .airb__results--parent .benchmark-domain-grid, .airb__results--leader , .airb__results--support , .airb__results--public .benchmark-domain-grid {
+	.airb__results--teacher .benchmark-domain-grid, .airb__results--student .benchmark-domain-grid, .airb__results--parent .benchmark-domain-grid, .airb__results--leader .benchmark-domain-grid, .airb__results--support .benchmark-domain-grid, .airb__results--public .benchmark-domain-grid {
 		grid-template-columns: 1fr;
 	}
 
-	.airb__results--teacher .demo-airb .airb__teacher-strength-grid, .airb__results--student .demo-airb .airb__teacher-strength-grid, .airb__results--parent .demo-airb .airb__teacher-strength-grid, .airb__results--leader , .airb__results--support , .airb__results--public .demo-airb .airb__teacher-strength-grid {
+	.airb__results--teacher .demo-airb .airb__teacher-strength-grid, .airb__results--student .demo-airb .airb__teacher-strength-grid, .airb__results--parent .demo-airb .airb__teacher-strength-grid, .airb__results--leader .demo-airb .airb__teacher-strength-grid, .airb__results--support .demo-airb .airb__teacher-strength-grid, .airb__results--public .demo-airb .airb__teacher-strength-grid {
 		grid-template-columns: 1fr;
 	}
 }
