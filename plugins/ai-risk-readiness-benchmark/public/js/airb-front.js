@@ -39,6 +39,7 @@
 		schoolPhase: '',
 		orgType: '',
 		yearGroup: '',
+		sessionId: '',
 	};
 
 	var el = {
@@ -84,9 +85,11 @@
 				id = 'ses_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 11);
 				localStorage.setItem(SESSION_KEY, id);
 			}
+			state.sessionId = id;
 			return id;
 		} catch (e) {
-			return 'ses_' + Date.now().toString(36);
+			state.sessionId = state.sessionId || ('ses_' + Date.now().toString(36));
+			return state.sessionId;
 		}
 	}
 
@@ -242,6 +245,18 @@
 				var sel = block.querySelector('select');
 				if (sel) sel.value = '';
 			}
+		});
+		var visible = section.questions.filter(function (q) {
+			return questionApplies(q, draft);
+		});
+		section.questions.forEach(function (q) {
+			var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
+			if (!block) return;
+			var meta = block.querySelector('.airb__q-meta');
+			if (!meta) return;
+			var pos = visible.indexOf(q);
+			meta.textContent = pos >= 0 && visible.length > 1 ? 'Question ' + (pos + 1) + ' of ' + visible.length : '';
+			meta.hidden = !(pos >= 0 && visible.length > 1);
 		});
 	}
 
@@ -2699,7 +2714,9 @@
 		var html = '<option value="">' + esc(i18n.schoolPhaseChoose) + '</option>';
 		html += '<option value="primary"' + (state.schoolPhase === 'primary' ? ' selected' : '') + '>' + esc(i18n.schoolPhasePrimary) + '</option>';
 		html += '<option value="secondary"' + (state.schoolPhase === 'secondary' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseSecondary) + '</option>';
-		html += '<option value="all_through"' + (state.schoolPhase === 'all_through' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseAllThrough) + '</option>';
+		html += '<option value="college"' + (state.schoolPhase === 'college' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseCollege) + '</option>';
+		html += '<option value="university"' + (state.schoolPhase === 'university' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseUniversity) + '</option>';
+		html += '<option value="other"' + (state.schoolPhase === 'other' ? ' selected' : '') + '>' + esc(i18n.schoolPhaseOther) + '</option>';
 		return html;
 	}
 
@@ -2774,6 +2791,7 @@
 			var val = state.answers[qid] !== undefined ? state.answers[qid] : 50;
 			var numVal = parseInt(val, 10) || 0;
 			html += '<div class="airb__slider-wrap"><input type="range" class="airb__slider" id="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" min="0" max="100" step="1" value="' + val + '" />';
+			html += '<div class="airb__slider-scale" aria-hidden="true"><span>0% unchanged</span><span>100% heavily edited</span></div>';
 			html += '<output class="airb__slider-out" for="airb-q-' + esc(qid) + '">' + val + '% ' + esc(i18n.modifyLabel) + '</output></div>';
 			html += '<p class="airb__slider-band" id="airb-band-' + esc(qid) + '" style="color:' + oversightZoneColor(numVal) + '">' + esc(oversightLabel(numVal)) + '</p>';
 		} else if (q.type === 'select') {
@@ -2784,7 +2802,11 @@
 			});
 			html += '</select>';
 		} else {
-			html += '<div class="airb__options airb__options--pills">';
+			var maxLabelLen = (q.options || []).reduce(function (max, o) {
+				return Math.max(max, String(o.label || '').length);
+			}, 0);
+			var optionClass = 'airb__options airb__options--pills' + (maxLabelLen > 22 ? ' airb__options--long' : '');
+			html += '<div class="' + optionClass + '">';
 			(q.options || []).forEach(function (o) {
 				var checked = state.answers[qid] === o.value ? ' checked' : '';
 				html += '<label class="airb__option"><input type="radio" name="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" value="' + esc(o.value) + '"' + checked + ' />' + esc(o.label) + '</label>';
@@ -2839,12 +2861,19 @@
 		html += '<span class="airb__domtag-text">';
 		html += '<span class="airb__domtag-section">' + esc(section.name) + '</span>';
 		html += '<span class="airb__domtag-domain">' + esc(domainLabel) + '</span>';
-		html += '</span></div></header>';
+		html += '</span></div>';
+		html += '<p class="airb__audit-note">Choose the answer closest to current practice. The benchmark measures behaviour and readiness, not perfection.</p>';
+		html += '</header>';
 
 		html += '<div class="airb__audit-questions">';
+		var visibleQuestions = section.questions.filter(function (q) {
+			return questionApplies(q, state.answers);
+		});
 		section.questions.forEach(function (q) {
 			var applies = questionApplies(q, state.answers);
 			html += '<div class="airb__q-block" data-airb-qid="' + esc(q.id) + '"' + (applies ? '' : ' hidden') + '>';
+			var qIndex = visibleQuestions.indexOf(q) + 1;
+			html += '<p class="airb__q-meta"' + (applies && visibleQuestions.length > 1 ? '' : ' hidden') + '>' + (applies && visibleQuestions.length > 1 ? 'Question ' + qIndex + ' of ' + visibleQuestions.length : '') + '</p>';
 			html += '<p class="airb__q-title">' + esc(q.displayText || q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
@@ -2986,13 +3015,6 @@
 			var ygLabel = state.role === 'parent' ? (i18n.yearGroupParent || i18n.yearGroup) : i18n.yearGroup;
 			html += '<label class="airb__label" for="airb-year-group">' + esc(ygLabel) + '</label>' +
 				'<select class="airb__select" id="airb-year-group">' + yearGroupOptionsHtml() + '</select>';
-			if (state.role === 'student') {
-				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional || 'School name (optional)') + '</label>' +
-					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
-				if (i18n.studentSchoolHint) {
-					html += '<p class="airb__muted">' + esc(i18n.studentSchoolHint) + '</p>';
-				}
-			}
 		} else {
 			if (state.role === 'teacher' && i18n.contactHintTeacher) {
 				html += '<p class="airb__muted">' + esc(i18n.contactHintTeacher) + '</p>';
@@ -3007,6 +3029,9 @@
 			if (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff') {
 				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
 					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+				if (i18n.schoolOptionalHint) {
+					html += '<p class="airb__muted airb__field-hint">' + esc(i18n.schoolOptionalHint) + '</p>';
+				}
 			}
 
 			if (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff') {
@@ -3020,6 +3045,13 @@
 				html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
 					'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
 			}
+			if (i18n.emailOptionalHint) {
+				html += '<p class="airb__muted airb__field-hint">' + esc(i18n.emailOptionalHint) + '</p>';
+			}
+		}
+
+		if (i18n.contactPrivacyNote) {
+			html += '<p class="airb__contact-note">' + esc(i18n.contactPrivacyNote) + '</p>';
 		}
 
 		html += '</div>';
@@ -3228,6 +3260,27 @@
 		var pr = r.parent_results;
 		if (!pr) return '';
 
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildParent) {
+			model = AIRB.DashboardModel.buildParent(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.ParentDashboard && AIRB.ParentDashboard.render) {
+			var renderOpts = parentDashboardRenderOpts();
+			var starters = pr.conversation_starters && pr.conversation_starters.length
+				? pr.conversation_starters
+				: (parentResult.conversation_starters || []);
+			if (starters.length) {
+				renderOpts.conversationHtml = function () {
+					return parentConversationStartersHtml(starters, parentResult.conversation_section_intro || '');
+				};
+			}
+			renderOpts.shareCardHtml = function () {
+				return parentShareCardHtml(pr);
+			};
+			return AIRB.ParentDashboard.render(r, model, renderOpts);
+		}
+
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.parentFocusTopics) {
@@ -3249,6 +3302,46 @@
 		return benchmarkResultsBodyHtml(html);
 	}
 
+	function parentDashboardRenderOpts() {
+		return {
+			esc: esc,
+			parentResult: parentResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: parentResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+			guidanceOpen: false,
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			resourcesHtml: function () {
+				var pr = state.results && state.results.parent_results;
+				var links = (pr && pr.resource_links) ? pr.resource_links : [];
+				if (!links.length && pr && pr.next_steps && pr.next_steps.resource_links) {
+					links = pr.next_steps.resource_links;
+				}
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">' + esc(parentResult.help_support_heading || 'Parent guides & resources') + '</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindParentDashboard() {
+		if (window.AIRB && AIRB.ParentDashboard && AIRB.ParentDashboard.bind) {
+			AIRB.ParentDashboard.bind(el.results);
+		}
+	}
+
 	function publicHelpSupportHtml(pr) {
 		if (!pr) return '';
 		var links = pr.resource_links || [];
@@ -3263,6 +3356,19 @@
 	function publicResultsHtml(r) {
 		var pr = r.public_results;
 		if (!pr) return '';
+
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildPublic) {
+			model = AIRB.DashboardModel.buildPublic(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.PublicDashboard && AIRB.PublicDashboard.render) {
+			var renderOpts = publicDashboardRenderOpts();
+			renderOpts.shareCardHtml = function () {
+				return publicShareCardHtml(pr);
+			};
+			return AIRB.PublicDashboard.render(r, model, renderOpts);
+		}
 
 		var html = '';
 
@@ -3293,6 +3399,44 @@
 		html += publicShareCardHtml(pr);
 		html += publicHelpSupportHtml(pr);
 		return benchmarkResultsBodyHtml(html);
+	}
+
+	function publicDashboardRenderOpts() {
+		return {
+			esc: esc,
+			publicResult: publicResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: publicResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: 'View privacy impact',
+			guidanceOpen: false,
+			focusStackIntro: 'These cards expand your lowest domain scores into privacy risks and habits to tighten.',
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			resourcesHtml: function () {
+				var pr = state.results && state.results.public_results;
+				var links = (pr && pr.resource_links) ? pr.resource_links : [];
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested reading to strengthen your personal AI safety habits.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">' + esc(publicResult.help_support_heading || 'Further reading') + '</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindPublicDashboard() {
+		if (window.AIRB && AIRB.PublicDashboard && AIRB.PublicDashboard.bind) {
+			AIRB.PublicDashboard.bind(el.results);
+		}
 	}
 
 	function parentPriorityFocusHtml() {
@@ -3412,6 +3556,33 @@
 		var tr = r.teacher_results;
 		if (!tr) return '';
 
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildTeacher) {
+			model = AIRB.DashboardModel.buildTeacher(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.TeacherDashboard && AIRB.TeacherDashboard.render) {
+			var dashboardOpts = teacherDashboardRenderOpts();
+			dashboardOpts.resourcesHtml = function () {
+				var nextSteps = tr.next_steps;
+				var links = (nextSteps && nextSteps.resource_links) ? nextSteps.resource_links : [];
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">CPD for teachers and students</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			};
+			return AIRB.TeacherDashboard.render(r, model, dashboardOpts);
+		}
+
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.teacherStrengths) {
@@ -3444,6 +3615,37 @@
 		html += teacherPathwayCtaHtml(tr.next_steps);
 		html += teacherHelpSupportHtml(tr.next_steps);
 		return benchmarkResultsBodyHtml(html);
+	}
+
+	function teacherDashboardRenderOpts() {
+		return {
+			esc: esc,
+			teacherResult: teacherResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: teacherResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+			guidanceToggleClassroom: 'View classroom impact',
+			guidanceOpen: true,
+			leaderFocusBadge: leaderFocusBadge,
+			leaderFocusSeverity: leaderFocusSeverity,
+			teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			rolloutCardHtml: teacherRolloutCardHtml,
+			rolloutSectionHtml: function (rollout) {
+				return leaderSectionLabel(
+					teacherResult.rollout_section_heading || 'Your next unlock — whole-school picture',
+					teacherResult.rollout_section_heading_short || 'Your next unlock'
+				) + teacherRolloutCardHtml(rollout);
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindTeacherDashboard() {
+		if (window.AIRB && AIRB.TeacherDashboard && AIRB.TeacherDashboard.bind) {
+			AIRB.TeacherDashboard.bind(el.results);
+		}
 	}
 
 	function teacherStrengthRenderOpts() {
@@ -3525,6 +3727,29 @@
 		var sr = r.support_results;
 		if (!sr) return '';
 
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildSupport) {
+			model = AIRB.DashboardModel.buildSupport(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.SupportDashboard && AIRB.SupportDashboard.render) {
+			var renderOpts = supportDashboardRenderOpts();
+			if (sr.next_steps && sr.next_steps.rollout) {
+				renderOpts.rolloutSectionHtml = function () {
+					return leaderSectionLabel(
+						supportResult.rollout_section_heading || 'Your next unlock — whole-school picture',
+						supportResult.rollout_section_heading_short || 'Your next unlock'
+					) + supportRolloutCardHtml(sr.next_steps.rollout);
+				};
+			}
+			if (sr.next_steps) {
+				renderOpts.ctaCardHtml = function () {
+					return supportCtaCardHtml(sr.next_steps);
+				};
+			}
+			return AIRB.SupportDashboard.render(r, model, renderOpts);
+		}
+
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.supportStrengths) {
@@ -3555,9 +3780,61 @@
 		return benchmarkResultsBodyHtml(html);
 	}
 
+	function supportDashboardRenderOpts() {
+		return {
+			esc: esc,
+			supportResult: supportResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: supportResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: 'View operational impact',
+			guidanceOpen: false,
+			focusStackIntro: 'These cards expand the lowest domain scores into operational impact and recommended actions.',
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			resourcesHtml: function () {
+				var sr = state.results && state.results.support_results;
+				var nextSteps = sr && sr.next_steps;
+				var links = (nextSteps && nextSteps.resource_links) ? nextSteps.resource_links : [];
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">' + esc(supportResult.help_support_heading || 'Further reading and tips to guide you') + '</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindSupportDashboard() {
+		if (window.AIRB && AIRB.SupportDashboard && AIRB.SupportDashboard.bind) {
+			AIRB.SupportDashboard.bind(el.results);
+		}
+	}
+
 	function studentResultsHtml(r) {
 		var sr = r.student_results;
 		if (!sr) return '';
+
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildStudent) {
+			model = AIRB.DashboardModel.buildStudent(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.StudentDashboard && AIRB.StudentDashboard.render) {
+			var renderOpts = studentDashboardRenderOpts();
+			renderOpts.retakeCardHtml = function () {
+				return studentRetakeCardHtml(sr, r.alignment_score);
+			};
+			return AIRB.StudentDashboard.render(r, model, renderOpts);
+		}
 
 		var html = '';
 		try {
@@ -3579,6 +3856,44 @@
 		html += studentHelpSupportHtml(sr.next_steps);
 		html += studentRetakeCardHtml(sr, r.alignment_score);
 		return benchmarkResultsBodyHtml(html);
+	}
+
+	function studentDashboardRenderOpts() {
+		return {
+			esc: esc,
+			studentResult: studentResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: studentResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: i18n.focusGuidanceToggle || 'Tips & steps to try',
+			guidanceOpen: false,
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			resourcesHtml: function () {
+				var sr = state.results && state.results.student_results;
+				var nextSteps = sr && sr.next_steps;
+				var links = (nextSteps && nextSteps.resource_links) ? nextSteps.resource_links : [];
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">' + esc(studentResult.resources_section_heading || 'Study resources') + '</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindStudentDashboard() {
+		if (window.AIRB && AIRB.StudentDashboard && AIRB.StudentDashboard.bind) {
+			AIRB.StudentDashboard.bind(el.results);
+		}
 	}
 
 	function resultsZoneClass(modifier) {
@@ -3636,11 +3951,78 @@
 		return paths[slug] || '';
 	}
 
+	function resourceLinkArrowSvg() {
+		return '<svg class="airb__resource-link-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+	}
+
+	function resourceCardBodyHtml(link, demoCards) {
+		var html = '<span class="airb__resource-link-body">';
+		if (demoCards && link.kicker) {
+			html += '<span class="airb__resource-link-kicker">' + escText(link.kicker) + '</span>';
+		}
+		html += '<span class="airb__resource-link-label">' + escText(link.label) + '</span>';
+		if (demoCards && link.description) {
+			html += '<span class="airb__resource-link-description">' + escText(link.description) + '</span>';
+		}
+		html += '</span>';
+		if (demoCards) {
+			html += resourceLinkArrowSvg();
+		}
+		return html;
+	}
+
+	function resourceFeaturedCardHtml(link) {
+		var url = resolveResourceLinkUrl(link) || (link.url ? String(link.url) : '');
+		if (!url) return '';
+		var html = '<a class="airb__results-resource-card airb__results-resource-card--featured" href="' + esc(url) + '"';
+		if (link.external) {
+			html += ' target="_blank" rel="noopener noreferrer"';
+		}
+		html += '>';
+		if (link.image) {
+			html += '<span class="airb__resource-link-media"><img class="airb__resource-link-thumb" src="' + esc(link.image) + '" alt="" loading="lazy" decoding="async" /></span>';
+		} else {
+			html += '<span class="airb__resource-link-media airb__resource-link-media--icon" aria-hidden="true"></span>';
+		}
+		html += resourceCardBodyHtml(link, true);
+		return html + '</a>';
+	}
+
+	function teacherBreakingNowResourceHtml(links) {
+		var breaking = null;
+		(links || []).forEach(function (link) {
+			var slug = link.slug ? String(link.slug) : '';
+			if (slug === 'how-does-a-large-language-model-work' || /large language model/i.test(link.label || '')) {
+				breaking = link;
+			}
+		});
+		if (!breaking) {
+			var paths = airbBenchmark.timelineReadPaths || {};
+			var fallbackUrl = paths['how-does-a-large-language-model-work'] || '';
+			if (fallbackUrl) {
+				breaking = {
+					label: 'How Does a Large Language Model Work?',
+					url: fallbackUrl,
+				};
+			}
+		}
+		if (!breaking) return '';
+		breaking = Object.assign({}, breaking, {
+			kicker: 'Breaking now',
+			description: breaking.description || 'The top timeline explainer to help staff and students understand what sits behind AI answers.',
+		});
+		return '<section class="airb__breaking-resource" aria-labelledby="airb-breaking-now-title">' +
+			'<p class="airb__leader-section-label" id="airb-breaking-now-title">Breaking now</p>' +
+			resourceFeaturedCardHtml(breaking) +
+			'</section>';
+	}
+
 	function resultsResourceLinksHtml(links, options) {
 		options = options || {};
 		if (!links || !links.length) return '';
 		var cardMode = options.cardMode !== false;
 		var leaderGrid = !!options.leaderGrid;
+		var demoCards = !!options.demoCards;
 		var html = '<ul class="airb__results-resource-links airb__leader-resource-links' +
 			(cardMode ? ' airb__results-resource-links--cards' : '') +
 			(leaderGrid ? ' airb__results-resource-links--leader-grid' : '') + '">';
@@ -3662,7 +4044,7 @@
 			} else {
 				html += '<span class="airb__resource-link-media airb__resource-link-media--icon" aria-hidden="true"></span>';
 			}
-			html += '<span class="airb__resource-link-body"><span class="airb__resource-link-label">' + escText(link.label) + '</span></span>';
+			html += resourceCardBodyHtml(link, demoCards);
 			html += link.prefill ? '</button>' : '</a>';
 			html += '</li>';
 		});
@@ -4048,6 +4430,37 @@
 		var lr = r.leader_results;
 		if (!lr) return '';
 
+		var model = state.dashboardModel;
+		if (!model && window.AIRB && AIRB.DashboardModel && AIRB.DashboardModel.buildLeader) {
+			model = AIRB.DashboardModel.buildLeader(r, cfg);
+		}
+
+		if (model && window.AIRB && AIRB.LeaderDashboard && AIRB.LeaderDashboard.render) {
+			var renderOpts = leaderDashboardRenderOpts();
+			if (lr.risk_heatmap && lr.risk_heatmap.length) {
+				renderOpts.heatmapHtml = function () {
+					return leaderSectionLabel(
+						leaderResult.heatmap_section_heading || 'Full risk picture',
+						leaderResult.heatmap_section_heading_short || 'Full risk picture'
+					) + leaderHeatmapCardHtml(lr.risk_heatmap);
+				};
+			}
+			if (lr.next_steps && lr.next_steps.rollout) {
+				renderOpts.rolloutSectionHtml = function () {
+					return leaderSectionLabel(
+						leaderResult.rollout_section_heading || 'Your next unlock — whole-school picture',
+						leaderResult.rollout_section_heading_short || 'Your next unlock'
+					) + leaderRolloutCardHtml(lr.next_steps.rollout);
+				};
+			}
+			if (lr.next_steps) {
+				renderOpts.governanceCtaHtml = function () {
+					return leaderGovernanceCtaHtml(lr.next_steps);
+				};
+			}
+			return AIRB.LeaderDashboard.render(r, model, renderOpts);
+		}
+
 		var html = '';
 		try {
 			if (window.AIRB && AIRB.Roles && AIRB.Roles.leaderUrgentAction) {
@@ -4097,6 +4510,45 @@
 		html += leaderGovernanceCtaHtml(lr.next_steps);
 		html += leaderHelpSupportHtml(lr.next_steps);
 		return benchmarkResultsBodyHtml(html);
+	}
+
+	function leaderDashboardRenderOpts() {
+		return {
+			esc: esc,
+			leaderResult: leaderResult,
+			sectionLabelHtml: leaderSectionLabel,
+			cardHeadingHtml: benchmarkCardHeadingHtml,
+			practiceHeading: leaderResult.focus_practice_heading_short || i18n.focusPracticeHeadingShort || 'In practice this means',
+			guidanceToggle: 'View governance impact',
+			guidanceOpen: false,
+			focusStackIntro: 'These cards expand the lowest domain scores into governance impact and recommended actions.',
+			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
+			resourcesHtml: function () {
+				var lr = state.results && state.results.leader_results;
+				var nextSteps = lr && lr.next_steps;
+				var links = (nextSteps && nextSteps.resource_links) ? nextSteps.resource_links : [];
+				var html = '';
+				if (links.length) {
+					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
+					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
+						'<div class="airb__resources-header">' +
+						'<p class="airb__leader-section-label">' + esc(leaderResult.help_support_heading || 'CPD for teachers and students') + '</p>' +
+						'<p class="airb__resources-intro">' + esc(intro) + '</p>' +
+						'</div>' +
+						resultsResourceLinksHtml(links, { cardMode: true, demoCards: true }) +
+						'</section>';
+				}
+				html += teacherBreakingNowResourceHtml(links);
+				return html;
+			},
+			resultsBodyHtml: benchmarkResultsBodyHtml,
+		};
+	}
+
+	function bindLeaderDashboard() {
+		if (window.AIRB && AIRB.LeaderDashboard && AIRB.LeaderDashboard.bind) {
+			AIRB.LeaderDashboard.bind(el.results);
+		}
 	}
 
 	function resultsProfileHtml(r) {
@@ -4151,37 +4603,58 @@
 		html += '<h2 class="airb__res-title">' + esc(profileTitle) + '</h2>';
 		html += '</div>';
 		if (leaderMode) {
-			var uiHero = r.leader_results && r.leader_results.ui ? r.leader_results.ui.hero : null;
-			html += leaderReadinessHeroHtml(readiness, uiHero);
-			html += leaderSupportingMetricsHtml(r, risk);
+			if (window.AIRB && AIRB.LeaderDashboard && AIRB.LeaderDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.LeaderDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var uiHero = r.leader_results && r.leader_results.ui ? r.leader_results.ui.hero : null;
+				html += leaderReadinessHeroHtml(readiness, uiHero);
+				html += leaderSupportingMetricsHtml(r, risk);
+			}
 		} else if (teacherBenchmarkMode) {
-			var tr = r.teacher_results;
-			var tUiHero = tr && tr.ui ? tr.ui.hero : null;
-			html += leaderReadinessHeroHtml(readiness, tUiHero);
-			html += teacherPeerBenchmarkHtml(tr);
-			html += teacherSupportingMetricsHtml(r, risk);
-			html += teacherOversightGaugeSectionHtml(r);
-			html += teacherDomainSectionHtml(r);
+			if (window.AIRB && AIRB.TeacherDashboard && AIRB.TeacherDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.TeacherDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var trFallback = r.teacher_results;
+				var tUiHero = trFallback && trFallback.ui ? trFallback.ui.hero : null;
+				html += leaderReadinessHeroHtml(readiness, tUiHero);
+				html += teacherPeerBenchmarkHtml(trFallback);
+			}
 		} else if (studentMode && studentResults) {
-			var sUiHero = studentResults.ui && studentResults.ui.hero ? studentResults.ui.hero : null;
-			html += studentReadinessHeroHtml(readiness, sUiHero);
-			html += studentPeerBenchmarkHtml(studentResults);
-			html += benchmarkOversightGaugeSectionHtml(r);
-			html += studentSkillsSectionHtml(studentResults.learning_metrics || []);
+			if (window.AIRB && AIRB.StudentDashboard && AIRB.StudentDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.StudentDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var sUiHero = studentResults.ui && studentResults.ui.hero ? studentResults.ui.hero : null;
+				html += studentReadinessHeroHtml(readiness, sUiHero);
+				html += studentPeerBenchmarkHtml(studentResults);
+				html += benchmarkOversightGaugeSectionHtml(r);
+				html += studentSkillsSectionHtml(studentResults.learning_metrics || []);
+			}
 		} else if (parentMode && parentResults) {
-			var pUiHero = parentResults.ui && parentResults.ui.hero ? parentResults.ui.hero : null;
-			html += parentReadinessHeroHtml(readiness, pUiHero);
-			html += parentHomeMetricsSectionHtml(parentResults.home_metrics);
+			if (window.AIRB && AIRB.ParentDashboard && AIRB.ParentDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.ParentDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var pUiHero = parentResults.ui && parentResults.ui.hero ? parentResults.ui.hero : null;
+				html += parentReadinessHeroHtml(readiness, pUiHero);
+				html += parentHomeMetricsSectionHtml(parentResults.home_metrics);
+			}
 		} else if (publicMode && publicResults) {
-			var pubUiHero = publicResults.ui && publicResults.ui.hero ? publicResults.ui.hero : null;
-			html += leaderReadinessHeroHtml(readiness, pubUiHero);
-			html += publicSummaryMetricsGridHtml(publicResults.summary_metrics);
+			if (window.AIRB && AIRB.PublicDashboard && AIRB.PublicDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.PublicDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var pubUiHero = publicResults.ui && publicResults.ui.hero ? publicResults.ui.hero : null;
+				html += leaderReadinessHeroHtml(readiness, pubUiHero);
+				html += publicSummaryMetricsGridHtml(publicResults.summary_metrics);
+			}
 		} else if (supportBenchmarkMode && supportResults) {
-			var supUiHero = supportResults.ui && supportResults.ui.hero ? supportResults.ui.hero : null;
-			html += supportReadinessHeroHtml(readiness, supUiHero);
-			html += supportMetricGridHtml(r, supportResults);
-			html += benchmarkOversightGaugeSectionHtml(r);
-			html += supportDomainsSectionHtml(supportResults.domain_rows);
+			if (window.AIRB && AIRB.SupportDashboard && AIRB.SupportDashboard.coreSummaryHtml && state.dashboardModel) {
+				html += AIRB.SupportDashboard.coreSummaryHtml(state.dashboardModel);
+			} else {
+				var supUiHero = supportResults.ui && supportResults.ui.hero ? supportResults.ui.hero : null;
+				html += supportReadinessHeroHtml(readiness, supUiHero);
+				html += supportMetricGridHtml(r, supportResults);
+				html += benchmarkOversightGaugeSectionHtml(r);
+				html += supportDomainsSectionHtml(supportResults.domain_rows);
+			}
 		} else {
 		html += readinessBandScaleHtml(readiness);
 
@@ -4423,9 +4896,24 @@
 		return html + '</section>';
 	}
 
+	function syncDashboardModel(r) {
+		state.dashboardModel = null;
+		if (!r || !window.AIRB || !AIRB.DashboardModel || !AIRB.DashboardModel.build) {
+			return;
+		}
+		try {
+			state.dashboardModel = AIRB.DashboardModel.build(r, state.role);
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('AIRB dashboard model failed', err);
+			}
+		}
+	}
+
 	function renderResults() {
 		var r = state.results;
 		if (!r) return;
+		syncDashboardModel(r);
 		try {
 			renderResultsBody(r);
 		} catch (err) {
@@ -4453,7 +4941,7 @@
 		var supportMode = isSupportStaffRole() && !!r.support_results;
 		var benchmarkResultsMode = studentMode || teacherMode || leaderMode || parentMode || publicMode || supportMode;
 
-		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' : '') + (publicMode ? ' airb__results--public' : '') + (teacherMode ? ' airb__results--teacher' : '') + (studentMode ? ' airb__results--student' : '') + (leaderMode ? ' airb__results--leader' : '') + (supportMode ? ' airb__results--support' : '') + '">';
+		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' + (state.dashboardModel && isParentRole() && r.parent_results ? ' airb__results--parent-dash' : '') : '') + (publicMode ? ' airb__results--public' + (state.dashboardModel ? ' airb__results--public-dash' : '') : '') + (teacherMode ? ' airb__results--teacher' + (state.dashboardModel ? ' airb__results--teacher-dash' : '') : '') + (studentMode ? ' airb__results--student' + (state.dashboardModel ? ' airb__results--student-dash' : '') : '') + (leaderMode ? ' airb__results--leader' + (state.dashboardModel ? ' airb__results--leader-dash' : '') : '') + (supportMode ? ' airb__results--support' + (state.dashboardModel ? ' airb__results--support-dash' : '') : '') + '">';
 		html += resultsProfileHtml(r);
 
 		if (teacherMode) {
@@ -4536,16 +5024,6 @@
 			html += benchmarkHtml(r);
 		}
 
-		if (roleShowsInterestForm(state.role)) {
-			if (!hasInterestForm(r)) {
-				var shells = airbBenchmark.interestForms || {};
-				if (shells[state.role]) {
-					mergeInterestFormShell(r, shells[state.role]);
-				}
-			}
-			html += interestFormHtml(r);
-		}
-
 		if (!benchmarkResultsMode) {
 			var shareHint = shareResultsHintText(r);
 			if (shareHint) {
@@ -4563,6 +5041,17 @@
 			}
 			html += '</div>';
 		}
+
+		if (roleShowsInterestForm(state.role)) {
+			if (!hasInterestForm(r)) {
+				var shells = airbBenchmark.interestForms || {};
+				if (shells[state.role]) {
+					mergeInterestFormShell(r, shells[state.role]);
+				}
+			}
+			html += interestFormHtml(r);
+		}
+
 		if (state.school && !isStaffRole()) {
 			html += '<p class="airb__school-link"><a class="airb__btn airb__btn--ghost airb__btn--sm" href="?school=' + encodeURIComponent(state.school) + '#airb-school-dashboard">' + esc(i18n.viewSchool) + '</a></p>';
 			html += '<p class="airb__muted airb__school-hint">' + esc(i18n.schoolHint) + '</p>';
@@ -4587,6 +5076,12 @@
 		bindInterestTriggers();
 		bindStudentRetakeTriggers();
 		bindPublicRetakeTriggers();
+		bindTeacherDashboard();
+		bindStudentDashboard();
+		bindParentDashboard();
+		bindLeaderDashboard();
+		bindSupportDashboard();
+		bindPublicDashboard();
 		fetchSchoolSnapshot();
 
 		animateResultsStats();
@@ -4956,6 +5451,457 @@
 		return html;
 	}
 
+	function parentDashboardFollowUpHtml(r, form, labels, fields, suggested) {
+		var demoOptionSlugs = ['parent_share_with_school', 'parent_resources', 'parent_school_take_part'];
+		var options = (form.options || []).filter(function (opt) {
+			return demoOptionSlugs.indexOf(opt.slug) >= 0;
+		});
+		options.sort(function (a, b) {
+			return demoOptionSlugs.indexOf(a.slug) - demoOptionSlugs.indexOf(b.slug);
+		});
+		if (!options.length) {
+			options = (form.options || []).slice(0, 3);
+		}
+
+		var weakestLabel = '';
+		if (state.dashboardModel && state.dashboardModel.domains && state.dashboardModel.domains.length) {
+			var weakest = state.dashboardModel.domains.reduce(function (min, domain) {
+				return !min || domain.value < min.value ? domain : min;
+			}, null);
+			if (weakest) weakestLabel = weakest.label.toLowerCase();
+		}
+		var messagePlaceholder = weakestLabel
+			? 'Example: We need help with ' + weakestLabel + ' at home.'
+			: 'Example: We want help sharing our results with school.';
+
+		var html = '<section class="airb__interest airb__teacher-dash-follow-up" id="airb-interest" aria-labelledby="airb-interest-heading">';
+		html += '<span id="benchmark-follow-up" class="airb__sr-only" aria-hidden="true"></span>';
+		html += '<div class="airb__teacher-follow-up-head">';
+		html += '<span class="airb__teacher-follow-up-icon" aria-hidden="true">';
+		html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+		html += '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>';
+		html += '</svg></span>';
+		html += '<div class="airb__teacher-follow-up-copy">';
+		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
+		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
+		html += '<p class="airb__interest-intro">' + esc(
+			labels.intro || 'Your results help your school understand how families use AI at home. Tell us if you want guides, school engagement, or AI Awareness Day support.'
+		) + '</p>';
+		html += '</div></div>';
+
+		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
+		html += '<fieldset class="airb__interest-options airb__teacher-follow-up-options">';
+		html += '<legend class="airb__interest-legend airb__sr-only">' + esc(labels.interests || 'What would you like?') + '</legend>';
+		options.forEach(function (opt) {
+			var checked = suggested.indexOf(opt.slug) >= 0;
+			if (!checked && opt.slug === 'parent_share_with_school' && !suggested.length) {
+				checked = true;
+			}
+			var inputId = 'airb-interest-' + opt.slug;
+			html += '<label class="airb__interest-option" for="' + esc(inputId) + '">';
+			html += '<input type="checkbox" id="' + esc(inputId) + '" name="interests[]" value="' + esc(opt.slug) + '"' + (checked ? ' checked' : '') + '>';
+			html += '<span class="airb__interest-option-text">';
+			html += '<span class="airb__interest-option-label">' + esc(opt.label) + '</span>';
+			if (opt.description) {
+				html += '<span class="airb__interest-option-desc">' + esc(opt.description) + '</span>';
+			}
+			html += '</span></label>';
+		});
+		html += '</fieldset>';
+
+		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
+		if (fields.show_name) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_name" autocomplete="name" placeholder="Alex Morgan"></label>';
+		}
+		if (fields.show_email) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.email || 'Email address') + (fields.email_required ? ' *' : '') + '</span>';
+			html += '<input class="airb__input" type="email" name="interest_email"' + (fields.email_required ? ' required' : '') + ' autocomplete="email" value="' + esc(state.email || '') + '">';
+			if (labels.email_hint) html += '<span class="airb__field-hint airb__muted">' + esc(labels.email_hint) + '</span>';
+			html += '</label>';
+		}
+		if (fields.show_child_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.child_school || 'Child\'s school (optional)') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_child_school" autocomplete="organization" placeholder="Riverside Academy"></label>';
+		}
+		if (fields.show_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
+		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="' + esc(messagePlaceholder) + '"></textarea></label>';
+		html += '</div>';
+
+		html += '<p class="airb__interest-status" id="airb-interest-status" role="status" aria-live="polite" hidden></p>';
+		html += '<button type="submit" class="airb__btn airb__btn--primary airb__interest-submit airb__teacher-follow-up-submit">';
+		html += esc(labels.submit_short || 'Request follow-up');
+		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+		html += '</button>';
+		html += '</form></section>';
+		return html;
+	}
+
+	function supportDashboardFollowUpHtml(r, form, labels, fields, suggested) {
+		var demoOptionSlugs = ['support_data_checklist', 'support_verification_resources', 'support_staff_cpd'];
+		var options = (form.options || []).filter(function (opt) {
+			return demoOptionSlugs.indexOf(opt.slug) >= 0;
+		});
+		options.sort(function (a, b) {
+			return demoOptionSlugs.indexOf(a.slug) - demoOptionSlugs.indexOf(b.slug);
+		});
+		if (!options.length) {
+			options = (form.options || []).slice(0, 3);
+		}
+
+		var weakestLabel = '';
+		if (state.dashboardModel && state.dashboardModel.domains && state.dashboardModel.domains.length) {
+			var weakest = state.dashboardModel.domains.reduce(function (min, domain) {
+				return !min || domain.value < min.value ? domain : min;
+			}, null);
+			if (weakest) weakestLabel = weakest.label.toLowerCase();
+		}
+		var messagePlaceholder = weakestLabel
+			? 'Example: We need help with ' + weakestLabel + ' in our office workflows.'
+			: 'Example: We need a data protection checklist for support staff.';
+
+		var html = '<section class="airb__interest airb__teacher-dash-follow-up" id="airb-interest" aria-labelledby="airb-interest-heading">';
+		html += '<span id="benchmark-follow-up" class="airb__sr-only" aria-hidden="true"></span>';
+		html += '<div class="airb__teacher-follow-up-head">';
+		html += '<span class="airb__teacher-follow-up-icon" aria-hidden="true">';
+		html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+		html += '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>';
+		html += '</svg></span>';
+		html += '<div class="airb__teacher-follow-up-copy">';
+		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
+		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
+		html += '<p class="airb__interest-intro">' + esc(
+			labels.intro || 'Tell us if you would like data protection checklists, verification resources, or support-staff CPD.'
+		) + '</p>';
+		html += '</div></div>';
+
+		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
+		html += '<fieldset class="airb__interest-options airb__teacher-follow-up-options">';
+		html += '<legend class="airb__interest-legend airb__sr-only">' + esc(labels.interests || 'What would you like?') + '</legend>';
+		options.forEach(function (opt) {
+			var checked = suggested.indexOf(opt.slug) >= 0;
+			if (!checked && opt.slug === 'support_data_checklist' && !suggested.length) {
+				checked = true;
+			}
+			var inputId = 'airb-interest-' + opt.slug;
+			html += '<label class="airb__interest-option" for="' + esc(inputId) + '">';
+			html += '<input type="checkbox" id="' + esc(inputId) + '" name="interests[]" value="' + esc(opt.slug) + '"' + (checked ? ' checked' : '') + '>';
+			html += '<span class="airb__interest-option-text">';
+			html += '<span class="airb__interest-option-label">' + esc(opt.label) + '</span>';
+			if (opt.description) {
+				html += '<span class="airb__interest-option-desc">' + esc(opt.description) + '</span>';
+			}
+			html += '</span></label>';
+		});
+		html += '</fieldset>';
+
+		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
+		if (fields.show_name) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_name" autocomplete="name" placeholder="Alex Morgan"></label>';
+		}
+		if (fields.show_email) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.email || 'Email address') + (fields.email_required ? ' *' : '') + '</span>';
+			html += '<input class="airb__input" type="email" name="interest_email"' + (fields.email_required ? ' required' : '') + ' autocomplete="email" value="' + esc(state.email || '') + '">';
+			if (labels.email_hint) html += '<span class="airb__field-hint airb__muted">' + esc(labels.email_hint) + '</span>';
+			html += '</label>';
+		}
+		if (fields.show_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
+		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="' + esc(messagePlaceholder) + '"></textarea></label>';
+		html += '</div>';
+
+		html += '<p class="airb__interest-status" id="airb-interest-status" role="status" aria-live="polite" hidden></p>';
+		html += '<button type="submit" class="airb__btn airb__btn--primary airb__interest-submit airb__teacher-follow-up-submit">';
+		html += esc(labels.submit_short || 'Request follow-up');
+		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+		html += '</button>';
+		html += '</form></section>';
+		return html;
+	}
+
+	function leaderDashboardFollowUpHtml(r, form, labels, fields, suggested) {
+		var demoOptionSlugs = ['whole_school_benchmark', 'governance_review', 'whole_school_cpd'];
+		var options = (form.options || []).filter(function (opt) {
+			return demoOptionSlugs.indexOf(opt.slug) >= 0;
+		});
+		options.sort(function (a, b) {
+			return demoOptionSlugs.indexOf(a.slug) - demoOptionSlugs.indexOf(b.slug);
+		});
+		if (!options.length) {
+			options = (form.options || []).slice(0, 3);
+		}
+
+		var weakestLabel = '';
+		if (state.dashboardModel && state.dashboardModel.domains && state.dashboardModel.domains.length) {
+			var weakest = state.dashboardModel.domains.reduce(function (min, domain) {
+				return !min || domain.value < min.value ? domain : min;
+			}, null);
+			if (weakest) weakestLabel = weakest.label.toLowerCase();
+		}
+		var messagePlaceholder = weakestLabel
+			? 'Example: We need help strengthening ' + weakestLabel + ' before our next governor meeting.'
+			: 'Example: We need a whole-school benchmark rollout plan.';
+
+		var html = '<section class="airb__interest airb__teacher-dash-follow-up" id="airb-interest" aria-labelledby="airb-interest-heading">';
+		html += '<span id="benchmark-follow-up" class="airb__sr-only" aria-hidden="true"></span>';
+		html += '<div class="airb__teacher-follow-up-head">';
+		html += '<span class="airb__teacher-follow-up-icon" aria-hidden="true">';
+		html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+		html += '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>';
+		html += '</svg></span>';
+		html += '<div class="airb__teacher-follow-up-copy">';
+		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
+		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
+		html += '<p class="airb__interest-intro">' + esc(
+			labels.intro || 'You have seen your results — tell us if you would like governance support, whole-school CPD, or a benchmark rollout.'
+		) + '</p>';
+		html += '</div></div>';
+
+		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
+		html += '<fieldset class="airb__interest-options airb__teacher-follow-up-options">';
+		html += '<legend class="airb__interest-legend airb__sr-only">' + esc(labels.interests || 'What would you like?') + '</legend>';
+		options.forEach(function (opt) {
+			var checked = suggested.indexOf(opt.slug) >= 0;
+			if (!checked && opt.slug === 'governance_review' && !suggested.length) {
+				checked = true;
+			}
+			var inputId = 'airb-interest-' + opt.slug;
+			html += '<label class="airb__interest-option" for="' + esc(inputId) + '">';
+			html += '<input type="checkbox" id="' + esc(inputId) + '" name="interests[]" value="' + esc(opt.slug) + '"' + (checked ? ' checked' : '') + '>';
+			html += '<span class="airb__interest-option-text">';
+			html += '<span class="airb__interest-option-label">' + esc(opt.label) + '</span>';
+			if (opt.description) {
+				html += '<span class="airb__interest-option-desc">' + esc(opt.description) + '</span>';
+			}
+			html += '</span></label>';
+		});
+		html += '</fieldset>';
+
+		if (fields.show_stakeholder_role && form.stakeholder_roles) {
+			html += '<fieldset class="airb__interest-stakeholder airb__teacher-follow-up-stakeholder">';
+			html += '<legend class="airb__interest-legend">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</legend>';
+			var roleKeys = Object.keys(form.stakeholder_roles);
+			roleKeys.forEach(function (key, index) {
+				var inputId = 'airb-stakeholder-' + key;
+				html += '<label class="airb__interest-option airb__interest-option--radio" for="' + esc(inputId) + '">';
+				html += '<input type="radio" id="' + esc(inputId) + '" name="stakeholder_role" value="' + esc(key) + '"' + (index === 0 ? ' checked' : '') + '>';
+				html += '<span class="airb__interest-option-text">' + esc(form.stakeholder_roles[key]) + '</span></label>';
+			});
+			html += '</fieldset>';
+		}
+
+		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
+		if (fields.show_name) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_name" autocomplete="name" placeholder="Alex Morgan"></label>';
+		}
+		if (fields.show_email) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.email || 'Email address') + (fields.email_required ? ' *' : '') + '</span>';
+			html += '<input class="airb__input" type="email" name="interest_email"' + (fields.email_required ? ' required' : '') + ' autocomplete="email" value="' + esc(state.email || '') + '">';
+			if (labels.email_hint) html += '<span class="airb__field-hint airb__muted">' + esc(labels.email_hint) + '</span>';
+			html += '</label>';
+		}
+		if (fields.show_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
+		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="' + esc(messagePlaceholder) + '"></textarea></label>';
+		html += '</div>';
+
+		html += '<p class="airb__interest-status" id="airb-interest-status" role="status" aria-live="polite" hidden></p>';
+		html += '<button type="submit" class="airb__btn airb__btn--primary airb__interest-submit airb__teacher-follow-up-submit">';
+		html += esc(labels.submit_short || 'Request follow-up');
+		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+		html += '</button>';
+		html += '</form></section>';
+		return html;
+	}
+
+	function studentDashboardFollowUpHtml(r, form, labels, fields, suggested) {
+		var demoOptionSlugs = ['student_share_school', 'student_school_programme', 'student_learn_ai'];
+		var options = (form.options || []).filter(function (opt) {
+			return demoOptionSlugs.indexOf(opt.slug) >= 0;
+		});
+		options.sort(function (a, b) {
+			return demoOptionSlugs.indexOf(a.slug) - demoOptionSlugs.indexOf(b.slug);
+		});
+		if (!options.length) {
+			options = (form.options || []).slice(0, 3);
+		}
+
+		var weakestLabel = '';
+		if (state.dashboardModel && state.dashboardModel.domains && state.dashboardModel.domains.length) {
+			var weakest = state.dashboardModel.domains.reduce(function (min, domain) {
+				return !min || domain.value < min.value ? domain : min;
+			}, null);
+			if (weakest) weakestLabel = weakest.label.toLowerCase();
+		}
+		var messagePlaceholder = weakestLabel
+			? 'Example: I want help improving my ' + weakestLabel + ' habits.'
+			: 'Example: I want help sharing my results with my school.';
+
+		var html = '<section class="airb__interest airb__teacher-dash-follow-up" id="airb-interest" aria-labelledby="airb-interest-heading">';
+		html += '<span id="benchmark-follow-up" class="airb__sr-only" aria-hidden="true"></span>';
+		html += '<div class="airb__teacher-follow-up-head">';
+		html += '<span class="airb__teacher-follow-up-icon" aria-hidden="true">';
+		html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+		html += '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>';
+		html += '</svg></span>';
+		html += '<div class="airb__teacher-follow-up-copy">';
+		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
+		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
+		html += '<p class="airb__interest-intro">' + esc(
+			labels.intro || 'Your results help your school understand how students use AI. Tell us if you want to share your results, learn more, or ask about AI Awareness Day.'
+		) + '</p>';
+		html += '</div></div>';
+
+		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
+		html += '<fieldset class="airb__interest-options airb__teacher-follow-up-options">';
+		html += '<legend class="airb__interest-legend airb__sr-only">' + esc(labels.interests || 'What would you like?') + '</legend>';
+		options.forEach(function (opt) {
+			var checked = suggested.indexOf(opt.slug) >= 0;
+			if (!checked && opt.slug === 'student_share_school' && !suggested.length) {
+				checked = true;
+			}
+			var inputId = 'airb-interest-' + opt.slug;
+			html += '<label class="airb__interest-option" for="' + esc(inputId) + '">';
+			html += '<input type="checkbox" id="' + esc(inputId) + '" name="interests[]" value="' + esc(opt.slug) + '"' + (checked ? ' checked' : '') + '>';
+			html += '<span class="airb__interest-option-text">';
+			html += '<span class="airb__interest-option-label">' + esc(opt.label) + '</span>';
+			if (opt.description) {
+				html += '<span class="airb__interest-option-desc">' + esc(opt.description) + '</span>';
+			}
+			html += '</span></label>';
+		});
+		html += '</fieldset>';
+
+		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
+		if (fields.show_name) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_name" autocomplete="name" placeholder="Alex Morgan"></label>';
+		}
+		if (fields.show_email) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.email || 'Email address') + (fields.email_required ? ' *' : '') + '</span>';
+			html += '<input class="airb__input" type="email" name="interest_email"' + (fields.email_required ? ' required' : '') + ' autocomplete="email" value="' + esc(state.email || '') + '">';
+			if (labels.email_hint) html += '<span class="airb__field-hint airb__muted">' + esc(labels.email_hint) + '</span>';
+			html += '</label>';
+		}
+		if (fields.show_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'Your school (optional)') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
+		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="' + esc(messagePlaceholder) + '"></textarea></label>';
+		html += '</div>';
+
+		html += '<p class="airb__interest-status" id="airb-interest-status" role="status" aria-live="polite" hidden></p>';
+		html += '<button type="submit" class="airb__btn airb__btn--primary airb__interest-submit airb__teacher-follow-up-submit">';
+		html += esc(labels.submit_short || 'Request follow-up');
+		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+		html += '</button>';
+		html += '</form></section>';
+		return html;
+	}
+
+	function teacherDashboardFollowUpHtml(r, form, labels, fields, suggested) {
+		var demoOptionSlugs = ['whole_school_cpd', 'teacher_activity_day', 'whole_school_benchmark'];
+		var options = (form.options || []).filter(function (opt) {
+			return demoOptionSlugs.indexOf(opt.slug) >= 0;
+		});
+		options.sort(function (a, b) {
+			return demoOptionSlugs.indexOf(a.slug) - demoOptionSlugs.indexOf(b.slug);
+		});
+		if (!options.length) {
+			options = (form.options || []).slice();
+		}
+
+		var html = '<section class="airb__interest airb__teacher-dash-follow-up" id="airb-interest" aria-labelledby="airb-interest-heading">';
+		html += '<span id="benchmark-follow-up" class="airb__sr-only" aria-hidden="true"></span>';
+		html += '<div class="airb__teacher-follow-up-head">';
+		html += '<span class="airb__teacher-follow-up-icon" aria-hidden="true">';
+		html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+		html += '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>';
+		html += '</svg></span>';
+		html += '<div class="airb__teacher-follow-up-copy">';
+		html += '<p class="airb__teacher-follow-up-eyebrow">Optional next step</p>';
+		html += '<h2 class="airb__interest-heading" id="airb-interest-heading">Want help with your next step?</h2>';
+		html += '<p class="airb__interest-intro">You have seen your results — tell us if you would like CPD, classroom resources, or a whole-school rollout.</p>';
+		html += '</div></div>';
+
+		html += '<form class="airb__interest-form airb__teacher-follow-up-form" id="airb-interest-form" novalidate>';
+		html += '<fieldset class="airb__interest-options airb__teacher-follow-up-options">';
+		html += '<legend class="airb__interest-legend airb__sr-only">' + esc(labels.interests || 'What would you like?') + '</legend>';
+		options.forEach(function (opt) {
+			var checked = suggested.indexOf(opt.slug) >= 0;
+			if (!checked && opt.slug === 'whole_school_cpd' && !suggested.length) {
+				checked = true;
+			}
+			var inputId = 'airb-interest-' + opt.slug;
+			html += '<label class="airb__interest-option" for="' + esc(inputId) + '">';
+			html += '<input type="checkbox" id="' + esc(inputId) + '" name="interests[]" value="' + esc(opt.slug) + '"' + (checked ? ' checked' : '') + '>';
+			html += '<span class="airb__interest-option-text">';
+			html += '<span class="airb__interest-option-label">' + esc(opt.label) + '</span>';
+			if (opt.description) {
+				html += '<span class="airb__interest-option-desc">' + esc(opt.description) + '</span>';
+			}
+			html += '</span></label>';
+		});
+		html += '</fieldset>';
+
+		if (fields.show_stakeholder_role && form.stakeholder_roles) {
+			html += '<fieldset class="airb__interest-stakeholder airb__teacher-follow-up-stakeholder">';
+			html += '<legend class="airb__interest-legend">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</legend>';
+			var roleKeys = Object.keys(form.stakeholder_roles);
+			roleKeys.forEach(function (key, index) {
+				var inputId = 'airb-stakeholder-' + key;
+				html += '<label class="airb__interest-option airb__interest-option--radio" for="' + esc(inputId) + '">';
+				html += '<input type="radio" id="' + esc(inputId) + '" name="stakeholder_role" value="' + esc(key) + '"' + (index === 0 ? ' checked' : '') + '>';
+				html += '<span class="airb__interest-option-text">' + esc(form.stakeholder_roles[key]) + '</span></label>';
+			});
+			html += '</fieldset>';
+		}
+
+		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
+		if (fields.show_name) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_name" autocomplete="name" placeholder="Alex Morgan"></label>';
+		}
+		if (fields.show_email) {
+			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.email || 'Email address') + (fields.email_required ? ' *' : '') + '</span>';
+			html += '<input class="airb__input" type="email" name="interest_email"' + (fields.email_required ? ' required' : '') + ' autocomplete="email" value="' + esc(state.email || '') + '">';
+			if (labels.email_hint) html += '<span class="airb__field-hint airb__muted">' + esc(labels.email_hint) + '</span>';
+			html += '</label>';
+		}
+		if (fields.show_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		if (fields.show_child_school) {
+			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.child_school || '') + '</span>';
+			html += '<input class="airb__input" type="text" name="interest_child_school" autocomplete="organization"></label>';
+		}
+		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
+		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="Example: We need help with assessment design across Year 8 lessons."></textarea></label>';
+		html += '</div>';
+
+		html += '<p class="airb__interest-status" id="airb-interest-status" role="status" aria-live="polite" hidden></p>';
+		html += '<button type="submit" class="airb__btn airb__btn--primary airb__interest-submit airb__teacher-follow-up-submit">';
+		html += esc(labels.submit_short || 'Request follow-up');
+		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+		html += '</button>';
+		html += '</form></section>';
+		return html;
+	}
+
 	function interestFormHtml(r) {
 		if (!hasInterestForm(r)) return '';
 		var form = r.interest_form;
@@ -4964,11 +5910,34 @@
 		var suggested = form.suggested || [];
 		var weak = form.weak_domains || [];
 		var summary = form.summary || {};
+		var teacherDashFollowUp = isTeacherRole() && state.dashboardModel;
+		var studentDashFollowUp = isStudentRole() && state.dashboardModel;
+		var parentDashFollowUp = isParentRole() && state.dashboardModel;
+		var leaderDashFollowUp = isLeaderRole() && state.dashboardModel;
+		var supportDashFollowUp = isSupportStaffRole() && state.dashboardModel;
+
+		if (teacherDashFollowUp) {
+			return teacherDashboardFollowUpHtml(r, form, labels, fields, suggested);
+		}
+		if (studentDashFollowUp) {
+			return studentDashboardFollowUpHtml(r, form, labels, fields, suggested);
+		}
+		if (parentDashFollowUp) {
+			return parentDashboardFollowUpHtml(r, form, labels, fields, suggested);
+		}
+		if (leaderDashFollowUp) {
+			return leaderDashboardFollowUpHtml(r, form, labels, fields, suggested);
+		}
+		if (supportDashFollowUp) {
+			return supportDashboardFollowUpHtml(r, form, labels, fields, suggested);
+		}
 
 		var html = '<section class="airb__interest" id="airb-interest" aria-labelledby="airb-interest-heading">';
 		html += '<h3 class="airb__interest-heading" id="airb-interest-heading">' + esc(labels.heading || '') + '</h3>';
 		html += gatewayInfoHtml(r);
-		if (labels.intro) html += '<p class="airb__muted airb__interest-intro">' + esc(labels.intro) + '</p>';
+		if (labels.intro) {
+			html += '<p class="airb__muted airb__interest-intro">' + esc(labels.intro) + '</p>';
+		}
 
 		html += '<div class="airb__interest-summary" aria-live="polite">';
 		html += '<p><strong>' + esc(labels.score_label || '') + ':</strong> ' + esc(String(summary.score != null ? summary.score : (r.alignment_score != null ? r.alignment_score : '—'))) + '%';

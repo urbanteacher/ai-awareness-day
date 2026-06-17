@@ -51,6 +51,41 @@
             "urgent_action": null
         }
     },
+    "dashboard": {
+        "scene": {
+            "default": "Study skills passport",
+            "independent_thinking": "Try-first study desk",
+            "verification": "Answer checking station",
+            "assessment_integrity": "Own-words workbench",
+            "privacy_awareness": "Privacy reset",
+            "safeguarding": "Trusted adult route",
+            "bias_fairness": "Fair answer check"
+        },
+        "motif": {
+            "default": "Think first, prompt second",
+            "independent_thinking": "Try before AI",
+            "verification": "Check before handing in",
+            "assessment_integrity": "Make it your own",
+            "privacy_awareness": "Keep identity out",
+            "safeguarding": "Report fake media",
+            "bias_fairness": "Spot unfair answers"
+        },
+        "headline": {
+            "beginning": "Start with one safer AI habit: try first, check answers, and keep personal details out.",
+            "developing": "You are learning how to use AI well. A few stronger routines will protect your thinking.",
+            "emerging": "Your AI habits are growing. Keep practising independence, verification and privacy.",
+            "confident": "You have good AI learning habits. Keep checking and explaining answers in your own words.",
+            "advanced": "You are building strong AI study skills and can model responsible use for others."
+        },
+        "next_action": {
+            "independent_thinking": "Make a five-minute first attempt",
+            "verification": "Check one AI answer",
+            "assessment_integrity": "Rewrite in your own words",
+            "privacy_awareness": "Remove personal details",
+            "safeguarding": "Tell a trusted adult",
+            "bias_fairness": "Check for unfair language"
+        }
+    },
     "bias_readiness": {
         "critical": {
             "min": 0,

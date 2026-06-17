@@ -197,6 +197,10 @@ class AIRB_Questions {
 				__( 'Before adopting a new AI tool with pupils, do you weigh benefits against risks?', 'ai-risk-benchmark' ),
 				__( 'Do you assess pros and cons before introducing a new AI tool to pupils?', 'ai-risk-benchmark' ),
 			),
+			't_ai_harm_reporting' => array(
+				__( 'If a pupil reported a deepfake, AI impersonation or harmful AI-generated content, would you know how to respond and report it?', 'ai-risk-benchmark' ),
+				__( 'Would you know the reporting route for an AI-related pupil harm, such as a deepfake or impersonation?', 'ai-risk-benchmark' ),
+			),
 			// Student
 			's_attempt_first' => array(
 				__( 'Do you try the work yourself before asking AI for help?', 'ai-risk-benchmark' ),
@@ -294,6 +298,10 @@ class AIRB_Questions {
 			'l_staff_training' => array(
 				__( 'What proportion of staff have received AI training in the last 12 months?', 'ai-risk-benchmark' ),
 				__( 'What share of staff have had AI risk and verification training in the past year?', 'ai-risk-benchmark' ),
+			),
+			'l_evaluate_impact' => array(
+				__( 'How does your school evaluate whether AI is improving learning outcomes?', 'ai-risk-benchmark' ),
+				__( 'How do leaders check whether AI use is improving learning rather than just increasing adoption?', 'ai-risk-benchmark' ),
 			),
 			'l_incidents'   => array(
 				__( 'Are AI-related incidents logged and reviewed by leadership?', 'ai-risk-benchmark' ),
@@ -417,14 +425,20 @@ class AIRB_Questions {
 					array( 'value' => 'unsure', 'label' => __( 'Not sure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No — I don\'t know of an approved list', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
+				self::q( 't_ai_harm_reporting', 'teacher', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'If a pupil reported a deepfake, AI impersonation or harmful AI-generated content, would you know how to respond and report it?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_clear', 'label' => __( 'Yes — I know the route and who to involve', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'mostly', 'label' => __( 'Mostly, but I would need to check', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 				self::q( 't_redesign_beyond_ai', 'teacher', 'assessment_integrity', __( 'Assessment design', 'ai-risk-benchmark' ), __( 'How often do you redesign tasks specifically to require student thinking beyond what AI can easily produce?', 'ai-risk-benchmark' ), $f ),
-				self::q( 't_bias_awareness', 'teacher', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'Do you know that AI tools can produce biased or unfair outputs that could affect pupils?', 'ai-risk-benchmark' ), array(
+				self::q( 't_bias_awareness', 'teacher', 'bias_equality', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'Do you know that AI tools can produce biased or unfair outputs that could affect pupils?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes — I understand AI can be biased', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'mostly', 'label' => __( 'I have heard of it', 'ai-risk-benchmark' ), 'score' => 1 ),
 					array( 'value' => 'unsure', 'label' => __( 'Not sure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No — I had not considered this', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
-				self::q( 't_bias_action', 'teacher', 'safeguarding', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'When you use AI with or for pupils, do you check outputs for bias or unfairness?', 'ai-risk-benchmark' ), array(
+				self::q( 't_bias_action', 'teacher', 'bias_equality', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'When you use AI with or for pupils, do you check outputs for bias or unfairness?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes — I check for this routinely', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'sometimes', 'label' => __( 'Sometimes', 'ai-risk-benchmark' ), 'score' => 1 ),
 					array( 'value' => 'rarely', 'label' => __( 'Rarely', 'ai-risk-benchmark' ), 'score' => 2 ),
@@ -627,6 +641,12 @@ class AIRB_Questions {
 					array( 'value' => 'planned', 'label' => __( 'Planned', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
+				self::q( 'l_evaluate_impact', 'leader', 'governance', __( 'Governance', 'ai-risk-benchmark' ), __( 'How does your school evaluate whether AI is improving learning outcomes?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'evidence_cycle', 'label' => __( 'Through a clear evidence and review cycle', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'some_metrics', 'label' => __( 'Some metrics or department reviews', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'informal_feedback', 'label' => __( 'Mostly informal feedback', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'not_evaluated', 'label' => __( 'We do not evaluate this yet', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 				self::q( 'l_incident_escalation', 'leader', 'governance', __( 'Governance', 'ai-risk-benchmark' ), __( 'If an AI-related safeguarding or data incident occurred tomorrow, would staff know how to escalate it?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'mostly', 'label' => __( 'Mostly', 'ai-risk-benchmark' ), 'score' => 1 ),
@@ -653,7 +673,7 @@ class AIRB_Questions {
 					),
 					'radio',
 					array(
-						'show_for_phases' => array( 'secondary', 'all_through' ),
+						'show_for_phases' => array( 'secondary', 'college', 'university' ),
 					)
 				),
 				self::q( 'l_safe_adoption', 'leader', 'safe_adoption', __( 'Governance', 'ai-risk-benchmark' ), __( 'Are new AI tools assessed before adoption (benefits vs risks)?', 'ai-risk-benchmark' ), array(

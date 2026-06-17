@@ -141,6 +141,39 @@
     }
   },
 
+  "dashboard": {
+    "scene": {
+      "default": "Personal AI habits",
+      "personal_ai_use": "Think-first reset",
+      "verification": "Source-check desk",
+      "data_privacy": "Privacy reset",
+      "workplace_ai": "Work disclosure check",
+      "emotional_social": "Perspective check"
+    },
+    "motif": {
+      "default": "Use AI without giving too much away",
+      "personal_ai_use": "Think before asking AI",
+      "verification": "Check before acting",
+      "data_privacy": "Keep personal data out",
+      "workplace_ai": "Be clear about AI use",
+      "emotional_social": "Keep human perspective"
+    },
+    "headline": {
+      "at_risk": "Your AI habits carry avoidable risk. Start with privacy and checking before acting.",
+      "take_care": "You use AI regularly. A few stronger habits will reduce data, scam and misinformation risks.",
+      "aware": "You have good AI awareness with some gaps to close around privacy and verification.",
+      "confident": "Your AI habits are strong. Keep checking outputs and protecting personal information.",
+      "advanced": "You use AI with strong awareness and can help others build safer everyday habits."
+    },
+    "next_action": {
+      "personal_ai_use": "Try one task without AI",
+      "verification": "Check one AI answer",
+      "data_privacy": "Remove personal details",
+      "workplace_ai": "Check workplace rules",
+      "emotional_social": "Get a human view"
+    }
+  },
+
   "domains": {
     "personal_ai_use": {
       "label": "Personal AI use",

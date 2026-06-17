@@ -125,6 +125,7 @@ class AIRB_Admin {
 		$submission_detail_id = max( 0, (int) ( $_GET['submission_id'] ?? 0 ) );
 		$submission_detail    = $submission_detail_id ? AIRB_Database::get_submission( $submission_detail_id ) : null;
 		$submission_leads     = $submission_detail_id ? AIRB_Leads::get_by_submission( $submission_detail_id ) : array();
+		$submission_certificate = $submission_detail_id ? AIRB_Certificates::get_by_submission( $submission_detail_id ) : null;
 		$stats = array(
 			'total'            => AIRB_Database::count_submissions( array() ),
 			'with_school'      => AIRB_Database::count_with_school(),

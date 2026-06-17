@@ -479,7 +479,7 @@ class AIRB_Database {
 	 *
 	 * @param string   $role            Role slug (typically leader).
 	 * @param int|null $alignment_score Optional score for percentile.
-	 * @param string   $school_phase    School phase slug (primary, secondary, all_through).
+	 * @param string   $school_phase    School phase slug (primary, secondary, college, university, other).
 	 * @return array<string, mixed>|null
 	 */
 	public static function get_peer_benchmark_stats( string $role, ?int $alignment_score, string $school_phase ): ?array {
@@ -649,7 +649,7 @@ class AIRB_Database {
 	}
 
 	/**
-	 * Unlink leads and events from the given submission IDs.
+	 * Unlink leads/events and remove certificates from the given submission IDs.
 	 *
 	 * @param array<int, int> $ids Submission IDs.
 	 */
@@ -664,10 +664,13 @@ class AIRB_Database {
 		if ( class_exists( 'AIRB_Events' ) ) {
 			AIRB_Events::unlink_submissions( $ids );
 		}
+		if ( class_exists( 'AIRB_Certificates' ) ) {
+			AIRB_Certificates::delete_by_submissions( $ids );
+		}
 	}
 
 	/**
-	 * Unlink all leads and events that reference any submission.
+	 * Unlink all leads/events and remove certificates that reference any submission.
 	 */
 	private static function unlink_all_related(): void {
 		if ( class_exists( 'AIRB_Leads' ) ) {
@@ -675,6 +678,9 @@ class AIRB_Database {
 		}
 		if ( class_exists( 'AIRB_Events' ) ) {
 			AIRB_Events::unlink_all_submissions();
+		}
+		if ( class_exists( 'AIRB_Certificates' ) ) {
+			AIRB_Certificates::delete_all_submission_certificates();
 		}
 	}
 }

@@ -287,12 +287,13 @@
         var focusCount = 0;
 
         var TEACHER_DOMAINS = [
+            'safe_adoption',
+            'human_oversight',
             'independent_practice',
             'privacy_data_protection',
-            'human_oversight',
-            'safeguarding',
             'assessment_integrity',
             'ai_literacy',
+            'safeguarding',
             'bias_awareness'
         ];
 

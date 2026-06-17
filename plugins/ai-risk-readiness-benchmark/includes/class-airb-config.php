@@ -56,6 +56,7 @@ class AIRB_Config {
 			$inaccurate_headlines = array(
 				"The UK's First DfE-Aligned AI Risk & Readiness Benchmark for Schools",
 				'The UK\'s First DfE-Aligned AI Risk & Readiness Benchmark for Schools',
+				'AI Risk & Readiness Benchmark for Schools',
 			);
 			if ( in_array( $stored_headline, $inaccurate_headlines, true ) ) {
 				$config['positioning']['headline'] = (string) ( $defaults['positioning']['headline'] ?? '' );
@@ -814,6 +815,54 @@ class AIRB_Config {
 				}
 			}
 			$config['version'] = 42;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 43 ) {
+			$config['questions'] = AIRB_Questions::all();
+			foreach ( array( 'domain_sources', 'domain_descriptions' ) as $key ) {
+				$default_map = (array) ( $defaults[ $key ] ?? array() );
+				if ( ! isset( $config[ $key ] ) || ! is_array( $config[ $key ] ) ) {
+					$config[ $key ] = $default_map;
+					continue;
+				}
+				foreach ( $default_map as $slug => $value ) {
+					if ( ! isset( $config[ $key ][ $slug ] ) ) {
+						$config[ $key ][ $slug ] = $value;
+					}
+				}
+			}
+			$config['version'] = 43;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 44 ) {
+			$default_teacher = (array) ( $defaults['teacher_result'] ?? array() );
+			if ( ! empty( $default_teacher['dashboard'] ) ) {
+				if ( ! isset( $config['teacher_result'] ) || ! is_array( $config['teacher_result'] ) ) {
+					$config['teacher_result'] = $default_teacher;
+				} else {
+					$config['teacher_result']['dashboard'] = $default_teacher['dashboard'];
+				}
+			}
+			$config['version'] = 44;
+			$changed           = true;
+		}
+
+		if ( (int) ( $config['version'] ?? 0 ) < 45 ) {
+			$role_keys = array( 'teacher_result', 'leader_result', 'student_result', 'parent_result', 'support_result', 'public_result' );
+			foreach ( $role_keys as $role_key ) {
+				$default_role = (array) ( $defaults[ $role_key ] ?? array() );
+				if ( empty( $default_role['dashboard'] ) ) {
+					continue;
+				}
+				if ( ! isset( $config[ $role_key ] ) || ! is_array( $config[ $role_key ] ) ) {
+					$config[ $role_key ] = $default_role;
+				} else {
+					$config[ $role_key ]['dashboard'] = $default_role['dashboard'];
+				}
+			}
+			$config['version'] = 45;
 			$changed           = true;
 		}
 

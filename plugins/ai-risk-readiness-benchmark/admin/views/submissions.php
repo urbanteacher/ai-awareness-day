@@ -11,6 +11,7 @@
  * @var array<string, int>        $stats
  * @var object|null               $submission_detail
  * @var array<int, object>        $submission_leads
+ * @var object|null               $submission_certificate
  * @var bool                      $has_filters
  */
 
@@ -55,6 +56,12 @@ $export_url = wp_nonce_url(
 	<?php endif; ?>
 
 	<?php if ( $submission_detail instanceof stdClass ) : ?>
+		<?php
+		$submission_answers = json_decode( (string) $submission_detail->answers, true );
+		if ( ! is_array( $submission_answers ) ) {
+			$submission_answers = array();
+		}
+		?>
 		<div class="card" style="max-width:960px;padding:1rem 1.25rem;margin:1rem 0;">
 			<h2 style="margin-top:0;"><?php printf( esc_html__( 'Submission #%d', 'ai-risk-benchmark' ), (int) $submission_detail->id ); ?></h2>
 			<p>
@@ -78,6 +85,9 @@ $export_url = wp_nonce_url(
 					<tr><th><?php esc_html_e( 'Role', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( $roles[ $submission_detail->role ] ?? $submission_detail->role ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'School', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->school_name ?: '—' ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Email', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->email ?: '—' ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'School phase', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) ( $submission_answers['_school_phase'] ?? '—' ) ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Organisation type', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) ( $submission_answers['_org_type'] ?? '—' ) ); ?></td></tr>
+					<tr><th><?php esc_html_e( 'Year group', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) ( $submission_answers['_year_group'] ?? '—' ) ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Alignment', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->alignment_score ); ?>/100</td></tr>
 					<tr><th><?php esc_html_e( 'Risk', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( ucfirst( (string) $submission_detail->risk_level ) ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Dependency', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_detail->dependency_index ); ?></td></tr>
@@ -85,6 +95,22 @@ $export_url = wp_nonce_url(
 					<tr><th><?php esc_html_e( 'Session ID', 'ai-risk-benchmark' ); ?></th><td><code><?php echo esc_html( (string) $submission_detail->session_id ); ?></code></td></tr>
 				</tbody>
 			</table>
+			<?php if ( $submission_certificate instanceof stdClass ) : ?>
+				<h3><?php esc_html_e( 'Certificate', 'ai-risk-benchmark' ); ?></h3>
+				<table class="widefat striped">
+					<tbody>
+						<tr><th style="width:180px;"><?php esc_html_e( 'Certificate ID', 'ai-risk-benchmark' ); ?></th><td><code><?php echo esc_html( (string) $submission_certificate->certificate_id ); ?></code></td></tr>
+						<tr><th><?php esc_html_e( 'Status', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->status ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Name', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->participant_name ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Theme', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->evidence_theme ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Evidence quality', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->evidence_quality_score ); ?>/100 · <?php echo esc_html( (string) $submission_certificate->evidence_quality_tier ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Action evidenced', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->evidence_action ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Change described', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->evidence_change ); ?></td></tr>
+						<tr><th><?php esc_html_e( 'Evidence link', 'ai-risk-benchmark' ); ?></th><td><?php echo $submission_certificate->evidence_link ? '<a href="' . esc_url( (string) $submission_certificate->evidence_link ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( (string) $submission_certificate->evidence_link ) . '</a>' : '—'; ?></td></tr>
+						<tr><th><?php esc_html_e( 'Awarded', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->awarded_at ); ?></td></tr>
+					</tbody>
+				</table>
+			<?php endif; ?>
 			<?php if ( ! empty( $submission_leads ) ) : ?>
 				<h3><?php esc_html_e( 'Linked leads', 'ai-risk-benchmark' ); ?></h3>
 				<ul>
@@ -238,7 +264,7 @@ $export_url = wp_nonce_url(
 	<?php if ( ( $stats['total'] ?? 0 ) > 0 ) : ?>
 		<div class="card" style="max-width:640px;padding:1rem 1.25rem;margin:1.5rem 0;border-left:4px solid #d63638;">
 			<h2 style="margin-top:0;"><?php esc_html_e( 'Delete all submissions', 'ai-risk-benchmark' ); ?></h2>
-			<p><?php esc_html_e( 'Permanently remove every benchmark submission. Linked leads and funnel events are kept, but their submission link is cleared.', 'ai-risk-benchmark' ); ?></p>
+			<p><?php esc_html_e( 'Permanently remove every benchmark submission. Linked leads and funnel events are kept, but their submission link is cleared. Linked certificates are removed with the deleted submissions.', 'ai-risk-benchmark' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('<?php echo esc_js( __( 'This cannot be undone. Delete every submission?', 'ai-risk-benchmark' ) ); ?>');">
 				<?php wp_nonce_field( 'airb_delete_submissions' ); ?>
 				<input type="hidden" name="action" value="airb_delete_submissions" />

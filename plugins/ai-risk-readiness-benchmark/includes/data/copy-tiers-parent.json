@@ -51,6 +51,41 @@
             "urgent_action": null
         }
     },
+    "dashboard": {
+        "scene": {
+            "default": "Kitchen table conversation",
+            "parent_awareness": "AI use check-in",
+            "home_ai_safety": "Family AI agreement",
+            "homework_oversight": "Homework explain-back",
+            "parent_ai_dependency": "Try-first support",
+            "online_risk_awareness": "Deepfake safety talk",
+            "school_partnership": "School-home expectations"
+        },
+        "motif": {
+            "default": "Ask them to explain it back",
+            "parent_awareness": "Know what they use",
+            "home_ai_safety": "Set simple home rules",
+            "homework_oversight": "Explain in their own words",
+            "parent_ai_dependency": "Model try-first habits",
+            "online_risk_awareness": "Know what to do",
+            "school_partnership": "Ask school expectations"
+        },
+        "headline": {
+            "just_starting": "Start with one calm conversation about how AI is used at home and for homework.",
+            "developing": "You have a base to build on. Clearer home boundaries will make AI use safer.",
+            "aware": "You understand some AI risks. Keep strengthening homework routines and online safety conversations.",
+            "confident": "Your home AI support is solid. Keep conversations regular as tools and school expectations change.",
+            "well_prepared": "You are well placed to support responsible AI use at home and share what works with school."
+        },
+        "next_action": {
+            "parent_awareness": "Ask which AI tools they use",
+            "home_ai_safety": "Agree a family AI rule",
+            "homework_oversight": "Try one explain-back",
+            "parent_ai_dependency": "Model try-first support",
+            "online_risk_awareness": "Talk about deepfakes",
+            "school_partnership": "Check school expectations"
+        }
+    },
     "domains": {
         "online_risk": {
             "label": "online_risk",

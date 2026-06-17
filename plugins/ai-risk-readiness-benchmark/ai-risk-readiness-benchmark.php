@@ -3,7 +3,7 @@
  * Plugin Name:       AI Risk & Readiness Benchmark
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       DfE-aligned AI Risk & Readiness Benchmark for UK schools. Shortcodes: [ai_risk_benchmark] [ai_risk_school_dashboard]
- * Version:           1.49.1
+ * Version:           1.49.2
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIRB_VERSION', '1.49.1' );
+define( 'AIRB_VERSION', '1.49.2' );
 define( 'AIRB_PLUGIN_FILE', __FILE__ );
 define( 'AIRB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIRB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -31,6 +31,9 @@ require_once AIRB_PLUGIN_DIR . 'includes/class-airb-components.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-defaults.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-config.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-database.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificates.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificate-copy.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificate-evidence.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-scoring.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-questions.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-pathway.php';
@@ -97,6 +100,7 @@ final class AIRB_Plugin {
 
 	public function init(): void {
 		AIRB_Database::maybe_upgrade();
+		AIRB_Certificates::maybe_upgrade();
 		AIRB_Leads::maybe_upgrade();
 		AIRB_Shortcode::register();
 		AIRB_School_Dashboard::register();

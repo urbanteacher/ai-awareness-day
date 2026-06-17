@@ -155,6 +155,10 @@ class AIRB_Copy_Tiers {
 			$overlay['focus_tiers'] = $this->domains_to_focus_tiers();
 		}
 
+		if ( ! empty( $this->data['dashboard'] ) ) {
+			$overlay['dashboard'] = (array) $this->data['dashboard'];
+		}
+
 		if ( ! empty( $this->data['governance_maturity'] ) && 'leader' === $this->role ) {
 			$overlay['copy_tiers']['governance'] = $this->governance_maturity_to_legacy();
 		}

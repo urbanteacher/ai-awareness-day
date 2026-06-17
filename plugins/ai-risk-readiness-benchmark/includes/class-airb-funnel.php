@@ -396,9 +396,11 @@ class AIRB_Funnel {
 	private static function format_school_profile( array $profile ): string {
 		$parts = array();
 		$phases = array(
-			'primary'     => __( 'Primary', 'ai-risk-benchmark' ),
-			'secondary'   => __( 'Secondary', 'ai-risk-benchmark' ),
-			'all_through' => __( 'All-through', 'ai-risk-benchmark' ),
+			'primary'    => __( 'Primary', 'ai-risk-benchmark' ),
+			'secondary'  => __( 'Secondary', 'ai-risk-benchmark' ),
+			'college'    => __( 'College', 'ai-risk-benchmark' ),
+			'university' => __( 'University', 'ai-risk-benchmark' ),
+			'other'      => __( 'Other', 'ai-risk-benchmark' ),
 		);
 		$orgs = array(
 			'standalone' => __( 'Standalone school', 'ai-risk-benchmark' ),

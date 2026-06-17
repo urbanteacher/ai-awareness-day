@@ -147,6 +147,48 @@
     }
   },
 
+  "dashboard": {
+    "scene": {
+      "default": "Governor evidence pack",
+      "governance": "AI governance board",
+      "safe_adoption": "Approved-tool register",
+      "safeguarding": "Safeguarding review route",
+      "bias_equality": "Equality risk review",
+      "privacy": "DPO evidence table",
+      "assessment_integrity": "Assessment controls review",
+      "human_oversight": "Staff CPD plan",
+      "ai_literacy": "AI literacy map"
+    },
+    "motif": {
+      "default": "Turn scores into governance evidence",
+      "governance": "Assign ownership",
+      "safe_adoption": "Assess tools before rollout",
+      "safeguarding": "Refresh AI harm procedures",
+      "bias_equality": "Make fairness checks visible",
+      "privacy": "Evidence data protection",
+      "assessment_integrity": "Evidence JCQ alignment",
+      "human_oversight": "Target staff CPD",
+      "ai_literacy": "Map pupil AI literacy"
+    },
+    "headline": {
+      "emerging": "Your school needs visible AI governance action before informal use becomes embedded risk.",
+      "developing": "Foundations are forming, but policy, staff practice and oversight need sharper ownership.",
+      "established": "Your school has solid AI governance foundations. Focus on embedding practice consistently.",
+      "strong": "Your school is in a strong position. Close the remaining gaps and evidence the review cycle.",
+      "leading": "Your school can model responsible AI readiness and share governance practice with others."
+    },
+    "next_action": {
+      "governance": "Assign an AI owner",
+      "safe_adoption": "Review the approved-tool list",
+      "safeguarding": "Update safeguarding procedures",
+      "bias_equality": "Add equality checks",
+      "privacy": "Complete a DPO review",
+      "assessment_integrity": "Review assessment controls",
+      "human_oversight": "Target staff CPD",
+      "ai_literacy": "Map pupil AI literacy"
+    }
+  },
+
   "urgent_action": {
     "data_protection_zero": {
       "trigger": "data_protection === 0",
@@ -464,7 +506,9 @@
   "peer_benchmark": {
     "secondary": { "avg": 62, "top_quartile": 84, "label": "Average secondary school" },
     "primary":   { "avg": 58, "top_quartile": 80, "label": "Average primary school" },
-    "all_through": { "avg": 61, "top_quartile": 82, "label": "Average all-through school" },
+    "college": { "avg": 61, "top_quartile": 83, "label": "Average college" },
+    "university": { "avg": 61, "top_quartile": 83, "label": "Average university" },
+    "other": { "avg": 60, "top_quartile": 82, "label": "Average organisation" },
     "mat":       { "avg": 65, "top_quartile": 86, "label": "Average MAT school" }
   },
 

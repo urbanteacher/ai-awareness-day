@@ -51,6 +51,41 @@
             "urgent_action": null
         }
     },
+    "dashboard": {
+        "scene": {
+            "default": "Office workflow check",
+            "ai_literacy": "AI limits desk",
+            "human_oversight": "Communications review",
+            "ai_dependency": "Manual route check",
+            "privacy": "Pupil data gate",
+            "safe_adoption": "Approved-tool check",
+            "safeguarding": "Reporting route"
+        },
+        "motif": {
+            "default": "Know the route before the risk",
+            "ai_literacy": "Spot limits before sending",
+            "human_oversight": "Review before sending",
+            "ai_dependency": "Keep a manual route",
+            "privacy": "Know what not to enter",
+            "safe_adoption": "Check approval first",
+            "safeguarding": "Know who to tell"
+        },
+        "headline": {
+            "emerging": "Start with the highest-risk operational habits: pupil data, approval routes and safeguarding escalation.",
+            "developing": "Your AI awareness is building. Tighten the routines around data handling and reporting.",
+            "established": "You have solid operational foundations. Keep strengthening the checks around sensitive information.",
+            "strong": "Your support role AI habits are strong. Keep approval and reporting routes visible for colleagues.",
+            "leading": "You model responsible AI use in operational workflows and can help others build consistency."
+        },
+        "next_action": {
+            "ai_literacy": "Test one AI output",
+            "human_oversight": "Review one drafted message",
+            "ai_dependency": "Attempt one task manually",
+            "privacy": "Check data before prompting",
+            "safe_adoption": "Check tool approval",
+            "safeguarding": "Confirm reporting route"
+        }
+    },
     "domains": {
         "safeguarding": {
             "label": "safeguarding",

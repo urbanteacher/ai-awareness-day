@@ -26,6 +26,10 @@ class AIRB_Ajax {
 		add_action( 'wp_ajax_nopriv_airb_track_event', array( __CLASS__, 'track_event' ) );
 		add_action( 'wp_ajax_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
 		add_action( 'wp_ajax_nopriv_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
+		add_action( 'wp_ajax_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
+		add_action( 'wp_ajax_nopriv_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
+		add_action( 'wp_ajax_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
+		add_action( 'wp_ajax_nopriv_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
 		add_action( 'wp_ajax_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
 		add_action( 'wp_ajax_nopriv_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
 	}
@@ -164,6 +168,9 @@ class AIRB_Ajax {
 
 		$read_seed = $id ? (int) $id : (int) crc32( $session_id . '|' . $role );
 		AIRB_Defaults::patch_results_timeline_read_links( $results, $role, $read_seed );
+		if ( $id ) {
+			$results['certificate'] = AIRB_Certificates::status_for_submission( $id, $results, $role, $school );
+		}
 
 		wp_send_json_success(
 			array(
@@ -171,6 +178,169 @@ class AIRB_Ajax {
 				'results'       => $results,
 			)
 		);
+	}
+
+	/**
+	 * Validate certificate evidence before unlock.
+	 */
+	public static function validate_certificate_evidence(): void {
+		self::verify_nonce();
+
+		$role            = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
+		$theme           = sanitize_key( (string) ( $_POST['evidence_theme'] ?? '' ) );
+		$action          = sanitize_textarea_field( (string) ( $_POST['evidence_action'] ?? '' ) );
+		$change          = sanitize_textarea_field( (string) ( $_POST['evidence_change'] ?? '' ) );
+		$link            = esc_url_raw( (string) ( $_POST['evidence_link'] ?? '' ) );
+		$benchmark_score = max( 0, min( 100, (int) ( $_POST['benchmark_score'] ?? 0 ) ) );
+
+		wp_send_json_success(
+			AIRB_Certificate_Evidence::assess( $role, $theme, $action, $change, $link, $benchmark_score )
+		);
+	}
+
+	/**
+	 * Allocate a named certificate after evidenced progress has been confirmed.
+	 */
+	public static function allocate_certificate(): void {
+		self::verify_nonce();
+
+		$submission_id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+		$session_id    = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
+		$role          = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
+		$name          = sanitize_text_field( (string) ( $_POST['participant_name'] ?? '' ) );
+		$school_name   = sanitize_text_field( (string) ( $_POST['school_name'] ?? '' ) );
+		$theme         = sanitize_key( (string) ( $_POST['evidence_theme'] ?? '' ) );
+		$action        = sanitize_textarea_field( (string) ( $_POST['evidence_action'] ?? '' ) );
+		$change        = sanitize_textarea_field( (string) ( $_POST['evidence_change'] ?? '' ) );
+		$link          = esc_url_raw( (string) ( $_POST['evidence_link'] ?? '' ) );
+
+		if ( ! $submission_id ) {
+			wp_send_json_error( array( 'message' => __( 'A saved benchmark submission is required before a certificate can be allocated.', 'ai-risk-benchmark' ) ), 400 );
+		}
+		if ( strlen( $name ) < 2 ) {
+			wp_send_json_error( array( 'message' => __( 'Please enter the name to show on the certificate.', 'ai-risk-benchmark' ) ), 400 );
+		}
+
+		$submission = AIRB_Database::get_submission( $submission_id );
+		if ( ! $submission ) {
+			wp_send_json_error( array( 'message' => __( 'Benchmark submission not found.', 'ai-risk-benchmark' ) ), 404 );
+		}
+		if ( '' === $session_id || ! hash_equals( (string) $submission->session_id, $session_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Certificate allocation must be completed from the same benchmark session.', 'ai-risk-benchmark' ) ), 403 );
+		}
+
+		$existing_cert = AIRB_Certificates::get_by_submission( $submission_id );
+		if ( $existing_cert && 'unlocked' === (string) $existing_cert->status ) {
+			wp_send_json_error( array( 'message' => __( 'Certificate already allocated for this benchmark.', 'ai-risk-benchmark' ) ), 400 );
+		}
+
+		$stored_role = sanitize_key( (string) $submission->role );
+		$role        = AIRB_Certificate_Copy::normalize_role( $stored_role ?: $role );
+		$posted_role = AIRB_Certificate_Copy::normalize_role( sanitize_key( (string) ( $_POST['role'] ?? '' ) ) );
+		if ( $posted_role && $role && $posted_role !== $role ) {
+			wp_send_json_error( array( 'message' => __( 'Certificate role does not match the saved benchmark.', 'ai-risk-benchmark' ) ), 400 );
+		}
+
+		if ( '' === $school_name ) {
+			$school_name = sanitize_text_field( (string) $submission->school_name );
+		}
+
+		$score = max( 0, min( 100, (int) $submission->alignment_score ) );
+
+		$assessment = AIRB_Certificate_Evidence::assess( $role, $theme, $action, $change, $link, $score );
+		if ( empty( $assessment['can_unlock'] ) ) {
+			wp_send_json_error(
+				array(
+					'message'    => __( 'Add more specific evidence before unlocking the certificate.', 'ai-risk-benchmark' ),
+					'assessment' => $assessment,
+				),
+				400
+			);
+		}
+
+		$row = AIRB_Certificates::allocate(
+			array(
+				'submission_id'          => $submission_id,
+				'session_id'             => (string) $submission->session_id,
+				'role'                   => $role,
+				'participant_name'       => $name,
+				'school_name'            => $school_name,
+				'baseline_score'         => $score,
+				'completed_score'        => $score,
+				'unlock_at'              => AIRB_Certificate_Evidence::SCORE_THRESHOLD,
+				'unlock_reason'          => 'evidenced_progress',
+				'evidence_theme'         => $theme,
+				'evidence_action'        => $action,
+				'evidence_change'        => $change,
+				'evidence_link'          => $link,
+				'evidence_quality_score' => (int) ( $assessment['quality_score'] ?? 0 ),
+				'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
+			)
+		);
+
+		if ( ! $row ) {
+			wp_send_json_error( array( 'message' => __( 'Could not allocate the certificate. Please try again.', 'ai-risk-benchmark' ) ), 500 );
+		}
+
+		AIRB_Events::insert(
+			array(
+				'session_id'    => (string) $submission->session_id,
+				'submission_id' => $submission_id,
+				'event_type'    => 'certificate_allocated',
+				'role'          => $role,
+				'metadata'      => array(
+					'certificate_id'         => (string) $row->certificate_id,
+					'evidence_theme'         => $theme,
+					'evidence_quality_score' => (int) ( $assessment['quality_score'] ?? 0 ),
+					'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
+				),
+			)
+		);
+
+		$role_label = self::certificate_role_label( $role );
+		$copy       = AIRB_Certificate_Copy::for_role( $role );
+
+		wp_send_json_success(
+			array(
+				'certificate' => array(
+					'certificate_id'         => (string) $row->certificate_id,
+					'verification_hash'      => (string) $row->verification_hash,
+					'participant_name'       => (string) $row->participant_name,
+					'school_name'            => (string) $row->school_name,
+					'role'                   => $role,
+					'role_label'             => $role_label,
+					'current_score'          => $score,
+					'unlock_at'              => AIRB_Certificate_Evidence::SCORE_THRESHOLD,
+					'awarded_at'             => (string) $row->awarded_at,
+					'verify_url'             => home_url( '/' ),
+					'evidence_theme'         => $theme,
+					'evidence_quality_score' => (int) ( $assessment['quality_score'] ?? 0 ),
+					'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
+					'assessment'             => $assessment,
+					'copy'                   => array(
+						'headline_primary' => $copy['headline_primary'],
+						'body'             => $copy['body'],
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Human-readable certificate role label.
+	 */
+	private static function certificate_role_label( string $role ): string {
+		$labels = array(
+			'teacher'       => __( 'Teacher', 'ai-risk-benchmark' ),
+			'student'       => __( 'Student', 'ai-risk-benchmark' ),
+			'parent'        => __( 'Parent', 'ai-risk-benchmark' ),
+			'leader'        => __( 'School Leader', 'ai-risk-benchmark' ),
+			'support_staff' => __( 'Support Staff', 'ai-risk-benchmark' ),
+			'support'       => __( 'Support Staff', 'ai-risk-benchmark' ),
+			'public'        => __( 'Public AI Safety', 'ai-risk-benchmark' ),
+		);
+
+		return $labels[ $role ] ?? __( 'AI Awareness', 'ai-risk-benchmark' );
 	}
 
 	/**

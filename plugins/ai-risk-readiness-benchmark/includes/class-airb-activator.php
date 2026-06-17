@@ -19,9 +19,11 @@ class AIRB_Activator {
 	 */
 	public static function activate(): void {
 		AIRB_Database::create_table();
+		AIRB_Certificates::create_table();
 		AIRB_Events::create_table();
 		AIRB_Leads::create_table();
 		update_option( 'airb_db_version', AIRB_Database::DB_VERSION, false );
+		update_option( 'airb_certificates_db_version', AIRB_Certificates::DB_VERSION, false );
 		update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
 		AIRB_Config::maybe_seed_defaults();
 		AIRB_Copy_Tiers::export_missing_json_files();

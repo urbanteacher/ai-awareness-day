@@ -333,15 +333,29 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
     var escFn = opts.esc || esc;
     if (!focusAreas || !focusAreas.length) return '';
     var practiceHeading = opts.practiceHeading || 'In practice this means';
+    var dashboardLayout = opts.layout === 'dashboard';
+    var domainList = opts.domains || [];
     var html = '';
     focusAreas.forEach(function (area) {
-        var badge = opts.leaderFocusBadge ? opts.leaderFocusBadge(area.pct) : { slug: 'attention', text: (area.pct || 0) + '%' };
         var severity = opts.leaderFocusSeverity ? opts.leaderFocusSeverity(area.pct) : 'moderate';
+        var badge = opts.leaderFocusBadge ? opts.leaderFocusBadge(area.pct) : { slug: 'attention', text: (area.pct || 0) + '%' };
+        var domainTone = dashboardLayout ? matchingDashboardDomainTone(area, domainList) : null;
+        var toneLabel = domainTone ? domainTone.label : badge.text;
+        var toneClass = domainTone ? domainTone.className : ('airb__focus-badge--' + escFn(badge.slug));
+
         html += '<div class="airb__focus-card airb__teacher-focus-card airb__focus-card--' + severity + '">';
         html += '<div class="airb__focus-card-header">';
         html += '<h4 class="airb__focus-card-title">' + escFn(area.label) + '</h4>';
-        html += '<span class="airb__focus-badge airb__focus-badge--' + escFn(badge.slug) + '">' + escFn(badge.text) + '</span>';
+        if (!dashboardLayout) {
+            html += '<span class="airb__focus-badge ' + toneClass + '">' + escFn(badge.text) + '</span>';
+        }
         html += '</div>';
+        if (dashboardLayout) {
+            html += '<div class="airb__focus-score-row">';
+            html += '<p class="airb__focus-card-score">' + (area.pct || 0) + '%</p>';
+            html += '<span class="airb__focus-badge ' + toneClass + '">' + escFn(toneLabel) + '</span>';
+            html += '</div>';
+        }
         if (area.summary) {
             html += '<p class="airb__focus-card-summary">' + escFn(area.summary) + '</p>';
         }
@@ -370,7 +384,7 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
         }
         if (guidance && opts.focusGuidanceAccordionHtml) {
             html += opts.focusGuidanceAccordionHtml(
-                opts.guidanceToggle || 'Tips & steps to try',
+                dashboardLayout ? (opts.guidanceToggleClassroom || 'View classroom impact') : (opts.guidanceToggle || 'Tips & steps to try'),
                 guidance,
                 opts.guidanceOpen !== false
             );
@@ -380,6 +394,24 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
         html += '</div>';
     });
     return html;
+}
+
+function matchingDashboardDomainTone(area, domains) {
+    if (!domains || !domains.length) return null;
+    var match = domains.find(function (domain) {
+        return String(domain.label || '').toLowerCase() === String(area.label || '').toLowerCase();
+    });
+    if (!match) return null;
+    var labels = { secure: 'secure', practice: 'practise', attention: 'focus' };
+    var classes = {
+        secure: 'airb__domain-badge--secure',
+        practice: 'airb__domain-badge--practice',
+        attention: 'airb__domain-badge--attention',
+    };
+    return {
+        label: labels[match.tone] || 'focus',
+        className: classes[match.tone] || classes.attention,
+    };
 }
 
 /**

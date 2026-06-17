@@ -120,11 +120,6 @@ function aiad_get_risk_benchmark_timeline_content(): string {
 		. '<tr><td>Safeguarding</td><td>Medium</td></tr>'
 		. '</tbody></table></figure><!-- /wp:table -->';
 
-	$blocks[] = '<!-- wp:paragraph --><p>Once your school has completed audits across all four groups, your live dashboard appears here:</p><!-- /wp:paragraph -->';
-
-	// Dashboard widget — placed strategically, before the killer metric and the live tool.
-	$blocks[] = '<!-- wp:shortcode -->[ai_risk_school_dashboard]<!-- /wp:shortcode -->';
-
 	// ── The killer metric ────────────────────────────────────────────────
 	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">The killer metric: the Human Oversight Ratio™</h2><!-- /wp:heading -->';
 
@@ -342,3 +337,52 @@ function aiad_backfill_risk_benchmark_audit_heading(): void {
 	update_option( 'aiad_risk_benchmark_audit_heading_backfilled', 'yes' );
 }
 add_action( 'init', 'aiad_backfill_risk_benchmark_audit_heading', 35 );
+
+/**
+ * One-time backfill: remove the school dashboard shortcode from the launch article.
+ */
+function aiad_backfill_risk_benchmark_remove_school_dashboard(): void {
+	if ( get_option( 'aiad_risk_benchmark_school_dashboard_removed' ) === 'yes' ) {
+		return;
+	}
+
+	$post = get_page_by_path( aiad_risk_benchmark_post_slug(), OBJECT, 'timeline' );
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	$content = (string) $post->post_content;
+	$changed = false;
+
+	$patterns = array(
+		'/<!--\s*wp:shortcode\s*-->\s*\[ai_risk_school_dashboard[^\]]*\]\s*<!--\s*\/wp:shortcode\s*-->\s*/i',
+		'/\[ai_risk_school_dashboard[^\]]*\]\s*/i',
+	);
+
+	foreach ( $patterns as $pattern ) {
+		$updated = preg_replace( $pattern, '', $content );
+		if ( is_string( $updated ) && $updated !== $content ) {
+			$content = $updated;
+			$changed = true;
+		}
+	}
+
+	$intro = '<!-- wp:paragraph --><p>Once your school has completed audits across all four groups, your live dashboard appears here:</p><!-- /wp:paragraph -->';
+	if ( str_contains( $content, $intro ) ) {
+		$content = str_replace( $intro, '', $content );
+		$changed = true;
+	}
+
+	if ( $changed ) {
+		wp_update_post(
+			array(
+				'ID'           => (int) $post->ID,
+				'post_content' => $content,
+			),
+			true
+		);
+	}
+
+	update_option( 'aiad_risk_benchmark_school_dashboard_removed', 'yes' );
+}
+add_action( 'init', 'aiad_backfill_risk_benchmark_remove_school_dashboard', 36 );

@@ -32,6 +32,12 @@ class AIRB_Shortcode {
 			array(),
 			AIRB_VERSION
 		);
+		wp_register_style(
+			'airb-teacher-dashboard',
+			AIRB_PLUGIN_URL . 'public/css/airb-teacher-dashboard.css',
+			array( 'airb-front' ),
+			AIRB_VERSION
+		);
 		wp_register_script(
 			'airb-core',
 			AIRB_PLUGIN_URL . 'public/js/airb-core.js',
@@ -68,9 +74,72 @@ class AIRB_Shortcode {
 			true
 		);
 		wp_register_script(
+			'airb-dashboard-model',
+			AIRB_PLUGIN_URL . 'public/js/airb-dashboard-model.js',
+			array( 'airb-core' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-certificate-evidence',
+			AIRB_PLUGIN_URL . 'public/js/airb-certificate-evidence.js',
+			array( 'airb-core' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-certificate',
+			AIRB_PLUGIN_URL . 'public/js/airb-certificate.js',
+			array( 'airb-core', 'airb-certificate-evidence' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-teacher-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-teacher-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-student-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-student-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-parent-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-parent-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-leader-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-leader-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-support-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-support-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
+			'airb-public-dashboard',
+			AIRB_PLUGIN_URL . 'public/js/airb-public-dashboard.js',
+			array( 'airb-core', 'airb-results', 'airb-dashboard-model', 'airb-certificate' ),
+			AIRB_VERSION,
+			true
+		);
+		wp_register_script(
 			'airb-front',
 			AIRB_PLUGIN_URL . 'public/js/airb-front.js',
-			array( 'airb-audit', 'airb-roles', 'airb-share', 'airb-results' ),
+			array( 'airb-audit', 'airb-roles', 'airb-share', 'airb-results', 'airb-dashboard-model', 'airb-teacher-dashboard', 'airb-student-dashboard', 'airb-parent-dashboard', 'airb-leader-dashboard', 'airb-support-dashboard', 'airb-public-dashboard' ),
 			AIRB_VERSION,
 			true
 		);
@@ -88,6 +157,7 @@ class AIRB_Shortcode {
 	 */
 	public static function enqueue_assets(): void {
 		wp_enqueue_style( 'airb-front' );
+		wp_enqueue_style( 'airb-teacher-dashboard' );
 		wp_enqueue_script( 'airb-front' );
 		wp_enqueue_script( 'airb-deck' );
 		$contact_email = sanitize_email( (string) get_option( 'admin_email' ) );
@@ -106,7 +176,10 @@ class AIRB_Shortcode {
 				'nonce'        => wp_create_nonce( 'airb_benchmark_nonce' ),
 				'contactEmail' => $contact_email,
 				'homeUrl'      => home_url( '/' ),
+				'pluginUrl'    => AIRB_PLUGIN_URL,
 				'config'       => AIRB_Config::public_config(),
+				'certificateCopy' => AIRB_Certificate_Copy::all_for_front(),
+				'certificateUnlock' => AIRB_Certificate_Evidence::front_config(),
 				'i18n'         => array(
 					'chooseRole'        => __( 'Please choose your role to continue', 'ai-risk-benchmark' ),
 					'chooseRoleHeading' => __( 'Choose your path — school role or general public benchmark', 'ai-risk-benchmark' ),
@@ -120,12 +193,12 @@ class AIRB_Shortcode {
 					'required'       => __( 'Please answer this question before continuing.', 'ai-risk-benchmark' ),
 					'emailInvalid'   => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ),
 					'contactTitle'   => __( 'Almost done', 'ai-risk-benchmark' ),
-					'contactHint'    => __( 'Optional details help tailor your leadership report and AI policy guidance.', 'ai-risk-benchmark' ),
-					'contactHintTeacher' => __( 'Optional school context and email help tailor your results. We do not need your school name.', 'ai-risk-benchmark' ),
-					'contactHintSupport' => __( 'Optional school or trust context helps tailor data-protection and operations guidance. Covers reception, office, HR, finance, exams, data and IT support roles.', 'ai-risk-benchmark' ),
-					'contactHintYoung' => __( 'Optionally choose your year group. We do not collect your name, school or email.', 'ai-risk-benchmark' ),
-					'contactHintParent' => __( 'Optionally choose your child\'s year group. We do not collect names, schools or email addresses.', 'ai-risk-benchmark' ),
-					'contactHintPublic' => __( 'Optional email to receive your results. We do not collect your name or employer.', 'ai-risk-benchmark' ),
+					'contactHint'    => __( 'These final details are optional. They help tailor your results and, if you choose, send you a copy of your report.', 'ai-risk-benchmark' ),
+					'contactHintTeacher' => __( 'These final details are optional. School context improves your recommendations; email is only needed if you want a copy of your report.', 'ai-risk-benchmark' ),
+					'contactHintSupport' => __( 'These final details are optional. School or trust context helps tailor data-protection and operations guidance for support roles.', 'ai-risk-benchmark' ),
+					'contactHintYoung' => __( 'Optionally choose your year group so the feedback fits your stage. We do not ask students for name, school or email here.', 'ai-risk-benchmark' ),
+					'contactHintParent' => __( 'Optionally choose your child\'s year group so the feedback fits their stage. We do not ask parents for names, school or email here.', 'ai-risk-benchmark' ),
+					'contactHintPublic' => __( 'Email is optional and only used if you want to receive your results. We do not ask for your name or employer.', 'ai-risk-benchmark' ),
 					'publicResultsTitle' => __( 'Your AI safety profile', 'ai-risk-benchmark' ),
 					'publicResultsEyebrow' => __( 'Public · AI risk & readiness benchmark', 'ai-risk-benchmark' ),
 					'yearGroup'      => __( 'Year group (optional)', 'ai-risk-benchmark' ),
@@ -147,7 +220,8 @@ class AIRB_Shortcode {
 						'year_12'   => __( 'Year 12', 'ai-risk-benchmark' ),
 						'year_13'   => __( 'Year 13', 'ai-risk-benchmark' ),
 					),
-					'emailOptional'  => __( 'Email (optional — to receive your report)', 'ai-risk-benchmark' ),
+					'emailOptional'  => __( 'Email address (optional)', 'ai-risk-benchmark' ),
+					'emailOptionalHint' => __( 'Used only to send your benchmark report or follow-up you request.', 'ai-risk-benchmark' ),
 					'requestFullReport' => __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ),
 					'requestSupportParent' => __( 'Get parent support & resources', 'ai-risk-benchmark' ),
 					'requestSupportStudent' => __( 'Get help with my next steps', 'ai-risk-benchmark' ),
@@ -359,7 +433,9 @@ class AIRB_Shortcode {
 					'schoolPhaseChoose' => __( 'Select phase…', 'ai-risk-benchmark' ),
 					'schoolPhasePrimary' => __( 'Primary', 'ai-risk-benchmark' ),
 					'schoolPhaseSecondary' => __( 'Secondary', 'ai-risk-benchmark' ),
-					'schoolPhaseAllThrough' => __( 'All-through', 'ai-risk-benchmark' ),
+					'schoolPhaseCollege' => __( 'College', 'ai-risk-benchmark' ),
+					'schoolPhaseUniversity' => __( 'University', 'ai-risk-benchmark' ),
+					'schoolPhaseOther' => __( 'Other', 'ai-risk-benchmark' ),
 					'leaderProfileTitle' => __( 'About your school', 'ai-risk-benchmark' ),
 					'leaderProfileHint' => __( 'We ask this first so we only show questions that fit your school — for example, exam rules for GCSE and A Level apply mainly to secondary schools.', 'ai-risk-benchmark' ),
 					'leaderProfilePhase' => __( 'What type of school do you lead?', 'ai-risk-benchmark' ),
@@ -370,9 +446,11 @@ class AIRB_Shortcode {
 					'orgTypeChoose'  => __( 'Select type…', 'ai-risk-benchmark' ),
 					'orgStandalone'  => __( 'Standalone school', 'ai-risk-benchmark' ),
 					'orgMat'         => __( 'MAT', 'ai-risk-benchmark' ),
-					'profileHint'    => __( 'Helps tailor your AI policy guidance and leadership report.', 'ai-risk-benchmark' ),
-					'profileHintTeacher' => __( 'Helps tailor recommendations to your school context.', 'ai-risk-benchmark' ),
-					'schoolOptional' => __( 'School name (optional)', 'ai-risk-benchmark' ),
+					'profileHint'    => __( 'School phase and organisation type help tailor benchmark comparisons and guidance.', 'ai-risk-benchmark' ),
+					'profileHintTeacher' => __( 'School phase and organisation type help tailor recommendations to your teaching context.', 'ai-risk-benchmark' ),
+					'schoolOptional' => __( 'School / trust name (optional)', 'ai-risk-benchmark' ),
+					'schoolOptionalHint' => __( 'Used to group anonymous responses into a whole-school picture if your school rolls this out.', 'ai-risk-benchmark' ),
+					'contactPrivacyNote' => __( 'You can skip this page and still see your results. We do not ask for pupil names or personal pupil data.', 'ai-risk-benchmark' ),
 					'insightLabel'   => __( 'Your priority focus', 'ai-risk-benchmark' ),
 					'domainFocus'    => __( 'What to focus on', 'ai-risk-benchmark' ),
 					'roleDone'       => __( 'Done · {n}%', 'ai-risk-benchmark' ),

@@ -171,6 +171,9 @@ class AIRB_Teacher_Copy {
 			if ( empty( $focus['summary'] ) && 'ai_dependency' === $slug ) {
 				$focus = $tiers->domain_focus( 'independent_practice', $pct );
 			}
+			if ( empty( $focus['summary'] ) && 'bias_equality' === $slug ) {
+				$focus = $tiers->domain_focus( 'bias_awareness', $pct );
+			}
 			if ( ! empty( $focus['summary'] ) ) {
 				return array(
 					'summary'       => (string) $focus['summary'],

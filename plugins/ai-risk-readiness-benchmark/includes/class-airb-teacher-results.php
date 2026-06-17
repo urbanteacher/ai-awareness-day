@@ -78,10 +78,16 @@ class AIRB_Teacher_Results {
 		foreach ( $opps as $opp ) {
 			$slug  = (string) ( $opp['slug'] ?? '' );
 			$pct   = (int) ( $opp['pct'] ?? 0 );
+			$label = (string) ( $opp['label'] ?? '' );
+			if ( 'bias_equality' === $slug ) {
+				$label = __( 'Bias & equality', 'ai-risk-benchmark' );
+			} elseif ( 'assessment_integrity' === $slug ) {
+				$label = __( 'Assessment design', 'ai-risk-benchmark' );
+			}
 			$block = AIRB_Teacher_Copy::focus_block( $slug, $pct, $cfg );
 			$out[] = array(
 				'slug'          => $slug,
-				'label'         => (string) ( $opp['label'] ?? '' ),
+				'label'         => $label,
 				'pct'           => $pct,
 				'summary'       => (string) ( $block['summary'] ?? '' ),
 				'likely_impact' => (array) ( $block['likely_impact'] ?? array() ),
@@ -125,9 +131,14 @@ class AIRB_Teacher_Results {
 			if ( $pct >= self::FOCUS_MAX ) {
 				continue;
 			}
-			$block = AIRB_Teacher_Copy::focus_block( (string) $slug, $pct, $cfg );
+			$focus_slug = (string) $slug;
+			$label      = (string) ( $dom['label'] ?? $slug );
+			if ( 'assessment_integrity' === $focus_slug ) {
+				$label = __( 'Assessment design', 'ai-risk-benchmark' );
+			}
+			$block = AIRB_Teacher_Copy::focus_block( $focus_slug, $pct, $cfg );
 			if ( empty( $block['summary'] ) ) {
-				$topic = (array) ( $copy[ $slug ] ?? array() );
+				$topic = (array) ( $copy[ $focus_slug ] ?? array() );
 				if ( ! $topic ) {
 					continue;
 				}
@@ -137,12 +148,42 @@ class AIRB_Teacher_Results {
 				continue;
 			}
 			$scored[] = array(
-				'slug'    => (string) $slug,
-				'label'   => (string) ( $dom['label'] ?? $slug ),
+				'slug'    => $focus_slug,
+				'label'   => $label,
 				'pct'     => $pct,
 				'summary' => (string) $block['summary'],
 				'detail'  => '',
 			);
+		}
+
+		if ( array_key_exists( 'bias_readiness', $results ) && null !== $results['bias_readiness'] ) {
+			$bias_pct = (int) $results['bias_readiness'];
+			if ( $bias_pct < self::FOCUS_MAX ) {
+				$bias_slug  = 'bias_equality';
+				$bias_label = __( 'Bias & equality', 'ai-risk-benchmark' );
+				$already_added = false;
+				foreach ( $scored as $item ) {
+					if ( $bias_slug === (string) ( $item['slug'] ?? '' ) ) {
+						$already_added = true;
+						break;
+					}
+				}
+				if ( ! $already_added ) {
+					$block      = AIRB_Teacher_Copy::focus_block( $bias_slug, $bias_pct, $cfg );
+					if ( empty( $block['summary'] ) ) {
+						$block = AIRB_Teacher_Copy::focus_block( 'bias_awareness', $bias_pct, $cfg );
+					}
+					if ( ! empty( $block['summary'] ) ) {
+						$scored[] = array(
+							'slug'    => $bias_slug,
+							'label'   => $bias_label,
+							'pct'     => $bias_pct,
+							'summary' => (string) $block['summary'],
+							'detail'  => '',
+						);
+					}
+				}
+			}
 		}
 
 		usort(

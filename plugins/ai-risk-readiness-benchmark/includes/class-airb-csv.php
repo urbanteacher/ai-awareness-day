@@ -52,6 +52,9 @@ class AIRB_Csv {
 				'Role',
 				'School',
 				'Email',
+				'School Phase',
+				'Organisation Type',
+				'Year Group',
 				'Session ID',
 				'Risk Level',
 				'Alignment Score',
@@ -60,10 +63,21 @@ class AIRB_Csv {
 				'Privacy Risk',
 				'Safeguarding Readiness',
 				'Governance Maturity',
+				'Certificate ID',
+				'Certificate Status',
+				'Certificate Name',
+				'Certificate Theme',
+				'Evidence Quality Score',
+				'Evidence Quality Tier',
 			)
 		);
 
 		foreach ( $rows as $row ) {
+			$answers = json_decode( (string) $row->answers, true );
+			if ( ! is_array( $answers ) ) {
+				$answers = array();
+			}
+			$certificate = AIRB_Certificates::get_by_submission( (int) $row->id );
 			fputcsv(
 				$out,
 				array(
@@ -72,6 +86,9 @@ class AIRB_Csv {
 					$row->role,
 					self::escape_cell( (string) $row->school_name ),
 					self::escape_cell( (string) $row->email ),
+					self::escape_cell( (string) ( $answers['_school_phase'] ?? '' ) ),
+					self::escape_cell( (string) ( $answers['_org_type'] ?? '' ) ),
+					self::escape_cell( (string) ( $answers['_year_group'] ?? '' ) ),
 					self::escape_cell( (string) ( $row->session_id ?? '' ) ),
 					$row->risk_level,
 					$row->alignment_score,
@@ -80,6 +97,12 @@ class AIRB_Csv {
 					$row->privacy_risk,
 					$row->safeguarding_readiness,
 					$row->governance_maturity,
+					$certificate ? self::escape_cell( (string) $certificate->certificate_id ) : '',
+					$certificate ? self::escape_cell( (string) $certificate->status ) : '',
+					$certificate ? self::escape_cell( (string) $certificate->participant_name ) : '',
+					$certificate ? self::escape_cell( (string) $certificate->evidence_theme ) : '',
+					$certificate ? (int) $certificate->evidence_quality_score : '',
+					$certificate ? self::escape_cell( (string) $certificate->evidence_quality_tier ) : '',
 				)
 			);
 		}

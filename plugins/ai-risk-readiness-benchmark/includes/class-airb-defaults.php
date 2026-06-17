@@ -113,6 +113,7 @@ class AIRB_Defaults {
 			'ai_dependency'         => __( 'Independent Practice', 'ai-risk-benchmark' ),
 			'privacy'               => __( 'Privacy & Data Protection', 'ai-risk-benchmark' ),
 			'safeguarding'          => __( 'Safeguarding', 'ai-risk-benchmark' ),
+			'bias_equality'         => __( 'Bias & Equality', 'ai-risk-benchmark' ),
 			'assessment_integrity'  => __( 'Assessment Integrity', 'ai-risk-benchmark' ),
 			'ai_literacy'           => __( 'AI Literacy', 'ai-risk-benchmark' ),
 			'governance'            => __( 'Governance', 'ai-risk-benchmark' ),
@@ -147,6 +148,7 @@ class AIRB_Defaults {
 			'ai_dependency'        => '#c2410c',
 			'privacy'              => '#7c3aed',
 			'safeguarding'         => '#b91c1c',
+			'bias_equality'        => '#be123c',
 			'assessment_integrity' => '#a16207',
 			'ai_literacy'          => '#2563eb',
 			'governance'           => '#475569',
@@ -165,6 +167,7 @@ class AIRB_Defaults {
 			'privacy'              => __( 'Never enter identifiable pupil, SEND or safeguarding data into public AI tools.', 'ai-risk-benchmark' ),
 			'ai_literacy'          => __( 'Cover hallucinations, limitations and clear no-go situations in training.', 'ai-risk-benchmark' ),
 			'safeguarding'         => __( 'Add AI and deepfake risks explicitly to safeguarding procedures.', 'ai-risk-benchmark' ),
+			'bias_equality'        => __( 'Build a routine check for biased, stereotyped or unfair AI outputs.', 'ai-risk-benchmark' ),
 			'assessment_integrity' => __( 'Review assessment design against JCQ and Ofqual AI guidance.', 'ai-risk-benchmark' ),
 			'governance'           => __( 'Publish an AI policy, name a lead, and schedule an annual review.', 'ai-risk-benchmark' ),
 			'safe_adoption'        => __( 'Maintain an approved tool list and structured staff training.', 'ai-risk-benchmark' ),
@@ -1289,16 +1292,20 @@ class AIRB_Defaults {
 			'maturity_heading' => AIRB_Scoring::governance_maturity_label(),
 			'peer_benchmark_title' => __( 'Benchmark against similar schools', 'ai-risk-benchmark' ),
 			'peer_phase_labels' => array(
-				'primary'     => __( 'Average Primary School', 'ai-risk-benchmark' ),
-				'secondary'   => __( 'Average Secondary School', 'ai-risk-benchmark' ),
-				'all_through' => __( 'Average All-through School', 'ai-risk-benchmark' ),
-				'default'     => __( 'Average School', 'ai-risk-benchmark' ),
+				'primary'    => __( 'Average Primary School', 'ai-risk-benchmark' ),
+				'secondary'  => __( 'Average Secondary School', 'ai-risk-benchmark' ),
+				'college'    => __( 'Average College', 'ai-risk-benchmark' ),
+				'university' => __( 'Average University', 'ai-risk-benchmark' ),
+				'other'      => __( 'Average Organisation', 'ai-risk-benchmark' ),
+				'default'    => __( 'Average School', 'ai-risk-benchmark' ),
 			),
 			'peer_benchmark_fallback' => array(
-				'primary'     => array( 'average' => 58, 'top_quartile' => 80 ),
-				'secondary'   => array( 'average' => 62, 'top_quartile' => 84 ),
-				'all_through' => array( 'average' => 60, 'top_quartile' => 82 ),
-				'default'     => array( 'average' => 62, 'top_quartile' => 84 ),
+				'primary'    => array( 'average' => 58, 'top_quartile' => 80 ),
+				'secondary'  => array( 'average' => 62, 'top_quartile' => 84 ),
+				'college'    => array( 'average' => 61, 'top_quartile' => 83 ),
+				'university' => array( 'average' => 61, 'top_quartile' => 83 ),
+				'other'      => array( 'average' => 60, 'top_quartile' => 82 ),
+				'default'    => array( 'average' => 62, 'top_quartile' => 84 ),
 			),
 			'focus_heading' => __( 'Priority focus areas', 'ai-risk-benchmark' ),
 			'focus_section_heading' => __( 'Priority focus areas — what to fix and how', 'ai-risk-benchmark' ),
@@ -1711,14 +1718,15 @@ class AIRB_Defaults {
 	 * @return array<int, array{label: string, url: string}>
 	 */
 	public static function results_timeline_read_links( string $role, int $seed = 0 ): array {
+		$preferred = self::results_timeline_read_links_preferred( $role );
 		if ( function_exists( 'aiad_timeline_benchmark_read_links' ) ) {
 			$links = aiad_timeline_benchmark_read_links( $role, 4, $seed );
 			if ( ! empty( $links ) ) {
-				return $links;
+				return self::merge_timeline_read_links( $preferred, $links );
 			}
 		}
 
-		return self::results_timeline_read_links_fallback( $role );
+		return self::merge_timeline_read_links( $preferred, self::results_timeline_read_links_fallback( $role ) );
 	}
 
 	/**
@@ -1793,6 +1801,78 @@ class AIRB_Defaults {
 		}
 
 		return $links;
+	}
+
+	/**
+	 * Preferred role resources that should appear even when timeline helper results exist.
+	 *
+	 * @param string $role Benchmark role.
+	 * @return array<int, array{label: string, url: string}>
+	 */
+	private static function results_timeline_read_links_preferred( string $role ): array {
+		$role    = sanitize_key( $role );
+		$presets = array(
+			'teacher' => array(
+				array(
+					'slug'  => 'ai-confidence',
+					'label' => __( 'AI Confidence CPD microcredential', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'timeline/ai-confidence' ),
+				),
+				array(
+					'slug'  => 'ai-micro-credentials-and-short-courses',
+					'label' => __( 'AI Micro-Credentials and Short Courses for Students', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'timeline/ai-micro-credentials-and-short-courses' ),
+				),
+				array(
+					'slug'  => '15-ai-buzzwords-teachers-2026',
+					'label' => __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'timeline/15-ai-buzzwords-teachers-2026' ),
+				),
+			),
+			'parent' => array(
+				array(
+					'slug'  => 'parent-tips',
+					'label' => __( 'Parent tips for AI at home', 'ai-risk-benchmark' ),
+					'url'   => self::hub_page_url( 'timeline/parent-tips' ),
+				),
+			),
+		);
+
+		$links = array();
+		foreach ( (array) ( $presets[ $role ] ?? array() ) as $item ) {
+			$link = self::timeline_read_link( $item );
+			if ( null !== $link ) {
+				$links[] = $link;
+			}
+		}
+		return $links;
+	}
+
+	/**
+	 * Merge resource links while preserving order and removing duplicate URLs/slugs.
+	 *
+	 * @param array<int, array<string, mixed>> $primary Primary links.
+	 * @param array<int, array<string, mixed>> $secondary Secondary links.
+	 * @return array<int, array<string, mixed>>
+	 */
+	private static function merge_timeline_read_links( array $primary, array $secondary ): array {
+		$out  = array();
+		$seen = array();
+		foreach ( array_merge( $primary, $secondary ) as $link ) {
+			if ( ! is_array( $link ) ) {
+				continue;
+			}
+			$key = sanitize_key( (string) ( $link['slug'] ?? '' ) );
+			if ( '' === $key ) {
+				$key = md5( (string) ( $link['url'] ?? '' ) );
+			}
+			if ( isset( $seen[ $key ] ) ) {
+				continue;
+			}
+			$seen[ $key ] = true;
+			$out[] = $link;
+		}
+		return array_slice( $out, 0, 4 );
 	}
 
 	/**
@@ -2377,7 +2457,7 @@ class AIRB_Defaults {
 	 */
 	public static function config(): array {
 		return array(
-			'version'             => 39,
+			'version'             => 45,
 			'framework'           => self::default_framework(),
 			'domain_sources'      => self::default_domain_sources(),
 			'positioning'         => self::default_positioning(),
@@ -2387,6 +2467,7 @@ class AIRB_Defaults {
 				'ai_dependency'        => __( 'How reliant have users become on AI?', 'ai-risk-benchmark' ),
 				'privacy'              => __( 'Are staff and students protecting personal information?', 'ai-risk-benchmark' ),
 				'safeguarding'         => __( 'Are AI-related safeguarding risks understood and managed?', 'ai-risk-benchmark' ),
+				'bias_equality'        => __( 'Are users checking AI outputs for bias, stereotypes and unfairness?', 'ai-risk-benchmark' ),
 				'assessment_integrity' => __( 'Are assessments protected against inappropriate AI use?', 'ai-risk-benchmark' ),
 				'ai_literacy'          => __( 'Do users understand AI capabilities and limitations?', 'ai-risk-benchmark' ),
 				'governance'           => __( 'Does the school have policies, accountability and oversight?', 'ai-risk-benchmark' ),
@@ -2430,8 +2511,8 @@ class AIRB_Defaults {
 		return array(
 			'product_name' => __( 'AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' ),
 			'subtitle'     => __( 'DfE-Aligned Assessment Framework for Schools', 'ai-risk-benchmark' ),
-			'statement'    => __( 'A DfE-aligned benchmark that measures AI exposure, dependency, governance and safe adoption across Teachers, Students, Parents and School Leaders.', 'ai-risk-benchmark' ),
-			'annual_note'  => __( 'An annual benchmark schools can use to evidence responsible AI adoption against DfE, KCSIE, ICO, JCQ, Ofqual and Ofsted expectations.', 'ai-risk-benchmark' ),
+			'statement'    => __( 'A DfE-aligned benchmark that measures AI exposure, dependency, human oversight, governance and safe adoption across teachers, students, parents, leaders and support staff.', 'ai-risk-benchmark' ),
+			'annual_note'  => __( 'An annual evidence layer for AI Awareness Day: schools can benchmark responsible AI behaviour and readiness against DfE, KCSIE, ICO, JCQ, Ofqual and Ofsted expectations.', 'ai-risk-benchmark' ),
 		);
 	}
 
@@ -2447,6 +2528,7 @@ class AIRB_Defaults {
 			'ai_dependency'        => __( 'DfE Teacher-Led Learning Principle', 'ai-risk-benchmark' ),
 			'privacy'              => __( 'ICO', 'ai-risk-benchmark' ),
 			'safeguarding'         => __( 'KCSIE', 'ai-risk-benchmark' ),
+			'bias_equality'        => __( 'Equality Act + DfE', 'ai-risk-benchmark' ),
 			'assessment_integrity' => __( 'JCQ + Ofqual', 'ai-risk-benchmark' ),
 			'ai_literacy'          => __( 'DfE', 'ai-risk-benchmark' ),
 			'governance'           => __( 'DfE + Ofsted', 'ai-risk-benchmark' ),
@@ -2460,9 +2542,9 @@ class AIRB_Defaults {
 	 */
 	private static function default_positioning(): array {
 		return array(
-			'headline'          => __( 'AI Risk & Readiness Benchmark for Schools', 'ai-risk-benchmark' ),
-			'tagline'           => __( 'Helping schools adopt AI safely, responsibly and with confidence.', 'ai-risk-benchmark' ),
-			'problem'           => __( 'Schools are under increasing pressure to adopt AI safely, but most guidance tells schools what they should do rather than helping them understand their actual level of exposure.', 'ai-risk-benchmark' ),
+			'headline'          => __( 'AI Awareness Day AI Risk & Readiness Index™', 'ai-risk-benchmark' ),
+			'tagline'           => __( 'Measuring how schools are actually using AI — not just whether they are aware of it.', 'ai-risk-benchmark' ),
+			'problem'           => __( 'Most AI literacy initiatives help people understand AI. Schools also need to know how AI is affecting behaviour: human oversight, dependency, safeguarding, assessment integrity and governance maturity.', 'ai-risk-benchmark' ),
 			'problem_questions' => array(
 				__( 'Are our teachers becoming over-reliant on AI?', 'ai-risk-benchmark' ),
 				__( 'Are students still developing independent thinking?', 'ai-risk-benchmark' ),
@@ -2471,9 +2553,9 @@ class AIRB_Defaults {
 				__( 'Do we have the right governance, policies and safeguards in place?', 'ai-risk-benchmark' ),
 				__( 'How do I know if we\'re doing enough?', 'ai-risk-benchmark' ),
 			),
-			'problem_closing'   => __( 'Most existing solutions focus on AI adoption. Very few measure AI dependency, human oversight, behavioural risk and governance maturity across the whole school community.', 'ai-risk-benchmark' ),
+			'problem_closing'   => __( 'Resources and training can raise awareness. The harder, more valuable question is whether teachers, students, parents, leaders and support teams are using AI wisely in practice.', 'ai-risk-benchmark' ),
 			'solution'          => __( 'AI Risk & Readiness Benchmark™', 'ai-risk-benchmark' ),
-			'solution_detail'   => __( 'A free DfE-aligned assessment platform that measures AI exposure, dependency, governance and safe adoption across teachers, students, parents and school leaders.', 'ai-risk-benchmark' ),
+			'solution_detail'   => __( 'A free DfE-aligned assessment platform that can grow into a national AI readiness index for education, combining teacher AI dependency, student independent thinking, parent awareness and school governance maturity.', 'ai-risk-benchmark' ),
 		);
 	}
 

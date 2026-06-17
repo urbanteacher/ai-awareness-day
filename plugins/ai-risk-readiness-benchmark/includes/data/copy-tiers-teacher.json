@@ -141,6 +141,41 @@
     }
   },
 
+  "dashboard": {
+    "scene": {
+      "default": "Lesson planning table",
+      "human_oversight": "Resource verification desk",
+      "assessment_integrity": "Assessment redesign table",
+      "safeguarding": "Safeguarding response route",
+      "bias_equality": "Fairness review desk",
+      "privacy_data_protection": "Pupil data check"
+    },
+    "motif": {
+      "default": "Verify before pupils see it",
+      "human_oversight": "Check before classroom use",
+      "assessment_integrity": "Require thinking evidence",
+      "safeguarding": "Know the reporting route",
+      "bias_equality": "Spot unfair outputs",
+      "privacy_data_protection": "Keep pupil data out"
+    },
+    "headline": {
+      "emerging": "Your AI habits need urgent attention. Start with safer checks before expanding classroom use.",
+      "developing": "Your classroom AI habits are forming, but verification and safer routines need to become consistent.",
+      "established": "Your classroom AI habits are useful, but verification needs to become routine.",
+      "strong": "Your responsible AI habits are strong. Keep refining the areas where pupils rely on your judgement most.",
+      "leading": "You are modelling strong responsible AI practice and can help colleagues build safer habits."
+    },
+    "next_action": {
+      "bias_equality": "Add a bias spot-check",
+      "assessment_integrity": "Redesign one AI-assisted task",
+      "safeguarding": "Confirm the reporting route",
+      "human_oversight": "Verify one classroom resource",
+      "privacy_data_protection": "Review data in prompts",
+      "safe_adoption": "Check an AI tool",
+      "ai_literacy": "Teach one AI limitation"
+    }
+  },
+
   "domains": {
     "safe_adoption": {
       "label": "Safe adoption",
@@ -421,6 +456,42 @@
             "Build a habit of checking AI output for bias before sharing with pupils",
             "Pay particular attention to AI outputs about people, history and social topics",
             "Ask your school AI lead whether bias checking is part of your AI policy"
+          ]
+        },
+        "moderate": {
+          "summary": "Bias awareness is developing. Make it a consistent part of your verification habit.",
+          "impact": [],
+          "actions": [
+            "Add a bias check to your existing Verify Before You Trust process",
+            "Discuss AI bias with pupils as part of AI literacy lessons"
+          ]
+        }
+      }
+    },
+    "bias_equality": {
+      "label": "Bias & equality",
+      "description": "Whether AI outputs are checked for potential bias, stereotypes or unfairness before use with pupils.",
+      "focus_card": {
+        "critical": {
+          "summary": "AI tools can reflect and reinforce bias against pupils based on race, gender, SEND status and other characteristics. This has not yet been addressed in your practice.",
+          "impact": [
+            "AI outputs potentially disadvantaging particular groups of pupils",
+            "No check in place before biased content reaches the classroom",
+            "Potential breach of Public Sector Equality Duty"
+          ],
+          "actions": [
+            "Before using AI output with pupils, ask: could this disadvantage any group?",
+            "Flag any AI output that describes different groups unevenly or unfairly",
+            "Raise AI bias as a topic in your next department or safeguarding meeting"
+          ]
+        },
+        "high": {
+          "summary": "AI outputs can be unfair or discriminatory. Build a simple bias spot-check into your verify-before-use routine.",
+          "impact": [],
+          "actions": [
+            "Check AI examples for protected characteristics and stereotypes",
+            "Add bias review to your normal output verification habit",
+            "Use one lesson example to show pupils how AI can be unfair"
           ]
         },
         "moderate": {
