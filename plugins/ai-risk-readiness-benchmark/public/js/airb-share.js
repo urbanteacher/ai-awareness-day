@@ -282,6 +282,177 @@
 		return canvasToPngBlob(canvas);
 	}
 
+	function dependencyIndexColorHex(pct) {
+		if (pct >= 60) return '#dc2626';
+		if (pct >= 35) return '#d97706';
+		return '#16a34a';
+	}
+
+	function drawDependencyScaleOnCanvas(ctx, pct, x, y, width, height) {
+		pct = Math.max(0, Math.min(100, pct));
+		var trackH = height;
+		var markerW = 14;
+		var markerH = height + 16;
+		var gradient = ctx.createLinearGradient(x, y, x + width, y);
+		gradient.addColorStop(0, '#16a34a');
+		gradient.addColorStop(0.5, '#d97706');
+		gradient.addColorStop(1, '#dc2626');
+		ctx.fillStyle = gradient;
+		roundRect(ctx, x, y, width, trackH, trackH / 2);
+		ctx.fill();
+		var markerX = x + (pct / 100) * width;
+		ctx.fillStyle = '#1e1e1e';
+		ctx.beginPath();
+		ctx.arc(markerX, y + trackH / 2, markerW / 2, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.strokeStyle = '#ffffff';
+		ctx.lineWidth = 3;
+		ctx.stroke();
+		ctx.fillStyle = '#64748b';
+		ctx.font = '600 18px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.textAlign = 'left';
+		ctx.fillText('Non-reliant', x, y + trackH + 28);
+		ctx.textAlign = 'right';
+		ctx.fillText('Over-reliant', x + width, y + trackH + 28);
+		ctx.textAlign = 'left';
+	}
+
+	function dependencyShareFilename(val) {
+		return 'ai-dependency-index-' + Math.round(val) + 'pct.png';
+	}
+
+	function setDependencyShareStatus(panel, message) {
+		var status = panel.querySelector('[data-airb-dependency-share-status]');
+		if (!status) return;
+		if (message) {
+			status.textContent = message;
+			status.hidden = false;
+		} else {
+			status.textContent = '';
+			status.hidden = true;
+		}
+	}
+
+	function buildDependencySharePngBlob(panel) {
+		var i18n = deps.i18n || {};
+		var cfg = deps.cfg || {};
+		var state = deps.getState ? deps.getState() : {};
+		var titleEl = panel.querySelector('.teacher-dash-metric__label');
+		var noteEl = panel.querySelector('.teacher-dash-metric__note');
+		var val = parseInt(panel.getAttribute('data-dependency-value'), 10);
+		if (isNaN(val)) {
+			var depBtn = panel.querySelector('[data-dependency-value]');
+			val = depBtn ? parseInt(depBtn.getAttribute('data-dependency-value'), 10) : NaN;
+		}
+		if (isNaN(val)) {
+			var valueEl = panel.querySelector('.teacher-dash-metric__value');
+			val = valueEl ? parseInt(String(valueEl.textContent).replace(/[^\d]/g, ''), 10) : 0;
+		}
+		var title = titleEl ? titleEl.textContent.trim() : (i18n.dependency || 'AI Dependency Index');
+		var note = noteEl ? noteEl.textContent.trim() : '';
+		var roleLbl = ((cfg.roles || {})[state.role] || state.role || '').trim();
+		var eyebrow = (i18n.shareDependencyEyebrow || i18n.shareOversightEyebrow || 'AI Awareness Day · {role} benchmark').replace('{role}', roleLbl || 'Benchmark');
+		var siteLabel = i18n.shareSiteLabel || 'aiawarenessday.co.uk';
+		var width = 1200;
+		var height = 630;
+		var canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		var ctx = canvas.getContext('2d');
+		if (!ctx) return Promise.reject(new Error('canvas_unsupported'));
+
+		ctx.fillStyle = '#f4f7f6';
+		ctx.fillRect(0, 0, width, height);
+		ctx.fillStyle = '#ffffff';
+		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
+		ctx.fill();
+		ctx.strokeStyle = '#e2e8e4';
+		ctx.lineWidth = 2;
+		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
+		ctx.stroke();
+
+		ctx.fillStyle = '#1e1e1e';
+		ctx.fillRect(56, 56, width - 112, 56);
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '600 24px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+		ctx.fillText(eyebrow, 80, 84);
+
+		ctx.fillStyle = '#1e1e1e';
+		ctx.font = '700 40px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(title, 80, 150);
+
+		var color = dependencyIndexColorHex(val);
+		ctx.fillStyle = color;
+		ctx.font = '700 96px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(String(Math.round(val)) + '%', 80, 270);
+
+		drawDependencyScaleOnCanvas(ctx, val, 80, 320, 520, 18);
+
+		ctx.fillStyle = '#4b5563';
+		ctx.font = '500 24px system-ui, -apple-system, Segoe UI, sans-serif';
+		var lines = wrapCanvasText(ctx, note, width - 680, 3);
+		lines.forEach(function (line, idx) {
+			ctx.fillText(line, 680, 300 + (idx * 34));
+		});
+
+		ctx.fillStyle = '#6b7280';
+		ctx.font = '500 20px system-ui, -apple-system, Segoe UI, sans-serif';
+		ctx.fillText(siteLabel, 80, height - 72);
+		ctx.textAlign = 'right';
+		ctx.fillText(i18n.shareDependencyTagline || i18n.shareOversightTagline || 'Free AI Risk & Readiness Benchmark', width - 80, height - 72);
+
+		return canvasToPngBlob(canvas);
+	}
+
+	function shareDependencyIndexImage(btn) {
+		var i18n = deps.i18n || {};
+		var panel = btn.closest('.teacher-dash-metric--dependency');
+		if (!panel || btn.disabled) return;
+		var val = parseInt(btn.getAttribute('data-dependency-value'), 10) || 0;
+		var defaultLabel = btn.textContent.trim();
+		var sharingLabel = i18n.shareDependencyIndexSharing || i18n.shareOversightGaugeSharing || 'Creating image…';
+		var doneLabel = i18n.shareDependencyIndexDone || i18n.shareOversightGaugeDone || 'Image ready';
+		var errorLabel = i18n.shareDependencyIndexError || i18n.shareOversightGaugeError || 'Could not create image. Try again.';
+		btn.disabled = true;
+		btn.textContent = sharingLabel;
+		setDependencyShareStatus(panel, sharingLabel);
+
+		buildDependencySharePngBlob(panel).then(function (blob) {
+			var file = new File([blob], dependencyShareFilename(val), { type: 'image/png' });
+			var shareText = (i18n.shareDependencyShareText || 'My AI Dependency Index from the AI Awareness Day benchmark: {pct}%.')
+				.replace('{pct}', String(Math.round(val)))
+				.trim();
+			var shareUrl = i18n.shareSiteUrl || (window.airbBenchmark && airbBenchmark.homeUrl) || window.location.href;
+			var shareTitle = (panel.querySelector('.teacher-dash-metric__label') || {}).textContent || 'AI Dependency Index';
+
+			if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+				return navigator.share({
+					files: [file],
+					title: shareTitle.trim(),
+					text: shareText,
+					url: shareUrl,
+				}).catch(function (err) {
+					if (err && err.name === 'AbortError') return;
+					downloadPngBlob(blob, dependencyShareFilename(val));
+				});
+			}
+			downloadPngBlob(blob, dependencyShareFilename(val));
+		}).then(function () {
+			setDependencyShareStatus(panel, doneLabel);
+			if (deps.trackEvent) {
+				deps.trackEvent('dependency_index_share', { value: val, role: (deps.getState && deps.getState().role) || '' });
+			}
+		}).catch(function () {
+			setDependencyShareStatus(panel, errorLabel);
+		}).finally(function () {
+			btn.disabled = false;
+			btn.textContent = defaultLabel;
+			setTimeout(function () { setDependencyShareStatus(panel, ''); }, 2500);
+		});
+	}
+
 	function shareOversightGaugeImage(btn) {
 		var i18n = deps.i18n || {};
 		var panel = btn.closest('.airb__res-panel--gauge');
@@ -337,6 +508,8 @@
 		oversightGaugeGeometry: oversightGaugeGeometry,
 		oversightGaugeSvg: oversightGaugeSvg,
 		drawOversightGaugeOnCanvas: drawOversightGaugeOnCanvas,
+		buildDependencySharePngBlob: buildDependencySharePngBlob,
+		shareDependencyIndexImage: shareDependencyIndexImage,
 		buildOversightSharePngBlob: buildOversightSharePngBlob,
 		shareOversightGaugeImage: shareOversightGaugeImage,
 		canvasToPngBlob: canvasToPngBlob,

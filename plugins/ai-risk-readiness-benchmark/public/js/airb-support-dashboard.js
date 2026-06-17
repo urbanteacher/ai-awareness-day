@@ -196,7 +196,9 @@
 		var pct = parseMetricPercent(metric.value);
 		var isDependency = /dependency/i.test(metric.label);
 		var color = isDependency && pct != null ? dependencyIndexColor(pct) : (accent || '#b45309');
-		var html = '<div class="teacher-dash-metric">';
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
+		var shareLabel = i18n.shareDependencyIndex || i18n.shareOversightGauge || 'Share as image';
+		var html = '<div class="teacher-dash-metric' + (isDependency && pct != null ? ' teacher-dash-metric--dependency' : '') + '"' + (isDependency && pct != null ? ' data-dependency-value="' + pct + '"' : '') + '>';
 		html += '<p class="teacher-dash-metric__label">' + esc(metric.label) + '</p>';
 		html += '<p class="teacher-dash-metric__value" style="color:' + esc(color) + '">' + esc(metric.value) + '</p>';
 		if (pct != null && isDependency) {
@@ -207,6 +209,12 @@
 		}
 		if (metric.note) {
 			html += '<p class="teacher-dash-metric__note">' + esc(metric.note) + '</p>';
+		}
+		if (pct != null && isDependency) {
+			html += '<div class="airb__gauge-share teacher-dash-metric__share">';
+			html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--sm airb__gauge-share-btn" data-airb-share-dependency-index data-dependency-value="' + pct + '">' + esc(shareLabel) + '</button>';
+			html += '<p class="airb__muted airb__gauge-share-status" data-airb-dependency-share-status hidden role="status" aria-live="polite"></p>';
+			html += '</div>';
 		}
 		html += '</div>';
 		return html;

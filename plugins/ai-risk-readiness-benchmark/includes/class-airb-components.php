@@ -399,12 +399,6 @@ class AIRB_Components {
         if ( $consequence ) {
             $html .= '<p class="airb__gauge-help">' . $consequence . '</p>';
         }
-        $html .= '<div class="airb__gauge-share">';
-        $html .= '<button type="button" class="airb__btn airb__btn--ghost airb__btn--sm airb__gauge-share-btn" ';
-        $html .= 'data-airb-share-oversight-gauge data-oversight-value="' . $value . '">';
-        $html .= esc_html__( 'Share as image', 'ai-risk-benchmark' );
-        $html .= '</button>';
-        $html .= '</div>';
         $html .= '</div>';
         return $html;
     }

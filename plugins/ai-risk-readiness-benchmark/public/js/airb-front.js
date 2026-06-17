@@ -3321,12 +3321,6 @@
 		html += '<div class="airb__res-gauge-wrap">' + oversightGaugeSvg(val, esc(i18n.oversight) + ': ' + Math.round(val) + '%') + '</div>';
 		if (label) html += '<p class="airb__gauge-band" style="color:' + oversightZoneColor(val) + '">' + esc(label) + '</p>';
 		html += '<p class="airb__gauge-help">' + esc(help) + '</p>';
-		html += '<div class="airb__gauge-share">';
-		html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--sm airb__gauge-share-btn" data-airb-share-oversight-gauge data-oversight-value="' + Math.round(val) + '">';
-		html += esc(i18n.shareOversightGauge || 'Share as image');
-		html += '</button>';
-		html += '<p class="airb__muted airb__gauge-share-status" data-airb-gauge-share-status hidden role="status" aria-live="polite"></p>';
-		html += '</div>';
 		return html + '</div>';
 	}
 
@@ -4916,18 +4910,18 @@
 		shareModuleReady = true;
 	}
 
-	function shareOversightGaugeImage(btn) {
+	function shareDependencyIndexImage(btn) {
 		initShareModule();
-		if (window.AIRB && AIRB.Share && AIRB.Share.shareOversightGaugeImage) {
-			AIRB.Share.shareOversightGaugeImage(btn);
+		if (window.AIRB && AIRB.Share && AIRB.Share.shareDependencyIndexImage) {
+			AIRB.Share.shareDependencyIndexImage(btn);
 		}
 	}
 
-	function bindOversightGaugeShare() {
+	function bindDependencyIndexShare() {
 		if (!el.results) return;
-		el.results.querySelectorAll('[data-airb-share-oversight-gauge]').forEach(function (btn) {
+		el.results.querySelectorAll('[data-airb-share-dependency-index]').forEach(function (btn) {
 			btn.addEventListener('click', function () {
-				shareOversightGaugeImage(btn);
+				shareDependencyIndexImage(btn);
 			});
 		});
 	}
@@ -5209,7 +5203,7 @@
 		if (emailBtn) emailBtn.addEventListener('click', emailReport);
 
 		bindResultsTracking();
-		bindOversightGaugeShare();
+		bindDependencyIndexShare();
 		bindInterestForm();
 		bindInterestTriggers();
 		bindStudentRetakeTriggers();
@@ -5871,19 +5865,6 @@
 		});
 		html += '</fieldset>';
 
-		if (fields.show_stakeholder_role && form.stakeholder_roles) {
-			var datalistId = 'airb-stakeholder-role-options';
-			html += '<div class="airb__field airb__teacher-follow-up-stakeholder">';
-			html += '<label class="airb__label" for="airb-stakeholder-role">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</label>';
-			html += '<input class="airb__input" type="text" id="airb-stakeholder-role" name="stakeholder_role" list="' + esc(datalistId) + '" autocomplete="organization-title">';
-			html += '<datalist id="' + esc(datalistId) + '">';
-			Object.keys(form.stakeholder_roles).forEach(function (key) {
-				html += '<option value="' + esc(form.stakeholder_roles[key]) + '"></option>';
-			});
-			html += '</datalist>';
-			html += '</div>';
-		}
-
 		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
 		if (fields.show_name) {
 			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
@@ -5898,6 +5879,9 @@
 		if (fields.show_school) {
 			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
 			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
+		}
+		if (fields.show_stakeholder_role && form.stakeholder_roles) {
+			html += stakeholderRoleFieldHtml(labels, form.stakeholder_roles);
 		}
 		html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.message || 'Anything else we should know?') + '</span>';
 		html += '<textarea class="airb__input airb__textarea" name="interest_message" rows="3" placeholder="' + esc(messagePlaceholder) + '"></textarea></label>';
@@ -6043,19 +6027,6 @@
 		});
 		html += '</fieldset>';
 
-		if (fields.show_stakeholder_role && form.stakeholder_roles) {
-			html += '<fieldset class="airb__interest-stakeholder airb__teacher-follow-up-stakeholder">';
-			html += '<legend class="airb__interest-legend">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</legend>';
-			var roleKeys = Object.keys(form.stakeholder_roles);
-			roleKeys.forEach(function (key, index) {
-				var inputId = 'airb-stakeholder-' + key;
-				html += '<label class="airb__interest-option airb__interest-option--radio" for="' + esc(inputId) + '">';
-				html += '<input type="radio" id="' + esc(inputId) + '" name="stakeholder_role" value="' + esc(key) + '"' + (index === 0 ? ' checked' : '') + '>';
-				html += '<span class="airb__interest-option-text">' + esc(form.stakeholder_roles[key]) + '</span></label>';
-			});
-			html += '</fieldset>';
-		}
-
 		html += '<div class="airb__interest-fields airb__teacher-follow-up-fields">';
 		if (fields.show_name) {
 			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || 'Your name') + '</span>';
@@ -6071,6 +6042,9 @@
 			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.school || 'School / trust name') + '</span>';
 			html += '<input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '" placeholder="Riverside Academy"></label>';
 		}
+		if (fields.show_stakeholder_role && form.stakeholder_roles) {
+			html += stakeholderRoleFieldHtml(labels, form.stakeholder_roles);
+		}
 		if (fields.show_child_school) {
 			html += '<label class="airb__field airb__field--full"><span class="airb__label">' + esc(labels.child_school || '') + '</span>';
 			html += '<input class="airb__input" type="text" name="interest_child_school" autocomplete="organization"></label>';
@@ -6085,6 +6059,21 @@
 		html += '<svg class="airb__teacher-follow-up-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
 		html += '</button>';
 		html += '</form></section>';
+		return html;
+	}
+
+	function stakeholderRoleFieldHtml(labels, stakeholderRoles) {
+		if (!stakeholderRoles || !Object.keys(stakeholderRoles).length) return '';
+		var datalistId = 'airb-stakeholder-role-options';
+		var html = '<label class="airb__field airb__field--full airb__teacher-follow-up-stakeholder">';
+		html += '<span class="airb__label">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</span>';
+		html += '<input class="airb__input" type="text" id="airb-stakeholder-role" name="stakeholder_role" list="' + esc(datalistId) + '" autocomplete="organization-title" placeholder="e.g. Teacher, Head of Department">';
+		html += '<datalist id="' + esc(datalistId) + '">';
+		Object.keys(stakeholderRoles).forEach(function (key) {
+			html += '<option value="' + esc(stakeholderRoles[key]) + '"></option>';
+		});
+		html += '</datalist>';
+		html += '</label>';
 		return html;
 	}
 
@@ -6150,17 +6139,6 @@
 		});
 		html += '</fieldset>';
 
-		if (fields.show_stakeholder_role && form.stakeholder_roles) {
-			html += '<fieldset class="airb__interest-stakeholder"><legend class="airb__interest-legend">' + esc(labels.stakeholder_role || 'Which best describes you?') + '</legend>';
-			Object.keys(form.stakeholder_roles).forEach(function (key) {
-				var inputId = 'airb-stakeholder-' + key;
-				html += '<label class="airb__interest-option airb__interest-option--radio" for="' + esc(inputId) + '">';
-				html += '<input type="radio" id="' + esc(inputId) + '" name="stakeholder_role" value="' + esc(key) + '">';
-				html += '<span class="airb__interest-option-text"><strong>' + esc(form.stakeholder_roles[key]) + '</strong></span></label>';
-			});
-			html += '</fieldset>';
-		}
-
 		html += '<div class="airb__interest-fields">';
 		if (fields.show_name) {
 			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.name || '') + '</span><input class="airb__input" type="text" name="interest_name" autocomplete="name"></label>';
@@ -6173,6 +6151,9 @@
 		}
 		if (fields.show_school) {
 			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.school || '') + '</span><input class="airb__input" type="text" name="interest_school" autocomplete="organization" value="' + esc(state.school || '') + '"></label>';
+		}
+		if (fields.show_stakeholder_role && form.stakeholder_roles) {
+			html += stakeholderRoleFieldHtml(labels, form.stakeholder_roles);
 		}
 		if (fields.show_child_school) {
 			html += '<label class="airb__field"><span class="airb__label">' + esc(labels.child_school || '') + '</span><input class="airb__input" type="text" name="interest_child_school" autocomplete="organization"></label>';
@@ -6339,7 +6320,7 @@
 					statusEl.className = 'airb__interest-status airb__interest-status--success';
 					statusEl.textContent = (json.data && json.data.message) || (r.interest_form && r.interest_form.labels && r.interest_form.labels.success) || 'Thank you.';
 				}
-				form.querySelectorAll('input[name="interests[]"], input[name="interest_name"], input[name="interest_school"], input[name="interest_child_school"], textarea[name="interest_message"]').forEach(function (el) {
+				form.querySelectorAll('input[name="interests[]"], input[name="interest_name"], input[name="interest_school"], input[name="interest_child_school"], input[name="stakeholder_role"], textarea[name="interest_message"]').forEach(function (el) {
 					if (el.type === 'checkbox') el.checked = false;
 					else el.value = '';
 				});
