@@ -3684,6 +3684,9 @@
 				var nextSteps = tr.next_steps;
 				var links = (nextSteps && nextSteps.resource_links) ? nextSteps.resource_links : [];
 				var html = '';
+				if (tr.next_steps && tr.next_steps.rollout) {
+					html += teacherRolloutCardHtml(tr.next_steps.rollout);
+				}
 				if (links.length) {
 					var intro = 'Suggested next steps after the audit, kept separate from the follow-up request form below.';
 					html += '<section class="airb__leader-help-support airb__benchmark-help-support">' +
@@ -3749,12 +3752,6 @@
 			teacherBiasEqualityFocusNote: teacherBiasEqualityFocusNote,
 			focusGuidanceAccordionHtml: focusGuidanceAccordionHtml,
 			rolloutCardHtml: teacherRolloutCardHtml,
-			rolloutSectionHtml: function (rollout) {
-				return leaderSectionLabel(
-					teacherResult.rollout_section_heading || 'Your next unlock — whole-school picture',
-					teacherResult.rollout_section_heading_short || 'Your next unlock'
-				) + teacherRolloutCardHtml(rollout);
-			},
 			resultsBodyHtml: benchmarkResultsBodyHtml,
 		};
 	}
@@ -3851,19 +3848,6 @@
 
 		if (model && window.AIRB && AIRB.SupportDashboard && AIRB.SupportDashboard.render) {
 			var renderOpts = supportDashboardRenderOpts();
-			if (sr.next_steps && sr.next_steps.rollout) {
-				renderOpts.rolloutSectionHtml = function () {
-					return leaderSectionLabel(
-						supportResult.rollout_section_heading || 'Your next unlock — whole-school picture',
-						supportResult.rollout_section_heading_short || 'Your next unlock'
-					) + supportRolloutCardHtml(sr.next_steps.rollout);
-				};
-			}
-			if (sr.next_steps) {
-				renderOpts.ctaCardHtml = function () {
-					return supportCtaCardHtml(sr.next_steps);
-				};
-			}
 			return AIRB.SupportDashboard.render(r, model, renderOpts);
 		}
 

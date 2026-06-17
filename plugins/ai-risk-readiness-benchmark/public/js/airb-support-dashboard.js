@@ -377,13 +377,6 @@
 		});
 		html += '</div></section>';
 
-		if (opts.rolloutSectionHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-rollout">' + opts.rolloutSectionHtml + '</section>';
-		}
-		if (opts.ctaCardHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-support-cta">' + opts.ctaCardHtml + '</section>';
-		}
-
 		html += (AIRB.Certificate && AIRB.Certificate.panelHtml) ? AIRB.Certificate.panelHtml(model, 'support_staff', accent) : '';
 		html += '</div>';
 		return html;
