@@ -385,6 +385,7 @@
 		if (!model) return '';
 
 		var html = '<section class="teacher-dash-section" data-airb-public-dashboard>';
+		html += PD.coreSummaryHtml(model);
 		html += tabsHtml('overview');
 		html += '<div class="teacher-dash-panels">';
 		html += overviewPanelHtml(model, r, opts);

@@ -5041,7 +5041,9 @@
 		var benchmarkResultsMode = studentMode || teacherMode || leaderMode || parentMode || publicMode || supportMode;
 
 		var html = '<div class="airb__results' + (parentMode ? ' airb__results--parent' + (state.dashboardModel && isParentRole() && r.parent_results ? ' airb__results--parent-dash' : '') : '') + (publicMode ? ' airb__results--public' + (state.dashboardModel ? ' airb__results--public-dash' : '') : '') + (teacherMode ? ' airb__results--teacher' + (state.dashboardModel ? ' airb__results--teacher-dash' : '') : '') + (studentMode ? ' airb__results--student' + (state.dashboardModel ? ' airb__results--student-dash' : '') : '') + (leaderMode ? ' airb__results--leader' + (state.dashboardModel ? ' airb__results--leader-dash' : '') : '') + (supportMode ? ' airb__results--support' + (state.dashboardModel ? ' airb__results--support-dash' : '') : '') + '">';
-		html += resultsProfileHtml(r);
+		if (!(publicMode && state.dashboardModel)) {
+			html += resultsProfileHtml(r);
+		}
 
 		if (teacherMode) {
 			html += teacherResultsHtml(r);
