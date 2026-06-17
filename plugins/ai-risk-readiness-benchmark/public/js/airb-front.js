@@ -1192,8 +1192,58 @@
 		return '<h3 class="airb__benchmark-card-heading">' + esc(text) + '</h3>';
 	}
 
+	function benchmarkShareUrl() {
+		return (i18n.shareSiteUrl || airbBenchmark.homeUrl || window.location.href || '').trim();
+	}
+
+	function benchmarkShareFocus(model) {
+		if (!model) return '';
+		if (model.focusAreas && model.focusAreas.length && model.focusAreas[0].label) {
+			return String(model.focusAreas[0].label);
+		}
+		if (model.domains && model.domains.length) {
+			var weakest = model.domains.reduce(function (min, domain) {
+				return !min || domain.value < min.value ? domain : min;
+			}, null);
+			if (weakest && weakest.label) return String(weakest.label);
+		}
+		return '';
+	}
+
+	function benchmarkShareText(model) {
+		var role = model && model.label ? String(model.label).toLowerCase() : 'participant';
+		var focus = benchmarkShareFocus(model);
+		var action = model && (model.priority || model.nextAction || model.motif) ? String(model.priority || model.nextAction || model.motif) : '';
+		var text = 'I completed the AI Risk & Readiness Benchmark with AI Awareness Day as a ' + role + '.';
+		if (focus) text += ' My focus is ' + focus + '.';
+		if (action) text += ' My next action: ' + action;
+		return text;
+	}
+
+	function dashboardSharePromptHtml() {
+		var model = state.dashboardModel;
+		if (!model) return '';
+		var focus = benchmarkShareFocus(model);
+		var action = model.priority || model.nextAction || model.motif || '';
+		var shareText = benchmarkShareText(model);
+		var url = benchmarkShareUrl();
+		return '<section class="airb__dashboard-share" aria-label="Share your benchmark action">' +
+			'<div class="airb__dashboard-share-copy">' +
+			'<p class="airb__leader-section-label">Share your next AI action</p>' +
+			'<h3 class="airb__dashboard-share-title">Turn your result into a public commitment</h3>' +
+			'<p class="airb__dashboard-share-body">Share the benchmark and the one habit you are going to strengthen. Your score stays private.</p>' +
+			(action ? '<p class="airb__dashboard-share-action"><strong>' + esc(focus || 'Focus') + ':</strong> ' + esc(action) + '</p>' : '') +
+			'</div>' +
+			'<div class="airb__dashboard-share-actions">' +
+			'<button type="button" class="airb__btn airb__btn--primary airb__dashboard-share-btn" data-airb-share-action data-airb-share-title="AI Risk & Readiness Benchmark" data-airb-share-url="' + esc(url) + '" data-airb-share-text="' + esc(shareText) + '">Share my AI action</button>' +
+			'<p class="airb__muted airb__dashboard-share-status" data-airb-share-action-status hidden role="status" aria-live="polite"></p>' +
+			'</div>' +
+			'</section>';
+	}
+
 	function benchmarkResultsBodyHtml(html) {
-		return html ? '<div class="airb__benchmark-results-body">' + html + '</div>' : '';
+		if (!html) return '';
+		return '<div class="airb__benchmark-results-body">' + html + dashboardSharePromptHtml() + '</div>';
 	}
 
 	function benchmarkHelpSupportHtml(nextSteps, heading, headingShort) {
@@ -5231,6 +5281,44 @@
 				trackEvent('share_click', {});
 			});
 		}
+
+		el.results.querySelectorAll('[data-airb-share-action]').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var title = btn.getAttribute('data-airb-share-title') || 'AI Risk & Readiness Benchmark';
+				var text = btn.getAttribute('data-airb-share-text') || '';
+				var url = btn.getAttribute('data-airb-share-url') || benchmarkShareUrl();
+				var status = btn.closest('.airb__dashboard-share') && btn.closest('.airb__dashboard-share').querySelector('[data-airb-share-action-status]');
+				var done = function (message) {
+					if (!status) return;
+					status.textContent = message;
+					status.hidden = false;
+					setTimeout(function () {
+						status.hidden = true;
+						status.textContent = '';
+					}, 2500);
+				};
+				if (navigator.share) {
+					navigator.share({ title: title, text: text, url: url }).then(function () {
+						trackEvent('share_click', { mode: 'action', role: state.role || '' });
+					}).catch(function (err) {
+						if (err && err.name === 'AbortError') return;
+						if (navigator.clipboard && navigator.clipboard.writeText) {
+							navigator.clipboard.writeText(text + ' Try the benchmark: ' + url).then(function () {
+								done('Share text copied.');
+								trackEvent('share_copy', { mode: 'action', role: state.role || '' });
+							});
+						}
+					});
+					return;
+				}
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(text + ' Try the benchmark: ' + url).then(function () {
+						done('Share text copied.');
+						trackEvent('share_copy', { mode: 'action', role: state.role || '' });
+					});
+				}
+			});
+		});
 
 		var reportBtn = document.getElementById('airb-request-report');
 		if (reportBtn) {

@@ -1160,6 +1160,49 @@
 	margin-top: 1rem;
 }
 
+.airb__results--teacher .airb__dashboard-share, .airb__results--student .airb__dashboard-share, .airb__results--parent .airb__dashboard-share, .airb__results--leader .airb__dashboard-share, .airb__results--support .airb__dashboard-share, .airb__results--public .airb__dashboard-share {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 1rem;
+	padding: 1rem;
+	border: 1px solid #dbe7f5;
+	border-radius: 8px;
+	background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%);
+}
+
+.airb__results--teacher .airb__dashboard-share-title, .airb__results--student .airb__dashboard-share-title, .airb__results--parent .airb__dashboard-share-title, .airb__results--leader .airb__dashboard-share-title, .airb__results--support .airb__dashboard-share-title, .airb__results--public .airb__dashboard-share-title {
+	margin: 0.2rem 0 0;
+	font-size: 1rem;
+	font-weight: 650;
+	line-height: 1.25;
+	color: #020617;
+}
+
+.airb__results--teacher .airb__dashboard-share-body, .airb__results--student .airb__dashboard-share-body, .airb__results--parent .airb__dashboard-share-body, .airb__results--leader .airb__dashboard-share-body, .airb__results--support .airb__dashboard-share-body, .airb__results--public .airb__dashboard-share-body,
+.airb__results--teacher .airb__dashboard-share-action, .airb__results--student .airb__dashboard-share-action, .airb__results--parent .airb__dashboard-share-action, .airb__results--leader .airb__dashboard-share-action, .airb__results--support .airb__dashboard-share-action, .airb__results--public .airb__dashboard-share-action {
+	margin: 0.4rem 0 0;
+	font-size: 0.86rem;
+	line-height: 1.45;
+	color: #475569;
+}
+
+.airb__results--teacher .airb__dashboard-share-action strong, .airb__results--student .airb__dashboard-share-action strong, .airb__results--parent .airb__dashboard-share-action strong, .airb__results--leader .airb__dashboard-share-action strong, .airb__results--support .airb__dashboard-share-action strong, .airb__results--public .airb__dashboard-share-action strong {
+	color: var(--teacher-dash-ink);
+}
+
+.airb__results--teacher .airb__dashboard-share-actions, .airb__results--student .airb__dashboard-share-actions, .airb__results--parent .airb__dashboard-share-actions, .airb__results--leader .airb__dashboard-share-actions, .airb__results--support .airb__dashboard-share-actions, .airb__results--public .airb__dashboard-share-actions {
+	display: grid;
+	justify-items: end;
+	gap: 0.4rem;
+}
+
+.airb__results--teacher .airb__dashboard-share-status, .airb__results--student .airb__dashboard-share-status, .airb__results--parent .airb__dashboard-share-status, .airb__results--leader .airb__dashboard-share-status, .airb__results--support .airb__dashboard-share-status, .airb__results--public .airb__dashboard-share-status {
+	margin: 0;
+	font-size: 0.75rem;
+}
+
 /* ── Progress passport + certificate (certificate.css) ── */
 .airb__results--teacher .benchmark-passport-grid, .airb__results--student .benchmark-passport-grid, .airb__results--parent .benchmark-passport-grid, .airb__results--leader .benchmark-passport-grid, .airb__results--support .benchmark-passport-grid, .airb__results--public .benchmark-passport-grid {
 	display: grid;
@@ -2173,6 +2216,15 @@
 	.airb__results--teacher .demo-airb .airb__leader-resource-links, .airb__results--student .demo-airb .airb__leader-resource-links,
 	.airb__results--teacher .demo-airb .airb__results-resource-links, .airb__results--student .demo-airb .airb__results-resource-links, .airb__results--parent .demo-airb .airb__results-resource-links, .airb__results--leader .demo-airb .airb__results-resource-links, .airb__results--support .demo-airb .airb__results-resource-links, .airb__results--public .demo-airb .airb__results-resource-links {
 		grid-template-columns: 1fr;
+	}
+
+	.airb__results--teacher .airb__dashboard-share, .airb__results--student .airb__dashboard-share, .airb__results--parent .airb__dashboard-share, .airb__results--leader .airb__dashboard-share, .airb__results--support .airb__dashboard-share, .airb__results--public .airb__dashboard-share {
+		grid-template-columns: 1fr;
+		padding: 0.85rem;
+	}
+
+	.airb__results--teacher .airb__dashboard-share-actions, .airb__results--student .airb__dashboard-share-actions, .airb__results--parent .airb__dashboard-share-actions, .airb__results--leader .airb__dashboard-share-actions, .airb__results--support .airb__dashboard-share-actions, .airb__results--public .airb__dashboard-share-actions {
+		justify-items: stretch;
 	}
 }
 
