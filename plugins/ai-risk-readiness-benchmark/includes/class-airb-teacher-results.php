@@ -27,9 +27,10 @@ class AIRB_Teacher_Results {
 	 * @param string               $school  Optional school name from submission.
 	 * @param array<string, mixed> $config  Plugin config.
 	 * @param array<int, array<string, string>> $gap_products Matched gap products (lower performers).
+	 * @param array<string, mixed>              $answers      Answer map.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results, string $school, array $config, array $gap_products = array() ): array {
+	public static function build( array $results, string $school, array $config, array $gap_products = array(), array $answers = array() ): array {
 		$cfg       = AIRB_Defaults::teacher_result_config();
 		$tier      = self::performance_tier( $results );
 		$strengths = self::detect_strengths( $results, $cfg );
@@ -43,7 +44,7 @@ class AIRB_Teacher_Results {
 			'performance_headline' => (string) ( $cfg['headlines'][ $tier ] ?? '' ),
 			'strengths'            => $strengths,
 			'opportunities'        => $opps,
-			'focus_areas'          => self::focus_areas_from_opportunities( $opps, $cfg ),
+			'focus_areas'          => self::focus_areas_from_opportunities( $opps, $cfg, $answers, $config ),
 			'champion_pathway'     => $champion,
 			'gap_pathway'          => $gap,
 			'suggested_resources'  => (array) ( $cfg['suggested_resources'] ?? array() ),
@@ -73,7 +74,7 @@ class AIRB_Teacher_Results {
 	 * @param array<int, array<string, mixed>> $opps Opportunities.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function focus_areas_from_opportunities( array $opps, array $cfg ): array {
+	private static function focus_areas_from_opportunities( array $opps, array $cfg, array $answers = array(), array $config = array() ): array {
 		$out = array();
 		foreach ( $opps as $opp ) {
 			$slug  = (string) ( $opp['slug'] ?? '' );
@@ -85,13 +86,19 @@ class AIRB_Teacher_Results {
 				$label = __( 'Assessment design', 'ai-risk-benchmark' );
 			}
 			$block = AIRB_Teacher_Copy::focus_block( $slug, $pct, $cfg );
+			$domain_slugs = array( $slug );
+			if ( 'bias_equality' === $slug ) {
+				$domain_slugs = array( 'bias_equality' );
+			}
+			$block = AIRB_Results_Guidance::enrich_focus_block( $block, $pct, 'teacher', $domain_slugs, $answers, $config );
 			$out[] = array(
-				'slug'          => $slug,
-				'label'         => $label,
-				'pct'           => $pct,
-				'summary'       => (string) ( $block['summary'] ?? '' ),
-				'likely_impact' => (array) ( $block['likely_impact'] ?? array() ),
-				'actions'       => (array) ( $block['actions'] ?? array() ),
+				'slug'              => $slug,
+				'label'             => $label,
+				'pct'               => $pct,
+				'summary'           => (string) ( $block['summary'] ?? '' ),
+				'likely_impact'     => (array) ( $block['likely_impact'] ?? array() ),
+				'actions'           => (array) ( $block['actions'] ?? array() ),
+				'challenge_heading' => (string) ( $block['challenge_heading'] ?? '' ),
 			);
 		}
 		return $out;
@@ -193,7 +200,7 @@ class AIRB_Teacher_Results {
 			}
 		);
 
-		return array_slice( $scored, 0, 3 );
+		return array_slice( $scored, 0, 4 );
 	}
 
 	/**

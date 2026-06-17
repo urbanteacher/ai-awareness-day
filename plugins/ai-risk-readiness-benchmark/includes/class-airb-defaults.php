@@ -346,13 +346,13 @@ class AIRB_Defaults {
 				'home_ai_safety' => array(
 					'label'       => __( 'Home AI Safety Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
-					'questions'   => array( 'p_no_share', 'p_home_ai_culture' ),
+					'questions'   => array( 'p_no_share', 'p_privacy_conversation', 'p_home_ai_culture' ),
 					'color'       => '#15803d',
 				),
 				'online_risk_awareness' => array(
 					'label'       => __( 'Deepfake & online risk awareness', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
-					'questions'   => array( 'p_harm_response' ),
+					'questions'   => array( 'p_harm_response', 'p_report_route' ),
 					'color'       => '#a32d2d',
 				),
 				'homework_oversight' => array(
@@ -376,11 +376,12 @@ class AIRB_Defaults {
 			),
 			'home_metrics' => array(
 				array(
-					'slug'     => 'parent_awareness',
-					'source'   => 'parent_awareness',
+					'slug'       => 'parent_awareness',
+					'source'     => 'parent_awareness',
 					'label'    => __( 'Parent awareness', 'ai-risk-benchmark' ),
 					'subtitle' => __( 'Know what AI tools are being used', 'ai-risk-benchmark' ),
 					'icon'     => 'eye',
+					'focus_slug' => 'parent_awareness',
 				),
 				array(
 					'slug'     => 'home_ai_safety',
@@ -550,6 +551,23 @@ class AIRB_Defaults {
 				'low'    => __( 'Choose the support that would help you most — we\'ll email practical guides to build your confidence at home.', 'ai-risk-benchmark' ),
 			),
 			'awareness_levels' => self::parent_awareness_levels(),
+			'question_improvements' => array(
+				'p_child_uses'          => __( 'Find out whether and how your child uses AI tools at home.', 'ai-risk-benchmark' ),
+				'p_know_tools'          => __( 'Learn which AI tools your child uses and what they use them for.', 'ai-risk-benchmark' ),
+				'p_child_unknown_use'   => __( 'Ask directly about hidden or unsupervised AI use on personal devices.', 'ai-risk-benchmark' ),
+				'p_no_share'            => __( 'Talk about keeping names, photos and school details out of AI tools.', 'ai-risk-benchmark' ),
+				'p_privacy_conversation'=> __( 'Have a clear conversation about what must never be shared with AI.', 'ai-risk-benchmark' ),
+				'p_home_ai_culture'     => __( 'Agree regular family conversations about when AI is appropriate at home.', 'ai-risk-benchmark' ),
+				'p_harm_response'       => __( 'Agree what your child should do if they receive a fake image, voice or account.', 'ai-risk-benchmark' ),
+				'p_report_route'        => __( 'Make sure your child knows which trusted adult or school route to use if something feels unsafe.', 'ai-risk-benchmark' ),
+				'p_explain_own_words'   => __( 'Ask your child to explain AI-assisted homework without looking at the screen.', 'ai-risk-benchmark' ),
+				'p_check_suspicion'     => __( 'Know what to do if you suspect homework was produced mainly by AI.', 'ai-risk-benchmark' ),
+				'p_hw_first_response'   => __( 'Encourage your child to try first before using AI for difficult homework.', 'ai-risk-benchmark' ),
+				'p_parent_ai_hw'        => __( 'Avoid using AI to complete homework for your child — model trying first.', 'ai-risk-benchmark' ),
+				'p_parent_ai_comms'     => __( 'Do not use AI to write messages to school that should reflect your own words.', 'ai-risk-benchmark' ),
+				'p_school_expectations' => __( 'Find out your school\'s expectations for AI and homework.', 'ai-risk-benchmark' ),
+				'p_school_discuss'      => __( 'Ask the school how you can support safe AI use at home.', 'ai-risk-benchmark' ),
+			),
 		);
 
 		$tier_data = self::role_tier_data( 'parent' );
@@ -620,13 +638,13 @@ class AIRB_Defaults {
 			),
 			'display_domains' => array(
 				'personal_ai_use' => array(
-					'label'       => __( 'Personal AI use habits', 'ai-risk-benchmark' ),
+					'label'       => __( 'Personal AI use', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_use_frequency', 'pub_use_tasks', 'pub_use_trust', 'pub_use_dependency' ),
 					'color'       => '#378ADD',
 				),
 				'verification' => array(
-					'label'       => __( 'Verification & critical thinking', 'ai-risk-benchmark' ),
+					'label'       => __( 'Verification', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_verify_check', 'pub_verify_hallucination', 'pub_verify_bias', 'pub_verify_deepfake' ),
 					'color'       => '#639922',
@@ -708,14 +726,25 @@ class AIRB_Defaults {
 				),
 			),
 			'hero_bands' => self::public_safety_levels(),
-			'focus_slug_map' => array(
-				'verification' => 'deepfake_scam_awareness',
-			),
-			'focus_topics' => array(
-				array(
-					'slug'  => 'deepfake_scam_awareness',
-					'label' => __( 'Deepfake & scam awareness', 'ai-risk-benchmark' ),
-				),
+			'question_improvements' => array(
+				'pub_use_frequency'      => __( 'Try completing at least one everyday task without AI before asking for help.', 'ai-risk-benchmark' ),
+				'pub_use_tasks'          => __( 'Use AI to check or improve your thinking — not to replace it entirely.', 'ai-risk-benchmark' ),
+				'pub_use_trust'          => __( 'Treat AI answers as drafts that need checking, not facts you can rely on.', 'ai-risk-benchmark' ),
+				'pub_use_dependency'     => __( 'Practice a week without your usual AI tool to rebuild independent habits.', 'ai-risk-benchmark' ),
+				'pub_verify_check'       => __( 'Check important facts, statistics and recommendations against a trusted source before acting.', 'ai-risk-benchmark' ),
+				'pub_verify_hallucination' => __( 'Remember that AI can confidently invent facts — build a habit of verifying specifics.', 'ai-risk-benchmark' ),
+				'pub_verify_bias'        => __( 'Ask whether an AI answer could be biased or one-sided before you accept it.', 'ai-risk-benchmark' ),
+				'pub_verify_deepfake'    => __( 'Learn how to spot AI-generated images, video and audio used in scams or misinformation.', 'ai-risk-benchmark' ),
+				'pub_data_sharing'       => __( 'Stop entering names, addresses, finances or health details into public AI tools.', 'ai-risk-benchmark' ),
+				'pub_data_third_party'   => __( 'Review how your AI tools store conversations and whether you can limit retention.', 'ai-risk-benchmark' ),
+				'pub_data_others'        => __( 'Never share another person\'s details with AI without their knowledge or consent.', 'ai-risk-benchmark' ),
+				'pub_data_scam'          => __( 'Learn current AI voice-cloning and scam patterns so urgent requests do not bypass your judgement.', 'ai-risk-benchmark' ),
+				'pub_work_policy'        => __( 'Find out whether your employer has an AI policy and what it requires for your role.', 'ai-risk-benchmark' ),
+				'pub_work_data'          => __( 'Never paste confidential client or company data into a personal or public AI tool.', 'ai-risk-benchmark' ),
+				'pub_work_disclosure'    => __( 'Disclose when AI contributed significantly to work you share with employers or clients.', 'ai-risk-benchmark' ),
+				'pub_social_advice'      => __( 'Seek a human perspective alongside AI for important personal or health decisions.', 'ai-risk-benchmark' ),
+				'pub_social_relationship' => __( 'Keep real human connection separate from AI interaction — notice if companionship feels one-sided.', 'ai-risk-benchmark' ),
+				'pub_social_news'        => __( 'Cross-check AI summaries of news and politics against original reporting.', 'ai-risk-benchmark' ),
 			),
 			'resource_links' => self::results_timeline_read_links( 'public' ),
 		);

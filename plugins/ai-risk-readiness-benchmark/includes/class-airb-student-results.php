@@ -26,9 +26,13 @@ class AIRB_Student_Results {
 	 *
 	 * @param array<string, mixed> $results Results.
 	 * @param string               $school  Optional school name from submission.
+	 * @param array<string, mixed> $answers Answer map.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results, string $school = '' ): array {
+	public static function build( array $results, string $school = '', array $answers = array(), array $config = array() ): array {
+		if ( empty( $config ) && class_exists( 'AIRB_Config' ) ) {
+			$config = AIRB_Config::get();
+		}
 		$cfg                 = AIRB_Defaults::student_result_config();
 		$metrics             = self::learning_metrics( $results );
 		$score               = (int) ( $results['alignment_score'] ?? 0 );
@@ -36,7 +40,7 @@ class AIRB_Student_Results {
 		$strength_items      = AIRB_Student_Copy::strength_statements( $results, $metrics, $cfg );
 		$legacy_strengths    = self::detect_strengths( $results, $cfg, $metrics );
 		$opps                = self::detect_opportunities( $results, $cfg, $metrics );
-		$focus_areas         = self::build_focus_areas( $opps, $metrics, $cfg );
+		$focus_areas         = self::build_focus_areas( $opps, $metrics, $cfg, $answers, $config, $results );
 		$journey             = self::learning_journey( $score, $cfg, $metrics );
 		$ui                  = AIRB_Student_Copy::resolve_ui( $results, $cfg );
 		$school_progress     = AIRB_Student_Copy::school_progress( $school );
@@ -94,8 +98,9 @@ class AIRB_Student_Results {
 	 * @param array<string, mixed>             $cfg     Config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function build_focus_areas( array $opps, array $metrics, array $cfg ): array {
+	private static function build_focus_areas( array $opps, array $metrics, array $cfg, array $answers = array(), array $config = array(), array $results = array() ): array {
 		$label_map = (array) ( $cfg['focus_label_map'] ?? array() );
+		$topics    = (array) ( $cfg['opportunity_topics'] ?? array() );
 		$by_slug   = array();
 		foreach ( $metrics as $metric ) {
 			$by_slug[ (string) ( $metric['slug'] ?? '' ) ] = $metric;
@@ -120,6 +125,11 @@ class AIRB_Student_Results {
 			$band        = ! empty( $metric['skill_band'] ) ? (array) $metric['skill_band'] : self::skill_band( $pct );
 			$label       = (string) ( $metric['label'] ?? $opp['label'] ?? '' );
 			$block       = AIRB_Student_Copy::focus_block( $opp, $cfg );
+			$domain_slugs = self::trigger_domains_for_topic( $slug, $topics );
+			$block = AIRB_Results_Guidance::enrich_focus_block( $block, $pct, 'student', $domain_slugs, $answers, $config );
+			if ( ! empty( $block['challenge_bullets'] ) && empty( $block['likely_impact'] ) ) {
+				$block['likely_impact'] = (array) $block['challenge_bullets'];
+			}
 
 			$out[] = array_merge(
 				$block,
@@ -133,6 +143,32 @@ class AIRB_Student_Results {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Scoring domain slugs linked to a student opportunity topic.
+	 *
+	 * @param string                             $topic_slug Opportunity slug.
+	 * @param array<int, array<string, mixed>> $topics     Opportunity topics.
+	 * @return array<int, string>
+	 */
+	private static function trigger_domains_for_topic( string $topic_slug, array $topics ): array {
+		foreach ( $topics as $topic ) {
+			if ( ! is_array( $topic ) || (string) ( $topic['slug'] ?? '' ) !== $topic_slug ) {
+				continue;
+			}
+			$domains = array();
+			foreach ( (array) ( $topic['triggers'] ?? array() ) as $trigger ) {
+				$trigger = (string) $trigger;
+				if ( in_array( $trigger, array( 'dependency_index', 'bias_readiness' ), true ) ) {
+					continue;
+				}
+				$domains[] = $trigger;
+			}
+			return $domains;
+		}
+
+		return array();
 	}
 
 	/**

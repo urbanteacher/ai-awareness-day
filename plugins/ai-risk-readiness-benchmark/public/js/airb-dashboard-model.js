@@ -258,6 +258,7 @@
 				summary: area.summary || '',
 				likely_impact: area.likely_impact || [],
 				actions: area.actions || [],
+				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || '',
 			};
 		});
@@ -528,6 +529,7 @@
 				summary: area.summary || '',
 				likely_impact: impact,
 				actions: area.actions || [],
+				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || '',
 			};
 		});
@@ -728,6 +730,7 @@
 				summary: area.summary || '',
 				likely_impact: impact,
 				actions: area.actions || area.improve_items || [],
+				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || area.focus_slug || '',
 			};
 		});
@@ -914,6 +917,7 @@
 				summary: area.summary || '',
 				likely_impact: area.likely_impact || [],
 				actions: area.actions || [],
+				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || '',
 			};
 		});
@@ -1105,6 +1109,7 @@
 				summary: area.summary || '',
 				likely_impact: impact,
 				actions: area.actions || [],
+				challenge_heading: area.challenge_heading || '',
 				slug: area.slug || area.focus_slug || '',
 			};
 		});
@@ -1339,6 +1344,7 @@
 				summary: area.summary || fallback.summary || '',
 				likely_impact: impact.length ? impact : (fallback.likely_impact || []),
 				actions: (area.actions && area.actions.length) ? area.actions : (fallback.actions || []),
+				challenge_heading: area.challenge_heading || '',
 				slug: slug,
 			};
 		});

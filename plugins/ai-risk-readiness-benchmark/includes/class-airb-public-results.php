@@ -14,18 +14,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AIRB_Public_Results {
 
-	private const FOCUS_MAX = 75;
+	private const FOCUS_MAX = 50;
 
 	/**
 	 * @param array<string, mixed> $results Scored results (incl. public_display_domains).
+	 * @param array<string, mixed> $answers Optional answer map for per-question factor guidance.
+	 * @param array<string, mixed> $config  Plugin config (questions list).
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results ): array {
+	public static function build( array $results, array $answers = array(), array $config = array() ): array {
+		if ( empty( $config ) && class_exists( 'AIRB_Config' ) ) {
+			$config = AIRB_Config::get();
+		}
 		$cfg            = AIRB_Defaults::public_result_config();
 		$score          = (int) ( $results['alignment_score'] ?? 0 );
 		$domain_rows    = self::domain_rows( $results, $cfg );
 		$summary_metrics = self::summary_metrics( $results, $cfg );
-		$focus_areas    = self::build_focus_areas( $domain_rows, $cfg );
+		$focus_areas    = self::build_focus_areas( $domain_rows, $cfg, $answers, $config );
 		$strengths      = AIRB_Public_Copy::strength_statements( $results, $cfg );
 		$ui             = AIRB_Public_Copy::resolve_ui( $results, $cfg );
 		$share          = self::share_block( $results, $focus_areas, $cfg );
@@ -115,31 +120,22 @@ class AIRB_Public_Results {
 	/**
 	 * @param array<int, array<string, mixed>> $domain_rows Domain rows.
 	 * @param array<string, mixed>             $cfg         Config.
+	 * @param array<string, mixed>             $answers     Answer map.
+	 * @param array<string, mixed>             $config      Plugin config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function build_focus_areas( array $domain_rows, array $cfg ): array {
-		$slug_map = (array) ( $cfg['focus_slug_map'] ?? array() );
-		$topics   = array();
-		foreach ( (array) ( $cfg['focus_topics'] ?? array() ) as $topic ) {
-			if ( ! is_array( $topic ) || empty( $topic['slug'] ) ) {
-				continue;
-			}
-			$topics[ (string) $topic['slug'] ] = $topic;
-		}
-
+	private static function build_focus_areas( array $domain_rows, array $cfg, array $answers, array $config ): array {
 		$weak = array();
 		foreach ( $domain_rows as $row ) {
 			$pct = (int) ( $row['pct'] ?? 100 );
 			if ( $pct >= self::FOCUS_MAX ) {
 				continue;
 			}
-			$source     = (string) ( $row['slug'] ?? '' );
-			$focus_slug = (string) ( $slug_map[ $source ] ?? $source );
-			$topic      = (array) ( $topics[ $focus_slug ] ?? array() );
-			$weak[]     = array(
+			$source = (string) ( $row['slug'] ?? '' );
+			$weak[] = array(
 				'slug'       => $source,
-				'focus_slug' => $focus_slug,
-				'label'      => (string) ( $topic['label'] ?? $row['label'] ?? '' ),
+				'focus_slug' => $source,
+				'label'      => (string) ( $row['label'] ?? '' ),
 				'pct'        => $pct,
 				'badge'      => (array) ( $row['badge'] ?? AIRB_Public_Copy::domain_badge( $pct ) ),
 			);
@@ -153,8 +149,22 @@ class AIRB_Public_Results {
 		);
 
 		$out = array();
-		foreach ( array_slice( $weak, 0, 3 ) as $area ) {
-			$out[] = array_merge( $area, AIRB_Public_Copy::focus_block( $area, $cfg ) );
+		foreach ( $weak as $area ) {
+			$block = AIRB_Public_Copy::focus_block( $area, $cfg );
+			$pct   = (int) ( $area['pct'] ?? 100 );
+			if ( $pct < self::FOCUS_MAX && $answers ) {
+				$display = (array) ( $cfg['display_domains'] ?? array() );
+				$block   = AIRB_Results_Guidance::enrich_focus_block(
+					$block,
+					$pct,
+					'public',
+					array( (string) ( $area['slug'] ?? '' ) ),
+					$answers,
+					$config,
+					$display
+				);
+			}
+			$out[] = array_merge( $area, $block );
 		}
 
 		return $out;

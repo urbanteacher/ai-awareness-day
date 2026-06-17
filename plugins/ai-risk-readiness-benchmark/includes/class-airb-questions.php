@@ -431,7 +431,14 @@ class AIRB_Questions {
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
+				self::q( 't_pupil_reporting_route', 'teacher', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Do pupils know how to report AI-generated harm, deepfakes or impersonation if they see it?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_taught', 'label' => __( 'Yes — this has been clearly taught', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'some', 'label' => __( 'Some pupils probably know', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'I am not sure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No — not explicitly', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 				self::q( 't_redesign_beyond_ai', 'teacher', 'assessment_integrity', __( 'Assessment design', 'ai-risk-benchmark' ), __( 'How often do you redesign tasks specifically to require student thinking beyond what AI can easily produce?', 'ai-risk-benchmark' ), $f ),
+				self::q( 't_process_evidence', 'teacher', 'assessment_integrity', __( 'Assessment design', 'ai-risk-benchmark' ), __( 'How often do your tasks require drafts, reasoning, working or explanation that shows the pupil\'s own thinking?', 'ai-risk-benchmark' ), $f ),
 				self::q( 't_bias_awareness', 'teacher', 'bias_equality', __( 'Fairness & bias', 'ai-risk-benchmark' ), __( 'Do you know that AI tools can produce biased or unfair outputs that could affect pupils?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes — I understand AI can be biased', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'mostly', 'label' => __( 'I have heard of it', 'ai-risk-benchmark' ), 'score' => 1 ),
@@ -538,11 +545,23 @@ class AIRB_Questions {
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
+				self::q( 'p_privacy_conversation', 'parent', 'privacy', __( 'Home AI safety', 'ai-risk-benchmark' ), __( 'Have you talked with your child about keeping names, photos, school details and private information out of AI tools?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_recently', 'label' => __( 'Yes — recently and clearly', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'briefly', 'label' => __( 'Briefly', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'not_yet', 'label' => __( 'Not yet', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'not_sure', 'label' => __( 'I am not sure what to say', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
 				self::q( 'p_harm_response', 'parent', 'safeguarding', __( 'Home AI safety', 'ai-risk-benchmark' ), __( 'If your child received an AI-generated image, voice message or fake account pretending to be someone they know, would they know what to do?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'definitely', 'label' => __( 'Definitely', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'probably', 'label' => __( 'Probably', 'ai-risk-benchmark' ), 'score' => 1 ),
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'unlikely', 'label' => __( 'Unlikely', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'p_report_route', 'parent', 'safeguarding', __( 'Home AI safety', 'ai-risk-benchmark' ), __( 'If something AI-related felt unsafe or harmful online, would your child know which trusted adult or school route to use?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_clear', 'label' => __( 'Yes — we have discussed this', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'probably', 'label' => __( 'Probably', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
 				) ),
 				self::q( 'p_home_ai_culture', 'parent', 'safe_adoption', __( 'Home AI safety', 'ai-risk-benchmark' ), __( 'Which statement best describes AI use in your home?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'discuss_regularly', 'label' => __( 'We regularly discuss AI use', 'ai-risk-benchmark' ), 'score' => 0 ),
@@ -761,6 +780,12 @@ class AIRB_Questions {
 				self::q( 'ss_check_approval', 'support_staff', 'safe_adoption', __( 'Safe adoption', 'ai-risk-benchmark' ), __( 'Before using a new AI tool, how likely are you to check whether it has been approved?', 'ai-risk-benchmark' ), $f ),
 				self::q( 'ss_report_issue', 'support_staff', 'safe_adoption', __( 'Safe adoption', 'ai-risk-benchmark' ), __( 'If an AI-related data protection or safeguarding issue occurred, would you know how to report it?', 'ai-risk-benchmark' ), array(
 					array( 'value' => 'yes', 'label' => __( 'Yes', 'ai-risk-benchmark' ), 'score' => 0 ),
+					array( 'value' => 'probably', 'label' => __( 'Probably', 'ai-risk-benchmark' ), 'score' => 1 ),
+					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
+					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),
+				) ),
+				self::q( 'ss_ai_harm_recognition', 'support_staff', 'safeguarding', __( 'Safeguarding', 'ai-risk-benchmark' ), __( 'Would you recognise AI-enabled harm, such as a deepfake, impersonation or manipulated image involving a pupil?', 'ai-risk-benchmark' ), array(
+					array( 'value' => 'yes_clear', 'label' => __( 'Yes — I know what to look for', 'ai-risk-benchmark' ), 'score' => 0 ),
 					array( 'value' => 'probably', 'label' => __( 'Probably', 'ai-risk-benchmark' ), 'score' => 1 ),
 					array( 'value' => 'unsure', 'label' => __( 'Unsure', 'ai-risk-benchmark' ), 'score' => 2 ),
 					array( 'value' => 'no', 'label' => __( 'No', 'ai-risk-benchmark' ), 'score' => 3 ),

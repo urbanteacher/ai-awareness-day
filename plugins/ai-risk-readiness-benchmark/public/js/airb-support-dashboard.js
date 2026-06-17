@@ -284,25 +284,8 @@
 			if (area.summary) {
 				html += '<p class="airb__focus-card-summary">' + esc(area.summary) + '</p>';
 			}
-			if (hasGuidance && opts.focusGuidanceAccordionHtml) {
-				var guidance = '';
-				if (area.likely_impact && area.likely_impact.length) {
-					guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
-					guidance += '<div class="airb__focus-practice-title">' + esc(opts.practiceHeading || 'In practice this means') + '</div>';
-					area.likely_impact.forEach(function (item) {
-						guidance += '<div class="airb__teacher-focus-impact">' + esc(item) + '</div>';
-					});
-					guidance += '</div>';
-				}
-				if (area.actions && area.actions.length) {
-					area.actions.forEach(function (item, index) {
-						guidance += '<div class="airb__teacher-action-row">';
-						guidance += '<span class="airb__teacher-action-num">' + (index + 1) + '</span>';
-						guidance += '<span class="airb__teacher-action-text">' + esc(item) + '</span>';
-						guidance += '</div>';
-					});
-				}
-				html += opts.focusGuidanceAccordionHtml(opts.guidanceToggle || 'View operational impact', guidance, false);
+			if (hasGuidance && opts.focusGuidanceAccordionHtml && AIRB.Results && AIRB.Results.focusGuidanceAccordionForArea) {
+				html += AIRB.Results.focusGuidanceAccordionForArea(area, opts);
 			}
 			html += '</div>';
 		});

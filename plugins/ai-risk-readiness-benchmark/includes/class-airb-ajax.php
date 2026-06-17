@@ -77,7 +77,7 @@ class AIRB_Ajax {
 
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
-		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school );
+		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school, $answers );
 		$results['gateway'] = AIRB_Pathway::build_gateway( $role, $config, $school );
 
 		if ( ! empty( $results['aad_promo']['cta_url'] ) && is_array( $results['gateway'] ) ) {

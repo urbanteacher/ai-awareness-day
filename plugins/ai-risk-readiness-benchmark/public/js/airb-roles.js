@@ -266,7 +266,7 @@
         if (focusAreas && focusAreas.length && Results.teacherFocusAreasHtml) {
             var stackOpts = {
                 esc: esc,
-                guidanceOpen: true,
+                guidanceOpen: false,
                 practiceHeading: trCfg.focus_practice_heading_short || 'In practice this means',
             };
             for (var key in renderOpts) {
@@ -299,7 +299,7 @@
 
         var cardOpts = {
             variant: 'teacher',
-            guidanceOpen: true,
+            guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
         };
@@ -405,7 +405,7 @@
         var focusAreas = lr.focus_areas && lr.focus_areas.length ? lr.focus_areas : null;
 
         if (focusAreas && focusAreas.length && Results.leaderFocusAreasHtml) {
-            var stackOpts = { guidanceOpen: true };
+            var stackOpts = { guidanceOpen: false };
             for (var optKey in renderOpts) {
                 if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
                     stackOpts[optKey] = renderOpts[optKey];
@@ -433,7 +433,7 @@
         ];
         var cardOpts = {
             variant: 'leader',
-            guidanceOpen: true,
+            guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
         };
@@ -560,7 +560,7 @@
         var focusAreas = supportFocusAreasFromResults(sr);
 
         if (focusAreas && focusAreas.length && Results.supportFocusAreasHtml) {
-            var stackOpts = { guidanceOpen: true };
+            var stackOpts = { guidanceOpen: false };
             for (var optKey in renderOpts) {
                 if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
                     stackOpts[optKey] = renderOpts[optKey];
@@ -580,7 +580,7 @@
         var SUPPORT_DOMAINS = ['safeguarding', 'privacy_data_protection', 'human_oversight', 'ai_literacy', 'bias_awareness'];
         var cardOpts = {
             variant: 'support',
-            guidanceOpen: true,
+            guidanceOpen: false,
             guidanceToggle: renderOpts.guidanceToggle || 'Tips & steps to try',
             guidanceAccordionHtml: renderOpts.focusGuidanceAccordionHtml || null,
         };
@@ -649,7 +649,7 @@
         var focusAreas = studentFocusAreasFromResults(sr);
 
         if (focusAreas && focusAreas.length && Results.studentFocusAreasHtml) {
-            var stackOpts = { guidanceOpen: true };
+            var stackOpts = { guidanceOpen: false };
             for (var optKey in renderOpts) {
                 if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
                     stackOpts[optKey] = renderOpts[optKey];
@@ -714,7 +714,7 @@
         var focusAreas = pr.focus_areas && pr.focus_areas.length ? pr.focus_areas : null;
 
         if (focusAreas && focusAreas.length && Results.parentFocusTopicsHtml) {
-            var stackOpts = { guidanceOpen: true, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
+            var stackOpts = { guidanceOpen: false, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
             for (var optKey in renderOpts) {
                 if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
                     stackOpts[optKey] = renderOpts[optKey];
@@ -768,7 +768,7 @@
         var focusAreas = pr.focus_areas && pr.focus_areas.length ? pr.focus_areas : null;
 
         if (focusAreas && focusAreas.length && Results.parentFocusTopicsHtml) {
-            var stackOpts = { guidanceOpen: true, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
+            var stackOpts = { guidanceOpen: false, i18n: (window.airbBenchmark && airbBenchmark.i18n) || {} };
             for (var optKey in renderOpts) {
                 if (Object.prototype.hasOwnProperty.call(renderOpts, optKey)) {
                     stackOpts[optKey] = renderOpts[optKey];
@@ -789,7 +789,7 @@
 
         PUBLIC_DOMAINS.forEach(function (key) {
             var score = domainReadinessScore(domains, key, r);
-            if (score === null || score >= 70 || focusCount >= 3) return;
+            if (score === null || score >= 50 || focusCount >= 6) return;
             if (!Results.focusCardHtml) return;
             var focus = resolveDomainFocus('public', key, score);
             html += Results.focusCardHtml({

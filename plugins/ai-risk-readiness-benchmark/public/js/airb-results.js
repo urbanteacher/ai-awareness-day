@@ -254,7 +254,7 @@ function focusCardHtml(opts) {
             html += opts.guidanceAccordionHtml(
                 opts.guidanceToggle || 'Tips & steps to try',
                 guidanceInner,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else {
             html += guidanceInner;
@@ -311,7 +311,7 @@ function parentFocusTopicsHtml(focusAreas, opts) {
             html += opts.focusGuidanceAccordionHtml(
                 parentGuidanceLabel,
                 guidance,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else if (guidance) {
             html += guidance;
@@ -386,7 +386,7 @@ function teacherFocusAreasHtml(focusAreas, biasHealth, opts) {
             html += opts.focusGuidanceAccordionHtml(
                 dashboardLayout ? (opts.guidanceToggleClassroom || 'View classroom impact') : (opts.guidanceToggle || 'Tips & steps to try'),
                 guidance,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else if (guidance) {
             html += guidance;
@@ -459,7 +459,7 @@ function supportFocusAreasHtml(focusAreas, opts) {
             html += opts.focusGuidanceAccordionHtml(
                 supportGuidanceLabel,
                 guidance,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else if (guidance) {
             html += guidance;
@@ -531,7 +531,7 @@ function leaderFocusAreasHtml(focusAreas, biasHealth, labelCfg, opts) {
             html += opts.focusGuidanceAccordionHtml(
                 opts.guidanceToggle || 'Tips & steps to try',
                 guidance,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else if (guidance) {
             html += guidance;
@@ -745,7 +745,7 @@ function studentFocusAreasHtml(focusAreas, opts) {
             html += opts.focusGuidanceAccordionHtml(
                 area.challenge_heading || opts.guidanceToggle || 'Tips & steps to try',
                 guidance,
-                opts.guidanceOpen !== false
+                opts.guidanceOpen === true
             );
         } else if (guidance) {
             html += guidance;
@@ -939,6 +939,45 @@ function oversightZoneColor(pct) {
     return '#A32D2D';
 }
 
+/** Build inner HTML for focus guidance (improvement areas + action tips). */
+function focusStackGuidanceInnerHtml(area, opts) {
+    opts = opts || {};
+    var escFn = opts.esc || esc;
+    var guidance = '';
+    var impactHeading = area.challenge_heading || opts.practiceHeading || 'Areas to improve';
+    var impact = area.likely_impact || area.challenge_bullets || [];
+    if (impact.length) {
+        guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
+        guidance += '<div class="airb__focus-practice-title">' + escFn(impactHeading) + '</div>';
+        impact.forEach(function (item) {
+            guidance += '<div class="airb__teacher-focus-impact">' + escFn(item) + '</div>';
+        });
+        guidance += '</div>';
+    }
+    if (area.actions && area.actions.length) {
+        if (impact.length) {
+            guidance += '<div class="airb__focus-practice-title" style="margin-top:0.75rem">' + escFn(opts.tipsHeading || 'Practical next steps') + '</div>';
+        }
+        area.actions.forEach(function (item, index) {
+            guidance += '<div class="airb__teacher-action-row">';
+            guidance += '<span class="airb__teacher-action-num">' + (index + 1) + '</span>';
+            guidance += '<span class="airb__teacher-action-text">' + escFn(item) + '</span>';
+            guidance += '</div>';
+        });
+    }
+    return guidance;
+}
+
+/** Accordion wrapper for a focus area; collapsed by default unless opts.guidanceOpen is true. */
+function focusGuidanceAccordionForArea(area, opts) {
+    opts = opts || {};
+    var guidance = focusStackGuidanceInnerHtml(area, opts);
+    if (!guidance || !opts.focusGuidanceAccordionHtml) return '';
+    var openGuidance = opts.guidanceOpen === true;
+    var label = opts.guidanceToggle || 'View areas to improve';
+    return opts.focusGuidanceAccordionHtml(label, guidance, openGuidance);
+}
+
 /** HTML escape — prefers AIRB.esc from airb-core.js */
 function esc(str) {
     if (window.AIRB && AIRB.esc) return AIRB.esc(str);
@@ -958,6 +997,8 @@ AIRB.Results = {
     domainBarRowHtml: domainBarRowHtml,
     domainBarListHtml: domainBarListHtml,
     focusCardHtml: focusCardHtml,
+    focusStackGuidanceInnerHtml: focusStackGuidanceInnerHtml,
+    focusGuidanceAccordionForArea: focusGuidanceAccordionForArea,
     parentFocusTopicsHtml: parentFocusTopicsHtml,
     teacherFocusAreasHtml: teacherFocusAreasHtml,
     supportFocusAreasHtml: supportFocusAreasHtml,

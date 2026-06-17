@@ -35,6 +35,7 @@ require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificates.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificate-copy.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-certificate-evidence.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-scoring.php';
+require_once AIRB_PLUGIN_DIR . 'includes/class-airb-results-guidance.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-questions.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-pathway.php';
 require_once AIRB_PLUGIN_DIR . 'includes/class-airb-funnel.php';

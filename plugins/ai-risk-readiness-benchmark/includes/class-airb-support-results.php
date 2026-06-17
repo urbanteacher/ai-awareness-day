@@ -21,9 +21,10 @@ class AIRB_Support_Results {
 	 * @param array<string, mixed> $results Scored results.
 	 * @param array<string, mixed> $config  Plugin config.
 	 * @param string               $school  Optional school name from submission.
+	 * @param array<string, mixed> $answers Answer map.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results, array $config, string $school = '' ): array {
+	public static function build( array $results, array $config, string $school = '', array $answers = array() ): array {
 		$cfg            = AIRB_Defaults::support_result_config();
 		$tier           = AIRB_Scoring::readiness_band( (int) ( $results['alignment_score'] ?? 0 ) );
 		$strengths      = self::detect_strengths( $results, $cfg );
@@ -32,7 +33,7 @@ class AIRB_Support_Results {
 		$progress       = AIRB_Support_Copy::school_progress( $school );
 		$domain_rows    = self::domain_rows( $results, $cfg );
 		$strength_items = AIRB_Support_Copy::strength_statements( $results, $cfg );
-		$focus_areas    = self::focus_areas_from_opportunities( $opps, $cfg );
+		$focus_areas    = self::focus_areas_from_opportunities( $opps, $cfg, $answers, $config );
 
 		$ho_domain = (array) ( $results['domain_scores']['human_oversight'] ?? array() );
 		$ho_pct    = (int) round( (float) ( $ho_domain['readiness_percentage'] ?? 0 ) );
@@ -146,12 +147,14 @@ class AIRB_Support_Results {
 	 * @param array<string, mixed>             $cfg  Config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function focus_areas_from_opportunities( array $opps, array $cfg ): array {
+	private static function focus_areas_from_opportunities( array $opps, array $cfg, array $answers = array(), array $config = array() ): array {
 		$out = array();
 		foreach ( array_slice( $opps, 0, self::FOCUS_AREA_MAX ) as $opp ) {
 			$slug  = (string) ( $opp['focus_slug'] ?? $opp['slug'] ?? '' );
 			$pct   = (int) ( $opp['pct'] ?? 0 );
 			$block = AIRB_Support_Copy::focus_block( $opp, $cfg );
+			$block = AIRB_Results_Guidance::enrich_focus_block( $block, $pct, 'support_staff', array( $slug ), $answers, $config );
+			$impact = (array) ( $block['likely_impact'] ?? $block['challenge_bullets'] ?? array() );
 			$badge = AIRB_Support_Copy::domain_badge( $pct );
 			$out[] = array(
 				'slug'              => $slug,
@@ -160,6 +163,7 @@ class AIRB_Support_Results {
 				'summary'           => (string) ( $block['summary'] ?? '' ),
 				'challenge_heading' => (string) ( $block['challenge_heading'] ?? '' ),
 				'challenge_bullets' => (array) ( $block['challenge_bullets'] ?? array() ),
+				'likely_impact'     => $impact,
 				'actions'           => (array) ( $block['actions'] ?? array() ),
 				'severity'          => (string) ( $block['severity'] ?? 'moderate' ),
 				'badge_text'        => AIRB_Support_Copy::focus_badge_text( $pct, $badge ),

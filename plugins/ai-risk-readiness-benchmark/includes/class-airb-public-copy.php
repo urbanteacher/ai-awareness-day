@@ -45,9 +45,9 @@ class AIRB_Public_Copy {
 			return 'critical';
 		}
 		if ( $pct < 50 ) {
-			return 'moderate';
+			return 'high';
 		}
-		return 'attention';
+		return 'moderate';
 	}
 
 	/**
@@ -168,7 +168,8 @@ class AIRB_Public_Copy {
 		$tier   = self::focus_tier( $pct );
 		$tiered = (array) ( ( $cfg['focus_tiers'][ $slug ] ?? array() )[ $tier ] ?? array() );
 		if ( empty( $tiered ) && 'critical' !== $tier ) {
-			$tiered = (array) ( ( $cfg['focus_tiers'][ $slug ] ?? array() )['moderate'] ?? array() );
+			$tiers  = (array) ( $cfg['focus_tiers'][ $slug ] ?? array() );
+			$tiered = (array) ( $tiers['high'] ?? $tiers['moderate'] ?? array() );
 		}
 
 		return array(

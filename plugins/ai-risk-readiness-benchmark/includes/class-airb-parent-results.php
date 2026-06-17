@@ -22,14 +22,19 @@ class AIRB_Parent_Results {
 
 	/**
 	 * @param array<string, mixed> $results Scored results (incl. parent_display_domains).
+	 * @param array<string, mixed> $answers Optional answer map.
+	 * @param array<string, mixed> $config  Plugin config.
 	 * @return array<string, mixed>
 	 */
-	public static function build( array $results ): array {
+	public static function build( array $results, array $answers = array(), array $config = array() ): array {
+		if ( empty( $config ) && class_exists( 'AIRB_Config' ) ) {
+			$config = AIRB_Config::get();
+		}
 		$cfg            = AIRB_Defaults::parent_result_config();
 		$score          = (int) ( $results['alignment_score'] ?? 0 );
 		$tier           = self::journey_tier( $score );
 		$home_metrics   = self::home_metrics( $results, $cfg );
-		$focus_areas    = self::build_focus_areas( $home_metrics, $results, $cfg );
+		$focus_areas    = self::build_focus_areas( $home_metrics, $results, $cfg, $answers, $config );
 		$ui             = AIRB_Parent_Copy::resolve_ui( $results, $cfg );
 		$conversations  = AIRB_Parent_Copy::conversation_starters( $focus_areas, $cfg );
 
@@ -118,9 +123,10 @@ class AIRB_Parent_Results {
 	 * @param array<string, mixed>             $cfg     Config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function build_focus_areas( array $metrics, array $results, array $cfg ): array {
+	private static function build_focus_areas( array $metrics, array $results, array $cfg, array $answers = array(), array $config = array() ): array {
 		$slug_map = (array) ( $cfg['focus_slug_map'] ?? array() );
 		$topics   = array();
+		$display  = (array) ( $cfg['display_domains'] ?? array() );
 		foreach ( (array) ( $cfg['focus_topics'] ?? array() ) as $topic ) {
 			if ( ! is_array( $topic ) || empty( $topic['slug'] ) ) {
 				continue;
@@ -135,7 +141,7 @@ class AIRB_Parent_Results {
 				continue;
 			}
 			$source     = (string) ( $metric['source'] ?? $metric['slug'] ?? '' );
-			$focus_slug = (string) ( $metric['focus_slug'] ?? ( $slug_map[ $source ] ?? $slug_map[ (string) ( $metric['slug'] ?? '' ) ] ?? '' ) );
+			$focus_slug = (string) ( $metric['focus_slug'] ?? ( $slug_map[ $source ] ?? $source ) );
 			if ( ! $focus_slug && isset( $topics[ $source ] ) ) {
 				$focus_slug = $source;
 			}
@@ -172,7 +178,7 @@ class AIRB_Parent_Results {
 			$topic = (array) ( $topics[ $extra_slug ] ?? array() );
 			$weak[] = array(
 				'slug'       => $extra_slug,
-				'focus_slug' => (string) ( $slug_map[ $extra_slug ] ?? 'parent_ai_use' ),
+				'focus_slug' => (string) ( $slug_map[ $extra_slug ] ?? $extra_slug ),
 				'label'      => (string) ( $topic['label'] ?? '' ),
 				'pct'        => $pct,
 				'badge'      => AIRB_Parent_Copy::metric_badge( $pct ),
@@ -188,8 +194,19 @@ class AIRB_Parent_Results {
 		);
 
 		$out = array();
-		foreach ( array_slice( $weak, 0, 2 ) as $area ) {
-			$out[] = array_merge( $area, AIRB_Parent_Copy::focus_block( $area, $cfg ) );
+		foreach ( $weak as $area ) {
+			$block = AIRB_Parent_Copy::focus_block( $area, $cfg );
+			$pct   = (int) ( $area['pct'] ?? 100 );
+			$block = AIRB_Results_Guidance::enrich_focus_block(
+				$block,
+				$pct,
+				'parent',
+				array( (string) ( $area['slug'] ?? '' ) ),
+				$answers,
+				$config,
+				$display
+			);
+			$out[] = array_merge( $area, $block );
 		}
 
 		return $out;

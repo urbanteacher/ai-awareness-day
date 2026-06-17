@@ -27,6 +27,7 @@ class AIRB_Leader_Results {
 	 * @param array<string, mixed> $config           Plugin config.
 	 * @param array<string, mixed>|null $policy_support AI policy support offer (DfE template).
 	 * @param array<string, mixed>|null $aad_promo   AI Awareness Day promo.
+	 * @param array<string, mixed>      $answers     Answer map.
 	 * @return array<string, mixed>
 	 */
 	public static function build(
@@ -35,14 +36,15 @@ class AIRB_Leader_Results {
 		array $profile,
 		array $config,
 		?array $policy_support = null,
-		?array $aad_promo = null
+		?array $aad_promo = null,
+		array $answers = array()
 	): array {
 		$cfg       = AIRB_Defaults::leader_result_config();
 		$maturity  = self::maturity( $results, $cfg );
 		$readiness = self::readiness_context( $results );
 		$strengths = self::detect_strengths( $results, $cfg );
 		$attention = self::detect_attention_areas( $results, $cfg );
-		$focus     = self::focus_areas( $results, $cfg );
+		$focus     = self::focus_areas( $results, $cfg, $answers, $config );
 		$peer      = self::peer_benchmark( $results, $profile, $cfg );
 		$progress  = self::school_rollout_counts( $school );
 
@@ -254,7 +256,7 @@ class AIRB_Leader_Results {
 	 * @param array<string, mixed> $cfg     Config.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function focus_areas( array $results, array $cfg ): array {
+	private static function focus_areas( array $results, array $cfg, array $answers = array(), array $config = array() ): array {
 		$domains = (array) ( $results['domain_scores'] ?? array() );
 		$labels  = (array) ( $cfg['domain_labels'] ?? array() );
 		$scored  = array();
@@ -268,7 +270,8 @@ class AIRB_Leader_Results {
 				continue;
 			}
 			$topic = AIRB_Leader_Copy::focus_block( (string) $slug, $pct, $cfg );
-			if ( ! $topic['summary'] && empty( $topic['actions'] ) ) {
+			$topic = AIRB_Results_Guidance::enrich_focus_block( $topic, $pct, 'leader', array( (string) $slug ), $answers, $config );
+			if ( ! $topic['summary'] && empty( $topic['actions'] ) && empty( $topic['likely_impact'] ) ) {
 				continue;
 			}
 			$scored[] = array(
@@ -276,9 +279,10 @@ class AIRB_Leader_Results {
 				'label'         => (string) ( $labels[ $slug ] ?? $dom['label'] ?? $slug ),
 				'pct'           => $pct,
 				'summary'       => (string) ( $topic['summary'] ?? '' ),
-				'likely_impact' => (array) ( $topic['likely_impact'] ?? array() ),
-				'actions'       => (array) ( $topic['actions'] ?? array() ),
-				'tier'          => (string) ( $topic['tier'] ?? '' ),
+				'likely_impact'     => (array) ( $topic['likely_impact'] ?? array() ),
+				'actions'           => (array) ( $topic['actions'] ?? array() ),
+				'challenge_heading' => (string) ( $topic['challenge_heading'] ?? '' ),
+				'tier'              => (string) ( $topic['tier'] ?? '' ),
 			);
 		}
 

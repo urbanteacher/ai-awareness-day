@@ -668,6 +668,14 @@ class AIRB_Copy_Tiers {
 			}
 		}
 
+		if ( 'parent' === $this->role ) {
+			foreach ( self::parent_domain_slug_aliases() as $json_key => $php_slug ) {
+				if ( isset( $out[ $json_key ] ) && ! isset( $out[ $php_slug ] ) ) {
+					$out[ $php_slug ] = $out[ $json_key ];
+				}
+			}
+		}
+
 		return $out;
 	}
 
@@ -681,6 +689,19 @@ class AIRB_Copy_Tiers {
 			'data_protection_awareness' => 'privacy',
 			'governance_consistency'    => 'governance',
 			'bias_awareness'            => 'bias_equality',
+		);
+	}
+
+	/**
+	 * Map V1 parent JSON domain keys to scoring / display slugs.
+	 *
+	 * @return array<string, string>
+	 */
+	private static function parent_domain_slug_aliases(): array {
+		return array(
+			'home_safety'         => 'home_ai_safety',
+			'homework_boundaries' => 'homework_oversight',
+			'parent_ai_use'       => 'parent_ai_dependency',
 		);
 	}
 

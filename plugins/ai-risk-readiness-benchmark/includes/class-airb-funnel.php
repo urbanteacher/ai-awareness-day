@@ -47,9 +47,11 @@ class AIRB_Funnel {
 	 * @param string               $role    Role slug.
 	 * @param array<string, string> $profile School profile (phase, org_type).
 	 * @param array<string, mixed> $config  Plugin config.
+	 * @param string               $school  School name.
+	 * @param array<string, mixed> $answers Answer map (for per-question factor guidance).
 	 * @return array<string, mixed>
 	 */
-	public static function enrich( array $results, string $role, array $profile, array $config, string $school = '' ): array {
+	public static function enrich( array $results, string $role, array $profile, array $config, string $school = '', array $answers = array() ): array {
 		$domain_scores = (array) ( $results['domain_scores'] ?? array() );
 
 		$results['risk_heatmap']        = self::risk_heatmap( $domain_scores );
@@ -63,7 +65,7 @@ class AIRB_Funnel {
 		if ( 'teacher' === $role ) {
 			$gap_products                 = $results['stage2_products'];
 			$results['funnel_closing']    = '';
-			$results['teacher_results']   = AIRB_Teacher_Results::build( $results, $school, $config, $gap_products );
+			$results['teacher_results']   = AIRB_Teacher_Results::build( $results, $school, $config, $gap_products, $answers );
 			$results['stage2_products']   = array();
 			if ( isset( $results['leadership_report'] ) ) {
 				$results['leadership_report']['show_full'] = false;
@@ -72,7 +74,7 @@ class AIRB_Funnel {
 
 		if ( 'student' === $role ) {
 			$results['funnel_closing']  = '';
-			$results['student_results'] = AIRB_Student_Results::build( $results, $school );
+			$results['student_results'] = AIRB_Student_Results::build( $results, $school, $answers, $config );
 			$results['stage2_products'] = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {
@@ -90,7 +92,8 @@ class AIRB_Funnel {
 				$profile,
 				$config,
 				is_array( $policy_gen ) ? $policy_gen : null,
-				is_array( $aad_promo ) ? $aad_promo : null
+				is_array( $aad_promo ) ? $aad_promo : null,
+				$answers
 			);
 			$results['stage2_products']   = array();
 			$results['key_exposure_areas'] = array();
@@ -101,7 +104,7 @@ class AIRB_Funnel {
 
 		if ( 'parent' === $role ) {
 			$results['funnel_closing']  = '';
-			$results['parent_results']  = AIRB_Parent_Results::build( $results );
+			$results['parent_results']  = AIRB_Parent_Results::build( $results, $answers, $config );
 			$results['stage2_products'] = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {
@@ -112,7 +115,7 @@ class AIRB_Funnel {
 		if ( 'support_staff' === $role ) {
 			$gap_products                 = $results['stage2_products'];
 			$results['funnel_closing']    = '';
-			$results['support_results']   = AIRB_Support_Results::build( $results, $config, $school );
+			$results['support_results']   = AIRB_Support_Results::build( $results, $config, $school, $answers );
 			$results['stage2_products']   = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {
@@ -122,7 +125,7 @@ class AIRB_Funnel {
 
 		if ( 'public' === $role ) {
 			$results['funnel_closing']     = '';
-			$results['public_results']     = AIRB_Public_Results::build( $results );
+			$results['public_results']     = AIRB_Public_Results::build( $results, $answers, $config );
 			$results['stage2_products']    = array();
 			$results['key_exposure_areas'] = array();
 			if ( isset( $results['leadership_report'] ) ) {

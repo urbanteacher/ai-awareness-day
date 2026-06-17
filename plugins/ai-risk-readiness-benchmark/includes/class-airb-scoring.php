@@ -566,13 +566,20 @@ class AIRB_Scoring {
 			}
 		}
 
-		$qid = 'ss_report_issue';
-		if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
+		$qids   = array( 'ss_report_issue', 'ss_ai_harm_recognition' );
+		$scores = array();
+		foreach ( $qids as $qid ) {
+			if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
+				continue;
+			}
+			$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+		}
+
+		if ( ! $scores ) {
 			return array();
 		}
 
-		$score     = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
-		$avg_risk  = $score / 3 * 100;
+		$avg_risk  = ( array_sum( $scores ) / count( $scores ) ) / 3 * 100;
 		$readiness = (int) round( 100 - $avg_risk );
 		$band      = self::risk_band( $avg_risk );
 
@@ -585,7 +592,7 @@ class AIRB_Scoring {
 				'band_label'           => self::band_label( $band ),
 				'readiness_band'       => self::readiness_band( $readiness ),
 				'readiness_band_label' => self::readiness_band_label( $readiness ),
-				'questions_answered'   => 1,
+				'questions_answered'   => count( $scores ),
 			),
 		);
 	}
