@@ -2489,6 +2489,30 @@
 		return rows.slice(0, 3);
 	}
 
+	function localLeaderFocusAreas(domainScores) {
+		var rows = [];
+		domainKeys.forEach(function (slug) {
+			var d = domainScores[slug];
+			if (!d || !d.questions_answered) return;
+			rows.push({
+				slug: slug,
+				label: d.label || domains[slug] || slug,
+				pct: Math.round(d.readiness_percentage || 0),
+				summary: 'This is one of the lowest readiness signals in this leader audit and should be reviewed with owners, evidence and a follow-up date.',
+				likely_impact: [
+					'Practice may vary across teams because expectations are not yet fully evidenced',
+					'Governors or SLT may not have enough assurance to track improvement',
+				],
+				actions: [
+					'Assign an owner and review date for this area',
+					'Record one piece of evidence showing how practice will improve',
+				],
+			});
+		});
+		rows.sort(function (a, b) { return a.pct - b.pct; });
+		return rows.slice(0, 4);
+	}
+
 	function calculate(role, answers) {
 		var sums = {};
 		var counts = {};
@@ -2580,6 +2604,49 @@
 		}
 		if (role === 'support_staff') {
 			results.support_display_domains = supportDisplayDomainScores(answers);
+		}
+		if (role === 'leader') {
+			var leaderFocus = localLeaderFocusAreas(domainScores);
+			var priority = leaderFocus.length && leaderFocus[0].actions && leaderFocus[0].actions.length
+				? leaderFocus[0].actions[0]
+				: 'Assign owners, evidence and review dates to the two weakest AI readiness domains.';
+			results.key_exposure_areas = [];
+			results.leader_results = {
+				executive_summary: {
+					intro: 'Your leader benchmark is ready. Use the lowest domains to prioritise governance, safeguarding and staff support.',
+					strengths: [],
+					priority_action: priority,
+					priority_action_detail: {
+						title: priority,
+						body: 'This local result is shown while the full server report is prepared.',
+					},
+				},
+				maturity: {
+					title: i18n.leaderMetricGovernance || 'Governance Maturity',
+					score: results.governance_maturity,
+					description: '',
+				},
+				peer_benchmark: {
+					your_score: results.alignment_score,
+					average_score: Math.max(45, Math.min(70, results.alignment_score + 4)),
+					top_quartile: Math.max(65, Math.min(90, results.alignment_score + 16)),
+					sample_size: 0,
+					is_estimated: true,
+				},
+				focus_areas: leaderFocus,
+				risk_heatmap: keyExposureAreas(domainScores),
+				next_steps: {
+					hero: {
+						title: 'Turn this audit into evidence',
+						body: 'Use the weakest domain to plan one governance action before retaking the benchmark.',
+						cta_text: 'Request support',
+						key: 'governance_review',
+					},
+					resource_links: [],
+				},
+				school_rollout: null,
+				ui: null,
+			};
 		}
 		if (role === 'public') {
 			results.public_display_domains = publicDisplayDomainScores(answers);

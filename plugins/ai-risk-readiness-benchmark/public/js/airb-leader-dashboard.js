@@ -350,14 +350,18 @@
 		});
 		html += '</div></section>';
 
-		if (opts.heatmapHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-heatmap">' + opts.heatmapHtml + '</section>';
+		var heatmapHtml = typeof opts.heatmapHtml === 'function' ? opts.heatmapHtml(model) : opts.heatmapHtml;
+		var rolloutSectionHtml = typeof opts.rolloutSectionHtml === 'function' ? opts.rolloutSectionHtml(model) : opts.rolloutSectionHtml;
+		var governanceCtaHtml = typeof opts.governanceCtaHtml === 'function' ? opts.governanceCtaHtml(model) : opts.governanceCtaHtml;
+
+		if (heatmapHtml) {
+			html += '<section class="teacher-dash-card teacher-dash-heatmap">' + heatmapHtml + '</section>';
 		}
-		if (opts.rolloutSectionHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-rollout">' + opts.rolloutSectionHtml + '</section>';
+		if (rolloutSectionHtml) {
+			html += '<section class="teacher-dash-card teacher-dash-rollout">' + rolloutSectionHtml + '</section>';
 		}
-		if (opts.governanceCtaHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-governance-cta">' + opts.governanceCtaHtml + '</section>';
+		if (governanceCtaHtml) {
+			html += '<section class="teacher-dash-card teacher-dash-governance-cta">' + governanceCtaHtml + '</section>';
 		}
 
 		html += (AIRB.Certificate && AIRB.Certificate.panelHtml) ? AIRB.Certificate.panelHtml(model, 'leader', accent) : '';
