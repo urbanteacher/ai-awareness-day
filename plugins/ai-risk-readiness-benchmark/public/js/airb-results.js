@@ -199,19 +199,25 @@ function focusCardHtml(opts) {
     var actions     = opts.actions || [];
     var badgeText   = opts.badgeText || opts.badge_text || (severity.charAt(0).toUpperCase() + severity.slice(1) + ' · ' + score + '%');
     var variant     = opts.variant || 'teacher';
+    var belowThreshold = isBelowFocusGuidanceMax(score, opts);
+    var belowCardClass = belowThreshold ? ' airb__focus-card--below-threshold' : '';
+    var belowBadgeClass = belowThreshold ? ' airb__focus-badge--below-threshold' : '';
+    var areaOpts = Object.assign({}, opts, { belowThreshold: belowThreshold });
 
     if (variant === 'parent' || variant === 'public') {
         var badgeSlug = (severity === 'critical' || severity === 'risk') ? 'risk' : 'attention';
-        var html = '<div class="airb__parent-topic-card airb__parent-topic-card--' + esc(severity) + '">';
+        var html = '<div class="airb__parent-topic-card airb__parent-topic-card--' + esc(severity) + belowCardClass + '">';
         html += '<div class="airb__parent-topic-header">';
         html += '<h4 class="airb__parent-topic-title">' + title + '</h4>';
-        html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + esc(badgeSlug) + '">' + esc(badgeText) + '</span>';
+        html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + esc(badgeSlug) + belowBadgeClass + '">' + esc(badgeText) + '</span>';
         html += '</div>';
         if (summary) html += '<p class="airb__parent-topic-summary">' + summary + '</p>';
         if (impact.length) {
             html += '<div class="airb__parent-topic-challenge airb__parent-topic-challenge--' + esc(severity) + '">';
-            html += '<div class="airb__parent-topic-challenge-title">' + impactTitle + '</div>';
-            impact.forEach(function (item) { html += '<div class="airb__parent-topic-challenge-bullet">' + esc(item) + '</div>'; });
+            html += '<div class="airb__parent-topic-challenge-title' + (belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + impactTitle + '</div>';
+            impact.forEach(function (item) {
+                html += '<div class="airb__parent-topic-challenge-bullet' + (belowThreshold ? ' airb__parent-topic-challenge-bullet--below-threshold' : '') + '">' + esc(item) + '</div>';
+            });
             html += '</div>';
         }
         if (actions.length) {
@@ -228,17 +234,19 @@ function focusCardHtml(opts) {
 
     var badgeSlug = severity === 'critical' ? 'critical' : (severity === 'high' ? 'high' : 'moderate');
     var mod = variant === 'teacher' ? ' airb__teacher-focus-card' : (variant === 'support' ? ' airb__support-focus-card' : '');
-    var html = '<div class="airb__focus-card' + mod + ' airb__focus-card--' + severity + '">';
+    var html = '<div class="airb__focus-card' + mod + ' airb__focus-card--' + severity + belowCardClass + '">';
     html += '<div class="airb__focus-card-header">';
     html += '<h4 class="airb__focus-card-title">' + title + '</h4>';
-    html += '<span class="airb__focus-badge airb__focus-badge--' + badgeSlug + '">' + esc(badgeText) + '</span>';
+    html += '<span class="airb__focus-badge airb__focus-badge--' + badgeSlug + belowBadgeClass + '">' + esc(badgeText) + '</span>';
     html += '</div>';
     if (summary) html += '<p class="airb__focus-card-summary">' + summary + '</p>';
     var guidanceInner = '';
     if (impact.length) {
         guidanceInner += '<div class="airb__focus-practice airb__teacher-focus-practice">';
-        guidanceInner += '<div class="airb__focus-practice-title">' + impactTitle + '</div>';
-        impact.forEach(function (item) { guidanceInner += '<div class="airb__teacher-focus-impact">' + esc(item) + '</div>'; });
+        guidanceInner += '<div class="airb__focus-practice-title' + (belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + impactTitle + '</div>';
+        impact.forEach(function (item) {
+            guidanceInner += '<div class="airb__teacher-focus-impact' + (belowThreshold ? ' airb__teacher-focus-impact--below-threshold' : '') + '">' + esc(item) + '</div>';
+        });
         guidanceInner += '</div>';
     }
     if (actions.length) {
@@ -251,10 +259,11 @@ function focusCardHtml(opts) {
     }
     if (guidanceInner) {
         if (opts.guidanceAccordionHtml) {
-            html += opts.guidanceAccordionHtml(
+            html += focusGuidanceAccordionMarkup(
+                areaOpts,
                 opts.guidanceToggle || 'Tips & steps to try',
                 guidanceInner,
-                opts.guidanceOpen === true
+                belowThreshold
             );
         } else {
             html += guidanceInner;
@@ -276,10 +285,14 @@ function parentFocusTopicsHtml(focusAreas, opts) {
     var html = '';
     focusAreas.forEach(function (area) {
         var severity = area.severity || (area.badge && area.badge.slug === 'risk' ? 'risk' : 'attention');
-        html += '<div class="airb__parent-topic-card airb__parent-topic-card--' + escFn(severity) + '">';
+        var belowThreshold = isBelowFocusGuidanceMax(focusAreaPct(area), opts);
+        var belowCardClass = belowThreshold ? ' airb__focus-card--below-threshold' : '';
+        var belowBadgeClass = belowThreshold ? ' airb__focus-badge--below-threshold' : '';
+        var areaOpts = Object.assign({}, opts, { belowThreshold: belowThreshold });
+        html += '<div class="airb__parent-topic-card airb__parent-topic-card--' + escFn(severity) + belowCardClass + '">';
         html += '<div class="airb__parent-topic-header">';
         html += '<h4 class="airb__parent-topic-title">' + escFn(area.label) + '</h4>';
-        html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + escFn((area.badge && area.badge.slug) || 'attention') + '">' + escFn(opts.parentFocusBadge ? opts.parentFocusBadge(area) : '') + '</span>';
+        html += '<span class="airb__parent-metric-badge airb__parent-metric-badge--' + escFn((area.badge && area.badge.slug) || 'attention') + belowBadgeClass + '">' + escFn(opts.parentFocusBadge ? opts.parentFocusBadge(area) : '') + '</span>';
         html += '</div>';
         if (area.summary && !opts.hideFocusSummary) {
             html += '<p class="airb__parent-topic-summary">' + escFn(area.summary) + '</p>';
@@ -287,13 +300,13 @@ function parentFocusTopicsHtml(focusAreas, opts) {
         var guidance = '';
         if (area.challenge_heading && (area.challenge_body || (area.challenge_bullets && area.challenge_bullets.length))) {
             guidance += '<div class="airb__parent-topic-challenge airb__parent-topic-challenge--' + escFn(severity) + '">';
-            guidance += '<div class="airb__parent-topic-challenge-title">' + escFn(area.challenge_heading) + '</div>';
+            guidance += '<div class="airb__parent-topic-challenge-title' + (belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + escFn(area.challenge_heading) + '</div>';
             if (area.challenge_body) {
-                guidance += '<p class="airb__parent-topic-challenge-body">' + escFn(area.challenge_body) + '</p>';
+                guidance += '<p class="airb__parent-topic-challenge-body' + (belowThreshold ? ' airb__parent-topic-challenge-bullet--below-threshold' : '') + '">' + escFn(area.challenge_body) + '</p>';
             }
             if (area.challenge_bullets && area.challenge_bullets.length) {
                 area.challenge_bullets.forEach(function (item) {
-                    guidance += '<div class="airb__parent-topic-challenge-bullet">' + escFn(item) + '</div>';
+                    guidance += '<div class="airb__parent-topic-challenge-bullet' + (belowThreshold ? ' airb__parent-topic-challenge-bullet--below-threshold' : '') + '">' + escFn(item) + '</div>';
                 });
             }
             guidance += '</div>';
@@ -306,15 +319,9 @@ function parentFocusTopicsHtml(focusAreas, opts) {
                 guidance += '</div>';
             });
         }
-        if (guidance && opts.focusGuidanceAccordionHtml) {
-            var parentGuidanceLabel = area.challenge_heading || (opts.i18n && opts.i18n.focusGuidanceToggle) || 'Tips & steps to try';
-            html += opts.focusGuidanceAccordionHtml(
-                parentGuidanceLabel,
-                guidance,
-                opts.guidanceOpen === true
-            );
-        } else if (guidance) {
-            html += guidance;
+        if (guidance) {
+            var parentGuidanceLabel = area.challenge_heading || (opts.i18n && opts.i18n.focusGuidanceToggle) || opts.guidanceToggle || 'Tips & steps to try';
+            html += focusGuidanceAccordionMarkup(areaOpts, parentGuidanceLabel, guidance, belowThreshold);
         }
         html += '</div>';
     });
@@ -939,6 +946,64 @@ function oversightZoneColor(pct) {
     return '#A32D2D';
 }
 
+/** Role thresholds for focus guidance (mirrors AIRB_Results_Guidance::focus_max_for_role). */
+var FOCUS_GUIDANCE_MAX_BY_ROLE = {
+    public: 50,
+    teacher: 75,
+    student: 70,
+    parent: 75,
+    leader: 70,
+    support_staff: 75,
+};
+
+function focusGuidanceMaxFromOpts(opts) {
+    opts = opts || {};
+    if (opts.focusGuidanceMax != null) {
+        var parsed = parseInt(opts.focusGuidanceMax, 10);
+        if (!isNaN(parsed)) {
+            return parsed;
+        }
+    }
+    var role = opts.role ? String(opts.role) : '';
+    if (role && FOCUS_GUIDANCE_MAX_BY_ROLE[role] != null) {
+        return FOCUS_GUIDANCE_MAX_BY_ROLE[role];
+    }
+    return 70;
+}
+
+function focusAreaPct(area) {
+    if (!area) {
+        return 0;
+    }
+    if (area.pct != null) {
+        return parseInt(area.pct, 10) || 0;
+    }
+    if (area.value != null) {
+        return parseInt(area.value, 10) || 0;
+    }
+    return 0;
+}
+
+function isBelowFocusGuidanceMax(pct, opts) {
+    var score = parseInt(pct, 10);
+    if (isNaN(score)) {
+        score = 0;
+    }
+    return score < focusGuidanceMaxFromOpts(opts);
+}
+
+function focusGuidanceAccordionMarkup(opts, summary, guidance, belowThreshold) {
+    if (!guidance || !opts.focusGuidanceAccordionHtml) {
+        return guidance || '';
+    }
+    return opts.focusGuidanceAccordionHtml(
+        summary,
+        guidance,
+        opts.guidanceOpen === true,
+        !!belowThreshold
+    );
+}
+
 /** Build inner HTML for focus guidance (improvement areas + action tips). */
 function focusStackGuidanceInnerHtml(area, opts) {
     opts = opts || {};
@@ -948,9 +1013,10 @@ function focusStackGuidanceInnerHtml(area, opts) {
     var impact = area.likely_impact || area.challenge_bullets || [];
     if (impact.length) {
         guidance += '<div class="airb__focus-practice airb__teacher-focus-practice">';
-        guidance += '<div class="airb__focus-practice-title">' + escFn(impactHeading) + '</div>';
+        guidance += '<div class="airb__focus-practice-title' + (opts.belowThreshold ? ' airb__focus-practice-title--below-threshold' : '') + '">' + escFn(impactHeading) + '</div>';
         impact.forEach(function (item) {
-            guidance += '<div class="airb__teacher-focus-impact">' + escFn(item) + '</div>';
+            var impactClass = 'airb__teacher-focus-impact' + (opts.belowThreshold ? ' airb__teacher-focus-impact--below-threshold' : '');
+            guidance += '<div class="' + impactClass + '">' + escFn(item) + '</div>';
         });
         guidance += '</div>';
     }
@@ -996,7 +1062,7 @@ function focusGuidanceAccordionForArea(area, opts, domain) {
     if (!guidance || !opts.focusGuidanceAccordionHtml) return '';
     var openGuidance = opts.guidanceOpen === true;
     var label = opts.guidanceToggle || focusGuidanceToggleLabel(domain, opts);
-    return opts.focusGuidanceAccordionHtml(label, guidance, openGuidance);
+    return opts.focusGuidanceAccordionHtml(label, guidance, openGuidance, !!opts.belowThreshold);
 }
 
 function normaliseKey(value) {
@@ -1075,25 +1141,33 @@ function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
         bar: '#64748b'
     };
     var accordionOpts = Object.assign({}, opts);
+    var focusMax = focusGuidanceMaxFromOpts(opts);
     var html = '<div class="benchmark-domain-grid benchmark-domain-grid--with-guidance">';
 
     domains.forEach(function (domain) {
         var tone = toneMap[domain.tone] || defaultTone;
         var area = focusAreaForDomain(domain, focusAreas);
         var hasGuidance = !!(area && ((area.likely_impact && area.likely_impact.length) || (area.challenge_bullets && area.challenge_bullets.length) || (area.challenge_body) || (area.actions && area.actions.length)));
+        var domainValue = parseInt(domain.value, 10);
+        if (isNaN(domainValue)) {
+            domainValue = 0;
+        }
+        var belowThreshold = domainValue < focusMax;
 
-        html += '<section class="benchmark-metric-card ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + '">';
+        html += '<section class="benchmark-metric-card ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
         html += '<div class="benchmark-metric-card__header">';
         html += '<h3 class="benchmark-metric-card__title">' + escFn(domain.label) + '</h3>';
-        html += '<span class="benchmark-metric-card__badge ' + (tone.bg || '') + ' ' + (tone.text || '') + '">' + escFn(tone.label || '') + '</span>';
+        html += '<span class="benchmark-metric-card__badge ' + (tone.bg || '') + ' ' + (tone.text || '') + (belowThreshold ? ' benchmark-metric-card__badge--below-threshold' : '') + '">' + escFn(tone.label || '') + '</span>';
         html += '</div>';
         html += '<div class="benchmark-metric-card__body">';
-        html += '<p class="benchmark-metric-card__value">' + escFn(domain.value) + '%</p>';
+        html += '<p class="benchmark-metric-card__value' + (belowThreshold ? ' benchmark-metric-card__value--below-threshold' : '') + '">' + escFn(domain.value) + '%</p>';
         html += '</div>';
         html += '<div class="benchmark-metric-card__bar"><span style="width:' + escFn(domain.value) + '%;background:' + escFn(tone.bar || '#64748b') + '"></span></div>';
 
         if (hasGuidance) {
-            html += focusGuidanceAccordionForArea(area, accordionOpts, domain);
+            html += focusGuidanceAccordionForArea(area, Object.assign({}, accordionOpts, {
+                belowThreshold: belowThreshold,
+            }), domain);
         }
 
         html += '</section>';
@@ -1124,6 +1198,8 @@ AIRB.Results = {
     focusStackGuidanceInnerHtml: focusStackGuidanceInnerHtml,
     focusGuidanceToggleLabel: focusGuidanceToggleLabel,
     focusGuidanceAccordionForArea: focusGuidanceAccordionForArea,
+    focusGuidanceMaxFromOpts: focusGuidanceMaxFromOpts,
+    isBelowFocusGuidanceMax: isBelowFocusGuidanceMax,
     domainGridWithGuidanceHtml: domainGridWithGuidanceHtml,
     parentFocusTopicsHtml: parentFocusTopicsHtml,
     teacherFocusAreasHtml: teacherFocusAreasHtml,

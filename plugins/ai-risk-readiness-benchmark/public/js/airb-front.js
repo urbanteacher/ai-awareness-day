@@ -3119,7 +3119,8 @@
 		}, 700);
 	}
 
-	function renderAuditSection() {
+	function renderAuditSection(opts) {
+		opts = opts || {};
 		var section = state.sections[state.step];
 		if (!section) return;
 
@@ -3167,8 +3168,11 @@
 		bindSectionInputs(section);
 		refreshSectionConditionalVisibility(section);
 		updateFlowChrome();
-		scrollBenchmarkToTop();
-		window.setTimeout(scrollBenchmarkToTop, 60);
+		var shouldScroll = opts.scrollToTop === true || (opts.scrollToTop !== false && state.questionStep === 0);
+		if (shouldScroll) {
+			scrollBenchmarkToTop();
+			window.setTimeout(scrollBenchmarkToTop, 60);
+		}
 	}
 
 	function isYoungRole() {
@@ -3245,7 +3249,6 @@
 	}
 
 	function staffProfileFieldsHtml() {
-		var hint = state.role === 'teacher' ? (i18n.profileHintTeacher || i18n.profileHint) : i18n.profileHint;
 		var html = '<div class="airb__contact-grid">';
 		var hidePhase = state.role === 'leader' && profilePhase();
 		if (!hidePhase) {
@@ -3260,7 +3263,6 @@
 		html += '<option value="standalone"' + (state.orgType === 'standalone' ? ' selected' : '') + '>' + esc(i18n.orgStandalone) + '</option>';
 		html += '<option value="mat"' + (state.orgType === 'mat' ? ' selected' : '') + '>' + esc(i18n.orgMat) + '</option>';
 		html += '</select></div></div>';
-		if (hint) html += '<p class="airb__muted airb__profile-hint">' + esc(hint) + '</p>';
 		return html;
 	}
 
@@ -3273,51 +3275,53 @@
 	}
 
 	function renderContact() {
-		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Almost done') + '</h3>';
+		var contactHint = i18n.contactHint;
+		if (state.role === 'teacher' && i18n.contactHintTeacher) contactHint = i18n.contactHintTeacher;
+		if (state.role === 'support_staff' && i18n.contactHintSupport) contactHint = i18n.contactHintSupport;
+		if (isPublicRole() && i18n.contactHintPublic) contactHint = i18n.contactHintPublic;
+
+		var html = '<div class="airb__panel airb__contact-panel">';
+		html += '<header class="airb__contact-header">';
+		html += '<p class="airb__contact-eyebrow">' + esc(i18n.contactEyebrow || 'Final step') + '</p>';
+		html += '<h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Personalise your results') + '</h3>';
+		if (contactHint) html += '<p class="airb__contact-intro">' + esc(contactHint) + '</p>';
+		html += '</header>';
 		html += roleSummaryHtml();
 
 		if (isYoungRole()) {
-			if (state.role === 'parent' && i18n.contactHintParent) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHintParent) + '</p>';
-			} else if (i18n.contactHintYoung) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHintYoung) + '</p>';
-			}
+			var youngHint = state.role === 'parent' ? i18n.contactHintParent : i18n.contactHintYoung;
+			html += '<section class="airb__contact-group" aria-labelledby="airb-contact-context-title">';
+			html += '<h4 class="airb__contact-group-title" id="airb-contact-context-title">' + esc(i18n.contactContextTitle || 'Tailor your recommendations') + '</h4>';
+			if (youngHint) html += '<p class="airb__contact-group-copy">' + esc(youngHint) + '</p>';
 			var ygLabel = state.role === 'parent' ? (i18n.yearGroupParent || i18n.yearGroup) : i18n.yearGroup;
 			html += '<label class="airb__label" for="airb-year-group">' + esc(ygLabel) + '</label>' +
 				'<select class="airb__select" id="airb-year-group">' + yearGroupOptionsHtml() + '</select>';
+			html += '</section>';
 		} else {
-			if (state.role === 'teacher' && i18n.contactHintTeacher) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHintTeacher) + '</p>';
-			} else if (state.role === 'support_staff' && i18n.contactHintSupport) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHintSupport) + '</p>';
-			} else if (isPublicRole() && i18n.contactHintPublic) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHintPublic) + '</p>';
-			} else if (i18n.contactHint) {
-				html += '<p class="airb__muted">' + esc(i18n.contactHint) + '</p>';
-			}
-
 			if (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff') {
+				html += '<section class="airb__contact-group" aria-labelledby="airb-contact-context-title">';
+				html += '<h4 class="airb__contact-group-title" id="airb-contact-context-title">' + esc(i18n.contactContextTitle || 'Tailor your recommendations') + '</h4>';
+				html += '<p class="airb__contact-group-copy">' + esc(i18n.contactContextHint || 'Add school context to make your recommendations more relevant.') + '</p>';
 				html += '<label class="airb__label" for="airb-school">' + esc(i18n.schoolOptional) + '</label>' +
-					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization" />';
+					'<input type="text" class="airb__input" id="airb-school" value="' + esc(state.school) + '" autocomplete="organization"' + (i18n.schoolOptionalHint ? ' aria-describedby="airb-school-hint"' : '') + ' />';
 				if (i18n.schoolOptionalHint) {
-					html += '<p class="airb__muted airb__field-hint">' + esc(i18n.schoolOptionalHint) + '</p>';
+					html += '<p class="airb__field-hint" id="airb-school-hint">' + esc(i18n.schoolOptionalHint) + '</p>';
 				}
+				if (state.role === 'teacher' || state.role === 'support_staff') {
+					html += staffProfileFieldsHtml();
+				}
+				html += '</section>';
 			}
 
-			if (state.role === 'teacher' || state.role === 'support_staff') {
-				html += staffProfileFieldsHtml();
-			}
-
-			if (!isPublicRole()) {
-				html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
-					'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
-			} else {
-				html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
-					'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email" />';
-			}
+			html += '<section class="airb__contact-group airb__contact-group--email" aria-labelledby="airb-contact-email-title">';
+			html += '<h4 class="airb__contact-group-title" id="airb-contact-email-title">' + esc(i18n.contactEmailTitle || 'Get a copy') + '</h4>';
+			html += '<p class="airb__contact-group-copy">' + esc(i18n.contactEmailHint || 'Enter an email only if you want your report sent to you.') + '</p>';
+			html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
+				'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email"' + (i18n.emailOptionalHint ? ' aria-describedby="airb-email-hint"' : '') + ' />';
 			if (i18n.emailOptionalHint) {
-				html += '<p class="airb__muted airb__field-hint">' + esc(i18n.emailOptionalHint) + '</p>';
+				html += '<p class="airb__field-hint" id="airb-email-hint">' + esc(i18n.emailOptionalHint) + '</p>';
 			}
+			html += '</section>';
 		}
 
 		if (i18n.contactPrivacyNote) {
@@ -4181,10 +4185,11 @@
 			innerHtml + '</details>';
 	}
 
-	function focusGuidanceAccordionHtml(summary, innerHtml, isOpen) {
+	function focusGuidanceAccordionHtml(summary, innerHtml, isOpen, belowThreshold) {
 		if (!innerHtml) return '';
 		var label = summary || i18n.focusGuidanceToggle || 'Tips & steps to try';
-		return '<details class="' + resultsAccordionClass() + ' airb__focus-guidance-accordion"' + (isOpen === true ? ' open' : '') + '>' +
+		var belowClass = belowThreshold ? ' airb__focus-guidance-accordion--below-threshold' : '';
+		return '<details class="' + resultsAccordionClass() + ' airb__focus-guidance-accordion' + belowClass + '"' + (isOpen === true ? ' open' : '') + '>' +
 			'<summary>' + esc(label) + '</summary>' +
 			'<div class="airb__focus-guidance-body">' + innerHtml + '</div>' +
 			'</details>';
@@ -5755,7 +5760,7 @@
 		if (state.phase === 'contact') {
 			state.phase = 'audit';
 			state.step = state.sections.length - 1;
-			renderAuditSection();
+			renderAuditSection({ scrollToTop: true });
 			return;
 		}
 		if (state.phase === 'leader_profile') {
@@ -6755,6 +6760,9 @@
 	if (el.role) {
 		collapseIntro();
 		renderRole();
+		if (el.root) {
+			el.root.classList.add('airb--role-ready');
+		}
 	}
 
 	// App-bar completion pill: reflect how many of the 4 audits this device has done.

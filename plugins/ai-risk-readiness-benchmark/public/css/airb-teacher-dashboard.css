@@ -126,6 +126,29 @@
 	font-variant-numeric: tabular-nums;
 }
 
+.airb__results--teacher .benchmark-metric-card__value--below-threshold, .airb__results--student .benchmark-metric-card__value--below-threshold, .airb__results--parent .benchmark-metric-card__value--below-threshold, .airb__results--leader .benchmark-metric-card__value--below-threshold, .airb__results--support .benchmark-metric-card__value--below-threshold, .airb__results--public .benchmark-metric-card__value--below-threshold {
+	color: #dc2626;
+}
+
+.airb__results--teacher .benchmark-metric-card__badge--below-threshold, .airb__results--student .benchmark-metric-card__badge--below-threshold, .airb__results--parent .benchmark-metric-card__badge--below-threshold, .airb__results--leader .benchmark-metric-card__badge--below-threshold, .airb__results--support .benchmark-metric-card__badge--below-threshold, .airb__results--public .benchmark-metric-card__badge--below-threshold {
+	color: #dc2626 !important;
+	background: #fef2f2 !important;
+}
+
+.airb__results--teacher .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary, .airb__results--student .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary, .airb__results--parent .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary, .airb__results--leader .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary, .airb__results--support .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary, .airb__results--public .benchmark-metric-card--below-threshold .airb__focus-guidance-accordion > summary,
+.airb__results--teacher .airb__focus-guidance-accordion--below-threshold > summary, .airb__results--student .airb__focus-guidance-accordion--below-threshold > summary, .airb__results--parent .airb__focus-guidance-accordion--below-threshold > summary, .airb__results--leader .airb__focus-guidance-accordion--below-threshold > summary, .airb__results--support .airb__focus-guidance-accordion--below-threshold > summary, .airb__results--public .airb__focus-guidance-accordion--below-threshold > summary {
+	color: #dc2626;
+}
+
+.airb__results--teacher .airb__teacher-focus-impact--below-threshold, .airb__results--student .airb__teacher-focus-impact--below-threshold, .airb__results--parent .airb__teacher-focus-impact--below-threshold, .airb__results--leader .airb__teacher-focus-impact--below-threshold, .airb__results--support .airb__teacher-focus-impact--below-threshold, .airb__results--public .airb__teacher-focus-impact--below-threshold {
+	color: #dc2626;
+	font-weight: 600;
+}
+
+.airb__results--teacher .benchmark-metric-card--below-threshold .airb__focus-practice-title, .airb__results--student .benchmark-metric-card--below-threshold .airb__focus-practice-title, .airb__results--parent .benchmark-metric-card--below-threshold .airb__focus-practice-title, .airb__results--leader .benchmark-metric-card--below-threshold .airb__focus-practice-title, .airb__results--support .benchmark-metric-card--below-threshold .airb__focus-practice-title, .airb__results--public .benchmark-metric-card--below-threshold .airb__focus-practice-title {
+	color: #dc2626;
+}
+
 .airb__results--teacher .benchmark-metric-card__prompt, .airb__results--student .benchmark-metric-card__prompt, .airb__results--parent .benchmark-metric-card__prompt, .airb__results--leader .benchmark-metric-card__prompt, .airb__results--support .benchmark-metric-card__prompt, .airb__results--public .benchmark-metric-card__prompt {
 	margin: 0.35rem 0 0;
 	max-width: none;
