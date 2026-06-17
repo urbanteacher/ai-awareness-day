@@ -32,7 +32,7 @@
 	}
 
 	var FALLBACK_COPY = {
-		headline_primary: 'Responsible AI Progress Certificate',
+		headline_primary: 'AI Risk & Readiness Benchmark\u2122 Certificate',
 		body: 'has completed the AI Risk & Readiness Benchmark\u2122 and submitted evidence of a real action linked to AI Awareness Day.',
 		name_placeholder: 'Example: Alex Teacher',
 	};
@@ -98,11 +98,6 @@
 	function previewHtml(data) {
 		return '<div class="certificate-preview certificate-preview--compact" data-airb-certificate-preview>' +
 			'<div class="certificate-preview__frame">' +
-			'<div class="certificate-preview__logos">' +
-			'<div class="certificate-preview__logo-slot"><span class="certificate-preview__logo-placeholder">AIAD logo</span></div>' +
-			'<div class="certificate-preview__logo-divider" aria-hidden="true"></div>' +
-			'<div class="certificate-preview__logo-slot certificate-preview__logo-slot--school"><span class="certificate-preview__logo-placeholder">School logo</span></div>' +
-			'</div>' +
 			'<div class="certificate-preview__content">' +
 			'<h1 class="certificate-preview__headline"><span class="certificate-preview__headline-primary">' + esc(data.title) + '</span></h1>' +
 			'<p class="certificate-preview__lead">This certifies that</p>' +
@@ -293,7 +288,7 @@
 		html += '<div class="benchmark-certificate-summary">';
 		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent || model.accent || '#2563eb') + '">Certificate</p>';
 		html += '<h3 class="teacher-dash-progress-title">' + esc(title) + '</h3>';
-		html += '<p class="teacher-dash-cert-note">' + (unlocked ? 'Certificate allocated. You can download or print it now.' : 'Complete the evidence step below to unlock your Responsible AI Progress Certificate.') + '</p></div>';
+		html += '<p class="teacher-dash-cert-note">' + (unlocked ? 'Certificate allocated. You can download or print it now.' : 'Complete the evidence step below to unlock your AI Risk & Readiness Benchmark\u2122 Certificate.') + '</p></div>';
 		html += '<div class="benchmark-certificate-stats">';
 		html += '<div><span>Current</span><strong>' + esc(cert.currentScore || model.score || 0) + '%</strong></div>';
 		html += '<div><span>Need</span><strong>' + esc(threshold) + '%</strong></div>';

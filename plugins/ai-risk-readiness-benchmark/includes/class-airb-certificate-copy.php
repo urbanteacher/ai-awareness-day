@@ -34,7 +34,7 @@ class AIRB_Certificate_Copy {
 		$role  = self::normalize_role( $role );
 		$all   = self::definitions();
 		$copy  = $all[ $role ] ?? $all['teacher'];
-		$title = __( 'Responsible AI Progress Certificate', 'ai-risk-benchmark' );
+		$title = __( 'AI Risk & Readiness Benchmark™ Certificate', 'ai-risk-benchmark' );
 
 		return array(
 			'headline_primary'      => $title,
@@ -55,7 +55,7 @@ class AIRB_Certificate_Copy {
 	 * @return array<string, array{headline_primary: string, body: string, name_placeholder: string}>
 	 */
 	public static function all_for_front(): array {
-		$title = __( 'Responsible AI Progress Certificate', 'ai-risk-benchmark' );
+		$title = __( 'AI Risk & Readiness Benchmark™ Certificate', 'ai-risk-benchmark' );
 		$out   = array();
 
 		foreach ( self::definitions() as $role => $copy ) {
