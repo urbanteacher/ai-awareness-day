@@ -1021,7 +1021,7 @@
 		if (levels.length) {
 			return levels.map(function (level) { return level.label || ''; }).filter(Boolean);
 		}
-		return ['Emerging', 'Developing', 'Established', 'Leading'];
+		return ['At risk', 'Action required', 'Stable', 'Responsible'];
 	}
 
 	function supportHeadline(sr) {

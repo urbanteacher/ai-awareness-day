@@ -387,20 +387,20 @@ class AIRB_Shortcode {
 					'riskLevel'      => __( 'Overall risk level', 'ai-risk-benchmark' ),
 					'readinessLevel' => __( 'Readiness level', 'ai-risk-benchmark' ),
 					'bandsReadiness' => array(
-						'emerging'          => __( 'Emerging', 'ai-risk-benchmark' ),
-						'developing'        => __( 'Developing', 'ai-risk-benchmark' ),
-						'established'       => __( 'Established', 'ai-risk-benchmark' ),
+						'emerging'          => __( 'At risk', 'ai-risk-benchmark' ),
+						'developing'        => __( 'Action required', 'ai-risk-benchmark' ),
+						'established'       => __( 'Stable', 'ai-risk-benchmark' ),
 						'earlyEstablished'  => __( 'Early Established', 'ai-risk-benchmark' ),
-						'strong'            => __( 'Strong', 'ai-risk-benchmark' ),
-						'leading'           => __( 'Leading', 'ai-risk-benchmark' ),
+						'strong'            => __( 'Confident', 'ai-risk-benchmark' ),
+						'leading'           => __( 'Responsible', 'ai-risk-benchmark' ),
 					),
 					'bandsReadinessShort' => array(
-						'emerging'         => __( 'Emerg.', 'ai-risk-benchmark' ),
-						'developing'       => __( 'Dev.', 'ai-risk-benchmark' ),
-						'established'      => __( 'Est.', 'ai-risk-benchmark' ),
+						'emerging'         => __( 'At risk', 'ai-risk-benchmark' ),
+						'developing'       => __( 'Action required', 'ai-risk-benchmark' ),
+						'established'      => __( 'Stable', 'ai-risk-benchmark' ),
 						'earlyEstablished' => __( 'Early est.', 'ai-risk-benchmark' ),
-						'strong'           => __( 'Str.', 'ai-risk-benchmark' ),
-						'leading'          => __( 'Lead.', 'ai-risk-benchmark' ),
+						'strong'           => __( 'Confident', 'ai-risk-benchmark' ),
+						'leading'          => __( 'Responsible', 'ai-risk-benchmark' ),
 					),
 					'readinessScaleKicker'   => __( 'Overall benchmark readiness', 'ai-risk-benchmark' ),
 					'readinessScaleNote'     => __( 'This score is calculated from your role-specific audit domains. Other metrics, such as dependency, oversight and governance, are shown separately.', 'ai-risk-benchmark' ),
@@ -478,8 +478,11 @@ class AIRB_Shortcode {
 					'parent'        => AIRB_Interest::form_shell_for_frontend( 'parent' ),
 					'support_staff' => AIRB_Interest::form_shell_for_frontend( 'support_staff' ),
 				),
-				'timelineReadPaths'  => function_exists( 'aiad_timeline_benchmark_read_paths_for_frontend' )
+				'timelineReadPaths'   => function_exists( 'aiad_timeline_benchmark_read_paths_for_frontend' )
 					? aiad_timeline_benchmark_read_paths_for_frontend()
+					: array(),
+				'timelineReadCatalog' => function_exists( 'aiad_timeline_benchmark_read_catalog_for_frontend' )
+					? aiad_timeline_benchmark_read_catalog_for_frontend()
 					: array(),
 			)
 		);

@@ -364,11 +364,11 @@ class AIRB_Scoring {
 		}
 
 		$labels = array(
-			'leading'     => __( 'Leading', 'ai-risk-benchmark' ),
-			'strong'      => __( 'Strong', 'ai-risk-benchmark' ),
-			'established' => __( 'Established', 'ai-risk-benchmark' ),
-			'developing'  => __( 'Developing', 'ai-risk-benchmark' ),
-			'emerging'    => __( 'Emerging', 'ai-risk-benchmark' ),
+			'leading'     => __( 'Responsible', 'ai-risk-benchmark' ),
+			'strong'      => __( 'Confident', 'ai-risk-benchmark' ),
+			'established' => __( 'Stable', 'ai-risk-benchmark' ),
+			'developing'  => __( 'Action required', 'ai-risk-benchmark' ),
+			'emerging'    => __( 'At risk', 'ai-risk-benchmark' ),
 		);
 		$band = self::readiness_band( $readiness );
 		return $labels[ $band ] ?? ucfirst( $band );

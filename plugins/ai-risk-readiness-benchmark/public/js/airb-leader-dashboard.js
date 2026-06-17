@@ -16,11 +16,11 @@
 	var esc = AIRB.esc || function (s) { return String(s); };
 
 	var READINESS_BANDS = [
-		{ slug: 'emerging', label: 'Emerging', min: 0, max: 39, color: '#dc2626', short: 'At risk' },
-		{ slug: 'developing', label: 'Developing', min: 40, max: 59, color: '#f59e0b', short: 'Concern' },
-		{ slug: 'established', label: 'Established', min: 60, max: 74, color: '#eab308', short: 'Est.' },
-		{ slug: 'strong', label: 'Strong', min: 75, max: 89, color: '#22c55e', short: 'Str.' },
-		{ slug: 'leading', label: 'Leading', min: 90, max: 100, color: '#16a34a', short: 'Lead.' },
+		{ slug: 'emerging', label: 'At risk', min: 0, max: 39, color: '#dc2626', short: 'At risk' },
+		{ slug: 'developing', label: 'Action required', min: 40, max: 59, color: '#f59e0b', short: 'Action required' },
+		{ slug: 'established', label: 'Stable', min: 60, max: 74, color: '#eab308', short: 'Stable' },
+		{ slug: 'strong', label: 'Confident', min: 75, max: 89, color: '#22c55e', short: 'Confident' },
+		{ slug: 'leading', label: 'Responsible', min: 90, max: 100, color: '#16a34a', short: 'Responsible' },
 	];
 
 	var TONE_MAP = {
@@ -314,12 +314,12 @@
 		var weakest = (model.domains && model.domains.length)
 			? model.domains.reduce(function (min, d) { return !min || d.value < min.value ? d : min; }, null)
 			: null;
-		var journey = model.journey || ['Emerging', 'Developing', 'Established', 'Leading'];
+		var journey = model.journey || ['At risk', 'Action required', 'Stable', 'Responsible'];
 		var steps = [
-			{ title: journey[0] || 'Emerging', body: 'Audit complete — baseline evidence captured for governors.' },
-			{ title: journey[1] || 'Developing', body: weakest ? ('Strengthen ' + weakest.label.toLowerCase() + ' with owners and review dates.') : 'Assign owners to your weakest domains.' },
-			{ title: journey[2] || 'Established', body: 'Return and reach ' + (cert.unlockAt || 0) + '% to evidence improvement.' },
-			{ title: journey[3] || 'Leading', body: 'Generate a shareable governance certificate once progress is evidenced.' },
+			{ title: journey[0] || 'At risk', body: 'Audit complete — baseline evidence captured for governors.' },
+			{ title: journey[1] || 'Action required', body: weakest ? ('Strengthen ' + weakest.label.toLowerCase() + ' with owners and review dates.') : 'Assign owners to your weakest domains.' },
+			{ title: journey[2] || 'Stable', body: 'Return and reach ' + (cert.unlockAt || 0) + '% to evidence improvement.' },
+			{ title: journey[3] || 'Responsible', body: 'Generate a shareable governance certificate once progress is evidenced.' },
 		];
 		var currentIndex = cert.unlocked ? steps.length - 1 : Math.min(1, steps.length - 1);
 

@@ -227,9 +227,9 @@
     // -------------------------------------------------------------------------
 
     var BAND_LABELS = {
-        teacher : ['At risk · Act now', 'Concern · Review needed', 'Established', 'Strong', 'Leading'],
-        leader  : ['Critical · Act now', 'Concern · Review needed', 'Established', 'Strong', 'Leading'],
-        support : ['At risk · Act now', 'Concern · Review needed', 'Established', 'Strong', 'Leading'],
+        teacher : ['At risk', 'Action required', 'Stable', 'Confident', 'Responsible'],
+        leader  : ['At risk', 'Action required', 'Stable', 'Confident', 'Responsible'],
+        support : ['At risk', 'Action required', 'Stable', 'Confident', 'Responsible'],
         student : ['Needs attention', 'Take care', 'Aware', 'Confident', 'Advanced'],
         parent  : ['Your child needs your help', 'Some gaps at home', 'Aware', 'Confident', 'Well prepared'],
         public  : ['At risk', 'Take care', 'Aware', 'Confident', 'Advanced']

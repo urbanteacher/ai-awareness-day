@@ -543,11 +543,11 @@
 	function readinessBandDefinitionsLegacy() {
 		var labels = i18n.bandsReadiness || {};
 		return [
-			{ slug: 'emerging', label: labels.emerging || 'Emerging', min: 0, max: 39, tone: 'alarm' },
-			{ slug: 'developing', label: labels.developing || 'Developing', min: 40, max: 59, tone: 'concern' },
-			{ slug: 'established', label: labels.established || 'Established', min: 60, max: 74 },
-			{ slug: 'strong', label: labels.strong || 'Strong', min: 75, max: 89 },
-			{ slug: 'leading', label: labels.leading || 'Leading', min: 90, max: 100 },
+			{ slug: 'emerging', label: labels.emerging || 'At risk', min: 0, max: 39, tone: 'alarm' },
+			{ slug: 'developing', label: labels.developing || 'Action required', min: 40, max: 59, tone: 'concern' },
+			{ slug: 'established', label: labels.established || 'Stable', min: 60, max: 74 },
+			{ slug: 'strong', label: labels.strong || 'Confident', min: 75, max: 89 },
+			{ slug: 'leading', label: labels.leading || 'Responsible', min: 90, max: 100 },
 		];
 	}
 
@@ -722,7 +722,7 @@
 				return levels[i];
 			}
 		}
-		return levels[0] || { slug: 'emerging', label: 'Emerging' };
+		return levels[0] || { slug: 'emerging', label: 'At risk' };
 	}
 
 	function leaderMetricCardHtml(opts) {
@@ -3035,7 +3035,7 @@
 	}
 
 	function roleShowsInterestForm(role) {
-		return role === 'teacher' || role === 'leader' || role === 'parent' || role === 'support_staff';
+		return role === 'teacher' || role === 'leader' || role === 'parent' || role === 'support_staff' || role === 'student';
 	}
 
 	function resolveInterestPrefill(slug) {
@@ -4064,8 +4064,36 @@
 		if (link.url) return String(link.url);
 		var slug = link.slug ? String(link.slug) : '';
 		if (!slug) return '';
+		var catalog = airbBenchmark.timelineReadCatalog || {};
+		if (catalog[slug] && catalog[slug].url) {
+			return String(catalog[slug].url);
+		}
 		var paths = airbBenchmark.timelineReadPaths || {};
 		return paths[slug] || '';
+	}
+
+	function resourceLinkSlug(link) {
+		if (!link) return '';
+		if (link.slug) return String(link.slug);
+		var url = resolveResourceLinkUrl(link) || (link.url ? String(link.url) : '');
+		if (!url) return '';
+		var match = url.match(/\/timeline\/([^/?#]+)/);
+		return match ? decodeURIComponent(match[1]) : '';
+	}
+
+	function enrichResourceLink(link) {
+		if (!link) return null;
+		var slug = resourceLinkSlug(link);
+		var catalog = airbBenchmark.timelineReadCatalog || {};
+		var catalogItem = slug && catalog[slug] ? catalog[slug] : null;
+		var enriched = Object.assign({}, catalogItem || {}, link);
+		if (catalogItem) {
+			enriched.url = enriched.url || catalogItem.url || '';
+			enriched.label = enriched.label || catalogItem.label || '';
+			enriched.image = enriched.image || catalogItem.image || '';
+			enriched.slug = enriched.slug || catalogItem.slug || slug;
+		}
+		return enriched;
 	}
 
 	function resourceLinkArrowSvg() {
@@ -4106,31 +4134,24 @@
 	}
 
 	function teacherBreakingNowResourceHtml(links) {
-		var breaking = null;
-		(links || []).forEach(function (link) {
-			var slug = link.slug ? String(link.slug) : '';
-			if (slug === 'how-does-a-large-language-model-work' || /large language model/i.test(link.label || '')) {
-				breaking = link;
-			}
-		});
+		var list = (links || []).slice();
+		var breaking = list.length ? list[0] : null;
+
+		// Fallback when no links are provided for this role.
 		if (!breaking) {
-			var paths = airbBenchmark.timelineReadPaths || {};
-			var fallbackUrl = paths['how-does-a-large-language-model-work'] || '';
-			if (fallbackUrl) {
-				breaking = {
-					label: 'How Does a Large Language Model Work?',
-					url: fallbackUrl,
-				};
-			}
+			var breakingSlug = 'how-does-a-large-language-model-work';
+			var catalog = airbBenchmark.timelineReadCatalog || {};
+			if (catalog[breakingSlug]) breaking = Object.assign({}, catalog[breakingSlug]);
 		}
 		if (!breaking) return '';
-		breaking = Object.assign({}, breaking, {
+		breaking = enrichResourceLink(Object.assign({}, breaking, {
 			kicker: 'Breaking now',
 			description: breaking.description || 'The top timeline explainer to help staff and students understand what sits behind AI answers.',
-		});
+		}));
+		if (!resolveResourceLinkUrl(breaking)) return '';
 		return '<section class="airb__breaking-resource" aria-labelledby="airb-breaking-now-title">' +
 			'<p class="airb__leader-section-label" id="airb-breaking-now-title">Breaking now</p>' +
-			resourceFeaturedCardHtml(breaking) +
+			resultsResourceLinksHtml([breaking], { cardMode: true, demoCards: true }) +
 			'</section>';
 	}
 
@@ -4144,6 +4165,7 @@
 			(cardMode ? ' airb__results-resource-links--cards' : '') +
 			(leaderGrid ? ' airb__results-resource-links--leader-grid' : '') + '">';
 		links.forEach(function (link) {
+			link = enrichResourceLink(link) || link;
 			var url = resolveResourceLinkUrl(link);
 			var prefill = link.prefill ? String(link.prefill) : '';
 			if (!url && !prefill) return;
@@ -6244,6 +6266,12 @@
 	}
 
 	function bindInterestTriggers() {
+		el.results.querySelectorAll('[data-airb-scroll-interest]').forEach(function (btn) {
+			btn.addEventListener('click', function (e) {
+				e.preventDefault();
+				scrollToInterestForm('');
+			});
+		});
 		el.results.querySelectorAll('[data-airb-open-interest]').forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
 				e.preventDefault();

@@ -376,7 +376,7 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			if ( ! is_string( $url ) || '' === $url ) {
 				continue;
 			}
-			$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
+			$image    = get_the_post_thumbnail_url( $post, 'thumbnail' );
 			$chosen[] = array(
 				'label' => aiad_timeline_post_link_label( $post ),
 				'url'   => $url,
@@ -441,10 +441,11 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
 			continue;
 		}
 		$seen[ $post->ID ] = true;
-		$image             = get_the_post_thumbnail_url( $post, 'thumbnail' );
-		$chosen[]          = array(
+		$image    = get_the_post_thumbnail_url( $post, 'thumbnail' );
+		$chosen[] = array(
 			'label' => aiad_timeline_post_link_label( $post ),
 			'url'   => $url,
+			'slug'  => $post->post_name,
 			'image' => is_string( $image ) ? $image : '',
 		);
 		if ( count( $chosen ) >= $limit ) {
@@ -464,15 +465,66 @@ function aiad_timeline_benchmark_read_links( string $role, int $limit = 3, int $
  */
 function aiad_timeline_benchmark_read_paths_for_frontend(): array {
 	$out = array();
+	foreach ( aiad_timeline_benchmark_read_catalog_for_frontend() as $slug => $item ) {
+		$out[ $slug ] = (string) ( $item['url'] ?? '' );
+	}
+	return $out;
+}
+
+/**
+ * Slug-indexed timeline read links for benchmark result cards (label, URL, thumbnail).
+ *
+ * @return array<string, array{slug: string, label: string, url: string, image: string}>
+ */
+function aiad_timeline_benchmark_read_catalog_for_frontend(): array {
+	$out  = array();
+	$seen = array();
+
 	foreach ( aiad_timeline_benchmark_audience_launch_map() as $items ) {
 		foreach ( (array) $items as $item ) {
 			$slug = (string) ( $item['slug'] ?? '' );
-			$path = (string) ( $item['path'] ?? '' );
-			if ( '' === $slug || '' === $path ) {
+			if ( '' === $slug || isset( $seen[ $slug ] ) ) {
 				continue;
 			}
-			$out[ $slug ] = home_url( $path );
+			$seen[ $slug ] = true;
+
+			$post = aiad_timeline_find_benchmark_audience_post( $item );
+			if ( $post instanceof WP_Post ) {
+				$url   = get_permalink( $post );
+				$image = get_the_post_thumbnail_url( $post, 'thumbnail' );
+				$out[ $slug ] = array(
+					'slug'  => $slug,
+					'label' => aiad_timeline_post_link_label( $post ),
+					'url'   => is_string( $url ) && '' !== $url ? $url : home_url( (string) ( $item['path'] ?? '' ) ),
+					'image' => is_string( $image ) ? $image : '',
+				);
+				continue;
+			}
+
+			if ( class_exists( 'AIRB_Defaults' ) ) {
+				$link = AIRB_Defaults::timeline_read_link( $item );
+				if ( is_array( $link ) ) {
+					$out[ $slug ] = array(
+						'slug'  => (string) ( $link['slug'] ?? $slug ),
+						'label' => (string) ( $link['label'] ?? '' ),
+						'url'   => (string) ( $link['url'] ?? '' ),
+						'image' => (string) ( $link['image'] ?? '' ),
+					);
+					continue;
+				}
+			}
+
+			$path = (string) ( $item['path'] ?? '' );
+			if ( '' !== $path ) {
+				$out[ $slug ] = array(
+					'slug'  => $slug,
+					'label' => '',
+					'url'   => home_url( $path ),
+					'image' => '',
+				);
+			}
 		}
 	}
+
 	return $out;
 }
