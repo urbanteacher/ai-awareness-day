@@ -1071,6 +1071,22 @@
 	background: #f8fafc;
 }
 
+.airb__results--teacher .teacher-dash-metric-row, .airb__results--student .teacher-dash-metric-row, .airb__results--parent .teacher-dash-metric-row, .airb__results--leader .teacher-dash-metric-row, .airb__results--support .teacher-dash-metric-row, .airb__results--public .teacher-dash-metric-row {
+	display: grid;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.airb__results--teacher .teacher-dash-metric-row .teacher-dash-metric, .airb__results--student .teacher-dash-metric-row .teacher-dash-metric, .airb__results--parent .teacher-dash-metric-row .teacher-dash-metric, .airb__results--leader .teacher-dash-metric-row .teacher-dash-metric, .airb__results--support .teacher-dash-metric-row .teacher-dash-metric, .airb__results--public .teacher-dash-metric-row .teacher-dash-metric {
+	margin-top: 0;
+}
+
+@media (min-width: 640px) {
+	.airb__results--teacher .teacher-dash-metric-row, .airb__results--student .teacher-dash-metric-row, .airb__results--parent .teacher-dash-metric-row, .airb__results--leader .teacher-dash-metric-row, .airb__results--support .teacher-dash-metric-row, .airb__results--public .teacher-dash-metric-row {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
 .airb__results--teacher .teacher-dash-metric__label, .airb__results--student .teacher-dash-metric__label, .airb__results--parent .teacher-dash-metric__label, .airb__results--leader .teacher-dash-metric__label, .airb__results--support .teacher-dash-metric__label, .airb__results--public .teacher-dash-metric__label {
 	margin: 0;
 	font-size: 0.75rem;

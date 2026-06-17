@@ -289,8 +289,10 @@
 			html += '<h2 class="teacher-dash-headline">' + esc(model.headline) + '</h2>';
 		}
 		html += strengthCardHtml(model, opts);
+		html += '<div class="teacher-dash-metric-row">';
 		html += readinessMetricHtml(model.metricA, model.accent);
 		html += readinessMetricHtml(model.metricB, model.accent);
+		html += '</div>';
 		if (model.domains && model.domains.length) {
 			html += '<h3 class="teacher-dash-domain-heading">Domain breakdown</h3>';
 			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model.domains) + '</div>';
