@@ -87,7 +87,7 @@
         }
     },
     "domains": {
-        "online_risk": {
+        "online_risk_awareness": {
             "label": "online_risk",
             "description": "",
             "focus_card": {

@@ -329,11 +329,12 @@ class AIRB_Defaults {
 	public static function parent_result_config(): array {
 		$base = array(
 			'domain_weights' => array(
-				'parent_awareness'     => 0.20,
-				'home_ai_safety'       => 0.20,
-				'homework_oversight'   => 0.20,
-				'parent_ai_dependency' => 0.20,
-				'school_partnership'   => 0.20,
+				'parent_awareness'      => 0.20,
+				'home_ai_safety'        => 0.20,
+				'online_risk_awareness' => 0.20,
+				'homework_oversight'    => 0.20,
+				'parent_ai_dependency'  => 0.20,
+				'school_partnership'    => 0.20,
 			),
 			'display_domains' => array(
 				'parent_awareness' => array(
@@ -371,6 +372,51 @@ class AIRB_Defaults {
 					'metric_type' => 'score',
 					'questions'   => array( 'p_school_expectations', 'p_school_discuss' ),
 					'color'       => '#2563eb',
+				),
+			),
+			'home_metrics' => array(
+				array(
+					'slug'     => 'parent_awareness',
+					'source'   => 'parent_awareness',
+					'label'    => __( 'Parent awareness', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'Know what AI tools are being used', 'ai-risk-benchmark' ),
+					'icon'     => 'eye',
+				),
+				array(
+					'slug'     => 'home_ai_safety',
+					'source'   => 'home_ai_safety',
+					'label'    => __( 'Home AI safety', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'Privacy and harm response at home', 'ai-risk-benchmark' ),
+					'icon'     => 'home',
+				),
+				array(
+					'slug'       => 'online_risk_awareness',
+					'source'     => 'online_risk_awareness',
+					'label'      => __( 'Deepfake awareness', 'ai-risk-benchmark' ),
+					'subtitle'   => __( 'Fake images, voices and scam risks', 'ai-risk-benchmark' ),
+					'icon'       => 'alert',
+					'focus_slug' => 'online_risk_awareness',
+				),
+				array(
+					'slug'     => 'homework_oversight',
+					'source'   => 'homework_oversight',
+					'label'    => __( 'Homework oversight', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'Explain AI-assisted work in own words', 'ai-risk-benchmark' ),
+					'icon'     => 'book',
+				),
+				array(
+					'slug'     => 'parent_ai_dependency',
+					'source'   => 'parent_ai_dependency',
+					'label'    => __( 'Parent AI use', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'Use AI to support, not replace thinking', 'ai-risk-benchmark' ),
+					'icon'     => 'confidence',
+				),
+				array(
+					'slug'     => 'school_partnership',
+					'source'   => 'school_partnership',
+					'label'    => __( 'School partnership', 'ai-risk-benchmark' ),
+					'subtitle' => __( 'Know and ask about school expectations', 'ai-risk-benchmark' ),
+					'icon'     => 'home',
 				),
 			),
 			'band_summaries' => array(
@@ -463,6 +509,11 @@ class AIRB_Defaults {
 					'slug'  => 'home_ai_safety',
 					'label' => __( 'Home AI safety', 'ai-risk-benchmark' ),
 					'body'  => __( 'Talk about privacy, fake images and voice messages, and agree what your child should do if something online does not feel right.', 'ai-risk-benchmark' ),
+				),
+				array(
+					'slug'  => 'online_risk_awareness',
+					'label' => __( 'Deepfake awareness', 'ai-risk-benchmark' ),
+					'body'  => __( 'Talk about deepfakes, fake accounts and AI-generated voice messages. Agree that unexpected or worrying online content gets shown to an adult before anyone responds or shares it.', 'ai-risk-benchmark' ),
 				),
 				array(
 					'slug'  => 'homework_oversight',
@@ -657,6 +708,15 @@ class AIRB_Defaults {
 				),
 			),
 			'hero_bands' => self::public_safety_levels(),
+			'focus_slug_map' => array(
+				'verification' => 'deepfake_scam_awareness',
+			),
+			'focus_topics' => array(
+				array(
+					'slug'  => 'deepfake_scam_awareness',
+					'label' => __( 'Deepfake & scam awareness', 'ai-risk-benchmark' ),
+				),
+			),
 			'resource_links' => self::results_timeline_read_links( 'public' ),
 		);
 

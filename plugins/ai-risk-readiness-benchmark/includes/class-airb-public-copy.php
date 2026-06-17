@@ -176,6 +176,7 @@ class AIRB_Public_Copy {
 			'challenge_heading' => (string) ( $tiered['challenge_heading'] ?? '' ),
 			'challenge_body'    => (string) ( $tiered['challenge_body'] ?? '' ),
 			'challenge_bullets' => (array) ( $tiered['challenge_bullets'] ?? array() ),
+			'likely_impact'     => (array) ( $tiered['likely_impact'] ?? $tiered['impact'] ?? $tiered['challenge_bullets'] ?? array() ),
 			'actions'           => (array) ( $tiered['actions'] ?? array() ),
 			'severity'          => (string) ( $tiered['severity'] ?? ( 'critical' === $tier ? 'risk' : 'attention' ) ),
 			'tier'              => $tier,

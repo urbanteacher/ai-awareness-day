@@ -320,6 +320,11 @@
 		}
 		html += strengthCardHtml(model, opts);
 		html += dependencyMetricHtml(model.metricA, model.accent);
+		html += '</section>';
+		if (opts.conversationHtml) {
+			html += '<section class="teacher-dash-conversation teacher-dash-conversation--overview">' + opts.conversationHtml() + '</section>';
+		}
+		html += '<section class="teacher-dash-card">';
 		if (model.domains && model.domains.length) {
 			html += '<h3 class="teacher-dash-domain-heading">Domain breakdown & key signals</h3>';
 			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model.domains) + '</div>';
@@ -375,9 +380,6 @@
 		html += '</div></section>';
 
 		html += (AIRB.Certificate && AIRB.Certificate.panelHtml) ? AIRB.Certificate.panelHtml(model, 'parent', accent) : '';
-		if (opts.conversationHtml) {
-			html += '<section class="teacher-dash-card teacher-dash-conversation">' + opts.conversationHtml() + '</section>';
-		}
 		if (opts.shareCardHtml) {
 			html += '<section class="teacher-dash-card teacher-dash-share">' + opts.shareCardHtml() + '</section>';
 		}
