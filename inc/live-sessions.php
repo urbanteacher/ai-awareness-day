@@ -1,6 +1,6 @@
 <?php
 /**
- * Live Sessions: CPT, taxonomy, admin UI, and helpers.
+ * Events: CPT, taxonomy, admin UI, and helpers.
  *
  * A live_session post represents one scheduled live event on AI Awareness Day
  * (e.g. "KS2 Assembly: AI in Our World"). Each session references an existing
@@ -19,17 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_register_live_session_cpt(): void {
     register_post_type( 'live_session', array(
         'labels'        => array(
-            'name'          => __( 'Live Sessions', 'ai-awareness-day' ),
-            'singular_name' => __( 'Live Session', 'ai-awareness-day' ),
+            'name'          => __( 'Events', 'ai-awareness-day' ),
+            'singular_name' => __( 'Event', 'ai-awareness-day' ),
             'add_new'       => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Live Session', 'ai-awareness-day' ),
-            'edit_item'     => __( 'Edit Live Session', 'ai-awareness-day' ),
-            'view_item'     => __( 'View Live Session', 'ai-awareness-day' ),
-            'menu_name'     => __( 'Live Sessions', 'ai-awareness-day' ),
+            'add_new_item'  => __( 'Add New Event', 'ai-awareness-day' ),
+            'edit_item'     => __( 'Edit Event', 'ai-awareness-day' ),
+            'view_item'     => __( 'View Event', 'ai-awareness-day' ),
+            'menu_name'     => __( 'Events', 'ai-awareness-day' ),
         ),
         'public'        => true,
-        'has_archive'   => 'schedule',
-        'rewrite'       => array( 'slug' => 'schedule' ),
+        'has_archive'   => 'events',
+        'rewrite'       => array( 'slug' => 'events' ),
         'menu_icon'     => 'dashicons-calendar-alt',
         'menu_position' => 22,
         'supports'      => array( 'title', 'editor', 'thumbnail' ),
@@ -50,6 +50,37 @@ function aiad_register_live_session_cpt(): void {
     ) );
 }
 add_action( 'init', 'aiad_register_live_session_cpt', 20 );
+
+/**
+ * Refresh permalink rules once after moving the public event URLs.
+ */
+function aiad_maybe_flush_event_rewrite_rules(): void {
+    $rewrite_version = 'events-v1';
+    if ( get_option( 'aiad_event_rewrite_version' ) === $rewrite_version ) {
+        return;
+    }
+    flush_rewrite_rules( false );
+    update_option( 'aiad_event_rewrite_version', $rewrite_version, false );
+}
+add_action( 'init', 'aiad_maybe_flush_event_rewrite_rules', 99 );
+
+/**
+ * Preserve old schedule URLs after the Events rename.
+ */
+function aiad_redirect_legacy_schedule_urls(): void {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+    $path = trim( (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ), PHP_URL_PATH ), '/' );
+    if ( $path !== 'schedule' && ! str_starts_with( $path, 'schedule/' ) ) {
+        return;
+    }
+    $suffix = ltrim( substr( $path, strlen( 'schedule' ) ), '/' );
+    $target = home_url( '/events/' . ( $suffix !== '' ? trailingslashit( $suffix ) : '' ) );
+    wp_safe_redirect( $target, 301 );
+    exit;
+}
+add_action( 'template_redirect', 'aiad_redirect_legacy_schedule_urls', 1 );
 
 /**
  * Seed default audience terms once.
@@ -82,7 +113,7 @@ add_action( 'init', 'aiad_seed_session_audience_terms', 23 );
 function aiad_live_session_meta_box(): void {
     add_meta_box(
         'aiad_live_session_details',
-        __( 'Session details', 'ai-awareness-day' ),
+        __( 'Event details', 'ai-awareness-day' ),
         'aiad_live_session_meta_box_callback',
         'live_session',
         'normal',
@@ -543,12 +574,87 @@ function aiad_session_show_join_link( int $post_id ): bool {
 }
 
 /**
+ * Whether this session is an external conference/CPD link (not a live join room).
+ *
+ * @param int $post_id live_session post ID.
+ */
+function aiad_session_is_conference( int $post_id ): bool {
+	$format = strtolower( (string) get_post_meta( $post_id, '_session_format', true ) );
+	if ( str_contains( $format, 'conference' ) || str_contains( $format, 'cpd' ) || str_contains( $format, 'course' ) ) {
+		return true;
+	}
+	if ( preg_match( '/\b(live|teams|zoom|webinar|meet)\b/i', $format ) ) {
+		return false;
+	}
+	$title = strtolower( get_the_title( $post_id ) );
+	return str_contains( $title, 'conference' );
+}
+
+/**
  * Join button label for live sessions.
  *
  * @param int $post_id live_session post ID.
  */
 function aiad_session_cta_label( int $post_id ): string {
+	if ( aiad_session_is_conference( $post_id ) ) {
+		return __( 'External link', 'ai-awareness-day' );
+	}
 	return __( 'Join', 'ai-awareness-day' );
+}
+
+/**
+ * External-link icon for conference / CPD cards.
+ */
+function aiad_session_link_icon_svg(): string {
+	if ( function_exists( 'aiad_timeline_link_icon_svg' ) ) {
+		return aiad_timeline_link_icon_svg();
+	}
+	return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+}
+
+/**
+ * Primary schedule CTA: “Join” for live sessions, chain-link icon for conferences.
+ *
+ * @param int    $post_id live_session post ID.
+ * @param string $url     Registration / join URL.
+ * @param string $block   BEM block prefix (e.g. aiad-schedule-card, aiad-schedule-table).
+ */
+function aiad_render_session_action_link( int $post_id, string $url, string $block = 'aiad-schedule-card' ): string {
+	if ( ! aiad_session_show_join_link( $post_id ) || $url === '' ) {
+		return '';
+	}
+
+	$is_conference = aiad_session_is_conference( $post_id );
+	$label         = aiad_session_cta_label( $post_id );
+	$classes       = $block . '__join ' . $block . '__link--action';
+	if ( $is_conference ) {
+		$classes .= ' ' . $block . '__link--icon';
+	}
+	if ( $block === 'aiad-schedule-table' ) {
+		$classes = 'aiad-schedule-table__cta' . ( $is_conference ? ' aiad-schedule-table__cta--icon' : '' );
+	}
+	if ( $block === 'session-single' ) {
+		$classes = 'session-single__btn session-single__btn--primary' . ( $is_conference ? ' session-single__btn--icon' : '' );
+	}
+
+	$inner = $is_conference
+		? '<span class="' . esc_attr( $block ) . '__link-icon" aria-hidden="true">' . aiad_session_link_icon_svg() . '</span>'
+		: esc_html( $label );
+
+	if ( $is_conference && $block === 'session-single' ) {
+		$inner = '<span class="session-single__link-icon" aria-hidden="true">' . aiad_session_link_icon_svg() . '</span>';
+	} elseif ( ! $is_conference && $block === 'session-single' ) {
+		$inner = esc_html( $label ) . '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+	}
+
+	return sprintf(
+		'<a class="%1$s" href="%2$s" data-session-id="%3$s" target="_blank" rel="noopener"%4$s>%5$s</a>',
+		esc_attr( $classes ),
+		esc_url( $url ),
+		esc_attr( (string) $post_id ),
+		$is_conference ? ' aria-label="' . esc_attr( $label ) . '"' : '',
+		$inner // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG from trusted helper.
+	);
 }
 
 /**

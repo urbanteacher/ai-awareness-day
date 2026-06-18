@@ -2,8 +2,8 @@
 /**
  * Front page section: AI Awareness Day "What's On" spotlight.
  *
- * Upcoming sessions only on the homepage (three random spotlight cards).
- * Past sessions are not listed here or on /schedule/.
+ * Upcoming events only on the homepage (three random spotlight cards).
+ * Past events are not listed here or on /events/.
  *
  * @package AI_Awareness_Day
  */
@@ -25,7 +25,7 @@ if ( empty( $sessions ) ) {
 
 $archive_url = get_post_type_archive_link( 'live_session' );
 if ( ! $archive_url ) {
-    $archive_url = home_url( '/schedule/' );
+    $archive_url = home_url( '/events/' );
 }
 
 $audience_data         = function_exists( 'aiad_get_schedule_audience_filter_data' )
@@ -49,7 +49,7 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
             <p class="section-desc">
                 <?php
                 esc_html_e(
-                    'Upcoming live sessions, CPD activities, events, and conferences across different age groups, themes, and topics.',
+                    'Upcoming events, conferences, CPD, courses and live online sessions for schools and educators.',
                     'ai-awareness-day'
                 );
                 ?>
@@ -125,14 +125,11 @@ $spotlight_sessions = array_slice( $spotlight_pool, 0, min( 3, count( $spotlight
                     <p class="aiad-schedule-card__org-name aiad-schedule-card__org-name--tbc"><?php esc_html_e( 'Organisation TBC', 'ai-awareness-day' ); ?></p>
                 <?php endif; ?>
                 <div class="aiad-schedule-card__actions">
-                    <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $s->ID ) ) : ?>
-                        <a class="aiad-schedule-card__join aiad-schedule-card__link--action"
-                           href="<?php echo esc_url( $reg_url ); ?>"
-                           data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>"
-                           target="_blank" rel="noopener">
-                            <?php echo esc_html( aiad_session_cta_label( $s->ID ) ); ?>
-                        </a>
-                    <?php endif; ?>
+                    <?php
+                    if ( function_exists( 'aiad_render_session_action_link' ) ) {
+                        echo aiad_render_session_action_link( (int) $s->ID, $reg_url, 'aiad-schedule-card' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    }
+                    ?>
                     <?php if ( $ics_start !== '' && ! $is_past ) : ?>
                         <button type="button" class="aiad-schedule-card__ics" aria-label="<?php echo esc_attr( $ics_aria ); ?>">
                             <span aria-hidden="true">📅</span>

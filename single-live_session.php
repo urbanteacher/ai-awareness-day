@@ -37,7 +37,7 @@ $aud_names  = ( $aud_terms && ! is_wp_error( $aud_terms ) )
 $ics_start  = $start ? str_replace( array( '-', ':' ), '', $start ) . '00' : '';
 $ics_end    = $end   ? str_replace( array( '-', ':' ), '', $end )   . '00' : $ics_start;
 
-$archive_url = get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' );
+$archive_url = get_post_type_archive_link( 'live_session' ) ?: home_url( '/events/' );
 
 $share_aria = sprintf(
     /* translators: %s: session title */
@@ -51,7 +51,7 @@ $share_aria = sprintf(
 
             <a class="session-single__back" href="<?php echo esc_url( $archive_url ); ?>">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                <?php esc_html_e( 'Full schedule', 'ai-awareness-day' ); ?>
+                <?php esc_html_e( 'All events', 'ai-awareness-day' ); ?>
             </a>
 
             <article class="session-single"
@@ -109,15 +109,14 @@ $share_aria = sprintf(
                 <?php endif; ?>
 
                 <footer class="session-single__actions">
-                    <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $post_id ) ) : ?>
-                        <a class="session-single__btn session-single__btn--primary"
-                           href="<?php echo esc_url( $reg_url ); ?>"
-                           data-session-id="<?php echo esc_attr( (string) $post_id ); ?>"
-                           target="_blank" rel="noopener">
-                            <?php echo esc_html( aiad_session_cta_label( $post_id ) ); ?>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        </a>
-                    <?php elseif ( ! $is_past ) : ?>
+                    <?php
+                    $action_link = function_exists( 'aiad_render_session_action_link' )
+                        ? aiad_render_session_action_link( $post_id, $reg_url, 'session-single' )
+                        : '';
+					if ( $action_link ) :
+						echo $action_link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					elseif ( ! $is_past ) :
+                    ?>
                         <span class="session-single__btn session-single__btn--soon"><?php esc_html_e( 'Join link coming soon', 'ai-awareness-day' ); ?></span>
                     <?php endif; ?>
 

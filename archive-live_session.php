@@ -1,6 +1,6 @@
 <?php
 /**
- * Archive template: AI Awareness Day full live-session schedule.
+ * Archive template: AI Awareness Day events.
  *
  * @package AI_Awareness_Day
  */
@@ -37,25 +37,25 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
 <main id="main" role="main" class="container-width-standard schedule-archive">
     <section class="section aiad-schedule-filter-root">
         <div class="container">
-            <span class="section-label"><?php esc_html_e( 'Live Sessions', 'ai-awareness-day' ); ?></span>
+            <span class="section-label"><?php esc_html_e( 'Events', 'ai-awareness-day' ); ?></span>
             <h1 class="section-title schedule-archive__title">
-                <span class="schedule-archive__title-lead"><?php esc_html_e( 'AI Awareness Day — Full', 'ai-awareness-day' ); ?></span>
-                <span class="schedule-archive__title-flash"><?php esc_html_e( 'Live', 'ai-awareness-day' ); ?></span>
-                <span class="schedule-archive__title-tail"><?php esc_html_e( 'Schedule', 'ai-awareness-day' ); ?></span>
+                <span class="schedule-archive__title-lead"><?php esc_html_e( 'AI Awareness Day —', 'ai-awareness-day' ); ?></span>
+                <span class="schedule-archive__title-flash"><?php esc_html_e( 'Events', 'ai-awareness-day' ); ?></span>
+                <span class="schedule-archive__title-tail"><?php esc_html_e( '& Conferences', 'ai-awareness-day' ); ?></span>
             </h1>
             <?php if ( $event_date_label ) : ?>
                 <p class="section-desc"><?php echo esc_html( $event_date_label ); ?></p>
             <?php endif; ?>
 
             <?php if ( empty( $sessions ) ) : ?>
-                <p><?php esc_html_e( 'Sessions will be announced shortly.', 'ai-awareness-day' ); ?></p>
+                <p><?php esc_html_e( 'New events, conferences, CPD and courses will be announced shortly.', 'ai-awareness-day' ); ?></p>
             <?php else : ?>
                 <?php
                 if ( function_exists( 'aiad_render_schedule_audience_tabs' ) ) {
                     aiad_render_schedule_audience_tabs( $audience_labels, $audience_counts, count( $sessions ) );
                 }
                 ?>
-                <table class="aiad-schedule-table" aria-label="<?php esc_attr_e( 'Schedule of live sessions', 'ai-awareness-day' ); ?>">
+                <table class="aiad-schedule-table" aria-label="<?php esc_attr_e( 'Upcoming events, conferences, CPD and courses', 'ai-awareness-day' ); ?>">
                     <colgroup>
                         <col class="aiad-schedule-col aiad-schedule-col--time">
                         <col class="aiad-schedule-col aiad-schedule-col--session">
@@ -67,7 +67,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                     <thead>
                         <tr>
                             <th scope="col"><?php esc_html_e( 'Time', 'ai-awareness-day' ); ?></th>
-                            <th scope="col"><?php esc_html_e( 'Session', 'ai-awareness-day' ); ?></th>
+                            <th scope="col"><?php esc_html_e( 'Event', 'ai-awareness-day' ); ?></th>
                             <th scope="col"><?php esc_html_e( 'Audience', 'ai-awareness-day' ); ?></th>
                             <th scope="col"><?php esc_html_e( 'Provider', 'ai-awareness-day' ); ?></th>
                             <th scope="col"><?php esc_html_e( 'Format', 'ai-awareness-day' ); ?></th>
@@ -135,11 +135,14 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                                 <td class="aiad-schedule-cell-format"><?php echo esc_html( $format ); ?></td>
                                 <td class="aiad-schedule-cell-actions">
                                     <div class="aiad-schedule-cell-actions__inner">
-                                        <?php if ( function_exists( 'aiad_session_show_join_link' ) && aiad_session_show_join_link( $s->ID ) ) : ?>
-                                            <a class="aiad-schedule-table__cta" href="<?php echo esc_url( $reg_url ); ?>" target="_blank" rel="noopener" data-session-id="<?php echo esc_attr( (string) $s->ID ); ?>">
-                                                <?php echo esc_html( aiad_session_cta_label( $s->ID ) ); ?>
-                                            </a>
-                                        <?php elseif ( ! $is_past && ! $reg_url ) : ?>
+                                        <?php
+                                        $action_link = function_exists( 'aiad_render_session_action_link' )
+                                            ? aiad_render_session_action_link( (int) $s->ID, $reg_url, 'aiad-schedule-table' )
+                                            : '';
+                                        if ( $action_link ) :
+                                            echo $action_link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                        elseif ( ! $is_past && ! $reg_url ) :
+                                        ?>
                                             <span class="aiad-schedule-table__cta aiad-schedule-table__cta--soon"><?php esc_html_e( 'Soon', 'ai-awareness-day' ); ?></span>
                                         <?php endif; ?>
                                         <?php if ( $ics_start && ! $is_past ) : ?>
@@ -161,11 +164,11 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <p class="aiad-schedule-row__empty" hidden><?php esc_html_e( 'No sessions for this audience.', 'ai-awareness-day' ); ?></p>
+                <p class="aiad-schedule-row__empty" hidden><?php esc_html_e( 'No events for this audience.', 'ai-awareness-day' ); ?></p>
 
                 <div class="aiad-schedule-footer">
-                    <p class="aiad-schedule-footer__label"><?php esc_html_e( 'Share this schedule', 'ai-awareness-day' ); ?></p>
-                    <div class="aiad-schedule-share-bar" role="region" aria-label="<?php esc_attr_e( 'Share this schedule', 'ai-awareness-day' ); ?>">
+                    <p class="aiad-schedule-footer__label"><?php esc_html_e( 'Share these events', 'ai-awareness-day' ); ?></p>
+                    <div class="aiad-schedule-share-bar" role="region" aria-label="<?php esc_attr_e( 'Share these events', 'ai-awareness-day' ); ?>">
                         <button type="button" class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--native" hidden>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                             <?php esc_html_e( 'Share', 'ai-awareness-day' ); ?>
@@ -175,13 +178,13 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
                             <?php esc_html_e( 'Copy link', 'ai-awareness-day' ); ?>
                         </button>
                         <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--x"
-                           href="https://x.com/intent/tweet?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>&text=<?php echo rawurlencode( 'AI Awareness Day — Full Live Schedule' ); ?>"
+                           href="https://x.com/intent/tweet?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/events/' ) ); ?>&text=<?php echo rawurlencode( 'AI Awareness Day — Events & Conferences' ); ?>"
                            target="_blank" rel="noopener">X</a>
                         <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--linkedin"
-                           href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>"
+                           href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/events/' ) ); ?>"
                            target="_blank" rel="noopener">LinkedIn</a>
                         <a class="aiad-schedule-share-bar__btn aiad-schedule-share-bar__btn--facebook"
-                           href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/schedule/' ) ); ?>"
+                           href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode( get_post_type_archive_link( 'live_session' ) ?: home_url( '/events/' ) ); ?>"
                            target="_blank" rel="noopener">Facebook</a>
                         <span class="aiad-schedule-share-bar__status" aria-live="polite"></span>
                     </div>

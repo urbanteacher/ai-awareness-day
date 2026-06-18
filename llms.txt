@@ -6,7 +6,7 @@
 
 - [Home](https://aiawarenessday.co.uk/): Campaign overview, school registration, and countdown to 4 June 2026
 - [Resources](https://aiawarenessday.co.uk/resources/): Free classroom activities — lesson starters, assemblies, tutor time, and after-school sessions
-- [Live schedule](https://aiawarenessday.co.uk/schedule/): Live online sessions on 4 June 2026, filterable by key stage
+- [Events](https://aiawarenessday.co.uk/events/): Conferences, CPD, courses and live online sessions for schools and educators
 - [Partners](https://aiawarenessday.co.uk/partners/): Schools, charities, and organisations supporting the campaign
 - [AI tools](https://aiawarenessday.co.uk/ai-tools/): Curated AI tools for classroom use
 - [From partners](https://aiawarenessday.co.uk/from-partners/): Handpicked games and learning tools from trusted organisations

@@ -225,12 +225,15 @@
 
 		if (model.certificate && certProgress) {
 			var progress = certificateProgress(model.certificate, model);
+			var cardTitle = progress.unlocked
+				? (opts.certReadyTitle || 'Your certificate is ready')
+				: (progress.scoreEligible ? (opts.certEligibleTitle || 'Your certificate is within reach') : (opts.certTargetTitle || 'Your certificate goal'));
 			var jumpLabel = progress.unlocked
 				? (opts.certViewLabel || 'View certificate')
-				: (progress.scoreEligible ? (opts.certUnlockLabel || 'Unlock certificate') : (opts.certTargetLabel || 'See certificate target'));
+				: (progress.scoreEligible ? (opts.certUnlockLabel || 'Complete your evidence') : (opts.certTargetLabel || 'See how to qualify'));
 			html += '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--cert" aria-labelledby="airb-guidance-cert-title">';
 			html += '<p class="teacher-dash-scene" style="color:' + esc(accent) + '">Certificate progress</p>';
-			html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-cert-title">Unlock your certificate</h3>';
+			html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-cert-title">' + escFn(cardTitle) + '</h3>';
 			html += certProgress;
 			html += '<div class="airb__guidance-section-actions">';
 			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-dashboard-tab-jump="progress">' + escFn(jumpLabel) + '</button>';

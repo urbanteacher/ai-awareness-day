@@ -80,7 +80,7 @@
             }
 
             var joinBtn = e.target.closest(
-                '.session-single__btn--primary[href], .aiad-schedule-table__cta[href], a.aiad-schedule-card__join[href]'
+                '.session-single__btn--primary[href], .aiad-schedule-table__cta[href], a.aiad-schedule-card__join[href], a.aiad-schedule-table__cta--icon[href]'
             );
             if ( joinBtn ) {
                 var joinId = sessionIdFromEl( joinBtn );

@@ -978,41 +978,116 @@ function DashboardSubTabs({
 }
 
 function DomainTiles({ domains }: { domains: Domain[] }) {
+  const chartWidth = 900
+  const chartHeight = 250
+  const plotTop = 24
+  const plotBottom = 214
+  const plotLeft = 52
+  const plotRight = 878
+  const target = 70
+  const average = Math.round(domains.reduce((total, domain) => total + domain.value, 0) / domains.length)
+  const xFor = (index: number) =>
+    plotLeft + (index * (plotRight - plotLeft)) / Math.max(1, domains.length - 1)
+  const yFor = (value: number) =>
+    plotBottom - (value / 100) * (plotBottom - plotTop)
+  const points = domains.map((domain, index) => `${xFor(index)},${yFor(domain.value)}`).join(' ')
+  const areaPoints = `${plotLeft},${plotBottom} ${points} ${plotRight},${plotBottom}`
+  const tickerFor = (label: string) =>
+    label
+      .split(/\s|&/)
+      .filter(Boolean)
+      .map((word) => word[0])
+      .join('')
+      .slice(0, 3)
+      .toUpperCase()
+
   return (
-    <div className="benchmark-domain-grid">
-      {domains.map((domain) => {
-        const style = toneStyle[domain.tone]
-        return (
-          <section
-            key={domain.label}
-            className={`benchmark-metric-card ${style.border}`}
-          >
-            <div className="benchmark-metric-card__header">
-              <h3 className="benchmark-metric-card__title">{domain.label}</h3>
-              <span
-                className={`benchmark-metric-card__badge ${style.bg} ${style.text}`}
-              >
-                {style.label}
-              </span>
-            </div>
-            <div className="benchmark-metric-card__body">
-              <p className="benchmark-metric-card__value">{domain.value}%</p>
-              <p className={`benchmark-metric-card__prompt ${style.text}`}>{domain.prompt}</p>
-            </div>
-            <div className="benchmark-metric-card__bar">
-              <div
-                className="h-full rounded-full"
-                style={{
-                  width: `${domain.value}%`,
-                  backgroundColor:
-                    domain.tone === 'secure' ? '#16a34a' : domain.tone === 'practice' ? '#f59e0b' : '#e11d48',
-                }}
-              />
-            </div>
-          </section>
-        )
-      })}
-    </div>
+    <section className="benchmark-market" aria-label="Domain readiness index">
+      <div className="benchmark-market__header">
+        <div>
+          <p className="benchmark-market__eyebrow">Readiness index</p>
+          <div className="benchmark-market__quote">
+            <strong>{average}.00</strong>
+            <span className={average >= target ? 'is-up' : 'is-down'}>
+              {average >= target ? '+' : ''}{average - target}.00 vs target
+            </span>
+          </div>
+        </div>
+        <div className="benchmark-market__legend" aria-label="Chart legend">
+          <span><i className="is-secure" /> Secure</span>
+          <span><i className="is-practice" /> Building</span>
+          <span><i className="is-attention" /> Attention</span>
+        </div>
+      </div>
+
+      <div className="benchmark-market__chart-wrap">
+        <svg
+          className="benchmark-market__chart"
+          viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+          role="img"
+          aria-label={`Domain readiness ranges from ${Math.min(...domains.map((domain) => domain.value))}% to ${Math.max(...domains.map((domain) => domain.value))}%, against a 70% target.`}
+        >
+          <defs>
+            <linearGradient id="readiness-market-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#2563eb" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#2563eb" stopOpacity="0.02" />
+            </linearGradient>
+            <filter id="readiness-market-shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#0f172a" floodOpacity="0.16" />
+            </filter>
+          </defs>
+
+          {[100, 75, 50, 25, 0].map((tick) => (
+            <g key={tick}>
+              <line x1={plotLeft} x2={plotRight} y1={yFor(tick)} y2={yFor(tick)} className="benchmark-market__grid-line" />
+              <text x="10" y={yFor(tick) + 4} className="benchmark-market__axis-label">{tick}</text>
+            </g>
+          ))}
+
+          <line x1={plotLeft} x2={plotRight} y1={yFor(target)} y2={yFor(target)} className="benchmark-market__target-line" />
+          <text x={plotRight - 2} y={yFor(target) - 9} textAnchor="end" className="benchmark-market__target-label">
+            TARGET 70
+          </text>
+          <polygon points={areaPoints} fill="url(#readiness-market-fill)" />
+          <polyline points={points} className="benchmark-market__trend-line" filter="url(#readiness-market-shadow)" />
+
+          {domains.map((domain, index) => (
+            <g key={domain.label}>
+              <circle cx={xFor(index)} cy={yFor(domain.value)} r="8" className={`benchmark-market__point benchmark-market__point--${domain.tone}`} />
+              <text x={xFor(index)} y={yFor(domain.value) - 14} textAnchor="middle" className="benchmark-market__point-value">
+                {domain.value}
+              </text>
+              <text x={xFor(index)} y={plotBottom + 25} textAnchor="middle" className="benchmark-market__ticker-label">
+                {tickerFor(domain.label)}
+              </text>
+            </g>
+          ))}
+        </svg>
+      </div>
+
+      <div className="benchmark-market__ticker-grid">
+        {domains.map((domain) => {
+          const style = toneStyle[domain.tone]
+          const gap = domain.value - target
+          return (
+            <article key={domain.label} className={`benchmark-market__ticker benchmark-market__ticker--${domain.tone}`}>
+              <div className="benchmark-market__ticker-topline">
+                <span className="benchmark-market__ticker-code">{tickerFor(domain.label)}</span>
+                <span className={`benchmark-market__ticker-change ${gap >= 0 ? 'is-up' : 'is-down'}`}>
+                  {gap >= 0 ? '+' : ''}{gap}
+                </span>
+              </div>
+              <h3>{domain.label}</h3>
+              <div className="benchmark-market__ticker-quote">
+                <strong>{domain.value}%</strong>
+                <span className={`${style.bg} ${style.text}`}>{style.label}</span>
+              </div>
+              <p>{domain.prompt}</p>
+            </article>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 
