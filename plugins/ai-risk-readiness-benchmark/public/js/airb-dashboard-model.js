@@ -169,7 +169,7 @@
 
 	function domainTone(pct) {
 		if (pct >= 75) return 'secure';
-		if (pct >= 50) return 'practice';
+		if (pct >= 25) return 'practice';
 		return 'attention';
 	}
 

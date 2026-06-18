@@ -984,7 +984,7 @@ function isBelowFocusGuidanceMax(pct, opts) {
     }
     // Guidance eligibility and visual severity are different concepts.
     // Reserve the red below-threshold treatment for genuine attention scores.
-    return score < 50;
+    return score < 25;
 }
 
 function focusGuidanceAccordionMarkup(opts, summary, guidance, belowThreshold) {
@@ -1147,7 +1147,7 @@ function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
         if (isNaN(domainValue)) {
             domainValue = 0;
         }
-        var belowThreshold = domainValue < 50;
+        var belowThreshold = domainValue < 25;
 
         html += '<section class="benchmark-metric-card benchmark-metric-card--tone-' + escFn(toneKey) + ' ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
         html += '<div class="benchmark-metric-card__header">';
