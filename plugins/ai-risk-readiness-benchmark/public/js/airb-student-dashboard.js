@@ -260,6 +260,9 @@
 	}
 
 	function guidanceCtaHtml(model) {
+		if (AIRB.Certificate && AIRB.Certificate.guidanceCtaHtml) {
+			return AIRB.Certificate.guidanceCtaHtml(model, { esc: esc });
+		}
 		if (!model.priority) return '';
 		return '<article class="demo-airb airb__leader-cta-card">' +
 			'<h4 class="airb__leader-cta-title">Need more guidance</h4>' +

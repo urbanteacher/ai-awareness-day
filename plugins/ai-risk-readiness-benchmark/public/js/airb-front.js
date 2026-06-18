@@ -2080,15 +2080,17 @@
 		if (intro) {
 			html += '<p class="airb__parent-convo-intro">' + esc(intro) + '</p>';
 		}
-		starters.forEach(function (item) {
-			html += '<div class="airb__parent-convo-item">';
-			html += '<span class="airb__parent-convo-icon" aria-hidden="true"></span>';
+		html += '<p class="airb__parent-convo-instruction">Choose one that feels natural and start there.</p>';
+		html += '<ol class="airb__parent-convo-list">';
+		starters.forEach(function (item, index) {
+			html += '<li class="airb__parent-convo-item">';
+			html += '<span class="airb__parent-convo-number" aria-hidden="true">' + (index + 1) + '</span>';
 			html += '<div class="airb__parent-convo-copy">';
-			html += '<p class="airb__parent-convo-question">' + esc(item.question || '') + '</p>';
+			html += '<q class="airb__parent-convo-question">' + esc(item.question || '') + '</q>';
 			if (item.hint) html += '<p class="airb__parent-convo-hint">' + esc(item.hint) + '</p>';
-			html += '</div></div>';
+			html += '</div></li>';
 		});
-		return html + '</div>';
+		return html + '</ol></div>';
 	}
 
 	function parentShareCardHtml(pr) {

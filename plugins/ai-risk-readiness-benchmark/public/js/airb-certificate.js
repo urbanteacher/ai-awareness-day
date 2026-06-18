@@ -132,6 +132,110 @@
 		return Evidence.scoreThreshold ? Evidence.scoreThreshold() : 70;
 	}
 
+	function certificateProgress(cert, model) {
+		cert = cert || {};
+		model = model || {};
+		var threshold = cert.scoreThreshold != null ? cert.scoreThreshold : (cert.unlockAt != null ? cert.unlockAt : scoreThreshold());
+		var current = cert.currentScore != null ? cert.currentScore : (model.score != null ? model.score : 0);
+		var needed = cert.needed != null ? cert.needed : Math.max(0, threshold - current);
+		return {
+			threshold: threshold,
+			current: current,
+			needed: needed,
+			scoreEligible: cert.scoreEligible != null ? !!cert.scoreEligible : current >= threshold,
+			unlocked: !!cert.unlocked,
+		};
+	}
+
+	Cert.incentiveHtml = function (model) {
+		if (!model || !model.certificate) {
+			return '';
+		}
+		var progress = certificateProgress(model.certificate, model);
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
+
+		if (progress.unlocked) {
+			return '<p class="airb__leader-cta-cert airb__leader-cta-cert--unlocked" role="status">' +
+				'<strong>' + esc(i18n.certificateUnlockedLabel || 'Certificate unlocked') + '.</strong> ' +
+				esc(i18n.certificateUnlockedNote || 'Open Progress & certificate to download or print yours.') +
+				'</p>';
+		}
+		if (progress.scoreEligible) {
+			return '<p class="airb__leader-cta-cert airb__leader-cta-cert--met" role="status">' +
+				'<strong>' + esc((i18n.certificateThresholdMetLabel || 'Certificate threshold met ({n}%)').replace('{n}', String(progress.threshold))) + '</strong> ' +
+				esc((i18n.certificateEligibleNote || 'You scored {score}% — complete evidence in Progress & certificate to unlock.').replace('{score}', String(progress.current))) +
+				'</p>';
+		}
+		return '<p class="airb__leader-cta-cert airb__leader-cta-cert--gap" role="status">' +
+			'<strong>' + esc((i18n.certificateUnlockTargetLabel || 'Certificate unlocks at {n}%').replace('{n}', String(progress.threshold))) + '</strong> ' +
+			esc((i18n.certificateGapNote || 'You\'re at {score}% — {gap} point{plural} to go.')
+				.replace('{score}', String(progress.current))
+				.replace('{gap}', String(progress.needed))
+				.replace('{plural}', progress.needed === 1 ? '' : 's')) +
+			'</p>';
+	};
+
+	Cert.guidanceCtaHtml = function (model, opts) {
+		opts = opts || {};
+		var escFn = opts.esc || esc;
+		if (!model || !model.priority) {
+			return '';
+		}
+		var title = opts.title || 'Need more guidance?';
+		var primaryLabel = opts.primaryLabel || 'Request support';
+		var supportCopy = opts.supportCopy || 'Get practical help turning your results into safer everyday habits.';
+		var certIncentive = Cert.incentiveHtml(model);
+		var certJump = '';
+		if (model.certificate) {
+			var progress = certificateProgress(model.certificate, model);
+			var jumpLabel = progress.unlocked
+				? (opts.certViewLabel || 'View certificate')
+				: (progress.scoreEligible ? (opts.certUnlockLabel || 'Unlock certificate') : (opts.certTargetLabel || 'See certificate target'));
+			certJump = '<button type="button" class="airb__btn airb__btn--premium airb__leader-cta-btn airb__certificate-path-btn" data-airb-dashboard-tab-jump="progress">' + escFn(jumpLabel) + '</button>';
+		}
+		var primaryBtn = '';
+		if (opts.primaryTab) {
+			primaryBtn = '<button type="button" class="airb__btn airb__btn--ghost airb__leader-cta-btn airb__support-path-btn" data-airb-dashboard-tab-jump="' + escFn(opts.primaryTab) + '">' + escFn(primaryLabel) + '</button>';
+		} else {
+			primaryBtn = '<button type="button" class="airb__btn airb__btn--ghost airb__leader-cta-btn airb__support-path-btn" data-airb-scroll-interest="1">' + escFn(primaryLabel) + '</button>';
+		}
+		return '<article class="demo-airb airb__leader-cta-card">' +
+			'<section class="airb__certificate-path" aria-labelledby="airb-certificate-path-title">' +
+			'<p class="airb__leader-cta-kicker">Certificate progress</p>' +
+			'<h4 class="airb__leader-cta-title" id="airb-certificate-path-title">Your next step</h4>' +
+			certIncentive +
+			'<p class="airb__leader-cta-body">' + escFn(model.priority) + '</p>' +
+			'<div class="airb__leader-cta-actions">' + certJump + '</div>' +
+			'</section>' +
+			'<section class="airb__support-path" aria-labelledby="airb-support-path-title">' +
+			'<div class="airb__support-path-copy"><h4 class="airb__support-path-title" id="airb-support-path-title">' + escFn(title) + '</h4>' +
+			'<p class="airb__support-path-body">' + escFn(supportCopy) + '</p></div>' +
+			primaryBtn +
+			'</section>' +
+			'</article>';
+	};
+
+	function bindTabJumps(root) {
+		if (!root || root.dataset.airbTabJumpsBound === '1') {
+			return;
+		}
+		root.dataset.airbTabJumpsBound = '1';
+		root.addEventListener('click', function (e) {
+			var btn = e.target.closest('[data-airb-dashboard-tab-jump]');
+			if (!btn || !root.contains(btn)) {
+				return;
+			}
+			var tabKey = btn.getAttribute('data-airb-dashboard-tab-jump');
+			if (!tabKey) {
+				return;
+			}
+			var tab = root.querySelector('[data-airb-dashboard-tab="' + tabKey + '"]');
+			if (tab) {
+				tab.click();
+			}
+		});
+	}
+
 	function tierClass(tier) {
 		if (tier === 'strong_evidence') return 'is-strong';
 		if (tier === 'likely_valid') return 'is-valid';
@@ -407,6 +511,7 @@
 
 	Cert.bind = function (root) {
 		if (!root) return;
+		bindTabJumps(root);
 		var panels = root.querySelectorAll('[data-airb-certificate-panel]');
 		panels.forEach(function (panel) {
 			bindEvidenceInputs(panel);

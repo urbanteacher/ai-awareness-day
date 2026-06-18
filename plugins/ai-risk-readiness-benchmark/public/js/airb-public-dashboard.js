@@ -229,6 +229,14 @@
 
 	function guidanceCtaHtml(model) {
 		if (!model.priority) return '';
+		if (AIRB.Certificate && AIRB.Certificate.guidanceCtaHtml) {
+			return AIRB.Certificate.guidanceCtaHtml(model, {
+				esc: esc,
+				title: 'Your next step',
+				primaryLabel: model.nextAction || 'Open personal AI safety checklist',
+				primaryTab: 'resources',
+			});
+		}
 		var cta = model.nextAction || 'Open personal AI safety checklist';
 		return '<article class="demo-airb airb__leader-cta-card">' +
 			'<h4 class="airb__leader-cta-title">Your next step</h4>' +

@@ -212,8 +212,9 @@
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	min-height: 2.4rem;
 	gap: 0.5rem;
-	padding: 0.55rem 0 0;
+	padding: 0.45rem 0 0.2rem;
 	font-weight: 700;
 	font-size: 0.66rem;
 	cursor: pointer;
@@ -227,17 +228,19 @@
 	content: '';
 	display: block;
 	flex: none;
-	width: 0.42rem;
-	height: 0.42rem;
-	border-right: 2px solid currentColor;
-	border-bottom: 2px solid currentColor;
-	transform: rotate(45deg) translateY(-0.1rem);
+	width: 1.125rem;
+	height: 1.125rem;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+	transform: rotate(0deg);
+	transform-origin: center;
 	opacity: 0.75;
 	transition: transform 0.15s ease;
 }
 
 .airb__results--teacher .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--student .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--parent .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--leader .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--support .benchmark-metric-card .airb__results-accordion[open] > summary::after, .airb__results--public .benchmark-metric-card .airb__results-accordion[open] > summary::after {
-	transform: rotate(-135deg) translateY(0.1rem);
+	transform: rotate(180deg);
 }
 
 .airb__results--teacher .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--student .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--parent .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--leader .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--support .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker, .airb__results--public .benchmark-metric-card .airb__results-accordion > summary::-webkit-details-marker {
@@ -467,8 +470,9 @@
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	min-height: 2.4rem;
 	gap: 0.5rem;
-	padding: 0.55rem 0 0;
+	padding: 0.45rem 0 0.2rem;
 	font-weight: 700;
 	font-size: 0.7rem;
 	cursor: pointer;
@@ -482,11 +486,13 @@
 	content: '';
 	display: block;
 	flex: none;
-	width: 0.45rem;
-	height: 0.45rem;
-	border-right: 2px solid currentColor;
-	border-bottom: 2px solid currentColor;
-	transform: rotate(45deg) translateY(-0.1rem);
+	width: 1.125rem;
+	height: 1.125rem;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+	transform: rotate(0deg);
+	transform-origin: center;
 	opacity: 0.7;
 	float: none;
 	font-weight: inherit;
@@ -496,7 +502,7 @@
 
 .airb__results--teacher .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--student .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--parent .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--leader .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--support .demo-airb .airb__results-accordion[open] > summary::after, .airb__results--public .demo-airb .airb__results-accordion[open] > summary::after {
 	content: '';
-	transform: rotate(-135deg) translateY(0.1rem);
+	transform: rotate(180deg);
 }
 
 .airb__results--teacher .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--student .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--parent .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--leader .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--support .demo-airb .airb__results-accordion > summary::-webkit-details-marker, .airb__results--public .demo-airb .airb__results-accordion > summary::-webkit-details-marker {
@@ -751,14 +757,27 @@
 }
 
 .airb__results--teacher .demo-airb .airb__leader-cta-card, .airb__results--student .demo-airb .airb__leader-cta-card, .airb__results--parent .demo-airb .airb__leader-cta-card, .airb__results--leader .demo-airb .airb__leader-cta-card, .airb__results--support .demo-airb .airb__leader-cta-card, .airb__results--public .demo-airb .airb__leader-cta-card {
-	background: #eaf3de;
-	border: 1px solid #c5dc9e;
-	border-left: 3px solid #3b6d11;
+	background: #fff;
+	border: 1px solid #dbe3ec;
 	border-radius: 8px;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	padding: 0.9rem;
+	padding: 0;
+	overflow: hidden;
 	margin-bottom: 0;
+}
+
+.airb__results--teacher .demo-airb .airb__certificate-path, .airb__results--student .demo-airb .airb__certificate-path, .airb__results--parent .demo-airb .airb__certificate-path, .airb__results--leader .demo-airb .airb__certificate-path, .airb__results--support .demo-airb .airb__certificate-path, .airb__results--public .demo-airb .airb__certificate-path {
+	padding: 1rem;
+	background: #f7faef;
+	border-left: 3px solid #3b6d11;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-kicker, .airb__results--student .demo-airb .airb__leader-cta-kicker, .airb__results--parent .demo-airb .airb__leader-cta-kicker, .airb__results--leader .demo-airb .airb__leader-cta-kicker, .airb__results--support .demo-airb .airb__leader-cta-kicker, .airb__results--public .demo-airb .airb__leader-cta-kicker {
+	margin: 0 0 0.2rem;
+	font-size: 0.66rem;
+	font-weight: 750;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #557c2c;
 }
 
 .airb__results--teacher .demo-airb .airb__leader-cta-title, .airb__results--student .demo-airb .airb__leader-cta-title, .airb__results--parent .demo-airb .airb__leader-cta-title, .airb__results--leader .demo-airb .airb__leader-cta-title, .airb__results--support .demo-airb .airb__leader-cta-title, .airb__results--public .demo-airb .airb__leader-cta-title {
@@ -776,10 +795,104 @@
 	color: #3b6d11;
 }
 
+.airb__results--teacher .demo-airb .airb__leader-cta-cert, .airb__results--student .demo-airb .airb__leader-cta-cert, .airb__results--parent .demo-airb .airb__leader-cta-cert, .airb__results--leader .demo-airb .airb__leader-cta-cert, .airb__results--support .demo-airb .airb__leader-cta-cert, .airb__results--public .demo-airb .airb__leader-cta-cert {
+	margin: 0 0 0.55rem;
+	padding: 0.5rem 0.6rem;
+	border-radius: 6px;
+	font-size: 0.72rem;
+	line-height: 1.45;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-cert strong, .airb__results--student .demo-airb .airb__leader-cta-cert strong, .airb__results--parent .demo-airb .airb__leader-cta-cert strong, .airb__results--leader .demo-airb .airb__leader-cta-cert strong, .airb__results--support .demo-airb .airb__leader-cta-cert strong, .airb__results--public .demo-airb .airb__leader-cta-cert strong {
+	font-weight: 700;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-cert--gap, .airb__results--student .demo-airb .airb__leader-cta-cert--gap, .airb__results--parent .demo-airb .airb__leader-cta-cert--gap, .airb__results--leader .demo-airb .airb__leader-cta-cert--gap, .airb__results--support .demo-airb .airb__leader-cta-cert--gap, .airb__results--public .demo-airb .airb__leader-cta-cert--gap {
+	background: #fff7ed;
+	border: 1px solid #fed7aa;
+	color: #9a3412;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-cert--met, .airb__results--student .demo-airb .airb__leader-cta-cert--met, .airb__results--parent .demo-airb .airb__leader-cta-cert--met, .airb__results--leader .demo-airb .airb__leader-cta-cert--met, .airb__results--support .demo-airb .airb__leader-cta-cert--met, .airb__results--public .demo-airb .airb__leader-cta-cert--met {
+	background: #f0fdf4;
+	border: 1px solid #bbf7d0;
+	color: #166534;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-cert--unlocked, .airb__results--student .demo-airb .airb__leader-cta-cert--unlocked, .airb__results--parent .demo-airb .airb__leader-cta-cert--unlocked, .airb__results--leader .demo-airb .airb__leader-cta-cert--unlocked, .airb__results--support .demo-airb .airb__leader-cta-cert--unlocked, .airb__results--public .demo-airb .airb__leader-cta-cert--unlocked {
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1e40af;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-actions, .airb__results--student .demo-airb .airb__leader-cta-actions, .airb__results--parent .demo-airb .airb__leader-cta-actions, .airb__results--leader .demo-airb .airb__leader-cta-actions, .airb__results--support .demo-airb .airb__leader-cta-actions, .airb__results--public .demo-airb .airb__leader-cta-actions {
+	display: grid;
+	gap: 0.4rem;
+}
+
+.airb__results--teacher .demo-airb .airb__support-path, .airb__results--student .demo-airb .airb__support-path, .airb__results--parent .demo-airb .airb__support-path, .airb__results--leader .demo-airb .airb__support-path, .airb__results--support .demo-airb .airb__support-path, .airb__results--public .demo-airb .airb__support-path {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.85rem 1rem;
+	background: #fff;
+	border-top: 1px solid #e2e8f0;
+}
+
+.airb__results--teacher .demo-airb .airb__support-path-title, .airb__results--student .demo-airb .airb__support-path-title, .airb__results--parent .demo-airb .airb__support-path-title, .airb__results--leader .demo-airb .airb__support-path-title, .airb__results--support .demo-airb .airb__support-path-title, .airb__results--public .demo-airb .airb__support-path-title {
+	margin: 0;
+	font-size: 0.8rem;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #0f172a;
+}
+
+.airb__results--teacher .demo-airb .airb__support-path-body, .airb__results--student .demo-airb .airb__support-path-body, .airb__results--parent .demo-airb .airb__support-path-body, .airb__results--leader .demo-airb .airb__support-path-body, .airb__results--support .demo-airb .airb__support-path-body, .airb__results--public .demo-airb .airb__support-path-body {
+	margin: 0.15rem 0 0;
+	font-size: 0.7rem;
+	line-height: 1.4;
+	color: #64748b;
+}
+
 .airb__results--teacher .demo-airb .airb__leader-cta-btn, .airb__results--student .demo-airb .airb__leader-cta-btn, .airb__results--parent .demo-airb .airb__leader-cta-btn, .airb__results--leader .demo-airb .airb__leader-cta-btn, .airb__results--support .demo-airb .airb__leader-cta-btn, .airb__results--public .demo-airb .airb__leader-cta-btn {
 	width: 100%;
 	justify-content: center;
-	margin-top: 0.15rem;
+	margin-top: 0;
+}
+
+.airb__results--teacher .demo-airb .airb__leader-cta-btn--secondary, .airb__results--student .demo-airb .airb__leader-cta-btn--secondary, .airb__results--parent .demo-airb .airb__leader-cta-btn--secondary, .airb__results--leader .demo-airb .airb__leader-cta-btn--secondary, .airb__results--support .demo-airb .airb__leader-cta-btn--secondary, .airb__results--public .demo-airb .airb__leader-cta-btn--secondary {
+	background: #fff;
+	border: 1px solid #c5dc9e;
+	color: #2d5010;
+}
+
+.airb__results--teacher .demo-airb .airb__support-path-btn, .airb__results--student .demo-airb .airb__support-path-btn, .airb__results--parent .demo-airb .airb__support-path-btn, .airb__results--leader .demo-airb .airb__support-path-btn, .airb__results--support .demo-airb .airb__support-path-btn, .airb__results--public .demo-airb .airb__support-path-btn {
+	width: auto;
+	min-height: 2.5rem;
+	margin: 0;
+	padding: 0.55rem 0.75rem;
+	border: 1px solid #cbd5e1;
+	background: #fff;
+	color: #334155;
+	white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+	.airb__results--teacher .demo-airb .airb__certificate-path, .airb__results--student .demo-airb .airb__certificate-path, .airb__results--parent .demo-airb .airb__certificate-path, .airb__results--leader .demo-airb .airb__certificate-path, .airb__results--support .demo-airb .airb__certificate-path, .airb__results--public .demo-airb .airb__certificate-path {
+		padding: 0.85rem;
+	}
+
+	.airb__results--teacher .demo-airb .airb__support-path, .airb__results--student .demo-airb .airb__support-path, .airb__results--parent .demo-airb .airb__support-path, .airb__results--leader .demo-airb .airb__support-path, .airb__results--support .demo-airb .airb__support-path, .airb__results--public .demo-airb .airb__support-path {
+		grid-template-columns: 1fr;
+		gap: 0.6rem;
+		padding: 0.75rem 0.85rem 0.85rem;
+	}
+
+	.airb__results--teacher .demo-airb .airb__support-path-btn, .airb__results--student .demo-airb .airb__support-path-btn, .airb__results--parent .demo-airb .airb__support-path-btn, .airb__results--leader .demo-airb .airb__support-path-btn, .airb__results--support .demo-airb .airb__support-path-btn, .airb__results--public .demo-airb .airb__support-path-btn {
+		width: 100%;
+		min-height: 2.75rem;
+	}
 }
 
 .airb__results--teacher .demo-airb .airb__btn, .airb__results--student .demo-airb .airb__btn, .airb__results--parent .demo-airb .airb__btn, .airb__results--leader .demo-airb .airb__btn, .airb__results--support .demo-airb .airb__btn, .airb__results--public .demo-airb .airb__btn {
@@ -2528,6 +2641,29 @@
 		grid-column: 1 / -1;
 		height: 0.22rem;
 		margin-top: 0;
+	}
+
+	.airb__results--teacher .benchmark-metric-card .airb__results-accordion, .airb__results--student .benchmark-metric-card .airb__results-accordion, .airb__results--parent .benchmark-metric-card .airb__results-accordion, .airb__results--leader .benchmark-metric-card .airb__results-accordion, .airb__results--support .benchmark-metric-card .airb__results-accordion, .airb__results--public .benchmark-metric-card .airb__results-accordion {
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+		margin-top: 0.35rem;
+	}
+
+		.airb__results--teacher .benchmark-metric-card .airb__results-accordion > summary, .airb__results--student .benchmark-metric-card .airb__results-accordion > summary, .airb__results--parent .benchmark-metric-card .airb__results-accordion > summary, .airb__results--leader .benchmark-metric-card .airb__results-accordion > summary, .airb__results--support .benchmark-metric-card .airb__results-accordion > summary, .airb__results--public .benchmark-metric-card .airb__results-accordion > summary {
+			width: 100%;
+			min-height: 2.75rem;
+			box-sizing: border-box;
+		}
+
+	.airb__results--teacher .benchmark-metric-card .airb__focus-guidance-body, .airb__results--student .benchmark-metric-card .airb__focus-guidance-body, .airb__results--parent .benchmark-metric-card .airb__focus-guidance-body, .airb__results--leader .benchmark-metric-card .airb__focus-guidance-body, .airb__results--support .benchmark-metric-card .airb__focus-guidance-body, .airb__results--public .benchmark-metric-card .airb__focus-guidance-body {
+		width: 100%;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.airb__results--teacher .benchmark-metric-card .airb__focus-practice, .airb__results--student .benchmark-metric-card .airb__focus-practice, .airb__results--parent .benchmark-metric-card .airb__focus-practice, .airb__results--leader .benchmark-metric-card .airb__focus-practice, .airb__results--support .benchmark-metric-card .airb__focus-practice, .airb__results--public .benchmark-metric-card .airb__focus-practice {
+		width: 100%;
 	}
 
 	.airb__results--teacher .demo-airb .airb__teacher-strength-grid, .airb__results--student .demo-airb .airb__teacher-strength-grid, .airb__results--parent .demo-airb .airb__teacher-strength-grid, .airb__results--leader .demo-airb .airb__teacher-strength-grid, .airb__results--support .demo-airb .airb__teacher-strength-grid, .airb__results--public .demo-airb .airb__teacher-strength-grid {
