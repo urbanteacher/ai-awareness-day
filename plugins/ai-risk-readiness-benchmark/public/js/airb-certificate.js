@@ -147,32 +147,55 @@
 		};
 	}
 
+	function certificateStatusNote(progress, escFn) {
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
+		if (progress.unlocked) {
+			return (i18n.certificateUnlockedLabel || 'Certificate unlocked') + '. ' +
+				(i18n.certificateUnlockedNote || 'Open Progress & certificate to download or print yours.');
+		}
+		if (progress.scoreEligible) {
+			return (i18n.certificateThresholdMetLabel || 'Certificate threshold met ({n}%)').replace('{n}', String(progress.threshold)) + ' ' +
+				(i18n.certificateEligibleNote || 'You scored {score}% — complete evidence in Progress & certificate to unlock.').replace('{score}', String(progress.current));
+		}
+		return (i18n.certificateGapNote || '{gap} point{plural} to certificate unlock at {n}%.')
+			.replace('{gap}', String(progress.needed))
+			.replace('{plural}', progress.needed === 1 ? '' : 's')
+			.replace('{n}', String(progress.threshold));
+	}
+
 	Cert.incentiveHtml = function (model) {
 		if (!model || !model.certificate) {
 			return '';
 		}
 		var progress = certificateProgress(model.certificate, model);
-		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
-
-		if (progress.unlocked) {
-			return '<p class="airb__leader-cta-cert airb__leader-cta-cert--unlocked" role="status">' +
-				'<strong>' + esc(i18n.certificateUnlockedLabel || 'Certificate unlocked') + '.</strong> ' +
-				esc(i18n.certificateUnlockedNote || 'Open Progress & certificate to download or print yours.') +
-				'</p>';
-		}
-		if (progress.scoreEligible) {
-			return '<p class="airb__leader-cta-cert airb__leader-cta-cert--met" role="status">' +
-				'<strong>' + esc((i18n.certificateThresholdMetLabel || 'Certificate threshold met ({n}%)').replace('{n}', String(progress.threshold))) + '</strong> ' +
-				esc((i18n.certificateEligibleNote || 'You scored {score}% — complete evidence in Progress & certificate to unlock.').replace('{score}', String(progress.current))) +
-				'</p>';
-		}
-		return '<p class="airb__leader-cta-cert airb__leader-cta-cert--gap" role="status">' +
-			'<strong>' + esc((i18n.certificateUnlockTargetLabel || 'Certificate unlocks at {n}%').replace('{n}', String(progress.threshold))) + '</strong> ' +
-			esc((i18n.certificateGapNote || 'You\'re at {score}% — {gap} point{plural} to go.')
-				.replace('{score}', String(progress.current))
-				.replace('{gap}', String(progress.needed))
-				.replace('{plural}', progress.needed === 1 ? '' : 's')) +
+		var stateClass = progress.unlocked ? 'airb__cert-progress--unlocked' : (progress.scoreEligible ? 'airb__cert-progress--met' : 'airb__cert-progress--gap');
+		return '<p class="teacher-dash-cert-note airb__cert-progress-note ' + stateClass + '" role="status">' +
+			esc(certificateStatusNote(progress, esc)) +
 			'</p>';
+	};
+
+	Cert.certificateProgressHtml = function (model, escFn) {
+		escFn = escFn || esc;
+		if (!model || !model.certificate) {
+			return '';
+		}
+		var progress = certificateProgress(model.certificate, model);
+		var accent = model.accent || '#2563eb';
+		var gapDisplay = progress.unlocked ? 'Done' : (progress.scoreEligible ? 'Met' : ('+' + progress.needed));
+		var barWidth = progress.threshold > 0 ? Math.min(100, Math.round((progress.current / progress.threshold) * 100)) : 0;
+		var stateClass = progress.unlocked ? 'airb__cert-progress--unlocked' : (progress.scoreEligible ? 'airb__cert-progress--met' : 'airb__cert-progress--gap');
+		var statusText = certificateStatusNote(progress, escFn);
+
+		return '<div class="airb__cert-progress ' + stateClass + '">' +
+			'<div class="benchmark-certificate-stats">' +
+			'<div><span>Current</span><strong>' + escFn(progress.current) + '%</strong></div>' +
+			'<div><span>Target</span><strong>' + escFn(progress.threshold) + '%</strong></div>' +
+			'<div><span>Gap</span><strong>' + escFn(gapDisplay) + '</strong></div>' +
+			'</div>' +
+			'<div class="teacher-dash-progress-bar airb__cert-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + escFn(progress.threshold) + '" aria-valuenow="' + escFn(progress.current) + '" aria-label="' + escFn('Progress toward certificate threshold') + '">' +
+			'<span style="width:' + barWidth + '%;background:' + esc(accent) + '"></span></div>' +
+			'<p class="teacher-dash-cert-note airb__cert-progress-note" role="status">' + escFn(statusText) + '</p>' +
+			'</div>';
 	};
 
 	Cert.guidanceCtaHtml = function (model, opts) {
@@ -181,38 +204,50 @@
 		if (!model || !model.priority) {
 			return '';
 		}
-		var title = opts.title || 'Need more guidance?';
+		var accent = model.accent || '#2563eb';
+		var focusHeading = opts.focusHeading || 'Priority focus';
 		var primaryLabel = opts.primaryLabel || 'Request support';
+		var practiceScene = opts.sceneLabel || (opts.primaryTab ? 'Your next step' : 'Need more guidance?');
+		var supportTitle = opts.title || 'Need more guidance?';
 		var supportCopy = opts.supportCopy || 'Get practical help turning your results into safer everyday habits.';
-		var certIncentive = Cert.incentiveHtml(model);
-		var certJump = '';
-		if (model.certificate) {
+		var certProgress = Cert.certificateProgressHtml(model, escFn);
+		var html = '';
+
+		if (model.certificate && certProgress) {
 			var progress = certificateProgress(model.certificate, model);
 			var jumpLabel = progress.unlocked
 				? (opts.certViewLabel || 'View certificate')
 				: (progress.scoreEligible ? (opts.certUnlockLabel || 'Unlock certificate') : (opts.certTargetLabel || 'See certificate target'));
-			certJump = '<button type="button" class="airb__btn airb__btn--premium airb__leader-cta-btn airb__certificate-path-btn" data-airb-dashboard-tab-jump="progress">' + escFn(jumpLabel) + '</button>';
+			html += '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--cert" aria-labelledby="airb-guidance-cert-title">';
+			html += '<p class="teacher-dash-scene" style="color:' + esc(accent) + '">Certificate progress</p>';
+			html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-cert-title">Unlock your certificate</h3>';
+			html += certProgress;
+			html += '<div class="airb__guidance-section-actions">';
+			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-dashboard-tab-jump="progress">' + escFn(jumpLabel) + '</button>';
+			html += '</div>';
+			html += '</section>';
 		}
-		var primaryBtn = '';
+
+		html += '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--practice" aria-labelledby="airb-guidance-practice-title">';
+		html += '<p class="teacher-dash-scene" style="color:' + esc(accent) + '">' + escFn(practiceScene) + '</p>';
+		html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-practice-title">' + escFn(focusHeading) + '</h3>';
+		html += '<p class="airb__guidance-focus-body">' + escFn(model.priority) + '</p>';
+		if (!opts.primaryTab) {
+			html += '<div class="airb__guidance-support">';
+			html += '<p class="airb__guidance-support-label">' + escFn(supportTitle) + '</p>';
+			html += '<p class="airb__guidance-support-copy">' + escFn(supportCopy) + '</p>';
+			html += '</div>';
+		}
+		html += '<div class="airb__guidance-section-actions">';
 		if (opts.primaryTab) {
-			primaryBtn = '<button type="button" class="airb__btn airb__btn--ghost airb__leader-cta-btn airb__support-path-btn" data-airb-dashboard-tab-jump="' + escFn(opts.primaryTab) + '">' + escFn(primaryLabel) + '</button>';
+			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-dashboard-tab-jump="' + escFn(opts.primaryTab) + '">' + escFn(primaryLabel) + '</button>';
 		} else {
-			primaryBtn = '<button type="button" class="airb__btn airb__btn--ghost airb__leader-cta-btn airb__support-path-btn" data-airb-scroll-interest="1">' + escFn(primaryLabel) + '</button>';
+			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-scroll-interest="1">' + escFn(primaryLabel) + '</button>';
 		}
-		return '<article class="demo-airb airb__leader-cta-card">' +
-			'<section class="airb__certificate-path" aria-labelledby="airb-certificate-path-title">' +
-			'<p class="airb__leader-cta-kicker">Certificate progress</p>' +
-			'<h4 class="airb__leader-cta-title" id="airb-certificate-path-title">Your next step</h4>' +
-			certIncentive +
-			'<p class="airb__leader-cta-body">' + escFn(model.priority) + '</p>' +
-			'<div class="airb__leader-cta-actions">' + certJump + '</div>' +
-			'</section>' +
-			'<section class="airb__support-path" aria-labelledby="airb-support-path-title">' +
-			'<div class="airb__support-path-copy"><h4 class="airb__support-path-title" id="airb-support-path-title">' + escFn(title) + '</h4>' +
-			'<p class="airb__support-path-body">' + escFn(supportCopy) + '</p></div>' +
-			primaryBtn +
-			'</section>' +
-			'</article>';
+		html += '</div>';
+		html += '</section>';
+
+		return html;
 	};
 
 	function bindTabJumps(root) {

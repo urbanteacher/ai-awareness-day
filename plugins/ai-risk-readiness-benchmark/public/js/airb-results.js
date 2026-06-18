@@ -982,7 +982,9 @@ function isBelowFocusGuidanceMax(pct, opts) {
     if (isNaN(score)) {
         score = 0;
     }
-    return score < focusGuidanceMaxFromOpts(opts);
+    // Guidance eligibility and visual severity are different concepts.
+    // Reserve the red below-threshold treatment for genuine attention scores.
+    return score < 50;
 }
 
 function focusGuidanceAccordionMarkup(opts, summary, guidance, belowThreshold) {
@@ -1134,20 +1136,20 @@ function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
         bar: '#64748b'
     };
     var accordionOpts = Object.assign({}, opts);
-    var focusMax = focusGuidanceMaxFromOpts(opts);
     var html = '<div class="benchmark-domain-grid benchmark-domain-grid--with-guidance">';
 
     domains.forEach(function (domain) {
         var tone = toneMap[domain.tone] || defaultTone;
+        var toneKey = normaliseKey(domain.tone || 'practice');
         var area = focusAreaForDomain(domain, focusAreas);
         var hasGuidance = !!(area && ((area.likely_impact && area.likely_impact.length) || (area.challenge_bullets && area.challenge_bullets.length) || (area.challenge_body) || (area.actions && area.actions.length)));
         var domainValue = parseInt(domain.value, 10);
         if (isNaN(domainValue)) {
             domainValue = 0;
         }
-        var belowThreshold = domainValue < focusMax;
+        var belowThreshold = domainValue < 50;
 
-        html += '<section class="benchmark-metric-card ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
+        html += '<section class="benchmark-metric-card benchmark-metric-card--tone-' + escFn(toneKey) + ' ' + (tone.border || '') + (hasGuidance ? ' benchmark-metric-card--has-guidance' : '') + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
         html += '<div class="benchmark-metric-card__header">';
         html += '<h3 class="benchmark-metric-card__title">' + escFn(domain.label) + '</h3>';
         html += '<span class="benchmark-metric-card__badge ' + (tone.bg || '') + ' ' + (tone.text || '') + (belowThreshold ? ' benchmark-metric-card__badge--below-threshold' : '') + '">' + escFn(tone.label || '') + '</span>';

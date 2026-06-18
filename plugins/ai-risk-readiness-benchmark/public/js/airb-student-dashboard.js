@@ -183,10 +183,9 @@
 			}));
 		}
 		var html = '<div class="benchmark-domain-grid">';
-		var focusMax = (Results.focusGuidanceMaxFromOpts && Results.focusGuidanceMaxFromOpts(opts)) || parseInt(opts.focusGuidanceMax, 10) || 70;
 		domains.forEach(function (domain) {
 			var tone = TONE_MAP[domain.tone] || TONE_MAP.practice;
-			var belowThreshold = domain.value < focusMax;
+			var belowThreshold = domain.value < 50;
 			html += '<section class="benchmark-metric-card ' + tone.border + (belowThreshold ? ' benchmark-metric-card--below-threshold' : '') + '">';
 			html += '<div class="benchmark-metric-card__header">';
 			html += '<h3 class="benchmark-metric-card__title">' + esc(domain.label) + '</h3>';
