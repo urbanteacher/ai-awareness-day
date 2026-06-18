@@ -1639,7 +1639,8 @@
 }
 
 .benchmark-certificate-reflection textarea,
-.benchmark-certificate-reflection input[type="url"] {
+.benchmark-certificate-reflection input[type="url"],
+.benchmark-certificate-reflection input[type="email"] {
 	width: 100%;
 	margin-top: 0.35rem;
 	padding: 0.55rem 0.65rem;
@@ -1650,6 +1651,14 @@
 	line-height: 1.45;
 	color: #0f172a;
 	background: #fff;
+}
+
+.benchmark-certificate-reflection-hint {
+	display: block;
+	margin-top: 0.35rem;
+	font-size: 0.72rem;
+	line-height: 1.4;
+	color: #64748b;
 }
 
 .benchmark-certificate-reflection textarea {

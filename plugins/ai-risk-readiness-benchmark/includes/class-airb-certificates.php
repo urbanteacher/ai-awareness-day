@@ -128,6 +128,7 @@ class AIRB_Certificates {
 
 		if ( $row ) {
 			$status['unlocked']              = 'unlocked' === (string) $row->status;
+			$status['pending_review']        = 'pending_review' === (string) $row->status;
 			$status['status']                = (string) $row->status;
 			$status['certificate_id']        = (string) $row->certificate_id;
 			$status['participant_name']      = (string) $row->participant_name;
@@ -165,6 +166,10 @@ class AIRB_Certificates {
 			? AIRB_School_Dashboard::school_key_for( $school_name )
 			: '';
 		$now            = current_time( 'mysql' );
+		$status         = sanitize_key( (string) ( $args['status'] ?? 'unlocked' ) );
+		if ( ! in_array( $status, array( 'unlocked', 'pending_review' ), true ) ) {
+			$status = 'unlocked';
+		}
 		$row            = array(
 			'certificate_id'          => $certificate_id,
 			'submission_id'           => $submission_id,
@@ -184,7 +189,7 @@ class AIRB_Certificates {
 			'evidence_quality_score'  => self::clamp_percent( (int) ( $args['evidence_quality_score'] ?? 0 ) ),
 			'evidence_quality_tier'   => sanitize_key( (string) ( $args['evidence_quality_tier'] ?? '' ) ),
 			'verification_hash'       => self::verification_hash( $certificate_id, $submission_id ),
-			'status'                  => 'unlocked',
+			'status'                  => $status,
 			'updated_at'              => $now,
 		);
 
@@ -277,5 +282,100 @@ class AIRB_Certificates {
 	 */
 	private static function clamp_percent( int $value ): int {
 		return max( 0, min( 100, $value ) );
+	}
+
+	/**
+	 * Update certificate status for a submission.
+	 */
+	public static function update_status( int $submission_id, string $status ): bool {
+		global $wpdb;
+
+		$submission_id = max( 0, $submission_id );
+		$status        = sanitize_key( $status );
+		if ( $submission_id <= 0 || ! in_array( $status, array( 'unlocked', 'pending_review', 'draft' ), true ) ) {
+			return false;
+		}
+
+		$updated = $wpdb->update(
+			self::table_name(),
+			array(
+				'status'     => $status,
+				'updated_at' => current_time( 'mysql' ),
+			),
+			array( 'submission_id' => $submission_id ),
+			array( '%s', '%s' ),
+			array( '%d' )
+		);
+
+		return false !== $updated;
+	}
+
+	/**
+	 * Notify AI Awareness Day when a certificate needs manual review.
+	 *
+	 * @param object $certificate Certificate row.
+	 * @param object $submission  Benchmark submission row.
+	 * @param string $notify_email Email to reach the participant.
+	 */
+	public static function notify_pending_review( object $certificate, object $submission, string $notify_email = '' ): void {
+		$to = class_exists( 'AIRB_Interest' ) ? AIRB_Interest::contact_email() : get_option( 'admin_email' );
+		if ( ! $to ) {
+			return;
+		}
+
+		$admin_url = add_query_arg(
+			array(
+				'page'          => 'airb-benchmark',
+				'submission_id' => (int) $submission->id,
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$subject = sprintf(
+			/* translators: %s: participant name */
+			__( 'Certificate review needed — %s', 'ai-risk-benchmark' ),
+			(string) $certificate->participant_name
+		);
+
+		$body  = "A benchmark certificate is waiting for manual review.\n\n";
+		$body .= 'Participant: ' . (string) $certificate->participant_name . "\n";
+		$body .= 'Role: ' . (string) $certificate->role . "\n";
+		$body .= 'School: ' . ( (string) $certificate->school_name ?: '—' ) . "\n";
+		$body .= 'Contact email: ' . ( $notify_email ?: '—' ) . "\n";
+		$body .= 'Certificate ID: ' . (string) $certificate->certificate_id . "\n";
+		$body .= 'Benchmark score: ' . (int) $submission->alignment_score . "%\n";
+		$body .= 'Evidence theme: ' . (string) $certificate->evidence_theme . "\n";
+		$body .= 'Evidence quality: ' . (int) $certificate->evidence_quality_score . '/100 · ' . (string) $certificate->evidence_quality_tier . "\n\n";
+		$body .= "Action evidenced:\n" . (string) $certificate->evidence_action . "\n\n";
+		$body .= "Change described:\n" . (string) $certificate->evidence_change . "\n\n";
+		if ( ! empty( $certificate->evidence_link ) ) {
+			$body .= 'Evidence link: ' . (string) $certificate->evidence_link . "\n\n";
+		}
+		$body .= "Review in WordPress:\n{$admin_url}\n";
+
+		wp_mail( $to, $subject, $body );
+	}
+
+	/**
+	 * Tell the participant their certificate is ready to download.
+	 *
+	 * @param object $certificate Certificate row.
+	 * @param string $notify_email Recipient email.
+	 */
+	public static function notify_approved( object $certificate, string $notify_email ): void {
+		$notify_email = sanitize_email( $notify_email );
+		if ( ! $notify_email ) {
+			return;
+		}
+
+		$subject = __( 'Your AI Awareness Day certificate is ready', 'ai-risk-benchmark' );
+		$body    = sprintf(
+			/* translators: 1: participant name, 2: certificate id */
+			__( "Hi %1\$s,\n\nYour AI Risk & Readiness Benchmark certificate has been approved.\n\nCertificate ID: %2\$s\n\nReturn to your benchmark results and open Progress & certificate to download or print it.\n\nAI Awareness Day", 'ai-risk-benchmark' ),
+			(string) $certificate->participant_name,
+			(string) $certificate->certificate_id
+		);
+
+		wp_mail( $notify_email, $subject, $body );
 	}
 }

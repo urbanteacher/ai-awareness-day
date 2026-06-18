@@ -387,6 +387,7 @@
 			scoreThreshold: threshold,
 			scoreEligible: source.score_eligible != null ? !!source.score_eligible : currentScore >= threshold,
 			unlocked: !!source.unlocked,
+			pendingReview: !!source.pending_review || source.status === 'pending_review',
 			status: source.status || (source.unlocked ? 'unlocked' : 'draft'),
 			certificateId: source.certificate_id || '',
 			participantName: source.participant_name || '',

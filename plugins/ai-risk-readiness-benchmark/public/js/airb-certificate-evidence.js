@@ -203,7 +203,7 @@
 		var manualReview = !!link;
 		if (link) {
 			score = Math.min(100, score + 5);
-			messages.push('Evidence link received — this may be reviewed by AI Awareness Day.');
+			messages.push('Evidence link added — submit for review. Download unlocks after AI Awareness Day approves your evidence.');
 		}
 
 		score = Math.max(0, Math.min(100, score));

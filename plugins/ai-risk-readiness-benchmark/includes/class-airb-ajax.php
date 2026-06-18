@@ -230,9 +230,12 @@ class AIRB_Ajax {
 		}
 
 		$existing_cert = AIRB_Certificates::get_by_submission( $submission_id );
-		if ( $existing_cert && 'unlocked' === (string) $existing_cert->status ) {
-			wp_send_json_error( array( 'message' => __( 'Certificate already allocated for this benchmark.', 'ai-risk-benchmark' ) ), 400 );
+		if ( $existing_cert && in_array( (string) $existing_cert->status, array( 'unlocked', 'pending_review' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Certificate already submitted for this benchmark.', 'ai-risk-benchmark' ) ), 400 );
 		}
+
+		$contact_email    = sanitize_email( (string) ( $_POST['contact_email'] ?? '' ) );
+		$submission_email = sanitize_email( (string) ( $submission->email ?? '' ) );
 
 		$stored_role = sanitize_key( (string) $submission->role );
 		$role        = AIRB_Certificate_Copy::normalize_role( $stored_role ?: $role );
@@ -258,6 +261,42 @@ class AIRB_Ajax {
 			);
 		}
 
+		$requires_review = ! empty( $assessment['manual_review'] );
+		$notify_email    = $submission_email ?: $contact_email;
+		$roles_need_contact = in_array( $role, array( 'student', 'parent' ), true );
+
+		if ( $requires_review && ! $notify_email ) {
+			wp_send_json_error(
+				array(
+					'message'    => __( 'Add an email address so we can tell you when your certificate is approved.', 'ai-risk-benchmark' ),
+					'assessment' => $assessment,
+				),
+				400
+			);
+		}
+		if ( $roles_need_contact && ! $notify_email ) {
+			wp_send_json_error(
+				array(
+					'message'    => __( 'Add an email address (yours or a parent/teacher contact) so we can send your certificate.', 'ai-risk-benchmark' ),
+					'assessment' => $assessment,
+				),
+				400
+			);
+		}
+
+		if ( $contact_email && ! $submission_email ) {
+			global $wpdb;
+			$wpdb->update(
+				AIRB_Database::table_name(),
+				array( 'email' => $contact_email ),
+				array( 'id' => $submission_id ),
+				array( '%s' ),
+				array( '%d' )
+			);
+		}
+
+		$cert_status = $requires_review ? 'pending_review' : 'unlocked';
+
 		$row = AIRB_Certificates::allocate(
 			array(
 				'submission_id'          => $submission_id,
@@ -268,18 +307,23 @@ class AIRB_Ajax {
 				'baseline_score'         => $score,
 				'completed_score'        => $score,
 				'unlock_at'              => AIRB_Certificate_Evidence::SCORE_THRESHOLD,
-				'unlock_reason'          => 'evidenced_progress',
+				'unlock_reason'          => $requires_review ? 'pending_manual_review' : 'evidenced_progress',
 				'evidence_theme'         => $theme,
 				'evidence_action'        => $action,
 				'evidence_change'        => $change,
 				'evidence_link'          => $link,
 				'evidence_quality_score' => (int) ( $assessment['quality_score'] ?? 0 ),
 				'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
+				'status'                 => $cert_status,
 			)
 		);
 
 		if ( ! $row ) {
 			wp_send_json_error( array( 'message' => __( 'Could not allocate the certificate. Please try again.', 'ai-risk-benchmark' ) ), 500 );
+		}
+
+		if ( $requires_review ) {
+			AIRB_Certificates::notify_pending_review( $row, $submission, $notify_email );
 		}
 
 		AIRB_Events::insert(
@@ -316,6 +360,9 @@ class AIRB_Ajax {
 					'evidence_theme'         => $theme,
 					'evidence_quality_score' => (int) ( $assessment['quality_score'] ?? 0 ),
 					'evidence_quality_tier'  => (string) ( $assessment['quality_tier'] ?? '' ),
+					'status'                 => (string) $row->status,
+					'pending_review'         => 'pending_review' === (string) $row->status,
+					'unlocked'               => 'unlocked' === (string) $row->status,
 					'assessment'             => $assessment,
 					'copy'                   => array(
 						'headline_primary'   => $copy['headline_primary'],

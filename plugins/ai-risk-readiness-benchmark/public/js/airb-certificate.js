@@ -63,6 +63,16 @@
 		return (AIRB.runtime && AIRB.runtime.state && AIRB.runtime.state.sessionId) || '';
 	}
 
+	function submissionEmailFromRuntime() {
+		return (AIRB.runtime && AIRB.runtime.state && AIRB.runtime.state.email) || '';
+	}
+
+	function roleNeedsContactEmail(role, submissionEmail) {
+		if (submissionEmail) return false;
+		role = normalizeRole(role);
+		return role === 'student' || role === 'parent';
+	}
+
 	function formatDate(value) {
 		if (!value) return new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
 		var normalised = String(value).replace(' ', 'T');
@@ -372,14 +382,53 @@
 	function syncUnlockState(panel, cert, assessment) {
 		var allocate = panel.querySelector('[data-airb-certificate-allocate]');
 		var download = panel.querySelector('[data-airb-certificate-download]');
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
 		var unlocked = cert && cert.unlocked;
+		var pendingReview = cert && cert.pendingReview;
 		var canUnlock = assessment && assessment.can_unlock;
+		var needsReview = assessment && assessment.manual_review;
 		if (allocate) {
-			allocate.disabled = unlocked || !canUnlock;
+			if (unlocked || pendingReview) {
+				allocate.disabled = true;
+				allocate.textContent = pendingReview
+					? (i18n.certificateSubmittedForReview || 'Submitted for review')
+					: (i18n.certificateAllocated || 'Certificate allocated');
+			} else {
+				allocate.disabled = !canUnlock;
+				allocate.textContent = needsReview
+					? (i18n.certificateSubmitForReview || 'Submit for review')
+					: (i18n.certificateUnlock || 'Unlock certificate');
+			}
 		}
 		if (download) {
 			download.disabled = !unlocked;
 		}
+	}
+
+	function contactEmailFieldHtml(role, submissionEmail, locked, value) {
+		if (!roleNeedsContactEmail(role, submissionEmail)) {
+			return '';
+		}
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
+		return '<label class="benchmark-certificate-reflection">' + esc(i18n.certificateContactEmail || 'Email for certificate updates') +
+			'<input type="email" data-airb-certificate-contact-email value="' + esc(value || '') + '" placeholder="' + esc(i18n.certificateContactEmailPlaceholder || 'you@school.org or parent@email.com') + '" autocomplete="email"' + (locked ? ' readonly' : '') + '>' +
+			'<span class="benchmark-certificate-reflection-hint">' + esc(i18n.certificateContactEmailHint || 'Required for students and parents so we can email when your certificate is approved.') + '</span></label>';
+	}
+
+	function printCertificateStyles() {
+		return '<style>' +
+			'body{margin:0;padding:32px;background:#fff;color:#020617;font-family:Georgia,"Times New Roman",serif;}' +
+			'.certificate-preview{width:100%;max-width:900px;margin:0 auto;background:#fff;}' +
+			'.certificate-preview__frame{border:4px solid #166534;padding:1.25rem;background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.06);}' +
+			'.certificate-preview__content,.certificate-preview__lead,.certificate-preview__name,.certificate-preview__body{text-align:center;}' +
+			'.certificate-preview__headline{margin:0;font-size:2rem;line-height:1.1;}' +
+			'.certificate-preview__headline-primary,.certificate-preview__headline-secondary{display:block;}' +
+			'.certificate-preview__lead,.certificate-preview__body{margin:.75rem auto 0;max-width:42rem;color:#475569;line-height:1.45;font-size:1rem;}' +
+			'.certificate-preview__name{margin:.5rem 0 0;font-size:2.2rem;line-height:1.05;font-weight:800;color:#166534;}' +
+			'.certificate-preview__date{margin:1rem 0 0;font-weight:700;}' +
+			'.certificate-preview__footer{display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:center;margin-top:1rem;padding-top:.75rem;border-top:1px solid #e2e8f0;font-size:.75rem;color:#64748b;}' +
+			'@media print{body{padding:0}.certificate-preview__frame{box-shadow:none}}' +
+			'</style>';
 	}
 
 	function evidenceFormHtml(role, cert, scoreEligible, unlocked) {
@@ -427,20 +476,25 @@
 	function printCertificate(panel) {
 		var preview = panel && panel.querySelector('[data-airb-certificate-preview]');
 		if (!preview) return;
-		var win = window.open('', '_blank', 'noopener,noreferrer,width=1000,height=760');
-		if (!win) return;
-		var cfg = window.airbBenchmark || {};
-		var role = panel.dataset.airbRole || roleFromRuntime() || 'teacher';
-		win.document.write('<!doctype html><html><head><title>AI Awareness Day Certificate</title>');
-		if (cfg.pluginUrl) {
-			win.document.write('<link rel="stylesheet" href="' + esc(cfg.pluginUrl + 'public/css/airb-teacher-dashboard.css') + '">');
+		var win = window.open('', '_blank', 'width=1000,height=760');
+		if (!win) {
+			setStatus(panel, (window.airbBenchmark && airbBenchmark.i18n && airbBenchmark.i18n.certificatePopupBlocked) || 'Allow pop-ups to download or print your certificate.', true);
+			return;
 		}
-		win.document.write('</head><body class="airb__results--' + esc(role) + '-dash" style="padding:32px;background:#fff;">');
-		win.document.write(preview.outerHTML);
-		win.document.write('</body></html>');
+		var html = '<!doctype html><html><head><meta charset="utf-8"><title>AI Awareness Day Certificate</title>';
+		html += printCertificateStyles();
+		html += '</head><body class="airb-certificate-print">';
+		html += preview.outerHTML;
+		html += '</body></html>';
+		win.document.open();
+		win.document.write(html);
 		win.document.close();
 		win.focus();
-		setTimeout(function () { win.print(); }, 250);
+		setTimeout(function () {
+			try {
+				win.print();
+			} catch (e) { /* ignore */ }
+		}, 300);
 	}
 
 	Cert.panelHtml = function (model, role, accent) {
@@ -449,7 +503,9 @@
 		var cert = model.certificate || {};
 		var title = certificateTitle(model, role);
 		var unlocked = !!cert.unlocked;
+		var pendingReview = !!cert.pendingReview || cert.status === 'pending_review';
 		var participantName = cert.participantName || '';
+		var submissionEmail = submissionEmailFromRuntime();
 		var scoreEligible = cert.scoreEligible != null ? !!cert.scoreEligible : (cert.currentScore || model.score || 0) >= scoreThreshold();
 		var threshold = scoreThreshold();
 		var storedCert = {
@@ -470,11 +526,15 @@
 		var submissionId = submissionIdFromRuntime();
 		var benchmarkScore = cert.currentScore || model.score || 0;
 
-		var html = '<section class="teacher-dash-card benchmark-certificate-layout" data-airb-certificate-panel data-airb-role="' + esc(role) + '" data-airb-submission-id="' + esc(submissionId) + '" data-airb-benchmark-score="' + esc(benchmarkScore) + '" data-airb-score-eligible="' + (scoreEligible ? '1' : '0') + '" data-airb-unlocked="' + (unlocked ? '1' : '0') + '">';
+		var html = '<section class="teacher-dash-card benchmark-certificate-layout" data-airb-certificate-panel data-airb-role="' + esc(role) + '" data-airb-submission-id="' + esc(submissionId) + '" data-airb-benchmark-score="' + esc(benchmarkScore) + '" data-airb-score-eligible="' + (scoreEligible ? '1' : '0') + '" data-airb-unlocked="' + (unlocked ? '1' : '0') + '" data-airb-pending-review="' + (pendingReview ? '1' : '0') + '" data-airb-submission-email="' + esc(submissionEmail) + '">';
 		html += '<div class="benchmark-certificate-summary">';
 		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent || model.accent || '#2563eb') + '">Certificate</p>';
 		html += '<h3 class="teacher-dash-progress-title">' + esc(title) + '</h3>';
-		html += '<p class="teacher-dash-cert-note">' + (unlocked ? 'Certificate allocated. You can download or print it now.' : 'Complete the evidence step below to unlock your AI Risk & Readiness Benchmark\u2122 Certificate.') + '</p></div>';
+		html += '<p class="teacher-dash-cert-note">' + (unlocked
+			? 'Certificate allocated. You can download or print it now.'
+			: (pendingReview
+				? 'Your evidence has been submitted. We will email you when your certificate is approved.'
+				: 'Complete the evidence step below to unlock your AI Risk & Readiness Benchmark\u2122 Certificate.')) + '</p></div>';
 		html += '<div class="benchmark-certificate-stats">';
 		html += '<div><span>Current</span><strong>' + esc(cert.currentScore || model.score || 0) + '%</strong></div>';
 		html += '<div><span>Need</span><strong>' + esc(threshold) + '%</strong></div>';
@@ -482,11 +542,16 @@
 		html += '</div></div>';
 		html += '<div class="benchmark-certificate-grid">';
 		html += '<div class="benchmark-certificate-form">';
-		html += '<label>Name on certificate<input type="text" data-airb-certificate-name value="' + esc(participantName) + '" placeholder="' + esc(namePlaceholder(role)) + '"' + (unlocked ? ' readonly' : '') + '></label>';
-		html += evidenceFormHtml(role, storedCert, scoreEligible, unlocked);
-		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-allocate ' + (unlocked ? 'disabled' : 'disabled') + '>' + (unlocked ? 'Certificate allocated' : 'Unlock certificate') + '</button>';
+		html += '<label>Name on certificate<input type="text" data-airb-certificate-name value="' + esc(participantName) + '" placeholder="' + esc(namePlaceholder(role)) + '"' + ((unlocked || pendingReview) ? ' readonly' : '') + '></label>';
+		html += contactEmailFieldHtml(role, submissionEmail, unlocked || pendingReview, submissionEmail);
+		html += evidenceFormHtml(role, storedCert, scoreEligible, unlocked || pendingReview);
+		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-allocate ' + ((unlocked || pendingReview) ? 'disabled' : 'disabled') + '>' + (pendingReview ? 'Submitted for review' : (unlocked ? 'Certificate allocated' : 'Unlock certificate')) + '</button>';
 		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-download ' + (unlocked ? '' : 'disabled') + '>Download / print certificate</button>';
-		html += '<p class="benchmark-certificate-status" data-airb-certificate-status>' + (unlocked ? ('Certificate ID ' + esc(cert.certificateId || '')) : 'Evidence is checked before unlock. This recognises progress — not certification as an expert user.') + '</p>';
+		html += '<p class="benchmark-certificate-status" data-airb-certificate-status>' + (unlocked
+			? ('Certificate ID ' + esc(cert.certificateId || ''))
+			: (pendingReview
+				? 'Waiting for AI Awareness Day to approve your evidence. Download will unlock after approval.'
+				: 'Evidence is checked before unlock. This recognises progress — not certification as an expert user.')) + '</p>';
 		html += '</div>';
 		html += '<div class="benchmark-certificate-preview-wrap">' + previewHtml(preview) + '</div>';
 		html += '</div>';
@@ -506,8 +571,13 @@
 		if (!cert) return;
 		var role = cert.role || panel.dataset.airbRole || roleFromRuntime();
 		var copy = cert.copy || roleCopy(role);
+		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
+		var isPending = cert.status === 'pending_review' || !!cert.pending_review;
+		var isUnlocked = cert.status === 'unlocked' || (!isPending && !!cert.certificate_id);
+		panel.dataset.airbUnlocked = isUnlocked ? '1' : '0';
+		panel.dataset.airbPendingReview = isPending ? '1' : '0';
 		var previewWrap = panel.querySelector('.benchmark-certificate-preview-wrap');
-		if (previewWrap) {
+		if (previewWrap && isUnlocked) {
 			previewWrap.innerHTML = previewHtml({
 				title: certificateTitle(null, role),
 				role: role,
@@ -522,11 +592,17 @@
 		var download = panel.querySelector('[data-airb-certificate-download]');
 		if (allocate) {
 			allocate.disabled = true;
-			allocate.textContent = 'Certificate allocated';
+			allocate.textContent = isPending
+				? (i18n.certificateSubmittedForReview || 'Submitted for review')
+				: (i18n.certificateAllocated || 'Certificate allocated');
 		}
-		if (download) download.disabled = false;
+		if (download) download.disabled = !isUnlocked;
 		if (cert.assessment) updateQuality(panel, cert.assessment);
-		setStatus(panel, 'Certificate ID ' + (cert.certificate_id || '') + ' allocated.', false);
+		if (isPending) {
+			setStatus(panel, i18n.certificatePendingReview || 'Submitted for review. We will email you when your certificate is approved.', false);
+		} else if (isUnlocked) {
+			setStatus(panel, (i18n.certificateAllocatedId || 'Certificate ID {id} allocated.').replace('{id}', cert.certificate_id || ''), false);
+		}
 	}
 
 	function bindEvidenceInputs(panel) {
@@ -551,9 +627,10 @@
 		panels.forEach(function (panel) {
 			bindEvidenceInputs(panel);
 			var unlocked = panel.dataset.airbUnlocked === '1';
+			var pendingReview = panel.dataset.airbPendingReview === '1';
 			var initialAssessment = assessPanel(panel);
 			updateQuality(panel, initialAssessment);
-			syncUnlockState(panel, { unlocked: unlocked }, initialAssessment);
+			syncUnlockState(panel, { unlocked: unlocked, pendingReview: pendingReview }, initialAssessment);
 
 			var nameInput = panel.querySelector('[data-airb-certificate-name]');
 			if (nameInput && !nameInput.dataset.airbBound) {
@@ -576,11 +653,25 @@
 			allocate.dataset.airbBound = '1';
 			allocate.addEventListener('click', function () {
 				var cfg = window.airbBenchmark || {};
+				var role = panel.dataset.airbRole || roleFromRuntime();
 				var name = (panel.querySelector('[data-airb-certificate-name]') || {}).value || '';
 				var evidence = readEvidence(panel);
 				var assessment = assessPanel(panel);
+				var contactEmailInput = panel.querySelector('[data-airb-certificate-contact-email]');
+				var contactEmail = contactEmailInput ? contactEmailInput.value.trim() : '';
+				var submissionEmail = panel.dataset.airbSubmissionEmail || submissionEmailFromRuntime();
 				if (!name.trim()) {
 					setStatus(panel, 'Add the name to show on the certificate.', true);
+					return;
+				}
+				if (roleNeedsContactEmail(role, submissionEmail) && !contactEmail && !submissionEmail) {
+					setStatus(panel, (cfg.i18n && cfg.i18n.certificateContactEmailRequired) || 'Add an email address so we can send your certificate.', true);
+					if (contactEmailInput) contactEmailInput.focus();
+					return;
+				}
+				if (assessment.manual_review && !submissionEmail && !contactEmail) {
+					setStatus(panel, (cfg.i18n && cfg.i18n.certificateContactEmailRequired) || 'Add an email address so we can tell you when your certificate is approved.', true);
+					if (contactEmailInput) contactEmailInput.focus();
 					return;
 				}
 				if (!assessment.can_unlock) {
@@ -608,6 +699,7 @@
 				body.append('evidence_action', evidence.action);
 				body.append('evidence_change', evidence.change);
 				body.append('evidence_link', evidence.link);
+				body.append('contact_email', contactEmail);
 				fetch(cfg.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 					.then(function (res) { return res.json(); })
 					.then(function (json) {

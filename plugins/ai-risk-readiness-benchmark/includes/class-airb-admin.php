@@ -23,6 +23,7 @@ class AIRB_Admin {
 		add_action( 'admin_post_airb_reset_defaults', array( __CLASS__, 'reset_defaults' ) );
 		add_action( 'admin_post_airb_update_lead', array( __CLASS__, 'update_lead' ) );
 		add_action( 'admin_post_airb_delete_submissions', array( __CLASS__, 'delete_submissions' ) );
+		add_action( 'admin_post_airb_approve_certificate', array( __CLASS__, 'approve_certificate' ) );
 		add_action( 'admin_init', array( __CLASS__, 'maybe_export_csv' ) );
 	}
 
@@ -133,6 +134,48 @@ class AIRB_Admin {
 		$has_filters = self::has_submission_filters( $filters );
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';
+	}
+
+	/**
+	 * Approve a certificate that is waiting for manual review.
+	 */
+	public static function approve_certificate(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Unauthorized', 'ai-risk-benchmark' ) );
+		}
+
+		$submission_id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
+		check_admin_referer( 'airb_approve_certificate_' . $submission_id );
+
+		$redirect_args = array(
+			'page'          => 'airb-benchmark',
+			'submission_id' => $submission_id,
+		);
+
+		$certificate = $submission_id ? AIRB_Certificates::get_by_submission( $submission_id ) : null;
+		$submission  = $submission_id ? AIRB_Database::get_submission( $submission_id ) : null;
+
+		if ( ! $certificate || ! $submission || 'pending_review' !== (string) $certificate->status ) {
+			$redirect_args['airb_cert_notice'] = 'approve_failed';
+			wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+			exit;
+		}
+
+		if ( ! AIRB_Certificates::update_status( $submission_id, 'unlocked' ) ) {
+			$redirect_args['airb_cert_notice'] = 'approve_failed';
+			wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+			exit;
+		}
+
+		$certificate = AIRB_Certificates::get_by_submission( $submission_id );
+		$notify_email = sanitize_email( (string) ( $submission->email ?? '' ) );
+		if ( $certificate && $notify_email ) {
+			AIRB_Certificates::notify_approved( $certificate, $notify_email );
+		}
+
+		$redirect_args['airb_cert_notice'] = 'approved';
+		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+		exit;
 	}
 
 	/**

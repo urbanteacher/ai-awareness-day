@@ -110,6 +110,15 @@ $export_url = wp_nonce_url(
 						<tr><th><?php esc_html_e( 'Awarded', 'ai-risk-benchmark' ); ?></th><td><?php echo esc_html( (string) $submission_certificate->awarded_at ); ?></td></tr>
 					</tbody>
 				</table>
+				<?php if ( 'pending_review' === (string) $submission_certificate->status ) : ?>
+					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:0.75rem;">
+						<?php wp_nonce_field( 'airb_approve_certificate_' . (int) $submission_detail->id ); ?>
+						<input type="hidden" name="action" value="airb_approve_certificate">
+						<input type="hidden" name="submission_id" value="<?php echo esc_attr( (string) $submission_detail->id ); ?>">
+						<button type="submit" class="button button-primary"><?php esc_html_e( 'Approve certificate & email participant', 'ai-risk-benchmark' ); ?></button>
+					</form>
+					<p class="description"><?php esc_html_e( 'Approving unlocks download in the participant’s results and emails them if a contact address is saved on the submission.', 'ai-risk-benchmark' ); ?></p>
+				<?php endif; ?>
 			<?php endif; ?>
 			<?php if ( ! empty( $submission_leads ) ) : ?>
 				<h3><?php esc_html_e( 'Linked leads', 'ai-risk-benchmark' ); ?></h3>

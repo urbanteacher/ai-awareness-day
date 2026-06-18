@@ -195,7 +195,7 @@ class AIRB_Certificate_Evidence {
 		if ( $link ) {
 			$manual_review = true;
 			$score         = min( 100, $score + 5 );
-			$messages[]    = __( 'Evidence link received — this may be reviewed by AI Awareness Day.', 'ai-risk-benchmark' );
+			$messages[]    = __( 'Evidence link added — submit for review. Download unlocks after AI Awareness Day approves your evidence.', 'ai-risk-benchmark' );
 		}
 
 		$score = max( 0, min( 100, $score ) );
