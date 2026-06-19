@@ -13,6 +13,7 @@
 	var PD = AIRB.PublicDashboard || {};
 	AIRB.PublicDashboard = PD;
 
+	var Results = AIRB.Results || {};
 	var esc = AIRB.esc || function (s) { return String(s); };
 
 	var READINESS_BANDS = [

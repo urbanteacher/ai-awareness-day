@@ -13,6 +13,7 @@
 	var LD = AIRB.LeaderDashboard || {};
 	AIRB.LeaderDashboard = LD;
 
+	var Results = AIRB.Results || {};
 	var esc = AIRB.esc || function (s) { return String(s); };
 
 	var READINESS_BANDS = [

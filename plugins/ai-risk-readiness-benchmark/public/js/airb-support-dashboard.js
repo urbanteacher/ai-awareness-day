@@ -13,6 +13,7 @@
 	var SD = AIRB.SupportDashboard || {};
 	AIRB.SupportDashboard = SD;
 
+	var Results = AIRB.Results || {};
 	var esc = AIRB.esc || function (s) { return String(s); };
 
 	var READINESS_BANDS = [
