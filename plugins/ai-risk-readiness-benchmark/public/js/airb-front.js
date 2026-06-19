@@ -343,6 +343,8 @@
 
 	function refreshSectionConditionalVisibility(section) {
 		if (!section || !el.audit) return;
+		var currentBlock = el.audit.querySelector('.airb__q-block:not([hidden])');
+		var currentQuestionId = currentBlock ? (currentBlock.getAttribute('data-airb-qid') || '') : '';
 		var draft = sectionAnswersDraft(section);
 		var step = state.sections.indexOf(section);
 		if (step < 0) {
@@ -369,7 +371,14 @@
 			visible = section.questions.filter(function (q) {
 				return questionApplies(q, draft);
 			});
-			clampQuestionStep(visible.length);
+			var currentQuestionIndex = visible.findIndex(function (q) {
+				return q.id === currentQuestionId;
+			});
+			if (currentQuestionIndex >= 0) {
+				state.questionStep = currentQuestionIndex;
+			} else {
+				clampQuestionStep(visible.length);
+			}
 			section.questions.forEach(function (q) {
 				var block = el.audit.querySelector('[data-airb-qid="' + q.id + '"]');
 				if (!block) return;
