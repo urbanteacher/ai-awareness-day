@@ -68,15 +68,66 @@
 		try {
 			var weak = (r.interest_form && r.interest_form.weak_domains) ? r.interest_form.weak_domains : [];
 			localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({
+				version: 2,
 				submissionId: state.submissionId || 0,
 				role: state.role,
+				results: r,
 				alignment_score: r.alignment_score,
 				weak_domains: weak,
 				email: state.email || '',
 				school: state.school || '',
+				schoolPhase: state.schoolPhase || '',
+				orgType: state.orgType || '',
+				yearGroup: state.yearGroup || '',
 				ts: Date.now(),
 			}));
 		} catch (e) { /* private browsing */ }
+	}
+
+	function loadResultsSnapshot() {
+		try {
+			var raw = localStorage.getItem(SNAPSHOT_KEY);
+			if (!raw) return null;
+			var snapshot = JSON.parse(raw);
+			if (!snapshot || !snapshot.role || !snapshot.results || typeof snapshot.results !== 'object') {
+				return null;
+			}
+			return snapshot;
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function clearResultsSnapshot() {
+		try {
+			localStorage.removeItem(SNAPSHOT_KEY);
+		} catch (e) { /* private browsing */ }
+	}
+
+	function restoreResultsSnapshot() {
+		var snapshot = loadResultsSnapshot();
+		if (!snapshot) {
+			return false;
+		}
+		state.role = snapshot.role || '';
+		state.results = snapshot.results || null;
+		state.submissionId = parseInt(snapshot.submissionId, 10) || 0;
+		state.email = snapshot.email || '';
+		state.school = snapshot.school || '';
+		state.schoolPhase = snapshot.schoolPhase || '';
+		state.orgType = snapshot.orgType || '';
+		state.yearGroup = snapshot.yearGroup || '';
+		state.phase = 'results';
+		if (el.role) el.role.hidden = true;
+		if (el.audit) el.audit.hidden = true;
+		if (el.contact) el.contact.hidden = true;
+		if (el.nav) el.nav.hidden = true;
+		if (el.progress) el.progress.hidden = true;
+		if (el.back) el.back.hidden = true;
+		collapseIntro();
+		renderResults();
+		updateFlowChrome();
+		return true;
 	}
 
 	function getSessionId() {
@@ -598,6 +649,7 @@
 			state.yearGroup = '';
 			state.answers = {};
 			state.results = null;
+			clearResultsSnapshot();
 			beginAudit();
 		});
 	}
@@ -1066,6 +1118,7 @@
 		state.answers = {};
 		state.results = null;
 		state.submissionId = 0;
+		clearResultsSnapshot();
 		renderRole();
 	}
 
@@ -1961,6 +2014,7 @@
 		state.role = 'student';
 		state.results = null;
 		state.submissionId = 0;
+		clearResultsSnapshot();
 		state.studentFocusSchool = !!focusSchool;
 		collapseIntro();
 		startAuditQuestions();
@@ -5706,6 +5760,7 @@
 
 			syncProfileIntoAnswers();
 			state.results = calculate(state.role, answersWithProfile());
+			persistResultsSnapshot();
 			state.phase = 'results';
 			el.results.innerHTML = '<p class="airb__muted airb__loading">' + esc(i18n.saving || 'Preparing your results…') + '</p>';
 			el.results.hidden = false;
@@ -5833,6 +5888,7 @@
 						mergeInterestFormShell(state.results, shells[state.role]);
 					}
 				}
+				persistResultsSnapshot();
 				if (done) done();
 			});
 	}
@@ -6771,8 +6827,10 @@
 	if (el.back) el.back.addEventListener('click', goBack);
 	bindRoleCardActions();
 	if (el.role) {
-		collapseIntro();
-		renderRole();
+		if (!restoreResultsSnapshot()) {
+			collapseIntro();
+			renderRole();
+		}
 		if (el.root) {
 			el.root.classList.add('airb--role-ready');
 		}
