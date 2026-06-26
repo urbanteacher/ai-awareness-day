@@ -887,6 +887,12 @@
 	visibility: visible;
 }
 
+/* Returning users with saved results should not see the intro shell flash before JS restores results. */
+#airb-benchmark.airb--snapshot-boot:not(.airb--role-ready) .airb__hero,
+#airb-benchmark.airb--snapshot-boot:not(.airb--role-ready) .airb__deck {
+	visibility: hidden;
+}
+
 /* Hero score ring — animated circular gauge on results */
 .airb__scorering {
 	position: relative;
@@ -8609,6 +8615,16 @@
 	flex-wrap: wrap;
 	gap: 0.65rem;
 	margin-top: 1.25rem;
+}
+
+.airb__results-reset {
+	display: flex;
+	justify-content: flex-end;
+	margin: 1rem 0 0;
+}
+
+.airb__btn--reset-results {
+	font-size: 0.88rem;
 }
 
 .airb__btn--share {

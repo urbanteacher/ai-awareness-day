@@ -474,6 +474,7 @@ class AIRB_Shortcode {
 					'roleDoneScore'  => __( '{n}%', 'ai-risk-benchmark' ),
 					'roleLastResult' => __( 'Your last result: {n}% · {band}', 'ai-risk-benchmark' ),
 					'retakeAudit'    => __( 'Retake audit', 'ai-risk-benchmark' ),
+					'resetResults'   => __( 'Retake audit', 'ai-risk-benchmark' ),
 					'startAudit'     => __( 'Start audit', 'ai-risk-benchmark' ),
 					'roleCardTagline' => __( 'Free online assessment — test your AI awareness', 'ai-risk-benchmark' ),
 					'nextSteps'      => __( 'Recommended for you', 'ai-risk-benchmark' ),

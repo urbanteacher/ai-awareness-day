@@ -65,6 +65,7 @@
 	function persistResultsSnapshot() {
 		var r = state.results;
 		if (!r || !state.role) return;
+		if (!resultMatchesRole(state.role, r)) return;
 		try {
 			var weak = (r.interest_form && r.interest_form.weak_domains) ? r.interest_form.weak_domains : [];
 			localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({
@@ -84,12 +85,37 @@
 		} catch (e) { /* private browsing */ }
 	}
 
+	function roleResultsKey(role) {
+		if (role === 'teacher') return 'teacher_results';
+		if (role === 'student') return 'student_results';
+		if (role === 'parent') return 'parent_results';
+		if (role === 'leader') return 'leader_results';
+		if (role === 'support_staff') return 'support_results';
+		if (role === 'public') return 'public_results';
+		return '';
+	}
+
+	function resultMatchesRole(role, results) {
+		var key = roleResultsKey(role);
+		if (!role || !key || !results || typeof results !== 'object') {
+			return false;
+		}
+		if (!results[key] || typeof results[key] !== 'object') {
+			return false;
+		}
+		return !isNaN(parseFloat(results.alignment_score));
+	}
+
 	function loadResultsSnapshot() {
 		try {
 			var raw = localStorage.getItem(SNAPSHOT_KEY);
 			if (!raw) return null;
 			var snapshot = JSON.parse(raw);
 			if (!snapshot || !snapshot.role || !snapshot.results || typeof snapshot.results !== 'object') {
+				return null;
+			}
+			if (!resultMatchesRole(snapshot.role, snapshot.results)) {
+				clearResultsSnapshot();
 				return null;
 			}
 			return snapshot;
@@ -104,30 +130,64 @@
 		} catch (e) { /* private browsing */ }
 	}
 
+	function resetBenchmarkResults() {
+		hideError();
+		clearResultsSnapshot();
+		state.phase = 'role';
+		state.role = '';
+		state.step = 0;
+		state.questionStep = 0;
+		state.sections = [];
+		state.questions = [];
+		state.answers = {};
+		state.results = null;
+		state.dashboardModel = null;
+		state.submissionId = 0;
+		state.school = '';
+		state.email = '';
+		state.schoolPhase = '';
+		state.orgType = '';
+		state.yearGroup = '';
+		if (el.root) {
+			el.root.classList.remove('airb--snapshot-boot');
+		}
+		collapseIntro();
+		renderRole();
+		scrollFlowToTop();
+	}
+
 	function restoreResultsSnapshot() {
-		var snapshot = loadResultsSnapshot();
-		if (!snapshot) {
+		try {
+			var snapshot = loadResultsSnapshot();
+			if (!snapshot) {
+				return false;
+			}
+			state.role = snapshot.role || '';
+			state.results = snapshot.results || null;
+			state.submissionId = parseInt(snapshot.submissionId, 10) || 0;
+			state.email = snapshot.email || '';
+			state.school = snapshot.school || '';
+			state.schoolPhase = snapshot.schoolPhase || '';
+			state.orgType = snapshot.orgType || '';
+			state.yearGroup = snapshot.yearGroup || '';
+			state.phase = 'results';
+			if (el.role) el.role.hidden = true;
+			if (el.audit) el.audit.hidden = true;
+			if (el.contact) el.contact.hidden = true;
+			if (el.nav) el.nav.hidden = true;
+			if (el.progress) el.progress.hidden = true;
+			if (el.back) el.back.hidden = true;
+			collapseIntro();
+			renderResults();
+			updateFlowChrome();
+			return true;
+		} catch (err) {
+			clearResultsSnapshot();
+			if (window.console && console.error) {
+				console.error('AIRB restoreResultsSnapshot failed', err);
+			}
 			return false;
 		}
-		state.role = snapshot.role || '';
-		state.results = snapshot.results || null;
-		state.submissionId = parseInt(snapshot.submissionId, 10) || 0;
-		state.email = snapshot.email || '';
-		state.school = snapshot.school || '';
-		state.schoolPhase = snapshot.schoolPhase || '';
-		state.orgType = snapshot.orgType || '';
-		state.yearGroup = snapshot.yearGroup || '';
-		state.phase = 'results';
-		if (el.role) el.role.hidden = true;
-		if (el.audit) el.audit.hidden = true;
-		if (el.contact) el.contact.hidden = true;
-		if (el.nav) el.nav.hidden = true;
-		if (el.progress) el.progress.hidden = true;
-		if (el.back) el.back.hidden = true;
-		collapseIntro();
-		renderResults();
-		updateFlowChrome();
-		return true;
 	}
 
 	function getSessionId() {
@@ -1150,6 +1210,16 @@
 				}
 			});
 		}
+	}
+
+	function bindResetResultsTrigger() {
+		if (!el.results) return;
+		el.results.querySelectorAll('[data-airb-reset-results]').forEach(function (btn) {
+			btn.addEventListener('click', function (e) {
+				e.preventDefault();
+				resetBenchmarkResults();
+			});
+		});
 	}
 
 	function leaderSupportingCardHtml(opts) {
@@ -5407,6 +5477,10 @@
 			html += benchmarkHtml(r);
 		}
 
+		html += '<div class="airb__results-reset">';
+		html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--reset-results" data-airb-reset-results="1">' + esc(i18n.resetResults || 'Reset results') + '</button>';
+		html += '</div>';
+
 		if (!benchmarkResultsMode) {
 			var shareHint = shareResultsHintText(r);
 			if (shareHint) {
@@ -5459,6 +5533,7 @@
 		bindInterestTriggers();
 		bindStudentRetakeTriggers();
 		bindPublicRetakeTriggers();
+		bindResetResultsTrigger();
 		bindTeacherDashboard();
 		bindStudentDashboard();
 		bindParentDashboard();

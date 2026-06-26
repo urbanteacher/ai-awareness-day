@@ -24,6 +24,15 @@ $aad               = (array) ( $config['aad_2027'] ?? array() );
 $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 ?>
 <div class="airb" id="airb-benchmark" data-airb-root aria-label="<?php esc_attr_e( 'AI Risk & Readiness Benchmark', 'ai-risk-benchmark' ); ?>">
+	<script>
+		(function () {
+			try {
+				if (window.localStorage && localStorage.getItem('airb_results_snapshot_v1')) {
+					document.getElementById('airb-benchmark').classList.add('airb--snapshot-boot');
+				}
+			} catch (e) {}
+		})();
+	</script>
 
 	<div class="airb__appbar">
 		<span class="airb__appbar-brand">
