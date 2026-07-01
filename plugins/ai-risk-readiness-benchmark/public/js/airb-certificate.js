@@ -548,7 +548,7 @@
 		html += '<label>Name on certificate<input type="text" data-airb-certificate-name value="' + esc(participantName) + '" placeholder="' + esc(namePlaceholder(role)) + '"' + ((unlocked || pendingReview) ? ' readonly' : '') + '></label>';
 		html += contactEmailFieldHtml(role, submissionEmail, unlocked || pendingReview, submissionEmail);
 		html += evidenceFormHtml(role, storedCert, scoreEligible, unlocked || pendingReview);
-		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-allocate ' + ((unlocked || pendingReview) ? 'disabled' : 'disabled') + '>' + (pendingReview ? 'Submitted for review' : (unlocked ? 'Certificate allocated' : 'Unlock certificate')) + '</button>';
+		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-allocate ' + ((unlocked || pendingReview) ? 'disabled' : '') + '>' + (pendingReview ? 'Submitted for review' : (unlocked ? 'Certificate allocated' : 'Unlock certificate')) + '</button>';
 		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-download ' + (unlocked ? '' : 'disabled') + '>Download / print certificate</button>';
 		html += '<p class="benchmark-certificate-status" data-airb-certificate-status>' + (unlocked
 			? ('Certificate ID ' + esc(cert.certificateId || ''))

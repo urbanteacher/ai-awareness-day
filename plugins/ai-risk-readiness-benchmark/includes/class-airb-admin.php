@@ -481,6 +481,9 @@ class AIRB_Admin {
 		if ( ! empty( $_POST['q_id'] ) && is_array( $_POST['q_id'] ) ) {
 			$questions = array();
 			$count     = count( $_POST['q_id'] );
+			$roles     = AIRB_Defaults::roles();
+			$domains   = AIRB_Defaults::domains();
+			$types     = array( 'radio', 'select', 'slider' );
 			for ( $i = 0; $i < $count; $i++ ) {
 				$q = array(
 					'id'     => sanitize_key( (string) $_POST['q_id'][ $i ] ),
@@ -489,6 +492,9 @@ class AIRB_Admin {
 					'type'   => sanitize_key( (string) ( $_POST['q_type'][ $i ] ?? 'radio' ) ),
 					'text'   => sanitize_textarea_field( (string) ( $_POST['q_text'][ $i ] ?? '' ) ),
 				);
+				if ( ! isset( $roles[ $q['role'] ] ) || ! isset( $domains[ $q['domain'] ] ) || ! in_array( $q['type'], $types, true ) ) {
+					continue;
+				}
 				$opts_raw = (string) ( $_POST['q_options'][ $i ] ?? '' );
 				$q['options'] = self::parse_options_lines( $opts_raw );
 				if ( $q['id'] && $q['text'] ) {

@@ -65,18 +65,24 @@ class AIRB_Defaults {
 		$archive_file = ( defined( 'AIRB_ARCHIVE_DIR' ) ? AIRB_ARCHIVE_DIR : AIRB_PLUGIN_DIR . 'archive/' ) . 'includes/data/' . $map[ $role ];
 		$legacy_file  = AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
 		$tier_file    = is_readable( $archive_file ) ? $archive_file : $legacy_file;
+
+		if ( ! class_exists( 'AIRB_Copy_Tiers', false ) || ! AIRB_Copy_Tiers::use_json_copy() ) {
+			if ( ! is_readable( $tier_file ) ) {
+				return array();
+			}
+			/** @var array<string, mixed> $php */
+			$php = require $tier_file;
+			return $php;
+		}
+
+		$overlay = AIRB_Copy_Tiers::for_role( $role )->to_legacy_overlay();
 		if ( ! is_readable( $tier_file ) ) {
-			return array();
+			return $overlay;
 		}
 
 		/** @var array<string, mixed> $php */
 		$php = require $tier_file;
 
-		if ( ! class_exists( 'AIRB_Copy_Tiers', false ) || ! AIRB_Copy_Tiers::use_json_copy() ) {
-			return $php;
-		}
-
-		$overlay = AIRB_Copy_Tiers::for_role( $role )->to_legacy_overlay();
 		if ( empty( $overlay ) ) {
 			return $php;
 		}
@@ -239,36 +245,36 @@ class AIRB_Defaults {
 				'label'       => __( 'Needs attention', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Attention', 'ai-risk-benchmark' ),
 				'min'         => 0,
-				'max'         => 20,
+				'max'         => 39,
 				'tone'        => 'alarm',
 			),
 			array(
 				'slug'        => 'developing',
 				'label'       => __( 'Take care', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Take care', 'ai-risk-benchmark' ),
-				'min'         => 21,
-				'max'         => 40,
+				'min'         => 40,
+				'max'         => 54,
 				'tone'        => 'concern',
 			),
 			array(
 				'slug'        => 'emerging',
 				'label'       => __( 'Aware', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
-				'min'         => 41,
-				'max'         => 60,
+				'min'         => 55,
+				'max'         => 69,
 			),
 			array(
 				'slug'        => 'confident',
 				'label'       => __( 'Confident', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Conf.', 'ai-risk-benchmark' ),
-				'min'         => 61,
-				'max'         => 80,
+				'min'         => 70,
+				'max'         => 84,
 			),
 			array(
 				'slug'        => 'advanced',
 				'label'       => __( 'Advanced', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Adv.', 'ai-risk-benchmark' ),
-				'min'         => 81,
+				'min'         => 85,
 				'max'         => 100,
 			),
 		);
@@ -286,36 +292,36 @@ class AIRB_Defaults {
 				'label'       => __( 'Your child needs your help', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Needs help', 'ai-risk-benchmark' ),
 				'min'         => 0,
-				'max'         => 20,
+				'max'         => 39,
 				'tone'        => 'alarm',
 			),
 			array(
 				'slug'        => 'developing',
 				'label'       => __( 'Some gaps at home', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Gaps', 'ai-risk-benchmark' ),
-				'min'         => 21,
-				'max'         => 40,
+				'min'         => 40,
+				'max'         => 54,
 				'tone'        => 'concern',
 			),
 			array(
 				'slug'        => 'aware',
 				'label'       => __( 'Aware', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
-				'min'         => 41,
-				'max'         => 60,
+				'min'         => 55,
+				'max'         => 69,
 			),
 			array(
 				'slug'        => 'confident',
 				'label'       => __( 'Confident', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Conf.', 'ai-risk-benchmark' ),
-				'min'         => 61,
-				'max'         => 80,
+				'min'         => 70,
+				'max'         => 84,
 			),
 			array(
 				'slug'        => 'well_prepared',
 				'label'       => __( 'Well prepared', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Prepared', 'ai-risk-benchmark' ),
-				'min'         => 81,
+				'min'         => 85,
 				'max'         => 100,
 			),
 		);
@@ -594,36 +600,36 @@ class AIRB_Defaults {
 				'label'       => __( 'At risk — significant gaps in your AI habits', 'ai-risk-benchmark' ),
 				'label_short' => __( 'At risk', 'ai-risk-benchmark' ),
 				'min'         => 0,
-				'max'         => 39,
+				'max'         => 29,
 				'tone'        => 'alarm',
 			),
 			array(
 				'slug'        => 'take_care',
 				'label'       => __( 'Take care — some risks in your AI habits', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Take care', 'ai-risk-benchmark' ),
-				'min'         => 40,
-				'max'         => 59,
+				'min'         => 30,
+				'max'         => 54,
 				'tone'        => 'concern',
 			),
 			array(
 				'slug'        => 'aware',
 				'label'       => __( 'Aware — reasonable habits with room to improve', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Aware', 'ai-risk-benchmark' ),
-				'min'         => 60,
-				'max'         => 74,
+				'min'         => 55,
+				'max'         => 69,
 			),
 			array(
 				'slug'        => 'confident',
 				'label'       => __( 'Confident — strong AI safety habits', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Confident', 'ai-risk-benchmark' ),
-				'min'         => 75,
-				'max'         => 89,
+				'min'         => 70,
+				'max'         => 84,
 			),
 			array(
 				'slug'        => 'advanced',
 				'label'       => __( 'Advanced — leading personal AI practice', 'ai-risk-benchmark' ),
 				'label_short' => __( 'Advanced', 'ai-risk-benchmark' ),
-				'min'         => 90,
+				'min'         => 85,
 				'max'         => 100,
 			),
 		);

@@ -75,7 +75,6 @@
 				results: r,
 				alignment_score: r.alignment_score,
 				weak_domains: weak,
-				email: state.email || '',
 				school: state.school || '',
 				schoolPhase: state.schoolPhase || '',
 				orgType: state.orgType || '',
@@ -112,6 +111,10 @@
 			if (!raw) return null;
 			var snapshot = JSON.parse(raw);
 			if (!snapshot || !snapshot.role || !snapshot.results || typeof snapshot.results !== 'object') {
+				return null;
+			}
+			if (!snapshot.ts || Date.now() - snapshot.ts > 24 * 60 * 60 * 1000) {
+				clearResultsSnapshot();
 				return null;
 			}
 			if (!resultMatchesRole(snapshot.role, snapshot.results)) {
@@ -165,7 +168,7 @@
 			state.role = snapshot.role || '';
 			state.results = snapshot.results || null;
 			state.submissionId = parseInt(snapshot.submissionId, 10) || 0;
-			state.email = snapshot.email || '';
+			state.email = '';
 			state.school = snapshot.school || '';
 			state.schoolPhase = snapshot.schoolPhase || '';
 			state.orgType = snapshot.orgType || '';
@@ -194,7 +197,15 @@
 		try {
 			var id = localStorage.getItem(SESSION_KEY);
 			if (!id) {
-				id = 'ses_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 11);
+				if (window.crypto && window.crypto.getRandomValues) {
+					var bytes = new Uint8Array(16);
+					window.crypto.getRandomValues(bytes);
+					id = 'ses_' + Array.prototype.map.call(bytes, function (b) {
+						return ('0' + b.toString(16)).slice(-2);
+					}).join('');
+				} else {
+					id = 'ses_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 11);
+				}
 				localStorage.setItem(SESSION_KEY, id);
 			}
 			state.sessionId = id;
@@ -206,9 +217,7 @@
 	}
 
 	function appendSessionToUrl(url) {
-		if (!url || url.indexOf('mailto:') === 0) return url;
-		var sep = url.indexOf('?') >= 0 ? '&' : '?';
-		return url + sep + 'airb_session=' + encodeURIComponent(getSessionId());
+		return url || '';
 	}
 
 	function trackEvent(eventType, metadata) {
@@ -1520,6 +1529,7 @@
 			'</div>' +
 			'<div class="airb__dashboard-share-actions">' +
 			'<button type="button" class="airb__btn airb__btn--primary airb__dashboard-share-btn" data-airb-share-action data-airb-share-title="AI Risk & Readiness Benchmark" data-airb-share-url="' + esc(url) + '" data-airb-share-text="' + esc(shareText) + '">Share my AI action</button>' +
+			'<button type="button" class="airb__btn airb__btn--ghost airb__dashboard-retake-btn" data-airb-reset-results="1">' + esc(i18n.retakeAudit || i18n.resetResults || 'Retake audit') + '</button>' +
 			'<p class="airb__muted airb__dashboard-share-status" data-airb-share-action-status hidden role="status" aria-live="polite"></p>' +
 			'</div>' +
 			'</section>';
@@ -2082,7 +2092,13 @@
 	function restartStudentAudit(focusSchool) {
 		hideError();
 		state.role = 'student';
+		state.step = 0;
+		state.questionStep = 0;
+		state.sections = [];
+		state.questions = [];
+		state.answers = {};
 		state.results = null;
+		state.dashboardModel = null;
 		state.submissionId = 0;
 		clearResultsSnapshot();
 		state.studentFocusSchool = !!focusSchool;
@@ -3456,6 +3472,10 @@
 			if (i18n.emailOptionalHint) {
 				html += '<p class="airb__field-hint" id="airb-email-hint">' + esc(i18n.emailOptionalHint) + '</p>';
 			}
+			html += '<label class="airb__check airb__contact-consent" for="airb-consent">';
+			html += '<input type="checkbox" id="airb-consent" />';
+			html += '<span>' + esc(i18n.contactConsent || 'If I enter an email, I consent to AI Awareness Day storing it to send my report or requested follow-up.') + '</span>';
+			html += '</label>';
 			html += '</section>';
 		}
 
@@ -5477,9 +5497,11 @@
 			html += benchmarkHtml(r);
 		}
 
-		html += '<div class="airb__results-reset">';
-		html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--reset-results" data-airb-reset-results="1">' + esc(i18n.resetResults || 'Reset results') + '</button>';
-		html += '</div>';
+		if (!benchmarkResultsMode) {
+			html += '<div class="airb__results-reset">';
+			html += '<button type="button" class="airb__btn airb__btn--ghost airb__btn--reset-results" data-airb-reset-results="1">' + esc(i18n.resetResults || 'Reset results') + '</button>';
+			html += '</div>';
+		}
 
 		if (!benchmarkResultsMode) {
 			var shareHint = shareResultsHintText(r);
@@ -5823,6 +5845,11 @@
 					showError(i18n.emailInvalid);
 					return;
 				}
+				var consentInput = document.getElementById('airb-consent');
+				if (state.email && consentInput && !consentInput.checked) {
+					showError(i18n.contactConsentRequired || 'Please tick the consent box before submitting an email address.');
+					return;
+				}
 			} else {
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 				if (state.role === 'student') {
@@ -5854,8 +5881,10 @@
 			}, 3000);
 			submitResults(function () {
 				window.clearTimeout(resultsFallbackTimer);
-				resultsRendered = true;
-				renderResults();
+				if (!resultsRendered) {
+					resultsRendered = true;
+					renderResults();
+				}
 			});
 		}
 	}
@@ -5925,6 +5954,11 @@
 		body.append('answers', JSON.stringify(state.answers));
 		body.append('school_name', state.school);
 		body.append('email', state.email);
+		body.append('contact_opt_in', state.email ? '1' : '0');
+		var consentInput = document.getElementById('airb-consent');
+		if (consentInput && consentInput.checked) {
+			body.append('consent', '1');
+		}
 		body.append('session_id', getSessionId());
 		body.append('school_phase', state.schoolPhase);
 		body.append('org_type', state.orgType);
@@ -6865,7 +6899,8 @@
 		body.append('nonce', airbBenchmark.nonce);
 		body.append('email', state.email);
 		body.append('role', state.role);
-		body.append('results', JSON.stringify(state.results));
+		body.append('session_id', getSessionId());
+		body.append('submission_id', state.submissionId || 0);
 
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
@@ -6938,6 +6973,9 @@
 		var html = '<div class="airb__school-results' + (compact ? ' airb__school-results--compact' : '') + '">';
 		html += '<h3 class="airb__panel-title">' + esc(i18n.schoolSnapshotTitle || 'Whole-School AI Readiness Snapshot') + '</h3>';
 		html += '<p class="airb__muted airb__school-snapshot-sub">' + esc(rollup.school_name) + ' · ' + esc(groupsText) + '</p>';
+		if (rollup.privacy_suppressed) {
+			html += '<p class="airb__notice airb__muted">' + esc(rollup.privacy_message || 'Results are hidden until the privacy sample threshold is met.') + '</p>';
+		}
 		html += '<div class="airb__role-bars">';
 		Object.keys(rollup.roles || {}).forEach(function (slug) {
 			var d = rollup.roles[slug];
@@ -6949,27 +6987,29 @@
 				if (d.readiness_band_label) html += ' <span class="airb__role-bar-band">' + esc(d.readiness_band_label) + '</span>';
 				html += '</span>';
 			} else {
-				html += '<span class="airb__role-bar-val airb__muted">' + esc(i18n.awaitingAudit || 'Awaiting audit') + '</span>';
+				html += '<span class="airb__role-bar-val airb__muted">' + esc(d.status === 'sample_too_small' ? (i18n.hiddenForPrivacy || 'Hidden for privacy') : (i18n.awaitingAudit || 'Awaiting audit')) + '</span>';
 			}
 			html += '</div>';
 		});
 		html += '</div>';
-		html += '<div class="airb__cards">';
-		html += card({
-			label: alignmentLabel,
-			value: rollup.overall_alignment + '%',
-			band: readinessBand(rollup.overall_alignment),
-			tone: 'readiness',
-			band_label: rollup.overall_readiness_band || readinessBandLabel(rollup.overall_alignment),
-		});
-		html += card({
-			label: i18n.riskLevel || 'Risk level',
-			value: rollup.overall_risk_label,
-			band: rollup.overall_risk_level,
-			tone: 'risk',
-			band_label: rollup.overall_risk_label,
-		});
-		html += '</div>';
+		if (!rollup.privacy_suppressed && rollup.overall_alignment != null) {
+			html += '<div class="airb__cards">';
+			html += card({
+				label: alignmentLabel,
+				value: rollup.overall_alignment + '%',
+				band: readinessBand(rollup.overall_alignment),
+				tone: 'readiness',
+				band_label: rollup.overall_readiness_band || readinessBandLabel(rollup.overall_alignment),
+			});
+			html += card({
+				label: i18n.riskLevel || 'Risk level',
+				value: rollup.overall_risk_label,
+				band: rollup.overall_risk_level,
+				tone: 'risk',
+				band_label: rollup.overall_risk_label,
+			});
+			html += '</div>';
+		}
 		if (rollup.alignment_disclaimer) {
 			html += '<p class="airb__muted airb__alignment-disclaimer">' + esc(rollup.alignment_disclaimer) + '</p>';
 		}

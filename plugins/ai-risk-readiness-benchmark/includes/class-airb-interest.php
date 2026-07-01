@@ -851,7 +851,9 @@ class AIRB_Interest {
 
 		$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
 		if ( $email ) {
-			$reply_name = $name ? $name : $role_label;
+			$reply_name = preg_replace( '/[\r\n]+/', ' ', $name ? $name : $role_label );
+			$reply_name = trim( sanitize_text_field( (string) $reply_name ) );
+			$email      = str_replace( array( "\r", "\n" ), '', $email );
 			$headers[]  = 'Reply-To: ' . $reply_name . ' <' . $email . '>';
 		}
 

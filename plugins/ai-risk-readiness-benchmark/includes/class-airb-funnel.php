@@ -133,7 +133,7 @@ class AIRB_Funnel {
 			}
 		}
 
-		if ( ! in_array( $role, array( 'parent', 'student', 'leader', 'teacher', 'support_staff', 'public' ), true ) ) {
+		if ( in_array( $role, array( 'parent', 'student', 'leader', 'teacher', 'support_staff', 'public' ), true ) ) {
 			$results['guided_improvement'] = AIRB_Improvement_Pathways::build( $role, $results );
 		} else {
 			$results['guided_improvement'] = array();

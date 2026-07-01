@@ -17,6 +17,9 @@ class AIRB_Database {
 	/** @var int Schema version for dbDelta upgrades. */
 	const DB_VERSION = 3;
 
+	/** Minimum sample before any aggregate benchmark is exposed. */
+	const BENCHMARK_MIN_SAMPLE = 8;
+
 	/**
 	 * Fully qualified table name.
 	 */
@@ -136,6 +139,8 @@ class AIRB_Database {
 			'role'                   => '',
 			'school_name'            => '',
 			'email'                  => '',
+			'consent'                => 0,
+			'contact_opt_in'         => 0,
 			'risk_level'             => '',
 			'alignment_score'        => 0,
 			'dependency_index'       => 0,
@@ -162,6 +167,8 @@ class AIRB_Database {
 				'school_name'            => $school_name,
 				'school_key'             => $school_key,
 				'email'                  => sanitize_email( (string) $row['email'] ),
+				'consent'                => ! empty( $row['consent'] ) ? 1 : 0,
+				'contact_opt_in'         => ! empty( $row['contact_opt_in'] ) ? 1 : 0,
 				'risk_level'             => sanitize_text_field( (string) $row['risk_level'] ),
 				'alignment_score'        => (int) $row['alignment_score'],
 				'dependency_index'       => (int) $row['dependency_index'],
@@ -174,7 +181,7 @@ class AIRB_Database {
 				'recommendations'        => wp_json_encode( $row['recommendations'] ),
 				'created_at'             => $row['created_at'],
 			),
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
 		);
 
 		return $inserted ? (int) $wpdb->insert_id : 0;
@@ -361,12 +368,6 @@ class AIRB_Database {
 
 		return $row ?: null;
 	}
-
-	/**
-	 * National benchmark stats for a role.
-	 * Below this, averages could de-anonymise a small cohort, so we suppress them.
-	 */
-	const BENCHMARK_MIN_SAMPLE = 8;
 
 	/**
 	 * National benchmark stats for a role.

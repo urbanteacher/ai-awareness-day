@@ -48,9 +48,6 @@
 
 	function getSessionId() {
 		try {
-			var params = new URLSearchParams(window.location.search);
-			var fromUrl = params.get('airb_session');
-			if (fromUrl) return fromUrl;
 			return localStorage.getItem(SESSION_KEY) || '';
 		} catch (e) {
 			return '';
@@ -103,7 +100,11 @@
 	function loadSnapshot() {
 		try {
 			var raw = localStorage.getItem(SNAPSHOT_KEY);
-			return raw ? JSON.parse(raw) : null;
+			var snapshot = raw ? JSON.parse(raw) : null;
+			if (!snapshot || !snapshot.ts || Date.now() - snapshot.ts > 24 * 60 * 60 * 1000) {
+				return null;
+			}
+			return snapshot;
 		} catch (e) {
 			return null;
 		}
@@ -551,7 +552,7 @@
 			alignment_score: snapshot ? snapshot.alignment_score : null,
 			weak_domains: snapshot ? snapshot.weak_domains : [],
 			suggested: hub.suggested || [],
-			email: snapshot ? snapshot.email : '',
+			email: '',
 			school: snapshot ? snapshot.school : '',
 			role: hub.role,
 			journey_context: null,
@@ -588,7 +589,6 @@
 					context.alignment_score = sub.alignment_score != null ? sub.alignment_score : context.alignment_score;
 					context.weak_domains = sub.weak_domains && sub.weak_domains.length ? sub.weak_domains : context.weak_domains;
 					context.suggested = mergeSuggested(context.suggested, sub.suggested);
-					context.email = sub.email || context.email;
 					context.school = sub.school || context.school;
 					context.role = sub.role || context.role;
 					context.journey_context = sub.journey_context || null;

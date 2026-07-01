@@ -1364,6 +1364,37 @@
 	display: grid;
 	justify-items: end;
 	gap: 0.4rem;
+	min-width: min(18rem, 100%);
+	width: 100%;
+	max-width: 22rem;
+}
+
+.airb__results--teacher .airb__dashboard-share-btn,
+.airb__results--student .airb__dashboard-share-btn,
+.airb__results--parent .airb__dashboard-share-btn,
+.airb__results--leader .airb__dashboard-share-btn,
+.airb__results--support .airb__dashboard-share-btn,
+.airb__results--public .airb__dashboard-share-btn,
+.airb__results--teacher .airb__dashboard-retake-btn,
+.airb__results--student .airb__dashboard-retake-btn,
+.airb__results--parent .airb__dashboard-retake-btn,
+.airb__results--leader .airb__dashboard-retake-btn,
+.airb__results--support .airb__dashboard-retake-btn,
+.airb__results--public .airb__dashboard-retake-btn {
+	width: 100%;
+	justify-content: center;
+	text-align: center;
+}
+
+.airb__results--teacher .airb__dashboard-retake-btn,
+.airb__results--student .airb__dashboard-retake-btn,
+.airb__results--parent .airb__dashboard-retake-btn,
+.airb__results--leader .airb__dashboard-retake-btn,
+.airb__results--support .airb__dashboard-retake-btn,
+.airb__results--public .airb__dashboard-retake-btn {
+	background: #fff;
+	border-color: #d8e3f0;
+	box-shadow: none;
 }
 
 .airb__results--teacher .airb__dashboard-share-status, .airb__results--student .airb__dashboard-share-status, .airb__results--parent .airb__dashboard-share-status, .airb__results--leader .airb__dashboard-share-status, .airb__results--support .airb__dashboard-share-status, .airb__results--public .airb__dashboard-share-status {

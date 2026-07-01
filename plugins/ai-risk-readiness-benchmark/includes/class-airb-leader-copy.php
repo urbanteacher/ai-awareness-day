@@ -202,7 +202,11 @@ class AIRB_Leader_Copy {
 	 */
 	public static function focus_block( string $slug, int $pct, array $cfg ): array {
 		$tier     = self::focus_tier( $pct );
-		$tiered   = (array) ( ( $cfg['focus_tiers'][ $slug ] ?? array() )[ $tier ] ?? array() );
+		$tiers    = (array) ( $cfg['focus_tiers'][ $slug ] ?? array() );
+		$tiered   = (array) ( $tiers[ $tier ] ?? array() );
+		if ( empty( $tiered ) ) {
+			$tiered = self::nearest_focus_tier( $tiers, $tier );
+		}
 		$fallback = (array) ( $cfg['focus_copy'][ $slug ] ?? array() );
 
 		$summary = (string) ( $tiered['summary'] ?? $fallback['summary'] ?? '' );
@@ -215,6 +219,31 @@ class AIRB_Leader_Copy {
 			'actions'       => $actions,
 			'tier'          => $tier,
 		);
+	}
+
+	/**
+	 * Nearest authored focus tier when a domain's copy set doesn't cover
+	 * every severity level `focus_tier()` can return (e.g. a domain with no
+	 * "low" tier authored for high-scoring responses).
+	 *
+	 * @param array<string, mixed> $tiers        Domain's focus tiers keyed by severity slug.
+	 * @param string               $requested Requested tier slug.
+	 * @return array<string, mixed>
+	 */
+	private static function nearest_focus_tier( array $tiers, string $requested ): array {
+		$order = array( 'critical', 'high', 'moderate', 'low' );
+		$idx   = array_search( $requested, $order, true );
+		if ( false === $idx ) {
+			return array();
+		}
+		for ( $offset = 1; $offset < count( $order ); $offset++ ) {
+			foreach ( array( $idx + $offset, $idx - $offset ) as $candidate ) {
+				if ( isset( $order[ $candidate ] ) && ! empty( $tiers[ $order[ $candidate ] ] ) ) {
+					return (array) $tiers[ $order[ $candidate ] ];
+				}
+			}
+		}
+		return array();
 	}
 
 	/**

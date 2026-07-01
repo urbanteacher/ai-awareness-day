@@ -29,6 +29,10 @@ $alignment_label = (string) ( $rollup['alignment_score_label'] ?? AIRB_Scoring::
 		?>
 	</p>
 
+	<?php if ( ! empty( $rollup['privacy_suppressed'] ) ) : ?>
+		<p class="airb__notice airb__muted"><?php echo esc_html( (string) ( $rollup['privacy_message'] ?? __( 'Results are hidden until the privacy sample threshold is met.', 'ai-risk-benchmark' ) ) ); ?></p>
+	<?php endif; ?>
+
 	<div class="airb__role-bars">
 		<?php foreach ( (array) $rollup['roles'] as $slug => $data ) : ?>
 			<div class="airb__role-bar <?php echo null === $data['readiness'] ? 'is-missing' : ''; ?>">
@@ -42,25 +46,35 @@ $alignment_label = (string) ( $rollup['alignment_score_label'] ?? AIRB_Scoring::
 						<?php endif; ?>
 					</span>
 				<?php else : ?>
-					<span class="airb__role-bar-val airb__muted"><?php esc_html_e( 'Awaiting audit', 'ai-risk-benchmark' ); ?></span>
+					<span class="airb__role-bar-val airb__muted">
+						<?php
+						echo esc_html(
+							'sample_too_small' === (string) ( $data['status'] ?? '' )
+								? __( 'Hidden for privacy', 'ai-risk-benchmark' )
+								: __( 'Awaiting audit', 'ai-risk-benchmark' )
+						);
+						?>
+					</span>
 				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>
 	</div>
 
-	<div class="airb__cards">
-		<div class="airb__card airb__card--<?php echo esc_attr( (string) $rollup['overall_risk_level'] ); ?>">
-			<span class="airb__card-title"><?php echo esc_html( $alignment_label ); ?></span>
-			<strong class="airb__card-value"><?php echo esc_html( (string) $rollup['overall_alignment'] ); ?>%</strong>
-			<?php if ( ! empty( $rollup['overall_readiness_band'] ) ) : ?>
-				<span class="airb__card-band"><?php echo esc_html( (string) $rollup['overall_readiness_band'] ); ?></span>
-			<?php endif; ?>
+	<?php if ( empty( $rollup['privacy_suppressed'] ) && null !== ( $rollup['overall_alignment'] ?? null ) ) : ?>
+		<div class="airb__cards">
+			<div class="airb__card airb__card--<?php echo esc_attr( (string) $rollup['overall_risk_level'] ); ?>">
+				<span class="airb__card-title"><?php echo esc_html( $alignment_label ); ?></span>
+				<strong class="airb__card-value"><?php echo esc_html( (string) $rollup['overall_alignment'] ); ?>%</strong>
+				<?php if ( ! empty( $rollup['overall_readiness_band'] ) ) : ?>
+					<span class="airb__card-band"><?php echo esc_html( (string) $rollup['overall_readiness_band'] ); ?></span>
+				<?php endif; ?>
+			</div>
+			<div class="airb__card airb__card--<?php echo esc_attr( (string) $rollup['overall_risk_level'] ); ?>">
+				<span class="airb__card-title"><?php esc_html_e( 'Risk level', 'ai-risk-benchmark' ); ?></span>
+				<strong class="airb__card-value"><?php echo esc_html( (string) $rollup['overall_risk_label'] ); ?></strong>
+			</div>
 		</div>
-		<div class="airb__card airb__card--<?php echo esc_attr( (string) $rollup['overall_risk_level'] ); ?>">
-			<span class="airb__card-title"><?php esc_html_e( 'Risk level', 'ai-risk-benchmark' ); ?></span>
-			<strong class="airb__card-value"><?php echo esc_html( (string) $rollup['overall_risk_label'] ); ?></strong>
-		</div>
-	</div>
+	<?php endif; ?>
 
 	<?php if ( ! empty( $rollup['alignment_disclaimer'] ) ) : ?>
 		<p class="airb__muted airb__alignment-disclaimer"><?php echo esc_html( (string) $rollup['alignment_disclaimer'] ); ?></p>

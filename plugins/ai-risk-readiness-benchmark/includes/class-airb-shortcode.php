@@ -203,6 +203,8 @@ class AIRB_Shortcode {
 					'contactContextHint' => __( 'A little school context helps us make your next steps more useful.', 'ai-risk-benchmark' ),
 					'contactEmailTitle' => __( 'Get a copy', 'ai-risk-benchmark' ),
 					'contactEmailHint' => __( 'Enter an email only if you want your report sent to you.', 'ai-risk-benchmark' ),
+					'contactConsent' => __( 'If I enter an email, I consent to AI Awareness Day storing it to send my report or requested follow-up.', 'ai-risk-benchmark' ),
+					'contactConsentRequired' => __( 'Please tick the consent box before submitting an email address.', 'ai-risk-benchmark' ),
 					'contactHintYoung' => __( 'Optionally choose your year group so the feedback fits your stage. We do not ask students for name, school or email here.', 'ai-risk-benchmark' ),
 					'contactHintParent' => __( 'Optionally choose your child\'s year group so the feedback fits their stage. We do not ask parents for names, school or email here.', 'ai-risk-benchmark' ),
 					'contactHintPublic' => __( 'Email is optional and only used if you want to receive your results. We do not ask for your name or employer.', 'ai-risk-benchmark' ),

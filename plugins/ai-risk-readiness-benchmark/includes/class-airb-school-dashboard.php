@@ -15,6 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIRB_School_Dashboard {
 
 	/**
+	 * Minimum submissions needed before a per-role score can be shown.
+	 */
+	const MIN_ROLE_SAMPLE = 3;
+
+	/**
+	 * Minimum total submissions needed before any school roll-up can be shown.
+	 */
+	const MIN_TOTAL_SAMPLE = 5;
+
+	/**
 	 * Register shortcode and AJAX.
 	 */
 	public static function register(): void {
@@ -113,6 +123,33 @@ class AIRB_School_Dashboard {
 		$display_name = trim( (string) ( $rows[0]->school_name ?? $school_name ) );
 
 		$roles         = AIRB_Defaults::roles();
+		$total_rows    = count( $rows );
+		$role_counts   = array();
+		foreach ( $rows as $row ) {
+			$role = sanitize_key( (string) ( $row->role ?? '' ) );
+			if ( ! isset( $roles[ $role ] ) ) {
+				continue;
+			}
+			$role_counts[ $role ] = ( $role_counts[ $role ] ?? 0 ) + 1;
+		}
+
+		if ( $total_rows < self::MIN_TOTAL_SAMPLE ) {
+			return array(
+				'school_name'        => $display_name,
+				'roles'              => self::private_role_placeholders( $roles, $role_counts ),
+				'roles_complete'     => 0,
+				'roles_total'        => count( $roles ),
+				'total_submissions'  => $total_rows,
+				'privacy_suppressed' => true,
+				'privacy_message'    => sprintf(
+					/* translators: 1: minimum sample size, 2: current sample size */
+					__( 'Results are hidden until at least %1$d people from this school have completed the benchmark. Current sample: %2$d.', 'ai-risk-benchmark' ),
+					self::MIN_TOTAL_SAMPLE,
+					$total_rows
+				),
+			);
+		}
+
 		$by_role       = array();
 		$domain_totals = array();
 		$domain_counts = array();
@@ -123,7 +160,10 @@ class AIRB_School_Dashboard {
 		}
 
 		foreach ( $rows as $row ) {
-			$role = (string) $row->role;
+			$role = sanitize_key( (string) $row->role );
+			if ( ! isset( $roles[ $role ] ) || ( $role_counts[ $role ] ?? 0 ) < self::MIN_ROLE_SAMPLE ) {
+				continue;
+			}
 			if ( ! isset( $by_role[ $role ] ) ) {
 				$by_role[ $role ] = array(
 					'count'             => 0,
@@ -156,12 +196,28 @@ class AIRB_School_Dashboard {
 		$weighted    = 0.0;
 
 		foreach ( $roles as $slug => $label ) {
+			if ( ( $role_counts[ $slug ] ?? 0 ) > 0 && ( $role_counts[ $slug ] ?? 0 ) < self::MIN_ROLE_SAMPLE ) {
+				$role_scores[ $slug ] = array(
+					'label'       => $label,
+					'readiness'   => null,
+					'dependency'  => null,
+					'submissions' => (int) ( $role_counts[ $slug ] ?? 0 ),
+					'status'      => 'sample_too_small',
+					'message'     => sprintf(
+						/* translators: %d: minimum role sample size */
+						__( 'Hidden until at least %d people in this group have completed the benchmark.', 'ai-risk-benchmark' ),
+						self::MIN_ROLE_SAMPLE
+					),
+				);
+				continue;
+			}
+
 			if ( empty( $by_role[ $slug ] ) ) {
 				$role_scores[ $slug ] = array(
 					'label'           => $label,
 					'readiness'       => null,
 					'dependency'      => null,
-					'submissions'     => 0,
+					'submissions'     => (int) ( $role_counts[ $slug ] ?? 0 ),
 					'status'          => 'missing',
 				);
 				continue;
@@ -213,27 +269,57 @@ class AIRB_School_Dashboard {
 			array_filter(
 				$role_scores,
 				static function ( $r ) {
-					return ( $r['submissions'] ?? 0 ) > 0;
+					return 'complete' === (string) ( $r['status'] ?? '' );
 				}
 			)
 		);
+		$privacy_suppressed = $roles_complete < 1;
 
 		return array(
 			'school_name'              => $display_name,
 			'roles'                    => $role_scores,
 			'roles_complete'           => $roles_complete,
 			'roles_total'              => count( $roles ),
-			'overall_alignment'        => $overall_alignment,
+			'overall_alignment'        => $privacy_suppressed ? null : $overall_alignment,
 			'overall_readiness_band'   => AIRB_Scoring::readiness_band_label( $overall_alignment ),
 			'overall_risk_level'       => $overall_band,
 			'overall_risk_label'       => AIRB_Scoring::display_risk_label( $overall_band, (float) $overall_risk ),
 			'alignment_score_label'    => AIRB_Scoring::alignment_score_label(),
 			'alignment_disclaimer'     => AIRB_Scoring::alignment_score_disclaimer(),
-			'key_exposure_areas'       => $exposure,
-			'exposure_breakdown'       => $breakdown,
-			'recommended_priorities'   => self::recommend_priorities( $exposure, $role_scores ),
-			'total_submissions'        => count( $rows ),
+			'key_exposure_areas'       => $privacy_suppressed ? array() : $exposure,
+			'exposure_breakdown'       => $privacy_suppressed ? array() : $breakdown,
+			'recommended_priorities'   => $privacy_suppressed ? array() : self::recommend_priorities( $exposure, $role_scores ),
+			'total_submissions'        => $total_rows,
+			'min_role_sample'          => self::MIN_ROLE_SAMPLE,
+			'privacy_suppressed'       => $privacy_suppressed,
+			'privacy_message'          => $privacy_suppressed ? sprintf(
+				/* translators: %d: minimum role sample size */
+				__( 'School scores are hidden until at least one stakeholder group has %d or more submissions.', 'ai-risk-benchmark' ),
+				self::MIN_ROLE_SAMPLE
+			) : '',
 		);
+	}
+
+	/**
+	 * Redacted role rows for a school below the overall privacy floor.
+	 *
+	 * @param array<string,string> $roles       Role labels.
+	 * @param array<string,int>    $role_counts Counts already observed.
+	 * @return array<string,array<string,mixed>>
+	 */
+	private static function private_role_placeholders( array $roles, array $role_counts ): array {
+		$out = array();
+		foreach ( $roles as $slug => $label ) {
+			$count = (int) ( $role_counts[ $slug ] ?? 0 );
+			$out[ $slug ] = array(
+				'label'       => $label,
+				'readiness'   => null,
+				'dependency'  => null,
+				'submissions' => $count,
+				'status'      => $count > 0 ? 'sample_too_small' : 'missing',
+			);
+		}
+		return $out;
 	}
 
 	/**

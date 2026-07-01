@@ -4,7 +4,7 @@ Tags: ai, risk, schools, dfe, benchmark, assessment
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 8.0
-Stable tag: 1.5.0
+Stable tag: 1.49.34
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ An educational self-assessment tool for teachers, students, parents and school l
 
 **v1.1** adds role-specific result cards, composite metrics, key exposure areas, marketing positioning copy, a school-wide dashboard, and expanded UK guidance references.
 
-**Not legal advice.** No student personal data is collected.
+**Not legal advice.** Benchmark answers are stored for reporting and aggregation. Contact email is collected only when a user chooses an email/report/contact flow, and should be handled as personal data.
 
 == Installation ==
 

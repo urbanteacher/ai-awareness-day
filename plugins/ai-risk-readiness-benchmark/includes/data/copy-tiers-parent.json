@@ -156,8 +156,8 @@
                 }
             }
         },
-        "homework_boundaries": {
-            "label": "homework_boundaries",
+    "homework_oversight": {
+      "label": "homework_oversight",
             "description": "",
             "focus_card": {
                 "low": {
@@ -179,8 +179,8 @@
                 }
             }
         },
-        "parent_ai_use": {
-            "label": "parent_ai_use",
+    "parent_ai_dependency": {
+      "label": "parent_ai_dependency",
             "description": "",
             "focus_card": {
                 "low": {
@@ -193,8 +193,8 @@
                 }
             }
         },
-        "home_safety": {
-            "label": "home_safety",
+    "home_ai_safety": {
+      "label": "home_ai_safety",
             "description": "",
             "focus_card": {
                 "attention": {

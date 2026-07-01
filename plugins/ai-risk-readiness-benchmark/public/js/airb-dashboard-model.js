@@ -349,6 +349,19 @@
 		return out;
 	}
 
+	function focusMaxForRole(role) {
+		var map = {
+			public: 50,
+			teacher: 75,
+			student: 70,
+			parent: 75,
+			leader: 70,
+			support_staff: 75,
+			support: 75,
+		};
+		return map[role] == null ? 70 : map[role];
+	}
+
 	function mapResources(nextSteps) {
 		var links = (nextSteps && nextSteps.resource_links) || [];
 		return links.map(function (link) {
@@ -1584,7 +1597,7 @@
 		var domains = mapStudentDomains(metrics, results);
 		var independent = metricBySlug(metrics, 'independent_thinking');
 		var verification = metricBySlug(metrics, 'verification_skills');
-		var focusAreas = supplementFocusAreas(mapStudentFocusAreas(sr, results), domains, STUDENT_GUIDANCE_PRIORITIES, 75);
+		var focusAreas = supplementFocusAreas(mapStudentFocusAreas(sr, results), domains, STUDENT_GUIDANCE_PRIORITIES, focusMaxForRole('student'));
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = srCfg.dashboard || {};
@@ -1650,7 +1663,7 @@
 			? clampPct(results.safeguarding_readiness)
 			: domainReadinessScore(results.domain_scores || {}, 'safeguarding', results);
 		var nextSteps = lr.next_steps || {};
-		var focusAreas = supplementFocusAreas(mapLeaderFocusAreas(lr, results), domains, LEADER_GUIDANCE_PRIORITIES, 75);
+		var focusAreas = supplementFocusAreas(mapLeaderFocusAreas(lr, results), domains, LEADER_GUIDANCE_PRIORITIES, focusMaxForRole('leader'));
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = lrCfg.dashboard || {};
@@ -1713,7 +1726,7 @@
 		var dep = results.dependency_index != null ? clampPct(results.dependency_index) : null;
 		var oversight = oversightPct(results);
 		var domains = mapDomains(results, cfg);
-		var focusAreas = supplementFocusAreas(mapFocusAreas(tr, results), domains, GUIDANCE_PRIORITIES, 75);
+		var focusAreas = supplementFocusAreas(mapFocusAreas(tr, results), domains, GUIDANCE_PRIORITIES, focusMaxForRole('teacher'));
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = trCfg.dashboard || {};
@@ -1787,7 +1800,7 @@
 			: null;
 		var domains = mapSupportDomains(sr, results);
 		var nextSteps = sr.next_steps || {};
-		var focusAreas = supplementFocusAreas(mapSupportFocusAreas(sr), domains, SUPPORT_GUIDANCE_PRIORITIES, 75);
+		var focusAreas = supplementFocusAreas(mapSupportFocusAreas(sr), domains, SUPPORT_GUIDANCE_PRIORITIES, focusMaxForRole('support_staff'));
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = srCfg.dashboard || {};
@@ -1861,7 +1874,7 @@
 				dataPrivacy = clampPct(privacyMetric.value);
 			}
 		}
-		var focusAreas = supplementFocusAreas(mapPublicFocusAreas(pr), domains, PUBLIC_GUIDANCE_PRIORITIES, 75);
+		var focusAreas = supplementFocusAreas(mapPublicFocusAreas(pr), domains, PUBLIC_GUIDANCE_PRIORITIES, focusMaxForRole('public'));
 		var weakest = weakestDomain(domains);
 		var weakestFocus = weakestFocusArea(focusAreas);
 		var dashboard = prCfg.dashboard || {};

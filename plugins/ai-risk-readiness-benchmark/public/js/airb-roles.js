@@ -508,7 +508,10 @@
     // -------------------------------------------------------------------------
 
     R.leaderGovernanceMaturity = function (r) {
-        var score   = Math.round(r.governance_maturity_score || r.domain_scores && r.domain_scores.governance || 0);
+        var rawScore = r.governance_maturity_score != null
+            ? r.governance_maturity_score
+            : (r.domain_scores && r.domain_scores.governance != null ? r.domain_scores.governance : 0);
+        var score   = Math.round(rawScore);
         var copy    = resolveGovernanceMaturity(score);
 
         return '<div class="airb__card airb__governance-maturity">'

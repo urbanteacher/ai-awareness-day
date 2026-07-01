@@ -229,6 +229,18 @@
 		return html;
 	}
 
+	function readinessMetricHtml(metric, accent) {
+		if (!metric) return '';
+		var html = '<div class="teacher-dash-metric teacher-dash-metric--readiness">';
+		html += '<p class="teacher-dash-metric__label">' + esc(metric.label) + '</p>';
+		html += '<p class="teacher-dash-metric__value" style="color:' + esc(accent || '#2563eb') + '">' + esc(metric.value) + '</p>';
+		if (metric.note) {
+			html += '<p class="teacher-dash-metric__note">' + esc(metric.note) + '</p>';
+		}
+		html += '</div>';
+		return html;
+	}
+
 	function strengthCardHtml(model, opts) {
 		if (!model.strengths || !model.strengths.length) return '';
 		var heading = (opts.teacherResult && opts.teacherResult.strengths_heading) || "What you're doing well";
@@ -279,6 +291,7 @@
 		}
 		html += strengthCardHtml(model, opts);
 		html += dependencyMetricHtml(model.metricA, model.accent);
+		html += readinessMetricHtml(model.metricB, model.accent);
 		if (model.domains && model.domains.length) {
 			html += '<h3 class="teacher-dash-domain-heading">Domain breakdown & key signals</h3>';
 			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model, opts) + '</div>';
@@ -297,11 +310,12 @@
 		var weakest = (model.domains && model.domains.length)
 			? model.domains.reduce(function (min, d) { return !min || d.value < min.value ? d : min; }, null)
 			: null;
+		var journey = model.journey || ['Audit complete', 'Practice challenge', 'Retake evidence', 'Certificate unlock'];
 		var steps = [
-			{ title: model.journey[0] || 'Audit complete', body: 'First stamp earned for finishing the audit.' },
-			{ title: model.journey[1] || 'Practice challenge', body: weakest ? ('Improve ' + weakest.label.toLowerCase() + ' with a one-week habit.') : 'Work on your weakest domain this week.' },
-			{ title: model.journey[2] || 'Retake evidence', body: 'Return and reach ' + (cert.unlockAt || 0) + '% to show improvement.' },
-			{ title: model.journey[3] || 'Certificate unlock', body: 'Generate a shareable certificate once progress is evidenced.' },
+			{ title: journey[0] || 'Audit complete', body: 'First stamp earned for finishing the audit.' },
+			{ title: journey[1] || 'Practice challenge', body: weakest ? ('Improve ' + weakest.label.toLowerCase() + ' with a one-week habit.') : 'Work on your weakest domain this week.' },
+			{ title: journey[2] || 'Retake evidence', body: 'Return and reach ' + (cert.unlockAt || 0) + '% to show improvement.' },
+			{ title: journey[3] || 'Certificate unlock', body: 'Generate a shareable certificate once progress is evidenced.' },
 		];
 		var currentIndex = cert.unlocked ? steps.length - 1 : Math.min(1, steps.length - 1);
 

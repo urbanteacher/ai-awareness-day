@@ -140,7 +140,11 @@ class AIRB_Student_Copy {
 		$slug   = (string) ( $opp['slug'] ?? '' );
 		$pct    = (int) ( $opp['pct'] ?? 0 );
 		$tier   = self::focus_tier( $pct );
-		$tiered = (array) ( ( $cfg['focus_tiers'][ $slug ] ?? array() )[ $tier ] ?? array() );
+		$tiers  = (array) ( $cfg['focus_tiers'][ $slug ] ?? array() );
+		$tiered = (array) ( $tiers[ $tier ] ?? array() );
+		if ( empty( $tiered ) ) {
+			$tiered = self::nearest_focus_tier( $tiers, $tier );
+		}
 
 		$summary = (string) ( $tiered['summary'] ?? $opp['summary'] ?? '' );
 		if ( ! $summary && ! empty( $opp['summary'] ) ) {
@@ -155,6 +159,31 @@ class AIRB_Student_Copy {
 			'actions'           => (array) ( $tiered['actions'] ?? $opp['tips'] ?? array() ),
 			'tier'              => $tier,
 		);
+	}
+
+	/**
+	 * Nearest authored focus tier when a topic's copy set doesn't cover
+	 * every severity level `focus_tier()` can return (e.g. a topic with no
+	 * "confident" tier authored for high-scoring students).
+	 *
+	 * @param array<string, mixed> $tiers     Topic's focus tiers keyed by severity slug.
+	 * @param string               $requested Requested tier slug.
+	 * @return array<string, mixed>
+	 */
+	private static function nearest_focus_tier( array $tiers, string $requested ): array {
+		$order = array( 'emerging', 'developing', 'confident' );
+		$idx   = array_search( $requested, $order, true );
+		if ( false === $idx ) {
+			return array();
+		}
+		for ( $offset = 1; $offset < count( $order ); $offset++ ) {
+			foreach ( array( $idx + $offset, $idx - $offset ) as $candidate ) {
+				if ( isset( $order[ $candidate ] ) && ! empty( $tiers[ $order[ $candidate ] ] ) ) {
+					return (array) $tiers[ $order[ $candidate ] ];
+				}
+			}
+		}
+		return array();
 	}
 
 	/**

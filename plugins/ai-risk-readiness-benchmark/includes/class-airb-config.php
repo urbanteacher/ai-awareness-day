@@ -88,7 +88,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 4 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$config['version']   = 4;
 			$changed             = true;
 		}
@@ -161,7 +161,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 13 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$config['version']   = 13;
 			$changed             = true;
 		}
@@ -353,7 +353,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 22 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$default_leader    = (array) ( $defaults['leader_result'] ?? array() );
 			if ( ! isset( $config['leader_result'] ) || ! is_array( $config['leader_result'] ) ) {
 				$config['leader_result'] = $default_leader;
@@ -548,7 +548,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 28 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$default_student     = (array) ( $defaults['student_result'] ?? array() );
 			if ( ! isset( $config['student_result'] ) || ! is_array( $config['student_result'] ) ) {
 				$config['student_result'] = $default_student;
@@ -660,7 +660,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 34 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$default_teacher = (array) ( $defaults['teacher_result'] ?? array() );
 			if ( ! isset( $config['teacher_result'] ) || ! is_array( $config['teacher_result'] ) ) {
 				$config['teacher_result'] = $default_teacher;
@@ -734,7 +734,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 37 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$default_public      = AIRB_Defaults::public_result_config();
 			if ( ! isset( $config['public_result'] ) || ! is_array( $config['public_result'] ) ) {
 				$config['public_result'] = $default_public;
@@ -751,7 +751,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 38 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			$config['version']   = 38;
 			$changed             = true;
 		}
@@ -819,7 +819,7 @@ class AIRB_Config {
 		}
 
 		if ( (int) ( $config['version'] ?? 0 ) < 43 ) {
-			$config['questions'] = AIRB_Questions::all();
+			self::merge_default_questions( $config );
 			foreach ( array( 'domain_sources', 'domain_descriptions' ) as $key ) {
 				$default_map = (array) ( $defaults[ $key ] ?? array() );
 				if ( ! isset( $config[ $key ] ) || ! is_array( $config[ $key ] ) ) {
@@ -922,6 +922,52 @@ class AIRB_Config {
 			}
 			unset( $service );
 		}
+	}
+
+	/**
+	 * Add new default questions without overwriting admin-customised questions.
+	 *
+	 * Existing question IDs are preserved. Default questions with new IDs are
+	 * appended so schema/content migrations remain non-destructive.
+	 *
+	 * @param array<string, mixed> $config Config array by reference.
+	 */
+	private static function merge_default_questions( array &$config ): void {
+		$roles    = AIRB_Defaults::roles();
+		$domains  = AIRB_Defaults::domains();
+		$types    = array( 'radio', 'select', 'slider' );
+		$existing = array();
+		$out      = array();
+
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			if ( ! is_array( $question ) ) {
+				continue;
+			}
+			$id     = sanitize_key( (string) ( $question['id'] ?? '' ) );
+			$role   = sanitize_key( (string) ( $question['role'] ?? '' ) );
+			$domain = sanitize_key( (string) ( $question['domain'] ?? '' ) );
+			$type   = sanitize_key( (string) ( $question['type'] ?? 'radio' ) );
+			if ( ! $id || isset( $existing[ $id ] ) || ! isset( $roles[ $role ] ) || ! isset( $domains[ $domain ] ) || ! in_array( $type, $types, true ) ) {
+				continue;
+			}
+			$question['id']     = $id;
+			$question['role']   = $role;
+			$question['domain'] = $domain;
+			$question['type']   = $type;
+			$out[]              = $question;
+			$existing[ $id ]    = true;
+		}
+
+		foreach ( AIRB_Questions::all() as $question ) {
+			$id = sanitize_key( (string) ( $question['id'] ?? '' ) );
+			if ( ! $id || isset( $existing[ $id ] ) ) {
+				continue;
+			}
+			$out[]           = $question;
+			$existing[ $id ] = true;
+		}
+
+		$config['questions'] = $out;
 	}
 
 	/**

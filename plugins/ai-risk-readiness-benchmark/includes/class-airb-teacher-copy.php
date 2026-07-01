@@ -48,7 +48,7 @@ class AIRB_Teacher_Copy {
 			return 'critical';
 		}
 		if ( $pct <= 50 ) {
-			return 'high';
+			return 'low';
 		}
 		if ( $pct <= 75 ) {
 			return 'moderate';
