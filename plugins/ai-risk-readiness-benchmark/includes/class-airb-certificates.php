@@ -99,6 +99,46 @@ class AIRB_Certificates {
 	}
 
 	/**
+	 * Get one certificate by its public verification hash (used for the
+	 * "check your certificate" link sent once a manual review is approved,
+	 * so a participant can find it again without relying on browser storage).
+	 */
+	public static function get_by_verification_hash( string $hash ): ?object {
+		global $wpdb;
+		$hash = sanitize_text_field( $hash );
+		if ( '' === $hash ) {
+			return null;
+		}
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE verification_hash = %s", $hash ) );
+		return $row ?: null;
+	}
+
+	/**
+	 * Certificates currently waiting for manual review, oldest first.
+	 *
+	 * @return array<int, object>
+	 */
+	public static function get_pending_review(): array {
+		global $wpdb;
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results( "SELECT * FROM {$table} WHERE status = 'pending_review' ORDER BY created_at ASC" );
+		return is_array( $rows ) ? $rows : array();
+	}
+
+	/**
+	 * Count certificates currently waiting for manual review.
+	 */
+	public static function count_pending_review(): int {
+		global $wpdb;
+		$table = self::table_name();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'pending_review'" );
+	}
+
+	/**
 	 * Certificate status payload for front-end models.
 	 *
 	 * @param int                  $submission_id Saved submission id.
@@ -368,12 +408,17 @@ class AIRB_Certificates {
 			return;
 		}
 
+		$verify_url = class_exists( 'AIRB_Defaults' )
+			? add_query_arg( 'airb_verify', (string) $certificate->verification_hash, AIRB_Defaults::benchmark_page_url() )
+			: '';
+
 		$subject = __( 'Your AI Awareness Day certificate is ready', 'ai-risk-benchmark' );
 		$body    = sprintf(
-			/* translators: 1: participant name, 2: certificate id */
-			__( "Hi %1\$s,\n\nYour AI Risk & Readiness Benchmark certificate has been approved.\n\nCertificate ID: %2\$s\n\nReturn to your benchmark results and open Progress & certificate to download or print it.\n\nAI Awareness Day", 'ai-risk-benchmark' ),
+			/* translators: 1: participant name, 2: certificate id, 3: direct link to view/print the certificate */
+			__( "Hi %1\$s,\n\nYour AI Risk & Readiness Benchmark certificate has been approved.\n\nCertificate ID: %2\$s\n\nOpen this link to view, download or print it (works even if you're on a different device or your last visit has expired):\n%3\$s\n\nAI Awareness Day", 'ai-risk-benchmark' ),
 			(string) $certificate->participant_name,
-			(string) $certificate->certificate_id
+			(string) $certificate->certificate_id,
+			$verify_url ?: __( 'Return to your benchmark results and open Progress & certificate.', 'ai-risk-benchmark' )
 		);
 
 		wp_mail( $notify_email, $subject, $body );

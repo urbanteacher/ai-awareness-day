@@ -13,6 +13,7 @@
  * @var array<int, object>        $submission_leads
  * @var object|null               $submission_certificate
  * @var bool                      $has_filters
+ * @var array<int, object>        $pending_certificates
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,6 +42,57 @@ $export_url = wp_nonce_url(
 <div class="wrap">
 	<h1><?php esc_html_e( 'AI Risk Benchmark — Submissions', 'ai-risk-benchmark' ); ?></h1>
 	<p><?php esc_html_e( 'Every completed benchmark is stored with scores and role. School name and email are saved when provided.', 'ai-risk-benchmark' ); ?></p>
+
+	<?php if ( ( $stats['pending_review'] ?? 0 ) > 0 ) : ?>
+		<div class="notice notice-warning">
+			<p>
+				<?php
+				printf(
+					/* translators: %d: number of certificates awaiting review */
+					esc_html( _n( '%d certificate is awaiting manual review.', '%d certificates are awaiting manual review.', $stats['pending_review'], 'ai-risk-benchmark' ) ),
+					(int) $stats['pending_review']
+				);
+				?>
+				<a href="<?php echo esc_url( add_query_arg( array( 'show_pending_review' => 1 ), admin_url( 'admin.php?page=airb-benchmark' ) ) ); ?>">
+					<?php esc_html_e( 'Review now', 'ai-risk-benchmark' ); ?>
+				</a>
+			</p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $pending_certificates ) ) : ?>
+		<h2><?php esc_html_e( 'Certificates awaiting review', 'ai-risk-benchmark' ); ?></h2>
+		<table class="widefat striped" style="margin-bottom:1.5rem;">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Submitted', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'Name', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'Role', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'School', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'Evidence theme', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'Evidence quality', 'ai-risk-benchmark' ); ?></th>
+					<th><?php esc_html_e( 'Action', 'ai-risk-benchmark' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $pending_certificates as $pending ) : ?>
+					<tr>
+						<td><?php echo esc_html( (string) $pending->created_at ); ?></td>
+						<td><?php echo esc_html( (string) $pending->participant_name ?: '—' ); ?></td>
+						<td><?php echo esc_html( $roles[ $pending->role ] ?? (string) $pending->role ); ?></td>
+						<td><?php echo esc_html( (string) $pending->school_name ?: '—' ); ?></td>
+						<td><?php echo esc_html( (string) $pending->evidence_theme ?: '—' ); ?></td>
+						<td><?php echo esc_html( (string) $pending->evidence_quality_score ); ?>/100 · <?php echo esc_html( (string) $pending->evidence_quality_tier ); ?></td>
+						<td>
+							<a class="button button-small" href="<?php echo esc_url( add_query_arg( array( 'page' => 'airb-benchmark', 'submission_id' => (int) $pending->submission_id ), admin_url( 'admin.php' ) ) ); ?>">
+								<?php esc_html_e( 'View & approve', 'ai-risk-benchmark' ); ?>
+							</a>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	<?php endif; ?>
 
 	<?php if ( $deleted_count > 0 ) : ?>
 		<div class="notice notice-success is-dismissible"><p>

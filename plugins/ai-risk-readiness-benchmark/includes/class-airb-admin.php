@@ -130,7 +130,9 @@ class AIRB_Admin {
 		$stats = array(
 			'total'            => AIRB_Database::count_submissions( array() ),
 			'with_school'      => AIRB_Database::count_with_school(),
+			'pending_review'   => AIRB_Certificates::count_pending_review(),
 		);
+		$pending_certificates = ! empty( $_GET['show_pending_review'] ) ? AIRB_Certificates::get_pending_review() : array();
 		$has_filters = self::has_submission_filters( $filters );
 
 		include AIRB_PLUGIN_DIR . 'admin/views/submissions.php';

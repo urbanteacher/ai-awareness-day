@@ -304,7 +304,7 @@
 			'<footer class="certificate-preview__footer">' +
 			'<span class="certificate-preview__id">Certificate ID: ' + esc(data.certificateId || 'Pending') + '</span>' +
 			'<span class="certificate-preview__issuer">Issued by: AI Awareness Day</span>' +
-			'<span class="certificate-preview__verify">' + esc(data.verifyUrl || 'ai-awareness-day.org') + '</span>' +
+			'<span class="certificate-preview__verify">' + esc(data.verifyUrl || 'aiawarenessday.co.uk') + '</span>' +
 			'</footer>' +
 			'</div>' +
 			'</div>' +
@@ -378,7 +378,7 @@
 			body: certificateBody(null, role),
 			awardedAt: '',
 			certificateId: 'Pending',
-			verifyUrl: 'ai-awareness-day.org',
+			verifyUrl: 'aiawarenessday.co.uk',
 		});
 	}
 
@@ -524,7 +524,7 @@
 			body: certificateBody(model, role),
 			awardedAt: cert.awardedAt || '',
 			certificateId: cert.certificateId || '',
-			verifyUrl: 'ai-awareness-day.org',
+			verifyUrl: 'aiawarenessday.co.uk',
 		};
 		var submissionId = submissionIdFromRuntime();
 		var benchmarkScore = cert.currentScore || model.score || 0;
@@ -588,7 +588,7 @@
 				body: copy.body || certificateBody(null, role),
 				awardedAt: cert.awarded_at,
 				certificateId: cert.certificate_id,
-				verifyUrl: cert.verify_url || 'ai-awareness-day.org',
+				verifyUrl: cert.verify_url || 'aiawarenessday.co.uk',
 			});
 		}
 		var allocate = panel.querySelector('[data-airb-certificate-allocate]');
@@ -720,6 +720,52 @@
 						setStatus(panel, err.message || 'Could not allocate the certificate.', true);
 					});
 			});
+		});
+	};
+
+	/**
+	 * Standalone certificate view for the "check your certificate" magic
+	 * link (?airb_verify=<hash>), rendered independently of the audit flow
+	 * or any locally stored results — used when a certificate needed manual
+	 * review and the participant is returning later, possibly on a
+	 * different device or after their local snapshot has expired.
+	 */
+	Cert.standaloneViewHtml = function (cert) {
+		cert = cert || {};
+		var copy = cert.copy || roleCopy(cert.role);
+		var pendingReview = !!cert.pending_review || cert.status === 'pending_review';
+		var html = '<section class="teacher-dash-card benchmark-certificate-layout benchmark-certificate-standalone">';
+
+		if (pendingReview) {
+			html += '<p class="airb__notice">' + esc('This certificate is still awaiting manual review. We will email you as soon as it is approved.') + '</p>';
+			return html + '</section>';
+		}
+
+		var title = copy.headline_secondary ? (copy.headline_primary + ' ' + copy.headline_secondary) : (copy.headline_primary || certificateTitle(null, cert.role));
+		html += previewHtml({
+			title: title,
+			role: cert.role,
+			participantName: cert.participant_name,
+			body: copy.body || certificateBody(null, cert.role),
+			awardedAt: cert.awarded_at,
+			certificateId: cert.certificate_id,
+			verifyUrl: cert.verify_url || 'aiawarenessday.co.uk',
+		});
+		html += '<div class="benchmark-certificate-actions" style="margin-top:1rem;">';
+		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-standalone-download>' + esc('Download / print certificate') + '</button>';
+		html += '</div>';
+		html += '<p class="benchmark-certificate-status" data-airb-certificate-status></p>';
+		html += '</section>';
+		return html;
+	};
+
+	Cert.bindStandalone = function (root) {
+		if (!root) return;
+		var btn = root.querySelector('[data-airb-certificate-standalone-download]');
+		if (!btn || btn.dataset.airbBound) return;
+		btn.dataset.airbBound = '1';
+		btn.addEventListener('click', function () {
+			printCertificate(root);
 		});
 	};
 

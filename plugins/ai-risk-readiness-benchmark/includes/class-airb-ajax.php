@@ -28,6 +28,8 @@ class AIRB_Ajax {
 		add_action( 'wp_ajax_nopriv_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
 		add_action( 'wp_ajax_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
 		add_action( 'wp_ajax_nopriv_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
+		add_action( 'wp_ajax_airb_lookup_certificate', array( __CLASS__, 'lookup_certificate' ) );
+		add_action( 'wp_ajax_nopriv_airb_lookup_certificate', array( __CLASS__, 'lookup_certificate' ) );
 		add_action( 'wp_ajax_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
 		add_action( 'wp_ajax_nopriv_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
 		add_action( 'wp_ajax_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
@@ -455,6 +457,60 @@ class AIRB_Ajax {
 					'pending_review'         => 'pending_review' === (string) $row->status,
 					'unlocked'               => 'unlocked' === (string) $row->status,
 					'assessment'             => $assessment,
+					'copy'                   => array(
+						'headline_primary'   => $copy['headline_primary'],
+						'headline_secondary' => $copy['headline_secondary'] ?? '',
+						'body'               => $copy['body'],
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Look up an already-allocated certificate by its public verification
+	 * hash, so a participant can retrieve it later without depending on
+	 * browser storage or the original session (e.g. after a manual review
+	 * is approved, possibly on a different device or after the local
+	 * results snapshot has expired).
+	 */
+	public static function lookup_certificate(): void {
+		self::verify_nonce();
+		self::enforce_rate_limit( 'cert_lookup', 20, 10 * MINUTE_IN_SECONDS );
+
+		$hash = sanitize_text_field( substr( (string) ( $_POST['verification_hash'] ?? '' ), 0, 64 ) );
+		if ( '' === $hash ) {
+			wp_send_json_error( array( 'message' => __( 'Certificate link is missing or invalid.', 'ai-risk-benchmark' ) ), 400 );
+		}
+
+		$row = AIRB_Certificates::get_by_verification_hash( $hash );
+		if ( ! $row || ! in_array( (string) $row->status, array( 'unlocked', 'pending_review' ), true ) ) {
+			wp_send_json_error( array( 'message' => __( 'We could not find a certificate for this link.', 'ai-risk-benchmark' ) ), 404 );
+		}
+
+		$role       = sanitize_key( (string) $row->role );
+		$role_label = self::certificate_role_label( $role );
+		$copy       = AIRB_Certificate_Copy::for_role( $role );
+
+		wp_send_json_success(
+			array(
+				'certificate' => array(
+					'certificate_id'         => (string) $row->certificate_id,
+					'verification_hash'      => (string) $row->verification_hash,
+					'participant_name'       => (string) $row->participant_name,
+					'school_name'            => (string) $row->school_name,
+					'role'                   => $role,
+					'role_label'             => $role_label,
+					'current_score'          => (int) $row->completed_score,
+					'unlock_at'              => AIRB_Certificate_Evidence::SCORE_THRESHOLD,
+					'awarded_at'             => (string) $row->awarded_at,
+					'verify_url'             => home_url( '/' ),
+					'evidence_theme'         => (string) $row->evidence_theme,
+					'evidence_quality_score' => (int) $row->evidence_quality_score,
+					'evidence_quality_tier'  => (string) $row->evidence_quality_tier,
+					'status'                 => (string) $row->status,
+					'pending_review'         => 'pending_review' === (string) $row->status,
+					'unlocked'               => 'unlocked' === (string) $row->status,
 					'copy'                   => array(
 						'headline_primary'   => $copy['headline_primary'],
 						'headline_secondary' => $copy['headline_secondary'] ?? '',

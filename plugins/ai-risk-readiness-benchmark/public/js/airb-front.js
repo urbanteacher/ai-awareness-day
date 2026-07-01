@@ -6,6 +6,42 @@
 
 	if (!window.airbBenchmark) return;
 
+	// "Check your certificate" magic link (?airb_verify=<hash>) — used when a
+	// certificate needed manual review, so the participant can view/print it
+	// later regardless of session state, device, or an expired local snapshot.
+	// This bypasses the whole audit flow below entirely.
+	var verifyToken = '';
+	try {
+		verifyToken = new URLSearchParams(window.location.search).get('airb_verify') || '';
+	} catch (e) { /* URLSearchParams unsupported; ignore */ }
+
+	if (verifyToken) {
+		var verifyRoot = document.getElementById('airb-benchmark');
+		if (verifyRoot) {
+			verifyRoot.innerHTML = '<p class="airb__muted">' + (airbBenchmark.i18n && airbBenchmark.i18n.certificateLookupLoading || 'Looking up your certificate…') + '</p>';
+
+			var verifyBody = new FormData();
+			verifyBody.append('action', 'airb_lookup_certificate');
+			verifyBody.append('nonce', airbBenchmark.nonce);
+			verifyBody.append('verification_hash', verifyToken);
+
+			fetch(airbBenchmark.ajaxurl, { method: 'POST', body: verifyBody, credentials: 'same-origin' })
+				.then(function (res) { return res.json(); })
+				.then(function (json) {
+					if (!json || !json.success || !json.data || !json.data.certificate || !window.AIRB || !AIRB.Certificate || !AIRB.Certificate.standaloneViewHtml) {
+						verifyRoot.innerHTML = '<p class="airb__notice">' + (airbBenchmark.i18n && airbBenchmark.i18n.certificateLookupNotFound || 'We could not find a certificate for this link. It may be invalid or the certificate may not have been issued yet.') + '</p>';
+						return;
+					}
+					verifyRoot.innerHTML = AIRB.Certificate.standaloneViewHtml(json.data.certificate);
+					AIRB.Certificate.bindStandalone(verifyRoot);
+				})
+				.catch(function () {
+					verifyRoot.innerHTML = '<p class="airb__notice">' + (airbBenchmark.i18n && airbBenchmark.i18n.certificateLookupError || 'Something went wrong loading your certificate. Please try again later.') + '</p>';
+				});
+		}
+		return;
+	}
+
 	var cfg = airbBenchmark.config;
 	var i18n = airbBenchmark.i18n;
 	var domains = cfg.domains || {};
