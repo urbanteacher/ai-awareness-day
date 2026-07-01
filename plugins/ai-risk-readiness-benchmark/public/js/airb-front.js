@@ -1556,6 +1556,12 @@
 		var action = model.priority || model.nextAction || model.motif || '';
 		var shareText = benchmarkShareText(model);
 		var url = benchmarkShareUrl();
+		// student and public results already show their own contextual retake
+		// button (studentRetakeCardHtml / publicShareCardHtml) — skip this
+		// generic one for them so the page doesn't show two retake CTAs.
+		var roleHasOwnRetake = state.role === 'student' || state.role === 'public';
+		var retakeBtn = roleHasOwnRetake ? '' :
+			'<button type="button" class="airb__btn airb__btn--ghost airb__dashboard-retake-btn" data-airb-reset-results="1">' + esc(i18n.retakeAudit || i18n.resetResults || 'Retake audit') + '</button>';
 		return '<section class="airb__dashboard-share" aria-label="Share your benchmark action">' +
 			'<div class="airb__dashboard-share-copy">' +
 			'<p class="airb__leader-section-label">Share your next AI action</p>' +
@@ -1565,7 +1571,7 @@
 			'</div>' +
 			'<div class="airb__dashboard-share-actions">' +
 			'<button type="button" class="airb__btn airb__btn--primary airb__dashboard-share-btn" data-airb-share-action data-airb-share-title="AI Risk & Readiness Benchmark" data-airb-share-url="' + esc(url) + '" data-airb-share-text="' + esc(shareText) + '">Share my AI action</button>' +
-			'<button type="button" class="airb__btn airb__btn--ghost airb__dashboard-retake-btn" data-airb-reset-results="1">' + esc(i18n.retakeAudit || i18n.resetResults || 'Retake audit') + '</button>' +
+			retakeBtn +
 			'<p class="airb__muted airb__dashboard-share-status" data-airb-share-action-status hidden role="status" aria-live="polite"></p>' +
 			'</div>' +
 			'</section>';
