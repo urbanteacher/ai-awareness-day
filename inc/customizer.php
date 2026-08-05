@@ -199,7 +199,7 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
     ) );
     $wp_customize->add_control( 'aiad_hero_date', array(
         'label'       => __( 'Event Date Text', 'ai-awareness-day' ),
-        'description' => __( 'Displayed prominently in the hero section. Format: "Thursday 4th June 2026"', 'ai-awareness-day' ),
+        'description' => __( 'Displayed prominently in the hero section. Keep loose until the 2027 date is confirmed (e.g. "AI Awareness Day 2027").', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'type'        => 'text',
     ) );
@@ -210,8 +210,8 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_event_date_ymd', array(
-        'label'       => __( 'Event Date (countdown & SEO)', 'ai-awareness-day' ),
-        'description' => __( 'Machine-readable date for the hero countdown, balloons, and structured data. Format: Y-m-d (e.g. 2026-06-04).', 'ai-awareness-day' ),
+        'label'       => __( 'Event Date (SEO)', 'ai-awareness-day' ),
+        'description' => __( 'Machine-readable date for structured data once 2027 is confirmed. Format: Y-m-d.', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'type'        => 'text',
     ) );

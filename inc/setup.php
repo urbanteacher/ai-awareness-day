@@ -187,19 +187,7 @@ function aiad_scripts(): void
         );
     }
 
-    // balloons-js (ES module): hero “live” moment + school registration success — front page only
-    if (is_front_page() && !is_admin()) {
-        $balloons_js = AIAD_DIR . '/assets/js/aiad-balloons.js';
-        if (file_exists($balloons_js)) {
-            wp_enqueue_script(
-                'aiad-balloons',
-                AIAD_URI . '/assets/js/aiad-balloons.js',
-                array('aiad-main'),
-                filemtime($balloons_js),
-                $script_args
-            );
-        }
-    }
+    // balloons-js disabled post-event (2026 celebration complete). Assets remain in theme for reuse.
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';

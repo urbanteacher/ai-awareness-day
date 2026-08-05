@@ -27,46 +27,11 @@ if ( empty( $entries ) ) {
 $icon_options = aiad_timeline_icon_options();
 $show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
 ?>
-<?php
-$days_to_go   = function_exists( 'aiad_timeline_days_until_event' ) ? aiad_timeline_days_until_event() : 0;
-$resources    = 0;
-$resource_obj = wp_count_posts( 'resource' );
-if ( $resource_obj && isset( $resource_obj->publish ) ) {
-    $resources = (int) $resource_obj->publish;
-}
-$featured_resource_obj = wp_count_posts( 'featured_resource' );
-if ( $featured_resource_obj && isset( $featured_resource_obj->publish ) ) {
-    $resources += (int) $featured_resource_obj->publish;
-}
-$days_urgent = $days_to_go > 0 && $days_to_go < 30;
-?>
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="timeline">
     <div class="container">
         <div class="fade-up">
             <span class="section-label section-label--live"><?php esc_html_e( 'Live', 'ai-awareness-day' ); ?></span>
             <h2 class="section-title"><?php esc_html_e( 'Campaign Updates', 'ai-awareness-day' ); ?></h2>
-
-            <div class="timeline-stats-bar" role="status" aria-label="<?php esc_attr_e( 'Campaign stats', 'ai-awareness-day' ); ?>">
-                <span class="timeline-stats-bar__stat timeline-stats-bar__days <?php echo $days_urgent ? ' timeline-stats-bar__days--urgent' : ''; ?>">
-                    <span class="timeline-stats-bar__icon" aria-hidden="true">⏱</span>
-                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $days_to_go ); ?></span>
-                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'days to go', 'ai-awareness-day' ); ?></span>
-                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'days', 'ai-awareness-day' ); ?></span>
-                </span>
-                <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
-                <span class="timeline-stats-bar__stat timeline-stats-bar__stat--schools">
-                    <span class="timeline-stats-bar__value">1000+</span>
-                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'schools reached', 'ai-awareness-day' ); ?></span>
-                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'schools', 'ai-awareness-day' ); ?></span>
-                </span>
-                <span class="timeline-stats-bar__sep" aria-hidden="true">·</span>
-                <span class="timeline-stats-bar__stat">
-                    <span class="timeline-stats-bar__value"><?php echo esc_html( (string) $resources ); ?></span>
-                    <span class="timeline-stats-bar__label--full"><?php esc_html_e( 'free resources', 'ai-awareness-day' ); ?></span>
-                    <span class="timeline-stats-bar__label--short"><?php esc_html_e( 'resources', 'ai-awareness-day' ); ?></span>
-                </span>
-            </div>
-
         </div>
 
         <?php if ( $show_filters ) : ?>

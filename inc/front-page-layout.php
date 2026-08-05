@@ -18,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_get_front_page_sections(): array {
     $sections = array(
         'hero',
-        'survey',
         'campaign',
         'schedule',
         'timeline',
