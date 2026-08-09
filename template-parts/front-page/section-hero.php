@@ -20,7 +20,15 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
             $defaults = aiad_get_customizer_defaults();
             ?>
             <p class="hero-date">
-                <?php echo esc_html( get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] ) ); ?>
+                <?php
+                $hero_date = (string) get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
+                if ( preg_match( '/^(.*?)\s+(\d{4})$/u', trim( $hero_date ), $hero_date_parts ) ) {
+                    echo esc_html( $hero_date_parts[1] );
+                    echo '<span class="hero-date__year">' . esc_html( $hero_date_parts[2] ) . '</span>';
+                } else {
+                    echo esc_html( $hero_date );
+                }
+                ?>
             </p>
 
             <p class="hero-slogan">
