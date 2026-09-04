@@ -23,10 +23,10 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                 <?php
                 $hero_date = (string) get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
                 if ( preg_match( '/^(.*?)\s+(\d{4})$/u', trim( $hero_date ), $hero_date_parts ) ) {
-                    echo esc_html( $hero_date_parts[1] );
+                    echo '<span class="hero-date__title">' . esc_html( $hero_date_parts[1] ) . '</span>';
                     echo '<span class="hero-date__year">' . esc_html( $hero_date_parts[2] ) . '</span>';
                 } else {
-                    echo esc_html( $hero_date );
+                    echo '<span class="hero-date__title">' . esc_html( $hero_date ) . '</span>';
                 }
                 ?>
             </p>

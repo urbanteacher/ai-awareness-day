@@ -10,6 +10,7 @@ import { CertificateDemo } from '@/pages/CertificateDemo'
 import { ComponentryDemo } from '@/pages/ComponentryDemo'
 import { CultDemo } from '@/pages/CultDemo'
 import { DotMatrixDemo } from '@/pages/DotMatrixDemo'
+import { HeroTextMotionDemo } from '@/pages/HeroTextMotionDemo'
 import { Home } from '@/pages/Home'
 import { MetalDemo } from '@/pages/MetalDemo'
 import { SkiperDemo } from '@/pages/SkiperDemo'
@@ -34,6 +35,7 @@ export default function App() {
       <Route path="/balloons" element={<BalloonsDemo />} />
       <Route path="/certificate" element={<CertificateDemo />} />
       <Route path="/benchmark-dashboards" element={<BenchmarkDashboardsDemo />} />
+      <Route path="/hero-text" element={<HeroTextMotionDemo />} />
     </Routes>
   )
 }

@@ -89,13 +89,59 @@
   letter-spacing: -0.02em;
   margin: 0 auto 1rem auto;
   text-align: center;
-  line-height: 1.15;
+  line-height: 1.1;
+}
+
+.hero-title-block .hero-date__title {
+  display: block;
+  font-size: clamp(3.2rem, 6.4vw, 4.8rem);
+  line-height: 1.05;
 }
 
 .hero-title-block .hero-date__year {
   display: block;
-  margin-top: 0.35em;
+  margin-top: 0.2em;
   color: var(--gray-500, #6b7280);
+}
+
+/* Staggered entrance: title → year → slogan — plays when .fade-up becomes .visible */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title-block .hero-date__title,
+  .hero-title-block .hero-date__year,
+  .hero-title-block .hero-slogan {
+    opacity: 0;
+    transform: translateY(1.15rem);
+  }
+
+  .hero-title-block.visible .hero-date__title {
+    animation: aiadHeroDateIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  }
+
+  .hero-title-block.visible .hero-date__year {
+    animation: aiadHeroDateIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
+  }
+
+  .hero-title-block.visible .hero-slogan {
+    animation: aiadHeroDateIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.52s forwards;
+  }
+}
+
+@keyframes aiadHeroDateIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.15rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.no-js .hero-title-block .hero-date__title,
+.no-js .hero-title-block .hero-date__year,
+.no-js .hero-title-block .hero-slogan {
+  opacity: 1;
+  transform: none;
 }
 
 /* Subtitle: front page uses .hero-subtitle; block pattern uses .section-desc */

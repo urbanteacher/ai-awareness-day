@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom'
 
 const DEMOS = [
   {
+    to: '/hero-text',
+    name: 'Hero text (Framer Motion)',
+    blurb:
+      'AI Awareness Day 2027 title stagger — spring entrance for title, year digits, and slogan.',
+  },
+  {
     to: '/benchmark-dashboards',
     name: 'Benchmark dashboards',
     blurb:
