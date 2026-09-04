@@ -148,8 +148,10 @@ $initial_show         = $initial_show_mobile;
                                     onerror="this.classList.add('is-broken');" />
                             <?php endif; ?>
                         </div>
-                        <?php if ($partner['stats']): ?>
-                            <p class="partner-stats"><?php echo esc_html($partner['stats']); ?></p>
+                        <?php if ( ! empty( $partner['stats'] ) ) : ?>
+                            <p class="partner-stats"><?php echo esc_html( $partner['stats'] ); ?></p>
+                        <?php else : ?>
+                            <p class="partner-stats partner-stats--empty" aria-hidden="true"></p>
                         <?php endif; ?>
                         <?php if (!empty($partner['provides_ai'])): ?>
                             <p class="partner-card__ai-hint"><?php esc_html_e('AI resources ↗', 'ai-awareness-day'); ?></p>
