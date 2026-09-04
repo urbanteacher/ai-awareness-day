@@ -1927,7 +1927,7 @@ class AIRB_Defaults {
 				),
 				array(
 					'slug'  => '15-ai-buzzwords-teachers-2026',
-					'label' => __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-risk-benchmark' ),
+					'label' => __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-risk-benchmark' ),
 					'url'   => self::hub_page_url( 'timeline/15-ai-buzzwords-teachers-2026' ),
 				),
 			),

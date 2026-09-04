@@ -384,13 +384,13 @@
 
                 <div class="cert-main">
                     <h1 class="cert-headline">
-                        <span class="cert-headline__primary" id="certHeadlinePrimary">AI Awareness Day 2026</span>
+                        <span class="cert-headline__primary" id="certHeadlinePrimary">AI Awareness Day 2027</span>
                     </h1>
                     <p class="cert-type" id="certEyebrow">Certificate of participation</p>
                     <p class="cert-lead">This certifies that</p>
                     <p class="cert-recipient" id="certNameDisplay">Participant name</p>
                     <p class="cert-school" id="certSchoolDisplay" hidden></p>
-                    <p class="cert-body" id="certBody">has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.</p>
+                    <p class="cert-body" id="certBody">has actively contributed to AI Awareness Day 2027 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.</p>
                 </div>
 
                 <footer class="cert-footer">
@@ -694,18 +694,18 @@
 
         function getSchoolBodyLocal(involvedAs, orgType) {
             const defaultBody =
-                'has actively contributed to AI Awareness Day 2026 through participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                'has actively contributed to AI Awareness Day 2027 through participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
             if (involvedAs === 'teacher' || involvedAs === 'school_leader') {
-                return 'has actively contributed to AI Awareness Day 2026 through the school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                return 'has actively contributed to AI Awareness Day 2027 through the school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
             }
             if (involvedAs === 'organisation') {
                 if (isTechOrganisation(orgType)) {
-                    return 'has actively contributed to AI Awareness Day 2026 through the organisation\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                    return 'has actively contributed to AI Awareness Day 2027 through the organisation\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
                 }
-                return 'has actively contributed to AI Awareness Day 2026 through the organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                return 'has actively contributed to AI Awareness Day 2027 through the organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
             }
             if (involvedAs === 'parent') {
-                return 'has actively contributed to AI Awareness Day 2026 as part of our nationwide exploration of artificial intelligence in education, supporting confident and responsible AI use for learners and families.';
+                return 'has actively contributed to AI Awareness Day 2027 as part of our nationwide exploration of artificial intelligence in education, supporting confident and responsible AI use for learners and families.';
             }
             return defaultBody;
         }
@@ -747,37 +747,37 @@
         /** Mirrors inc/certificate-copy.php when API copy is unavailable. */
         function getCertificateCopyLocal(involvedAs, orgType) {
             const defaultBody =
-                'has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
+                'has actively contributed to AI Awareness Day 2027 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.';
             const base = {
-                headline_primary: 'AI Awareness Day 2026',
+                headline_primary: 'AI Awareness Day 2027',
                 eyebrow: 'Certificate of participation',
                 affiliation_prefix: 'from',
                 body: defaultBody,
             };
             if (involvedAs === 'teacher') {
                 return Object.assign({}, base, {
-                    body: 'has actively contributed to AI Awareness Day 2026 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                    body: 'has actively contributed to AI Awareness Day 2027 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
                 });
             }
             if (involvedAs === 'school_leader') {
                 return Object.assign({}, base, {
-                    body: 'has actively contributed to AI Awareness Day 2026 through their leadership and their school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                    body: 'has actively contributed to AI Awareness Day 2027 through their leadership and their school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
                 });
             }
             if (involvedAs === 'organisation') {
                 if (isTechOrganisation(orgType)) {
                     return Object.assign({}, base, {
-                        body: 'has actively contributed to AI Awareness Day 2026 through their organisation\'s engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                        body: 'has actively contributed to AI Awareness Day 2027 through their organisation\'s engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
                     });
                 }
                 return Object.assign({}, base, {
-                    body: 'has actively contributed to AI Awareness Day 2026 through their organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+                    body: 'has actively contributed to AI Awareness Day 2027 through their organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
                 });
             }
             if (involvedAs === 'parent') {
                 return Object.assign({}, base, {
                     affiliation_prefix: 'in support of',
-                    body: 'has actively contributed to AI Awareness Day 2026 as a parent or carer supporting their child\'s learning, as part of our nationwide exploration of artificial intelligence in education.',
+                    body: 'has actively contributed to AI Awareness Day 2027 as a parent or carer supporting their child\'s learning, as part of our nationwide exploration of artificial intelligence in education.',
                 });
             }
             return base;
@@ -869,7 +869,7 @@
             const involvedAs = row?.involved_as || 'teacher';
             const orgType = row?.org_type || 'company';
             mode = mode || getRecipientMode();
-            document.getElementById('certHeadlinePrimary').textContent = copy.headline_primary || copy.headlinePrimary || 'AI Awareness Day 2026';
+            document.getElementById('certHeadlinePrimary').textContent = copy.headline_primary || copy.headlinePrimary || 'AI Awareness Day 2027';
             document.getElementById('certEyebrow').textContent = copy.eyebrow || 'Certificate of participation';
             document.getElementById('certBody').textContent = resolveCertificateBody(copy, involvedAs, orgType, mode);
             return copy.affiliation_prefix || copy.affiliationPrefix || 'from';

@@ -187,7 +187,7 @@ function aiad_scripts(): void
         );
     }
 
-    // balloons-js disabled post-event (2026 celebration complete). Assets remain in theme for reuse.
+    // balloons-js disabled post-event. Assets remain in theme for reuse.
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';

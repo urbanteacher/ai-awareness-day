@@ -424,7 +424,7 @@ class AIAD_Homepage_Editor {
             'aiad_event_date_ymd' => array(
                 'label'       => __( 'Event Date (SEO)', 'ai-awareness-day' ),
                 'type'        => 'text',
-                'default'     => '2026-06-04',
+                'default'     => '2027-06-04',
                 'description' => __( 'Machine-readable date for structured data once 2027 is confirmed. Format: Y-m-d.', 'ai-awareness-day' ),
             ),
             'aiad_hero_title'    => array( 'label' => __( 'Hero Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day' ),

@@ -75,7 +75,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <div class="dbm__header">
                         <div class="dbm__header-logo"><span><?php esc_html_e( 'LOGO', 'ai-awareness-day' ); ?></span></div>
                         <div class="dbm__header-text">
-                            <strong class="dbm__header-title"><?php esc_html_e( 'AI Awareness Day 2026', 'ai-awareness-day' ); ?></strong>
+                            <strong class="dbm__header-title"><?php esc_html_e( 'AI Awareness Day 2027', 'ai-awareness-day' ); ?></strong>
                             <span class="dbm__header-tagline"><?php esc_html_e( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ); ?></span>
                         </div>
                     </div>

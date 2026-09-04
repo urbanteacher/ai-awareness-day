@@ -16,10 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_get_thank_you_letter_copy(): array {
 	return array(
-		'title'      => __( 'AI Awareness Day 2026', 'ai-awareness-day' ),
+		'title'      => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
 		'paragraphs' => array(
 			__(
-				'Thank you for taking part in AI Awareness Day 2026. We are deeply grateful for your participation, and for the support and backing you have given our campaign.',
+				'Thank you for taking part in AI Awareness Day 2027. We are deeply grateful for your participation, and for the support and backing you have given our campaign.',
 				'ai-awareness-day'
 			),
 			__(

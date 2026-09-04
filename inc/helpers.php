@@ -224,7 +224,7 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '15 min',
             'icon_bg'     => '#86efac',
             'icon'        => 'people',
-            'status'      => __( 'March 2026', 'ai-awareness-day' ),
+            'status'      => __( 'March 2027', 'ai-awareness-day' ),
             'status_live' => false,
         ),
         '20-min-assemblies' => array(
@@ -233,7 +233,7 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '20 min',
             'icon_bg'     => '#c4b5fd',
             'icon'        => 'presentation',
-            'status'      => __( 'April 2026', 'ai-awareness-day' ),
+            'status'      => __( 'April 2027', 'ai-awareness-day' ),
             'status_live' => false,
         ),
         '30-45-min-after-school' => array(
@@ -242,7 +242,7 @@ function aiad_explore_session_cards(): array {
             'badge_short' => '30 min',
             'icon_bg'     => '#fdba74',
             'icon'        => 'book',
-            'status'      => __( 'April 2026', 'ai-awareness-day' ),
+            'status'      => __( 'April 2027', 'ai-awareness-day' ),
             'status_live' => false,
         ),
     );
@@ -568,7 +568,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_hero_slogan'        => __( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ),
         'aiad_hero_title'         => __( 'AI Awareness Day', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
-        'aiad_event_date_ymd'     => '2026-06-04',
+        'aiad_event_date_ymd'     => '2027-06-04',
         'aiad_show_breadcrumbs'   => false,
         'aiad_hero_subtitle'      => __( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
         'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),

@@ -32,7 +32,7 @@ function aiad_risk_benchmark_get_headline(): string {
  * Timeline excerpt shown on the single timeline entry.
  */
 function aiad_risk_benchmark_get_excerpt(): string {
-	return __( 'During the build-up to AI Awareness Day 2026, we received many enquiries about AI in schools. This article introduces our free AI Risk & Readiness Benchmark™ — a practical audit to measure adoption, dependency and readiness for you and your school.', 'ai-awareness-day' );
+	return __( 'During the build-up to AI Awareness Day 2027, we received many enquiries about AI in schools. This article introduces our free AI Risk & Readiness Benchmark™ — a practical audit to measure adoption, dependency and readiness for you and your school.', 'ai-awareness-day' );
 }
 
 /**

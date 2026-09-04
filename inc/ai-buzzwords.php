@@ -87,7 +87,7 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 
 	$atts = shortcode_atts(
 		array(
-			'title'       => __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-awareness-day' ),
+			'title'       => __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' ),
 			'description' => __( 'From "agentic AI" to "vibe coding" — the terms everyone\'s talking about, explained in plain English with classroom angles.', 'ai-awareness-day' ),
 			'hide_intro'  => '0',
 			'quiz'        => '1',
@@ -183,7 +183,7 @@ function aiad_get_ai_buzzwords_timeline_content(): string {
 	$contact_url = esc_url( home_url( '/contact/' ) );
 
 	return '<!-- wp:paragraph -->
-<p>If you teach in 2026, you have probably heard colleagues mention <em>agentic AI</em>, <em>vibe coding</em>, or <em>AI slop</em> — often in the same breath. These terms show up in staff briefings, vendor pitches, and student conversations. Knowing what they mean helps you guide classroom discussions with confidence.</p>
+<p>If you teach in 2027, you have probably heard colleagues mention <em>agentic AI</em>, <em>vibe coding</em>, or <em>AI slop</em> — often in the same breath. These terms show up in staff briefings, vendor pitches, and student conversations. Knowing what they mean helps you guide classroom discussions with confidence.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -220,7 +220,7 @@ function aiad_set_buzzwords_timeline_meta( int $post_id ): void {
  */
 function aiad_create_buzzwords_timeline_entry(): int {
 	$slug  = aiad_buzzwords_post_slug();
-	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-awareness-day' );
+	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' );
 
 	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
 	if ( $existing instanceof WP_Post ) {
@@ -232,7 +232,7 @@ function aiad_create_buzzwords_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'An interactive glossary of the AI terms educators hear most in 2026 — from agentic AI to vibe coding — with classroom angles for every buzzword.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'An interactive glossary of the AI terms educators hear most in 2027 — from agentic AI to vibe coding — with classroom angles for every buzzword.', 'ai-awareness-day' ),
 			'post_content' => aiad_get_ai_buzzwords_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,
@@ -301,7 +301,7 @@ function aiad_seed_ai_buzzwords_timeline_entry(): void {
 		return;
 	}
 
-	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2026', 'ai-awareness-day' );
+	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' );
 	$slug  = aiad_buzzwords_post_slug();
 
 	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {

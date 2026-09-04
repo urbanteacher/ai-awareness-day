@@ -31,6 +31,7 @@ if ( is_admin() ) {
 require_once $aiad_dir . '/inc/theme-assets.php';
 require_once $aiad_dir . '/inc/setup.php';
 require_once $aiad_dir . '/inc/helpers.php';
+require_once $aiad_dir . '/inc/migrate-2027-branding.php';
 require_once $aiad_dir . '/inc/entry-figure.php';
 require_once $aiad_dir . '/inc/post-types.php';
 require_once $aiad_dir . '/inc/resource-seeds.php';

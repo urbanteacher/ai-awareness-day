@@ -242,7 +242,7 @@ function aiad_save_live_session_meta( int $post_id ): void {
 add_action( 'save_post_live_session', 'aiad_save_live_session_meta' );
 
 /**
- * One-time seeder: create the AI Awareness Day 2026 live sessions (and any
+ * One-time seeder: create the AI Awareness Day 2027 live sessions (and any
  * missing Partner posts they depend on). Runs once, gated by an option.
  * Edit or delete the posts in admin afterwards — re-running is harmless,
  * the option prevents duplicates.
@@ -283,56 +283,56 @@ function aiad_seed_live_sessions(): void {
         array(
             'title'    => 'AI in Our World — KS2 Live Assembly',
             'desc'     => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can in partnership with Accenture.',
-            'start'    => '2026-06-04 09:15:00',
-            'end'      => '2026-06-04 10:00:00',
+            'start'    => '2027-06-04 09:15:00',
+            'end'      => '2027-06-04 10:00:00',
             'audience' => array( 'ks2' ),
             'partner'  => $accenture,
         ),
         array(
             'title'    => 'AI Explorers Live Lesson – Level 1 (Ages 5–7)',
             'desc'     => 'Explores how data trains computers and evaluates AI-generated content. Delivered by Barefoot Computing. 45 minutes.',
-            'start'    => '2026-06-04 13:00:00',
-            'end'      => '2026-06-04 13:45:00',
+            'start'    => '2027-06-04 13:00:00',
+            'end'      => '2027-06-04 13:45:00',
             'audience' => array( 'ks1' ),
             'partner'  => $barefoot,
         ),
         array(
             'title'    => 'AI in Everyday Life — KS3 Live Assembly',
             'desc'     => 'Explores how AI integrates into daily life — navigation, recommendations, and voice tools. Discusses AI training, human roles, critical evaluation, fairness, and responsible use. Delivered by Tech She Can in partnership with Accenture.',
-            'start'    => '2026-06-04 14:00:00',
-            'end'      => '2026-06-04 15:00:00',
+            'start'    => '2027-06-04 14:00:00',
+            'end'      => '2027-06-04 15:00:00',
             'audience' => array( 'ks3' ),
             'partner'  => $accenture,
         ),
         array(
             'title'    => 'AI Explorers Live Lesson – Level 2 (Ages 7–11)',
             'desc'     => 'Examines AI\'s role in daily life, current applications, and misinformation. Delivered by Barefoot Computing. 55 minutes.',
-            'start'    => '2026-06-04 14:00:00',
-            'end'      => '2026-06-04 14:55:00',
+            'start'    => '2027-06-04 14:00:00',
+            'end'      => '2027-06-04 14:55:00',
             'audience' => array( 'ks2' ),
             'partner'  => $barefoot,
         ),
         array(
             'title'    => 'AI for ALL CPD (in partnership with Microsoft)',
             'desc'     => 'CPD session for primary and secondary teachers across all specialisms.',
-            'start'    => '2026-06-04 15:30:00',
-            'end'      => '2026-06-04 17:00:00',
+            'start'    => '2027-06-04 15:30:00',
+            'end'      => '2027-06-04 17:00:00',
             'audience' => array( 'teachers' ),
             'partner'  => $tech_she_can,
         ),
         array(
             'title'    => 'Secondary Teacher CPD',
             'desc'     => 'STEM Learning CPD focused on KS4 teaching practice.',
-            'start'    => '2026-06-04 16:00:00',
-            'end'      => '2026-06-04 17:00:00',
+            'start'    => '2027-06-04 16:00:00',
+            'end'      => '2027-06-04 17:00:00',
             'audience' => array( 'ks4' ),
             'partner'  => $stem_learning,
         ),
         array(
             'title'    => 'Careers in AI',
             'desc'     => 'KS5 panel exploring careers and pathways into AI.',
-            'start'    => '2026-06-04 16:00:00',
-            'end'      => '2026-06-04 17:00:00',
+            'start'    => '2027-06-04 16:00:00',
+            'end'      => '2027-06-04 17:00:00',
             'audience' => array( 'ks5' ),
             'partner'  => 0, // TBC
         ),
@@ -374,12 +374,12 @@ function aiad_migrate_barefoot_sessions(): void {
         'Barefoot Workshop Level 1 with Ben Davies' => array(
             'title' => 'AI Explorers Live Lesson – Level 1 (Ages 5–7)',
             'desc'  => 'Explores how data trains computers and evaluates AI-generated content. Delivered by Barefoot Computing. 45 minutes.',
-            'end'   => '2026-06-04T13:45',
+            'end'   => '2027-06-04T13:45',
         ),
         'Barefoot Workshop Level 2 with Ben Davies' => array(
             'title' => 'AI Explorers Live Lesson – Level 2 (Ages 7–11)',
             'desc'  => 'Examines AI\'s role in daily life, current applications, and misinformation. Delivered by Barefoot Computing. 55 minutes.',
-            'end'   => '2026-06-04T14:55',
+            'end'   => '2027-06-04T14:55',
         ),
     );
     foreach ( $fixes as $old_title => $data ) {
@@ -436,7 +436,7 @@ function aiad_migrate_techshecan_sessions(): void {
         'KS2 Assembly: AI in Our World' => array(
             'title'   => 'AI in Our World — KS2 Live Assembly',
             'desc'    => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can in partnership with Accenture.',
-            'start'   => '2026-06-04T09:15',
+            'start'   => '2027-06-04T09:15',
             'partner' => $accenture_id,
         ),
         'KS3 Assembly: AI in Everyday Life' => array(
@@ -658,7 +658,7 @@ function aiad_render_session_action_link( int $post_id, string $url, string $blo
 }
 
 /**
- * Formatted calendar date for a session start (e.g. Wednesday 4 June 2026).
+ * Formatted calendar date for a session start (e.g. Wednesday 2027).
  */
 function aiad_format_session_date( string $start ): string {
 	if ( $start === '' ) {

@@ -217,10 +217,10 @@ function aiad_get_website_schema(): array {
  * @return array<string, mixed> Event schema array.
  */
 function aiad_get_event_schema(): array {
-	$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2026-06-04';
+	$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2027-06-04';
 	$event_url  = home_url( '/' );
 
-	// ISO 8601 with UK timezone for clearer indexing of 4 June 2026.
+	// ISO 8601 with UK timezone for clearer indexing of AI Awareness Day 2027.
 	$start_date = $event_date . 'T00:00:00+01:00';
 	$end_date   = $event_date . 'T23:59:59+01:00';
 
@@ -260,7 +260,7 @@ function aiad_get_event_schema(): array {
 			'price'           => '0',
 			'priceCurrency'   => 'GBP',
 			'availability'    => 'https://schema.org/InStock',
-			'validFrom'       => '2026-01-01',
+			'validFrom'       => '2027-01-01',
 		),
 		'url'                   => $event_url,
 		'inLanguage'            => 'en-GB',
@@ -300,7 +300,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		$end_iso = $start_iso;
 	}
 	if ( ! $start_iso ) {
-		$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2026-06-04';
+		$event_date = function_exists( 'aiad_timeline_event_date' ) ? aiad_timeline_event_date() : '2027-06-04';
 		$start_iso  = $event_date . 'T00:00:00+01:00';
 		$end_iso    = $event_date . 'T23:59:59+01:00';
 	}
@@ -333,7 +333,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 40, '…' );
 	}
 	if ( ! $description ) {
-		$description = __( 'Live session for AI Awareness Day on 4 June 2026.', 'ai-awareness-day' );
+		$description = __( 'Live session for AI Awareness Day 2027.', 'ai-awareness-day' );
 	}
 
 	$is_online  = $reg_url !== '';

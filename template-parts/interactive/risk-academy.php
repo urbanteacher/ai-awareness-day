@@ -349,7 +349,7 @@ $show = isset( $aiad_risk_academy_show ) && is_array( $aiad_risk_academy_show )
 	<section class="sara-section sara-section--paper" id="sara-sources" data-sara-reveal>
 		<div class="sara-wrap">
 			<h2><?php esc_html_e( 'Alignment & sources', 'ai-awareness-day' ); ?></h2>
-			<p class="sara-muted"><?php esc_html_e( 'The app links to published UK guidance. Those sources are the authority — this is a way in, not a substitute. Educational resource, not legal advice. England framework; Scotland, Wales and NI should follow their own national guidance. Guidance current as of June 2026.', 'ai-awareness-day' ); ?></p>
+			<p class="sara-muted"><?php esc_html_e( 'The app links to published UK guidance. Those sources are the authority — this is a way in, not a substitute. Educational resource, not legal advice. England framework; Scotland, Wales and NI should follow their own national guidance. Guidance current as of June 2027.', 'ai-awareness-day' ); ?></p>
 			<ul class="sara-sources-list">
 				<li><a href="https://www.gov.uk/government/publications/generative-artificial-intelligence-in-education" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'DfE — Generative AI in education', 'ai-awareness-day' ); ?></a></li>
 				<li><a href="https://www.gov.uk/government/collections/using-ai-in-education-settings-support-materials" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'DfE — Using AI in education settings', 'ai-awareness-day' ); ?></a></li>

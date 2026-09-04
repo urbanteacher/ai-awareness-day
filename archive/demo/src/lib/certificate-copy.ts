@@ -24,10 +24,10 @@ export function getCertificateCopy(
   orgType = '',
 ): CertificateCopy {
   const defaultBody =
-    'has actively contributed to AI Awareness Day 2026 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.'
+    'has actively contributed to AI Awareness Day 2027 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.'
 
   const base: CertificateCopy = {
-    headlinePrimary: 'AI Awareness Day 2026',
+    headlinePrimary: 'AI Awareness Day 2027',
     eyebrow: 'Certificate of participation',
     affiliationPrefix: 'from',
     body: defaultBody,
@@ -37,29 +37,29 @@ export function getCertificateCopy(
     case 'teacher':
       return {
         ...base,
-        body: 'has actively contributed to AI Awareness Day 2026 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
+        body: 'has actively contributed to AI Awareness Day 2027 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
       }
     case 'school_leader':
       return {
         ...base,
-        body: "has actively contributed to AI Awareness Day 2026 through their leadership and their school's participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
+        body: "has actively contributed to AI Awareness Day 2027 through their leadership and their school's participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
       }
     case 'organisation':
       if (isTechOrganisation(orgType)) {
         return {
           ...base,
-          body: "has actively contributed to AI Awareness Day 2026 through their organisation's engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
+          body: "has actively contributed to AI Awareness Day 2027 through their organisation's engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
         }
       }
       return {
         ...base,
-        body: "has actively contributed to AI Awareness Day 2026 through their organisation's support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
+        body: "has actively contributed to AI Awareness Day 2027 through their organisation's support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.",
       }
     case 'parent':
       return {
         ...base,
         affiliationPrefix: 'in support of',
-        body: "has actively contributed to AI Awareness Day 2026 as a parent or carer supporting their child's learning, as part of our nationwide exploration of artificial intelligence in education.",
+        body: "has actively contributed to AI Awareness Day 2027 as a parent or carer supporting their child's learning, as part of our nationwide exploration of artificial intelligence in education.",
       }
     default:
       return base

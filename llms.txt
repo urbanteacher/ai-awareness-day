@@ -1,10 +1,10 @@
 # AI Awareness Day
 
-> National AI Awareness Day is on 4 June 2026 — a UK-wide campaign to build AI literacy in schools. Schools commit to one AI activity on the day. Free resources, live streams, and partner support for teachers, students, and parents.
+> National AI Awareness Day returns in 2027 — a UK-wide campaign to build AI literacy in schools. Schools commit to one AI activity on the day. Free resources, live streams, and partner support for teachers, students, and parents.
 
 ## Key pages
 
-- [Home](https://aiawarenessday.co.uk/): Campaign overview, school registration, and countdown to 4 June 2026
+- [Home](https://aiawarenessday.co.uk/): Campaign overview, school registration, and AI Awareness Day 2027
 - [Resources](https://aiawarenessday.co.uk/resources/): Free classroom activities — lesson starters, assemblies, tutor time, and after-school sessions
 - [Events](https://aiawarenessday.co.uk/events/): Conferences, CPD, courses and live online sessions for schools and educators
 - [Partners](https://aiawarenessday.co.uk/partners/): Schools, charities, and organisations supporting the campaign
@@ -13,4 +13,4 @@
 
 ## Campaign updates
 
-- [Campaign updates archive](https://aiawarenessday.co.uk/timeline/): News, milestones, partner announcements, and countdown updates for AI Awareness Day 2026
+- [Campaign updates archive](https://aiawarenessday.co.uk/timeline/): News, milestones, partner announcements, and updates for AI Awareness Day 2027

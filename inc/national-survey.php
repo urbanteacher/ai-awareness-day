@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Survey schema version — v1.0 = launch; v1.1 = reach/impact questions (June 2026). */
+/** Survey schema version — v1.0 = launch; v1.1 = reach/impact questions (June 2027). */
 define( 'AIAD_SURVEY_VERSION', '1.1' );
 
 // ---------------------------------------------------------------------------
@@ -206,7 +206,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 				<!-- Q4: Participation gate -->
 				<div class="aiad-survey__field">
 					<p class="aiad-survey__label">
-						4. <?php esc_html_e( 'Did your school or classroom participate in National AI Awareness Day on 4th June 2026?', 'ai-awareness-day' ); ?>
+						4. <?php esc_html_e( 'Did your school or classroom participate in National AI Awareness Day (2026)?', 'ai-awareness-day' ); ?>
 						<span class="aiad-survey__required" aria-hidden="true">*</span>
 					</p>
 					<div class="aiad-survey__radio-group">
@@ -1647,7 +1647,7 @@ function aiad_national_moment_seed_timeline_entry(): void {
 		. '</ul>'
 		. '<p>This was not a single school, a single organisation, or a single moment. It was a movement.</p>'
 		. '<h3>What comes next</h3>'
-		. '<p>AI Awareness Day was the launchpad, not the finish line. Browse the full resource library, watch YouTube Shorts featuring AI education leaders, and attend partner events throughout June 2026. Our Mini Masterclass series is growing — submit your tips and insights to be featured.</p>'
+		. '<p>AI Awareness Day was the launchpad, not the finish line. Browse the full resource library, watch YouTube Shorts featuring AI education leaders, and attend partner events as we look ahead to 2027. Our Mini Masterclass series is growing — submit your tips and insights to be featured.</p>'
 		. '<p><em>Know it. Question it. Use it wisely.</em></p>';
 
 	$post_id = aiad_create_timeline_entry( array(
