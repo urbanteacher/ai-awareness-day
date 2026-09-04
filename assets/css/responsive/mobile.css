@@ -36,7 +36,7 @@
   }
 
   .hero-title-block .hero-date__title {
-    font-size: clamp(2.4rem, 9.6vw, 3.6rem);
+    font-size: clamp(2.76rem, 11.04vw, 4.14rem);
   }
 
   .hero-title-block .hero-slogan,
@@ -69,7 +69,7 @@
   }
 
   .hero-title-block .hero-date__title {
-    font-size: clamp(2.16rem, 9.6vw, 3.2rem);
+    font-size: clamp(2.48rem, 11.04vw, 3.68rem);
   }
 
   .section-desc {
