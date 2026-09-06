@@ -101,15 +101,13 @@
 }
 
 .hero-title-block .hero-date__year {
-  display: inline-block;
-  margin-top: 0.85rem;
-  padding: 0.35em 0.85em;
-  border: 1px solid #b7d9c3;
-  border-radius: 999px;
-  background: #edf7f0;
-  color: #176336;
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  letter-spacing: 0.12em;
+  display: block;
+  margin-top: 0.4em;
+  color: var(--gray-500, #6b7280);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 /* One entrance sequence; content remains visible if scripts fail to initialise. */
