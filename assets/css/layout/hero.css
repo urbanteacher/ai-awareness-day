@@ -22,7 +22,7 @@
 
 .hero-title-block {
   text-align: center;
-  padding: clamp(4rem, 8vw, 7rem) 0 clamp(2rem, 4vw, 3.25rem);
+  padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(2.5rem, 5vw, 4rem);
 }
 
 /* When partner marquee shows, bottom padding lives on the marquee (symmetric) */
@@ -72,7 +72,7 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gray-400, #9ca3af);
+  color: var(--gray-700, #374151);
   margin: 0 auto;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -96,33 +96,42 @@
   display: block;
   font-size: clamp(3.68rem, 7.36vw, 5.52rem);
   line-height: 1.05;
+  text-wrap: balance;
+  letter-spacing: -0.045em;
 }
 
 .hero-title-block .hero-date__year {
-  display: block;
-  margin-top: 0.2em;
-  color: var(--gray-500, #6b7280);
+  display: inline-block;
+  margin-top: 0.85rem;
+  padding: 0.35em 0.85em;
+  border: 1px solid #b7d9c3;
+  border-radius: 999px;
+  background: #edf7f0;
+  color: #176336;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  letter-spacing: 0.12em;
 }
 
-/* Staggered entrance: title → year → slogan — plays when .fade-up becomes .visible */
+/* One entrance sequence; content remains visible if scripts fail to initialise. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-title-block .hero-date__title,
-  .hero-title-block .hero-date__year,
+  .hero-title-block .hero-date__title {
+    animation: aiadHeroDateIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-title-block .hero-date__year {
+    animation: aiadHeroDateIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+
   .hero-title-block .hero-slogan {
-    opacity: 0;
-    transform: translateY(1.15rem);
+    animation: aiadHeroDateIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
   }
 
-  .hero-title-block.visible .hero-date__title {
-    animation: aiadHeroDateIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  .hero-title-block .hero-subtitle {
+    animation: aiadHeroDateIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
   }
 
-  .hero-title-block.visible .hero-date__year {
-    animation: aiadHeroDateIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
-  }
-
-  .hero-title-block.visible .hero-slogan {
-    animation: aiadHeroDateIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.52s forwards;
+  .hero-title-block .hero-cta {
+    animation: aiadHeroDateIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.34s both;
   }
 }
 
@@ -153,6 +162,46 @@
   margin: 0.5rem auto 0;
   text-align: center;
   line-height: 1.7;
+  text-wrap: pretty;
+}
+
+#hero .hero-cta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 660px;
+}
+
+#hero .hero-cta__btn {
+  justify-content: center;
+  min-height: 54px;
+  padding: 0.9rem 1.1rem;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+#hero .hero-cta__btn:focus-visible {
+  outline: 3px solid #176336;
+  outline-offset: 4px;
+}
+
+#hero .hero-cta__btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+@media (max-width: 480px) {
+  #hero .hero-cta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero .hero-cta__btn {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ── Hero CTA buttons ─────────────────────────────────── */

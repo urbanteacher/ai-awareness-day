@@ -134,7 +134,7 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
         $rest = get_posts($rest_args);
 
         return array(
-            'entries' => array_merge($pinned, $rest),
+            'entries' => aiad_unique_timeline_entries(array_merge($pinned, $rest)),
             'has_more' => false,
         );
     }
@@ -194,6 +194,28 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
     return array('entries' => $entries, 'has_more' => !empty($check));
 }
 
+/** Hide identical imported cards in the full homepage feed without deleting posts. */
+function aiad_unique_timeline_entries(array $entries): array
+{
+    $seen = array();
+    $unique = array();
+    foreach ($entries as $entry) {
+        $key = hash('sha256', serialize(array(
+            $entry->post_title,
+            $entry->post_content,
+            $entry->post_excerpt,
+            get_post_meta($entry->ID, '_aiad_timeline_link_url', true),
+            get_post_meta($entry->ID, '_aiad_timeline_icon', true),
+        )));
+        if (isset($seen[$key])) {
+            continue;
+        }
+        $seen[$key] = true;
+        $unique[] = $entry;
+    }
+    return $unique;
+}
+
 /**
  * Allowed HTML for oEmbed video output (iframe). wp_kses_post() strips iframes; timeline needs them for YouTube/Vimeo.
  *
@@ -215,4 +237,3 @@ function aiad_timeline_oembed_allowed_html(): array
         ),
     );
 }
-

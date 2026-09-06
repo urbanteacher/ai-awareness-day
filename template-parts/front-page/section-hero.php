@@ -15,11 +15,11 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
 ?>
 <section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero">
     <div class="container">
-        <div class="hero-title-block fade-up<?php echo ! empty( $hero_marquee ) ? ' hero-title-block--partner-marquee' : ''; ?>">
+        <div class="hero-title-block<?php echo ! empty( $hero_marquee ) ? ' hero-title-block--partner-marquee' : ''; ?>">
             <?php
             $defaults = aiad_get_customizer_defaults();
             ?>
-            <p class="hero-date">
+            <h1 class="hero-date">
                 <?php
                 $hero_date = (string) get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
                 if ( preg_match( '/^(.*?)\s+(\d{4})$/u', trim( $hero_date ), $hero_date_parts ) ) {
@@ -29,7 +29,7 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                     echo '<span class="hero-date__title">' . esc_html( $hero_date ) . '</span>';
                 }
                 ?>
-            </p>
+            </h1>
 
             <p class="hero-slogan">
                 <?php echo esc_html( get_theme_mod( 'aiad_hero_slogan', $defaults['aiad_hero_slogan'] ) ); ?>
@@ -42,8 +42,8 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
                 <a href="#contact" class="hero-cta__btn hero-cta__btn--primary">
                     <?php esc_html_e( 'Register Your School', 'ai-awareness-day' ); ?>
                 </a>
-                <a href="#campaign" class="hero-cta__btn hero-cta__btn--secondary">
-                    <?php esc_html_e( 'Learn More', 'ai-awareness-day' ); ?>
+                <a href="<?php echo esc_url( aiad_get_benchmark_start_url() ); ?>" class="hero-cta__btn hero-cta__btn--secondary">
+                    <?php esc_html_e( 'Check your AI readiness', 'ai-awareness-day' ); ?>
                 </a>
             </div>
 

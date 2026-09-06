@@ -61,6 +61,7 @@
 	var SNAPSHOT_KEY = 'airb_results_snapshot_v1';
 	var VARIANT_KEY = 'airb_audit_variant_v1';
 	var introCollapsed = false;
+	var submissionGeneration = 0;
 
 	var state = {
 		phase: 'role',
@@ -149,10 +150,6 @@
 			if (!snapshot || !snapshot.role || !snapshot.results || typeof snapshot.results !== 'object') {
 				return null;
 			}
-			if (!snapshot.ts || Date.now() - snapshot.ts > 24 * 60 * 60 * 1000) {
-				clearResultsSnapshot();
-				return null;
-			}
 			if (!resultMatchesRole(snapshot.role, snapshot.results)) {
 				clearResultsSnapshot();
 				return null;
@@ -164,6 +161,8 @@
 	}
 
 	function clearResultsSnapshot() {
+		// Invalidate pending submissions when a user starts again.
+		submissionGeneration++;
 		try {
 			localStorage.removeItem(SNAPSHOT_KEY);
 		} catch (e) { /* private browsing */ }
@@ -5988,6 +5987,11 @@
 	}
 
 	function submitResults(done) {
+		var generation = ++submissionGeneration;
+		var submittedRole = state.role;
+		function isCurrentSubmission() {
+			return generation === submissionGeneration && state.phase === 'results' && state.role === submittedRole;
+		}
 		syncProfileIntoAnswers();
 		var body = new FormData();
 		body.append('action', 'airb_submit_benchmark');
@@ -6009,6 +6013,7 @@
 		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
+				if (!isCurrentSubmission()) return;
 				try {
 					if (json.success && json.data && json.data.results) {
 						state.results = json.data.results;
@@ -6030,6 +6035,7 @@
 				if (done) done();
 			})
 			.catch(function (err) {
+				if (!isCurrentSubmission()) return;
 				if (window.console && console.error) {
 					console.error('AIRB submitResults request failed', err);
 				}

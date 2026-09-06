@@ -1637,7 +1637,7 @@ function aiad_national_moment_seed_timeline_entry(): void {
 		return;
 	}
 
-	$content = '<p>Yesterday, we did something historic.</p>'
+	$content = '<p>Looking back at AI Awareness Day 2026 as we build towards the 2027 campaign.</p>'
 		. '<p>AI Awareness Day 2026 became a genuine national moment — and it exceeded every expectation we had. Multi-academy trusts, schools, charities, EdTech companies, universities, and grassroots organisations across the UK came together to bring artificial intelligence education into classrooms, assemblies, and homes on the same day.</p>'
 		. '<h3>The numbers</h3>'
 		. '<ul>'
@@ -1651,7 +1651,7 @@ function aiad_national_moment_seed_timeline_entry(): void {
 		. '<p><em>Know it. Question it. Use it wisely.</em></p>';
 
 	$post_id = aiad_create_timeline_entry( array(
-		'title'      => 'The Day After. And What a Day It Was. 🎉',
+		'title'      => 'Highlights from 2026',
 		'content'    => $content,
 		'auto_type'  => 'national_moment_2026',
 		'icon'       => 'milestone',

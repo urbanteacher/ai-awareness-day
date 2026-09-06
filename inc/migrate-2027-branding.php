@@ -125,6 +125,10 @@ function aiad_migrate_2027_replace_in_posts(): void {
 			if ( ! $post instanceof WP_Post ) {
 				continue;
 			}
+			if ( 'national_moment_2026' === get_post_meta( $post->ID, '_aiad_timeline_auto_type', true )
+				|| 'the-day-after-and-what-a-day-it-was' === $post->post_name ) {
+				continue;
+			}
 
 			$blob = $post->post_title . "\n" . $post->post_excerpt . "\n" . $post->post_name . "\n" . $post->post_content;
 			$skip = false;
@@ -158,3 +162,36 @@ function aiad_migrate_2027_replace_in_posts(): void {
 		}
 	}
 }
+
+/** Restore the historical recap on sites that already ran the branding migration. */
+function aiad_restore_2026_recap(): void {
+	if ( get_option( 'aiad_2026_recap_restored' ) === '2' ) {
+		return;
+	}
+	$posts = get_posts( array(
+		'post_type' => 'timeline',
+		'post_status' => array( 'publish', 'draft', 'private', 'future', 'pending' ),
+		'posts_per_page' => -1,
+		'meta_key' => '_aiad_timeline_auto_type',
+		'meta_value' => 'national_moment_2026',
+	) );
+	$recap = get_page_by_path( 'the-day-after-and-what-a-day-it-was', OBJECT, 'timeline' );
+	if ( $recap ) {
+		$posts[] = $recap;
+	}
+	foreach ( $posts as $post ) {
+		$update = array( 'ID' => $post->ID );
+		foreach ( array( 'post_title', 'post_excerpt', 'post_content' ) as $field ) {
+			$update[ $field ] = str_replace( 'AI Awareness Day 2027', 'AI Awareness Day 2026', $post->$field );
+			$update[ $field ] = str_replace( 'Yesterday, we did something historic.', 'Looking back at AI Awareness Day 2026 as we build towards the 2027 campaign.', $update[ $field ] );
+		}
+		if ( 'The Day After. And What a Day It Was. 🎉' === $post->post_title ) {
+			$update['post_title'] = 'Highlights from 2026';
+		}
+		if ( is_wp_error( wp_update_post( wp_slash( $update ), true ) ) ) {
+			return;
+		}
+	}
+	update_option( 'aiad_2026_recap_restored', '2' );
+}
+add_action( 'init', 'aiad_restore_2026_recap', 41 );

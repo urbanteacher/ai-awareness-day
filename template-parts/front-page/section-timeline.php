@@ -30,7 +30,7 @@ $show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="timeline">
     <div class="container">
         <div class="fade-up">
-            <span class="section-label section-label--live"><?php esc_html_e( 'Live', 'ai-awareness-day' ); ?></span>
+            <span class="section-label"><?php esc_html_e( 'Latest updates', 'ai-awareness-day' ); ?></span>
             <h2 class="section-title"><?php esc_html_e( 'Campaign Updates', 'ai-awareness-day' ); ?></h2>
         </div>
 
