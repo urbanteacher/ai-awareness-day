@@ -255,8 +255,18 @@ body {
 .hero-strand-feature__themes {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: .2rem .75rem;
+  /* Left-aligned and compact rather than spread. The row spans the full
+     container on desktop — 1200px holding 305px of labels — so
+     space-between pushed 224px between each word. Everything else in the hero
+     is left-aligned and short, so the labels sit on that same axis instead.
+
+     The gap is fluid, and its floor is set by the narrow end rather than
+     chosen: enlarging the labels to .8rem pushed their combined width to
+     305px, leaving only 38px of gap budget across four gaps inside a 343px
+     row at 375px. Anything above .5rem wraps them onto two lines there.
+     Wrap stays as a safety net below about 340px. */
+  justify-content: flex-start;
+  gap: .2rem clamp(.5rem, 1.8vw, 1.75rem);
   width: 100%;
 }
 
