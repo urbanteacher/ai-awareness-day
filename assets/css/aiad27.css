@@ -287,18 +287,15 @@ body {
    plate behind every logo to be legible. On cream the plates are redundant, so
    they are gone — the request was to drop the shapes rather than keep fighting
    them. */
+/* The strip sits at the top of the campaign section, so it needs no fixed
+   header clearance of its own — the hero is first in main again and keeps it.
+   Bled to the viewport edges: a logo row that runs off both sides reads as a
+   continuous scroll, where a boxed one just looks cropped. */
 .partner-strip {
-  /* The header is position: fixed, so whatever comes first in main sits under
-     it. That clearance used to live on .hero-section (78px, 68px small); the
-     strip is first now, so it carries it and the hero hands it back below. */
-  --aiad-header-h: 78px;
-  background: var(--a27-cream);
-  padding: calc(var(--aiad-header-h) + clamp(1.1rem, 2.5vw, 1.75rem)) 0 clamp(1.1rem, 2.5vw, 1.75rem);
+  margin-inline: calc(50% - 50vw);
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+  padding-bottom: clamp(1.1rem, 2.5vw, 1.75rem);
   border-bottom: 1px solid var(--a27-rule);
-}
-
-.partner-strip + .hero-section {
-  padding-top: clamp(1.5rem, 3vw, 2.5rem);
 }
 
 .partner-strip .hero-partner-marquee {
@@ -513,7 +510,6 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 @media (max-width: 768px) {
   .site-header, .header-inner { height: 68px; }
   .hero-section { padding-top: 68px; }
-  .partner-strip { --aiad-header-h: 68px; }
   .hero-title-block { min-height: auto; padding: 2.5rem 0; }
 
   /* The hero was being clipped on narrow screens, not scrolled. A grid item's

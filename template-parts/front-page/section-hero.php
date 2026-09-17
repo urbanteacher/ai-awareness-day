@@ -9,50 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
-$hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
-    ? aiad_get_hero_partner_marquee_entries()
-    : array();
 ?>
-<?php
-/*
- * The partner strip sits above the hero, on cream, rather than inside it.
- * Partner logos are third-party uploads of mixed provenance — several carry a
- * background baked into the artwork — so they never sat well on a strand
- * ground, whatever treatment was applied to them.
- */
-if ( ! empty( $hero_marquee ) ) :
-    $marquee_count = count( $hero_marquee );
-    // Slower when more logos so the strip does not feel frantic.
-    $marquee_secs = (int) min( 90, max( 28, $marquee_count * 5 ) );
-    ?>
-<section class="partner-strip">
-    <div class="hero-partner-marquee" role="region"
-        aria-label="<?php esc_attr_e( 'Partner organisations', 'ai-awareness-day' ); ?>">
-        <div class="hero-partner-marquee__viewport">
-            <div class="hero-partner-marquee__track"
-                style="<?php echo esc_attr( '--hero-marquee-duration: ' . $marquee_secs . 's' ); ?>">
-                <?php foreach ( array( 1, 2 ) as $_dup ) : ?>
-                <ul class="hero-partner-marquee__list">
-                    <?php foreach ( $hero_marquee as $row ) : ?>
-                    <li class="hero-partner-marquee__item">
-                        <a class="hero-partner-marquee__link" href="<?php echo esc_url( $row['href'] ); ?>" data-partner-id="<?php echo esc_attr( (string) $row['id'] ); ?>">
-                            <img class="hero-partner-marquee__img"
-                                src="<?php echo esc_url( $row['img'] ); ?>"
-                                alt="<?php echo esc_attr( $row['title'] ); ?>"
-                                width="240"
-                                height="120"
-                                loading="lazy"
-                                decoding="async" />
-                        </a>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 <section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero" data-strand="safe">
     <div class="container">
         <div class="hero-title-block">
