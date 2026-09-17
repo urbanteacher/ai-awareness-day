@@ -23,9 +23,10 @@
     padding-right: 1rem;
   }
 
+  /* Deliberately not sticky. This used to pin 8rem from the top, so scrolling
+     the section detached the video from the copy it belongs beside and left it
+     hanging near the header. It stays put alongside the text instead. */
   .campaign--split .campaign-embed {
-    position: sticky;
-    top: 8rem;
     padding-left: 0.5rem;
   }
 }
