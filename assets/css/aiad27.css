@@ -508,7 +508,7 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 @media (max-width: 768px) {
   .site-header, .header-inner { height: 68px; }
   .hero-section { padding-top: 68px; }
-  .hero-title-block { min-height: auto; padding: 4rem 0; }
+  .hero-title-block { min-height: auto; padding: 2.5rem 0; }
 
   /* The hero was being clipped on narrow screens, not scrolled. A grid item's
      automatic minimum is its content size, so `width: max-content` on
@@ -525,7 +525,14 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   /* Title and mark are both sized in em off .hero-brand so they scale as one.
      Overriding the title with its own vw clamp here broke that link, which is
      why the mark no longer fitted beside it. */
-  .hero-title-block .hero-date { font-size: 1em; }
+  .hero-title-block .hero-date {
+    font-size: 1em;
+    text-align: right;
+  }
+  .hero-title-block .hero-date__line,
+  .hero-title-block .hero-date__line--loop {
+    text-align: right;
+  }
   /* The mark moves to the strand word here, so the hero title gets the full
      width instead of sharing it with a graphic that pushed it off-screen. */
   .hero-brand__mark { display: none; }
