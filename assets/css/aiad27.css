@@ -110,10 +110,7 @@ body {
 .hero-title-block .hero-date {
   grid-column: 1;
   grid-row: 2;
-  /* Ink, matching .hero-brand__mark beside it. The hero sits on a strand
-     bright, and the campaign puts ink on a bright ground throughout; it is
-     also the only value that passes here (ink 7.3:1, cream 2.0:1). */
-  color: var(--a27-ink);
+  color: #FFFFFF;
   font-size: 1em;
   font-weight: 700;
   letter-spacing: -.06em;
@@ -128,6 +125,19 @@ body {
 
 .hero-title-block .hero-date__line--loop {
   text-align: right;
+}
+
+/* The strand-side mark is the same graphic as .hero-brand__mark and only one of
+   the two is ever shown. Desktop keeps it beside the hero title; narrow screens
+   move it beside the strand word. */
+.hero-strand-feature__mark {
+  display: none;
+  flex: none;
+  width: .78em;
+  height: .78em;
+  background: var(--a27-ink, #231F20);
+  -webkit-mask: var(--hero-mark) center / contain no-repeat;
+  mask: var(--hero-mark) center / contain no-repeat;
 }
 
 .hero-brand__mark {
@@ -337,17 +347,23 @@ body {
 .section-title { font-size: clamp(2.45rem, 5vw, 4.25rem); line-height: .98; letter-spacing: -.055em; max-width: 900px; }
 .section-desc { color: var(--a27-dim); font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.5; max-width: 690px; }
 
-#campaign .campaign-content { position: relative; padding-left: clamp(0rem, 10vw, 9rem); }
+#campaign .campaign-content {
+  position: relative;
+  padding-left: 0;
+}
 #campaign .campaign-content::before {
   content: '“';
   position: absolute;
-  top: -.32em;
-  left: 0;
+  top: -.28em;
+  right: 100%;
+  margin-right: clamp(0.15rem, 1.2vw, 0.65rem);
   color: var(--a27-safe-deep);
-  font-size: clamp(6rem, 14vw, 13rem);
+  font-size: clamp(5.5rem, 12vw, 11rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -.08em;
+  pointer-events: none;
+  user-select: none;
 }
 #campaign .section-label { color: var(--a27-safe-deep); }
 #campaign .momentum-section { border-top: 1px solid var(--a27-rule); margin-top: 4rem; padding-top: 4rem; }
@@ -493,21 +509,83 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   .site-header, .header-inner { height: 68px; }
   .hero-section { padding-top: 68px; }
   .hero-title-block { min-height: auto; padding: 4rem 0; }
-  .hero-title-block .hero-date { font-size: clamp(3rem, 15vw, 5.25rem); }
+
+  /* The hero was being clipped on narrow screens, not scrolled. A grid item's
+     automatic minimum is its content size, so `width: max-content` on
+     .hero-brand inflated the 1fr track to 490px inside a 343px container and
+     the section cropped the overflow. Let the track and the block shrink. */
+  .hero-title-block { grid-template-columns: minmax(0, 1fr); }
+  .hero-copy { min-width: 0; }
+  .hero-brand {
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(2.1rem, 10.5vw, 3.25rem);
+    column-gap: clamp(.5rem, 2.5vw, 1rem);
+  }
+  /* Title and mark are both sized in em off .hero-brand so they scale as one.
+     Overriding the title with its own vw clamp here broke that link, which is
+     why the mark no longer fitted beside it. */
+  .hero-title-block .hero-date { font-size: 1em; }
+  /* The mark moves to the strand word here, so the hero title gets the full
+     width instead of sharing it with a graphic that pushed it off-screen. */
+  .hero-brand__mark { display: none; }
+  .hero-brand { grid-template-columns: minmax(0, 1fr); }
+  .hero-strand-feature__stage {
+    display: flex;
+    align-items: center;
+    gap: .28em;
+  }
+  .hero-strand-feature__word { width: auto; }
+  .hero-strand-feature__mark { display: block; }
+
+  /* Five equal columns cannot hold "RESPONSIBLE" at this size, so the labels
+     overran their cells and collided. Let them wrap and take their own width;
+     the active underline then hugs the word rather than the column. */
+  .hero-strand-feature__themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .15rem 1.05rem;
+  }
+  .hero-strand-feature__theme { width: auto; text-align: left; }
   #hero .hero-cta { grid-template-columns: 1fr; }
   #hero .hero-cta__btn { width: 100%; }
   #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
   .hero-strand-feature { margin-top: .65rem; width: 100%; }
   .hero-strand-feature__stage { min-height: 0; }
-  .principles-grid { display: grid; margin: 2rem 0 0; padding: 0; width: auto; overflow: visible; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .principles-grid > .principle-card { flex: initial; max-width: none; padding: 0; }
-  .principles-grid > .principle-card:last-child:nth-child(odd) { max-width: none; margin: 0; grid-column: auto; }
+  /* Five stacked cards ran to ~890px on a phone. The grid's own aria-label
+     already promises "swipe sideways to explore each card", so this restores
+     that: one full-bleed snapping row instead of a column. */
+  .principles-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: .9rem;
+    margin: 2rem 0 0;
+    width: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: calc(50% - 50vw);
+    padding: 0 max(1.5rem, calc(50vw - 50%)) .5rem;
+    overscroll-behavior-x: contain;
+  }
+  .principles-grid::-webkit-scrollbar { display: none; }
+  .principles-grid > .principle-card {
+    flex: 0 0 clamp(9.25rem, 44vw, 12.5rem);
+    max-width: none;
+    padding: 0;
+    scroll-snap-align: start;
+  }
   .main-navigation { background: var(--a27-cream); border-color: var(--a27-rule); }
-  #campaign .campaign-content { padding-left: 3.5rem; }
+  #campaign .campaign-content { padding-left: 0; }
+  #campaign .campaign-content::before {
+    font-size: clamp(3.75rem, 18vw, 6rem);
+    margin-right: 0.2rem;
+  }
 }
 
 @media (max-width: 440px) {
-  .principles-grid { grid-template-columns: 1fr; }
   .principle-card .principle-badge,
   .principle-card .principle-badge__img {
     width: 64px;
@@ -515,4 +593,15 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
     max-width: 64px;
     max-height: 64px;
   }
+}
+
+/* The homepage AI Tools cards carried a category, a title, a use-case line, a
+   three-item feature list and a link. The use-case line already says what the
+   bullets repeat — "Lesson planning, differentiation, feedback" against
+   "Lesson planning assistance / Differentiation strategies / Student feedback
+   generation" — so on the homepage the list is duplicated detail. Hidden here
+   only; the AI Tools archive keeps it, which is where the detail belongs. */
+#ai-tools .tool-card__features,
+#ai-tools .tool-card__features-more {
+  display: none;
 }

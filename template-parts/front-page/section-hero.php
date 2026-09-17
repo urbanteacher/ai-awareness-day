@@ -34,6 +34,10 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
             <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
                 <div class="hero-strand-feature__stage" aria-live="off">
                     <span class="hero-strand-feature__word">Safe</span>
+                    <?php /* Decorative twin of .hero-brand__mark. On narrow screens the mark
+                             sits beside the strand word instead of the hero title, where it
+                             was forcing the title column wider than the viewport. */ ?>
+                    <span class="hero-strand-feature__mark" aria-hidden="true"></span>
                 </div>
                 <p class="hero-strand-feature__summary"><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></p>
                 <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
