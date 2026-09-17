@@ -2,13 +2,13 @@
 
 .airb-hub-journey-wrap,
 #airb-hub-interest {
-	--airb-interest-bg: var(--gray-900, #1e1e1e);
+	--airb-interest-bg: var(--gray-900, var(--a27-ink, #231F20));
 	--airb-interest-surface: rgba(0, 0, 0, 0.35);
-	--airb-interest-surface-2: var(--gray-800, #262626);
-	--airb-interest-text: var(--white, #ffffff);
-	--airb-interest-muted: var(--gray-400, #a3a3a3);
-	--airb-interest-border: rgba(255, 255, 255, 0.12);
-	--airb-interest-accent: var(--accent-green, #22c55e);
+	--airb-interest-surface-2: var(--gray-800, var(--a27-ink, #231F20));
+	--airb-interest-text: var(--white, var(--a27-cream, #F6F4ED));
+	--airb-interest-muted: var(--gray-400, var(--a27-dim, #54504E));
+	--airb-interest-border: color-mix(in srgb, var(--a27-cream, #F6F4ED) 12%, transparent);
+	--airb-interest-accent: var(--a27-responsible-deep, #176E3B);
 
 	margin-top: 3rem;
 	padding: 1.75rem 1.5rem 2rem;
@@ -219,14 +219,14 @@
 
 .airb-hub-btn--primary {
 	background: var(--airb-interest-accent);
-	color: var(--gray-900, #1e1e1e);
+	color: var(--gray-900, var(--a27-ink, #231F20));
 	border-color: var(--airb-interest-accent);
 }
 
 .airb-hub-btn--primary:hover {
-	background: var(--accent-green-dark, #15803d);
-	border-color: var(--accent-green-dark, #15803d);
-	color: var(--white, #ffffff);
+	background: var(--accent-green-dark, var(--airb-low));
+	border-color: var(--accent-green-dark, var(--airb-low));
+	color: var(--white, var(--a27-cream, #F6F4ED));
 }
 
 .airb-hub-btn--secondary {
@@ -237,7 +237,7 @@
 
 .airb-hub-btn--secondary:hover {
 	background: var(--airb-interest-surface);
-	border-color: rgba(255, 255, 255, 0.22);
+	border-color: color-mix(in srgb, var(--a27-cream, #F6F4ED) 22%, transparent);
 }
 
 .airb-hub-support {
@@ -358,12 +358,12 @@
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body label.airb__interest-option:hover {
-	border-color: rgba(255, 255, 255, 0.22);
+	border-color: color-mix(in srgb, var(--a27-cream, #F6F4ED) 22%, transparent);
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body label.airb__interest-option:has(input:checked) {
 	border-color: var(--airb-interest-accent);
-	background: rgba(34, 197, 94, 0.08);
+	background: color-mix(in srgb, var(--airb-low) 8%, transparent);
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__interest-option input {
@@ -393,7 +393,7 @@
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__input::placeholder,
 .airb-hub-journey-wrap .airb-hub-support-body .airb__textarea::placeholder {
-	color: rgba(255, 255, 255, 0.38);
+	color: color-mix(in srgb, var(--a27-cream, #F6F4ED) 38%, transparent);
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__field .airb__input:focus,
@@ -401,19 +401,19 @@
 	outline: 2px solid var(--airb-interest-accent);
 	outline-offset: 1px;
 	border-color: var(--airb-interest-accent);
-	box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--airb-low) 15%, transparent);
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__btn--primary {
 	background: var(--airb-interest-accent);
-	color: var(--gray-900, #1e1e1e);
+	color: var(--gray-900, var(--a27-ink, #231F20));
 	border-color: var(--airb-interest-accent);
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__btn--primary:hover {
-	background: var(--accent-green-dark, #15803d);
-	border-color: var(--accent-green-dark, #15803d);
-	color: var(--white, #ffffff);
+	background: var(--accent-green-dark, var(--airb-low));
+	border-color: var(--accent-green-dark, var(--airb-low));
+	color: var(--white, var(--a27-cream, #F6F4ED));
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__interest-status--success {
@@ -421,7 +421,7 @@
 }
 
 .airb-hub-journey-wrap .airb-hub-support-body .airb__interest-status--error {
-	color: #fca5a5;
+	color: var(--airb-tint-crit);
 }
 
 @media (min-width: 640px) {

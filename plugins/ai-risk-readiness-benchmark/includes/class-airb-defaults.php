@@ -149,15 +149,15 @@ class AIRB_Defaults {
 	 */
 	public static function domain_colors(): array {
 		return array(
-			'safe_adoption'        => '#1B6B8C',
-			'human_oversight'      => '#15803d',
-			'ai_dependency'        => '#c2410c',
-			'privacy'              => '#7c3aed',
-			'safeguarding'         => '#b91c1c',
-			'bias_equality'        => '#be123c',
-			'assessment_integrity' => '#a16207',
-			'ai_literacy'          => '#2563eb',
-			'governance'           => '#475569',
+			'safe_adoption'        => '#006A7D',
+			'human_oversight'      => '#176E3B',
+			'ai_dependency'        => '#A7350B',
+			'privacy'              => '#6441B8',
+			'safeguarding'         => '#983488',
+			'bias_equality'        => '#A7350B',
+			'assessment_integrity' => '#A7350B',
+			'ai_literacy'          => '#006A7D',
+			'governance'           => '#231F20',
 		);
 	}
 
@@ -347,13 +347,13 @@ class AIRB_Defaults {
 					'label'       => __( 'Parent Awareness Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'p_child_uses', 'p_know_tools', 'p_child_unknown_use' ),
-					'color'       => '#1B6B8C',
+					'color'       => '#006A7D',
 				),
 				'home_ai_safety' => array(
 					'label'       => __( 'Home AI Safety Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'p_no_share', 'p_privacy_conversation', 'p_home_ai_culture' ),
-					'color'       => '#15803d',
+					'color'       => '#176E3B',
 				),
 				'online_risk_awareness' => array(
 					'label'       => __( 'Deepfake & online risk awareness', 'ai-risk-benchmark' ),
@@ -365,19 +365,19 @@ class AIRB_Defaults {
 					'label'       => __( 'Homework Oversight Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'p_explain_own_words', 'p_check_suspicion', 'p_hw_first_response' ),
-					'color'       => '#a16207',
+					'color'       => '#A7350B',
 				),
 				'parent_ai_dependency' => array(
 					'label'       => __( 'Parent AI Dependency Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'risk',
 					'questions'   => array( 'p_parent_ai_hw', 'p_parent_ai_comms' ),
-					'color'       => '#b45309',
+					'color'       => '#A7350B',
 				),
 				'school_partnership' => array(
 					'label'       => __( 'School Partnership Score', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'p_school_expectations', 'p_school_discuss' ),
-					'color'       => '#2563eb',
+					'color'       => '#006A7D',
 				),
 			),
 			'home_metrics' => array(
@@ -654,31 +654,31 @@ class AIRB_Defaults {
 					'label'       => __( 'Personal AI use', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_use_frequency', 'pub_use_tasks', 'pub_use_trust', 'pub_use_dependency' ),
-					'color'       => '#378ADD',
+					'color'       => '#006A7D',
 				),
 				'verification' => array(
 					'label'       => __( 'Verification', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_verify_check', 'pub_verify_hallucination', 'pub_verify_bias', 'pub_verify_deepfake' ),
-					'color'       => '#639922',
+					'color'       => '#176E3B',
 				),
 				'data_privacy' => array(
 					'label'       => __( 'Data & privacy', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_data_sharing', 'pub_data_third_party', 'pub_data_others', 'pub_data_scam' ),
-					'color'       => '#E24B4A',
+					'color'       => '#A32D2D',
 				),
 				'workplace_ai' => array(
 					'label'       => __( 'Workplace AI', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_work_policy', 'pub_work_data', 'pub_work_disclosure' ),
-					'color'       => '#EF9F27',
+					'color'       => '#A7350B',
 				),
 				'emotional_social' => array(
 					'label'       => __( 'Emotional & social AI use', 'ai-risk-benchmark' ),
 					'metric_type' => 'score',
 					'questions'   => array( 'pub_social_advice', 'pub_social_relationship', 'pub_social_news' ),
-					'color'       => '#378ADD',
+					'color'       => '#006A7D',
 				),
 			),
 			'summary_metrics' => array(
@@ -2527,12 +2527,12 @@ class AIRB_Defaults {
 	 */
 	public static function role_meta(): array {
 		return array(
-			'teacher' => array( 'tint' => '#dcfce7', 'accent' => '#15803d' ),
-			'student' => array( 'tint' => '#dbeafe', 'accent' => '#2563eb' ),
-			'parent'  => array( 'tint' => '#f3e8ff', 'accent' => '#7c3aed' ),
-			'leader'        => array( 'tint' => '#f1f5f9', 'accent' => '#475569' ),
-			'support_staff' => array( 'tint' => '#fef3c7', 'accent' => '#b45309' ),
-			'public'        => array( 'tint' => '#e6f1fb', 'accent' => '#185fa5' ),
+			'teacher' => array( 'tint' => '#EAE7DF', 'accent' => '#176E3B' ),
+			'student' => array( 'tint' => '#EAE7DF', 'accent' => '#006A7D' ),
+			'parent'  => array( 'tint' => '#EAE7DF', 'accent' => '#6441B8' ),
+			'leader'        => array( 'tint' => '#EAE7DF', 'accent' => '#231F20' ),
+			'support_staff' => array( 'tint' => '#EAE7DF', 'accent' => '#A7350B' ),
+			'public'        => array( 'tint' => '#EAE7DF', 'accent' => '#983488' ),
 		);
 	}
 

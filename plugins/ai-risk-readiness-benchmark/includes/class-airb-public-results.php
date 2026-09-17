@@ -104,7 +104,7 @@ class AIRB_Public_Results {
 				continue;
 			}
 			$badge = AIRB_Public_Copy::domain_badge( $pct );
-			$color = (string) ( $def['color'] ?? '#378ADD' );
+			$color = (string) ( $def['color'] ?? '#006A7D' );
 			$out[] = array(
 				'slug'  => (string) $slug,
 				'label' => (string) ( $def['label'] ?? $slug ),

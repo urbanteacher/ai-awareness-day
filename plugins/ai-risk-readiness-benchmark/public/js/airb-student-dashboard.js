@@ -17,17 +17,17 @@
 	var esc = AIRB.esc || function (s) { return String(s); };
 
 	var READINESS_BANDS = [
-		{ slug: 'emerging', label: 'At risk', min: 0, max: 39, color: '#dc2626', short: 'At risk' },
-		{ slug: 'developing', label: 'Action required', min: 40, max: 59, color: '#f59e0b', short: 'Action required' },
-		{ slug: 'established', label: 'Stable', min: 60, max: 74, color: '#eab308', short: 'Stable' },
-		{ slug: 'strong', label: 'Confident', min: 75, max: 89, color: '#22c55e', short: 'Confident' },
-		{ slug: 'leading', label: 'Responsible', min: 90, max: 100, color: '#16a34a', short: 'Responsible' },
+		{ slug: 'emerging', label: 'At risk', min: 0, max: 39, color: '#A32D2D', short: 'At risk' },
+		{ slug: 'developing', label: 'Action required', min: 40, max: 59, color: '#A7350B', short: 'Action required' },
+		{ slug: 'established', label: 'Stable', min: 60, max: 74, color: '#A7350B', short: 'Stable' },
+		{ slug: 'strong', label: 'Confident', min: 75, max: 89, color: '#176E3B', short: 'Confident' },
+		{ slug: 'leading', label: 'Responsible', min: 90, max: 100, color: '#176E3B', short: 'Responsible' },
 	];
 
 	var TONE_MAP = {
-		secure: { border: 'border-emerald-300', bg: 'bg-emerald-50', text: 'text-emerald-800', label: 'secure', bar: '#16a34a' },
-		practice: { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-800', label: 'practise', bar: '#f59e0b' },
-		attention: { border: 'border-rose-300', bg: 'bg-rose-50', text: 'text-rose-800', label: 'focus', bar: '#e11d48' },
+		secure: { border: 'border-emerald-300', bg: 'bg-emerald-50', text: 'text-emerald-800', label: 'secure', bar: '#176E3B' },
+		practice: { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-800', label: 'practise', bar: '#A7350B' },
+		attention: { border: 'border-rose-300', bg: 'bg-rose-50', text: 'text-rose-800', label: 'focus', bar: '#A32D2D' },
 	};
 
 	var TABS = [
@@ -62,7 +62,7 @@
 
 	function peerYourScoreColor(yourScore, averageScore, topQuartile) {
 		if (averageScore - yourScore > 0) return '#a32d2d';
-		if (topQuartile - yourScore <= 0) return '#1d9e75';
+		if (topQuartile - yourScore <= 0) return '#176E3B';
 		return null;
 	}
 
@@ -72,9 +72,9 @@
 	}
 
 	function dependencyIndexColor(pct) {
-		if (pct >= 60) return '#dc2626';
-		if (pct >= 35) return '#d97706';
-		return '#16a34a';
+		if (pct >= 60) return '#A32D2D';
+		if (pct >= 35) return '#A7350B';
+		return '#176E3B';
 	}
 
 	function focusSeverity(pct) {
@@ -103,7 +103,7 @@
 		});
 		html += '</div><div class="teacher-dash-readiness__labels">';
 		READINESS_BANDS.forEach(function (band) {
-			html += '<span style="color:' + (band.slug === active.slug ? band.color : '#94a3b8') + '">' + esc(band.label) + '</span>';
+			html += '<span style="color:' + (band.slug === active.slug ? band.color : '#54504E') + '">' + esc(band.label) + '</span>';
 		});
 		html += '</div></div>';
 		return html;
@@ -114,7 +114,7 @@
 		var yourScore = model.score;
 		var averageScore = peer.averageScore || 0;
 		var topQuartile = peer.topQuartile || 0;
-		var yourColor = peerYourScoreColor(yourScore, averageScore, topQuartile) || model.accent || '#2563eb';
+		var yourColor = peerYourScoreColor(yourScore, averageScore, topQuartile) || model.accent || '#006A7D';
 
 		var html = '<section class="teacher-dash-peer" aria-label="' + esc(peer.comparisonLabel || 'How you compare to other teachers') + '">';
 		html += '<div class="teacher-dash-peer__head">';
@@ -124,8 +124,8 @@
 		html += '<div class="teacher-dash-peer__grid">';
 		[
 			{ label: 'You', value: yourScore, color: yourColor },
-			{ label: 'Nat. avg', value: averageScore, color: '#64748b' },
-			{ label: 'Top quartile', value: topQuartile, color: '#16a34a' },
+			{ label: 'Nat. avg', value: averageScore, color: '#54504E' },
+			{ label: 'Top quartile', value: topQuartile, color: '#176E3B' },
 		].forEach(function (item) {
 			html += '<div class="teacher-dash-peer__stat">';
 			html += '<p class="teacher-dash-peer__stat-label">' + esc(item.label) + '</p>';
@@ -204,7 +204,7 @@
 		if (!metric) return '';
 		var pct = parseMetricPercent(metric.value);
 		var isDependency = /dependency/i.test(metric.label);
-		var color = isDependency && pct != null ? dependencyIndexColor(pct) : (accent || '#2563eb');
+		var color = isDependency && pct != null ? dependencyIndexColor(pct) : (accent || '#006A7D');
 		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
 		var shareLabel = i18n.shareDependencyIndex || i18n.shareOversightGauge || 'Share as image';
 		var html = '<div class="teacher-dash-metric' + (isDependency && pct != null ? ' teacher-dash-metric--dependency' : '') + '"' + (isDependency && pct != null ? ' data-dependency-value="' + pct + '"' : '') + '>';
@@ -233,7 +233,7 @@
 		if (!metric) return '';
 		var html = '<div class="teacher-dash-metric teacher-dash-metric--readiness">';
 		html += '<p class="teacher-dash-metric__label">' + esc(metric.label) + '</p>';
-		html += '<p class="teacher-dash-metric__value" style="color:' + esc(accent || '#2563eb') + '">' + esc(metric.value) + '</p>';
+		html += '<p class="teacher-dash-metric__value" style="color:' + esc(accent || '#006A7D') + '">' + esc(metric.value) + '</p>';
 		if (metric.note) {
 			html += '<p class="teacher-dash-metric__note">' + esc(metric.note) + '</p>';
 		}
@@ -305,8 +305,8 @@
 	function progressPanelHtml(model, opts) {
 		opts = opts || {};
 		var cert = model.certificate || {};
-		var accent = model.accent || '#0f766e';
-		var soft = model.soft || '#ccfbf1';
+		var accent = model.accent || '#006A7D';
+		var soft = model.soft || '#EAE7DF';
 		var weakest = (model.domains && model.domains.length)
 			? model.domains.reduce(function (min, d) { return !min || d.value < min.value ? d : min; }, null)
 			: null;
@@ -331,10 +331,10 @@
 		steps.forEach(function (step, index) {
 			var unlocked = index <= currentIndex;
 			var active = index === currentIndex + 1;
-			var bg = active ? soft : unlocked ? '#f0fdf4' : '#f8fafc';
-			var iconBg = unlocked ? accent : '#fff';
-			var iconColor = unlocked ? '#fff' : active ? accent : '#64748b';
-			var ring = active ? accent : '#cbd5e1';
+			var bg = active ? soft : unlocked ? '#EAE7DF' : '#F6F4ED';
+			var iconBg = unlocked ? accent : '#F6F4ED';
+			var iconColor = unlocked ? '#F6F4ED' : active ? accent : '#54504E';
+			var ring = active ? accent : '#C9C6BE';
 			html += '<section class="teacher-dash-passport-step" style="background:' + esc(bg) + '">';
 			html += '<div class="teacher-dash-passport-step__head">';
 			html += '<span class="teacher-dash-passport-step__icon" style="background:' + esc(iconBg) + ';color:' + esc(iconColor) + ';box-shadow:inset 0 0 0 1px ' + esc(ring) + '">' + (unlocked ? '✓' : String(index + 1)) + '</span>';

@@ -9,9 +9,9 @@
 	var deps = {};
 
 	function oversightZoneColorHex(v) {
-		if (v >= 76) return '#3B6D11';
-		if (v >= 51) return '#185FA5';
-		if (v >= 26) return '#854F0B';
+		if (v >= 76) return '#176E3B';
+		if (v >= 51) return '#006A7D';
+		if (v >= 26) return '#A7350B';
 		return '#A32D2D';
 	}
 
@@ -67,7 +67,7 @@
 			ctx.stroke();
 		}
 
-		strokeArc(0, 100, '#e8e8e8', 'round');
+		strokeArc(0, 100, '#C9C6BE', 'round');
 		zones.forEach(function (z, i) {
 			var cap = (i === 0 || i === zones.length - 1) ? 'round' : 'butt';
 			strokeArc(z[0], z[1], oversightZoneColorHex(z[1] - 0.1), cap);
@@ -75,7 +75,7 @@
 
 		var npt = geom.polar(cx, cy, rr - (14 * scale), geom.toAngle(val));
 		ctx.beginPath();
-		ctx.strokeStyle = '#1e1e1e';
+		ctx.strokeStyle = '#231F20';
 		ctx.lineWidth = 3.5 * scale;
 		ctx.lineCap = 'round';
 		ctx.moveTo(cx, cy);
@@ -83,11 +83,11 @@
 		ctx.stroke();
 
 		ctx.beginPath();
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.arc(cx, cy, 7 * scale, 0, Math.PI * 2);
 		ctx.fill();
 
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		var numStr = String(Math.round(val));
@@ -231,25 +231,25 @@
 		var ctx = canvas.getContext('2d');
 		if (!ctx) return Promise.reject(new Error('canvas_unsupported'));
 
-		ctx.fillStyle = '#f4f7f6';
+		ctx.fillStyle = '#F6F4ED';
 		ctx.fillRect(0, 0, width, height);
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = '#F6F4ED';
 		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
 		ctx.fill();
-		ctx.strokeStyle = '#e2e8e4';
+		ctx.strokeStyle = '#C9C6BE';
 		ctx.lineWidth = 2;
 		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
 		ctx.stroke();
 
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.fillRect(56, 56, width - 112, 56);
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = '#F6F4ED';
 		ctx.font = '600 24px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'middle';
 		ctx.fillText(eyebrow, 80, 84);
 
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.font = '700 40px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.fillText(title, 80, 150);
 
@@ -266,14 +266,14 @@
 		ctx.font = '700 34px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.fillText(band || oversightLabel(val), textX, 250);
 
-		ctx.fillStyle = '#4b5563';
+		ctx.fillStyle = '#54504E';
 		ctx.font = '500 24px system-ui, -apple-system, Segoe UI, sans-serif';
 		var lines = wrapCanvasText(ctx, help, width - textX - 80, 4);
 		lines.forEach(function (line, idx) {
 			ctx.fillText(line, textX, 310 + (idx * 34));
 		});
 
-		ctx.fillStyle = '#6b7280';
+		ctx.fillStyle = '#54504E';
 		ctx.font = '500 20px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.fillText(siteLabel, 80, height - 72);
 		ctx.textAlign = 'right';
@@ -283,9 +283,9 @@
 	}
 
 	function dependencyIndexColorHex(pct) {
-		if (pct >= 60) return '#dc2626';
-		if (pct >= 35) return '#d97706';
-		return '#16a34a';
+		if (pct >= 60) return '#A32D2D';
+		if (pct >= 35) return '#A7350B';
+		return '#176E3B';
 	}
 
 	function drawDependencyScaleOnCanvas(ctx, pct, x, y, width, height) {
@@ -294,21 +294,21 @@
 		var markerW = 14;
 		var markerH = height + 16;
 		var gradient = ctx.createLinearGradient(x, y, x + width, y);
-		gradient.addColorStop(0, '#16a34a');
-		gradient.addColorStop(0.5, '#d97706');
-		gradient.addColorStop(1, '#dc2626');
+		gradient.addColorStop(0, '#176E3B');
+		gradient.addColorStop(0.5, '#A7350B');
+		gradient.addColorStop(1, '#A32D2D');
 		ctx.fillStyle = gradient;
 		roundRect(ctx, x, y, width, trackH, trackH / 2);
 		ctx.fill();
 		var markerX = x + (pct / 100) * width;
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.beginPath();
 		ctx.arc(markerX, y + trackH / 2, markerW / 2, 0, Math.PI * 2);
 		ctx.fill();
-		ctx.strokeStyle = '#ffffff';
+		ctx.strokeStyle = '#F6F4ED';
 		ctx.lineWidth = 3;
 		ctx.stroke();
-		ctx.fillStyle = '#64748b';
+		ctx.fillStyle = '#54504E';
 		ctx.font = '600 18px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.textAlign = 'left';
 		ctx.fillText('Non-reliant', x, y + trackH + 28);
@@ -361,25 +361,25 @@
 		var ctx = canvas.getContext('2d');
 		if (!ctx) return Promise.reject(new Error('canvas_unsupported'));
 
-		ctx.fillStyle = '#f4f7f6';
+		ctx.fillStyle = '#F6F4ED';
 		ctx.fillRect(0, 0, width, height);
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = '#F6F4ED';
 		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
 		ctx.fill();
-		ctx.strokeStyle = '#e2e8e4';
+		ctx.strokeStyle = '#C9C6BE';
 		ctx.lineWidth = 2;
 		roundRect(ctx, 36, 36, width - 72, height - 72, 24);
 		ctx.stroke();
 
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.fillRect(56, 56, width - 112, 56);
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = '#F6F4ED';
 		ctx.font = '600 24px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'middle';
 		ctx.fillText(eyebrow, 80, 84);
 
-		ctx.fillStyle = '#1e1e1e';
+		ctx.fillStyle = '#231F20';
 		ctx.font = '700 40px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.fillText(title, 80, 150);
 
@@ -390,14 +390,14 @@
 
 		drawDependencyScaleOnCanvas(ctx, val, 80, 320, 520, 18);
 
-		ctx.fillStyle = '#4b5563';
+		ctx.fillStyle = '#54504E';
 		ctx.font = '500 24px system-ui, -apple-system, Segoe UI, sans-serif';
 		var lines = wrapCanvasText(ctx, note, width - 680, 3);
 		lines.forEach(function (line, idx) {
 			ctx.fillText(line, 680, 300 + (idx * 34));
 		});
 
-		ctx.fillStyle = '#6b7280';
+		ctx.fillStyle = '#54504E';
 		ctx.font = '500 20px system-ui, -apple-system, Segoe UI, sans-serif';
 		ctx.fillText(siteLabel, 80, height - 72);
 		ctx.textAlign = 'right';

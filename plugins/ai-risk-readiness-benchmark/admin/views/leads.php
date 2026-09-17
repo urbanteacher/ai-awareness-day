@@ -201,7 +201,7 @@ $total_leads = array_sum( $status_counts );
 				admin_url( 'admin.php' )
 			);
 			?>
-			<a href="<?php echo esc_url( $url ); ?>" class="card" style="padding:0.6rem 0.9rem;text-decoration:none;<?php echo $filters['status'] === $slug ? 'border:2px solid #2271b1;' : ''; ?>">
+			<a href="<?php echo esc_url( $url ); ?>" class="card" style="padding:0.6rem 0.9rem;text-decoration:none;<?php echo $filters['status'] === $slug ? 'border:2px solid #006A7D;' : ''; ?>">
 				<strong style="font-size:1.25rem;display:block;"><?php echo esc_html( (string) $count ); ?></strong>
 				<span><?php echo esc_html( $label ); ?></span>
 			</a>
@@ -241,7 +241,7 @@ $total_leads = array_sum( $status_counts );
 					admin_url( 'admin.php' )
 				);
 				?>
-				<div class="card" style="padding:0.75rem 1rem;margin:0 0 1rem;background:#f6f7f7;">
+				<div class="card" style="padding:0.75rem 1rem;margin:0 0 1rem;background:#F6F4ED;">
 					<h3 style="margin-top:0;"><?php esc_html_e( 'Linked benchmark submission', 'ai-risk-benchmark' ); ?></h3>
 					<p>
 						<a href="<?php echo esc_url( $submission_url ); ?>"><strong><?php printf( esc_html__( 'Submission #%d', 'ai-risk-benchmark' ), (int) $submission->id ); ?></strong></a>

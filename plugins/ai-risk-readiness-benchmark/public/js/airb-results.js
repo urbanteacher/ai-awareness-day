@@ -933,9 +933,9 @@ function scoreToramp(score) {
 
 /** Oversight zone color (used for gauge band label) */
 function oversightZoneColor(pct) {
-    if (pct >= 76) return '#3B6D11';
-    if (pct >= 51) return '#185FA5';
-    if (pct >= 26) return '#854F0B';
+    if (pct >= 76) return '#176E3B';
+    if (pct >= 51) return '#006A7D';
+    if (pct >= 26) return '#A7350B';
     return '#A32D2D';
 }
 
@@ -1133,7 +1133,7 @@ function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
         bg: '',
         text: '',
         label: '',
-        bar: '#64748b'
+        bar: '#54504E'
     };
     var accordionOpts = Object.assign({}, opts);
     var html = '<div class="benchmark-domain-grid benchmark-domain-grid--with-guidance">';
@@ -1157,7 +1157,7 @@ function domainGridWithGuidanceHtml(domains, focusAreas, opts) {
         html += '<div class="benchmark-metric-card__body">';
         html += '<p class="benchmark-metric-card__value' + (belowThreshold ? ' benchmark-metric-card__value--below-threshold' : '') + '">' + escFn(domain.value) + '%</p>';
         html += '</div>';
-        html += '<div class="benchmark-metric-card__bar"><span style="width:' + escFn(domain.value) + '%;background:' + escFn(tone.bar || '#64748b') + '"></span></div>';
+        html += '<div class="benchmark-metric-card__bar"><span style="width:' + escFn(domain.value) + '%;background:' + escFn(tone.bar || '#54504E') + '"></span></div>';
 
         if (hasGuidance) {
             html += focusGuidanceAccordionForArea(area, Object.assign({}, accordionOpts, {

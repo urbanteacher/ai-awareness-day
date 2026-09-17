@@ -822,17 +822,17 @@
 
 	function readinessBandColor(pct, role) {
 		var colors = {
-			leading: '#15803d',
+			leading: '#176E3B',
 			strong: 'var(--airb-low)',
-			established: '#3a8fb0',
+			established: '#006A7D',
 			developing: 'var(--airb-mod)',
 			emerging: 'var(--airb-crit)',
 			beginning: '#a32d2d',
-			advanced: '#15803d',
-			confident: '#1d9e75',
-			aware: '#0c6b8a',
+			advanced: '#176E3B',
+			confident: '#176E3B',
+			aware: '#006A7D',
 			just_starting: '#a32d2d',
-			well_prepared: '#15803d',
+			well_prepared: '#176E3B',
 		};
 		return colors[readinessLevel(pct, role).slug] || 'var(--airb-text)';
 	}
@@ -993,10 +993,10 @@
 
 	function heatmapBarColor(risk) {
 		risk = Math.round(parseFloat(risk) || 0);
-		if (risk > 80) return '#e24b4a';
-		if (risk > 50) return '#ef9f27';
-		if (risk > 30) return '#378add';
-		return '#3b6d11';
+		if (risk > 80) return '#A32D2D';
+		if (risk > 50) return '#A7350B';
+		if (risk > 30) return '#006A7D';
+		return '#176E3B';
 	}
 
 	function leaderSectionDivider() {
@@ -1141,9 +1141,9 @@
 	}
 
 	function publicSummaryMetricColor(slug) {
-		if (slug === 'good') return '#3B6D11';
-		if (slug === 'developing') return '#185FA5';
-		if (slug === 'attention') return '#854F0B';
+		if (slug === 'good') return '#176E3B';
+		if (slug === 'developing') return '#006A7D';
+		if (slug === 'attention') return '#A7350B';
 		return '#A32D2D';
 	}
 
@@ -1616,7 +1616,7 @@
 		var topGap = typeof pb.gap_vs_top_quartile === 'number' ? pb.gap_vs_top_quartile : ((parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
 		var yourColor = readinessBandColor(parseInt(pb.your_score, 10) || 0);
 		if (avgGap <= 0 && topGap <= 0) {
-			yourColor = 'var(--airb-good, #1d9e75)';
+			yourColor = 'var(--airb-good, #176E3B)';
 		}
 		return peerBenchmarkBarHtml(pb, {
 			cfg: teacherResult,
@@ -1640,7 +1640,7 @@
 		var topGap = (parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0);
 		var yourColor = studentSkillColor(parseInt(pb.your_score, 10) || 0);
 		if (avgGap <= 0 && topGap <= 0) {
-			yourColor = 'var(--airb-good, #1d9e75)';
+			yourColor = 'var(--airb-good, #176E3B)';
 		}
 		return peerBenchmarkBarHtml(pb, {
 			cfg: studentResult,
@@ -1761,7 +1761,7 @@
 		var cfg = opts.cfg || leaderResult;
 		var avgGap = typeof pb.gap_vs_average === 'number' ? pb.gap_vs_average : ((parseInt(pb.average_score, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
 		var topGap = typeof pb.gap_vs_top_quartile === 'number' ? pb.gap_vs_top_quartile : ((parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
-		var yourColor = opts.yourScoreColor || (avgGap > 0 ? 'var(--airb-crit, #a32d2d)' : (topGap <= 0 ? 'var(--airb-good, #1d9e75)' : 'inherit'));
+		var yourColor = opts.yourScoreColor || (avgGap > 0 ? 'var(--airb-crit, #a32d2d)' : (topGap <= 0 ? 'var(--airb-good, #176E3B)' : 'inherit'));
 		var avgLong = String(opts.avgLong || pb.phase_label || i18n.parentAverage || 'Average');
 		var avgShort = opts.avgShort || avgLong.replace(/^Average\s+/i, 'Avg ');
 		var avgMobile = opts.avgMobile || cfg.peer_phase_short || i18n.avgSchool || avgShort;
@@ -1956,12 +1956,12 @@
 		var slug = studentSkillBand(pct).slug;
 		var colors = {
 			beginning: '#a32d2d',
-			developing: '#185fa5',
-			emerging: '#0c6b8a',
-			confident: '#1d9e75',
-			advanced: '#15803d',
+			developing: '#006A7D',
+			emerging: '#006A7D',
+			confident: '#176E3B',
+			advanced: '#176E3B',
 		};
-		return colors[slug] || '#64748b';
+		return colors[slug] || '#54504E';
 	}
 
 	function studentBandDefinitions() {
@@ -2174,17 +2174,17 @@
 	}
 
 	function parentMetricColor(badgeSlug, pct) {
-		if (badgeSlug === 'good') return '#639922';
-		if (badgeSlug === 'risk') return '#e24b4a';
-		if (badgeSlug === 'attention') return '#ef9f27';
-		return '#378add';
+		if (badgeSlug === 'good') return '#176E3B';
+		if (badgeSlug === 'risk') return '#A32D2D';
+		if (badgeSlug === 'attention') return '#A7350B';
+		return '#006A7D';
 	}
 
 	function parentMetricTextColor(badgeSlug) {
-		if (badgeSlug === 'good') return '#3b6d11';
+		if (badgeSlug === 'good') return '#176E3B';
 		if (badgeSlug === 'risk') return '#a32d2d';
-		if (badgeSlug === 'attention') return '#854f0b';
-		return '#185fa5';
+		if (badgeSlug === 'attention') return '#A7350B';
+		return '#006A7D';
 	}
 
 	function parentReadinessHeroHtml(score, uiHero) {
@@ -2547,7 +2547,7 @@
 			out[slug] = {
 				label: def.label || slug,
 				metric_type: def.metric_type || 'score',
-				color: def.color || '#475569',
+				color: def.color || '#54504E',
 				risk_percentage: Math.round(avgRisk * 10) / 10,
 				readiness_percentage: Math.round((100 - avgRisk) * 10) / 10,
 				band: riskBand(avgRisk),
@@ -2578,7 +2578,7 @@
 			out[slug] = {
 				label: def.label || slug,
 				metric_type: def.metric_type || 'score',
-				color: def.color || '#475569',
+				color: def.color || '#54504E',
 				risk_percentage: Math.round(avgRisk * 10) / 10,
 				readiness_percentage: Math.round((100 - avgRisk) * 10) / 10,
 				band: riskBand(avgRisk),
@@ -3087,10 +3087,10 @@
 	}
 
 	function oversightZoneColorHex(v) {
-		if (v <= 10) return '#b91c1c';
-		if (v <= 25) return '#c2410c';
-		if (v <= 50) return '#a16207';
-		return '#15803d';
+		if (v <= 10) return '#A32D2D';
+		if (v <= 25) return '#A7350B';
+		if (v <= 50) return '#A7350B';
+		return '#176E3B';
 	}
 
 	function domainColor(slug) {

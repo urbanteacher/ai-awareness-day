@@ -102,7 +102,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p class="description"><?php esc_html_e( 'For radio/select questions, enter options one per line as: value|label|score (0=low risk, 3=high risk). Leave options empty for slider questions.', 'ai-risk-benchmark' ); ?></p>
 
 		<?php foreach ( (array) ( $config['questions'] ?? array() ) as $i => $q ) : ?>
-			<div style="border:1px solid #ccd0d4;padding:12px;margin-bottom:12px;background:#fff;">
+			<div style="border:1px solid #C9C6BE;padding:12px;margin-bottom:12px;background:#fff;">
 				<input type="hidden" name="q_id[]" value="<?php echo esc_attr( (string) ( $q['id'] ?? '' ) ); ?>" />
 				<p>
 					<strong><?php echo esc_html( sprintf( 'Q%s — %s', (string) ( $i + 1 ), (string) ( $q['id'] ?? '' ) ) ); ?></strong>
@@ -131,7 +131,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<h2><?php esc_html_e( 'Recommendations', 'ai-risk-benchmark' ); ?></h2>
 		<?php foreach ( (array) ( $config['recommendations'] ?? array() ) as $rec ) : ?>
-			<div style="border:1px solid #ccd0d4;padding:12px;margin-bottom:12px;background:#fff;">
+			<div style="border:1px solid #C9C6BE;padding:12px;margin-bottom:12px;background:#fff;">
 				<p>
 					<select name="r_domain[]">
 						<?php foreach ( $domains as $slug => $label ) : ?>

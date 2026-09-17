@@ -67,8 +67,13 @@
 		return (AIRB.runtime && AIRB.runtime.state && AIRB.runtime.state.email) || '';
 	}
 
-	function roleNeedsContactEmail(role, submissionEmail) {
+	function showContactEmailField(submissionEmail) {
+		return !submissionEmail;
+	}
+
+	function roleRequiresContactEmail(role, submissionEmail, needsReview) {
 		if (submissionEmail) return false;
+		if (needsReview) return true;
 		role = normalizeRole(role);
 		return role === 'student' || role === 'parent';
 	}
@@ -190,7 +195,7 @@
 			return '';
 		}
 		var progress = certificateProgress(model.certificate, model);
-		var accent = model.accent || '#2563eb';
+		var accent = model.accent || '#006A7D';
 		var gapDisplay = progress.unlocked ? 'Done' : (progress.scoreEligible ? 'Met' : ('+' + progress.needed));
 		var barWidth = progress.threshold > 0 ? Math.min(100, Math.round((progress.current / progress.threshold) * 100)) : 0;
 		var stateClass = progress.unlocked ? 'airb__cert-progress--unlocked' : (progress.scoreEligible ? 'airb__cert-progress--met' : 'airb__cert-progress--gap');
@@ -214,7 +219,7 @@
 		if (!model || !model.priority) {
 			return '';
 		}
-		var accent = model.accent || '#2563eb';
+		var accent = model.accent || '#006A7D';
 		var focusHeading = opts.focusHeading || 'Priority focus';
 		var primaryLabel = opts.primaryLabel || 'Request support';
 		var practiceScene = opts.sceneLabel || (opts.primaryTab ? 'Your next step' : 'Need more guidance?');
@@ -409,28 +414,28 @@
 	}
 
 	function contactEmailFieldHtml(role, submissionEmail, locked, value) {
-		if (!roleNeedsContactEmail(role, submissionEmail)) {
+		if (!showContactEmailField(submissionEmail)) {
 			return '';
 		}
 		var i18n = (window.airbBenchmark && airbBenchmark.i18n) || {};
 		return '<label class="benchmark-certificate-reflection">' + esc(i18n.certificateContactEmail || 'Email for certificate updates') +
 			'<input type="email" data-airb-certificate-contact-email value="' + esc(value || '') + '" placeholder="' + esc(i18n.certificateContactEmailPlaceholder || 'you@school.org or parent@email.com') + '" autocomplete="email"' + (locked ? ' readonly' : '') + '>' +
-			'<span class="benchmark-certificate-reflection-hint">' + esc(i18n.certificateContactEmailHint || 'Required for students and parents so we can email when your certificate is approved.') + '</span></label>';
+			'<span class="benchmark-certificate-reflection-hint">' + esc(i18n.certificateContactEmailHint || 'Required so we can email your certificate or tell you when it is approved.') + '</span></label>';
 	}
 
 	function printCertificateStyles() {
 		return '<style>' +
-			'body{margin:0;padding:32px;background:#fff;color:#020617;font-family:Georgia,"Times New Roman",serif;}' +
-			'.certificate-preview{width:100%;max-width:900px;margin:0 auto;background:#fff;}' +
-			'.certificate-preview__frame{border:4px solid #166534;padding:1.25rem;background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.06);}' +
+			'body{margin:0;padding:32px;background:#F6F4ED;color:#231F20;font-family:"AIAD Sans",Arial,sans-serif;}' +
+			'.certificate-preview{width:100%;max-width:900px;margin:0 auto;background:#F6F4ED;}' +
+			'.certificate-preview__frame{border:4px solid #231F20;padding:1.25rem;background:#F6F4ED;box-shadow:none;}' +
 			'.certificate-preview__content,.certificate-preview__lead,.certificate-preview__name,.certificate-preview__body{text-align:center;}' +
 			'.certificate-preview__headline{margin:0;font-size:2rem;line-height:1.1;}' +
 			'.certificate-preview__headline-primary,.certificate-preview__headline-secondary{display:block;}' +
-			'.certificate-preview__lead,.certificate-preview__body{margin:.75rem auto 0;max-width:42rem;color:#475569;line-height:1.45;font-size:1rem;}' +
-			'.certificate-preview__name{margin:.5rem 0 0;font-size:2.2rem;line-height:1.05;font-weight:800;color:#166534;}' +
+			'.certificate-preview__lead,.certificate-preview__body{margin:.75rem auto 0;max-width:42rem;color:#54504E;line-height:1.45;font-size:1rem;}' +
+			'.certificate-preview__name{margin:.5rem 0 0;font-size:2.2rem;line-height:1.05;font-weight:800;color:#176E3B;}' +
 			'.certificate-preview__date{margin:1rem 0 0;font-weight:700;}' +
-			'.certificate-preview__footer{display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:center;margin-top:1rem;padding-top:.75rem;border-top:1px solid #e2e8f0;font-size:.75rem;color:#64748b;}' +
-			'@media print{body{padding:0}.certificate-preview__frame{box-shadow:none}}' +
+			'.certificate-preview__footer{display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:center;margin-top:1rem;padding-top:.75rem;border-top:1px solid #C9C6BE;font-size:.75rem;color:#54504E;}' +
+			'@media print{body{padding:0;background:#fff}.certificate-preview,.certificate-preview__frame{background:#fff;box-shadow:none}}' +
 			'</style>';
 	}
 
@@ -531,7 +536,7 @@
 
 		var html = '<section class="teacher-dash-card benchmark-certificate-layout" data-airb-certificate-panel data-airb-role="' + esc(role) + '" data-airb-submission-id="' + esc(submissionId) + '" data-airb-benchmark-score="' + esc(benchmarkScore) + '" data-airb-score-eligible="' + (scoreEligible ? '1' : '0') + '" data-airb-unlocked="' + (unlocked ? '1' : '0') + '" data-airb-pending-review="' + (pendingReview ? '1' : '0') + '" data-airb-submission-email="' + esc(submissionEmail) + '">';
 		html += '<div class="benchmark-certificate-summary">';
-		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent || model.accent || '#2563eb') + '">Certificate</p>';
+		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent || model.accent || '#006A7D') + '">Certificate</p>';
 		html += '<h3 class="teacher-dash-progress-title">' + esc(title) + '</h3>';
 		html += '<p class="teacher-dash-cert-note">' + (unlocked
 			? 'Certificate allocated. You can download or print it now.'
@@ -667,7 +672,7 @@
 					setStatus(panel, 'Add the name to show on the certificate.', true);
 					return;
 				}
-				if (roleNeedsContactEmail(role, submissionEmail) && !contactEmail && !submissionEmail) {
+				if (roleRequiresContactEmail(role, submissionEmail, !!assessment.manual_review) && !contactEmail && !submissionEmail) {
 					setStatus(panel, (cfg.i18n && cfg.i18n.certificateContactEmailRequired) || 'Add an email address so we can send your certificate.', true);
 					if (contactEmailInput) contactEmailInput.focus();
 					return;
