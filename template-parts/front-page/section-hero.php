@@ -29,6 +29,14 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
             </div>
             <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
+                <?php /* The switcher leads, above the strand word it changes. Reordered
+                         in the markup rather than with CSS order so reading order and
+                         tab order follow what is on screen. */ ?>
+                <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
+                    <?php foreach ( array( 'safe' => 'Safe', 'smart' => 'Smart', 'creative' => 'Creative', 'responsible' => 'Responsible', 'future' => 'Future' ) as $slug => $label ) : ?>
+                        <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $label ); ?></a>
+                    <?php endforeach; ?>
+                </div>
                 <div class="hero-strand-feature__stage" aria-live="off">
                     <span class="hero-strand-feature__word">Safe</span>
                     <?php /* Decorative twin of .hero-brand__mark. On narrow screens the mark
@@ -37,11 +45,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <span class="hero-strand-feature__mark" aria-hidden="true"></span>
                 </div>
                 <p class="hero-strand-feature__summary"><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></p>
-                <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
-                    <?php foreach ( array( 'safe' => 'Safe', 'smart' => 'Smart', 'creative' => 'Creative', 'responsible' => 'Responsible', 'future' => 'Future' ) as $slug => $label ) : ?>
-                        <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $label ); ?></a>
-                    <?php endforeach; ?>
-                </div>
             </div>
         </div>
     </div>
