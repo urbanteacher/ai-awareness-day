@@ -46,6 +46,10 @@ body {
 .hero-cta__btn--primary:hover { background: var(--a27-safe-deep); border-color: var(--a27-safe-deep); }
 
 .hero-section {
+  /* Hero body size, shared by the subtitle and the strand summary. They were
+     set separately — a clamp against a fixed 1.1rem — so they matched at small
+     widths and drifted apart as the viewport grew, 23.2px against 17.6px. */
+  --hero-body: clamp(1.12rem, 2vw, 1.45rem);
   --hero-bright: var(--a27-safe);
   --hero-deep: var(--a27-safe-deep);
   --hero-mark: url('../brand/aiad27/icon-safe.svg');
@@ -154,7 +158,7 @@ body {
 
 .hero-title-block .hero-subtitle {
   color: var(--a27-ink);
-  font-size: clamp(1.12rem, 2vw, 1.45rem);
+  font-size: var(--hero-body);
   line-height: 1.35;
   margin: 1.65rem 0 0;
   max-width: min(42rem, 100%);
@@ -240,7 +244,7 @@ body {
 
 .hero-strand-feature.is-flipping .hero-strand-feature__word { animation: aiad27StrandFlip .54s cubic-bezier(.2,.8,.2,1); }
 
-.hero-strand-feature__summary { border-top: 1px solid currentColor; font-size: 1.1rem; line-height: 1.25; margin: .85rem 0 0; padding: .8rem 0 .95rem; }
+.hero-strand-feature__summary { border-top: 1px solid currentColor; font-size: var(--hero-body); line-height: 1.25; margin: .85rem 0 0; padding: .8rem 0 .95rem; }
 
 /* Five equal 1fr columns need 5x the widest label to hold their text, and
    "RESPONSIBLE" measures 85.9px here — so the grid silently collided below
