@@ -265,3 +265,50 @@ function aiad_restore_2026_recap(): void {
 	update_option( 'aiad_2026_recap_restored', '2' );
 }
 add_action( 'init', 'aiad_restore_2026_recap', 41 );
+
+/**
+ * One-time migration: drop the strand and session badge image overrides.
+ *
+ * The five strand marks and the session-length badges are brand assets, bundled
+ * in the theme at assets/brand/aiad27/. Both resolvers prefer a Customizer
+ * upload and only fall back to the bundled mark, so production kept serving the
+ * 2026 badge PNGs from the media library — artwork with "AI AWARENESS 2026" set
+ * into it — while a clean install showed the 2027 marks. That state lives in the
+ * database, so no code deploy could shift it.
+ *
+ * Clearing the overrides lets the bundled marks take over. The previous values
+ * are kept in an option first, so this is reversible and nothing is destroyed:
+ * the attachments themselves are untouched and stay in the media library.
+ */
+function aiad_migrate_2027_badge_overrides(): void {
+	if ( get_option( 'aiad_2027_badge_overrides_cleared' ) === '1' ) {
+		return;
+	}
+
+	$mods = get_theme_mods();
+	if ( ! is_array( $mods ) ) {
+		$mods = array();
+	}
+
+	$cleared = array();
+	foreach ( array_keys( $mods ) as $key ) {
+		$key = (string) $key;
+		if ( 0 !== strpos( $key, 'aiad_badge_' ) && 0 !== strpos( $key, 'aiad_session_badge_' ) ) {
+			continue;
+		}
+		$value = absint( $mods[ $key ] );
+		if ( ! $value ) {
+			continue;
+		}
+		$cleared[ $key ] = $value;
+		remove_theme_mod( $key );
+	}
+
+	if ( $cleared ) {
+		// Keep the old mapping so a site owner can restore a deliberate upload.
+		update_option( 'aiad_2027_badge_overrides_backup', $cleared, false );
+	}
+
+	update_option( 'aiad_2027_badge_overrides_cleared', '1' );
+}
+add_action( 'init', 'aiad_migrate_2027_badge_overrides', 7 );
