@@ -265,9 +265,12 @@ body {
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
-  color: currentColor;
+  /* White, as asked. Note this fails WCAG AA on every strand ground at this
+     size — see the commit message for the ratios; the labels are 12.8px bold,
+     which needs 4.5:1. */
+  color: #FFFFFF;
   cursor: pointer;
-  font-size: .72rem;
+  font-size: .8rem;
   font-weight: 700;
   letter-spacing: .08em;
   padding: .35rem 0 .4rem;
