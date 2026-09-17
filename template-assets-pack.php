@@ -229,6 +229,12 @@ $assets = array(
             <?php endif; ?>
         </div>
 
+        <p class="assets-pack__review-links">
+            <a href="<?php echo esc_url( AIAD_URI . '/assets/aiad27-review/style.html' ); ?>"><?php esc_html_e( 'Style guide', 'ai-awareness-day' ); ?></a>
+            <span aria-hidden="true">·</span>
+            <a href="<?php echo esc_url( AIAD_URI . '/assets/aiad27-review/preview.html' ); ?>"><?php esc_html_e( 'Student slides', 'ai-awareness-day' ); ?></a>
+        </p>
+
     </div>
 </main>
 

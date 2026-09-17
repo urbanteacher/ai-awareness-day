@@ -1,0 +1,436 @@
+.format-tools{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0;padding:6px;background:var(--ui-bg,#f4f6ef);border-radius:8px}
+.format-tools button{min-width:30px;min-height:32px;padding:4px 7px;border:1px solid #bbc6b6;border-radius:6px;background:#fff;color:#243422;cursor:pointer}
+#inspector .insp-chrome{flex-wrap:wrap;gap:4px}
+#inspector .insp-chrome .btn{font-size:11px;padding:4px 6px}
+#inspector .design-panes .btn{flex:1;min-width:0;font-size:10px;padding:7px 2px;line-height:1.2}
+#inspector .design-panes .btn.active{border-color:#9cae8c;background:#eff4e9;color:#3f5a30;font-weight:650}
+.engage-add{display:flex;flex-direction:column;gap:8px}
+.engage-add .btn{width:100%;justify-content:center}
+.format-tools input[type=color]{width:32px;height:32px;padding:2px;border:0}
+.format-tools input[type=url]{width:115px;min-width:70px;flex:1}
+.custom-controls{margin:4px 0 14px;border:1px solid #b9c6b3;border-radius:10px;padding:12px}
+.custom-controls summary{font-weight:700;cursor:pointer;margin-bottom:10px}
+.custom-controls input[type=range]{width:100%}
+/* Progressive builds: keep layout space, animate each step in. */
+.slide .step,
+.slide .pad li,
+.slide .kw-row,
+.slide .it-row,
+.slide .q-line,
+.slide .ex-body > p,
+.slide tbody tr{
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity .42s ease,transform .42s cubic-bezier(.2,.75,.2,1),visibility 0s;
+}
+.slide .step-hidden{
+  opacity:0!important;
+  visibility:hidden;
+  transform:translateY(.55em);
+  pointer-events:none;
+  transition:opacity .28s ease,transform .28s ease,visibility 0s linear .28s;
+}
+/* Build mode "dim": a point already made stays on screen and steps back, so
+   the argument so far is still readable while the eye is told where the
+   lecture is now. Slower than the reveal on purpose — the point arriving
+   should be the thing that catches attention, not the ones retreating. */
+.slide .step-past{
+  /* !important for the same reason step-hidden carries it: the base rule
+     above names each steppable element (.slide .pad li beats .slide
+     .step-past on specificity), so a plain opacity here would lose on
+     bullets, cards and explain paragraphs while appearing to work on
+     keywords and table rows. */
+  opacity:.38!important;
+  transition:opacity .45s ease;
+}
+@media (prefers-reduced-motion:reduce){
+  .slide .step,
+  .slide .pad li,
+  .slide .kw-row,
+  .slide .it-row,
+  .slide .q-line,
+  .slide .ex-body > p,
+  .slide tbody tr{transition:none}
+  .slide .step-hidden{transform:none;transition:none}
+}
+/* The ink tools are integrated directly into the HUD pill for a single unified control bar. */
+.hud-group{display:inline-flex;align-items:center;gap:6px}
+.hud-group[hidden]{display:none!important}
+.hud-ink-tools button[aria-pressed=true]{background:#ec346d!important;border-color:#ec346d!important;color:#fff!important}
+.hud-ink-done{width:auto!important;height:38px!important;padding:0 14px!important;font-size:13px!important;font-weight:600;border-radius:999px!important;background:rgba(52,201,138,.2)!important;color:#72f0b7!important;border:1px solid rgba(52,201,138,.4)!important}
+.hud-ink-done:hover{background:rgba(52,201,138,.35)!important;color:#fff!important}
+#hud.hud-inking{border-color:rgba(236,52,109,.55);box-shadow:0 10px 35px #0008,0 0 14px rgba(236,52,109,.3)}
+#hud.hud-frozen{border-color:rgba(100,180,255,.65);box-shadow:0 10px 35px #0008,0 0 14px rgba(100,180,255,.35)}
+.hud button[data-act="freeze"].on{background:rgba(45,120,200,.45)!important;color:#7ad1ff!important;box-shadow:inset 0 0 0 1.5px rgba(100,180,255,.7)!important}
+.hud button[data-act="poll"].on{background:rgba(142,68,173,.45)!important;color:#e8b3ff!important;box-shadow:inset 0 0 0 1.5px rgba(175,122,197,.7)!important}
+.player-freeze-pill{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:125;display:flex;align-items:center;gap:10px;padding:6px 16px;background:rgba(14,28,45,.92);border:1px solid rgba(100,180,255,.5);border-radius:999px;color:#d8ecff;font-size:13px;font-weight:500;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:auto;box-shadow:0 6px 22px rgba(0,0,0,.45),0 0 12px rgba(90,175,255,.25)}
+.player-freeze-pill .pfp-tag{background:#1b4d79;color:#7ad1ff;font-size:10px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:4px}
+.player-freeze-pill .pfp-unfreeze{padding:3px 10px;font-size:11px;font-weight:600;background:rgba(100,180,255,.18);border:1px solid rgba(100,180,255,.4);color:#ffffff;border-radius:6px;cursor:pointer}
+.player-freeze-pill .pfp-unfreeze:hover{background:rgba(100,180,255,.35)}
+.player-spontaneous-pill{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:124;padding:6px 14px;background:rgba(36,55,44,.92);border:1px solid rgba(180,210,160,.45);border-radius:999px;color:#e8f0e0;font-size:12px;font-weight:600;pointer-events:none;box-shadow:0 6px 22px rgba(0,0,0,.35)}
+#player.is-spontaneous .player-spontaneous-pill{display:block}
+.teaching-ink{position:absolute;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;touch-action:none}
+.teaching-ink.drawing{pointer-events:auto;cursor:crosshair}
+.manual-panel{position:fixed;inset:5vh max(16px,calc((100vw - 700px)/2));z-index:180;background:#fff;color:#243422;padding:22px;border-radius:16px;overflow:auto;box-shadow:0 15px 90px #0008}
+.manual-panel header{display:flex;align-items:center;justify-content:space-between;gap:12px}.manual-panel button,.manual-panel input,.manual-panel select{font:inherit;padding:9px;border:1px solid #a6b79d;border-radius:7px}.manual-panel textarea{width:100%;min-height:80px}.manual-entry{display:flex;flex-wrap:wrap;gap:7px;border-top:1px solid #d8dfd4;padding:12px 0;align-items:center}.manual-entry strong{min-width:140px}.manual-entry button[aria-pressed=true]{background:#334b2a;color:white}
+@media(max-width:700px){.manual-panel{margin:8px!important;padding:14px!important}.manual-entry strong{width:100%}}
+.hud{border-radius:18px;gap:6px;padding:7px;max-width:calc(100vw - 20px);transition:border-color .25s,box-shadow .25s,opacity .25s}
+.hud>button,.hud-group button{width:42px;height:42px;font-size:18px;flex-shrink:0}
+.hud .pos{padding:0 4px;white-space:nowrap}
+.hud-more{position:absolute;bottom:calc(100% + 10px);right:0;width:300px;max-width:calc(100vw - 24px);padding:8px;border:1px solid #4a5059;border-radius:14px;background:#191d24;box-shadow:0 10px 35px #0008;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hud-more[hidden]{display:none!important}
+.hud .hud-more button{width:auto;height:auto;min-height:44px;border-radius:9px;padding:9px;font-size:13px;text-align:left}
+.hud button:disabled{opacity:.38;cursor:default}
+.hud button:focus-visible{outline:2px solid #e4f0ab;outline-offset:2px}
+/* 42px is two short of the 44px touch floor, and this is the bar a teacher
+   thumbs mid-lecture, so on a touchscreen it goes the last two pixels.
+   Only above 380px: nine buttons at 44px need 444px of pill and a 375px phone
+   has nowhere to put it, which is what the rule below is already solving. A
+   cursor does not need 44px, so a laptop keeps the tighter bar. */
+@media(pointer:coarse) and (min-width:381px){.hud>button,.hud-group button{width:44px;height:44px}}
+@media(max-width:380px){.hud{gap:2px}.hud>button,.hud-group button{width:36px;height:36px}.hud .sep{margin:0}.hud .pos{font-size:12px}}
+
+/* Teacher window: a row you answer for, and a row that answers itself. */
+.manual-entry.on-phone{opacity:.9;background:#f3f6ef}
+.source-tag{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#6a7a5e;border:1px solid #cfdcc3;border-radius:99px;padding:1px 7px;margin-left:8px}
+.roster-acts{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.roster-act{font-size:12px;padding:5px 9px!important}
+.manual-entry.on-phone .answer-status{color:#4a5c3d}
+
+/* Composition foundations. Opt-in, independent of theme; existing decks
+   retain their own layout until the author chooses a composition. */
+.slide[data-composition] .pad { position:relative; z-index:1; padding:86px 88px; align-items:stretch; text-align:left; }
+.slide[data-composition] > .theme-art { display:none; }
+.slide[data-composition] .pad > .accent-bar { display:none; }
+.slide[data-composition] :is(h1,.statement,.q) { font-size:var(--composition-display); line-height:1.04; letter-spacing:-.035em; max-width:none; font-style:normal; text-wrap:balance; }
+.slide[data-composition] :is(.sub,.statement-credit,.attrib) { font-size:var(--composition-column-heading,27px); line-height:1.35; letter-spacing:0; text-transform:none; max-width:800px; margin-top:30px; }
+.slide[data-composition] .q { border:0; padding:0; }
+.slide[data-composition] .q::before { display:none; }
+/* Only the size is a composition decision; where it sits is the region's.
+   This used to set top:26 and right:40 of its own, which is why 50 of the 405
+   logo-bearing slides sat 2px higher and 4px further in than the other 355. */
+.slide[data-composition] .slide-logo { bottom:auto; max-height:38px; }
+/* The shape sits in its own right-hand area, never behind the headline. */
+.slide[data-composition='poster']::after { content:''; position:absolute; width:390px; height:390px; right:-90px; top:165px; border:68px solid var(--s-accent); border-radius:50%; opacity:.85; pointer-events:none; }
+.slide[data-composition='poster'] .pad { justify-content:flex-end; padding:100px 380px 110px 88px; }
+.slide[data-composition='poster'] :is(h1,.statement,.q) { max-width:810px; }
+.slide[data-composition='poster'] :is(.sub,.statement-credit,.attrib) { max-width:710px; }
+/* Lower-left type and a long rule create a quiet editorial opener. */
+.slide[data-composition='editorial'] .pad { justify-content:flex-end; padding:96px 160px 110px 110px; }
+.slide[data-composition='editorial'] .pad::before { content:''; position:absolute; left:110px; right:110px; top:100px; height:3px; background:var(--s-accent); }
+.slide[data-composition='editorial'] :is(h1,.statement,.q) { max-width:1000px; }
+.slide[data-composition='editorial'] :is(.sub,.statement-credit,.attrib) { max-width:880px; }
+/* A frame is a boundary, not a container for more text. */
+.slide[data-composition='frame']::after { content:''; position:absolute; inset:62px; border:2px solid var(--s-rule); pointer-events:none; }
+.slide[data-composition='frame'] .pad { justify-content:center; align-items:center; text-align:center; padding:110px 150px; }
+.slide[data-composition='frame'] :is(h1,.statement,.q) { max-width:970px; }
+.slide[data-composition='frame'] :is(.sub,.statement-credit,.attrib) { max-width:800px; }
+/* Two independent text areas: the title gives the subject, the supporting
+   copy gives the context. No forced image placeholder. */
+.slide[data-composition='sidecar'] .pad { display:grid; grid-template-columns:1.25fr 1fr; gap:54px; align-content:center; align-items:center; padding:100px 88px; }
+.slide[data-composition='sidecar'] h1 { font-size:calc(var(--composition-display) * .82); }
+.slide[data-composition='sidecar'] .sub { border-left:3px solid var(--s-accent); padding:22px 0 22px 38px; margin:0; font-size:var(--composition-list,30px); }
+.slide[data-composition='sidecar'] .slide-date { grid-column:2; }
+/* Content compositions keep the original list and step markers. */
+.slide[data-composition='rail'] .pad { display:grid; grid-template-columns:340px 1fr; gap:60px; align-items:start; align-content:center; }
+.slide[data-composition='rail'] h2 { font-size:var(--composition-rail-heading,54px); line-height:1.06; letter-spacing:-.025em; margin:0; padding-top:20px; text-align:left; }
+.slide[data-composition='rail'] ul { gap:0; margin:0; padding:0; width:auto; }
+.slide[data-composition='rail'] li { list-style:none; font-size:var(--composition-list,30px); line-height:1.25; padding:22px 0; border-top:1px solid var(--s-rule); }
+.slide[data-composition='rail'][data-composition-density='dense'] li { font-size:var(--composition-compact,26px); padding:15px 0; }
+.slide[data-composition='columns'] .pad { justify-content:center; }
+.slide[data-composition='columns'] h2 { font-size:var(--composition-columns-heading,56px); margin:0 0 48px; text-align:left; max-width:1050px; }
+.slide[data-composition='columns'] ul { display:grid; grid-template-columns:repeat(var(--composition-columns),minmax(0,1fr)); gap:30px; margin:0; padding:0; align-items:start; }
+.slide[data-composition='columns'] li { list-style:none; width:auto; font-size:var(--composition-list,30px); line-height:1.3; padding:26px 0 0; border-top:5px solid var(--s-accent); }
+.slide[data-composition='columns'][data-composition-density='dense'] li { font-size:var(--composition-compact,26px); padding-top:16px; }
+@media print { .slide[data-composition]::after { opacity:.35; } }
+
+/* Structured compositions. Shared semantic fields, not campaign markup. */
+.slide.cp { color:var(--s-fg); --cp-color:var(--s-accent); --cp-deep:var(--s-accent); }
+
+.slide.cp .pad { padding:32px 52px 24px; display:flex; flex-direction:column; gap:0; height:100%; position:relative; z-index:1; align-items:stretch; justify-content:flex-start; text-align:left; }
+
+.cp h1,.cp h2,.cp h3,.cp p,.cp blockquote { margin:0; font-family:var(--s-font); color:inherit; }
+/* 56px, because that is how tall the thing in it is.
+   The band was 40px while the campaign lockup beside it is 56, so the mark
+   hung 16px below its own header and into the body — which never showed,
+   because the body happened to pad its top by 32px and hold content clear.
+   The band was not containing its contents; the body was covering for it.
+   Fixing that is free: the 16px moves out of every body's top padding and
+   into the header, so every content box stays exactly where it was, and the
+   body becomes 576px — which is 16 rows of 36 exactly, see §14b. */
+.cp-header { position:relative; display:flex; justify-content:space-between; align-items:center; height:56px; flex:none; font-size:var(--composition-meta,20px); font-weight:600; }
+.cp-beat { font-weight:400; }
+/* The context line sits in the middle of the slide, not in the middle of
+   whatever room the other two items left it.
+
+   space-between put it hard against the corner reserve, so it drifted with
+   the identity's length and sat about two thirds across — close enough to
+   centre to look like a mistake rather than a choice. Absolute at left:50%
+   resolves against the header's PADDING box, which still spans the full
+   52px-to-52px content width even when has-corner-mark pads 330px off the
+   right, so this lands on the slide's true centre whether or not a mark is
+   in the corner.
+
+   The cap is the narrower of the two gaps it has to clear: the mark starts
+   330px from the right, so the centred line has 288px either side of centre
+   before it runs under it. 560 leaves a little air. */
+.cp-header .cp-beat { position:absolute; left:50%; transform:translateX(-50%); max-width:560px; text-align:center; }
+/* RE-FIT: the body starts on row 2, and the heading occupies whole rows.
+   A heading whose height varies with its wording cannot put the block after
+   it on a line — so it is given a two-row box instead of a margin, and
+   everything below it lands by construction rather than by arithmetic. */
+.cp-body { flex:1; min-height:0; position:relative; padding:36px 0 0; }
+/* min-height only, no margin. Two rows is the heading's box and the slack
+   inside it is the gap — adding a margin on top spent 108px where the old
+   layout spent 41, and a rules slide overflowed in chrome-regions mode. */
+/* .slide-qualified so it outranks the per-layout h2 rules in app.css —
+   .slide.layout-journey h2 sets a 10px bottom margin, which put every rule
+   row on that slide 10px below its line, and comparison the same. Three
+   classes beat two classes and an element. */
+.slide.cp .cp-heading { min-height:72px; margin:0; }
+.cp .cp-heading { font-size:var(--composition-heading,52px); line-height:1.03; letter-spacing:-.035em; font-weight:700; max-width:1120px; text-wrap:balance; }
+.cp .cp-prompt { font-size:var(--composition-body,24px); font-weight:500; }
+.cp .cp-source { font-size:var(--composition-caption,18px); line-height:1.25; margin-top:14px; max-width:1130px; }
+/* Poster with an authored illustration. */
+
+/* RE-FIT onto the 16x36 body, so the row lines fall on the blocks.
+   align-items:center had to go: a centred item's offset is a function of its
+   own height, so two items of different heights can never both sit on a line.
+   Start-aligned, and each item placed explicitly — which is the anchor
+   question from §14b answered for this one composition.
+   art rows 2-15 · eyebrow row 5 · heading rows 6-10 · tagline row 12 */
+.cp-title .cp-body { display:grid; grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); align-items:start; gap:12px; padding:0; }
+.cp-title .cp-title-copy { margin-top:144px; }
+.cp-title .cp-art { margin-top:36px; height:504px; }
+/* .slide-qualified, because the shared eyebrow and tagline rules further down
+   this file carry the same specificity and would otherwise win on order. */
+.slide.cp-title .cp-eyebrow { margin-bottom:15px; }
+.slide.cp-title .cp-tagline { margin-top:33px; }
+
+/* A cover with no picture is one column, not one column and a hole. */
+.cp-title-unillustrated .cp-body { grid-template-columns: minmax(0,1fr); }
+.cp-title-unillustrated .cp-title-copy { max-width:1000px; }
+.cp-title-unillustrated h1 { max-width:none; }
+.cp-title h1 { font-size:var(--composition-display); font-weight:700; line-height:.98; letter-spacing:-.052em; text-wrap:balance; max-width:650px; }
+.cp .cp-tagline { font-size:var(--composition-supporting,28px); margin-top:32px; }
+.cp-art { width:100%; height:490px; position:relative; }
+.cp-prop { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+/* A human voice against a quiet dark ground. */
+
+/* Start, not centre: a centred stack's top is a function of its own height. */
+.cp-quote .cp-body { display:flex; flex-direction:column; justify-content:flex-start; padding:72px 60px 0 150px; }
+.cp .cp-quote-mark { position:absolute; top:24px; left:0; font-size:var(--composition-hero-mark,230px); color:var(--cp-color); line-height:1; }
+.cp .cp-scenario { border:0; padding:0; font-size:var(--cp-voice-size,62px); line-height:1.1; font-weight:600; letter-spacing:-.025em; max-width:920px; }
+.cp-quote .cp-prompt { margin-top:38px; color:var(--cp-color); }
+/* Two by two ballot: the wall and the live poll use the same letters. */
+.cp-cards .cp-body { display:flex; flex-direction:column; gap:36px; padding-top:36px; }
+.slide.cp-cards .cp-heading { text-align:left; margin:0; font-size:var(--composition-ballot-heading,48px); max-width:1070px; }
+.cp-choices { display:grid; grid-template-columns:1fr 1fr; gap:0 38px; flex:1; }
+.cp-choice { display:flex; gap:22px; align-items:center; padding:20px 0; border-top:2px solid var(--s-fg); }
+.cp-letter { display:flex; align-items:center; justify-content:center; width:76px; height:76px; flex:none; background:var(--s-card); font-size:var(--composition-badge,50px); font-weight:700; clip-path:polygon(0 0,78% 0,100% 22%,100% 100%,0 100%); }
+.cp-choice h3 { font-size:var(--composition-item-heading,29px); line-height:1.06; font-weight:700; letter-spacing:-.02em; }
+.cp-choice p { font-size:var(--composition-body,24px); line-height:1.15; margin-top:9px; }
+/* A single question needs room, and a sharp change of pace. */
+
+.cp-statement .cp-body { display:flex; flex-direction:column; justify-content:flex-start; gap:36px; }
+.cp-discussion { display:grid; grid-template-columns:140px 1fr; align-items:start; gap:24px; }
+.cp-pair-mark { font-size:var(--composition-symbol,130px); line-height:.85; font-weight:700; }
+.cp .cp-question { font-size:var(--cp-question-size,68px); letter-spacing:-.04em; line-height:1.06; text-align:left; font-weight:700; max-width:980px; }
+.cp-statement .cp-prompt { margin-left:164px; }
+/* Reveals have shapes that suit their argument, rather than one shared template. */
+.cp-risk-map { display:grid; grid-template-columns:1fr; gap:38px; margin-top:30px; }
+.cp-risks { display:grid; grid-template-columns:1fr 1fr; gap:22px 30px; }
+.cp-risk { border-top:2px solid var(--s-fg); padding-top:12px; }
+.cp-risk-number { color:var(--cp-deep); font-size:var(--composition-body,24px); font-weight:700; }
+.cp-risk h3 { font-size:var(--composition-item-heading,29px); line-height:1.08; margin:9px 0; }
+.cp-risk p { font-size:var(--composition-body,24px); line-height:1.17; }
+.cp-comparison { margin-top:28px; }
+.cp-compare-head,.cp-compare-row { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+.cp-compare-head h3 { font-size:var(--composition-column-heading,27px); padding:16px 22px; background:var(--s-card); }
+.cp-compare-head h3:last-child { background:var(--s-fg); color:var(--s-bg); }
+/* Same two-row band as a credit: the table's fifth row has to be as
+   predictable as its first. */
+.cp-compare-row p { font-size:var(--composition-row,25px); line-height:1.13; padding:0 22px; height:72px; display:flex; align-items:center; border-bottom:1px solid var(--s-rule); box-sizing:border-box; }
+.cp-compare-row p:nth-child(2) { border-left:1px solid var(--s-rule); }
+.cp-credits { margin-top:0; border-top:5px solid var(--cp-color); }
+/* Two rows each, so the sixth credit lands on a line as reliably as the
+   first. At 55px they were 1.53 rows and drifted 17px every other row. */
+.cp-credit { display:grid; grid-template-columns:240px 180px 1fr; gap:20px; align-items:center; border-bottom:1px solid var(--s-rule); height:72px; padding:0; box-sizing:border-box; }
+.cp-credit span { font-size:var(--composition-body,24px); }.cp-credit strong { font-size:var(--composition-row,25px); color:var(--cp-deep); }.cp-credit p { font-size:var(--composition-body,24px); line-height:1.13; }
+.cp-lanes { display:grid; grid-template-columns:1fr 1fr; gap:36px; margin-top:0; }
+.cp-lane { border-top:12px solid var(--cp-color); padding-top:18px; }
+.cp-lane:nth-child(2) { border-color:var(--s-fg); }
+.cp-lane h3 { font-size:var(--composition-lane-heading,32px); margin-bottom:14px; }
+.cp-lane-item { border-top:1px solid var(--s-rule); padding:17px 0; }
+.cp-lane-item strong { font-size:var(--composition-supporting,28px); line-height:1.13; display:block; }.cp-lane-item p { font-size:var(--composition-detail,23px); margin-top:6px; }
+/* Large numbered rules, then a personal commitment. */
+
+.cp-rules { margin-top:25px; }
+.cp-rule { display:grid; grid-template-columns:105px 1fr; gap:25px; padding:19px 0; border-top:1px solid var(--s-rule); align-items:center; }
+.cp-rule-number { font-size:var(--composition-index,66px); line-height:1; font-weight:700; color:var(--cp-color); letter-spacing:-.05em; }
+.cp-rule h3 { font-size:var(--composition-rule-heading,33px); line-height:1.07; }.cp-rule p { font-size:var(--composition-row,25px); line-height:1.17; margin-top:8px; max-width:960px; }
+
+.cp-keyfact .cp-body { display:grid; grid-template-columns:270px 1fr; gap:36px; align-items:start; }
+.cp-action-number { font-size:var(--composition-hero-mark,230px); letter-spacing:-.085em; line-height:1; font-weight:700; align-self:start; padding-top:65px; }
+.cp-action h2 { font-size:var(--composition-action-heading,60px); line-height:1.03; letter-spacing:-.04em; font-weight:700; }
+.cp-action p { font-size:var(--composition-supporting,28px); line-height:1.2; margin-top:25px; }
+.cp-write-line { font-size:var(--composition-context,22px); margin-top:28px; padding-bottom:30px; border-bottom:3px solid var(--s-fg); }
+
+/* The pad keeps its own 24px foot. This used to be 62px, holding the closing
+   rule clear of a page number that floated above it; the number sits on the
+   rule now, so the reservation went with it. */
+/* The closing rule, and the deck's own page number brought onto it. The
+   number stays the platform's — absolutely positioned as everywhere else —
+   and is only nudged to share this line, so there is one counter, not two. */
+.cp-footer { display:flex; justify-content:space-between; align-items:center; flex:none;
+  height:32px; margin-top:auto; border-top:1px solid var(--cp-rule,var(--s-rule)); font-size:18px; }
+/* Matched to the strand name in the header opposite: same 20px, same 700.
+   The two are the deck's identity at either end of the slide, so they are
+   set alike; the page number stays smaller because it is a position, not a
+   name. */
+.cp-footer-note { font-size:20px; font-weight:700; color:var(--s-fg); }
+/* In the footer it is a flex child, so it needs no coordinates at all. */
+.cp-footer .pagenum { position:static; font-size:18px; letter-spacing:0; color:var(--s-dim); }
+/* A composition footer with no note still pushes the number to the right. */
+.cp-footer .pagenum:only-child { margin-left:auto; }
+/* Only when a mark is actually in that corner — see has-corner-mark in
+   renderSlide. Otherwise the header keeps the full width. */
+.slide.cp.has-corner-mark .cp-header { padding-right:330px; }
+/* The cover's eyebrow: a label for the question, sized and spaced apart
+   rather than coloured apart, because every campaign ground fails light text. */
+.cp-title .cp-eyebrow, .cp-quote .cp-eyebrow, .cp-statement .cp-eyebrow,
+.cp-keyfact .cp-eyebrow { font-size:20px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:26px; opacity:.85; }
+/* The discussion slide centres its question, so the label centres with it. */
+.cp-statement .cp-eyebrow { margin-bottom:20px; }
+/* Closing the numbered list rather than labelling it from the corner. Needs
+   to outrank the `.cp p { margin:0 }` reset above, or it sits tight under the
+   last rule and reads as part of it. */
+.cp .cp-closing-line { margin-top:44px; font-size:var(--composition-context,20px);
+  color:var(--s-accent); font-weight:600; }
+/* The scenario's ground is dark and its quote mark is already at the top
+   left, so the eyebrow clears it rather than sitting under it. */
+.cp-quote .cp-eyebrow { margin-bottom:22px; }
+.slide.cp .cp-beat { font-size:var(--composition-context,22px); line-height:1.2; }
+.slide.cp .cp-question { font-size:var(--cp-question-size,68px); }
+.slide.cp .cp-scenario { font-size:var(--cp-voice-size,62px); }
+.slide.cp .cp-scenario::before { display:none; }
+.cp-lane-position { font-size:var(--composition-caption,18px); opacity:.8; }
+.cp .cp-compare-row.labelled,.cp .cp-compare-head.labelled { grid-template-columns:.65fr 1fr 1fr; }
+.cp .cp-compare-row.labelled p:first-child { font-weight:700; }
+.slide.cp .slide-logo { top:30px; bottom:auto; right:52px; max-height:42px; }
+.slide.cp .pagenum { bottom:22px; }
+.slide.cp .cp-choice-copy { min-width:0; }
+.slide.cp :is(.cp-rule,.cp-credit,.cp-risk,.cp-choice) [data-content-key] { overflow-wrap:break-word; }
+
+/* Opt-in region furniture shares the composition's flow. Each occupied slot
+   owns its contents; there are no mark-sized padding reservations. */
+.slide.cp.chrome-regions :is(.cp-header,.cp-footer) {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;
+  height:auto; min-height:0; padding:8px 0; align-items:center;
+}
+.slide.cp.chrome-regions .region-empty { display:none; }
+.slide.cp.chrome-regions .chrome-slot { min-width:0; display:flex; align-items:center; }
+.slide.cp.chrome-regions [data-region$='center'] { justify-content:center; text-align:center; }
+.slide.cp.chrome-regions [data-region$='right'] { justify-content:flex-end; text-align:right; }
+.slide.cp.chrome-regions .chrome-slot :is(.slide-logo,.pagenum,.cp-beat,.cp-footer-note) {
+  position:static; inset:auto; transform:none; margin:0; min-width:0; max-width:100%;
+}
+.slide.cp.chrome-regions .chrome-slot .slide-logo { max-height:72px; flex-shrink:1; }
+.slide.cp.chrome-regions .chrome-slot .slide-logo img { display:block; width:100%; height:100%; object-fit:contain; }
+.slide.cp.chrome-regions .chrome-slot :is(.cp-beat,.cp-footer-note) { overflow-wrap:anywhere; font-size:var(--composition-meta,20px); line-height:1.2; }
+.slide.cp.chrome-regions .chrome-slot .pagenum { font-size:18px; white-space:nowrap; }
+.slide.cp.chrome-regions .cp-header::before { content:none; }
+.slide.cp.chrome-regions .chrome-identity { font-weight:700; padding-left:32px; background:var(--a27-icon,none) left center / 22px 22px no-repeat; overflow-wrap:anywhere; }
+
+/* ── THE SLOT TABLE ─────────────────────────────────────────────────────────
+ *
+ * Every campaign composition is two or three top-level slots, and each slot is
+ * a whole number of 36px rows. That is the whole model: a slot is what a
+ * person places, a row is what a slot boundary lands on.
+ *
+ * Declared here rather than derived, because a slot's height must not depend
+ * on its wording — that was the fault in every earlier attempt. A heading
+ * that grows by a line used to push everything below it off the lattice; a
+ * heading in a two-row box does not.
+ *
+ *   poster-art   copy 11 · art 14                 (two columns)
+ *   voice        label 1 · voice 6
+ *   ballot       heading 2 · choices 11 · prompt 1
+ *   prompt       label 1 · discussion 6
+ *   reveal-map   heading 2 · map 8 · source 1
+ *   rules        heading 2 · rules 12 · closing 1
+ *   commitment   mark 9 · action 11               (two columns)
+ *   comparison   heading 2 · table 12
+ *   credits      heading 2 · credits 12 · source 1
+ *   lanes        heading 2 · lanes 11 · source 1
+ *
+ * Repeated items inside a slot are whole rows too, so the sixth is as
+ * predictable as the first: a choice is 5 rows, a rule 4, a credit 2.
+ *
+ * Scoped to :not(.chrome-regions). Named regions reassemble the chrome into
+ * slots, which changes the body's height — so the 16x36 lattice, which is
+ * measured against the standard 576px body, does not hold there. Applying it
+ * anyway overflowed the ballot slide in regions mode. Regions needs its own
+ * lattice; it does not get to borrow this one.
+ *
+ * Measured, not guessed — tools/row-audit.mjs reports every block against
+ * this lattice, and tools/slot-table.mjs prints the table above from the
+ * live slides.
+ */
+.slide.cp:not(.chrome-regions) :is(.cp-eyebrow,.cp-prompt,.cp-source,.cp-closing-line) { min-height:36px; }
+.slide.cp:not(.chrome-regions) .cp-eyebrow { margin-bottom:0; }
+
+/* voice — a label and a human sentence. */
+.slide.cp-quote:not(.chrome-regions) .q { min-height:216px; margin:0; }
+
+/* prompt — a label and one question with its arrow. */
+.slide.cp-statement:not(.chrome-regions) .cp-discussion { min-height:216px; margin:0; }
+.slide.cp-statement:not(.chrome-regions) .cp-prompt { margin-top:0; }
+
+/* ballot — four choices as two rows of two, five rows each. */
+.slide.cp-cards:not(.chrome-regions) .cp-choices { min-height:396px; gap:36px 38px; }
+.slide.cp-cards:not(.chrome-regions) .cp-choice { height:180px; padding:0; box-sizing:border-box; }
+
+/* rules — three numbered rows, four rows each. */
+.slide.cp-journey:not(.chrome-regions) .cp-rules { margin-top:0; }
+.slide.cp-journey:not(.chrome-regions) .cp-rule { height:144px; padding:0; box-sizing:border-box; }
+.slide.cp-journey:not(.chrome-regions) .cp-closing-line { margin-top:0; }
+
+/* reveal-map — a heading, the map, a source line. */
+.slide.cp-iceberg:not(.chrome-regions) .cp-risk-map { min-height:288px; margin-top:0; gap:36px; }
+
+/* comparison — a heading and a twelve-row table. */
+.slide.cp-compare:not(.chrome-regions) .cp-comparison { min-height:432px; }
+
+/* credits — six two-row rows under a heading. */
+.slide.cp-sourcecheck:not(.chrome-regions) .cp-credits { min-height:432px; }
+
+/* lanes — two eleven-row columns. */
+.slide.cp-spectrum:not(.chrome-regions) .cp-lanes { min-height:396px; }
+
+/* commitment — the rising mark beside the action, nine rows and eleven. */
+.slide.cp-keyfact:not(.chrome-regions) .cp-action-number { min-height:324px; padding-top:0; }
+.slide.cp-keyfact:not(.chrome-regions) .cp-action { min-height:396px; }
+/* The slot was right and its contents were not: three 25px margins inside it
+   put the label, the sentence and the write-line each a third of a row off.
+   Whole-row boxes instead of margins, same as the heading. */
+.slide.cp-keyfact:not(.chrome-regions) .cp-action :is(.cp-eyebrow,p,.cp-write-line) { margin-top:0; }
+.slide.cp-keyfact:not(.chrome-regions) .cp-action :is(h1,h2,.cp-heading) { min-height:144px; margin:0; }
+.slide.cp-keyfact:not(.chrome-regions) .cp-action p { min-height:72px; }
+.slide.cp-keyfact:not(.chrome-regions) .cp-write-line { min-height:72px; }
+
+/* A decorative rule is decoration: it draws, it does not take part in the
+   lattice. Left as a border it added 5px to the credits box and 12px to a
+   lane, which put every row below it that far off a line — the credits were
+   out by exactly their own border. As a pseudo-element the rule is still
+   there and the rows land. */
+.slide.cp-sourcecheck:not(.chrome-regions) .cp-credits { border-top:0; position:relative; }
+.slide.cp-sourcecheck:not(.chrome-regions) .cp-credits::before { content:''; position:absolute; left:0; right:0; top:-5px; height:5px; background:var(--cp-color); }
+.slide.cp-spectrum:not(.chrome-regions) .cp-lane { border-top:0; padding-top:0; position:relative; }
+.slide.cp-spectrum:not(.chrome-regions) .cp-lane::before { content:''; position:absolute; left:0; right:0; top:-12px; height:12px; background:var(--cp-color); }
+
+/* comparison — the 28px lead-in becomes a row, and the head a two-row band
+   like every other row of the table. */
+.slide.cp-compare:not(.chrome-regions) .cp-comparison { margin-top:0; }
+.slide.cp-compare:not(.chrome-regions) .cp-compare-head h3 { height:72px; padding:0 22px; display:flex; align-items:center; box-sizing:border-box; }
