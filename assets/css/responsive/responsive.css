@@ -108,9 +108,14 @@
   border: 0;
 }
 
-.theme-link:hover {
-  border-color: var(--green-600);
-  color: var(--gray-900);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
+.theme-link:hover,
+.theme-link:focus-visible {
+  color: var(--a27-ink, #231F20);
+  box-shadow: none;
+  transform: none;
+}
+
+.theme-link:hover .theme-link__label,
+.theme-link:focus-visible .theme-link__label {
+  color: var(--a27-ink, #231F20);
 }

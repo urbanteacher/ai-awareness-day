@@ -35,10 +35,6 @@
     line-height: 1.1;
   }
 
-  .hero-title-block .hero-date__title {
-    font-size: clamp(2.76rem, 11.04vw, 4.14rem);
-  }
-
   .hero-title-block .hero-slogan,
   .hero-title-block .hero-subtitle,
   .hero-title-block .section-desc {
@@ -66,10 +62,6 @@
 
   .hero-title-block .hero-date {
     font-size: clamp(1.35rem, 6vw, 2rem);
-  }
-
-  .hero-title-block .hero-date__title {
-    font-size: clamp(2.48rem, 11.04vw, 3.68rem);
   }
 
   .section-desc {

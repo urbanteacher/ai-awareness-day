@@ -165,18 +165,12 @@ $initial_show         = $initial_show_mobile;
                 <a href="#contact"
                     class="partner-card partner-card--dummy fade-up stagger-<?php echo $dummy_index + 1; ?>"
                     data-partner-index="<?php echo $dummy_index; ?>">
-                    <div class="partner-logo">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                            style="color: var(--gray-400);">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                            <line x1="12" y1="8" x2="12" y2="16" />
-                            <line x1="8" y1="12" x2="16" y2="12" />
-                        </svg>
+                    <div class="partner-logo" aria-hidden="true">
+                        <span class="partner-card__mark">↗</span>
                     </div>
                     <h3><?php esc_html_e('Join the campaign', 'ai-awareness-day'); ?></h3>
                     <p class="partner-stats">
-                        <?php esc_html_e('Complete form to join movement', 'ai-awareness-day'); ?>
+                        <?php esc_html_e('Complete the form to join the movement.', 'ai-awareness-day'); ?>
                     </p>
                 </a>
             </div>

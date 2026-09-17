@@ -2135,7 +2135,7 @@ function aiad_survey_analytics_page(): void {
 				array( 'label' => __( 'Total responses', 'ai-awareness-day' ), 'value' => $total, 'color' => '#0070c0' ),
 				array( 'label' => __( 'Participants', 'ai-awareness-day' ), 'value' => $participated_yes, 'color' => '#059669' ),
 				array( 'label' => __( 'Non-participants', 'ai-awareness-day' ), 'value' => $participated_no, 'color' => '#dc2626' ),
-				array( 'label' => __( 'Schools named', 'ai-awareness-day' ), 'value' => count( array_filter( array_map( fn( $pid ) => get_post_meta( (int) $pid, '_survey_school_name', true ), $post_ids ) ) ), 'color' => '#7c3aed' ),
+				array( 'label' => __( 'Schools named', 'ai-awareness-day' ), 'value' => count( array_filter( array_map( fn( $pid ) => get_post_meta( (int) $pid, '_survey_school_name', true ), $post_ids ) ) ), 'color' => '#6441B8' ),
 			);
 			foreach ( $stats as $s ) :
 				?>

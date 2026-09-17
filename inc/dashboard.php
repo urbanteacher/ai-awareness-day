@@ -775,7 +775,7 @@ function aiad_dashboard_widget_callback(): void {
     $chase_colors = array(
         'not_contacted' => '#b45309',
         'contacted'     => '#2563eb',
-        'following_up'  => '#7c3aed',
+        'following_up'  => '#6441B8',
         'done'          => '#16a34a',
     );
     $chase_total = array_sum( $chase );

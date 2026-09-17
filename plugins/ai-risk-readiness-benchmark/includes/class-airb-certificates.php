@@ -401,11 +401,12 @@ class AIRB_Certificates {
 	 *
 	 * @param object $certificate Certificate row.
 	 * @param string $notify_email Recipient email.
+	 * @return bool Whether wp_mail reported success.
 	 */
-	public static function notify_approved( object $certificate, string $notify_email ): void {
+	public static function notify_approved( object $certificate, string $notify_email ): bool {
 		$notify_email = sanitize_email( $notify_email );
 		if ( ! $notify_email ) {
-			return;
+			return false;
 		}
 
 		$verify_url = class_exists( 'AIRB_Defaults' )
@@ -421,6 +422,6 @@ class AIRB_Certificates {
 			$verify_url ?: __( 'Return to your benchmark results and open Progress & certificate.', 'ai-risk-benchmark' )
 		);
 
-		wp_mail( $notify_email, $subject, $body );
+		return (bool) wp_mail( $notify_email, $subject, $body );
 	}
 }

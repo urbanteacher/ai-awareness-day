@@ -1,21 +1,7 @@
-/**
- * Font Fallbacks
- * Provides @font-face declarations for cases where theme.json font loading
- * might fail or is not supported in certain contexts.
- */
-
-@font-face {
-    font-family: 'Intel Clear';
-    src: url('https://fonts.cdnfonts.com/s/18413/IntelClear-Light.woff') format('woff');
-    font-weight: 300 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'DM Sans';
-    src: url('https://fonts.gstatic.com/s/dmsans/v11/rP2Fp2K8z96vMv6_vg7m.woff2') format('woff2');
-    font-weight: 400 700;
-    font-style: normal;
-    font-display: swap;
-}
+/* Uncut Sans by Kasper Nordkvist. SIL OFL 1.1; license bundled beside fonts. */
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-RegularItalic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-SemiboldItalic.woff2') format('woff2'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'AIAD Sans'; src: url('../../fonts/aiad27/UncutSans-BoldItalic.woff2') format('woff2'); font-weight: 700 900; font-style: italic; font-display: swap; }

@@ -122,7 +122,7 @@
 }
 
 #survey-cta {
-  background: #000;
+  background: #231F20;
   color: var(--white);
   padding-top: clamp(2rem, 4vw, 3rem);
   padding-bottom: clamp(2rem, 4vw, 3rem);
@@ -226,7 +226,7 @@
 }
 
 #survey-cta + #campaign {
-  padding-top: clamp(0.25rem, 0.75vw, 0.5rem);
+  padding-top: var(--section-padding-y);
 }
 
 @media screen and (min-width: 900px) {
@@ -285,7 +285,7 @@
   border-radius: 0;
   overflow: hidden;
   border: 1px solid var(--gray-200);
-  background: #000000;
+  background: #231F20;
 }
 
 .campaign-embed__wrapper iframe {

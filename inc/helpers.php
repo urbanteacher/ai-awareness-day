@@ -565,13 +565,13 @@ function aiad_get_customizer_defaults(): array {
     }
     $defaults = array(
         'aiad_hero_logo'         => '',
-        'aiad_hero_slogan'        => __( 'Know it, Question it, Use it Wisely', 'ai-awareness-day' ),
-        'aiad_hero_title'         => __( 'AI Awareness Day', 'ai-awareness-day' ),
+        'aiad_hero_slogan'        => __( 'Keep Humans in the Loop', 'ai-awareness-day' ),
+        'aiad_hero_title'         => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
         'aiad_event_date_ymd'     => '2027-06-04',
         'aiad_show_breadcrumbs'   => false,
-        'aiad_hero_subtitle'      => __( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
-        'aiad_campaign_title'     => __( 'What is AI Awareness Day?', 'ai-awareness-day' ),
+        'aiad_hero_subtitle'      => __( 'We are back for 2027. A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
+        'aiad_campaign_title'     => __( 'Your AI. Your choices.', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day is a nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
         'aiad_campaign_text_2'    => __( 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.', 'ai-awareness-day' ),
         'aiad_campaign_linkedin_embed_src' => '',

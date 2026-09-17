@@ -163,19 +163,27 @@ class AIRB_Admin {
 			exit;
 		}
 
+		$certificate = AIRB_Certificates::get_by_submission( $submission_id );
+		$notify_email = sanitize_email( (string) ( $submission->email ?? '' ) );
+
+		// Send the approval email while still pending so a failed mail does not
+		// leave the certificate unlocked with no way to retry.
+		if ( $notify_email ) {
+			$mail_ok = $certificate ? AIRB_Certificates::notify_approved( $certificate, $notify_email ) : false;
+			if ( ! $mail_ok ) {
+				$redirect_args['airb_cert_notice'] = 'email_failed';
+				wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
+				exit;
+			}
+		}
+
 		if ( ! AIRB_Certificates::update_status( $submission_id, 'unlocked' ) ) {
 			$redirect_args['airb_cert_notice'] = 'approve_failed';
 			wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
 			exit;
 		}
 
-		$certificate = AIRB_Certificates::get_by_submission( $submission_id );
-		$notify_email = sanitize_email( (string) ( $submission->email ?? '' ) );
-		if ( $certificate && $notify_email ) {
-			AIRB_Certificates::notify_approved( $certificate, $notify_email );
-		}
-
-		$redirect_args['airb_cert_notice'] = 'approved';
+		$redirect_args['airb_cert_notice'] = $notify_email ? 'approved' : 'approved_no_email';
 		wp_safe_redirect( add_query_arg( $redirect_args, admin_url( 'admin.php' ) ) );
 		exit;
 	}

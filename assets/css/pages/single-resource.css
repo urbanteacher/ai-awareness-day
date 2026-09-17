@@ -75,17 +75,17 @@
   word-break: break-word;
 }
 
-/* Theme-specific title colours — dark enough for AA contrast */
+/* Theme-specific title colours — strand deep on cream for AA contrast */
 [data-theme="safe"]        .resource-activity-title,
-[data-theme="safe"]        .resource-section__title { color: #3b82f6 !important; } /* blue-500   */
+[data-theme="safe"]        .resource-section__title { color: var(--a27-safe-deep, #006A7D) !important; }
 [data-theme="smart"]       .resource-activity-title,
-[data-theme="smart"]       .resource-section__title { color: #f97316 !important; } /* orange-500 */
+[data-theme="smart"]       .resource-section__title { color: var(--a27-smart-deep, #A7350B) !important; }
 [data-theme="creative"]    .resource-activity-title,
-[data-theme="creative"]    .resource-section__title { color: #8b5cf6 !important; } /* violet-500 */
+[data-theme="creative"]    .resource-section__title { color: var(--a27-creative-deep, #6441B8) !important; }
 [data-theme="responsible"] .resource-activity-title,
-[data-theme="responsible"] .resource-section__title { color: #22c55e !important; } /* green-500  */
+[data-theme="responsible"] .resource-section__title { color: var(--a27-responsible-deep, #176E3B) !important; }
 [data-theme="future"]      .resource-activity-title,
-[data-theme="future"]      .resource-section__title { color: #ec4899 !important; } /* pink-500   */
+[data-theme="future"]      .resource-section__title { color: var(--a27-future-deep, #983488) !important; }
 
 .resource-activity-title-badge {
   display: inline-flex;
@@ -138,7 +138,7 @@
 
 .resource-list--resources a {
   overflow-wrap: anywhere;
-  color: var(--accent-blue, #2563eb);
+  color: var(--accent-blue, #00BEDD);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
@@ -146,7 +146,7 @@
 }
 
 .resource-list--resources a:hover {
-  color: var(--accent-blue-dark, #1d4ed8);
+  color: var(--accent-blue-dark, #00BEDD);
   text-decoration-thickness: 2px;
 }
 
@@ -389,8 +389,8 @@
   }
 
   .resource-instruction-ref {
-    background: var(--accent-purple-light, #f3e8ff);
-    color: var(--accent-purple-dark, #6b21a8);
+    background: var(--accent-purple-light, #EAE7DF);
+    color: var(--accent-purple-dark, #6441B8);
   }
 
   .resource-instruction-student {
@@ -893,8 +893,8 @@
   body {
     font-size: 12pt;
     line-height: 1.5;
-    color: #000;
-    background: #fff;
+    color: #231F20;
+    background: #F6F4ED;
   }
 
   .single-resource .section.pt-100 {
@@ -948,7 +948,7 @@
   gap: 1rem;
   padding: 0.6rem 1rem;
   background: var(--gray-900);
-  color: #fff;
+  color: #F6F4ED;
 }
 
 .resource-pptx-preview__label {
@@ -967,7 +967,7 @@
   font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 600;
-  color: #fff;
+  color: #F6F4ED;
   text-decoration: none;
   padding: 0.3rem 0.75rem;
   border: 1px solid var(--gray-600);
@@ -1002,7 +1002,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: #231F20;
 }
 
 /* Cover all WP oEmbed wrapper structures: bare iframe, wp-block-embed, wp-block-embed__wrapper */
@@ -1039,7 +1039,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000;
+  background: #231F20;
 }
 
 @media screen and (max-width: 767px) {

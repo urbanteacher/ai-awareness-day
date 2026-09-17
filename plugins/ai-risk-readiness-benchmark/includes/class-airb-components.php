@@ -616,13 +616,13 @@ class AIRB_Components {
      */
     public static function ramp_colors( string $ramp ): array {
         $map = [
-            'red'    => [ '#FCEBEB', '#A32D2D', '#E24B4A' ],
-            'amber'  => [ '#FAEEDA', '#854F0B', '#EF9F27' ],
-            'blue'   => [ '#E6F1FB', '#185FA5', '#378ADD' ],
-            'green'  => [ '#EAF3DE', '#3B6D11', '#639922' ],
-            'purple' => [ '#EEEDFE', '#534AB7', '#7F77DD' ],
-            'teal'   => [ '#E1F5EE', '#0F6E56', '#1D9E75' ],
-            'gray'   => [ '#F1EFE8', '#5F5E5A', '#888780' ],
+            'purple' => [ '#EAE7DF', '#6441B8', '#AC91FF' ],
+            'teal'   => [ '#EAE7DF', '#006A7D', '#00BEDD' ],
+            'gray'   => [ '#EAE7DF', '#54504E', '#C9C6BE' ],
+            'green'  => [ '#EAE7DF', '#176E3B', '#63DF93' ],
+            'blue'   => [ '#EAE7DF', '#006A7D', '#00BEDD' ],
+            'amber'  => [ '#EAE7DF', '#A7350B', '#FF7038' ],
+            'red'    => [ '#EAE7DF', '#983488', '#FA83EB' ],
         ];
         return $map[ $ramp ] ?? $map['gray'];
     }
@@ -631,9 +631,9 @@ class AIRB_Components {
      * Oversight zone color (used for gauge band label).
      */
     public static function oversight_zone_color( int $pct ): string {
-        if ( $pct >= 76 ) return '#3B6D11';
-        if ( $pct >= 51 ) return '#185FA5';
-        if ( $pct >= 26 ) return '#854F0B';
-        return '#A32D2D';
+        if ( $pct >= 76 ) return '#176E3B';
+        if ( $pct >= 51 ) return '#006A7D';
+        if ( $pct >= 26 ) return '#A7350B';
+        return '#983488';
     }
 }

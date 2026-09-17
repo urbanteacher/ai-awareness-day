@@ -26,16 +26,14 @@ get_header();
                     <div class="themes-links">
                         <?php foreach ( $theme_terms as $term ) :
                             $url = add_query_arg( 'principle', $term->slug, $featured_resources_url );
-                            // Map term slug to Customizer badge setting (normalize to lowercase)
-                            // Use same simple approach as display board images (which work reliably)
-                            $badge_slug = strtolower( $term->slug );
-                            $theme_badge_id = absint( get_theme_mod( 'aiad_badge_' . $badge_slug, 0 ) );
-                            $theme_badge_src = $theme_badge_id ? wp_get_attachment_image_url( $theme_badge_id, 'thumbnail' ) : '';
+                            $theme_badge_src = function_exists( 'aiad_theme_link_badge_src' )
+                                ? aiad_theme_link_badge_src( $term->slug )
+                                : '';
                             ?>
-                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link">
+                            <a href="<?php echo esc_url( $url ); ?>" class="theme-link theme-link--<?php echo esc_attr( strtolower( $term->slug ) ); ?>">
                                 <?php if ( $theme_badge_src ) : ?>
                                     <span class="theme-link__badge">
-                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" />
+                                        <img src="<?php echo esc_url( $theme_badge_src ); ?>" alt="" aria-hidden="true" class="theme-link__badge-img" width="48" height="48" />
                                     </span>
                                 <?php endif; ?>
                                 <span class="theme-link__label"><?php echo esc_html( $term->name ); ?></span>

@@ -259,6 +259,123 @@
         }
 
         // ============================================
+        // AiAd27 hero strands
+        // ============================================
+        function initHeroStrandFeature() {
+            var hero = document.querySelector('.hero-section[data-strand]');
+            var feature = document.querySelector('.hero-strand-feature');
+            if (!hero || !feature) return;
+
+            var strands = [
+                { slug: 'safe', name: 'Safe', summary: 'Would you tell an AI your secret?' },
+                { slug: 'smart', name: 'Smart', summary: 'What happens when AI acts for you?' },
+                { slug: 'creative', name: 'Creative', summary: 'Who really made it?' },
+                { slug: 'responsible', name: 'Responsible', summary: 'Should AI decide?' },
+                { slug: 'future', name: 'Future', summary: 'What skills must stay human?' },
+            ];
+            var word = feature.querySelector('.hero-strand-feature__word');
+            var summary = feature.querySelector('.hero-strand-feature__summary');
+            var controls = Array.prototype.slice.call(feature.querySelectorAll('[data-strand-target]'));
+            var currentIndex = 0;
+            var autoTimer = null;
+            var resumeTimer = null;
+            var AUTO_MS = 7000;
+            var RESUME_MS = 10000;
+            var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function setStrand(index, animate) {
+                var nextIndex = Math.max(0, Math.min(strands.length - 1, index));
+                if (nextIndex === currentIndex && hero.dataset.strand === strands[nextIndex].slug) return;
+                var strand = strands[nextIndex];
+                currentIndex = nextIndex;
+                hero.dataset.strand = strand.slug;
+                word.textContent = strand.name;
+                summary.textContent = strand.summary;
+                controls.forEach(function (control) {
+                    var active = control.dataset.strandTarget === strand.slug;
+                    control.classList.toggle('is-active', active);
+                    if (control.hasAttribute('aria-pressed')) {
+                        control.setAttribute('aria-pressed', active ? 'true' : 'false');
+                    }
+                    if (control.hasAttribute('aria-current') || control.tagName === 'A') {
+                        if (active) {
+                            control.setAttribute('aria-current', 'true');
+                        } else {
+                            control.removeAttribute('aria-current');
+                        }
+                    }
+                });
+                if (animate && !reducedMotion) {
+                    feature.classList.remove('is-flipping');
+                    void feature.offsetWidth;
+                    feature.classList.add('is-flipping');
+                }
+            }
+
+            function scrollToThemes() {
+                var target = document.getElementById('themes')
+                    || document.querySelector('.toolkit-explore-themes');
+                if (!target) return;
+                if (reducedMotion) {
+                    target.scrollIntoView();
+                } else {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function stopAuto() {
+                if (autoTimer) {
+                    window.clearInterval(autoTimer);
+                    autoTimer = null;
+                }
+                if (resumeTimer) {
+                    window.clearTimeout(resumeTimer);
+                    resumeTimer = null;
+                }
+            }
+
+            function startAuto() {
+                stopAuto();
+                if (reducedMotion || document.hidden) return;
+                autoTimer = window.setInterval(function () {
+                    setStrand((currentIndex + 1) % strands.length, true);
+                }, AUTO_MS);
+            }
+
+            function pauseThenResume() {
+                stopAuto();
+                if (reducedMotion) return;
+                resumeTimer = window.setTimeout(startAuto, RESUME_MS);
+            }
+
+            controls.forEach(function (control, index) {
+                control.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    setStrand(index, true);
+                    pauseThenResume();
+                    scrollToThemes();
+                    if (history && history.replaceState) {
+                        history.replaceState(null, '', '#themes');
+                    } else {
+                        window.location.hash = 'themes';
+                    }
+                });
+            });
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    stopAuto();
+                } else {
+                    startAuto();
+                }
+            });
+
+            startAuto();
+        }
+
+        initHeroStrandFeature();
+
+        // ============================================
         // Mobile navigation toggle
         // ============================================
         const navToggle = document.getElementById('nav-toggle');
@@ -822,4 +939,3 @@
         init();
     }
 })();
-

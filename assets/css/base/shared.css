@@ -17,22 +17,22 @@
   padding: var(--section-padding);
 }
 
-/* Less air between hero (logo strip) and the next block (e.g. Campaign) */
+/* Match top/bottom section rhythm after hero and between sections */
 .hero-section + .section {
-  padding-top: clamp(1rem, 2.5vw, 1.75rem);
+  padding-top: var(--section-padding-y);
 }
 
 .section + .section {
-  padding-top: 1rem;
+  padding-top: var(--section-padding-y);
 }
 
 @media screen and (max-width: 768px) {
   .section + .section {
-    padding-top: 1.5rem;
+    padding-top: var(--section-padding-y);
   }
 
   .hero-section + .section {
-    padding-top: 0.75rem;
+    padding-top: var(--section-padding-y);
   }
 }
 

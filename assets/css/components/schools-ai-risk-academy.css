@@ -12,17 +12,17 @@
 }
 
 .sara {
-	--ink: #14201a;
-	--ink-2: #1b2b22;
-	--ink-3: #22362b;
-	--paper: #f2efe4;
-	--amber: #e0a52e;
-	--sage: #9fb39a;
+	--ink: #231F20;
+	--ink-2: #231F20;
+	--ink-3: #231F20;
+	--paper: #EAE7DF;
+	--amber: #FF7038;
+	--sage: #54504E;
 	--text: rgba(255, 255, 255, 0.92);
 	--muted: rgba(255, 255, 255, 0.65);
-	--risk-low: #5fa463;
-	--risk-mod: #e0a52e;
-	--risk-high: #cc5c4d;
+	--risk-low: #63DF93;
+	--risk-mod: #FF7038;
+	--risk-high: var(--a27-crit);
 	--border: rgba(159, 179, 154, 0.35);
 	--radius: 4px;
 	--wrap: min(1140px, 100%);
@@ -216,8 +216,8 @@
 }
 
 .sara .sara-btn--primary:hover {
-	background: #c99228;
-	border-color: #c99228;
+	background: #FF7038;
+	border-color: #FF7038;
 }
 
 .sara .sara-btn--ghost {
@@ -521,7 +521,7 @@
 	background: rgba(204, 92, 77, 0.15);
 	border: 1px solid var(--risk-high);
 	border-radius: var(--radius);
-	color: #f5c4be;
+	color: #EAE7DF;
 	font-size: 0.9rem;
 }
 

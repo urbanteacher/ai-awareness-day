@@ -13,7 +13,7 @@
     <?php if ( ! function_exists( 'aiad_seo_should_output' ) || aiad_seo_should_output() ) : ?>
     <meta name="description" content="<?php echo esc_attr( $meta_description ); ?>">
     <?php endif; ?>
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#00BEDD">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
@@ -26,18 +26,8 @@
     <header class="site-header" id="site-header">
         <div class="container header-inner">
 
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
-                <?php
-                $defaults = aiad_get_customizer_defaults();
-                $title    = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] );
-
-                $logo_url = aiad_get_logo_image_url( aiad_get_brand_logo_attachment_id(), 'full' );
-
-                if ( $logo_url ) {
-                    echo '<img src="' . esc_url( $logo_url ) . '" alt="" aria-hidden="true" class="site-logo__img" />';
-                }
-                ?>
-                <span class="site-logo__text"><?php echo esc_html( $title ); ?><span class="site-logo__dot">.</span></span>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo" aria-label="<?php esc_attr_e( 'AI Awareness Day 2027 — Keep Humans in the Loop', 'ai-awareness-day' ); ?>">
+                <img src="<?php echo esc_url( AIAD_URI . '/assets/brand/aiad27/aiad27-lockup.svg' ); ?>" alt="" aria-hidden="true" class="site-logo__img" />
             </a>
 
             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"

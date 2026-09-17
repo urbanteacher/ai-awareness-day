@@ -47,6 +47,24 @@
   position: relative;
   overflow: hidden;
   min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a.principle-card:hover .principle-badge__img,
+a.principle-card:focus-visible .principle-badge__img {
+  filter: brightness(0);
+}
+
+a.principle-card:hover h3,
+a.principle-card:focus-visible h3 {
+  color: var(--a27-ink, #231F20);
+}
+
+a.principle-card:focus-visible {
+  outline: 2px solid var(--a27-ink, #231F20);
+  outline-offset: 3px;
 }
 
 .principle-card::before {

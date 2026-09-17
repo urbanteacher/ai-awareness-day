@@ -4,12 +4,12 @@
  */
 
 .aiad-survey {
-	--su-ink: #1a1a1a;
-	--su-panel: #1e1e1e;
-	--su-panel-2: #2a2a2a;
-	--su-border: #333;
-	--su-border-2: #444;
-	--su-accent: #86efac;
+	--su-ink: #231F20;
+	--su-panel: #231F20;
+	--su-panel-2: #231F20;
+	--su-border: #231F20;
+	--su-border-2: #231F20;
+	--su-accent: #63DF93;
 	--su-text: rgba(255, 255, 255, 0.92);
 	--su-muted: rgba(255, 255, 255, 0.65);
 	--su-radius: 4px;
@@ -46,7 +46,7 @@
 	flex: 1;
 	height: 6px;
 	border-radius: 3px;
-	background: #e0e0e0;
+	background: #EAE7DF;
 	transition: background 0.2s, box-shadow 0.2s;
 }
 
@@ -88,14 +88,14 @@
 }
 
 .aiad-survey__step--error {
-	border-color: #f87171;
+	border-color: var(--a27-crit);
 	box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.25);
 }
 
 .aiad-survey__step-title {
 	font-size: 1.25rem;
 	font-weight: 700;
-	color: #fff;
+	color: #F6F4ED;
 	margin: 0 0 1.25rem;
 	padding: 0;
 	line-height: 1.3;
@@ -131,7 +131,7 @@
 	font-weight: 600;
 	font-size: 0.95rem;
 	margin-bottom: 0.75rem;
-	color: #fff;
+	color: #F6F4ED;
 	line-height: 1.45;
 }
 
@@ -142,7 +142,7 @@
 }
 
 .aiad-survey__required {
-	color: #f87171;
+	color: var(--a27-crit);
 	margin-left: 2px;
 }
 
@@ -174,7 +174,7 @@
 	border-radius: var(--su-radius);
 	font-size: 1rem;
 	font-family: inherit;
-	color: #fff;
+	color: #F6F4ED;
 	background: var(--su-panel-2);
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -201,8 +201,8 @@
 }
 
 .aiad-survey__select option {
-	color: #1a1a1a;
-	background: #fff;
+	color: #231F20;
+	background: #F6F4ED;
 }
 
 .aiad-survey__textarea {
@@ -245,14 +245,14 @@
 
 .aiad-survey__check-label:hover,
 .aiad-survey__radio-label:hover {
-	border-color: #666;
-	background: #333;
+	border-color: #54504E;
+	background: #231F20;
 }
 
 .aiad-survey__check-label:has(input:checked),
 .aiad-survey__radio-label:has(input:checked) {
 	border-color: var(--su-accent);
-	background: #333;
+	background: #231F20;
 	box-shadow: 0 0 0 1px var(--su-accent);
 }
 
@@ -304,13 +304,13 @@
 
 .aiad-survey__star {
 	font-size: 2rem;
-	color: #d1d5db;
+	color: #C9C6BE;
 	transition: color 0.1s;
 	display: block;
 	line-height: 1;
 }
 
-/* JS controls selected/hover star colours inline (amber #f59e0b). */
+/* JS controls selected/hover star colours inline (amber #FF7038). */
 
 /* Navigation — sits on the page background, below the dark panel */
 .aiad-survey__nav {
@@ -350,15 +350,15 @@
 .aiad-survey__btn--next,
 .aiad-survey__btn--submit {
 	background: var(--su-panel);
-	color: #fff;
+	color: #F6F4ED;
 	border-color: var(--su-panel);
 	margin-left: auto;
 }
 
 .aiad-survey__btn--next:hover,
 .aiad-survey__btn--submit:hover {
-	background: #333;
-	border-color: #333;
+	background: #231F20;
+	border-color: #231F20;
 }
 
 .aiad-survey__btn--back {
@@ -369,7 +369,7 @@
 
 .aiad-survey__btn--back:hover {
 	background: var(--su-ink);
-	color: #fff;
+	color: #F6F4ED;
 }
 
 .aiad-survey__btn:disabled {
@@ -381,10 +381,10 @@
 .aiad-survey__error {
 	margin-top: 1rem;
 	padding: 0.75rem 1rem;
-	background: #fef2f2;
-	border: 1.5px solid #fca5a5;
+	background: #F6F4ED;
+	border: 1.5px solid #EAE7DF;
 	border-radius: var(--su-radius);
-	color: #b91c1c;
+	color: var(--a27-crit);
 	font-size: 0.9375rem;
 }
 
@@ -415,7 +415,7 @@
 .aiad-survey__success-title {
 	font-size: 1.75rem;
 	font-weight: 700;
-	color: #fff;
+	color: #F6F4ED;
 	margin-bottom: 0.75rem;
 }
 
@@ -430,11 +430,11 @@
 	margin-top: 1.5rem;
 	text-align: center;
 	font-size: 12px;
-	color: #888;
+	color: #54504E;
 }
 
 .aiad-survey__credit a {
-	color: #888;
+	color: #54504E;
 }
 
 /* Honeypot */

@@ -77,8 +77,8 @@
 	   Risk bands escalate green -> burnt orange -> red -> deep red, so all four
 	   stay legible on one score ring. Oversight strength reuses the same ink
 	   values, with Safe deep carrying "informational" rather than "bad". */
-	--airb-red: #A32D2D;
-	--airb-red-deep: #791F1F;
+	--airb-red: var(--a27-crit, #A32D2D);
+	--airb-red-deep: var(--a27-crit-deep, #791F1F);
 
 	--airb-low: var(--a27-responsible-deep, #176E3B);
 	--airb-mod: var(--a27-smart-deep, #A7350B);

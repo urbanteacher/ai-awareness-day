@@ -441,7 +441,7 @@ class AIAD_Homepage_Editor {
         $fields = array(
             'aiad_campaign_title'  => array( 'label' => __( 'Campaign Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'What is AI Awareness Day?' ),
             'aiad_campaign_text'   => array( 'label' => __( 'Campaign Description', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => 'National AI Awareness Day is a nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.' ),
-            'aiad_campaign_text_2' => array( 'label' => __( 'Campaign Paragraph 2', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => 'Our goal is to create a unified moment...' ),
+            'aiad_campaign_text_2' => array( 'label' => __( 'Campaign Paragraph 2', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.' ),
         );
         $this->render_fields( $fields );
     }

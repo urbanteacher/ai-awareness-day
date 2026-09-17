@@ -86,7 +86,7 @@ function aiad_form_submission_column_content( $column, $post_id ): void {
             $colors  = array(
                 'not_contacted' => '#b45309',
                 'contacted'     => '#2563eb',
-                'following_up'  => '#7c3aed',
+                'following_up'  => '#6441B8',
                 'done'          => '#16a34a',
             );
             $bg = isset( $colors[ $status ] ) ? $colors[ $status ] : '#666';

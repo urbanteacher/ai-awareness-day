@@ -154,12 +154,30 @@ class AIRB_Ajax {
 
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
-		$answered_total = 0;
-		foreach ( (array) ( $results['domain_scores'] ?? array() ) as $domain_score ) {
-			$answered_total += (int) ( is_array( $domain_score ) ? ( $domain_score['questions_answered'] ?? 0 ) : 0 );
+		if ( ! empty( $results['invalid_answer_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Some answers were invalid. Please refresh and complete the benchmark again.', 'ai-risk-benchmark' ),
+				),
+				400
+			);
 		}
-		if ( $answered_total < 1 ) {
-			wp_send_json_error( array( 'message' => __( 'Please answer the benchmark questions before submitting.', 'ai-risk-benchmark' ) ), 400 );
+		if ( empty( $results['is_complete'] ) ) {
+			$expected = (int) ( $results['questions_expected'] ?? 0 );
+			$answered = (int) ( $results['questions_answered'] ?? 0 );
+			wp_send_json_error(
+				array(
+					/* translators: 1: answered count, 2: expected count */
+					'message' => $expected > 0
+						? sprintf(
+							__( 'Please answer all benchmark questions before submitting (%1$d of %2$d answered).', 'ai-risk-benchmark' ),
+							$answered,
+							$expected
+						)
+						: __( 'Please answer the benchmark questions before submitting.', 'ai-risk-benchmark' ),
+				),
+				400
+			);
 		}
 		$results = AIRB_Funnel::enrich( $results, $role, $profile, $config, $school, $answers );
 		$results['gateway'] = AIRB_Pathway::build_gateway( $role, $config, $school );
@@ -354,8 +372,8 @@ class AIRB_Ajax {
 			);
 		}
 
-		$requires_review = ! empty( $assessment['manual_review'] );
-		$notify_email    = $submission_email ?: $contact_email;
+		$requires_review    = ! empty( $assessment['manual_review'] );
+		$notify_email       = $submission_email ?: $contact_email;
 		$roles_need_contact = in_array( $role, array( 'student', 'parent' ), true );
 
 		if ( $requires_review && ! $notify_email ) {

@@ -423,7 +423,11 @@ class AIRB_Scoring {
 			if ( ! self::question_applies_to_profile( $questions[ $qid ], $answers ) ) {
 				continue;
 			}
-			$risk_scores[] = self::score_answer( $questions[ $qid ], $answers[ $qid ] );
+			$score = self::score_answer( $questions[ $qid ], $answers[ $qid ] );
+			if ( null === $score ) {
+				continue;
+			}
+			$risk_scores[] = $score;
 		}
 
 		if ( empty( $risk_scores ) ) {
@@ -523,7 +527,11 @@ class AIRB_Scoring {
 				if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
 					continue;
 				}
-				$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+				$score = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+				if ( null === $score ) {
+					continue;
+				}
+				$scores[] = $score;
 			}
 			if ( ! $scores ) {
 				continue;
@@ -535,7 +543,7 @@ class AIRB_Scoring {
 			$out[ $slug ] = array(
 				'label'                => (string) ( $def['label'] ?? $slug ),
 				'metric_type'          => $metric_type,
-				'color'                => (string) ( $def['color'] ?? '#475569' ),
+				'color'                => (string) ( $def['color'] ?? '#54504E' ),
 				'risk_percentage'      => round( $avg_risk, 1 ),
 				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
 				'band'                 => $band,
@@ -572,7 +580,11 @@ class AIRB_Scoring {
 			if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
 				continue;
 			}
-			$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+			$score = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+			if ( null === $score ) {
+				continue;
+			}
+			$scores[] = $score;
 		}
 
 		if ( ! $scores ) {
@@ -622,7 +634,11 @@ class AIRB_Scoring {
 				if ( ! isset( $answers[ $qid ], $questions_by_id[ $qid ] ) ) {
 					continue;
 				}
-				$scores[] = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+				$score = self::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
+				if ( null === $score ) {
+					continue;
+				}
+				$scores[] = $score;
 			}
 			if ( ! $scores ) {
 				continue;
@@ -633,7 +649,7 @@ class AIRB_Scoring {
 			$out[ $slug ] = array(
 				'label'                => (string) ( $def['label'] ?? $slug ),
 				'metric_type'          => (string) ( $def['metric_type'] ?? 'score' ),
-				'color'                => (string) ( $def['color'] ?? '#475569' ),
+				'color'                => (string) ( $def['color'] ?? '#54504E' ),
 				'risk_percentage'      => round( $avg_risk, 1 ),
 				'readiness_percentage' => round( 100 - $avg_risk, 1 ),
 				'band'                 => $band,
@@ -798,7 +814,11 @@ class AIRB_Scoring {
 			$dom = (string) ( $question['domain'] ?? '' );
 			$in_list = in_array( $qid, $qids[ $role ] ?? array(), true );
 			if ( 'ai_dependency' === $dom || $in_list ) {
-				$scores[] = self::score_answer( $question, $answers[ $qid ] );
+				$score = self::score_answer( $question, $answers[ $qid ] );
+				if ( null === $score ) {
+					continue;
+				}
+				$scores[] = $score;
 			}
 		}
 
@@ -842,7 +862,10 @@ class AIRB_Scoring {
 			}
 
 			if ( 'human_oversight' === $dom ) {
-				$score            = self::score_answer( $question, $value );
+				$score = self::score_answer( $question, $value );
+				if ( null === $score ) {
+					continue;
+				}
 				$readiness_vals[] = 100 - ( ( $score / 3 ) * 100 );
 			}
 		}
@@ -906,22 +929,56 @@ class AIRB_Scoring {
 	 *
 	 * @param array<string, mixed> $question Question config.
 	 * @param mixed                $value    Answer value.
+	 * @return int|null Risk score 0–3, or null when the value is not a valid option.
 	 */
-	public static function score_answer( array $question, $value ): int {
+	public static function score_answer( array $question, $value ): ?int {
 		$type = (string) ( $question['type'] ?? 'radio' );
 
 		if ( 'slider' === $type ) {
+			if ( ! is_numeric( $value ) && '' !== $value && null !== $value ) {
+				return null;
+			}
 			$pct = max( 0, min( 100, (int) $value ) );
 			return self::slider_modify_score( $pct );
 		}
 
+		$value_str = is_scalar( $value ) ? (string) $value : '';
+		if ( '' === $value_str ) {
+			return null;
+		}
+
 		foreach ( (array) ( $question['options'] ?? array() ) as $opt ) {
-			if ( (string) ( $opt['value'] ?? '' ) === (string) $value ) {
+			if ( (string) ( $opt['value'] ?? '' ) === $value_str ) {
 				return max( 0, min( 3, (int) ( $opt['score'] ?? 0 ) ) );
 			}
 		}
 
-		return 0;
+		return null;
+	}
+
+	/**
+	 * Count role questions that apply for this answer profile.
+	 *
+	 * @param string               $role    Role slug.
+	 * @param array<string, mixed> $answers Answers including optional profile keys.
+	 * @param array<string, mixed> $config  Full config.
+	 */
+	public static function count_applicable_questions( string $role, array $answers, array $config ): int {
+		$count = 0;
+		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
+			if ( (string) ( $question['role'] ?? '' ) !== $role ) {
+				continue;
+			}
+			if ( ! self::question_applies_to_profile( $question, $answers ) ) {
+				continue;
+			}
+			$qid = (string) ( $question['id'] ?? '' );
+			if ( '' === $qid ) {
+				continue;
+			}
+			++$count;
+		}
+		return $count;
 	}
 
 	/**
@@ -973,6 +1030,9 @@ class AIRB_Scoring {
 
 		$human_oversight_pct   = null;
 		$human_oversight_label = __( 'Not assessed', 'ai-risk-benchmark' );
+		$questions_expected    = 0;
+		$questions_answered    = 0;
+		$invalid_answer_ids    = array();
 
 		foreach ( (array) ( $config['questions'] ?? array() ) as $question ) {
 			if ( (string) ( $question['role'] ?? '' ) !== $role ) {
@@ -982,13 +1042,24 @@ class AIRB_Scoring {
 				continue;
 			}
 			$qid = (string) ( $question['id'] ?? '' );
-			if ( ! $qid || ! array_key_exists( $qid, $answers ) ) {
+			if ( ! $qid ) {
+				continue;
+			}
+			++$questions_expected;
+
+			if ( ! array_key_exists( $qid, $answers ) ) {
 				continue;
 			}
 
 			$value = $answers[ $qid ];
 			$score = self::score_answer( $question, $value );
-			$dom   = (string) ( $question['domain'] ?? '' );
+			if ( null === $score ) {
+				$invalid_answer_ids[] = $qid;
+				continue;
+			}
+
+			++$questions_answered;
+			$dom = (string) ( $question['domain'] ?? '' );
 
 			if ( isset( $domain_sums[ $dom ] ) ) {
 				$domain_sums[ $dom ]   += $score;
@@ -1126,6 +1197,12 @@ class AIRB_Scoring {
 			'support_display_domains' => $support_display,
 			'role_result_cards'       => $result_cards,
 			'next_steps'              => AIRB_Pathway::match_next_steps( $role, $answers, $domain_scores, $result_payload, $config ),
+			'questions_expected'      => $questions_expected,
+			'questions_answered'      => $questions_answered,
+			'invalid_answer_ids'      => $invalid_answer_ids,
+			'is_complete'             => $questions_expected > 0
+				&& $questions_answered === $questions_expected
+				&& empty( $invalid_answer_ids ),
 		);
 
 		return $results;

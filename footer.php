@@ -28,7 +28,7 @@
 
         <div class="footer-bottom">
             <p class="footer-copy">
-                &copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <?php echo esc_html( get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>. <?php esc_html_e( 'All rights reserved.', 'ai-awareness-day' ); ?>
+                &copy; <?php echo esc_html( get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ); ?>. <?php esc_html_e( 'All rights reserved.', 'ai-awareness-day' ); ?>
             </p>
             <?php
             $linkedin_url  = get_theme_mod( 'aiad_linkedin', $defaults['aiad_linkedin'] );

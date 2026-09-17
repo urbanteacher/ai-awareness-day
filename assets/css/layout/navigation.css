@@ -240,8 +240,8 @@
    BREADCRUMB TRAIL
    ============================================ */
 .aiad-breadcrumbs {
-  background: var(--gray-50, #f9fafb);
-  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+  background: var(--gray-50, #F6F4ED);
+  border-bottom: 1px solid var(--gray-200, #EAE7DF);
   font-family: var(--font-display);
   font-size: 0.8rem;
   padding: 0.65rem 0;
@@ -266,7 +266,7 @@
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
-  color: var(--gray-600, #4b5563);
+  color: var(--gray-600, #54504E);
 }
 
 .aiad-breadcrumbs__item {
@@ -276,23 +276,23 @@
 }
 
 .aiad-breadcrumbs__item a {
-  color: var(--gray-700, #374151);
+  color: var(--gray-700, #231F20);
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .aiad-breadcrumbs__item a:hover {
-  color: var(--green-600, #16a34a);
+  color: var(--a27-responsible-deep, #176E3B);
   text-decoration: underline;
 }
 
 .aiad-breadcrumbs__item.is-current span {
-  color: var(--gray-900, #111827);
+  color: var(--gray-900, #231F20);
   font-weight: 600;
 }
 
 .aiad-breadcrumbs__sep {
-  color: var(--gray-400, #9ca3af);
+  color: var(--gray-400, #54504E);
   user-select: none;
 }
 

@@ -1,14 +1,14 @@
 /* Timed AI speed quiz (shortcode [aiad_speed_quiz]) */
 
 [data-aiad-speed-quiz] {
-	--sq-bg: #141414;
-	--sq-panel: #1c1c1c;
-	--sq-border: #2e2e2e;
-	--sq-text: #f5f5f5;
-	--sq-muted: #a3a3a3;
-	--sq-accent: #86efac;
-	--sq-warn: #fbbf24;
-	--sq-danger: #f87171;
+	--sq-bg: #231F20;
+	--sq-panel: #231F20;
+	--sq-border: #231F20;
+	--sq-text: #F6F4ED;
+	--sq-muted: #54504E;
+	--sq-accent: #63DF93;
+	--sq-warn: #FF7038;
+	--sq-danger: var(--a27-crit);
 	font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 	max-width: 720px;
 	margin: 2rem auto;
@@ -30,7 +30,7 @@
 	padding: 4px 12px;
 	border-radius: 999px;
 	border: 1px solid var(--sq-border);
-	background: #252525;
+	background: #231F20;
 	font-size: 0.75rem;
 	font-weight: 600;
 	color: var(--sq-muted);
@@ -64,7 +64,7 @@
 	padding: 0.75rem 0.35rem;
 	border: 1px solid var(--sq-border);
 	border-radius: 10px;
-	background: #222;
+	background: #231F20;
 }
 
 [data-aiad-speed-quiz] .sq-stat__val {
@@ -95,14 +95,14 @@
 	padding: 12px 14px;
 	border-radius: 10px;
 	border: 1px solid var(--sq-border);
-	background: #111;
+	background: #231F20;
 	color: var(--sq-text);
 	font-size: 0.95rem;
 	font-family: inherit;
 }
 
 [data-aiad-speed-quiz] .sq-input::placeholder {
-	color: #666;
+	color: #54504E;
 }
 
 [data-aiad-speed-quiz] .sq-input:focus {
@@ -124,7 +124,7 @@
 	font-family: inherit;
 	cursor: pointer;
 	border: 1px solid var(--sq-border);
-	background: #2a2a2a;
+	background: #231F20;
 	color: var(--sq-text);
 	-webkit-appearance: none;
 	appearance: none;
@@ -132,18 +132,18 @@
 }
 
 [data-aiad-speed-quiz] .sq-btn:hover {
-	background: #333;
-	border-color: #555;
+	background: #231F20;
+	border-color: #54504E;
 }
 
 [data-aiad-speed-quiz] .sq-btn--primary {
 	background: var(--sq-text);
-	color: #111;
+	color: #231F20;
 	border-color: var(--sq-text);
 }
 
 [data-aiad-speed-quiz] .sq-btn--primary:hover {
-	background: #e5e5e5;
+	background: #EAE7DF;
 }
 
 [data-aiad-speed-quiz] .sq-btn:focus-visible {
@@ -181,7 +181,7 @@
 
 [data-aiad-speed-quiz] .sq-timer-bar {
 	height: 6px;
-	background: #333;
+	background: #231F20;
 	border-radius: 3px;
 	overflow: hidden;
 	margin-bottom: 1.25rem;
@@ -231,7 +231,7 @@
 	padding: 12px 14px;
 	border-radius: 10px;
 	border: 1px solid var(--sq-border);
-	background: #252525;
+	background: #231F20;
 	color: var(--sq-text);
 	font-size: 0.9rem;
 	line-height: 1.35;
@@ -241,8 +241,8 @@
 }
 
 [data-aiad-speed-quiz] .sq-option:hover:not(:disabled) {
-	border-color: #666;
-	background: #2e2e2e;
+	border-color: #54504E;
+	background: #231F20;
 }
 
 [data-aiad-speed-quiz] .sq-option:disabled {
@@ -363,7 +363,7 @@
 
 [data-aiad-speed-quiz] .sq-credit {
 	font-size: 12px;
-	color: #666;
+	color: #54504E;
 	margin-top: 1rem;
 	text-align: center;
 }

@@ -1,14 +1,14 @@
 /* NEU AI Report ([aiad_neu_ai_report]) — FT-style editorial commentary + data */
 
 #aiad-neu-report {
-	--nr-ink: #1a1a1a;
-	--nr-muted: #555;
-	--nr-rule: #ccc;
-	--nr-accent-1: var(--accent-blue, #2563eb);
-	--nr-accent-2: var(--accent-purple, #7c3aed);
-	--nr-accent-3: var(--accent-rose, #db2777);
-	--nr-accent-4: var(--accent-emerald, #059669);
-	font-family: var(--font-body, 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+	--nr-ink: #231F20;
+	--nr-muted: #54504E;
+	--nr-rule: #C9C6BE;
+	--nr-accent-1: var(--accent-blue, #00BEDD);
+	--nr-accent-2: var(--a27-creative-deep, #6441B8);
+	--nr-accent-3: var(--a27-future-deep, #983488);
+	--nr-accent-4: var(--accent-emerald, #006A7D);
+	font-family: var(--font-body, 'AIAD Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 	max-width: none;
 	margin: 2.5rem 0;
 	padding: 0;
@@ -64,18 +64,18 @@
 }
 
 #aiad-neu-report .nr-introduction a {
-	color: var(--green-700, #0f6e56);
+	color: var(--green-700, #006A7D);
 	text-decoration: underline;
 	text-underline-offset: 0.15em;
 }
 
 #aiad-neu-report .nr-introduction a:hover {
-	color: var(--green-600, #128f6f);
+	color: var(--green-600, #006A7D);
 }
 
 #aiad-neu-report .nr-scope {
 	font-size: 0.8125rem;
-	color: #888;
+	color: #54504E;
 	line-height: 1.55;
 	margin: 1.25rem 0 0;
 }
@@ -134,7 +134,7 @@
 }
 
 #aiad-neu-report .nr-lens-btn:focus-visible {
-	outline: 2px solid var(--green-600, #0f6e56);
+	outline: 2px solid var(--green-600, #006A7D);
 	outline-offset: 2px;
 }
 
@@ -206,7 +206,7 @@
 	font-family: var(--font-display, inherit);
 	font-size: 0.6875rem;
 	font-weight: 700;
-	color: #888;
+	color: #54504E;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
 	margin: 0 0 0.75rem;
@@ -282,7 +282,7 @@
 #aiad-neu-report .nr-bar-track {
 	grid-column: 1;
 	height: 6px;
-	background: #e5e5e5;
+	background: #EAE7DF;
 	overflow: hidden;
 }
 
@@ -397,7 +397,7 @@
 #aiad-neu-report .nr-note,
 #aiad-neu-report .nr-source-note {
 	font-size: 0.8125rem;
-	color: #888;
+	color: #54504E;
 	line-height: 1.55;
 	margin: 1rem 0 0;
 	padding: 0;
@@ -407,7 +407,7 @@
 
 #aiad-neu-report .nr-footer {
 	font-size: 0.8125rem;
-	color: #888;
+	color: #54504E;
 	margin-top: 2.5rem;
 	padding-top: 1.25rem;
 	border-top: 1px solid var(--nr-rule);

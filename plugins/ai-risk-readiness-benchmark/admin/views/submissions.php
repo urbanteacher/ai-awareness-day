@@ -107,6 +107,19 @@ $export_url = wp_nonce_url(
 		<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'No submissions were deleted. Check your selection or confirmation text and try again.', 'ai-risk-benchmark' ); ?></p></div>
 	<?php endif; ?>
 
+	<?php
+	$cert_notice = sanitize_key( (string) ( $_GET['airb_cert_notice'] ?? '' ) );
+	if ( 'approved' === $cert_notice ) :
+		?>
+		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Certificate approved and the participant was emailed.', 'ai-risk-benchmark' ); ?></p></div>
+	<?php elseif ( 'approved_no_email' === $cert_notice ) : ?>
+		<div class="notice notice-warning is-dismissible"><p><?php esc_html_e( 'Certificate approved, but no participant email was on file so no notification was sent.', 'ai-risk-benchmark' ); ?></p></div>
+	<?php elseif ( 'email_failed' === $cert_notice ) : ?>
+		<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'Could not email the participant. The certificate is still pending review — fix mail delivery and approve again.', 'ai-risk-benchmark' ); ?></p></div>
+	<?php elseif ( 'approve_failed' === $cert_notice ) : ?>
+		<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'Could not approve that certificate. It may already have been processed.', 'ai-risk-benchmark' ); ?></p></div>
+	<?php endif; ?>
+
 	<?php if ( $submission_detail instanceof stdClass ) : ?>
 		<?php
 		$submission_answers = json_decode( (string) $submission_detail->answers, true );
@@ -323,7 +336,7 @@ $export_url = wp_nonce_url(
 	</table>
 
 	<?php if ( ( $stats['total'] ?? 0 ) > 0 ) : ?>
-		<div class="card" style="max-width:640px;padding:1rem 1.25rem;margin:1.5rem 0;border-left:4px solid #d63638;">
+		<div class="card" style="max-width:640px;padding:1rem 1.25rem;margin:1.5rem 0;border-left:4px solid #A32D2D;">
 			<h2 style="margin-top:0;"><?php esc_html_e( 'Delete all submissions', 'ai-risk-benchmark' ); ?></h2>
 			<p><?php esc_html_e( 'Permanently remove every benchmark submission. Linked leads and funnel events are kept, but their submission link is cleared. Linked certificates are removed with the deleted submissions.', 'ai-risk-benchmark' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('<?php echo esc_js( __( 'This cannot be undone. Delete every submission?', 'ai-risk-benchmark' ) ); ?>');">

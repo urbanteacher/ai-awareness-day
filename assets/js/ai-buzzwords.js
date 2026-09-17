@@ -2,10 +2,10 @@
 	'use strict';
 
 	var CATS = {
-		hot: { label: 'Hottest right now', bg: '#FFF0EC', text: '#993C1D', tagBg: '#FFF0EC', tagText: '#993C1D' },
-		agents: { label: 'Agents & autonomy', bg: '#F0EFFE', text: '#534AB7', tagBg: '#F0EFFE', tagText: '#534AB7' },
-		safety: { label: 'Safety & ethics', bg: '#FEF6E6', text: '#854F0B', tagBg: '#FEF6E6', tagText: '#854F0B' },
-		models: { label: 'Models & tech', bg: '#E8F8F3', text: '#0F6E56', tagBg: '#E8F8F3', tagText: '#0F6E56' },
+		hot: { label: 'Hottest right now', bg: '#EAE7DF', text: '#A7350B', tagBg: '#EAE7DF', tagText: '#A7350B' },
+		agents: { label: 'Agents & autonomy', bg: '#EAE7DF', text: '#6441B8', tagBg: '#EAE7DF', tagText: '#6441B8' },
+		safety: { label: 'Safety & ethics', bg: '#EAE7DF', text: '#006A7D', tagBg: '#EAE7DF', tagText: '#006A7D' },
+		models: { label: 'Models & tech', bg: '#EAE7DF', text: '#176E3B', tagBg: '#EAE7DF', tagText: '#176E3B' },
 	};
 
 	var WORDS = [

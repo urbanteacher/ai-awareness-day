@@ -67,6 +67,76 @@ function aiad_migrate_2027_branding(): void {
 add_action( 'init', 'aiad_migrate_2027_branding', 5 );
 
 /**
+ * Replace only the stock 2026 campaign wording stored in the Customizer.
+ *
+ * Deliberately leave an editor's bespoke wording alone; this is a design-system
+ * update, not a bulk rewrite of the site's voice.
+ */
+function aiad_migrate_aiad27_brand_voice(): void {
+	if ( get_option( 'aiad_aiad27_brand_voice_migrated' ) === '3' ) {
+		return;
+	}
+
+	$replacements = array(
+		'aiad_hero_slogan' => array(
+			'Know it, Question it, Use it Wisely',
+			'Keep Humans in the Loop',
+		),
+		'aiad_hero_title' => array(
+			'AI Awareness Day',
+			'AI Awareness Day 2027',
+		),
+		'aiad_campaign_title' => array(
+			'What is AI Awareness Day?',
+			'Your AI. Your choices.',
+		),
+		// Restore long campaign copy if the short AiAd27 draft was applied.
+		'aiad_campaign_text' => array(
+			'AI Awareness Day gives every school a simple place to begin: one honest conversation about the tools already shaping young lives.',
+			'National AI Awareness Day is a nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.',
+		),
+		'aiad_campaign_text_2' => array(
+			'Start with a question. Make space for judgement. Keep humans in the loop.',
+			'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.',
+		),
+		'aiad_principle_desc_safe' => array(
+			'Ensuring safe and secure interactions with AI technologies.',
+			'Start with what should stay private — trust, sharing and the data AI holds about you.',
+		),
+		'aiad_principle_desc_smart' => array(
+			'Building intelligent understanding of how AI works.',
+			'Question AI that acts on your behalf — decisions, shortcuts and who is really choosing.',
+		),
+		'aiad_principle_desc_creative' => array(
+			'Harnessing AI as a tool for creativity and innovation.',
+			'Own what you make with AI — authorship, attribution and honest creative work.',
+		),
+		'aiad_principle_desc_responsible' => array(
+			'Promoting ethical and responsible use of AI.',
+			'Keep human judgement in consequential moments — when the output matters.',
+		),
+		'aiad_principle_desc_future' => array(
+			'Preparing for an AI-shaped future with confidence.',
+			'Name the skills worth keeping human — and practise them on purpose.',
+		),
+	);
+
+	foreach ( $replacements as $setting => $pair ) {
+		if ( (string) get_theme_mod( $setting, '' ) === $pair[0] ) {
+			set_theme_mod( $setting, $pair[1] );
+		}
+	}
+
+	$tagline = (string) get_option( 'blogdescription', '' );
+	if ( $tagline === '' || $tagline === '2027' ) {
+		update_option( 'blogdescription', 'Keep Humans in the Loop' );
+	}
+
+	update_option( 'aiad_aiad27_brand_voice_migrated', '3' );
+}
+add_action( 'init', 'aiad_migrate_aiad27_brand_voice', 6 );
+
+/**
  * Replace public campaign 2026 branding inside published content.
  */
 function aiad_migrate_2027_replace_in_posts(): void {

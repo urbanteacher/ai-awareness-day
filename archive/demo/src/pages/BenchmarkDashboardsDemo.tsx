@@ -1,39 +1,34 @@
 import {
-  ArrowRight,
   BookOpenCheck,
   ClipboardList,
-  Download,
-  FileText,
   GraduationCap,
   Home,
-  LockKeyhole,
-  MessageCircleQuestion,
+  Maximize2,
   School,
   Users,
 } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { CertificatePreview } from '@/components/certificate/CertificatePreview'
-import {
-  buildCertificateData,
-  exportCertificatePdf,
-  makeCertificateId,
-} from '@/lib/certificate'
-import { getBenchmarkCertificateCopy, type BenchmarkCertificateRole } from '@/lib/benchmark-certificate-copy'
-import {
-  assessCertificateEvidence,
-  EVIDENCE_PATHWAYS,
-  EVIDENCE_THEMES,
-  SCORE_THRESHOLD,
-  type EvidenceTheme,
-} from '@/lib/certificate-evidence'
-
-import '@/styles/certificate.css'
 import '@/styles/focus-areas.css'
+import '@/styles/benchmark-deck.css'
+import {
+  AUDITS,
+  AUDIENCE_WEIGHTS,
+  DOMAIN_LABELS,
+  LIVE_BENCHMARK_URL,
+  WEIGHT_SCALES,
+  auditKeyForRole,
+  questionCount,
+  questionsBySection,
+  weightScaleLabel,
+  type AuditAudienceKey,
+  type AuditQuestion,
+} from '@/lib/benchmark-questions'
 
 type RoleKey = 'teacher' | 'student' | 'parent' | 'leader' | 'support' | 'public'
-type DashboardTabKey = 'overview' | 'progress' | 'resources'
+type DashboardTabKey = 'intro' | 'questions' | 'score' | 'signals' | 'domains' | 'simulator' | 'quiz'
 type Tone = 'secure' | 'practice' | 'attention'
 
 type Domain = {
@@ -87,7 +82,6 @@ type RoleModel = {
   metricB: { label: string; value: string; note: string }
   priority: string
   nextAction: string
-  journey: string[]
   domains: Domain[]
   focusAreas: FocusArea[]
   strengths: Strength[]
@@ -107,12 +101,6 @@ function pageResource(slug: string, label: string): ResourceLink {
 
 function externalResource(url: string, label: string): ResourceLink {
   return { label, url, external: true }
-}
-
-const breakingNowResource: ResourceLink = {
-  ...timelineResource('how-does-a-large-language-model-work', 'How Does a Large Language Model Work?'),
-  kicker: 'Breaking now',
-  description: 'The top timeline explainer to help staff and students understand what sits behind AI answers.',
 }
 
 function peerGapAverageText(yourScore: number, averageScore: number) {
@@ -154,7 +142,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'Human Oversight Ratio', value: '54%', note: 'Moderate checking, not yet a habit.' },
     priority: 'Redesign one AI-assisted task so pupils must show thinking beyond the first generated answer.',
     nextAction: 'Open verification framework',
-    journey: ['Audit complete', 'Verification ready', 'Responsible practitioner', 'AI champion'],
     domains: [
       { label: 'Safe adoption', value: 100, tone: 'secure', prompt: 'Assess tools first' },
       { label: 'Human oversight', value: 54, tone: 'practice', prompt: 'Check before use' },
@@ -267,7 +254,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'Verification Skills', value: '63%', note: 'Checks happen when stakes are high.' },
     priority: 'Spend five minutes attempting the work before asking AI for help or explanation.',
     nextAction: 'Start Think First, Prompt Second',
-    journey: ['Aware learner', 'Independent attempt', 'Verification habit', 'AI study mentor'],
     domains: [
       { label: 'Independent thinking', value: 51, tone: 'practice', prompt: 'Make first attempt' },
       { label: 'Verification', value: 63, tone: 'practice', prompt: 'Check the answer' },
@@ -355,7 +341,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'School Partnership', value: '66%', note: 'Good base for shared expectations.' },
     priority: 'Create a simple home agreement for AI-assisted homework and talk through one example together.',
     nextAction: 'Open parent conversation guide',
-    journey: ['Aware at home', 'Homework routine', 'Safety conversations', 'School partnership'],
     domains: [
       { label: 'Awareness', value: 60, tone: 'practice', prompt: 'Know what they use' },
       { label: 'Home AI safety', value: 58, tone: 'practice', prompt: 'Set boundaries' },
@@ -425,7 +410,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'Safeguarding Readiness', value: '72%', note: 'Procedures partly updated.' },
     priority: 'Assign owners, evidence, and review dates to the two weakest domains before the next SLT meeting.',
     nextAction: 'Open policy generator',
-    journey: ['Emerging', 'Developing', 'Established', 'Leading'],
     domains: [
       { label: 'Governance', value: 61, tone: 'practice', prompt: 'Assign ownership' },
       { label: 'Safe adoption', value: 57, tone: 'practice', prompt: 'Assess new tools' },
@@ -497,7 +481,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'Data Protection', value: '71%', note: 'Rules known, approval routes less clear.' },
     priority: 'Put approved-tool guidance and reporting routes next to the tasks where AI is most often used.',
     nextAction: 'Open data protection checklist',
-    journey: ['AI aware', 'Approved tools', 'Data confident', 'Safe workflow'],
     domains: [
       { label: 'AI literacy', value: 62, tone: 'practice', prompt: 'Spot limits' },
       { label: 'Human oversight', value: 59, tone: 'practice', prompt: 'Review before sending' },
@@ -564,7 +547,6 @@ const roles: Record<RoleKey, RoleModel> = {
     metricB: { label: 'Data & Privacy', value: '57%', note: 'Occasional personal data exposure.' },
     priority: 'Remove names, addresses, health details, and workplace data before using public AI tools.',
     nextAction: 'Open personal AI safety checklist',
-    journey: ['Aware user', 'Privacy reset', 'Verification habit', 'Confident practice'],
     domains: [
       { label: 'Personal AI use', value: 73, tone: 'secure', prompt: 'Useful habits' },
       { label: 'Verification', value: 74, tone: 'secure', prompt: 'Check sources' },
@@ -618,10 +600,14 @@ const roleIcons: Record<RoleKey, typeof GraduationCap> = {
   public: Users,
 }
 
-const dashboardTabs: Array<{ key: DashboardTabKey; label: string }> = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'progress', label: 'Progress & certificate' },
-  { key: 'resources', label: 'Resources' },
+const dashboardTabs: Array<{ key: DashboardTabKey; label: string; kicker: string }> = [
+  { key: 'intro', label: 'Overview', kicker: 'What the benchmark measures · six audiences' },
+  { key: 'questions', label: 'Questions & weights', kicker: 'Every question · option scores · audience weights' },
+  { key: 'score', label: 'Readiness score', kicker: 'Mock result · readiness bands · cohort context' },
+  { key: 'signals', label: 'Key signals', kicker: 'Strengths · dependency index · oversight ratio' },
+  { key: 'domains', label: 'Domain breakdown', kicker: 'Nine DfE-aligned domains · focus areas' },
+  { key: 'simulator', label: 'Behaviour simulator', kicker: 'Tune habits · watch the score move · modelled' },
+  { key: 'quiz', label: 'Spot the risk', kicker: 'Safe or risky? · real classroom scenarios' },
 ]
 
 /** Shared red → green spectrum for the header stripe and readiness scale segments. */
@@ -635,24 +621,6 @@ const readinessBands = [
   { slug: 'strong', label: 'Strong', min: 75, max: 89, color: '#22c55e', short: 'Str.' },
   { slug: 'leading', label: 'Leading', min: 90, max: 100, color: '#16a34a', short: 'Lead.' },
 ] as const
-
-const supportOptions = [
-  {
-    slug: 'whole_school_cpd',
-    label: 'I want CPD',
-    description: 'Training matched to the risk areas in this audit.',
-  },
-  {
-    slug: 'teacher_activity_day',
-    label: 'I want classroom resources',
-    description: 'Lesson activities, prompts and verification routines.',
-  },
-  {
-    slug: 'whole_school_benchmark',
-    label: 'I want my school to run the benchmark',
-    description: 'Build a picture across staff, students, parents and leaders.',
-  },
-]
 
 function scoreReadinessBand(score: number) {
   const clamped = Math.max(0, Math.min(100, score))
@@ -751,54 +719,6 @@ const toneStyle: Record<Tone, { bg: string; text: string; border: string; label:
   },
 }
 
-function RoleChips({
-  role,
-  onRole,
-}: {
-  role: RoleKey
-  onRole: (role: RoleKey) => void
-}) {
-  return (
-    <div
-      className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      role="tablist"
-      aria-label="Benchmark role"
-    >
-      {(Object.keys(roles) as RoleKey[]).map((key) => {
-        const Icon = roleIcons[key]
-        const active = role === key
-        const model = roles[key]
-        return (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            aria-label={`Show ${model.label} dashboard`}
-            onClick={() => onRole(key)}
-            className={`inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition ${
-              active ? 'bg-white shadow-sm' : 'bg-white/60 hover:bg-white'
-            }`}
-            style={{
-              borderColor: active ? model.accent : '#d8ddd8',
-              boxShadow: active ? `0 0 0 2px ${model.soft}` : undefined,
-            }}
-          >
-            <span
-              className="grid size-7 place-items-center rounded-full text-white"
-              style={{ backgroundColor: model.accent }}
-            >
-              <Icon className="size-4" />
-            </span>
-            <span className="text-slate-950">{model.label}</span>
-            <span className="tabular-nums text-slate-500">{model.score}</span>
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
 function PeerComparisonBar({ model }: { model: RoleModel }) {
   const yourScore = model.score
   const { averageScore, topQuartile, comparisonLabel } = model.peer
@@ -874,7 +794,7 @@ function CoreSummary({ model, icon: Icon }: { model: RoleModel; icon: typeof Gra
 
   return (
     <section
-      className="sticky top-0 z-20 relative overflow-hidden rounded-lg border border-slate-200 bg-white p-4 pt-5 shadow-sm sm:p-5 sm:pt-6"
+      className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-4 pt-5 shadow-sm sm:p-5 sm:pt-6"
       aria-label="Result summary"
     >
       <div
@@ -938,42 +858,6 @@ function CoreSummary({ model, icon: Icon }: { model: RoleModel; icon: typeof Gra
         <PeerComparisonBar model={model} />
       </div>
     </section>
-  )
-}
-
-function DashboardSubTabs({
-  tab,
-  onTab,
-}: {
-  tab: DashboardTabKey
-  onTab: (tab: DashboardTabKey) => void
-}) {
-  return (
-    <div
-      className="flex gap-1 overflow-x-auto border-b border-slate-200 pb-px [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      role="tablist"
-      aria-label="Result sections"
-    >
-      {dashboardTabs.map((item) => {
-        const active = tab === item.key
-        return (
-          <button
-            key={item.key}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onTab(item.key)}
-            className={`min-h-12 shrink-0 snap-start border-b-2 px-4 py-2.5 text-sm font-semibold transition ${
-              active
-                ? 'border-slate-950 text-slate-950'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            {item.label}
-          </button>
-        )
-      })}
-    </div>
   )
 }
 
@@ -1232,666 +1116,1214 @@ function PriorityFocusStack({
   )
 }
 
-function GuidanceCtaCard({ model }: { model: RoleModel }) {
-  const scrollToFollowUp = () => {
-    document.getElementById('benchmark-follow-up')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
-  return (
-    <article className="demo-airb airb__leader-cta-card">
-      <h4 className="airb__leader-cta-title">Need more guidance</h4>
-      <p className="airb__leader-cta-body">{model.priority}</p>
-      <button type="button" className="airb__btn airb__btn--premium airb__leader-cta-btn" onClick={scrollToFollowUp}>
-        Request support
-      </button>
-    </article>
-  )
-}
-
-function OverviewPanel({ model }: { model: RoleModel }) {
+function SignalsPanel({ model }: { model: RoleModel }) {
   return (
     <div className="grid gap-4">
       <section className="rounded-lg border border-slate-200 bg-white p-4">
         <p className="text-sm font-semibold uppercase tracking-wide" style={{ color: model.accent }}>
           {model.scene}
         </p>
-
         <h2 className="mt-2 text-xl font-semibold tracking-normal text-slate-950 sm:text-2xl">{model.headline}</h2>
 
         <div className="mt-4">
           <StrengthCard strengths={model.strengths} />
         </div>
-
-        <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{model.metricA.label}</p>
-          {(() => {
-            const metricPct = parseMetricPercent(model.metricA.value)
-            const metricColor = isDependencyMetric(model.metricA.label)
-              ? dependencyIndexColor(metricPct)
-              : model.accent
-            return (
-              <>
-                <p
-                  className="mt-1 text-3xl font-semibold tabular-nums leading-none sm:text-4xl"
-                  style={{ color: metricColor }}
-                >
-                  {model.metricA.value}
-                </p>
-                {isDependencyMetric(model.metricA.label) ? (
-                  <DependencyScaleBar value={metricPct} />
-                ) : null}
-              </>
-            )
-          })()}
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">{model.metricA.note}</p>
-        </div>
-
-        <div className="mt-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Domain breakdown & key signals</h3>
-          <div className="mt-3">
-            <DomainTiles domains={model.domains} />
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <PriorityFocusStack areas={model.focusAreas} domains={model.domains} />
-        </div>
       </section>
 
-      <GuidanceCtaCard model={model} />
+      <div className="grid gap-4 md:grid-cols-2">
+        {[model.metricA, model.metricB].map((metric) => {
+          const metricPct = parseMetricPercent(metric.value)
+          const metricColor = isDependencyMetric(metric.label)
+            ? dependencyIndexColor(metricPct)
+            : model.accent
+          return (
+            <section key={metric.label} className="rounded-lg border border-slate-200 bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{metric.label}</p>
+              <p
+                className="mt-2 text-4xl font-semibold tabular-nums leading-none"
+                style={{ color: metricColor }}
+              >
+                {metric.value}
+              </p>
+              {isDependencyMetric(metric.label) ? <DependencyScaleBar value={metricPct} /> : null}
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">{metric.note}</p>
+            </section>
+          )
+        })}
+      </div>
     </div>
   )
 }
 
-function ProgressPanel({ model, roleKey }: { model: RoleModel; roleKey: RoleKey }) {
-  const currentIndex = Math.min(1, model.journey.length - 1)
-  const retakeTarget = Math.min(model.score + 10, 92)
-  const weakestDomain = model.domains.reduce((weakest, domain) =>
-    domain.value < weakest.value ? domain : weakest,
-  )
+function DomainsPanel({ model }: { model: RoleModel }) {
+  return (
+    <div className="grid gap-4">
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Domain breakdown & key signals
+        </h3>
+        <div className="mt-3">
+          <DomainTiles domains={model.domains} />
+        </div>
+      </section>
 
-  const progressSteps = [
-    {
-      title: model.journey[0] ?? 'Audit complete',
-      body: 'First stamp earned for finishing the audit.',
-    },
-    {
-      title: model.journey[1] ?? 'Practice challenge',
-      body: `Improve ${weakestDomain.label.toLowerCase()} with a one-week habit.`,
-    },
-    {
-      title: model.journey[2] ?? 'Retake evidence',
-      body: `Return and reach ${retakeTarget}% to show improvement.`,
-    },
-    {
-      title: model.journey[3] ?? 'Certificate unlock',
-      body: 'Generate a shareable certificate once progress is evidenced.',
-    },
-  ].map((step, index) => {
-    const status = index <= currentIndex ? 'unlocked' : index === currentIndex + 1 ? 'active' : 'locked'
-    return { ...step, status }
-  })
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <PriorityFocusStack areas={model.focusAreas} domains={model.domains} />
+      </section>
+    </div>
+  )
+}
+
+/* ---------- Questions & weights ---------- */
+
+/** Risk score 0–3 → chip colour (0 = safest, 3 = highest risk). */
+function riskChipColor(score: number) {
+  if (score <= 0) return { bg: '#ecfdf5', fg: '#047857' }
+  if (score === 1) return { bg: '#fefce8', fg: '#a16207' }
+  if (score === 2) return { bg: '#fff7ed', fg: '#c2410c' }
+  return { bg: '#fef2f2', fg: '#b91c1c' }
+}
+
+function QuestionRow({ q }: { q: AuditQuestion }) {
+  return (
+    <article className="rounded-lg border border-slate-200 bg-white p-3">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <p className="min-w-0 flex-1 text-sm font-semibold leading-snug text-slate-900">{q.text}</p>
+        <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-slate-600">
+          {weightScaleLabel(q)}
+        </span>
+      </div>
+      <p className="mt-1 text-[0.65rem] font-medium uppercase tracking-wide text-slate-400">
+        {q.domainLabel} · {q.section}
+      </p>
+      {q.type === 'slider' ? (
+        <p className="mt-2 text-xs text-slate-600">
+          Continuous 0–100% slider — Human Oversight Ratio™. Bands: 0–10% critical · 11–25% high
+          reliance · 26–50% moderate · 51%+ strong oversight.
+        </p>
+      ) : (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {q.options.map((opt) => {
+            const chip = riskChipColor(opt.score)
+            return (
+              <span
+                key={`${q.id}-${opt.value}`}
+                className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium"
+                style={{ backgroundColor: chip.bg, color: chip.fg }}
+              >
+                {opt.label}
+                <strong className="tabular-nums">risk {opt.score}</strong>
+              </span>
+            )
+          })}
+        </div>
+      )}
+    </article>
+  )
+}
+
+function QuestionsStage({
+  role,
+  onPickAudience,
+}: {
+  role: RoleKey
+  onPickAudience: (key: AuditAudienceKey) => void
+}) {
+  const auditKey = auditKeyForRole(role)
+  const audit = AUDITS[auditKey]
+  const totalQ = questionCount(audit)
+  const sections = questionsBySection(audit)
 
   return (
     <div className="grid gap-4">
       <section className="rounded-lg border border-slate-200 bg-white p-4">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide" style={{ color: model.accent }}>
-              Progress passport
-            </p>
-            <h3 className="mt-1 text-lg font-semibold tracking-normal text-slate-950">From audit to evidence</h3>
-          </div>
-          <p className="rounded-md bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
-            {currentIndex + 1} of {progressSteps.length} stamped
-          </p>
-        </div>
-
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${((currentIndex + 1) / progressSteps.length) * 100}%`,
-              backgroundColor: model.accent,
-            }}
-          />
-        </div>
-
-        <div className="benchmark-passport-grid mt-3">
-          {progressSteps.map((step, index) => {
-            const unlocked = step.status === 'unlocked'
-            const active = step.status === 'active'
-            return (
-              <section
-                key={step.title}
-                className="rounded-lg border border-slate-200 p-3"
-                style={{ backgroundColor: active ? model.soft : unlocked ? '#f0fdf4' : '#f8fafc' }}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold"
-                    style={{
-                      backgroundColor: unlocked ? model.accent : '#fff',
-                      boxShadow: `inset 0 0 0 1px ${active ? model.accent : '#cbd5e1'}`,
-                      color: unlocked ? '#fff' : active ? model.accent : '#64748b',
-                    }}
-                  >
-                    {unlocked ? '✓' : index + 1}
-                  </span>
-                  <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
-                    {unlocked ? 'Stamped' : active ? 'Next' : 'Locked'}
-                  </p>
-                </div>
-                <h4 className="mt-2 text-sm font-semibold leading-tight text-slate-950">{step.title}</h4>
-                <p className="mt-1 text-xs leading-relaxed text-slate-600">{step.body}</p>
-              </section>
-            )
-          })}
-        </div>
-      </section>
-
-      <CertificatePanel model={model} roleKey={roleKey} />
-    </div>
-  )
-}
-
-function ResourcesPanel({ model }: { model: RoleModel }) {
-  if (!model.resources.length) {
-    return <p className="text-sm leading-relaxed text-slate-600">No further reading links for this role in the demo yet.</p>
-  }
-
-  return (
-    <div className="demo-airb airb__resources-panel">
-      <section className="airb__leader-help-support airb__benchmark-help-support">
-        <div className="airb__resources-header">
-          <p className="airb__leader-section-label">CPD for teachers and students</p>
-          <p className="airb__resources-intro">
-            Suggested next steps after the audit, kept separate from the follow-up request form below.
-          </p>
-        </div>
-        <ul className="airb__results-resource-links airb__leader-resource-links airb__results-resource-links--cards">
-          {model.resources.map((link) => (
-            <li key={link.url} className="airb__results-resource-item">
-              <ResourceCard link={link} />
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="airb__breaking-resource" aria-labelledby="airb-breaking-now-title">
-        <p className="airb__leader-section-label" id="airb-breaking-now-title">
-          Breaking now
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Live AIRB model · from the published benchmark
         </p>
-        <ResourceCard link={breakingNowResource} featured />
-      </section>
-    </div>
-  )
-}
-
-function ResourceCard({ link, featured = false }: { link: ResourceLink; featured?: boolean }) {
-  return (
-    <a
-      className={`airb__results-resource-card${featured ? ' airb__results-resource-card--featured' : ''}`}
-      href={link.url}
-      {...(link.external
-        ? { target: '_blank', rel: 'noopener noreferrer' }
-        : {})}
-    >
-      {link.image ? (
-        <span className="airb__resource-link-media">
-          <img className="airb__resource-link-thumb" src={link.image} alt="" loading="lazy" decoding="async" />
-        </span>
-      ) : (
-        <span className="airb__resource-link-media airb__resource-link-media--icon" aria-hidden="true" />
-      )}
-      <span className="airb__resource-link-body">
-        {link.kicker ? <span className="airb__resource-link-kicker">{link.kicker}</span> : null}
-        <span className="airb__resource-link-label">{link.label}</span>
-        {link.description ? <span className="airb__resource-link-description">{link.description}</span> : null}
-      </span>
-      <ArrowRight className="airb__resource-link-arrow" aria-hidden="true" />
-    </a>
-  )
-}
-
-function CertificatePanel({ model, roleKey }: { model: RoleModel; roleKey: RoleKey }) {
-  const certRef = useRef<HTMLDivElement>(null)
-  const [certificateId] = useState(makeCertificateId)
-  const [generatingCertificate, setGeneratingCertificate] = useState(false)
-  const [certificateError, setCertificateError] = useState<string | null>(null)
-  const [theme, setTheme] = useState<EvidenceTheme | ''>('')
-  const [action, setAction] = useState('')
-  const [change, setChange] = useState('')
-  const [link, setLink] = useState('')
-  const [unlocked, setUnlocked] = useState(false)
-  const roleCopy = getBenchmarkCertificateCopy(roleKey as BenchmarkCertificateRole)
-  const scoreEligible = model.score >= SCORE_THRESHOLD
-  const assessment = useMemo(
-    () => assessCertificateEvidence(roleKey, theme, action, change, link, model.score),
-    [action, change, link, model.score, roleKey, theme],
-  )
-  const canUnlock = scoreEligible && assessment.can_unlock && !unlocked
-
-  const certificateData = useMemo(() => {
-    const demoName =
-      roleKey === 'teacher'
-        ? 'Demo Teacher'
-        : roleKey === 'student'
-          ? 'Demo Student'
-          : roleKey === 'parent'
-            ? 'Demo Parent'
-            : roleKey === 'leader'
-              ? 'Demo Leader'
-              : roleKey === 'support'
-                ? 'Demo Support Staff'
-                : 'Demo Participant'
-
-    const data = buildCertificateData({
-      teacherName: demoName,
-      schoolName: '',
-      participationDate: new Date().toISOString().slice(0, 10),
-      schoolLogoUrl: null,
-      certificateId,
-      involvedAs: roleKey === 'teacher' ? 'teacher' : '',
-    })
-
-    return {
-      ...data,
-      copy: {
-        headlinePrimary: roleCopy.headlinePrimary,
-        affiliationPrefix: 'from',
-        body: roleCopy.body,
-      },
-    }
-  }, [certificateId, roleCopy.body, roleCopy.headlinePrimary, roleKey])
-
-  const downloadCertificate = async () => {
-    const el = certRef.current
-    if (!el) return
-    setGeneratingCertificate(true)
-    setCertificateError(null)
-    try {
-      const safeRole = model.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-      await exportCertificatePdf(el, `ai-readiness-${safeRole}-progress-certificate.pdf`)
-    } catch (e) {
-      setCertificateError(e instanceof Error ? e.message : 'Could not generate certificate PDF.')
-    } finally {
-      setGeneratingCertificate(false)
-    }
-  }
-
-  const qualityClass =
-    assessment.quality_tier === 'strong_evidence'
-      ? 'is-strong'
-      : assessment.quality_tier === 'likely_valid'
-        ? 'is-valid'
-        : assessment.quality_tier === 'needs_manual_review'
-          ? 'is-review'
-          : 'is-weak'
-
-  return (
-    <section className="rounded-lg border border-slate-200 bg-white p-4">
-      <div className="benchmark-certificate-layout">
-        <div className="grid content-start gap-3">
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5">
-            <div className="flex items-start gap-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-slate-200">
-                <FileText className="size-5" style={{ color: model.accent }} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: model.accent }}>
-                  Certificate
-                </p>
-                <h3 className="mt-1 text-lg font-semibold leading-tight text-slate-950">
-                  {roleCopy.headlinePrimary}
-                </h3>
-                <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                  {unlocked
-                    ? 'Certificate unlocked in this demo session.'
-                    : 'Submit one verified action linked to an AI Awareness Day theme.'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="benchmark-certificate-stats">
-            <div className="rounded-lg border border-slate-200 bg-white p-2.5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Current</p>
-              <p className="mt-1 text-xl font-semibold tabular-nums leading-none text-slate-950">{model.score}%</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-2.5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Need</p>
-              <p className="mt-1 text-xl font-semibold tabular-nums leading-none text-slate-950">{SCORE_THRESHOLD}%</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-white p-2.5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Gap</p>
-              <p className="mt-1 text-xl font-semibold tabular-nums leading-none text-slate-950">
-                {scoreEligible ? 'Met' : `+${SCORE_THRESHOLD - model.score}`}
+        <h2 className="mt-1 text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
+          Questions and option risk scores
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+          Pulled from the live AI Risk &amp; Readiness Benchmark™. Each radio answer carries a{' '}
+          <strong className="font-semibold text-slate-800">risk score 0–3</strong>. Domain risk =
+          mean of its question scores ÷ 3 × 100. Readiness is the inverse. The teacher oversight
+          slider is the Human Oversight Ratio™ — share of AI output modified before use.
+        </p>
+        <p className="mt-2 text-sm">
+          <a
+            href={LIVE_BENCHMARK_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-teal-700 underline underline-offset-2 hover:text-teal-900"
+          >
+            aiawarenessday.co.uk/timeline/ai-risk-readiness-benchmark
+          </a>
+        </p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {(Object.keys(AUDITS) as AuditAudienceKey[]).map((key) => (
+            <div key={key} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
+                {AUDITS[key].label}
+              </p>
+              <p className="mt-0.5 text-2xl font-semibold tabular-nums text-slate-950">
+                {questionCount(AUDITS[key])}
+              </p>
+              <p className="text-[0.65rem] text-slate-500">
+                questions
+                {AUDIENCE_WEIGHTS[key] != null ? ` · school blend ×${AUDIENCE_WEIGHTS[key]}` : ''}
               </p>
             </div>
-          </div>
-
-          <p
-            className={`benchmark-certificate-gate text-xs leading-relaxed ${scoreEligible ? 'is-open' : 'is-blocked'}`}
-          >
-            {scoreEligible
-              ? 'Reach the benchmark score threshold and complete one of the evidence options below.'
-              : `Reach at least ${SCORE_THRESHOLD}% on the benchmark before unlocking.`}
-          </p>
-
-          <fieldset className="benchmark-certificate-themes border-0 p-0" disabled={!scoreEligible || unlocked}>
-            <legend className="text-xs font-semibold text-slate-700">Choose one theme</legend>
-            <div className="benchmark-certificate-theme-grid mt-2">
-              {EVIDENCE_THEMES.map((item) => (
-                <label key={item.slug} className="benchmark-certificate-theme-option">
-                  <input
-                    type="radio"
-                    name={`demo-cert-theme-${roleKey}`}
-                    value={item.slug}
-                    checked={theme === item.slug}
-                    onChange={() => setTheme(item.slug)}
-                  />
-                  <span>{item.label}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <label className="benchmark-certificate-reflection block text-xs font-semibold text-slate-700">
-            {roleCopy.evidenceActionLabel}
-            <textarea
-              className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-slate-800"
-              rows={3}
-              value={action}
-              disabled={!scoreEligible || unlocked}
-              onChange={(event) => setAction(event.target.value)}
-              placeholder={roleCopy.evidenceActionPlaceholder}
-            />
-          </label>
-
-          <label className="benchmark-certificate-reflection block text-xs font-semibold text-slate-700">
-            {roleCopy.evidenceChangeLabel}
-            <textarea
-              className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-slate-800"
-              rows={3}
-              value={change}
-              disabled={!scoreEligible || unlocked}
-              onChange={(event) => setChange(event.target.value)}
-              placeholder={roleCopy.evidenceChangePlaceholder}
-            />
-          </label>
-
-          <label className="benchmark-certificate-reflection block text-xs font-semibold text-slate-700">
-            {roleCopy.evidenceLinkLabel}
-            <input
-              className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-slate-800"
-              type="url"
-              value={link}
-              disabled={!scoreEligible || unlocked}
-              onChange={(event) => setLink(event.target.value)}
-              placeholder={roleCopy.evidenceLinkPlaceholder}
-            />
-          </label>
-
-          <div className={`benchmark-certificate-quality ${qualityClass}`}>
-            <div className="benchmark-certificate-quality__head">
-              <span className="benchmark-certificate-quality__label">Evidence quality</span>
-              <strong className="benchmark-certificate-quality__score">{assessment.quality_score}/100</strong>
-              <span className="benchmark-certificate-quality__tier">{assessment.tier_label}</span>
-            </div>
-            <ul className="benchmark-certificate-pathways">
-              {EVIDENCE_PATHWAYS.map((pathway) => {
-                const met = assessment.pathways[pathway.key]
-                return (
-                  <li
-                    key={pathway.key}
-                    className={`benchmark-certificate-pathways__item${met ? ' is-met' : ''}`}
-                  >
-                    <span className="benchmark-certificate-pathways__status" aria-hidden="true">
-                      {met ? '✓' : '○'}
-                    </span>
-                    <span>
-                      <strong>{pathway.label}</strong>
-                      <br />
-                      <span className="benchmark-certificate-pathways__hint">{pathway.hint}</span>
-                    </span>
-                  </li>
-                )
-              })}
-            </ul>
-            {assessment.messages.length ? (
-              <ul className="benchmark-certificate-quality__messages">
-                {assessment.messages.map((message) => (
-                  <li key={message}>{message}</li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-
-          {certificateError ? (
-            <p className="text-sm font-semibold text-red-600" role="alert">
-              {certificateError}
-            </p>
-          ) : null}
-
-          <div className="grid gap-2">
-            <button
-              type="button"
-              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-              style={{ backgroundColor: model.accent }}
-              disabled={!canUnlock}
-              onClick={() => setUnlocked(true)}
-            >
-              {unlocked ? 'Certificate unlocked' : 'Unlock certificate'}
-              <LockKeyhole className="size-4" />
-            </button>
-            <button
-              type="button"
-              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={!unlocked || generatingCertificate}
-              onClick={() => void downloadCertificate()}
-            >
-              {generatingCertificate ? 'Generating PDF...' : 'Download / print certificate'}
-              <Download className="size-4" />
-            </button>
-          </div>
-
-          <p className="text-xs leading-relaxed text-slate-500">
-            Evidence is checked before unlock. This recognises progress — not certification as an expert user.
-          </p>
+          ))}
         </div>
-
-        <div className="rounded-lg border border-slate-200 bg-slate-50 p-2">
-          <CertificatePreview ref={certRef} data={certificateData} compact />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function FollowUpForm({ model }: { model: RoleModel }) {
-  const [supportInterests, setSupportInterests] = useState<string[]>(['whole_school_cpd'])
-  const [supportSubmitted, setSupportSubmitted] = useState(false)
-  const weakestDomain = model.domains.reduce((weakest, domain) =>
-    domain.value < weakest.value ? domain : weakest,
-  )
-
-  const toggleSupportInterest = (slug: string) => {
-    setSupportSubmitted(false)
-    setSupportInterests((current) =>
-      current.includes(slug)
-        ? current.filter((item) => item !== slug)
-        : [...current, slug],
-    )
-  }
-
-  return (
-    <section
-      id="benchmark-follow-up"
-      className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5"
-      aria-labelledby="benchmark-follow-up-heading"
-    >
-      <div className="flex items-start gap-3">
-        <MessageCircleQuestion className="mt-1 size-5 shrink-0" style={{ color: model.accent }} />
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: model.accent }}>
-            Optional next step
+        <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
+            Nine DfE-aligned domains
           </p>
-          <h2 id="benchmark-follow-up-heading" className="mt-1 text-lg font-semibold leading-tight text-slate-950">
-            Want help with your next step?
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            You have seen your results — tell us if you would like CPD, classroom resources, or a
-            whole-school rollout.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4 grid gap-2">
-        {supportOptions.map((option) => {
-          const checked = supportInterests.includes(option.slug)
-          return (
-            <label
-              key={option.slug}
-              className={`flex min-h-12 cursor-pointer gap-3 rounded-lg border p-3 text-sm transition ${
-                checked ? 'bg-blue-50' : 'bg-slate-50'
-              }`}
-              style={{ borderColor: checked ? model.accent : '#e2e8f0' }}
-            >
-              <input
-                type="checkbox"
-                className="mt-1 size-4 shrink-0"
-                checked={checked}
-                onChange={() => toggleSupportInterest(option.slug)}
-              />
-              <span>
-                <span className="block font-semibold text-slate-950">{option.label}</span>
-                <span className="mt-0.5 block leading-relaxed text-slate-600">{option.description}</span>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {Object.values(DOMAIN_LABELS).map((label) => (
+              <span
+                key={label}
+                className="rounded-md bg-white px-2 py-1 text-[0.7rem] font-medium text-slate-700 ring-1 ring-slate-200"
+              >
+                {label}
               </span>
-            </label>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <h3 className="text-sm font-semibold text-slate-900">Shared scales (option → risk 0–3)</h3>
+        <div className="mt-3 grid gap-3 lg:grid-cols-3">
+          {WEIGHT_SCALES.map((scale) => (
+            <div key={scale.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs font-semibold text-slate-800">{scale.title}</p>
+              <p className="mt-0.5 text-[0.7rem] text-slate-500">{scale.note}</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {scale.options.map((opt) => {
+                  const chip = riskChipColor(opt.score)
+                  return (
+                    <span
+                      key={opt.label}
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[0.7rem] font-medium"
+                      style={{ backgroundColor: chip.bg, color: chip.fg }}
+                    >
+                      {opt.label} <strong className="tabular-nums">{opt.score}</strong>
+                    </span>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="flex flex-wrap gap-1.5">
+        {(Object.keys(AUDITS) as AuditAudienceKey[]).map((key) => {
+          const active = key === auditKey
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => onPickAudience(key)}
+              className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+                active
+                  ? 'border-slate-900 bg-slate-900 text-white'
+                  : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400'
+              }`}
+            >
+              {AUDITS[key].label}
+            </button>
           )
         })}
       </div>
 
-      <fieldset className="mt-4">
-        <legend className="text-sm font-semibold text-slate-700">Which best describes you?</legend>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          {['Teacher', 'Middle leader', 'Senior leader', 'Governor'].map((roleLabel) => (
-            <label
-              key={roleLabel}
-              className="flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700"
-            >
-              <input type="radio" name="teacher-support-role" defaultChecked={roleLabel === 'Teacher'} />
-              {roleLabel}
-            </label>
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: audit.color }}>
+              {audit.label} audit
+            </p>
+            <h3 className="mt-1 text-lg font-semibold text-slate-950">{totalQ} questions</h3>
+            <p className="mt-1 max-w-2xl text-sm text-slate-600">{audit.blurb}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4">
+          {sections.map((section) => (
+            <div key={section.name}>
+              <div className="mb-2 flex items-center gap-2">
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: audit.color }}
+                  aria-hidden
+                />
+                <h4 className="text-sm font-semibold text-slate-900">{section.name}</h4>
+                <span className="text-[0.65rem] font-medium uppercase tracking-wide text-slate-400">
+                  {section.questions[0]?.domainLabel}
+                </span>
+              </div>
+              <div className="grid gap-2">
+                {section.questions.map((q) => (
+                  <QuestionRow key={q.id} q={q} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-      </fieldset>
+      </section>
+    </div>
+  )
+}
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <label className="block text-sm font-semibold text-slate-700">
-          Your name
-          <input
-            className="mt-1 min-h-12 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-normal text-slate-700 outline-none focus:border-blue-500 focus:bg-white"
-            type="text"
-            autoComplete="name"
-            placeholder="Alex Morgan"
-          />
-        </label>
-        <label className="block text-sm font-semibold text-slate-700">
-          Email address *
-          <input
-            className="mt-1 min-h-12 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-normal text-slate-700 outline-none focus:border-blue-500 focus:bg-white"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="alex@school.org"
-          />
-        </label>
+/* ---------- Intro stage ---------- */
+
+const BENCHMARK_FOCUS: Partial<Record<RoleKey, string>> = {
+  teacher: 'Reliance, data entry, verification',
+  student: 'Critical thinking, prompt literacy',
+  parent: 'Safety awareness, home usage',
+  leader: 'Compliance, governance, policy',
+  support: 'Operational dependency, data protection',
+  public: 'Personal AI use, verification habits',
+}
+
+const AUDIT_CONTRAST: Array<{ traditional: string; behavioural: string }> = [
+  { traditional: 'Do you have an AI policy?', behavioural: 'Do staff actually follow it?' },
+  { traditional: 'Do you provide training?', behavioural: 'Has training reduced risky behaviour?' },
+  { traditional: 'Do you allow AI tools?', behavioural: 'How dependent are people becoming on them?' },
+  { traditional: 'Are safeguards documented?', behavioural: 'Are people actively bypassing safeguards?' },
+  { traditional: 'Is governance in place?', behavioural: 'Where is data exposure actually occurring?' },
+]
+
+function IntroStage({
+  role,
+  onPickRole,
+}: {
+  role: RoleKey
+  onPickRole: (key: RoleKey) => void
+}) {
+  return (
+    <div className="grid gap-4">
+      <section className="rounded-lg border border-slate-200 bg-white p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          AI Risk &amp; Readiness Benchmark™ · free for UK schools
+        </p>
+        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+          Do you actually know how AI is changing{' '}
+          <span style={{ color: '#dc2626' }}>behaviour</span> in your school community?
+        </h2>
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+          Most AI audits only measure <strong className="font-semibold text-slate-800">adoption</strong> —
+          the tech, the policies, the infrastructure. They completely miss{' '}
+          <strong className="font-semibold text-slate-800">exposure</strong> — how dependent
+          teachers and students are becoming on these tools, and where the actual risks lie. The
+          benchmark measures behavioural risk across nine DfE-aligned domains and produces two
+          signature data points: the <strong className="font-semibold text-slate-800">AI Dependency Index™</strong>{' '}
+          and the <strong className="font-semibold text-slate-800">DfE Alignment Score</strong>.
+        </p>
+        <div className="mt-4">
+          <ReadinessScaleBar score={roles[role].score} />
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <h3 className="text-sm font-semibold text-slate-900">
+          Traditional AI audits vs the behavioural risk approach
+        </h3>
+        <div className="mt-3 grid gap-1.5">
+          {AUDIT_CONTRAST.map((row) => (
+            <div key={row.traditional} className="grid gap-1.5 sm:grid-cols-2">
+              <p className="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-500 ring-1 ring-slate-200">
+                {row.traditional}
+              </p>
+              <p className="rounded-md bg-teal-50 px-3 py-2 text-xs font-medium text-teal-900 ring-1 ring-teal-200">
+                {row.behavioural}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs leading-relaxed text-slate-500">
+          Focusing on behavioural risk shows leaders exactly where confidence outpaces competence —
+          and where to target interventions.
+        </p>
+      </section>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {(Object.keys(roles) as RoleKey[]).map((key) => {
+          const RoleIcon = roleIcons[key]
+          const roleModel = roles[key]
+          const band = scoreReadinessBand(roleModel.score)
+          const active = key === role
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => onPickRole(key)}
+              className={`rounded-lg border bg-white p-4 text-left transition-shadow hover:shadow-md ${
+                active ? 'border-slate-900 ring-1 ring-slate-900' : 'border-slate-200'
+              }`}
+              aria-pressed={active}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span
+                  className="grid size-9 place-items-center rounded-lg text-white"
+                  style={{ backgroundColor: roleModel.accent }}
+                >
+                  <RoleIcon className="size-5" />
+                </span>
+                <span
+                  className="text-2xl font-semibold tabular-nums leading-none"
+                  style={{ color: band.color }}
+                >
+                  {roleModel.score}
+                </span>
+              </div>
+              <p className="mt-3 text-sm font-semibold text-slate-950">
+                {roleModel.label} Benchmark
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                {BENCHMARK_FOCUS[key] ?? roleModel.audience}
+              </p>
+              <p className="mt-2 text-xs font-semibold" style={{ color: band.color }}>
+                {band.label} · {roleModel.risk}% behavioural risk
+              </p>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Behaviour simulator ---------- */
+
+type SimBehaviourKey = 'verify' | 'challenge' | 'attemptFirst' | 'withoutAi' | 'privacy' | 'literacy'
+type SimValues = Record<SimBehaviourKey, number>
+
+const SIM_BEHAVIOURS: Array<{
+  key: SimBehaviourKey
+  label: string
+  hint: string
+  domain: string
+  group: 'oversight' | 'dependency' | 'privacy' | 'literacy'
+}> = [
+  {
+    key: 'verify',
+    label: 'Verify AI outputs against a reliable source',
+    hint: '0 = never check · 100 = always check',
+    domain: 'Human Oversight',
+    group: 'oversight',
+  },
+  {
+    key: 'challenge',
+    label: 'Challenge or push back on AI recommendations',
+    hint: '0 = accept everything · 100 = interrogate everything',
+    domain: 'Human Oversight',
+    group: 'oversight',
+  },
+  {
+    key: 'attemptFirst',
+    label: 'Attempt tasks yourself before reaching for AI',
+    hint: '0 = AI first, always · 100 = own attempt first',
+    domain: 'AI Dependency',
+    group: 'dependency',
+  },
+  {
+    key: 'withoutAi',
+    label: 'Could work effectively for a week with no AI',
+    hint: '0 = could not cope · 100 = no problem',
+    domain: 'AI Dependency',
+    group: 'dependency',
+  },
+  {
+    key: 'privacy',
+    label: 'Keep personal / pupil data out of AI tools',
+    hint: '0 = paste anything in · 100 = strictly anonymised',
+    domain: 'Privacy & Data Protection',
+    group: 'privacy',
+  },
+  {
+    key: 'literacy',
+    label: 'Understand hallucinations and tool limits',
+    hint: '0 = unaware · 100 = confident and current',
+    domain: 'AI Literacy',
+    group: 'literacy',
+  },
+]
+
+const SIM_PRESETS: Array<{ id: string; label: string; values: SimValues }> = [
+  {
+    id: 'hands-off',
+    label: 'Hands-off adopter',
+    values: { verify: 15, challenge: 10, attemptFirst: 20, withoutAi: 25, privacy: 40, literacy: 30 },
+  },
+  {
+    id: 'busy',
+    label: 'Busy pragmatist',
+    values: { verify: 45, challenge: 40, attemptFirst: 50, withoutAi: 45, privacy: 60, literacy: 55 },
+  },
+  {
+    id: 'balanced',
+    label: 'Balanced practitioner',
+    values: { verify: 65, challenge: 60, attemptFirst: 65, withoutAi: 60, privacy: 80, literacy: 70 },
+  },
+  {
+    id: 'cautious',
+    label: 'Cautious verifier',
+    values: { verify: 90, challenge: 85, attemptFirst: 85, withoutAi: 80, privacy: 95, literacy: 90 },
+  },
+]
+
+const SIM_DEFAULT: SimValues = SIM_PRESETS[1].values
+
+/** Mirrors the live benchmark scoring: readiness = mean of behaviour values,
+ *  dependency index inverts the dependency answers, oversight ratio averages
+ *  the oversight answers. */
+function computeSimResult(values: SimValues) {
+  const all = SIM_BEHAVIOURS.map((b) => values[b.key])
+  const readiness = Math.round(all.reduce((a, b) => a + b, 0) / all.length)
+  const depIndex = Math.round(100 - (values.attemptFirst + values.withoutAi) / 2)
+  const oversight = Math.round((values.verify + values.challenge) / 2)
+  return { readiness, risk: 100 - readiness, depIndex, oversight }
+}
+
+function oversightBandFor(v: number) {
+  if (v <= 10) return { label: 'Critical reliance', color: '#dc2626' }
+  if (v <= 25) return { label: 'High reliance', color: '#ea580c' }
+  if (v <= 50) return { label: 'Moderate oversight', color: '#d97706' }
+  return { label: 'Strong human oversight', color: '#16a34a' }
+}
+
+const SIM_GRID_COLS = 8
+const SIM_GRID_ROWS = 6
+const SIM_GRID_CELLS = SIM_GRID_COLS * SIM_GRID_ROWS
+
+/** Visual metaphor: every cell is an AI output this term. Green = checked by a
+ *  human, red = unchecked and habit-forming, grey = unchecked. */
+function ClassroomGrid({ oversight, depIndex }: { oversight: number; depIndex: number }) {
+  const checkedCells = Math.round((oversight / 100) * SIM_GRID_CELLS)
+  const riskyCells = Math.round(((SIM_GRID_CELLS - checkedCells) * depIndex) / 100)
+
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white">
+      <div className="border-b border-slate-200 bg-slate-50 px-3 py-2">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500">
+          A term of AI outputs · each square is one AI-assisted task
+        </p>
+      </div>
+      <div className="flex items-center justify-center px-4 py-4">
+        <div
+          className="inline-grid grid-cols-8 gap-1"
+          role="img"
+          aria-label={`${checkedCells} of ${SIM_GRID_CELLS} AI outputs human-checked, ${riskyCells} high-risk`}
+        >
+          {Array.from({ length: SIM_GRID_CELLS }).map((_, i) => {
+            const isChecked = i < checkedCells
+            const isRisky = !isChecked && i < checkedCells + riskyCells
+            return (
+              <span
+                key={i}
+                className="size-[clamp(1.1rem,2.2vw,1.7rem)] rounded-sm transition-colors duration-200"
+                style={{
+                  backgroundColor: isChecked ? '#16a34a' : isRisky ? '#dc2626' : '#cbd5e1',
+                  opacity: isChecked ? 0.9 : isRisky ? 0.85 : 0.7,
+                }}
+              />
+            )
+          })}
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-3 border-t border-slate-200 px-3 py-2 text-[0.65rem] font-medium text-slate-500">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[#16a34a]" /> Human-checked
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[#dc2626]" /> Unchecked + dependent
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[#cbd5e1]" /> Unchecked
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function SimulatorStage({
+  values,
+  onChange,
+}: {
+  values: SimValues
+  onChange: (values: SimValues) => void
+}) {
+  const result = computeSimResult(values)
+  const band = scoreReadinessBand(result.readiness)
+  const ovBand = oversightBandFor(result.oversight)
+  const depColor = dependencyIndexColor(result.depIndex)
+  const activePreset = SIM_PRESETS.find((p) =>
+    SIM_BEHAVIOURS.every((b) => p.values[b.key] === values[b.key]),
+  )
+
+  return (
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <p className="max-w-xl text-sm leading-relaxed text-slate-600">
+          Recreates the benchmark's two signature metrics: the AI Dependency Index™ (reliance,
+          verification and independent-practice habits) and the Human Oversight Ratio™ (0–10%
+          critical · 11–25% high reliance · 26–50% moderate · 51%+ strong oversight). Drag the
+          sliders or load a persona and watch the scores move.
+        </p>
+        <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-amber-700">
+          Modelled
+        </span>
       </div>
 
-      <label className="mt-4 block text-sm font-semibold text-slate-700">
-        School / trust name
-        <input
-          className="mt-1 min-h-12 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-normal text-slate-700 outline-none focus:border-blue-500 focus:bg-white"
-          type="text"
-          autoComplete="organization"
-          placeholder="Riverside Academy"
-        />
-      </label>
+      <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid content-start gap-3">
+          <div className="flex flex-wrap gap-1.5">
+            {SIM_PRESETS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => onChange({ ...preset.values })}
+                className={`rounded-lg border px-2.5 py-1.5 text-[0.7rem] font-semibold transition-colors ${
+                  activePreset?.id === preset.id
+                    ? 'border-slate-900 bg-slate-900 text-white'
+                    : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400 hover:text-slate-900'
+                }`}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
 
-      <label className="mt-4 block text-sm font-semibold text-slate-700">
-        Anything else we should know?
-        <textarea
-          className="mt-1 min-h-20 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-normal text-slate-700 outline-none focus:border-blue-500 focus:bg-white"
-          placeholder={`Example: We need help with ${weakestDomain.label.toLowerCase()} across Year 8 lessons.`}
-        />
-      </label>
+          <div className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4">
+            {SIM_BEHAVIOURS.map((behaviour) => (
+              <label key={behaviour.key} className="block">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-xs font-semibold text-slate-800">{behaviour.label}</span>
+                  <span className="text-sm font-semibold tabular-nums text-slate-950">
+                    {values[behaviour.key]}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={values[behaviour.key]}
+                  onChange={(e) =>
+                    onChange({ ...values, [behaviour.key]: Number(e.target.value) })
+                  }
+                  className="mt-1.5 w-full accent-slate-900"
+                  aria-label={behaviour.label}
+                />
+                <div className="mt-0.5 flex justify-between text-[0.62rem] text-slate-400">
+                  <span>{behaviour.hint}</span>
+                  <span className="font-semibold uppercase tracking-wide">{behaviour.domain}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
 
-      {supportSubmitted ? (
-        <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
-          Demo request captured. In production this would submit through the existing interest form.
+        <div className="grid content-start gap-3">
+          <div className="grid gap-2 sm:grid-cols-3">
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
+                Readiness
+              </p>
+              <p
+                className="mt-1 text-4xl font-semibold tabular-nums leading-none"
+                style={{ color: band.color }}
+              >
+                {result.readiness}
+              </p>
+              <p className="mt-1 text-xs font-semibold" style={{ color: band.color }}>
+                {band.label}
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
+                AI Dependency Index™
+              </p>
+              <p
+                className="mt-1 text-4xl font-semibold tabular-nums leading-none"
+                style={{ color: depColor }}
+              >
+                {result.depIndex}
+              </p>
+              <DependencyScaleBar value={result.depIndex} />
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-3">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-500">
+                Oversight Ratio™
+              </p>
+              <p
+                className="mt-1 text-4xl font-semibold tabular-nums leading-none"
+                style={{ color: ovBand.color }}
+              >
+                {result.oversight}
+              </p>
+              <p className="mt-1 text-xs font-semibold" style={{ color: ovBand.color }}>
+                {ovBand.label}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <ReadinessScaleBar score={result.readiness} />
+          </div>
+
+          <ClassroomGrid oversight={result.oversight} depIndex={result.depIndex} />
+
+          <div
+            className="rounded-lg border border-l-4 bg-white px-3 py-2.5 text-sm leading-relaxed text-slate-600"
+            style={{ borderColor: '#e2e8f0', borderLeftColor: band.color }}
+          >
+            {result.depIndex >= 60
+              ? 'High dependency with weak checking habits — the riskiest profile in the benchmark. Rebuilding the "attempt first" habit moves the score fastest.'
+              : result.oversight < 40
+                ? 'Outputs are flowing through unchecked. Verification is the single highest-leverage behaviour in the model.'
+                : result.readiness >= 75
+                  ? 'Strong profile — AI used as a tool with human judgement kept in the loop. This is what the benchmark rewards.'
+                  : 'A workable middle ground. Nudging verification and first-attempt habits above 70% lifts this into the Strong band.'}
+          </div>
+
+          <details className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500">
+            <summary className="cursor-pointer text-[0.7rem] font-semibold uppercase tracking-wider text-slate-700">
+              Model transparency
+            </summary>
+            <div className="mt-2 space-y-1.5 font-mono text-[0.68rem] leading-relaxed">
+              <p>readiness = mean(all six behaviours)</p>
+              <p>dependency = 100 − mean(attemptFirst, withoutAi)</p>
+              <p>oversight = mean(verify, challenge)</p>
+              <p className="font-sans">
+                Simplified from the live audit (which weights per-question option values per
+                audience). Illustrative — six sliders stand in for the full question set.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Spot-the-risk quiz ---------- */
+
+type QuizScenario = {
+  id: string
+  text: string
+  risky: boolean
+  domain: string
+  why: string
+}
+
+const QUIZ_SCENARIOS: QuizScenario[] = [
+  {
+    id: 'send-report',
+    text: 'Pasting a pupil\u2019s SEND report into a free chatbot to draft a summary.',
+    risky: true,
+    domain: 'Privacy & Data Protection',
+    why: 'Identifiable and sensitive pupil data entering an external AI tool — the highest-severity behaviour in the benchmark.',
+  },
+  {
+    id: 'starter-check',
+    text: 'Using AI to draft a lesson starter, then checking the facts against the textbook.',
+    risky: false,
+    domain: 'Human Oversight',
+    why: 'AI drafts, human verifies against a reliable source. Exactly the oversight habit the benchmark rewards.',
+  },
+  {
+    id: 'feedback-unread',
+    text: 'Sending AI-written pupil feedback home without reading it first.',
+    risky: true,
+    domain: 'Human Oversight',
+    why: 'Unreviewed output going straight to families removes the human from the loop entirely.',
+  },
+  {
+    id: 'quiz-edit',
+    text: 'Asking AI to suggest quiz questions, then editing them for your class.',
+    risky: false,
+    domain: 'AI Dependency',
+    why: 'The teacher stays the author — AI accelerates, the human adapts and owns the result.',
+  },
+  {
+    id: 'names-marking',
+    text: 'Marking with a consumer chatbot, pupil names left in the work.',
+    risky: true,
+    domain: 'Privacy & Data Protection',
+    why: 'Names make it personal data. Anonymise first, or use an approved tool with a data agreement.',
+  },
+  {
+    id: 'trust-lesson',
+    text: 'Running a class discussion on when AI answers can\u2019t be trusted.',
+    risky: false,
+    domain: 'AI Literacy',
+    why: 'Actively building pupils\u2019 verification habits — literacy work the benchmark scores highly.',
+  },
+  {
+    id: 'week-unreviewed',
+    text: 'Letting AI plan a full week of lessons unreviewed because you\u2019re behind.',
+    risky: true,
+    domain: 'AI Dependency',
+    why: 'Time pressure is how dependency forms: volume plus zero review compounds the risk.',
+  },
+  {
+    id: 'anonymised-errors',
+    text: 'Anonymising pupil work before using AI to spot common errors.',
+    risky: false,
+    domain: 'Privacy & Data Protection',
+    why: 'Data minimisation done right — the insight without the personal data.',
+  },
+]
+
+function QuizStage() {
+  const [order] = useState(() =>
+    [...QUIZ_SCENARIOS].sort(() => Math.random() - 0.5),
+  )
+  const [round, setRound] = useState(0)
+  const [picked, setPicked] = useState<boolean | null>(null)
+  const [score, setScore] = useState(0)
+  const [attempts, setAttempts] = useState(0)
+
+  const scenario = order[round % order.length]
+  const answered = picked !== null
+  const correct = answered && picked === scenario.risky
+
+  const choose = (guessRisky: boolean) => {
+    if (answered) return
+    setPicked(guessRisky)
+    setAttempts((n) => n + 1)
+    if (guessRisky === scenario.risky) setScore((n) => n + 1)
+  }
+
+  const next = () => {
+    setPicked(null)
+    setRound((n) => n + 1)
+  }
+
+  return (
+    <div className="mx-auto grid w-full max-w-2xl gap-4 text-center">
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Safe or risky?</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Score: <span className="font-semibold tabular-nums text-slate-900">{score} / {attempts}</span>
+          {' · '}scenarios drawn from the audit questions
         </p>
-      ) : null}
+      </div>
 
-      <button
-        type="button"
-        className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold"
-        style={{ borderColor: model.accent, color: model.accent }}
-        onClick={() => setSupportSubmitted(true)}
-      >
-        Request follow-up
-        <ArrowRight className="size-4" />
-      </button>
-    </section>
+      <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate-400">
+          Scenario {attempts + (answered ? 0 : 1)}
+        </p>
+        <p className="mt-2 text-lg font-medium leading-relaxed text-slate-900">{scenario.text}</p>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        {([false, true] as const).map((guessRisky) => {
+          const isPick = answered && picked === guessRisky
+          const isAnswer = answered && scenario.risky === guessRisky
+          return (
+            <button
+              key={String(guessRisky)}
+              type="button"
+              disabled={answered}
+              onClick={() => choose(guessRisky)}
+              className={`rounded-lg border-2 px-4 py-4 text-base font-semibold transition-colors ${
+                isAnswer
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-800'
+                  : isPick
+                    ? 'border-rose-400 bg-rose-50 text-rose-700'
+                    : answered
+                      ? 'border-slate-200 bg-white text-slate-400'
+                      : 'border-slate-300 bg-white text-slate-800 hover:border-slate-500'
+              }`}
+            >
+              {guessRisky ? 'Risky' : 'Safe'}
+            </button>
+          )
+        })}
+      </div>
+
+      {answered ? (
+        <div
+          className={`rounded-lg border p-4 text-left ${
+            correct ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'
+          }`}
+          role="status"
+        >
+          <p className={`text-sm font-bold ${correct ? 'text-emerald-800' : 'text-rose-700'}`}>
+            {correct ? 'Correct' : 'Not quite'} — this one is {scenario.risky ? 'risky' : 'safe'}.
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-slate-700">{scenario.why}</p>
+          <p className="mt-2 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500">
+            Domain · {scenario.domain}
+          </p>
+          <button
+            type="button"
+            onClick={next}
+            className="mt-3 rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white"
+          >
+            Next scenario
+          </button>
+        </div>
+      ) : null}
+    </div>
   )
 }
 
 export function BenchmarkDashboardsDemo() {
   const [role, setRole] = useState<RoleKey>('teacher')
-  const [tab, setTab] = useState<DashboardTabKey>('overview')
+  const [tab, setTab] = useState<DashboardTabKey>('intro')
+  const [simValues, setSimValues] = useState<SimValues>({ ...SIM_DEFAULT })
   const model = roles[role]
   const Icon = roleIcons[role]
+  const slideIndex = Math.max(0, dashboardTabs.findIndex((item) => item.key === tab))
+  const activeSlide = dashboardTabs[slideIndex] ?? dashboardTabs[0]
+  const weakestDomain = model.domains.reduce((weakest, domain) =>
+    domain.value < weakest.value ? domain : weakest,
+  )
+  const simResult = useMemo(() => computeSimResult(simValues), [simValues])
+
+  const go = (direction: number) => {
+    const next = (slideIndex + direction + dashboardTabs.length) % dashboardTabs.length
+    setTab(dashboardTabs[next].key)
+  }
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      void document.documentElement.requestFullscreen()
+    } else {
+      void document.exitFullscreen()
+    }
+  }
+
+  useEffect(() => {
+    document.documentElement.classList.add('airb-deck-mode')
+    document.body.classList.add('airb-deck-mode')
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      const tag = (event.target as HTMLElement | null)?.tagName
+      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return
+
+      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        event.preventDefault()
+        go(1)
+      } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault()
+        go(-1)
+      } else if (event.key >= '1' && event.key <= String(dashboardTabs.length)) {
+        setTab(dashboardTabs[Number(event.key) - 1].key)
+      } else if (event.key.toLowerCase() === 'f') {
+        toggleFullscreen()
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.documentElement.classList.remove('airb-deck-mode')
+      document.body.classList.remove('airb-deck-mode')
+    }
+  }, [slideIndex])
 
   return (
-    <main className="min-h-svh bg-[#f5f1e8] text-slate-900">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:gap-5 sm:py-5 lg:px-6">
-        <header className="rounded-lg border border-slate-200 bg-white p-4">
-          <Link
-            to="/"
-            className="text-sm font-medium text-slate-500 underline-offset-4 hover:text-slate-950 hover:underline"
+    <main className="airb-deck">
+      <div className="airb-deck__atmosphere" aria-hidden="true">
+        <i className="airb-deck__orb airb-deck__orb--warm" />
+        <i className="airb-deck__orb airb-deck__orb--cool" />
+        <i className="airb-deck__grid-texture" />
+      </div>
+
+      <header className="airb-deck__header">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSlide.key}
+            className="airb-deck__header-copy"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.2 }}
           >
+            <p className="airb-deck__kicker">{activeSlide.kicker}</p>
+            <h1 className="airb-deck__title">{activeSlide.label}</h1>
+          </motion.div>
+        </AnimatePresence>
+        <div className="airb-deck__header-actions">
+          <span className="airb-deck__count" aria-label={`Slide ${slideIndex + 1} of ${dashboardTabs.length}`}>
+            <strong>{String(slideIndex + 1).padStart(2, '0')}</strong>
+            <i />
+            <span>{String(dashboardTabs.length).padStart(2, '0')}</span>
+          </span>
+          <span className="airb-deck__status">
+            {model.score}/100 · {scoreReadinessBand(model.score).label}
+          </span>
+          <nav className="airb-deck__dots" aria-label="Dashboard slides">
+            {dashboardTabs.map((item, index) => (
+              <button
+                key={item.key}
+                type="button"
+                className={`airb-deck__dot${index === slideIndex ? ' is-active' : ''}`}
+                onClick={() => setTab(item.key)}
+                aria-label={item.label}
+                aria-current={index === slideIndex ? 'true' : undefined}
+              />
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <div className="airb-deck__progress" aria-hidden="true">
+        <i style={{ transform: `scaleX(${(slideIndex + 1) / dashboardTabs.length})` }} />
+      </div>
+
+      <div className="airb-deck__stage">
+        <aside className="airb-deck__rail airb-deck__rail--left" aria-label="Audience filters">
+          <div className="airb-deck__brand">
+            <p>Behavioural AI benchmark</p>
+            <h2>Teacher dependency simulator</h2>
+          </div>
+          <div className="airb-deck__rail-block">
+            <p className="airb-deck__rail-label">Audience</p>
+            <div className="airb-deck__role-list" role="tablist" aria-label="Benchmark role">
+              {(Object.keys(roles) as RoleKey[]).map((key) => {
+                const RoleIcon = roleIcons[key]
+                const roleModel = roles[key]
+                const active = key === role
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    className={`airb-deck__role${active ? ' is-active' : ''}`}
+                    onClick={() => setRole(key)}
+                  >
+                    <RoleIcon aria-hidden="true" />
+                    <span>{roleModel.label}</span>
+                    <strong>{roleModel.score}</strong>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div className="airb-deck__rail-summary">
+            <p className="airb-deck__rail-label">Current profile</p>
+            <strong>
+              {model.score}
+              <small>/100</small>
+            </strong>
+            <span>{model.risk}% behavioural risk</span>
+            <p>{model.motif}</p>
+          </div>
+          <Link to="/" className="airb-deck__back-link">
             ← All demos
           </Link>
-          <h1 className="mt-3 text-2xl font-semibold tracking-normal text-slate-950 sm:text-3xl">
-            Benchmark results dashboard
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            Education-focused layout: core score stays visible, detail lives in clear sections, and
-            follow-up support comes after the results.
-          </p>
-        </header>
+        </aside>
 
-        <RoleChips role={role} onRole={setRole} />
-        <CoreSummary model={model} icon={Icon} />
-
-        <section className="rounded-lg border border-slate-200 bg-white">
-          <div className="px-4 pt-3 sm:px-5">
-            <DashboardSubTabs tab={tab} onTab={setTab} />
-          </div>
-          <div className="p-4 sm:p-5" role="tabpanel">
-            {tab === 'overview' && <OverviewPanel model={model} />}
-            {tab === 'progress' && <ProgressPanel model={model} roleKey={role} />}
-            {tab === 'resources' && <ResourcesPanel model={model} />}
+        <section className="airb-deck__canvas" aria-live="polite">
+          <div className="airb-deck__canvas-scroll">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSlide.key}
+                className="airb-deck__panel"
+                role="tabpanel"
+                aria-label={activeSlide.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.22 }}
+              >
+                {tab === 'intro' ? (
+                  <IntroStage
+                    role={role}
+                    onPickRole={(key) => {
+                      setRole(key)
+                      setTab('questions')
+                    }}
+                  />
+                ) : null}
+                {tab === 'questions' ? (
+                  <QuestionsStage
+                    role={role}
+                    onPickAudience={(key) =>
+                      setRole(key === 'support_staff' ? 'support' : (key as RoleKey))
+                    }
+                  />
+                ) : null}
+                {tab === 'score' ? <CoreSummary model={model} icon={Icon} /> : null}
+                {tab === 'signals' ? <SignalsPanel model={model} /> : null}
+                {tab === 'domains' ? <DomainsPanel model={model} /> : null}
+                {tab === 'simulator' ? (
+                  <SimulatorStage values={simValues} onChange={setSimValues} />
+                ) : null}
+                {tab === 'quiz' ? <QuizStage /> : null}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </section>
 
-        <FollowUpForm model={model} />
+        <aside className="airb-deck__rail airb-deck__rail--right" aria-label="Slide context">
+          {tab === 'intro' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">What it measures</p>
+                <p className="airb-deck__rail-copy">
+                  Behaviour, not tools — oversight, dependency, privacy and literacy across eight
+                  DfE-aligned domains.
+                </p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">How to drive</p>
+                <p className="airb-deck__rail-copy">
+                  Pick an audience card, then ← → through the deck. Next slide shows every question
+                  and its weights.
+                </p>
+              </div>
+            </>
+          ) : null}
 
-        <footer className="pb-4 text-sm text-slate-500">
-          Prototype only. Uses mock result data and does not touch the WordPress benchmark plugin.
-        </footer>
+          {tab === 'questions' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Within an audit</p>
+                <p className="airb-deck__rail-copy">
+                  readiness = mean(all answer scores). Each option carries a fixed 0–100 weight.
+                </p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">School blend</p>
+                <p className="airb-deck__rail-copy">
+                  Leader ×1.4 · Teacher ×1.2 · Student ×1.0 · Parent ×0.9
+                </p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Tags</p>
+                <p className="airb-deck__rail-copy">
+                  Dep questions feed the dependency index. Oversight questions feed the oversight
+                  ratio.
+                </p>
+              </div>
+            </>
+          ) : null}
+
+          {tab === 'simulator' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Live result</p>
+                <article className="airb-deck__signal">
+                  <span>Readiness</span>
+                  <strong>{simResult.readiness}/100</strong>
+                  <p>{scoreReadinessBand(simResult.readiness).label}</p>
+                </article>
+                <article className="airb-deck__signal">
+                  <span>AI Dependency Index™</span>
+                  <strong>{simResult.depIndex}</strong>
+                  <p>{oversightBandFor(simResult.oversight).label}</p>
+                </article>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Try this</p>
+                <p className="airb-deck__rail-copy">
+                  Load “Hands-off adopter”, then raise only the verify slider — watch oversight
+                  rescue the grid before the score follows.
+                </p>
+              </div>
+            </>
+          ) : null}
+
+          {tab === 'quiz' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Why these scenarios</p>
+                <p className="airb-deck__rail-copy">
+                  Each one maps to a real audit question. The risky ones are the behaviours that
+                  drag the readiness score down hardest.
+                </p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Severity order</p>
+                <p className="airb-deck__rail-copy">
+                  Pupil data in AI tools ranks above unchecked outputs, which rank above
+                  convenience habits.
+                </p>
+              </div>
+            </>
+          ) : null}
+
+          {tab === 'score' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Band</p>
+                <p className="airb-deck__rail-copy">
+                  {scoreReadinessBand(model.score).label} · {model.risk}% behavioural risk
+                </p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Peer context</p>
+                <p className="airb-deck__rail-copy">
+                  {peerGapAverageText(model.score, model.peer.averageScore)} vs {model.peer.comparisonLabel}
+                </p>
+              </div>
+            </>
+          ) : null}
+
+          {tab === 'signals' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Priority action</p>
+                <p className="airb-deck__rail-copy">{model.priority}</p>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Next step</p>
+                <p className="airb-deck__rail-copy">{model.nextAction}</p>
+              </div>
+            </>
+          ) : null}
+
+          {tab === 'domains' ? (
+            <>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Weakest domain</p>
+                <article className="airb-deck__signal">
+                  <span>{weakestDomain.label}</span>
+                  <strong>{weakestDomain.value}%</strong>
+                  <p>{weakestDomain.prompt}</p>
+                </article>
+              </div>
+              <div className="airb-deck__rail-block">
+                <p className="airb-deck__rail-label">Priority action</p>
+                <p className="airb-deck__rail-copy">{model.priority}</p>
+              </div>
+            </>
+          ) : null}
+
+          <button type="button" className="airb-deck__fullscreen" onClick={toggleFullscreen}>
+            <Maximize2 aria-hidden="true" />
+            Fullscreen
+          </button>
+        </aside>
       </div>
+
+      <footer className="airb-deck__footer">
+        <p>
+          AIRB · ← → navigate · 1–{dashboardTabs.length} jump · F fullscreen · {model.label.toLowerCase()} ·{' '}
+          {activeSlide.label.toLowerCase()}
+        </p>
+        <div>
+          <button type="button" onClick={() => go(-1)}>
+            Prev
+          </button>
+          <button type="button" onClick={() => go(1)}>
+            Next
+          </button>
+        </div>
+      </footer>
+      <p className="airb-deck__prototype">
+        Prototype only · mock result data · WordPress benchmark remains untouched
+      </p>
     </main>
   )
 }
+

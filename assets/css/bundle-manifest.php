@@ -40,5 +40,6 @@ return array(
 		'pages/assets-pack.css',
 		'responsive/responsive.css',
 		'responsive/mobile.css',
+		'aiad27.css',
 	),
 );

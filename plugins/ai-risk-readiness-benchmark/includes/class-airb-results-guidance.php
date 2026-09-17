@@ -127,7 +127,7 @@ class AIRB_Results_Guidance {
 				continue;
 			}
 			$score = AIRB_Scoring::score_answer( $questions_by_id[ $qid ], $answers[ $qid ] );
-			if ( $score < self::WEAK_ANSWER_MIN ) {
+			if ( null === $score || $score < self::WEAK_ANSWER_MIN ) {
 				continue;
 			}
 			$text = (string) ( $improvements[ $qid ] ?? '' );

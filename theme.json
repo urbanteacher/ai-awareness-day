@@ -10,57 +10,280 @@
     "color": {
       "link": true,
       "palette": [
-        { "slug": "white", "color": "#ffffff", "name": "White" },
-        { "slug": "black", "color": "#000000", "name": "Black" },
-        { "slug": "gray-100", "color": "#f5f5f5", "name": "Gray 100" },
-        { "slug": "gray-500", "color": "#737373", "name": "Gray 500" },
-        { "slug": "gray-900", "color": "#171717", "name": "Gray 900" },
-        { "slug": "green-600", "color": "#1e1e1e", "name": "Brand dark" },
-        { "slug": "accent-green", "color": "#22c55e", "name": "Accent green" }
-      ]
+        {
+          "slug": "cream",
+          "color": "#F6F4ED",
+          "name": "Cream"
+        },
+        {
+          "slug": "ink",
+          "color": "#231F20",
+          "name": "Ink"
+        },
+        {
+          "slug": "dim",
+          "color": "#54504E",
+          "name": "Dim"
+        },
+        {
+          "slug": "rule",
+          "color": "#C9C6BE",
+          "name": "Rule"
+        },
+        {
+          "slug": "card",
+          "color": "#EAE7DF",
+          "name": "Card wash"
+        },
+        {
+          "slug": "safe",
+          "color": "#00BEDD",
+          "name": "Safe \u00b7 ground"
+        },
+        {
+          "slug": "safe-deep",
+          "color": "#006A7D",
+          "name": "Safe \u00b7 ink"
+        },
+        {
+          "slug": "smart",
+          "color": "#FF7038",
+          "name": "Smart \u00b7 ground"
+        },
+        {
+          "slug": "smart-deep",
+          "color": "#A7350B",
+          "name": "Smart \u00b7 ink"
+        },
+        {
+          "slug": "creative",
+          "color": "#AC91FF",
+          "name": "Creative \u00b7 ground"
+        },
+        {
+          "slug": "creative-deep",
+          "color": "#6441B8",
+          "name": "Creative \u00b7 ink"
+        },
+        {
+          "slug": "responsible",
+          "color": "#63DF93",
+          "name": "Responsible \u00b7 ground"
+        },
+        {
+          "slug": "responsible-deep",
+          "color": "#176E3B",
+          "name": "Responsible \u00b7 ink"
+        },
+        {
+          "slug": "future",
+          "color": "#FA83EB",
+          "name": "Future \u00b7 ground"
+        },
+        {
+          "slug": "future-deep",
+          "color": "#983488",
+          "name": "Future \u00b7 ink"
+        },
+        {
+          "slug": "white",
+          "color": "#F6F4ED",
+          "name": "white (legacy)"
+        },
+        {
+          "slug": "black",
+          "color": "#231F20",
+          "name": "black (legacy)"
+        },
+        {
+          "slug": "gray-100",
+          "color": "#EAE7DF",
+          "name": "gray-100 (legacy)"
+        },
+        {
+          "slug": "gray-500",
+          "color": "#54504E",
+          "name": "gray-500 (legacy)"
+        },
+        {
+          "slug": "gray-900",
+          "color": "#231F20",
+          "name": "gray-900 (legacy)"
+        },
+        {
+          "slug": "green-600",
+          "color": "#231F20",
+          "name": "green-600 (legacy)"
+        },
+        {
+          "slug": "accent-green",
+          "color": "#176E3B",
+          "name": "accent-green (legacy)"
+        }
+      ],
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "customGradient": false
     },
     "typography": {
       "defaultFontSizes": false,
       "lineHeight": true,
       "fontFamilies": [
         {
-          "slug": "display",
-          "name": "Intel Clear",
-          "fontFamily": "'Intel Clear', sans-serif",
+          "slug": "body",
+          "name": "AIAD Sans",
+          "fontFamily": "'AIAD Sans', Arial, sans-serif",
           "fontFace": [
             {
-              "fontFamily": "Intel Clear",
-              "fontWeight": "400 700",
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "400",
               "fontStyle": "normal",
               "fontDisplay": "swap",
-              "src": [ "https://fonts.cdnfonts.com/s/18413/IntelClear-Light.woff" ]
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Regular.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "600",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Semibold.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "700 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Bold.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "400",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-RegularItalic.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "600",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-SemiboldItalic.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "700 900",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-BoldItalic.woff2"
+              ]
             }
           ]
         },
         {
-          "slug": "body",
-          "name": "DM Sans",
-          "fontFamily": "'DM Sans', sans-serif",
+          "slug": "display",
+          "name": "AIAD Sans",
+          "fontFamily": "'AIAD Sans', Arial, sans-serif",
           "fontFace": [
             {
-              "fontFamily": "DM Sans",
-              "fontWeight": "400 700",
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "400",
               "fontStyle": "normal",
               "fontDisplay": "swap",
-              "src": [ "https://fonts.gstatic.com/s/dmsans/v11/rP2Fp2K8z96vMv6_vg7m.woff2" ]
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Regular.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "600",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Semibold.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "700 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-Bold.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "400",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-RegularItalic.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "600",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-SemiboldItalic.woff2"
+              ]
+            },
+            {
+              "fontFamily": "AIAD Sans",
+              "fontWeight": "700 900",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": [
+                "file:./assets/fonts/aiad27/UncutSans-BoldItalic.woff2"
+              ]
             }
           ]
         }
       ],
       "fontSizes": [
-        { "slug": "small", "size": "0.875rem", "name": "Small" },
-        { "slug": "medium", "size": "1rem", "name": "Medium" },
-        { "slug": "large", "size": "1.25rem", "name": "Large" },
-        { "slug": "x-large", "size": "1.5rem", "name": "Extra large" }
+        {
+          "slug": "small",
+          "size": "0.875rem",
+          "name": "Small"
+        },
+        {
+          "slug": "medium",
+          "size": "1rem",
+          "name": "Medium"
+        },
+        {
+          "slug": "large",
+          "size": "1.25rem",
+          "name": "Large"
+        },
+        {
+          "slug": "x-large",
+          "size": "1.5rem",
+          "name": "Extra large"
+        }
       ]
     },
     "spacing": {
-      "units": [ "px", "em", "rem", "%", "vw", "vh" ]
+      "units": [
+        "px",
+        "em",
+        "rem",
+        "%",
+        "vw",
+        "vh"
+      ]
     },
     "border": {
       "color": true,
@@ -71,7 +294,8 @@
   },
   "styles": {
     "color": {
-      "text": "var(--wp--preset--color--gray-900, #171717)"
+      "text": "#231F20",
+      "background": "#F6F4ED"
     },
     "typography": {
       "fontFamily": "var(--wp--preset--font-family--body)",
@@ -79,7 +303,9 @@
     },
     "elements": {
       "link": {
-        "color": { "text": "var(--wp--preset--color--accent-green, #22c55e)" }
+        "color": {
+          "text": "#006A7D"
+        }
       }
     }
   }

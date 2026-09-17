@@ -167,29 +167,29 @@
     align-self: start;
     padding: 1rem;
     border: none;
-    background: var(--gray-900, #111);
-    color: var(--white, #fff);
+    background: var(--gray-900, #231F20);
+    color: var(--white, #F6F4ED);
   }
 
   .resource-card--placeholder:not(.resource-card--placeholder-pointed):hover {
     border: none;
-    background: #000;
+    background: #231F20;
     transform: none;
     box-shadow: none;
   }
 
   .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-title {
     font-size: 1.05rem;
-    color: var(--white, #fff);
+    color: var(--white, #F6F4ED);
   }
 
   .resource-card--placeholder:not(.resource-card--placeholder-pointed):hover .resource-card__placeholder-title {
-    color: var(--white, #fff);
+    color: var(--white, #F6F4ED);
   }
 
   .resource-card--placeholder:not(.resource-card--placeholder-pointed) .resource-card__placeholder-desc {
     font-size: 0.9rem;
-    color: var(--gray-300, #d4d4d4);
+    color: var(--gray-300, #C9C6BE);
   }
 
   .tools-grid .resource-card--placeholder,
@@ -230,21 +230,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0a0a0a;
+  background-color: #231F20;
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, transparent 28%),
     radial-gradient(ellipse 125% 85% at 92% 6%, rgba(255, 255, 255, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 100% 75% at 6% 94%, rgba(255, 255, 255, 0.04) 0%, transparent 46%),
     linear-gradient(
       148deg,
-      #646464 0%,
-      #505050 10%,
-      #3d3d3d 24%,
-      #2a2a2a 42%,
-      #1a1a1a 58%,
-      #101010 72%,
-      #050505 88%,
-      #000000 100%
+      #54504E 0%,
+      #231F20 10%,
+      #231F20 24%,
+      #231F20 42%,
+      #231F20 58%,
+      #231F20 72%,
+      #231F20 88%,
+      #231F20 100%
     ),
     linear-gradient(180deg, transparent 46%, rgba(0, 0, 0, 0.5) 100%);
   background-size: cover, cover, cover, cover, cover;

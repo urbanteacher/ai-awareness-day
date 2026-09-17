@@ -23,7 +23,7 @@ function aiad_get_thank_you_letter_copy(): array {
 				'ai-awareness-day'
 			),
 			__(
-				'The idea behind the day has always been simple: to build AI literacy across UK schools by asking every school to commit to just one activity — one conversation, one lesson, one assembly. This year, we rallied around a single, powerful message: Know it. Question it. Use it wisely.',
+				'The idea behind the day has always been simple: to build AI literacy across UK schools by asking every school to commit to just one activity — one conversation, one lesson, one assembly. This year, we rallied around a single, powerful message: Your AI. Your choices. Keep Humans in the Loop.',
 				'ai-awareness-day'
 			),
 			__(
@@ -31,7 +31,7 @@ function aiad_get_thank_you_letter_copy(): array {
 				'ai-awareness-day'
 			),
 			__(
-				'We would love to see how you took part. Please do share any photos from your activities, or tag us in your posts using #AiAwarenessDay26 — we would be delighted to celebrate your work alongside others across the UK.',
+				'We would love to see how you took part. Please do share any photos from your activities, or tag us in your posts using #AiAwarenessDay27 — we would be delighted to celebrate your work alongside others across the UK.',
 				'ai-awareness-day'
 			),
 		),

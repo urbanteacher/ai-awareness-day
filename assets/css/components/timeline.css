@@ -13,11 +13,11 @@
 
     0%,
     100% {
-        color: #f87171;
+        color: var(--a27-crit);
     }
 
     50% {
-        color: #ffffff;
+        color: #F6F4ED;
     }
 }
 
@@ -117,7 +117,7 @@
 .timeline-stats-bar__value {
     font-variant-numeric: tabular-nums;
     font-weight: 700;
-    color: #4ade80;
+    color: #63DF93;
     /* Bright green to stand out */
     text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
     /* Subtle glow */
@@ -486,31 +486,38 @@
 }
 
 .timeline-entry__cover-fallback--announcement {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 35%, #4c1d95 100%);
+    background: var(--a27-creative, #AC91FF);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--resource {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 35%, #0f172a 100%);
+    background: var(--a27-safe, #00BEDD);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--partner {
-    background: linear-gradient(135deg, #10b981 0%, #059669 35%, #111827 100%);
+    background: var(--a27-responsible, #63DF93);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--milestone {
-    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 35%, #292524 100%);
+    background: var(--a27-smart, #FF7038);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--media {
-    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 35%, #18181b 100%);
+    background: var(--a27-future, #FA83EB);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--event {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 35%, #0f172a 100%);
+    background: var(--a27-ink, #231F20);
+    color: var(--a27-cream, #F6F4ED);
 }
 
 .timeline-entry__cover-fallback--signup {
-    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 35%, #111827 100%);
+    background: var(--a27-safe, #00BEDD);
+    color: var(--a27-ink, #231F20);
 }
 
 .timeline-entry__cover-fallback--tech::before {
@@ -518,8 +525,8 @@
     position: absolute;
     inset: 0;
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        linear-gradient(rgba(35, 31, 32, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(35, 31, 32, 0.08) 1px, transparent 1px);
     background-size: 24px 24px;
     pointer-events: none;
 }
@@ -529,9 +536,15 @@
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.15), transparent 45%),
-        radial-gradient(circle at 80% 75%, rgba(0, 0, 0, 0.35), transparent 50%);
+        radial-gradient(circle at 22% 18%, rgba(246, 244, 237, 0.35), transparent 42%),
+        radial-gradient(circle at 82% 78%, rgba(35, 31, 32, 0.12), transparent 48%);
     pointer-events: none;
+}
+
+.timeline-entry__cover-fallback--event.timeline-entry__cover-fallback--tech::before {
+    background-image:
+        linear-gradient(rgba(246, 244, 237, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(246, 244, 237, 0.1) 1px, transparent 1px);
 }
 
 .timeline-entry__cover-fallback-icon {
@@ -542,14 +555,21 @@
     justify-content: center;
     width: 3rem;
     height: 3rem;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(35, 31, 32, 0.22);
+    background: rgba(246, 244, 237, 0.35);
+    color: var(--a27-ink, #231F20);
+}
+
+.timeline-entry__cover-fallback--event .timeline-entry__cover-fallback-icon {
+    border-color: rgba(246, 244, 237, 0.28);
+    background: rgba(246, 244, 237, 0.12);
+    color: var(--a27-cream, #F6F4ED);
 }
 
 .timeline-entry__cover-fallback-icon svg {
     width: 1.25rem;
     height: 1.25rem;
-    color: var(--white);
+    color: inherit;
 }
 
 .timeline-entry__cover-fallback-title {
@@ -562,6 +582,7 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     line-height: 1.35;
+    color: inherit;
 }
 
 .timeline-entry__cover-fallback-hint {
@@ -1040,7 +1061,7 @@
     position: relative;
     display: block;
     overflow: hidden;
-    background: #111;
+    background: #231F20;
     text-decoration: none;
 }
 
@@ -1128,42 +1149,46 @@ a.timeline-magazine__hero-media-link .timeline-magazine__cover img {
 
 .timeline-magazine__hero-media-frame.timeline-cover--announcement,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--announcement {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 35%, #4c1d95 100%);
+    background: var(--a27-creative, #AC91FF);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--resource,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--resource {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 35%, #0f172a 100%);
+    background: var(--a27-safe, #00BEDD);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--partner,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--partner {
-    background: linear-gradient(135deg, #10b981 0%, #059669 35%, #111827 100%);
+    background: var(--a27-responsible, #63DF93);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--milestone,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--milestone {
-    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 35%, #292524 100%);
+    background: var(--a27-smart, #FF7038);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--media,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--media {
-    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 35%, #18181b 100%);
+    background: var(--a27-future, #FA83EB);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--event,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--event {
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 35%, #0f172a 100%);
+    background: var(--a27-ink, #231F20);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--signup,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--signup {
-    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 35%, #111827 100%);
+    background: var(--a27-safe, #00BEDD);
 }
 
 .timeline-magazine__hero-media-frame.timeline-cover--pinned,
 .timeline-magazine__card-media-link--chamfer.timeline-cover--pinned {
-    background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);
+    background: var(--a27-ink, #231F20);
+}
+
+.timeline-swipe__cover--fallback.timeline-cover--pinned {
+    background: transparent;
 }
 
 /* Bottom scrim on cover image (not a coloured theme wedge) */

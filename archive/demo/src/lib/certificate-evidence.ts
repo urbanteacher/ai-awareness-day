@@ -91,6 +91,7 @@ export function assessCertificateEvidence(
   link = '',
   benchmarkScore = 0,
 ): EvidenceAssessment {
+  void role
   const combined = `${action} ${change}`.trim()
   const messages: string[] = []
   let score = 0

@@ -302,7 +302,7 @@ class AIRB_Shortcode {
 					'certificateAllocatedId' => __( 'Certificate ID {id} allocated.', 'ai-risk-benchmark' ),
 					'certificateContactEmail' => __( 'Email for certificate updates', 'ai-risk-benchmark' ),
 					'certificateContactEmailPlaceholder' => __( 'you@school.org or parent@email.com', 'ai-risk-benchmark' ),
-					'certificateContactEmailHint' => __( 'Required for students and parents so we can email when your certificate is approved.', 'ai-risk-benchmark' ),
+					'certificateContactEmailHint' => __( 'Required so we can email your certificate or tell you when it is approved.', 'ai-risk-benchmark' ),
 					'certificateContactEmailRequired' => __( 'Add an email address so we can tell you when your certificate is approved.', 'ai-risk-benchmark' ),
 					'certificatePopupBlocked' => __( 'Allow pop-ups to download or print your certificate.', 'ai-risk-benchmark' ),
 					'error'          => __( 'Something went wrong. Please try again.', 'ai-risk-benchmark' ),

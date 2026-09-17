@@ -13,38 +13,34 @@ $hero_marquee = function_exists( 'aiad_get_hero_partner_marquee_entries' )
     ? aiad_get_hero_partner_marquee_entries()
     : array();
 ?>
-<section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero">
+<section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero" data-strand="safe">
     <div class="container">
         <div class="hero-title-block<?php echo ! empty( $hero_marquee ) ? ' hero-title-block--partner-marquee' : ''; ?>">
-            <?php
-            $defaults = aiad_get_customizer_defaults();
-            ?>
-            <h1 class="hero-date">
-                <?php
-                $hero_date = (string) get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
-                if ( preg_match( '/^(.*?)\s+(\d{4})$/u', trim( $hero_date ), $hero_date_parts ) ) {
-                    echo '<span class="hero-date__title">' . esc_html( $hero_date_parts[1] ) . '</span>';
-                    echo '<span class="hero-date__year">' . esc_html( $hero_date_parts[2] ) . '</span>';
-                } else {
-                    echo '<span class="hero-date__title">' . esc_html( $hero_date ) . '</span>';
-                }
-                ?>
-            </h1>
-
-            <p class="hero-slogan">
-                <?php echo esc_html( get_theme_mod( 'aiad_hero_slogan', $defaults['aiad_hero_slogan'] ) ); ?>
-            </p>
-            <p class="hero-subtitle">
-                <?php echo esc_html( get_theme_mod( 'aiad_hero_subtitle', $defaults['aiad_hero_subtitle'] ) ); ?>
-            </p>
-
-            <div class="hero-cta">
-                <a href="#contact" class="hero-cta__btn hero-cta__btn--primary">
-                    <?php esc_html_e( 'Register Your School', 'ai-awareness-day' ); ?>
-                </a>
-                <a href="<?php echo esc_url( aiad_get_benchmark_start_url() ); ?>" class="hero-cta__btn hero-cta__btn--secondary">
-                    <?php esc_html_e( 'Check your AI readiness', 'ai-awareness-day' ); ?>
-                </a>
+            <div class="hero-copy">
+                <div class="hero-brand">
+                    <img class="hero-lockup" src="<?php echo esc_url( AIAD_URI . '/assets/brand/aiad27/aiad27-lockup-wordmark.svg' ); ?>" alt="AI Awareness Day 2027" width="300" height="36" />
+                    <h1 class="hero-date">
+                        <span class="hero-date__line"><?php esc_html_e( 'Keep Humans in', 'ai-awareness-day' ); ?></span>
+                        <span class="hero-date__line hero-date__line--loop"><?php esc_html_e( 'the Loop', 'ai-awareness-day' ); ?></span>
+                    </h1>
+                    <span class="hero-brand__mark" aria-hidden="true"></span>
+                </div>
+                <p class="hero-subtitle"><strong><?php esc_html_e( 'We are back for 2027.', 'ai-awareness-day' ); ?></strong> <?php esc_html_e( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ); ?></p>
+                <div class="hero-cta">
+                    <a href="#contact" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Bring AiAd27 to your school', 'ai-awareness-day' ); ?></a>
+                    <a href="<?php echo esc_url( aiad_get_benchmark_start_url() ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Check your AI readiness', 'ai-awareness-day' ); ?></a>
+                </div>
+            </div>
+            <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
+                <div class="hero-strand-feature__stage" aria-live="off">
+                    <span class="hero-strand-feature__word">Safe</span>
+                </div>
+                <p class="hero-strand-feature__summary"><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></p>
+                <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
+                    <?php foreach ( array( 'safe' => 'Safe', 'smart' => 'Smart', 'creative' => 'Creative', 'responsible' => 'Responsible', 'future' => 'Future' ) as $slug => $label ) : ?>
+                        <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $label ); ?></a>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
             <?php

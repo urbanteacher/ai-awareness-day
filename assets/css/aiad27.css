@@ -61,9 +61,9 @@ body {
 
 .hero-title-block {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: clamp(2rem, 5vw, 4.5rem);
+  gap: clamp(1.75rem, 3.5vw, 2.75rem);
   min-height: 0;
   padding: clamp(3.5rem, 7vw, 6.5rem) 0 clamp(3rem, 6vw, 5.5rem);
   text-align: left;
@@ -71,7 +71,8 @@ body {
 
 .hero-copy {
   align-self: start;
-  max-width: 710px;
+  max-width: none;
+  width: 100%;
   position: relative;
   top: auto;
   z-index: 1;
@@ -86,23 +87,56 @@ body {
   text-transform: uppercase;
 }
 
+.hero-brand {
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-template-rows: auto auto;
+  column-gap: clamp(1.75rem, 4vw, 3.25rem);
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  font-size: clamp(3.25rem, 7.2vw, 6.7rem);
+}
+
 .hero-lockup {
+  grid-column: 1;
+  grid-row: 1;
   display: block;
   width: min(300px, 100%);
   height: auto;
-  margin: 0 0 1.55rem auto;
+  margin: 0 0 1.25rem auto;
 }
 
 .hero-title-block .hero-date {
-  color: #FFFFFF;
-  font-size: clamp(3.25rem, 7.2vw, 6.7rem);
+  grid-column: 1;
+  grid-row: 2;
+  color: #F6F4ED;
+  font-size: 1em;
   font-weight: 700;
   letter-spacing: -.06em;
   line-height: .9;
   margin: 0;
-  max-width: 710px;
   text-align: left;
-  text-wrap: balance;
+}
+
+.hero-title-block .hero-date__line {
+  display: block;
+}
+
+.hero-title-block .hero-date__line--loop {
+  text-align: right;
+}
+
+.hero-brand__mark {
+  grid-column: 2;
+  grid-row: 2;
+  display: block;
+  align-self: center;
+  width: 1.72em;
+  height: 1.72em;
+  background: var(--a27-ink, #231F20);
+  -webkit-mask: var(--hero-mark) center / contain no-repeat;
+  mask: var(--hero-mark) center / contain no-repeat;
 }
 
 .hero-title-block .hero-subtitle {
@@ -110,7 +144,7 @@ body {
   font-size: clamp(1.12rem, 2vw, 1.45rem);
   line-height: 1.35;
   margin: 1.65rem 0 0;
-  max-width: 560px;
+  max-width: min(42rem, 100%);
   text-align: left;
 }
 
@@ -124,7 +158,7 @@ body {
   column-gap: 0;
   row-gap: 0;
   margin: 1rem 0 0;
-  max-width: none;
+  max-width: min(42rem, 100%);
   width: 100%;
 }
 
@@ -159,25 +193,21 @@ body {
   max-width: none;
   color: var(--a27-ink);
   z-index: 0;
+  margin-top: .35rem;
 }
 
 .hero-strand-feature__stage {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(1rem, 2vw, 1.5rem);
+  display: block;
   width: 100%;
   min-height: 0;
-  margin: .25rem 0 0;
+  margin: 0;
   padding: .2rem 0 .15rem;
   perspective: 950px;
-  font-size: clamp(3.5rem, 4.8vw, 5rem);
+  font-size: clamp(3.75rem, 6vw, 6rem);
 }
 
 .hero-strand-feature__word {
   display: block;
-  flex: 1 1 auto;
-  min-width: 0;
   font-size: 1em;
   font-weight: 700;
   letter-spacing: -.085em;
@@ -185,31 +215,17 @@ body {
   transform-origin: left center;
 }
 
-/* These two labels are longer than the other three. They have their own
-   scale so they remain a single, intentional word rather than crossing into
-   the campaign copy at desktop widths. */
+/* Longer labels keep a single intentional word on the full-width stage. */
 .hero-section[data-strand="creative"] .hero-strand-feature__word {
-  font-size: clamp(3.35rem, 4.25vw, 4.75rem);
+  font-size: clamp(3.5rem, 5.4vw, 5.5rem);
 }
 
 .hero-section[data-strand="responsible"] .hero-strand-feature__word {
-  font-size: clamp(2.85rem, 3.6vw, 4rem);
+  font-size: clamp(3rem, 4.6vw, 4.75rem);
   letter-spacing: -.095em;
 }
 
 .hero-strand-feature.is-flipping .hero-strand-feature__word { animation: aiad27StrandFlip .54s cubic-bezier(.2,.8,.2,1); }
-
-.hero-strand-feature__mark {
-  background: currentColor;
-  display: block;
-  flex: 0 0 auto;
-  align-self: flex-end;
-  height: .88em;
-  width: .88em;
-  margin: 0;
-  -webkit-mask: var(--hero-mark) center / contain no-repeat;
-  mask: var(--hero-mark) center / contain no-repeat;
-}
 
 .hero-strand-feature__summary { border-top: 1px solid currentColor; font-size: 1.1rem; line-height: 1.25; margin: .85rem 0 0; padding: .8rem 0 .95rem; }
 
@@ -358,7 +374,7 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 .section--green :is(.section-title, .section-label, .aim-text),
 #aim :is(.section-title, .section-label, .aim-text) { color: var(--a27-cream); }
 .section--green .section-label, #aim .section-label { color: var(--a27-responsible); }
-.section--green .aim-item, #aim .aim-item { border-color: #686366; }
+.section--green .aim-item, #aim .aim-item { border-color: #54504E; }
 .section--green .aim-num, #aim .aim-num { color: var(--a27-responsible); }
 
 .resource-card,
@@ -373,9 +389,9 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 
 .site-footer { background: var(--a27-ink); border: 0; color: var(--a27-cream); padding: 4rem 0 2rem; }
 .site-footer :is(.footer-widget__title, .footer-links a, .footer-copy) { color: var(--a27-cream); }
-.site-footer .footer-links__pending { color: #a6a19e; }
-.site-footer :is(.footer-widgets, .footer-bottom) { border-color: #686366; }
-.site-footer .footer-social a { background: transparent; border: 1px solid #686366; color: var(--a27-cream); }
+.site-footer .footer-links__pending { color: #54504E; }
+.site-footer :is(.footer-widgets, .footer-bottom) { border-color: #54504E; }
+.site-footer .footer-social a { background: transparent; border: 1px solid #54504E; color: var(--a27-cream); }
 .site-footer .footer-social a:hover { background: var(--a27-future); color: var(--a27-ink); border-color: var(--a27-future); }
 
 /* Chamfer signature — official shapes from the brand kit */
@@ -390,7 +406,7 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 }
 
 @media (max-width: 1024px) {
-  .hero-title-block { grid-template-columns: 1fr; min-height: auto; gap: 1.35rem; }
+  .hero-title-block { min-height: auto; gap: 1.35rem; }
   .hero-copy,
   .hero-strand-feature {
     position: static;
@@ -400,7 +416,7 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   }
   .hero-strand-feature {
     justify-self: stretch;
-    margin-top: .75rem;
+    margin-top: .5rem;
     z-index: 0;
   }
   .hero-copy { z-index: 1; }

@@ -5,11 +5,11 @@
 
 /* Main Widget Container */
 .aiad-ict-curriculum-widget {
-    background: #0f172a; /* Sleek dark slate blue */
+    background: var(--a27-ink, #231F20); /* Sleek dark slate blue */
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 2.25rem;
-    color: #e2e8f0;
+    color: #EAE7DF;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     max-width: 1100px;
@@ -26,7 +26,7 @@
     right: -150px;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(100, 65, 184, 0.15) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -39,16 +39,16 @@
 
 .ict-widget__badge {
     display: inline-block;
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-    color: #ffffff;
+    background: var(--a27-creative, #AC91FF);
+    color: var(--a27-ink, #231F20);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     padding: 0.25rem 0.75rem;
-    border-radius: 99px;
+    border-radius: 0;
     margin-bottom: 0.75rem;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    box-shadow: none;
 }
 
 /* Intro sits outside the widget, on the page background, so it inherits the
@@ -61,7 +61,7 @@
 }
 
 .ict-widget__lead {
-    color: #94a3b8;
+    color: #54504E;
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0 0 1.5rem 0;
@@ -84,20 +84,20 @@
     text-align: left;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    color: #94a3b8;
+    color: #54504E;
 }
 
 .ict-widget__tab-btn:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.15);
-    color: #cbd5e1;
+    color: #C9C6BE;
 }
 
 .ict-widget__tab-btn.is-active {
-    background: rgba(99, 102, 241, 0.08);
-    border-color: #6366f1;
-    color: #ffffff;
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), inset 0 0 8px rgba(99, 102, 241, 0.05);
+    background: rgba(100, 65, 184, 0.08);
+    border-color: var(--a27-creative-deep, #6441B8);
+    color: #F6F4ED;
+    box-shadow: 0 0 20px rgba(100, 65, 184, 0.15), inset 0 0 8px rgba(100, 65, 184, 0.05);
 }
 
 .tab-label-main {
@@ -125,7 +125,7 @@
 
 .ict-widget__panel-intro {
     background: rgba(255, 255, 255, 0.02);
-    border-left: 3px solid #6366f1;
+    border-left: 3px solid var(--a27-creative-deep, #6441B8);
     border-radius: 0 8px 8px 0;
     padding: 1rem 1.25rem;
     margin-bottom: 2rem;
@@ -134,13 +134,13 @@
 .ict-widget__panel-intro h3 {
     margin: 0 0 0.4rem 0;
     font-size: 1.15rem;
-    color: #f1f5f9;
+    color: #F6F4ED;
 }
 
 .ict-widget__panel-intro p {
     margin: 0;
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: #54504E;
     line-height: 1.5;
 }
 
@@ -162,7 +162,7 @@
 
 /* Visual Scratch Editor */
 .scratch-editor {
-    background: #1e293b;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     display: flex;
@@ -172,7 +172,7 @@
 }
 
 .editor-header {
-    background: #0f172a;
+    background: var(--a27-ink, #231F20);
     padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
@@ -187,14 +187,14 @@
     display: inline-block;
 }
 
-.dot-btn.red { background: #ef4444; }
-.dot-btn.yellow { background: #f59e0b; }
-.dot-btn.green { background: #10b981; }
+.dot-btn.red { background: var(--a27-crit); }
+.dot-btn.yellow { background: #FF7038; }
+.dot-btn.green { background: #006A7D; }
 
 .editor-title {
     margin-left: auto;
     font-size: 0.75rem;
-    color: #64748b;
+    color: #54504E;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -202,7 +202,7 @@
 
 .scratch-blocks-list {
     padding: 1.5rem;
-    background: #111827; /* Dark playground feel */
+    background: #231F20; /* Dark playground feel */
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
@@ -213,7 +213,7 @@
 .scratch-block {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #F6F4ED;
     padding: 0.55rem 0.85rem;
     border-radius: 4px 12px 12px 4px;
     user-select: none;
@@ -242,7 +242,7 @@
 
 .scratch-block--pen {
     background: #0fbd8c; /* Scratch Pen Green */
-    border-left: 4px solid #0b8e69;
+    border-left: 4px solid #006A7D;
 }
 
 /* Nested blocks shape representing visual control loops */
@@ -280,8 +280,8 @@
 
 /* Custom inputs inside blocks */
 .scratch-select {
-    background: #ffffff;
-    color: #111827;
+    background: #F6F4ED;
+    color: #231F20;
     border: none;
     border-radius: 4px;
     font-size: 0.8rem;
@@ -292,12 +292,12 @@
 }
 
 .scratch-select:focus {
-    outline: 2px solid #ffffff;
+    outline: 2px solid #F6F4ED;
 }
 
 .block-input-value {
-    background: #ffffff;
-    color: #111827;
+    background: #F6F4ED;
+    color: #231F20;
     border-radius: 4px;
     padding: 0.1rem 0.4rem;
     font-weight: 700;
@@ -305,7 +305,7 @@
 
 /* Editor actions */
 .editor-actions {
-    background: #0f172a;
+    background: var(--a27-ink, #231F20);
     padding: 0.75rem 1.25rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
@@ -323,13 +323,13 @@
 }
 
 .playground-btn--run {
-    background: #10b981;
-    color: #ffffff;
+    background: #006A7D;
+    color: #F6F4ED;
     box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
 }
 
 .playground-btn--run:hover {
-    background: #059669;
+    background: #006A7D;
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
     transform: translateY(-1px);
 }
@@ -339,13 +339,13 @@
 }
 
 .playground-btn--reset {
-    background: #334155;
-    color: #cbd5e1;
+    background: #231F20;
+    color: #C9C6BE;
 }
 
 .playground-btn--reset:hover {
-    background: #475569;
-    color: #ffffff;
+    background: #54504E;
+    color: #F6F4ED;
 }
 
 .btn-icon {
@@ -355,7 +355,7 @@
 
 /* Grid Simulator Preview */
 .grid-simulator {
-    background: #0f172a;
+    background: var(--a27-ink, #231F20);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
     display: flex;
@@ -370,12 +370,12 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.75rem;
-    color: #64748b;
+    color: #54504E;
     font-weight: 600;
 }
 
 .grid-canvas-wrap {
-    background: #090d16;
+    background: #231F20;
     height: 320px;
     position: relative;
     overflow: hidden;
@@ -454,7 +454,7 @@
 .simulator-instruction p {
     margin: 0;
     font-size: 0.8rem;
-    color: #64748b;
+    color: #54504E;
     line-height: 1.4;
 }
 
@@ -469,7 +469,7 @@
 
 /* Part A: Binary lock register block */
 .binary-lock-section {
-    background: #111827;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
     padding: 1.25rem;
@@ -487,14 +487,14 @@
 
 .binary-lock__header h4 {
     margin: 0 0 0.2rem 0;
-    color: #f1f5f9;
+    color: #F6F4ED;
     font-size: 1rem;
 }
 
 .binary-lock__header p {
     margin: 0;
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: #54504E;
     line-height: 1.45;
 }
 
@@ -506,7 +506,7 @@
 }
 
 .bit-card {
-    background: #1e293b;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     padding: 0.75rem;
@@ -519,18 +519,18 @@
 .bit-value-label {
     font-size: 0.7rem;
     font-weight: 700;
-    color: #64748b;
+    color: #54504E;
     text-transform: uppercase;
 }
 
 .bit-toggle-btn {
-    background: #0f172a;
-    border: 2px solid #334155;
+    background: var(--a27-ink, #231F20);
+    border: 2px solid #231F20;
     border-radius: 8px;
     font-size: 1.5rem;
     font-family: monospace;
     font-weight: 700;
-    color: #64748b;
+    color: #54504E;
     width: 60px;
     height: 60px;
     cursor: pointer;
@@ -539,30 +539,30 @@
 }
 
 .bit-toggle-btn:hover {
-    border-color: #475569;
-    color: #94a3b8;
+    border-color: #54504E;
+    color: #54504E;
 }
 
 /* Active glowing state when bit is 1 */
 .bit-toggle-btn.is-active {
-    border-color: #6366f1;
-    color: #6366f1;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3), inset 0 0 8px rgba(99, 102, 241, 0.2);
-    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--a27-creative-deep, #6441B8);
+    color: var(--a27-creative-deep, #6441B8);
+    box-shadow: 0 0 15px rgba(100, 65, 184, 0.3), inset 0 0 8px rgba(100, 65, 184, 0.2);
+    background: rgba(100, 65, 184, 0.05);
 }
 
 .bit-status-label {
     font-size: 0.65rem;
     font-weight: 700;
-    color: #475569;
+    color: #54504E;
 }
 
 .bit-card:has(.bit-toggle-btn.is-active) .bit-status-label {
-    color: #6366f1;
+    color: var(--a27-creative-deep, #6441B8);
 }
 
 .binary-display-bar {
-    background: #0f172a;
+    background: var(--a27-ink, #231F20);
     border-radius: 8px;
     padding: 0.75rem 1rem;
     display: flex;
@@ -574,26 +574,26 @@
 .bar-formula {
     font-family: monospace;
     font-size: 0.85rem;
-    color: #475569;
+    color: #54504E;
 }
 
 .formula-term.is-highlighted {
-    color: #6366f1;
+    color: var(--a27-creative-deep, #6441B8);
     font-weight: 700;
 }
 
 .bar-total {
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: #54504E;
     font-weight: 600;
 }
 
 .total-number {
     font-size: 1.1rem;
     font-weight: 800;
-    color: #ffffff;
+    color: #F6F4ED;
     font-family: monospace;
-    background: #1e293b;
+    background: #231F20;
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
 }
@@ -610,7 +610,7 @@
 .binary-feedback.success {
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.2);
-    color: #34d399;
+    color: #63DF93;
 }
 
 /* Part B: Python terminal simulator (Locked State) */
@@ -648,12 +648,12 @@
 .python-lock-overlay p {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #cbd5e1;
+    color: #C9C6BE;
     margin: 0;
 }
 
 .python-terminal-wrap {
-    background: #111827; /* Dark black terminal IDE color */
+    background: #231F20; /* Dark black terminal IDE color */
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     overflow: hidden;
@@ -662,7 +662,7 @@
 }
 
 .terminal-header {
-    background: #0f172a;
+    background: var(--a27-ink, #231F20);
     padding: 0.6rem 1rem;
     display: flex;
     align-items: center;
@@ -680,14 +680,14 @@
     border-radius: 50%;
 }
 
-.t-dot.red { background: #ef4444; }
-.t-dot.yellow { background: #f59e0b; }
-.t-dot.green { background: #10b981; }
+.t-dot.red { background: var(--a27-crit); }
+.t-dot.yellow { background: #FF7038; }
+.t-dot.green { background: #006A7D; }
 
 .terminal-title {
     margin-left: auto;
     font-size: 0.7rem;
-    color: #64748b;
+    color: #54504E;
     font-family: monospace;
 }
 
@@ -714,30 +714,30 @@
 }
 
 /* Syntax highlighting */
-.py-comment { color: #64748b; font-style: italic; }
-.py-keyword { color: #f43f5e; font-weight: 700; }
-.py-var { color: #f8fafc; }
-.py-val { color: #38bdf8; }
+.py-comment { color: #54504E; font-style: italic; }
+.py-keyword { color: var(--a27-crit); font-weight: 700; }
+.py-var { color: #F6F4ED; }
+.py-val { color: #00BEDD; }
 
 /* Traced highlight line during terminal simulation */
 .py-line.is-traced {
-    background: rgba(99, 102, 241, 0.15);
-    border-left-color: #6366f1;
+    background: rgba(100, 65, 184, 0.15);
+    border-left-color: var(--a27-creative-deep, #6441B8);
 }
 
 .terminal-output-bar {
-    background: #090d16;
+    background: #231F20;
     padding: 0.75rem 1.25rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     font-family: monospace;
     font-size: 0.85rem;
-    color: #10b981; /* Emerald green output */
+    color: #006A7D; /* Emerald green output */
     display: flex;
     gap: 0.5rem;
 }
 
 .terminal-output-bar.is-error {
-    color: #ef4444;
+    color: var(--a27-crit);
 }
 
 .output-text {
@@ -766,7 +766,7 @@
 .question-title {
     margin: 0 0 1rem 0;
     font-size: 0.95rem;
-    color: #cbd5e1;
+    color: #C9C6BE;
     line-height: 1.4;
 }
 
@@ -783,41 +783,41 @@
 }
 
 .python-opt-btn {
-    background: #1e293b;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     padding: 0.65rem;
     font-size: 0.95rem;
     font-weight: 700;
     font-family: monospace;
-    color: #e2e8f0;
+    color: #EAE7DF;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .python-opt-btn:hover {
-    background: #334155;
+    background: #231F20;
     border-color: rgba(255, 255, 255, 0.15);
 }
 
 .python-opt-btn.is-active {
-    background: #6366f1;
-    border-color: #6366f1;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    background: var(--a27-creative-deep, #6441B8);
+    border-color: var(--a27-creative-deep, #6441B8);
+    color: #F6F4ED;
+    box-shadow: 0 4px 12px rgba(100, 65, 184, 0.35);
 }
 
 .python-opt-btn.is-correct {
-    background: #10b981;
-    border-color: #10b981;
-    color: #ffffff;
+    background: #006A7D;
+    border-color: #006A7D;
+    color: #F6F4ED;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
 }
 
 .python-opt-btn.is-wrong {
-    background: #ef4444;
-    border-color: #ef4444;
-    color: #ffffff;
+    background: var(--a27-crit);
+    border-color: var(--a27-crit);
+    color: #F6F4ED;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
 }
 
@@ -825,7 +825,7 @@
    Educational Feedback Card
    -------------------------------------------------------------------------- */
 .ict-feedback-card {
-    background: #1e293b;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 1.5rem;
@@ -860,12 +860,12 @@
 .feedback-status p {
     margin: 0;
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: #54504E;
     line-height: 1.4;
 }
 
-.feedback-status.success h4 { color: #34d399; }
-.feedback-status.error h4 { color: #f87171; }
+.feedback-status.success h4 { color: #63DF93; }
+.feedback-status.error h4 { color: var(--a27-crit); }
 
 .feedback-curriculum-tabs {
     display: flex;
@@ -876,7 +876,7 @@
 .feedback-tab-btn {
     background: transparent;
     border: none;
-    color: #64748b;
+    color: #54504E;
     font-size: 0.8rem;
     font-weight: 700;
     padding: 0.35rem 0.75rem;
@@ -886,19 +886,19 @@
 }
 
 .feedback-tab-btn:hover {
-    color: #cbd5e1;
+    color: #C9C6BE;
     background: rgba(255, 255, 255, 0.03);
 }
 
 .feedback-tab-btn.is-active {
-    color: #ffffff;
+    color: #F6F4ED;
     background: rgba(255, 255, 255, 0.08);
 }
 
 .feedback-tab-content {
     font-size: 0.85rem;
     line-height: 1.55;
-    color: #cbd5e1;
+    color: #C9C6BE;
     animation: fadeIn 0.3s ease-out;
 }
 
@@ -913,23 +913,23 @@
 .feedback-tab-content blockquote {
     margin: 1rem 0 0 0;
     padding: 0.75rem 1rem;
-    background: rgba(99, 102, 241, 0.05);
-    border-left: 3px solid #6366f1;
+    background: rgba(100, 65, 184, 0.05);
+    border-left: 3px solid var(--a27-creative-deep, #6441B8);
     border-radius: 0 6px 6px 0;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: #54504E;
 }
 
 .feedback-tab-content blockquote strong {
     display: block;
-    color: #6366f1;
+    color: var(--a27-creative-deep, #6441B8);
     margin-bottom: 0.2rem;
 }
 
 /* Footer Credit */
 .ict-widget__credit {
     font-size: 0.75rem;
-    color: #475569;
+    color: #54504E;
     text-align: center;
     margin: 2rem 0 0 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -937,13 +937,13 @@
 }
 
 .ict-widget__credit a {
-    color: #64748b;
+    color: #54504E;
     text-decoration: none;
     font-weight: 600;
 }
 
 .ict-widget__credit a:hover {
-    color: #cbd5e1;
+    color: #C9C6BE;
 }
 
 /* --------------------------------------------------------------------------
@@ -969,8 +969,8 @@
 }
 
 .playground-btn--run:disabled {
-    background: #1e293b;
-    color: #475569;
+    background: #231F20;
+    color: #54504E;
     box-shadow: none;
     cursor: not-allowed;
     transform: none;
@@ -985,13 +985,13 @@
 }
 
 .ks4-line.is-traced {
-    background: rgba(99, 102, 241, 0.15);
-    border-left-color: #6366f1;
+    background: rgba(100, 65, 184, 0.15);
+    border-left-color: var(--a27-creative-deep, #6441B8);
 }
 
 /* Trace table card */
 .ks4-trace-card {
-    background: #111827;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 1.25rem;
@@ -1008,22 +1008,22 @@
 .ks4-trace-title {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #cbd5e1;
+    color: #C9C6BE;
     letter-spacing: 0.02em;
 }
 
 .ks4-total-chip {
     font-family: "Fira Code", "Courier New", Courier, monospace;
     font-size: 0.8rem;
-    color: #94a3b8;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #54504E;
+    background: rgba(100, 65, 184, 0.12);
+    border: 1px solid rgba(100, 65, 184, 0.3);
     border-radius: 999px;
     padding: 0.2rem 0.7rem;
 }
 
 .ks4-total-chip strong {
-    color: #a5b4fc;
+    color: #EAE7DF;
     margin-left: 0.25rem;
 }
 
@@ -1036,7 +1036,7 @@
 
 .ks4-trace-table th {
     text-align: left;
-    color: #64748b;
+    color: #54504E;
     font-weight: 700;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -1046,7 +1046,7 @@
 }
 
 .ks4-trace-table td {
-    color: #e2e8f0;
+    color: #EAE7DF;
     padding: 0.45rem 0.6rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
@@ -1056,7 +1056,7 @@
 }
 
 .ks4-cell-total {
-    color: #34d399;
+    color: #63DF93;
     font-weight: 700;
 }
 
@@ -1064,7 +1064,7 @@
     margin: 0.85rem 0 0 0;
     font-size: 0.78rem;
     line-height: 1.45;
-    color: #64748b;
+    color: #54504E;
 }
 
 .ks4-question {
@@ -1101,13 +1101,13 @@
 }
 
 .ks5-line.is-traced {
-    background: rgba(99, 102, 241, 0.15);
-    border-left-color: #6366f1;
+    background: rgba(100, 65, 184, 0.15);
+    border-left-color: var(--a27-creative-deep, #6441B8);
 }
 
 /* Call stack card */
 .ks5-stack-card {
-    background: #111827;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 1.25rem;
@@ -1124,16 +1124,16 @@
 .ks5-stack-title {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #cbd5e1;
+    color: #C9C6BE;
     letter-spacing: 0.02em;
 }
 
 .ks5-phase-chip {
     font-family: "Fira Code", "Courier New", Courier, monospace;
     font-size: 0.72rem;
-    color: #a5b4fc;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #EAE7DF;
+    background: rgba(100, 65, 184, 0.12);
+    border: 1px solid rgba(100, 65, 184, 0.3);
     border-radius: 999px;
     padding: 0.2rem 0.7rem;
 }
@@ -1149,7 +1149,7 @@
 .ks5-stack-empty {
     font-size: 0.78rem;
     line-height: 1.45;
-    color: #64748b;
+    color: #54504E;
 }
 
 .ks5-frame {
@@ -1159,27 +1159,27 @@
     gap: 0.75rem;
     font-family: "Fira Code", "Courier New", Courier, monospace;
     font-size: 0.85rem;
-    color: #e2e8f0;
-    background: #1e293b;
+    color: #EAE7DF;
+    background: #231F20;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-left: 3px solid #475569;
+    border-left: 3px solid #54504E;
     border-radius: 8px;
     padding: 0.55rem 0.8rem;
     animation: slideUp 0.25s ease-out;
 }
 
 .ks5-frame.is-top {
-    border-left-color: #6366f1;
-    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+    border-left-color: var(--a27-creative-deep, #6441B8);
+    box-shadow: 0 0 0 1px rgba(100, 65, 184, 0.25);
 }
 
 .ks5-frame.is-base {
-    border-left-color: #f59e0b;
+    border-left-color: #FF7038;
 }
 
 .ks5-frame.is-returning {
-    border-left-color: #10b981;
-    color: #34d399;
+    border-left-color: #006A7D;
+    color: #63DF93;
 }
 
 .ks5-frame-name {
@@ -1188,7 +1188,7 @@
 
 .ks5-frame-return {
     font-size: 0.78rem;
-    color: #34d399;
+    color: #63DF93;
     font-weight: 700;
 }
 
@@ -1196,7 +1196,7 @@
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #fbbf24;
+    color: #FF7038;
     background: rgba(245, 158, 11, 0.12);
     border-radius: 999px;
     padding: 0.1rem 0.5rem;
@@ -1206,7 +1206,7 @@
     margin: 0.85rem 0 0 0;
     font-size: 0.78rem;
     line-height: 1.45;
-    color: #64748b;
+    color: #54504E;
 }
 
 .ks5-question {

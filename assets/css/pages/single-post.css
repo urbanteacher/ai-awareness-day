@@ -36,7 +36,7 @@
 .entry-content--post {
 	font-size: 1.05rem;
 	line-height: 1.85;
-	color: var(--gray-800, #333);
+	color: var(--gray-800, #231F20);
 }
 
 .entry-content--post > *:first-child {
@@ -55,13 +55,13 @@
 }
 
 .entry-content--post a {
-	color: var(--green-700, #0f6e56);
+	color: var(--green-700, #006A7D);
 	text-decoration: underline;
 	text-underline-offset: 0.15em;
 }
 
 .entry-content--post a:hover {
-	color: var(--green-600, #128f6f);
+	color: var(--green-600, #006A7D);
 }
 
 .entry-content--post .aiad-buzzwords-widget {
@@ -71,7 +71,7 @@
 .single-post .post-navigation {
 	margin-top: 3rem;
 	padding-top: 2rem;
-	border-top: 1px solid var(--gray-200, #e5e5e5);
+	border-top: 1px solid var(--gray-200, #EAE7DF);
 	display: grid;
 	gap: 1rem;
 }
@@ -87,7 +87,7 @@
 
 .single-post .post-navigation .nav-title {
 	font-weight: 600;
-	color: var(--gray-900, #1a1a1a);
+	color: var(--gray-900, #231F20);
 }
 
 @media (min-width: 640px) {
@@ -117,7 +117,7 @@
 
 .blog-index__description {
 	margin-top: 0.75rem;
-	color: var(--gray-600, #525252);
+	color: var(--gray-600, #231F20);
 }
 
 .blog-index__list {
@@ -131,7 +131,7 @@
 }
 
 .blog-post-card__title a {
-	color: var(--gray-900, #1a1a1a);
+	color: var(--gray-900, #231F20);
 	text-decoration: none;
 }
 
@@ -172,7 +172,7 @@
 	max-width: 52rem;
 	margin: 3rem auto 0;
 	padding-top: 2rem;
-	border-top: 1px solid var(--gray-200, #e5e5e5);
+	border-top: 1px solid var(--gray-200, #EAE7DF);
 }
 
 .comments-area__title {

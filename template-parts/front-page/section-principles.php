@@ -9,13 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 ?>
-<section class="section section--alt <?php echo esc_attr( $text_alignment_class ); ?>" id="principles">
+<section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="principles">
     <div class="container">
         <div class="fade-up">
-            <span class="section-label"><?php esc_html_e( 'Principles', 'ai-awareness-day' ); ?></span>
-            <h2 class="section-title"><?php esc_html_e( 'Five Core Principles', 'ai-awareness-day' ); ?></h2>
+            <span class="section-label"><?php esc_html_e( 'Five strands', 'ai-awareness-day' ); ?></span>
+            <h2 class="section-title"><?php esc_html_e( 'Safe. Smart. Creative. Responsible. Future.', 'ai-awareness-day' ); ?></h2>
             <p class="section-desc">
-                <?php esc_html_e( 'Our educational framework is built on five foundational principles that guide how we approach AI learning.', 'ai-awareness-day' ); ?>
+                <?php esc_html_e( 'One campaign, five classroom starters. Each strand has a colour, a word and a mark — and a conversation worth having about the AI already in young people’s lives.', 'ai-awareness-day' ); ?>
             </p>
         </div>
 
@@ -31,11 +31,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 'future'     => __( 'Future', 'ai-awareness-day' ),
             );
             $principle_default_descs = array(
-                'safe'       => __( 'Ensuring safe and secure interactions with AI technologies.', 'ai-awareness-day' ),
-                'smart'      => __( 'Building intelligent understanding of how AI works.', 'ai-awareness-day' ),
-                'creative'   => __( 'Harnessing AI as a tool for creativity and innovation.', 'ai-awareness-day' ),
-                'responsible' => __( 'Promoting ethical and responsible use of AI.', 'ai-awareness-day' ),
-                'future'     => __( 'Preparing for an AI-shaped future with confidence.', 'ai-awareness-day' ),
+                'safe'       => __( 'Start with what should stay private — trust, sharing and the data AI holds about you.', 'ai-awareness-day' ),
+                'smart'      => __( 'Question AI that acts on your behalf — decisions, shortcuts and who is really choosing.', 'ai-awareness-day' ),
+                'creative'   => __( 'Own what you make with AI — authorship, attribution and honest creative work.', 'ai-awareness-day' ),
+                'responsible' => __( 'Keep human judgement in consequential moments — when the output matters.', 'ai-awareness-day' ),
+                'future'     => __( 'Name the skills worth keeping human — and practise them on purpose.', 'ai-awareness-day' ),
             );
             foreach ( $principle_slugs as $index => $slug ) :
                 $title_mod = get_theme_mod( 'aiad_principle_title_' . $slug, '' );
@@ -43,20 +43,25 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $desc_mod  = get_theme_mod( 'aiad_principle_desc_' . $slug, '' );
                 $desc     = ! empty( $desc_mod ) ? $desc_mod : ( isset( $principle_default_descs[ $slug ] ) ? $principle_default_descs[ $slug ] : '' );
                 $p        = array( 'title' => $title, 'desc' => $desc );
-                $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
-                $badge_src = $badge_id ? wp_get_attachment_image_url( $badge_id, 'medium' ) : '';
-                $has_badge_image = ! empty( $badge_src );
+                $badge_src = function_exists( 'aiad_strand_icon_uri' )
+                    ? aiad_strand_icon_uri( $slug )
+                    : ( AIAD_URI . '/assets/brand/aiad27/icon-' . $slug . '.svg' );
+                $themes_href = '#themes';
+                $card_label  = sprintf(
+                    /* translators: %s: strand name e.g. Safe */
+                    __( 'Explore %s activities', 'ai-awareness-day' ),
+                    $title
+                );
                 ?>
-                <div class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>">
+                <a href="<?php echo esc_url( $themes_href ); ?>"
+                    class="principle-card principle-card--<?php echo esc_attr( $slug ); ?> fade-up stagger-<?php echo $index + 1; ?>"
+                    aria-label="<?php echo esc_attr( $card_label ); ?>">
                     <div class="principle-badge">
-                        <?php if ( $has_badge_image ) : ?>
-                            <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true"
-                                class="principle-badge__img" onerror="this.classList.add('is-broken');" />
-                        <?php endif; ?>
+                        <img src="<?php echo esc_url( $badge_src ); ?>" alt="" aria-hidden="true" class="principle-badge__img" />
                     </div>
                     <h3><?php echo esc_html( $p['title'] ); ?></h3>
                     <p class="section-desc"><?php echo esc_html( $p['desc'] ); ?></p>
-                </div>
+                </a>
             <?php endforeach; ?>
 
             <div class="ai-literacy-box principle-card fade-up stagger-6">
@@ -73,8 +78,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </div>
                     <?php endif; ?>
                 </div>
-                <h3><?php esc_html_e( 'Our AI literacy', 'ai-awareness-day' ); ?></h3>
-                <p class="section-desc"><?php esc_html_e( 'Our AI literacy contains these five principles.', 'ai-awareness-day' ); ?></p>
+                <h3><?php esc_html_e( 'Your AI. Your choices.', 'ai-awareness-day' ); ?></h3>
+                <p class="section-desc"><?php esc_html_e( 'These five strands are one literacy — Keep Humans in the Loop.', 'ai-awareness-day' ); ?></p>
             </div>
         </div>
     </div>

@@ -86,17 +86,17 @@
         if (!ctx) return;
 
         var gradient = ctx.createLinearGradient(0, 0, 1200, 630);
-        gradient.addColorStop(0, '#0f172a');
-        gradient.addColorStop(1, '#166534');
+        gradient.addColorStop(0, '#231F20');
+        gradient.addColorStop(1, '#006A7D');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#dcfce7';
-        ctx.font = '700 32px sans-serif';
+        ctx.fillStyle = '#F6F4ED';
+        ctx.font = '700 32px "AIAD Sans", Arial, sans-serif';
         ctx.fillText('AI Awareness Day Resource', 70, 100);
 
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '700 58px sans-serif';
+        ctx.fillStyle = '#F6F4ED';
+        ctx.font = '700 58px "AIAD Sans", Arial, sans-serif';
         var words = title.split(/\s+/);
         var line = '';
         var y = 190;

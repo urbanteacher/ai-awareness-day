@@ -124,19 +124,23 @@ function aiad_render_timeline_cover_fallback(string $icon, string $fallback, str
  */
 function aiad_timeline_icon_svg(string $icon): string
 {
-    $attr = 'width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
-
-    $icons = array(
-        'announcement' => '<svg ' . $attr . '><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
-        'resource' => '<svg ' . $attr . '><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
-        'partner' => '<svg ' . $attr . '><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-        'signup' => '<svg ' . $attr . '><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>',
-        'milestone' => '<svg ' . $attr . '><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-        'media' => '<svg ' . $attr . '><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-        'event' => '<svg ' . $attr . '><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    // Map timeline categories onto AiAd27 strand marks.
+    $strand_map = array(
+        'announcement' => 'creative',
+        'resource'     => 'safe',
+        'partner'      => 'responsible',
+        'signup'       => 'safe',
+        'milestone'    => 'smart',
+        'media'        => 'future',
+        'event'        => 'creative',
     );
+    $strand = $strand_map[ $icon ] ?? 'smart';
+    if ( function_exists( 'aiad_strand_icon_svg' ) ) {
+        return aiad_strand_icon_svg( $strand, 20 );
+    }
 
-    return $icons[$icon] ?? $icons['announcement'];
+    $attr = 'width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"';
+    return '<svg ' . $attr . '><path d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></svg>';
 }
 
 /**

@@ -150,7 +150,7 @@
 	overflow: hidden;
 	padding: 3px;
 	box-sizing: border-box;
-	background: linear-gradient(135deg, #374151, #111827);
+	background: linear-gradient(135deg, #231F20, #231F20);
 	clip-path: polygon(
 		0 0,
 		calc(100% - var(--avatar-chamfer)) 0,

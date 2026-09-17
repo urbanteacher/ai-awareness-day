@@ -13,17 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     <div class="container">
         <div class="fade-up">
             <span class="section-label"><?php esc_html_e( 'Aim', 'ai-awareness-day' ); ?></span>
-            <h2 class="section-title"><?php esc_html_e( 'What We Hope to Achieve', 'ai-awareness-day' ); ?></h2>
+            <h2 class="section-title"><?php esc_html_e( 'Keep humans in the loop', 'ai-awareness-day' ); ?></h2>
         </div>
 
         <?php
         $aims = array(
-            __( 'Demystify AI for students, parents, and educators — making it accessible, understandable, and less intimidating.', 'ai-awareness-day' ),
-            __( 'Develop critical thinking skills that enable young people to evaluate AI-generated content and make informed decisions.', 'ai-awareness-day' ),
-            __( 'Build digital resilience so students can navigate an AI-powered world safely and confidently.', 'ai-awareness-day' ),
-            __( 'Inspire creative and responsible use of AI tools across the curriculum and beyond the classroom.', 'ai-awareness-day' ),
-            __( 'Foster a national conversation about the role of AI in education, skills development, and the future of work.', 'ai-awareness-day' ),
-            __( 'Encourage students, educators, and parents to know what AI is, question how it works, and use it wisely in their everyday lives.', 'ai-awareness-day' ),
+            __( 'Help young people keep humans in the loop — knowing when to trust AI, when to check it, and when to decide without it.', 'ai-awareness-day' ),
+            __( 'Give classrooms a shared language for five conversations: Safe, Smart, Creative, Responsible and Future.', 'ai-awareness-day' ),
+            __( 'Build the habit of questioning what AI knows about you, what it decides for you, and what it makes in your name.', 'ai-awareness-day' ),
+            __( 'Strengthen digital resilience so students can navigate an AI-shaped world with judgement, not fear.', 'ai-awareness-day' ),
+            __( 'Inspire creative and responsible use of AI across the curriculum — with authorship and attribution kept honest.', 'ai-awareness-day' ),
+            __( 'Grow a national conversation about the AI already in young people’s lives: Your AI. Your choices.', 'ai-awareness-day' ),
         );
         $aim_expand_threshold = 3;
         ?>
