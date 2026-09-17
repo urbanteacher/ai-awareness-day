@@ -612,3 +612,31 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 #ai-tools .tool-card__features-more {
   display: none;
 }
+
+/* The timeline filter row already scrolled on mobile, but it was inset inside
+   the container, so a button clipped flat against the gutter with nothing to
+   suggest the row continued. Bleeding it to the viewport edges lets the next
+   button peek past the gutter, which is the affordance, and snapping keeps the
+   row tidy once dragged.
+
+   The selectors are doubled deliberately. components/timeline.css and
+   components/tools.css are enqueued conditionally in inc/setup.php and land
+   AFTER this file, so this brand layer loses every equal-specificity contest
+   against them. Doubling the class wins without depending on load order.
+   Reordering the enqueue would be the real fix, but it would also let every
+   other rule in this file start overriding those two stylesheets, so that is
+   a deliberate change to make and test on its own. */
+@media (max-width: 767px) {
+  .timeline-filters.timeline-filters {
+    margin-inline: calc(50% - 50vw);
+    padding: .5rem max(1.5rem, calc(50vw - 50%));
+    gap: .4rem;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+  .timeline-filters.timeline-filters .timeline-filter-btn { scroll-snap-align: start; }
+}
+
+/* Pills are the one soft-UI idiom still fighting the chamfer signature; the
+   campaign squares its corners everywhere else. */
+.timeline-filter-btn.timeline-filter-btn { border-radius: 0; }
