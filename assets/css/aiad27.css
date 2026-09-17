@@ -242,10 +242,17 @@ body {
 
 .hero-strand-feature__summary { border-top: 1px solid currentColor; font-size: 1.1rem; line-height: 1.25; margin: .85rem 0 0; padding: .8rem 0 .95rem; }
 
+/* Five equal 1fr columns need 5x the widest label to hold their text, and
+   "RESPONSIBLE" measures 85.9px here — so the grid silently collided below
+   about 430px of row width. A content-width flex row with space-between keeps
+   the same edge-to-edge spread on a wide screen, wraps on its own when it runs
+   out of room, and needs no breakpoint to decide which. The active underline
+   then hugs the word instead of spanning an equal column. */
 .hero-strand-feature__themes {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .2rem .75rem;
   width: 100%;
 }
 
@@ -260,10 +267,10 @@ body {
   font-weight: 700;
   letter-spacing: .08em;
   padding: .35rem 0 .4rem;
-  text-align: center;
+  text-align: left;
   text-decoration: none;
   text-transform: uppercase;
-  width: 100%;
+  width: auto;
 }
 
 .hero-strand-feature__theme.is-active { border-bottom: 2px solid currentColor; }
@@ -548,12 +555,6 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   /* Five equal columns cannot hold "RESPONSIBLE" at this size, so the labels
      overran their cells and collided. Let them wrap and take their own width;
      the active underline then hugs the word rather than the column. */
-  .hero-strand-feature__themes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .15rem 1.05rem;
-  }
-  .hero-strand-feature__theme { width: auto; text-align: left; }
   #hero .hero-cta { grid-template-columns: 1fr; }
   #hero .hero-cta__btn { width: 100%; }
   #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
