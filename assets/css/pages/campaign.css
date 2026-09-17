@@ -25,8 +25,14 @@
 
   /* Deliberately not sticky. This used to pin 8rem from the top, so scrolling
      the section detached the video from the copy it belongs beside and left it
-     hanging near the header. It stays put alongside the text instead. */
+     hanging near the header. It stays put alongside the text instead.
+
+     align-self overrides the grid's align-items: start for this cell only: the
+     copy column is roughly 690px against the video's 280px, so starting both
+     at the top left the video stranded against the first paragraph. The text
+     still starts at the top, where text should; only the video centres. */
   .campaign--split .campaign-embed {
+    align-self: center;
     padding-left: 0.5rem;
   }
 }
