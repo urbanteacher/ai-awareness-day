@@ -146,14 +146,14 @@
 				var checked = group.querySelector('.aiad-survey__star-input:checked');
 				var checkedIdx = checked ? labels.indexOf(checked.closest('.aiad-survey__star-label')) : -1;
 				labels.forEach(function (l, i) {
-					l.querySelector('.aiad-survey__star').style.color = i <= checkedIdx ? '#f59e0b' : '#d1d5db';
+					l.querySelector('.aiad-survey__star').style.color = i <= checkedIdx ? '#FF7038' : '#C9C6BE';
 				});
 			}
 
 			labels.forEach(function (label, index) {
 				label.addEventListener('mouseenter', function () {
 					labels.forEach(function (l, i) {
-						l.querySelector('.aiad-survey__star').style.color = i <= index ? '#f59e0b' : '#d1d5db';
+						l.querySelector('.aiad-survey__star').style.color = i <= index ? '#FF7038' : '#C9C6BE';
 					});
 				});
 				label.querySelector('.aiad-survey__star-input').addEventListener('change', reflectChecked);

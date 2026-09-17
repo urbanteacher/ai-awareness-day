@@ -143,7 +143,7 @@
 
 				// Create premium glowing SVG path element
 				var pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-				pathEl.setAttribute('stroke', '#00f5ff');
+				pathEl.setAttribute('stroke', '#00BEDD');
 				pathEl.setAttribute('stroke-width', '4');
 				pathEl.setAttribute('fill', 'none');
 				pathEl.setAttribute('stroke-linecap', 'round');

@@ -537,7 +537,7 @@
 
                 if (missing) {
                     const errSpan = document.createElement('span');
-                    errSpan.style.color = '#ef4444';
+                    errSpan.style.color = '#A32D2D';
                     errSpan.textContent = 'Please fill in all required fields.';
                     formStatus.textContent = '';
                     formStatus.appendChild(errSpan);
@@ -594,14 +594,14 @@
                             }
                         }
                     } else {
-                        msgSpan.style.color = '#ef4444';
+                        msgSpan.style.color = '#A32D2D';
                         msgSpan.textContent = data.data.message;
                         formStatus.textContent = '';
                         formStatus.appendChild(msgSpan);
                     }
                 } catch (err) {
                     const errSpan = document.createElement('span');
-                    errSpan.style.color = '#ef4444';
+                    errSpan.style.color = '#A32D2D';
                     errSpan.textContent = 'Network error. Please try again.';
                     formStatus.textContent = '';
                     formStatus.appendChild(errSpan);

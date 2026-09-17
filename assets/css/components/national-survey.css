@@ -304,7 +304,7 @@
 
 .aiad-survey__star {
 	font-size: 2rem;
-	color: #C9C6BE;
+	color: var(--a27-dim);
 	transition: color 0.1s;
 	display: block;
 	line-height: 1;

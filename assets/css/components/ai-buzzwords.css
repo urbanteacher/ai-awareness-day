@@ -96,7 +96,7 @@
 }
 
 [data-aiad-buzzwords] .aiad-card:hover {
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -375,7 +375,7 @@
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__option:has(input:checked) {
-	border-color: #63DF93;
+	border-color: var(--a27-responsible-deep);
 	background: #231F20;
 	box-shadow: 0 0 0 1px #63DF93;
 }
@@ -388,7 +388,7 @@
 [data-aiad-buzzwords] .aiad-bz-quiz__option input {
 	margin-top: 0.2rem;
 	flex-shrink: 0;
-	accent-color: #63DF93;
+	accent-color: var(--a27-responsible-deep);
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__btn {
@@ -523,7 +523,7 @@
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__review-item--ok strong {
-	color: #63DF93;
+	color: var(--a27-responsible-deep);
 }
 
 [data-aiad-buzzwords] .aiad-bz-quiz__review-item--miss strong {

@@ -112,7 +112,7 @@
         });
         if (line) ctx.fillText(line, 70, y);
 
-        ctx.fillStyle = '#bbf7d0';
+        ctx.fillStyle = '#EAE7DF';
         ctx.font = '600 30px sans-serif';
         if (theme) {
             ctx.fillText('Theme: ' + theme, 70, 460);
@@ -121,7 +121,7 @@
             ctx.fillText('Key stages: ' + keyStages, 70, 510);
         }
 
-        ctx.fillStyle = '#e5e7eb';
+        ctx.fillStyle = '#EAE7DF';
         ctx.font = '500 20px sans-serif';
         ctx.fillText(url, 70, 575);
 

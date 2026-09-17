@@ -79,7 +79,7 @@
 
 #aiad-misinfo .mi-btn:hover {
 	background: #F6F4ED;
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 }
 
 #aiad-misinfo .mi-btn--primary {

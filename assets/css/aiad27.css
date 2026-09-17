@@ -110,7 +110,10 @@ body {
 .hero-title-block .hero-date {
   grid-column: 1;
   grid-row: 2;
-  color: #F6F4ED;
+  /* Ink, matching .hero-brand__mark beside it. The hero sits on a strand
+     bright, and the campaign puts ink on a bright ground throughout; it is
+     also the only value that passes here (ink 7.3:1, cream 2.0:1). */
+  color: var(--a27-ink);
   font-size: 1em;
   font-weight: 700;
   letter-spacing: -.06em;
@@ -389,9 +392,11 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 
 .site-footer { background: var(--a27-ink); border: 0; color: var(--a27-cream); padding: 4rem 0 2rem; }
 .site-footer :is(.footer-widget__title, .footer-links a, .footer-copy) { color: var(--a27-cream); }
-.site-footer .footer-links__pending { color: #54504E; }
-.site-footer :is(.footer-widgets, .footer-bottom) { border-color: #54504E; }
-.site-footer .footer-social a { background: transparent; border: 1px solid #54504E; color: var(--a27-cream); }
+/* Dim is a cream-ground value; on the ink footer it reads at 2:1, so the
+   muted footer link takes the rule hairline value instead (8.5:1). */
+.site-footer .footer-links__pending { color: var(--a27-rule); }
+.site-footer :is(.footer-widgets, .footer-bottom) { border-color: var(--a27-dim); }
+.site-footer .footer-social a { background: transparent; border: 1px solid var(--a27-dim); color: var(--a27-cream); }
 .site-footer .footer-social a:hover { background: var(--a27-future); color: var(--a27-ink); border-color: var(--a27-future); }
 
 /* Chamfer signature — official shapes from the brand kit */

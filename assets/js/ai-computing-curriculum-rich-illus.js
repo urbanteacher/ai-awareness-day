@@ -86,47 +86,47 @@
 			'<div class="cc-illus"><p class="cc-illus-lbl">Key data structures \u2014 visual reference for Questions A, B and C</p>';
 		h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">';
 
-		h += '<div><p style="font-size:12px;font-weight:600;color:#3C3489;margin-bottom:8px">Stack (LIFO)</p>';
+		h += '<div><p style="font-size:12px;font-weight:600;color:#6441B8;margin-bottom:8px">Stack (LIFO)</p>';
 		['C (top)', 'B', 'A'].forEach(function (v) {
 			h +=
-				'<div style="background:#EEEDFE;border:1.5px solid #534AB7;border-radius:6px;padding:7px 10px;text-align:center;font-size:13px;font-weight:600;color:#3C3489;margin-bottom:3px">' +
+				'<div style="background:#EAE7DF;border:1.5px solid #AC91FF;border-radius:6px;padding:7px 10px;text-align:center;font-size:13px;font-weight:600;color:#6441B8;margin-bottom:3px">' +
 				v +
 				'</div>';
 		});
 		h +=
-			'<p style="font-size:11px;color:#888;margin-top:5px;text-align:center">push / pop \u2191</p></div>';
+			'<p style="font-size:11px;color:#54504E;margin-top:5px;text-align:center">push / pop \u2191</p></div>';
 
-		h += '<div><p style="font-size:12px;font-weight:600;color:#085041;margin-bottom:8px">Queue (FIFO)</p>';
+		h += '<div><p style="font-size:12px;font-weight:600;color:#006A7D;margin-bottom:8px">Queue (FIFO)</p>';
 		h += '<div style="display:flex;gap:3px;align-items:center;margin-top:18px">';
-		h += '<span style="font-size:11px;color:#085041">\u2192 in</span>';
+		h += '<span style="font-size:11px;color:#006A7D">\u2192 in</span>';
 		['A', 'B', 'C'].forEach(function (v) {
 			h +=
-				'<div style="background:#E1F5EE;border:1.5px solid #1D9E75;border-radius:6px;padding:7px 10px;text-align:center;font-size:13px;font-weight:600;color:#085041;min-width:36px">' +
+				'<div style="background:#EAE7DF;border:1.5px solid #006A7D;border-radius:6px;padding:7px 10px;text-align:center;font-size:13px;font-weight:600;color:#006A7D;min-width:36px">' +
 				v +
 				'</div>';
 		});
-		h += '<span style="font-size:11px;color:#085041">out \u2192</span></div>';
+		h += '<span style="font-size:11px;color:#006A7D">out \u2192</span></div>';
 		h +=
-			'<p style="font-size:11px;color:#888;margin-top:5px;text-align:center">enqueue / dequeue</p></div>';
+			'<p style="font-size:11px;color:#54504E;margin-top:5px;text-align:center">enqueue / dequeue</p></div>';
 
-		h += '<div><p style="font-size:12px;font-weight:600;color:#633806;margin-bottom:8px">Binary tree</p>';
+		h += '<div><p style="font-size:12px;font-weight:600;color:#A7350B;margin-bottom:8px">Binary tree</p>';
 		h += '<div style="text-align:center">';
 		h +=
-			'<div style="display:inline-block;background:#FAEEDA;border:1.5px solid #BA7517;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#633806;margin-bottom:4px">5</div><br>';
+			'<div style="display:inline-block;background:#EAE7DF;border:1.5px solid #A7350B;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#A7350B;margin-bottom:4px">5</div><br>';
 		h += '<div style="display:flex;gap:8px;justify-content:center;margin-bottom:4px">';
 		h +=
-			'<div style="background:#FAEEDA;border:1.5px solid #BA7517;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#633806">3</div>';
+			'<div style="background:#EAE7DF;border:1.5px solid #A7350B;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#A7350B">3</div>';
 		h +=
-			'<div style="background:#FAEEDA;border:1.5px solid #BA7517;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#633806">8</div>';
+			'<div style="background:#EAE7DF;border:1.5px solid #A7350B;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;color:#A7350B">8</div>';
 		h += '</div>';
 		h += '<div style="display:flex;gap:4px;justify-content:center">';
 		h +=
-			'<div style="background:#FAEEDA;border:1.5px solid #BA7517;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;color:#633806">2</div>';
+			'<div style="background:#EAE7DF;border:1.5px solid #A7350B;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;color:#A7350B">2</div>';
 		h +=
-			'<div style="background:#FAEEDA;border:1.5px solid #BA7517;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;color:#633806">4</div>';
+			'<div style="background:#EAE7DF;border:1.5px solid #A7350B;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;color:#A7350B">4</div>';
 		h += '</div></div></div>';
 
-		h += '<div><p style="font-size:12px;font-weight:600;color:#0C447C;margin-bottom:8px">Hash table</p>';
+		h += '<div><p style="font-size:12px;font-weight:600;color:#006A7D;margin-bottom:8px">Hash table</p>';
 		[
 			['name', 'bucket 2'],
 			['age', 'bucket 0'],
@@ -134,12 +134,12 @@
 		].forEach(function (pair) {
 			h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">';
 			h +=
-				'<span style="font-size:12px;color:#666;font-family:monospace;width:38px">' +
+				'<span style="font-size:12px;color:#54504E;font-family:monospace;width:38px">' +
 				pair[0] +
 				'</span>';
-			h += '<span style="font-size:11px;color:#aaa">\u2192</span>';
+			h += '<span style="font-size:11px;color:#54504E">\u2192</span>';
 			h +=
-				'<div style="background:#E6F1FB;border:1.5px solid #185FA5;border-radius:5px;padding:4px 8px;font-size:12px;font-weight:600;color:#0C447C">' +
+				'<div style="background:#EAE7DF;border:1.5px solid #006A7D;border-radius:5px;padding:4px 8px;font-size:12px;font-weight:600;color:#006A7D">' +
 				pair[1] +
 				'</div>';
 			h += '</div>';

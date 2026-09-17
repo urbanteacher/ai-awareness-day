@@ -53,7 +53,7 @@
     $(document).on('click', '.aiad-add-definition', function() {
         var container = $(this).prev('.aiad-repeatable-rows');
         var idx = container.find('.aiad-repeatable-row').length;
-        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.75rem; padding: 0.5rem; background: #f6f7f7; border-radius: 4px;">' +
+        var html = '<div class="aiad-repeatable-row" style="margin-bottom: 0.75rem; padding: 0.5rem; background: #F6F4ED; border-radius: 4px;">' +
             '<label style="display:block;">' + aiadAdminMeta.termText + '</label><input type="text" name="aiad_key_definitions[' + idx + '][term]" value="" class="regular-text" style="margin-bottom: 0.5rem;" /> ' +
             '<label style="display:block;">' + aiadAdminMeta.definitionText + '</label><textarea name="aiad_key_definitions[' + idx + '][definition]" rows="2" class="large-text" style="width:100%;"></textarea> ' +
             '<label style="display:inline-block; margin-left: 0.5rem;"><input type="checkbox" name="aiad_key_definitions[' + idx + '][key_stage_adapted]" value="1" /> ' + aiadAdminMeta.keyStageAdaptedText + '</label> ' +
@@ -66,7 +66,7 @@
         var list = $(this).prev('.aiad-repeatable-list');
         var idx = getNextIdx(list);
         var stepNum = idx + 1;
-        var html = '<div class="aiad-repeatable-row aiad-instruction-row" style="margin-bottom: 1rem; padding: 0.75rem; background: #f6f7f7; border-radius: 4px;">' +
+        var html = '<div class="aiad-repeatable-row aiad-instruction-row" style="margin-bottom: 1rem; padding: 0.75rem; background: #F6F4ED; border-radius: 4px;">' +
             '<label>Step <input type="number" name="aiad_instructions[' + idx + '][step]" value="' + stepNum + '" min="1" style="width:4em;" /></label> ' +
             '<label>' + aiadAdminMeta.durationText + ' <input type="text" name="aiad_instructions[' + idx + '][duration]" value="" placeholder="e.g. 60 seconds" style="width:10em;" /></label><br style="margin-bottom:0.5rem;" />' +
             '<label style="display:block; margin-top:0.35rem;">' + aiadAdminMeta.actionText + '</label>' +

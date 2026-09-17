@@ -153,7 +153,7 @@
 
 [data-aiad-llm] .nav-row button:hover {
 	background: #F6F4ED;
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 }
 
 [data-aiad-llm] .nav-row button:focus-visible {
@@ -202,7 +202,7 @@
 
 [data-aiad-llm] .token-arrow {
 	font-size: 12px;
-	color: #C9C6BE;
+	color: var(--a27-dim);
 }
 
 [data-aiad-llm] .layer-row {
@@ -371,13 +371,13 @@
 
 [data-aiad-llm] .aiad-llm-credit {
 	font-size: 12px;
-	color: #C9C6BE;
+	color: var(--a27-dim);
 	margin-top: 1rem;
 	text-align: center;
 }
 
 [data-aiad-llm] .aiad-llm-credit a {
-	color: #C9C6BE;
+	color: var(--a27-dim);
 	text-decoration: underline;
 }
 

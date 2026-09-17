@@ -117,7 +117,7 @@
 .timeline-stats-bar__value {
     font-variant-numeric: tabular-nums;
     font-weight: 700;
-    color: #63DF93;
+    color: var(--a27-responsible-deep);
     /* Bright green to stand out */
     text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
     /* Subtle glow */

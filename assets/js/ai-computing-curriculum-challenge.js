@@ -8,9 +8,9 @@
 	var STAGES = [
 		{
 			ks: 'KS1',
-			ksColor: '#1D9E75',
-			ksBg: '#E1F5EE',
-			ksText: '#085041',
+			ksColor: '#006A7D',
+			ksBg: '#EAE7DF',
+			ksText: '#006A7D',
 			title: 'KS1 \u2014 algorithms as instructions',
 			years: 'Years 1 & 2 \u00b7 Ages 5\u20137',
 			context:
@@ -52,9 +52,9 @@
 		},
 		{
 			ks: 'KS2',
-			ksColor: '#534AB7',
-			ksBg: '#EEEDFE',
-			ksText: '#3C3489',
+			ksColor: '#AC91FF',
+			ksBg: '#EAE7DF',
+			ksText: '#6441B8',
 			title: 'KS2 \u2014 sequences, loops & debugging',
 			years: 'Years 3\u20136 \u00b7 Ages 7\u201311',
 			context:
@@ -93,9 +93,9 @@
 		},
 		{
 			ks: 'KS3',
-			ksColor: '#BA7517',
-			ksBg: '#FAEEDA',
-			ksText: '#633806',
+			ksColor: '#A7350B',
+			ksBg: '#EAE7DF',
+			ksText: '#A7350B',
 			title: 'KS3 \u2014 sorting & searching algorithms',
 			years: 'Years 7\u20139 \u00b7 Ages 11\u201314',
 			context:
@@ -139,9 +139,9 @@
 		},
 		{
 			ks: 'KS4',
-			ksColor: '#D85A30',
-			ksBg: '#FAECE7',
-			ksText: '#712B13',
+			ksColor: '#A32D2D',
+			ksBg: '#EAE7DF',
+			ksText: '#A32D2D',
 			title: 'KS4 \u2014 ethics, AI & digital impacts',
 			years: 'Years 10\u201311 \u00b7 Ages 14\u201316 \u00b7 AQA GCSE spec 3.8',
 			context:
@@ -206,9 +206,9 @@
 		},
 		{
 			ks: 'KS5',
-			ksColor: '#185FA5',
-			ksBg: '#E6F1FB',
-			ksText: '#0C447C',
+			ksColor: '#006A7D',
+			ksBg: '#EAE7DF',
+			ksText: '#006A7D',
 			title: 'KS5 \u2014 data structures',
 			years: 'Years 12\u201313 \u00b7 Ages 16\u201318 \u00b7 AQA A-level spec 3.2',
 			context:
@@ -328,7 +328,7 @@
 			var screen = document.getElementById('aiad-s' + si);
 			var isActive = screen && screen.classList.contains('active');
 			var bg = isActive
-				? 'background:' + st.ksColor + ';border-color:' + st.ksColor + ';color:#fff;'
+				? 'background:' + st.ksColor + ';border-color:' + st.ksColor + ';color:#F6F4ED;'
 				: '';
 			h +=
 				'<button type="button" class="cc-ks-tab' +
@@ -350,7 +350,7 @@
 			'<button type="button" class="cc-ks-tab' +
 			(sumActive ? ' active' : '') +
 			'" style="' +
-			(sumActive ? 'background:#1a1a2e;border-color:#1a1a2e;color:#fff;' : '') +
+			(sumActive ? 'background:#231F20;border-color:#231F20;color:#F6F4ED;' : '') +
 			'" onclick="aiadJump(\'summary\')">Summary</button>';
 		el.innerHTML = h;
 	}
@@ -750,9 +750,9 @@
 			ss.ticks[key] = true;
 			if (cb) {
 				cb.classList.add('ticked');
-				cb.style.background = '#1D9E75';
-				cb.style.borderColor = '#1D9E75';
-				cb.style.color = '#fff';
+				cb.style.background = '#006A7D';
+				cb.style.borderColor = '#006A7D';
+				cb.style.color = '#F6F4ED';
 			}
 		}
 		var count = Object.keys(ss.ticks).filter(function (k) {
@@ -771,15 +771,15 @@
 		var max = si < 3 ? 30 : si === 3 ? 50 : 72;
 		var pct = ss.score / max;
 		if (!ss.done) {
-			return { label: 'Not attempted', bg: '#f5f5f5', text: '#aaa' };
+			return { label: 'Not attempted', bg: '#F6F4ED', text: '#54504E' };
 		}
 		if (pct >= 0.8) {
-			return { label: 'Confident', bg: '#E1F5EE', text: '#085041' };
+			return { label: 'Confident', bg: '#EAE7DF', text: '#006A7D' };
 		}
 		if (pct >= 0.5) {
-			return { label: 'Getting there', bg: '#FAEEDA', text: '#633806' };
+			return { label: 'Getting there', bg: '#EAE7DF', text: '#A7350B' };
 		}
-		return { label: 'Needs review', bg: '#FAECE7', text: '#712B13' };
+		return { label: 'Needs review', bg: '#EAE7DF', text: '#A32D2D' };
 	}
 
 	function renderSummary() {

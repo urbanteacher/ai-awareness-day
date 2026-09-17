@@ -66,7 +66,7 @@
 }
 
 [data-aiad-llm-order] .aiad-llm-order__item.is-drag-over {
-	border-color: #AC91FF;
+	border-color: var(--a27-creative-deep);
 	background: #F6F4ED;
 }
 
@@ -111,7 +111,7 @@
 	margin: 6px 0 0;
 	font-size: 0.8rem;
 	font-weight: 700;
-	color: #AC91FF;
+	color: var(--a27-creative-deep);
 }
 
 [data-aiad-llm-order] .aiad-llm-order__move {
@@ -193,7 +193,7 @@
 
 [data-aiad-llm-order] .aiad-llm-order__btn--ghost:hover {
 	background: #F6F4ED;
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 }
 
 [data-aiad-llm-order] .aiad-llm-order__btn:focus-visible {

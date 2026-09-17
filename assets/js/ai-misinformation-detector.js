@@ -403,7 +403,7 @@
 			var hint = el('aiad-mi-sources-hint');
 			if (hint) {
 				hint.textContent = 'Please name at least one source you would check before choosing a verdict.';
-				hint.style.color = '#d85a30';
+				hint.style.color = '#A32D2D';
 			}
 			var first = el('aiad-mi-src-1');
 			if (first) {

@@ -232,7 +232,7 @@
 
 #aiad-cc .cc-opt:hover:not(:disabled) {
 	background: #F6F4ED;
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 }
 
 #aiad-cc .cc-opt.correct {
@@ -456,7 +456,7 @@
 
 #aiad-cc .cc-nav-row button:hover {
 	background: #F6F4ED;
-	border-color: #C9C6BE;
+	border-color: var(--a27-dim);
 }
 
 #aiad-cc .cc-nav-row .btn-primary {
@@ -556,13 +556,13 @@
 
 #aiad-cc .cc-footer {
 	font-size: 12px;
-	color: #C9C6BE;
+	color: var(--a27-dim);
 	text-align: center;
 	margin-top: 1.5rem;
 }
 
 #aiad-cc .cc-footer a {
-	color: #C9C6BE;
+	color: var(--a27-dim);
 }
 
 /* Rich HTML illustrations (Bee-Bot, Scratch, bubble sort, data structures) */
@@ -685,7 +685,7 @@
 
 #aiad-cc .cc-illus-caption {
 	font-size: 12px;
-	color: #FF7038;
+	color: var(--a27-smart-deep);
 	font-weight: 600;
 	margin-top: 10px;
 	text-align: center;

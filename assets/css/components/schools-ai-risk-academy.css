@@ -217,7 +217,7 @@
 
 .sara .sara-btn--primary:hover {
 	background: #FF7038;
-	border-color: #FF7038;
+	border-color: var(--a27-smart-deep);
 }
 
 .sara .sara-btn--ghost {

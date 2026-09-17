@@ -289,7 +289,7 @@
 		var out = '';
 		var i;
 		for (i = 0; i < 5; i++) {
-			out += '<span class="aiad-hype-dot" style="background:' + (i < n ? '#D85A30' : '#e0e0e0') + '"></span>';
+			out += '<span class="aiad-hype-dot" style="background:' + (i < n ? '#A32D2D' : '#EAE7DF') + '"></span>';
 		}
 		return out;
 	}

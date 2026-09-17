@@ -2,8 +2,8 @@
 	'use strict';
 
 	var TOKENS = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
-	var TOK_BG = ['#EEEDFE', '#E1F5EE', '#FAECE7', '#FAEEDA', '#E6F1FB', '#EAF3DE'];
-	var TOK_TXT = ['#3C3489', '#085041', '#712B13', '#633806', '#0C447C', '#27500A'];
+	var TOK_BG = ['#EAE7DF', '#EAE7DF', '#EAE7DF', '#EAE7DF', '#EAE7DF', '#EAE7DF'];
+	var TOK_TXT = ['#6441B8', '#006A7D', '#A32D2D', '#A7350B', '#006A7D', '#176E3B'];
 
 	var ATTENTIONS = [
 		[0.05, 0.1, 0.08, 0.03, 0.04, 0.02],
@@ -88,8 +88,8 @@
 		function tokButton(i, size, opacity, selected, interactive) {
 			var s = size || 13;
 			var o = opacity !== undefined ? opacity : 1;
-			var bg = selected ? '#1a1a2e' : TOK_BG[i];
-			var col = selected ? '#fff' : TOK_TXT[i];
+			var bg = selected ? '#231F20' : TOK_BG[i];
+			var col = selected ? '#F6F4ED' : TOK_TXT[i];
 			var cls = 'tok' + (interactive ? '' : ' tok--static');
 			var attrs = interactive
 				? ' type="button" data-aiad-llm-tok="' + i + '" aria-pressed="' + (selected ? 'true' : 'false') + '"'
@@ -168,7 +168,7 @@
 			h += '<p class="att-hint">Click any word to see what it pays attention to. Word size = attention weight.</p>';
 			TOKENS.forEach(function (t, i) {
 				var pct = Math.round(weights[i] * 100);
-				var barCol = i === state.selectedTok ? '#1a1a2e' : '#7F77DD';
+				var barCol = i === state.selectedTok ? '#231F20' : '#AC91FF';
 				h += '<div class="att-bar-row">';
 				h += '<span class="att-bar-label">' + t + '</span>';
 				h += '<div class="att-bar-wrap"><div class="att-bar-fill" style="width:' + pct + '%;background:' + barCol + '"></div></div>';
@@ -180,12 +180,12 @@
 
 		function renderLayers() {
 			var layers = [
-				{ label: 'Layer 1', desc: 'Spelling & punctuation', w: 30, bg: '#E1F5EE', col: '#085041' },
-				{ label: 'Layer 2', desc: 'Word type (noun, verb…)', w: 50, bg: '#EEEDFE', col: '#3C3489' },
-				{ label: 'Layer 3', desc: 'Sentence grammar', w: 65, bg: '#FAEEDA', col: '#633806' },
-				{ label: 'Layer 4', desc: 'Topic & meaning', w: 80, bg: '#FAECE7', col: '#712B13' },
-				{ label: 'Layer 5', desc: 'Context & intent', w: 92, bg: '#E6F1FB', col: '#0C447C' },
-				{ label: 'Output', desc: 'Next token prediction', w: 100, bg: '#1a1a2e', col: '#fff' },
+				{ label: 'Layer 1', desc: 'Spelling & punctuation', w: 30, bg: '#EAE7DF', col: '#006A7D' },
+				{ label: 'Layer 2', desc: 'Word type (noun, verb…)', w: 50, bg: '#EAE7DF', col: '#6441B8' },
+				{ label: 'Layer 3', desc: 'Sentence grammar', w: 65, bg: '#EAE7DF', col: '#A7350B' },
+				{ label: 'Layer 4', desc: 'Topic & meaning', w: 80, bg: '#EAE7DF', col: '#A32D2D' },
+				{ label: 'Layer 5', desc: 'Context & intent', w: 92, bg: '#EAE7DF', col: '#006A7D' },
+				{ label: 'Output', desc: 'Next token prediction', w: 100, bg: '#231F20', col: '#F6F4ED' },
 			];
 			var h = '<div>';
 			layers.forEach(function (l) {
@@ -222,7 +222,7 @@
 			});
 			h += '<span class="token-arrow" aria-hidden="true">&rarr;</span>';
 			h +=
-				'<span class="tok tok--static" style="background:#1a1a2e;color:#fff;border:1px dashed rgba(255,255,255,0.3)">?</span>';
+				'<span class="tok tok--static" style="background:#231F20;color:#F6F4ED;border:1px dashed rgba(255,255,255,0.3)">?</span>';
 			h += '</div>';
 			h += '<p class="att-hint">Top predictions for the next token:</p>';
 			h += '<div class="pred-row">';
@@ -240,10 +240,10 @@
 
 		function renderTraining() {
 			var data = [
-				{ label: 'Books & articles', val: 85, bg: '#EEEDFE', col: '#3C3489' },
-				{ label: 'Websites', val: 95, bg: '#E1F5EE', col: '#085041' },
-				{ label: 'Code repos', val: 60, bg: '#FAEEDA', col: '#633806' },
-				{ label: 'Research papers', val: 45, bg: '#E6F1FB', col: '#0C447C' },
+				{ label: 'Books & articles', val: 85, bg: '#EAE7DF', col: '#6441B8' },
+				{ label: 'Websites', val: 95, bg: '#EAE7DF', col: '#006A7D' },
+				{ label: 'Code repos', val: 60, bg: '#EAE7DF', col: '#A7350B' },
+				{ label: 'Research papers', val: 45, bg: '#EAE7DF', col: '#006A7D' },
 			];
 			var h = '<div>';
 			data.forEach(function (d) {
@@ -351,7 +351,7 @@
 				h +=
 					'<a class="btn-primary" href="' +
 					moreUrl +
-					'" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;background:#1a1a2e;color:#fff;border:2px solid #1a1a2e">Explore more &rarr;</a>';
+					'" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;background:#231F20;color:#F6F4ED;border:2px solid #231F20">Explore more &rarr;</a>';
 			}
 			h += '</div>';
 			panel.innerHTML = h;

@@ -24,7 +24,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #C9C6BE;
+  color: var(--a27-dim);
 }
 
 .benchmark-promo__dot {

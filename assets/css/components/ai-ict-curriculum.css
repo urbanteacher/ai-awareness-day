@@ -90,7 +90,7 @@
 .ict-widget__tab-btn:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.15);
-    color: #C9C6BE;
+    color: var(--a27-dim);
 }
 
 .ict-widget__tab-btn.is-active {
@@ -340,7 +340,7 @@
 
 .playground-btn--reset {
     background: #231F20;
-    color: #C9C6BE;
+    color: var(--a27-dim);
 }
 
 .playground-btn--reset:hover {
@@ -610,7 +610,7 @@
 .binary-feedback.success {
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.2);
-    color: #63DF93;
+    color: var(--a27-responsible-deep);
 }
 
 /* Part B: Python terminal simulator (Locked State) */
@@ -648,7 +648,7 @@
 .python-lock-overlay p {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #C9C6BE;
+    color: var(--a27-dim);
     margin: 0;
 }
 
@@ -717,7 +717,7 @@
 .py-comment { color: #54504E; font-style: italic; }
 .py-keyword { color: var(--a27-crit); font-weight: 700; }
 .py-var { color: #F6F4ED; }
-.py-val { color: #00BEDD; }
+.py-val { color: var(--a27-safe-deep); }
 
 /* Traced highlight line during terminal simulation */
 .py-line.is-traced {
@@ -766,7 +766,7 @@
 .question-title {
     margin: 0 0 1rem 0;
     font-size: 0.95rem;
-    color: #C9C6BE;
+    color: var(--a27-dim);
     line-height: 1.4;
 }
 
@@ -864,7 +864,7 @@
     line-height: 1.4;
 }
 
-.feedback-status.success h4 { color: #63DF93; }
+.feedback-status.success h4 { color: var(--a27-responsible-deep); }
 .feedback-status.error h4 { color: var(--a27-crit); }
 
 .feedback-curriculum-tabs {
@@ -886,7 +886,7 @@
 }
 
 .feedback-tab-btn:hover {
-    color: #C9C6BE;
+    color: var(--a27-dim);
     background: rgba(255, 255, 255, 0.03);
 }
 
@@ -898,7 +898,7 @@
 .feedback-tab-content {
     font-size: 0.85rem;
     line-height: 1.55;
-    color: #C9C6BE;
+    color: var(--a27-dim);
     animation: fadeIn 0.3s ease-out;
 }
 
@@ -943,7 +943,7 @@
 }
 
 .ict-widget__credit a:hover {
-    color: #C9C6BE;
+    color: var(--a27-dim);
 }
 
 /* --------------------------------------------------------------------------
@@ -1008,7 +1008,7 @@
 .ks4-trace-title {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #C9C6BE;
+    color: var(--a27-dim);
     letter-spacing: 0.02em;
 }
 
@@ -1056,7 +1056,7 @@
 }
 
 .ks4-cell-total {
-    color: #63DF93;
+    color: var(--a27-responsible-deep);
     font-weight: 700;
 }
 
@@ -1124,7 +1124,7 @@
 .ks5-stack-title {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #C9C6BE;
+    color: var(--a27-dim);
     letter-spacing: 0.02em;
 }
 
@@ -1174,12 +1174,12 @@
 }
 
 .ks5-frame.is-base {
-    border-left-color: #FF7038;
+    border-left-color: var(--a27-smart-deep);
 }
 
 .ks5-frame.is-returning {
     border-left-color: #006A7D;
-    color: #63DF93;
+    color: var(--a27-responsible-deep);
 }
 
 .ks5-frame-name {
@@ -1188,7 +1188,7 @@
 
 .ks5-frame-return {
     font-size: 0.78rem;
-    color: #63DF93;
+    color: var(--a27-responsible-deep);
     font-weight: 700;
 }
 
@@ -1196,7 +1196,7 @@
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #FF7038;
+    color: var(--a27-smart-deep);
     background: rgba(245, 158, 11, 0.12);
     border-radius: 999px;
     padding: 0.1rem 0.5rem;
