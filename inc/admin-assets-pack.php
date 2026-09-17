@@ -30,6 +30,61 @@ function aiad_get_assets_pack_page(): ?WP_Post {
 }
 
 /**
+ * Footer / nav URL for Assets Pack: prefer published page, then Customizer URL.
+ *
+ * @return string
+ */
+function aiad_get_assets_pack_public_url(): string {
+	$page = aiad_get_assets_pack_page();
+	if ( $page && 'publish' === $page->post_status ) {
+		return (string) get_permalink( $page );
+	}
+	return (string) get_theme_mod( 'aiad_asset_pack_url', '' );
+}
+
+/**
+ * Ensure a published Assets Pack page exists so the footer link works.
+ */
+function aiad_ensure_assets_pack_page(): void {
+	$stored_id = absint( get_option( 'aiad_assets_pack_page_id', 0 ) );
+	if ( $stored_id ) {
+		$stored = get_post( $stored_id );
+		if ( $stored instanceof WP_Post && 'page' === $stored->post_type && 'trash' !== $stored->post_status ) {
+			$template = (string) get_post_meta( $stored_id, '_wp_page_template', true );
+			if ( 'template-assets-pack.php' !== $template ) {
+				update_post_meta( $stored_id, '_wp_page_template', 'template-assets-pack.php' );
+			}
+			return;
+		}
+	}
+
+	$existing = aiad_get_assets_pack_page();
+	if ( $existing ) {
+		update_option( 'aiad_assets_pack_page_id', $existing->ID, false );
+		return;
+	}
+
+	$page_id = wp_insert_post(
+		array(
+			'post_title'   => __( 'Assets Pack', 'ai-awareness-day' ),
+			'post_name'    => 'assets-pack',
+			'post_status'  => 'publish',
+			'post_type'    => 'page',
+			'post_content' => '',
+		),
+		true
+	);
+
+	if ( is_wp_error( $page_id ) || ! $page_id ) {
+		return;
+	}
+
+	update_post_meta( $page_id, '_wp_page_template', 'template-assets-pack.php' );
+	update_option( 'aiad_assets_pack_page_id', (int) $page_id, false );
+}
+add_action( 'init', 'aiad_ensure_assets_pack_page', 20 );
+
+/**
  * Admin URL to open the Customizer focused on a section.
  *
  * @param string $section_id Section ID registered with the Customizer.

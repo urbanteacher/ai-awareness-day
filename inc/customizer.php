@@ -449,7 +449,7 @@ function aiad_register_footer_resource_links_section( WP_Customize_Manager $wp_c
         'aiad_asset_pack_url',
         array(
             'label'       => __( 'Assets Pack page URL (footer link)', 'ai-awareness-day' ),
-            'description' => __( 'Paste the address of your published “Assets Pack” page (the page that lists logo and banner downloads). Upload the actual image files under “Assets Pack”, not here.', 'ai-awareness-day' ),
+            'description' => __( 'Optional override. Leave blank to use your published “Assets Pack” page automatically (the theme creates one if needed).', 'ai-awareness-day' ),
             'section'     => 'aiad_footer_resource_links',
             'type'        => 'url',
         )
@@ -754,7 +754,7 @@ function aiad_register_social_section( WP_Customize_Manager $wp_customize ): voi
 function aiad_register_assets_pack_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_assets_pack', array(
         'title'       => __( 'Assets Pack (file uploads)', 'ai-awareness-day' ),
-        'description' => __( 'Upload files here. Create a page using the “Assets Pack” template so visitors can download them, then add that page’s URL under “Footer resource links” → “Assets Pack page URL” so the footer points to the right place.', 'ai-awareness-day' ),
+        'description' => __( 'Upload files here. Create a page using the “Assets Pack” template, or let the theme publish one automatically — the footer “Asset Pack” link points at that page.', 'ai-awareness-day' ),
         'priority'    => 38,
     ) );
 

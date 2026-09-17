@@ -13,7 +13,7 @@
         $resource_links = array(
             __( 'Newsletter', 'ai-awareness-day' )           => get_theme_mod( 'aiad_newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
             __( 'Press Release', 'ai-awareness-day' )        => $press_url,
-            __( 'Asset Pack', 'ai-awareness-day' )           => get_theme_mod( 'aiad_asset_pack_url', '' ),
+            __( 'Asset Pack', 'ai-awareness-day' )           => function_exists( 'aiad_get_assets_pack_public_url' ) ? aiad_get_assets_pack_public_url() : get_theme_mod( 'aiad_asset_pack_url', '' ),
             __( 'Implementation Guide', 'ai-awareness-day' ) => get_theme_mod( 'aiad_implementation_guide_url', '' ),
         ); ?>
         <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">

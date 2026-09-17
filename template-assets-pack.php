@@ -196,6 +196,45 @@ $assets = array(
         </div>
 
         <div class="assets-pack__grid">
+            <?php
+            $review_pages = array(
+                array(
+                    'url'         => AIAD_URI . '/assets/aiad27-review/style.html',
+                    'label'       => __( 'Style guide', 'ai-awareness-day' ),
+                    'description' => __( 'Live tokens, colour swatches, contrast tables and campaign marks.', 'ai-awareness-day' ),
+                    'btn_label'   => __( 'Open style guide', 'ai-awareness-day' ),
+                    'preview'     => AIAD_URI . '/assets/brand/aiad27/aiad27-lockup.svg',
+                    'badge'       => __( 'Guide', 'ai-awareness-day' ),
+                ),
+                array(
+                    'url'         => AIAD_URI . '/assets/aiad27-review/preview.html',
+                    'label'       => __( 'Student slides', 'ai-awareness-day' ),
+                    'description' => __( 'All 35 AiAd27 classroom slides — click any slide to view it full size.', 'ai-awareness-day' ),
+                    'btn_label'   => __( 'Open student slides', 'ai-awareness-day' ),
+                    'preview'     => AIAD_URI . '/assets/brand/aiad27/poster-safe.svg',
+                    'badge'       => __( 'Slides', 'ai-awareness-day' ),
+                ),
+            );
+            foreach ( $review_pages as $page ) :
+                ?>
+            <div class="assets-pack__card assets-pack__card--page fade-up">
+                <div class="assets-pack__preview assets-pack__preview--page">
+                    <img src="<?php echo esc_url( $page['preview'] ); ?>"
+                         alt=""
+                         loading="lazy" />
+                    <span class="assets-pack__doc-badge"><?php echo esc_html( $page['badge'] ); ?></span>
+                </div>
+                <div class="assets-pack__info">
+                    <h2 class="assets-pack__card-title"><?php echo esc_html( $page['label'] ); ?></h2>
+                    <p class="assets-pack__card-desc section-desc"><?php echo esc_html( $page['description'] ); ?></p>
+                    <a href="<?php echo esc_url( $page['url'] ); ?>"
+                       class="btn assets-pack__download-btn">
+                        <?php echo esc_html( $page['btn_label'] ); ?>
+                    </a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+
             <?php foreach ( $assets as $asset ) :
                 $asset_id = absint( $asset['id'] ?? 0 );
                 $img_url  = $asset_id ? wp_get_attachment_url( $asset_id ) : ( $asset['url'] ?? '' );
@@ -228,12 +267,6 @@ $assets = array(
             </p>
             <?php endif; ?>
         </div>
-
-        <p class="assets-pack__review-links">
-            <a href="<?php echo esc_url( AIAD_URI . '/assets/aiad27-review/style.html' ); ?>"><?php esc_html_e( 'Style guide', 'ai-awareness-day' ); ?></a>
-            <span aria-hidden="true">·</span>
-            <a href="<?php echo esc_url( AIAD_URI . '/assets/aiad27-review/preview.html' ); ?>"><?php esc_html_e( 'Student slides', 'ai-awareness-day' ); ?></a>
-        </p>
 
     </div>
 </main>
