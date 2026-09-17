@@ -25,8 +25,17 @@ if ( is_admin() ) {
     require_once $aiad_dir . '/inc/meta-boxes.php';
     require_once $aiad_dir . '/inc/admin-columns.php';
     require_once $aiad_dir . '/inc/import-export.php';
-    require_once $aiad_dir . '/inc/admin-assets-pack.php';
 }
+
+/*
+ * Despite the filename this is not admin-only: footer.php calls
+ * aiad_get_assets_pack_public_url() to link the Assets Pack, and the init hook
+ * that creates the page lives here too. Loaded only under is_admin(), neither
+ * existed on the front end, so the footer's function_exists() check failed and
+ * the link fell back to an empty Customizer URL and rendered as dead text.
+ * Its only other hook is wp_dashboard_setup, which simply never fires here.
+ */
+require_once $aiad_dir . '/inc/admin-assets-pack.php';
 
 require_once $aiad_dir . '/inc/theme-assets.php';
 require_once $aiad_dir . '/inc/setup.php';
