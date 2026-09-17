@@ -312,3 +312,46 @@ function aiad_migrate_2027_badge_overrides(): void {
 	update_option( 'aiad_2027_badge_overrides_cleared', '1' );
 }
 add_action( 'init', 'aiad_migrate_2027_badge_overrides', 7 );
+
+/**
+ * One-time migration: swap the campaign embed from the LinkedIn post to video.
+ *
+ * The embed src is a Customizer value, so it lives in the database and no code
+ * change reaches it — production kept serving the LinkedIn post while the
+ * theme default pointed at the campaign video.
+ *
+ * Only replaces the value while it is still a LinkedIn embed, so a URL set
+ * deliberately after this runs is never clobbered, and keeps the old value in
+ * an option so the post can be restored.
+ */
+function aiad_migrate_campaign_embed_to_video(): void {
+	if ( get_option( 'aiad_campaign_embed_video_migrated' ) === '1' ) {
+		return;
+	}
+
+	$current = (string) get_theme_mod( 'aiad_campaign_linkedin_embed_src', '' );
+
+	if ( $current !== '' && false === stripos( $current, 'linkedin.com' ) ) {
+		// Something other than the LinkedIn post is set; leave the choice alone.
+		update_option( 'aiad_campaign_embed_video_migrated', '1' );
+		return;
+	}
+
+	if ( $current !== '' ) {
+		update_option( 'aiad_campaign_embed_previous_src', $current, false );
+	}
+
+	/*
+	 * Muted is not a preference: browsers refuse to autoplay audio, so an
+	 * unmuted autoplay simply does not start. playsinline keeps iOS from
+	 * taking the video fullscreen, and the nocookie host avoids setting
+	 * tracking cookies on a site aimed at schoolchildren.
+	 */
+	set_theme_mod(
+		'aiad_campaign_linkedin_embed_src',
+		'https://www.youtube-nocookie.com/embed/ayg1efXE8d0?autoplay=1&mute=1&playsinline=1&rel=0'
+	);
+
+	update_option( 'aiad_campaign_embed_video_migrated', '1' );
+}
+add_action( 'init', 'aiad_migrate_campaign_embed_to_video', 8 );

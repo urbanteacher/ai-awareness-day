@@ -574,7 +574,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_campaign_title'     => __( 'Your AI. Your choices.', 'ai-awareness-day' ),
         'aiad_campaign_text'      => __( 'National AI Awareness Day is a nationwide campaign designed to build AI literacy across UK schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
         'aiad_campaign_text_2'    => __( 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.', 'ai-awareness-day' ),
-        'aiad_campaign_linkedin_embed_src' => '',
+        'aiad_campaign_linkedin_embed_src' => 'https://www.youtube-nocookie.com/embed/ayg1efXE8d0?autoplay=1&mute=1&playsinline=1&rel=0',
         'aiad_youtube_url'        => '',
         'aiad_youtube_title'      => __( 'Watch', 'ai-awareness-day' ),
         'aiad_contact_title'      => __( 'Get Involved', 'ai-awareness-day' ),
