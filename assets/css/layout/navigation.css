@@ -193,6 +193,15 @@
 @media screen and (max-width: 768px) {
   .nav-toggle {
     display: block;
+    /* .main-navigation is position: fixed at this width, so it drops out of
+       the flex flow and only the logo and this button are left in
+       .header-inner's space-between row. Ordered after the logo so the
+       hamburger sits left and the logo sits in the right corner. */
+    order: 1;
+  }
+
+  .site-logo {
+    order: 2;
   }
 
   .main-navigation {
