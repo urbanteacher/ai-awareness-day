@@ -164,6 +164,14 @@
   #hero .hero-date { text-align: right; }
   #hero .hero-date__line,
   #hero .hero-date__line--loop { text-align: right; }
+  /* --hero-measure assumes the desktop headline, which is width: max-content
+     and only as wide as its longest line. Here the headline switches to
+     width: 100% instead — right-aligned inside the full column, not sized to
+     its text — so the measure formula no longer describes where the headline
+     actually ends. Without this the subtitle kept the desktop-derived measure
+     (401px in a 699px column) while the headline filled the full 699px,
+     wrapping "We are back for 2027..." onto a third line for no reason. */
+  #hero .hero-subtitle { max-width: 100%; }
   #hero .hero-cta { flex-direction: column; width: 100%; }
   #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
 }
