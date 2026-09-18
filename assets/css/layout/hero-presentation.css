@@ -79,6 +79,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
+  /* Aligned to the same left edge as the subtitle above. layout/hero.css
+     centres this row, which was invisible while the buttons stretched across a
+     grid; once they were sized to their labels the pair started sitting 88px
+     in from the copy's edge while every other line began at 0, which read as
+     the hero having three different alignments. */
+  justify-content: flex-start;
   gap: 0;
   margin: 1rem 0 0;
   width: auto;
