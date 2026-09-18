@@ -73,7 +73,7 @@ add_action( 'init', 'aiad_migrate_2027_branding', 5 );
  * update, not a bulk rewrite of the site's voice.
  */
 function aiad_migrate_aiad27_brand_voice(): void {
-	if ( get_option( 'aiad_aiad27_brand_voice_migrated' ) === '3' ) {
+	if ( get_option( 'aiad_aiad27_brand_voice_migrated' ) === '5' ) {
 		return;
 	}
 
@@ -87,8 +87,8 @@ function aiad_migrate_aiad27_brand_voice(): void {
 			'AI Awareness Day 2027',
 		),
 		'aiad_campaign_title' => array(
-			'What is AI Awareness Day?',
 			'Your AI. Your choices.',
+			'AI Awareness Day',
 		),
 		// Restore long campaign copy if the short AiAd27 draft was applied.
 		'aiad_campaign_text' => array(
@@ -127,12 +127,17 @@ function aiad_migrate_aiad27_brand_voice(): void {
 		}
 	}
 
+	$campaign_text = (string) get_theme_mod( 'aiad_campaign_text', '' );
+	if ( false !== strpos( $campaign_text, 'across UK schools' ) ) {
+		set_theme_mod( 'aiad_campaign_text', str_replace( 'across UK schools', 'across schools', $campaign_text ) );
+	}
+
 	$tagline = (string) get_option( 'blogdescription', '' );
 	if ( $tagline === '' || $tagline === '2027' ) {
 		update_option( 'blogdescription', 'Keep Humans in the Loop' );
 	}
 
-	update_option( 'aiad_aiad27_brand_voice_migrated', '3' );
+	update_option( 'aiad_aiad27_brand_voice_migrated', '5' );
 }
 add_action( 'init', 'aiad_migrate_aiad27_brand_voice', 6 );
 
