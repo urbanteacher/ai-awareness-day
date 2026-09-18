@@ -22,6 +22,16 @@
 
 /* Restore the pre-presentation brand lockup: wordmark over a hanging
    two-line H1, strand mark beside “the Loop”. */
+/* The headline sets the measure for everything under it. "Keep Humans in" is
+   about 6.6x the title's own font-size wide, so expressing the measure in that
+   em keeps the subtitle and the buttons ending on the headline's right edge as
+   the clamped title scales. Retune the multiplier if the headline wording
+   changes — it is tied to that string in Uncut Sans, not to anything generic. */
+#hero .hero-copy {
+  --hero-title-size: clamp(2.75rem, 5.4vw, 5.4rem);
+  --hero-measure: min(calc(6.6 * var(--hero-title-size)), 100%);
+}
+
 #hero .hero-brand {
   display: grid;
   grid-template-columns: max-content auto;
@@ -30,7 +40,7 @@
   align-items: center;
   width: max-content;
   max-width: 100%;
-  font-size: clamp(2.75rem, 5.4vw, 5.4rem);
+  font-size: var(--hero-title-size);
 }
 #hero .hero-lockup {
   grid-column: 1;
@@ -66,7 +76,7 @@
 }
 #hero .hero-subtitle {
   margin: 1.5rem 0 0;
-  max-width: min(42rem, 100%);
+  max-width: var(--hero-measure);
   line-height: 1.35;
   font-size: var(--hero-body, clamp(1.12rem, 2vw, 1.45rem));
 }
@@ -87,10 +97,13 @@
   justify-content: flex-start;
   gap: 0;
   margin: 1rem 0 0;
-  width: auto;
+  width: var(--hero-measure);
   max-width: 100%;
 }
 #hero .hero-cta__btn {
+  /* Share the measure between them rather than each sizing to its own label,
+     so the pair ends on the headline's edge instead of stopping short. */
+  flex: 1 1 auto;
   width: auto;
   min-height: 0;
   margin: 0;
@@ -125,7 +138,7 @@
 #hero .hero-strand-feature__summary { border-color: var(--a27-dim); margin: 1.25rem 0 0; padding: 1.25rem 0 0; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.4; min-height: 5.2rem; }
 @media (max-width: 1050px) {
   #hero .hero-title-block { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  #hero .hero-brand { font-size: clamp(2.4rem, 8vw, 4.2rem); }
+  #hero .hero-copy { --hero-title-size: clamp(2.4rem, 8vw, 4.2rem); }
   #hero .hero-strand-feature__stage { flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }
   #hero .hero-strand-feature__word { font-size: clamp(2rem, 6vw, 3.5rem); }
   #hero .hero-strand-feature__mark { width: 4rem; height: 4rem; }
