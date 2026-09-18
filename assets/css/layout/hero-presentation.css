@@ -203,8 +203,12 @@
      (401px in a 699px column) while the headline filled the full 699px,
      wrapping "We are back for 2027..." onto a third line for no reason. */
   #hero .hero-subtitle { max-width: 100%; text-align: center; margin-inline: auto; }
-  #hero .hero-cta { flex-direction: column; width: 100%; }
-  #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
+  /* Side by side, not stacked: kept as one flex row rather than switching to
+     a column, so the pair keeps a single accessible tap target per button
+     without doubling the hero's vertical scroll length. Labels wrap onto a
+     second line inside the narrower button rather than truncating. */
+  #hero .hero-cta { width: 100%; }
+  #hero .hero-cta__btn { font-size: .72rem; white-space: normal; line-height: 1.25; }
   #hero .hero-strand-feature__themes { justify-content: center; }
   #hero .hero-strand-feature__stage { justify-content: center; }
   #hero .hero-strand-feature__summary { text-align: center; }
@@ -217,4 +221,11 @@
      the hero at this size. */
   #hero .hero-strand-feature__stage { flex-direction: row; justify-content: center; align-items: center; }
   #hero .hero-strand-feature__word { font-size: clamp(2rem, 8.2vw, 2.5rem); }
+  /* The two CTA labels plus their padding need 306px and a 320px screen only
+     has 288px to give them once the container's own gutters come out —
+     18px short, so flex-wrap: wrap was dropping "Check your AI readiness"
+     onto its own full-width row instead of staying beside "Get involved".
+     Tighter padding recovers the 18px; nowrap stops it happening again. */
+  #hero .hero-cta { flex-wrap: nowrap; }
+  #hero .hero-cta__btn { padding-inline: .5rem; }
 }
