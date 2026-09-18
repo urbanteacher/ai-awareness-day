@@ -24,6 +24,10 @@ Everything above comes from one command, with the local WordPress running:
 
     AIAD_PLAYWRIGHT_DIR=<dir-with-playwright> node scripts/export-aiad27-cards.mjs
 
+It can be started from any directory — with no output argument it writes to
+this folder, resolved from the script's own location rather than from the
+shell's working directory.
+
 Cards are written first, then the sheet, which reads them back over
 `localhost`. Serve these pages over `localhost`, never `file://` — the brand
 SVGs will not load cross-origin from a file URL.

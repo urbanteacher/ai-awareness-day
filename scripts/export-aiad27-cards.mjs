@@ -22,9 +22,15 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 
 const args = process.argv.slice(2);
-const outDir = args.find((a) => !a.startsWith('--')) || 'assets/aiad27-review/linkedin';
+/* Default the output at the theme rather than at the shell's cwd, so the run
+   lands in the same place from wherever it is started. An explicit outDir
+   argument is still taken as given, relative to cwd. */
+const themeDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const outDir =
+	args.find((a) => !a.startsWith('--')) || path.join(themeDir, 'assets/aiad27-review/linkedin');
 const urlArg = args.find((a) => a.startsWith('--url='));
 const BASE = 'http://localhost:8888/wp-content/themes/ai-awareness-day/assets/aiad27-review';
 const PREVIEW_URL = urlArg ? urlArg.slice('--url='.length) : `${BASE}/preview.html`;
