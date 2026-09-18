@@ -139,7 +139,9 @@
 #hero .hero-strand-feature__themes { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: .4rem 1rem; margin: 0 0 2rem; max-width: none; }
 #hero .hero-strand-feature__theme { color: var(--a27-cream); font-size: .7rem; letter-spacing: .06em; padding-block: .5rem; }
 #hero .hero-strand-feature__theme.is-active { color: var(--hero-bright); border-color: currentColor; }
-#hero .hero-strand-feature__stage { display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 1.75rem; margin: 0; padding: 0; font-size: inherit; }
+/* Row rather than column-reverse: icon and word sit on one line at every
+   width instead of the icon stacking above the word above roughly 1050px. */
+#hero .hero-strand-feature__stage { display: flex; flex-direction: row; align-items: center; gap: 1.25rem; margin: 0; padding: 0; font-size: inherit; }
 #hero .hero-strand-feature__mark { display: block; width: 6rem; height: 6rem; background: var(--hero-bright); }
 #hero .hero-strand-feature__word { width: auto; font-size: clamp(2rem, 3.8vw, 3.5rem); letter-spacing: -.055em; line-height: 1.1; }
 #hero .hero-strand-feature__summary { border-color: var(--a27-dim); margin: 1.25rem 0 0; padding: 1.25rem 0 0; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.4; min-height: 5.2rem; }
@@ -160,10 +162,16 @@
     column-gap: 0;
   }
   #hero .hero-brand__mark { display: none; }
-  #hero .hero-lockup { width: min(260px, 100%); margin: 0 0 .85rem auto; }
-  #hero .hero-date { text-align: right; }
+  /* Everything centred on mobile rather than the desktop's right-hung
+     headline over a left-hung body. The right-alignment on the headline and
+     the left axis shared by the subtitle/buttons/labels were both decisions
+     made for a wide two-column hero; stacked full-width on a phone, a single
+     centred column reads far more settled than either edge. */
+  #hero .hero-brand { justify-items: center; }
+  #hero .hero-lockup { width: min(260px, 100%); margin: 0 auto .85rem; }
+  #hero .hero-date,
   #hero .hero-date__line,
-  #hero .hero-date__line--loop { text-align: right; }
+  #hero .hero-date__line--loop { text-align: center; }
   /* --hero-measure assumes the desktop headline, which is width: max-content
      and only as wide as its longest line. Here the headline switches to
      width: 100% instead — right-aligned inside the full column, not sized to
@@ -171,11 +179,19 @@
      actually ends. Without this the subtitle kept the desktop-derived measure
      (401px in a 699px column) while the headline filled the full 699px,
      wrapping "We are back for 2027..." onto a third line for no reason. */
-  #hero .hero-subtitle { max-width: 100%; }
+  #hero .hero-subtitle { max-width: 100%; text-align: center; margin-inline: auto; }
   #hero .hero-cta { flex-direction: column; width: 100%; }
   #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
+  #hero .hero-strand-feature__themes { justify-content: center; }
+  #hero .hero-strand-feature__stage { justify-content: center; }
+  #hero .hero-strand-feature__summary { text-align: center; }
 }
 @media (max-width: 480px) {
-  #hero .hero-strand-feature__stage { flex-direction: column-reverse; align-items: flex-start; }
+  /* Was column-reverse, stacking the icon above the word and pulling both
+     back to the left — it undid both the one-line layout and the centring
+     set for mobile just above, since this query wins at the same width. Row
+     plus centre keeps icon and word on one line, centred like the rest of
+     the hero at this size. */
+  #hero .hero-strand-feature__stage { flex-direction: row; justify-content: center; align-items: center; }
   #hero .hero-strand-feature__word { font-size: clamp(2rem, 8.2vw, 2.5rem); }
 }
