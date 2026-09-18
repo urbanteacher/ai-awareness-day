@@ -1,0 +1,253 @@
+/* ============================================
+   Certificate showcase
+
+   Self-contained block: everything is scoped to .cert-showcase so it can be
+   dropped on any page without colliding with the section around it. The
+   certificate itself is a canvas drawn by the benchmark plugin, so its
+   sizing lives here too — the plugin's own stylesheets are not loaded
+   outside the audit.
+   ============================================ */
+
+.cert-showcase {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+  background: var(--a27-cream, #F6F4ED);
+  color: var(--a27-ink, #231F20);
+}
+
+.cert-showcase--ink {
+  background: var(--a27-ink, #231F20);
+  color: var(--a27-cream, #F6F4ED);
+}
+
+.cert-showcase__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media screen and (min-width: 860px) {
+  .cert-showcase__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+}
+
+.cert-showcase__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a27-dim, #54504E);
+}
+
+.cert-showcase--ink .cert-showcase__eyebrow {
+  color: rgba(246, 244, 237, 0.7);
+}
+
+/* Headings carry an explicit ink colour from the theme's base styles, so
+   they do not inherit the section's colour and disappear on the ink ground. */
+.cert-showcase--ink .cert-showcase__title,
+.cert-showcase--ink .cert-showcase__earn-title,
+.cert-showcase--ink .cert-showcase__steps li {
+  color: var(--a27-cream, #F6F4ED);
+}
+
+.cert-showcase__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--a27-responsible-deep, #176E3B);
+}
+
+.cert-showcase--ink .cert-showcase__dot {
+  background: var(--a27-responsible, #63DF93);
+}
+
+.cert-showcase__title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.cert-showcase__lead {
+  margin: 0 0 1.75rem;
+  max-width: 38rem;
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  line-height: 1.55;
+  color: var(--a27-dim, #54504E);
+}
+
+.cert-showcase--ink .cert-showcase__lead {
+  color: rgba(246, 244, 237, 0.78);
+}
+
+/* Numbered by hand so the count can carry the strand accent. */
+.cert-showcase__steps {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: cert-step;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.cert-showcase__steps li {
+  counter-increment: cert-step;
+  display: grid;
+  grid-template-columns: 1.85rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.85rem;
+  font-weight: 600;
+}
+
+.cert-showcase__steps li::before {
+  content: counter(cert-step);
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  background: var(--a27-safe, #00BEDD);
+  color: var(--a27-ink, #231F20);
+  font-size: 0.85rem;
+  font-weight: 700;
+  /* The chamfer, at button scale. */
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+/* The roles the audit covers, named in one line. Quiet on purpose: it is
+   orientation, not a choice to make here. */
+.cert-showcase__roles-note {
+  margin: 0 0 1.85rem;
+  max-width: 34rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.7;
+  /* Safe blue, the same accent as the step markers and the certificate's
+     band. The deep tone on cream, the bright one on ink — the bright blue
+     does not carry enough contrast against cream to be read at this size. */
+  color: var(--a27-safe-deep, #006A7D);
+}
+
+.cert-showcase--ink .cert-showcase__roles-note {
+  color: var(--a27-safe, #00BEDD);
+}
+
+.cert-showcase__cta {
+  margin: 0;
+}
+
+.cert-showcase__btn {
+  display: inline-block;
+  padding: 0.95rem 2rem;
+  background: var(--a27-ink, #231F20);
+  color: var(--a27-cream, #F6F4ED);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.cert-showcase__btn:hover,
+.cert-showcase__btn:focus-visible {
+  background: var(--a27-safe-deep, #006A7D);
+  color: #FFFFFF;
+}
+
+.cert-showcase--ink .cert-showcase__btn {
+  background: var(--a27-cream, #F6F4ED);
+  color: var(--a27-ink, #231F20);
+}
+
+.cert-showcase__art {
+  margin: 0;
+}
+
+.cert-showcase__art .certificate-preview__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  /* The certificate is cream on a cream ground, so it needs an edge of its
+     own; the shadow alone only defines the bottom of it. */
+  border: 1px solid var(--a27-rule, #C9C6BE);
+  box-shadow: 0 22px 50px rgba(35, 31, 32, 0.18);
+}
+
+.cert-showcase--ink .cert-showcase__art .certificate-preview__canvas {
+  border-color: transparent;
+}
+
+.cert-showcase--ink .cert-showcase__art .certificate-preview__canvas {
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
+}
+
+.cert-showcase__caption {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--a27-dim, #54504E);
+}
+
+.cert-showcase--ink .cert-showcase__caption {
+  color: rgba(246, 244, 237, 0.65);
+}
+
+/* No source-order override on narrow screens: this block opens the page's
+   pitch for the audit, so the heading has to arrive before the artwork. */
+
+
+/* ---------------------------------------------------------------
+   What finishing it earns — a full-width strip under both columns,
+   so the steps get room to sit side by side instead of stacking in
+   a narrow column.
+   --------------------------------------------------------------- */
+.cert-showcase__earn {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--a27-rule, #C9C6BE);
+}
+
+.cert-showcase--ink .cert-showcase__earn {
+  border-top-color: rgba(246, 244, 237, 0.25);
+}
+
+.cert-showcase__earn-head {
+  max-width: 52rem;
+}
+
+.cert-showcase__earn-title {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.cert-showcase__earn-lead {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--a27-dim, #54504E);
+}
+
+.cert-showcase--ink .cert-showcase__earn-lead {
+  color: rgba(246, 244, 237, 0.78);
+}
+
+.cert-showcase__earn .cert-showcase__steps {
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+}
+
+@media screen and (min-width: 720px) {
+  .cert-showcase__earn .cert-showcase__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}

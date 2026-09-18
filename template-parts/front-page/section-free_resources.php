@@ -87,7 +87,6 @@ if ( $free_resources->have_posts() ):
                                 <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                             <?php endif; ?>
 
-                            <div class="resource-card__wedge" aria-hidden="true"></div>
                             <div class="resource-card__fade"  aria-hidden="true"></div>
 
                             <?php if ( $theme_name ): ?>

@@ -100,7 +100,6 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                                         <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                                     <?php endif; ?>
 
-                                    <div class="resource-card__wedge" aria-hidden="true"></div>
                                     <div class="resource-card__fade"  aria-hidden="true"></div>
 
                                     <?php if ( $theme_name ): ?>

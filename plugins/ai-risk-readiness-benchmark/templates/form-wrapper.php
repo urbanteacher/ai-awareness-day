@@ -63,7 +63,7 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 				<div class="airb__hero-gauge-copy">
 					<h3 class="airb__hero-gauge-title"><?php esc_html_e( 'Human Oversight Ratio', 'ai-risk-benchmark' ); ?></h3>
 					<p class="airb__hero-gauge-sub"><?php esc_html_e( 'Share of AI output a person changes before using it.', 'ai-risk-benchmark' ); ?></p>
-					<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Below 26% signals reliance without meaningful human review.', 'ai-risk-benchmark' ); ?></p>
+					<p class="airb__hero-gauge-foot"><?php esc_html_e( 'Editing is one signal of oversight. Also consider whether you check accuracy, suitability and safety before use.', 'ai-risk-benchmark' ); ?></p>
 				</div>
 				<div class="airb__hero-gauge-dial" data-airb-demo-gauge="34"></div>
 			</div>
@@ -73,6 +73,7 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	<?php // Role picker is rendered client-side (completion badges, retake labels). ?>
 	<div class="airb__screen" id="airb-screen-role" aria-live="polite">
 		<noscript>
+			<p class="airb__notice"><?php esc_html_e( 'Enable JavaScript in your browser to choose a role and complete the interactive benchmark.', 'ai-risk-benchmark' ); ?></p>
 			<?php
 			$airb_roles = AIRB_Defaults::roles();
 			if ( $airb_roles ) :
@@ -102,6 +103,31 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 			?>
 		</noscript>
 	</div>
+
+	<?php
+	/*
+	 * What the benchmark is for, shown before the twenty questions rather
+	 * than after them. The artwork is drawn by airb-certificate.js into the
+	 * canvas below, from the same renderer that draws the real thing, so the
+	 * example cannot drift from what people actually receive.
+	 */
+	?>
+	<section class="airb__cert-showcase" data-airb-cert-showcase aria-labelledby="airb-cert-showcase-title">
+		<div class="airb__cert-showcase-copy">
+			<p class="airb__cert-showcase-eyebrow"><?php esc_html_e( 'What you earn', 'ai-risk-benchmark' ); ?></p>
+			<h3 class="airb__cert-showcase-title" id="airb-cert-showcase-title"><?php esc_html_e( 'A certificate you can evidence', 'ai-risk-benchmark' ); ?></h3>
+			<p class="airb__cert-showcase-lead"><?php esc_html_e( 'Score 70 or above, then describe one thing you changed in your practice. Your certificate is issued in the AI Awareness Day strand you worked on, and downloads as an image you can keep, print or add to your CPD record.', 'ai-risk-benchmark' ); ?></p>
+			<ol class="airb__cert-showcase-steps">
+				<li><?php esc_html_e( 'Complete your benchmark', 'ai-risk-benchmark' ); ?></li>
+				<li><?php esc_html_e( 'Evidence one change you made', 'ai-risk-benchmark' ); ?></li>
+				<li><?php esc_html_e( 'Download your certificate', 'ai-risk-benchmark' ); ?></li>
+			</ol>
+		</div>
+		<figure class="airb__cert-showcase-art">
+			<div data-airb-cert-showcase-art></div>
+			<figcaption class="airb__cert-showcase-caption"><?php esc_html_e( 'Example — your name and strand appear on the certificate you earn.', 'ai-risk-benchmark' ); ?></figcaption>
+		</figure>
+	</section>
 
 	<section class="airb__deck" id="airb-deck" data-deck aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'How it works', 'ai-risk-benchmark' ); ?>" tabindex="0">
 		<div class="airb__deck-head">
@@ -288,7 +314,7 @@ $problem_questions = (array) ( $positioning['problem_questions'] ?? array() );
 	</section>
 
 	<div class="airb__progress" id="airb-progress" hidden>
-		<div class="airb__stepper" id="airb-stepper" role="list" aria-hidden="true"></div>
+		<div class="airb__stepper" id="airb-stepper" role="list"></div>
 		<p class="airb__progress-label" id="airb-progress-label" aria-live="polite"></p>
 	</div>
 

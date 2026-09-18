@@ -175,6 +175,14 @@
                         "Explain the answer in your own words",
                         "If you cannot explain it yourself, you may not fully understand it yet"
                     ]
+                },
+                "developing": {
+                    "summary": "You check AI answers some of the time. The habit only protects you when it is automatic, because AI sounds just as confident when it is wrong.",
+                    "impact": [],
+                    "actions": [
+                        "Check anything you would repeat as fact against a second source",
+                        "Say the answer in your own words before you use it"
+                    ]
                 }
             }
         },

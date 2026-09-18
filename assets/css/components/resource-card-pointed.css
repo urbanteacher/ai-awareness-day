@@ -38,20 +38,6 @@
   opacity: 0.6;
 }
 
-/* ---- Top-left gradient wedge — blends over the photo ---- */
-.resource-card--pointed .resource-card__wedge {
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: overlay;
-  clip-path: polygon(0 0, 55% 0, 0 45%);
-}
-
-.resource-card--safe    .resource-card__wedge { background: var(--a27-safe, #00BEDD); }
-.resource-card--smart   .resource-card__wedge { background: var(--a27-smart, #FF7038); }
-.resource-card--creative .resource-card__wedge { background: var(--a27-creative, #AC91FF); }
-.resource-card--responsible .resource-card__wedge { background: var(--a27-responsible, #63DF93); }
-.resource-card--future  .resource-card__wedge { background: var(--a27-future, #FA83EB); }
-
 /* ---- Black / grey bottom fade for text legibility ---- */
 .resource-card--pointed .resource-card__fade {
   position: absolute;
@@ -71,13 +57,59 @@
   position: absolute;
   top: 1rem;
   left: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3rem 0.7rem;
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--a27-cream, #F6F4ED);
-  text-shadow: 0 1px 4px rgba(35, 31, 32, 0.55);
+  /* Bright strand grounds always take ink, never cream. */
+  color: var(--a27-ink, #231F20);
+  background: var(--a27-safe, #00BEDD);
+  --card-mark: url('../../brand/aiad27/icon-safe.svg');
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+/* The strand mark, masked to the label's ink so it always matches the word.
+   Declared and used in this file: a url() inside a custom property resolves
+   against the stylesheet that USES it, so splitting the two across files
+   silently breaks the path. */
+.resource-card--pointed .resource-card__theme-label::before {
+  content: '';
+  flex: none;
+  width: 1em;
+  height: 1em;
+  background: currentColor;
+  -webkit-mask: var(--card-mark) center / contain no-repeat;
+  mask: var(--card-mark) center / contain no-repeat;
+}
+
+.resource-card--safe .resource-card__theme-label {
+  background: var(--a27-safe, #00BEDD);
+  --card-mark: url('../../brand/aiad27/icon-safe.svg');
+}
+
+.resource-card--smart .resource-card__theme-label {
+  background: var(--a27-smart, #FF7038);
+  --card-mark: url('../../brand/aiad27/icon-smart.svg');
+}
+
+.resource-card--creative .resource-card__theme-label {
+  background: var(--a27-creative, #AC91FF);
+  --card-mark: url('../../brand/aiad27/icon-creative.svg');
+}
+
+.resource-card--responsible .resource-card__theme-label {
+  background: var(--a27-responsible, #63DF93);
+  --card-mark: url('../../brand/aiad27/icon-responsible.svg');
+}
+
+.resource-card--future .resource-card__theme-label {
+  background: var(--a27-future, #FA83EB);
+  --card-mark: url('../../brand/aiad27/icon-future.svg');
 }
 
 /* ---- Format word — bottom-left inside hero (desktop) ---- */
@@ -239,6 +271,8 @@
     font-size: 0.5rem;
     top: 0.6rem;
     left: 0.75rem;
+    padding: 0.22rem 0.5rem;
+    clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
   }
 
   .resource-card--pointed .resource-card__title-overlay {

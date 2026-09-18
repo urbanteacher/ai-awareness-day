@@ -62,9 +62,11 @@
 	var VARIANT_KEY = 'airb_audit_variant_v1';
 	var introCollapsed = false;
 	var submissionGeneration = 0;
+	var confirmedResults = null;
 
 	var state = {
 		phase: 'role',
+		saveStatus: 'idle',
 		role: '',
 		step: 0,
 		questionStep: 0,
@@ -100,13 +102,14 @@
 	};
 
 	function persistResultsSnapshot() {
-		var r = state.results;
+		var r = confirmedResults || state.results;
 		if (!r || !state.role) return;
 		if (!resultMatchesRole(state.role, r)) return;
 		try {
 			var weak = (r.interest_form && r.interest_form.weak_domains) ? r.interest_form.weak_domains : [];
 			localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({
 				version: 2,
+				saveStatus: confirmedResults ? 'saved' : state.saveStatus,
 				submissionId: state.submissionId || 0,
 				role: state.role,
 				results: r,
@@ -170,6 +173,9 @@
 
 	function resetBenchmarkResults() {
 		hideError();
+		confirmedResults = null;
+		state.saveStatus = 'idle';
+		submissionGeneration++;
 		clearResultsSnapshot();
 		state.phase = 'role';
 		state.role = '';
@@ -203,6 +209,7 @@
 			state.role = snapshot.role || '';
 			state.results = snapshot.results || null;
 			state.submissionId = parseInt(snapshot.submissionId, 10) || 0;
+			state.saveStatus = snapshot.saveStatus === 'saved' ? 'saved' : 'unconfirmed';
 			state.email = '';
 			state.school = snapshot.school || '';
 			state.schoolPhase = snapshot.schoolPhase || '';
@@ -470,6 +477,10 @@
 	function syncAuditProgressUi(sections, answers, step) {
 		var counts = auditQuestionCounts(sections, answers, step);
 		updateAuditProgressStepper(sections, answers, step);
+		if (el.next && state.phase === 'audit') {
+			var isLast = counts.offsetBeforeSection + state.questionStep + 1 >= counts.total;
+			el.next.textContent = isLast ? 'Finish questions' : (i18n.next || 'Next');
+		}
 		if (el.progressLbl) {
 			el.progressLbl.textContent = auditProgressLabel(counts);
 		}
@@ -754,6 +765,10 @@
 			state.answers = {};
 			state.results = null;
 			clearResultsSnapshot();
+			state.submissionId = 0;
+			state.saveStatus = 'idle';
+			confirmedResults = null;
+			submissionGeneration++;
 			beginAudit();
 		});
 	}
@@ -1758,6 +1773,7 @@
 	function peerBenchmarkBarHtml(pb, opts) {
 		opts = opts || {};
 		if (!pb) return '';
+		if (pb.is_estimated || !(pb.sample_size > 0)) return '<p class="airb__muted">Peer comparison is not available for this report. Focus on your own domain feedback and next steps.</p>';
 		var cfg = opts.cfg || leaderResult;
 		var avgGap = typeof pb.gap_vs_average === 'number' ? pb.gap_vs_average : ((parseInt(pb.average_score, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
 		var topGap = typeof pb.gap_vs_top_quartile === 'number' ? pb.gap_vs_top_quartile : ((parseInt(pb.top_quartile, 10) || 0) - (parseInt(pb.your_score, 10) || 0));
@@ -3058,8 +3074,10 @@
 		return results;
 	}
 
-	function showError(msg) {
+	function showError(msg, isSuccess) {
 		if (!el.error) return;
+		el.error.classList.toggle('airb__error--success', !!isSuccess);
+		el.error.setAttribute('role', isSuccess ? 'status' : 'alert');
 		el.error.textContent = msg;
 		el.error.hidden = false;
 		if (el.root) {
@@ -3210,7 +3228,9 @@
 
 	function renderRole() {
 		var completions = loadRoleCompletions();
-		var html = '<div class="airb__panel"><h3 class="airb__panel-title">' + esc(i18n.chooseRoleHeading || i18n.chooseRole) + '</h3><div class="airb__role-grid">';
+		var html = '<div class="airb__panel">';
+		html += '<div class="airb__welcome"><p class="airb__welcome-kicker">A clearer picture of your AI practice</p><h2>Keep your judgement.<br>Build your confidence.</h2><p>Discover what is working, where you may be relying too much on AI, and what to do next.</p><ol class="airb__journey"><li><span>01</span> Choose your role</li><li><span>02</span> Reflect on your practice</li><li><span>03</span> Get your next steps</li></ol></div>';
+		html += '<h3 class="airb__panel-title">' + esc(i18n.chooseRoleHeading || i18n.chooseRole) + '</h3><p class="airb__muted">Choose the role that fits you today. You only need to complete one path.</p><div class="airb__role-grid">';
 		var benchmarks = cfg.role_benchmarks || {};
 		Object.keys(cfg.roles || {}).forEach(function (slug) {
 			var active = state.role === slug ? ' is-selected' : '';
@@ -3221,6 +3241,8 @@
 				html += '<span class="airb__role-done">' + esc((i18n.roleDoneScore || '{n}%').replace('{n}', String(done.alignment))) + '</span>';
 			}
 			html += '<span class="airb__role-card-title">' + esc(cfg.roles[slug]) + '</span>';
+			var questionCount = (cfg.questions || []).filter(function (q) { return q.role === slug; }).length;
+			if (questionCount) html += '<span class="airb__role-meta">Up to ' + questionCount + ' questions · at your own pace</span>';
 			var tagline = bench.tagline || i18n.roleCardTagline || '';
 			if (tagline) {
 				html += '<span class="airb__role-card-blurb">' + esc(tagline) + '</span>';
@@ -3251,12 +3273,12 @@
 		if (q.type === 'slider') {
 			var val = state.answers[qid] !== undefined ? state.answers[qid] : 50;
 			var numVal = parseInt(val, 10) || 0;
-			html += '<div class="airb__slider-wrap"><input type="range" class="airb__slider" id="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" min="0" max="100" step="1" value="' + val + '" />';
+			html += '<div class="airb__slider-wrap"><input type="range" class="airb__slider" id="airb-q-' + esc(qid) + '" aria-labelledby="airb-q-title-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" min="0" max="100" step="1" value="' + val + '" />';
 			html += '<div class="airb__slider-scale" aria-hidden="true"><span>0% unchanged</span><span>100% heavily edited</span></div>';
 			html += '<output class="airb__slider-out" for="airb-q-' + esc(qid) + '">' + val + '% ' + esc(i18n.modifyLabel) + '</output></div>';
 			html += '<p class="airb__slider-band" id="airb-band-' + esc(qid) + '" style="color:' + oversightZoneColor(numVal) + '">' + esc(oversightLabel(numVal)) + '</p>';
 		} else if (q.type === 'select') {
-			html += '<select class="airb__select" id="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '"><option value="">' + esc(i18n.required) + '</option>';
+			html += '<select class="airb__select" id="airb-q-' + esc(qid) + '" aria-labelledby="airb-q-title-' + esc(qid) + '" data-airb-q="' + esc(qid) + '"><option value="">' + esc(i18n.required) + '</option>';
 			(q.options || []).forEach(function (o) {
 				var sel = state.answers[qid] === o.value ? ' selected' : '';
 				html += '<option value="' + esc(o.value) + '"' + sel + '>' + esc(o.label) + '</option>';
@@ -3267,7 +3289,7 @@
 				return Math.max(max, String(o.label || '').length);
 			}, 0);
 			var optionClass = 'airb__options airb__options--pills' + (maxLabelLen > 22 ? ' airb__options--long' : '');
-			html += '<div class="' + optionClass + '">';
+			html += '<div class="' + optionClass + '" role="radiogroup" aria-labelledby="airb-q-title-' + esc(qid) + '">';
 			(q.options || []).forEach(function (o) {
 				var checked = state.answers[qid] === o.value ? ' checked' : '';
 				html += '<label class="airb__option"><input type="radio" name="airb-q-' + esc(qid) + '" data-airb-q="' + esc(qid) + '" value="' + esc(o.value) + '"' + checked + ' />' + esc(o.label) + '</label>';
@@ -3297,6 +3319,7 @@
 		});
 		el.audit.querySelectorAll('[data-airb-q]').forEach(function (input) {
 			input.addEventListener('change', function () {
+				hideError();
 				refreshSectionConditionalVisibility(section);
 				highlightNextButton();
 			});
@@ -3339,7 +3362,7 @@
 			html += '<div class="airb__q-block" data-airb-qid="' + esc(q.id) + '"' + (showQuestion ? '' : ' hidden') + '>';
 			var globalIndex = questionCounts.offsetBeforeSection + qIndex + 1;
 			html += '<p class="airb__q-meta"' + (applies && questionCounts.total > 1 && !singleQuestion ? '' : ' hidden') + '>' + (applies && questionCounts.total > 1 && !singleQuestion ? questionNumberLabel(globalIndex, questionCounts.total) : '') + '</p>';
-			html += '<p class="airb__q-title">' + esc(q.displayText || q.text) + '</p>';
+			html += '<p class="airb__q-title" id="airb-q-title-' + esc(q.id) + '">' + esc(q.displayText || q.text) + '</p>';
 			html += questionInputHtml(q);
 			html += '</div>';
 		});
@@ -3351,7 +3374,7 @@
 		el.contact.hidden = true;
 		el.results.hidden = true;
 		el.nav.hidden = false;
-		el.back.hidden = state.step === 0 && (!singleQuestion || state.questionStep === 0);
+		el.back.hidden = false;
 		if (el.next) {
 			el.next.textContent = i18n.next;
 		}
@@ -3360,6 +3383,11 @@
 		bindSectionInputs(section);
 		refreshSectionConditionalVisibility(section);
 		updateFlowChrome();
+		var questionTitle = el.audit.querySelector('.airb__q-block:not([hidden]) .airb__q-title');
+		if (questionTitle) {
+			questionTitle.setAttribute('tabindex', '-1');
+			questionTitle.focus({ preventScroll: true });
+		}
 		var shouldScroll = opts.scrollToTop === true || (opts.scrollToTop !== false && state.questionStep === 0);
 		if (shouldScroll) {
 			scrollBenchmarkToTop();
@@ -3475,6 +3503,7 @@
 		var html = '<div class="airb__panel airb__contact-panel">';
 		html += '<header class="airb__contact-header">';
 		html += '<p class="airb__contact-eyebrow">' + esc(i18n.contactEyebrow || 'Final step') + '</p>';
+		html += '<p class="airb__contact-intro">Your questions are complete. Add any context you want to share, then see your results.</p>';
 		html += '<h3 class="airb__panel-title">' + esc(i18n.contactTitle || 'Personalise your results') + '</h3>';
 		if (contactHint) html += '<p class="airb__contact-intro">' + esc(contactHint) + '</p>';
 		html += '</header>';
@@ -3505,19 +3534,11 @@
 				html += '</section>';
 			}
 
-			html += '<section class="airb__contact-group airb__contact-group--email" aria-labelledby="airb-contact-email-title">';
-			html += '<h4 class="airb__contact-group-title" id="airb-contact-email-title">' + esc(i18n.contactEmailTitle || 'Get a copy') + '</h4>';
-			html += '<p class="airb__contact-group-copy">' + esc(i18n.contactEmailHint || 'Enter an email only if you want your report sent to you.') + '</p>';
-			html += '<label class="airb__label" for="airb-email">' + esc(i18n.emailOptional) + '</label>' +
-				'<input type="email" class="airb__input" id="airb-email" value="' + esc(state.email) + '" autocomplete="email"' + (i18n.emailOptionalHint ? ' aria-describedby="airb-email-hint"' : '') + ' />';
-			if (i18n.emailOptionalHint) {
-				html += '<p class="airb__field-hint" id="airb-email-hint">' + esc(i18n.emailOptionalHint) + '</p>';
-			}
-			html += '<label class="airb__check airb__contact-consent" for="airb-consent">';
-			html += '<input type="checkbox" id="airb-consent" />';
-			html += '<span>' + esc(i18n.contactConsent || 'If I enter an email, I consent to AI Awareness Day storing it to send my report or requested follow-up.') + '</span>';
-			html += '</label>';
-			html += '</section>';
+			/* The "get a copy" email is gone: results are shown on screen, and
+			   the address never triggered a send for any role but public. With
+			   no address collected here, the consent tickbox has nothing to
+			   consent to. People who want follow-up give an email on the
+			   interest form instead. */
 		}
 
 		if (i18n.contactPrivacyNote) {
@@ -3535,7 +3556,7 @@
 		el.back.hidden = false;
 		el.nav.hidden = false;
 		if (el.next) {
-			el.next.textContent = i18n.submit;
+			el.next.textContent = 'See my results';
 		}
 		el.progress.hidden = true;
 		updateFlowChrome();
@@ -4489,6 +4510,8 @@
 	}
 
 	function teacherBreakingNowResourceHtml(links) {
+		// The main resource list already contains these links; do not repeat one.
+		if (links && links.length) return '';
 		var list = (links || []).slice();
 		var breaking = list.length ? list[0] : null;
 
@@ -4500,12 +4523,12 @@
 		}
 		if (!breaking) return '';
 		breaking = enrichResourceLink(Object.assign({}, breaking, {
-			kicker: 'Breaking now',
+			kicker: 'Start here',
 			description: breaking.description || 'The top timeline explainer to help staff and students understand what sits behind AI answers.',
 		}));
 		if (!resolveResourceLinkUrl(breaking)) return '';
 		return '<section class="airb__breaking-resource" aria-labelledby="airb-breaking-now-title">' +
-			'<p class="airb__leader-section-label" id="airb-breaking-now-title">Breaking now</p>' +
+			'<p class="airb__leader-section-label" id="airb-breaking-now-title">Start here</p>' +
 			resultsResourceLinksHtml([breaking], { cardMode: true, demoCards: true }) +
 			'</section>';
 	}
@@ -4513,6 +4536,12 @@
 	function resultsResourceLinksHtml(links, options) {
 		options = options || {};
 		if (!links || !links.length) return '';
+		if (options.demoCards && links.length > 3 && !options.expanded) {
+			var expandedOptions = Object.assign({}, options, { expanded: true });
+			return resultsResourceLinksHtml(links.slice(0, 3), expandedOptions) +
+				'<details class="airb__tab-details"><summary>More resources (' + (links.length - 3) + ')</summary>' +
+				resultsResourceLinksHtml(links.slice(3), expandedOptions) + '</details>';
+		}
 		var cardMode = options.cardMode !== false;
 		var leaderGrid = !!options.leaderGrid;
 		var demoCards = !!options.demoCards;
@@ -5432,7 +5461,8 @@
 			if (window.console && console.error) {
 				console.error('AIRB renderResults failed', err);
 			}
-			el.results.innerHTML = '<div class="airb__panel"><p class="airb__error">' + esc(i18n.error || 'Something went wrong. Please try again.') + '</p></div>';
+			el.results.innerHTML = '<div class="airb__panel"><h3>We could not display your report</h3><p>Your result is still available in this session. Try opening it again.</p><button type="button" class="airb__btn airb__btn--primary" data-airb-retry-display>Open report again</button></div>';
+			el.results.querySelector('[data-airb-retry-display]').addEventListener('click', renderResults);
 			el.results.hidden = false;
 			el.role.hidden = true;
 			el.audit.hidden = true;
@@ -5441,6 +5471,25 @@
 			el.progress.hidden = true;
 			updateFlowChrome();
 		}
+	}
+
+	function renderSaveStatus() {
+		var mount = document.getElementById('airb-save-status');
+		if (!mount) return;
+		var status = state.saveStatus;
+		var title = status === 'saved' ? 'Your report is ready' : status === 'ready' ? 'Your confirmed report is ready' : status === 'pending' ? 'Your preview is ready' : 'Your results are a preview';
+		var detail = status === 'saved' ? 'Use your strengths as a starting point, then choose one action to practise.' : status === 'ready' ? 'Open the confirmed report to see your final scores and recommendations.' : status === 'pending' ? 'We are still confirming your report. The scores below are provisional.' : 'We could not confirm this report was saved. Keep this page open or print a copy for your records; email and certificates may be unavailable.';
+		mount.innerHTML = '<div><strong>' + title + '</strong><p>' + detail + '</p></div>' + (status === 'ready' ? '<button type="button" class="airb__btn airb__btn--primary" data-airb-confirmed>Open confirmed report</button>' : '');
+		mount.setAttribute('data-status', status);
+		var button = mount.querySelector('[data-airb-confirmed]');
+		if (button) button.addEventListener('click', function () {
+			if (!confirmedResults) return;
+			state.results = confirmedResults;
+			confirmedResults = null;
+			state.saveStatus = 'saved';
+			persistResultsSnapshot();
+			renderResults();
+		});
 	}
 
 	function renderResultsBody(r) {
@@ -5578,7 +5627,8 @@
 		}
 		html += '</div>';
 
-		el.results.innerHTML = html;
+		el.results.innerHTML = '<aside class="airb__save-status" id="airb-save-status" role="status" aria-live="polite"></aside>' + html;
+		renderSaveStatus();
 		el.results.hidden = false;
 		el.role.hidden = true;
 		el.audit.hidden = true;
@@ -5753,12 +5803,15 @@
 		var counts = auditQuestionCounts(sections, answers, step);
 		if (usesSingleQuestionFlow()) {
 			var currentGlobal = counts.offsetBeforeSection + state.questionStep + 1;
-			var pct = counts.total ? Math.round((currentGlobal / counts.total) * 100) : 0;
+			var completed = Math.max(0, currentGlobal - 1);
+			var pct = counts.total ? Math.round((completed / counts.total) * 100) : 0;
 			el.stepper.className = 'airb__stepper airb__stepper--bar';
-			el.stepper.innerHTML = '<span class="airb__progress-fill" style="width:' + pct + '%" role="progressbar" aria-valuenow="' + currentGlobal + '" aria-valuemin="1" aria-valuemax="' + counts.total + '"></span>';
+			el.stepper.setAttribute('role', 'group');
+			el.stepper.innerHTML = '<span class="airb__progress-fill" style="width:' + pct + '%" role="progressbar" aria-label="Questions completed" aria-valuenow="' + completed + '" aria-valuemin="0" aria-valuemax="' + counts.total + '"></span>';
 			return;
 		}
 		el.stepper.className = 'airb__stepper';
+		el.stepper.setAttribute('role', 'list');
 		var html = '';
 		for (var i = 0; i < counts.total; i++) {
 			var cls = i < counts.offsetBeforeSection ? 'is-done' : (i < counts.offsetBeforeSection + counts.countInSection ? 'is-current' : '');
@@ -5850,10 +5903,15 @@
 		if (state.phase === 'audit') {
 			var section = state.sections[state.step];
 			if (usesSingleQuestionFlow()) {
-				var visible = visibleQuestionsForCurrentSection();
+				/* From the same draft the visibility refresh used, not from
+				   state.answers: the answer just clicked is still only in the
+				   DOM, so state.answers yields a different visible list and
+				   questionStep then indexes the wrong question — which showed
+				   up as "choose an answer" on a question already answered. */
+				var visible = visibleQuestionsForCurrentSection(sectionAnswersDraft(section));
 				var currentQ = visible[state.questionStep];
 				if (!currentQ || !saveQuestionAnswer(currentQ)) {
-					showError(i18n.required);
+					showError('Choose an answer to continue. Pick the option closest to your current practice.');
 					return;
 				}
 				if (state.questionStep < visible.length - 1) {
@@ -5876,21 +5934,12 @@
 		if (state.phase === 'contact') {
 			if (!isYoungRole()) {
 				state.school = (state.role === 'leader' || state.role === 'teacher' || state.role === 'support_staff') ? ((document.getElementById('airb-school') || {}).value || '') : '';
-				state.email = (document.getElementById('airb-email') || {}).value || '';
+				state.email = '';
 				var phaseInput = document.getElementById('airb-school-phase');
 				if (phaseInput) {
 					state.schoolPhase = phaseInput.value || '';
 				}
 				state.orgType = (document.getElementById('airb-org-type') || {}).value || '';
-				if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-					showError(i18n.emailInvalid);
-					return;
-				}
-				var consentInput = document.getElementById('airb-consent');
-				if (state.email && consentInput && !consentInput.checked) {
-					showError(i18n.contactConsentRequired || 'Please tick the consent box before submitting an email address.');
-					return;
-				}
 			} else {
 				state.yearGroup = (document.getElementById('airb-year-group') || {}).value || '';
 				if (state.role === 'student') {
@@ -5902,6 +5951,9 @@
 			}
 
 			syncProfileIntoAnswers();
+			state.submissionId = 0;
+			state.saveStatus = 'pending';
+			confirmedResults = null;
 			state.results = calculate(state.role, answersWithProfile());
 			persistResultsSnapshot();
 			state.phase = 'results';
@@ -5973,6 +6025,7 @@
 		if (state.phase === 'contact') {
 			state.phase = 'audit';
 			state.step = state.sections.length - 1;
+			state.questionStep = Math.max(0, visibleQuestionsInSection(state.sections[state.step], state.answers).length - 1);
 			renderAuditSection({ scrollToTop: true });
 			return;
 		}
@@ -5999,12 +6052,10 @@
 		body.append('role', state.role);
 		body.append('answers', JSON.stringify(state.answers));
 		body.append('school_name', state.school);
+		/* Still sent so the server contract is unchanged, but always empty from
+		   the audit itself now — an address only arrives via the interest form. */
 		body.append('email', state.email);
 		body.append('contact_opt_in', state.email ? '1' : '0');
-		var consentInput = document.getElementById('airb-consent');
-		if (consentInput && consentInput.checked) {
-			body.append('consent', '1');
-		}
 		body.append('session_id', getSessionId());
 		body.append('school_phase', state.schoolPhase);
 		body.append('org_type', state.orgType);
@@ -6016,18 +6067,29 @@
 				if (!isCurrentSubmission()) return;
 				try {
 					if (json.success && json.data && json.data.results) {
-						state.results = json.data.results;
+						if (document.getElementById('airb-save-status') && !el.results.hidden) {
+							confirmedResults = json.data.results;
+							state.saveStatus = 'ready';
+							// Keep the visible preview and any in-progress form intact.
+						} else {
+							state.results = json.data.results;
+							state.saveStatus = 'saved';
+						}
 					} else if (state.results && state.role && roleShowsInterestForm(state.role)) {
 						var shells = airbBenchmark.interestForms || {};
 						if (shells[state.role]) {
 							mergeInterestFormShell(state.results, shells[state.role]);
 						}
 					}
+					if (!json.success || !json.data || !json.data.results) state.saveStatus = 'unconfirmed';
 					if (json.success && json.data && json.data.submission_id) {
 						state.submissionId = parseInt(json.data.submission_id, 10) || 0;
 					}
 					persistResultsSnapshot();
+					renderSaveStatus();
 				} catch (err) {
+					state.saveStatus = 'unconfirmed';
+					renderSaveStatus();
 					if (window.console && console.error) {
 						console.error('AIRB submitResults handler failed', err);
 					}
@@ -6036,6 +6098,8 @@
 			})
 			.catch(function (err) {
 				if (!isCurrentSubmission()) return;
+				state.saveStatus = 'unconfirmed';
+				renderSaveStatus();
 				if (window.console && console.error) {
 					console.error('AIRB submitResults request failed', err);
 				}
@@ -6872,7 +6936,7 @@
 		);
 
 		var b = r.benchmark;
-		if (b && typeof b.average === 'number') {
+		if (b && !b.is_estimated && b.sample_size > 0 && typeof b.average === 'number') {
 			parts.push(
 				(i18n.shareCopyBenchmarkAvg || 'National average for {role}s: {avg}/100.')
 					.replace('{role}', roleLbl)
@@ -6955,7 +7019,7 @@
 			.then(function (json) {
 				if (json.success) {
 					trackEvent('email_report', { email: state.email });
-					showError(i18n.emailed);
+					showError(i18n.emailed, true);
 				} else showError((json.data && json.data.message) || i18n.error);
 			})
 			.catch(function () { showError(i18n.error); });

@@ -1588,6 +1588,13 @@
 	font-size: 0.9rem;
 }
 
+.airb .airb__error.airb__error--success,
+.airb.airb--nav-dock.airb--show-error .airb__error.airb__error--success {
+	background: color-mix(in srgb, var(--airb-low) 8%, transparent);
+	border-color: var(--airb-low);
+	color: var(--airb-low);
+}
+
 .airb.airb--nav-dock.airb--show-error .airb__error {
 	position: static;
 	max-width: 42rem;
@@ -10283,4 +10290,169 @@ body.airb-flow-active .airb__footer {
 .airb progress,
 .airb input[type='range'] {
 	accent-color: var(--airb-info);
+}
+
+/* Benchmark journey: a calm entry, clear choices and visible report status. */
+.airb .airb__welcome {
+	margin: 0 0 1.75rem;
+	padding: clamp(1.25rem, 4vw, 2.5rem);
+	border: 1px solid var(--airb-brand);
+	border-radius: 18px;
+	background: var(--airb-brand);
+	color: var(--airb-ink);
+	text-align: left;
+}
+
+.airb .airb__welcome-kicker {
+	margin: 0 0 1rem;
+	color: var(--airb-accent-fill);
+	font-size: .75rem;
+	font-weight: 600;
+	letter-spacing: .07em;
+	text-transform: uppercase;
+}
+
+.airb .airb__welcome h2 {
+	margin: 0 0 1rem;
+	max-width: 20ch;
+	color: inherit;
+	font-size: clamp(1.8rem, 4vw, 3rem);
+	line-height: 1.08;
+	letter-spacing: -.035em;
+}
+
+.airb .airb__welcome > p:not(.airb__welcome-kicker) {
+	max-width: 55ch;
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+.airb .airb__journey {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+	list-style: none;
+	padding: 1.25rem 0 0;
+	margin: 1.5rem 0 0;
+	border-top: 1px solid color-mix(in srgb, var(--airb-ink) 25%, transparent);
+}
+
+.airb .airb__journey li {
+	margin: 0;
+	font-size: .82rem;
+	line-height: 1.5;
+}
+
+.airb .airb__journey span {
+	display: block;
+	margin-bottom: .35rem;
+	color: var(--airb-accent-fill);
+	font-variant-numeric: tabular-nums;
+}
+
+.airb .airb__role-card {
+	position: relative;
+	text-align: left;
+	transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.airb .airb__role-meta {
+	display: block;
+	color: inherit;
+	opacity: .85;
+	font-size: .75rem;
+	line-height: 1.5;
+}
+
+.airb .airb__role-card-go {
+	margin-top: auto;
+	padding-top: .85rem;
+}
+
+.airb .airb__role-card:focus-visible,
+.airb .airb__option:focus-within {
+	outline: 3px solid var(--airb-info);
+	outline-offset: 4px;
+}
+
+.airb .airb__options .airb__option {
+	min-height: 52px;
+	transition: background .15s ease, border-color .15s ease;
+}
+
+.airb .airb__options .airb__option:has(input:checked) {
+	box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.airb .airb__q-title {
+	line-height: 1.4;
+	text-wrap: pretty;
+}
+
+.airb .airb__q-title:focus {
+	outline: none;
+}
+
+.airb .airb__save-status {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin: 0 0 1.5rem;
+	padding: 1.1rem 1.25rem;
+	border: 1px solid var(--airb-info);
+	border-left-width: 4px;
+	border-radius: 12px;
+	background: var(--airb-ink);
+	color: var(--airb-text);
+}
+
+.airb .airb__save-status[data-status='saved'] {
+	border-color: var(--airb-low);
+}
+
+.airb .airb__save-status p,
+.airb .airb__peer-unavailable > p:last-child {
+	margin: .35rem 0 0;
+	font-size: .85rem;
+	line-height: 1.6;
+	color: var(--airb-muted);
+}
+
+.airb .airb__save-status button {
+	flex-shrink: 0;
+}
+
+@media (hover: hover) {
+	.airb .airb__role-card:hover {
+		transform: translateY(-2px);
+		border-color: var(--airb-brand);
+		box-shadow: 0 6px 0 color-mix(in srgb, var(--airb-brand) 9%, transparent);
+	}
+}
+
+@media (max-width: 600px) {
+	.airb .airb__journey {
+		grid-template-columns: 1fr;
+		gap: .65rem;
+	}
+	.airb .airb__journey span {
+		display: inline-block;
+		margin: 0 .75rem 0 0;
+	}
+	.airb .airb__save-status {
+		align-items: stretch;
+		flex-direction: column;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.airb .airb__role-card,
+	.airb .airb__options .airb__option {
+		transition: none;
+	}
+	.airb .airb__role-card:hover {
+		transform: none;
+	}
 }

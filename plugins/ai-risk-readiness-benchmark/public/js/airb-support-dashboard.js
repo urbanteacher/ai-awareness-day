@@ -26,7 +26,7 @@
 
 	var TONE_MAP = {
 		secure: { border: 'border-emerald-300', bg: 'bg-emerald-50', text: 'text-emerald-800', label: 'secure', bar: '#176E3B' },
-		practice: { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-800', label: 'practise', bar: '#A7350B' },
+		practice: { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-800', label: 'practise', bar: '#FF7038' },
 		attention: { border: 'border-rose-300', bg: 'bg-rose-50', text: 'text-rose-800', label: 'focus', bar: '#A32D2D' },
 	};
 
@@ -105,6 +105,9 @@
 
 	function peerComparisonHtml(model) {
 		var peer = model.peer || {};
+		if (peer.isEstimated || !(peer.sampleSize > 0)) {
+			return '<section class="teacher-dash-peer airb__peer-unavailable"><p class="teacher-dash-peer__label">Your progress, in context</p><p>Peer comparison is not available for this report. Use your domain feedback to choose a practical next step.</p></section>';
+		}
 		var yourScore = model.score;
 		var averageScore = peer.averageScore || 0;
 		var topQuartile = peer.topQuartile || 0;
@@ -290,7 +293,7 @@
 		html += dependencyMetricHtml(model.metricA, model.accent);
 		html += readinessMetricHtml(model.metricB, model.accent);
 		if (model.domains && model.domains.length) {
-			html += '<h3 class="teacher-dash-domain-heading">Domain breakdown & key signals</h3>';
+			html += '<h3 class="teacher-dash-domain-heading">Your domain scores and guidance</h3>';
 			html += '<div class="teacher-dash-domain-grid-wrap">' + domainGridHtml(model, opts) + '</div>';
 		}
 		html += '</section>';
@@ -314,17 +317,17 @@
 			{ title: journey[2] || 'Data confident', body: 'Return and reach ' + (cert.unlockAt || 0) + '% to evidence improvement.' },
 			{ title: journey[3] || 'Safe workflow', body: 'Generate a shareable certificate once progress is evidenced.' },
 		];
-		var currentIndex = cert.unlocked ? steps.length - 1 : Math.min(1, steps.length - 1);
+		var currentIndex = cert.unlocked ? steps.length - 1 : 0;
 
 		var html = '<div class="teacher-dash-stack" data-airb-dashboard-panel="progress" hidden>';
 		html += '<section class="teacher-dash-card">';
 		html += '<div class="teacher-dash-progress-head">';
 		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent) + '">Workflow passport</p>';
 		html += '<h3 class="teacher-dash-progress-title">From audit to evidence</h3></div>';
-		html += '<p class="teacher-dash-progress-stamp">' + (currentIndex + 1) + ' of ' + steps.length + ' stamped</p>';
+		html += '<p class="teacher-dash-progress-stamp">' + (cert.unlocked ? 'Certificate ready' : 'Audit complete · next: practise one action') + '</p>';
 		html += '</div>';
 		html += '<div class="teacher-dash-progress-bar"><span style="width:' + (((currentIndex + 1) / steps.length) * 100) + '%;background:' + esc(accent) + '"></span></div>';
-		html += '<div class="benchmark-passport-grid">';
+		html += '<details class="airb__tab-details"><summary>How the certificate journey works</summary><div class="benchmark-passport-grid">';
 		steps.forEach(function (step, index) {
 			var unlocked = index <= currentIndex;
 			var active = index === currentIndex + 1;
@@ -341,7 +344,7 @@
 			html += '<p>' + esc(step.body) + '</p>';
 			html += '</section>';
 		});
-		html += '</div></section>';
+		html += '</div></details></section>';
 
 		html += (AIRB.Certificate && AIRB.Certificate.panelHtml) ? AIRB.Certificate.panelHtml(model, 'support_staff', accent) : '';
 		html += '</div>';
@@ -350,6 +353,7 @@
 
 	function resourcesPanelHtml(model, opts) {
 		var html = '<div data-airb-dashboard-panel="resources" hidden>';
+		html += '<p class="airb__tab-intro">Choose one resource for your priority. Try one idea, then record what changed in Progress &amp; certificate.</p>';
 		if (opts.resourcesHtml) {
 			html += '<div class="demo-airb airb__resources-panel">' + opts.resourcesHtml(model) + '</div>';
 		} else {

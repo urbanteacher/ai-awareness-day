@@ -87,10 +87,19 @@ class AIRB_Shortcode {
 			AIRB_VERSION,
 			true
 		);
+		/* Standalone on purpose: the theme enqueues this one by itself to
+		   show an example certificate on marketing pages. */
+		wp_register_script(
+			'airb-certificate-art',
+			AIRB_PLUGIN_URL . 'public/js/airb-certificate-art.js',
+			array(),
+			AIRB_VERSION,
+			true
+		);
 		wp_register_script(
 			'airb-certificate',
 			AIRB_PLUGIN_URL . 'public/js/airb-certificate.js',
-			array( 'airb-core', 'airb-certificate-evidence' ),
+			array( 'airb-core', 'airb-certificate-evidence', 'airb-certificate-art' ),
 			AIRB_VERSION,
 			true
 		);
@@ -201,16 +210,12 @@ class AIRB_Shortcode {
 					'contactHintSupport' => __( 'These final details are optional. School or trust context helps tailor data-protection and operations guidance for support roles.', 'ai-risk-benchmark' ),
 					'contactContextTitle' => __( 'Tailor your recommendations', 'ai-risk-benchmark' ),
 					'contactContextHint' => __( 'A little school context helps us make your next steps more useful.', 'ai-risk-benchmark' ),
-					'contactEmailTitle' => __( 'Get a copy', 'ai-risk-benchmark' ),
-					'contactEmailHint' => __( 'Enter an email only if you want your report sent to you.', 'ai-risk-benchmark' ),
-					'contactConsent' => __( 'If I enter an email, I consent to AI Awareness Day storing it to send my report or requested follow-up.', 'ai-risk-benchmark' ),
-					'contactConsentRequired' => __( 'Please tick the consent box before submitting an email address.', 'ai-risk-benchmark' ),
 					'certificateLookupLoading' => __( 'Looking up your certificate…', 'ai-risk-benchmark' ),
 					'certificateLookupNotFound' => __( 'We could not find a certificate for this link. It may be invalid or the certificate may not have been issued yet.', 'ai-risk-benchmark' ),
 					'certificateLookupError' => __( 'Something went wrong loading your certificate. Please try again later.', 'ai-risk-benchmark' ),
 					'contactHintYoung' => __( 'Optionally choose your year group so the feedback fits your stage. We do not ask students for name, school or email here.', 'ai-risk-benchmark' ),
 					'contactHintParent' => __( 'Optionally choose your child\'s year group so the feedback fits their stage. We do not ask parents for names, school or email here.', 'ai-risk-benchmark' ),
-					'contactHintPublic' => __( 'Email is optional and only used if you want to receive your results. We do not ask for your name or employer.', 'ai-risk-benchmark' ),
+					'contactHintPublic' => __( 'Everything below is optional. We do not ask for your name, email or employer.', 'ai-risk-benchmark' ),
 					'publicResultsTitle' => __( 'Your AI safety profile', 'ai-risk-benchmark' ),
 					'publicResultsEyebrow' => __( 'Public · AI risk & readiness benchmark', 'ai-risk-benchmark' ),
 					'yearGroup'      => __( 'Year group (optional)', 'ai-risk-benchmark' ),
@@ -232,8 +237,6 @@ class AIRB_Shortcode {
 						'year_12'   => __( 'Year 12', 'ai-risk-benchmark' ),
 						'year_13'   => __( 'Year 13', 'ai-risk-benchmark' ),
 					),
-					'emailOptional'  => __( 'Email address (optional)', 'ai-risk-benchmark' ),
-					'emailOptionalHint' => __( 'Used only to send your benchmark report or follow-up you request.', 'ai-risk-benchmark' ),
 					'requestFullReport' => __( 'Request support from AI Awareness Day', 'ai-risk-benchmark' ),
 					'requestSupportParent' => __( 'Get parent support & resources', 'ai-risk-benchmark' ),
 					'requestSupportStudent' => __( 'Get help with my next steps', 'ai-risk-benchmark' ),

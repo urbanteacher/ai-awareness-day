@@ -23,6 +23,8 @@
 			.replace(/'/g, '&#039;');
 	};
 
+	var Art = AIRB.CertificateArt || {};
+
 	function unlockConfig() {
 		return (window.airbBenchmark && airbBenchmark.certificateUnlock) || {};
 	}
@@ -215,79 +217,16 @@
 
 	Cert.guidanceCtaHtml = function (model, opts) {
 		opts = opts || {};
+		if (!model || !model.priority) return '';
 		var escFn = opts.esc || esc;
-		if (!model || !model.priority) {
-			return '';
-		}
-		var accent = model.accent || '#006A7D';
-		var focusHeading = opts.focusHeading || 'Priority focus';
-		var primaryLabel = opts.primaryLabel || 'Request support';
-		var practiceScene = opts.sceneLabel || (opts.primaryTab ? 'Your next step' : 'Need more guidance?');
-		var supportTitle = opts.title || 'Need more guidance?';
-		var supportCopy = opts.supportCopy || 'Get practical help turning your results into safer everyday habits.';
-		var certProgress = Cert.certificateProgressHtml(model, escFn);
-		var html = '';
-
-		if (model.certificate && certProgress) {
-			var progress = certificateProgress(model.certificate, model);
-			var cardTitle = progress.unlocked
-				? (opts.certReadyTitle || 'Your certificate is ready')
-				: (progress.scoreEligible ? (opts.certEligibleTitle || 'Your certificate is within reach') : (opts.certTargetTitle || 'Your certificate goal'));
-			var jumpLabel = progress.unlocked
-				? (opts.certViewLabel || 'View certificate')
-				: (progress.scoreEligible ? (opts.certUnlockLabel || 'Complete your evidence') : (opts.certTargetLabel || 'See how to qualify'));
-			html += '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--cert" aria-labelledby="airb-guidance-cert-title">';
-			html += '<p class="teacher-dash-scene" style="color:' + esc(accent) + '">Certificate progress</p>';
-			html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-cert-title">' + escFn(cardTitle) + '</h3>';
-			html += certProgress;
-			html += '<div class="airb__guidance-section-actions">';
-			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-dashboard-tab-jump="progress">' + escFn(jumpLabel) + '</button>';
-			html += '</div>';
-			html += '</section>';
-		}
-
-		html += '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--practice" aria-labelledby="airb-guidance-practice-title">';
-		html += '<p class="teacher-dash-scene" style="color:' + esc(accent) + '">' + escFn(practiceScene) + '</p>';
-		html += '<h3 class="teacher-dash-domain-heading" id="airb-guidance-practice-title">' + escFn(focusHeading) + '</h3>';
-		html += '<p class="airb__guidance-focus-body">' + escFn(model.priority) + '</p>';
-		if (!opts.primaryTab) {
-			html += '<div class="airb__guidance-support">';
-			html += '<p class="airb__guidance-support-label">' + escFn(supportTitle) + '</p>';
-			html += '<p class="airb__guidance-support-copy">' + escFn(supportCopy) + '</p>';
-			html += '</div>';
-		}
-		html += '<div class="airb__guidance-section-actions">';
-		if (opts.primaryTab) {
-			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-dashboard-tab-jump="' + escFn(opts.primaryTab) + '">' + escFn(primaryLabel) + '</button>';
-		} else {
-			html += '<button type="button" class="airb__btn airb__btn--primary airb__guidance-btn" data-airb-scroll-interest="1">' + escFn(primaryLabel) + '</button>';
-		}
-		html += '</div>';
-		html += '</section>';
-
-		return html;
+		/* No jump buttons: they existed because the tabs did not look
+		   clickable. The tabs are buttons now, so these only competed with
+		   them and said the same thing twice. */
+		return '<section class="teacher-dash-card airb__guidance-card airb__guidance-card--practice">' +
+			'<h3 class="teacher-dash-domain-heading">Your next step</h3>' +
+			'<p class="airb__guidance-focus-body">' + escFn(model.priority) + '</p>' +
+			'</section>';
 	};
-
-	function bindTabJumps(root) {
-		if (!root || root.dataset.airbTabJumpsBound === '1') {
-			return;
-		}
-		root.dataset.airbTabJumpsBound = '1';
-		root.addEventListener('click', function (e) {
-			var btn = e.target.closest('[data-airb-dashboard-tab-jump]');
-			if (!btn || !root.contains(btn)) {
-				return;
-			}
-			var tabKey = btn.getAttribute('data-airb-dashboard-tab-jump');
-			if (!tabKey) {
-				return;
-			}
-			var tab = root.querySelector('[data-airb-dashboard-tab="' + tabKey + '"]');
-			if (tab) {
-				tab.click();
-			}
-		});
-	}
 
 	function tierClass(tier) {
 		if (tier === 'strong_evidence') return 'is-strong';
@@ -297,34 +236,35 @@
 	}
 
 	function previewHtml(data) {
-		var role = data.role || roleFromRuntime();
-		return '<div class="certificate-preview certificate-preview--compact" data-airb-certificate-preview>' +
-			'<div class="certificate-preview__frame">' +
-			'<div class="certificate-preview__content">' +
-			certificateHeadlineHtml({ certificateTitle: data.title }, role) +
-			'<p class="certificate-preview__lead">This certifies that</p>' +
-			'<p class="certificate-preview__name">' + esc(data.participantName || 'Name pending') + '</p>' +
-			'<p class="certificate-preview__body">' + esc(data.body) + '</p>' +
-			'<p class="certificate-preview__date">Awarded: ' + esc(formatDate(data.awardedAt)) + '</p>' +
-			'<footer class="certificate-preview__footer">' +
-			'<span class="certificate-preview__id">Certificate ID: ' + esc(data.certificateId || 'Pending') + '</span>' +
-			'<span class="certificate-preview__issuer">Issued by: AI Awareness Day</span>' +
-			'<span class="certificate-preview__verify">' + esc(data.verifyUrl || 'aiawarenessday.co.uk') + '</span>' +
-			'</footer>' +
-			'</div>' +
-			'</div>' +
-			'</div>';
+		return Art.previewHtml({
+			name: data.participantName || 'Name pending',
+			body: data.body,
+			awarded: formatDate(data.awardedAt) || 'on completion',
+			certificateId: data.certificateId,
+			verifyUrl: data.verifyUrl,
+			theme: data.theme,
+		});
+	}
+
+	function paintPreviews(scope) {
+		return Art.paint(scope);
 	}
 
 	function qualityHtml(assessment) {
 		if (!assessment) return '';
 		var cls = tierClass(assessment.quality_tier);
+		/* Every criterion and every unmet message used to render at full
+		   height before the user had typed a character — a wall of red on
+		   arrival. The score stays visible; the detail opens once there is
+		   progress worth reading. */
+		var started = (parseInt(assessment.quality_score, 10) || 0) > 0;
 		var html = '<div class="benchmark-certificate-quality ' + cls + '" data-airb-certificate-quality>';
-		html += '<div class="benchmark-certificate-quality__head">';
+		html += '<details class="benchmark-certificate-quality__detail"' + (started ? ' open' : '') + '>';
+		html += '<summary class="benchmark-certificate-quality__head">';
 		html += '<span class="benchmark-certificate-quality__label">Evidence quality</span>';
 		html += '<strong class="benchmark-certificate-quality__score">' + esc(assessment.quality_score) + '/100</strong>';
 		html += '<span class="benchmark-certificate-quality__tier">' + esc(assessment.tier_label || '') + '</span>';
-		html += '</div>';
+		html += '</summary>';
 		var pathwayDefs = Evidence.pathwayConfig ? Evidence.pathwayConfig() : [];
 		if (pathwayDefs.length && assessment.pathways) {
 			html += '<ul class="benchmark-certificate-pathways">';
@@ -344,6 +284,7 @@
 			});
 			html += '</ul>';
 		}
+		html += '</details>';
 		html += '</div>';
 		return html;
 	}
@@ -372,19 +313,18 @@
 	}
 
 	function updatePreview(panel) {
-		var previewWrap = panel.querySelector('.benchmark-certificate-preview-wrap');
-		if (!previewWrap) return;
+		var host = panel.querySelector('[data-airb-certificate-preview]');
+		if (!host) return;
 		var role = panel.dataset.airbRole || roleFromRuntime();
 		var name = ((panel.querySelector('[data-airb-certificate-name]') || {}).value || '').trim();
-		previewWrap.innerHTML = previewHtml({
-			title: certificateTitle(null, role),
-			role: role,
-			participantName: name || 'Name pending',
-			body: certificateBody(null, role),
-			awardedAt: '',
-			certificateId: 'Pending',
-			verifyUrl: 'aiawarenessday.co.uk',
-		});
+		if (panel.dataset.airbUnlocked !== '1') {
+			/* Before unlock the preview tracks the form, so the strand the
+			   user picks is visible on the artwork they are working toward. */
+			host.dataset.certName = name || 'Name pending';
+			host.dataset.certBody = certificateBody(null, role);
+			host.dataset.certTheme = readEvidence(panel).theme || '';
+		}
+		paintPreviews(host);
 	}
 
 	function syncUnlockState(panel, cert, assessment) {
@@ -411,6 +351,10 @@
 		if (download) {
 			download.disabled = !unlocked;
 		}
+		var printBtn = panel.querySelector('[data-airb-certificate-print]');
+		if (printBtn) {
+			printBtn.disabled = !unlocked;
+		}
 	}
 
 	function contactEmailFieldHtml(role, submissionEmail, locked, value) {
@@ -423,38 +367,21 @@
 			'<span class="benchmark-certificate-reflection-hint">' + esc(i18n.certificateContactEmailHint || 'Required so we can email your certificate or tell you when it is approved.') + '</span></label>';
 	}
 
-	function printCertificateStyles() {
-		return '<style>' +
-			'body{margin:0;padding:32px;background:#F6F4ED;color:#231F20;font-family:"AIAD Sans",Arial,sans-serif;}' +
-			'.certificate-preview{width:100%;max-width:900px;margin:0 auto;background:#F6F4ED;}' +
-			'.certificate-preview__frame{border:4px solid #231F20;padding:1.25rem;background:#F6F4ED;box-shadow:none;}' +
-			'.certificate-preview__content,.certificate-preview__lead,.certificate-preview__name,.certificate-preview__body{text-align:center;}' +
-			'.certificate-preview__headline{margin:0;font-size:2rem;line-height:1.1;}' +
-			'.certificate-preview__headline-primary,.certificate-preview__headline-secondary{display:block;}' +
-			'.certificate-preview__lead,.certificate-preview__body{margin:.75rem auto 0;max-width:42rem;color:#54504E;line-height:1.45;font-size:1rem;}' +
-			'.certificate-preview__name{margin:.5rem 0 0;font-size:2.2rem;line-height:1.05;font-weight:800;color:#176E3B;}' +
-			'.certificate-preview__date{margin:1rem 0 0;font-weight:700;}' +
-			'.certificate-preview__footer{display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:center;margin-top:1rem;padding-top:.75rem;border-top:1px solid #C9C6BE;font-size:.75rem;color:#54504E;}' +
-			'@media print{body{padding:0;background:#fff}.certificate-preview,.certificate-preview__frame{background:#fff;box-shadow:none}}' +
-			'</style>';
-	}
-
+	/**
+	 * Step 2: what you did. Evidence fields only — the requirements checklist
+	 * and the gate message are rendered above the form by panelHtml, because
+	 * "what do I need?" has to be answerable before "fill this in".
+	 */
 	function evidenceFormHtml(role, cert, scoreEligible, unlocked) {
 		cert = cert || {};
 		unlocked = !!unlocked;
 		var copy = roleCopy(role);
 		var cfg = unlockConfig();
-		var unlockIntro = cfg.unlock_intro || 'Reach the benchmark score threshold and complete one of the evidence options below.';
 		var themes = cfg.themes || [];
-		var threshold = scoreThreshold();
 		var disabled = !scoreEligible || unlocked;
-		var html = '';
+		var html = '<section class="benchmark-certificate-step">';
 
-		if (!scoreEligible) {
-			html += '<p class="benchmark-certificate-gate is-blocked">Reach at least ' + esc(threshold) + '% on the benchmark before unlocking. Retake the audit to improve your score.</p>';
-		} else if (!unlocked) {
-			html += '<p class="benchmark-certificate-gate is-open">' + esc(unlockIntro) + '</p>';
-		}
+		html += '<h4 class="benchmark-certificate-step-title"><span>2</span>Your evidence</h4>';
 
 		html += '<fieldset class="benchmark-certificate-themes"' + (disabled ? ' disabled' : '') + '>';
 		html += '<legend>Choose one theme</legend>';
@@ -477,32 +404,68 @@
 		html += '<label class="benchmark-certificate-reflection">' + esc(copy.evidence_link_label || 'Optional evidence link');
 		html += '<input type="url" data-airb-certificate-link value="' + esc(cert.evidence_link || '') + '" placeholder="' + esc(copy.evidence_link_placeholder || 'https://...') + '"' + (disabled ? ' disabled' : '') + '></label>';
 
-		html += '<div data-airb-certificate-quality-wrap></div>';
+		html += '</section>';
 		return html;
 	}
 
+	function certificateCanvas(scope) {
+		return Art.canvasIn(scope);
+	}
+
+	function certificateFilename(scope) {
+		var host = scope && scope.querySelector && scope.querySelector('[data-airb-certificate-preview]');
+		var id = (host && host.dataset.certId) || '';
+		var slug = String(id).replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+		return 'ai-awareness-day-certificate' + (slug && slug.toLowerCase() !== 'pending' ? '-' + slug : '') + '.png';
+	}
+
+	/* A real file, not a print dialog. The previous "download" only ever
+	   opened a print window, which popup blockers eat and mobile handles
+	   badly — and it left the user with nothing to attach or post. */
+	function downloadCertificate(panel) {
+		var canvas = certificateCanvas(panel);
+		if (!canvas) return;
+		paintPreviews(panel).then(function () {
+			var done = function (blob) {
+				if (!blob) {
+					setStatus(panel, 'Could not build the certificate image. Try printing it instead.', true);
+					return;
+				}
+				var url = URL.createObjectURL(blob);
+				var link = document.createElement('a');
+				link.href = url;
+				link.download = certificateFilename(panel);
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+				setStatus(panel, 'Certificate downloaded.', false);
+			};
+			if (canvas.toBlob) canvas.toBlob(done, 'image/png');
+			else done(null);
+		});
+	}
+
 	function printCertificate(panel) {
-		var preview = panel && panel.querySelector('[data-airb-certificate-preview]');
-		if (!preview) return;
-		var win = window.open('', '_blank', 'width=1000,height=760');
-		if (!win) {
-			setStatus(panel, (window.airbBenchmark && airbBenchmark.i18n && airbBenchmark.i18n.certificatePopupBlocked) || 'Allow pop-ups to download or print your certificate.', true);
-			return;
-		}
-		var html = '<!doctype html><html><head><meta charset="utf-8"><title>AI Awareness Day Certificate</title>';
-		html += printCertificateStyles();
-		html += '</head><body class="airb-certificate-print">';
-		html += preview.outerHTML;
-		html += '</body></html>';
-		win.document.open();
-		win.document.write(html);
-		win.document.close();
-		win.focus();
-		setTimeout(function () {
-			try {
-				win.print();
-			} catch (e) { /* ignore */ }
-		}, 300);
+		var canvas = certificateCanvas(panel);
+		if (!canvas) return;
+		paintPreviews(panel).then(function () {
+			var win = window.open('', '_blank', 'width=1000,height=760');
+			if (!win) {
+				setStatus(panel, (window.airbBenchmark && airbBenchmark.i18n && airbBenchmark.i18n.certificatePopupBlocked) || 'Allow pop-ups to print your certificate, or use Download instead.', true);
+				return;
+			}
+			var html = '<!doctype html><html><head><meta charset="utf-8"><title>AI Awareness Day Certificate</title>';
+			html += '<style>@page{size:A4 landscape;margin:12mm}html,body{margin:0;padding:0;background:#fff}img{display:block;width:100%;height:auto}</style>';
+			html += '</head><body><img alt="" src="' + canvas.toDataURL('image/png') + '"></body></html>';
+			win.document.open();
+			win.document.write(html);
+			win.document.close();
+			win.focus();
+			setTimeout(function () {
+				try { win.print(); } catch (e) { /* ignore */ }
+			}, 400);
+		});
 	}
 
 	Cert.panelHtml = function (model, role, accent) {
@@ -530,19 +493,24 @@
 			awardedAt: cert.awardedAt || '',
 			certificateId: cert.certificateId || '',
 			verifyUrl: 'aiawarenessday.co.uk',
+			theme: storedCert.evidence_theme || '',
 		};
 		var submissionId = submissionIdFromRuntime();
 		var benchmarkScore = cert.currentScore || model.score || 0;
 
-		var html = '<section class="teacher-dash-card benchmark-certificate-layout" data-airb-certificate-panel data-airb-role="' + esc(role) + '" data-airb-submission-id="' + esc(submissionId) + '" data-airb-benchmark-score="' + esc(benchmarkScore) + '" data-airb-score-eligible="' + (scoreEligible ? '1' : '0') + '" data-airb-unlocked="' + (unlocked ? '1' : '0') + '" data-airb-pending-review="' + (pendingReview ? '1' : '0') + '" data-airb-submission-email="' + esc(submissionEmail) + '">';
+		var html = '<section class="teacher-dash-card benchmark-certificate-layout' + (unlocked ? ' is-unlocked' : '') + (pendingReview ? ' is-pending-review' : '') + '" data-airb-certificate-panel data-airb-role="' + esc(role) + '" data-airb-submission-id="' + esc(submissionId) + '" data-airb-benchmark-score="' + esc(benchmarkScore) + '" data-airb-score-eligible="' + (scoreEligible ? '1' : '0') + '" data-airb-unlocked="' + (unlocked ? '1' : '0') + '" data-airb-pending-review="' + (pendingReview ? '1' : '0') + '" data-airb-submission-email="' + esc(submissionEmail) + '">';
 		html += '<div class="benchmark-certificate-summary">';
 		html += '<div><p class="teacher-dash-scene" style="color:' + esc(accent || model.accent || '#006A7D') + '">Certificate</p>';
 		html += '<h3 class="teacher-dash-progress-title">' + esc(title) + '</h3>';
-		html += '<p class="teacher-dash-cert-note">' + (unlocked
+		/* When the score gate is closed the line below states the gap and the
+		   next move, so a generic "complete the evidence step below" here
+		   just repeats it above a collapsed form. */
+		var gateBlocks = !scoreEligible && !unlocked && !pendingReview;
+		html += gateBlocks ? '</div>' : ('<p class="teacher-dash-cert-note">' + (unlocked
 			? 'Certificate allocated. You can download or print it now.'
 			: (pendingReview
 				? 'Your evidence has been submitted. We will email you when your certificate is approved.'
-				: 'Complete the evidence step below to unlock your AI Risk & Readiness Benchmark\u2122 Certificate.')) + '</p></div>';
+				: 'Complete the evidence step below to unlock your AI Risk & Readiness Benchmark\u2122 Certificate.')) + '</p></div>');
 		html += '<div class="benchmark-certificate-stats">';
 		html += '<div><span>Current</span><strong>' + esc(cert.currentScore || model.score || 0) + '%</strong></div>';
 		html += '<div><span>Need</span><strong>' + esc(threshold) + '%</strong></div>';
@@ -550,18 +518,62 @@
 		html += '</div></div>';
 		html += '<div class="benchmark-certificate-grid">';
 		html += '<div class="benchmark-certificate-form">';
+
+		/* Below the score gate the whole form is disabled, so rendering it at
+		   full height buries the one thing that matters — the gap, and what to
+		   do about it — under a screen of dead fields. Lead with the gap;
+		   the form waits behind a disclosure. */
+		var gated = !scoreEligible && !unlocked && !pendingReview;
+
+		/* Order follows the questions people actually ask, in order:
+		   where am I (stats, above) -> what is required (checklist) ->
+		   who am I (step 1) -> what did I do (step 2) -> the certificate. */
+		if (gated) {
+			html += '<p class="benchmark-certificate-gate is-blocked">' +
+				'Reach at least ' + esc(threshold) + '% to unlock your certificate. You are at ' +
+				esc(cert.currentScore || model.score || 0) + '% — work on your weakest areas in Overview, then retake the audit.' +
+				'</p>';
+		} else if (!unlocked && !pendingReview) {
+			html += '<p class="benchmark-certificate-gate is-open">' + esc(unlockConfig().unlock_intro || 'Reach the benchmark score threshold and complete one of the evidence options below.') + '</p>';
+		}
+
+		// What unlocks it, before being asked to fill anything in.
+		html += '<div data-airb-certificate-quality-wrap></div>';
+
+		if (gated) {
+			html += '<details class="benchmark-certificate-prep">';
+			html += '<summary>See what you will need to provide</summary>';
+		}
+
+		html += '<section class="benchmark-certificate-step">';
+		html += '<h4 class="benchmark-certificate-step-title"><span>1</span>Your details</h4>';
 		html += '<label>Name on certificate<input type="text" data-airb-certificate-name value="' + esc(participantName) + '" placeholder="' + esc(namePlaceholder(role)) + '"' + ((unlocked || pendingReview) ? ' readonly' : '') + '></label>';
 		html += contactEmailFieldHtml(role, submissionEmail, unlocked || pendingReview, submissionEmail);
+		html += '</section>';
+
 		html += evidenceFormHtml(role, storedCert, scoreEligible, unlocked || pendingReview);
 		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-allocate ' + ((unlocked || pendingReview) ? 'disabled' : '') + '>' + (pendingReview ? 'Submitted for review' : (unlocked ? 'Certificate allocated' : 'Unlock certificate')) + '</button>';
-		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-download ' + (unlocked ? '' : 'disabled') + '>Download / print certificate</button>';
+		if (gated) {
+			html += '</details>';
+		}
 		html += '<p class="benchmark-certificate-status" data-airb-certificate-status>' + (unlocked
 			? ('Certificate ID ' + esc(cert.certificateId || ''))
 			: (pendingReview
 				? 'Waiting for AI Awareness Day to approve your evidence. Download will unlock after approval.'
 				: 'Evidence is checked before unlock. This recognises progress — not certification as an expert user.')) + '</p>';
 		html += '</div>';
-		html += '<div class="benchmark-certificate-preview-wrap">' + previewHtml(preview) + '</div>';
+		html += '<div class="benchmark-certificate-preview-wrap" data-airb-certificate-preview-wrap>';
+		html += '<p class="benchmark-certificate-preview-label">' + (unlocked ? 'Your certificate' : 'Preview — updates as you fill in the form') + '</p>';
+		html += previewHtml(preview);
+		html += '</div>';
+		/* Outside the preview wrap on purpose: unlocking re-renders that wrap's
+		   innerHTML, which would throw these away along with their handlers.
+		   Sits with the artwork visually; CSS hides it until unlocked, because
+		   disabled download buttons read as broken. */
+		html += '<div class="benchmark-certificate-actions">';
+		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-download ' + (unlocked ? '' : 'disabled') + '>Download certificate (PNG)</button>';
+		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-print ' + (unlocked ? '' : 'disabled') + '>Print</button>';
+		html += '</div>';
 		html += '</div>';
 		html += '</section>';
 		return html;
@@ -584,9 +596,9 @@
 		var isUnlocked = cert.status === 'unlocked' || (!isPending && !!cert.certificate_id);
 		panel.dataset.airbUnlocked = isUnlocked ? '1' : '0';
 		panel.dataset.airbPendingReview = isPending ? '1' : '0';
-		var previewWrap = panel.querySelector('.benchmark-certificate-preview-wrap');
+		var previewWrap = panel.querySelector('[data-airb-certificate-preview-wrap]');
 		if (previewWrap && isUnlocked) {
-			previewWrap.innerHTML = previewHtml({
+			previewWrap.innerHTML = '<p class="benchmark-certificate-preview-label">Your certificate</p>' + previewHtml({
 				title: certificateTitle(null, role),
 				role: role,
 				participantName: cert.participant_name,
@@ -594,7 +606,29 @@
 				awardedAt: cert.awarded_at,
 				certificateId: cert.certificate_id,
 				verifyUrl: cert.verify_url || 'aiawarenessday.co.uk',
+				theme: cert.evidence_theme || readEvidence(panel).theme || '',
 			});
+			paintPreviews(previewWrap);
+		}
+		/* The panel intro still read "complete the evidence step below to
+		   unlock" after unlocking, so the one moment worth celebrating
+		   looked like a form that had not been submitted. */
+		var note = panel.querySelector('.teacher-dash-cert-note');
+		if (note) {
+			note.textContent = isPending
+				? 'Your evidence has been submitted. We will email you when your certificate is approved.'
+				: (isUnlocked ? 'Certificate unlocked. Download it as an image, or print it.' : note.textContent);
+		}
+		panel.classList.toggle('is-unlocked', isUnlocked);
+		panel.classList.toggle('is-pending-review', isPending);
+		if (isUnlocked && previewWrap) {
+			previewWrap.setAttribute('tabindex', '-1');
+			try {
+				previewWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				previewWrap.focus({ preventScroll: true });
+			} catch (e) {
+				previewWrap.scrollIntoView();
+			}
 		}
 		var allocate = panel.querySelector('[data-airb-certificate-allocate]');
 		var download = panel.querySelector('[data-airb-certificate-download]');
@@ -605,6 +639,8 @@
 				: (i18n.certificateAllocated || 'Certificate allocated');
 		}
 		if (download) download.disabled = !isUnlocked;
+		var printBtn = panel.querySelector('[data-airb-certificate-print]');
+		if (printBtn) printBtn.disabled = !isUnlocked;
 		if (cert.assessment) updateQuality(panel, cert.assessment);
 		if (isPending) {
 			setStatus(panel, i18n.certificatePendingReview || 'Submitted for review. We will email you when your certificate is approved.', false);
@@ -622,6 +658,9 @@
 				var assessment = assessPanel(panel);
 				updateQuality(panel, assessment);
 				syncUnlockState(panel, { unlocked: false }, assessment);
+				/* The strand chosen here colours the certificate, so the
+				   preview has to follow the form, not just the name. */
+				updatePreview(panel);
 			};
 			field.addEventListener('input', handler);
 			field.addEventListener('change', handler);
@@ -630,7 +669,6 @@
 
 	Cert.bind = function (root) {
 		if (!root) return;
-		bindTabJumps(root);
 		var panels = root.querySelectorAll('[data-airb-certificate-panel]');
 		panels.forEach(function (panel) {
 			bindEvidenceInputs(panel);
@@ -652,9 +690,19 @@
 			if (download && !download.dataset.airbBound) {
 				download.dataset.airbBound = '1';
 				download.addEventListener('click', function () {
+					downloadCertificate(panel);
+				});
+			}
+
+			var printBtn = panel.querySelector('[data-airb-certificate-print]');
+			if (printBtn && !printBtn.dataset.airbBound) {
+				printBtn.dataset.airbBound = '1';
+				printBtn.addEventListener('click', function () {
 					printCertificate(panel);
 				});
 			}
+
+			paintPreviews(panel);
 
 			var allocate = panel.querySelector('[data-airb-certificate-allocate]');
 			if (!allocate || allocate.dataset.airbBound) return;
@@ -755,9 +803,11 @@
 			awardedAt: cert.awarded_at,
 			certificateId: cert.certificate_id,
 			verifyUrl: cert.verify_url || 'aiawarenessday.co.uk',
+			theme: cert.evidence_theme || '',
 		});
 		html += '<div class="benchmark-certificate-actions" style="margin-top:1rem;">';
-		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-standalone-download>' + esc('Download / print certificate') + '</button>';
+		html += '<button type="button" class="airb__btn airb__btn--primary" data-airb-certificate-standalone-download>' + esc('Download certificate (PNG)') + '</button>';
+		html += '<button type="button" class="airb__btn airb__btn--ghost" data-airb-certificate-standalone-print>' + esc('Print') + '</button>';
 		html += '</div>';
 		html += '<p class="benchmark-certificate-status" data-airb-certificate-status></p>';
 		html += '</section>';
@@ -766,12 +816,21 @@
 
 	Cert.bindStandalone = function (root) {
 		if (!root) return;
+		paintPreviews(root);
 		var btn = root.querySelector('[data-airb-certificate-standalone-download]');
-		if (!btn || btn.dataset.airbBound) return;
-		btn.dataset.airbBound = '1';
-		btn.addEventListener('click', function () {
-			printCertificate(root);
-		});
+		if (btn && !btn.dataset.airbBound) {
+			btn.dataset.airbBound = '1';
+			btn.addEventListener('click', function () {
+				downloadCertificate(root);
+			});
+		}
+		var printBtn = root.querySelector('[data-airb-certificate-standalone-print]');
+		if (printBtn && !printBtn.dataset.airbBound) {
+			printBtn.dataset.airbBound = '1';
+			printBtn.addEventListener('click', function () {
+				printCertificate(root);
+			});
+		}
 	};
 
 	Cert.roleCopy = roleCopy;

@@ -156,8 +156,8 @@
                 }
             }
         },
-    "homework_oversight": {
-      "label": "homework_oversight",
+        "homework_oversight": {
+            "label": "homework_oversight",
             "description": "",
             "focus_card": {
                 "low": {
@@ -179,8 +179,8 @@
                 }
             }
         },
-    "parent_ai_dependency": {
-      "label": "parent_ai_dependency",
+        "parent_ai_dependency": {
+            "label": "parent_ai_dependency",
             "description": "",
             "focus_card": {
                 "low": {
@@ -190,13 +190,30 @@
                         "Try supporting without AI first when homework is hard",
                         "Use AI to explain concepts, not to write submissions for your child"
                     ]
+                },
+                "attention": {
+                    "summary": "You sometimes reach for AI before your child has tried. Using it to check or explain, rather than to produce, keeps the thinking with them.",
+                    "impact": [],
+                    "actions": [
+                        "Let your child attempt the work first, then look at it together with AI",
+                        "Ask AI to explain a method rather than write the answer"
+                    ]
                 }
             }
         },
-    "home_ai_safety": {
-      "label": "home_ai_safety",
+        "home_ai_safety": {
+            "label": "home_ai_safety",
             "description": "",
             "focus_card": {
+                "low": {
+                    "summary": "Home rules for AI have not been set yet. Without them children work out the limits on their own, usually after something has already gone wrong.",
+                    "impact": [],
+                    "actions": [
+                        "Agree one rule this week: no names, photos or addresses into AI tools",
+                        "Name the adult your child tells if something online feels wrong",
+                        "Look at a fake image or voice clip together so they know what to doubt"
+                    ]
+                },
                 "attention": {
                     "summary": "Talk about privacy, fake images and voice messages, and agree what your child should do if something online does not feel right.",
                     "impact": [],

@@ -135,7 +135,12 @@
 }
 
 .airb__results--teacher .benchmark-metric-card--tone-practice .benchmark-metric-card__value, .airb__results--student .benchmark-metric-card--tone-practice .benchmark-metric-card__value, .airb__results--parent .benchmark-metric-card--tone-practice .benchmark-metric-card__value, .airb__results--leader .benchmark-metric-card--tone-practice .benchmark-metric-card__value, .airb__results--support .benchmark-metric-card--tone-practice .benchmark-metric-card__value, .airb__results--public .benchmark-metric-card--tone-practice .benchmark-metric-card__value {
-	color: var(--airb-mod);
+	/* Was --airb-mod (#A7350B, the Smart strand's deep tone). Against the
+	   focus tier's #A32D2D that is the same colour to the eye, so a mid
+	   score read as a failure. Ink here keeps red meaning "act on this",
+	   and the bar carries the tone. The palette has no amber to reach for:
+	   Smart bright only manages 2.5:1 on cream, below AA for large text. */
+	color: var(--a27-ink, #231F20);
 }
 
 .airb__results--teacher .benchmark-metric-card--tone-attention .benchmark-metric-card__value, .airb__results--student .benchmark-metric-card--tone-attention .benchmark-metric-card__value, .airb__results--parent .benchmark-metric-card--tone-attention .benchmark-metric-card__value, .airb__results--leader .benchmark-metric-card--tone-attention .benchmark-metric-card__value, .airb__results--support .benchmark-metric-card--tone-attention .benchmark-metric-card__value, .airb__results--public .benchmark-metric-card--tone-attention .benchmark-metric-card__value {
@@ -1142,9 +1147,9 @@
 
 .airb__results--teacher .teacher-dash-tabs, .airb__results--student .teacher-dash-tabs, .airb__results--parent .teacher-dash-tabs, .airb__results--leader .teacher-dash-tabs, .airb__results--support .teacher-dash-tabs, .airb__results--public .teacher-dash-tabs {
 	display: flex;
-	gap: 0.25rem;
-	overflow-x: auto;
-	padding: 0.75rem 1rem 0;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 1rem;
 	border-bottom: 1px solid var(--a27-card, #EAE7DF);
 	scrollbar-width: none;
 }
@@ -1154,26 +1159,29 @@
 }
 
 .airb__results--teacher .teacher-dash-tab, .airb__results--student .teacher-dash-tab, .airb__results--parent .teacher-dash-tab, .airb__results--leader .teacher-dash-tab, .airb__results--support .teacher-dash-tab, .airb__results--public .teacher-dash-tab {
-	flex: none;
-	min-height: 3rem;
-	padding: 0.625rem 1rem;
+	flex: 0 1 auto;
+	min-height: 2.75rem;
+	padding: 0.625rem 1.1rem;
+	/* Filled, not outlined: clip-path cuts through a border and leaves the
+	   chamfered corners looking broken. */
 	border: none;
-	border-bottom: 2px solid transparent;
-	background: transparent;
+	background: var(--a27-card, #EAE7DF);
 	font: inherit;
-	font-size: 0.875rem;
-	font-weight: 600;
-	color: var(--a27-dim, #54504E);
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: var(--a27-ink, #231F20);
 	cursor: pointer;
+	clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+	transition: background-color 0.16s ease, color 0.16s ease;
 }
 
 .airb__results--teacher .teacher-dash-tab.is-active, .airb__results--student .teacher-dash-tab.is-active, .airb__results--parent .teacher-dash-tab.is-active, .airb__results--leader .teacher-dash-tab.is-active, .airb__results--support .teacher-dash-tab.is-active, .airb__results--public .teacher-dash-tab.is-active {
-	border-bottom-color: var(--a27-ink, #231F20);
-	color: var(--a27-ink, #231F20);
+	background: var(--a27-ink, #231F20);
+	color: var(--a27-cream, #F6F4ED);
 }
 
-.airb__results--teacher .teacher-dash-tab:hover, .airb__results--student .teacher-dash-tab:hover, .airb__results--parent .teacher-dash-tab:hover, .airb__results--leader .teacher-dash-tab:hover, .airb__results--support .teacher-dash-tab:hover, .airb__results--public .teacher-dash-tab:hover {
-	color: var(--a27-ink, #231F20);
+.airb__results--teacher .teacher-dash-tab:not(.is-active):hover, .airb__results--student .teacher-dash-tab:not(.is-active):hover, .airb__results--parent .teacher-dash-tab:not(.is-active):hover, .airb__results--leader .teacher-dash-tab:not(.is-active):hover, .airb__results--support .teacher-dash-tab:not(.is-active):hover, .airb__results--public .teacher-dash-tab:not(.is-active):hover {
+	background: var(--a27-rule, #C9C6BE);
 }
 
 .airb__results--teacher .teacher-dash-panels, .airb__results--student .teacher-dash-panels, .airb__results--parent .teacher-dash-panels, .airb__results--leader .teacher-dash-panels, .airb__results--support .teacher-dash-panels, .airb__results--public .teacher-dash-panels {
@@ -1650,7 +1658,10 @@
 	gap: 0.45rem;
 }
 
-.benchmark-certificate-theme-option {
+/* `.benchmark-certificate-form label` sets display:grid for the stacked
+   field labels, and won on specificity here — which stretched the radio to
+   the full column width and dropped the word beneath it. */
+.benchmark-certificate-form .benchmark-certificate-theme-option {
 	display: flex;
 	align-items: center;
 	gap: 0.45rem;
@@ -1662,6 +1673,12 @@
 	font-weight: 600;
 	color: var(--a27-ink, #231F20);
 	cursor: pointer;
+}
+
+.benchmark-certificate-form .benchmark-certificate-theme-option input[type="radio"] {
+	flex: none;
+	width: auto;
+	margin: 0;
 }
 
 .benchmark-certificate-theme-option:has(input:checked) {
@@ -1825,6 +1842,52 @@
 	border-radius: 8px;
 	background: var(--a27-cream, #F6F4ED);
 	padding: 0.75rem;
+}
+
+.benchmark-certificate-preview-wrap:focus {
+	outline: 3px solid var(--a27-ink, #231F20);
+	outline-offset: 3px;
+}
+
+.benchmark-certificate-preview-label {
+	margin: 0 0 0.6rem;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--a27-dim, #54504E);
+}
+
+/* The certificate is drawn on a canvas so that what is on screen and what
+   downloads are the same pixels. Intrinsic size is 2000x1414; it scales to
+   whatever the column gives it. */
+.certificate-preview__canvas {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+
+.benchmark-certificate-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.benchmark-certificate-actions .airb__btn {
+	flex: 1 1 auto;
+}
+
+/* Spent its purpose: a disabled primary button reads as the main action
+   and as broken. The status line and label already say it worked. */
+.benchmark-certificate-layout.is-unlocked [data-airb-certificate-allocate] {
+	display: none;
+}
+
+/* Unlocking is the one moment in this flow worth marking. */
+.benchmark-certificate-layout.is-unlocked .benchmark-certificate-preview-wrap {
+	border-color: var(--a27-ink, #231F20);
+	box-shadow: 0 10px 30px rgba(35, 31, 32, 0.12);
 }
 
 .certificate-preview {
@@ -2732,8 +2795,219 @@
 }
 
 /* Public share card — progress tab */
+.airb .airb__tab-details {
+	margin: 1rem 0;
+	border-top: 1px solid var(--airb-muted, #54504E);
+	padding-top: .75rem;
+}
+
+.airb .airb__tab-details > summary {
+	cursor: pointer;
+	font-size: .9rem;
+	font-weight: 600;
+	line-height: 1.5;
+	padding: .5rem 0;
+}
+
+.airb .airb__tab-details > summary:focus-visible {
+	outline: 2px solid var(--airb-info, #006A7D);
+	outline-offset: 4px;
+}
+
+.airb .airb__tab-details[open] > summary {
+	margin-bottom: 1rem;
+}
+
+.airb .airb__tab-intro {
+	max-width: 60ch;
+	margin: 0 0 1rem;
+	color: var(--airb-muted, #54504E);
+	font-size: .9rem;
+	line-height: 1.6;
+}
+
 .airb__results--public-dash .teacher-dash-share .airb__public-share-card {
 	margin: 0;
 	border: none;
 	box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------------
+ * Example certificate on the intro screen
+ *
+ * Only while choosing a role: once the questions start, the reward is
+ * a distraction and the panel in the results tab takes over.
+ * ------------------------------------------------------------- */
+.airb__cert-showcase {
+	display: none;
+}
+
+.airb--phase-role .airb__cert-showcase {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+	gap: clamp(1.5rem, 4vw, 3rem);
+	align-items: center;
+	margin: clamp(1.5rem, 4vw, 2.5rem) 0;
+	padding: clamp(1.25rem, 3vw, 2rem);
+	border: 1px solid var(--a27-card, #EAE7DF);
+	border-radius: 12px;
+	background: var(--a27-cream, #F6F4ED);
+}
+
+.airb__cert-showcase-eyebrow {
+	margin: 0 0 0.5rem;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--a27-dim, #54504E);
+}
+
+.airb__cert-showcase-title {
+	margin: 0 0 0.75rem;
+	font-size: clamp(1.5rem, 3vw, 2.1rem);
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: var(--a27-ink, #231F20);
+}
+
+.airb__cert-showcase-lead {
+	margin: 0 0 1.25rem;
+	color: var(--a27-dim, #54504E);
+	line-height: 1.5;
+}
+
+.airb__cert-showcase-steps {
+	margin: 0;
+	padding-left: 1.2rem;
+	display: grid;
+	gap: 0.4rem;
+	color: var(--a27-ink, #231F20);
+	font-weight: 600;
+}
+
+.airb__cert-showcase-art {
+	margin: 0;
+}
+
+.airb__cert-showcase-caption {
+	margin-top: 0.6rem;
+	font-size: 0.8rem;
+	color: var(--a27-dim, #54504E);
+}
+
+@media (max-width: 760px) {
+	.airb--phase-role .airb__cert-showcase {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	/* Lead with the artwork on a phone: it is the reason to scroll on. */
+	.airb__cert-showcase-art {
+		order: -1;
+	}
+}
+
+/* ---------------------------------------------------------------
+   Certificate panel density
+
+   The progress tab ran to roughly three screens before the user could
+   act on anything. Two disclosures carry most of that weight now: the
+   evidence form while the score gate is closed, and the evidence-quality
+   breakdown before there is any evidence to score.
+   --------------------------------------------------------------- */
+.benchmark-certificate-prep,
+.benchmark-certificate-quality__detail {
+	min-width: 0;
+}
+
+.benchmark-certificate-prep > summary,
+.benchmark-certificate-quality__detail > summary {
+	cursor: pointer;
+	list-style: none;
+}
+
+.benchmark-certificate-prep > summary::-webkit-details-marker,
+.benchmark-certificate-quality__detail > summary::-webkit-details-marker {
+	display: none;
+}
+
+.benchmark-certificate-prep > summary {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.6rem 0;
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: var(--a27-dim, #54504E);
+}
+
+.benchmark-certificate-prep > summary::after {
+	content: '▾';
+	font-size: 0.75em;
+}
+
+.benchmark-certificate-prep[open] > summary::after {
+	content: '▴';
+}
+
+.benchmark-certificate-prep > summary:hover {
+	color: var(--a27-ink, #231F20);
+}
+
+/* The score line stays readable as a summary row. */
+.benchmark-certificate-quality__detail > summary.benchmark-certificate-quality__head {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.benchmark-certificate-quality__detail > summary::after {
+	content: '▾';
+	margin-left: auto;
+	font-size: 0.75em;
+	opacity: 0.7;
+}
+
+.benchmark-certificate-quality__detail[open] > summary::after {
+	content: '▴';
+}
+
+/* Numbered steps in the certificate form. */
+.benchmark-certificate-step {
+	margin-top: 1.25rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--a27-card, #EAE7DF);
+}
+
+.benchmark-certificate-step:first-of-type {
+	border-top: none;
+	padding-top: 0;
+}
+
+.benchmark-certificate-step-title {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin: 0 0 0.85rem;
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: var(--a27-ink, #231F20);
+}
+
+.benchmark-certificate-step-title > span {
+	display: grid;
+	place-items: center;
+	width: 1.6rem;
+	height: 1.6rem;
+	background: var(--a27-ink, #231F20);
+	color: var(--a27-cream, #F6F4ED);
+	font-size: 0.8rem;
+	clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+}
+
+/* Nothing to download until it is earned. */
+.benchmark-certificate-layout:not(.is-unlocked) .benchmark-certificate-actions {
+	display: none;
 }

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.4.0' );
+define( 'AIAD_VERSION', '1.5.0' );
 
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', __DIR__ );
@@ -80,5 +80,6 @@ require_once $aiad_dir . '/inc/schools-ai-risk-academy.php';
 require_once $aiad_dir . '/inc/bundled-plugins.php';
 require_once $aiad_dir . '/inc/ai-risk-benchmark-post.php';
 require_once $aiad_dir . '/inc/benchmark-promo.php';
+require_once $aiad_dir . '/inc/certificate-showcase.php';
 require_once $aiad_dir . '/inc/hub-resource-page.php';
 require_once $aiad_dir . '/inc/airb-hub-timeline-seed.php';

@@ -70,10 +70,13 @@
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--a27-ink, #231F20);
-	padding: 0.2em 0.5em;
+	padding: 0.3em 0.7em;
 	display: inline-block;
 	text-shadow: none;
 	background: var(--a27-cream, #F6F4ED);
+	/* Chamfer, not a rectangle — the signature shape, sized in em so it holds
+	   its proportion against this label's small type. */
+	clip-path: polygon(0.5em 0, 100% 0, 100% calc(100% - 0.5em), calc(100% - 0.5em) 100%, 0 100%, 0 0.5em);
 }
 
 .tool-card--cat-content-creation .tool-card__category {

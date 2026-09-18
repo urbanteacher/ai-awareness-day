@@ -260,7 +260,16 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
 </section>
 
-<?php get_template_part( 'template-parts/front-page/part', 'benchmark-promo' ); ?>
+<?php
+/*
+ * What the audit earns you, immediately above the audit's own promo. Self
+ * contained — see inc/certificate-showcase.php, or paste
+ * [aiad_certificate_showcase] anywhere else you want it.
+ */
+if ( function_exists( 'aiad_certificate_showcase' ) ) {
+	echo aiad_certificate_showcase(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template part escapes its own output.
+}
+?>
 
 <!-- Activities / Time resources: By theme + By session length -->
 <section id="themes" class="section <?php echo esc_attr( $text_alignment_class ); ?>">
@@ -438,7 +447,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                                     <?php endif; ?>
 
-                                    <div class="resource-card__wedge" aria-hidden="true"></div>
                                     <div class="resource-card__fade"  aria-hidden="true"></div>
 
                                     <?php if ( $theme_name ): ?>
