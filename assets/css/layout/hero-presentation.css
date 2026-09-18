@@ -14,10 +14,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   align-items: start;
-  /* Tighter column gap: 55px at 1200px, up to 4.5rem (72px) at wider
-     screens, read as a gap between two things that belong together rather
-     than a deliberate break. */
-  gap: clamp(1rem, 2.2vw, 2rem);
+  /* Tighter again: 26px still read as two things that belong together but
+     were held apart. Down to a single hairline-adjacent gap. */
+  gap: clamp(.5rem, 1vw, 1rem);
   padding-block: clamp(3rem, 6vw, 5.5rem);
   min-height: 0;
 }
