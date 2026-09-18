@@ -38,11 +38,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php endforeach; ?>
                 </div>
                 <div class="hero-strand-feature__stage" aria-live="off">
-                    <span class="hero-strand-feature__word">Safe</span>
                     <?php /* Decorative twin of .hero-brand__mark. On narrow screens the mark
                              sits beside the strand word instead of the hero title, where it
-                             was forcing the title column wider than the viewport. */ ?>
+                             was forcing the title column wider than the viewport. Icon first,
+                             word second — the reading order of "mark, then its name". */ ?>
                     <span class="hero-strand-feature__mark" aria-hidden="true"></span>
+                    <span class="hero-strand-feature__word">Safe</span>
                 </div>
                 <p class="hero-strand-feature__summary"><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></p>
             </div>

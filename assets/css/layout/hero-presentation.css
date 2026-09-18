@@ -141,7 +141,12 @@
 #hero .hero-strand-feature__theme.is-active { color: var(--hero-bright); border-color: currentColor; }
 /* Row rather than column-reverse: icon and word sit on one line at every
    width instead of the icon stacking above the word above roughly 1050px. */
-#hero .hero-strand-feature__stage { display: flex; flex-direction: row; align-items: center; gap: 1.25rem; margin: 0; padding: 0; font-size: inherit; }
+/* perspective restored: aiad27.css's .hero-strand-feature__stage carried
+   perspective: 950px for the word's rotateX flip on strand change, but this
+   ID-selector rule wins the cascade and didn't repeat it. Without perspective
+   on an ancestor, rotateX has nothing to project into and the flip animation
+   simply looked flat. */
+#hero .hero-strand-feature__stage { display: flex; flex-direction: row; align-items: center; gap: 1.25rem; margin: 0; padding: 0; font-size: inherit; perspective: 950px; }
 #hero .hero-strand-feature__mark { display: block; width: 6rem; height: 6rem; background: var(--hero-bright); }
 #hero .hero-strand-feature__word { width: auto; font-size: clamp(2rem, 3.8vw, 3.5rem); letter-spacing: -.055em; line-height: 1.1; }
 #hero .hero-strand-feature__summary { border-color: var(--a27-dim); margin: 1.25rem 0 0; padding: 1.25rem 0 0; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.4; min-height: 5.2rem; }
