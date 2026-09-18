@@ -1,33 +1,49 @@
 # LinkedIn card exports
 
-Six cards for a LinkedIn post: five starter cards exported straight from
-`../preview.html` at 2x scale (one per strand), plus a closing brand card.
+Five strand starter cards, a closing brand card, and a contact sheet of all
+six for a single-image post.
 
-| File | Source | Content |
-|---|---|---|
-| `1-safe.png` | deck slide | Safe 01 — Would you tell an AI your secret? |
-| `2-smart.png` | deck slide | Smart 01 — What happens when AI acts for you? |
-| `3-creative.png` | deck slide | Creative 01 — Who really made it? |
-| `4-responsible.png` | deck slide | Responsible 01 — Should AI decide? |
-| `5-future.png` | deck slide | Future 01 — What skills must stay human? |
-| `6-safe-04.png` | `../linkedin-cover.html` | Closing brand card — the `aiad27-lockup.svg` lockup at full size |
+| File | Size | Source | Content |
+|---|---|---|---|
+| `0-all-six-1200x1200.png` | 1200×1200 | `../linkedin-sheet.html` | All six cards, 2×3 on the ink ground |
+| `1-safe.png` | 2560×1440 | deck slide | Safe 01 — Would you tell an AI your secret? |
+| `2-smart.png` | 2560×1440 | deck slide | Smart 01 — What happens when AI acts for you? |
+| `3-creative.png` | 2560×1440 | deck slide | Creative 01 — Who really made it? |
+| `4-responsible.png` | 2560×1440 | deck slide | Responsible 01 — Should AI decide? |
+| `5-future.png` | 2560×1440 | deck slide | Future 01 — What skills must stay human? |
+| `6-lockup.png` | 2560×1440 | `../linkedin-cover.html` | Closing brand card — the `aiad27-lockup.svg` lockup at full size |
 
-Cards 1–5 regenerate after refreshing the review bundle from SlideForge with:
+1200×1200 is LinkedIn's recommended square for a single-image post. The six
+16:9 cards tile wider than tall, so the sheet centres the grid and lets the
+leftover height read as margin. Its ground is ink rather than cream because the
+closing card is cream and would otherwise lose its edges.
 
-    node <path-to-export-script> assets/aiad27-review/linkedin
+## Regenerating
 
-which screenshots the live `.slide` element for each starter question,
-rather than a manual crop.
+Everything above comes from one command, with the local WordPress running:
 
-`6-safe-04.png` is not a deck slide — no slide in the bundle renders just the
-logo and tagline (the deck's `title` layout shows the strand question, not the
-tagline). It is a standalone card at `../linkedin-cover.html`, which places
-`assets/brand/aiad27/aiad27-lockup.svg` — the real lockup, wordmark, rule and
-tagline in one asset — scaled to fill the card, and is screenshotted at
-1298×732 with Playwright. Serve it over `localhost`, not `file://`: the brand
+    AIAD_PLAYWRIGHT_DIR=<dir-with-playwright> node scripts/export-aiad27-cards.mjs
+
+Cards are written first, then the sheet, which reads them back over
+`localhost`. Serve these pages over `localhost`, never `file://` — the brand
 SVGs will not load cross-origin from a file URL.
 
-The lockup's type is right-anchored inside its own viewBox, so its left quarter
-is empty. The card oversizes and offsets the image to centre the visible type
-rather than its box — see the comment in `../linkedin-cover.html` for how those
-offsets are derived, and redo that measurement if the lockup's wording changes.
+Two things the script handles that are easy to get wrong by hand:
+
+- **Slides are captured unscaled.** They are authored at 1280×720 and the
+  review grid shows them through a `transform: scale()`. Screenshotting a tile
+  captures a fractionally-scaled box, which bled page background and
+  drop-shadow into the bottom edge and clipped the slide's own progress bar.
+  Each slide is cloned into a clean host at scale 1 instead, giving pixel-exact
+  16:9 at 2× resolution.
+- **Starters are matched on slide text,** not on an index, so the export
+  survives the bundle being reordered or renumbered.
+
+`6-lockup.png` is not a deck slide — no slide in the bundle renders just the
+logo and tagline (the deck's `title` layout shows the strand question). It
+places `assets/brand/aiad27/aiad27-lockup.svg`, the real lockup with wordmark,
+rule and tagline in one asset, scaled to fill the card. That lockup's type is
+right-anchored inside its viewBox, so its left quarter is empty and the card
+offsets the image to centre the visible type rather than its box — see the
+comment in `../linkedin-cover.html`, and redo that measurement if the lockup's
+wording changes.

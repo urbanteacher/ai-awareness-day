@@ -4,10 +4,12 @@
 <meta charset="utf-8">
 <style>
   html, body { margin: 0; padding: 0; }
+  /* 1280x720, the size the SlideForge slides are authored at, so this card
+     drops into the same set as the five strand starters. */
   .card {
     position: relative;
-    width: 1298px;
-    height: 732px;
+    width: 1280px;
+    height: 720px;
     background: #F6F4ED;
     overflow: hidden;
   }
@@ -16,18 +18,19 @@
 
      Its type is right-anchored (text-anchor="end" at x=300), so the visible ink
      sits at x 76.9-300 of the 300x56 viewBox and the left quarter of the box is
-     empty. Centring the box would therefore push the type right, so the box is
-     oversized and offset instead, to centre the ink rather than its container.
-     Offsets are derived from that measured extent: at 1180px of visible type
-     the scale is 1180/223.08 = 5.290, giving a 1587px box whose left edge sits
-     at 59 - 76.9x5.290 and whose vertical centre lands on y=30.5 of the box. */
+     empty. Centring the box would push the type right, so the box is oversized
+     and offset instead, to centre the ink rather than its container:
+       scale     = 1565/300 = 5.2167, for 1164px of visible type
+       left      = 58 - 76.9 x 5.2167, putting 58px of cream each side
+       top       = 360 - 30.5 x 5.2167, centring the ink's own midpoint
+     Re-measure the viewBox extent if the lockup's wording ever changes. */
   .card img {
     position: absolute;
     display: block;
-    width: 1587px;
+    width: 1565px;
     height: auto;
-    left: -348px;
-    top: 205px;
+    left: -343px;
+    top: 201px;
   }
 </style>
 </head>
