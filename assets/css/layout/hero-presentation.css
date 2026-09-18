@@ -1,9 +1,19 @@
 /* Campaign copy and strand exploration share a baseline, with independent
    space for the longest strand. ID scope supersedes legacy hero variants. */
+
+/* Strand colour stays on the section; only the strand panel is ink. */
+#hero.hero-section {
+  background: var(--hero-bright);
+}
+#hero .hero-title-block,
+#hero .hero-copy {
+  background: transparent;
+}
+
 #hero .hero-title-block {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(2rem, 5vw, 4.5rem);
   padding-block: clamp(3rem, 6vw, 5.5rem);
   min-height: 0;
@@ -27,8 +37,12 @@
 #hero .hero-cta__btn { width: auto; min-height: 48px; padding: .9rem 1.15rem; border: 1px solid var(--a27-ink); border-radius: 0; font-size: .75rem; }
 #hero .hero-strand-feature {
   box-sizing: border-box;
+  align-self: start;
+  justify-self: stretch;
   min-width: 0;
   width: 100%;
+  max-width: 100%;
+  height: auto;
   margin: 0;
   padding: clamp(1.25rem, 3vw, 2.5rem);
   background: var(--a27-ink);

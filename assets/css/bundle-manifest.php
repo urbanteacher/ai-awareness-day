@@ -41,5 +41,6 @@ return array(
 		'responsive/responsive.css',
 		'responsive/mobile.css',
 		'aiad27.css',
+		'layout/hero-presentation.css',
 	),
 );

@@ -522,6 +522,15 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 
 @media (max-width: 768px) {
   .site-header, .header-inner { height: 68px; }
+  .site-header .header-inner {
+    width: min(1200px, calc(100% - 3rem));
+    padding-inline: max(0px, env(safe-area-inset-left)) max(0px, env(safe-area-inset-right));
+  }
+  .site-logo__img,
+  .custom-logo {
+    width: min(160px, 52vw);
+    max-width: none;
+  }
   .hero-section { padding-top: 68px; }
   .hero-title-block { min-height: auto; padding: 2.5rem 0; }
 
