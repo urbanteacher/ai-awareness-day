@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 </div>
                 <p class="hero-subtitle"><strong><?php esc_html_e( 'We are back for 2027.', 'ai-awareness-day' ); ?></strong> <?php esc_html_e( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ); ?></p>
                 <div class="hero-cta">
-                    <a href="#contact" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Bring AiAd27 to your school', 'ai-awareness-day' ); ?></a>
+                    <a href="#contact" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Get involved', 'ai-awareness-day' ); ?></a>
                     <a href="<?php echo esc_url( aiad_get_benchmark_start_url() ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Check your AI readiness', 'ai-awareness-day' ); ?></a>
                 </div>
             </div>
