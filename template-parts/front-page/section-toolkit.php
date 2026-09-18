@@ -80,13 +80,6 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </div>
                     </div>
 
-                    <div class="dbm__invitation">
-                        <p class="dbm__eyebrow"><?php esc_html_e( 'Our classroom AI conversation', 'ai-awareness-day' ); ?></p>
-                        <h3><?php esc_html_e( 'Big questions. Human answers.', 'ai-awareness-day' ); ?></h3>
-                        <p><?php esc_html_e( 'Pick a question. Talk it through. Add your voice to the board.', 'ai-awareness-day' ); ?></p>
-                        <span class="dbm__teacher-note"><?php esc_html_e( 'Teacher tip: choose one strand each week and refresh the responses together.', 'ai-awareness-day' ); ?></span>
-                    </div>
-
                     <div class="dbm__panels">
                         <?php
                         $dbm_strands = array(
@@ -135,8 +128,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 <h3 class="dbm__panel-title"><?php esc_html_e( 'QR challenges', 'ai-awareness-day' ); ?></h3>
                             </div>
                             <div class="dbm__panel-body">
-                                <p class="dbm__panel-desc"><?php esc_html_e( 'Connect the conversation to your school’s AI policy and classroom guidelines.', 'ai-awareness-day' ); ?></p>
-                                <p class="dbm__panel-fact"><?php esc_html_e( 'Teacher setup: add your own QR codes in the spaces below.', 'ai-awareness-day' ); ?></p>
+                                <p class="dbm__panel-desc"><?php esc_html_e( 'Scan to find your school’s AI policy and classroom guidelines.', 'ai-awareness-day' ); ?></p>
                                 <div class="dbm__qr-grid">
                                     <div class="dbm__qr-item">
                                         <span class="dbm__qr-mark" aria-hidden="true"></span>
@@ -154,10 +146,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <div class="dbm__row">
                         <div class="dbm__panel dbm__panel--questions">
                             <div class="dbm__panel-header">
-                                <h3 class="dbm__panel-title"><?php esc_html_e( 'This week: pause, pair, share', 'ai-awareness-day' ); ?></h3>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'This week’s questions', 'ai-awareness-day' ); ?></h3>
                             </div>
                             <div class="dbm__panel-body">
-                                <p class="dbm__panel-desc"><?php esc_html_e( 'Choose one question. Compare answers with a partner. What changed your mind?', 'ai-awareness-day' ); ?></p>
                                 <ul class="dbm__questions">
                                     <li><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></li>
                                     <li><?php esc_html_e( 'What happens when AI acts for you?', 'ai-awareness-day' ); ?></li>
@@ -168,10 +159,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
                         <div class="dbm__panel dbm__panel--responses">
                             <div class="dbm__panel-header">
-                                <h3 class="dbm__panel-title"><?php esc_html_e( 'Your voice belongs here', 'ai-awareness-day' ); ?></h3>
+                                <h3 class="dbm__panel-title"><?php esc_html_e( 'Student responses', 'ai-awareness-day' ); ?></h3>
                             </div>
                             <div class="dbm__panel-body">
-                                <p class="dbm__panel-fact"><?php esc_html_e( 'Example responses — replace these with your class’s ideas.', 'ai-awareness-day' ); ?></p>
                                 <p class="dbm__panel-quote"><?php esc_html_e( '“I’d tell a person first.”', 'ai-awareness-day' ); ?></p>
                                 <p class="dbm__panel-quote"><?php esc_html_e( '“It can draft — I decide.”', 'ai-awareness-day' ); ?></p>
                                 <p class="dbm__panel-quote"><?php esc_html_e( '“I made it. AI helped.”', 'ai-awareness-day' ); ?></p>
