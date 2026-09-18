@@ -31,6 +31,187 @@
     return n;
   }
 
+  /* ---------------------------------------------------------- slide artwork
+     The theme manifest paints the same decoration on every slide of an eligible
+     type. A pose is one slide's disagreement with that: where a shape sits, how
+     big it is, and whether it is there at all. Poses are per slide, so a slide
+     nobody has touched still follows its theme — and still restyles when the
+     theme changes. They live on slide.art, which survives normalizeSlide
+     untouched because that copies the raw slide over the base.
+
+     Keyed by the shape's first class, which is what the theme manifest names it
+     (art-orbit, art-tile, art-dot). Editing the manifest's html can orphan a
+     pose; an orphan is ignored rather than applied to the wrong shape. */
+  function artKeyOf(node, i) {
+    var cls = String(node.className || '').split(/\s+/).filter(Boolean)[0];
+    return cls || 'art-' + i;
+  }
+  SF.artKeyOf = artKeyOf;
+
+  /* Tags every shape with its key so the editor can find it, then applies any
+     pose. Theme shapes are placed off right/bottom, so a pose that sets a
+     corner has to release the other one or the shape is pinned by both. */
+  SF.applyArtPoses = function (layer, poses) {
+    if (!layer) return;
+    Array.prototype.forEach.call(layer.children, function (node, i) {
+      var key = artKeyOf(node, i);
+      node.setAttribute('data-art-key', key);
+      var pose = poses && poses[key];
+      if (!pose) return;
+      if (pose.x != null && pose.y != null) {
+        node.style.left = pose.x + 'px';
+        node.style.top = pose.y + 'px';
+        node.style.right = 'auto';
+        node.style.bottom = 'auto';
+      }
+      if (pose.scale != null) {
+        node.style.transform = 'scale(' + pose.scale + ')';
+        node.style.transformOrigin = 'top left';
+      }
+      if (pose.hidden) node.style.display = 'none';
+    });
+  };
+
+  /* Null rather than an empty layer when there is nothing placed: an empty
+     absolutely positioned box over every slide is a hit-testing hazard for no
+     reason. Coordinates are true slide pixels — callers scale the whole slide,
+     so a pose means the same thing in the rail, the editor and the player. */
+  SF.placedArtLayer = function (pictures) {
+    var list = Array.isArray(pictures) ? pictures.filter(function (p) {
+      return p && p.src && !p.hidden;
+    }) : [];
+    if (!list.length) return null;
+    var layer = el('div', 'slide-art');
+    list.forEach(function (pic, i) {
+      var img = el('img', 'slide-art-img');
+      img.src = pic.src;
+      img.alt = String(pic.alt || '');
+      img.setAttribute('data-art-pic', String(pic.id == null ? i : pic.id));
+      img.style.left = (pic.x || 0) + 'px';
+      img.style.top = (pic.y || 0) + 'px';
+      if (pic.w) img.style.width = pic.w + 'px';
+      layer.appendChild(img);
+    });
+    return layer;
+  };
+
+  /* ------------------------------------------------------------- the lattice
+     A drag manipulates a named region in a grid, never a coordinate. Free-form
+     {x,y,w,h} forfeits reflow, re-theming, aspect export and print, so what a
+     slide stores is a cell range — col, row and spans — on the same 16x12
+     lattice Engine 3 has been proving against the layout bank.
+
+     The pad keeps its identity and only its children are re-parented, which is
+     safe here because no theme sheet uses a `.pad >` selector: descendant rules
+     like `.theme-studio.layout-title h1` still match through the wrapper, and
+     every nth-child rule in the theme sheets targets `li` inside a list or
+     .timeline-event inside its own container, neither of which is re-parented.
+
+     A slide with no regions is not latticed at all, so every existing deck
+     renders exactly as before. */
+  var LATTICE = { left: 52, top: 88, w: 1176, h: 576, cols: 12, rows: 16, stepX: 101, stepY: 36 };
+  SF.LATTICE = LATTICE;
+
+  /* What a content block is called in a region map. The editable key when the
+     block has one, so a region survives the text changing; otherwise the class
+     the theme gave it, which is what an accent rule or a decorative bar has. */
+  function blockKeyOf(node, i) {
+    var key = node.getAttribute && node.getAttribute('data-content-key');
+    if (key) return key;
+    var cls = String(node.className || '').split(/\s+/).filter(Boolean)[0];
+    return cls || 'block-' + i;
+  }
+  SF.blockKeyOf = blockKeyOf;
+
+  SF.latticeHost = function (root) {
+    return root.querySelector('.cp-body') || root.querySelector('.pad') || null;
+  };
+
+  /* Wraps each pad child in a cell of the lattice. Blocks the map does not
+     mention are left to auto-flow rather than dropped — a region map that has
+     gone stale should misplace a block, not lose it. */
+  SF.applyRegions = function (root, slide) {
+    var regions = slide && slide.design && slide.design.regions;
+    if (!regions || !Object.keys(regions).length) return false;
+    var host = SF.latticeHost(root);
+    if (!host) return false;
+    var kids = Array.prototype.slice.call(host.children).filter(function (n) {
+      return n.nodeType === 1;
+    });
+    if (!kids.length) return false;
+    var grid = el('div', 'sf-lattice');
+    kids.forEach(function (node, i) {
+      var key = blockKeyOf(node, i);
+      var r = regions[key];
+      var slot = el('div', 'sf-slot');
+      slot.setAttribute('data-block-key', key);
+      if (r) {
+        slot.style.gridArea = r.row + ' / ' + r.col + ' / span ' + r.rows + ' / span ' + r.cols;
+        slot.setAttribute('data-region', r.row + ',' + r.col + ',' + r.rows + ',' + r.cols);
+      }
+      slot.appendChild(node);
+      grid.appendChild(slot);
+    });
+    host.replaceChildren(grid);
+    root.classList.add('sf-latticed');
+    return true;
+  };
+
+  /* ------------------------------------------------------- does it fit?
+     Counted in lines, not boxes. A slot measures its element box, but a display
+     face paints an inline box half a leading taller, and the app's escapes()
+     reads a bottom overhang as an overflow while ignoring an identical one at
+     the top — so the same block passed or failed on where it happened to sit.
+     Lines count the block, not its leading.
+
+     A region's `rows` is its tariff: the lines the author gave it. The tariff
+     does not grow from paint, because the empty lines under a heading are
+     composition rather than slack. Overflowing is allowed and reported, never
+     refused. Same rule and the same arithmetic as Engine 3, published here so
+     the two cannot answer the question differently. */
+  SF.linesFor = function (px) {
+    var tol = SF.FIT_TOLERANCE == null ? 1 : SF.FIT_TOLERANCE;
+    return Math.max(1, Math.ceil((px - tol) / LATTICE.stepY));
+  };
+
+  /* Null for a block that spends no lines: out of flow is out of the count. */
+  SF.linesNeeded = function (slot) {
+    var node = slot.firstElementChild;
+    if (!node) return null;
+    var pos = getComputedStyle(node).position;
+    if (pos === 'absolute' || pos === 'fixed') return null;
+    return SF.linesFor(node.scrollHeight);
+  };
+
+  /* Measures every slot against the lines its region gave it. Marks the verdict
+     on the slot so CSS and tests can both read it, and returns the rows so a
+     caller can say which block wants what. */
+  SF.latticeFit = function (root) {
+    var out = [];
+    if (!root) return out;
+    root.querySelectorAll('.sf-slot').forEach(function (slot) {
+      var parts = (slot.getAttribute('data-region') || '').split(',');
+      var have = Number(parts[2]) || Math.max(1, Math.round(slot.clientHeight / LATTICE.stepY));
+      var need = SF.linesNeeded(slot);
+      /* Sideways is not a line question, and nothing else catches it. Measured
+         on the content, never on the slot: the arranging face hangs a label off
+         the slot in an ::after, and an absolutely positioned pseudo-element
+         still counts toward scrollWidth — "accent-bar · 1r x 1c" is 198px of
+         text, which reported a 66px rule in a 65px column as three columns of
+         overflow. */
+      var node = slot.firstElementChild;
+      var wide = need != null && !!node && node.scrollWidth > slot.clientWidth + 1;
+      var over = need != null && (need > have || wide);
+      slot.setAttribute('data-fit', over ? 'over' : 'ok');
+      if (need != null) slot.setAttribute('data-need', String(need));
+      out.push({
+        key: slot.getAttribute('data-block-key'),
+        need: need, have: have, wide: wide, over: over
+      });
+    });
+    return out;
+  };
+
   /* "slide:12" — a jump inside the lesson. Returns the 1-based number the
      author wrote, or 0 for anything else, so callers can use it as a test. */
   SF.slideJumpTarget = function (value) {
@@ -4892,8 +5073,9 @@
     }
     // The manifest owns eligibility and decoration; deck text is always textContent.
     var spec = SF.THEMES[SF.resolveTheme(deck.theme)].art;
+    var art;
     if (spec && spec.layouts.includes(slide.type)) {
-      var art = el('div', 'theme-art ' + spec.className);
+      art = el('div', 'theme-art ' + spec.className);
       art.innerHTML = spec.html;
       if (spec.eyebrow) {
         var fields = spec.eyebrow[slide.type] || [];
@@ -4901,8 +5083,16 @@
         if (line) art.appendChild(el('div', spec.eyebrow.className, line));
       }
       art.setAttribute('aria-hidden', 'true');
+      SF.applyArtPoses(art, slide.art && slide.art.poses);
       root.appendChild(art);
     }
+    /* Pictures the author placed on this slide, in their own layer. The theme
+       layer above is decoration and stays aria-hidden; these are not, so they
+       carry whatever alt text the author gave them. The layer exists even on a
+       slide type the theme does not decorate — placing a picture must not
+       depend on the theme happening to paint here. */
+    var placed = SF.placedArtLayer(slide.art && slide.art.pictures);
+    if (placed) root.appendChild(placed);
     /* Which of a theme's decorations a slide shows, as a number a stylesheet
        can switch on. Stamped on every slide rather than only the two
        full-bleed ones, because a theme may want quiet decoration on the
@@ -4925,6 +5115,10 @@
     SF.declareBodyRegion(root,slide);
     if (SF.Explore) SF.Explore.render(root, pad, slide, opts);
     if (SF.Custom) SF.Custom.layout(root, slide);
+    /* Last, once compositions, boards, Explore and Customise have all finished
+       shaping the pad: regions are the slide's explicit arrangement, so they
+       are applied to whatever those produced rather than racing them. */
+    SF.applyRegions(root, slide);
 
     if (opts.chrome !== false && deck.showSlideNumbers && opts.index != null && slide.type !== 'title') {
       /* Counted over the running order, not the editor's rows. A deck with a
