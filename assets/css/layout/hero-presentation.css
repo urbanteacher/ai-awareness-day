@@ -75,6 +75,13 @@
   mask: var(--hero-mark) center / contain no-repeat;
 }
 #hero .hero-subtitle {
+  /* Right-aligned, matching the headline above it. The box itself stays at
+     the same left offset as the headline's max-content box — only the text
+     inside it hugs the right edge. margin-left: auto would instead push the
+     whole box out to the copy column's true right edge (580px here), past
+     the headline's own right edge (429px), which misaligns the two rather
+     than matching them. */
+  text-align: right;
   margin: 1.5rem 0 0;
   max-width: var(--hero-measure);
   line-height: 1.35;
