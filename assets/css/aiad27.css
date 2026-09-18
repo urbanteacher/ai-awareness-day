@@ -192,14 +192,22 @@ body {
 }
 
 .hero-cta__btn--secondary {
-  background: transparent;
+  background: #FFFFFF;
   border: 1px solid var(--a27-ink);
   color: var(--a27-ink);
 }
 
 #hero .hero-cta__btn--secondary { border-left-width: 0; }
 
-.hero-cta__btn--secondary:hover { background: var(--a27-cream); border-color: var(--a27-cream); color: var(--a27-ink); }
+/* Rollover takes the strand's deep, so it changes with the hero and reads as
+   colour without competing with the bright ground behind it. Cream type on a
+   deep is the campaign's reverse pairing and clears contrast on all five. */
+.hero-cta__btn--secondary:hover,
+.hero-cta__btn--secondary:focus-visible {
+  background: var(--hero-deep);
+  border-color: var(--hero-deep);
+  color: var(--a27-cream);
+}
 
 .hero-strand-feature {
   align-self: start;

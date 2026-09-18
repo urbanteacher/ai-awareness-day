@@ -71,17 +71,21 @@
   font-size: var(--hero-body, clamp(1.12rem, 2vw, 1.45rem));
 }
 #hero .hero-subtitle strong { display: inline; margin: 0; font-weight: 700; }
+/* Sized to their labels, not stretched. Two equal 1fr columns across a 42rem
+   row padded both buttons to 336px whatever their text said, so "Get involved"
+   sat in the same box as "Check your AI readiness". No gap, so they still read
+   as one joined unit and the secondary keeps dropping its left border. */
 #hero .hero-cta {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 0;
   margin: 1rem 0 0;
-  max-width: min(42rem, 100%);
-  width: 100%;
+  width: auto;
+  max-width: 100%;
 }
 #hero .hero-cta__btn {
-  width: 100%;
+  width: auto;
   min-height: 0;
   margin: 0;
   padding: .85rem 1rem;
@@ -134,7 +138,7 @@
   #hero .hero-date { text-align: right; }
   #hero .hero-date__line,
   #hero .hero-date__line--loop { text-align: right; }
-  #hero .hero-cta { grid-template-columns: 1fr; }
+  #hero .hero-cta { flex-direction: column; width: 100%; }
   #hero .hero-cta__btn--secondary { border-left-width: 1px; border-top-width: 0; }
 }
 @media (max-width: 480px) {
