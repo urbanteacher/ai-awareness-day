@@ -383,56 +383,6 @@
     margin: 0;
 }
 
-/* Classroom conversation board: spacious cards, a weekly activity and a
-   response wall. Scoped to the blueprint, not the downloadable assets. */
-#dbt-panel-blueprint .dbm { gap: 1.25rem; background: var(--a27-cream); color: var(--a27-ink); }
-#dbt-panel-blueprint .dbm__header { padding: 1.5rem; }
-.dbm__invitation { padding: clamp(1rem, 3vw, 2rem) 0; max-width: 46rem; }
-.dbm__invitation .dbm__eyebrow { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin: 0 0 .75rem; color: var(--a27-safe-deep); }
-.dbm__invitation h3 { font-size: clamp(1.8rem, 4vw, 3.2rem); line-height: 1.05; letter-spacing: -.045em; margin: 0 0 1rem; }
-.dbm__invitation p { margin: 0 0 1rem; }
-.dbm__teacher-note { display: block; border-left: 3px solid var(--a27-ink); padding-left: 1rem; color: var(--a27-dim); font-size: .85rem; }
-#dbt-panel-blueprint .dbm__panels { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-#dbt-panel-blueprint .dbm__panel { min-width: 0; background: var(--a27-card); clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
-#dbt-panel-blueprint .dbm__panel--safe { --board-strand: var(--a27-safe); }
-#dbt-panel-blueprint .dbm__panel--smart { --board-strand: var(--a27-smart); }
-#dbt-panel-blueprint .dbm__panel--creative { --board-strand: var(--a27-creative); }
-#dbt-panel-blueprint .dbm__panel--responsible { --board-strand: var(--a27-responsible); }
-#dbt-panel-blueprint .dbm__panel--future { --board-strand: var(--a27-future); }
-#dbt-panel-blueprint .dbm__panels > .dbm__panel:not(.dbm__panel--qr) { background: var(--board-strand); }
-#dbt-panel-blueprint .dbm__panel-header { padding: 1.25rem; gap: .75rem; }
-#dbt-panel-blueprint .dbm__panel-icon { width: 36px; height: 36px; background: transparent; }
-#dbt-panel-blueprint .dbm__panel-icon svg { width: 32px; height: 32px; }
-#dbt-panel-blueprint .dbm__panel-title { font-size: .8rem; overflow-wrap: anywhere; }
-#dbt-panel-blueprint .dbm__panel-body { padding: 1.25rem; gap: 1rem; }
-#dbt-panel-blueprint .dbm__panels .dbm__panel-body { padding-top: 0; }
-#dbt-panel-blueprint .dbm__panel-desc { font-size: 1.15rem; font-weight: 700; line-height: 1.25; color: var(--a27-ink); }
-#dbt-panel-blueprint .dbm__panel-fact { font-size: .85rem; line-height: 1.5; color: var(--a27-ink); }
-#dbt-panel-blueprint .dbm__panel--qr .dbm__panel-body { padding-top: 1.25rem; }
-#dbt-panel-blueprint .dbm__qr-item { border: 1px dashed var(--a27-dim); border-radius: 0; padding: .75rem .4rem; }
-#dbt-panel-blueprint .dbm__qr-mark { width: 48px; height: 48px; border: 1px dashed var(--a27-dim); background: var(--a27-cream); }
-#dbt-panel-blueprint .dbm__row { gap: 1rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
-#dbt-panel-blueprint .dbm__questions { gap: .8rem; }
-#dbt-panel-blueprint .dbm__questions li { font-size: .95rem; color: var(--a27-ink); }
-#dbt-panel-blueprint .dbm__panel-quote { background: var(--a27-cream); border-left: 3px solid var(--a27-creative-deep); padding: .85rem 1rem; font-size: 1rem; color: var(--a27-ink); }
-#dbt-panel-blueprint .dbm__sticky-hint { padding: 1.5rem 1rem; border: 1px dashed var(--a27-dim); border-radius: 0; background: transparent; color: var(--a27-dim); }
-#dbt-panel-blueprint .dbm__gallery-item { min-width: 0; min-height: 100px; justify-content: center; border-radius: 0; border-color: var(--a27-dim); background: var(--a27-cream); }
-#dbt-panel-blueprint .dbm__gallery-hint { background: transparent; color: var(--a27-dim); }
-#dbt-panel-blueprint .dbm__spotlight { gap: 1rem; }
-#dbt-panel-blueprint .dbm__spotlight-avatar { width: 48px; height: 48px; background: var(--a27-creative); }
-@media (max-width: 1000px) {
-    #dbt-panel-blueprint .dbm__panels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 640px) {
-    #dbt-panel-blueprint .dbm__panels,
-    #dbt-panel-blueprint .dbm__row { grid-template-columns: minmax(0, 1fr); }
-    #dbt-panel-blueprint .dbm__panel--leaders,
-    #dbt-panel-blueprint .dbm__panel--spotlight { display: block; }
-    #dbt-panel-blueprint .dbm__gallery { flex-direction: column; }
-    #dbt-panel-blueprint .dbm__header { padding: 1rem; }
-    #dbt-panel-blueprint .dbm__header-lockup { width: 100%; height: auto; }
-}
-
 /* ── Steps list ──────────────────────────── */
 .display-board-steps__list {
     margin: 0;
