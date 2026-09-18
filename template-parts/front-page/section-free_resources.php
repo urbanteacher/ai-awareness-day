@@ -87,23 +87,19 @@ if ( $free_resources->have_posts() ):
                                 <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
                             <?php endif; ?>
 
-                            <div class="resource-card__wedge" aria-hidden="true"></div>
-                            <div class="resource-card__fade"  aria-hidden="true"></div>
-
                             <?php if ( $theme_name ): ?>
-                                <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html( strtoupper( $theme_name ) ); ?></span>
+                                <span class="resource-card__theme-label"><?php echo esc_html( strtoupper( $theme_name ) ); ?></span>
                             <?php endif; ?>
 
                             <?php if ( $duration_str ): ?>
-                                <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html( $duration_str ); ?></span>
+                                <span class="resource-card__duration-label"><?php echo esc_html( $duration_str ); ?></span>
                             <?php endif; ?>
 
-                            <h3 class="resource-card__title-overlay"><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></h3>
                         </a>
 
                         <div class="resource-card__body">
                             <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
-                            <a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a>
+                            <h3 class="resource-card__heading"><a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a></h3>
                             <?php if ( has_excerpt() ): ?>
                                 <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
                             <?php endif; ?>

@@ -1,0 +1,59 @@
+/* Campaign copy and strand exploration share a baseline, with independent
+   space for the longest strand. ID scope supersedes legacy hero variants. */
+#hero .hero-title-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  min-height: 0;
+}
+#hero .hero-copy { min-width: 0; width: 100%; position: static; }
+#hero .hero-brand { display: block; width: 100%; font-size: inherit; }
+#hero .hero-lockup { width: min(260px, 100%); margin: 0 0 2rem; }
+#hero .hero-date {
+  color: var(--a27-ink);
+  font-size: clamp(2.6rem, 5.1vw, 4.6rem);
+  letter-spacing: -.055em;
+  line-height: 1.02;
+  text-align: left;
+  margin: 0;
+}
+#hero .hero-date__line { text-align: left; }
+#hero .hero-brand__mark { display: none; }
+#hero .hero-subtitle { margin: 1.75rem 0 0; max-width: 34rem; line-height: 1.5; font-size: clamp(1rem, 1.6vw, 1.2rem); }
+#hero .hero-subtitle strong { display: block; margin-bottom: .35rem; }
+#hero .hero-cta { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0 0; width: 100%; }
+#hero .hero-cta__btn { width: auto; min-height: 48px; padding: .9rem 1.15rem; border: 1px solid var(--a27-ink); border-radius: 0; font-size: .75rem; }
+#hero .hero-strand-feature {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  position: static;
+}
+#hero .hero-strand-feature__themes { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: .4rem 1rem; margin: 0 0 2rem; max-width: none; }
+#hero .hero-strand-feature__theme { color: var(--a27-cream); font-size: .7rem; letter-spacing: .06em; padding-block: .5rem; }
+#hero .hero-strand-feature__theme.is-active { color: var(--hero-bright); border-color: currentColor; }
+#hero .hero-strand-feature__stage { display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 1.75rem; margin: 0; padding: 0; font-size: inherit; }
+#hero .hero-strand-feature__mark { display: block; width: 6rem; height: 6rem; background: var(--hero-bright); }
+#hero .hero-strand-feature__word { width: auto; font-size: clamp(2rem, 3.8vw, 3.5rem); letter-spacing: -.055em; line-height: 1.1; }
+#hero .hero-strand-feature__summary { border-color: var(--a27-dim); margin: 1.25rem 0 0; padding: 1.25rem 0 0; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.4; min-height: 5.2rem; }
+@media (max-width: 1050px) {
+  #hero .hero-title-block { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  #hero .hero-date { font-size: clamp(2.6rem, 7.5vw, 4.6rem); }
+  #hero .hero-strand-feature__stage { flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }
+  #hero .hero-strand-feature__word { font-size: clamp(2rem, 6vw, 3.5rem); }
+  #hero .hero-strand-feature__mark { width: 4rem; height: 4rem; }
+  #hero .hero-strand-feature__summary { min-height: 0; }
+}
+@media (max-width: 480px) {
+  #hero .hero-lockup { width: 230px; margin-bottom: 1.5rem; }
+  #hero .hero-cta { flex-direction: column; }
+  #hero .hero-cta__btn { width: 100%; }
+  #hero .hero-strand-feature__stage { flex-direction: column-reverse; align-items: flex-start; }
+  #hero .hero-strand-feature__word { font-size: clamp(2rem, 8.2vw, 2.5rem); }
+}
