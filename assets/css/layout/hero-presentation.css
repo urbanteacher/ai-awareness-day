@@ -141,6 +141,13 @@
   background: var(--a27-ink);
   color: var(--a27-cream);
   position: static;
+  /* Now that the panel stretches to the copy column's height, its content —
+     labels, icon+word, question — no longer fills the box on its own and sat
+     top-heavy with dead space below. Centring it as a group as the box grows,
+     rather than leaving it pinned to the top edge. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 #hero .hero-strand-feature__themes { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: .4rem 1rem; margin: 0 0 2rem; max-width: none; }
 #hero .hero-strand-feature__theme { color: var(--a27-cream); font-size: .7rem; letter-spacing: .06em; padding-block: .5rem; }
