@@ -3,61 +3,37 @@
 <head>
 <meta charset="utf-8">
 <style>
-  @font-face { font-family:'AIAD Sans'; src:url('../fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight:400; font-display:block; }
-  @font-face { font-family:'AIAD Sans'; src:url('../fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight:600; font-display:block; }
-  @font-face { font-family:'AIAD Sans'; src:url('../fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight:700 900; font-display:block; }
   html, body { margin: 0; padding: 0; }
   .card {
+    position: relative;
     width: 1298px;
     height: 732px;
     background: #F6F4ED;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'AIAD Sans', Arial, sans-serif;
+    overflow: hidden;
   }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 64px;
-  }
-  .brand img {
-    width: 340px;
-    height: auto;
+  /* The lockup is one asset — wordmark, rule and tagline are locked up together
+     in aiad27-lockup.svg. Scale it; never rebuild it.
+
+     Its type is right-anchored (text-anchor="end" at x=300), so the visible ink
+     sits at x 76.9-300 of the 300x56 viewBox and the left quarter of the box is
+     empty. Centring the box would therefore push the type right, so the box is
+     oversized and offset instead, to centre the ink rather than its container.
+     Offsets are derived from that measured extent: at 1180px of visible type
+     the scale is 1180/223.08 = 5.290, giving a 1587px box whose left edge sits
+     at 59 - 76.9x5.290 and whose vertical centre lands on y=30.5 of the box. */
+  .card img {
+    position: absolute;
     display: block;
+    width: 1587px;
+    height: auto;
+    left: -348px;
+    top: 205px;
   }
-  .brand .mark {
-    width: 62px;
-    height: 62px;
-    flex: none;
-    background: #231F20;
-    -webkit-mask: url('../brand/aiad27/icon-safe.svg') center / contain no-repeat;
-    mask: url('../brand/aiad27/icon-safe.svg') center / contain no-repeat;
-  }
-  .tagline {
-    color: #231F20;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    line-height: 0.92;
-    font-size: 104px;
-    text-align: center;
-    margin: 0;
-  }
-  .tagline span { display: block; }
 </style>
 </head>
 <body>
   <div class="card">
-    <div class="brand">
-      <img src="../brand/aiad27/aiad27-lockup-wordmark.svg" alt="AI Awareness Day 2027" />
-      <div class="mark" aria-hidden="true"></div>
-    </div>
-    <h1 class="tagline">
-      <span>Keep Humans in</span>
-      <span>the Loop</span>
-    </h1>
+    <img src="../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop" />
   </div>
 </body>
 </html>
