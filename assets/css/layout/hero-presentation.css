@@ -13,7 +13,11 @@
 #hero .hero-title-block {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  align-items: start;
+  /* Stretch: the black panel was align-self: start with height: auto, so it
+     only ran as tall as its own content and stopped short of the copy
+     column's height, leaving cream showing below it. Stretching the row lets
+     the panel fill the full column height instead. */
+  align-items: stretch;
   /* Tighter again: 26px still read as two things that belong together but
      were held apart. Down to a single hairline-adjacent gap. */
   gap: clamp(.5rem, 1vw, 1rem);
@@ -126,12 +130,12 @@
 
 #hero .hero-strand-feature {
   box-sizing: border-box;
-  align-self: start;
+  align-self: stretch;
   justify-self: stretch;
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  height: auto;
+  height: 100%;
   margin: 0;
   padding: clamp(1.25rem, 3vw, 2.5rem);
   background: var(--a27-ink);
