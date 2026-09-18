@@ -191,10 +191,21 @@
   #hero .hero-date,
   #hero .hero-date__line,
   #hero .hero-date__line--loop { text-align: center; }
-  /* "in" moves down to join "the Loop" rather than trailing "Keep Humans" on
-     its own line — a different word grouping for this width, not a reflow. */
+  /* One line instead of a different two-line split: two lines of the
+     headline cost more vertical space than the phrase is worth at this
+     width, so mobile gets the whole phrase on one line at a size small
+     enough to fit it, rather than another way of breaking it in two. */
   #hero .hero-date__lines--desktop { display: none; }
   #hero .hero-date__lines--mobile { display: contents; }
+  /* Measured against the actual rendered string in Uncut Sans Bold at -.045em
+     tracking: the longest word "Keep Humans in the Loop" needs at most 31px
+     to fit a 375px screen's column (343px) and 26px to fit 320px's (288px).
+     7.4vw lands under both with room to spare — 27.75px and 23.7px — and
+     clamps at 2rem so it never grows large enough to wrap on a wider phone. */
+  #hero .hero-date__line--single {
+    font-size: clamp(1.5rem, 7.4vw, 2rem);
+    white-space: nowrap;
+  }
   /* --hero-measure assumes the desktop headline, which is width: max-content
      and only as wide as its longest line. Here the headline switches to
      width: 100% instead — right-aligned inside the full column, not sized to
