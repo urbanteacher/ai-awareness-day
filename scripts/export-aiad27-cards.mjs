@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Export the AiAd27 LinkedIn card set: five strand starters, a closing brand
- * card, and a contact sheet of all six.
+ * Export the AiAd27 LinkedIn card set: an opening brand card, five strand
+ * starters, and a contact sheet of all six.
  *
  * The starters come out of assets/aiad27-review/preview.html rather than a
  * manual crop, so the export always matches whatever is in the review bundle.
@@ -54,17 +54,28 @@ async function loadChromium() {
 /* Matched on the slide's own visible text so the export survives the slides
    being reordered or renumbered in the bundle. */
 const starters = [
-	{ text: 'Would you tell an AI your secret?', file: '1-safe.png' },
-	{ text: 'What happens when AI acts for you?', file: '2-smart.png' },
-	{ text: 'Who really made it?', file: '3-creative.png' },
-	{ text: 'Should AI decide?', file: '4-responsible.png' },
-	{ text: 'What skills must stay human?', file: '5-future.png' },
+	{ text: 'Would you tell an AI your secret?', file: '2-safe.png' },
+	{ text: 'What happens when AI acts for you?', file: '3-smart.png' },
+	{ text: 'Who really made it?', file: '4-creative.png' },
+	{ text: 'Should AI decide?', file: '5-responsible.png' },
+	{ text: 'What skills must stay human?', file: '6-future.png' },
 ];
 
 fs.mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch();
 const failures = [];
+
+/* --- the opening brand card --- */
+const coverPage = await browser.newPage({
+	viewport: { width: SLIDE_W, height: SLIDE_H },
+	deviceScaleFactor: 2,
+});
+await coverPage.goto(COVER_URL, { waitUntil: 'networkidle' });
+await coverPage.waitForTimeout(300);
+await (await coverPage.$('.card')).screenshot({ path: path.join(outDir, '1-lockup.png') });
+console.log('OK    1-lockup.png');
+await coverPage.close();
 
 /* --- the five strand starters, out of the review page --- */
 const page = await browser.newPage({
@@ -122,17 +133,6 @@ for (const item of starters) {
 	console.log(`OK    ${item.file}`);
 }
 await page.close();
-
-/* --- the closing brand card --- */
-const coverPage = await browser.newPage({
-	viewport: { width: SLIDE_W, height: SLIDE_H },
-	deviceScaleFactor: 2,
-});
-await coverPage.goto(COVER_URL, { waitUntil: 'networkidle' });
-await coverPage.waitForTimeout(300);
-await (await coverPage.$('.card')).screenshot({ path: path.join(outDir, '6-lockup.png') });
-console.log('OK    6-lockup.png');
-await coverPage.close();
 
 /* --- the contact sheet, which reads the cards written above --- */
 const sheetPage = await browser.newPage({

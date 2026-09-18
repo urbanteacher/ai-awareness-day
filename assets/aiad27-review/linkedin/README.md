@@ -1,22 +1,22 @@
 # LinkedIn card exports
 
-Five strand starter cards, a closing brand card, and a contact sheet of all
-six for a single-image post.
+An opening brand card, five strand starter cards, and a contact sheet of all
+six for a single-image post. Numbered in posting order, brand card first.
 
 | File | Size | Source | Content |
 |---|---|---|---|
 | `0-all-six-1200x1200.png` | 1200×1200 | `../linkedin-sheet.html` | All six cards, 2×3 on the ink ground |
-| `1-safe.png` | 2560×1440 | deck slide | Safe 01 — Would you tell an AI your secret? |
-| `2-smart.png` | 2560×1440 | deck slide | Smart 01 — What happens when AI acts for you? |
-| `3-creative.png` | 2560×1440 | deck slide | Creative 01 — Who really made it? |
-| `4-responsible.png` | 2560×1440 | deck slide | Responsible 01 — Should AI decide? |
-| `5-future.png` | 2560×1440 | deck slide | Future 01 — What skills must stay human? |
-| `6-lockup.png` | 2560×1440 | `../linkedin-cover.html` | Closing brand card — the `aiad27-lockup.svg` lockup at full size |
+| `1-lockup.png` | 2560×1440 | `../linkedin-cover.html` | Opening brand card — the `aiad27-lockup.svg` lockup at full size |
+| `2-safe.png` | 2560×1440 | deck slide | Safe 01 — Would you tell an AI your secret? |
+| `3-smart.png` | 2560×1440 | deck slide | Smart 01 — What happens when AI acts for you? |
+| `4-creative.png` | 2560×1440 | deck slide | Creative 01 — Who really made it? |
+| `5-responsible.png` | 2560×1440 | deck slide | Responsible 01 — Should AI decide? |
+| `6-future.png` | 2560×1440 | deck slide | Future 01 — What skills must stay human? |
 
 1200×1200 is LinkedIn's recommended square for a single-image post. The six
 16:9 cards tile wider than tall, so the sheet centres the grid and lets the
 leftover height read as margin. Its ground is ink rather than cream because the
-closing card is cream and would otherwise lose its edges.
+lockup card is cream and would otherwise lose its edges.
 
 ## Regenerating
 
@@ -39,7 +39,7 @@ Two things the script handles that are easy to get wrong by hand:
 - **Starters are matched on slide text,** not on an index, so the export
   survives the bundle being reordered or renumbered.
 
-`6-lockup.png` is not a deck slide — no slide in the bundle renders just the
+`1-lockup.png` is not a deck slide — no slide in the bundle renders just the
 logo and tagline (the deck's `title` layout shows the strand question). It
 places `assets/brand/aiad27/aiad27-lockup.svg`, the real lockup with wordmark,
 rule and tagline in one asset, scaled to fill the card. That lockup's type is
