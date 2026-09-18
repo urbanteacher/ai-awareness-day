@@ -16,9 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
             <div class="hero-copy">
                 <div class="hero-brand">
                     <img class="hero-lockup" src="<?php echo esc_url( AIAD_URI . '/assets/brand/aiad27/aiad27-lockup-wordmark.svg' ); ?>" alt="AI Awareness Day 2027" width="300" height="36" />
+                    <?php /* Two word groupings, shown one at a time by breakpoint (CSS
+                             display, not JS). Desktop keeps "Keep Humans in / the Loop"; on
+                             mobile "in" moves to join "the Loop" instead of trailing the first
+                             line on its own, so the second line reads "in the Loop". */ ?>
                     <h1 class="hero-date">
-                        <span class="hero-date__line"><?php esc_html_e( 'Keep Humans in', 'ai-awareness-day' ); ?></span>
-                        <span class="hero-date__line hero-date__line--loop"><?php esc_html_e( 'the Loop', 'ai-awareness-day' ); ?></span>
+                        <span class="hero-date__lines hero-date__lines--desktop">
+                            <span class="hero-date__line"><?php esc_html_e( 'Keep Humans in', 'ai-awareness-day' ); ?></span>
+                            <span class="hero-date__line hero-date__line--loop"><?php esc_html_e( 'the Loop', 'ai-awareness-day' ); ?></span>
+                        </span>
+                        <span class="hero-date__lines hero-date__lines--mobile">
+                            <span class="hero-date__line"><?php esc_html_e( 'Keep Humans', 'ai-awareness-day' ); ?></span>
+                            <span class="hero-date__line hero-date__line--loop"><?php esc_html_e( 'in the Loop', 'ai-awareness-day' ); ?></span>
+                        </span>
                     </h1>
                     <span class="hero-brand__mark" aria-hidden="true"></span>
                 </div>

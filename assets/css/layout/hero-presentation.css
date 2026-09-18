@@ -67,6 +67,7 @@
   text-align: left;
   margin: 0;
 }
+#hero .hero-date__lines--mobile { display: none; }
 #hero .hero-date__line { display: block; text-align: left; }
 #hero .hero-date__line--loop { text-align: right; }
 #hero .hero-brand__mark {
@@ -190,6 +191,10 @@
   #hero .hero-date,
   #hero .hero-date__line,
   #hero .hero-date__line--loop { text-align: center; }
+  /* "in" moves down to join "the Loop" rather than trailing "Keep Humans" on
+     its own line — a different word grouping for this width, not a reflow. */
+  #hero .hero-date__lines--desktop { display: none; }
+  #hero .hero-date__lines--mobile { display: contents; }
   /* --hero-measure assumes the desktop headline, which is width: max-content
      and only as wide as its longest line. Here the headline switches to
      width: 100% instead — right-aligned inside the full column, not sized to
