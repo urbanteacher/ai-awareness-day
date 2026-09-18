@@ -224,6 +224,16 @@
   #hero .hero-strand-feature__stage { justify-content: center; }
   #hero .hero-strand-feature__summary { text-align: center; }
 }
+@media (max-width: 470px) {
+  /* Below 470px the subtitle wraps to 3-4 lines at the normal 17.92px size
+     (measured: 3 lines at 455px, 4 at 320px) even though 480px and up hold at
+     2 lines fine — the sentence just runs out of column width before the
+     font shrinks. Probed the largest size that keeps it at 2 lines at both
+     ends of this range (14.5px at 375px, 12px at 320px) and picked a clamp
+     comfortably under both. Left untouched above this breakpoint so text
+     everywhere else keeps its normal size. */
+  #hero .hero-subtitle { font-size: clamp(.72rem, 3.6vw, .89rem); }
+}
 @media (max-width: 480px) {
   /* Was column-reverse, stacking the icon above the word and pulling both
      back to the left — it undid both the one-line layout and the centring
