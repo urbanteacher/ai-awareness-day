@@ -1,0 +1,550 @@
+{
+    "schema": "aiad.questions/1",
+    "bank": "benchmark-public",
+    "title": "Public benchmark",
+    "locale": "en-GB",
+    "roles": [
+        "public"
+    ],
+    "passMark": 70,
+    "questions": [
+        {
+            "id": "pub_use_frequency",
+            "domain": "ai_dependency",
+            "section": "Personal AI use",
+            "type": "single",
+            "text": "How often do you use AI tools — such as ChatGPT, Copilot, Gemini or similar?",
+            "options": [
+                {
+                    "value": "daily",
+                    "label": "Every day",
+                    "score": 0
+                },
+                {
+                    "value": "few_week",
+                    "label": "A few times a week",
+                    "score": 0
+                },
+                {
+                    "value": "occasionally",
+                    "label": "Occasionally",
+                    "score": 1
+                },
+                {
+                    "value": "rarely",
+                    "label": "Rarely or never — but I want to understand it",
+                    "score": 2
+                }
+            ]
+        },
+        {
+            "id": "pub_use_tasks",
+            "domain": "ai_dependency",
+            "section": "Personal AI use",
+            "type": "single",
+            "text": "If you use AI tools, what do you mainly use them for?",
+            "options": [
+                {
+                    "value": "writing",
+                    "label": "Writing, editing or summarising",
+                    "score": 0
+                },
+                {
+                    "value": "research",
+                    "label": "Research or finding information",
+                    "score": 1
+                },
+                {
+                    "value": "work",
+                    "label": "Work tasks — reports, emails, planning",
+                    "score": 0
+                },
+                {
+                    "value": "personal",
+                    "label": "Personal decisions — health, finances, relationships",
+                    "score": 2
+                },
+                {
+                    "value": "entertainment",
+                    "label": "Entertainment or general curiosity",
+                    "score": 0
+                },
+                {
+                    "value": "none",
+                    "label": "I don't use AI for any of these",
+                    "score": 0
+                }
+            ],
+            "visible": {
+                "question": "pub_use_frequency",
+                "notIn": [
+                    "rarely"
+                ]
+            }
+        },
+        {
+            "id": "pub_use_trust",
+            "domain": "human_oversight",
+            "section": "Personal AI use",
+            "type": "single",
+            "text": "When an AI tool gives you an answer, how much do you trust it?",
+            "options": [
+                {
+                    "value": "trust_act",
+                    "label": "I trust it and usually act on it directly",
+                    "score": 3
+                },
+                {
+                    "value": "trust_sometimes",
+                    "label": "I trust it but sometimes check it",
+                    "score": 2
+                },
+                {
+                    "value": "starting_point",
+                    "label": "I treat it as a starting point and always verify",
+                    "score": 0
+                },
+                {
+                    "value": "sceptical",
+                    "label": "I'm generally sceptical and check everything",
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "id": "pub_use_dependency",
+            "domain": "ai_dependency",
+            "section": "Personal AI use",
+            "type": "single",
+            "text": "If your usual AI tool was unavailable for a week, how would that affect you?",
+            "options": [
+                {
+                    "value": "significantly",
+                    "label": "Significantly — I rely on it for important tasks",
+                    "score": 3
+                },
+                {
+                    "value": "somewhat",
+                    "label": "Somewhat — it would slow me down",
+                    "score": 2
+                },
+                {
+                    "value": "not_much",
+                    "label": "Not much — I could manage fine without it",
+                    "score": 1
+                },
+                {
+                    "value": "not_at_all",
+                    "label": "Not at all — I don't rely on it",
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "id": "pub_verify_check",
+            "domain": "human_oversight",
+            "section": "Verification",
+            "type": "single",
+            "text": "When AI gives you a fact, statistic or recommendation, what do you usually do?",
+            "options": [
+                {
+                    "value": "use_given",
+                    "label": "Use it as given — I trust the source",
+                    "score": 3
+                },
+                {
+                    "value": "sometimes",
+                    "label": "Sometimes check it, depending on how important it is",
+                    "score": 1
+                },
+                {
+                    "value": "always_check",
+                    "label": "Always check it against another source before using it",
+                    "score": 0
+                },
+                {
+                    "value": "own_view",
+                    "label": "I form my own view first then use AI to challenge it",
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "id": "pub_verify_hallucination",
+            "domain": "ai_literacy",
+            "section": "Verification",
+            "type": "single",
+            "text": "Are you aware that AI tools can confidently produce information that is completely made up?",
+            "options": [
+                {
+                    "value": "yes_factor",
+                    "label": "Yes — I know this and factor it into how I use AI",
+                    "score": 0
+                },
+                {
+                    "value": "heard",
+                    "label": "I've heard of it but I'm not sure how common it is",
+                    "score": 1
+                },
+                {
+                    "value": "didnt_know",
+                    "label": "I didn't know AI could do that",
+                    "score": 3
+                },
+                {
+                    "value": "dont_think",
+                    "label": "I don't think the tools I use do this",
+                    "score": 2
+                }
+            ]
+        },
+        {
+            "id": "pub_verify_bias",
+            "domain": "ai_literacy",
+            "section": "Verification",
+            "type": "single",
+            "text": "Do you think the AI tools you use could reflect bias — for example, in how they describe different groups of people?",
+            "options": [
+                {
+                    "value": "yes_watch",
+                    "label": "Yes — I actively watch for this",
+                    "score": 0
+                },
+                {
+                    "value": "possibly",
+                    "label": "Possibly — I haven't really thought about it",
+                    "score": 2
+                },
+                {
+                    "value": "not_significant",
+                    "label": "I don't think bias is a significant issue",
+                    "score": 3
+                },
+                {
+                    "value": "not_sure",
+                    "label": "I'm not sure what bias in AI means",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_verify_deepfake",
+            "domain": "ai_literacy",
+            "section": "Verification",
+            "type": "single",
+            "text": "How confident are you in spotting AI-generated images, videos or audio that are designed to look real?",
+            "options": [
+                {
+                    "value": "very",
+                    "label": "Very confident — I can usually tell",
+                    "score": 0
+                },
+                {
+                    "value": "fairly",
+                    "label": "Fairly confident — I look for signs",
+                    "score": 1
+                },
+                {
+                    "value": "not_very",
+                    "label": "Not very confident — I find it difficult",
+                    "score": 2
+                },
+                {
+                    "value": "didnt_know",
+                    "label": "I didn't know AI could generate convincing fake content",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_data_sharing",
+            "domain": "privacy",
+            "section": "Data & privacy",
+            "type": "single",
+            "text": "Have you ever entered personal information — your name, address, financial details or health information — into an AI tool?",
+            "options": [
+                {
+                    "value": "no_careful",
+                    "label": "No — I'm careful not to share personal details",
+                    "score": 0
+                },
+                {
+                    "value": "occasionally",
+                    "label": "Occasionally, but only when I thought it was necessary",
+                    "score": 1
+                },
+                {
+                    "value": "yes_regular",
+                    "label": "Yes — fairly regularly",
+                    "score": 3
+                },
+                {
+                    "value": "not_sure",
+                    "label": "I'm not sure what counts as personal information",
+                    "score": 2
+                }
+            ]
+        },
+        {
+            "id": "pub_data_third_party",
+            "domain": "privacy",
+            "section": "Data & privacy",
+            "type": "single",
+            "text": "Are you aware that most public AI tools store your conversations and may use them to train future models?",
+            "options": [
+                {
+                    "value": "yes_read",
+                    "label": "Yes — I read the terms or already knew this",
+                    "score": 0
+                },
+                {
+                    "value": "had_feeling",
+                    "label": "I had a feeling but wasn't certain",
+                    "score": 1
+                },
+                {
+                    "value": "didnt_know",
+                    "label": "I didn't know that",
+                    "score": 3
+                },
+                {
+                    "value": "assumed_private",
+                    "label": "I assumed my conversations were private",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_data_others",
+            "domain": "privacy",
+            "section": "Data & privacy",
+            "type": "single",
+            "text": "Have you ever shared information about another person — a colleague, friend or family member — with an AI tool without their knowledge?",
+            "options": [
+                {
+                    "value": "no",
+                    "label": "No — I wouldn't share someone else's information",
+                    "score": 0
+                },
+                {
+                    "value": "once_twice",
+                    "label": "Once or twice, but nothing sensitive",
+                    "score": 1
+                },
+                {
+                    "value": "yes_advice",
+                    "label": "Yes — to help write a message or get advice",
+                    "score": 2
+                },
+                {
+                    "value": "didnt_realise",
+                    "label": "I didn't realise that could be a problem",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_data_scam",
+            "domain": "privacy",
+            "section": "Data & privacy",
+            "type": "single",
+            "text": "Are you aware that AI is now being used to create convincing scam messages, fake voices and fraudulent calls?",
+            "options": [
+                {
+                    "value": "yes_alert",
+                    "label": "Yes — I know what to look for and stay alert",
+                    "score": 0
+                },
+                {
+                    "value": "heard_unsure",
+                    "label": "I've heard about it but I'm not sure how to spot it",
+                    "score": 1
+                },
+                {
+                    "value": "didnt_know",
+                    "label": "I didn't know AI was being used for scams",
+                    "score": 3
+                },
+                {
+                    "value": "received",
+                    "label": "I've already received something I think was AI-generated",
+                    "score": 1
+                }
+            ]
+        },
+        {
+            "id": "pub_work_policy",
+            "domain": "governance",
+            "section": "Workplace AI",
+            "type": "single",
+            "text": "Does your employer have a policy on using AI tools at work?",
+            "options": [
+                {
+                    "value": "yes_know",
+                    "label": "Yes — and I know what it says",
+                    "score": 0
+                },
+                {
+                    "value": "think_not_read",
+                    "label": "I think there is one but I haven't read it",
+                    "score": 2
+                },
+                {
+                    "value": "not_aware",
+                    "label": "Not that I know of",
+                    "score": 2
+                },
+                {
+                    "value": "self_employed",
+                    "label": "I'm self-employed or this doesn't apply to me",
+                    "score": 0
+                }
+            ]
+        },
+        {
+            "id": "pub_work_data",
+            "domain": "privacy",
+            "section": "Workplace AI",
+            "type": "single",
+            "text": "Have you used a personal or public AI tool for a work task that involved confidential or client information?",
+            "options": [
+                {
+                    "value": "no",
+                    "label": "No — I keep work data out of personal AI tools",
+                    "score": 0
+                },
+                {
+                    "value": "occasionally",
+                    "label": "Occasionally — it seemed harmless at the time",
+                    "score": 2
+                },
+                {
+                    "value": "yes_regularly",
+                    "label": "Yes — fairly regularly to help with my work",
+                    "score": 3
+                },
+                {
+                    "value": "wasnt_aware",
+                    "label": "I wasn't aware this could be a problem",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_work_disclosure",
+            "domain": "governance",
+            "section": "Workplace AI",
+            "type": "single",
+            "text": "If you used AI to help produce work — a report, email or presentation — would you disclose that to your employer or client?",
+            "options": [
+                {
+                    "value": "always",
+                    "label": "Yes — I always say when AI has contributed",
+                    "score": 0
+                },
+                {
+                    "value": "sometimes",
+                    "label": "Sometimes, if I think it's significant",
+                    "score": 1
+                },
+                {
+                    "value": "no",
+                    "label": "No — I treat it like using any other tool",
+                    "score": 2
+                },
+                {
+                    "value": "havent_thought",
+                    "label": "I haven't thought about it",
+                    "score": 2
+                }
+            ]
+        },
+        {
+            "id": "pub_social_advice",
+            "domain": "ai_dependency",
+            "section": "Emotional & social",
+            "type": "single",
+            "text": "Have you used AI to help with a personal decision — such as a relationship issue, health concern or financial choice?",
+            "options": [
+                {
+                    "value": "no",
+                    "label": "No — I wouldn't use AI for personal decisions",
+                    "score": 0
+                },
+                {
+                    "value": "once_twice",
+                    "label": "Once or twice, just to get a different perspective",
+                    "score": 1
+                },
+                {
+                    "value": "yes_helpful",
+                    "label": "Yes — I find it helpful for thinking things through",
+                    "score": 2
+                },
+                {
+                    "value": "regularly",
+                    "label": "Regularly — it's often my first port of call",
+                    "score": 3
+                }
+            ]
+        },
+        {
+            "id": "pub_social_relationship",
+            "domain": "ai_dependency",
+            "section": "Emotional & social",
+            "type": "single",
+            "text": "Do you ever feel a sense of connection or companionship with an AI tool?",
+            "options": [
+                {
+                    "value": "no_tool",
+                    "label": "No — I see AI as a tool, not a companion",
+                    "score": 0
+                },
+                {
+                    "value": "sometimes_natural",
+                    "label": "Sometimes it feels like a natural conversation",
+                    "score": 1
+                },
+                {
+                    "value": "yes_easier",
+                    "label": "Yes — I find it easier to talk to than some people",
+                    "score": 3
+                },
+                {
+                    "value": "never_thought",
+                    "label": "I've never thought about it",
+                    "score": 1
+                }
+            ]
+        },
+        {
+            "id": "pub_social_news",
+            "domain": "ai_literacy",
+            "section": "Emotional & social",
+            "type": "single",
+            "text": "Do you use AI tools to help you understand news, current events or political issues?",
+            "options": [
+                {
+                    "value": "no_traditional",
+                    "label": "No — I use traditional news sources for this",
+                    "score": 0
+                },
+                {
+                    "value": "sometimes_summary",
+                    "label": "Sometimes, to get a summary or explanation",
+                    "score": 1
+                },
+                {
+                    "value": "yes_often",
+                    "label": "Yes — it's often how I find out what's happening",
+                    "score": 3
+                },
+                {
+                    "value": "yes_aware_bias",
+                    "label": "Yes — and I'm aware AI may present a particular view",
+                    "score": 0
+                }
+            ]
+        }
+    ]
+}
