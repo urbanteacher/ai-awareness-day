@@ -40,12 +40,26 @@ except ImportError:  # pragma: no cover - dependency hint
 THEME = pathlib.Path(__file__).resolve().parent.parent
 FONTS = THEME / "assets/fonts/aiad27"
 
-# CSS weight -> the face the theme maps it to. A face covers the weights listed.
+# The faces the theme registers, and the CSS weight range each is declared for.
 FACES = [
-    ("UncutSans-Regular.woff2", "400", (400,)),
-    ("UncutSans-Semibold.woff2", "600", (600,)),
-    ("UncutSans-Bold.woff2", "700 900", (700, 800, 900)),
+    ("UncutSans-Regular.woff2", "400"),
+    ("UncutSans-Semibold.woff2", "600"),
+    ("UncutSans-Bold.woff2", "700 900"),
 ]
+
+
+def face_for(weight):
+    """The face CSS font matching picks for a weight, given only 400, 600 and 700-900.
+
+    500 is not declared, and matching sends it down to 400 before trying above,
+    so the lockup's 500-weight tagline renders Regular -- in the theme and here.
+    Its characters must go in the Regular subset, or they fall back to Arial.
+    """
+    if weight <= 500:
+        return FACES[0][0]
+    if weight <= 600:
+        return FACES[1][0]
+    return FACES[2][0]
 
 DEFAULTS = [
     THEME / "assets/images/polygon-shapes",
@@ -73,7 +87,10 @@ def used(svg):
 
 
 def subset(path, chars):
-    font = TTFont(FONTS / path)
+    # Keep the source face's own timestamp. By default fontTools stamps the time of
+    # saving into the head table, so every run changed the bytes of every SVG and
+    # left a diff behind with nothing in it.
+    font = TTFont(FONTS / path, recalcTimestamp=False)
     sub = Subsetter()
     sub.populate(text="".join(sorted(chars)))
     sub.subset(font)
@@ -90,10 +107,10 @@ def embed(svg_path):
         return None
 
     rules = []
-    for filename, css_weight, covered in FACES:
+    for filename, css_weight in FACES:
         chars = set()
         for weight, cs in by_weight.items():
-            if weight in covered:
+            if face_for(weight) == filename:
                 chars |= cs
         if not chars:
             continue
