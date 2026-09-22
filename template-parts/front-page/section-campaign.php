@@ -85,7 +85,8 @@ $initial_show         = $initial_show_mobile;
 ?>
 <section
     class="section <?php echo esc_attr($text_alignment_class); ?> <?php echo $campaign_has_embed ? 'campaign--split' : ''; ?>"
-    id="campaign">
+    id="campaign"
+    data-anchor-target=".campaign-split">
     <div class="container">
         <?php
         /*

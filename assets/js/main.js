@@ -412,23 +412,46 @@
         // ============================================
         // Smooth scrolling for anchor links
         // ============================================
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
+        // Covers "#x" and same-page "/#x" links (the header nav uses the
+        // latter). The offset comes from each target's CSS scroll-margin-top,
+        // so JS and native hash jumps land in the same place.
+        const anchorReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    const headerHeight = header ? header.offsetHeight : 72;
-                    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
-
-                    window.scrollTo({
-                        top: top,
-                        behavior: 'smooth',
-                    });
-                }
+        // A section can name a child to land on with data-anchor-target, e.g.
+        // #campaign lands on its heading, not the partner logo strip above it.
+        // Folding the child's offset into the section's scroll-margin keeps the
+        // browser's own hash jump (arriving from another page) on the child too.
+        const anchorOffsetSections = Array.prototype.slice.call(document.querySelectorAll('[data-anchor-target]'));
+        function updateAnchorOffsets() {
+            anchorOffsetSections.forEach(function (section) {
+                const child = section.querySelector(section.dataset.anchorTarget);
+                if (!child) return;
+                section.style.scrollMarginTop = '';
+                const base = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
+                const offset = child.getBoundingClientRect().top - section.getBoundingClientRect().top;
+                section.style.scrollMarginTop = (base - offset) + 'px';
             });
+        }
+        if (anchorOffsetSections.length) {
+            updateAnchorOffsets();
+            window.addEventListener('load', updateAnchorOffsets);
+            window.addEventListener('resize', updateAnchorOffsets);
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+            const anchor = e.target.closest('a[href*="#"]');
+            if (!anchor || anchor.target === '_blank') return;
+            if (anchor.pathname !== window.location.pathname || anchor.search !== window.location.search || anchor.host !== window.location.host) return;
+
+            const target = anchor.hash.length > 1 ? document.getElementById(decodeURIComponent(anchor.hash.slice(1))) : null;
+            if (!target) return;
+
+            e.preventDefault();
+            target.scrollIntoView({ behavior: anchorReducedMotion ? 'auto' : 'smooth', block: 'start' });
+            if (history && history.pushState && anchor.hash !== window.location.hash) {
+                history.pushState(null, '', anchor.hash);
+            }
         });
 
         // ============================================
