@@ -198,13 +198,6 @@ function aiad_scripts(): void
             file_exists( $resource_filters_js ) ? filemtime( $resource_filters_js ) : AIAD_VERSION,
             $script_args
         );
-        wp_localize_script(
-            'aiad-resource-filters',
-            'aiadResourceCard',
-            array(
-                'durationPillParts' => function_exists( 'aiad_duration_badge_parts_map' ) ? aiad_duration_badge_parts_map() : array(),
-            )
-        );
     }
 
     // Enqueue resource sharing script on single resource pages

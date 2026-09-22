@@ -1,0 +1,251 @@
+/* ============================================
+   Resource cards
+   (template-parts/components/resource-tile.php)
+
+   Every resource grid: the homepage's three, the /resources library and the
+   featured archive (/from-partners), including their AJAX-filtered results.
+
+   Following the AiAd27 style guide (SlideForge docs/aiad27-style-guide.md):
+   - The photo is shown as it is. No strand-colour wash, which turned photos
+     murky and fell back to a muddy gradient when there was no photo.
+   - The strand label is bright on ink, the pairing the guide passes on any
+     ground, so it reads over any photo.
+   - The chamfer is used once per card, on the hero. It is the panel cut:
+     20.8% of the shorter side, top-right and bottom-left.
+   - The title appears once, below the hero, in black. Hierarchy comes from
+     size and weight, not colour.
+   ============================================ */
+
+.resource-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: 2.5rem 1.75rem;
+    margin-top: 2rem;
+}
+
+.resource-tile {
+    --rt-bright: var(--a27-cream, #F6F4ED);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Bright is for the pill on ink; deep is for type on cream (the guide's contrast table). */
+.resource-tile--safe        { --rt-bright: var(--a27-safe, #00BEDD);        --rt-deep: var(--a27-safe-deep, #006A7D); }
+.resource-tile--smart       { --rt-bright: var(--a27-smart, #FF7038);       --rt-deep: var(--a27-smart-deep, #A7350B); }
+.resource-tile--creative    { --rt-bright: var(--a27-creative, #AC91FF);    --rt-deep: var(--a27-creative-deep, #6441B8); }
+.resource-tile--responsible { --rt-bright: var(--a27-responsible, #63DF93); --rt-deep: var(--a27-responsible-deep, #176E3B); }
+.resource-tile--future      { --rt-bright: var(--a27-future, #FA83EB);      --rt-deep: var(--a27-future-deep, #983488); }
+
+/* ── Hero ─────────────────────────────────── */
+.resource-tile__hero {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--a27-ink, #231F20);
+    /* 20.8% of the height is 13% of the width at 16:10. */
+    clip-path: polygon(0 0, 87% 0, 100% 20.8%, 100% 100%, 13% 100%, 0 79.2%);
+}
+
+.resource-tile__photo,
+.resource-tile__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.resource-tile__photo {
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.resource-tile:hover .resource-tile__photo {
+    transform: scale(1.03);
+}
+
+.resource-tile__strand {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.7rem;
+    background: var(--a27-ink, #231F20);
+    color: var(--rt-bright);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.14em;
+}
+
+.resource-tile__strand svg {
+    flex: none;
+}
+
+/* ── Body ─────────────────────────────────── */
+.resource-tile__body {
+    padding: 1rem 0.125rem 0;
+}
+
+.resource-tile__meta {
+    min-height: 1.2em;           /* holds the line when a card has no format or time */
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--a27-dim, #54504E);
+}
+
+/* The strand word belongs to the phone layout only; the pill carries it elsewhere. */
+.resource-tile__meta-strand {
+    display: none;
+    color: var(--rt-deep, var(--a27-dim, #54504E));
+}
+
+.resource-tile__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+}
+
+.resource-tile__title a {
+    color: var(--a27-ink, #231F20);
+    text-decoration: none;
+}
+
+/* The title is the card's one link; this stretches it over the whole card. */
+.resource-tile__title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.resource-tile:hover .resource-tile__title a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.15em;
+}
+
+.resource-tile__title a:focus-visible {
+    outline: none;
+}
+
+.resource-tile__title a:focus-visible::after {
+    outline: 3px solid var(--a27-ink, #231F20);
+    outline-offset: 6px;
+}
+
+.resource-tile__excerpt {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--a27-dim, #54504E);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── "View all" ───────────────────────────── */
+/* A plain link, where there used to be a black card the size of a resource. */
+.resource-tiles__more {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+    font-weight: 700;
+    color: var(--a27-ink, #231F20);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
+.resource-tiles__more:hover {
+    text-decoration-thickness: 3px;
+}
+
+/* ── Phones: compact rows ─────────────────────
+   A full-width 16:10 card took about a screen each, so a phone showed one
+   resource at a time. Below 640px each card becomes a row, a square hero
+   beside the text, and about four fit on a screen. The square keeps the
+   panel's two cuts at 20.8%. At that size the pill won't fit, so the
+   strand moves into the meta line in its deep shade. */
+@media (max-width: 640px) {
+    .resource-tiles {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+        border-top: 1px solid var(--a27-rule, #C9C6BE);
+    }
+
+    .resource-tile {
+        display: grid;
+        grid-template-columns: 6.5rem minmax(0, 1fr);
+        gap: 1rem;
+        align-items: start;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--a27-rule, #C9C6BE);
+    }
+
+    .resource-tile__hero {
+        aspect-ratio: 1;
+        clip-path: polygon(0 0, 79.2% 0, 100% 20.8%, 100% 100%, 20.8% 100%, 0 79.2%);
+    }
+
+    .resource-tile__strand {
+        display: none;
+    }
+
+    .resource-tile__body {
+        padding: 0;
+    }
+
+    .resource-tile__meta {
+        min-height: 0;               /* one column: nothing to line up with */
+        margin-bottom: 0.35rem;
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;       /* keeps STRAND · FORMAT · TIME on one line more often */
+    }
+
+    .resource-tile__meta-strand {
+        display: inline;
+    }
+
+    /* Non-breaking either side, so a line never starts with the dot. (A plain
+       space after a CSS hex escape is swallowed as its terminator, so " \00B7 "
+       would lose the space after the dot.) */
+    .resource-tile__meta-strand + .resource-tile__meta-info::before {
+        content: "\00A0\00B7\00A0";
+    }
+
+    .resource-tile__title {
+        margin-bottom: 0.25rem;
+        font-size: 1.0625rem;
+        line-height: 1.2;
+    }
+
+    .resource-tile__excerpt {
+        font-size: 0.875rem;
+        -webkit-line-clamp: 2;
+    }
+
+    .resource-tile__title a:focus-visible::after {
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .resource-tile__photo {
+        transition: none;
+    }
+
+    .resource-tile:hover .resource-tile__photo {
+        transform: none;
+    }
+}

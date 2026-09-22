@@ -123,7 +123,7 @@ function aiad_strand_poster_svg( string $slug ): string {
 			esc_attr( $paths[ $slug ] )
 		);
 	}
-	return '<svg class="home-card__poster" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">'
+	return '<svg class="resource-tile__poster" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">'
 		. '<rect width="160" height="100" style="fill:var(--a27-ink, #231F20)"/>' . $mark . '</svg>';
 }
 

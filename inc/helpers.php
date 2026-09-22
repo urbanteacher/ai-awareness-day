@@ -96,23 +96,6 @@ function aiad_duration_badge_parts( object|string $term_or_slug ): ?array {
 }
 
 /**
- * JSON-serializable map for JS card rendering (wp_localize_script).
- *
- * @return array<string, array{slot: string, time: string}>
- */
-function aiad_duration_badge_parts_map(): array {
-    $slugs = array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
-    $out   = array();
-    foreach ( $slugs as $slug ) {
-        $p = aiad_duration_badge_parts( $slug );
-        if ( $p ) {
-            $out[ $slug ] = $p;
-        }
-    }
-    return $out;
-}
-
-/**
  * Echo session-length pill markup for resource cards (stacked slot + time when mappable).
  *
  * @param WP_Term|object|string $term_or_slug Duration term or slug.

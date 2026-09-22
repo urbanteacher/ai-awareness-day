@@ -6,12 +6,10 @@
     'use strict';
 
     var form = document.querySelector( '.resource-filter-form' );
-    var grid = document.querySelector( '.resources-grid' );
+    var grid = document.querySelector( '.resource-tiles' );
     var loadingEl = document.querySelector( '.resources-loading' );
     var emptyMessage = document.querySelector( '.resources-empty-message' );
     var ajaxConfig = typeof aiad_ajax !== 'undefined' ? aiad_ajax : {};
-    var cardConfig = typeof aiadResourceCard !== 'undefined' ? aiadResourceCard : {};
-    var durationPillParts = cardConfig.durationPillParts || {};
     var canUseAjax = !! ajaxConfig.url;
 
     if ( ! form || ! grid ) {
@@ -44,117 +42,6 @@
         }).join( '&' );
     }
 
-    function decodeEntities( text ) {
-        if ( ! text ) return '';
-        var t = document.createElement( 'textarea' );
-        t.innerHTML = text;
-        return t.value;
-    }
-
-    function escapeHtml( text ) {
-        if ( ! text ) return '';
-        var div = document.createElement( 'div' );
-        div.textContent = decodeEntities( text );
-        return div.innerHTML;
-    }
-
-    function durationTimeOnly( name ) {
-        if ( ! name ) return '';
-        var m = name.match( /\(([^)]+)\)/ );
-        if ( m ) return m[ 1 ].toUpperCase();
-        var m2 = name.match( /(\d+(?:[–\-]\d+)?\s*min(?:ute)?s?)/i );
-        return m2 ? m2[ 1 ].toUpperCase() : name.toUpperCase();
-    }
-
-    function buildPlaceholderText( resource ) {
-        if ( resource.activity_types && resource.activity_types.length > 0 ) return resource.activity_types[ 0 ];
-        if ( resource.duration_names && resource.duration_names.length > 0 ) return resource.duration_names[ 0 ];
-        if ( resource.type_names && resource.type_names.length > 0 ) return resource.type_names[ 0 ];
-        if ( resource.type_name ) return resource.type_name;
-        if ( resource.duration_name ) return resource.duration_name;
-        if ( resource.org_name ) {
-            var words = ( resource.org_name || '' ).trim().split( /\s+/ );
-            var first = words[ 0 ] || '';
-            var second = words[ 1 ] || '';
-            return ( first.charAt( 0 ) + ( second ? second.charAt( 0 ) : first.charAt( 1 ) || '' ) ).toUpperCase();
-        }
-        return '—';
-    }
-
-    function durationTypePillHtml( slug, fullName ) {
-        var parts = slug && durationPillParts[ slug ];
-        if ( parts && parts.slot && parts.time ) {
-            return (
-                '<span class="resource-card__pill resource-card__pill--type resource-card__pill--duration">' +
-                '<span class="resource-card__pill-slot">' + escapeHtml( parts.slot ) + '</span>' +
-                '<span class="resource-card__pill-time">' + escapeHtml( parts.time ) + '</span>' +
-                '</span>'
-            );
-        }
-        return '<span class="resource-card__pill resource-card__pill--type">' + escapeHtml( fullName ) + '</span>';
-    }
-
-    function themePillClass( themeSlug ) {
-        if ( ! themeSlug ) return 'resource-card__pill--theme';
-        var slug = themeSlug.toLowerCase();
-        if ( [ 'safe', 'smart', 'creative', 'responsible', 'future' ].indexOf( slug ) !== -1 ) {
-            return 'resource-card__pill resource-card__pill--theme resource-card__pill--' + slug;
-        }
-        return 'resource-card__pill resource-card__pill--theme';
-    }
-
-    function renderCard( resource ) {
-        var isExternal = !! ( resource.external_url && postType === 'featured_resource' );
-        var linkHref   = isExternal ? ( resource.external_url || resource.permalink ) : resource.permalink;
-        var linkTarget = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-
-        // Theme class
-        var themeSlug   = ( resource.theme_slug || '' ).toLowerCase();
-        var validThemes = [ 'safe', 'smart', 'creative', 'responsible', 'future' ];
-        var themeClass  = validThemes.indexOf( themeSlug ) !== -1 ? ' resource-card--' + themeSlug : '';
-        var cardClass   = 'resource-card resource-card--pointed' + themeClass + ' fade-up visible';
-
-        // Hero image (absolute fill inside clip-path hero)
-        var heroImgHtml = resource.thumbnail
-            ? '<img src="' + escapeHtml( resource.thumbnail ) + '" class="resource-card__hero-img" alt="" aria-hidden="true" />'
-            : '';
-
-        // Labels inside hero
-        var themeLabelHtml = resource.theme_name
-            ? '<span class="resource-card__theme-label" aria-hidden="true">' + escapeHtml( resource.theme_name.toUpperCase() ) + '</span>'
-            : '';
-
-        var formatLabel = resource.activity_types && resource.activity_types.length
-            ? resource.activity_types[ 0 ].toUpperCase()
-            : 'SLIDE';
-
-        var durationHtml = resource.duration_name
-            ? '<span class="resource-card__duration-label" aria-hidden="true">' + escapeHtml( durationTimeOnly( resource.duration_name ) ) + '</span>'
-            : '';
-
-        var excerptHtml = resource.excerpt
-            ? '<p class="resource-card__excerpt">' + escapeHtml( resource.excerpt ) + '</p>'
-            : '';
-
-        return (
-            '<article class="' + cardClass + '">' +
-                '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__hero"' + linkTarget + ' aria-label="' + escapeHtml( resource.title ) + '">' +
-                    heroImgHtml +
-                    '<div class="resource-card__wedge" aria-hidden="true"></div>' +
-                    '<div class="resource-card__fade" aria-hidden="true"></div>' +
-                    themeLabelHtml +
-                    durationHtml +
-                    '<h3 class="resource-card__title-overlay">' + escapeHtml( resource.title ) + '</h3>' +
-                '</a>' +
-                '<div class="resource-card__body">' +
-                    '<span class="resource-card__format-label">' + escapeHtml( formatLabel ) + '</span>' +
-                    '<a href="' + escapeHtml( linkHref ) + '" class="resource-card__title-below"' + linkTarget + '>' + escapeHtml( resource.title ) + '</a>' +
-                    excerptHtml +
-                '</div>' +
-            '</article>'
-        );
-    }
-
     function updateUrl( params ) {
         var query = buildParams( params );
         var url = baseUrl.split( '?' )[ 0 ];
@@ -165,13 +52,15 @@
     }
 
     function updateGrid( resources ) {
-        var html = resources.map( renderCard ).join( '' );
+        // Each result carries its card as the server rendered it (resource-tile.php), so a
+        // filtered grid is the same markup as the first page. There is no card in this file.
+        var html = resources.map( function ( r ) { return r.html || ''; } ).join( '' );
         function applyRender() {
             grid.innerHTML = html;
             document.dispatchEvent(new CustomEvent('aiad:resourcesRendered'));
             // Trigger reflow so CSS transitions start from the correct initial state.
             grid.offsetHeight;
-            var cards = grid.querySelectorAll( '.resource-card' );
+            var cards = grid.querySelectorAll( '.resource-tile' );
             cards.forEach( function ( card, i ) {
                 card.style.animationDelay = ( i % 6 ) * 0.05 + 's';
             });

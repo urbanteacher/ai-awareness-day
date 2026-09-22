@@ -53,11 +53,11 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                         </p>
                     </div>
 
-                    <div class="home-cards">
+                    <div class="resource-tiles">
                         <?php
                         while ( $featured_resources->have_posts() ) :
                             $featured_resources->the_post();
-                            get_template_part( 'template-parts/components/home-resource-card', null, array(
+                            get_template_part( 'template-parts/components/resource-tile', null, array(
                                 'link'     => get_post_meta( get_the_ID(), '_featured_resource_url', true ) ?: get_permalink(),
                                 'external' => (bool) get_post_meta( get_the_ID(), '_featured_resource_url', true ),
                                 'track_id' => get_the_ID(),
@@ -74,7 +74,7 @@ $section_desc = get_theme_mod( 'aiad_handpicked_resources_desc', __( 'A curated 
                         }
                         ?>
                     </div>
-                    <a class="home-cards__more" href="<?php echo esc_url( $featured_archive_url ); ?>"><?php esc_html_e( 'View all handpicked resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+                    <a class="resource-tiles__more" href="<?php echo esc_url( $featured_archive_url ); ?>"><?php esc_html_e( 'View all handpicked resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
                 </div>
             </section>
             <?php

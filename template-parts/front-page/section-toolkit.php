@@ -292,15 +292,15 @@ if ( function_exists( 'aiad_certificate_showcase' ) ) {
                 <div id="free-resources" class="toolkit-free-resources toolkit-free-resources--section fade-up">
                     <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>
                     <h2 class="section-title"><?php esc_html_e('AI Awareness Activities', 'ai-awareness-day'); ?></h2>
-                    <div class="home-cards">
+                    <div class="resource-tiles">
                         <?php
                         while ( $free_resources->have_posts() ) :
                             $free_resources->the_post();
-                            get_template_part( 'template-parts/components/home-resource-card', null, array() );
+                            get_template_part( 'template-parts/components/resource-tile', null, array() );
                         endwhile;
                         ?>
                     </div>
-                    <a class="home-cards__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+                    <a class="resource-tiles__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
                 </div>
                 <?php
                 wp_reset_postdata();

@@ -47,11 +47,11 @@ if ( $free_resources->have_posts() ):
                 </p>
             </div>
 
-            <div class="home-cards">
+            <div class="resource-tiles">
                 <?php
                 while ( $free_resources->have_posts() ) :
                     $free_resources->the_post();
-                    get_template_part( 'template-parts/components/home-resource-card', null, array() );
+                    get_template_part( 'template-parts/components/resource-tile', null, array() );
                 endwhile;
                 ?>
                 <?php
@@ -64,7 +64,7 @@ if ( $free_resources->have_posts() ):
                 }
                 ?>
             </div>
-            <a class="home-cards__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all free resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+            <a class="resource-tiles__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all free resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
         </div>
     </section>
     <?php

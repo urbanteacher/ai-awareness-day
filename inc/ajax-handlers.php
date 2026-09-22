@@ -624,6 +624,19 @@ function aiad_ajax_filter_resources(): void {
                 'external_url'   => $featured_url ?: '',
                 'org_name'       => get_post_meta( $id, '_featured_resource_org_name', true ) ?: '',
             );
+
+            // Both archives render their cards from template-parts/components/resource-tile.php.
+            // Send that same markup, so a filtered grid is the first page's card rather than
+            // a second copy of it rebuilt in resource-filters.js.
+            ob_start();
+            get_template_part(
+                'template-parts/components/resource-tile',
+                null,
+                'featured_resource' === $post_type
+                    ? array( 'link' => $featured_url ?: get_permalink(), 'external' => (bool) $featured_url )
+                    : array()
+            );
+            $results[ count( $results ) - 1 ]['html'] = ob_get_clean();
         }
         wp_reset_postdata();
     }
