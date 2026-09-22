@@ -292,81 +292,15 @@ if ( function_exists( 'aiad_certificate_showcase' ) ) {
                 <div id="free-resources" class="toolkit-free-resources toolkit-free-resources--section fade-up">
                     <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>
                     <h2 class="section-title"><?php esc_html_e('AI Awareness Activities', 'ai-awareness-day'); ?></h2>
-                    <div class="resources-grid">
+                    <div class="home-cards">
                         <?php
-                        while ($free_resources->have_posts()):
+                        while ( $free_resources->have_posts() ) :
                             $free_resources->the_post();
-                            $themes = get_the_terms(get_the_ID(), 'resource_principle');
-                            $durations = get_the_terms(get_the_ID(), 'resource_duration');
-                            $duration_labels = ($durations && !is_wp_error($durations) && function_exists('aiad_resource_duration_term_labels'))
-                                ? aiad_resource_duration_term_labels($durations)
-                                : array();
-                            $theme_name    = $themes && ! is_wp_error( $themes ) ? $themes[0]->name : '';
-                            $theme_slug    = in_array( strtolower( $theme_name ), array( 'safe', 'smart', 'creative', 'responsible', 'future' ), true )
-                                ? strtolower( $theme_name ) : '';
-                            $activity_terms = get_the_terms( get_the_ID(), 'activity_type' );
-                            $format_label  = ( $activity_terms && ! is_wp_error( $activity_terms ) && ! empty( $activity_terms ) )
-                                ? strtoupper( $activity_terms[0]->name ) : 'SLIDE';
-                            $duration_parts = ( $durations && ! is_wp_error( $durations ) && function_exists( 'aiad_duration_badge_parts' ) )
-                                ? aiad_duration_badge_parts( $durations[0] ) : null;
-                            if ( $duration_parts ) {
-                                $duration_str = strtoupper( $duration_parts['time'] );
-                            } elseif ( ! empty( $duration_labels ) && preg_match( '/\(([^)]+)\)/', $duration_labels[0], $m ) ) {
-                                $duration_str = strtoupper( trim( $m[1] ) );
-                            } elseif ( ! empty( $duration_labels ) && preg_match( '/(\d+(?:[\-–]\d+)?\s*min(?:ute)?s?)/i', $duration_labels[0], $m ) ) {
-                                $duration_str = strtoupper( $m[1] );
-                            } else {
-                                $duration_str = '';
-                            }
-                            $article_class = 'resource-card resource-card--pointed fade-up';
-                            if ( $theme_slug ) {
-                                $article_class .= ' resource-card--' . $theme_slug;
-                            }
-                            ?>
-                            <article class="<?php echo esc_attr( $article_class ); ?>">
-                                <a href="<?php the_permalink(); ?>" class="resource-card__hero" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
-                                    <?php if ( has_post_thumbnail() ): ?>
-                                        <?php the_post_thumbnail( 'medium_large', array( 'class' => 'resource-card__hero-img' ) ); ?>
-                                    <?php else: ?>
-                                        <div class="resource-card__hero-img" style="background:#111;" aria-hidden="true"></div>
-                                    <?php endif; ?>
-
-                                    <div class="resource-card__fade"  aria-hidden="true"></div>
-
-                                    <?php if ( $theme_name ): ?>
-                                        <span class="resource-card__theme-label" aria-hidden="true"><?php echo esc_html( strtoupper( $theme_name ) ); ?></span>
-                                    <?php endif; ?>
-
-                                    <?php if ( $duration_str ): ?>
-                                        <span class="resource-card__duration-label" aria-hidden="true"><?php echo esc_html( $duration_str ); ?></span>
-                                    <?php endif; ?>
-
-                                    <h3 class="resource-card__title-overlay"><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></h3>
-                                </a>
-
-                                <div class="resource-card__body">
-                                    <span class="resource-card__format-label"><?php echo esc_html( $format_label ); ?></span>
-                                    <a href="<?php the_permalink(); ?>" class="resource-card__title-below"><?php echo esc_html( html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' ) ); ?></a>
-                                    <?php if ( has_excerpt() ): ?>
-                                        <p class="resource-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
-                                    <?php endif; ?>
-                                </div>
-                            </article>
-                        <?php endwhile; ?>
-                        <?php /* Placeholder card: mobile only, links to full resources archive */ ?>
-                        <a href="<?php echo esc_url($resources_archive_url); ?>"
-                            class="resource-card resource-card--placeholder resource-card--placeholder-pointed free-resources-placeholder--mobile fade-up"
-                            aria-label="<?php esc_attr_e('View all resources', 'ai-awareness-day'); ?>">
-                            <span class="resource-card__placeholder-hero" aria-hidden="true">
-                                <span class="resource-card__placeholder-title"><?php esc_html_e('View all resources', 'ai-awareness-day'); ?></span>
-                            </span>
-                            <span class="resource-card__placeholder-body">
-                                <span class="resource-card__format-label"><?php esc_html_e('Archive', 'ai-awareness-day'); ?></span>
-                                <span class="resource-card__placeholder-title-below"><?php esc_html_e('View all resources', 'ai-awareness-day'); ?></span>
-                                <span class="resource-card__placeholder-desc"><?php esc_html_e('Browse all activities', 'ai-awareness-day'); ?></span>
-                            </span>
-                        </a>
+                            get_template_part( 'template-parts/components/home-resource-card', null, array() );
+                        endwhile;
+                        ?>
                     </div>
+                    <a class="home-cards__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
                 </div>
                 <?php
                 wp_reset_postdata();

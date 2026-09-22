@@ -22,6 +22,7 @@ return array(
 		'components/display-board.css',
 		'components/benchmark-promo.css',
 		'components/resource-card-pointed.css',
+		'components/home-cards.css',
 		'components/entry-figure.css',
 		'components/schedule.css',
 	),
