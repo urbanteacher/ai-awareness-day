@@ -69,146 +69,30 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php endif; ?>
 
             <div class="display-board-panel" id="dbt-panel-blueprint" role="tabpanel" aria-labelledby="dbt-btn-blueprint"<?php echo $default_tab !== 'blueprint' ? ' hidden' : ''; ?>>
-                <div class="dbm" aria-label="<?php esc_attr_e( 'Display board layout guide', 'ai-awareness-day' ); ?>">
-
-                    <div class="dbm__header">
-                        <div class="dbm__header-logo" aria-hidden="true">
-                            <span class="dbm__header-logo-label"><?php esc_html_e( 'School logo', 'ai-awareness-day' ); ?></span>
-                        </div>
-                        <div class="dbm__header-brand">
-                            <img class="dbm__header-lockup" src="<?php echo esc_url( AIAD_URI . '/assets/brand/aiad27/aiad27-lockup-reverse.svg' ); ?>" alt="<?php esc_attr_e( 'AI Awareness Day 2027', 'ai-awareness-day' ); ?>" width="300" height="56" />
-                        </div>
-                    </div>
-
-                    <div class="dbm__panels">
-                        <?php
-                        $dbm_strands = array(
-                            'safe' => array(
-                                'title' => __( 'Safe', 'ai-awareness-day' ),
-                                'desc'  => __( 'Would you tell an AI your secret?', 'ai-awareness-day' ),
-                                'fact'  => __( 'Start with what should stay private — trust, sharing and the data AI holds about you.', 'ai-awareness-day' ),
-                            ),
-                            'smart' => array(
-                                'title' => __( 'Smart', 'ai-awareness-day' ),
-                                'desc'  => __( 'What happens when AI acts for you?', 'ai-awareness-day' ),
-                                'fact'  => __( 'Decide what an AI must always ask about before it acts.', 'ai-awareness-day' ),
-                            ),
-                            'creative' => array(
-                                'title' => __( 'Creative', 'ai-awareness-day' ),
-                                'desc'  => __( 'Who really made it?', 'ai-awareness-day' ),
-                                'fact'  => __( 'Own what you make with AI — authorship, attribution and honest creative work.', 'ai-awareness-day' ),
-                            ),
-                            'responsible' => array(
-                                'title' => __( 'Responsible', 'ai-awareness-day' ),
-                                'desc'  => __( 'Should AI decide?', 'ai-awareness-day' ),
-                                'fact'  => __( 'Keep human judgement in consequential moments — when the output matters.', 'ai-awareness-day' ),
-                            ),
-                            'future' => array(
-                                'title' => __( 'Future', 'ai-awareness-day' ),
-                                'desc'  => __( 'What skills must stay human?', 'ai-awareness-day' ),
-                                'fact'  => __( 'Name the skills worth keeping human — and practise them on purpose.', 'ai-awareness-day' ),
-                            ),
-                        );
-                        foreach ( $dbm_strands as $slug => $strand ) :
-                            ?>
-                        <div class="dbm__panel dbm__panel--<?php echo esc_attr( $slug ); ?>">
-                            <div class="dbm__panel-header">
-                                <span class="dbm__panel-icon" aria-hidden="true"><?php echo aiad_strand_icon_svg( $slug, 20 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-                                <h3 class="dbm__panel-title"><?php echo esc_html( $strand['title'] ); ?></h3>
-                            </div>
-                            <div class="dbm__panel-body">
-                                <p class="dbm__panel-desc"><?php echo esc_html( $strand['desc'] ); ?></p>
-                                <p class="dbm__panel-fact"><?php echo esc_html( $strand['fact'] ); ?></p>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-
-                        <div class="dbm__panel dbm__panel--qr">
-                            <div class="dbm__panel-header">
-                                <h3 class="dbm__panel-title"><?php esc_html_e( 'QR challenges', 'ai-awareness-day' ); ?></h3>
-                            </div>
-                            <div class="dbm__panel-body">
-                                <p class="dbm__panel-desc"><?php esc_html_e( 'Scan to find your school’s AI policy and classroom guidelines.', 'ai-awareness-day' ); ?></p>
-                                <div class="dbm__qr-grid">
-                                    <div class="dbm__qr-item">
-                                        <span class="dbm__qr-mark" aria-hidden="true"></span>
-                                        <span><?php esc_html_e( 'School policy', 'ai-awareness-day' ); ?></span>
-                                    </div>
-                                    <div class="dbm__qr-item">
-                                        <span class="dbm__qr-mark" aria-hidden="true"></span>
-                                        <span><?php esc_html_e( 'AI guidelines', 'ai-awareness-day' ); ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dbm__row">
-                        <div class="dbm__panel dbm__panel--questions">
-                            <div class="dbm__panel-header">
-                                <h3 class="dbm__panel-title"><?php esc_html_e( 'This week’s questions', 'ai-awareness-day' ); ?></h3>
-                            </div>
-                            <div class="dbm__panel-body">
-                                <ul class="dbm__questions">
-                                    <li><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></li>
-                                    <li><?php esc_html_e( 'What happens when AI acts for you?', 'ai-awareness-day' ); ?></li>
-                                    <li><?php esc_html_e( 'Who really made it?', 'ai-awareness-day' ); ?></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="dbm__panel dbm__panel--responses">
-                            <div class="dbm__panel-header">
-                                <h3 class="dbm__panel-title"><?php esc_html_e( 'Student responses', 'ai-awareness-day' ); ?></h3>
-                            </div>
-                            <div class="dbm__panel-body">
-                                <p class="dbm__panel-quote"><?php esc_html_e( '“I’d tell a person first.”', 'ai-awareness-day' ); ?></p>
-                                <p class="dbm__panel-quote"><?php esc_html_e( '“It can draft — I decide.”', 'ai-awareness-day' ); ?></p>
-                                <p class="dbm__panel-quote"><?php esc_html_e( '“I made it. AI helped.”', 'ai-awareness-day' ); ?></p>
-                                <p class="dbm__sticky-hint"><?php esc_html_e( 'Leave space for sticky notes here.', 'ai-awareness-day' ); ?></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dbm__panel dbm__panel--leaders dbm__panel--wide">
-                        <div class="dbm__panel-header">
-                            <h3 class="dbm__panel-title"><?php esc_html_e( 'AI leaders & innovators', 'ai-awareness-day' ); ?></h3>
-                        </div>
-                        <div class="dbm__panel-body">
-                            <div class="dbm__gallery">
-                                <div class="dbm__gallery-item"><span class="dbm__gallery-slot" aria-hidden="true"></span><p><?php esc_html_e( 'Add photo', 'ai-awareness-day' ); ?></p></div>
-                                <div class="dbm__gallery-item"><span class="dbm__gallery-slot" aria-hidden="true"></span><p><?php esc_html_e( 'Add photo', 'ai-awareness-day' ); ?></p></div>
-                                <div class="dbm__gallery-item"><span class="dbm__gallery-slot" aria-hidden="true"></span><p><?php esc_html_e( 'Add photo', 'ai-awareness-day' ); ?></p></div>
-                            </div>
-                            <p class="dbm__gallery-hint"><?php esc_html_e( 'Challenge: find three living people working in AI and add them here.', 'ai-awareness-day' ); ?></p>
-                        </div>
-                    </div>
-
-                    <div class="dbm__panel dbm__panel--spotlight dbm__panel--wide">
-                        <div class="dbm__panel-header">
-                            <h3 class="dbm__panel-title"><?php esc_html_e( 'Student spotlight', 'ai-awareness-day' ); ?></h3>
-                        </div>
-                        <div class="dbm__panel-body">
-                            <div class="dbm__spotlight">
-                                <div class="dbm__spotlight-item">
-                                    <div class="dbm__spotlight-avatar" aria-hidden="true"></div>
-                                    <div>
-                                        <p class="dbm__spotlight-name"><?php esc_html_e( 'Student name', 'ai-awareness-day' ); ?></p>
-                                        <p class="dbm__spotlight-work"><?php esc_html_e( 'Add student work or project here', 'ai-awareness-day' ); ?></p>
-                                    </div>
-                                </div>
-                                <div class="dbm__spotlight-item">
-                                    <div class="dbm__spotlight-avatar" aria-hidden="true"></div>
-                                    <div>
-                                        <p class="dbm__spotlight-name"><?php esc_html_e( 'Student name', 'ai-awareness-day' ); ?></p>
-                                        <p class="dbm__spotlight-work"><?php esc_html_e( 'Add student work or project here', 'ai-awareness-day' ); ?></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                <?php
+                /*
+                 * The board as one graphic. Built by scripts/build-display-board.py, so it
+                 * keeps a fixed composition: framed, pinned, the lockup in the middle. The
+                 * HTML mockup it replaces reflowed into a grid of web cards. The
+                 * "How to create" tab carries the same zones as text.
+                 */
+                $board_svg = AIAD_URI . '/assets/images/display-board/aiad27-display-board.svg';
+                $board_png = AIAD_URI . '/assets/images/display-board/aiad27-display-board.png';
+                ?>
+                <figure class="dbm-graphic">
+                    <a class="dbm-graphic__zoom" href="<?php echo esc_url( $board_svg ); ?>" target="_blank" rel="noopener">
+                        <img src="<?php echo esc_url( $board_svg ); ?>" width="2400" height="1600" loading="lazy" decoding="async"
+                            alt="<?php esc_attr_e( 'Example AI Awareness Day 2027 display board. In the centre: your school logo, the date, Friday 4 June 2027, and the title with the line Your AI. Your choices. Around it, one card for each strand with its question: Safe, would you tell an AI your secret; Smart, what happens when AI acts for you; Creative, who really made it; Responsible, should AI decide; Future, what skills must stay human. Between them: this week’s questions, student responses on sticky notes, QR codes for resources and your school’s AI policy, photos of AI leaders and innovators, and a student spotlight.', 'ai-awareness-day' ); ?>" />
+                        <span class="screen-reader-text"><?php esc_html_e( '(opens full size in a new tab)', 'ai-awareness-day' ); ?></span>
+                    </a>
+                    <figcaption class="dbm-graphic__caption">
+                        <p><?php esc_html_e( 'Select the board to see it full size.', 'ai-awareness-day' ); ?></p>
+                        <span class="dbm-graphic__downloads">
+                            <a href="<?php echo esc_url( $board_png ); ?>" download="aiad27-display-board.png"><?php esc_html_e( 'Download for print (PNG)', 'ai-awareness-day' ); ?></a>
+                            <a href="<?php echo esc_url( $board_svg ); ?>" download="aiad27-display-board.svg"><?php esc_html_e( 'Download (SVG)', 'ai-awareness-day' ); ?></a>
+                        </span>
+                    </figcaption>
+                </figure>
             </div>
 
             <div class="display-board-panel" id="dbt-panel-steps" role="tabpanel" aria-labelledby="dbt-btn-steps" hidden>
