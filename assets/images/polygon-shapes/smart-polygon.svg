@@ -1,8 +1,40 @@
 <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0,0 L120,0 L160,40 L160,160 L40,160 L0,120 Z" fill="#FF7038"/>
+  <defs>
+    <style>
+      /* Subset of assets/fonts/aiad27, inlined by scripts/embed-brand-font.py
+         so this file renders in the brand face on its own. Do not hand-edit:
+         change the type above, then re-run the script. */
+      @font-face { font-family: 'AIAD Sans'; font-style: normal;
+        font-weight: 700 900;
+        src: url(data:font/woff2;base64,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) format('woff2'); }
+    </style>
+  </defs>
+  <!-- Colour stops 1px inside the ink band rather than running under all of it:
+       painted full-tile, it sat beneath the band's bottom-left diagonal and
+       leaked through that edge's anti-aliasing as a hairline. -->
+  <path d="M0,0 L120,0 L160,40 L160,97 L0,97 Z" fill="#FF7038"/>
   <path d="M0,96 L160,96 L160,160 L40,160 L0,120 Z" fill="#231F20"/>
+  <!-- The strand icon, from assets/brand/aiad27/icon-smart.svg, running behind
+       both halves of the tile. The colour field is only 96px tall, so an icon
+       big enough to read as a background has to cross the band; it is drawn
+       twice with one transform, clipped to each half: the strand's deep shade
+       (the a27-deep token) over the colour, the strand colour over the ink. Sized to
+       150px of its own ink and centred on (108, 84). -->
+  <clipPath id="aiad-smart-field"><path d="M0,0 L120,0 L160,40 L160,96 L0,96 Z"/></clipPath>
+  <clipPath id="aiad-smart-band"><path d="M0,96 L160,96 L160,160 L40,160 L0,120 Z"/></clipPath>
+  <g clip-path="url(#aiad-smart-field)">
+    <path opacity="0.3" fill="#A7350B" transform="translate(20.62 -5.56) scale(7.2816)"
+          d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/>
+  </g>
+  <g clip-path="url(#aiad-smart-band)">
+    <path opacity="0.16" fill="#FF7038" transform="translate(20.62 -5.56) scale(7.2816)"
+          d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/>
+  </g>
   <text x="80" y="50" text-anchor="middle" fill="#231F20" font-family="'AIAD Sans', Arial, sans-serif" font-size="16" font-weight="700">SMART</text>
-  <text x="150" y="130" text-anchor="end" fill="#F6F4ED" font-family="'AIAD Sans', Arial, sans-serif" font-size="10">AI</text>
-  <text x="150" y="142" text-anchor="end" fill="#F6F4ED" font-family="'AIAD Sans', Arial, sans-serif" font-size="10">AWARENESS</text>
-  <text x="150" y="154" text-anchor="end" fill="#F6F4ED" font-family="'AIAD Sans', Arial, sans-serif" font-size="10">2027</text>
+  <!-- The wordmark lockup, scaled into the band, never rebuilt. -->
+  <g transform="translate(-24 116) scale(0.58)" fill="#F6F4ED">
+    <text x="300" y="24" text-anchor="end" font-family="'AIAD Sans', Arial, Helvetica, sans-serif"
+          font-size="20" font-weight="700" letter-spacing="-0.4">AI Awareness Day 2027</text>
+    <rect x="260" y="30" width="40" height="2.5"/>
+  </g>
 </svg>

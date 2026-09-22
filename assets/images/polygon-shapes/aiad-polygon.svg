@@ -1,0 +1,29 @@
+<svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="AI Awareness Day 2027">
+  <defs>
+    <style>
+      /* Subset of assets/fonts/aiad27, inlined by scripts/embed-brand-font.py
+         so this file renders in the brand face on its own. Do not hand-edit:
+         change the type above, then re-run the script. */
+      @font-face { font-family: 'AIAD Sans'; font-style: normal;
+        font-weight: 600;
+        src: url(data:font/woff2;base64,d09GMk9UVE8AAATIAAsAAAAAB6wAAAR8AAFN0gAAAAAAAAAAAAAAAAAAAAAAAAAADYVfG4E6HIEiBmAARAE2AiQDKAQGBYJgByAb5gYRlZyLAH4kmG7ukb5bf3WpUqeHuNLWRIkrXYYj9td3VnfimQ24DLwyj5jsgfwi+AVwbk9vUn2AJzj2vrufFZt18YCmPKVIwOb573d0/iVHIzBKECRqIWqNlITd/Ob/cnq1dUyc2jvgqJctsET+ak+wW1TRxvBeVsBty8Jw67LwXh54i3pBpVEXvwkjAQ9hjBV1TPdhQ2u6MkPCagZm90AYYytnQZwVczYeZxcQlRd/4xiPytNFyGHFOg+l5uQqRGFMqQMcYQnpbe0jH8zY0YNxDxw6IuHNiDXubGWGDRxMiCDiTZGRUeExkbHzg67buZLPdm0fbC53D+7R/8YgPIcpswQ1rZ4D++4NqF6WfSoSYyyOqqjrtGjtGJbbwtK6d9cfgDDRSh5EhJemEaGkr6W9N90UNLmPPny0+ejJE5vbUlLdbc0mue6uCGL3f3p+zKg5c41sKYZGsWZNak1X21xikcjtBs2aDvqGeiNsIa13abMBHwElfAYlHz6M0UEpCMAMwyFJ0EpKSSlFbMPJcPgklJpYAX0TZtxQn3mYBtvjHmjen6UxUkEayAeeIUQUxvyA7guXrLlw6w07WH7VYbAUfYMkpN389uvXTSdJenOR02KSz5jDcktYfAZUsAxU/LOszsWtZ8k7MXT5ATSYwOYH/taPJAikhcOIzgiqScJ7ly48unesIZ6oLFaygwQZ5dVrhnOfWQx5QPEhTw+UCK4+hWZIfW9k/6xwcXwxsRFhNulE9vrJiXuKhZL/MZCFc5yG62aKnF0zHM7aDZo7HfoV13hup1rG1xkYrgAPZQkeymnwcvlLnHVEv+NR2Azw0moYs5ybuVxkTDj/32mb40V7iNaDdJcGCTFWGsOyi3WaOyWw/SZJFGveWyn5TVhwAx95ABEP+dBGvzp8+/xTPxuVEt7ZVWOk79aeTEmuacgyPpwm3L9u065dawd3p7foozQvEmBX1KfDWFqL5Mc6lEFyRsDFr2/fBjNIgjY2Rra0VBkFVp3eHErY1Y1oeHGHIvD/Jc//z/Wb3aASwoZ6wUihOBMDKbvNDJQgmftwqg5zhqs3OsjESPsfFCXkZ6vIPC0DSFqmx9gtRauoDVk+YcrMjGg+ZP50PSrIGW4QHBsqY+5Gpn0DY8rSSAidQiH+X9bvIodoXwpfcfRibihHZ1CkSXexdAhVn/ha5KcnQJYLKDCAICDWGXXtVla6qatvUqX31lN36gZMV8ryrmyezzp7Uv9WPv89BI++W+ie1/uL2+L1ZVxuQFioIcncFfTuQ8s3B1Yw9tRw46FW+ohLjHhb1Kxt7X5axt04huzA4haf9FIEa4BblK3dyu3ObTB3P2nsz22y9vA+s6RPlMOt3SiD9dVbH0OZ9XX19WTt6WpIP7KejNkhdz3TQ3/Dh0gOUfQ6jO6GGap1VsAgbgLRPlBf3WQDmGo99e7z+gG6GixK20DX0MKFEg3KKTa2mPIelq6fF90QfWcZZurdMsAo7frMBTPQ1q/XVQ0WGRqrTQWodPaaw0Wk/xX6AAAA) format('woff2'); }
+      @font-face { font-family: 'AIAD Sans'; font-style: normal;
+        font-weight: 700 900;
+        src: url(data:font/woff2;base64,d09GMk9UVE8AAAUoAAwAAAAACCgAAATdAAFN0gAAAAAAAAAAAAAAAAAAAAAAAAAADYZaGhYbgW4cKgZgAGQBNgIkAygEBgWCWgcgG00HUZRMTofsZ4LpNg9ph2h1JVSajOKH2LwSCc01l6c+40IInqf9fefOvLXZvrxSiOzOW+M6ROh+qL/EFvxC54K49t5HvTw/z/9zw/tfYSCZd4I6CQSjdQYywqmNRjCJfv8DAHOc/8vp/41Jh/f8yNOAE7nR+s1Bc9DY1AbNeh4ltBaurWHCAQUWgKeIbnNvFtfLgRv/HcIIUhK19LLs7iyY/NtVJVsjJfkq6mOlRJRvRPdkuXr/C97NiertXHk7PGqcmy4JLcmbPXuOrLmy526JvnANlf63NX0rt2q3LavniR6mbU0uS3/B+QVJiCaCxUiQrlm3USfOLbLJaY+8Lyap+slS6Zn1Yp5rILn/Lax+i6uJY1J2wZf3hfpA+KIAJKdXoD6BufQyekOTUxwar06wCeWTgKiuxeCaWsZNKJn3g96msz2IyOFDG06ePtGx+mwJcg4B33C0X0VPFGXqQug0cLhyHsVUkeqVulaTPHO1Wx8MNEYQzAuu5JBfcrgyyA9ZIOk7cBj82fJTV15FwJH8EeaXmQVHZu5Hr9pP0EbRG7DYhcKU42gKo/GCPw3U/0EfH2tTrVq9NgUNDjJRv+Eak4ZrkzwlbAQrfbCtQ8HpxlzMR0DSUZB8DGhNz+daEOZA1FQgntVgpAOpmqGuDQohzqqf8oVmex5Q7YFg4K4LK/H8lTkE5ZqU0kgro2xyyS2/gljpFrtXpsldtlH3gS0dl1OJNGyOGU0h7qQR6ZijVkqhXwNpSS5G8f/yvmlp9SeGSrgMuKkMtKRkjhmpWHIBw7II7++sxCCVUTj6DcomYAxI7/sMkul+OvKfvE8vHLBrEmTGYF/Pqniit3kK5l2eSTiGLe+rL1PPUzPHoEVq/CIq851KtCWbZOPx7764y7/Sq7HSSfKiFTr2HDh70+FrOQWH0gEoScGqeoPV7E2gBIXM8eoEQ5RfC4ChhlA4bw4hkCFeHQ1zCMXzagjBDJQv7wsbgawTlwVS8v5UFO7VIrEBZsbHmAEeE0xNobs5mHB9UTyHJbXgi9alJc1wNxh8LZCeUZhqPvOjVXXNwHgQo9AcUpugJUJEsbmBU9OANep6kRGTU+o87jIug6uuCYgEAIqQ2jByHwhXqJ5a1slFoq9zx080A3ATrng+tvyEIoIzhGlFcSvgC5QNBjhyKUEwyG7sq56kAfwjTRzO+f8xk0H3/2c/Au1nEly1xkw6gD/aS6cOSSihNAzqwUG1MGOQmVI0Y6HSxUr5qUbkZCOrOYxAbWHw/xL9yKXeV5KkGLi0r0xzr4S14Uz7oTh8Ksbln+TwsFxRQAENEkmt8JhhFsWa62jQZ8iYaQtWrLUEGAQ48x/kjjpkn9122J6OKa0px/fggbkTmzkL/0mw6HcaPM7rscPrb2ZWsf19GJXLdCEUAMGk1Z8CgdjqnQ4Kz4JAjnDlrNIpbQvKI8xjONLdXlqj3ULpLhGzCAch1mkyhgHdCAiRqJtQQs17tPqqhCHbKRGk28PpgqV6V0rAhkNbXBycduSqV6tenVwTTLaLoC2Wa1oA61h57HHZtmOJn8VuA7RQDfl51F8BetepU61BrUYdlkxYMe0rKyurGqrI2h0Zc3nt8gSwba5Ov9yu0Uhh4tAGZ+VYg2r1pLtUA3pp1KxsyICVZsj6X1xO) format('woff2'); }
+    </style>
+  </defs>
+  <path d="M0,0 L120,0 L160,40 L160,160 L40,160 L0,120 Z" fill="#231F20"/>
+  <!-- The square mark (assets/brand/aiad27/aiad27-mark.svg) at polygon scale:
+       160/512 = 0.3125. Its own 512-unit geometry goes in verbatim, so the
+       stack stays identical to the favicon; only the tile under it differs,
+       the polygon cutting a 40/160 corner where the mark cuts 112/512. -->
+  <g transform="scale(0.3125)" fill="#F6F4ED" font-family="'AIAD Sans', Arial, Helvetica, sans-serif">
+    <g font-size="70" font-weight="700" letter-spacing="-1.5">
+      <text x="44" y="168">AI</text>
+      <text x="44" y="242">AWARENESS</text>
+      <text x="44" y="316">DAY</text>
+    </g>
+    <text x="468" y="452" text-anchor="end" font-size="52" font-weight="600" letter-spacing="0.5">2027</text>
+  </g>
+</svg>
