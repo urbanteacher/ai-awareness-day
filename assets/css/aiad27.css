@@ -633,17 +633,6 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   }
 }
 
-/* The homepage AI Tools cards carried a category, a title, a use-case line, a
-   three-item feature list and a link. The use-case line already says what the
-   bullets repeat — "Lesson planning, differentiation, feedback" against
-   "Lesson planning assistance / Differentiation strategies / Student feedback
-   generation" — so on the homepage the list is duplicated detail. Hidden here
-   only; the AI Tools archive keeps it, which is where the detail belongs. */
-#ai-tools .tool-card__features,
-#ai-tools .tool-card__features-more {
-  display: none;
-}
-
 /* The timeline filter row already scrolled on mobile, but it was inset inside
    the container, so a button clipped flat against the gutter with nothing to
    suggest the row continued. Bleeding it to the viewport edges lets the next

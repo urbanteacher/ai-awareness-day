@@ -18,6 +18,17 @@
 		btn.addEventListener( 'click', function () {
 			var filter = btn.getAttribute( 'data-filter' ) || 'all';
 
+			// Keep ?category= in step, so a filtered view can be shared or reloaded.
+			if ( window.history && window.history.replaceState ) {
+				var url = new URL( window.location.href );
+				if ( filter === 'all' ) {
+					url.searchParams.delete( 'category' );
+				} else {
+					url.searchParams.set( 'category', filter );
+				}
+				window.history.replaceState( null, '', url );
+			}
+
 			// Update active state
 			filterBtns.forEach( function ( b ) {
 				b.classList.remove( 'tools-filter__btn--active' );
@@ -37,4 +48,15 @@
 			} );
 		} );
 	} );
+
+	// The homepage's category chips link here as ?category=<slug>. Open on that
+	// category by pressing its button, so the view is exactly what a click gives.
+	var wanted = new URLSearchParams( window.location.search ).get( 'category' );
+	if ( wanted ) {
+		filterBtns.forEach( function ( btn ) {
+			if ( btn.getAttribute( 'data-filter' ) === wanted ) {
+				btn.click();
+			}
+		} );
+	}
 })();

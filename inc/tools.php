@@ -570,59 +570,67 @@ add_action( 'save_post_ai_tool', 'aiad_save_tool_meta' );
    ────────────────────────────────────────────── */
 
 /**
- * Render a single tool card.
+ * Render one tool as a directory row: <li> for a .tool-rows list.
+ *
+ * The old card was a black chamfered panel per tool, and it coloured each
+ * category with a strand's bright ("Visual & Creative" in Smart orange, three
+ * unrelated categories in Safe cyan). Colour on this site means strand, so that
+ * told teachers the wrong thing. Rows use no strand colour at all. The tool's
+ * initial sits in the style guide's letter tile, its one-cut chamfer.
+ *
+ * The whole row is one link to the tool's site. data-tool-id is what
+ * assets/js/engagement-tracking.js counts clicks by.
  *
  * @param WP_Post $tool The ai_tool post object.
+ * @param array   $opts {
+ *     @type bool $show_category Print the category label. Off inside the archive's
+ *                               category groups, whose heading already says it.
+ *     @type bool $show_features Print the features, joined on one line.
+ * }
  * @return string HTML markup.
  */
-function aiad_render_tool_card( WP_Post $tool ): string {
-	$url      = get_post_meta( $tool->ID, '_aiad_tool_url', true );
-	$use_case = get_post_meta( $tool->ID, '_aiad_tool_use_case', true );
+function aiad_render_tool_row( WP_Post $tool, array $opts = array() ): string {
+	$opts = wp_parse_args( $opts, array( 'show_category' => true, 'show_features' => false ) );
+
+	$url          = get_post_meta( $tool->ID, '_aiad_tool_url', true );
+	$use_case     = get_post_meta( $tool->ID, '_aiad_tool_use_case', true );
 	$features_raw = get_post_meta( $tool->ID, '_aiad_tool_features', true );
+	$features     = $features_raw ? array_values( array_filter( array_map( 'trim', explode( "\n", $features_raw ) ) ) ) : array();
 
-	$features     = $features_raw ? array_filter( array_map( 'trim', explode( "\n", $features_raw ) ) ) : array();
-	$features     = array_values( $features );
-	$shown        = array_slice( $features, 0, 3 );
+	$terms    = get_the_terms( $tool->ID, 'tool_category' );
+	$category = ( $terms && ! is_wp_error( $terms ) ) ? html_entity_decode( $terms[0]->name, ENT_QUOTES, 'UTF-8' ) : '';
 
-	$terms        = get_the_terms( $tool->ID, 'tool_category' );
-	$category     = ( $terms && ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0]->name : '';
-	$cat_slug     = ( $terms && ! is_wp_error( $terms ) && ! empty( $terms ) ) ? (string) $terms[0]->slug : '';
+	$title   = html_entity_decode( get_the_title( $tool ), ENT_QUOTES, 'UTF-8' );
+	$initial = preg_match( '/[\p{L}\p{N}]/u', $title, $m ) ? mb_strtoupper( $m[0] ) : '·';
 
-	$card_classes = array( 'tool-card' );
-	if ( $cat_slug !== '' ) {
-		$card_classes[] = 'tool-card--cat-' . sanitize_html_class( $cat_slug );
-	}
+	$tag   = $url ? 'a' : 'div';
+	$attrs = $url
+		? sprintf( ' href="%s" data-tool-id="%d" target="_blank" rel="noopener noreferrer"', esc_url( $url ), (int) $tool->ID )
+		: '';
 
 	ob_start();
 	?>
-	<div class="<?php echo esc_attr( implode( ' ', $card_classes ) ); ?>">
-		<?php if ( $category ) : ?>
-		<div class="tool-card__top">
-			<span class="tool-card__category"><?php echo esc_html( $category ); ?></span>
-		</div>
-		<?php endif; ?>
-
-		<h3 class="tool-card__title"><?php echo esc_html( get_the_title( $tool ) ); ?></h3>
-
-		<?php if ( $use_case ) : ?>
-			<p class="tool-card__use-case"><?php echo esc_html( $use_case ); ?></p>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $shown ) ) : ?>
-			<ul class="tool-card__features">
-				<?php foreach ( $shown as $feature ) : ?>
-					<li><?php echo esc_html( $feature ); ?></li>
-				<?php endforeach; ?>
-			</ul>
-		<?php endif; ?>
-
-		<?php if ( $url ) : ?>
-			<a href="<?php echo esc_url( $url ); ?>" class="tool-card__link" data-tool-id="<?php echo esc_attr( (string) $tool->ID ); ?>" target="_blank" rel="noopener noreferrer">
-				<?php esc_html_e( 'Visit Website', 'ai-awareness-day' ); ?>
-				<span aria-hidden="true">→</span>
-			</a>
-		<?php endif; ?>
-	</div>
+	<li class="tool-row">
+		<<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- a or div. ?> class="tool-row__inner"<?php echo $attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>>
+			<span class="tool-row__tile" aria-hidden="true"><?php echo esc_html( $initial ); ?></span>
+			<span class="tool-row__body">
+				<?php if ( $opts['show_category'] && $category ) : ?>
+					<span class="tool-row__cat"><?php echo esc_html( $category ); ?></span>
+				<?php endif; ?>
+				<span class="tool-row__name"><?php echo esc_html( $title ); ?></span>
+				<?php if ( $use_case ) : ?>
+					<span class="tool-row__use"><?php echo esc_html( $use_case ); ?></span>
+				<?php endif; ?>
+				<?php if ( $opts['show_features'] && $features ) : ?>
+					<span class="tool-row__features"><?php echo esc_html( implode( ' · ', array_slice( $features, 0, 3 ) ) ); ?></span>
+				<?php endif; ?>
+			</span>
+			<?php if ( $url ) : ?>
+				<span class="tool-row__go" aria-hidden="true">&#8599;</span>
+				<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'ai-awareness-day' ); ?></span>
+			<?php endif; ?>
+		</<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	</li>
 	<?php
 	return ob_get_clean();
 }

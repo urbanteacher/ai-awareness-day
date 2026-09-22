@@ -67,7 +67,7 @@
                 return;
             }
 
-            var toolLink = e.target.closest( 'a.tool-card__link[data-tool-id]' );
+            var toolLink = e.target.closest( 'a[data-tool-id]' );
             if ( toolLink ) {
                 track( toolLink.getAttribute( 'data-tool-id' ), 'click' );
                 return;

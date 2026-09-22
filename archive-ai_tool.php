@@ -83,12 +83,13 @@ $categories = get_terms( array(
 						?>
 					</span>
 				</div>
-				<div class="tools-grid">
+				<ul class="tool-rows tool-rows--archive">
 					<?php while ( $tools->have_posts() ) : $tools->the_post(); ?>
-						<?php echo aiad_render_tool_card( get_post() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php // The group heading names the category, so the rows don't repeat it. ?>
+						<?php echo aiad_render_tool_row( get_post(), array( 'show_category' => false, 'show_features' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php endwhile; ?>
 					<?php wp_reset_postdata(); ?>
-				</div>
+				</ul>
 			</div>
 			<?php
 		endforeach;
@@ -102,12 +103,12 @@ $categories = get_terms( array(
 			) );
 			if ( $all_tools->have_posts() ) :
 				?>
-				<div class="tools-grid">
+				<ul class="tool-rows tool-rows--archive">
 					<?php while ( $all_tools->have_posts() ) : $all_tools->the_post(); ?>
-						<?php echo aiad_render_tool_card( get_post() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo aiad_render_tool_row( get_post(), array( 'show_features' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php endwhile; ?>
 					<?php wp_reset_postdata(); ?>
-				</div>
+				</ul>
 				<?php
 			endif;
 		endif;

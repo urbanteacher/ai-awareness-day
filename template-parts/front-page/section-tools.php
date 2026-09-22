@@ -2,7 +2,11 @@
 /**
  * Template Part: Free AI Tools front page section.
  *
- * Shows up to 4 tools in a grid with a "View all" CTA.
+ * A directory, not a showcase. It used to show the first three tools by menu
+ * order, which were always the same three from Content Creation, under a label
+ * saying there were 36. Now there is a chip for every category with its count,
+ * each opening the archive filtered to it, and one row from each of the six
+ * largest categories, so the section shows the range.
  *
  * @package AI_Awareness_Day
  */
@@ -11,19 +15,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$tools_query = new WP_Query( array(
-	'post_type'      => 'ai_tool',
-	'post_status'    => 'publish',
-	'posts_per_page' => 3,
-	'orderby'        => 'menu_order date',
-	'order'          => 'ASC',
-) );
+$tool_cats = get_terms( array( 'taxonomy' => 'tool_category', 'hide_empty' => true ) );
+if ( is_wp_error( $tool_cats ) ) {
+	$tool_cats = array();
+}
+// Largest categories first; ties by name, so the order is stable between visits.
+usort( $tool_cats, static function ( $a, $b ) {
+	return ( $b->count <=> $a->count ) ?: strcasecmp( $a->name, $b->name );
+} );
 
-if ( ! $tools_query->have_posts() ) {
+// One tool from each of the six largest categories: its first by menu order.
+$tool_picks = array();
+foreach ( array_slice( $tool_cats, 0, 6 ) as $tool_cat ) {
+	$first = get_posts( array(
+		'post_type'      => 'ai_tool',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'orderby'        => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
+		'tax_query'      => array( array( 'taxonomy' => 'tool_category', 'field' => 'term_id', 'terms' => $tool_cat->term_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery
+	) );
+	if ( $first ) {
+		$tool_picks[] = $first[0];
+	}
+}
+// No categories yet: fall back to the first six tools.
+if ( ! $tool_picks ) {
+	$tool_picks = get_posts( array( 'post_type' => 'ai_tool', 'post_status' => 'publish', 'posts_per_page' => 6, 'orderby' => array( 'menu_order' => 'ASC', 'title' => 'ASC' ) ) );
+}
+if ( ! $tool_picks ) {
 	return;
 }
 
-$archive_url = get_post_type_archive_link( 'ai_tool' );
+$archive_url          = get_post_type_archive_link( 'ai_tool' );
 $text_alignment_class = aiad_get_text_alignment_class();
 $published_tools_count = (int) ( wp_count_posts( 'ai_tool' )->publish ?? 0 );
 $tools_label = sprintf(
@@ -41,22 +64,29 @@ $tools_label = sprintf(
 			<p class="section-desc"><?php esc_html_e( 'Our curated collection of trending AI tools designed to enhance your lessons.', 'ai-awareness-day' ); ?></p>
 		</div>
 
-		<div class="tools-grid">
-			<?php while ( $tools_query->have_posts() ) : $tools_query->the_post(); ?>
-				<?php echo aiad_render_tool_card( get_post() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — escaped inside renderer ?>
-			<?php endwhile; ?>
-			<?php wp_reset_postdata(); ?>
+		<?php if ( $tool_cats && $archive_url ) : ?>
+			<nav class="tool-chips" aria-label="<?php esc_attr_e( 'AI tools by category', 'ai-awareness-day' ); ?>">
+				<a class="tool-chip tool-chip--all" href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'All', 'ai-awareness-day' ); ?> <span class="tool-chip__count"><?php echo esc_html( (string) $published_tools_count ); ?></span></a>
+				<?php foreach ( $tool_cats as $tool_cat ) : ?>
+					<a class="tool-chip" href="<?php echo esc_url( add_query_arg( 'category', $tool_cat->slug, $archive_url ) ); ?>"><?php echo esc_html( html_entity_decode( $tool_cat->name, ENT_QUOTES, 'UTF-8' ) ); ?> <span class="tool-chip__count"><?php echo esc_html( (string) $tool_cat->count ); ?></span></a>
+				<?php endforeach; ?>
+			</nav>
+		<?php endif; ?>
 
-			<?php if ( $archive_url ) : ?>
-				<a href="<?php echo esc_url( $archive_url ); ?>"
-					class="resource-card resource-card--placeholder resource-card--placeholder-pointed ai-tools-placeholder--mobile fade-up"
-					aria-label="<?php esc_attr_e( 'View all AI tools', 'ai-awareness-day' ); ?>">
-					<span class="resource-card__placeholder-hero">
-						<span class="resource-card__placeholder-title"><?php esc_html_e( 'View all AI tools', 'ai-awareness-day' ); ?></span>
-						<span class="resource-card__placeholder-desc"><?php esc_html_e( 'Browse the full collection', 'ai-awareness-day' ); ?></span>
-					</span>
-				</a>
-			<?php endif; ?>
-		</div>
+		<ul class="tool-rows fade-up">
+			<?php foreach ( $tool_picks as $tool_pick ) : ?>
+				<?php echo aiad_render_tool_row( $tool_pick ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside the renderer. ?>
+			<?php endforeach; ?>
+		</ul>
+
+		<?php if ( $archive_url ) : ?>
+			<a class="tool-rows__more" href="<?php echo esc_url( $archive_url ); ?>">
+				<?php
+				/* translators: %d: number of published AI tools. */
+				echo esc_html( sprintf( __( 'Browse all %d tools', 'ai-awareness-day' ), $published_tools_count ) );
+				?>
+				<span aria-hidden="true">&rarr;</span>
+			</a>
+		<?php endif; ?>
 	</div>
 </section>
