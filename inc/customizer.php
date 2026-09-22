@@ -549,18 +549,22 @@ function aiad_register_time_resources_display_section( WP_Customize_Manager $wp_
 function aiad_register_display_board_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_display_board', array(
         'title'       => __( 'Display board examples', 'ai-awareness-day' ),
-        'description' => __( 'Optional images shown in the Toolkit display board guide. Upload photos of example boards to inspire teachers.', 'ai-awareness-day' ),
+        'description' => __( 'Optional photos for the display board section\'s "More examples" tab. Upload real school boards to inspire teachers.', 'ai-awareness-day' ),
         'priority'    => 36,
     ) );
 
-    foreach ( array( 1, 2, 3 ) as $num ) {
+    // Image 1 fed the "Example" tab, which was removed because it showed the
+    // 2026 board. Images 2 and 3 are the More examples tab; their keys stay so
+    // photos already uploaded keep working.
+    foreach ( array( 2, 3 ) as $num ) {
         $wp_customize->add_setting( 'aiad_display_board_image_' . $num, array(
             'default'           => 0,
             'sanitize_callback' => 'absint',
             'transport'         => 'refresh',
         ) );
         $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_display_board_image_' . $num, array(
-            'label'     => sprintf( __( 'Example display board %d', 'ai-awareness-day' ), $num ),
+            /* translators: %d: 1 or 2 */
+            'label'     => sprintf( __( 'More examples: photo %d', 'ai-awareness-day' ), $num - 1 ),
             'section'   => 'aiad_display_board',
             'mime_type' => 'image',
         ) ) );

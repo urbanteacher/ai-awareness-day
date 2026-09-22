@@ -218,7 +218,6 @@ class AIAD_Homepage_Editor {
      */
     private function save_display_board(): int {
         $keys = array(
-            'aiad_display_board_image_1' => 'absint',
             'aiad_display_board_image_2' => 'absint',
             'aiad_display_board_image_3' => 'absint',
         );
@@ -498,9 +497,8 @@ class AIAD_Homepage_Editor {
      */
     private function render_display_tab(): void {
         $fields = array(
-            'aiad_display_board_image_1' => array( 'label' => __( 'Example display board 1', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
-            'aiad_display_board_image_2' => array( 'label' => __( 'Example display board 2', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
-            'aiad_display_board_image_3' => array( 'label' => __( 'Example display board 3', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
+            'aiad_display_board_image_2' => array( 'label' => __( 'More examples: photo 1', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
+            'aiad_display_board_image_3' => array( 'label' => __( 'More examples: photo 2', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
         );
         echo '<table class="form-table" role="presentation">';
         foreach ( $fields as $key => $config ) {

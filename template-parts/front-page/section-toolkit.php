@@ -18,15 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
 
         <?php
-        $display_img_1_id  = absint( get_theme_mod( 'aiad_display_board_image_1', 0 ) );
-        $display_img_1_url = $display_img_1_id ? wp_get_attachment_image_url( $display_img_1_id, 'full' ) : '';
+        /*
+         * The "Example" tab (aiad_display_board_image_1) is gone. It opened by
+         * default on a photo of the 2026 board, so visitors met last year's
+         * branding before the 2027 blueprint. The blueprint now opens first.
+         * The More examples photos (images 2 and 3) are unchanged.
+         */
         $display_img_2_id  = absint( get_theme_mod( 'aiad_display_board_image_2', 0 ) );
         $display_img_3_id  = absint( get_theme_mod( 'aiad_display_board_image_3', 0 ) );
         $display_img_2_url = $display_img_2_id ? wp_get_attachment_image_url( $display_img_2_id, 'full' ) : '';
         $display_img_3_url = $display_img_3_id ? wp_get_attachment_image_url( $display_img_3_id, 'full' ) : '';
-        $has_real          = (bool) $display_img_1_url;
         $has_more          = $display_img_2_url || $display_img_3_url;
-        $default_tab       = $has_real ? 'real' : 'blueprint';
 
         $contact_email = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
         $mailto_link   = 'mailto:' . esc_attr( $contact_email )
@@ -34,18 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
             . '&body='    . rawurlencode( "Hello,\n\nPlease find attached photos of our school's AI Awareness Day display board.\n\nThank you!" );
         ?>
 
-        <div class="display-board-tabs js-display-board-tabs" data-default="<?php echo esc_attr( $default_tab ); ?>">
+        <div class="display-board-tabs js-display-board-tabs" data-default="blueprint">
 
             <div class="display-board-tabbar" role="tablist" aria-label="<?php esc_attr_e( 'Display board views', 'ai-awareness-day' ); ?>">
-                <?php if ( $has_real ) : ?>
-                <button type="button" class="display-board-tab<?php echo $default_tab === 'real' ? ' is-active' : ''; ?>"
-                    role="tab" data-tab="real" id="dbt-btn-real"
-                    aria-selected="<?php echo $default_tab === 'real' ? 'true' : 'false'; ?>"
-                    aria-controls="dbt-panel-real"><?php esc_html_e( 'Example', 'ai-awareness-day' ); ?></button>
-                <?php endif; ?>
-                <button type="button" class="display-board-tab<?php echo $default_tab === 'blueprint' ? ' is-active' : ''; ?>"
+                <button type="button" class="display-board-tab is-active"
                     role="tab" data-tab="blueprint" id="dbt-btn-blueprint"
-                    aria-selected="<?php echo $default_tab === 'blueprint' ? 'true' : 'false'; ?>"
+                    aria-selected="true"
                     aria-controls="dbt-panel-blueprint"><?php esc_html_e( 'Blueprint', 'ai-awareness-day' ); ?></button>
                 <button type="button" class="display-board-tab"
                     role="tab" data-tab="steps" id="dbt-btn-steps"
@@ -59,16 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php endif; ?>
             </div>
 
-            <?php if ( $has_real ) : ?>
-            <div class="display-board-panel" id="dbt-panel-real" role="tabpanel" aria-labelledby="dbt-btn-real"<?php echo $default_tab !== 'real' ? ' hidden' : ''; ?>>
-                <div class="display-board-real">
-                    <img src="<?php echo esc_url( $display_img_1_url ); ?>"
-                        alt="<?php esc_attr_e( 'Example display board', 'ai-awareness-day' ); ?>" loading="lazy" />
-                </div>
-            </div>
-            <?php endif; ?>
-
-            <div class="display-board-panel" id="dbt-panel-blueprint" role="tabpanel" aria-labelledby="dbt-btn-blueprint"<?php echo $default_tab !== 'blueprint' ? ' hidden' : ''; ?>>
+            <div class="display-board-panel" id="dbt-panel-blueprint" role="tabpanel" aria-labelledby="dbt-btn-blueprint">
                 <?php
                 /*
                  * The board as one graphic. Built by scripts/build-display-board.py, so it
