@@ -1029,6 +1029,187 @@
 
 /* Legacy deck hint removed — use .timeline-swipe__media-hint on each slide */
 
+/* ── Desktop newsroom (inc/timeline-layouts.php aiad_render_timeline_newsroom) ──
+   The lead story as type beside a dated list, straight on the section's ink.
+   Only the desktop wrapper renders it, so none of this reaches the phone deck.
+   Type on ink is cream, or the lighter rule grey for secondary lines: the
+   guide's contrast table fails the dim grey there. */
+@media (min-width: 768px) {
+    /* The framed translucent panel belonged to the magazine's cards. */
+    #timeline .timeline-feed {
+        background: transparent;
+        border-color: transparent;
+    }
+}
+
+.timeline-newsroom {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+    color: var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0 0 0.9rem;
+}
+
+.timeline-newsroom__badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--a27-rule, #C9C6BE);
+}
+
+.timeline-newsroom__lead .timeline-newsroom__badge {
+    color: var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom__when {
+    font-size: 0.8125rem;
+    color: var(--a27-rule, #C9C6BE);
+    white-space: nowrap;
+}
+
+.timeline-newsroom__lead-title {
+    /* Set here, not inherited: reset.css gives every h3 the ink colour, which on
+       this section's ink ground made the lead headline invisible. */
+    color: var(--a27-cream, #F6F4ED);
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    font-weight: 700;
+    line-height: 1.03;
+    letter-spacing: -0.04em;
+}
+
+.timeline-newsroom__lead-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.timeline-newsroom__lead-title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.12em;
+}
+
+.timeline-newsroom__lead-text {
+    margin: 0 0 1.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--a27-rule, #C9C6BE);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.timeline-newsroom__lead-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+}
+
+.timeline-newsroom__read {
+    font-weight: 700;
+    color: var(--a27-cream, #F6F4ED);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
+/* The shared like/share buttons are coloured for a cream card; on ink they
+   need the cream family, or they all but disappear. */
+.timeline-newsroom .timeline-entry__actions {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.timeline-newsroom .timeline-entry__actions button,
+.timeline-newsroom .timeline-entry__actions a {
+    color: var(--a27-rule, #C9C6BE);
+}
+
+.timeline-newsroom .timeline-entry__actions button:hover,
+.timeline-newsroom .timeline-entry__actions a:hover {
+    color: var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom__item {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 1.25rem;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--a27-dim, #54504E);
+    color: var(--a27-cream, #F6F4ED);
+    text-decoration: none;
+}
+
+.timeline-newsroom__item-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.timeline-newsroom__item-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.timeline-newsroom__go {
+    color: var(--a27-rule, #C9C6BE);
+    transition: transform 0.2s ease;
+}
+
+.timeline-newsroom__item:hover .timeline-newsroom__item-title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.15em;
+}
+
+.timeline-newsroom__item:hover .timeline-newsroom__go {
+    transform: translateX(3px);
+    color: var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom a:focus-visible {
+    outline: 3px solid var(--a27-cream, #F6F4ED);
+    outline-offset: 4px;
+}
+
+/* 768-960px: two columns get cramped, so the list goes under the lead. */
+@media (max-width: 960px) {
+    .timeline-newsroom {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-newsroom__go {
+        transition: none;
+    }
+}
+
 /* Magazine tokens — homepage grid + /timeline/ archive (no .timeline-magazine wrapper on archive) */
 .timeline-feed__body,
 .timeline-archive__list,
