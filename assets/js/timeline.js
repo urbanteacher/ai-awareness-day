@@ -284,7 +284,9 @@
         initSwipeDeck();
     }
 
-    if ( filters.length > 0 ) {
+    // On /timeline/ the pills are links: the server renders the filtered page, so its
+    // page numbers match and the URL can be shared. Only the homepage filters in place.
+    if ( filters.length > 0 && ! isArchive ) {
         filters.forEach( function ( filterBtn ) {
             filterBtn.addEventListener( 'click', function () {
                 var filter = filterBtn.getAttribute( 'data-filter' ) || 'all';

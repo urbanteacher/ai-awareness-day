@@ -23,9 +23,10 @@ if ( empty( $entries ) ) {
     return;
 }
 
-// Get available icon types for filtering
-$icon_options = aiad_timeline_icon_options();
-$show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
+// Pills are topics (inc/timeline/topics.php); the old types until topics are assigned.
+$topic_options = function_exists( 'aiad_timeline_topic_options' ) ? aiad_timeline_topic_options() : array();
+$icon_options  = $topic_options ?: aiad_timeline_icon_options();
+$show_filters  = ! empty( $entries ) && count( $icon_options ) > 1;
 ?>
 <section class="section <?php echo esc_attr( $text_alignment_class ); ?>" id="timeline">
     <div class="container">
@@ -35,7 +36,7 @@ $show_filters = ! empty( $entries ) && count( $icon_options ) > 1;
         </div>
 
         <?php if ( $show_filters ) : ?>
-        <div class="timeline-filters" role="group" aria-label="<?php esc_attr_e( 'Filter timeline updates', 'ai-awareness-day' ); ?>">
+        <div class="timeline-filters" role="group" aria-label="<?php esc_attr_e( 'Filter updates by topic', 'ai-awareness-day' ); ?>">
             <button type="button" class="timeline-filter-btn timeline-filter-btn--active" data-filter="all">
                 <?php esc_html_e( 'All', 'ai-awareness-day' ); ?>
             </button>

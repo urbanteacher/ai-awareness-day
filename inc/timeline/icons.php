@@ -273,10 +273,11 @@ function aiad_timeline_featured_badge_label(WP_Post $entry, bool $pinned, string
     if ($pinned) {
         return __('Pinned', 'ai-awareness-day');
     }
-    $terms = get_the_terms($entry->ID, 'timeline_category');
+    // In assigned order: the first is the primary topic (see 'sort' on the taxonomy).
+    $terms = wp_get_object_terms($entry->ID, 'timeline_category', array('orderby' => 'term_order'));
     if ($terms && !is_wp_error($terms)) {
-        $name = $terms[0]->name;
-        return $name;
+        // Stored with & as &amp;; callers escape on output, so decode here or it shows twice.
+        return html_entity_decode($terms[0]->name, ENT_QUOTES, 'UTF-8');
     }
     $labels = array(
         'announcement' => __('Announcement', 'ai-awareness-day'),

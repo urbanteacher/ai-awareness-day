@@ -68,15 +68,8 @@ function aiad_get_timeline_archive_entries(int $paged = 1, string $filter = ''):
         'order' => 'DESC',
     );
 
-    if (!empty($filter) && 'all' !== $filter) {
-        $args['meta_query'] = array(
-            array(
-                'key' => '_aiad_timeline_icon',
-                'value' => $filter,
-                'compare' => '=',
-            ),
-        );
-    }
+    // A topic filters by taxonomy; an old type key still filters by the icon meta.
+    $args = array_merge($args, aiad_timeline_filter_query_args($filter));
 
     $query = new WP_Query($args);
 
@@ -91,12 +84,18 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
 {
     $entries = array();
 
-    // Build meta query for filtering
+    // Build the filter: a topic filters by taxonomy (added to each query below);
+    // an old type key still filters by the icon meta.
     $meta_query = array();
+    $tax_query  = array();
     if (!empty($filter) && $filter !== 'all') {
-        $meta_query = array(
-            array('key' => '_aiad_timeline_icon', 'value' => $filter, 'compare' => '='),
-        );
+        if (aiad_timeline_is_topic($filter)) {
+            $tax_query = aiad_timeline_filter_query_args($filter)['tax_query'];
+        } else {
+            $meta_query = array(
+                array('key' => '_aiad_timeline_icon', 'value' => $filter, 'compare' => '='),
+            );
+        }
     }
 
     // Full feed (mobile swipe scrolls every entry).
@@ -118,6 +117,9 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
         if (!empty($meta_query)) {
             $pinned_args['meta_query'][] = $meta_query[0];
         }
+        if (!empty($tax_query)) {
+            $pinned_args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery
+        }
         $pinned = get_posts($pinned_args);
 
         $rest_args = array(
@@ -130,6 +132,9 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
         );
         if (!empty($meta_query)) {
             $rest_args['meta_query'] = $meta_query;
+        }
+        if (!empty($tax_query)) {
+            $rest_args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery
         }
         $rest = get_posts($rest_args);
 
@@ -154,6 +159,9 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
         if (!empty($meta_query)) {
             $pinned_args['meta_query'][] = $meta_query;
         }
+        if (!empty($tax_query)) {
+            $pinned_args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery
+        }
         $pinned = get_posts($pinned_args);
         $entries = $pinned;
     }
@@ -176,6 +184,12 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
             $args['meta_query'] = $meta_query;
         }
 
+        if (!empty($tax_query)) {
+
+            $args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery
+
+        }
+
         $more_entries = get_posts($args);
         $has_more = count($more_entries) > $remaining;
         $entries = array_merge($entries, array_slice($more_entries, 0, $remaining));
@@ -184,13 +198,22 @@ function aiad_get_timeline_entries(int $per_page = 4, int $offset = 0, string $f
     }
 
     // Pinned entries fill the page; check if any non-pinned entries exist before claiming more.
-    $check = get_posts(array(
+    // Filtered like the queries above; it used to ignore the filter, so a filtered
+    // feed could claim more entries than the filter had.
+    $check_args = array(
         'post_type' => 'timeline',
         'post_status' => 'publish',
         'posts_per_page' => 1,
         'post__not_in' => wp_list_pluck($entries, 'ID'),
         'fields' => 'ids',
-    ));
+    );
+    if (!empty($meta_query)) {
+        $check_args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery
+    }
+    if (!empty($tax_query)) {
+        $check_args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery
+    }
+    $check = get_posts($check_args);
     return array('entries' => $entries, 'has_more' => !empty($check));
 }
 

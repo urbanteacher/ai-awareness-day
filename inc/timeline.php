@@ -26,6 +26,7 @@ require_once __DIR__ . '/timeline/cpt-meta.php';
 require_once __DIR__ . '/timeline/admin-meta-box.php';
 require_once __DIR__ . '/timeline/icons.php';
 require_once __DIR__ . '/timeline/entries.php';
+require_once __DIR__ . '/timeline/topics.php';
 require_once __DIR__ . '/timeline/query.php';
 require_once __DIR__ . '/timeline/ajax.php';
 require_once __DIR__ . '/timeline/single-helpers.php';

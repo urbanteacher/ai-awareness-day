@@ -51,16 +51,21 @@ add_action('init', 'aiad_register_timeline_post_type');
 function aiad_register_timeline_category_taxonomy(): void
 {
     register_taxonomy('timeline_category', 'timeline', array(
+        // Shown as "Topics": these drive the filter pills (inc/timeline/topics.php).
         'labels' => array(
-            'name' => __('Categories', 'ai-awareness-day'),
-            'singular_name' => __('Category', 'ai-awareness-day'),
-            'add_new_item' => __('Add New Category', 'ai-awareness-day'),
-            'edit_item' => __('Edit Category', 'ai-awareness-day'),
+            'name' => __('Topics', 'ai-awareness-day'),
+            'singular_name' => __('Topic', 'ai-awareness-day'),
+            'add_new_item' => __('Add New Topic', 'ai-awareness-day'),
+            'edit_item' => __('Edit Topic', 'ai-awareness-day'),
+            'menu_name' => __('Topics', 'ai-awareness-day'),
         ),
         'hierarchical' => true,
         'show_ui' => true,
         'show_admin_column' => true,
         'show_in_rest' => true,
+        // Keep the order topics were assigned in, so a post's first topic is its primary
+        // one (the card badge reads it). Without this WordPress returns them by name.
+        'sort' => true,
     ));
 }
 add_action('init', 'aiad_register_timeline_category_taxonomy', 11);
