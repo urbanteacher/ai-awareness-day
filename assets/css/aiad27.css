@@ -633,13 +633,16 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   }
 }
 
-/* The timeline filter row already scrolled on mobile, but it was inset inside
-   the container, so a button clipped flat against the gutter with nothing to
-   suggest the row continued. Bleeding it to the viewport edges lets the next
-   button peek past the gutter, which is the affordance, and snapping keeps the
-   row tidy once dragged.
+/* The timeline filter row scrolls at every width now (components/timeline.css),
+   not just on mobile, since wrapping to a second row on desktop was the more
+   overbearing problem: nine-plus topic pills pushed the first story down. On
+   mobile specifically the row is also bled to the viewport edges, so the next
+   button peeks past the small gutter as an affordance; on desktop the row
+   stays inside the same column as the heading and cards, and the fade in
+   components/timeline.css carries that job instead, so the row doesn't jump
+   away from everything else on a wide screen.
 
-   The selectors are doubled deliberately. components/timeline.css and
+   The selector is doubled deliberately. components/timeline.css and
    components/tools.css are enqueued conditionally in inc/setup.php and land
    AFTER this file, so this brand layer loses every equal-specificity contest
    against them. Doubling the class wins without depending on load order.
@@ -650,11 +653,8 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
   .timeline-filters.timeline-filters {
     margin-inline: calc(50% - 50vw);
     padding: .5rem max(1.5rem, calc(50vw - 50%));
-    gap: .4rem;
-    scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
   }
-  .timeline-filters.timeline-filters .timeline-filter-btn { scroll-snap-align: start; }
 }
 
 /* Pills are the one soft-UI idiom still fighting the chamfer signature; the

@@ -48,29 +48,33 @@
 
 #timeline .timeline-filter-btn {
     color: var(--gray-200);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.18);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 #timeline .timeline-filter-btn:hover {
     color: var(--white);
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.28);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.34);
 }
 
 #timeline .timeline-filter-btn--active {
     color: var(--gray-900);
     background: var(--white);
     border-color: var(--white);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
 }
 
 #timeline .timeline-filter-btn--active:hover {
     color: var(--gray-900);
     background: var(--gray-100);
     border-color: var(--gray-100);
+}
+
+/* The row's own fade needs the section's ink, not the light page's white
+   (see the shared .timeline-filters rule above). */
+#timeline .timeline-filters {
+    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
 }
 
 #timeline .timeline-filter-btn:focus {
@@ -250,44 +254,61 @@
 }
 
 /* ── Filter buttons ─────────────────────────── */
+/* One row, always. With up to 9 topics + All, wrapping put a second row of
+   boxy pills between the heading and the first story (see the git log for
+   the screenshot that prompted this). Scrolling instead keeps the row's
+   height fixed regardless of how many topics exist. The trailing fade is a
+   permanent hint that the row continues, since a container-width cutoff
+   doesn't reliably land mid-label. */
 .timeline-filters {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
     margin: 1rem 0 1.25rem;
     padding: 0;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+}
+
+.timeline-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.timeline-filters .timeline-filter-btn {
+    scroll-snap-align: start;
 }
 
 .timeline-filter-btn {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.4rem 0.85rem;
+    padding: 0.35rem 0.7rem;
     font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--gray-600);
-    background: var(--gray-50);
+    background: transparent;
     border: 1px solid var(--gray-200);
     border-radius: 999px;
     cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     transition:
         color 0.2s ease,
         background 0.2s ease,
         border-color 0.2s ease,
-        box-shadow 0.2s ease,
         transform 0.2s ease;
 }
 
 .timeline-filter-btn:hover {
     color: var(--gray-900);
     border-color: var(--gray-300);
-    background: var(--white);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    transform: translateY(-1px);
+    background: var(--gray-50);
 }
 
 .timeline-filter-btn:focus {
@@ -296,19 +317,16 @@
 }
 
 .timeline-filter-btn--active {
+    font-weight: 700;
     color: var(--white);
     background: var(--gray-900);
     border-color: var(--gray-900);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-    transform: none;
 }
 
 .timeline-filter-btn--active:hover {
     color: var(--white);
     background: var(--gray-800);
     border-color: var(--gray-800);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-    transform: translateY(-1px);
 }
 
 /* Muted suffix inside a pill (e.g. schedule “Parents · Soon”) */
@@ -333,29 +351,17 @@
     border-color: var(--gray-300);
 }
 
-/* Mobile: filters smaller and scrollable horizontally */
+/* Mobile: a touch tighter than the desktop row. */
 @media (max-width: 767px) {
     .timeline-filters {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        gap: 0.25rem;
+        gap: 0.3rem;
         padding: 0.5rem 0.25rem;
         margin: 0.75rem 0;
-        scrollbar-width: none;
-        /* Firefox */
-    }
-
-    .timeline-filters::-webkit-scrollbar {
-        display: none;
-        /* Chrome/Safari */
     }
 
     .timeline-filter-btn {
-        flex-shrink: 0;
-        padding: 0.25rem 0.4rem;
-        font-size: 0.6rem;
+        padding: 0.3rem 0.55rem;
+        font-size: 0.65rem;
     }
 }
 
