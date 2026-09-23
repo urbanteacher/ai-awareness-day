@@ -1053,6 +1053,7 @@
 
 /* ── Lead ── */
 .timeline-newsroom__lead-media {
+    position: relative;
     display: block;
     aspect-ratio: 16 / 9;
     margin-bottom: 1.25rem;
@@ -1084,6 +1085,47 @@
 
 .timeline-newsroom__lead-media:hover .timeline-newsroom__lead-img {
     transform: scale(1.03);
+}
+
+/* Headline, kind and date on the picture, over a gradient that darkens toward
+   the bottom so cream type holds on any photo, light or dark. */
+.timeline-newsroom__lead-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* The bottom-left cut is 11.7% of the width across and as tall again. The
+       headline starts 1.75rem in, so it has to sit at least (cut - 1.75rem) up,
+       or the cut clips its first letter. */
+    padding: 1.5rem 1.75rem max(1.6rem, calc(11.7% - 1.25rem));
+    background: linear-gradient(180deg, rgba(20, 17, 18, 0) 30%, rgba(20, 17, 18, 0.55) 58%, rgba(20, 17, 18, 0.92) 100%);
+}
+
+.timeline-newsroom__lead-overlay .timeline-newsroom__meta {
+    justify-content: flex-start;
+    gap: 0;                       /* the dot below is the only separator */
+    margin-bottom: 0.6rem;
+}
+
+.timeline-newsroom__lead-overlay .timeline-newsroom__when {
+    color: var(--a27-cream, #F6F4ED);
+}
+
+.timeline-newsroom__lead-overlay .timeline-newsroom__when::before {
+    content: "\00A0\00A0\00B7\00A0\00A0";
+}
+
+.timeline-newsroom__lead-overlay .timeline-newsroom__lead-title {
+    margin: 0;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* The title link covers the whole picture. */
+.timeline-newsroom__lead-overlay .timeline-newsroom__lead-title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
 }
 
 .timeline-newsroom__meta,
@@ -1119,15 +1161,10 @@
        this section's ink ground made the lead headline invisible. */
     color: var(--a27-cream, #F6F4ED);
     margin: 0 0 0.85rem;
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.04em;
-}
-
-/* Without a photo the lead is type only, so it can take a bigger headline. */
-.timeline-newsroom__lead:not(.timeline-newsroom__lead--photo) .timeline-newsroom__lead-title {
-    font-size: clamp(2rem, 3.4vw, 2.875rem);
 }
 
 .timeline-newsroom__lead-title a {
@@ -1143,6 +1180,7 @@
 
 .timeline-newsroom__lead-text {
     margin: 0 0 1.25rem;
+    padding-top: 0.25rem;
     font-size: 1.0625rem;
     line-height: 1.55;
     color: var(--a27-rule, #C9C6BE);
@@ -1267,6 +1305,30 @@
     display: flex;
     gap: 0.75rem;
     margin-top: 0.4rem;
+}
+
+.timeline-newsroom__all {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-weight: 700;
+    color: var(--a27-cream, #F6F4ED);
+    text-decoration: none;
+}
+
+.timeline-newsroom__all:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
+/* The newsroom carries its own "View all" under the list, so the section's
+   link would repeat it under the lead. Hidden only on desktop and only while
+   the newsroom is there (a filter with no results leaves the section's one
+   visible); the phone deck keeps the section's link as before. */
+@media (min-width: 768px) {
+    #timeline:has(.timeline-newsroom) .timeline-section__actions {
+        display: none;
+    }
 }
 
 .timeline-newsroom a:focus-visible,

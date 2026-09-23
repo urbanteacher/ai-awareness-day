@@ -689,18 +689,25 @@ function aiad_render_timeline_newsroom(array $entries): string
     ?>
     <div class="timeline-newsroom">
         <article class="timeline-newsroom__lead timeline-newsroom__lead--photo" data-entry-id="<?php echo esc_attr((string) $lead->ID); ?>">
-            <a class="timeline-newsroom__lead-media" href="<?php echo esc_url($lead_url ?: '#'); ?>" tabindex="-1" aria-hidden="true">
+            <?php
+            /* The headline sits on the picture over a dark gradient, as on the phone
+               card. The title link is the only link: its ::after stretches over the
+               whole picture, so the image is still one click target. */
+            ?>
+            <div class="timeline-newsroom__lead-media">
                 <?php echo $lead_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by its builders. ?>
-            </a>
-            <p class="timeline-newsroom__meta">
-                <span class="timeline-newsroom__badge"><?php echo esc_html($badge($lead)); ?></span>
-                <?php echo $when($lead); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the closure. ?>
-            </p>
-            <h3 class="timeline-newsroom__lead-title">
-                <?php if ($lead_url) : ?><a href="<?php echo esc_url($lead_url); ?>"><?php endif; ?>
-                <?php echo esc_html(get_the_title($lead)); ?>
-                <?php if ($lead_url) : ?></a><?php endif; ?>
-            </h3>
+                <div class="timeline-newsroom__lead-overlay">
+                    <p class="timeline-newsroom__meta">
+                        <span class="timeline-newsroom__badge"><?php echo esc_html($badge($lead)); ?></span>
+                        <?php echo $when($lead); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the closure. ?>
+                    </p>
+                    <h3 class="timeline-newsroom__lead-title">
+                        <?php if ($lead_url) : ?><a href="<?php echo esc_url($lead_url); ?>"><?php endif; ?>
+                        <?php echo esc_html(get_the_title($lead)); ?>
+                        <?php if ($lead_url) : ?></a><?php endif; ?>
+                    </h3>
+                </div>
+            </div>
             <?php if ($lead_text !== '') : ?>
                 <p class="timeline-newsroom__lead-text"><?php echo esc_html($lead_text); ?></p>
             <?php endif; ?>
@@ -713,6 +720,7 @@ function aiad_render_timeline_newsroom(array $entries): string
                 <?php echo aiad_timeline_entry_actions_html($lead); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
         </article>
+        <div class="timeline-newsroom__side">
         <?php if (!empty($rest)) : ?>
             <ol class="timeline-newsroom__list">
                 <?php foreach ($rest as $entry) :
@@ -739,6 +747,14 @@ function aiad_render_timeline_newsroom(array $entries): string
                 <?php endforeach; ?>
             </ol>
         <?php endif; ?>
+            <?php
+            // "View all" closes the list it continues, in the right-hand column. The
+            // section's own link (section-timeline.php) is hidden on desktop while
+            // this one is shown, and stays for the phone deck.
+            $archive_url = get_post_type_archive_link('timeline') ?: home_url('/timeline/');
+            ?>
+            <a class="timeline-newsroom__all" href="<?php echo esc_url($archive_url); ?>"><?php esc_html_e('View all updates', 'ai-awareness-day'); ?> <span aria-hidden="true">&rarr;</span></a>
+        </div>
     </div>
     <?php
     return ob_get_clean();
