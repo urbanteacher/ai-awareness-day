@@ -231,7 +231,15 @@ function aiad_timeline_magazine_cover_meta_html(
  * @param WP_Post $entry Timeline post.
  * @return string HTML
  */
-function aiad_timeline_entry_actions_html(WP_Post $entry): string
+/**
+ * Like / share / link / open buttons for a timeline entry.
+ *
+ * @param WP_Post $entry   Timeline post.
+ * @param bool    $compact Like and share only, for the newsroom's list rows, where
+ *                         the title is already the link and the full set won't fit.
+ * @return string HTML
+ */
+function aiad_timeline_entry_actions_html(WP_Post $entry, bool $compact = false): string
 {
     $likes = (int) get_post_meta($entry->ID, '_aiad_timeline_like_count', true);
     $link_url = get_post_meta($entry->ID, '_aiad_timeline_link_url', true);
@@ -242,7 +250,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
 
     ob_start();
     ?>
-    <div class="timeline-entry__actions" aria-label="<?php esc_attr_e('Actions', 'ai-awareness-day'); ?>">
+    <div class="timeline-entry__actions<?php echo $compact ? ' timeline-entry__actions--compact' : ''; ?>" aria-label="<?php esc_attr_e('Actions', 'ai-awareness-day'); ?>">
         <button type="button" class="timeline-entry__like" data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
             aria-pressed="false" aria-label="<?php esc_attr_e('Like this update', 'ai-awareness-day'); ?>">
             <span class="timeline-entry__like-icon"
@@ -255,7 +263,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
             <span class="timeline-entry__share-icon"
                 aria-hidden="true"><?php echo aiad_timeline_share_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
         </button>
-        <?php if ($link_url): ?>
+        <?php if ($link_url && ! $compact): ?>
             <a href="<?php echo esc_url($link_url); ?>" class="timeline-entry__link timeline-entry__link--action"
                 data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
                 aria-label="<?php echo esc_attr($link_label); ?>">
@@ -263,6 +271,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
                     aria-hidden="true"><?php echo aiad_timeline_link_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
             </a>
         <?php endif; ?>
+        <?php if (! $compact) : ?>
         <a href="<?php echo esc_url($entry_url); ?>"
             class="timeline-entry__link timeline-entry__link--action timeline-entry__view-post"
             data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>"
@@ -270,6 +279,7 @@ function aiad_timeline_entry_actions_html(WP_Post $entry): string
             <span class="timeline-entry__link-icon"
                 aria-hidden="true"><?php echo aiad_timeline_view_post_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
         </a>
+        <?php endif; ?>
     </div>
     <?php
     return ob_get_clean();
@@ -606,16 +616,19 @@ function aiad_render_timeline_magazine_row(WP_Post $entry): string
 }
 
 /**
- * Desktop newsroom: the lead story as type, beside a dated list of the next few.
+ * Desktop newsroom: the lead story beside a dated list of the next few.
  *
- * Replaces the homepage "magazine", which set the lead inside a large gradient
- * cover and printed its whole article into the card beside it, then gave every
- * other update an empty dark cover. Nothing here pretends to be an image. The lead
- * is a big headline with a few lines and its call to action. The rest are rows
- * of date, kind and title, the quickest thing to scan for what's new.
+ * A hybrid of the old magazine and the first newsroom. From the magazine it
+ * keeps the updates' real photos (59 of 97 live entries have one) and quick
+ * engagement on every item, not only the lead: one-tap like and share on each
+ * row. From the newsroom it keeps the scannable list and the lead's few lines
+ * in place of the whole article. What it drops is the generated gradient cover:
+ * an update without a photo shows its type's icon in a small tile rather than
+ * a large fake image.
  *
  * Phones keep the swipe deck. The same entries feed both, and the AJAX filter
- * re-renders both through aiad_render_timeline_feed_layouts().
+ * re-renders both through aiad_render_timeline_feed_layouts(). Like and share
+ * are handled by the feed-level click listener in assets/js/timeline.js.
  *
  * @param WP_Post[] $entries Timeline posts, lead first (pinned entries lead).
  * @return string HTML
@@ -644,14 +657,41 @@ function aiad_render_timeline_newsroom(array $entries): string
         return aiad_timeline_featured_badge_label($entry, $pinned, $icon);
     };
 
-    $lead_url  = get_permalink($lead) ?: '';
-    $lead_cta  = aiad_timeline_hero_interactive_cta($lead);
-    $lead_text = wp_trim_words(preg_replace('/\s+/u', ' ', trim(aiad_timeline_entry_excerpt_text($lead))), 45, '…');
+    // The entry's real picture: its YouTube thumbnail for a video post, else its
+    // cover photo. An empty string means it has none, and no fake one is made up.
+    $photo = static function (WP_Post $entry, string $size, string $class): string {
+        $video_id = function_exists('aiad_youtube_video_id')
+            ? aiad_youtube_video_id((string) get_post_meta($entry->ID, '_aiad_timeline_video_url', true))
+            : '';
+        if ($video_id) {
+            return sprintf('<img class="%s" src="%s" alt="" loading="lazy" />', esc_attr($class), esc_url('https://img.youtube.com/vi/' . $video_id . '/hqdefault.jpg'));
+        }
+        $cover = aiad_timeline_entry_cover_image_data($entry, $size);
+        if (empty($cover['url'])) {
+            return '';
+        }
+        $style = function_exists('aiad_entry_figure_img_style_attr')
+            ? aiad_entry_figure_img_style_attr((int) ($cover['focal_post_id'] ?? $entry->ID), (string) $cover['fit'], 'feed')
+            : '';
+        $fit = 'contain' === $cover['fit'] ? ' ' . $class . '--contain' : '';
+        return sprintf('<img class="%s%s" src="%s" alt="" loading="lazy"%s />', esc_attr($class), esc_attr($fit), esc_url($cover['url']), $style);
+    };
+
+    $lead_url   = get_permalink($lead) ?: '';
+    $lead_cta   = aiad_timeline_hero_interactive_cta($lead);
+    $lead_text  = wp_trim_words(preg_replace('/\s+/u', ' ', trim(aiad_timeline_entry_excerpt_text($lead))), 32, '…');
+    $lead_photo = $photo($lead, 'hero', 'timeline-newsroom__lead-img');
+    // The lead always gets a picture: its photo, or else the same cover art the
+    // phone deck shows for it. Only the smaller list rows fall back to an icon.
+    $lead_media = $lead_photo ?: aiad_timeline_entry_cover_visual($lead, 'timeline-newsroom', 'hero');
 
     ob_start();
     ?>
     <div class="timeline-newsroom">
-        <article class="timeline-newsroom__lead" data-entry-id="<?php echo esc_attr((string) $lead->ID); ?>">
+        <article class="timeline-newsroom__lead timeline-newsroom__lead--photo" data-entry-id="<?php echo esc_attr((string) $lead->ID); ?>">
+            <a class="timeline-newsroom__lead-media" href="<?php echo esc_url($lead_url ?: '#'); ?>" tabindex="-1" aria-hidden="true">
+                <?php echo $lead_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by its builders. ?>
+            </a>
             <p class="timeline-newsroom__meta">
                 <span class="timeline-newsroom__badge"><?php echo esc_html($badge($lead)); ?></span>
                 <?php echo $when($lead); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the closure. ?>
@@ -675,16 +715,26 @@ function aiad_render_timeline_newsroom(array $entries): string
         </article>
         <?php if (!empty($rest)) : ?>
             <ol class="timeline-newsroom__list">
-                <?php foreach ($rest as $entry) : ?>
-                    <li>
-                        <a class="timeline-newsroom__item" href="<?php echo esc_url(get_permalink($entry) ?: '#'); ?>">
-                            <?php echo $when($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                            <span class="timeline-newsroom__item-body">
-                                <span class="timeline-newsroom__badge"><?php echo esc_html($badge($entry)); ?></span>
-                                <span class="timeline-newsroom__item-title"><?php echo esc_html(get_the_title($entry)); ?></span>
-                            </span>
-                            <span class="timeline-newsroom__go" aria-hidden="true">&rarr;</span>
+                <?php foreach ($rest as $entry) :
+                    $url   = get_permalink($entry) ?: '#';
+                    $thumb = $photo($entry, 'thumb', 'timeline-newsroom__thumb-img');
+                    $icon  = get_post_meta($entry->ID, '_aiad_timeline_icon', true) ?: 'announcement';
+                    ?>
+                    <li class="timeline-newsroom__item" data-entry-id="<?php echo esc_attr((string) $entry->ID); ?>">
+                        <a class="timeline-newsroom__thumb<?php echo $thumb ? '' : ' timeline-newsroom__thumb--icon'; ?>" href="<?php echo esc_url($url); ?>" tabindex="-1" aria-hidden="true">
+                            <?php
+                            echo $thumb // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in the closure.
+                                ?: aiad_timeline_icon_svg($icon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG.
+                            ?>
                         </a>
+                        <div class="timeline-newsroom__item-body">
+                            <p class="timeline-newsroom__item-meta">
+                                <span class="timeline-newsroom__badge"><?php echo esc_html($badge($entry)); ?></span>
+                                <?php echo $when($entry); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                            </p>
+                            <a class="timeline-newsroom__item-title" href="<?php echo esc_url($url); ?>"><?php echo esc_html(get_the_title($entry)); ?></a>
+                            <?php echo aiad_timeline_entry_actions_html($entry, true); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                        </div>
                     </li>
                 <?php endforeach; ?>
             </ol>

@@ -1030,10 +1030,11 @@
 /* Legacy deck hint removed — use .timeline-swipe__media-hint on each slide */
 
 /* ── Desktop newsroom (inc/timeline-layouts.php aiad_render_timeline_newsroom) ──
-   The lead story as type beside a dated list, straight on the section's ink.
+   Hybrid: the lead story with its real photo beside a dated list, every row with
+   its own thumbnail and one-tap like and share. On the section's ink ground.
    Only the desktop wrapper renders it, so none of this reaches the phone deck.
-   Type on ink is cream, or the lighter rule grey for secondary lines: the
-   guide's contrast table fails the dim grey there. */
+   Type on ink is cream, or the lighter rule grey for secondary lines: the guide's
+   contrast table fails the dim grey there. */
 @media (min-width: 768px) {
     /* The framed translucent panel belonged to the magazine's cards. */
     #timeline .timeline-feed {
@@ -1050,12 +1051,48 @@
     color: var(--a27-cream, #F6F4ED);
 }
 
-.timeline-newsroom__meta {
+/* ── Lead ── */
+.timeline-newsroom__lead-media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    background: var(--a27-dim, #54504E);
+    /* The panel cut: 20.8% of the shorter side, top-right and bottom-left. */
+    clip-path: polygon(0 0, calc(100% - 11.7%) 0, 100% 20.8%, 100% 100%, 11.7% 100%, 0 79.2%);
+}
+
+.timeline-newsroom__lead-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+/* No photo: the entry's generated cover art, filling the same frame. */
+.timeline-newsroom__lead-media .timeline-newsroom__cover,
+.timeline-newsroom__lead-media .timeline-entry__cover-fallback {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.timeline-newsroom__lead-img--contain {
+    object-fit: contain;
+}
+
+.timeline-newsroom__lead-media:hover .timeline-newsroom__lead-img {
+    transform: scale(1.03);
+}
+
+.timeline-newsroom__meta,
+.timeline-newsroom__item-meta {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
-    margin: 0 0 0.9rem;
+    margin: 0 0 0.75rem;
 }
 
 .timeline-newsroom__badge {
@@ -1081,11 +1118,16 @@
     /* Set here, not inherited: reset.css gives every h3 the ink colour, which on
        this section's ink ground made the lead headline invisible. */
     color: var(--a27-cream, #F6F4ED);
-    margin: 0 0 1rem;
-    font-size: clamp(2rem, 3.4vw, 2.875rem);
+    margin: 0 0 0.85rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 700;
-    line-height: 1.03;
+    line-height: 1.05;
     letter-spacing: -0.04em;
+}
+
+/* Without a photo the lead is type only, so it can take a bigger headline. */
+.timeline-newsroom__lead:not(.timeline-newsroom__lead--photo) .timeline-newsroom__lead-title {
+    font-size: clamp(2rem, 3.4vw, 2.875rem);
 }
 
 .timeline-newsroom__lead-title a {
@@ -1100,12 +1142,12 @@
 }
 
 .timeline-newsroom__lead-text {
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.25rem;
     font-size: 1.0625rem;
     line-height: 1.55;
     color: var(--a27-rule, #C9C6BE);
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1140,10 +1182,12 @@
 }
 
 .timeline-newsroom .timeline-entry__actions button:hover,
-.timeline-newsroom .timeline-entry__actions a:hover {
+.timeline-newsroom .timeline-entry__actions a:hover,
+.timeline-newsroom .timeline-entry__like[aria-pressed="true"] {
     color: var(--a27-cream, #F6F4ED);
 }
 
+/* ── List ── */
 .timeline-newsroom__list {
     list-style: none;
     margin: 0;
@@ -1153,47 +1197,82 @@
 
 .timeline-newsroom__item {
     display: grid;
-    grid-template-columns: 6.5rem minmax(0, 1fr) 1.25rem;
-    gap: 1rem;
-    align-items: baseline;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 1.1rem;
+    align-items: start;
     padding: 1rem 0;
     border-bottom: 1px solid var(--a27-dim, #54504E);
-    color: var(--a27-cream, #F6F4ED);
-    text-decoration: none;
+}
+
+.timeline-newsroom__thumb {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--a27-dim, #54504E);
+    /* The letter tile's single cut, the guide's small-tile chamfer. */
+    clip-path: polygon(0 0, 78% 0, 100% 22%, 100% 100%, 0 100%);
+}
+
+.timeline-newsroom__thumb-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.timeline-newsroom__thumb-img--contain {
+    object-fit: contain;
+}
+
+/* No photo: the update type's icon on a quiet tile, not a made-up cover. */
+.timeline-newsroom__thumb--icon {
+    color: var(--a27-rule, #C9C6BE);
+}
+
+.timeline-newsroom__thumb--icon svg {
+    width: 2rem;
+    height: 2rem;
 }
 
 .timeline-newsroom__item-body {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
     min-width: 0;
 }
 
+.timeline-newsroom__item-meta {
+    margin-bottom: 0.4rem;
+}
+
 .timeline-newsroom__item-title {
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     font-weight: 700;
     line-height: 1.25;
+    color: var(--a27-cream, #F6F4ED);
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.timeline-newsroom__go {
-    color: var(--a27-rule, #C9C6BE);
-    transition: transform 0.2s ease;
-}
-
-.timeline-newsroom__item:hover .timeline-newsroom__item-title {
+.timeline-newsroom__item-title:hover {
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 0.15em;
 }
 
-.timeline-newsroom__item:hover .timeline-newsroom__go {
-    transform: translateX(3px);
-    color: var(--a27-cream, #F6F4ED);
+.timeline-newsroom .timeline-entry__actions--compact {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
 }
 
-.timeline-newsroom a:focus-visible {
+.timeline-newsroom a:focus-visible,
+.timeline-newsroom button:focus-visible {
     outline: 3px solid var(--a27-cream, #F6F4ED);
-    outline-offset: 4px;
+    outline-offset: 3px;
 }
 
 /* 768-960px: two columns get cramped, so the list goes under the lead. */
@@ -1205,8 +1284,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .timeline-newsroom__go {
+    .timeline-newsroom__lead-img {
         transition: none;
+    }
+
+    .timeline-newsroom__lead-media:hover .timeline-newsroom__lead-img {
+        transform: none;
     }
 }
 
