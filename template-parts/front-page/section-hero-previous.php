@@ -2,7 +2,7 @@
 /**
  * Front page section: Hero, the previous version (live until the 2027 National Conversation hero replaced it).
  *
- * Kept as it was so the homepage can go back to it from Appearance > Customise > Hero Section > Homepage hero,
+ * Kept as it was so the homepage can go back to it from Appearance > Customise > Front Page Sections > Hero Section > Homepage hero,
  * without uploading an older theme. section-hero.php includes this file when that setting is "Previous".
  *
  * @package AI_Awareness_Day
