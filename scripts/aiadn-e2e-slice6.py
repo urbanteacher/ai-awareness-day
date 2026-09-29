@@ -129,6 +129,7 @@ def run(admin_login, sub_login):
     # Earlier runs leave their own test schools behind. The tidy-up lists show ten each, so retire the old ones first.
     sql("UPDATE wp_aiadn_schools SET status='rejected' WHERE status<>'rejected' AND (name LIKE 'Nowhere School %' OR name LIKE 'Oakfield Primary %' OR name LIKE 'Waiting School %')")
     sql("UPDATE wp_aiadn_schools SET mat_name='' WHERE mat_name LIKE 'Oak Trust %'")
+    sql("UPDATE wp_aiadn_debates SET status='expired' WHERE status IN ('awaiting_opponent','awaiting_b_approval','matched','proposed','agreed') AND stage_at < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 5 DAY)")
     body0, m0, g0, _ = national_csv(admin)
 
     print("\n2. Schools and debates to measure")

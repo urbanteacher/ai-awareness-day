@@ -33,12 +33,53 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <span class="hero-brand__mark" aria-hidden="true"></span>
                 </div>
                 <p class="hero-subtitle"><strong><?php esc_html_e( 'We are back for 2027.', 'ai-awareness-day' ); ?></strong> <?php esc_html_e( 'A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ); ?></p>
+                <?php
+                $join_url     = aiad_conversation_url( 'register' ) ?: '#contact';
+                $sign_in_url  = aiad_conversation_url( 'join' );
+                $nominate_url = aiad_conversation_url( 'nominate' );
+                ?>
                 <div class="hero-cta">
-                    <a href="#contact" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Get involved', 'ai-awareness-day' ); ?></a>
+                    <a href="<?php echo esc_url( $join_url ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Join the National Conversation', 'ai-awareness-day' ); ?></a>
                     <a href="<?php echo esc_url( aiad_get_benchmark_start_url() ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Check your AI readiness', 'ai-awareness-day' ); ?></a>
                 </div>
+                <?php if ( $nominate_url || $sign_in_url ) : ?>
+                <p class="hero-cta-more">
+                    <?php if ( $nominate_url ) : ?><a href="<?php echo esc_url( $nominate_url ); ?>"><?php esc_html_e( 'Nominate a school you work with', 'ai-awareness-day' ); ?></a><?php endif; ?>
+                    <?php if ( $nominate_url && $sign_in_url ) : ?> &middot; <?php endif; ?>
+                    <?php if ( $sign_in_url ) : ?><a href="<?php echo esc_url( $sign_in_url ); ?>"><?php esc_html_e( 'Already registered? Sign in', 'ai-awareness-day' ); ?></a><?php endif; ?>
+                </p>
+                <?php endif; ?>
+                <?php
+                $countdown = aiad_national_conversation_countdown();
+                $totals    = aiad_national_conversation_totals();
+                if ( $countdown ) :
+                    $days_until = max( 0, (int) floor( ( $countdown['ts_ms'] / 1000 - time() ) / DAY_IN_SECONDS ) );
+                    ?>
+                <div class="hero-countdown-wrap">
+                    <p class="hero-countdown__title" id="hero-countdown-title"><?php echo esc_html( $countdown['label'] ); ?></p>
+                    <div class="hero-countdown" role="timer" aria-labelledby="hero-countdown-title" data-event-date="<?php echo esc_attr( $countdown['date'] ); ?>" data-event-ts="<?php echo esc_attr( (string) $countdown['ts_ms'] ); ?>">
+                        <div class="hero-countdown__item"><span class="hero-countdown__value" data-unit="days"><?php echo esc_html( (string) $days_until ); ?></span><span class="hero-countdown__label"><?php esc_html_e( 'Days', 'ai-awareness-day' ); ?></span></div>
+                        <div class="hero-countdown__item"><span class="hero-countdown__value" data-unit="hours">00</span><span class="hero-countdown__label"><?php esc_html_e( 'Hours', 'ai-awareness-day' ); ?></span></div>
+                        <div class="hero-countdown__item"><span class="hero-countdown__value" data-unit="minutes">00</span><span class="hero-countdown__label"><?php esc_html_e( 'Minutes', 'ai-awareness-day' ); ?></span></div>
+                        <div class="hero-countdown__item"><span class="hero-countdown__value" data-unit="seconds">00</span><span class="hero-countdown__label"><?php esc_html_e( 'Seconds', 'ai-awareness-day' ); ?></span></div>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php if ( $totals ) : ?>
+                <p class="hero-totals"><?php
+                    printf(
+                        /* translators: 1: schools, 2: debates judged, 3: students */
+                        esc_html__( '%1$s schools · %2$s debates judged · %3$s students taking part', 'ai-awareness-day' ),
+                        '<strong>' . esc_html( number_format_i18n( $totals['schools'] ) ) . '</strong>',
+                        '<strong>' . esc_html( number_format_i18n( $totals['debates'] ) ) . '</strong>',
+                        '<strong>' . esc_html( number_format_i18n( $totals['students'] ) ) . '</strong>'
+                    );
+                ?></p>
+                <?php endif; ?>
             </div>
             <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
+                <?php /* The box is the way in to the National AI Conversation, so it carries the name. */ ?>
+                <p class="hero-strand-feature__title"><?php esc_html_e( 'National AI Conversation 2027', 'ai-awareness-day' ); ?></p>
                 <?php /* The switcher leads, above the strand word it changes. Reordered
                          in the markup rather than with CSS order so reading order and
                          tab order follow what is on screen. */ ?>
@@ -55,7 +96,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <span class="hero-strand-feature__mark" aria-hidden="true"></span>
                     <span class="hero-strand-feature__word">Safe</span>
                 </div>
-                <p class="hero-strand-feature__summary"><?php esc_html_e( 'Would you tell an AI your secret?', 'ai-awareness-day' ); ?></p>
+                <?php /* The box asks one thing: the motion to debate for the strand on show. main.js changes it with the strand. */ ?>
+                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php esc_html_e( 'Debate it', 'ai-awareness-day' ); ?></span> <span class="hero-strand-feature__motion-text"><?php esc_html_e( 'This house believes users, not companies, should control what AI remembers about them.', 'ai-awareness-day' ); ?></span></p>
             </div>
         </div>
     </div>

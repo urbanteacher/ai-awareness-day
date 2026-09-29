@@ -729,3 +729,62 @@ function aiad_get_hero_partner_marquee_entries(): array {
     wp_reset_postdata();
     return apply_filters( 'aiad_hero_partner_marquee_entries', $out );
 }
+
+/* ------------------------------------------------------------------ */
+/* National AI Conversation hero                                       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A link into the National AI Conversation platform, or '' when that plugin is not running.
+ *
+ * @param string $view register, join, nominate...
+ */
+function aiad_conversation_url( string $view ): string {
+	return class_exists( 'AIADN_Front' ) ? AIADN_Front::url( $view ) : '';
+}
+
+/**
+ * Totals for the hero, from the platform's own counts: schools, debates judged, students reached.
+ * Null until there are enough for the numbers to mean something, so an early site never shows "3 schools".
+ * Cached for ten minutes, because the counts are worked out from several tables.
+ *
+ * @return array{schools:int,debates:int,students:int}|null
+ */
+function aiad_national_conversation_totals(): ?array {
+	if ( ! class_exists( 'AIADN_Stats' ) ) {
+		return null;
+	}
+	$cached = get_transient( 'aiad_nc_totals' );
+	if ( is_array( $cached ) ) {
+		return $cached['ok'] ? $cached['data'] : null;
+	}
+	AIADN_Stats::reset();
+	$f    = AIADN_Stats::figures( null );
+	$min  = defined( 'AIAD_TOTALS_MIN_SCHOOLS' ) ? (int) AIAD_TOTALS_MIN_SCHOOLS : 10;
+	$ok   = (int) $f['approved'] >= $min;
+	$data = array( 'schools' => (int) $f['approved'], 'debates' => (int) $f['counting'], 'students' => (int) $f['students'] );
+	set_transient( 'aiad_nc_totals', array( 'ok' => $ok, 'data' => $data ), 10 * MINUTE_IN_SECONDS );
+	return $ok ? $data : null;
+}
+
+/**
+ * What the hero counts down to: the day the National AI Conversation opens, then AI Awareness Day itself.
+ *
+ * @return array{label:string,ts_ms:int,date:string}|null null once both have passed
+ */
+function aiad_national_conversation_countdown(): ?array {
+	$tz     = wp_timezone();
+	$opens  = ( defined( 'AIAD_CONVERSATION_OPENS' ) ? AIAD_CONVERSATION_OPENS : '2027-01-01' );
+	$target = new DateTimeImmutable( $opens . ' 00:00:00', $tz );
+	$label  = __( 'The National AI Conversation opens in', 'ai-awareness-day' );
+	if ( time() >= $target->getTimestamp() ) {
+		$defaults = aiad_get_customizer_defaults();
+		$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+		$target   = new DateTimeImmutable( $event . ' 00:00:00', $tz );
+		$label    = __( 'AI Awareness Day 2027 is in', 'ai-awareness-day' );
+		if ( time() >= $target->getTimestamp() ) {
+			return null;
+		}
+	}
+	return array( 'label' => $label, 'ts_ms' => $target->getTimestamp() * 1000, 'date' => $target->format( 'Y-m-d' ) );
+}

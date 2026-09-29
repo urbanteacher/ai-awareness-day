@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 11;
+	const DB_VERSION = 12;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -41,6 +41,7 @@ class AIADN_Database {
 		$ratings = self::table( 'ratings' );
 		$voice   = self::table( 'voice' );
 		$requests  = self::table( 'debate_requests' );
+		$nominations = self::table( 'nominations' );
 		$partners  = self::table( 'partners' );
 		$referrals = self::table( 'referrals' );
 
@@ -307,6 +308,26 @@ class AIADN_Database {
 			KEY school_phase (school_id,phase),
 			KEY pin_id (pin_id),
 			KEY debate_id (debate_id)
+		) {$charset};";
+
+		// Someone who works with a school nominates it. Their address is confirmed with a code first, the school gets one
+		// invitation, and the school's address is cleared once it is sent (a hash is kept, to honour "do not contact me").
+		$sql[] = "CREATE TABLE {$nominations} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			nominator_name varchar(120) NOT NULL DEFAULT '',
+			nominator_email varchar(255) NOT NULL DEFAULT '',
+			org_name varchar(255) NOT NULL DEFAULT '',
+			school_name varchar(255) NOT NULL DEFAULT '',
+			school_email varchar(255) NOT NULL DEFAULT '',
+			school_email_hash varchar(64) NOT NULL DEFAULT '',
+			status varchar(12) NOT NULL DEFAULT 'unverified',
+			registered_school_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			created_at datetime NOT NULL,
+			sent_at datetime DEFAULT NULL,
+			PRIMARY KEY  (id),
+			KEY email_hash (school_email_hash),
+			KEY status (status),
+			KEY nominator (nominator_email)
 		) {$charset};";
 
 		// A school asks to take up another school's open Debate Request (Find a Debate). The host chooses.

@@ -315,6 +315,8 @@ class AIADN_Programme_Front {
 			$rows[] = array( self::esc( $r['who'] ), self::esc( $r['org'] ) );
 		}
 		$body .= self::table( array( 'Named', 'As introduced by' ), $rows, 'No referral has been disowned.' );
+		$nm    = AIADN_Nominations::summary();
+		$body .= '<h3>Nominations</h3>' . self::tiles( array( 'Waiting for the nominator’s code' => $nm['unverified'], 'Invitations sent' => $nm['sent'], 'Schools registered' => $nm['registered'], 'Asked not to be contacted' => $nm['opted_out'] ) ) . '<p class="aiadn__small">Someone who works with a school nominates it; the school gets one email and decides for itself. Counts only.</p>';
 		$h    .= AIADN_Result_Front::fold( 'Referrals', $body, $rs['counts']['disowned'] > 0 );
 
 		// Judges.

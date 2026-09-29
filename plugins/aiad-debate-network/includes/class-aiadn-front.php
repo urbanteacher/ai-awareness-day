@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find', 'privacy' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find', 'privacy', 'nominate' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -54,6 +54,7 @@ class AIADN_Front {
 		'partner'  => 'future',
 		'find'     => 'smart',
 		'privacy'  => 'safe',
+		'nominate' => 'creative',
 	);
 
 	public static function register(): void {
@@ -125,7 +126,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front', 'AIADN_Privacy_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front', 'AIADN_Privacy_Front', 'AIADN_Nominate_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -271,6 +272,12 @@ class AIADN_Front {
 	public static function carried_invite(): string {
 		$inv = self::post( 'inv' ) ?: self::get( 'inv' );
 		return preg_match( '/^[a-f0-9]{40}$/', $inv ) ? $inv : '';
+	}
+
+	/** A nomination link being carried to registration, but only if it is still good. Otherwise ''. */
+	public static function carried_nomination(): string {
+		$nom = self::post( 'nom' ) ?: self::get( 'nom' );
+		return ( preg_match( '/^[a-f0-9]{40}$/', $nom ) && AIADN_Nominations::from_token( $nom ) ) ? $nom : '';
 	}
 
 	private static function render_front_door( string $error, string $prefill_code ): string {
@@ -462,7 +469,11 @@ class AIADN_Front {
 
 	private static function view_register(): string {
 		self::$title = 'Register your school';
-		$values      = array( 'inv' => self::carried_invite() );
+		$values      = array( 'inv' => self::carried_invite(), 'nom' => self::carried_nomination() );
+		if ( '' !== $values['nom'] ) {
+			$nomination     = AIADN_Nominations::from_token( $values['nom'] );
+			$values['name'] = $nomination ? $nomination['school_name'] : '';
+		}
 		$errors      = array();
 
 		if ( self::is_post() ) {
@@ -495,6 +506,7 @@ class AIADN_Front {
 			'age_phases'   => array(),
 			'agree'        => '' !== self::post( 'agree' ),
 			'inv'          => self::carried_invite(),
+			'nom'          => self::carried_nomination(),
 		);
 		$posted_phases = isset( $_POST['age_phases'] ) && is_array( $_POST['age_phases'] ) ? array_map( 'sanitize_key', wp_unslash( $_POST['age_phases'] ) ) : array(); // phpcs:ignore WordPress.Security
 		$values['age_phases'] = array_values( array_intersect( array( 'primary', 'secondary', 'post16' ), $posted_phases ) );
@@ -573,6 +585,9 @@ class AIADN_Front {
 
 		// Who introduced them is recorded now. Nobody is told until the headteacher agrees.
 		AIADN_Referrals::name_referrer( 'school', (int) $result, $values['ref_org'], $values['ref_email'] );
+		if ( '' !== $values['nom'] && ( $nomination = AIADN_Nominations::from_token( $values['nom'] ) ) ) {
+			AIADN_Nominations::on_registered( $nomination, (int) $result );
+		}
 
 		if ( $invite_debate ) {
 			$lead_row = AIADN_Schools::lead( (int) $result );
@@ -597,6 +612,9 @@ class AIADN_Front {
 		if ( ! empty( $v['inv'] ) ) {
 			$h .= '<p class="aiadn__notice aiadn__notice--info">You are registering to accept a debate invitation. Once your headteacher approves your school, the debate is confirmed.</p>';
 		}
+		if ( ! empty( $v['nom'] ) ) {
+			$h .= '<p class="aiadn__notice aiadn__notice--info">Someone has nominated your school for the National AI Conversation. Registering is your choice, and your headteacher approves the school before anything happens.</p>';
+		}
 		if ( isset( $errors['form'] ) ) {
 			$h .= self::notice( $errors['form'], 'error' );
 		}
@@ -604,6 +622,9 @@ class AIADN_Front {
 		$h .= '<input type="hidden" name="aiadn_action" value="register">' . self::honeypot();
 		if ( ! empty( $v['inv'] ) ) {
 			$h .= '<input type="hidden" name="inv" value="' . esc_attr( $v['inv'] ) . '">';
+		}
+		if ( ! empty( $v['nom'] ) ) {
+			$h .= '<input type="hidden" name="nom" value="' . esc_attr( $v['nom'] ) . '">';
 		}
 
 		$h .= '<label for="r-school">School name</label><input id="r-school" name="school_name" type="text" value="' . $val( 'name' ) . '" required>' . self::field_error( $errors, 'school_name' );

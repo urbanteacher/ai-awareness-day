@@ -170,6 +170,16 @@ class AIADN_Mailer {
 		return self::send( $to, $school_name . ': your school code', $body );
 	}
 
+	/** The one invitation to a nominated school. Plain, short, with a way to say "do not contact me". */
+	public static function send_nomination( string $to, string $school, string $name, string $org, string $nominator_email, string $register_url, string $stop_url ): bool {
+		$who   = '' !== $org ? "{$name} ({$org})" : $name;
+		$body  = "Hello,\n\n{$who} has nominated {$school} to take part in the National AI Conversation 2027, part of AI Awareness Day. They gave us the email address {$nominator_email}, which they confirmed. We have not checked the name or organisation they typed.\n\n";
+		$body .= "It is a national conversation about AI, led by young people, where schools debate an AI question with another school and an independent judge, and their students answer a short anonymous survey. Your headteacher approves the school before anything happens, and you stay responsible for your own students throughout.\n\n";
+		$body .= "If you are interested, you can register here:\n\n    {$register_url}\n\nIf you are not, you do not need to do anything. This is the only email we will send about this nomination.\n\n";
+		$body .= "Please do not contact me about this again:\n{$stop_url}";
+		return self::send( $to, "{$school}: you have been nominated for the National AI Conversation", $body );
+	}
+
 	public static function send_colleague_joined( string $to, string $colleague, string $school_name ): bool {
 		$body = "{$colleague} has joined {$school_name} using your school's email domain.\n\nIf you do not know them, reply to this email and we will remove them.";
 		return self::send( $to, $colleague . ' joined ' . $school_name, $body );

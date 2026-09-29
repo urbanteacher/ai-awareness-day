@@ -70,7 +70,7 @@ final class AIADN_Privacy {
 	public static function holds( string $email ): bool {
 		global $wpdb;
 		$email = AIADN_Util::normalise_email( $email );
-		foreach ( array( array( 'members', 'email' ), array( 'judges', 'email' ), array( 'referrals', 'referrer_email' ), array( 'issues', 'reporter_email' ), array( 'debates', 'invite_email' ) ) as $pair ) {
+		foreach ( array( array( 'members', 'email' ), array( 'judges', 'email' ), array( 'referrals', 'referrer_email' ), array( 'issues', 'reporter_email' ), array( 'debates', 'invite_email' ), array( 'nominations', 'nominator_email' ), array( 'nominations', 'school_email' ) ) as $pair ) {
 			if ( (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . self::t( $pair[0] ) . " WHERE {$pair[1]} = %s", $email ) ) > 0 ) { // phpcs:ignore WordPress.DB
 				return true;
 			}
@@ -136,6 +136,9 @@ final class AIADN_Privacy {
 			$wpdb->update( self::t( 'partners' ), array( 'party_key' => 'deleted-' . (int) $p['id'] ), array( 'id' => (int) $p['id'] ) ); // phpcs:ignore WordPress.DB
 			$out['links'] += (int) $wpdb->query( $wpdb->prepare( 'DELETE FROM ' . self::t( 'tokens' ) . " WHERE kind = 'partner' AND ref_id = %d", (int) $p['id'] ) ); // phpcs:ignore WordPress.DB
 		}
+		// Nominations: as the person who nominated, or as the address a school was to be invited at.
+		$wpdb->query( $wpdb->prepare( 'UPDATE ' . self::t( 'nominations' ) . " SET nominator_name = '', nominator_email = '', org_name = '' WHERE nominator_email = %s", $email ) ); // phpcs:ignore WordPress.DB
+		$wpdb->query( $wpdb->prepare( 'UPDATE ' . self::t( 'nominations' ) . " SET school_email = '' WHERE school_email = %s", $email ) ); // phpcs:ignore WordPress.DB
 		self::record( 'one person asked for their details to be deleted', $out );
 		return $out;
 	}
@@ -184,6 +187,9 @@ final class AIADN_Privacy {
 			array( 'Invitations and meeting links', 'debates', "{$dbc} AND (invite_name <> '' OR invite_email <> '' OR meeting_url <> '')", "invite_name = '', invite_email = '', meeting_url = ''" ),
 			array( 'Emails of people who introduced a school or judge', 'referrals', "{$rc} AND referrer_email <> ''", "referrer_email = ''" ),
 		);
+		if ( null === $school_ids ) {
+			$ops[] = array( 'Nominations: who nominated, and the school addresses', 'nominations', "(nominator_email <> '' OR school_email <> '' OR school_email_hash <> '')", "nominator_name = '', nominator_email = '', org_name = '', school_email = '', school_email_hash = ''" );
+		}
 		if ( null === $school_ids ) {
 			$ops[] = array( 'Personal addresses used to identify an organisation', 'partners', "party_key LIKE '%@%'", "party_key = CONCAT('deleted-', id)" );
 		}

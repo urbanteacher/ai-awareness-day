@@ -250,3 +250,29 @@
   #hero .hero-cta { flex-wrap: nowrap; }
   #hero .hero-cta__btn { padding-inline: .5rem; }
 }
+
+
+/* National AI Conversation: the box carries the name, a motion for each strand and the way in. */
+#hero .hero-strand-feature__title { margin: 0 0 1.25rem; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
+#hero .hero-strand-feature__summary .hero-strand-feature__motion-label { display: block; margin-bottom: .2rem; font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
+#hero .hero-strand-feature__motion-text { font-style: normal; }
+
+#hero .hero-cta-more { margin: .9rem 0 0; font-size: .88rem; }
+#hero .hero-cta-more a { color: var(--a27-ink); text-decoration: underline; text-underline-offset: 3px; }
+#hero .hero-cta-more a:hover, #hero .hero-cta-more a:focus-visible { text-decoration-thickness: 2px; }
+
+/* The countdown, in the campaign's own look and outside the box. */
+#hero .hero-countdown-wrap { margin: 1.5rem 0 0; width: var(--hero-measure); max-width: 100%; box-sizing: border-box; padding: 1.1rem 1.25rem 1.25rem; background: var(--a27-ink); color: var(--a27-cream); }
+#hero .hero-countdown__title { margin: 0 0 .75rem; font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
+#hero .hero-countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; max-width: none; margin: 0; }
+#hero .hero-countdown__item { background: transparent; border: 1px solid rgba(246, 244, 237, .45); border-radius: 0; box-shadow: none; padding: .7rem .4rem .55rem; text-align: center; }
+#hero .hero-countdown__item + .hero-countdown__item { border-left-width: 0; }
+#hero .hero-countdown__value { color: var(--a27-cream); font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; font-variant-numeric: tabular-nums; }
+#hero .hero-countdown__label { color: var(--a27-cream); opacity: .8; }
+#hero .hero-totals { margin: 1rem 0 0; font-size: .95rem; }
+@media (max-width: 768px) {
+  #hero .hero-countdown-wrap { margin-inline: auto; }
+  #hero .hero-countdown__title, #hero .hero-totals { text-align: center; }
+  #hero .hero-strand-feature__title { text-align: center; }
+  #hero .hero-cta-more { text-align: center; }
+}
