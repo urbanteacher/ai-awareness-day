@@ -1,0 +1,30 @@
+/* Debate Network: plain, readable screens. Brand styling comes later. */
+.aiadn { padding: 7.5rem 1rem 4rem; background: #f4f6f8; min-height: 70vh; } /* clears the site's fixed header */
+.aiadn__card { max-width: 34rem; margin: 0 auto; padding: 2rem; background: #fff; border: 1px solid #d5dde5; border-radius: 8px; color: #16232f; font-size: 1rem; line-height: 1.5; }
+.aiadn__card h1 { font-size: 1.75rem; margin: 0 0 .75rem; color: #234a6e; }
+.aiadn__card h2 { font-size: 1.15rem; margin: 0 0 .5rem; color: #234a6e; }
+.aiadn__eyebrow { margin: 0 0 .5rem; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: #5a6b7b; font-weight: 600; }
+.aiadn__form label { display: block; margin: 1rem 0 .25rem; font-weight: 600; }
+.aiadn__form input[type=text], .aiadn__form input[type=email] { width: 100%; padding: .65rem .75rem; border: 1px solid #8b9aa8; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+.aiadn__form input:focus-visible, .aiadn__button:focus-visible, .aiadn__link:focus-visible { outline: 3px solid #234a6e; outline-offset: 2px; }
+.aiadn__code, .aiadn__pin { letter-spacing: .2em; font-size: 1.4rem !important; text-transform: uppercase; }
+.aiadn__roles { border: 0; padding: 0; margin: 1rem 0 0; }
+.aiadn__roles legend { font-weight: 600; padding: 0; }
+.aiadn__radio { display: block !important; font-weight: 400 !important; margin: .35rem 0 !important; }
+.aiadn__opt, .aiadn__hint, .aiadn__meta, .aiadn__small { color: #5a6b7b; font-weight: 400; font-size: .9rem; }
+.aiadn__hint { margin: .25rem 0 0; }
+.aiadn__button { display: inline-block; margin-top: 1.25rem; padding: .75rem 1.5rem; background: #234a6e; color: #fff; border: 2px solid #234a6e; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.aiadn__button--quiet { background: #fff; color: #234a6e; }
+.aiadn__form--row .aiadn__button { margin-right: .5rem; }
+.aiadn__link { background: none; border: 0; padding: 0; color: #234a6e; text-decoration: underline; cursor: pointer; font-size: .9rem; }
+.aiadn__notice { padding: .75rem 1rem; border-radius: 6px; margin: 1rem 0; }
+.aiadn__notice--error { background: #fdecea; border: 1px solid #b42318; color: #7a1a12; }
+.aiadn__notice--info { background: #e8f1f8; border: 1px solid #234a6e; }
+.aiadn__error { color: #b42318; margin: .25rem 0 0; font-size: .9rem; }
+.aiadn__panel { margin: 1.25rem 0; padding: 1rem 1.25rem; background: #f4f8fb; border: 1px solid #d5dde5; border-radius: 6px; }
+.aiadn__bigcode { font-size: 2rem; font-weight: 700; letter-spacing: .12em; color: #234a6e; margin: .25rem 0; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.aiadn__bigcode--pin { font-size: 2.75rem; }
+.aiadn__table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.aiadn__table th, .aiadn__table td { text-align: left; padding: .4rem .5rem; border-bottom: 1px solid #d5dde5; }
+.aiadn__signout { margin-top: 1.5rem; }
+.aiadn__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
