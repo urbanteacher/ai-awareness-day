@@ -19,6 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Programme_Front {
 
+	/** @var string|null Result of the last test email, for the page. */
+	private static $test_result = null;
+
 	/** A partner sees an age group's Student Voice only when it comes from at least this many schools. */
 	const PARTNER_MIN_SCHOOLS = 3;
 
@@ -142,6 +145,13 @@ class AIADN_Programme_Front {
 		}
 		AIADN_Stats::reset();
 
+		$sent_test = null;
+		if ( AIADN_Front::is_post() && 'send_test_email' === AIADN_Front::post( 'aiadn_action' ) && check_admin_referer( 'aiadn_test_email' ) ) {
+			$me        = wp_get_current_user();
+			$sent_test = AIADN_Mailer::send_test( $me->user_email ) ? 'sent to ' . $me->user_email : 'failed';
+		}
+		self::$test_result = $sent_test;
+
 		$export = AIADN_Front::get( 'export' );
 		if ( '' !== $export ) {
 			self::export( $export );
@@ -246,6 +256,15 @@ class AIADN_Programme_Front {
 			$rows[] = array( '<a href="' . esc_url( AIADN_Front::url( 'programme', array( 'partner' => $g['key'] ) ) ) . '">' . self::esc( $g['label'] ) . '</a>', (string) $g['schools'], (string) $g['approved'], (string) $g['active'], (string) $g['debates'], (string) AIADN_Stats::judges_from_partner( $g['key'] ) );
 		}
 		$h .= AIADN_Result_Front::fold( 'Partners', '<p class="aiadn__small">Organisations named at sign-up whose school (or judge) agreed to tell them. Open one for its impact report.</p>' . self::table( array( 'Partner', 'Schools', 'Approved', 'Started a debate', 'Debates', 'Judges' ), $rows, 'No headteacher or judge has agreed to tell an organisation yet.' ), false );
+
+		// Email check.
+		$route = AIADN_Mailer::route();
+		$body  = '<p>How this platform\'s emails go out (sign-in codes, approvals, invitations, updates).</p><dl class="aiadn__details"><dt>Route</dt><dd>' . self::esc( $route['kind'] ) . ( '' !== $route['detail'] ? ' (' . self::esc( $route['detail'] ) . ')' : '' ) . '</dd><dt>Sent from</dt><dd>' . self::esc( $route['from'] ) . '</dd><dt>Team address</dt><dd>' . self::esc( AIADN_Util::team_email() ) . '</dd></dl>';
+		if ( null !== self::$test_result ) {
+			$body .= AIADN_Front::notice( 'Test email ' . self::$test_result . '.', 'sent' === substr( self::$test_result, 0, 4 ) ? 'info' : 'error' );
+		}
+		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . wp_nonce_field( 'aiadn_test_email', '_wpnonce', true, false ) . '<input type="hidden" name="aiadn_action" value="send_test_email"><button class="aiadn__button aiadn__button--quiet" type="submit">Send a test email to me</button></form>';
+		$h    .= AIADN_Result_Front::fold( 'Email check', $body, false );
 
 		// Referrals.
 		$rs   = AIADN_Stats::referrals_summary();

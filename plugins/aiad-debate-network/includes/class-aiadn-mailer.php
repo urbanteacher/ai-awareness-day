@@ -2,9 +2,21 @@
 /**
  * Emails. Plain text, short, from a recognisable sender.
  *
- * Locally, set AIADN_SMTP_HOST (docker-compose does) and every email goes to Mailpit.
- * In production, use a transactional email service through an SMTP plugin and
- * authenticate the sending domain (SPF, DKIM, DMARC).
+ * Locally, AIADN_SMTP_HOST is set in the environment (docker-compose does) and every email goes to Mailpit.
+ *
+ * On the live site, put the email service's SMTP login in wp-config.php and this plugin's emails go through it
+ * (the campaign uses Brevo, from info@aiawarenessday.co.uk):
+ *
+ *     define( 'AIADN_SMTP_HOST', 'smtp-relay.brevo.com' );
+ *     define( 'AIADN_SMTP_PORT', 587 );
+ *     define( 'AIADN_SMTP_USER', '...' );
+ *     define( 'AIADN_SMTP_PASS', '...' );
+ *     define( 'AIADN_MAIL_FROM', 'info@aiawarenessday.co.uk' );
+ *     define( 'AIADN_TEAM_EMAIL', '...' );
+ *
+ * Only this plugin's own emails use these settings and its sender. The site's other emails (the contact form,
+ * the benchmark certificates) keep whatever set-up they already have. The sending domain needs SPF, DKIM and
+ * DMARC in the email service.
  *
  * @package AIADN
  */
@@ -27,6 +39,9 @@ class AIADN_Mailer {
 	 * that carries the SPF/DKIM/DMARC records.
 	 */
 	public static function from_address( string $email ): string {
+		if ( ! self::$sending ) {
+			return $email; // Not one of ours: leave the site's other emails (contact form, certificates) as they are.
+		}
 		if ( defined( 'AIADN_MAIL_FROM' ) && is_email( AIADN_MAIL_FROM ) ) {
 			return AIADN_MAIL_FROM;
 		}
@@ -35,7 +50,7 @@ class AIADN_Mailer {
 		if ( false === strpos( $host, '.' ) ) {
 			$host = 'aiawarenessday.co.uk';
 		}
-		return 'no-reply@' . $host;
+		return 'info@' . $host;
 	}
 
 	/** @var array{content:string,name:string}|null A calendar file to attach to the email being sent. */
@@ -54,23 +69,72 @@ class AIADN_Mailer {
 			$phpmailer->addStringAttachment( self::$ics['content'], self::$ics['name'], 'base64', 'text/calendar; charset=utf-8; method=PUBLISH' );
 		}
 		$host = getenv( 'AIADN_SMTP_HOST' );
-		if ( ! $host ) {
+		if ( $host ) {
+			// A local test inbox: no login, no encryption.
+			$phpmailer->isSMTP();
+			$phpmailer->Host        = $host;
+			$phpmailer->Port        = (int) ( getenv( 'AIADN_SMTP_PORT' ) ?: 1025 );
+			$phpmailer->SMTPAuth    = false;
+			$phpmailer->SMTPAutoTLS = false;
+			return;
+		}
+		if ( self::$sending ) {
+			self::configure_smtp( $phpmailer );
+		}
+	}
+
+	/** The email service's SMTP login from wp-config.php, for this plugin's own emails. Does nothing if it is not set. */
+	public static function configure_smtp( $phpmailer ): void {
+		if ( ! defined( 'AIADN_SMTP_HOST' ) || '' === (string) AIADN_SMTP_HOST ) {
 			return;
 		}
 		$phpmailer->isSMTP();
-		$phpmailer->Host        = $host;
-		$phpmailer->Port        = (int) ( getenv( 'AIADN_SMTP_PORT' ) ?: 1025 );
-		$phpmailer->SMTPAuth    = false;
-		$phpmailer->SMTPAutoTLS = false;
+		$phpmailer->Host       = (string) AIADN_SMTP_HOST;
+		$phpmailer->Port       = defined( 'AIADN_SMTP_PORT' ) ? (int) AIADN_SMTP_PORT : 587;
+		$phpmailer->SMTPSecure = defined( 'AIADN_SMTP_SECURE' ) ? (string) AIADN_SMTP_SECURE : ( 465 === $phpmailer->Port ? 'ssl' : 'tls' );
+		$phpmailer->SMTPAuth   = defined( 'AIADN_SMTP_USER' ) && '' !== (string) AIADN_SMTP_USER;
+		if ( $phpmailer->SMTPAuth ) {
+			$phpmailer->Username = (string) AIADN_SMTP_USER;
+			$phpmailer->Password = defined( 'AIADN_SMTP_PASS' ) ? (string) AIADN_SMTP_PASS : '';
+		}
+	}
+
+	/**
+	 * How this plugin's emails will go out, for the programme team's check. Never includes a login.
+	 *
+	 * @return array{kind:string,detail:string,from:string}
+	 */
+	public static function route(): array {
+		self::$sending = true;
+		$from = self::from_address( '' );
+		self::$sending = false;
+		if ( getenv( 'AIADN_SMTP_HOST' ) ) {
+			return array( 'kind' => 'local test inbox', 'detail' => (string) getenv( 'AIADN_SMTP_HOST' ), 'from' => $from );
+		}
+		if ( defined( 'AIADN_SMTP_HOST' ) && '' !== (string) AIADN_SMTP_HOST ) {
+			return array( 'kind' => 'SMTP from wp-config.php', 'detail' => (string) AIADN_SMTP_HOST, 'from' => $from );
+		}
+		return array( 'kind' => 'the site\'s default mail (usually SMTP plugin or the server)', 'detail' => '', 'from' => $from );
+	}
+
+	/** A test email to one address, so the programme team can check the set-up on the live site. */
+	public static function send_test( string $to ): bool {
+		return self::send( $to, 'Test email from the National AI Conversation', "This is a test. If it reached you, the platform's emails are going out.\n\nSent " . wp_date( 'j M Y, H:i' ) . '.' );
 	}
 
 	public static function from_name( string $name ): string {
-		return 'AI Awareness Day';
+		return self::$sending ? 'AI Awareness Day' : $name;
 	}
+
+	/** True only while one of this plugin's own emails is being sent. */
+	private static $sending = false;
 
 	private static function send( string $to, string $subject, string $body ): bool {
 		$footer = "\n\n--\nAI Awareness Day 2027: National AI Conversation\nhttps://aiawarenessday.co.uk/";
-		return (bool) wp_mail( $to, $subject, $body . $footer );
+		self::$sending = true;
+		$ok            = (bool) wp_mail( $to, $subject, $body . $footer );
+		self::$sending = false;
+		return $ok;
 	}
 
 	public static function send_code( string $to, string $code ): bool {

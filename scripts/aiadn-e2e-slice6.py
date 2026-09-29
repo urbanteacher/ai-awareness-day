@@ -126,6 +126,9 @@ def run(admin_login, sub_login):
     s, html, _ = Browser().get(f"{SITE}/conversation/programme/?export=national", follow=False)
     check("and a stranger cannot get it", s == 302 and "Measure" not in html)
 
+    # Earlier runs leave their own test schools behind. The tidy-up lists show ten each, so retire the old ones first.
+    sql("UPDATE wp_aiadn_schools SET status='rejected' WHERE status<>'rejected' AND (name LIKE 'Nowhere School %' OR name LIKE 'Oakfield Primary %' OR name LIKE 'Waiting School %')")
+    sql("UPDATE wp_aiadn_schools SET mat_name='' WHERE mat_name LIKE 'Oak Trust %'")
     body0, m0, g0, _ = national_csv(admin)
 
     print("\n2. Schools and debates to measure")

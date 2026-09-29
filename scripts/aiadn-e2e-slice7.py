@@ -280,6 +280,42 @@ def run(admin_login):
     s, _, _ = rb.get(f"{SITE}/conversation/school/", follow=False)
     check("saying 'this isn't right' signs nobody in", s == 302)
 
+    print("\n14. The site's other emails keep their own sender")
+    import subprocess
+    php = 'define("WP_USE_THEMES", false); require "/var/www/html/wp-load.php"; echo apply_filters("wp_mail_from", "certificates@example.org") . "|" . apply_filters("wp_mail_from_name", "Site Name");'
+    out = subprocess.run(["docker", "compose", "exec", "-T", "wordpress", "php", "-r", php], capture_output=True, text=True, cwd=os.path.dirname(HERE)).stdout.strip().splitlines()[-1]
+    check("outside this plugin's emails, the sender is left alone", out == "certificates@example.org|Site Name", out)
+    import json, urllib.request
+    data = json.load(urllib.request.urlopen(e2e.MAIL + "/messages?limit=300", timeout=10))
+    ours = [m for m in data.get("messages", []) if any(a["Address"] == P["slt"] for a in m.get("To", [])) and "your school code" in m["Subject"].lower()]
+    check("this plugin's own emails still come from info@aiawarenessday.co.uk", bool(ours) and ours[0]["From"]["Address"] == "info@aiawarenessday.co.uk" and ours[0]["From"]["Name"] == "AI Awareness Day", str(ours[0]["From"]) if ours else "none")
+
+    print("\n15. The email service's login comes from wp-config.php")
+    def php(code):
+        out = subprocess.run(["docker", "compose", "exec", "-T", "wordpress", "php", "-r", code], capture_output=True, text=True, cwd=os.path.dirname(HERE))
+        lines = [l for l in out.stdout.splitlines() if l.startswith("R:")]
+        return lines[-1][2:] if lines else out.stdout[-200:] + out.stderr[-200:]
+    base = 'putenv("AIADN_SMTP_HOST"); define("WP_USE_THEMES", false); '
+    with_const = base + 'define("AIADN_SMTP_HOST","smtp-relay.example.test"); define("AIADN_SMTP_PORT",587); define("AIADN_SMTP_USER","login-x"); define("AIADN_SMTP_PASS","secret-x"); define("AIADN_MAIL_FROM","info@aiawarenessday.co.uk"); require "/var/www/html/wp-load.php"; '
+    got = php(with_const + 'require_once ABSPATH . WPINC . "/PHPMailer/PHPMailer.php"; require_once ABSPATH . WPINC . "/PHPMailer/SMTP.php"; require_once ABSPATH . WPINC . "/PHPMailer/Exception.php"; $m = new PHPMailer\\PHPMailer\\PHPMailer(true); AIADN_Mailer::configure_smtp($m); echo "R:" . implode("|", array($m->Mailer, $m->Host, $m->Port, $m->SMTPSecure, $m->SMTPAuth ? "auth" : "noauth", $m->Username, $m->Password));')
+    check("the login in wp-config.php sets up SMTP with encryption and a login", got == "smtp|smtp-relay.example.test|587|tls|auth|login-x|secret-x", got)
+    got = php(base + 'define("AIADN_SMTP_HOST","smtp.example.test"); define("AIADN_SMTP_PORT",465); require "/var/www/html/wp-load.php"; require_once ABSPATH . WPINC . "/PHPMailer/PHPMailer.php"; require_once ABSPATH . WPINC . "/PHPMailer/SMTP.php"; require_once ABSPATH . WPINC . "/PHPMailer/Exception.php"; $m = new PHPMailer\\PHPMailer\\PHPMailer(true); AIADN_Mailer::configure_smtp($m); echo "R:" . implode("|", array($m->Port, $m->SMTPSecure, $m->SMTPAuth ? "auth" : "noauth"));')
+    check("port 465 uses SSL, and no login means no authentication", got == "465|ssl|noauth", got)
+    got = php(base + 'require "/var/www/html/wp-load.php"; require_once ABSPATH . WPINC . "/PHPMailer/PHPMailer.php"; require_once ABSPATH . WPINC . "/PHPMailer/SMTP.php"; require_once ABSPATH . WPINC . "/PHPMailer/Exception.php"; $m = new PHPMailer\\PHPMailer\\PHPMailer(true); AIADN_Mailer::configure_smtp($m); echo "R:" . $m->Mailer;')
+    check("with nothing set, the site's own mail set-up is left alone", got == "mail", got)
+    got = php(with_const + 'echo "R:" . json_encode(AIADN_Mailer::route());')
+    check("the route report names the host and the sender, and never the login", "smtp-relay.example.test" in got and "info@aiawarenessday.co.uk" in got and "secret-x" not in got and "login-x" not in got, got)
+
+    admin, st, h = s6.wp_login(admin_login)
+    s, html, _ = admin.get(f"{SITE}/conversation/programme/")
+    check("the programme page has an Email check section that names the route and sender", "Email check" in html and "local test inbox" in html and "info@aiawarenessday.co.uk" in html)
+    nonce = re.search(r'name="_wpnonce" value="([a-f0-9]+)"', html)
+    mail_clear()
+    s, html, _ = admin.post(f"{SITE}/conversation/programme/", {"aiadn_action": "send_test_email", "_wpnonce": nonce.group(1) if nonce else ""})
+    check("the test email button sends to the person pressing it", "Test email sent to" in html and any("test email" in m["subject"].lower() for m in mails(f"{admin_login}@example.test")))
+    s, html, _ = admin.post(f"{SITE}/conversation/programme/", {"aiadn_action": "send_test_email", "_wpnonce": "bad"})
+    check("and needs the page's own token", "Test email sent" not in html)
+
 
 if __name__ == "__main__":
     main()
