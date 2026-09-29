@@ -198,7 +198,7 @@ def build_pages(admin_login):
     pages = []
     get = lambda label, b, url: pages.append((label, b.get(url)[1]))
     anon = Browser()
-    for label, url in [("front door", "/conversation/join/"), ("register", "/conversation/register/"), ("ask to join (colleague)", "/conversation/colleague/"), ("nominate", "/conversation/nominate/"), ("delete my details", "/conversation/privacy/"), ("check a certificate", "/conversation/check/"), ("public results", "/conversation/debates/"), ("partner: ask for a link", "/conversation/partner/")]:
+    for label, url in [("front door", "/conversation/join/"), ("register", "/conversation/register/"), ("ask to join (colleague)", "/conversation/colleague/"), ("nominate", "/conversation/nominate/"), ("check a certificate", "/conversation/check/"), ("public results", "/conversation/debates/"), ("partner: ask for a link", "/conversation/partner/")]:
         get(f"public: {label}", anon, SITE + url)
     inv = mails(A["teacher"])
     slt_link = None

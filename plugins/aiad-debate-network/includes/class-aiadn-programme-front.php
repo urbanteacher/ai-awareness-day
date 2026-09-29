@@ -294,7 +294,7 @@ class AIADN_Programme_Front {
 		$nonce = '<input type="hidden" name="_wpnonce" value="' . esc_attr( wp_create_nonce( 'aiadn_retention' ) ) . '">'; // No id, so the page never has two of the same.
 		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_preview"><button class="aiadn__button aiadn__button--quiet" type="submit">Preview what would be deleted</button></form>';
 		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_run"><label for="rt-confirm">To delete everyone&rsquo;s contact details now, type DELETE</label><input id="rt-confirm" name="confirm" type="text" autocomplete="off"><button class="aiadn__button aiadn__button--quiet" type="submit">Delete now</button></form>';
-		$body .= '<p class="aiadn__small">Anyone can also ask for their own details to go sooner, from the &ldquo;Delete my details&rdquo; page. Download any figures you want to keep as CSV first.</p>';
+		$body .= '<p class="aiadn__small">Download any figures you want to keep as CSV first.</p>';
 		$h    .= AIADN_Result_Front::fold( 'Data retention', $body, false );
 
 		// Go-live check.

@@ -128,7 +128,6 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-nominate-front.php',
 			'includes/class-aiadn-nominations.php',
 			'includes/class-aiadn-partner-front.php',
-			'includes/class-aiadn-privacy-front.php',
 			'includes/class-aiadn-privacy.php',
 			'includes/class-aiadn-programme-front.php',
 			'includes/class-aiadn-qr.php',

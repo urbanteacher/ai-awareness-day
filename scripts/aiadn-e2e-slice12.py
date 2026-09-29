@@ -80,7 +80,6 @@ def run(admin_login):
     s, html, _ = nb.post(f"{SITE}/conversation/nominate/", {"aiadn_action": "nominate", "name": "Nora Nominator", "email": f"nora{RUN}@nom{RUN}.org", "org": f"Nom Org {U}", "school": f"Nominee {U}", "school_email": f"head@nominee{RUN}.sch.uk"})
     ref = re.search(r'name="ref" value="([a-f0-9]{32})"', html)
     nb.post(f"{SITE}/conversation/nominate/", {"aiadn_action": "nominate_confirm", "ref": ref.group(1), "code": code_for(f"nora{RUN}@nom{RUN}.org")})
-    Browser().post(f"{SITE}/conversation/privacy/", {"aiadn_action": "erase_request", "email": B["teacher"]})
 
     msgs = all_mail_for_run()
     urls = []

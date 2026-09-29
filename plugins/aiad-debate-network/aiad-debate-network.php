@@ -3,7 +3,7 @@
  * Plugin Name:       AI Awareness Day Debate Network
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval, class PINs, debates, judges, scoring, results, certificates, Student Voice and reminders (slices 1 to 4).
- * Version:           0.16.0
+ * Version:           0.16.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIADN_VERSION', '0.16.0' );
+define( 'AIADN_VERSION', '0.16.1' );
 define( 'AIADN_PLUGIN_FILE', __FILE__ );
 define( 'AIADN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 // When the theme loads the plugin itself (hosting that blocks plugin activation), plugin_dir_url() cannot make a
@@ -61,7 +61,6 @@ require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-snapshot-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-colleague-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-partner-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-find-front.php';
-require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-privacy-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-nominate-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-activator.php';
 
