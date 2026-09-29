@@ -97,6 +97,15 @@ class AIADN_Mailer {
 		return self::send( $to, $school_name . ' is approved', $body );
 	}
 
+	/** The headteacher's copy: the code, and how to come back. They are signed in on the device they approved from. */
+	public static function send_school_approved_slt( string $to, string $school_name, string $school_code, string $join_url ): bool {
+		$body  = "You have approved {$school_name}. Thank you.\n\n";
+		$body .= "Your school code is:  {$school_code}\n\n";
+		$body .= "To see your school another time, go to:\n\n    {$join_url}\n\nChoose Headteacher / SLT, and enter the code and this email address. We will email you a six-digit code to finish signing in.\n\n";
+		$body .= "The school code is not a password. It shows which school, and everyone signing in also needs their own email address and a code we send them, so it is fine to show on a whiteboard.";
+		return self::send( $to, $school_name . ': your school code', $body );
+	}
+
 	public static function send_colleague_joined( string $to, string $colleague, string $school_name ): bool {
 		$body = "{$colleague} has joined {$school_name} using your school's email domain.\n\nIf you do not know them, reply to this email and we will remove them.";
 		return self::send( $to, $colleague . ' joined ' . $school_name, $body );

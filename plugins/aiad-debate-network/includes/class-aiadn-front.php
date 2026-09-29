@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -51,6 +51,7 @@ class AIADN_Front {
 		'programme' => 'future',
 		'snapshot' => 'safe',
 		'colleague' => 'creative',
+		'partner'  => 'future',
 	);
 
 	public static function register(): void {
@@ -122,7 +123,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -487,7 +488,8 @@ class AIADN_Front {
 			'job_title'    => self::post( 'job_title' ),
 			'email'        => AIADN_Util::normalise_email( self::post( 'email' ) ),
 			'slt_email'    => AIADN_Util::normalise_email( self::post( 'slt_email' ) ),
-			'partner_ref'  => self::post( 'partner_ref' ),
+			'ref_org'      => self::post( 'ref_org' ),
+			'ref_email'    => AIADN_Util::normalise_email( self::post( 'ref_email' ) ),
 			'age_phases'   => array(),
 			'agree'        => '' !== self::post( 'agree' ),
 			'inv'          => self::carried_invite(),
@@ -527,6 +529,13 @@ class AIADN_Front {
 		if ( ! $values['agree'] ) {
 			$errors['agree'] = 'Please agree to the Code of Conduct.';
 		}
+		if ( '' !== $values['ref_org'] || '' !== $values['ref_email'] ) {
+			if ( '' === $values['ref_org'] || ! is_email( $values['ref_email'] ) ) {
+				$errors['ref'] = 'To name who introduced you, give the organisation and the email address of the person there. Or leave both empty.';
+			} elseif ( in_array( $values['ref_email'], array( $values['email'], $values['slt_email'] ), true ) ) {
+				$errors['ref'] = 'This needs to be the person at the organisation, not you or your headteacher.';
+			}
+		}
 		if ( $errors ) {
 			return array( $values, $errors );
 		}
@@ -546,7 +555,7 @@ class AIADN_Front {
 				'postcode'     => $values['postcode'],
 				'age_phases'   => implode( ',', $values['age_phases'] ),
 				'mat_name'     => $values['mat_name'],
-				'partner_ref'  => $values['partner_ref'],
+				'partner_ref'  => '',
 				'slt_email'    => $values['slt_email'],
 				'teacher_name' => $values['teacher_name'],
 				'job_title'    => $values['job_title'],
@@ -559,6 +568,9 @@ class AIADN_Front {
 				: 'We could not save your registration. Please try again.';
 			return array( $values, array( 'form' => $msg ) );
 		}
+
+		// Who introduced them is recorded now. Nobody is told until the headteacher agrees.
+		AIADN_Referrals::name_referrer( 'school', (int) $result, $values['ref_org'], $values['ref_email'] );
 
 		if ( $invite_debate ) {
 			$lead_row = AIADN_Schools::lead( (int) $result );
@@ -607,7 +619,7 @@ class AIADN_Front {
 		$h .= '<label for="r-role">Your role <span class="aiadn__opt">(optional)</span></label><input id="r-role" name="job_title" type="text" value="' . $val( 'job_title' ) . '" placeholder="Class teacher">';
 		$h .= '<label for="r-email">School email</label><input id="r-email" name="email" type="email" value="' . $val( 'email' ) . '" autocomplete="email" required>' . self::field_error( $errors, 'email' );
 		$h .= '<label for="r-slt">Headteacher or SLT email <span class="aiadn__opt">(to approve your school)</span></label><input id="r-slt" name="slt_email" type="email" value="' . $val( 'slt_email' ) . '" required>' . self::field_error( $errors, 'slt_email' );
-		$h .= '<label for="r-partner">Did a partner introduce you? <span class="aiadn__opt">(optional)</span></label><input id="r-partner" name="partner_ref" type="text" value="' . $val( 'partner_ref' ) . '" placeholder="e.g. Apps for Good">';
+		$h .= '<fieldset class="aiadn__roles"><legend>Did an organisation introduce you? <span class="aiadn__opt">(optional)</span></legend><label for="r-org">Organisation</label><input id="r-org" name="ref_org" type="text" value="' . $val( 'ref_org' ) . '" placeholder="e.g. Apps for Good"><label for="r-refemail">Email of the person there</label><input id="r-refemail" name="ref_email" type="email" value="' . $val( 'ref_email' ) . '"><p class="aiadn__small">You are responsible for having their permission to give us their email address. We do not contact them yet: your headteacher chooses whether they are told when they approve your school.</p></fieldset>' . self::field_error( $errors, 'ref' );
 		$h .= '<p class="aiadn__small">When a debate is finished, the school names, theme, motion and winner are shown on a public results page. Teacher and student details never are, and the school code is never shown.</p>';
 		$h .= '<label class="aiadn__radio"><input type="checkbox" name="agree" value="1"' . ( ! empty( $v['agree'] ) ? ' checked' : '' ) . '> I agree to the Code of Conduct: challenge the argument, respect the person.</label>' . self::field_error( $errors, 'agree' );
 		$h .= '<button type="submit" class="aiadn__button">Send me a code</button></form>';
@@ -659,8 +671,15 @@ class AIADN_Front {
 		$h   = '<h1>Approve ' . esc_html( $school['name'] ) . '?</h1>';
 		$h  .= '<p>Teacher: <strong>' . esc_html( $who ) . '</strong></p>';
 		$h  .= '<p>Approving lets this school invite others to take part and run debates. Students, colleagues and judges still need a class PIN or their own emailed code.</p>';
+		$ref = AIADN_Referrals::for_subject( 'school', (int) $school['id'] );
+		$share_box = '';
+		if ( $ref && 'named' === $ref['status'] ) {
+			$share_box = '<div class="aiadn__panel"><h2>An organisation introduced this school</h2><p>' . esc_html( $lead['name'] ) . ' says <strong>' . esc_html( $ref['org_name'] ) . '</strong> introduced you, and gave <strong>' . esc_html( $ref['referrer_email'] ) . '</strong> as the person there.</p><label class="aiadn__radio"><input type="checkbox" name="share_referral" value="1"> Tell ' . esc_html( $ref['org_name'] ) . ' that ' . esc_html( $school['name'] ) . ' is taking part, and keep them updated when a debate is agreed and judged.</label><p class="aiadn__small">This is the school\'s decision, and it is your choice. If you tick it, they see the school\'s name in those emails, and only totals on their dashboard: nothing about students or staff. If you leave it unticked, nobody is told.</p></div>';
+		}
+
 		$h  .= '<form method="post" action="' . esc_url( self::url( 'approve' ) ) . '" class="aiadn__form aiadn__form--row">';
 		$h  .= '<input type="hidden" name="aiadn_action" value="slt_decide"><input type="hidden" name="t" value="' . esc_attr( self::get( 't' ) ) . '">';
+		$h  .= $share_box;
 		$h  .= '<button type="submit" name="decision" value="approve" class="aiadn__button">Approve</button> ';
 		$h  .= '<button type="submit" name="decision" value="reject" class="aiadn__button aiadn__button--quiet">This isn\'t right</button></form>';
 		return $h;
@@ -680,7 +699,11 @@ class AIADN_Front {
 			return $done;
 		}
 
+		$ref = AIADN_Referrals::for_subject( 'school', (int) $school['id'] );
 		if ( 'reject' === self::post( 'decision' ) ) {
+			if ( $ref ) {
+				AIADN_Referrals::decide( $ref, false, $school['slt_email'] );
+			}
 			AIADN_Schools::set_status( (int) $school['id'], 'rejected' );
 			return '<h1>Thank you</h1><p>We will not go ahead with this registration.</p>';
 		}
@@ -690,15 +713,29 @@ class AIADN_Front {
 			AIADN_Schools::add_member( (int) $school['id'], $school['slt_email'], 'Senior leader', '', 'slt', true );
 		}
 		AIADN_Debates::on_school_approved( (int) $school['id'] );
+		if ( $ref ) {
+			AIADN_Referrals::decide( $ref, '' !== self::post( 'share_referral' ), $school['slt_email'] );
+		}
 		$lead = AIADN_Schools::lead( (int) $school['id'] );
 		if ( $lead ) {
 			AIADN_Mailer::send_school_approved( $lead['email'], $school['name'], (string) $school['code'], self::url( 'join', array( 'c' => $school['code'] ) ) );
 		}
 
+		// The headteacher has just shown they can read that inbox, which is the same proof as the emailed sign-in code:
+		// so they go straight in. They can sign in the usual way next time.
+		$slt = AIADN_Schools::find_member( (int) $school['id'], $school['slt_email'] );
+		if ( $slt ) {
+			AIADN_Schools::mark_member_verified( (int) $slt['id'] );
+			AIADN_Auth::start_session( array( 'member_id' => (int) $slt['id'], 'school_id' => (int) $school['id'], 'role' => 'slt' ), AIADN_Auth::SESSION_TTL );
+		}
+		AIADN_Mailer::send_school_approved_slt( $school['slt_email'], $school['name'], (string) $school['code'], self::url( 'join', array( 'c' => $school['code'] ) ) );
+
 		$h  = '<h1>Approved</h1>';
-		$h .= '<p>' . esc_html( $school['name'] ) . ' can now take part.</p>';
+		$h .= '<p>' . esc_html( $school['name'] ) . ' can now take part. You are signed in as its senior leader.</p>';
 		$h .= '<p>Your school code is</p><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
-		$h .= '<p>To see your school, go to <a href="' . esc_url( self::url( 'join' ) ) . '">the front door</a>, choose Headteacher / SLT, and enter the code and this email address.</p>';
+		$h .= '<p>Keep it: it is how your teachers, students and judges find your school. It is not a password, and it is fine to show on a whiteboard. Anyone signing in also needs their own email address and a code we email them. We have emailed you a copy of this.</p>';
+		$h .= '<p><a class="aiadn__button" href="' . esc_url( self::url( 'school' ) ) . '">Go to your school</a></p>';
+		$h .= '<p class="aiadn__small">Next time, go to <a href="' . esc_url( self::url( 'join', array( 'c' => $school['code'] ) ) ) . '">the front door</a>, choose Headteacher / SLT, and enter the code and this email address.</p>';
 		return $h;
 	}
 

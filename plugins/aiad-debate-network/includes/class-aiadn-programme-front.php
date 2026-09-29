@@ -150,7 +150,7 @@ class AIADN_Programme_Front {
 			return self::view_mat( AIADN_Front::get( 'mat' ) );
 		}
 		if ( '' !== AIADN_Front::get( 'partner' ) ) {
-			return self::view_partner( AIADN_Front::get( 'partner' ) );
+			return self::partner_page( AIADN_Front::get( 'partner' ) );
 		}
 		return self::view_national();
 	}
@@ -245,7 +245,18 @@ class AIADN_Programme_Front {
 		foreach ( AIADN_Stats::groups( 'partner' ) as $g ) {
 			$rows[] = array( '<a href="' . esc_url( AIADN_Front::url( 'programme', array( 'partner' => $g['key'] ) ) ) . '">' . self::esc( $g['label'] ) . '</a>', (string) $g['schools'], (string) $g['approved'], (string) $g['active'], (string) $g['debates'], (string) AIADN_Stats::judges_from_partner( $g['key'] ) );
 		}
-		$h .= AIADN_Result_Front::fold( 'Partners', '<p class="aiadn__small">From &ldquo;Did a partner introduce you?&rdquo; at school sign-up, and for judges when they submit scores. Open a partner for its impact report.</p>' . self::table( array( 'Partner', 'Schools', 'Approved', 'Started a debate', 'Debates', 'Judges' ), $rows, 'No school or judge has named a partner yet.' ), false );
+		$h .= AIADN_Result_Front::fold( 'Partners', '<p class="aiadn__small">Organisations named at sign-up whose school (or judge) agreed to tell them. Open one for its impact report.</p>' . self::table( array( 'Partner', 'Schools', 'Approved', 'Started a debate', 'Debates', 'Judges' ), $rows, 'No headteacher or judge has agreed to tell an organisation yet.' ), false );
+
+		// Referrals.
+		$rs   = AIADN_Stats::referrals_summary();
+		$body = self::tiles( array( 'Waiting for the headteacher or judge' => $rs['counts']['named'], 'Agreed to tell them' => $rs['counts']['shared'], 'Chose not to tell them' => $rs['counts']['not_shared'], 'Organisation said not us' => $rs['counts']['disowned'] ) );
+		$body .= '<p class="aiadn__small">A school or judge names who introduced them. Nobody is emailed until the headteacher or judge agrees, and the organisation can say it was not them.</p>';
+		$rows = array();
+		foreach ( $rs['disowned'] as $r ) {
+			$rows[] = array( self::esc( $r['who'] ), self::esc( $r['org'] ) );
+		}
+		$body .= self::table( array( 'Named', 'As introduced by' ), $rows, 'No referral has been disowned.' );
+		$h    .= AIADN_Result_Front::fold( 'Referrals', $body, $rs['counts']['disowned'] > 0 );
 
 		// Judges.
 		$body  = self::tiles( array( 'Accepted' => $j['accepted'], 'Different people' => $j['people'], 'Judged more than once' => $j['repeat'], 'Declined' => $j['declined'], 'Waiting to answer' => $j['invited'] ) );
@@ -299,47 +310,47 @@ class AIADN_Programme_Front {
 	/* One partner: aggregate only                                         */
 	/* ------------------------------------------------------------------ */
 
-	/** @return array<string,mixed> the figures a partner is sent */
-	private static function partner_report( string $key ): array {
-		$ids = AIADN_Stats::school_ids( 'partner', $key ) ?? array();
-		$f   = AIADN_Stats::figures( $ids );
-		return array(
-			'label'    => AIADN_Stats::group_label( 'partner', $key ),
-			'f'        => $f,
-			'judges'   => AIADN_Stats::judges_from_partner( $key ),
-			'started'  => (int) $f['funnel'][3][1],
-		);
-	}
-
-	private static function view_partner( string $key ): string {
+	private static function partner_page( string $key ): string {
 		$ids = AIADN_Stats::school_ids( 'partner', $key );
 		if ( ! $ids && 0 === AIADN_Stats::judges_from_partner( $key ) ) {
 			return '<h1>Partner not found</h1><p><a href="' . esc_url( AIADN_Front::url( 'programme' ) ) . '">&larr; Programme team</a></p>';
 		}
-		$r = self::partner_report( $key );
-		$f = $r['f'];
+		$label = AIADN_Stats::group_label( 'partner', $key );
+		$h     = '<h1>Impact report: ' . self::esc( $label ) . '</h1>';
+		$h    .= '<p class="aiadn__small aiadn__noprint"><a href="' . esc_url( AIADN_Front::url( 'programme' ) ) . '">&larr; Programme team</a> &middot; <a href="' . esc_url( AIADN_Front::url( 'programme', array( 'export' => 'partner', 'partner' => $key ) ) ) . '">Download as CSV</a></p>';
+		return $h . self::partner_body( $key, $label ) . '<p class="aiadn__small aiadn__noprint">The organisation has its own live version of this, by email link, once a headteacher or judge has agreed to tell it.</p>';
+	}
 
-		$h  = '<h1>Impact report: ' . self::esc( $r['label'] ) . '</h1>';
-		$h .= '<p class="aiadn__small aiadn__noprint"><a href="' . esc_url( AIADN_Front::url( 'programme' ) ) . '">&larr; Programme team</a> &middot; <a href="' . esc_url( AIADN_Front::url( 'programme', array( 'export' => 'partner', 'partner' => $key ) ) ) . '">Download as CSV</a></p>';
-		$h .= '<div class="aiadn__partner-logo">' . AIADN_Front::logo_html() . '</div><h2 class="aiadn__printonly">Impact report: ' . self::esc( $r['label'] ) . '</h2>';
+	/**
+	 * The figures for one organisation: what the programme team prints, and what the organisation sees on its
+	 * own dashboard. Counts only. No school, teacher, judge or student is named.
+	 */
+	public static function partner_body( string $key, string $label ): string {
+		$ids = AIADN_Stats::school_ids( 'partner', $key ) ?? array();
+		$f   = AIADN_Stats::figures( $ids );
+		$judges  = AIADN_Stats::judges_from_partner( $key );
+		$started = (int) $f['funnel'][3][1];
+
+		$h  = '<div class="aiadn__partner-logo">' . AIADN_Front::logo_html() . '</div><h2 class="aiadn__printonly">Impact report: ' . self::esc( $label ) . '</h2>';
 		$h .= '<p>National AI Conversation, AI Awareness Day 2027. Prepared ' . self::esc( wp_date( 'j F Y' ) ) . '.</p>';
 		$h .= self::tiles( array(
-			'Schools activated' => $f['approved'],
-			'Started a debate'  => $r['started'],
-			'Debates generated' => $f['debates'],
-			'Debates completed' => $f['counting'],
-			'Judges contributed' => $r['judges'],
-			'Students reached'  => $f['students'],
+			'Schools activated'  => $f['approved'],
+			'Started a debate'   => $started,
+			'Debates generated'  => $f['debates'],
+			'Debates completed'  => $f['counting'],
+			'Judges contributed' => $judges,
+			'Students reached'   => $f['students'],
 		) );
 		$h .= '<div class="aiadn__panel"><h2>What that means</h2><ul class="aiadn__list">';
-		$h .= '<li><strong>' . (int) $f['schools'] . '</strong> schools said ' . self::esc( $r['label'] ) . ' introduced them, and <strong>' . (int) $f['approved'] . '</strong> were approved by their headteacher.</li>';
+		$h .= '<li><strong>' . (int) $f['approved'] . '</strong> schools you introduced are taking part. Their headteachers agreed we could tell you.</li>';
 		$h .= '<li>Those schools took part in <strong>' . (int) $f['debates'] . '</strong> debates, and <strong>' . (int) $f['counting'] . '</strong> have been judged and counted, reaching <strong>' . (int) $f['students'] . '</strong> students.</li>';
 		$h .= '<li>Their students gave <strong>' . (int) $f['voice'] . '</strong> anonymous Student Voice answers.</li>';
 		$h .= '<li>Debates covered <strong>' . (int) $f['themes_used'] . '</strong> of the five themes, against <strong>' . (int) $f['connections'] . '</strong> different schools.</li>';
+		$h .= '<li><strong>' . (int) $judges . '</strong> judges you introduced have agreed to judge.</li>';
 		$h .= '</ul></div>';
 		$h .= '<div class="aiadn__panel"><h2>By theme</h2>' . self::count_table( $f['themes'], AIADN_Motions::THEMES ) . '<h2>By age group</h2>' . self::count_table( $f['ages'], AIADN_Motions::AGES ) . '</div>';
-		$h .= '<div class="aiadn__panel"><h2>What students said, by age group</h2>' . self::voice_panel( AIADN_Stats::voice_by_pathway( AIADN_Stats::school_ids( 'partner', $key ) ?? array(), self::PARTNER_MIN_SCHOOLS ), self::PARTNER_MIN_SCHOOLS ) . '</div>';
-		$h .= '<p class="aiadn__small">Counts only. No school, teacher, judge or student is named. The figures describe the schools that took part, based on each school saying who introduced them, and are not representative of schools nationally.</p>';
+		$h .= '<div class="aiadn__panel"><h2>What students said, by age group</h2>' . self::voice_panel( AIADN_Stats::voice_by_pathway( $ids, self::PARTNER_MIN_SCHOOLS ), self::PARTNER_MIN_SCHOOLS ) . '</div>';
+		$h .= '<p class="aiadn__small">Counts only. No school, teacher, judge or student is named. The figures describe the schools that took part and are not representative of schools nationally. Each school, judge and partner is responsible for their own part in the conversation, and you are responsible for how you use these figures.</p>';
 		$h .= '<p class="aiadn__noprint"><button class="aiadn__button aiadn__button--quiet" type="button" onclick="window.print()">Print or save as PDF</button></p>';
 		return $h;
 	}

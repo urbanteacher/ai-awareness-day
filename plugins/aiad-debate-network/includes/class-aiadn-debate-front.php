@@ -901,6 +901,7 @@ class AIADN_Debate_Front {
 		$h .= '<input type="hidden" name="aiadn_action" value="judge_respond"><input type="hidden" name="judge_id" value="' . (int) $judge['id'] . '">';
 		$h .= '<label class="aiadn__radio"><input type="checkbox" name="ack" value="1"> I will follow the host school\'s visitor and safeguarding rules.</label>';
 		$h .= '<label class="aiadn__radio"><input type="checkbox" name="name_public" value="1"> Show my name on the public result.</label>';
+		$h .= '<fieldset class="aiadn__roles"><legend>Did an organisation introduce you to judging? <span class="aiadn__opt">(optional)</span></legend><label for="jr-org">Organisation</label><input id="jr-org" name="ref_org" type="text" maxlength="200"><label for="jr-email">Email of the person there</label><input id="jr-email" name="ref_email" type="email"><label class="aiadn__radio"><input type="checkbox" name="share_referral" value="1"> Tell them I am judging, and when I have judged. They will see my name.</label><p class="aiadn__small">You are responsible for having their permission to give us their email address. They see your name in those emails and only totals on their dashboard.</p></fieldset>';
 		$h .= '<button class="aiadn__button" type="submit" name="decision" value="accept">I can judge</button> <button class="aiadn__button aiadn__button--quiet" type="submit" name="decision" value="decline">I can\'t make it</button></form></div>';
 		return $h;
 	}
@@ -929,6 +930,12 @@ class AIADN_Debate_Front {
 			AIADN_Front::redirect( 'judge', array_merge( $back, array( 'msg' => 'ack' ) ) );
 		}
 		AIADN_Debates::judge_respond( $debate, $target, $accept, '' !== AIADN_Front::post( 'name_public' ) );
+		if ( $accept ) {
+			$rid = AIADN_Referrals::name_referrer( 'judge', (int) $target['id'], AIADN_Front::post( 'ref_org' ), AIADN_Front::post( 'ref_email' ) );
+			if ( $rid ) {
+				AIADN_Referrals::decide( AIADN_Referrals::get( $rid ), '' !== AIADN_Front::post( 'share_referral' ), strtolower( $target['email'] ) );
+			}
+		}
 		AIADN_Front::redirect( 'judge', array_merge( $back, array( 'msg' => $accept ? 'accepted' : 'declined' ) ) );
 	}
 }

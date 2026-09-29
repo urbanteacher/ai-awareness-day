@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 9;
+	const DB_VERSION = 10;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -40,6 +40,8 @@ class AIADN_Database {
 		$certs   = self::table( 'certificates' );
 		$ratings = self::table( 'ratings' );
 		$voice   = self::table( 'voice' );
+		$partners  = self::table( 'partners' );
+		$referrals = self::table( 'referrals' );
 
 		$sql = array();
 
@@ -298,6 +300,41 @@ class AIADN_Database {
 			KEY school_phase (school_id,phase),
 			KEY pin_id (pin_id),
 			KEY debate_id (debate_id)
+		) {$charset};";
+
+		// An organisation that has introduced a school or a judge. Found by the email domain of the person
+		// named (or their whole address if it is a personal one), so spelling does not split it in two.
+		$sql[] = "CREATE TABLE {$partners} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			name varchar(255) NOT NULL DEFAULT '',
+			party_key varchar(255) NOT NULL DEFAULT '',
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY party_key (party_key)
+		) {$charset};";
+
+		// "Who introduced you?" A school or a judge names an organisation and a person there. Nobody is
+		// emailed until the school's headteacher (or the judge) agrees. The organisation can say it was not them.
+		$sql[] = "CREATE TABLE {$referrals} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			subject_type varchar(8) NOT NULL DEFAULT 'school',
+			subject_id bigint(20) unsigned NOT NULL,
+			org_name varchar(255) NOT NULL DEFAULT '',
+			referrer_email varchar(255) NOT NULL DEFAULT '',
+			partner_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			status varchar(12) NOT NULL DEFAULT 'named',
+			emails_stopped tinyint(1) NOT NULL DEFAULT 0,
+			shared_by varchar(255) NOT NULL DEFAULT '',
+			shared_at datetime DEFAULT NULL,
+			sent_approved datetime DEFAULT NULL,
+			sent_agreed datetime DEFAULT NULL,
+			sent_result datetime DEFAULT NULL,
+			disowned_at datetime DEFAULT NULL,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY subject (subject_type,subject_id),
+			KEY partner_id (partner_id),
+			KEY referrer_email (referrer_email)
 		) {$charset};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

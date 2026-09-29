@@ -95,6 +95,8 @@ final class AIADN_Stats {
 		}
 		// Answers given after a debate are left out, so what a debate did to opinion does not colour the picture.
 		$voice_rows = (array) $wpdb->get_results( "SELECT school_id, year_group, COUNT(*) AS n{$sums} FROM {$t( 'voice' )} WHERE phase <> 'after' GROUP BY school_id, year_group", ARRAY_A ); // phpcs:ignore WordPress.DB
+		$partners = self::keyed( 'SELECT id, name, party_key FROM ' . $t( 'partners' ), 'id' );
+		$referrals = (array) $wpdb->get_results( 'SELECT id, subject_type, subject_id, partner_id, status, org_name, created_at FROM ' . $t( 'referrals' ), ARRAY_A ); // phpcs:ignore WordPress.DB
 		$rates  = (array) $wpdb->get_results( "SELECT who, COUNT(*) AS n, AVG(rating) AS avg FROM {$t( 'ratings' )} GROUP BY who", ARRAY_A ); // phpcs:ignore WordPress.DB
 
 		foreach ( $debates as $id => $d ) {
@@ -104,10 +106,28 @@ final class AIADN_Stats {
 		foreach ( $schools as $id => $s ) {
 			$schools[ $id ]['region']  = AIADN_Regions::for_postcode( (string) $s['postcode'] );
 			$schools[ $id ]['mat_key'] = self::org_key( (string) $s['mat_name'] );
-			$schools[ $id ]['par_key'] = self::org_key( (string) $s['partner_ref'] );
 		}
 
-		self::$data = compact( 'schools', 'debates', 'cards', 'certs', 'voice', 'voice_rows', 'judges', 'issues', 'rates' );
+		// Who was introduced by whom, counting only what the school or judge agreed to share and the organisation has not disowned.
+		$judge_email = array();
+		foreach ( $judges as $j ) {
+			if ( 'accepted' === $j['status'] ) {
+				$judge_email[ (int) $j['id'] ] = strtolower( $j['email'] );
+			}
+		}
+		$partner_schools = $partner_judges = array();
+		foreach ( $referrals as $r ) {
+			if ( 'shared' !== $r['status'] || ! (int) $r['partner_id'] ) {
+				continue;
+			}
+			if ( 'school' === $r['subject_type'] ) {
+				$partner_schools[ (int) $r['partner_id'] ][ (int) $r['subject_id'] ] = true;
+			} elseif ( isset( $judge_email[ (int) $r['subject_id'] ] ) ) {
+				$partner_judges[ (int) $r['partner_id'] ][ $judge_email[ (int) $r['subject_id'] ] ] = true;
+			}
+		}
+
+		self::$data = compact( 'schools', 'debates', 'cards', 'certs', 'voice', 'voice_rows', 'judges', 'issues', 'rates', 'partners', 'referrals', 'partner_schools', 'partner_judges' );
 		return self::$data;
 	}
 
@@ -136,6 +156,8 @@ final class AIADN_Stats {
 	/**
 	 * The schools in a group: every school for the whole programme, or a region, trust or partner.
 	 *
+	 * For a partner the key is the partner's id, and the schools are the ones that agreed to be shared with it.
+	 *
 	 * @param string $kind '' (everyone), 'region', 'mat' or 'partner'
 	 * @return array<int,true>|null a set of school ids, or null for everyone
 	 */
@@ -143,7 +165,10 @@ final class AIADN_Stats {
 		if ( '' === $kind ) {
 			return null;
 		}
-		$field = array( 'region' => 'region', 'mat' => 'mat_key', 'partner' => 'par_key' )[ $kind ] ?? null;
+		if ( 'partner' === $kind ) {
+			return self::load()['partner_schools'][ (int) $key ] ?? array();
+		}
+		$field = array( 'region' => 'region', 'mat' => 'mat_key' )[ $kind ] ?? null;
 		$set   = array();
 		if ( $field ) {
 			foreach ( self::load()['schools'] as $id => $s ) {
@@ -360,26 +385,42 @@ final class AIADN_Stats {
 	 * @return array<int,array<string,mixed>> sorted by schools, largest first
 	 */
 	public static function groups( string $kind ): array {
-		$d     = self::load();
-		$field = array( 'region' => 'region', 'mat' => 'mat_key', 'partner' => 'par_key' )[ $kind ];
-		$raw   = array( 'region' => 'region', 'mat' => 'mat_name', 'partner' => 'partner_ref' )[ $kind ];
-
-		$rows   = array();
-		$member = array();
-		foreach ( $d['schools'] as $sid => $s ) {
-			$key = (string) $s[ $field ];
-			if ( '' === $key ) {
-				continue;
+		$d    = self::load();
+		$rows = array();
+		$member = array(); // school id => group key
+		$raw    = array(); // school id => the name as it was typed
+		if ( 'partner' === $kind ) {
+			foreach ( $d['partner_schools'] as $pid => $set ) {
+				foreach ( array_keys( $set ) as $sid ) {
+					if ( isset( $d['schools'][ $sid ] ) ) {
+						$member[ $sid ] = (string) $pid;
+						$raw[ $sid ]    = (string) ( $d['partners'][ $pid ]['name'] ?? '' );
+					}
+				}
 			}
-			$member[ (int) $sid ] = $key;
+			// A partner with a judge but no school yet is still a partner.
+			foreach ( array_keys( $d['partner_judges'] ) as $pid ) {
+				$rows[ (string) $pid ] = self::blank_group( (string) $pid, (string) ( $d['partners'][ $pid ]['name'] ?? '' ) );
+			}
+		} else {
+			$field = array( 'region' => 'region', 'mat' => 'mat_key' )[ $kind ];
+			$name  = array( 'region' => 'region', 'mat' => 'mat_name' )[ $kind ];
+			foreach ( $d['schools'] as $sid => $s ) {
+				if ( '' !== (string) $s[ $field ] ) {
+					$member[ (int) $sid ] = (string) $s[ $field ];
+					$raw[ (int) $sid ]    = trim( (string) $s[ $name ] );
+				}
+			}
+		}
+		foreach ( $member as $sid => $key ) {
+			$s = $d['schools'][ $sid ];
 			if ( ! isset( $rows[ $key ] ) ) {
-				$rows[ $key ] = array( 'key' => $key, 'label' => '', 'spellings' => array(), 'schools' => 0, 'approved' => 0, 'active' => 0, 'debates' => 0, 'students' => 0, 'voice' => 0 );
+				$rows[ $key ] = self::blank_group( $key, '' );
 			}
 			++$rows[ $key ]['schools'];
 			$rows[ $key ]['approved'] += 'approved' === $s['status'] ? 1 : 0;
 			$rows[ $key ]['voice']    += (int) ( $d['voice'][ (int) $sid ] ?? 0 );
-			$spelling = trim( (string) $s[ $raw ] );
-			$rows[ $key ]['spellings'][ $spelling ] = ( $rows[ $key ]['spellings'][ $spelling ] ?? 0 ) + 1;
+			$rows[ $key ]['spellings'][ $raw[ $sid ] ] = ( $rows[ $key ]['spellings'][ $raw[ $sid ] ] ?? 0 ) + 1;
 		}
 		$active = array();
 		foreach ( $d['debates'] as $id => $x ) {
@@ -401,12 +442,18 @@ final class AIADN_Stats {
 			++$rows[ $member[ $sid ] ]['active'];
 		}
 		foreach ( $rows as $key => $row ) {
-			arsort( $row['spellings'] );
-			$rows[ $key ]['label']     = (string) key( $row['spellings'] );
-			$rows[ $key ]['variants']  = count( $row['spellings'] );
+			if ( '' === $row['label'] ) {
+				arsort( $row['spellings'] );
+				$rows[ $key ]['label'] = (string) key( $row['spellings'] );
+			}
+			$rows[ $key ]['variants'] = max( 1, count( $row['spellings'] ) );
 		}
 		usort( $rows, static fn( $a, $b ) => $b['schools'] <=> $a['schools'] ?: strcmp( $a['label'], $b['label'] ) );
 		return $rows;
+	}
+
+	private static function blank_group( string $key, string $label ): array {
+		return array( 'key' => $key, 'label' => $label, 'spellings' => array(), 'schools' => 0, 'approved' => 0, 'active' => 0, 'debates' => 0, 'students' => 0, 'voice' => 0 );
 	}
 
 	/** The name to show for a group key, or the key itself if it is unknown. */
@@ -444,17 +491,28 @@ final class AIADN_Stats {
 		return $out;
 	}
 
-	/**
-	 * Judges a partner has brought in: accepted judges who named the partner.
-	 */
+	/** Judges a partner has brought in: accepted judges who agreed to be shared with it. */
 	public static function judges_from_partner( string $key ): int {
-		$people = array();
-		foreach ( self::load()['judges'] as $row ) {
-			if ( 'accepted' === $row['status'] && '' !== $key && self::org_key( (string) $row['partner_ref'] ) === $key ) {
-				$people[ strtolower( $row['email'] ) ] = true;
+		return count( self::load()['partner_judges'][ (int) $key ] ?? array() );
+	}
+
+	/**
+	 * Referrals by state, for the programme team. Disowned ones are listed so somebody can look into them.
+	 *
+	 * @return array{counts:array<string,int>,disowned:array<int,array<string,string>>}
+	 */
+	public static function referrals_summary(): array {
+		$d      = self::load();
+		$counts = array( 'named' => 0, 'shared' => 0, 'not_shared' => 0, 'disowned' => 0 );
+		$out    = array();
+		foreach ( $d['referrals'] as $r ) {
+			$counts[ $r['status'] ] = ( $counts[ $r['status'] ] ?? 0 ) + 1;
+			if ( 'disowned' === $r['status'] ) {
+				$name  = 'school' === $r['subject_type'] ? ( $d['schools'][ (int) $r['subject_id'] ]['name'] ?? 'A school' ) : 'A judge';
+				$out[] = array( 'who' => $name, 'org' => $r['org_name'] );
 			}
 		}
-		return count( $people );
+		return array( 'counts' => $counts, 'disowned' => $out );
 	}
 
 	/* ------------------------------------------------------------------ */
@@ -564,7 +622,7 @@ final class AIADN_Stats {
 			}
 		}
 		$variants = array();
-		foreach ( array( 'mat' => 'Trust', 'partner' => 'Partner' ) as $kind => $label ) {
+		foreach ( array( 'mat' => 'Trust' ) as $kind => $label ) {
 			foreach ( self::groups( $kind ) as $g ) {
 				if ( $g['variants'] > 1 ) {
 					$variants[] = array( 'kind' => $label, 'names' => implode( ' / ', array_keys( $g['spellings'] ) ) );

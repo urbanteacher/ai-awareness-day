@@ -53,6 +53,20 @@ def wp_login(login):
     return b, s, h
 
 
+def link_partner(name, email, school_codes, judge_emails=()):
+    """A partner whose schools (and judges) have agreed to be shared with it. Returns the partner's id."""
+    key = email.split("@")[1]
+    sql(f"INSERT INTO wp_aiadn_partners (name,party_key,created_at) VALUES ('{name}','{key}',UTC_TIMESTAMP())")
+    pid = sql(f"SELECT id FROM wp_aiadn_partners WHERE party_key='{key}'")
+    for code in school_codes:
+        sid = sql(f"SELECT id FROM wp_aiadn_schools WHERE code='{code}'")
+        sql(f"INSERT INTO wp_aiadn_referrals (subject_type,subject_id,org_name,referrer_email,partner_id,status,shared_by,shared_at,created_at) VALUES ('school',{sid},'{name}','{email}',{pid},'shared','test',UTC_TIMESTAMP(),UTC_TIMESTAMP())")
+    for je in judge_emails:
+        jid = sql(f"SELECT id FROM wp_aiadn_judges WHERE email='{je}' AND status='accepted' LIMIT 1")
+        sql(f"INSERT INTO wp_aiadn_referrals (subject_type,subject_id,org_name,referrer_email,partner_id,status,shared_by,shared_at,created_at) VALUES ('judge',{jid},'{name}','{email}',{pid},'shared','test',UTC_TIMESTAMP(),UTC_TIMESTAMP())")
+    return pid
+
+
 def tile(html, label):
     m = re.search(r'<strong>([^<]*)</strong><span>' + re.escape(label) + r'</span>', html)
     return m.group(1).strip() if m else None
@@ -128,18 +142,20 @@ def run(admin_login, sub_login):
     sql(f"UPDATE wp_aiadn_schools SET created_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 DAY) WHERE code='{G_code}'")
     oak, oak_lower, beech, afg, afg_lower, formula = f"Oak Trust {U}", f"oak trust {U}", f"Beech Trust {U}", f"Apps for Good {U}", f"apps for good {U}", f"=HYPERLINK {U}"
     afg_upper = f"APPS FOR GOOD {U}"
-    for sch, mat, partner in ((A, oak, afg), (B, oak_lower, ""), (C, beech, afg_lower), (E, "", formula), (F, "", afg_upper)):
-        sql(f"UPDATE wp_aiadn_schools SET mat_name='{mat}', partner_ref='{partner}' WHERE code='{sch['code']}'")
+    for sch, mat in ((A, oak), (B, oak_lower), (C, beech)):
+        sql(f"UPDATE wp_aiadn_schools SET mat_name='{mat}' WHERE code='{sch['code']}'")
 
     d_ab = s3.run_debate(A, B, 61, winner="a")
     d_ac = s3.run_debate(A, C, 62, score=False)
     s3.set_start(d_ac["code"], 60)
     j = Browser()
-    j.post(f"{SITE}/conversation/score/?t={d_ac['token']}", {"t": d_ac["token"], "aiadn_action": "submit_result", **s3.scores(winner="b"), "partner_ref": afg})
+    j.post(f"{SITE}/conversation/score/?t={d_ac['token']}", {"t": d_ac["token"], "aiadn_action": "submit_result", **s3.scores(winner="b")})
     d_ad = s3.run_debate(A, D, 63, winner="a")
     s, html, _ = A["browser"].get(f"{SITE}/conversation/issue/?d={d_ad['code']}")
     A["browser"].post(f"{SITE}/conversation/issue/?d={d_ad['code']}", {"csrf": field(html, "csrf"), "aiadn_action": "report_issue", "category": "result_wrong", "details": "We think the scores were swapped."})
     check("two counted debates and one held by an issue", s2.page(A["browser"], d_ab["code"])[1].count("Result") > 0 and s3.sql(f"SELECT status FROM wp_aiadn_issues WHERE debate_id=(SELECT id FROM wp_aiadn_debates WHERE code='{d_ad['code']}')") == "reported")
+    pid = link_partner(afg, f"jo@appsforgood{RUN}.org", [A["code"], C["code"], F["code"]], [d_ac["judge"]])
+    link_partner(formula, f"x@formula{RUN}.org", [E["code"]])
     stuck = s2.new_debate(D)
     sql(f"UPDATE wp_aiadn_debates SET stage_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 DAY) WHERE code='{stuck}'")
     fresh = s2.new_debate(D)
@@ -161,7 +177,7 @@ def run(admin_login, sub_login):
     trusts = g1.get("Trust", {})
     check("'Oak Trust' and 'oak trust' are one trust of two schools", trusts.get(oak, trusts.get(oak_lower, [0]))[0] == 2 and (oak in trusts) != (oak_lower in trusts), str([k for k in trusts if U in k]))
     partners = g1.get("Partner", {})
-    check("'Apps for Good', 'apps for good' and 'APPS FOR GOOD' are one partner of three schools", sum(v[0] for k, v in partners.items() if k.lower() == afg.lower()) == 3 and sum(1 for k in partners if k.lower() == afg.lower()) == 1, str({k: v for k, v in partners.items() if U in k}))
+    check("the introducing organisation is one partner of three schools", partners.get(afg, [0])[0] == 3, str({k: v for k, v in partners.items() if U in k}))
     check("a partner name that looks like a formula cannot run as one in the CSV", f"'{formula}" in body1 and f'\n{formula}' not in body1)
 
     print("\n4. The dashboard")
@@ -194,9 +210,9 @@ def run(admin_login, sub_login):
     check("the trust CSV has its figures", '"Students reached",48' in html and "Group" in html, html[:120])
 
     print("\n6. One partner: counts only")
-    pkey = org_key(afg)
+    pkey = str(pid)
     s, html, _ = admin.get(f"{SITE}/conversation/programme/?partner={pkey}")
-    check("the partner report has the AiAd27 logo and the partner's name", "aiad27-lockup.svg" in html and (afg in html or afg_lower in html) and "Impact report" in html)
+    check("the partner report has the AiAd27 logo and the partner's name", "aiad27-lockup.svg" in html and afg in html and "Impact report" in html)
     check("schools activated: 3", tile(html, "Schools activated") == "3", str(tile(html, "Schools activated")))
     check("debates generated: 3, completed: 2, students: 48", tile(html, "Debates generated") == "3" and tile(html, "Debates completed") == "2" and tile(html, "Students reached") == "48", str((tile(html, "Debates generated"), tile(html, "Debates completed"), tile(html, "Students reached"))))
     check("judges contributed: 1 (the judge who named the partner)", tile(html, "Judges contributed") == "1", str(tile(html, "Judges contributed")))
@@ -207,12 +223,9 @@ def run(admin_login, sub_login):
     s, html, _ = admin.get(f"{SITE}/conversation/programme/")
     check("the dashboard's partner table links to the report", f"partner={pkey}" in html)
 
-    print("\n7. The judge is asked about partners")
-    d_open = s3.run_debate(A, B, 64, score=False)
-    s3.set_start(d_open["code"], 60)
-    s, html, _ = Browser().get(f"{SITE}/conversation/score/?t={d_open['token']}")
-    check("the judge's page asks 'Did a partner introduce you'", "Did a partner introduce you to judging?" in html and 'name="partner_ref"' in html)
-    check("the answer is kept on the judge, not the scorecard", sql(f"SELECT partner_ref FROM wp_aiadn_judges WHERE email='{d_ac['judge']}'") == afg)
+    print("\n7. The scorecard no longer asks for a partner")
+    s, html, _ = Browser().get(f"{SITE}/conversation/score/?t={d_ab['token']}")
+    check("the free-text partner question is gone (judges say it when they accept)", 'name="partner_ref"' not in html)
 
     print("\n8. The School AI Snapshot")
     s, html, _ = A["browser"].get(f"{SITE}/conversation/school/")

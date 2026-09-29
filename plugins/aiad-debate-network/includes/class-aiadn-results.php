@@ -47,6 +47,7 @@ class AIADN_Results {
 		}
 		AIADN_Certificates::recalc( (int) $debate['school_a_id'] );
 		AIADN_Certificates::recalc( (int) $debate['school_b_id'] );
+		AIADN_Referrals::on_result( $debate );
 	}
 
 	/**

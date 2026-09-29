@@ -138,7 +138,6 @@ class AIADN_Result_Front {
 				$values = AIADN_Scorecards::clean( self::posted_scores() );
 				$errors = AIADN_Scorecards::submit( $debate, $judge, $values );
 				if ( ! $errors ) {
-					AIADN_Debates::set_judge_partner( (int) $judge['id'], mb_substr( AIADN_Front::post( 'partner_ref' ), 0, 120 ) );
 					wp_safe_redirect( self::score_url( $debate, $mode, $raw, array( 'msg' => 'submitted' ) ) );
 					exit;
 				}
@@ -232,7 +231,6 @@ class AIADN_Result_Front {
 		$h .= '<label for="sc-cb">Comment for ' . self::esc( $b ) . '</label><textarea id="sc-cb" name="comment_b" rows="3" maxlength="1000">' . esc_textarea( (string) ( $v['comment_b'] ?? '' ) ) . '</textarea>';
 		$h .= '<fieldset class="aiadn__roles"><legend>Room vote after the debate</legend>' . self::vote_inputs( 'va', $v ) . '</fieldset>';
 
-		$h .= '<label for="sc-partner">Did a partner introduce you to judging? <span class="aiadn__opt">(optional)</span></label><input id="sc-partner" name="partner_ref" type="text" maxlength="120" value="' . esc_attr( (string) ( $judge['partner_ref'] ?? '' ) ) . '"><p class="aiadn__small">For example a charity or company that asked you to take part. We only use it to count judges by partner.</p>';
 		$h .= '<p class="aiadn__small" id="aiadn-saved" aria-live="polite">' . ( $card ? 'Draft saved earlier.' : 'Nothing saved yet.' ) . '</p>';
 		$h .= '<button class="aiadn__button aiadn__button--quiet" type="submit" name="aiadn_action" value="save_scores">Save draft</button> <button class="aiadn__button" type="submit" name="aiadn_action" value="submit_result">Submit result</button></form>';
 		$h .= '<p class="aiadn__small"><a href="' . esc_url( $back ) . '">&larr; Back to judging</a></p>';

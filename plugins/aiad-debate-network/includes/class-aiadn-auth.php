@@ -91,10 +91,10 @@ class AIADN_Auth {
 	/* ------------------------------------------------------------------ */
 
 	/** Make a new token for a kind of link. Any earlier unused token of that kind for the school is cancelled. */
-	public static function issue_token( int $school_id, string $kind, int $ttl, int $ref_id = 0 ): string {
+	public static function issue_token( int $school_id, string $kind, int $ttl, int $ref_id = 0, bool $supersede = true ): string {
 		global $wpdb;
 		$table = AIADN_Database::table( 'tokens' );
-		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET used_at = %s WHERE school_id = %d AND kind = %s AND ref_id = %d AND used_at IS NULL", AIADN_Util::now(), $school_id, $kind, $ref_id ) ); // phpcs:ignore WordPress.DB
+		$supersede && $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET used_at = %s WHERE school_id = %d AND kind = %s AND ref_id = %d AND used_at IS NULL", AIADN_Util::now(), $school_id, $kind, $ref_id ) ); // phpcs:ignore WordPress.DB
 
 		$token = AIADN_Util::new_token();
 		$wpdb->insert( // phpcs:ignore WordPress.DB

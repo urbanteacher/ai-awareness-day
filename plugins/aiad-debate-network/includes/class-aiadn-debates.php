@@ -380,6 +380,7 @@ class AIADN_Debates {
 			self::invite_judge( $debate, $judge );
 		}
 		AIADN_Calendar::send_initial( $debate );
+		AIADN_Referrals::on_debate_agreed( $debate );
 	}
 
 	public static function cancel( array $debate, int $by_school_id ): void {
@@ -425,14 +426,6 @@ class AIADN_Debates {
 	}
 
 	/** @param array<string,string> $data name, email, organisation, judge_type */
-	/** Which partner introduced this judge, as the judge said when submitting. Optional. */
-	public static function set_judge_partner( int $judge_id, string $partner ): void {
-		global $wpdb;
-		if ( '' !== $partner ) {
-			$wpdb->update( AIADN_Database::table( 'judges' ), array( 'partner_ref' => $partner ), array( 'id' => $judge_id ) ); // phpcs:ignore WordPress.DB
-		}
-	}
-
 	public static function create_judge( int $debate_id, array $data ): int {
 		global $wpdb;
 		$wpdb->insert( // phpcs:ignore WordPress.DB
