@@ -18,6 +18,7 @@ class AIADN_Auth {
 	const SLT_TOKEN_TTL   = 1209600;    // 14 days.
 	const PIN_TTL         = 10800;      // 3 hours: "expires after the lesson".
 	const SESSION_TTL     = 2592000;    // 30 days for adults.
+	const JUDGE_TTL       = 86400;      // 24 hours: long enough to save mid-debate.
 	const STUDENT_TTL     = 10800;      // 3 hours for students.
 	const COOKIE          = 'aiadn_session';
 
@@ -90,10 +91,10 @@ class AIADN_Auth {
 	/* ------------------------------------------------------------------ */
 
 	/** Make a new token for a kind of link. Any earlier unused token of that kind for the school is cancelled. */
-	public static function issue_token( int $school_id, string $kind, int $ttl ): string {
+	public static function issue_token( int $school_id, string $kind, int $ttl, int $ref_id = 0 ): string {
 		global $wpdb;
 		$table = AIADN_Database::table( 'tokens' );
-		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET used_at = %s WHERE school_id = %d AND kind = %s AND used_at IS NULL", AIADN_Util::now(), $school_id, $kind ) ); // phpcs:ignore WordPress.DB
+		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET used_at = %s WHERE school_id = %d AND kind = %s AND ref_id = %d AND used_at IS NULL", AIADN_Util::now(), $school_id, $kind, $ref_id ) ); // phpcs:ignore WordPress.DB
 
 		$token = AIADN_Util::new_token();
 		$wpdb->insert( // phpcs:ignore WordPress.DB
@@ -101,6 +102,7 @@ class AIADN_Auth {
 			array(
 				'school_id'  => $school_id,
 				'kind'       => $kind,
+				'ref_id'     => $ref_id,
 				'token_hash' => AIADN_Util::hash_secret( $token ),
 				'hint'       => substr( $token, -4 ),
 				'expires_at' => AIADN_Util::in_seconds( $ttl ),
@@ -234,7 +236,13 @@ class AIADN_Auth {
 			return null;
 		}
 		$member = null;
-		if ( 'student' !== $payload['r'] ) {
+		if ( 'judge' === $payload['r'] ) {
+			// A judge session is tied to one judge row; it must still involve this school.
+			$member = AIADN_Debates::get_judge( (int) $payload['m'] );
+			if ( ! $member || ! AIADN_Debates::judge_involves_school( $member, (int) $school['id'] ) || ! in_array( $member['status'], array( 'invited', 'accepted' ), true ) ) {
+				return null;
+			}
+		} elseif ( 'student' !== $payload['r'] ) {
 			$member = AIADN_Schools::get_member( (int) $payload['m'] );
 			// The role in the cookie must still be the person's role, so handing over the lead role ends old sessions.
 			if ( ! $member || (int) $member['school_id'] !== (int) $school['id'] || $member['role'] !== $payload['r'] ) {

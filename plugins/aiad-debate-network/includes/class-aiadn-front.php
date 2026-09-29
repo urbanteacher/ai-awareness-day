@@ -19,10 +19,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
+
+	/** @var string Strand colour for the page: safe, smart, creative, responsible or future. */
+	private static $strand = 'safe';
+
+	/** Each page takes a strand colour, like the homepage sections. Debate pages override it with their theme. */
+	const VIEW_STRANDS = array(
+		'join'     => 'safe',
+		'register' => 'creative',
+		'approve'  => 'responsible',
+		'school'   => 'safe',
+		'invite'   => 'smart',
+		'debate'   => 'smart',
+		'judge'    => 'smart',
+	);
 
 	public static function register(): void {
 		add_action( 'init', array( __CLASS__, 'add_rewrites' ), 5 );
@@ -47,6 +61,16 @@ class AIADN_Front {
 	public static function query_vars( array $vars ): array {
 		$vars[] = 'aiadn_view';
 		return $vars;
+	}
+
+	public static function set_title( string $title ): void {
+		self::$title = $title;
+	}
+
+	public static function set_strand( string $strand ): void {
+		if ( isset( AIADN_Motions::THEMES[ $strand ] ) ) {
+			self::$strand = $strand;
+		}
 	}
 
 	public static function url( string $view, array $args = array() ): string {
@@ -74,7 +98,8 @@ class AIADN_Front {
 			AIADN_Database::create_tables();
 		}
 
-		$html = call_user_func( array( __CLASS__, 'view_' . $view ) );
+		self::$strand = self::VIEW_STRANDS[ $view ];
+		$html         = call_user_func( array( __CLASS__, 'view_' . $view ) );
 		self::output( $html );
 	}
 
@@ -83,15 +108,31 @@ class AIADN_Front {
 		add_filter( 'wp_robots', static fn( $r ) => array( 'noindex' => true, 'nofollow' => true ) );
 		wp_enqueue_style( 'aiadn', AIADN_PLUGIN_URL . 'public/aiadn.css', array(), AIADN_VERSION );
 		get_header();
-		echo '<main id="main" class="aiadn"><div class="aiadn__card">';
+
+		// The page's own <h1> (and an optional "back" link above it) moves into the coloured band.
+		$lead  = '';
+		$title = esc_html( self::$title );
+		$rest  = $inner;
+		if ( preg_match( '#^(<p class="aiadn__small">.*?</p>)?<h1>(.*?)</h1>(.*)$#s', $inner, $m ) ) {
+			$lead  = $m[1];
+			$title = $m[2];
+			$rest  = $m[3];
+		}
+
+		echo '<main id="main" class="aiadn aiadn--' . esc_attr( self::$strand ) . '">';
+		echo '<header class="aiadn__band"><div class="aiadn__wrap">';
+		echo $lead; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.
 		echo '<p class="aiadn__eyebrow">National AI Conversation</p>';
-		echo $inner; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts below.
-		echo '</div></main>';
+		echo '<h1>' . $title . '</h1>'; // phpcs:ignore WordPress.Security.EscapeOutput -- already escaped where the view built it.
+		echo '</div></header>';
+		echo '<div class="aiadn__body"><div class="aiadn__wrap">';
+		echo $rest; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts below.
+		echo '</div></div></main>';
 		get_footer();
 		exit;
 	}
 
-	private static function redirect( string $view, array $args = array() ): void {
+	public static function redirect( string $view, array $args = array() ): void {
 		wp_safe_redirect( self::url( $view, $args ) );
 		exit;
 	}
@@ -100,19 +141,19 @@ class AIADN_Front {
 	/* Small helpers                                                       */
 	/* ------------------------------------------------------------------ */
 
-	private static function is_post(): bool {
+	public static function is_post(): bool {
 		return isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === $_SERVER['REQUEST_METHOD'];
 	}
 
-	private static function post( string $key ): string {
+	public static function post( string $key ): string {
 		return isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? trim( sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
-	private static function get( string $key ): string {
+	public static function get( string $key ): string {
 		return isset( $_GET[ $key ] ) && is_string( $_GET[ $key ] ) ? trim( sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
-	private static function message( string $key ): string {
+	public static function message( string $key ): string {
 		$messages = array(
 			'nomatch'   => "We couldn't match those details.",
 			'slow'      => 'Too many attempts. Please wait a few minutes and try again.',
@@ -121,27 +162,29 @@ class AIADN_Front {
 			'signedout' => 'You are signed out.',
 			'pin'       => 'A new class PIN has started. The old one no longer works.',
 			'resent'    => 'We have sent the approval email again.',
+			'invalid'   => 'That link is no longer valid.',
+			'declined'  => 'You have left this debate. The other school has been told.',
 		);
 		return $messages[ $key ] ?? '';
 	}
 
-	private static function notice( string $text, string $type = 'info' ): string {
+	public static function notice( string $text, string $type = 'info' ): string {
 		return '' === $text ? '' : '<p class="aiadn__notice aiadn__notice--' . esc_attr( $type ) . '" role="status">' . esc_html( $text ) . '</p>';
 	}
 
-	private static function local_time( string $utc ): string {
+	public static function local_time( string $utc ): string {
 		return wp_date( 'H:i', strtotime( $utc . ' UTC' ) );
 	}
 
-	private static function honeypot(): string {
+	public static function honeypot(): string {
 		return '<div class="aiadn__hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>';
 	}
 
-	private static function honeypot_tripped(): bool {
+	public static function honeypot_tripped(): bool {
 		return '' !== self::post( 'website' );
 	}
 
-	private static function csrf_field(): string {
+	public static function csrf_field(): string {
 		return '<input type="hidden" name="csrf" value="' . esc_attr( AIADN_Auth::csrf() ) . '">';
 	}
 
@@ -191,11 +234,23 @@ class AIADN_Front {
 		return self::render_front_door( self::message( self::get( 'msg' ) ), AIADN_Util::normalise_school_code( self::get( 'c' ) ) );
 	}
 
+	/** An invitation token that is being carried through sign-in, or ''. */
+	public static function carried_invite(): string {
+		$inv = self::post( 'inv' ) ?: self::get( 'inv' );
+		return preg_match( '/^[a-f0-9]{40}$/', $inv ) ? $inv : '';
+	}
+
 	private static function render_front_door( string $error, string $prefill_code ): string {
 		$h  = '<h1>Enter your school code</h1>';
 		$h .= self::notice( $error, 'error' );
+		if ( self::carried_invite() ) {
+			$h .= '<p>Sign in with your school code to accept the debate invitation.</p>';
+		}
 		$h .= '<form method="post" action="' . esc_url( self::url( 'join' ) ) . '" class="aiadn__form" novalidate>';
 		$h .= '<input type="hidden" name="aiadn_action" value="front_door">';
+		if ( self::carried_invite() ) {
+			$h .= '<input type="hidden" name="inv" value="' . esc_attr( self::carried_invite() ) . '">';
+		}
 		$h .= self::honeypot();
 		$h .= '<label for="aiadn-code">School code</label>';
 		$h .= '<input id="aiadn-code" name="school_code" type="text" value="' . esc_attr( $prefill_code ) . '" placeholder="SCH-3F9A2" autocapitalize="characters" autocomplete="off" maxlength="12" required class="aiadn__code">';
@@ -256,8 +311,12 @@ class AIADN_Front {
 			list( $member, $by_domain ) = AIADN_Schools::eligibility( $school, $email, $role );
 			$eligible                   = (bool) ( $member || $by_domain );
 		}
-		$ref = self::send_or_decoy( $school, $email, 'signin', $role, $eligible );
-		self::redirect( 'join', array( 'step' => 'code', 'ref' => $ref ) );
+		$ref  = self::send_or_decoy( $school, $email, 'signin', $role, $eligible );
+		$args = array( 'step' => 'code', 'ref' => $ref );
+		if ( self::carried_invite() ) {
+			$args['inv'] = self::carried_invite();
+		}
+		self::redirect( 'join', $args );
 	}
 
 	private static function render_code_form( string $view, string $ref, string $error ): string {
@@ -268,6 +327,9 @@ class AIADN_Front {
 		$h   .= self::notice( $error, 'error' );
 		$h   .= '<form method="post" action="' . esc_url( self::url( $view ) ) . '" class="aiadn__form">';
 		$h   .= '<input type="hidden" name="aiadn_action" value="verify"><input type="hidden" name="ref" value="' . esc_attr( $ref ) . '">';
+		if ( self::carried_invite() ) {
+			$h .= '<input type="hidden" name="inv" value="' . esc_attr( self::carried_invite() ) . '">';
+		}
 		$h   .= '<label for="aiadn-digits">6-digit code</label>';
 		$h   .= '<input id="aiadn-digits" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required class="aiadn__code" autofocus>';
 		$h   .= '<button type="submit" class="aiadn__button">Continue</button></form>';
@@ -305,6 +367,16 @@ class AIADN_Front {
 			self::redirect( 'school', array( 'welcome' => 1 ) );
 		}
 
+		// A judge signs in as that judge, not as a school member.
+		if ( 'judge' === $row['role_hint'] ) {
+			$judge = AIADN_Debates::judge_for_school_email( (int) $school['id'], $email );
+			if ( ! $judge ) {
+				self::redirect( 'join', array( 'msg' => 'nomatch' ) );
+			}
+			AIADN_Auth::start_session( array( 'member_id' => (int) $judge['id'], 'school_id' => (int) $school['id'], 'role' => 'judge' ), AIADN_Auth::JUDGE_TTL );
+			self::redirect( 'judge' );
+		}
+
 		// Sign in. A colleague on the same email domain joins here (decision applied: same domain joins straight away).
 		if ( ! $member && 'teacher' === $row['role_hint'] ) {
 			list( , $by_domain ) = AIADN_Schools::eligibility( $school, $email, 'teacher' );
@@ -322,6 +394,9 @@ class AIADN_Front {
 		}
 		AIADN_Schools::mark_member_verified( (int) $member['id'] );
 		AIADN_Auth::start_session( array( 'member_id' => (int) $member['id'], 'school_id' => (int) $school['id'], 'role' => (string) $member['role'] ), AIADN_Auth::SESSION_TTL );
+		if ( self::carried_invite() ) {
+			self::redirect( 'invite', array( 't' => self::carried_invite() ) );
+		}
 		self::redirect( 'school' );
 	}
 
@@ -342,7 +417,7 @@ class AIADN_Front {
 
 	private static function view_register(): string {
 		self::$title = 'Register your school';
-		$values      = array();
+		$values      = array( 'inv' => self::carried_invite() );
 		$errors      = array();
 
 		if ( self::is_post() ) {
@@ -373,6 +448,7 @@ class AIADN_Front {
 			'partner_ref'  => self::post( 'partner_ref' ),
 			'age_phases'   => array(),
 			'agree'        => '' !== self::post( 'agree' ),
+			'inv'          => self::carried_invite(),
 		);
 		$posted_phases = isset( $_POST['age_phases'] ) && is_array( $_POST['age_phases'] ) ? array_map( 'sanitize_key', wp_unslash( $_POST['age_phases'] ) ) : array(); // phpcs:ignore WordPress.Security
 		$values['age_phases'] = array_values( array_intersect( array( 'primary', 'secondary', 'post16' ), $posted_phases ) );
@@ -413,6 +489,15 @@ class AIADN_Front {
 			return array( $values, $errors );
 		}
 
+		$invite_debate = null;
+		if ( '' !== $values['inv'] ) {
+			$tok           = AIADN_Auth::find_token( $values['inv'], 'debate_invite' );
+			$invite_debate = $tok ? AIADN_Debates::get( (int) $tok['ref_id'] ) : null;
+			if ( ! $invite_debate || 'awaiting_opponent' !== $invite_debate['status'] ) {
+				return array( $values, array( 'form' => 'That invitation has expired or has already been taken. Ask the other school to send a new one.' ) );
+			}
+		}
+
 		$result = AIADN_Schools::register(
 			array(
 				'name'         => $values['name'],
@@ -433,6 +518,11 @@ class AIADN_Front {
 			return array( $values, array( 'form' => $msg ) );
 		}
 
+		if ( $invite_debate ) {
+			$lead_row = AIADN_Schools::lead( (int) $result );
+			AIADN_Debates::claim_slot( (int) $invite_debate['id'], (int) $result, $lead_row ? (int) $lead_row['id'] : 0, 'awaiting_b_approval' );
+		}
+
 		list( $ref, $code ) = AIADN_Auth::issue_code( (int) $result, $values['email'], 'register', 'lead' );
 		AIADN_Mailer::send_code( $values['email'], $code );
 		self::remember_mask( $ref, $values['email'] );
@@ -448,11 +538,17 @@ class AIADN_Front {
 		$val = static fn( string $k ) => esc_attr( (string) ( $v[ $k ] ?? '' ) );
 		$h   = '<h1>Register your school</h1>';
 		$h  .= '<p>Register once. Colleagues, students and judges then use your school code.</p>';
+		if ( ! empty( $v['inv'] ) ) {
+			$h .= '<p class="aiadn__notice aiadn__notice--info">You are registering to accept a debate invitation. Once your headteacher approves your school, the debate is confirmed.</p>';
+		}
 		if ( isset( $errors['form'] ) ) {
 			$h .= self::notice( $errors['form'], 'error' );
 		}
 		$h .= '<form method="post" action="' . esc_url( self::url( 'register' ) ) . '" class="aiadn__form" novalidate>';
 		$h .= '<input type="hidden" name="aiadn_action" value="register">' . self::honeypot();
+		if ( ! empty( $v['inv'] ) ) {
+			$h .= '<input type="hidden" name="inv" value="' . esc_attr( $v['inv'] ) . '">';
+		}
 
 		$h .= '<label for="r-school">School name</label><input id="r-school" name="school_name" type="text" value="' . $val( 'name' ) . '" required>' . self::field_error( $errors, 'school_name' );
 		$h .= '<label for="r-pc">School postcode</label><input id="r-pc" name="postcode" type="text" value="' . $val( 'postcode' ) . '" maxlength="10" autocomplete="postal-code" required>' . self::field_error( $errors, 'postcode' );
@@ -485,6 +581,18 @@ class AIADN_Front {
 	/* ------------------------------------------------------------------ */
 	/* /conversation/approve/  SLT                                         */
 	/* ------------------------------------------------------------------ */
+
+	private static function view_invite(): string {
+		return AIADN_Debate_Front::view_invite();
+	}
+
+	private static function view_debate(): string {
+		return AIADN_Debate_Front::view_debate();
+	}
+
+	private static function view_judge(): string {
+		return AIADN_Debate_Front::view_judge();
+	}
 
 	private static function view_approve(): string {
 		self::$title = 'Approve a school';
@@ -538,6 +646,7 @@ class AIADN_Front {
 		if ( ! AIADN_Schools::find_member( (int) $school['id'], $school['slt_email'] ) ) {
 			AIADN_Schools::add_member( (int) $school['id'], $school['slt_email'], 'Senior leader', '', 'slt', true );
 		}
+		AIADN_Debates::on_school_approved( (int) $school['id'] );
 		$lead = AIADN_Schools::lead( (int) $school['id'] );
 		if ( $lead ) {
 			AIADN_Mailer::send_school_approved( $lead['email'], $school['name'], (string) $school['code'], self::url( 'join', array( 'c' => $school['code'] ) ) );
@@ -563,6 +672,9 @@ class AIADN_Front {
 		if ( 'student' === $session['role'] ) {
 			self::redirect( 'join', array( 'step' => 'student' ) );
 		}
+		if ( 'judge' === $session['role'] ) {
+			self::redirect( 'judge' );
+		}
 
 		if ( self::is_post() ) {
 			if ( ! AIADN_Auth::csrf_ok( self::post( 'csrf' ) ) ) {
@@ -570,6 +682,16 @@ class AIADN_Front {
 			}
 			$action = self::post( 'aiadn_action' );
 			$school = $session['school'];
+			if ( 'new_debate' === $action && 'approved' === $school['status'] && in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
+				if ( AIADN_Util::allow( 'newdebate|' . $school['id'], 20, HOUR_IN_SECONDS ) ) {
+					$debate = AIADN_Debates::create( (int) $school['id'], (int) $session['member_id'] );
+					if ( $debate ) {
+						wp_safe_redirect( AIADN_Debates::url( $debate ) );
+						exit;
+					}
+				}
+				self::redirect( 'school', array( 'msg' => 'slow' ) );
+			}
 			if ( 'logout' === $action ) {
 				AIADN_Auth::end_session();
 				self::redirect( 'join', array( 'msg' => 'signedout' ) );
@@ -601,7 +723,7 @@ class AIADN_Front {
 		$h .= self::notice( self::message( self::get( 'msg' ) ), 'info' );
 
 		if ( self::get( 'welcome' ) && 'pending_slt' === $status ) {
-			$h .= '<div class="aiadn__panel"><h2>You are verified</h2>';
+			$h .= '<div class="aiadn__panel aiadn__panel--ink"><h2>You are verified</h2>';
 			$h .= '<p>Your school code is</p><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
 			$h .= '<p>Everyone at your school uses this: students, colleagues, your headteacher and judges. It is a reference, not a password. Each person also needs a class PIN or an emailed code.</p></div>';
 		}
@@ -614,13 +736,13 @@ class AIADN_Front {
 			}
 			$h .= '</div>';
 		} elseif ( 'approved' === $status ) {
-			$h .= '<div class="aiadn__panel"><h2>School code</h2><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
+			$h .= '<div class="aiadn__panel aiadn__panel--ink"><h2>School code</h2><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
 			$h .= '<p>Share it with students, colleagues, your headteacher and judges. Each also needs a class PIN or their own email code.</p>';
 			$h .= '<p class="aiadn__small">Front door: <a href="' . esc_url( self::url( 'join', array( 'c' => $school['code'] ) ) ) . '">' . esc_html( self::url( 'join', array( 'c' => $school['code'] ) ) ) . '</a></p></div>';
 
 			if ( in_array( $role, array( 'lead', 'teacher' ), true ) ) {
 				$pin = AIADN_Auth::current_pin( (int) $school['id'] );
-				$h  .= '<div class="aiadn__panel"><h2>Class PIN for students</h2>';
+				$h  .= '<div class="aiadn__panel aiadn__panel--ink"><h2>Class PIN for students</h2>';
 				if ( $pin ) {
 					$h .= '<p class="aiadn__bigcode aiadn__bigcode--pin">' . esc_html( $pin['pin'] ) . '</p><p>Works until about ' . esc_html( self::local_time( $pin['expires_at'] ) ) . '. Starting a new PIN stops this one.</p>';
 				} else {
@@ -629,6 +751,8 @@ class AIADN_Front {
 				$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_pin"><button class="aiadn__button" type="submit">' . ( $pin ? 'Start a new PIN' : 'Start a class PIN' ) . '</button></form></div>';
 			}
 
+			$h .= self::render_debates_panel( $session );
+
 			if ( 'lead' === $role ) {
 				$h .= '<div class="aiadn__panel"><h2>Team</h2><table class="aiadn__table"><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th></tr></thead><tbody>';
 				foreach ( AIADN_Schools::members( (int) $school['id'] ) as $m ) {
@@ -636,12 +760,33 @@ class AIADN_Front {
 				}
 				$h .= '</tbody></table></div>';
 			}
-			$h .= '<p class="aiadn__small">Inviting another school and setting up a debate arrive in the next build.</p>';
+			$h .= '<p class="aiadn__small">Scoring and results arrive in the next build.</p>';
 		} else {
 			$h .= '<div class="aiadn__panel"><p>This registration is not active.</p></div>';
 		}
 
 		$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '" class="aiadn__signout">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="logout"><button class="aiadn__link" type="submit">Sign out</button></form>';
 		return $h;
+	}
+
+	private static function render_debates_panel( array $session ): string {
+		$school = $session['school'];
+		$h      = '<div class="aiadn__panel"><h2>Debates</h2>';
+		$debates = AIADN_Debates::for_school( (int) $school['id'] );
+		if ( ! $debates ) {
+			$h .= '<p>No debates yet. Start one, then invite another school.</p>';
+		} else {
+			$h .= '<table class="aiadn__table"><thead><tr><th scope="col">Debate</th><th scope="col">Against</th><th scope="col">Where it is</th></tr></thead><tbody>';
+			foreach ( $debates as $d ) {
+				$other_id = AIADN_Debates::other_school_id( $d, (int) $school['id'] );
+				$other    = $other_id ? AIADN_Schools::get( $other_id ) : null;
+				$h       .= '<tr><td><a href="' . esc_url( AIADN_Debates::url( $d ) ) . '">' . esc_html( $d['code'] ) . '</a></td><td>' . esc_html( $other ? $other['name'] : 'Not yet chosen' ) . '</td><td>' . esc_html( AIADN_Debates::STATUS_LABELS[ $d['status'] ] ?? $d['status'] ) . '</td></tr>';
+			}
+			$h .= '</tbody></table>';
+		}
+		if ( in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
+			$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_debate"><button class="aiadn__button" type="submit">Start a new debate</button></form>';
+		}
+		return $h . '</div>';
 	}
 }

@@ -87,4 +87,40 @@ class AIADN_Mailer {
 		$body = "{$colleague} has joined {$school_name} using your school's email domain.\n\nIf you do not know them, reply to this email and we will remove them.";
 		return self::send( $to, $colleague . ' joined ' . $school_name, $body );
 	}
+
+	public static function send_debate_invite( string $to, string $name, string $school_a_name, string $debate_code, string $url ): bool {
+		$hello = '' !== $name ? "Hello {$name},\n\n" : '';
+		$body  = $hello . "{$school_a_name} has invited your school to a debate about AI, as part of the National AI Conversation.\n\n";
+		$body .= "Debate ID: {$debate_code}\n\n";
+		$body .= "To accept, or to see who is asking first, open:\n\n    {$url}\n\n";
+		$body .= "Your school will need headteacher or SLT approval before the debate can go ahead. If you do not know {$school_a_name}, ignore this email.";
+		return self::send( $to, $school_a_name . ' has invited you to a debate', $body );
+	}
+
+	public static function send_match( string $to, string $other_school, string $debate_code, string $url, bool $proposes ): bool {
+		$body  = "It's a match! Your school will debate {$other_school}.\n\nDebate ID: {$debate_code}\n\n";
+		$body .= "Your Debate & Safeguarding Pack is on the debate page. Each school stays responsible for its own pupils, supervision, visitors and permissions, so please read it:\n\n    {$url}\n\n";
+		$body .= $proposes
+			? 'Next: you propose the date, theme, motion and judge on that page.'
+			: 'Next: the other school proposes the date, theme, motion and judge. We will email you when they do.';
+		return self::send( $to, "It's a match: " . $other_school, $body );
+	}
+
+	/** A plain notice for the smaller moments: proposed, agreed, cancelled, judge replied. */
+	public static function send_notice( string $to, string $subject, string $body ): bool {
+		return self::send( $to, $subject, $body );
+	}
+
+	public static function send_judge_invitation( string $to, string $judge_name, string $summary, string $school_code, string $join_url, string $shortcut_url ): bool {
+		$body  = "Hello {$judge_name},\n\nThank you for offering to judge a school debate about AI.\n\n{$summary}\n\n";
+		$body .= "To accept and, on the day, to score:\n\n";
+		$body .= "  1. Go to {$join_url}\n  2. Enter the school code  {$school_code}\n  3. Choose Judge and enter this email address (we will send you a 6-digit code)\n\n";
+		$body .= "Or use this shortcut to accept or decline:\n\n    {$shortcut_url}\n\n";
+		$body .= 'The host school stays responsible for safeguarding and visitors, and will tell you how to arrive.';
+		return self::send( $to, 'Will you judge a debate on ' . self::date_from_summary( $summary ) . '?', $body );
+	}
+
+	private static function date_from_summary( string $summary ): string {
+		return preg_match( '/\b\d{1,2} [A-Z][a-z]{2} \d{4}\b/', $summary, $m ) ? preg_replace( '/ \d{4}$/', '', $m[0] ) : 'the day';
+	}
 }

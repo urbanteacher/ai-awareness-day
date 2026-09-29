@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       AI Awareness Day Debate Network
  * Plugin URI:        https://aiawarenessday.co.uk/
- * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval and class PINs (slice 1).
- * Version:           0.1.0
+ * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval and class PINs (slices 1-2).
+ * Version:           0.2.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIADN_VERSION', '0.1.0' );
+define( 'AIADN_VERSION', '0.2.0' );
 define( 'AIADN_PLUGIN_FILE', __FILE__ );
 define( 'AIADN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIADN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -27,8 +27,11 @@ require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-util.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-database.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-mailer.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-schools.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-motions.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-debates.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-auth.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-front.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-debate-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-activator.php';
 
 /**

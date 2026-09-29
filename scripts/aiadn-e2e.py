@@ -113,7 +113,7 @@ def sign_in(browser, school_code, email, role="teacher"):
     if not code:
         return None
     status, html, _ = browser.post(f"{SITE}/conversation/join/", {"aiadn_action": "verify", "ref": ref.group(1), "code": code})
-    return html if "aiadn__card" in html and "<h1>" in html else None
+    return html if "aiadn__band" in html and "<h1>" in html else None
 
 
 def main():

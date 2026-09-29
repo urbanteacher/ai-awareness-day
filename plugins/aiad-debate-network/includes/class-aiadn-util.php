@@ -68,6 +68,42 @@ class AIADN_Util {
 		return gmdate( 'Y-m-d H:i:s', time() + $seconds );
 	}
 
+	/** A datetime-local value typed in the site's time zone, as UTC for storage (or null if it is not a date). */
+	public static function local_to_utc( string $local ): ?string {
+		foreach ( array( 'Y-m-d\TH:i', 'Y-m-d\TH:i:s' ) as $format ) {
+			$dt     = DateTimeImmutable::createFromFormat( $format, $local, wp_timezone() );
+			$errors = DateTimeImmutable::getLastErrors();
+			$clean  = false === $errors || 0 === ( $errors['warning_count'] + $errors['error_count'] );
+			if ( $dt && $clean ) {
+				return $dt->setTimezone( new DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i:s' );
+			}
+		}
+		return null;
+	}
+
+	/** A stored UTC time, shown in the site's time zone. */
+	public static function show( string $utc, string $format = 'D j M Y, H:i' ): string {
+		return wp_date( $format, strtotime( $utc . ' UTC' ) );
+	}
+
+	/** A stored UTC time as a datetime-local input value. */
+	public static function to_input( string $utc ): string {
+		return wp_date( 'Y-m-d\TH:i', strtotime( $utc . ' UTC' ) );
+	}
+
+	public static function new_debate_code(): string {
+		return 'AID-' . self::random_string( 5 );
+	}
+
+	/** Turn what someone typed into a Debate ID, or '' if it cannot be one. */
+	public static function normalise_debate_code( string $input ): string {
+		$clean = strtoupper( preg_replace( '/[^A-Za-z0-9]/', '', $input ) );
+		if ( str_starts_with( $clean, 'AID' ) ) {
+			$clean = substr( $clean, 3 );
+		}
+		return preg_match( '/^[' . self::CODE_ALPHABET . ']{5}$/', $clean ) ? 'AID-' . $clean : '';
+	}
+
 	public static function normalise_email( string $email ): string {
 		return strtolower( trim( $email ) );
 	}

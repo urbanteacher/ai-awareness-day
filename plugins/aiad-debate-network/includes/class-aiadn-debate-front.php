@@ -1,0 +1,692 @@
+<?php
+/**
+ * Debate pages:
+ *   /conversation/invite/  what School B sees when invited (screen 15)
+ *   /conversation/debate/  one debate: tracker, next step, fixture, safeguarding pack (screens 8, 14, 16-20)
+ *   /conversation/judge/   the judge: signed-in list or a shortcut link (screens 21b, 22)
+ *
+ * @package AIADN
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class AIADN_Debate_Front {
+
+	const FLASH = array(
+		'invited'   => 'Invitation sent.',
+		'released'  => 'The place is open again. You can invite another school.',
+		'proposed'  => 'Sent. We have emailed the other school to review it.',
+		'agreed'    => 'The fixture is agreed. We have invited the judge.',
+		'suggested' => 'We have sent your suggested date back to the other school.',
+		'declined'  => 'You have left this debate. The other school has been told.',
+		'cancelled' => 'This debate has been cancelled and the other school has been told.',
+		'saved'     => 'Saved.',
+		'resent'    => 'We have sent the judge the invitation again.',
+		'changed'   => 'The judge has been changed and invited.',
+		'joined'    => 'You have accepted. Once your headteacher has approved the school, everything is confirmed.',
+		'slow'      => 'Too many requests. Please wait a while and try again.',
+	);
+
+	const CHECKLIST = array(
+		'supervision' => 'Supervision: staff with students at all times',
+		'travel'      => 'Travel and educational visit forms (if going away)',
+		'permissions' => 'Parental permissions (photos, travel)',
+		'risk'        => 'Risk assessment completed',
+		'visitor'     => 'Visitor procedure for the judge',
+		'audience'    => 'Audience and behaviour plan',
+		'online'      => 'Online only: approved platform, no recording',
+	);
+
+	/* ------------------------------------------------------------------ */
+	/* Helpers                                                             */
+	/* ------------------------------------------------------------------ */
+
+	private static function esc( $v ): string {
+		return esc_html( (string) $v );
+	}
+
+	private static function flash( string $key ): string {
+		return isset( self::FLASH[ $key ] ) ? AIADN_Front::notice( self::FLASH[ $key ], 'info' ) : '';
+	}
+
+	private static function back( array $debate, string $flash_key = '' ): void {
+		$url = AIADN_Debates::url( $debate );
+		if ( '' !== $flash_key ) {
+			$url = add_query_arg( 'msg', $flash_key, $url );
+		}
+		wp_safe_redirect( $url );
+		exit;
+	}
+
+	private static function not_found(): string {
+		AIADN_Front::set_title( 'Not found' );
+		return '<h1>We could not find that debate</h1><p>Check the link, or <a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">go to your school page</a>.</p>';
+	}
+
+	private static function school_name( $id ): string {
+		$school = $id ? AIADN_Schools::get( (int) $id ) : null;
+		return $school ? $school['name'] : 'Not yet chosen';
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* /conversation/invite/                                               */
+	/* ------------------------------------------------------------------ */
+
+	public static function view_invite(): string {
+		AIADN_Front::set_title( 'You are invited to a debate' );
+		$raw   = AIADN_Front::get( 't' ) ?: AIADN_Front::post( 't' );
+		$token = AIADN_Auth::find_token( $raw, 'debate_invite' );
+		$debate = $token ? AIADN_Debates::get( (int) $token['ref_id'] ) : null;
+		if ( ! $debate ) {
+			return '<h1>This invitation is no longer valid</h1><p>It may have expired, or the other school may have sent a newer one. Ask them to send it again.</p>';
+		}
+		if ( 'awaiting_opponent' !== $debate['status'] ) {
+			return '<h1>This invitation has already been taken</h1><p>Another school has accepted it. If that was not you, ask the inviting school to send a new invitation.</p>';
+		}
+		$host    = AIADN_Schools::get( (int) $debate['school_a_id'] );
+		$session = AIADN_Auth::current();
+		$mine    = $session && in_array( $session['role'], array( 'lead', 'teacher' ), true ) && 'approved' === $session['school']['status'] && (int) $session['school_id'] !== (int) $debate['school_a_id'];
+
+		if ( AIADN_Front::is_post() && 'accept_invite' === AIADN_Front::post( 'aiadn_action' ) ) {
+			if ( $mine && AIADN_Auth::csrf_ok( AIADN_Front::post( 'csrf' ) ) ) {
+				if ( AIADN_Debates::claim_slot( (int) $debate['id'], (int) $session['school_id'], (int) $session['member_id'], 'matched' ) ) {
+					AIADN_Debates::complete_match( AIADN_Debates::get( (int) $debate['id'] ) );
+				}
+				wp_safe_redirect( AIADN_Debates::url( $debate ) );
+				exit;
+			}
+			AIADN_Front::redirect( 'invite', array( 't' => $raw ) );
+		}
+
+		$h  = '<h1>' . self::esc( $host['name'] ) . ' has invited you to a debate</h1>';
+		$h .= '<p>Debate ID: <strong>' . self::esc( $debate['code'] ) . '</strong></p>';
+		$h .= '<p>Two schools argue an AI question, with an independent judge. Your school stays responsible for its own pupils, supervision and permissions.</p>';
+		if ( $mine ) {
+			$h .= '<div class="aiadn__panel"><h2>Accept as ' . self::esc( $session['school']['name'] ) . '</h2>';
+			$h .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'invite' ) ) . '">' . AIADN_Front::csrf_field() . '<input type="hidden" name="aiadn_action" value="accept_invite"><input type="hidden" name="t" value="' . esc_attr( $raw ) . '"><button class="aiadn__button" type="submit">Accept this debate</button></form></div>';
+		} else {
+			$h .= '<div class="aiadn__panel"><h2>Register your school to accept</h2><p>You will need your headteacher or another senior leader to approve your school. It takes a few minutes.</p>';
+			$h .= '<a class="aiadn__button" href="' . esc_url( AIADN_Front::url( 'register', array( 'inv' => $raw ) ) ) . '">Register and accept</a></div>';
+			$h .= '<p class="aiadn__small">Already registered? <a href="' . esc_url( AIADN_Front::url( 'join', array( 'inv' => $raw ) ) ) . '">Sign in with your school code</a>.</p>';
+		}
+		return $h;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* /conversation/debate/                                               */
+	/* ------------------------------------------------------------------ */
+
+	public static function view_debate(): string {
+		AIADN_Front::set_title( 'Your debate' );
+		$session = AIADN_Auth::current();
+		if ( ! $session || ! in_array( $session['role'], array( 'lead', 'teacher', 'slt' ), true ) ) {
+			AIADN_Front::redirect( 'join', array( 'msg' => 'signin' ) );
+		}
+		$code   = AIADN_Util::normalise_debate_code( AIADN_Front::get( 'd' ) ?: AIADN_Front::post( 'd' ) );
+		$debate = $code ? AIADN_Debates::get_by_code( $code ) : null;
+		if ( ! $debate || ! AIADN_Debates::involves( $debate, (int) $session['school_id'] ) ) {
+			return self::not_found();
+		}
+
+		if ( ! empty( $debate['theme'] ) ) {
+			AIADN_Front::set_strand( $debate['theme'] );
+		}
+		$state = array( 'errors' => array(), 'values' => array(), 'link' => '' );
+		if ( AIADN_Front::is_post() ) {
+			if ( ! AIADN_Auth::csrf_ok( AIADN_Front::post( 'csrf' ) ) || ! in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
+				self::back( $debate );
+			}
+			$state  = self::handle_action( $debate, $session );
+			$debate = AIADN_Debates::get( (int) $debate['id'] );
+		}
+		return self::render_debate( $debate, $session, $state );
+	}
+
+	/**
+	 * Run one action. Redirects on success; returns errors/values/link when the page should re-render.
+	 *
+	 * @return array{errors:array,values:array,link:string}
+	 */
+	private static function handle_action( array $debate, array $session ): array {
+		$school_id = (int) $session['school_id'];
+		$side      = AIADN_Debates::side( $debate, $school_id );
+		$status    = $debate['status'];
+		$state     = array( 'errors' => array(), 'values' => array(), 'link' => '' );
+		$action    = AIADN_Front::post( 'aiadn_action' );
+
+		switch ( $action ) {
+			case 'send_invite':
+				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
+					$email = AIADN_Util::normalise_email( AIADN_Front::post( 'invite_email' ) );
+					if ( ! is_email( $email ) ) {
+						$state['errors']['invite_email'] = 'Enter the other teacher\'s email address.';
+						$state['values']                 = array( 'invite_name' => AIADN_Front::post( 'invite_name' ), 'invite_email' => $email );
+						return $state;
+					}
+					if ( ! AIADN_Util::allow( 'invite|' . $school_id, 10, HOUR_IN_SECONDS ) ) {
+						self::back( $debate, 'slow' );
+					}
+					AIADN_Debates::send_invite( $debate, AIADN_Front::post( 'invite_name' ), $email );
+					self::back( $debate, 'invited' );
+				}
+				break;
+
+			case 'new_link':
+				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
+					$state['link'] = AIADN_Debates::new_invite_link( $debate );
+					return $state;
+				}
+				break;
+
+			case 'release':
+				if ( 'a' === $side && 'awaiting_b_approval' === $status ) {
+					AIADN_Debates::reopen( $debate, $school_id, 'released' );
+					self::back( $debate, 'released' );
+				}
+				break;
+
+			case 'propose':
+				if ( 'a' === $side && 'matched' === $status ) {
+					list( $errors, $values, $fx, $judge ) = self::parse_fixture();
+					if ( $errors ) {
+						$state['errors'] = $errors;
+						$state['values'] = $values;
+						return $state;
+					}
+					AIADN_Debates::propose( $debate, $fx, $judge );
+					self::back( $debate, 'proposed' );
+				}
+				break;
+
+			case 'accept_fixture':
+				if ( 'proposed' === $status && (int) $debate['proposed_by'] !== $school_id ) {
+					AIADN_Debates::agree( $debate, $school_id );
+					self::back( $debate, 'agreed' );
+				}
+				break;
+
+			case 'suggest_date':
+				if ( 'proposed' === $status && (int) $debate['proposed_by'] !== $school_id ) {
+					$utc = AIADN_Util::local_to_utc( AIADN_Front::post( 'starts_at' ) );
+					if ( ! $utc || strtotime( $utc . ' UTC' ) < time() + HOUR_IN_SECONDS ) {
+						$state['errors']['suggest'] = 'Choose a date and time in the future.';
+						return $state;
+					}
+					AIADN_Debates::suggest_date( $debate, $school_id, $utc );
+					self::back( $debate, 'suggested' );
+				}
+				break;
+
+			case 'decline':
+				if ( 'b' === $side && in_array( $status, array( 'matched', 'proposed' ), true ) ) {
+					AIADN_Debates::notify_other( $debate, $school_id, 'The other school has left your debate', "The other school can no longer take part, so the place is open again. You can invite another school from the debate page:\n\n" . AIADN_Debates::url( $debate ) );
+					AIADN_Debates::reopen( $debate, $school_id, 'declined' );
+					wp_safe_redirect( add_query_arg( 'msg', 'declined', AIADN_Front::url( 'school' ) ) );
+					exit;
+				}
+				break;
+
+			case 'cancel':
+				if ( in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
+					AIADN_Debates::cancel( $debate, $school_id );
+					self::back( $debate, 'cancelled' );
+				}
+				break;
+
+			case 'checklist':
+				if ( in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
+					$ticks = array();
+					foreach ( array_keys( self::CHECKLIST ) as $key ) {
+						$ticks[ $key ] = '' !== AIADN_Front::post( 'tick_' . $key );
+					}
+					AIADN_Debates::save_checklist( $debate, $side, $ticks );
+					self::back( $debate, 'saved' );
+				}
+				break;
+
+			case 'resend_judge':
+				$judge = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
+				if ( in_array( $status, array( 'agreed', 'ready' ), true ) && $judge && 'invited' === $judge['status'] ) {
+					if ( ! AIADN_Util::allow( 'rejudge|' . $debate['id'], 3, HOUR_IN_SECONDS ) ) {
+						self::back( $debate, 'slow' );
+					}
+					AIADN_Debates::invite_judge( $debate, $judge );
+					self::back( $debate, 'resent' );
+				}
+				break;
+
+			case 'change_judge':
+				if ( in_array( $status, array( 'agreed', 'ready' ), true ) ) {
+					list( $errors, $values, $judge ) = self::parse_judge( 'cj_' );
+					if ( $errors ) {
+						$state['errors'] = $errors;
+						$state['values'] = $values;
+						return $state;
+					}
+					AIADN_Debates::change_judge( $debate, $judge, $school_id );
+					self::back( $debate, 'changed' );
+				}
+				break;
+		}
+		self::back( $debate );
+		return $state;
+	}
+
+	/* ---- form parsing ------------------------------------------------ */
+
+	/** @return array{0:array,1:array,2:array} errors, values, judge */
+	private static function parse_judge( string $prefix ): array {
+		$values = array(
+			'name'         => AIADN_Front::post( $prefix . 'name' ),
+			'email'        => AIADN_Util::normalise_email( AIADN_Front::post( $prefix . 'email' ) ),
+			'organisation' => AIADN_Front::post( $prefix . 'organisation' ),
+			'judge_type'   => AIADN_Front::post( $prefix . 'judge_type' ),
+			'ack'          => '' !== AIADN_Front::post( $prefix . 'ack' ),
+		);
+		$errors = array();
+		if ( strlen( $values['name'] ) < 2 ) {
+			$errors[ $prefix . 'name' ] = "Enter the judge's name.";
+		}
+		if ( ! is_email( $values['email'] ) ) {
+			$errors[ $prefix . 'email' ] = "Enter the judge's email address.";
+		}
+		if ( ! isset( AIADN_Motions::JUDGE_TYPES[ $values['judge_type'] ] ) ) {
+			$errors[ $prefix . 'judge_type' ] = 'Choose a judge type.';
+		}
+		if ( ! $values['ack'] ) {
+			$errors[ $prefix . 'ack' ] = "Please confirm your school's safeguarding and visitor policy applies.";
+		}
+		return array( $errors, $values, array( 'name' => $values['name'], 'email' => $values['email'], 'organisation' => $values['organisation'], 'judge_type' => $values['judge_type'] ) );
+	}
+
+	/** @return array{0:array,1:array,2:array,3:array} errors, values, fixture, judge */
+	private static function parse_fixture(): array {
+		$values = array(
+			'starts_at'  => AIADN_Front::post( 'starts_at' ),
+			'age_group'  => AIADN_Front::post( 'age_group' ),
+			'theme'      => AIADN_Front::post( 'theme' ),
+			'motion_key' => AIADN_Front::post( 'motion_key' ),
+			'a_side'     => AIADN_Front::post( 'a_side' ),
+			'format'     => AIADN_Front::post( 'format' ),
+			'venue'      => AIADN_Front::post( 'venue' ),
+		);
+		$errors = array();
+		$utc    = AIADN_Util::local_to_utc( $values['starts_at'] );
+		if ( ! $utc || strtotime( $utc . ' UTC' ) < time() + HOUR_IN_SECONDS ) {
+			$errors['starts_at'] = 'Choose a date and time in the future.';
+		} elseif ( strtotime( $utc . ' UTC' ) > time() + YEAR_IN_SECONDS ) {
+			$errors['starts_at'] = 'Choose a date within the next year.';
+		}
+		if ( ! isset( AIADN_Motions::AGES[ $values['age_group'] ] ) ) {
+			$errors['age_group'] = 'Choose an age group.';
+		}
+		if ( ! isset( AIADN_Motions::THEMES[ $values['theme'] ] ) ) {
+			$errors['theme'] = 'Choose a theme.';
+		}
+		$motion = ( ! isset( $errors['age_group'] ) && ! isset( $errors['theme'] ) ) ? AIADN_Motions::find( $values['motion_key'], $values['theme'], $values['age_group'] ) : null;
+		if ( ! $motion ) {
+			$errors['motion_key'] = 'Choose a motion for that theme and age group.';
+		}
+		if ( ! in_array( $values['a_side'], array( 'for', 'against' ), true ) ) {
+			$errors['a_side'] = 'Choose which side you argue.';
+		}
+		if ( ! isset( AIADN_Motions::FORMATS[ $values['format'] ] ) ) {
+			$errors['format'] = 'Choose online or in person.';
+		} elseif ( 'in_person' === $values['format'] && strlen( $values['venue'] ) < 3 ) {
+			$errors['venue'] = 'Say where it will take place.';
+		}
+		list( $judge_errors, $judge_values, $judge ) = self::parse_judge( 'j_' );
+		$errors = array_merge( $errors, $judge_errors );
+		$values = array_merge( $values, array( 'j_name' => $judge_values['name'], 'j_email' => $judge_values['email'], 'j_organisation' => $judge_values['organisation'], 'j_judge_type' => $judge_values['judge_type'], 'j_ack' => $judge_values['ack'] ) );
+
+		$fx = array(
+			'age_group'   => $values['age_group'],
+			'theme'       => $values['theme'],
+			'motion_key'  => $values['motion_key'],
+			'motion_text' => $motion ? $motion['text'] : '',
+			'a_side'      => $values['a_side'],
+			'format'      => $values['format'],
+			'venue'       => $values['venue'],
+			'starts_at'   => $utc,
+		);
+		return array( $errors, $values, $fx, $judge );
+	}
+
+	/* ---- rendering --------------------------------------------------- */
+
+	private static function err( array $errors, string $key ): string {
+		return isset( $errors[ $key ] ) ? '<p class="aiadn__error" role="alert">' . esc_html( $errors[ $key ] ) . '</p>' : '';
+	}
+
+	private static function form_open( array $debate, string $action ): string {
+		return '<form method="post" action="' . esc_url( AIADN_Debates::url( $debate ) ) . '" class="aiadn__form">' . AIADN_Front::csrf_field() . '<input type="hidden" name="d" value="' . esc_attr( $debate['code'] ) . '"><input type="hidden" name="aiadn_action" value="' . esc_attr( $action ) . '">';
+	}
+
+	private static function render_tracker( array $debate ): string {
+		$marks = array( 'done' => array( '&#10003;', 'Done' ), 'now' => array( '&#9679;', 'Now' ), 'todo' => array( '&#9675;', 'To do' ), 'issue' => array( '!', 'Issue' ) );
+		$h     = '<ol class="aiadn__tracker">';
+		foreach ( AIADN_Debates::tracker( $debate ) as $stage ) {
+			$m  = $marks[ $stage['state'] ];
+			$h .= '<li class="aiadn__tracker--' . esc_attr( $stage['state'] ) . '"><span class="aiadn__mark" aria-hidden="true">' . $m[0] . '</span><span class="aiadn__sr">' . $m[1] . ': </span>' . esc_html( $stage['label'] ) . ( '' !== $stage['detail'] ? ' <span class="aiadn__meta">' . esc_html( $stage['detail'] ) . '</span>' : '' ) . '</li>';
+		}
+		return $h . '</ol>';
+	}
+
+	private static function render_details( array $debate, int $school_id ): string {
+		$side = AIADN_Debates::side( $debate, $school_id );
+		$rows = array( 'Against' => self::school_name( AIADN_Debates::other_school_id( $debate, $school_id ) ) );
+		if ( $debate['starts_at'] ) {
+			$rows['When'] = AIADN_Util::show( $debate['starts_at'] );
+			$rows['Where'] = ( AIADN_Motions::FORMATS[ $debate['format'] ] ?? '' ) . ( $debate['venue'] ? ': ' . $debate['venue'] : '' );
+			$rows['Theme'] = AIADN_Motions::THEMES[ $debate['theme'] ] ?? '';
+			$rows['Motion'] = '"' . $debate['motion_text'] . '"';
+			$a_for = 'for' === $debate['a_side'];
+			$rows['You argue'] = strtoupper( ( 'a' === $side ? $a_for : ! $a_for ) ? 'for' : 'against' );
+			$judge = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
+			if ( $judge ) {
+				$rows['Judge'] = $judge['name'] . ( $judge['organisation'] ? ', ' . $judge['organisation'] : '' );
+			}
+		}
+		$h = '<dl class="aiadn__details">';
+		foreach ( $rows as $label => $value ) {
+			$h .= '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( $value ) . '</dd>';
+		}
+		return $h . '</dl>';
+	}
+
+	private static function render_debate( array $debate, array $session, array $state ): string {
+		$school_id = (int) $session['school_id'];
+		$side      = AIADN_Debates::side( $debate, $school_id );
+		$status    = $debate['status'];
+		$can_act   = in_array( $session['role'], array( 'lead', 'teacher' ), true );
+		$errors    = $state['errors'];
+		$v         = $state['values'];
+
+		$h  = '<p class="aiadn__small"><a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">&larr; Your school</a></p>';
+		$h .= '<h1>Debate ' . self::esc( $debate['code'] ) . '</h1>';
+		$h .= self::flash( AIADN_Front::get( 'msg' ) );
+		$h .= self::render_tracker( $debate );
+
+		if ( 'cancelled' === $status ) {
+			return $h . '<div class="aiadn__panel"><h2>Cancelled</h2><p>This debate was cancelled.</p></div>' . ( 'cancelled' === $status ? self::render_details( $debate, $school_id ) : '' );
+		}
+
+		// ---- the one next step ----
+		$h .= '<div class="aiadn__panel"><h2>Next step</h2>';
+		if ( 'awaiting_opponent' === $status ) {
+			if ( 'a' === $side && $can_act ) {
+				if ( $state['link'] ) {
+					$h .= '<p><strong>Share this link.</strong> It replaces any earlier link.</p><p class="aiadn__link-box"><input type="text" readonly value="' . esc_attr( $state['link'] ) . '" onclick="this.select()" aria-label="Invitation link"></p>';
+				}
+				$h .= '<h3>Option 1: email a teacher</h3>' . self::form_open( $debate, 'send_invite' );
+				$h .= '<label for="inv-name">Their name <span class="aiadn__opt">(optional)</span></label><input id="inv-name" name="invite_name" type="text" value="' . esc_attr( $v['invite_name'] ?? '' ) . '">';
+				$h .= '<label for="inv-email">Their email</label><input id="inv-email" name="invite_email" type="email" value="' . esc_attr( $v['invite_email'] ?? '' ) . '" required>' . self::err( $errors, 'invite_email' );
+				$h .= '<button class="aiadn__button" type="submit">Send invitation</button></form>';
+				$h .= '<h3>Option 2: share a link</h3><p class="aiadn__small">Anyone with the link can start to accept, but their school still needs headteacher approval.</p>' . self::form_open( $debate, 'new_link' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Get a link to share</button></form>';
+			} else {
+				$h .= '<p>Waiting for the other school to be invited.</p>';
+			}
+		} elseif ( 'awaiting_b_approval' === $status ) {
+			$h .= '<p><strong>' . self::esc( self::school_name( $debate['school_b_id'] ) ) . '</strong> has accepted. The match is confirmed as soon as their headteacher approves the school.</p>';
+			if ( 'a' === $side && $can_act ) {
+				$h .= '<p class="aiadn__small">Taking too long?</p>' . self::form_open( $debate, 'release' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Invite someone else</button></form>';
+			}
+		} elseif ( 'matched' === $status ) {
+			if ( 'a' === $side && $can_act ) {
+				$h .= self::render_propose_form( $debate, $session, $errors, $v );
+			} else {
+				$h .= '<p>It is a match. Waiting for <strong>' . self::esc( self::school_name( $debate['school_a_id'] ) ) . '</strong> to propose the date, theme, motion and judge.</p>';
+			}
+		} elseif ( 'proposed' === $status ) {
+			if ( (int) $debate['proposed_by'] !== $school_id && $can_act ) {
+				$h .= '<p>Please review the fixture below.</p>';
+				$h .= '<div class="aiadn__actions">' . self::form_open( $debate, 'accept_fixture' ) . '<button class="aiadn__button" type="submit">Accept</button></form></div>';
+				$h .= '<h3>Suggest another date</h3>' . self::form_open( $debate, 'suggest_date' ) . '<label for="sd">New date and time</label><input id="sd" name="starts_at" type="datetime-local" min="' . esc_attr( wp_date( 'Y-m-d\TH:i', time() + HOUR_IN_SECONDS ) ) . '" value="' . esc_attr( $debate['starts_at'] ? AIADN_Util::to_input( $debate['starts_at'] ) : '' ) . '" required>' . self::err( $errors, 'suggest' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Suggest this date instead</button></form>';
+				if ( 'b' === $side ) {
+					$h .= '<h3>Not for you?</h3>' . self::form_open( $debate, 'decline' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Decline this debate</button></form>';
+				}
+			} else {
+				$h .= '<p>Waiting for <strong>' . self::esc( self::school_name( AIADN_Debates::other_school_id( $debate, $school_id ) ) ) . '</strong> to review the fixture.</p>';
+			}
+		} else { // agreed / ready.
+			$judge = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
+			if ( 'ready' === $status ) {
+				$h .= '<p><strong>Everything is set.</strong> The judge has accepted. Scoring and results arrive in the next build.</p>';
+			} elseif ( $judge && 'declined' === $judge['status'] ) {
+				$h .= '<p><strong>' . self::esc( $judge['name'] ) . " can't make it.</strong> Please choose another judge.</p>";
+			} else {
+				$h .= '<p>The fixture is agreed. Waiting for <strong>' . self::esc( $judge ? $judge['name'] : 'the judge' ) . '</strong> to accept.</p>';
+				if ( $judge && 'invited' === $judge['status'] && $can_act ) {
+					$h .= self::form_open( $debate, 'resend_judge' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Send the invitation again</button></form>';
+				}
+			}
+			if ( $can_act && ( ! $judge || 'accepted' !== $judge['status'] || 'ready' === $status ) ) {
+				$open = $judge && 'declined' === $judge['status'] || array_intersect_key( $errors, array_flip( array( 'cj_name', 'cj_email', 'cj_judge_type', 'cj_ack' ) ) );
+				$h   .= '<details class="aiadn__details-box"' . ( $open ? ' open' : '' ) . '><summary>Change the judge</summary>' . self::render_judge_fields( $debate, 'cj_', $errors, $v, 'change_judge', 'Invite a different judge' ) . '</details>';
+			}
+		}
+		$h .= '</div>';
+
+		// ---- the fixture ----
+		if ( $debate['starts_at'] ) {
+			$h .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . '</div>';
+		} elseif ( $debate['school_b_id'] ) {
+			$h .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . '</div>';
+		}
+
+		// ---- safeguarding pack ----
+		if ( in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
+			$h .= self::render_pack( $debate, $side, $can_act );
+		}
+
+		if ( $can_act && in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
+			$h .= '<div class="aiadn__panel"><h2>Cancel this debate</h2><p class="aiadn__small">The other school and the judge will be told.</p>' . self::form_open( $debate, 'cancel' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit" onclick="return confirm(\'Cancel this debate?\');">Cancel debate</button></form></div>';
+		}
+		return $h;
+	}
+
+	private static function render_pack( array $debate, string $side, bool $can_act ): string {
+		$ticks = AIADN_Debates::checklist( $debate, $side );
+		$h     = '<div class="aiadn__panel"><h2>Debate &amp; Safeguarding Pack</h2>';
+		$h    .= '<p>Your school\'s own policies apply. Use this list to check you are ready. The ticks are for your own records: nobody else sees them and they do not block anything.</p>';
+		if ( $can_act ) {
+			$h .= self::form_open( $debate, 'checklist' );
+		}
+		foreach ( self::CHECKLIST as $key => $label ) {
+			$h .= '<label class="aiadn__radio"><input type="checkbox" name="tick_' . esc_attr( $key ) . '" value="1"' . ( ! empty( $ticks[ $key ] ) ? ' checked' : '' ) . ( $can_act ? '' : ' disabled' ) . '> ' . esc_html( $label ) . '</label>';
+		}
+		if ( $can_act ) {
+			$h .= '<button class="aiadn__button aiadn__button--quiet" type="submit">Save my ticks</button></form>';
+		}
+		$h .= '<p><em>Challenge the argument. Respect the person.</em> The National Debate Code of Conduct applies to pupils, teachers, judges, visitors and audiences. Report anything concerning to your own safeguarding lead first.</p></div>';
+		return $h;
+	}
+
+	private static function render_judge_fields( array $debate, string $prefix, array $errors, array $v, string $action, string $button ): string {
+		$name = $prefix . 'name';
+		$h    = '';
+		if ( $action ) {
+			$h .= self::form_open( $debate, $action );
+		}
+		$h   .= '<label for="' . $prefix . 'n">Judge\'s name</label><input id="' . $prefix . 'n" name="' . $name . '" type="text" value="' . esc_attr( (string) ( $v[ $name ] ?? $v['name'] ?? '' ) ) . '" required>' . self::err( $errors, $name );
+		$h   .= '<label for="' . $prefix . 'e">Judge\'s email</label><input id="' . $prefix . 'e" name="' . $prefix . 'email" type="email" value="' . esc_attr( (string) ( $v[ $prefix . 'email' ] ?? $v['email'] ?? '' ) ) . '" required>' . self::err( $errors, $prefix . 'email' );
+		$h   .= '<label for="' . $prefix . 'o">Organisation <span class="aiadn__opt">(optional)</span></label><input id="' . $prefix . 'o" name="' . $prefix . 'organisation" type="text" value="' . esc_attr( (string) ( $v[ $prefix . 'organisation' ] ?? $v['organisation'] ?? '' ) ) . '">';
+		$h   .= '<label for="' . $prefix . 't">Judge type</label><select id="' . $prefix . 't" name="' . $prefix . 'judge_type"><option value="">Choose...</option>';
+		$cur  = (string) ( $v[ $prefix . 'judge_type' ] ?? $v['judge_type'] ?? '' );
+		foreach ( AIADN_Motions::JUDGE_TYPES as $key => $label ) {
+			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( $cur, $key, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		$h   .= '</select>' . self::err( $errors, $prefix . 'judge_type' );
+		$ack  = ! empty( $v[ $prefix . 'ack' ] ) || ! empty( $v['ack'] );
+		$h   .= '<label class="aiadn__radio"><input type="checkbox" name="' . $prefix . 'ack" value="1"' . ( $ack ? ' checked' : '' ) . '> Our school\'s safeguarding and visitor policy applies to the judge.</label>' . self::err( $errors, $prefix . 'ack' );
+		if ( $action ) {
+			$h .= '<button class="aiadn__button aiadn__button--quiet" type="submit">' . esc_html( $button ) . '</button></form>';
+		}
+		return $h;
+	}
+
+	private static function render_propose_form( array $debate, array $session, array $errors, array $v ): string {
+		$phases  = array_filter( explode( ',', (string) $session['school']['age_phases'] ) );
+		$default = $v['age_group'] ?? ( $phases ? reset( $phases ) : 'primary' );
+		$h       = '<p>It is a match with <strong>' . self::esc( self::school_name( $debate['school_b_id'] ) ) . '</strong>. Propose the debate.</p>';
+		$h      .= self::form_open( $debate, 'propose' );
+		$h      .= '<label for="p-when">Date and time</label><input id="p-when" name="starts_at" type="datetime-local" min="' . esc_attr( wp_date( 'Y-m-d\TH:i', time() + HOUR_IN_SECONDS ) ) . '" value="' . esc_attr( (string) ( $v['starts_at'] ?? '' ) ) . '" required>' . self::err( $errors, 'starts_at' );
+		$h      .= '<fieldset class="aiadn__roles"><legend>Age group</legend>';
+		foreach ( AIADN_Motions::AGES as $key => $label ) {
+			$h .= '<label class="aiadn__radio"><input type="radio" name="age_group" value="' . esc_attr( $key ) . '"' . checked( $default, $key, false ) . '> ' . esc_html( $label ) . '</label>';
+		}
+		$h .= '</fieldset>' . self::err( $errors, 'age_group' );
+		$h .= '<label for="p-theme">Theme</label><select id="p-theme" name="theme"><option value="">Choose...</option>';
+		foreach ( AIADN_Motions::THEMES as $key => $label ) {
+			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( (string) ( $v['theme'] ?? '' ), $key, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		$h .= '</select>' . self::err( $errors, 'theme' );
+		$h .= '<label for="p-motion">Motion</label><select id="p-motion" name="motion_key"><option value="">Choose a theme and age group first</option>';
+		foreach ( AIADN_Motions::all() as $key => $m ) {
+			$h .= '<option value="' . esc_attr( $key ) . '" data-theme="' . esc_attr( $m['theme'] ) . '" data-age="' . esc_attr( $m['age'] ) . '"' . selected( (string) ( $v['motion_key'] ?? '' ), $key, false ) . '>' . esc_html( $m['text'] ) . '</option>';
+		}
+		$h .= '</select>' . self::err( $errors, 'motion_key' );
+		$h .= '<fieldset class="aiadn__roles"><legend>We argue</legend>';
+		foreach ( array( 'for' => 'For the motion', 'against' => 'Against the motion' ) as $key => $label ) {
+			$h .= '<label class="aiadn__radio"><input type="radio" name="a_side" value="' . esc_attr( $key ) . '"' . checked( (string) ( $v['a_side'] ?? '' ), $key, false ) . '> ' . esc_html( $label ) . '</label>';
+		}
+		$h .= '</fieldset>' . self::err( $errors, 'a_side' );
+		$h .= '<fieldset class="aiadn__roles"><legend>Format</legend>';
+		foreach ( AIADN_Motions::FORMATS as $key => $label ) {
+			$h .= '<label class="aiadn__radio"><input type="radio" name="format" value="' . esc_attr( $key ) . '"' . checked( (string) ( $v['format'] ?? 'in_person' ), $key, false ) . '> ' . esc_html( $label ) . '</label>';
+		}
+		$h .= '</fieldset>' . self::err( $errors, 'format' );
+		$h .= '<label for="p-venue">Venue, or how to join <span class="aiadn__opt">(required for in person)</span></label><input id="p-venue" name="venue" type="text" value="' . esc_attr( (string) ( $v['venue'] ?? '' ) ) . '">' . self::err( $errors, 'venue' );
+		$h .= '<h3>The judge</h3><p class="aiadn__small">Someone independent of both schools. We invite them once both schools agree the fixture.</p>';
+		$h .= self::render_judge_fields( $debate, 'j_', $errors, $v, '', '' );
+		$h .= '<button class="aiadn__button" type="submit">Send to ' . self::esc( self::school_name( $debate['school_b_id'] ) ) . '</button></form>';
+		$h .= '<script>(function(){var t=document.getElementById("p-theme"),m=document.getElementById("p-motion");if(!t||!m)return;function f(){var a=document.querySelector("input[name=age_group]:checked");var age=a?a.value:"",th=t.value;var any=false;for(var i=1;i<m.options.length;i++){var o=m.options[i];var ok=o.dataset.theme===th&&o.dataset.age===age;o.hidden=!ok;o.disabled=!ok;if(ok)any=true;if(!ok&&o.selected)m.selectedIndex=0;}m.options[0].text=any?"Choose a motion...":"Choose a theme and age group first";}t.addEventListener("change",f);document.querySelectorAll("input[name=age_group]").forEach(function(r){r.addEventListener("change",f);});f();})();</script>';
+		return $h;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* /conversation/judge/                                                */
+	/* ------------------------------------------------------------------ */
+
+	public static function view_judge(): string {
+		AIADN_Front::set_title( 'Judge' );
+		$raw     = AIADN_Front::get( 't' ) ?: AIADN_Front::post( 't' );
+		$session = AIADN_Auth::current();
+		$mode    = '';
+		$judge   = null;
+
+		if ( '' !== $raw ) {
+			$token = preg_match( '/^[a-f0-9]{40}$/', $raw ) ? AIADN_Auth::find_token( $raw, 'judge' ) : null;
+			if ( $token ) {
+				$judge = AIADN_Debates::get_judge( (int) $token['ref_id'] );
+				$mode  = 'token';
+			}
+			if ( ! $judge ) {
+				return '<h1>This link is no longer valid</h1><p>It may have expired, or the teachers may have chosen a different judge. Ask them to send it again.</p>';
+			}
+		} elseif ( $session && 'judge' === $session['role'] ) {
+			$mode = 'session';
+		} else {
+			AIADN_Front::redirect( 'join', array( 'msg' => 'signin' ) );
+		}
+
+		if ( AIADN_Front::is_post() && 'judge_respond' === AIADN_Front::post( 'aiadn_action' ) ) {
+			self::handle_judge_response( $mode, $judge, $session );
+		}
+
+		if ( 'token' === $mode ) {
+			$first = AIADN_Debates::get( (int) $judge['debate_id'] );
+			if ( $first && ! empty( $first['theme'] ) ) {
+				AIADN_Front::set_strand( $first['theme'] );
+			}
+			$rows = array( $judge );
+		} else {
+			$rows = AIADN_Debates::judges_for_school_email( (int) $session['school_id'], (string) $session['member']['email'] );
+		}
+
+		$h  = '<h1>Judging</h1>';
+		$flash = array(
+			'accepted' => array( 'Thank you. You are down to judge this debate.', 'info' ),
+			'declined' => array( 'Thank you for letting us know. The teachers have been told.', 'info' ),
+			'ack'      => array( "Please tick the box to confirm you'll follow the host school's rules.", 'error' ),
+		);
+		$msg = AIADN_Front::get( 'msg' );
+		if ( isset( $flash[ $msg ] ) ) {
+			$h .= AIADN_Front::notice( $flash[ $msg ][0], $flash[ $msg ][1] );
+		}
+		if ( ! $rows ) {
+			return $h . '<p>You are not down to judge any debates here.</p>';
+		}
+		foreach ( $rows as $row ) {
+			$debate = AIADN_Debates::get( (int) $row['debate_id'] );
+			if ( ! $debate ) {
+				continue;
+			}
+			$h .= self::render_judge_card( $row, $debate, $mode, $raw );
+		}
+		if ( 'session' === $mode ) {
+			$h .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'school' ) ) . '" class="aiadn__signout">' . AIADN_Front::csrf_field() . '<input type="hidden" name="aiadn_action" value="logout"><button class="aiadn__link" type="submit">Sign out</button></form>';
+		}
+		return $h;
+	}
+
+	private static function render_judge_card( array $judge, array $debate, string $mode, string $raw ): string {
+		$a = AIADN_Schools::get( (int) $debate['school_a_id'] );
+		$b = $debate['school_b_id'] ? AIADN_Schools::get( (int) $debate['school_b_id'] ) : null;
+		$h = '<div class="aiadn__panel"><h2>' . self::esc( $a['name'] ) . ' v ' . self::esc( $b ? $b['name'] : '' ) . '</h2><dl class="aiadn__details">';
+		$h .= '<dt>When</dt><dd>' . self::esc( AIADN_Util::show( (string) $debate['starts_at'] ) ) . '</dd>';
+		$h .= '<dt>Where</dt><dd>' . self::esc( ( AIADN_Motions::FORMATS[ $debate['format'] ] ?? '' ) . ( $debate['venue'] ? ': ' . $debate['venue'] : '' ) ) . '</dd>';
+		$h .= '<dt>Theme</dt><dd>' . self::esc( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . '</dd>';
+		$h .= '<dt>Motion</dt><dd>&ldquo;' . self::esc( $debate['motion_text'] ) . '&rdquo;</dd></dl>';
+
+		if ( 'cancelled' === $debate['status'] ) {
+			return $h . '<p><strong>This debate has been cancelled.</strong> There is nothing more to do.</p></div>';
+		}
+		if ( 'accepted' === $judge['status'] ) {
+			return $h . '<p><strong>You have accepted.</strong> Scoring opens on the day, in the next build. We will email you before then.</p></div>';
+		}
+		if ( 'declined' === $judge['status'] ) {
+			return $h . '<p>You have told us you can\'t make it. Thank you.</p></div>';
+		}
+		if ( 'invited' !== $judge['status'] ) {
+			return $h . '<p>This invitation is no longer active.</p></div>';
+		}
+
+		$h .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'judge' ) ) . '" class="aiadn__form">';
+		$h .= 'token' === $mode ? '<input type="hidden" name="t" value="' . esc_attr( $raw ) . '">' : AIADN_Front::csrf_field();
+		$h .= '<input type="hidden" name="aiadn_action" value="judge_respond"><input type="hidden" name="judge_id" value="' . (int) $judge['id'] . '">';
+		$h .= '<label class="aiadn__radio"><input type="checkbox" name="ack" value="1"> I will follow the host school\'s visitor and safeguarding rules.</label>';
+		$h .= '<label class="aiadn__radio"><input type="checkbox" name="name_public" value="1"> Show my name on the public result.</label>';
+		$h .= '<button class="aiadn__button" type="submit" name="decision" value="accept">I can judge</button> <button class="aiadn__button aiadn__button--quiet" type="submit" name="decision" value="decline">I can\'t make it</button></form></div>';
+		return $h;
+	}
+
+	private static function handle_judge_response( string $mode, ?array $judge, ?array $session ): void {
+		if ( ! AIADN_Util::allow( 'judge|' . AIADN_Util::client_ip(), 30, 600 ) ) {
+			AIADN_Front::redirect( 'judge', array( 'msg' => 'slow' ) );
+		}
+		$target = AIADN_Debates::get_judge( (int) AIADN_Front::post( 'judge_id' ) );
+		$ok     = false;
+		if ( $target && 'token' === $mode && $judge && (int) $judge['id'] === (int) $target['id'] ) {
+			$ok = true;
+		} elseif ( $target && 'session' === $mode && $session && AIADN_Auth::csrf_ok( AIADN_Front::post( 'csrf' ) ) && strtolower( $target['email'] ) === strtolower( (string) $session['member']['email'] ) && AIADN_Debates::judge_involves_school( $target, (int) $session['school_id'] ) ) {
+			$ok = true;
+		}
+		$back = 'token' === $mode ? array( 't' => AIADN_Front::post( 't' ) ) : array();
+		if ( ! $ok || 'invited' !== $target['status'] ) {
+			AIADN_Front::redirect( 'judge', $back );
+		}
+		$debate = AIADN_Debates::get( (int) $target['debate_id'] );
+		if ( ! $debate || 'cancelled' === $debate['status'] ) {
+			AIADN_Front::redirect( 'judge', $back );
+		}
+		$accept = 'accept' === AIADN_Front::post( 'decision' );
+		if ( $accept && '' === AIADN_Front::post( 'ack' ) ) {
+			AIADN_Front::redirect( 'judge', array_merge( $back, array( 'msg' => 'ack' ) ) );
+		}
+		AIADN_Debates::judge_respond( $debate, $target, $accept, '' !== AIADN_Front::post( 'name_public' ) );
+		AIADN_Front::redirect( 'judge', array_merge( $back, array( 'msg' => $accept ? 'accepted' : 'declined' ) ) );
+	}
+}

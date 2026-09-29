@@ -164,7 +164,7 @@ class AIADN_Schools {
 	 *
 	 * - teacher: an existing lead/teacher, or (approved schools only) anyone on the lead's school email domain
 	 * - slt: the SLT member created when they approved the school
-	 * - judge: nobody yet (judges arrive with the fixture slice)
+	 * - judge: someone a teacher has invited to judge a debate involving this school
 	 *
 	 * @return array{0:?array,1:bool}
 	 */
@@ -184,6 +184,14 @@ class AIADN_Schools {
 						return array( null, true );
 					}
 				}
+			}
+			return array( null, false );
+		}
+
+		if ( 'judge' === $role ) {
+			$judge = AIADN_Debates::judge_for_school_email( $school_id, $email );
+			if ( $judge ) {
+				return array( $judge, false );
 			}
 			return array( null, false );
 		}

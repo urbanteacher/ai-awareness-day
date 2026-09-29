@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 1;
+	const DB_VERSION = 2;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -32,6 +32,9 @@ class AIADN_Database {
 		$codes   = self::table( 'login_codes' );
 		$tokens  = self::table( 'tokens' );
 		$pins    = self::table( 'class_pins' );
+		$debates = self::table( 'debates' );
+		$events  = self::table( 'debate_events' );
+		$judges  = self::table( 'judges' );
 
 		$sql = array();
 
@@ -96,13 +99,14 @@ class AIADN_Database {
 			school_id bigint(20) unsigned NOT NULL,
 			kind varchar(20) NOT NULL DEFAULT '',
 			token_hash varchar(64) NOT NULL DEFAULT '',
+			ref_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			hint varchar(8) NOT NULL DEFAULT '',
 			expires_at datetime NOT NULL,
 			used_at datetime DEFAULT NULL,
 			created_at datetime NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY token_hash (token_hash),
-			KEY school_kind (school_id,kind)
+			KEY school_kind (school_id,kind,ref_id)
 		) {$charset};";
 
 		// Class PINs for students. Short-lived; the teacher can see the current one.
@@ -115,6 +119,69 @@ class AIADN_Database {
 			created_at datetime NOT NULL,
 			PRIMARY KEY  (id),
 			KEY school_expiry (school_id,expires_at)
+		) {$charset};";
+
+		// One row per fixture. The code (AID-XXXXX) is the public reference, never a password.
+		$sql[] = "CREATE TABLE {$debates} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			code varchar(12) NOT NULL DEFAULT '',
+			school_a_id bigint(20) unsigned NOT NULL,
+			school_b_id bigint(20) unsigned DEFAULT NULL,
+			a_member_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			b_member_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			status varchar(24) NOT NULL DEFAULT 'awaiting_opponent',
+			invite_name varchar(255) NOT NULL DEFAULT '',
+			invite_email varchar(255) NOT NULL DEFAULT '',
+			age_group varchar(10) NOT NULL DEFAULT '',
+			theme varchar(12) NOT NULL DEFAULT '',
+			motion_key varchar(40) NOT NULL DEFAULT '',
+			motion_text varchar(255) NOT NULL DEFAULT '',
+			a_side varchar(8) NOT NULL DEFAULT '',
+			format varchar(10) NOT NULL DEFAULT '',
+			venue varchar(255) NOT NULL DEFAULT '',
+			starts_at datetime DEFAULT NULL,
+			proposed_by bigint(20) unsigned NOT NULL DEFAULT 0,
+			judge_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			checklist_a text,
+			checklist_b text,
+			created_at datetime NOT NULL,
+			updated_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY code (code),
+			KEY school_a (school_a_id),
+			KEY school_b (school_b_id),
+			KEY status (status)
+		) {$charset};";
+
+		// What happened and when. Feeds the debate tracker and, later, the drop-off figures.
+		$sql[] = "CREATE TABLE {$events} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			event varchar(30) NOT NULL DEFAULT '',
+			school_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			note varchar(255) NOT NULL DEFAULT '',
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY debate_event (debate_id,event)
+		) {$charset};";
+
+		// Judges are named by a teacher for one debate. No account, no vetting by the platform.
+		$sql[] = "CREATE TABLE {$judges} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			name varchar(255) NOT NULL DEFAULT '',
+			email varchar(255) NOT NULL DEFAULT '',
+			organisation varchar(255) NOT NULL DEFAULT '',
+			judge_type varchar(12) NOT NULL DEFAULT '',
+			status varchar(10) NOT NULL DEFAULT 'pending',
+			name_public tinyint(1) NOT NULL DEFAULT 0,
+			ack tinyint(1) NOT NULL DEFAULT 0,
+			invited_at datetime DEFAULT NULL,
+			responded_at datetime DEFAULT NULL,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY debate_id (debate_id),
+			KEY email (email)
 		) {$charset};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
