@@ -19,6 +19,7 @@ class AIADN_Activator {
 
 	public static function deactivate(): void {
 		AIADN_Reminders::unschedule();
+		AIADN_Privacy::unschedule();
 		flush_rewrite_rules();
 	}
 }

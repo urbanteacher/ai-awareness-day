@@ -3,7 +3,7 @@
  * Plugin Name:       AI Awareness Day Debate Network
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval, class PINs, debates, judges, scoring, results, certificates, Student Voice and reminders (slices 1 to 4).
- * Version:           0.13.0
+ * Version:           0.14.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIADN_VERSION', '0.13.0' );
+define( 'AIADN_VERSION', '0.14.0' );
 define( 'AIADN_PLUGIN_FILE', __FILE__ );
 define( 'AIADN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AIADN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -34,6 +34,7 @@ require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-referrals.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-stats.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-debates.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-find.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-privacy.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-scorecards.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-issues.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-certificates.php';
@@ -53,6 +54,7 @@ require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-snapshot-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-colleague-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-partner-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-find-front.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-privacy-front.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-activator.php';
 
 /**
@@ -78,6 +80,7 @@ final class AIADN_Plugin {
 		AIADN_Mailer::register();
 		AIADN_Front::register();
 		AIADN_Reminders::register();
+		AIADN_Privacy::register();
 		add_action( 'init', array( 'AIADN_Database', 'maybe_upgrade' ) );
 	}
 }

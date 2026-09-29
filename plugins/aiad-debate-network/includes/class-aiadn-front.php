@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find', 'privacy' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -53,6 +53,7 @@ class AIADN_Front {
 		'colleague' => 'creative',
 		'partner'  => 'future',
 		'find'     => 'smart',
+		'privacy'  => 'safe',
 	);
 
 	public static function register(): void {
@@ -124,7 +125,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front', 'AIADN_Privacy_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -299,7 +300,7 @@ class AIADN_Front {
 		$h .= '<p class="aiadn__hint">Your teacher will show the PIN on the board.</p></div>';
 		$h .= '<button type="submit" class="aiadn__button">Continue</button>';
 		$h .= '</form>';
-		$h .= '<p class="aiadn__small">New school? <a href="' . esc_url( self::url( 'register' ) ) . '">Register here</a>. Lost your code? Ask your teacher or headteacher.</p><p class="aiadn__small">A colleague without your school\'s email address? <a href="' . esc_url( self::url( 'colleague' ) ) . '">Ask to join</a>.</p>';
+		$h .= '<p class="aiadn__small">New school? <a href="' . esc_url( self::url( 'register' ) ) . '">Register here</a>. Lost your code? Ask your teacher or headteacher.</p><p class="aiadn__small">A colleague without your school\'s email address? <a href="' . esc_url( self::url( 'colleague' ) ) . '">Ask to join</a>.</p><p class="aiadn__small">We delete everyone\'s contact details after the campaign. <a href="' . esc_url( self::url( 'privacy' ) ) . '">Delete my details now</a>.</p>';
 		$h .= '<script>(function(){var f=document.querySelector(".aiadn__form");if(!f)return;function s(){var r=f.querySelector("input[name=role]:checked");var st=r&&r.value==="student";f.querySelector("[data-for=pin]").style.display=st?"":"none";f.querySelector("[data-for=email]").style.display=st?"none":"";}f.addEventListener("change",s);s();})();</script>';
 		return $h;
 	}
@@ -621,7 +622,7 @@ class AIADN_Front {
 		$h .= '<label for="r-email">School email</label><input id="r-email" name="email" type="email" value="' . $val( 'email' ) . '" autocomplete="email" required>' . self::field_error( $errors, 'email' );
 		$h .= '<label for="r-slt">Headteacher or SLT email <span class="aiadn__opt">(to approve your school)</span></label><input id="r-slt" name="slt_email" type="email" value="' . $val( 'slt_email' ) . '" required>' . self::field_error( $errors, 'slt_email' );
 		$h .= '<fieldset class="aiadn__roles"><legend>Did an organisation introduce you? <span class="aiadn__opt">(optional)</span></legend><label for="r-org">Organisation</label><input id="r-org" name="ref_org" type="text" value="' . $val( 'ref_org' ) . '" placeholder="e.g. Apps for Good"><label for="r-refemail">Email of the person there</label><input id="r-refemail" name="ref_email" type="email" value="' . $val( 'ref_email' ) . '"><p class="aiadn__small">You are responsible for having their permission to give us their email address. We do not contact them yet: your headteacher chooses whether they are told when they approve your school.</p></fieldset>' . self::field_error( $errors, 'ref' );
-		$h .= '<p class="aiadn__small">When a debate is finished, the school names, theme, motion and winner are shown on a public results page. Teacher and student details never are, and the school code is never shown.</p>';
+		$h .= '<p class="aiadn__small">We delete teacher, headteacher and judge details after the campaign ends on ' . esc_html( wp_date( 'j F Y', strtotime( AIADN_Privacy::retention_date() ) ) ) . ', or sooner if you ask (<a href="' . esc_url( self::url( 'privacy' ) ) . '">Delete my details</a>).</p><p class="aiadn__small">When a debate is finished, the school names, theme, motion and winner are shown on a public results page. Teacher and student details never are, and the school code is never shown.</p>';
 		$h .= '<label class="aiadn__radio"><input type="checkbox" name="agree" value="1"' . ( ! empty( $v['agree'] ) ? ' checked' : '' ) . '> I agree to the Code of Conduct: challenge the argument, respect the person.</label>' . self::field_error( $errors, 'agree' );
 		$h .= '<button type="submit" class="aiadn__button">Send me a code</button></form>';
 		$h .= '<p class="aiadn__small">Already registered? <a href="' . esc_url( self::url( 'join' ) ) . '">Use the front door</a>.</p>';

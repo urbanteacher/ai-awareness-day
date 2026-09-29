@@ -19,6 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Programme_Front {
 
+	/** @var array<string,mixed>|null Result of a retention preview or run, for the page. */
+	private static $retention = null;
+
 	/** @var string|null Result of the last test email, for the page. */
 	private static $test_result = null;
 
@@ -151,6 +154,16 @@ class AIADN_Programme_Front {
 			$sent_test = AIADN_Mailer::send_test( $me->user_email ) ? 'sent to ' . $me->user_email : 'failed';
 		}
 		self::$test_result = $sent_test;
+		if ( AIADN_Front::is_post() && in_array( AIADN_Front::post( 'aiadn_action' ), array( 'retention_preview', 'retention_run' ), true ) && check_admin_referer( 'aiadn_retention' ) ) {
+			$do = AIADN_Front::post( 'aiadn_action' );
+			if ( 'retention_preview' === $do ) {
+				self::$retention = array( 'kind' => 'preview', 'counts' => AIADN_Privacy::end_of_campaign( null, true ) );
+			} elseif ( 'retention_run' === $do ) {
+				self::$retention = 'DELETE' === AIADN_Front::post( 'confirm' )
+					? array( 'kind' => 'done', 'counts' => AIADN_Privacy::end_of_campaign( null, false ) )
+					: array( 'kind' => 'refused', 'counts' => array() );
+			}
+		}
 
 		$export = AIADN_Front::get( 'export' );
 		if ( '' !== $export ) {
@@ -262,6 +275,27 @@ class AIADN_Programme_Front {
 		$body = self::tiles( array( 'Open requests now' => $fs['open'], 'Asks waiting' => $fs['pending'], 'Accepted' => $fs['accepted'], 'Declined' => $fs['declined'], 'Withdrawn' => $fs['withdrawn'] ) );
 		$body .= '<p class="aiadn__small">Schools without an opponent publish a request; another school asks and the host chooses. Counts only.</p>';
 		$h    .= AIADN_Result_Front::fold( 'Join the conversation', $body, false );
+
+		// Data retention.
+		$body  = '<p>Teacher, headteacher and judge contact details, and the emails of the people who introduced them, are deleted automatically the day after <strong>' . self::esc( wp_date( 'j F Y', strtotime( AIADN_Privacy::retention_date() ) ) ) . '</strong>. The team is warned 14 days before. Anonymous totals, scores, results and Student Voice answers are kept.</p>';
+		$done  = get_option( 'aiadn_retention_done_' . AIADN_Privacy::retention_date() );
+		$body .= '<p>' . ( $done ? 'The end-of-campaign deletion has run (' . self::esc( AIADN_Util::show( (string) $done ) ) . ').' : 'The end-of-campaign deletion has not run yet.' ) . '</p>';
+		if ( self::$retention ) {
+			if ( 'refused' === self::$retention['kind'] ) {
+				$body .= AIADN_Front::notice( 'Nothing was deleted. Type DELETE in capitals to confirm.', 'error' );
+			} else {
+				$rows = array();
+				foreach ( self::$retention['counts'] as $label => $n ) {
+					$rows[] = array( self::esc( $label ), (string) (int) $n );
+				}
+				$body .= '<h3>' . ( 'preview' === self::$retention['kind'] ? 'This is what would be deleted' : 'This has been deleted' ) . '</h3>' . self::table( array( 'What', 'Rows' ), $rows );
+			}
+		}
+		$nonce = wp_nonce_field( 'aiadn_retention', '_wpnonce', true, false );
+		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_preview"><button class="aiadn__button aiadn__button--quiet" type="submit">Preview what would be deleted</button></form>';
+		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_run"><label for="rt-confirm">To delete everyone&rsquo;s contact details now, type DELETE</label><input id="rt-confirm" name="confirm" type="text" autocomplete="off"><button class="aiadn__button aiadn__button--quiet" type="submit">Delete now</button></form>';
+		$body .= '<p class="aiadn__small">Anyone can also ask for their own details to go sooner, from the &ldquo;Delete my details&rdquo; page. Download any figures you want to keep as CSV first.</p>';
+		$h    .= AIADN_Result_Front::fold( 'Data retention', $body, false );
 
 		// Email check.
 		$route = AIADN_Mailer::route();
