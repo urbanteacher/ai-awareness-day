@@ -35,7 +35,7 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                 <?php endif; ?>
                 <p class="hero-subtitle"><strong><?php esc_html_e( 'Humans in the Loop should mean something tangible.', 'ai-awareness-day' ); ?></strong> <?php esc_html_e( 'In 2026 we encouraged AI literacy through lessons and display boards. In 2027 we want young people across the UK to question, discuss and debate the role AI should play in their lives and futures.', 'ai-awareness-day' ); ?></p>
                 <div class="hero-cta">
-                    <a href="#contact" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Contact', 'ai-awareness-day' ); ?></a>
+                    <a href="#contact" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Get involved', 'ai-awareness-day' ); ?></a>
                     <a href="<?php echo esc_url( $join_url ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Join the National Conversation', 'ai-awareness-day' ); ?></a>
                 </div>
                 <?php if ( $nominate_url || $sign_in_url ) : ?>
