@@ -786,3 +786,11 @@ function aiad_national_conversation_countdown(): ?array {
 		'date'  => $target->format( 'Y-m-d' ),
 	);
 }
+
+/**
+ * Whether the homepage shows the previous hero instead of the 2027 National Conversation one.
+ * Set in Appearance > Customise > Hero Section > Homepage hero, so the homepage can go back without a theme upload.
+ */
+function aiad_homepage_hero_is_previous(): bool {
+	return 'previous' === get_theme_mod( 'aiad_homepage_hero', 'new' );
+}

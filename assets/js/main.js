@@ -266,15 +266,17 @@
             var feature = document.querySelector('.hero-strand-feature');
             if (!hero || !feature) return;
 
-            // The motion is the post-16 one for each strand in the debate network's motion bank.
+            // The motion is the post-16 one for each strand in the debate network's motion bank. The question is what
+            // the previous hero asked instead, for when Customise > Hero Section > Homepage hero is set to Previous.
             var strands = [
-                { slug: 'safe', name: 'Safe', motion: 'This house believes users, not companies, should control what AI remembers about them.' },
-                { slug: 'smart', name: 'Smart', motion: 'This house would require AI tools in schools to guide students rather than give answers.' },
-                { slug: 'creative', name: 'Creative', motion: 'This house believes AI-generated work should not be eligible for creative prizes.' },
-                { slug: 'responsible', name: 'Responsible', motion: 'This house would require AI companies to show the environmental cost of every request.' },
-                { slug: 'future', name: 'Future', motion: 'This house believes young people should have a formal say in how AI is used in schools.' },
+                { slug: 'safe', name: 'Safe', motion: 'This house believes users, not companies, should control what AI remembers about them.', question: 'Would you tell an AI your secret?' },
+                { slug: 'smart', name: 'Smart', motion: 'This house would require AI tools in schools to guide students rather than give answers.', question: 'What happens when AI acts for you?' },
+                { slug: 'creative', name: 'Creative', motion: 'This house believes AI-generated work should not be eligible for creative prizes.', question: 'Who really made it?' },
+                { slug: 'responsible', name: 'Responsible', motion: 'This house would require AI companies to show the environmental cost of every request.', question: 'Should AI decide?' },
+                { slug: 'future', name: 'Future', motion: 'This house believes young people should have a formal say in how AI is used in schools.', question: 'What skills must stay human?' },
             ];
             var motion = feature.querySelector('.hero-strand-feature__motion-text');
+            var summary = motion ? null : feature.querySelector('.hero-strand-feature__summary');
             var word = feature.querySelector('.hero-strand-feature__word');
             var controls = Array.prototype.slice.call(feature.querySelectorAll('[data-strand-target]'));
             var currentIndex = 0;
@@ -292,6 +294,7 @@
                 hero.dataset.strand = strand.slug;
                 word.textContent = strand.name;
                 if (motion) motion.textContent = strand.motion;
+                if (summary) summary.textContent = strand.question;
                 controls.forEach(function (control) {
                     var active = control.dataset.strandTarget === strand.slug;
                     control.classList.toggle('is-active', active);

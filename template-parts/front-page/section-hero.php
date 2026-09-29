@@ -9,6 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
+// Soft-launch switch: Appearance > Customise > Hero Section > Homepage hero can bring back the previous hero.
+if ( aiad_homepage_hero_is_previous() ) {
+    include __DIR__ . '/section-hero-previous.php';
+    return;
+}
+
 /* Until the conversation opens the portal (register, sign in, nominate) is not offered here: the button explains what
    the conversation is instead. aiad_portal_is_live() brings the portal links back on the opening day. */
 $portal_live  = function_exists( 'aiad_portal_is_live' ) ? aiad_portal_is_live() : true;

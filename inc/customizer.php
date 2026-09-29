@@ -158,6 +158,26 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'priority' => 30,
     ) );
 
+    // The one switch for the soft launch: back to the previous homepage hero without uploading an older theme.
+    $wp_customize->add_setting( 'aiad_homepage_hero', array(
+        'default'           => 'new',
+        'sanitize_callback' => static function ( $value ) {
+            return in_array( $value, array( 'new', 'previous' ), true ) ? $value : 'new';
+        },
+        'transport'         => 'refresh',
+    ) );
+    $wp_customize->add_control( 'aiad_homepage_hero', array(
+        'label'       => __( 'Homepage hero', 'ai-awareness-day' ),
+        'description' => __( 'Which version of the top of the homepage visitors see. Switch back at any time; nothing else on the site changes.', 'ai-awareness-day' ),
+        'section'     => 'aiad_hero',
+        'type'        => 'radio',
+        'priority'    => 1,
+        'choices'     => array(
+            'new'      => __( 'New: the 2027 National AI Conversation', 'ai-awareness-day' ),
+            'previous' => __( 'Previous: "Keep Humans in the Loop" with Get involved and Check your AI readiness', 'ai-awareness-day' ),
+        ),
+    ) );
+
     $wp_customize->add_setting( 'aiad_hero_logo', array(
         'default'           => 0,
         'sanitize_callback' => 'absint',
