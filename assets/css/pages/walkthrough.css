@@ -1,0 +1,351 @@
+/* ============================================
+   PAGE: PLATFORM WALKTHROUGH (/walkthrough/)
+   A tour of screenshots from the demo, in the AiAd27 palette. Each screen is a card whose preview
+   shows the top of the page; clicking it opens the whole screenshot.
+   ============================================ */
+.wt {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font-family: var(--s-font);
+  line-height: 1.55;
+}
+
+.wt :where(h1, h2, h3) {
+  margin: 0;
+  color: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.wt :where(p) {
+  margin: 0 0 1rem;
+}
+
+/* In-page links land below the fixed header rather than under it. */
+.wt [id] {
+  scroll-margin-top: 7rem;
+}
+
+.wt a:focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Hero ---- */
+.wt-hero {
+  /* The site header is fixed, so the band starts below it. */
+  padding: 8.5rem 0 3rem;
+  background: var(--a27-safe);
+}
+
+.wt-eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.wt-title {
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+}
+
+.wt-lead {
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  line-height: 1.3;
+}
+
+.wt-demo-note {
+  display: inline-block;
+  margin: 1.25rem 0 0;
+  padding: 0.45rem 0.8rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.wt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.75rem 0 0;
+}
+
+.wt-btn {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  border: 2px solid var(--a27-ink);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.wt-btn--primary {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.wt-btn--primary:hover,
+.wt-btn--primary:focus-visible {
+  background: var(--a27-safe-deep);
+  border-color: var(--a27-safe-deep);
+  color: var(--a27-cream);
+}
+
+.wt-btn--ghost {
+  background: transparent;
+  color: var(--a27-ink);
+}
+
+.wt-btn--ghost:hover,
+.wt-btn--ghost:focus-visible {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.wt-parts ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wt-parts a {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--a27-ink);
+  color: var(--a27-ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.wt-parts a:hover,
+.wt-parts a:focus-visible {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+/* ---- Parts ---- */
+.wt-part {
+  padding: 3.5rem 0;
+}
+
+.wt-part--card {
+  background: var(--a27-card);
+}
+
+.wt-part__number {
+  margin-bottom: 0.5rem;
+  color: var(--a27-safe-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wt-part h2 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+}
+
+.wt-part__intro {
+  max-width: 44rem;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* ---- Screens ---- */
+.wt-shots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cards take the ground their section is not, so they never vanish into it. */
+.wt-shot {
+  display: flex;
+  flex-direction: column;
+  border-top: 6px solid var(--a27-ink);
+  background: var(--a27-card);
+}
+
+.wt-part--card .wt-shot {
+  background: var(--a27-cream);
+}
+
+.wt-shot__frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--a27-rule);
+  background: var(--a27-cream);
+}
+
+.wt-shot__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.3s ease;
+}
+
+.wt-shot__frame:hover img {
+  transform: scale(1.02);
+}
+
+/* The phone scorecard sits as a phone-width slice in the middle of its frame. */
+.wt-shot--phone .wt-shot__frame {
+  background: var(--a27-rule);
+}
+
+.wt-shot--phone .wt-shot__frame img {
+  width: 42%;
+  margin: 0 auto;
+  border-right: 1px solid var(--a27-ink);
+  border-left: 1px solid var(--a27-ink);
+}
+
+.wt-shot__zoom {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wt-shot__frame:hover .wt-shot__zoom,
+.wt-shot__frame:focus-visible .wt-shot__zoom {
+  opacity: 1;
+}
+
+/* On touch screens there is no hover, so the label is always shown. */
+@media (hover: none) {
+  .wt-shot__zoom {
+    opacity: 1;
+  }
+}
+
+.wt-shot__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.1rem 1.25rem 1.35rem;
+}
+
+.wt-shot__step {
+  color: var(--a27-safe-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.wt-shot__body p {
+  margin: 0;
+}
+
+.wt-shot__body .wt-shot__step {
+  margin-bottom: 0.35rem;
+}
+
+.wt-shot h3 {
+  margin-bottom: 0.45rem;
+  font-size: 1.3rem;
+}
+
+/* Pushed to the foot of the card, so the live links line up along a row. */
+.wt-shot__body .wt-shot__live {
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+.wt-shot__live a {
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ---- Closing call ---- */
+.wt-cta {
+  padding: 4rem 0;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.wt-cta h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.wt-cta .wt-btn--primary {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.wt-cta .wt-btn--primary:hover,
+.wt-cta .wt-btn--primary:focus-visible {
+  background: var(--a27-cream);
+  border-color: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.wt-cta .wt-btn--ghost {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.wt-cta .wt-btn--ghost:hover,
+.wt-cta .wt-btn--ghost:focus-visible {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.wt-cta a:focus-visible {
+  outline-color: var(--a27-cream);
+}
+
+@media (min-width: 45rem) {
+  .wt-shots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 52rem) {
+  .wt-hero {
+    padding: 10rem 0 3.5rem;
+  }
+
+  .wt-part {
+    padding: 5rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt * {
+    transition: none !important;
+  }
+
+  .wt-shot__frame:hover img {
+    transform: none;
+  }
+}

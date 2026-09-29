@@ -267,7 +267,7 @@
             if (!hero || !feature) return;
 
             // The motion is the post-16 one for each strand in the debate network's motion bank. The question is what
-            // the previous hero asked instead, for when Customise > Hero Section > Homepage hero is set to Previous.
+            // the previous hero asked instead, for when Customise > Front Page Sections > Hero Section > Homepage hero is set to Previous.
             var strands = [
                 { slug: 'safe', name: 'Safe', motion: 'This house believes users, not companies, should control what AI remembers about them.', question: 'Would you tell an AI your secret?' },
                 { slug: 'smart', name: 'Smart', motion: 'This house would require AI tools in schools to guide students rather than give answers.', question: 'What happens when AI acts for you?' },

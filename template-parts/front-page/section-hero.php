@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
-// Soft-launch switch: Appearance > Customise > Hero Section > Homepage hero can bring back the previous hero.
+// Soft-launch switch: Appearance > Customise > Front Page Sections > Hero Section > Homepage hero can bring back the previous hero.
 if ( aiad_homepage_hero_is_previous() ) {
     include __DIR__ . '/section-hero-previous.php';
     return;
