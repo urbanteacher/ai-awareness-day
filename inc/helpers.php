@@ -551,7 +551,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_hero_slogan'        => __( 'Keep Humans in the Loop', 'ai-awareness-day' ),
         'aiad_hero_title'         => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
-        'aiad_event_date_ymd'     => '2027-06-04',
+        'aiad_event_date_ymd'     => '2027-04-29',
         'aiad_show_breadcrumbs'   => false,
         'aiad_hero_subtitle'      => __( 'We are back for 2027. A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
         'aiad_campaign_title'     => __( 'AI Awareness Day', 'ai-awareness-day' ),
@@ -768,23 +768,21 @@ function aiad_national_conversation_totals(): ?array {
 }
 
 /**
- * What the hero counts down to: the day the National AI Conversation opens, then AI Awareness Day itself.
+ * What the hero counts down to: AI Awareness Day itself. The day the conversation opens is stated on the page as
+ * text ("Starting January 2027"), not counted, so one clock never stands for two dates.
  *
- * @return array{label:string,ts_ms:int,date:string}|null null once both have passed
+ * @return array{label:string,ts_ms:int,date:string}|null null once AI Awareness Day has passed
  */
 function aiad_national_conversation_countdown(): ?array {
-	$tz     = wp_timezone();
-	$opens  = ( defined( 'AIAD_CONVERSATION_OPENS' ) ? AIAD_CONVERSATION_OPENS : '2027-01-01' );
-	$target = new DateTimeImmutable( $opens . ' 00:00:00', $tz );
-	$label  = __( 'The National AI Conversation opens in', 'ai-awareness-day' );
+	$defaults = aiad_get_customizer_defaults();
+	$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+	$target   = new DateTimeImmutable( $event . ' 00:00:00', wp_timezone() );
 	if ( time() >= $target->getTimestamp() ) {
-		$defaults = aiad_get_customizer_defaults();
-		$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
-		$target   = new DateTimeImmutable( $event . ' 00:00:00', $tz );
-		$label    = __( 'AI Awareness Day 2027 is in', 'ai-awareness-day' );
-		if ( time() >= $target->getTimestamp() ) {
-			return null;
-		}
+		return null;
 	}
-	return array( 'label' => $label, 'ts_ms' => $target->getTimestamp() * 1000, 'date' => $target->format( 'Y-m-d' ) );
+	return array(
+		'label' => __( 'AI Awareness Day 2027 is in', 'ai-awareness-day' ),
+		'ts_ms' => $target->getTimestamp() * 1000,
+		'date'  => $target->format( 'Y-m-d' ),
+	);
 }

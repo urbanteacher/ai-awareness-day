@@ -135,3 +135,21 @@
     font-size: 0.7rem;
     letter-spacing: 0.14em;
 }
+
+/* Local demo link: small and quiet, but still readable. */
+.assets-pack__demo {
+  margin: 2rem 0 0;
+  padding: 0 1rem 1.5rem;
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.assets-pack__demo a {
+  color: var(--a27-dim);
+  text-decoration: none;
+}
+
+.assets-pack__demo a:hover,
+.assets-pack__demo a:focus-visible {
+  text-decoration: underline;
+}

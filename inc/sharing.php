@@ -96,6 +96,19 @@ function aiad_get_og_data(): array {
 			$data['image']    = $share_image['image'];
 		}
 
+	} elseif ( function_exists( 'aiad_is_national_conversation_page' ) && aiad_is_national_conversation_page() ) {
+		$data['title']       = __( 'The National AI Conversation 2027', 'ai-awareness-day' ) . ' — ' . $site_name;
+		$data['description'] = __( 'A national conversation about AI, led by young people: classroom talks, school debates and judged inter-school debates before AI Awareness Day 2027.', 'ai-awareness-day' );
+		$data['url']         = home_url( '/national-conversation/' );
+
+		$share_image = function_exists( 'aiad_get_social_share_image_data' )
+			? aiad_get_social_share_image_data()
+			: array( 'image_id' => 0, 'image' => '' );
+		if ( ! empty( $share_image['image'] ) ) {
+			$data['image_id'] = $share_image['image_id'];
+			$data['image']    = $share_image['image'];
+		}
+
 	} elseif ( is_singular( array( 'resource', 'partner', 'timeline', 'live_session' ) ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );

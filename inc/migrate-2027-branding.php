@@ -38,7 +38,7 @@ function aiad_migrate_2027_branding(): void {
 	}
 
 	set_theme_mod( 'aiad_hero_date', 'AI Awareness Day 2027' );
-	set_theme_mod( 'aiad_event_date_ymd', '2027-06-04' );
+	set_theme_mod( 'aiad_event_date_ymd', '2027-04-29' );
 
 	$campaign = (string) get_theme_mod( 'aiad_campaign_text', '' );
 	if ( $campaign !== '' && false !== stripos( $campaign, '2026' ) ) {

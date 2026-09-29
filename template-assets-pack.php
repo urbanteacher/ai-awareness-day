@@ -269,6 +269,15 @@ $assets = array(
         </div>
 
     </div>
+
+    <?php
+    /* Local demo only: a quiet way back to the client walkthrough. It shows only when the site's own address is
+       localhost and the walkthrough file is in the theme, so it never appears on the live site. */
+    $aiad_demo_host = strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
+    if ( in_array( $aiad_demo_host, array( 'localhost', '127.0.0.1' ), true ) && is_readable( get_template_directory() . '/demo-walkthrough.html' ) ) :
+        ?>
+    <p class="assets-pack__demo"><a href="<?php echo esc_url( AIAD_URI . '/demo-start.php' ); ?>" rel="nofollow">Demo</a></p>
+    <?php endif; ?>
 </main>
 
 <?php get_footer(); ?>

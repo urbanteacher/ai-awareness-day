@@ -1,278 +1,479 @@
-/* Campaign copy and strand exploration share a baseline, with independent
-   space for the longest strand. ID scope supersedes legacy hero variants. */
+/* Front-page hero. Loads last and is scoped to #hero, so it supersedes the
+   older hero rules in layout/hero.css, responsive/mobile.css and aiad27.css.
 
-/* Strand colour stays on the section; only the strand panel is ink. */
+   Three tiers, one left edge:
+   1. The headline and the two actions, in ink on the strand ground.
+   2. The chamfered ink panel (the brand kit's signature shape) carrying the
+      strand switcher and the motion to debate.
+   3. A facts row under a rule: the countdown and the running totals. */
+
 #hero.hero-section {
+  --hero-ink: var(--a27-ink);
+  --hero-rule: rgba(35, 31, 32, .32);
   background: var(--hero-bright);
-}
-#hero .hero-title-block,
-#hero .hero-copy {
-  background: transparent;
+  color: var(--hero-ink);
 }
 
 #hero .hero-title-block {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  /* Stretch: the black panel was align-self: start with height: auto, so it
-     only ran as tall as its own content and stopped short of the copy
-     column's height, leaving cream showing below it. Stretching the row lets
-     the panel fill the full column height instead. */
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   align-items: stretch;
-  /* Tighter again: 26px still read as two things that belong together but
-     were held apart. Down to a single hairline-adjacent gap. */
-  gap: clamp(.5rem, 1vw, 1rem);
-  padding-block: clamp(3rem, 6vw, 5.5rem);
+  gap: clamp(2rem, 5vw, 5rem);
   min-height: 0;
+  padding-block: clamp(2.5rem, 4.6vw, 4.5rem);
+  background: transparent;
+  text-align: left;
 }
-#hero .hero-copy { min-width: 0; width: 100%; position: static; }
 
-/* Restore the pre-presentation brand lockup: wordmark over a hanging
-   two-line H1, strand mark beside “the Loop”. */
-/* The headline sets the measure for everything under it. "Keep Humans in" is
-   about 6.6x the title's own font-size wide, so expressing the measure in that
-   em keeps the subtitle and the buttons ending on the headline's right edge as
-   the clamped title scales. Retune the multiplier if the headline wording
-   changes — it is tied to that string in Uncut Sans, not to anything generic. */
+/* ── Copy column ─────────────────────────────────────── */
+
 #hero .hero-copy {
-  --hero-title-size: clamp(2.75rem, 5.4vw, 5.4rem);
-  --hero-measure: min(calc(6.6 * var(--hero-title-size)), 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  width: 100%;
+  position: static;
+  background: transparent;
 }
 
-#hero .hero-brand {
-  display: grid;
-  grid-template-columns: max-content auto;
-  grid-template-rows: auto auto;
-  column-gap: clamp(1.25rem, 3vw, 2.5rem);
-  align-items: center;
-  width: max-content;
-  max-width: 100%;
-  font-size: var(--hero-title-size);
-}
-#hero .hero-lockup {
-  grid-column: 1;
-  grid-row: 1;
-  display: block;
-  width: min(300px, 100%);
-  height: auto;
-  margin: 0 0 1.1rem auto;
-}
-#hero .hero-date {
-  grid-column: 1;
-  grid-row: 2;
-  color: #FFFFFF;
-  font-size: 1em;
+/* The lockup's device, "2027" underlined, in live text on the copy's edge. */
+#hero .hero-eyebrow {
+  margin: 0 0 clamp(1rem, 1.8vw, 1.35rem);
+  color: var(--hero-ink);
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
   font-weight: 700;
-  letter-spacing: -.06em;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+}
+#hero .hero-eyebrow__year {
+  display: inline-block;
+  padding-bottom: .18em;
+  border-bottom: .14em solid currentColor;
+}
+/* The day itself, set under the title one step down from it, in ink so it supports the white title rather than
+   competing with it. Its date comes from the same setting as the countdown. */
+#hero .hero-eyebrow-date {
+  margin: clamp(.75rem, 1.4vw, 1.1rem) 0 0;
+  color: var(--hero-ink);
+  font-size: clamp(1.2rem, 2.62vw, 2.59rem); /* 0.4 of the title, so the date runs as wide as "in the Loop" */
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+  text-align: left;
+}
+
+#hero .hero-title {
+  margin: 0;
+  color: #FFFFFF;
+  font-size: clamp(3rem, 6.6vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -.055em;
   line-height: .9;
   text-align: left;
-  margin: 0;
 }
-#hero .hero-date__lines--mobile { display: none; }
-#hero .hero-date__line { display: block; text-align: left; }
-#hero .hero-date__line--loop { text-align: right; }
-#hero .hero-brand__mark {
-  grid-column: 2;
-  grid-row: 2;
-  display: block;
-  align-self: center;
-  width: 1.72em;
-  height: 1.72em;
-  background: var(--a27-ink, #231F20);
-  -webkit-mask: var(--hero-mark) center / contain no-repeat;
-  mask: var(--hero-mark) center / contain no-repeat;
-}
+#hero .hero-title__line { display: block; }
+
+/* Three sentences: the bold one leads on its own line as a standfirst,
+   and the measure is wider than a one-line lede would need. */
 #hero .hero-subtitle {
-  /* Right-aligned, matching the headline above it. The box itself stays at
-     the same left offset as the headline's max-content box — only the text
-     inside it hugs the right edge. margin-left: auto would instead push the
-     whole box out to the copy column's true right edge (580px here), past
-     the headline's own right edge (429px), which misaligns the two rather
-     than matching them. */
-  text-align: right;
-  margin: 1.5rem 0 0;
-  max-width: var(--hero-measure);
-  line-height: 1.35;
-  font-size: var(--hero-body, clamp(1.12rem, 2vw, 1.45rem));
+  max-width: 48ch;
+  margin: clamp(1.25rem, 2.2vw, 1.75rem) 0 0;
+  color: var(--hero-ink);
+  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  line-height: 1.45;
+  text-align: left;
+  text-wrap: pretty;
 }
-#hero .hero-subtitle strong { display: inline; margin: 0; font-weight: 700; }
-/* Sized to their labels, not stretched. Two equal 1fr columns across a 42rem
-   row padded both buttons to 336px whatever their text said, so "Get involved"
-   sat in the same box as "Check your AI readiness". No gap, so they still read
-   as one joined unit and the secondary keeps dropping its left border. */
+#hero .hero-subtitle strong { display: block; margin-bottom: .3em; color: #FFFFFF; font-weight: 700; }
+
+/* Actions: two choices of different weight with a gap between, not one
+   joined control. They grow to fill the row so its right edge meets the
+   facts rule below, and fill it each on their own line once they wrap. */
 #hero .hero-cta {
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  /* Aligned to the same left edge as the subtitle above. layout/hero.css
-     centres this row, which was invisible while the buttons stretched across a
-     grid; once they were sized to their labels the pair started sitting 88px
-     in from the copy's edge while every other line began at 0, which read as
-     the hero having three different alignments. */
   justify-content: flex-start;
-  gap: 0;
-  margin: 1rem 0 0;
-  width: var(--hero-measure);
-  max-width: 100%;
+  gap: .75rem;
+  width: 100%;
+  margin: clamp(1.5rem, 2.4vw, 2rem) 0 0;
 }
 #hero .hero-cta__btn {
-  /* Share the measure between them rather than each sizing to its own label,
-     so the pair ends on the headline's edge instead of stopping short. */
+  display: inline-flex;
   flex: 1 1 auto;
-  width: auto;
-  min-height: 0;
-  margin: 0;
-  padding: .85rem 1rem;
-  border: 1px solid var(--a27-ink);
-  border-radius: 0;
-  font-size: .82rem;
+  align-items: center;
   justify-content: center;
-}
-#hero .hero-cta__btn--secondary { border-left-width: 0; }
-
-#hero .hero-strand-feature {
-  box-sizing: border-box;
-  align-self: stretch;
-  justify-self: stretch;
-  min-width: 0;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
+  gap: .7rem;
+  width: auto;
+  min-height: 3.5rem;
   margin: 0;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
-  background: var(--a27-ink);
-  color: var(--a27-cream);
-  position: static;
-  /* Now that the panel stretches to the copy column's height, its content —
-     labels, icon+word, question — no longer fills the box on its own and sat
-     top-heavy with dead space below. Centring it as a group as the box grows,
-     rather than leaving it pinned to the top edge. */
+  padding: 1rem 1.6rem;
+  border: 2px solid var(--hero-ink);
+  border-radius: 0;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+#hero .hero-cta__btn:hover,
+#hero .hero-cta__btn:active { transform: none; box-shadow: none; }
+#hero .hero-cta__btn--primary { background: var(--hero-ink); color: var(--a27-cream); }
+#hero .hero-cta__btn--primary::after {
+  content: "";
+  flex: none;
+  width: 1.15em;
+  height: .95em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 18'%3E%3Cpath d='M13 1.5 20.5 9 13 16.5M20.5 9H1' fill='none' stroke='%23000' stroke-width='2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 18'%3E%3Cpath d='M13 1.5 20.5 9 13 16.5M20.5 9H1' fill='none' stroke='%23000' stroke-width='2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform .18s ease;
+}
+#hero .hero-cta__btn--primary:hover,
+#hero .hero-cta__btn--primary:focus-visible { background: var(--hero-deep); border-color: var(--hero-deep); color: var(--a27-cream); }
+#hero .hero-cta__btn--primary:hover::after { transform: translateX(3px); }
+#hero .hero-cta__btn--secondary { background: transparent; color: var(--hero-ink); }
+#hero .hero-cta__btn--secondary:hover,
+#hero .hero-cta__btn--secondary:focus-visible { background: var(--hero-ink); border-color: var(--hero-ink); color: var(--a27-cream); }
+
+#hero a:focus-visible { outline: 3px solid var(--hero-ink); outline-offset: 3px; }
+
+#hero .hero-cta-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .35rem 1.5rem;
+  margin: 1.1rem 0 0;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+#hero .hero-cta-more a {
+  color: var(--hero-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+}
+#hero .hero-cta-more a:hover,
+#hero .hero-cta-more a:focus-visible { text-decoration-thickness: 2px; }
+
+/* Facts row: one ruled strip at the column foot, the countdown on the left
+   and the running totals closing it on the right. margin-top: auto drops its
+   base level with the panel's; the padding is the minimum gap above it. */
+#hero .hero-facts {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  width: 100%;
+  margin-top: auto;
+  padding-top: clamp(1.5rem, 2.6vw, 2.25rem);
+}
+#hero .hero-facts > * {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 2px solid var(--hero-ink);
+}
+#hero .hero-countdown-wrap {
+  width: auto;
+  background: none;
+  color: #FFFFFF;
+}
+/* On its own (the totals start on the opening day) the countdown and its rule run the full width of the button row. */
+#hero .hero-countdown-wrap:only-child { grid-column: 1 / -1; }
+#hero .hero-countdown__title {
+  margin: 0 0 .75rem;
+  color: var(--hero-ink);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+#hero .hero-countdown {
+  display: flex;
+  gap: 0;
+  max-width: none;
+  margin: 0;
+}
+/* Alone, the four units share the row equally instead of huddling at the left. */
+#hero .hero-countdown-wrap:only-child .hero-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+#hero .hero-countdown-wrap:only-child .hero-countdown__item,
+#hero .hero-countdown-wrap:only-child .hero-countdown__item + .hero-countdown__item {
+  align-items: center;
+  padding-inline: .5rem;
+  text-align: center;
+}
+#hero .hero-countdown__item {
   display: flex;
   flex-direction: column;
+  padding: 0 clamp(1rem, 2.2vw, 1.75rem) 0 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+}
+#hero .hero-countdown__item + .hero-countdown__item {
+  padding-left: clamp(1rem, 2.2vw, 1.75rem);
+  border-left: 1px solid var(--hero-rule);
+}
+#hero .hero-countdown__value {
+  color: #FFFFFF;
+  font-size: clamp(2rem, 3.2vw, 2.85rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+#hero .hero-countdown__label {
+  margin-top: .4rem;
+  color: var(--hero-ink);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+#hero .hero-totals {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-left: 1rem;
+  color: var(--hero-ink);
+  font-size: .92rem;
+  line-height: 1.5;
+  list-style: none;
+  text-align: right;
+}
+#hero .hero-totals li { margin: 0; padding: 0; }
+#hero .hero-totals strong { font-weight: 700; }
+
+/* Too narrow for the pair side by side: stack them, and run the totals as
+   one line under the countdown instead of a right-hung column. */
+@media (min-width: 961px) and (max-width: 1140px), (max-width: 600px) {
+  #hero .hero-facts { grid-template-columns: minmax(0, 1fr); }
+  #hero .hero-facts > .hero-countdown-wrap + .hero-totals { padding-top: .85rem; border-top-width: 1px; border-top-color: var(--hero-rule); margin-top: 1rem; }
+  #hero .hero-totals { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: .1rem 1.25rem; padding-left: 0; text-align: left; }
+}
+
+/* ── Strand panel ────────────────────────────────────── */
+
+/* The chamfer is the brand kit's shape-chamfer-panel: top-right and
+   bottom-left corners cut at 45°. clip-path rather than the SVG mask so the
+   cut stays a fixed size however tall the panel grows. */
+#hero .hero-strand-feature {
+  --cut: clamp(1.75rem, 3.6vw, 3.25rem);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  align-self: stretch;
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  position: relative;
+  background: var(--hero-ink);
+  color: var(--a27-cream);
+  container-type: inline-size;
+  -webkit-clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+#hero .hero-strand-feature a:focus-visible { outline-color: var(--hero-bright); }
+/* Centred throughout, like the brand poster's centred mark. */
+#hero .hero-strand-feature { text-align: center; }
+
+/* Sized off the panel's width: the line runs about 21x its font size, so
+   4.5cqi is the largest that always fits on one line, capped at 1rem. */
+#hero .hero-strand-feature__title {
+  margin: 0 0 .4rem;
+  color: #FFFFFF;
+  font-size: .85rem;
+  font-size: clamp(.72rem, 4.5cqi, 1rem);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* When it starts, in the strand's own colour, under the name. */
+#hero .hero-strand-feature__starts {
+  margin: 0 0 1.1rem;
+  color: var(--hero-bright);
+  font-size: clamp(.68rem, 3.6cqi, .85rem);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+#hero .hero-strand-feature__themes {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: .25rem 1.15rem;
+  width: auto;
+  max-width: none;
+  margin: 0;
 }
-#hero .hero-strand-feature__themes { display: flex; justify-content: flex-start; flex-wrap: wrap; gap: .4rem 1rem; margin: 0 0 2rem; max-width: none; }
-#hero .hero-strand-feature__theme { color: var(--a27-cream); font-size: .7rem; letter-spacing: .06em; padding-block: .5rem; }
-#hero .hero-strand-feature__theme.is-active { color: var(--hero-bright); border-color: currentColor; }
-/* Row rather than column-reverse: icon and word sit on one line at every
-   width instead of the icon stacking above the word above roughly 1050px. */
-/* perspective restored: aiad27.css's .hero-strand-feature__stage carried
-   perspective: 950px for the word's rotateX flip on strand change, but this
-   ID-selector rule wins the cascade and didn't repeat it. Without perspective
-   on an ancestor, rotateX has nothing to project into and the flip animation
-   simply looked flat. */
-#hero .hero-strand-feature__stage { display: flex; flex-direction: row; align-items: center; gap: 1.25rem; margin: 0; padding: 0; font-size: inherit; perspective: 950px; }
-#hero .hero-strand-feature__mark { display: block; width: 6rem; height: 6rem; background: var(--hero-bright); }
-#hero .hero-strand-feature__word { width: auto; font-size: clamp(2rem, 3.8vw, 3.5rem); letter-spacing: -.055em; line-height: 1.1; }
-#hero .hero-strand-feature__summary { border-color: var(--a27-dim); margin: 1.25rem 0 0; padding: 1.25rem 0 0; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.4; min-height: 5.2rem; }
-@media (max-width: 1050px) {
-  #hero .hero-title-block { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  #hero .hero-copy { --hero-title-size: clamp(2.4rem, 8vw, 4.2rem); }
-  #hero .hero-strand-feature__stage { flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; }
-  #hero .hero-strand-feature__word { font-size: clamp(2rem, 6vw, 3.5rem); }
-  #hero .hero-strand-feature__mark { width: 4rem; height: 4rem; }
-  #hero .hero-strand-feature__summary { min-height: 0; }
+#hero .hero-strand-feature__theme {
+  padding: .4rem 0;
+  border-bottom: 2px solid transparent;
+  color: rgba(246, 244, 237, .72);
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-decoration: none;
+  transition: color .18s ease;
 }
-@media (max-width: 768px) {
-  #hero .hero-brand {
-    width: 100%;
-    max-width: 100%;
+#hero .hero-strand-feature__theme:hover { color: var(--a27-cream); }
+#hero .hero-strand-feature__theme.is-active { color: var(--hero-bright); border-bottom-color: currentColor; }
+/* Keyed to the panel's own width, not the viewport's: it narrows both on
+   phones and in the two-column band around 1024px. Tighter, and spread
+   edge to edge, so all five stay on one line instead of orphaning "Future". */
+@container (max-width: 400px) {
+  #hero .hero-strand-feature__themes { justify-content: space-between; gap: 0 .5rem; }
+  #hero .hero-strand-feature__theme { font-size: .64rem; letter-spacing: .06em; }
+}
+
+/* The panel stretches to the copy column's height, which is usually more
+   than its content needs. Rather than let space-between spread that out as
+   two dead gaps, the stage takes all of it and the icon grows into it, the
+   way the brand poster fills its chamfered panel with the strand mark. */
+#hero .hero-strand-feature__stage {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  /* The word's rotateX flip on strand change needs a projecting ancestor. */
+  perspective: 950px;
+}
+/* contain + centre bottom: the icon scales to whichever of the box's width
+   or height runs out first and sits on the word like a lockup. */
+#hero .hero-strand-feature__mark {
+  display: block;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: clamp(4rem, 7vw, 6.5rem);
+  max-height: 13rem;
+  background: var(--hero-bright);
+  -webkit-mask-position: center bottom;
+  mask-position: center bottom;
+}
+/* One size for all five words, set by the longest ("Responsible") against
+   the panel's own width, so the type does not jump between strands. */
+#hero .hero-strand-feature__word {
+  display: block;
+  width: auto;
+  color: var(--a27-cream);
+  font-size: clamp(2.5rem, 4.4vw, 4.25rem);
+  font-size: min(5rem, 18.5cqi);
+  font-weight: 700;
+  letter-spacing: -.055em;
+  line-height: .95;
+  transform-origin: center;
+}
+
+#hero .hero-strand-feature__summary {
+  min-height: 0;
+  margin: 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(246, 244, 237, .22);
+  font-size: clamp(1.2rem, 1.75vw, 1.6rem);
+  line-height: 1.35;
+}
+#hero .hero-strand-feature__motion-label {
+  display: block;
+  margin-bottom: .5rem;
+  color: var(--hero-bright);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+/* Room for three lines, so the panel does not reflow as the motions rotate. */
+#hero .hero-strand-feature__motion-text {
+  display: block;
+  min-height: 4.2em;
+  font-style: normal;
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #hero .hero-eyebrow,
+  #hero .hero-eyebrow-date,
+  #hero .hero-title { animation: aiadHeroDateIn .65s cubic-bezier(.16, 1, .3, 1) .06s both; }
+  #hero .hero-strand-feature { animation: aiadHeroDateIn .75s cubic-bezier(.16, 1, .3, 1) .2s both; }
+}
+
+/* Short laptop screens (1366x768 is common in schools): tighten the vertical
+   rhythm so the facts row still lands above the fold. */
+@media (min-width: 961px) and (max-height: 820px) {
+  #hero .hero-title-block { padding-block: clamp(2rem, 3vw, 2.5rem); }
+  #hero .hero-title { font-size: clamp(3rem, 6vw, 5.75rem); }
+  #hero .hero-eyebrow-date { font-size: clamp(1.2rem, 2.38vw, 2.28rem); }
+  #hero .hero-subtitle { margin-top: 1.1rem; }
+  #hero .hero-cta { margin-top: 1.4rem; }
+  #hero .hero-facts { padding-top: 1.5rem; }
+}
+
+/* ── Stacked ─────────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  #hero .hero-title-block {
     grid-template-columns: minmax(0, 1fr);
-    font-size: clamp(2.1rem, 10.5vw, 3.25rem);
-    column-gap: 0;
+    gap: clamp(2.5rem, 7vw, 3.5rem);
+    padding-block: clamp(2.5rem, 7vw, 4rem) clamp(3rem, 8vw, 4.5rem);
   }
-  #hero .hero-brand__mark { display: none; }
-  /* Everything centred on mobile rather than the desktop's right-hung
-     headline over a left-hung body. The right-alignment on the headline and
-     the left axis shared by the subtitle/buttons/labels were both decisions
-     made for a wide two-column hero; stacked full-width on a phone, a single
-     centred column reads far more settled than either edge. */
-  #hero .hero-brand { justify-items: center; }
-  #hero .hero-lockup { width: min(260px, 100%); margin: 0 auto .85rem; }
-  #hero .hero-date,
-  #hero .hero-date__line,
-  #hero .hero-date__line--loop { text-align: center; }
-  /* One line instead of a different two-line split: two lines of the
-     headline cost more vertical space than the phrase is worth at this
-     width, so mobile gets the whole phrase on one line at a size small
-     enough to fit it, rather than another way of breaking it in two. */
-  #hero .hero-date__lines--desktop { display: none; }
-  #hero .hero-date__lines--mobile { display: contents; }
-  /* Measured against the actual rendered string in Uncut Sans Bold at -.045em
-     tracking: the longest word "Keep Humans in the Loop" needs at most 31px
-     to fit a 375px screen's column (343px) and 26px to fit 320px's (288px).
-     7.4vw lands under both with room to spare — 27.75px and 23.7px — and
-     clamps at 2rem so it never grows large enough to wrap on a wider phone. */
-  #hero .hero-date__line--single {
-    font-size: clamp(1.5rem, 7.4vw, 2rem);
-    white-space: nowrap;
-  }
-  /* --hero-measure assumes the desktop headline, which is width: max-content
-     and only as wide as its longest line. Here the headline switches to
-     width: 100% instead — right-aligned inside the full column, not sized to
-     its text — so the measure formula no longer describes where the headline
-     actually ends. Without this the subtitle kept the desktop-derived measure
-     (401px in a 699px column) while the headline filled the full 699px,
-     wrapping "We are back for 2027..." onto a third line for no reason. */
-  #hero .hero-subtitle { max-width: 100%; text-align: center; margin-inline: auto; }
-  /* Side by side, not stacked: kept as one flex row rather than switching to
-     a column, so the pair keeps a single accessible tap target per button
-     without doubling the hero's vertical scroll length. Labels wrap onto a
-     second line inside the narrower button rather than truncating. */
-  #hero .hero-cta { width: 100%; }
-  #hero .hero-cta__btn { font-size: .72rem; white-space: normal; line-height: 1.25; }
-  #hero .hero-strand-feature__themes { justify-content: center; }
-  #hero .hero-strand-feature__stage { justify-content: center; }
-  #hero .hero-strand-feature__summary { text-align: center; }
-}
-@media (max-width: 470px) {
-  /* Below 470px the subtitle wraps to 3-4 lines at the normal 17.92px size
-     (measured: 3 lines at 455px, 4 at 320px) even though 480px and up hold at
-     2 lines fine — the sentence just runs out of column width before the
-     font shrinks. Probed the largest size that keeps it at 2 lines at both
-     ends of this range (14.5px at 375px, 12px at 320px) and picked a clamp
-     comfortably under both. Left untouched above this breakpoint so text
-     everywhere else keeps its normal size. */
-  #hero .hero-subtitle { font-size: clamp(.72rem, 3.6vw, .89rem); }
-}
-@media (max-width: 480px) {
-  /* Was column-reverse, stacking the icon above the word and pulling both
-     back to the left — it undid both the one-line layout and the centring
-     set for mobile just above, since this query wins at the same width. Row
-     plus centre keeps icon and word on one line, centred like the rest of
-     the hero at this size. */
-  #hero .hero-strand-feature__stage { flex-direction: row; justify-content: center; align-items: center; }
-  #hero .hero-strand-feature__word { font-size: clamp(2rem, 8.2vw, 2.5rem); }
-  /* The two CTA labels plus their padding need 306px and a 320px screen only
-     has 288px to give them once the container's own gutters come out —
-     18px short, so flex-wrap: wrap was dropping "Check your AI readiness"
-     onto its own full-width row instead of staying beside "Get involved".
-     Tighter padding recovers the 18px; nowrap stops it happening again. */
-  #hero .hero-cta { flex-wrap: nowrap; }
-  #hero .hero-cta__btn { padding-inline: .5rem; }
+  #hero .hero-title { font-size: clamp(2.75rem, 11vw, 6rem); }
+  #hero .hero-eyebrow-date { font-size: clamp(1.09rem, 4.37vw, 2.38rem); }
+  #hero .hero-facts { margin-top: 0; }
+  #hero .hero-strand-feature { gap: 1.75rem; }
+  /* Icon beside the word here: stacked, the pair cost more height than the
+     panel's content is worth once it sits below the copy. */
+  #hero .hero-strand-feature__stage { flex-direction: row; justify-content: center; align-items: center; gap: 1rem; }
+  #hero .hero-strand-feature__mark { flex: none; width: clamp(3rem, 9vw, 4.5rem); height: clamp(3rem, 9vw, 4.5rem); min-height: 0; -webkit-mask-position: center; mask-position: center; }
+  #hero .hero-strand-feature__word { font-size: clamp(2.25rem, 8.5vw, 4rem); }
+  #hero .hero-strand-feature__motion-text { min-height: 0; }
 }
 
+@media (max-width: 600px) {
+  /* Phones: the headline fills the width of the page like it does beside the panel on desktop, and the date keeps its
+     size relative to it. The vw sizes stay as the fallback for browsers without container-query units. */
+  #hero .hero-copy { container-type: inline-size; }
+  #hero .hero-title { font-size: clamp(2.5rem, 13.4vw, 3.75rem); font-size: 17.15cqi; }
+  #hero .hero-title__line { white-space: nowrap; }
+  #hero .hero-eyebrow-date { font-size: clamp(.99rem, 5.32vw, 1.48rem); font-size: 6.78cqi; }
+  #hero .hero-subtitle { font-size: 1.05rem; }
+  #hero .hero-cta { flex-direction: column; align-items: stretch; width: 100%; }
+  #hero .hero-cta__btn { width: 100%; min-height: 3.25rem; padding-inline: 1rem; white-space: normal; }
+  #hero .hero-cta-more { font-size: .88rem; }
+  #hero .hero-countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #hero .hero-countdown__item { padding-right: .5rem; }
+  #hero .hero-countdown__item + .hero-countdown__item { padding-left: .75rem; }
+  #hero .hero-countdown__value { font-size: clamp(1.6rem, 8vw, 2.25rem); }
+  #hero .hero-countdown__label { font-size: .6rem; letter-spacing: .08em; }
+  #hero .hero-strand-feature { --cut: 1.5rem; padding: 1.5rem 1.25rem 1.75rem; }
+  #hero .hero-strand-feature__theme { padding-block: .6rem; }
+}
 
-/* National AI Conversation: the box carries the name, a motion for each strand and the way in. */
-#hero .hero-strand-feature__title { margin: 0 0 1.25rem; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
-#hero .hero-strand-feature__summary .hero-strand-feature__motion-label { display: block; margin-bottom: .2rem; font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
-#hero .hero-strand-feature__motion-text { font-style: normal; }
+/* ── Desktop: pack the copy column out ───────────────── */
 
-#hero .hero-cta-more { margin: .9rem 0 0; font-size: .88rem; }
-#hero .hero-cta-more a { color: var(--a27-ink); text-decoration: underline; text-underline-offset: 3px; }
-#hero .hero-cta-more a:hover, #hero .hero-cta-more a:focus-visible { text-decoration-thickness: 2px; }
-
-/* The countdown, in the campaign's own look and outside the box. */
-#hero .hero-countdown-wrap { margin: 1.5rem 0 0; width: var(--hero-measure); max-width: 100%; box-sizing: border-box; padding: 1.1rem 1.25rem 1.25rem; background: var(--a27-ink); color: var(--a27-cream); }
-#hero .hero-countdown__title { margin: 0 0 .75rem; font-size: .74rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-bright); }
-#hero .hero-countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; max-width: none; margin: 0; }
-#hero .hero-countdown__item { background: transparent; border: 1px solid rgba(246, 244, 237, .45); border-radius: 0; box-shadow: none; padding: .7rem .4rem .55rem; text-align: center; }
-#hero .hero-countdown__item + .hero-countdown__item { border-left-width: 0; }
-#hero .hero-countdown__value { color: var(--a27-cream); font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; font-variant-numeric: tabular-nums; }
-#hero .hero-countdown__label { color: var(--a27-cream); opacity: .8; }
-#hero .hero-totals { margin: 1rem 0 0; font-size: .95rem; }
-@media (max-width: 768px) {
-  #hero .hero-countdown-wrap { margin-inline: auto; }
-  #hero .hero-countdown__title, #hero .hero-totals { text-align: center; }
-  #hero .hero-strand-feature__title { text-align: center; }
-  #hero .hero-cta-more { text-align: center; }
+/* Side by side, "Keep Humans" runs the full width of the button row (the copy column), and the date under it
+   keeps its size relative to the title. cqi is the copy column's width; the browsers that lack it keep the vw sizes
+   above. Stacked layouts (960px and under) are untouched. */
+@media (min-width: 961px) {
+  #hero .hero-copy { container-type: inline-size; }
+  #hero .hero-title { font-size: 17.15cqi; }
+  #hero .hero-title__line { white-space: nowrap; }
+  #hero .hero-eyebrow-date { font-size: 6.78cqi; }
 }
