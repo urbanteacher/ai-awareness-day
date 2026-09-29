@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -52,6 +52,7 @@ class AIADN_Front {
 		'snapshot' => 'safe',
 		'colleague' => 'creative',
 		'partner'  => 'future',
+		'find'     => 'smart',
 	);
 
 	public static function register(): void {
@@ -123,7 +124,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -910,7 +911,7 @@ class AIADN_Front {
 			$h .= '</tbody></table>';
 		}
 		if ( in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
-			$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_debate"><button class="aiadn__button" type="submit">Start a new debate</button></form>';
+			$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_debate"><button class="aiadn__button" type="submit">Start a new debate</button></form><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'find' ) ) . '">Find a Debate</a></p>';
 		}
 		return $h . '</div>';
 	}

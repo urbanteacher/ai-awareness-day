@@ -257,6 +257,12 @@ class AIADN_Programme_Front {
 		}
 		$h .= AIADN_Result_Front::fold( 'Partners', '<p class="aiadn__small">Organisations named at sign-up whose school (or judge) agreed to tell them. Open one for its impact report.</p>' . self::table( array( 'Partner', 'Schools', 'Approved', 'Started a debate', 'Debates', 'Judges' ), $rows, 'No headteacher or judge has agreed to tell an organisation yet.' ), false );
 
+		// Find a Debate.
+		$fs   = AIADN_Find::summary();
+		$body = self::tiles( array( 'Open requests now' => $fs['open'], 'Asks waiting' => $fs['pending'], 'Accepted' => $fs['accepted'], 'Declined' => $fs['declined'], 'Withdrawn' => $fs['withdrawn'] ) );
+		$body .= '<p class="aiadn__small">Schools without an opponent publish a request; another school asks and the host chooses. Counts only.</p>';
+		$h    .= AIADN_Result_Front::fold( 'Find a Debate', $body, false );
+
 		// Email check.
 		$route = AIADN_Mailer::route();
 		$body  = '<p>How this platform\'s emails go out (sign-in codes, approvals, invitations, updates).</p><dl class="aiadn__details"><dt>Route</dt><dd>' . self::esc( $route['kind'] ) . ( '' !== $route['detail'] ? ' (' . self::esc( $route['detail'] ) . ')' : '' ) . '</dd><dt>Sent from</dt><dd>' . self::esc( $route['from'] ) . '</dd><dt>Team address</dt><dd>' . self::esc( AIADN_Util::team_email() ) . '</dd></dl>';

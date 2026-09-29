@@ -287,6 +287,7 @@ class AIADN_Debates {
 		) );
 		if ( 1 === (int) $done ) {
 			self::log( $debate_id, 'opponent_joined', $school_b_id );
+			AIADN_Find::on_matched( $debate_id, $school_b_id );
 			return true;
 		}
 		return false;

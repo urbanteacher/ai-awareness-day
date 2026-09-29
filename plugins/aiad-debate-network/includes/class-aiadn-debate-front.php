@@ -29,6 +29,10 @@ class AIADN_Debate_Front {
 		'linked'    => 'The meeting link is updated. The other school and the judge have been told.',
 		'joined'    => 'You have accepted. Once your headteacher has approved the school, everything is confirmed.',
 		'slow'      => 'Too many requests. Please wait a while and try again.',
+		'published' => 'Your request is on Find a Debate. Other schools can now ask to debate you, and you choose.',
+		'unpublished' => 'Your request is off Find a Debate.',
+		'request_accepted' => 'You have accepted. It is a match, and we have told the other school.',
+		'request_declined' => 'You have declined. We have told them politely.',
 	);
 
 	const CHECKLIST = array(
@@ -185,6 +189,45 @@ class AIADN_Debate_Front {
 				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
 					$state['link'] = AIADN_Debates::new_invite_link( $debate );
 					return $state;
+				}
+				break;
+
+			case 'publish_request':
+				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
+					$f   = array(
+						'age_group' => AIADN_Front::post( 'age_group' ),
+						'theme'     => AIADN_Front::post( 'theme' ),
+						'dates'     => AIADN_Front::post( 'req_dates' ),
+						'format'    => AIADN_Front::post( 'req_format' ),
+						'host'      => AIADN_Front::post( 'req_host' ),
+						'travel'    => AIADN_Front::post( 'req_travel' ),
+					);
+					$err = AIADN_Find::publish( $debate, $f );
+					if ( '' !== $err ) {
+						$state['errors']['find'] = $err;
+						$state['values']         = array_merge( $f, array( 'req_dates' => $f['dates'], 'req_format' => $f['format'], 'req_host' => $f['host'], 'req_travel' => $f['travel'] ) );
+						return $state;
+					}
+					self::back( $debate, 'published' );
+				}
+				break;
+
+			case 'unpublish_request':
+				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
+					AIADN_Find::unpublish( $debate );
+					self::back( $debate, 'unpublished' );
+				}
+				break;
+
+			case 'decide_request':
+				if ( 'a' === $side && 'awaiting_opponent' === $status ) {
+					$req = AIADN_Find::get( (int) AIADN_Front::post( 'request_id' ) );
+					if ( $req && (int) $req['debate_id'] === (int) $debate['id'] ) {
+						$accept = 'accept' === AIADN_Front::post( 'decision' );
+						if ( AIADN_Find::decide( $req, $debate, $accept ) ) {
+							self::back( $debate, $accept ? 'request_accepted' : 'request_declined' );
+						}
+					}
 				}
 				break;
 
@@ -620,6 +663,7 @@ class AIADN_Debate_Front {
 				$h .= '<label for="inv-email">Their email</label><input id="inv-email" name="invite_email" type="email" value="' . esc_attr( $v['invite_email'] ?? '' ) . '" required>' . self::err( $errors, 'invite_email' );
 				$h .= '<button class="aiadn__button" type="submit">Send invitation</button></form>';
 				$h .= '<h3>Option 2: share a link</h3><p class="aiadn__small">Anyone with the link can start to accept, but their school still needs headteacher approval.</p>' . self::form_open( $debate, 'new_link' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Get a link to share</button></form>';
+				$h .= self::render_find_panel( $debate, $session, $errors, $v );
 			} else {
 				$h .= '<p>Waiting for the other school to be invited.</p>';
 			}
@@ -693,6 +737,48 @@ class AIADN_Debate_Front {
 		return $h;
 	}
 
+	/** Option 3: put the debate on Find a Debate, and answer the schools that ask. */
+	private static function render_find_panel( array $debate, array $session, array $errors, array $v ): string {
+		$h = '<h3>Option 3: Find a Debate</h3>';
+		if ( (int) $debate['open_request'] ) {
+			$h .= '<p>Your request is on Find a Debate: <strong>' . esc_html( AIADN_Motions::AGES[ $debate['age_group'] ] ?? '' ) . '</strong>, <strong>' . esc_html( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . '</strong>. ' . esc_html( $debate['req_dates'] ) . '</p>';
+			$pending = AIADN_Find::requests_for_debate( (int) $debate['id'] );
+			if ( $pending ) {
+				$h .= '<p><strong>' . count( $pending ) . ' school' . ( 1 === count( $pending ) ? '' : 's' ) . ' would like to debate you.</strong> You choose. Accepting one tells the others it is taken.</p>';
+				foreach ( $pending as $r ) {
+					$school = AIADN_Schools::get( (int) $r['school_id'] );
+					if ( ! $school ) {
+						continue;
+					}
+					$h .= self::form_open( $debate, 'decide_request' ) . '<input type="hidden" name="request_id" value="' . (int) $r['id'] . '"><span><strong>' . self::esc( $school['name'] ) . '</strong>, ' . self::esc( AIADN_Regions::for_postcode( (string) $school['postcode'] ) ) . ', ' . self::esc( implode( ' and ', array_map( static fn( $k ) => AIADN_Motions::AGES[ $k ] ?? '', array_filter( explode( ',', (string) $school['age_phases'] ) ) ) ) ) . '</span> <button class="aiadn__button" type="submit" name="decision" value="accept">Accept</button> <button class="aiadn__button aiadn__button--quiet" type="submit" name="decision" value="decline">Decline</button></form>';
+				}
+			} else {
+				$h .= '<p class="aiadn__small">No school has asked yet. We will email you when one does.</p>';
+			}
+			return $h . self::form_open( $debate, 'unpublish_request' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Take it off Find a Debate</button></form>';
+		}
+		$phases  = array_filter( explode( ',', (string) $session['school']['age_phases'] ) );
+		$val     = static fn( string $k, string $d = '' ): string => (string) ( $v[ $k ] ?? $d );
+		$h      .= '<p class="aiadn__small">Show other schools you are looking for an opponent. They see your school name and area, and what you are looking for. They never see anyone&rsquo;s name or email. You choose who you debate.</p>' . self::form_open( $debate, 'publish_request' );
+		$h      .= '<fieldset class="aiadn__roles"><legend>Age group</legend>';
+		foreach ( AIADN_Motions::AGES as $key => $label ) {
+			$h .= '<label class="aiadn__radio"><input type="radio" name="age_group" value="' . esc_attr( $key ) . '"' . checked( $val( 'age_group', $debate['age_group'] ?: ( $phases ? reset( $phases ) : 'primary' ) ), $key, false ) . '> ' . esc_html( $label ) . '</label>';
+		}
+		$h .= '</fieldset><label for="f-theme">Theme</label><select id="f-theme" name="theme"><option value="">Choose...</option>';
+		foreach ( AIADN_Motions::THEMES as $key => $label ) {
+			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( $val( 'theme', (string) $debate['theme'] ), $key, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		$h .= '</select><label for="f-dates">When suits <span class="aiadn__opt">(for example: any Tuesday in February)</span></label><input id="f-dates" name="req_dates" type="text" maxlength="200" value="' . esc_attr( $val( 'req_dates' ) ) . '">';
+		foreach ( array( 'req_format' => array( 'Online or in person', AIADN_Find::FORMATS ), 'req_host' => array( 'Hosting', AIADN_Find::HOST ), 'req_travel' => array( 'Travel', AIADN_Find::TRAVEL ) ) as $name => $set ) {
+			$h .= '<label for="f-' . esc_attr( $name ) . '">' . esc_html( $set[0] ) . '</label><select id="f-' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '">';
+			foreach ( $set[1] as $key => $label ) {
+				$h .= '<option value="' . esc_attr( $key ) . '"' . selected( $val( $name, 'either' === $key || 'region' === $key ? $key : '' ), $key, false ) . '>' . esc_html( $label ) . '</option>';
+			}
+			$h .= '</select>';
+		}
+		return $h . self::err( $errors, 'find' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Put it on Find a Debate</button></form>';
+	}
+
 	private static function render_pack( array $debate, string $side, bool $can_act ): string {
 		$ticks = AIADN_Debates::checklist( $debate, $side );
 		$h     = '<div class="aiadn__panel"><h2>Debate &amp; Safeguarding Pack</h2>';
@@ -741,7 +827,7 @@ class AIADN_Debate_Front {
 
 	private static function render_propose_form( array $debate, array $session, array $errors, array $v ): string {
 		$phases  = array_filter( explode( ',', (string) $session['school']['age_phases'] ) );
-		$default = $v['age_group'] ?? ( $phases ? reset( $phases ) : 'primary' );
+		$default = $v['age_group'] ?? ( $debate['age_group'] ?: ( $phases ? reset( $phases ) : 'primary' ) );
 		$h       = '<p>It is a match with <strong>' . self::esc( self::school_name( $debate['school_b_id'] ) ) . '</strong>. Propose the debate.</p>';
 		$h      .= self::form_open( $debate, 'propose' );
 		$h      .= '<label for="p-when">Date and time</label><input id="p-when" name="starts_at" type="datetime-local" min="' . esc_attr( wp_date( 'Y-m-d\TH:i', time() + HOUR_IN_SECONDS ) ) . '" value="' . esc_attr( (string) ( $v['starts_at'] ?? '' ) ) . '" required>' . self::err( $errors, 'starts_at' );
@@ -753,7 +839,7 @@ class AIADN_Debate_Front {
 		$h .= '<p class="aiadn__small">We recommend ' . (int) AIADN_Format::TOTAL_MINUTES . ' minutes, and you can adapt it to suit your school. Once the debate is agreed, both schools get a prep pack with a suggested running order.</p>';
 		$h .= '<label for="p-theme">Theme</label><select id="p-theme" name="theme"><option value="">Choose...</option>';
 		foreach ( AIADN_Motions::THEMES as $key => $label ) {
-			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( (string) ( $v['theme'] ?? '' ), $key, false ) . '>' . esc_html( $label ) . '</option>';
+			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( (string) ( $v['theme'] ?? $debate['theme'] ), $key, false ) . '>' . esc_html( $label ) . '</option>';
 		}
 		$h .= '</select>' . self::err( $errors, 'theme' );
 		$h .= '<label for="p-motion">Motion</label><select id="p-motion" name="motion_key"><option value="">Choose a theme and age group first</option>';

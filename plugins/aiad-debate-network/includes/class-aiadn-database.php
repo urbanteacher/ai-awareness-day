@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 10;
+	const DB_VERSION = 11;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -40,6 +40,7 @@ class AIADN_Database {
 		$certs   = self::table( 'certificates' );
 		$ratings = self::table( 'ratings' );
 		$voice   = self::table( 'voice' );
+		$requests  = self::table( 'debate_requests' );
 		$partners  = self::table( 'partners' );
 		$referrals = self::table( 'referrals' );
 
@@ -157,6 +158,12 @@ class AIADN_Database {
 			judge_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			stage_at datetime DEFAULT NULL,
 			reminders_sent tinyint(3) unsigned NOT NULL DEFAULT 0,
+			open_request tinyint(1) NOT NULL DEFAULT 0,
+			req_dates varchar(255) NOT NULL DEFAULT '',
+			req_format varchar(10) NOT NULL DEFAULT '',
+			req_host varchar(6) NOT NULL DEFAULT '',
+			req_travel varchar(10) NOT NULL DEFAULT '',
+			opened_at datetime DEFAULT NULL,
 			checklist_a text,
 			checklist_b text,
 			created_at datetime NOT NULL,
@@ -300,6 +307,20 @@ class AIADN_Database {
 			KEY school_phase (school_id,phase),
 			KEY pin_id (pin_id),
 			KEY debate_id (debate_id)
+		) {$charset};";
+
+		// A school asks to take up another school's open Debate Request (Find a Debate). The host chooses.
+		$sql[] = "CREATE TABLE {$requests} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			school_id bigint(20) unsigned NOT NULL,
+			member_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			status varchar(10) NOT NULL DEFAULT 'pending',
+			created_at datetime NOT NULL,
+			decided_at datetime DEFAULT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY one_ask (debate_id,school_id),
+			KEY school_status (school_id,status)
 		) {$charset};";
 
 		// An organisation that has introduced a school or a judge. Found by the email domain of the person
