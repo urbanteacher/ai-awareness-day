@@ -114,6 +114,11 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-debates.php',
 			'includes/class-aiadn-debate-front.php',
 			'includes/class-aiadn-motions.php',
+			'includes/class-aiadn-scorecards.php',
+			'includes/class-aiadn-issues.php',
+			'includes/class-aiadn-certificates.php',
+			'includes/class-aiadn-results.php',
+			'includes/class-aiadn-result-front.php',
 			'public/aiadn.css',
 		),
 	);

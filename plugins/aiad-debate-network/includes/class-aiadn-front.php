@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -36,6 +36,12 @@ class AIADN_Front {
 		'invite'   => 'smart',
 		'debate'   => 'smart',
 		'judge'    => 'smart',
+		'score'    => 'smart',
+		'results'  => 'future',
+		'issue'    => 'smart',
+		'certificate' => 'responsible',
+		'check'    => 'responsible',
+		'debates'  => 'future',
 	);
 
 	public static function register(): void {
@@ -99,7 +105,8 @@ class AIADN_Front {
 		}
 
 		self::$strand = self::VIEW_STRANDS[ $view ];
-		$html         = call_user_func( array( __CLASS__, 'view_' . $view ) );
+		$handler      = method_exists( __CLASS__, 'view_' . $view ) ? array( __CLASS__, 'view_' . $view ) : array( 'AIADN_Result_Front', 'view_' . $view );
+		$html         = call_user_func( $handler );
 		self::output( $html );
 	}
 
@@ -752,6 +759,9 @@ class AIADN_Front {
 			}
 
 			$h .= self::render_debates_panel( $session );
+			if ( AIADN_Debates::for_school( (int) $school['id'] ) ) {
+				$h .= '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'results' ) ) . '">Results and certificate</a></p>';
+			}
 
 			if ( 'lead' === $role ) {
 				$h .= '<div class="aiadn__panel"><h2>Team</h2><table class="aiadn__table"><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th></tr></thead><tbody>';

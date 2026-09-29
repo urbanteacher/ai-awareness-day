@@ -61,7 +61,7 @@ def mail_clear():
 
 
 def mails(to=None):
-    data = json.load(urllib.request.urlopen(MAIL + "/messages", timeout=10))
+    data = json.load(urllib.request.urlopen(MAIL + "/messages?limit=300", timeout=10))
     out = []
     for m in data.get("messages", []):
         addrs = [a["Address"] for a in m.get("To", [])]

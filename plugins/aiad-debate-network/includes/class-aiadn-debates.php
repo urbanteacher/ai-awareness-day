@@ -25,6 +25,8 @@ class AIADN_Debates {
 		'proposed'            => 'Fixture proposed',
 		'agreed'              => 'Waiting for the judge',
 		'ready'               => 'Ready',
+		'completed'           => 'Result in',
+		'void'                => 'Void',
 		'cancelled'           => 'Cancelled',
 	);
 
@@ -456,9 +458,13 @@ class AIADN_Debates {
 	 *
 	 * @return array<int,array{label:string,state:string,detail:string}> state is done, now, todo or issue
 	 */
-	public static function tracker( array $debate ): array {
+	public static function tracker( array $debate, int $school_id = 0 ): array {
 		$events  = self::events( (int) $debate['id'] );
 		$status  = $debate['status'];
+		$card    = AIADN_Scorecards::get_for_debate( (int) $debate['id'] );
+		$held    = AIADN_Issues::is_held( (int) $debate['id'] );
+		$cert    = $school_id ? AIADN_Certificates::get_for_school( $school_id ) : null;
+		$prog    = $school_id ? AIADN_Certificates::progress( $school_id ) : null;
 		$judge   = (int) $debate['judge_id'] ? self::get_judge( (int) $debate['judge_id'] ) : null;
 		$when    = static fn( string $e ) => isset( $events[ $e ] ) ? AIADN_Util::show( $events[ $e ], 'j M' ) : '';
 		$matched = in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true );
@@ -473,16 +479,19 @@ class AIADN_Debates {
 			array( 'Safeguarding pack', $matched, $matched ? 'sent ' . $when( 'safeguarding_pack' ) : '' ),
 			array( 'Fixture', $agreed, $agreed && $debate['starts_at'] ? AIADN_Util::show( $debate['starts_at'] ) : ( 'proposed' === $status ? 'waiting for agreement' : '' ) ),
 			array( 'Judge', $judge && 'accepted' === $judge['status'], $judge ? ( 'accepted' === $judge['status'] ? $judge['name'] : ( 'declined' === $judge['status'] ? $judge['name'] . " can't make it" : ( 'invited' === $judge['status'] ? 'waiting for ' . $judge['name'] : '' ) ) ) : '' ),
-			array( 'Scorecard', false, '' ),
-			array( 'Result', false, '' ),
-			array( 'Certificate', false, '' ),
+			array( 'Scorecard', $card && 'submitted' === $card['status'], $card ? ( 'submitted' === $card['status'] ? $when( 'result_submitted' ) : 'draft saved' ) : ( 'ready' === $status ? 'opens ' . AIADN_Util::show( gmdate( 'Y-m-d H:i:s', AIADN_Scorecards::opens_at( $debate ) ), 'j M, H:i' ) : '' ) ),
+			array( 'Result', 'completed' === $status && ! $held, $held ? 'issue logged, result on hold' : ( 'void' === $status ? 'void' : ( 'completed' === $status && $card ? $card['a_total'] . ' - ' . $card['b_total'] : '' ) ) ),
+			array( 'Certificate', $cert && 'issued' === $cert['status'], $cert ? ( 'issued' === $cert['status'] ? 'issued' : 'withdrawn' ) : ( $prog ? $prog['have'] . ' of ' . $prog['need'] : '' ) ),
 		);
 
 		$out       = array();
 		$found_now = false;
 		foreach ( $stages as $stage ) {
 			list( $label, $done, $detail ) = $stage;
-			if ( 'cancelled' === $status && ! $done ) {
+			if ( ( $held || 'void' === $status ) && 'Result' === $label ) {
+				$state     = 'issue';
+				$found_now = true;
+			} elseif ( 'cancelled' === $status && ! $done ) {
 				$state = $found_now ? 'todo' : 'issue';
 				$found_now = true;
 				$detail = ! $detail && 'issue' === $state ? 'Cancelled' : $detail;

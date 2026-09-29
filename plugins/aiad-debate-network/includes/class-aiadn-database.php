@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 2;
+	const DB_VERSION = 3;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -35,6 +35,10 @@ class AIADN_Database {
 		$debates = self::table( 'debates' );
 		$events  = self::table( 'debate_events' );
 		$judges  = self::table( 'judges' );
+		$cards   = self::table( 'scorecards' );
+		$issues  = self::table( 'issues' );
+		$certs   = self::table( 'certificates' );
+		$ratings = self::table( 'ratings' );
 
 		$sql = array();
 
@@ -182,6 +186,86 @@ class AIADN_Database {
 			PRIMARY KEY  (id),
 			KEY debate_id (debate_id),
 			KEY email (email)
+		) {$charset};";
+
+		// The judge's scorecard. Scores of 0 mean "not scored yet". Final once submitted.
+		$sql[] = "CREATE TABLE {$cards} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			judge_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			status varchar(10) NOT NULL DEFAULT 'draft',
+			students smallint(5) unsigned NOT NULL DEFAULT 0,
+			vb_agree smallint(5) unsigned NOT NULL DEFAULT 0,
+			vb_disagree smallint(5) unsigned NOT NULL DEFAULT 0,
+			vb_unsure smallint(5) unsigned NOT NULL DEFAULT 0,
+			va_agree smallint(5) unsigned NOT NULL DEFAULT 0,
+			va_disagree smallint(5) unsigned NOT NULL DEFAULT 0,
+			va_unsure smallint(5) unsigned NOT NULL DEFAULT 0,
+			a_argument tinyint(3) unsigned NOT NULL DEFAULT 0,
+			a_evidence tinyint(3) unsigned NOT NULL DEFAULT 0,
+			a_rebuttal tinyint(3) unsigned NOT NULL DEFAULT 0,
+			a_delivery tinyint(3) unsigned NOT NULL DEFAULT 0,
+			b_argument tinyint(3) unsigned NOT NULL DEFAULT 0,
+			b_evidence tinyint(3) unsigned NOT NULL DEFAULT 0,
+			b_rebuttal tinyint(3) unsigned NOT NULL DEFAULT 0,
+			b_delivery tinyint(3) unsigned NOT NULL DEFAULT 0,
+			a_total tinyint(3) unsigned NOT NULL DEFAULT 0,
+			b_total tinyint(3) unsigned NOT NULL DEFAULT 0,
+			winner varchar(1) NOT NULL DEFAULT '',
+			comment_a text,
+			comment_b text,
+			submitted_by varchar(255) NOT NULL DEFAULT '',
+			submitted_at datetime DEFAULT NULL,
+			created_at datetime NOT NULL,
+			updated_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY debate_id (debate_id)
+		) {$charset};";
+
+		// Something went wrong (cancelled, wrong result, conduct, safeguarding). Schools handle it; we record it.
+		$sql[] = "CREATE TABLE {$issues} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			reporter_school_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			reporter_role varchar(10) NOT NULL DEFAULT '',
+			reporter_email varchar(255) NOT NULL DEFAULT '',
+			category varchar(20) NOT NULL DEFAULT '',
+			details text,
+			status varchar(10) NOT NULL DEFAULT 'reported',
+			resolution varchar(10) NOT NULL DEFAULT '',
+			resolved_by_school_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			resolved_at datetime DEFAULT NULL,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY debate_status (debate_id,status)
+		) {$charset};";
+
+		// One certificate per school. Withdrawn, never deleted.
+		$sql[] = "CREATE TABLE {$certs} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			school_id bigint(20) unsigned NOT NULL,
+			reference varchar(16) NOT NULL DEFAULT '',
+			status varchar(10) NOT NULL DEFAULT 'issued',
+			issued_at datetime NOT NULL,
+			withdrawn_at datetime DEFAULT NULL,
+			withdrawn_reason varchar(255) NOT NULL DEFAULT '',
+			snapshot longtext,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY school_id (school_id),
+			UNIQUE KEY reference (reference)
+		) {$charset};";
+
+		// One-tap ratings: how easy a debate was to organise (teachers) and how judging went (judges).
+		$sql[] = "CREATE TABLE {$ratings} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			debate_id bigint(20) unsigned NOT NULL,
+			school_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			who varchar(8) NOT NULL DEFAULT '',
+			rating tinyint(3) unsigned NOT NULL DEFAULT 0,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			UNIQUE KEY one_each (debate_id,school_id,who)
 		) {$charset};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

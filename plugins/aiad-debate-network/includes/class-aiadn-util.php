@@ -104,6 +104,14 @@ class AIADN_Util {
 		return preg_match( '/^[' . self::CODE_ALPHABET . ']{5}$/', $clean ) ? 'AID-' . $clean : '';
 	}
 
+	/** Where issue reports are copied. Set AIADN_TEAM_EMAIL in wp-config.php; falls back to the site admin. */
+	public static function team_email(): string {
+		if ( defined( 'AIADN_TEAM_EMAIL' ) && is_email( AIADN_TEAM_EMAIL ) ) {
+			return AIADN_TEAM_EMAIL;
+		}
+		return (string) get_option( 'admin_email' );
+	}
+
 	public static function normalise_email( string $email ): string {
 		return strtolower( trim( $email ) );
 	}

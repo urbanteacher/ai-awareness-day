@@ -25,6 +25,7 @@ class AIADN_Debate_Front {
 		'saved'     => 'Saved.',
 		'resent'    => 'We have sent the judge the invitation again.',
 		'changed'   => 'The judge has been changed and invited.',
+		'rated'     => 'Thank you for the feedback.',
 		'joined'    => 'You have accepted. Once your headteacher has approved the school, everything is confirmed.',
 		'slow'      => 'Too many requests. Please wait a while and try again.',
 	);
@@ -235,6 +236,13 @@ class AIADN_Debate_Front {
 				}
 				break;
 
+			case 'rate':
+				if ( 'completed' === $status ) {
+					AIADN_Results::save_rating( (int) $debate['id'], $school_id, 'teacher', (int) AIADN_Front::post( 'rating' ) );
+					self::back( $debate, 'rated' );
+				}
+				break;
+
 			case 'checklist':
 				if ( in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
 					$ticks = array();
@@ -364,10 +372,10 @@ class AIADN_Debate_Front {
 		return '<form method="post" action="' . esc_url( AIADN_Debates::url( $debate ) ) . '" class="aiadn__form">' . AIADN_Front::csrf_field() . '<input type="hidden" name="d" value="' . esc_attr( $debate['code'] ) . '"><input type="hidden" name="aiadn_action" value="' . esc_attr( $action ) . '">';
 	}
 
-	private static function render_tracker( array $debate ): string {
+	private static function render_tracker( array $debate, int $school_id = 0 ): string {
 		$marks = array( 'done' => array( '&#10003;', 'Done' ), 'now' => array( '&#9679;', 'Now' ), 'todo' => array( '&#9675;', 'To do' ), 'issue' => array( '!', 'Issue' ) );
 		$h     = '<ol class="aiadn__tracker">';
-		foreach ( AIADN_Debates::tracker( $debate ) as $stage ) {
+		foreach ( AIADN_Debates::tracker( $debate, $school_id ) as $stage ) {
 			$m  = $marks[ $stage['state'] ];
 			$h .= '<li class="aiadn__tracker--' . esc_attr( $stage['state'] ) . '"><span class="aiadn__mark" aria-hidden="true">' . $m[0] . '</span><span class="aiadn__sr">' . $m[1] . ': </span>' . esc_html( $stage['label'] ) . ( '' !== $stage['detail'] ? ' <span class="aiadn__meta">' . esc_html( $stage['detail'] ) . '</span>' : '' ) . '</li>';
 		}
@@ -407,10 +415,18 @@ class AIADN_Debate_Front {
 		$h  = '<p class="aiadn__small"><a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">&larr; Your school</a></p>';
 		$h .= '<h1>Debate ' . self::esc( $debate['code'] ) . '</h1>';
 		$h .= self::flash( AIADN_Front::get( 'msg' ) );
-		$h .= self::render_tracker( $debate );
+		$h .= self::render_tracker( $debate, $school_id );
 
 		if ( 'cancelled' === $status ) {
 			return $h . '<div class="aiadn__panel"><h2>Cancelled</h2><p>This debate was cancelled.</p></div>' . ( 'cancelled' === $status ? self::render_details( $debate, $school_id ) : '' );
+		}
+
+		// ---- a result is in (or the debate is void) ----
+		if ( in_array( $status, array( 'completed', 'void' ), true ) ) {
+			$h .= AIADN_Result_Front::render_result_panel( $debate, $session );
+			$h .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . '</div>';
+			$h .= AIADN_Result_Front::render_result_actions( $debate, $session, self::form_open( $debate, 'rate' ), $can_act );
+			return $h;
 		}
 
 		// ---- the one next step ----
@@ -645,7 +661,14 @@ class AIADN_Debate_Front {
 			return $h . '<p><strong>This debate has been cancelled.</strong> There is nothing more to do.</p></div>';
 		}
 		if ( 'accepted' === $judge['status'] ) {
-			return $h . '<p><strong>You have accepted.</strong> Scoring opens on the day, in the next build. We will email you before then.</p></div>';
+			$score_url = 'token' === $mode ? AIADN_Front::url( 'score', array( 't' => $raw ) ) : AIADN_Front::url( 'score', array( 'd' => $debate['code'] ) );
+			if ( in_array( $debate['status'], array( 'completed', 'void' ), true ) ) {
+				return $h . '<p><strong>Your result has been submitted.</strong> Thank you.</p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $score_url ) . '">See what you submitted</a></div>';
+			}
+			if ( AIADN_Scorecards::is_open( $debate ) ) {
+				return $h . '<p><strong>You have accepted.</strong> Scoring is open.</p><a class="aiadn__button" href="' . esc_url( $score_url ) . '">Open the scorecard</a></div>';
+			}
+			return $h . '<p><strong>You have accepted.</strong> Scoring opens ' . self::esc( AIADN_Util::show( gmdate( 'Y-m-d H:i:s', AIADN_Scorecards::opens_at( $debate ) ) ) ) . ', three hours before the debate. Come back to this page then.</p></div>';
 		}
 		if ( 'declined' === $judge['status'] ) {
 			return $h . '<p>You have told us you can\'t make it. Thank you.</p></div>';

@@ -109,6 +109,18 @@ class AIADN_Schools {
 		return (array) $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . AIADN_Database::table( 'members' ) . ' WHERE school_id = %d ORDER BY id ASC', $school_id ), ARRAY_A ); // phpcs:ignore WordPress.DB
 	}
 
+	/** The school's senior leaders: the approver named at registration plus anyone who has signed in as SLT. */
+	public static function slt_emails( int $school_id ): array {
+		$school = self::get( $school_id );
+		$emails = $school && '' !== $school['slt_email'] ? array( strtolower( $school['slt_email'] ) ) : array();
+		foreach ( self::members( $school_id ) as $m ) {
+			if ( 'slt' === $m['role'] ) {
+				$emails[] = strtolower( $m['email'] );
+			}
+		}
+		return array_values( array_unique( $emails ) );
+	}
+
 	public static function lead( int $school_id ): ?array {
 		foreach ( self::members( $school_id ) as $m ) {
 			if ( 'lead' === $m['role'] ) {
