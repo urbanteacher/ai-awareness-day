@@ -174,7 +174,7 @@ class AIADN_Result_Front {
 		}
 		$h .= '<p><strong>' . self::esc( $a ) . ' v ' . self::esc( $b ) . '</strong><br>' . self::esc( AIADN_Util::show( (string) $debate['starts_at'] ) ) . '<br>&ldquo;' . self::esc( $debate['motion_text'] ) . '&rdquo;</p>';
 		$back = 'token' === $mode ? AIADN_Front::url( 'judge', array( 't' => $raw ) ) : AIADN_Front::url( 'judge' );
-		$h   .= AIADN_Debate_Front::join_panel( $debate );
+		$h   .= AIADN_Debate_Front::join_panel( $debate, 'judge', ( 'token' === $mode ? AIADN_Front::url( 'calendar', array( 't' => $raw ) ) : AIADN_Front::url( 'calendar', array( 'd' => $debate['code'] ) ) ) );
 
 		// ---- already submitted ----
 		if ( $card && 'submitted' === $card['status'] ) {
@@ -316,6 +316,283 @@ class AIADN_Result_Front {
 			$h .= '</form><p class="aiadn__small">1 is hard, 5 is easy.</p></div>';
 		}
 		$h .= '<p>Something wrong? <a href="' . esc_url( AIADN_Front::url( 'issue', array( 'd' => $debate['code'] ) ) ) . '">Report an issue</a>. <a href="' . esc_url( AIADN_Front::url( 'results' ) ) . '">All your results</a>.</p>';
+		return $h;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* /conversation/paper/  the printed scorecard                         */
+	/* ------------------------------------------------------------------ */
+
+	/**
+	 * The agreed debate a printable page is for, and who is looking: the schools (teachers and senior leaders)
+	 * or the judge, by shortcut link or after signing in. Null when there is nothing to show them.
+	 *
+	 * @return array{0:array,1:string,2:string}|null the debate, the viewer ('school' or 'judge') and, for a school, its side
+	 */
+	private static function printable_debate(): ?array {
+		$raw     = AIADN_Front::get( 't' );
+		$session = AIADN_Auth::current();
+		$debate  = null;
+		$viewer  = 'school';
+		$side    = '';
+
+		if ( '' !== $raw ) {
+			$tok    = preg_match( '/^[a-f0-9]{40}$/', $raw ) ? AIADN_Auth::find_token( $raw, 'judge' ) : null;
+			$judge  = $tok ? AIADN_Debates::get_judge( (int) $tok['ref_id'] ) : null;
+			$debate = ( $judge && 'accepted' === $judge['status'] ) ? AIADN_Debates::get( (int) $judge['debate_id'] ) : null;
+			$viewer = 'judge';
+		} elseif ( $session ) {
+			$code   = AIADN_Util::normalise_debate_code( AIADN_Front::get( 'd' ) );
+			$debate = $code ? AIADN_Debates::get_by_code( $code ) : null;
+			$ok     = false;
+			if ( $debate ) {
+				if ( in_array( $session['role'], array( 'lead', 'teacher', 'slt' ), true ) ) {
+					$ok   = AIADN_Debates::involves( $debate, (int) $session['school_id'] );
+					$side = AIADN_Debates::side( $debate, (int) $session['school_id'] );
+				} elseif ( 'judge' === $session['role'] ) {
+					$viewer = 'judge';
+					foreach ( AIADN_Debates::judges_for_school_email( (int) $session['school_id'], (string) $session['member']['email'] ) as $row ) {
+						$ok = $ok || ( (int) $row['debate_id'] === (int) $debate['id'] && 'accepted' === $row['status'] );
+					}
+				}
+			}
+			$debate = $ok ? $debate : null;
+		}
+		if ( ! $debate || ! in_array( $debate['status'], array( 'agreed', 'ready' ), true ) || ! $debate['starts_at'] ) {
+			return null;
+		}
+		return array( $debate, $viewer, $side );
+	}
+
+	/**
+	 * A printable A4 scorecard for a judge who prefers paper (brief, section 9). The school prints it in
+	 * advance and hands it over, or the judge prints their own. After the debate the judge scans the QR
+	 * code and enters the final scores online: that entry is the official result.
+	 */
+	public static function view_paper(): string {
+		AIADN_Front::set_title( 'Paper scorecard' );
+		$none  = '<h1>We could not find that</h1><p>A paper scorecard is available for an agreed debate, to the schools and the judge.</p>';
+		$found = self::printable_debate();
+		if ( ! $found ) {
+			return $none;
+		}
+		$debate = $found[0];
+		self::theme_strand( $debate );
+
+		$a      = self::school_name( $debate['school_a_id'] );
+		$b      = self::school_name( $debate['school_b_id'] );
+		$judge  = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
+		$a_for  = 'for' === $debate['a_side'];
+		$school = AIADN_Schools::get( (int) $debate['school_a_id'] );
+		$join   = AIADN_Front::url( 'join', array( 'c' => $school['code'] ) );
+
+		$blank = '<span class="aiadn__blank"></span>';
+		$votes = static fn( string $label ) => '<p class="aiadn__paper-votes"><strong>' . esc_html( $label ) . '</strong> &nbsp; Agree ' . $blank . ' &nbsp; Disagree ' . $blank . ' &nbsp; Unsure ' . $blank . '</p>';
+
+		$h  = '<h1>Paper scorecard</h1>';
+		$h .= '<div class="aiadn__noprint"><p>The judge can score on their phone or on paper. <strong>Print this in advance</strong> and give it to the judge on the day. After the debate the judge scans the code at the bottom and enters the final scores online.</p>';
+		$h .= '<p><button class="aiadn__button" type="button" onclick="window.print()">Print the scorecard</button></p></div>';
+
+		$h .= '<div class="aiadn__paper">';
+		$h .= '<div class="aiadn__paper-logo">' . AIADN_Front::logo_html() . '</div>';
+		$h .= '<h2>Judge&rsquo;s scorecard</h2>';
+		$h .= '<p class="aiadn__paper-head"><strong>Debate ' . esc_html( $debate['code'] ) . '</strong><br>' . esc_html( AIADN_Util::show( (string) $debate['starts_at'] ) ) . '<br>' . esc_html( AIADN_Debates::where( $debate ) ) . '</p>';
+		$h .= '<p><strong>Motion:</strong> &ldquo;' . esc_html( $debate['motion_text'] ) . '&rdquo;<br><strong>Theme:</strong> ' . esc_html( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . ( $judge ? '<br><strong>Judge:</strong> ' . esc_html( $judge['name'] ) : '' ) . '</p>';
+		$h .= '<p class="aiadn__paper-order"><strong>Suggested running order (' . esc_html( (string) AIADN_Format::TOTAL_MINUTES ) . ' minutes):</strong> ' . esc_html( AIADN_Format::one_line( (string) $debate['age_group'], (string) $debate['starts_at'] ) ) . '</p>';
+		$h .= '<p><strong>Students taking part (both schools):</strong> ' . $blank . '</p>';
+		$h .= $votes( 'Room vote before the debate' );
+		$h .= '<table class="aiadn__paper-table"><thead><tr><th scope="col">Score 1 (weak) to 5 (excellent)</th><th scope="col">' . esc_html( $a ) . '<br><span>' . ( $a_for ? 'FOR' : 'AGAINST' ) . '</span></th><th scope="col">' . esc_html( $b ) . '<br><span>' . ( $a_for ? 'AGAINST' : 'FOR' ) . '</span></th></tr></thead><tbody>';
+		foreach ( AIADN_Scorecards::CRITERIA as $label ) {
+			$h .= '<tr><th scope="row">' . esc_html( $label ) . '</th><td></td><td></td></tr>';
+		}
+		$h .= '<tr><th scope="row">Total</th><td></td><td></td></tr></tbody></table>';
+		$h .= '<p class="aiadn__paper-winner"><strong>Winner:</strong> &nbsp; <span class="aiadn__box"></span> ' . esc_html( $a ) . ' &nbsp;&nbsp; <span class="aiadn__box"></span> ' . esc_html( $b ) . '</p>';
+		$h .= '<p><strong>Comment for ' . esc_html( $a ) . '</strong></p><div class="aiadn__lines"></div>';
+		$h .= '<p><strong>Comment for ' . esc_html( $b ) . '</strong></p><div class="aiadn__lines"></div>';
+		$h .= $votes( 'Room vote after the debate' );
+		$h .= '<div class="aiadn__paper-qr"><div class="aiadn__paper-qrimg">' . AIADN_QR::svg( $join, 'QR code that opens the sign-in page' ) . '</div><p>After the debate, scan this code. It opens the sign-in page with the school code filled in. Choose <strong>Judge</strong>, enter your email, then the code we email you, then enter these scores. <strong>The online entry is the official result.</strong></p></div>';
+		$h .= '</div>';
+		return $h;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* /conversation/prep/  (the prep pack and running order)              */
+	/* ------------------------------------------------------------------ */
+
+	/**
+	 * The prep pack: a checklist, how students take part, the weeks before and a suggested running order.
+	 * The judge sees the running order without the preparation. Every section folds away, to save scrolling.
+	 */
+	public static function view_prep(): string {
+		AIADN_Front::set_title( 'Prep pack' );
+		$none  = '<h1>We could not find that</h1><p>The prep pack is available for an agreed debate, to the schools and the judge.</p>';
+		$found = self::printable_debate();
+		if ( ! $found ) {
+			return $none;
+		}
+		list( $debate, $viewer, $side ) = $found;
+		self::theme_strand( $debate );
+
+		$judge_view = 'judge' === $viewer;
+		$session    = AIADN_Auth::current();
+		$can_act    = ! $judge_view && $session && in_array( $session['role'], array( 'lead', 'teacher' ), true );
+		$age        = AIADN_Format::age( (string) $debate['age_group'] );
+		$a          = self::school_name( $debate['school_a_id'] );
+		$b          = self::school_name( $debate['school_b_id'] );
+		$a_for      = 'for' === $debate['a_side'];
+		$motion     = AIADN_Motions::all()[ $debate['motion_key'] ] ?? array();
+		if ( ( $motion['text'] ?? '' ) !== $debate['motion_text'] ) {
+			$motion = array(); // A debate made before the motion bank changed: its key now means something else.
+		}
+		$raw = AIADN_Front::get( 't' );
+
+		if ( $judge_view ) {
+			AIADN_Front::set_title( 'Running order' );
+			$back = AIADN_Front::url( 'judge', '' !== $raw ? array( 't' => $raw ) : array() );
+		} else {
+			$back = AIADN_Debates::url( $debate );
+		}
+
+		$h  = '<h1>' . ( $judge_view ? 'Running order' : 'Prep pack' ) . '</h1>';
+		$h .= '<p class="aiadn__small aiadn__noprint"><a href="' . esc_url( $back ) . '">&larr; Back</a></p>';
+		$h .= 'saved' === AIADN_Front::get( 'msg' ) ? AIADN_Front::notice( 'Saved.', 'info' ) : '';
+		$h .= '<div class="aiadn__panel"><dl class="aiadn__details">';
+		$h .= '<dt>Debate</dt><dd>' . esc_html( $debate['code'] ) . '</dd>';
+		$h .= '<dt>Motion</dt><dd>&ldquo;' . esc_html( $debate['motion_text'] ) . '&rdquo;</dd>';
+		$h .= '<dt>Theme</dt><dd>' . esc_html( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . '</dd>';
+		$h .= '<dt>Age group</dt><dd>' . esc_html( AIADN_Motions::AGES[ $age ] ) . '</dd>';
+		$h .= '<dt>When</dt><dd>' . esc_html( AIADN_Util::show( (string) $debate['starts_at'] ) ) . '</dd>';
+		$h .= '<dt>For (Proposition)</dt><dd>' . esc_html( $a_for ? $a : $b ) . '</dd>';
+		$h .= '<dt>Against (Opposition)</dt><dd>' . esc_html( $a_for ? $b : $a ) . '</dd>';
+		if ( ! $judge_view && '' !== $side ) {
+			$you_for = 'a' === $side ? $a_for : ! $a_for;
+			$h      .= '<dt>Your school argues</dt><dd><strong>' . ( $you_for ? 'FOR (Proposition)' : 'AGAINST (Opposition)' ) . '</strong></dd>';
+		}
+		$h .= '</dl></div>';
+
+		$h .= '<p class="aiadn__small aiadn__noprint">Each section folds away. <button class="aiadn__link" type="button" onclick="document.querySelectorAll(\'.aiadn__fold\').forEach(function(d){d.open=true})">Open all</button> &middot; <button class="aiadn__link" type="button" onclick="document.querySelectorAll(\'.aiadn__fold\').forEach(function(d){d.open=false})">Close all</button></p>';
+
+		if ( ! $judge_view ) {
+			$h .= self::fold( 'Your checklist', self::prep_checklist( $debate, $side, $can_act ), true );
+			$h .= self::fold( 'How your students take part', self::prep_students( $age, $motion ), false );
+			$h .= self::fold( 'Two to three weeks before', self::prep_before( $debate, $age ), false );
+		}
+
+		$h .= self::fold( 'On the day: ' . (int) AIADN_Format::TOTAL_MINUTES . ' minutes (recommended)', self::prep_run( $debate, $age, $judge_view ), $judge_view );
+
+		if ( ! $judge_view ) {
+			$who  = '<p>For a class of about 30. Each school names six roles: two survey presenters, an opening speaker, a rebuttal speaker, a closing speaker and a lead note-taker. Everyone else is a note-taker or a questioner, so the whole room has a job.</p><dl class="aiadn__details">';
+			$who .= '<dt>The chair</dt><dd>Introduces the motion and rules, keeps time with a timer everyone can see, takes the floor questions and announces the vote. Agree between you who this is.</dd>';
+			foreach ( AIADN_Format::ROLES as $role => $job ) {
+				$who .= '<dt>' . esc_html( $role ) . '</dt><dd>' . esc_html( $job ) . '</dd>';
+			}
+			$who .= '</dl><p class="aiadn__small">Thirty minutes leaves little slack, so a timer helps. If you can manage 35 minutes, give the extra five to floor questions: it is the part audiences most often find too short.</p>';
+			$h   .= self::fold( 'Who does what', $who, false );
+		}
+		$h .= '<p class="aiadn__small">The format is a draft and will be reviewed by debate educators before national use.</p>';
+		$h .= '<p class="aiadn__noprint"><button class="aiadn__button aiadn__button--quiet" type="button" onclick="window.print()">Print this page</button></p>';
+		// Folded sections would print folded: open them all for printing, then put them back.
+		$h .= '<script>(function(){var s=[];window.addEventListener("beforeprint",function(){s=[];document.querySelectorAll(".aiadn__fold").forEach(function(d){s.push(d.open);d.open=true})});window.addEventListener("afterprint",function(){document.querySelectorAll(".aiadn__fold").forEach(function(d,i){d.open=!!s[i]})})})();</script>';
+		return $h;
+	}
+
+	/** A section that folds away. Its heading is the summary. */
+	private static function fold( string $title, string $body, bool $open ): string {
+		return '<details class="aiadn__panel aiadn__fold"' . ( $open ? ' open' : '' ) . '><summary><h2>' . esc_html( $title ) . '</h2></summary>' . $body . '</details>';
+	}
+
+	/** The school's own to-do list, saved as they tick. */
+	private static function prep_checklist( array $debate, string $side, bool $can_act ): string {
+		$ticks = '' !== $side ? AIADN_Debates::checklist( $debate, $side ) : array();
+		$items = AIADN_Format::checklist_for( (string) $debate['format'] );
+		$h     = '<p class="aiadn__small">For your own records: nobody else sees your ticks and they do not block anything.</p>';
+		if ( $can_act ) {
+			$h .= AIADN_Debate_Front::form_open( $debate, 'prep_checklist' );
+		}
+		foreach ( array( 'before' => 'In the weeks before', 'day' => 'On the day' ) as $when => $heading ) {
+			$h .= '<h3>' . esc_html( $heading ) . '</h3>';
+			foreach ( $items as $key => $item ) {
+				if ( $when !== $item['when'] ) {
+					continue;
+				}
+				$h .= '<label class="aiadn__radio"><input type="checkbox" name="tick_' . esc_attr( $key ) . '" value="1"' . ( ! empty( $ticks[ $key ] ) ? ' checked' : '' ) . ( $can_act ? '' : ' disabled' ) . '> ' . esc_html( $item['text'] ) . '</label>';
+			}
+		}
+		if ( $can_act ) {
+			$h .= '<button class="aiadn__button aiadn__button--quiet" type="submit">Save my ticks</button></form>';
+		}
+		return $h;
+	}
+
+	/** How students take part at this age, and the prompt that goes with the motion. */
+	private static function prep_students( string $age, array $motion ): string {
+		$h = '';
+		if ( 'primary' === $age ) {
+			$h .= '<p>Pupils move to a corner of the room, or vote with a show of hands, then tell a talk partner why they chose it. Keep the sentence starter on display and prompt as needed.</p>';
+			if ( ! empty( $motion['starter'] ) ) {
+				$h .= '<p><strong>Sentence starter:</strong> &ldquo;' . esc_html( $motion['starter'] ) . '&rdquo;</p>';
+			}
+		} elseif ( 'secondary' === $age ) {
+			$h .= '<p>Small groups discuss the question, using talking roles: Builder, Challenger and Summariser. After the first round, give each group the challenge card so it tests its own view. Teachers can shorten the discussion for Key Stage 3.</p>';
+			if ( ! empty( $motion['challenge'] ) ) {
+				$h .= '<p><strong>Challenge card:</strong> &ldquo;' . esc_html( $motion['challenge'] ) . '&rdquo;</p>';
+			}
+		} else {
+			$h .= '<p>Students prepare with the central tension and the research prompt, then debate using the running order below.</p>';
+			if ( ! empty( $motion['tension'] ) ) {
+				$h .= '<p><strong>Central tension:</strong> ' . esc_html( $motion['tension'] ) . '</p>';
+			}
+			if ( ! empty( $motion['research'] ) ) {
+				$h .= '<p><strong>Research prompt:</strong> ' . esc_html( $motion['research'] ) . '</p>';
+			}
+		}
+		return $h;
+	}
+
+	/** The survey and the research, for the weeks before. */
+	private static function prep_before( array $debate, string $age ): string {
+		$before = AIADN_Format::before( $age );
+
+		$h  = '<h3>Survey your own students</h3><p>' . esc_html( $before['survey'] ) . ' Use the same questions as the other school, so the results can be compared on the day.</p><ol class="aiadn__list">';
+		foreach ( AIADN_Format::survey_questions( $debate ) as $q ) {
+			$h .= '<li>' . esc_html( $q['text'] ) . ' <span class="aiadn__meta">(' . esc_html( $q['answers'] ) . ')</span></li>';
+		}
+		$h .= '</ol><p><strong>Another way for students to complete it.</strong> They can answer on their own device instead. Show the whiteboard page, and they scan the code and type the class PIN. It is anonymous, and covers the theme statement' . ( count( AIADN_Format::survey_questions( $debate ) ) > 3 ? 's' : '' ) . ' above. The motion question and the reason still need a class vote or a form. <a href="' . esc_url( AIADN_Front::url( 'board' ) ) . '">Open the whiteboard page</a>.</p>';
+		$h .= '<p class="aiadn__small">Keep it to a class or year group and do not record names. On the day, share a simple chart and one key finding.</p>';
+
+		$h .= '<h3>Research</h3><p>Split the team into three research groups. ' . esc_html( $before['research'] ) . '</p><ul class="aiadn__list">';
+		foreach ( AIADN_Format::RESEARCH_GROUPS as $group => $ask ) {
+			$h .= '<li><strong>' . esc_html( $group ) . '.</strong> ' . esc_html( $ask ) . '</li>';
+		}
+		$h .= '</ul><h3>Check your sources</h3><ul class="aiadn__list">';
+		$h .= '<li><strong>Use more than one source</strong> for every fact you plan to use, from different places.</li>';
+		$h .= '<li><strong>Do not rely on AI-generated content.</strong> It can be wrong and still sound certain. If AI suggests a fact, find it somewhere else before you use it.</li>';
+		$h .= '<li><strong>Write down where each fact came from</strong>, so students can answer &ldquo;how do you know?&rdquo;</li></ul>';
+		$h .= '<p class="aiadn__small">Ready-made fact cards and sources are still being prepared. Until then, choose your own and check them as above.</p>';
+		return $h;
+	}
+
+	/** The running order as two tables, start-up then debate. Recommended, not compulsory. */
+	private static function prep_run( array $debate, string $age, bool $judge_view ): string {
+		$stages = AIADN_Format::run( $age );
+		$h      = '<p>' . ( $judge_view
+			? 'This is the schools&rsquo; suggested running order. They may adapt it to suit their setting and their students.'
+			: 'This is a recommended running order, <strong>not a requirement</strong>. Change the stages or the timings to suit your school and what your students can do.' ) . '</p>';
+		$h     .= '<p class="aiadn__small">' . esc_html( AIADN_Motions::AGES[ $age ] ) . ' timings. The first column starts from the time of the debate.</p>';
+		foreach ( array( 'start' => 'Start-up', 'debate' => 'Debate' ) as $part => $heading ) {
+			$rows = array_filter( $stages, static fn( $s ) => $part === $s['part'] );
+			if ( ! $rows ) {
+				continue;
+			}
+			$first = reset( $rows );
+			$last  = end( $rows );
+			$h    .= '<h3>' . esc_html( $heading ) . ' <span class="aiadn__meta">' . esc_html( AIADN_Format::clock( $first['start'] ) . ' to ' . AIADN_Format::clock( $last['end'] ) ) . '</span></h3>';
+			$h    .= '<table class="aiadn__table aiadn__run"><thead><tr><th scope="col">Time</th><th scope="col">Stage</th><th scope="col">What happens</th><th scope="col">Length</th></tr></thead><tbody>';
+			foreach ( $rows as $s ) {
+				$h .= '<tr><td>' . esc_html( AIADN_Format::clock_time( (string) $debate['starts_at'], $s['start'] ) ) . ' <span class="aiadn__meta">(' . esc_html( AIADN_Format::clock( $s['start'] ) ) . ')</span></td><th scope="row">' . esc_html( $s['label'] ) . '</th><td>' . esc_html( $s['what'] ) . '</td><td>' . AIADN_Format::minutes_label( $s['minutes'], $s['each'] ) . '</td></tr>';
+			}
+			$h .= '</tbody></table>';
+		}
 		return $h;
 	}
 
@@ -555,7 +832,7 @@ class AIADN_Result_Front {
 		}
 		$snap  = json_decode( (string) $cert['snapshot'], true );
 		$check = AIADN_Front::url( 'check', array( 'ref' => $cert['reference'] ) );
-		$h    .= '<div class="aiadn__cert"><p class="aiadn__cert-top">AI Awareness Day 2027</p><h2>National AI Debate School</h2><p>awarded to</p><p class="aiadn__cert-school">' . self::esc( $school['name'] ) . '</p><p>for debating with two different schools:</p><ul class="aiadn__list">';
+		$h    .= '<div class="aiadn__cert"><div class="aiadn__cert-logo">' . AIADN_Front::logo_html() . '</div><h2>National AI Debate School</h2><p>awarded to</p><p class="aiadn__cert-school">' . self::esc( $school['name'] ) . '</p><p>for debating with two different schools:</p><ul class="aiadn__list">';
 		foreach ( (array) $snap as $row ) {
 			$h .= '<li>' . self::esc( $row['opponent'] ?? '' ) . ', ' . self::esc( AIADN_Util::show( (string) ( $row['date'] ?? '' ), 'j M Y' ) ) . ', ' . self::esc( AIADN_Motions::THEMES[ $row['theme'] ?? '' ] ?? '' ) . '</li>';
 		}

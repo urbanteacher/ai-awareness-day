@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -45,6 +45,9 @@ class AIADN_Front {
 		'survey'   => 'safe',
 		'voice'    => 'safe',
 		'board'    => 'safe',
+		'calendar' => 'smart',
+		'paper'    => 'smart',
+		'prep'     => 'smart',
 	);
 
 	public static function register(): void {
@@ -70,6 +73,11 @@ class AIADN_Front {
 	public static function query_vars( array $vars ): array {
 		$vars[] = 'aiadn_view';
 		return $vars;
+	}
+
+	/** The AiAd27 lockup from the theme's asset pack, for pages people print (the site header does not print). */
+	public static function logo_html( string $class = '' ): string {
+		return '<img class="aiadn__logo ' . esc_attr( $class ) . '" src="' . esc_url( get_theme_file_uri( 'assets/brand/aiad27/aiad27-lockup.svg' ) ) . '" alt="AI Awareness Day 2027, Keep Humans in the Loop" width="240" height="45">';
 	}
 
 	public static function set_title( string $title ): void {
@@ -110,7 +118,12 @@ class AIADN_Front {
 		self::$strand = self::VIEW_STRANDS[ $view ];
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
-			$handler = method_exists( 'AIADN_Result_Front', 'view_' . $view ) ? array( 'AIADN_Result_Front', 'view_' . $view ) : array( 'AIADN_Voice_Front', 'view_' . $view );
+			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front' ) as $class ) {
+				if ( method_exists( $class, 'view_' . $view ) ) {
+					$handler = array( $class, 'view_' . $view );
+				}
+			}
 		}
 		$html         = call_user_func( $handler );
 		self::output( $html );
@@ -776,7 +789,7 @@ class AIADN_Front {
 		} elseif ( 'approved' === $status ) {
 			// Any online debate that is on now: the join button, right at the top.
 			foreach ( AIADN_Debates::for_school( (int) $school['id'] ) as $d ) {
-				$h .= AIADN_Debate_Front::join_panel( $d );
+				$h .= AIADN_Debate_Front::join_panel( $d, 'school', self::url( 'calendar', array( 'd' => $d['code'] ) ), self::url( 'paper', array( 'd' => $d['code'] ) ), self::url( 'prep', array( 'd' => $d['code'] ) ) );
 			}
 			$h .= '<div class="aiadn__panel aiadn__panel--ink"><h2>School code</h2><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
 			$h .= '<p>Share it with students, colleagues, your headteacher and judges. Each also needs a class PIN or their own email code.</p>';

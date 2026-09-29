@@ -54,7 +54,7 @@ final class AIADN_Calendar {
 			'STATUS:' . $status,
 			'SUMMARY:' . self::text( 'AI debate: ' . ( $a['name'] ?? '' ) . ' v ' . ( $b['name'] ?? '' ) ),
 			'DESCRIPTION:' . self::text( $desc ),
-			'LOCATION:' . self::text( $online ? (string) $debate['meeting_url'] : (string) $debate['venue'] ),
+			'LOCATION:' . self::text( AIADN_Debates::place( $debate ) ),
 		);
 		if ( $online && $debate['meeting_url'] ) {
 			$lines[] = 'URL:' . $debate['meeting_url'];
@@ -86,6 +86,17 @@ final class AIADN_Calendar {
 			$limit   = 74; // The leading space of a continuation line counts.
 		}
 		return $out;
+	}
+
+	/** The .ics file as a download, with the headers a browser needs. Exits. */
+	public static function download( array $debate ): void {
+		$ics = self::build( $debate, 'CONFIRMED', (int) $debate['ics_sequence'] );
+		nocache_headers();
+		header( 'Content-Type: text/calendar; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="ai-debate-' . $debate['code'] . '.ics"' );
+		header( 'X-Content-Type-Options: nosniff' );
+		echo $ics; // phpcs:ignore WordPress.Security.EscapeOutput -- a calendar file, escaped per RFC 5545 in build().
+		exit;
 	}
 
 	/** Teachers and senior leaders at both schools. The judge is added separately. */

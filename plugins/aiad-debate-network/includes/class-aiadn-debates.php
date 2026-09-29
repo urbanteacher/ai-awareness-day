@@ -87,26 +87,48 @@ class AIADN_Debates {
 		return AIADN_Front::url( 'debate', array( 'd' => $debate['code'] ) );
 	}
 
-	/** Where the debate is, as plain text: the venue, or for an online debate the host school's meeting link. */
-	public static function where( array $debate ): string {
+	/** The place itself: the venue and its address, or the online meeting link. No label. */
+	public static function place( array $debate ): string {
 		if ( 'online' === $debate['format'] ) {
-			return 'Online' . ( $debate['meeting_url'] ? ': ' . $debate['meeting_url'] : '' );
+			return (string) $debate['meeting_url'];
 		}
-		return 'In person' . ( $debate['venue'] ? ': ' . $debate['venue'] : '' );
+		return implode( ', ', array_filter( array( trim( (string) $debate['venue'] ), trim( (string) ( $debate['venue_address'] ?? '' ) ) ) ) );
+	}
+
+	/** Where the debate is, as plain text: the venue and address, or for an online debate the host school's meeting link. */
+	public static function where( array $debate ): string {
+		$place = self::place( $debate );
+		if ( 'online' === $debate['format'] ) {
+			return 'Online' . ( '' !== $place ? ': ' . $place : '' );
+		}
+		return 'In person' . ( '' !== $place ? ': ' . $place : '' );
+	}
+
+	/** A link to directions for an in-person venue, so a visiting judge can find the school. */
+	public static function directions_url( array $debate ): string {
+		if ( 'in_person' !== $debate['format'] || '' === self::place( $debate ) ) {
+			return '';
+		}
+		return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( self::place( $debate ) );
 	}
 
 	/** The join button appears an hour before the start and stays until three hours after. */
 	const JOIN_BEFORE = 3600;
 	const JOIN_AFTER  = 10800;
 
-	/** Is this an online debate that is on now (or about to be), with a link to join? */
-	public static function is_live( array $debate ): bool {
-		if ( 'online' !== $debate['format'] || ! $debate['meeting_url'] || ! $debate['starts_at'] || ! in_array( $debate['status'], array( 'agreed', 'ready' ), true ) ) {
+	/** Is this debate on now (or about to be)? Either format: the window runs from an hour before to three hours after. */
+	public static function is_today( array $debate ): bool {
+		if ( ! $debate['starts_at'] || ! in_array( $debate['status'], array( 'agreed', 'ready' ), true ) ) {
 			return false;
 		}
 		$start = strtotime( $debate['starts_at'] . ' UTC' );
 		$now   = time();
 		return $now >= $start - self::JOIN_BEFORE && $now <= $start + self::JOIN_AFTER;
+	}
+
+	/** An online debate that is on now, with a link to join. */
+	public static function is_live( array $debate ): bool {
+		return 'online' === $debate['format'] && '' !== (string) $debate['meeting_url'] && self::is_today( $debate );
 	}
 
 	/** Valid https meeting link, or ''. The host school pastes it, so it is checked hard: https only, no scripts. */
@@ -350,7 +372,7 @@ class AIADN_Debates {
 		foreach ( array( 'a', 'b' ) as $side ) {
 			$owner = self::owner( $debate, $side );
 			if ( $owner ) {
-				AIADN_Mailer::send_notice( $owner['email'], 'Your debate is agreed', "The fixture is agreed:\n\n" . self::summary( $debate ) . "\n\nWe are inviting the judge now.\n\n" . self::url( $debate ) );
+				AIADN_Mailer::send_notice( $owner['email'], 'Your debate is agreed', "The fixture is agreed:\n\n" . self::summary( $debate ) . "\n\nWe are inviting the judge now.\n\nThe judge can score on their phone or on paper. If they would rather use paper, please print a scorecard in advance from the debate page and give it to them on the day.\n\nThe prep pack has the running order for the day, the survey questions to ask your students and how to split the research:\n" . AIADN_Front::url( 'prep', array( 'd' => $debate['code'] ) ) . "\n\n" . self::url( $debate ) );
 			}
 		}
 		$judge = self::get_judge( (int) $debate['judge_id'] );

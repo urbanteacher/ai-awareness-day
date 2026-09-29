@@ -161,6 +161,7 @@ class AIADN_Voice_Front {
 
 		$h  = '<h1>Join the conversation</h1>';
 		$h .= '<p class="aiadn__small aiadn__noprint"><a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">&larr; Your school</a></p>';
+		$h .= '<div class="aiadn__board-logo">' . AIADN_Front::logo_html() . '</div>';
 		$h .= '<div class="aiadn__board"><div class="aiadn__board-qr">' . AIADN_QR::svg( $url, 'QR code that opens the front door with your school code filled in' ) . '</div><div class="aiadn__board-text">';
 		$h .= '<p class="aiadn__eyebrow">1. Scan the code</p><p class="aiadn__small">It opens the page with the school code filled in.</p>';
 		$h .= '<p class="aiadn__eyebrow">School code</p><p class="aiadn__bigcode">' . self::esc( $school['code'] ) . '</p>';

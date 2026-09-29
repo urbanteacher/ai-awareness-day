@@ -266,12 +266,23 @@ class AIADN_Debate_Front {
 
 			case 'checklist':
 				if ( in_array( $status, array( 'matched', 'proposed', 'agreed', 'ready' ), true ) ) {
-					$ticks = array();
+					$ticks = array_diff_key( AIADN_Debates::checklist( $debate, $side ), self::CHECKLIST ); // Keep the prep ticks.
 					foreach ( array_keys( self::CHECKLIST ) as $key ) {
 						$ticks[ $key ] = '' !== AIADN_Front::post( 'tick_' . $key );
 					}
 					AIADN_Debates::save_checklist( $debate, $side, $ticks );
 					self::back( $debate, 'saved' );
+				}
+				break;
+
+			case 'prep_checklist':
+				if ( in_array( $status, array( 'agreed', 'ready' ), true ) && '' !== $side && in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
+					$ticks = array_diff_key( AIADN_Debates::checklist( $debate, $side ), AIADN_Format::CHECKLIST ); // Keep the safeguarding ticks.
+					foreach ( array_keys( AIADN_Format::checklist_for( (string) $debate['format'] ) ) as $key ) {
+						$ticks[ $key ] = '' !== AIADN_Front::post( 'tick_' . $key );
+					}
+					AIADN_Debates::save_checklist( $debate, $side, $ticks );
+					AIADN_Front::redirect( 'prep', array( 'd' => $debate['code'], 'msg' => 'saved' ) );
 				}
 				break;
 
@@ -337,14 +348,83 @@ class AIADN_Debate_Front {
 		return '' === $url ? array( '', 'The link must start with https:// and be a web address, such as a Teams, Meet or Zoom link.' ) : array( $url, '' );
 	}
 
-	/** The panel that puts the meeting link on the platform on the day, so nobody hunts through email. */
-	public static function join_panel( array $debate ): string {
-		if ( ! AIADN_Debates::is_live( $debate ) ) {
+	/**
+	 * The panel for the day itself. Online: the join button, so nobody hunts through email for the link.
+	 * In person: when, where and who is judging, with the same weight, so the day looks the same either way.
+	 */
+	public static function join_panel( array $debate, string $viewer = 'school', string $calendar_url = '', string $paper_url = '', string $prep_url = '' ): string {
+		if ( ! AIADN_Debates::is_today( $debate ) ) {
 			return '';
 		}
 		$a = AIADN_Schools::get( (int) $debate['school_a_id'] );
 		$b = AIADN_Schools::get( (int) $debate['school_b_id'] );
-		return '<div class="aiadn__panel aiadn__panel--ink aiadn__join"><h2>Join the meeting</h2><p><strong>' . esc_html( ( $a['name'] ?? '' ) . ' v ' . ( $b['name'] ?? '' ) ) . '</strong><br>' . esc_html( AIADN_Util::show( (string) $debate['starts_at'], 'D j M, H:i' ) ) . '. Hosted by ' . esc_html( $a['name'] ?? '' ) . ', who admit everyone from the waiting room.</p><p><a class="aiadn__button" href="' . esc_url( $debate['meeting_url'] ) . '" target="_blank" rel="noopener noreferrer">Join the meeting</a></p></div>';
+		if ( 'in_person' === $debate['format'] ) {
+			$judge = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
+			$dir   = AIADN_Debates::directions_url( $debate );
+			$h     = '<div class="aiadn__panel aiadn__panel--ink aiadn__join aiadn__today"><h2>Today</h2><p><strong>' . esc_html( ( $a['name'] ?? '' ) . ' v ' . ( $b['name'] ?? '' ) ) . '</strong><br>' . esc_html( AIADN_Util::show( (string) $debate['starts_at'], 'D j M, H:i' ) ) . '</p><dl class="aiadn__details"><dt>Where</dt><dd>' . esc_html( AIADN_Debates::place( $debate ) ) . ( $dir ? ' <a href="' . esc_url( $dir ) . '" target="_blank" rel="noopener noreferrer">Get directions</a>' : '' ) . '</dd>';
+			if ( $judge ) {
+				$h .= '<dt>Judge</dt><dd>' . esc_html( $judge['name'] . ( $judge['organisation'] ? ', ' . $judge['organisation'] : '' ) ) . '</dd>';
+			}
+			$note = 'judge' === $viewer
+				? 'Please arrive at reception and follow the host school\'s visitor procedure.'
+				: 'The judge is a visitor: please welcome them at reception and follow your school\'s visitor procedure.';
+			$print = ( 'school' === $viewer && '' !== $paper_url ) ? '<p class="aiadn__small">Have a printed scorecard ready for the judge, if they would rather score on paper.</p><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $paper_url ) . '" target="_blank" rel="noopener">Print a scorecard for the judge</a></p>' : '';
+			return $h . '</dl><p class="aiadn__small">' . esc_html( $note ) . '</p>' . self::prep_button( $prep_url ) . $print . self::calendar_button( $calendar_url ) . '</div>';
+		}
+		if ( ! AIADN_Debates::is_live( $debate ) ) {
+			return '';
+		}
+		return '<div class="aiadn__panel aiadn__panel--ink aiadn__join"><h2>Join the meeting</h2><p><strong>' . esc_html( ( $a['name'] ?? '' ) . ' v ' . ( $b['name'] ?? '' ) ) . '</strong><br>' . esc_html( AIADN_Util::show( (string) $debate['starts_at'], 'D j M, H:i' ) ) . '. Hosted by ' . esc_html( $a['name'] ?? '' ) . ', who admit everyone from the waiting room.</p><p><a class="aiadn__button" href="' . esc_url( $debate['meeting_url'] ) . '" target="_blank" rel="noopener noreferrer">Join the meeting</a></p>' . self::prep_button( $prep_url ) . self::calendar_button( $calendar_url ) . '</div>';
+	}
+
+	/** The link to the running order for the day. */
+	public static function prep_button( string $url ): string {
+		return '' === $url ? '' : '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">Running order for the day</a></p>';
+	}
+
+	/** The "Add to my calendar" download, for an agreed fixture. */
+	public static function calendar_button( string $url ): string {
+		return '' === $url ? '' : '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $url ) . '">Add to my calendar</a></p>';
+	}
+
+	/**
+	 * /conversation/calendar/: the debate's calendar file as a download.
+	 * For a teacher or headteacher at either school, or for the judge (by shortcut link or after signing in).
+	 * Only for a fixture that has been agreed and is still to come or on now.
+	 */
+	public static function view_calendar(): string {
+		AIADN_Front::set_title( 'Calendar' );
+		$none    = '<h1>We could not find that</h1><p>The calendar file is only available for an agreed debate, to the schools and the judge.</p>';
+		$raw     = AIADN_Front::get( 't' );
+		$session = AIADN_Auth::current();
+		$debate  = null;
+
+		if ( '' !== $raw ) {
+			$tok   = preg_match( '/^[a-f0-9]{40}$/', $raw ) ? AIADN_Auth::find_token( $raw, 'judge' ) : null;
+			$judge = $tok ? AIADN_Debates::get_judge( (int) $tok['ref_id'] ) : null;
+			$debate = ( $judge && 'accepted' === $judge['status'] ) ? AIADN_Debates::get( (int) $judge['debate_id'] ) : null;
+		} else {
+			$code   = AIADN_Util::normalise_debate_code( AIADN_Front::get( 'd' ) );
+			$debate = $code ? AIADN_Debates::get_by_code( $code ) : null;
+			$ok     = false;
+			if ( $debate && $session ) {
+				if ( in_array( $session['role'], array( 'lead', 'teacher', 'slt' ), true ) ) {
+					$ok = AIADN_Debates::involves( $debate, (int) $session['school_id'] );
+				} elseif ( 'judge' === $session['role'] ) {
+					foreach ( AIADN_Debates::judges_for_school_email( (int) $session['school_id'], (string) $session['member']['email'] ) as $row ) {
+						$ok = $ok || ( (int) $row['debate_id'] === (int) $debate['id'] && 'accepted' === $row['status'] );
+					}
+				}
+			}
+			if ( ! $ok ) {
+				$debate = null;
+			}
+		}
+		if ( ! $debate || ! in_array( $debate['status'], array( 'agreed', 'ready' ), true ) || ! $debate['starts_at'] ) {
+			return $none;
+		}
+		AIADN_Calendar::download( $debate );
+		return ''; // download() exits.
 	}
 
 	/* ---- form parsing ------------------------------------------------ */
@@ -384,6 +464,7 @@ class AIADN_Debate_Front {
 			'a_side'     => AIADN_Front::post( 'a_side' ),
 			'format'     => AIADN_Front::post( 'format' ),
 			'venue'      => AIADN_Front::post( 'venue' ),
+			'venue_address' => AIADN_Front::post( 'venue_address' ),
 			'meeting_url' => AIADN_Front::post( 'meeting_url' ),
 			'calendar'    => '' !== AIADN_Front::post( 'calendar' ),
 		);
@@ -409,8 +490,14 @@ class AIADN_Debate_Front {
 		}
 		if ( ! isset( AIADN_Motions::FORMATS[ $values['format'] ] ) ) {
 			$errors['format'] = 'Choose online or in person.';
-		} elseif ( 'in_person' === $values['format'] && strlen( $values['venue'] ) < 3 ) {
-			$errors['venue'] = 'Say where it will take place.';
+		} elseif ( 'in_person' === $values['format'] ) {
+			if ( strlen( $values['venue'] ) < 3 ) {
+				$errors['venue'] = 'Say where it will take place.';
+			}
+			// The address goes into the calendar entry and the judge's directions, so a visitor can find the school.
+			if ( strlen( $values['venue_address'] ) < 10 ) {
+				$errors['venue_address'] = 'Add the full address with the postcode, so the judge can find you and the calendar entry has it.';
+			}
 		} elseif ( 'online' === $values['format'] ) {
 			// The host school (School A) creates the meeting, so a link is needed to agree an online debate.
 			list( $meeting, $link_error ) = self::link_from_request( (string) $utc );
@@ -433,6 +520,7 @@ class AIADN_Debate_Front {
 			'format'      => $values['format'],
 			// Only the field that belongs to the chosen format is kept.
 			'venue'       => 'in_person' === $values['format'] ? $values['venue'] : '',
+			'venue_address' => 'in_person' === $values['format'] ? $values['venue_address'] : '',
 			'meeting_url' => ( 'online' === $values['format'] && isset( $meeting ) ) ? $meeting : '',
 			'send_calendar' => $values['calendar'] ? 1 : 0,
 			'starts_at'   => $utc,
@@ -446,7 +534,7 @@ class AIADN_Debate_Front {
 		return isset( $errors[ $key ] ) ? '<p class="aiadn__error" role="alert">' . esc_html( $errors[ $key ] ) . '</p>' : '';
 	}
 
-	private static function form_open( array $debate, string $action ): string {
+	public static function form_open( array $debate, string $action ): string {
 		return '<form method="post" action="' . esc_url( AIADN_Debates::url( $debate ) ) . '" class="aiadn__form" enctype="multipart/form-data">' . AIADN_Front::csrf_field() . '<input type="hidden" name="d" value="' . esc_attr( $debate['code'] ) . '"><input type="hidden" name="aiadn_action" value="' . esc_attr( $action ) . '">';
 	}
 
@@ -510,7 +598,7 @@ class AIADN_Debate_Front {
 			return $h . '<div class="aiadn__panel"><h2>Cancelled</h2><p>This debate was cancelled.</p></div>' . ( 'cancelled' === $status ? self::render_details( $debate, $school_id ) : '' );
 		}
 
-		$h .= self::join_panel( $debate );
+		$h .= self::join_panel( $debate, 'school', AIADN_Front::url( 'calendar', array( 'd' => $debate['code'] ) ), AIADN_Front::url( 'paper', array( 'd' => $debate['code'] ) ), in_array( $status, array( 'agreed', 'ready' ), true ) ? AIADN_Front::url( 'prep', array( 'd' => $debate['code'] ) ) : '' );
 
 		// ---- a result is in (or the debate is void) ----
 		if ( in_array( $status, array( 'completed', 'void' ), true ) ) {
@@ -583,7 +671,13 @@ class AIADN_Debate_Front {
 
 		// ---- the fixture ----
 		if ( $debate['starts_at'] ) {
-			$h .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . '</div>';
+			$cal = in_array( $status, array( 'agreed', 'ready' ), true ) ? self::calendar_button( AIADN_Front::url( 'calendar', array( 'd' => $debate['code'] ) ) ) : '';
+			$h  .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . $cal . '</div>';
+			if ( in_array( $status, array( 'agreed', 'ready' ), true ) ) {
+				$h .= '<div class="aiadn__panel"><h2>Prepare for the day</h2><p>We recommend ' . (int) AIADN_Format::TOTAL_MINUTES . ' minutes, and you can adapt it to suit your school. The prep pack has a checklist, a suggested running order, the survey questions to ask your students, how to split the research, and who does what.</p><p><a class="aiadn__button" href="' . esc_url( AIADN_Front::url( 'prep', array( 'd' => $debate['code'] ) ) ) . '">Open the prep pack</a></p></div>';
+				// The two ways a judge can score, and what the school should do about paper (brief, section 9).
+				$h .= '<div class="aiadn__panel"><h2>Scorecard for the judge</h2><p>The judge can score on their phone or on paper. <strong>If they would rather use paper, please print a scorecard in advance</strong> and give it to them on the day. After the debate they scan the code on it and enter the final scores.</p><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( AIADN_Front::url( 'paper', array( 'd' => $debate['code'] ) ) ) . '" target="_blank" rel="noopener">Print a scorecard for the judge</a></p></div>';
+			}
 		} elseif ( $debate['school_b_id'] ) {
 			$h .= '<div class="aiadn__panel"><h2>The fixture</h2>' . self::render_details( $debate, $school_id ) . '</div>';
 		}
@@ -656,6 +750,7 @@ class AIADN_Debate_Front {
 			$h .= '<label class="aiadn__radio"><input type="radio" name="age_group" value="' . esc_attr( $key ) . '"' . checked( $default, $key, false ) . '> ' . esc_html( $label ) . '</label>';
 		}
 		$h .= '</fieldset>' . self::err( $errors, 'age_group' );
+		$h .= '<p class="aiadn__small">We recommend ' . (int) AIADN_Format::TOTAL_MINUTES . ' minutes, and you can adapt it to suit your school. Once the debate is agreed, both schools get a prep pack with a suggested running order.</p>';
 		$h .= '<label for="p-theme">Theme</label><select id="p-theme" name="theme"><option value="">Choose...</option>';
 		foreach ( AIADN_Motions::THEMES as $key => $label ) {
 			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( (string) ( $v['theme'] ?? '' ), $key, false ) . '>' . esc_html( $label ) . '</option>';
@@ -676,18 +771,22 @@ class AIADN_Debate_Front {
 			$h .= '<label class="aiadn__radio"><input type="radio" name="format" value="' . esc_attr( $key ) . '"' . checked( (string) ( $v['format'] ?? 'in_person' ), $key, false ) . '> ' . esc_html( $label ) . '</label>';
 		}
 		$h .= '</fieldset>' . self::err( $errors, 'format' );
-		$h .= '<div data-for="in_person"><label for="p-venue">Venue</label><input id="p-venue" name="venue" type="text" value="' . esc_attr( (string) ( $v['venue'] ?? '' ) ) . '" placeholder="e.g. the school hall">' . self::err( $errors, 'venue' ) . '</div>';
+		$h .= '<div data-for="in_person"><label for="p-venue">Venue</label><input id="p-venue" name="venue" type="text" value="' . esc_attr( (string) ( $v['venue'] ?? '' ) ) . '" placeholder="e.g. the school hall">' . self::err( $errors, 'venue' );
+		$h .= '<label for="p-addr">Address <span class="aiadn__opt">(street, town and postcode)</span></label><input id="p-addr" name="venue_address" type="text" value="' . esc_attr( (string) ( $v['venue_address'] ?? '' ) ) . '" autocomplete="street-address" placeholder="e.g. 12 High Street, Leeds, LS6 2AB">' . self::err( $errors, 'venue_address' );
+		$h .= '<p class="aiadn__hint">This goes in the calendar entry and gives the judge directions, so please give the school\'s full address, not just the room.</p></div>';
 		$h .= '<div data-for="online"><label for="p-ics">Upload the calendar file from your meeting (.ics)</label><input id="p-ics" name="meeting_ics" type="file" accept=".ics,text/calendar">';
 		$h .= '<p class="aiadn__hint">Create the meeting in Teams, Meet or Zoom, download its calendar file (.ics) and upload it here. We take the join link from it, so on the day everyone joins from this site and nobody has to search their email. We do not keep the file.</p>';
 		$h .= '<label for="p-link">Or paste the meeting link</label><input id="p-link" name="meeting_url" type="url" inputmode="url" value="' . esc_attr( (string) ( $v['meeting_url'] ?? '' ) ) . '" placeholder="https://teams.microsoft.com/...">' . self::err( $errors, 'meeting_url' );
 		$h .= '<p class="aiadn__hint">As the host, you create the meeting on the platform your school approves. Turn the waiting room on, admit the other school and the judge yourself, and do not record.</p></div>';
-		$cal_on = $v && ! empty( $v['calendar'] ); // An extra, off unless the host ticks it.
-		$h .= '<label class="aiadn__radio aiadn__calendar"><input type="checkbox" name="calendar" value="1"' . ( $cal_on ? ' checked' : '' ) . '> Also email calendar invites (.ics) so it is booked in everyone\'s diary</label>';
-		$h .= '<p class="aiadn__hint">Optional. Once both schools agree, we email an invite to you, the other school and both schools\' headteachers or senior leaders, and to the judge when they accept. If you have already invited people from Teams, leave this off so nobody gets two.</p>';
+		// In person there is no meeting to send invites from, so we make the calendar file: on to begin with.
+		// Online, the host has usually invited people from Teams already: off, and switched by the format choice.
+		$cal_on = $v ? ! empty( $v['calendar'] ) : true;
+		$h .= '<label class="aiadn__radio aiadn__calendar"><input type="checkbox" name="calendar" value="1"' . ( $cal_on ? ' checked' : '' ) . '> Email calendar invites (.ics) so it is booked in everyone\'s diary</label>';
+		$h .= '<p class="aiadn__hint">We make the calendar file, so nobody has to. Once both schools agree, we email an invite to you, the other school and both schools\' headteachers or senior leaders, and to the judge when they accept. If the debate changes it updates, and if it is cancelled it is marked cancelled. For an online debate, leave this off if you have already invited people from Teams, so nobody gets two.</p>';
 		$h .= '<h3>The judge</h3><p class="aiadn__small">Someone independent of both schools. We invite them once both schools agree the fixture.</p>';
 		$h .= self::render_judge_fields( $debate, 'j_', $errors, $v, '', '' );
 		$h .= '<button class="aiadn__button" type="submit">Send to ' . self::esc( self::school_name( $debate['school_b_id'] ) ) . '</button></form>';
-		$h .= '<script>(function(){var f=document.querySelector("form input[value=propose]");if(f){f=f.form;var s=function(){var r=f.querySelector("input[name=format]:checked");var v=r?r.value:"in_person";f.querySelectorAll("[data-for]").forEach(function(d){d.style.display=d.getAttribute("data-for")===v?"":"none";});};f.querySelectorAll("input[name=format]").forEach(function(r){r.addEventListener("change",s);});s();}})();</script>';
+		$h .= '<script>(function(){var f=document.querySelector("form input[value=propose]");if(f){f=f.form;var cal=f.querySelector("input[name=calendar]"),touched=false;if(cal){cal.addEventListener("change",function(){touched=true;});}var s=function(){var r=f.querySelector("input[name=format]:checked");var v=r?r.value:"in_person";f.querySelectorAll("[data-for]").forEach(function(d){d.style.display=d.getAttribute("data-for")===v?"":"none";});};f.querySelectorAll("input[name=format]").forEach(function(r){r.addEventListener("change",function(){s();if(cal&&!touched){cal.checked=(r.value==="in_person");}});});s();}})();</script>';
 		$h .= '<script>(function(){var t=document.getElementById("p-theme"),m=document.getElementById("p-motion");if(!t||!m)return;function f(){var a=document.querySelector("input[name=age_group]:checked");var age=a?a.value:"",th=t.value;var any=false;for(var i=1;i<m.options.length;i++){var o=m.options[i];var ok=o.dataset.theme===th&&o.dataset.age===age;o.hidden=!ok;o.disabled=!ok;if(ok)any=true;if(!ok&&o.selected)m.selectedIndex=0;}m.options[0].text=any?"Choose a motion...":"Choose a theme and age group first";}t.addEventListener("change",f);document.querySelectorAll("input[name=age_group]").forEach(function(r){r.addEventListener("change",f);});f();})();</script>';
 		return $h;
 	}
@@ -772,14 +871,23 @@ class AIADN_Debate_Front {
 		}
 		if ( 'accepted' === $judge['status'] ) {
 			$score_url = 'token' === $mode ? AIADN_Front::url( 'score', array( 't' => $raw ) ) : AIADN_Front::url( 'score', array( 'd' => $debate['code'] ) );
-			$h        .= self::join_panel( $debate );
+			$cal_url   = 'token' === $mode ? AIADN_Front::url( 'calendar', array( 't' => $raw ) ) : AIADN_Front::url( 'calendar', array( 'd' => $debate['code'] ) );
+			$prep_url  = 'token' === $mode ? AIADN_Front::url( 'prep', array( 't' => $raw ) ) : AIADN_Front::url( 'prep', array( 'd' => $debate['code'] ) );
+			$live      = in_array( $debate['status'], array( 'agreed', 'ready' ), true );
+			$h        .= self::join_panel( $debate, 'judge', $live ? $cal_url : '', '', $live ? $prep_url : '' );
+			if ( ! AIADN_Debates::is_today( $debate ) && $live ) {
+				$h .= self::prep_button( $prep_url ) . self::calendar_button( $cal_url );
+			}
 			if ( in_array( $debate['status'], array( 'completed', 'void' ), true ) ) {
 				return $h . '<p><strong>Your result has been submitted.</strong> Thank you.</p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $score_url ) . '">See what you submitted</a></div>';
 			}
-			if ( AIADN_Scorecards::is_open( $debate ) ) {
-				return $h . '<p><strong>You have accepted.</strong> Scoring is open.</p><a class="aiadn__button" href="' . esc_url( $score_url ) . '">Open the scorecard</a></div>';
-			}
-			return $h . '<p><strong>You have accepted.</strong> Scoring opens ' . self::esc( AIADN_Util::show( gmdate( 'Y-m-d H:i:s', AIADN_Scorecards::opens_at( $debate ) ) ) ) . ', three hours before the debate. Come back to this page then.</p></div>';
+			// Two ways to score, as in the brief: on the phone, or on paper and then enter the final scores.
+			$paper_url = 'token' === $mode ? AIADN_Front::url( 'paper', array( 't' => $raw ) ) : AIADN_Front::url( 'paper', array( 'd' => $debate['code'] ) );
+			$phone     = AIADN_Scorecards::is_open( $debate )
+				? '<p><strong>On your phone.</strong> Scoring is open.</p><p><a class="aiadn__button" href="' . esc_url( $score_url ) . '">Open the scorecard</a></p>'
+				: '<p><strong>On your phone.</strong> Scoring opens ' . self::esc( AIADN_Util::show( gmdate( 'Y-m-d H:i:s', AIADN_Scorecards::opens_at( $debate ) ) ) ) . ', three hours before the debate. Come back to this page then.</p>';
+			$paper     = '<p><strong>On paper.</strong> Your host school may give you a printed scorecard. If not, you can print one here. After the debate, scan the code on it and enter the final scores. The online entry is the official result.</p><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( $paper_url ) . '" target="_blank" rel="noopener">Print a paper scorecard</a></p>';
+			return $h . '<p><strong>You have accepted.</strong> There are two ways to score.</p>' . $phone . $paper . '</div>';
 		}
 		if ( 'declined' === $judge['status'] ) {
 			return $h . '<p>You have told us you can\'t make it. Thank you.</p></div>';

@@ -130,6 +130,7 @@ class AIADN_Mailer {
 		$body .= "To accept and, on the day, to score:\n\n";
 		$body .= "  1. Go to {$join_url}\n  2. Enter the school code  {$school_code}\n  3. Choose Judge and enter this email address (we will send you a 6-digit code)\n\n";
 		$body .= "Or use this shortcut to accept or decline:\n\n    {$shortcut_url}\n\n";
+		$body .= "On the day you can score on your phone, or on paper: the host school may hand you a printed scorecard, or you can print one from your judge page and enter the final scores online afterwards.\n\n";
 		$body .= 'The host school stays responsible for safeguarding and visitors, and will tell you how to arrive.';
 		return self::send( $to, 'Will you judge a debate on ' . self::date_from_summary( $summary ) . '?', $body );
 	}

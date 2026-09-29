@@ -80,9 +80,12 @@ def new_debate(school):
     return m.group(1) if m else None
 
 
+ADDRESS = "12 High Street, Leeds, LS6 2AB"
+
+
 def fixture(**over):
     data = {"starts_at": FUTURE, "age_group": "primary", "theme": "creative", "motion_key": "primary-creative-1", "a_side": "for",
-            "format": "in_person", "venue": "The school hall", "j_name": "Dr Amy Chen", "j_email": f"amy.chen@judges{RUN}.example",
+            "format": "in_person", "venue": "The school hall", "venue_address": ADDRESS, "j_name": "Dr Amy Chen", "j_email": f"amy.chen@judges{RUN}.example",
             "j_organisation": "Local university", "j_judge_type": "academic", "j_ack": "1"}
     data.update(over)
     return data
@@ -178,7 +181,7 @@ def main():
     check("School B is emailed to review it", any("review" in m["subject"].lower() for m in mails(b_teacher)))
     check("the judge is NOT emailed until both schools agree", len(mails(judge_email)) == 0)
     s, html, _ = page(bb, d1)
-    check("School B sees the fixture and which side it argues", "AGAINST" in html and "AI art should win prizes" in html and "Accept" in html)
+    check("School B sees the fixture and which side it argues", "AGAINST" in html and "Which part would you want to do yourself" in html and "Accept" in html)
     s, html, _ = act(A["browser"], d1, "accept_fixture")
     s, html, _ = page(A["browser"], d1)
     check("School A cannot accept its own proposal", "Waiting for" in html and "review the fixture" in html)
@@ -207,7 +210,7 @@ def main():
     check("the judge is sent a code", "step=code" in loc(h) and bool(code_for(judge_email)))
     ref = re.search(r"ref=([a-f0-9]{32})", loc(h)).group(1)
     s, html, _ = j.post(f"{SITE}/conversation/join/", {"aiadn_action": "verify", "ref": ref, "code": code_for(judge_email)})
-    check("judge lands on the judging page with the fixture", "Judging" in html and "AI art should win prizes" in html)
+    check("judge lands on the judging page with the fixture", "Judging" in html and "Which part would you want to do yourself" in html)
     check("the judge sees who is debating", A["name"] in html and b_school in html)
     s, _, h = j.get(f"{SITE}/conversation/debate/?d={d1}", follow=False)
     check("a judge session cannot open the teachers' debate page", s == 302 and "/conversation/join/" in loc(h))

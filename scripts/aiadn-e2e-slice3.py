@@ -186,7 +186,7 @@ def main():
         check("averages are shown once there are 5 or more scored debates in the age group", "average " in html.lower())
     check("certificate progress is 1 of 2", "1 of 2" in html)
     s, html, _ = Browser().get(f"{SITE}/conversation/debates/")
-    check("the public page lists the debate with both schools, theme and motion", A["name"] in html and B["name"] in html and "AI art should win prizes" in html and "CREATIVE" in html)
+    check("the public page lists the debate with both schools, theme and motion", A["name"] in html and B["name"] in html and "Which part would you want to do yourself" in html and "CREATIVE" in html)
     check("the judge is named because they agreed", "Dr Amy Chen" in html or "Judge Number" in html or "Amy" in html)
     check("no school codes, teacher emails or student details are public", A["code"] not in html and A["teacher"] not in html and B["teacher"] not in html and "Sam Patel" not in html)
     s, html, _ = Browser().get(f"{SITE}/conversation/debates/?theme=safe")
