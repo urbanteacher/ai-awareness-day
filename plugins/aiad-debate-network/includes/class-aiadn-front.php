@@ -152,6 +152,17 @@ class AIADN_Front {
 			$rest  = $m[3];
 		}
 
+		// A table wider than a phone scrolls sideways inside its own box, which keyboard users can reach, instead of
+		// pushing the whole page wider than the screen.
+		$rest = preg_replace_callback(
+			'#<table\b[^>]*>.*?</table>#s',
+			static function ( $m ) {
+				$name = preg_match( '#<caption[^>]*>(.*?)</caption>#s', $m[0], $c ) ? wp_strip_all_tags( $c[1] ) : 'Table';
+				return '<div class="aiadn__scroll" role="region" tabindex="0" aria-label="' . esc_attr( $name ) . '">' . $m[0] . '</div>';
+			},
+			$rest
+		);
+
 		echo '<main id="main" class="aiadn aiadn--' . esc_attr( self::$strand ) . '">';
 		echo '<header class="aiadn__band"><div class="aiadn__wrap">';
 		echo $lead; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts.

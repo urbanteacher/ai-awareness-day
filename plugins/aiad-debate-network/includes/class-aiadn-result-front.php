@@ -341,7 +341,10 @@ class AIADN_Result_Front {
 			$judge  = $tok ? AIADN_Debates::get_judge( (int) $tok['ref_id'] ) : null;
 			$debate = ( $judge && 'accepted' === $judge['status'] ) ? AIADN_Debates::get( (int) $judge['debate_id'] ) : null;
 			$viewer = 'judge';
-		} elseif ( $session ) {
+		} elseif ( ! $session ) {
+			// A teacher opening the link from an email, before signing in, is sent to sign in rather than told it is not there.
+			AIADN_Front::redirect( 'join', array( 'msg' => 'signin' ) );
+		} else {
 			$code   = AIADN_Util::normalise_debate_code( AIADN_Front::get( 'd' ) );
 			$debate = $code ? AIADN_Debates::get_by_code( $code ) : null;
 			$ok     = false;

@@ -29,8 +29,14 @@ class AIADN_Reminders {
 	const OPEN_STATUSES = array( 'awaiting_opponent', 'awaiting_b_approval', 'matched', 'proposed', 'agreed', 'ready' );
 
 	public static function register(): void {
-		add_action( self::HOOK, array( __CLASS__, 'run' ) );
+		add_action( self::HOOK, array( __CLASS__, 'cron' ) );
 		add_action( 'init', array( __CLASS__, 'schedule' ) );
+	}
+
+	/** The scheduled run. Records when it last ran, so the go-live check can tell whether the server is really calling cron. */
+	public static function cron(): void {
+		self::run();
+		update_option( 'aiadn_cron_last_run', time(), false );
 	}
 
 	public static function schedule(): void {

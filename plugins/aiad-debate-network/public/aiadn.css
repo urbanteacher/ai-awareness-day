@@ -255,3 +255,9 @@
 .aiadn__printonly { display: none; }
 @media print { .aiadn__printonly { display: block; } }
 .aiadn__panel table + h2, .aiadn__panel .aiadn__vq + h3 { margin-top: 1.5rem; }
+
+.aiadn__scroll { overflow-x: auto; max-width: 100%; }
+.aiadn__scroll:focus-visible { outline: 3px solid var(--aiadn-d); outline-offset: 2px; }
+.aiadn__golive { list-style: none; padding-left: 0; }
+.aiadn__golive li { margin: .35rem 0; }
+.aiadn__golive--warn strong, .aiadn__golive--fail strong { color: var(--aiadn-crit); }

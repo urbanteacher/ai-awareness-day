@@ -291,11 +291,22 @@ class AIADN_Programme_Front {
 				$body .= '<h3>' . ( 'preview' === self::$retention['kind'] ? 'This is what would be deleted' : 'This has been deleted' ) . '</h3>' . self::table( array( 'What', 'Rows' ), $rows );
 			}
 		}
-		$nonce = wp_nonce_field( 'aiadn_retention', '_wpnonce', true, false );
+		$nonce = '<input type="hidden" name="_wpnonce" value="' . esc_attr( wp_create_nonce( 'aiadn_retention' ) ) . '">'; // No id, so the page never has two of the same.
 		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_preview"><button class="aiadn__button aiadn__button--quiet" type="submit">Preview what would be deleted</button></form>';
 		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . $nonce . '<input type="hidden" name="aiadn_action" value="retention_run"><label for="rt-confirm">To delete everyone&rsquo;s contact details now, type DELETE</label><input id="rt-confirm" name="confirm" type="text" autocomplete="off"><button class="aiadn__button aiadn__button--quiet" type="submit">Delete now</button></form>';
 		$body .= '<p class="aiadn__small">Anyone can also ask for their own details to go sooner, from the &ldquo;Delete my details&rdquo; page. Download any figures you want to keep as CSV first.</p>';
 		$h    .= AIADN_Result_Front::fold( 'Data retention', $body, false );
+
+		// Go-live check.
+		$checks = AIADN_Golive::checks();
+		$worst  = AIADN_Golive::worst( $checks );
+		$marks  = array( 'ok' => array( '&#10003;', 'OK' ), 'warn' => array( '!', 'Look at this' ), 'fail' => array( '&#10007;', 'Will break something' ) );
+		$body   = '<p>Whether this site is set up to run the National AI Conversation for real. Nothing here shows a password or a key.</p><ul class="aiadn__list aiadn__golive">';
+		foreach ( $checks as $c ) {
+			$body .= '<li class="aiadn__golive--' . esc_attr( $c['status'] ) . '"><span aria-hidden="true">' . $marks[ $c['status'] ][0] . '</span> <span class="aiadn__sr">' . esc_html( $marks[ $c['status'] ][1] ) . ': </span><strong>' . esc_html( $c['label'] ) . '.</strong> ' . esc_html( $c['detail'] ) . '</li>';
+		}
+		$body .= '</ul>';
+		$h    .= AIADN_Result_Front::fold( 'Go-live check' . ( 'ok' === $worst ? '' : ( 'fail' === $worst ? ' (something will break)' : ' (look at this)' ) ), $body, 'ok' !== $worst );
 
 		// Email check.
 		$route = AIADN_Mailer::route();
@@ -303,7 +314,7 @@ class AIADN_Programme_Front {
 		if ( null !== self::$test_result ) {
 			$body .= AIADN_Front::notice( 'Test email ' . self::$test_result . '.', 'sent' === substr( self::$test_result, 0, 4 ) ? 'info' : 'error' );
 		}
-		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form">' . wp_nonce_field( 'aiadn_test_email', '_wpnonce', true, false ) . '<input type="hidden" name="aiadn_action" value="send_test_email"><button class="aiadn__button aiadn__button--quiet" type="submit">Send a test email to me</button></form>';
+		$body .= '<form method="post" action="' . esc_url( AIADN_Front::url( 'programme' ) ) . '" class="aiadn__form"><input type="hidden" name="_wpnonce" value="' . esc_attr( wp_create_nonce( 'aiadn_test_email' ) ) . '"><input type="hidden" name="aiadn_action" value="send_test_email"><button class="aiadn__button aiadn__button--quiet" type="submit">Send a test email to me</button></form>';
 		$h    .= AIADN_Result_Front::fold( 'Email check', $body, false );
 
 		// Referrals.

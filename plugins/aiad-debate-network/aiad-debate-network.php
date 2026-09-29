@@ -3,7 +3,7 @@
  * Plugin Name:       AI Awareness Day Debate Network
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval, class PINs, debates, judges, scoring, results, certificates, Student Voice and reminders (slices 1 to 4).
- * Version:           0.15.0
+ * Version:           0.16.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -18,10 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIADN_VERSION', '0.15.0' );
+define( 'AIADN_VERSION', '0.16.0' );
 define( 'AIADN_PLUGIN_FILE', __FILE__ );
 define( 'AIADN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'AIADN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+// When the theme loads the plugin itself (hosting that blocks plugin activation), plugin_dir_url() cannot make a
+// working address for a folder outside wp-content/plugins, so build it from the theme's address instead.
+$aiadn_dir   = wp_normalize_path( plugin_dir_path( __FILE__ ) );
+$aiadn_theme = trailingslashit( wp_normalize_path( get_template_directory() ) );
+define( 'AIADN_PLUGIN_URL', 0 === strpos( $aiadn_dir, $aiadn_theme ) ? trailingslashit( get_template_directory_uri() ) . substr( $aiadn_dir, strlen( $aiadn_theme ) ) : plugin_dir_url( __FILE__ ) );
+unset( $aiadn_dir, $aiadn_theme );
 
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-util.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-database.php';
@@ -35,6 +40,7 @@ require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-stats.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-debates.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-find.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-privacy.php';
+require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-golive.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-nominations.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-scorecards.php';
 require_once AIADN_PLUGIN_DIR . 'includes/class-aiadn-issues.php';
