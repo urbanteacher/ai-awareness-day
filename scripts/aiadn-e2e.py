@@ -14,6 +14,7 @@ import re
 import string
 import subprocess
 import sys
+import uuid
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -48,6 +49,19 @@ class Browser:
         body = urllib.parse.urlencode(data, doseq=True).encode()
         return self._do(urllib.request.Request(url, data=body), follow)
 
+    def post_multipart(self, url, fields, files, follow=True):
+        """A form post that carries files. files is {name: (filename, bytes, content_type)}."""
+        boundary = "----aiadn" + uuid.uuid4().hex
+        body = b""
+        for key, value in fields.items():
+            for v in (value if isinstance(value, list) else [value]):
+                body += f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{v}\r\n'.encode()
+        for name, (filename, content, ctype) in files.items():
+            body += f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"; filename="{filename}"\r\nContent-Type: {ctype}\r\n\r\n'.encode() + content + b"\r\n"
+        body += f"--{boundary}--\r\n".encode()
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
+        return self._do(req, follow)
+
     def _do(self, req, follow):
         try:
             r = (self.follow if follow else self.stay).open(req, timeout=30)
@@ -69,6 +83,20 @@ def mails(to=None):
             continue
         full = json.load(urllib.request.urlopen(f"{MAIL}/message/{m['ID']}", timeout=10))
         out.append({"to": addrs, "subject": m["Subject"], "text": full.get("Text", "")})
+    return out
+
+
+def attachments(to):
+    """Every attachment in the emails sent to an address: list of dicts with name, type, subject, text."""
+    data = json.load(urllib.request.urlopen(MAIL + "/messages?limit=300", timeout=10))
+    out = []
+    for m in data.get("messages", []):
+        if to not in [a["Address"] for a in m.get("To", [])] or not m.get("Attachments"):
+            continue
+        full = json.load(urllib.request.urlopen(f"{MAIL}/message/{m['ID']}", timeout=10))
+        for att in full.get("Attachments", []):
+            raw = urllib.request.urlopen(f"{MAIL}/message/{m['ID']}/part/{att['PartID']}", timeout=10).read().decode("utf-8", "replace")
+            out.append({"name": att["FileName"], "type": att["ContentType"], "subject": m["Subject"], "text": raw})
     return out
 
 

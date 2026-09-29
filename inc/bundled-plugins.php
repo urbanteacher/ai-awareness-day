@@ -122,6 +122,8 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-voice.php',
 			'includes/class-aiadn-voice-front.php',
 			'includes/class-aiadn-qr.php',
+			'includes/class-aiadn-calendar.php',
+			'includes/class-aiadn-meeting-ics.php',
 			'includes/class-aiadn-reminders.php',
 			'public/aiadn.css',
 		),

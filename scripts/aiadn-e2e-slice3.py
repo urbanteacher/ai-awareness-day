@@ -64,7 +64,7 @@ def scores(a=(4, 3, 5, 4), b=(3, 4, 3, 4), winner="a", students=24, comment_a="S
     return data
 
 
-def run_debate(A, B, n, winner="a", score=True, **kw):
+def run_debate(A, B, n, winner="a", score=True, fx=None, **kw):
     """A and B debate. Returns a dict describing the debate, ready (or completed if score)."""
     d = s2.new_debate(A)
     s, html, _ = s2.act(A["browser"], d, "new_link")
@@ -72,7 +72,7 @@ def run_debate(A, B, n, winner="a", score=True, **kw):
     s, html, _ = B["browser"].get(link)
     B["browser"].post(f"{SITE}/conversation/invite/", {"csrf": field(html, "csrf"), "aiadn_action": "accept_invite", "t": link.split("t=")[1]})
     judge = f"judge{n}@judges{RUN}.example"
-    s2.act(A["browser"], d, "propose", **s2.fixture(j_email=judge, j_name=f"Judge Number{n}"))
+    s2.act(A["browser"], d, "propose", **s2.fixture(j_email=judge, j_name=f"Judge Number{n}", **(fx or {})))
     s2.act(B["browser"], d, "accept_fixture")
     shortcut = link_for(judge, "conversation/judge")
     token = shortcut.split("t=")[1]

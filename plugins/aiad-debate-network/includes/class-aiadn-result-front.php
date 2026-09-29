@@ -174,6 +174,7 @@ class AIADN_Result_Front {
 		}
 		$h .= '<p><strong>' . self::esc( $a ) . ' v ' . self::esc( $b ) . '</strong><br>' . self::esc( AIADN_Util::show( (string) $debate['starts_at'] ) ) . '<br>&ldquo;' . self::esc( $debate['motion_text'] ) . '&rdquo;</p>';
 		$back = 'token' === $mode ? AIADN_Front::url( 'judge', array( 't' => $raw ) ) : AIADN_Front::url( 'judge' );
+		$h   .= AIADN_Debate_Front::join_panel( $debate );
 
 		// ---- already submitted ----
 		if ( $card && 'submitted' === $card['status'] ) {

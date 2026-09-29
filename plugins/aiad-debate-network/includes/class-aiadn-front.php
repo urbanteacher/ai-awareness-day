@@ -119,7 +119,7 @@ class AIADN_Front {
 	private static function output( string $inner ): void {
 		add_filter( 'pre_get_document_title', static fn() => self::$title . ' | AI Awareness Day' );
 		add_filter( 'wp_robots', static fn( $r ) => array( 'noindex' => true, 'nofollow' => true ) );
-		wp_enqueue_style( 'aiadn', AIADN_PLUGIN_URL . 'public/aiadn.css', array(), AIADN_VERSION );
+		wp_enqueue_style( 'aiadn', AIADN_PLUGIN_URL . 'public/aiadn.css', array(), AIADN_VERSION . '.' . (int) @filemtime( AIADN_PLUGIN_DIR . 'public/aiadn.css' ) ); // The file's date is part of the version, so a changed stylesheet is never served stale.
 		get_header();
 
 		// The page's own <h1> (and an optional "back" link above it) moves into the coloured band.
@@ -774,6 +774,10 @@ class AIADN_Front {
 			}
 			$h .= '</div>';
 		} elseif ( 'approved' === $status ) {
+			// Any online debate that is on now: the join button, right at the top.
+			foreach ( AIADN_Debates::for_school( (int) $school['id'] ) as $d ) {
+				$h .= AIADN_Debate_Front::join_panel( $d );
+			}
 			$h .= '<div class="aiadn__panel aiadn__panel--ink"><h2>School code</h2><p class="aiadn__bigcode">' . esc_html( (string) $school['code'] ) . '</p>';
 			$h .= '<p>Share it with students, colleagues, your headteacher and judges. Each also needs a class PIN or their own email code.</p>';
 			$h .= '<p class="aiadn__small">Front door: <a href="' . esc_url( self::url( 'join', array( 'c' => $school['code'] ) ) ) . '">' . esc_html( self::url( 'join', array( 'c' => $school['code'] ) ) ) . '</a></p></div>';

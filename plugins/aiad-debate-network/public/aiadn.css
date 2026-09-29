@@ -52,7 +52,7 @@
 
 /* Forms */
 .aiadn__form label { display: block; margin: 1.1rem 0 .3rem; font-weight: 700; }
-.aiadn__form input[type=text], .aiadn__form input[type=email], .aiadn__form input[type=datetime-local], .aiadn__form select {
+.aiadn__form input[type=text], .aiadn__form input[type=email], .aiadn__form input[type=url], .aiadn__form input[type=datetime-local], .aiadn__form select {
 	width: 100%; box-sizing: border-box; padding: .8rem .9rem; font: inherit; font-size: 1rem; color: var(--aiadn-ink);
 	background: var(--aiadn-cream); border: 1.5px solid var(--aiadn-rule); border-radius: 0;
 }
@@ -186,3 +186,10 @@
 .aiadn__q .aiadn__meta { color: var(--q-d); font-weight: 700; letter-spacing: .1em; font-size: .78rem; }
 .aiadn__vq .aiadn__meta { color: var(--q-d); }
 @media (max-width: 26rem) { .aiadn__q { grid-template-columns: 3.5rem 1fr; gap: .75rem; padding-left: .75rem; } }
+
+/* The join button on the day, and file inputs */
+.aiadn__panel--ink a.aiadn__button { background: var(--aiadn-c); color: var(--aiadn-ink); border-color: var(--aiadn-c); }
+.aiadn__panel--ink a.aiadn__button:hover { background: var(--aiadn-cream); color: var(--aiadn-ink); border-color: var(--aiadn-cream); }
+.aiadn__join .aiadn__button { margin-top: .25rem; }
+.aiadn__form input[type=file] { width: 100%; box-sizing: border-box; padding: .7rem; font: inherit; font-size: .95rem; background: var(--aiadn-cream); border: 1.5px dashed var(--aiadn-rule); border-radius: 0; }
+.aiadn__panel .aiadn__join { margin: 1.25rem 0; }

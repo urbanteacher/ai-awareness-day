@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 5;
+	const DB_VERSION = 7;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -146,6 +146,9 @@ class AIADN_Database {
 			a_side varchar(8) NOT NULL DEFAULT '',
 			format varchar(10) NOT NULL DEFAULT '',
 			venue varchar(255) NOT NULL DEFAULT '',
+			meeting_url varchar(500) NOT NULL DEFAULT '',
+			send_calendar tinyint(1) NOT NULL DEFAULT 0,
+			ics_sequence smallint(5) unsigned NOT NULL DEFAULT 0,
 			starts_at datetime DEFAULT NULL,
 			proposed_by bigint(20) unsigned NOT NULL DEFAULT 0,
 			judge_id bigint(20) unsigned NOT NULL DEFAULT 0,

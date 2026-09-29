@@ -87,6 +87,55 @@ class AIADN_Debates {
 		return AIADN_Front::url( 'debate', array( 'd' => $debate['code'] ) );
 	}
 
+	/** Where the debate is, as plain text: the venue, or for an online debate the host school's meeting link. */
+	public static function where( array $debate ): string {
+		if ( 'online' === $debate['format'] ) {
+			return 'Online' . ( $debate['meeting_url'] ? ': ' . $debate['meeting_url'] : '' );
+		}
+		return 'In person' . ( $debate['venue'] ? ': ' . $debate['venue'] : '' );
+	}
+
+	/** The join button appears an hour before the start and stays until three hours after. */
+	const JOIN_BEFORE = 3600;
+	const JOIN_AFTER  = 10800;
+
+	/** Is this an online debate that is on now (or about to be), with a link to join? */
+	public static function is_live( array $debate ): bool {
+		if ( 'online' !== $debate['format'] || ! $debate['meeting_url'] || ! $debate['starts_at'] || ! in_array( $debate['status'], array( 'agreed', 'ready' ), true ) ) {
+			return false;
+		}
+		$start = strtotime( $debate['starts_at'] . ' UTC' );
+		$now   = time();
+		return $now >= $start - self::JOIN_BEFORE && $now <= $start + self::JOIN_AFTER;
+	}
+
+	/** Valid https meeting link, or ''. The host school pastes it, so it is checked hard: https only, no scripts. */
+	public static function clean_meeting_url( string $url ): string {
+		$url = trim( $url );
+		if ( strlen( $url ) > 500 || preg_match( '/\s/', $url ) || ! preg_match( '#^https://#i', $url ) ) {
+			return '';
+		}
+		$parts = wp_parse_url( $url );
+		if ( empty( $parts['host'] ) || false === strpos( $parts['host'], '.' ) ) {
+			return '';
+		}
+		return esc_url_raw( $url, array( 'https' ) );
+	}
+
+	/** The host school changes the meeting link: the other school and the judge are told. */
+	public static function set_meeting_link( array $debate, string $url, int $by_school_id ): void {
+		self::update( (int) $debate['id'], array( 'meeting_url' => $url ) );
+		self::log( (int) $debate['id'], 'link_changed', $by_school_id );
+		$debate = self::get( (int) $debate['id'] );
+		$text   = "The meeting link for this online debate has changed. Please use the new one:\n\n" . self::summary( $debate ) . "\n\n" . self::url( $debate );
+		self::notify_other( $debate, $by_school_id, 'The meeting link has changed', $text );
+		AIADN_Calendar::send_update( $debate );
+		$judge = (int) $debate['judge_id'] ? self::get_judge( (int) $debate['judge_id'] ) : null;
+		if ( $judge && in_array( $judge['status'], array( 'invited', 'accepted' ), true ) ) {
+			AIADN_Mailer::send_notice( $judge['email'], 'The meeting link has changed', "The link for the online debate you are judging has changed. Please use the new one:\n\n" . self::summary( $debate ) );
+		}
+	}
+
 	/** One line describing the fixture, for emails. */
 	public static function summary( array $debate ): string {
 		$a     = AIADN_Schools::get( (int) $debate['school_a_id'] );
@@ -102,7 +151,7 @@ class AIADN_Debates {
 			$parts[] = 'Motion: "' . $debate['motion_text'] . '"';
 		}
 		if ( $debate['format'] ) {
-			$parts[] = ( AIADN_Motions::FORMATS[ $debate['format'] ] ?? '' ) . ( $debate['venue'] ? ': ' . $debate['venue'] : '' );
+			$parts[] = self::where( $debate );
 		}
 		return implode( "\n", array_filter( $parts ) );
 	}
@@ -149,6 +198,12 @@ class AIADN_Debates {
 			$fields['stage_at']       = AIADN_Util::now();
 			$fields['reminders_sent'] = 0;
 		}
+		$wpdb->update( AIADN_Database::table( 'debates' ), $fields, array( 'id' => $id ) ); // phpcs:ignore WordPress.DB
+	}
+
+	/** Change a value without counting it as progress: no new "last updated" time, no reminder-clock restart. */
+	public static function update_quiet( int $id, array $fields ): void {
+		global $wpdb;
 		$wpdb->update( AIADN_Database::table( 'debates' ), $fields, array( 'id' => $id ) ); // phpcs:ignore WordPress.DB
 	}
 
@@ -302,6 +357,7 @@ class AIADN_Debates {
 		if ( $judge ) {
 			self::invite_judge( $debate, $judge );
 		}
+		AIADN_Calendar::send_initial( $debate );
 	}
 
 	public static function cancel( array $debate, int $by_school_id ): void {
@@ -309,6 +365,7 @@ class AIADN_Debates {
 		self::log( (int) $debate['id'], 'cancelled', $by_school_id );
 		$debate = self::get( (int) $debate['id'] );
 		self::notify_other( $debate, $by_school_id, 'A debate has been cancelled', "This debate has been cancelled:\n\n" . self::summary( $debate ) );
+		AIADN_Calendar::send_cancel( $debate );
 		$judge = self::get_judge( (int) $debate['judge_id'] );
 		if ( $judge && in_array( $judge['status'], array( 'invited', 'accepted' ), true ) ) {
 			AIADN_Mailer::send_notice( $judge['email'], 'The debate on ' . AIADN_Util::show( (string) $debate['starts_at'], 'j M' ) . ' is cancelled', "Thank you for offering to judge. This debate has been cancelled, so there is nothing more to do:\n\n" . self::summary( $debate ) );
@@ -380,6 +437,7 @@ class AIADN_Debates {
 		}
 		global $wpdb;
 		if ( $old ) {
+			AIADN_Calendar::send_cancel_to_judge( $debate, $old );
 			$wpdb->update( AIADN_Database::table( 'judges' ), array( 'status' => 'replaced' ), array( 'id' => (int) $old['id'] ) ); // phpcs:ignore WordPress.DB
 		}
 		$judge_id = self::create_judge( (int) $debate['id'], $judge );
@@ -428,6 +486,9 @@ class AIADN_Debates {
 		}
 		self::log( (int) $debate['id'], $accept ? 'judge_accepted' : 'judge_declined', 0 );
 		$debate = self::get( (int) $debate['id'] );
+		if ( $accept ) {
+			AIADN_Calendar::send_to_judge( $debate, self::get_judge( (int) $judge['id'] ) );
+		}
 		$text   = $accept
 			? $judge['name'] . " has accepted and will judge this debate:\n\n" . self::summary( $debate )
 			: $judge['name'] . " can't make it. Please choose another judge from the debate page:\n\n" . self::summary( $debate );

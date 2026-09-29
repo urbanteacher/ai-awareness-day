@@ -38,7 +38,21 @@ class AIADN_Mailer {
 		return 'no-reply@' . $host;
 	}
 
+	/** @var array{content:string,name:string}|null A calendar file to attach to the email being sent. */
+	private static $ics = null;
+
+	/** An email with a calendar invite (.ics) attached, which calendars open as an event. */
+	public static function send_calendar( string $to, string $subject, string $body, string $ics, string $filename ): bool {
+		self::$ics = array( 'content' => $ics, 'name' => $filename );
+		$ok        = self::send( $to, $subject, $body );
+		self::$ics = null;
+		return $ok;
+	}
+
 	public static function maybe_use_local_smtp( $phpmailer ): void {
+		if ( self::$ics ) {
+			$phpmailer->addStringAttachment( self::$ics['content'], self::$ics['name'], 'base64', 'text/calendar; charset=utf-8; method=PUBLISH' );
+		}
 		$host = getenv( 'AIADN_SMTP_HOST' );
 		if ( ! $host ) {
 			return;
