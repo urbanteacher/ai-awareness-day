@@ -19,7 +19,8 @@ final class AIADN_Find {
 
 	const FORMATS = array( 'either' => 'Either', 'in_person' => 'In person', 'online' => 'Online' );
 	const HOST    = array( 'either' => 'Either', 'yes' => 'We can host', 'no' => 'We would like to be hosted' );
-	const TRAVEL  = array( 'none' => 'We cannot travel', 'region' => 'Within our region', 'anywhere' => 'We can travel anywhere' );
+	/** Who can see the request: schools in the host's own region, or any school. (Stored in req_travel.) */
+	const TRAVEL  = array( 'region' => 'Schools in my region', 'anywhere' => 'Any school' );
 
 	/** A school may have this many requests open at once, and this many of its own asks waiting. */
 	const MAX_OPEN    = 3;
@@ -94,7 +95,7 @@ final class AIADN_Find {
 	/**
 	 * Open requests from other schools, newest first.
 	 *
-	 * @param array<string,string> $filters age, theme, format, region
+	 * @param array<string,string> $filters age, theme, format, region, all (any non-empty: show every region)
 	 * @return array<int,array<string,mixed>> each with 'debate', 'school', 'region', 'near' (same area as the viewer), 'asked' (this school's request status or '')
 	 */
 	public static function board( int $viewer_school_id, array $filters = array() ): array {
@@ -118,6 +119,7 @@ final class AIADN_Find {
 		$viewer = AIADN_Schools::get( $viewer_school_id );
 		$home   = $viewer ? AIADN_Regions::for_postcode( (string) $viewer['postcode'] ) : '';
 		$want   = (string) ( $filters['region'] ?? '' );
+		$all    = ! empty( $filters['all'] );
 		$out    = array();
 		foreach ( $rows as $debate ) {
 			$school = AIADN_Schools::get( (int) $debate['school_a_id'] );
@@ -129,8 +131,19 @@ final class AIADN_Find {
 			if ( '' !== $want && $region !== $want ) {
 				continue;
 			}
+			$near = '' !== $home && AIADN_Regions::UNKNOWN !== $region && $region === $home;
+			// A request for the host's own region is only seen from that region. An old 'none' counts as the same.
+			if ( 'anywhere' !== $debate['req_travel'] && ! $near ) {
+				continue;
+			}
+			// "In my region" is the default view; "Everywhere" shows every request this school may see. An online-only
+			// request open to any school needs no travelling, so it shows in both.
+			$online = 'online' === $debate['req_format'];
+			if ( ! $all && ! $near && ! $online ) {
+				continue;
+			}
 			$mine  = self::request_for( (int) $debate['id'], $viewer_school_id );
-			$out[] = array( 'debate' => $debate, 'school' => $school, 'region' => $region, 'near' => '' !== $home && AIADN_Regions::UNKNOWN !== $region && $region === $home, 'asked' => $mine ? $mine['status'] : '' );
+			$out[] = array( 'debate' => $debate, 'school' => $school, 'region' => $region, 'near' => $near, 'asked' => $mine ? $mine['status'] : '' );
 		}
 		// Schools in the viewer's own area first, otherwise newest first.
 		$order = array_keys( $out );
@@ -191,7 +204,7 @@ final class AIADN_Find {
 		$us    = AIADN_Schools::get( $school_id );
 		$owner = AIADN_Debates::owner( $debate, 'a' );
 		if ( $owner && $us ) {
-			AIADN_Mailer::send_notice( $owner['email'], $us['name'] . ' would like to debate you', "{$us['name']} has asked to take up your Debate Request ({$debate['code']}) in Find a Debate.\n\nYou choose who you debate. Open the debate to accept or decline. You can see their school name and area, and nothing else about them.\n\n" . AIADN_Debates::url( $debate ) );
+			AIADN_Mailer::send_notice( $owner['email'], $us['name'] . ' would like to debate you', "{$us['name']} has asked to take up your Debate Request ({$debate['code']}) on Join the conversation.\n\nYou choose who you debate. Open the debate to accept or decline. You can see their school name and area, and nothing else about them.\n\n" . AIADN_Debates::url( $debate ) );
 		}
 		return '';
 	}
@@ -219,7 +232,7 @@ final class AIADN_Find {
 		if ( ! $accept ) {
 			$wpdb->update( self::table(), array( 'status' => 'declined', 'decided_at' => AIADN_Util::now() ), array( 'id' => (int) $request['id'] ) ); // phpcs:ignore WordPress.DB
 			if ( $member ) {
-				AIADN_Mailer::send_notice( $member['email'], 'About your request to debate ' . $host['name'], "{$host['name']} has chosen not to go ahead with your request this time.\n\nThere are more requests waiting on Find a Debate:\n\n" . AIADN_Front::url( 'find' ) );
+				AIADN_Mailer::send_notice( $member['email'], 'About your request to debate ' . $host['name'], "{$host['name']} has chosen not to go ahead with your request this time.\n\nThere are more requests waiting on Join the conversation:\n\n" . AIADN_Front::url( 'find' ) );
 			}
 			return true;
 		}
@@ -255,7 +268,7 @@ final class AIADN_Find {
 			$wpdb->update( self::table(), array( 'status' => 'declined', 'decided_at' => AIADN_Util::now() ), array( 'id' => (int) $r['id'] ) ); // phpcs:ignore WordPress.DB
 			$member = AIADN_Schools::get_member( (int) $r['member_id'] );
 			if ( $member ) {
-				AIADN_Mailer::send_notice( $member['email'], 'About your request to debate ' . ( $host['name'] ?? 'a school' ), $why . "\n\nThere are more requests waiting on Find a Debate:\n\n" . AIADN_Front::url( 'find' ) );
+				AIADN_Mailer::send_notice( $member['email'], 'About your request to debate ' . ( $host['name'] ?? 'a school' ), $why . "\n\nThere are more requests waiting on Join the conversation:\n\n" . AIADN_Front::url( 'find' ) );
 			}
 		}
 	}

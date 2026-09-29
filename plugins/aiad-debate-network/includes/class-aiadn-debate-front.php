@@ -29,8 +29,8 @@ class AIADN_Debate_Front {
 		'linked'    => 'The meeting link is updated. The other school and the judge have been told.',
 		'joined'    => 'You have accepted. Once your headteacher has approved the school, everything is confirmed.',
 		'slow'      => 'Too many requests. Please wait a while and try again.',
-		'published' => 'Your request is on Find a Debate. Other schools can now ask to debate you, and you choose.',
-		'unpublished' => 'Your request is off Find a Debate.',
+		'published' => 'Your request is up. Other schools can now ask to debate you, and you choose.',
+		'unpublished' => 'Your request is down.',
 		'request_accepted' => 'You have accepted. It is a match, and we have told the other school.',
 		'request_declined' => 'You have declined. We have told them politely.',
 	);
@@ -538,7 +538,7 @@ class AIADN_Debate_Front {
 				$errors['venue'] = 'Say where it will take place.';
 			}
 			// The address goes into the calendar entry and the judge's directions, so a visitor can find the school.
-			if ( strlen( $values['venue_address'] ) < 10 ) {
+			if ( strlen( $values['venue_address'] ) < 10 || ! preg_match( '/\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/i', $values['venue_address'] ) ) {
 				$errors['venue_address'] = 'Add the full address with the postcode, so the judge can find you and the calendar entry has it.';
 			}
 		} elseif ( 'online' === $values['format'] ) {
@@ -739,9 +739,9 @@ class AIADN_Debate_Front {
 
 	/** Option 3: put the debate on Find a Debate, and answer the schools that ask. */
 	private static function render_find_panel( array $debate, array $session, array $errors, array $v ): string {
-		$h = '<h3>Option 3: Find a Debate</h3>';
+		$h = '<h3>Option 3: Join the conversation</h3>';
 		if ( (int) $debate['open_request'] ) {
-			$h .= '<p>Your request is on Find a Debate: <strong>' . esc_html( AIADN_Motions::AGES[ $debate['age_group'] ] ?? '' ) . '</strong>, <strong>' . esc_html( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . '</strong>. ' . esc_html( $debate['req_dates'] ) . '</p>';
+			$h .= '<p>Your request is up: <strong>' . esc_html( AIADN_Motions::AGES[ $debate['age_group'] ] ?? '' ) . '</strong>, <strong>' . esc_html( AIADN_Motions::THEMES[ $debate['theme'] ] ?? '' ) . '</strong>. ' . esc_html( $debate['req_dates'] ) . '</p>';
 			$pending = AIADN_Find::requests_for_debate( (int) $debate['id'] );
 			if ( $pending ) {
 				$h .= '<p><strong>' . count( $pending ) . ' school' . ( 1 === count( $pending ) ? '' : 's' ) . ' would like to debate you.</strong> You choose. Accepting one tells the others it is taken.</p>';
@@ -755,7 +755,7 @@ class AIADN_Debate_Front {
 			} else {
 				$h .= '<p class="aiadn__small">No school has asked yet. We will email you when one does.</p>';
 			}
-			return $h . self::form_open( $debate, 'unpublish_request' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Take it off Find a Debate</button></form>';
+			return $h . self::form_open( $debate, 'unpublish_request' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Take it down</button></form>';
 		}
 		$phases  = array_filter( explode( ',', (string) $session['school']['age_phases'] ) );
 		$val     = static fn( string $k, string $d = '' ): string => (string) ( $v[ $k ] ?? $d );
@@ -769,14 +769,14 @@ class AIADN_Debate_Front {
 			$h .= '<option value="' . esc_attr( $key ) . '"' . selected( $val( 'theme', (string) $debate['theme'] ), $key, false ) . '>' . esc_html( $label ) . '</option>';
 		}
 		$h .= '</select><label for="f-dates">When suits <span class="aiadn__opt">(for example: any Tuesday in February)</span></label><input id="f-dates" name="req_dates" type="text" maxlength="200" value="' . esc_attr( $val( 'req_dates' ) ) . '">';
-		foreach ( array( 'req_format' => array( 'Online or in person', AIADN_Find::FORMATS ), 'req_host' => array( 'Hosting', AIADN_Find::HOST ), 'req_travel' => array( 'Travel', AIADN_Find::TRAVEL ) ) as $name => $set ) {
+		foreach ( array( 'req_format' => array( 'Online or in person', AIADN_Find::FORMATS ), 'req_host' => array( 'Hosting', AIADN_Find::HOST ), 'req_travel' => array( 'Who can ask', AIADN_Find::TRAVEL ) ) as $name => $set ) {
 			$h .= '<label for="f-' . esc_attr( $name ) . '">' . esc_html( $set[0] ) . '</label><select id="f-' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '">';
 			foreach ( $set[1] as $key => $label ) {
 				$h .= '<option value="' . esc_attr( $key ) . '"' . selected( $val( $name, 'either' === $key || 'region' === $key ? $key : '' ), $key, false ) . '>' . esc_html( $label ) . '</option>';
 			}
 			$h .= '</select>';
 		}
-		return $h . self::err( $errors, 'find' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Put it on Find a Debate</button></form>';
+		return $h . self::err( $errors, 'find' ) . '<button class="aiadn__button aiadn__button--quiet" type="submit">Put it up</button></form>';
 	}
 
 	private static function render_pack( array $debate, string $side, bool $can_act ): string {
@@ -858,8 +858,8 @@ class AIADN_Debate_Front {
 		}
 		$h .= '</fieldset>' . self::err( $errors, 'format' );
 		$h .= '<div data-for="in_person"><label for="p-venue">Venue</label><input id="p-venue" name="venue" type="text" value="' . esc_attr( (string) ( $v['venue'] ?? '' ) ) . '" placeholder="e.g. the school hall">' . self::err( $errors, 'venue' );
-		$h .= '<label for="p-addr">Address <span class="aiadn__opt">(street, town and postcode)</span></label><input id="p-addr" name="venue_address" type="text" value="' . esc_attr( (string) ( $v['venue_address'] ?? '' ) ) . '" autocomplete="street-address" placeholder="e.g. 12 High Street, Leeds, LS6 2AB">' . self::err( $errors, 'venue_address' );
-		$h .= '<p class="aiadn__hint">This goes in the calendar entry and gives the judge directions, so please give the school\'s full address, not just the room.</p></div>';
+		$h .= '<label for="p-addr">Address <span class="aiadn__opt">(street, town and postcode)</span></label><input id="p-addr" name="venue_address" type="text" value="' . esc_attr( (string) ( $v['venue_address'] ?? ( $session['school']['name'] . ', ' . $session['school']['postcode'] ) ) ) . '" autocomplete="street-address" placeholder="e.g. 12 High Street, Leeds, LS6 2AB">' . self::err( $errors, 'venue_address' );
+		$h .= '<p class="aiadn__hint">This goes in the calendar entry and gives the judge directions, so please give the full address, not just the room. We have started it with your school\'s name and the postcode you registered with: add the street and town, or change it if you are hosting somewhere else.</p></div>';
 		$h .= '<div data-for="online"><label for="p-ics">Upload the calendar file from your meeting (.ics)</label><input id="p-ics" name="meeting_ics" type="file" accept=".ics,text/calendar">';
 		$h .= '<p class="aiadn__hint">Create the meeting in Teams, Meet or Zoom, download its calendar file (.ics) and upload it here. We take the join link from it, so on the day everyone joins from this site and nobody has to search their email. We do not keep the file.</p>';
 		$h .= '<label for="p-link">Or paste the meeting link</label><input id="p-link" name="meeting_url" type="url" inputmode="url" value="' . esc_attr( (string) ( $v['meeting_url'] ?? '' ) ) . '" placeholder="https://teams.microsoft.com/...">' . self::err( $errors, 'meeting_url' );

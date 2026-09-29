@@ -261,7 +261,7 @@ class AIADN_Programme_Front {
 		$fs   = AIADN_Find::summary();
 		$body = self::tiles( array( 'Open requests now' => $fs['open'], 'Asks waiting' => $fs['pending'], 'Accepted' => $fs['accepted'], 'Declined' => $fs['declined'], 'Withdrawn' => $fs['withdrawn'] ) );
 		$body .= '<p class="aiadn__small">Schools without an opponent publish a request; another school asks and the host chooses. Counts only.</p>';
-		$h    .= AIADN_Result_Front::fold( 'Find a Debate', $body, false );
+		$h    .= AIADN_Result_Front::fold( 'Join the conversation', $body, false );
 
 		// Email check.
 		$route = AIADN_Mailer::route();

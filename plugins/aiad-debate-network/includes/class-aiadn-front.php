@@ -911,7 +911,7 @@ class AIADN_Front {
 			$h .= '</tbody></table>';
 		}
 		if ( in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
-			$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_debate"><button class="aiadn__button" type="submit">Start a new debate</button></form><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'find' ) ) . '">Find a Debate</a></p>';
+			$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_debate"><button class="aiadn__button" type="submit">Start a new debate</button></form><p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'find' ) ) . '">Join the conversation</a></p>';
 		}
 		return $h . '</div>';
 	}

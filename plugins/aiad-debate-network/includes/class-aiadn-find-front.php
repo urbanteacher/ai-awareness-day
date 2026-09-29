@@ -19,7 +19,7 @@ class AIADN_Find_Front {
 	}
 
 	public static function view_find(): string {
-		AIADN_Front::set_title( 'Find a Debate' );
+		AIADN_Front::set_title( 'Join the conversation' );
 		$session = AIADN_Auth::current();
 		if ( ! $session || ! in_array( $session['role'], array( 'lead', 'teacher' ), true ) || 'approved' !== $session['school']['status'] ) {
 			AIADN_Front::redirect( 'join', array( 'msg' => 'signin' ) );
@@ -51,44 +51,31 @@ class AIADN_Find_Front {
 		$home    = AIADN_Regions::for_postcode( (string) $session['school']['postcode'] );
 		$notes   = array( 'asked' => 'We have told them. You will get an email when they decide.', 'withdrawn' => 'Withdrawn.' );
 
-		$h  = '<h1>Find a Debate</h1>';
+		$h  = '<h1>Join the conversation</h1>';
 		$h .= '<p class="aiadn__small"><a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">&larr; Your school</a></p>';
 		$h .= AIADN_Front::notice( $notes[ AIADN_Front::get( 'msg' ) ] ?? '', 'info' ) . AIADN_Front::notice( $error, 'error' );
-		$h .= '<p>Schools looking for an opponent. Schools in your own area come first, and you can filter by area. Ask to debate one and they choose. They see your school name and area, and nothing else about you.</p>';
+		$h .= '<p>Schools looking for an opponent. Ask to debate one and they choose. They see your school name and region, and nothing else about you.</p>';
 
-		// Filters.
-		$h .= '<form method="get" action="' . esc_url( AIADN_Front::url( 'find' ) ) . '" class="aiadn__form aiadn__form--row"><label for="fl-age" class="aiadn__sr">Age group</label><select id="fl-age" name="age"><option value="">Any age group</option>';
-		foreach ( AIADN_Motions::AGES as $k => $label ) {
-			$h .= '<option value="' . esc_attr( $k ) . '"' . selected( $filters['age'], $k, false ) . '>' . esc_html( $label ) . '</option>';
-		}
-		$h .= '</select><label for="fl-theme" class="aiadn__sr">Theme</label><select id="fl-theme" name="theme"><option value="">Any theme</option>';
-		foreach ( AIADN_Motions::THEMES as $k => $label ) {
-			$h .= '<option value="' . esc_attr( $k ) . '"' . selected( $filters['theme'], $k, false ) . '>' . esc_html( $label ) . '</option>';
-		}
-		$h .= '</select><label for="fl-region" class="aiadn__sr">Area</label><select id="fl-region" name="region"><option value="">Any area</option>';
-		foreach ( array_keys( AIADN_Regions::AREAS ) as $r ) {
-			$h .= '<option value="' . esc_attr( $r ) . '"' . selected( $filters['region'], $r, false ) . '>' . esc_html( $r . ( $r === $home ? ' (yours)' : '' ) ) . '</option>';
-		}
-		$h .= '</select><label for="fl-format" class="aiadn__sr">Format</label><select id="fl-format" name="format"><option value="">Online or in person</option>';
-		foreach ( AIADN_Motions::FORMATS as $k => $label ) {
-			$h .= '<option value="' . esc_attr( $k ) . '"' . selected( $filters['format'], $k, false ) . '>' . esc_html( $label ) . '</option>';
-		}
-		$h .= '</select><button class="aiadn__button aiadn__button--quiet" type="submit">Filter</button></form>';
+		// One switch: my region, or everywhere. The region is worked out from each school's registered postcode.
+		$all = 'all' === AIADN_Front::get( 'where' );
+		$h  .= '<p>';
+		$h  .= $all ? '<a class="aiadn__button aiadn__button--quiet" href="' . esc_url( AIADN_Front::url( 'find' ) ) . '">In my region: ' . self::esc( $home ) . '</a> <strong>Everywhere</strong>' : '<strong>In my region: ' . self::esc( $home ) . '</strong> <a class="aiadn__button aiadn__button--quiet" href="' . esc_url( AIADN_Front::url( 'find', array( 'where' => 'all' ) ) ) . '">Everywhere</a>';
+		$h  .= '</p>';
 
-		$board = AIADN_Find::board( $school_id, $filters );
+		$board = AIADN_Find::board( $school_id, array_merge( $filters, array( 'all' => $all ? '1' : '' ) ) );
 		if ( ! $board ) {
-			$h .= '<div class="aiadn__panel"><p>No open requests match. Try fewer filters, or put your own request on Find a Debate from a debate that is waiting for an opponent.</p></div>';
+			$h .= '<div class="aiadn__panel"><p>No open requests in your region yet. Try Everywhere, or put your own request up from a debate that is waiting for an opponent.</p></div>';
 		}
 		foreach ( $board as $card ) {
 			$d  = $card['debate'];
-			$h .= '<div class="aiadn__panel aiadn__q--' . esc_attr( $d['theme'] ) . '"><h2>' . self::esc( $card['school']['name'] ) . '</h2>' . ( $card['near'] ? '<p class="aiadn__eyebrow">In your area</p>' : '' ) . '<dl class="aiadn__details">';
-			$h .= '<dt>Area</dt><dd>' . self::esc( $card['region'] ) . '</dd>';
+			$h .= '<div class="aiadn__panel aiadn__q--' . esc_attr( $d['theme'] ) . '"><h2>' . self::esc( $card['school']['name'] ) . '</h2>' . ( $card['near'] ? '<p class="aiadn__eyebrow">In your region</p>' : '' ) . '<dl class="aiadn__details">';
+			$h .= '<dt>Region</dt><dd>' . self::esc( $card['region'] ) . '</dd>';
 			$h .= '<dt>Age group</dt><dd>' . self::esc( AIADN_Motions::AGES[ $d['age_group'] ] ?? '' ) . '</dd>';
 			$h .= '<dt>Theme</dt><dd>' . self::esc( AIADN_Motions::THEMES[ $d['theme'] ] ?? '' ) . '</dd>';
 			$h .= '<dt>When suits</dt><dd>' . self::esc( $d['req_dates'] ) . '</dd>';
 			$h .= '<dt>Format</dt><dd>' . self::esc( AIADN_Find::FORMATS[ $d['req_format'] ] ?? '' ) . '</dd>';
 			$h .= '<dt>Hosting</dt><dd>' . self::esc( AIADN_Find::HOST[ $d['req_host'] ] ?? '' ) . '</dd>';
-			$h .= '<dt>Travel</dt><dd>' . self::esc( AIADN_Find::TRAVEL[ $d['req_travel'] ] ?? '' ) . '</dd></dl>';
+			$h .= '<dt>Open to</dt><dd>' . self::esc( AIADN_Find::TRAVEL[ $d['req_travel'] ] ?? AIADN_Find::TRAVEL['region'] ) . '</dd></dl>';
 			if ( '' !== $card['asked'] ) {
 				$h .= '<p><strong>' . self::esc( 'pending' === $card['asked'] ? 'You have asked. Waiting for their answer.' : ( 'declined' === $card['asked'] ? 'They chose not to go ahead this time.' : 'You asked about this one.' ) ) . '</strong></p>';
 			} else {

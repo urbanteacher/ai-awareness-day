@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-End-to-end test for the Debate Network plugin, slice 8: Find a Debate.
+End-to-end test for the Debate Network plugin, slice 8: Join the conversation.
 
 A school with no opponent puts a request on the board. Other schools ask, the host chooses, and the normal
 debate flow starts. Nobody's name or email is shown to another school.
@@ -23,10 +23,10 @@ mails, mail_clear, link_for = e2e.mails, e2e.mail_clear, e2e.link_for
 sql, RUN = s3.sql, s3.RUN
 U = RUN.upper()
 
-REQ = dict(age_group="primary", theme="creative", req_dates="Any Tuesday in February", req_format="either", req_host="yes", req_travel="region")
+REQ = dict(age_group="primary", theme="creative", req_dates="Any Tuesday in February", req_format="either", req_host="yes", req_travel="anywhere")
 
 
-def board(school, query=""):
+def board(school, query="?where=all"):
     s, html, _ = school["browser"].get(f"{SITE}/conversation/find/{query}")
     return html
 
@@ -81,13 +81,13 @@ def run(admin_login):
     s, _, _ = st.get(f"{SITE}/conversation/find/", follow=False)
     check("a student is sent away too", s == 302)
     s, html, _ = A["browser"].get(f"{SITE}/conversation/school/")
-    check("a school's page links to Find a Debate", "conversation/find" in html)
-    check("the board says schools see names and areas only", "nothing else about you" in board(A))
+    check("a school's page links to Join the conversation", "conversation/find" in html)
+    check("the board says schools see names and regions only", "nothing else about you" in board(A))
 
     print("\n2. Putting a request on the board")
     d1 = s2.new_debate(A)
     s, html, _ = s2.page(A["browser"], d1)
-    check("a debate waiting for an opponent offers Find a Debate as an option", "Option 3: Find a Debate" in html and "They never see anyone" in html)
+    check("a debate waiting for an opponent offers Join the conversation as an option", "Option 3: Join the conversation" in html and "They never see anyone" in html)
     s, html, _ = s2.act(A["browser"], d1, "publish_request", **{**REQ, "theme": ""})
     check("a theme is required", "Choose a theme" in html and status(d1) == "awaiting_opponent")
     s, html, _ = s2.act(A["browser"], d1, "publish_request", **{**REQ, "req_dates": "x"})
@@ -95,30 +95,31 @@ def run(admin_login):
     s, html, _ = s2.act(A["browser"], d1, "publish_request", **{**REQ, "req_host": "maybe"})
     check("and a valid choice for hosting", "Choose an option" in html)
     s, html, _ = s2.act(A["browser"], d1, "publish_request", **REQ)
-    check("a good request goes on the board", "on Find a Debate" in html and sql(f"SELECT open_request FROM wp_aiadn_debates WHERE code='{d1}'") == "1")
+    check("a good request goes on the board", "Your request is up" in html and sql(f"SELECT open_request FROM wp_aiadn_debates WHERE code='{d1}'") == "1")
 
     print("\n3. What other schools see")
     html = board(B)
-    check("the card names the school and its area, and what it is looking for", A["name"] in html and "Yorkshire and The Humber" in html and "Any Tuesday in February" in html and "CREATIVE" in html and "Primary" in html and "We can host" in html and "Within our region" in html)
+    check("the card names the school and its area, and what it is looking for", A["name"] in html and "Yorkshire and The Humber" in html and "Any Tuesday in February" in html and "CREATIVE" in html and "Primary" in html and "We can host" in html and "Any school" in html)
     check("no teacher name, email or code is shown", "Test Teacher" not in html and A["teacher"] not in html and A["slt"] not in html and A["code"] not in html)
     check("a school does not see its own request on the board", A["name"] not in board(A).split("Waiting for an answer")[0] or "No open requests" in board(A))
-    check("the theme filter works", A["name"] not in board(B, "?theme=safe") and A["name"] in board(B, "?theme=creative"))
-    check("the age filter works", A["name"] not in board(B, "?age=secondary") and A["name"] in board(B, "?age=primary"))
-    check("an 'either' request shows for online and for in person", A["name"] in board(B, "?format=online") and A["name"] in board(B, "?format=in_person"))
-
-    print("\n3b. Finding schools in your own area")
+    print("\n3b. My region, or everywhere")
     E = s2.make_school("ee", f"Elm Primary {U}", "EH2 2AA")
     check("a fifth school, in Scotland", E["ok"])
-    dE, _ = publish(E)
-    html = board(D)
-    check("a school in your own area is marked and comes first", "In your area" in html and html.index(E["name"]) < html.index(A["name"]), "order")
-    check("schools in other areas are not marked as near", ("<h2>" + E["name"] + "</h2><p class=\"aiadn__eyebrow\">In your area") in html and ("<h2>" + A["name"] + "</h2><dl") in html)
-    check("the area filter offers every region, and marks yours", '<option value="Scotland" selected' not in html and "Scotland (yours)" in html and "London" in html)
-    check("filtering by Scotland shows only Scottish schools", E["name"] in board(D, "?region=Scotland") and A["name"] not in board(D, "?region=Scotland"))
-    check("filtering by Yorkshire shows the Yorkshire school and hides the rest", A["name"] in board(B, "?region=Yorkshire%20and%20The%20Humber") and E["name"] not in board(B, "?region=Yorkshire%20and%20The%20Humber"))
-    check("an area with nothing in it says so", "No open requests match" in board(B, "?region=London"))
-    check("the area is worked out from the postcode, not stored", "region" not in sql("SHOW COLUMNS FROM wp_aiadn_schools").lower())
+    dE, _ = publish(E, req_travel="region")
+    check("by default a school sees only its own region", A["name"] not in board(B, "") and "In my region: North West" in board(B, ""))
+    check("Everywhere shows requests open to any school", A["name"] in board(B, "?where=all"))
+    check("a request kept to its own region is seen from that region, and marked", E["name"] in board(D, "") and ("<h2>" + E["name"] + "</h2><p class=\"aiadn__eyebrow\">In your region") in board(D, ""))
+    check("but not from another region, even under Everywhere", E["name"] not in board(A, "?where=all") and E["name"] not in board(B, "?where=all"))
+    check("an empty region says so and points to Everywhere", "No open requests in your region yet" in board(C, ""))
+    check("the region is worked out from the postcode, not stored", "region" not in sql("SHOW COLUMNS FROM wp_aiadn_schools").lower())
     s2.act(E["browser"], dE, "unpublish_request")
+    dO, _ = publish(C, req_format="online", req_travel="anywhere")
+    check("an online request open to any school shows in the default view, from another region", C["name"] in board(D, "") and C["name"] in board(A, ""))
+    check("and is marked as online", "<dd>Online</dd>" in board(D, "").split("<h2>" + C["name"] + "</h2>")[1].split("</dl>")[0])
+    dO2, _ = publish(C, req_format="online", req_travel="region")
+    check("an online request kept to the host's region is still kept to it (only the open one shows)", board(D, "?where=all").count("<h2>" + C["name"] + "</h2>") == 1, str(board(D, "?where=all").count("<h2>" + C["name"] + "</h2>")))
+    s2.act(C["browser"], dO2, "unpublish_request")
+    s2.act(C["browser"], dO, "unpublish_request")
 
     print("\n4. Asking")
     mail_clear()
@@ -150,6 +151,13 @@ def run(admin_login):
     check("the losing ask is closed", req_status(d1, B) == "declined" and req_status(d1, C) == "accepted")
     s, html, _ = s2.page(A["browser"], d1)
     check("the normal flow carries on: the proposal form starts with the age group and theme asked for", 'value="primary" checked' in html and re.search(r'<option value="creative"[^>]*selected', html) is not None)
+
+    print("\n5b. The venue starts from the registered postcode")
+    check("the address is started with the school's name and the postcode it registered with", ('value="' + A["name"] + ', LS6 2AB"') in html, "prefill")
+    s, html2, _ = s2.act(A["browser"], d1, "propose", **s2.fixture(venue="The hall", venue_address="The hall, Leeds", j_email=f"judge98@judges{RUN}.example"))
+    check("an address without a postcode is refused, so the calendar entry always has one", "postcode" in html2 and status(d1) == "matched")
+    s, html2, _ = s2.act(A["browser"], d1, "propose", **s2.fixture(venue="The hall", venue_address=f"{A['name']}, 12 High Street, Leeds, LS6 2AB", j_email=f"judge98@judges{RUN}.example"))
+    check("with the postcode it goes through", status(d1) == "proposed")
 
     print("\n6. Declining, and asking again after withdrawing")
     d2, _ = publish(A)
@@ -210,8 +218,8 @@ def run(admin_login):
     print("\n9. For the programme team")
     admin, st, h = s6.wp_login(admin_login)
     s, html, _ = admin.get(f"{SITE}/conversation/programme/")
-    check("the programme page counts Find a Debate", "Find a Debate" in html and "Open requests now" in html and "Accepted" in html)
-    check("and names no school in that section", A["name"] not in html.split("Find a Debate")[1].split("Email check")[0])
+    check("the programme page counts Join the conversation", "Join the conversation" in html and "Open requests now" in html and "Accepted" in html)
+    check("and names no school in that section", A["name"] not in html.split("Join the conversation")[1].split("Email check")[0])
 
 
 if __name__ == "__main__":
