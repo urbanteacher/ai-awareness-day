@@ -417,6 +417,9 @@ class AIADN_Debate_Front {
 		$h .= self::flash( AIADN_Front::get( 'msg' ) );
 		$h .= self::render_tracker( $debate, $school_id );
 
+		if ( 'expired' === $status ) {
+			return $h . '<div class="aiadn__panel"><h2>Closed</h2><p>Nothing happened for 14 days, so this debate closed. You can start a new debate from <a href="' . esc_url( AIADN_Front::url( 'school' ) ) . '">your school page</a>, and invite the same school or a different one.</p></div>' . self::render_details( $debate, $school_id );
+		}
 		if ( 'cancelled' === $status ) {
 			return $h . '<div class="aiadn__panel"><h2>Cancelled</h2><p>This debate was cancelled.</p></div>' . ( 'cancelled' === $status ? self::render_details( $debate, $school_id ) : '' );
 		}

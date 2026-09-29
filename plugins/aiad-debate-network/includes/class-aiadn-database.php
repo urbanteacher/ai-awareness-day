@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 3;
+	const DB_VERSION = 5;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -39,6 +39,7 @@ class AIADN_Database {
 		$issues  = self::table( 'issues' );
 		$certs   = self::table( 'certificates' );
 		$ratings = self::table( 'ratings' );
+		$voice   = self::table( 'voice' );
 
 		$sql = array();
 
@@ -118,6 +119,8 @@ class AIADN_Database {
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			school_id bigint(20) unsigned NOT NULL,
 			pin varchar(4) NOT NULL DEFAULT '',
+			purpose varchar(10) NOT NULL DEFAULT 'general',
+			debate_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			created_by bigint(20) unsigned NOT NULL DEFAULT 0,
 			expires_at datetime NOT NULL,
 			created_at datetime NOT NULL,
@@ -146,6 +149,8 @@ class AIADN_Database {
 			starts_at datetime DEFAULT NULL,
 			proposed_by bigint(20) unsigned NOT NULL DEFAULT 0,
 			judge_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			stage_at datetime DEFAULT NULL,
+			reminders_sent tinyint(3) unsigned NOT NULL DEFAULT 0,
 			checklist_a text,
 			checklist_b text,
 			created_at datetime NOT NULL,
@@ -266,6 +271,28 @@ class AIADN_Database {
 			created_at datetime NOT NULL,
 			PRIMARY KEY  (id),
 			UNIQUE KEY one_each (debate_id,school_id,who)
+		) {$charset};";
+
+		// Student Voice answers. Anonymous by design: no name, no email, no IP, no way back to a student.
+		// 1 = agree, 2 = not sure, 3 = disagree. phase is general, before or after a debate.
+		$sql[] = "CREATE TABLE {$voice} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			school_id bigint(20) unsigned NOT NULL,
+			pin_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			debate_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			phase varchar(10) NOT NULL DEFAULT 'general',
+			year_group varchar(10) NOT NULL DEFAULT '',
+			q_safe tinyint(3) unsigned NOT NULL DEFAULT 0,
+			q_smart tinyint(3) unsigned NOT NULL DEFAULT 0,
+			q_creative tinyint(3) unsigned NOT NULL DEFAULT 0,
+			q_responsible tinyint(3) unsigned NOT NULL DEFAULT 0,
+			q_planet tinyint(3) unsigned NOT NULL DEFAULT 0,
+			q_future tinyint(3) unsigned NOT NULL DEFAULT 0,
+			created_at datetime NOT NULL,
+			PRIMARY KEY  (id),
+			KEY school_phase (school_id,phase),
+			KEY pin_id (pin_id),
+			KEY debate_id (debate_id)
 		) {$charset};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

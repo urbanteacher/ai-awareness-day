@@ -558,7 +558,7 @@ class AIADN_Result_Front {
 		foreach ( (array) $snap as $row ) {
 			$h .= '<li>' . self::esc( $row['opponent'] ?? '' ) . ', ' . self::esc( AIADN_Util::show( (string) ( $row['date'] ?? '' ), 'j M Y' ) ) . ', ' . self::esc( AIADN_Motions::THEMES[ $row['theme'] ?? '' ] ?? '' ) . '</li>';
 		}
-		$h .= '</ul><p class="aiadn__cert-strands">SAFE &middot; SMART &middot; CREATIVE &middot; RESPONSIBLE &middot; FUTURE</p><p class="aiadn__cert-ref">Reference: <strong>' . self::esc( $cert['reference'] ) . '</strong><br>Check it at ' . self::esc( $check ) . '</p></div>';
+		$h .= '</ul><p class="aiadn__cert-strands">SAFE &middot; SMART &middot; CREATIVE &middot; RESPONSIBLE &middot; FUTURE</p><div class="aiadn__cert-qr">' . AIADN_QR::svg( $check, 'QR code that checks this certificate' ) . '</div><p class="aiadn__cert-ref">Reference: <strong>' . self::esc( $cert['reference'] ) . '</strong><br>Scan the code, or check it at ' . self::esc( $check ) . '</p></div>';
 		$h .= '<button class="aiadn__button aiadn__noprint" type="button" onclick="window.print()">Print certificate</button>';
 		return $h;
 	}

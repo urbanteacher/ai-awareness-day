@@ -137,15 +137,15 @@ class AIADN_Auth {
 	/* Class PINs                                                          */
 	/* ------------------------------------------------------------------ */
 
-	/** @return array{pin:string,expires_at:string}|null */
+	/** @return array<string,mixed>|null the running PIN's row (id, pin, purpose, debate_id, expires_at) */
 	public static function current_pin( int $school_id ): ?array {
 		global $wpdb;
-		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT pin, expires_at FROM ' . AIADN_Database::table( 'class_pins' ) . ' WHERE school_id = %d AND expires_at > %s ORDER BY id DESC LIMIT 1', $school_id, AIADN_Util::now() ), ARRAY_A ); // phpcs:ignore WordPress.DB
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . AIADN_Database::table( 'class_pins' ) . ' WHERE school_id = %d AND expires_at > %s ORDER BY id DESC LIMIT 1', $school_id, AIADN_Util::now() ), ARRAY_A ); // phpcs:ignore WordPress.DB
 		return $row ?: null;
 	}
 
 	/** Start a new class PIN. The old one stops working straight away. */
-	public static function new_pin( int $school_id, int $member_id ): array {
+	public static function new_pin( int $school_id, int $member_id, string $purpose = 'general', int $debate_id = 0 ): array {
 		global $wpdb;
 		$table = AIADN_Database::table( 'class_pins' );
 		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET expires_at = %s WHERE school_id = %d AND expires_at > %s", AIADN_Util::now(), $school_id, AIADN_Util::now() ) ); // phpcs:ignore WordPress.DB
@@ -157,6 +157,8 @@ class AIADN_Auth {
 			array(
 				'school_id'  => $school_id,
 				'pin'        => $pin,
+				'purpose'    => $purpose,
+				'debate_id'  => $debate_id,
 				'created_by' => $member_id,
 				'expires_at' => $expires,
 				'created_at' => AIADN_Util::now(),
@@ -166,8 +168,19 @@ class AIADN_Auth {
 	}
 
 	public static function pin_matches( int $school_id, string $pin ): bool {
+		return null !== self::pin_row_matching( $school_id, $pin );
+	}
+
+	/** The running PIN's row if this is the right PIN, so a student's session can point at it. */
+	public static function pin_row_matching( int $school_id, string $pin ): ?array {
 		$current = self::current_pin( $school_id );
-		return $current && hash_equals( $current['pin'], preg_replace( '/\D/', '', $pin ) );
+		return ( $current && hash_equals( (string) $current['pin'], preg_replace( '/\D/', '', $pin ) ) ) ? $current : null;
+	}
+
+	public static function get_pin( int $id ): ?array {
+		global $wpdb;
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . AIADN_Database::table( 'class_pins' ) . ' WHERE id = %d', $id ), ARRAY_A ); // phpcs:ignore WordPress.DB
+		return $row ?: null;
 	}
 
 	/* ------------------------------------------------------------------ */

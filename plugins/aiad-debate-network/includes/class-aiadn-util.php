@@ -150,6 +150,17 @@ class AIADN_Util {
 		return (string) apply_filters( 'aiadn_client_ip', $ip );
 	}
 
+	/** Has this bucket already reached its limit? Does not count anything. */
+	public static function exhausted( string $bucket, int $max ): bool {
+		$data = get_transient( 'aiadn_rl_' . md5( $bucket ) );
+		return is_array( $data ) && $data[0] >= $max;
+	}
+
+	/** Count one failure against a bucket (used where only wrong guesses should count). */
+	public static function record( string $bucket, int $window ): void {
+		self::allow( $bucket, PHP_INT_MAX, $window );
+	}
+
 	/**
 	 * Count an attempt against a bucket. Returns false once the limit is reached.
 	 *

@@ -28,6 +28,7 @@ class AIADN_Debates {
 		'completed'           => 'Result in',
 		'void'                => 'Void',
 		'cancelled'           => 'Cancelled',
+		'expired'             => 'Expired',
 	);
 
 	/* ------------------------------------------------------------------ */
@@ -126,6 +127,7 @@ class AIADN_Debates {
 					'school_a_id' => $school_a_id,
 					'a_member_id' => $member_id,
 					'status'      => 'awaiting_opponent',
+					'stage_at'    => $now,
 					'created_at'  => $now,
 					'updated_at'  => $now,
 				)
@@ -142,6 +144,11 @@ class AIADN_Debates {
 	public static function update( int $id, array $fields ): void {
 		global $wpdb;
 		$fields['updated_at'] = AIADN_Util::now();
+		if ( isset( $fields['status'] ) ) {
+			// A change of stage restarts the reminder clock.
+			$fields['stage_at']       = AIADN_Util::now();
+			$fields['reminders_sent'] = 0;
+		}
 		$wpdb->update( AIADN_Database::table( 'debates' ), $fields, array( 'id' => $id ) ); // phpcs:ignore WordPress.DB
 	}
 
@@ -192,10 +199,11 @@ class AIADN_Debates {
 	public static function claim_slot( int $debate_id, int $school_b_id, int $member_b_id, string $new_status ): bool {
 		global $wpdb;
 		$done = $wpdb->query( $wpdb->prepare( // phpcs:ignore WordPress.DB
-			'UPDATE ' . AIADN_Database::table( 'debates' ) . " SET school_b_id = %d, b_member_id = %d, status = %s, updated_at = %s WHERE id = %d AND status = 'awaiting_opponent' AND school_a_id <> %d",
+			'UPDATE ' . AIADN_Database::table( 'debates' ) . " SET school_b_id = %d, b_member_id = %d, status = %s, updated_at = %s, stage_at = %s, reminders_sent = 0 WHERE id = %d AND status = 'awaiting_opponent' AND school_a_id <> %d",
 			$school_b_id,
 			$member_b_id,
 			$new_status,
+			AIADN_Util::now(),
 			AIADN_Util::now(),
 			$debate_id,
 			$school_b_id
@@ -380,6 +388,12 @@ class AIADN_Debates {
 		self::invite_judge( self::get( (int) $debate['id'] ), self::get_judge( $judge_id ) );
 	}
 
+	/** A fresh shortcut link for a judge. Any earlier link for them stops working. */
+	public static function judge_link( array $debate, array $judge ): string {
+		$token = AIADN_Auth::issue_token( (int) $debate['school_a_id'], 'judge', self::JUDGE_TTL, (int) $judge['id'] );
+		return AIADN_Front::url( 'judge', array( 't' => $token ) );
+	}
+
 	/** Email the judge how to get in: school code + their email, or the shortcut link. */
 	public static function invite_judge( array $debate, array $judge ): bool {
 		global $wpdb;
@@ -427,7 +441,7 @@ class AIADN_Debates {
 
 	public static function judge_involves_school( array $judge, int $school_id ): bool {
 		$debate = self::get( (int) $judge['debate_id'] );
-		return $debate && self::involves( $debate, $school_id ) && 'cancelled' !== $debate['status'];
+		return $debate && self::involves( $debate, $school_id ) && ! in_array( $debate['status'], array( 'cancelled', 'expired' ), true );
 	}
 
 	/** The most recent live judge row for this email at a school, or null. */
@@ -442,7 +456,7 @@ class AIADN_Debates {
 		$j = AIADN_Database::table( 'judges' );
 		$d = AIADN_Database::table( 'debates' );
 		return (array) $wpdb->get_results( $wpdb->prepare( // phpcs:ignore WordPress.DB
-			"SELECT j.* FROM {$j} j INNER JOIN {$d} d ON d.id = j.debate_id WHERE j.email = %s AND j.status IN ('invited','accepted') AND d.status <> 'cancelled' AND (d.school_a_id = %d OR d.school_b_id = %d) ORDER BY d.starts_at ASC, j.id DESC",
+			"SELECT j.* FROM {$j} j INNER JOIN {$d} d ON d.id = j.debate_id WHERE j.email = %s AND j.status IN ('invited','accepted') AND d.status NOT IN ('cancelled','expired') AND (d.school_a_id = %d OR d.school_b_id = %d) ORDER BY d.starts_at ASC, j.id DESC",
 			$email,
 			$school_id,
 			$school_id
@@ -491,10 +505,10 @@ class AIADN_Debates {
 			if ( ( $held || 'void' === $status ) && 'Result' === $label ) {
 				$state     = 'issue';
 				$found_now = true;
-			} elseif ( 'cancelled' === $status && ! $done ) {
+			} elseif ( in_array( $status, array( 'cancelled', 'expired' ), true ) && ! $done ) {
 				$state = $found_now ? 'todo' : 'issue';
 				$found_now = true;
-				$detail = ! $detail && 'issue' === $state ? 'Cancelled' : $detail;
+				$detail = ! $detail && 'issue' === $state ? ( 'expired' === $status ? 'Expired' : 'Cancelled' ) : $detail;
 			} elseif ( $done ) {
 				$state = 'done';
 			} elseif ( ! $found_now ) {

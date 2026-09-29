@@ -247,7 +247,7 @@ def main():
     pin = pin.group(1) if pin else "0000"
     st = Browser()
     s, html, _ = st.post(fd, {"aiadn_action": "front_door", "school_code": school_code, "role": "student", "pin": pin})
-    check("student gets in with school code + PIN", "You are in" in html and school_name in html)
+    check("student gets in with school code + PIN and lands on the survey", "Student Voice" in html and school_name in html)
     s, html, h = Browser().post(fd, {"aiadn_action": "front_door", "school_code": school_code, "role": "student", "pin": "0000" if pin != "0000" else "1111"}, follow=False)
     check("wrong PIN is refused", "msg=nomatch" in loc(h))
     s, html, h = Browser().post(fd, {"aiadn_action": "front_door", "school_code": school_code, "role": "student"}, follow=False)
@@ -277,7 +277,7 @@ def main():
     check("dashboard is closed after sign out", s == 302)
     limiter = Browser()
     hit = False
-    for _ in range(12):
+    for _ in range(20):
         _, _, h = limiter.post(fd, {"aiadn_action": "front_door", "school_code": school_code, "role": "student", "pin": "1234"}, follow=False)
         if "msg=slow" in loc(h):
             hit = True

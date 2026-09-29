@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -42,6 +42,9 @@ class AIADN_Front {
 		'certificate' => 'responsible',
 		'check'    => 'responsible',
 		'debates'  => 'future',
+		'survey'   => 'safe',
+		'voice'    => 'safe',
+		'board'    => 'safe',
 	);
 
 	public static function register(): void {
@@ -105,7 +108,10 @@ class AIADN_Front {
 		}
 
 		self::$strand = self::VIEW_STRANDS[ $view ];
-		$handler      = method_exists( __CLASS__, 'view_' . $view ) ? array( __CLASS__, 'view_' . $view ) : array( 'AIADN_Result_Front', 'view_' . $view );
+		$handler      = array( __CLASS__, 'view_' . $view );
+		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
+			$handler = method_exists( 'AIADN_Result_Front', 'view_' . $view ) ? array( 'AIADN_Result_Front', 'view_' . $view ) : array( 'AIADN_Voice_Front', 'view_' . $view );
+		}
 		$html         = call_user_func( $handler );
 		self::output( $html );
 	}
@@ -281,7 +287,9 @@ class AIADN_Front {
 
 	private static function handle_front_door(): void {
 		$ip = AIADN_Util::client_ip();
-		if ( ! AIADN_Util::allow( 'fd|' . $ip, 30, 600 ) ) {
+		// A whole class shares one school network address, so this is generous. The real protections are
+		// per person (a code goes to an email at most 5 times an hour) and per PIN (wrong guesses, below).
+		if ( ! AIADN_Util::allow( 'fd|' . $ip, 300, 600 ) ) {
 			self::redirect( 'join', array( 'msg' => 'slow' ) );
 		}
 		if ( self::honeypot_tripped() ) {
@@ -293,14 +301,23 @@ class AIADN_Front {
 		$school = $code ? AIADN_Schools::get_by_code( $code ) : null;
 
 		if ( 'student' === $role ) {
-			// Guessing PINs is the only real attack here: 8 tries per school code per 10 minutes.
-			if ( ! AIADN_Util::allow( 'pin|' . $code . '|' . $ip, 8, 600 ) ) {
+			// Guessing PINs is the only real attack here, so only WRONG guesses count: 15 per 10 minutes from one
+			// network, and 60 an hour against one PIN from anywhere. Starting a new PIN starts the count again.
+			// Counting every sign-in would lock a whole class of 30 out of its own lesson.
+			$running   = ( $school && 'approved' === $school['status'] ) ? AIADN_Auth::current_pin( (int) $school['id'] ) : null;
+			$bucket_ip = 'pinfail|ip|' . $code . '|' . $ip;
+			$bucket_pin = 'pinfail|' . ( $running ? (int) $running['id'] : 0 ) . '|' . $code;
+			if ( AIADN_Util::exhausted( $bucket_ip, 15 ) || AIADN_Util::exhausted( $bucket_pin, 60 ) ) {
 				self::redirect( 'join', array( 'msg' => 'slow' ) );
 			}
-			if ( $school && 'approved' === $school['status'] && AIADN_Auth::pin_matches( (int) $school['id'], self::post( 'pin' ) ) ) {
-				AIADN_Auth::start_session( array( 'member_id' => 0, 'school_id' => (int) $school['id'], 'role' => 'student' ), AIADN_Auth::STUDENT_TTL );
-				self::redirect( 'join', array( 'step' => 'student' ) );
+			$pin_row = ( $school && 'approved' === $school['status'] ) ? AIADN_Auth::pin_row_matching( (int) $school['id'], self::post( 'pin' ) ) : null;
+			if ( $pin_row ) {
+				// For students the session's member id is the PIN they used, so their answers can be filed under it.
+				AIADN_Auth::start_session( array( 'member_id' => (int) $pin_row['id'], 'school_id' => (int) $school['id'], 'role' => 'student' ), AIADN_Auth::STUDENT_TTL );
+				self::redirect( 'survey' );
 			}
+			AIADN_Util::record( $bucket_ip, 600 );
+			AIADN_Util::record( $bucket_pin, 3600 );
 			self::redirect( 'join', array( 'msg' => 'nomatch' ) );
 		}
 
@@ -408,6 +425,7 @@ class AIADN_Front {
 	}
 
 	private static function render_student_landing(): string {
+		self::redirect( 'survey' );
 		$session = AIADN_Auth::current();
 		if ( ! $session || 'student' !== $session['role'] ) {
 			self::redirect( 'join', array( 'msg' => 'nomatch' ) );
@@ -573,13 +591,14 @@ class AIADN_Front {
 		$h .= '<label for="r-email">School email</label><input id="r-email" name="email" type="email" value="' . $val( 'email' ) . '" autocomplete="email" required>' . self::field_error( $errors, 'email' );
 		$h .= '<label for="r-slt">Headteacher or SLT email <span class="aiadn__opt">(to approve your school)</span></label><input id="r-slt" name="slt_email" type="email" value="' . $val( 'slt_email' ) . '" required>' . self::field_error( $errors, 'slt_email' );
 		$h .= '<label for="r-partner">Did a partner introduce you? <span class="aiadn__opt">(optional)</span></label><input id="r-partner" name="partner_ref" type="text" value="' . $val( 'partner_ref' ) . '" placeholder="e.g. Apps for Good">';
+		$h .= '<p class="aiadn__small">When a debate is finished, the school names, theme, motion and winner are shown on a public results page. Teacher and student details never are, and the school code is never shown.</p>';
 		$h .= '<label class="aiadn__radio"><input type="checkbox" name="agree" value="1"' . ( ! empty( $v['agree'] ) ? ' checked' : '' ) . '> I agree to the Code of Conduct: challenge the argument, respect the person.</label>' . self::field_error( $errors, 'agree' );
 		$h .= '<button type="submit" class="aiadn__button">Send me a code</button></form>';
 		$h .= '<p class="aiadn__small">Already registered? <a href="' . esc_url( self::url( 'join' ) ) . '">Use the front door</a>.</p>';
 		return $h;
 	}
 
-	private static function send_slt_email( array $school, array $lead ): void {
+	public static function send_slt_email( array $school, array $lead ): void {
 		$token = AIADN_Auth::issue_token( (int) $school['id'], 'slt_approve', AIADN_Auth::SLT_TOKEN_TTL );
 		$url   = self::url( 'approve', array( 't' => $token ) );
 		AIADN_Mailer::send_slt_approval( $school['slt_email'], $lead['name'], $lead['job_title'], $school['name'], $url );
@@ -677,7 +696,7 @@ class AIADN_Front {
 			self::redirect( 'join', array( 'msg' => 'signin' ) );
 		}
 		if ( 'student' === $session['role'] ) {
-			self::redirect( 'join', array( 'step' => 'student' ) );
+			self::redirect( 'survey' );
 		}
 		if ( 'judge' === $session['role'] ) {
 			self::redirect( 'judge' );
@@ -704,7 +723,19 @@ class AIADN_Front {
 				self::redirect( 'join', array( 'msg' => 'signedout' ) );
 			}
 			if ( 'new_pin' === $action && 'approved' === $school['status'] && in_array( $session['role'], array( 'lead', 'teacher' ), true ) ) {
-				AIADN_Auth::new_pin( (int) $school['id'], (int) $session['member_id'] );
+				$purpose   = self::post( 'pin_purpose' );
+				$debate_id = 0;
+				if ( in_array( $purpose, array( 'before', 'after' ), true ) ) {
+					$chosen = AIADN_Debates::get_by_code( AIADN_Util::normalise_debate_code( self::post( 'pin_debate' ) ) );
+					if ( $chosen && AIADN_Debates::involves( $chosen, (int) $school['id'] ) && in_array( $chosen['status'], array( 'agreed', 'ready', 'completed' ), true ) ) {
+						$debate_id = (int) $chosen['id'];
+					} else {
+						$purpose = 'general'; // No valid debate chosen: an ordinary survey.
+					}
+				} else {
+					$purpose = 'general';
+				}
+				AIADN_Auth::new_pin( (int) $school['id'], (int) $session['member_id'], $purpose, $debate_id );
 				self::redirect( 'school', array( 'msg' => 'pin' ) );
 			}
 			if ( 'resend_slt' === $action && 'pending_slt' === $school['status'] && 'lead' === $session['role'] ) {
@@ -752,10 +783,31 @@ class AIADN_Front {
 				$h  .= '<div class="aiadn__panel aiadn__panel--ink"><h2>Class PIN for students</h2>';
 				if ( $pin ) {
 					$h .= '<p class="aiadn__bigcode aiadn__bigcode--pin">' . esc_html( $pin['pin'] ) . '</p><p>Works until about ' . esc_html( self::local_time( $pin['expires_at'] ) ) . '. Starting a new PIN stops this one.</p>';
+					if ( 'general' !== $pin['purpose'] ) {
+						$linked = AIADN_Debates::get( (int) $pin['debate_id'] );
+						$h     .= '<p class="aiadn__small">For the survey ' . esc_html( strtolower( AIADN_Voice::PHASES[ $pin['purpose'] ] ) ) . ( $linked ? ' ' . esc_html( $linked['code'] ) : '' ) . '.</p>';
+					}
+					$h .= '<p><a class="aiadn__button" href="' . esc_url( self::url( 'board' ) ) . '">Show on the whiteboard</a></p>';
 				} else {
 					$h .= '<p>No PIN is running. Start one when the lesson begins and show it on the board.</p>';
 				}
-				$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_pin"><button class="aiadn__button" type="submit">' . ( $pin ? 'Start a new PIN' : 'Start a class PIN' ) . '</button></form></div>';
+				$h .= '<form method="post" action="' . esc_url( self::url( 'school' ) ) . '" class="aiadn__form">' . self::csrf_field() . '<input type="hidden" name="aiadn_action" value="new_pin">';
+				$h .= '<label for="pin-purpose">What is this PIN for?</label><select id="pin-purpose" name="pin_purpose">';
+				foreach ( AIADN_Voice::PHASES as $key => $label ) {
+					$h .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</option>';
+				}
+				$h .= '</select>';
+				$pickable = array_filter( AIADN_Debates::for_school( (int) $school['id'] ), static fn( $d ) => in_array( $d['status'], array( 'agreed', 'ready', 'completed' ), true ) );
+				if ( $pickable ) {
+					$h .= '<label for="pin-debate">Which debate? <span class="aiadn__opt">(for before or after)</span></label><select id="pin-debate" name="pin_debate"><option value="">Choose...</option>';
+					foreach ( $pickable as $d ) {
+						$h .= '<option value="' . esc_attr( $d['code'] ) . '">' . esc_html( $d['code'] . ' v ' . ( AIADN_Schools::get( AIADN_Debates::other_school_id( $d, (int) $school['id'] ) )['name'] ?? '' ) ) . '</option>';
+					}
+					$h .= '</select>';
+				}
+				$h .= '<button class="aiadn__button' . ( $pin ? ' aiadn__button--quiet' : '' ) . '" type="submit">' . ( $pin ? 'Start a new PIN' : 'Start a class PIN' ) . '</button></form>';
+				$count = AIADN_Voice::count( (int) $school['id'] );
+				$h    .= '<p class="aiadn__small"><a href="' . esc_url( self::url( 'voice' ) ) . '">Student Voice results</a>: ' . (int) $count . ' response' . ( 1 === $count ? '' : 's' ) . ( $count < AIADN_Voice::MIN_RESPONSES ? ', results unlock at ' . (int) AIADN_Voice::MIN_RESPONSES : '' ) . '.</p></div>';
 			}
 
 			$h .= self::render_debates_panel( $session );

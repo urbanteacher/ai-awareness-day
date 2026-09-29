@@ -119,6 +119,10 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-certificates.php',
 			'includes/class-aiadn-results.php',
 			'includes/class-aiadn-result-front.php',
+			'includes/class-aiadn-voice.php',
+			'includes/class-aiadn-voice-front.php',
+			'includes/class-aiadn-qr.php',
+			'includes/class-aiadn-reminders.php',
 			'public/aiadn.css',
 		),
 	);
