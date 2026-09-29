@@ -136,7 +136,7 @@
     letter-spacing: 0.14em;
 }
 
-/* Local demo link: small and quiet, but still readable. */
+/* Local demo link: the same colour as the page, so it only shows when you roll over it (or tab to it). */
 .assets-pack__demo {
   margin: 2rem 0 0;
   padding: 0 1rem 1.5rem;
@@ -145,11 +145,12 @@
 }
 
 .assets-pack__demo a {
-  color: var(--a27-dim);
+  color: var(--a27-cream);
   text-decoration: none;
 }
 
 .assets-pack__demo a:hover,
 .assets-pack__demo a:focus-visible {
+  color: var(--a27-dim);
   text-decoration: underline;
 }
