@@ -82,4 +82,5 @@ require_once $aiad_dir . '/inc/ai-risk-benchmark-post.php';
 require_once $aiad_dir . '/inc/benchmark-promo.php';
 require_once $aiad_dir . '/inc/certificate-showcase.php';
 require_once $aiad_dir . '/inc/hub-resource-page.php';
+require_once $aiad_dir . '/inc/national-conversation-page.php';
 require_once $aiad_dir . '/inc/airb-hub-timeline-seed.php';

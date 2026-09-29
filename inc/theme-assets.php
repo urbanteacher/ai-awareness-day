@@ -187,7 +187,12 @@ function aiad_modular_stylesheet_paths(): array {
  * Enqueue modular theme CSS (source of truth — no generated bundles on the live site).
  */
 function aiad_enqueue_modular_theme_styles(): void {
+	$previous_hero = function_exists( 'aiad_homepage_hero_is_previous' ) && aiad_homepage_hero_is_previous();
 	foreach ( aiad_modular_stylesheet_paths() as $file ) {
+		// The previous homepage hero keeps its own stylesheet, so the two never fight over the same selectors.
+		if ( $previous_hero && 'layout/hero-presentation.css' === $file ) {
+			$file = 'layout/hero-previous.css';
+		}
 		$handle    = 'aiad-' . str_replace( array( '/', '.css' ), array( '-', '' ), $file );
 		$file_path = AIAD_DIR . '/assets/css/' . $file;
 		$version   = file_exists( $file_path ) ? (string) filemtime( $file_path ) : AIAD_VERSION;

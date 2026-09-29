@@ -551,7 +551,7 @@ function aiad_get_customizer_defaults(): array {
         'aiad_hero_slogan'        => __( 'Keep Humans in the Loop', 'ai-awareness-day' ),
         'aiad_hero_title'         => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
         'aiad_hero_date'          => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
-        'aiad_event_date_ymd'     => '2027-06-04',
+        'aiad_event_date_ymd'     => '2027-04-29',
         'aiad_show_breadcrumbs'   => false,
         'aiad_hero_subtitle'      => __( 'We are back for 2027. A nationwide day for schools, students, and parents to explore AI together.', 'ai-awareness-day' ),
         'aiad_campaign_title'     => __( 'AI Awareness Day', 'ai-awareness-day' ),
@@ -728,4 +728,69 @@ function aiad_get_hero_partner_marquee_entries(): array {
     }
     wp_reset_postdata();
     return apply_filters( 'aiad_hero_partner_marquee_entries', $out );
+}
+
+/* ------------------------------------------------------------------ */
+/* National AI Conversation hero                                       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A link into the National AI Conversation platform, or '' when that plugin is not running.
+ *
+ * @param string $view register, join, nominate...
+ */
+function aiad_conversation_url( string $view ): string {
+	return class_exists( 'AIADN_Front' ) ? AIADN_Front::url( $view ) : '';
+}
+
+/**
+ * Totals for the hero, from the platform's own counts: schools, debates judged, students reached.
+ * Null until there are enough for the numbers to mean something, so an early site never shows "3 schools".
+ * Cached for ten minutes, because the counts are worked out from several tables.
+ *
+ * @return array{schools:int,debates:int,students:int}|null
+ */
+function aiad_national_conversation_totals(): ?array {
+	if ( ! class_exists( 'AIADN_Stats' ) ) {
+		return null;
+	}
+	$cached = get_transient( 'aiad_nc_totals' );
+	if ( is_array( $cached ) ) {
+		return $cached['ok'] ? $cached['data'] : null;
+	}
+	AIADN_Stats::reset();
+	$f    = AIADN_Stats::figures( null );
+	$min  = defined( 'AIAD_TOTALS_MIN_SCHOOLS' ) ? (int) AIAD_TOTALS_MIN_SCHOOLS : 10;
+	$ok   = (int) $f['approved'] >= $min;
+	$data = array( 'schools' => (int) $f['approved'], 'debates' => (int) $f['counting'], 'students' => (int) $f['students'] );
+	set_transient( 'aiad_nc_totals', array( 'ok' => $ok, 'data' => $data ), 10 * MINUTE_IN_SECONDS );
+	return $ok ? $data : null;
+}
+
+/**
+ * What the hero counts down to: AI Awareness Day itself. The day the conversation opens is stated on the page as
+ * text ("Starting January 2027"), not counted, so one clock never stands for two dates.
+ *
+ * @return array{label:string,ts_ms:int,date:string}|null null once AI Awareness Day has passed
+ */
+function aiad_national_conversation_countdown(): ?array {
+	$defaults = aiad_get_customizer_defaults();
+	$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+	$target   = new DateTimeImmutable( $event . ' 00:00:00', wp_timezone() );
+	if ( time() >= $target->getTimestamp() ) {
+		return null;
+	}
+	return array(
+		'label' => __( 'AI Awareness Day 2027 is in', 'ai-awareness-day' ),
+		'ts_ms' => $target->getTimestamp() * 1000,
+		'date'  => $target->format( 'Y-m-d' ),
+	);
+}
+
+/**
+ * Whether the homepage shows the previous hero instead of the 2027 National Conversation one.
+ * Set in Appearance > Customise > Hero Section > Homepage hero, so the homepage can go back without a theme upload.
+ */
+function aiad_homepage_hero_is_previous(): bool {
+	return 'previous' === get_theme_mod( 'aiad_homepage_hero', 'new' );
 }

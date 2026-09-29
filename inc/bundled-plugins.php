@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_bundled_plugins(): array {
 	return array(
 		'ai-risk-readiness-benchmark' => 'ai-risk-readiness-benchmark.php',
+		'aiad-debate-network'         => 'aiad-debate-network.php',
 	);
 }
 
@@ -105,6 +106,44 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/data/copy-tiers-leader.json',
 			'admin/views/submissions.php',
 			'includes/class-airb-admin.php',
+		),
+		'aiad-debate-network'         => array(
+			'includes/class-aiadn-activator.php',
+			'includes/class-aiadn-auth.php',
+			'includes/class-aiadn-calendar.php',
+			'includes/class-aiadn-certificates.php',
+			'includes/class-aiadn-colleague-front.php',
+			'includes/class-aiadn-database.php',
+			'includes/class-aiadn-debate-front.php',
+			'includes/class-aiadn-debates.php',
+			'includes/class-aiadn-find-front.php',
+			'includes/class-aiadn-find.php',
+			'includes/class-aiadn-format.php',
+			'includes/class-aiadn-front.php',
+			'includes/class-aiadn-golive.php',
+			'includes/class-aiadn-issues.php',
+			'includes/class-aiadn-mailer.php',
+			'includes/class-aiadn-meeting-ics.php',
+			'includes/class-aiadn-motions.php',
+			'includes/class-aiadn-nominate-front.php',
+			'includes/class-aiadn-nominations.php',
+			'includes/class-aiadn-partner-front.php',
+			'includes/class-aiadn-privacy.php',
+			'includes/class-aiadn-programme-front.php',
+			'includes/class-aiadn-qr.php',
+			'includes/class-aiadn-referrals.php',
+			'includes/class-aiadn-regions.php',
+			'includes/class-aiadn-reminders.php',
+			'includes/class-aiadn-result-front.php',
+			'includes/class-aiadn-results.php',
+			'includes/class-aiadn-schools.php',
+			'includes/class-aiadn-scorecards.php',
+			'includes/class-aiadn-snapshot-front.php',
+			'includes/class-aiadn-stats.php',
+			'includes/class-aiadn-util.php',
+			'includes/class-aiadn-voice-front.php',
+			'includes/class-aiadn-voice.php',
+			'public/aiadn.css',
 		),
 	);
 }
@@ -233,6 +272,18 @@ function aiad_load_bundled_plugin_from_theme( string $slug, string $main_file ):
 		if ( shortcode_exists( 'ai_risk_benchmark' ) ) {
 			return false;
 		}
+	}
+
+	if ( 'aiad-debate-network' === $slug ) {
+		if ( class_exists( 'AIADN_Plugin', false ) ) {
+			return false;
+		}
+		require_once $source_main;
+		// Hosting that blocks plugin activation never runs the activator, so make sure the tables exist.
+		if ( class_exists( 'AIADN_Database' ) && ! AIADN_Database::tables_exist() ) {
+			AIADN_Database::create_tables();
+		}
+		return true;
 	}
 
 	require_once $source_main;

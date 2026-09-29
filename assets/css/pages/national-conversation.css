@@ -1,0 +1,1273 @@
+/* ============================================
+   PAGE: THE NATIONAL AI CONVERSATION (/national-conversation/)
+   Palette and type come from the AiAd27 variables. Bright strand colours are grounds and carry ink text;
+   deep colours are ink on cream.
+   ============================================ */
+.ncp {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font-family: var(--s-font);
+  line-height: 1.55;
+}
+
+.ncp h1,
+.ncp h2,
+.ncp h3,
+.ncp h4 {
+  margin: 0;
+  color: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* :where() keeps this default at one class of specificity, so the classed
+   paragraphs below (.ncp-lead, .ncp-actions, .ncp-tally, .ncp-chips...)
+   can set their own margins. Written as `.ncp p` it outranked every one of
+   them and flattened the spacing: the lead sat on the title, the buttons on
+   the dates, the tally bar on the steps. */
+.ncp :where(p) {
+  margin: 0 0 1rem;
+}
+
+.ncp-narrow > * {
+  max-width: 52rem;
+}
+
+/* Running text keeps the same reading measure in the full-width sections too;
+   only the grids and the tally bar use the whole container. */
+:where(.ncp-section .container > p:not(.ncp-tally)) {
+  max-width: 52rem;
+}
+
+.ncp-nowrap {
+  white-space: nowrap;
+}
+
+/* ---- Hero ---- */
+.ncp-hero {
+  /* The site header is fixed, so the band starts below it. */
+  padding: 8.5rem 0 3.5rem;
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.ncp-eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ncp-title {
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  max-width: 14ch;
+}
+
+.ncp-lead {
+  margin: 1.25rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+  line-height: 1.3;
+}
+
+/* The two dates as one ink bar of equal halves, and the buttons below it held
+   to the same width and filling it, so the hero's boxes share both edges. */
+.ncp-dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px;
+  max-width: 40rem;
+  margin: 2rem 0 0;
+}
+
+.ncp-dates > div {
+  padding: 0.85rem 1.1rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.ncp-hero .ncp-actions {
+  max-width: 40rem;
+}
+
+.ncp-hero .ncp-actions > * {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.ncp-dates dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.ncp-dates dd {
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ncp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 2rem 0 0;
+}
+
+.ncp-btn {
+  display: inline-block;
+  padding: 0.85rem 1.4rem;
+  border: 2px solid var(--a27-ink);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.ncp-btn--primary {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.ncp-btn--primary:hover,
+.ncp-btn--primary:focus-visible {
+  background: var(--a27-safe-deep);
+  border-color: var(--a27-safe-deep);
+  color: var(--a27-cream);
+}
+
+.ncp-btn--ghost {
+  background: transparent;
+  color: var(--a27-ink);
+}
+
+.ncp-btn--ghost:hover,
+.ncp-btn--ghost:focus-visible {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.ncp-btn--soon {
+  border-style: dashed;
+  background: transparent;
+  color: var(--a27-ink);
+}
+
+.ncp-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin: 1.25rem 0 0;
+  font-size: 0.95rem;
+}
+
+.ncp-more a,
+.ncp-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ncp a:focus-visible,
+.ncp summary:focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Sections ---- */
+.ncp-section {
+  padding: 3.5rem 0;
+}
+
+.ncp-section--card {
+  background: var(--a27-card);
+}
+
+.ncp-section h2 {
+  margin-bottom: 1.5rem;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+}
+
+.ncp-big {
+  font-size: clamp(1.3rem, 3vw, 1.85rem);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.ncp-intro {
+  max-width: 40rem;
+  margin-bottom: 2rem;
+  font-size: 1.15rem;
+}
+
+.ncp-principle {
+  margin: 2rem 0 0;
+  padding: 1.25rem 1.5rem;
+  border-left: 8px solid var(--a27-safe);
+  background: var(--a27-card);
+}
+
+.ncp-principle p {
+  margin: 0;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+/* On a card-coloured section the quote's own card ground would vanish. */
+.ncp-section--card .ncp-principle {
+  background: var(--a27-cream);
+}
+
+/* A campaign line set on its own, larger than body text but not a quote. */
+.ncp-motto {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.3rem, 3vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.ncp-label {
+  margin-bottom: 0.5rem;
+  color: var(--a27-safe-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Doubled with .ncp so it outranks the `.ncp h3` reset, which would
+   otherwise zero its margins. */
+.ncp .ncp-subhead {
+  margin: 3rem 0 1.25rem;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+}
+
+.ncp-note {
+  margin-top: 1.25rem;
+  color: var(--a27-dim);
+  font-size: 0.95rem;
+}
+
+/* ---- The skills we want young people to build ---- */
+/* Framed like a table: a solid ink border round the list, ink rules between
+   the skills, and on wider screens a divider between each name, on a tinted
+   column, and its description. Stacks on phones. */
+.ncp-skills {
+  margin: 0 0 2rem;
+  border: 2px solid var(--a27-ink);
+}
+
+.ncp-skills > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ncp-skills > div + div {
+  border-top: 1px solid var(--a27-ink);
+}
+
+.ncp-skills dt {
+  padding: 0.85rem 1.1rem 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ncp-skills dd {
+  margin: 0;
+  padding: 0 1.1rem 0.9rem;
+}
+
+@media (min-width: 40rem) {
+  .ncp-skills > div {
+    grid-template-columns: minmax(11rem, 16rem) minmax(0, 1fr);
+  }
+
+  .ncp-skills dt {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.25rem;
+    border-right: 1px solid var(--a27-ink);
+    background: var(--a27-card);
+  }
+
+  .ncp-skills dd {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.25rem;
+  }
+}
+
+/* ---- Every student's journey (Learn to Reflect) ---- */
+/* The arrow belongs to the word before it, so a wrapped line ends on an arrow
+   rather than starting with one. The last stage, where the change happens,
+   takes the deep accent. */
+.ncp-arc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  font-size: clamp(1.45rem, 3.6vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  list-style: none;
+}
+
+.ncp-arc li:not(:last-child)::after {
+  content: "\2192";
+  margin: 0 0.4em;
+  color: var(--a27-safe-deep);
+  font-weight: 400;
+}
+
+.ncp-arc li:last-child {
+  color: var(--a27-safe-deep);
+}
+
+
+/* ---- Themes ---- */
+/* Five cards never divide evenly, so they wrap as flex items that grow: a
+   short last row (3 + 2 on a tablet) stretches to the same right edge
+   instead of leaving an orphan card and a gap, as auto-fit did. */
+.ncp-themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-theme {
+  --ncp-bright: var(--a27-safe);
+  flex: 1 1 13rem;
+  padding: 1.25rem;
+  background: var(--ncp-bright);
+  color: var(--a27-ink);
+}
+
+.ncp-theme--smart { --ncp-bright: var(--a27-smart); }
+.ncp-theme--creative { --ncp-bright: var(--a27-creative); }
+.ncp-theme--responsible { --ncp-bright: var(--a27-responsible); }
+.ncp-theme--future { --ncp-bright: var(--a27-future); }
+
+.ncp-theme__icon {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.ncp-theme__icon svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+}
+
+.ncp-theme h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.ncp-theme p {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+/* ---- Three ways ---- */
+/* Fixed column counts rather than auto-fit, which broke three ways into 2 + 1
+   and six steps into 4 + 2 at common widths. */
+.ncp-ways {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: way;
+}
+
+.ncp-ways li {
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-top: 6px solid var(--a27-ink);
+  counter-increment: way;
+}
+
+.ncp-ways li::before {
+  content: counter(way);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--a27-safe-deep);
+}
+
+.ncp-ways h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.ncp-ways p {
+  margin: 0;
+}
+
+.ncp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.ncp-chips strong {
+  margin-right: 0.25rem;
+}
+
+.ncp-chips span {
+  padding: 0.25rem 0.75rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Cards take the ground their section is not: the card colour on a cream
+   section, cream on a card-coloured one. Set once here, because moving a
+   section between the two grounds otherwise made its cards vanish into it. */
+.ncp-ways li,
+.ncp-running li,
+.ncp-who li,
+.ncp-paths > li,
+.ncp-agecards > li,
+.ncp-partner li {
+  background: var(--a27-card);
+}
+
+.ncp-section--card :is(.ncp-ways li, .ncp-running li, .ncp-who li, .ncp-paths > li, .ncp-agecards > li, .ncp-partner li) {
+  background: var(--a27-cream);
+}
+
+/* In-page links land below the fixed header rather than under it. */
+.ncp [id] {
+  scroll-margin-top: 7rem;
+}
+
+/* ---- Photos ---- */
+/* Real classroom moments to loosen the page's grid of boxes. Each takes the
+   brand's chamfer, the same cut corners as the hero's panels. */
+.ncp-photo {
+  --cut: clamp(1.25rem, 2.5vw, 2rem);
+  margin: 0 0 2rem;
+}
+
+.ncp-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  -webkit-clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+
+.ncp-photo figcaption {
+  margin-top: 0.4rem;
+  color: var(--a27-dim);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.ncp-photo--wide img {
+  aspect-ratio: 16 / 9;
+}
+
+.ncp-photo--classroom img {
+  object-position: 62% 40%;
+}
+
+.ncp-photo--writing img {
+  object-position: 55% 40%;
+}
+
+/* The portrait leads the section on narrow screens, cropped wide to the
+   presenter and the raised hand, and moves beside the text when there is room. */
+.ncp-photo--tall img {
+  aspect-ratio: 4 / 3;
+  object-position: 50% 58%;
+}
+
+.ncp-lede__text {
+  max-width: 52rem;
+}
+
+@media (min-width: 45rem) {
+  .ncp-photo--wide img {
+    aspect-ratio: 21 / 8;
+  }
+}
+
+@media (min-width: 64rem) {
+  .ncp-lede {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem);
+    column-gap: clamp(2.5rem, 4vw, 4.5rem);
+    align-items: start;
+  }
+
+  .ncp-lede__text {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Stays in view beside the long column of text as it scrolls. */
+  .ncp-lede .ncp-photo--tall {
+    position: sticky;
+    top: 7rem;
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0.5rem 0 0;
+  }
+
+  .ncp-lede .ncp-photo--tall img {
+    aspect-ratio: 3 / 4;
+    object-position: 50% 65%;
+  }
+}
+
+/* ---- Find your pathway ---- */
+.ncp-paths {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-paths > li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.35rem 1.4rem;
+  border-top: 6px solid var(--a27-ink);
+}
+
+.ncp-paths h3 {
+  margin-bottom: 0.35rem;
+  color: var(--a27-safe-deep);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.ncp-paths__tag {
+  margin-bottom: 0.9rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.ncp-paths ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: path;
+}
+
+.ncp-paths ol li {
+  position: relative;
+  margin: 0 0 0.55rem;
+  padding-left: 2rem;
+  counter-increment: path;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.ncp-paths ol li::before {
+  content: counter(path);
+  position: absolute;
+  top: 0.1rem;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ncp-paths__note {
+  margin: 0.4rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+/* Pushed to the foot of the card, so the links line up along each row. */
+.ncp-paths__more {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  font-size: 0.92rem;
+}
+
+.ncp-paths__more a,
+.ncp-note .ncp-link {
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ---- One conversation, pitched for every age ---- */
+/* Three cards with the same six rows. Where subgrid is supported the rows
+   share one set of tracks, so The question, Help to get going and the rest
+   line up across the three ages and read as a comparison. */
+.ncp-agecards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-agecards > li {
+  padding: 1.25rem 1.35rem 1.4rem;
+  border-top: 6px solid var(--a27-ink);
+}
+
+.ncp-agecards h3 {
+  font-size: 1.6rem;
+}
+
+.ncp-agecards__years {
+  margin: 0.2rem 0 1rem;
+  color: var(--a27-safe-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ncp-agecards__row {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--a27-rule);
+}
+
+.ncp-agecards__row h4 {
+  margin-bottom: 0.25rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ncp-agecards__row p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.ncp-agecards__row--question p {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+/* ---- For organisations that bring AI into schools ---- */
+.ncp-partner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-partner li {
+  padding: 1.25rem 1.35rem 1.4rem;
+  border-left: 6px solid var(--a27-ink);
+}
+
+.ncp-partner h3 {
+  margin-bottom: 0.4rem;
+  font-size: 1.25rem;
+}
+
+.ncp-partner p {
+  margin: 0;
+}
+
+/* ---- Approval callout ---- */
+.ncp-callout {
+  max-width: 52rem;
+  margin: 0 0 2.5rem;
+  padding: 1.25rem 1.5rem 1.4rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.ncp-callout h3 {
+  margin-bottom: 0.5rem;
+  color: var(--a27-safe);
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+}
+
+.ncp-callout p {
+  margin: 0;
+}
+
+/* The partnership invitation closing the organisations section. */
+.ncp-callout--invite {
+  margin: 2.5rem 0 0;
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+
+.ncp-callout--invite > p + ul,
+.ncp-callout--invite ul + p {
+  margin-top: 0.75rem;
+}
+
+.ncp-callout--invite ul {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+}
+
+.ncp-callout--invite li {
+  margin: 0.3rem 0;
+  font-weight: 700;
+}
+
+.ncp-callout--invite li::marker {
+  color: var(--a27-safe);
+}
+
+.ncp-callout__small {
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+.ncp-callout .ncp-actions {
+  margin-top: 1.25rem;
+}
+
+/* Ink on ink would vanish: the button takes the strand bright, as in the closing call. */
+.ncp-callout .ncp-btn--primary {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.ncp-callout .ncp-btn--primary:hover,
+.ncp-callout .ncp-btn--primary:focus-visible {
+  background: var(--a27-cream);
+  border-color: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.ncp-callout a:focus-visible {
+  outline-color: var(--a27-cream);
+}
+
+/* ---- Inside a debate ---- */
+/* The two parts sit 1 : 2, the same ratio as their 10 and 20 minutes. */
+.ncp-running {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-running li {
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-top: 6px solid var(--a27-ink);
+}
+
+.ncp-running__time {
+  margin-bottom: 0.4rem;
+  color: var(--a27-safe-deep);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.ncp-running h3 {
+  margin-bottom: 0.4rem;
+  font-size: 1.3rem;
+}
+
+.ncp-running li p:last-child {
+  margin: 0;
+}
+
+.ncp-inside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+}
+
+.ncp-inside h3 {
+  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+}
+
+.ncp-inside .ncp-chips {
+  margin-bottom: 0.75rem;
+}
+
+/* ---- Everyone has a part to play ---- */
+.ncp-who {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-who li {
+  padding: 1.25rem 1.25rem 1.5rem;
+  border-top: 6px solid var(--a27-ink);
+}
+
+.ncp-who h3 {
+  margin-bottom: 0.6rem;
+  color: var(--a27-safe-deep);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.ncp-who__line {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.ncp-who__note {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+}
+
+/* ---- Steps ---- */
+.ncp-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.ncp-steps li {
+  position: relative;
+  padding: 0 0 0 3.25rem;
+  counter-increment: step;
+}
+
+.ncp-steps li::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-weight: 700;
+}
+
+.ncp-steps h3 {
+  margin-bottom: 0.4rem;
+  font-size: 1.25rem;
+}
+
+.ncp-steps p {
+  margin: 0;
+}
+
+.ncp-tally {
+  margin: 2.5rem 0 0;
+  padding: 1rem 1.25rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Safeguarding ---- */
+.ncp-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.ncp-conduct {
+  padding: 1.5rem;
+  background: var(--a27-responsible);
+  color: var(--a27-ink);
+}
+
+.ncp-conduct h3 {
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ncp-conduct__line {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.ncp-conduct p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Recognition ---- */
+.ncp-recognition {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.ncp-recognition > div {
+  padding: 1.25rem 1.5rem;
+  background: var(--a27-creative);
+  color: var(--a27-ink);
+}
+
+.ncp-recognition :where(p) {
+  margin: 0;
+}
+
+.ncp-recognition__count {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.ncp-recognition__result {
+  margin-top: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+/* ---- Networks ---- */
+/* Six steps in equal columns, a diagram across the whole container like the
+   other grids: one row of six when wide, two rows of three below 60rem. The
+   arrows sit centred in the gap, and the one that would open a row is
+   dropped, so neither row starts with an arrow hanging off its left edge. */
+.ncp-narrow > .ncp-chain {
+  max-width: none;
+}
+
+.ncp-chain {
+  --chain-gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem var(--chain-gap);
+  margin-bottom: 1.75rem;
+}
+
+.ncp-chain span {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.5rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ncp-chain span:nth-child(3n + 1)::before {
+  display: none;
+}
+
+.ncp-chain span + span::before {
+  content: "\2192";
+  position: absolute;
+  top: 50%;
+  left: calc(var(--chain-gap) / -2);
+  color: var(--a27-ink);
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 40rem) {
+  .ncp-chain {
+    --chain-gap: 1rem;
+  }
+
+  .ncp-chain span {
+    padding: 0.5rem 0.25rem;
+    font-size: clamp(0.62rem, 3vw, 0.8rem);
+    letter-spacing: 0.03em;
+  }
+}
+
+@media (min-width: 60rem) {
+  .ncp-chain {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .ncp-chain span:nth-child(3n + 1)::before {
+    display: block;
+  }
+
+  .ncp-chain span:first-child::before {
+    display: none;
+  }
+}
+
+/* ---- Timeline ---- */
+.ncp-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 4px solid var(--a27-ink);
+}
+
+.ncp-timeline li {
+  position: relative;
+  padding: 0 0 1.5rem 1.5rem;
+}
+
+.ncp-timeline li:last-child {
+  padding-bottom: 0;
+}
+
+.ncp-timeline li::before {
+  content: "";
+  position: absolute;
+  top: 0.3rem;
+  left: -0.72rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: var(--a27-safe);
+  border: 3px solid var(--a27-ink);
+}
+
+.ncp-timeline li:last-child::before {
+  background: var(--a27-smart);
+}
+
+.ncp-timeline h3 {
+  margin-bottom: 0.3rem;
+  font-size: 1.25rem;
+}
+
+.ncp-timeline p {
+  margin: 0;
+}
+
+/* ---- FAQ ---- */
+.ncp-faq {
+  border-top: 2px solid var(--a27-ink);
+}
+
+.ncp-faq:last-of-type {
+  border-bottom: 2px solid var(--a27-ink);
+}
+
+.ncp-faq summary {
+  padding: 1rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.ncp-faq p {
+  margin: 0 0 1.25rem;
+  max-width: 44rem;
+}
+
+/* ---- Closing call ---- */
+.ncp-cta {
+  padding: 4rem 0;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.ncp-cta h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.ncp-cta p {
+  max-width: 34rem;
+}
+
+.ncp-cta .ncp-btn--primary {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.ncp-cta .ncp-btn--primary:hover,
+.ncp-cta .ncp-btn--primary:focus-visible {
+  background: var(--a27-cream);
+  border-color: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.ncp-cta a:focus-visible {
+  outline-color: var(--a27-cream);
+}
+
+@media (min-width: 40rem) {
+  .ncp-steps,
+  .ncp-recognition {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 45rem) {
+  .ncp-ways,
+  .ncp-who {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ncp-paths,
+  .ncp-partner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ncp-running {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+
+  .ncp-inside {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 60rem) {
+  .ncp-steps,
+  .ncp-paths {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ncp-agecards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @supports (grid-template-rows: subgrid) {
+    .ncp-agecards > li {
+      display: grid;
+      grid-row: span 8;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+    }
+  }
+}
+
+/* Wide: the dates leave the copy column and stand as one chamfered panel on
+   the right, running from the top of the title to the foot of the buttons,
+   instead of a second row of boxes of different widths under the lead. Only
+   from 80rem: the title needs about 730px to hold two lines, and below that
+   it broke to three and stretched the panel into a tall empty slab. */
+@media (min-width: 80rem) {
+  .ncp-hero .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+  }
+
+  .ncp-hero .container > * {
+    grid-column: 1;
+  }
+
+  .ncp-hero .ncp-dates {
+    --cut: 2rem;
+    grid-column: 2;
+    grid-row: 2 / span 3;
+    display: flex;
+    flex-direction: column;
+    max-width: none;
+    margin: 0;
+    -webkit-clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  }
+
+  .ncp-hero .ncp-dates > div {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+  }
+
+  .ncp-hero .ncp-dates dd {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .ncp-hero .ncp-actions {
+    max-width: none;
+  }
+
+  .ncp-hero .ncp-actions > * {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 52rem) {
+  .ncp-hero {
+    padding: 10rem 0 4.5rem;
+  }
+
+  .ncp-section {
+    padding: 5rem 0;
+  }
+
+  .ncp-split {
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ncp * {
+    transition: none !important;
+  }
+}
