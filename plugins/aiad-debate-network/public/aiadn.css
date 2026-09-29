@@ -242,3 +242,16 @@
 .aiadn__fold[open] > summary::after { content: "\2212"; }
 .aiadn__fold[open] > summary { margin-bottom: 1rem; }
 .aiadn__fold > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.aiadn__barrow--wide { grid-template-columns: 12rem 1fr 6rem; }
+@media (max-width: 40rem) { .aiadn__barrow--wide { grid-template-columns: 1fr; gap: .2rem; } }
+.aiadn__partner-logo { margin: 0 0 1rem; }
+.aiadn__snapshot { background: #fff; border: 2px solid var(--aiadn-ink, #231f20); padding: 1.5rem 2rem; margin-bottom: 1rem; }
+.aiadn__snapshot h2 { margin-top: 0; }
+@media print {
+	.aiadn__snapshot { border: 0; padding: 0; }
+	.aiadn__snapshot h3, .aiadn__snapshot .aiadn__vq { break-inside: avoid; }
+	.aiadn__partner-logo .aiadn__logo { width: 55mm; }
+}
+.aiadn__printonly { display: none; }
+@media print { .aiadn__printonly { display: block; } }
+.aiadn__panel table + h2, .aiadn__panel .aiadn__vq + h3 { margin-top: 1.5rem; }

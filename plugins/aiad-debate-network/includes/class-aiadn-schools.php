@@ -91,6 +91,16 @@ class AIADN_Schools {
 		return (int) $wpdb->insert_id;
 	}
 
+	public static function set_member_role( int $id, string $role ): void {
+		global $wpdb;
+		$wpdb->update( AIADN_Database::table( 'members' ), array( 'role' => $role ), array( 'id' => $id ) ); // phpcs:ignore WordPress.DB
+	}
+
+	public static function delete_member( int $id ): void {
+		global $wpdb;
+		$wpdb->delete( AIADN_Database::table( 'members' ), array( 'id' => $id ) ); // phpcs:ignore WordPress.DB
+	}
+
 	public static function get_member( int $id ): ?array {
 		global $wpdb;
 		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . AIADN_Database::table( 'members' ) . ' WHERE id = %d', $id ), ARRAY_A ); // phpcs:ignore WordPress.DB

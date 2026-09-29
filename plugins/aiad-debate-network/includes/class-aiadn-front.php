@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -48,6 +48,9 @@ class AIADN_Front {
 		'calendar' => 'smart',
 		'paper'    => 'smart',
 		'prep'     => 'smart',
+		'programme' => 'future',
+		'snapshot' => 'safe',
+		'colleague' => 'creative',
 	);
 
 	public static function register(): void {
@@ -119,7 +122,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -187,6 +190,7 @@ class AIADN_Front {
 			'signin'    => 'Please sign in with your school code.',
 			'signedout' => 'You are signed out.',
 			'pin'       => 'A new class PIN has started. The old one no longer works.',
+			'colleague' => 'Done. We have told your colleague.',
 			'resent'    => 'We have sent the approval email again.',
 			'invalid'   => 'That link is no longer valid.',
 			'declined'  => 'You have left this debate. The other school has been told.',
@@ -293,7 +297,7 @@ class AIADN_Front {
 		$h .= '<p class="aiadn__hint">Your teacher will show the PIN on the board.</p></div>';
 		$h .= '<button type="submit" class="aiadn__button">Continue</button>';
 		$h .= '</form>';
-		$h .= '<p class="aiadn__small">New school? <a href="' . esc_url( self::url( 'register' ) ) . '">Register here</a>. Lost your code? Ask your teacher or headteacher.</p>';
+		$h .= '<p class="aiadn__small">New school? <a href="' . esc_url( self::url( 'register' ) ) . '">Register here</a>. Lost your code? Ask your teacher or headteacher.</p><p class="aiadn__small">A colleague without your school\'s email address? <a href="' . esc_url( self::url( 'colleague' ) ) . '">Ask to join</a>.</p>';
 		$h .= '<script>(function(){var f=document.querySelector(".aiadn__form");if(!f)return;function s(){var r=f.querySelector("input[name=role]:checked");var st=r&&r.value==="student";f.querySelector("[data-for=pin]").style.display=st?"":"none";f.querySelector("[data-for=email]").style.display=st?"none":"";}f.addEventListener("change",s);s();})();</script>';
 		return $h;
 	}
@@ -751,6 +755,10 @@ class AIADN_Front {
 				AIADN_Auth::new_pin( (int) $school['id'], (int) $session['member_id'], $purpose, $debate_id );
 				self::redirect( 'school', array( 'msg' => 'pin' ) );
 			}
+			if ( 'colleague_decide' === $action && 'approved' === $school['status'] && 'lead' === $session['role'] ) {
+				AIADN_Colleague_Front::decide_from_dashboard( $school, (int) self::post( 'member_id' ), 'approve' === self::post( 'decision' ) );
+				self::redirect( 'school', array( 'msg' => 'colleague' ) );
+			}
 			if ( 'resend_slt' === $action && 'pending_slt' === $school['status'] && 'lead' === $session['role'] ) {
 				if ( AIADN_Util::allow( 'resend|' . $school['id'], 3, HOUR_IN_SECONDS ) ) {
 					self::send_slt_email( $school, $session['member'] );
@@ -831,15 +839,16 @@ class AIADN_Front {
 			if ( AIADN_Debates::for_school( (int) $school['id'] ) ) {
 				$h .= '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'results' ) ) . '">Results and certificate</a></p>';
 			}
+			$h .= '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'snapshot' ) ) . '">School AI Snapshot</a></p>';
 
 			if ( 'lead' === $role ) {
+				$h .= AIADN_Colleague_Front::pending_panel( (int) $school['id'] );
 				$h .= '<div class="aiadn__panel"><h2>Team</h2><table class="aiadn__table"><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th></tr></thead><tbody>';
 				foreach ( AIADN_Schools::members( (int) $school['id'] ) as $m ) {
-					$h .= '<tr><td>' . esc_html( $m['name'] ?: 'Colleague' ) . '</td><td>' . esc_html( $m['email'] ) . '</td><td>' . esc_html( 'slt' === $m['role'] ? 'SLT' : $m['role'] ) . '</td></tr>';
+					$h .= '<tr><td>' . esc_html( $m['name'] ?: 'Colleague' ) . '</td><td>' . esc_html( $m['email'] ) . '</td><td>' . esc_html( 'slt' === $m['role'] ? 'SLT' : ( 'pending' === $m['role'] ? 'Waiting for approval' : $m['role'] ) ) . '</td></tr>';
 				}
 				$h .= '</tbody></table></div>';
 			}
-			$h .= '<p class="aiadn__small">Scoring and results arrive in the next build.</p>';
 		} else {
 			$h .= '<div class="aiadn__panel"><p>This registration is not active.</p></div>';
 		}

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AIADN_Database {
 
 	/** Bump when a table changes so dbDelta runs again. */
-	const DB_VERSION = 8;
+	const DB_VERSION = 9;
 
 	const OPTION = 'aiadn_db_version';
 
@@ -189,6 +189,7 @@ class AIADN_Database {
 			status varchar(10) NOT NULL DEFAULT 'pending',
 			name_public tinyint(1) NOT NULL DEFAULT 0,
 			ack tinyint(1) NOT NULL DEFAULT 0,
+			partner_ref varchar(120) NOT NULL DEFAULT '',
 			invited_at datetime DEFAULT NULL,
 			responded_at datetime DEFAULT NULL,
 			created_at datetime NOT NULL,

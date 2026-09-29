@@ -648,7 +648,7 @@ class AIADN_Debate_Front {
 		} else { // agreed / ready.
 			$judge = (int) $debate['judge_id'] ? AIADN_Debates::get_judge( (int) $debate['judge_id'] ) : null;
 			if ( 'ready' === $status ) {
-				$h .= '<p><strong>Everything is set.</strong> The judge has accepted. Scoring and results arrive in the next build.</p>';
+				$h .= '<p><strong>Everything is set.</strong> The judge has accepted. After the debate the judge submits the scores, and the result appears here.</p>';
 			} elseif ( $judge && 'declined' === $judge['status'] ) {
 				$h .= '<p><strong>' . self::esc( $judge['name'] ) . " can't make it.</strong> Please choose another judge.</p>";
 			} else {

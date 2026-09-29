@@ -19,7 +19,7 @@ class AIADN_Voice_Front {
 	}
 
 	/** The theme's own strand graphic (dark chamfered tile, coloured icon). Decorative: the label sits beside it. */
-	private static function tile( string $theme ): string {
+	public static function tile( string $theme ): string {
 		return '<img class="aiadn__tile" src="' . esc_url( get_theme_file_uri( 'assets/brand/aiad27/poster-' . $theme . '.svg' ) ) . '" alt="" width="64" height="65" loading="lazy">';
 	}
 
@@ -141,7 +141,7 @@ class AIADN_Voice_Front {
 	}
 
 	/** A stacked bar for agree, not sure and disagree. The percentages are also written out below it. */
-	private static function stack( array $r ): string {
+	public static function stack( array $r ): string {
 		return '<span class="aiadn__stack" aria-hidden="true"><span class="aiadn__stack--a" style="width:' . (int) $r['agree'] . '%"></span><span class="aiadn__stack--u" style="width:' . (int) $r['unsure'] . '%"></span><span class="aiadn__stack--d" style="width:' . (int) $r['disagree'] . '%"></span></span>';
 	}
 

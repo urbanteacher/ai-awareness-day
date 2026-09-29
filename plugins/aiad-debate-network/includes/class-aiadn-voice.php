@@ -50,6 +50,19 @@ class AIADN_Voice {
 		'skip'   => 'Prefer not to say',
 	);
 
+	/** Which age pathway a year group belongs to. "Prefer not to say" belongs to none. */
+	const PATHWAYS = array(
+		'y1_4'   => 'primary',
+		'y5_6'   => 'primary',
+		'y7_9'   => 'secondary',
+		'y10_11' => 'secondary',
+		'post16' => 'post16',
+	);
+
+	public static function pathway( string $year_group ): string {
+		return self::PATHWAYS[ $year_group ] ?? '';
+	}
+
 	const PHASES = array(
 		'general' => 'A general survey',
 		'before'  => 'Before a debate',
