@@ -1,8 +1,10 @@
 <?php
 /**
- * Homepage benchmark promo helpers.
+ * Benchmark promo helpers: whether the benchmark plugin is available, its start URL, and the role links.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/benchmark-promo.php.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

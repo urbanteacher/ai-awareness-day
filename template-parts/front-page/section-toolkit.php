@@ -134,8 +134,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 /*
  * What the audit earns you, immediately above the audit's own promo. Self
- * contained — see inc/certificate-showcase.php, or paste
- * [aiad_certificate_showcase] anywhere else you want it.
+ * contained — see plugins/aiad-core/modules/certificate-showcase.php, or add
+ * the Certificate Showcase block ([aiad_certificate_showcase]) anywhere else.
  */
 if ( function_exists( 'aiad_certificate_showcase' ) ) {
 	echo aiad_certificate_showcase(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template part escapes its own output.

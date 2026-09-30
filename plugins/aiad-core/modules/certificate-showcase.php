@@ -7,7 +7,8 @@
  * earns you. It replaced the separate ink promo block, which said the first
  * half again a screen apart.
  *
- * Self-contained: one shortcode, one template part, one stylesheet. Drop
+ * Self-contained: one shortcode, one template (certificate-showcase/template.php), one stylesheet
+ * (assets/css/certificate-showcase.css). Drop
  * [aiad_certificate_showcase] into any page, or call
  * aiad_certificate_showcase() from a template.
  *
@@ -15,12 +16,19 @@
  * flat image, so this block cannot advertise a certificate the audit no
  * longer issues. No plugin, no block.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme (inc/certificate-showcase.php, its template part and stylesheet); the aiad/certificate-showcase
+ * block renders through the same function. The theme loads this file from its bundled copy of the plugin when the
+ * plugin isn't active, so this is the only copy.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// Marks this module as loaded. See aiad_core_load_modules().
+define( 'AIAD_CORE_MODULE_CERTIFICATE_SHOWCASE', __FILE__ );
 
 /**
  * Whether the benchmark plugin can draw its certificate artwork here.
@@ -37,11 +45,11 @@ function aiad_certificate_art_available(): bool {
  * Register the showcase stylesheet and the plugin's certificate renderer.
  */
 function aiad_register_certificate_showcase_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/certificate-showcase.css';
+	$css_path = aiad_core_path( 'assets/css/certificate-showcase.css' );
 
 	wp_register_style(
 		'aiad-certificate-showcase',
-		AIAD_URI . '/assets/css/components/certificate-showcase.css',
+		aiad_core_url( 'assets/css/certificate-showcase.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
@@ -120,7 +128,7 @@ function aiad_certificate_showcase( array $args = array() ): string {
 	);
 
 	ob_start();
-	get_template_part( 'template-parts/components/certificate-showcase', null, $args );
+	load_template( __DIR__ . '/certificate-showcase/template.php', false, $args );
 	return (string) ob_get_clean();
 }
 

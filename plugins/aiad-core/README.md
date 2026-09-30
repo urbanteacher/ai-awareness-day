@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** ten blocks (the interactive tools and the survey); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools` moved.
+**Status:** eleven blocks (the interactive tools, the survey and the certificate showcase); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools`, `certificate-showcase` moved.
 
 ## Layout
 
@@ -44,6 +44,7 @@ Blocks so far, all in the "AI Awareness Day" inserter category, one per post (`m
 | `aiad/neu-ai-report` | `[aiad_neu_ai_report]` | headline: automatic / show / hide |
 | `aiad/risk-academy` | `[aiad_risk_academy]` | the eight sections on or off |
 | `aiad/national-survey` | `[aiad_national_survey]` | — |
+| `aiad/certificate-showcase` | `[aiad_certificate_showcase]` | wording, button, example strand, background, section ID (empty = default) |
 
 The tool blocks share one editor (`src/shared/tool-block.js`): a server-rendered preview plus sidebar settings described in each block's `index.js`. `src/blocks/buzzwords/` is the pattern to copy.
 
@@ -67,7 +68,7 @@ There is only ever **one copy** of a module: the file in `modules/`. This plugin
    aiad_require_core_module( 'post-types' );
    ```
    It loads the theme's bundled copy unless the active plugin already provides the module. Keep it at the same position the old require was, so load order stays the same with the plugin off.
-5. Replace `AIAD_DIR` / `AIAD_URI` with `AIAD_CORE_DIR` / `AIAD_CORE_URL` only for assets the module now owns. Assets still in the theme keep the theme constants.
+5. For assets the module now owns, move them into the plugin and use `aiad_core_path()` / `aiad_core_url()` (the `paths` module). They work from both copies of the plugin; `AIAD_CORE_DIR` / `AIAD_CORE_URL` only exist when the plugin is active. Assets still in the theme keep the theme constants.
 6. Test with the plugin active, inactive, and while activating it: pages should match byte for byte and the log should show no errors. For modules that register things, also compare rewrite rules, post types, taxonomies, meta, REST output, meta boxes, admin menus and hook priorities.
 
 **Watch the load order.** With the plugin active, a module's hooks are added before any of the theme's, so callbacks that share a hook and priority with theme code now run first. `post-types` hit this with the Resources admin submenu order and `tracking` with the dashboard widget order; a priority bump fixed each. Admin pages added from the plugin also change the internal key order of `$submenu` (which parent entry is created first); that is harmless, because the sidebar is drawn from `$menu`, and the rendered menu stays identical. A module made of several files can use a folder plus an entry file that defines the constant and requires the rest (see `modules/post-types.php`).
@@ -96,7 +97,7 @@ Where each file in the theme's `inc/` should end up.
 | `ai-tools` ✅ | `tools.php` except its row renderer | **Moved** to `modules/ai-tools.php`: the `ai_tool` CPT, `tool_category` taxonomy, seeds, meta and meta box. `aiad_render_tool_row()` stays in the theme's `inc/tools.php` (AI Tools archive, homepage tools section) |
 | `tools` ✅ | `ai-buzzwords.php`, `ai-llm-explainer.php`, `ai-llm-order-game.php`, `ai-speed-quiz.php`, `ai-computing-curriculum-challenge.php`, `ai-ict-curriculum.php`, `ai-misinformation-detector.php`, `ai-neu-ai-report.php`, `ai-neu-ai-report-data.php`, `schools-ai-risk-academy.php` | **Moved** to `modules/tools/`, in their original order, listed before `benchmark-content` (shared seed priorities). CSS/JS and the Risk Academy template still load from the theme until each tool's block takes them over. `ai-curriculum-quiz.php` stays in the theme's `inc/`, unloaded: it was retired in cdc60430 and its two posts are in the trash |
 | `survey` ✅ | `national-survey.php` | **Moved** to `modules/survey.php`: `survey_response` CPT, `[aiad_national_survey]` shortcode, AJAX submit, meta box, add-to-timeline action, timeline seed, CSV export, columns, analytics page, survey page creation. Its CSS and JS still load from the theme; becomes a block in the interactive-tools phase |
-| `certificate-showcase` (as a block) | `certificate-showcase.php` + `template-parts/components/certificate-showcase.php` + `assets/css/components/certificate-showcase.css` + `aiad_benchmark_promo_roles()` / `aiad_get_benchmark_start_url()` from `benchmark-promo.php` | **Decision: stays in the theme until it becomes the `aiad/certificate-showcase` block** in the interactive-tools phase. It is presentation apart from its shortcode, so moving the PHP alone would leave the plugin depending on the theme's template, CSS and helpers. As a block, `render.php` (the template), the stylesheet (`block.json` `style`) and the two helpers move together; keep `[aiad_certificate_showcase]` registered for existing content |
+| `certificate-showcase` ✅ | `certificate-showcase.php`, its template part and stylesheet; `benchmark-promo.php` | **Moved.** `modules/certificate-showcase.php` renders `modules/certificate-showcase/template.php` (`load_template()`, same `$args`) and loads `assets/css/certificate-showcase.css` from the plugin; the `aiad/certificate-showcase` block and `[aiad_certificate_showcase]` share it. The benchmark promo helpers joined `benchmark-content` (also used by the homepage promo, the previous hero and the National Conversation page) |
 | `seo` | `seo.php`, `sharing.php` | Reads Customizer values (see Risks) |
 | `benchmark-content` ✅ | `ai-risk-benchmark-post.php`, `airb-hub-timeline-seed.php` | **Moved** to `modules/benchmark-content/`. Seed content for the bundled benchmark plugin; the theme's `timeline-layouts.php` calls `aiad_risk_benchmark_get_excerpt()`. Keep this module listed after the interactive tools' modules when they move (see Risks) |
 

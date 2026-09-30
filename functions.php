@@ -32,6 +32,9 @@ function aiad_require_core_module( string $module ): void {
 	require_once AIAD_DIR . '/plugins/aiad-core/modules/' . $module . '.php';
 }
 
+// Loaded first: modules that ship their own assets build their paths and URLs with it.
+aiad_require_core_module( 'paths' );
+
 if ( is_admin() ) {
     require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';
 }
@@ -71,7 +74,6 @@ require_once $aiad_dir . '/inc/seo.php';
 aiad_require_core_module( 'survey' );
 require_once $aiad_dir . '/inc/bundled-plugins.php';
 aiad_require_core_module( 'benchmark-content' );
-require_once $aiad_dir . '/inc/benchmark-promo.php';
-require_once $aiad_dir . '/inc/certificate-showcase.php';
+aiad_require_core_module( 'certificate-showcase' );
 require_once $aiad_dir . '/inc/hub-resource-page.php';
 require_once $aiad_dir . '/inc/national-conversation-page.php';

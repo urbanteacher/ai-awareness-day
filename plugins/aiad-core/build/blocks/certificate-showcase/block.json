@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/certificate-showcase",
+  "version": "0.1.0",
+  "title": "Certificate Showcase",
+  "category": "aiad",
+  "icon": "awards",
+  "description": "The AI Risk & Readiness Benchmark pitch and the certificate it earns. Same output as the [aiad_certificate_showcase] shortcode. Needs the benchmark plugin to draw the certificate.",
+  "keywords": [
+    "certificate",
+    "benchmark",
+    "audit"
+  ],
+  "textdomain": "aiad-core",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "lead": {
+      "type": "string",
+      "default": ""
+    },
+    "ctaText": {
+      "type": "string",
+      "default": ""
+    },
+    "ctaUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "certEyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "certTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "certLead": {
+      "type": "string",
+      "default": ""
+    },
+    "strand": {
+      "type": "string",
+      "default": "safe"
+    },
+    "tone": {
+      "type": "string",
+      "default": ""
+    },
+    "sectionId": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

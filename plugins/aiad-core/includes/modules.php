@@ -20,20 +20,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_core_modules(): array {
 	return array(
-		'helpers-data'      => 'helpers-data.php',
-		'post-types'        => 'post-types.php',
-		'contact'           => 'contact.php',
-		'resource-filter'   => 'resource-filter.php',
-		'tracking'          => 'tracking.php',
-		'admin'             => 'admin.php',
-		'timeline'          => 'timeline.php',
-		'live-sessions'     => 'live-sessions.php',
-		'certificates'      => 'certificates.php',
-		'ai-tools'          => 'ai-tools.php',
-		'tools'             => 'tools.php',
-		'survey'            => 'survey.php',
+		'paths'                => 'paths.php',
+		'helpers-data'         => 'helpers-data.php',
+		'post-types'           => 'post-types.php',
+		'contact'              => 'contact.php',
+		'resource-filter'      => 'resource-filter.php',
+		'tracking'             => 'tracking.php',
+		'admin'                => 'admin.php',
+		'timeline'             => 'timeline.php',
+		'live-sessions'        => 'live-sessions.php',
+		'certificates'         => 'certificates.php',
+		'ai-tools'             => 'ai-tools.php',
+		'tools'                => 'tools.php',
+		'survey'               => 'survey.php',
 		// After tools: their timeline seeds share init priorities 33-35, and tools seeded first in the theme.
-		'benchmark-content' => 'benchmark-content.php',
+		'benchmark-content'    => 'benchmark-content.php',
+		'certificate-showcase' => 'certificate-showcase.php',
 	);
 }
 

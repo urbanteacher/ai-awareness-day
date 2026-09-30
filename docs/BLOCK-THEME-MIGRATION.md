@@ -107,12 +107,12 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `benchmark-content` module: benchmark launch article and hub timeline seeds
 - [x] `survey` module: survey responses CPT, shortcode, AJAX submit, admin analytics and CSV export (assets stay in the theme until it becomes a block)
 - [x] `tools` module: the 10 live interactive tools (the retired curriculum quiz stays unloaded in the theme)
-- [ ] Certificate showcase: stays in the theme until it becomes the `aiad/certificate-showcase` block (with its template, stylesheet and the two benchmark promo helpers) in the interactive-tools phase
+- [x] Certificate showcase: moved with its template, stylesheet and the benchmark promo helpers; `aiad/certificate-showcase` block
 - [ ] Move the remaining module (SEO, after the Customizer settings decision; see the plugin README) from `inc/` into it (theme keeps only presentation)
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)
-- [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. 10 of 11 done (tools + survey); the certificate showcase is next. The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
+- [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. All 11 done (tools, survey, certificate showcase). The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
 - [ ] Tool CSS/JS into the plugin (registered on `init`, referenced from `block.json`), so editor previews are styled
 - [ ] Wrap the 2 plugin shortcodes as blocks inside the plugin
 - [x] Block category "AI Awareness Day"
