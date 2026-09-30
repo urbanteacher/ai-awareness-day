@@ -76,7 +76,7 @@ require_once $aiad_dir . '/inc/ai-misinformation-detector.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report-data.php';
 require_once $aiad_dir . '/inc/ai-neu-ai-report.php';
 require_once $aiad_dir . '/inc/seo.php';
-require_once $aiad_dir . '/inc/national-survey.php';
+aiad_require_core_module( 'survey' );
 require_once $aiad_dir . '/inc/schools-ai-risk-academy.php';
 require_once $aiad_dir . '/inc/bundled-plugins.php';
 aiad_require_core_module( 'benchmark-content' );

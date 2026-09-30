@@ -5,12 +5,18 @@
  * Shortcode: [aiad_national_survey]
  * Responses are stored as 'survey_response' custom posts with _survey_* meta.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/national-survey.php. The theme loads this file from its bundled copy of the plugin when
+ * the plugin isn't active, so this is the only copy. Its stylesheet and script still load from the theme.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// Marks this module as loaded. See aiad_core_load_modules().
+define( 'AIAD_CORE_MODULE_SURVEY', __FILE__ );
 
 /** Survey schema version — v1.0 = launch; v1.1 = reach/impact questions (June 2027). */
 define( 'AIAD_SURVEY_VERSION', '1.1' );

@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content` moved.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey` moved.
 
 ## Layout
 
@@ -74,7 +74,7 @@ Where each file in the theme's `inc/` should end up.
 | `live-sessions` ✅ | `live-sessions.php` except its four markup helpers | **Moved** to `modules/live-sessions.php`: the `live_session` CPT and audience taxonomy, meta box, seeds and migrations, data and formatting helpers, admin columns, legacy `/schedule/` redirects and the calendar (ICS) feed. The action link and its icon, the audience tabs and the inline filter script stay in the theme's `inc/live-sessions.php` |
 | `ai-tools` ✅ | `tools.php` except its row renderer | **Moved** to `modules/ai-tools.php`: the `ai_tool` CPT, `tool_category` taxonomy, seeds, meta and meta box. `aiad_render_tool_row()` stays in the theme's `inc/tools.php` (AI Tools archive, homepage tools section) |
 | `tools` | `ai-buzzwords.php`, `ai-llm-explainer.php`, `ai-llm-order-game.php`, `ai-speed-quiz.php`, `ai-computing-curriculum-challenge.php`, `ai-ict-curriculum.php`, `ai-curriculum-quiz.php`, `ai-misinformation-detector.php`, `ai-neu-ai-report.php`, `ai-neu-ai-report-data.php`, `schools-ai-risk-academy.php` + their JS/CSS | Each becomes a block. Move the explainer and buzzwords together: the speed quiz and order game call them |
-| `survey` | `national-survey.php` | |
+| `survey` ✅ | `national-survey.php` | **Moved** to `modules/survey.php`: `survey_response` CPT, `[aiad_national_survey]` shortcode, AJAX submit, meta box, add-to-timeline action, timeline seed, CSV export, columns, analytics page, survey page creation. Its CSS and JS still load from the theme; becomes a block in the interactive-tools phase |
 | `certificate-showcase` (as a block) | `certificate-showcase.php` + `template-parts/components/certificate-showcase.php` + `assets/css/components/certificate-showcase.css` + `aiad_benchmark_promo_roles()` / `aiad_get_benchmark_start_url()` from `benchmark-promo.php` | **Decision: stays in the theme until it becomes the `aiad/certificate-showcase` block** in the interactive-tools phase. It is presentation apart from its shortcode, so moving the PHP alone would leave the plugin depending on the theme's template, CSS and helpers. As a block, `render.php` (the template), the stylesheet (`block.json` `style`) and the two helpers move together; keep `[aiad_certificate_showcase]` registered for existing content |
 | `seo` | `seo.php`, `sharing.php` | Reads Customizer values (see Risks) |
 | `benchmark-content` ✅ | `ai-risk-benchmark-post.php`, `airb-hub-timeline-seed.php` | **Moved** to `modules/benchmark-content/`. Seed content for the bundled benchmark plugin; the theme's `timeline-layouts.php` calls `aiad_risk_benchmark_get_excerpt()`. Keep this module listed after the interactive tools' modules when they move (see Risks) |
