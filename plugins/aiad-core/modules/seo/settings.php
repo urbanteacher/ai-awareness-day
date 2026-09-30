@@ -51,18 +51,24 @@ function aiad_seo_settings_from_customizer(): array {
 	$campaign_text = $mod( 'aiad_campaign_text' );
 	$subtitle      = $mod( 'aiad_hero_subtitle' );
 
+	// The Customizer uses '#' for "no link"; SEO skips it, so copy it as empty.
+	$url = static function ( string $key ) use ( $mod ): string {
+		$value = $mod( $key );
+		return '#' === trim( $value ) ? '' : $value;
+	};
+
 	return array(
 		'site_name'        => $mod( 'aiad_hero_title' ),
 		'event_date'       => $mod( 'aiad_hero_date' ),
 		// Exactly the description the homepage share preview was built from.
 		'home_description' => sprintf( '%s %s', $campaign_text ?: '', $subtitle ?: get_bloginfo( 'description' ) ),
-		'social_linkedin'  => $mod( 'aiad_linkedin' ),
-		'social_instagram' => $mod( 'aiad_instagram' ),
-		'social_twitter'   => $mod( 'aiad_twitter' ),
-		'social_facebook'  => $mod( 'aiad_facebook' ),
-		'social_youtube'   => $mod( 'aiad_youtube' ),
-		'social_tiktok'    => $mod( 'aiad_tiktok' ),
-		'social_github'    => $mod( 'aiad_github' ),
+		'social_linkedin'  => $url( 'aiad_linkedin' ),
+		'social_instagram' => $url( 'aiad_instagram' ),
+		'social_twitter'   => $url( 'aiad_twitter' ),
+		'social_facebook'  => $url( 'aiad_facebook' ),
+		'social_youtube'   => $url( 'aiad_youtube' ),
+		'social_tiktok'    => $url( 'aiad_tiktok' ),
+		'social_github'    => $url( 'aiad_github' ),
 		'verify_google'    => $mod( 'aiad_verify_google' ),
 		'verify_bing'      => $mod( 'aiad_verify_bing' ),
 		'verify_pinterest' => $mod( 'aiad_verify_pinterest' ),
@@ -102,7 +108,8 @@ function aiad_seo_sanitize_settings( $input ): array {
 	foreach ( aiad_seo_setting_fields() as $key => $field ) {
 		$value = isset( $input[ $key ] ) ? wp_unslash( (string) $input[ $key ] ) : '';
 		if ( 'url' === $field[2] ) {
-			$clean[ $key ] = '#' === trim( $value ) ? '#' : esc_url_raw( trim( $value ) );
+			// '#' is the Customizer's "no link" placeholder; SEO skips it, so store it as empty.
+			$clean[ $key ] = '#' === trim( $value ) ? '' : esc_url_raw( trim( $value ) );
 		} elseif ( 'textarea' === $field[2] ) {
 			$clean[ $key ] = sanitize_textarea_field( $value );
 		} else {
@@ -179,6 +186,9 @@ function aiad_seo_render_field( array $args ): void {
 	$key   = $args['key'];
 	$field = aiad_seo_setting_fields()[ $key ];
 	$value = aiad_seo_setting( $key );
+	if ( 'url' === $field[2] && '#' === trim( $value ) ) {
+		$value = ''; // Not a URL; the browser would refuse to submit the form. SEO skips it anyway.
+	}
 	$name  = 'aiad_seo[' . $key . ']';
 	if ( 'textarea' === $field[2] ) {
 		printf( '<textarea id="%1$s" name="%2$s" rows="4" class="large-text">%3$s</textarea>', esc_attr( $args['label_for'] ), esc_attr( $name ), esc_textarea( $value ) );
