@@ -61,7 +61,6 @@ require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
-aiad_require_core_module( 'tracking' );
 aiad_require_core_module( 'admin' );
 require_once $aiad_dir . '/inc/certificate-copy.php';
 require_once $aiad_dir . '/inc/letter-copy.php';
@@ -74,8 +73,7 @@ if ( is_admin() ) {
 }
 require_once $aiad_dir . '/inc/timeline.php';
 require_once $aiad_dir . '/inc/live-sessions.php';
-require_once $aiad_dir . '/inc/dashboard.php';
-require_once $aiad_dir . '/inc/engagement-tracking.php';
+aiad_require_core_module( 'tracking' );
 require_once $aiad_dir . '/inc/tools.php';
 require_once $aiad_dir . '/inc/sharing.php';
 require_once $aiad_dir . '/inc/ai-buzzwords.php';

@@ -36,7 +36,8 @@ function aiad_register_dashboard_widget(): void {
         'aiad_survey_dashboard_widget_callback'
     );
 }
-add_action( 'wp_dashboard_setup', 'aiad_register_dashboard_widget' );
+// Priority 11 keeps these widgets after the theme's Assets Pack widget, which the theme adds after this plugin loads.
+add_action( 'wp_dashboard_setup', 'aiad_register_dashboard_widget', 11 );
 
 /**
  * Aggregate resource analytics: total downloads, total views, resource counts.
