@@ -266,8 +266,8 @@
             var feature = document.querySelector('.hero-strand-feature');
             if (!hero || !feature) return;
 
-            // The motion is each strand's post-16 motion in the debate network's motion bank, put as a short, balanced question
-            // that a reasonable person could answer either way. The question is what
+            // The motion is the fallback for each strand's question: the hero prints the saved ones on the strand links
+            // (data-motion), from aiad_hero27_strand_questions() and the Customiser. The question is what
             // the previous hero asked instead, for when Customise > Front Page Sections > Hero Section > Homepage hero is set to Previous.
             var strands = [
                 { slug: 'safe', name: 'Safe', motion: 'Should each person manage what AI remembers about them?', question: 'Would you tell an AI your secret?' },
@@ -294,7 +294,11 @@
                 currentIndex = nextIndex;
                 hero.dataset.strand = strand.slug;
                 word.textContent = strand.name;
-                if (motion) motion.textContent = strand.motion;
+                if (motion) {
+                    // The page's own question for the strand (set in the Customiser) wins over the fallback list above.
+                    var control = feature.querySelector('[data-strand-target="' + strand.slug + '"][data-motion]');
+                    motion.textContent = control && control.dataset.motion ? control.dataset.motion : strand.motion;
+                }
                 if (summary) summary.textContent = strand.question;
                 controls.forEach(function (control) {
                     var active = control.dataset.strandTarget === strand.slug;

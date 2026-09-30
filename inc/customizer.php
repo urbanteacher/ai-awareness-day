@@ -178,16 +178,42 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         ),
     ) );
 
+    // The 2027 hero's words, shown while the new hero is on. Edit Homepage shares the same fields (aiad_hero27_fields()).
+    $is_new_hero      = static function () {
+        return ! aiad_homepage_hero_is_previous();
+    };
+    $is_previous_hero = static function () {
+        return aiad_homepage_hero_is_previous();
+    };
+    $priority = 2;
+    foreach ( aiad_hero27_fields() as $key => $field ) {
+        $wp_customize->add_setting( $key, array(
+            'default'           => $field['default'],
+            'sanitize_callback' => $field['sanitize'],
+            'transport'         => 'refresh',
+        ) );
+        $wp_customize->add_control( $key, array(
+            'label'           => $field['label'],
+            'description'     => $field['description'] ?? '',
+            'section'         => 'aiad_hero',
+            'type'            => $field['type'],
+            'priority'        => $priority++,
+            'active_callback' => $is_new_hero,
+        ) );
+    }
+
     $wp_customize->add_setting( 'aiad_hero_logo', array(
         'default'           => 0,
         'sanitize_callback' => 'absint',
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_hero_logo', array(
-        'label'       => __( 'Hero Logo', 'ai-awareness-day' ),
+        'label'       => __( 'Previous hero: logo', 'ai-awareness-day' ),
         'description' => __( 'Large image above the date. Leave empty to use Site Identity → Logo (or Site Icon). Clear an old GIF here to stop it overriding the main brand image.', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'mime_type'   => 'image',
+        'priority'    => 50,
+        'active_callback' => $is_previous_hero,
     ) ) );
 
     $wp_customize->add_setting( 'aiad_hero_slogan', array(
@@ -196,9 +222,11 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_slogan', array(
-        'label'   => __( 'Hero Slogan (under logo)', 'ai-awareness-day' ),
-        'section' => 'aiad_hero',
-        'type'    => 'text',
+        'label'           => __( 'Previous hero: slogan under the logo', 'ai-awareness-day' ),
+        'section'         => 'aiad_hero',
+        'type'            => 'text',
+        'priority'        => 51,
+        'active_callback' => $is_previous_hero,
     ) );
 
     $wp_customize->add_setting( 'aiad_hero_title', array(
@@ -207,9 +235,11 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_title', array(
-        'label'   => __( 'Hero Title', 'ai-awareness-day' ),
-        'section' => 'aiad_hero',
-        'type'    => 'text',
+        'label'       => __( 'Site name', 'ai-awareness-day' ),
+        'description' => __( 'Used in the footer, search results and link previews, and as the previous hero\'s title.', 'ai-awareness-day' ),
+        'section'     => 'aiad_hero',
+        'type'        => 'text',
+        'priority'    => 60,
     ) );
 
     $wp_customize->add_setting( 'aiad_hero_date', array(
@@ -218,10 +248,11 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_date', array(
-        'label'       => __( 'Event Date Text', 'ai-awareness-day' ),
-        'description' => __( 'Displayed prominently in the hero section. Keep loose until the 2027 date is confirmed (e.g. "AI Awareness Day 2027").', 'ai-awareness-day' ),
+        'label'       => __( 'Event date text', 'ai-awareness-day' ),
+        'description' => __( 'Used in link previews and by the previous hero. The new hero shows the date from the Event Date below.', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'type'        => 'text',
+        'priority'    => 61,
     ) );
 
     $wp_customize->add_setting( 'aiad_event_date_ymd', array(
@@ -230,10 +261,11 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_event_date_ymd', array(
-        'label'       => __( 'Event Date (SEO)', 'ai-awareness-day' ),
-        'description' => __( 'Machine-readable date for structured data once 2027 is confirmed. Format: Y-m-d.', 'ai-awareness-day' ),
+        'label'       => __( 'Event date', 'ai-awareness-day' ),
+        'description' => __( 'Format: Y-m-d. Sets the date and countdown in the new hero, and the date search engines see.', 'ai-awareness-day' ),
         'section'     => 'aiad_hero',
         'type'        => 'text',
+        'priority'    => 62,
     ) );
 
     $wp_customize->add_setting( 'aiad_hero_subtitle', array(
@@ -242,9 +274,11 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'transport'         => 'refresh',
     ) );
     $wp_customize->add_control( 'aiad_hero_subtitle', array(
-        'label'   => __( 'Hero Subtitle', 'ai-awareness-day' ),
-        'section' => 'aiad_hero',
-        'type'    => 'textarea',
+        'label'       => __( 'Site description', 'ai-awareness-day' ),
+        'description' => __( 'Used in link previews and as the previous hero\'s subtitle. The new hero\'s intro is edited above.', 'ai-awareness-day' ),
+        'section'     => 'aiad_hero',
+        'type'        => 'textarea',
+        'priority'    => 63,
     ) );
 }
 

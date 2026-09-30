@@ -152,6 +152,9 @@ class AIAD_Homepage_Editor {
             'aiad_hero_slogan'   => 'sanitize_text_field',
             'aiad_hero_subtitle' => 'sanitize_textarea_field',
         );
+        foreach ( aiad_hero27_fields() as $key => $field ) {
+            $keys[ $key ] = $field['sanitize'];
+        }
         return $this->save_theme_mods( $keys );
     }
 
@@ -323,6 +326,8 @@ class AIAD_Homepage_Editor {
                 $val = wp_kses_post( $raw );
             } elseif ( 'absint' === $sanitize ) {
                 $val = absint( $raw );
+            } elseif ( 'aiad_sanitize_link_or_anchor' === $sanitize ) {
+                $val = aiad_sanitize_link_or_anchor( $raw );
             } else {
                 $val = sanitize_text_field( $raw );
             }
@@ -416,19 +421,25 @@ class AIAD_Homepage_Editor {
      * Render Hero tab fields.
      */
     private function render_hero_tab(): void {
+        echo '<h2>' . esc_html__( '2027 hero', 'ai-awareness-day' ) . '</h2>';
+        echo '<p class="description">' . esc_html__( 'The top of the homepage while Customise > Front Page Sections > Hero Section > Homepage hero is set to New. Leave a field empty to use the standard wording.', 'ai-awareness-day' ) . '</p>';
+        $this->render_fields( aiad_hero27_fields() );
+
+        echo '<h2>' . esc_html__( 'Site name, dates and the previous hero', 'ai-awareness-day' ) . '</h2>';
+        echo '<p class="description">' . esc_html__( 'Site name and description are also used in the footer, search results and link previews. Event date sets the new hero\'s date and countdown.', 'ai-awareness-day' ) . '</p>';
         $fields = array(
-            'aiad_hero_logo'     => array( 'label' => __( 'Hero Logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Optional large hero image. Empty = Site Identity → Logo. Clear old GIFs here.', 'ai-awareness-day' ) ),
+            'aiad_hero_logo'     => array( 'label' => __( 'Previous hero: logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Optional large hero image. Empty = Site Identity → Logo. Clear old GIFs here.', 'ai-awareness-day' ) ),
             'aiad_header_logo'   => array( 'label' => __( 'Header Logo (legacy)', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Fallback only if Site Identity → Logo is empty.', 'ai-awareness-day' ) ),
-            'aiad_hero_date'      => array( 'label' => __( 'Event Date Text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day 2027' ),
+            'aiad_hero_date'      => array( 'label' => __( 'Event date text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day 2027', 'description' => __( 'Used in link previews and by the previous hero.', 'ai-awareness-day' ) ),
             'aiad_event_date_ymd' => array(
-                'label'       => __( 'Event Date (SEO)', 'ai-awareness-day' ),
+                'label'       => __( 'Event date', 'ai-awareness-day' ),
                 'type'        => 'text',
-                'default'     => '2027-06-04',
-                'description' => __( 'Machine-readable date for structured data once 2027 is confirmed. Format: Y-m-d.', 'ai-awareness-day' ),
+                'default'     => aiad_get_customizer_defaults()['aiad_event_date_ymd'],
+                'description' => __( 'Format: Y-m-d. Sets the date and countdown in the new hero, and the date search engines see.', 'ai-awareness-day' ),
             ),
-            'aiad_hero_title'    => array( 'label' => __( 'Hero Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day' ),
-            'aiad_hero_slogan'   => array( 'label' => __( 'Hero Slogan', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Know it, Question it, Use it Wisely' ),
-            'aiad_hero_subtitle' => array( 'label' => __( 'Hero Subtitle', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => 'A nationwide day for schools, students, and parents to explore AI together.' ),
+            'aiad_hero_title'    => array( 'label' => __( 'Site name', 'ai-awareness-day' ), 'type' => 'text', 'default' => aiad_get_customizer_defaults()['aiad_hero_title'] ),
+            'aiad_hero_slogan'   => array( 'label' => __( 'Previous hero: slogan', 'ai-awareness-day' ), 'type' => 'text', 'default' => aiad_get_customizer_defaults()['aiad_hero_slogan'] ),
+            'aiad_hero_subtitle' => array( 'label' => __( 'Site description', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => aiad_get_customizer_defaults()['aiad_hero_subtitle'] ),
         );
         $this->render_fields( $fields );
     }

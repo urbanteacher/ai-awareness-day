@@ -33,16 +33,16 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                          can sit on the copy's left edge. The SVG lockup is right-anchored. */ ?>
                 <p class="hero-eyebrow"><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?> <span class="hero-eyebrow__year">2027</span></p>
                 <h1 class="hero-title">
-                    <span class="hero-title__line"><?php esc_html_e( 'Keep Humans', 'ai-awareness-day' ); ?></span>
-                    <span class="hero-title__line"><?php esc_html_e( 'in the Loop', 'ai-awareness-day' ); ?></span>
+                    <span class="hero-title__line"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_title_1' ) ); ?></span>
+                    <span class="hero-title__line"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_title_2' ) ); ?></span>
                 </h1>
                 <?php if ( function_exists( 'aiad_national_conversation_dates' ) ) : ?>
                 <p class="hero-eyebrow-date"><?php echo esc_html( wp_date( 'l jS F Y', aiad_national_conversation_dates()['event']->getTimestamp() ) ); ?></p>
                 <?php endif; ?>
-                <p class="hero-subtitle"><strong><?php esc_html_e( 'Humans in the Loop should mean something tangible.', 'ai-awareness-day' ); ?></strong> <?php esc_html_e( 'In 2026 we encouraged AI literacy through lessons and display boards. In 2027 we want young people across the UK to question, discuss and debate the role AI should play in their lives and futures.', 'ai-awareness-day' ); ?></p>
+                <p class="hero-subtitle"><strong><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_lead' ) ); ?></strong> <?php echo esc_html( aiad_hero27_text( 'aiad_hero27_body' ) ); ?></p>
                 <div class="hero-cta">
-                    <a href="#contact" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Get involved with AIAD27', 'ai-awareness-day' ); ?></a>
-                    <a href="<?php echo esc_url( $join_url ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php esc_html_e( 'Join the National Conversation', 'ai-awareness-day' ); ?></a>
+                    <a href="<?php echo esc_url( aiad_hero27_text( 'aiad_hero27_involved_url' ) ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_involved_label' ) ); ?></a>
+                    <a href="<?php echo esc_url( $join_url ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_join_label' ) ); ?></a>
                 </div>
                 <?php if ( $nominate_url || $sign_in_url ) : ?>
                 <p class="hero-cta-more">
@@ -91,7 +91,7 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
             <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
                 <?php /* The box is the way in to the National AI Conversation, so it carries the name. */ ?>
                 <div class="hero-strand-feature__head">
-                    <p class="hero-strand-feature__title"><?php esc_html_e( 'National AI Conversation 2027', 'ai-awareness-day' ); ?></p>
+                    <p class="hero-strand-feature__title"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_panel_title' ) ); ?></p>
                     <?php if ( function_exists( 'aiad_national_conversation_dates' ) ) : ?>
                     <p class="hero-strand-feature__starts">
                         <?php
@@ -106,8 +106,9 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                     <?php endif; ?>
                     <?php /* The switcher leads, above the strand word it changes. */ ?>
                     <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
-                        <?php foreach ( array( 'safe' => 'Safe', 'smart' => 'Smart', 'creative' => 'Creative', 'responsible' => 'Responsible', 'future' => 'Future' ) as $slug => $label ) : ?>
-                            <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $label ); ?></a>
+                        <?php /* Each strand carries its question (edited in the Customiser or Edit Homepage); main.js shows it with the strand. */ ?>
+                        <?php foreach ( aiad_hero27_strand_questions() as $slug => $strand ) : ?>
+                            <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" data-motion="<?php echo esc_attr( aiad_hero27_text( 'aiad_hero27_q_' . $slug ) ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $strand['name'] ); ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -115,8 +116,8 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                     <span class="hero-strand-feature__mark" aria-hidden="true"></span>
                     <span class="hero-strand-feature__word">Safe</span>
                 </div>
-                <?php /* The box asks one thing: the motion to debate for the strand on show. main.js changes it with the strand. */ ?>
-                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php esc_html_e( 'Debate it', 'ai-awareness-day' ); ?></span> <span class="hero-strand-feature__motion-text"><?php esc_html_e( 'Should each person manage what AI remembers about them?', 'ai-awareness-day' ); ?></span></p>
+                <?php /* The box asks one thing: the question to debate for the strand on show. main.js changes it with the strand. */ ?>
+                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_question_label' ) ); ?></span> <span class="hero-strand-feature__motion-text"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_q_safe' ) ); ?></span></p>
             </div>
         </div>
     </div>

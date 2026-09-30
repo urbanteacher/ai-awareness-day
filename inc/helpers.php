@@ -417,3 +417,78 @@ function aiad_national_conversation_countdown(): ?array {
 function aiad_homepage_hero_is_previous(): bool {
 	return 'previous' === get_theme_mod( 'aiad_homepage_hero', 'new' );
 }
+
+/**
+ * The 2027 hero's editable words, shared by Customise > Front Page Sections > Hero Section and Appearance > Edit Homepage.
+ * Each key is a theme_mod; an empty value falls back to the default here, so clearing a field restores the standard wording.
+ *
+ * @return array<string, array{label: string, type: string, default: string, sanitize: string, description?: string}>
+ */
+function aiad_hero27_fields(): array {
+	$fields = array(
+		'aiad_hero27_title_1'        => array( 'label' => __( 'Headline, first line', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Keep Humans', 'ai-awareness-day' ) ),
+		'aiad_hero27_title_2'        => array( 'label' => __( 'Headline, second line', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'in the Loop', 'ai-awareness-day' ) ),
+		'aiad_hero27_lead'           => array( 'label' => __( 'Intro, bold opening line', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Humans in the Loop should mean something tangible.', 'ai-awareness-day' ) ),
+		'aiad_hero27_body'           => array( 'label' => __( 'Intro, rest of the paragraph', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => __( 'In 2026 we encouraged AI literacy through lessons, activities and display boards. In 2027 we want young people across the UK to question, discuss and debate the role AI should play in their lives and futures.', 'ai-awareness-day' ) ),
+		'aiad_hero27_involved_label' => array( 'label' => __( 'Outline button, label', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Get involved with AIAD27', 'ai-awareness-day' ) ),
+		'aiad_hero27_involved_url'   => array( 'label' => __( 'Outline button, link', 'ai-awareness-day' ), 'type' => 'text', 'default' => '#contact', 'sanitize' => 'aiad_sanitize_link_or_anchor', 'description' => __( 'A full web address, or #contact for the Get Involved form further down the page.', 'ai-awareness-day' ) ),
+		'aiad_hero27_join_label'     => array( 'label' => __( 'Dark button, label', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Join the National Conversation', 'ai-awareness-day' ), 'description' => __( 'Its link is set for you: the National Conversation page now, and registration once the conversation opens.', 'ai-awareness-day' ) ),
+		'aiad_hero27_panel_title'    => array( 'label' => __( 'Panel title', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'National AI Conversation 2027', 'ai-awareness-day' ), 'description' => __( 'The "Starting…" line under it follows the opening date.', 'ai-awareness-day' ) ),
+		'aiad_hero27_question_label' => array( 'label' => __( 'Panel, label above the question', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Debate it', 'ai-awareness-day' ) ),
+	);
+	foreach ( aiad_hero27_strand_questions() as $slug => $strand ) {
+		$fields[ 'aiad_hero27_q_' . $slug ] = array(
+			/* translators: %s: strand name, e.g. Safe */
+			'label'       => sprintf( __( 'Question: %s', 'ai-awareness-day' ), $strand['name'] ),
+			'type'        => 'textarea',
+			'default'     => $strand['question'],
+			'description' => 'safe' === $slug ? __( 'The panel shows one question per strand and changes with it. Keep each to two short lines, answerable either way.', 'ai-awareness-day' ) : '',
+		);
+	}
+	foreach ( $fields as $key => $field ) {
+		$fields[ $key ] += array( 'sanitize' => 'textarea' === $field['type'] ? 'sanitize_textarea_field' : 'sanitize_text_field' );
+	}
+	return $fields;
+}
+
+/**
+ * The five strands and the standard question the 2027 hero panel asks for each.
+ *
+ * @return array<string, array{name: string, question: string}>
+ */
+function aiad_hero27_strand_questions(): array {
+	return array(
+		'safe'        => array( 'name' => __( 'Safe', 'ai-awareness-day' ), 'question' => __( 'Should each person manage what AI remembers about them?', 'ai-awareness-day' ) ),
+		'smart'       => array( 'name' => __( 'Smart', 'ai-awareness-day' ), 'question' => __( 'Should school AI tools be allowed to give students the answer?', 'ai-awareness-day' ) ),
+		'creative'    => array( 'name' => __( 'Creative', 'ai-awareness-day' ), 'question' => __( 'Should AI-made work be allowed to compete for creative prizes?', 'ai-awareness-day' ) ),
+		'responsible' => array( 'name' => __( 'Responsible', 'ai-awareness-day' ), 'question' => __( "Should AI have to report its energy use when streaming and gaming don't?", 'ai-awareness-day' ) ),
+		'future'      => array( 'name' => __( 'Future', 'ai-awareness-day' ), 'question' => __( 'Should students have an official role in how their school uses AI?', 'ai-awareness-day' ) ),
+	);
+}
+
+/**
+ * One of the 2027 hero's words: the saved value, or the default when it is empty.
+ *
+ * @param string $key A key from aiad_hero27_fields().
+ */
+function aiad_hero27_text( string $key ): string {
+	$fields = aiad_hero27_fields();
+	$value  = trim( (string) get_theme_mod( $key, '' ) );
+	return '' !== $value ? $value : ( $fields[ $key ]['default'] ?? '' );
+}
+
+/**
+ * Sanitise a link that may be a web address or an on-page anchor such as #contact.
+ *
+ * @param mixed $value Raw value.
+ */
+function aiad_sanitize_link_or_anchor( $value ): string {
+	$value = trim( (string) $value );
+	if ( '' === $value ) {
+		return '';
+	}
+	if ( '#' === $value[0] ) {
+		return '#' . sanitize_title( substr( $value, 1 ) );
+	}
+	return esc_url_raw( $value );
+}
