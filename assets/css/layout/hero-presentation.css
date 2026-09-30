@@ -429,11 +429,19 @@
 /* ── Stacked ─────────────────────────────────────────── */
 
 @media (max-width: 960px) {
+  /* The copy column is flattened into the title block so the actions can close the hero, under the strand panel. */
   #hero .hero-title-block {
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2.5rem, 7vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
     padding-block: clamp(2.5rem, 7vw, 4rem) clamp(3rem, 8vw, 4.5rem);
   }
+  #hero .hero-copy { display: contents; }
+  #hero .hero-facts { padding-top: 2rem; }
+  #hero .hero-strand-feature { margin-top: clamp(2.5rem, 7vw, 3.5rem); }
+  #hero .hero-cta { order: 1; margin-top: 2rem; }
+  #hero .hero-cta-more { order: 2; }
   #hero .hero-title { font-size: clamp(2.75rem, 11vw, 6rem); }
   #hero .hero-eyebrow-date { font-size: clamp(1.09rem, 4.37vw, 2.38rem); }
   #hero .hero-facts { margin-top: 0; }
@@ -449,14 +457,8 @@
 @media (max-width: 600px) {
   /* Phones: the headline fills the width of the page like it does beside the panel on desktop, and the date keeps its
      size relative to it. The vw sizes stay as the fallback for browsers without container-query units.
-     The copy column is flattened into the title block so the actions can close the hero, under the strand panel;
-     the title block is the same width as the copy column here, so it carries the container for the cqi sizes. */
-  #hero .hero-title-block { display: flex; flex-direction: column; align-items: flex-start; gap: 0; container-type: inline-size; }
-  #hero .hero-copy { display: contents; }
-  #hero .hero-facts { padding-top: 2rem; }
-  #hero .hero-strand-feature { margin-top: 2.5rem; }
-  #hero .hero-cta { order: 1; margin-top: 2rem; }
-  #hero .hero-cta-more { order: 2; }
+     The copy column is flattened (see above), so the title block, which is the same width, carries the container. */
+  #hero .hero-title-block { container-type: inline-size; }
   #hero .hero-title { font-size: clamp(2.5rem, 13.4vw, 3.75rem); font-size: 17.15cqi; }
   #hero .hero-title__line { white-space: nowrap; }
   #hero .hero-eyebrow-date { font-size: clamp(.99rem, 5.32vw, 1.48rem); font-size: 6.78cqi; }
