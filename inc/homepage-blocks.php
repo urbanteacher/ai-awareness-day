@@ -317,6 +317,27 @@ function aiad_copy_customizer_wording_into_blocks( WP_Post $page ): int {
 }
 
 /**
+ * A homepage section pattern's block markup. WordPress keeps the list of theme pattern files in a cache that lasts
+ * until the theme version changes (or 30 minutes), so a pattern added in a deploy can be missing from the registry
+ * for a while; then the pattern file itself is rendered.
+ *
+ * @param string $pattern A pattern slug from aiad_homepage_section_patterns(), e.g. aiad/homepage-aim.
+ */
+function aiad_homepage_pattern_content( string $pattern ): string {
+	$registered = WP_Block_Patterns_Registry::get_instance()->get_registered( $pattern );
+	if ( $registered && ! empty( $registered['content'] ) ) {
+		return (string) $registered['content'];
+	}
+	$file = AIAD_DIR . '/patterns/' . basename( str_replace( 'aiad/', '', $pattern ) ) . '.php';
+	if ( ! is_readable( $file ) ) {
+		return '';
+	}
+	ob_start();
+	include $file;
+	return (string) ob_get_clean();
+}
+
+/**
  * Swap each section block on a page that has a pattern (aiad_homepage_section_patterns()) for the pattern's blocks,
  * carrying over the wording set in its sidebar, as "Edit on the page" does in the editor
  * (assets/js/homepage-section-blocks.js). The page keeps a revision of how it was. The hero keeps its block: it is
@@ -325,7 +346,6 @@ function aiad_copy_customizer_wording_into_blocks( WP_Post $page ): int {
  * @return int Number of sections rebuilt.
  */
 function aiad_rebuild_homepage_sections( WP_Post $page ): int {
-	$registry = WP_Block_Patterns_Registry::get_instance();
 	$targets  = aiad_homepage_pattern_wording_targets();
 	$out      = array();
 	$rebuilt  = 0;
@@ -333,14 +353,14 @@ function aiad_rebuild_homepage_sections( WP_Post $page ): int {
 		$name       = (string) $block['blockName'];
 		$slug       = 0 === strpos( $name, 'aiad/section-' ) ? str_replace( '-', '_', substr( $name, strlen( 'aiad/section-' ) ) ) : '';
 		$pattern    = $slug ? ( aiad_homepage_section_patterns()[ $slug ] ?? '' ) : '';
-		$registered = $pattern ? $registry->get_registered( $pattern ) : null;
-		if ( ! $registered ) {
+		$content = $pattern ? aiad_homepage_pattern_content( $pattern ) : '';
+		if ( '' === $content ) {
 			$out[] = $block;
 			continue;
 		}
 		$wording        = aiad_homepage_section_wording( $slug, $block['attrs']['wording'] ?? array() );
 		$seen           = array();
-		$pattern_blocks = parse_blocks( $registered['content'] );
+		$pattern_blocks = parse_blocks( $content );
 		aiad_apply_pattern_wording( $pattern_blocks, $wording, $targets[ $slug ] ?? array(), $seen );
 		foreach ( $pattern_blocks as $pattern_block ) {
 			if ( ! empty( $pattern_block['blockName'] ) ) {
@@ -764,12 +784,11 @@ add_action( 'init', 'aiad_register_homepage_pattern_category' );
  * Give the editor each section block's pattern, so the block can swap itself for editable core blocks.
  */
 function aiad_homepage_section_pattern_data(): void {
-	$registry = WP_Block_Patterns_Registry::get_instance();
-	$data     = array();
+	$data = array();
 	foreach ( aiad_homepage_section_patterns() as $slug => $pattern ) {
-		$registered = $registry->get_registered( $pattern );
-		if ( $registered ) {
-			$data[ aiad_homepage_section_block_name( $slug ) ] = $registered['content'];
+		$content = aiad_homepage_pattern_content( $pattern );
+		if ( '' !== $content ) {
+			$data[ aiad_homepage_section_block_name( $slug ) ] = $content;
 		}
 	}
 	$targets = array();
