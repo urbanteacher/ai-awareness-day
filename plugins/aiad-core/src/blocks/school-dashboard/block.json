@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/school-dashboard",
+	"version": "0.1.0",
+	"title": "Benchmark School Dashboard",
+	"category": "aiad",
+	"icon": "building",
+	"description": "A school's AI Risk & Readiness Benchmark results. Same output as the [ai_risk_school_dashboard] shortcode; needs the AI Risk & Readiness Benchmark plugin.",
+	"keywords": [ "benchmark", "school", "dashboard" ],
+	"textdomain": "aiad-core",
+	"attributes": {
+		"school": { "type": "string", "default": "" }
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

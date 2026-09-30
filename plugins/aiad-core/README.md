@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** eleven blocks (the interactive tools, the survey and the certificate showcase); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools`, `certificate-showcase` moved.
+**Status:** thirteen blocks (the interactive tools, the survey, the certificate showcase and the two benchmark blocks); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools`, `certificate-showcase` moved.
 
 ## Layout
 
@@ -45,6 +45,10 @@ Blocks so far, all in the "AI Awareness Day" inserter category, one per post (`m
 | `aiad/risk-academy` | `[aiad_risk_academy]` | the eight sections on or off |
 | `aiad/national-survey` | `[aiad_national_survey]` | — |
 | `aiad/certificate-showcase` | `[aiad_certificate_showcase]` | wording, button, example strand, background, section ID (empty = default) |
+| `aiad/risk-benchmark` | `[ai_risk_benchmark]` (benchmark plugin) | — |
+| `aiad/school-dashboard` | `[ai_risk_school_dashboard]` (benchmark plugin) | school (empty = `?school=` parameter) |
+
+The two benchmark blocks call the bundled AI Risk & Readiness Benchmark plugin's own shortcode methods and render nothing without it. They live here rather than in that plugin, which deploys on its own version bumps and ships standalone; the benchmark plugin itself is unchanged. Their editor previews are unstyled: the benchmark's CSS belongs to that plugin and is only registered on the front end.
 
 The tool blocks share one editor (`src/shared/tool-block.js`): a server-rendered preview plus sidebar settings described in each block's `index.js`. `src/blocks/buzzwords/` is the pattern to copy.
 

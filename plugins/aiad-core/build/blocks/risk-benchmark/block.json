@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/risk-benchmark",
+  "version": "0.1.0",
+  "title": "AI Risk & Readiness Benchmark",
+  "category": "aiad",
+  "icon": "chart-bar",
+  "description": "The AI Risk & Readiness Benchmark audit. Same output as the [ai_risk_benchmark] shortcode; needs the AI Risk & Readiness Benchmark plugin.",
+  "keywords": [
+    "benchmark",
+    "audit",
+    "risk"
+  ],
+  "textdomain": "aiad-core",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

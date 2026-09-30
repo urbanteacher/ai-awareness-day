@@ -115,7 +115,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. All 11 done (tools, survey, certificate showcase). The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
 - [x] Tool CSS/JS, data, fonts and the Risk Academy template moved into the plugin
 - [x] Editor previews styled: each block loads its tool's stylesheet in the editor; theme tokens moved to `assets/css/base/tokens.css`, loaded first on the front end and in the editor
-- [ ] Wrap the 2 plugin shortcodes as blocks inside the plugin
+- [x] Blocks for the benchmark plugin's 2 shortcodes (`aiad/risk-benchmark`, `aiad/school-dashboard`), in aiad-core rather than inside the benchmark plugin, which deploys on its own version bumps
 - [x] Block category "AI Awareness Day"
 - [ ] Proof of concept: hero (the quizzes are done)
 
