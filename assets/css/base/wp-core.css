@@ -41,31 +41,40 @@
 .mb-2rem { margin-bottom: 2rem; }
 
 /* Homepage sections built from core blocks (patterns/homepage-*.php) and the header and footer template parts
-   (parts/*.html), and the main group of block templates (templates/*.html): core's flow layout puts a 24px gap above every block after the first; these keep their own
+   (parts/*.html), and the main group of block templates (templates/*.html) down to the post content, whose own
+   blocks keep core's spacing as they had it before: core's flow layout puts a 24px gap above every block after the first; these keep their own
    spacing instead. This stylesheet loads after core's, so the theme's own margin rules (same specificity, later)
    still win. */
-:where(.section.wp-block-group, .site-header.wp-block-group, .site-footer.wp-block-group, main.wp-block-group) .is-layout-flow > * {
+:where(section.section.wp-block-group, .site-header.wp-block-group, .site-footer.wp-block-group) .is-layout-flow > *,
+:where(main.wp-block-group) .is-layout-flow:where(:not(.wp-block-post-content .is-layout-flow)) > * {
   margin-block-start: 0;
 }
 
 /* Core's flow layout also takes the bottom margin off the last block in each group (a stronger rule than the
    theme's), which the section headings rely on; give them back the margins the theme gives them
    (base/shared.css, responsive/mobile.css). */
-:where(.section.wp-block-group) .is-layout-flow > .section-label:last-child {
+:where(section.section.wp-block-group) .is-layout-flow > .section-label:last-child {
   margin-block-end: 0.6rem;
 }
 
-:where(.section.wp-block-group) .is-layout-flow > .section-title:last-child {
+:where(section.section.wp-block-group) .is-layout-flow > .section-title:last-child {
   margin-block-end: 1rem;
 }
 
 @media screen and (max-width: 767px) {
-  :where(.section.wp-block-group) .is-layout-flow > .section-desc:last-child {
+  :where(section.section.wp-block-group) .is-layout-flow > .section-desc:last-child {
     margin-block-end: 1.5rem;
   }
 }
 
 /* Block templates (templates/*.html): the styles their PHP templates set inline. */
+
+/* Core gives the post content block display: flow-root, which stops its first and last blocks' margins collapsing
+   through it as they did in the PHP templates' entry content. */
+:where(main.wp-block-group) .wp-block-post-content {
+  display: block;
+}
+
 .page-404 {
   padding-top: 140px;
   padding-bottom: 100px;

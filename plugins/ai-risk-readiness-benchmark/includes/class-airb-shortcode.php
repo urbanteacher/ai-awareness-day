@@ -165,6 +165,11 @@ class AIRB_Shortcode {
 	 * Enqueue when shortcode renders.
 	 */
 	public static function enqueue_assets(): void {
+		// A block template renders the page before wp_enqueue_scripts runs; register first, or
+		// wp_localize_script() below has no handle to attach airbBenchmark to.
+		if ( ! wp_script_is( 'airb-front', 'registered' ) ) {
+			self::register_assets();
+		}
 		wp_enqueue_style( 'airb-front' );
 		wp_enqueue_style( 'airb-teacher-dashboard' );
 		wp_enqueue_script( 'airb-front' );
