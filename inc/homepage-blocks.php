@@ -317,6 +317,95 @@ function aiad_copy_customizer_wording_into_blocks( WP_Post $page ): int {
 }
 
 /**
+ * Swap each section block on a page that has a pattern (aiad_homepage_section_patterns()) for the pattern's blocks,
+ * carrying over the wording set in its sidebar, as "Edit on the page" does in the editor
+ * (assets/js/homepage-section-blocks.js). The page keeps a revision of how it was. The hero keeps its block: it is
+ * edited on the canvas already.
+ *
+ * @return int Number of sections rebuilt.
+ */
+function aiad_rebuild_homepage_sections( WP_Post $page ): int {
+	$registry = WP_Block_Patterns_Registry::get_instance();
+	$targets  = aiad_homepage_pattern_wording_targets();
+	$out      = array();
+	$rebuilt  = 0;
+	foreach ( parse_blocks( $page->post_content ) as $block ) {
+		$name       = (string) $block['blockName'];
+		$slug       = 0 === strpos( $name, 'aiad/section-' ) ? str_replace( '-', '_', substr( $name, strlen( 'aiad/section-' ) ) ) : '';
+		$pattern    = $slug ? ( aiad_homepage_section_patterns()[ $slug ] ?? '' ) : '';
+		$registered = $pattern ? $registry->get_registered( $pattern ) : null;
+		if ( ! $registered ) {
+			$out[] = $block;
+			continue;
+		}
+		$wording        = aiad_homepage_section_wording( $slug, $block['attrs']['wording'] ?? array() );
+		$seen           = array();
+		$pattern_blocks = parse_blocks( $registered['content'] );
+		aiad_apply_pattern_wording( $pattern_blocks, $wording, $targets[ $slug ] ?? array(), $seen );
+		foreach ( $pattern_blocks as $pattern_block ) {
+			if ( ! empty( $pattern_block['blockName'] ) ) {
+				$out[] = $pattern_block;
+			}
+		}
+		++$rebuilt;
+	}
+	if ( $rebuilt ) {
+		// wp_update_post() unslashes its input; slash first (see aiad_copy_customizer_wording_into_blocks()).
+		wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( serialize_blocks( $out ) ) ) );
+	}
+	return $rebuilt;
+}
+
+/**
+ * Put sidebar wording into a pattern's parsed blocks (the PHP side of applyWording() in
+ * assets/js/homepage-section-blocks.js). The values are already sanitised with their fields' callbacks.
+ *
+ * @param array<int, array>                   $blocks  Parsed blocks, changed in place.
+ * @param array<string, string>               $wording Sanitised wording, by theme mod.
+ * @param array<string, array<string, mixed>> $targets aiad_homepage_pattern_wording_targets() for the section.
+ * @param array<string, int>                  $seen    How many blocks with each target's class have gone by.
+ */
+function aiad_apply_pattern_wording( array &$blocks, array $wording, array $targets, array &$seen ): void {
+	foreach ( $blocks as &$block ) {
+		$name    = (string) $block['blockName'];
+		$classes = preg_split( '/\s+/', (string) ( $block['attrs']['className'] ?? '' ) );
+		foreach ( $targets as $key => $target ) {
+			if ( ! empty( $target['block'] ) ) {
+				if ( $target['block'] === $name && isset( $wording[ $key ] ) ) {
+					$block['attrs'][ $target['attr'] ] = $wording[ $key ];
+				}
+				continue;
+			}
+			if ( ! in_array( $target['class'], $classes, true ) || ! in_array( $name, array( 'core/paragraph', 'core/heading' ), true ) ) {
+				continue;
+			}
+			$nth          = $seen[ $key ] ?? 0;
+			$seen[ $key ] = $nth + 1;
+			if ( isset( $wording[ $key ] ) && ( $target['nth'] ?? 0 ) === $nth ) {
+				$value = empty( $target['html'] ) ? esc_html( $wording[ $key ] ) : $wording[ $key ];
+				// A paragraph or heading holds its text between its tag's ">" and "</".
+				$html                  = (string) $block['innerHTML'];
+				$html                  = substr( $html, 0, strpos( $html, '>' ) + 1 ) . $value . substr( $html, strrpos( $html, '</' ) );
+				$block['innerHTML']    = $html;
+				$block['innerContent'] = array( $html );
+			}
+		}
+		if ( 'aiad/principle-card' === $name ) {
+			$strand = (string) ( $block['attrs']['strand'] ?? 'safe' );
+			foreach ( array( 'title' => 'aiad_principle_title_', 'text' => 'aiad_principle_desc_' ) as $attr => $prefix ) {
+				if ( isset( $wording[ $prefix . $strand ] ) ) {
+					$block['attrs'][ $attr ] = esc_html( $wording[ $prefix . $strand ] );
+				}
+			}
+		}
+		if ( ! empty( $block['innerBlocks'] ) ) {
+			aiad_apply_pattern_wording( $block['innerBlocks'], $wording, $targets, $seen );
+		}
+	}
+	unset( $block );
+}
+
+/**
  * Whether a post's content uses any homepage section block.
  *
  * @param WP_Post|int|null $post Post, ID, or the current post.
@@ -455,7 +544,7 @@ function aiad_block_homepage_admin_page(): void {
 add_action( 'admin_menu', 'aiad_block_homepage_admin_page' );
 
 /**
- * Handle the page's two actions.
+ * Handle the page's actions.
  */
 function aiad_handle_block_homepage_actions(): void {
 	if ( empty( $_POST['aiad_block_homepage_action'] ) || ! current_user_can( 'edit_theme_options' ) ) {
@@ -469,6 +558,8 @@ function aiad_handle_block_homepage_actions(): void {
 	} elseif ( 'copy' === $action && aiad_block_homepage_page() ) {
 		$copied  = aiad_copy_customizer_wording_into_blocks( aiad_block_homepage_page() );
 		$message = 'copied' . $copied;
+	} elseif ( 'rebuild' === $action && aiad_block_homepage_page() ) {
+		$message = 'rebuilt' . aiad_rebuild_homepage_sections( aiad_block_homepage_page() );
 	} elseif ( 'classic' === $action ) {
 		update_option( 'show_on_front', 'posts' );
 		$message = 'classic';
@@ -499,6 +590,10 @@ function aiad_render_block_homepage_admin_page(): void {
 		'error'    => __( 'That did not work. Nothing was changed.', 'ai-awareness-day' ),
 	);
 	$message = isset( $_GET['aiad_message'] ) ? sanitize_key( wp_unslash( $_GET['aiad_message'] ) ) : '';
+	if ( preg_match( '/^rebuilt(\d+)$/', $message, $m ) ) {
+		/* translators: %d: number of homepage sections */
+		$messages[ $message ] = sprintf( _n( '%d section can now be edited on the page, with its wording and design unchanged. The page\'s Revisions keep the version before.', '%d sections can now be edited on the page, with their wording and design unchanged. The page\'s Revisions keep the version before.', (int) $m[1], 'ai-awareness-day' ), (int) $m[1] );
+	}
 	if ( preg_match( '/^copied(\d+)$/', $message, $m ) ) {
 		/* translators: %d: number of wording fields */
 		$messages[ $message ] = sprintf( _n( '%d wording field was copied from the Customizer into the homepage blocks.', '%d wording fields were copied from the Customizer into the homepage blocks.', (int) $m[1], 'ai-awareness-day' ), (int) $m[1] );
@@ -522,6 +617,13 @@ function aiad_render_block_homepage_admin_page(): void {
 				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
 				<input type="hidden" name="aiad_block_homepage_action" value="copy" />
 				<?php submit_button( __( 'Copy the Customizer wording into the blocks', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
+			</form>
+			<h2><?php esc_html_e( 'Edit on the page', 'ai-awareness-day' ); ?></h2>
+			<p><?php esc_html_e( 'Each section can be swapped for ordinary blocks with the same wording and design, so its text is edited directly on the page (the "Edit on the page" button in a section\'s sidebar). This does it for every section at once, keeping the wording each has now. The hero is edited on the page already. The page\'s Revisions keep the version before.', 'ai-awareness-day' ); ?></p>
+			<form method="post">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="rebuild" />
+				<?php submit_button( __( 'Make every section editable on the page', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
 			</form>
 			<form method="post" style="margin-top:2em">
 				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
