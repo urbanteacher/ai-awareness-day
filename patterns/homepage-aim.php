@@ -20,7 +20,7 @@ $aiad_aims = array(
 	__( 'Grow a national conversation about the AI already in young people’s lives: Your AI. Your choices.', 'ai-awareness-day' ),
 );
 ?>
-<!-- wp:group {"tagName":"section","metadata":{"name":"Aim","patternName":"aiad/homepage-aim"},"anchor":"aim","className":"section section--green","layout":{"type":"default"}} -->
+<!-- wp:group {"tagName":"section","metadata":{"name":"Aim","patternName":"aiad/homepage-aim"},"className":"section section--green","layout":{"type":"default"},"anchor":"aim"} -->
 <section id="aim" class="wp-block-group section section--green"><!-- wp:group {"className":"container","layout":{"type":"default"}} -->
 <div class="wp-block-group container"><!-- wp:group {"className":"fade-up","layout":{"type":"default"}} -->
 <div class="wp-block-group fade-up"><!-- wp:paragraph {"className":"section-label"} -->
@@ -32,10 +32,18 @@ $aiad_aims = array(
 <!-- /wp:heading --></div>
 <!-- /wp:group -->
 
-<!-- wp:list {"ordered":true,"anchor":"aims-list","className":"aims-list fade-up"} -->
-<ol id="aims-list" class="wp-block-list aims-list fade-up"><?php foreach ( $aiad_aims as $aiad_aim ) : ?><!-- wp:list-item -->
-<li><?php echo esc_html( $aiad_aim ); ?></li>
-<!-- /wp:list-item --><?php endforeach; ?></ol>
+<!-- wp:list {"ordered":true,"className":"aims-list fade-up","anchor":"aims-list"} -->
+<ol id="aims-list" class="wp-block-list aims-list fade-up"><?php
+echo implode(
+	"\n\n",
+	array_map(
+		static function ( string $aim ): string {
+			return "<!-- wp:list-item -->\n<li>" . esc_html( $aim ) . "</li>\n<!-- /wp:list-item -->";
+		},
+		$aiad_aims
+	)
+);
+?></ol>
 <!-- /wp:list --></div>
 <!-- /wp:group --></section>
 <!-- /wp:group -->
