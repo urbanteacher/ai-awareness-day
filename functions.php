@@ -20,6 +20,18 @@ if ( ! defined( 'AIAD_URI' ) ) {
 }
 
 $aiad_dir = AIAD_DIR;
+
+/**
+ * Load a module that moved to the aiad-core plugin, from the plugin's copy in this theme, unless the active plugin
+ * already provides it. Keeps the theme working with or without the plugin.
+ */
+function aiad_require_core_module( string $module ): void {
+	if ( function_exists( 'aiad_core_provides' ) && aiad_core_provides( $module ) ) {
+		return;
+	}
+	require_once AIAD_DIR . '/plugins/aiad-core/modules/' . $module . '.php';
+}
+
 if ( is_admin() ) {
     require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';
     require_once $aiad_dir . '/inc/meta-boxes.php';
@@ -40,6 +52,7 @@ require_once $aiad_dir . '/inc/admin-assets-pack.php';
 require_once $aiad_dir . '/inc/theme-assets.php';
 require_once $aiad_dir . '/inc/setup.php';
 require_once $aiad_dir . '/inc/helpers.php';
+aiad_require_core_module( 'helpers-data' );
 require_once $aiad_dir . '/inc/walkthrough.php';
 require_once $aiad_dir . '/inc/migrate-2027-branding.php';
 require_once $aiad_dir . '/inc/entry-figure.php';
