@@ -607,10 +607,12 @@ add_action( 'admin_notices', 'aiad_block_homepage_edit_homepage_notice' );
  */
 function aiad_homepage_section_patterns(): array {
 	return array(
-		'principles' => 'aiad/homepage-principles',
-		'aim'        => 'aiad/homepage-aim',
-		'contact'    => 'aiad/homepage-contact',
-		'campaign'   => 'aiad/homepage-campaign',
+		'campaign'           => 'aiad/homepage-campaign',
+		'principles'         => 'aiad/homepage-principles',
+		'aim'                => 'aiad/homepage-aim',
+		'free_resources'     => 'aiad/homepage-free-resources',
+		'featured_resources' => 'aiad/homepage-featured-resources',
+		'contact'            => 'aiad/homepage-contact',
 	);
 }
 
@@ -624,13 +626,22 @@ function aiad_homepage_section_patterns(): array {
  */
 function aiad_homepage_pattern_wording_targets(): array {
 	return array(
-		'campaign' => array(
+		'campaign'           => array(
 			'aiad_campaign_title'              => array( 'class' => 'section-title' ),
 			'aiad_campaign_text'               => array( 'class' => 'section-desc', 'html' => true ),
 			'aiad_campaign_text_2'             => array( 'class' => 'section-desc', 'html' => true, 'nth' => 1 ),
 			'aiad_campaign_linkedin_embed_src' => array( 'block' => 'aiad/campaign-embed', 'attr' => 'url' ),
 		),
-		'contact'  => array(
+		'free_resources'     => array(
+			'aiad_free_resources_title' => array( 'class' => 'section-title' ),
+			'aiad_free_resources_desc'  => array( 'class' => 'section-desc' ),
+		),
+		'featured_resources' => array(
+			'aiad_handpicked_resources_title' => array( 'class' => 'section-title' ),
+			'aiad_handpicked_resources_desc'  => array( 'class' => 'section-desc' ),
+			'aiad_linkedin_post_url'          => array( 'block' => 'aiad/linkedin-card', 'attr' => 'url' ),
+		),
+		'contact'            => array(
 			'aiad_contact_title' => array( 'class' => 'section-title' ),
 			'aiad_contact_desc'  => array( 'class' => 'section-desc', 'html' => true ),
 		),

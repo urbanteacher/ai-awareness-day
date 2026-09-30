@@ -10,28 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
 
-// Check if user has manually selected resources via Homepage Editor
-$selected_ids = array();
-for ( $i = 1; $i <= 6; $i++ ) {
-    $id = absint( get_theme_mod( 'aiad_free_resource_' . $i, 0 ) );
-    if ( $id > 0 ) {
-        $selected_ids[] = $id;
-    }
+$free_resources = aiad_free_resources_query();
+if ( ! $free_resources ) {
+    return; // No resources picked in Appearance > Edit Homepage.
 }
-
-// If no resources selected, don't render the section
-if ( empty( $selected_ids ) ) {
-    return;
-}
-
-// Query the selected resources
-$free_resources = new WP_Query( array(
-    'post_type'      => 'resource',
-    'post_status'    => 'publish',
-    'posts_per_page' => 6,
-    'post__in'       => $selected_ids,
-    'orderby'        => 'post__in',
-) );
 
 // Get custom section title/description
 $section_title = get_theme_mod( 'aiad_free_resources_title', __( 'Free Resources', 'ai-awareness-day' ) );
@@ -49,24 +31,7 @@ if ( $free_resources->have_posts() ):
                 </p>
             </div>
 
-            <div class="resource-tiles">
-                <?php
-                while ( $free_resources->have_posts() ) :
-                    $free_resources->the_post();
-                    get_template_part( 'template-parts/components/resource-tile', null, array() );
-                endwhile;
-                ?>
-                <?php
-                $resources_archive_url = get_post_type_archive_link( 'resource' );
-                if ( ! $resources_archive_url ) {
-                    $resources_archive_url = home_url( '/resources/' );
-                    if ( get_option( 'permalink_structure' ) === '' ) {
-                        $resources_archive_url = add_query_arg( 'post_type', 'resource', home_url( '/' ) );
-                    }
-                }
-                ?>
-            </div>
-            <a class="resource-tiles__more" href="<?php echo esc_url( $resources_archive_url ); ?>"><?php esc_html_e( 'View all free resources', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+<?php get_template_part( 'template-parts/components/free-resource-tiles', null, array( 'query' => $free_resources ) ); ?>
         </div>
     </section>
     <?php
