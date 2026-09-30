@@ -29,3 +29,37 @@ function aiad_register_site_part_blocks(): void {
 	}
 }
 add_action( 'init', 'aiad_register_site_part_blocks' );
+
+/**
+ * The tags every page's <head> starts with, printed by wp_head() so that block templates (template-canvas.php) get
+ * them too, not only header.php: the meta description, the browser theme colour, the web-app tags, and the script
+ * that swaps the <html> element's no-js class for js.
+ */
+function aiad_site_head_tags(): void {
+	if ( ! function_exists( 'aiad_seo_should_output' ) || aiad_seo_should_output() ) {
+		$og_data     = function_exists( 'aiad_get_og_data' ) ? aiad_get_og_data() : null;
+		$description = $og_data && isset( $og_data['description'] ) ? $og_data['description'] : get_bloginfo( 'description' );
+		echo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\n";
+	}
+	echo '<meta name="theme-color" content="#00BEDD">' . "\n";
+	echo '<meta name="mobile-web-app-capable" content="yes">' . "\n";
+	echo '<meta name="apple-mobile-web-app-status-bar-style" content="default">' . "\n";
+	echo "<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>\n";
+}
+add_action( 'wp_head', 'aiad_site_head_tags', 0 );
+
+/**
+ * Give the site's pages <html class="no-js"> (the script in aiad_site_head_tags() makes it js), in header.php and in
+ * block templates alike. Only for the theme's own pages, not the admin or the login screen.
+ *
+ * @param string $output The lang and dir attributes.
+ */
+function aiad_html_no_js_class( string $output ): string {
+	return $output . ' class="no-js"';
+}
+add_action(
+	'template_redirect',
+	static function (): void {
+		add_filter( 'language_attributes', 'aiad_html_no_js_class' );
+	}
+);
