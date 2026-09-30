@@ -42,6 +42,7 @@ services:
       # Mount bundled plugins
       - ./plugins/ai-risk-readiness-benchmark:/var/www/html/wp-content/plugins/ai-risk-readiness-benchmark
       - ./plugins/aiad-debate-network:/var/www/html/wp-content/plugins/aiad-debate-network
+      - ./plugins/aiad-core:/var/www/html/wp-content/plugins/aiad-core
 
 volumes:
   db_data:

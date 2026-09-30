@@ -1,0 +1,15 @@
+{
+  "name": "aiad-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Awareness Day Core plugin: blocks build.",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "wp-scripts build --webpack-copy-php",
+    "start": "wp-scripts start --webpack-copy-php",
+    "lint:js": "wp-scripts lint-js src"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^36.0.0"
+  }
+}

@@ -1,0 +1,2 @@
+node_modules/
+# build/ is committed: deploys copy the plugin as it is and run no build step.

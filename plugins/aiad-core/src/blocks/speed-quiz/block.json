@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/speed-quiz",
+	"version": "0.1.0",
+	"title": "AI Speed Quiz",
+	"category": "aiad",
+	"icon": "clock",
+	"description": "Timed AI quiz for teachers, with a leaderboard saved on the device. Same output as the [aiad_speed_quiz] shortcode.",
+	"keywords": [ "quiz", "teachers", "timed" ],
+	"textdomain": "aiad-core",
+	"attributes": {
+		"questions": { "type": "integer", "default": 10 },
+		"seconds": { "type": "integer", "default": 15 },
+		"bonus": { "type": "integer", "default": 10 },
+		"points": { "type": "integer", "default": 100 }
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
