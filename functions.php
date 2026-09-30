@@ -63,6 +63,7 @@ require_once $aiad_dir . '/inc/front-page-layout.php';
 require_once $aiad_dir . '/inc/homepage-blocks.php';
 require_once $aiad_dir . '/inc/homepage-campaign.php';
 require_once $aiad_dir . '/inc/homepage-resources.php';
+require_once $aiad_dir . '/inc/site-parts.php';
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
 aiad_require_core_module( 'certificates' );

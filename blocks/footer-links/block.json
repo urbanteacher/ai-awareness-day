@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/footer-links",
+	"title": "Footer links",
+	"category": "theme",
+	"icon": "admin-links",
+	"description": "The newsletter, press release, asset pack and implementation guide links. A link without an address shows as plain text.",
+	"keywords": [
+		"links",
+		"downloads",
+		"footer"
+	],
+	"textdomain": "ai-awareness-day",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

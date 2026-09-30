@@ -124,8 +124,8 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 
 ### Stage 2 — Hybrid theme (~1–2 weeks)
 
-- [ ] `add_theme_support( 'block-template-parts' )` so editors can edit parts on screen (Appearance → Template Parts)
-- [ ] Add `parts/header.html` and `parts/footer.html`; call them from `header.php` / `footer.php` via `block_template_part()`
+- [x] `add_theme_support( 'block-template-parts' )` (`inc/site-parts.php`), so the header and footer are edited in Appearance → Design (WordPress 7's name for the Site Editor in a classic theme); `templateParts` in `theme.json` gives them their areas
+- [x] `parts/header.html` and `parts/footer.html`, printed by `header.php` / `footer.php` with `block_template_part()`. Groups for the structure; small blocks (`blocks/site-logo`, `site-navigation`, `footer-widgets`, `footer-links`, `footer-social`) print the pieces that come from menus, widgets and settings, with the templates' markup (`template-parts/components/`); the copyright line is an ordinary paragraph. Same tags and text on every page checked, every element matches at 1280px and 390px (mobile menu open too). The menu stays in Appearance → Menus until the Navigation block can take over its markup and script (stage 3)
 - [x] Homepage sections as blocks: 11 section blocks (theme, `inc/homepage-blocks.php`) that render the existing section templates; Appearance → Block homepage creates a "Home" page from the current order and visibility and makes it the front page (and can switch back). The homepage prints the same markup
 - [x] Section wording in each block's sidebar (35 fields across 6 sections), copied from the Customizer by a button on Appearance → Block homepage; the Customizer hides those controls while the block homepage is on
 - [ ] Sections rebuilt from core blocks/patterns for on-canvas editing, section by section. A section block with a pattern (`aiad_homepage_section_patterns()`) gets an "Edit on the page" button that swaps it for the pattern's core blocks; the theme CSS styles core's markup alongside the template's

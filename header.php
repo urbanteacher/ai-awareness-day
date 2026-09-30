@@ -23,38 +23,7 @@
 <body <?php body_class(); ?>>
     <?php wp_body_open(); ?>
 
-    <header class="site-header" id="site-header">
-        <div class="container header-inner">
-
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="site-logo" aria-label="<?php esc_attr_e( 'AI Awareness Day 2027 — Keep Humans in the Loop', 'ai-awareness-day' ); ?>">
-                <img src="<?php echo esc_url( AIAD_URI . '/assets/brand/aiad27/aiad27-lockup.svg' ); ?>" alt="" aria-hidden="true" class="site-logo__img" />
-            </a>
-
-            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"
-                aria-controls="main-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-            <nav class="main-navigation" id="main-nav" role="navigation"
-                aria-label="<?php esc_attr_e('Main Navigation', 'ai-awareness-day'); ?>">
-                <?php
-                if (has_nav_menu('primary')) {
-                    wp_nav_menu(array(
-                        'theme_location' => 'primary',
-                        'container' => false,
-                        'walker' => new AIAD_Nav_Walker(),
-                        'fallback_cb' => 'aiad_fallback_menu',
-                    ));
-                } else {
-                    aiad_fallback_menu();
-                }
-                ?>
-            </nav>
-
-        </div>
-    </header>
+    <?php block_template_part( 'header' ); // parts/header.html, edited in Appearance > Editor. ?>
 
     <?php if ( get_theme_mod( 'aiad_show_breadcrumbs', false ) && function_exists( 'aiad_render_breadcrumbs' ) ) : ?>
         <?php aiad_render_breadcrumbs(); ?>

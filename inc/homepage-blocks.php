@@ -452,11 +452,13 @@ function aiad_render_block_homepage( WP_Post $page ): string {
 }
 
 /**
- * In the editor, give pages that use the section blocks the theme's front-end stylesheets, so the previews in the
- * editor canvas look like the site.
+ * In the editor, give pages that use the section blocks, and the Site Editor, the theme's front-end stylesheets, so the
+ * previews in the editor canvas look like the site.
  */
 function aiad_homepage_section_editor_styles(): void {
-	if ( ! is_admin() || ! aiad_post_has_homepage_sections() ) {
+	// The Site Editor edits the header and footer template parts (inc/site-parts.php), which need the same styles.
+	$site_editor = function_exists( 'get_current_screen' ) && get_current_screen() && 'site-editor' === get_current_screen()->base;
+	if ( ! is_admin() || ! ( $site_editor || aiad_post_has_homepage_sections() ) ) {
 		return;
 	}
 	wp_enqueue_style( 'aiad-fonts-fallback', AIAD_URI . '/assets/css/base/fonts.css', array(), AIAD_VERSION );

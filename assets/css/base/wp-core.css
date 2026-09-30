@@ -40,10 +40,11 @@
 .mt-1-5rem { margin-top: 1.5rem; }
 .mb-2rem { margin-bottom: 2rem; }
 
-/* Homepage sections built from core blocks (patterns/homepage-*.php): core's flow layout puts a 24px gap above
-   every block after the first; the sections keep their own spacing instead. This stylesheet loads after core's, so
-   the theme's own margin rules (same specificity, later) still win. */
-:where(.section.wp-block-group) .is-layout-flow > * {
+/* Homepage sections built from core blocks (patterns/homepage-*.php) and the header and footer template parts
+   (parts/*.html): core's flow layout puts a 24px gap above every block after the first; these keep their own
+   spacing instead. This stylesheet loads after core's, so the theme's own margin rules (same specificity, later)
+   still win. */
+:where(.section.wp-block-group, .site-header.wp-block-group, .site-footer.wp-block-group) .is-layout-flow > * {
   margin-block-start: 0;
 }
 
