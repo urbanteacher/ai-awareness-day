@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline` moved.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions` moved.
 
 ## Layout
 
@@ -70,8 +70,8 @@ Where each file in the theme's `inc/` should end up.
 | `resource-filter` ✅ | middle of `ajax-handlers.php` | **Moved.** AJAX filter for both resource archives and the cached filter counts. Still renders the theme's `resource-tile` template part with `get_template_part()` (decision: keep until the card becomes an `aiad/resource-card` block with the archive templates in Stage 3) |
 | `tracking` ✅ | download and view counters (from `ajax-handlers.php`), `engagement-tracking.php`, `dashboard.php` | **Moved** to `modules/tracking/`. The Campaign dashboard widgets now use priority 11, so they stay below the theme's Assets Pack widget. |
 | `certificates` | `certificate-api.php`, `certificate-copy.php`, `certificate-admin.php`, `letter-copy.php`, `letter-admin.php`, `generator-embed.php` | |
-| `timeline` ✅ | `cpt-meta.php`, `admin-meta-box.php`, `entries.php`, `topics.php`, `topic-assignments.php`, `query.php`, `ajax.php`, `benchmark-audience.php`, and the data half of `icons.php` (now `icon-options.php`) | **Moved** to `modules/timeline/`. The theme's `inc/timeline.php` loads the module, then the presentation files it keeps. The AJAX filter still renders with the theme's `timeline-layouts.php`, like the resource filter. `entries.php` still calls the theme's `aiad_get_customizer_defaults()` / `aiad_sanitize_event_date_ymd()` and live-sessions functions (runtime only) |
-| `live-sessions` | `live-sessions.php` | |
+| `timeline` ✅ | `cpt-meta.php`, `admin-meta-box.php`, `entries.php`, `topics.php`, `topic-assignments.php`, `query.php`, `ajax.php`, `benchmark-audience.php`, and the data half of `icons.php` (now `icon-options.php`) | **Moved** to `modules/timeline/`. The theme's `inc/timeline.php` loads the module, then the presentation files it keeps. The AJAX filter still renders with the theme's `timeline-layouts.php`, like the resource filter. `entries.php` still calls the theme's `aiad_get_customizer_defaults()` / `aiad_sanitize_event_date_ymd()` (runtime only) |
+| `live-sessions` ✅ | `live-sessions.php` except its four markup helpers | **Moved** to `modules/live-sessions.php`: the `live_session` CPT and audience taxonomy, meta box, seeds and migrations, data and formatting helpers, admin columns, legacy `/schedule/` redirects and the calendar (ICS) feed. The action link and its icon, the audience tabs and the inline filter script stay in the theme's `inc/live-sessions.php` |
 | `ai-tools` | `tools.php` | `ai_tool` CPT |
 | `tools` | `ai-buzzwords.php`, `ai-llm-explainer.php`, `ai-llm-order-game.php`, `ai-speed-quiz.php`, `ai-computing-curriculum-challenge.php`, `ai-ict-curriculum.php`, `ai-curriculum-quiz.php`, `ai-misinformation-detector.php`, `ai-neu-ai-report.php`, `ai-neu-ai-report-data.php`, `schools-ai-risk-academy.php` + their JS/CSS | Each becomes a block. Move the explainer and buzzwords together: the speed quiz and order game call them |
 | `survey` | `national-survey.php` | |

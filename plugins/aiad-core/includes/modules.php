@@ -27,6 +27,7 @@ function aiad_core_modules(): array {
 		'tracking'        => 'tracking.php',
 		'admin'           => 'admin.php',
 		'timeline'        => 'timeline.php',
+		'live-sessions'   => 'live-sessions.php',
 	);
 }
 

@@ -101,7 +101,8 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `tracking` module finished: download/view counters, engagement tracking, dashboard widgets
 - [x] `admin` module finished: meta boxes, list columns and filters, import/export, focal point, submissions CSV export
 - [x] `timeline` module: CPT, meta, admin meta box, entries, topics, queries, AJAX, benchmark audience (presentation stays in the theme)
-- [ ] Move the remaining modules (certificates, live sessions, tools, survey, SEO and others; see the plugin README) from `inc/` into it (theme keeps only presentation)
+- [x] `live-sessions` module: events CPT, admin, data helpers, redirects, calendar feed (markup helpers stay in the theme)
+- [ ] Move the remaining modules (certificates, tools, survey, SEO and others; see the plugin README) from `inc/` into it (theme keeps only presentation)
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)
