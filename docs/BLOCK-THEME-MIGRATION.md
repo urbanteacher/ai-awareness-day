@@ -104,6 +104,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `live-sessions` module: events CPT, admin, data helpers, redirects, calendar feed (markup helpers stay in the theme)
 - [x] `certificates` module: certificate and letter wording, REST API, generator config, admin pages
 - [x] `ai-tools` module: AI tools CPT, taxonomy, seeds, meta (row renderer stays in the theme)
+- [x] `benchmark-content` module: benchmark launch article and hub timeline seeds
 - [ ] Move the remaining modules (tools, survey, SEO and others; see the plugin README) from `inc/` into it (theme keeps only presentation)
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`

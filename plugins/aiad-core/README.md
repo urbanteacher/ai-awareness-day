@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools` moved.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content` moved.
 
 ## Layout
 
@@ -77,7 +77,7 @@ Where each file in the theme's `inc/` should end up.
 | `survey` | `national-survey.php` | |
 | `certificate-showcase` | `certificate-showcase.php` | Renders a theme template part, same approach as `ajax` |
 | `seo` | `seo.php`, `sharing.php` | Reads Customizer values (see Risks) |
-| `benchmark-content` | `ai-risk-benchmark-post.php`, `airb-hub-timeline-seed.php` | Seed content for the bundled benchmark plugin |
+| `benchmark-content` ✅ | `ai-risk-benchmark-post.php`, `airb-hub-timeline-seed.php` | **Moved** to `modules/benchmark-content/`. Seed content for the bundled benchmark plugin; the theme's `timeline-layouts.php` calls `aiad_risk_benchmark_get_excerpt()`. Keep this module listed after the interactive tools' modules when they move (see Risks) |
 
 ### Stays in the theme
 
@@ -96,6 +96,7 @@ Where each file in the theme's `inc/` should end up.
 
 - **Customizer values belong to the theme.** `seo.php` and `sharing.php` read hero title, date and campaign text with `get_theme_mod()`, the `contact` module reads the form's recipient address (`aiad_contact_email`), and the `timeline` module's `entries.php` reads the event date (`aiad_event_date_ymd`). Theme mods are stored per theme, so a theme switch would empty them. When these move off the Customizer, give them their own options (copied once from the theme mods) instead.
 - **Load order.** Plugins load before the theme. Module code must only call theme functions inside hooks, never when the file loads, and must not rely on `AIAD_DIR` / `AIAD_URI` / `AIAD_VERSION` for anything it owns.
+- **Seed order on fresh installs.** Several one-off `init` seeds (benchmark content and the interactive tools' timeline entries) share priorities 33–35 and set no post dates. While the tools are still in the theme, the plugin's benchmark seeds run before the tools' seeds instead of after. That only matters on a brand-new site, where same-second timeline entries could tie in date order. When the tools move, list their modules before `benchmark-content` in `aiad_core_modules()` to restore the original order.
 - **Deploy.** Production gets bundled plugins through `inc/bundled-plugins.php`, which copies **and activates** them. Adding `aiad-core` to `aiad_bundled_plugins()` ships it live. Do that only once a module has moved and been tested on staging.
 - **Editor preview styling.** The block editor preview shows the quiz's markup without its CSS, because the theme only registers that stylesheet on the front end. Fix when the tool's assets move into the plugin (register them on `init`, reference them in `block.json` as `style`).
 
