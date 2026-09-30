@@ -208,7 +208,7 @@ Use Twenty Twenty-Five as the parent, with a child theme holding brand styles, t
 
 ## 7. Testing checklist (per stage)
 
-- [ ] Front end matches before/after at phone, tablet and desktop widths
+- [x] Front end matches before/after at phone, tablet and desktop widths: each step at 1280px and 390px; at 768px, `main` (before the migration) against the block theme on 12 pages of every kind, where 11 match piece for piece and the homepage differs only by the hero's newer wording (a longer intro wraps one more line). The 768px check found three things the block theme changed, now undone in `inc/site-parts.php`: core's block theme styles (`wp-block-styles`: a quote's border and padding, padding on groups with a background), and the block button classes core gives the comment form's submit button (`comments_block_form_defaults`). After them, the 152 URLs match the hybrid theme byte for byte, apart from blank lines
 - [ ] Every interactive tool loads and works (including AJAX submissions)
 - [ ] Editor preview matches the front end for each custom block
 - [ ] No PHP notices or JS console errors

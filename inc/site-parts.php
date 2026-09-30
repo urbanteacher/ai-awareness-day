@@ -17,6 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_site_parts_support(): void {
 	add_theme_support( 'block-template-parts' );
+	// WordPress gives a block theme core's opinionated block styles (a quote's left border and padding, padding on a
+	// group with a background, and so on). The theme styles blocks itself, and did so without them as a hybrid theme.
+	remove_theme_support( 'wp-block-styles' );
+	// In a block theme, core gives the comment form's submit button the block button classes, and with them core's
+	// default button colours. comments.php styles its own form, as it did as a hybrid theme.
+	remove_filter( 'comment_form_defaults', 'comments_block_form_defaults' ); // wp-includes/blocks/comments.php
 }
 add_action( 'after_setup_theme', 'aiad_site_parts_support' );
 
