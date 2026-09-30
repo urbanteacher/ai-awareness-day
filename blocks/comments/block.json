@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/comments",
+	"title": "Comments",
+	"category": "theme",
+	"icon": "admin-comments",
+	"description": "The post's comments and comment form (the theme's comments.php), when comments are open or there are some.",
+	"keywords": [
+		"comments",
+		"discussion"
+	],
+	"textdomain": "ai-awareness-day",
+	"usesContext": [
+		"postId",
+		"postType"
+	],
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
