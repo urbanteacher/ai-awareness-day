@@ -30,8 +30,9 @@ function aiad_core_modules(): array {
 		'live-sessions'     => 'live-sessions.php',
 		'certificates'      => 'certificates.php',
 		'ai-tools'          => 'ai-tools.php',
+		'tools'             => 'tools.php',
 		'survey'            => 'survey.php',
-		// Keep after the interactive tools' modules once they move: their timeline seeds share init priorities.
+		// After tools: their timeline seeds share init priorities 33-35, and tools seeded first in the theme.
 		'benchmark-content' => 'benchmark-content.php',
 	);
 }
