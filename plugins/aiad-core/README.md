@@ -56,6 +56,17 @@ Each tool's `aiad_post_content_has_*_shortcode()` check also looks for its block
 
 Two expected differences from the shortcode, both standard WordPress behaviour: the shortcode's output gets a stray `<p>` from `wpautop` and the block's does not, and block output goes through `wptexturize` (so `...` becomes `…`) because blocks render before that filter and shortcodes after it.
 
+## WordPress compatibility
+
+Checked against WordPress 7.1.2 (latest, PHP 8.3) and the local 6.6.2 (PHP 8.2), with `WP_DEBUG` on: every page, endpoint and module check behaves the same on both, all 13 blocks register and preview, and `aiad-core` logs no notices, warnings or deprecations.
+
+- **Blocks** are registered from `build/blocks-manifest.php` with `wp_register_block_types_from_metadata_collection()` on 6.8+, and block by block on older versions ([docs](https://developer.wordpress.org/block-editor/getting-started/fundamentals/registration-of-a-block/)). Both routes register the same blocks.
+- **Iframed editor** (always on from 7.1): editor styles come from each block's `block.json` (`editorStyle`) and the theme's `add_editor_style()`, both injected into the iframe. Nothing reaches into the editor's `document`.
+- **`"role": "content"`** on the certificate showcase's text attributes, so they stay editable inside patterns (contentOnly by default since 7.0).
+- **Deprecated functions**: none. `get_page_by_title()` (deprecated in 6.2) is replaced by `aiad_core_get_post_by_exact_title()`, the dev note's `WP_Query`; it returns the same post for every current title (it skips trashed posts, which the old function did not).
+- **Plugin header**: `Update URI: false`, so WordPress never offers an update from a WordPress.org plugin with the same slug. `Requires at least: 6.6` and `Requires PHP: 8.0` match what the code uses.
+- The editor previews use `ServerSideRender`, which the block editor docs treat as a fallback for dynamic blocks; it fits these shortcode-backed tools.
+
 ## Moving a module out of the theme
 
 There is only ever **one copy** of a module: the file in `modules/`. This plugin folder ships inside the theme, so the theme can load the same file from `plugins/aiad-core/modules/` when the plugin isn't active. `helpers-data` is the worked example.

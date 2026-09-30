@@ -16,19 +16,23 @@
   "attributes": {
     "eyebrow": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "title": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "lead": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "ctaText": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "ctaUrl": {
       "type": "string",
@@ -36,15 +40,18 @@
     },
     "certEyebrow": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "certTitle": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "certLead": {
       "type": "string",
-      "default": ""
+      "default": "",
+      "role": "content"
     },
     "strand": {
       "type": "string",

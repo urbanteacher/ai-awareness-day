@@ -41,7 +41,7 @@ function aiad_certificate_resolve_school_logo_url( string $school_name ): string
 	}
 
 	// Exact title match first.
-	$exact = get_page_by_title( $school_name, OBJECT, 'partner' );
+	$exact = aiad_core_get_post_by_exact_title( $school_name, 'partner' );
 	if ( $exact instanceof WP_Post ) {
 		$url = get_the_post_thumbnail_url( $exact, 'medium' );
 		if ( $url ) {

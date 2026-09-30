@@ -150,6 +150,34 @@ function aiad_get_post_by_title( string $title, string $post_type = 'post' ): ?W
 }
 
 /**
+ * The oldest post with exactly this title, of any status: the WP_Query replacement for the deprecated
+ * get_page_by_title() (deprecated in WordPress 6.2), as recommended in its dev note.
+ *
+ * @see https://make.wordpress.org/core/2023/03/06/get_page_by_title-deprecated/
+ *
+ * @param string $title     Post title (exact match).
+ * @param string $post_type Post type.
+ * @return WP_Post|null
+ */
+function aiad_core_get_post_by_exact_title( string $title, string $post_type = 'page' ): ?WP_Post {
+	$query = new WP_Query(
+		array(
+			'post_type'              => $post_type,
+			'title'                  => $title,
+			'post_status'            => 'all',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'ignore_sticky_posts'    => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'orderby'                => 'date ID',
+			'order'                  => 'ASC',
+		)
+	);
+	return $query->have_posts() ? $query->posts[0] : null;
+}
+
+/**
  * Key stage options (slug => label)
  *
  * @return array<string, string>

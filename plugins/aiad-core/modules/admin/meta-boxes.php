@@ -599,7 +599,7 @@ function aiad_seed_additional_partner_resources(): void {
 
     foreach ( $items as $item ) {
         // Avoid duplicates by title.
-        $existing = get_page_by_title( $item['title'], OBJECT, 'featured_resource' );
+        $existing = aiad_core_get_post_by_exact_title( $item['title'], 'featured_resource' );
         if ( $existing ) {
             continue;
         }
