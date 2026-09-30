@@ -45,19 +45,19 @@ function aiad_content_has_llm_explainer_shortcode(): bool {
  * Register LLM explainer CSS/JS.
  */
 function aiad_register_llm_explainer_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-llm-explainer.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-llm-explainer.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-llm-explainer.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-llm-explainer.js' );
 
 	wp_register_style(
 		'aiad-llm-explainer',
-		AIAD_URI . '/assets/css/components/ai-llm-explainer.css',
+		aiad_core_url( 'assets/css/components/ai-llm-explainer.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-llm-explainer',
-		AIAD_URI . '/assets/js/ai-llm-explainer.js',
+		aiad_core_url( 'assets/js/ai-llm-explainer.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

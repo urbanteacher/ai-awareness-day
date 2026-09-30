@@ -113,7 +113,8 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)
 - [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. All 11 done (tools, survey, certificate showcase). The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
-- [ ] Tool CSS/JS into the plugin (registered on `init`, referenced from `block.json`), so editor previews are styled
+- [x] Tool CSS/JS, data, fonts and the Risk Academy template moved into the plugin
+- [ ] Editor previews styled: tool stylesheets in the block editor, theme tokens available there
 - [ ] Wrap the 2 plugin shortcodes as blocks inside the plugin
 - [x] Block category "AI Awareness Day"
 - [ ] Proof of concept: hero (the quizzes are done)

@@ -56,19 +56,19 @@ add_action( 'init', 'aiad_register_survey_response_post_type' );
 // ---------------------------------------------------------------------------
 
 function aiad_register_national_survey_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/national-survey.css';
-	$js_path  = AIAD_DIR . '/assets/js/national-survey.js';
+	$css_path = aiad_core_path( 'assets/css/components/national-survey.css' );
+	$js_path  = aiad_core_path( 'assets/js/national-survey.js' );
 
 	wp_register_style(
 		'aiad-national-survey',
-		AIAD_URI . '/assets/css/components/national-survey.css',
+		aiad_core_url( 'assets/css/components/national-survey.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-national-survey',
-		AIAD_URI . '/assets/js/national-survey.js',
+		aiad_core_url( 'assets/js/national-survey.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

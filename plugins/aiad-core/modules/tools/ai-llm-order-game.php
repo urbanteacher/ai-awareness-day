@@ -38,19 +38,19 @@ function aiad_content_has_llm_order_game_shortcode(): bool {
  * Register order game CSS/JS.
  */
 function aiad_register_llm_order_game_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-llm-order-game.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-llm-order-game.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-llm-order-game.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-llm-order-game.js' );
 
 	wp_register_style(
 		'aiad-llm-order-game',
-		AIAD_URI . '/assets/css/components/ai-llm-order-game.css',
+		aiad_core_url( 'assets/css/components/ai-llm-order-game.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-llm-order-game',
-		AIAD_URI . '/assets/js/ai-llm-order-game.js',
+		aiad_core_url( 'assets/js/ai-llm-order-game.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

@@ -86,19 +86,19 @@ function aiad_content_has_neu_ai_report_shortcode(): bool {
  * Register NEU AI report CSS/JS.
  */
 function aiad_register_neu_ai_report_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-neu-ai-report.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-neu-ai-report.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-neu-ai-report.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-neu-ai-report.js' );
 
 	wp_register_style(
 		'aiad-neu-ai-report',
-		AIAD_URI . '/assets/css/components/ai-neu-ai-report.css',
+		aiad_core_url( 'assets/css/components/ai-neu-ai-report.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-neu-ai-report',
-		AIAD_URI . '/assets/js/ai-neu-ai-report.js',
+		aiad_core_url( 'assets/js/ai-neu-ai-report.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

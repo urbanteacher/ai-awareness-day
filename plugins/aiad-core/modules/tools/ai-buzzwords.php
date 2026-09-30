@@ -45,19 +45,19 @@ function aiad_content_has_buzzwords_shortcode(): bool {
  * Register buzzwords CSS/JS (enqueue separately).
  */
 function aiad_register_buzzwords_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-buzzwords.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-buzzwords.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-buzzwords.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-buzzwords.js' );
 
 	wp_register_style(
 		'aiad-buzzwords',
-		AIAD_URI . '/assets/css/components/ai-buzzwords.css',
+		aiad_core_url( 'assets/css/components/ai-buzzwords.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-buzzwords',
-		AIAD_URI . '/assets/js/ai-buzzwords.js',
+		aiad_core_url( 'assets/js/ai-buzzwords.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

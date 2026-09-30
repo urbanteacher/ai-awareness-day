@@ -45,19 +45,19 @@ function aiad_content_has_speed_quiz_shortcode(): bool {
  * Register speed quiz CSS/JS.
  */
 function aiad_register_speed_quiz_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-speed-quiz.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-speed-quiz.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-speed-quiz.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-speed-quiz.js' );
 
 	wp_register_style(
 		'aiad-speed-quiz',
-		AIAD_URI . '/assets/css/components/ai-speed-quiz.css',
+		aiad_core_url( 'assets/css/components/ai-speed-quiz.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-speed-quiz',
-		AIAD_URI . '/assets/js/ai-speed-quiz.js',
+		aiad_core_url( 'assets/js/ai-speed-quiz.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

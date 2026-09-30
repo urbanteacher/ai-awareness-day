@@ -41,19 +41,19 @@ function aiad_content_has_misinformation_detector_shortcode(): bool {
  * Register misinformation detector CSS/JS.
  */
 function aiad_register_misinformation_detector_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-misinformation-detector.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-misinformation-detector.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-misinformation-detector.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-misinformation-detector.js' );
 
 	wp_register_style(
 		'aiad-misinformation-detector',
-		AIAD_URI . '/assets/css/components/ai-misinformation-detector.css',
+		aiad_core_url( 'assets/css/components/ai-misinformation-detector.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-misinformation-detector',
-		AIAD_URI . '/assets/js/ai-misinformation-detector.js',
+		aiad_core_url( 'assets/js/ai-misinformation-detector.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

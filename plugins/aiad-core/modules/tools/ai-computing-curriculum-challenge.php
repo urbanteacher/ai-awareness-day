@@ -41,22 +41,22 @@ function aiad_content_has_computing_curriculum_shortcode(): bool {
  * Register computing curriculum challenge CSS/JS.
  */
 function aiad_register_computing_curriculum_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-computing-curriculum-challenge.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-computing-curriculum-challenge.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-computing-curriculum-challenge.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-computing-curriculum-challenge.js' );
 
 	wp_register_style(
 		'aiad-computing-curriculum',
-		AIAD_URI . '/assets/css/components/ai-computing-curriculum-challenge.css',
+		aiad_core_url( 'assets/css/components/ai-computing-curriculum-challenge.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
-	$rich_illus_path = AIAD_DIR . '/assets/js/ai-computing-curriculum-rich-illus.js';
-	$illus_path      = AIAD_DIR . '/assets/js/ai-computing-curriculum-illustrations.js';
+	$rich_illus_path = aiad_core_path( 'assets/js/ai-computing-curriculum-rich-illus.js' );
+	$illus_path      = aiad_core_path( 'assets/js/ai-computing-curriculum-illustrations.js' );
 
 	wp_register_script(
 		'aiad-computing-curriculum-rich-illus',
-		AIAD_URI . '/assets/js/ai-computing-curriculum-rich-illus.js',
+		aiad_core_url( 'assets/js/ai-computing-curriculum-rich-illus.js' ),
 		array(),
 		file_exists( $rich_illus_path ) ? (string) filemtime( $rich_illus_path ) : AIAD_VERSION,
 		true
@@ -64,7 +64,7 @@ function aiad_register_computing_curriculum_assets(): void {
 
 	wp_register_script(
 		'aiad-computing-curriculum-illustrations',
-		AIAD_URI . '/assets/js/ai-computing-curriculum-illustrations.js',
+		aiad_core_url( 'assets/js/ai-computing-curriculum-illustrations.js' ),
 		array( 'aiad-computing-curriculum-rich-illus' ),
 		file_exists( $illus_path ) ? (string) filemtime( $illus_path ) : AIAD_VERSION,
 		true
@@ -72,7 +72,7 @@ function aiad_register_computing_curriculum_assets(): void {
 
 	wp_register_script(
 		'aiad-computing-curriculum',
-		AIAD_URI . '/assets/js/ai-computing-curriculum-challenge.js',
+		aiad_core_url( 'assets/js/ai-computing-curriculum-challenge.js' ),
 		array( 'aiad-computing-curriculum-illustrations' ),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true

@@ -21,7 +21,7 @@ function aiad_neu_ai_report_get_config(): array {
 		return $config;
 	}
 
-	$path = AIAD_DIR . '/assets/data/neu-ai-report.json';
+	$path = aiad_core_path( 'assets/data/neu-ai-report.json' );
 	if ( ! file_exists( $path ) ) {
 		$config = array(
 			'sections'  => array(),

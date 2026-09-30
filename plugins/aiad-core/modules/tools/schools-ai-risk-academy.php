@@ -48,27 +48,27 @@ function aiad_content_has_risk_academy_shortcode(): bool {
  * Register risk academy CSS/JS.
  */
 function aiad_register_risk_academy_assets(): void {
-	$fonts_path = AIAD_DIR . '/assets/css/components/sara-fonts.css';
-	$css_path   = AIAD_DIR . '/assets/css/components/schools-ai-risk-academy.css';
-	$js_path    = AIAD_DIR . '/assets/js/schools-ai-risk-academy.js';
+	$fonts_path = aiad_core_path( 'assets/css/components/sara-fonts.css' );
+	$css_path   = aiad_core_path( 'assets/css/components/schools-ai-risk-academy.css' );
+	$js_path    = aiad_core_path( 'assets/js/schools-ai-risk-academy.js' );
 
 	wp_register_style(
 		'aiad-sara-fonts',
-		AIAD_URI . '/assets/css/components/sara-fonts.css',
+		aiad_core_url( 'assets/css/components/sara-fonts.css' ),
 		array(),
 		file_exists( $fonts_path ) ? (string) filemtime( $fonts_path ) : AIAD_VERSION
 	);
 
 	wp_register_style(
 		'aiad-risk-academy',
-		AIAD_URI . '/assets/css/components/schools-ai-risk-academy.css',
+		aiad_core_url( 'assets/css/components/schools-ai-risk-academy.css' ),
 		array( 'aiad-sara-fonts' ),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-risk-academy',
-		AIAD_URI . '/assets/js/schools-ai-risk-academy.js',
+		aiad_core_url( 'assets/js/schools-ai-risk-academy.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true
@@ -128,7 +128,7 @@ function aiad_risk_academy_shortcode( $atts = array() ): string {
 
 	ob_start();
 	$aiad_risk_academy_show = $show;
-	include AIAD_DIR . '/template-parts/interactive/risk-academy.php';
+	include aiad_core_path( 'template-parts/interactive/risk-academy.php' );
 	return (string) ob_get_clean();
 }
 add_shortcode( 'aiad_risk_academy', 'aiad_risk_academy_shortcode' );

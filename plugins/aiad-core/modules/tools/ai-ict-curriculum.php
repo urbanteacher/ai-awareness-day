@@ -38,19 +38,19 @@ function aiad_content_has_ict_curriculum_shortcode(): bool {
  * Register CPT assets.
  */
 function aiad_register_ict_curriculum_assets(): void {
-	$css_path = AIAD_DIR . '/assets/css/components/ai-ict-curriculum.css';
-	$js_path  = AIAD_DIR . '/assets/js/ai-ict-curriculum.js';
+	$css_path = aiad_core_path( 'assets/css/components/ai-ict-curriculum.css' );
+	$js_path  = aiad_core_path( 'assets/js/ai-ict-curriculum.js' );
 
 	wp_register_style(
 		'aiad-ict-curriculum',
-		AIAD_URI . '/assets/css/components/ai-ict-curriculum.css',
+		aiad_core_url( 'assets/css/components/ai-ict-curriculum.css' ),
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
 	);
 
 	wp_register_script(
 		'aiad-ict-curriculum',
-		AIAD_URI . '/assets/js/ai-ict-curriculum.js',
+		aiad_core_url( 'assets/js/ai-ict-curriculum.js' ),
 		array(),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
 		true
