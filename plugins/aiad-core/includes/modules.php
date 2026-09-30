@@ -22,6 +22,10 @@ function aiad_core_modules(): array {
 	return array(
 		'helpers-data'    => 'helpers-data.php',
 		'post-types'      => 'post-types.php',
+		'contact'         => 'contact.php',
+		'resource-filter' => 'resource-filter.php',
+		'tracking'        => 'tracking.php',
+		'admin'           => 'admin.php',
 	);
 }
 
