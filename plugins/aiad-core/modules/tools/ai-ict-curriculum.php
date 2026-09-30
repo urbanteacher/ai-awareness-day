@@ -16,7 +16,8 @@ function aiad_post_content_has_ict_curriculum_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_ict_curriculum' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_ict_curriculum' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_ict_curriculum' ) || has_block( 'aiad/ict-curriculum', $post );
 }
 
 /**

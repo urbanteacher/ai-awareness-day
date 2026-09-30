@@ -23,7 +23,8 @@ function aiad_post_content_has_speed_quiz_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_speed_quiz' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_speed_quiz' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_speed_quiz' ) || has_block( 'aiad/speed-quiz', $post );
 }
 
 /**

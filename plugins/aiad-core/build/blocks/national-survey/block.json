@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/national-survey",
+  "version": "0.1.0",
+  "title": "National Survey",
+  "category": "aiad",
+  "icon": "feedback",
+  "description": "The National AI Survey form. Same output as the [aiad_national_survey] shortcode.",
+  "keywords": [
+    "survey",
+    "national"
+  ],
+  "textdomain": "aiad-core",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

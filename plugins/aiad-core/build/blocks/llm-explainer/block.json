@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/llm-explainer",
+  "version": "0.1.0",
+  "title": "How an LLM Works",
+  "category": "aiad",
+  "icon": "lightbulb",
+  "description": "Step-by-step explainer of how a large language model works. Same output as the [aiad_llm_explainer] shortcode.",
+  "keywords": [
+    "llm",
+    "explainer",
+    "language model"
+  ],
+  "textdomain": "aiad-core",
+  "attributes": {
+    "hideIntro": {
+      "type": "boolean",
+      "default": false
+    },
+    "exploreUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

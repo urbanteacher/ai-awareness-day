@@ -19,7 +19,8 @@ function aiad_post_content_has_neu_ai_report_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_neu_ai_report' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_neu_ai_report' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_neu_ai_report' ) || has_block( 'aiad/neu-ai-report', $post );
 }
 
 /**

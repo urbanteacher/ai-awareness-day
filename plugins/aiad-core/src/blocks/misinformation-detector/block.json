@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/misinformation-detector",
+	"version": "0.1.0",
+	"title": "Misinformation Detector",
+	"category": "aiad",
+	"icon": "search",
+	"description": "Spot the signs of AI-generated misinformation. Same output as the [aiad_misinformation_detector] shortcode.",
+	"keywords": [ "misinformation", "fake news", "detector" ],
+	"textdomain": "aiad-core",
+	"attributes": {
+		"hideIntro": {
+			"type": "string",
+			"default": "auto"
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

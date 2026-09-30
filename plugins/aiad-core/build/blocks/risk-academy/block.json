@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/risk-academy",
+  "version": "0.1.0",
+  "title": "Schools' AI Risk Academy",
+  "category": "aiad",
+  "icon": "shield",
+  "description": "The Schools' AI Risk Academy, section by section. Same output as the [aiad_risk_academy] shortcode.",
+  "keywords": [
+    "risk",
+    "academy",
+    "schools"
+  ],
+  "textdomain": "aiad-core",
+  "attributes": {
+    "hero": {
+      "type": "boolean",
+      "default": true
+    },
+    "methodology": {
+      "type": "boolean",
+      "default": true
+    },
+    "meter": {
+      "type": "boolean",
+      "default": true
+    },
+    "curriculum": {
+      "type": "boolean",
+      "default": true
+    },
+    "contributors": {
+      "type": "boolean",
+      "default": true
+    },
+    "resources": {
+      "type": "boolean",
+      "default": true
+    },
+    "sources": {
+      "type": "boolean",
+      "default": true
+    },
+    "enrol": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -26,7 +26,8 @@ function aiad_post_content_has_risk_academy_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_risk_academy' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_risk_academy' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_risk_academy' ) || has_block( 'aiad/risk-academy', $post );
 }
 
 /**

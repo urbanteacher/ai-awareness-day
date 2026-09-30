@@ -19,7 +19,8 @@ function aiad_post_content_has_misinformation_detector_shortcode( WP_Post $post 
 	if ( has_shortcode( $post->post_content, 'aiad_misinformation_detector' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_misinformation_detector' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_misinformation_detector' ) || has_block( 'aiad/misinformation-detector', $post );
 }
 
 /**

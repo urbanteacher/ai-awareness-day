@@ -112,10 +112,11 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)
-- [ ] Convert the 12 theme shortcodes to dynamic blocks in the plugin (one folder each); keep shortcodes registered for existing content
+- [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. 10 of 11 done (tools + survey); the certificate showcase is next. The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
+- [ ] Tool CSS/JS into the plugin (registered on `init`, referenced from `block.json`), so editor previews are styled
 - [ ] Wrap the 2 plugin shortcodes as blocks inside the plugin
 - [x] Block category "AI Awareness Day"
-- [ ] Proof of concept first: hero + one quiz (speed quiz done: `aiad/speed-quiz`)
+- [ ] Proof of concept: hero (the quizzes are done)
 
 **Done when:** every shortcode has a matching block that renders identically on the front end, and editors can insert them from the inserter.
 

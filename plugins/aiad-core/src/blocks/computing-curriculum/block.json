@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/computing-curriculum",
+	"version": "0.1.0",
+	"title": "Computing Curriculum Challenge",
+	"category": "aiad",
+	"icon": "welcome-learn-more",
+	"description": "Computing curriculum challenge for teachers. Same output as the [aiad_computing_curriculum] shortcode.",
+	"keywords": [ "computing", "curriculum", "challenge" ],
+	"textdomain": "aiad-core",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

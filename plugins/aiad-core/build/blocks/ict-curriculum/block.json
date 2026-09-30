@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/ict-curriculum",
+  "version": "0.1.0",
+  "title": "Experience the Computing Curriculum",
+  "category": "aiad",
+  "icon": "desktop",
+  "description": "Interactive computing curriculum walkthrough across the key stages. Same output as the [aiad_ict_curriculum] shortcode.",
+  "keywords": [
+    "ict",
+    "computing",
+    "curriculum"
+  ],
+  "textdomain": "aiad-core",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

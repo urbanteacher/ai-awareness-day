@@ -23,7 +23,8 @@ function aiad_post_content_has_buzzwords_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_buzzwords' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_buzzwords' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_buzzwords' ) || has_block( 'aiad/buzzwords', $post );
 }
 
 /**

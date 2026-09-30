@@ -23,7 +23,8 @@ function aiad_post_content_has_llm_explainer_shortcode( WP_Post $post ): bool {
 	if ( has_shortcode( $post->post_content, 'aiad_llm_explainer' ) ) {
 		return true;
 	}
-	return false !== strpos( $post->post_content, '[aiad_llm_explainer' );
+	// The block renders through the same shortcode function, so it needs the same assets in the head.
+	return false !== strpos( $post->post_content, '[aiad_llm_explainer' ) || has_block( 'aiad/llm-explainer', $post );
 }
 
 /**

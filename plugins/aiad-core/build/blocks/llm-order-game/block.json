@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/llm-order-game",
+  "version": "0.1.0",
+  "title": "LLM Order Game",
+  "category": "aiad",
+  "icon": "randomize",
+  "description": "Put the steps of how a language model answers in the right order. Same output as the [aiad_llm_order_game] shortcode.",
+  "keywords": [
+    "llm",
+    "game",
+    "order"
+  ],
+  "textdomain": "aiad-core",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

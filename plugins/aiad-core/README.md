@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools` moved.
+**Status:** ten blocks (the interactive tools and the survey); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates`, `ai-tools`, `benchmark-content`, `survey`, `tools` moved.
 
 ## Layout
 
@@ -28,7 +28,28 @@ npm run build     # or: npm start (rebuilds on save)
 
 Commit `build/`. Deploys copy the plugin as it is and run no build step.
 
-A new block is a folder in `src/blocks/` with a `block.json`. It is registered automatically once built. For a tool that already has a shortcode, `render.php` calls the shortcode function, so the block and the shortcode give identical output and existing posts keep working. `src/blocks/speed-quiz/` is the pattern to copy.
+A new block is a folder in `src/blocks/` with a `block.json`. It is registered automatically once built. For a tool that already has a shortcode, `render.php` calls the shortcode function, so the block and the shortcode give identical output and existing posts keep working. `npm run lint:js` checks the source.
+
+Blocks so far, all in the "AI Awareness Day" inserter category, one per post (`multiple: false`, the tools use fixed element IDs):
+
+| Block | Shortcode | Settings |
+|---|---|---|
+| `aiad/speed-quiz` | `[aiad_speed_quiz]` | questions, seconds, bonus, points |
+| `aiad/buzzwords` | `[aiad_buzzwords]` | hide intro, show quiz |
+| `aiad/llm-explainer` | `[aiad_llm_explainer]` | hide intro, "explore more" link |
+| `aiad/llm-order-game` | `[aiad_llm_order_game]` | — |
+| `aiad/computing-curriculum` | `[aiad_computing_curriculum]` | — |
+| `aiad/ict-curriculum` | `[aiad_ict_curriculum]` | — |
+| `aiad/misinformation-detector` | `[aiad_misinformation_detector]` | introduction: automatic / show / hide |
+| `aiad/neu-ai-report` | `[aiad_neu_ai_report]` | headline: automatic / show / hide |
+| `aiad/risk-academy` | `[aiad_risk_academy]` | the eight sections on or off |
+| `aiad/national-survey` | `[aiad_national_survey]` | — |
+
+The tool blocks share one editor (`src/shared/tool-block.js`): a server-rendered preview plus sidebar settings described in each block's `index.js`. `src/blocks/buzzwords/` is the pattern to copy.
+
+Each tool's `aiad_post_content_has_*_shortcode()` check also looks for its block (`has_block()`), so a block-only page gets the tool's CSS in the head, as a shortcode page does.
+
+Two expected differences from the shortcode, both standard WordPress behaviour: the shortcode's output gets a stray `<p>` from `wpautop` and the block's does not, and block output goes through `wptexturize` (so `...` becomes `…`) because blocks render before that filter and shortcodes after it.
 
 ## Moving a module out of the theme
 
@@ -98,7 +119,7 @@ Where each file in the theme's `inc/` should end up.
 - **Load order.** Plugins load before the theme. Module code must only call theme functions inside hooks, never when the file loads, and must not rely on `AIAD_DIR` / `AIAD_URI` / `AIAD_VERSION` for anything it owns.
 - **Seed order on fresh installs.** Several one-off `init` seeds (benchmark content and the interactive tools' timeline entries) share priorities 33–35 and set no post dates, so their order decides how same-second entries tie on a brand-new site. `tools` is listed before `benchmark-content` in `aiad_core_modules()`, which keeps the theme's original order; keep it that way.
 - **Deploy.** Production gets bundled plugins through `inc/bundled-plugins.php`, which copies **and activates** them. Adding `aiad-core` to `aiad_bundled_plugins()` ships it live. Do that only once a module has moved and been tested on staging.
-- **Editor preview styling.** The block editor preview shows the quiz's markup without its CSS, because the theme only registers that stylesheet on the front end. Fix when the tool's assets move into the plugin (register them on `init`, reference them in `block.json` as `style`).
+- **Editor preview styling.** The block editor previews show each tool's markup without its CSS, because the theme only registers those stylesheets on the front end. Fix when the tool's assets move into the plugin (register them on `init`, reference them in `block.json` as `style`).
 
 ## Local development
 
