@@ -58,7 +58,7 @@ Two expected differences from the shortcode, both standard WordPress behaviour: 
 
 ## WordPress compatibility
 
-Checked against WordPress 7.1.2 (latest, PHP 8.3) and the local 6.6.2 (PHP 8.2), with `WP_DEBUG` on: every page, endpoint and module check behaves the same on both, all 13 blocks register and preview, and `aiad-core` logs no notices, warnings or deprecations.
+Checked against WordPress 7.1.2 (latest, PHP 8.3; now also the local Docker image) and 6.6.2 (PHP 8.2), with `WP_DEBUG` on: every page, endpoint and module check behaves the same on both, all 13 blocks register and preview, and `aiad-core` logs no notices, warnings or deprecations.
 
 - **Blocks** are registered from `build/blocks-manifest.php` with `wp_register_block_types_from_metadata_collection()` on 6.8+, and block by block on older versions ([docs](https://developer.wordpress.org/block-editor/getting-started/fundamentals/registration-of-a-block/)). Both routes register the same blocks.
 - **Iframed editor** (always on from 7.1): editor styles come from each block's `block.json` (`editorStyle`) and the theme's `add_editor_style()`, both injected into the iframe. Nothing reaches into the editor's `document`.
@@ -141,4 +141,4 @@ Where each file in the theme's `inc/` should end up.
 
 ## Local development
 
-`docker-compose.yml` mounts this folder at `wp-content/plugins/aiad-core`. Activate it under Plugins (it's inactive by default on a fresh database).
+`docker-compose.yml` (WordPress 7.1, PHP 8.3) mounts this folder at `wp-content/plugins/aiad-core`. Activate it under Plugins (it's inactive by default on a fresh database).
