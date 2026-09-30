@@ -127,7 +127,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [ ] `add_theme_support( 'block-template-parts' )` so editors can edit parts on screen (Appearance → Template Parts)
 - [ ] Add `parts/header.html` and `parts/footer.html`; call them from `header.php` / `footer.php` via `block_template_part()`
 - [x] Homepage sections as blocks: 11 section blocks (theme, `inc/homepage-blocks.php`) that render the existing section templates; Appearance → Block homepage creates a "Home" page from the current order and visibility and makes it the front page (and can switch back). The homepage prints the same markup
-- [ ] Section wording in each block's sidebar, copied from the Customizer (next)
+- [x] Section wording in each block's sidebar (35 fields across 6 sections), copied from the Customizer by a button on Appearance → Block homepage; the Customizer hides those controls while the block homepage is on
 - [ ] Sections rebuilt from core blocks/patterns for on-canvas editing, section by section
 - [ ] Migration script: read the 52 `theme_mod` values → write the homepage `post_content` (run on staging first; keep a backup of `theme_mods_ai-awareness-day`)
 - [x] `front-page.php` renders the block homepage's section blocks when it is the front page (each block on its own, without the_content's filters), and the classic section loop otherwise

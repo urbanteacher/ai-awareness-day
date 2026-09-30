@@ -46,9 +46,97 @@ function aiad_homepage_section_block_name( string $slug ): string {
 }
 
 /**
- * Render one homepage section, exactly as front-page.php's section loop does.
+ * Each section block's wording fields: section slug => [ theme mod => [ label, type, default, sanitize callback, help ] ].
+ *
+ * These are the theme mods the section's template reads. A block that has a value for one gives it to the template
+ * (see aiad_render_homepage_section()); an empty value leaves the Customizer's value or the template's default.
+ * The event date, contact email, site name and images stay in their own settings.
+ *
+ * @return array<string, array<string, array{0: string, 1: string, 2: ?string, 3: string, 4?: string}>>
  */
-function aiad_render_homepage_section( string $slug ): string {
+function aiad_homepage_section_fields(): array {
+	$d      = function_exists( 'aiad_get_customizer_defaults' ) ? aiad_get_customizer_defaults() : array();
+	$fields = array();
+
+	if ( function_exists( 'aiad_hero27_fields' ) ) {
+		foreach ( aiad_hero27_fields() as $key => $f ) {
+			$fields['hero'][ $key ] = array( $f['label'], $f['type'], (string) $f['default'], $f['sanitize'], (string) ( $f['description'] ?? '' ) );
+		}
+	}
+	$fields['campaign'] = array(
+		'aiad_campaign_title'              => array( __( 'Title', 'ai-awareness-day' ), 'text', $d['aiad_campaign_title'] ?? null, 'sanitize_text_field' ),
+		'aiad_campaign_text'               => array( __( 'Description', 'ai-awareness-day' ), 'textarea', $d['aiad_campaign_text'] ?? null, 'wp_kses_post' ),
+		'aiad_campaign_text_2'             => array( __( 'Second paragraph', 'ai-awareness-day' ), 'textarea', $d['aiad_campaign_text_2'] ?? null, 'wp_kses_post' ),
+		'aiad_campaign_linkedin_embed_src' => array( __( 'LinkedIn embed URL', 'ai-awareness-day' ), 'url', $d['aiad_campaign_linkedin_embed_src'] ?? null, 'esc_url_raw', __( 'Optional: the src of a LinkedIn post embed, shown beside the text.', 'ai-awareness-day' ) ),
+	);
+	foreach ( array( 'safe' => __( 'Safe', 'ai-awareness-day' ), 'smart' => __( 'Smart', 'ai-awareness-day' ), 'creative' => __( 'Creative', 'ai-awareness-day' ), 'responsible' => __( 'Responsible', 'ai-awareness-day' ), 'future' => __( 'Future', 'ai-awareness-day' ) ) as $slug => $name ) {
+		/* translators: %s: strand name, e.g. Safe */
+		$fields['principles'][ 'aiad_principle_title_' . $slug ] = array( sprintf( __( '%s: title', 'ai-awareness-day' ), $name ), 'text', null, 'sanitize_text_field', __( 'Leave empty for the standard wording.', 'ai-awareness-day' ) );
+		/* translators: %s: strand name, e.g. Safe */
+		$fields['principles'][ 'aiad_principle_desc_' . $slug ] = array( sprintf( __( '%s: description', 'ai-awareness-day' ), $name ), 'textarea', null, 'sanitize_textarea_field', __( 'Leave empty for the standard wording.', 'ai-awareness-day' ) );
+	}
+	$fields['free_resources'] = array(
+		'aiad_free_resources_title' => array( __( 'Title', 'ai-awareness-day' ), 'text', __( 'Free Resources', 'ai-awareness-day' ), 'sanitize_text_field' ),
+		'aiad_free_resources_desc'  => array( __( 'Description', 'ai-awareness-day' ), 'textarea', __( 'Ready-to-use activities and materials for AI Awareness Day.', 'ai-awareness-day' ), 'sanitize_textarea_field' ),
+	);
+	$fields['featured_resources'] = array(
+		'aiad_handpicked_resources_title' => array( __( 'Title', 'ai-awareness-day' ), 'text', __( 'Handpicked Quality Resources', 'ai-awareness-day' ), 'sanitize_text_field' ),
+		'aiad_handpicked_resources_desc'  => array( __( 'Description', 'ai-awareness-day' ), 'textarea', __( 'A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day' ), 'sanitize_textarea_field' ),
+		'aiad_linkedin_post_url'          => array( __( 'LinkedIn post URL', 'ai-awareness-day' ), 'url', '', 'esc_url_raw', __( 'Optional.', 'ai-awareness-day' ) ),
+	);
+	$fields['contact'] = array(
+		'aiad_contact_title' => array( __( 'Title', 'ai-awareness-day' ), 'text', $d['aiad_contact_title'] ?? null, 'sanitize_text_field' ),
+		'aiad_contact_desc'  => array( __( 'Description', 'ai-awareness-day' ), 'textarea', $d['aiad_contact_desc'] ?? null, 'wp_kses_post' ),
+	);
+	return $fields;
+}
+
+/**
+ * What a wording field shows when its block leaves it empty: the Customizer's value, else the default.
+ */
+function aiad_homepage_field_fallback( string $key, ?string $default ): string {
+	$mods   = get_theme_mods();
+	$stored = is_array( $mods ) && isset( $mods[ $key ] ) ? trim( (string) $mods[ $key ] ) : '';
+	return '' !== $stored ? $stored : (string) $default;
+}
+
+/**
+ * A block's wording values for its section, sanitised; empty values dropped.
+ *
+ * @param mixed $wording The block's wording attribute.
+ * @return array<string, string>
+ */
+function aiad_homepage_section_wording( string $slug, $wording ): array {
+	$fields = aiad_homepage_section_fields()[ $slug ] ?? array();
+	$clean  = array();
+	foreach ( (array) $wording as $key => $value ) {
+		if ( ! isset( $fields[ $key ] ) || ! is_scalar( $value ) ) {
+			continue;
+		}
+		$value = trim( (string) call_user_func( $fields[ $key ][3], (string) $value ) );
+		if ( '' !== $value ) {
+			$clean[ $key ] = $value;
+		}
+	}
+	return $clean;
+}
+
+/**
+ * Render one homepage section, exactly as front-page.php's section loop does.
+ *
+ * Wording the block sets is handed to the template through the theme_mod_{name} filters while it renders, so the
+ * template itself is unchanged; the filters are removed straight after.
+ *
+ * @param array<string, string> $wording Sanitised wording (aiad_homepage_section_wording()).
+ */
+function aiad_render_homepage_section( string $slug, array $wording = array() ): string {
+	$filters = array();
+	foreach ( $wording as $key => $value ) {
+		$filters[ $key ] = static function () use ( $value ) {
+			return $value;
+		};
+		add_filter( "theme_mod_{$key}", $filters[ $key ], 999 );
+	}
 	ob_start();
 	get_template_part(
 		'template-parts/front-page/section',
@@ -58,7 +146,11 @@ function aiad_render_homepage_section( string $slug ): string {
 			'container_class'      => aiad_get_container_width_class(),
 		)
 	);
-	return (string) ob_get_clean();
+	$html = (string) ob_get_clean();
+	foreach ( $filters as $key => $filter ) {
+		remove_filter( "theme_mod_{$key}", $filter, 999 );
+	}
+	return $html;
 }
 
 /**
@@ -88,7 +180,7 @@ function aiad_register_homepage_section_blocks(): void {
 	wp_register_script(
 		'aiad-homepage-section-blocks',
 		AIAD_URI . '/assets/js/homepage-section-blocks.js',
-		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-server-side-render' ),
+		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render' ),
 		file_exists( $script ) ? (string) filemtime( $script ) : AIAD_VERSION,
 		true
 	);
@@ -111,9 +203,10 @@ function aiad_register_homepage_section_blocks(): void {
 					'multiple' => false, // The sections use fixed element IDs.
 					'reusable' => false,
 				),
+				'attributes'           => isset( aiad_homepage_section_fields()[ $slug ] ) ? array( 'wording' => array( 'type' => 'object', 'default' => array() ) ) : array(),
 				'editor_script_handles' => array( 'aiad-homepage-section-blocks' ),
-				'render_callback'      => static function () use ( $slug ): string {
-					return aiad_render_homepage_section( $slug );
+				'render_callback'      => static function ( $attributes ) use ( $slug ): string {
+					return aiad_render_homepage_section( $slug, aiad_homepage_section_wording( $slug, $attributes['wording'] ?? array() ) );
 				},
 			)
 		);
@@ -121,6 +214,63 @@ function aiad_register_homepage_section_blocks(): void {
 	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepageSections = ' . wp_json_encode( $names ) . ';', 'before' );
 }
 add_action( 'init', 'aiad_register_homepage_section_blocks' );
+
+/**
+ * Give the editor each block's wording fields, with what shows when a field is empty.
+ */
+function aiad_homepage_section_editor_data(): void {
+	$data = array();
+	foreach ( aiad_homepage_section_fields() as $slug => $fields ) {
+		foreach ( $fields as $key => $f ) {
+			$data[ aiad_homepage_section_block_name( $slug ) ][] = array(
+				'key'         => $key,
+				'label'       => $f[0],
+				'type'        => $f[1],
+				'placeholder' => wp_strip_all_tags( aiad_homepage_field_fallback( $key, $f[2] ) ),
+				'help'        => (string) ( $f[4] ?? '' ),
+			);
+		}
+	}
+	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepageFields = ' . wp_json_encode( $data ) . ';', 'before' );
+}
+add_action( 'enqueue_block_editor_assets', 'aiad_homepage_section_editor_data' );
+
+/**
+ * Copy the wording the Customizer holds into a page's section blocks, for fields the blocks leave empty.
+ * The page then shows exactly what it showed before, with the wording owned by its blocks.
+ *
+ * @return int Number of fields copied.
+ */
+function aiad_copy_customizer_wording_into_blocks( WP_Post $page ): int {
+	$mods   = get_theme_mods();
+	$mods   = is_array( $mods ) ? $mods : array();
+	$fields = aiad_homepage_section_fields();
+	$copied = 0;
+	$blocks = parse_blocks( $page->post_content );
+	foreach ( $blocks as &$block ) {
+		$slug = empty( $block['blockName'] ) ? '' : str_replace( '-', '_', (string) substr( $block['blockName'], strlen( 'aiad/section-' ) ) );
+		if ( 0 !== strpos( (string) $block['blockName'], 'aiad/section-' ) || empty( $fields[ $slug ] ) ) {
+			continue;
+		}
+		$wording = (array) ( $block['attrs']['wording'] ?? array() );
+		foreach ( $fields[ $slug ] as $key => $f ) {
+			$stored = isset( $mods[ $key ] ) ? trim( (string) $mods[ $key ] ) : '';
+			if ( '' !== $stored && '' === trim( (string) ( $wording[ $key ] ?? '' ) ) ) {
+				$wording[ $key ] = $stored;
+				++$copied;
+			}
+		}
+		if ( $wording ) {
+			$block['attrs']['wording'] = $wording;
+		}
+	}
+	unset( $block );
+	if ( $copied ) {
+		// wp_update_post() unslashes its input; slash first, or the \u0026 that serialize_blocks() writes for & loses its backslash.
+		wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( serialize_blocks( $blocks ) ) ) );
+	}
+	return $copied;
+}
 
 /**
  * Whether a post's content uses any homepage section block.
@@ -221,6 +371,7 @@ function aiad_create_block_homepage() {
 	if ( is_wp_error( $id ) ) {
 		return $id;
 	}
+	aiad_copy_customizer_wording_into_blocks( get_post( (int) $id ) );
 	update_option( 'aiad_block_homepage_id', (int) $id, false );
 	update_option( 'page_on_front', (int) $id );
 	update_option( 'show_on_front', 'page' );
@@ -261,6 +412,9 @@ function aiad_handle_block_homepage_actions(): void {
 	if ( 'create' === $action && ! aiad_block_homepage_page() && ! aiad_saved_block_homepage() ) {
 		$id = aiad_create_block_homepage();
 		$message = is_wp_error( $id ) ? 'error' : 'created';
+	} elseif ( 'copy' === $action && aiad_block_homepage_page() ) {
+		$copied  = aiad_copy_customizer_wording_into_blocks( aiad_block_homepage_page() );
+		$message = 'copied' . $copied;
 	} elseif ( 'classic' === $action ) {
 		update_option( 'show_on_front', 'posts' );
 		$message = 'classic';
@@ -291,6 +445,10 @@ function aiad_render_block_homepage_admin_page(): void {
 		'error'    => __( 'That did not work. Nothing was changed.', 'ai-awareness-day' ),
 	);
 	$message = isset( $_GET['aiad_message'] ) ? sanitize_key( wp_unslash( $_GET['aiad_message'] ) ) : '';
+	if ( preg_match( '/^copied(\d+)$/', $message, $m ) ) {
+		/* translators: %d: number of wording fields */
+		$messages[ $message ] = sprintf( _n( '%d wording field was copied from the Customizer into the homepage blocks.', '%d wording fields were copied from the Customizer into the homepage blocks.', (int) $m[1], 'ai-awareness-day' ), (int) $m[1] );
+	}
 	$saved    = $page ? null : aiad_saved_block_homepage();
 	?>
 	<div class="wrap">
@@ -304,6 +462,13 @@ function aiad_render_block_homepage_admin_page(): void {
 				<a class="button button-primary" href="<?php echo esc_url( get_edit_post_link( $page->ID ) ); ?>"><?php esc_html_e( 'Edit the homepage', 'ai-awareness-day' ); ?></a>
 				<a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'View it', 'ai-awareness-day' ); ?></a>
 			</p>
+			<h2><?php esc_html_e( 'Wording', 'ai-awareness-day' ); ?></h2>
+			<p><?php esc_html_e( 'Each section\'s wording is edited in its block\'s settings sidebar. An empty field shows the Customizer\'s value or the standard wording. Copying fills the empty fields from the Customizer, so the blocks hold the wording and the page stays the same.', 'ai-awareness-day' ); ?></p>
+			<form method="post">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="copy" />
+				<?php submit_button( __( 'Copy the Customizer wording into the blocks', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
+			</form>
 			<form method="post" style="margin-top:2em">
 				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
 				<input type="hidden" name="aiad_block_homepage_action" value="classic" />
@@ -330,3 +495,52 @@ function aiad_render_block_homepage_admin_page(): void {
 	</div>
 	<?php
 }
+
+/**
+ * While the block homepage is on, the Customizer's homepage wording, section order and visibility have no effect:
+ * hide those fields and say where the homepage is edited now. Site name, dates, images and the hero choice stay.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer.
+ */
+function aiad_block_homepage_customizer( $wp_customize ): void {
+	$page = aiad_block_homepage_page();
+	if ( ! $page ) {
+		return;
+	}
+	foreach ( aiad_homepage_section_fields() as $fields ) {
+		foreach ( array_keys( $fields ) as $key ) {
+			$wp_customize->remove_control( $key );
+		}
+	}
+	foreach ( array_keys( aiad_homepage_section_blocks() ) as $slug ) {
+		$wp_customize->remove_control( 'aiad_section_visible_' . $slug );
+	}
+	$wp_customize->remove_control( 'aiad_section_order' );
+	/* translators: %s: link to edit the homepage */
+	$note = sprintf( __( 'The homepage is a block page: its sections and wording are edited in the block editor (%s).', 'ai-awareness-day' ), '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html__( 'edit the homepage', 'ai-awareness-day' ) . '</a>' );
+	foreach ( array( 'aiad_hero', 'aiad_campaign', 'aiad_contact', 'aiad_front_page_layout' ) as $section_id ) {
+		$section = $wp_customize->get_section( $section_id );
+		if ( $section ) {
+			$section->description = '<p>' . $note . '</p>' . $section->description;
+		}
+	}
+}
+add_action( 'customize_register', 'aiad_block_homepage_customizer', 1001 );
+
+/**
+ * Appearance → Edit Homepage: while the block homepage is on, say that the homepage's wording is edited in its blocks.
+ */
+function aiad_block_homepage_edit_homepage_notice(): void {
+	$screen = get_current_screen();
+	$page   = aiad_block_homepage_page();
+	if ( ! $page || ! $screen || 'appearance_page_aiad-edit-homepage' !== $screen->id ) {
+		return;
+	}
+	printf(
+		'<div class="notice notice-info"><p>%s <a href="%s">%s</a></p></div>',
+		esc_html__( 'The homepage is a block page. Section wording set in its blocks takes the place of these fields; empty block fields still use them.', 'ai-awareness-day' ),
+		esc_url( get_edit_post_link( $page->ID ) ),
+		esc_html__( 'Edit the homepage', 'ai-awareness-day' )
+	);
+}
+add_action( 'admin_notices', 'aiad_block_homepage_edit_homepage_notice' );
