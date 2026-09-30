@@ -29,6 +29,7 @@ function aiad_core_modules(): array {
 		'timeline'        => 'timeline.php',
 		'live-sessions'   => 'live-sessions.php',
 		'certificates'    => 'certificates.php',
+		'ai-tools'        => 'ai-tools.php',
 	);
 }
 

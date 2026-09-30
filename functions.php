@@ -63,6 +63,7 @@ require_once $aiad_dir . '/inc/timeline.php';
 aiad_require_core_module( 'live-sessions' );
 require_once $aiad_dir . '/inc/live-sessions.php';
 aiad_require_core_module( 'tracking' );
+aiad_require_core_module( 'ai-tools' );
 require_once $aiad_dir . '/inc/tools.php';
 require_once $aiad_dir . '/inc/sharing.php';
 require_once $aiad_dir . '/inc/ai-buzzwords.php';
