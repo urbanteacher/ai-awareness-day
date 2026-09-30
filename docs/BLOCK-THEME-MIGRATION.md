@@ -108,7 +108,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `survey` module: survey responses CPT, shortcode, AJAX submit, admin analytics and CSV export (assets stay in the theme until it becomes a block)
 - [x] `tools` module: the 10 live interactive tools (the retired curriculum quiz stays unloaded in the theme)
 - [x] Certificate showcase: moved with its template, stylesheet and the benchmark promo helpers; `aiad/certificate-showcase` block
-- [ ] Move the remaining module (SEO, after the Customizer settings decision; see the plugin README) from `inc/` into it (theme keeps only presentation)
+- [x] `seo` module, with its own settings (Settings → SEO & sharing) copied once from the Customizer. All modules on the plugin's map are now moved
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [x] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json` (validates against it; version stays 3)
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)

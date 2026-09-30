@@ -2,7 +2,10 @@
 /**
  * SEO functionality: JSON-LD structured data, breadcrumbs, and canonical URLs.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/seo.php; site name, social profiles and verification codes now come from the SEO
+ * settings (seo/settings.php) instead of the Customizer.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -81,7 +84,7 @@ function aiad_get_current_request_canonical_url(): string {
  * @return array<string, mixed>|null
  */
 function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
-	$logo_id = aiad_get_schema_logo_attachment_id();
+	$logo_id = function_exists( 'aiad_get_schema_logo_attachment_id' ) ? aiad_get_schema_logo_attachment_id() : 0;
 	if ( ! $logo_id ) {
 		return null;
 	}
@@ -104,7 +107,7 @@ function aiad_get_schema_image_object( $image_size = 'full' ): ?array {
  * @return array{image_id: int, image: string}
  */
 function aiad_get_social_share_image_data(): array {
-	$logo_id = aiad_get_schema_logo_attachment_id();
+	$logo_id = function_exists( 'aiad_get_schema_logo_attachment_id' ) ? aiad_get_schema_logo_attachment_id() : 0;
 	if ( ! $logo_id ) {
 		return array(
 			'image_id' => 0,
@@ -146,8 +149,7 @@ function aiad_session_meta_to_iso( string $datetime_local ): string {
  * @return array<string, mixed> Organization schema array.
  */
 function aiad_get_organization_schema(): array {
-	$defaults = aiad_get_customizer_defaults();
-	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
+	$site_name = aiad_seo_setting( 'site_name' ) ?: get_bloginfo( 'name' );
 
 	$schema = array(
 		'@context' => 'https://schema.org',
@@ -167,14 +169,14 @@ function aiad_get_organization_schema(): array {
 		$schema['logo'] = $logo;
 	}
 
-	// Social profiles (sameAs) — each Customizer field below contributes.
+	// Social profiles (sameAs) — each SEO setting below contributes.
 	$same_as_settings = array(
-		'aiad_linkedin', 'aiad_instagram', 'aiad_twitter', 'aiad_facebook',
-		'aiad_youtube', 'aiad_tiktok', 'aiad_github',
+		'social_linkedin', 'social_instagram', 'social_twitter', 'social_facebook',
+		'social_youtube', 'social_tiktok', 'social_github',
 	);
 	$same_as = array();
 	foreach ( $same_as_settings as $setting ) {
-		$val = get_theme_mod( $setting, $defaults[ $setting ] ?? '' );
+		$val = aiad_seo_setting( $setting );
 		if ( $val && $val !== '#' && filter_var( $val, FILTER_VALIDATE_URL ) ) {
 			$same_as[] = $val;
 		}
@@ -192,8 +194,7 @@ function aiad_get_organization_schema(): array {
  * @return array<string, mixed>
  */
 function aiad_get_website_schema(): array {
-	$defaults  = aiad_get_customizer_defaults();
-	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
+	$site_name = aiad_seo_setting( 'site_name' ) ?: get_bloginfo( 'name' );
 
 	return array(
 		'@context'        => 'https://schema.org',
@@ -770,18 +771,18 @@ function aiad_output_json_ld_schemas(): void {
 add_action( 'wp_head', 'aiad_output_json_ld_schemas', 10 );
 
 /**
- * Output search-engine verification <meta> tags from Customizer settings.
+ * Output search-engine verification <meta> tags from the SEO settings.
  * Accepts either the raw token or the full meta tag pasted by the user —
  * the regex pulls the content="…" value out either way.
  */
 function aiad_output_search_verification_meta(): void {
 	$map = array(
-		'aiad_verify_google'    => 'google-site-verification',
-		'aiad_verify_bing'      => 'msvalidate.01',
-		'aiad_verify_pinterest' => 'p:domain_verify',
+		'verify_google'    => 'google-site-verification',
+		'verify_bing'      => 'msvalidate.01',
+		'verify_pinterest' => 'p:domain_verify',
 	);
 	foreach ( $map as $setting => $meta_name ) {
-		$raw = trim( (string) get_theme_mod( $setting, '' ) );
+		$raw = trim( aiad_seo_setting( $setting ) );
 		if ( $raw === '' ) {
 			continue;
 		}
@@ -792,7 +793,13 @@ function aiad_output_search_verification_meta(): void {
 		echo '<meta name="' . esc_attr( $meta_name ) . '" content="' . esc_attr( $raw ) . '" />' . "\n";
 	}
 }
-add_action( 'wp_head', 'aiad_output_search_verification_meta', 1 );
+// Added once the theme has loaded, so it keeps its place after the theme's favicon links (also wp_head, priority 1).
+add_action(
+	'after_setup_theme',
+	static function (): void {
+		add_action( 'wp_head', 'aiad_output_search_verification_meta', 1 );
+	}
+);
 
 /**
  * Output canonical URL.
@@ -830,7 +837,13 @@ function aiad_output_canonical_url(): void {
 		echo '<link rel="canonical" href="' . esc_url( $canonical ) . '" />' . "\n";
 	}
 }
-add_action( 'wp_head', 'aiad_output_canonical_url', 1 );
+// Added once the theme has loaded, so it keeps its place after the theme's favicon links (also wp_head, priority 1).
+add_action(
+	'after_setup_theme',
+	static function (): void {
+		add_action( 'wp_head', 'aiad_output_canonical_url', 1 );
+	}
+);
 
 /**
  * Persistent admin notice when "Discourage search engines from indexing this
@@ -887,12 +900,12 @@ function aiad_noindex_low_value_archives( array $robots ): array {
 add_filter( 'wp_robots', 'aiad_noindex_low_value_archives' );
 
 /**
- * Curated llms.txt shipped with the theme.
+ * Curated llms.txt shipped with this plugin (llms.txt at its root).
  *
  * @return string Plain text or empty if missing.
  */
 function aiad_get_llms_txt_contents(): string {
-	$file = AIAD_DIR . '/llms.txt';
+	$file = aiad_core_path( 'llms.txt' );
 	if ( ! is_readable( $file ) ) {
 		return '';
 	}

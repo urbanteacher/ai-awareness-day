@@ -2,7 +2,10 @@
 /**
  * Open Graph meta tags and social sharing functionality.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/sharing.php; the site name, event date and homepage description now come from the SEO
+ * settings (seo/settings.php) instead of the Customizer.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -54,8 +57,7 @@ function aiad_youtube_og_thumbnail_url( string $video_id ): string {
  * @return array<string, mixed> Array with 'title', 'description', 'image', 'image_id', 'url', 'type', 'site_name'.
  */
 function aiad_get_og_data(): array {
-	$defaults  = aiad_get_customizer_defaults();
-	$site_name = get_theme_mod( 'aiad_hero_title', $defaults['aiad_hero_title'] ) ?: get_bloginfo( 'name' );
+	$site_name = aiad_seo_setting( 'site_name' ) ?: get_bloginfo( 'name' );
 
 	$data = array(
 		'title'       => '',
@@ -71,18 +73,12 @@ function aiad_get_og_data(): array {
 
 	// Front page
 	if ( is_front_page() ) {
-		$event_date    = get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
+		$event_date    = aiad_seo_setting( 'event_date' );
 		$data['title'] = $event_date
 			? sprintf( '%s — %s', $site_name, $event_date )
 			: $site_name;
 
-		$campaign_text        = get_theme_mod( 'aiad_campaign_text', $defaults['aiad_campaign_text'] );
-		$subtitle             = get_theme_mod( 'aiad_hero_subtitle', $defaults['aiad_hero_subtitle'] );
-		$data['description']  = sprintf(
-			'%s %s',
-			$campaign_text ?: '',
-			$subtitle ?: get_bloginfo( 'description' )
-		);
+		$data['description'] = aiad_seo_setting( 'home_description' ) ?: get_bloginfo( 'description' );
 		// Trim to ~160 chars for optimal preview display
 		if ( strlen( $data['description'] ) > 160 ) {
 			$data['description'] = wp_trim_words( $data['description'], 25, '…' );
@@ -305,7 +301,6 @@ function aiad_get_og_data(): array {
  * @return string Share message with {URL} placeholder.
  */
 function aiad_get_share_message( string $context, ?WP_Post $post = null ): string {
-	$defaults = aiad_get_customizer_defaults();
 	
 	switch ( $context ) {
 		case 'resource':
@@ -366,7 +361,7 @@ function aiad_get_share_message( string $context, ?WP_Post $post = null ): strin
 			return __( 'I found this free AI activity for AI Awareness Day 👉 {URL}', 'ai-awareness-day' );
 			
 		case 'front_page':
-			$event_date = get_theme_mod( 'aiad_hero_date', $defaults['aiad_hero_date'] );
+			$event_date = aiad_seo_setting( 'event_date' );
 			if ( $event_date ) {
 				return sprintf(
 					__( 'Our school is taking part in AI Awareness Day (%s). Free resources for every key stage 👉 {URL}', 'ai-awareness-day' ),
