@@ -63,3 +63,31 @@ add_action(
 		add_filter( 'language_attributes', 'aiad_html_no_js_class' );
 	}
 );
+
+/**
+ * As a block theme, WordPress chooses a block template first; some pages then swap in a PHP template of their own
+ * (National Conversation, Walkthrough, the benchmark's hub pages: template_include). For any page that ends up on a
+ * PHP template, keep the head as header.php makes it:
+ * - core queued its viewport tag for the block template, and header.php prints one already;
+ * - the header and footer template parts render after wp_head(), so their blocks' small stylesheets would print at
+ *   the end of the page; queue them now so they print in the head, as they do in a hybrid theme.
+ *
+ * @param string $template The template file WordPress will load.
+ */
+function aiad_php_template_in_block_theme( string $template ): string {
+	$canvas = wp_normalize_path( ABSPATH . WPINC . '/template-canvas.php' );
+	if ( ! wp_is_block_theme() || wp_normalize_path( $template ) === $canvas ) {
+		return $template;
+	}
+	remove_action( 'wp_head', '_block_template_viewport_meta_tag', 0 );
+	add_action(
+		'wp_enqueue_scripts',
+		static function (): void {
+			foreach ( array( 'wp-block-group', 'wp-block-paragraph' ) as $handle ) {
+				wp_enqueue_style( $handle );
+			}
+		}
+	);
+	return $template;
+}
+add_filter( 'template_include', 'aiad_php_template_in_block_theme', PHP_INT_MAX );
