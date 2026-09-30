@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/campaign-embed",
+	"title": "Campaign video",
+	"category": "aiad-homepage",
+	"icon": "video-alt3",
+	"description": "The campaign's video (YouTube or Vimeo) or LinkedIn post, beside the campaign text.",
+	"keywords": [
+		"video",
+		"embed",
+		"campaign"
+	],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"url": {
+			"type": "string",
+			"role": "content"
+		}
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

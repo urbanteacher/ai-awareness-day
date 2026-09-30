@@ -600,21 +600,29 @@ function aiad_homepage_section_patterns(): array {
 		'principles' => 'aiad/homepage-principles',
 		'aim'        => 'aiad/homepage-aim',
 		'contact'    => 'aiad/homepage-contact',
+		'campaign'   => 'aiad/homepage-campaign',
 	);
 }
 
 /**
  * Where a section block's sidebar wording goes when it swaps itself for its pattern: section slug => [ theme mod =>
- * [ class of the core block in the pattern whose content it replaces, whether the value is HTML ] ]. The principle
- * cards take theirs by strand (assets/js/homepage-section-blocks.js).
+ * target ]. A target is either a core block by class ( 'class', and 'nth' for a later block with the same class ),
+ * whose content the value replaces ( 'html' when the value may hold HTML ), or a block attribute ( 'block', 'attr' ).
+ * The principle cards take theirs by strand (assets/js/homepage-section-blocks.js).
  *
- * @return array<string, array<string, array{0: string, 1: bool}>>
+ * @return array<string, array<string, array<string, mixed>>>
  */
 function aiad_homepage_pattern_wording_targets(): array {
 	return array(
-		'contact' => array(
-			'aiad_contact_title' => array( 'section-title', false ),
-			'aiad_contact_desc'  => array( 'section-desc', true ),
+		'campaign' => array(
+			'aiad_campaign_title'              => array( 'class' => 'section-title' ),
+			'aiad_campaign_text'               => array( 'class' => 'section-desc', 'html' => true ),
+			'aiad_campaign_text_2'             => array( 'class' => 'section-desc', 'html' => true, 'nth' => 1 ),
+			'aiad_campaign_linkedin_embed_src' => array( 'block' => 'aiad/campaign-embed', 'attr' => 'url' ),
+		),
+		'contact'  => array(
+			'aiad_contact_title' => array( 'class' => 'section-title' ),
+			'aiad_contact_desc'  => array( 'class' => 'section-desc', 'html' => true ),
 		),
 	);
 }
@@ -641,9 +649,7 @@ function aiad_homepage_section_pattern_data(): void {
 	}
 	$targets = array();
 	foreach ( aiad_homepage_pattern_wording_targets() as $slug => $fields ) {
-		foreach ( $fields as $key => $target ) {
-			$targets[ aiad_homepage_section_block_name( $slug ) ][ $key ] = array( 'className' => $target[0], 'html' => $target[1] );
-		}
+		$targets[ aiad_homepage_section_block_name( $slug ) ] = $fields;
 	}
 	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepagePatterns = ' . wp_json_encode( $data ) . '; window.aiadHomepagePatternTargets = ' . wp_json_encode( $targets ) . ';', 'before' );
 }

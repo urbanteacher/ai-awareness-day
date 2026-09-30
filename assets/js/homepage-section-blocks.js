@@ -22,17 +22,28 @@
 	var targetsByBlock = window.aiadHomepagePatternTargets || {};
 
 	// Wording set in the section block's sidebar goes into the pattern's blocks, so the page reads the same after the swap.
-	// A core block takes the value named for its class (aiad_homepage_pattern_wording_targets()); the first match wins.
-	function applyWording( list, wording, targets, filled ) {
+	// Each field names its target (aiad_homepage_pattern_wording_targets()): the nth core block with a class, or a
+	// block's attribute.
+	function applyWording( list, wording, targets, seen ) {
 		targets = targets || {};
-		filled = filled || {};
+		seen = seen || {};
 		list.forEach( function ( block ) {
 			var classes = ( block.attributes.className || '' ).split( ' ' );
 			Object.keys( targets ).forEach( function ( key ) {
 				var target = targets[ key ];
-				if ( wording[ key ] && ! filled[ key ] && -1 !== classes.indexOf( target.className ) && 'content' in block.attributes ) {
+				if ( target.block ) {
+					if ( target.block === block.name && wording[ key ] ) {
+						block.attributes[ target.attr ] = wording[ key ];
+					}
+					return;
+				}
+				if ( -1 === classes.indexOf( target.class ) || ! ( 'content' in block.attributes ) ) {
+					return;
+				}
+				var nth = seen[ key ] || 0;
+				seen[ key ] = nth + 1;
+				if ( wording[ key ] && nth === ( target.nth || 0 ) ) {
 					block.attributes.content = target.html ? wording[ key ] : escapeText( wording[ key ] );
-					filled[ key ] = true;
 				}
 			} );
 			if ( 'aiad/principle-card' === block.name ) {
@@ -44,7 +55,7 @@
 					block.attributes.text = escapeText( wording[ 'aiad_principle_desc_' + strand ] );
 				}
 			}
-			applyWording( block.innerBlocks, wording, targets, filled );
+			applyWording( block.innerBlocks, wording, targets, seen );
 		} );
 		return list;
 	}

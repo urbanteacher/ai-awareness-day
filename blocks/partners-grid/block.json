@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/partners-grid",
+	"title": "Partner cards",
+	"category": "aiad-homepage",
+	"icon": "groups",
+	"description": "The partner cards and the Show More Partners button. The cards come from Partners.",
+	"keywords": [
+		"partners",
+		"reach",
+		"cards"
+	],
+	"textdomain": "ai-awareness-day",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
