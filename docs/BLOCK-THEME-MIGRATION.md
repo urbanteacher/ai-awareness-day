@@ -128,7 +128,9 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [ ] Add `parts/header.html` and `parts/footer.html`; call them from `header.php` / `footer.php` via `block_template_part()`
 - [x] Homepage sections as blocks: 11 section blocks (theme, `inc/homepage-blocks.php`) that render the existing section templates; Appearance → Block homepage creates a "Home" page from the current order and visibility and makes it the front page (and can switch back). The homepage prints the same markup
 - [x] Section wording in each block's sidebar (35 fields across 6 sections), copied from the Customizer by a button on Appearance → Block homepage; the Customizer hides those controls while the block homepage is on
-- [ ] Sections rebuilt from core blocks/patterns for on-canvas editing, section by section
+- [ ] Sections rebuilt from core blocks/patterns for on-canvas editing, section by section. A section block with a pattern (`aiad_homepage_section_patterns()`) gets an "Edit on the page" button that swaps it for the pattern's core blocks; the theme CSS styles core's markup alongside the template's
+  - [x] Aim (`patterns/homepage-aim.php`): same layout at 1280px and 390px, "Show more" still works; the aims fade in together rather than one by one
+  - [ ] Principles, campaign, free resources, featured resources, contact, hero (wording from the Customizer or the block's Wording fields goes into the pattern)
 - [ ] Migration script: read the 52 `theme_mod` values → write the homepage `post_content` (run on staging first; keep a backup of `theme_mods_ai-awareness-day`)
 - [x] `front-page.php` renders the block homepage's section blocks when it is the front page (each block on its own, without the_content's filters), and the classic section loop otherwise
 - [ ] Section styles in `styles/sections/` for Safe / Smart / Creative / Responsible / Future

@@ -944,7 +944,7 @@
         var labelLess = btn.getAttribute('data-label-less') || 'Show less';
 
         function revealAimsFromFourth() {
-            var items = list.querySelectorAll('.aim-item');
+            var items = list.querySelectorAll(':scope > li'); // .aim-item, or the core list's items (patterns/homepage-aim.php)
             items.forEach(function (li, i) {
                 if (i >= 3) {
                     li.classList.add('visible');

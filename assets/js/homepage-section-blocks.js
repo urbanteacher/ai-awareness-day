@@ -5,10 +5,40 @@
  * a Wording panel in the settings sidebar. An empty field shows its placeholder (the Customizer's value or the
  * standard wording) on the page. The front end is rendered in PHP too, so nothing is saved but the block comment
  * and its wording attribute.
+ *
+ * A section with a pattern of core blocks (aiad_homepage_section_patterns()) can swap itself for that pattern, so its
+ * wording is then edited on the page.
  */
-( function ( blocks, element, blockEditor, components, ServerSideRender ) {
+( function ( blocks, element, blockEditor, components, ServerSideRender, data ) {
 	var el = element.createElement;
 	var fieldsByBlock = window.aiadHomepageFields || {};
+	var patternByBlock = window.aiadHomepagePatterns || {};
+
+	function editOnPagePanel( name, clientId ) {
+		var content = patternByBlock[ name ];
+		if ( ! content ) {
+			return null;
+		}
+		return el(
+			blockEditor.InspectorControls,
+			null,
+			el(
+				components.PanelBody,
+				{ title: 'Edit on the page', initialOpen: true },
+				el( 'p', null, 'Swap this section for ordinary blocks with the same wording and design, so you can edit its text directly on the page. To undo, press Undo or put this section block back.' ),
+				el(
+					components.Button,
+					{
+						variant: 'secondary',
+						onClick: function () {
+							data.dispatch( 'core/block-editor' ).replaceBlocks( clientId, blocks.parse( content ) );
+						},
+					},
+					'Edit on the page'
+				)
+			)
+		);
+	}
 
 	function wordingPanel( name, attributes, setAttributes ) {
 		var fields = fieldsByBlock[ name ] || [];
@@ -55,6 +85,7 @@
 				return el(
 					'div',
 					blockEditor.useBlockProps(),
+					editOnPagePanel( name, props.clientId ),
 					wordingPanel( name, props.attributes, props.setAttributes ),
 					el( ServerSideRender, { block: name, attributes: props.attributes } )
 				);
@@ -64,4 +95,4 @@
 			},
 		} );
 	} );
-} )( window.wp.blocks, window.wp.element, window.wp.blockEditor, window.wp.components, window.wp.serverSideRender );
+} )( window.wp.blocks, window.wp.element, window.wp.blockEditor, window.wp.components, window.wp.serverSideRender, window.wp.data );

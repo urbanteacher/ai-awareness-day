@@ -180,7 +180,7 @@ function aiad_register_homepage_section_blocks(): void {
 	wp_register_script(
 		'aiad-homepage-section-blocks',
 		AIAD_URI . '/assets/js/homepage-section-blocks.js',
-		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render' ),
+		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-data' ),
 		file_exists( $script ) ? (string) filemtime( $script ) : AIAD_VERSION,
 		true
 	);
@@ -287,7 +287,8 @@ function aiad_post_has_homepage_sections( $post = null ): bool {
 			return true;
 		}
 	}
-	return false;
+	// A section rebuilt from core blocks keeps its pattern's name in the outer group's metadata.
+	return str_contains( $post->post_content, '"patternName":"aiad/homepage-' );
 }
 
 /**
@@ -331,6 +332,13 @@ function aiad_homepage_section_editor_styles(): void {
 	if ( function_exists( 'aiad_enqueue_modular_theme_styles' ) ) {
 		aiad_enqueue_modular_theme_styles();
 	}
+	// On the site, main.js fades .fade-up content in as it scrolls into view; the editor has no main.js, so show it.
+	// Small screens show three aims until "Show more" is pressed; the editor shows them all so each can be edited.
+	wp_add_inline_style(
+		'aiad-style',
+		'.editor-styles-wrapper .fade-up { opacity: 1; transform: none; }
+		.editor-styles-wrapper .aims-list.wp-block-list > li { display: flex !important; }'
+	);
 	// The front page also loads these; aiad_scripts() leaves them out of wp-admin.
 	foreach ( array( 'aiad-tools' => 'components/tools.css', 'aiad-entry-figure' => 'components/entry-figure.css', 'aiad-timeline' => 'components/timeline.css' ) as $handle => $file ) {
 		$path = AIAD_DIR . '/assets/css/' . $file;
@@ -544,3 +552,69 @@ function aiad_block_homepage_edit_homepage_notice(): void {
 	);
 }
 add_action( 'admin_notices', 'aiad_block_homepage_edit_homepage_notice' );
+
+/**
+ * Sections that can be rebuilt from core blocks, so they are edited on the page: section slug => pattern
+ * (patterns/homepage-{slug}.php). The section block's sidebar offers to swap itself for the pattern.
+ *
+ * @return array<string, string>
+ */
+function aiad_homepage_section_patterns(): array {
+	return array(
+		'aim' => 'aiad/homepage-aim',
+	);
+}
+
+/**
+ * The pattern category the homepage section patterns use.
+ */
+function aiad_register_homepage_pattern_category(): void {
+	register_block_pattern_category( 'aiad-homepage', array( 'label' => __( 'Homepage sections', 'ai-awareness-day' ) ) );
+}
+add_action( 'init', 'aiad_register_homepage_pattern_category' );
+
+/**
+ * Give the editor each section block's pattern, so the block can swap itself for editable core blocks.
+ */
+function aiad_homepage_section_pattern_data(): void {
+	$registry = WP_Block_Patterns_Registry::get_instance();
+	$data     = array();
+	foreach ( aiad_homepage_section_patterns() as $slug => $pattern ) {
+		$registered = $registry->get_registered( $pattern );
+		if ( $registered ) {
+			$data[ aiad_homepage_section_block_name( $slug ) ] = $registered['content'];
+		}
+	}
+	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepagePatterns = ' . wp_json_encode( $data ) . ';', 'before' );
+}
+add_action( 'enqueue_block_editor_assets', 'aiad_homepage_section_pattern_data' );
+
+/**
+ * The Aim section in core blocks: add the "Show more" button the section template prints after the aims list.
+ * It is not a block because it only works with the list's script (initAimListExpand in assets/js/main.js).
+ *
+ * @param string $block_content The list's HTML.
+ */
+function aiad_homepage_aims_expand_button( string $block_content ): string {
+	if ( ! str_contains( $block_content, 'id="aims-list"' ) || substr_count( $block_content, '<li' ) <= 3 ) {
+		return $block_content;
+	}
+	ob_start();
+	?>
+<div class="aims-expand-wrap">
+	<button
+		type="button"
+		class="aims-expand"
+		id="aim-expand"
+		aria-expanded="false"
+		aria-controls="aims-list"
+		data-label-more="<?php echo esc_attr__( 'Show more', 'ai-awareness-day' ); ?>"
+		data-label-less="<?php echo esc_attr__( 'Show less', 'ai-awareness-day' ); ?>"
+	>
+		<?php esc_html_e( 'Show more', 'ai-awareness-day' ); ?>
+	</button>
+</div>
+	<?php
+	return $block_content . ob_get_clean();
+}
+add_filter( 'render_block_core/list', 'aiad_homepage_aims_expand_button' );

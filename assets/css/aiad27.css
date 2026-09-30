@@ -475,6 +475,9 @@ a.principle-card:focus-visible h3 { color: var(--a27-ink); }
 .section--green .section-label, #aim .section-label { color: var(--a27-responsible); }
 .section--green .aim-item, #aim .aim-item { border-color: #54504E; }
 .section--green .aim-num, #aim .aim-num { color: var(--a27-responsible); }
+/* The same for the Aim section in core blocks (patterns/homepage-aim.php). */
+.section--green .aims-list > li, #aim .aims-list > li { color: var(--a27-cream); border-color: #54504E; }
+.section--green .aims-list > li::before, #aim .aims-list > li::before { color: var(--a27-responsible); }
 
 .resource-card,
 .featured-resource-card,

@@ -3,6 +3,7 @@
    ============================================ */
 
 .aims-list {
+  counter-reset: aim;
   list-style: none;
   margin: 1.5rem 0 0;
   padding: 0;
@@ -12,7 +13,8 @@
   overflow: hidden;
 }
 
-.aim-item {
+.aim-item,
+.aims-list.wp-block-list > li {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
@@ -21,7 +23,8 @@
   margin: -1px 0 0 -1px;
 }
 
-.aim-num {
+.aim-num,
+.aims-list.wp-block-list > li::before {
   flex-shrink: 0;
   font-family: var(--font-display);
   font-size: 1rem;
@@ -31,6 +34,18 @@
   letter-spacing: -0.02em;
   min-width: 1.75rem;
   padding-top: 0.15rem;
+}
+
+/* Core list version (patterns/homepage-aim.php): the item holds the text itself and the number comes from a counter. */
+.aims-list.wp-block-list > li {
+  counter-increment: aim;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--gray-200);
+}
+
+.aims-list.wp-block-list > li::before {
+  content: counter(aim, decimal-leading-zero);
 }
 
 .aim-text {
@@ -49,7 +64,8 @@
 
 /* Viewport-wide: many phones/tablets report >768px CSS width — collapse until large desktop */
 @media (max-width: 1024px) {
-  .aims-list:not(.aims-list--expanded) .aim-item:nth-child(n + 4) {
+  .aims-list:not(.aims-list--expanded) .aim-item:nth-child(n + 4),
+  .aims-list.wp-block-list:not(.aims-list--expanded) > li:nth-child(n + 4) {
     display: none;
   }
 
@@ -96,18 +112,21 @@
     margin-top: 2rem;
   }
 
-  .aim-item {
+  .aim-item,
+  .aims-list.wp-block-list > li {
     gap: 1.25rem;
     padding: 1.25rem;
   }
 
-  .aim-num {
+  .aim-num,
+  .aims-list.wp-block-list > li::before {
     font-size: 2rem;
     min-width: 3rem;
     padding-top: 0.05rem;
   }
 
-  .aim-text {
+  .aim-text,
+  .aims-list.wp-block-list > li {
     font-size: 0.95rem;
     line-height: 1.6;
   }
