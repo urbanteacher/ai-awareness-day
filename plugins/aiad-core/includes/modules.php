@@ -28,6 +28,7 @@ function aiad_core_modules(): array {
 		'admin'           => 'admin.php',
 		'timeline'        => 'timeline.php',
 		'live-sessions'   => 'live-sessions.php',
+		'certificates'    => 'certificates.php',
 	);
 }
 

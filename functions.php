@@ -58,14 +58,7 @@ require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
-require_once $aiad_dir . '/inc/certificate-copy.php';
-require_once $aiad_dir . '/inc/letter-copy.php';
-require_once $aiad_dir . '/inc/certificate-api.php';
-require_once $aiad_dir . '/inc/generator-embed.php';
-if ( is_admin() ) {
-	require_once $aiad_dir . '/inc/certificate-admin.php';
-	require_once $aiad_dir . '/inc/letter-admin.php';
-}
+aiad_require_core_module( 'certificates' );
 require_once $aiad_dir . '/inc/timeline.php';
 aiad_require_core_module( 'live-sessions' );
 require_once $aiad_dir . '/inc/live-sessions.php';

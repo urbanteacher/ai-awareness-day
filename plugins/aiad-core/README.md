@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions` moved.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline`, `live-sessions`, `certificates` moved.
 
 ## Layout
 
@@ -49,7 +49,7 @@ There is only ever **one copy** of a module: the file in `modules/`. This plugin
 5. Replace `AIAD_DIR` / `AIAD_URI` with `AIAD_CORE_DIR` / `AIAD_CORE_URL` only for assets the module now owns. Assets still in the theme keep the theme constants.
 6. Test with the plugin active, inactive, and while activating it: pages should match byte for byte and the log should show no errors. For modules that register things, also compare rewrite rules, post types, taxonomies, meta, REST output, meta boxes, admin menus and hook priorities.
 
-**Watch the load order.** With the plugin active, a module's hooks are added before any of the theme's, so callbacks that share a hook and priority with theme code now run first. `post-types` hit this with the Resources admin submenu order and `tracking` with the dashboard widget order; a priority bump fixed each. A module made of several files can use a folder plus an entry file that defines the constant and requires the rest (see `modules/post-types.php`).
+**Watch the load order.** With the plugin active, a module's hooks are added before any of the theme's, so callbacks that share a hook and priority with theme code now run first. `post-types` hit this with the Resources admin submenu order and `tracking` with the dashboard widget order; a priority bump fixed each. Admin pages added from the plugin also change the internal key order of `$submenu` (which parent entry is created first); that is harmless, because the sidebar is drawn from `$menu`, and the rendered menu stays identical. A module made of several files can use a folder plus an entry file that defines the constant and requires the rest (see `modules/post-types.php`).
 
 Once the plugin is live everywhere, the theme's `aiad_require_core_module()` calls can go.
 
@@ -69,7 +69,7 @@ Where each file in the theme's `inc/` should end up.
 | `contact` ✅ | first part of `ajax-handlers.php` | **Moved.** Get Involved form handler, checklist labels, client IP / fingerprint. Reads the recipient from the Customizer (`aiad_contact_email`, see Risks) |
 | `resource-filter` ✅ | middle of `ajax-handlers.php` | **Moved.** AJAX filter for both resource archives and the cached filter counts. Still renders the theme's `resource-tile` template part with `get_template_part()` (decision: keep until the card becomes an `aiad/resource-card` block with the archive templates in Stage 3) |
 | `tracking` ✅ | download and view counters (from `ajax-handlers.php`), `engagement-tracking.php`, `dashboard.php` | **Moved** to `modules/tracking/`. The Campaign dashboard widgets now use priority 11, so they stay below the theme's Assets Pack widget. |
-| `certificates` | `certificate-api.php`, `certificate-copy.php`, `certificate-admin.php`, `letter-copy.php`, `letter-admin.php`, `generator-embed.php` | |
+| `certificates` ✅ | `certificate-api.php`, `certificate-copy.php`, `certificate-admin.php`, `letter-copy.php`, `letter-admin.php`, `generator-embed.php` | **Moved** to `modules/certificates/`, same order and `is_admin()` conditions. The generator tools are HTML files in the theme (`archive/theme/generators/`), linked through `get_template_directory_uri()`; the REST bootstrap uses the theme's logo helpers (runtime only) |
 | `timeline` ✅ | `cpt-meta.php`, `admin-meta-box.php`, `entries.php`, `topics.php`, `topic-assignments.php`, `query.php`, `ajax.php`, `benchmark-audience.php`, and the data half of `icons.php` (now `icon-options.php`) | **Moved** to `modules/timeline/`. The theme's `inc/timeline.php` loads the module, then the presentation files it keeps. The AJAX filter still renders with the theme's `timeline-layouts.php`, like the resource filter. `entries.php` still calls the theme's `aiad_get_customizer_defaults()` / `aiad_sanitize_event_date_ymd()` (runtime only) |
 | `live-sessions` ✅ | `live-sessions.php` except its four markup helpers | **Moved** to `modules/live-sessions.php`: the `live_session` CPT and audience taxonomy, meta box, seeds and migrations, data and formatting helpers, admin columns, legacy `/schedule/` redirects and the calendar (ICS) feed. The action link and its icon, the audience tabs and the inline filter script stay in the theme's `inc/live-sessions.php` |
 | `ai-tools` | `tools.php` | `ai_tool` CPT |
