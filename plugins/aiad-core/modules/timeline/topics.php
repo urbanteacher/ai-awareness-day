@@ -106,7 +106,7 @@ function aiad_timeline_filter_query_args( string $filter ): array {
 }
 
 /**
- * Create the topic terms, and apply inc/timeline/topic-assignments.php once.
+ * Create the topic terms, and apply topic-assignments.php (same folder) once.
  *
  * Runs on init, but only does work when the assignments file has changed since
  * it last ran (its hash is stored), so after the first request following a

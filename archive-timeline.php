@@ -15,7 +15,7 @@ if ( ! $archive_url ) {
 $paged = max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
 
 /*
- * Pills are topics (inc/timeline/topics.php), as links: ?topic=<slug>. A link
+ * Pills are topics (plugins/aiad-core/modules/timeline/topics.php), as links: ?topic=<slug>. A link
  * renders the filtered page on the server, so the page numbers match the filter
  * and the view can be shared. The old ?timeline_icon=<type> links still work.
  * Until topics are assigned, the pills fall back to the old types.

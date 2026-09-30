@@ -2,7 +2,7 @@
 /**
  * Live Timeline — Query helpers.
  *
- * Loaded by inc/timeline.php.
+ * Loaded by modules/timeline.php.
  *
  * @package AI_Awareness_Day
  */

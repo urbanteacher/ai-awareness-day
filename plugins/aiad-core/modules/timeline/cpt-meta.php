@@ -2,7 +2,7 @@
 /**
  * Live Timeline — CPT, taxonomy & meta registration.
  *
- * Loaded by inc/timeline.php.
+ * Loaded by modules/timeline.php.
  *
  * @package AI_Awareness_Day
  */
@@ -51,7 +51,7 @@ add_action('init', 'aiad_register_timeline_post_type');
 function aiad_register_timeline_category_taxonomy(): void
 {
     register_taxonomy('timeline_category', 'timeline', array(
-        // Shown as "Topics": these drive the filter pills (inc/timeline/topics.php).
+        // Shown as "Topics": these drive the filter pills (plugins/aiad-core/modules/timeline/topics.php).
         'labels' => array(
             'name' => __('Topics', 'ai-awareness-day'),
             'singular_name' => __('Topic', 'ai-awareness-day'),

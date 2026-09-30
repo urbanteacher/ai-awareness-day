@@ -100,7 +100,8 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `ajax-handlers.php` split and moved: `contact`, `resource-filter`, plus the first part of `admin`. The filter keeps rendering the theme's resource tile until the card becomes a block in Stage 3
 - [x] `tracking` module finished: download/view counters, engagement tracking, dashboard widgets
 - [x] `admin` module finished: meta boxes, list columns and filters, import/export, focal point, submissions CSV export
-- [ ] Move the remaining modules (certificates, timeline, live sessions, tools, survey, SEO and others; see the plugin README) from `inc/` into it (theme keeps only presentation)
+- [x] `timeline` module: CPT, meta, admin meta box, entries, topics, queries, AJAX, benchmark audience (presentation stays in the theme)
+- [ ] Move the remaining modules (certificates, live sessions, tools, survey, SEO and others; see the plugin README) from `inc/` into it (theme keeps only presentation)
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)

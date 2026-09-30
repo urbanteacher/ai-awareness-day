@@ -23,7 +23,7 @@ if ( empty( $entries ) ) {
     return;
 }
 
-// Pills are topics (inc/timeline/topics.php); the old types until topics are assigned.
+// Pills are topics (plugins/aiad-core/modules/timeline/topics.php); the old types until topics are assigned.
 $topic_options = function_exists( 'aiad_timeline_topic_options' ) ? aiad_timeline_topic_options() : array();
 $icon_options  = $topic_options ?: aiad_timeline_icon_options();
 $show_filters  = ! empty( $entries ) && count( $icon_options ) > 1;

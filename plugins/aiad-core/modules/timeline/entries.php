@@ -2,7 +2,7 @@
 /**
  * Live Timeline — Entry creation & disabled auto-generation hooks.
  *
- * Loaded by inc/timeline.php.
+ * Loaded by modules/timeline.php.
  *
  * @package AI_Awareness_Day
  */

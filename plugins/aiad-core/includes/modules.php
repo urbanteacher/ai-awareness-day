@@ -26,6 +26,7 @@ function aiad_core_modules(): array {
 		'resource-filter' => 'resource-filter.php',
 		'tracking'        => 'tracking.php',
 		'admin'           => 'admin.php',
+		'timeline'        => 'timeline.php',
 	);
 }
 

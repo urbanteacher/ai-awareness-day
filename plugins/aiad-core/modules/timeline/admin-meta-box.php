@@ -2,7 +2,7 @@
 /**
  * Live Timeline — Admin meta box for manual entries.
  *
- * Loaded by inc/timeline.php.
+ * Loaded by modules/timeline.php.
  *
  * @package AI_Awareness_Day
  */

@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin` moved.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin`, `timeline` moved.
 
 ## Layout
 
@@ -70,7 +70,7 @@ Where each file in the theme's `inc/` should end up.
 | `resource-filter` ✅ | middle of `ajax-handlers.php` | **Moved.** AJAX filter for both resource archives and the cached filter counts. Still renders the theme's `resource-tile` template part with `get_template_part()` (decision: keep until the card becomes an `aiad/resource-card` block with the archive templates in Stage 3) |
 | `tracking` ✅ | download and view counters (from `ajax-handlers.php`), `engagement-tracking.php`, `dashboard.php` | **Moved** to `modules/tracking/`. The Campaign dashboard widgets now use priority 11, so they stay below the theme's Assets Pack widget. |
 | `certificates` | `certificate-api.php`, `certificate-copy.php`, `certificate-admin.php`, `letter-copy.php`, `letter-admin.php`, `generator-embed.php` | |
-| `timeline` | `timeline.php`, `timeline/cpt-meta.php`, `entries.php`, `query.php`, `topics.php`, `topic-assignments.php`, `ajax.php`, `admin-meta-box.php`, `benchmark-audience.php`, `icons.php` | `icons.php` calls `aiad_strand_icon_svg()` from the theme's `theme-assets.php`; move that function with it |
+| `timeline` ✅ | `cpt-meta.php`, `admin-meta-box.php`, `entries.php`, `topics.php`, `topic-assignments.php`, `query.php`, `ajax.php`, `benchmark-audience.php`, and the data half of `icons.php` (now `icon-options.php`) | **Moved** to `modules/timeline/`. The theme's `inc/timeline.php` loads the module, then the presentation files it keeps. The AJAX filter still renders with the theme's `timeline-layouts.php`, like the resource filter. `entries.php` still calls the theme's `aiad_get_customizer_defaults()` / `aiad_sanitize_event_date_ymd()` and live-sessions functions (runtime only) |
 | `live-sessions` | `live-sessions.php` | |
 | `ai-tools` | `tools.php` | `ai_tool` CPT |
 | `tools` | `ai-buzzwords.php`, `ai-llm-explainer.php`, `ai-llm-order-game.php`, `ai-speed-quiz.php`, `ai-computing-curriculum-challenge.php`, `ai-ict-curriculum.php`, `ai-curriculum-quiz.php`, `ai-misinformation-detector.php`, `ai-neu-ai-report.php`, `ai-neu-ai-report-data.php`, `schools-ai-risk-academy.php` + their JS/CSS | Each becomes a block. Move the explainer and buzzwords together: the speed quiz and order game call them |
@@ -86,7 +86,7 @@ Where each file in the theme's `inc/` should end up.
 | `setup.php`, `theme-assets.php` | Theme supports, menus, styles and scripts |
 | `customizer.php`, `customizer-smtp-control.php`, `front-page-layout.php`, `admin/class-aiad-homepage-editor.php` | Replaced by block editing in Stages 2–3. The SMTP setting moves to a plugin settings page then |
 | presentation half of `helpers.php` | Hero text, logos, partner marquee, countdown, press release URL |
-| `timeline-layouts.php`, `timeline/single-helpers.php` | Timeline rendering; becomes blocks or templates later |
+| `timeline-layouts.php`, `timeline/icons.php` (SVG renderers), `timeline/single-helpers.php` | Timeline presentation, loaded by the theme's `inc/timeline.php`. Becomes blocks or templates later |
 | `hub-resource-page.php`, `national-conversation-page.php`, `walkthrough.php` | Page routes and layouts. The data parts of `national-conversation-page.php` (totals, URLs used by `sharing.php`) move with `seo` |
 | `benchmark-promo.php`, `admin-assets-pack.php` | Homepage and dashboard presentation |
 | `bundled-plugins.php` | Installs the bundled plugins on deploy, so it has to stay in the theme |
@@ -94,7 +94,7 @@ Where each file in the theme's `inc/` should end up.
 
 ## Risks
 
-- **Customizer values belong to the theme.** `seo.php` and `sharing.php` read hero title, date and campaign text with `get_theme_mod()`, and the `contact` module reads the form's recipient address (`aiad_contact_email`). Theme mods are stored per theme, so a theme switch would empty them. When these move off the Customizer, give them their own options (copied once from the theme mods) instead.
+- **Customizer values belong to the theme.** `seo.php` and `sharing.php` read hero title, date and campaign text with `get_theme_mod()`, the `contact` module reads the form's recipient address (`aiad_contact_email`), and the `timeline` module's `entries.php` reads the event date (`aiad_event_date_ymd`). Theme mods are stored per theme, so a theme switch would empty them. When these move off the Customizer, give them their own options (copied once from the theme mods) instead.
 - **Load order.** Plugins load before the theme. Module code must only call theme functions inside hooks, never when the file loads, and must not rely on `AIAD_DIR` / `AIAD_URI` / `AIAD_VERSION` for anything it owns.
 - **Deploy.** Production gets bundled plugins through `inc/bundled-plugins.php`, which copies **and activates** them. Adding `aiad-core` to `aiad_bundled_plugins()` ships it live. Do that only once a module has moved and been tested on staging.
 - **Editor preview styling.** The block editor preview shows the quiz's markup without its CSS, because the theme only registers that stylesheet on the front end. Fix when the tool's assets move into the plugin (register them on `init`, reference them in `block.json` as `style`).
