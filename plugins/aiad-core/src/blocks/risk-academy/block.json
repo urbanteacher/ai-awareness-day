@@ -7,7 +7,11 @@
 	"category": "aiad",
 	"icon": "shield",
 	"description": "The Schools' AI Risk Academy, section by section. Same output as the [aiad_risk_academy] shortcode.",
-	"keywords": [ "risk", "academy", "schools" ],
+	"keywords": [
+		"risk",
+		"academy",
+		"schools"
+	],
 	"textdomain": "aiad-core",
 	"attributes": {
 		"hero": {
@@ -46,8 +50,15 @@
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": [
+		"file:../../../assets/css/components/sara-fonts.css",
+		"file:../../../assets/css/components/schools-ai-risk-academy.css"
+	],
 	"render": "file:./render.php"
 }

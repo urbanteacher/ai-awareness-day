@@ -56,5 +56,9 @@
     ]
   },
   "editorScript": "file:./index.js",
+  "editorStyle": [
+    "file:../../../assets/css/components/sara-fonts.css",
+    "file:../../../assets/css/components/schools-ai-risk-academy.css"
+  ],
   "render": "file:./render.php"
 }

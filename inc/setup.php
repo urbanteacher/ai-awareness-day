@@ -58,7 +58,8 @@ function aiad_setup(): void
     add_theme_support('align-wide');
     add_theme_support('wp-block-styles');
     add_theme_support('editor-styles');
-    add_editor_style('assets/css/editor-style.css');
+    // Tokens first, so blocks previewed in the editor (the aiad-core tools) resolve the theme's colours and fonts.
+    add_editor_style(array('assets/css/base/tokens.css', 'assets/css/editor-style.css'));
     add_theme_support('custom-units');
 
     // 6.5: Appearance tools for classic themes (margin, padding, border, line-height, etc.)

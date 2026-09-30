@@ -1,76 +1,7 @@
 /* ============================================
-   CSS VARIABLES & RESET
+   RESET
+   Design tokens (:root custom properties) live in base/tokens.css.
    ============================================ */
-:root {
-  /* AiAd27: source of truth is SlideForge css/aiad27.css. Bright = ground; deep = ink. */
-  --a27-safe: #00BEDD; --a27-safe-deep: #006A7D;
-  --a27-smart: #FF7038; --a27-smart-deep: #A7350B;
-  --a27-creative: #AC91FF; --a27-creative-deep: #6441B8;
-  --a27-responsible: #63DF93; --a27-responsible-deep: #176E3B;
-  --a27-future: #FA83EB; --a27-future-deep: #983488;
-  --a27-cream: #F6F4ED; --a27-ink: #231F20; --a27-dim: #54504E;
-  --a27-rule: #C9C6BE; --a27-card: #EAE7DF; --a27-scrim: #f6f4eddd;
-  /* Derived, not from the campaign palette: AiAd27 has no red and risk,
-     error and wrong-answer states need one. Ink only, never a ground, and
-     never used for anything that is not a severity or error signal. */
-  --a27-crit: #A32D2D; --a27-crit-deep: #791F1F;
-  --a27-color: var(--a27-safe); --a27-deep: var(--a27-safe-deep);
-  --s-bg: var(--a27-cream); --s-fg: var(--a27-ink); --s-dim: var(--a27-dim);
-  --s-accent: var(--a27-deep); --s-rule: var(--a27-rule); --s-card: var(--a27-card);
-  --s-scrim: var(--a27-scrim); --s-font: 'AIAD Sans', Arial, sans-serif;
-  --font-display: var(--s-font); --font-body: var(--s-font);
-  --a27-xs: 18px; --a27-sm: 22px; --a27-base: 24px; --a27-lg: 28px;
-  --a27-xl: 33px; --a27-2xl: 48px; --a27-3xl: 52px; --a27-4xl: 62px; --a27-5xl: 68px;
-  --a27-display-short: 88px; --a27-display-medium: 86px;
-  --a27-display-long: 72px; --a27-display-longest: 60px;
-  /* Compatibility aliases: existing templates keep their hooks and semantics. */
-  --badge-safe: var(--a27-safe);
-  --badge-smart: var(--a27-smart);
-  --badge-creative: var(--a27-creative);
-  --badge-responsible: var(--a27-responsible);
-  --badge-future: var(--a27-future);
-  --gray-50: var(--a27-cream);
-  --gray-100: var(--a27-card);
-  --gray-200: var(--a27-rule);
-  --gray-300: var(--a27-rule);
-  --gray-400: var(--a27-dim);
-  --gray-500: var(--a27-dim);
-  --gray-600: var(--a27-dim);
-  --gray-700: var(--a27-ink);
-  --gray-800: var(--a27-ink);
-  --gray-900: var(--a27-ink);
-  --green-50: var(--a27-cream);
-  --green-100: var(--a27-card);
-  --green-200: var(--a27-rule);
-  --green-300: var(--a27-rule);
-  --green-400: var(--a27-dim);
-  --green-500: var(--a27-dim);
-  --green-600: var(--a27-ink);
-  --green-700: var(--a27-ink);
-  --green-800: var(--a27-ink);
-  --green-900: var(--a27-ink);
-  --white: var(--a27-cream); --badge-black: var(--a27-ink);
-  --accent-green: var(--a27-responsible-deep);
-  --accent-green-light: var(--a27-card);
-  --accent-green-dark: var(--a27-responsible-deep);
-  --accent-green-mid: var(--a27-responsible-deep);
-  --accent-purple: var(--a27-creative-deep);
-  --accent-purple-light: var(--a27-card);
-  --accent-purple-dark: var(--a27-creative-deep);
-  --accent-purple-mid: var(--a27-creative-deep);
-  --accent-blue: var(--a27-safe-deep);
-  --accent-blue-light: var(--a27-card);
-  --accent-blue-dark: var(--a27-safe-deep);
-  --accent-blue-mid: var(--a27-safe-deep);
-  --accent-amber: var(--a27-smart-deep); --accent-amber-light: var(--a27-card);
-  --accent-rose: var(--a27-future-deep); --accent-emerald: var(--a27-responsible-deep);
-  --section-padding-y: clamp(3.5rem, 7vw, 6rem);
-  --section-padding: var(--section-padding-y) 0;
-  --container-width: min(1200px, calc(100% - clamp(2rem, 8vw, 6.5rem)));
-  --border-radius: 0;
-  --transition: 0.2s ease;
-}
-
 *, *::before, *::after {
   margin: 0;
   padding: 0;

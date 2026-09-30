@@ -7,13 +7,21 @@
 	"category": "aiad",
 	"icon": "randomize",
 	"description": "Put the steps of how a language model answers in the right order. Same output as the [aiad_llm_order_game] shortcode.",
-	"keywords": [ "llm", "game", "order" ],
+	"keywords": [
+		"llm",
+		"game",
+		"order"
+	],
 	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-llm-order-game.css",
 	"render": "file:./render.php"
 }

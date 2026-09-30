@@ -7,7 +7,11 @@
 	"category": "aiad",
 	"icon": "lightbulb",
 	"description": "Step-by-step explainer of how a large language model works. Same output as the [aiad_llm_explainer] shortcode.",
-	"keywords": [ "llm", "explainer", "language model" ],
+	"keywords": [
+		"llm",
+		"explainer",
+		"language model"
+	],
 	"textdomain": "aiad-core",
 	"attributes": {
 		"hideIntro": {
@@ -22,8 +26,12 @@
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-llm-explainer.css",
 	"render": "file:./render.php"
 }

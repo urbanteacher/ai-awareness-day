@@ -7,13 +7,21 @@
 	"category": "aiad",
 	"icon": "desktop",
 	"description": "Interactive computing curriculum walkthrough across the key stages. Same output as the [aiad_ict_curriculum] shortcode.",
-	"keywords": [ "ict", "computing", "curriculum" ],
+	"keywords": [
+		"ict",
+		"computing",
+		"curriculum"
+	],
 	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-ict-curriculum.css",
 	"render": "file:./render.php"
 }

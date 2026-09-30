@@ -7,7 +7,10 @@
 	"category": "aiad",
 	"icon": "media-document",
 	"description": "Unpacking the NEU AI report. Same output as the [aiad_neu_ai_report] shortcode.",
-	"keywords": [ "neu", "report" ],
+	"keywords": [
+		"neu",
+		"report"
+	],
 	"textdomain": "aiad-core",
 	"attributes": {
 		"headline": {
@@ -18,8 +21,12 @@
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-neu-ai-report.css",
 	"render": "file:./render.php"
 }

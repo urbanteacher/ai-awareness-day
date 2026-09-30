@@ -7,6 +7,7 @@
 
 return array(
 	'base'   => array(
+		'base/tokens.css',
 		'base/reset.css',
 		'base/shared.css',
 		'base/animations.css',

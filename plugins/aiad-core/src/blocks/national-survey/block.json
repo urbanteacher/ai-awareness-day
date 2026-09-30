@@ -7,13 +7,20 @@
 	"category": "aiad",
 	"icon": "feedback",
 	"description": "The National AI Survey form. Same output as the [aiad_national_survey] shortcode.",
-	"keywords": [ "survey", "national" ],
+	"keywords": [
+		"survey",
+		"national"
+	],
 	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/national-survey.css",
 	"render": "file:./render.php"
 }

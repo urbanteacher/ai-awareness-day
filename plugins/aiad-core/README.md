@@ -120,7 +120,7 @@ Where each file in the theme's `inc/` should end up.
 - **Load order.** Plugins load before the theme. Module code must only call theme functions inside hooks, never when the file loads, and must not rely on `AIAD_DIR` / `AIAD_URI` / `AIAD_VERSION` for anything it owns.
 - **Seed order on fresh installs.** Several one-off `init` seeds (benchmark content and the interactive tools' timeline entries) share priorities 33–35 and set no post dates, so their order decides how same-second entries tie on a brand-new site. `tools` is listed before `benchmark-content` in `aiad_core_modules()`, which keeps the theme's original order; keep it that way.
 - **Deploy.** Production gets bundled plugins through `inc/bundled-plugins.php`, which copies **and activates** them. Adding `aiad-core` to `aiad_bundled_plugins()` ships it live. Do that only once a module has moved and been tested on staging.
-- **Editor preview styling.** The block editor previews show each tool's markup without its CSS, because the theme only registers those stylesheets on the front end. Fix when the tool's assets move into the plugin (register them on `init`, reference them in `block.json` as `style`).
+- **Editor previews.** Each block's `block.json` loads its tool's stylesheet in the editor (`editorStyle`, a `file:` path to `assets/`), and the theme gives the editor its design tokens (`assets/css/base/tokens.css`), so previews use the site's colours and fonts. The tools' scripts do not run in the editor: previews show each tool's starting state. The editor styles only exist while this plugin is active; a block theme would need to provide the tokens itself (e.g. `theme.json` or its own editor styles).
 
 ## Local development
 

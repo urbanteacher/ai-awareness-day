@@ -27,5 +27,6 @@
     ]
   },
   "editorScript": "file:./index.js",
+  "editorStyle": "file:../../../assets/css/components/ai-neu-ai-report.css",
   "render": "file:./render.php"
 }

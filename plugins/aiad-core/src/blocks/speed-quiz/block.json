@@ -7,19 +7,39 @@
 	"category": "aiad",
 	"icon": "clock",
 	"description": "Timed AI quiz for teachers, with a leaderboard saved on the device. Same output as the [aiad_speed_quiz] shortcode.",
-	"keywords": [ "quiz", "teachers", "timed" ],
+	"keywords": [
+		"quiz",
+		"teachers",
+		"timed"
+	],
 	"textdomain": "aiad-core",
 	"attributes": {
-		"questions": { "type": "integer", "default": 10 },
-		"seconds": { "type": "integer", "default": 15 },
-		"bonus": { "type": "integer", "default": 10 },
-		"points": { "type": "integer", "default": 100 }
+		"questions": {
+			"type": "integer",
+			"default": 10
+		},
+		"seconds": {
+			"type": "integer",
+			"default": 15
+		},
+		"bonus": {
+			"type": "integer",
+			"default": 10
+		},
+		"points": {
+			"type": "integer",
+			"default": 100
+		}
 	},
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-speed-quiz.css",
 	"render": "file:./render.php"
 }

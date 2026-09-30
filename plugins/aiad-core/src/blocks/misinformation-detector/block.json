@@ -7,7 +7,11 @@
 	"category": "aiad",
 	"icon": "search",
 	"description": "Spot the signs of AI-generated misinformation. Same output as the [aiad_misinformation_detector] shortcode.",
-	"keywords": [ "misinformation", "fake news", "detector" ],
+	"keywords": [
+		"misinformation",
+		"fake news",
+		"detector"
+	],
 	"textdomain": "aiad-core",
 	"attributes": {
 		"hideIntro": {
@@ -18,8 +22,12 @@
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"align": [ "wide", "full" ]
+		"align": [
+			"wide",
+			"full"
+		]
 	},
 	"editorScript": "file:./index.js",
+	"editorStyle": "file:../../../assets/css/components/ai-misinformation-detector.css",
 	"render": "file:./render.php"
 }
