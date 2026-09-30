@@ -128,6 +128,11 @@
 	( window.aiadHomepageSections || [] ).forEach( function ( name ) {
 		blocks.registerBlockType( name, {
 			edit: function ( props ) {
+				var heroEdit = window.aiadHomepageHeroEdit;
+				if ( 'aiad/section-hero' === name && heroEdit && heroEdit.enabled ) {
+					// The hero is edited on the canvas (assets/js/homepage-hero-edit.js); the sidebar keeps every field, the link too.
+					return el( element.Fragment, null, wordingPanel( name, props.attributes, props.setAttributes ), heroEdit( props ) );
+				}
 				return el(
 					'div',
 					blockEditor.useBlockProps(),

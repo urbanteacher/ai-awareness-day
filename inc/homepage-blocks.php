@@ -213,10 +213,18 @@ add_filter( 'block_categories_all', 'aiad_homepage_block_category' );
  */
 function aiad_register_homepage_section_blocks(): void {
 	$script = AIAD_DIR . '/assets/js/homepage-section-blocks.js';
+	$hero_script = AIAD_DIR . '/assets/js/homepage-hero-edit.js';
+	wp_register_script(
+		'aiad-homepage-hero-edit',
+		AIAD_URI . '/assets/js/homepage-hero-edit.js',
+		array( 'wp-element', 'wp-block-editor', 'wp-rich-text', 'wp-escape-html' ),
+		file_exists( $hero_script ) ? (string) filemtime( $hero_script ) : AIAD_VERSION,
+		true
+	);
 	wp_register_script(
 		'aiad-homepage-section-blocks',
 		AIAD_URI . '/assets/js/homepage-section-blocks.js',
-		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-data' ),
+		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-data', 'aiad-homepage-hero-edit' ),
 		file_exists( $script ) ? (string) filemtime( $script ) : AIAD_VERSION,
 		true
 	);
@@ -370,10 +378,12 @@ function aiad_homepage_section_editor_styles(): void {
 	}
 	// On the site, main.js fades .fade-up content in as it scrolls into view; the editor has no main.js, so show it.
 	// Small screens show three aims until "Show more" is pressed; the editor shows them all so each can be edited.
+	// Some of the site's text cannot be selected (the hero headline); in the editor, text being edited can.
 	wp_add_inline_style(
 		'aiad-style',
 		'.editor-styles-wrapper .fade-up { opacity: 1; transform: none; }
-		.editor-styles-wrapper .aims-list.wp-block-list > li { display: flex !important; }'
+		.editor-styles-wrapper .aims-list.wp-block-list > li { display: flex !important; }
+		.editor-styles-wrapper [contenteditable="true"] { -webkit-user-select: text; user-select: text; }'
 	);
 	// The front page also loads these; aiad_scripts() leaves them out of wp-admin.
 	foreach ( array( 'aiad-tools' => 'components/tools.css', 'aiad-entry-figure' => 'components/entry-figure.css', 'aiad-timeline' => 'components/timeline.css' ) as $handle => $file ) {
@@ -718,3 +728,26 @@ function aiad_principle_card_editor_data(): void {
 	wp_add_inline_script( generate_block_asset_handle( 'aiad/principle-card', 'editorScript' ), 'window.aiadPrincipleCards = ' . wp_json_encode( $data ) . ';', 'before' );
 }
 add_action( 'enqueue_block_editor_assets', 'aiad_principle_card_editor_data' );
+
+/**
+ * What the hero's on-canvas editor shows that is worked out when the page renders (assets/js/homepage-hero-edit.js):
+ * the dates, the countdown, whether the portal links show, and the strand names. The previous hero keeps its preview.
+ */
+function aiad_homepage_hero_editor_data(): void {
+	$portal_live = function_exists( 'aiad_portal_is_live' ) ? aiad_portal_is_live() : true;
+	$dates       = function_exists( 'aiad_national_conversation_dates' ) ? aiad_national_conversation_dates() : null;
+	$countdown   = aiad_national_conversation_countdown();
+	$data        = array(
+		'previous'  => aiad_homepage_hero_is_previous(),
+		'eventDate' => $dates ? wp_date( 'l jS F Y', $dates['event']->getTimestamp() ) : '',
+		/* translators: %s: month and year the conversation opens, e.g. January 2027 */
+		'starts'    => $dates ? ( $portal_live ? __( 'Now open', 'ai-awareness-day' ) : sprintf( __( 'Starting %s', 'ai-awareness-day' ), wp_date( 'F Y', $dates['opens']->getTimestamp() ) ) ) : '',
+		'portal'    => $portal_live ? array( __( 'Nominate a school you work with', 'ai-awareness-day' ), __( 'Already registered? Sign in', 'ai-awareness-day' ) ) : array(),
+		'countdown' => $countdown ? array( 'label' => $countdown['label'], 'days' => max( 0, (int) floor( ( $countdown['ts_ms'] / 1000 - time() ) / DAY_IN_SECONDS ) ) ) : null,
+		'units'     => array( __( 'Days', 'ai-awareness-day' ), __( 'Hours', 'ai-awareness-day' ), __( 'Minutes', 'ai-awareness-day' ), __( 'Seconds', 'ai-awareness-day' ) ),
+		'strands'   => array_map( static fn( array $strand ): string => $strand['name'], aiad_hero27_strand_questions() ),
+		'eyebrow'   => __( 'AI Awareness Day', 'ai-awareness-day' ),
+	);
+	wp_add_inline_script( 'aiad-homepage-hero-edit', 'window.aiadHeroEditor = ' . wp_json_encode( $data ) . ';', 'before' );
+}
+add_action( 'enqueue_block_editor_assets', 'aiad_homepage_hero_editor_data' );
