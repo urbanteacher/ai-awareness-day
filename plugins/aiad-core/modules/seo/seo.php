@@ -815,9 +815,9 @@ function aiad_output_canonical_url(): void {
 	if ( is_front_page() ) {
 		$canonical = home_url( '/' );
 	}
-	// Single posts/pages
+	// Single posts/pages (wp_get_canonical_url() keeps core's handling of paged posts and comment pages)
 	elseif ( is_singular() ) {
-		$canonical = get_permalink();
+		$canonical = wp_get_canonical_url() ?: get_permalink();
 	}
 	// Archive pages (strip query params for filtered views)
 	elseif ( is_post_type_archive() ) {
@@ -835,6 +835,8 @@ function aiad_output_canonical_url(): void {
 	
 	if ( $canonical ) {
 		echo '<link rel="canonical" href="' . esc_url( $canonical ) . '" />' . "\n";
+		// This replaces core's canonical tag (singular pages, wp_head priority 10) instead of adding a second one.
+		remove_action( 'wp_head', 'rel_canonical' );
 	}
 }
 // Added once the theme has loaded, so it keeps its place after the theme's favicon links (also wp_head, priority 1).
