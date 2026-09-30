@@ -60,6 +60,7 @@ require_once $aiad_dir . '/inc/walkthrough.php';
 require_once $aiad_dir . '/inc/migrate-2027-branding.php';
 require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
+require_once $aiad_dir . '/inc/homepage-blocks.php';
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
 aiad_require_core_module( 'certificates' );
