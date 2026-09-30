@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/partners-directory",
+	"title": "Partners directory",
+	"category": "theme",
+	"icon": "groups",
+	"description": "The Partner Type filter and every partner's logo, linking to its page. Partners are edited under Partners.",
+	"keywords": [
+		"partners",
+		"directory",
+		"filter"
+	],
+	"textdomain": "ai-awareness-day",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
