@@ -113,7 +113,22 @@ function aiad_seo_sanitize_settings( $input ): array {
 }
 
 /**
- * Register the setting and its admin page (Settings → SEO & sharing).
+ * SEO settings sections: slug => [ title, description ].
+ *
+ * @return array<string, array{0: string, 1: string}>
+ */
+function aiad_seo_setting_sections(): array {
+	return array(
+		'site'   => array( __( 'Site and homepage sharing', 'aiad-core' ), __( 'These were copied from the Customizer when first used. The homepage keeps its own wording in the Customizer, so change both if you want them to match.', 'aiad-core' ) ),
+		'social' => array( __( 'Social profiles', 'aiad-core' ), __( 'Used in the Organization schema (sameAs), so search engines can link the site to its profiles. The footer links still come from the Customizer.', 'aiad-core' ) ),
+		'verify' => array( __( 'Search engine verification', 'aiad-core' ), __( 'Each code adds its verification <meta> tag to every page.', 'aiad-core' ) ),
+	);
+}
+
+/**
+ * Register the setting, its sections and fields (Settings API).
+ *
+ * @see https://developer.wordpress.org/plugins/settings/custom-settings-page/
  */
 function aiad_seo_register_settings(): void {
 	register_setting(
@@ -121,12 +136,59 @@ function aiad_seo_register_settings(): void {
 		'aiad_seo',
 		array(
 			'type'              => 'array',
+			'label'             => __( 'SEO & sharing', 'aiad-core' ),
+			'description'       => __( 'Site name, homepage sharing, social profiles and search-engine verification.', 'aiad-core' ),
 			'sanitize_callback' => 'aiad_seo_sanitize_settings',
 			'show_in_rest'      => false,
 		)
 	);
+
+	foreach ( aiad_seo_setting_sections() as $section => $info ) {
+		add_settings_section(
+			'aiad_seo_' . $section,
+			$info[0],
+			static function () use ( $info ): void {
+				echo '<p>' . esc_html( $info[1] ) . '</p>';
+			},
+			'aiad-seo'
+		);
+	}
+
+	foreach ( aiad_seo_setting_fields() as $key => $field ) {
+		add_settings_field(
+			'aiad-seo-' . $key,
+			$field[0],
+			'aiad_seo_render_field',
+			'aiad-seo',
+			'aiad_seo_' . $field[1],
+			array(
+				'label_for' => 'aiad-seo-' . $key,
+				'key'       => $key,
+			)
+		);
+	}
 }
 add_action( 'admin_init', 'aiad_seo_register_settings' );
+
+/**
+ * Render one SEO field.
+ *
+ * @param array{label_for: string, key: string} $args Field arguments from add_settings_field().
+ */
+function aiad_seo_render_field( array $args ): void {
+	$key   = $args['key'];
+	$field = aiad_seo_setting_fields()[ $key ];
+	$value = aiad_seo_setting( $key );
+	$name  = 'aiad_seo[' . $key . ']';
+	if ( 'textarea' === $field[2] ) {
+		printf( '<textarea id="%1$s" name="%2$s" rows="4" class="large-text">%3$s</textarea>', esc_attr( $args['label_for'] ), esc_attr( $name ), esc_textarea( $value ) );
+	} else {
+		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" class="regular-text" />', 'url' === $field[2] ? 'url' : 'text', esc_attr( $args['label_for'] ), esc_attr( $name ), esc_attr( $value ) );
+	}
+	if ( ! empty( $field[3] ) ) {
+		echo '<p class="description">' . esc_html( $field[3] ) . '</p>';
+	}
+}
 
 /**
  * Add the settings page.
@@ -143,52 +205,21 @@ function aiad_seo_add_settings_page(): void {
 add_action( 'admin_menu', 'aiad_seo_add_settings_page' );
 
 /**
- * Render the settings page.
+ * Render the settings page. Under the Settings menu WordPress shows the saved/validation notices itself.
  */
 function aiad_seo_render_settings_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	$values   = aiad_seo_settings();
-	$sections = array(
-		'site'   => array( __( 'Site and homepage sharing', 'aiad-core' ), __( 'These were copied from the Customizer when this page was first used. The homepage keeps its own wording in the Customizer, so change both if you want them to match.', 'aiad-core' ) ),
-		'social' => array( __( 'Social profiles', 'aiad-core' ), __( 'Used in the Organization schema (sameAs), so search engines can link the site to its profiles. The footer links still come from the Customizer.', 'aiad-core' ) ),
-		'verify' => array( __( 'Search engine verification', 'aiad-core' ), __( 'Each code adds its verification <meta> tag to every page.', 'aiad-core' ) ),
-	);
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'SEO & sharing', 'aiad-core' ); ?></h1>
+		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 		<form method="post" action="options.php">
-			<?php settings_fields( 'aiad_seo' ); ?>
-			<?php foreach ( $sections as $section => $info ) : ?>
-				<h2><?php echo esc_html( $info[0] ); ?></h2>
-				<p><?php echo esc_html( $info[1] ); ?></p>
-				<table class="form-table" role="presentation">
-					<?php
-					foreach ( aiad_seo_setting_fields() as $key => $field ) :
-						if ( $section !== $field[1] ) {
-							continue;
-						}
-						$id   = 'aiad-seo-' . $key;
-						$name = 'aiad_seo[' . $key . ']';
-						?>
-						<tr>
-							<th scope="row"><label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $field[0] ); ?></label></th>
-							<td>
-								<?php if ( 'textarea' === $field[2] ) : ?>
-									<textarea id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" rows="4" class="large-text"><?php echo esc_textarea( $values[ $key ] ); ?></textarea>
-								<?php else : ?>
-									<input type="<?php echo 'url' === $field[2] ? 'url' : 'text'; ?>" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $values[ $key ] ); ?>" class="regular-text" />
-								<?php endif; ?>
-								<?php if ( ! empty( $field[3] ) ) : ?>
-									<p class="description"><?php echo esc_html( $field[3] ); ?></p>
-								<?php endif; ?>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-				</table>
-			<?php endforeach; ?>
-			<?php submit_button(); ?>
+			<?php
+			settings_fields( 'aiad_seo' );
+			do_settings_sections( 'aiad-seo' );
+			submit_button();
+			?>
 		</form>
 	</div>
 	<?php

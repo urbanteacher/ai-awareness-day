@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_core_modules(): array {
 	return array(
 		'paths'                => 'paths.php',
+		'campaign'             => 'campaign.php',
 		'helpers-data'         => 'helpers-data.php',
 		'post-types'           => 'post-types.php',
 		'contact'              => 'contact.php',

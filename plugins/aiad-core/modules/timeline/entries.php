@@ -388,8 +388,7 @@ function aiad_timeline_on_live_session_save(int $post_id): void
  */
 function aiad_timeline_event_date(): string
 {
-    $defaults = aiad_get_customizer_defaults();
-    $date     = get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+    $date = aiad_campaign_event_date();
     if ( function_exists( 'aiad_sanitize_event_date_ymd' ) ) {
         $date = aiad_sanitize_event_date_ymd( $date );
     }

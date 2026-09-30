@@ -34,6 +34,7 @@ function aiad_require_core_module( string $module ): void {
 
 // Loaded first: modules that ship their own assets build their paths and URLs with it.
 aiad_require_core_module( 'paths' );
+aiad_require_core_module( 'campaign' );
 
 if ( is_admin() ) {
     require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';

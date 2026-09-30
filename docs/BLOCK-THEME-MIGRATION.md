@@ -109,6 +109,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] `tools` module: the 10 live interactive tools (the retired curriculum quiz stays unloaded in the theme)
 - [x] Certificate showcase: moved with its template, stylesheet and the benchmark promo helpers; `aiad/certificate-showcase` block
 - [x] `seo` module, with its own settings (Settings → SEO & sharing) copied once from the Customizer. All modules on the plugin's map are now moved
+- [x] `campaign` module: the event date and contact form recipient in their own settings (Settings → Campaign & contact), kept in step with the Customizer and homepage editor
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
 - [x] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json` (validates against it; version stays 3)
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)

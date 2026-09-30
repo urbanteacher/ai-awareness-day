@@ -151,7 +151,7 @@ function aiad_handle_contact_form(): void {
     $role_display = isset( $role_labels[ $involved_as ] ) ? $role_labels[ $involved_as ] : $involved_as;
 
     // Build email
-    $to = get_theme_mod( 'aiad_contact_email', get_option( 'admin_email' ) );
+    $to = aiad_campaign_setting( 'contact_email' ) ?: get_option( 'admin_email' );
     $subject_line = sprintf( '[AI Awareness Day] %s – %s %s', $role_display, $first_name, $last_name );
 
     $body  = "Getting involved as: {$role_display}\n";
