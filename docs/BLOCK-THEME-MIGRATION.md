@@ -145,7 +145,9 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 
 ### Stage 3 — Full block theme (~2–4 weeks)
 
-- [ ] Convert templates to `templates/*.html` one at a time; delete each PHP version once its block version matches
+- [ ] Convert templates to `templates/*.html` one at a time; the PHP versions stay as the fallback until `templates/index.html` (the switch), then go
+  - [x] Groundwork: the head tags `header.php` printed come from `wp_head()` (`aiad_site_head_tags()`) and `<html class="no-js">` from a `language_attributes` filter, because block templates render through core's `template-canvas.php`; a breadcrumbs block (`blocks/breadcrumbs`) for the trail `header.php` printed
+  - [x] 404 (`templates/404.html`): header and footer template parts, the page in core blocks (the Back to Home button is a Custom HTML block, keeping `.btn-submit` and its arrow), its inline styles in `base/wp-core.css`. Every element matches at 1280px and 390px. Core adds its "Skip to content" link, as block templates do
 - [ ] Add `templates/index.html` last — this is the switch to a full block theme
 - [ ] Register `templateParts` and `customTemplates` in `theme.json`
 - [ ] Migrate menus to `wp_navigation` posts (core Navigation block)

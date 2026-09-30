@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/breadcrumbs",
+	"title": "Breadcrumbs",
+	"category": "theme",
+	"icon": "arrow-right-alt2",
+	"description": "The breadcrumb trail below the header, when breadcrumbs are switched on in the Customizer.",
+	"keywords": [
+		"breadcrumbs",
+		"navigation"
+	],
+	"textdomain": "ai-awareness-day",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

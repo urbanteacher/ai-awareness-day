@@ -24,7 +24,7 @@ add_action( 'after_setup_theme', 'aiad_site_parts_support' );
  * Register the header and footer blocks.
  */
 function aiad_register_site_part_blocks(): void {
-	foreach ( array( 'site-logo', 'site-navigation', 'footer-widgets', 'footer-links', 'footer-social' ) as $block ) {
+	foreach ( array( 'site-logo', 'site-navigation', 'breadcrumbs', 'footer-widgets', 'footer-links', 'footer-social' ) as $block ) {
 		register_block_type( AIAD_DIR . '/blocks/' . $block );
 	}
 }
