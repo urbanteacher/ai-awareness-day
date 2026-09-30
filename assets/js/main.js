@@ -266,14 +266,15 @@
             var feature = document.querySelector('.hero-strand-feature');
             if (!hero || !feature) return;
 
-            // The motion is the post-16 one for each strand in the debate network's motion bank. The question is what
+            // The motion is each strand's post-16 motion in the debate network's motion bank, put as a short, balanced question
+            // that a reasonable person could answer either way. The question is what
             // the previous hero asked instead, for when Customise > Front Page Sections > Hero Section > Homepage hero is set to Previous.
             var strands = [
-                { slug: 'safe', name: 'Safe', motion: 'This house believes users, not companies, should control what AI remembers about them.', question: 'Would you tell an AI your secret?' },
-                { slug: 'smart', name: 'Smart', motion: 'This house would require AI tools in schools to guide students rather than give answers.', question: 'What happens when AI acts for you?' },
-                { slug: 'creative', name: 'Creative', motion: 'This house believes AI-generated work should not be eligible for creative prizes.', question: 'Who really made it?' },
-                { slug: 'responsible', name: 'Responsible', motion: 'This house would require AI companies to show the environmental cost of every request.', question: 'Should AI decide?' },
-                { slug: 'future', name: 'Future', motion: 'This house believes young people should have a formal say in how AI is used in schools.', question: 'What skills must stay human?' },
+                { slug: 'safe', name: 'Safe', motion: 'Should each person manage what AI remembers about them?', question: 'Would you tell an AI your secret?' },
+                { slug: 'smart', name: 'Smart', motion: 'Should school AI tools be allowed to give students the answer?', question: 'What happens when AI acts for you?' },
+                { slug: 'creative', name: 'Creative', motion: 'Should AI-made work be allowed to compete for creative prizes?', question: 'Who really made it?' },
+                { slug: 'responsible', name: 'Responsible', motion: 'Should AI have to report its energy use when streaming and gaming don\'t?', question: 'Should AI decide?' },
+                { slug: 'future', name: 'Future', motion: 'Should students have an official role in how their school uses AI?', question: 'What skills must stay human?' },
             ];
             var motion = feature.querySelector('.hero-strand-feature__motion-text');
             var summary = motion ? null : feature.querySelector('.hero-strand-feature__summary');

@@ -389,7 +389,7 @@
   margin: 0;
   padding: 1.25rem 0 0;
   border-top: 1px solid rgba(246, 244, 237, .22);
-  font-size: clamp(1.2rem, 1.75vw, 1.6rem);
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
   line-height: 1.35;
 }
 #hero .hero-strand-feature__motion-label {
@@ -401,10 +401,10 @@
   letter-spacing: .14em;
   text-transform: uppercase;
 }
-/* Room for three lines, so the panel does not reflow as the motions rotate. */
+/* Room for two lines, so the panel does not reflow as the motions rotate. */
 #hero .hero-strand-feature__motion-text {
   display: block;
-  min-height: 4.2em;
+  min-height: 2.7em;
   font-style: normal;
   text-wrap: pretty;
 }

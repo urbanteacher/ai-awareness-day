@@ -116,7 +116,7 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                     <span class="hero-strand-feature__word">Safe</span>
                 </div>
                 <?php /* The box asks one thing: the motion to debate for the strand on show. main.js changes it with the strand. */ ?>
-                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php esc_html_e( 'Debate it', 'ai-awareness-day' ); ?></span> <span class="hero-strand-feature__motion-text"><?php esc_html_e( 'This house believes users, not companies, should control what AI remembers about them.', 'ai-awareness-day' ); ?></span></p>
+                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php esc_html_e( 'Debate it', 'ai-awareness-day' ); ?></span> <span class="hero-strand-feature__motion-text"><?php esc_html_e( 'Should each person manage what AI remembers about them?', 'ai-awareness-day' ); ?></span></p>
             </div>
         </div>
     </div>
