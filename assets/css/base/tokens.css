@@ -5,14 +5,16 @@
    blocks previewed in the editor resolve the same colours and fonts.
    ============================================ */
 :root {
-  /* AiAd27: source of truth is SlideForge css/aiad27.css. Bright = ground; deep = ink. */
-  --a27-safe: #00BEDD; --a27-safe-deep: #006A7D;
-  --a27-smart: #FF7038; --a27-smart-deep: #A7350B;
-  --a27-creative: #AC91FF; --a27-creative-deep: #6441B8;
-  --a27-responsible: #63DF93; --a27-responsible-deep: #176E3B;
-  --a27-future: #FA83EB; --a27-future-deep: #983488;
-  --a27-cream: #F6F4ED; --a27-ink: #231F20; --a27-dim: #54504E;
-  --a27-rule: #C9C6BE; --a27-card: #EAE7DF; --a27-scrim: #f6f4eddd;
+  /* AiAd27: source of truth is SlideForge css/aiad27.css. Bright = ground; deep = ink.
+     The campaign colours and the font read theme.json's presets (the value after the comma is the same colour, for
+     anywhere the presets are not printed), so a change in Appearance > Editor > Styles reaches the whole theme. */
+  --a27-safe: var(--wp--preset--color--safe, #00BEDD); --a27-safe-deep: var(--wp--preset--color--safe-deep, #006A7D);
+  --a27-smart: var(--wp--preset--color--smart, #FF7038); --a27-smart-deep: var(--wp--preset--color--smart-deep, #A7350B);
+  --a27-creative: var(--wp--preset--color--creative, #AC91FF); --a27-creative-deep: var(--wp--preset--color--creative-deep, #6441B8);
+  --a27-responsible: var(--wp--preset--color--responsible, #63DF93); --a27-responsible-deep: var(--wp--preset--color--responsible-deep, #176E3B);
+  --a27-future: var(--wp--preset--color--future, #FA83EB); --a27-future-deep: var(--wp--preset--color--future-deep, #983488);
+  --a27-cream: var(--wp--preset--color--cream, #F6F4ED); --a27-ink: var(--wp--preset--color--ink, #231F20); --a27-dim: var(--wp--preset--color--dim, #54504E);
+  --a27-rule: var(--wp--preset--color--rule, #C9C6BE); --a27-card: var(--wp--preset--color--card, #EAE7DF); --a27-scrim: #f6f4eddd;
   /* Derived, not from the campaign palette: AiAd27 has no red and risk,
      error and wrong-answer states need one. Ink only, never a ground, and
      never used for anything that is not a severity or error signal. */
@@ -20,7 +22,7 @@
   --a27-color: var(--a27-safe); --a27-deep: var(--a27-safe-deep);
   --s-bg: var(--a27-cream); --s-fg: var(--a27-ink); --s-dim: var(--a27-dim);
   --s-accent: var(--a27-deep); --s-rule: var(--a27-rule); --s-card: var(--a27-card);
-  --s-scrim: var(--a27-scrim); --s-font: 'AIAD Sans', Arial, sans-serif;
+  --s-scrim: var(--a27-scrim); --s-font: var(--wp--preset--font-family--body, 'AIAD Sans', Arial, sans-serif);
   --font-display: var(--s-font); --font-body: var(--s-font);
   --a27-xs: 18px; --a27-sm: 22px; --a27-base: 24px; --a27-lg: 28px;
   --a27-xl: 33px; --a27-2xl: 48px; --a27-3xl: 52px; --a27-4xl: 62px; --a27-5xl: 68px;

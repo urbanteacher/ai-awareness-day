@@ -294,8 +294,8 @@
   },
   "styles": {
     "color": {
-      "text": "#231F20",
-      "background": "#F6F4ED"
+      "text": "var:preset|color|ink",
+      "background": "var:preset|color|cream"
     },
     "typography": {
       "fontFamily": "var(--wp--preset--font-family--body)",
@@ -304,7 +304,7 @@
     "elements": {
       "link": {
         "color": {
-          "text": "#006A7D"
+          "text": "var:preset|color|safe-deep"
         }
       }
     }
