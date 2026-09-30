@@ -34,10 +34,8 @@ function aiad_require_core_module( string $module ): void {
 
 if ( is_admin() ) {
     require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';
-    require_once $aiad_dir . '/inc/meta-boxes.php';
-    require_once $aiad_dir . '/inc/admin-columns.php';
-    require_once $aiad_dir . '/inc/import-export.php';
 }
+aiad_require_core_module( 'admin' );
 
 /*
  * Despite the filename this is not admin-only: footer.php calls
@@ -56,12 +54,10 @@ aiad_require_core_module( 'helpers-data' );
 aiad_require_core_module( 'post-types' );
 require_once $aiad_dir . '/inc/walkthrough.php';
 require_once $aiad_dir . '/inc/migrate-2027-branding.php';
-require_once $aiad_dir . '/inc/entry-figure.php';
 require_once $aiad_dir . '/inc/customizer.php';
 require_once $aiad_dir . '/inc/front-page-layout.php';
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
-aiad_require_core_module( 'admin' );
 require_once $aiad_dir . '/inc/certificate-copy.php';
 require_once $aiad_dir . '/inc/letter-copy.php';
 require_once $aiad_dir . '/inc/certificate-api.php';
@@ -69,7 +65,6 @@ require_once $aiad_dir . '/inc/generator-embed.php';
 if ( is_admin() ) {
 	require_once $aiad_dir . '/inc/certificate-admin.php';
 	require_once $aiad_dir . '/inc/letter-admin.php';
-	require_once $aiad_dir . '/inc/submissions-csv-export.php';
 }
 require_once $aiad_dir . '/inc/timeline.php';
 require_once $aiad_dir . '/inc/live-sessions.php';

@@ -2,7 +2,7 @@
 
 The site's functionality, kept separate from the theme so a redesign or a switch to a block theme cannot break it. The theme keeps presentation only. Part of Stage 1 of [the block theme migration](../../docs/BLOCK-THEME-MIGRATION.md).
 
-**Status:** one block (`aiad/speed-quiz`) moved; modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking` moved, `admin` started.
+**Status:** one block (`aiad/speed-quiz`); modules `helpers-data`, `post-types`, `contact`, `resource-filter`, `tracking`, `admin` moved.
 
 ## Layout
 
@@ -65,10 +65,10 @@ Where each file in the theme's `inc/` should end up.
 |---|---|---|
 | `helpers-data` ✅ | data half of `helpers.php` | **Moved.** Most other modules depend on it. Resource key stages and durations, organisation types, `aiad_get_post_by_title`, `aiad_youtube_video_id`, pledge counts, `aiad_normalise_*`. `aiad_sanitize_event_date_ymd` stayed in the theme: it falls back to a Customizer default |
 | `post-types` ✅ | `post-types.php`, `field-registry.php`, `validation.php`, `admin-taxonomy-fields.php`, `resource-seeds.php` | **Moved** to `modules/post-types/`. `resource`, `partner`, `featured_resource`, `form_submission`. The Resources → Settings menu item now uses priority 11, so it stays below the theme's Import/Export items |
-| `admin` (started) | ✅ card image fetch (from `ajax-handlers.php`, now `modules/admin/card-image.php`); to come: `meta-boxes.php`, `admin-columns.php`, `import-export.php`, `entry-figure.php`, `submissions-csv-export.php` The theme loads `meta-boxes.php`, `admin-columns.php`, `import-export.php` and `submissions-csv-export.php` only under `is_admin()`; keep that condition inside `modules/admin.php` when they move. The card image fetch loads on every request, as `ajax-handlers.php` did | `entry-figure.php` is the focal-point field used by meta boxes and timeline |
+| `admin` ✅ | `meta-boxes.php`, `admin-columns.php`, `import-export.php`, `entry-figure.php`, `submissions-csv-export.php`, card image fetch (from `ajax-handlers.php`) | **Moved** to `modules/admin/`, with the same `is_admin()` conditions as before. `entry-figure.php` (focal point) and the card image fetch load on every request. Edit-screen scripts and styles still load from the theme via `AIAD_URI` (`assets/js/admin-*.js`, `admin/css/`), and `import-export.php` reads its sample file from the theme's `archive/` folder |
 | `contact` ✅ | first part of `ajax-handlers.php` | **Moved.** Get Involved form handler, checklist labels, client IP / fingerprint. Reads the recipient from the Customizer (`aiad_contact_email`, see Risks) |
 | `resource-filter` ✅ | middle of `ajax-handlers.php` | **Moved.** AJAX filter for both resource archives and the cached filter counts. Still renders the theme's `resource-tile` template part with `get_template_part()` (decision: keep until the card becomes an `aiad/resource-card` block with the archive templates in Stage 3) |
-| `tracking` ✅ | download and view counters (from `ajax-handlers.php`), `engagement-tracking.php`, `dashboard.php` | **Moved** to `modules/tracking/`. The Campaign dashboard widgets now use priority 11, so they stay below the theme's Assets Pack widget. `dashboard.php` calls `aiad_submission_status_options()` from the theme's `admin-columns.php` inside the widget; that resolves when `admin` moves |
+| `tracking` ✅ | download and view counters (from `ajax-handlers.php`), `engagement-tracking.php`, `dashboard.php` | **Moved** to `modules/tracking/`. The Campaign dashboard widgets now use priority 11, so they stay below the theme's Assets Pack widget. |
 | `certificates` | `certificate-api.php`, `certificate-copy.php`, `certificate-admin.php`, `letter-copy.php`, `letter-admin.php`, `generator-embed.php` | |
 | `timeline` | `timeline.php`, `timeline/cpt-meta.php`, `entries.php`, `query.php`, `topics.php`, `topic-assignments.php`, `ajax.php`, `admin-meta-box.php`, `benchmark-audience.php`, `icons.php` | `icons.php` calls `aiad_strand_icon_svg()` from the theme's `theme-assets.php`; move that function with it |
 | `live-sessions` | `live-sessions.php` | |

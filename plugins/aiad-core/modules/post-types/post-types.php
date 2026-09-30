@@ -168,8 +168,8 @@ add_action( 'init', 'aiad_register_post_types' );
  * 
  * Meta field naming conventions:
  * - Resource post type: _aiad_* prefix for all resource-specific fields (including _aiad_download_url)
- * - Featured resource post type: _featured_resource_* prefix (see inc/meta-boxes.php)
- * - Partner post type: _partner_* prefix (see inc/meta-boxes.php)
+ * - Featured resource post type: _featured_resource_* prefix (see plugins/aiad-core/modules/admin/meta-boxes.php)
+ * - Partner post type: _partner_* prefix (see plugins/aiad-core/modules/admin/meta-boxes.php)
  * - Timeline post type: _aiad_timeline_* prefix (see inc/timeline.php)
  * 
  * @see aiad_register_post_types() for post type definitions
