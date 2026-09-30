@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Responsible",
+	"slug": "section-responsible",
+	"blockTypes": [
+		"core/group"
+	],
+	"styles": {
+		"color": {
+			"background": "var:preset|color|responsible",
+			"text": "var:preset|color|ink"
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "var:preset|color|ink"
+				}
+			}
+		}
+	}
+}

@@ -139,7 +139,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
   - [x] Free resources, featured resources (`patterns/homepage-free-resources.php`, `patterns/homepage-featured-resources.php`): heading in core blocks; the tiles are a resource tiles block (`blocks/resource-tiles`, free or featured) and the LinkedIn card its own block (`blocks/linkedin-card`), printing shared components; the resources are still picked in Appearance → Edit Homepage (`inc/homepage-resources.php`). As in the templates, a section without resources is hidden (`aiad_homepage_resources_section_visibility()`). Every element matches at 1280px and 390px
 - [x] Migration, in two buttons on Appearance → Block homepage: "Copy the Customizer wording into the blocks" (the theme mods into each section block's wording) and "Make every section editable on the page" (`aiad_rebuild_homepage_sections()`: each section with a pattern becomes its blocks, keeping its wording). Theme mods are only read, and the page's Revisions keep the version before. Run on staging first
 - [x] `front-page.php` renders the block homepage's section blocks when it is the front page (each block on its own, without the_content's filters), and the classic section loop otherwise
-- [ ] Section styles in `styles/sections/` for Safe / Smart / Creative / Responsible / Future
+- [x] Section styles in `styles/sections/` for Safe / Smart / Creative / Responsible / Future: block style variations for the Group block (WordPress 6.6+), picked under Styles; the strand's ground with ink text and headings from the palette. Links keep the theme's link colour, which the theme's own rule sets
 
 **Done when:** the homepage is edited entirely in the block editor and matches the current design.
 

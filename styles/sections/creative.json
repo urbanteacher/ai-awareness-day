@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Creative",
+	"slug": "section-creative",
+	"blockTypes": [
+		"core/group"
+	],
+	"styles": {
+		"color": {
+			"background": "var:preset|color|creative",
+			"text": "var:preset|color|ink"
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "var:preset|color|ink"
+				}
+			}
+		}
+	}
+}
