@@ -19,9 +19,22 @@
 		return String( value ).replace( /<[^>]*>/g, '' ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
 	}
 
+	var targetsByBlock = window.aiadHomepagePatternTargets || {};
+
 	// Wording set in the section block's sidebar goes into the pattern's blocks, so the page reads the same after the swap.
-	function applyWording( list, wording ) {
+	// A core block takes the value named for its class (aiad_homepage_pattern_wording_targets()); the first match wins.
+	function applyWording( list, wording, targets, filled ) {
+		targets = targets || {};
+		filled = filled || {};
 		list.forEach( function ( block ) {
+			var classes = ( block.attributes.className || '' ).split( ' ' );
+			Object.keys( targets ).forEach( function ( key ) {
+				var target = targets[ key ];
+				if ( wording[ key ] && ! filled[ key ] && -1 !== classes.indexOf( target.className ) && 'content' in block.attributes ) {
+					block.attributes.content = target.html ? wording[ key ] : escapeText( wording[ key ] );
+					filled[ key ] = true;
+				}
+			} );
 			if ( 'aiad/principle-card' === block.name ) {
 				var strand = block.attributes.strand || 'safe';
 				if ( wording[ 'aiad_principle_title_' + strand ] ) {
@@ -31,7 +44,7 @@
 					block.attributes.text = escapeText( wording[ 'aiad_principle_desc_' + strand ] );
 				}
 			}
-			applyWording( block.innerBlocks, wording );
+			applyWording( block.innerBlocks, wording, targets, filled );
 		} );
 		return list;
 	}
@@ -53,7 +66,7 @@
 					{
 						variant: 'secondary',
 						onClick: function () {
-							data.dispatch( 'core/block-editor' ).replaceBlocks( clientId, applyWording( blocks.parse( content ), wording || {} ) );
+							data.dispatch( 'core/block-editor' ).replaceBlocks( clientId, applyWording( blocks.parse( content ), wording || {}, targetsByBlock[ name ] ) );
 						},
 					},
 					'Edit on the page'

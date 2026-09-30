@@ -599,6 +599,23 @@ function aiad_homepage_section_patterns(): array {
 	return array(
 		'principles' => 'aiad/homepage-principles',
 		'aim'        => 'aiad/homepage-aim',
+		'contact'    => 'aiad/homepage-contact',
+	);
+}
+
+/**
+ * Where a section block's sidebar wording goes when it swaps itself for its pattern: section slug => [ theme mod =>
+ * [ class of the core block in the pattern whose content it replaces, whether the value is HTML ] ]. The principle
+ * cards take theirs by strand (assets/js/homepage-section-blocks.js).
+ *
+ * @return array<string, array<string, array{0: string, 1: bool}>>
+ */
+function aiad_homepage_pattern_wording_targets(): array {
+	return array(
+		'contact' => array(
+			'aiad_contact_title' => array( 'section-title', false ),
+			'aiad_contact_desc'  => array( 'section-desc', true ),
+		),
 	);
 }
 
@@ -622,7 +639,13 @@ function aiad_homepage_section_pattern_data(): void {
 			$data[ aiad_homepage_section_block_name( $slug ) ] = $registered['content'];
 		}
 	}
-	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepagePatterns = ' . wp_json_encode( $data ) . ';', 'before' );
+	$targets = array();
+	foreach ( aiad_homepage_pattern_wording_targets() as $slug => $fields ) {
+		foreach ( $fields as $key => $target ) {
+			$targets[ aiad_homepage_section_block_name( $slug ) ][ $key ] = array( 'className' => $target[0], 'html' => $target[1] );
+		}
+	}
+	wp_add_inline_script( 'aiad-homepage-section-blocks', 'window.aiadHomepagePatterns = ' . wp_json_encode( $data ) . '; window.aiadHomepagePatternTargets = ' . wp_json_encode( $targets ) . ';', 'before' );
 }
 add_action( 'enqueue_block_editor_assets', 'aiad_homepage_section_pattern_data' );
 
@@ -658,11 +681,12 @@ add_filter( 'render_block_core/list', 'aiad_homepage_aims_expand_button' );
 
 /**
  * The blocks the section patterns use where core blocks cannot keep the design (blocks/*): the principles grid and
- * its cards, whose whole card is a link.
+ * its cards, whose whole card is a link, and the Get Involved form.
  */
 function aiad_register_homepage_pattern_blocks(): void {
 	register_block_type( AIAD_DIR . '/blocks/principles-grid' );
 	register_block_type( AIAD_DIR . '/blocks/principle-card' );
+	register_block_type( AIAD_DIR . '/blocks/contact-form' );
 }
 add_action( 'init', 'aiad_register_homepage_pattern_blocks' );
 
