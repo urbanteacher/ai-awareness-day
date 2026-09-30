@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * - _partner_provides_ai_resources: '1' when partner links to AI learning resources (Reach grid).
  * - _partner_ai_resources_url: Optional dedicated URL; if empty, Partner URL is used when the card is linked.
  *
- * Field definitions: partner_details in inc/field-registry.php.
+ * Field definitions: partner_details in plugins/aiad-core/modules/post-types/field-registry.php.
  */
 function aiad_partner_url_meta_box(): void {
     add_meta_box(

@@ -798,7 +798,8 @@ function aiad_resource_settings_menu(): void {
         'aiad_resource_settings_page'
     );
 }
-add_action( 'admin_menu', 'aiad_resource_settings_menu' );
+// Priority 11 keeps Settings after the theme's Import/Export items, which the theme adds after this plugin loads.
+add_action( 'admin_menu', 'aiad_resource_settings_menu', 11 );
 
 function aiad_resource_settings_page(): void {
     if ( ! current_user_can( 'manage_options' ) ) {

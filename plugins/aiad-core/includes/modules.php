@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_core_modules(): array {
 	return array(
 		'helpers-data'    => 'helpers-data.php',
+		'post-types'      => 'post-types.php',
 	);
 }
 
