@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
+
 // Check if user has manually selected resources via Homepage Editor
 $selected_ids = array();
 for ( $i = 1; $i <= 3; $i++ ) {

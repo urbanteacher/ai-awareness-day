@@ -8,6 +8,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
+
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
 ?>
 <section class="section section--green <?php echo esc_attr( $text_alignment_class ); ?>" id="aim">
     <div class="container">

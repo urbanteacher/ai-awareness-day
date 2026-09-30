@@ -8,6 +8,8 @@
 if (!defined('ABSPATH')) {
     return;
 }
+
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
 $defaults = aiad_get_customizer_defaults();
 $campaign_embed_src = esc_url(get_theme_mod('aiad_campaign_linkedin_embed_src', $defaults['aiad_campaign_linkedin_embed_src']));
 $campaign_has_embed = !empty($campaign_embed_src);

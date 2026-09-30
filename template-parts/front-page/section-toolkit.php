@@ -7,6 +7,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
+
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
 ?>
 <!-- Display board: separate section -->
 <section id="display-board" class="section <?php echo esc_attr( $text_alignment_class ); ?>">

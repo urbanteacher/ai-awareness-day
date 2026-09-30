@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
+
 // Soft-launch switch: Appearance > Customise > Front Page Sections > Hero Section > Homepage hero can bring back the previous hero.
 if ( aiad_homepage_hero_is_previous() ) {
     include __DIR__ . '/section-hero-previous.php';

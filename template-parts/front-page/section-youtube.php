@@ -8,6 +8,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
+
+$text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args['text_alignment_class'] : aiad_get_text_alignment_class();
 $defaults        = aiad_get_customizer_defaults();
 $youtube_url    = get_theme_mod( 'aiad_youtube_url', $defaults['aiad_youtube_url'] );
 $youtube_title  = get_theme_mod( 'aiad_youtube_title', $defaults['aiad_youtube_title'] );
