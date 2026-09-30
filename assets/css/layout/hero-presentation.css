@@ -448,8 +448,15 @@
 
 @media (max-width: 600px) {
   /* Phones: the headline fills the width of the page like it does beside the panel on desktop, and the date keeps its
-     size relative to it. The vw sizes stay as the fallback for browsers without container-query units. */
-  #hero .hero-copy { container-type: inline-size; }
+     size relative to it. The vw sizes stay as the fallback for browsers without container-query units.
+     The copy column is flattened into the title block so the actions can close the hero, under the strand panel;
+     the title block is the same width as the copy column here, so it carries the container for the cqi sizes. */
+  #hero .hero-title-block { display: flex; flex-direction: column; align-items: flex-start; gap: 0; container-type: inline-size; }
+  #hero .hero-copy { display: contents; }
+  #hero .hero-facts { padding-top: 2rem; }
+  #hero .hero-strand-feature { margin-top: 2.5rem; }
+  #hero .hero-cta { order: 1; margin-top: 2rem; }
+  #hero .hero-cta-more { order: 2; }
   #hero .hero-title { font-size: clamp(2.5rem, 13.4vw, 3.75rem); font-size: 17.15cqi; }
   #hero .hero-title__line { white-space: nowrap; }
   #hero .hero-eyebrow-date { font-size: clamp(.99rem, 5.32vw, 1.48rem); font-size: 6.78cqi; }
