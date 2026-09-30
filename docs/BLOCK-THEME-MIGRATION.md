@@ -110,7 +110,7 @@ The theme stays classic. Editors gain blocks. Functionality moves out of the the
 - [x] Certificate showcase: moved with its template, stylesheet and the benchmark promo helpers; `aiad/certificate-showcase` block
 - [ ] Move the remaining module (SEO, after the Customizer settings decision; see the plugin README) from `inc/` into it (theme keeps only presentation)
 - [x] Add `package.json` with `@wordpress/scripts`; `npm run build` → `build/blocks/`
-- [ ] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json`
+- [x] Bump `theme.json` `$schema` to `https://schemas.wp.org/wp/7.1/theme.json` (validates against it; version stays 3)
 - [x] Register blocks from the plugin's `build/blocks/` (metadata collection / `register_block_type`)
 - [x] Convert the theme shortcodes to dynamic blocks in the plugin; shortcodes stay registered for existing content. All 11 done (tools, survey, certificate showcase). The 12th, `[aiad_curriculum_quiz]`, was retired and needs no block
 - [x] Tool CSS/JS, data, fonts and the Risk Academy template moved into the plugin
