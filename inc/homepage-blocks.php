@@ -39,6 +39,42 @@ function aiad_homepage_section_blocks(): array {
 }
 
 /**
+ * The principles cards in order: strand => [ standard title, standard description ]. "literacy" is the closing
+ * "Your AI. Your choices." card. Used by the section template, the principle card block and its pattern.
+ *
+ * @return array<string, array{0: string, 1: string}>
+ */
+function aiad_principle_cards(): array {
+	return array(
+		'safe'        => array( __( 'Safe', 'ai-awareness-day' ), __( 'Start with what should stay private — trust, sharing and the data AI holds about you.', 'ai-awareness-day' ) ),
+		'smart'       => array( __( 'Smart', 'ai-awareness-day' ), __( 'Question AI that acts on your behalf — decisions, shortcuts and who is really choosing.', 'ai-awareness-day' ) ),
+		'creative'    => array( __( 'Creative', 'ai-awareness-day' ), __( 'Own what you make with AI — authorship, attribution and honest creative work.', 'ai-awareness-day' ) ),
+		'responsible' => array( __( 'Responsible', 'ai-awareness-day' ), __( 'Keep human judgement in consequential moments — when the output matters.', 'ai-awareness-day' ) ),
+		'future'      => array( __( 'Future', 'ai-awareness-day' ), __( 'Name the skills worth keeping human — and practise them on purpose.', 'ai-awareness-day' ) ),
+		'literacy'    => array( __( 'Your AI. Your choices.', 'ai-awareness-day' ), __( 'These five strands are one literacy — Keep Humans in the Loop.', 'ai-awareness-day' ) ),
+	);
+}
+
+/**
+ * A principle card's wording as the site shows it: the Customizer's value (aiad_principle_title_{strand} /
+ * aiad_principle_desc_{strand}), else the standard wording. The literacy card has no Customizer fields.
+ *
+ * @return array{0: string, 1: string} Plain-text title and description.
+ */
+function aiad_principle_card_wording( string $strand ): array {
+	$cards = aiad_principle_cards();
+	if ( ! isset( $cards[ $strand ] ) ) {
+		return array( '', '' );
+	}
+	if ( 'literacy' === $strand ) {
+		return $cards[ $strand ];
+	}
+	$title = (string) get_theme_mod( 'aiad_principle_title_' . $strand, '' );
+	$desc  = (string) get_theme_mod( 'aiad_principle_desc_' . $strand, '' );
+	return array( ! empty( $title ) ? $title : $cards[ $strand ][0], ! empty( $desc ) ? $desc : $cards[ $strand ][1] ); // empty(), as the template always did.
+}
+
+/**
  * Block name for a section slug: free_resources => aiad/section-free-resources.
  */
 function aiad_homepage_section_block_name( string $slug ): string {
@@ -561,7 +597,8 @@ add_action( 'admin_notices', 'aiad_block_homepage_edit_homepage_notice' );
  */
 function aiad_homepage_section_patterns(): array {
 	return array(
-		'aim' => 'aiad/homepage-aim',
+		'principles' => 'aiad/homepage-principles',
+		'aim'        => 'aiad/homepage-aim',
 	);
 }
 
@@ -618,3 +655,36 @@ function aiad_homepage_aims_expand_button( string $block_content ): string {
 	return $block_content . ob_get_clean();
 }
 add_filter( 'render_block_core/list', 'aiad_homepage_aims_expand_button' );
+
+/**
+ * The blocks the section patterns use where core blocks cannot keep the design (blocks/*): the principles grid and
+ * its cards, whose whole card is a link.
+ */
+function aiad_register_homepage_pattern_blocks(): void {
+	register_block_type( AIAD_DIR . '/blocks/principles-grid' );
+	register_block_type( AIAD_DIR . '/blocks/principle-card' );
+}
+add_action( 'init', 'aiad_register_homepage_pattern_blocks' );
+
+/**
+ * Give the principle card's editor script each strand's icon, name and the site's wording (shown while a card's
+ * text is empty).
+ */
+function aiad_principle_card_editor_data(): void {
+	$names = array(
+		'safe'        => __( 'Safe', 'ai-awareness-day' ),
+		'smart'       => __( 'Smart', 'ai-awareness-day' ),
+		'creative'    => __( 'Creative', 'ai-awareness-day' ),
+		'responsible' => __( 'Responsible', 'ai-awareness-day' ),
+		'future'      => __( 'Future', 'ai-awareness-day' ),
+		'literacy'    => __( 'Your AI. Your choices. (literacy logo)', 'ai-awareness-day' ),
+	);
+	$data = array( 'icons' => array(), 'strands' => array() );
+	foreach ( array_keys( aiad_principle_cards() ) as $strand ) {
+		$wording                     = aiad_principle_card_wording( $strand );
+		$data['strands'][ $strand ] = array( 'label' => $names[ $strand ], 'title' => $wording[0], 'text' => $wording[1] );
+		$data['icons'][ $strand ]   = 'literacy' === $strand ? aiad_get_logo_image_url( aiad_get_literacy_logo_attachment_id(), 'medium' ) : aiad_strand_icon_uri( $strand );
+	}
+	wp_add_inline_script( generate_block_asset_handle( 'aiad/principle-card', 'editorScript' ), 'window.aiadPrincipleCards = ' . wp_json_encode( $data ) . ';', 'before' );
+}
+add_action( 'enqueue_block_editor_assets', 'aiad_principle_card_editor_data' );

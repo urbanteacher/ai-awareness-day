@@ -1,0 +1,35 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/principle-card",
+	"title": "Principle card",
+	"category": "aiad-homepage",
+	"parent": [ "aiad/principles-grid" ],
+	"icon": "star-filled",
+	"description": "One strand of the principles: its icon, title and description. The card links to the activities.",
+	"keywords": [ "strand", "principle", "homepage" ],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"strand": {
+			"type": "string",
+			"enum": [ "safe", "smart", "creative", "responsible", "future", "literacy" ],
+			"default": "safe"
+		},
+		"title": {
+			"type": "string",
+			"role": "content"
+		},
+		"text": {
+			"type": "string",
+			"role": "content"
+		}
+	},
+	"supports": {
+		"html": false,
+		"className": false,
+		"customClassName": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

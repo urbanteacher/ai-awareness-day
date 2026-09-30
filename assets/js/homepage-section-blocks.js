@@ -14,7 +14,29 @@
 	var fieldsByBlock = window.aiadHomepageFields || {};
 	var patternByBlock = window.aiadHomepagePatterns || {};
 
-	function editOnPagePanel( name, clientId ) {
+	// Sidebar wording is plain text (its fields strip tags when the page renders); the cards hold HTML.
+	function escapeText( value ) {
+		return String( value ).replace( /<[^>]*>/g, '' ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
+	}
+
+	// Wording set in the section block's sidebar goes into the pattern's blocks, so the page reads the same after the swap.
+	function applyWording( list, wording ) {
+		list.forEach( function ( block ) {
+			if ( 'aiad/principle-card' === block.name ) {
+				var strand = block.attributes.strand || 'safe';
+				if ( wording[ 'aiad_principle_title_' + strand ] ) {
+					block.attributes.title = escapeText( wording[ 'aiad_principle_title_' + strand ] );
+				}
+				if ( wording[ 'aiad_principle_desc_' + strand ] ) {
+					block.attributes.text = escapeText( wording[ 'aiad_principle_desc_' + strand ] );
+				}
+			}
+			applyWording( block.innerBlocks, wording );
+		} );
+		return list;
+	}
+
+	function editOnPagePanel( name, clientId, wording ) {
 		var content = patternByBlock[ name ];
 		if ( ! content ) {
 			return null;
@@ -31,7 +53,7 @@
 					{
 						variant: 'secondary',
 						onClick: function () {
-							data.dispatch( 'core/block-editor' ).replaceBlocks( clientId, blocks.parse( content ) );
+							data.dispatch( 'core/block-editor' ).replaceBlocks( clientId, applyWording( blocks.parse( content ), wording || {} ) );
 						},
 					},
 					'Edit on the page'
@@ -85,7 +107,7 @@
 				return el(
 					'div',
 					blockEditor.useBlockProps(),
-					editOnPagePanel( name, props.clientId ),
+					editOnPagePanel( name, props.clientId, props.attributes.wording ),
 					wordingPanel( name, props.attributes, props.setAttributes ),
 					el( ServerSideRender, { block: name, attributes: props.attributes } )
 				);

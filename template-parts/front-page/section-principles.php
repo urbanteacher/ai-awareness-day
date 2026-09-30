@@ -24,26 +24,10 @@ $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args[
         <div class="principles-grid" role="region"
             aria-label="<?php echo esc_attr__( 'Core principles — swipe sideways to explore each card', 'ai-awareness-day' ); ?>">
             <?php
+            // Wording: the Customizer's, else the standard wording (aiad_principle_cards() in inc/homepage-blocks.php).
             $principle_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
-            $principle_default_titles = array(
-                'safe'       => __( 'Safe', 'ai-awareness-day' ),
-                'smart'      => __( 'Smart', 'ai-awareness-day' ),
-                'creative'   => __( 'Creative', 'ai-awareness-day' ),
-                'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-                'future'     => __( 'Future', 'ai-awareness-day' ),
-            );
-            $principle_default_descs = array(
-                'safe'       => __( 'Start with what should stay private — trust, sharing and the data AI holds about you.', 'ai-awareness-day' ),
-                'smart'      => __( 'Question AI that acts on your behalf — decisions, shortcuts and who is really choosing.', 'ai-awareness-day' ),
-                'creative'   => __( 'Own what you make with AI — authorship, attribution and honest creative work.', 'ai-awareness-day' ),
-                'responsible' => __( 'Keep human judgement in consequential moments — when the output matters.', 'ai-awareness-day' ),
-                'future'     => __( 'Name the skills worth keeping human — and practise them on purpose.', 'ai-awareness-day' ),
-            );
             foreach ( $principle_slugs as $index => $slug ) :
-                $title_mod = get_theme_mod( 'aiad_principle_title_' . $slug, '' );
-                $title    = ! empty( $title_mod ) ? $title_mod : ( isset( $principle_default_titles[ $slug ] ) ? $principle_default_titles[ $slug ] : ucfirst( $slug ) );
-                $desc_mod  = get_theme_mod( 'aiad_principle_desc_' . $slug, '' );
-                $desc     = ! empty( $desc_mod ) ? $desc_mod : ( isset( $principle_default_descs[ $slug ] ) ? $principle_default_descs[ $slug ] : '' );
+                list( $title, $desc ) = aiad_principle_card_wording( $slug );
                 $p        = array( 'title' => $title, 'desc' => $desc );
                 $badge_src = function_exists( 'aiad_strand_icon_uri' )
                     ? aiad_strand_icon_uri( $slug )
@@ -64,7 +48,7 @@ $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args[
                     <h3><?php echo esc_html( $p['title'] ); ?></h3>
                     <p class="section-desc"><?php echo esc_html( $p['desc'] ); ?></p>
                 </a>
-            <?php endforeach; ?>
+            <?php endforeach; list( $literacy_title, $literacy_desc ) = aiad_principle_card_wording( 'literacy' ); ?>
 
             <div class="ai-literacy-box principle-card fade-up stagger-6">
                 <div class="principle-badge">
@@ -80,8 +64,8 @@ $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args[
                         </div>
                     <?php endif; ?>
                 </div>
-                <h3><?php esc_html_e( 'Your AI. Your choices.', 'ai-awareness-day' ); ?></h3>
-                <p class="section-desc"><?php esc_html_e( 'These five strands are one literacy — Keep Humans in the Loop.', 'ai-awareness-day' ); ?></p>
+                <h3><?php echo esc_html( $literacy_title ); ?></h3>
+                <p class="section-desc"><?php echo esc_html( $literacy_desc ); ?></p>
             </div>
         </div>
     </div>
