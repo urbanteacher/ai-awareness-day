@@ -20,7 +20,7 @@ Counted from source by `scripts/audit-wp71.mjs`. Counts are by pattern, so they 
 | `wp_localize_script` / jQuery-dependent scripts / echoed `<script>` tags | 11 / 5 / 10 | Globals, jQuery, inline tags. |
 | PHP templates (`get_header()`) | 20 | Against 11 block templates. Cannot be edited in the Site Editor. |
 | Hand-written, unbuilt theme blocks | 26 | A second way of writing blocks next to aiad-core's built ones. |
-| Version floors below 7.1 | 5 | The theme, three plugins and a readme said 6.0 to 6.6 (and "tested up to" 6.6 or 6.9) on a site that only runs, and is only tested on, 7.1.2. Fixed. |
+| Version floors below 7.1 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` 20 to 15 | **Done, untested.** Five that had an equivalent block template were deleted; the other fifteen stay on purpose (below). |
 
 Not used anywhere: block bindings, the Interactivity API, script modules, the Abilities API. The admin screens (17 menu or settings pages) are PHP forms; none use DataViews.
 
@@ -195,6 +195,23 @@ When the live site shows `ready` on that screen and has run on the block homepag
 - *Theme blocks.* The 26 hand-written blocks in the theme's `blocks/` folder (header, footer, homepage, walkthrough and Assets Pack pieces) moved to `plugins/aiad-core/src/blocks/` and are built with the rest. Their editor scripts are unchanged except for side-effect imports of the packages they read from `window.wp`, so the build lists those packages as dependencies in place of the hand-written `index.asset.php` files. The theme's `register_block_type()` calls and the directory scan in `aiad_post_has_theme_blocks()` (now a fixed list) are gone; the plugin registers them all from its manifest. Block names are unchanged. The theme now needs aiad-core active for its header, footer and homepage blocks, as it already did for the post types.
 - *Not run.* None of this was exercised in a browser or the editor. Check on the first pass: the header and footer, the homepage sections, the National Conversation, Walkthrough, Assets Pack and Press Release pages in the front end and in the editor, and one tool page by shortcode and by block.
 
+### PHP templates (row 5)
+
+**Removed:** `404.php`, `archive-partner.php`, `archive-timeline.php`, `page.php` and `single.php`. Each had a block template doing the same job (verified element for element when the block templates were written), and the PHP file was only winning over it. The block templates now serve those pages, so they are editable in the Site Editor. `index.php` stays as the required fallback file.
+
+**Stay, on purpose (15):**
+
+| Template | Why it stays PHP |
+|---|---|
+| `front-page.php` | Prints the homepage's section blocks or, until the live site is converted, the classic section loop (2c-3) |
+| `page-national-conversation.php`, `page-walkthrough.php` | The built-in versions the editable pages fall back to ("go back" on Pages, Theme pages); their block pages already exist |
+| `template-assets-pack.php`, `template-press-release.php`, `page-hub-resource.php` | Page templates chosen by name on a page, which WordPress still offers in a block theme; the first two already have an editable block version |
+| `single-resource.php` | The lesson page: timed steps, video and PDF beside the steps, debate tabs, all worked out from the lesson's meta |
+| `single-partner.php`, `single-live_session.php`, `single-timeline.php` | Data-heavy singles: counters, calendar and schema output, related content, conditional on many fields |
+| `archive-resource.php`, `archive-featured_resource.php`, `archive-ai_tool.php`, `archive-live_session.php` | Archives with filters and counts that the REST filter and scripts hook into |
+
+The way to make any of these editable in the Site Editor, if wanted later, is the one the plan already gives: a small block bindings source over the `_aiad_*` meta (core's post-meta source cannot read them), so a block template can show the fields while the logic stays in PHP. `index.php`, `header.php` and `footer.php` stay as WordPress requires.
+
 ### Deliberately not doing
 
 - **The Interactivity API, script modules or block bindings for their own sake.** The aim is a consistent editing experience, not a count of APIs. They get used when a feature needs them.
@@ -236,6 +253,8 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (row 5).** Five PHP templates with block twins deleted (`phpTemplates` 20 to 15); the rest listed with reasons. Untested, at the owner's request.
 
 - **1 October 2026 (row 3, admin scripts).** Card image fetch to REST; classic meta box scripts off jQuery and off `wp_localize_script`; NEU report config on its element; JSON-LD no longer counted as echoed script. Untested, at the owner's request. `ajaxHandlers` 19 to 18, `localizeScript` 9 to 4, `jquerySignedScripts` 5 to 1, `echoedScriptTags` 10 to 2.
 
