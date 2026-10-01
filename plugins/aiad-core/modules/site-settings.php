@@ -355,26 +355,3 @@ foreach ( aiad_site_social_mods() as $aiad_site_mod => $aiad_site_seo_key ) {
 	);
 }
 unset( $aiad_site_mod, $aiad_site_seo_key );
-
-/**
- * Remove the Customizer controls for the settings that are now edited on Settings → AI Awareness Day, so each is
- * edited in one place. The Customizer settings go with them; their values are in the options.
- *
- * @param WP_Customize_Manager $wp_customize Customizer.
- */
-function aiad_site_remove_customizer_fields( $wp_customize ): void {
-	$ids = array_merge(
-		array_column( aiad_site_fields(), 0 ),
-		array_keys( aiad_site_social_mods() )
-	);
-	foreach ( $ids as $id ) {
-		$wp_customize->remove_control( $id );
-		$wp_customize->remove_setting( $id );
-	}
-	foreach ( array( 'aiad_header', 'aiad_footer_resource_links', 'aiad_assets_pack', 'aiad_press_release', 'aiad_social' ) as $section ) {
-		$wp_customize->remove_section( $section );
-	}
-	// Its two sections were the downloads, now on the settings screen.
-	$wp_customize->remove_panel( 'aiad_panel_files' );
-}
-add_action( 'customize_register', 'aiad_site_remove_customizer_fields', 1000 );

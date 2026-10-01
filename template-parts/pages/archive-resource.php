@@ -7,7 +7,7 @@
 
 ?>
 
-<main id="main" role="main" class="resources-archive">
+<main id="main" class="resources-archive">
     <section class="section pt-100">
         <div class="container">
             <span class="section-label"><?php esc_html_e('Free Resources', 'ai-awareness-day'); ?></span>

@@ -13,7 +13,7 @@ $text_alignment_class = aiad_get_text_alignment_class();
 $block_homepage       = aiad_block_homepage_page();
 ?>
 
-<main id="main" role="main" class="<?php echo esc_attr( $container_class ); ?>">
+<main id="main" class="<?php echo esc_attr( $container_class ); ?>">
 
     <?php
     if ( $block_homepage ) {

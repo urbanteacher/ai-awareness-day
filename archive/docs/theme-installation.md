@@ -101,8 +101,8 @@ ai-awareness-day/
 
 ## Requirements
 
-- WordPress 6.0+
-- PHP 7.4+
+- WordPress 7.1+
+- PHP 8.0+
 
 ## License
 

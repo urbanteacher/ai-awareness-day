@@ -7,7 +7,7 @@
 
 ?>
 
-<main id="main" role="main" class="single-timeline">
+<main id="main" class="single-timeline">
 	<?php while ( have_posts() ) : the_post();
 
 		$post_id      = get_the_ID();

@@ -10,7 +10,7 @@
 
 ?>
 
-<main id="main" role="main" class="rl">
+<main id="main" class="rl">
 	<?php
 	while ( have_posts() ) :
 		the_post();

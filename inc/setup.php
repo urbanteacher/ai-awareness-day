@@ -53,7 +53,7 @@ function aiad_setup(): void
     // Site icon / favicon
     add_theme_support('site-icon');
 
-    // Block editor: alignments, responsive embeds, block styles (WP 5.9+)
+    // Block editor: alignments, responsive embeds, block styles
     add_theme_support('responsive-embeds');
     add_theme_support('align-wide');
     add_theme_support('wp-block-styles');
@@ -91,18 +91,6 @@ add_action('admin_init', function (): void {
 });
 
 /**
- * WordPress 6.9+ compatibility: classic theme block styles
- *
- * WP 6.9 loads block styles on demand in classic themes, which can break layouts
- * when plugins (e.g. Gravity Forms, WooCommerce blocks) expect all block CSS.
- * Uncomment the filter below if you see broken block/plugin layouts after upgrading.
- *
- * @see https://core.trac.wordpress.org/ticket/64099
- * @see https://wordpress.org/support/topic/wp-6-9-1still-have-issue-with-load-block-styles-on-demand-in-classic-themes/
- */
-// add_filter( 'should_load_separate_core_block_assets', '__return_false' );
-
-/**
  * Enqueue Styles & Scripts
  */
 function aiad_scripts(): void
@@ -133,10 +121,8 @@ function aiad_scripts(): void
         aiad_enqueue_modular_theme_styles();
     }
 
-    // Main script (defer on WordPress 6.3+ for better performance)
-    $script_args = version_compare(get_bloginfo('version'), '6.3', '>=')
-        ? array('in_footer' => true, 'strategy' => 'defer')
-        : true;
+    // Main script, deferred.
+    $script_args = array('in_footer' => true, 'strategy' => 'defer');
     $main_js_path = AIAD_DIR . '/assets/js/main.js';
     wp_enqueue_script(
         'aiad-main',
@@ -466,3 +452,36 @@ function aiad_favicon_admin_notice(): void {
     }
 }
 add_action( 'admin_notices', 'aiad_favicon_admin_notice' );
+
+
+/**
+ * Leave out what WordPress adds to every page that this site does not use or should not say: the generator tag (and the
+ * generator line in the feeds), which names the WordPress version, and the emoji detection script and styles, which
+ * the browsers this site supports do not need. The core assets' ?ver= is the WordPress version too, so it is replaced
+ * with a hash of it: still different after an update, so caches refresh, without naming the version.
+ */
+function aiad_trim_legacy_head_output(): void {
+    remove_action( 'wp_head', 'wp_generator' );
+    add_filter( 'the_generator', '__return_empty_string' );
+
+    remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+    remove_action( 'wp_enqueue_scripts', 'wp_enqueue_emoji_styles' );
+    remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+    add_filter( 'style_loader_src', 'aiad_mask_core_version', 10, 1 );
+    add_filter( 'script_loader_src', 'aiad_mask_core_version', 10, 1 );
+}
+add_action( 'init', 'aiad_trim_legacy_head_output', 1 );
+
+/**
+ * Replace a ?ver= that is the WordPress version with a short hash of it.
+ *
+ * @param string $src A style or script address.
+ */
+function aiad_mask_core_version( $src ) {
+    $version = get_bloginfo( 'version' );
+    if ( is_string( $src ) && 1 === preg_match( '/[?&]ver=' . preg_quote( $version, '/' ) . '(?:&|$)/', $src ) ) {
+        $src = add_query_arg( 'ver', substr( md5( $version ), 0, 8 ), remove_query_arg( 'ver', $src ) );
+    }
+    return $src;
+}

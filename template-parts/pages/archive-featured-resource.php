@@ -8,7 +8,7 @@
 
 ?>
 
-<main id="main" role="main" class="resources-archive featured-resources-archive">
+<main id="main" class="resources-archive featured-resources-archive">
     <section class="section pt-100">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Handpicked resources', 'ai-awareness-day' ); ?></span>

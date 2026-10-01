@@ -43,7 +43,7 @@ $share_aria = sprintf(
     $title
 );
 ?>
-<main id="main" role="main" class="single-live-session">
+<main id="main" class="single-live-session">
     <section class="section pt-100">
         <div class="container container--narrow">
 

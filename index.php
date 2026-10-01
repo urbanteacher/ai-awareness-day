@@ -8,7 +8,7 @@
 get_header();
 ?>
 
-<main id="main" role="main" class="blog-index section">
+<main id="main" class="blog-index section">
 	<div class="container blog-index__inner">
 
 		<?php if ( have_posts() ) : ?>

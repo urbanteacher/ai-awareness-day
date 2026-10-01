@@ -127,18 +127,3 @@ function aiad_seo_sanitize_settings( $input ): array {
 	}
 	return $clean;
 }
-
-/**
- * Remove the Customizer fields that only SEO used, now edited on the settings page. LinkedIn and Instagram stay:
- * the footer still links to them.
- *
- * @param WP_Customize_Manager $wp_customize Customizer.
- */
-function aiad_seo_remove_customizer_fields( $wp_customize ): void {
-	foreach ( array( 'aiad_twitter', 'aiad_facebook', 'aiad_youtube', 'aiad_tiktok', 'aiad_github', 'aiad_verify_google', 'aiad_verify_bing', 'aiad_verify_pinterest' ) as $id ) {
-		$wp_customize->remove_control( $id );
-		$wp_customize->remove_setting( $id );
-	}
-	$wp_customize->remove_section( 'aiad_seo_verify' );
-}
-add_action( 'customize_register', 'aiad_seo_remove_customizer_fields', 1000 );

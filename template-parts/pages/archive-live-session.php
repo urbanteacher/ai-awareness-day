@@ -33,7 +33,7 @@ if ( ! empty( $sessions ) && function_exists( 'aiad_get_schedule_audience_filter
     $audience_labels      = $audience_data['audience_labels'];
 }
 ?>
-<main id="main" role="main" class="container-width-standard schedule-archive">
+<main id="main" class="container-width-standard schedule-archive">
     <section class="section aiad-schedule-filter-root">
         <div class="container">
             <span class="section-label"><?php esc_html_e( 'Events', 'ai-awareness-day' ); ?></span>

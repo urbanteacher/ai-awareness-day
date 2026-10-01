@@ -112,7 +112,7 @@ function aiad_national_survey_render( $atts = array() ): string {
 
 	ob_start();
 	?>
-	<div class="aiad-survey" id="aiad-national-survey" role="main" aria-label="<?php esc_attr_e( 'AI Awareness Day National Survey', 'ai-awareness-day' ); ?>">
+	<div class="aiad-survey" id="aiad-national-survey" role="region" aria-label="<?php esc_attr_e( 'AI Awareness Day National Survey', 'ai-awareness-day' ); ?>">
 
 		<!-- Progress: segmented stepper (built by JS, one segment per step in the active path) -->
 		<div class="aiad-survey__progress" id="aiad-survey-progress">
