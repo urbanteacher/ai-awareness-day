@@ -7,10 +7,9 @@
  * itself (demo-walkthrough.html and demo-start.php, which signs the browser in as the demo administrator) stays on the
  * presenter's laptop and out of git; on the local copy the tour links to it.
  *
- * The address is matched directly rather than through a rewrite rule, so it works straight after a deploy without
- * waiting for the stored rules to be flushed. Pages → Theme pages (inc/editable-pages.php) can turn it into an
- * editable page in blocks at the same address (patterns/walkthrough.php, templates/page-walkthrough.html), which
- * the address then shows.
+ * It is an ordinary page of blocks at /walkthrough/ (patterns/walkthrough.php, templates/page-walkthrough.html),
+ * created the first time the theme loads (aiad_maybe_convert_theme_pages() in inc/editable-pages.php). The address is
+ * matched directly, so its title, robots and style load on that page and nowhere else.
  *
  * @package AI_Awareness_Day
  */
@@ -56,33 +55,6 @@ function aiad_walkthrough_demo_url(): string {
 	return '';
 }
 
-/** No post sits behind the address, so say plainly that it is a real page. */
-add_action(
-	'template_redirect',
-	static function (): void {
-		if ( ! aiad_is_walkthrough() ) {
-			return;
-		}
-		global $wp_query;
-		$wp_query->is_404  = false;
-		$wp_query->is_home = false;
-		status_header( 200 );
-	},
-	1 // Before WordPress guesses at a similar page for an address it does not know.
-);
-
-add_filter(
-	'template_include',
-	static function ( string $template ): string {
-		if ( ! aiad_is_walkthrough() || aiad_editable_page_post( 'walkthrough' ) ) {
-			return $template; // The editable page has its own template (templates/page-walkthrough.html).
-		}
-		$custom = get_template_directory() . '/page-walkthrough.php';
-		return is_readable( $custom ) ? $custom : $template;
-	},
-	20
-);
-
 add_filter(
 	'pre_get_document_title',
 	static function ( string $title ): string {
@@ -127,7 +99,7 @@ add_action(
 );
 
 /**
- * The walkthrough's parts and screens, in order: page-walkthrough.php prints them, and patterns/walkthrough.php turns
+ * The walkthrough's parts and screens, in order: patterns/walkthrough.php turns
  * them into the blocks of the editable page. Each screen: image, width, height, title, what it shows, and a live page
  * to open where there is one.
  *

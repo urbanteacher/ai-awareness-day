@@ -10,15 +10,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * [ai_risk_benchmark] shortcode.
+ * The benchmark's assets and markup. The aiad/risk-benchmark block calls render(); the [ai_risk_benchmark] shortcode
+ * is no longer registered (aiad-core converts content that holds it to the block).
  */
 class AIRB_Shortcode {
 
 	/**
-	 * Register shortcode and assets.
+	 * Register assets.
 	 */
 	public static function register(): void {
-		add_shortcode( 'ai_risk_benchmark', array( __CLASS__, 'render' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ), 5 );
 	}
 
@@ -175,10 +175,10 @@ class AIRB_Shortcode {
 		wp_enqueue_script( 'airb-front' );
 		wp_enqueue_script( 'airb-deck' );
 		$contact_email = sanitize_email( (string) get_option( 'admin_email' ) );
-		if ( function_exists( 'get_theme_mod' ) ) {
-			$theme_email = sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) );
-			if ( $theme_email ) {
-				$contact_email = $theme_email;
+		if ( function_exists( 'aiad_campaign_setting' ) ) {
+			$campaign_email = sanitize_email( aiad_campaign_setting( 'contact_email' ) );
+			if ( $campaign_email ) {
+				$contact_email = $campaign_email;
 			}
 		}
 

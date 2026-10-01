@@ -1,6 +1,74 @@
 <?php
 // This file is generated. Do not modify it manually.
 return array(
+	'archive-featured-resource' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/archive-featured-resource',
+		'title' => 'Resources from partners archive',
+		'category' => 'aiad',
+		'icon' => 'awards',
+		'description' => 'Handpicked resources from other organisations, with the same filters as the resources.',
+		'keywords' => array(
+			'archive',
+			'featured',
+			'resource'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'archive-live-session' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/archive-live-session',
+		'title' => 'Events archive',
+		'category' => 'aiad',
+		'icon' => 'calendar',
+		'description' => 'The events schedule with its audience filter.',
+		'keywords' => array(
+			'archive',
+			'live',
+			'session'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'archive-resource' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/archive-resource',
+		'title' => 'Resources archive',
+		'category' => 'aiad',
+		'icon' => 'portfolio',
+		'description' => 'The free resources, with the session length, theme and activity filters.',
+		'keywords' => array(
+			'archive',
+			'resource'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
 	'breadcrumbs' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -391,6 +459,28 @@ return array(
 			'className' => false,
 			'customClassName' => false,
 			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'front-page' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/front-page',
+		'title' => 'Homepage',
+		'category' => 'aiad',
+		'icon' => 'admin-home',
+		'description' => 'The homepage: the Home page\'s section blocks in order. Printed from the page being shown.',
+		'keywords' => array(
+			'homepage',
+			'front'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
 		),
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php'
@@ -1264,6 +1354,73 @@ return array(
 				'wide',
 				'full'
 			)
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'single-live-session' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/single-live-session',
+		'title' => 'Event page',
+		'category' => 'aiad',
+		'icon' => 'calendar-alt',
+		'description' => 'An event: date and time, format, registration, calendar download and share. Printed from the event being shown.',
+		'keywords' => array(
+			'single',
+			'live',
+			'session'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'single-resource' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/single-resource',
+		'title' => 'Lesson page',
+		'category' => 'aiad',
+		'icon' => 'welcome-learn-more',
+		'description' => 'The lesson page: what it is, what to get ready, the timed steps with the video beside them, the question for the board and the reference material. Printed from the resource being shown.',
+		'keywords' => array(
+			'single',
+			'resource'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'single-timeline' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/single-timeline',
+		'title' => 'Timeline entry page',
+		'category' => 'aiad',
+		'icon' => 'clock',
+		'description' => 'A timeline entry: badge, title, video or body, share and navigation. Printed from the entry being shown.',
+		'keywords' => array(
+			'single',
+			'timeline'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'inserter' => false
 		),
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php'

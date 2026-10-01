@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/archive-featured-resource",
+  "title": "Resources from partners archive",
+  "category": "aiad",
+  "icon": "awards",
+  "description": "Handpicked resources from other organisations, with the same filters as the resources.",
+  "keywords": [
+    "archive",
+    "featured",
+    "resource"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false,
+    "inserter": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

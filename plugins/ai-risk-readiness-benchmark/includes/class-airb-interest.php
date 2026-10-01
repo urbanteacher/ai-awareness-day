@@ -733,8 +733,8 @@ class AIRB_Interest {
 	 */
 	public static function contact_email(): string {
 		$email = '';
-		if ( function_exists( 'get_theme_mod' ) ) {
-			$email = sanitize_email( (string) get_theme_mod( 'aiad_contact_email', '' ) );
+		if ( function_exists( 'aiad_campaign_setting' ) ) {
+			$email = sanitize_email( aiad_campaign_setting( 'contact_email' ) );
 		}
 		return $email ? $email : 'info@aiawarenessday.co.uk';
 	}

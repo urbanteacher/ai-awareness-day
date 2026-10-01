@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/single-resource",
+  "title": "Lesson page",
+  "category": "aiad",
+  "icon": "welcome-learn-more",
+  "description": "The lesson page: what it is, what to get ready, the timed steps with the video beside them, the question for the board and the reference material. Printed from the resource being shown.",
+  "keywords": [
+    "single",
+    "resource"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false,
+    "inserter": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

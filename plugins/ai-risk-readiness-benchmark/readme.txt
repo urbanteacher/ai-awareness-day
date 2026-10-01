@@ -4,11 +4,11 @@ Tags: ai, risk, schools, dfe, benchmark, assessment
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.50.2
+Stable tag: 1.59.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-DfE-aligned AI Risk & Readiness Benchmark for UK schools. Shortcodes: [ai_risk_benchmark] and [ai_risk_school_dashboard]
+DfE-aligned AI Risk & Readiness Benchmark for UK schools. Blocks: AI Risk & Readiness Benchmark and School dashboard (from AI Awareness Day Core)
 
 == Description ==
 
@@ -28,8 +28,8 @@ An educational self-assessment tool for teachers, students, parents and school l
 
 1. Upload the `ai-risk-readiness-benchmark` folder to `/wp-content/plugins/`.
 2. Activate the plugin through the **Plugins** menu.
-3. Add the shortcode `[ai_risk_benchmark]` to any page or post.
-4. Optionally add `[ai_risk_school_dashboard]` on a page for whole-school roll-up (requires submissions per role).
+3. Add the **AI Risk & Readiness Benchmark** block to any page or post.
+4. Optionally add the **School dashboard** block on a page for whole-school roll-up (requires submissions per role).
 5. Visit **AI Risk Benchmark → Settings** to edit questions, scoring, positioning copy and recommendations.
 
 == Docker (this theme repo) ==
@@ -40,11 +40,11 @@ Symlink or copy the plugin into your WordPress plugins directory, or mount `plug
 ./plugins/ai-risk-readiness-benchmark:/var/www/html/wp-content/plugins/ai-risk-readiness-benchmark
 ```
 
-== Shortcodes ==
+== Blocks ==
 
-`[ai_risk_benchmark]` — individual stakeholder audit (teacher, student, parent, leader)
+AI Risk & Readiness Benchmark — individual stakeholder audit (teacher, student, parent, leader). The old `[ai_risk_benchmark]` shortcode is no longer registered; AI Awareness Day Core converts content that holds it.
 
-`[ai_risk_school_dashboard]` or `[ai_risk_school_dashboard school="Your School Name"]` — school-wide readiness view aggregated from benchmark submissions
+School dashboard (optional school name) — school-wide readiness view aggregated from benchmark submissions. Replaces `[ai_risk_school_dashboard]`.
 
 == Admin ==
 

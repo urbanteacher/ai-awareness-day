@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/archive-live-session",
+  "title": "Events archive",
+  "category": "aiad",
+  "icon": "calendar",
+  "description": "The events schedule with its audience filter.",
+  "keywords": [
+    "archive",
+    "live",
+    "session"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false,
+    "inserter": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

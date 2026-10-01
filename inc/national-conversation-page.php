@@ -2,10 +2,9 @@
 /**
  * The landing page that explains the National AI Conversation: /national-conversation/.
  *
- * It starts as a route, not a WordPress page, so a fresh install has it without anyone creating content, and it is
- * public and indexable (the platform's own /conversation/ pages are not); page-national-conversation.php renders it.
- * Pages → Theme pages (inc/editable-pages.php) can create an editable page in blocks at the same address
- * (patterns/national-conversation.php, templates/page-national-conversation.html), which the address then shows.
+ * An ordinary page of blocks (patterns/national-conversation.php, templates/page-national-conversation.html), public
+ * and indexable (the platform's own /conversation/ pages are not). A fresh install has it without anyone creating
+ * content: the first time the theme loads, aiad_maybe_convert_theme_pages() (inc/editable-pages.php) creates it.
  *
  * @package AI_Awareness_Day
  */
@@ -14,22 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const AIAD_NC_QUERY_VAR = 'aiad_nc_page';
-
 /**
  * Whether this request is the landing page.
  */
 function aiad_is_national_conversation_page(): bool {
-	if ( '' !== (string) get_query_var( AIAD_NC_QUERY_VAR ) ) {
-		return true; // The virtual page (page-national-conversation.php).
-	}
 	$page = aiad_national_conversation_post();
 	return $page && is_page( $page->ID );
 }
 
 /**
- * The editable page, once it has been created (Pages → Theme pages, inc/editable-pages.php): a published page at
- * /national-conversation/ built from blocks. While it exists the address shows it; without it, the virtual page.
+ * The landing page: a published page at /national-conversation/ built from blocks, created the first time the theme
+ * loads (aiad_maybe_convert_theme_pages() in inc/editable-pages.php).
  */
 function aiad_national_conversation_post(): ?WP_Post {
 	return aiad_editable_page_post( 'national-conversation' );
@@ -49,10 +43,9 @@ function aiad_national_conversation_page_url(): string {
  * @return array{opens:DateTimeImmutable,event:DateTimeImmutable}
  */
 function aiad_national_conversation_dates(): array {
-	$tz       = wp_timezone();
-	$defaults = aiad_get_customizer_defaults();
-	$opens    = defined( 'AIAD_CONVERSATION_OPENS' ) ? AIAD_CONVERSATION_OPENS : '2027-01-01';
-	$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
+	$tz    = wp_timezone();
+	$opens = defined( 'AIAD_CONVERSATION_OPENS' ) ? AIAD_CONVERSATION_OPENS : '2027-01-01';
+	$event = aiad_campaign_event_date(); // aiad-core: the campaign settings, else the standard date.
 	return array(
 		'opens' => new DateTimeImmutable( $opens . ' 12:00:00', $tz ),
 		'event' => new DateTimeImmutable( $event . ' 12:00:00', $tz ),
@@ -71,74 +64,6 @@ function aiad_portal_is_live(): bool {
 	$opens = defined( 'AIAD_CONVERSATION_OPENS' ) ? AIAD_CONVERSATION_OPENS : '2027-01-01';
 	return time() >= ( new DateTimeImmutable( $opens . ' 00:00:00', wp_timezone() ) )->getTimestamp();
 }
-
-add_filter(
-	'query_vars',
-	static function ( array $vars ): array {
-		$vars[] = AIAD_NC_QUERY_VAR;
-		return $vars;
-	}
-);
-
-add_action(
-	'init',
-	static function (): void {
-		add_rewrite_rule( '^national-conversation/?$', 'index.php?' . AIAD_NC_QUERY_VAR . '=1', 'top' );
-	},
-	4
-);
-
-/** Once the editable page exists, the address shows it rather than the virtual page. */
-add_filter(
-	'request',
-	static function ( array $vars ): array {
-		if ( empty( $vars[ AIAD_NC_QUERY_VAR ] ) ) {
-			return $vars;
-		}
-		$page = aiad_national_conversation_post();
-		return $page ? array( 'page_id' => $page->ID ) : $vars;
-	}
-);
-
-/** Flush once per theme version, so a deploy never needs a manual permalink reset. */
-add_action(
-	'init',
-	static function (): void {
-		if ( AIAD_VERSION === get_option( 'aiad_nc_rewrite_version' ) ) {
-			return;
-		}
-		flush_rewrite_rules( false );
-		update_option( 'aiad_nc_rewrite_version', AIAD_VERSION, false );
-	},
-	99
-);
-
-/** The route has no post behind it, so say plainly that it is a real page. */
-add_action(
-	'template_redirect',
-	static function (): void {
-		if ( ! aiad_is_national_conversation_page() ) {
-			return;
-		}
-		global $wp_query;
-		$wp_query->is_404  = false;
-		$wp_query->is_home = false;
-		status_header( 200 );
-	},
-	1
-);
-
-add_filter(
-	'template_include',
-	static function ( string $template ): string {
-		if ( ! aiad_is_national_conversation_page() || aiad_national_conversation_post() ) {
-			return $template; // The editable page has its own template (templates/page-national-conversation.html).
-		}
-		$custom = get_template_directory() . '/page-national-conversation.php';
-		return is_readable( $custom ) ? $custom : $template;
-	},
-	20
-);
 
 add_filter(
 	'pre_get_document_title',

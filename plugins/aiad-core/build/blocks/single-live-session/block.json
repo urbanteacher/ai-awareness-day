@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/single-live-session",
+  "title": "Event page",
+  "category": "aiad",
+  "icon": "calendar-alt",
+  "description": "An event: date and time, format, registration, calendar download and share. Printed from the event being shown.",
+  "keywords": [
+    "single",
+    "live",
+    "session"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false,
+    "inserter": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

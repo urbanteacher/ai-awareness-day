@@ -1,19 +1,19 @@
 <?php
 /**
- * Theme pages that can be edited in blocks: pages the theme builds itself, with their words in the theme, which
- * Pages → Theme pages can turn into an ordinary page of blocks with the same words and design.
+ * Theme pages in blocks: pages the theme builds itself, with their words in the theme, as ordinary pages of blocks.
  *
- * Two kinds. A page at its own address (National Conversation, the walkthrough) has no post until its editable page
- * is created; while that page is published the address shows it, and going back shows the built-in page again and
- * keeps the edited one as a draft. A page with a theme template chosen (the Assets Pack, the Press Release) keeps its post and its
- * template, so whatever finds the page by its template still does: turning it into blocks swaps its content for the
- * blocks (keeping the content it had, to put back), and while it is flagged (_aiad_block_page) it renders from
- * templates/theme-page.html instead of the PHP template. Going back puts the old content back and keeps the edited
- * blocks to use again.
+ * Two kinds. A page at its own address (National Conversation, the walkthrough) is a page with that slug. A page with
+ * a page template chosen (the Assets Pack, the Press Release) is whichever page has that template, from
+ * theme.json's customTemplates (templates/assets-pack.html, templates/press-release.html).
+ *
+ * The pages are made for the site: the first time the theme loads, aiad_maybe_convert_theme_pages() creates a missing
+ * page of the first kind, and puts the second kind's page (the one with the old PHP template chosen, or the one
+ * the Assets Pack link created) on its new template and gives it its blocks. The old content of a converted page is
+ * kept in _aiad_builtin_content.
  *
  * Each page's blocks come from a pattern (patterns/{slug}.php, built with inc/block-markup.php), also offered when a
  * new page is created. Its outermost block is the page's main group, so the editor canvas is styled as the site is;
- * templates/page-{slug}.html holds only the header, the post content and the footer.
+ * the templates hold only the header, the post content and the footer.
  *
  * What changes on its own is written as placeholders ({opens}...) filled in when the page renders, and explained in
  * a notice in its editor. A link whose placeholder is empty is left out (the walkthrough's demo link, away from the
@@ -30,9 +30,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The theme pages that can be edited in blocks: slug => settings.
  *
  * title:        the page's title when it is created.
- * builtin:      the PHP template that renders the built-in page.
- * template:     for a page with a theme template chosen, that template; '' for a page at its own address.
- * page:         for a page with a theme template chosen, a function returning its post.
+ * template:     for a page with a page template chosen, that template (theme.json customTemplates); '' for a page at its own address.
+ * page:         for a page with a page template chosen, a function returning its post.
  * style:        the handle of the page's stylesheet (assets/css/pages/{slug}.css), loaded in its editor too; '' when
  *               the theme loads it everywhere.
  * placeholders: a function returning placeholder => HTML, or ''.
@@ -44,7 +43,6 @@ function aiad_editable_pages(): array {
 	return array(
 		'national-conversation' => array(
 			'title'        => __( 'The National AI Conversation', 'ai-awareness-day' ),
-			'builtin'      => 'page-national-conversation.php',
 			'template'     => '',
 			'page'         => '',
 			'style'        => 'aiad-national-conversation',
@@ -53,7 +51,6 @@ function aiad_editable_pages(): array {
 		),
 		'walkthrough'           => array(
 			'title'        => __( 'Platform walkthrough', 'ai-awareness-day' ),
-			'builtin'      => 'page-walkthrough.php',
 			'template'     => '',
 			'page'         => '',
 			'style'        => 'aiad-walkthrough',
@@ -62,8 +59,7 @@ function aiad_editable_pages(): array {
 		),
 		'assets-pack'           => array(
 			'title'        => __( 'Assets Pack', 'ai-awareness-day' ),
-			'builtin'      => 'template-assets-pack.php',
-			'template'     => 'template-assets-pack.php',
+			'template'     => 'assets-pack',
 			'page'         => 'aiad_get_assets_pack_page',
 			'style'        => '',
 			'placeholders' => 'aiad_assets_pack_placeholders',
@@ -71,8 +67,7 @@ function aiad_editable_pages(): array {
 		),
 		'press-release'         => array(
 			'title'        => __( 'Press Release', 'ai-awareness-day' ),
-			'builtin'      => 'template-press-release.php',
-			'template'     => 'template-press-release.php',
+			'template'     => 'press-release',
 			'page'         => 'aiad_get_press_release_page',
 			'style'        => '',
 			'placeholders' => '',
@@ -115,22 +110,6 @@ function aiad_editable_page_base( string $slug ): ?WP_Post {
 	}
 	return get_page_by_path( $slug );
 }
-
-/**
- * A theme page with a template chosen, while it shows its blocks, renders from templates/theme-page.html (the
- * header, the post content and the footer) in place of its PHP template.
- *
- * @param string[] $templates The page's template hierarchy.
- * @return string[]
- */
-function aiad_editable_page_template_hierarchy( array $templates ): array {
-	$slug = aiad_current_editable_page();
-	if ( '' === $slug || '' === aiad_editable_pages()[ $slug ]['template'] ) {
-		return $templates;
-	}
-	return array_merge( array( 'theme-page.php' ), array_values( array_diff( $templates, array( aiad_editable_pages()[ $slug ]['template'] ) ) ) );
-}
-add_filter( 'page_template_hierarchy', 'aiad_editable_page_template_hierarchy' );
 
 /**
  * The editable theme page this request shows, or ''.
@@ -283,64 +262,8 @@ function aiad_editable_page_editor_notice(): void {
 add_action( 'enqueue_block_editor_assets', 'aiad_editable_page_editor_notice' );
 
 /**
- * Pages → Theme pages.
- */
-function aiad_editable_pages_admin_page(): void {
-	add_pages_page(
-		__( 'Theme pages', 'ai-awareness-day' ),
-		__( 'Theme pages', 'ai-awareness-day' ),
-		'edit_pages',
-		'aiad-theme-pages',
-		'aiad_render_editable_pages_admin_page'
-	);
-}
-add_action( 'admin_menu', 'aiad_editable_pages_admin_page' );
-
-/**
- * Handle the screen's two actions: create (or publish again) a theme page's editable page, or go back to the
- * built-in page.
- */
-function aiad_handle_editable_page_actions(): void {
-	if ( empty( $_POST['aiad_theme_page_action'] ) || empty( $_POST['aiad_theme_page'] ) || ! current_user_can( 'publish_pages' ) ) {
-		return;
-	}
-	check_admin_referer( 'aiad_theme_pages' );
-	$action  = sanitize_key( wp_unslash( $_POST['aiad_theme_page_action'] ) );
-	$slug    = sanitize_key( wp_unslash( $_POST['aiad_theme_page'] ) );
-	$pages   = aiad_editable_pages();
-	$current = isset( $pages[ $slug ] ) ? aiad_editable_page_base( $slug ) : null;
-	$message = 'error';
-	if ( $current && '' !== $pages[ $slug ]['template'] ) {
-		$message = aiad_switch_template_page( $current, $slug, $action );
-	} elseif ( 'create' === $action && isset( $pages[ $slug ] ) && ! aiad_editable_page_post( $slug ) ) {
-		if ( $current && 'trash' !== $current->post_status ) {
-			// A page kept from before (a draft, after going back to the built-in page): publish it again as it was.
-			$id = wp_update_post( array( 'ID' => $current->ID, 'post_status' => 'publish' ), true );
-		} else {
-			$id = wp_insert_post(
-				array(
-					'post_type'    => 'page',
-					'post_status'  => 'publish',
-					'post_title'   => $pages[ $slug ]['title'],
-					'post_name'    => $slug,
-					'post_content' => wp_slash( aiad_editable_page_content( $slug ) ),
-				),
-				true
-			);
-		}
-		$message = is_wp_error( $id ) ? 'error' : 'created';
-	} elseif ( 'builtin' === $action && $current && 'publish' === $current->post_status ) {
-		$id      = wp_update_post( array( 'ID' => $current->ID, 'post_status' => 'draft' ), true );
-		$message = is_wp_error( $id ) ? 'error' : 'builtin';
-	}
-	wp_safe_redirect( add_query_arg( array( 'page' => 'aiad-theme-pages', 'aiad_message' => $message, 'aiad_theme_page' => $slug ), admin_url( 'edit.php?post_type=page' ) ) );
-	exit;
-}
-add_action( 'admin_init', 'aiad_handle_editable_page_actions' );
-
-/**
- * Switch a page with a theme template chosen to its blocks ('create') or back to its PHP template ('builtin'). Each
- * keeps the other's content, so switching back and forth loses nothing; the page's revisions keep every step too.
+ * Give a page with a page template chosen its blocks ('create'), keeping the content it had in _aiad_builtin_content
+ * (and, going back with 'builtin', blocks in _aiad_edited_content). The page's revisions keep every step too.
  *
  * @param WP_Post $page   The page.
  * @param string  $slug   A slug from aiad_editable_pages().
@@ -353,7 +276,15 @@ function aiad_switch_template_page( WP_Post $page, string $slug, string $action 
 		$kept    = (string) get_post_meta( $page->ID, '_aiad_edited_content', true );
 		$content = '' !== $kept ? $kept : aiad_editable_page_content( $slug, $page );
 		update_post_meta( $page->ID, '_aiad_builtin_content', wp_slash( $page->post_content ) );
+		// The site writes this content itself, so it is saved as it is written, whoever's request makes it.
+		$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+		if ( $kses ) {
+			kses_remove_filters();
+		}
 		$id = wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( $content ) ), true );
+		if ( $kses ) {
+			kses_init_filters();
+		}
 		if ( is_wp_error( $id ) ) {
 			return 'error';
 		}
@@ -373,60 +304,108 @@ function aiad_switch_template_page( WP_Post $page, string $slug, string $action 
 }
 
 /**
- * Render Pages → Theme pages.
+ * The first page that has one of the given page templates chosen, published or not.
+ *
+ * @param string[] $templates Template names, e.g. array( 'press-release', 'template-press-release.php' ).
  */
-function aiad_render_editable_pages_admin_page(): void {
-	$message  = isset( $_GET['aiad_message'] ) ? sanitize_key( wp_unslash( $_GET['aiad_message'] ) ) : '';
-	$messages = array(
-		'created' => __( 'The page is ready to edit, and is what its address shows now.', 'ai-awareness-day' ),
-		'builtin' => __( 'The address shows the built-in page again. Your page is kept to use again.', 'ai-awareness-day' ),
-		'error'   => __( 'That did not work. Nothing was changed.', 'ai-awareness-day' ),
+function aiad_find_page_by_template( array $templates ): ?WP_Post {
+	$pages = get_posts(
+		array(
+			'post_type'      => 'page',
+			'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
+			'posts_per_page' => 1,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery
+				array(
+					'key'     => '_wp_page_template',
+					'value'   => $templates,
+					'compare' => 'IN',
+				),
+			),
+		)
 	);
-	?>
-	<div class="wrap">
-		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-		<?php if ( isset( $messages[ $message ] ) ) : ?>
-			<div class="notice <?php echo 'error' === $message ? 'notice-error' : 'notice-success'; ?> is-dismissible"><p><?php echo esc_html( $messages[ $message ] ); ?></p></div>
-		<?php endif; ?>
-		<p><?php esc_html_e( 'These pages are built by the theme, with their wording in the theme. Each can be turned into a page of blocks with the same wording and design, at the same address, so its text is edited in the block editor. Going back shows the built-in page again and keeps your page to use again.', 'ai-awareness-day' ); ?></p>
-		<?php
-		foreach ( aiad_editable_pages() as $slug => $settings ) :
-			$page = aiad_editable_page_post( $slug );
-			$base = aiad_editable_page_base( $slug );
-			if ( '' !== $settings['template'] ) {
-				if ( ! $base ) {
-					continue; // No page has the template chosen.
-				}
-				$kept = ( ! $page && '' !== (string) get_post_meta( $base->ID, '_aiad_edited_content', true ) ) ? $base : null;
-				$url  = (string) get_permalink( $base );
-			} else {
-				$kept = ( ! $page && $base && 'draft' === $base->post_status ) ? $base : null;
-				$url  = home_url( '/' . $slug . '/' );
-			}
-			?>
-			<h2><?php echo esc_html( $settings['title'] ); ?> <code style="font-size:0.75em"><?php echo esc_html( wp_parse_url( $url, PHP_URL_PATH ) ); ?></code></h2>
-			<?php if ( $page ) : ?>
-				<p><?php esc_html_e( 'A page built from blocks: edit its text in the block editor.', 'ai-awareness-day' ); ?></p>
-				<p>
-					<a class="button button-primary" href="<?php echo esc_url( get_edit_post_link( $page->ID ) ); ?>"><?php esc_html_e( 'Edit the page', 'ai-awareness-day' ); ?></a>
-					<a class="button" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View it', 'ai-awareness-day' ); ?></a>
-				</p>
-			<?php else : ?>
-				<p><?php echo esc_html( $kept ? __( 'The built-in page. Your edited page is kept; using it again shows it as you left it.', 'ai-awareness-day' ) : sprintf( /* translators: %s: PHP template file */ __( 'The built-in page (%s).', 'ai-awareness-day' ), $settings['builtin'] ) ); ?></p>
-			<?php endif; ?>
-			<form method="post">
-				<?php wp_nonce_field( 'aiad_theme_pages' ); ?>
-				<input type="hidden" name="aiad_theme_page" value="<?php echo esc_attr( $slug ); ?>" />
-				<input type="hidden" name="aiad_theme_page_action" value="<?php echo $page ? 'builtin' : 'create'; ?>" />
-				<?php
-				if ( $page ) {
-					submit_button( __( 'Show the built-in page instead', 'ai-awareness-day' ), 'secondary', 'submit', false );
-				} else {
-					submit_button( $kept ? __( 'Use the edited page again', 'ai-awareness-day' ) : __( 'Create the editable page', 'ai-awareness-day' ), 'primary', 'submit', false );
-				}
-				?>
-			</form>
-		<?php endforeach; ?>
-	</div>
-	<?php
+	return $pages ? $pages[0] : null;
 }
+
+/**
+ * Make the theme pages editable pages, once: a missing page at its own address is created from its pattern (a draft
+ * kept from before is published again), and a page with the old PHP template chosen is moved to its new page
+ * template and given its blocks. Records when it ran in aiad_theme_pages_converted and any failure in
+ * aiad_theme_pages_conversion_error, and tries again on the next load if it could not finish.
+ */
+function aiad_maybe_convert_theme_pages(): void {
+	if ( get_option( 'aiad_theme_pages_converted' ) || wp_installing() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+	$locked = get_option( 'aiad_theme_pages_converting' );
+	if ( $locked && ( time() - (int) $locked ) < 10 * MINUTE_IN_SECONDS ) {
+		return;
+	}
+	delete_option( 'aiad_theme_pages_converting' );
+	if ( ! add_option( 'aiad_theme_pages_converting', time(), '', false ) ) {
+		return;
+	}
+
+	// The site writes this content itself, so it is saved as it is written, whoever's request makes it.
+	$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+	if ( $kses ) {
+		kses_remove_filters();
+	}
+
+	$error = '';
+	foreach ( aiad_editable_pages() as $slug => $settings ) {
+		if ( '' === $settings['template'] ) {
+			if ( aiad_editable_page_post( $slug ) ) {
+				continue;
+			}
+			$current = get_page_by_path( $slug, OBJECT, 'page' );
+			if ( $current && 'trash' !== $current->post_status ) {
+				// A page kept from before (a draft): publish it again as it was.
+				$id = wp_update_post( array( 'ID' => $current->ID, 'post_status' => 'publish' ), true );
+			} else {
+				$id = wp_insert_post(
+					array(
+						'post_type'    => 'page',
+						'post_status'  => 'publish',
+						'post_title'   => $settings['title'],
+						'post_name'    => $slug,
+						'post_content' => wp_slash( aiad_editable_page_content( $slug ) ),
+					),
+					true
+				);
+			}
+			if ( is_wp_error( $id ) ) {
+				$error = $id->get_error_message();
+			}
+			continue;
+		}
+
+		// A page with a page template chosen: the old PHP template (before this change) or the new one.
+		$page = aiad_find_page_by_template( array( $settings['template'], 'template-' . $settings['template'] . '.php' ) );
+		if ( ! $page ) {
+			continue; // No page has it chosen; the Assets Pack page is made by aiad_ensure_assets_pack_page().
+		}
+		update_post_meta( $page->ID, '_wp_page_template', $settings['template'] );
+		if ( ! get_post_meta( $page->ID, '_aiad_block_page', true ) ) {
+			$result = aiad_switch_template_page( $page, $slug, 'create' );
+			if ( 'error' === $result ) {
+				$error = sprintf( 'Could not give the %s page its blocks.', $slug );
+			}
+		}
+	}
+
+	if ( $kses ) {
+		kses_init_filters();
+	}
+	if ( '' !== $error ) {
+		update_option( 'aiad_theme_pages_conversion_error', $error, false );
+		delete_option( 'aiad_theme_pages_converting' );
+		return;
+	}
+	delete_option( 'aiad_theme_pages_conversion_error' );
+	update_option( 'aiad_theme_pages_converted', gmdate( 'c' ), false );
+	delete_option( 'aiad_theme_pages_converting' );
+}
+// After the Assets Pack page is ensured (priority 20) and the homepage is converted (30).
+add_action( 'init', 'aiad_maybe_convert_theme_pages', 31 );

@@ -15,23 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Find the first page using the Press Release template.
+ * Find the first page using the Press Release template (templates/press-release.html).
  *
  * @return WP_Post|null
  */
 function aiad_get_press_release_page(): ?WP_Post {
-	$pages = get_pages(
-		array(
-			'meta_key'    => '_wp_page_template',
-			'meta_value'  => 'template-press-release.php',
-			'number'      => 1,
-			'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
-		)
-	);
-	if ( empty( $pages ) ) {
-		return null;
-	}
-	return $pages[0];
+	return aiad_find_page_by_template( array( 'press-release', 'template-press-release.php' ) );
 }
 
 /**
@@ -456,9 +445,8 @@ function aiad_national_conversation_totals(): ?array {
  * @return array{label:string,ts_ms:int,date:string}|null null once AI Awareness Day has passed
  */
 function aiad_national_conversation_countdown(): ?array {
-	$defaults = aiad_get_customizer_defaults();
-	$event    = (string) get_theme_mod( 'aiad_event_date_ymd', $defaults['aiad_event_date_ymd'] );
-	$target   = new DateTimeImmutable( $event . ' 00:00:00', wp_timezone() );
+	$event  = aiad_campaign_event_date(); // aiad-core: the campaign settings, else the standard date.
+	$target = new DateTimeImmutable( $event . ' 00:00:00', wp_timezone() );
 	if ( time() >= $target->getTimestamp() ) {
 		return null;
 	}

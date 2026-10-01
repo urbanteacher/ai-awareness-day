@@ -309,6 +309,10 @@
       }
     }
   },
+  "customTemplates": [
+    { "name": "assets-pack", "title": "Assets Pack", "postTypes": [ "page" ] },
+    { "name": "press-release", "title": "Press Release", "postTypes": [ "page" ] }
+  ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
     { "name": "footer", "title": "Footer", "area": "footer" }

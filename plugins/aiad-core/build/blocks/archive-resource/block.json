@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/archive-resource",
+  "title": "Resources archive",
+  "category": "aiad",
+  "icon": "portfolio",
+  "description": "The free resources, with the session length, theme and activity filters.",
+  "keywords": [
+    "archive",
+    "resource"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false,
+    "inserter": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

@@ -28,7 +28,6 @@ class AIRB_School_Dashboard {
 	 * Register shortcode and AJAX.
 	 */
 	public static function register(): void {
-		add_shortcode( 'ai_risk_school_dashboard', array( __CLASS__, 'render_shortcode' ) );
 		add_action(
 			'rest_api_init',
 			static function (): void {

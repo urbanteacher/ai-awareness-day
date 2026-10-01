@@ -11,23 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Find the first page using the Assets Pack template.
+ * Find the first page using the Assets Pack template (templates/assets-pack.html).
  *
  * @return WP_Post|null
  */
 function aiad_get_assets_pack_page(): ?WP_Post {
-	$pages = get_pages(
-		array(
-			'meta_key'    => '_wp_page_template',
-			'meta_value'  => 'template-assets-pack.php',
-			'number'      => 1,
-			'post_status' => array( 'publish', 'draft', 'pending', 'private' ),
-		)
-	);
-	if ( empty( $pages ) ) {
-		return null;
-	}
-	return $pages[0];
+	return aiad_find_page_by_template( array( 'assets-pack', 'template-assets-pack.php' ) );
 }
 
 /**
@@ -52,8 +41,8 @@ function aiad_ensure_assets_pack_page(): void {
 		$stored = get_post( $stored_id );
 		if ( $stored instanceof WP_Post && 'page' === $stored->post_type && 'trash' !== $stored->post_status ) {
 			$template = (string) get_post_meta( $stored_id, '_wp_page_template', true );
-			if ( 'template-assets-pack.php' !== $template ) {
-				update_post_meta( $stored_id, '_wp_page_template', 'template-assets-pack.php' );
+			if ( 'assets-pack' !== $template ) {
+				update_post_meta( $stored_id, '_wp_page_template', 'assets-pack' );
 			}
 			return;
 		}
@@ -80,8 +69,14 @@ function aiad_ensure_assets_pack_page(): void {
 		return;
 	}
 
-	update_post_meta( $page_id, '_wp_page_template', 'template-assets-pack.php' );
+	update_post_meta( $page_id, '_wp_page_template', 'assets-pack' );
 	update_option( 'aiad_assets_pack_page_id', (int) $page_id, false );
+
+	// A new page starts with its blocks (the pattern), as the converted one has.
+	$page = get_post( (int) $page_id );
+	if ( $page && function_exists( 'aiad_switch_template_page' ) ) {
+		aiad_switch_template_page( $page, 'assets-pack', 'create' );
+	}
 }
 add_action( 'init', 'aiad_ensure_assets_pack_page', 20 );
 

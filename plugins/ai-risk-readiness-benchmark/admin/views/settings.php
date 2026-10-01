@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'ai-risk-benchmark' ); ?></p></div>
 	<?php endif; ?>
 
-	<p><?php esc_html_e( 'Shortcodes:', 'ai-risk-benchmark' ); ?> <code>[ai_risk_benchmark]</code> · <code>[ai_risk_school_dashboard]</code></p>
+	<p><?php esc_html_e( 'Blocks (AI Awareness Day Core):', 'ai-risk-benchmark' ); ?> <code>AI Risk &amp; Readiness Benchmark</code> · <code>School dashboard</code></p>
 
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<?php wp_nonce_field( 'airb_save_settings' ); ?>
