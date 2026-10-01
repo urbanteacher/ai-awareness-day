@@ -369,7 +369,9 @@ function aiad_sync_lesson_decks(): void {
         return;
     }
 
-    $base = get_template_directory_uri() . '/assets/lessons/2027/';
+    // CLI migrations have no HTTPS request context; retain the site's configured scheme.
+    $scheme = wp_parse_url( (string) get_option( 'home' ), PHP_URL_SCHEME ) ?: 'http';
+    $base = set_url_scheme( get_template_directory_uri(), $scheme ) . '/assets/lessons/2027/';
     foreach ( $lessons as $lesson ) {
         $post = get_page_by_path( (string) ( $lesson['wp'] ?? '' ), OBJECT, 'resource' );
         if ( ! $post || empty( $lesson['instructions'] ) ) {
