@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Event page' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'An event: date and time, format, registration, calendar download and share. Printed from the event being shown.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					'An event: date and time, format, registration, calendar download and share. Printed from the event being shown.'
+				)
 			);
 		},
 		save() {

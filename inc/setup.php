@@ -78,17 +78,18 @@ add_action('after_switch_theme', 'aiad_flush_rewrite_rules_on_activation');
 
 /**
  * Flush rewrite rules once whenever AIAD_VERSION changes.
- * Fires on the first admin page load after a theme update so new CPT rewrite
- * slugs (e.g. /timeline/) are registered without requiring a manual
- * Settings → Permalinks → Save.
+ * Fires on the first request after a theme update (front end or admin), so routes that were added or removed (a
+ * custom post type's slug, the old /national-conversation/ route) are right straight after a git deploy, without
+ * anyone saving Settings → Permalinks. Until then a stored rule that points at something that no longer exists would
+ * send the address to the homepage. Bump AIAD_VERSION in inc/bootstrap.php (and style.css) with any such change.
  */
-add_action('admin_init', function (): void {
+add_action('init', function (): void {
     if (get_option('aiad_rewrite_version') === AIAD_VERSION) {
         return;
     }
     flush_rewrite_rules(true);
     update_option('aiad_rewrite_version', AIAD_VERSION);
-});
+}, 99); // After every post type and the theme's own rules are registered.
 
 /**
  * Enqueue Styles & Scripts

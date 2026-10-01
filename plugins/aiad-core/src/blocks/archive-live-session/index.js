@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Events archive' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'The events schedule with its audience filter.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					'The events schedule with its audience filter.'
+				)
 			);
 		},
 		save() {

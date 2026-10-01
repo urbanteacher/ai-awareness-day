@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Timeline entry page' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'A timeline entry: badge, title, video or body, share and navigation. Printed from the entry being shown.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					'A timeline entry: badge, title, video or body, share and navigation. Printed from the entry being shown.'
+				)
 			);
 		},
 		save() {

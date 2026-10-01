@@ -3,7 +3,7 @@
  * Plugin Name:       AI Awareness Day Core
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       Site functionality that should survive a theme change: post types, meta, tools, certificates, survey, AJAX and the AI Awareness Day blocks. The theme keeps presentation only.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
@@ -19,7 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'AIAD_CORE_VERSION', '0.1.0' );
+// A git deploy copies this plugin whatever WordPress and PHP the site runs. Behind these versions it does nothing but say so.
+if ( version_compare( PHP_VERSION, '8.0', '<' ) || version_compare( $GLOBALS['wp_version'], '7.1-alpha', '<' ) ) {
+	add_action(
+		'admin_notices',
+		function () {
+			echo '<div class="notice notice-error"><p>' . esc_html( 'AI Awareness Day Core needs WordPress 7.1 and PHP 8.0 or newer, so it is switched off.' ) . '</p></div>';
+		}
+	);
+	return;
+}
+
+define( 'AIAD_CORE_VERSION', '0.2.0' );
 define( 'AIAD_CORE_FILE', __FILE__ );
 define( 'AIAD_CORE_DIR', plugin_dir_path( __FILE__ ) );
 // Same as the Debate Network plugin: when the theme loads this plugin from its own plugins/ folder, plugin_dir_url()

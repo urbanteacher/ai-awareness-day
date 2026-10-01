@@ -20,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_bundled_plugins(): array {
 	return array(
+		// First: the theme's header, footer, homepage and page blocks, and the other two plugins' blocks, are aiad-core's.
+		'aiad-core'                   => 'aiad-core.php',
 		'ai-risk-readiness-benchmark' => 'ai-risk-readiness-benchmark.php',
 		'aiad-debate-network'         => 'aiad-debate-network.php',
 	);
@@ -62,7 +64,11 @@ function aiad_copy_dir( string $src, string $dest ): bool {
 		return false;
 	}
 
-	wp_mkdir_p( $dest );
+	// A host that does not let the theme write into wp-content/plugins: say no once, quietly, and let the plugin load
+	// from the theme folder (aiad_load_bundled_plugin_from_theme()) instead of failing on every file of every request.
+	if ( ! wp_mkdir_p( $dest ) || ! wp_is_writable( $dest ) ) {
+		return false;
+	}
 
 	try {
 		$iterator = new RecursiveIteratorIterator(
@@ -95,6 +101,16 @@ function aiad_copy_dir( string $src, string $dest ): bool {
  */
 function aiad_bundled_plugin_sentinel_files(): array {
 	return array(
+		'aiad-core'                   => array(
+			'aiad-core.php',
+			'includes/modules.php',
+			'includes/blocks.php',
+			'build/blocks-manifest.php',
+			'build/editors/index.js',
+			'modules/partner-profile.php',
+			'modules/site-settings.php',
+			'modules/shortcode-migration.php',
+		),
 		'ai-risk-readiness-benchmark' => array(
 			'public/js/airb-front.js',
 			'public/js/airb-core.js',
@@ -244,6 +260,17 @@ function aiad_activate_bundled_plugin( string $slug, string $main_file ): bool {
 		return false;
 	}
 
+	if ( 'aiad-core' === $slug ) {
+		// The theme has already loaded this plugin's modules from its own copy in this request (aiad_require_core_module()),
+		// so including the copied plugin now, as activate_plugin() does, would declare them twice. aiad-core has no
+		// activation hook, so listing it as active is all activation does; WordPress loads it from wp-content/plugins on
+		// the next request, and the theme then skips its own copies.
+		$active   = (array) get_option( 'active_plugins', array() );
+		$active[] = $plugin_file;
+		update_option( 'active_plugins', array_values( array_unique( $active ) ) );
+		return true;
+	}
+
 	activate_plugin( $plugin_file, '', false, true );
 	return is_plugin_active( $plugin_file );
 }
@@ -255,6 +282,14 @@ function aiad_load_bundled_plugin_from_theme( string $slug, string $main_file ):
 	$source_main = trailingslashit( aiad_bundled_plugin_source_dir( $slug ) ) . $main_file;
 	if ( ! is_readable( $source_main ) ) {
 		return false;
+	}
+
+	if ( 'aiad-core' === $slug ) {
+		if ( defined( 'AIAD_CORE_VERSION' ) ) {
+			return false; // Loaded already: from wp-content/plugins, or from the theme earlier in this request.
+		}
+		require_once $source_main; // Its modules are the theme's own copies already loaded in this request, so nothing is declared twice.
+		return true;
 	}
 
 	if ( 'ai-risk-readiness-benchmark' === $slug ) {

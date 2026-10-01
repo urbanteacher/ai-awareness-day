@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Resources archive' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'The free resources, with the session length, theme and activity filters.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					'The free resources, with the session length, theme and activity filters.'
+				)
 			);
 		},
 		save() {

@@ -6,7 +6,8 @@
  * has a block now. The shortcodes are no longer registered, so content that still holds one is converted: once, for
  * every post that has one, and from then on whenever a post is saved with one in it (the seeded timeline entries are
  * written that way). A shortcode becomes the matching block, with its attributes carried over; a block is the same
- * markup, so the page does not change. The post's previous content is kept as a revision first.
+ * markup, so the page does not change. The post's previous content is kept first: as a revision, or in
+ * _aiad_pre_block_content for a post type without revisions.
  *
  * @package AIAD_Core
  */
@@ -150,9 +151,12 @@ function aiad_migrate_shortcodes_in_existing_posts(): void {
 		if ( $new === $post->post_content ) {
 			continue;
 		}
-		// Keep the old content as a revision, then write the new one directly (no save hooks, no filters on the content).
+		// Keep the old content, then write the new one directly (no save hooks, no filters on the content): as a revision,
+		// or, for a post type that has none (the timeline), in a field of its own, so it can always be put back.
 		if ( function_exists( 'wp_save_post_revision' ) && post_type_supports( $post->post_type, 'revisions' ) ) {
 			wp_save_post_revision( $post->ID );
+		} else {
+			update_post_meta( $post->ID, '_aiad_pre_block_content', wp_slash( $post->post_content ) );
 		}
 		$wpdb->update( $wpdb->posts, array( 'post_content' => $new ), array( 'ID' => $post->ID ) );
 		clean_post_cache( $post->ID );

@@ -18,6 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// A git deploy copies this plugin whatever WordPress and PHP the site runs. Behind these versions it does nothing but say so.
+if ( version_compare( PHP_VERSION, '8.0', '<' ) || version_compare( $GLOBALS['wp_version'], '7.1-alpha', '<' ) ) {
+	add_action(
+		'admin_notices',
+		function () {
+			echo '<div class="notice notice-error"><p>' . esc_html( 'The Debate Network needs WordPress 7.1 and PHP 8.0 or newer, so it is switched off.' ) . '</p></div>';
+		}
+	);
+	return;
+}
+
 define( 'AIADN_VERSION', '0.16.1' );
 define( 'AIADN_PLUGIN_FILE', __FILE__ );
 define( 'AIADN_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

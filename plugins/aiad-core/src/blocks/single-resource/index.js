@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Lesson page' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'The lesson page: what it is, what to get ready, the timed steps with the video beside them, the question for the board and the reference material. Printed from the resource being shown.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					'The lesson page: what it is, what to get ready, the timed steps with the video beside them, the question for the board and the reference material. Printed from the resource being shown.'
+				)
 			);
 		},
 		save() {

@@ -18,6 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// A git deploy copies this plugin whatever WordPress and PHP the site runs. Behind these versions it does nothing but say so.
+if ( version_compare( PHP_VERSION, '8.0', '<' ) || version_compare( $GLOBALS['wp_version'], '7.1-alpha', '<' ) ) {
+	add_action(
+		'admin_notices',
+		function () {
+			echo '<div class="notice notice-error"><p>' . esc_html( 'The AI Risk & Readiness Benchmark needs WordPress 7.1 and PHP 8.0 or newer, so it is switched off.' ) . '</p></div>';
+		}
+	);
+	return;
+}
+
 define( 'AIRB_VERSION', '1.59.0' );
 define( 'AIRB_PLUGIN_FILE', __FILE__ );
 define( 'AIRB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -96,11 +107,11 @@ final class AIRB_Plugin {
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 	}
 
-	public function load_textdomain(): void {
+	public function load_textdomain() {
 		load_plugin_textdomain( 'ai-risk-benchmark', false, dirname( plugin_basename( AIRB_PLUGIN_FILE ) ) . '/languages' );
 	}
 
-	public function init(): void {
+	public function init() {
 		AIRB_Database::maybe_upgrade();
 		AIRB_Certificates::maybe_upgrade();
 		AIRB_Leads::maybe_upgrade();

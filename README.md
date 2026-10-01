@@ -17,3 +17,5 @@ See [`archive/docs/theme-installation.md`](archive/docs/theme-installation.md) f
 | `inc/`, `template-parts/`, `assets/` | Theme |
 | `plugins/ai-risk-readiness-benchmark/` | Benchmark plugin |
 | `archive/theme/generators/` | Certificate & letter HTML tools (admin URLs updated) |
+
+Deploying to Hostinger: see [`docs/DEPLOY.md`](docs/DEPLOY.md).

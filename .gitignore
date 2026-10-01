@@ -87,3 +87,7 @@ assets/css/bundles/*.css
 
 # Local signup export — contains PII, never commit
 scripts/_external.csv
+
+# Presenter's laptop only: signs the browser in as the demo administrator. Never deployed.
+/demo-start.php
+/demo-walkthrough.html

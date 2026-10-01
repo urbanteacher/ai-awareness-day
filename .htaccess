@@ -1,0 +1,13 @@
+# Keeps development files in this theme folder from being served when the repository is deployed here (a git deploy puts
+# every tracked file in the web root's theme folder). Nothing here is needed by a visitor's browser.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# Folders for developers.
+RewriteRule ^(scripts|docs|archive|\.git|\.github)(/|$) - [F,L]
+# Files for developers, at the theme root and in the bundled plugins.
+RewriteRule ^(docker-compose\.yml|composer\.(json|lock)|package(-lock)?\.json|\.env.*|\.gitignore|[^/]*\.(sql|backup|md))$ - [F,L]
+RewriteRule ^plugins/[^/]+/(README\.md|readme\.txt|llms\.txt|package(-lock)?\.json|eslint\.config\.cjs)$ - [F,L]
+RewriteRule ^plugins/[^/]+/(node_modules|src)(/|$) - [F,L]
+</IfModule>
+# Directory listings off.
+Options -Indexes

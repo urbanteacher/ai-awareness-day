@@ -14,9 +14,15 @@ import '@wordpress/element';
 		edit() {
 			return el(
 				'div',
-				blockEditor.useBlockProps( { style: { padding: '2rem', border: '1px dashed #999' } } ),
+				blockEditor.useBlockProps( {
+					style: { padding: '2rem', border: '1px dashed #999' },
+				} ),
 				el( 'strong', null, 'Homepage' ),
-				el( 'p', { style: { margin: '0.5rem 0 0' } }, 'The homepage: the Home page\'s section blocks in order. Printed from the page being shown.' )
+				el(
+					'p',
+					{ style: { margin: '0.5rem 0 0' } },
+					"The homepage: the Home page's section blocks in order. Printed from the page being shown."
+				)
 			);
 		},
 		save() {
