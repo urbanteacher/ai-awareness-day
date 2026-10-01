@@ -571,22 +571,15 @@ function aiad_partner_quick_edit_js( string $hook ): void {
     if ( ! $screen || 'partner' !== $screen->post_type ) {
         return;
     }
-    ?>
-    <script>
-    jQuery( function( $ ) {
-        var $wp_inline_edit = inlineEditPost.edit;
-        inlineEditPost.edit = function( id ) {
-            $wp_inline_edit.apply( this, arguments );
-            var postId = ( typeof id === 'object' ) ? parseInt( this.getId( id ) ) : id;
-            var $row   = $( '#post-' + postId );
-            var order  = $row.find( '.aiad-partner-order' ).data( 'order' );
-            $( '#edit-' + postId ).find( '.aiad-partner-menu-order' ).val( order );
-        };
-    } );
-    </script>
-    <?php
+    wp_enqueue_script(
+        'aiad-admin-partner-quick-edit',
+        AIAD_URI . '/assets/js/admin-partner-quick-edit.js',
+        array( 'inline-edit-post' ),
+        AIAD_VERSION,
+        true
+    );
 }
-add_action( 'admin_footer', 'aiad_partner_quick_edit_js' );
+add_action( 'admin_enqueue_scripts', 'aiad_partner_quick_edit_js' );
 
 /**
  * Add Downloads column to resource list table

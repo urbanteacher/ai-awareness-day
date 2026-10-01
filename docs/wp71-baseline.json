@@ -7,7 +7,7 @@
   "ajaxHandlers": 0,
   "localizeScript": 4,
   "jquerySignedScripts": 1,
-  "echoedScriptTags": 2,
+  "echoedScriptTags": 0,
   "phpTemplates": 15,
   "unbuiltThemeBlocks": 0,
   "settingsApiForms": 0,
