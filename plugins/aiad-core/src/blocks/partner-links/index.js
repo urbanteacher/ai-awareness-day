@@ -9,13 +9,23 @@ import '@wordpress/server-side-render';
 
 ( function ( blocks, element, blockEditor, ServerSideRender ) {
 	const el = element.createElement;
+	// What the editor shows when the partner it previews has nothing for this block (the site shows nothing).
+	const Empty = () =>
+		el(
+			'p',
+			{ style: { margin: 0, opacity: 0.6 } },
+			'Partner resources: shown when the partner has links.'
+		);
 
 	blocks.registerBlockType( 'aiad/partner-links', {
 		edit() {
 			return el(
 				'div',
 				blockEditor.useBlockProps(),
-				el( ServerSideRender, { block: 'aiad/partner-links' } )
+				el( ServerSideRender, {
+					block: 'aiad/partner-links',
+					EmptyResponsePlaceholder: Empty,
+				} )
 			);
 		},
 		save() {
