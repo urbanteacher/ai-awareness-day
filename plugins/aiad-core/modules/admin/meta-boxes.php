@@ -733,7 +733,11 @@ function aiad_resource_details_meta_box(): void {
         'aiad_resource_details_callback',
         'resource',
         'normal',
-        'high'
+        'high',
+        /* Classic editor only. In the block editor a lesson is edited on the
+           canvas (the Lesson plan block) and in the Lesson details panel; this
+           box would only sit in the collapsed drawer under the canvas. */
+        array( '__back_compat_meta_box' => true )
     );
 }
 add_action( 'add_meta_boxes', 'aiad_resource_details_meta_box' );
@@ -958,7 +962,11 @@ function aiad_resource_content_sections_meta_box(): void {
         'aiad_resource_content_sections_callback',
         'resource',
         'normal',
-        'default'
+        'default',
+        /* Classic editor only. In the block editor a lesson is edited on the
+           canvas (the Lesson plan block) and in the Lesson details panel; this
+           box would only sit in the collapsed drawer under the canvas. */
+        array( '__back_compat_meta_box' => true )
     );
 }
 add_action( 'add_meta_boxes', 'aiad_resource_content_sections_meta_box' );

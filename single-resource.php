@@ -151,7 +151,8 @@ get_header();
 			'other'     => __( 'Other', 'ai-awareness-day' ),
 		);
 
-		$body_content = trim( (string) get_the_content() );
+		/* The introduction: the content besides the Lesson plan block, which saves nothing. */
+		$body_content = function_exists( 'aiad_lesson_intro_html' ) ? aiad_lesson_intro_html( $resource_id ) : trim( (string) get_the_content() );
 
 		// The contents list follows the sections that will actually render.
 		$toc = array_filter(
@@ -289,7 +290,7 @@ get_header();
 
 					<?php if ( '' !== $body_content ) : ?>
 						<div class="rl-intro entry-content">
-							<?php the_content(); ?>
+							<?php echo $body_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the_content, rendered. ?>
 						</div>
 					<?php endif; ?>
 

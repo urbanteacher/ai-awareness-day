@@ -171,6 +171,31 @@ return array(
 		'editorStyle' => 'file:../../../assets/css/components/ai-ict-curriculum.css',
 		'render' => 'file:./render.php'
 	),
+	'lesson-plan' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/lesson-plan',
+		'version' => '0.1.0',
+		'title' => 'Lesson plan',
+		'category' => 'aiad',
+		'icon' => 'welcome-learn-more',
+		'description' => 'The lesson\'s plan, edited where it reads: preparation, objectives, steps, the big question, adapting, the debate, key words and materials. Saved to the lesson, which the lesson page draws.',
+		'keywords' => array(
+			'lesson',
+			'steps',
+			'debate'
+		),
+		'textdomain' => 'aiad-core',
+		'supports' => array(
+			'html' => false,
+			'inserter' => false,
+			'multiple' => false,
+			'reusable' => false,
+			'customClassName' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css'
+	),
 	'llm-explainer' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,

@@ -22,3 +22,4 @@ require_once __DIR__ . '/post-types/resource-seeds.php';
 require_once __DIR__ . '/post-types/field-registry.php';
 require_once __DIR__ . '/post-types/admin-taxonomy-fields.php';
 require_once __DIR__ . '/post-types/validation.php';
+require_once __DIR__ . '/post-types/resource-editor.php';

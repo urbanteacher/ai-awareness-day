@@ -89,15 +89,19 @@
   line-height: 1.35;
 }
 
-/* The facts as one ink bar of cells, like the National Conversation dates. */
+/* The facts as one ink bar of cells, like the National Conversation dates.
+   Flex items that grow rather than a grid: five facts never divide evenly,
+   and a grid left "Level" alone in one column of a second row, with the bar
+   gapped beside it. Growing, every row fills the width. */
 .rl-facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   margin: 2rem 0 0;
 }
 
 .rl-facts > div {
+  flex: 1 1 9.5rem;
   padding: 0.8rem 1.1rem;
   background: var(--a27-ink);
   color: var(--a27-cream);

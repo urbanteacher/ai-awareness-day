@@ -45,6 +45,8 @@ function aiad_register_post_types(): void {
         'hierarchical'      => true,
         'show_ui'           => true,
         'show_admin_column' => true,
+        // The block editor sets these through REST (the Lesson details panel, and core's panel for session length).
+        'show_in_rest'      => true,
     ) );
 
     // Taxonomy: Session length (slot + time — e.g. Lesson Starter 5 min, Assembly 20 min)
@@ -58,6 +60,8 @@ function aiad_register_post_types(): void {
         'hierarchical'      => true,
         'show_ui'           => true,
         'show_admin_column' => true,
+        // The block editor sets these through REST (the Lesson details panel, and core's panel for session length).
+        'show_in_rest'      => true,
     ) );
 
     // Taxonomy: Format (Discussion, Quiz, Video, Hands-On, etc.) — registered as activity_type for back-compat
@@ -88,7 +92,8 @@ function aiad_register_post_types(): void {
         'has_archive'  => true,
         'rewrite'      => array( 'slug' => 'resources' ),
         'menu_icon'    => 'dashicons-media-document',
-        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+        // custom-fields: without it REST leaves the lesson's meta out, and the block editor cannot edit it.
+        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
         'show_in_rest' => true,
     ) );
 
@@ -220,7 +225,10 @@ function aiad_register_resource_meta(): void {
     register_post_meta( 'resource', '_aiad_status', array(
         'type'          => 'string',
         'single'        => true,
-        'default'       => 'draft',
+        /* Empty, not 'draft': the block editor sends back whatever it was given,
+           so a default of 'draft' was written onto published lessons on their
+           first save. Empty reads as the post's own state, as the old box did. */
+        'default'       => '',
         'show_in_rest'  => true,
         'auth_callback' => function () {
             return current_user_can( 'edit_posts' );
@@ -357,6 +365,21 @@ function aiad_register_resource_meta(): void {
         },
     ) );
 
+    /* Saved by the old Resource Details box without being registered, so the
+       block editor could not see them. */
+    foreach ( array( '_aiad_download_url', '_aiad_preview_video_url', '_aiad_image_keywords' ) as $key ) {
+        register_post_meta( 'resource', $key, array(
+            'type'              => 'string',
+            'single'            => true,
+            'default'           => '',
+            'show_in_rest'      => true,
+            'sanitize_callback' => '_aiad_image_keywords' === $key ? 'sanitize_text_field' : 'esc_url_raw',
+            'auth_callback'     => function () {
+                return current_user_can( 'edit_posts' );
+            },
+        ) );
+    }
+
     register_post_meta( 'resource', '_aiad_learning_objectives', array(
         'type'          => 'array',
         'single'        => true,
@@ -392,6 +415,7 @@ function aiad_register_resource_meta(): void {
                         'resource_ref'  => array( 'type' => 'string' ),
                         'student_action'=> array( 'type' => 'string' ),
                         'teacher_tip'   => array( 'type' => 'string' ),
+                        'optional'      => array( 'type' => 'boolean' ),
                     ),
                 ),
             ),
