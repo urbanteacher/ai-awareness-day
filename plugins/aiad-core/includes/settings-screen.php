@@ -2,7 +2,7 @@
 /**
  * Site settings: one screen, Settings → AI Awareness Day.
  *
- * The campaign and SEO options are registered for REST, so the screen reads and saves them through core's own
+ * The campaign, site and SEO options are registered for REST, so the screen reads and saves them through core's own
  * settings endpoint (/wp/v2/settings) and the `site` entity in @wordpress/core-data, as WordPress documents for
  * a settings screen. The screen is React (src/settings/, built to build/settings/) on core's @wordpress/components.
  * It replaces the two Settings API pages these options had (Campaign & contact, SEO & sharing); their old addresses
@@ -58,6 +58,29 @@ function aiad_core_register_site_settings(): void {
 				'schema' => array(
 					'type'                 => 'object',
 					'properties'           => $campaign,
+					'additionalProperties' => false,
+				),
+			),
+		)
+	);
+
+	$site = array();
+	foreach ( aiad_site_fields() as $key => $field ) {
+		$site[ $key ] = array( 'type' => 'bool' === $field[1] ? 'boolean' : ( 'file' === $field[1] ? 'integer' : 'string' ) );
+	}
+	register_setting(
+		'aiad_site',
+		'aiad_site',
+		array(
+			'type'              => 'object',
+			'label'             => __( 'Site links and files', 'aiad-core' ),
+			'description'       => __( 'The footer links, breadcrumbs and the downloadable files.', 'aiad-core' ),
+			'sanitize_callback' => 'aiad_site_sanitize_settings',
+			'default'           => array(),
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'                 => 'object',
+					'properties'           => $site,
 					'additionalProperties' => false,
 				),
 			),
@@ -125,6 +148,7 @@ function aiad_core_render_settings_screen(): void {
 	// The first read copies each option from the values it used to be kept in, so the form opens with them.
 	aiad_campaign_settings();
 	aiad_seo_settings();
+	aiad_site_settings();
 
 	$config = array(
 		'defaultEventDate' => aiad_campaign_default_event_date(),
@@ -152,6 +176,8 @@ function aiad_core_enqueue_settings_screen( string $hook_suffix ): void {
 	$asset = require $asset_file;
 	wp_enqueue_script( 'aiad-core-settings', AIAD_CORE_URL . 'build/settings/index.js', $asset['dependencies'], $asset['version'], true );
 	wp_set_script_translations( 'aiad-core-settings', 'aiad-core' );
+	// The media library behind the file pickers.
+	wp_enqueue_media();
 	wp_enqueue_style( 'wp-components' );
 	if ( file_exists( AIAD_CORE_DIR . 'build/settings/index.css' ) ) {
 		wp_enqueue_style( 'aiad-core-settings', AIAD_CORE_URL . 'build/settings/index.css', array( 'wp-components' ), $asset['version'] );

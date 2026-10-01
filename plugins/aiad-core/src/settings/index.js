@@ -17,7 +17,9 @@ import {
 	Spinner,
 	TextControl,
 	TextareaControl,
+	ToggleControl,
 } from '@wordpress/components';
+import { MediaUpload } from '@wordpress/media-utils';
 import { store as coreStore, useEntityRecord } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 
@@ -86,6 +88,124 @@ function sections( config ) {
 			],
 		},
 		{
+			option: 'aiad_site',
+			title: __( 'Footer links', 'aiad-core' ),
+			intro: __(
+				'Text links in the site footer. A link left empty shows as pending. The Press Release and Asset Pack links go to their own pages once those are published.',
+				'aiad-core'
+			),
+			fields: [
+				{
+					key: 'newsletter_url',
+					label: __( 'Newsletter', 'aiad-core' ),
+					type: 'url',
+					help: __(
+						'Usually your Beehiiv or newsletter signup page. Appears as "Newsletter" in the footer.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'asset_pack_url',
+					label: __( 'Assets Pack page address', 'aiad-core' ),
+					type: 'url',
+					help: __(
+						'Optional override. Leave empty to use your published Assets Pack page.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'implementation_guide_url',
+					label: __( 'Implementation Guide', 'aiad-core' ),
+					type: 'url',
+					help: __(
+						'A PDF or page address shown as "Implementation Guide" in the footer.',
+						'aiad-core'
+					),
+				},
+			],
+		},
+		{
+			option: 'aiad_site',
+			title: __( 'Header', 'aiad-core' ),
+			fields: [
+				{
+					key: 'show_breadcrumbs',
+					label: __( 'Show breadcrumbs', 'aiad-core' ),
+					type: 'toggle',
+					help: __(
+						'Show the breadcrumb trail below the header on inner pages.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'header_logo',
+					label: __( 'Header logo (fallback)', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Used only when the Site Logo is empty. Prefer setting the logo in the Site Editor, under the header.',
+						'aiad-core'
+					),
+				},
+			],
+		},
+		{
+			option: 'aiad_site',
+			title: __( 'Downloads', 'aiad-core' ),
+			intro: __(
+				'Files schools download. The Press Release and Assets Pack pages show them with download buttons.',
+				'aiad-core'
+			),
+			fields: [
+				{
+					key: 'press_release_file',
+					label: __( 'Press release file', 'aiad-core' ),
+					type: 'file',
+					media: '',
+					help: __(
+						'Typically a PDF. Shown on the Press Release page with a download button.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'asset_logo',
+					label: __( 'Logo (download)', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'The AI Awareness Day logo for schools to use in documents and presentations.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'asset_banner_participating',
+					label: __(
+						'"I\u2019m Participating" email banner',
+						'aiad-core'
+					),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Banner teachers add to their email signature before the event.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'asset_banner_participated',
+					label: __(
+						'"I\u2019ve Participated" email banner',
+						'aiad-core'
+					),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Banner teachers add to their email signature after the event.',
+						'aiad-core'
+					),
+				},
+			],
+		},
+		{
 			option: 'aiad_seo',
 			title: __( 'Site and homepage sharing', 'aiad-core' ),
 			intro: __(
@@ -126,7 +246,7 @@ function sections( config ) {
 			option: 'aiad_seo',
 			title: __( 'Social profiles', 'aiad-core' ),
 			intro: __(
-				'Used in the Organization schema (sameAs), so search engines can link the site to its profiles. The footer links still come from the Customizer.',
+				'The footer shows the LinkedIn and Instagram addresses, and all of them go into the Organization schema (sameAs), so search engines can link the site to its profiles. Leave one empty to hide it.',
 				'aiad-core'
 			),
 			fields: [
@@ -182,7 +302,100 @@ function problem( field, value ) {
 	return '';
 }
 
+/**
+ * A file from the media library: its preview or name, with choose, replace and remove.
+ *
+ * @param {Object}               props          Props.
+ * @param {Object}               props.field    The field.
+ * @param {number}               props.value    The attachment ID, or 0 for none.
+ * @param {(id: number) => void} props.onChange Called with the new ID.
+ */
+function FileField( { field, value, onChange } ) {
+	const id = Number( value ) || 0;
+	const item = useSelect(
+		( select ) =>
+			id
+				? select( coreStore ).getEntityRecord(
+						'postType',
+						'attachment',
+						id
+					)
+				: null,
+		[ id ]
+	);
+	const thumb =
+		item?.media_details?.sizes?.thumbnail?.source_url ||
+		( item?.mime_type?.startsWith( 'image/' ) ? item.source_url : '' );
+	const name = item?.source_url ? item.source_url.split( '/' ).pop() : '';
+
+	return (
+		<div className="aiad-settings__file">
+			<span className="aiad-settings__file-label">{ field.label }</span>
+			<div className="aiad-settings__file-body">
+				{ id ? (
+					<div className="aiad-settings__file-current">
+						{ thumb && <img src={ thumb } alt="" /> }
+						<span>
+							{ item
+								? name
+								: sprintf(
+										/* translators: %d: attachment ID */
+										__( 'File %d', 'aiad-core' ),
+										id
+									) }
+						</span>
+					</div>
+				) : (
+					<span className="aiad-settings__file-none">
+						{ __( 'No file chosen', 'aiad-core' ) }
+					</span>
+				) }
+				<MediaUpload
+					allowedTypes={ field.media ? [ field.media ] : undefined }
+					value={ id || undefined }
+					onSelect={ ( media ) => onChange( media?.id || 0 ) }
+					render={ ( { open } ) => (
+						<Button variant="secondary" onClick={ open }>
+							{ id
+								? __( 'Replace', 'aiad-core' )
+								: __( 'Choose file', 'aiad-core' ) }
+						</Button>
+					) }
+				/>
+				{ id > 0 && (
+					<Button
+						variant="tertiary"
+						isDestructive
+						onClick={ () => onChange( 0 ) }
+					>
+						{ __( 'Remove', 'aiad-core' ) }
+					</Button>
+				) }
+			</div>
+			{ field.help && (
+				<p className="aiad-settings__file-help">{ field.help }</p>
+			) }
+		</div>
+	);
+}
+
 function Field( { field, value, onChange, error } ) {
+	if ( field.type === 'file' ) {
+		return (
+			<FileField field={ field } value={ value } onChange={ onChange } />
+		);
+	}
+	if ( field.type === 'toggle' ) {
+		return (
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ field.label }
+				help={ field.help }
+				checked={ !! value }
+				onChange={ onChange }
+			/>
+		);
+	}
 	const common = {
 		__nextHasNoMarginBottom: true,
 		label: field.label,
@@ -218,7 +431,7 @@ function SettingsScreen( { config } ) {
 		return <Spinner />;
 	}
 
-	const valueOf = ( option, key ) => editedRecord?.[ option ]?.[ key ] || '';
+	const valueOf = ( option, key ) => editedRecord?.[ option ]?.[ key ] ?? '';
 	const change = ( option, key ) => ( value ) =>
 		edit( {
 			[ option ]: {
@@ -238,6 +451,7 @@ function SettingsScreen( { config } ) {
 		setNotice( null );
 		const sent = {
 			aiad_campaign: { ...( editedRecord?.aiad_campaign || {} ) },
+			aiad_site: { ...( editedRecord?.aiad_site || {} ) },
 			aiad_seo: { ...( editedRecord?.aiad_seo || {} ) },
 		};
 		try {
@@ -254,7 +468,12 @@ function SettingsScreen( { config } ) {
 					const now = String(
 						kept[ group.option ]?.[ field.key ] || ''
 					);
-					if ( was !== '' && was !== now ) {
+					if (
+						field.type !== 'toggle' &&
+						was !== '' &&
+						was !== '0' &&
+						was !== now
+					) {
 						refused.push( field.label );
 					}
 				} )

@@ -35,13 +35,13 @@ function aiad_get_press_release_page(): ?WP_Post {
 }
 
 /**
- * The press release file chosen in the Customizer, and the words around it: template-press-release.php prints them,
+ * The press release file chosen on the settings screen, and the words around it: template-press-release.php prints them,
  * and patterns/press-release.php turns them into a Download card block.
  *
  * @return array{id:int,url:string,filename:string,is_image:bool,preview:string,label:string,description:string,btn_label:string}
  */
 function aiad_press_release_download(): array {
-	$file_id  = absint( get_theme_mod( 'aiad_press_release_file', 0 ) );
+	$file_id  = absint( aiad_site_value( 'press_release_file', 0 ) );
 	$file_url = $file_id ? (string) wp_get_attachment_url( $file_id ) : '';
 	$mime     = $file_id ? (string) get_post_mime_type( $file_id ) : '';
 	$is_image = $file_id && $mime && 0 === strpos( $mime, 'image/' );
@@ -71,7 +71,7 @@ function aiad_get_press_release_public_url(): string {
 	if ( $legacy !== '' ) {
 		return $legacy;
 	}
-	$fid = absint( get_theme_mod( 'aiad_press_release_file', 0 ) );
+	$fid = absint( aiad_site_value( 'press_release_file', 0 ) );
 	return $fid ? (string) wp_get_attachment_url( $fid ) : '';
 }
 
@@ -200,7 +200,7 @@ function aiad_get_brand_logo_attachment_id(): int {
 	if ( $site_icon ) {
 		return $site_icon;
 	}
-	$header_logo = absint( get_theme_mod( 'aiad_header_logo', 0 ) );
+	$header_logo = absint( aiad_site_value( 'header_logo', 0 ) );
 	if ( $header_logo ) {
 		return $header_logo;
 	}
@@ -278,6 +278,42 @@ function aiad_get_default_avatar_url(): string {
 		}
 	}
 	return '';
+}
+
+/**
+ * A site-wide setting from the aiad_site option (Settings → AI Awareness Day), which aiad-core keeps.
+ *
+ * Without the plugin the theme falls back to the Customizer value the option was copied from, so the footer, the
+ * breadcrumbs and the downloads still work.
+ *
+ * @param string $key     Setting key: newsletter_url, asset_pack_url, implementation_guide_url, show_breadcrumbs,
+ *                        header_logo, press_release_file, asset_logo, asset_banner_participating or asset_banner_participated.
+ * @param mixed  $default Value when the plugin is not active and no Customizer value is set.
+ * @return mixed
+ */
+function aiad_site_value( string $key, $default = '' ) {
+	if ( function_exists( 'aiad_site_setting' ) ) {
+		return aiad_site_setting( $key );
+	}
+	return get_theme_mod( 'aiad_' . $key, $default );
+}
+
+/**
+ * A social profile address for the footer: 'linkedin' or 'instagram'. '#' means there is none.
+ *
+ * It is the SEO option's social profile, kept by aiad-core, so the footer and the search-engine markup share one address.
+ * Without the plugin it is the Customizer value.
+ *
+ * @param string $network linkedin or instagram.
+ * @return string
+ */
+function aiad_social_url( string $network ): string {
+	if ( function_exists( 'aiad_seo_setting' ) ) {
+		$address = aiad_seo_setting( 'social_' . $network );
+		return '' !== $address ? $address : '#';
+	}
+	$defaults = aiad_get_customizer_defaults();
+	return (string) get_theme_mod( 'aiad_' . $network, $defaults[ 'aiad_' . $network ] ?? '#' );
 }
 
 /**

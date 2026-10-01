@@ -34,6 +34,7 @@ function aiad_core_modules(): array {
 		'ai-tools'             => 'ai-tools.php',
 		'tools'                => 'tools.php',
 		'seo'                  => 'seo.php',
+		'site-settings'        => 'site-settings.php',
 		'survey'               => 'survey.php',
 		// After tools: their timeline seeds share init priorities 33-35, and tools seeded first in the theme.
 		'benchmark-content'    => 'benchmark-content.php',

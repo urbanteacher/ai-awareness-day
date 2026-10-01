@@ -10,6 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
-if ( get_theme_mod( 'aiad_show_breadcrumbs', false ) && function_exists( 'aiad_render_breadcrumbs' ) ) {
+if ( aiad_site_value( 'show_breadcrumbs', false ) && function_exists( 'aiad_render_breadcrumbs' ) ) {
 	aiad_render_breadcrumbs();
 }

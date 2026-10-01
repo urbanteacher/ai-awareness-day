@@ -1,6 +1,7 @@
 <?php
 /**
- * Theme Customizer settings (header, hero, campaign, badges, YouTube, display board, contact, social).
+ * Theme Customizer settings (hero, campaign, badges, YouTube, display board, contact). The site-wide settings (footer links,
+ * breadcrumbs, downloads, social links) moved to Settings → AI Awareness Day (plugins/aiad-core/modules/site-settings.php).
  *
  * @package AI_Awareness_Day
  */
@@ -24,20 +25,6 @@ function aiad_customizer_validate_url( WP_Error $validity, $value ): WP_Error {
 }
 
 /**
- * Customizer validate_callback: require a valid URL or '#' placeholder (or empty).
- *
- * @param WP_Error $validity
- * @param mixed    $value
- * @return WP_Error
- */
-function aiad_customizer_validate_url_or_hash( WP_Error $validity, $value ): WP_Error {
-    if ( ! empty( $value ) && $value !== '#' && ! filter_var( $value, FILTER_VALIDATE_URL ) ) {
-        $validity->add( 'invalid_url', __( 'Please enter a valid URL.', 'ai-awareness-day' ) );
-    }
-    return $validity;
-}
-
-/**
  * Main Customizer registration function.
  *
  * @param WP_Customize_Manager $wp_customize Customizer manager instance.
@@ -46,7 +33,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     // Register panels first so sections can be retrofitted into them.
     $wp_customize->add_panel( 'aiad_panel_brand', array(
         'title'       => __( 'Brand & Identity', 'ai-awareness-day' ),
-        'description' => __( 'Logos, badges, social profiles, and search-engine verification — everything that defines who the site is.', 'ai-awareness-day' ),
+        'description' => __( 'The principle and theme badges.', 'ai-awareness-day' ),
         'priority'    => 25,
     ) );
     $wp_customize->add_panel( 'aiad_panel_front_page', array(
@@ -54,34 +41,22 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
         'description' => __( 'Configure each homepage section: hero, campaign, video, themes, display board, get involved, and related layout settings.', 'ai-awareness-day' ),
         'priority'    => 30,
     ) );
-    $wp_customize->add_panel( 'aiad_panel_files', array(
-        'title'       => __( 'Files & Downloads', 'ai-awareness-day' ),
-        'description' => __( 'Upload asset packs, the press release PDF, and other downloadable files.', 'ai-awareness-day' ),
-        'priority'    => 38,
-    ) );
 
-    aiad_register_header_section( $wp_customize );
     aiad_register_hero_section( $wp_customize );
     aiad_register_campaign_section( $wp_customize );
     aiad_register_badges_section( $wp_customize );
     aiad_register_youtube_section( $wp_customize );
-    aiad_register_footer_resource_links_section( $wp_customize );
     aiad_register_toolkit_section( $wp_customize );
     aiad_register_time_resources_display_section( $wp_customize );
     aiad_register_display_board_section( $wp_customize );
     aiad_register_contact_section( $wp_customize );
-    aiad_register_social_section( $wp_customize );
-    aiad_register_assets_pack_section( $wp_customize );
-    aiad_register_press_release_section( $wp_customize );
     aiad_register_front_page_layout_section( $wp_customize );
 
     // Retrofit panel assignments so we don't have to edit each section's
     // registration. Sections not listed here remain at the top level.
     $assignments = array(
         // Brand & Identity
-        'aiad_social'                 => 'aiad_panel_brand',
         'aiad_badges'                 => 'aiad_panel_brand',
-        'aiad_seo_verify'             => 'aiad_panel_brand',
         // Front Page Sections
         'aiad_front_page_layout'      => 'aiad_panel_front_page',
         'aiad_hero'                   => 'aiad_panel_front_page',
@@ -91,10 +66,6 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
         'aiad_display_board'          => 'aiad_panel_front_page',
         'aiad_contact'                => 'aiad_panel_front_page',
         'aiad_toolkit'                => 'aiad_panel_front_page',
-        'aiad_footer_resource_links'  => 'aiad_panel_front_page',
-        // Files & Downloads
-        'aiad_assets_pack'            => 'aiad_panel_files',
-        'aiad_press_release'          => 'aiad_panel_files',
     );
     foreach ( $assignments as $section_id => $panel_id ) {
         $section = $wp_customize->get_section( $section_id );
@@ -104,46 +75,6 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     }
 }
 add_action( 'customize_register', 'aiad_customize_register' );
-
-/**
- * Register Header section.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_header_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section( 'aiad_header', array(
-        'title'       => __( 'Header', 'ai-awareness-day' ),
-        'description' => __( 'This theme uses the Customizer and classic templates—not the Site Editor under Appearance → Editor. Layout and branding are managed here and under Front Page Sections.', 'ai-awareness-day' ),
-        'priority'    => 29,
-    ) );
-
-    $wp_customize->add_setting( 'aiad_header_logo', array(
-        'default'           => 0,
-        'sanitize_callback' => 'absint',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_header_logo', array(
-        'label'       => __( 'Header Logo (legacy)', 'ai-awareness-day' ),
-        'description' => __( 'Fallback only when Site Identity → Logo is empty. Prefer Appearance → Customize → Site Identity → Logo.', 'ai-awareness-day' ),
-        'section'     => 'aiad_header',
-        'mime_type'   => 'image',
-    ) ) );
-
-    $defaults = aiad_get_customizer_defaults();
-    $wp_customize->add_setting( 'aiad_show_breadcrumbs', array(
-        'default'           => $defaults['aiad_show_breadcrumbs'],
-        'sanitize_callback' => function ( $value ) {
-            return (bool) $value;
-        },
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_show_breadcrumbs', array(
-        'label'       => __( 'Show breadcrumbs', 'ai-awareness-day' ),
-        'description' => __( 'Display the breadcrumb trail below the header on inner pages.', 'ai-awareness-day' ),
-        'section'     => 'aiad_header',
-        'type'        => 'checkbox',
-    ) );
-}
 
 /**
  * Register Hero section.
@@ -459,76 +390,6 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
 }
 
 /**
- * Register Footer resource links — URLs for the site footer row (not file uploads).
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_footer_resource_links_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section(
-        'aiad_footer_resource_links',
-        array(
-            'title'       => __( 'Footer resource links', 'ai-awareness-day' ),
-            'description' => __( 'These three settings only control text links in the site footer. They are not the downloadable files: upload logos and banners under “Assets Pack”, and the press release PDF under “Press Release”. The Press Release footer link uses your Press Release page when you publish it (see Press Release section).', 'ai-awareness-day' ),
-            'priority'    => 31,
-        )
-    );
-
-    $wp_customize->add_setting(
-        'aiad_newsletter_url',
-        array(
-            'default'           => 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched',
-            'sanitize_callback' => 'esc_url_raw',
-            'transport'         => 'refresh',
-        )
-    );
-    $wp_customize->add_control(
-        'aiad_newsletter_url',
-        array(
-            'label'       => __( 'Newsletter (footer link)', 'ai-awareness-day' ),
-            'description' => __( 'Usually your Beehiiv or newsletter signup page. Appears as “Newsletter” in the footer.', 'ai-awareness-day' ),
-            'section'     => 'aiad_footer_resource_links',
-            'type'        => 'url',
-        )
-    );
-
-    $wp_customize->add_setting(
-        'aiad_asset_pack_url',
-        array(
-            'default'           => '',
-            'sanitize_callback' => 'esc_url_raw',
-            'transport'         => 'refresh',
-        )
-    );
-    $wp_customize->add_control(
-        'aiad_asset_pack_url',
-        array(
-            'label'       => __( 'Assets Pack page URL (footer link)', 'ai-awareness-day' ),
-            'description' => __( 'Optional override. Leave blank to use your published “Assets Pack” page automatically (the theme creates one if needed).', 'ai-awareness-day' ),
-            'section'     => 'aiad_footer_resource_links',
-            'type'        => 'url',
-        )
-    );
-
-    $wp_customize->add_setting(
-        'aiad_implementation_guide_url',
-        array(
-            'default'           => '',
-            'sanitize_callback' => 'esc_url_raw',
-            'transport'         => 'refresh',
-        )
-    );
-    $wp_customize->add_control(
-        'aiad_implementation_guide_url',
-        array(
-            'label'       => __( 'Implementation Guide (footer link)', 'ai-awareness-day' ),
-            'description' => __( 'PDF or page URL shown as “Implementation Guide” in the footer.', 'ai-awareness-day' ),
-            'section'     => 'aiad_footer_resource_links',
-            'type'        => 'url',
-        )
-    );
-}
-
-/**
  * Register Toolkit section — homepage toolkit card images only.
  *
  * @param WP_Customize_Manager $wp_customize Customizer manager instance.
@@ -694,193 +555,6 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
         'section'  => 'aiad_contact',
         'priority' => 20,
     ) ) );
-}
-
-/**
- * Register Social Links section.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_social_section( WP_Customize_Manager $wp_customize ): void {
-    $defaults = aiad_get_customizer_defaults();
-
-    $wp_customize->add_section( 'aiad_social', array(
-        'title'    => __( 'Social Links', 'ai-awareness-day' ),
-        'priority' => 37,
-    ) );
-
-    $wp_customize->add_setting( 'aiad_linkedin', array(
-        'default'           => $defaults['aiad_linkedin'],
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-        'validate_callback' => 'aiad_customizer_validate_url_or_hash',
-    ) );
-    $wp_customize->add_control( 'aiad_linkedin', array(
-        'label'   => __( 'LinkedIn URL', 'ai-awareness-day' ),
-        'section' => 'aiad_social',
-        'type'    => 'url',
-    ) );
-
-    $wp_customize->add_setting( 'aiad_instagram', array(
-        'default'           => $defaults['aiad_instagram'],
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-        'validate_callback' => 'aiad_customizer_validate_url_or_hash',
-    ) );
-    $wp_customize->add_control( 'aiad_instagram', array(
-        'label'   => __( 'Instagram URL', 'ai-awareness-day' ),
-        'section' => 'aiad_social',
-        'type'    => 'url',
-    ) );
-
-    $extra_socials = array(
-        'aiad_twitter'  => __( 'X / Twitter URL', 'ai-awareness-day' ),
-        'aiad_facebook' => __( 'Facebook URL', 'ai-awareness-day' ),
-        'aiad_youtube'  => __( 'YouTube URL', 'ai-awareness-day' ),
-        'aiad_tiktok'   => __( 'TikTok URL', 'ai-awareness-day' ),
-        'aiad_github'   => __( 'GitHub URL', 'ai-awareness-day' ),
-    );
-    foreach ( $extra_socials as $setting => $label ) {
-        $wp_customize->add_setting( $setting, array(
-            'default'           => '',
-            'sanitize_callback' => 'esc_url_raw',
-            'transport'         => 'refresh',
-            'validate_callback' => 'aiad_customizer_validate_url_or_hash',
-        ) );
-        $wp_customize->add_control( $setting, array(
-            'label'       => $label,
-            'description' => __( 'Used in the Organization schema (sameAs) so Google can link your social profiles to your knowledge panel.', 'ai-awareness-day' ),
-            'section'     => 'aiad_social',
-            'type'        => 'url',
-        ) );
-    }
-
-    // Search engine verification codes (Google / Bing / Pinterest).
-    $wp_customize->add_section( 'aiad_seo_verify', array(
-        'title'       => __( 'Search engine verification', 'ai-awareness-day' ),
-        'priority'    => 165,
-        'description' => __( 'Paste the verification token from each search engine. The corresponding <meta> tag is added to every page automatically.', 'ai-awareness-day' ),
-    ) );
-
-    $verify_fields = array(
-        'aiad_verify_google'    => array(
-            'label'       => __( 'Google Search Console', 'ai-awareness-day' ),
-            'description' => __( 'In Search Console, choose "HTML tag" method, then paste only the content value (the bit between quotes), or the whole meta tag.', 'ai-awareness-day' ),
-        ),
-        'aiad_verify_bing'      => array(
-            'label'       => __( 'Bing Webmaster Tools', 'ai-awareness-day' ),
-            'description' => __( 'Paste only the content value, or the whole meta tag.', 'ai-awareness-day' ),
-        ),
-        'aiad_verify_pinterest' => array(
-            'label'       => __( 'Pinterest', 'ai-awareness-day' ),
-            'description' => __( 'Paste only the content value, or the whole meta tag.', 'ai-awareness-day' ),
-        ),
-    );
-    foreach ( $verify_fields as $setting => $args ) {
-        $wp_customize->add_setting( $setting, array(
-            'default'           => '',
-            'sanitize_callback' => 'sanitize_text_field',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( $setting, array(
-            'label'       => $args['label'],
-            'description' => $args['description'],
-            'section'     => 'aiad_seo_verify',
-            'type'        => 'text',
-        ) );
-    }
-
-    $wp_customize->add_setting( 'aiad_linkedin_post_url', array(
-        'default'           => $defaults['aiad_linkedin_post_url'],
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-        'validate_callback' => 'aiad_customizer_validate_url',
-    ) );
-    $wp_customize->add_control( 'aiad_linkedin_post_url', array(
-        'label'       => __( 'Featured LinkedIn post URL', 'ai-awareness-day' ),
-        'description' => __( 'Optional. Paste the URL of a LinkedIn post to show a "Latest from LinkedIn" card on the front page. Leave empty to hide the card.', 'ai-awareness-day' ),
-        'section'     => 'aiad_social',
-        'type'        => 'url',
-    ) );
-}
-
-/**
- * Register Assets Pack section — downloadable logo and email banners.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_assets_pack_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section( 'aiad_assets_pack', array(
-        'title'       => __( 'Assets Pack (file uploads)', 'ai-awareness-day' ),
-        'description' => __( 'Upload files here. Create a page using the “Assets Pack” template, or let the theme publish one automatically — the footer “Asset Pack” link points at that page.', 'ai-awareness-day' ),
-        'priority'    => 38,
-    ) );
-
-    $assets = array(
-        'aiad_asset_logo' => array(
-            'label'       => __( 'Logo (download)', 'ai-awareness-day' ),
-            'description' => __( 'The AI Awareness Day logo for schools to use in documents and presentations.', 'ai-awareness-day' ),
-        ),
-        'aiad_asset_banner_participating' => array(
-            'label'       => __( '"I\'m Participating" Email Banner', 'ai-awareness-day' ),
-            'description' => __( 'Banner teachers add to their email signature before the event.', 'ai-awareness-day' ),
-        ),
-        'aiad_asset_banner_participated' => array(
-            'label'       => __( '"I\'ve Participated" Email Banner', 'ai-awareness-day' ),
-            'description' => __( 'Banner teachers add to their email signature after the event.', 'ai-awareness-day' ),
-        ),
-    );
-
-    foreach ( $assets as $key => $labels ) {
-        $wp_customize->add_setting( $key, array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, $key, array(
-            'label'       => $labels['label'],
-            'description' => $labels['description'],
-            'section'     => 'aiad_assets_pack',
-            'mime_type'   => 'image',
-        ) ) );
-    }
-}
-
-/**
- * Register Press Release section — downloadable file for the Press Release page.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_press_release_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section(
-        'aiad_press_release',
-        array(
-            'title'       => __( 'Press Release (file upload)', 'ai-awareness-day' ),
-            'description' => __( 'Upload the press release PDF (or file) here. Create a page with the “Press Release” template and publish it—the footer “Press Release” link goes to that page. If there is no page yet, the theme may fall back to this file or an older URL.', 'ai-awareness-day' ),
-            'priority'    => 39,
-        )
-    );
-
-    $wp_customize->add_setting(
-        'aiad_press_release_file',
-        array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        )
-    );
-    $wp_customize->add_control(
-        new WP_Customize_Media_Control(
-            $wp_customize,
-            'aiad_press_release_file',
-            array(
-                'label'       => __( 'Press release file', 'ai-awareness-day' ),
-                'description' => __( 'Typically a PDF. Shown on the Press Release page with a download button.', 'ai-awareness-day' ),
-                'section'     => 'aiad_press_release',
-                'mime_type'   => 'application/pdf',
-            )
-        )
-    );
 }
 
 /**

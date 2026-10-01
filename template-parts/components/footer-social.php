@@ -1,7 +1,7 @@
 <?php
 /**
  * The footer's social icons (LinkedIn, Instagram): the footer template part's footer social block
- * (blocks/footer-social) prints them. The addresses are the LinkedIn and Instagram profiles in the Customizer.
+ * (blocks/footer-social) prints them. The addresses are the LinkedIn and Instagram profiles on Settings → AI Awareness Day.
  *
  * @package AI_Awareness_Day
  */
@@ -9,10 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     return;
 }
 ?>
-<?php $defaults = aiad_get_customizer_defaults(); ?>
             <?php
-            $linkedin_url  = get_theme_mod( 'aiad_linkedin', $defaults['aiad_linkedin'] );
-            $instagram_url = get_theme_mod( 'aiad_instagram', $defaults['aiad_instagram'] );
+            $linkedin_url  = aiad_social_url( 'linkedin' );
+            $instagram_url = aiad_social_url( 'instagram' );
             $has_social = ( $linkedin_url && $linkedin_url !== '#' ) || ( $instagram_url && $instagram_url !== '#' );
             if ( $has_social ) : ?>
             <div class="footer-social">

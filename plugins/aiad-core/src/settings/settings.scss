@@ -43,3 +43,42 @@
 	padding: 12px 0;
 	background: #f0f0f1;
 }
+
+.aiad-settings__file-label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.aiad-settings__file-body {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	align-items: center;
+}
+
+.aiad-settings__file-current {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+
+	img {
+		width: 48px;
+		height: 48px;
+		border: 1px solid #c3c4c7;
+		background: #fff;
+		object-fit: contain;
+	}
+}
+
+.aiad-settings__file-none {
+	color: #50575e;
+}
+
+.aiad-settings__file-help {
+	margin: 8px 0 0;
+	color: #757575;
+	font-size: 12px;
+}

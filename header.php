@@ -14,6 +14,6 @@
 
     <?php block_template_part( 'header' ); // parts/header.html, edited in Appearance > Editor. ?>
 
-    <?php if ( get_theme_mod( 'aiad_show_breadcrumbs', false ) && function_exists( 'aiad_render_breadcrumbs' ) ) : ?>
+    <?php if ( aiad_site_value( 'show_breadcrumbs', false ) && function_exists( 'aiad_render_breadcrumbs' ) ) : ?>
         <?php aiad_render_breadcrumbs(); ?>
     <?php endif; ?>

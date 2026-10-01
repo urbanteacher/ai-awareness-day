@@ -40,7 +40,7 @@ function aiad_get_assets_pack_public_url(): string {
 	if ( $page && 'publish' === $page->post_status ) {
 		return (string) get_permalink( $page );
 	}
-	return (string) get_theme_mod( 'aiad_asset_pack_url', '' );
+	return (string) aiad_site_value( 'asset_pack_url', '' );
 }
 
 /**
@@ -179,9 +179,9 @@ function aiad_render_assets_pack_dashboard_widget(): void {
  * @return array<int, array<string, mixed>> url or id (an attachment), label, description, btn_label.
  */
 function aiad_assets_pack_downloads(): array {
-	$logo_id        = absint( get_theme_mod( 'aiad_asset_logo', 0 ) );
-	$banner_part_id = absint( get_theme_mod( 'aiad_asset_banner_participating', 0 ) );
-	$banner_done_id = absint( get_theme_mod( 'aiad_asset_banner_participated', 0 ) );
+	$logo_id        = absint( aiad_site_value( 'asset_logo', 0 ) );
+	$banner_part_id = absint( aiad_site_value( 'asset_banner_participating', 0 ) );
+	$banner_done_id = absint( aiad_site_value( 'asset_banner_participated', 0 ) );
 
 	return array(
 		array(
