@@ -35,6 +35,29 @@ function aiad_get_press_release_page(): ?WP_Post {
 }
 
 /**
+ * The press release file chosen in the Customizer, and the words around it: template-press-release.php prints them,
+ * and patterns/press-release.php turns them into a Download card block.
+ *
+ * @return array{id:int,url:string,filename:string,is_image:bool,preview:string,label:string,description:string,btn_label:string}
+ */
+function aiad_press_release_download(): array {
+	$file_id  = absint( get_theme_mod( 'aiad_press_release_file', 0 ) );
+	$file_url = $file_id ? (string) wp_get_attachment_url( $file_id ) : '';
+	$mime     = $file_id ? (string) get_post_mime_type( $file_id ) : '';
+	$is_image = $file_id && $mime && 0 === strpos( $mime, 'image/' );
+	return array(
+		'id'          => $file_id,
+		'url'         => $file_url,
+		'filename'    => $file_id ? basename( get_attached_file( $file_id ) ?: $file_url ) : '',
+		'is_image'    => (bool) $is_image,
+		'preview'     => $file_id && $is_image ? (string) wp_get_attachment_image_url( $file_id, 'large' ) : '',
+		'label'       => __( 'Press release', 'ai-awareness-day' ),
+		'description' => __( 'Official text for newsletters, websites, and local media. Download and adapt for your school or trust.', 'ai-awareness-day' ),
+		'btn_label'   => __( 'Download', 'ai-awareness-day' ),
+	);
+}
+
+/**
  * Footer / nav URL for Press Release: prefer published page, then legacy Customizer URL, then direct file attachment.
  *
  * @return string

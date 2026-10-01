@@ -1,6 +1,6 @@
 /**
- * Download card (block.json): a preview, a title, a description and a button that downloads a file (or, for a page
- * card, opens a page), saved as plain HTML with the Assets Pack's classes (assets/css/pages/assets-pack.css).
+ * Download card (block.json): a preview (for a document with no preview, its type and a label), a title, a
+ * description and a button that downloads a file (or, for a page card, opens a page), saved as plain HTML with the Assets Pack's classes (assets/css/pages/assets-pack.css).
  * Choose the file from the toolbar: its address, name and preview come with it.
  */
 ( function ( blocks, element, blockEditor, components, i18n, escapeHtml ) {
@@ -20,14 +20,17 @@
 	// The card; title and description are passed in, as editable text in the editor and saved text on the site.
 	function card( a, props, title, description, button ) {
 		var page = 'page' === a.kind;
+		var doc = ! page && ! a.preview; // A document: its type and a label in place of a preview.
 		return el(
 			'div',
 			props,
 			el(
 				'div',
-				{ className: 'assets-pack__preview' + ( page ? ' assets-pack__preview--page' : '' ) },
+				{ className: 'assets-pack__preview' + ( page ? ' assets-pack__preview--page' : '' ) + ( doc ? ' assets-pack__preview--doc' : '' ) },
 				a.preview ? el( 'img', { src: a.preview, alt: a.alt, loading: 'lazy' } ) : null,
-				page && a.badge ? el( 'span', { className: 'assets-pack__doc-badge' }, a.badge ) : null
+				page && a.badge ? el( 'span', { className: 'assets-pack__doc-badge' }, a.badge ) : null,
+				doc ? el( 'span', { className: 'assets-pack__doc-badge', 'aria-hidden': 'true' }, a.badge || 'PDF' ) : null,
+				doc ? el( 'span', { className: 'assets-pack__doc-label' }, a.docLabel ) : null
 			),
 			el( 'div', { className: 'assets-pack__info' }, title, description, button )
 		);
@@ -84,10 +87,13 @@
 								return;
 							}
 							var image = 'image' === media.type;
+							var filename = media.filename || media.url.split( '/' ).pop();
 							set( {
 								href: media.url,
-								filename: media.filename || media.url.split( '/' ).pop(),
-								preview: image ? ( ( media.sizes && media.sizes.large && media.sizes.large.url ) || media.url ) : a.preview,
+								filename: filename,
+								// A document shows its type instead of a preview.
+								preview: image ? ( ( media.sizes && media.sizes.large && media.sizes.large.url ) || media.url ) : '',
+								badge: image ? a.badge : ( filename.split( '.' ).pop() || 'pdf' ).toUpperCase(),
 							} );
 						},
 						onSelectURL: function ( url ) {
@@ -111,6 +117,8 @@
 						} ),
 						field( 'href', page ? __( 'Page address', 'ai-awareness-day' ) : __( 'File address', 'ai-awareness-day' ) ),
 						page ? field( 'badge', __( 'Badge on the preview', 'ai-awareness-day' ) ) : field( 'filename', __( 'File name when downloaded', 'ai-awareness-day' ) ),
+						! page && ! a.preview ? field( 'badge', __( 'Document type shown', 'ai-awareness-day' ) ) : null,
+						! page && ! a.preview ? field( 'docLabel', __( 'Label under the document type', 'ai-awareness-day' ) ) : null,
 						field( 'preview', __( 'Preview image address', 'ai-awareness-day' ) ),
 						field( 'alt', __( 'Preview\'s alternative text', 'ai-awareness-day' ), __( 'Leave empty when the title says what the preview shows.', 'ai-awareness-day' ) )
 					)

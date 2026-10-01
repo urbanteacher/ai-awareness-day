@@ -5,7 +5,7 @@
  *
  * Two kinds. A page at its own address (National Conversation, the walkthrough) has no post until its editable page
  * is created; while that page is published the address shows it, and going back shows the built-in page again and
- * keeps the edited one as a draft. A page with a theme template chosen (the Assets Pack) keeps its post and its
+ * keeps the edited one as a draft. A page with a theme template chosen (the Assets Pack, the Press Release) keeps its post and its
  * template, so whatever finds the page by its template still does: turning it into blocks swaps its content for the
  * blocks (keeping the content it had, to put back), and while it is flagged (_aiad_block_page) it renders from
  * templates/theme-page.html instead of the PHP template. Going back puts the old content back and keeps the edited
@@ -67,6 +67,15 @@ function aiad_editable_pages(): array {
 			'page'         => 'aiad_get_assets_pack_page',
 			'style'        => '',
 			'placeholders' => 'aiad_assets_pack_placeholders',
+			'note'         => '',
+		),
+		'press-release'         => array(
+			'title'        => __( 'Press Release', 'ai-awareness-day' ),
+			'builtin'      => 'template-press-release.php',
+			'template'     => 'template-press-release.php',
+			'page'         => 'aiad_get_press_release_page',
+			'style'        => '',
+			'placeholders' => '',
 			'note'         => '',
 		),
 	);
