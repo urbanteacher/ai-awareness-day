@@ -186,8 +186,7 @@ class AIRB_Shortcode {
 			'airb-front',
 			'airbBenchmark',
 			array(
-				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-				'nonce'        => wp_create_nonce( 'airb_benchmark_nonce' ),
+				'rest'         => rest_url( 'airb/v1/' ),
 				'contactEmail' => $contact_email,
 				'homeUrl'      => home_url( '/' ),
 				'pluginUrl'    => AIRB_PLUGIN_URL,

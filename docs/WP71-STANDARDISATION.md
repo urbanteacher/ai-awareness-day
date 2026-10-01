@@ -77,7 +77,7 @@ Three editing surfaces. Each kind of content has exactly one.
 | 2c | The Customizer's homepage controls | `customizerSettings` 30 to 17, `themeModReads` 70 to 52 | **Everything that can be done without the live conversion is done.** 2c-1: dead settings, images. 2c-2: draft-first conversion with preview and checklist. 2c-3: the homepage resource picks, the one thing the cleanup would have stranded, moved to the settings screen. What is left to delete (below) breaks a site that has not converted, so it waits for the checklist's `ready` on the live site. |
 | 2d | Whether the footer's links and social icons are edited in the Site Editor | `blockBindingSources` stays 0 | **Decided: no.** They change on the settings screen, which is one place and is what editors were given; the footer blocks print them. Revisit if editors ask to change them from the footer in the Site Editor, in which case a small block bindings source over `aiad_site` feeds a Button (buttons support `url` and `text` bindings).
 | 2e | Remove `inc/customizer.php`, `inc/customizer-smtp-control.php` and `inc/front-page-layout.php`; the SMTP note moves to the settings screen | `customizerSettings` to 0 | After 2b and 2c. |
-| 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers` 35 to 18, `localizeScript` 11 to 4, `jquerySignedScripts` 5 to 1, `echoedScriptTags` 10 to 2, `restRoutes` 3 to 11 | **Done except the benchmark plugin and the Edit Homepage screen.** Every call in the theme and aiad-core is REST. Details below. |
+| 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers` 35 to 0, `localizeScript` 11 to 4, `jquerySignedScripts` 5 to 1, `echoedScriptTags` 10 to 2, `restRoutes` 3 to 11 | **Done except the localised config objects in the benchmark plugin and the Edit Homepage screen's jQuery.** No `admin-ajax` handler is left anywhere. |
 | 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks` 12 to 0, `unbuiltThemeBlocks` 26 to 0 | **Done, untested.** Details below. `shortcodes` stay at 14 until the pages that use them are re-saved. |
 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` | Not started. See below. |
 
@@ -185,7 +185,9 @@ When the live site shows `ready` on that screen and has run on the block homepag
 - *NEU report.* Its data is JSON in a `data-config` attribute on the report element, not the `aiadNeuReportData` global.
 - *The audit's script-tag count* no longer counts `application/ld+json`: structured data is not code, and printing it from PHP is the normal way.
 
-**Not done in row 3, and why.** The benchmark plugin's `class-airb-ajax.php` (1,050 lines, eight handlers behind nonces, including certificate allocation and lookup) and its three localised scripts: the plugin deploys on its own version and the certificate flows are the most sensitive in the site, so it should be its own piece of work with its own test. The Edit Homepage screen's one jQuery script and the shortcode and echo counts in the benchmark plugin leave with that screen in 2c-3.
+**Benchmark plugin (done, untested).** Its eight handlers and the school dashboard lookup are REST routes under `airb/v1/` (`submit_benchmark`, `email_report`, `track_event`, `submit_interest`, `allocate_certificate`, `lookup_certificate`, `validate_certificate_evidence`, `get_hub_context`, `school_dashboard`). The handler code is unchanged: the `wp_send_json_*` calls became `AIRB_Ajax::ok()` and `::fail()`, which throw an `AIRB_Response` that `AIRB_Ajax::run()` turns into a REST response with the same `{success, data}` body and status, and the handlers still read their fields from `$_POST`. The nonce check is gone; the rate limits and the session and ownership checks inside each handler (the certificate calls check that the request comes from the same benchmark session) are what protect them, as they did, since every visitor was given a nonce. The scripts send to `airbBenchmark.rest + name` and no longer send an action or a nonce. The localised objects stay (they carry the questions' configuration and the interface text), without `ajaxurl` and `nonce`. This is a plugin that deploys on its own version: bump it with this change.
+
+**Superseded: "not done in row 3".** (Done afterwards, above.) The Edit Homepage screen's one jQuery script and the shortcode and echo counts in the benchmark plugin leave with that screen in 2c-3.
 
 **Left in row 3 (superseded by the above):** the other ajax handlers (the card image fetch, which is admin-only, and 16 in the benchmark plugin); the 9 localised scripts; five scripts that depend on jQuery; ten echoed `<script>` tags. Order: the admin ones, then the benchmark plugin (which deploys on its own version).
 
@@ -253,6 +255,8 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (benchmark).** The benchmark plugin's handlers moved to `airb/v1` REST routes (`ajaxHandlers` 18 to 0). Untested beyond two smoke calls (an invalid role and a missing certificate link both returned the old message and status).
 
 - **1 October 2026 (row 5).** Five PHP templates with block twins deleted (`phpTemplates` 20 to 15); the rest listed with reasons. Untested, at the owner's request.
 

@@ -29,8 +29,22 @@ class AIRB_School_Dashboard {
 	 */
 	public static function register(): void {
 		add_shortcode( 'ai_risk_school_dashboard', array( __CLASS__, 'render_shortcode' ) );
-		add_action( 'wp_ajax_airb_school_dashboard', array( __CLASS__, 'ajax_lookup' ) );
-		add_action( 'wp_ajax_nopriv_airb_school_dashboard', array( __CLASS__, 'ajax_lookup' ) );
+		add_action(
+			'rest_api_init',
+			static function (): void {
+				register_rest_route(
+					'airb/v1',
+					'/school_dashboard',
+					array(
+						'methods'             => WP_REST_Server::CREATABLE,
+						'callback'            => static function () {
+							return AIRB_Ajax::run( array( __CLASS__, 'ajax_lookup' ) );
+						},
+						'permission_callback' => '__return_true',
+					)
+				);
+			}
+		);
 	}
 
 	/**
@@ -470,21 +484,18 @@ class AIRB_School_Dashboard {
 	 * AJAX school lookup.
 	 */
 	public static function ajax_lookup(): void {
-		if ( ! check_ajax_referer( 'airb_benchmark_nonce', 'nonce', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-risk-benchmark' ) ), 403 );
-		}
 
 		$school = sanitize_text_field( (string) ( $_POST['school_name'] ?? '' ) );
 		$rollup = self::get_rollup( $school );
 
 		if ( ! $rollup ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					'message' => __( 'No benchmark results found for this school yet. Complete audits from each stakeholder group first.', 'ai-risk-benchmark' ),
 				)
 			);
 		}
 
-		wp_send_json_success( array( 'rollup' => $rollup ) );
+		AIRB_Ajax::ok( array( 'rollup' => $rollup ) );
 	}
 }

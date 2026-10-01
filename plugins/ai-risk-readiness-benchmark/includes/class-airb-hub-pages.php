@@ -86,8 +86,7 @@ class AIRB_Hub_Pages {
 			'airb-hub-interest',
 			'airbHubInterest',
 			array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'airb_benchmark_nonce' ),
+				'rest'    => rest_url( 'airb/v1/' ),
 				'config'  => $config ? $config : array(),
 				'i18n'    => array(
 					'emailInvalid'     => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ),

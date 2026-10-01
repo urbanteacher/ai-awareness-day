@@ -12,37 +12,103 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Front-end AJAX.
  */
+/**
+ * The answer a handler ends the request with (see AIRB_Ajax::ok() and ::fail()).
+ */
+class AIRB_Response extends Exception {
+	/** @var array<string,mixed> */
+	public $body;
+
+	/** @var int */
+	public $status;
+
+	/**
+	 * @param array<string,mixed> $body   JSON body.
+	 * @param int                 $status HTTP status.
+	 */
+	public function __construct( array $body, int $status ) {
+		parent::__construct( 'airb response' );
+		$this->body   = $body;
+		$this->status = $status;
+	}
+}
+
 class AIRB_Ajax {
 
 	/**
 	 * Register hooks.
 	 */
 	public static function register(): void {
-		add_action( 'wp_ajax_airb_submit_benchmark', array( __CLASS__, 'submit' ) );
-		add_action( 'wp_ajax_nopriv_airb_submit_benchmark', array( __CLASS__, 'submit' ) );
-		add_action( 'wp_ajax_airb_email_report', array( __CLASS__, 'email_report' ) );
-		add_action( 'wp_ajax_nopriv_airb_email_report', array( __CLASS__, 'email_report' ) );
-		add_action( 'wp_ajax_airb_track_event', array( __CLASS__, 'track_event' ) );
-		add_action( 'wp_ajax_nopriv_airb_track_event', array( __CLASS__, 'track_event' ) );
-		add_action( 'wp_ajax_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
-		add_action( 'wp_ajax_nopriv_airb_submit_interest', array( __CLASS__, 'submit_interest' ) );
-		add_action( 'wp_ajax_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
-		add_action( 'wp_ajax_nopriv_airb_allocate_certificate', array( __CLASS__, 'allocate_certificate' ) );
-		add_action( 'wp_ajax_airb_lookup_certificate', array( __CLASS__, 'lookup_certificate' ) );
-		add_action( 'wp_ajax_nopriv_airb_lookup_certificate', array( __CLASS__, 'lookup_certificate' ) );
-		add_action( 'wp_ajax_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
-		add_action( 'wp_ajax_nopriv_airb_validate_certificate_evidence', array( __CLASS__, 'validate_certificate_evidence' ) );
-		add_action( 'wp_ajax_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
-		add_action( 'wp_ajax_nopriv_airb_get_hub_context', array( __CLASS__, 'get_hub_context' ) );
+		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
 	}
 
 	/**
-	 * Verify nonce.
+	 * The REST routes (airb/v1/{name}) that replace the admin-ajax actions. They answer anyone: what protected the
+	 * actions was never the nonce (every visitor was given one, and a cached page's expired) but the rate limits and the
+	 * checks inside each handler, which are unchanged.
 	 */
-	private static function verify_nonce(): void {
-		if ( ! check_ajax_referer( 'airb_benchmark_nonce', 'nonce', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-risk-benchmark' ) ), 403 );
+	public static function register_routes(): void {
+		$handlers = array(
+			'submit_benchmark'              => 'submit',
+			'email_report'                  => 'email_report',
+			'track_event'                   => 'track_event',
+			'submit_interest'               => 'submit_interest',
+			'allocate_certificate'          => 'allocate_certificate',
+			'lookup_certificate'            => 'lookup_certificate',
+			'validate_certificate_evidence' => 'validate_certificate_evidence',
+			'get_hub_context'               => 'get_hub_context',
+		);
+		foreach ( $handlers as $route => $method ) {
+			register_rest_route(
+				'airb/v1',
+				'/' . $route,
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => static function () use ( $method ) {
+						return self::run( array( __CLASS__, $method ) );
+					},
+					'permission_callback' => '__return_true',
+				)
+			);
 		}
+	}
+
+	/**
+	 * Run a handler and turn the answer it ends with into a REST response. The handlers read the posted fields from
+	 * $_POST, which WordPress leaves filled for a form post.
+	 *
+	 * @param callable $handler Handler.
+	 * @return WP_REST_Response
+	 */
+	public static function run( callable $handler ): WP_REST_Response {
+		try {
+			call_user_func( $handler );
+		} catch ( AIRB_Response $response ) {
+			return new WP_REST_Response( $response->body, $response->status );
+		}
+		return new WP_REST_Response( array( 'success' => false, 'data' => null ), 500 );
+	}
+
+	/**
+	 * End the request with a success answer. Throws; the route wrapper turns it into the response, in the same
+	 * {success, data} shape wp_send_json_success() sent, so the scripts read it as before.
+	 *
+	 * @param mixed $data Payload.
+	 * @throws AIRB_Response Always.
+	 */
+	public static function ok( $data = null ): void {
+		throw new AIRB_Response( array( 'success' => true, 'data' => $data ), 200 );
+	}
+
+	/**
+	 * End the request with an error answer ({success: false, data}) and an HTTP status.
+	 *
+	 * @param mixed $data   Payload, usually array( 'message' => ... ).
+	 * @param int   $status HTTP status.
+	 * @throws AIRB_Response Always.
+	 */
+	public static function fail( $data = null, int $status = 200 ): void {
+		throw new AIRB_Response( array( 'success' => false, 'data' => $data ), $status );
 	}
 
 	/**
@@ -63,7 +129,7 @@ class AIRB_Ajax {
 		$key   = 'airb_rate_' . sanitize_key( $scope ) . '_' . self::request_fingerprint();
 		$count = (int) get_transient( $key );
 		if ( $count >= $max ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array( 'message' => __( 'Too many requests. Please wait a moment and try again.', 'ai-risk-benchmark' ) ),
 				429
 			);
@@ -115,7 +181,6 @@ class AIRB_Ajax {
 	 * Submit benchmark results.
 	 */
 	public static function submit(): void {
-		self::verify_nonce();
 		self::enforce_rate_limit( 'submit', 10, 10 * MINUTE_IN_SECONDS );
 
 		$role    = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
@@ -123,10 +188,10 @@ class AIRB_Ajax {
 		$session_id = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
 
 		if ( ! $role || ! is_array( $answers ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid submission.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid submission.', 'ai-risk-benchmark' ) ) );
 		}
 		if ( ! self::is_valid_role( $role ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		$school  = sanitize_text_field( (string) ( $_POST['school_name'] ?? '' ) );
@@ -134,7 +199,7 @@ class AIRB_Ajax {
 		$consent = ! empty( $_POST['consent'] ) || ! empty( $_POST['privacy_consent'] );
 		$contact_opt_in = ! empty( $_POST['contact_opt_in'] ) || ! empty( $_POST['email_opt_in'] ) || ( '' !== $email );
 		if ( '' !== $email && ! $consent ) {
-			wp_send_json_error( array( 'message' => __( 'Consent is required before storing an email address.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Consent is required before storing an email address.', 'ai-risk-benchmark' ) ), 400 );
 		}
 		$profile = array(
 			'school_phase' => sanitize_key( (string) ( $_POST['school_phase'] ?? '' ) ),
@@ -155,7 +220,7 @@ class AIRB_Ajax {
 		$config  = AIRB_Config::get();
 		$results = AIRB_Scoring::calculate( $role, $answers, $config );
 		if ( ! empty( $results['invalid_answer_ids'] ) ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					'message' => __( 'Some answers were invalid. Please refresh and complete the benchmark again.', 'ai-risk-benchmark' ),
 				),
@@ -165,7 +230,7 @@ class AIRB_Ajax {
 		if ( empty( $results['is_complete'] ) ) {
 			$expected = (int) ( $results['questions_expected'] ?? 0 );
 			$answered = (int) ( $results['questions_answered'] ?? 0 );
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					/* translators: 1: answered count, 2: expected count */
 					'message' => $expected > 0
@@ -276,7 +341,7 @@ class AIRB_Ajax {
 			$results['certificate'] = AIRB_Certificates::status_for_submission( $id, $results, $role, $school );
 		}
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			array(
 				'submission_id' => $id,
 				'results'       => $results,
@@ -288,7 +353,6 @@ class AIRB_Ajax {
 	 * Validate certificate evidence before unlock.
 	 */
 	public static function validate_certificate_evidence(): void {
-		self::verify_nonce();
 
 		$role            = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
 		$theme           = sanitize_key( (string) ( $_POST['evidence_theme'] ?? '' ) );
@@ -298,10 +362,10 @@ class AIRB_Ajax {
 		$benchmark_score = max( 0, min( 100, (int) ( $_POST['benchmark_score'] ?? 0 ) ) );
 
 		if ( ! self::is_valid_role( $role ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			AIRB_Certificate_Evidence::assess( $role, $theme, $action, $change, $link, $benchmark_score )
 		);
 	}
@@ -310,7 +374,6 @@ class AIRB_Ajax {
 	 * Allocate a named certificate after evidenced progress has been confirmed.
 	 */
 	public static function allocate_certificate(): void {
-		self::verify_nonce();
 
 		$submission_id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
 		$session_id    = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
@@ -323,26 +386,26 @@ class AIRB_Ajax {
 		$link          = esc_url_raw( (string) ( $_POST['evidence_link'] ?? '' ) );
 
 		if ( ! $submission_id ) {
-			wp_send_json_error( array( 'message' => __( 'A saved benchmark submission is required before a certificate can be allocated.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'A saved benchmark submission is required before a certificate can be allocated.', 'ai-risk-benchmark' ) ), 400 );
 		}
 		if ( $role && ! self::is_valid_role( $role ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
 		}
 		if ( strlen( $name ) < 2 ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter the name to show on the certificate.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Please enter the name to show on the certificate.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		$submission = AIRB_Database::get_submission( $submission_id );
 		if ( ! $submission ) {
-			wp_send_json_error( array( 'message' => __( 'Benchmark submission not found.', 'ai-risk-benchmark' ) ), 404 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Benchmark submission not found.', 'ai-risk-benchmark' ) ), 404 );
 		}
 		if ( '' === $session_id || ! hash_equals( (string) $submission->session_id, $session_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Certificate allocation must be completed from the same benchmark session.', 'ai-risk-benchmark' ) ), 403 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Certificate allocation must be completed from the same benchmark session.', 'ai-risk-benchmark' ) ), 403 );
 		}
 
 		$existing_cert = AIRB_Certificates::get_by_submission( $submission_id );
 		if ( $existing_cert && in_array( (string) $existing_cert->status, array( 'unlocked', 'pending_review' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Certificate already submitted for this benchmark.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Certificate already submitted for this benchmark.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		$contact_email    = sanitize_email( (string) ( $_POST['contact_email'] ?? '' ) );
@@ -352,7 +415,7 @@ class AIRB_Ajax {
 		$role        = AIRB_Certificate_Copy::normalize_role( $stored_role ?: $role );
 		$posted_role = AIRB_Certificate_Copy::normalize_role( sanitize_key( (string) ( $_POST['role'] ?? '' ) ) );
 		if ( $posted_role && $role && $posted_role !== $role ) {
-			wp_send_json_error( array( 'message' => __( 'Certificate role does not match the saved benchmark.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Certificate role does not match the saved benchmark.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		if ( '' === $school_name ) {
@@ -363,7 +426,7 @@ class AIRB_Ajax {
 
 		$assessment = AIRB_Certificate_Evidence::assess( $role, $theme, $action, $change, $link, $score );
 		if ( empty( $assessment['can_unlock'] ) ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					'message'    => __( 'Add more specific evidence before unlocking the certificate.', 'ai-risk-benchmark' ),
 					'assessment' => $assessment,
@@ -377,7 +440,7 @@ class AIRB_Ajax {
 		$roles_need_contact = in_array( $role, array( 'student', 'parent' ), true );
 
 		if ( $requires_review && ! $notify_email ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					'message'    => __( 'Add an email address so we can tell you when your certificate is approved.', 'ai-risk-benchmark' ),
 					'assessment' => $assessment,
@@ -386,7 +449,7 @@ class AIRB_Ajax {
 			);
 		}
 		if ( $roles_need_contact && ! $notify_email ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array(
 					'message'    => __( 'Add an email address (yours or a parent/teacher contact) so we can send your certificate.', 'ai-risk-benchmark' ),
 					'assessment' => $assessment,
@@ -430,7 +493,7 @@ class AIRB_Ajax {
 		);
 
 		if ( ! $row ) {
-			wp_send_json_error( array( 'message' => __( 'Could not allocate the certificate. Please try again.', 'ai-risk-benchmark' ) ), 500 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Could not allocate the certificate. Please try again.', 'ai-risk-benchmark' ) ), 500 );
 		}
 
 		if ( $requires_review ) {
@@ -455,7 +518,7 @@ class AIRB_Ajax {
 		$role_label = self::certificate_role_label( $role );
 		$copy       = AIRB_Certificate_Copy::for_role( $role );
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			array(
 				'certificate' => array(
 					'certificate_id'         => (string) $row->certificate_id,
@@ -493,24 +556,23 @@ class AIRB_Ajax {
 	 * results snapshot has expired).
 	 */
 	public static function lookup_certificate(): void {
-		self::verify_nonce();
 		self::enforce_rate_limit( 'cert_lookup', 20, 10 * MINUTE_IN_SECONDS );
 
 		$hash = sanitize_text_field( substr( (string) ( $_POST['verification_hash'] ?? '' ), 0, 64 ) );
 		if ( '' === $hash ) {
-			wp_send_json_error( array( 'message' => __( 'Certificate link is missing or invalid.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Certificate link is missing or invalid.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		$row = AIRB_Certificates::get_by_verification_hash( $hash );
 		if ( ! $row || ! in_array( (string) $row->status, array( 'unlocked', 'pending_review' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'We could not find a certificate for this link.', 'ai-risk-benchmark' ) ), 404 );
+			AIRB_Ajax::fail( array( 'message' => __( 'We could not find a certificate for this link.', 'ai-risk-benchmark' ) ), 404 );
 		}
 
 		$role       = sanitize_key( (string) $row->role );
 		$role_label = self::certificate_role_label( $role );
 		$copy       = AIRB_Certificate_Copy::for_role( $role );
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			array(
 				'certificate' => array(
 					'certificate_id'         => (string) $row->certificate_id,
@@ -728,7 +790,6 @@ class AIRB_Ajax {
 	 * Submit post-benchmark interest form.
 	 */
 	public static function submit_interest(): void {
-		self::verify_nonce();
 
 		$role           = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
 		$name           = sanitize_text_field( (string) ( $_POST['name'] ?? '' ) );
@@ -763,7 +824,7 @@ class AIRB_Ajax {
 		$weak_domains   = isset( $_POST['weak_domains'] ) ? json_decode( wp_unslash( (string) $_POST['weak_domains'] ), true ) : array();
 
 		if ( ! in_array( $role, AIRB_Interest::supported_roles(), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid role.', 'ai-risk-benchmark' ) ) );
 		}
 
 		$parent_tier = '';
@@ -774,16 +835,16 @@ class AIRB_Ajax {
 
 		$fields = AIRB_Interest::fields_for_role( $role );
 		if ( ! empty( $fields['email_required'] ) && ! is_email( $email ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Please enter a valid email address.', 'ai-risk-benchmark' ) ) );
 		}
 		if ( ! is_array( $interests ) || ! $interests ) {
-			wp_send_json_error( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
 		}
 
 		$allowed   = array_column( AIRB_Interest::options_for_role( $role, $parent_tier ), 'slug' );
 		$interests = array_values( array_intersect( array_map( 'sanitize_key', $interests ), $allowed ) );
 		if ( ! $interests ) {
-			wp_send_json_error( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Please select at least one option.', 'ai-risk-benchmark' ) ) );
 		}
 
 		$fingerprint = md5(
@@ -794,7 +855,7 @@ class AIRB_Ajax {
 		$rate_key = 'airb_interest_rate_' . $fingerprint;
 		$count    = (int) get_transient( $rate_key );
 		if ( $count >= 5 ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array( 'message' => __( 'Too many requests. Please try again in a few minutes.', 'ai-risk-benchmark' ) ),
 				429
 			);
@@ -827,7 +888,7 @@ class AIRB_Ajax {
 
 		$sent = AIRB_Interest::send_notification( $payload );
 		if ( ! $sent ) {
-			wp_send_json_error( array( 'message' => __( 'Could not send your request. Please try again.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Could not send your request. Please try again.', 'ai-risk-benchmark' ) ) );
 		}
 
 		$lead_id = AIRB_Leads::insert(
@@ -864,7 +925,7 @@ class AIRB_Ajax {
 			);
 		}
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			array(
 				'message' => AIRB_Interest::form_labels( $role )['success'],
 				'lead_id' => $lead_id,
@@ -876,7 +937,6 @@ class AIRB_Ajax {
 	 * Load benchmark submission context for hub interest form (session lookup).
 	 */
 	public static function get_hub_context(): void {
-		self::verify_nonce();
 
 		$session_id = sanitize_text_field( substr( (string) ( $_POST['session_id'] ?? '' ), 0, 64 ) );
 		$role       = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
@@ -884,11 +944,11 @@ class AIRB_Ajax {
 		$ref        = sanitize_key( (string) ( $_POST['hub_ref'] ?? '' ) );
 
 		if ( ! $session_id ) {
-			wp_send_json_success( array( 'submission' => null ) );
+			AIRB_Ajax::ok( array( 'submission' => null ) );
 		}
 
 		if ( $role && ! self::is_valid_role( $role ) ) {
-			wp_send_json_success( array( 'submission' => null ) );
+			AIRB_Ajax::ok( array( 'submission' => null ) );
 		}
 
 		$row = AIRB_Database::get_latest_submission_by_session( $session_id, $role );
@@ -897,7 +957,7 @@ class AIRB_Ajax {
 		}
 
 		if ( ! $row ) {
-			wp_send_json_success( array( 'submission' => null ) );
+			AIRB_Ajax::ok( array( 'submission' => null ) );
 		}
 
 		$results = AIRB_Hub_Interest::results_from_submission( $row );
@@ -929,7 +989,7 @@ class AIRB_Ajax {
 		$allowed = array_column( AIRB_Interest::options_for_role( $sub_role ), 'slug' );
 		$merged  = array_values( array_intersect( $merged, $allowed ) );
 
-		wp_send_json_success(
+		AIRB_Ajax::ok(
 			array(
 				'submission' => array(
 					'id'              => (int) $row->id,
@@ -949,7 +1009,6 @@ class AIRB_Ajax {
 	 * Email printable report.
 	 */
 	public static function email_report(): void {
-		self::verify_nonce();
 
 		$email         = sanitize_email( (string) ( $_POST['email'] ?? '' ) );
 		$role          = sanitize_key( (string) ( $_POST['role'] ?? '' ) );
@@ -957,20 +1016,20 @@ class AIRB_Ajax {
 		$submission_id = max( 0, (int) ( $_POST['submission_id'] ?? 0 ) );
 
 		if ( ! is_email( $email ) || ! $submission_id || ! $session_id ) {
-			wp_send_json_error( array( 'message' => __( 'A saved benchmark session and valid email are required.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'A saved benchmark session and valid email are required.', 'ai-risk-benchmark' ) ), 400 );
 		}
 		if ( $role && ! self::is_valid_role( $role ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid benchmark role.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		$submission = AIRB_Database::get_submission( $submission_id );
 		if ( ! $submission || ! hash_equals( (string) $submission->session_id, $session_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Report can only be sent from the saved benchmark session.', 'ai-risk-benchmark' ) ), 403 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Report can only be sent from the saved benchmark session.', 'ai-risk-benchmark' ) ), 403 );
 		}
 
 		$stored_role = sanitize_key( (string) ( $submission->role ?? '' ) );
 		if ( $role && $stored_role && $role !== $stored_role ) {
-			wp_send_json_error( array( 'message' => __( 'Report role does not match the saved benchmark.', 'ai-risk-benchmark' ) ), 400 );
+			AIRB_Ajax::fail( array( 'message' => __( 'Report role does not match the saved benchmark.', 'ai-risk-benchmark' ) ), 400 );
 		}
 
 		// Rate limit: 3 emails per fingerprint per hour to stop the open relay being abused for spam.
@@ -982,7 +1041,7 @@ class AIRB_Ajax {
 		$rate_key = 'airb_email_rate_' . $fingerprint;
 		$count    = (int) get_transient( $rate_key );
 		if ( $count >= 3 ) {
-			wp_send_json_error(
+			AIRB_Ajax::fail(
 				array( 'message' => __( 'Too many report emails requested. Please try again later or use print/download.', 'ai-risk-benchmark' ) ),
 				429
 			);
@@ -1002,19 +1061,18 @@ class AIRB_Ajax {
 		$sent    = wp_mail( $email, $subject, $body, $headers );
 
 		if ( ! $sent ) {
-			wp_send_json_error( array( 'message' => __( 'Could not send email. Try print/download instead.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Could not send email. Try print/download instead.', 'ai-risk-benchmark' ) ) );
 		}
 
 		set_transient( $rate_key, $count + 1, HOUR_IN_SECONDS );
 
-		wp_send_json_success( array( 'message' => __( 'Report sent.', 'ai-risk-benchmark' ) ) );
+		AIRB_Ajax::ok( array( 'message' => __( 'Report sent.', 'ai-risk-benchmark' ) ) );
 	}
 
 	/**
 	 * Record a front-end funnel event (anonymous session).
 	 */
 	public static function track_event(): void {
-		self::verify_nonce();
 		self::enforce_rate_limit( 'event', 120, MINUTE_IN_SECONDS );
 
 		$event_type = sanitize_key( (string) ( $_POST['event_type'] ?? '' ) );
@@ -1024,7 +1082,7 @@ class AIRB_Ajax {
 		$metadata   = isset( $_POST['metadata'] ) ? json_decode( wp_unslash( (string) $_POST['metadata'] ), true ) : array();
 
 		if ( ! $event_type || ! $session_id ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid event.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Invalid event.', 'ai-risk-benchmark' ) ) );
 		}
 
 		if ( ! is_array( $metadata ) ) {
@@ -1042,9 +1100,9 @@ class AIRB_Ajax {
 		);
 
 		if ( ! $id ) {
-			wp_send_json_error( array( 'message' => __( 'Could not record event.', 'ai-risk-benchmark' ) ) );
+			AIRB_Ajax::fail( array( 'message' => __( 'Could not record event.', 'ai-risk-benchmark' ) ) );
 		}
 
-		wp_send_json_success( array( 'event_id' => $id ) );
+		AIRB_Ajax::ok( array( 'event_id' => $id ) );
 	}
 }

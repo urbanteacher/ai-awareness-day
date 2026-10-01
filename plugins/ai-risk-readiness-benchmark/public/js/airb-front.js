@@ -21,11 +21,9 @@
 			verifyRoot.innerHTML = '<p class="airb__muted">' + (airbBenchmark.i18n && airbBenchmark.i18n.certificateLookupLoading || 'Looking up your certificate…') + '</p>';
 
 			var verifyBody = new FormData();
-			verifyBody.append('action', 'airb_lookup_certificate');
-			verifyBody.append('nonce', airbBenchmark.nonce);
 			verifyBody.append('verification_hash', verifyToken);
 
-			fetch(airbBenchmark.ajaxurl, { method: 'POST', body: verifyBody, credentials: 'same-origin' })
+			fetch(airbBenchmark.rest + 'lookup_certificate', { method: 'POST', body: verifyBody, credentials: 'same-origin' })
 				.then(function (res) { return res.json(); })
 				.then(function (json) {
 					if (!json || !json.success || !json.data || !json.data.certificate || !window.AIRB || !AIRB.Certificate || !AIRB.Certificate.standaloneViewHtml) {
@@ -263,10 +261,8 @@
 	}
 
 	function trackEvent(eventType, metadata) {
-		if (!airbBenchmark.ajaxurl || !eventType) return;
+		if (!airbBenchmark.rest || !eventType) return;
 		var body = new FormData();
-		body.append('action', 'airb_track_event');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('session_id', getSessionId());
 		body.append('event_type', eventType);
 		body.append('role', state.role || '');
@@ -275,10 +271,10 @@
 		}
 		body.append('metadata', JSON.stringify(metadata || {}));
 		if (navigator.sendBeacon) {
-			navigator.sendBeacon(airbBenchmark.ajaxurl, body);
+			navigator.sendBeacon(airbBenchmark.rest + 'track_event', body);
 			return;
 		}
-		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin', keepalive: true }).catch(function () {});
+		fetch(airbBenchmark.rest + 'track_event', { method: 'POST', body: body, credentials: 'same-origin', keepalive: true }).catch(function () {});
 	}
 
 	function isMobileFlow() {
@@ -6047,8 +6043,6 @@
 		}
 		syncProfileIntoAnswers();
 		var body = new FormData();
-		body.append('action', 'airb_submit_benchmark');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('role', state.role);
 		body.append('answers', JSON.stringify(state.answers));
 		body.append('school_name', state.school);
@@ -6061,7 +6055,7 @@
 		body.append('org_type', state.orgType);
 		body.append('year_group', state.yearGroup);
 
-		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(airbBenchmark.rest + 'submit_benchmark', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (!isCurrentSubmission()) return;
@@ -6827,8 +6821,6 @@
 		if (statusEl) statusEl.hidden = true;
 
 		var body = new FormData();
-		body.append('action', 'airb_submit_interest');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('role', state.role);
 		body.append('session_id', state.sessionId || '');
 		body.append('submission_id', String(state.submissionId || 0));
@@ -6848,7 +6840,7 @@
 		body.append('interests', JSON.stringify(interests));
 		body.append('weak_domains', JSON.stringify((r.interest_form && r.interest_form.weak_domains) || []));
 
-		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(airbBenchmark.rest + 'submit_interest', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (submitBtn) {
@@ -7007,14 +6999,12 @@
 	function emailReport() {
 		if (!state.email || !state.results) return;
 		var body = new FormData();
-		body.append('action', 'airb_email_report');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('email', state.email);
 		body.append('role', state.role);
 		body.append('session_id', getSessionId());
 		body.append('submission_id', state.submissionId || 0);
 
-		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(airbBenchmark.rest + 'email_report', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (json.success) {
@@ -7161,11 +7151,9 @@
 		mount.innerHTML = '<p class="airb__muted">' + esc(i18n.schoolSnapshotLoading || 'Loading whole-school snapshot…') + '</p>';
 
 		var body = new FormData();
-		body.append('action', 'airb_school_dashboard');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('school_name', state.school);
 
-		fetch(airbBenchmark.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(airbBenchmark.rest + 'school_dashboard', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (!json || !json.success || !json.data || !json.data.rollup) {

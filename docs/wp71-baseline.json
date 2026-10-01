@@ -4,7 +4,7 @@
   "themeModReads": 52,
   "shortcodes": 14,
   "shortcodeBlocks": 0,
-  "ajaxHandlers": 18,
+  "ajaxHandlers": 0,
   "localizeScript": 4,
   "jquerySignedScripts": 1,
   "echoedScriptTags": 2,
@@ -15,7 +15,7 @@
   "blockTemplates": 11,
   "recordEditors": 6,
   "settingsScreenOptions": 3,
-  "restRoutes": 11,
+  "restRoutes": 13,
   "blockBindingSources": 0,
   "scriptModules": 5
 }

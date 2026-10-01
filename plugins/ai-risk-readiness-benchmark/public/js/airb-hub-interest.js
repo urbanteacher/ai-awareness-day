@@ -495,8 +495,6 @@
 
 		var role = form.getAttribute('data-airb-role') || hub.role;
 		var body = new FormData();
-		body.append('action', 'airb_submit_interest');
-		body.append('nonce', cfg.nonce || '');
 		body.append('source', 'hub');
 		body.append('role', role);
 		body.append('session_id', getSessionId());
@@ -516,7 +514,7 @@
 		body.append('interests', JSON.stringify(interests));
 		body.append('weak_domains', JSON.stringify(context.weak_domains || []));
 
-		fetch(cfg.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(cfg.rest + 'submit_interest', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (submitBtn) {
@@ -559,7 +557,7 @@
 		};
 
 		var sessionId = getSessionId();
-		if (!sessionId || !cfg.ajaxurl) {
+		if (!sessionId || !cfg.rest) {
 			if (context.alignment_score != null) {
 				context.journey_context = {
 					has_benchmark: true,
@@ -573,14 +571,12 @@
 		}
 
 		var body = new FormData();
-		body.append('action', 'airb_get_hub_context');
-		body.append('nonce', cfg.nonce || '');
 		body.append('session_id', sessionId);
 		body.append('role', hub.role || '');
 		body.append('hub_page', hub.pageSlug || '');
 		body.append('hub_ref', hub.ref || '');
 
-		fetch(cfg.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+		fetch(cfg.rest + 'get_hub_context', { method: 'POST', body: body, credentials: 'same-origin' })
 			.then(function (res) { return res.json(); })
 			.then(function (json) {
 				if (json && json.success && json.data && json.data.submission) {

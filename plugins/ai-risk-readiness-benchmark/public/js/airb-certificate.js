@@ -737,15 +737,13 @@
 						: 'Complete one evidence option before unlocking the certificate.', true);
 					return;
 				}
-				if (!cfg.ajaxurl || !cfg.nonce) {
+				if (!cfg.rest) {
 					setStatus(panel, 'Certificate allocation is not available on this page.', true);
 					return;
 				}
 				allocate.disabled = true;
 				setStatus(panel, 'Allocating certificate...', false);
 				var body = new FormData();
-				body.append('action', 'airb_allocate_certificate');
-				body.append('nonce', cfg.nonce);
 				body.append('submission_id', panel.dataset.airbSubmissionId || submissionIdFromRuntime());
 				body.append('session_id', sessionIdFromRuntime());
 				body.append('role', panel.dataset.airbRole || roleFromRuntime());
@@ -756,7 +754,7 @@
 				body.append('evidence_change', evidence.change);
 				body.append('evidence_link', evidence.link);
 				body.append('contact_email', contactEmail);
-				fetch(cfg.ajaxurl, { method: 'POST', body: body, credentials: 'same-origin' })
+				fetch(cfg.rest + 'allocate_certificate', { method: 'POST', body: body, credentials: 'same-origin' })
 					.then(function (res) { return res.json(); })
 					.then(function (json) {
 						if (!json || !json.success) {
