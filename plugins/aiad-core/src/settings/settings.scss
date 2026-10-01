@@ -1,0 +1,45 @@
+/* Settings → AI Awareness Day. Core's components keep their own look; this only
+   sets the page's width and spacing, and the save bar. */
+
+.aiad-settings {
+	max-width: 760px;
+	padding: 8px 0 80px;
+
+	h1 {
+		margin: 0 0 16px;
+	}
+
+	.components-notice {
+		margin: 0 0 16px;
+	}
+}
+
+.aiad-settings__card {
+	margin-bottom: 16px;
+
+	h2 {
+		margin: 0;
+		font-size: 15px;
+	}
+}
+
+.aiad-settings__intro {
+	margin: 0 0 16px;
+	color: #50575e;
+}
+
+.aiad-settings__fields {
+	display: grid;
+	gap: 20px;
+}
+
+.aiad-settings__error {
+	color: #cc1818;
+}
+
+.aiad-settings__bar {
+	position: sticky;
+	bottom: 0;
+	padding: 12px 0;
+	background: #f0f0f1;
+}

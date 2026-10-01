@@ -129,6 +129,28 @@ function metaBoxCalls() {
 
 const metaBoxes = metaBoxCalls();
 
+// register_setting() calls whose option is in REST, so a settings screen can use it.
+function restSettings() {
+	let n = 0;
+	for ( const f of php ) {
+		const text = withoutComments( read( f ) );
+		let from = 0;
+		for ( ;; ) {
+			const at = text.indexOf( 'register_setting(', from );
+			if ( at < 0 ) {
+				break;
+			}
+			const end = text.indexOf( ');', at );
+			const call = text.slice( at, end < 0 ? undefined : end );
+			if ( /['"]show_in_rest['"]\s*=>\s*(true|array)/.test( call ) ) {
+				n++;
+			}
+			from = at + 1;
+		}
+	}
+	return n;
+}
+
 // Post types that are not in REST. WordPress opens these on the classic edit
 // screen whatever the editor setting, so a meta box on one is that screen's form
 // by design, not a box in the block editor's drawer. These are the admin-only
@@ -202,6 +224,8 @@ const METRICS = [
 		why: 'Templates drawn in PHP through get_header(). The data-heavy ones may stay, but each stays on purpose (see the plan).' },
 	{ key: 'unbuiltThemeBlocks', kind: 'habit', value: files.filter( ( f ) => /^blocks\/[^/]+\/block\.json$/.test( f.rel ) ).length,
 		why: 'Blocks hand-written in the theme with no build step. New blocks go in aiad-core/src, built with wp-scripts.' },
+	{ key: 'settingsApiForms', kind: 'habit', value: total( php, /add_settings_section\(/g ),
+		why: 'Settings screens drawn by PHP forms (Settings API). A settings screen is React on core-data\'s site entity, over options registered for REST (includes/settings-screen.php).' },
 	{ key: 'staleVersionFloors', kind: 'habit', value: staleFloors,
 		why: 'Headers that still declare a WordPress minimum below 7.1, the only version this is tested on.' },
 
@@ -210,6 +234,8 @@ const METRICS = [
 		why: 'Block templates, editable in the Site Editor.' },
 	{ key: 'recordEditors', kind: 'progress', value: total( files.filter( ( f ) => /^plugins\/aiad-core\/src\/(blocks|editors)\/.*\.js$/.test( f.rel ) ), /registerRecordDetails\(\s*\{/g ),
 		why: 'Content types edited with the shared record editor kit (src/shared/record-editor): one Details panel each, in the block editor, in place of a meta box.' },
+	{ key: 'settingsScreenOptions', kind: 'progress', value: restSettings(),
+		why: 'Options registered for REST with a schema, which the settings screen reads and saves through core-data.' },
 	{ key: 'restRoutes', kind: 'progress', value: total( php, /register_rest_route\(/g ),
 		why: 'REST routes.' },
 	{ key: 'blockBindingSources', kind: 'progress', value: total( php, /register_block_bindings_source\(/g ),

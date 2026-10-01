@@ -1,7 +1,7 @@
 <?php
 /**
  * Campaign module: the event date and the contact form's recipient, stored in the aiad_campaign option so they
- * survive a theme change. Edited under Settings → Campaign & contact.
+ * survive a theme change. Edited on Settings → AI Awareness Day (includes/settings-screen.php, which registers it for REST).
  *
  * Both used to be Customizer theme mods (aiad_event_date_ymd, aiad_contact_email), and the theme, the homepage editor
  * and the benchmark plugin still read and write them that way. This option stays the single source of truth for all
@@ -14,7 +14,6 @@
  *
  * @see https://developer.wordpress.org/reference/hooks/theme_mod_name/
  * @see https://developer.wordpress.org/reference/hooks/pre_set_theme_mod_name/
- * @see https://developer.wordpress.org/plugins/settings/custom-settings-page/
  *
  * @package AIAD_Core
  */
@@ -152,7 +151,8 @@ function aiad_campaign_sync_theme_mods( $old_value, $value ): void {
 add_action( 'update_option_aiad_campaign', 'aiad_campaign_sync_theme_mods', 10, 2 );
 
 /**
- * Validate the settings form. Invalid input is reported and the previous value kept.
+ * Validate the setting on every write. Invalid input keeps the previous value. The value arrives unslashed, from
+ * REST and from options.php alike.
  *
  * @param mixed $input Submitted values.
  * @return array{event_date: string, contact_email: string}
@@ -162,126 +162,21 @@ function aiad_campaign_sanitize_settings( $input ): array {
 	$old   = aiad_campaign_settings();
 	$clean = $old;
 
-	$date = sanitize_text_field( wp_unslash( (string) ( $input['event_date'] ?? '' ) ) );
+	$date = sanitize_text_field( (string) ( $input['event_date'] ?? '' ) );
 	if ( '' === $date || aiad_campaign_is_ymd( $date ) ) {
 		$clean['event_date'] = $date;
-	} else {
-		add_settings_error( 'aiad_campaign', 'aiad_campaign_event_date', __( 'The event date must be a real date (YYYY-MM-DD). The previous date was kept.', 'aiad-core' ) );
 	}
+	// A date that is not a real one keeps the previous date. The settings screen checks first and compares what
+	// came back, so it tells the editor; add_settings_error() is not loaded for a REST write.
 
-	$raw_email = trim( wp_unslash( (string) ( $input['contact_email'] ?? '' ) ) );
+	$raw_email = trim( (string) ( $input['contact_email'] ?? '' ) );
 	$email     = sanitize_email( $raw_email );
 	if ( '' === $raw_email ) {
 		$clean['contact_email'] = '';
 	} elseif ( '' !== $email && is_email( $email ) ) {
 		$clean['contact_email'] = $email;
-	} else {
-		add_settings_error( 'aiad_campaign', 'aiad_campaign_contact_email', __( 'The contact email is not a valid email address. The previous address was kept.', 'aiad-core' ) );
 	}
+	// Anything else keeps the previous address, as for the date.
 
 	return $clean;
-}
-
-/**
- * Register the setting, its section and fields (Settings API).
- */
-function aiad_campaign_register_settings(): void {
-	register_setting(
-		'aiad_campaign',
-		'aiad_campaign',
-		array(
-			'type'              => 'array',
-			'label'             => __( 'Campaign & contact', 'aiad-core' ),
-			'description'       => __( 'The event date and the contact form recipient.', 'aiad-core' ),
-			'sanitize_callback' => 'aiad_campaign_sanitize_settings',
-			'show_in_rest'      => false,
-		)
-	);
-
-	add_settings_section(
-		'aiad_campaign_main',
-		'',
-		static function (): void {
-			echo '<p>' . esc_html__( 'These are also edited in the Customizer and the homepage editor; all three stay in step, and they are kept here if the theme changes.', 'aiad-core' ) . '</p>';
-		},
-		'aiad-campaign'
-	);
-
-	add_settings_field(
-		'aiad-campaign-event-date',
-		__( 'Event date', 'aiad-core' ),
-		static function (): void {
-			printf(
-				'<input type="date" id="aiad-campaign-event-date" name="aiad_campaign[event_date]" value="%s" /><p class="description">%s</p>',
-				esc_attr( aiad_campaign_setting( 'event_date' ) ),
-				esc_html(
-					sprintf(
-						/* translators: %s: default date, YYYY-MM-DD */
-						__( 'AI Awareness Day itself. Drives the homepage countdown, the timeline and the National Conversation page. Leave empty for the default (%s).', 'aiad-core' ),
-						aiad_campaign_default_event_date()
-					)
-				)
-			);
-		},
-		'aiad-campaign',
-		'aiad_campaign_main',
-		array( 'label_for' => 'aiad-campaign-event-date' )
-	);
-
-	add_settings_field(
-		'aiad-campaign-contact-email',
-		__( 'Contact form recipient', 'aiad-core' ),
-		static function (): void {
-			printf(
-				'<input type="email" id="aiad-campaign-contact-email" name="aiad_campaign[contact_email]" value="%s" class="regular-text" /><p class="description">%s</p>',
-				esc_attr( aiad_campaign_setting( 'contact_email' ) ),
-				esc_html(
-					sprintf(
-						/* translators: %s: the site admin email address */
-						__( 'Where Get Involved form submissions are sent. Leave empty to use the site admin email (%s).', 'aiad-core' ),
-						get_option( 'admin_email' )
-					)
-				)
-			);
-		},
-		'aiad-campaign',
-		'aiad_campaign_main',
-		array( 'label_for' => 'aiad-campaign-contact-email' )
-	);
-}
-add_action( 'admin_init', 'aiad_campaign_register_settings' );
-
-/**
- * Add the page under Settings.
- */
-function aiad_campaign_add_settings_page(): void {
-	add_options_page(
-		__( 'Campaign & contact', 'aiad-core' ),
-		__( 'Campaign & contact', 'aiad-core' ),
-		'manage_options',
-		'aiad-campaign',
-		'aiad_campaign_render_settings_page'
-	);
-}
-add_action( 'admin_menu', 'aiad_campaign_add_settings_page' );
-
-/**
- * Render the page. Under the Settings menu WordPress shows the saved/validation notices itself.
- */
-function aiad_campaign_render_settings_page(): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-	?>
-	<div class="wrap">
-		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-		<form method="post" action="options.php">
-			<?php
-			settings_fields( 'aiad_campaign' );
-			do_settings_sections( 'aiad-campaign' );
-			submit_button();
-			?>
-		</form>
-	</div>
-	<?php
 }

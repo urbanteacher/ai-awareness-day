@@ -10,9 +10,11 @@
   "echoedScriptTags": 10,
   "phpTemplates": 20,
   "unbuiltThemeBlocks": 26,
+  "settingsApiForms": 0,
   "staleVersionFloors": 0,
   "blockTemplates": 11,
   "recordEditors": 6,
+  "settingsScreenOptions": 2,
   "restRoutes": 3,
   "blockBindingSources": 0,
   "scriptModules": 0

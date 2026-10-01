@@ -32,5 +32,6 @@ unset( $aiad_core_dir, $aiad_core_theme );
 require_once AIAD_CORE_DIR . 'includes/modules.php';
 require_once AIAD_CORE_DIR . 'includes/blocks.php';
 require_once AIAD_CORE_DIR . 'includes/editors.php';
+require_once AIAD_CORE_DIR . 'includes/settings-screen.php';
 
 aiad_core_load_modules();
