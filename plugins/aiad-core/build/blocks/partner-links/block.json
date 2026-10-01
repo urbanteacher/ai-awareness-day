@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/partner-links",
+  "title": "Partner resources",
+  "category": "aiad",
+  "icon": "admin-links",
+  "description": "The partner's resource links, grouped by strand. Shows nothing when it has none.",
+  "keywords": [
+    "partner",
+    "profile"
+  ],
+  "textdomain": "ai-awareness-day",
+  "usesContext": [
+    "postId"
+  ],
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

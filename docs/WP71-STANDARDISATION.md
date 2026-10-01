@@ -20,7 +20,7 @@ Counted from source by `scripts/audit-wp71.mjs`. Counts are by pattern, so they 
 | `wp_localize_script` / jQuery-dependent scripts / echoed `<script>` tags | 11 / 5 / 10 | Globals, jQuery, inline tags. |
 | PHP templates (`get_header()`) | 20 | Against 11 block templates. Cannot be edited in the Site Editor. |
 | Hand-written, unbuilt theme blocks | 26 | A second way of writing blocks next to aiad-core's built ones. |
-| Version floors below 7.1 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` 20 to 15 | **Done, untested.** Five that had an equivalent block template were deleted; the other fifteen stay on purpose (below). |
+| Version floors below 7.1 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` 20 to 14 | **Done, untested.** Five that had an equivalent block template were deleted, and the partner page was rebuilt as a block template; the other fourteen stay on purpose (below). |
 
 Not used anywhere: block bindings, the Interactivity API, script modules, the Abilities API. The admin screens (17 menu or settings pages) are PHP forms; none use DataViews.
 
@@ -199,9 +199,9 @@ When the live site shows `ready` on that screen and has run on the block homepag
 
 ### PHP templates (row 5)
 
-**Removed:** `404.php`, `archive-partner.php`, `archive-timeline.php`, `page.php` and `single.php`. Each had a block template doing the same job (verified element for element when the block templates were written), and the PHP file was only winning over it. The block templates now serve those pages, so they are editable in the Site Editor. `index.php` stays as the required fallback file.
+**Removed:** `404.php`, `archive-partner.php`, `archive-timeline.php`, `page.php`, `single.php` and `single-partner.php`. Each had a block template doing the same job (verified element for element when the block templates were written), and the PHP file was only winning over it. The block templates now serve those pages, so they are editable in the Site Editor. `index.php` stays as the required fallback file.
 
-**Stay, on purpose (15):**
+**Stay, on purpose (14):**
 
 | Template | Why it stays PHP |
 |---|---|
@@ -209,10 +209,12 @@ When the live site shows `ready` on that screen and has run on the block homepag
 | `page-national-conversation.php`, `page-walkthrough.php` | The built-in versions the editable pages fall back to ("go back" on Pages, Theme pages); their block pages already exist |
 | `template-assets-pack.php`, `template-press-release.php`, `page-hub-resource.php` | Page templates chosen by name on a page, which WordPress still offers in a block theme; the first two already have an editable block version |
 | `single-resource.php` | The lesson page: timed steps, video and PDF beside the steps, debate tabs, all worked out from the lesson's meta |
-| `single-partner.php`, `single-live_session.php`, `single-timeline.php` | Data-heavy singles: counters, calendar and schema output, related content, conditional on many fields |
+| `single-live_session.php`, `single-timeline.php` | Data-heavy singles: counters, calendar and schema output, related content, conditional on many fields |
 | `archive-resource.php`, `archive-featured_resource.php`, `archive-ai_tool.php`, `archive-live_session.php` | Archives with filters and counts that the REST filter and scripts hook into |
 
 The way to make any of these editable in the Site Editor, if wanted later, is the one the plan already gives: a small block bindings source over the `_aiad_*` meta (core's post-meta source cannot read them), so a block template can show the fields while the logic stays in PHP. `index.php`, `header.php` and `footer.php` stay as WordPress requires.
+
+**The partner page moved (`single-partner.php` to `templates/single-partner.html`).** It was on the list as data-heavy, but it only prints a logo, an intro, a list of links grouped by strand and two buttons, each only when the partner has it. The layout is core blocks in the block template (post title, groups, the breadcrumbs block); the four parts that depend on the partner's fields are small server-rendered blocks, `aiad/partner-logo`, `-intro`, `-links` and `-actions`, sharing `plugins/aiad-core/modules/partner-profile.php`. They are blocks and not block bindings because a binding fills an attribute and cannot leave a block out when the field is empty, and because core's post meta binding refuses every key that starts with an underscore (checked in the 7.1 source: `_block_bindings_post_meta_get_value()` returns null for a protected key). The markup and class names are carried over, so `single-partner.css` still applies. **Not run yet.** The way to read the other singles is the same: what is only layout goes in the template, what depends on a field being there goes in a small block.
 
 ### Retiring the classic homepage (2c-3, done)
 
@@ -272,6 +274,7 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 
 ## Log
 
+- **1 October 2026 (partner page, benchmark 1.58.1).** Asked to look at one of each remaining habit, the partner single was rebuilt as a block template with four small blocks (`phpTemplates` 15 to 14, `blockTemplates` 11 to 12; see PHP templates above). The look also found a bug left by the REST move: the school dashboard's lookup form (`templates/school-dashboard.php`) still posted an admin-ajax action and nonce to `airbBenchmark.ajaxurl`, which no longer exists, so the form sent its request to `/undefined` and did nothing. It posts to `airb/v1/school_dashboard` now and reads `airbBenchmark` when the form is sent, because the footer prints it after the form's inline script. Plugin 1.58.1. Neither change is tested in a browser yet; that waits for the final pass. Looked at and left alone: the theme-mod reads (about 12 sit in section templates that a converted homepage no longer renders, 11 in one-off migrations; both go once the live homepage has converted), the benchmark shortcodes (no saved content uses them locally; drop the registration after the live posts are converted) and the `airbBenchmark` localised object (290 strings read by 19 classic scripts; a rewrite, not a refactor).
 - **1 October 2026 (final test pass, local).** On the finished branch. **Static:** all 362 tracked PHP files lint clean; every script parses (the five ES modules as modules); ESLint is clean; a fresh `npm run build` reproduces the committed build exactly; the audit shows no habit grew. **Every public URL:** 157 pages, records, archives, term pages, search, sitemap, robots and feed: 156 return 200 and the deliberate 404 returns 404; no literal shortcodes in any output; no PHP message in any body; the PHP log is clean. **Editors:** a lesson, timeline entry, event, partner, featured resource, AI tool and the homepage, National Conversation and Walkthrough pages open in the block editor with the right panels, no classic meta boxes and no invalid blocks; the Site Editor shows the header. **Admin:** all 77 links in the admin menu load with no PHP message (the only match was core's own plugin-editor warning text). **Security:** `/wp/v2/settings`, the certificate routes and the card image route return 401 to a visitor; the timeline's REST meta exposes no counters. **Migrations:** the homepage conversion and the shortcode conversion each ran once and do not re-run; one Home page exists. **Visual:** the homepage hero, header, footer links and contact form render at desktop width, and the homepage has no horizontal scroll at phone width. Earlier passes (above) cover the routes, the benchmark chain, the survey, contact form, resource filter, timeline, tracking, settings screen and the homepage conversion. **Not testable here:** cached pages, the benchmark report email on a real domain (local sender address is invalid), real Assets Pack and Press Release files, the classic meta boxes (no classic editor), and the first conversion of the live site's own Customizer values.
 
 - **1 October 2026 (finish).** Homepage conversion made automatic and the classic homepage code deleted (`customizerSettings` 17 to 0, `themeModReads` 52 to 41, `jquerySignedScripts` 1 to 0); previous hero retired; the eleven tool shortcodes removed with a content migration (`shortcodes` 14 to 3). Each migration was run once locally on real or test content. Remaining by design: 4 localised config objects in the benchmark plugin, 15 PHP templates, and the stored Customizer values used as fallback wording.

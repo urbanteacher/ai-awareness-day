@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,w,o,i){const n=w.createElement;e.registerBlockType("aiad/partner-actions",{edit:()=>n("div",o.useBlockProps(),n(i,{block:"aiad/partner-actions"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

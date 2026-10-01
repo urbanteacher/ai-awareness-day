@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/partner-actions",
+	"title": "Partner actions",
+	"category": "aiad",
+	"icon": "external",
+	"description": "The Visit website button (when the partner has a website) and the link back to the partners.",
+	"keywords": [
+		"partner",
+		"profile"
+	],
+	"textdomain": "ai-awareness-day",
+	"usesContext": [
+		"postId"
+	],
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

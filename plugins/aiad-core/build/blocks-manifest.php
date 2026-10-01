@@ -741,6 +741,102 @@ return array(
 		'editorStyle' => 'file:../../../assets/css/components/ai-neu-ai-report.css',
 		'render' => 'file:./render.php'
 	),
+	'partner-actions' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/partner-actions',
+		'title' => 'Partner actions',
+		'category' => 'aiad',
+		'icon' => 'external',
+		'description' => 'The Visit website button (when the partner has a website) and the link back to the partners.',
+		'keywords' => array(
+			'partner',
+			'profile'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'partner-intro' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/partner-intro',
+		'title' => 'Partner intro',
+		'category' => 'aiad',
+		'icon' => 'text',
+		'description' => 'The partner\'s profile intro, or its page content when it has no intro.',
+		'keywords' => array(
+			'partner',
+			'profile'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'partner-links' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/partner-links',
+		'title' => 'Partner resources',
+		'category' => 'aiad',
+		'icon' => 'admin-links',
+		'description' => 'The partner\'s resource links, grouped by strand. Shows nothing when it has none.',
+		'keywords' => array(
+			'partner',
+			'profile'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'partner-logo' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/partner-logo',
+		'title' => 'Partner logo',
+		'category' => 'aiad',
+		'icon' => 'format-image',
+		'description' => 'The partner\'s logo (its featured image), linking to its website when it has one. Shows nothing without a logo.',
+		'keywords' => array(
+			'partner',
+			'profile'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
 	'partner-marquee' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
