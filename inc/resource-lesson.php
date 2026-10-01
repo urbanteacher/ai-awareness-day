@@ -70,7 +70,8 @@ function aiad_resource_length_label( int $seconds ): string {
  *
  * The clock only runs when every step has a duration that parses; one gap
  * would put every later start time wrong, so then no step gets one and the
- * total is 0. Steps still keep their own duration text either way.
+ * total is 0. Steps still keep their own duration text either way. Optional
+ * steps are left off the clock and out of the total.
  *
  * @param array $instructions Output of aiad_normalise_instructions().
  * @return array{steps: array<int, array<string, mixed>>, total: int}
@@ -86,18 +87,25 @@ function aiad_resource_lesson_steps( array $instructions ): array {
 		}
 		$duration = is_array( $step ) ? trim( (string) ( $step['duration'] ?? '' ) ) : '';
 		$seconds  = aiad_resource_duration_seconds( $duration );
-		if ( 0 === $seconds ) {
+		/* An optional step (the debate after a starter) keeps its own length
+		   but stays off the clock: a five-minute starter is still five
+		   minutes, and the support step after it still starts on time. */
+		$optional = is_array( $step ) && ! empty( $step['optional'] );
+		if ( 0 === $seconds && ! $optional ) {
 			$timed = false;
 		}
 		$steps[] = array(
 			'action'   => $action,
 			'duration' => $duration,
-			'start'    => $elapsed,
+			'start'    => $optional ? null : $elapsed,
+			'optional' => $optional,
 			'ref'      => is_array( $step ) ? trim( (string) ( $step['resource_ref'] ?? '' ) ) : '',
 			'students' => is_array( $step ) ? trim( (string) ( $step['student_action'] ?? '' ) ) : '',
 			'tip'      => is_array( $step ) ? trim( (string) ( $step['teacher_tip'] ?? '' ) ) : '',
 		);
-		$elapsed += $seconds;
+		if ( ! $optional ) {
+			$elapsed += $seconds;
+		}
 	}
 	if ( ! $timed ) {
 		foreach ( $steps as $i => $step ) {

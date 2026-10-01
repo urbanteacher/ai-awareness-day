@@ -336,115 +336,6 @@ function aiad_seed_debate_packs_by_slug( array $packs ): void {
     }
 }
 
-/**
- * Debate packs for the six lesson starters and the assembly published before
- * the debate section existed. Where two lessons share a topic (pattern
- * prediction; AI's environmental cost) each takes a different motion, so a
- * class that does both does not debate the same thing twice. The motion bank
- * item is kept, by leaving the motion empty, only where it is a clear for or
- * against; most Primary bank items are open questions.
- */
-function aiad_seed_resource_debate_packs_v2(): void {
-    if ( get_option( 'aiad_debate_packs_seeded_v2' ) === 'yes' ) {
-        return;
-    }
-
-    $packs = array(
-        // Smart, assembly. Angle: checking what AI tells you.
-        'ai-is-already-here' => array(
-            'primary_motion'    => 'Should you check everything AI tells you?',
-            'primary_prompt'    => 'Sentence starter: I think you should / don\'t need to check because ___.',
-            'primary_for'       => "AI can make things up and still sound very sure.\nChecking with a book or a trusted adult helps you find the truth.\nIf you share something wrong, other people might believe it too.",
-            'primary_against'   => "Checking everything would take a very long time.\nFor fun things, like a silly story, it does not matter if it is wrong.\nAI gets lots of simple things right.",
-            'secondary_motion'  => 'AI chatbots should have to warn you every time an answer might be made up.',
-            'secondary_prompt'  => 'Challenge card: What if the warnings appeared so often that everyone started ignoring them?',
-            'secondary_for'     => "Hallucinations happen regularly, and fluent answers make them hard to spot.\nA warning reminds people to verify before they trust or share.\nCompanies already warn about other risks, such as age limits and gambling.",
-            'secondary_against' => "The system often cannot tell when it is wrong, so the warnings would be guesses too.\nConstant warnings cause warning fatigue, and people stop reading them.\nLearning to verify is a skill we need anyway, warning or not.",
-            // Post-16 keeps the bank motion: guide students rather than give answers.
-            'post16_for'        => "Learning comes from working things out; ready-made answers skip the thinking that builds understanding.\nGuiding tools reduce the risk of students copying a confident hallucination into their work.\nSchools have a duty to teach verification, and answer machines undermine it.",
-            'post16_against'    => "Students will use answer tools at home anyway, so schools should teach them to use them well.\nSometimes a clear worked answer is the fastest way to learn, as with a model essay.\nA rule for every tool is hard to enforce and may hold back students who use AI responsibly.",
-        ),
-        // Creative.
-        'ai-as-your-creative-partner' => array(
-            'primary_motion'    => 'If AI helps you make a picture, is it still your picture?',
-            'primary_prompt'    => 'Sentence starter: I think it is / isn\'t still mine because ___.',
-            'primary_for'       => "You had the idea and told the AI what to make.\nYou chose which picture to keep and what to change.\nArtists have always used tools, like paintbrushes and cameras.",
-            'primary_against'   => "The AI did the drawing, not you.\nThe AI learned from other people's pictures.\nIf you only typed a few words, you did not do much of the work.",
-            'secondary_motion'  => 'Using AI makes people more creative, not less.',
-            'secondary_prompt'  => 'Challenge card: What if AI made it so easy that nobody bothered to learn to draw, write or play an instrument?',
-            'secondary_for'     => "AI can get you past a blank page and spark ideas you would not have had.\nPeople without expensive training or equipment can now make music, films and art.\nThe best results come from human ideas plus AI help, with the human still in charge.",
-            'secondary_against' => "AI recombines existing patterns, so its suggestions push everyone towards similar work.\nSkills such as drawing and writing come from practice that AI lets people skip.\nWhen AI does the hard part, it is harder to put your own voice and experience into the work.",
-            // Post-16 keeps the bank motion: AI work and creative prizes.
-            'post16_for'        => "Prizes reward human skill, effort and vision, and a prompt is not the same achievement.\nAI models are trained on artists' work, often without permission or payment.\nIf AI work can win, human artists lose the opportunities that build careers.",
-            'post16_against'    => "Every new tool, from photography to digital art, was once called cheating.\nWhere a person directs, selects and edits, the creative choices are still theirs.\nA ban is unworkable, because almost all digital work now involves some AI assistance.",
-        ),
-        // Smart. Angle: whether understanding matters, and AI advice.
-        'how-does-ai-actually-think' => array(
-            'primary_motion'    => 'Would you trust an AI helper more than a book?',
-            'primary_prompt'    => 'Sentence starter: I would trust ___ more because ___.',
-            'primary_for'       => "AI answers quickly, and you can ask it anything.\nIt can explain things in a way that suits you.\nBooks can be old and out of date.",
-            'primary_against'   => "AI can make up answers that sound true.\nBooks are checked by people before they are printed.\nAI does not really understand what it is saying.",
-            'secondary_motion'  => 'It does not matter whether AI understands, as long as its answers are useful.',
-            'secondary_prompt'  => 'Challenge card: What if someone followed an AI\'s health advice and it was wrong?',
-            'secondary_for'     => "We use calculators and maps without them understanding anything.\nWhat matters is whether an answer is correct, and we can check that.\nAI already helps people learn, write and solve problems every day.",
-            'secondary_against' => "Without understanding, AI cannot tell when its own answer is false.\nHallucinations in health, legal or safety advice can cause real harm.\nPeople trust AI more when they think it understands, so the difference changes how we use it.",
-            'post16_motion'     => 'This house would ban AI chatbots from giving medical or legal advice.',
-            'post16_prompt'     => 'The tension: access vs accuracy. Research: what do UK health and legal regulators say about AI tools giving advice to the public?',
-            'post16_for'        => "Pattern prediction is not professional judgement, and confident errors here can do serious harm.\nDoctors and lawyers are accountable and regulated; a chatbot is neither.\nVulnerable people are the most likely to rely on free advice without checking it.",
-            'post16_against'    => "Many people cannot afford or quickly reach a doctor or lawyer, and general information helps them.\nA ban would push people towards worse sources, such as anonymous forums.\nClear signposting and safety rules would reduce harm without removing a useful service.",
-        ),
-        // Responsible. Angle: who is responsible, and whether it is worth it.
-        'the-hidden-costs-of-ai' => array(
-            'primary_motion'    => 'Should we use AI less to help look after the planet?',
-            'primary_prompt'    => 'Sentence starter: I think we should / shouldn\'t use AI less because ___.',
-            'primary_for'       => "AI uses electricity and water every time we use it.\nSmall changes by lots of people can add up.\nWe can still do many things without AI, like thinking for ourselves.",
-            'primary_against'   => "AI can help the planet too, like spotting leaks or saving energy.\nThe big companies use the most, so they should change first.\nAI helps people learn and do useful things.",
-            'secondary_motion'  => 'Tech companies, not users, should be responsible for cutting AI\'s environmental impact.',
-            'secondary_prompt'  => 'Challenge card: What if companies only change when their customers demand it?',
-            'secondary_for'     => "Companies design the models and run the data centres, so they control most of the impact.\nUsers cannot see how much energy or water a request uses, so they cannot make informed choices.\nCompanies have the money and expertise to switch to renewable energy and better cooling.",
-            'secondary_against' => "Companies respond to demand, so users' choices shape what they build.\nGovernments set the rules on energy and water, so responsibility is shared.\nEvery user can choose when AI is really needed.",
-            'post16_motion'     => 'This house believes the benefits of AI are worth its environmental cost.',
-            'post16_prompt'     => 'The tension: progress vs sustainability. Research: how is AI being used to cut emissions in energy, transport or farming?',
-            'post16_for'        => "AI is helping to design better batteries, manage power grids and model the climate.\nEfficiency improves quickly: newer models and chips do more with less energy.\nThe cost is real but small compared with sectors such as transport and heating.",
-            'post16_against'    => "Data centre demand for energy and water is growing fast and competing with local communities.\nMuch AI use is trivial, so the cost is not being spent on climate solutions.\nWithout transparent reporting, claims that the benefits outweigh the costs cannot be checked.",
-        ),
-        // Safe, sensitive. Primary stays with labelling; no intimate-image content below Post-16
-        // beyond the lesson's own point that it is already a crime.
-        'whos-really-behind-the-screen' => array(
-            'primary_motion'    => 'Should apps have to put a label on pictures and videos made by AI?',
-            'primary_prompt'    => 'Sentence starter: I think they should / shouldn\'t because ___.',
-            'primary_for'       => "It would help us tell what is real and what is made up.\nPeople would be less likely to be tricked.\nIt is fair to know how something was made.",
-            'primary_against'   => "People who want to trick others could remove the label.\nSome AI pictures are just for fun and do no harm.\nWe should learn to check things ourselves anyway.",
-            'secondary_motion'  => 'Making a deepfake of someone without their permission should be against the law, even as a joke.',
-            'secondary_prompt'  => 'Challenge card: What if the deepfake was of a famous politician and made a serious point?',
-            'secondary_for'     => "A joke deepfake can still humiliate someone and spread far beyond the people it was meant for.\nOnce shared, it is almost impossible to delete, and the harm can last.\nA clear law would show that a person's face and voice belong to them.",
-            'secondary_against' => "Satire of public figures is an important part of free speech.\nThe most harmful uses, such as intimate images and fraud, are already crimes.\nEducation and fast reporting tools may protect people better than a law that is hard to enforce.",
-            'post16_motion'     => 'This house would make social media platforms legally responsible for deepfakes shared on their sites.',
-            'post16_prompt'     => 'The tension: free expression vs protection. Research: what does the Online Safety Act require platforms to do about illegal content?',
-            'post16_for'        => "Platforms profit from content spreading, so they should carry responsibility for the harm it causes.\nOnly platforms can act at the speed and scale needed to stop a deepfake spreading.\nLegal duties give victims a route to justice that individual reporting does not.",
-            'post16_against'    => "Detection is imperfect, so platforms would over-remove legitimate content, including satire.\nResponsibility should rest with the person who makes and shares a deepfake.\nHeavy liability favours big companies that can afford moderation and squeezes out smaller platforms.",
-        ),
-        // Future.
-        'your-ai-ready-future' => array(
-            'primary_motion'    => 'Should AI and robots do the boring jobs so people don\'t have to?',
-            'primary_prompt'    => 'Sentence starter: I think they should / shouldn\'t because ___.',
-            'primary_for'       => "People would have more time for fun, creative and caring jobs.\nRobots do not get tired or bored.\nSome boring jobs are also dangerous, so it would keep people safe.",
-            'primary_against'   => "Some people like those jobs and need them to earn money.\nA job that seems boring to you might matter a lot to someone else.\nIf AI does everything, people might forget how to do important things.",
-            'secondary_motion'  => 'AI will create more good jobs than it takes away.',
-            'secondary_prompt'  => 'Challenge card: What if the new jobs need skills that the people who lost their jobs do not have?',
-            'secondary_for'     => "The World Economic Forum expects about 170 million new roles by 2030, against 92 million displaced.\nMost jobs will be transformed rather than disappear, with AI taking over routine tasks.\nNew careers are already appearing, from AI ethics to data science.",
-            'secondary_against' => "New jobs may appear in different places from the jobs that are lost.\nNot every new role is a good one; some will be low-paid work checking AI output.\nThe speed of change could leave many people behind before they can retrain.",
-            'post16_motion'     => 'This house believes schools should prioritise human skills over technical AI skills.',
-            'post16_prompt'     => 'The tension: employability vs adaptability. Research: which skills do employers say they will need most by 2030?',
-            'post16_for'        => "Empathy, judgement and creativity are the skills AI cannot replicate, so they keep their value.\nTechnical tools change every year, but human skills last a whole career.\nEmployers consistently rank skills such as communication and problem-solving among the most important.",
-            'post16_against'    => "Without technical AI literacy, young people cannot shape or question the tools they use.\nMany of the best-paid new roles need data and AI skills, and school is where access is fairest.\nIt is a false choice: working well alongside AI is itself a human skill.",
-        ),
-    );
-
-    aiad_seed_debate_packs_by_slug( $packs );
-    update_option( 'aiad_debate_packs_seeded_v2', 'yes' );
-}
-add_action( 'init', 'aiad_seed_resource_debate_packs_v2', 30 );
 
 /**
  * The lesson slides and their teacher steps, kept in step with SlideForge.
@@ -455,6 +346,8 @@ add_action( 'init', 'aiad_seed_resource_debate_packs_v2', 30 );
  * for each lesson, with every step's "Slide n" numbered against the PDF's
  * pages. Both are written from one source, so the steps on the page and the
  * slides on the board cannot drift apart again.
+ *
+ * The file also carries each lesson's debate pack, which its slides use too.
  *
  * Applied when the file changes, not once: a new export deployed with the
  * theme updates the lessons on the next request. That is the point of a single
@@ -491,11 +384,23 @@ function aiad_sync_lesson_decks(): void {
                 'resource_ref'   => sanitize_text_field( (string) ( $step['resource_ref'] ?? '' ) ),
                 'student_action' => sanitize_text_field( (string) ( $step['student_action'] ?? '' ) ),
                 'teacher_tip'    => sanitize_textarea_field( (string) ( $step['teacher_tip'] ?? '' ) ),
+                'optional'       => ! empty( $step['optional'] ),
             );
         }
         update_post_meta( $post->ID, '_aiad_instructions', $steps );
         if ( ! empty( $lesson['preparation'] ) && is_array( $lesson['preparation'] ) ) {
             update_post_meta( $post->ID, '_aiad_preparation', array_map( 'sanitize_text_field', $lesson['preparation'] ) );
+        }
+        /* The debate on the slides and in "Set up the debate" on the page,
+           from one source (AiAd27-Classic/debates.js in SlideForge). */
+        if ( ! empty( $lesson['debate_pack'] ) && is_array( $lesson['debate_pack'] ) ) {
+            $pack = array();
+            foreach ( array( 'primary', 'secondary', 'post16' ) as $age ) {
+                foreach ( array( 'motion', 'prompt', 'for', 'against' ) as $part ) {
+                    $pack[ $age . '_' . $part ] = sanitize_textarea_field( (string) ( $lesson['debate_pack'][ $age . '_' . $part ] ?? '' ) );
+                }
+            }
+            update_post_meta( $post->ID, '_aiad_debate_pack', $pack );
         }
         if ( ! empty( $lesson['pdf'] ) ) {
             update_post_meta( $post->ID, '_aiad_download_url', esc_url_raw( $base . rawurlencode( (string) $lesson['pdf'] ) ) );

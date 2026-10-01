@@ -462,6 +462,14 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The debate after a starter: set apart from the timed steps, in the
+   National Conversation's blue like the rest of the debate. */
+.rl .rl-tag--optional {
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+  font-weight: 700;
+}
+
 .rl-tag__key {
   color: var(--a27-dim);
   font-size: 0.7rem;

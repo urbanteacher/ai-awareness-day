@@ -415,6 +415,9 @@ function aiad_normalise_instructions( $raw ): array {
                 'resource_ref'   => isset( $item['resource_ref'] ) ? (string) $item['resource_ref'] : '',
                 'student_action' => isset( $item['student_action'] ) ? (string) $item['student_action'] : '',
                 'teacher_tip'    => isset( $item['teacher_tip'] ) ? (string) $item['teacher_tip'] : '',
+                /* A step the lesson can do without (the debate after a
+                   starter): shown, but kept off the lesson clock. */
+                'optional'       => ! empty( $item['optional'] ),
             );
             $step = $out[ count( $out ) - 1 ]['step'] + 1;
         } elseif ( is_string( $item ) && $item !== '' ) {

@@ -1238,6 +1238,7 @@ function aiad_save_resource_content_sections( int $post_id ): void {
                 'resource_ref'   => isset( $item['resource_ref'] ) ? sanitize_text_field( wp_unslash( $item['resource_ref'] ) ) : '',
                 'student_action' => isset( $item['student_action'] ) ? sanitize_text_field( wp_unslash( $item['student_action'] ) ) : '',
                 'teacher_tip'    => isset( $item['teacher_tip'] ) ? sanitize_textarea_field( wp_unslash( $item['teacher_tip'] ) ) : '',
+                'optional'       => ! empty( $item['optional'] ),
             );
         }
         update_post_meta( $post_id, '_aiad_instructions', $steps );

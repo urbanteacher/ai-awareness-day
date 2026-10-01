@@ -207,6 +207,7 @@ function aiad_get_field_registry(): array {
                     'resource_ref'  => array( 'type' => 'text', 'label' => __( 'Resource ref', 'ai-awareness-day' ), 'placeholder' => 'e.g. Slide 6' ),
                     'student_action'=> array( 'type' => 'text', 'label' => __( 'Student action', 'ai-awareness-day' ), 'placeholder' => 'e.g. Pair discussion' ),
                     'teacher_tip'   => array( 'type' => 'textarea', 'label' => __( 'Teacher tip', 'ai-awareness-day' ), 'rows' => 1 ),
+                    'optional'      => array( 'type' => 'checkbox', 'label' => __( 'Optional (left off the lesson time)', 'ai-awareness-day' ) ),
                 ),
                 'add_button'  => __( 'Add step', 'ai-awareness-day' ),
                 'min'         => 2,

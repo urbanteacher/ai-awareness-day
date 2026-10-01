@@ -360,6 +360,9 @@ get_header();
 											<p class="rl-step__action"><?php echo wptexturize( wp_kses_post( $step['action'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 											<?php if ( '' !== $step['duration'] || '' !== $step['students'] || '' !== $step['ref'] ) : ?>
 												<ul class="rl-step__meta">
+													<?php if ( ! empty( $step['optional'] ) ) : ?>
+														<li class="rl-tag rl-tag--optional"><?php esc_html_e( 'Optional', 'ai-awareness-day' ); ?></li>
+													<?php endif; ?>
 													<?php if ( '' !== $step['duration'] ) : ?>
 														<li class="rl-tag rl-tag--time"><?php echo esc_html( $step['duration'] ); ?></li>
 													<?php endif; ?>
