@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/text",
+	"title": "Styled text",
+	"category": "theme",
+	"icon": "editor-textcolor",
+	"description": "A short piece of text in a styled list: a term and its description, a list item or a tag.",
+	"keywords": [ "term", "definition", "tag" ],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"tagName": { "type": "string", "enum": [ "dt", "dd", "li", "span" ], "default": "span" },
+		"content": { "type": "rich-text", "source": "rich-text", "selector": "dt,dd,li,span", "role": "content" }
+	},
+	"supports": {
+		"html": false,
+		"className": false
+	},
+	"editorScript": "file:./index.js"
+}

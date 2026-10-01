@@ -81,3 +81,4 @@ aiad_require_core_module( 'benchmark-content' );
 aiad_require_core_module( 'certificate-showcase' );
 require_once $aiad_dir . '/inc/hub-resource-page.php';
 require_once $aiad_dir . '/inc/national-conversation-page.php';
+require_once $aiad_dir . '/inc/national-conversation-content.php';

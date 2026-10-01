@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/strand-icon",
+	"title": "Strand icon",
+	"category": "theme",
+	"icon": "marker",
+	"description": "The mark of one of the five strands: Safe, Smart, Creative, Responsible or Future.",
+	"keywords": [ "strand", "theme", "icon" ],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"strand": { "type": "string", "enum": [ "safe", "smart", "creative", "responsible", "future" ], "default": "safe" },
+		"size": { "type": "number", "default": 32 }
+	},
+	"supports": {
+		"html": false,
+		"className": false,
+		"customClassName": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
