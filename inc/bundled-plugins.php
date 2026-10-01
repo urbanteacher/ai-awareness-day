@@ -360,6 +360,6 @@ function aiad_maybe_sync_bundled_plugins(): void {
 		}
 	}
 }
-// Theme functions.php loads after plugins_loaded, so that hook is too early.
-add_action( 'after_setup_theme', 'aiad_maybe_sync_bundled_plugins', 1 );
-aiad_maybe_sync_bundled_plugins();
+// Activation validates translated plugin headers. Wait for init so translations are safe,
+// but run before plugins' own init callbacks and the content migrations (priorities 30–40).
+add_action( 'init', 'aiad_maybe_sync_bundled_plugins', 0 );
