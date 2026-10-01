@@ -1,5 +1,5 @@
 /**
- * Styled list (block.json): a ul, ol or dl (or a p or div of tags) whose items are Styled list items or Styled text.
+ * Styled list (block.json): a ul, ol or dl (or a p or div of tags, or a nav around a list) whose items are Styled list items or Styled text.
  * Saved as plain HTML with its class, so the page's styles apply in the editor and on the site alike.
  */
 ( function ( blocks, element, blockEditor, components, i18n ) {
@@ -38,6 +38,7 @@
 								{ label: __( 'Terms and descriptions (dl)', 'ai-awareness-day' ), value: 'dl' },
 								{ label: __( 'Paragraph of tags (p)', 'ai-awareness-day' ), value: 'p' },
 								{ label: __( 'Box (div)', 'ai-awareness-day' ), value: 'div' },
+								{ label: __( 'Navigation (nav)', 'ai-awareness-day' ), value: 'nav' },
 							],
 							onChange: function ( value ) {
 								props.setAttributes( { tagName: value } );

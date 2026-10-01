@@ -1,7 +1,7 @@
 <?php
 /**
  * Template for /national-conversation/: what the National AI Conversation is. Once the editable page has been
- * created (Pages → National Conversation), the address shows that instead, built from the same words
+ * created (Pages → Theme pages), the address shows that instead, built from the same words
  * (inc/national-conversation-content.php, patterns/national-conversation.php).
  *
  * There is deliberately no "Become a partner" or "Volunteer to judge" button. Partners could be read as selling into

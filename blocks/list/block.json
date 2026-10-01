@@ -9,9 +9,9 @@
 	"keywords": [ "list", "cards", "steps" ],
 	"textdomain": "ai-awareness-day",
 	"attributes": {
-		"tagName": { "type": "string", "enum": [ "ul", "ol", "dl", "p", "div" ], "default": "ul" },
-		"ariaLabel": { "type": "string", "source": "attribute", "selector": "ul,ol,dl,p,div", "attribute": "aria-label" },
-		"ariaLabelledby": { "type": "string", "source": "attribute", "selector": "ul,ol,dl,p,div", "attribute": "aria-labelledby" }
+		"tagName": { "type": "string", "enum": [ "ul", "ol", "dl", "p", "div", "nav" ], "default": "ul" },
+		"ariaLabel": { "type": "string", "source": "attribute", "selector": "ul,ol,dl,p,div,nav", "attribute": "aria-label" },
+		"ariaLabelledby": { "type": "string", "source": "attribute", "selector": "ul,ol,dl,p,div,nav", "attribute": "aria-labelledby" }
 	},
 	"supports": {
 		"html": false,

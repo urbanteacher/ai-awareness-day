@@ -42,14 +42,14 @@
 
 /* Homepage sections built from core blocks (patterns/homepage-*.php) and the header and footer template parts
    (parts/*.html), the main group of block templates (templates/*.html) down to the post content, whose own
-   blocks keep core's spacing as they had it before, and the National Conversation page, whose main group is in its
-   content (patterns/national-conversation.php): core's flow layout puts a 24px gap above every block after the first; these keep their own
+   blocks keep core's spacing as they had it before, and the theme pages whose main group is in their content
+   (inc/editable-pages.php: National Conversation, the walkthrough): core's flow layout puts a 24px gap above every block after the first; these keep their own
    spacing instead. This stylesheet loads after core's, so the theme's own margin rules (same specificity, later)
    still win. */
 :where(section.section.wp-block-group, .site-header.wp-block-group, .site-footer.wp-block-group) .is-layout-flow > *,
 :where(main.wp-block-group) .is-layout-flow:where(:not(.wp-block-post-content .is-layout-flow)) > *,
-:where(main.ncp.wp-block-group).is-layout-flow > *,
-:where(main.ncp.wp-block-group) .is-layout-flow > * {
+:where(main.ncp.wp-block-group, main.wt.wp-block-group).is-layout-flow > *,
+:where(main.ncp.wp-block-group, main.wt.wp-block-group) .is-layout-flow > * {
   margin-block-start: 0;
 }
 

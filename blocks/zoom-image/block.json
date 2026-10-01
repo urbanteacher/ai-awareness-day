@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/zoom-image",
+	"title": "Image that opens full size",
+	"category": "theme",
+	"icon": "search",
+	"description": "An image that opens full size in a new tab, with a label over it. Used for the walkthrough's screenshots.",
+	"keywords": [ "image", "screenshot", "zoom" ],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"url": { "type": "string", "source": "attribute", "selector": "img", "attribute": "src", "role": "content" },
+		"alt": { "type": "string", "source": "attribute", "selector": "img", "attribute": "alt", "default": "", "role": "content" },
+		"width": { "type": "number" },
+		"height": { "type": "number" },
+		"label": { "type": "rich-text", "source": "rich-text", "selector": "span", "role": "content" }
+	},
+	"supports": {
+		"html": false,
+		"className": false
+	},
+	"editorScript": "file:./index.js"
+}
