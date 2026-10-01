@@ -5,6 +5,9 @@
  * @package AI_Awareness_Day
  */
 
+// Start the singular query again when rendering inside the block template canvas.
+rewind_posts();
+
 if ( ! have_posts() ) {
     return;
 }
@@ -202,4 +205,3 @@ $share_aria = sprintf(
     }
 })();
 </script>
-

@@ -8,6 +8,10 @@
  * @package AI_Awareness_Day
  */
 
+// The block template canvas may already have advanced the singular main query.
+// This template owns its loop, so start it at the requested resource again.
+rewind_posts();
+
 ?>
 
 <main id="main" class="rl">

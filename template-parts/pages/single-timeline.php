@@ -5,6 +5,9 @@
  * @package AI_Awareness_Day
  */
 
+// Start the singular query again when rendering inside the block template canvas.
+rewind_posts();
+
 ?>
 
 <main id="main" class="single-timeline">
@@ -208,5 +211,4 @@
 
 	<?php endwhile; ?>
 </main>
-
 
