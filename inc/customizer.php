@@ -46,6 +46,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_campaign_section( $wp_customize );
     aiad_register_badges_section( $wp_customize );
     aiad_register_youtube_section( $wp_customize );
+    aiad_register_featured_linkedin_section( $wp_customize );
     aiad_register_toolkit_section( $wp_customize );
     aiad_register_time_resources_display_section( $wp_customize );
     aiad_register_display_board_section( $wp_customize );
@@ -62,6 +63,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
         'aiad_hero'                   => 'aiad_panel_front_page',
         'aiad_campaign'               => 'aiad_panel_front_page',
         'aiad_youtube'                => 'aiad_panel_front_page',
+        'aiad_featured_linkedin'      => 'aiad_panel_front_page',
         'aiad_time_resources_display' => 'aiad_panel_front_page',
         'aiad_display_board'          => 'aiad_panel_front_page',
         'aiad_contact'                => 'aiad_panel_front_page',
@@ -386,6 +388,35 @@ function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): vo
         'label'   => __( 'Section title', 'ai-awareness-day' ),
         'section' => 'aiad_youtube',
         'type'    => 'text',
+    ) );
+}
+
+/**
+ * Register the featured LinkedIn post (homepage featured-resources card).
+ *
+ * It was registered inside the Social Links section until those moved to Settings → AI Awareness Day; it is homepage
+ * content, so it stays with the other front page sections.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function aiad_register_featured_linkedin_section( WP_Customize_Manager $wp_customize ): void {
+    $defaults = aiad_get_customizer_defaults();
+
+    $wp_customize->add_section( 'aiad_featured_linkedin', array(
+        'title'    => __( 'Featured LinkedIn post', 'ai-awareness-day' ),
+        'priority' => 36,
+    ) );
+    $wp_customize->add_setting( 'aiad_linkedin_post_url', array(
+        'default'           => $defaults['aiad_linkedin_post_url'],
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+        'validate_callback' => 'aiad_customizer_validate_url',
+    ) );
+    $wp_customize->add_control( 'aiad_linkedin_post_url', array(
+        'label'       => __( 'Featured LinkedIn post URL', 'ai-awareness-day' ),
+        'description' => __( 'Optional. Paste the URL of a LinkedIn post to show a "Latest from LinkedIn" card on the front page. Leave empty to hide the card.', 'ai-awareness-day' ),
+        'section'     => 'aiad_featured_linkedin',
+        'type'        => 'url',
     ) );
 }
 
