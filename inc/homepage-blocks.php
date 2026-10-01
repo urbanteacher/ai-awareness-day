@@ -452,13 +452,34 @@ function aiad_render_block_homepage( WP_Post $page ): string {
 }
 
 /**
- * In the editor, give pages that use the section blocks, and the Site Editor, the theme's front-end stylesheets, so the
- * previews in the editor canvas look like the site.
+ * Whether a post uses one of the theme's own blocks (blocks/*, and the homepage section blocks), whose editor
+ * previews are the site's markup and so need the site's stylesheets.
+ *
+ * @param WP_Post|int|null $post Post, ID, or the current post.
+ */
+function aiad_post_has_theme_blocks( $post = null ): bool {
+	$post = get_post( $post );
+	if ( ! $post || ! str_contains( $post->post_content, '<!-- wp:aiad/' ) ) {
+		return false;
+	}
+	$names = array_map( 'basename', glob( AIAD_DIR . '/blocks/*', GLOB_ONLYDIR ) ?: array() );
+	foreach ( $names as $name ) {
+		if ( has_block( 'aiad/' . $name, $post ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * In the editor, give pages that use the section blocks or the theme's other blocks, and the Site Editor, the theme's
+ * front-end stylesheets, so the previews in the editor canvas look like the site. Other posts keep the editor's own
+ * styles: the theme's reset (margins and padding off) would otherwise reach their content.
  */
 function aiad_homepage_section_editor_styles(): void {
 	// The Site Editor edits the header and footer template parts (inc/site-parts.php), which need the same styles.
 	$site_editor = function_exists( 'get_current_screen' ) && get_current_screen() && 'site-editor' === get_current_screen()->base;
-	if ( ! is_admin() || ! ( $site_editor || aiad_post_has_homepage_sections() ) ) {
+	if ( ! is_admin() || ! ( $site_editor || aiad_post_has_homepage_sections() || aiad_post_has_theme_blocks() ) ) {
 		return;
 	}
 	wp_enqueue_style( 'aiad-fonts-fallback', AIAD_URI . '/assets/css/base/fonts.css', array(), AIAD_VERSION );
