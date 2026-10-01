@@ -65,7 +65,14 @@ rewind_posts();
 		/* The board's slide-at-a-time view: one picture per PDF page, made by
 		   scripts/export-lesson-slides.swift. None, no slide view: the board
 		   opens on the PDF viewer instead. */
-		$slide_pages = function_exists( 'aiad_resource_deck_images' ) ? aiad_resource_deck_images( $download_url )['slides'] : array();
+		$deck_images = function_exists( 'aiad_resource_deck_images' )
+			? aiad_resource_deck_images( $download_url )
+			: array(
+				'slides' => array(),
+				'share'  => '',
+			);
+		$slide_pages = $deck_images['slides'];
+		$share_card  = $deck_images['share']; // The cover as a 1200x630 card: what "Share image" downloads.
 		$video_url         = (string) get_post_meta( $resource_id, '_aiad_preview_video_url', true );
 		$video_html        = ( '' !== $video_url && function_exists( 'aiad_resource_preview_video_html' ) )
 			? aiad_resource_embed_with_api( aiad_resource_preview_video_html( $video_url ) )
@@ -246,6 +253,7 @@ rewind_posts();
 							<span class="rl-btn__label"><?php esc_html_e( 'Share', 'ai-awareness-day' ); ?></span>
 						</button>
 						<button type="button" class="rl-btn resource-social-card-btn"
+							<?php echo $share_card ? 'data-image="' . esc_url( $share_card ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>
 							data-title="<?php echo esc_attr( get_the_title() ); ?>"
 							data-url="<?php echo esc_url( get_permalink() ); ?>"
 							data-theme="<?php echo esc_attr( $theme_name ); ?>"

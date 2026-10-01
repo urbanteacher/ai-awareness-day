@@ -83,6 +83,20 @@
     }
 
     function handleSocialCard(btn) {
+        // A lesson with a PDF deck has its cover as a ready-made card (the same
+        // one link previews use): download that. Anything else gets a drawn one.
+        var image = btn.getAttribute('data-image');
+        if (image) {
+            var file = document.createElement('a');
+            file.href = image;
+            file.download = image.split(/[?#]/)[0].split('/').pop() || 'aiad-resource-card.jpg';
+            file.rel = 'noopener';
+            document.body.appendChild(file);
+            file.click();
+            document.body.removeChild(file);
+            return;
+        }
+
         var title = btn.getAttribute('data-title') || 'AI Awareness Day';
         var url = btn.getAttribute('data-url') || window.location.href;
         var theme = btn.getAttribute('data-theme') || 'AI';

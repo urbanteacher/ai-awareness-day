@@ -156,11 +156,12 @@ function aiad_scripts(): void
 
     // Enqueue resource sharing script on single resource pages
     if (is_singular('resource')) {
+        $resource_sharing_js = AIAD_DIR . '/assets/js/resource-sharing.js';
         wp_enqueue_script(
             'aiad-resource-sharing',
             AIAD_URI . '/assets/js/resource-sharing.js',
             array('aiad-main'),
-            AIAD_VERSION,
+            file_exists( $resource_sharing_js ) ? filemtime( $resource_sharing_js ) : AIAD_VERSION,
             true
         );
     }
