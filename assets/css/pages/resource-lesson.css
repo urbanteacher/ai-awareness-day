@@ -101,7 +101,8 @@
 }
 
 .rl-facts > div {
-  flex: 1 1 9.5rem;
+  flex: 1 1 calc((100% - 4px) / 3);
+  min-width: 0;
   padding: 0.8rem 1.1rem;
   background: var(--a27-ink);
   color: var(--a27-cream);
@@ -121,6 +122,31 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* The download and view counts are the last boxes of the same list, so they
+   share the rows. First three across, then four from the fourth box on (the
+   counts join Format and Level), so a lesson with both counts is two rows. A
+   phone has no room for four: two across there. */
+@media (min-width: 40rem) {
+  .rl-facts > div:nth-child(n + 4) {
+    flex-basis: calc((100% - 6px) / 4);
+  }
+}
+
+@media (max-width: 40rem) {
+  .rl-facts > div {
+    padding: 0.7rem 0.7rem;
+  }
+
+  .rl-facts > div:nth-child(n + 4) {
+    flex-basis: calc((100% - 2px) / 2);
+  }
+
+  .rl-facts dd {
+    font-size: 0.95rem;
+  }
 }
 
 .rl-actions {
@@ -130,11 +156,13 @@
   margin-top: 1.25rem;
 }
 
+/* The same counts, in line at the end of the buttons: wide screens only (see
+   the 64rem query), where they cost no extra row. */
 .rl-stats {
-  display: flex;
-  flex-wrap: wrap;
+  display: none;
+  align-items: center;
   gap: 0.25rem 1.25rem;
-  margin: 1rem 0 0;
+  margin: 0 0 0 auto;
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -1164,6 +1192,19 @@ html:has(.is-board) {
 }
 
 @media (min-width: 64rem) {
+  .rl-facts > div,
+  .rl-facts > div:nth-child(n + 4) {
+    flex-basis: 9.5rem;
+  }
+
+  .rl-facts > .rl-fact--stat {
+    display: none;
+  }
+
+  .rl-stats {
+    display: flex;
+  }
+
   .rl-layout {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
     gap: 4rem;

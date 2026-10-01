@@ -78,12 +78,33 @@ rewind_posts();
 			? aiad_resource_embed_with_api( aiad_resource_preview_video_html( $video_url ) )
 			: '';
 		$is_youtube        = '' !== $video_url && (bool) preg_match( '#(youtube\.com|youtu\.be)/#', $video_url );
-		/* Download and view counts under the actions, only when "Show stats on
-		   resource pages" is ticked (Resources → Resource Settings) and only
-		   once a count is above zero, as before the lesson-plan page. */
-		$show_stats     = (bool) get_option( 'aiad_show_resource_stats', 0 );
-		$stat_downloads = $show_stats ? absint( get_post_meta( $resource_id, '_aiad_download_count', true ) ) : 0;
-		$stat_views     = $show_stats ? absint( get_post_meta( $resource_id, '_aiad_view_count', true ) ) : 0;
+		/* Download and view counts, only when "Show stats on resource pages" is
+		   ticked (Resources → Resource Settings) and only once a count is above
+		   zero, as before the lesson-plan page. A wide screen shows them at the
+		   end of the buttons; a narrow one as two more boxes under the facts. */
+		$stat_items = array();
+		if ( get_option( 'aiad_show_resource_stats', 0 ) ) {
+			$stat_downloads = absint( get_post_meta( $resource_id, '_aiad_download_count', true ) );
+			$stat_views     = absint( get_post_meta( $resource_id, '_aiad_view_count', true ) );
+			if ( $stat_downloads ) {
+				$stat_items[] = array(
+					'label' => __( 'Downloads', 'ai-awareness-day' ),
+					'count' => number_format_i18n( $stat_downloads ),
+					/* translators: %s: number of downloads */
+					'text'  => sprintf( _n( '%s download', '%s downloads', $stat_downloads, 'ai-awareness-day' ), number_format_i18n( $stat_downloads ) ),
+					'icon'  => '<path d="M12 3v12m-5-5 5 5 5-5M4 20h16"/>',
+				);
+			}
+			if ( $stat_views ) {
+				$stat_items[] = array(
+					'label' => __( 'Views', 'ai-awareness-day' ),
+					'count' => number_format_i18n( $stat_views ),
+					/* translators: %s: number of views */
+					'text'  => sprintf( _n( '%s view', '%s views', $stat_views, 'ai-awareness-day' ), number_format_i18n( $stat_views ) ),
+					'icon'  => '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+				);
+			}
+		}
 
 		// ---- Lesson content ----
 		$preparation = array_values(
@@ -219,12 +240,18 @@ rewind_posts();
 						<p class="rl-lead"><?php echo wptexturize( esc_html( $overview ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 					<?php endif; ?>
 
-					<?php if ( $facts ) : ?>
+					<?php if ( $facts || $stat_items ) : ?>
 						<dl class="rl-facts">
 							<?php foreach ( $facts as $label => $value ) : ?>
 								<div>
 									<dt><?php echo esc_html( $label ); ?></dt>
 									<dd><?php echo esc_html( $value ); ?></dd>
+								</div>
+							<?php endforeach; ?>
+							<?php foreach ( $stat_items as $stat ) : ?>
+								<div class="rl-fact--stat">
+									<dt><?php echo esc_html( $stat['label'] ); ?></dt>
+									<dd><?php echo esc_html( $stat['count'] ); ?></dd>
 								</div>
 							<?php endforeach; ?>
 						</dl>
@@ -260,23 +287,17 @@ rewind_posts();
 							data-key-stages="<?php echo esc_attr( implode( ', ', $key_stage_names ) ); ?>">
 							<?php esc_html_e( 'Share image', 'ai-awareness-day' ); ?>
 						</button>
+						<?php if ( $stat_items ) : ?>
+							<p class="rl-stats">
+								<?php foreach ( $stat_items as $stat ) : ?>
+									<span class="rl-stat">
+										<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true"><?php echo $stat['icon']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG paths set above. ?></svg>
+										<?php echo esc_html( $stat['text'] ); ?>
+									</span>
+								<?php endforeach; ?>
+							</p>
+						<?php endif; ?>
 					</div>
-					<?php if ( $stat_downloads || $stat_views ) : ?>
-						<p class="rl-stats">
-							<?php if ( $stat_downloads ) : ?>
-								<span class="rl-stat">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 20h16"/></svg>
-									<?php echo esc_html( sprintf( _n( '%s download', '%s downloads', $stat_downloads, 'ai-awareness-day' ), number_format_i18n( $stat_downloads ) ) ); ?>
-								</span>
-							<?php endif; ?>
-							<?php if ( $stat_views ) : ?>
-								<span class="rl-stat">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-									<?php echo esc_html( sprintf( _n( '%s view', '%s views', $stat_views, 'ai-awareness-day' ), number_format_i18n( $stat_views ) ) ); ?>
-								</span>
-							<?php endif; ?>
-						</p>
-					<?php endif; ?>
 				</div>
 			</header>
 
