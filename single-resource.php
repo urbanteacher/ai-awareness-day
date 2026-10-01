@@ -50,9 +50,15 @@ get_header();
 		$download_url      = (string) get_post_meta( $resource_id, '_aiad_download_url', true );
 		$download_label    = function_exists( 'aiad_resource_download_label' ) ? aiad_resource_download_label( $download_url ) : __( 'Download', 'ai-awareness-day' );
 		$download_ext      = $download_url ? strtolower( pathinfo( (string) wp_parse_url( $download_url, PHP_URL_PATH ), PATHINFO_EXTENSION ) ) : '';
-		$pptx_embed_url    = in_array( $download_ext, array( 'pptx', 'ppt' ), true )
-			? 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $download_url )
-			: '';
+		/* The slides beside the steps: a PowerPoint through Office's viewer, a
+		   PDF (the SlideForge exports) through the browser's own, opened to fit
+		   a whole slide in the frame. */
+		$slides_embed_url  = '';
+		if ( in_array( $download_ext, array( 'pptx', 'ppt' ), true ) ) {
+			$slides_embed_url = 'https://view.officeapps.live.com/op/embed.aspx?src=' . rawurlencode( $download_url );
+		} elseif ( 'pdf' === $download_ext ) {
+			$slides_embed_url = $download_url . '#view=Fit&navpanes=0';
+		}
 		$video_url         = (string) get_post_meta( $resource_id, '_aiad_preview_video_url', true );
 		$video_html        = ( '' !== $video_url && function_exists( 'aiad_resource_preview_video_html' ) )
 			? aiad_resource_embed_with_api( aiad_resource_preview_video_html( $video_url ) )
@@ -240,7 +246,7 @@ get_header();
 
 				<aside class="rl-aside" aria-label="<?php esc_attr_e( 'Lesson media and contents', 'ai-awareness-day' ); ?>">
 					<div class="rl-aside__sticky">
-						<?php if ( $video_html || $pptx_embed_url ) : ?>
+						<?php if ( $video_html || $slides_embed_url ) : ?>
 							<figure class="rl-media<?php echo $video_html ? ' rl-media--video' : ' rl-media--slides'; ?>" data-rl-media>
 								<div class="rl-media__frame">
 									<?php if ( $video_html ) : ?>
@@ -249,14 +255,14 @@ get_header();
 										echo $video_html;
 										?>
 									<?php else : ?>
-										<iframe src="<?php echo esc_url( $pptx_embed_url ); ?>" title="<?php esc_attr_e( 'Presentation preview', 'ai-awareness-day' ); ?>" loading="lazy" allowfullscreen></iframe>
+										<iframe src="<?php echo esc_url( $slides_embed_url ); ?>" title="<?php esc_attr_e( 'The slides for this lesson', 'ai-awareness-day' ); ?>" loading="lazy" allowfullscreen></iframe>
 									<?php endif; ?>
 								</div>
 								<figcaption class="rl-media__caption">
 									<?php
 									echo $video_html
 										? esc_html__( 'The video for this lesson. Video references in the steps jump to the right moment.', 'ai-awareness-day' )
-										: esc_html__( 'Slide preview', 'ai-awareness-day' );
+										: esc_html__( 'The slides for this lesson. "Slide" in each step means this deck\'s page number.', 'ai-awareness-day' );
 									?>
 								</figcaption>
 							</figure>

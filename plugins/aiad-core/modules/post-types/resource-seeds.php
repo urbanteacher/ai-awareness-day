@@ -445,3 +445,63 @@ function aiad_seed_resource_debate_packs_v2(): void {
     update_option( 'aiad_debate_packs_seeded_v2', 'yes' );
 }
 add_action( 'init', 'aiad_seed_resource_debate_packs_v2', 30 );
+
+/**
+ * The lesson slides and their teacher steps, kept in step with SlideForge.
+ *
+ * The six lessons with slides (five starters and the Smart assembly) are built
+ * in SlideForge (AiAd27-Classic/ in that repository), which exports a PDF of
+ * each and assets/lessons/2027/lessons.json: the Instructions and Preparation
+ * for each lesson, with every step's "Slide n" numbered against the PDF's
+ * pages. Both are written from one source, so the steps on the page and the
+ * slides on the board cannot drift apart again.
+ *
+ * Applied when the file changes, not once: a new export deployed with the
+ * theme updates the lessons on the next request. That is the point of a single
+ * source, and it means a change made only in the editor to these fields is
+ * replaced by the next export — make it in SlideForge instead. The PDF also
+ * replaces each lesson's PowerPoint download.
+ */
+function aiad_sync_lesson_decks(): void {
+    $file = get_template_directory() . '/assets/lessons/2027/lessons.json';
+    if ( ! is_readable( $file ) ) {
+        return;
+    }
+    $hash = md5_file( $file );
+    if ( get_option( 'aiad_lesson_decks_synced' ) === $hash ) {
+        return;
+    }
+    $lessons = json_decode( (string) file_get_contents( $file ), true );
+    if ( ! is_array( $lessons ) ) {
+        return;
+    }
+
+    $base = get_template_directory_uri() . '/assets/lessons/2027/';
+    foreach ( $lessons as $lesson ) {
+        $post = get_page_by_path( (string) ( $lesson['wp'] ?? '' ), OBJECT, 'resource' );
+        if ( ! $post || empty( $lesson['instructions'] ) ) {
+            continue;
+        }
+        $steps = array();
+        foreach ( $lesson['instructions'] as $i => $step ) {
+            $steps[] = array(
+                'step'           => $i + 1,
+                'action'         => sanitize_textarea_field( (string) ( $step['action'] ?? '' ) ),
+                'duration'       => sanitize_text_field( (string) ( $step['duration'] ?? '' ) ),
+                'resource_ref'   => sanitize_text_field( (string) ( $step['resource_ref'] ?? '' ) ),
+                'student_action' => sanitize_text_field( (string) ( $step['student_action'] ?? '' ) ),
+                'teacher_tip'    => sanitize_textarea_field( (string) ( $step['teacher_tip'] ?? '' ) ),
+            );
+        }
+        update_post_meta( $post->ID, '_aiad_instructions', $steps );
+        if ( ! empty( $lesson['preparation'] ) && is_array( $lesson['preparation'] ) ) {
+            update_post_meta( $post->ID, '_aiad_preparation', array_map( 'sanitize_text_field', $lesson['preparation'] ) );
+        }
+        if ( ! empty( $lesson['pdf'] ) ) {
+            update_post_meta( $post->ID, '_aiad_download_url', esc_url_raw( $base . rawurlencode( (string) $lesson['pdf'] ) ) );
+        }
+    }
+
+    update_option( 'aiad_lesson_decks_synced', $hash );
+}
+add_action( 'init', 'aiad_sync_lesson_decks', 31 );
