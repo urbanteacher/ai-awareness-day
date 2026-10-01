@@ -150,15 +150,12 @@ function aiad_scripts(): void
     $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
     if (is_front_page()) {
         $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
-        $aiad_ajax['timeline_nonce'] = wp_create_nonce('aiad_timeline_nonce');
         $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
     }
     if ( is_post_type_archive( 'timeline' ) ) {
-        $aiad_ajax['timeline_nonce'] = wp_create_nonce( 'aiad_timeline_nonce' );
         $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
     }
     if (is_singular('timeline')) {
-        $aiad_ajax['timeline_nonce'] = wp_create_nonce('aiad_timeline_nonce');
         $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
     }
     if ( is_singular( 'post' ) ) {

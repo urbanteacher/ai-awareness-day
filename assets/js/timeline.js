@@ -1,13 +1,34 @@
 /**
- * Timeline: swipe deck (mobile), magazine (desktop), AJAX filter, like/share.
+ * Timeline: swipe deck (mobile), magazine (desktop), in-place filter, like/share.
+ *
+ * The filter and the like call the site's REST routes (aiad/v1/timeline), found through the discovery link WordPress
+ * prints in the page head, so the page carries no address or token of its own and can be cached.
  *
  * @package AI_Awareness_Day
  */
 (function () {
     'use strict';
 
-    if ( typeof aiad_ajax === 'undefined' || ! aiad_ajax.url ) {
-        return;
+    /**
+     * Address of one of the site's REST routes, from the discovery link in the head.
+     *
+     * @param {string} route Route under the REST root, e.g. "aiad/v1/timeline".
+     * @param {Object} [query] Query arguments.
+     * @return {string} The address, or '' when the page has no discovery link.
+     */
+    function restUrl( route, query ) {
+        var link = document.querySelector( 'link[rel="https://api.w.org/"]' );
+        if ( ! link || ! link.href ) {
+            return '';
+        }
+        var base = link.href.replace( /\/?$/, '/' ) + route;
+        var args = [];
+        Object.keys( query || {} ).forEach( function ( key ) {
+            args.push( encodeURIComponent( key ) + '=' + encodeURIComponent( query[ key ] ) );
+        } );
+        // With plain permalinks the root is ...?rest_route=/ and the route follows it, so more arguments join with &.
+        var joiner = link.href.indexOf( '?' ) === -1 ? '?' : '&';
+        return base + ( args.length ? joiner + args.join( '&' ) : '' );
     }
 
     var feed    = document.getElementById( 'timeline-feed' );
@@ -306,26 +327,29 @@
 
                 renderFeedEmpty( 'Loading…' );
 
-                var body = 'action=aiad_timeline_filter'
-                    + '&nonce=' + encodeURIComponent( aiad_ajax.timeline_nonce || '' )
-                    + '&filter=' + encodeURIComponent( filter );
+                var query = { filter: filter };
                 if ( isArchive ) {
-                    body += '&archive=1';
+                    query.archive = 1;
                 }
 
-                fetch( aiad_ajax.url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: body,
-                } )
-                    .then( function ( res ) { return res.json(); } )
-                    .then( function ( json ) {
-                        if ( json.success && json.data ) {
-                            if ( json.data.html ) {
-                                replaceFeedLayouts( json.data.html );
-                            } else {
-                                renderFeedEmpty( 'No entries found.' );
-                            }
+                var feedUrl = restUrl( 'aiad/v1/timeline', query );
+                if ( ! feedUrl ) {
+                    renderFeedEmpty( 'Error loading entries.' );
+                    return;
+                }
+
+                fetch( feedUrl )
+                    .then( function ( res ) {
+                        if ( ! res.ok ) {
+                            throw new Error( 'timeline ' + res.status );
+                        }
+                        return res.json();
+                    } )
+                    .then( function ( data ) {
+                        if ( data && data.html ) {
+                            replaceFeedLayouts( data.html );
+                        } else {
+                            renderFeedEmpty( 'No entries found.' );
                         }
                     } )
                     .catch( function () {
@@ -382,23 +406,25 @@
             return;
         }
 
-        var body = 'action=aiad_timeline_like'
-            + '&nonce=' + encodeURIComponent( aiad_ajax.timeline_nonce || '' )
-            + '&entry_id=' + encodeURIComponent( entryId );
+        var likeUrl = restUrl( 'aiad/v1/timeline/' + encodeURIComponent( entryId ) + '/like' );
+        if ( ! likeUrl ) {
+            return;
+        }
 
-        fetch( aiad_ajax.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: body,
-        } )
+        fetch( likeUrl, { method: 'POST' } )
             .then( function ( res ) { return res.json(); } )
-            .then( function ( json ) {
-                if ( json.success && json.data && typeof json.data.count === 'number' ) {
-                    countEl.textContent = String( json.data.count );
+            .then( function ( data ) {
+                // A like that went through carries the count; so does the refusal for a visitor who already liked
+                // it today (its extra data), and either way the heart should show as liked with the current count.
+                var liked = data && typeof data.count === 'number';
+                var already = data && data.code === 'aiad_already_liked' && data.data && typeof data.data.count === 'number';
+                if ( liked || already ) {
+                    countEl.textContent = String( liked ? data.count : data.data.count );
                     btn.setAttribute( 'aria-pressed', 'true' );
                     btn.classList.add( 'is-liked' );
                 }
-            } );
+            } )
+            .catch( function () {} );
     }
 
     function handleShare( btn ) {
