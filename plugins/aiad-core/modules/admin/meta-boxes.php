@@ -1266,6 +1266,20 @@ function aiad_save_resource_content_sections( int $post_id ): void {
         update_post_meta( $post_id, '_aiad_differentiation', $diff );
     }
 
+    if ( isset( $_POST['aiad_debate'] ) ) {
+        update_post_meta( $post_id, '_aiad_debate', sanitize_textarea_field( wp_unslash( $_POST['aiad_debate'] ) ) );
+    }
+    if ( isset( $_POST['aiad_debate_pack'] ) && is_array( $_POST['aiad_debate_pack'] ) ) {
+        $pack = array();
+        foreach ( array( 'primary', 'secondary', 'post16' ) as $age ) {
+            foreach ( array( 'motion', 'prompt', 'for', 'against' ) as $part ) {
+                $key          = $age . '_' . $part;
+                $pack[ $key ] = isset( $_POST['aiad_debate_pack'][ $key ] ) ? sanitize_textarea_field( wp_unslash( $_POST['aiad_debate_pack'][ $key ] ) ) : '';
+            }
+        }
+        update_post_meta( $post_id, '_aiad_debate_pack', $pack );
+    }
+
     if ( ! empty( $_POST['aiad_extensions'] ) && is_array( $_POST['aiad_extensions'] ) ) {
         $ext_types = array( 'homework', 'next_lesson', 'cross_curricular', 'independent' );
         $exts = array();

@@ -1,0 +1,1161 @@
+/* ============================================
+   PAGE: SINGLE RESOURCE AS A LESSON PLAN (single-resource.php)
+   Built from the AiAd27 variables and the National Conversation page's
+   idioms: a strand-bright hero carrying ink, an ink fact bar, square corners,
+   ink-framed tables and one chamfered panel. Loaded only on single resources
+   (inc/resource-lesson.php), after the brand layer.
+   ============================================ */
+.rl {
+  --rl-bright: var(--a27-safe);
+  --rl-deep: var(--a27-safe-deep);
+  --rl-mark: url('../../brand/aiad27/icon-safe.svg');
+  --rl-header: 78px;
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font-family: var(--s-font);
+  line-height: 1.55;
+}
+
+.rl-article[data-strand="smart"] { --rl-bright: var(--a27-smart); --rl-deep: var(--a27-smart-deep); --rl-mark: url('../../brand/aiad27/icon-smart.svg'); }
+.rl-article[data-strand="creative"] { --rl-bright: var(--a27-creative); --rl-deep: var(--a27-creative-deep); --rl-mark: url('../../brand/aiad27/icon-creative.svg'); }
+.rl-article[data-strand="responsible"] { --rl-bright: var(--a27-responsible); --rl-deep: var(--a27-responsible-deep); --rl-mark: url('../../brand/aiad27/icon-responsible.svg'); }
+.rl-article[data-strand="future"] { --rl-bright: var(--a27-future); --rl-deep: var(--a27-future-deep); --rl-mark: url('../../brand/aiad27/icon-future.svg'); }
+
+.rl :is(h1, h2, h3) {
+  margin: 0;
+  color: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* One class of specificity, so the classed paragraphs below keep their own margins. */
+.rl :where(p) {
+  margin: 0 0 1rem;
+}
+
+.rl [id] {
+  scroll-margin-top: calc(var(--rl-header) + 1.5rem);
+}
+
+.rl :is(a, button):focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Hero ---- */
+.rl-hero {
+  /* The site header is fixed, so the band starts below it. */
+  padding: 7.5rem 0 2.5rem;
+  background: var(--rl-bright);
+  color: var(--a27-ink);
+}
+
+.rl-hero__inner {
+  position: relative;
+}
+
+.rl-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rl-eyebrow a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.rl-eyebrow a:hover {
+  border-bottom-color: currentColor;
+}
+
+.rl-title {
+  max-width: 20ch;
+  font-size: clamp(2.3rem, 6vw, 4.4rem);
+  font-weight: 700;
+}
+
+.rl-lead {
+  max-width: 40rem;
+  margin: 1.1rem 0 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  line-height: 1.35;
+}
+
+/* The facts as one ink bar of cells, like the National Conversation dates. */
+.rl-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: 2px;
+  margin: 2rem 0 0;
+}
+
+.rl-facts > div {
+  padding: 0.8rem 1.1rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl-facts dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.rl-facts dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.rl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.rl .rl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.15rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rl .rl-btn:hover {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl .rl-btn--primary {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl .rl-btn--primary:hover {
+  background: var(--rl-deep);
+  border-color: var(--rl-deep);
+}
+
+/* ---- Layout: content, with media and contents pinned beside it ---- */
+.rl-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  padding: 2rem 0 5rem;
+}
+
+.rl-aside__sticky > * + * {
+  margin-top: 1.5rem;
+}
+
+.rl-media {
+  margin: 0;
+}
+
+.rl-media__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--a27-ink);
+}
+
+.rl-media__frame :is(iframe, video) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.rl-media--image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rl-media__caption {
+  margin-top: 0.5rem;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.rl-toc {
+  display: none;
+}
+
+.rl-toc__title {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rl-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 2px solid var(--a27-rule);
+}
+
+.rl-toc a {
+  display: block;
+  margin-left: -2px;
+  padding: 0.4rem 0 0.4rem 1rem;
+  border-left: 2px solid transparent;
+  color: var(--a27-dim);
+  text-decoration: none;
+}
+
+.rl-toc a:hover {
+  color: var(--a27-ink);
+}
+
+.rl-toc a[aria-current] {
+  border-left-color: var(--a27-ink);
+  color: var(--a27-ink);
+  font-weight: 700;
+}
+
+/* ---- Sections ---- */
+.rl-intro {
+  max-width: 44rem;
+  font-size: 1.1rem;
+}
+
+.rl-section {
+  padding: 2.25rem 0 0.5rem;
+  border-top: 2px solid var(--a27-ink);
+}
+
+.rl-intro + .rl-section,
+.rl-section + .rl-section {
+  margin-top: 2rem;
+}
+
+.rl-section h2 {
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+}
+
+.rl-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.rl-section__head h2 {
+  margin-bottom: 0;
+}
+
+.rl-section__meta {
+  margin: 0;
+  color: var(--a27-dim);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rl .rl-subhead,
+.rl-notes__title,
+.rl-step__tip-label {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+/* Before you teach: a checklist, then the notes as a marked aside. */
+.rl-checklist {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.rl-checklist li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 2rem;
+}
+
+.rl-checklist li::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  left: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 2px solid var(--a27-ink);
+}
+
+.rl-notes {
+  padding: 1.25rem 1.5rem;
+  border-left: 8px solid var(--rl-bright);
+  background: var(--a27-card);
+}
+
+.rl-notes p:last-child,
+.rl-notes ul:last-child {
+  margin-bottom: 0;
+}
+
+.rl-notes ul,
+.rl-adapt__card ul,
+.rl-words ul {
+  margin: 0 0 1rem;
+  padding-left: 1.15rem;
+}
+
+/* Learning objectives: framed like a table, numbered in a tinted column. */
+.rl-objectives {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--a27-ink);
+  counter-reset: objective;
+}
+
+.rl-objectives li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  counter-increment: objective;
+}
+
+.rl-objectives li + li {
+  border-top: 1px solid var(--a27-ink);
+}
+
+.rl-objectives li::before {
+  content: counter(objective);
+  display: grid;
+  place-items: center;
+  border-right: 1px solid var(--a27-ink);
+  background: var(--a27-card);
+  font-weight: 700;
+}
+
+.rl-objectives li > span {
+  padding: 0.8rem 1.1rem;
+  line-height: 1.45;
+}
+
+/* ---- The lesson: steps on a running clock ---- */
+.rl-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rl-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-bottom: 1.75rem;
+}
+
+/* The rail joins each number to the next. */
+.rl-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 2.6rem;
+  bottom: 0.2rem;
+  left: 1.15rem;
+  width: 2px;
+  background: var(--a27-rule);
+}
+
+.rl-step__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.rl-step__num {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-weight: 700;
+}
+
+.rl-step__clock {
+  position: relative;
+  z-index: 1;
+  padding: 0.05rem 0.2rem;
+  background: var(--a27-cream);
+  color: var(--a27-dim);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rl-step__body {
+  padding-top: 0.35rem;
+}
+
+.rl-step__action {
+  margin: 0 0 0.65rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.rl-step__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rl-tag-wrap {
+  display: contents;
+}
+
+.rl .rl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--a27-card);
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.rl .rl-tag--time {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-variant-numeric: tabular-nums;
+}
+
+.rl-tag__key {
+  color: var(--a27-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rl .rl-tag--seek {
+  background: var(--rl-bright);
+  cursor: pointer;
+}
+
+.rl .rl-tag--seek:hover {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl-step__tip {
+  margin-top: 0.85rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--rl-bright);
+  background: var(--a27-card);
+}
+
+.rl-step__tip-label {
+  color: var(--rl-deep);
+}
+
+.rl-step__tip p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Big question: the one chamfered panel, for the board ---- */
+.rl-question {
+  border-top: 0;
+}
+
+.rl-question__panel {
+  --cut: 2rem;
+  padding: 2rem clamp(1.5rem, 4vw, 2.75rem) 2.25rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  -webkit-clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+
+.rl .rl-question__label {
+  margin-bottom: 0.9rem;
+  color: var(--rl-bright);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rl-question__text {
+  max-width: 34ch;
+  font-size: clamp(1.45rem, 3.4vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.rl .rl-question__show {
+  margin-top: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--rl-bright);
+  color: var(--a27-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rl .rl-question__show:hover {
+  background: var(--a27-cream);
+}
+
+.rl .rl-question__show:focus-visible {
+  outline-color: var(--a27-cream);
+}
+
+.rl-question__panel:fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8vh 8vw;
+  -webkit-clip-path: none;
+  clip-path: none;
+}
+
+.rl-question__panel:fullscreen .rl-question__text {
+  max-width: 24ch;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+}
+
+.rl-question__panel:fullscreen .rl-question__show {
+  align-self: flex-start;
+  margin-top: 3rem;
+}
+
+/* ---- Adapting the lesson ---- */
+/* Four cards, so two by two: an auto-fit grid went three across on a wide
+   screen and left the debate card alone on a second row. */
+.rl-adapt {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 36rem) {
+  .rl-adapt {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.rl-adapt__card {
+  padding: 1.25rem 1.25rem 0.5rem;
+  border-top: 4px solid var(--a27-ink);
+  background: var(--a27-card);
+  font-size: 0.975rem;
+}
+
+.rl-adapt__card h3 {
+  font-size: 1.3rem;
+}
+
+.rl .rl-adapt__for {
+  margin: 0.2rem 0 0.85rem;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+}
+
+/* The debate card wears the National Conversation's own blue on every
+   lesson, whatever the strand, so it reads as the campaign's thread through
+   all of them rather than a fourth kind of differentiation. Dim text fails
+   contrast on the bright ground (about 3.6:1), so everything here is ink. */
+.rl-adapt__card--debate {
+  background: var(--a27-safe);
+}
+
+.rl .rl-adapt__card--debate .rl-adapt__for {
+  color: var(--a27-ink);
+}
+
+.rl .rl-adapt__badge {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.2rem 0.55rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* The debate card links on to the National Conversation; the arrow sits
+   with the last word so a wrapped line never ends on it alone. */
+.rl .rl-adapt__link {
+  margin-top: -0.25rem;
+}
+
+.rl-adapt__link a {
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.rl-adapt__link a::after {
+  content: '\00a0\2192';
+}
+
+.rl-adapt__link a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---- Set up the debate ---- */
+/* The National Conversation's blue again, so the card above and this section
+   read as one thing on every lesson. One panel per age pathway; with script
+   they become tabs, without it they stack under their own headings. */
+.rl .rl-debate__badge {
+  display: inline-block;
+  margin: 0 0 0.85rem;
+  padding: 0.2rem 0.55rem;
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.rl .rl-debate__intro {
+  max-width: 40rem;
+  margin: -0.5rem 0 1.5rem;
+}
+
+.rl-debate__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rl-debate__tabs[hidden] {
+  display: none;
+}
+
+.rl .rl-debate__tabs button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rl .rl-debate__tabs button + button {
+  border-left-width: 0;
+}
+
+.rl .rl-debate__tabs button:hover {
+  background: var(--a27-card);
+}
+
+.rl .rl-debate__tabs button[aria-selected="true"] {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl-debate__tab-name {
+  font-weight: 700;
+}
+
+.rl-debate__tab-years {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.rl-debate__panel {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  background: var(--a27-safe);
+}
+
+.rl-debate__panel + .rl-debate__panel {
+  margin-top: 1rem;
+}
+
+/* With tabs the panel hangs from them, and the tab already names the age. */
+.rl-debate.is-tabbed .rl-debate__panel {
+  margin-top: 0;
+}
+
+.rl-debate.is-tabbed .rl-debate__age {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.rl .rl-debate__age {
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+}
+
+.rl .rl-debate__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rl .rl-debate__motion-text {
+  max-width: 36ch;
+  margin-bottom: 0.85rem;
+  font-size: clamp(1.3rem, 2.8vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.rl-debate__motion > p:last-child {
+  margin-bottom: 0;
+}
+
+.rl-debate__sides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.rl-debate__side {
+  padding: 1rem 1.15rem;
+  border-top: 4px solid var(--a27-ink);
+  background: var(--a27-cream);
+}
+
+.rl .rl-debate__side h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rl-debate__side ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.rl-debate__side li + li {
+  margin-top: 0.45rem;
+}
+
+.rl .rl-debate__build {
+  margin: 1.25rem 0 0;
+  font-weight: 700;
+}
+
+.rl-debate__run {
+  margin: 1.25rem 0 0;
+  border-top: 2px solid var(--a27-ink);
+}
+
+.rl-debate__run > div {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--a27-ink);
+}
+
+.rl-debate__run dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rl-debate__run dd {
+  margin: 0.15rem 0 0;
+}
+
+.rl .rl-debate__more {
+  margin: 1.25rem 0 0;
+}
+
+@media (min-width: 40rem) {
+  .rl-debate__sides {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rl-debate__run > div {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  .rl-debate__run dd {
+    margin: 0;
+  }
+}
+
+/* ---- Key words: the National Conversation skills table ---- */
+.rl-words {
+  margin: 0;
+  border: 2px solid var(--a27-ink);
+}
+
+.rl-words > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rl-words > div + div {
+  border-top: 1px solid var(--a27-ink);
+}
+
+.rl-words dt {
+  padding: 0.85rem 1.1rem 0.2rem;
+  font-weight: 700;
+}
+
+.rl-words dd {
+  margin: 0;
+  padding: 0 1.1rem 0.85rem;
+}
+
+.rl-words dd p:last-child {
+  margin-bottom: 0;
+}
+
+.rl-words__adapted {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--a27-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---- Take it further, Materials ---- */
+.rl-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rl-rows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.15rem 1.5rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--a27-rule);
+}
+
+.rl-rows li:first-child {
+  padding-top: 0;
+}
+
+.rl-rows__type {
+  color: var(--rl-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rl-rows a {
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.rl-rows a:hover {
+  color: var(--rl-deep);
+}
+
+.rl-empty {
+  padding: 1rem 1.25rem;
+  border: 2px dashed var(--a27-rule);
+  color: var(--a27-dim);
+}
+
+.rl-back {
+  margin: 3rem 0 0;
+}
+
+.rl-back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rl-back a:hover {
+  color: var(--rl-deep);
+}
+
+.rl-back svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- Wider screens ---- */
+@media (min-width: 40rem) {
+  .rl-words > div {
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+  }
+
+  .rl-words dt {
+    padding: 0.9rem 1.25rem;
+    border-right: 1px solid var(--a27-ink);
+    background: var(--a27-card);
+  }
+
+  .rl-words dd {
+    padding: 0.9rem 1.25rem;
+  }
+
+  .rl-rows li {
+    grid-template-columns: 9rem minmax(0, 1fr);
+    align-items: baseline;
+  }
+
+  .rl-step {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 52rem) {
+  .rl-hero {
+    padding: 9.5rem 0 3.25rem;
+  }
+
+  /* The strand's mark stands beside the title, as on the homepage hero. */
+  .rl-hero__inner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: clamp(7rem, 13vw, 11rem);
+    aspect-ratio: 1;
+    background: var(--a27-ink);
+    -webkit-mask: var(--rl-mark) center / contain no-repeat;
+    mask: var(--rl-mark) center / contain no-repeat;
+  }
+
+  .rl-eyebrow,
+  .rl-title,
+  .rl-lead {
+    margin-right: clamp(9rem, 16vw, 14rem);
+  }
+
+  .rl-facts {
+    --cut: 1.25rem;
+    -webkit-clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  }
+}
+
+@media (min-width: 64rem) {
+  .rl-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    gap: 4rem;
+    padding-top: 3rem;
+  }
+
+  .rl-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .rl-aside {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .rl-aside__sticky {
+    position: sticky;
+    top: calc(var(--rl-header) + 1.5rem);
+    max-height: calc(100vh - var(--rl-header) - 3rem);
+    overflow-y: auto;
+  }
+
+  .admin-bar .rl-aside__sticky {
+    top: calc(var(--rl-header) + 32px + 1.5rem);
+  }
+
+  .rl-toc {
+    display: block;
+  }
+
+  .rl-section:first-child,
+  .rl-intro + .rl-section {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .rl {
+    --rl-header: 68px;
+  }
+
+  /* A 1200x630 download is a desktop job; on a phone, Share covers it. */
+  .rl .resource-social-card-btn {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.rl) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---- Print: a lesson plan on paper ---- */
+@media print {
+  .rl-aside,
+  .rl-actions,
+  .rl-back,
+  .rl-question__show,
+  .rl-empty {
+    display: none !important;
+  }
+
+  .rl,
+  .rl-hero {
+    background: none;
+  }
+
+  .rl-hero {
+    padding: 0 0 1rem;
+  }
+
+  .rl-hero__inner::after {
+    display: none;
+  }
+
+  .rl-title {
+    font-size: 24pt;
+  }
+
+  .rl-eyebrow,
+  .rl-title,
+  .rl-lead {
+    margin-right: 0;
+  }
+
+  .rl-facts,
+  .rl-question__panel {
+    -webkit-clip-path: none;
+    clip-path: none;
+  }
+
+  .rl-facts > div,
+  .rl-question__panel,
+  .rl-step__num,
+  .rl .rl-tag--time {
+    background: none;
+    color: var(--a27-ink);
+    border: 1px solid var(--a27-ink);
+  }
+
+  .rl .rl-question__label {
+    color: var(--a27-ink);
+  }
+
+  .rl-adapt__card--debate {
+    border: 2px solid var(--a27-ink);
+  }
+
+  .rl-debate__tabs {
+    display: none !important;
+  }
+
+  .rl-debate__panel {
+    background: none;
+    border: 2px solid var(--a27-ink);
+    break-inside: avoid;
+  }
+
+  .rl-debate.is-tabbed .rl-debate__age {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+  }
+
+  .rl-layout {
+    display: block;
+    padding: 0;
+  }
+
+  .rl-section {
+    padding-top: 1rem;
+  }
+
+  .rl-section + .rl-section {
+    margin-top: 1rem;
+  }
+
+  .rl-step,
+  .rl-adapt__card,
+  .rl-words > div,
+  .rl-question__panel {
+    break-inside: avoid;
+  }
+
+  .rl-section h2 {
+    break-after: avoid;
+  }
+
+  /* Only the materials need their addresses on paper. */
+  .rl a[href^="http"]::after {
+    content: none;
+  }
+
+  .rl .rl-rows a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    font-weight: 400;
+    word-break: break-all;
+  }
+}

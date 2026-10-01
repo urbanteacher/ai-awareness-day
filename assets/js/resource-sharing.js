@@ -35,9 +35,18 @@
             // Fallback: copy URL to clipboard
             copyToClipboard(url).then(function(ok) {
                 var originalLabel = btn.getAttribute('aria-label');
+                var visible = btn.querySelector('.rl-btn__label');
+                var originalText = visible ? visible.textContent : '';
                 btn.setAttribute('aria-label', ok ? 'Link copied!' : 'Copy failed');
+                // The lesson page shows the result too, not only to screen readers.
+                if (visible) {
+                    visible.textContent = ok ? 'Link copied' : 'Copy failed';
+                }
                 setTimeout(function() {
                     btn.setAttribute('aria-label', originalLabel || 'Share this resource');
+                    if (visible) {
+                        visible.textContent = originalText;
+                    }
                 }, 2000);
             });
         }

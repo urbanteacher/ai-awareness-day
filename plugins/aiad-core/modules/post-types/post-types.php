@@ -319,6 +319,44 @@ function aiad_register_resource_meta(): void {
         },
     ) );
 
+    register_post_meta( 'resource', '_aiad_debate', array(
+        'type'          => 'string',
+        'single'        => true,
+        'default'       => '',
+        'show_in_rest'  => true,
+        'auth_callback' => function () {
+            return current_user_can( 'edit_posts' );
+        },
+    ) );
+
+    register_post_meta( 'resource', '_aiad_debate_pack', array(
+        'type'          => 'object',
+        'single'        => true,
+        'default'       => array(),
+        'show_in_rest'  => array(
+            'schema' => array(
+                'type'       => 'object',
+                'properties' => array(
+                    'primary_motion' => array( 'type' => 'string' ),
+                    'primary_prompt' => array( 'type' => 'string' ),
+                    'primary_for' => array( 'type' => 'string' ),
+                    'primary_against' => array( 'type' => 'string' ),
+                    'secondary_motion' => array( 'type' => 'string' ),
+                    'secondary_prompt' => array( 'type' => 'string' ),
+                    'secondary_for' => array( 'type' => 'string' ),
+                    'secondary_against' => array( 'type' => 'string' ),
+                    'post16_motion' => array( 'type' => 'string' ),
+                    'post16_prompt' => array( 'type' => 'string' ),
+                    'post16_for' => array( 'type' => 'string' ),
+                    'post16_against' => array( 'type' => 'string' ),
+                ),
+            ),
+        ),
+        'auth_callback' => function () {
+            return current_user_can( 'edit_posts' );
+        },
+    ) );
+
     register_post_meta( 'resource', '_aiad_learning_objectives', array(
         'type'          => 'array',
         'single'        => true,
