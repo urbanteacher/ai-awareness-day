@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_core_enqueue_record_editors(): void {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	if ( ! $screen || ! in_array( $screen->post_type, apply_filters( 'aiad_core_record_editor_post_types', array( 'timeline', 'live_session', 'partner', 'featured_resource' ) ), true ) ) {
+	if ( ! $screen || ! in_array( $screen->post_type, apply_filters( 'aiad_core_record_editor_post_types', array( 'timeline', 'live_session', 'partner', 'featured_resource', 'ai_tool' ) ), true ) ) {
 		return;
 	}
 	$asset_file = AIAD_CORE_DIR . 'build/editors/index.asset.php';
@@ -39,3 +39,19 @@ function aiad_core_enqueue_record_editors(): void {
 	}
 }
 add_action( 'enqueue_block_editor_assets', 'aiad_core_enqueue_record_editors' );
+
+/**
+ * The nonce the Fetch image button needs (modules/admin/card-image.php), for the
+ * types that have one.
+ *
+ * @param array                    $settings Editor settings.
+ * @param WP_Block_Editor_Context $context  The screen being edited.
+ * @return array
+ */
+function aiad_core_image_fetch_settings( array $settings, WP_Block_Editor_Context $context ): array {
+	if ( $context->post && in_array( $context->post->post_type, array( 'resource', 'featured_resource' ), true ) ) {
+		$settings['aiadImageFetch'] = array( 'nonce' => wp_create_nonce( 'aiad_fetch_card_image' ) );
+	}
+	return $settings;
+}
+add_filter( 'block_editor_settings_all', 'aiad_core_image_fetch_settings', 10, 2 );

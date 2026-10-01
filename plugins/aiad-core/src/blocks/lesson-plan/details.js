@@ -10,17 +10,17 @@ import { store as editorStore } from '@wordpress/editor';
 import {
 	Button,
 	CheckboxControl,
-	RadioControl,
 	SelectControl,
 	TextControl,
 	TextareaControl,
 	BaseControl,
 } from '@wordpress/components';
-import { useEntityProp, store as coreStore } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 
 import {
+	CardImageKeywords,
 	FocalPoint,
+	SingleTerm,
 	registerRecordDetails,
 	useEditorSetting,
 } from '../../shared/record-editor';
@@ -53,20 +53,6 @@ const FOCAL_CONTEXTS = [
 
 function LessonFields( record ) {
 	const { set, text, list } = record;
-	const [ themeIds, setThemeIds ] = useEntityProp(
-		'postType',
-		'resource',
-		'resource_principle'
-	);
-	const themes = useSelect(
-		( select ) =>
-			select( coreStore ).getEntityRecords(
-				'taxonomy',
-				'resource_principle',
-				{ per_page: -1, orderby: 'id', order: 'asc' }
-			),
-		[]
-	);
 	const published = useSelect(
 		( select ) =>
 			select( editorStore ).getEditedPostAttribute( 'status' ) ===
@@ -93,21 +79,15 @@ function LessonFields( record ) {
 				onChange={ set( '_aiad_subtitle' ) }
 			/>
 
-			{ Array.isArray( themes ) && (
-				<RadioControl
-					label={ __( 'Theme', 'aiad-core' ) }
-					help={ __(
-						'Sets the lesson’s colour and its place in Classroom resources.',
-						'aiad-core'
-					) }
-					selected={ String( ( themeIds || [] )[ 0 ] || '' ) }
-					options={ themes.map( ( t ) => ( {
-						value: String( t.id ),
-						label: t.name,
-					} ) ) }
-					onChange={ ( id ) => setThemeIds( [ Number( id ) ] ) }
-				/>
-			) }
+			<SingleTerm
+				postType="resource"
+				taxonomy="resource_principle"
+				label={ __( 'Theme', 'aiad-core' ) }
+				help={ __(
+					'Sets the lesson’s colour and its place in Classroom resources.',
+					'aiad-core'
+				) }
+			/>
 
 			<SelectControl
 				__next40pxDefaultSize
@@ -217,16 +197,13 @@ function LessonFields( record ) {
 				onChange={ set( '_aiad_preview_video_url' ) }
 			/>
 
-			<TextControl
-				__next40pxDefaultSize
-				__nextHasNoMarginBottom
-				label={ __( 'Card image keywords', 'aiad-core' ) }
+			<CardImageKeywords
+				record={ record }
+				keyName="_aiad_image_keywords"
 				help={ __(
 					'Used to find a picture for the lesson’s card when it has no featured image.',
 					'aiad-core'
 				) }
-				value={ text( '_aiad_image_keywords' ) }
-				onChange={ set( '_aiad_image_keywords' ) }
 			/>
 
 			<FocalPoint contexts={ FOCAL_CONTEXTS } record={ record } />

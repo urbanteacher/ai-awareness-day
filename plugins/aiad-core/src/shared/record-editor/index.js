@@ -16,16 +16,22 @@
  *
  * See docs/WP71-STANDARDISATION.md for why, and for the order the types follow.
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import {
 	PluginDocumentSettingPanel,
 	store as editorStore,
 } from '@wordpress/editor';
-import { Button, FocalPointPicker } from '@wordpress/components';
+import {
+	Button,
+	FocalPointPicker,
+	RadioControl,
+	SelectControl,
+	TextControl,
+} from '@wordpress/components';
 import { useEntityProp, store as coreStore } from '@wordpress/core-data';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 
 import './record-editor.scss';
 
@@ -93,23 +99,6 @@ export function useHidePanels( postType, panels ) {
 }
 
 /**
- * Hide core panels for a type that has no Details panel yet, because its meta
- * box already holds the field.
- *
- * @param {Object}   config
- * @param {string}   config.postType The type.
- * @param {string}   config.name     Plugin name.
- * @param {string[]} config.panels   Core panel names to hide.
- */
-export function hideCorePanels( { postType, name, panels } ) {
-	function Hide() {
-		useHidePanels( postType, panels );
-		return null;
-	}
-	registerPlugin( name, { render: Hide } );
-}
-
-/**
  * Register a type's Details panel.
  *
  * @param {Object}   config
@@ -171,6 +160,192 @@ export function registerRecordDetails( {
 		);
 	}
 	registerPlugin( name, { render: Details } );
+}
+
+/**
+ * A taxonomy where a record has exactly one term (a lesson's theme, a resource's
+ * format). Core's panel for a taxonomy is a list of checkboxes that allows several;
+ * this is the single choice the classic box offered. Hide core's panel for the
+ * taxonomy with `hidePanels` when you use this.
+ *
+ * @param {Object}  props
+ * @param {string}  props.postType Post type being edited.
+ * @param {string}  props.taxonomy Taxonomy slug, e.g. 'resource_principle'.
+ * @param {string}  props.label    The control's label.
+ * @param {string}  props.help     Help under it.
+ * @param {string}  props.variant  'radio' (few terms, all visible) or 'select'.
+ * @param {boolean} props.optional Offer "none" (select only).
+ * @return {Element|null} The control, once the terms have loaded.
+ */
+export function SingleTerm( {
+	postType,
+	taxonomy,
+	label,
+	help,
+	variant = 'radio',
+	optional = false,
+} ) {
+	const [ termIds, setTermIds ] = useEntityProp(
+		'postType',
+		postType,
+		taxonomy
+	);
+	const terms = useSelect(
+		( select ) =>
+			select( coreStore ).getEntityRecords( 'taxonomy', taxonomy, {
+				per_page: -1,
+				orderby: 'id',
+				order: 'asc',
+			} ),
+		[ taxonomy ]
+	);
+	if ( ! Array.isArray( terms ) ) {
+		return null;
+	}
+	const selected = String( ( termIds || [] )[ 0 ] || '' );
+	const options = terms.map( ( t ) => ( {
+		value: String( t.id ),
+		label: t.name,
+	} ) );
+	const onChange = ( id ) => setTermIds( id ? [ Number( id ) ] : [] );
+
+	if ( variant === 'select' ) {
+		return (
+			<SelectControl
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+				label={ label }
+				help={ help }
+				value={ selected }
+				options={ [
+					...( optional
+						? [
+								{
+									value: '',
+									label: __( '— None —', 'aiad-core' ),
+								},
+							]
+						: [] ),
+					...options,
+				] }
+				onChange={ onChange }
+			/>
+		);
+	}
+	return (
+		<RadioControl
+			label={ label }
+			help={ help }
+			selected={ selected }
+			options={ options }
+			onChange={ onChange }
+		/>
+	);
+}
+
+/**
+ * Card image keywords, with the Fetch image button: asks the server for a picture
+ * for the keywords, which it saves to the media library, and takes it as the
+ * record's featured image (modules/admin/card-image.php).
+ *
+ * @param {Object} props
+ * @param {Object} props.record  The result of useRecordMeta().
+ * @param {string} props.keyName The meta key that holds the keywords.
+ * @param {string} props.help    Help under the field.
+ * @return {Element} The control.
+ */
+export function CardImageKeywords( { record, keyName, help } ) {
+	const settings = useEditorSetting( 'aiadImageFetch' );
+	const postId = useSelect(
+		( select ) => select( editorStore ).getCurrentPostId(),
+		[]
+	);
+	const { editPost } = useDispatch( editorStore );
+	const [ state, setState ] = useState( { busy: false, ok: true, text: '' } );
+	const keywords = record.text( keyName );
+
+	async function fetchImage() {
+		if ( ! keywords.trim() ) {
+			setState( {
+				busy: false,
+				ok: false,
+				text: __( 'Enter keywords first.', 'aiad-core' ),
+			} );
+			return;
+		}
+		setState( { busy: true, ok: true, text: '' } );
+		try {
+			const body = new URLSearchParams( {
+				action: 'aiad_fetch_card_image',
+				post_id: String( postId ),
+				keywords,
+				nonce: settings.nonce || '',
+			} );
+			const response = await window.fetch( window.ajaxurl, {
+				method: 'POST',
+				body,
+				credentials: 'same-origin',
+			} );
+			const json = await response.json();
+			if ( json.success ) {
+				editPost( { featured_media: json.data.attachment_id } );
+				setState( {
+					busy: false,
+					ok: true,
+					text: __( 'Featured image set.', 'aiad-core' ),
+				} );
+			} else {
+				setState( {
+					busy: false,
+					ok: false,
+					text: sprintf(
+						/* translators: %s: the reason the image could not be fetched. */
+						__( 'Error: %s', 'aiad-core' ),
+						String(
+							json.data || __( 'unknown error', 'aiad-core' )
+						)
+					),
+				} );
+			}
+		} catch {
+			setState( {
+				busy: false,
+				ok: false,
+				text: __( 'Request failed.', 'aiad-core' ),
+			} );
+		}
+	}
+
+	return (
+		<div className="aiad-re-fetch">
+			<TextControl
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+				label={ __( 'Card image keywords', 'aiad-core' ) }
+				help={ help }
+				value={ keywords }
+				onChange={ record.set( keyName ) }
+			/>
+			<Button
+				variant="secondary"
+				isBusy={ state.busy }
+				disabled={ state.busy }
+				onClick={ fetchImage }
+			>
+				{ state.busy
+					? __( 'Fetching…', 'aiad-core' )
+					: __( 'Fetch image', 'aiad-core' ) }
+			</Button>
+			{ state.text && (
+				<p
+					className={ `aiad-re-fetch__status${ state.ok ? '' : ' is-error' }` }
+					role="status"
+				>
+					{ state.text }
+				</p>
+			) }
+		</div>
+	);
 }
 
 /**

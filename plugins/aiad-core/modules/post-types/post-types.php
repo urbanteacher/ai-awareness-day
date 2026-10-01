@@ -137,7 +137,8 @@ function aiad_register_post_types(): void {
         'has_archive'  => true,
         'rewrite'      => array( 'slug' => 'from-partners' ),
         'menu_icon'    => 'dashicons-share',
-        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+        // custom-fields: without it REST leaves the resource's meta out, and the block editor cannot edit it.
+        'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
         'show_in_rest' => true,
     ) );
 
@@ -541,6 +542,31 @@ function aiad_register_partner_meta(): void {
     ) );
 }
 add_action( 'init', 'aiad_register_partner_meta', 15 );
+
+/**
+ * Expose a featured resource's fields to the block editor (the Resource details
+ * panel, src/editors/featured-resource.js), under the keys the cards read.
+ */
+function aiad_register_featured_resource_meta(): void {
+    $fields = array(
+        '_featured_resource_url'            => 'esc_url_raw',
+        '_featured_resource_org_name'       => 'sanitize_text_field',
+        '_featured_resource_org_url'        => 'esc_url_raw',
+        '_featured_resource_image_keywords' => 'sanitize_text_field',
+    );
+    foreach ( $fields as $key => $sanitize ) {
+        register_post_meta( 'featured_resource', $key, array(
+            'type'              => 'string',
+            'single'            => true,
+            'show_in_rest'      => true,
+            'sanitize_callback' => $sanitize,
+            'auth_callback'     => static function () {
+                return current_user_can( 'edit_posts' );
+            },
+        ) );
+    }
+}
+add_action( 'init', 'aiad_register_featured_resource_meta', 15 );
 
 /**
  * Migrate old meta keys to new naming convention.

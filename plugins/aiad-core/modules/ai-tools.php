@@ -43,7 +43,8 @@ function aiad_register_ai_tool_post_type(): void {
 		'show_in_menu'       => true,
 		'menu_icon'          => 'dashicons-laptop',
 		'show_in_rest'       => true,
-		'supports'           => array( 'title', 'excerpt', 'thumbnail' ),
+		// editor: without it WordPress opens the tool on the classic edit screen, not the block editor. custom-fields: so REST returns its meta.
+		'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
 	) );
 }
 add_action( 'init', 'aiad_register_ai_tool_post_type', 10 );
@@ -486,19 +487,21 @@ add_action( 'init', 'aiad_seed_tools_v2', 26 );
 
 function aiad_register_tool_meta(): void {
 	$fields = array(
-		'_aiad_tool_url'      => 'string',
-		'_aiad_tool_status'   => 'string',
-		'_aiad_tool_use_case' => 'string',
-		'_aiad_tool_features' => 'string',
+		'_aiad_tool_url'      => 'esc_url_raw',
+		'_aiad_tool_status'   => 'sanitize_text_field',
+		'_aiad_tool_use_case' => 'sanitize_text_field',
+		'_aiad_tool_features' => 'sanitize_textarea_field',
 	);
 
-	foreach ( $fields as $key => $type ) {
+	foreach ( $fields as $key => $sanitize ) {
 		register_post_meta( 'ai_tool', $key, array(
-			'type'          => $type,
-			'single'        => true,
-			'default'       => '',
-			'show_in_rest'  => true,
-			'auth_callback' => function () {
+			'type'              => 'string',
+			'single'            => true,
+			'default'           => '',
+			'show_in_rest'      => true,
+			// The block editor saves through REST, which sanitises nothing by itself.
+			'sanitize_callback' => $sanitize,
+			'auth_callback'     => function () {
 				return current_user_can( 'edit_posts' );
 			},
 		) );
@@ -517,7 +520,9 @@ function aiad_add_tool_meta_box(): void {
 		'aiad_render_tool_meta_box',
 		'ai_tool',
 		'normal',
-		'high'
+		'high',
+		// Classic editor only. In the block editor these fields are in the Tool details panel (src/editors/ai-tool.js).
+		array( '__back_compat_meta_box' => true )
 	);
 }
 add_action( 'add_meta_boxes', 'aiad_add_tool_meta_box' );

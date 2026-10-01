@@ -7,4 +7,5 @@
 import './timeline';
 import './event';
 import './partner';
+import './ai-tool';
 import './featured-resource';

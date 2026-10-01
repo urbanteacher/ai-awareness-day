@@ -253,7 +253,11 @@ function aiad_featured_resource_meta_box(): void {
         __( 'External resource link, theme & attribution', 'ai-awareness-day' ),
         'aiad_featured_resource_callback',
         'featured_resource',
-        'normal'
+        'normal',
+        'default',
+        /* Classic editor only. In the block editor these fields are in the Resource
+           details panel (src/editors/featured-resource.js). */
+        array( '__back_compat_meta_box' => true )
     );
 }
 function aiad_featured_resource_callback( WP_Post $post ): void {
