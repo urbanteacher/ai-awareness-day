@@ -36,29 +36,39 @@ $school = $airb_school_name ?? '';
 <script>
 (function(){
 	var form = document.getElementById('airb-school-lookup-form');
-	if (!form || !window.airbBenchmark) return;
+	if (!form) return;
 	var results = document.getElementById('airb-school-results');
 	var err = document.getElementById('airb-school-error');
+	function fail(message) {
+		err.textContent = message;
+		err.hidden = false;
+		results.hidden = true;
+	}
 	form.addEventListener('submit', function(e){
 		e.preventDefault();
 		err.hidden = true;
 		var name = document.getElementById('airb-school-lookup-input').value.trim();
 		if (!name) return;
+		// airbBenchmark is printed with the footer scripts, after this tag, so it is read when the form is sent.
+		var cfg = window.airbBenchmark;
+		if (!cfg || !cfg.rest) {
+			fail('Something went wrong. Please try again.');
+			return;
+		}
 		var body = new FormData();
-		body.append('action', 'airb_school_dashboard');
-		body.append('nonce', airbBenchmark.nonce);
 		body.append('school_name', name);
-		fetch(airbBenchmark.ajaxurl, { method:'POST', body: body, credentials:'same-origin' })
+		fetch(cfg.rest + 'school_dashboard', { method:'POST', body: body, credentials:'same-origin' })
 			.then(function(r){ return r.json(); })
 			.then(function(json){
 				if (!json.success) {
-					err.textContent = (json.data && json.data.message) ? json.data.message : 'Not found';
-					err.hidden = false;
-					results.hidden = true;
+					fail((json.data && json.data.message) ? json.data.message : 'Not found');
 					return;
 				}
 				window.airbRenderSchoolDashboard && window.airbRenderSchoolDashboard(json.data.rollup, results);
 				results.hidden = false;
+			})
+			.catch(function(){
+				fail((cfg.i18n && cfg.i18n.error) || 'Something went wrong. Please try again.');
 			});
 	});
 })();
