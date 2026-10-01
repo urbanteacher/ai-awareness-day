@@ -146,14 +146,11 @@ function aiad_scripts(): void
         $script_args
     );
 
-    // Localize for AJAX: only output nonces where they are used to reduce payload. What is left is the contact form
-    // and the resource filter; the timeline and the counters are REST routes found through the discovery link.
+    // Localize for AJAX: only output nonces where they are used to reduce payload. What is left is the contact form;
+    // the timeline, the counters and the resource filter are REST routes found through the discovery link.
     $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
     if (is_front_page()) {
         $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
-    }
-    if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
-        $aiad_ajax['filter_nonce'] = wp_create_nonce('aiad_filter_nonce');
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
@@ -167,12 +164,11 @@ function aiad_scripts(): void
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';
-        wp_enqueue_script(
-            'aiad-resource-filters',
+        wp_enqueue_script_module(
+            'aiad/resource-filters',
             AIAD_URI . '/assets/js/resource-filters.js',
-            array('aiad-main'),
-            file_exists( $resource_filters_js ) ? filemtime( $resource_filters_js ) : AIAD_VERSION,
-            $script_args
+            array( 'aiad/rest' ),
+            file_exists( $resource_filters_js ) ? filemtime( $resource_filters_js ) : AIAD_VERSION
         );
     }
 

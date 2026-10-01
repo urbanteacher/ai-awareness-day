@@ -1,6 +1,6 @@
 <?php
 /**
- * Resource filter: AJAX handler for the /resources/ and /from-partners/ archives, and the cached filter counts.
+ * Resource filter: the REST route for the /resources/ and /from-partners/ archives, and the cached filter counts.
  *
  * Results carry their card HTML from the theme's template-parts/components/resource-tile.php (kept in the theme
  * until the card becomes a block).
@@ -235,16 +235,19 @@ add_action( 'save_post_resource', 'aiad_bump_filter_counts_version' );
 add_action( 'save_post_featured_resource', 'aiad_bump_filter_counts_version' );
 
 /**
- * AJAX handler: filter resources
+ * GET aiad/v1/resources: the resources that match the archive's filters, each as its card markup, with the counts the
+ * filter menus show.
+ *
+ * Public, read-only data, so there is no nonce to expire on a cached page; it was an admin-ajax handler that
+ * already skipped the check. The page script finds the route through the REST discovery link
+ * (assets/js/resource-filters.js).
+ *
+ * @param WP_REST_Request $request Request: `post_type` (resource or featured_resource), and any of `principle`,
+ *                                 `duration`, `activity_type` and `key_stage` (a slug, or a list of slugs).
+ * @return WP_REST_Response|WP_Error
  */
-function aiad_ajax_filter_resources(): void {
-    // No nonce required: this endpoint only returns public, published post data.
-    // A nonce would expire on cached pages and break filtering for all visitors.
-
-    $post_type = sanitize_text_field( $_POST['post_type'] ?? 'resource' );
-    if ( ! in_array( $post_type, array( 'resource', 'featured_resource' ), true ) ) {
-        wp_send_json_error( array( 'message' => __( 'Invalid request. Please try again.', 'ai-awareness-day' ) ) );
-    }
+function aiad_rest_filter_resources( WP_REST_Request $request ) {
+    $post_type = (string) $request->get_param( 'post_type' );
 
     $args = array(
         'post_type'              => $post_type,
@@ -258,7 +261,7 @@ function aiad_ajax_filter_resources(): void {
 
     $tax_query = array();
 
-    $principle = sanitize_text_field( $_POST['principle'] ?? '' );
+    $principle = sanitize_text_field( (string) $request->get_param( 'principle' ) );
     if ( $principle ) {
         $tax_query[] = array(
             'taxonomy' => 'resource_principle',
@@ -267,8 +270,8 @@ function aiad_ajax_filter_resources(): void {
         );
     }
 
-    $duration = sanitize_text_field( $_POST['duration'] ?? '' );
-    $legacy_type = sanitize_text_field( $_POST['resource_type'] ?? '' );
+    $duration = sanitize_text_field( (string) $request->get_param( 'duration' ) );
+    $legacy_type = sanitize_text_field( (string) $request->get_param( 'resource_type' ) );
     if ( ! $duration && $legacy_type && function_exists( 'aiad_legacy_resource_type_slug_to_duration_slug' ) ) {
         $duration = aiad_legacy_resource_type_slug_to_duration_slug( $legacy_type );
     }
@@ -280,7 +283,7 @@ function aiad_ajax_filter_resources(): void {
         );
     }
 
-    $activity_type = sanitize_text_field( $_POST['activity_type'] ?? '' );
+    $activity_type = sanitize_text_field( (string) $request->get_param( 'activity_type' ) );
     if ( $activity_type ) {
         $tax_query[] = array(
             'taxonomy' => 'activity_type',
@@ -294,15 +297,8 @@ function aiad_ajax_filter_resources(): void {
         $args['tax_query'] = $tax_query;
     }
 
-    $key_stage = array();
-    if ( ! empty( $_POST['key_stage'] ) ) {
-        if ( is_array( $_POST['key_stage'] ) ) {
-            $key_stage = array_map( 'sanitize_text_field', wp_unslash( $_POST['key_stage'] ) );
-        } else {
-            $key_stage = array( sanitize_text_field( wp_unslash( $_POST['key_stage'] ) ) );
-        }
-        $key_stage = array_values( array_intersect( $key_stage, array_keys( aiad_key_stage_options() ) ) );
-    }
+    $key_stage = array_values( array_filter( array_map( 'sanitize_text_field', (array) $request->get_param( 'key_stage' ) ) ) );
+    $key_stage = array_values( array_intersect( $key_stage, array_keys( aiad_key_stage_options() ) ) );
     if ( ! empty( $key_stage ) ) {
         $meta_clauses = array();
         foreach ( $key_stage as $ks ) {
@@ -392,11 +388,34 @@ function aiad_ajax_filter_resources(): void {
 
     $counts = aiad_get_filter_counts( $post_type, $tax_query, $key_stage );
 
-    wp_send_json_success( array(
-        'resources'      => $results,
-        'total'          => count( $results ),
-        'filter_counts'  => $counts,
-    ) );
+    return new WP_REST_Response(
+        array(
+            'resources'     => $results,
+            'total'         => count( $results ),
+            'filter_counts' => $counts,
+        )
+    );
 }
-add_action( 'wp_ajax_aiad_filter_resources', 'aiad_ajax_filter_resources' );
-add_action( 'wp_ajax_nopriv_aiad_filter_resources', 'aiad_ajax_filter_resources' );
+
+/**
+ * Register the route.
+ */
+function aiad_register_resource_filter_rest_route(): void {
+    register_rest_route(
+        'aiad/v1',
+        '/resources',
+        array(
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => 'aiad_rest_filter_resources',
+            'permission_callback' => '__return_true',
+            'args'                => array(
+                'post_type' => array(
+                    'type'    => 'string',
+                    'default' => 'resource',
+                    'enum'    => array( 'resource', 'featured_resource' ),
+                ),
+            ),
+        )
+    );
+}
+add_action( 'rest_api_init', 'aiad_register_resource_filter_rest_route' );

@@ -1,7 +1,11 @@
 /**
- * AJAX resource filtering — no page reload.
- * Listens to filter selects, fetches results, updates grid and URL.
+ * Resource filtering without a page reload.
+ * Listens to filter selects, fetches results from the site's REST route (aiad/v1/resources, found through the
+ * discovery link by restUrl() in aiad/rest), updates the grid and the URL. A script module, "aiad/resource-filters"
+ * (inc/setup.php). If the route cannot be reached the form is submitted, so the server-rendered archive still filters.
  */
+import { restUrl } from 'aiad/rest';
+
 (function () {
     'use strict';
 
@@ -9,8 +13,6 @@
     var grid = document.querySelector( '.resource-tiles' );
     var loadingEl = document.querySelector( '.resources-loading' );
     var emptyMessage = document.querySelector( '.resources-empty-message' );
-    var ajaxConfig = typeof aiad_ajax !== 'undefined' ? aiad_ajax : {};
-    var canUseAjax = !! ajaxConfig.url;
 
     if ( ! form || ! grid ) {
         return;
@@ -23,8 +25,6 @@
     function getFilterValues() {
         var selects = form.querySelectorAll( 'select[data-filter="true"]' );
         var data = {
-            action: 'aiad_filter_resources',
-            filter_nonce: ajaxConfig.filter_nonce || '',
             post_type: postType
         };
         selects.forEach( function (sel) {
@@ -119,34 +119,30 @@
     }
 
     function runFilter() {
-        // Fallback for stale/missing localized script data on live caches:
-        // submit as normal GET request so server-side archive filtering still works.
-        if ( ! canUseAjax ) {
+        var data = getFilterValues();
+        var url = restUrl( 'aiad/v1/resources', data );
+        // No discovery link in the page: submit as a normal GET request so server-side archive filtering still works.
+        if ( ! url ) {
             form.submit();
             return;
         }
 
-        var data = getFilterValues();
         showLoading( true );
         if ( emptyMessage ) emptyMessage.style.display = 'none';
 
-        fetch( ajaxConfig.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: buildParams( data )
-        })
-            .then( function ( res ) { return res.json(); } )
-            .then( function ( json ) {
-                if ( ! json || ! json.success || ! json.data ) {
-                    // Stale cached nonce on live can cause AJAX to fail even when config exists.
-                    // Fall back to server-rendered filtering so users are never stuck.
+        fetch( url )
+            .then( function ( res ) { return res.ok ? res.json() : null; } )
+            .then( function ( data ) {
+                if ( ! data ) {
+                    // The route failed (an old cached page, a proxy in the way): fall back to server-rendered
+                    // filtering so users are never stuck.
                     form.submit();
                     return;
                 }
                 showLoading( false );
-                var resources = json.data.resources || [];
+                var resources = data.resources || [];
                 updateGrid( resources );
-                applyFilterCounts( json.data.filter_counts );
+                applyFilterCounts( data.filter_counts );
                 var params = {};
                 form.querySelectorAll( 'select[data-filter="true"]' ).forEach( function ( sel ) {
                     if ( sel.name && sel.value ) params[ sel.name ] = sel.value;
