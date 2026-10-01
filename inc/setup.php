@@ -146,44 +146,22 @@ function aiad_scripts(): void
         $script_args
     );
 
-    // Localize for AJAX: only output nonces where they are used to reduce payload
+    // Localize for AJAX: only output nonces where they are used to reduce payload. What is left is the contact form
+    // and the resource filter; the timeline and the counters are REST routes found through the discovery link.
     $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
     if (is_front_page()) {
         $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
-        $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
-    }
-    if ( is_post_type_archive( 'timeline' ) ) {
-        $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
-    }
-    if (is_singular('timeline')) {
-        $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
-    }
-    if ( is_singular( 'post' ) ) {
-        $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
-    }
-    if ( is_singular( 'live_session' ) || is_post_type_archive( 'live_session' ) ) {
-        $aiad_ajax['engagement_nonce'] = wp_create_nonce( 'aiad_engagement_nonce' );
     }
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $aiad_ajax['filter_nonce'] = wp_create_nonce('aiad_filter_nonce');
-        $aiad_ajax['track_download_nonce'] = wp_create_nonce('aiad_track_download_nonce');
-    }
-    if (is_singular('resource')) {
-        $aiad_ajax['track_download_nonce'] = wp_create_nonce('aiad_track_download_nonce');
-        $aiad_ajax['track_view_nonce']     = wp_create_nonce('aiad_track_view_nonce');
     }
     wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
 
-    if ( is_front_page() || is_singular( 'live_session' ) || is_post_type_archive( 'live_session' ) ) {
-        $engagement_js = AIAD_DIR . '/assets/js/engagement-tracking.js';
-        wp_enqueue_script(
-            'aiad-engagement-tracking',
-            AIAD_URI . '/assets/js/engagement-tracking.js',
-            array( 'aiad-main' ),
-            file_exists( $engagement_js ) ? filemtime( $engagement_js ) : AIAD_VERSION,
-            $script_args
-        );
-    }
+    // The theme's script modules. They share aiad/rest, which finds the REST routes through the discovery link.
+    $rest_js     = AIAD_DIR . '/assets/js/rest.js';
+    $tracking_js = AIAD_DIR . '/assets/js/tracking.js';
+    wp_register_script_module( 'aiad/rest', AIAD_URI . '/assets/js/rest.js', array(), file_exists( $rest_js ) ? filemtime( $rest_js ) : AIAD_VERSION );
+    wp_enqueue_script_module( 'aiad/tracking', AIAD_URI . '/assets/js/tracking.js', array( 'aiad/rest' ), file_exists( $tracking_js ) ? filemtime( $tracking_js ) : AIAD_VERSION );
 
     // balloons-js disabled post-event. Assets remain in theme for reuse.
 
@@ -259,15 +237,9 @@ function aiad_scripts(): void
         );
     }
 
-    // Timeline JS only where the AJAX feed exists (#timeline-feed on front page + archive).
+    // Timeline JS only where the feed exists (#timeline-feed on front page + archive).
     if ( ( is_front_page() || is_singular( 'timeline' ) || is_post_type_archive( 'timeline' ) ) && ! is_admin() ) {
-        wp_enqueue_script(
-            'aiad-timeline',
-            AIAD_URI . '/assets/js/timeline.js',
-            array( 'aiad-main' ),
-            $timeline_js_ver,
-            true
-        );
+        wp_enqueue_script_module( 'aiad/timeline', AIAD_URI . '/assets/js/timeline.js', array( 'aiad/rest' ), $timeline_js_ver );
     }
 
     if ( is_singular( 'resource' ) && ! is_admin() && file_exists( $entry_figure_css ) && ! wp_style_is( 'aiad-entry-figure', 'enqueued' ) ) {

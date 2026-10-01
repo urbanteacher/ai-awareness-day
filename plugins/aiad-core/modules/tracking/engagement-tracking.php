@@ -206,63 +206,6 @@ function aiad_engagement_is_trackable_post( int $post_id, string $event = '' ): 
 }
 
 /**
- * AJAX: track click, share, or view.
- */
-function aiad_ajax_track_engagement(): void {
-	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'aiad_engagement_nonce' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Security check failed.', 'ai-awareness-day' ) ) );
-	}
-
-	$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
-	$event   = isset( $_POST['event'] ) ? sanitize_key( wp_unslash( $_POST['event'] ) ) : '';
-
-	if ( $event === 'hero_partners_stat' ) {
-		$count = (int) get_option( 'aiad_hero_partners_stat_clicks', 0 );
-		++$count;
-		update_option( 'aiad_hero_partners_stat_clicks', $count, false );
-		wp_send_json_success( array( 'count' => $count ) );
-	}
-
-	if ( ! $post_id || ! aiad_engagement_is_trackable_post( $post_id, $event ) ) {
-		wp_send_json_error( array( 'message' => __( 'Invalid content.', 'ai-awareness-day' ) ) );
-	}
-
-	$post      = get_post( $post_id );
-	$meta_key  = $post ? aiad_engagement_event_meta_key( $post->post_type, $event ) : null;
-	if ( ! $meta_key ) {
-		wp_send_json_error( array( 'message' => __( 'Invalid event.', 'ai-awareness-day' ) ) );
-	}
-
-	if ( $event === 'view' ) {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		if ( $ip !== '' ) {
-			$key = 'aiad_engagement_viewed_' . md5( $ip . $post_id . $event );
-			if ( get_transient( $key ) ) {
-				wp_send_json_success( array( 'count' => (int) get_post_meta( $post_id, $meta_key, true ), 'skipped' => true ) );
-			}
-			set_transient( $key, true, 6 * HOUR_IN_SECONDS );
-		}
-	}
-
-	$count = aiad_increment_engagement_meta( $post_id, $meta_key );
-
-	// Clicks on outbound links: also credit the destination article when it is on this site.
-	if ( $event === 'click' && ! empty( $_POST['target_url'] ) && $post && in_array( $post->post_type, aiad_engagement_post_types(), true ) ) {
-		$target_id = aiad_engagement_post_id_from_url( (string) wp_unslash( $_POST['target_url'] ) );
-		if ( $target_id > 0 && $target_id !== $post_id && aiad_engagement_is_trackable_post( $target_id, 'click' ) ) {
-			$target_key = aiad_engagement_event_meta_key( get_post_type( $target_id ), 'click' );
-			if ( $target_key ) {
-				aiad_increment_engagement_meta( $target_id, $target_key );
-			}
-		}
-	}
-
-	wp_send_json_success( array( 'count' => $count ) );
-}
-add_action( 'wp_ajax_aiad_track_engagement', 'aiad_ajax_track_engagement' );
-add_action( 'wp_ajax_nopriv_aiad_track_engagement', 'aiad_ajax_track_engagement' );
-
-/**
  * Top published posts by meta key across engagement post types.
  *
  * @param string $meta_key Meta key.

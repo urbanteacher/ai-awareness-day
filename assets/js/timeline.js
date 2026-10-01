@@ -2,34 +2,15 @@
  * Timeline: swipe deck (mobile), magazine (desktop), in-place filter, like/share.
  *
  * The filter and the like call the site's REST routes (aiad/v1/timeline), found through the discovery link WordPress
- * prints in the page head, so the page carries no address or token of its own and can be cached.
+ * prints in the page head (restUrl() in aiad/rest), so the page carries no address or token of its own and can be
+ * cached. A script module, "aiad/timeline" (inc/setup.php).
  *
  * @package AI_Awareness_Day
  */
+import { restUrl, sendBeacon } from 'aiad/rest';
+
 (function () {
     'use strict';
-
-    /**
-     * Address of one of the site's REST routes, from the discovery link in the head.
-     *
-     * @param {string} route Route under the REST root, e.g. "aiad/v1/timeline".
-     * @param {Object} [query] Query arguments.
-     * @return {string} The address, or '' when the page has no discovery link.
-     */
-    function restUrl( route, query ) {
-        var link = document.querySelector( 'link[rel="https://api.w.org/"]' );
-        if ( ! link || ! link.href ) {
-            return '';
-        }
-        var base = link.href.replace( /\/?$/, '/' ) + route;
-        var args = [];
-        Object.keys( query || {} ).forEach( function ( key ) {
-            args.push( encodeURIComponent( key ) + '=' + encodeURIComponent( query[ key ] ) );
-        } );
-        // With plain permalinks the root is ...?rest_route=/ and the route follows it, so more arguments join with &.
-        var joiner = link.href.indexOf( '?' ) === -1 ? '?' : '&';
-        return base + ( args.length ? joiner + args.join( '&' ) : '' );
-    }
 
     var feed    = document.getElementById( 'timeline-feed' );
     var feedRoot = feed ? feed.closest( '.timeline-archive__root, #timeline' ) : null;
@@ -360,21 +341,9 @@
     }
 
     function trackEngagement( postId, event, targetUrl ) {
-        if ( ! postId || typeof aiad_ajax === 'undefined' || ! aiad_ajax.engagement_nonce ) {
-            return;
+        if ( postId ) {
+            sendBeacon( 'aiad/v1/track/engagement', { post_id: postId, event: event, target_url: targetUrl } );
         }
-        var body = 'action=aiad_track_engagement'
-            + '&nonce=' + encodeURIComponent( aiad_ajax.engagement_nonce )
-            + '&post_id=' + encodeURIComponent( postId )
-            + '&event=' + encodeURIComponent( event );
-        if ( targetUrl ) {
-            body += '&target_url=' + encodeURIComponent( targetUrl );
-        }
-        fetch( aiad_ajax.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: body,
-        } ).catch( function () {} );
     }
 
     feed.addEventListener( 'click', function ( e ) {

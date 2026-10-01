@@ -765,58 +765,7 @@
             });
         }
 
-        // ============================================
-        // Resource page view tracking (fires once per page load)
-        // ============================================
-        (function () {
-            var card = document.querySelector('article.rl-article, article.resource-activity-card');
-            if (!card || typeof aiad_ajax === 'undefined' || !aiad_ajax.track_view_nonce) return;
-            var postId = card.id.replace('post-', '');
-            if (!postId) return;
-            fetch(aiad_ajax.url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'action=aiad_track_resource_view&post_id=' + encodeURIComponent(postId) +
-                      '&nonce=' + encodeURIComponent(aiad_ajax.track_view_nonce),
-            }).catch(function () {}); // Silently fail - tracking is non-critical
-        })();
-
-        // Blog post & timeline article view tracking
-        (function () {
-            if (typeof aiad_ajax === 'undefined' || !aiad_ajax.engagement_nonce) return;
-            var body = document.body;
-            if (!body || (!body.classList.contains('single-post') && !body.classList.contains('single-timeline') && !body.classList.contains('single-live_session'))) return;
-            var article = document.querySelector('article.session-single[data-session-id], article[id^="post-"]');
-            if (!article) return;
-            var postId = article.getAttribute('data-session-id') || (article.id ? article.id.replace('post-', '') : '');
-            if (!postId) return;
-            fetch(aiad_ajax.url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'action=aiad_track_engagement&post_id=' + encodeURIComponent(postId) +
-                      '&event=view&nonce=' + encodeURIComponent(aiad_ajax.engagement_nonce),
-            }).catch(function () {});
-        })();
-
-        // Download tracking (fire-and-forget, does not block download)
-        // ============================================
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('.resource-download-link, a[download]');
-            if (!link) return;
-            const postId = link.getAttribute('data-resource-id');
-            if (!postId || typeof aiad_ajax === 'undefined' || !aiad_ajax.url) return;
-
-            // Include nonce for security
-            const nonce = aiad_ajax.track_download_nonce || '';
-            const body = 'action=aiad_track_download&post_id=' + encodeURIComponent(postId) +
-                (nonce ? '&nonce=' + encodeURIComponent(nonce) : '');
-
-            fetch(aiad_ajax.url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: body,
-            }).catch(() => { }); // Silently fail - download tracking is non-critical
-        });
+        // Resource and article view tracking and download tracking are the script module assets/js/tracking.js.
 
         // ============================================
         // AI Literacy Quiz
