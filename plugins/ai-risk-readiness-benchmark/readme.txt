@@ -1,8 +1,8 @@
 === AI Risk & Readiness Benchmark ===
 Contributors: AI Awareness Day
 Tags: ai, risk, schools, dfe, benchmark, assessment
-Requires at least: 6.0
-Tested up to: 6.6
+Requires at least: 7.1
+Tested up to: 7.1
 Requires PHP: 8.0
 Stable tag: 1.50.2
 License: GPLv2 or later

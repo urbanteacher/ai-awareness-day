@@ -4,7 +4,7 @@
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       Site functionality that should survive a theme change: post types, meta, tools, certificates, survey, AJAX and the AI Awareness Day blocks. The theme keeps presentation only.
  * Version:           0.1.0
- * Requires at least: 6.6
+ * Requires at least: 7.1
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
  * License:           GPL-2.0-or-later

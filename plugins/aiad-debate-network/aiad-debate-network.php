@@ -4,7 +4,7 @@
  * Plugin URI:        https://aiawarenessday.co.uk/
  * Description:       National AI Conversation & Debate Network: school code, email sign-in, SLT approval, class PINs, debates, judges, scoring, results, certificates, Student Voice and reminders (slices 1 to 4).
  * Version:           0.16.1
- * Requires at least: 6.0
+ * Requires at least: 7.1
  * Requires PHP:      8.0
  * Author:            AI Awareness Day
  * License:           GPL-2.0-or-later
