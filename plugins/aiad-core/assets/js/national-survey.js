@@ -377,31 +377,32 @@
 				return;
 			}
 
-			if (!window.aiadSurvey || !window.aiadSurvey.ajaxurl) {
+			// The site's REST route, found through the discovery link WordPress prints in the head.
+			var link = document.querySelector('link[rel="https://api.w.org/"]');
+			if (!link || !link.href) {
 				showError('Configuration error. Please reload the page and try again.');
 				return;
 			}
+			var url = link.href.replace(/\/?$/, '/') + 'aiad/v1/survey';
 
 			submitBtn.disabled = true;
 			submitBtn.textContent = 'Submitting…';
 
 			var data = new FormData(form);
-			data.append('action', 'aiad_survey_submit');
-			data.append('nonce', window.aiadSurvey.nonce);
 
-			fetch(window.aiadSurvey.ajaxurl, {
+			fetch(url, {
 				method: 'POST',
 				body: data,
-				credentials: 'same-origin',
 			})
-				.then(function (res) { return res.json(); })
-				.then(function (json) {
-					if (json.success) {
+				.then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+				.then(function (result) {
+					var json = result.json;
+					if (result.ok) {
 						form.hidden = true;
 						if (progressEl) progressEl.hidden = true;
 						success.hidden = false;
 					} else {
-						var msg = (json.data && json.data.message) ? json.data.message : 'Something went wrong. Please try again.';
+						var msg = json && json.message ? json.message : 'Something went wrong. Please try again.';
 						showError(msg);
 						submitBtn.disabled = false;
 						submitBtn.textContent = 'Submit survey';
