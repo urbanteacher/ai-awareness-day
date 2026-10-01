@@ -30,9 +30,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'AIAD_CORE_MODULE_SITE_SETTINGS', __FILE__ );
 
 /**
- * The settings: key => [ theme mod it mirrors, type (url, bool, file), default ].
+ * The settings: key => [ theme mod it mirrors, type (url, bool, file, post:{type}), default ].
  *
- * A `file` is an attachment ID, 0 for none.
+ * A `file` is an attachment ID, 0 for none. A `post:{type}` is the ID of a published post of that type, 0 for none:
+ * the homepage's picked resources.
  *
  * @return array<string, array{0: string, 1: string, 2: mixed}>
  */
@@ -60,6 +61,13 @@ function aiad_site_fields(): array {
 	foreach ( aiad_site_session_slugs() as $slug ) {
 		$fields[ 'session_badge_' . $slug ] = array( 'aiad_session_badge_' . $slug, 'file', 0 );
 	}
+	// The resources the homepage shows, in the order picked: up to six free resources and three from partners.
+	for ( $i = 1; $i <= 6; $i++ ) {
+		$fields[ 'free_resource_' . $i ] = array( 'aiad_free_resource_' . $i, 'post:resource', 0 );
+	}
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$fields[ 'handpicked_resource_' . $i ] = array( 'aiad_handpicked_resource_' . $i, 'post:featured_resource', 0 );
+	}
 	return $fields;
 }
 
@@ -85,10 +93,16 @@ function aiad_site_session_slugs(): array {
  * Bring one value to its type: a URL or nothing, a boolean, or the ID of an attachment that exists.
  *
  * @param mixed  $value Raw value.
- * @param string $type  url, bool or file.
+ * @param string $type  url, bool, file or post:{type}.
  * @return mixed
  */
 function aiad_site_clean_value( $value, string $type ) {
+	if ( 0 === strpos( $type, 'post:' ) ) {
+		$id = absint( $value );
+		// A pick stays while its post exists, even as a draft: the homepage query only shows published posts, and saving
+		// the screen must not drop a pick because someone un-published its post for a while.
+		return $id && substr( $type, 5 ) === get_post_type( $id ) && ! in_array( get_post_status( $id ), array( 'trash', 'auto-draft' ), true ) ? $id : 0;
+	}
 	switch ( $type ) {
 		case 'bool':
 			return filter_var( $value, FILTER_VALIDATE_BOOLEAN );

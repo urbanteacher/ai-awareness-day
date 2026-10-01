@@ -66,7 +66,7 @@ function aiad_core_register_site_settings(): void {
 
 	$site = array();
 	foreach ( aiad_site_fields() as $key => $field ) {
-		$site[ $key ] = array( 'type' => 'bool' === $field[1] ? 'boolean' : ( 'file' === $field[1] ? 'integer' : 'string' ) );
+		$site[ $key ] = array( 'type' => 'bool' === $field[1] ? 'boolean' : ( 'file' === $field[1] || 0 === strpos( $field[1], 'post:' ) ? 'integer' : 'string' ) );
 	}
 	register_setting(
 		'aiad_site',

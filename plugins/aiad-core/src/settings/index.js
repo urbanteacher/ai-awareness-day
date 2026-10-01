@@ -18,7 +18,9 @@ import {
 	TextControl,
 	TextareaControl,
 	ToggleControl,
+	ComboboxControl,
 } from '@wordpress/components';
+import { decodeEntities } from '@wordpress/html-entities';
 import { MediaUpload } from '@wordpress/media-utils';
 import { store as coreStore, useEntityRecord } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
@@ -314,6 +316,50 @@ function sections( config ) {
 			],
 		},
 		{
+			option: 'aiad_site',
+			title: __( 'Homepage resources', 'aiad-core' ),
+			intro: __(
+				'The resources the homepage shows, in the order picked. The section titles are edited on the homepage itself.',
+				'aiad-core'
+			),
+			fields: [
+				...[ 1, 2, 3, 4, 5, 6 ].map( ( n ) => ( {
+					key: 'free_resource_' + n,
+					label: sprintf(
+						/* translators: %d: position, 1 to 6 */
+						__( 'Free resource %d', 'aiad-core' ),
+						n
+					),
+					type: 'post',
+					postType: 'resource',
+					help:
+						n === 1
+							? __(
+									'Up to six free resources. With none picked, the section is hidden.',
+									'aiad-core'
+								)
+							: '',
+				} ) ),
+				...[ 1, 2, 3 ].map( ( n ) => ( {
+					key: 'handpicked_resource_' + n,
+					label: sprintf(
+						/* translators: %d: position, 1 to 3 */
+						__( 'Partner resource %d', 'aiad-core' ),
+						n
+					),
+					type: 'post',
+					postType: 'featured_resource',
+					help:
+						n === 1
+							? __(
+									'Up to three resources from partners. With none picked, the first three are shown.',
+									'aiad-core'
+								)
+							: '',
+				} ) ),
+			],
+		},
+		{
 			option: 'aiad_seo',
 			title: __( 'Site and homepage sharing', 'aiad-core' ),
 			intro: __(
@@ -487,7 +533,83 @@ function FileField( { field, value, onChange } ) {
 	);
 }
 
+/**
+ * A published post of one type, picked from a searchable list.
+ *
+ * @param {Object}               props          Props.
+ * @param {Object}               props.field    The field; `postType` is the type.
+ * @param {number}               props.value    The post ID, or 0 for none.
+ * @param {(id: number) => void} props.onChange Called with the new ID.
+ */
+function PostField( { field, value, onChange } ) {
+	const [ search, setSearch ] = useState( '' );
+	const id = Number( value ) || 0;
+	const { records, current } = useSelect(
+		( select ) => {
+			const core = select( coreStore );
+			return {
+				records: core.getEntityRecords( 'postType', field.postType, {
+					per_page: 50,
+					status: 'publish',
+					orderby: 'title',
+					order: 'asc',
+					search,
+					_fields: 'id,title',
+				} ),
+				current: id
+					? core.getEntityRecord( 'postType', field.postType, id, {
+							_fields: 'id,title,status',
+						} )
+					: null,
+			};
+		},
+		[ field.postType, search, id ]
+	);
+	const options = ( records || [] ).map( ( post ) => ( {
+		value: post.id,
+		label: decodeEntities( post.title?.rendered || '' ),
+	} ) );
+	if ( id && ! options.some( ( option ) => option.value === id ) ) {
+		options.unshift( {
+			value: id,
+			label: current
+				? decodeEntities( current.title?.rendered || '' )
+				: sprintf(
+						/* translators: %d: post ID */
+						__( 'Post %d', 'aiad-core' ),
+						id
+					),
+		} );
+	}
+	const unpublished = id && current && current.status !== 'publish';
+	return (
+		<ComboboxControl
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
+			label={ field.label }
+			value={ id || null }
+			options={ options }
+			onChange={ ( next ) => onChange( Number( next ) || 0 ) }
+			onFilterValueChange={ setSearch }
+			allowReset
+			help={
+				unpublished
+					? __(
+							'This is not published, so the homepage does not show it.',
+							'aiad-core'
+						)
+					: field.help
+			}
+		/>
+	);
+}
+
 function Field( { field, value, onChange, error } ) {
+	if ( field.type === 'post' ) {
+		return (
+			<PostField field={ field } value={ value } onChange={ onChange } />
+		);
+	}
 	if ( field.type === 'file' ) {
 		return (
 			<FileField field={ field } value={ value } onChange={ onChange } />

@@ -5,8 +5,9 @@
 		'wp-core-data',
 		'wp-data',
 		'wp-element',
+		'wp-html-entities',
 		'wp-i18n',
 		'wp-media-utils'
 	),
-	'version' => '617e9d6aeeb570ea9774'
+	'version' => '6d582f9b9a8ebee00015'
 );

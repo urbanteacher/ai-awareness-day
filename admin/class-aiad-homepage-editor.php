@@ -204,26 +204,6 @@ class AIAD_Homepage_Editor {
     private function save_resources(): int {
         $n = 0;
         
-        // Save handpicked resources (featured_resource post IDs)
-        for ( $i = 1; $i <= 3; $i++ ) {
-            $key = 'aiad_handpicked_resource_' . $i;
-            if ( isset( $_POST[ $key ] ) ) {
-                $val = absint( $_POST[ $key ] );
-                set_theme_mod( $key, $val );
-                $n++;
-            }
-        }
-        
-        // Save free resources (resource post IDs)
-        for ( $i = 1; $i <= 6; $i++ ) {
-            $key = 'aiad_free_resource_' . $i;
-            if ( isset( $_POST[ $key ] ) ) {
-                $val = absint( $_POST[ $key ] );
-                set_theme_mod( $key, $val );
-                $n++;
-            }
-        }
-        
         // Save section titles
         $title_keys = array(
             'aiad_handpicked_resources_title' => 'sanitize_text_field',
@@ -434,7 +414,7 @@ class AIAD_Homepage_Editor {
     private function render_resources_tab(): void {
         // Section titles
         echo '<h2>' . esc_html__( 'Handpicked Quality Resources', 'ai-awareness-day' ) . '</h2>';
-        echo '<p class="description">' . esc_html__( 'Select up to 3 handpicked resources from partners to display on the homepage. These are external resources from trusted organisations.', 'ai-awareness-day' ) . '</p>';
+        echo '<p class="description">' . esc_html__( 'The wording above the resources from partners. Which resources it shows is picked on Settings → AI Awareness Day.', 'ai-awareness-day' ) . '</p>';
         
         // Handpicked resources section title/desc
         echo '<table class="form-table" role="presentation">';
@@ -448,46 +428,11 @@ class AIAD_Homepage_Editor {
         echo '</td></tr>';
         echo '</table>';
         
-        // Get all published featured_resources
-        $featured_resources = get_posts( array(
-            'post_type'      => 'featured_resource',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-        ) );
-        
-        echo '<table class="form-table" role="presentation">';
-        for ( $i = 1; $i <= 3; $i++ ) {
-            $key = 'aiad_handpicked_resource_' . $i;
-            $current_id = absint( get_theme_mod( $key, 0 ) );
-            
-            echo '<tr><th scope="row"><label for="' . esc_attr( $key ) . '">' . sprintf( esc_html__( 'Handpicked Resource %d', 'ai-awareness-day' ), $i ) . '</label></th><td>';
-            echo '<select id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="regular-text">';
-            echo '<option value="">' . esc_html__( '— Select a resource —', 'ai-awareness-day' ) . '</option>';
-            foreach ( $featured_resources as $resource ) {
-                $selected = selected( $current_id, $resource->ID, false );
-                echo '<option value="' . esc_attr( $resource->ID ) . '"' . $selected . '>' . esc_html( $resource->post_title ) . '</option>';
-            }
-            echo '</select>';
-            
-            // Show preview of selected resource
-            if ( $current_id ) {
-                $preview = get_post( $current_id );
-                if ( $preview ) {
-                    $org = get_post_meta( $current_id, '_featured_resource_org_name', true );
-                    echo ' <span class="description">(' . esc_html( $org ? $org : 'No organisation' ) . ')</span>';
-                }
-            }
-            echo '</td></tr>';
-        }
-        echo '</table>';
-        
         echo '<hr style="margin: 2rem 0;" />';
         
         // Free Resources section
         echo '<h2>' . esc_html__( 'Free Resources / AI Awareness Activities', 'ai-awareness-day' ) . '</h2>';
-        echo '<p class="description">' . esc_html__( 'Select up to 6 free resources to highlight on the homepage. These are downloadable activities created for AI Awareness Day.', 'ai-awareness-day' ) . '</p>';
+        echo '<p class="description">' . esc_html__( 'The wording above the free resources. Which resources it shows is picked on Settings → AI Awareness Day.', 'ai-awareness-day' ) . '</p>';
         
         // Free resources section title/desc
         echo '<table class="form-table" role="presentation">';
@@ -499,46 +444,6 @@ class AIAD_Homepage_Editor {
         echo '<tr><th scope="row"><label for="aiad_free_resources_desc">' . esc_html__( 'Section Description', 'ai-awareness-day' ) . '</label></th><td>';
         echo '<textarea id="aiad_free_resources_desc" name="aiad_free_resources_desc" rows="2" class="large-text">' . esc_textarea( $free_desc ) . '</textarea>';
         echo '</td></tr>';
-        echo '</table>';
-        
-        // Get all published resources
-        $resources = get_posts( array(
-            'post_type'      => 'resource',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'title',
-            'order'          => 'ASC',
-        ) );
-        
-        echo '<table class="form-table" role="presentation">';
-        for ( $i = 1; $i <= 6; $i++ ) {
-            $key = 'aiad_free_resource_' . $i;
-            $current_id = absint( get_theme_mod( $key, 0 ) );
-            
-            echo '<tr><th scope="row"><label for="' . esc_attr( $key ) . '">' . sprintf( esc_html__( 'Free Resource %d', 'ai-awareness-day' ), $i ) . '</label></th><td>';
-            echo '<select id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="regular-text">';
-            echo '<option value="">' . esc_html__( '— Select a resource —', 'ai-awareness-day' ) . '</option>';
-            foreach ( $resources as $resource ) {
-                $selected = selected( $current_id, $resource->ID, false );
-                echo '<option value="' . esc_attr( $resource->ID ) . '"' . $selected . '>' . esc_html( $resource->post_title ) . '</option>';
-            }
-            echo '</select>';
-            
-            // Show preview of selected resource
-            if ( $current_id ) {
-                $preview = get_post( $current_id );
-                if ( $preview ) {
-                    $duration_terms = get_the_terms( $current_id, 'resource_duration' );
-                    $duration_preview = '';
-                    if ( $duration_terms && ! is_wp_error( $duration_terms ) && function_exists( 'aiad_resource_duration_term_labels' ) ) {
-                        $labels = aiad_resource_duration_term_labels( $duration_terms );
-                        $duration_preview = ! empty( $labels ) ? implode( ' · ', $labels ) : '';
-                    }
-                    echo ' <span class="description">(' . esc_html( $duration_preview !== '' ? $duration_preview : __( 'No session length', 'ai-awareness-day' ) ) . ')</span>';
-                }
-            }
-            echo '</td></tr>';
-        }
         echo '</table>';
         
         // Quick links to manage resources

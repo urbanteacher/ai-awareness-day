@@ -2,7 +2,7 @@
 /**
  * The homepage's free and featured resources sections in blocks: shared helpers for the section templates, their
  * patterns (patterns/homepage-free-resources.php, patterns/homepage-featured-resources.php) and the blocks those use
- * (blocks/resource-tiles, blocks/linkedin-card). The resources are still picked in Appearance > Edit Homepage.
+ * (blocks/resource-tiles, blocks/linkedin-card). The resources are picked on Settings → AI Awareness Day.
  *
  * @package AI_Awareness_Day
  */
@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The free resources picked in Appearance > Edit Homepage, in the order picked; null when none are, which hides the
+ * The free resources picked on Settings → AI Awareness Day, in the order picked; null when none are, which hides the
  * section.
  */
 function aiad_free_resources_query(): ?WP_Query {
 	$selected_ids = array();
 	for ( $i = 1; $i <= 6; $i++ ) {
-		$id = absint( get_theme_mod( 'aiad_free_resource_' . $i, 0 ) );
+		$id = absint( aiad_site_value( 'free_resource_' . $i, 0 ) );
 		if ( $id > 0 ) {
 			$selected_ids[] = $id;
 		}
@@ -38,12 +38,12 @@ function aiad_free_resources_query(): ?WP_Query {
 }
 
 /**
- * The featured (partner) resources picked in Appearance > Edit Homepage, in the order picked, or else the first three.
+ * The featured (partner) resources picked on Settings → AI Awareness Day, in the order picked, or else the first three.
  */
 function aiad_featured_resources_query(): WP_Query {
 	$selected_ids = array();
 	for ( $i = 1; $i <= 3; $i++ ) {
-		$id = absint( get_theme_mod( 'aiad_handpicked_resource_' . $i, 0 ) );
+		$id = absint( aiad_site_value( 'handpicked_resource_' . $i, 0 ) );
 		if ( $id > 0 ) {
 			$selected_ids[] = $id;
 		}
