@@ -96,6 +96,11 @@ function metaBoxCalls() {
 			if ( at < 0 ) {
 				break;
 			}
+			// A function named ..._add_meta_box() is not a call to it.
+			if ( /\w/.test( text[ at - 1 ] || '' ) ) {
+				from = at + 1;
+				continue;
+			}
 			let depth = 0;
 			let i = at + 'add_meta_box'.length;
 			let quote = null;
@@ -124,6 +129,33 @@ function metaBoxCalls() {
 
 const metaBoxes = metaBoxCalls();
 
+// Post types that are not in REST. WordPress opens these on the classic edit
+// screen whatever the editor setting, so a meta box on one is that screen's form
+// by design, not a box in the block editor's drawer. These are the admin-only
+// records (survey responses, form submissions): data people read and act on, not
+// content they write.
+function classicOnlyPostTypes() {
+	const types = new Set();
+	for ( const f of php ) {
+		const text = withoutComments( read( f ) );
+		const re = /register_post_type\(\s*['"]([a-z_]+)['"]/g;
+		let m;
+		while ( ( m = re.exec( text ) ) ) {
+			const rest = text.slice( m.index, m.index + 2500 );
+			if ( /['"]show_in_rest['"]\s*=>\s*false/.test( rest.split( /register_post_type\(/ )[ 1 ] || rest ) ) {
+				types.add( m[ 1 ] );
+			}
+		}
+	}
+	return types;
+}
+const classicOnly = classicOnlyPostTypes();
+const blockEditorBoxes = metaBoxes.filter(
+	( c ) =>
+		! c.includes( '__back_compat_meta_box' ) &&
+		! [ ...classicOnly ].some( ( type ) => c.includes( `'${ type }'` ) )
+);
+
 // Templates the theme draws in PHP through get_header(), which a block template would replace.
 const rootPhp = php.filter( ( f ) => ! f.rel.includes( path.sep ) );
 const phpTemplates = rootPhp.filter( ( f ) => /get_header\(\)/.test( read( f ) ) );
@@ -148,8 +180,8 @@ const staleFloors = floors.reduce( ( n, f ) => {
  */
 const METRICS = [
 	// Habits.
-	{ key: 'metaBoxesInBlockEditor', kind: 'habit', value: metaBoxes.filter( ( c ) => ! c.includes( '__back_compat_meta_box' ) ).length,
-		why: 'Classic meta boxes that show in the block editor, in its collapsed drawer. A record editor (a block on the canvas and a Details panel) replaces one; the box is then marked __back_compat_meta_box so only the classic editor shows it.' },
+	{ key: 'metaBoxesInBlockEditor', kind: 'habit', value: blockEditorBoxes.length,
+		why: 'Classic meta boxes that show in the block editor, in its collapsed drawer. A record editor (a block on the canvas and a Details panel) replaces one; the box is then marked __back_compat_meta_box so only the classic editor shows it. Boxes on post types that are not in REST (admin-only records) are not counted: those open on the classic screen by design.' },
 	{ key: 'customizerSettings', kind: 'habit', value: total( php, /->add_setting\(/g ),
 		why: 'Customizer settings: content that belongs on a page or in a settings screen, not in a preview panel.' },
 	{ key: 'themeModReads', kind: 'habit', value: total( php.filter( ( f ) => f.rel !== 'inc/customizer.php' ), /get_theme_mod\(/g ),
