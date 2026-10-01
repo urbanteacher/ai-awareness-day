@@ -39,19 +39,3 @@ function aiad_core_enqueue_record_editors(): void {
 	}
 }
 add_action( 'enqueue_block_editor_assets', 'aiad_core_enqueue_record_editors' );
-
-/**
- * The nonce the Fetch image button needs (modules/admin/card-image.php), for the
- * types that have one.
- *
- * @param array                    $settings Editor settings.
- * @param WP_Block_Editor_Context $context  The screen being edited.
- * @return array
- */
-function aiad_core_image_fetch_settings( array $settings, WP_Block_Editor_Context $context ): array {
-	if ( $context->post && in_array( $context->post->post_type, array( 'resource', 'featured_resource' ), true ) ) {
-		$settings['aiadImageFetch'] = array( 'nonce' => wp_create_nonce( 'aiad_fetch_card_image' ) );
-	}
-	return $settings;
-}
-add_filter( 'block_editor_settings_all', 'aiad_core_image_fetch_settings', 10, 2 );

@@ -1,54 +1,70 @@
-/* Admin: fetch card image from LoremFlickr using keywords */
-jQuery( function ( $ ) {
-	$( document ).on( 'click', '.aiad-fetch-image-btn', function () {
-		var btn      = $( this );
-		var postId   = btn.data( 'post-id' );
-		var input    = btn.closest( 'p, .aiad-rd-section' ).find( '.aiad-image-keywords-input' );
-		var keywords = input.val();
-		var status   = btn.siblings( '.aiad-fetch-image-status' );
+/* Admin (classic screen): fetch card image from LoremFlickr using keywords, through the aiad/v1/card-image route. */
+( function () {
+	document.addEventListener( 'click', function ( event ) {
+		var btn = event.target.closest( '.aiad-fetch-image-btn' );
+		if ( ! btn ) {
+			return;
+		}
+		var wrap = btn.closest( 'p, .aiad-rd-section' );
+		var input = wrap ? wrap.querySelector( '.aiad-image-keywords-input' ) : null;
+		var keywords = input ? input.value : '';
+		var status = btn.parentNode.querySelector( '.aiad-fetch-image-status' );
+
+		function say( text, colour ) {
+			if ( status ) {
+				status.textContent = text;
+				status.style.color = colour;
+			}
+		}
 
 		if ( ! keywords ) {
-			status.text( 'Enter keywords first.' ).css( 'color', '#A32D2D' );
+			say( 'Enter keywords first.', '#A32D2D' );
 			return;
 		}
 
-		btn.prop( 'disabled', true ).text( 'Fetching…' );
-		status.text( '' );
+		btn.disabled = true;
+		btn.textContent = 'Fetching…';
+		say( '', '' );
 
-		$.post(
-			ajaxurl,
-			{
-				action:   'aiad_fetch_card_image',
-				post_id:  postId,
-				keywords: keywords,
-				nonce:    aiadImageFetch.nonce,
-			},
-			function ( response ) {
-				btn.prop( 'disabled', false ).text( 'Fetch image' );
-				if ( response.success ) {
-					status.text( '✓ Featured image set.' ).css( 'color', '#176E3B' );
-					if ( response.data.thumb_url ) {
-						// Show inline preview
-						btn.closest( 'p, .aiad-rd-section' ).find( '.aiad-image-preview' ).remove();
-						btn.closest( 'p, .aiad-rd-section' ).append(
-							'<div class="aiad-image-preview" style="margin-top:0.6rem;">' +
-							'<img src="' + response.data.thumb_url + '" style="max-width:160px;height:auto;border-radius:4px;border:1px solid #EAE7DF;" alt="Fetched card image" />' +
-							'<p style="margin:0.3rem 0 0;font-size:11px;color:#54504E;">Saved as featured image. To replace manually, use the <strong>Featured Image</strong> panel on the right.</p>' +
-							'</div>'
-						);
-						// Also update the sidebar featured image box if already visible
-						var $sideImg = $( '#postimagediv .inside img' );
-						if ( $sideImg.length ) {
-							$sideImg.attr( 'src', response.data.thumb_url );
-						}
-					}
-				} else {
-					status.text( 'Error: ' + ( response.data || 'Unknown error' ) ).css( 'color', '#A32D2D' );
+		window.wp.apiFetch( {
+			path: '/aiad/v1/card-image/' + encodeURIComponent( btn.getAttribute( 'data-post-id' ) ),
+			method: 'POST',
+			data: { keywords: keywords },
+		} )
+			.then( function ( result ) {
+				say( '✓ Featured image set.', '#176E3B' );
+				if ( ! result.thumb_url || ! wrap ) {
+					return;
 				}
-			}
-		).fail( function () {
-			btn.prop( 'disabled', false ).text( 'Fetch image' );
-			status.text( 'Request failed.' ).css( 'color', '#A32D2D' );
-		} );
+				var old = wrap.querySelector( '.aiad-image-preview' );
+				if ( old ) {
+					old.remove();
+				}
+				var preview = document.createElement( 'div' );
+				preview.className = 'aiad-image-preview';
+				preview.style.marginTop = '0.6rem';
+				var img = document.createElement( 'img' );
+				img.src = result.thumb_url;
+				img.alt = 'Fetched card image';
+				img.style.cssText = 'max-width:160px;height:auto;border-radius:4px;border:1px solid #EAE7DF;';
+				var note = document.createElement( 'p' );
+				note.style.cssText = 'margin:0.3rem 0 0;font-size:11px;color:#54504E;';
+				note.textContent = 'Saved as featured image. To replace manually, use the Featured Image panel on the right.';
+				preview.appendChild( img );
+				preview.appendChild( note );
+				wrap.appendChild( preview );
+				// Also update the sidebar featured image box if already visible.
+				var side = document.querySelector( '#postimagediv .inside img' );
+				if ( side ) {
+					side.src = result.thumb_url;
+				}
+			} )
+			.catch( function ( error ) {
+				say( 'Error: ' + ( ( error && error.message ) || 'Unknown error' ), '#A32D2D' );
+			} )
+			.then( function () {
+				btn.disabled = false;
+				btn.textContent = 'Fetch image';
+			} );
 	} );
-} );
+} )();

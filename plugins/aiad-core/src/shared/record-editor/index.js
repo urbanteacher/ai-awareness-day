@@ -17,6 +17,7 @@
  * See docs/WP71-STANDARDISATION.md for why, and for the order the types follow.
  */
 import { __, sprintf } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 import { registerPlugin } from '@wordpress/plugins';
 import {
 	PluginDocumentSettingPanel,
@@ -255,7 +256,6 @@ export function SingleTerm( {
  * @return {Element} The control.
  */
 export function CardImageKeywords( { record, keyName, help } ) {
-	const settings = useEditorSetting( 'aiadImageFetch' );
 	const postId = useSelect(
 		( select ) => select( editorStore ).getCurrentPostId(),
 		[]
@@ -275,43 +275,28 @@ export function CardImageKeywords( { record, keyName, help } ) {
 		}
 		setState( { busy: true, ok: true, text: '' } );
 		try {
-			const body = new URLSearchParams( {
-				action: 'aiad_fetch_card_image',
-				post_id: String( postId ),
-				keywords,
-				nonce: settings.nonce || '',
-			} );
-			const response = await window.fetch( window.ajaxurl, {
+			const result = await apiFetch( {
+				path: `/aiad/v1/card-image/${ postId }`,
 				method: 'POST',
-				body,
-				credentials: 'same-origin',
+				data: { keywords },
 			} );
-			const json = await response.json();
-			if ( json.success ) {
-				editPost( { featured_media: json.data.attachment_id } );
-				setState( {
-					busy: false,
-					ok: true,
-					text: __( 'Featured image set.', 'aiad-core' ),
-				} );
-			} else {
-				setState( {
-					busy: false,
-					ok: false,
-					text: sprintf(
-						/* translators: %s: the reason the image could not be fetched. */
-						__( 'Error: %s', 'aiad-core' ),
-						String(
-							json.data || __( 'unknown error', 'aiad-core' )
-						)
-					),
-				} );
-			}
-		} catch {
+			editPost( { featured_media: result.attachment_id } );
+			setState( {
+				busy: false,
+				ok: true,
+				text: __( 'Featured image set.', 'aiad-core' ),
+			} );
+		} catch ( error ) {
 			setState( {
 				busy: false,
 				ok: false,
-				text: __( 'Request failed.', 'aiad-core' ),
+				text: sprintf(
+					/* translators: %s: the reason the image could not be fetched. */
+					__( 'Error: %s', 'aiad-core' ),
+					String(
+						error?.message || __( 'unknown error', 'aiad-core' )
+					)
+				),
 			} );
 		}
 	}

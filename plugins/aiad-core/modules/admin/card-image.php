@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin AJAX: fetch a card image from LoremFlickr and set it as the post's featured image.
+ * Admin: fetch a card image from LoremFlickr and set it as the post's featured image.
  *
  * Moved from the theme's inc/ajax-handlers.php. The theme loads this file from its bundled copy of the plugin when
  * the plugin isn't active, so this is the only copy.
@@ -13,21 +13,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AJAX: fetch a card image from LoremFlickr using admin-supplied keywords,
- * sideload it into the media library, and set it as the post's featured image.
+ * POST aiad/v1/card-image/{id}: fetch a card image from LoremFlickr using the editor's keywords, sideload it into the
+ * media library and set it as the post's featured image.
+ *
+ * It was an admin-ajax handler behind a nonce. The REST route checks that the person can edit this post, and the
+ * block editor and the classic screen's script send the REST nonce through wp.apiFetch.
+ *
+ * @param WP_REST_Request $request Request: `id` and `keywords`.
+ * @return WP_REST_Response|WP_Error
  */
-function aiad_fetch_card_image(): void {
-    check_ajax_referer( 'aiad_fetch_card_image', 'nonce' );
-
-    if ( ! current_user_can( 'edit_posts' ) ) {
-        wp_send_json_error( 'Unauthorised' );
-    }
-
-    $post_id  = absint( $_POST['post_id'] ?? 0 );
-    $keywords = sanitize_text_field( wp_unslash( $_POST['keywords'] ?? '' ) );
+function aiad_rest_fetch_card_image( WP_REST_Request $request ) {
+    $post_id  = absint( $request['id'] );
+    $keywords = sanitize_text_field( (string) $request->get_param( 'keywords' ) );
 
     if ( ! $post_id || ! $keywords ) {
-        wp_send_json_error( 'Missing post ID or keywords.' );
+        return new WP_Error( 'aiad_missing', __( 'Missing post ID or keywords.', 'ai-awareness-day' ), array( 'status' => 400 ) );
     }
 
     // Build LoremFlickr URL — comma-separate keywords, random seed busts cache
@@ -42,7 +42,7 @@ function aiad_fetch_card_image(): void {
     // extension-check that media_sideload_image applies to the URL string.
     $tmp = download_url( $img_url, 30 );
     if ( is_wp_error( $tmp ) ) {
-        wp_send_json_error( 'Download failed: ' . $tmp->get_error_message() );
+        return new WP_Error( 'aiad_download', 'Download failed: ' . $tmp->get_error_message(), array( 'status' => 502 ) );
     }
 
     $file_array = array(
@@ -55,14 +55,33 @@ function aiad_fetch_card_image(): void {
     // Clean up temp file if sideload failed
     if ( is_wp_error( $attachment_id ) ) {
         @unlink( $tmp );
-        wp_send_json_error( $attachment_id->get_error_message() );
+        return new WP_Error( 'aiad_sideload', $attachment_id->get_error_message(), array( 'status' => 500 ) );
     }
 
     set_post_thumbnail( $post_id, $attachment_id );
 
-    wp_send_json_success( array(
-        'attachment_id' => $attachment_id,
-        'thumb_url'     => get_the_post_thumbnail_url( $post_id, 'medium' ),
-    ) );
+    return new WP_REST_Response(
+        array(
+            'attachment_id' => $attachment_id,
+            'thumb_url'     => get_the_post_thumbnail_url( $post_id, 'medium' ),
+        )
+    );
 }
-add_action( 'wp_ajax_aiad_fetch_card_image', 'aiad_fetch_card_image' );
+
+/**
+ * Register the route.
+ */
+function aiad_register_card_image_rest_route(): void {
+    register_rest_route(
+        'aiad/v1',
+        '/card-image/(?P<id>\d+)',
+        array(
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => 'aiad_rest_fetch_card_image',
+            'permission_callback' => static function ( WP_REST_Request $request ): bool {
+                return current_user_can( 'edit_post', absint( $request['id'] ) );
+            },
+        )
+    );
+}
+add_action( 'rest_api_init', 'aiad_register_card_image_rest_route' );

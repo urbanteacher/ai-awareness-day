@@ -106,7 +106,7 @@ function aiad_register_neu_ai_report_assets(): void {
 }
 add_action( 'wp_enqueue_scripts', 'aiad_register_neu_ai_report_assets', 5 );
 // Block templates render the page before wp_enqueue_scripts; register first, so the script exists when the
-// shortcode or block enqueues and localises it.
+// shortcode or block enqueues it.
 add_action( 'wp', 'aiad_register_neu_ai_report_assets' );
 
 /**
@@ -120,10 +120,6 @@ function aiad_enqueue_neu_ai_report_assets(): void {
 	$enqueued = true;
 	wp_enqueue_style( 'aiad-neu-ai-report' );
 	wp_enqueue_script( 'aiad-neu-ai-report' );
-
-	if ( function_exists( 'aiad_neu_ai_report_get_config' ) ) {
-		wp_localize_script( 'aiad-neu-ai-report', 'aiadNeuReportData', aiad_neu_ai_report_get_config() );
-	}
 }
 
 /**
@@ -154,7 +150,7 @@ function aiad_neu_ai_report_render( $atts = array() ): string {
 
 	ob_start();
 	?>
-	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php echo esc_attr( $headline ); ?>">
+	<div id="aiad-neu-report" class="aiad-neu-ai-report nr-editorial" aria-label="<?php echo esc_attr( $headline ); ?>" data-config="<?php echo esc_attr( function_exists( 'aiad_neu_ai_report_get_config' ) ? wp_json_encode( aiad_neu_ai_report_get_config() ) : '{}' ); ?>">
 		<div class="nr-intro">
 			<?php if ( $show_headline ) : ?>
 				<h2 id="aiad-neu-headline" class="nr-headline"><?php echo esc_html( $headline ); ?></h2>

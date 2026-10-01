@@ -715,6 +715,10 @@ function aiad_image_fetch_admin_scripts( string $hook ): void {
         return;
     }
     $screen = get_current_screen();
+    // The block editor edits these fields in its own panels, and hides these boxes.
+    if ( $screen && $screen->is_block_editor() ) {
+        return;
+    }
     if ( ! $screen || ! in_array( $screen->post_type, array( 'featured_resource', 'resource' ), true ) ) {
         return;
     }
@@ -722,13 +726,10 @@ function aiad_image_fetch_admin_scripts( string $hook ): void {
     wp_enqueue_script(
         'aiad-admin-image-fetch',
         AIAD_URI . '/assets/js/admin-image-fetch.js',
-        array( 'jquery' ),
+        array( 'wp-api-fetch' ),
         AIAD_VERSION,
         true
     );
-    wp_localize_script( 'aiad-admin-image-fetch', 'aiadImageFetch', array(
-        'nonce' => wp_create_nonce( 'aiad_fetch_card_image' ),
-    ) );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_image_fetch_admin_scripts' );
 
@@ -990,6 +991,10 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
         return;
     }
     $screen = get_current_screen();
+    // The block editor edits these fields in its own panels, and hides these boxes.
+    if ( $screen && $screen->is_block_editor() ) {
+        return;
+    }
     if ( ! $screen || $screen->post_type !== 'resource' ) {
         return;
     }
@@ -997,51 +1002,11 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
     wp_enqueue_script(
         'aiad-admin-meta-boxes',
         AIAD_URI . '/assets/js/admin-meta-boxes.js',
-        array( 'jquery' ),
+        array( 'wp-i18n' ),
         AIAD_VERSION,
         true
     );
-
-    // Prepare extension options HTML
-    $opts = array(
-        'homework'        => __( 'Homework', 'ai-awareness-day' ),
-        'next_lesson'     => __( 'Next lesson', 'ai-awareness-day' ),
-        'cross_curricular' => __( 'Cross-curricular', 'ai-awareness-day' ),
-        'independent'     => __( 'Independent', 'ai-awareness-day' ),
-    );
-    $ext_parts = array();
-    foreach ( $opts as $k => $v ) {
-        $ext_parts[] = '<option value="' . esc_attr( $k ) . '">' . esc_html( $v ) . '</option>';
-    }
-
-    // Prepare resource options HTML
-    $r_opts = array(
-        'slides'   => __( 'Slides', 'ai-awareness-day' ),
-        'worksheet' => __( 'Worksheet', 'ai-awareness-day' ),
-        'handout'  => __( 'Handout', 'ai-awareness-day' ),
-        'video'    => __( 'Video', 'ai-awareness-day' ),
-        'link'     => __( 'Link', 'ai-awareness-day' ),
-        'other'    => __( 'Other', 'ai-awareness-day' ),
-    );
-    $res_parts = array();
-    foreach ( $r_opts as $k => $v ) {
-        $res_parts[] = '<option value="' . esc_attr( $k ) . '">' . esc_html( $v ) . '</option>';
-    }
-
-    wp_localize_script( 'aiad-admin-meta-boxes', 'aiadAdminMeta', array(
-        'removeText'          => __( 'Remove', 'ai-awareness-day' ),
-        'termText'            => __( 'Term', 'ai-awareness-day' ),
-        'definitionText'     => __( 'Definition', 'ai-awareness-day' ),
-        'keyStageAdaptedText' => __( 'Key stage adapted', 'ai-awareness-day' ),
-        'durationText'       => __( 'Duration', 'ai-awareness-day' ),
-        'actionText'          => __( 'Action', 'ai-awareness-day' ),
-        'resourceRefText'     => __( 'Resource ref', 'ai-awareness-day' ),
-        'studentActionText'   => __( 'Student action', 'ai-awareness-day' ),
-        'teacherTipText'      => __( 'Teacher tip', 'ai-awareness-day' ),
-        'removeStepText'      => __( 'Remove step', 'ai-awareness-day' ),
-        'extensionOptions'    => implode( '', $ext_parts ),
-        'resourceOptions'     => implode( '', $res_parts ),
-    ) );
+    wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_content_meta_box_enqueue_scripts' );
 
@@ -1055,6 +1020,10 @@ function aiad_partner_meta_box_enqueue_scripts( string $hook ): void {
         return;
     }
     $screen = get_current_screen();
+    // The block editor edits these fields in its own panels, and hides these boxes.
+    if ( $screen && $screen->is_block_editor() ) {
+        return;
+    }
     if ( ! $screen || $screen->post_type !== 'partner' ) {
         return;
     }
@@ -1062,42 +1031,11 @@ function aiad_partner_meta_box_enqueue_scripts( string $hook ): void {
     wp_enqueue_script(
         'aiad-admin-meta-boxes',
         AIAD_URI . '/assets/js/admin-meta-boxes.js',
-        array( 'jquery' ),
+        array( 'wp-i18n' ),
         AIAD_VERSION,
         true
     );
-
-    $theme_opts = array(
-        'safe'        => __( 'Safe', 'ai-awareness-day' ),
-        'smart'       => __( 'Smart', 'ai-awareness-day' ),
-        'creative'    => __( 'Creative', 'ai-awareness-day' ),
-        'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-        'future'      => __( 'Future', 'ai-awareness-day' ),
-    );
-    $theme_parts = array();
-    foreach ( $theme_opts as $k => $v ) {
-        $theme_parts[] = '<option value="' . esc_attr( $k ) . '">' . esc_html( $v ) . '</option>';
-    }
-
-    wp_localize_script(
-        'aiad-admin-meta-boxes',
-        'aiadAdminMeta',
-        array(
-            // Keep core strings for existing handlers.
-            'removeText'          => __( 'Remove', 'ai-awareness-day' ),
-            'termText'            => __( 'Term', 'ai-awareness-day' ),
-            'definitionText'     => __( 'Definition', 'ai-awareness-day' ),
-            'keyStageAdaptedText' => __( 'Key stage adapted', 'ai-awareness-day' ),
-            'durationText'       => __( 'Duration', 'ai-awareness-day' ),
-            'actionText'          => __( 'Action', 'ai-awareness-day' ),
-            'resourceRefText'     => __( 'Resource ref', 'ai-awareness-day' ),
-            'studentActionText'   => __( 'Student action', 'ai-awareness-day' ),
-            'teacherTipText'      => __( 'Teacher tip', 'ai-awareness-day' ),
-            'removeStepText'      => __( 'Remove step', 'ai-awareness-day' ),
-            // Partner-specific
-            'partnerThemeOptions' => implode( '', $theme_parts ),
-        )
-    );
+    wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_partner_meta_box_enqueue_scripts' );
 
@@ -1346,6 +1284,10 @@ function aiad_resource_download_admin_scripts( string $hook ): void {
         return;
     }
     $screen = get_current_screen();
+    // The block editor edits these fields in its own panels, and hides these boxes.
+    if ( $screen && $screen->is_block_editor() ) {
+        return;
+    }
     if ( ! $screen || $screen->post_type !== 'resource' ) {
         return;
     }
@@ -1359,14 +1301,11 @@ function aiad_resource_download_admin_scripts( string $hook ): void {
     wp_enqueue_script(
         'aiad-resource-download-admin',
         AIAD_URI . '/assets/js/admin-resource-download.js',
-        array( 'jquery' ),
+        array( 'wp-i18n', 'media-editor' ),
         AIAD_VERSION,
         true
     );
-    wp_localize_script( 'aiad-resource-download-admin', 'aiadAdminDownload', array(
-        'selectFileText' => __( 'Select or upload PDF or PPTX', 'ai-awareness-day' ),
-        'useFileText'    => __( 'Use this file', 'ai-awareness-day' ),
-    ) );
+    wp_set_script_translations( 'aiad-resource-download-admin', 'ai-awareness-day' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_download_admin_scripts' );
 

@@ -4,7 +4,14 @@
 (function () {
 	'use strict';
 
-	var CONFIG = window.aiadNeuReportData || {};
+	// The report's data is JSON on the element (data-config), not a global.
+	var CONFIG = {};
+	try {
+		var configEl = document.getElementById('aiad-neu-report');
+		CONFIG = configEl ? JSON.parse(configEl.getAttribute('data-config') || '{}') : {};
+	} catch (e) {
+		CONFIG = {};
+	}
 	var SECTIONS = CONFIG.sections || [];
 	var EDITORIAL = CONFIG.editorial || {};
 	var STRINGS = CONFIG.strings || {};

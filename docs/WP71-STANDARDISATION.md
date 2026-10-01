@@ -77,7 +77,7 @@ Three editing surfaces. Each kind of content has exactly one.
 | 2c | The Customizer's homepage controls | `customizerSettings` 30 to 17, `themeModReads` 70 to 52 | **Everything that can be done without the live conversion is done.** 2c-1: dead settings, images. 2c-2: draft-first conversion with preview and checklist. 2c-3: the homepage resource picks, the one thing the cleanup would have stranded, moved to the settings screen. What is left to delete (below) breaks a site that has not converted, so it waits for the checklist's `ready` on the live site. |
 | 2d | Whether the footer's links and social icons are edited in the Site Editor | `blockBindingSources` stays 0 | **Decided: no.** They change on the settings screen, which is one place and is what editors were given; the footer blocks print them. Revisit if editors ask to change them from the footer in the Site Editor, in which case a small block bindings source over `aiad_site` feeds a Button (buttons support `url` and `text` bindings).
 | 2e | Remove `inc/customizer.php`, `inc/customizer-smtp-control.php` and `inc/front-page-layout.php`; the SMTP note moves to the settings screen | `customizerSettings` to 0 | After 2b and 2c. |
-| 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers` 35 to 19, `localizeScript` 11 to 9, `restRoutes` 3 to 10, `scriptModules` 0 to 5 | **In progress.** Every public call in the theme and aiad-core is now REST (timeline, tracking, resource filter, contact form, survey). What is left is admin-side and the benchmark plugin. |
+| 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers` 35 to 18, `localizeScript` 11 to 4, `jquerySignedScripts` 5 to 1, `echoedScriptTags` 10 to 2, `restRoutes` 3 to 11 | **Done except the benchmark plugin and the Edit Homepage screen.** Every call in the theme and aiad-core is REST. Details below. |
 | 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks` 12 to 0, `unbuiltThemeBlocks` 26 to 0 | **Done, untested.** Details below. `shortcodes` stay at 14 until the pages that use them are re-saved. |
 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` | Not started. See below. |
 
@@ -178,7 +178,16 @@ When the live site shows `ready` on that screen and has run on the block homepag
 
 **Survey (done).** `POST aiad/v1/survey` replaces `aiad_survey_submit`, with the honeypot, the limit of two responses per visitor per hour and the validation unchanged, and no nonce. `national-survey.js` (a plugin script, so it keeps its own six-line lookup of the discovery link rather than depend on the theme's `aiad/rest` module) posts the form to it and shows the message from an error. The `aiadSurvey` global is gone.
 
-**Left in row 3:** the other ajax handlers (the card image fetch, which is admin-only, and 16 in the benchmark plugin); the 9 localised scripts; five scripts that depend on jQuery; ten echoed `<script>` tags. Order: the admin ones, then the benchmark plugin (which deploys on its own version).
+**Admin scripts and the last globals (done, untested).**
+
+- *Card image fetch.* `POST aiad/v1/card-image/{id}` (permission: can edit that post) replaces the admin-ajax handler. The block editor's Fetch image button (`CardImageKeywords` in the kit) now uses `apiFetch`, and the nonce the editor settings carried (`aiadImageFetch`) is gone. The classic meta box's script is plain DOM over `wp.apiFetch`.
+- *Classic meta box scripts.* `admin-meta-boxes.js` and `admin-resource-download.js` no longer use jQuery. Their words come from `wp.i18n` with `wp_set_script_translations()`, which replaces three `wp_localize_script()` calls (the option lists they carried are written in the script). All four classic-box enqueues return early on the block editor screen, where those boxes are hidden anyway, so the block editor no longer loads them.
+- *NEU report.* Its data is JSON in a `data-config` attribute on the report element, not the `aiadNeuReportData` global.
+- *The audit's script-tag count* no longer counts `application/ld+json`: structured data is not code, and printing it from PHP is the normal way.
+
+**Not done in row 3, and why.** The benchmark plugin's `class-airb-ajax.php` (1,050 lines, eight handlers behind nonces, including certificate allocation and lookup) and its three localised scripts: the plugin deploys on its own version and the certificate flows are the most sensitive in the site, so it should be its own piece of work with its own test. The Edit Homepage screen's one jQuery script and the shortcode and echo counts in the benchmark plugin leave with that screen in 2c-3.
+
+**Left in row 3 (superseded by the above):** the other ajax handlers (the card image fetch, which is admin-only, and 16 in the benchmark plugin); the 9 localised scripts; five scripts that depend on jQuery; ten echoed `<script>` tags. Order: the admin ones, then the benchmark plugin (which deploys on its own version).
 
 ### Blocks (row 4)
 
@@ -227,6 +236,8 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (row 3, admin scripts).** Card image fetch to REST; classic meta box scripts off jQuery and off `wp_localize_script`; NEU report config on its element; JSON-LD no longer counted as echoed script. Untested, at the owner's request. `ajaxHandlers` 19 to 18, `localizeScript` 9 to 4, `jquerySignedScripts` 5 to 1, `echoedScriptTags` 10 to 2.
 
 - **1 October 2026 (row 4).** Shortcode-only blocks call render functions (`shortcodeBlocks` 12 to 0) and the 26 theme blocks moved into aiad-core's built blocks (`unbuiltThemeBlocks` 26 to 0). Done without testing, at the owner's request, for a test pass at the end.
 
