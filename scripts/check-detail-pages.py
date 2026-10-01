@@ -2,6 +2,7 @@
 """Verify singular template bodies against a JSON list of public post URLs/titles.
 
 Each item has url, title and type (resource, timeline or live_session).
+An optional heading accounts for editorial title filters.
 Use --base to run the same list against a rehearsal or the live site.
 """
 import argparse
@@ -37,8 +38,8 @@ class Headings(HTMLParser):
 
 
 def normalized_title(value):
-    # WordPress texturizes straight quotes when printing the stored title.
-    return ' '.join(html.unescape(value).translate(str.maketrans({'‘': "'", '’': "'", '“': '"', '”': '"'})).split())
+    # WordPress texturizes straight quotes and dashes when printing titles.
+    return ' '.join(html.unescape(value).translate(str.maketrans({'‘': "'", '’': "'", '“': '"', '”': '"', '–': '-', '—': '-'})).split())
 
 
 def verify(page, base):
@@ -54,7 +55,7 @@ def verify(page, base):
                 return {'url': url, 'error': f'HTTP {response.status}'}
         parser = Headings()
         parser.feed(body)
-        expected = normalized_title(page['title'])
+        expected = normalized_title(page.get('heading', page['title']))
         if expected not in [normalized_title(heading) for heading in parser.headings]:
             return {'url': url, 'error': 'Requested post title is missing from the rendered body'}
         if page['type'] == 'resource' and not re.search(r'<article[^>]*\brl-article\b', body):
