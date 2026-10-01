@@ -1,0 +1,19 @@
+{
+  "metaBoxesInBlockEditor": 11,
+  "customizerSettings": 41,
+  "themeModReads": 80,
+  "shortcodes": 14,
+  "shortcodeBlocks": 12,
+  "ajaxHandlers": 35,
+  "localizeScript": 11,
+  "jquerySignedScripts": 5,
+  "echoedScriptTags": 10,
+  "phpTemplates": 20,
+  "unbuiltThemeBlocks": 26,
+  "staleVersionFloors": 0,
+  "blockTemplates": 11,
+  "recordEditors": 0,
+  "restRoutes": 3,
+  "blockBindingSources": 0,
+  "scriptModules": 0
+}
