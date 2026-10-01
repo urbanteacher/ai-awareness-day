@@ -1,0 +1,115 @@
+/* The record editor kit's look: the lesson page's sections, in the editor, with
+   square edges and ink rules. Controls keep core's own look, so they behave as
+   everywhere else in the editor. Used by the canvas blocks (inside the editor
+   canvas) and the sidebar panels. */
+
+.aiad-re-section {
+	margin: 0 0 32px;
+	padding-top: 20px;
+	border-top: 2px solid #231f20;
+
+	.components-base-control,
+	.components-toggle-control,
+	.components-checkbox-control {
+		margin-bottom: 12px;
+	}
+
+	.components-base-control:last-child,
+	.aiad-re-row__fields > :last-child {
+		margin-bottom: 0;
+	}
+}
+
+.aiad-re-section__title {
+	margin: 0 0 12px;
+	font-size: 26px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+}
+
+.aiad-re-label {
+	margin: 0 0 8px;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.aiad-re-meta,
+.aiad-re-help {
+	margin: -4px 0 12px;
+	color: #54504e;
+	font-size: 13px;
+}
+
+.aiad-re-notice {
+	margin: 0 0 12px;
+}
+
+.aiad-re-rows {
+	margin-bottom: 16px;
+}
+
+.aiad-re-row {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 12px;
+	align-items: start;
+	margin-bottom: 12px;
+	padding: 12px;
+	border: 1px solid #c9c6be;
+	background: #fff;
+
+	&:not(:has(.aiad-re-row__num)) {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+}
+
+.aiad-re-row__num {
+	display: grid;
+	place-items: center;
+	width: 32px;
+	height: 32px;
+	background: #231f20;
+	color: #f6f4ed;
+	font-weight: 700;
+}
+
+.aiad-re-row__tools {
+	display: flex;
+	gap: 2px;
+}
+
+.aiad-re-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.aiad-re-grid--two {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.aiad-re-grid--wide {
+	grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+}
+
+/* The sidebar panel. */
+.aiad-re-details {
+	.components-base-control,
+	.components-radio-control,
+	.components-toggle-control {
+		margin-bottom: 16px;
+	}
+}
+
+.aiad-re-details__file {
+	margin: 0 0 8px;
+	font-size: 13px;
+	word-break: break-all;
+}
+
+.aiad-re-focal__context + .aiad-re-focal__context {
+	margin-top: 16px;
+}

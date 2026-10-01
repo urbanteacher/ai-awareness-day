@@ -23,10 +23,47 @@ function aiad_timeline_meta_box(): void
         'aiad_timeline_meta_box_callback',
         'timeline',
         'side',
-        'high'
+        'high',
+        /* Classic editor only. In the block editor the entry's fields are in the
+           Entry details panel (src/editors/timeline.js); this box would only sit
+           in the collapsed drawer under the canvas. */
+        array('__back_compat_meta_box' => true)
     );
 }
 add_action('add_meta_boxes', 'aiad_timeline_meta_box');
+
+/**
+ * The entry's option lists and field wording for the Entry details panel, so
+ * they stay defined here (aiad_timeline_editable_meta_config() and the option
+ * functions) and the panel only draws them.
+ */
+add_filter(
+    'block_editor_settings_all',
+    static function (array $settings, WP_Block_Editor_Context $context): array {
+        if (!$context->post || 'timeline' !== $context->post->post_type) {
+            return $settings;
+        }
+        $config = aiad_timeline_editable_meta_config();
+        $fields = array();
+        foreach ($config as $key => $field) {
+            $fields[$key] = array(
+                'label' => (string) ($field['label'] ?? ''),
+                'placeholder' => (string) ($field['placeholder'] ?? ''),
+                'help' => (string) ($field['description'] ?? ''),
+            );
+        }
+        $settings['aiadTimeline'] = array(
+            'cardTypes' => $config['_aiad_timeline_card_type']['options'] ?? array(),
+            'icons' => aiad_timeline_icon_options(),
+            'covers' => aiad_timeline_cover_fallback_options(),
+            'fields' => $fields,
+            'auto' => 'auto' === get_post_meta($context->post->ID, '_aiad_timeline_source', true),
+        );
+        return $settings;
+    },
+    10,
+    2
+);
 
 function aiad_timeline_meta_box_callback(WP_Post $post): void
 {

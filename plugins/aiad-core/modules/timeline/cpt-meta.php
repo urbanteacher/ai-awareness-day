@@ -100,6 +100,8 @@ function aiad_register_timeline_meta(): void
         '_aiad_timeline_like_count' => array('type' => 'integer', 'default' => 0),
         // Cover when no featured image: '' (auto), 'gradient', 'tech'
         '_aiad_timeline_cover_fallback' => array('type' => 'string', 'default' => ''),
+        // Always show in the AI Risk Benchmark's "More to read" when the audience matches
+        '_airb_benchmark_outcome_pin' => array('type' => 'boolean', 'default' => false),
     );
 
     foreach ($meta_fields as $key => $args) {

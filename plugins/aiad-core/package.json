@@ -5,9 +5,11 @@
   "description": "AI Awareness Day Core plugin: blocks build.",
   "license": "GPL-2.0-or-later",
   "scripts": {
-    "build": "wp-scripts build --webpack-copy-php --blocks-manifest",
+    "build": "wp-scripts build --webpack-copy-php --blocks-manifest && npm run build:editors",
     "start": "wp-scripts start --webpack-copy-php --blocks-manifest",
-    "lint:js": "wp-scripts lint-js src"
+    "lint:js": "wp-scripts lint-js src",
+    "build:editors": "wp-scripts build --webpack-src-dir=src/editors --output-path=build/editors",
+    "start:editors": "wp-scripts start --webpack-src-dir=src/editors --output-path=build/editors"
   },
   "devDependencies": {
     "@wordpress/scripts": "^36.0.0"

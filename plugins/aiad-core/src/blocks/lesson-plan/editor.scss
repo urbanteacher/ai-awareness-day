@@ -1,6 +1,6 @@
-/* The Lesson plan block in the editor: the lesson page's sections, in its
-   order, with square edges and ink rules like the page itself. Controls keep
-   core's own look, so they behave as everywhere else in the editor. */
+/* The Lesson plan block in the editor. The sections, rows and grids are the
+   record editor kit's (src/shared/record-editor); this is only what is the
+   lesson's own. */
 
 .aiad-lp {
 	font-family: var(--s-font, inherit);
@@ -14,105 +14,7 @@
 	font-size: 14px;
 }
 
-.aiad-lp-section {
-	margin: 0 0 32px;
-
-	.components-base-control:last-child,
-	.aiad-lp-row__fields > :last-child {
-		margin-bottom: 0;
-	}
-	padding-top: 20px;
-	border-top: 2px solid #231f20;
-
-	.components-base-control,
-	.components-toggle-control,
-	.components-checkbox-control {
-		margin-bottom: 12px;
-	}
-}
-
-.aiad-lp-section__title {
-	margin: 0 0 12px;
-	font-size: 26px;
-	font-weight: 700;
-	letter-spacing: -0.02em;
-	line-height: 1.15;
-}
-
-.aiad-lp-label {
-	margin: 0 0 8px;
-	font-size: 12px;
-	font-weight: 700;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-}
-
-.aiad-lp-meta,
-.aiad-lp-help {
-	margin: -4px 0 12px;
-	color: #54504e;
-	font-size: 13px;
-}
-
-.aiad-lp-notice {
-	margin: 0 0 12px;
-}
-
-.aiad-lp-rows {
-	margin-bottom: 16px;
-}
-
-.aiad-lp-row {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) auto;
-	gap: 12px;
-	align-items: start;
-	margin-bottom: 12px;
-	padding: 12px;
-	border: 1px solid #c9c6be;
-	background: #fff;
-}
-
-.aiad-lp-row__num {
-	display: grid;
-	place-items: center;
-	width: 32px;
-	height: 32px;
-	background: #231f20;
-	color: #f6f4ed;
-	font-weight: 700;
-}
-
-.aiad-lp-row:not(:has(.aiad-lp-row__num)) {
-	grid-template-columns: minmax(0, 1fr) auto;
-}
-
-.aiad-lp-row__tools {
-	display: flex;
-	gap: 2px;
-}
-
-.aiad-lp-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
-}
-
-.aiad-lp-grid--two {
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.aiad-lp-grid--wide {
-	grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
-}
-
 .aiad-lp-tabs .components-tab-panel__tabs {
 	margin-bottom: 12px;
 	border-bottom: 1px solid #c9c6be;
-}
-
-.aiad-lesson-details__file {
-	margin: 0 0 8px;
-	font-size: 13px;
-	word-break: break-all;
 }
