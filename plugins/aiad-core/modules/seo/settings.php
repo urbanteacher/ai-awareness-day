@@ -104,11 +104,15 @@ function aiad_seo_setting( string $key ): string {
  */
 function aiad_seo_sanitize_settings( $input ): array {
 	$input = is_array( $input ) ? $input : array();
+	// The stored value as it is, not aiad_seo_settings(): that function creates the option on its first read, which
+	// runs this sanitiser, which would call it again.
+	$old   = get_option( 'aiad_seo', array() );
+	$old   = is_array( $old ) ? $old : array();
 	$clean = array();
 	foreach ( aiad_seo_setting_fields() as $key => $field ) {
 		if ( ! array_key_exists( $key, $input ) ) {
 			// A key that was not sent is not an empty one: a write that names only some settings keeps the rest.
-			$clean[ $key ] = aiad_seo_setting( $key );
+			$clean[ $key ] = (string) ( $old[ $key ] ?? '' );
 			continue;
 		}
 		$value = (string) $input[ $key ];

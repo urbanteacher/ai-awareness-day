@@ -159,8 +159,14 @@ add_action( 'update_option_aiad_campaign', 'aiad_campaign_sync_theme_mods', 10, 
  */
 function aiad_campaign_sanitize_settings( $input ): array {
 	$input = is_array( $input ) ? $input : array();
-	$old   = aiad_campaign_settings();
-	$clean = $old;
+	// The stored value as it is, not aiad_campaign_settings(): that function creates the option on its first read,
+	// which runs this sanitiser, which would call it again.
+	$old   = get_option( 'aiad_campaign', array() );
+	$old   = is_array( $old ) ? $old : array();
+	$clean = array(
+		'event_date'    => (string) ( $old['event_date'] ?? '' ),
+		'contact_email' => (string) ( $old['contact_email'] ?? '' ),
+	);
 
 	$date = sanitize_text_field( (string) ( $input['event_date'] ?? '' ) );
 	if ( '' === $date || aiad_campaign_is_ymd( $date ) ) {
