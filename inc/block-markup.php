@@ -119,11 +119,37 @@ function aiad_block_styled_item( array $inner, string $class = '', string $tag =
 /**
  * A Styled text (blocks/text).
  *
- * @param string $html Content.
- * @param string $tag  dt, dd, li or span.
+ * @param string $html  Content.
+ * @param string $tag   dt, dd, li or span.
+ * @param string $class Class.
  */
-function aiad_block_styled_text( string $html, string $tag = 'span' ): string {
-	return '<!-- wp:aiad/text' . aiad_block_attrs( array( 'tagName' => 'span' === $tag ? null : $tag ) ) . " -->\n<" . $tag . '>' . $html . '</' . $tag . ">\n<!-- /wp:aiad/text -->";
+function aiad_block_styled_text( string $html, string $tag = 'span', string $class = '' ): string {
+	return '<!-- wp:aiad/text' . aiad_block_attrs( array( 'tagName' => 'span' === $tag ? null : $tag, 'className' => $class ) ) . " -->\n<" . $tag . ( '' !== $class ? ' class="' . esc_attr( $class ) . '"' : '' ) . '>' . $html . '</' . $tag . ">\n<!-- /wp:aiad/text -->";
+}
+
+/**
+ * A Download card (blocks/download-card), its attributes in the order the editor writes them.
+ *
+ * @param array $card kind (download or page), href, filename, preview, alt, badge, button, title, description (plain text).
+ */
+function aiad_block_download_card( array $card ): string {
+	$page  = 'page' === ( $card['kind'] ?? 'download' );
+	$attrs = array(
+		'kind'     => $page ? 'page' : null,
+		'href'     => $card['href'],
+		'filename' => $page ? null : $card['filename'],
+		'preview'  => $card['preview'],
+		'alt'      => $card['alt'] ?? '',
+		'badge'    => $page ? ( $card['badge'] ?? '' ) : null,
+		'button'   => $card['button'],
+	);
+	$icon  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
+	return '<!-- wp:aiad/download-card' . aiad_block_attrs( $attrs ) . " -->\n"
+		. '<div class="assets-pack__card' . ( $page ? ' assets-pack__card--page' : '' ) . ' fade-up"><div class="assets-pack__preview' . ( $page ? ' assets-pack__preview--page' : '' ) . '">'
+		. ( '' !== $card['preview'] ? '<img src="' . esc_url( $card['preview'] ) . '" alt="' . str_replace( '&#039;', "'", esc_attr( $card['alt'] ?? '' ) ) . '" loading="lazy"/>' : '' )
+		. ( $page && ! empty( $card['badge'] ) ? '<span class="assets-pack__doc-badge">' . esc_html( $card['badge'] ) . '</span>' : '' )
+		. '</div><div class="assets-pack__info"><h2 class="assets-pack__card-title">' . aiad_block_text( $card['title'] ) . '</h2><p class="assets-pack__card-desc section-desc">' . aiad_block_text( $card['description'] ) . '</p>'
+		. '<a href="' . esc_url( $card['href'] ) . '"' . ( $page ? '' : ' download="' . esc_attr( $card['filename'] ) . '"' ) . ' class="btn assets-pack__download-btn">' . esc_html( $card['button'] ) . ( $page ? '' : $icon ) . "</a></div></div>\n<!-- /wp:aiad/download-card -->";
 }
 
 /**

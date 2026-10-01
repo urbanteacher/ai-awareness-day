@@ -1,9 +1,15 @@
 <?php
 /**
- * Theme pages that can be edited in blocks: pages the theme builds itself at their own address (a PHP template with
- * its words in the theme), which Pages → Theme pages can turn into an ordinary page of blocks with the same words
- * and design. While that page is published, the address shows it; going back shows the built-in page again and
- * keeps the edited one as a draft.
+ * Theme pages that can be edited in blocks: pages the theme builds itself, with their words in the theme, which
+ * Pages → Theme pages can turn into an ordinary page of blocks with the same words and design.
+ *
+ * Two kinds. A page at its own address (National Conversation, the walkthrough) has no post until its editable page
+ * is created; while that page is published the address shows it, and going back shows the built-in page again and
+ * keeps the edited one as a draft. A page with a theme template chosen (the Assets Pack) keeps its post and its
+ * template, so whatever finds the page by its template still does: turning it into blocks swaps its content for the
+ * blocks (keeping the content it had, to put back), and while it is flagged (_aiad_block_page) it renders from
+ * templates/theme-page.html instead of the PHP template. Going back puts the old content back and keeps the edited
+ * blocks to use again.
  *
  * Each page's blocks come from a pattern (patterns/{slug}.php, built with inc/block-markup.php), also offered when a
  * new page is created. Its outermost block is the page's main group, so the editor canvas is styled as the site is;
@@ -25,7 +31,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * title:        the page's title when it is created.
  * builtin:      the PHP template that renders the built-in page.
- * style:        the handle of the page's stylesheet (assets/css/pages/{slug}.css), loaded in its editor too.
+ * template:     for a page with a theme template chosen, that template; '' for a page at its own address.
+ * page:         for a page with a theme template chosen, a function returning its post.
+ * style:        the handle of the page's stylesheet (assets/css/pages/{slug}.css), loaded in its editor too; '' when
+ *               the theme loads it everywhere.
  * placeholders: a function returning placeholder => HTML, or ''.
  * note:         a sentence for the editor notice, or ''.
  *
@@ -36,6 +45,8 @@ function aiad_editable_pages(): array {
 		'national-conversation' => array(
 			'title'        => __( 'The National AI Conversation', 'ai-awareness-day' ),
 			'builtin'      => 'page-national-conversation.php',
+			'template'     => '',
+			'page'         => '',
 			'style'        => 'aiad-national-conversation',
 			'placeholders' => 'aiad_national_conversation_placeholders',
 			'note'         => __( 'The buttons change on the day the conversation opens, so they are a block of their own.', 'ai-awareness-day' ),
@@ -43,8 +54,19 @@ function aiad_editable_pages(): array {
 		'walkthrough'           => array(
 			'title'        => __( 'Platform walkthrough', 'ai-awareness-day' ),
 			'builtin'      => 'page-walkthrough.php',
+			'template'     => '',
+			'page'         => '',
 			'style'        => 'aiad-walkthrough',
 			'placeholders' => 'aiad_walkthrough_placeholders',
+			'note'         => '',
+		),
+		'assets-pack'           => array(
+			'title'        => __( 'Assets Pack', 'ai-awareness-day' ),
+			'builtin'      => 'template-assets-pack.php',
+			'template'     => 'template-assets-pack.php',
+			'page'         => 'aiad_get_assets_pack_page',
+			'style'        => '',
+			'placeholders' => 'aiad_assets_pack_placeholders',
 			'note'         => '',
 		),
 	);
@@ -58,11 +80,48 @@ function aiad_editable_pages(): array {
 function aiad_editable_page_post( string $slug ): ?WP_Post {
 	static $pages = array();
 	if ( ! array_key_exists( $slug, $pages ) ) {
-		$found          = get_page_by_path( $slug );
-		$pages[ $slug ] = ( $found && 'publish' === $found->post_status && has_blocks( $found ) ) ? $found : null;
+		$found = aiad_editable_page_base( $slug );
+		$ok    = $found && 'publish' === $found->post_status && has_blocks( $found );
+		if ( $ok && '' !== ( aiad_editable_pages()[ $slug ]['template'] ?? '' ) ) {
+			$ok = (bool) get_post_meta( $found->ID, '_aiad_block_page', true );
+		}
+		$pages[ $slug ] = $ok ? $found : null;
 	}
 	return $pages[ $slug ];
 }
+
+/**
+ * The post behind a theme page, edited or not: the page at its address, or the page with its template chosen.
+ *
+ * @param string $slug A slug from aiad_editable_pages().
+ */
+function aiad_editable_page_base( string $slug ): ?WP_Post {
+	$settings = aiad_editable_pages()[ $slug ] ?? null;
+	if ( ! $settings ) {
+		return null;
+	}
+	if ( '' !== $settings['page'] ) {
+		$page = function_exists( $settings['page'] ) ? call_user_func( $settings['page'] ) : null;
+		return $page instanceof WP_Post ? $page : null;
+	}
+	return get_page_by_path( $slug );
+}
+
+/**
+ * A theme page with a template chosen, while it shows its blocks, renders from templates/theme-page.html (the
+ * header, the post content and the footer) in place of its PHP template.
+ *
+ * @param string[] $templates The page's template hierarchy.
+ * @return string[]
+ */
+function aiad_editable_page_template_hierarchy( array $templates ): array {
+	$slug = aiad_current_editable_page();
+	if ( '' === $slug || '' === aiad_editable_pages()[ $slug ]['template'] ) {
+		return $templates;
+	}
+	return array_merge( array( 'theme-page.php' ), array_values( array_diff( $templates, array( aiad_editable_pages()[ $slug ]['template'] ) ) ) );
+}
+add_filter( 'page_template_hierarchy', 'aiad_editable_page_template_hierarchy' );
 
 /**
  * The editable theme page this request shows, or ''.
@@ -85,7 +144,16 @@ function aiad_current_editable_page(): string {
  */
 function aiad_edited_editable_page(): string {
 	$post = is_admin() ? get_post() : null;
-	return ( $post && 'page' === $post->post_type && isset( aiad_editable_pages()[ $post->post_name ] ) ) ? $post->post_name : '';
+	if ( ! $post || 'page' !== $post->post_type ) {
+		return '';
+	}
+	foreach ( aiad_editable_pages() as $slug => $settings ) {
+		$base = '' !== $settings['page'] ? aiad_editable_page_base( $slug ) : null;
+		if ( $base ? $base->ID === $post->ID : $slug === $post->post_name ) {
+			return $slug;
+		}
+	}
+	return '';
 }
 
 /**
@@ -103,9 +171,11 @@ function aiad_editable_page_placeholders( string $slug ): array {
  * A theme page's blocks, as its pattern builds them. Read from the pattern file itself, since WordPress's list of
  * theme patterns can lag behind a deploy (aiad_homepage_pattern_content()).
  *
- * @param string $slug A slug from aiad_editable_pages().
+ * @param string       $slug      A slug from aiad_editable_pages().
+ * @param WP_Post|null $aiad_page The page they are for, if it exists (the Assets Pack keeps the page's own text as
+ *                                its introduction).
  */
-function aiad_editable_page_content( string $slug ): string {
+function aiad_editable_page_content( string $slug, ?WP_Post $aiad_page = null ): string {
 	$file = AIAD_DIR . '/patterns/' . sanitize_key( $slug ) . '.php';
 	if ( ! isset( aiad_editable_pages()[ $slug ] ) || ! is_readable( $file ) ) {
 		return '';
@@ -134,6 +204,7 @@ function aiad_editable_page_render_block( string $block_content, array $block ):
 		// Once, on the whole page, so nothing is replaced twice.
 		$block_content = strtr( $block_content, aiad_editable_page_placeholders( $slug ) );
 		$block_content = (string) preg_replace( '#\s*<a\b[^>]*\bhref=""[^>]*>.*?</a>#s', '', $block_content );
+		$block_content = (string) preg_replace( '#\s*<p\b[^>]*>\s*</p>#', '', $block_content ); // A paragraph that held only that link.
 	}
 	if ( 'core/group' === $block['blockName'] && preg_match( '/^\s*<(section|aside)\b/', $block_content, $tag ) && preg_match( '/<h[1-6][^>]*\bid="([^"]+)"/', $block_content, $m ) ) {
 		$html = new WP_HTML_Tag_Processor( $block_content );
@@ -172,7 +243,7 @@ add_action( 'init', 'aiad_register_page_pattern_category' );
  */
 function aiad_editable_page_editor_styles(): void {
 	$slug = aiad_edited_editable_page();
-	if ( '' === $slug ) {
+	if ( '' === $slug || '' === aiad_editable_pages()[ $slug ]['style'] ) {
 		return;
 	}
 	$file = 'assets/css/pages/' . $slug . '.css';
@@ -228,9 +299,11 @@ function aiad_handle_editable_page_actions(): void {
 	$action  = sanitize_key( wp_unslash( $_POST['aiad_theme_page_action'] ) );
 	$slug    = sanitize_key( wp_unslash( $_POST['aiad_theme_page'] ) );
 	$pages   = aiad_editable_pages();
-	$current = isset( $pages[ $slug ] ) ? get_page_by_path( $slug ) : null;
+	$current = isset( $pages[ $slug ] ) ? aiad_editable_page_base( $slug ) : null;
 	$message = 'error';
-	if ( 'create' === $action && isset( $pages[ $slug ] ) && ! aiad_editable_page_post( $slug ) ) {
+	if ( $current && '' !== $pages[ $slug ]['template'] ) {
+		$message = aiad_switch_template_page( $current, $slug, $action );
+	} elseif ( 'create' === $action && isset( $pages[ $slug ] ) && ! aiad_editable_page_post( $slug ) ) {
 		if ( $current && 'trash' !== $current->post_status ) {
 			// A page kept from before (a draft, after going back to the built-in page): publish it again as it was.
 			$id = wp_update_post( array( 'ID' => $current->ID, 'post_status' => 'publish' ), true );
@@ -257,13 +330,47 @@ function aiad_handle_editable_page_actions(): void {
 add_action( 'admin_init', 'aiad_handle_editable_page_actions' );
 
 /**
+ * Switch a page with a theme template chosen to its blocks ('create') or back to its PHP template ('builtin'). Each
+ * keeps the other's content, so switching back and forth loses nothing; the page's revisions keep every step too.
+ *
+ * @param WP_Post $page   The page.
+ * @param string  $slug   A slug from aiad_editable_pages().
+ * @param string  $action create or builtin.
+ * @return string The message to show: created, builtin or error.
+ */
+function aiad_switch_template_page( WP_Post $page, string $slug, string $action ): string {
+	$on = (bool) get_post_meta( $page->ID, '_aiad_block_page', true );
+	if ( 'create' === $action && ! $on ) {
+		$kept    = (string) get_post_meta( $page->ID, '_aiad_edited_content', true );
+		$content = '' !== $kept ? $kept : aiad_editable_page_content( $slug, $page );
+		update_post_meta( $page->ID, '_aiad_builtin_content', wp_slash( $page->post_content ) );
+		$id = wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( $content ) ), true );
+		if ( is_wp_error( $id ) ) {
+			return 'error';
+		}
+		update_post_meta( $page->ID, '_aiad_block_page', '1' );
+		return 'created';
+	}
+	if ( 'builtin' === $action && $on ) {
+		update_post_meta( $page->ID, '_aiad_edited_content', wp_slash( $page->post_content ) );
+		$id = wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( (string) get_post_meta( $page->ID, '_aiad_builtin_content', true ) ) ), true );
+		if ( is_wp_error( $id ) ) {
+			return 'error';
+		}
+		delete_post_meta( $page->ID, '_aiad_block_page' );
+		return 'builtin';
+	}
+	return 'error';
+}
+
+/**
  * Render Pages → Theme pages.
  */
 function aiad_render_editable_pages_admin_page(): void {
 	$message  = isset( $_GET['aiad_message'] ) ? sanitize_key( wp_unslash( $_GET['aiad_message'] ) ) : '';
 	$messages = array(
 		'created' => __( 'The page is ready to edit, and is what its address shows now.', 'ai-awareness-day' ),
-		'builtin' => __( 'The address shows the built-in page again. Your page is kept as a draft.', 'ai-awareness-day' ),
+		'builtin' => __( 'The address shows the built-in page again. Your page is kept to use again.', 'ai-awareness-day' ),
 		'error'   => __( 'That did not work. Nothing was changed.', 'ai-awareness-day' ),
 	);
 	?>
@@ -272,13 +379,21 @@ function aiad_render_editable_pages_admin_page(): void {
 		<?php if ( isset( $messages[ $message ] ) ) : ?>
 			<div class="notice <?php echo 'error' === $message ? 'notice-error' : 'notice-success'; ?> is-dismissible"><p><?php echo esc_html( $messages[ $message ] ); ?></p></div>
 		<?php endif; ?>
-		<p><?php esc_html_e( 'These pages are built by the theme, with their wording in the theme. Each can be turned into a page of blocks with the same wording and design, at the same address, so its text is edited in the block editor. Going back shows the built-in page again and keeps your page as a draft.', 'ai-awareness-day' ); ?></p>
+		<p><?php esc_html_e( 'These pages are built by the theme, with their wording in the theme. Each can be turned into a page of blocks with the same wording and design, at the same address, so its text is edited in the block editor. Going back shows the built-in page again and keeps your page to use again.', 'ai-awareness-day' ); ?></p>
 		<?php
 		foreach ( aiad_editable_pages() as $slug => $settings ) :
 			$page = aiad_editable_page_post( $slug );
-			$kept = $page ? null : get_page_by_path( $slug );
-			$kept = ( $kept && 'draft' === $kept->post_status ) ? $kept : null;
-			$url  = home_url( '/' . $slug . '/' );
+			$base = aiad_editable_page_base( $slug );
+			if ( '' !== $settings['template'] ) {
+				if ( ! $base ) {
+					continue; // No page has the template chosen.
+				}
+				$kept = ( ! $page && '' !== (string) get_post_meta( $base->ID, '_aiad_edited_content', true ) ) ? $base : null;
+				$url  = (string) get_permalink( $base );
+			} else {
+				$kept = ( ! $page && $base && 'draft' === $base->post_status ) ? $base : null;
+				$url  = home_url( '/' . $slug . '/' );
+			}
 			?>
 			<h2><?php echo esc_html( $settings['title'] ); ?> <code style="font-size:0.75em"><?php echo esc_html( wp_parse_url( $url, PHP_URL_PATH ) ); ?></code></h2>
 			<?php if ( $page ) : ?>
@@ -288,7 +403,7 @@ function aiad_render_editable_pages_admin_page(): void {
 					<a class="button" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'View it', 'ai-awareness-day' ); ?></a>
 				</p>
 			<?php else : ?>
-				<p><?php echo esc_html( $kept ? __( 'The built-in page. Your edited page is kept as a draft; using it again publishes it as you left it.', 'ai-awareness-day' ) : sprintf( /* translators: %s: PHP template file */ __( 'The built-in page (%s).', 'ai-awareness-day' ), $settings['builtin'] ) ); ?></p>
+				<p><?php echo esc_html( $kept ? __( 'The built-in page. Your edited page is kept; using it again shows it as you left it.', 'ai-awareness-day' ) : sprintf( /* translators: %s: PHP template file */ __( 'The built-in page (%s).', 'ai-awareness-day' ), $settings['builtin'] ) ); ?></p>
 			<?php endif; ?>
 			<form method="post">
 				<?php wp_nonce_field( 'aiad_theme_pages' ); ?>

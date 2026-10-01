@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/download-card",
+	"title": "Download card",
+	"category": "theme",
+	"icon": "download",
+	"description": "A card with a preview, a title, a description and a button that downloads a file, or opens a page. Used on the Assets Pack.",
+	"keywords": [ "download", "file", "asset", "logo", "card" ],
+	"textdomain": "ai-awareness-day",
+	"attributes": {
+		"kind": { "type": "string", "enum": [ "download", "page" ], "default": "download" },
+		"href": { "type": "string", "default": "", "role": "content" },
+		"filename": { "type": "string", "default": "" },
+		"preview": { "type": "string", "default": "", "role": "content" },
+		"alt": { "type": "string", "default": "" },
+		"badge": { "type": "string", "default": "" },
+		"button": { "type": "string", "default": "", "role": "content" },
+		"title": { "type": "rich-text", "source": "rich-text", "selector": "h2", "role": "content" },
+		"description": { "type": "rich-text", "source": "rich-text", "selector": "p", "role": "content" }
+	},
+	"supports": {
+		"html": false,
+		"className": false
+	},
+	"editorScript": "file:./index.js"
+}
