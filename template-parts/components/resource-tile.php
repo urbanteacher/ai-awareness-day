@@ -5,7 +5,7 @@
  * The homepage's three resource grids, the /resources library and the featured
  * archive each carried their own copy of the old pointed card, and
  * resource-filters.js kept a fifth. This is the one card they all now share. The
- * archives' AJAX filter renders it too (aiad_ajax_filter_resources() returns its
+ * archives' AJAX filter renders it too (aiad_rest_filter_resources() returns its
  * HTML), so a filtered page cannot drift from the first one. It shows the photo as it
  * is, with no colour wash and no title laid over it. The strand sits in an ink
  * pill, which reads on any photo, and the title appears once, below. A resource

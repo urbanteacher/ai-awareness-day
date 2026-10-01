@@ -146,18 +146,13 @@ function aiad_scripts(): void
         $script_args
     );
 
-    // Localize for AJAX: only output nonces where they are used to reduce payload. What is left is the contact form;
-    // the timeline, the counters and the resource filter are REST routes found through the discovery link.
-    $aiad_ajax = array('url' => admin_url('admin-ajax.php'));
-    if (is_front_page()) {
-        $aiad_ajax['nonce'] = wp_create_nonce('aiad_contact_nonce');
-    }
-    wp_localize_script('aiad-main', 'aiad_ajax', $aiad_ajax);
-
     // The theme's script modules. They share aiad/rest, which finds the REST routes through the discovery link.
     $rest_js     = AIAD_DIR . '/assets/js/rest.js';
     $tracking_js = AIAD_DIR . '/assets/js/tracking.js';
     wp_register_script_module( 'aiad/rest', AIAD_URI . '/assets/js/rest.js', array(), file_exists( $rest_js ) ? filemtime( $rest_js ) : AIAD_VERSION );
+    // The contact form is on the front page and wherever the Get Involved form block is used; the script checks for the form.
+    $contact_js = AIAD_DIR . '/assets/js/contact-form.js';
+    wp_enqueue_script_module( 'aiad/contact-form', AIAD_URI . '/assets/js/contact-form.js', array( 'aiad/rest' ), file_exists( $contact_js ) ? filemtime( $contact_js ) : AIAD_VERSION );
     wp_enqueue_script_module( 'aiad/tracking', AIAD_URI . '/assets/js/tracking.js', array( 'aiad/rest' ), file_exists( $tracking_js ) ? filemtime( $tracking_js ) : AIAD_VERSION );
 
     // balloons-js disabled post-event. Assets remain in theme for reuse.

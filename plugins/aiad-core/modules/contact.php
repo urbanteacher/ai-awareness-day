@@ -1,6 +1,6 @@
 <?php
 /**
- * Get Involved contact form: AJAX handler, checklist labels, and client IP / fingerprint for rate limiting.
+ * Get Involved contact form: the REST route, checklist labels, and client IP / fingerprint for rate limiting.
  *
  * Moved from the theme's inc/ajax-handlers.php. The theme loads this file from its bundled copy of the plugin when
  * the plugin isn't active, so this is the only copy.
@@ -58,43 +58,59 @@ function aiad_get_client_fingerprint(): string {
 }
 
 /**
- * AJAX Contact Form Handler
+ * POST aiad/v1/contact: the Get Involved form.
+ *
+ * It was an admin-ajax handler behind a nonce printed into the page. HTML that is cached outlives a nonce, and a
+ * submission with a stale one got a bare "-1" the page script could not read, so the form said "Network error". The
+ * form is for anyone, so it is a public route; what protects it is what the handler already did: a hidden honeypot
+ * field, three submissions per visitor per five minutes, and validation. The page script (assets/js/contact-form.js)
+ * finds the route through the REST discovery link.
+ *
+ * @param WP_REST_Request $request The form's fields.
+ * @return WP_REST_Response|WP_Error
  */
-function aiad_handle_contact_form(): void {
-    check_ajax_referer( 'aiad_contact_nonce', 'nonce' );
+function aiad_rest_contact_form( WP_REST_Request $request ) {
+    $error = static function ( string $message, int $status = 400 ): WP_Error {
+        return new WP_Error( 'aiad_contact', $message, array( 'status' => $status ) );
+    };
+    // A text field is a string; anything else sent under its name (an array, say) counts as empty.
+    $field = static function ( string $key ) use ( $request ): string {
+        $value = $request->get_param( $key );
+        return is_scalar( $value ) ? (string) $value : '';
+    };
 
     // Honeypot field (hidden from users, bots may fill it)
-    $honeypot = isset( $_POST['aiad_website'] ) ? sanitize_text_field( wp_unslash( $_POST['aiad_website'] ) ) : '';
+    $honeypot = sanitize_text_field( $field( 'aiad_website' ) );
     if ( $honeypot !== '' ) {
-        wp_send_json_error( array( 'message' => __( 'Invalid submission detected. Please refresh the page and try again.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Invalid submission detected. Please refresh the page and try again.', 'ai-awareness-day' ) );
     }
 
     // Rate limit: 3 submissions per IP per 5 minutes
     $limit_key = 'aiad_contact_limit_' . aiad_get_client_fingerprint();
     $count    = (int) get_transient( $limit_key );
     if ( $count >= 3 ) {
-        wp_send_json_error( array( 'message' => __( 'Too many submissions from your address. Please try again in a few minutes.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Too many submissions from your address. Please try again in a few minutes.', 'ai-awareness-day' ), 429 );
     }
 
-    $first_name    = sanitize_text_field( wp_unslash( $_POST['first_name'] ?? '' ) );
-    $last_name     = sanitize_text_field( wp_unslash( $_POST['last_name'] ?? '' ) );
-    $email         = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
-    $message       = sanitize_textarea_field( wp_unslash( $_POST['message'] ?? '' ) );
-    $involved_as   = sanitize_text_field( wp_unslash( $_POST['involved_as'] ?? '' ) );
-    $school_name   = sanitize_text_field( wp_unslash( $_POST['school_name'] ?? '' ) );
-    $subject       = sanitize_text_field( wp_unslash( $_POST['subject'] ?? '' ) );
-    $child_school  = sanitize_text_field( wp_unslash( $_POST['child_school'] ?? '' ) );
-    $role_title    = sanitize_text_field( wp_unslash( $_POST['role_title'] ?? '' ) );
-    $organisation  = sanitize_text_field( wp_unslash( $_POST['organisation'] ?? '' ) );
-    $org_type      = sanitize_text_field( wp_unslash( $_POST['org_type'] ?? '' ) );
+    $first_name    = sanitize_text_field( $field( 'first_name' ) );
+    $last_name     = sanitize_text_field( $field( 'last_name' ) );
+    $email         = sanitize_email( $field( 'email' ) );
+    $message       = sanitize_textarea_field( $field( 'message' ) );
+    $involved_as   = sanitize_text_field( $field( 'involved_as' ) );
+    $school_name   = sanitize_text_field( $field( 'school_name' ) );
+    $subject       = sanitize_text_field( $field( 'subject' ) );
+    $child_school  = sanitize_text_field( $field( 'child_school' ) );
+    $role_title    = sanitize_text_field( $field( 'role_title' ) );
+    $organisation  = sanitize_text_field( $field( 'organisation' ) );
+    $org_type      = sanitize_text_field( $field( 'org_type' ) );
 
     // Optional checklist (role-specific; only submitted checkboxes are sent)
-    $checklist_raw   = isset( $_POST['aiad_checklist'] ) && is_array( $_POST['aiad_checklist'] ) ? wp_unslash( $_POST['aiad_checklist'] ) : array();
+    $checklist_raw   = is_array( $request->get_param( 'aiad_checklist' ) ) ? $request->get_param( 'aiad_checklist' ) : array();
     $checklist_labels = aiad_get_contact_checklist_labels();
     $checklist       = array();
     $checklist_keys  = array();
     foreach ( $checklist_raw as $key ) {
-        $key = sanitize_text_field( $key );
+        $key = sanitize_text_field( (string) $key );
         if ( isset( $checklist_labels[ $key ] ) ) {
             $checklist[]      = $checklist_labels[ $key ];
             $checklist_keys[] = $key;
@@ -103,32 +119,32 @@ function aiad_handle_contact_form(): void {
 
     // Validate: all visible fields are compulsory
     if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) || empty( $message ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please fill in all required fields.', 'ai-awareness-day' ) );
     }
 
     if ( empty( $involved_as ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please select how you\'re getting involved.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please select how you\'re getting involved.', 'ai-awareness-day' ) );
     }
 
     // Role-specific required fields
     if ( ( $involved_as === 'teacher' || $involved_as === 'school_leader' ) && empty( $school_name ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please provide your school name.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please provide your school name.', 'ai-awareness-day' ) );
     }
 
     if ( $involved_as === 'teacher' && empty( $subject ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please provide your subject or area.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please provide your subject or area.', 'ai-awareness-day' ) );
     }
 
     if ( $involved_as === 'parent' && empty( $child_school ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please provide your child\'s school.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please provide your child\'s school.', 'ai-awareness-day' ) );
     }
 
     if ( $involved_as === 'school_leader' && empty( $role_title ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please provide your role.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please provide your role.', 'ai-awareness-day' ) );
     }
 
     if ( $involved_as === 'organisation' && ( empty( $organisation ) || empty( $org_type ) ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please provide your organisation name and type.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please provide your organisation name and type.', 'ai-awareness-day' ) );
     }
     $org_type_options = function_exists( 'aiad_get_organisation_type_options' ) ? aiad_get_organisation_type_options() : array();
     if ( $involved_as === 'organisation' && $org_type && ! isset( $org_type_options[ $org_type ] ) ) {
@@ -136,7 +152,7 @@ function aiad_handle_contact_form(): void {
     }
 
     if ( ! is_email( $email ) ) {
-        wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'ai-awareness-day' ) ) );
+        return $error( __( 'Please enter a valid email address.', 'ai-awareness-day' ) );
     }
 
     // Increment rate-limit counter only for valid submissions.
@@ -258,19 +274,37 @@ function aiad_handle_contact_form(): void {
     $pledge_goal  = aiad_get_school_pledge_goal();
 
     if ( $admin_sent || $submission_id ) {
-        wp_send_json_success( array(
-            'message'      => __( 'Thank you! We\'ll be in touch soon.', 'ai-awareness-day' ),
-            'pledge_count' => $pledge_count,
-            'pledge_goal'  => $pledge_goal,
-        ) );
+        return new WP_REST_Response(
+            array(
+                'message'      => __( 'Thank you! We\'ll be in touch soon.', 'ai-awareness-day' ),
+                'pledge_count' => $pledge_count,
+                'pledge_goal'  => $pledge_goal,
+            )
+        );
     } else {
         // Submission was saved but email failed — still show success to user.
-        wp_send_json_success( array(
-            'message'      => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'ai-awareness-day' ),
-            'pledge_count' => $pledge_count,
-            'pledge_goal'  => $pledge_goal,
-        ) );
+        return new WP_REST_Response(
+            array(
+                'message'      => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'ai-awareness-day' ),
+                'pledge_count' => $pledge_count,
+                'pledge_goal'  => $pledge_goal,
+            )
+        );
     }
 }
-add_action( 'wp_ajax_aiad_contact', 'aiad_handle_contact_form' );
-add_action( 'wp_ajax_nopriv_aiad_contact', 'aiad_handle_contact_form' );
+
+/**
+ * Register the route.
+ */
+function aiad_register_contact_rest_route(): void {
+    register_rest_route(
+        'aiad/v1',
+        '/contact',
+        array(
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => 'aiad_rest_contact_form',
+            'permission_callback' => '__return_true',
+        )
+    );
+}
+add_action( 'rest_api_init', 'aiad_register_contact_rest_route' );
