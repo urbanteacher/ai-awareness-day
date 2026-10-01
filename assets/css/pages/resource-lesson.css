@@ -144,6 +144,12 @@
     flex-basis: calc((100% - 2px) / 2);
   }
 
+  /* Exactly six boxes (four facts and both counts, or five and one): two
+     rows of three, rather than three, two and a lone one. */
+  .rl-facts > div:first-child:nth-last-child(6) ~ div:nth-child(n + 4) {
+    flex-basis: calc((100% - 4px) / 3);
+  }
+
   .rl-facts dd {
     font-size: 0.95rem;
   }
