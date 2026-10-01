@@ -60,6 +60,9 @@ function aiad_register_misinformation_detector_assets(): void {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'aiad_register_misinformation_detector_assets', 5 );
+// Block templates render the page before wp_enqueue_scripts; register first, so the script exists when the
+// shortcode or block enqueues and localises it.
+add_action( 'wp', 'aiad_register_misinformation_detector_assets' );
 
 /**
  * Enqueue misinformation detector assets.
