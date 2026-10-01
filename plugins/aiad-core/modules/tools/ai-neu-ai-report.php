@@ -105,6 +105,9 @@ function aiad_register_neu_ai_report_assets(): void {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'aiad_register_neu_ai_report_assets', 5 );
+// Block templates render the page before wp_enqueue_scripts; register first, so the script exists when the
+// shortcode or block enqueues and localises it.
+add_action( 'wp', 'aiad_register_neu_ai_report_assets' );
 
 /**
  * Enqueue NEU AI report assets.
