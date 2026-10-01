@@ -533,7 +533,11 @@ function aiad_homepage_section_editor_styles(): void {
 add_action( 'enqueue_block_assets', 'aiad_homepage_section_editor_styles' );
 
 /**
- * Build a "Home" page from the current homepage (section order and visibility) and make it the front page.
+ * Build a "Home" page from the current homepage (section order and visibility), as a draft.
+ *
+ * The draft is not the front page: the site keeps showing the classic sections until it is published
+ * (aiad_publish_block_homepage()), and a draft can be previewed on the real front page first
+ * (aiad_block_homepage_preview_page()). The wording the Customizer holds is copied into its blocks.
  *
  * @return int|WP_Error The new page's ID.
  */
@@ -547,7 +551,7 @@ function aiad_create_block_homepage() {
 	$id = wp_insert_post(
 		array(
 			'post_type'    => 'page',
-			'post_status'  => 'publish',
+			'post_status'  => 'draft',
 			'post_title'   => __( 'Home', 'ai-awareness-day' ),
 			'post_name'    => 'home',
 			'post_content' => implode( "\n\n", $blocks ),
@@ -558,11 +562,79 @@ function aiad_create_block_homepage() {
 		return $id;
 	}
 	aiad_copy_customizer_wording_into_blocks( get_post( (int) $id ) );
+	update_option( 'aiad_block_homepage_draft_id', (int) $id, false );
+	return (int) $id;
+}
+
+/**
+ * The block homepage draft made by aiad_create_block_homepage(), if it is still a draft built from section blocks.
+ */
+function aiad_block_homepage_draft(): ?WP_Post {
+	$page = get_post( (int) get_option( 'aiad_block_homepage_draft_id', 0 ) );
+	return ( $page && 'page' === $page->post_type && in_array( $page->post_status, array( 'draft', 'pending', 'private' ), true ) && aiad_post_has_homepage_sections( $page ) ) ? $page : null;
+}
+
+/**
+ * Publish the draft and make it the front page. The classic sections stay available (Switch back).
+ *
+ * @return int|WP_Error The page's ID.
+ */
+function aiad_publish_block_homepage() {
+	$page = aiad_block_homepage_draft();
+	if ( ! $page ) {
+		return new WP_Error( 'aiad_no_draft', __( 'There is no block homepage draft to publish.', 'ai-awareness-day' ) );
+	}
+	$id = wp_update_post( array( 'ID' => $page->ID, 'post_status' => 'publish' ), true );
+	if ( is_wp_error( $id ) ) {
+		return $id;
+	}
 	update_option( 'aiad_block_homepage_id', (int) $id, false );
 	update_option( 'page_on_front', (int) $id );
 	update_option( 'show_on_front', 'page' );
+	delete_option( 'aiad_block_homepage_draft_id' );
 	return (int) $id;
 }
+
+/**
+ * Address that shows the draft as the front page, to the person who asks and no one else.
+ */
+function aiad_block_homepage_preview_url( WP_Post $draft ): string {
+	return add_query_arg(
+		array(
+			'aiad_preview_homepage' => $draft->ID,
+			'_wpnonce'              => wp_create_nonce( 'aiad_preview_homepage_' . $draft->ID ),
+		),
+		home_url( '/' )
+	);
+}
+
+/**
+ * The draft to show as the front page on this request: only for someone who can edit the theme's options, with the
+ * nonce from the preview address, and only while the site's front page is the classic one (a posts index, or no block
+ * homepage yet), where front-page.php prints it in place of the classic sections.
+ */
+function aiad_block_homepage_preview_page(): ?WP_Post {
+	if ( empty( $_GET['aiad_preview_homepage'] ) || ! is_front_page() || ! current_user_can( 'edit_theme_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked below.
+		return null;
+	}
+	$id = absint( wp_unslash( $_GET['aiad_preview_homepage'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( ! $id || ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'aiad_preview_homepage_' . $id ) ) {
+		return null;
+	}
+	$draft = aiad_block_homepage_draft();
+	return ( $draft && $draft->ID === $id ) ? $draft : null;
+}
+
+/**
+ * A preview is private: not cached, not indexed.
+ */
+function aiad_block_homepage_preview_headers(): void {
+	if ( aiad_block_homepage_preview_page() ) {
+		nocache_headers();
+		add_filter( 'wp_robots', 'wp_robots_no_robots' );
+	}
+}
+add_action( 'template_redirect', 'aiad_block_homepage_preview_headers' );
 
 /**
  * The block homepage created earlier, if it still exists and uses section blocks (for switching back to it).
@@ -570,6 +642,74 @@ function aiad_create_block_homepage() {
 function aiad_saved_block_homepage(): ?WP_Post {
 	$page = get_post( (int) get_option( 'aiad_block_homepage_id', 0 ) );
 	return ( $page && 'page' === $page->post_type && 'trash' !== $page->post_status && aiad_post_has_homepage_sections( $page ) ) ? $page : null;
+}
+
+/**
+ * Where the homepage's conversion stands, for Appearance → Block homepage and for deciding when the Customizer's
+ * homepage controls can go.
+ *
+ * Counts only what is true of the stored data: whether each wording value the Customizer holds is also in a block,
+ * which sections are still dynamic blocks that could be made editable on the page, and which values only a section
+ * that is not on the page uses (they stay in the database as the block's fallback, but have no field to change them
+ * until the section is added).
+ *
+ * @return array{page: ?WP_Post, draft: ?WP_Post, target: ?WP_Post, uncopied: array<string, string[]>, hidden: array<string, string[]>, rebuildable: int, previous_hero: bool, ready: bool}
+ */
+function aiad_homepage_conversion_status(): array {
+	$page   = aiad_block_homepage_page();
+	$draft  = $page ? null : aiad_block_homepage_draft();
+	$target = $page ?: $draft;
+	$status = array(
+		'page'          => $page,
+		'draft'         => $draft,
+		'target'        => $target,
+		'uncopied'      => array(),
+		'hidden'        => array(),
+		'rebuildable'   => 0,
+		'previous_hero' => function_exists( 'aiad_homepage_hero_is_previous' ) && aiad_homepage_hero_is_previous(),
+		'ready'         => false,
+	);
+	if ( ! $target ) {
+		return $status;
+	}
+	$mods     = get_theme_mods();
+	$mods     = is_array( $mods ) ? $mods : array();
+	$fields   = aiad_homepage_section_fields();
+	$patterns = array_flip( aiad_homepage_section_patterns() );
+	$present  = array();
+	foreach ( parse_blocks( $target->post_content ) as $block ) {
+		$name = (string) ( $block['blockName'] ?? '' );
+		if ( 0 === strpos( $name, 'aiad/section-' ) ) {
+			$slug             = str_replace( '-', '_', substr( $name, strlen( 'aiad/section-' ) ) );
+			$present[ $slug ] = true;
+			if ( isset( aiad_homepage_section_patterns()[ $slug ] ) ) {
+				++$status['rebuildable'];
+			}
+			$wording = (array) ( $block['attrs']['wording'] ?? array() );
+			foreach ( array_keys( $fields[ $slug ] ?? array() ) as $key ) {
+				$stored = isset( $mods[ $key ] ) ? trim( (string) $mods[ $key ] ) : '';
+				if ( '' !== $stored && '' === trim( (string) ( $wording[ $key ] ?? '' ) ) ) {
+					$status['uncopied'][ $slug ][] = $key;
+				}
+			}
+		} elseif ( isset( $block['attrs']['metadata']['patternName'] ) && isset( $patterns[ $block['attrs']['metadata']['patternName'] ] ) ) {
+			// A section already made editable on the page: its wording is in its own blocks.
+			$present[ $patterns[ $block['attrs']['metadata']['patternName'] ] ] = true;
+		}
+	}
+	foreach ( $fields as $slug => $slug_fields ) {
+		if ( isset( $present[ $slug ] ) ) {
+			continue;
+		}
+		foreach ( array_keys( $slug_fields ) as $key ) {
+			if ( isset( $mods[ $key ] ) && '' !== trim( (string) $mods[ $key ] ) ) {
+				$status['hidden'][ $slug ][] = $key;
+			}
+		}
+	}
+	// Ready for the cleanup: published as the front page, nothing left to copy, and not on the previous hero.
+	$status['ready'] = (bool) $page && ! $status['uncopied'] && ! $status['previous_hero'];
+	return $status;
 }
 
 /**
@@ -595,14 +735,23 @@ function aiad_handle_block_homepage_actions(): void {
 	}
 	check_admin_referer( 'aiad_block_homepage' );
 	$action = sanitize_key( wp_unslash( $_POST['aiad_block_homepage_action'] ) );
-	if ( 'create' === $action && ! aiad_block_homepage_page() && ! aiad_saved_block_homepage() ) {
-		$id = aiad_create_block_homepage();
+	// Copying and making editable work on the published block homepage, or on the draft before it is published.
+	$target = aiad_block_homepage_page() ?: aiad_block_homepage_draft();
+	if ( 'create' === $action && ! aiad_block_homepage_page() && ! aiad_saved_block_homepage() && ! aiad_block_homepage_draft() ) {
+		$id      = aiad_create_block_homepage();
+		$message = is_wp_error( $id ) ? 'error' : 'drafted';
+	} elseif ( 'publish' === $action && aiad_block_homepage_draft() ) {
+		$id      = aiad_publish_block_homepage();
 		$message = is_wp_error( $id ) ? 'error' : 'created';
-	} elseif ( 'copy' === $action && aiad_block_homepage_page() ) {
-		$copied  = aiad_copy_customizer_wording_into_blocks( aiad_block_homepage_page() );
+	} elseif ( 'discard' === $action && aiad_block_homepage_draft() ) {
+		wp_delete_post( aiad_block_homepage_draft()->ID, true );
+		delete_option( 'aiad_block_homepage_draft_id' );
+		$message = 'discarded';
+	} elseif ( 'copy' === $action && $target ) {
+		$copied  = aiad_copy_customizer_wording_into_blocks( $target );
 		$message = 'copied' . $copied;
-	} elseif ( 'rebuild' === $action && aiad_block_homepage_page() ) {
-		$message = 'rebuilt' . aiad_rebuild_homepage_sections( aiad_block_homepage_page() );
+	} elseif ( 'rebuild' === $action && $target ) {
+		$message = 'rebuilt' . aiad_rebuild_homepage_sections( $target );
 	} elseif ( 'classic' === $action ) {
 		update_option( 'show_on_front', 'posts' );
 		$message = 'classic';
@@ -619,6 +768,57 @@ function aiad_handle_block_homepage_actions(): void {
 add_action( 'admin_init', 'aiad_handle_block_homepage_actions' );
 
 /**
+ * The conversion checklist on Appearance → Block homepage.
+ *
+ * @param array<string, mixed> $status aiad_homepage_conversion_status().
+ */
+function aiad_render_conversion_status( array $status ): void {
+	$items = array();
+	$items[] = array( (bool) $status['page'], $status['page'] ? __( 'The block homepage is the front page.', 'ai-awareness-day' ) : __( 'The block homepage is a draft: not the front page yet.', 'ai-awareness-day' ) );
+	$count   = 0;
+	foreach ( $status['uncopied'] as $keys ) {
+		$count += count( $keys );
+	}
+	$items[] = array(
+		0 === $count,
+		0 === $count
+			? __( 'All the wording the Customizer holds for these sections is in the blocks.', 'ai-awareness-day' )
+			/* translators: %d: number of wording fields */
+			: sprintf( _n( '%d wording field is still only in the Customizer. Copy the wording.', '%d wording fields are still only in the Customizer. Copy the wording.', $count, 'ai-awareness-day' ), $count )
+	);
+	$items[] = array(
+		0 === $status['rebuildable'],
+		0 === $status['rebuildable']
+			? __( 'Every section can be edited on the page.', 'ai-awareness-day' )
+			/* translators: %d: number of sections */
+			: sprintf( _n( '%d section is still a block with a sidebar form. It works, but its text is not edited on the page. Make it editable.', '%d sections are still blocks with a sidebar form. They work, but their text is not edited on the page. Make them editable.', $status['rebuildable'], 'ai-awareness-day' ), $status['rebuildable'] )
+	);
+	$items[] = array(
+		! $status['previous_hero'],
+		$status['previous_hero']
+			? __( 'The previous hero design is selected. Its own wording (title, date text, slogan, description) is only in the Customizer.', 'ai-awareness-day' )
+			: __( 'The 2027 hero is in use, so the previous hero\'s wording does not matter.', 'ai-awareness-day' )
+	);
+	echo '<h2>' . esc_html__( 'Where the conversion stands', 'ai-awareness-day' ) . '</h2><ul style="list-style:none;margin-left:0">';
+	foreach ( $items as $item ) {
+		printf( '<li><span aria-hidden="true">%s</span> %s</li>', $item[0] ? '✔' : '○', esc_html( $item[1] ) );
+	}
+	echo '</ul>';
+	if ( $status['hidden'] ) {
+		$names = aiad_homepage_section_blocks();
+		$list  = array();
+		foreach ( array_keys( $status['hidden'] ) as $slug ) {
+			$list[] = isset( $names[ $slug ] ) ? $names[ $slug ][0] : $slug;
+		}
+		/* translators: %s: section names */
+		echo '<p class="description">' . esc_html( sprintf( __( 'The Customizer holds wording for sections that are not on the page (%s). It stays in the database and is used if you add the section, but there is no field to change it until you do.', 'ai-awareness-day' ), implode( ', ', $list ) ) ) . '</p>';
+	}
+	if ( $status['ready'] ) {
+		echo '<p><strong>' . esc_html__( 'Nothing the homepage shows depends on the Customizer\'s homepage controls any more.', 'ai-awareness-day' ) . '</strong></p>';
+	}
+}
+
+/**
  * Render Appearance → Block homepage.
  */
 function aiad_render_block_homepage_admin_page(): void {
@@ -627,7 +827,9 @@ function aiad_render_block_homepage_admin_page(): void {
 	}
 	$page     = aiad_block_homepage_page();
 	$messages = array(
-		'created'  => __( 'The block homepage was created and is now the front page.', 'ai-awareness-day' ),
+		'drafted'   => __( 'The block homepage draft was created. The site still shows the classic homepage: preview the draft, then publish it when it looks right.', 'ai-awareness-day' ),
+		'discarded' => __( 'The draft was deleted. Nothing else changed.', 'ai-awareness-day' ),
+		'created'  => __( 'The block homepage is published and is now the front page.', 'ai-awareness-day' ),
 		'switched' => __( 'The block homepage is the front page again.', 'ai-awareness-day' ),
 		'classic'  => __( 'The homepage is back to the classic sections (Customizer order and visibility).', 'ai-awareness-day' ),
 		'error'    => __( 'That did not work. Nothing was changed.', 'ai-awareness-day' ),
@@ -642,6 +844,8 @@ function aiad_render_block_homepage_admin_page(): void {
 		$messages[ $message ] = sprintf( _n( '%d wording field was copied from the Customizer into the homepage blocks.', '%d wording fields were copied from the Customizer into the homepage blocks.', (int) $m[1], 'ai-awareness-day' ), (int) $m[1] );
 	}
 	$saved    = $page ? null : aiad_saved_block_homepage();
+	$draft    = $page ? null : aiad_block_homepage_draft();
+	$status   = aiad_homepage_conversion_status();
 	?>
 	<div class="wrap">
 		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
@@ -654,6 +858,7 @@ function aiad_render_block_homepage_admin_page(): void {
 				<a class="button button-primary" href="<?php echo esc_url( get_edit_post_link( $page->ID ) ); ?>"><?php esc_html_e( 'Edit the homepage', 'ai-awareness-day' ); ?></a>
 				<a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'View it', 'ai-awareness-day' ); ?></a>
 			</p>
+			<?php aiad_render_conversion_status( $status ); ?>
 			<h2><?php esc_html_e( 'Wording', 'ai-awareness-day' ); ?></h2>
 			<p><?php esc_html_e( 'Each section\'s wording is edited in its block\'s settings sidebar. An empty field shows the Customizer\'s value or the standard wording. Copying fills the empty fields from the Customizer, so the blocks hold the wording and the page stays the same.', 'ai-awareness-day' ); ?></p>
 			<form method="post">
@@ -674,6 +879,37 @@ function aiad_render_block_homepage_admin_page(): void {
 				<p><?php esc_html_e( 'Switching back shows the classic homepage again (Customizer order and visibility). The block page is kept, so you can switch back to it later.', 'ai-awareness-day' ); ?></p>
 				<?php submit_button( __( 'Switch back to the classic homepage', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
 			</form>
+		<?php elseif ( $draft ) : ?>
+			<p><?php esc_html_e( 'A draft of the block homepage is ready. It is not the front page: visitors still see the classic homepage until you publish it.', 'ai-awareness-day' ); ?></p>
+			<p>
+				<a class="button button-primary" href="<?php echo esc_url( aiad_block_homepage_preview_url( $draft ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Preview it as the homepage', 'ai-awareness-day' ); ?></a>
+				<a class="button" href="<?php echo esc_url( get_edit_post_link( $draft->ID ) ); ?>"><?php esc_html_e( 'Edit the draft', 'ai-awareness-day' ); ?></a>
+			</p>
+			<p class="description"><?php esc_html_e( 'The preview address works for you only, shows the draft in place of the homepage, and is not indexed or cached. Compare it with the live homepage section by section.', 'ai-awareness-day' ); ?></p>
+			<?php aiad_render_conversion_status( $status ); ?>
+			<h2><?php esc_html_e( 'Wording and editing on the page', 'ai-awareness-day' ); ?></h2>
+			<form method="post" style="display:inline-block;margin-right:8px">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="copy" />
+				<?php submit_button( __( 'Copy the Customizer wording into the blocks', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
+			</form>
+			<form method="post" style="display:inline-block">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="rebuild" />
+				<?php submit_button( __( 'Make every section editable on the page', 'ai-awareness-day' ), 'secondary', 'submit', false ); ?>
+			</form>
+			<h2><?php esc_html_e( 'Publish', 'ai-awareness-day' ); ?></h2>
+			<p><?php esc_html_e( 'Publishing makes the draft the front page. You can switch back to the classic homepage at any time; the Customizer values are not touched.', 'ai-awareness-day' ); ?></p>
+			<form method="post" style="display:inline-block;margin-right:8px">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="publish" />
+				<?php submit_button( __( 'Publish and make it the front page', 'ai-awareness-day' ), 'primary', 'submit', false ); ?>
+			</form>
+			<form method="post" style="display:inline-block">
+				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
+				<input type="hidden" name="aiad_block_homepage_action" value="discard" />
+				<?php submit_button( __( 'Delete the draft', 'ai-awareness-day' ), 'delete', 'submit', false ); ?>
+			</form>
 		<?php elseif ( $saved ) : ?>
 			<p><?php esc_html_e( 'The homepage is showing the classic sections (Customizer order and visibility). The block homepage you created is kept.', 'ai-awareness-day' ); ?></p>
 			<form method="post">
@@ -684,11 +920,11 @@ function aiad_render_block_homepage_admin_page(): void {
 			<p><a href="<?php echo esc_url( get_edit_post_link( $saved->ID ) ); ?>"><?php esc_html_e( 'Edit the block homepage', 'ai-awareness-day' ); ?></a></p>
 		<?php else : ?>
 			<p><?php esc_html_e( 'The homepage is built from the classic sections, in the order and visibility set in the Customizer.', 'ai-awareness-day' ); ?></p>
-			<p><?php esc_html_e( 'Creating the block homepage makes a "Home" page with one block per section, in the same order, with hidden sections left out, and makes it the front page. The site looks the same; you then arrange sections in the block editor.', 'ai-awareness-day' ); ?></p>
+			<p><?php esc_html_e( 'Creating the block homepage makes a draft "Home" page with one block per section, in the same order, with hidden sections left out, and copies the Customizer wording into it. The site does not change: you preview the draft as the homepage, and publish it when it looks right.', 'ai-awareness-day' ); ?></p>
 			<form method="post">
 				<?php wp_nonce_field( 'aiad_block_homepage' ); ?>
 				<input type="hidden" name="aiad_block_homepage_action" value="create" />
-				<?php submit_button( __( 'Create the block homepage', 'ai-awareness-day' ) ); ?>
+				<?php submit_button( __( 'Create the block homepage draft', 'ai-awareness-day' ) ); ?>
 			</form>
 		<?php endif; ?>
 	</div>
