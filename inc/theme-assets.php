@@ -132,7 +132,7 @@ function aiad_strand_poster_svg( string $slug ): string {
  */
 function aiad_theme_link_badge_src( string $slug ): string {
 	$slug = strtolower( sanitize_title( $slug ) );
-	$badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
+	$badge_id = absint( aiad_site_value( 'badge_' . $slug, 0 ) );
 	if ( $badge_id ) {
 		$src = wp_get_attachment_image_url( $badge_id, 'thumbnail' );
 		if ( $src ) {

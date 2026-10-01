@@ -45,11 +45,7 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
     aiad_register_hero_section( $wp_customize );
     aiad_register_campaign_section( $wp_customize );
     aiad_register_badges_section( $wp_customize );
-    aiad_register_youtube_section( $wp_customize );
     aiad_register_featured_linkedin_section( $wp_customize );
-    aiad_register_toolkit_section( $wp_customize );
-    aiad_register_time_resources_display_section( $wp_customize );
-    aiad_register_display_board_section( $wp_customize );
     aiad_register_contact_section( $wp_customize );
     aiad_register_front_page_layout_section( $wp_customize );
 
@@ -62,12 +58,8 @@ function aiad_customize_register( WP_Customize_Manager $wp_customize ): void {
         'aiad_front_page_layout'      => 'aiad_panel_front_page',
         'aiad_hero'                   => 'aiad_panel_front_page',
         'aiad_campaign'               => 'aiad_panel_front_page',
-        'aiad_youtube'                => 'aiad_panel_front_page',
         'aiad_featured_linkedin'      => 'aiad_panel_front_page',
-        'aiad_time_resources_display' => 'aiad_panel_front_page',
-        'aiad_display_board'          => 'aiad_panel_front_page',
         'aiad_contact'                => 'aiad_panel_front_page',
-        'aiad_toolkit'                => 'aiad_panel_front_page',
     );
     foreach ( $assignments as $section_id => $panel_id ) {
         $section = $wp_customize->get_section( $section_id );
@@ -135,20 +127,6 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         ) );
     }
 
-    $wp_customize->add_setting( 'aiad_hero_logo', array(
-        'default'           => 0,
-        'sanitize_callback' => 'absint',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_hero_logo', array(
-        'label'       => __( 'Previous hero: logo', 'ai-awareness-day' ),
-        'description' => __( 'Large image above the date. Leave empty to use Site Identity → Logo (or Site Icon). Clear an old GIF here to stop it overriding the main brand image.', 'ai-awareness-day' ),
-        'section'     => 'aiad_hero',
-        'mime_type'   => 'image',
-        'priority'    => 50,
-        'active_callback' => $is_previous_hero,
-    ) ) );
-
     $wp_customize->add_setting( 'aiad_hero_slogan', array(
         'default'           => $defaults['aiad_hero_slogan'],
         'sanitize_callback' => 'sanitize_text_field',
@@ -186,19 +164,6 @@ function aiad_register_hero_section( WP_Customize_Manager $wp_customize ): void 
         'section'     => 'aiad_hero',
         'type'        => 'text',
         'priority'    => 61,
-    ) );
-
-    $wp_customize->add_setting( 'aiad_event_date_ymd', array(
-        'default'           => $defaults['aiad_event_date_ymd'],
-        'sanitize_callback' => 'aiad_sanitize_event_date_ymd',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_event_date_ymd', array(
-        'label'       => __( 'Event date', 'ai-awareness-day' ),
-        'description' => __( 'Format: Y-m-d. Sets the date and countdown in the new hero, and the date search engines see.', 'ai-awareness-day' ),
-        'section'     => 'aiad_hero',
-        'type'        => 'text',
-        'priority'    => 62,
     ) );
 
     $wp_customize->add_setting( 'aiad_hero_subtitle', array(
@@ -281,32 +246,10 @@ function aiad_register_campaign_section( WP_Customize_Manager $wp_customize ): v
  */
 function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_badges', array(
-        'title'       => __( 'Principle & Theme Badges', 'ai-awareness-day' ),
-        'description' => __( 'Upload badge images for the Five Core Principles and the By theme links. Same images are used in both sections.', 'ai-awareness-day' ),
+        'title'       => __( 'Principles wording', 'ai-awareness-day' ),
+        'description' => __( 'The title and description of each of the Five Core Principles. The badge images are on Settings → AI Awareness Day.', 'ai-awareness-day' ),
         'priority'    => 33,
     ) );
-
-    $badge_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
-    $badge_labels = array(
-        'safe'        => __( 'Safe', 'ai-awareness-day' ),
-        'smart'       => __( 'Smart', 'ai-awareness-day' ),
-        'creative'    => __( 'Creative', 'ai-awareness-day' ),
-        'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-        'future'      => __( 'Future', 'ai-awareness-day' ),
-    );
-
-    foreach ( $badge_slugs as $slug ) {
-        $wp_customize->add_setting( 'aiad_badge_' . $slug, array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_badge_' . $slug, array(
-            'label'     => isset( $badge_labels[ $slug ] ) ? $badge_labels[ $slug ] : ucfirst( $slug ),
-            'section'   => 'aiad_badges',
-            'mime_type' => 'image',
-        ) ) );
-    }
 
     $principle_defaults = array(
         'safe'        => array( 'title' => __( 'Safe', 'ai-awareness-day' ), 'desc' => __( 'Ensuring safe and secure interactions with AI technologies.', 'ai-awareness-day' ) ),
@@ -339,56 +282,6 @@ function aiad_register_badges_section( WP_Customize_Manager $wp_customize ): voi
             'type'    => 'textarea',
         ) );
     }
-
-    $wp_customize->add_setting( 'aiad_ai_literacy_logo', array(
-        'default'           => 0,
-        'sanitize_callback' => 'absint',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_ai_literacy_logo', array(
-        'label'       => __( 'Our AI Literacy logo', 'ai-awareness-day' ),
-        'description' => __( 'Badge for the "Our AI literacy" card. Leave empty to use the same brand logo as the header (Site Identity → Logo).', 'ai-awareness-day' ),
-        'section'     => 'aiad_badges',
-        'mime_type'   => 'image',
-    ) ) );
-}
-
-/**
- * Register YouTube / Video section.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_youtube_section( WP_Customize_Manager $wp_customize ): void {
-    $defaults = aiad_get_customizer_defaults();
-
-    $wp_customize->add_section( 'aiad_youtube', array(
-        'title'    => __( 'YouTube / Video Section', 'ai-awareness-day' ),
-        'priority' => 34,
-    ) );
-
-    $wp_customize->add_setting( 'aiad_youtube_url', array(
-        'default'           => $defaults['aiad_youtube_url'],
-        'sanitize_callback' => 'esc_url_raw',
-        'transport'         => 'refresh',
-        'validate_callback' => 'aiad_customizer_validate_url',
-    ) );
-    $wp_customize->add_control( 'aiad_youtube_url', array(
-        'label'       => __( 'YouTube video URL', 'ai-awareness-day' ),
-        'description' => __( 'Paste a YouTube link, e.g. https://www.youtube.com/watch?v=VIDEO_ID', 'ai-awareness-day' ),
-        'section'     => 'aiad_youtube',
-        'type'        => 'url',
-    ) );
-
-    $wp_customize->add_setting( 'aiad_youtube_title', array(
-        'default'           => $defaults['aiad_youtube_title'],
-        'sanitize_callback' => 'sanitize_text_field',
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_youtube_title', array(
-        'label'   => __( 'Section title', 'ai-awareness-day' ),
-        'section' => 'aiad_youtube',
-        'type'    => 'text',
-    ) );
 }
 
 /**
@@ -421,103 +314,6 @@ function aiad_register_featured_linkedin_section( WP_Customize_Manager $wp_custo
 }
 
 /**
- * Register Toolkit section — homepage toolkit card images only.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_toolkit_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section(
-        'aiad_toolkit',
-        array(
-            'title'       => __( 'Toolkit card images (homepage)', 'ai-awareness-day' ),
-            'description' => __( 'Optional images at the top of toolkit-related areas on the front page. Footer links are set under “Footer resource links”.', 'ai-awareness-day' ),
-            'priority'    => 32,
-        )
-    );
-
-    $toolkit_card_labels = array(
-        1 => __( 'Implementation Guide', 'ai-awareness-day' ),
-        3 => __( 'Latest Newsletter', 'ai-awareness-day' ),
-    );
-    foreach ( $toolkit_card_labels as $num => $label ) {
-        $wp_customize->add_setting( 'aiad_toolkit_image_' . $num, array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_toolkit_image_' . $num, array(
-            'label'       => sprintf( __( 'Card image: %s', 'ai-awareness-day' ), $label ),
-            'description' => __( 'Optional. Upload an image to show at the top of this toolkit card. Leave empty to show a placeholder.', 'ai-awareness-day' ),
-            'section'     => 'aiad_toolkit',
-            'mime_type'   => 'image',
-        ) ) );
-    }
-}
-
-/**
- * Register Time Resources Display section (By session length badge images, mobile).
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_time_resources_display_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section( 'aiad_time_resources_display', array(
-        'title'       => __( 'Time Resources Display', 'ai-awareness-day' ),
-        'description' => __( 'Images for the "By session length" cards (5 min, 15 min, 20 min, 30 min). Shown in the badge holder on mobile. Leave empty for placeholder.', 'ai-awareness-day' ),
-        'priority'    => 35,
-    ) );
-
-    $session_badge_slugs = array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
-    $session_badge_labels = array(
-        '5-min-lesson-starters'   => __( '5 min – image', 'ai-awareness-day' ),
-        '15-20-min-tutor-time'   => __( '15 min – image', 'ai-awareness-day' ),
-        '20-min-assemblies'      => __( '20 min – image', 'ai-awareness-day' ),
-        '30-45-min-after-school' => __( '30 min – image', 'ai-awareness-day' ),
-    );
-    foreach ( $session_badge_slugs as $sess_slug ) {
-        $wp_customize->add_setting( 'aiad_session_badge_' . $sess_slug, array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_session_badge_' . $sess_slug, array(
-            'label'     => isset( $session_badge_labels[ $sess_slug ] ) ? $session_badge_labels[ $sess_slug ] : $sess_slug,
-            'section'   => 'aiad_time_resources_display',
-            'mime_type' => 'image',
-        ) ) );
-    }
-}
-
-/**
- * Register Display board examples section.
- *
- * @param WP_Customize_Manager $wp_customize Customizer manager instance.
- */
-function aiad_register_display_board_section( WP_Customize_Manager $wp_customize ): void {
-    $wp_customize->add_section( 'aiad_display_board', array(
-        'title'       => __( 'Display board examples', 'ai-awareness-day' ),
-        'description' => __( 'Optional photos for the display board section\'s "More examples" tab. Upload real school boards to inspire teachers.', 'ai-awareness-day' ),
-        'priority'    => 36,
-    ) );
-
-    // Image 1 fed the "Example" tab, which was removed because it showed the
-    // 2026 board. Images 2 and 3 are the More examples tab; their keys stay so
-    // photos already uploaded keep working.
-    foreach ( array( 2, 3 ) as $num ) {
-        $wp_customize->add_setting( 'aiad_display_board_image_' . $num, array(
-            'default'           => 0,
-            'sanitize_callback' => 'absint',
-            'transport'         => 'refresh',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'aiad_display_board_image_' . $num, array(
-            /* translators: %d: 1 or 2 */
-            'label'     => sprintf( __( 'More examples: photo %d', 'ai-awareness-day' ), $num - 1 ),
-            'section'   => 'aiad_display_board',
-            'mime_type' => 'image',
-        ) ) );
-    }
-}
-
-/**
  * Register Contact / Get Involved section.
  *
  * @param WP_Customize_Manager $wp_customize Customizer manager instance.
@@ -525,14 +321,9 @@ function aiad_register_display_board_section( WP_Customize_Manager $wp_customize
 function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): void {
     $defaults = aiad_get_customizer_defaults();
 
-    // Define custom control class only in Customizer context (avoids fatal on front-end).
-    if ( ! class_exists( 'AIAD_SMTP_Info_Control' ) ) {
-        require_once AIAD_DIR . '/inc/customizer-smtp-control.php';
-    }
-
     $wp_customize->add_section( 'aiad_contact', array(
         'title'       => __( 'Get Involved Section', 'ai-awareness-day' ),
-        'description' => __( 'Configure the contact form settings. IMPORTANT: For reliable email delivery, install the WP Mail SMTP plugin and configure SMTP settings. See instructions below.', 'ai-awareness-day' ),
+        'description' => __( 'The wording above the contact form. The address that receives submissions, and the note on email delivery, are on Settings → AI Awareness Day.', 'ai-awareness-day' ),
         'priority'    => 37,
     ) );
 
@@ -557,35 +348,6 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
         'section' => 'aiad_contact',
         'type'    => 'textarea',
     ) );
-
-    $wp_customize->add_setting( 'aiad_contact_email', array(
-        'default'           => $defaults['aiad_contact_email'],
-        'sanitize_callback' => 'sanitize_email',
-        'capability'        => 'manage_options',
-        'transport'         => 'refresh',
-        'validate_callback' => function( $validity, $value ) {
-            if ( ! empty( $value ) && ! is_email( $value ) ) {
-                $validity->add( 'invalid_email', __( 'Please enter a valid email address.', 'ai-awareness-day' ) );
-            }
-            return $validity;
-        },
-    ) );
-    $wp_customize->add_control( 'aiad_contact_email', array(
-        'label'       => __( 'Notification Email', 'ai-awareness-day' ),
-        'description' => __( 'Form submissions are sent to this email address. Make sure to install WP Mail SMTP plugin for reliable email delivery.', 'ai-awareness-day' ),
-        'section'     => 'aiad_contact',
-        'type'        => 'email',
-    ) );
-
-    // Add informational control about SMTP plugin
-    $wp_customize->add_setting( 'aiad_smtp_info', array(
-        'default'           => '',
-        'sanitize_callback' => '__return_empty_string',
-    ) );
-    $wp_customize->add_control( new AIAD_SMTP_Info_Control( $wp_customize, 'aiad_smtp_info', array(
-        'section'  => 'aiad_contact',
-        'priority' => 20,
-    ) ) );
 }
 
 /**
@@ -596,7 +358,7 @@ function aiad_register_contact_section( WP_Customize_Manager $wp_customize ): vo
 function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_customize ): void {
     $wp_customize->add_section( 'aiad_front_page_layout', array(
         'title'       => __( 'Front Page Layout', 'ai-awareness-day' ),
-        'description' => __( 'Control section visibility, ordering, and alignment on the front page.', 'ai-awareness-day' ),
+        'description' => __( 'Control section visibility and ordering on the front page.', 'ai-awareness-day' ),
         'priority'    => 25,
     ) );
 
@@ -625,47 +387,6 @@ function aiad_register_front_page_layout_section( WP_Customize_Manager $wp_custo
             'type'    => 'checkbox',
         ) );
     }
-
-    // Text alignment options
-    $wp_customize->add_setting( 'aiad_text_alignment', array(
-        'default'           => 'left',
-        'sanitize_callback' => function( $value ) {
-            return in_array( $value, array( 'left', 'center', 'right' ), true ) ? $value : 'left';
-        },
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_text_alignment', array(
-        'label'       => __( 'Default Text Alignment', 'ai-awareness-day' ),
-        'description' => __( 'Default text alignment for section content.', 'ai-awareness-day' ),
-        'section'     => 'aiad_front_page_layout',
-        'type'        => 'select',
-        'choices'     => array(
-            'left'   => __( 'Left', 'ai-awareness-day' ),
-            'center' => __( 'Center', 'ai-awareness-day' ),
-            'right'  => __( 'Right', 'ai-awareness-day' ),
-        ),
-    ) );
-
-    // Container width
-    $wp_customize->add_setting( 'aiad_container_width', array(
-        'default'           => 'standard',
-        'sanitize_callback' => function( $value ) {
-            return in_array( $value, array( 'narrow', 'standard', 'wide', 'full' ), true ) ? $value : 'standard';
-        },
-        'transport'         => 'refresh',
-    ) );
-    $wp_customize->add_control( 'aiad_container_width', array(
-        'label'       => __( 'Container Width', 'ai-awareness-day' ),
-        'description' => __( 'Control the maximum width of content containers.', 'ai-awareness-day' ),
-        'section'     => 'aiad_front_page_layout',
-        'type'        => 'select',
-        'choices'     => array(
-            'narrow'   => __( 'Narrow (960px)', 'ai-awareness-day' ),
-            'standard' => __( 'Standard (1200px)', 'ai-awareness-day' ),
-            'wide'     => __( 'Wide (1400px)', 'ai-awareness-day' ),
-            'full'     => __( 'Full Width', 'ai-awareness-day' ),
-        ),
-    ) );
 
     // Section ordering (stored as comma-separated list)
     $default_order = implode( ',', array_keys( $sections ) );

@@ -56,7 +56,7 @@
                 $title = !empty($title_mod) ? $title_mod : ($principle_default_titles[$slug] ?? ucfirst($slug));
                 $desc_mod = get_theme_mod('aiad_principle_desc_' . $slug, '');
                 $desc = !empty($desc_mod) ? $desc_mod : ($principle_default_descs[$slug] ?? '');
-                $badge_id = absint(get_theme_mod('aiad_badge_' . $slug, 0));
+                $badge_id = absint(aiad_site_value( 'badge_' . $slug, 0 ));
                 $badge_src = $badge_id ? wp_get_attachment_image_url($badge_id, 'medium') : '';
                 ?>
                 <!-- wp:group {"className":"principle-card principle-card--<?php echo esc_attr($slug); ?> fade-up stagger-<?php echo $index + 1; ?>","layout":{"type":"constrained"}} -->

@@ -58,6 +58,10 @@ function sections( config ) {
 		{
 			option: 'aiad_campaign',
 			title: __( 'Campaign and contact', 'aiad-core' ),
+			intro: __(
+				'For reliable delivery of form submissions, install and configure an SMTP plugin such as WP Mail SMTP (Plugins, Add New), using your hosting provider\u2019s SMTP details or a service such as Gmail or SendGrid.',
+				'aiad-core'
+			),
 			fields: [
 				{
 					key: 'event_date',
@@ -200,6 +204,110 @@ function sections( config ) {
 					media: 'image',
 					help: __(
 						'Banner teachers add to their email signature after the event.',
+						'aiad-core'
+					),
+				},
+			],
+		},
+		{
+			option: 'aiad_site',
+			title: __( 'Homepage images', 'aiad-core' ),
+			intro: __(
+				'Optional images on the homepage. A badge left empty shows the standard artwork or a placeholder.',
+				'aiad-core'
+			),
+			fields: [
+				...[
+					[ 'badge_safe', __( 'Safe', 'aiad-core' ) ],
+					[ 'badge_smart', __( 'Smart', 'aiad-core' ) ],
+					[ 'badge_creative', __( 'Creative', 'aiad-core' ) ],
+					[ 'badge_responsible', __( 'Responsible', 'aiad-core' ) ],
+					[ 'badge_future', __( 'Future', 'aiad-core' ) ],
+				].map( ( [ key, label ] ) => ( {
+					key,
+					label: sprintf(
+						/* translators: %s: strand name, e.g. Safe */
+						__( 'Badge: %s', 'aiad-core' ),
+						label
+					),
+					type: 'file',
+					media: 'image',
+					help:
+						key === 'badge_safe'
+							? __(
+									'The five badges are used for the Five Core Principles and the By theme links.',
+									'aiad-core'
+								)
+							: '',
+				} ) ),
+				{
+					key: 'ai_literacy_logo',
+					label: __( 'Our AI Literacy logo', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Badge for the "Our AI literacy" card. Leave empty to use the brand logo.',
+						'aiad-core'
+					),
+				},
+				...[
+					[
+						'session_badge_5-min-lesson-starters',
+						__( '5 min', 'aiad-core' ),
+					],
+					[
+						'session_badge_15-20-min-tutor-time',
+						__( '15 min', 'aiad-core' ),
+					],
+					[
+						'session_badge_20-min-assemblies',
+						__( '20 min', 'aiad-core' ),
+					],
+					[
+						'session_badge_30-45-min-after-school',
+						__( '30 min', 'aiad-core' ),
+					],
+				].map( ( [ key, label ] ) => ( {
+					key,
+					label: sprintf(
+						/* translators: %s: session length, e.g. 5 min */
+						__( 'By session length: %s', 'aiad-core' ),
+						label
+					),
+					type: 'file',
+					media: 'image',
+					help:
+						key === 'session_badge_5-min-lesson-starters'
+							? __(
+									'Images for the "By session length" cards, shown in the badge holder on mobile.',
+									'aiad-core'
+								)
+							: '',
+				} ) ),
+				{
+					key: 'display_board_image_2',
+					label: __( 'Display board: photo 1', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Photos for the display board section\'s "More examples" tab. Upload real school boards to inspire teachers.',
+						'aiad-core'
+					),
+				},
+				{
+					key: 'display_board_image_3',
+					label: __( 'Display board: photo 2', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: '',
+				},
+				{
+					key: 'hero_logo',
+					label: __( 'Previous hero: logo', 'aiad-core' ),
+					type: 'file',
+					media: 'image',
+					help: __(
+						'Large image above the date in the previous hero design. Leave empty to use the Site Logo.',
 						'aiad-core'
 					),
 				},

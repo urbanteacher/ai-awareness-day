@@ -204,7 +204,7 @@ function aiad_get_brand_logo_attachment_id(): int {
 	if ( $header_logo ) {
 		return $header_logo;
 	}
-	return absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+	return absint( aiad_site_value( 'hero_logo', 0 ) );
 }
 
 /**
@@ -213,7 +213,7 @@ function aiad_get_brand_logo_attachment_id(): int {
  * @return int Attachment ID or 0.
  */
 function aiad_get_hero_logo_attachment_id(): int {
-	$hero_logo = absint( get_theme_mod( 'aiad_hero_logo', 0 ) );
+	$hero_logo = absint( aiad_site_value( 'hero_logo', 0 ) );
 	if ( $hero_logo ) {
 		return $hero_logo;
 	}
@@ -226,7 +226,7 @@ function aiad_get_hero_logo_attachment_id(): int {
  * @return int Attachment ID or 0.
  */
 function aiad_get_literacy_logo_attachment_id(): int {
-	$literacy_logo = absint( get_theme_mod( 'aiad_ai_literacy_logo', 0 ) );
+	$literacy_logo = absint( aiad_site_value( 'ai_literacy_logo', 0 ) );
 	if ( $literacy_logo ) {
 		return $literacy_logo;
 	}
@@ -286,8 +286,10 @@ function aiad_get_default_avatar_url(): string {
  * Without the plugin the theme falls back to the Customizer value the option was copied from, so the footer, the
  * breadcrumbs and the downloads still work.
  *
- * @param string $key     Setting key: newsletter_url, asset_pack_url, implementation_guide_url, show_breadcrumbs,
- *                        header_logo, press_release_file, asset_logo, asset_banner_participating or asset_banner_participated.
+ * @param string $key     Setting key, a key of aiad_site_fields() in aiad-core: newsletter_url, asset_pack_url,
+ *                        implementation_guide_url, show_breadcrumbs, the files (header_logo, press_release_file, asset_logo,
+ *                        banners, hero_logo, ai_literacy_logo, display_board_image_2/3) and the homepage badges
+ *                        (badge_{strand}, session_badge_{session}).
  * @param mixed  $default Value when the plugin is not active and no Customizer value is set.
  * @return mixed
  */
@@ -338,8 +340,6 @@ function aiad_get_customizer_defaults(): array {
         'aiad_campaign_text'      => __( 'National AI Awareness Day is a nationwide campaign designed to build AI literacy across schools. The model is simple: schools commit to running just one activity.', 'ai-awareness-day' ),
         'aiad_campaign_text_2'    => __( 'Our goal is to create a unified moment where the entire education community comes together to engage positively and critically with AI — preparing the next generation for a world increasingly shaped by intelligent technology.', 'ai-awareness-day' ),
         'aiad_campaign_linkedin_embed_src' => 'https://www.youtube-nocookie.com/embed/ayg1efXE8d0?autoplay=1&mute=1&playsinline=1&rel=0',
-        'aiad_youtube_url'        => '',
-        'aiad_youtube_title'      => __( 'Watch', 'ai-awareness-day' ),
         'aiad_contact_title'      => __( 'Get Involved', 'ai-awareness-day' ),
         'aiad_contact_desc'       => __( 'Whether you\'re a teacher, school leader, parent, or organisation — we\'d love to hear from you. Join the movement and help shape how the next generation engages with AI.', 'ai-awareness-day' ),
         'aiad_contact_email'      => '',

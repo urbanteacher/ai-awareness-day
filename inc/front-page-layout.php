@@ -61,8 +61,8 @@ function aiad_is_section_visible( string $section_slug ): bool {
  * @return string CSS class for text alignment.
  */
 function aiad_get_text_alignment_class(): string {
-    $alignment = get_theme_mod( 'aiad_text_alignment', 'left' );
-    return 'text-align-' . esc_attr( $alignment );
+    // Fixed: the Customizer setting this read had no CSS behind any of its values, so the choice did nothing.
+    return 'text-align-left';
 }
 
 /**
@@ -71,6 +71,6 @@ function aiad_get_text_alignment_class(): string {
  * @return string CSS class for container width.
  */
 function aiad_get_container_width_class(): string {
-    $width = get_theme_mod( 'aiad_container_width', 'standard' );
-    return 'container-width-' . esc_attr( $width );
+    // Fixed, as the alignment is: no CSS was written for any width, so the Customizer choice did nothing.
+    return 'container-width-standard';
 }

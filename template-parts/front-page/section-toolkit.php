@@ -26,8 +26,8 @@ $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args[
          * branding before the 2027 blueprint. The blueprint now opens first.
          * The More examples photos (images 2 and 3) are unchanged.
          */
-        $display_img_2_id  = absint( get_theme_mod( 'aiad_display_board_image_2', 0 ) );
-        $display_img_3_id  = absint( get_theme_mod( 'aiad_display_board_image_3', 0 ) );
+        $display_img_2_id  = absint( aiad_site_value( 'display_board_image_2', 0 ) );
+        $display_img_3_id  = absint( aiad_site_value( 'display_board_image_3', 0 ) );
         $display_img_2_url = $display_img_2_id ? wp_get_attachment_image_url( $display_img_2_id, 'full' ) : '';
         $display_img_3_url = $display_img_3_id ? wp_get_attachment_image_url( $display_img_3_id, 'full' ) : '';
         $has_more          = $display_img_2_url || $display_img_3_url;
@@ -218,7 +218,7 @@ if ( function_exists( 'aiad_certificate_showcase' ) ) {
                                 $icon_bg = isset($card['icon_bg']) ? $card['icon_bg'] : '#c4b5fd';
                                 $status = isset($card['status']) ? $card['status'] : '';
                                 $status_live = !empty($card['status_live']);
-                                $session_badge_id = absint(get_theme_mod('aiad_session_badge_' . $slug, 0));
+                                $session_badge_id = absint(aiad_site_value( 'session_badge_' . $slug, 0 ));
                                 $session_badge_src = $session_badge_id ? wp_get_attachment_image_url($session_badge_id, 'thumbnail') : '';
                                 $has_session_badge = !empty($session_badge_src);
                                 ?>

@@ -37,17 +37,48 @@ define( 'AIAD_CORE_MODULE_SITE_SETTINGS', __FILE__ );
  * @return array<string, array{0: string, 1: string, 2: mixed}>
  */
 function aiad_site_fields(): array {
-	return array(
-		'newsletter_url'                  => array( 'aiad_newsletter_url', 'url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
-		'asset_pack_url'                  => array( 'aiad_asset_pack_url', 'url', '' ),
-		'implementation_guide_url'        => array( 'aiad_implementation_guide_url', 'url', '' ),
-		'show_breadcrumbs'                => array( 'aiad_show_breadcrumbs', 'bool', false ),
-		'header_logo'                     => array( 'aiad_header_logo', 'file', 0 ),
-		'press_release_file'              => array( 'aiad_press_release_file', 'file', 0 ),
-		'asset_logo'                      => array( 'aiad_asset_logo', 'file', 0 ),
-		'asset_banner_participating'      => array( 'aiad_asset_banner_participating', 'file', 0 ),
-		'asset_banner_participated'       => array( 'aiad_asset_banner_participated', 'file', 0 ),
+	$fields = array(
+		'newsletter_url'             => array( 'aiad_newsletter_url', 'url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
+		'asset_pack_url'             => array( 'aiad_asset_pack_url', 'url', '' ),
+		'implementation_guide_url'   => array( 'aiad_implementation_guide_url', 'url', '' ),
+		'show_breadcrumbs'           => array( 'aiad_show_breadcrumbs', 'bool', false ),
+		'header_logo'                => array( 'aiad_header_logo', 'file', 0 ),
+		'press_release_file'         => array( 'aiad_press_release_file', 'file', 0 ),
+		'asset_logo'                 => array( 'aiad_asset_logo', 'file', 0 ),
+		'asset_banner_participating' => array( 'aiad_asset_banner_participating', 'file', 0 ),
+		'asset_banner_participated'  => array( 'aiad_asset_banner_participated', 'file', 0 ),
+		'hero_logo'                  => array( 'aiad_hero_logo', 'file', 0 ),
+		'ai_literacy_logo'           => array( 'aiad_ai_literacy_logo', 'file', 0 ),
+		'display_board_image_2'      => array( 'aiad_display_board_image_2', 'file', 0 ),
+		'display_board_image_3'      => array( 'aiad_display_board_image_3', 'file', 0 ),
 	);
+	// The homepage images: a badge for each strand (the Five Core Principles and the By theme links) and one for each
+	// session length.
+	foreach ( aiad_site_strand_slugs() as $slug ) {
+		$fields[ 'badge_' . $slug ] = array( 'aiad_badge_' . $slug, 'file', 0 );
+	}
+	foreach ( aiad_site_session_slugs() as $slug ) {
+		$fields[ 'session_badge_' . $slug ] = array( 'aiad_session_badge_' . $slug, 'file', 0 );
+	}
+	return $fields;
+}
+
+/**
+ * The five strands, in the order the homepage shows them.
+ *
+ * @return string[]
+ */
+function aiad_site_strand_slugs(): array {
+	return array( 'safe', 'smart', 'creative', 'responsible', 'future' );
+}
+
+/**
+ * The session-length terms that have a badge image on the homepage.
+ *
+ * @return string[]
+ */
+function aiad_site_session_slugs(): array {
+	return array( '5-min-lesson-starters', '15-20-min-tutor-time', '20-min-assemblies', '30-45-min-after-school' );
 }
 
 /**
@@ -189,6 +220,10 @@ function aiad_site_sync_theme_mods( $old_value, $value ): void {
 			continue;
 		}
 		$new = $value[ $key ];
+		// A value back at its default with no theme mod set needs none: unset already reads as the default.
+		if ( ! array_key_exists( $field[0], $mods ) && $new === $field[2] ) {
+			continue;
+		}
 		if ( ( $old[ $key ] ?? null ) === $new && ( $mods[ $field[0] ] ?? null ) === $new ) {
 			continue;
 		}
@@ -198,6 +233,36 @@ function aiad_site_sync_theme_mods( $old_value, $value ): void {
 	}
 }
 add_action( 'update_option_aiad_site', 'aiad_site_sync_theme_mods', 10, 2 );
+
+/**
+ * A theme mod removed with remove_theme_mod() puts its setting back to the default.
+ *
+ * WordPress runs no hook of its own for a removal, only the one for the whole theme_mods option being saved, so this
+ * compares the mods before and after. Without it a removed override (the 2027 migration clears old badge uploads this
+ * way) would be ignored, because the option's value is what the theme mod filter returns.
+ *
+ * @param string $option    Option name, e.g. theme_mods_ai-awareness-day.
+ * @param mixed  $old_value Previous value.
+ * @param mixed  $value     New value.
+ */
+function aiad_site_theme_mod_removed( $option, $old_value, $value ): void {
+	if ( 'theme_mods_' . get_option( 'stylesheet' ) !== $option || ! is_array( $old_value ) ) {
+		return;
+	}
+	$value    = is_array( $value ) ? $value : array();
+	$settings = null;
+	foreach ( aiad_site_fields() as $key => $field ) {
+		if ( ! array_key_exists( $field[0], $old_value ) || array_key_exists( $field[0], $value ) ) {
+			continue;
+		}
+		$settings              = $settings ?? aiad_site_settings();
+		$settings[ $key ]      = $field[2];
+	}
+	if ( null !== $settings ) {
+		update_option( 'aiad_site', $settings );
+	}
+}
+add_action( 'updated_option', 'aiad_site_theme_mod_removed', 10, 3 );
 
 /*
  * The footer's social links are the SEO option's social profiles.

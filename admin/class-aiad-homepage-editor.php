@@ -111,20 +111,11 @@ class AIAD_Homepage_Editor {
             case 'principles':
                 $updated = $this->save_principles();
                 break;
-            case 'video':
-                $updated = $this->save_video();
-                break;
-            case 'display':
-                $updated = $this->save_display_board();
-                break;
             case 'resources':
                 $updated = $this->save_resources();
                 break;
             case 'contact':
                 $updated = $this->save_contact();
-                break;
-            case 'social':
-                $updated = $this->save_social();
                 break;
         }
 
@@ -144,10 +135,7 @@ class AIAD_Homepage_Editor {
      */
     private function save_hero(): int {
         $keys = array(
-            'aiad_hero_logo'     => 'absint',
-            'aiad_header_logo'   => 'absint',
             'aiad_hero_date'       => 'sanitize_text_field',
-            'aiad_event_date_ymd'  => 'aiad_sanitize_event_date_ymd',
             'aiad_hero_title'    => 'sanitize_text_field',
             'aiad_hero_slogan'   => 'sanitize_text_field',
             'aiad_hero_subtitle' => 'sanitize_textarea_field',
@@ -173,7 +161,7 @@ class AIAD_Homepage_Editor {
     }
 
     /**
-     * Save Principles & Badges tab (badges are attachment IDs; principle title/desc are text).
+     * Save Principles tab (principle title and description; the badge images are on Settings → AI Awareness Day).
      *
      * @return int Number of options updated.
      */
@@ -181,12 +169,6 @@ class AIAD_Homepage_Editor {
         $n = 0;
         $slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
         foreach ( $slugs as $slug ) {
-            $key_badge = 'aiad_badge_' . $slug;
-            if ( isset( $_POST[ $key_badge ] ) ) {
-                $val = absint( $_POST[ $key_badge ] );
-                set_theme_mod( $key_badge, $val );
-                $n++;
-            }
             $key_title = 'aiad_principle_title_' . $slug;
             if ( isset( $_POST[ $key_title ] ) ) {
                 set_theme_mod( $key_title, sanitize_text_field( wp_unslash( $_POST[ $key_title ] ) ) );
@@ -202,32 +184,6 @@ class AIAD_Homepage_Editor {
     }
 
     /**
-     * Save Video tab.
-     *
-     * @return int Number of options updated.
-     */
-    private function save_video(): int {
-        $keys = array(
-            'aiad_youtube_url'  => 'esc_url_raw',
-            'aiad_youtube_title' => 'sanitize_text_field',
-        );
-        return $this->save_theme_mods( $keys );
-    }
-
-    /**
-     * Save Display Board tab (attachment IDs; same as Customizer).
-     *
-     * @return int Number of options updated.
-     */
-    private function save_display_board(): int {
-        $keys = array(
-            'aiad_display_board_image_2' => 'absint',
-            'aiad_display_board_image_3' => 'absint',
-        );
-        return $this->save_theme_mods( $keys );
-    }
-
-    /**
      * Save Get Involved tab.
      *
      * @return int Number of options updated.
@@ -236,20 +192,6 @@ class AIAD_Homepage_Editor {
         $keys = array(
             'aiad_contact_title' => 'sanitize_text_field',
             'aiad_contact_desc'  => 'wp_kses_post',
-            'aiad_contact_email' => 'sanitize_email',
-        );
-        return $this->save_theme_mods( $keys );
-    }
-
-    /**
-     * Save Social tab.
-     *
-     * @return int Number of options updated.
-     */
-    private function save_social(): int {
-        $keys = array(
-            'aiad_linkedin'  => 'esc_url_raw',
-            'aiad_instagram' => 'esc_url_raw',
         );
         return $this->save_theme_mods( $keys );
     }
@@ -357,7 +299,13 @@ class AIAD_Homepage_Editor {
 
         echo '<div class="wrap aiad-homepage-editor-wrap">';
         echo '<h1 class="wp-heading-inline">' . esc_html__( 'Edit Homepage', 'ai-awareness-day' ) . '</h1>';
-        echo '<p class="description">' . esc_html__( 'Edit the content of your homepage sections. Changes are saved to the same settings as the Customizer.', 'ai-awareness-day' ) . '</p>';
+        echo '<p class="description">' . esc_html__( 'Edit the wording of your homepage sections. Changes are saved to the same settings as the Customizer.', 'ai-awareness-day' ) . '</p>';
+        printf(
+            '<div class="notice notice-info inline"><p>%s <a href="%s">%s</a></p></div>',
+            esc_html__( 'The event date, contact address, links, logos and the homepage images (badges, display board) are on one screen now.', 'ai-awareness-day' ),
+            esc_url( admin_url( 'options-general.php?page=aiad-settings' ) ),
+            esc_html__( 'Settings → AI Awareness Day', 'ai-awareness-day' )
+        );
 
         if ( '1' === $updated ) {
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'ai-awareness-day' ) . '</p></div>';
@@ -368,12 +316,9 @@ class AIAD_Homepage_Editor {
         $tabs = array(
             'hero'       => __( 'Hero', 'ai-awareness-day' ),
             'campaign'   => __( 'Campaign', 'ai-awareness-day' ),
-            'principles' => __( 'Principles & Badges', 'ai-awareness-day' ),
-            'video'      => __( 'Video', 'ai-awareness-day' ),
-            'display'    => __( 'Display Board', 'ai-awareness-day' ),
+            'principles' => __( 'Principles', 'ai-awareness-day' ),
             'resources'  => __( 'Resources', 'ai-awareness-day' ),
             'contact'    => __( 'Get Involved', 'ai-awareness-day' ),
-            'social'     => __( 'Social', 'ai-awareness-day' ),
         );
         echo '<nav class="nav-tab-wrapper wp-clearfix" aria-label="' . esc_attr__( 'Homepage sections', 'ai-awareness-day' ) . '">';
         foreach ( $tabs as $slug => $label ) {
@@ -396,20 +341,11 @@ class AIAD_Homepage_Editor {
             case 'principles':
                 $this->render_principles_tab();
                 break;
-            case 'video':
-                $this->render_video_tab();
-                break;
-            case 'display':
-                $this->render_display_tab();
-                break;
             case 'resources':
                 $this->render_resources_tab();
                 break;
             case 'contact':
                 $this->render_contact_tab();
-                break;
-            case 'social':
-                $this->render_social_tab();
                 break;
         }
 
@@ -425,18 +361,10 @@ class AIAD_Homepage_Editor {
         echo '<p class="description">' . esc_html__( 'The top of the homepage while Customise > Front Page Sections > Hero Section > Homepage hero is set to New. Leave a field empty to use the standard wording.', 'ai-awareness-day' ) . '</p>';
         $this->render_fields( aiad_hero27_fields() );
 
-        echo '<h2>' . esc_html__( 'Site name, dates and the previous hero', 'ai-awareness-day' ) . '</h2>';
-        echo '<p class="description">' . esc_html__( 'Site name and description are also used in the footer, search results and link previews. Event date sets the new hero\'s date and countdown.', 'ai-awareness-day' ) . '</p>';
+        echo '<h2>' . esc_html__( 'Site name and the previous hero', 'ai-awareness-day' ) . '</h2>';
+        echo '<p class="description">' . esc_html__( 'Site name and description are also used in the footer, search results and link previews.', 'ai-awareness-day' ) . '</p>';
         $fields = array(
-            'aiad_hero_logo'     => array( 'label' => __( 'Previous hero: logo', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Optional large hero image. Empty = Site Identity → Logo. Clear old GIFs here.', 'ai-awareness-day' ) ),
-            'aiad_header_logo'   => array( 'label' => __( 'Header Logo (legacy)', 'ai-awareness-day' ), 'type' => 'image', 'description' => __( 'Fallback only if Site Identity → Logo is empty.', 'ai-awareness-day' ) ),
             'aiad_hero_date'      => array( 'label' => __( 'Event date text', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'AI Awareness Day 2027', 'description' => __( 'Used in link previews and by the previous hero.', 'ai-awareness-day' ) ),
-            'aiad_event_date_ymd' => array(
-                'label'       => __( 'Event date', 'ai-awareness-day' ),
-                'type'        => 'text',
-                'default'     => aiad_get_customizer_defaults()['aiad_event_date_ymd'],
-                'description' => __( 'Format: Y-m-d. Sets the date and countdown in the new hero, and the date search engines see.', 'ai-awareness-day' ),
-            ),
             'aiad_hero_title'    => array( 'label' => __( 'Site name', 'ai-awareness-day' ), 'type' => 'text', 'default' => aiad_get_customizer_defaults()['aiad_hero_title'] ),
             'aiad_hero_slogan'   => array( 'label' => __( 'Previous hero: slogan', 'ai-awareness-day' ), 'type' => 'text', 'default' => aiad_get_customizer_defaults()['aiad_hero_slogan'] ),
             'aiad_hero_subtitle' => array( 'label' => __( 'Site description', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => aiad_get_customizer_defaults()['aiad_hero_subtitle'] ),
@@ -477,46 +405,13 @@ class AIAD_Homepage_Editor {
         );
         echo '<table class="form-table" role="presentation">';
         foreach ( $slugs as $slug ) {
-            $badge_id = absint( get_theme_mod( 'aiad_badge_' . $slug, 0 ) );
             $title    = get_theme_mod( 'aiad_principle_title_' . $slug, $titles[ $slug ] );
             $desc     = get_theme_mod( 'aiad_principle_desc_' . $slug, $descs[ $slug ] );
             echo '<tr><th scope="row">' . esc_html( ucfirst( $slug ) ) . '</th><td>';
-            echo '<p><label>' . esc_html__( 'Badge image', 'ai-awareness-day' ) . '</label><br>';
-            $this->render_media_input( 'aiad_badge_' . $slug, $badge_id, 'image' );
-            echo '</p><p><label for="aiad_principle_title_' . esc_attr( $slug ) . '">' . esc_html__( 'Title', 'ai-awareness-day' ) . '</label><br>';
+            echo '<p><label for="aiad_principle_title_' . esc_attr( $slug ) . '">' . esc_html__( 'Title', 'ai-awareness-day' ) . '</label><br>';
             echo '<input type="text" id="aiad_principle_title_' . esc_attr( $slug ) . '" name="aiad_principle_title_' . esc_attr( $slug ) . '" value="' . esc_attr( $title ) . '" class="regular-text" /></p>';
             echo '<p><label for="aiad_principle_desc_' . esc_attr( $slug ) . '">' . esc_html__( 'Description', 'ai-awareness-day' ) . '</label><br>';
             echo '<textarea id="aiad_principle_desc_' . esc_attr( $slug ) . '" name="aiad_principle_desc_' . esc_attr( $slug ) . '" rows="2" class="large-text">' . esc_textarea( $desc ) . '</textarea></p>';
-            echo '</td></tr>';
-        }
-        echo '</table>';
-    }
-
-    /**
-     * Render Video tab fields.
-     */
-    private function render_video_tab(): void {
-        $fields = array(
-            'aiad_youtube_url'  => array( 'label' => __( 'YouTube URL', 'ai-awareness-day' ), 'type' => 'url', 'default' => '', 'description' => __( 'e.g. https://www.youtube.com/watch?v=VIDEO_ID', 'ai-awareness-day' ) ),
-            'aiad_youtube_title' => array( 'label' => __( 'Section title', 'ai-awareness-day' ), 'type' => 'text', 'default' => __( 'Watch', 'ai-awareness-day' ) ),
-        );
-        $this->render_fields( $fields );
-    }
-
-    /**
-     * Render Display Board tab (attachment IDs; same as Customizer).
-     */
-    private function render_display_tab(): void {
-        $fields = array(
-            'aiad_display_board_image_2' => array( 'label' => __( 'More examples: photo 1', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
-            'aiad_display_board_image_3' => array( 'label' => __( 'More examples: photo 2', 'ai-awareness-day' ), 'type' => 'image', 'default' => 0 ),
-        );
-        echo '<table class="form-table" role="presentation">';
-        foreach ( $fields as $key => $config ) {
-            $val = get_theme_mod( $key, $config['default'] );
-            $id = absint( is_numeric( $val ) ? $val : 0 );
-            echo '<tr><th scope="row">' . esc_html( $config['label'] ) . '</th><td>';
-            $this->render_media_input( $key, $id, 'image' );
             echo '</td></tr>';
         }
         echo '</table>';
@@ -529,18 +424,6 @@ class AIAD_Homepage_Editor {
         $fields = array(
             'aiad_contact_title' => array( 'label' => __( 'Section Title', 'ai-awareness-day' ), 'type' => 'text', 'default' => 'Get Involved' ),
             'aiad_contact_desc'  => array( 'label' => __( 'Description', 'ai-awareness-day' ), 'type' => 'textarea', 'default' => "Whether you're a teacher, school leader..." ),
-            'aiad_contact_email' => array( 'label' => __( 'Notification Email', 'ai-awareness-day' ), 'type' => 'email', 'default' => '', 'description' => __( 'Form submissions are sent here.', 'ai-awareness-day' ) ),
-        );
-        $this->render_fields( $fields );
-    }
-
-    /**
-     * Render Social tab fields.
-     */
-    private function render_social_tab(): void {
-        $fields = array(
-            'aiad_linkedin'  => array( 'label' => __( 'LinkedIn URL', 'ai-awareness-day' ), 'type' => 'url', 'default' => 'https://www.linkedin.com/company/110126438/' ),
-            'aiad_instagram' => array( 'label' => __( 'Instagram URL', 'ai-awareness-day' ), 'type' => 'url', 'default' => '#' ),
         );
         $this->render_fields( $fields );
     }
