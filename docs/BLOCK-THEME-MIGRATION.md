@@ -227,7 +227,7 @@ Use Twenty Twenty-Five as the parent, with a child theme holding brand styles, t
 
 1. ~~Commit `build/` to git, or build on deploy?~~ Commit it: deploys copy the plugin as it is and run no build step.
 2. Stop at Stage 2 (hybrid) or go to a full block theme?
-3. Which meta boxes are worth rebuilding as editor panels, and which stay as they are?
+3. Which meta boxes are worth rebuilding as editor panels, and which stay as they are? Answered in [WP71-STANDARDISATION.md](WP71-STANDARDISATION.md): content types move to a Details panel (and a canvas block where the content is structured meta), one at a time; admin tools may stay as screens.
 4. Who signs off the visual match for each stage?
 
 ---

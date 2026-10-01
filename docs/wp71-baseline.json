@@ -1,5 +1,5 @@
 {
-  "metaBoxesInBlockEditor": 11,
+  "metaBoxesInBlockEditor": 10,
   "customizerSettings": 41,
   "themeModReads": 80,
   "shortcodes": 14,
@@ -12,7 +12,7 @@
   "unbuiltThemeBlocks": 26,
   "staleVersionFloors": 0,
   "blockTemplates": 11,
-  "recordEditors": 0,
+  "recordEditors": 2,
   "restRoutes": 3,
   "blockBindingSources": 0,
   "scriptModules": 0

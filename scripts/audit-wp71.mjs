@@ -139,8 +139,8 @@ const METRICS = [
 	// The 7.1 way.
 	{ key: 'blockTemplates', kind: 'progress', value: files.filter( ( f ) => /^templates\/[^/]+\.html$/.test( f.rel ) ).length,
 		why: 'Block templates, editable in the Site Editor.' },
-	{ key: 'recordEditors', kind: 'progress', value: files.filter( ( f ) => /^plugins\/aiad-core\/src\/blocks\/[^/]+\/index\.js$/.test( f.rel ) && /record-editor/.test( read( f ) ) ).length,
-		why: 'Content types edited with the shared record editor kit (src/shared/record-editor).' },
+	{ key: 'recordEditors', kind: 'progress', value: total( files.filter( ( f ) => /^plugins\/aiad-core\/src\/(blocks|editors)\/.*\.js$/.test( f.rel ) ), /registerRecordDetails\(\s*\{/g ),
+		why: 'Content types edited with the shared record editor kit (src/shared/record-editor): one Details panel each, in the block editor, in place of a meta box.' },
 	{ key: 'restRoutes', kind: 'progress', value: total( php, /register_rest_route\(/g ),
 		why: 'REST routes.' },
 	{ key: 'blockBindingSources', kind: 'progress', value: total( php, /register_block_bindings_source\(/g ),
