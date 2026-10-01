@@ -461,6 +461,13 @@
             if (history && history.pushState && anchor.hash !== window.location.hash) {
                 history.pushState(null, '', anchor.hash);
             }
+            // Move focus there too, as following the link would have, so the next Tab carries on from the target
+            // (the skip link, and every link to a section) rather than from the link.
+            if (!target.matches('a[href], button, input, select, textarea, summary, [tabindex]')) {
+                target.setAttribute('tabindex', '-1');
+                target.setAttribute('data-aiad-scroll-target', '');
+            }
+            target.focus({ preventScroll: true });
         });
 
         // ============================================

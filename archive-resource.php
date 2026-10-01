@@ -188,6 +188,8 @@ get_header();
             <div class="resources-loading" style="display:none" aria-live="polite">
                 <?php esc_html_e('Loading…', 'ai-awareness-day'); ?></div>
             <?php /* resource-filters.js finds this grid and swaps in the cards the AJAX filter renders. */ ?>
+            <?php /* Names the list for the page's outline (h1, then this, then From other organisations); the design shows none. */ ?>
+            <h2 class="screen-reader-text"><?php esc_html_e( 'Resources from AI Awareness Day', 'ai-awareness-day' ); ?></h2>
             <div class="resource-tiles">
                 <?php if ( $resources->have_posts() ) : ?>
                     <?php

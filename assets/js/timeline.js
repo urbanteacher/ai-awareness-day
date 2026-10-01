@@ -63,8 +63,12 @@
             var lastClone = lastSlide.cloneNode( true );
             firstClone.classList.add( 'timeline-swipe__slide--clone' );
             lastClone.classList.add( 'timeline-swipe__slide--clone' );
+            // The copies only make the loop seamless: inert keeps their links and buttons out of the Tab order
+            // as well as out of screen readers.
             firstClone.setAttribute( 'aria-hidden', 'true' );
             lastClone.setAttribute( 'aria-hidden', 'true' );
+            firstClone.setAttribute( 'inert', '' );
+            lastClone.setAttribute( 'inert', '' );
             viewport.insertBefore( lastClone, firstSlide );
             viewport.appendChild( firstClone );
         }

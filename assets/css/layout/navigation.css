@@ -193,7 +193,7 @@
 @media screen and (max-width: 768px) {
   .nav-toggle {
     display: block;
-    /* .main-navigation is position: fixed at this width, so it drops out of
+    /* .main-navigation is positioned (absolute) at this width, so it drops out of
        the flex flow and only the logo and this button are left in
        .header-inner's space-between row. Ordered after the logo so the
        hamburger sits left and the logo sits in the right corner. */
@@ -204,9 +204,12 @@
     order: 2;
   }
 
+  /* Hangs from the header's bottom edge, whatever the header's height. The header's backdrop-filter makes it the
+     menu's containing block, so a fixed top (72px, 118px with the admin bar) was measured from the header, not
+     the window, and left a strip of the page showing between the two (50px when signed in). */
   .main-navigation {
-    position: fixed;
-    top: 72px;
+    position: absolute;
+    top: 100%;
     left: 0;
     width: 100%;
     z-index: 999;
@@ -222,16 +225,6 @@
     transform: translateY(calc(-100% - 80px));
     visibility: hidden;
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0s linear 0.4s;
-  }
-
-  /* Shift mobile nav down to clear the admin bar (46px on mobile) */
-  .admin-bar .main-navigation {
-    top: 118px;
-    /* 72px header + 46px admin bar */
-  }
-  .admin-bar.js .main-navigation,
-  .js .admin-bar .main-navigation {
-    transform: translateY(calc(-100% - 130px));
   }
 
   .js .main-navigation.open {

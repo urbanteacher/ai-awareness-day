@@ -598,9 +598,10 @@ function aiad_render_timeline_magazine_row(WP_Post $entry): string
                 <?php echo aiad_timeline_magazine_cover_meta_html($badge, $icon, $pinned, $date_label, $date_iso); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </div>
             <div class="timeline-magazine__card-body">
-                <h4 class="timeline-magazine__card-title">
+                <?php // h2: these cards sit straight under the archive's h1 (aiad_render_timeline_archive_feed()). ?>
+                <h2 class="timeline-magazine__card-title">
                     <a href="<?php echo esc_url($entry_url); ?>"><?php echo esc_html(get_the_title($entry)); ?></a>
-                </h4>
+                </h2>
                 <?php
                 $card_excerpt = aiad_timeline_entry_excerpt_text($entry);
                 if ($card_excerpt !== '') :

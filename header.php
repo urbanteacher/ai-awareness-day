@@ -9,6 +9,8 @@
 
 <body <?php body_class(); ?>>
     <?php wp_body_open(); ?>
+    <?php /* Block templates get core's skip link; the PHP templates that print this header get the same one. */ ?>
+    <a class="skip-link screen-reader-text" href="#main"><?php esc_html_e( 'Skip to content', 'ai-awareness-day' ); ?></a>
 
     <?php block_template_part( 'header' ); // parts/header.html, edited in Appearance > Editor. ?>
 

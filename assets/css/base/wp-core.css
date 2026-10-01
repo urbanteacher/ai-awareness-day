@@ -26,6 +26,29 @@
   word-wrap: normal !important;
 }
 
+/* The skip link header.php prints for the PHP templates, as core styles its own on block templates. */
+.skip-link.screen-reader-text:focus {
+  background-color: #eee;
+  clip: auto !important;
+  clip-path: none;
+  color: #444;
+  display: block;
+  font-size: 1em;
+  height: auto;
+  left: 5px;
+  line-height: normal;
+  padding: 15px 23px 14px;
+  text-decoration: none;
+  top: 5px;
+  width: auto;
+  z-index: 100000;
+}
+
+/* A section an in-page link moved focus to (assets/js/main.js): focus is there for the next Tab, not to be drawn. */
+[data-aiad-scroll-target]:focus {
+  outline: none;
+}
+
 /* Honeypot: hidden from users, present for bots */
 .aiad-honeypot {
   position: absolute;
