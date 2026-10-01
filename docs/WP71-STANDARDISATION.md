@@ -43,7 +43,8 @@ Three editing surfaces. Each kind of content has exactly one.
   - *The body is the content* (timeline entries, events): the canvas stays the normal editor, and the type gets a Details panel. Timeline is the first.
   - *The content is structured meta* (lessons): a block on the canvas draws the fields in the order the front end shows them, and the type also gets a Details panel. Lessons are the first. The block saves nothing into the page, so the front end and anything else that reads the meta need no change.
 - **Use core's panel where core has one.** Topics, Session length, Formats and the benchmark audience are core taxonomy panels. Our panel only replaces core's where the choice differs (a lesson has one theme, so it is a radio group, and core's checkbox panel is hidden).
-- A field is registered with `show_in_rest` and stored under the same meta key as before, so a conversion needs no data migration and the classic editor keeps working. The old meta box is kept for the classic editor only, flagged `__back_compat_meta_box`.
+- A field is registered with `show_in_rest` and stored under the same meta key as before, so a conversion needs no data migration and the classic editor keeps working.
+- **A field the server changes is not in REST.** The block editor sends back every meta field it was given when a record is saved, not just the one that changed. A counter that moved while an editor had the screen open (views, joins, likes, clicks) would be rolled back to the value it had when the screen opened. Counters are therefore registered with `show_in_rest => false` (`modules/tracking/engagement-tracking.php`, and the timeline like count). Nothing reads them over REST. A new field written by the front end or by a background job follows the same rule. The old meta box is kept for the classic editor only, flagged `__back_compat_meta_box`.
 - Words and option lists stay defined once, in PHP, and reach the panel through `block_editor_settings_all` (see the timeline's `aiadTimeline`).
 
 **The kit** (`plugins/aiad-core/src/shared/record-editor/`):
@@ -65,8 +66,9 @@ Three editing surfaces. Each kind of content has exactly one.
 | 0 | Declare 7.1 truthfully; add the audit ratchet | `staleVersionFloors` 5 to 0 | **Done** |
 | 1a | Lessons: Lesson plan block and Lesson details panel | `recordEditors` | **Done** |
 | 1b | Shared record editor kit; timeline entries | `recordEditors`, `metaBoxesInBlockEditor` 11 to 10 | **Done** |
-| 1c | Events (`live_session`), partners, featured resources, AI tools | `metaBoxesInBlockEditor` | Next, one type at a time. Featured resources: core's Themes and Session length panels are hidden until then, because their meta box already holds those fields. |
-| 1d | Admin-only boxes (survey, certificates, import/export, submissions) | | Decide: these are admin tools, not content. They may stay as admin screens. |
+| 1c | Events (`live_session`) | `recordEditors`, `metaBoxesInBlockEditor` 10 to 9 | **Done** |
+| 1d | Partners, featured resources, AI tools | `metaBoxesInBlockEditor` | Next, one type at a time. Featured resources: core's Themes and Session length panels are hidden until then, because their meta box already holds those fields. |
+| 1e | Admin-only boxes (survey, certificates, import/export, submissions) | | Decide: these are admin tools, not content. They may stay as admin screens. |
 | 2 | Site settings: Customizer content to a settings screen and blocks | `customizerSettings` 41, `themeModReads` 80 | Not started. This is the migration doc's separate project. |
 | 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers`, `localizeScript`, `jquerySignedScripts`, `echoedScriptTags` | Not started. New code first; old handlers only when touched. |
 | 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks`, `shortcodes`, `unbuiltThemeBlocks` | Not started. Keep the shortcodes until the pages using them are re-saved. |
@@ -91,9 +93,12 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 
 - The audit counts were run against the source and checked by hand against greps for the same patterns.
 - Lessons and timeline entries were opened in the 7.1.2 block editor: the panels appear, the old boxes and the drawer do not, edits save, and the saved values read back correctly from the database. The focal point was set through the picker's own inputs with a real image attached.
+- Events were opened in the editor and a real save was read back from the database. A counter changed in the database while the event was open survived the save (see the rule above; it did not before the fix). A new event starts with the usual format filled in.
 - Not done: no test with a second person editing the same entry at once (7.1's real-time collaboration); no keyboard-only or screen-reader pass over the new panels; the live site has not been touched, and the classic editor path was checked only by reading the code.
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (later).** Events moved to the record editor (Event details panel). While testing it, saving an event reset its view counter: the editor saves all the meta it holds, and the engagement counters were in REST. This also affected the timeline entry panel (like count) pushed earlier the same day. Counters are now out of REST (six content types' engagement counters and the timeline like count). Times use the browser's own date and time field so the stored `YYYY-MM-DDTHH:MM` and the front end are unchanged; a time in any other format is refused by the field's sanitiser. `recordEditors` 2 to 3, `metaBoxesInBlockEditor` 10 to 9.
 
 - **1 October 2026.** Audit written. Versions declared as 7.1 (the live site runs 7.1.2). Lessons and timeline entries moved to the record editor kit. `recordEditors` 0 to 2, `metaBoxesInBlockEditor` 11 to 10, `staleVersionFloors` 5 to 0 (recorded in the baseline after the fix, so the file itself shows 0). Featured resources: core's duplicate Themes and Session length panels, which appeared when lessons needed those taxonomies in REST, are hidden.
