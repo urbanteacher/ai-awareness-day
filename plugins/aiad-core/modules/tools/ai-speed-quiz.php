@@ -199,7 +199,6 @@ function aiad_speed_quiz_render( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_speed_quiz', 'aiad_speed_quiz_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

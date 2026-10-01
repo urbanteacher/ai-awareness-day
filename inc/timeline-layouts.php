@@ -286,25 +286,27 @@ function aiad_timeline_entry_actions_html(WP_Post $entry, bool $compact = false)
 }
 
 /**
+ * Whether content embeds one of the site's tools, as the block or as the old shortcode: the tag is the old shortcode's
+ * (aiad_speed_quiz, ai_risk_benchmark) and the block is aiad/speed-quiz, aiad/risk-benchmark.
+ *
+ * @param string $content Post content.
+ * @param string $tag     Shortcode tag.
+ */
+function aiad_content_has_tool(string $content, string $tag): bool
+{
+    $slug = str_replace('_', '-', (string) preg_replace('/^(aiad_|ai_)/', '', $tag));
+    return false !== strpos($content, '[' . $tag) || false !== strpos($content, '<!-- wp:aiad/' . $slug . ' ');
+}
+
+/**
  * Whether a timeline entry embeds an interactive shortcode (no full body in feed hero).
  *
  * @param WP_Post $entry Timeline post.
  */
 function aiad_timeline_entry_has_interactive_shortcode(WP_Post $entry): bool
 {
-    $needles = array(
-        '[aiad_buzzwords',
-        '[aiad_llm_explainer',
-        '[aiad_llm_order_game',
-        '[aiad_speed_quiz',
-        '[aiad_computing_curriculum',
-        '[aiad_misinformation_detector',
-        '[aiad_neu_ai_report',
-        '[aiad_risk_academy',
-        '[ai_risk_benchmark',
-    );
-    foreach ($needles as $needle) {
-        if (false !== strpos($entry->post_content, $needle)) {
+    foreach ( array( 'aiad_buzzwords', 'aiad_llm_explainer', 'aiad_llm_order_game', 'aiad_speed_quiz', 'aiad_computing_curriculum', 'aiad_misinformation_detector', 'aiad_neu_ai_report', 'aiad_risk_academy', 'ai_risk_benchmark' ) as $tag ) {
+        if ( aiad_content_has_tool( $entry->post_content, $tag ) ) {
             return true;
         }
     }
@@ -331,21 +333,21 @@ function aiad_timeline_hero_interactive_cta(WP_Post $entry): ?array
     $label = __('Open interactive activity →', 'ai-awareness-day');
     $content = (string) $entry->post_content;
 
-    if (false !== strpos($content, '[aiad_speed_quiz')) {
+    if (aiad_content_has_tool( $content, 'aiad_speed_quiz' )) {
         $label = __('Take the speed quiz →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_computing_curriculum')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_computing_curriculum' )) {
         $label = __('Try the curriculum challenge →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_misinformation_detector')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_misinformation_detector' )) {
         $label = __('Try the misinformation detector →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_neu_ai_report')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_neu_ai_report' )) {
         $label = __('Explore the NEU data →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_llm_explainer')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_llm_explainer' )) {
         $label = __('Try the 6-step explainer →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_buzzwords')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_buzzwords' )) {
         $label = __('Explore the glossary →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[aiad_risk_academy')) {
+    } elseif (aiad_content_has_tool( $content, 'aiad_risk_academy' )) {
         $label = __('Assess your school\'s AI risk →', 'ai-awareness-day');
-    } elseif (false !== strpos($content, '[ai_risk_benchmark')) {
+    } elseif (aiad_content_has_tool( $content, 'ai_risk_benchmark' )) {
         $label = __('Start the free benchmark →', 'ai-awareness-day');
     }
 
@@ -398,7 +400,7 @@ function aiad_timeline_interactive_excerpt_fallback(WP_Post $entry): string
 {
     $content = (string) get_post_field('post_content', $entry);
 
-    if (false !== strpos($content, '[ai_risk_benchmark')) {
+    if (aiad_content_has_tool( $content, 'ai_risk_benchmark' )) {
         if (function_exists('aiad_risk_benchmark_get_excerpt')) {
             return aiad_risk_benchmark_get_excerpt();
         }
@@ -407,28 +409,28 @@ function aiad_timeline_interactive_excerpt_fallback(WP_Post $entry): string
             'ai-awareness-day'
         );
     }
-    if (false !== strpos($content, '[aiad_risk_academy')) {
+    if (aiad_content_has_tool( $content, 'aiad_risk_academy' )) {
         return __(
             'Structured CPD to help school leaders assess and reduce AI-related risk across your community.',
             'ai-awareness-day'
         );
     }
-    if (false !== strpos($content, '[aiad_speed_quiz')) {
+    if (aiad_content_has_tool( $content, 'aiad_speed_quiz' )) {
         return __('Quick interactive quiz — test how well you spot AI facts from fiction.', 'ai-awareness-day');
     }
-    if (false !== strpos($content, '[aiad_computing_curriculum')) {
+    if (aiad_content_has_tool( $content, 'aiad_computing_curriculum' )) {
         return __('Interactive challenge linking AI concepts to the computing curriculum.', 'ai-awareness-day');
     }
-    if (false !== strpos($content, '[aiad_misinformation_detector')) {
+    if (aiad_content_has_tool( $content, 'aiad_misinformation_detector' )) {
         return __('Practice spotting misleading AI-generated claims and health misinformation.', 'ai-awareness-day');
     }
-    if (false !== strpos($content, '[aiad_neu_ai_report')) {
+    if (aiad_content_has_tool( $content, 'aiad_neu_ai_report' )) {
         return __('Explore NEU survey data on how teachers are using AI in schools.', 'ai-awareness-day');
     }
-    if (false !== strpos($content, '[aiad_llm_explainer') || false !== strpos($content, '[aiad_llm_order_game')) {
+    if (aiad_content_has_tool( $content, 'aiad_llm_explainer' ) || aiad_content_has_tool( $content, 'aiad_llm_order_game' )) {
         return __('Step-by-step explainer — see how large language models generate text.', 'ai-awareness-day');
     }
-    if (false !== strpos($content, '[aiad_buzzwords')) {
+    if (aiad_content_has_tool( $content, 'aiad_buzzwords' )) {
         return __('Plain-English glossary of common AI terms for staff, students and parents.', 'ai-awareness-day');
     }
 

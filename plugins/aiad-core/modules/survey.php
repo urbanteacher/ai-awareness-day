@@ -1103,7 +1103,6 @@ function aiad_national_survey_render( $atts = array() ): string {
 	<?php
 	return ob_get_clean();
 }
-add_shortcode( 'aiad_national_survey', 'aiad_national_survey_render' );
 
 // ---------------------------------------------------------------------------
 // REST route

@@ -36,9 +36,6 @@ function aiad_require_core_module( string $module ): void {
 aiad_require_core_module( 'paths' );
 aiad_require_core_module( 'campaign' );
 
-if ( is_admin() ) {
-    require_once $aiad_dir . '/admin/class-aiad-homepage-editor.php';
-}
 aiad_require_core_module( 'admin' );
 
 /*
@@ -58,9 +55,8 @@ aiad_require_core_module( 'helpers-data' );
 aiad_require_core_module( 'post-types' );
 require_once $aiad_dir . '/inc/walkthrough.php';
 require_once $aiad_dir . '/inc/migrate-2027-branding.php';
-require_once $aiad_dir . '/inc/customizer.php';
-require_once $aiad_dir . '/inc/front-page-layout.php';
 require_once $aiad_dir . '/inc/homepage-blocks.php';
+require_once $aiad_dir . '/inc/homepage-migration.php';
 require_once $aiad_dir . '/inc/homepage-campaign.php';
 require_once $aiad_dir . '/inc/homepage-resources.php';
 require_once $aiad_dir . '/inc/site-parts.php';

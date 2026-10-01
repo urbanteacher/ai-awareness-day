@@ -470,14 +470,6 @@ function aiad_national_conversation_countdown(): ?array {
 }
 
 /**
- * Whether the homepage shows the previous hero instead of the 2027 National Conversation one.
- * Set in Appearance > Customise > Front Page Sections > Hero Section > Homepage hero, so the homepage can go back without a theme upload.
- */
-function aiad_homepage_hero_is_previous(): bool {
-	return 'previous' === get_theme_mod( 'aiad_homepage_hero', 'new' );
-}
-
-/**
  * The 2027 hero's editable words, shared by Customise > Front Page Sections > Hero Section and Appearance > Edit Homepage.
  * Each key is a theme_mod; an empty value falls back to the default here, so clearing a field restores the standard wording.
  *

@@ -133,7 +133,6 @@ function aiad_computing_curriculum_render( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_computing_curriculum', 'aiad_computing_curriculum_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

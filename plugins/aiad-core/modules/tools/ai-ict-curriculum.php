@@ -674,7 +674,6 @@ function aiad_ict_curriculum_render(): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_ict_curriculum', 'aiad_ict_curriculum_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

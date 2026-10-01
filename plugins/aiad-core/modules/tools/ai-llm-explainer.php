@@ -133,7 +133,6 @@ function aiad_llm_explainer_render( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_llm_explainer', 'aiad_llm_explainer_render' );
 
 /**
  * Load assets in head when the shortcode is in post content.

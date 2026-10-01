@@ -159,4 +159,3 @@ function aiad_certificate_showcase_render( $atts ): string {
 
 	return aiad_certificate_showcase( array_filter( $atts, 'strlen' ) );
 }
-add_shortcode( 'aiad_certificate_showcase', 'aiad_certificate_showcase_render' );

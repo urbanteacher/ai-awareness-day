@@ -129,7 +129,6 @@ function aiad_llm_order_game_render( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_llm_order_game', 'aiad_llm_order_game_render' );
 
 /**
  * Load assets in head when the shortcode is in post content.

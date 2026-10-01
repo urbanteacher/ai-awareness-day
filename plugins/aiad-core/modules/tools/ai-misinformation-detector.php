@@ -254,7 +254,6 @@ function aiad_misinformation_detector_render( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_misinformation_detector', 'aiad_misinformation_detector_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

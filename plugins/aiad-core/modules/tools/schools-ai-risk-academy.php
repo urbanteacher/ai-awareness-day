@@ -134,7 +134,6 @@ function aiad_risk_academy_render( $atts = array() ): string {
 	include aiad_core_path( 'template-parts/interactive/risk-academy.php' );
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_risk_academy', 'aiad_risk_academy_render' );
 
 /**
  * Load assets in head when shortcode is in post content.
