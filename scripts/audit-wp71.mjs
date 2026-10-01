@@ -48,11 +48,48 @@ const php = files.filter( ( f ) => f.rel.endsWith( '.php' ) );
 const count = ( text, re ) => ( text.match( re ) || [] ).length;
 const total = ( list, re ) => list.reduce( ( n, f ) => n + count( read( f ), re ), 0 );
 
+/**
+ * The source with its comments blanked out, so an apostrophe in a comment ("the entry's
+ * fields") is not taken for the start of a string. Strings are kept, and skipped over
+ * correctly, so "https://" inside one is not taken for a comment.
+ */
+function withoutComments( text ) {
+	let out = '';
+	let quote = null;
+	for ( let i = 0; i < text.length; i++ ) {
+		const c = text[ i ];
+		const next = text[ i + 1 ];
+		if ( quote ) {
+			out += c;
+			if ( c === '\\' ) {
+				out += text[ ++i ] ?? '';
+			} else if ( c === quote ) {
+				quote = null;
+			}
+		} else if ( c === "'" || c === '"' ) {
+			quote = c;
+			out += c;
+		} else if ( ( c === '/' && next === '/' ) || c === '#' ) {
+			while ( i < text.length && text[ i ] !== '\n' ) {
+				i++;
+			}
+			out += '\n';
+		} else if ( c === '/' && next === '*' ) {
+			const end = text.indexOf( '*/', i + 2 );
+			i = end < 0 ? text.length : end + 1;
+			out += ' ';
+		} else {
+			out += c;
+		}
+	}
+	return out;
+}
+
 /** The text of each add_meta_box( ... ) call, found by matching its parentheses. */
 function metaBoxCalls() {
 	const calls = [];
 	for ( const f of php ) {
-		const text = read( f );
+		const text = withoutComments( read( f ) );
 		let from = 0;
 		for ( ;; ) {
 			const at = text.indexOf( 'add_meta_box(', from );

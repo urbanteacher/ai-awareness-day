@@ -67,8 +67,9 @@ Three editing surfaces. Each kind of content has exactly one.
 | 1a | Lessons: Lesson plan block and Lesson details panel | `recordEditors` | **Done** |
 | 1b | Shared record editor kit; timeline entries | `recordEditors`, `metaBoxesInBlockEditor` 11 to 10 | **Done** |
 | 1c | Events (`live_session`) | `recordEditors`, `metaBoxesInBlockEditor` 10 to 9 | **Done** |
-| 1d | Partners, featured resources, AI tools | `metaBoxesInBlockEditor` | Next, one type at a time. Featured resources: core's Themes and Session length panels are hidden until then, because their meta box already holds those fields. |
-| 1e | Admin-only boxes (survey, certificates, import/export, submissions) | | Decide: these are admin tools, not content. They may stay as admin screens. |
+| 1d | Partners | `recordEditors`, `metaBoxesInBlockEditor` 9 to 7 | **Done.** The two old boxes showed the profile intro and the links but never saved them; the panel does. |
+| 1e | Featured resources, AI tools | `metaBoxesInBlockEditor` | Next, one type at a time. Featured resources: core's Themes and Session length panels are hidden until then, because their meta box already holds those fields. |
+| 1f | Admin-only boxes (survey, certificates, import/export, submissions) | | Decide: these are admin tools, not content. They may stay as admin screens. |
 | 2 | Site settings: Customizer content to a settings screen and blocks | `customizerSettings` 41, `themeModReads` 80 | Not started. This is the migration doc's separate project. |
 | 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers`, `localizeScript`, `jquerySignedScripts`, `echoedScriptTags` | Not started. New code first; old handlers only when touched. |
 | 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks`, `shortcodes`, `unbuiltThemeBlocks` | Not started. Keep the shortcodes until the pages using them are re-saved. |
@@ -94,10 +95,13 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 - The audit counts were run against the source and checked by hand against greps for the same patterns.
 - Lessons and timeline entries were opened in the 7.1.2 block editor: the panels appear, the old boxes and the drawer do not, edits save, and the saved values read back correctly from the database. The focal point was set through the picker's own inputs with a real image attached.
 - Events were opened in the editor and a real save was read back from the database. A counter changed in the database while the event was open survived the save (see the rule above; it did not before the fix). A new event starts with the usual format filled in.
+- Partners were opened in the editor and every field was set through the real controls (including adding links with the Add link button), saved, and read back from the database. The profile intro and the links then appeared on the partner page, and the stats and AI link on the homepage card. Switching "provides AI resources" off stored an empty value, the homepage dropped the link, and the tracking query that tests for `'1'` found no flagged partners. An empty link row is dropped, as the old rule did.
 - Not done: no test with a second person editing the same entry at once (7.1's real-time collaboration); no keyboard-only or screen-reader pass over the new panels; the live site has not been touched, and the classic editor path was checked only by reading the code.
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (later still).** Partners moved to the record editor (Partner details panel). Found in passing: the old Partner URL box rendered the profile intro and the partner links, and `single-partner.php` reads them, but the box's save handler never listed them, so nothing an editor typed there was kept. No partner had a value. The panel saves them. The classic box's save list is unchanged, so the classic editor still drops them: it is no longer used by the block editor and I did not test the classic path. The audit's meta-box counter mistook an apostrophe in a comment for the start of a string and miscounted by one after the partner change; it now skips comments. `recordEditors` 3 to 4, `metaBoxesInBlockEditor` 9 to 7.
 
 - **1 October 2026 (later).** Events moved to the record editor (Event details panel). While testing it, saving an event reset its view counter: the editor saves all the meta it holds, and the engagement counters were in REST. This also affected the timeline entry panel (like count) pushed earlier the same day. Counters are now out of REST (six content types' engagement counters and the timeline like count). Times use the browser's own date and time field so the stored `YYYY-MM-DDTHH:MM` and the front end are unchanged; a time in any other format is refused by the field's sanitiser. `recordEditors` 2 to 3, `metaBoxesInBlockEditor` 10 to 9.
 
