@@ -60,6 +60,20 @@
 		return list;
 	}
 
+	// A section with nothing to show is hidden on the site; say why, rather than core's "Block rendered as empty".
+	var emptyReasons = {
+		'aiad/section-schedule': 'There are no upcoming live sessions, so the schedule is hidden on the site. Add sessions under Live Sessions.',
+		'aiad/section-free-resources': 'No free resources are picked, so this section is hidden on the site. Pick them in Appearance → Edit Homepage.',
+		'aiad/section-featured-resources': 'There are no featured resources yet, so this section is hidden on the site.',
+		'aiad/section-timeline': 'There are no campaign updates yet, so the timeline is hidden on the site.',
+	};
+
+	function emptySection( name ) {
+		return function () {
+			return el( 'p', { className: 'section-desc' }, emptyReasons[ name ] || 'This section has nothing to show yet, so it is hidden on the site.' );
+		};
+	}
+
 	function editOnPagePanel( name, clientId, wording ) {
 		var content = patternByBlock[ name ];
 		if ( ! content ) {
@@ -138,7 +152,7 @@
 					blockEditor.useBlockProps(),
 					editOnPagePanel( name, props.clientId, props.attributes.wording ),
 					wordingPanel( name, props.attributes, props.setAttributes ),
-					el( ServerSideRender, { block: name, attributes: props.attributes } )
+					el( ServerSideRender, { block: name, attributes: props.attributes, EmptyResponsePlaceholder: emptySection( name ) } )
 				);
 			},
 			save: function () {
