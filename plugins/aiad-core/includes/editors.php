@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_core_enqueue_record_editors(): void {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	if ( ! $screen || ! in_array( $screen->post_type, apply_filters( 'aiad_core_record_editor_post_types', array( 'timeline', 'live_session', 'featured_resource' ) ), true ) ) {
+	if ( ! $screen || ! in_array( $screen->post_type, apply_filters( 'aiad_core_record_editor_post_types', array( 'timeline', 'live_session', 'partner', 'featured_resource' ) ), true ) ) {
 		return;
 	}
 	$asset_file = AIAD_CORE_DIR . 'build/editors/index.asset.php';

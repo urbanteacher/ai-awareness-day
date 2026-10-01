@@ -6,4 +6,5 @@
  */
 import './timeline';
 import './event';
+import './partner';
 import './featured-resource';

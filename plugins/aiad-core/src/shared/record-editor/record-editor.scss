@@ -95,7 +95,17 @@
 	grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
 }
 
-/* The sidebar panel. */
+/* The sidebar panel. A repeating row there is narrow, so its move and remove
+   buttons sit under the fields, not beside them. */
+.aiad-re-details .aiad-re-row {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 8px;
+}
+
+.aiad-re-details .aiad-re-row__tools {
+	justify-content: flex-end;
+}
+
 .aiad-re-details {
 	.components-base-control,
 	.components-radio-control,

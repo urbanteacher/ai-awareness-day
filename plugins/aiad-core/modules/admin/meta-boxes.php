@@ -27,7 +27,11 @@ function aiad_partner_url_meta_box(): void {
         __( 'Partner URL', 'ai-awareness-day' ),
         'aiad_partner_url_callback',
         'partner',
-        'normal'
+        'normal',
+        'default',
+        /* Classic editor only. In the block editor a partner's fields are in the
+           Partner details panel (src/editors/partner.js). */
+        array( '__back_compat_meta_box' => true )
     );
 }
 /**
@@ -198,7 +202,8 @@ function aiad_partner_stats_meta_box(): void {
         'aiad_partner_stats_meta_box_callback',
         'partner',
         'normal',
-        'high'
+        'high',
+        array( '__back_compat_meta_box' => true )
     );
 }
 

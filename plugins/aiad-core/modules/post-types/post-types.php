@@ -120,7 +120,8 @@ function aiad_register_post_types(): void {
         'has_archive'  => true,
         'rewrite'      => array( 'slug' => 'partners' ),
         'menu_icon'    => 'dashicons-groups',
-        'supports'     => array( 'title', 'thumbnail', 'editor' ),
+        // custom-fields: without it REST leaves the partner's meta out, and the block editor cannot edit it.
+        'supports'     => array( 'title', 'thumbnail', 'editor', 'custom-fields' ),
         'show_in_rest' => true,
     ) );
 
@@ -448,6 +449,98 @@ function aiad_register_resource_meta(): void {
     ) );
 }
 add_action( 'init', 'aiad_register_resource_meta', 15 );
+
+/**
+ * Keep the rows of a partner's links that say something, with clean fields: a
+ * row needs a title or an address. The same rule the classic box applied.
+ *
+ * @param mixed $value The submitted links.
+ * @return array<int, array<string, string>>
+ */
+function aiad_sanitize_partner_links( $value ): array {
+    $items = array();
+    foreach ( is_array( $value ) ? $value : array() as $row ) {
+        if ( ! is_array( $row ) ) {
+            continue;
+        }
+        $out = array_filter(
+            array(
+                'theme'    => sanitize_key( (string) ( $row['theme'] ?? '' ) ),
+                'title'    => sanitize_text_field( (string) ( $row['title'] ?? '' ) ),
+                'duration' => sanitize_text_field( (string) ( $row['duration'] ?? '' ) ),
+                'url'      => esc_url_raw( (string) ( $row['url'] ?? '' ) ),
+            ),
+            static fn( $v ) => '' !== $v
+        );
+        if ( empty( $out['url'] ) && empty( $out['title'] ) ) {
+            continue;
+        }
+        $items[] = $out;
+    }
+    return $items;
+}
+
+/**
+ * Expose a partner's fields to the block editor (the Partner details panel,
+ * src/editors/partner.js). Stored under the same keys the front end reads.
+ * Until now the profile intro and the links were shown in the classic box but
+ * never saved by it.
+ */
+function aiad_register_partner_meta(): void {
+    $auth = static function () {
+        return current_user_can( 'edit_posts' );
+    };
+    $text = array(
+        '_partner_url'              => 'esc_url_raw',
+        '_partner_ai_resources_url' => 'esc_url_raw',
+        '_partner_profile_intro'    => 'sanitize_textarea_field',
+        '_partner_stats'            => 'sanitize_text_field',
+    );
+    foreach ( $text as $key => $sanitize ) {
+        register_post_meta( 'partner', $key, array(
+            'type'              => 'string',
+            'single'            => true,
+            'show_in_rest'      => true,
+            'sanitize_callback' => $sanitize,
+            'auth_callback'     => $auth,
+        ) );
+    }
+    // The front end and the tracking queries test for the string '1'; a boolean saves '1' for true and '' for false.
+    register_post_meta( 'partner', '_partner_provides_ai_resources', array(
+        'type'          => 'boolean',
+        'single'        => true,
+        'show_in_rest'  => true,
+        'auth_callback' => $auth,
+    ) );
+    register_post_meta( 'partner', '_partner_school_count', array(
+        'type'              => 'integer',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'absint',
+        'auth_callback'     => $auth,
+    ) );
+    register_post_meta( 'partner', '_partner_links', array(
+        'type'              => 'array',
+        'single'            => true,
+        'show_in_rest'      => array(
+            'schema' => array(
+                'type'  => 'array',
+                'items' => array(
+                    'type'       => 'object',
+                    'properties' => array(
+                        'theme'    => array( 'type' => 'string' ),
+                        'title'    => array( 'type' => 'string' ),
+                        'duration' => array( 'type' => 'string' ),
+                        'url'      => array( 'type' => 'string' ),
+                    ),
+                ),
+            ),
+        ),
+        'sanitize_callback' => 'aiad_sanitize_partner_links',
+        'auth_callback'     => $auth,
+    ) );
+}
+add_action( 'init', 'aiad_register_partner_meta', 15 );
 
 /**
  * Migrate old meta keys to new naming convention.
