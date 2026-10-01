@@ -70,14 +70,9 @@ function aiad_featured_resources_query(): WP_Query {
 	);
 }
 
-/**
- * Register the blocks the resources patterns use.
+/*
+ * The resource tiles and LinkedIn card blocks are built blocks in aiad-core (src/blocks/resource-tiles, linkedin-card).
  */
-function aiad_register_homepage_resource_blocks(): void {
-	register_block_type( AIAD_DIR . '/blocks/resource-tiles' );
-	register_block_type( AIAD_DIR . '/blocks/linkedin-card' );
-}
-add_action( 'init', 'aiad_register_homepage_resource_blocks' );
 
 /**
  * The free and featured resources sections in blocks: like the templates, show the section only when it has

@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,o,w,i){const n=o.createElement;e.registerBlockType("aiad/contact-form",{edit:()=>n("div",w.useBlockProps(),n(i,{block:"aiad/contact-form"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

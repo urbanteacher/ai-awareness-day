@@ -2,7 +2,7 @@
 /**
  * Front-end output for aiad/llm-explainer.
  *
- * Calls the tool's shortcode function, so the block and [aiad_llm_explainer] always produce the same markup; the function enqueues
+ * Calls the tool's render function, which [aiad_llm_explainer] uses too, so the block and the shortcode always produce the same markup; the function enqueues
  * the tool's CSS and JS itself.
  *
  * @package AIAD_Core
@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_llm_explainer_shortcode' ) ) {
+if ( ! function_exists( 'aiad_llm_explainer_render' ) ) {
 	return;
 }
 
-$aiad_core_tool = aiad_llm_explainer_shortcode(
+$aiad_core_tool = aiad_llm_explainer_render(
 	array(
 		'hide_intro'  => ! empty( $attributes['hideIntro'] ) ? '1' : '0',
 		'explore_url' => (string) ( $attributes['exploreUrl'] ?? '' ),

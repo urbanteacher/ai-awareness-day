@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,i,w,o){const n=i.createElement;e.registerBlockType("aiad/site-navigation",{edit:()=>n("div",w.useBlockProps(),n(o,{block:"aiad/site-navigation"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

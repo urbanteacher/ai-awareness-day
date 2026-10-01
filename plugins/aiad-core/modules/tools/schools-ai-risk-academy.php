@@ -104,7 +104,7 @@ function aiad_risk_academy_get_headline(): string {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_risk_academy_shortcode( $atts = array() ): string {
+function aiad_risk_academy_render( $atts = array() ): string {
 	$GLOBALS['aiad_risk_academy_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -134,7 +134,7 @@ function aiad_risk_academy_shortcode( $atts = array() ): string {
 	include aiad_core_path( 'template-parts/interactive/risk-academy.php' );
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_risk_academy', 'aiad_risk_academy_shortcode' );
+add_shortcode( 'aiad_risk_academy', 'aiad_risk_academy_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

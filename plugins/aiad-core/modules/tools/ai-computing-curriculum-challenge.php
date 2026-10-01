@@ -101,7 +101,7 @@ function aiad_enqueue_computing_curriculum_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_computing_curriculum_shortcode( $atts = array() ): string {
+function aiad_computing_curriculum_render( $atts = array() ): string {
 	$GLOBALS['aiad_computing_curriculum_shortcode_rendered'] = true;
 
 	shortcode_atts( array(), is_array( $atts ) ? $atts : array(), 'aiad_computing_curriculum' );
@@ -133,7 +133,7 @@ function aiad_computing_curriculum_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_computing_curriculum', 'aiad_computing_curriculum_shortcode' );
+add_shortcode( 'aiad_computing_curriculum', 'aiad_computing_curriculum_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

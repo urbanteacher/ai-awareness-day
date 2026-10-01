@@ -78,7 +78,7 @@ Three editing surfaces. Each kind of content has exactly one.
 | 2d | Whether the footer's links and social icons are edited in the Site Editor | `blockBindingSources` stays 0 | **Decided: no.** They change on the settings screen, which is one place and is what editors were given; the footer blocks print them. Revisit if editors ask to change them from the footer in the Site Editor, in which case a small block bindings source over `aiad_site` feeds a Button (buttons support `url` and `text` bindings).
 | 2e | Remove `inc/customizer.php`, `inc/customizer-smtp-control.php` and `inc/front-page-layout.php`; the SMTP note moves to the settings screen | `customizerSettings` to 0 | After 2b and 2c. |
 | 3 | New server calls as REST routes; scripts off jQuery and globals | `ajaxHandlers` 35 to 19, `localizeScript` 11 to 9, `restRoutes` 3 to 10, `scriptModules` 0 to 5 | **In progress.** Every public call in the theme and aiad-core is now REST (timeline, tracking, resource filter, contact form, survey). What is left is admin-side and the benchmark plugin. |
-| 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks`, `shortcodes`, `unbuiltThemeBlocks` | Not started. Keep the shortcodes until the pages using them are re-saved. |
+| 4 | Shortcode-only blocks become real blocks; the 26 unbuilt theme blocks move to aiad-core | `shortcodeBlocks` 12 to 0, `unbuiltThemeBlocks` 26 to 0 | **Done, untested.** Details below. `shortcodes` stay at 14 until the pages that use them are re-saved. |
 | 5 | PHP templates: each stays on purpose or becomes a block template | `phpTemplates` | Not started. See below. |
 
 ### The settings screen (2a)
@@ -180,6 +180,12 @@ When the live site shows `ready` on that screen and has run on the block homepag
 
 **Left in row 3:** the other ajax handlers (the card image fetch, which is admin-only, and 16 in the benchmark plugin); the 9 localised scripts; five scripts that depend on jQuery; ten echoed `<script>` tags. Order: the admin ones, then the benchmark plugin (which deploys on its own version).
 
+### Blocks (row 4)
+
+- *Shortcode-only blocks.* Eleven tool, survey and showcase blocks called `aiad_X_shortcode()` from `render.php`. The function is now `aiad_X_render()`, the block calls it, and `add_shortcode()` points at the same function, so the shortcode and the block still print the same markup and existing pages are untouched. The benchmark plugin's dashboard gained a `render()` method for the same reason (the risk benchmark block already called one). The shortcodes stay registered; they go when no saved page uses them.
+- *Theme blocks.* The 26 hand-written blocks in the theme's `blocks/` folder (header, footer, homepage, walkthrough and Assets Pack pieces) moved to `plugins/aiad-core/src/blocks/` and are built with the rest. Their editor scripts are unchanged except for side-effect imports of the packages they read from `window.wp`, so the build lists those packages as dependencies in place of the hand-written `index.asset.php` files. The theme's `register_block_type()` calls and the directory scan in `aiad_post_has_theme_blocks()` (now a fixed list) are gone; the plugin registers them all from its manifest. Block names are unchanged. The theme now needs aiad-core active for its header, footer and homepage blocks, as it already did for the post types.
+- *Not run.* None of this was exercised in a browser or the editor. Check on the first pass: the header and footer, the homepage sections, the National Conversation, Walkthrough, Assets Pack and Press Release pages in the front end and in the editor, and one tool page by shortcode and by block.
+
 ### Deliberately not doing
 
 - **The Interactivity API, script modules or block bindings for their own sake.** The aim is a consistent editing experience, not a count of APIs. They get used when a feature needs them.
@@ -221,6 +227,8 @@ A habit may go down, a 7.1 count may go up, and anything else fails. Run `--upda
 - The audit says where the habits are. It does not say that every page is fine; the page-by-page comparison in the migration doc still applies.
 
 ## Log
+
+- **1 October 2026 (row 4).** Shortcode-only blocks call render functions (`shortcodeBlocks` 12 to 0) and the 26 theme blocks moved into aiad-core's built blocks (`unbuiltThemeBlocks` 26 to 0). Done without testing, at the owner's request, for a test pass at the end.
 
 - **1 October 2026 (row 3, survey).** The national survey moved to `POST aiad/v1/survey`; the `aiad` global `aiadSurvey` is gone. The public calls are all REST now. `ajaxHandlers` 21 to 19, `localizeScript` 10 to 9, `restRoutes` 9 to 10.
 

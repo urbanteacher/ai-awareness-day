@@ -2,7 +2,7 @@
 /**
  * Front-end output for aiad/neu-ai-report.
  *
- * Calls the tool's shortcode function, so the block and [aiad_neu_ai_report] always produce the same markup; the function enqueues
+ * Calls the tool's render function, which [aiad_neu_ai_report] uses too, so the block and the shortcode always produce the same markup; the function enqueues
  * the tool's CSS and JS itself.
  *
  * @package AIAD_Core
@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_neu_ai_report_shortcode' ) ) {
+if ( ! function_exists( 'aiad_neu_ai_report_render' ) ) {
 	return;
 }
 
-$aiad_core_tool = aiad_neu_ai_report_shortcode(
+$aiad_core_tool = aiad_neu_ai_report_render(
 	array(
 		'headline' => in_array( $attributes['headline'] ?? 'auto', array( 'auto', '1', '0' ), true ) ? $attributes['headline'] : 'auto',
 	)

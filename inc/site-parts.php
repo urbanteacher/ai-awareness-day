@@ -26,15 +26,9 @@ function aiad_site_parts_support(): void {
 }
 add_action( 'after_setup_theme', 'aiad_site_parts_support' );
 
-/**
- * Register the header and footer blocks, and the ones the block templates use.
+/*
+ * The header and footer blocks, and the ones the block templates use, are built blocks in aiad-core (src/blocks).
  */
-function aiad_register_site_part_blocks(): void {
-	foreach ( array( 'site-logo', 'site-navigation', 'breadcrumbs', 'footer-widgets', 'footer-links', 'footer-social', 'post-badge', 'post-navigation', 'comments', 'partners-directory', 'timeline-feed', 'list', 'item', 'text', 'strand-icon', 'nc-actions', 'zoom-image', 'download-card' ) as $block ) {
-		register_block_type( AIAD_DIR . '/blocks/' . $block );
-	}
-}
-add_action( 'init', 'aiad_register_site_part_blocks' );
 
 /**
  * The tags every page's <head> starts with, printed by wp_head() so that block templates (template-canvas.php) get

@@ -79,7 +79,7 @@ function aiad_enqueue_llm_order_game_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_llm_order_game_shortcode( $atts = array() ): string {
+function aiad_llm_order_game_render( $atts = array() ): string {
 	$GLOBALS['aiad_llm_order_game_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -129,7 +129,7 @@ function aiad_llm_order_game_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_llm_order_game', 'aiad_llm_order_game_shortcode' );
+add_shortcode( 'aiad_llm_order_game', 'aiad_llm_order_game_render' );
 
 /**
  * Load assets in head when the shortcode is in post content.

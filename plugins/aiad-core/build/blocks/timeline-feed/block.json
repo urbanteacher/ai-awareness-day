@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/timeline-feed",
+  "title": "Campaign updates feed",
+  "category": "theme",
+  "icon": "clock",
+  "description": "The topic filters, the campaign updates and their page numbers. Updates are edited under Timeline.",
+  "keywords": [
+    "timeline",
+    "updates",
+    "news",
+    "feed"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

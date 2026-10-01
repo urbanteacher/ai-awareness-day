@@ -131,7 +131,7 @@ function aiad_enqueue_neu_ai_report_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_neu_ai_report_shortcode( $atts = array() ): string {
+function aiad_neu_ai_report_render( $atts = array() ): string {
 	$GLOBALS['aiad_neu_ai_report_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -185,7 +185,7 @@ function aiad_neu_ai_report_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_neu_ai_report', 'aiad_neu_ai_report_shortcode' );
+add_shortcode( 'aiad_neu_ai_report', 'aiad_neu_ai_report_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

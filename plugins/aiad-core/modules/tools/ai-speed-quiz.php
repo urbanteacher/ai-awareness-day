@@ -86,7 +86,7 @@ function aiad_enqueue_speed_quiz_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_speed_quiz_shortcode( $atts = array() ): string {
+function aiad_speed_quiz_render( $atts = array() ): string {
 	$GLOBALS['aiad_speed_quiz_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -199,7 +199,7 @@ function aiad_speed_quiz_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_speed_quiz', 'aiad_speed_quiz_shortcode' );
+add_shortcode( 'aiad_speed_quiz', 'aiad_speed_quiz_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

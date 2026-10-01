@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/resource-tiles",
+  "title": "Resource tiles",
+  "category": "aiad-homepage",
+  "icon": "media-document",
+  "description": "The resources picked in Appearance → Edit Homepage, as tiles, with a View all link. Free resources show nothing until some are picked; featured resources show the first three.",
+  "keywords": [
+    "resources",
+    "tiles",
+    "homepage"
+  ],
+  "textdomain": "ai-awareness-day",
+  "attributes": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "free",
+        "featured"
+      ],
+      "default": "free"
+    }
+  },
+  "supports": {
+    "html": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

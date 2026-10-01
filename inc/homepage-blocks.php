@@ -482,7 +482,8 @@ function aiad_post_has_theme_blocks( $post = null ): bool {
 	if ( ! $post || ! str_contains( $post->post_content, '<!-- wp:aiad/' ) ) {
 		return false;
 	}
-	$names = array_map( 'basename', glob( AIAD_DIR . '/blocks/*', GLOB_ONLYDIR ) ?: array() );
+	// The theme's own blocks, which live in aiad-core (src/blocks).
+	$names = array( 'breadcrumbs', 'campaign-embed', 'comments', 'contact-form', 'download-card', 'footer-links', 'footer-social', 'footer-widgets', 'item', 'linkedin-card', 'list', 'nc-actions', 'partner-marquee', 'partners-directory', 'partners-grid', 'post-badge', 'post-navigation', 'principle-card', 'principles-grid', 'resource-tiles', 'site-logo', 'site-navigation', 'strand-icon', 'text', 'timeline-feed', 'zoom-image' );
 	foreach ( $names as $name ) {
 		if ( has_block( 'aiad/' . $name, $post ) ) {
 			return true;
@@ -1086,16 +1087,10 @@ function aiad_homepage_aims_expand_button( string $block_content ): string {
 }
 add_filter( 'render_block_core/list', 'aiad_homepage_aims_expand_button' );
 
-/**
- * The blocks the section patterns use where core blocks cannot keep the design (blocks/*): the principles grid and
- * its cards, whose whole card is a link, and the Get Involved form.
+/*
+ * The blocks the section patterns use where core blocks cannot keep the design are built blocks in aiad-core
+ * (src/blocks): the principles grid and its cards, whose whole card is a link, and the Get Involved form.
  */
-function aiad_register_homepage_pattern_blocks(): void {
-	register_block_type( AIAD_DIR . '/blocks/principles-grid' );
-	register_block_type( AIAD_DIR . '/blocks/principle-card' );
-	register_block_type( AIAD_DIR . '/blocks/contact-form' );
-}
-add_action( 'init', 'aiad_register_homepage_pattern_blocks' );
 
 /**
  * Give the principle card's editor script each strand's icon, name and the site's wording (shown while a card's

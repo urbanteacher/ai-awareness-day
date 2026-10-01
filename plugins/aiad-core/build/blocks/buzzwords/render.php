@@ -2,7 +2,7 @@
 /**
  * Front-end output for aiad/buzzwords.
  *
- * Calls the tool's shortcode function, so the block and [aiad_buzzwords] always produce the same markup; the function enqueues
+ * Calls the tool's render function, which [aiad_buzzwords] uses too, so the block and the shortcode always produce the same markup; the function enqueues
  * the tool's CSS and JS itself.
  *
  * @package AIAD_Core
@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_buzzwords_shortcode' ) ) {
+if ( ! function_exists( 'aiad_buzzwords_render' ) ) {
 	return;
 }
 
-$aiad_core_tool = aiad_buzzwords_shortcode(
+$aiad_core_tool = aiad_buzzwords_render(
 	array(
 		'hide_intro' => ! empty( $attributes['hideIntro'] ) ? '1' : '0',
 		'quiz'       => ! empty( $attributes['quiz'] ) ? '1' : '0',

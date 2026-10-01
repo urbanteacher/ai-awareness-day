@@ -77,7 +77,7 @@ function aiad_enqueue_ict_curriculum_assets(): void {
 /**
  * Shortcode: [aiad_ict_curriculum]
  */
-function aiad_ict_curriculum_shortcode(): string {
+function aiad_ict_curriculum_render(): string {
 	$GLOBALS['aiad_ict_curriculum_shortcode_rendered'] = true;
 	aiad_enqueue_ict_curriculum_assets();
 
@@ -674,7 +674,7 @@ function aiad_ict_curriculum_shortcode(): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_ict_curriculum', 'aiad_ict_curriculum_shortcode' );
+add_shortcode( 'aiad_ict_curriculum', 'aiad_ict_curriculum_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

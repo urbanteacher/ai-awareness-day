@@ -436,6 +436,15 @@ class AIRB_School_Dashboard {
 	 *
 	 * @param array<string, string>|string $atts Attributes.
 	 */
+	/**
+	 * The dashboard's markup, for the aiad/school-dashboard block and the shortcode alike.
+	 *
+	 * @param array<string, mixed> $atts Attributes (school).
+	 */
+	public static function render( $atts = array() ): string {
+		return self::render_shortcode( $atts );
+	}
+
 	public static function render_shortcode( $atts = array() ): string {
 		AIRB_Shortcode::enqueue_assets();
 

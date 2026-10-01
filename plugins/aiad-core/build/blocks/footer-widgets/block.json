@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/footer-widgets",
+  "title": "Footer widgets",
+  "category": "theme",
+  "icon": "welcome-widgets-menus",
+  "description": "The Footer Content widget area (Appearance → Widgets), when it has widgets.",
+  "keywords": [
+    "widgets",
+    "footer"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

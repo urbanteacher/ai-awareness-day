@@ -86,7 +86,7 @@ function aiad_enqueue_buzzwords_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_buzzwords_shortcode( $atts = array() ): string {
+function aiad_buzzwords_render( $atts = array() ): string {
 	$GLOBALS['aiad_buzzwords_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -158,7 +158,7 @@ function aiad_buzzwords_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_buzzwords', 'aiad_buzzwords_shortcode' );
+add_shortcode( 'aiad_buzzwords', 'aiad_buzzwords_render' );
 
 /**
  * Load assets in <head> when the shortcode is in post content.

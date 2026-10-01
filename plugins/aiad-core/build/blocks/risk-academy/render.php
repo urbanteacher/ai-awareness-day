@@ -2,7 +2,7 @@
 /**
  * Front-end output for aiad/risk-academy.
  *
- * Calls the tool's shortcode function, so the block and [aiad_risk_academy] always produce the same markup; the function enqueues
+ * Calls the tool's render function, which [aiad_risk_academy] uses too, so the block and the shortcode always produce the same markup; the function enqueues
  * the tool's CSS and JS itself.
  *
  * @package AIAD_Core
@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_risk_academy_shortcode' ) ) {
+if ( ! function_exists( 'aiad_risk_academy_render' ) ) {
 	return;
 }
 
-$aiad_core_tool = aiad_risk_academy_shortcode(
+$aiad_core_tool = aiad_risk_academy_render(
 	array(
 		'hero'         => ! empty( $attributes['hero'] ) ? '1' : '0',
 		'methodology'  => ! empty( $attributes['methodology'] ) ? '1' : '0',

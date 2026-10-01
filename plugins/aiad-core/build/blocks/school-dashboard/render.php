@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'AIRB_School_Dashboard' ) || ! method_exists( 'AIRB_School_Dashboard', 'render_shortcode' ) ) {
+if ( ! class_exists( 'AIRB_School_Dashboard' ) || ! method_exists( 'AIRB_School_Dashboard', 'render' ) ) {
 	return; // No benchmark plugin: nothing to show, as with the shortcode.
 }
 
-$aiad_core_benchmark = AIRB_School_Dashboard::render_shortcode(
+$aiad_core_benchmark = AIRB_School_Dashboard::render(
 	array(
 		'school' => (string) ( $attributes['school'] ?? '' ),
 	)

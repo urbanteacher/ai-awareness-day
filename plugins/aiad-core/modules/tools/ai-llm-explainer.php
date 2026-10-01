@@ -86,7 +86,7 @@ function aiad_enqueue_llm_explainer_assets(): void {
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_llm_explainer_shortcode( $atts = array() ): string {
+function aiad_llm_explainer_render( $atts = array() ): string {
 	$GLOBALS['aiad_llm_explainer_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -133,7 +133,7 @@ function aiad_llm_explainer_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_llm_explainer', 'aiad_llm_explainer_shortcode' );
+add_shortcode( 'aiad_llm_explainer', 'aiad_llm_explainer_render' );
 
 /**
  * Load assets in head when the shortcode is in post content.

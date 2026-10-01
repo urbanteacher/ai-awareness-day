@@ -138,7 +138,7 @@ function aiad_certificate_showcase( array $args = array() ): string {
 /**
  * [aiad_certificate_showcase] — same block, pasteable into any page or post.
  */
-function aiad_certificate_showcase_shortcode( $atts ): string {
+function aiad_certificate_showcase_render( $atts ): string {
 	$atts = shortcode_atts(
 		array(
 			'eyebrow'      => '',
@@ -159,4 +159,4 @@ function aiad_certificate_showcase_shortcode( $atts ): string {
 
 	return aiad_certificate_showcase( array_filter( $atts, 'strlen' ) );
 }
-add_shortcode( 'aiad_certificate_showcase', 'aiad_certificate_showcase_shortcode' );
+add_shortcode( 'aiad_certificate_showcase', 'aiad_certificate_showcase_render' );

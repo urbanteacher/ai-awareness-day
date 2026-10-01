@@ -120,7 +120,7 @@ add_filter( 'document_title_parts', 'aiad_misinformation_detector_filter_documen
  *
  * @param array<string, string>|string $atts Attributes.
  */
-function aiad_misinformation_detector_shortcode( $atts = array() ): string {
+function aiad_misinformation_detector_render( $atts = array() ): string {
 	$GLOBALS['aiad_misinformation_detector_shortcode_rendered'] = true;
 
 	$atts = shortcode_atts(
@@ -254,7 +254,7 @@ function aiad_misinformation_detector_shortcode( $atts = array() ): string {
 	<?php
 	return (string) ob_get_clean();
 }
-add_shortcode( 'aiad_misinformation_detector', 'aiad_misinformation_detector_shortcode' );
+add_shortcode( 'aiad_misinformation_detector', 'aiad_misinformation_detector_render' );
 
 /**
  * Load assets in head when shortcode is in post content.

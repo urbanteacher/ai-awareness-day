@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_certificate_showcase_shortcode' ) ) {
+if ( ! function_exists( 'aiad_certificate_showcase_render' ) ) {
 	return;
 }
 
-$aiad_core_showcase = aiad_certificate_showcase_shortcode(
+$aiad_core_showcase = aiad_certificate_showcase_render(
 	array(
 		'eyebrow'      => (string) ( $attributes['eyebrow'] ?? '' ),
 		'title'        => (string) ( $attributes['title'] ?? '' ),

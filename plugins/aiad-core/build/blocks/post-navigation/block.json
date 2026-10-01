@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/post-navigation",
+  "title": "Previous and next posts",
+  "category": "theme",
+  "icon": "leftright",
+  "description": "Links to the previous and next posts, as single.php printed them.",
+  "keywords": [
+    "previous",
+    "next",
+    "navigation"
+  ],
+  "textdomain": "ai-awareness-day",
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

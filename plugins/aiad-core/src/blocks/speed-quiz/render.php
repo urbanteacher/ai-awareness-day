@@ -15,11 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'aiad_speed_quiz_shortcode' ) ) {
+if ( ! function_exists( 'aiad_speed_quiz_render' ) ) {
 	return;
 }
 
-$aiad_core_quiz = aiad_speed_quiz_shortcode(
+$aiad_core_quiz = aiad_speed_quiz_render(
 	array(
 		'questions' => (string) absint( $attributes['questions'] ?? 10 ),
 		'seconds'   => (string) absint( $attributes['seconds'] ?? 15 ),

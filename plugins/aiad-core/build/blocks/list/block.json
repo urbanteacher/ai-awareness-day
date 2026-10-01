@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/list",
+  "title": "Styled list",
+  "category": "theme",
+  "icon": "editor-ul",
+  "description": "A list whose items can hold any blocks (a heading and text, for example), styled by its class. Used on the National Conversation page.",
+  "keywords": [
+    "list",
+    "cards",
+    "steps"
+  ],
+  "textdomain": "ai-awareness-day",
+  "attributes": {
+    "tagName": {
+      "type": "string",
+      "enum": [
+        "ul",
+        "ol",
+        "dl",
+        "p",
+        "div",
+        "nav"
+      ],
+      "default": "ul"
+    },
+    "ariaLabel": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "ul,ol,dl,p,div,nav",
+      "attribute": "aria-label"
+    },
+    "ariaLabelledby": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "ul,ol,dl,p,div,nav",
+      "attribute": "aria-labelledby"
+    }
+  },
+  "supports": {
+    "html": false,
+    "className": false,
+    "anchor": true
+  },
+  "editorScript": "file:./index.js"
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/post-badge",
+  "title": "Featured badge",
+  "category": "theme",
+  "icon": "star-filled",
+  "description": "Shows \"Featured\" above the title of a sticky post.",
+  "keywords": [
+    "featured",
+    "sticky"
+  ],
+  "textdomain": "ai-awareness-day",
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

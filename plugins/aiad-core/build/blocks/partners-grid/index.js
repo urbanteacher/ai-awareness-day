@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,w,i,d){const o=w.createElement;e.registerBlockType("aiad/partners-grid",{edit:()=>o("div",i.useBlockProps(),o(d,{block:"aiad/partners-grid"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

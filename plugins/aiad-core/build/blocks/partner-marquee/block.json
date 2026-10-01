@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/partner-marquee",
+  "title": "Partner logo strip",
+  "category": "aiad-homepage",
+  "icon": "images-alt2",
+  "description": "The scrolling strip of partner logos. The logos come from Partners.",
+  "keywords": [
+    "partners",
+    "logos",
+    "marquee"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

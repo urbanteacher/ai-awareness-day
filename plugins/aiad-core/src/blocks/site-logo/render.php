@@ -1,0 +1,17 @@
+<?php
+/**
+ * Site logo block: prints template-parts/components/site-logo.php.
+ *
+ * @package AI_Awareness_Day
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
+
+ob_start();
+get_template_part( 'template-parts/components/site-logo' );
+$aiad_html = (string) ob_get_clean();
+if ( '' !== trim( $aiad_html ) ) { // Nothing to show prints nothing, so the editor can say why.
+	echo $aiad_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the component escapes its output.
+}

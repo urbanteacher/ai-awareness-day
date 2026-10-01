@@ -91,15 +91,9 @@ function aiad_campaign_partners(): array {
 	return $cache;
 }
 
-/**
- * Register the blocks the campaign pattern uses.
+/*
+ * The campaign pattern's blocks (partner-marquee, campaign-embed, partners-grid) are built blocks in aiad-core (src/blocks).
  */
-function aiad_register_campaign_blocks(): void {
-	foreach ( array( 'partner-marquee', 'campaign-embed', 'partners-grid' ) as $block ) {
-		register_block_type( AIAD_DIR . '/blocks/' . $block );
-	}
-}
-add_action( 'init', 'aiad_register_campaign_blocks' );
 
 /**
  * The campaign section in blocks (patterns/homepage-campaign.php): add what the section template works out when it

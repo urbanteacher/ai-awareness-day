@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,function(o,e,n){const t=e.createElement;o.registerBlockType("aiad/post-navigation",{edit:()=>t("p",n.useBlockProps(),"Previous and next posts: links to the neighbouring posts show here on the site."),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor)})();

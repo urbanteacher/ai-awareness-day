@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,o,w,i){const n=o.createElement;e.registerBlockType("aiad/footer-links",{edit:()=>n("div",w.useBlockProps(),n(i,{block:"aiad/footer-links"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

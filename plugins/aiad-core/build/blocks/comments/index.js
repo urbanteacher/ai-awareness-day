@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,function(e,o,n){const t=o.createElement;e.registerBlockType("aiad/comments",{edit:()=>t("p",n.useBlockProps(),"Comments: the post’s comments and comment form show here on the site, when comments are open."),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor)})();

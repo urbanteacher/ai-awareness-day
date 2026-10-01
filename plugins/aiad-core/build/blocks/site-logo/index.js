@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,o,w,i){const d=o.createElement;e.registerBlockType("aiad/site-logo",{edit:()=>d("div",w.useBlockProps(),d(i,{block:"aiad/site-logo"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

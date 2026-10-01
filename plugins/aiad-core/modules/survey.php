@@ -107,7 +107,7 @@ function aiad_enqueue_national_survey_assets(): void {
  *
  * @param array<string, string>|string $atts Unused.
  */
-function aiad_national_survey_shortcode( $atts = array() ): string {
+function aiad_national_survey_render( $atts = array() ): string {
 	aiad_enqueue_national_survey_assets();
 
 	ob_start();
@@ -1103,7 +1103,7 @@ function aiad_national_survey_shortcode( $atts = array() ): string {
 	<?php
 	return ob_get_clean();
 }
-add_shortcode( 'aiad_national_survey', 'aiad_national_survey_shortcode' );
+add_shortcode( 'aiad_national_survey', 'aiad_national_survey_render' );
 
 // ---------------------------------------------------------------------------
 // REST route

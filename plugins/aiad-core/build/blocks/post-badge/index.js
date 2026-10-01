@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,function(e,o,w){const t=o.createElement;e.registerBlockType("aiad/post-badge",{edit:()=>t("p",w.useBlockProps(),"Featured badge: shows “Featured” here on sticky posts."),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor)})();

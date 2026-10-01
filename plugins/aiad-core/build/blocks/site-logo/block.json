@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/site-logo",
+  "title": "Site logo",
+  "category": "theme",
+  "icon": "admin-home",
+  "description": "The AI Awareness Day 2027 lockup, linking to the homepage.",
+  "keywords": [
+    "logo",
+    "header"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "className": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

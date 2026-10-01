@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/nc-actions",
+  "title": "National Conversation buttons",
+  "category": "theme",
+  "icon": "button",
+  "description": "The National Conversation's buttons and links, which change on the day it opens: until then, when registration opens and the readiness check; from then, joining, signing in and nominating a school.",
+  "keywords": [
+    "national conversation",
+    "register",
+    "join",
+    "buttons"
+  ],
+  "textdomain": "ai-awareness-day",
+  "attributes": {
+    "variant": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "cta",
+        "nominate"
+      ],
+      "default": "hero"
+    }
+  },
+  "supports": {
+    "html": false,
+    "className": false,
+    "customClassName": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}
