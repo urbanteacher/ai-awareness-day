@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/tools-groups",
+  "title": "Tools by category",
+  "category": "aiad",
+  "icon": "list-view",
+  "description": "The AI tools archive's tools, grouped by category (or in one list while there are no categories).",
+  "keywords": [
+    "tools",
+    "groups"
+  ],
+  "textdomain": "ai-awareness-day",
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

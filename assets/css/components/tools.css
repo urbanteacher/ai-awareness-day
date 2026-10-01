@@ -231,7 +231,8 @@ a.tool-row__inner:focus-visible {
 	padding: 2rem 0 3rem;
 }
 
-.tools-archive__back-home {
+.tools-archive__back-home,
+.tools-archive__footer a {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -248,7 +249,9 @@ a.tool-row__inner:focus-visible {
 }
 
 .tools-archive__back-home:hover,
-.tools-archive__back-home:focus-visible {
+.tools-archive__back-home:focus-visible,
+.tools-archive__footer a:hover,
+.tools-archive__footer a:focus-visible {
 	color: var(--white);
 	background: var(--gray-900);
 	border-color: var(--gray-900);

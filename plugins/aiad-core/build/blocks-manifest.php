@@ -395,6 +395,81 @@ return array(
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php'
 	),
+	'hub-resource-badge' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/hub-resource-badge',
+		'title' => 'Hub resource badge',
+		'category' => 'aiad',
+		'icon' => 'tag',
+		'description' => 'The audience badge (Teacher resource, Student resource and so on) on a benchmark hub page.',
+		'keywords' => array(
+			'hub',
+			'resource',
+			'badge'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'hub-resource-excerpt' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/hub-resource-excerpt',
+		'title' => 'Hub resource excerpt',
+		'category' => 'aiad',
+		'icon' => 'text',
+		'description' => 'The page\'s own excerpt, when it has one. Unlike the Excerpt block, it never makes one up from the content.',
+		'keywords' => array(
+			'hub',
+			'resource',
+			'excerpt'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'hub-resource-footer' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/hub-resource-footer',
+		'title' => 'Hub resource footer',
+		'category' => 'aiad',
+		'icon' => 'arrow-left-alt',
+		'description' => 'What the benchmark plugin adds after a hub page\'s content, and the link back to the benchmark.',
+		'keywords' => array(
+			'hub',
+			'resource',
+			'footer'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'usesContext' => array(
+			'postId'
+		),
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
 	'ict-curriculum' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
@@ -1382,6 +1457,48 @@ return array(
 			'multiple' => false,
 			'className' => false,
 			'customClassName' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'tools-filter' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/tools-filter',
+		'title' => 'Tools category filter',
+		'category' => 'aiad',
+		'icon' => 'filter',
+		'description' => 'The category buttons on the AI tools archive. Shows nothing until a tool has a category.',
+		'keywords' => array(
+			'tools',
+			'filter'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
+			'reusable' => false
+		),
+		'editorScript' => 'file:./index.js',
+		'render' => 'file:./render.php'
+	),
+	'tools-groups' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'aiad/tools-groups',
+		'title' => 'Tools by category',
+		'category' => 'aiad',
+		'icon' => 'list-view',
+		'description' => 'The AI tools archive\'s tools, grouped by category (or in one list while there are no categories).',
+		'keywords' => array(
+			'tools',
+			'groups'
+		),
+		'textdomain' => 'ai-awareness-day',
+		'supports' => array(
+			'html' => false,
+			'multiple' => false,
 			'reusable' => false
 		),
 		'editorScript' => 'file:./index.js',

@@ -575,3 +575,25 @@ function aiad_save_tool_meta( int $post_id ): void {
 	}
 }
 add_action( 'save_post_ai_tool', 'aiad_save_tool_meta' );
+
+/**
+ * The tool categories the archive shows: those with at least one tool, A to Z. The filter buttons
+ * (aiad/tools-filter) and the groups (aiad/tools-groups) read the same list.
+ *
+ * @return WP_Term[]
+ */
+function aiad_tools_archive_categories(): array {
+	static $categories = null;
+	if ( null === $categories ) {
+		$found      = get_terms(
+			array(
+				'taxonomy'   => 'tool_category',
+				'hide_empty' => true,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			)
+		);
+		$categories = is_array( $found ) ? $found : array();
+	}
+	return $categories;
+}

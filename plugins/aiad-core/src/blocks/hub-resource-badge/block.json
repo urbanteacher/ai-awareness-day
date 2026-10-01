@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/hub-resource-badge",
+	"title": "Hub resource badge",
+	"category": "aiad",
+	"icon": "tag",
+	"description": "The audience badge (Teacher resource, Student resource and so on) on a benchmark hub page.",
+	"keywords": [
+		"hub",
+		"resource",
+		"badge"
+	],
+	"textdomain": "ai-awareness-day",
+	"usesContext": [
+		"postId"
+	],
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

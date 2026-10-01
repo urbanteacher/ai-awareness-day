@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,o,w,i){const r=o.createElement;e.registerBlockType("aiad/hub-resource-footer",{edit:()=>r("div",w.useBlockProps(),r(i,{block:"aiad/hub-resource-footer"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

@@ -1,0 +1,1 @@
+(()=>{"use strict";window.wp.blockEditor,window.wp.blocks,window.wp.element,window.wp.serverSideRender,function(e,w,o,d){const i=w.createElement;e.registerBlockType("aiad/hub-resource-badge",{edit:()=>i("div",o.useBlockProps(),i(d,{block:"aiad/hub-resource-badge"})),save:()=>null})}(window.wp.blocks,window.wp.element,window.wp.blockEditor,window.wp.serverSideRender)})();

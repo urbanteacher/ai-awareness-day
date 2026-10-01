@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "aiad/hub-resource-excerpt",
+  "title": "Hub resource excerpt",
+  "category": "aiad",
+  "icon": "text",
+  "description": "The page's own excerpt, when it has one. Unlike the Excerpt block, it never makes one up from the content.",
+  "keywords": [
+    "hub",
+    "resource",
+    "excerpt"
+  ],
+  "textdomain": "ai-awareness-day",
+  "usesContext": [
+    "postId"
+  ],
+  "supports": {
+    "html": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

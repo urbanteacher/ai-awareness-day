@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "aiad/hub-resource-footer",
+	"title": "Hub resource footer",
+	"category": "aiad",
+	"icon": "arrow-left-alt",
+	"description": "What the benchmark plugin adds after a hub page's content, and the link back to the benchmark.",
+	"keywords": [
+		"hub",
+		"resource",
+		"footer"
+	],
+	"textdomain": "ai-awareness-day",
+	"usesContext": [
+		"postId"
+	],
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

@@ -75,23 +75,19 @@ function aiad_hub_resource_back_url(): string {
 }
 
 /**
- * Use the hub resource template for AIRB intervention pages.
+ * Use the hub resource template (templates/page-hub-resource.html) for AIRB intervention pages: it goes to the front
+ * of the page template hierarchy, ahead of the page template WordPress would pick.
  *
- * @param string $template Path to template.
+ * @param string[] $templates Template file names, most specific first.
+ * @return string[]
  */
-function aiad_hub_resource_template( string $template ): string {
-	if ( ! aiad_is_hub_resource_page() ) {
-		return $template;
+function aiad_hub_resource_template_hierarchy( array $templates ): array {
+	if ( aiad_is_hub_resource_page() ) {
+		array_unshift( $templates, 'page-hub-resource.php' );
 	}
-
-	$custom = get_stylesheet_directory() . '/page-hub-resource.php';
-	if ( is_readable( $custom ) ) {
-		return $custom;
-	}
-
-	return $template;
+	return $templates;
 }
-add_filter( 'template_include', 'aiad_hub_resource_template', 20 );
+add_filter( 'page_template_hierarchy', 'aiad_hub_resource_template_hierarchy' );
 
 /**
  * Timeline-style CSS for hub resource pages.
