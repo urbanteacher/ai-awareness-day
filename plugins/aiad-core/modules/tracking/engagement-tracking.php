@@ -64,7 +64,11 @@ function aiad_register_engagement_meta(): void {
 					'type'              => $args['type'],
 					'single'            => true,
 					'default'           => $args['default'],
-					'show_in_rest'      => true,
+					/* Not in REST. These are counted by the front end (aiad_track_*), and the block
+					   editor sends back every meta field it was given when a record is saved: with
+					   them in REST, saving an event or an entry rolled a counter back to the value
+					   it had when the editor was opened. Nothing reads them over REST. */
+					'show_in_rest'      => false,
 					'sanitize_callback' => 'absint',
 					'auth_callback'     => function () {
 						return current_user_can( 'edit_posts' );

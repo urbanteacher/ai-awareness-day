@@ -39,7 +39,8 @@ function aiad_register_live_session_cpt(): void {
         'rewrite'       => array( 'slug' => 'events' ),
         'menu_icon'     => 'dashicons-calendar-alt',
         'menu_position' => 22,
-        'supports'      => array( 'title', 'editor', 'thumbnail' ),
+        // custom-fields: without it REST leaves the event's meta out, and the block editor cannot edit it.
+        'supports'      => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
         'show_in_rest'  => true,
     ) );
 
@@ -115,6 +116,52 @@ function aiad_seed_session_audience_terms(): void {
 add_action( 'init', 'aiad_seed_session_audience_terms', 23 );
 
 /**
+ * Expose the event's fields to the block editor (the Event details panel,
+ * src/editors/event.js). Times are what a datetime-local field gives and the
+ * front end reads: local time, "YYYY-MM-DDTHH:MM".
+ */
+function aiad_register_live_session_meta(): void {
+    $auth = static function () {
+        return current_user_can( 'edit_posts' );
+    };
+    $time = static function ( $value ) {
+        $value = sanitize_text_field( (string) $value );
+        return preg_match( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/', $value ) ? $value : '';
+    };
+    foreach ( array( '_session_start_time', '_session_end_time' ) as $key ) {
+        register_post_meta( 'live_session', $key, array(
+            'type'              => 'string',
+            'single'            => true,
+            'show_in_rest'      => true,
+            'sanitize_callback' => $time,
+            'auth_callback'     => $auth,
+        ) );
+    }
+    register_post_meta( 'live_session', '_session_format', array(
+        'type'              => 'string',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'sanitize_text_field',
+        'auth_callback'     => $auth,
+    ) );
+    register_post_meta( 'live_session', '_session_registration_url', array(
+        'type'              => 'string',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'esc_url_raw',
+        'auth_callback'     => $auth,
+    ) );
+    register_post_meta( 'live_session', '_session_partner_id', array(
+        'type'              => 'integer',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'absint',
+        'auth_callback'     => $auth,
+    ) );
+}
+add_action( 'init', 'aiad_register_live_session_meta', 15 );
+
+/**
  * Register meta fields and admin meta box.
  */
 function aiad_live_session_meta_box(): void {
@@ -124,7 +171,11 @@ function aiad_live_session_meta_box(): void {
         'aiad_live_session_meta_box_callback',
         'live_session',
         'normal',
-        'high'
+        'high',
+        /* Classic editor only. In the block editor the event's fields are in the
+           Event details panel (src/editors/event.js); this box would only sit in
+           the collapsed drawer under the canvas. */
+        array( '__back_compat_meta_box' => true )
     );
 }
 add_action( 'add_meta_boxes', 'aiad_live_session_meta_box' );

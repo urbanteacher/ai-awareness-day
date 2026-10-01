@@ -5,4 +5,5 @@
  * block's folder instead.
  */
 import './timeline';
+import './event';
 import './featured-resource';

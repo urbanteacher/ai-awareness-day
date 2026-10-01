@@ -61,7 +61,11 @@ export function useRecordMeta( postType ) {
 	return {
 		meta,
 		// set( key )( value ) writes one field.
-		set: ( key ) => ( value ) => setMeta( { ...meta, [ key ]: value } ),
+		// The editor merges this one change into the meta it holds and saves the whole
+		// object, so anything the server changes while an editor has the screen open
+		// would be put back. Keep server-managed fields (counters) out of REST instead:
+		// see modules/tracking/engagement-tracking.php.
+		set: ( key ) => ( value ) => setMeta( { [ key ]: value } ),
 		text: ( key ) =>
 			meta && typeof meta[ key ] === 'string' ? meta[ key ] : '',
 		flag: ( key ) => !! ( meta && meta[ key ] ),

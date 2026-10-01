@@ -96,8 +96,9 @@ function aiad_register_timeline_meta(): void
         '_aiad_timeline_video_url' => array('type' => 'string', 'default' => ''),
         // Optional LinkedIn post URL for embedded posts
         '_aiad_timeline_linkedin_url' => array('type' => 'string', 'default' => ''),
-        // Like count (incremented via front-end AJAX)
-        '_aiad_timeline_like_count' => array('type' => 'integer', 'default' => 0),
+        // Like count (incremented via front-end AJAX). Not in REST, for the reason given in
+        // modules/tracking/engagement-tracking.php: the editor would save a stale count back.
+        '_aiad_timeline_like_count' => array('type' => 'integer', 'default' => 0, 'rest' => false),
         // Cover when no featured image: '' (auto), 'gradient', 'tech'
         '_aiad_timeline_cover_fallback' => array('type' => 'string', 'default' => ''),
         // Always show in the AI Risk Benchmark's "More to read" when the audience matches
@@ -109,7 +110,7 @@ function aiad_register_timeline_meta(): void
             'type' => $args['type'],
             'single' => true,
             'default' => $args['default'],
-            'show_in_rest' => true,
+            'show_in_rest' => $args['rest'] ?? true,
             'auth_callback' => function () {
                 return current_user_can('edit_posts');
             },
