@@ -223,6 +223,20 @@ function aiad_get_og_data(): array {
 					}
 				}
 			}
+			// Lesson with a PDF deck: its cover slide as a 1200x630 card, so a shared lesson shows its own title in the 2027 look.
+			if ( empty( $data['image'] ) && 'resource' === $post->post_type && function_exists( 'aiad_resource_deck_images' ) ) {
+				$deck_images = aiad_resource_deck_images( (string) get_post_meta( $post->ID, '_aiad_download_url', true ) );
+				if ( '' !== $deck_images['share'] ) {
+					$data['image']      = $deck_images['share'];
+					$data['image_id']   = 0;
+					$data['image_dims'] = array( 1200, 630 );
+					$data['image_alt']  = sprintf(
+						/* translators: %s: resource title */
+						__( '%s — title slide', 'ai-awareness-day' ),
+						get_the_title( $post )
+					);
+				}
+			}
 			// Final fallback: Site Icon PNG (not hero GIF).
 			if ( empty( $data['image'] ) && function_exists( 'aiad_get_social_share_image_data' ) ) {
 				$share_image = aiad_get_social_share_image_data();

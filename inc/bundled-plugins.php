@@ -111,6 +111,7 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'modules/site-settings.php',
 			'modules/shortcode-migration.php',
 			'modules/post-types/resource-seeds.php',
+			'modules/seo/sharing.php',
 		),
 		'ai-risk-readiness-benchmark' => array(
 			'public/js/airb-front.js',

@@ -130,6 +130,21 @@
   margin-top: 1.25rem;
 }
 
+.rl-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.rl-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .rl .rl-btn {
   display: inline-flex;
   align-items: center;
@@ -203,6 +218,130 @@
   color: var(--a27-dim);
   font-size: 0.85rem;
   line-height: 1.4;
+}
+
+/* Under the pinned slides: the board button, and on the board itself the
+   Slides / PDF choice and the slide arrows. */
+.rl-media__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.rl .rl-media__bar .rl-btn {
+  padding: 0.55rem 1rem;
+}
+
+.rl .rl-media__show {
+  margin-top: 0.75rem;
+}
+
+.rl .rl-media__show[hidden],
+.rl-media__views,
+.rl-deck__nav,
+.rl-deck {
+  display: none;
+}
+
+.rl-media__views {
+  gap: 0;
+}
+
+.rl-media__views .rl-btn + .rl-btn {
+  margin-left: -2px;
+}
+
+.rl-deck__nav {
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.rl-deck__count {
+  min-width: 4.5ch;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* One slide at a time, as large as the window allows, on the board's dark. */
+.rl-deck {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  background: var(--a27-ink);
+}
+
+.rl-deck__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* On the board the frame takes the whole window, so the PDF viewer has room
+   to show its own page and zoom controls. */
+.rl-media.is-board {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.rl-media.is-board .rl-media__frame {
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+.rl-media.is-board .rl-media__bar {
+  padding: 0.5rem 0.75rem;
+}
+
+.rl .rl-media.is-board .rl-media__show {
+  margin: 0;
+}
+
+.rl-media.is-board .rl-media__views {
+  display: flex;
+}
+
+.rl-media.is-board[data-view="slides"] .rl-deck {
+  display: flex;
+}
+
+.rl-media.is-board[data-view="slides"] .rl-media__frame iframe {
+  display: none;
+}
+
+.rl-media.is-board[data-view="slides"] .rl-deck__nav {
+  display: flex;
+}
+
+.rl .rl-media.is-board .rl-btn {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.rl .rl-media.is-board .rl-btn:hover:not(:disabled),
+.rl .rl-media.is-board .rl-btn[aria-pressed="true"] {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.rl .rl-media.is-board .rl-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.rl-media.is-board .rl-media__caption {
+  display: none;
 }
 
 .rl-toc {
@@ -557,23 +696,40 @@
   outline-color: var(--a27-cream);
 }
 
-.rl-question__panel:fullscreen {
+/* Board mode: resource-lesson.js adds .is-board, whether the browser went
+   full screen or refused and the panel just fills the window instead. */
+.rl-question__panel.is-board {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow-y: auto;
   padding: 8vh 8vw;
   -webkit-clip-path: none;
   clip-path: none;
 }
 
-.rl-question__panel:fullscreen .rl-question__text {
+.rl-question__panel.is-board .rl-question__text {
   max-width: 24ch;
   font-size: clamp(2.5rem, 6vw, 6rem);
 }
 
-.rl-question__panel:fullscreen .rl-question__show {
+.rl-question__panel.is-board .rl-question__show {
   align-self: flex-start;
   margin-top: 3rem;
+}
+
+/* The pinned column is a stacking context of its own, so lift it above the
+   site header while its slides fill the window. */
+.rl-aside__sticky:has(.is-board) {
+  z-index: 100000;
+}
+
+html:has(.is-board) {
+  overflow: hidden;
 }
 
 /* ---- Adapting the lesson ---- */
@@ -1066,6 +1222,7 @@
 @media print {
   .rl-aside,
   .rl-actions,
+  .rl-stats,
   .rl-back,
   .rl-question__show,
   .rl-empty {

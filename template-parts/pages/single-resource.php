@@ -62,11 +62,21 @@ rewind_posts();
 		} elseif ( 'pdf' === $download_ext ) {
 			$slides_embed_url = $download_url . '#view=Fit&navpanes=0';
 		}
+		/* The board's slide-at-a-time view: one picture per PDF page, made by
+		   scripts/export-lesson-slides.swift. None, no slide view: the board
+		   opens on the PDF viewer instead. */
+		$slide_pages = function_exists( 'aiad_resource_deck_images' ) ? aiad_resource_deck_images( $download_url )['slides'] : array();
 		$video_url         = (string) get_post_meta( $resource_id, '_aiad_preview_video_url', true );
 		$video_html        = ( '' !== $video_url && function_exists( 'aiad_resource_preview_video_html' ) )
 			? aiad_resource_embed_with_api( aiad_resource_preview_video_html( $video_url ) )
 			: '';
 		$is_youtube        = '' !== $video_url && (bool) preg_match( '#(youtube\.com|youtu\.be)/#', $video_url );
+		/* Download and view counts under the actions, only when "Show stats on
+		   resource pages" is ticked (Resources → Resource Settings) and only
+		   once a count is above zero, as before the lesson-plan page. */
+		$show_stats     = (bool) get_option( 'aiad_show_resource_stats', 0 );
+		$stat_downloads = $show_stats ? absint( get_post_meta( $resource_id, '_aiad_download_count', true ) ) : 0;
+		$stat_views     = $show_stats ? absint( get_post_meta( $resource_id, '_aiad_view_count', true ) ) : 0;
 
 		// ---- Lesson content ----
 		$preparation = array_values(
@@ -243,6 +253,22 @@ rewind_posts();
 							<?php esc_html_e( 'Share image', 'ai-awareness-day' ); ?>
 						</button>
 					</div>
+					<?php if ( $stat_downloads || $stat_views ) : ?>
+						<p class="rl-stats">
+							<?php if ( $stat_downloads ) : ?>
+								<span class="rl-stat">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 20h16"/></svg>
+									<?php echo esc_html( sprintf( _n( '%s download', '%s downloads', $stat_downloads, 'ai-awareness-day' ), number_format_i18n( $stat_downloads ) ) ); ?>
+								</span>
+							<?php endif; ?>
+							<?php if ( $stat_views ) : ?>
+								<span class="rl-stat">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+									<?php echo esc_html( sprintf( _n( '%s view', '%s views', $stat_views, 'ai-awareness-day' ), number_format_i18n( $stat_views ) ) ); ?>
+								</span>
+							<?php endif; ?>
+						</p>
+					<?php endif; ?>
 				</div>
 			</header>
 
@@ -260,8 +286,33 @@ rewind_posts();
 										?>
 									<?php else : ?>
 										<iframe src="<?php echo esc_url( $slides_embed_url ); ?>" title="<?php esc_attr_e( 'The slides for this lesson', 'ai-awareness-day' ); ?>" loading="lazy" allowfullscreen></iframe>
+										<?php if ( $slide_pages ) : ?>
+											<?php /* Shown only on the board: one slide at a time, filled in by resource-lesson.js. */ ?>
+											<div class="rl-deck" data-rl-deck data-rl-pages="<?php echo esc_attr( wp_json_encode( $slide_pages ) ); ?>">
+												<img class="rl-deck__img" alt="" decoding="async">
+											</div>
+										<?php endif; ?>
 									<?php endif; ?>
 								</div>
+								<?php if ( ! $video_html ) : ?>
+									<?php /* The pinned frame is too small for the PDF viewer's own controls; the board gives them room. Hidden until resource-lesson.js is running. */ ?>
+									<div class="rl-media__bar">
+										<button type="button" class="rl-btn rl-media__show" data-rl-slides-project hidden>
+											<?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?>
+										</button>
+										<?php if ( $slide_pages ) : ?>
+											<div class="rl-media__views" role="group" aria-label="<?php esc_attr_e( 'How to show the slides', 'ai-awareness-day' ); ?>">
+												<button type="button" class="rl-btn" data-rl-view="slides" aria-pressed="true"><?php esc_html_e( 'Slides', 'ai-awareness-day' ); ?></button>
+												<button type="button" class="rl-btn" data-rl-view="pdf" aria-pressed="false"><?php esc_html_e( 'PDF', 'ai-awareness-day' ); ?></button>
+											</div>
+											<div class="rl-deck__nav">
+												<button type="button" class="rl-btn" data-rl-prev aria-label="<?php esc_attr_e( 'Previous slide', 'ai-awareness-day' ); ?>">&larr;</button>
+												<span class="rl-deck__count" data-rl-count aria-live="polite"></span>
+												<button type="button" class="rl-btn" data-rl-next aria-label="<?php esc_attr_e( 'Next slide', 'ai-awareness-day' ); ?>">&rarr;</button>
+											</div>
+										<?php endif; ?>
+									</div>
+								<?php endif; ?>
 								<figcaption class="rl-media__caption">
 									<?php
 									echo $video_html

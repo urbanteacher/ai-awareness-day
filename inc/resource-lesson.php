@@ -191,6 +191,62 @@ function aiad_resource_rich_text( string $text ): string {
 }
 
 /**
+ * The pictures made from a lesson's PDF deck by
+ * scripts/export-lesson-slides.swift, found from the PDF's own URL. A PDF in
+ * the theme has them beside it: slides/<deck>/NN.jpg, one per page, and
+ * share/<deck>.jpg, the cover as a 1200x630 link-preview card.
+ *
+ * @param string $pdf_url The resource's download URL.
+ * @return array{slides: string[], share: string} Slide URLs in page order, and
+ *                                               the share card URL. Both empty
+ *                                               when the PDF is not in the
+ *                                               theme or nothing was exported.
+ */
+function aiad_resource_deck_images( string $pdf_url ): array {
+	$none = array(
+		'slides' => array(),
+		'share'  => '',
+	);
+
+	$clean_url = (string) strtok( $pdf_url, '?#' );
+	if ( 'pdf' !== strtolower( pathinfo( $clean_url, PATHINFO_EXTENSION ) ) ) {
+		return $none;
+	}
+
+	// Compare without the scheme, so http/https setups agree, then find the same file on disk.
+	$theme_uri = (string) preg_replace( '#^https?:#', '', AIAD_URI );
+	$pdf_uri   = (string) preg_replace( '#^https?:#', '', $clean_url );
+	if ( 0 !== strpos( $pdf_uri, $theme_uri . '/' ) ) {
+		return $none;
+	}
+	$pdf_path = AIAD_DIR . rawurldecode( substr( $pdf_uri, strlen( $theme_uri ) ) );
+	$deck     = pathinfo( $pdf_path, PATHINFO_FILENAME );
+	$dir      = dirname( $pdf_path );
+	$base_uri = dirname( $clean_url );
+
+	$images = array(
+		'slides' => array(),
+		'share'  => '',
+	);
+
+	$slide_files = glob( $dir . '/slides/' . $deck . '/*.jpg' );
+	if ( $slide_files ) {
+		sort( $slide_files, SORT_NATURAL );
+		foreach ( $slide_files as $file ) {
+			$images['slides'][] = $base_uri . '/slides/' . rawurlencode( $deck ) . '/' . rawurlencode( basename( $file ) );
+		}
+	}
+
+	$share_file = $dir . '/share/' . $deck . '.jpg';
+	if ( is_file( $share_file ) ) {
+		// Versioned by file time: link-preview caches key on the URL, so a regenerated card shows up.
+		$images['share'] = add_query_arg( 'v', (string) filemtime( $share_file ), $base_uri . '/share/' . rawurlencode( $deck ) . '.jpg' );
+	}
+
+	return $images;
+}
+
+/**
  * A YouTube oEmbed iframe that accepts player commands, so a step's video
  * reference can seek it. Other embeds pass through unchanged.
  *
