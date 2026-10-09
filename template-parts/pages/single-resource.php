@@ -413,6 +413,7 @@ rewind_posts();
 							<div class="rl-section__head">
 								<h2 id="rl-lesson-h"><?php esc_html_e( 'The lesson', 'ai-awareness-day' ); ?></h2>
 								<p class="rl-section__meta">
+									<span data-rl-count>
 									<?php
 									echo esc_html(
 										sprintf(
@@ -421,26 +422,33 @@ rewind_posts();
 											count( $steps )
 										)
 									);
-									if ( $lesson['total'] > 0 ) {
-										echo ' &middot; ' . esc_html( aiad_resource_length_label( $lesson['total'] ) );
-									}
 									?>
+									</span>
+									<?php if ( $lesson['total'] > 0 ) : ?>
+										&middot; <span data-rl-total><?php echo esc_html( aiad_resource_length_label( $lesson['total'] ) ); ?></span>
+									<?php endif; ?>
+									<button type="button" class="rl-steps__reset" data-rl-reset hidden><?php esc_html_e( 'Reset steps', 'ai-awareness-day' ); ?></button>
 								</p>
 							</div>
-							<ol class="rl-steps">
+							<ol class="rl-steps" data-rl-steps data-rl-lesson="<?php echo esc_attr( (string) $resource_id ); ?>">
 								<?php foreach ( $steps as $i => $step ) : ?>
 									<?php $seek = ( $video_html && '' !== $step['ref'] ) ? aiad_resource_ref_seek( $step['ref'] ) : null; ?>
-									<li class="rl-step">
+									<?php $step_secs = ( null !== $step['start'] ) ? aiad_resource_duration_seconds( $step['duration'] ) : 0; ?>
+									<li class="rl-step" data-rl-step="<?php echo esc_attr( (string) $i ); ?>"<?php echo null !== $step['start'] ? ' data-rl-secs="' . esc_attr( (string) $step_secs ) . '"' : ''; ?>>
 										<div class="rl-step__rail">
 											<span class="rl-step__num" aria-hidden="true"><?php echo esc_html( (string) ( $i + 1 ) ); ?></span>
 											<?php if ( null !== $step['start'] ) : ?>
-												<span class="rl-step__clock">
+												<span class="rl-step__clock" data-rl-clock>
 													<span class="screen-reader-text"><?php esc_html_e( 'Starts at', 'ai-awareness-day' ); ?></span>
 													<?php echo esc_html( aiad_resource_clock( (int) $step['start'] ) ); ?>
 												</span>
 											<?php endif; ?>
 										</div>
 										<div class="rl-step__body">
+											<label class="rl-step__skip" data-rl-skip-label hidden>
+												<input type="checkbox" data-rl-skip>
+												<?php esc_html_e( 'Skip this step', 'ai-awareness-day' ); ?>
+											</label>
 											<p class="rl-step__action"><?php echo wptexturize( wp_kses_post( $step['action'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 											<?php if ( '' !== $step['duration'] || '' !== $step['students'] || '' !== $step['ref'] ) : ?>
 												<ul class="rl-step__meta">

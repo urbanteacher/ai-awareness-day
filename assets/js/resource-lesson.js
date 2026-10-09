@@ -222,4 +222,62 @@
             if (section) observer.observe(section);
         });
     }
+    // ── Skip steps: a teacher ticks off the steps they will not teach. The
+    // choice stays in this browser only; the shared lesson never changes. ──
+    var stepList = document.querySelector('[data-rl-steps]');
+    if (stepList) {
+        var items = Array.prototype.slice.call(stepList.querySelectorAll('[data-rl-step]'));
+        var storeKey = 'aiad-lesson-skips-' + stepList.getAttribute('data-rl-lesson');
+        var countEl = document.querySelector('[data-rl-count]');
+        var totalEl = document.querySelector('[data-rl-total]');
+        var resetBtn = document.querySelector('[data-rl-reset]');
+        var countFmt = function (n) { return n + (n === 1 ? ' step' : ' steps'); };
+        var lengthFmt = function (s) {
+            if (s < 60) return s + ' sec';
+            var m = Math.round(s / 60);
+            return m < 60 ? m + ' min' : Math.floor(m / 60) + ' hr ' + (m % 60) + ' min';
+        };
+        var skipped = {};
+        try { skipped = JSON.parse(localStorage.getItem(storeKey) || '{}') || {}; } catch (err) { skipped = {}; }
+
+        var render = function () {
+            var elapsed = 0, shown = 0, any = false;
+            items.forEach(function (li) {
+                var id = li.getAttribute('data-rl-step');
+                var off = !!skipped[id];
+                any = any || off;
+                li.classList.toggle('is-skipped', off);
+                li.querySelector('[data-rl-skip]').checked = off;
+                if (off) return;
+                shown++;
+                var clock = li.querySelector('[data-rl-clock]');
+                var secs = li.getAttribute('data-rl-secs');
+                if (clock && secs !== null) {
+                    var node = clock.lastChild;
+                    if (node) node.textContent = ' ' + Math.floor(elapsed / 60) + ':' + ('0' + (elapsed % 60)).slice(-2) + ' ';
+                    if (!li.querySelector('.rl-tag--optional')) elapsed += parseInt(secs, 10) || 0;
+                }
+            });
+            if (countEl) countEl.textContent = countFmt(shown);
+            if (totalEl) totalEl.textContent = lengthFmt(elapsed);
+            if (resetBtn) resetBtn.hidden = !any;
+        };
+        var save = function () {
+            try {
+                if (Object.keys(skipped).length) localStorage.setItem(storeKey, JSON.stringify(skipped));
+                else localStorage.removeItem(storeKey);
+            } catch (err) { /* private mode: the choice just lasts until reload */ }
+        };
+
+        stepList.querySelectorAll('[data-rl-skip-label]').forEach(function (l) { l.hidden = false; });
+        stepList.addEventListener('change', function (e) {
+            if (!e.target.matches('[data-rl-skip]')) return;
+            var id = e.target.closest('[data-rl-step]').getAttribute('data-rl-step');
+            if (e.target.checked) skipped[id] = 1; else delete skipped[id];
+            save();
+            render();
+        });
+        if (resetBtn) resetBtn.addEventListener('click', function () { skipped = {}; save(); render(); });
+        render();
+    }
 })();

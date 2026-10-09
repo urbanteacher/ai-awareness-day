@@ -1375,3 +1375,45 @@ html:has(.is-board) {
     word-break: break-all;
   }
 }
+
+/* Skip a step: teachers tick off what they will not teach (resource-lesson.js). */
+.rl-step__skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.4rem;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.rl-step.is-skipped .rl-step__body > :not(.rl-step__skip) {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.rl-step.is-skipped .rl-step__clock {
+  visibility: hidden;
+}
+
+.rl-steps__reset {
+  margin-left: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media print {
+  .rl-step__skip,
+  .rl-steps__reset {
+    display: none;
+  }
+
+  .rl-step.is-skipped {
+    display: none;
+  }
+}
