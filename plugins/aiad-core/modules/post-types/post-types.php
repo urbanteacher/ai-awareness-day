@@ -664,6 +664,11 @@ function aiad_get_partner_type_term_names(): array {
         'Charity',
         'University',
         'Institute',
+        'MAT',
+        'EdTech',
+        'Broadcaster',
+        'Organisation',
+        'Non-profit',
     );
 }
 
