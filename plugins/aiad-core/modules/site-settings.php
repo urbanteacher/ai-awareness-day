@@ -39,7 +39,7 @@ define( 'AIAD_CORE_MODULE_SITE_SETTINGS', __FILE__ );
  */
 function aiad_site_fields(): array {
 	$fields = array(
-		'newsletter_url'             => array( 'aiad_newsletter_url', 'url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
+		'newsletter_url'             => array( 'aiad_newsletter_url', 'url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-2027-new-date-new-theme-and-more-ways-to-engage' ),
 		'asset_pack_url'             => array( 'aiad_asset_pack_url', 'url', '' ),
 		'implementation_guide_url'   => array( 'aiad_implementation_guide_url', 'url', '' ),
 		'show_breadcrumbs'           => array( 'aiad_show_breadcrumbs', 'bool', false ),
