@@ -19,8 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Run the partner profiles migration once per data version.
  */
 function aiad_migrate_partner_profiles(): void {
-	$version = '1';
-	if ( get_option( 'aiad_partner_profiles_migrated' ) === $version || ! post_type_exists( 'partner' ) ) {
+	// Bump the version when partner-profiles-data.php gains partners; each run skips the partners the previous one handled.
+	$version  = '2';
+	$previous = (string) get_option( 'aiad_partner_profiles_migrated', '' );
+	if ( $previous === $version || ! post_type_exists( 'partner' ) ) {
 		return;
 	}
 
@@ -29,6 +31,9 @@ function aiad_migrate_partner_profiles(): void {
 	$backup   = is_array( $backup ) ? $backup : array();
 
 	foreach ( $profiles as $slug => $profile ) {
+		if ( '' !== $previous && isset( $backup[ $slug ] ) ) {
+			continue; // Handled by an earlier run, and perhaps edited since.
+		}
 		$post = get_page_by_path( $slug, OBJECT, 'partner' );
 		if ( ! $post && ! empty( $profile['create'] ) ) {
 			$post = aiad_partner_profiles_create( $slug, $profile );

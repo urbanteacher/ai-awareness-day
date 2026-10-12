@@ -467,6 +467,21 @@ return array(
 			array( 'theme' => 'creative', 'title' => 'Entrepreneurship programmes for schools', 'url' => 'https://ultra.education/school/' ),
 		),
 	),
+	'unthinkable' => array(
+		'title'            => 'Unthinkable',
+		'type'             => 'tech-company',
+		'fix_type'         => true,
+		'website'          => 'https://www.unthinkabledigital.co.uk/',
+		'intro'            => 'Unthinkable is a UK digital consultancy that designs learning experiences and digital services with universities, cultural institutions and charities.',
+		'bio'              => array(
+			'Unthinkable is a UK digital consultancy, working since 2010 to help organisations spot digital opportunities, deliver projects and build the teams to grow new ideas. Its learning design work includes online courses and learning platforms for universities, the V&A Academy and the Royal College of Art.',
+			'For Nominet it researched how young people can thrive in a digital society, working with educators, skills providers and a group of young advisers, and reported six recommendations on digital skills in schools.',
+		),
+		'ai_resources_url' => '',
+		'links'            => array(
+			array( 'theme' => 'future', 'title' => 'Nominet: how young people can build digital skills', 'url' => 'https://www.unthinkabledigital.co.uk/case-studies/nominet' ),
+		),
+	),
 	'ailitkit' => array(
 		'create'           => true,
 		'title'            => 'AILitKit',
