@@ -5,7 +5,7 @@
  * Each partner in inc/partner-profiles-data.php is matched by its slug. Only empty fields are filled (website, profile
  * intro, bio, AI resources link, resource links, partner type, logo alt text), so nothing a partner or editor wrote
  * is overwritten. The exceptions are listed per partner as 'fix_title' and 'fix_type'. Every value it changes is kept
- * in the aiad_partner_profiles_backup option first ('fix_logo' replaces a wrong logo, keeping the old image in the library). A partner marked 'create' that is not on the site yet is added,
+ * in the aiad_partner_profiles_backup option first. A partner marked 'create' that is not on the site yet is added,
  * with its logo imported from the theme.
  *
  * @package AI_Awareness_Day
@@ -68,7 +68,9 @@ function aiad_partner_profiles_create( string $slug, array $profile ): ?WP_Post 
 		return null;
 	}
 
-	aiad_partner_profiles_set_logo( $id, $slug, $profile );
+	if ( aiad_partner_profiles_set_logo( $id, $slug, $profile ) ) {
+		aiad_partner_profiles_logo_done( $slug );
+	}
 
 	return get_post( $id );
 }
@@ -163,14 +165,6 @@ function aiad_partner_profiles_fill( WP_Post $post, array $profile ): array {
 		}
 	}
 
-	// 'fix_logo': the logo on the site is wrong (AILitKit's is a screenshot of a broken image); replace it, keeping the old one.
-	if ( ! empty( $profile['fix_logo'] ) ) {
-		$old = (int) get_post_thumbnail_id( $id );
-		if ( aiad_partner_profiles_set_logo( $id, $post->post_name, $profile ) ) {
-			$changed['logo'] = $old;
-		}
-	}
-
 	$logo = (int) get_post_thumbnail_id( $id );
 	if ( $logo && (string) get_post_meta( $logo, '_wp_attachment_image_alt', true ) === '' ) {
 		$changed['logo_alt'] = '';
@@ -199,3 +193,50 @@ function aiad_partner_profiles_type_exists( string $slug ): bool {
 	);
 	return isset( $names[ $slug ] ) && ! is_wp_error( wp_insert_term( $names[ $slug ], 'partner_type', array( 'slug' => $slug ) ) );
 }
+
+/**
+ * Remember that a partner's logo has been dealt with, so the logo fix runs once per partner.
+ *
+ * @param string $slug Partner slug.
+ */
+function aiad_partner_profiles_logo_done( string $slug ): void {
+	$done = get_option( 'aiad_partner_logos_fixed', array() );
+	$done = is_array( $done ) ? $done : array();
+	if ( ! in_array( $slug, $done, true ) ) {
+		$done[] = $slug;
+		update_option( 'aiad_partner_logos_fixed', $done, false );
+	}
+}
+
+/**
+ * One-time, per partner: replace a wrong logo with the theme's file ('fix_logo' in partner-profiles-data.php).
+ * AILitKit's logo on the site was a picture of a broken image. A separate step from the profile migration, which
+ * had already run when this was found. The old image stays in the media library and its ID is kept in the
+ * aiad_partner_profiles_backup option, under "<slug>:logo".
+ */
+function aiad_migrate_partner_logo_fixes(): void {
+	if ( ! post_type_exists( 'partner' ) ) {
+		return;
+	}
+	$done = get_option( 'aiad_partner_logos_fixed', array() );
+	$done = is_array( $done ) ? $done : array();
+
+	foreach ( require AIAD_DIR . '/inc/partner-profiles-data.php' as $slug => $profile ) {
+		if ( empty( $profile['fix_logo'] ) || in_array( $slug, $done, true ) ) {
+			continue;
+		}
+		$post = get_page_by_path( $slug, OBJECT, 'partner' );
+		if ( ! $post ) {
+			continue; // Not on the site yet; the profile migration creates it with the right logo.
+		}
+		$old = (int) get_post_thumbnail_id( $post->ID );
+		if ( aiad_partner_profiles_set_logo( $post->ID, $slug, $profile ) ) {
+			$backup = get_option( 'aiad_partner_profiles_backup', array() );
+			$backup = is_array( $backup ) ? $backup : array();
+			$backup[ $slug . ':logo' ] = array( 'logo' => $old );
+			update_option( 'aiad_partner_profiles_backup', $backup, false );
+			aiad_partner_profiles_logo_done( $slug );
+		}
+	}
+}
+add_action( 'init', 'aiad_migrate_partner_logo_fixes', 43 );
