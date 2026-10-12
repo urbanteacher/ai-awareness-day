@@ -319,6 +319,108 @@ function aiad_migrate_2027_badge_overrides(): void {
 add_action( 'init', 'aiad_migrate_2027_badge_overrides', 7 );
 
 /**
+ * One-time migration: replace Site Logo / Site Icon with the AiAd27 mark.
+ *
+ * Site Identity still pointed at the 2026 media-library uploads
+ * (publication-logo-800, AIAD-Main-logo, aiad-main-logo). The header lockup
+ * already ships the 2027 SVG from the theme, but the Site Editor logo field,
+ * favicon, OG/schema logo and Assets Pack "Logo" download all read these
+ * attachment IDs from the database — so a code deploy alone could not fix them.
+ *
+ * Imports assets/brand/aiad27/aiad27-mark.png into the media library once,
+ * backs up the previous IDs, then points custom_logo, site_icon and
+ * aiad_site[asset_logo] at the new attachment.
+ */
+function aiad_migrate_2027_site_logo(): void {
+	if ( get_option( 'aiad_2027_site_logo_migrated' ) === '1' ) {
+		return;
+	}
+
+	$source = AIAD_DIR . '/assets/brand/aiad27/aiad27-mark.png';
+	if ( ! is_readable( $source ) ) {
+		// SVG is already tracked; prefer PNG for Site Icon cropping when present.
+		$source = AIAD_DIR . '/assets/brand/aiad27/aiad27-mark.svg';
+	}
+	if ( ! is_readable( $source ) ) {
+		return;
+	}
+	$basename = basename( $source );
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+
+	$attachment_id = 0;
+
+	// Reuse an existing AiAd27 mark upload if one is already in the library.
+	$existing = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one-time migration.
+				array(
+					'key'     => '_wp_attached_file',
+					'value'   => 'aiad27-mark',
+					'compare' => 'LIKE',
+				),
+			),
+		)
+	);
+	if ( $existing ) {
+		$attachment_id = (int) $existing[0];
+	}
+
+	if ( ! $attachment_id ) {
+		$tmp = wp_tempnam( basename( $source ) );
+		if ( ! $tmp || ! copy( $source, $tmp ) ) {
+			return;
+		}
+
+		$file_array = array(
+			'name'     => $basename,
+			'tmp_name' => $tmp,
+		);
+		$attachment_id = media_handle_sideload(
+			$file_array,
+			0,
+			'AI Awareness Day 2027'
+		);
+		if ( is_wp_error( $attachment_id ) ) {
+			@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			return;
+		}
+		update_post_meta( (int) $attachment_id, '_wp_attachment_image_alt', 'AI Awareness Day 2027' );
+	}
+
+	$attachment_id = (int) $attachment_id;
+	if ( ! $attachment_id ) {
+		return;
+	}
+
+	$backup = array(
+		'custom_logo' => (int) get_theme_mod( 'custom_logo', 0 ),
+		'site_icon'   => (int) get_option( 'site_icon', 0 ),
+		'asset_logo'  => absint( function_exists( 'aiad_site_value' ) ? aiad_site_value( 'asset_logo', 0 ) : 0 ),
+	);
+	update_option( 'aiad_2027_site_logo_backup', $backup, false );
+
+	set_theme_mod( 'custom_logo', $attachment_id );
+	update_option( 'site_icon', $attachment_id );
+
+	$site = get_option( 'aiad_site', array() );
+	if ( ! is_array( $site ) ) {
+		$site = array();
+	}
+	$site['asset_logo'] = $attachment_id;
+	update_option( 'aiad_site', $site );
+
+	update_option( 'aiad_2027_site_logo_migrated', '1' );
+}
+add_action( 'init', 'aiad_migrate_2027_site_logo', 7 );
+
+/**
  * One-time migration: swap the campaign embed from the LinkedIn post to video.
  *
  * The embed src is a Customizer value, so it lives in the database and no code

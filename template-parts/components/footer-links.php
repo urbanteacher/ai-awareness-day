@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         $defaults      = aiad_get_customizer_defaults();
         $press_url = function_exists( 'aiad_get_press_release_public_url' ) ? aiad_get_press_release_public_url() : '';
         $resource_links = array(
-            __( 'Newsletter', 'ai-awareness-day' )           => aiad_site_value( 'newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-launched' ),
+            __( 'Newsletter', 'ai-awareness-day' )           => aiad_site_value( 'newsletter_url', 'https://aiawarenessday.beehiiv.com/p/ai-awareness-day-2027-new-date-new-theme-and-more-ways-to-engage' ),
             __( 'Press Release', 'ai-awareness-day' )        => $press_url,
             __( 'Asset Pack', 'ai-awareness-day' )           => function_exists( 'aiad_get_assets_pack_public_url' ) ? aiad_get_assets_pack_public_url() : aiad_site_value( 'asset_pack_url', '' ),
             __( 'Implementation Guide', 'ai-awareness-day' ) => aiad_site_value( 'implementation_guide_url', '' ),
