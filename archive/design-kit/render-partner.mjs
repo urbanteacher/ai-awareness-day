@@ -1,0 +1,12 @@
+import { createRequire } from 'node:module';
+import fs from 'node:fs'; import path from 'node:path'; import { pathToFileURL, fileURLToPath } from 'node:url';
+const require = createRequire(process.env.PW + '/x.cjs');
+const { chromium } = require('playwright');
+const here = path.dirname(fileURLToPath(import.meta.url)), THEME = path.resolve(here, '../..');
+const [LI] = process.argv.slice(2);
+fs.mkdirSync(LI, { recursive: true });
+fs.writeFileSync(path.join(here, 'partner.built.html'), fs.readFileSync(path.join(here, 'ig-partner.html'), 'utf8').replaceAll('THEME', pathToFileURL(THEME).href));
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 700, height: 700 }, deviceScaleFactor: 2 });
+await p.goto(pathToFileURL(path.join(here, 'partner.built.html')).href, { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready);
+await p.locator('#li').screenshot({ path: path.join(LI, 'welcome-ailitkit-1200x1200.png') });
+await b.close(); console.log('1 image');

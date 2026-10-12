@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- "Welcome, new partner" LinkedIn square (600×600, rendered at 2× to 1200×1200). render-partner.mjs renders it.
+     The partner's own logo sits on a cream panel so its colours stay true. -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE; --tile:#34302F;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; font-family: 'AIAD Sans', Arial, sans-serif; padding: 20px; }
+.s { width: 600px; height: 600px; position: relative; overflow: hidden; padding: 44px 40px; }
+.ink { background: var(--ink); color: var(--cream); }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+h1 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.lead { font-size: 19px; line-height: 1.35; color: #D6D3CC; }
+
+#li h1 { font-size: 54px; margin-top: 26px; }
+#li h1 span { color: var(--responsible); }
+/* The partner's logo panel, with the five strand colours as a stripe down its left edge */
+#li .panel { position: absolute; left: 40px; right: 40px; top: 214px; height: 124px; background: var(--cream); --k: 18px;
+  display: grid; place-items: center; padding: 0 40px 0 56px; }
+#li .panel::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 14px;
+  background: linear-gradient(var(--safe) 0 20%, var(--smart) 0 40%, var(--creative) 0 60%, var(--responsible) 0 80%, var(--future) 0); }
+#li .panel img { width: 100%; max-height: 82px; object-fit: contain; display: block; }
+#li .lead { position: absolute; left: 40px; right: 40px; top: 360px; }
+#li .lead b { color: var(--cream); font-weight: 600; }
+#li .dates { position: absolute; left: 40px; right: 40px; top: 456px; display: flex; gap: 10px; }
+#li .d { background: var(--tile); padding: 10px 16px 12px; font-size: 18px; font-weight: 600; white-space: nowrap; --k: 10px; }
+#li .d b { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--rule); margin-bottom: 3px; }
+</style></head>
+<body>
+
+<section class="s ink" id="li" data-eb="New event partner">
+  <h1>Welcome to the loop, <span>AILitKit.</span></h1>
+  <div class="panel tile"><img src="THEME/assets/images/logos/ailitkit.svg" alt="AILitKit"></div>
+  <p class="lead">AI literacy in the lessons teachers already teach. <b>Every guide has an unplugged activity, no devices needed.</b></p>
+  <div class="dates"><div class="d tile"><b>National AI Conversation opens</b>1 January 2027</div><div class="d tile"><b>AI Awareness Day</b>Thursday 29 April 2027</div></div>
+</section>
+
+<script>
+const SIG = '<span class="sig"><i></i><i></i><i></i><i></i><i></i></span>';
+document.querySelectorAll('.s').forEach(s => {
+  if (s.dataset.eb) s.insertAdjacentHTML('afterbegin', `<div class="eyebrow">${SIG}${s.dataset.eb}</div>`);
+  s.insertAdjacentHTML('beforeend', `<div class="foot"><span class="lk">AI Awareness Day <u>2027</u></span><span>aiawarenessday.co.uk</span></div>`);
+});
+</script>
+</body></html>
