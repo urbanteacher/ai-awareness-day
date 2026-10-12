@@ -5,7 +5,7 @@
  * Each partner in inc/partner-profiles-data.php is matched by its slug. Only empty fields are filled (website, profile
  * intro, bio, AI resources link, resource links, partner type, logo alt text), so nothing a partner or editor wrote
  * is overwritten. The exceptions are listed per partner as 'fix_title' and 'fix_type'. Every value it changes is kept
- * in the aiad_partner_profiles_backup option first. A partner marked 'create' that is not on the site yet is added,
+ * in the aiad_partner_profiles_backup option first ('fix_logo' replaces a wrong logo, keeping the old image in the library). A partner marked 'create' that is not on the site yet is added,
  * with its logo imported from the theme.
  *
  * @package AI_Awareness_Day
@@ -68,23 +68,39 @@ function aiad_partner_profiles_create( string $slug, array $profile ): ?WP_Post 
 		return null;
 	}
 
-	$logo = AIAD_DIR . '/assets/images/logos/' . ( $profile['logo'] ?? '' );
-	if ( ! empty( $profile['logo'] ) && is_readable( $logo ) ) {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-		$tmp = wp_tempnam( basename( $logo ) );
-		if ( $tmp && copy( $logo, $tmp ) ) {
-			$attachment = media_handle_sideload( array( 'name' => $slug . '-logo.png', 'tmp_name' => $tmp ), $id, $profile['title'] . ' logo' );
-			if ( is_wp_error( $attachment ) ) {
-				@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			} else {
-				set_post_thumbnail( $id, (int) $attachment );
-			}
-		}
-	}
+	aiad_partner_profiles_set_logo( $id, $slug, $profile );
 
 	return get_post( $id );
+}
+
+/**
+ * Import the partner's logo from the theme's assets/images/logos folder and make it the featured image.
+ *
+ * @param int    $id      Partner post ID.
+ * @param string $slug    Partner slug.
+ * @param array  $profile Its entry in partner-profiles-data.php.
+ * @return bool Whether the logo was imported.
+ */
+function aiad_partner_profiles_set_logo( int $id, string $slug, array $profile ): bool {
+	$logo = AIAD_DIR . '/assets/images/logos/' . ( $profile['logo'] ?? '' );
+	if ( empty( $profile['logo'] ) || ! is_readable( $logo ) ) {
+		return false;
+	}
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$tmp = wp_tempnam( basename( $logo ) );
+	if ( ! $tmp || ! copy( $logo, $tmp ) ) {
+		return false;
+	}
+	$attachment = media_handle_sideload( array( 'name' => $slug . '-logo.png', 'tmp_name' => $tmp ), $id, $profile['title'] . ' logo' );
+	if ( is_wp_error( $attachment ) ) {
+		@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		return false;
+	}
+	update_post_meta( (int) $attachment, '_wp_attachment_image_alt', $profile['title'] );
+	set_post_thumbnail( $id, (int) $attachment );
+	return true;
 }
 
 /**
@@ -144,6 +160,14 @@ function aiad_partner_profiles_fill( WP_Post $post, array $profile ): array {
 		if ( ( ! $current || ! empty( $profile['fix_type'] ) ) && $current !== array( $profile['type'] ) && aiad_partner_profiles_type_exists( $profile['type'] ) ) {
 			$changed['partner_type'] = $current;
 			wp_set_object_terms( $id, $profile['type'], 'partner_type' );
+		}
+	}
+
+	// 'fix_logo': the logo on the site is wrong (AILitKit's is a screenshot of a broken image); replace it, keeping the old one.
+	if ( ! empty( $profile['fix_logo'] ) ) {
+		$old = (int) get_post_thumbnail_id( $id );
+		if ( aiad_partner_profiles_set_logo( $id, $post->post_name, $profile ) ) {
+			$changed['logo'] = $old;
 		}
 	}
 

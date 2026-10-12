@@ -3,7 +3,7 @@
  * Partner profile details, keyed by partner slug, for the partner profiles migration (inc/partner-profiles.php).
  *
  * Drafted from each partner's own website in October 2026. Fields: title, type (partner_type slug), website, intro
- * (one sentence), bio (paragraphs), ai_resources_url, links (theme, title, url). 'fix_title' / 'fix_type' replace a
+ * (one sentence), bio (paragraphs), ai_resources_url, links (theme, title, url). 'fix_title' / 'fix_type' / 'fix_logo' replace a
  * wrong value already on the site; 'create' adds the partner if missing, with 'logo' from assets/images/logos.
  *
  * @package AI_Awareness_Day
@@ -471,6 +471,7 @@ return array(
 		'create'           => true,
 		'title'            => 'AILitKit',
 		'logo'             => 'ailitkit.png',
+		'fix_logo'         => true,
 		'type'             => 'edtech',
 		'fix_type'         => true,
 		'website'          => 'https://ailitkit.com/',
