@@ -143,6 +143,20 @@
     outline-offset: 6px;
 }
 
+/* The organisation behind a featured resource, under the title. */
+.resource-tile__title:has(+ .resource-tile__org) {
+    margin-bottom: 0.125rem;
+}
+
+.resource-tile__org {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    color: var(--a27-ink, #231F20);
+}
+
 .resource-tile__excerpt {
     margin: 0;
     font-size: 0.9375rem;
@@ -228,6 +242,11 @@
         margin-bottom: 0.25rem;
         font-size: 1.0625rem;
         line-height: 1.2;
+    }
+
+    .resource-tile__org {
+        margin-bottom: 0.25rem;
+        font-size: 0.8125rem;
     }
 
     .resource-tile__excerpt {

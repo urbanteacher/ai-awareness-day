@@ -14,6 +14,8 @@
  * The title link is the only link. Its ::after covers the whole card, so the
  * card is one click target and one tab stop, not two links to the same place.
  *
+ * A featured resource also shows its organisation's name under the title.
+ *
  * Args:
  *   link     string  Where the card goes. Defaults to the permalink.
  *   external bool    Opens in a new tab and says so to screen readers.
@@ -59,6 +61,9 @@ $card_meta = array_filter( array( $card_format, $card_duration ) );
 
 $card_title = html_entity_decode( get_the_title(), ENT_QUOTES, 'UTF-8' );
 
+// Who made it: only featured (partner) resources have an organisation name.
+$card_org = (string) get_post_meta( get_the_ID(), '_featured_resource_org_name', true );
+
 // The hand-written excerpt, else the first 30 words, as the library always did.
 $card_summary = has_excerpt() ? get_the_excerpt() : wp_trim_words( wp_strip_all_tags( get_the_content( '' ) ), 30 );
 ?>
@@ -94,6 +99,9 @@ $card_summary = has_excerpt() ? get_the_excerpt() : wp_trim_words( wp_strip_all_
 				<?php if ( $card_external ) : ?><span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'ai-awareness-day' ); ?></span><?php endif; ?>
 			</a>
 		</h3>
+		<?php if ( '' !== $card_org ) : ?>
+			<p class="resource-tile__org"><?php echo esc_html( $card_org ); ?></p>
+		<?php endif; ?>
 		<?php if ( $card_summary ) : ?>
 			<p class="resource-tile__excerpt"><?php echo esc_html( $card_summary ); ?></p>
 		<?php endif; ?>
