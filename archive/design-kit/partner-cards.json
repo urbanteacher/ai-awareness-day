@@ -1,0 +1,14 @@
+{
+  "ailitkit": {
+    "name": "AILitKit",
+    "logo": "ailitkit.svg",
+    "lead": "AI literacy in the lessons teachers already teach. <b>Every guide has an unplugged activity, no devices needed.</b>",
+    "file": "welcome-ailitkit-1200x1200.png"
+  },
+  "digitall": {
+    "name": "DigitALL",
+    "logo": "digitall.png",
+    "lead": "Digital skills, AI and coding for young people, through climate and sustainability. <b>Free Spark AI and EcoCode activities.</b>",
+    "file": "welcome-digitall-1200x1200.png"
+  }
+}

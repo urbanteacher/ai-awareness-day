@@ -234,6 +234,23 @@ return array(
 			array( 'theme' => 'future', 'title' => 'Free webinars, podcasts and reading on AI', 'url' => 'https://crafting-tomorrow.com/resources/' ),
 		),
 	),
+	'digitall' => array(
+		'create'           => true,
+		'title'            => 'DigitALL',
+		'logo'             => 'digitall.png',
+		'type'             => 'charity',
+		'website'          => 'https://www.digitall.charity/',
+		'intro'            => 'DigitALL is a charity helping young people build digital skills and leadership through coding, AI and climate-focused projects, with support for teachers.',
+		'bio'              => array(
+			'DigitALL is a charity that equips young people in schools and their local communities with the digital skills and leadership they need for current and future digital careers, while developing their digital wellbeing. Its active learning is set in the context of climate and sustainability.',
+			'It inspires young people to become confident, discerning users and developers of technology, through AI, coding, data science, cybersecurity, engineering and internet safety. Spark AI covers inclusive and alternative AI for teachers and pupils, and EcoCode teaches coding through sustainability with the micro:bit.',
+		),
+		'ai_resources_url' => 'https://www.digitall.charity/sparkai',
+		'links'            => array(
+			array( 'theme' => 'smart', 'title' => 'Spark AI: inclusive and alternative AI for teachers and pupils', 'url' => 'https://www.digitall.charity/sparkai' ),
+			array( 'theme' => 'creative', 'title' => 'EcoCode: sustainable computing with the micro:bit (free activity packs)', 'url' => 'https://www.digitall.charity/ecocode' ),
+		),
+	),
 	'e-act' => array(
 		'title'            => 'E-ACT',
 		'type'             => 'mat',

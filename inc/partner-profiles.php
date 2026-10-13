@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_migrate_partner_profiles(): void {
 	// Bump the version when partner-profiles-data.php gains partners; each run skips the partners the previous one handled.
-	$version  = '2';
+	$version  = '3';
 	$previous = (string) get_option( 'aiad_partner_profiles_migrated', '' );
 	if ( $previous === $version || ! post_type_exists( 'partner' ) ) {
 		return;
