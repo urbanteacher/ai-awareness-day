@@ -10,5 +10,13 @@
     "logo": "digitall.png",
     "lead": "Digital skills, AI and coding for young people, through climate and sustainability. <b>Free Spark AI and EcoCode activities.</b>",
     "file": "welcome-digitall-1200x1200.png"
+  },
+  "digitall-resources": {
+    "name": "DigitALL",
+    "logo": "digitall.png",
+    "eyebrow": "New partner resources",
+    "headline": "New from <span>DigitALL.</span>",
+    "lead": "Spark AI and EcoCode are now in Extra Resources. <b>Free activities on AI, coding and sustainability.</b>",
+    "file": "new-resources-digitall-1200x1200.png"
   }
 }
