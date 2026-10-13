@@ -257,8 +257,7 @@ if ( function_exists( 'aiad_certificate_showcase' ) ) {
                 'post_type' => 'resource',
                 'post_status' => 'publish',
                 'posts_per_page' => 3,
-                'orderby' => 'menu_order title',
-                'order' => 'ASC',
+                'orderby' => 'rand', // A new random three, in a new order, on every page load.
                 'tax_query' => array(
                     array(
                         'taxonomy' => 'resource_duration',

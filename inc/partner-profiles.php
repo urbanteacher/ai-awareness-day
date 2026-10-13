@@ -31,6 +31,7 @@ function aiad_migrate_partner_profiles(): void {
 	$backup   = is_array( $backup ) ? $backup : array();
 
 	foreach ( $profiles as $slug => $profile ) {
+		aiad_partner_profiles_featured_resources( $profile );
 		if ( '' !== $previous && isset( $backup[ $slug ] ) ) {
 			continue; // Handled by an earlier run, and perhaps edited since.
 		}
@@ -245,3 +246,42 @@ function aiad_migrate_partner_logo_fixes(): void {
 	}
 }
 add_action( 'init', 'aiad_migrate_partner_logo_fixes', 43 );
+
+/**
+ * Add a partner's tiles to the homepage's "Extra Resources" section (featured resources). One whose link is already
+ * a featured resource is left alone, so this can run again without making copies or undoing edits.
+ *
+ * @param array $profile Its entry in partner-profiles-data.php.
+ */
+function aiad_partner_profiles_featured_resources( array $profile ): void {
+	foreach ( $profile['featured_resources'] ?? array() as $tile ) {
+		$existing = get_posts(
+			array(
+				'post_type'      => 'featured_resource',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'meta_key'       => '_featured_resource_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- one-time migration.
+				'meta_value'     => $tile['url'], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			)
+		);
+		if ( $existing ) {
+			continue;
+		}
+		$id = wp_insert_post(
+			array(
+				'post_type'    => 'featured_resource',
+				'post_status'  => 'publish',
+				'post_title'   => $tile['title'],
+				'post_excerpt' => $tile['excerpt'],
+			),
+			true
+		);
+		if ( is_wp_error( $id ) ) {
+			continue;
+		}
+		update_post_meta( $id, '_featured_resource_url', $tile['url'] );
+		update_post_meta( $id, '_featured_resource_org_name', $tile['org'] );
+		wp_set_object_terms( $id, $tile['strand'], 'resource_principle' );
+	}
+}

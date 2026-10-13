@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The free resources picked on Settings → AI Awareness Day, in the order picked; null when none are, which hides the
- * section.
+ * The free resources picked on Settings → AI Awareness Day, in a new random order on every page load so none always
+ * comes first; null when none are picked, which hides the section.
  */
 function aiad_free_resources_query(): ?WP_Query {
 	$selected_ids = array();
@@ -32,13 +32,14 @@ function aiad_free_resources_query(): ?WP_Query {
 			'post_status'    => 'publish',
 			'posts_per_page' => 6,
 			'post__in'       => $selected_ids,
-			'orderby'        => 'post__in',
+			'orderby'        => 'rand',
 		)
 	);
 }
 
 /**
- * The featured (partner) resources picked on Settings → AI Awareness Day, in the order picked, or else the first three.
+ * The featured (partner) resources picked on Settings → AI Awareness Day, or else three drawn at random from all of
+ * them. Either way they come in a new random order on every page load, so every partner gets a turn at the top.
  */
 function aiad_featured_resources_query(): WP_Query {
 	$selected_ids = array();
@@ -55,7 +56,7 @@ function aiad_featured_resources_query(): WP_Query {
 				'post_status'    => 'publish',
 				'posts_per_page' => 3,
 				'post__in'       => $selected_ids,
-				'orderby'        => 'post__in',
+				'orderby'        => 'rand',
 			)
 		);
 	}
@@ -64,8 +65,7 @@ function aiad_featured_resources_query(): WP_Query {
 			'post_type'      => 'featured_resource',
 			'post_status'    => 'publish',
 			'posts_per_page' => 3,
-			'orderby'        => 'menu_order title',
-			'order'          => 'ASC',
+			'orderby'        => 'rand',
 		)
 	);
 }

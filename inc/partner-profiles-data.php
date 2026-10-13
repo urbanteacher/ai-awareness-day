@@ -3,7 +3,7 @@
  * Partner profile details, keyed by partner slug, for the partner profiles migration (inc/partner-profiles.php).
  *
  * Drafted from each partner's own website in October 2026. Fields: title, type (partner_type slug), website, intro
- * (one sentence), bio (paragraphs), ai_resources_url, links (theme, title, url). 'fix_title' / 'fix_type' / 'fix_logo' replace a
+ * (one sentence), bio (paragraphs), ai_resources_url, links (theme, title, url). 'featured_resources' add tiles to the homepage's Extra Resources; 'fix_title' / 'fix_type' / 'fix_logo' replace a
  * wrong value already on the site; 'create' adds the partner if missing, with 'logo' from assets/images/logos.
  *
  * @package AI_Awareness_Day
@@ -245,10 +245,27 @@ return array(
 			'DigitALL is a charity that equips young people in schools and their local communities with the digital skills and leadership they need for current and future digital careers, while developing their digital wellbeing. Its active learning is set in the context of climate and sustainability.',
 			'It inspires young people to become confident, discerning users and developers of technology, through AI, coding, data science, cybersecurity, engineering and internet safety. Spark AI covers inclusive and alternative AI for teachers and pupils, and EcoCode teaches coding through sustainability with the micro:bit.',
 		),
-		'ai_resources_url' => 'https://www.digitall.charity/sparkai',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Spark AI: inclusive and alternative AI for teachers and pupils', 'url' => 'https://www.digitall.charity/sparkai' ),
 			array( 'theme' => 'creative', 'title' => 'EcoCode: sustainable computing with the micro:bit (free activity packs)', 'url' => 'https://www.digitall.charity/ecocode' ),
+		),
+		// Tiles for the homepage's "Extra Resources" section (featured resources), added once if their link is not there yet.
+		'featured_resources' => array(
+			array(
+				'title'   => 'Spark AI',
+				'org'     => 'DigitALL',
+				'strand'  => 'smart',
+				'url'     => 'https://www.digitall.charity/sparkai',
+				'excerpt' => 'Free classroom resources and training on inclusive and alternative AI, including micro:bit AI and a KS3 AI and biodiversity unit.',
+			),
+			array(
+				'title'   => 'EcoCode',
+				'org'     => 'DigitALL',
+				'strand'  => 'creative',
+				'url'     => 'https://www.digitall.charity/ecocode',
+				'excerpt' => 'Free micro:bit activity packs that teach coding and AI through sustainability, for ages 8 to 13.',
+			),
 		),
 	),
 	'e-act' => array(
