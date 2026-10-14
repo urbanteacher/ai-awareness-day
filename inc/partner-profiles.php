@@ -370,3 +370,49 @@ function aiad_migrate_partner_type_moves(): void {
 	update_option( 'aiad_partner_type_moves', '1' );
 }
 add_action( 'init', 'aiad_migrate_partner_type_moves', 45 );
+
+/**
+ * One-time: take Accenture off the site. Trashes an Accenture partner and its "joined as Partner" news item, and cuts
+ * "in partnership with Accenture" from the text of the live sessions and news items that carry it. The original
+ * text and the trashed IDs are kept in the aiad_accenture_removed_backup option; trashed posts can be restored from
+ * the Trash. Written straight to the database, so the editor's HTML filtering cannot change the rest of the text.
+ */
+function aiad_migrate_remove_accenture(): void {
+	if ( get_option( 'aiad_accenture_removed' ) === '1' ) {
+		return;
+	}
+	global $wpdb;
+	$backup = get_option( 'aiad_accenture_removed_backup', array() );
+	$backup = is_array( $backup ) ? $backup : array();
+	$backup += array( 'trashed' => array(), 'text' => array() );
+
+	$partner = get_page_by_path( 'accenture', OBJECT, 'partner' );
+	if ( $partner && 'trash' !== $partner->post_status ) {
+		wp_trash_post( $partner->ID );
+		$backup['trashed'][] = $partner->ID;
+	}
+	foreach ( get_posts( array( 'post_type' => 'timeline', 'post_status' => 'any', 'numberposts' => -1, 'title' => 'Accenture joined as Partner' ) ) as $news ) {
+		if ( 'trash' !== $news->post_status ) {
+			wp_trash_post( $news->ID );
+			$backup['trashed'][] = $news->ID;
+		}
+	}
+
+	$rows = $wpdb->get_results( "SELECT ID, post_content, post_excerpt FROM {$wpdb->posts} WHERE post_type IN ('live_session','timeline','post','page') AND post_status <> 'trash' AND (post_content LIKE '%Accenture%' OR post_excerpt LIKE '%Accenture%')" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	foreach ( $rows as $row ) {
+		// " in partnership with Accenture", ", created in partnership with Accenture UK & Ireland", and the like.
+		$pattern = '/[,]?\s*(?:created\s+|delivered\s+)?in partnership with Accenture(?:\s+UK\s+(?:&amp;|&#038;|&)\s+Ireland)?/i';
+		$content = preg_replace( $pattern, '', $row->post_content );
+		$excerpt = preg_replace( $pattern, '', $row->post_excerpt );
+		if ( $content === $row->post_content && $excerpt === $row->post_excerpt ) {
+			continue;
+		}
+		$backup['text'][ $row->ID ] = $backup['text'][ $row->ID ] ?? array( 'post_content' => $row->post_content, 'post_excerpt' => $row->post_excerpt );
+		$wpdb->update( $wpdb->posts, array( 'post_content' => $content, 'post_excerpt' => $excerpt ), array( 'ID' => $row->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		clean_post_cache( (int) $row->ID );
+	}
+
+	update_option( 'aiad_accenture_removed_backup', $backup, false );
+	update_option( 'aiad_accenture_removed', '1' );
+}
+add_action( 'init', 'aiad_migrate_remove_accenture', 46 );

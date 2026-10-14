@@ -335,16 +335,15 @@ function aiad_seed_live_sessions(): void {
     $tech_she_can  = $ensure_partner( 'Tech She Can' );
     $barefoot      = $ensure_partner( 'Barefoot' );
     $stem_learning = $ensure_partner( 'STEM Learning' );
-    $accenture     = $ensure_partner( 'Accenture' );
 
     $sessions = array(
         array(
             'title'    => 'AI in Our World — KS2 Live Assembly',
-            'desc'     => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can in partnership with Accenture.',
+            'desc'     => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can.',
             'start'    => '2027-06-04 09:15:00',
             'end'      => '2027-06-04 10:00:00',
             'audience' => array( 'ks2' ),
-            'partner'  => $accenture,
+            'partner'  => $tech_she_can,
         ),
         array(
             'title'    => 'AI Explorers Live Lesson – Level 1 (Ages 5–7)',
@@ -356,11 +355,11 @@ function aiad_seed_live_sessions(): void {
         ),
         array(
             'title'    => 'AI in Everyday Life — KS3 Live Assembly',
-            'desc'     => 'Explores how AI integrates into daily life — navigation, recommendations, and voice tools. Discusses AI training, human roles, critical evaluation, fairness, and responsible use. Delivered by Tech She Can in partnership with Accenture.',
+            'desc'     => 'Explores how AI integrates into daily life — navigation, recommendations, and voice tools. Discusses AI training, human roles, critical evaluation, fairness, and responsible use. Delivered by Tech She Can.',
             'start'    => '2027-06-04 14:00:00',
             'end'      => '2027-06-04 15:00:00',
             'audience' => array( 'ks3' ),
-            'partner'  => $accenture,
+            'partner'  => $tech_she_can,
         ),
         array(
             'title'    => 'AI Explorers Live Lesson – Level 2 (Ages 7–11)',
@@ -463,44 +462,28 @@ function aiad_migrate_barefoot_sessions(): void {
 add_action( 'init', 'aiad_migrate_barefoot_sessions', 31 );
 
 /**
- * One-time migration: fix Tech She Can assembly titles, times, and assign Accenture as partner.
+ * One-time migration: fix Tech She Can assembly titles, times, and assign Tech She Can as partner.
  */
 function aiad_migrate_techshecan_sessions(): void {
     if ( get_option( 'aiad_techshecan_migration_v1' ) ) {
         return;
     }
 
-    // Ensure Accenture partner post exists.
-    $accenture_posts = get_posts( array(
-        'post_type'   => 'partner',
-        'post_status' => 'publish',
-        'title'       => 'Accenture',
-        'numberposts' => 1,
-    ) );
-    if ( $accenture_posts ) {
-        $accenture_id = $accenture_posts[0]->ID;
-    } else {
-        $accenture_id = wp_insert_post( array(
-            'post_type'   => 'partner',
-            'post_title'  => 'Accenture',
-            'post_status' => 'publish',
-        ) );
-        if ( is_wp_error( $accenture_id ) ) {
-            $accenture_id = 0;
-        }
-    }
+    // The assemblies are Tech She Can's.
+    $tech_she_can    = get_page_by_path( 'tech-she-can', OBJECT, 'partner' );
+    $tech_she_can_id = $tech_she_can ? (int) $tech_she_can->ID : 0;
 
     $fixes = array(
         'KS2 Assembly: AI in Our World' => array(
             'title'   => 'AI in Our World — KS2 Live Assembly',
-            'desc'    => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can in partnership with Accenture.',
+            'desc'    => 'Students explore AI in everyday life — chatbots, voice assistants, gaming, and creative tools. Covers generative AI, prompt use, and responsible practice. Highlights tech careers aligned with student interests. Delivered by Tech She Can.',
             'start'   => '2027-06-04T09:15',
-            'partner' => $accenture_id,
+            'partner' => $tech_she_can_id,
         ),
         'KS3 Assembly: AI in Everyday Life' => array(
             'title'   => 'AI in Everyday Life — KS3 Live Assembly',
-            'desc'    => 'Explores how AI integrates into daily life — navigation, recommendations, and voice tools. Discusses AI training, human roles, critical evaluation, fairness, and responsible use. Delivered by Tech She Can in partnership with Accenture.',
-            'partner' => $accenture_id,
+            'desc'    => 'Explores how AI integrates into daily life — navigation, recommendations, and voice tools. Discusses AI training, human roles, critical evaluation, fairness, and responsible use. Delivered by Tech She Can.',
+            'partner' => $tech_she_can_id,
         ),
     );
 
