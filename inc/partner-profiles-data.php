@@ -440,7 +440,7 @@ return array(
 	),
 	'tech-london-advocates' => array(
 		'title'            => 'Tech London Advocates',
-		'type'             => 'institute',
+		'type'             => 'tech-network',
 		'fix_type'         => true,
 		'website'          => 'https://www.techlondonadvocates.org.uk/',
 		'intro'            => 'Tech London Advocates is a volunteer-led network of tech leaders whose Education working group connects schools, young people and employers with digital skills and career pathways.',
@@ -503,7 +503,7 @@ return array(
 	),
 	'unthinkable' => array(
 		'title'            => 'Unthinkable',
-		'type'             => 'tech-company',
+		'type'             => 'agency',
 		'fix_type'         => true,
 		'website'          => 'https://www.unthinkabledigital.co.uk/',
 		'intro'            => 'Unthinkable is a UK digital consultancy that designs learning experiences and digital services with universities, cultural institutions and charities.',

@@ -196,6 +196,8 @@ function aiad_partner_profiles_type_exists( string $slug ): bool {
 		'broadcaster'  => 'Broadcaster',
 		'organisation' => 'Organisation',
 		'non-profit'   => 'Non-profit',
+		'agency'       => 'Agency',
+		'tech-network' => 'Tech Network',
 	);
 	return isset( $names[ $slug ] ) && ! is_wp_error( wp_insert_term( $names[ $slug ], 'partner_type', array( 'slug' => $slug ) ) );
 }
@@ -325,3 +327,33 @@ function aiad_migrate_partner_ai_flags_revert(): void {
 	update_option( 'aiad_partner_ai_flags_reverted', '1' );
 }
 add_action( 'init', 'aiad_migrate_partner_ai_flags_revert', 44 );
+
+/**
+ * One-time: move partners the profiles migration typed to a better-fitting type. Unthinkable is an agency and Tech
+ * London Advocates a tech network. A partner moves only if it still has the type the migration gave it, so a type an
+ * editor has set since is kept.
+ */
+function aiad_migrate_partner_type_moves(): void {
+	if ( get_option( 'aiad_partner_type_moves' ) === '1' || ! post_type_exists( 'partner' ) ) {
+		return;
+	}
+	if ( '' === (string) get_option( 'aiad_partner_profiles_migrated', '' ) ) {
+		return; // The profiles migration has not run yet; it will use the new types itself.
+	}
+	$moves = array(
+		'unthinkable'           => array( 'tech-company', 'agency' ),
+		'tech-london-advocates' => array( 'institute', 'tech-network' ),
+	);
+	foreach ( $moves as $slug => list( $from, $to ) ) {
+		$post = get_page_by_path( $slug, OBJECT, 'partner' );
+		if ( ! $post || ! aiad_partner_profiles_type_exists( $to ) ) {
+			continue;
+		}
+		$current = wp_get_post_terms( $post->ID, 'partner_type', array( 'fields' => 'slugs' ) );
+		if ( ! is_wp_error( $current ) && array( $from ) === $current ) {
+			wp_set_object_terms( $post->ID, $to, 'partner_type' );
+		}
+	}
+	update_option( 'aiad_partner_type_moves', '1' );
+}
+add_action( 'init', 'aiad_migrate_partner_type_moves', 45 );
