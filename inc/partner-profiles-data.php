@@ -359,7 +359,7 @@ return array(
 	),
 	'pearson' => array(
 		'title'            => 'Pearson',
-		'type'             => 'tech-company',
+		'type'             => 'publisher',
 		'website'          => 'https://www.pearson.com/en-gb.html',
 		'intro'            => 'Pearson is an education publisher and awarding body offering UK schools AI literacy support, research into AI in classrooms and an Extended Project Qualification pathway on AI.',
 		'bio'              => array(
