@@ -408,7 +408,7 @@ return array(
 	),
 	'run-dont-walk' => array(
 		'title'            => 'Run Don’t Walk',
-		'type'             => 'teacher',
+		'type'             => 'education-provider',
 		'website'          => 'https://rundontwalk.co.uk/',
 		'intro'            => 'Run Don\'t Walk is primary computing specialist Phil Wickins\'s site, offering a free five-lesson AI unit for ages 8 to 14 plus training and CPD for schools.',
 		'bio'              => array(
