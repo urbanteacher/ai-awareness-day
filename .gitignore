@@ -91,3 +91,6 @@ scripts/_external.csv
 # Presenter's laptop only: signs the browser in as the demo administrator. Never deployed.
 /demo-start.php
 /demo-walkthrough.html
+
+# Scratch HTML from scripts/export-debate-guides.mjs
+scripts/.debate-guides/

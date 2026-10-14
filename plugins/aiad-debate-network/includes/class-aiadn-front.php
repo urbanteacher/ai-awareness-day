@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class AIADN_Front {
 
-	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find', 'nominate' );
+	const VIEWS = array( 'join', 'register', 'approve', 'school', 'invite', 'debate', 'judge', 'score', 'results', 'issue', 'certificate', 'check', 'debates', 'survey', 'voice', 'board', 'calendar', 'paper', 'prep', 'programme', 'snapshot', 'colleague', 'partner', 'find', 'nominate', 'guide' );
 
 	/** @var string */
 	private static $title = 'National AI Conversation';
@@ -54,6 +54,7 @@ class AIADN_Front {
 		'partner'  => 'future',
 		'find'     => 'smart',
 		'nominate' => 'creative',
+		'guide'    => 'smart',
 	);
 
 	public static function register(): void {
@@ -125,7 +126,7 @@ class AIADN_Front {
 		$handler      = array( __CLASS__, 'view_' . $view );
 		if ( ! method_exists( __CLASS__, 'view_' . $view ) ) {
 			$handler = array( 'AIADN_Voice_Front', 'view_' . $view );
-			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front', 'AIADN_Nominate_Front' ) as $class ) {
+			foreach ( array( 'AIADN_Result_Front', 'AIADN_Debate_Front', 'AIADN_Programme_Front', 'AIADN_Snapshot_Front', 'AIADN_Colleague_Front', 'AIADN_Partner_Front', 'AIADN_Find_Front', 'AIADN_Nominate_Front', 'AIADN_Guide_Front' ) as $class ) {
 				if ( method_exists( $class, 'view_' . $view ) ) {
 					$handler = array( $class, 'view_' . $view );
 				}
@@ -906,6 +907,7 @@ class AIADN_Front {
 			}
 
 			$h .= self::render_debates_panel( $session );
+			$h .= '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'guide' ) ) . '">How to run a debate: step-by-step guides</a></p>';
 			if ( AIADN_Debates::for_school( (int) $school['id'] ) ) {
 				$h .= '<p><a class="aiadn__button aiadn__button--quiet" href="' . esc_url( self::url( 'results' ) ) . '">Results and certificate</a></p>';
 			}

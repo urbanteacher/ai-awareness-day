@@ -494,7 +494,7 @@ class AIADN_Result_Front {
 			$h   .= self::fold( 'Who does what', $who, false );
 		}
 		$h .= '<p class="aiadn__small">The format is a draft and will be reviewed by debate educators before national use.</p>';
-		$h .= '<p class="aiadn__noprint"><button class="aiadn__button aiadn__button--quiet" type="button" onclick="window.print()">Print this page</button></p>';
+		$h .= '<p class="aiadn__noprint"><a class="aiadn__button" href="' . esc_url( AIADN_Guide_Front::url( $age ) ) . '">How to run a debate: the full guide</a> <button class="aiadn__button aiadn__button--quiet" type="button" onclick="window.print()">Print this page</button></p>';
 		// Folded sections would print folded: open them all for printing, then put them back.
 		$h .= '<script>(function(){var s=[];window.addEventListener("beforeprint",function(){s=[];document.querySelectorAll(".aiadn__fold").forEach(function(d){s.push(d.open);d.open=true})});window.addEventListener("afterprint",function(){document.querySelectorAll(".aiadn__fold").forEach(function(d,i){d.open=!!s[i]})})})();</script>';
 		return $h;

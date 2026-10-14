@@ -139,6 +139,7 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-format.php',
 			'includes/class-aiadn-front.php',
 			'includes/class-aiadn-golive.php',
+			'includes/class-aiadn-guide-front.php',
 			'includes/class-aiadn-issues.php',
 			'includes/class-aiadn-mailer.php',
 			'includes/class-aiadn-meeting-ics.php',
@@ -161,6 +162,10 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'includes/class-aiadn-util.php',
 			'includes/class-aiadn-voice-front.php',
 			'includes/class-aiadn-voice.php',
+			'downloads/.htaccess',
+			'downloads/debate-guide-primary.pdf',
+			'downloads/debate-guide-secondary.pdf',
+			'downloads/debate-guide-post16.pdf',
 			'public/aiadn.css',
 		),
 	);

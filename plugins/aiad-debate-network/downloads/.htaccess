@@ -1,0 +1,7 @@
+# The guides go out through /conversation/guide/, after the sign-in check, never directly.
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+	Deny from all
+</IfModule>
