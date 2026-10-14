@@ -3,7 +3,7 @@
  * Partner profile details, keyed by partner slug, for the partner profiles migration (inc/partner-profiles.php).
  *
  * Drafted from each partner's own website in October 2026. Fields: title, type (partner_type slug), website, intro
- * (one sentence), bio (paragraphs), ai_resources_url, links (theme, title, url). 'featured_resources' add tiles to the homepage's Extra Resources; 'fix_title' / 'fix_type' / 'fix_logo' replace a
+ * (one sentence), bio (paragraphs), ai_resources_url (leave empty: a link here puts the partner first on the homepage grid as an "AI resources" card; only AILitKit has one for now), links (theme, title, url). 'featured_resources' add tiles to the homepage's Extra Resources; 'fix_title' / 'fix_type' / 'fix_logo' replace a
  * wrong value already on the site; 'create' adds the partner if missing, with 'logo' from assets/images/logos.
  *
  * @package AI_Awareness_Day
@@ -23,7 +23,7 @@ return array(
 			'AiEd Certified is run by AI in Education, a registered charity. Its framework has three levels, Explorer, Practitioner and Innovator, covering AI literacy, policies and ethics, tools and systems, digital pedagogy, and collaboration.',
 			'Schools gather evidence they already hold, such as policies and training materials, and expert assessors give supportive feedback. The charity also hosts a searchable library of AI resources for teachers and leaders, including case studies, guidance reports and prompts.',
 		),
-		'ai_resources_url' => 'https://www.ai-in-education.co.uk/resources',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Library of AI resources for teachers and leaders', 'url' => 'https://www.ai-in-education.co.uk/resources' ),
 			array( 'theme' => 'responsible', 'title' => 'How AiEd Certified works for schools', 'url' => 'https://www.ai-in-education.co.uk/how-it-works' ),
@@ -38,7 +38,7 @@ return array(
 			'Apps for Good is a UK education charity that gives young people computing, AI and life skills through project-based learning. Its course is free to schools, supported by partners and industry volunteers.',
 			'Its AI for Good 2.0 course is a modular 12-session programme for KS3 (ages 11 to 14). Students can code in JavaScript or use an AI-assisted Canva Code pathway, and explore AI bias, ethics and deepfakes without needing personal data.',
 		),
-		'ai_resources_url' => 'https://www.appsforgood.org/our-course',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'creative', 'title' => 'AI for Good 2.0: build AI-powered apps, KS3 (free)', 'url' => 'https://www.appsforgood.org/our-course' ),
 			array( 'theme' => 'responsible', 'title' => 'AI for Good 2.0 FAQs: bias, ethics and data safety', 'url' => 'https://www.appsforgood.org/ai-for-good-2-0-frequently-asked-questions' ),
@@ -54,7 +54,7 @@ return array(
 			'Barefoot Computing supports primary teachers to teach computing to children aged 2 to 11. Set up in 2014, it is powered by BCS, The Chartered Institute for IT, and its Computing at School network, with support from BT, Ciena and the Scratch Foundation.',
 			'It offers cross-curricular lesson plans, live lessons, CPD workshops and jargon-free guides. Its AI Explorers resources help pupils learn how AI is trained and spot AI-generated misinformation.',
 		),
-		'ai_resources_url' => 'https://www.barefootcomputing.org/barefoot-ai-zone',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Barefoot AI Explorers Level 1, ages 5 to 7', 'url' => 'https://www.barefootcomputing.org/resources/ai-explorers-level-1' ),
 			array( 'theme' => 'safe', 'title' => 'Barefoot AI Explorers Level 2, ages 7 to 11', 'url' => 'https://www.barefootcomputing.org/resources/ai-explorers-level-2' ),
@@ -71,7 +71,7 @@ return array(
 			'BBC Bitesize is the BBC\'s online learning service for pupils, parents and teachers, with curriculum-linked guides, videos and quizzes from early years to post-16, plus careers content through Bitesize Careers.',
 			'Its articles on AI help young people use AI for homework without risking their grades, spot deepfakes, and test themselves with AI or real quizzes. Careers pieces explain how AI is used in job applications.',
 		),
-		'ai_resources_url' => 'https://www.bbc.co.uk/bitesize/articles/zf7xkhv',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'How to use AI for homework', 'url' => 'https://www.bbc.co.uk/bitesize/articles/zf7xkhv' ),
 			array( 'theme' => 'safe', 'title' => 'How to spot a deepfake', 'url' => 'https://www.bbc.co.uk/bitesize/articles/zbkr7v4' ),
@@ -87,7 +87,7 @@ return array(
 			'BCS, The Chartered Institute for IT, is the professional body for digital and IT professionals, operating under a Royal Charter. It supports computing education through teacher scholarships, subject knowledge courses, digital skills qualifications and the Barefoot and Computing at School programmes.',
 			'Its AI Confidence programme offers free short online modules for anyone working in a UK school or college, covering AI basics, school leadership, inclusion and AI in the world of work. BCS membership is not required.',
 		),
-		'ai_resources_url' => 'https://www.bcs.org/deliver-and-teach-qualifications/teachers-schools-and-colleges/ai-confidence/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'AI Confidence: short AI training for school staff (free)', 'url' => 'https://www.bcs.org/deliver-and-teach-qualifications/teachers-schools-and-colleges/ai-confidence/' ),
 			array( 'theme' => 'responsible', 'title' => 'AI Confidence Toolkit for schools', 'url' => 'https://www.bcs.org/deliver-and-teach-qualifications/teachers-schools-and-colleges/ai-confidence/ai-confidence-toolkit/' ),
@@ -103,7 +103,7 @@ return array(
 			'Bett, the British Educational Technology Show, started in 1985 and brings educators and edtech providers together each January at ExCeL London. Bett UK 2027 runs from 20 to 22 January 2027, and educators attend free.',
 			'The programme includes talks, hands-on tech labs and CPD-accredited content. Its content hub offers free reports on AI in education, including a survey of UK teachers and a report on what students think about AI.',
 		),
-		'ai_resources_url' => 'https://uk.bettshow.com/reports-and-whitepapers/state-of-ai-in-education',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'The state of AI in education 2026 report (free)', 'url' => 'https://uk.bettshow.com/reports-and-whitepapers/state-of-ai-in-education' ),
 			array( 'theme' => 'future', 'title' => 'Learner AI report: students on AI and the future (free)', 'url' => 'https://uk.bettshow.com/learner-ai-report' ),
@@ -120,7 +120,7 @@ return array(
 			'Black AI Futures (BAIF) was founded in 2025 as a strategic policy initiative, part think-tank, part convener and part community organiser. It works to make sure AI technologies empower Black and Global Majority communities, through advocacy, education and ethical investment.',
 			'BAIF runs workshops, public reports and educational programmes that explain AI and build community capacity. Its education work focuses on supplementary education and SEND, aiming for AI tools that support rather than replace educators. It also publishes an Ethical AI Repository that rates AI tools for bias and transparency.',
 		),
-		'ai_resources_url' => 'https://blackaifutures.org/resources',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'responsible', 'title' => 'Ethical AI Repository: AI tools rated for bias', 'url' => 'https://blackaifutures.org/repository' ),
 			array( 'theme' => 'responsible', 'title' => 'Reports, policy briefs and open evidence on AI', 'url' => 'https://blackaifutures.org/resources' ),
@@ -150,7 +150,7 @@ return array(
 			'Capital City College is a further education college group in London, with campuses including Angel, King\'s Cross, Holloway, Tottenham, Enfield, Soho and Westminster. It offers A Levels, T Levels, vocational and technical courses, apprenticeships, higher education and short courses for young people and adults.',
 			'Its computing and IT courses cover programming, digital design, cyber security, data and AI. A Level 3 UAL course in AI Generative Media at Holloway teaches 16 to 18 year olds generative tools and the ethics of AI content. Study is free for eligible 16 to 18 year olds.',
 		),
-		'ai_resources_url' => 'https://www.capitalccg.ac.uk/courses/computing-and-it/562/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'creative', 'title' => 'AI Generative Media, Level 3 (UAL) course', 'url' => 'https://www.capitalccg.ac.uk/course/ai-generative-media-level-3-diploma/46061/' ),
 			array( 'theme' => 'future', 'title' => 'Computing and IT courses in London', 'url' => 'https://www.capitalccg.ac.uk/courses/computing-and-it/562/' ),
@@ -195,7 +195,7 @@ return array(
 			'Common Sense Media is a US nonprofit that helps children, families and educators navigate media and technology. Its Common Sense Education site offers a free Digital Literacy and Well-Being curriculum with more than 165 lessons, covering privacy, online safety, media literacy and AI literacy.',
 			'For AI, it offers short AI literacy lessons on topics such as bias, chatbots, algorithms and deepfakes, plus free self-paced courses for teachers, including AI Basics for K-12 Teachers. It also publishes AI risk assessments of popular AI tools and a toolkit for schools adopting AI.',
 		),
-		'ai_resources_url' => 'https://www.commonsense.org/education/ai-in-schools',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'AI literacy lessons for students', 'url' => 'https://www.commonsense.org/education/collections/ai-literacy-lessons-for-grades-k-12' ),
 			array( 'theme' => 'smart', 'title' => 'Self-paced AI courses for teachers (free)', 'url' => 'https://www.commonsense.org/education/AI-PD-For-Educators' ),
@@ -211,7 +211,7 @@ return array(
 			'Computing at School (CAS) is a nationwide community of computing educators, powered by BCS, The Chartered Institute for IT. It supports teachers from primary to higher education through regional and online communities, a discussion forum, events and an annual conference.',
 			'Its resource library is built by teachers for teachers. The CAS AI Zone gathers lesson resources, AI policy templates and CPD, including signposting to AI Confidence, free CPD for school staff created by BCS and partners. Other themes cover physical computing, 3D and gaming, and digital literacy.',
 		),
-		'ai_resources_url' => 'https://www.computingatschool.org.uk/digital-themes/cas-ai-zone/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Artificial intelligence: 5-lesson unit for Years 5 and 6', 'url' => 'https://www.computingatschool.org.uk/resources/2026/may/artificial-intelligence-5-lesson-computing-unit-for-y56/' ),
 			array( 'theme' => 'responsible', 'title' => 'How to use AI responsibly (ages 13+)', 'url' => 'https://www.computingatschool.org.uk/resources/2024/june/how-to-use-ai-responsibly/' ),
@@ -227,7 +227,7 @@ return array(
 			'Crafting Tomorrow is a European education company co-founded by Kevin D. Shields in Madrid and Dr M. Naci Akkøk in Oslo. It aims to help families and educators prepare for the AI era with guidance, tools and structures that link school, home and work.',
 			'Its Living with AI programme is a values-led AI literacy framework for Years 3 to 13, with lesson plans, teacher notes and parent materials. Other products include ParentBites, which links digital parenting to the school curriculum, and JanusEd for curriculum and skills planning.',
 		),
-		'ai_resources_url' => 'https://crafting-tomorrow.com/solutions/living-with-ai/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Living with AI: AI literacy curriculum for Years 3 to 13', 'url' => 'https://crafting-tomorrow.com/solutions/living-with-ai/' ),
 			array( 'theme' => 'safe', 'title' => 'ParentBites: digital parenting linked to the curriculum', 'url' => 'https://crafting-tomorrow.com/solutions/parentbites/' ),
@@ -306,7 +306,7 @@ return array(
 			'Harris Federation is an education charity led and run by teachers, which opened its first school in 1991. It runs 55 primary and secondary academies across London and Essex and trains thousands of teachers each year for its own schools and others.',
 			'Its Turbocharging Teaching of Computer Science work aims to grow participation in computing and set out how AI should and should not be used in education. Partners include the DfE, BCS, STEM Learning, the National Centre for Computing Education and Microsoft TEALS.',
 		),
-		'ai_resources_url' => 'https://www.harrisfederation.org.uk/818/turbocharging-teaching-of-computer-science',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Turbocharging the teaching of computer science', 'url' => 'https://www.harrisfederation.org.uk/818/turbocharging-teaching-of-computer-science' ),
 			array( 'theme' => 'creative', 'title' => 'Harris students build AI tools with Microsoft', 'url' => 'https://www.harrisfederation.org.uk/50/harris-highlights/post/190/harris-students-build-ai-tools-with-rishi-sunak-and-microsoft-uk-ireland-ceo' ),
@@ -334,7 +334,7 @@ return array(
 			'The National Centre for Computing Education (NCCE) is funded by the Department for Education and powered by STEM Learning. It supports primary and secondary teachers in England to teach computing through courses, certificates and a full set of classroom resources.',
 			'Its AI offer includes a free self-paced online course, Introduction to Machine Learning and AI, plus CPD on AI in primary computing, Key Stage 3 and GCSE ethics. The free Teach Computing Curriculum covers AI at Key Stage 3, and student events connect pupils with industry experts.',
 		),
-		'ai_resources_url' => 'https://teachcomputing.org/artificial-intelligence',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Introduction to Machine Learning and AI course (free)', 'url' => 'https://teachcomputing.org/courses/CO231/introduction-to-machine-learning-and-ai' ),
 			array( 'theme' => 'responsible', 'title' => 'AI and Ethics in GCSE computer science CPD', 'url' => 'https://teachcomputing.org/courses/CO427/ai-and-ethics-in-gcse-computer-science' ),
@@ -350,7 +350,7 @@ return array(
 			'Parent Zone is a UK social enterprise focused on children\'s digital lives. It researches the effects of technology on family life, advises government on new legislation, and creates family-friendly media literacy services, guides and training for parents, professionals and young people.',
 			'For schools it runs Be Internet Legends, with free live online safety events for primary schools, and Be Internet Citizens, free media literacy lessons for secondary pupils. It also delivers free Experience AI training to help secondary teachers across subjects teach AI literacy.',
 		),
-		'ai_resources_url' => 'https://parentzone.org.uk/ExperienceAI',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Experience AI training for secondary teachers (free)', 'url' => 'https://parentzone.org.uk/ExperienceAI' ),
 			array( 'theme' => 'safe', 'title' => 'Be Internet Legends live events for primary schools (free)', 'url' => 'https://parentzone.org.uk/beinternetlegends/assemblies' ),
@@ -366,7 +366,7 @@ return array(
 			'Pearson is an education company that publishes learning resources and awards qualifications including Edexcel and BTEC. In the UK it works with primary and secondary schools and colleges, and publishes an annual School and College Report on how teachers and students experience education, including their use of AI.',
 			'Its Edexcel Project Qualification has an AI topic pathway that lets sixth form students explore generative AI tools and their ethical and social questions. Pearson also provides guidance for teachers and students on using AI responsibly in coursework, based on JCQ guidance.',
 		),
-		'ai_resources_url' => 'https://www.pearson.com/en-gb/schools/insights-and-events/schools-blog/2026/05/ai-awareness-day--supporting-ai-literacy-in-schools.html',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'responsible', 'title' => 'Project Qualification AI pathway and teacher guidance', 'url' => 'https://qualifications.pearson.com/en/qualifications/edexcel-project-qualification/topic-pathways/artificial-intelligence-ai.html' ),
 			array( 'theme' => 'smart', 'title' => 'Supporting AI literacy in schools: AI Awareness Day blog', 'url' => 'https://www.pearson.com/en-gb/schools/insights-and-events/schools-blog/2026/05/ai-awareness-day--supporting-ai-literacy-in-schools.html' ),
@@ -383,7 +383,7 @@ return array(
 			'The Raspberry Pi Foundation is a UK charity that helps young people learn computing and digital making. It provides free curriculum resources, online coding projects, teacher training and programmes such as Code Club, Coolest Projects and Astro Pi, along with research and the Hello World magazine for educators.',
 			'Its AI education work includes Experience AI, developed with Google DeepMind, which offers free lessons, slide decks, worksheets and videos for secondary pupils. Teachers can also take free online courses on AI and join monthly research seminars on teaching AI across subjects.',
 		),
-		'ai_resources_url' => 'https://www.raspberrypi.org/teach/ai-education',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Experience AI lessons with Google DeepMind (free)', 'url' => 'https://experience-ai.org/en/units' ),
 			array( 'theme' => 'smart', 'title' => 'Introducing AI online course for educators', 'url' => 'https://training-hub.raspberrypi.org/en/courses/introducing-ai' ),
@@ -415,7 +415,7 @@ return array(
 			'Run Don\'t Walk is the website of Phil Wickins, an independent primary computing specialist who coaches and trains teachers and subject leaders in UK and international schools. He is a Senior Professional Development Leader for STEM and a former NCCE National Specialist for Primary Computing Leaders.',
 			'The site offers a free, five-lesson AI unit for Key Stages 2 and 3, covering how machines learn, bias, misinformation, safe use and designing an ethical AI system, with a Welsh version. It also shares blog guidance, physical computing ideas and paid CPD and INSET sessions.',
 		),
-		'ai_resources_url' => 'https://rundontwalk.co.uk/artificial-intelligence/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Artificial Intelligence unit for KS2 and KS3 (free)', 'url' => 'https://rundontwalk.co.uk/artificial-intelligence/' ),
 			array( 'theme' => 'safe', 'title' => 'Communicating with parents about AI learning', 'url' => 'https://rundontwalk.co.uk/2026/09/24/communicating-with-parents-about-ai-learning/' ),
@@ -431,7 +431,7 @@ return array(
 			'STEM Learning provides professional development and resources for teachers of science, technology, engineering and maths across the UK. Its online library holds thousands of quality-assured teaching resources that teachers can use free of charge.',
 			'Its artificial intelligence offer includes live-online courses on using AI in the classroom, short webinars on topics such as assessment and ethics, a self-paced introduction to machine learning for computing teachers, and unplugged AI activities for pupils.',
 		),
-		'ai_resources_url' => 'https://www.stem.org.uk/artificial-intelligence',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'Artificial Intelligence (AI) workshop activities', 'url' => 'https://www.stem.org.uk/resources/elibrary/resource/537337/artificial-intelligence-ai-workshop-activities' ),
 			array( 'theme' => 'smart', 'title' => 'Introduction to Machine Learning and AI (teacher course)', 'url' => 'https://www.stem.org.uk/cpd/ondemand/527933/introduction-machine-learning-and-ai' ),
@@ -448,7 +448,7 @@ return array(
 			'Tech London Advocates is a volunteer-led, independent and not-for-profit community of tech leaders, experts and investors. It began in London in 2013 and is now part of the wider Global Tech Advocates network, with dozens of working groups.',
 			'Its Education working group aims to join up the education sector around skills and talent, apprenticeships and education technology. It runs a resource hub for teachers, students, young people and businesses, and highlights pathways into tech careers.',
 		),
-		'ai_resources_url' => 'https://www.techlondonadvocates.org.uk/working-groups/working-groups-education/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'future', 'title' => 'TLA Education working group', 'url' => 'https://www.techlondonadvocates.org.uk/working-groups/working-groups-education/' ),
 			array( 'theme' => 'future', 'title' => 'Future of Work working group', 'url' => 'https://www.techlondonadvocates.org.uk/working-groups/future-of-work/' ),
@@ -463,7 +463,7 @@ return array(
 			'Tech She Can is a registered charity that aims to bring technology careers to life for children, with a focus on girls and on reaching young people who need it most. Its work is funded by member organisations and supporters.',
 			'Its Tech We Can programme offers free lesson packs, live and on-demand lessons, animated lessons, after-school clubs and teacher CPD, designed by teachers for ages 5 to 18. Volunteer industry Champions can also visit classrooms.',
 		),
-		'ai_resources_url' => 'https://techshecan.org/on-demand-lessons',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'smart', 'title' => 'AI in Everyday Life lesson (ages 11-14)', 'url' => 'https://techshecan.org/previous-assemblies/ai-in-everyday-life-ages-11-14' ),
 			array( 'theme' => 'safe', 'title' => 'Tech for Online Safety lesson (ages 11-14)', 'url' => 'https://techshecan.org/previous-assemblies/tech-for-online-safety-ages-11-14' ),
@@ -494,7 +494,7 @@ return array(
 			'Ultra Education CIC is a youth entrepreneurship organisation based in Wembley. It aims to create positive and lasting change for young people facing disadvantage, especially those from communities the education system serves less well.',
 			'It works with primary and secondary schools through assemblies, class takeovers, after-school clubs and teacher CPD. Its AI mentor, Abby, guides pupils through ideas, market research and pitching, with a free basic tier and paid school licences.',
 		),
-		'ai_resources_url' => 'https://ultra.education/abby-for-schools-entrepreneurship-mentor/',
+		'ai_resources_url' => '',
 		'links'            => array(
 			array( 'theme' => 'future', 'title' => 'Abby, an AI entrepreneurship mentor for schools', 'url' => 'https://ultra.education/abby-for-schools-entrepreneurship-mentor/' ),
 			array( 'theme' => 'future', 'title' => 'Youth entrepreneurship teaching resources (free)', 'url' => 'https://ultra.education/teaching-resources-entrepreneurship/' ),

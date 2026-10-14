@@ -285,3 +285,41 @@ function aiad_partner_profiles_featured_resources( array $profile ): void {
 		wp_set_object_terms( $id, $tile['strand'], 'resource_principle' );
 	}
 }
+
+/**
+ * One-time: take back the "AI resources" link and tick the profiles migration put on every partner with a resources
+ * page. Each one makes a partner an AI resources card at the front of the homepage grid, and 22 of them made the
+ * page a long scroll. Only partners the migration set (it kept their previous values in the
+ * aiad_partner_profiles_backup option) and only where the value is still the one it wrote, so nothing an editor
+ * has set or changed since is touched. AILitKit keeps its link. The profile pages' resource lists stay.
+ */
+function aiad_migrate_partner_ai_flags_revert(): void {
+	if ( get_option( 'aiad_partner_ai_flags_reverted' ) === '1' || ! post_type_exists( 'partner' ) ) {
+		return;
+	}
+	// Wait until the profiles migration has run on this site, so there is a backup to read.
+	if ( '' === (string) get_option( 'aiad_partner_profiles_migrated', '' ) ) {
+		return;
+	}
+	$backup   = get_option( 'aiad_partner_profiles_backup', array() );
+	$profiles = require AIAD_DIR . '/inc/partner-profiles-data.php';
+
+	foreach ( is_array( $backup ) ? $backup : array() as $slug => $changed ) {
+		if ( 'ailitkit' === $slug || str_contains( (string) $slug, ':' ) || ! is_array( $changed ) ) {
+			continue;
+		}
+		$post = get_page_by_path( (string) $slug, OBJECT, 'partner' );
+		if ( ! $post ) {
+			continue;
+		}
+		if ( array_key_exists( '_partner_provides_ai_resources', $changed ) && '1' === (string) get_post_meta( $post->ID, '_partner_provides_ai_resources', true ) ) {
+			$before = (string) $changed['_partner_provides_ai_resources'];
+			'' === $before ? delete_post_meta( $post->ID, '_partner_provides_ai_resources' ) : update_post_meta( $post->ID, '_partner_provides_ai_resources', $before );
+		}
+		if ( array_key_exists( '_partner_ai_resources_url', $changed ) && '' === (string) $changed['_partner_ai_resources_url'] ) {
+			delete_post_meta( $post->ID, '_partner_ai_resources_url' );
+		}
+	}
+	update_option( 'aiad_partner_ai_flags_reverted', '1' );
+}
+add_action( 'init', 'aiad_migrate_partner_ai_flags_revert', 44 );
