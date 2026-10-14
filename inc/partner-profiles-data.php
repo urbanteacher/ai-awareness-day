@@ -96,7 +96,7 @@ return array(
 	),
 	'bett' => array(
 		'title'            => 'Bett',
-		'type'             => 'tech-company',
+		'type'             => 'events-company',
 		'website'          => 'https://uk.bettshow.com/',
 		'intro'            => 'Bett is the UK\'s annual education technology show, free for educators, with talks, exhibitors and free reports on how teachers and students use AI.',
 		'bio'              => array(
@@ -113,7 +113,7 @@ return array(
 	'black-futures-ai' => array(
 		'title'            => 'Black AI Futures',
 		'fix_title'        => true,
-		'type'             => 'institute',
+		'type'             => 'tech-network',
 		'website'          => 'https://blackaifutures.org/',
 		'intro'            => 'Black AI Futures is a UK Black-led AI for Good network that works on policy, research and education so AI benefits Black and Global Majority communities.',
 		'bio'              => array(
@@ -143,7 +143,7 @@ return array(
 	),
 	'capital-city-college' => array(
 		'title'            => 'Capital City College',
-		'type'             => 'school',
+		'type'             => 'fe',
 		'website'          => 'https://www.capitalccg.ac.uk/',
 		'intro'            => 'Capital City College is a large London further education college offering 16 to 18 and adult courses in computing, digital skills and AI, including AI generative media.',
 		'bio'              => array(

@@ -671,6 +671,8 @@ function aiad_get_partner_type_term_names(): array {
         'Non-profit',
         'Agency',
         'Tech Network',
+        'Events Company',
+        'FE',
     );
 }
 
