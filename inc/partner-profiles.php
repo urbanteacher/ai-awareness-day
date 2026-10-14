@@ -202,6 +202,7 @@ function aiad_partner_profiles_type_exists( string $slug ): bool {
 		'fe'           => 'FE',
 		'alternative-provision' => 'Alternative Provision',
 		'publisher'    => 'Publisher',
+		'cic'          => 'CIC',
 	);
 	return isset( $names[ $slug ] ) && ! is_wp_error( wp_insert_term( $names[ $slug ], 'partner_type', array( 'slug' => $slug ) ) );
 }
@@ -334,7 +335,7 @@ add_action( 'init', 'aiad_migrate_partner_ai_flags_revert', 44 );
 
 /**
  * One-time: move partners the profiles migration typed to a better-fitting type. Unthinkable is an agency, Tech
- * London Advocates and Black AI Futures are tech networks, Bett is an events company Capital City College is FE and Education Links is alternative provision and Pearson is a publisher. A partner moves only if it still has the type the migration gave it, so a type an
+ * London Advocates and Black AI Futures are tech networks, Bett is an events company Capital City College is FE and Education Links is alternative provision Pearson is a publisher and Ultra Education is a CIC. A partner moves only if it still has the type the migration gave it, so a type an
  * editor has set since is kept.
  */
 function aiad_migrate_partner_type_moves(): void {
@@ -352,6 +353,7 @@ function aiad_migrate_partner_type_moves(): void {
 		'capital-city-college'  => array( 'school', 'fe' ),
 		'education-links'       => array( 'school', 'alternative-provision' ),
 		'pearson'               => array( 'tech-company', 'publisher' ),
+		'ultra-education-cic'   => array( 'charity', 'cic' ),
 	);
 	foreach ( $moves as $slug => list( $from, $to ) ) {
 		$post = get_page_by_path( $slug, OBJECT, 'partner' );

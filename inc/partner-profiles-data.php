@@ -487,7 +487,7 @@ return array(
 	),
 	'ultra-education-cic' => array(
 		'title'            => 'Ultra Education CIC',
-		'type'             => 'charity',
+		'type'             => 'cic',
 		'website'          => 'https://ultra.education/',
 		'intro'            => 'Ultra Education CIC teaches entrepreneurship to young people aged 7 to 18 through school workshops, clubs and Abby, an AI mentor that coaches pupils through starting a business.',
 		'bio'              => array(
