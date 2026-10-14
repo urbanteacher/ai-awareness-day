@@ -114,6 +114,10 @@
 .partner-bio__theme-pill--responsible { border-color: rgba(34,197,94,0.35); }
 .partner-bio__theme-pill--future { border-color: rgba(244,63,94,0.35); }
 
+.partner-bio__resources > .partner-bio__link-list {
+  margin-top: 1rem;
+}
+
 .partner-bio__link-list {
   list-style: none;
   margin: 0;

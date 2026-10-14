@@ -96,3 +96,12 @@ $initial_show   = $initial_show_mobile;
                     </button>
                 </div>
             <?php endif; ?>
+
+            <?php
+            // The logos stay on this site: partners without an AI resources link are not links out, so this is where
+            // visitors go to read about the partners and find their links.
+            $partners_archive_url = get_post_type_archive_link( 'partner' ) ?: home_url( '/partners/' );
+            ?>
+            <p class="partners-grid__all" style="text-align: center;">
+                <a class="resource-tiles__more" href="<?php echo esc_url( $partners_archive_url ); ?>"><?php esc_html_e( 'View all partners', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+            </p>
