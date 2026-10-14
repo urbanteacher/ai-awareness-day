@@ -301,11 +301,13 @@ function aiad_migrate_partner_ai_flags_revert(): void {
 	if ( '' === (string) get_option( 'aiad_partner_profiles_migrated', '' ) ) {
 		return;
 	}
-	$backup   = get_option( 'aiad_partner_profiles_backup', array() );
-	$profiles = require AIAD_DIR . '/inc/partner-profiles-data.php';
+	$backup = get_option( 'aiad_partner_profiles_backup', array() );
+	// Partners whose AI resources link was set by hand before the migration (their links differ from the ones it
+	// wrote), plus AILitKit: never touched, whatever the backup says.
+	$keep = array( 'ailitkit', 'bbc-bitesize', 'bcs-the-chartered-institute-for-it', 'common-sense-media', 'parent-zone', 'pearson', 'rapberry-pi-foundation', 'rm', 'tech-she-can' );
 
 	foreach ( is_array( $backup ) ? $backup : array() as $slug => $changed ) {
-		if ( 'ailitkit' === $slug || str_contains( (string) $slug, ':' ) || ! is_array( $changed ) ) {
+		if ( in_array( $slug, $keep, true ) || str_contains( (string) $slug, ':' ) || ! is_array( $changed ) ) {
 			continue;
 		}
 		$post = get_page_by_path( (string) $slug, OBJECT, 'partner' );
