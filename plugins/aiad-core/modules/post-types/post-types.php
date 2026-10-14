@@ -673,6 +673,7 @@ function aiad_get_partner_type_term_names(): array {
         'Tech Network',
         'Events Company',
         'FE',
+        'Alternative Provision',
     );
 }
 

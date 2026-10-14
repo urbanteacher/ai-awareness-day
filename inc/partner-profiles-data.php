@@ -283,7 +283,7 @@ return array(
 	),
 	'education-links' => array(
 		'title'            => 'Education Links',
-		'type'             => 'school',
+		'type'             => 'alternative-provision',
 		'website'          => 'https://www.education-links.org/',
 		'intro'            => 'Education Links is an alternative provision free school in Newham, east London, giving young people aged 11 to 16 a personalised route back into education or training.',
 		'bio'              => array(
