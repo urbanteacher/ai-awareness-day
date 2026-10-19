@@ -25,7 +25,9 @@ In our new article we look at what it means for AI Awareness Day 2027, and for s
 ⏳ A window before September 2028 to start building oracy, with AI as a ready-made subject
 ⚠️ The fair challenges: grade inflation, crowded timetables, and speech that needs knowledge behind it
 
-The National AI Conversation opens on 1 January 2027, with structured speaking and listening about AI for primary, secondary and post-16 students, all leading to AI Awareness Day on Thursday 29 April 2027.
+We were surprised by how well it lines up with our National AI Conversation, which starts in January. Oracy is the first of the eight skills we want young people to build in the age of AI, alongside public speaking, active listening and civil discourse. We don't believe that's a coincidence. We believe it's perfect timing.
+
+So we're using it. Before the consultation ends, we want to get young people talking about AI: structured speaking and listening for primary, secondary and post-16 students, all leading to AI Awareness Day on Thursday 29 April 2027.
 
 To help children thrive alongside AI, we don't need to teach them to think like computers. We need to help them talk, listen and reason like humans.
 

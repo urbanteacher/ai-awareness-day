@@ -182,7 +182,7 @@ function aiad_migrate_article_oracy_skills_image(): void {
 add_action( 'init', 'aiad_migrate_article_oracy_skills_image', 48 );
 
 /**
- * One-time: add "The skills AI Awareness Day is promoting" to the oracy article, before "Levelling the playing field":
+ * One-time: add "Perfect timing: the skills AI Awareness Day is promoting" to the oracy article, before "Levelling the playing field":
  * the National AI Conversation's eight skills, with oracy first, and its Learn, Think, Discuss, Rebut, Reflect journey
  * (both as on the National Conversation page, inc/national-conversation-content.php). Written straight to the database
  * like the skills image, with the previous text kept in the aiad_article_oracy_skills_text_backup option; skipped if the
@@ -198,7 +198,7 @@ function aiad_migrate_article_oracy_skills_text(): void {
 	}
 	$before = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Levelling the playing field</h2>";
 	$at     = strpos( $post->post_content, $before );
-	if ( false === $at || false !== strpos( $post->post_content, 'The skills AI Awareness Day is promoting' ) ) {
+	if ( false === $at || false !== strpos( $post->post_content, 'skills AI Awareness Day is promoting' ) ) {
 		update_option( 'aiad_article_oracy_skills_text', '1' );
 		return;
 	}
@@ -207,11 +207,13 @@ function aiad_migrate_article_oracy_skills_text(): void {
 		return "<!-- wp:paragraph -->\n<p>" . $text . "</p>\n<!-- /wp:paragraph -->\n\n";
 	};
 	$link  = '<a href="' . esc_url( home_url( '/national-conversation/' ) ) . '">National AI Conversation</a>';
-	$block = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">The skills AI Awareness Day is promoting</h2>\n<!-- /wp:heading -->\n\n"
-		. $p( 'Oracy was at the heart of the ' . $link . ' before this announcement. It is the first of eight skills we want young people to build in the age of AI, and three more are spoken skills too: public speaking, active listening and empathy, and civil discourse. The rest are critical thinking, information literacy, conflict resolution and independent judgement.' )
+	$block = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Perfect timing: the skills AI Awareness Day is promoting</h2>\n<!-- /wp:heading -->\n\n"
+		. $p( 'We were surprised by how well the government’s announcement lines up with our ' . $link . ', which starts in January. We don’t believe it is a coincidence. We believe it is perfect timing.' )
+		. $p( 'Oracy was already at the heart of the Conversation. It is the first of eight skills we want young people to build in the age of AI, and three more are spoken skills too: public speaking, active listening and empathy, and civil discourse. The rest are critical thinking, information literacy, conflict resolution and independent judgement.' )
 		. $p( 'Every student’s journey through the Conversation has five steps:' )
 		. $p( '<strong>Learn → Think → Discuss → Rebut → Reflect</strong>' )
-		. $p( 'That is oracy in practice: finding something out, thinking it through, talking it over with others, answering a view you disagree with, and reflecting on what you now believe.' );
+		. $p( 'That is oracy in practice: finding something out, thinking it through, talking it over with others, answering a view you disagree with, and reflecting on what you now believe.' )
+		. $p( 'It also gives us an opportunity. Before the consultation ends, we want to get young people talking about AI, practising the skills the curriculum is about to ask of them and telling us what they think.' );
 
 	global $wpdb;
 	update_option( 'aiad_article_oracy_skills_text_backup', $post->post_content, false );
