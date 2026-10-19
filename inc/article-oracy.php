@@ -180,3 +180,43 @@ function aiad_migrate_article_oracy_skills_image(): void {
 	update_option( 'aiad_article_oracy_skills_image', '1' );
 }
 add_action( 'init', 'aiad_migrate_article_oracy_skills_image', 48 );
+
+/**
+ * One-time: add "The skills AI Awareness Day is promoting" to the oracy article, before "Levelling the playing field":
+ * the National AI Conversation's eight skills, with oracy first, and its Learn, Think, Discuss, Rebut, Reflect journey
+ * (both as on the National Conversation page, inc/national-conversation-content.php). Written straight to the database
+ * like the skills image, with the previous text kept in the aiad_article_oracy_skills_text_backup option; skipped if the
+ * article is gone, already has the section, or no longer has the heading to put it before.
+ */
+function aiad_migrate_article_oracy_skills_text(): void {
+	if ( get_option( 'aiad_article_oracy_skills_text' ) === '1' ) {
+		return;
+	}
+	$post = get_page_by_path( 'oracy-and-ai-awareness-day', OBJECT, 'timeline' );
+	if ( ! $post ) {
+		return;
+	}
+	$before = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Levelling the playing field</h2>";
+	$at     = strpos( $post->post_content, $before );
+	if ( false === $at || false !== strpos( $post->post_content, 'The skills AI Awareness Day is promoting' ) ) {
+		update_option( 'aiad_article_oracy_skills_text', '1' );
+		return;
+	}
+
+	$p     = static function ( string $text ): string {
+		return "<!-- wp:paragraph -->\n<p>" . $text . "</p>\n<!-- /wp:paragraph -->\n\n";
+	};
+	$link  = '<a href="' . esc_url( home_url( '/national-conversation/' ) ) . '">National AI Conversation</a>';
+	$block = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">The skills AI Awareness Day is promoting</h2>\n<!-- /wp:heading -->\n\n"
+		. $p( 'Oracy was at the heart of the ' . $link . ' before this announcement. It is the first of eight skills we want young people to build in the age of AI, and three more are spoken skills too: public speaking, active listening and empathy, and civil discourse. The rest are critical thinking, information literacy, conflict resolution and independent judgement.' )
+		. $p( 'Every student’s journey through the Conversation has five steps:' )
+		. $p( '<strong>Learn → Think → Discuss → Rebut → Reflect</strong>' )
+		. $p( 'That is oracy in practice: finding something out, thinking it through, talking it over with others, answering a view you disagree with, and reflecting on what you now believe.' );
+
+	global $wpdb;
+	update_option( 'aiad_article_oracy_skills_text_backup', $post->post_content, false );
+	$wpdb->update( $wpdb->posts, array( 'post_content' => substr( $post->post_content, 0, $at ) . $block . substr( $post->post_content, $at ) ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	clean_post_cache( $post->ID );
+	update_option( 'aiad_article_oracy_skills_text', '1' );
+}
+add_action( 'init', 'aiad_migrate_article_oracy_skills_text', 49 );
