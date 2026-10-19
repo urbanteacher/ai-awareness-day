@@ -1,0 +1,108 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- "New article" LinkedIn square for the oracy article, with the minister cut out on a brand gradient (600×600, rendered at 2× to 1200×1200). render-article-minister.mjs renders it. The photo is archive/linkedin/2026-10-oracy-article/minister-cutout.png (made from minister-source.png with macOS Vision's foreground mask). The first, text-only version is ig-article.html. -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE; --tile:#34302F;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; font-family: 'AIAD Sans', Arial, sans-serif; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 20px; width: 2400px; }
+.s { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 44px 40px; background: var(--cream); color: var(--ink); }
+.s.sq { width: 600px; height: 600px; }
+.ink { background: var(--ink); color: var(--cream); }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+svg.i { width: 1em; height: 1em; fill: currentColor; display: block; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.on-colour .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.swipe { font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.lead { font-size: 22px; line-height: 1.35; }
+.ink .lead { color: #D6D3CC; }
+
+/* The loop: five strand tiles on a ring, a teacher in the middle with a question */
+.loop { position: absolute; }
+.loop .ring { position: absolute; border: 3px solid rgba(246,244,237,.3); border-radius: 50%; }
+.loop .node { position: absolute; display: grid; place-items: center; color: var(--ink); }
+.loop .human { position: absolute; fill: var(--cream); }
+.loop .ask { position: absolute; background: var(--safe); color: var(--ink); font-weight: 700; display: grid; place-items: center;
+  clip-path: polygon(0 0, 82% 0, 100% 18%, 100% 78%, 34% 78%, 8% 100%, 18% 78%, 0 78%); }
+.loop .ask span { margin-top: -18%; }
+
+/* 1 · cover */
+#w1 h1 { font-size: 72px; margin-top: 30px; }
+#w1 h1 span { color: var(--safe); }
+#w1 .lead { margin-top: 16px; width: 420px; font-size: 21px; }
+
+/* 2 · answers and questions */
+#w2 h2 { font-size: 56px; margin-top: 30px; }
+#w2 h2 em { font-style: normal; color: #B8461A; }
+#w2 .lead { margin-top: 18px; width: 440px; font-size: 21px; }
+#w2 .chat { position: absolute; left: 40px; right: 40px; top: 300px; }
+#w2 .b { position: absolute; padding: 16px 22px 20px; font-size: 22px; font-weight: 600; line-height: 1.2; --k: 16px; }
+#w2 .b small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
+#w2 .b1 { left: 0; top: 0; width: 300px; background: var(--ink); color: var(--cream); }
+#w2 .b2 { right: 0; top: 94px; width: 352px; background: var(--smart); color: var(--ink); }
+#w2 .b3 { left: 30px; top: 188px; width: 250px; background: var(--safe); color: var(--ink); }
+
+/* 3 · 60 years */
+#w3 { background: var(--responsible); }
+#w3 h2 { font-size: 64px; margin-top: 30px; width: 440px; }
+#w3 .lead { margin-top: 18px; width: 440px; font-size: 20px; color: #173A26; }
+#w3 .note { position: absolute; left: 40px; right: 40px; top: 420px; background: var(--ink); color: var(--cream); padding: 22px 24px 24px; --k: 20px; }
+#w3 .note p { font-size: 22px; font-weight: 600; line-height: 1.28; letter-spacing: -.01em; }
+#w3 .note .url { margin-top: 14px; font-size: 17px; font-weight: 700; color: var(--responsible); letter-spacing: .02em; }
+
+
+#li { background: linear-gradient(145deg, #FF7038 0%, #FA83EB 58%, #AC91FF 100%); color: var(--ink); }
+#li .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+#li h1 { font-size: 56px; margin-top: 34px; width: 520px; position: relative; z-index: 3; }
+#li h1 mark { background: var(--ink); color: var(--cream); padding: 0 12px 4px; margin-left: -2px; --k: 12px;
+  display: inline-block; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+#li .photo { position: absolute; right: -64px; bottom: 0; height: 340px; z-index: 1; filter: grayscale(1) contrast(1.12) brightness(1.04); }
+#li .bub { position: absolute; z-index: 0; background: rgba(246,244,237,.38); border-radius: 18px; }
+#li .bub::after { content: ''; position: absolute; bottom: -14px; width: 0; height: 0; border-top: 16px solid rgba(246,244,237,.38); }
+#li .b1 { left: 300px; top: 212px; width: 120px; height: 62px; }
+#li .b1::after { left: 22px; border-right: 14px solid transparent; }
+#li .b2 { right: 26px; top: 240px; width: 100px; height: 52px; }
+#li .b2::after { right: 22px; border-left: 14px solid transparent; }
+#li .ask { position: absolute; z-index: 3; left: 40px; top: 270px; width: 235px; background: var(--ink); color: var(--cream); padding: 18px 22px 22px; --k: 18px; }
+#li .ask p { font-size: 25px; font-weight: 700; line-height: 1.1; letter-spacing: -.02em; }
+#li .ask p em { font-style: normal; color: var(--smart); }
+#li .date { position: absolute; z-index: 3; left: 40px; top: 448px; background: var(--cream); color: var(--ink); padding: 9px 16px 11px; font-size: 17px; font-weight: 600; --k: 10px; }
+#li .date b { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 2px; }
+#li .scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; z-index: 2; background: linear-gradient(to top, rgba(35,31,32,.92), rgba(35,31,32,0)); }
+#li .foot { z-index: 4; color: var(--cream); }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="safe" viewBox="0 0 24 24"><path d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></symbol>
+  <symbol id="smart" viewBox="0 0 24 24"><path d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/></symbol>
+  <symbol id="creative" viewBox="0 0 24 24"><path d="M12 1 L14.4 8.6 L22 11 L14.4 13.4 L12 21 L9.6 13.4 L2 11 L9.6 8.6 Z"/></symbol>
+  <symbol id="responsible" viewBox="0 0 24 24"><path d="M11 2 h2 v3.2 h6.4 v1.8 H13 V20 h5 v2 H6 v-2 h5 V7 H4.6 V5.2 H11 Z M4.6 8.4 L1.4 15 h6.4 Z M19.4 8.4 L16.2 15 h6.4 Z"/></symbol>
+  <symbol id="future" viewBox="0 0 24 24"><path d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></symbol>
+</svg>
+
+<section class="s sq ink" id="li" data-eb="New article">
+  <div class="bub b1"></div><div class="bub b2"></div>
+  <img class="photo" src="THEME/archive/linkedin/2026-10-oracy-article/minister-cutout.png" alt="">
+  <h1>Oracy is joining reading and <mark class="tile">writing.</mark></h1>
+  <div class="ask tile"><p>When AI can write the essay, who can <em>explain and defend it?</em></p></div>
+  <div class="date tile"><b>AI Awareness Day</b>Thursday 29 April 2027</div>
+  <div class="scrim"></div>
+</section>
+
+<script>
+const SIG = '<span class="sig"><i></i><i></i><i></i><i></i><i></i></span>';
+document.querySelectorAll('.s').forEach(s => {
+  if (s.dataset.eb) s.insertAdjacentHTML('afterbegin', `<div class="eyebrow">${SIG}${s.dataset.eb}</div>`);
+  s.insertAdjacentHTML('beforeend', `<div class="foot"><span class="lk">AI Awareness Day <u>2027</u></span><span class="swipe">${s.dataset.swipe ? 'Swipe →' : 'aiawarenessday.co.uk'}</span></div>`);
+});
+</script>
+</body></html>
