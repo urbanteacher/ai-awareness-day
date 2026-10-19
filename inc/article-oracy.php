@@ -47,6 +47,35 @@ function aiad_article_oracy_content(): string {
 }
 
 /**
+ * Import the text-free cover from the theme's assets/images/articles folder and make it the featured image. The cards
+ * on the home page and the updates feed show the featured image alone, so the picture carries no words.
+ *
+ * @param int $id The article.
+ * @return bool Whether the image was set; the article stays without one (the gradient shows) if not.
+ */
+function aiad_article_oracy_set_cover( int $id ): bool {
+	$file = AIAD_DIR . '/assets/images/articles/oracy-article-card.jpg';
+	if ( ! is_readable( $file ) ) {
+		return false;
+	}
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$tmp = wp_tempnam( basename( $file ) );
+	if ( ! $tmp || ! copy( $file, $tmp ) ) {
+		return false;
+	}
+	$attachment = media_handle_sideload( array( 'name' => 'oracy-and-ai-awareness-day.jpg', 'tmp_name' => $tmp ), $id, 'Oracy and AI Awareness Day' );
+	if ( is_wp_error( $attachment ) ) {
+		@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		return false;
+	}
+	update_post_meta( (int) $attachment, '_wp_attachment_image_alt', 'The Education Secretary speaking, in black and white, with speech bubbles on an orange, pink and purple gradient' );
+	set_post_thumbnail( $id, (int) $attachment );
+	return true;
+}
+
+/**
  * Publish the article once, with its excerpt and topics (Policy & regulation first, then Teaching & learning).
  */
 function aiad_migrate_article_oracy(): void {
@@ -77,6 +106,7 @@ function aiad_migrate_article_oracy(): void {
 
 	update_post_meta( $id, '_aiad_timeline_source', 'manual' );
 	update_post_meta( $id, '_aiad_timeline_icon', 'announcement' );
+	aiad_article_oracy_set_cover( (int) $id );
 
 	$terms = array();
 	foreach ( array( 'policy-regulation', 'teaching-learning' ) as $topic ) {
