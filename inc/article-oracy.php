@@ -122,3 +122,61 @@ function aiad_migrate_article_oracy(): void {
 	update_option( 'aiad_article_oracy_added', '1' );
 }
 add_action( 'init', 'aiad_migrate_article_oracy', 47 );
+
+/**
+ * One-time: put the eight-skills picture into the oracy article, after the paragraph about the National AI Conversation
+ * (the skills are that conversation's own list). The picture is imported into the media library and the block is added to
+ * the article's text, written straight to the database so the editor's HTML filtering cannot change the rest of it. The
+ * article's previous text is kept in the aiad_article_oracy_skills_backup option. Skipped if the article is gone, is
+ * already carrying an image block, or has been rewritten so the paragraph cannot be found.
+ */
+function aiad_migrate_article_oracy_skills_image(): void {
+	if ( get_option( 'aiad_article_oracy_skills_image' ) === '1' ) {
+		return;
+	}
+	$post = get_page_by_path( 'oracy-and-ai-awareness-day', OBJECT, 'timeline' );
+	if ( ! $post ) {
+		return; // Not made yet on this copy of the site: try again after aiad_migrate_article_oracy().
+	}
+	$file = AIAD_DIR . '/assets/images/articles/skills-age-of-ai-1200x1500.png';
+	$mark = 'The National AI Conversation, starting in January 2027';
+	$at   = strpos( $post->post_content, $mark );
+	$end  = false === $at ? false : strpos( $post->post_content, '<!-- /wp:paragraph -->', $at );
+	if ( false === $end || false !== strpos( $post->post_content, '<!-- wp:image' ) || ! is_readable( $file ) ) {
+		update_option( 'aiad_article_oracy_skills_image', '1' );
+		return;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$tmp = wp_tempnam( basename( $file ) );
+	if ( ! $tmp || ! copy( $file, $tmp ) ) {
+		return;
+	}
+	$attachment = media_handle_sideload( array( 'name' => 'national-ai-conversation-skills.png', 'tmp_name' => $tmp ), $post->ID, 'The skills we want young people to build in the age of AI' );
+	if ( is_wp_error( $attachment ) ) {
+		@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		return;
+	}
+	$id  = (int) $attachment;
+	$alt = 'The skills we want young people to build in the age of AI, from the National AI Conversation: 1 Oracy and Communication, 2 Public Speaking, 3 Critical Thinking, 4 Information Literacy, 5 Conflict Resolution, 6 Active Listening and Empathy, 7 Independent Judgement, 8 Civil Discourse. Led by young people. Question it. Challenge it. Debate it.';
+	update_post_meta( $id, '_wp_attachment_image_alt', $alt );
+	$url = wp_get_attachment_image_url( $id, 'large' );
+	if ( ! $url ) {
+		return;
+	}
+
+	$block = "\n\n<!-- wp:image {\"id\":" . $id . ",\"width\":\"520px\",\"sizeSlug\":\"large\",\"linkDestination\":\"none\",\"align\":\"center\"} -->\n"
+		. '<figure class="wp-block-image aligncenter size-large is-resized"><img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt ) . '" class="wp-image-' . $id . '" style="width:520px"/>'
+		. '<figcaption class="wp-element-caption">The eight skills the National AI Conversation is built around, starting with oracy.</figcaption></figure>'
+		. "\n<!-- /wp:image -->";
+	$end += strlen( '<!-- /wp:paragraph -->' );
+
+	global $wpdb;
+	update_option( 'aiad_article_oracy_skills_backup', $post->post_content, false );
+	$wpdb->update( $wpdb->posts, array( 'post_content' => substr( $post->post_content, 0, $end ) . $block . substr( $post->post_content, $end ) ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	clean_post_cache( $post->ID );
+	update_option( 'aiad_article_oracy_skills_image', '1' );
+}
+add_action( 'init', 'aiad_migrate_article_oracy_skills_image', 48 );
