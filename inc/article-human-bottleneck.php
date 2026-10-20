@@ -97,6 +97,33 @@ function aiad_migrate_article_human_bottleneck(): void {
 		wp_set_object_terms( $id, $terms, 'timeline_category', false );
 	}
 
+	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
 	update_option( 'aiad_article_human_bottleneck_added', '1' );
 }
 add_action( 'init', 'aiad_migrate_article_human_bottleneck', 50 );
+
+/**
+ * Bring the live article up to date with inc/articles/the-human-bottleneck.html (it is the same text with links to its
+ * sources added), but only while the article is exactly as that file last put it there: an article an editor has
+ * changed is left alone. The first version of the file, which put the article up without the links, is recognised by its
+ * hash; later versions by the hash stored when they were saved.
+ */
+function aiad_sync_article_human_bottleneck(): void {
+	$file = AIAD_DIR . '/inc/articles/the-human-bottleneck.html';
+	$post = get_page_by_path( 'human-bottleneck-ai-workplace', OBJECT, 'timeline' );
+	if ( ! $post || ! is_readable( $file ) ) {
+		return;
+	}
+	$content = (string) file_get_contents( $file );
+	$stored  = (string) get_option( 'aiad_article_human_bottleneck_hash', 'bc262a273223fa84163780be39e0155e' );
+	if ( '' === $content || md5( $content ) === $stored ) {
+		return;
+	}
+	if ( md5( $post->post_content ) === $stored ) {
+		global $wpdb;
+		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		clean_post_cache( $post->ID );
+	}
+	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
+}
+add_action( 'init', 'aiad_sync_article_human_bottleneck', 51 );
