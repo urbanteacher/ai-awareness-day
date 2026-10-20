@@ -57,6 +57,18 @@ function aiad_article_human_bottleneck_content(): string {
 }
 
 /**
+ * The article's title and excerpt (the line shown under the cover and on the cards), in the campaign's own words.
+ *
+ * @return array{title: string, excerpt: string}
+ */
+function aiad_article_human_bottleneck_words(): array {
+	return array(
+		'title'   => 'Is the human the new bottleneck?',
+		'excerpt' => 'Human in the loop? Why, if they are slowing things up checking everything? Anthropic’s latest report this week shows what is on the horizon.',
+	);
+}
+
+/**
  * Publish the article once, with its excerpt, topics (Research & insight first, then Skills & careers) and cover.
  */
 function aiad_migrate_article_human_bottleneck(): void {
@@ -73,14 +85,15 @@ function aiad_migrate_article_human_bottleneck(): void {
 		return;
 	}
 
+	$words = aiad_article_human_bottleneck_words();
 	kses_remove_filters();
 	$id = wp_insert_post(
 		array(
 			'post_type'    => 'timeline',
 			'post_status'  => 'publish',
 			'post_name'    => $slug,
-			'post_title'   => 'The human bottleneck in the AI workplace',
-			'post_excerpt' => 'Anthropic offers a glimpse of work organised around tireless agents. The pressure to remove human delays could reshape careers and determine who shares in the gains.',
+			'post_title'   => $words['title'],
+			'post_excerpt' => $words['excerpt'],
 			'post_content' => $content,
 		)
 	);
@@ -131,7 +144,14 @@ function aiad_sync_article_human_bottleneck(): void {
 	}
 	if ( md5( $post->post_content ) === $stored ) {
 		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$fields = array( 'post_content' => $content );
+		// The title and excerpt too, unless an editor has already given the article its own.
+		if ( 'The human bottleneck in the AI workplace' === $post->post_title ) {
+			$words                 = aiad_article_human_bottleneck_words();
+			$fields['post_title']   = $words['title'];
+			$fields['post_excerpt'] = $words['excerpt'];
+		}
+		$wpdb->update( $wpdb->posts, $fields, array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		clean_post_cache( $post->ID );
 	}
 	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
