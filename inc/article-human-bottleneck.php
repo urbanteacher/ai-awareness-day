@@ -46,6 +46,17 @@ function aiad_article_import_image( int $post_id, string $file, string $name, st
 }
 
 /**
+ * The article's block markup from inc/articles/the-human-bottleneck.html, with THEME_URI (where its charts are linked from)
+ * made the theme's address.
+ *
+ * @return string Block markup, or '' if the file cannot be read.
+ */
+function aiad_article_human_bottleneck_content(): string {
+	$file = AIAD_DIR . '/inc/articles/the-human-bottleneck.html';
+	return is_readable( $file ) ? str_replace( 'THEME_URI', untrailingslashit( AIAD_URI ), (string) file_get_contents( $file ) ) : '';
+}
+
+/**
  * Publish the article once, with its excerpt, topics (Research & insight first, then Skills & careers) and cover.
  */
 function aiad_migrate_article_human_bottleneck(): void {
@@ -57,7 +68,7 @@ function aiad_migrate_article_human_bottleneck(): void {
 		update_option( 'aiad_article_human_bottleneck_added', '1' );
 		return;
 	}
-	$content = is_readable( AIAD_DIR . '/inc/articles/the-human-bottleneck.html' ) ? (string) file_get_contents( AIAD_DIR . '/inc/articles/the-human-bottleneck.html' ) : '';
+	$content = aiad_article_human_bottleneck_content();
 	if ( '' === $content ) {
 		return;
 	}
@@ -109,12 +120,11 @@ add_action( 'init', 'aiad_migrate_article_human_bottleneck', 50 );
  * hash; later versions by the hash stored when they were saved.
  */
 function aiad_sync_article_human_bottleneck(): void {
-	$file = AIAD_DIR . '/inc/articles/the-human-bottleneck.html';
 	$post = get_page_by_path( 'human-bottleneck-ai-workplace', OBJECT, 'timeline' );
-	if ( ! $post || ! is_readable( $file ) ) {
+	if ( ! $post ) {
 		return;
 	}
-	$content = (string) file_get_contents( $file );
+	$content = aiad_article_human_bottleneck_content();
 	$stored  = (string) get_option( 'aiad_article_human_bottleneck_hash', 'bc262a273223fa84163780be39e0155e' );
 	if ( '' === $content || md5( $content ) === $stored ) {
 		return;
