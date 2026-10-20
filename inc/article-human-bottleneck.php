@@ -47,13 +47,13 @@ function aiad_article_import_image( int $post_id, string $file, string $name, st
 
 /**
  * The article's block markup from inc/articles/the-human-bottleneck.html, with THEME_URI (where its charts are linked from)
- * made the theme's address.
+ * made the theme's address and SITE_URI the site's.
  *
  * @return string Block markup, or '' if the file cannot be read.
  */
 function aiad_article_human_bottleneck_content(): string {
 	$file = AIAD_DIR . '/inc/articles/the-human-bottleneck.html';
-	return is_readable( $file ) ? str_replace( 'THEME_URI', untrailingslashit( AIAD_URI ), (string) file_get_contents( $file ) ) : '';
+	return is_readable( $file ) ? str_replace( array( 'THEME_URI', 'SITE_URI' ), array( untrailingslashit( AIAD_URI ), untrailingslashit( home_url() ) ), (string) file_get_contents( $file ) ) : '';
 }
 
 /**
