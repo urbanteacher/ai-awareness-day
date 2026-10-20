@@ -124,7 +124,7 @@ function aiad_migrate_article_human_bottleneck(): void {
 	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
 	update_option( 'aiad_article_human_bottleneck_added', '1' );
 }
-add_action( 'init', 'aiad_migrate_article_human_bottleneck', 50 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_human_bottleneck_added', 'aiad_migrate_article_human_bottleneck' ); }, 50 );
 
 /**
  * Bring the live article up to date with inc/articles/the-human-bottleneck.html (it is the same text with links to its

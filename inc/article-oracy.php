@@ -15,6 +15,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Run one of the one-time article steps on its own. The first visitors after a deploy arrive together, and without this
+ * each would find the step not yet done and do it again (two copies of the article). One request holds a database lock
+ * while it works; the others skip the step this time and find it done on their next request.
+ *
+ * @param string   $done_option Option that is '1' once the step is done.
+ * @param callable $step        The step.
+ */
+function aiad_article_run_once( string $done_option, callable $step ): void {
+	if ( get_option( $done_option ) === '1' ) {
+		return;
+	}
+	global $wpdb;
+	$lock = 'aiad_articles_lock';
+	// INSERT IGNORE adds the row for exactly one request; add_option() would overwrite it and let several through.
+	$got = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $lock, (string) time() ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	if ( ! $got ) {
+		// Someone holds it. Take it over only if that request died (more than five minutes ago).
+		$got = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND CAST(option_value AS UNSIGNED) < %d", (string) time(), $lock, time() - 300 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	}
+	if ( ! $got ) {
+		return;
+	}
+	// The request that held the lock may have finished since this one loaded its options: read them afresh.
+	wp_cache_delete( 'alloptions', 'options' );
+	wp_cache_delete( 'notoptions', 'options' );
+	wp_cache_delete( $done_option, 'options' );
+	try {
+		if ( get_option( $done_option ) !== '1' ) {
+			$step();
+		}
+	} finally {
+		$wpdb->delete( $wpdb->options, array( 'option_name' => $lock ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		wp_cache_delete( 'alloptions', 'options' );
+	}
+}
+
+/**
  * The article's blocks.
  *
  * @return string Block markup.
@@ -121,7 +158,7 @@ function aiad_migrate_article_oracy(): void {
 
 	update_option( 'aiad_article_oracy_added', '1' );
 }
-add_action( 'init', 'aiad_migrate_article_oracy', 47 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_oracy_added', 'aiad_migrate_article_oracy' ); }, 47 );
 
 /**
  * One-time: put the eight-skills picture into the oracy article, after the paragraph about the National AI Conversation
@@ -179,7 +216,7 @@ function aiad_migrate_article_oracy_skills_image(): void {
 	clean_post_cache( $post->ID );
 	update_option( 'aiad_article_oracy_skills_image', '1' );
 }
-add_action( 'init', 'aiad_migrate_article_oracy_skills_image', 48 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_oracy_skills_image', 'aiad_migrate_article_oracy_skills_image' ); }, 48 );
 
 /**
  * One-time: add "Perfect timing: the skills AI Awareness Day is promoting" to the oracy article, before "Levelling the playing field":
@@ -221,4 +258,4 @@ function aiad_migrate_article_oracy_skills_text(): void {
 	clean_post_cache( $post->ID );
 	update_option( 'aiad_article_oracy_skills_text', '1' );
 }
-add_action( 'init', 'aiad_migrate_article_oracy_skills_text', 49 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_oracy_skills_text', 'aiad_migrate_article_oracy_skills_text' ); }, 49 );
