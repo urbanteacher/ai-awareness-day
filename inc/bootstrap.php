@@ -58,6 +58,7 @@ require_once $aiad_dir . '/inc/walkthrough.php';
 require_once $aiad_dir . '/inc/migrate-2027-branding.php';
 require_once $aiad_dir . '/inc/partner-profiles.php';
 require_once $aiad_dir . '/inc/article-oracy.php';
+require_once $aiad_dir . '/inc/article-human-bottleneck.php';
 require_once $aiad_dir . '/inc/homepage-blocks.php';
 require_once $aiad_dir . '/inc/homepage-migration.php';
 require_once $aiad_dir . '/inc/homepage-campaign.php';

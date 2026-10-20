@@ -1,0 +1,101 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Text-free cover for "The human bottleneck in the AI workplace" (a stream of tiles squeezing towards one person) (750×500 at 2× = 1500×1000, 3:2). The site crops covers from 16:7 to 1:1 about the centre, so everything sits in the middle. render-article-bottleneck.mjs renders it. The photo is archive/linkedin/2026-10-oracy-article/minister-cutout.png (made from minister-source.png with macOS Vision's foreground mask). The first, text-only version is ig-article.html. -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE; --tile:#34302F;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; font-family: 'AIAD Sans', Arial, sans-serif; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 20px; width: 2400px; }
+.s { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 44px 40px; background: var(--cream); color: var(--ink); }
+.s.sq { width: 600px; height: 600px; }
+.ink { background: var(--ink); color: var(--cream); }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+svg.i { width: 1em; height: 1em; fill: currentColor; display: block; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.on-colour .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.swipe { font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.lead { font-size: 22px; line-height: 1.35; }
+.ink .lead { color: #D6D3CC; }
+
+/* The loop: five strand tiles on a ring, a teacher in the middle with a question */
+.loop { position: absolute; }
+.loop .ring { position: absolute; border: 3px solid rgba(246,244,237,.3); border-radius: 50%; }
+.loop .node { position: absolute; display: grid; place-items: center; color: var(--ink); }
+.loop .human { position: absolute; fill: var(--cream); }
+.loop .ask { position: absolute; background: var(--safe); color: var(--ink); font-weight: 700; display: grid; place-items: center;
+  clip-path: polygon(0 0, 82% 0, 100% 18%, 100% 78%, 34% 78%, 8% 100%, 18% 78%, 0 78%); }
+.loop .ask span { margin-top: -18%; }
+
+/* 1 · cover */
+#w1 h1 { font-size: 72px; margin-top: 30px; }
+#w1 h1 span { color: var(--safe); }
+#w1 .lead { margin-top: 16px; width: 420px; font-size: 21px; }
+
+/* 2 · answers and questions */
+#w2 h2 { font-size: 56px; margin-top: 30px; }
+#w2 h2 em { font-style: normal; color: #B8461A; }
+#w2 .lead { margin-top: 18px; width: 440px; font-size: 21px; }
+#w2 .chat { position: absolute; left: 40px; right: 40px; top: 300px; }
+#w2 .b { position: absolute; padding: 16px 22px 20px; font-size: 22px; font-weight: 600; line-height: 1.2; --k: 16px; }
+#w2 .b small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
+#w2 .b1 { left: 0; top: 0; width: 300px; background: var(--ink); color: var(--cream); }
+#w2 .b2 { right: 0; top: 94px; width: 352px; background: var(--smart); color: var(--ink); }
+#w2 .b3 { left: 30px; top: 188px; width: 250px; background: var(--safe); color: var(--ink); }
+
+/* 3 · 60 years */
+#w3 { background: var(--responsible); }
+#w3 h2 { font-size: 64px; margin-top: 30px; width: 440px; }
+#w3 .lead { margin-top: 18px; width: 440px; font-size: 20px; color: #173A26; }
+#w3 .note { position: absolute; left: 40px; right: 40px; top: 420px; background: var(--ink); color: var(--cream); padding: 22px 24px 24px; --k: 20px; }
+#w3 .note p { font-size: 22px; font-weight: 600; line-height: 1.28; letter-spacing: -.01em; }
+#w3 .note .url { margin-top: 14px; font-size: 17px; font-weight: 700; color: var(--responsible); letter-spacing: .02em; }
+
+
+body { width: auto; padding: 0; display: block; background: #231F20; }
+#cv { width: 750px; height: 500px; position: relative; overflow: hidden; background: linear-gradient(150deg, #231F20 0%, #2E2A2B 60%, #34302F 100%); }
+#cv .glow { position: absolute; border-radius: 50%; filter: blur(34px); }
+#cv .g1 { width: 420px; height: 420px; left: -140px; top: 20px; background: rgba(0,190,221,.28); }
+#cv .g2 { width: 380px; height: 380px; right: -110px; top: -100px; background: rgba(172,145,255,.30); }
+#cv .t { position: absolute; width: 30px; height: 30px; clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px)); }
+#cv .human { position: absolute; left: 372px; top: 158px; width: 160px; height: 172px; fill: #F6F4ED; z-index: 3; }
+#cv .gate { position: absolute; left: 356px; width: 6px; background: #F6F4ED; z-index: 2; border-radius: 3px; }
+#cv .sigs { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; display: flex; z-index: 4; }
+#cv .sigs i { flex: 1; display: block; }
+#cv .sigs i:nth-child(1){background:var(--safe)} #cv .sigs i:nth-child(2){background:var(--smart)} #cv .sigs i:nth-child(3){background:var(--creative)} #cv .sigs i:nth-child(4){background:var(--responsible)} #cv .sigs i:nth-child(5){background:var(--future)}
+</style></head>
+<body>
+<section id="cv">
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="gate" style="top:40px;height:150px"></div><div class="gate" style="top:310px;height:150px"></div>
+  <svg class="human" viewBox="-30 -34 60 64"><circle cx="0" cy="-18" r="13"/><path d="M-26 30 C-26 6 -13 -1 0 -1 C13 -1 26 6 26 30 Z"/></svg>
+  <div class="sigs"><i></i><i></i><i></i><i></i><i></i></div>
+</section>
+<script>
+const C = ['--safe','--smart','--creative','--responsible','--future'];
+const cv = document.getElementById('cv'); let n = 0;
+// Left of the gate: columns of tiles that thin to a few as they reach the person.
+[[96,11],[142,9],[188,8],[234,6],[280,4],[322,2]].forEach(([x,count],ci) => {
+  for (let k = 0; k < count; k++) {
+    const y = 250 - (count - 1) * 18 + k * 36 - 15;
+    const t = document.createElement('div'); t.className = 't';
+    t.style.cssText = `left:${x}px;top:${y}px;background:var(${C[(n++) % 5]});opacity:${.45 + ci * .11}`;
+    cv.appendChild(t);
+  }
+});
+// Right of the gate: only a few get through, spaced out.
+[[578,1],[630,1],[682,1]].forEach(([x,count],ci) => {
+  const t = document.createElement('div'); t.className = 't';
+  t.style.cssText = `left:${x}px;top:${235 + (ci % 2 ? 14 : -10)}px;background:var(${C[(n++) % 5]});opacity:${1 - ci * .22}`;
+  cv.appendChild(t);
+});
+</script>
+</body></html>
