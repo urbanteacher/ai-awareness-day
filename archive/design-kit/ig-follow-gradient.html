@@ -67,9 +67,7 @@ h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
   clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
 #li .lead { color: var(--ink); margin-top: 22px; width: 400px; font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; position: relative; z-index: 3; }
 #li .handle { position: absolute; z-index: 3; left: 40px; top: 330px; background: var(--ink); color: var(--cream); padding: 16px 24px 18px; font-size: 34px; font-weight: 700; letter-spacing: -.02em; --k: 16px; display: flex; align-items: center; gap: 14px; }
-#li .handle .cam { width: 34px; height: 34px; border: 3.5px solid var(--cream); border-radius: 10px; position: relative; flex: none; }
-#li .handle .cam::before { content: ''; position: absolute; inset: 6px; border: 3.5px solid var(--cream); border-radius: 50%; }
-#li .handle .cam::after { content: ''; position: absolute; width: 4px; height: 4px; background: var(--cream); border-radius: 50%; top: 2px; right: 2px; }
+#li .handle svg { width: 44px; height: 44px; flex: none; display: block; }
 #li .dates { position: absolute; z-index: 3; left: 40px; right: 40px; top: 440px; display: flex; gap: 10px; }
 #li .d { background: var(--cream); color: var(--ink); padding: 10px 16px 12px; font-size: 18px; font-weight: 600; white-space: nowrap; --k: 10px; }
 #li .d b { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
@@ -89,7 +87,7 @@ h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
 <section class="s sq ink" id="li" data-eb="Follow along">
   <h1>We’re on <mark class="tile">Instagram.</mark></h1>
   <p class="lead">Big questions and classroom ideas, every week.</p>
-  <div class="handle tile"><span class="cam"></span>@aiawarenessday</div>
+  <div class="handle tile"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><radialGradient id="igg" cx="30%" cy="107%" r="140%"><stop offset="0" stop-color="#FED576"/><stop offset=".26" stop-color="#F47133"/><stop offset=".61" stop-color="#BC3081"/><stop offset="1" stop-color="#4C63D2"/></radialGradient></defs><rect x="4" y="4" width="40" height="40" rx="11.5" fill="none" stroke="url(#igg)" stroke-width="4.2"/><circle cx="24" cy="24" r="9.3" fill="none" stroke="url(#igg)" stroke-width="4.2"/><circle cx="34.6" cy="13.4" r="2.7" fill="url(#igg)"/></svg>@aiawarenessday</div>
   <div class="dates"><div class="d tile"><b>National AI Conversation opens</b>1 January 2027</div><div class="d tile"><b>AI Awareness Day</b>Thursday 29 April 2027</div></div>
   <div class="scrim"></div>
 </section>

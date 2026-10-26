@@ -29,4 +29,4 @@ From 1 January 2027, schools can join free classroom conversations, school debat
 
 `instagram-follow-gradient-1200x1200.png`, in the style of the oracy and bottleneck cards (orange, pink and purple gradient, dark headline panel). Made by `archive/design-kit/ig-follow-gradient.html` + `render-follow-gradient.mjs`. The first design above is kept. Use either with the post above.
 
-Alt text: "We're on Instagram: @aiawarenessday. Big questions and classroom ideas, every week. National AI Conversation opens 1 January 2027. AI Awareness Day, Thursday 29 April 2027. aiawarenessday.co.uk." A dark handle panel with a camera icon on an orange, pink and purple gradient.
+Alt text: "We're on Instagram: @aiawarenessday. Big questions and classroom ideas, every week. National AI Conversation opens 1 January 2027. AI Awareness Day, Thursday 29 April 2027. aiawarenessday.co.uk." A dark handle panel with the Instagram logo on an orange, pink and purple gradient.
