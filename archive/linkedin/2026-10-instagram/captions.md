@@ -41,7 +41,7 @@ Follow @aiawarenessday for a big question a week, classroom ideas you can use to
 
 We're also looking for teachers and school leaders to share their hot takes on AI. What's your view? Do you have a tip on teaching and pedagogy with AI? The best ones will help shape the conversation leading up to our national debate.
 
-Tell us in the comments, or message us on Instagram.
+How to share yours: post your take on Instagram and invite @aiawarenessday as a collaborator (Tag people, then Invite collaborator). We'll accept the best ones, so they appear on our profile as well as yours. Not on Instagram? Tell us in the comments here.
 
 From 1 January 2027, schools can join free classroom conversations, school debates and the National Debate Network, building to AI Awareness Day on Thursday 29 April 2027.
 
