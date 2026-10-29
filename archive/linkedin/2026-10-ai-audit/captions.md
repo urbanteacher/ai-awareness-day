@@ -112,7 +112,9 @@ questions; 3 a sample dashboard and what each measure means; 4 how it works, the
 teaser: it shows four of the 14 to 22 questions per role and sample results with made-up numbers (marked as such), so people
 still take the real tool to get a result.
 
-On LinkedIn, upload the PDF as a document (it shows as a swipeable carousel). Use this post with it:
+**Mobile version:** `ai-audit-sneak-peek-swipe.pdf` is the same 15 slides as the Instagram carousel, one 4:5 page each, with large type, and is the better one for a LinkedIn document post (people read those on phones). The four-page A4 file is for printing, email and staff rooms.
+
+On LinkedIn, upload the swipe PDF as a document (it shows as a swipeable carousel). Use this post with it:
 
 Curious what's in our free AI audit before you take it? We made a four-page sneak peek.
 

@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Instagram carousel (8 slides, 540×675 at 2× = 1080×1350) for the AI Risk & Readiness Benchmark: sample questions, a sample dashboard and what you get. Everything is drawn here, not screenshotted; the dashboard numbers are made up and labelled as a sample. render-benchmark-slides.mjs renders each slide. -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE; --tile:#34302F;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; font-family: 'AIAD Sans', Arial, sans-serif; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 20px; width: 2400px; }
+.s { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 44px 40px; background: var(--cream); color: var(--ink); }
+.s.sq { width: 600px; height: 600px; }
+.ink { background: var(--ink); color: var(--cream); }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+svg.i { width: 1em; height: 1em; fill: currentColor; display: block; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.on-colour .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.swipe { font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.lead { font-size: 22px; line-height: 1.35; }
+.ink .lead { color: #D6D3CC; }
+
+/* The loop: five strand tiles on a ring, a teacher in the middle with a question */
+.loop { position: absolute; }
+.loop .ring { position: absolute; border: 3px solid rgba(246,244,237,.3); border-radius: 50%; }
+.loop .node { position: absolute; display: grid; place-items: center; color: var(--ink); }
+.loop .human { position: absolute; fill: var(--cream); }
+.loop .ask { position: absolute; background: var(--safe); color: var(--ink); font-weight: 700; display: grid; place-items: center;
+  clip-path: polygon(0 0, 82% 0, 100% 18%, 100% 78%, 34% 78%, 8% 100%, 18% 78%, 0 78%); }
+.loop .ask span { margin-top: -18%; }
+
+/* 1 · cover */
+#w1 h1 { font-size: 72px; margin-top: 30px; }
+#w1 h1 span { color: var(--safe); }
+#w1 .lead { margin-top: 16px; width: 420px; font-size: 21px; }
+
+/* 2 · answers and questions */
+#w2 h2 { font-size: 56px; margin-top: 30px; }
+#w2 h2 em { font-style: normal; color: #B8461A; }
+#w2 .lead { margin-top: 18px; width: 440px; font-size: 21px; }
+#w2 .chat { position: absolute; left: 40px; right: 40px; top: 300px; }
+#w2 .b { position: absolute; padding: 16px 22px 20px; font-size: 22px; font-weight: 600; line-height: 1.2; --k: 16px; }
+#w2 .b small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
+#w2 .b1 { left: 0; top: 0; width: 300px; background: var(--ink); color: var(--cream); }
+#w2 .b2 { right: 0; top: 94px; width: 352px; background: var(--smart); color: var(--ink); }
+#w2 .b3 { left: 30px; top: 188px; width: 250px; background: var(--safe); color: var(--ink); }
+
+/* 3 · 60 years */
+#w3 { background: var(--responsible); }
+#w3 h2 { font-size: 64px; margin-top: 30px; width: 440px; }
+#w3 .lead { margin-top: 18px; width: 440px; font-size: 20px; color: #173A26; }
+#w3 .note { position: absolute; left: 40px; right: 40px; top: 420px; background: var(--ink); color: var(--cream); padding: 22px 24px 24px; --k: 20px; }
+#w3 .note p { font-size: 22px; font-weight: 600; line-height: 1.28; letter-spacing: -.01em; }
+#w3 .note .url { margin-top: 14px; font-size: 17px; font-weight: 700; color: var(--responsible); letter-spacing: .02em; }
+
+
+
+.s { padding: 44px 40px; }
+.s.cream { background: var(--cream); color: var(--ink); }
+.s.ink { background: var(--ink); color: var(--cream); }
+.s.grad { background: linear-gradient(150deg, #FF7038 0%, #FA83EB 55%, #AC91FF 100%); color: var(--ink); }
+.grad .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+.cream .foot { color: var(--ink); }
+.grad .foot { color: var(--cream); }
+.scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 100px; background: linear-gradient(to top, rgba(35,31,32,.9), rgba(35,31,32,0)); z-index: 2; }
+.foot { z-index: 4; }
+h1, h2 { position: relative; z-index: 3; line-height: 1.04; }
+mark { background: var(--ink); color: var(--cream); padding: 2px 12px 11px; margin-left: -2px; margin-top: 10px; display: inline-block; line-height: 1.04;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+.chips { display: flex; gap: 8px; margin-top: 30px; }
+.chip { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 7px 11px 8px; background: var(--ink); color: var(--cream); }
+.chip.c { color: var(--ink); }
+.q { font-size: 35px; font-weight: 700; letter-spacing: -.03em; line-height: 1.08; margin-top: 26px; }
+.opts { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
+.opt { font-size: 21px; font-weight: 600; padding: 13px 18px 14px; background: #fff; border: 2px solid #C9C6BE; display: flex; align-items: center; gap: 14px; }
+.opt i { width: 20px; height: 20px; border: 2px solid var(--ink); border-radius: 50%; flex: none; display: block; }
+.opt.sel { border-color: var(--ink); background: var(--c); font-weight: 700; }
+.opt.sel i { background: var(--ink); box-shadow: inset 0 0 0 4px var(--c); }
+.meas { margin-top: 20px; font-size: 14px; font-weight: 600; color: var(--dim); }
+.meas b { color: var(--ink); }
+.note { position: absolute; left: 40px; right: 40px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.lead { font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; margin-top: 18px; position: relative; z-index: 3; }
+#b1 h1 { font-size: 60px; margin-top: 40px; width: 470px; }
+#b1 .lead, #b8 .lead { width: 440px; }
+#b8 h1 { font-size: 56px; margin-top: 40px; width: 470px; }
+.btn { position: absolute; z-index: 3; left: 40px; background: var(--ink); color: var(--cream); font-weight: 700; letter-spacing: -.02em; font-size: 24px; padding: 16px 22px 18px; --k: 14px; }
+.btn small { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #D6D3CC; font-weight: 600; margin-bottom: 4px; }
+.pills { position: absolute; z-index: 3; display: flex; gap: 8px; left: 40px; }
+.pills span { background: var(--cream); color: var(--ink); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 11px; padding: 7px 10px 8px; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
+.mini { position: absolute; z-index: 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; left: 40px; right: 40px; }
+.mini div { background: var(--ink); color: var(--cream); font-weight: 700; font-size: 15px; padding: 10px 8px 11px; display: flex; align-items: center; gap: 7px; --k: 8px; }
+.mini i { width: 12px; height: 12px; flex: none; display: block; }
+.dash { margin-top: 28px; display: grid; gap: 12px; position: relative; z-index: 3; }
+.card { background: #34302F; padding: 13px 16px 15px; --k: 12px; }
+.card h3 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #C9C6BE; font-weight: 600; margin-bottom: 10px; }
+.score { display: flex; align-items: center; gap: 20px; }
+.score svg { width: 100px; height: 100px; flex: none; }
+.score b { font-size: 60px; letter-spacing: -.04em; line-height: .9; }
+.score b small { font-size: 22px; color: #C9C6BE; letter-spacing: 0; font-weight: 600; }
+.score p { font-size: 17px; line-height: 1.25; color: #E4E1DA; margin-top: 6px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bar { height: 14px; background: #4a4544; position: relative; margin-top: 10px; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; display: block; }
+.big { font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.sub { font-size: 13.5px; color: #D6D3CC; margin-top: 8px; line-height: 1.25; }
+.next { background: var(--responsible); color: var(--ink); padding: 13px 18px 15px; --k: 14px; font-size: 17px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+.next small { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.tag { position: absolute; top: 40px; right: 40px; z-index: 5; }
+#b7 h2 { font-size: 46px; margin-top: 36px; width: 460px; }
+.get { position: absolute; z-index: 3; left: 40px; width: 250px; display: flex; flex-direction: column; gap: 9px; top: 190px; }
+.get div { background: var(--ink); color: var(--cream); padding: 12px 14px 14px; font-size: 15px; font-weight: 600; line-height: 1.22; --k: 11px; }
+.get b { display: block; font-size: 18px; letter-spacing: -.02em; margin-bottom: 2px; }
+.cert { position: absolute; z-index: 2; left: 296px; top: 380px; width: 232px; height: 190px; background: #F7F4EE; color: var(--ink); box-shadow: 0 10px 30px rgba(35,31,32,.28); transform: rotate(4deg); overflow: hidden; }
+.cert::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: #AC91FF; }
+.cert .in { position: absolute; left: 14%; right: 6%; top: 9%; }
+.cert .k { font-size: 6.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #6A42BE; }
+.cert .t { font-size: 24px; font-weight: 700; letter-spacing: -.03em; line-height: .95; margin-top: 6%; }
+.cert .w { font-size: 8.5px; color: #5b5755; margin-top: 8%; }
+.cert .n { font-size: 25px; font-weight: 700; letter-spacing: -.03em; color: #6A42BE; line-height: 1; margin-top: 2%; }
+.cert .u { height: 3px; width: 34%; background: #AC91FF; margin-top: 5%; }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="safe" viewBox="0 0 24 24"><path d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></symbol>
+  <symbol id="smart" viewBox="0 0 24 24"><path d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/></symbol>
+  <symbol id="creative" viewBox="0 0 24 24"><path d="M12 1 L14.4 8.6 L22 11 L14.4 13.4 L12 21 L9.6 13.4 L2 11 L9.6 8.6 Z"/></symbol>
+  <symbol id="responsible" viewBox="0 0 24 24"><path d="M11 2 h2 v3.2 h6.4 v1.8 H13 V20 h5 v2 H6 v-2 h5 V7 H4.6 V5.2 H11 Z M4.6 8.4 L1.4 15 h6.4 Z M19.4 8.4 L16.2 15 h6.4 Z"/></symbol>
+  <symbol id="future" viewBox="0 0 24 24"><path d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></symbol>
+</svg>
+
+<section class="s grad" id="b1" data-eb="Free AI audit" data-swipe="1"><h1>A peek inside the <mark>AI audit.</mark></h1><p class="lead">Sample questions, a sample dashboard and what you get when you finish.</p><div class="pills" style="top:392px"><span>Free</span><span>10–15 min</span><span>Anonymous</span></div><div class="mini" style="top:452px"><div><i style="background:var(--safe)"></i>Teachers</div><div><i style="background:var(--smart)"></i>Students</div><div><i style="background:var(--creative)"></i>Parents</div><div><i style="background:var(--responsible)"></i>Leaders</div></div><div class="scrim"></div></section>
+<section class="s cream" id="b2" data-eb="Sample question" data-swipe="1"><div class="chips"><span class="chip c" style="background:var(--safe)">Teachers</span><span class="chip">Sample</span></div><div class="q">Do you verify AI outputs before using them with pupils or colleagues?</div><div class="opts" style="--c:var(--safe)"><div class="opt"><i></i>Always</div><div class="opt sel"><i></i>Often</div><div class="opt"><i></i>Sometimes</div><div class="opt"><i></i>Rarely or never</div></div><div class="meas">Measures: <b>Human oversight</b></div></section>
+<section class="s cream" id="b3" data-eb="Sample question" data-swipe="1"><div class="chips"><span class="chip c" style="background:var(--smart)">Students</span><span class="chip">Sample</span></div><div class="q">Could you explain an AI-generated answer in your own words?</div><div class="opts" style="--c:var(--smart)"><div class="opt"><i></i>Always</div><div class="opt"><i></i>Often</div><div class="opt sel"><i></i>Sometimes</div><div class="opt"><i></i>Rarely or never</div></div><div class="meas">Measures: <b>Verification</b></div></section>
+<section class="s cream" id="b4" data-eb="Sample question" data-swipe="1"><div class="chips"><span class="chip c" style="background:var(--creative)">Parents</span><span class="chip">Sample</span></div><div class="q">Do you know which AI tools your child uses for homework?</div><div class="opts" style="--c:var(--creative)"><div class="opt"><i></i>Yes, all of them</div><div class="opt sel"><i></i>Some of them</div><div class="opt"><i></i>Not really</div><div class="opt"><i></i>No idea</div></div><div class="meas">Measures: <b>Home use and safety awareness</b></div></section>
+<section class="s cream" id="b5" data-eb="Sample question" data-swipe="1"><div class="chips"><span class="chip c" style="background:var(--responsible)">Leaders</span><span class="chip">Sample</span></div><div class="q">If a pupil reported an AI-made fake, would staff know what to do?</div><div class="opts" style="--c:var(--responsible)"><div class="opt"><i></i>Yes, and it is written down</div><div class="opt sel"><i></i>Yes, but only a few know</div><div class="opt"><i></i>We are working on it</div><div class="opt"><i></i>No</div></div><div class="meas">Measures: <b>Safeguarding and governance</b></div></section>
+<section class="s ink" id="b6" data-eb="What you see" data-swipe="1"><div class="tag chip" style="background:var(--future);color:var(--ink)">Sample results</div>
+<div class="dash">
+ <div class="card tile score"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="56" fill="none" stroke="#4a4544" stroke-width="16"/><circle cx="70" cy="70" r="56" fill="none" stroke="#00BEDD" stroke-width="16" stroke-dasharray="218 352" transform="rotate(-90 70 70)"/></svg><div><h3 style="margin-bottom:6px">Readiness Score</h3><b>62<small> / 100</small></b><p>Strong habits, with gaps to close.</p></div></div>
+ <div class="row2">
+  <div class="card tile"><h3>AI Dependency Index</h3><div class="big">Moderate</div><div class="bar"><i style="width:48%;background:#FF7038"></i></div><div class="sub">Reliance, independent thinking and checking.</div></div>
+  <div class="card tile"><h3>Human Oversight Ratio</h3><div class="big">38%</div><div class="bar"><i style="width:38%;background:#AC91FF"></i></div><div class="sub">Share of AI output you change before using it.</div></div>
+ </div>
+ <div class="card tile"><h3>Data Protection Readiness</h3><div class="bar" style="margin-top:2px"><i style="width:71%;background:#63DF93"></i></div><div class="sub" style="margin-top:8px">71 out of 100. Pupil data stays out of unapproved tools.</div></div>
+ <div class="next tile"><small>Your next step</small>Agree which AI tools staff may use, and write it down.</div>
+<div class="note" style="position:static;color:#C9C6BE;margin-top:2px">Illustrative numbers, not a real result</div></div></section>
+<section class="s grad" id="b7" data-eb="What you get" data-swipe="1"><h2>More than <mark>a score.</mark></h2>
+<div class="get"><div><b>Your results</b>A readiness score, signature measures and tailored next steps.</div><div><b>A certificate</b>Teachers add a responsible classroom AI action and receive a certificate.</div><div><b>The whole school</b>Leaders can see the picture across staff, students and parents.</div></div>
+<div class="cert"><div class="in"><div class="k">AI Risk &amp; Readiness Benchmark™</div><div class="t">Certificate of Completion</div><div class="w">This certifies that</div><div class="n">Your Name</div><div class="u"></div></div></div>
+<div class="scrim"></div></section>
+<section class="s grad" id="b8" data-eb="Take it free"><h1>Ready to <mark>find out?</mark></h1><p class="lead">Free, anonymous, 10–15 minutes. Then pass it on to a colleague, a class or a parent.</p><div class="btn tile" style="top:340px"><small>Link in bio</small>aiawarenessday.co.uk</div><div class="pills" style="top:442px"><span>Teachers</span><span>Students</span><span>Parents</span><span>Leaders</span></div><div class="scrim"></div></section>
+<script>
+const SIG = '<span class="sig"><i></i><i></i><i></i><i></i><i></i></span>';
+document.querySelectorAll('.s').forEach(s => {
+  if (s.dataset.eb) s.insertAdjacentHTML('afterbegin', `<div class="eyebrow">${SIG}${s.dataset.eb}</div>`);
+  s.insertAdjacentHTML('beforeend', `<div class="foot"><span class="lk">AI Awareness Day <u>2027</u></span><span class="swipe">${s.dataset.swipe ? 'Swipe →' : 'aiawarenessday.co.uk'}</span></div>`);
+});
+</script>
+</body></html>
