@@ -101,3 +101,28 @@ Tag a teacher who should take it.
 ## Alt text
 
 "Thank you. Teachers around the world are auditing AI. Thank you for taking the AI Risk & Readiness Benchmark. Take the free AI audit: free, 10 to 15 minutes, anonymous. AI Awareness Day 2027, aiawarenessday.co.uk." A globe made of coloured tiles on a dark disc, on an orange, pink and purple gradient.
+
+---
+
+# The PDF: "AI audit: a sneak peek" (LinkedIn document post, email, staff rooms)
+
+`ai-audit-a-sneak-peek.pdf`: four A4 pages made from `archive/design-kit/ig-benchmark-pdf.html`
+(`PW=<playwright dir> node render-benchmark-pdf.mjs <file.pdf>`). Pages: 1 what it is and who it's for; 2 four sample
+questions; 3 a sample dashboard and what each measure means; 4 how it works, the certificate, and the link. It is a
+teaser: it shows four of the 14 to 22 questions per role and sample results with made-up numbers (marked as such), so people
+still take the real tool to get a result.
+
+On LinkedIn, upload the PDF as a document (it shows as a swipeable carousel). Use this post with it:
+
+Curious what's in our free AI audit before you take it? We made a four-page sneak peek.
+
+Inside: four sample questions (teachers, students, parents and leaders), what your dashboard looks like, and what you get at the end, including a certificate for teachers.
+
+The AI Risk & Readiness Benchmark asks what people actually do with AI, not just whether a school has a policy. It takes 10–15 minutes, it's free and it's anonymous.
+
+Read the PDF, then take the real thing:
+👉 aiawarenessday.co.uk/timeline/ai-risk-readiness-benchmark/
+
+Share it with a colleague, a class or the parents' group.
+
+#AIAwarenessDay #AIinEducation #KeepHumansInTheLoop #Safeguarding #EdTech

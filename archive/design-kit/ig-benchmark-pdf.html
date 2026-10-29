@@ -1,0 +1,166 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE; --tile:#34302F;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #fff; font-family: 'AIAD Sans', Arial, sans-serif; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 20px; width: 2400px; }
+.s { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 44px 40px; background: var(--cream); color: var(--ink); }
+.s.sq { width: 600px; height: 600px; }
+.ink { background: var(--ink); color: var(--cream); }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+svg.i { width: 1em; height: 1em; fill: currentColor; display: block; }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.on-colour .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+h1, h2 { font-weight: 700; letter-spacing: -.04em; line-height: .96; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.swipe { font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.lead { font-size: 22px; line-height: 1.35; }
+.ink .lead { color: #D6D3CC; }
+
+/* The loop: five strand tiles on a ring, a teacher in the middle with a question */
+.loop { position: absolute; }
+.loop .ring { position: absolute; border: 3px solid rgba(246,244,237,.3); border-radius: 50%; }
+.loop .node { position: absolute; display: grid; place-items: center; color: var(--ink); }
+.loop .human { position: absolute; fill: var(--cream); }
+.loop .ask { position: absolute; background: var(--safe); color: var(--ink); font-weight: 700; display: grid; place-items: center;
+  clip-path: polygon(0 0, 82% 0, 100% 18%, 100% 78%, 34% 78%, 8% 100%, 18% 78%, 0 78%); }
+.loop .ask span { margin-top: -18%; }
+
+/* 1 · cover */
+#w1 h1 { font-size: 72px; margin-top: 30px; }
+#w1 h1 span { color: var(--safe); }
+#w1 .lead { margin-top: 16px; width: 420px; font-size: 21px; }
+
+/* 2 · answers and questions */
+#w2 h2 { font-size: 56px; margin-top: 30px; }
+#w2 h2 em { font-style: normal; color: #B8461A; }
+#w2 .lead { margin-top: 18px; width: 440px; font-size: 21px; }
+#w2 .chat { position: absolute; left: 40px; right: 40px; top: 300px; }
+#w2 .b { position: absolute; padding: 16px 22px 20px; font-size: 22px; font-weight: 600; line-height: 1.2; --k: 16px; }
+#w2 .b small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; opacity: .8; }
+#w2 .b1 { left: 0; top: 0; width: 300px; background: var(--ink); color: var(--cream); }
+#w2 .b2 { right: 0; top: 94px; width: 352px; background: var(--smart); color: var(--ink); }
+#w2 .b3 { left: 30px; top: 188px; width: 250px; background: var(--safe); color: var(--ink); }
+
+/* 3 · 60 years */
+#w3 { background: var(--responsible); }
+#w3 h2 { font-size: 64px; margin-top: 30px; width: 440px; }
+#w3 .lead { margin-top: 18px; width: 440px; font-size: 20px; color: #173A26; }
+#w3 .note { position: absolute; left: 40px; right: 40px; top: 420px; background: var(--ink); color: var(--cream); padding: 22px 24px 24px; --k: 20px; }
+#w3 .note p { font-size: 22px; font-weight: 600; line-height: 1.28; letter-spacing: -.01em; }
+#w3 .note .url { margin-top: 14px; font-size: 17px; font-weight: 700; color: var(--responsible); letter-spacing: .02em; }
+
+
+
+
+@page { size: 210mm 297mm; margin: 0; }
+html, body { width: 210mm; margin: 0; padding: 0; display: block; gap: 0; }
+body { background: #fff; width: 210mm; display: block; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; break-after: page; padding: 17mm 16mm; box-sizing: border-box; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.cream { background: var(--cream); color: var(--ink); }
+.ink { background: var(--ink); color: var(--cream); }
+.grad { background: linear-gradient(150deg, #FF7038 0%, #FA83EB 55%, #AC91FF 100%); color: var(--ink); }
+.grad .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+.eyebrow { font-size: 12px; }
+.tile { clip-path: polygon(0 0, calc(100% - var(--k,14px)) 0, 100% var(--k,14px), 100% 100%, var(--k,14px) 100%, 0 calc(100% - var(--k,14px))); }
+h1 { font-size: 78px; margin-top: 22mm; line-height: 1.03; font-weight: 700; letter-spacing: -.04em; width: 150mm; }
+h2 { font-size: 40px; font-weight: 700; letter-spacing: -.035em; line-height: 1.05; margin-top: 9mm; }
+mark { background: var(--ink); color: var(--cream); padding: 2px 14px 12px; margin-left: -3px; display: inline-block; line-height: 1.04;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
+.lead { font-size: 19px; line-height: 1.38; font-weight: 600; letter-spacing: -.01em; margin-top: 7mm; width: 150mm; }
+.body { font-size: 14px; line-height: 1.5; margin-top: 5mm; }
+.pfoot { position: absolute; left: 16mm; right: 16mm; bottom: 12mm; display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+.pfoot u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.aud4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14mm; }
+.aud4 div { background: var(--ink); color: var(--cream); padding: 14px 16px 16px; --k: 14px; }
+.aud4 b { display: flex; align-items: center; gap: 9px; font-size: 20px; letter-spacing: -.02em; margin-bottom: 5px; }
+.aud4 i { width: 14px; height: 14px; display: block; }
+.aud4 span { font-size: 13.5px; line-height: 1.35; color: #E4E1DA; font-weight: 600; }
+.pills { display: flex; gap: 8px; margin-top: 9mm; }
+.pills span { background: var(--cream); color: var(--ink); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 12px; padding: 8px 12px 9px; clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px)); }
+.qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10mm; }
+.qc { background: #fff; border: 2px solid #C9C6BE; padding: 16px 16px 18px; }
+.chip { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 9px 6px; color: var(--ink); }
+.qt { font-size: 21px; font-weight: 700; letter-spacing: -.025em; line-height: 1.12; margin-top: 10px; min-height: 70px; }
+.qo { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.qo div { font-size: 13.5px; font-weight: 600; padding: 7px 10px 8px; border: 1.5px solid #C9C6BE; display: flex; gap: 9px; align-items: center; }
+.qo i { width: 12px; height: 12px; border: 2px solid var(--ink); border-radius: 50%; flex: none; display: block; }
+.qo .sel { border-color: var(--ink); background: var(--c); }
+.qo .sel i { background: var(--ink); box-shadow: inset 0 0 0 2.5px var(--c); }
+.meas { font-size: 11.5px; color: var(--dim); font-weight: 600; margin-top: 10px; }
+.meas b { color: var(--ink); }
+.ink .card { background: #34302F; padding: 16px 18px 18px; --k: 14px; }
+.card h3 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #C9C6BE; font-weight: 600; margin-bottom: 8px; }
+.score { display: flex; align-items: center; gap: 22px; }
+.score svg { width: 104px; height: 104px; flex: none; }
+.score b { font-size: 62px; letter-spacing: -.04em; line-height: .9; }
+.score b small { font-size: 22px; color: #C9C6BE; font-weight: 600; letter-spacing: 0; }
+.score p { font-size: 15px; color: #E4E1DA; margin-top: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+.big { font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.bar { height: 12px; background: #4a4544; position: relative; margin-top: 10px; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; display: block; }
+.sub { font-size: 12.5px; color: #D6D3CC; margin-top: 8px; line-height: 1.3; }
+.next { background: var(--responsible); color: var(--ink); padding: 13px 18px 15px; --k: 14px; font-size: 16px; font-weight: 700; line-height: 1.2; margin-top: 12px; }
+.next small { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
+.explain { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; margin-top: 9mm; font-size: 13px; line-height: 1.4; color: #E4E1DA; }
+.explain b { display: block; color: var(--cream); font-size: 15px; margin-bottom: 2px; }
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12mm; }
+.vs div { padding: 16px 18px 18px; font-size: 14px; line-height: 1.45; --k: 16px; }
+.vs .a { background: rgba(35,31,32,.14); color: var(--ink); }
+.vs .b { background: var(--ink); color: var(--cream); }
+.vs small { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+.vs p { font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; margin-bottom: 6px; }
+.school { margin-top: 10mm; }
+.school .card { padding: 16px 18px 18px; }
+.srow { display: grid; grid-template-columns: 100px 1fr 40px; gap: 12px; align-items: center; margin-top: 12px; font-size: 13.5px; font-weight: 600; }
+.srow .bar { margin-top: 0; height: 14px; }
+.srow em { font-style: normal; text-align: right; color: #E4E1DA; }
+.note { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: #C9C6BE; margin-top: 10px; }
+.steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 9mm; }
+.steps div { background: var(--ink); color: var(--cream); padding: 14px 16px 16px; --k: 12px; font-size: 13.5px; line-height: 1.35; font-weight: 600; color: #E4E1DA; }
+.steps b { display: block; color: var(--cream); font-size: 17px; letter-spacing: -.02em; margin-bottom: 4px; }
+.steps em { font-style: normal; color: var(--cream); font-size: 30px; font-weight: 700; letter-spacing: -.04em; display: block; margin-bottom: 4px; }
+.gets { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 9mm; align-items: start; }
+.get { background: #fff; border: 2px solid #C9C6BE; padding: 13px 15px 15px; font-size: 13.5px; line-height: 1.38; margin-bottom: 10px; }
+.get b { display: block; font-size: 16px; letter-spacing: -.02em; margin-bottom: 3px; }
+.cert { background: #F7F4EE; color: var(--ink); box-shadow: 0 8px 24px rgba(35,31,32,.2); position: relative; height: 252px; overflow: hidden; border: 1px solid #E4E1DA; }
+.cert::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: #AC91FF; }
+.cert .in { position: absolute; left: 13%; right: 6%; top: 9%; }
+.cert .k { font-size: 7px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #6A42BE; }
+.cert .t { font-size: 28px; font-weight: 700; letter-spacing: -.03em; line-height: .95; margin-top: 6%; }
+.cert .w { font-size: 9.5px; color: #5b5755; margin-top: 8%; }
+.cert .n { font-size: 29px; font-weight: 700; letter-spacing: -.03em; color: #6A42BE; line-height: 1; margin-top: 2%; }
+.cert .u { height: 3px; width: 34%; background: #AC91FF; margin-top: 5%; }
+.cert .d { font-size: 9px; color: #5b5755; margin-top: 6%; }
+.cta { background: var(--ink); color: var(--cream); padding: 20px 24px 24px; margin-top: 10mm; --k: 18px; }
+.cta small { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #D6D3CC; font-weight: 600; margin-bottom: 6px; }
+.cta b { font-size: 21.5px; display: block; letter-spacing: -.03em; }
+.cta p { font-size: 13.5px; color: #E4E1DA; margin-top: 8px; line-height: 1.4; }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="safe" viewBox="0 0 24 24"><path d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></symbol>
+  <symbol id="smart" viewBox="0 0 24 24"><path d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/></symbol>
+  <symbol id="creative" viewBox="0 0 24 24"><path d="M12 1 L14.4 8.6 L22 11 L14.4 13.4 L12 21 L9.6 13.4 L2 11 L9.6 8.6 Z"/></symbol>
+  <symbol id="responsible" viewBox="0 0 24 24"><path d="M11 2 h2 v3.2 h6.4 v1.8 H13 V20 h5 v2 H6 v-2 h5 V7 H4.6 V5.2 H11 Z M4.6 8.4 L1.4 15 h6.4 Z M19.4 8.4 L16.2 15 h6.4 Z"/></symbol>
+  <symbol id="future" viewBox="0 0 24 24"><path d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></symbol>
+</svg>
+
+<section class="page grad"><div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Free AI audit · a sneak peek</div><h1>How much do you rely on <mark>AI?</mark></h1><p class="lead">The AI Risk &amp; Readiness Benchmark™ looks at what people actually do with AI, not just whether a school has a policy.</p><div class="aud4"><div class="tile"><b><i style="background:var(--safe)"></i>Teachers</b><span>Reliance, checking what AI tells you, and the pupil data you put into it.</span></div><div class="tile"><b><i style="background:var(--smart)"></i>Students</b><span>Critical thinking, and whether you could do the work without AI.</span></div><div class="tile"><b><i style="background:var(--creative)"></i>Parents</b><span>How children use AI at home, and the risks to know about.</span></div><div class="tile"><b><i style="background:var(--responsible)"></i>School leaders</b><span>Governance, policy and safeguarding across the school.</span></div></div><div class="pills"><span>Free</span><span>10–15 minutes</span><span>Anonymous</span></div><p class="body" style="width:150mm;font-weight:600">No student personal data is collected.</p><div class="vs"><div class="a tile"><small>Most AI audits ask</small><p>Do you have an AI policy? Do you provide training? Which tools do you allow?</p>They measure adoption: the technology and the paperwork.</div><div class="b tile"><small>This one asks</small><p>Do people follow it? Has training changed what they do? How dependent are they becoming?</p>It measures behaviour: where confidence outpaces competence.</div></div><div class="pfoot"><span>AI Awareness Day <u>2027</u></span><span>aiawarenessday.co.uk</span></div></section>
+<section class="page cream"><div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>A flavour of the questions</div><h2>Four of the questions, <br>so you know what to expect.</h2><p class="body" style="width:160mm">Every role has its own set, from 14 to 22 questions depending on who you are. There are no trick questions and no right or wrong labels: it asks about habits, and gives you a picture back. These four are samples.</p><div class="qgrid"><div class="qc" style="--c:var(--safe)"><span class="chip" style="background:var(--safe)">Teachers</span><div class="qt">Do you verify AI outputs before using them with pupils or colleagues?</div><div class="qo"><div class=""><i></i>Always</div><div class="sel"><i></i>Often</div><div class=""><i></i>Sometimes</div><div class=""><i></i>Rarely or never</div></div><div class="meas">Measures: <b>Human oversight</b></div></div><div class="qc" style="--c:var(--smart)"><span class="chip" style="background:var(--smart)">Students</span><div class="qt">Could you explain an AI-generated answer in your own words?</div><div class="qo"><div class=""><i></i>Always</div><div class=""><i></i>Often</div><div class="sel"><i></i>Sometimes</div><div class=""><i></i>Rarely or never</div></div><div class="meas">Measures: <b>Verification</b></div></div><div class="qc" style="--c:var(--creative)"><span class="chip" style="background:var(--creative)">Parents</span><div class="qt">Do you know which AI tools your child uses for homework?</div><div class="qo"><div class=""><i></i>Yes, all of them</div><div class="sel"><i></i>Some of them</div><div class=""><i></i>Not really</div><div class=""><i></i>No idea</div></div><div class="meas">Measures: <b>Home use and safety awareness</b></div></div><div class="qc" style="--c:var(--responsible)"><span class="chip" style="background:var(--responsible)">Leaders</span><div class="qt">If a pupil reported an AI-made fake, would staff know what to do?</div><div class="qo"><div class=""><i></i>Yes, and it is written down</div><div class="sel"><i></i>Yes, but only a few know</div><div class=""><i></i>We are working on it</div><div class=""><i></i>No</div></div><div class="meas">Measures: <b>Safeguarding and governance</b></div></div></div><div class="pfoot"><span>AI Awareness Day <u>2027</u></span><span>aiawarenessday.co.uk</span></div></section>
+<section class="page ink"><div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>What you see when you finish</div><h2>Your results, <br>in one place.</h2><p class="body" style="width:160mm;color:#E4E1DA">You get a readiness score, a few signature measures and tailored next steps, so you know what to change first.</p><div style="margin-top:9mm"><div class="card tile score"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="56" fill="none" stroke="#4a4544" stroke-width="16"/><circle cx="70" cy="70" r="56" fill="none" stroke="#00BEDD" stroke-width="16" stroke-dasharray="218 352" transform="rotate(-90 70 70)"/></svg><div><h3 style="margin-bottom:6px">Readiness Score</h3><b>62<small> / 100</small></b><p>Strong habits, with gaps to close.</p></div></div>
+<div class="row3"><div class="card tile"><h3>AI Dependency Index</h3><div class="big">Moderate</div><div class="bar"><i style="width:48%;background:#FF7038"></i></div></div><div class="card tile"><h3>Human Oversight Ratio</h3><div class="big">38%</div><div class="bar"><i style="width:38%;background:#AC91FF"></i></div></div><div class="card tile"><h3>Data Protection</h3><div class="big">71 / 100</div><div class="bar"><i style="width:71%;background:#63DF93"></i></div></div></div>
+<div class="next tile"><small>Your next step</small>Agree which AI tools staff may use, and write it down.</div>
+<div class="note">A sample dashboard with illustrative numbers, not a real result</div></div><div class="explain"><div><b>AI Dependency Index</b>Reliance, independent thinking and checking, combined into one picture.</div><div><b>Human Oversight Ratio</b>The share of AI output you change before you use it.</div><div><b>Data Protection Readiness</b>How safely personal and pupil data is handled around AI.</div><div><b>Readiness Score</b>Where you are overall, out of 100.</div></div><div class="school"><div class="card tile"><h3>Optional whole-school view (sample)</h3><div class="srow"><span>Teachers</span><div class="bar"><i style="width:66%;background:#00BEDD"></i></div><em>66</em></div><div class="srow"><span>Students</span><div class="bar"><i style="width:54%;background:#FF7038"></i></div><em>54</em></div><div class="srow"><span>Parents</span><div class="bar"><i style="width:48%;background:#AC91FF"></i></div><em>48</em></div><div class="srow"><span>Leaders</span><div class="bar"><i style="width:72%;background:#63DF93"></i></div><em>72</em></div><div class="note" style="margin-top:14px">Illustrative numbers. Shows where support is needed first.</div></div></div><div class="pfoot" style="color:var(--cream)"><span>AI Awareness Day <u>2027</u></span><span>aiawarenessday.co.uk</span></div></section>
+<section class="page cream"><div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>How it works and what you get</div><h2>Three steps, <br>and more than a score.</h2><div class="steps"><div class="tile"><em>1</em><b>Choose your role</b>Teacher, student, parent or school leader.</div><div class="tile"><em>2</em><b>Answer honestly</b>10–15 minutes. Free and anonymous.</div><div class="tile"><em>3</em><b>See your results</b>Your score, measures and next steps.</div></div><div class="gets"><div><div class="get"><b>A certificate</b>Teachers add a responsible classroom AI action they have taken, linked to AI Awareness Day, and receive a certificate.</div><div class="get"><b>The whole-school picture</b>Leaders can see how staff, students and parents compare, so effort goes where the risk is.</div><div class="get"><b>Next steps you can act on</b>Practical changes matched to your answers, not a generic checklist.</div></div><div class="cert"><div class="in"><div class="k">AI Risk &amp; Readiness Benchmark™</div><div class="t">Certificate of Completion</div><div class="w">This certifies that</div><div class="n">Your Name</div><div class="u"></div><div class="d">has completed the AI Risk &amp; Readiness Benchmark™ and submitted evidence of a responsible classroom AI action.</div></div></div></div><div class="cta tile"><small>Take it free</small><b>aiawarenessday.co.uk/timeline/ai-risk-readiness-benchmark/</b><p>Take it yourself, then pass it to a colleague, a class or the parents’ group. Keep Humans in the Loop starts with knowing where you are.</p></div><div class="pfoot"><span>AI Awareness Day <u>2027</u></span><span>aiawarenessday.co.uk</span></div></section>
+</body></html>
