@@ -29,7 +29,7 @@ Which of the six would you use first? Tell us in the comments.
 
 ## Post
 
-Did you know? One in 17 young people have been targeted by deepfake image abuse.
+Did you know? One in four UK teenagers have seen a sexualised deepfake.
 
 That's the "did you know" from just one of our five free lesson starters, one for each theme of AI Awareness Day. Each takes about five minutes, with slides and a lesson plan ready to go, and each ends on three habits and one takeaway:
 
