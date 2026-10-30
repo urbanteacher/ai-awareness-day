@@ -19,3 +19,29 @@ Swipe through, then try one tomorrow:
 Which of the six would you use first? Tell us in the comments.
 
 #AIAwarenessDay #AIinEducation #KeepHumansInTheLoop #Oracy #Teachers
+
+---
+
+# Version 2: a fact and three habits for each theme
+
+`lesson-starters-facts-swipe.pdf`: the same 13 slides as the Instagram carousel in
+`archive/instagram/2026-10-lesson-starters-facts/` (details and sources there). Upload it as a document.
+
+## Post
+
+Did you know? One in 17 young people have been targeted by deepfake image abuse.
+
+That's the "did you know" from just one of our five free lesson starters, one for each theme of AI Awareness Day. Each takes about five minutes, with slides and a lesson plan ready to go, and each ends on three habits and one takeaway:
+
+🛡️ Safe: Stop, Verify, Report. Think before you post.
+💡 Smart: Know what it is, Verify, Be specific. Autocomplete, not an oracle.
+✨ Creative: Brainstorm with it, Bring yourself, Start (don't finish). You are still the author.
+⚖️ Responsible: Think first, Check yourself first, Ask for transparency. Thoughtfully, not never.
+🚀 Future: Lead with human skills, Learn to work with AI, Stay adaptable. Collaborate, and stay human.
+
+Swipe through for the facts and sources, then try one tomorrow:
+👉 aiawarenessday.co.uk/resources/
+
+Which theme would you start with? Tell us in the comments.
+
+#AIAwarenessDay #AIinEducation #KeepHumansInTheLoop #Oracy #Teachers
