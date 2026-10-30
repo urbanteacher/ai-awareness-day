@@ -45,3 +45,21 @@ Swipe through for the facts and sources, then try one tomorrow:
 Which theme would you start with? Tell us in the comments.
 
 #AIAwarenessDay #AIinEducation #KeepHumansInTheLoop #Oracy #Teachers
+
+---
+
+# Post: five themes, use them now as lesson starters (attach `lesson-starters-facts-swipe.pdf`)
+
+AI Awareness Day has five themes: Safe, Smart, Creative, Responsible and Future. 🛡️💡✨⚖️🚀
+
+Next year, from January 2027, we're aiming to get students debating them in the National AI Conversation, building up to AI Awareness Day on Thursday 29 April 2027.
+
+But you don't have to wait. Right now you can use each theme as a five-minute lesson starter, a simple way to help students understand the AI landscape before they start to argue about it.
+
+Every starter has one big question, a UK fact to react to, three habits to take away, and slides and a lesson plan ready to go. Swipe through for a taster of all five.
+
+Which theme would you start with? Tell us in the comments. 👇
+
+Try them free: aiawarenessday.co.uk/resources/
+
+#AIAwarenessDay #KeepHumansInTheLoop #AIinEducation #Oracy #Teachers
