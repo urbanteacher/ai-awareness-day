@@ -24,7 +24,7 @@ Which of the six would you use first? Tell us in the comments.
 
 # Version 2: a fact and three habits for each theme
 
-`lesson-starters-facts-swipe.pdf`: the same 13 slides as the Instagram carousel in
+`lesson-starters-facts-swipe.pdf`: the same 18 slides as the Instagram carousel in
 `archive/instagram/2026-10-lesson-starters-facts/` (details and sources there). Upload it as a document.
 
 ## Post
