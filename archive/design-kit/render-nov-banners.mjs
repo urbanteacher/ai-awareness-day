@@ -8,7 +8,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const THEME = path.resolve(here, '../..');
 const OUT = process.argv[2]; fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(here, 'nov-banners.built.html'), fs.readFileSync(path.join(here, 'nov-banners.html'), 'utf8').replaceAll('THEME', pathToFileURL(THEME).href));
-const names = { n01: '01-october-in-one-read', n02: '02-bbc-bitesize-calendar', n03: '03-free-ai-audit', n04: '04-lesson-starters', n05: '05-new-partners', n06: '06-two-new-articles', n07: '07-how-to-run-a-debate', n08: '08-instagram', n09: '09-coming-up', n10: '10-dessa-classroom-debate', n11: '11-eight-skills' };
+const names = { n01: '01-oracy-is-back', n02: '02-bbc-bitesize-calendar', n03: '03-free-ai-audit', n04: '04-lesson-starters', n05: '05-new-partners', n06: '06-human-bottleneck', n07: '07-how-to-run-a-debate', n08: '08-instagram', n09: '09-coming-up', n10: '10-dessa-classroom-debate', n11: '11-eight-skills' };
 const b = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
 const p = await b.newPage({ viewport: { width: 660, height: 800 }, deviceScaleFactor: 2 });
 await p.goto(pathToFileURL(path.join(here, 'nov-banners.built.html')).href, { waitUntil: 'networkidle' });

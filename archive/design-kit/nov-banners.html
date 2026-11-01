@@ -27,13 +27,14 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
 .ink .lead { color: #C9C6BE; } .cream .lead { color: var(--dim); }
 .tile { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
 
-/* 01 masthead: October in one read, with a contents grid */
-#n01 h2 { font-size: 52px; margin-top: 30px; }
-#n01 .date { font-size: 20px; font-weight: 600; color: var(--safe); margin-top: 18px; }
-#n01 .theme { font-size: 15px; color: #C9C6BE; margin-top: 6px; }
-#n01 .grid { position: absolute; left: 330px; top: 46px; width: 244px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-#n01 .g { height: 62px; padding: 9px 12px; color: var(--ink); display: flex; flex-direction: column; justify-content: space-between; font-size: 20px; }
-#n01 .g span { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+/* 01 lead story: oracy, with the road from the announcement to first teaching */
+#n01 h2 { font-size: 64px; margin-top: 26px; }
+#n01 .lead { width: 270px; margin-top: 16px; }
+#n01 .tl { position: absolute; left: 330px; top: 40px; width: 244px; display: grid; gap: 8px; }
+#n01 .st { height: 66px; padding: 10px 14px; color: var(--ink); display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+#n01 .st b { font-size: 20px; letter-spacing: -.03em; }
+#n01 .st span { font-size: 13px; font-weight: 600; }
+#n01 .now { margin-left: -18px; }
 
 /* 02 BBC Bitesize calendar (our own drawing, no BBC branding) */
 #n02 h2 { font-size: 36px; margin: 20px 0 12px; width: 290px; }
@@ -73,13 +74,12 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
 #n05 .p span { font-size: 14px; color: var(--dim); line-height: 1.3; }
 #n05 .p small { font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
 
-/* 06 two new articles */
-#n06 h2 { font-size: 36px; margin: 18px 0 0; }
-#n06 .as { position: absolute; left: 28px; right: 28px; bottom: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-#n06 .a { height: 150px; padding: 14px 16px; color: var(--ink); display: flex; flex-direction: column; justify-content: space-between; }
-#n06 .a small { font-size: 10px; font-weight: 700; letter-spacing: .14em; }
-#n06 .a b { font-size: 25px; letter-spacing: -.035em; line-height: 1.02; }
-#n06 .a .bar { width: 50px; height: 3px; background: var(--ink); }
+/* 06 the human bottleneck article */
+#n06 h2 { font-size: 40px; margin: 20px 0 14px; width: 300px; }
+#n06 .lead { width: 280px; }
+#n06 .stat { position: absolute; left: 350px; top: 44px; width: 224px; height: 212px; background: var(--safe); color: var(--ink); padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+#n06 .stat b { font-size: 84px; letter-spacing: -.05em; line-height: 1; }
+#n06 .stat span { font-size: 16px; font-weight: 700; line-height: 1.25; }
 
 /* 07 how to run a debate */
 #n07 h2 { font-size: 38px; margin: 18px 0 10px; }
@@ -142,19 +142,15 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
   <symbol id="future" viewBox="0 0 24 24"><path d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></symbol>
 </svg>
 
-<!-- 01 Masthead -->
+<!-- 01 Lead story: oracy is back on the curriculum -->
 <section class="b ink" id="n01">
   <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>November newsletter</div>
-  <h2>October,<br>in one read</h2>
-  <div class="date">Thursday 29 April 2027</div>
-  <div class="theme">Humans in the Loop</div>
-  <div class="grid">
-    <div class="g tile" style="background:var(--smart)"><svg class="i"><use href="#smart"/></svg><span>BBC Bitesize</span></div>
-    <div class="g tile" style="background:var(--safe)"><svg class="i"><use href="#safe"/></svg><span>Free AI audit</span></div>
-    <div class="g tile" style="background:var(--creative)"><svg class="i"><use href="#creative"/></svg><span>Lesson starters</span></div>
-    <div class="g tile" style="background:var(--responsible)"><svg class="i"><use href="#responsible"/></svg><span>New partners</span></div>
-    <div class="g tile" style="background:var(--future)"><svg class="i"><use href="#future"/></svg><span>New articles</span></div>
-    <div class="g tile" style="background:var(--cream)"><svg class="i"><use href="#creative"/></svg><span>Debate guides</span></div>
+  <h2>Oracy is<br>back</h2>
+  <p class="lead">Speaking joins reading and writing in England’s national curriculum.</p>
+  <div class="tl">
+    <div class="st tile" style="background:var(--safe)"><b>Spring 2027</b><span>Final curriculum published</span></div>
+    <div class="st tile now" style="background:var(--smart)"><b>29 April 2027</b><span>AI Awareness Day</span></div>
+    <div class="st tile" style="background:var(--future)"><b>Sept 2028</b><span>First teaching</span></div>
   </div>
 </section>
 
@@ -207,14 +203,12 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
   </div>
 </section>
 
-<!-- 06 Two new articles -->
+<!-- 06 The human bottleneck article -->
 <section class="b ink" id="n06">
   <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Worth a read</div>
-  <h2>Two new articles</h2>
-  <div class="as">
-    <div class="a tile" style="background:var(--future)"><small>ORACY</small><b>Speaking joins reading and writing</b><div class="bar"></div></div>
-    <div class="a tile" style="background:var(--safe)"><small>WORK</small><b>Is the human the new bottleneck?</b><div class="bar"></div></div>
-  </div>
+  <h2>Is the human the new bottleneck?</h2>
+  <p class="lead">What Anthropic’s report on its own workplace means for schools and careers.</p>
+  <div class="stat tile"><b>80%</b><span>of AI session time at Anthropic is spent waiting for a person</span></div>
 </section>
 
 <!-- 07 How to run a debate -->

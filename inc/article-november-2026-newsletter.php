@@ -1,6 +1,6 @@
 <?php
 /**
- * One-time: publish the November 2026 newsletter (the October round-up) as a campaign update, the way the October issue
+ * One-time: publish the November 2026 newsletter (Oracy is back, plus the October round-up) as a campaign update, the way the October issue
  * is at /timeline/october-newsletter/. The text is inc/articles/november-2026-newsletter.html, the same words as the
  * Beehiiv issue (archive/newsletter/2026-11-november/newsletter-copy.md). Its banners, in
  * assets/images/newsletter/2026-11/ (from archive/design-kit/nov-banners.html), are imported into the media library and
@@ -39,8 +39,8 @@ function aiad_migrate_november_2026_newsletter(): void {
 			'post_type'    => 'timeline',
 			'post_status'  => 'publish',
 			'post_name'    => $slug,
-			'post_title'   => 'November Newsletter: October Round-Up',
-			'post_excerpt' => 'AI Awareness Day in the BBC Bitesize calendar, a free AI audit, five lesson starters, two new partners and two new articles: October in one read.',
+			'post_title'   => 'November Newsletter: Oracy Is Back on the Curriculum',
+			'post_excerpt' => 'Oracy joins reading and writing in England’s national curriculum, taught from September 2028: perfect timing for AI Awareness Day 2027. Plus October in one read: BBC Bitesize, a free AI audit, lesson starters and new partners.',
 			'post_content' => '',
 		)
 	);
