@@ -116,9 +116,11 @@ Button: **Meet our partners** → https://aiawarenessday.co.uk/partners/
 
 [12-partner-with-us.png] Alt text: Partner with us. Join the loop: we’re welcoming new partners and sponsors for AI Awareness Day 2027. The five theme tiles in a ring, with one open place marked Your organisation.
 
-AI Awareness Day has grown because of the organisations behind it: charities, trusts, publishers, edtech teams and many more, each helping young people question AI, not just use it.
+In 2026 we engaged hundreds of thousands of young people, working with the UK’s computing and education bodies, including BCS, Computing at School, the National Centre for Computing Education, STEM Learning and the Raspberry Pi Foundation. Six multi-academy trusts, covering 192 schools and around 136,500 students, also worked with us.
 
-For 2027 we’re welcoming new partners and sponsors. There’s room for different kinds of support, from sharing the campaign with your networks or contributing classroom resources, to supporting the National Debate Network or sponsoring the day itself. We’ll work with you to find the fit that makes sense for you and for schools.
+2026 was about resources: helping schools build AI literacy. 2027 is a new season. From January, the National Conversation brings schools together to debate each other across the country, in person and online, and running it well takes more than ever before. So for the first time, we’re inviting organisations to support the campaign directly, as partners and sponsors.
+
+There’s room for different kinds of support, from sharing the campaign with your networks or contributing classroom resources, to supporting the National Debate Network or sponsoring the day itself. We’ll work with you to find the fit that makes sense for you and for schools.
 
 If that sounds like your organisation, we’d love to talk. Get in touch through our contact form (choose “Organisation”) or simply reply to this email.
 
