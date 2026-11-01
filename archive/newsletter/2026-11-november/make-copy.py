@@ -35,7 +35,7 @@ O(['<strong>Oracy &amp; Communication:</strong> fluent spoken language, confiden
 P('Which of these skills matters most to you? Just reply and tell us.')
 P('That’s why we’re launching the National AI Conversation: young people across the UK debating the big questions about AI, in their classrooms, their schools and with schools across the country.')
 B('Explore the National Conversation',SITE+'/national-conversation/')
-P('<strong>Also in October:</strong> AI Awareness Day landed in the BBC Bitesize calendar, teachers around the world took our free AI audit, two new partners joined and our lesson starters got a refresh. Here it all is.')
+P('<strong>Also in October:</strong> AI Awareness Day landed in the BBC Bitesize calendar, teachers around the world took our free AI audit, two new partners joined and our lesson starters got a refresh. And on World Teachers’ Day we said thank you to the real humans in the loop: teachers, who help young people question AI, not just use it. Here it all is.')
 H('In BBC Bitesize'); I('02-bbc-bitesize-calendar','Teachers’ calendar. On the page teachers plan from: AI Awareness Day is now in the BBC Bitesize calendar for April. A calendar for April 2027 with Thursday 29 April marked.')
 P('AI Awareness Day is now in the BBC Bitesize educational calendar for teachers. Every year, Bitesize maps out the dates schools plan around, month by month: Earth Day, Shakespeare Day, Stephen Lawrence Day and more. Thursday 29 April 2027 is now one of them, right where teachers look when they plan the school year.')
 B('See the April calendar','https://www.bbc.co.uk/teach/topics/c9wk4kxgkxjt')
@@ -59,6 +59,11 @@ H('New partners'); I('05-new-partners','New event partners. Welcome to the loop:
 P('<strong>AILitKit</strong> helps teachers bring AI literacy into the lessons they already teach, in any subject and year group. Every guide includes an unplugged activity, and pupils never need an account. '+A('ailitkit.com/ai-literacy','https://ailitkit.com/ai-literacy'))
 P('<strong>DigitALL</strong> is a charity building young people’s digital skills through climate and sustainability. Its free Spark AI and EcoCode resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.')
 B('Meet our partners',SITE+'/partners/')
+H('Partner with us'); I('12-partner-with-us','Partner with us. Join the loop: we’re welcoming new partners and sponsors for AI Awareness Day 2027. The five theme tiles in a ring, with one open place marked Your organisation.')
+P('AI Awareness Day has grown because of the organisations behind it: charities, trusts, publishers, edtech teams and many more, each helping young people question AI, not just use it.')
+P('For 2027 we’re welcoming new partners and sponsors. There’s room for different kinds of support, from sharing the campaign with your networks or contributing classroom resources, to supporting the National Debate Network or sponsoring the day itself. We’ll work with you to find the fit that makes sense for you and for schools.')
+P('If that sounds like your organisation, we’d love to talk. Get in touch through our contact form (choose “Organisation”) or simply reply to this email.')
+B('Talk to us about partnering',SITE+'/#contact')
 H('Debate guides'); I('07-how-to-run-a-debate','Debate Network. How to run a debate: a step-by-step guide for every age, primary, secondary and post-16. 30 minutes, stage by stage.')
 P('Signed up to the National Debate Network? There’s now a step-by-step “How to run a debate” guide for primary, secondary and post-16: the weeks before, the room layout, who does what, the 30 minutes stage by stage, a rebuttal card, success criteria and how to include every student. You’ll find it in the portal once you’re signed in.')
 H('We’re on Instagram'); I('08-instagram','We’re on Instagram. Follow along: a big question a week, and classroom ideas you can use tomorrow. @aiawarenessday')
@@ -75,7 +80,13 @@ def block(k,v,site):
     if k=='btn': return f'<!-- wp:buttons -->\n<div class="wp-block-buttons"><!-- wp:button -->\n<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{v[1]}">{v[0]}</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->'
     if k=='ol': return '<!-- wp:list {"ordered":true} -->\n<ol class="wp-block-list">'+''.join(f'<!-- wp:list-item -->\n<li>{i}</li>\n<!-- /wp:list-item -->' for i in v)+'</ol>\n<!-- /wp:list -->'
     if k=='ul': return '<!-- wp:list -->\n<ul class="wp-block-list">'+''.join(f'<!-- wp:list-item -->\n<li>{i}</li>\n<!-- /wp:list-item -->' for i in v)+'</ul>\n<!-- /wp:list -->'
-site=[block(k,v,True) for k,v in doc if not (k=='p' and v=='Hello,')]
+# On the website there is no email to reply to.
+WEB={' or simply reply to this email.':'.','Which of these skills matters most to you? Just reply and tell us.':'Which of these skills matters most to you? Tell us on <a href="https://www.instagram.com/aiawarenessday/">Instagram</a> or LinkedIn.'}
+def web(v):
+    if isinstance(v,str):
+        for a,b in WEB.items(): v=v.replace(a,b)
+    return v
+site=[block(k,web(v),True) for k,v in doc if not (k=='p' and v=='Hello,')]
 site.append(block('p','Get every newsletter in your inbox: <a href="https://aiawarenessday.beehiiv.com/subscribe">subscribe for free</a>.',True))
 open('inc/articles/november-2026-newsletter.html','w').write('\n\n'.join(site)+'\n')
 

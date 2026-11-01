@@ -49,7 +49,7 @@ That’s why we’re launching the National AI Conversation: young people across
 
 Button: **Explore the National Conversation** → https://aiawarenessday.co.uk/national-conversation/
 
-**Also in October:** AI Awareness Day landed in the BBC Bitesize calendar, teachers around the world took our free AI audit, two new partners joined and our lesson starters got a refresh. Here it all is.
+**Also in October:** AI Awareness Day landed in the BBC Bitesize calendar, teachers around the world took our free AI audit, two new partners joined and our lesson starters got a refresh. And on World Teachers’ Day we said thank you to the real humans in the loop: teachers, who help young people question AI, not just use it. Here it all is.
 
 ## In BBC Bitesize
 
@@ -111,6 +111,18 @@ Which side would your students take? Block’s page: [block.xyz/dessa](https://b
 **DigitALL** is a charity building young people’s digital skills through climate and sustainability. Its free Spark AI and EcoCode resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.
 
 Button: **Meet our partners** → https://aiawarenessday.co.uk/partners/
+
+## Partner with us
+
+[12-partner-with-us.png] Alt text: Partner with us. Join the loop: we’re welcoming new partners and sponsors for AI Awareness Day 2027. The five theme tiles in a ring, with one open place marked Your organisation.
+
+AI Awareness Day has grown because of the organisations behind it: charities, trusts, publishers, edtech teams and many more, each helping young people question AI, not just use it.
+
+For 2027 we’re welcoming new partners and sponsors. There’s room for different kinds of support, from sharing the campaign with your networks or contributing classroom resources, to supporting the National Debate Network or sponsoring the day itself. We’ll work with you to find the fit that makes sense for you and for schools.
+
+If that sounds like your organisation, we’d love to talk. Get in touch through our contact form (choose “Organisation”) or simply reply to this email.
+
+Button: **Talk to us about partnering** → https://aiawarenessday.co.uk/#contact
 
 ## Debate guides
 

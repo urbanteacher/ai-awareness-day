@@ -132,6 +132,15 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
 #cover .c { position: absolute; color: var(--ink); display: grid; place-items: center; }
 #cover .ring { position: absolute; border-radius: 50%; border: 3px solid rgba(246,244,237,.2); }
 #cover .human { position: absolute; fill: var(--cream); }
+
+/* 12 partner with us: the loop with one open place */
+#n12 h2 { font-size: 46px; margin: 22px 0 14px; }
+#n12 .lead { width: 270px; }
+#n12 .loop { position: absolute; left: 340px; top: 30px; width: 240px; height: 240px; }
+#n12 .ring { position: absolute; inset: 30px; border: 2px solid var(--rule); border-radius: 50%; }
+#n12 .c { position: absolute; width: 52px; height: 52px; display: grid; place-items: center; color: var(--ink); font-size: 26px; }
+#n12 .open { position: absolute; width: 86px; height: 62px; border: 2px dashed var(--ink); background: var(--cream); display: grid; place-items: center; text-align: center; font-size: 11px; font-weight: 700; line-height: 1.15; letter-spacing: .02em; }
+#n12 .human { position: absolute; left: 98px; top: 94px; width: 44px; height: 47px; fill: var(--ink); }
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -264,6 +273,14 @@ h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
   <div class="sk"><div class="tile" style="background:var(--safe)"><b>1</b><span>Oracy</span></div><div class="tile" style="background:var(--smart)"><b>2</b><span>Public speaking</span></div><div class="tile" style="background:var(--creative)"><b>3</b><span>Critical thinking</span></div><div class="tile" style="background:var(--responsible)"><b>4</b><span>Information literacy</span></div><div class="tile" style="background:var(--future)"><b>5</b><span>Conflict resolution</span></div><div class="tile" style="background:var(--safe)"><b>6</b><span>Active listening</span></div><div class="tile" style="background:var(--smart)"><b>7</b><span>Independent judgement</span></div><div class="tile" style="background:var(--creative)"><b>8</b><span>Civil discourse</span></div></div>
 </section>
 
+<!-- 12 Partner with us -->
+<section class="b cream" id="n12">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Partner with us</div>
+  <h2>Join the loop</h2>
+  <p class="lead">We’re welcoming new partners and sponsors for AI Awareness Day 2027.</p>
+  <div class="loop" id="loop12"><div class="ring"></div></div>
+</section>
+
 <!-- Website cover (no text) -->
 <section id="cover"></section>
 
@@ -273,6 +290,14 @@ let h = ['M','T','W','T','F','S','S'].map(d => `<i class="h">${d}</i>`).join('')
 for (let d = 1; d <= 30; d++) h += `<i${d === 29 ? ' class="on"' : ''}>${d}</i>`;
 document.getElementById('days').innerHTML = h;
 
+// 12: five strand tiles round the ring, and one open place for the next partner.
+{ const L = document.getElementById('loop12'), S = ['safe','smart','creative','responsible','future'], cx = 120, cy = 120, R = 90; let h = '';
+  S.forEach((s, k) => { const a = (-90 + 60*k) * Math.PI/180;
+    h += `<div class="c tile" style="background:var(--${s});left:${cx+R*Math.cos(a)-26}px;top:${cy+R*Math.sin(a)-26}px"><svg class="i"><use href="#${s}"/></svg></div>`; });
+  const a = 210 * Math.PI/180;
+  h += `<div class="open tile" style="left:${cx+R*Math.cos(a)-43}px;top:${cy+R*Math.sin(a)-31}px">Your<br>organisation</div>`;
+  h += `<svg class="human" viewBox="-30 -34 60 64"><circle cx="0" cy="-18" r="13"/><path d="M-26 30 C-26 6 -13 -1 0 -1 C13 -1 26 6 26 30 Z"/></svg>`;
+  L.innerHTML += h; }
 // The cover: the loop of five strand tiles around a person, with October's six stories as tiles drifting out of it.
 { const S = ['safe','smart','creative','responsible','future'], cx = 375, cy = 250, R = 130, t = 78;
   let h = [210, 300, 400].map((r, i) => `<div class="ring" style="left:${cx-r}px;top:${cy-r}px;width:${2*r}px;height:${2*r}px;opacity:${1 - i*.3}"></div>`).join('');
