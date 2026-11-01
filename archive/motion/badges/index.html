@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Awareness Day 2027 — newsletter badges</title>
+<!--
+  Looping 900×900 badges for the newsletter, on ../lib/motion.js like the films: the countdown badges
+  (?badge=2weeks, 1week, 1day, today), the newsletter badge (?badge=newsletter) and the November 2026 issue's badge
+  (?badge=november: "November newsletter", then its lead story, oracy, with the date). Each loop starts and ends on
+  an empty cream frame, so the GIF repeats without a jump. Silent: no voice-over or cues.
+  Watch one with node archive/motion/serve.mjs, then /archive/motion/badges/?badge=today
+-->
+<script>window.SIZE = [900, 900];</script>
+<link rel="stylesheet" href="../lib/motion.css">
+<style>
+#stage { background: var(--cream); color: var(--ink); }
+
+/* The 2027 mark: an ink chamfer panel that shrinks into the top of the badge after its intro */
+#mkw { left: 190px; top: 150px; width: 520px; height: 520px; transform-origin: 50% 50%; }
+#mkp { --k: 92px; position: absolute; inset: 0; background: var(--ink); }
+.mk { font-size: 72px; font-weight: 600; line-height: 74px; color: var(--cream); text-transform: uppercase; letter-spacing: -.01em; }
+.yr { font-size: 62px; font-weight: 600; line-height: 1; color: var(--cream); }
+.roll { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; }
+.rolli { display: flex; flex-direction: column; }
+
+/* Countdown and date */
+.big { font-size: 150px; font-weight: 700; line-height: .98; letter-spacing: -.045em; text-transform: uppercase; margin: 0; }
+.big.one { font-size: 172px; }
+.dt { font-size: 128px; font-weight: 700; line-height: 1; letter-spacing: -.045em; margin: 0; }
+.bar5 { display: flex; justify-content: center; gap: 12px; }
+.bar5 i { width: 96px; height: 16px; transform-origin: 0 50%; }
+.chip { --k: 22px; display: inline-block; background: var(--ink); color: var(--cream); font-size: 64px; font-weight: 600; padding: 14px 40px 20px; letter-spacing: -.02em; }
+.icons { display: flex; justify-content: center; gap: 30px; }
+.icons svg { transform-origin: 50% 50%; }
+.lbl { font-size: 26px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #006A7D; }
+.uline { width: 300px; height: 16px; background: var(--ink); margin: 26px auto 0; transform-origin: 50% 50%; }
+
+/* Confetti tiles for "Today!" and the strand badge grid */
+.conf { --k: 10px; position: absolute; left: 430px; top: 430px; width: 40px; height: 40px; }
+.pg { position: absolute; width: 236px; height: 236px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="abs" id="confetti"></div>
+
+  <div class="abs" id="mkw">
+    <div class="cut" id="mkp">
+      <div class="abs" id="mkt" style="left:46px;top:96px">
+        <div class="mk split">AI</div>
+        <div class="mk split">Awareness</div>
+        <div class="mk split">Day</div>
+      </div>
+      <div class="abs yr" id="yr" style="right:56px;bottom:46px">202<span class="roll"><span class="rolli" id="rolli"><span>6</span><span>7</span></span></span></div>
+    </div>
+  </div>
+
+  <!-- countdown / newsletter word -->
+  <div class="abs cx" id="cd" style="top:300px"><h1 class="big split" id="cdh"></h1></div>
+  <div class="abs cx" id="bar5w" style="top:690px"><div class="bar5" id="bar5"><i style="background:var(--safe)"></i><i style="background:var(--smart)"></i><i style="background:var(--creative)"></i><i style="background:var(--responsible)"></i><i style="background:var(--future)"></i></div></div>
+  <div class="abs cx" id="ul" style="top:470px"><div class="uline" id="uline"></div></div>
+
+  <!-- date -->
+  <div class="abs cx lbl" id="dlbl" style="top:238px">AI Awareness Day</div>
+  <div class="abs cx" style="top:290px"><h2 class="dt split" id="dth">Thursday<br>29 April</h2></div>
+  <div class="abs cx" id="dchip" style="top:568px"><div class="chip cut">2027</div></div>
+  <div class="abs cx icons" id="icons" style="top:712px"></div>
+
+  <!-- strand badges -->
+  <div class="abs" id="grid" style="left:0;top:0"></div>
+</div>
+
+<script src="../lib/motion.js"></script>
+<script>
+const BADGE = (PARAMS.get('badge') || 'today').toLowerCase();
+const COPY = { '2weeks': '2 weeks<br>to go!', '1week': '1 week<br>to go!', '1day': '1 day<br>to go!', today: 'Today!', newsletter: 'Newsletter', november: 'November<br>newsletter' };
+$('#cdh').innerHTML = COPY[BADGE] || COPY.today;
+if (BADGE === 'today') $('#cdh').classList.add('one');
+// November: a two-line headline, then the issue's lead story in place of the countdown's date scene, the date in the chip.
+if (BADGE === 'november') {
+  $('#cdh').style.fontSize = '118px'; $('#cd').style.top = '300px'; $('#bar5w').style.top = '580px';
+  $('#dlbl').textContent = 'In this issue'; $('#dth').innerHTML = 'Oracy is<br>back';
+  $('#dchip .chip').textContent = '29 April 2027'; $('#dchip .chip').style.fontSize = '54px';
+}
+if (BADGE === 'newsletter') {
+  $('#cdh').style.fontSize = '128px'; $('#cd').style.top = '340px';
+  ['#bar5w', '#dlbl', '#dth', '#dchip', '#icons'].forEach(s => { const el = $(s); (el.closest('.abs') || el).remove(); });
+} else $('#ul').remove();
+if (BADGE === 'today') $('#bar5w').style.top = '560px';
+
+if ($('#icons')) STRANDS.forEach(s => $('#icons').insertAdjacentHTML('beforeend', icon(s, 72, s.c)));
+
+// The six strand badges (assets/images/polygon-shapes), for the newsletter badge's last scene.
+const PG = ['aiad', 'safe', 'smart', 'creative', 'responsible', 'future'];
+if (BADGE === 'newsletter') PG.forEach((n, i) => {
+  const x = 84 + (i % 3) * 252, y = 186 + Math.floor(i / 3) * 268;
+  $('#grid').insertAdjacentHTML('beforeend', `<img class="pg" src="../../../assets/images/polygon-shapes/${n}-polygon.svg" style="left:${x}px;top:${y}px" alt="">`);
+});
+
+// Confetti for "Today!": chamfer tiles in the strand colours, flung out from the middle.
+const rnd = mulberry32(2904);
+const conf = [];
+if (BADGE === 'today') for (let i = 0; i < 22; i++) {
+  const s = STRANDS[i % 5];
+  const el = document.createElement('div'); el.className = 'conf cut'; el.style.background = s.c;
+  const a = (i / 22) * Math.PI * 2 + rnd() * .3, r = 300 + rnd() * 140;
+  $('#confetti').appendChild(el);
+  conf.push({ el, x: Math.cos(a) * r, y: Math.sin(a) * r * .92, rot: (rnd() - .5) * 540, sc: .6 + rnd() * .8 });
+}
+
+function build() {
+  // 1 · the mark wipes in, its words slide up, the year rolls 2026 → 2027
+  to('#mkw', .1, .8, { '--p': [0, 1] }, 'outExpo');
+  $('#mkw').classList.add('pw');
+  to('#mkw', .1, .9, { x: [-40, 0] }, 'outExpo');
+  wordsIn('#mkt', .3, .09, .85);
+  fadeUp('#yr', .6, .5, 16);
+  to('#rolli', 1.15, .6, { yp: [0, -50] }, 'outExpo');
+
+  // 2 · the mark shrinks to the top; the headline slams in
+  const s2 = 1.95;
+  to('#mkw', s2, .7, { scale: [1, .25], y: [0, -282] }, 'inOutCubic');
+  wordsIn('#cdh', s2 + .35, .1, .85);
+  to('#cdh', s2 + .35, .9, { scale: [1.12, 1] }, 'outExpo');
+
+  if (BADGE === 'newsletter') {
+    to('#uline', s2 + .7, .7, { sx: [0, 1] }, 'outExpo');
+    // 3 · the six strand badges pop into a grid
+    const s3 = 4.1;
+    wordsOut('#cdh', s3, .03, .45);
+    to('#cdh', s3 + .45, .15, { opacity: [1, 0] }, 'linear');
+    to('#uline', s3, .35, { sx: [1, 0] }, 'inCubic');
+    to('#mkw', s3, .4, { scale: [.25, 0], opacity: [1, 0] }, 'inBack');
+    $$('.pg').forEach((el, i) => {
+      to(el, s3 + .35 + i * .1, .75, { scale: [.3, 1], rot: [i % 2 ? 14 : -14, 0] }, 'outBack');
+      to(el, s3 + .35 + i * .1, .2, { opacity: [0, 1] }, 'linear');
+    });
+    // a gentle pulse along the grid while it holds
+    $$('.pg').forEach((el, i) => to(el, 5.9 + i * .07, .5, { y: [0, -14] }, 'outCubic'));
+    $$('.pg').forEach((el, i) => to(el, 6.25 + i * .07, .5, { y: [-14, 0] }, 'outBack'));
+    // out
+    const out = 7.3;
+    $$('.pg').forEach((el, i) => to(el, out + i * .05, .4, { scale: [1, 0] }, 'inBack'));
+    return out + .9;
+  }
+
+  stagger('#bar5 i', s2 + .7, .55, .07, { sx: [0, 1] }, 'outExpo');
+  if (BADGE === 'today') conf.forEach((c, i) => {
+    const t = s2 + .45 + i * .012;
+    to(c.el, t, 1.1, { x: [0, c.x], y: [0, c.y], rot: [0, c.rot], scale: [.2, c.sc] }, 'outExpo');
+    to(c.el, t, .15, { opacity: [0, 1] }, 'linear');
+    to(c.el, t + 1.5, .5, { opacity: [1, 0], scale: [c.sc, 0] }, 'inCubic');
+  });
+
+  // 3 · out with the countdown, in with the date and the five strands
+  const s3 = 4.1;
+  wordsOut('#cdh', s3, .03, .45);
+  to('#cdh', s3 + .45, .15, { opacity: [1, 0] }, 'linear');
+  stagger('#bar5 i', s3, .3, .03, { sx: [1, 0] }, 'inCubic');
+  fadeUp('#dlbl', s3 + .35, .5, 14);
+  wordsIn('#dth', s3 + .35, .09, .85);
+  popIn('#dchip', s3 + .75, .6);
+  $$('#icons svg').forEach((el, i) => popIn(el, s3 + .95 + i * .08, .2));
+
+  // out: everything leaves, back to an empty cream frame for the loop
+  const out = 6.9;
+  to('#mkw', out, .4, { scale: [.25, 0], opacity: [1, 0] }, 'inBack');
+  to('#dlbl', out, .3, { opacity: [1, 0] }, 'linear');
+  wordsOut('#dth', out, .03, .45);
+  to('#dth', out + .45, .15, { opacity: [1, 0] }, 'linear');
+  to('#dchip', out + .05, .4, { scale: [1, 0] }, 'inBack');
+  $$('#icons svg').forEach((el, i) => to(el, out + .05 + i * .04, .35, { scale: [1, 0] }, 'inBack'));
+  return out + .8;
+}
+start(build);
+</script>
+</body>
+</html>
