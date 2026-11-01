@@ -122,6 +122,8 @@ For 2027 we’re welcoming new partners and sponsors. There’s room for differe
 
 If that sounds like your organisation, we’d love to talk. Get in touch through our contact form (choose “Organisation”) or simply reply to this email.
 
+**Already a partner?** Send us your latest resources, share your referral route with schools in your network, volunteer to judge a debate, or introduce us to organisations, schools and MATs who should be part of the National Conversation.
+
 Button: **Talk to us about partnering** → https://aiawarenessday.co.uk/#contact
 
 ## Debate pilots
@@ -136,6 +138,10 @@ We’ll share more on how your school can get involved early next year, ahead of
 
 Button: **Try a classroom debate** → https://aiawarenessday.co.uk/resources/
 
+## Teacher Ambassadors
+
+Have you led a debate club at your school? Your experience could help shape the National Conversation. We’re rolling out a small number of Teacher Ambassador roles: to find out more, email [info@aiawarenessday.co.uk](mailto:info@aiawarenessday.co.uk).
+
 ## We’re on Instagram
 
 [08-instagram.png] Alt text: We’re on Instagram. Follow along: a big question a week, and classroom ideas you can use tomorrow. @aiawarenessday
@@ -145,6 +151,10 @@ Follow @aiawarenessday for a big question a week, classroom ideas you can use to
 We’re also looking for teachers’ and school leaders’ hot takes on AI. Post yours on Instagram and invite @aiawarenessday as a collaborator (Tag people, then Invite collaborator). We’ll share the best ones on our profile.
 
 Button: **Follow us** → https://www.instagram.com/aiawarenessday/
+
+## Around the world
+
+We’re speaking to leads in Africa, the Caribbean and Europe about running AI Awareness Day in their own countries, independently or in sync with us, the way AI Awareness Day UK works with AI Awareness Day US. Interested? Drop us a line at [info@aiawarenessday.co.uk](mailto:info@aiawarenessday.co.uk).
 
 ## Coming up
 
