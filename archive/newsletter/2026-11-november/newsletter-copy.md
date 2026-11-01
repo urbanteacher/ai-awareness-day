@@ -124,11 +124,17 @@ If that sounds like your organisation, we’d love to talk. Get in touch through
 
 Button: **Talk to us about partnering** → https://aiawarenessday.co.uk/#contact
 
-## Debate guides
+## Debate pilots
 
-[07-how-to-run-a-debate.png] Alt text: Debate Network. How to run a debate: a step-by-step guide for every age, primary, secondary and post-16. 30 minutes, stage by stage.
+[07-debate-pilots.png] Alt text: Debate Network. Piloting with schools: our first school debates start this month. November 2026 pilot sessions for primary, secondary and post-16.
 
-Signed up to the National Debate Network? There’s now a step-by-step “How to run a debate” guide for primary, secondary and post-16: the weeks before, the room layout, who does what, the 30 minutes stage by stage, a rebuttal card, success criteria and how to include every student. You’ll find it in the portal once you’re signed in.
+This month we start piloting the National Debate Network with schools: primary, secondary and post-16 students debating the big questions about AI, with judges, scorecards and a final vote.
+
+Want to try it out now? Head over to our lesson resources. Most lesson starters come with a ready-made debate and motions for every age, so you can run one in your classroom this week.
+
+We’ll share more on how your school can get involved early next year, ahead of the National AI Conversation opening on 1 January 2027.
+
+Button: **Try a classroom debate** → https://aiawarenessday.co.uk/resources/
 
 ## We’re on Instagram
 
