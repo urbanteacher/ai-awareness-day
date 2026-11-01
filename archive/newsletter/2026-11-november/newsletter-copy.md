@@ -138,6 +138,17 @@ We’ll share more on how your school can get involved early next year, ahead of
 
 Button: **Try a classroom debate** → https://aiawarenessday.co.uk/resources/
 
+## How to take part
+
+[06b-ways-to-engage.png] Alt text: More ways to engage. Pick your level: start with one class, go as far as a national debate. Classroom Conversation, School Debate, MAT Debate and the National Debate Network.
+
+From January, primary (Years 5–6), secondary (Years 7–11) and post-16 students (Years 12–13 and FE) can take part. Choose the level that suits your school:
+
+- **Classroom Conversation:** one theme, a five-minute starter and a class discussion.
+- **School Debate:** class vs class, house vs house or year vs year.
+- **MAT Debate:** schools across your trust debate each other.
+- **National Debate Network:** our flagship, debating schools beyond your own, judged with our national scorecard.
+
 ## Teacher Ambassadors
 
 Have you led a debate club at your school? Your experience could help shape the National Conversation. We’re rolling out a small number of Teacher Ambassador roles: to find out more, email [info@aiawarenessday.co.uk](mailto:info@aiawarenessday.co.uk).
