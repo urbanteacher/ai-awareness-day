@@ -57,7 +57,7 @@ L(['<strong>Safe:</strong> if a voice on the phone sounds human, how would you c
 P('Which side would your students take? Block’s page: '+A('block.xyz/dessa','https://block.xyz/dessa'))
 H('New partners'); I('05-new-partners','New event partners. Welcome to the loop: AILitKit, AI literacy in the lessons you already teach, and DigitALL, Spark AI and EcoCode, free for schools.')
 P('<strong>AILitKit</strong> helps teachers bring AI literacy into the lessons they already teach, in any subject and year group. Every guide includes an unplugged activity, and pupils never need an account. '+A('ailitkit.com/ai-literacy','https://ailitkit.com/ai-literacy'))
-P('<strong>DigitALL</strong> is a charity building young people’s digital skills through climate and sustainability. Its free Spark AI and EcoCode resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.')
+P('<strong>DigitALL</strong> is a charity building young people’s digital skills through climate and sustainability. Its free '+A('Spark AI','https://digitall.charity/sparkai')+' and '+A('EcoCode','https://digitall.charity/ecocode')+' resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.')
 B('Meet our partners',SITE+'/partners/')
 H('Partner with us'); I('12-partner-with-us','Partner with us. Join the loop: we’re welcoming new partners and sponsors for AI Awareness Day 2027. The five theme tiles in a ring, with one open place marked Your organisation.')
 P('AI Awareness Day has grown because of the organisations behind it: charities, trusts, publishers, edtech teams and many more, each helping young people question AI, not just use it.')

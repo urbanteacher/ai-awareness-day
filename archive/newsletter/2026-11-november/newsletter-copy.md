@@ -108,7 +108,7 @@ Which side would your students take? Block’s page: [block.xyz/dessa](https://b
 
 **AILitKit** helps teachers bring AI literacy into the lessons they already teach, in any subject and year group. Every guide includes an unplugged activity, and pupils never need an account. [ailitkit.com/ai-literacy](https://ailitkit.com/ai-literacy)
 
-**DigitALL** is a charity building young people’s digital skills through climate and sustainability. Its free Spark AI and EcoCode resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.
+**DigitALL** is a charity building young people’s digital skills through climate and sustainability. Its free [Spark AI](https://digitall.charity/sparkai) and [EcoCode](https://digitall.charity/ecocode) resources are now in Extra Resources on our homepage. Thank you to Peter Marshman and the DigitALL team.
 
 Button: **Meet our partners** → https://aiawarenessday.co.uk/partners/
 
