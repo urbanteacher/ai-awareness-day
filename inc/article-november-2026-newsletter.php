@@ -1,7 +1,7 @@
 <?php
 /**
  * One-time: publish the November 2026 newsletter (Oracy is back, plus the October round-up) as a campaign update, the way the October issue
- * is at /timeline/october-newsletter/. The text is inc/articles/november-2026-newsletter.html, the same words as the
+ * is at /timeline/october-newsletter/ (this one at /timeline/november-2026/). The text is inc/articles/november-2026-newsletter.html, the same words as the
  * Beehiiv issue (archive/newsletter/2026-11-november/newsletter-copy.md). Its banners, in
  * assets/images/newsletter/2026-11/ (from archive/design-kit/nov-banners.html), are imported into the media library and
  * the IMG:{name} placeholders replaced with their addresses; the text-free website-cover.jpg becomes the featured image. Runs once
@@ -22,7 +22,7 @@ function aiad_migrate_november_2026_newsletter(): void {
 	if ( get_option( 'aiad_newsletter_2026_11_added' ) === '1' || ! post_type_exists( 'timeline' ) || ! taxonomy_exists( 'timeline_category' ) ) {
 		return;
 	}
-	$slug = 'november-newsletter';
+	$slug = 'november-2026';
 	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {
 		update_option( 'aiad_newsletter_2026_11_added', '1' );
 		return;
