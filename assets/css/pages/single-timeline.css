@@ -266,6 +266,20 @@
 	text-decoration: underline;
 }
 
+/* Button blocks (the newsletter updates' calls to action) keep button colours, not the link style above. */
+.single-timeline-entry__content .wp-block-button__link {
+	background: var(--wp--preset--color--ink, #231F20);
+	color: var(--wp--preset--color--cream, #F6F4ED);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.single-timeline-entry__content .wp-block-button__link:hover,
+.single-timeline-entry__content .wp-block-button__link:focus-visible {
+	background: var(--wp--preset--color--responsible-deep, #176E3B);
+	color: var(--wp--preset--color--cream, #F6F4ED);
+}
+
 .single-timeline-entry__content .entry-content__tags {
 	font-size: 0.9rem;
 	color: var(--gray-500);

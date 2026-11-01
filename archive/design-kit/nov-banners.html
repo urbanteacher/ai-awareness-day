@@ -1,0 +1,292 @@
+<!doctype html>
+<!-- November 2026 newsletter banners (the October round-up). 600×300 each, rendered at 2× and transparent by
+     render-nov-banners.mjs. Same frame and type as banners.html (the October issue). Headlines are big because they are
+     read at about 350px wide on a phone. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root {
+  --cream: #F6F4ED; --ink: #231F20; --dim: #54504E; --rule: #C9C6BE;
+  --safe: #00BEDD; --smart: #FF7038; --creative: #AC91FF; --responsible: #63DF93; --future: #FA83EB;
+  --safe-deep: #006A7D; --creative-deep: #6441B8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #F6F4ED; font-family: 'AIAD Sans', Arial, sans-serif; color: var(--ink); padding: 20px; display: grid; gap: 20px; }
+svg.i { width: 1em; height: 1em; fill: currentColor; display: block; }
+.b { width: 600px; height: 300px; position: relative; overflow: hidden; padding: 26px 28px;
+     clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px)); }
+.cream { background: #EAE7DF; } .ink { background: var(--ink); color: var(--cream); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 3px; } .sig i { width: 8px; height: 8px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.on-colour .sig i { outline: 1.5px solid var(--ink); outline-offset: -0.5px; }
+h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
+.lead { font-size: 16px; line-height: 1.4; }
+.ink .lead { color: #C9C6BE; } .cream .lead { color: var(--dim); }
+.tile { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+
+/* 01 masthead: October in one read, with a contents grid */
+#n01 h2 { font-size: 52px; margin-top: 30px; }
+#n01 .date { font-size: 20px; font-weight: 600; color: var(--safe); margin-top: 18px; }
+#n01 .theme { font-size: 15px; color: #C9C6BE; margin-top: 6px; }
+#n01 .grid { position: absolute; left: 330px; top: 46px; width: 244px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#n01 .g { height: 62px; padding: 9px 12px; color: var(--ink); display: flex; flex-direction: column; justify-content: space-between; font-size: 20px; }
+#n01 .g span { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+
+/* 02 BBC Bitesize calendar (our own drawing, no BBC branding) */
+#n02 h2 { font-size: 36px; margin: 20px 0 12px; width: 290px; }
+#n02 .lead { width: 270px; }
+#n02 .cal { position: absolute; left: 330px; top: 34px; width: 244px; background: var(--cream); padding: 12px 12px 10px; }
+#n02 .cal .m { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; letter-spacing: .1em; margin-bottom: 8px; }
+#n02 .cal .m em { font-style: normal; color: var(--dim); font-weight: 600; }
+#n02 .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+#n02 .days i { font-style: normal; height: 26px; display: grid; place-items: center; font-size: 11px; font-weight: 600; color: var(--dim); background: #EAE7DF; }
+#n02 .days i.h { background: transparent; height: 16px; font-size: 9px; letter-spacing: .06em; }
+#n02 .days i.x { background: transparent; }
+#n02 .days i.on { background: var(--ink); color: var(--cream); font-size: 13px; font-weight: 700; outline: 3px solid var(--smart); outline-offset: 1px; }
+#n02 .flag { position: absolute; left: 354px; top: 246px; background: var(--smart); color: var(--ink); font-size: 13px; font-weight: 700; padding: 8px 12px; }
+
+/* 03 free AI audit */
+#n03 h2 { font-size: 40px; margin: 20px 0 14px; width: 300px; }
+#n03 .lead { width: 270px; }
+#n03 .roles { position: absolute; left: 340px; top: 52px; width: 234px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#n03 .r { height: 72px; padding: 10px 12px; color: var(--ink); display: flex; flex-direction: column; justify-content: space-between; }
+#n03 .r b { font-size: 17px; letter-spacing: -.02em; }
+#n03 .r span { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+#n03 .pill { position: absolute; left: 340px; top: 222px; width: 234px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: var(--cream); }
+#n03 .pill span { border: 1.5px solid rgba(246,244,237,.4); padding: 6px 9px; }
+
+/* 04 lesson starters: five themes, five takeaways */
+#n04 h2 { font-size: 34px; margin: 18px 0 22px; }
+#n04 .row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+#n04 .t { height: 140px; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; font-size: 30px; }
+#n04 .t span { font-size: 14px; font-weight: 700; letter-spacing: -.015em; line-height: 1.1; }
+
+/* 05 new partners */
+#n05 { background: var(--smart); }
+#n05 h2 { font-size: 44px; margin: 20px 0 0; }
+#n05 .ps { position: absolute; left: 28px; right: 28px; bottom: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#n05 .p { height: 120px; background: var(--cream); padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+#n05 .p b { font-size: 30px; letter-spacing: -.04em; line-height: 1; }
+#n05 .p span { font-size: 14px; color: var(--dim); line-height: 1.3; }
+#n05 .p small { font-size: 10px; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
+
+/* 06 two new articles */
+#n06 h2 { font-size: 36px; margin: 18px 0 0; }
+#n06 .as { position: absolute; left: 28px; right: 28px; bottom: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#n06 .a { height: 150px; padding: 14px 16px; color: var(--ink); display: flex; flex-direction: column; justify-content: space-between; }
+#n06 .a small { font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+#n06 .a b { font-size: 25px; letter-spacing: -.035em; line-height: 1.02; }
+#n06 .a .bar { width: 50px; height: 3px; background: var(--ink); }
+
+/* 07 how to run a debate */
+#n07 h2 { font-size: 38px; margin: 18px 0 10px; }
+#n07 .lead { width: 300px; }
+#n07 .stairs { position: absolute; left: 300px; right: 28px; bottom: 0; display: flex; align-items: flex-end; gap: 6px; }
+#n07 .st { flex: 1 1 0; padding: 12px 10px; display: flex; flex-direction: column; gap: 3px; }
+#n07 .st b { font-size: 17px; white-space: nowrap; letter-spacing: -.02em; }
+#n07 .st span { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; opacity: .8; }
+#n07 .clock { position: absolute; left: 28px; bottom: 28px; display: flex; gap: 10px; align-items: center; font-size: 15px; font-weight: 600; }
+#n07 .clock b { background: var(--ink); color: var(--cream); font-size: 20px; padding: 8px 12px; }
+
+/* 08 Instagram */
+#n08 { background: linear-gradient(120deg, var(--smart) 0%, var(--future) 55%, var(--creative) 100%); }
+#n08 h2 { font-size: 44px; margin: 20px 0 12px; }
+#n08 .lead { color: var(--ink); width: 290px; font-weight: 600; }
+#n08 .handle { position: absolute; left: 28px; right: 28px; bottom: 28px; height: 74px; background: var(--ink); color: var(--cream); display: flex; align-items: center; gap: 16px; padding: 0 22px; font-size: 32px; font-weight: 700; letter-spacing: -.03em; }
+#n08 .handle svg { width: 38px; height: 38px; }
+#n08 .bubble { position: absolute; right: 44px; top: 34px; width: 112px; height: 92px; background: var(--cream); display: grid; place-items: center; font-size: 60px; font-weight: 700; }
+
+/* 09 coming up */
+#n09 h2 { font-size: 36px; margin-top: 18px; }
+#n09 .tl { position: absolute; left: 28px; right: 28px; bottom: 30px; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr); gap: 10px; align-items: end; }
+#n09 .d { padding: 14px; height: 116px; display: flex; flex-direction: column; justify-content: space-between; }
+#n09 .d b { font-size: 22px; letter-spacing: -.03em; line-height: 1.05; }
+#n09 .d span { font-size: 15px; font-weight: 600; line-height: 1.2; }
+#n09 .d.big { height: 150px; background: var(--ink); color: var(--cream); }
+#n09 .d.big b { font-size: 30px; }
+#n09 .d.big span { color: var(--smart); }
+
+/* 10 classroom debate: Dessa, a voice AI that sounds human */
+#n10 { background: var(--creative); }
+#n10 h2 { font-size: 34px; margin: 16px 0 8px; width: 330px; }
+#n10 .lead { color: var(--ink); width: 320px; font-weight: 600; font-size: 14px; }
+#n10 .wave { position: absolute; left: 380px; top: 40px; width: 194px; height: 110px; display: flex; align-items: center; gap: 5px; }
+#n10 .wave i { flex: 1; background: var(--ink); display: block; }
+#n10 .q { position: absolute; left: 28px; right: 28px; bottom: 26px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+#n10 .q div { background: var(--cream); padding: 9px 10px; font-size: 12px; font-weight: 700; line-height: 1.2; height: 70px; display: flex; gap: 6px; }
+#n10 .q svg { width: 16px; height: 16px; flex: none; }
+#n10 .tag { position: absolute; left: 380px; top: 162px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+/* 11 eight skills */
+#n11 h2 { font-size: 36px; margin: 18px 0 18px; }
+#n11 .sk { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+#n11 .sk div { height: 84px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; color: var(--ink); }
+#n11 .sk b { font-size: 13px; opacity: .7; }
+#n11 .sk span { font-size: 15px; font-weight: 700; letter-spacing: -.02em; line-height: 1.08; }
+
+/* Featured image for the website's campaign update: no text, so any crop works. 750×500, rendered at 2× as JPEG. */
+#cover { width: 750px; height: 500px; position: relative; overflow: hidden; background: var(--ink); }
+#cover .c { position: absolute; color: var(--ink); display: grid; place-items: center; }
+#cover .ring { position: absolute; border-radius: 50%; border: 3px solid rgba(246,244,237,.2); }
+#cover .human { position: absolute; fill: var(--cream); }
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="safe" viewBox="0 0 24 24"><path d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></symbol>
+  <symbol id="smart" viewBox="0 0 24 24"><path d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/></symbol>
+  <symbol id="creative" viewBox="0 0 24 24"><path d="M12 1 L14.4 8.6 L22 11 L14.4 13.4 L12 21 L9.6 13.4 L2 11 L9.6 8.6 Z"/></symbol>
+  <symbol id="responsible" viewBox="0 0 24 24"><path d="M11 2 h2 v3.2 h6.4 v1.8 H13 V20 h5 v2 H6 v-2 h5 V7 H4.6 V5.2 H11 Z M4.6 8.4 L1.4 15 h6.4 Z M19.4 8.4 L16.2 15 h6.4 Z"/></symbol>
+  <symbol id="future" viewBox="0 0 24 24"><path d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></symbol>
+</svg>
+
+<!-- 01 Masthead -->
+<section class="b ink" id="n01">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>November newsletter</div>
+  <h2>October,<br>in one read</h2>
+  <div class="date">Thursday 29 April 2027</div>
+  <div class="theme">Humans in the Loop</div>
+  <div class="grid">
+    <div class="g tile" style="background:var(--smart)"><svg class="i"><use href="#smart"/></svg><span>BBC Bitesize</span></div>
+    <div class="g tile" style="background:var(--safe)"><svg class="i"><use href="#safe"/></svg><span>Free AI audit</span></div>
+    <div class="g tile" style="background:var(--creative)"><svg class="i"><use href="#creative"/></svg><span>Lesson starters</span></div>
+    <div class="g tile" style="background:var(--responsible)"><svg class="i"><use href="#responsible"/></svg><span>New partners</span></div>
+    <div class="g tile" style="background:var(--future)"><svg class="i"><use href="#future"/></svg><span>New articles</span></div>
+    <div class="g tile" style="background:var(--cream)"><svg class="i"><use href="#creative"/></svg><span>Debate guides</span></div>
+  </div>
+</section>
+
+<!-- 02 In the BBC Bitesize calendar -->
+<section class="b cream" id="n02">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Teachers' calendar</div>
+  <h2>On the page<br>teachers plan&nbsp;from</h2>
+  <p class="lead">AI Awareness Day is now in the BBC Bitesize calendar for April.</p>
+  <div class="cal tile">
+    <div class="m">APRIL <em>2027</em></div>
+    <div class="days" id="days"></div>
+  </div>
+  <div class="flag tile">Thursday 29 April</div>
+</section>
+
+<!-- 03 Free AI audit -->
+<section class="b ink" id="n03">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Free AI audit</div>
+  <h2>How much do you rely on AI?</h2>
+  <p class="lead">Teachers around the world have taken it. Your turn.</p>
+  <div class="roles">
+    <div class="r tile" style="background:var(--safe)"><span>For</span><b>Teachers</b></div>
+    <div class="r tile" style="background:var(--smart)"><span>For</span><b>Students</b></div>
+    <div class="r tile" style="background:var(--creative)"><span>For</span><b>Parents</b></div>
+    <div class="r tile" style="background:var(--responsible)"><span>For</span><b>Leaders</b></div>
+  </div>
+  <div class="pill"><span>Free</span><span>10–15 min</span><span>Anonymous</span></div>
+</section>
+
+<!-- 04 Lesson starters -->
+<section class="b cream" id="n04">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Lesson starters</div>
+  <h2>Five minutes. One big question.</h2>
+  <div class="row">
+    <div class="t tile" style="background:var(--safe)"><svg class="i"><use href="#safe"/></svg><span>Think before you post</span></div>
+    <div class="t tile" style="background:var(--smart)"><svg class="i"><use href="#smart"/></svg><span>Autocomplete, not an oracle</span></div>
+    <div class="t tile" style="background:var(--creative)"><svg class="i"><use href="#creative"/></svg><span>You are still the author</span></div>
+    <div class="t tile" style="background:var(--responsible)"><svg class="i"><use href="#responsible"/></svg><span>Thoughtfully, not never</span></div>
+    <div class="t tile" style="background:var(--future)"><svg class="i"><use href="#future"/></svg><span>Collaborate, and stay human</span></div>
+  </div>
+</section>
+
+<!-- 05 New partners -->
+<section class="b on-colour" id="n05">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>New event partners</div>
+  <h2>Welcome to the loop</h2>
+  <div class="ps">
+    <div class="p tile"><small>AI LITERACY</small><b>AILitKit</b><span>AI literacy in the lessons you already teach</span></div>
+    <div class="p tile"><small>DIGITAL SKILLS</small><b>DigitALL</b><span>Spark AI and EcoCode, free for schools</span></div>
+  </div>
+</section>
+
+<!-- 06 Two new articles -->
+<section class="b ink" id="n06">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Worth a read</div>
+  <h2>Two new articles</h2>
+  <div class="as">
+    <div class="a tile" style="background:var(--future)"><small>ORACY</small><b>Speaking joins reading and writing</b><div class="bar"></div></div>
+    <div class="a tile" style="background:var(--safe)"><small>WORK</small><b>Is the human the new bottleneck?</b><div class="bar"></div></div>
+  </div>
+</section>
+
+<!-- 07 How to run a debate -->
+<section class="b cream" id="n07">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Debate Network</div>
+  <h2>How to run<br>a debate</h2>
+  <p class="lead">A step-by-step guide for every age.</p>
+  <div class="clock"><b class="tile">30 min</b>stage by stage</div>
+  <div class="stairs">
+    <div class="st tile" style="height:110px;background:var(--responsible)"><b>Primary</b><span>Guide</span></div>
+    <div class="st tile" style="height:160px;background:var(--creative)"><b>Secondary</b><span>Guide</span></div>
+    <div class="st tile" style="height:210px;background:var(--ink);color:var(--cream)"><b>Post-16</b><span style="color:var(--smart);opacity:1">Guide</span></div>
+  </div>
+</section>
+
+<!-- 08 We're on Instagram -->
+<section class="b on-colour" id="n08">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>We're on Instagram</div>
+  <h2>Follow along</h2>
+  <p class="lead">A big question a week, and classroom ideas you can use tomorrow.</p>
+  <div class="bubble tile">?</div>
+  <div class="handle tile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+    @aiawarenessday
+  </div>
+</section>
+
+<!-- 09 Coming up -->
+<section class="b cream" id="n09">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Coming up</div>
+  <h2>Mark your calendar</h2>
+  <div class="tl">
+    <div class="d tile" style="background:var(--responsible)"><b>Nov – Dec 2026</b><span>Pilot sessions with schools and trusts</span></div>
+    <div class="d tile" style="background:var(--safe);height:134px"><b>1 Jan 2027</b><span>National Conversation opens</span></div>
+    <div class="d big tile"><b>29 April 2027</b><span>AI Awareness Day</span></div>
+  </div>
+</section>
+
+<!-- 10 Classroom debate: Dessa -->
+<section class="b on-colour" id="n10">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>Classroom debate</div>
+  <h2>If AI sounded human, would you know?</h2>
+  <p class="lead">A voice AI that laughs, pauses and says <span style="white-space:nowrap">“mm-hmm”.</span></p>
+  <div class="wave"><i style="height:30px"></i><i style="height:58px"></i><i style="height:92px"></i><i style="height:70px"></i><i style="height:110px"></i><i style="height:84px"></i><i style="height:46px"></i><i style="height:100px"></i><i style="height:64px"></i><i style="height:118px"></i><i style="height:76px"></i><i style="height:40px"></i><i style="height:88px"></i><i style="height:56px"></i><i style="height:104px"></i><i style="height:72px"></i><i style="height:34px"></i><i style="height:60px"></i><i style="height:90px"></i><i style="height:48px"></i></div>
+  <div class="tag">Four questions to debate</div>
+  <div class="q"><div class="tile"><svg class="i"><use href="#safe"/></svg>Sounds human? How do you check?</div><div class="tile"><svg class="i"><use href="#smart"/></svg>When should it act for you?</div><div class="tile"><svg class="i"><use href="#responsible"/></svg>Must it say it isn’t human?</div><div class="tile"><svg class="i"><use href="#future"/></svg>Which talk skills stay human?</div></div>
+</section>
+
+<!-- 11 Eight skills -->
+<section class="b cream" id="n11">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>The skills that stay human</div>
+  <h2>Eight skills for the age of AI</h2>
+  <div class="sk"><div class="tile" style="background:var(--safe)"><b>1</b><span>Oracy</span></div><div class="tile" style="background:var(--smart)"><b>2</b><span>Public speaking</span></div><div class="tile" style="background:var(--creative)"><b>3</b><span>Critical thinking</span></div><div class="tile" style="background:var(--responsible)"><b>4</b><span>Information literacy</span></div><div class="tile" style="background:var(--future)"><b>5</b><span>Conflict resolution</span></div><div class="tile" style="background:var(--safe)"><b>6</b><span>Active listening</span></div><div class="tile" style="background:var(--smart)"><b>7</b><span>Independent judgement</span></div><div class="tile" style="background:var(--creative)"><b>8</b><span>Civil discourse</span></div></div>
+</section>
+
+<!-- Website cover (no text) -->
+<section id="cover"></section>
+
+<script>
+// April 2027 starts on a Thursday; weeks run Monday to Sunday.
+let h = ['M','T','W','T','F','S','S'].map(d => `<i class="h">${d}</i>`).join('') + '<i class="x"></i>'.repeat(3);
+for (let d = 1; d <= 30; d++) h += `<i${d === 29 ? ' class="on"' : ''}>${d}</i>`;
+document.getElementById('days').innerHTML = h;
+
+// The cover: the loop of five strand tiles around a person, with October's six stories as tiles drifting out of it.
+{ const S = ['safe','smart','creative','responsible','future'], cx = 375, cy = 250, R = 130, t = 78;
+  let h = [210, 300, 400].map((r, i) => `<div class="ring" style="left:${cx-r}px;top:${cy-r}px;width:${2*r}px;height:${2*r}px;opacity:${1 - i*.3}"></div>`).join('');
+  S.forEach((s, k) => { const a = (-90 + 72*k) * Math.PI/180;
+    h += `<div class="c tile" style="background:var(--${s});width:${t}px;height:${t}px;left:${cx+R*Math.cos(a)-t/2}px;top:${cy+R*Math.sin(a)-t/2}px;font-size:42px;--k:16px"><svg class="i"><use href="#${s}"/></svg></div>`; });
+  [['safe',70,60,90,.35],['smart',610,40,70,.3],['creative',640,360,100,.3],['responsible',40,380,80,.35],['future',560,190,44,.5],['creative',150,230,40,.5],['cream',300,440,34,.25],['smart',470,20,30,.35]].forEach(([s,x,y,w,o]) =>
+    h += `<div class="tile" style="position:absolute;background:var(--${s});opacity:${o};left:${x}px;top:${y}px;width:${w}px;height:${w}px"></div>`);
+  h += `<svg class="human" viewBox="-30 -34 60 64" style="left:${cx-36}px;top:${cy-40}px;width:72px;height:77px"><circle cx="0" cy="-18" r="13"/><path d="M-26 30 C-26 6 -13 -1 0 -1 C13 -1 26 6 26 30 Z"/></svg>`;
+  document.getElementById('cover').innerHTML = h; }
+</script>
+</body></html>
