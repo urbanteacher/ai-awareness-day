@@ -84,19 +84,21 @@ function aiad_migrate_article_crazy_week_in_ai(): void {
 
 	update_option( 'aiad_article_crazy_week_added', '1' );
 	update_option( 'aiad_article_crazy_week_v2', '1' ); // a fresh publish already has the corrected text.
+	update_option( 'aiad_article_crazy_week_v3', '1' );
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_crazy_week_added', 'aiad_migrate_article_crazy_week_in_ai' ); }, 53 );
 
 /**
- * One-time: bring the live post up to the corrected text after the November 2026 review (claims tied to their sources, a
- * safeguarding line, lines for pupils and parents, plain-English glosses, corrected banners). The post was first published
- * from the earlier text, so this swaps in inc/articles/crazy-week-in-ai.html with fresh copies of the banners, but only
- * if nobody has edited the post in the editor (its modified time is still its published time). An edited post is left alone.
+ * One-time (revision 3): bring a post that was published from earlier text up to the current inc/articles/crazy-week-in-ai.html
+ * (claims tied to their sources after the November 2026 review, a safeguarding line, lines for pupils and parents, plain-English
+ * glosses, and the Gemini 4 Carbon bird demo in place of the Perch and whale item). Only if nobody has edited the post in the
+ * editor (its modified time is still its published time); an edited post is left alone. The banners already on the post are
+ * reused in order; if it does not have all seven, they are imported again from assets/images/articles/crazy-week/.
  */
-function aiad_sync_article_crazy_week_v2(): void {
+function aiad_sync_article_crazy_week_v3(): void {
 	$post = get_page_by_path( 'crazy-week-in-ai', OBJECT, 'timeline' );
 	if ( ! $post ) {
-		return; // Not published yet: the publish above will use the corrected text.
+		return; // Not published yet: the publish above will use the current text.
 	}
 	$file = AIAD_DIR . '/inc/articles/crazy-week-in-ai.html';
 	if ( ! is_readable( $file ) ) {
@@ -104,20 +106,28 @@ function aiad_sync_article_crazy_week_v2(): void {
 	}
 	// Edited in the editor since it was published (more than two minutes apart)? Leave it as the editors have it.
 	if ( abs( strtotime( $post->post_modified_gmt . ' UTC' ) - strtotime( $post->post_date_gmt . ' UTC' ) ) > 120 ) {
-		update_option( 'aiad_article_crazy_week_v2', '1' );
+		update_option( 'aiad_article_crazy_week_v3', '1' );
 		return;
 	}
 	$content = str_replace( array( 'THEME_URI', 'SITE_URI' ), array( untrailingslashit( AIAD_URI ), untrailingslashit( home_url() ) ), (string) file_get_contents( $file ) );
-	$dir     = AIAD_DIR . '/assets/images/articles/crazy-week';
 	preg_match_all( '/IMG:([a-z0-9-]+)/', $content, $found );
-	foreach ( array_unique( $found[1] ) as $name ) {
-		$attachment = aiad_article_import_image( (int) $post->ID, $dir . '/' . $name . '.png', 'crazy-week-v2-' . $name . '.png', '' );
-		$url        = $attachment ? (string) wp_get_attachment_url( $attachment ) : untrailingslashit( AIAD_URI ) . '/assets/images/articles/crazy-week/' . $name . '.png';
-		$content    = str_replace( 'IMG:' . $name . '"', $url . '"', $content );
+	$names = array_values( array_unique( $found[1] ) );
+	// The seven banners already on the post, in order (the image blocks are the only images in the body).
+	preg_match_all( '/<img[^>]+src="([^"]*crazy-week[^"]*)"/', (string) $post->post_content, $have );
+	$have = array_values( array_unique( $have[1] ) );
+	$dir  = AIAD_DIR . '/assets/images/articles/crazy-week';
+	foreach ( $names as $i => $name ) {
+		if ( count( $have ) === count( $names ) ) {
+			$url = $have[ $i ];
+		} else {
+			$attachment = aiad_article_import_image( (int) $post->ID, $dir . '/' . $name . '.png', 'crazy-week-v3-' . $name . '.png', '' );
+			$url        = $attachment ? (string) wp_get_attachment_url( $attachment ) : untrailingslashit( AIAD_URI ) . '/assets/images/articles/crazy-week/' . $name . '.png';
+		}
+		$content = str_replace( 'IMG:' . $name . '"', $url . '"', $content );
 	}
 	global $wpdb;
 	$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	clean_post_cache( $post->ID );
-	update_option( 'aiad_article_crazy_week_v2', '1' );
+	update_option( 'aiad_article_crazy_week_v3', '1' );
 }
-add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_crazy_week_v2', 'aiad_sync_article_crazy_week_v2' ); }, 54 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_crazy_week_v3', 'aiad_sync_article_crazy_week_v3' ); }, 54 );
