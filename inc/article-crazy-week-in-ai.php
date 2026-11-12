@@ -83,5 +83,41 @@ function aiad_migrate_article_crazy_week_in_ai(): void {
 	}
 
 	update_option( 'aiad_article_crazy_week_added', '1' );
+	update_option( 'aiad_article_crazy_week_v2', '1' ); // a fresh publish already has the corrected text.
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_crazy_week_added', 'aiad_migrate_article_crazy_week_in_ai' ); }, 53 );
+
+/**
+ * One-time: bring the live post up to the corrected text after the November 2026 review (claims tied to their sources, a
+ * safeguarding line, lines for pupils and parents, plain-English glosses, corrected banners). The post was first published
+ * from the earlier text, so this swaps in inc/articles/crazy-week-in-ai.html with fresh copies of the banners, but only
+ * if nobody has edited the post in the editor (its modified time is still its published time). An edited post is left alone.
+ */
+function aiad_sync_article_crazy_week_v2(): void {
+	$post = get_page_by_path( 'crazy-week-in-ai', OBJECT, 'timeline' );
+	if ( ! $post ) {
+		return; // Not published yet: the publish above will use the corrected text.
+	}
+	$file = AIAD_DIR . '/inc/articles/crazy-week-in-ai.html';
+	if ( ! is_readable( $file ) ) {
+		return;
+	}
+	// Edited in the editor since it was published (more than two minutes apart)? Leave it as the editors have it.
+	if ( abs( strtotime( $post->post_modified_gmt . ' UTC' ) - strtotime( $post->post_date_gmt . ' UTC' ) ) > 120 ) {
+		update_option( 'aiad_article_crazy_week_v2', '1' );
+		return;
+	}
+	$content = str_replace( array( 'THEME_URI', 'SITE_URI' ), array( untrailingslashit( AIAD_URI ), untrailingslashit( home_url() ) ), (string) file_get_contents( $file ) );
+	$dir     = AIAD_DIR . '/assets/images/articles/crazy-week';
+	preg_match_all( '/IMG:([a-z0-9-]+)/', $content, $found );
+	foreach ( array_unique( $found[1] ) as $name ) {
+		$attachment = aiad_article_import_image( (int) $post->ID, $dir . '/' . $name . '.png', 'crazy-week-v2-' . $name . '.png', '' );
+		$url        = $attachment ? (string) wp_get_attachment_url( $attachment ) : untrailingslashit( AIAD_URI ) . '/assets/images/articles/crazy-week/' . $name . '.png';
+		$content    = str_replace( 'IMG:' . $name . '"', $url . '"', $content );
+	}
+	global $wpdb;
+	$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	clean_post_cache( $post->ID );
+	update_option( 'aiad_article_crazy_week_v2', '1' );
+}
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_crazy_week_v2', 'aiad_sync_article_crazy_week_v2' ); }, 54 );
