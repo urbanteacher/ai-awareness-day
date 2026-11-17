@@ -61,6 +61,7 @@ require_once $aiad_dir . '/inc/article-oracy.php';
 require_once $aiad_dir . '/inc/article-human-bottleneck.php';
 require_once $aiad_dir . '/inc/article-november-2026-newsletter.php';
 require_once $aiad_dir . '/inc/article-crazy-week-in-ai.php';
+require_once $aiad_dir . '/inc/article-two-out-of-three.php';
 require_once $aiad_dir . '/inc/homepage-blocks.php';
 require_once $aiad_dir . '/inc/homepage-migration.php';
 require_once $aiad_dir . '/inc/homepage-campaign.php';
