@@ -1,6 +1,6 @@
 <?php
 /**
- * One-time: publish "The Milburn Review: work-readiness now includes AI literacy", AI Awareness Day's response to Alan Milburn's
+ * One-time: publish "The Milburn Review: why work-readiness should include AI literacy", AI Awareness Day's response to Alan Milburn's
  * final report on young people and work (17 November 2026), as a campaign update (the timeline post type, shown at /timeline/).
  * The text is inc/articles/milburn-review-ai-work-readiness.html. Its figure (assets/images/articles/milburn/) is imported into
  * the media library and the IMG:{name} placeholder replaced with its address; the text-free cover
@@ -13,6 +13,18 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+/**
+ * The post's title and excerpt (its standfirst), shared by the publish and the revision below.
+ *
+ * @return array{title: string, excerpt: string}
+ */
+function aiad_article_milburn_fields(): array {
+	return array(
+		'title'   => 'The Milburn Review: why work-readiness should include AI literacy',
+		'excerpt' => 'Milburn proposes AI skills training available to every young person, but does not define those skills. Here is what they could look like in class.',
+	);
 }
 
 /**
@@ -33,6 +45,7 @@ function aiad_migrate_article_milburn_review(): void {
 	}
 	$content = str_replace( array( 'THEME_URI', 'SITE_URI' ), array( untrailingslashit( AIAD_URI ), untrailingslashit( home_url() ) ), (string) file_get_contents( $file ) );
 	$dir     = AIAD_DIR . '/assets/images/articles/milburn';
+	$fields  = aiad_article_milburn_fields();
 
 	kses_remove_filters();
 	$id = wp_insert_post(
@@ -40,8 +53,8 @@ function aiad_migrate_article_milburn_review(): void {
 			'post_type'    => 'timeline',
 			'post_status'  => 'publish',
 			'post_name'    => $slug,
-			'post_title'   => 'The Milburn Review: work-readiness now includes AI literacy',
-			'post_excerpt' => 'Milburn wants a Ready-for-Work Standard for schools and AI skills for every young person. What that could look like in class, with a person behind every data flag.',
+			'post_title'   => $fields['title'],
+			'post_excerpt' => $fields['excerpt'],
 			'post_content' => '',
 		)
 	);
@@ -80,19 +93,20 @@ function aiad_migrate_article_milburn_review(): void {
 	}
 
 	update_option( 'aiad_article_milburn_added', '1' );
-	update_option( 'aiad_article_milburn_v2', '1' ); // a fresh publish already has the portrait cover.
+	update_option( 'aiad_article_milburn_v3', '1' ); // a fresh publish already has the current text, title and cover.
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_milburn_added', 'aiad_migrate_article_milburn_review' ); }, 57 );
 
 /**
- * One-time (revision 2): the post went live with the ladder cover. Make Alan Milburn's portrait the cover and add its photo credit
- * at the end of the text. Only if nobody has edited the post in the editor (its modified time is still its published time); an
- * edited post keeps its text but still gets the new cover. The figure already on the post is reused.
+ * One-time (revision 3): the post went live with the ladder cover and its first text. Bring it up to date: Alan Milburn's portrait
+ * as the cover (unless revision 2 already set it), and the text, title and excerpt after the 18 November 2026 fairness and fact
+ * check (more balance on critics and on the report's AI caveats, its central argument, two new sources and the photo credit). Text, title and excerpt change only if nobody has edited the post in the editor (its modified time is still its
+ * published time); an edited post keeps them but still gets the cover. The figure already on the post is reused.
  */
-function aiad_sync_article_milburn_v2(): void {
+function aiad_sync_article_milburn_v3(): void {
 	$post = get_page_by_path( 'milburn-review-ai-work-readiness', OBJECT, 'timeline' );
 	if ( ! $post ) {
-		return; // Not published yet: the publish above will use the current text and cover.
+		return; // Not published yet: the publish above will use the current text, title and cover.
 	}
 	$file   = AIAD_DIR . '/inc/articles/milburn-review-ai-work-readiness.html';
 	$edited = abs( strtotime( $post->post_modified_gmt . ' UTC' ) - strtotime( $post->post_date_gmt . ' UTC' ) ) > 120;
@@ -114,15 +128,27 @@ function aiad_sync_article_milburn_v2(): void {
 			}
 			$content = str_replace( 'IMG:' . $name . '"', $url . '"', $content );
 		}
+		$fields = aiad_article_milburn_fields();
 		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_content' => $content ), array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->posts,
+			array(
+				'post_content' => $content,
+				'post_title'   => $fields['title'],
+				'post_excerpt' => $fields['excerpt'],
+			),
+			array( 'ID' => $post->ID )
+		);
 		clean_post_cache( $post->ID );
 	}
 
-	$cover = aiad_article_import_image( (int) $post->ID, AIAD_DIR . '/assets/images/articles/milburn-card.jpg', 'milburn-review-ai-work-readiness-cover.jpg', 'Alan Milburn in a dark suit and glasses on a blue, purple and pink gradient, beside a ladder with rungs in the AI Awareness Day colours and a dashed outline where the bottom rung should be' );
-	if ( $cover ) {
-		update_post_meta( $post->ID, '_thumbnail_id', $cover ); // set_post_thumbnail() would also work; this leaves the modified time alone.
+	$thumb = (int) get_post_thumbnail_id( $post->ID );
+	if ( ! $thumb || false === strpos( (string) get_attached_file( $thumb ), 'milburn-review-ai-work-readiness-cover' ) ) {
+		$cover = aiad_article_import_image( (int) $post->ID, AIAD_DIR . '/assets/images/articles/milburn-card.jpg', 'milburn-review-ai-work-readiness-cover.jpg', 'Alan Milburn in a dark suit and glasses on a blue, purple and pink gradient, beside a ladder with rungs in the AI Awareness Day colours and a dashed outline where the bottom rung should be' );
+		if ( $cover ) {
+			update_post_meta( $post->ID, '_thumbnail_id', $cover ); // set_post_thumbnail() would also work; this leaves the modified time alone.
+		}
 	}
-	update_option( 'aiad_article_milburn_v2', '1' );
+	update_option( 'aiad_article_milburn_v3', '1' );
 }
-add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_milburn_v2', 'aiad_sync_article_milburn_v2' ); }, 58 );
+add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_milburn_v3', 'aiad_sync_article_milburn_v3' ); }, 58 );
