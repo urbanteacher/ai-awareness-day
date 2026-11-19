@@ -1,0 +1,883 @@
+/* ============================================
+   PAGE: THE AI LITERACY PERIODIC TABLE (/ai-literacy-periodic-table/)
+   inc/literacy-table.php draws the table; patterns/ai-literacy-periodic-table.php the page around it.
+   Families take the campaign's strand colours, with "How AI works" in ink. Tiles carry the AiAd27 chamfer.
+   Wide screens (and print) show the 18-column table with the detail panel in its gap; narrower screens show
+   the elements family by family, under the panel.
+   ============================================ */
+
+.alpt-page {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font-family: var(--s-font);
+  line-height: 1.5;
+}
+
+.alpt-page :where(h1, h2, h3) {
+  margin: 0;
+  color: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.alpt-page :where(p) {
+  margin: 0 0 1rem;
+}
+
+.alpt-page [id],
+.alpt-panel {
+  scroll-margin-top: 6.5rem;
+}
+
+.alpt-page :where(a, button, input, summary):focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Families ---- */
+.alpt-fam--foundations { --fam: var(--a27-ink); --fam-fg: var(--a27-cream); --fam-deep: var(--a27-ink); --fam-ring: var(--a27-safe); }
+.alpt-fam--safe { --fam: var(--a27-safe); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-safe-deep); --fam-ring: var(--a27-ink); }
+.alpt-fam--smart { --fam: var(--a27-smart); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-smart-deep); --fam-ring: var(--a27-ink); }
+.alpt-fam--creative { --fam: var(--a27-creative); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-creative-deep); --fam-ring: var(--a27-ink); }
+.alpt-fam--responsible { --fam: var(--a27-responsible); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-responsible-deep); --fam-ring: var(--a27-ink); }
+.alpt-fam--future { --fam: var(--a27-future); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-future-deep); --fam-ring: var(--a27-ink); }
+
+/* ---- Buttons ---- */
+.alpt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.1rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.alpt-btn:hover {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-btn--ink {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-btn--ink:hover {
+  background: var(--a27-safe-deep);
+  border-color: var(--a27-safe-deep);
+}
+
+/* ---- Introduction ---- */
+.alpt-hero {
+  /* The site header is fixed, so the band starts below it. */
+  padding: 8.5rem 0 2rem;
+}
+
+.alpt-eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpt-title {
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+}
+
+.alpt-lead {
+  max-width: 44rem;
+  margin: 1.25rem 0 0.75rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  line-height: 1.35;
+}
+
+.alpt-intro {
+  max-width: 44rem;
+  color: var(--a27-dim);
+}
+
+/* Printing needs the script, so the button shows only when it has run. */
+html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
+  display: none;
+}
+
+.alpt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+}
+
+/* ---- The table ---- */
+.alpt-table-wrap {
+  padding: 0 0 3rem;
+}
+
+.alpt {
+  width: min(100% - 2rem, 1680px);
+  margin: 0 auto;
+}
+
+.alpt-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.alpt-controls[hidden] {
+  display: none;
+}
+
+.alpt-search {
+  display: grid;
+  gap: 0.3rem;
+  flex: 1 1 15rem;
+  max-width: 22rem;
+}
+
+.alpt-search label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-search input {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: #FFFFFF;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.alpt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 10 1 34rem;
+}
+
+.alpt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.85rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.alpt-chip__swatch {
+  display: inline-block;
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--fam);
+  clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%);
+}
+
+.alpt-chip__count {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.alpt-chip[aria-pressed="true"] {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-chip[aria-pressed="true"] .alpt-chip__count {
+  opacity: 0.85;
+}
+
+.alpt-chip--all {
+  font-weight: 600;
+}
+
+.alpt-status {
+  flex-basis: 100%;
+  min-height: 1.5em;
+  margin: -0.25rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+.alpt-status:empty {
+  display: none;
+}
+
+.alpt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: 6px;
+}
+
+/* A tile: number, symbol, name. The top right corner is cut, as the brand's tiles are. */
+.alpt-tile {
+  --cut: clamp(9px, 0.9vw, 16px);
+  order: var(--o);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.15rem;
+  min-width: 0;
+  min-height: 5.25rem;
+  padding: 0.4rem 0.45rem 0.45rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.alpt-tile:hover {
+  transform: translateY(-2px);
+}
+
+/* The chamfer clips an outline, so the focus and selected rings are drawn inside the tile. */
+.alpt-page .alpt-tile:focus-visible,
+.alpt-tile[aria-current="true"] {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--fam-ring), inset 0 0 0 5px var(--fam);
+}
+
+.alpt-tile[aria-current="true"] {
+  box-shadow: inset 0 0 0 4px var(--fam-ring), inset 0 0 0 6px var(--fam);
+}
+
+.alpt-tile__n {
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.alpt-tile__sym {
+  font-size: clamp(1.35rem, 2vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.alpt-tile__name {
+  overflow: hidden;
+  font-size: clamp(0.6rem, 0.62vw, 0.78rem);
+  font-weight: 600;
+  line-height: 1.12;
+  /* Long words carry soft hyphens (aiad_literacy_tile_name()), the same in every browser. */
+  -webkit-hyphens: manual;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+/* Filtered out by family or search. */
+.alpt-tile.is-dim {
+  opacity: 0.16;
+}
+
+.alpt-tile.is-dim:hover {
+  opacity: 0.4;
+}
+
+/* ---- The detail panel ---- */
+.alpt-panel {
+  order: -1;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: start;
+  gap: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF;
+}
+
+.alpt-panel__print {
+  display: none;
+}
+
+.alpt-panel__tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: clamp(6rem, 22vw, 11rem);
+  aspect-ratio: 1 / 1.1;
+  padding: 0.6rem 0.7rem 0.7rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  clip-path: polygon(0 0, calc(100% - 22%) 0, 100% 20%, 100% 100%, 0 100%);
+}
+
+.alpt-panel__n {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.alpt-panel__sym {
+  font-size: clamp(2.6rem, 9vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.alpt-panel__tile-name {
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.alpt-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.alpt-panel__family {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-panel__title {
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem);
+}
+
+.alpt-panel__def {
+  max-width: 48rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.4;
+}
+
+.alpt-panel__talk {
+  max-width: 48rem;
+  padding-left: 0.8rem;
+  border-left: 4px solid var(--fam-deep);
+}
+
+.alpt-panel__talk p {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  line-height: 1.35;
+}
+
+.alpt-panel__talk .alpt-panel__talk-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a27-dim);
+}
+
+.alpt-panel__nav {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alpt-panel__nav[hidden] {
+  display: none;
+}
+
+.alpt-panel__nav .alpt-btn {
+  min-height: 2.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.alpt-panel__count {
+  margin-left: auto;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+}
+
+/* ---- Key and family headings ---- */
+.alpt-key {
+  display: none;
+}
+
+.alpt-family-label {
+  order: var(--o);
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 1rem 0 0.15rem;
+  padding-top: 0.5rem;
+  border-top: 4px solid var(--fam);
+}
+
+.alpt-family-label__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.alpt-family-label__about {
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+.alpt-footnote {
+  display: none;
+  margin: 1rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+/* ---- The full table: wide screens and print ---- */
+@media (min-width: 1200px), print {
+  .alpt-grid {
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    /* Equal fr rows all take the tallest row's height, and the tiles stretch to fill them, so every tile on the
+       table is the same size, beside the panel too. */
+    grid-template-rows: repeat(7, minmax(4.6rem, 1fr)) 1.25rem minmax(4.6rem, 1fr);
+  }
+
+  .alpt-tile {
+    order: 0;
+    grid-row: var(--r);
+    grid-column: var(--c);
+    min-height: 0;
+  }
+
+  .alpt-panel {
+    order: 0;
+    grid-column: 3 / 13;
+    grid-row: 1 / 4;
+    margin: 0 0.5rem 0.5rem;
+    padding: clamp(0.75rem, 1.2vw, 1.4rem);
+    gap: 0.6rem clamp(1rem, 1.6vw, 1.75rem);
+    grid-template-rows: 1fr auto;
+  }
+
+  .alpt-panel__tile {
+    width: clamp(7.5rem, 10vw, 12rem);
+    align-self: start;
+  }
+
+  .alpt-panel__sym {
+    font-size: clamp(3rem, 4.6vw, 5.4rem);
+  }
+
+  .alpt-key {
+    grid-column: 13 / 18;
+    grid-row: 1;
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-right: 0.5rem;
+  }
+
+  .alpt-tile--key {
+    --fam: #FFFFFF;
+    --fam-fg: var(--a27-ink);
+    flex: none;
+    width: calc((100% - 4 * 6px) / 5 * 1.25);
+    max-width: 6rem;
+    outline: 2px dashed var(--a27-rule);
+    outline-offset: -2px;
+    clip-path: none;
+  }
+
+  .alpt-tile--key:hover {
+    transform: none;
+  }
+
+  .alpt-key__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-width: 0;
+    color: var(--a27-dim);
+    font-size: clamp(0.68rem, 0.72vw, 0.85rem);
+    line-height: 1.3;
+  }
+
+  .alpt-key__text p {
+    margin: 0;
+  }
+
+  .alpt-key__text .alpt-key__title {
+    color: var(--a27-ink);
+    font-size: clamp(0.8rem, 0.85vw, 1rem);
+    font-weight: 700;
+  }
+
+  .alpt-family-label {
+    display: none;
+  }
+
+  /* The row below the table is named on its left, as a periodic table's separate rows are. */
+  .alpt-family-label.alpt-fam--future {
+    grid-column: 1 / 4;
+    grid-row: 9;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0 0.75rem 0 0;
+    border: 0;
+    text-align: right;
+  }
+
+  .alpt-family-label.alpt-fam--future .alpt-family-label__name {
+    color: var(--fam-deep);
+  }
+
+  .alpt-family-label.alpt-fam--future .alpt-family-label__about {
+    font-size: 0.8rem;
+  }
+
+  .alpt-footnote {
+    display: block;
+  }
+}
+
+/* Laptop widths: the tiles and panel are smaller, so their words are too. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .alpt-grid {
+    gap: 4px;
+  }
+
+  .alpt-tile {
+    padding: 0.3rem 0.3rem 0.35rem;
+  }
+
+  .alpt-tile__name {
+    font-size: 0.58rem;
+  }
+
+  .alpt-panel__title {
+    font-size: 1.6rem;
+  }
+
+  .alpt-panel__def {
+    font-size: 0.95rem;
+  }
+
+  .alpt-panel__talk p {
+    font-size: 0.88rem;
+  }
+}
+
+/* ---- Every element, family by family ---- */
+.alpt-glossary {
+  margin-top: 3rem;
+}
+
+.alpt-glossary__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+}
+
+.alpt-glossary__lead {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--a27-dim);
+}
+
+.alpt-glossary__family {
+  border-top: 2px solid var(--a27-ink);
+}
+
+.alpt-glossary__family:last-of-type {
+  border-bottom: 2px solid var(--a27-ink);
+}
+
+.alpt-glossary__family summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.alpt-glossary__family summary::-webkit-details-marker {
+  display: none;
+}
+
+.alpt-glossary__family summary::after {
+  content: "+";
+  margin-left: auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.alpt-glossary__family[open] summary::after {
+  content: "\2212";
+}
+
+.alpt-glossary__family summary .alpt-chip__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.alpt-glossary__family-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.alpt-glossary__family-about {
+  color: var(--a27-dim);
+}
+
+.alpt-glossary__family dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 0 0 1.5rem;
+}
+
+.alpt-glossary__item dt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.alpt-glossary__sym {
+  flex: none;
+  min-width: 2.2rem;
+  padding: 0.1rem 0.3rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.alpt-glossary__n {
+  margin-left: auto;
+  color: var(--a27-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.alpt-glossary__item dd {
+  margin: 0.4rem 0 0;
+}
+
+.alpt-glossary__item dd p {
+  margin: 0 0 0.4rem;
+}
+
+.alpt-glossary__talk {
+  color: var(--a27-dim);
+}
+
+.alpt-glossary__item:target dt,
+.alpt-glossary__item:has(dt:target) dt {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--fam);
+}
+
+/* ---- Ways to use it in class ---- */
+.alpt-classroom {
+  padding: 3.5rem 0 5rem;
+  background: var(--a27-card);
+}
+
+.alpt-section-title {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+}
+
+.alpt-section-lead {
+  max-width: 44rem;
+  margin: 1rem 0 2rem;
+  font-size: 1.1rem;
+}
+
+.alpt-ideas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+}
+
+/* The groups' flow layout spaces every block after the first; in a grid that pushes cards out of line. */
+.alpt-page .alpt-ideas > *,
+.alpt-page .alpt-audiences > * {
+  margin-block: 0;
+}
+
+.alpt-idea {
+  padding: 1.25rem 1.25rem 0.5rem;
+  background: var(--a27-cream);
+  border-top: 5px solid var(--a27-ink);
+}
+
+.alpt-idea h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.25rem;
+}
+
+.alpt-audiences {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.alpt-audience {
+  padding: 1.25rem 1.25rem 0.5rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-audience h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-tile {
+    transition: none;
+  }
+
+  .alpt-tile:hover {
+    transform: none;
+  }
+}
+
+/* ---- Print: the table as a poster ---- */
+@media print {
+  @page {
+    size: A3 landscape;
+    margin: 10mm;
+  }
+
+  body.literacy-table-page {
+    background: #FFFFFF;
+  }
+
+  .literacy-table-page :where(.site-header, .site-footer, footer, .skip-link),
+  .alpt-hero,
+  .alpt-controls,
+  .alpt-glossary,
+  .alpt-classroom,
+  .alpt-panel__tile,
+  .alpt-panel__body,
+  .alpt-panel__nav {
+    display: none !important;
+  }
+
+  .alpt-page {
+    background: #FFFFFF;
+  }
+
+  .alpt-page,
+  .alpt-page * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .alpt-table-wrap {
+    padding: 0;
+  }
+
+  .alpt {
+    width: 100%;
+  }
+
+  .alpt-panel {
+    display: block;
+    border: 0;
+    background: transparent;
+    padding: 0 1rem;
+  }
+
+  .alpt-panel__print {
+    display: block;
+  }
+
+  .alpt-panel__print-eyebrow {
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .alpt-panel__print-title {
+    margin: 0 0 0.5rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .alpt-panel__print-lead {
+    max-width: 40rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .alpt-panel__print-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .alpt-panel__print-key li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .alpt-tile {
+    break-inside: avoid;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .alpt-tile__name {
+    font-size: 0.62rem;
+  }
+}

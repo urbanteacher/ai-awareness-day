@@ -73,6 +73,14 @@ function aiad_editable_pages(): array {
 			'placeholders' => '',
 			'note'         => '',
 		),
+		'ai-literacy-periodic-table' => array(
+			'title'        => __( 'The AI Literacy Periodic Table', 'ai-awareness-day' ),
+			'template'     => '',
+			'page'         => '',
+			'style'        => 'aiad-literacy-table',
+			'placeholders' => '',
+			'note'         => '',
+		),
 	);
 }
 
@@ -329,13 +337,33 @@ function aiad_find_page_by_template( array $templates ): ?WP_Post {
 }
 
 /**
- * Make the theme pages editable pages, once: a missing page at its own address is created from its pattern (a draft
- * kept from before is published again), and a page with the old PHP template chosen is moved to its new page
- * template and given its blocks. Records when it ran in aiad_theme_pages_converted and any failure in
- * aiad_theme_pages_conversion_error, and tries again on the next load if it could not finish.
+ * The theme pages aiad_maybe_convert_theme_pages() has already made. A site converted before this list was kept
+ * made the first four.
+ *
+ * @return string[]
+ */
+function aiad_theme_pages_done(): array {
+	$done = get_option( 'aiad_theme_pages_done' );
+	if ( is_array( $done ) ) {
+		return $done;
+	}
+	return get_option( 'aiad_theme_pages_converted' ) ? array( 'national-conversation', 'walkthrough', 'assets-pack', 'press-release' ) : array();
+}
+
+/**
+ * Make the theme pages editable pages, once each: a missing page at its own address is created from its pattern (a
+ * draft kept from before is published again), and a page with the old PHP template chosen is moved to its new page
+ * template and given its blocks. Records when it ran in aiad_theme_pages_converted, which pages it made in
+ * aiad_theme_pages_done (so a page added to aiad_editable_pages() later is made on its own, without touching the
+ * others again) and any failure in aiad_theme_pages_conversion_error, and tries again on the next load if it could
+ * not finish.
  */
 function aiad_maybe_convert_theme_pages(): void {
-	if ( get_option( 'aiad_theme_pages_converted' ) || wp_installing() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+	if ( wp_installing() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+	$todo = array_diff_key( aiad_editable_pages(), array_flip( aiad_theme_pages_done() ) );
+	if ( ! $todo ) {
 		return;
 	}
 	$locked = get_option( 'aiad_theme_pages_converting' );
@@ -354,7 +382,7 @@ function aiad_maybe_convert_theme_pages(): void {
 	}
 
 	$error = '';
-	foreach ( aiad_editable_pages() as $slug => $settings ) {
+	foreach ( $todo as $slug => $settings ) {
 		if ( '' === $settings['template'] ) {
 			if ( aiad_editable_page_post( $slug ) ) {
 				continue;
@@ -405,6 +433,7 @@ function aiad_maybe_convert_theme_pages(): void {
 	}
 	delete_option( 'aiad_theme_pages_conversion_error' );
 	update_option( 'aiad_theme_pages_converted', gmdate( 'c' ), false );
+	update_option( 'aiad_theme_pages_done', array_keys( aiad_editable_pages() ), false );
 	delete_option( 'aiad_theme_pages_converting' );
 }
 // After the Assets Pack page is ensured (priority 20) and the homepage is converted (30).

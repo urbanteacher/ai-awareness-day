@@ -17,6 +17,12 @@ $text_alignment_class = isset( $args['text_alignment_class'] ) ? (string) $args[
             <span class="section-label"><?php esc_html_e( 'Display board', 'ai-awareness-day' ); ?></span>
             <h2 class="section-title"><?php esc_html_e( 'Create a display board for your school', 'ai-awareness-day' ); ?></h2>
             <p class="section-desc"><?php esc_html_e( 'Use the layout below as a guide to build a physical display in your school or staff room.', 'ai-awareness-day' ); ?></p>
+            <?php if ( function_exists( 'aiad_editable_page_post' ) && aiad_editable_page_post( 'ai-literacy-periodic-table' ) && function_exists( 'aiad_literacy_table_url' ) ) : ?>
+                <p class="section-desc display-board-table-link">
+                    <?php esc_html_e( 'New: print the AI Literacy Periodic Table for your board.', 'ai-awareness-day' ); ?>
+                    <a href="<?php echo esc_url( aiad_literacy_table_url() . '#alpt-classroom' ); ?>"><?php esc_html_e( 'Need help with your display board?', 'ai-awareness-day' ); ?></a>
+                </p>
+            <?php endif; ?>
         </div>
 
         <?php

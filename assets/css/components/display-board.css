@@ -206,3 +206,12 @@
         box-sizing: border-box;
     }
 }
+
+/* The link from the display board section to the AI Literacy Periodic Table's display board help. */
+.display-board-table-link a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}

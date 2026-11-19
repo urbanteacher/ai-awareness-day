@@ -18,7 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
             __( 'Press Release', 'ai-awareness-day' )        => $press_url,
             __( 'Asset Pack', 'ai-awareness-day' )           => function_exists( 'aiad_get_assets_pack_public_url' ) ? aiad_get_assets_pack_public_url() : aiad_site_value( 'asset_pack_url', '' ),
             __( 'Implementation Guide', 'ai-awareness-day' ) => aiad_site_value( 'implementation_guide_url', '' ),
-        ); ?>
+        );
+        // Shown once the page exists (it is created the first time the theme loads: inc/editable-pages.php).
+        if ( function_exists( 'aiad_editable_page_post' ) && aiad_editable_page_post( 'ai-literacy-periodic-table' ) ) {
+            $resource_links[ __( 'AI Literacy Periodic Table', 'ai-awareness-day' ) ] = aiad_literacy_table_url();
+        } ?>
         <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">
             <?php foreach ( $resource_links as $label => $url ) :
                 if ( $url ) : ?>

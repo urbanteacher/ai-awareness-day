@@ -1,0 +1,2686 @@
+/* ============================================
+   PAGE: THE AI LITERACY PERIODIC TABLE (/ai-literacy-periodic-table/)
+   inc/literacy-table.php draws the table; patterns/ai-literacy-periodic-table.php the page around it.
+   Families take the campaign's strand colours, with "How AI works" in ink. Tiles carry the AiAd27 chamfer.
+   Wide screens (and print) show the 18-column table with the detail panel in its gap; narrower screens show
+   the elements family by family, under the panel.
+   ============================================ */
+
+.alpt-page {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font-family: var(--s-font);
+  line-height: 1.5;
+}
+
+.alpt-page :where(h1, h2, h3) {
+  margin: 0;
+  color: inherit;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.alpt-page :where(p) {
+  margin: 0 0 1rem;
+}
+
+.alpt-page [id],
+.alpt-panel,
+.alpt-grid {
+  scroll-margin-top: 6.5rem;
+}
+
+.alpt-page :where(a, button, input, summary):focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Families ---- */
+/* The original table's family colours: a pale tile, with the symbol and selection ring in the deep shade. */
+.alpt-fam--foundations { --fam: #E3E8EF; --fam-fg: var(--a27-ink); --fam-deep: #334155; --fam-ring: #334155; }
+.alpt-fam--generative { --fam: #EEE6FF; --fam-fg: var(--a27-ink); --fam-deep: #6D28D9; --fam-ring: #6D28D9; }
+.alpt-fam--predictive { --fam: #DFE9FF; --fam-fg: var(--a27-ink); --fam-deep: #1D4ED8; --fam-ring: #1D4ED8; }
+.alpt-fam--agents { --fam: #FFEDD5; --fam-fg: var(--a27-ink); --fam-deep: #B45309; --fam-ring: #B45309; }
+.alpt-fam--automation { --fam: #D5F2EC; --fam-fg: var(--a27-ink); --fam-deep: #0F766E; --fam-ring: #0F766E; }
+.alpt-fam--governance { --fam: #FFE1E7; --fam-fg: var(--a27-ink); --fam-deep: #BE123C; --fam-ring: #BE123C; }
+.alpt-fam--infra { --fam: #E8F3D6; --fam-fg: var(--a27-ink); --fam-deep: #3F6212; --fam-ring: #3F6212; }
+
+/* The AI Awareness Day themes, for "View by: AIAD themes": a pale tile in the theme's colour, with the symbol and
+   selection ring in its deep shade. */
+.alpt-th--safe,
+.is-themes .alpt-tile[data-alpt-theme="safe"],
+.is-themes .alpt-panel[data-alpt-theme="safe"] { --fam: color-mix(in srgb, var(--a27-safe) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-safe-deep); --fam-ring: var(--a27-safe-deep); }
+.alpt-th--smart,
+.is-themes .alpt-tile[data-alpt-theme="smart"],
+.is-themes .alpt-panel[data-alpt-theme="smart"] { --fam: color-mix(in srgb, var(--a27-smart) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-smart-deep); --fam-ring: var(--a27-smart-deep); }
+.alpt-th--creative,
+.is-themes .alpt-tile[data-alpt-theme="creative"],
+.is-themes .alpt-panel[data-alpt-theme="creative"] { --fam: color-mix(in srgb, var(--a27-creative) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-creative-deep); --fam-ring: var(--a27-creative-deep); }
+.alpt-th--responsible,
+.is-themes .alpt-tile[data-alpt-theme="responsible"],
+.is-themes .alpt-panel[data-alpt-theme="responsible"] { --fam: color-mix(in srgb, var(--a27-responsible) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-responsible-deep); --fam-ring: var(--a27-responsible-deep); }
+.alpt-th--future,
+.is-themes .alpt-tile[data-alpt-theme="future"],
+.is-themes .alpt-panel[data-alpt-theme="future"] { --fam: color-mix(in srgb, var(--a27-future) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-future-deep); --fam-ring: var(--a27-future-deep); }
+
+/* ---- Buttons ---- */
+.alpt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.1rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.alpt-btn:hover {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-btn--ink {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-btn--ink:hover {
+  background: var(--a27-safe-deep);
+  border-color: var(--a27-safe-deep);
+}
+
+/* ---- Introduction ---- */
+.alpt-hero {
+  /* The site header is fixed, so the band starts below it. */
+  padding: 8.5rem 0 2rem;
+}
+
+.alpt-eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpt-title {
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+}
+
+.alpt-lead {
+  max-width: 44rem;
+  margin: 1.25rem 0 0.75rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  line-height: 1.35;
+}
+
+.alpt-intro {
+  max-width: 44rem;
+  color: var(--a27-dim);
+}
+
+/* Printing needs the script, so the button shows only when it has run. */
+html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
+  display: none;
+}
+
+.alpt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+}
+
+/* ---- The table ---- */
+.alpt-table-wrap {
+  padding: 0 0 3rem;
+}
+
+.alpt {
+  width: min(100% - 2rem, 1680px);
+  margin: 0 auto;
+}
+
+.alpt-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.alpt-controls[hidden] {
+  display: none;
+}
+
+.alpt-search {
+  display: grid;
+  gap: 0.3rem;
+  flex: 1 1 15rem;
+  max-width: 22rem;
+}
+
+.alpt-search label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-search input {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: #FFFFFF;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.alpt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 10 1 34rem;
+}
+
+.alpt-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.85rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.alpt-chip__swatch {
+  display: inline-block;
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--fam);
+  box-shadow: inset 0 0 0 2px var(--fam-deep);
+  clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%);
+}
+
+.alpt-chip__count {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.alpt-chip[aria-pressed="true"] {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-chip[aria-pressed="true"] .alpt-chip__count {
+  opacity: 0.85;
+}
+
+.alpt-chip--all {
+  font-weight: 600;
+}
+
+.alpt-status {
+  flex-basis: 100%;
+  min-height: 1.5em;
+  margin: -0.25rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+.alpt-status:empty {
+  display: none;
+}
+
+.alpt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: 6px;
+}
+
+/* A tile: number, symbol, name. The top right corner is cut, as the brand's tiles are. */
+.alpt-tile {
+  --cut: clamp(9px, 0.9vw, 16px);
+  order: var(--o);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.15rem;
+  min-width: 0;
+  min-height: 5.25rem;
+  padding: 0.4rem 0.45rem 0.45rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transition: opacity 0.2s ease;
+}
+
+@media screen and (hover: hover) {
+  .alpt-tile[data-alpt-el]:where(:hover):not(:where(.is-picked, .is-unfocused, [aria-current="true"])) {
+    box-shadow: inset 0 0 0 2px var(--fam-ring);
+  }
+}
+
+/* The chamfer clips an outline, so the focus and selected rings are drawn inside the tile. */
+.alpt-page .alpt-tile:focus-visible,
+.alpt-tile[aria-current="true"] {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--fam-ring), inset 0 0 0 5px var(--fam);
+}
+
+.alpt-tile[aria-current="true"] {
+  box-shadow: inset 0 0 0 4px var(--fam-ring), inset 0 0 0 6px var(--fam);
+}
+
+.alpt-tile__n {
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.alpt-tile__sym {
+  color: var(--fam-deep);
+  font-size: clamp(1.35rem, 2vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.alpt-tile__name {
+  overflow: hidden;
+  font-size: clamp(0.6rem, 0.62vw, 0.78rem);
+  font-weight: 600;
+  line-height: 1.12;
+  /* Long words carry soft hyphens (aiad_literacy_tile_name()), the same in every browser. */
+  -webkit-hyphens: manual;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+/* ---- The detail panel ---- */
+.alpt-panel {
+  order: -1;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: start;
+  gap: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF;
+}
+
+.alpt-panel__print {
+  display: none;
+}
+
+.alpt-panel__tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: clamp(6rem, 22vw, 11rem);
+  aspect-ratio: 1 / 1.1;
+  padding: 0.6rem 0.7rem 0.7rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  clip-path: polygon(0 0, calc(100% - 22%) 0, 100% 20%, 100% 100%, 0 100%);
+}
+
+.alpt-panel__n {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.alpt-panel__sym {
+  color: var(--fam-deep);
+  font-size: clamp(2.6rem, 9vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.alpt-panel__tile-name {
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.alpt-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.alpt-panel__labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.alpt-panel__theme {
+  padding: 0.2rem 0.55rem;
+  background: var(--fam);
+  color: var(--fam-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-panel__family {
+  display: inline-block;
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  background: var(--fam);
+  color: var(--fam-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-panel__title {
+  font-size: clamp(1.5rem, 2.6vw, 2.6rem);
+}
+
+.alpt-panel__def {
+  max-width: 48rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.4;
+}
+
+
+.alpt-panel__nav {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alpt-panel__nav[hidden] {
+  display: none;
+}
+
+.alpt-panel__nav .alpt-btn {
+  min-height: 2.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+/* Previous and Next sit at either end of the row, with the other buttons and the count between them. */
+.alpt-panel__nav .alpt-step--prev {
+  order: -1;
+}
+
+.alpt-panel__nav .alpt-step--next {
+  order: 99;
+}
+
+.alpt-panel__count {
+  order: 98;
+  margin-left: auto;
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+}
+
+/* ---- Key and family headings ---- */
+.alpt-key {
+  display: none;
+}
+
+.alpt-family-label {
+  order: var(--o);
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 1rem 0 0.15rem;
+  padding-top: 0.5rem;
+  border-top: 4px solid var(--fam);
+}
+
+.alpt-family-label__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.alpt-family-label__about {
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+.alpt-footnote {
+  display: none;
+  margin: 1rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+/* ---- The full table: wide screens and print ---- */
+@media (min-width: 1200px), print {
+  .alpt-grid {
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    /* Equal fr rows all take the tallest row's height, and the tiles stretch to fill them, so every tile on the
+       table is the same size, beside the panel too. */
+    grid-template-rows: repeat(8, minmax(4.6rem, 1fr)) 1.25rem repeat(3, minmax(4.6rem, 1fr));
+  }
+
+  .alpt-tile {
+    order: 0;
+    grid-row: var(--r);
+    grid-column: var(--c);
+    min-height: 0;
+  }
+
+  .alpt-panel {
+    order: 0;
+    grid-column: 3 / 13;
+    grid-row: 1 / 4;
+    margin: 0 0.5rem 0.5rem;
+    padding: clamp(0.75rem, 1.2vw, 1.4rem);
+    gap: 0.6rem clamp(1rem, 1.6vw, 1.75rem);
+    grid-template-rows: minmax(0, 1fr) auto;
+    /* The panel takes the height of the three rows it spans, rather than stretching them: the tiles stay the
+       same size whatever the element says, and a long panel scrolls. */
+    contain: size;
+  }
+
+  .alpt-panel__body {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    scrollbar-width: thin;
+  }
+
+  /* Two columns, so the definition and the issues it raises both show without scrolling: what it is and the
+     question on the left, the issues and the benchmark on the right. */
+  .alpt-panel__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-content: start;
+    gap: 0.45rem 1.25rem;
+  }
+
+  .alpt-panel__body > .alpt-panel__labels,
+  .alpt-panel__body > .alpt-panel__title,
+  .alpt-panel__body > .alpt-panel__links {
+    grid-column: 1 / -1;
+  }
+
+  .alpt-panel__body > .alpt-panel__def {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .alpt-panel__body > .alpt-panel__talk {
+    grid-column: 1;
+    grid-row: 4;
+    align-self: start;
+  }
+
+  .alpt-panel__body > .alpt-panel__issues {
+    grid-column: 2;
+    grid-row: 3 / span 2;
+  }
+
+  .alpt-panel__body > .alpt-panel__bench {
+    grid-column: 2;
+    grid-row: 5;
+  }
+
+  .alpt-panel__body > .alpt-panel__res {
+    grid-column: 1;
+    grid-row: 5;
+  }
+
+  /* An element with no issues: the definition takes the full width. */
+  .alpt-panel__body:not(:has(.alpt-panel__issues:not([hidden]))) > .alpt-panel__def,
+  .alpt-panel__body:not(:has(.alpt-panel__issues:not([hidden]))) > .alpt-panel__talk {
+    grid-column: 1 / -1;
+  }
+
+  .alpt-panel__body:not(:has(.alpt-panel__issues:not([hidden]))) > .alpt-panel__res {
+    grid-column: 1 / -1;
+  }
+
+  .alpt-panel__body:not(:has(.alpt-panel__issues:not([hidden]))) > .alpt-panel__bench {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
+  .alpt-panel__body .alpt-panel__def {
+    font-size: clamp(0.88rem, 0.95vw, 1.05rem);
+    line-height: 1.4;
+  }
+
+  .alpt-panel__body .alpt-panel__title {
+    font-size: clamp(1.35rem, 1.9vw, 2.1rem);
+  }
+
+  .alpt-panel__body .alpt-panel__talk {
+    font-size: clamp(0.8rem, 0.85vw, 0.92rem);
+  }
+
+  .alpt-panel__body .alpt-issue {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  .alpt-panel__nav .alpt-btn {
+    min-height: 2.3rem;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .alpt-panel__tile {
+    width: clamp(7rem, 8.5vw, 10rem);
+  }
+
+  .alpt-panel__tile {
+    width: clamp(7.5rem, 10vw, 12rem);
+    align-self: start;
+  }
+
+  .alpt-panel__sym {
+    font-size: clamp(3rem, 4.6vw, 5.4rem);
+  }
+
+  .alpt-key {
+    grid-column: 13 / 17;
+    grid-row: 1;
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-right: 0.5rem;
+  }
+
+  .alpt-tile--key {
+    --fam: #FFFFFF;
+    --fam-fg: var(--a27-ink);
+    flex: none;
+    width: calc((100% - 4 * 6px) / 5 * 1.25);
+    max-width: 6rem;
+    outline: 2px dashed var(--a27-rule);
+    outline-offset: -2px;
+    clip-path: none;
+  }
+
+  .alpt-tile--key:hover {
+    transform: none;
+  }
+
+  .alpt-key__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-width: 0;
+    color: var(--a27-dim);
+    font-size: clamp(0.68rem, 0.72vw, 0.85rem);
+    line-height: 1.3;
+  }
+
+  .alpt-key__text p {
+    margin: 0;
+  }
+
+  .alpt-key__text .alpt-key__title {
+    color: var(--a27-ink);
+    font-size: clamp(0.8rem, 0.85vw, 1rem);
+    font-weight: 700;
+  }
+
+  .alpt-family-label {
+    display: none;
+  }
+
+  /* The rows below the table are named on their left, as a periodic table's separate rows are. */
+  .alpt-family-label.alpt-fam--governance,
+  .alpt-family-label.alpt-fam--infra {
+    grid-column: 1 / 4;
+    grid-row: 10 / 12;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0 0.75rem 0 0;
+    border: 0;
+    text-align: right;
+  }
+
+  .alpt-family-label.alpt-fam--infra {
+    grid-row: 12;
+  }
+
+  .alpt-family-label .alpt-family-label__name {
+    color: var(--fam-deep);
+  }
+
+  .alpt-family-label .alpt-family-label__about {
+    font-size: 0.8rem;
+  }
+
+  .alpt-footnote {
+    display: block;
+  }
+}
+
+/* Laptop widths: the tiles and panel are smaller, so their words are too. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .alpt-grid {
+    gap: 4px;
+  }
+
+  .alpt-tile {
+    padding: 0.3rem 0.2rem 0.35rem 0.25rem;
+  }
+
+  .alpt-tile__name {
+    font-size: 0.58rem;
+  }
+
+  .alpt-panel__title {
+    font-size: 1.6rem;
+  }
+
+  .alpt-panel__def {
+    font-size: 0.95rem;
+  }
+}
+
+/* ---- Connections ---- */
+.alpt-links-toggle__icon {
+  position: relative;
+  width: 0.95rem;
+  height: 0.95rem;
+  /* Three linked dots. */
+  background:
+    radial-gradient(circle at 20% 80%, currentColor 0 18%, transparent 20%),
+    radial-gradient(circle at 80% 80%, currentColor 0 18%, transparent 20%),
+    radial-gradient(circle at 50% 22%, currentColor 0 18%, transparent 20%),
+    linear-gradient(currentColor, currentColor) 50% 80% / 60% 1.5px no-repeat;
+}
+
+.alpt-links-toggle[aria-pressed="true"] {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.alpt-tile.is-linked {
+  box-shadow: inset 0 0 0 3px var(--fam-deep);
+  transform: translateY(-2px);
+}
+
+.alpt-tile.is-faded {
+  opacity: 0.22;
+}
+
+.alpt-panel__links {
+  max-width: 48rem;
+}
+
+.alpt-panel__links[hidden],
+.alpt-panel__links-compounds[hidden] {
+  display: none;
+}
+
+.alpt-panel__links-label {
+  margin: 0 0 0.3rem;
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-panel__links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.alpt-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.2rem 0.45rem;
+  border: 0;
+  background: var(--fam);
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.alpt-link:hover {
+  box-shadow: inset 0 0 0 2px var(--fam-deep);
+}
+
+.alpt-link__sym {
+  color: var(--fam-deep);
+  font-weight: 700;
+}
+
+.alpt-panel__links-compounds {
+  margin: 0.4rem 0 0;
+  color: var(--a27-dim);
+  font-size: 0.82rem;
+}
+
+/* ---- View by: Families or AIAD themes ---- */
+.alpt-view {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  flex-basis: 100%;
+}
+
+.alpt-view__label {
+  margin-right: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-view__option {
+  min-height: 2.5rem;
+  padding: 0.35rem 1rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.alpt-view__option + .alpt-view__option {
+  border-left: 0;
+}
+
+.alpt-view__option[aria-pressed="true"] {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+/* Each view shows its own chips, key and (on phones) group labels. */
+.alpt-legend--themes,
+.alpt-key-theme,
+.alpt-theme-label {
+  display: none !important;
+}
+
+.is-themes .alpt-legend--themes {
+  display: flex !important;
+}
+
+.is-themes .alpt-legend:not(.alpt-legend--themes),
+.is-themes .alpt-key-family {
+  display: none !important;
+}
+
+.is-themes .alpt-key-theme {
+  display: revert !important;
+}
+
+/* The rows below the table keep their family names; in the themes view they are plain ink. */
+.is-themes .alpt-family-label .alpt-family-label__name {
+  color: var(--a27-ink);
+}
+
+@media screen and (max-width: 1199px) {
+  .is-themes .alpt-grid > .alpt-tile {
+    order: var(--o2);
+  }
+
+  .is-themes .alpt-family-label:not(.alpt-theme-label) {
+    display: none !important;
+  }
+
+  .is-themes .alpt-theme-label {
+    display: flex !important;
+    order: var(--o2);
+  }
+}
+
+/* ---- Guided mode: the table narrows to a few elements ---- */
+.alpt-tile.is-unfocused {
+  opacity: 0.12;
+  cursor: not-allowed;
+}
+
+.alpt-tile.is-unfocused:hover {
+  transform: none;
+}
+
+.is-focused .alpt-grid > .alpt-tile:not(.is-unfocused):not(.is-picked) {
+  box-shadow: inset 0 0 0 3px var(--fam-deep);
+}
+
+.is-focused .alpt-family-label,
+.is-focused .alpt-key {
+  opacity: 0.25;
+}
+
+.alpt-lab__target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--a27-safe);
+}
+
+.alpt-lab__target[hidden] {
+  display: none;
+}
+
+.alpt-lab__target-text {
+  flex: 1 1 18rem;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.alpt-lab__target-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.alpt-compound__try {
+  margin-top: 0.35rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.alpt-lab__hint-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* While a compound is being found, its own hint button sits in the target panel. */
+.is-focused .alpt-lab__hint {
+  display: none;
+}
+
+/* Hints: the area to look in lights up, then the one tile glows. */
+.alpt-tile.is-hint-dim {
+  opacity: 0.25;
+}
+
+.alpt-tile.is-hint-area {
+  box-shadow: inset 0 0 0 3px var(--fam-deep);
+}
+
+.alpt-tile.is-hint-tile {
+  box-shadow: inset 0 0 0 4px var(--a27-ink), inset 0 0 0 7px var(--a27-safe);
+  animation: alpt-hint-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes alpt-hint-glow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-tile.is-hint-tile {
+    animation: none;
+  }
+}
+
+/* ---- Compound lab ---- */
+.alpt-lab-toggle__icon {
+  width: 0.9rem;
+  height: 1rem;
+  background: var(--a27-safe);
+  /* A flask: narrow neck, wide base. */
+  clip-path: polygon(35% 0, 65% 0, 65% 35%, 100% 100%, 0 100%, 35% 35%);
+}
+
+/* Picked tiles lift, with a thick ink ring. */
+.alpt-tile.is-picked {
+  box-shadow: inset 0 0 0 4px var(--a27-ink), inset 0 0 0 6px var(--fam);
+  transform: translateY(-3px);
+}
+
+html.alpt-lab-open body {
+  padding-bottom: var(--alpt-lab-h, 0);
+}
+
+.alpt-lab {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 90;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.alpt-lab[hidden] {
+  display: none;
+}
+
+.alpt-lab__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem;
+  width: min(100%, 1680px);
+  margin: 0 auto;
+}
+
+.alpt-lab__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.alpt-lab__help {
+  margin: 0.1rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.alpt-lab__slots {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 4.75rem));
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alpt-lab__slots > li {
+  margin: 0;
+}
+
+.alpt-lab__slot {
+  --cut: 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 4.25rem;
+  padding: 0.35rem 0.4rem;
+  border: 0;
+  background: var(--fam);
+  color: var(--a27-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-lab__slot--empty {
+  display: block;
+  background: transparent;
+  outline: 2px dashed rgba(255, 255, 255, 0.35);
+  outline-offset: -2px;
+  clip-path: none;
+  cursor: default;
+}
+
+.alpt-lab__slot-sym {
+  color: var(--fam-deep);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.alpt-lab__slot-name {
+  overflow: hidden;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.alpt-lab__slot:hover .alpt-lab__slot-name::before {
+  content: "\00D7  ";
+}
+
+.alpt-lab__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.alpt-lab .alpt-btn {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.alpt-lab .alpt-btn:hover:not(:disabled),
+.alpt-lab .alpt-btn--ink {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-lab .alpt-btn--ink:hover:not(:disabled) {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+}
+
+.alpt-lab .alpt-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.alpt-lab__msg {
+  min-height: 1.4em;
+  font-size: 0.95rem;
+}
+
+.alpt-lab__msg:empty {
+  display: none;
+}
+
+.alpt-lab__msg a {
+  color: var(--a27-safe);
+  font-weight: 700;
+}
+
+.alpt-lab :where(a, button):focus-visible {
+  outline: 3px solid var(--a27-safe);
+  outline-offset: 2px;
+}
+
+/* Tablets: the slots and buttons share a row under the title. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .alpt-lab__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 1rem;
+  }
+
+  .alpt-lab__head,
+  .alpt-lab__msg {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Phones: a shorter bar, so it covers less of the table. */
+@media (max-width: 599px) {
+  .alpt-lab__help {
+    display: none;
+  }
+
+  .alpt-lab__slot {
+    height: 3.6rem;
+  }
+
+  .alpt-lab .alpt-btn {
+    min-height: 2.4rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.88rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .alpt-lab__inner {
+    grid-template-columns: minmax(12rem, 1fr) auto auto;
+    align-items: center;
+    column-gap: 1.25rem;
+  }
+
+  .alpt-lab__msg {
+    grid-column: 1 / -1;
+    order: 6;
+  }
+
+  .alpt-lab__target {
+    grid-column: 1 / -1;
+    order: 5;
+  }
+}
+
+/* ---- Compounds ---- */
+.alpt-compounds {
+  margin-top: 3rem;
+}
+
+.alpt-compounds__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+}
+
+.alpt-compounds__lead {
+  max-width: 46rem;
+  margin: 0.75rem 0 1rem;
+  color: var(--a27-dim);
+}
+
+.alpt-compounds__locked-note {
+  margin: -0.25rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.alpt-compounds__locked-note {
+  display: none;
+}
+
+.is-challenge .alpt-compounds__locked-note {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-weight: 600;
+}
+
+/* ---- Levels ---- */
+.alpt-level--beginner { --level: #16A34A; --level-n: 1; }
+.alpt-level--intermediate { --level: #D97706; --level-n: 2; }
+.alpt-level--advanced { --level: #DC2626; --level-n: 3; }
+
+/* One, two or three bars, like a signal meter. */
+.alpt-level-mark {
+  display: inline-block;
+  flex: none;
+  width: 0.85rem;
+  height: 0.7rem;
+  margin-right: 0.35rem;
+  background:
+    linear-gradient(var(--level), var(--level)) 0 100% / 22% 40% no-repeat,
+    linear-gradient(var(--l2, var(--a27-rule)), var(--l2, var(--a27-rule))) 50% 100% / 22% 70% no-repeat,
+    linear-gradient(var(--l3, var(--a27-rule)), var(--l3, var(--a27-rule))) 100% 100% / 22% 100% no-repeat;
+}
+
+.alpt-level--intermediate .alpt-level-mark,
+.alpt-level--advanced .alpt-level-mark {
+  --l2: var(--level);
+}
+
+.alpt-level--advanced .alpt-level-mark {
+  --l3: var(--level);
+}
+
+.alpt-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+}
+
+.alpt-levels[hidden],
+.alpt-compounds__more-wrap[hidden] {
+  display: none;
+}
+
+.alpt-compounds__more-wrap {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.alpt-compound__level {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.alpt-compound__found {
+  padding: 0.2rem 0.45rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.alpt-compound__found[hidden] {
+  display: none;
+}
+
+.alpt-challenge__levels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.alpt-challenge__level {
+  --cut: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 0.85rem 1rem;
+  border: 0;
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  transition: transform 0.15s ease;
+}
+
+.alpt-challenge__level:hover {
+  transform: translateY(-2px);
+}
+
+.alpt-challenge__level-name {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.alpt-challenge__level-about {
+  color: var(--a27-dim);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.alpt-challenge__level-count {
+  margin-top: auto;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.alpt-challenge__level--all {
+  background: transparent;
+  color: var(--a27-cream);
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+  clip-path: none;
+}
+
+.alpt-challenge__level--all .alpt-challenge__level-about {
+  color: inherit;
+  opacity: 0.75;
+}
+
+/* ---- The compound challenge ---- */
+.alpt-challenge {
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  --cut: 22px;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-challenge[hidden] {
+  display: none;
+}
+
+.alpt-challenge__title {
+  color: var(--a27-cream);
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+}
+
+.alpt-challenge__lead {
+  max-width: 44rem;
+  margin: 0.6rem 0 1rem;
+  opacity: 0.85;
+}
+
+.alpt-challenge__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.alpt-challenge__progress {
+  margin: 0;
+  font-weight: 700;
+}
+
+.alpt-challenge .alpt-meter {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.alpt-challenge .alpt-meter__fill {
+  background: var(--a27-safe);
+}
+
+.alpt-challenge__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.alpt-challenge .alpt-btn {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.alpt-challenge .alpt-btn:hover,
+.alpt-challenge .alpt-btn--ink {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-challenge .alpt-btn--ink:hover {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+}
+
+.alpt-challenge .alpt-btn[hidden] {
+  display: none;
+}
+
+.alpt-challenge .alpt-lab-toggle__icon {
+  background: var(--a27-safe);
+}
+
+.alpt-challenge .alpt-btn--ink:hover .alpt-lab-toggle__icon {
+  background: var(--a27-ink);
+}
+
+.alpt-challenge :where(a, button):focus-visible {
+  outline: 3px solid var(--a27-safe);
+  outline-offset: 2px;
+}
+
+.alpt-lab__count {
+  margin-left: 0.4rem;
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.alpt-meter {
+  flex: 1 1 10rem;
+  max-width: 20rem;
+  height: 0.6rem;
+  background: var(--a27-rule);
+}
+
+.alpt-meter__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--a27-ink);
+  transition: width 0.4s ease;
+}
+
+.alpt-compounds__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  /* Opening one card's details doesn't stretch the others in its row. */
+  align-items: start;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Four across on larger screens, so the four-card preview fills one row. */
+@media (min-width: 1100px) {
+  .alpt-compounds__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.alpt-compound {
+  --cut: 14px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 1rem;
+  background: var(--a27-card, #FFFFFF);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-compound--volatile {
+  box-shadow: inset 0 4px 0 #D97706;
+}
+
+.alpt-compound p {
+  margin: 0;
+}
+
+/* Every compound shows, until a student takes the challenge: then the ones not yet discovered are hidden, with a clue. */
+.alpt-compound__locked {
+  display: none;
+}
+
+.alpt-compound[hidden] {
+  display: none;
+}
+
+.has-lab.is-challenge .alpt-compound:not(.is-found) {
+  background: transparent;
+  box-shadow: none;
+  outline: 2px dashed var(--a27-rule);
+  outline-offset: -2px;
+  clip-path: none;
+}
+
+.has-lab.is-challenge .alpt-compound:not(.is-found) .alpt-compound__body {
+  display: none;
+}
+
+.has-lab.is-challenge .alpt-compound:not(.is-found) .alpt-compound__locked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  min-height: 9rem;
+  color: var(--a27-dim);
+}
+
+.alpt-compound__q {
+  color: var(--a27-ink);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.alpt-compound__locked-title {
+  color: var(--a27-ink);
+  font-weight: 700;
+}
+
+.alpt-compound__swatches {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.alpt-compound__swatches .alpt-chip__swatch {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.alpt-compound__hint {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.alpt-compound__locked .alpt-compound__strand {
+  margin-top: auto;
+}
+
+.alpt-compound__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.alpt-compound .alpt-compound__made {
+  margin: 0.15rem 0 0.3rem;
+}
+
+/* The rest of a compound folds away, so the cards show just the name and what it is made from. */
+.alpt-compound__more {
+  margin-top: auto;
+  border-top: 1px solid var(--a27-rule);
+}
+
+.alpt-compound__more > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0 0.1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.alpt-compound__more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.alpt-compound__more > summary::after {
+  content: "+";
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.alpt-compound__more[open] > summary::after {
+  content: "\2212";
+}
+
+.alpt-compound__more[open] > summary {
+  margin-bottom: 0.5rem;
+}
+
+.alpt-compound__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.alpt-compound__made {
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* The elements a compound is made from: one slim row each, the symbol beside its full name, so long names stay on
+   one line. */
+.alpt-compound__formula {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.alpt-compound__el {
+  --cut: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.2rem 0.45rem 0.2rem 0.3rem;
+  background: var(--fam);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-compound__el-sym {
+  flex: none;
+  width: 1.9rem;
+  color: var(--fam-deep);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.alpt-compound__el-name {
+  min-width: 0;
+  color: var(--a27-ink);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+.alpt-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.alpt-badge--stable {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.alpt-badge--volatile {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.alpt-compounds__key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin: 0 0 0.75rem;
+  color: var(--a27-dim);
+  font-size: 0.9rem;
+}
+
+.alpt-compounds__key .alpt-badge--volatile {
+  margin-left: 0.75rem;
+}
+
+/* The name, with its strand on the right of the same line. */
+.alpt-compound__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.2rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.alpt-compound__head .alpt-compound__name,
+.alpt-compound__head .alpt-compound__strand {
+  margin-bottom: 0 !important;
+}
+
+.alpt-compound__head .alpt-compound__strand {
+  flex: none;
+}
+
+.alpt-compound__name {
+  margin: 0 0 0.2rem;
+  font-size: 1.2rem;
+}
+
+.alpt-compound__strand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem !important;
+  color: var(--a27-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.alpt-compound__strand::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--strand, var(--a27-rule));
+}
+
+.alpt-strand--safe { --strand: var(--a27-safe); }
+.alpt-strand--smart { --strand: var(--a27-smart); }
+.alpt-strand--creative { --strand: var(--a27-creative); }
+.alpt-strand--responsible { --strand: var(--a27-responsible); }
+.alpt-strand--future { --strand: var(--a27-future); }
+
+.alpt-compound__what {
+  margin-bottom: 0.5rem !important;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.alpt-compound__facts {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.alpt-compound__facts dt {
+  font-weight: 700;
+}
+
+.alpt-compound__facts dd {
+  margin: 0.1rem 0 0;
+}
+
+.alpt-compound__debate {
+  padding: 0.5rem 0.6rem;
+  background: var(--a27-cream);
+}
+
+.alpt-compound__debate-label {
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-compound__debate-q {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.alpt-compound__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.alpt-challenge__teacher {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.alpt-challenge .alpt-btn[aria-pressed="true"] {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.alpt-compound.is-new {
+  animation: alpt-discover 0.9s ease;
+}
+
+@keyframes alpt-discover {
+  0% { transform: scale(0.94); box-shadow: 0 0 0 0 var(--a27-safe); }
+  40% { transform: scale(1.03); box-shadow: 0 0 0 6px var(--a27-safe); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ---- Issues each element raises ---- */
+.alpt-panel__talk {
+  max-width: 48rem;
+  margin: 0;
+  padding-left: 0.7rem;
+  border-left: 4px solid var(--fam-deep);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.alpt-panel__talk[hidden],
+.alpt-panel__issues[hidden],
+.alpt-panel__issue[hidden] {
+  display: none;
+}
+
+.alpt-panel__issues {
+  max-width: 48rem;
+}
+
+.alpt-panel__issues-label {
+  margin: 0 0 0.3rem;
+  color: var(--a27-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-panel__issues-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.alpt-issue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border: 0;
+  background: var(--fam);
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.alpt-issue::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--fam-deep);
+}
+
+.alpt-issue:hover,
+.alpt-issue[aria-expanded="true"] {
+  box-shadow: inset 0 0 0 2px var(--fam-deep);
+}
+
+.alpt-issue[hidden] {
+  display: none;
+}
+
+.alpt-issue--more {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--a27-rule);
+  color: var(--a27-dim);
+}
+
+.alpt-issue--more::before {
+  display: none;
+}
+
+.alpt-panel__issue {
+  margin-top: 0.45rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--fam);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.alpt-panel__issue p {
+  margin: 0;
+}
+
+.alpt-panel__issue .alpt-panel__issue-talk {
+  margin-top: 0.3rem;
+}
+
+.alpt-glossary__talk,
+.alpt-glossary__issues {
+  color: var(--a27-dim);
+  font-size: 0.88rem;
+}
+
+.alpt-issues .alpt-glossary__issues a {
+  color: inherit;
+}
+
+.alpt-panel__res {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.alpt-panel__res[hidden] {
+  display: none;
+}
+
+.alpt-panel__res a,
+.alpt-panel__issue-res a,
+.alpt-glossary__res a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.alpt-res__kind {
+  color: var(--a27-dim);
+  font-weight: 400;
+}
+
+.alpt-panel__issue .alpt-panel__issue-res {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.alpt-glossary__res {
+  color: var(--a27-dim);
+  font-size: 0.88rem;
+}
+
+/* ---- Show to class: the board view ---- */
+.alpt-board-btn__icon {
+  width: 0.95rem;
+  height: 0.7rem;
+  border: 2px solid currentColor;
+  /* A little screen. */
+  box-shadow: 0 3px 0 -1px currentColor;
+}
+
+.alpt-compound__board {
+  align-self: flex-start;
+  min-height: 2.1rem;
+  margin: 0 0 0.6rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.alpt-compound__board[hidden] {
+  display: none;
+}
+
+.alpt-board {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3rem;
+  overflow-y: auto;
+  padding: 6vh 7vw;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-board[hidden] {
+  display: none;
+}
+
+.alpt-board:focus {
+  outline: none;
+}
+
+html.alpt-board-open {
+  overflow: hidden;
+}
+
+.alpt-board__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem 4vw;
+}
+
+.alpt-board__tile {
+  --cut: 2.2rem;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: clamp(12rem, 22vw, 20rem);
+  aspect-ratio: 1;
+  padding: 1.4rem 1.5rem;
+  background: var(--fam);
+  color: var(--a27-ink);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-board__n {
+  font-size: clamp(1rem, 1.6vw, 1.5rem);
+  font-weight: 600;
+}
+
+.alpt-board__sym {
+  color: var(--fam-deep);
+  font-size: clamp(5rem, 10vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.alpt-board__tile-name {
+  font-size: clamp(1rem, 1.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.alpt-board__text {
+  flex: 1 1 26rem;
+  min-width: 0;
+}
+
+.alpt-board .alpt-board__label {
+  margin: 0 0 1rem;
+  color: var(--a27-safe);
+  font-size: clamp(0.85rem, 1.1vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpt-board .alpt-board__title {
+  margin: 0 0 1.25rem;
+  color: var(--a27-cream);
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.alpt-board .alpt-board__def,
+.alpt-board .alpt-board__prompt {
+  max-width: 30ch;
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.alpt-board .alpt-board__prompt {
+  color: var(--a27-safe);
+}
+
+.alpt-board .alpt-board__talk {
+  max-width: 40ch;
+  margin: 2rem 0 0;
+  padding-left: 1.1rem;
+  border-left: 6px solid var(--a27-safe);
+  font-size: clamp(1.1rem, 1.9vw, 1.6rem);
+  line-height: 1.35;
+}
+
+.alpt-board__talk-label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--a27-safe);
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.alpt-board__formula {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.alpt-board__el {
+  --cut: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: clamp(7rem, 11vw, 10rem);
+  min-height: clamp(7rem, 11vw, 10rem);
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  background: var(--fam);
+  color: var(--a27-ink);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-board__el-sym {
+  color: var(--fam-deep);
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.alpt-board__el-name {
+  font-size: clamp(0.8rem, 1vw, 1rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.alpt-board__bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.alpt-board .alpt-board__btn {
+  min-height: 3rem;
+  padding: 0.7rem 1.25rem;
+  border: 2px solid var(--a27-cream);
+  border-radius: 0;
+  background: transparent;
+  color: var(--a27-cream);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.alpt-board .alpt-board__btn:hover,
+.alpt-board .alpt-board__btn--close {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.alpt-board .alpt-board__btn:focus-visible {
+  outline: 3px solid var(--a27-cream);
+  outline-offset: 3px;
+}
+
+@media print {
+  .alpt-board,
+  .alpt-board-btn {
+    display: none !important;
+  }
+}
+
+/* ---- Benchmark links ---- */
+.alpt-panel__bench {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.alpt-panel__bench-label {
+  color: var(--a27-dim);
+  font-weight: 700;
+}
+
+.alpt-panel__bench a,
+.alpt-glossary__bench a,
+.alpt-suggest__bench a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.alpt-glossary__bench {
+  color: var(--a27-dim);
+  font-size: 0.85rem;
+}
+
+/* ---- Suggest a new element ---- */
+.alpt-suggest {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--a27-card, #FFFFFF);
+}
+
+@media (min-width: 900px) {
+  .alpt-suggest {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    align-items: start;
+  }
+}
+
+.alpt-suggest__title {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+}
+
+.alpt-suggest__intro p {
+  margin: 0 0 0.75rem;
+}
+
+.alpt-suggest__bench {
+  color: var(--a27-dim);
+  font-size: 0.92rem;
+}
+
+.alpt-suggest__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.alpt-suggest__form[hidden] {
+  display: none;
+}
+
+.alpt-suggest__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 600px) {
+  .alpt-suggest__row {
+    grid-template-columns: 2fr 1fr 1.4fr;
+  }
+
+  .alpt-suggest__row:last-of-type {
+    grid-template-columns: 2fr 1.4fr;
+  }
+}
+
+.alpt-suggest__field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.alpt-suggest__field :where(input, select, textarea) {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.65rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.alpt-suggest__field textarea {
+  resize: vertical;
+}
+
+.alpt-suggest__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.alpt-suggest__note {
+  margin: 0;
+  color: var(--a27-dim);
+  font-size: 0.82rem;
+}
+
+.alpt-suggest__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.alpt-suggest__status {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media print {
+  .alpt-suggest {
+    display: none;
+  }
+}
+
+/* ---- Every element, family by family ---- */
+.alpt-glossary {
+  margin-top: 3rem;
+}
+
+.alpt-glossary__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+}
+
+.alpt-glossary__lead {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--a27-dim);
+}
+
+.alpt-glossary__family {
+  border-top: 2px solid var(--a27-ink);
+}
+
+.alpt-glossary__family:last-of-type {
+  border-bottom: 2px solid var(--a27-ink);
+}
+
+.alpt-glossary__family summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.alpt-glossary__family summary::-webkit-details-marker {
+  display: none;
+}
+
+.alpt-glossary__family summary::after {
+  content: "+";
+  margin-left: auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.alpt-glossary__family[open] summary::after {
+  content: "\2212";
+}
+
+.alpt-glossary__family summary .alpt-chip__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.alpt-glossary__family-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.alpt-glossary__family-about {
+  color: var(--a27-dim);
+}
+
+.alpt-glossary__family dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 1.25rem 2rem;
+  margin: 0 0 1.5rem;
+}
+
+.alpt-glossary__item dt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.alpt-glossary__sym {
+  flex: none;
+  min-width: 2.2rem;
+  padding: 0.1rem 0.3rem;
+  background: var(--fam);
+  color: var(--fam-fg);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.alpt-glossary__n {
+  margin-left: auto;
+  color: var(--a27-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.alpt-glossary__item dd {
+  margin: 0.4rem 0 0;
+}
+
+.alpt-glossary__item dd p {
+  margin: 0 0 0.4rem;
+}
+
+
+.alpt-glossary__item:target dt,
+.alpt-glossary__item:has(dt:target) dt {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--fam);
+}
+
+/* ---- Ways to use it in class ---- */
+.alpt-classroom {
+  padding: 3.5rem 0 5rem;
+  background: var(--a27-card);
+}
+
+.alpt-section-title {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+}
+
+.alpt-section-lead {
+  max-width: 44rem;
+  margin: 1rem 0 2rem;
+  font-size: 1.1rem;
+}
+
+/* ---- Display board help: questions and answers ---- */
+.alpt-page .alpt-faq {
+  max-width: 56rem;
+  margin-top: 1.5rem;
+  border-bottom: 2px solid var(--a27-ink);
+}
+
+.alpt-page .alpt-faq > * {
+  margin-block: 0;
+}
+
+.alpt-faq__item {
+  border-top: 2px solid var(--a27-ink);
+}
+
+.alpt-faq__item > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.alpt-faq__item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.alpt-faq__item > summary::after {
+  content: "+";
+  flex: none;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.alpt-faq__item[open] > summary::after {
+  content: "\2212";
+}
+
+.alpt-faq__item > p {
+  max-width: 48rem;
+  margin: 0 0 1.1rem;
+  line-height: 1.55;
+}
+
+.alpt-faq__item a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.alpt-ideas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+}
+
+/* The groups' flow layout spaces every block after the first; in a grid that pushes cards out of line. */
+.alpt-page .alpt-ideas > *,
+.alpt-page .alpt-audiences > * {
+  margin-block: 0;
+}
+
+.alpt-idea {
+  padding: 1.25rem 1.25rem 0.5rem;
+  background: var(--a27-cream);
+  border-top: 5px solid var(--a27-ink);
+}
+
+.alpt-idea h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.25rem;
+}
+
+.alpt-audiences {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.alpt-audience {
+  padding: 1.25rem 1.25rem 0.5rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-audience h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-tile {
+    transition: none;
+  }
+
+  .alpt-tile:hover,
+  .alpt-tile.is-picked {
+    transform: none;
+  }
+
+  .alpt-compound.is-new {
+    animation: none;
+  }
+
+  .alpt-meter__fill {
+    transition: none;
+  }
+}
+
+/* ---- Print: the table as a poster ---- */
+@media print {
+  @page {
+    size: A3 landscape;
+    margin: 10mm;
+  }
+
+  body.literacy-table-page {
+    background: #FFFFFF;
+  }
+
+  .literacy-table-page :where(.site-header, .site-footer, footer, .skip-link),
+  .alpt-hero,
+  .alpt-lab,
+  .alpt-compounds,
+  .alpt-challenge,
+  .alpt-controls,
+  .alpt-glossary,
+  .alpt-classroom,
+  .alpt-panel__tile,
+  .alpt-panel__body,
+  .alpt-panel__nav {
+    display: none !important;
+  }
+
+  .alpt-page {
+    background: #FFFFFF;
+  }
+
+  .alpt-page,
+  .alpt-page * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .alpt-table-wrap {
+    padding: 0;
+  }
+
+  .alpt {
+    width: 100%;
+  }
+
+  /* All twelve rows and the footnote on one landscape page. */
+  .alpt {
+    zoom: 0.86;
+  }
+
+  .alpt-grid {
+    grid-template-rows: repeat(8, minmax(0, 1fr)) 0.75rem repeat(3, minmax(0, 1fr));
+  }
+
+  .alpt-panel {
+    display: block;
+    border: 0;
+    background: transparent;
+    padding: 0 1rem;
+  }
+
+  .alpt-panel__print {
+    display: block;
+  }
+
+  .alpt-panel__print-eyebrow {
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .alpt-panel__print-title {
+    margin: 0 0 0.5rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .alpt-panel__print-lead {
+    max-width: 40rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .alpt-panel__print-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .alpt-panel__print-key li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .alpt-tile {
+    break-inside: avoid;
+    opacity: 1 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .alpt-tile__name {
+    font-size: 0.62rem;
+  }
+}
+
+/* On screen the glossary is browsable. Print always uses the full poster grid. */
+.alpt-back-to-tiles { display: none; }
+#alpt-explore { scroll-margin-top: 6rem; }
+@media screen {
+  .alpt .alpt-tile__name { font-size: .75rem; line-height: 1.2; overflow: visible; overflow-wrap: anywhere; }
+  .alpt .is-excluded, .alpt.has-no-matches .alpt-grid,
+  .alpt.is-filtered .alpt-family-label, .alpt.is-filtered .alpt-key,
+  .alpt [data-alpt-clear-search][hidden] { display: none !important; }
+  .alpt.is-filtered .alpt-grid { grid-template-columns: repeat(auto-fill,minmax(6.5rem,1fr)); grid-template-rows: auto; }
+  .alpt.is-filtered .alpt-tile { grid-area: auto; min-height: 5rem; }
+  .alpt.is-filtered .alpt-panel { grid-area: auto / 1 / auto / -1; order: -1; contain: none; }
+}
+@media screen and (max-width:1199px) {
+  .alpt-js .alpt:not(.is-detail-open) .alpt-panel { display:none; }
+  .alpt-js .is-detail-open .alpt-back-to-tiles { display:inline-flex; grid-column:1/-1; justify-self:start; }
+}
+
+@media screen {
+  .alpt .alpt-panel__body { display:flex; flex-direction:column; gap:.55rem; }
+  .alpt-panel__tile-name { overflow-wrap:anywhere; }
+  .alpt-reader-notes {border-block-start:1px solid var(--a27-rule)}
+  .alpt-reader-notes summary {cursor:pointer;font-weight:650;padding:.65rem 0}
+  .alpt-reader-notes[open] > :not(summary):not([hidden]) {margin-block:.5rem}
+}
+
+.alpt-quiz {margin-block:3rem;padding:clamp(1rem,3vw,2rem);background:#f1ebfa;border-block-start:5px solid #6d28d9;scroll-margin-top:6rem}
+.alpt-quiz h2,.alpt-quiz h3 {margin:0}
+.alpt-quiz h3 {max-width:52ch;font-size:clamp(1.2rem,2vw,1.65rem);line-height:1.3}
+.alpt-quiz [data-quiz-progress] {font-weight:700;color:#50288b}
+.alpt-quiz [data-quiz-options] {display:flex;flex-wrap:wrap;gap:.6rem;margin-block:1rem}
+.alpt-quiz .is-answer {background:#dcf2dd;color:#193b23;border-color:#266b38}
+.alpt-quiz [data-quiz-feedback] {max-width:65ch}
+.alpt-quiz [hidden],.alpt-quiz[hidden] {display:none}
+@media print { .alpt-quiz { display:none!important } }

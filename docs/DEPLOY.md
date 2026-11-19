@@ -16,8 +16,10 @@ nothing else; the theme then installs its plugins itself the first time WordPres
 3. On the first request, once each, with a lock and a retry if one could not finish:
    - `aiad_maybe_convert_homepage()` builds the block homepage from the Customizer's section order, visibility and
      wording and makes it the front page. The old page and the Customizer values are kept.
-   - `aiad_maybe_convert_theme_pages()` creates the National Conversation and walkthrough pages and gives the Assets Pack
-     and Press Release pages their blocks (the old content is kept in `_aiad_builtin_content`).
+   - `aiad_maybe_convert_theme_pages()` creates the National Conversation, walkthrough and AI Literacy Periodic Table
+     pages and gives the Assets Pack and Press Release pages their blocks (the old content is kept in
+     `_aiad_builtin_content`). It records the pages it has made in `aiad_theme_pages_done`, so a page added later is
+     created on its own, on a site that ran it before, without the others being touched again.
    - aiad-core converts shortcodes in existing content to blocks, saving each post's old content first: as a revision
      (so revisions must not be switched off: `WP_POST_REVISIONS` is not `false` in `wp-config.php`), or in the
      `_aiad_pre_block_content` field for a post type without revisions (the timeline).
@@ -41,7 +43,7 @@ nothing else; the theme then installs its plugins itself the first time WordPres
 
 ## After the push
 
-- [ ] `/` shows the block homepage, `/national-conversation/` and `/walkthrough/` answer 200, the Assets Pack and
+- [ ] `/` shows the block homepage, `/national-conversation/`, `/walkthrough/` and `/ai-literacy-periodic-table/` answer 200, the Assets Pack and
       Press Release pages show their blocks, the footer links work.
 - [ ] Plugins page: AI Awareness Day Core, the Benchmark and the Debate Network are active.
 - [ ] Contact form, benchmark report email (needs a real sender domain) and the school dashboard lookup.
