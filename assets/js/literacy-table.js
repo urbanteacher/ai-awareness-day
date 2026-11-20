@@ -24,6 +24,57 @@
 		var elements = data.elements; // [ sym, name, family, def, id ]
 		var families = data.families;
 		var tiles = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-el]' ) );
+
+		// Tile names: a whole word moves to the next line rather than splitting ("Data / Governance", not
+		// "Data Gover- / nance"). Each name carries soft hyphens from the server; here they are kept only in words too
+		// wide for the tile on their own, and the rest are taken out. Done again whenever the tiles change size.
+		var SHY = '\u00AD';
+		var measure = document.createElement( 'canvas' ).getContext( '2d' );
+		function fitNames() {
+			tiles.forEach( function ( tile ) {
+				var nameEl = tile.querySelector( '.alpt-tile__name' );
+				if ( ! nameEl ) {
+					return;
+				}
+				if ( ! nameEl.hasAttribute( 'data-alpt-name' ) ) {
+					nameEl.setAttribute( 'data-alpt-name', nameEl.textContent );
+				}
+				var width = nameEl.clientWidth;
+				if ( ! width ) {
+					return;
+				}
+				var style = window.getComputedStyle( nameEl );
+				measure.font = style.fontWeight + ' ' + style.fontSize + ' ' + style.fontFamily;
+				var fitted = nameEl.getAttribute( 'data-alpt-name' ).split( ' ' ).map( function ( word ) {
+					// Hard hyphens (Human-in-the-Loop) are break points already, so each part is judged on its own.
+					return word.split( '-' ).map( function ( part ) {
+						var plain = part.split( SHY ).join( '' );
+						// On a line of its own the word needs no hyphen, so it is measured as it is.
+						return measure.measureText( plain ).width <= width + 0.5 ? plain : part;
+					} ).join( '-' );
+				} ).join( ' ' );
+				if ( nameEl.textContent !== fitted ) {
+					nameEl.textContent = fitted;
+				}
+			} );
+		}
+		var gridEl = root.querySelector( '.alpt-grid' );
+		if ( gridEl ) {
+			var fitTimer = null;
+			var refit = function () {
+				window.clearTimeout( fitTimer );
+				fitTimer = window.setTimeout( fitNames, 60 );
+			};
+			if ( 'ResizeObserver' in window ) {
+				new window.ResizeObserver( refit ).observe( gridEl );
+			} else {
+				window.addEventListener( 'resize', refit );
+			}
+			if ( document.fonts && document.fonts.ready ) {
+				document.fonts.ready.then( fitNames );
+			}
+			fitNames();
+		}
 		var panel = root.querySelector( '[data-alpt-panel]' );
 		var outs = {};
 		Array.prototype.forEach.call( root.querySelectorAll( '[data-alpt-out]' ), function ( el ) {

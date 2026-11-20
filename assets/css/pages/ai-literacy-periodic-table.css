@@ -4431,8 +4431,9 @@ html.alpt-board-open {
 
 .alpt-grid .alpt-tile__name {
   align-self: end;
-  -webkit-hyphens: auto;
-  hyphens: auto;
+  /* Only the break points the page sets: the script keeps them just for words too wide to fit on their own. */
+  -webkit-hyphens: manual;
+  hyphens: manual;
   hyphenate-limit-chars: 7 3 3;
   /* Break a word only at its hyphen points; chop it only if nothing else fits (an older rule allowed any letter). */
   overflow-wrap: break-word;
@@ -4481,4 +4482,22 @@ html.alpt-board-open {
   .alpt-grid .alpt-tile[data-alpt-el] {
     transition: none;
   }
+}
+
+/* ---- Calmer tiles: one name size for every tile, less padding, and the name straight under the symbol, so the
+   number, symbol and first line of the name line up across every row. Hover enlarges a tile to read a long name. ---- */
+.alpt-grid .alpt-tile {
+  gap: 0.05rem;
+  padding: 0.3rem 0.35rem 0.35rem;
+  align-content: start;
+}
+
+.alpt-grid .alpt-tile__name,
+.alpt-grid .alpt-tile__name--long,
+.alpt-grid .alpt-tile__name--xlong {
+  align-self: start;
+  margin-top: 0.2rem;
+  font-size: 0.64rem;
+  line-height: 1.15;
+  letter-spacing: 0;
 }

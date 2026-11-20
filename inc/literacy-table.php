@@ -862,7 +862,7 @@ function aiad_literacy_tile_name( string $name ): string {
 			'Pro|ductive', 'Reason|ing', 'Recom|mend|ation', 'Regu|lation', 'Same|ness', 'Stereo|type', 'Summar|ising', 'Syco|phancy',
 			'Trans|parency', 'Water|mark',
 			'Adver|sarial', 'Analy|tics', 'Augment|ed', 'Charac|ter', 'Classi|fication', 'Cluster|ing', 'Distil|lation',
-			'Docu|ment', 'Embed|ding', 'Engineer|ing', 'Fore|casting', 'Gover|nance', 'Hyper|auto|mation', 'Integ|ration', 'Intelli|gent',
+			'Docu|ment', 'Embed|ding', 'Engin|eering', 'Fore|casting', 'Gover|nance', 'Hyper|auto|mation', 'Integ|ration', 'Intelli|gent',
 			'Multi|modal', 'Orches|tration', 'Orches|trator', 'Para|meters', 'Predic|tive', 'Prescrip|tive', 'Process|ing', 'Proto|col',
 			'Recog|nition', 'Recur|sive', 'Improve|ment', 'Reflec|tion', 'Regres|sion', 'Retriev|al', 'Senti|ment', 'Un|super|vised', 'Super|vised',
 			'Trans|former', 'Quanti|sation', 'Guard|rails', 'Guard|rail', 'Auto|nomy', 'Com|puter', 'Align|ment', 'Sover|eignty', 'Over|fitting', 'Foun|dation', 'Rein|force|ment', 'Accel|er|ators', 'Temper|ature', 'Respon|sible', 'Optim|isation', 'Super|intelli|gence', 'Mechan|istic', 'Interpret|ability', 'Activ|ation', 'Extrac|tion', 'Abli|ter|ation', 'Uncen|sored', 'Jail|breaking', 'Direc|tion',
