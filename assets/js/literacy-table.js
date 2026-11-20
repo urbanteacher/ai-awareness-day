@@ -1494,6 +1494,240 @@
 			return root.classList.contains( 'is-themes' ) ? 'alpt-th--' + key : '';
 		}
 
+		// ---- A shareable graphic card of an element: 1080 × 1350, the portrait size LinkedIn and Instagram use. ----
+		var shareFilesOk = null;
+		function canShareFiles() {
+			if ( null === shareFilesOk ) {
+				try {
+					shareFilesOk = !! ( navigator.canShare && window.File && navigator.canShare( { files: [ new File( [ '' ], 'x.png', { type: 'image/png' } ) ] } ) );
+				} catch ( err ) {
+					shareFilesOk = false;
+				}
+			}
+			return shareFilesOk;
+		}
+
+		function cardColours( e ) {
+			var probe = el( 'span', 'alpt-fam--' + e[ 2 ] );
+			probe.hidden = true;
+			root.appendChild( probe );
+			var cs = getComputedStyle( probe );
+			var rs = getComputedStyle( document.documentElement );
+			var out = {
+				fam: cs.getPropertyValue( '--fam' ).trim() || '#E5E7EB',
+				deep: cs.getPropertyValue( '--fam-deep' ).trim() || '#231F20',
+				ink: rs.getPropertyValue( '--a27-ink' ).trim() || '#231F20',
+				cream: rs.getPropertyValue( '--a27-cream' ).trim() || '#F6F4ED',
+				accent: rs.getPropertyValue( '--a27-safe' ).trim() || '#00BEDD'
+			};
+			probe.remove();
+			return out;
+		}
+
+		function wrapLines( ctx, text, width ) {
+			var lines = [], line = '';
+			String( text ).split( /\s+/ ).forEach( function ( w ) {
+				var test = line ? line + ' ' + w : w;
+				if ( line && ctx.measureText( test ).width > width ) {
+					lines.push( line );
+					line = w;
+				} else {
+					line = test;
+				}
+			} );
+			if ( line ) {
+				lines.push( line );
+			}
+			return lines;
+		}
+
+		function spaced( ctx, text, x, y, px ) {
+			if ( 'letterSpacing' in ctx ) {
+				ctx.letterSpacing = px + 'px';
+				ctx.fillText( text, x, y );
+				ctx.letterSpacing = '0px';
+			} else {
+				ctx.fillText( text, x, y );
+			}
+		}
+
+		function drawCard( index ) {
+			var e = elements[ index ];
+			var c = cardColours( e );
+			var W = 1080, H = 1350, P = 84;
+			var canvas = document.createElement( 'canvas' );
+			canvas.width = W;
+			canvas.height = H;
+			var ctx = canvas.getContext( '2d' );
+			var face = getComputedStyle( document.querySelector( '.alpt-tile__sym' ) || document.body ).fontFamily;
+			var font = function ( weight, size ) {
+				return weight + ' ' + Math.round( size ) + 'px ' + face;
+			};
+			ctx.fillStyle = c.ink;
+			ctx.fillRect( 0, 0, W, H );
+
+			ctx.fillStyle = c.accent;
+			ctx.font = font( 700, 26 );
+			spaced( ctx, 'THE AI LITERACY PERIODIC TABLE', P, P + 20, 4 );
+
+			// The tile, with its cut corner, as on the table.
+			var T = 400, tx = P, ty = P + 72, cut = 64;
+			ctx.fillStyle = c.fam;
+			ctx.beginPath();
+			ctx.moveTo( tx, ty );
+			ctx.lineTo( tx + T - cut, ty );
+			ctx.lineTo( tx + T, ty + cut );
+			ctx.lineTo( tx + T, ty + T );
+			ctx.lineTo( tx, ty + T );
+			ctx.closePath();
+			ctx.fill();
+			ctx.fillStyle = c.ink;
+			ctx.font = font( 600, 40 );
+			ctx.fillText( String( index + 1 ), tx + 36, ty + 72 );
+			// The name first, at the foot of the tile, then the symbol in the space left above it.
+			var nameSize = 34;
+			ctx.font = font( 700, nameSize );
+			var nameLines = wrapLines( ctx, e[ 1 ], T - 72 );
+			while ( nameLines.length > 2 && nameSize > 24 ) {
+				nameSize -= 2;
+				ctx.font = font( 700, nameSize );
+				nameLines = wrapLines( ctx, e[ 1 ], T - 72 );
+			}
+			nameLines = nameLines.slice( 0, 3 );
+			var nameTop = ty + T - 36 - ( nameLines.length - 1 ) * ( nameSize + 6 ) - nameSize;
+			ctx.fillStyle = c.ink;
+			nameLines.forEach( function ( l, i ) {
+				ctx.fillText( l, tx + 36, nameTop + nameSize + i * ( nameSize + 6 ) );
+			} );
+			// Cap height is about 0.72 of the size and a descender (g, p, y) about 0.22.
+			var room = nameTop - 16 - ( ty + 96 );
+			var symSize = Math.min( 210, room / 0.96 );
+			ctx.font = font( 700, symSize );
+			while ( ctx.measureText( e[ 0 ] ).width > T - 72 && symSize > 80 ) {
+				symSize -= 6;
+				ctx.font = font( 700, symSize );
+			}
+			ctx.fillStyle = c.deep;
+			ctx.fillText( e[ 0 ], tx + 30, nameTop - 16 - symSize * 0.22 );
+
+			// Beside the tile: the family and the theme.
+			var sx = tx + T + 48, sw = W - P - sx, y = ty + 52;
+			ctx.fillStyle = c.fam;
+			ctx.font = font( 700, 30 );
+			wrapLines( ctx, ( families[ e[ 2 ] ] || '' ).toUpperCase(), sw ).forEach( function ( l ) {
+				spaced( ctx, l, sx, y, 2 );
+				y += 42;
+			} );
+			y += 8;
+			ctx.fillStyle = c.cream;
+			ctx.globalAlpha = 0.75;
+			ctx.font = font( 500, 30 );
+			wrapLines( ctx, ( themes[ e[ 5 ] ] || '' ) + ' theme', sw ).forEach( function ( l ) {
+				ctx.fillText( l, sx, y );
+				y += 40;
+			} );
+			ctx.globalAlpha = 1;
+
+			// The name, definition and talk question, made smaller together until they fit above the footer.
+			var top = ty + T + 110, bottom = H - P - 100, width = W - P * 2, question = talk[ e[ 0 ] ] || '';
+			var plan = function ( k ) {
+				var parts = [];
+				ctx.font = font( 700, 84 * k );
+				parts.push( { lines: wrapLines( ctx, e[ 1 ], width ), size: 84 * k, weight: 700, lh: 1.04, after: 30 * k } );
+				ctx.font = font( 600, 44 * k );
+				parts.push( { lines: wrapLines( ctx, e[ 3 ], width ), size: 44 * k, weight: 600, lh: 1.28, after: 48 * k } );
+				if ( question ) {
+					ctx.font = font( 500, 34 * k );
+					parts.push( { lines: wrapLines( ctx, question, width - 40 ), size: 34 * k, weight: 500, lh: 1.34, after: 0, talk: true } );
+				}
+				var h = 0;
+				parts.forEach( function ( p ) {
+					h += ( p.talk ? 48 * k : 0 ) + p.lines.length * p.size * p.lh + p.after;
+				} );
+				return { parts: parts, height: h, k: k };
+			};
+			var layout = plan( 1 );
+			for ( var k = 0.95; top + layout.height > bottom && k >= 0.5; k -= 0.05 ) {
+				layout = plan( k );
+			}
+			y = top;
+			layout.parts.forEach( function ( p ) {
+				var x = P;
+				if ( p.talk ) {
+					var blockTop = y - p.size;
+					ctx.fillStyle = c.accent;
+					ctx.font = font( 700, 24 * layout.k );
+					spaced( ctx, 'TALK ABOUT IT', P + 36, blockTop + 22 * layout.k, 3 );
+					y += 48 * layout.k;
+					ctx.fillRect( P, blockTop - 4, 8, 48 * layout.k + p.lines.length * p.size * p.lh );
+					x = P + 36;
+				}
+				ctx.fillStyle = c.cream;
+				ctx.font = font( p.weight, p.size );
+				p.lines.forEach( function ( l ) {
+					ctx.fillText( l, x, y );
+					y += p.size * p.lh;
+				} );
+				y += p.after;
+			} );
+
+			// Footer.
+			ctx.fillStyle = c.cream;
+			ctx.globalAlpha = 0.25;
+			ctx.fillRect( P, H - P - 62, W - P * 2, 2 );
+			ctx.globalAlpha = 1;
+			ctx.font = font( 700, 28 );
+			ctx.fillText( 'AI Awareness Day · Thursday 29 April 2027', P, H - P );
+			ctx.textAlign = 'right';
+			ctx.fillStyle = c.accent;
+			ctx.font = font( 600, 26 );
+			ctx.fillText( 'aiawarenessday.co.uk', W - P, H - P );
+			ctx.textAlign = 'left';
+			return canvas;
+		}
+
+		function shareCard( index, button ) {
+			var e = elements[ index ];
+			var name = 'ai-literacy-periodic-table-' + e[ 0 ].toLowerCase() + '.png';
+			var url = window.location.origin + window.location.pathname + '#element-' + e[ 0 ].toLowerCase();
+			var label = button ? button.textContent : '';
+			var flash = function ( text ) {
+				if ( ! button ) {
+					return;
+				}
+				button.textContent = text;
+				window.setTimeout( function () {
+					if ( button.isConnected ) {
+						button.textContent = label;
+					}
+				}, 2500 );
+			};
+			var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+			ready.then( function () {
+				drawCard( index ).toBlob( function ( blob ) {
+					if ( ! blob ) {
+						return;
+					}
+					if ( canShareFiles() ) {
+						var file = new File( [ blob ], name, { type: 'image/png' } );
+						navigator.share( { files: [ file ], title: e[ 1 ] + ' | The AI Literacy Periodic Table', text: e[ 1 ] + ': ' + e[ 3 ] + ' ' + url } ).catch( function () {} );
+						return;
+					}
+					var link = document.createElement( 'a' );
+					link.href = URL.createObjectURL( blob );
+					link.download = name;
+					document.body.appendChild( link );
+					link.click();
+					link.remove();
+					window.setTimeout( function () {
+						URL.revokeObjectURL( link.href );
+					}, 4000 );
+					flash( 'Card downloaded' );
+					boardSay.textContent = 'Card for ' + e[ 1 ] + ' downloaded.';
+				}, 'image/png' );
+			} );
+		}
+
 		function renderBoardElement() {
 			var e = elements[ boardIndex ];
 			clearBoard();
@@ -1523,9 +1757,16 @@
 			wrap.appendChild( text );
 			board.appendChild( wrap );
 			var bar = el( 'div', 'alpt-board__bar' );
-			bar.appendChild( boardButton( '← Previous', 'prev' ) );
-			bar.appendChild( boardButton( 'Next →', 'next' ) );
-			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle' ) );
+			var prev = boardButton( '', 'prev', 'alpt-board__btn--prev' );
+			prev.innerHTML = '<span aria-hidden="true">←</span> <span class="alpt-board__btn-word">Previous</span>';
+			prev.setAttribute( 'aria-label', 'Previous' );
+			var next = boardButton( '', 'next', 'alpt-board__btn--next' );
+			next.innerHTML = '<span class="alpt-board__btn-word">Next</span> <span aria-hidden="true">→</span>';
+			next.setAttribute( 'aria-label', 'Next' );
+			bar.appendChild( prev );
+			bar.appendChild( next );
+			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle', 'alpt-board__btn--toggle' ) );
+			bar.appendChild( boardButton( canShareFiles() ? 'Share as a card' : 'Download as a card', 'card', 'alpt-board__btn--card' ) );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
 		}
@@ -1648,6 +1889,8 @@
 				stepBoard( -1 );
 			} else if ( 'next' === action ) {
 				stepBoard( 1 );
+			} else if ( 'card' === action ) {
+				shareCard( boardIndex, b );
 			} else if ( 'toggle' === action ) {
 				boardHideDef = ! boardHideDef;
 				if ( 'element' === boardMode ) {

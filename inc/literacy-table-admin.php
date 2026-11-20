@@ -331,6 +331,15 @@ function aiad_render_literacy_admin(): void {
 	$res_all   = (array) ( aiad_literacy_data( 'resources' )['resources'] ?? array() );
 	$res_live  = aiad_literacy_resources();
 	$dir       = AIAD_DIR . '/data/literacy-table';
+	$suggested = post_type_exists( 'form_submission' ) ? get_posts(
+		array(
+			'post_type'   => 'form_submission',
+			'post_status' => 'any',
+			'numberposts' => 200,
+			'meta_key'    => '_submission_involved_as', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'  => 'periodic_table_suggestion', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		)
+	) : array();
 	$tab       = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'elements'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$tabs      = array(
 		'elements'  => sprintf( __( 'Elements (%d)', 'ai-awareness-day' ), count( $elements ) ),
@@ -338,6 +347,7 @@ function aiad_render_literacy_admin(): void {
 		'compounds' => sprintf( __( 'Compounds (%d)', 'ai-awareness-day' ), count( $compounds ) ),
 		'resources' => sprintf( __( 'Learn more links (%d)', 'ai-awareness-day' ), count( $res_all ) ),
 		'week'      => __( 'Word of the week', 'ai-awareness-day' ),
+		'suggest'   => sprintf( __( 'Suggestions from visitors (%d)', 'ai-awareness-day' ), count( $suggested ) ),
 	);
 	if ( ! isset( $tabs[ $tab ] ) ) {
 		$tab = 'elements';
@@ -425,7 +435,7 @@ function aiad_render_literacy_admin(): void {
 			<?php endforeach; ?>
 		</nav>
 
-		<?php if ( 'week' !== $tab ) : ?>
+		<?php if ( ! in_array( $tab, array( 'week', 'suggest' ), true ) ) : ?>
 			<p><label><?php esc_html_e( 'Filter:', 'ai-awareness-day' ); ?> <input type="search" class="aiad-lt__filter" data-aiad-lt-filter placeholder="<?php esc_attr_e( 'Type a word, symbol, family or theme', 'ai-awareness-day' ); ?>"></label> <span class="aiad-lt__muted" data-aiad-lt-count></span></p>
 		<?php endif; ?>
 
@@ -496,6 +506,33 @@ function aiad_render_literacy_admin(): void {
 				<?php endforeach; ?>
 				</tbody>
 			</table>
+		<?php elseif ( 'suggest' === $tab ) : ?>
+			<p>
+				<?php esc_html_e( 'What visitors send through "Suggest a new element" on the table. Nothing they send is published: to add a word, write it into elements.json (with a "credit" line if they asked for one, a class or first name only) and deploy. Each suggestion is also emailed to the team and kept under Form Submissions.', 'ai-awareness-day' ); ?>
+				<a href="<?php echo esc_url( aiad_literacy_table_url() . '#alpt-suggest-title' ); ?>"><?php esc_html_e( 'See the form', 'ai-awareness-day' ); ?></a>
+			</p>
+			<?php if ( ! $suggested ) : ?>
+				<p><em><?php esc_html_e( 'No suggestions yet.', 'ai-awareness-day' ); ?></em></p>
+			<?php else : ?>
+				<table class="widefat striped">
+					<thead><tr><th><?php esc_html_e( 'Sent', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Term', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Already on the table?', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'What they sent', 'ai-awareness-day' ); ?></th></tr></thead>
+					<tbody>
+					<?php
+					$names = array_map( 'strtolower', array_column( $elements, 'name' ) );
+					foreach ( $suggested as $sp ) :
+						$term = (string) get_post_meta( $sp->ID, '_submission_term', true );
+						$have = in_array( strtolower( trim( $term ) ), $names, true ) || isset( $issues[ sanitize_title( $term ) ] );
+						?>
+						<tr>
+							<td><?php echo esc_html( get_the_date( 'j M Y', $sp ) ); ?><br><a href="<?php echo esc_url( (string) get_edit_post_link( $sp->ID ) ); ?>"><?php esc_html_e( 'Open', 'ai-awareness-day' ); ?></a></td>
+							<td><strong><?php echo esc_html( $term ); ?></strong></td>
+							<td><?php echo $have ? esc_html__( 'Yes', 'ai-awareness-day' ) : esc_html__( 'No', 'ai-awareness-day' ); ?></td>
+							<td><?php echo nl2br( esc_html( wp_strip_all_tags( $sp->post_content ) ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
 		<?php else : ?>
 			<p><?php esc_html_e( 'A new word every Monday, worked through in the order of week_rotation in lists.json. Elements with a safeguarding note are skipped.', 'ai-awareness-day' ); ?></p>
 			<table class="widefat striped" style="max-width:60rem">
