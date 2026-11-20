@@ -91,3 +91,4 @@ require_once $aiad_dir . '/inc/editable-pages.php';
 require_once $aiad_dir . '/inc/national-conversation-page.php';
 require_once $aiad_dir . '/inc/national-conversation-content.php';
 require_once $aiad_dir . '/inc/literacy-table.php';
+require_once $aiad_dir . '/inc/literacy-table-admin.php';

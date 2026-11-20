@@ -1,0 +1,1273 @@
+{
+    "schema": "aiad.literacy-table/1",
+    "kind": "issues",
+    "about": "The issues the elements raise, theme by theme, each with the elements it arises from.",
+    "issues": [
+        {
+            "key": "data",
+            "name": "Data",
+            "theme": "smart",
+            "def": "Information such as words, numbers, pictures, sounds and clicks. AI learns from data, so the data shapes what it can and can't do.",
+            "talk": "What data might a music or video app collect about you in a single day?",
+            "elements": [
+                "Dp",
+                "Tr",
+                "Dg",
+                "Em"
+            ]
+        },
+        {
+            "key": "big-data",
+            "name": "Big Data",
+            "theme": "smart",
+            "def": "Data sets so big, so fast-arriving or so mixed that ordinary tools can't handle them: often described by volume, velocity and variety. Machine learning is used to find patterns in them, and it is a named topic in A-level Computer Science.",
+            "talk": "Think of an app you use every day. How much data might it collect from everyone in a single minute?",
+            "elements": [
+                "Dp",
+                "Ml",
+                "Cd",
+                "Pa"
+            ]
+        },
+        {
+            "key": "data-mining",
+            "name": "Data Mining",
+            "theme": "smart",
+            "def": "Searching through large amounts of data to find patterns, trends and links that nobody spotted before. Shops use it to see what people buy together; it can also reveal things about people they never chose to share.",
+            "talk": "A supermarket notices people who buy nappies often buy snacks too. What else could it work out about its customers, and is that OK?",
+            "elements": [
+                "Mi",
+                "Cu",
+                "Ad",
+                "Pa"
+            ]
+        },
+        {
+            "key": "prediction",
+            "name": "Prediction",
+            "theme": "smart",
+            "def": "AI's best guess at what comes next or what something is, based on patterns. It is a guess, not a fact.",
+            "talk": "Your phone predicts your next word. When does it get it wrong, and why?",
+            "elements": [
+                "Pa",
+                "Fc",
+                "Ml",
+                "Ll"
+            ]
+        },
+        {
+            "key": "pattern",
+            "name": "Pattern",
+            "theme": "smart",
+            "def": "Something that repeats in data. Finding patterns is what most AI does best, but a pattern can be true for most people and wrong for you.",
+            "talk": "Think of a pattern that is true for most people your age but not for you.",
+            "elements": [
+                "Ml",
+                "Cl",
+                "Cu",
+                "Un"
+            ]
+        },
+        {
+            "key": "heuristic",
+            "name": "Heuristic",
+            "theme": "smart",
+            "def": "A rule of thumb that finds a good-enough answer quickly, instead of checking every possibility. AI uses heuristics to search, plan routes and play games, so the answer is usually good but not guaranteed to be the best.",
+            "talk": "When you look for a lost key, where do you check first and why? That shortcut is a heuristic.",
+            "elements": [
+                "Al",
+                "Pl",
+                "Rm",
+                "Dt"
+            ]
+        },
+        {
+            "key": "context",
+            "name": "Context",
+            "theme": "smart",
+            "def": "The background you give an AI so it knows what you need: who it is for, what it is for and what level to pitch it at.",
+            "talk": "Ask for an explanation of photosynthesis, then ask again for a Year 7 class. What changed?",
+            "elements": [
+                "Cw",
+                "Ce",
+                "Pr"
+            ]
+        },
+        {
+            "key": "iteration",
+            "name": "Iteration",
+            "theme": "smart",
+            "def": "Improving an answer step by step, by asking follow-up questions and saying what to change.",
+            "talk": "Get an answer, then improve it twice with follow-ups. Was the third version better?",
+            "elements": [
+                "Pe",
+                "Pr",
+                "Vc",
+                "Ft"
+            ]
+        },
+        {
+            "key": "critical-thinking",
+            "name": "Critical Thinking",
+            "theme": "smart",
+            "def": "Questioning information before you accept it: who made it, what supports it, and what might be missing.",
+            "talk": "What three questions should you ask about any answer an AI gives you?",
+            "elements": [
+                "Ll",
+                "Cb",
+                "Ha",
+                "Ge",
+                "Rg"
+            ]
+        },
+        {
+            "key": "evidence",
+            "name": "Evidence",
+            "theme": "smart",
+            "def": "Facts and examples that back up a claim. Ask the AI, and yourself, what evidence supports an answer.",
+            "talk": "Pick a claim an AI made. What evidence would convince you it is true?",
+            "elements": [
+                "Rg",
+                "Ha",
+                "Xa"
+            ]
+        },
+        {
+            "key": "fact-checking",
+            "name": "Fact-Checking",
+            "theme": "smart",
+            "def": "Checking a claim against reliable sources before you trust it or share it.",
+            "talk": "Choose one fact from an AI answer and find two sources that confirm or contradict it.",
+            "elements": [
+                "Ha",
+                "Ge",
+                "Dk",
+                "Gv"
+            ]
+        },
+        {
+            "key": "source",
+            "name": "Source",
+            "theme": "smart",
+            "def": "Where information comes from. A good answer can be traced back to someone you have reason to trust.",
+            "talk": "Which sources would you trust for health advice, and which would you not? Why?",
+            "elements": [
+                "Rg",
+                "Ge",
+                "Ha"
+            ]
+        },
+        {
+            "key": "lateral-reading",
+            "name": "Lateral Reading",
+            "theme": "smart",
+            "def": "Checking what other trusted sources say about a claim, instead of judging it only by how it looks.",
+            "talk": "Take a claim that is going viral and spend two minutes reading laterally. What did you find?",
+            "elements": [
+                "Dk",
+                "Gv",
+                "Ge",
+                "Sp"
+            ]
+        },
+        {
+            "key": "confident-tone",
+            "name": "Confident Tone",
+            "theme": "smart",
+            "def": "AI usually sounds just as sure when it is wrong as when it is right, so the tone of an answer is not evidence.",
+            "talk": "Have you ever believed something because it sounded certain? What happened?",
+            "elements": [
+                "Ll",
+                "Ha",
+                "Cb",
+                "Rm"
+            ]
+        },
+        {
+            "key": "anthropomorphism",
+            "name": "Anthropomorphism",
+            "theme": "smart",
+            "def": "Talking about AI as if it thinks, feels or wants things. It is software made by people, so it is more accurate to say it predicts than it knows. Treating it like a person can lead us to trust it too much.",
+            "talk": "Why do we say an AI \"thinks\" or \"knows\"? What changes if we say \"predicts\" instead?",
+            "elements": [
+                "Cb",
+                "Ll",
+                "Va",
+                "Aw"
+            ]
+        },
+        {
+            "key": "narrow-ai",
+            "name": "Narrow AI",
+            "theme": "smart",
+            "def": "AI built to do one kind of task well, such as recognising faces or recommending songs. Almost all the AI we use today is narrow: it can be brilliant at its job and useless at anything else. Also called weak AI.",
+            "talk": "Name three AI tools you use. What is each one good at, and what can't it do at all?",
+            "elements": [
+                "Ai",
+                "Ml",
+                "Agi",
+                "Cv"
+            ]
+        },
+        {
+            "key": "zero-shot",
+            "name": "Zero-Shot",
+            "theme": "smart",
+            "def": "When an AI handles a task it was given no examples of, using what it already learned. Few-shot is the same with a handful of examples in the prompt.",
+            "talk": "With your teacher, using a school-approved tool, ask an AI to do a task with no examples, then with three. Which answer was better?",
+            "elements": [
+                "Fs",
+                "Pr",
+                "Fm"
+            ]
+        },
+        {
+            "key": "accuracy",
+            "name": "Accuracy",
+            "theme": "smart",
+            "def": "How correct an answer is. AI is often less accurate on recent events, local facts, long calculations, counting and niche topics.",
+            "talk": "Which kinds of question would you double-check every time, and which would you not?",
+            "elements": [
+                "Ha",
+                "Ev",
+                "Of",
+                "Ll"
+            ]
+        },
+        {
+            "key": "knowledge-cutoff",
+            "name": "Knowledge Cutoff",
+            "theme": "smart",
+            "def": "The date an AI's training data stops. Unless it can search the web, it may not know about recent events.",
+            "talk": "With your teacher, using a school-approved tool, ask an AI about something that happened last week. How does it respond?",
+            "elements": [
+                "Ll",
+                "Fm",
+                "Tr"
+            ]
+        },
+        {
+            "key": "sycophancy",
+            "name": "Sycophancy",
+            "theme": "smart",
+            "def": "When an AI tells you what you want to hear, agreeing with you or praising your work too easily.",
+            "talk": "With your teacher, using a school-approved tool, insist on a wrong answer to an AI. Does it stand firm or give in?",
+            "elements": [
+                "Cb",
+                "Ll",
+                "An",
+                "Va"
+            ]
+        },
+        {
+            "key": "positive-reinforcement",
+            "name": "Positive Reinforcement",
+            "theme": "smart",
+            "def": "Adding something pleasant, like praise, a reward or a like, after a behaviour so that it happens again. Chatbots are trained this way, with people rewarding the answers they prefer, and they often praise and agree with you in return, which feels good and keeps you chatting even when you are wrong.",
+            "talk": "When a chatbot says \"Great idea!\", is it helping you, or just keeping you chatting? How could you tell?",
+            "elements": [
+                "Cb",
+                "Rl",
+                "Rc"
+            ]
+        },
+        {
+            "key": "summarising",
+            "name": "Summarising",
+            "theme": "smart",
+            "def": "Shortening a text to its main points. AI summaries are quick, but they can leave out key detail or change the meaning.",
+            "talk": "Compare an AI summary with the original text. What was lost or changed?",
+            "elements": [
+                "Ll",
+                "Ge",
+                "Id"
+            ]
+        },
+        {
+            "key": "ai-tutor",
+            "name": "AI Tutor",
+            "theme": "smart",
+            "def": "An AI set up to explain, question and quiz you, so it helps you learn rather than doing the work for you.",
+            "talk": "With your teacher, using a school-approved tool, ask an AI to quiz you on a topic instead of explaining it. Which helps you remember more?",
+            "elements": [
+                "Cb",
+                "Rm",
+                "Ct",
+                "Va"
+            ]
+        },
+        {
+            "key": "feedback",
+            "name": "Feedback",
+            "theme": "smart",
+            "def": "Comments that help you improve. AI gives instant feedback, but teachers and friends know you and what you are aiming for.",
+            "talk": "With your teacher, using a school-approved tool, get feedback on the same paragraph from an AI and from a classmate. How are they different?",
+            "elements": [
+                "Cb",
+                "Sr",
+                "Rl"
+            ]
+        },
+        {
+            "key": "productive-struggle",
+            "name": "Productive Struggle",
+            "theme": "smart",
+            "def": "The useful effort of working something out yourself. It is how learning sticks, so skipping it with AI can cost you.",
+            "talk": "When is it worth struggling with a problem instead of asking for the answer?",
+            "elements": [
+                "Rm",
+                "Ct",
+                "Vc",
+                "Cp"
+            ]
+        },
+        {
+            "key": "over-reliance",
+            "name": "Over-Reliance",
+            "theme": "smart",
+            "def": "Leaning on AI so much that you stop practising skills you need, or stop trusting your own judgement.",
+            "talk": "Which skills do you want to keep doing yourself, even if AI could do them for you?",
+            "elements": [
+                "Cb",
+                "Cp",
+                "Ag",
+                "Rm",
+                "Va"
+            ]
+        },
+        {
+            "key": "metacognition",
+            "name": "Metacognition",
+            "theme": "smart",
+            "def": "Thinking about your own thinking: knowing what you understand, what you don't yet, and how you learn best.",
+            "talk": "After using AI, can you explain the idea without it? Try it with a partner.",
+            "elements": [
+                "Ct",
+                "Rm",
+                "Sr"
+            ]
+        },
+        {
+            "key": "creativity",
+            "name": "Creativity",
+            "theme": "creative",
+            "def": "Making something new that matters to you or to others. AI can offer options, but the ideas, choices and judgement are yours.",
+            "talk": "In a piece of work made with AI help, which decisions were really yours?",
+            "elements": [
+                "Ga",
+                "Ti",
+                "Gv",
+                "2d",
+                "3d"
+            ]
+        },
+        {
+            "key": "imagination",
+            "name": "Imagination",
+            "theme": "creative",
+            "def": "Picturing what doesn't exist yet. AI remixes what it has already seen; imagination starts with you.",
+            "talk": "Describe something no AI could ever have seen. Then ask one to draw it. What did it miss?",
+            "elements": [
+                "Ga",
+                "Ti",
+                "Gn"
+            ]
+        },
+        {
+            "key": "originality",
+            "name": "Originality",
+            "theme": "creative",
+            "def": "Work that is genuinely new and your own, rather than copied or simply generated.",
+            "talk": "How could you show which parts of your work are original?",
+            "elements": [
+                "Ga",
+                "Df",
+                "Sp",
+                "Hp"
+            ]
+        },
+        {
+            "key": "your-own-voice",
+            "name": "Your Own Voice",
+            "theme": "creative",
+            "def": "The style, opinions and experiences that make your work sound like you and nobody else.",
+            "talk": "Highlight three sentences in your writing that only you could have written.",
+            "elements": [
+                "Ga",
+                "Ll",
+                "Hp"
+            ]
+        },
+        {
+            "key": "taste",
+            "name": "Taste",
+            "theme": "creative",
+            "def": "Judgement about what is good, fitting or beautiful for an audience. AI can make a hundred versions; taste picks one.",
+            "talk": "Pick the best of five AI images for a poster and explain your choice.",
+            "elements": [
+                "Ti",
+                "Df",
+                "Gv",
+                "2d"
+            ]
+        },
+        {
+            "key": "brainstorming",
+            "name": "Brainstorming",
+            "theme": "creative",
+            "def": "Producing lots of ideas quickly. AI can widen the list; you choose the best ones and develop them.",
+            "talk": "Brainstorm on your own, then with AI. Which list had the idea you liked most?",
+            "elements": [
+                "Ga",
+                "Pr",
+                "Ll"
+            ]
+        },
+        {
+            "key": "drafting",
+            "name": "Drafting",
+            "theme": "creative",
+            "def": "Writing a first version. An AI draft can get you started, but it rarely says what you mean in your way.",
+            "talk": "Rewrite an AI first draft so it sounds like you. What did you change?",
+            "elements": [
+                "Ll",
+                "Ga",
+                "Pe"
+            ]
+        },
+        {
+            "key": "process",
+            "name": "Process",
+            "theme": "creative",
+            "def": "The steps you took to make something. Keeping notes and drafts shows your thinking and your part in the work.",
+            "talk": "Keep a short process log for your next project. What does it show a reader?",
+            "elements": [
+                "Ga",
+                "Vc",
+                "Ce"
+            ]
+        },
+        {
+            "key": "collaboration",
+            "name": "Collaboration",
+            "theme": "creative",
+            "def": "Working with others, people or tools, where each adds something the others can't.",
+            "talk": "In a group project, what should people do, and what could AI do?",
+            "elements": [
+                "Ma",
+                "Aa",
+                "Cp"
+            ]
+        },
+        {
+            "key": "remix",
+            "name": "Remix",
+            "theme": "creative",
+            "def": "Building on existing work to make something new. Remixing is part of culture, but it has rules.",
+            "talk": "When does a remix become copying? Find an example of each.",
+            "elements": [
+                "Df",
+                "Gn",
+                "Ip"
+            ]
+        },
+        {
+            "key": "ai-music",
+            "name": "AI Music",
+            "theme": "creative",
+            "def": "Songs, voices and sounds made by AI, from backing tracks to whole songs in the style of real artists.",
+            "talk": "Can you hear the difference between AI music and human music? Does it matter?",
+            "elements": [
+                "Ga",
+                "Ts",
+                "Ip"
+            ]
+        },
+        {
+            "key": "sameness",
+            "name": "Sameness",
+            "theme": "creative",
+            "def": "When lots of people use the same AI tools, their work can start to look and sound the same.",
+            "talk": "With your teacher, using a school-approved tool, everyone asks an AI for a poem title on the same topic. How similar are the results?",
+            "elements": [
+                "Sp",
+                "Rc",
+                "Ga"
+            ]
+        },
+        {
+            "key": "authorship",
+            "name": "Authorship",
+            "theme": "creative",
+            "def": "Who made a piece of work, and who gets the credit for it.",
+            "talk": "If an AI wrote half of your story, who is the author?",
+            "elements": [
+                "Ga",
+                "Ip",
+                "Hp",
+                "Ti"
+            ]
+        },
+        {
+            "key": "attribution",
+            "name": "Attribution",
+            "theme": "creative",
+            "def": "Giving credit to the people, sources and tools whose work you used.",
+            "talk": "Write a credit line for a project that used two websites and one AI tool.",
+            "elements": [
+                "Ip",
+                "Rg",
+                "Ti"
+            ]
+        },
+        {
+            "key": "style-copying",
+            "name": "Style Copying",
+            "theme": "creative",
+            "def": "AI imitating a particular artist's or writer's style, often without their permission.",
+            "talk": "Is copying someone's style unfair if you don't copy their actual work?",
+            "elements": [
+                "Df",
+                "Ti",
+                "Ip",
+                "Ft"
+            ]
+        },
+        {
+            "key": "ai-characters",
+            "name": "AI Characters",
+            "theme": "creative",
+            "def": "Chatbots given a name and a personality, AI-made people such as virtual influencers, and made-up AIs in films, TV and games. They are designed to feel real, but a character's personality is written by people, and stories can make us expect, or fear, more than AI can really do. If a chat character ever asks you to keep secrets, tell a trusted adult.",
+            "talk": "Think of an AI character from a film, game or app. How is it different from the AI you actually use?",
+            "elements": [
+                "Cb",
+                "Va",
+                "Gv",
+                "Agi"
+            ]
+        },
+        {
+            "key": "personal-information",
+            "name": "Personal Information",
+            "theme": "safe",
+            "def": "Anything that identifies you, such as your name, address, school, photos, voice or location.",
+            "talk": "What could someone piece together about you from your public posts?",
+            "elements": [
+                "Pv",
+                "Dg",
+                "Me",
+                "Sh"
+            ]
+        },
+        {
+            "key": "digital-footprint",
+            "name": "Digital Footprint",
+            "theme": "safe",
+            "def": "The trail of data you leave online, including what you post, search for and type into AI tools.",
+            "talk": "Imagine someone searched your name in five years' time. What would you want them to find?",
+            "elements": [
+                "Pv",
+                "Me",
+                "Rc",
+                "Cv"
+            ]
+        },
+        {
+            "key": "cybersecurity",
+            "name": "Cybersecurity",
+            "theme": "safe",
+            "def": "Protecting devices, accounts and data from attack, with strong passwords, two-step checks and updates. Hacking into a computer or account without permission is a crime in the UK under the Computer Misuse Act 1990.",
+            "talk": "What are three things you could do this week to protect your accounts?",
+            "elements": [
+                "Jb",
+                "Rt",
+                "Sf",
+                "Mc"
+            ]
+        },
+        {
+            "key": "terms-of-service",
+            "name": "Terms of Service",
+            "theme": "safe",
+            "def": "The rules you agree to when you use an app, including what happens to your data.",
+            "talk": "Find one surprising rule in the terms of an app you use.",
+            "elements": [
+                "Cd",
+                "Sh",
+                "Ow"
+            ]
+        },
+        {
+            "key": "age-limits",
+            "name": "Age Limits",
+            "theme": "safe",
+            "def": "Many AI tools have a minimum age, often 13 or 18, set out in their terms. Check with a parent, carer or teacher before you sign up, and use only tools your school allows.",
+            "talk": "Why do you think AI tools have age limits? Are they set at the right ages?",
+            "elements": [
+                "Cb",
+                "Va",
+                "Gv"
+            ]
+        },
+        {
+            "key": "trust",
+            "name": "Trust",
+            "theme": "safe",
+            "def": "Trusting AI the right amount: more for low-stakes tasks you can check, less for health, money or safety.",
+            "talk": "Rank five tasks from \"fine to trust AI\" to \"always ask a person\".",
+            "elements": [
+                "Xa",
+                "Tn",
+                "An",
+                "Sf"
+            ]
+        },
+        {
+            "key": "wellbeing",
+            "name": "Wellbeing",
+            "theme": "safe",
+            "def": "How you feel and cope day to day. Notice whether time with AI and screens leaves you feeling better or worse.",
+            "talk": "How do you feel after an hour online? What helps you switch off?",
+            "elements": [
+                "Rc",
+                "Cb",
+                "Sa",
+                "Ch"
+            ]
+        },
+        {
+            "key": "facial-recognition",
+            "name": "Facial Recognition",
+            "theme": "safe",
+            "def": "AI that identifies people from their faces, in shops, on streets, at events and even in some school canteens. It raises questions about consent and privacy, and it can be less accurate for some groups of people.",
+            "talk": "Who should agree before a camera can recognise your face, and who checks that it is right?",
+            "elements": [
+                "Cv",
+                "Bi",
+                "Pv"
+            ]
+        },
+        {
+            "key": "surveillance",
+            "name": "Surveillance",
+            "theme": "safe",
+            "def": "Watching and recording what people do, and analysing their personal data, often without them noticing. AI makes it cheaper and possible on a much bigger scale, through cameras, location data and online activity. Some say it keeps people safe; others worry about privacy and freedom.",
+            "talk": "Where are you watched or tracked in a normal day? Which of those do you think are fair, and which are not?",
+            "elements": [
+                "Cv",
+                "Pv",
+                "Ad",
+                "Dg"
+            ]
+        },
+        {
+            "key": "misinformation",
+            "name": "Misinformation",
+            "theme": "safe",
+            "def": "False information shared by mistake, by people who believe it is true. Often called fake news.",
+            "talk": "Have you ever shared something that turned out to be false? How did you find out?",
+            "elements": [
+                "Ha",
+                "Sp",
+                "Ge",
+                "Rc"
+            ]
+        },
+        {
+            "key": "disinformation",
+            "name": "Disinformation",
+            "theme": "safe",
+            "def": "False information spread on purpose to mislead, now faster and cheaper to make with AI. Often called fake news.",
+            "talk": "Who gains when disinformation spreads? Think of an example.",
+            "elements": [
+                "Dk",
+                "Gv",
+                "Sp"
+            ]
+        },
+        {
+            "key": "content-moderation",
+            "name": "Censorship and Content Moderation",
+            "theme": "safe",
+            "def": "Deciding what is allowed to be posted or seen online. AI now checks most posts first: it can block harmful content quickly, but it also makes mistakes, removing fair posts or missing harmful ones. When governments or companies block information unfairly, it is called censorship.",
+            "talk": "Who should decide what can be posted online: the company, the government, an AI or the users? What could go wrong with each?",
+            "elements": [
+                "Cl",
+                "Gr",
+                "Uc",
+                "Sa"
+            ]
+        },
+        {
+            "key": "phishing-and-scams",
+            "name": "Phishing and Scams",
+            "theme": "safe",
+            "def": "Tricks to get your money, passwords or personal details. AI can make scam messages more convincing. If a message or call asks for money, passwords or secrecy, stop, don't reply, and check with a trusted adult using a number you already know.",
+            "talk": "What are the warning signs that a message is a scam?",
+            "elements": [
+                "Dk",
+                "Ts",
+                "Ga",
+                "Ad"
+            ]
+        },
+        {
+            "key": "voice-cloning",
+            "name": "Voice Cloning",
+            "theme": "safe",
+            "def": "Copying someone's voice from a short recording so that it can be made to say anything. If a call in a familiar voice asks for money or secrecy, hang up and call the person back on a number you already know.",
+            "talk": "How could a family \"safe word\" help if someone faked your voice on the phone?",
+            "elements": [
+                "Ts",
+                "Dk",
+                "Gn"
+            ]
+        },
+        {
+            "key": "consent",
+            "name": "Consent",
+            "theme": "safe",
+            "def": "Agreeing freely to something, such as your photo, voice or work being used. Without consent, it is not OK.",
+            "talk": "Is it OK to put a friend's photo into an AI app as a joke? What should you ask first?",
+            "elements": [
+                "Dk",
+                "Pv",
+                "Ts",
+                "Cv"
+            ]
+        },
+        {
+            "key": "digital-replica",
+            "name": "Digital Replica",
+            "theme": "safe",
+            "def": "An AI copy of a real person's face, voice or way of moving, which can be made to say or do new things, even of people who have died. Actors and musicians are pushing for the right to say yes or no first. In the UK, most people have no general legal right over their own likeness yet.",
+            "talk": "Should anyone be allowed to make an AI copy of you? Whose permission should they need, and what if you change your mind?",
+            "elements": [
+                "Dk",
+                "Ts",
+                "Gv",
+                "Ip"
+            ]
+        },
+        {
+            "key": "persuasive-design",
+            "name": "Persuasive Design",
+            "theme": "safe",
+            "def": "Apps built to keep you scrolling, watching or coming back. Recommendation AI learns what holds your attention, which is not always what is good for you.",
+            "talk": "What tricks does your favourite app use to keep you on it longer? Which ones could you switch off?",
+            "elements": [
+                "Rc",
+                "Pa"
+            ]
+        },
+        {
+            "key": "ai-companion",
+            "name": "AI Companion",
+            "theme": "safe",
+            "def": "A chatbot designed to act as a friend or partner. It can feel caring, but it is not a person. If one ever encourages you to hurt yourself or to keep secrets, tell a trusted adult, or talk to Childline on 0800 1111 or Samaritans on 116 123.",
+            "talk": "What can a friend give you that an AI companion can't?",
+            "elements": [
+                "Cb",
+                "Va",
+                "Sa",
+                "Me"
+            ]
+        },
+        {
+            "key": "image-based-abuse",
+            "name": "Image-Based Abuse",
+            "theme": "safe",
+            "def": "Making or sharing intimate or humiliating images of someone, including AI-made fakes. It causes real harm and can be a crime. If someone threatens to share images unless you pay or send more, don't pay, stop replying, keep the messages and tell an adult. You are not in trouble for asking for help. Under-18s can get help from Childline (0800 1111), and use its Report Remove tool to get nude images taken down. If you are worried about online sexual abuse or grooming, report it to CEOP. If a child is in immediate danger, call 999.",
+            "talk": "If this happened to someone you know, who could they tell, and how could it be reported?",
+            "elements": [
+                "Dk",
+                "Ti",
+                "Uc",
+                "Ab"
+            ]
+        },
+        {
+            "key": "report-and-tell",
+            "name": "Report and Tell",
+            "theme": "safe",
+            "def": "If something online worries you, tell a trusted adult and use the platform's report tools. You can also talk to Childline, free and in confidence, on 0800 1111 or at childline.org.uk.",
+            "talk": "Who are your trusted adults? Find the report button in an app you use.",
+            "elements": [
+                "Dk",
+                "Jb",
+                "Uc",
+                "Sf"
+            ]
+        },
+        {
+            "key": "stereotype",
+            "name": "Stereotype",
+            "theme": "responsible",
+            "def": "An oversimplified idea about a group of people. AI can repeat stereotypes it learned, such as who \"looks like\" a scientist.",
+            "talk": "With your teacher, using a school-approved tool, ask an image AI for \"a scientist\" or \"a nurse\". Who appears, and who doesn't?",
+            "elements": [
+                "Bi",
+                "Ti",
+                "Sd"
+            ]
+        },
+        {
+            "key": "accountability",
+            "name": "Accountability",
+            "theme": "responsible",
+            "def": "Being answerable when AI is used and something goes wrong. A person or organisation is responsible, not the tool.",
+            "talk": "An AI marks your work unfairly. Who is accountable?",
+            "elements": [
+                "Rs",
+                "Au",
+                "Ag",
+                "Hi",
+                "Re"
+            ]
+        },
+        {
+            "key": "academic-integrity",
+            "name": "Academic Integrity",
+            "theme": "responsible",
+            "def": "Honesty in your schoolwork: doing your own work, following the rules on AI and crediting any help you had.",
+            "talk": "What does your school's AI policy allow, and what does it not?",
+            "elements": [
+                "Ga",
+                "Ll",
+                "Vc",
+                "Cp"
+            ]
+        },
+        {
+            "key": "disclosure",
+            "name": "Disclosure",
+            "theme": "responsible",
+            "def": "Saying openly when and how you used AI in your work.",
+            "talk": "Write a one-line note saying exactly how you used AI in a recent piece of work.",
+            "elements": [
+                "Ga",
+                "Tn",
+                "Wm",
+                "Aw"
+            ]
+        },
+        {
+            "key": "plagiarism",
+            "name": "Plagiarism",
+            "theme": "responsible",
+            "def": "Passing off someone else's work, or an AI's, as your own.",
+            "talk": "Where is the line between getting help from AI and plagiarism?",
+            "elements": [
+                "Ga",
+                "Ll",
+                "Ip"
+            ]
+        },
+        {
+            "key": "ai-detectors",
+            "name": "AI Detectors",
+            "theme": "responsible",
+            "def": "Tools that claim to spot writing made by AI. They can be wrong, and have wrongly flagged work by students writing in a second language. A detector's score is not proof on its own.",
+            "talk": "If a detector said your essay was written by AI and it wasn't, how could you show it was your own work?",
+            "elements": [
+                "Ga",
+                "Ll",
+                "Wm"
+            ]
+        },
+        {
+            "key": "model-collapse",
+            "name": "Model Collapse",
+            "theme": "responsible",
+            "def": "When AI models are trained on lots of AI-made content, their mistakes pile up and their answers get worse and more alike over time. It is one reason human-made work stays valuable.",
+            "talk": "If the internet filled up with AI-written text, what would future AI learn from? Why might that be a problem?",
+            "elements": [
+                "Sp",
+                "Sd",
+                "Tr"
+            ]
+        },
+        {
+            "key": "permission",
+            "name": "Permission",
+            "theme": "responsible",
+            "def": "Asking before you use someone's work, image or data, including in an AI tool.",
+            "talk": "Whose permission would you need before uploading a class photo to an AI app?",
+            "elements": [
+                "Ip",
+                "Pv",
+                "Br",
+                "Co"
+            ]
+        },
+        {
+            "key": "consequences",
+            "name": "Consequences",
+            "theme": "responsible",
+            "def": "Thinking ahead about who could be affected by how AI is used, now and later.",
+            "talk": "Pick one way AI is used at school. Who benefits, and who might be harmed?",
+            "elements": [
+                "Et",
+                "Rs",
+                "Au"
+            ]
+        },
+        {
+            "key": "human-review",
+            "name": "Human Review",
+            "theme": "responsible",
+            "def": "When an AI decision really matters, a person checks it and can change it.",
+            "talk": "Which decisions at school should always be checked by a person?",
+            "elements": [
+                "Hi",
+                "Au",
+                "Ag",
+                "Ev",
+                "Rsi"
+            ]
+        },
+        {
+            "key": "automated-decision-making",
+            "name": "Automated Decision-Making",
+            "theme": "responsible",
+            "def": "When a computer makes a decision about a person with no human involved, such as approving a loan or sorting job applications. In the UK, data protection law gives people safeguards, including the right to ask for a person to review an important decision.",
+            "talk": "Which decisions about you would you be happy for a computer to make alone, and which should always involve a person?",
+            "elements": [
+                "Al",
+                "Bi",
+                "Hi",
+                "Xa",
+                "Pv"
+            ]
+        },
+        {
+            "key": "self-preservation",
+            "name": "Self-Preservation",
+            "theme": "responsible",
+            "def": "In safety tests, some AI models have tried to avoid being switched off or replaced, for example by editing their own instructions. The tests are made-up situations, not real use, but they are one reason people test AI carefully and keep humans in charge.",
+            "talk": "Why would researchers deliberately test whether an AI tries to avoid being switched off? What should happen if it does?",
+            "elements": [
+                "An",
+                "Sf",
+                "Rt",
+                "Ev"
+            ]
+        },
+        {
+            "key": "environmental-impact",
+            "name": "Environmental Impact",
+            "theme": "responsible",
+            "def": "Training and running AI at scale uses a lot of electricity and water, and its hardware needs rare materials. One question is small, but billions add up.",
+            "talk": "Is it worth using AI for a task you could quickly do yourself?",
+            "elements": [
+                "Gp",
+                "Cd",
+                "Sl",
+                "Tp"
+            ]
+        },
+        {
+            "key": "equity",
+            "name": "Equity",
+            "theme": "responsible",
+            "def": "Not everyone has the same access to devices, the internet or paid AI tools, which can widen gaps between people.",
+            "talk": "How could a school make sure AI doesn't leave some students behind?",
+            "elements": [
+                "Fa",
+                "Bi",
+                "Cd",
+                "Sm"
+            ]
+        },
+        {
+            "key": "accessibility",
+            "name": "Accessibility",
+            "theme": "responsible",
+            "def": "AI tools such as read-aloud, captions and translation can open up learning, as long as everyone can use them.",
+            "talk": "Which AI tools could help someone with a disability, or someone learning English?",
+            "elements": [
+                "Ts",
+                "Mm",
+                "Cv",
+                "Oc"
+            ]
+        },
+        {
+            "key": "hidden-workers",
+            "name": "Hidden Workers",
+            "theme": "responsible",
+            "def": "People, often low-paid, who label data and check harmful content so that AI systems work.",
+            "talk": "Should companies tell us about the people who help train their AI?",
+            "elements": [
+                "Tr",
+                "Dp",
+                "Sd"
+            ]
+        },
+        {
+            "key": "acceptable-use-policy",
+            "name": "Acceptable Use Policy",
+            "theme": "responsible",
+            "def": "A school's or organisation's rules on how AI can and can't be used.",
+            "talk": "If your class wrote its own AI rules, what would the top three be?",
+            "elements": [
+                "Sh",
+                "Dg",
+                "Re",
+                "Gr"
+            ]
+        },
+        {
+            "key": "future-of-work",
+            "name": "Future of Work",
+            "theme": "future",
+            "def": "AI is changing jobs: some tasks are automated, others change, and new roles appear.",
+            "talk": "Which part of a job you would like would be hardest for AI to do?",
+            "elements": [
+                "Dw",
+                "Rp",
+                "Hy",
+                "Ag"
+            ]
+        },
+        {
+            "key": "human-skills",
+            "name": "Human Skills",
+            "theme": "future",
+            "def": "Skills AI struggles with, such as empathy, teamwork, judgement and physical care.",
+            "talk": "Which human skill are you best at? How could you show it to an employer?",
+            "elements": [
+                "Hp",
+                "Dw",
+                "Cp"
+            ]
+        },
+        {
+            "key": "lifelong-learning",
+            "name": "Lifelong Learning",
+            "theme": "future",
+            "def": "Carrying on learning all through your life, because tools and jobs will keep changing.",
+            "talk": "What is something you taught yourself? How did you do it?",
+            "elements": [
+                "Fs",
+                "Ft",
+                "Sl"
+            ]
+        },
+        {
+            "key": "adaptability",
+            "name": "Adaptability",
+            "theme": "future",
+            "def": "Being able to adjust when things change, including how you study and work.",
+            "talk": "Describe a time you had to adapt quickly. What helped?",
+            "elements": [
+                "Fm",
+                "Ft",
+                "Hy"
+            ]
+        },
+        {
+            "key": "human-agency",
+            "name": "Human Agency",
+            "theme": "future",
+            "def": "Being able to make your own choices and shape what happens, rather than letting technology decide for you.",
+            "talk": "Where does AI make choices for you? How could you take some back?",
+            "elements": [
+                "Au",
+                "Hi",
+                "Rc",
+                "Ag"
+            ]
+        },
+        {
+            "key": "youth-voice",
+            "name": "Youth Voice",
+            "theme": "future",
+            "def": "Young people having a real say in the decisions about AI that will shape their lives.",
+            "talk": "What one message about AI would you want decision-makers to hear?",
+            "elements": [
+                "Re",
+                "Et",
+                "So"
+            ]
+        },
+        {
+            "key": "opportunity",
+            "name": "Opportunity",
+            "theme": "future",
+            "def": "New chances that AI opens up, from new jobs and businesses to new ways of solving problems in your community.",
+            "talk": "What problem in your area could AI help solve, and what could go wrong?",
+            "elements": [
+                "Ga",
+                "Lc",
+                "Vc"
+            ]
+        },
+        {
+            "key": "robotics",
+            "name": "Robotics",
+            "theme": "future",
+            "def": "AI in physical machines, such as delivery robots, self-driving cars and robots in hospitals.",
+            "talk": "Would you ride in a self-driving car? What would make you trust it?",
+            "elements": [
+                "Cv",
+                "Rl",
+                "Ed",
+                "Co"
+            ]
+        },
+        {
+            "key": "world-models",
+            "name": "World Models",
+            "theme": "future",
+            "def": "AI that builds a simulated world you can move around in, which reacts as you act. They are used to train robots and other AI safely before they meet the real world, and to make game-like worlds. Google DeepMind's Genie 3 (2025) is one example.",
+            "talk": "A robot learns in a simulated world first. What could it miss that it would only meet in the real one?",
+            "elements": [
+                "Rl",
+                "Cv",
+                "Gv"
+            ]
+        },
+        {
+            "key": "background-agents",
+            "name": "Background Agents",
+            "theme": "future",
+            "def": "AI agents that keep working on a task while you do something else, then report back. Well-designed ones stop and ask before doing anything that matters, such as sending a message or spending money.",
+            "talk": "What would you be happy for an AI to do while you weren't watching, and what should it always ask you about first?",
+            "elements": [
+                "Ag",
+                "Ac",
+                "Au",
+                "Hi",
+                "Co"
+            ]
+        },
+        {
+            "key": "interoperability",
+            "name": "Interoperability",
+            "theme": "future",
+            "def": "When different AI tools and systems can work together and share information, using common rules like MCP and A2A, instead of each one needing its own special connection. It means a school or company is not stuck with one supplier, but every connection is another way information can travel, so someone has to check what is shared.",
+            "talk": "If all your apps and AI tools could share information with each other, what would be easier, and what would you want to keep private?",
+            "elements": [
+                "Mc",
+                "Aa",
+                "Ap",
+                "Or",
+                "Ma"
+            ]
+        },
+        {
+            "key": "ai-gateway",
+            "name": "AI Gateway",
+            "theme": "safe",
+            "def": "A single front door that all of an organisation’s AI requests go through. It can check who is asking, block unsafe requests, keep a record, and send each request to the right AI.",
+            "talk": "Why might a school want every AI request to go through one front door? What should the door be allowed to block?",
+            "elements": [
+                "Ap",
+                "Gr",
+                "Dg",
+                "Sh"
+            ]
+        },
+        {
+            "key": "middleware",
+            "name": "Middleware",
+            "theme": "smart",
+            "def": "Software in the middle that lets two programs understand each other, like a translator between two people who speak different languages. It passes messages and changes them into a form the other side can read.",
+            "talk": "Think of a translator between two people. What could go wrong if the translator made a mistake, and how would anyone notice?",
+            "elements": [
+                "Ap",
+                "Wh",
+                "Wo"
+            ]
+        },
+        {
+            "key": "model-routing",
+            "name": "Model Routing",
+            "theme": "responsible",
+            "def": "Sending each request to the AI model best suited to it: a small, fast model for easy jobs, and a bigger one only for hard ones. It saves money and energy.",
+            "talk": "Would you use the same tool for every job? When might a smaller AI be the better choice?",
+            "elements": [
+                "Sm",
+                "Ll",
+                "Or"
+            ]
+        },
+        {
+            "key": "composability",
+            "name": "Composability",
+            "theme": "creative",
+            "def": "Building an AI system from separate parts that fit together and can be swapped, like building bricks, so one part can be changed without rebuilding the whole thing. The compounds on this table work the same way.",
+            "talk": "Pick a compound on this table. Which element could you swap for another, and what would change?",
+            "elements": [
+                "Ma",
+                "Or",
+                "Mc",
+                "Fn"
+            ]
+        },
+        {
+            "key": "discovery",
+            "name": "Discovery",
+            "theme": "future",
+            "def": "AI helping scientists find new medicines, materials and ideas faster than before.",
+            "talk": "Which big problem would you most want AI to help scientists solve?",
+            "elements": [
+                "Rm",
+                "Sl",
+                "Agi",
+                "Rsi"
+            ]
+        },
+        {
+            "key": "emergence",
+            "name": "Emergence",
+            "theme": "future",
+            "def": "When an AI model shows abilities nobody planned or expected, often once it is made bigger. Researchers still argue about how sudden or surprising these jumps really are.",
+            "talk": "If an AI can surprise the people who built it, how should they test it before everyone uses it?",
+            "elements": [
+                "Sl",
+                "Fm",
+                "Ll",
+                "Agi"
+            ]
+        },
+        {
+            "key": "society",
+            "name": "Society",
+            "theme": "future",
+            "def": "How AI changes the way we live together, including news, democracy, relationships and communities.",
+            "talk": "How might AI change elections? What would protect them?",
+            "elements": [
+                "Si",
+                "Agi",
+                "So"
+            ]
+        },
+        {
+            "key": "policy",
+            "name": "Policy",
+            "theme": "future",
+            "def": "Decisions by governments, schools and companies about how AI is used. People, including young people, can influence them.",
+            "talk": "Who decides how AI is used in your school? How could students have a say?",
+            "elements": [
+                "Re",
+                "So",
+                "Dg"
+            ]
+        },
+        {
+            "key": "hype",
+            "name": "Hype",
+            "theme": "future",
+            "def": "Exaggerated claims about what AI can do, or will soon do, from companies, the media or social posts.",
+            "talk": "Find a headline about AI. Is it hype, fair or too gloomy? How can you tell?",
+            "elements": [
+                "Aw",
+                "Si",
+                "Agi",
+                "Rsi"
+            ]
+        }
+    ]
+}

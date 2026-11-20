@@ -1,0 +1,300 @@
+{
+    "schema": "aiad.literacy-table/1",
+    "kind": "lists",
+    "about": "The families, themes, challenge levels, eras, benchmark areas and the word-of-the-week order the other files refer to by key.",
+    "families": [
+        {
+            "key": "foundations",
+            "name": "Foundations",
+            "about": "The ideas everything else is built on."
+        },
+        {
+            "key": "generative",
+            "name": "Generative AI",
+            "about": "AI that makes new text, images, sound, video and code."
+        },
+        {
+            "key": "predictive",
+            "name": "Predictive & Analytical AI",
+            "about": "AI that finds patterns in data to sort, forecast and recommend."
+        },
+        {
+            "key": "agents",
+            "name": "Autonomous AI Agents",
+            "about": "AI that plans and takes actions towards a goal."
+        },
+        {
+            "key": "automation",
+            "name": "Automation & Workflow AI",
+            "about": "AI and software that carry out tasks and processes."
+        },
+        {
+            "key": "governance",
+            "name": "Governance & Ethics",
+            "about": "Keeping AI fair, safe, lawful and accountable, and the ways people get around it."
+        },
+        {
+            "key": "infra",
+            "name": "Infrastructure & Ops",
+            "about": "The hardware, tools and methods that run AI."
+        }
+    ],
+    "themes": [
+        {
+            "key": "safe",
+            "name": "Safe"
+        },
+        {
+            "key": "smart",
+            "name": "Smart"
+        },
+        {
+            "key": "creative",
+            "name": "Creative"
+        },
+        {
+            "key": "responsible",
+            "name": "Responsible"
+        },
+        {
+            "key": "future",
+            "name": "Future"
+        }
+    ],
+    "levels": [
+        {
+            "key": "primary",
+            "name": "Primary"
+        },
+        {
+            "key": "secondary",
+            "name": "Secondary"
+        },
+        {
+            "key": "further",
+            "name": "Further education"
+        }
+    ],
+    "eras": [
+        {
+            "key": "e1",
+            "name": "Before 1950",
+            "from": 0,
+            "to": 1949
+        },
+        {
+            "key": "e2",
+            "name": "1950s–70s",
+            "from": 1950,
+            "to": 1979
+        },
+        {
+            "key": "e3",
+            "name": "1980s–90s",
+            "from": 1980,
+            "to": 1999
+        },
+        {
+            "key": "e4",
+            "name": "2000–2014",
+            "from": 2000,
+            "to": 2014
+        },
+        {
+            "key": "e5",
+            "name": "2015–2021",
+            "from": 2015,
+            "to": 2021
+        },
+        {
+            "key": "e6",
+            "name": "2022–2023",
+            "from": 2022,
+            "to": 2023
+        },
+        {
+            "key": "e7",
+            "name": "2024 on",
+            "from": 2024,
+            "to": 9999
+        }
+    ],
+    "benchmark_domains": [
+        {
+            "key": "safeguarding",
+            "name": "Safeguarding"
+        },
+        {
+            "key": "privacy",
+            "name": "Privacy & Data Protection"
+        },
+        {
+            "key": "human_oversight",
+            "name": "Human Oversight"
+        },
+        {
+            "key": "bias_equality",
+            "name": "Bias & Equality"
+        },
+        {
+            "key": "assessment_integrity",
+            "name": "Assessment Integrity"
+        },
+        {
+            "key": "governance",
+            "name": "Governance"
+        },
+        {
+            "key": "safe_adoption",
+            "name": "Safe Adoption"
+        },
+        {
+            "key": "ai_dependency",
+            "name": "Independent Practice"
+        }
+    ],
+    "week_rotation": [
+        "Ai",
+        "Al",
+        "Ml",
+        "Nn",
+        "Md",
+        "Ll",
+        "Cb",
+        "Ga",
+        "Pr",
+        "Ha",
+        "Pv",
+        "Dk",
+        "Bi",
+        "Fa",
+        "Tn",
+        "Xa",
+        "Ag",
+        "Agi",
+        "Rsi",
+        "Ls",
+        "Dl",
+        "Rp",
+        "Hy",
+        "Pl",
+        "Fn",
+        "Wo",
+        "Tg",
+        "En",
+        "Un",
+        "Rr",
+        "Cu",
+        "Ra",
+        "Lp",
+        "Sr",
+        "Ap",
+        "Wh",
+        "Lc",
+        "If",
+        "Pm",
+        "Mm",
+        "Df",
+        "Gn",
+        "Dt",
+        "Rf",
+        "Gb",
+        "Fe",
+        "Mc",
+        "Aa",
+        "Or",
+        "Id",
+        "Oc",
+        "Mi",
+        "Em",
+        "Ft",
+        "Fs",
+        "Tm",
+        "Ad",
+        "Pa",
+        "Ps",
+        "Ma",
+        "Sw",
+        "Be",
+        "St",
+        "Tf",
+        "Fm",
+        "Ce",
+        "2d",
+        "Dg",
+        "Rv",
+        "Mp",
+        "As",
+        "Mx",
+        "Rd",
+        "Ab",
+        "Gp",
+        "Tp",
+        "Cd",
+        "Mo",
+        "Lo",
+        "Vd",
+        "Ms",
+        "Qz",
+        "Ds",
+        "Sm",
+        "Sl",
+        "Dp",
+        "Si",
+        "Ac",
+        "Au",
+        "Pe",
+        "Cw",
+        "Su",
+        "Cl",
+        "Of",
+        "Ct",
+        "Te",
+        "Sd",
+        "Sa",
+        "Np",
+        "Cv",
+        "Co",
+        "Br",
+        "Ca",
+        "Va",
+        "Cp",
+        "Sp",
+        "Ge",
+        "Rs",
+        "Et",
+        "An",
+        "Gr",
+        "Rt",
+        "Sf",
+        "Aw",
+        "Sh",
+        "Hp",
+        "So",
+        "Jb",
+        "Uc",
+        "Ed",
+        "Ow",
+        "Ev",
+        "Ch",
+        "Fc",
+        "Tk",
+        "Rg",
+        "Ts",
+        "Rl",
+        "Dw",
+        "3d",
+        "Hi",
+        "Tr",
+        "Rc",
+        "Rm",
+        "Ti",
+        "Gv",
+        "Vc",
+        "Ip",
+        "Wm",
+        "Me",
+        "Re",
+        "Ia"
+    ]
+}

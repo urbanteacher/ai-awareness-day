@@ -1,0 +1,2622 @@
+{
+    "schema": "aiad.literacy-table/1",
+    "kind": "elements",
+    "about": "The 142 elements: one record each, with its place on the grid, theme, year, definition, talk question, hand-picked connections and benchmark area.",
+    "elements": [
+        {
+            "sym": "Ai",
+            "name": "Artificial Intelligence",
+            "family": "foundations",
+            "row": 1,
+            "col": 1,
+            "theme": "smart",
+            "year": 1955,
+            "approx": false,
+            "older": false,
+            "def": "Computer systems that perform tasks normally requiring human intelligence, such as understanding language, recognising patterns and making decisions.",
+            "talk": "Name three things you used today that might have AI inside. How could you tell?",
+            "links": [
+                "Ml",
+                "Agi",
+                "Ga",
+                "Rs"
+            ]
+        },
+        {
+            "sym": "Ls",
+            "name": "Latent Space",
+            "family": "foundations",
+            "row": 1,
+            "col": 2,
+            "theme": "smart",
+            "year": 2013,
+            "approx": true,
+            "older": false,
+            "def": "A model’s private map of ideas, made of numbers, where similar ideas sit close together as it works towards an answer.",
+            "talk": "If an AI stores ideas as a map of numbers, can we ever be sure what it “thinks”?",
+            "links": [
+                "Em",
+                "Nn",
+                "Mp",
+                "As"
+            ]
+        },
+        {
+            "sym": "Rsi",
+            "name": "Recursive Self-Improvement",
+            "family": "foundations",
+            "row": 1,
+            "col": 16,
+            "theme": "future",
+            "year": 1965,
+            "approx": true,
+            "older": false,
+            "def": "AI helping to build better AI, which could then build better AI still. An idea first described in 1965. AI labs now use their own models to help train and test the next ones, which has made the question of who stays in charge more pressing.",
+            "talk": "If AI helps to build the next AI, who should check each new version before it is used?",
+            "links": [
+                "Agi",
+                "Si",
+                "Ca",
+                "Sl",
+                "Hi",
+                "Sf"
+            ]
+        },
+        {
+            "sym": "Si",
+            "name": "Superintelligence",
+            "family": "foundations",
+            "row": 1,
+            "col": 17,
+            "theme": "future",
+            "year": 1998,
+            "approx": false,
+            "older": false,
+            "def": "A hypothetical AI that would far surpass the best human minds in almost every field. Experts disagree on whether, or when, it could arrive.",
+            "talk": "If an AI became cleverer than every person, who should decide what it is allowed to do?",
+            "links": [
+                "Agi",
+                "Sf",
+                "An",
+                "Sl"
+            ]
+        },
+        {
+            "sym": "Agi",
+            "name": "Artificial General Intelligence",
+            "family": "foundations",
+            "row": 1,
+            "col": 18,
+            "theme": "future",
+            "year": 1997,
+            "approx": false,
+            "older": false,
+            "def": "A hypothetical AI able to match or exceed human ability across almost any intellectual task, rather than excelling in one narrow domain.",
+            "talk": "How would we know if artificial general intelligence had arrived? Who should decide?",
+            "links": [
+                "Ai",
+                "Sf",
+                "Sl",
+                "Rsi"
+            ]
+        },
+        {
+            "sym": "Ml",
+            "name": "Machine Learning",
+            "family": "foundations",
+            "row": 2,
+            "col": 1,
+            "theme": "smart",
+            "year": 1959,
+            "approx": false,
+            "older": false,
+            "def": "A branch of AI where systems learn patterns from data instead of following hand-written rules.",
+            "talk": "How would you teach a computer to tell cats from dogs without describing either?",
+            "links": [
+                "Ai",
+                "Dl",
+                "Su",
+                "Un",
+                "Tr"
+            ]
+        },
+        {
+            "sym": "Dl",
+            "name": "Deep Learning",
+            "family": "foundations",
+            "row": 2,
+            "col": 2,
+            "theme": "smart",
+            "year": 1986,
+            "approx": false,
+            "older": false,
+            "def": "Machine learning using neural networks with many layers — the approach behind most modern breakthroughs in vision, speech and language.",
+            "talk": "Deep learning needs huge amounts of data. Whose data should it be allowed to learn from?",
+            "links": [
+                "Ml",
+                "Nn",
+                "Tf"
+            ]
+        },
+        {
+            "sym": "Nn",
+            "name": "Neural Network",
+            "family": "foundations",
+            "row": 3,
+            "col": 1,
+            "theme": "smart",
+            "year": 1943,
+            "approx": false,
+            "older": false,
+            "def": "A model made of layers of connected nodes, loosely inspired by the brain, that learns by adjusting the strength of its connections.",
+            "talk": "In what ways is a neural network like a brain, and in what ways is it nothing like one?",
+            "links": [
+                "Dl",
+                "Pm",
+                "Tr",
+                "Ls"
+            ]
+        },
+        {
+            "sym": "Al",
+            "name": "Algorithm",
+            "family": "foundations",
+            "row": 3,
+            "col": 2,
+            "theme": "smart",
+            "year": 1950,
+            "approx": true,
+            "older": true,
+            "def": "A step-by-step set of instructions for solving a problem; in machine learning, the method a system uses to learn from data.",
+            "talk": "Write an algorithm for making a cup of tea. What would a computer get wrong if one step were missing?",
+            "links": [
+                "Ml",
+                "Dt",
+                "Md"
+            ]
+        },
+        {
+            "sym": "Md",
+            "name": "Model",
+            "family": "foundations",
+            "row": 4,
+            "col": 1,
+            "theme": "smart",
+            "year": 1950,
+            "approx": true,
+            "older": true,
+            "def": "What you get after an algorithm has learned from data: the trained program that turns an input, such as a question or a photo, into an output.",
+            "talk": "Two models trained on different data are asked the same question. Should they give the same answer?",
+            "links": [
+                "Tr",
+                "If",
+                "Pm",
+                "Fm"
+            ]
+        },
+        {
+            "sym": "Tr",
+            "name": "Training",
+            "family": "foundations",
+            "row": 4,
+            "col": 2,
+            "theme": "smart",
+            "year": 1958,
+            "approx": true,
+            "older": true,
+            "def": "The process of feeding data to a model and adjusting its internal settings until its outputs improve.",
+            "talk": "What might an AI get wrong if it only learned from photos taken in one country?",
+            "links": [
+                "Md",
+                "Pm",
+                "Gp",
+                "Dp"
+            ]
+        },
+        {
+            "sym": "If",
+            "name": "Inference",
+            "family": "foundations",
+            "row": 5,
+            "col": 1,
+            "theme": "smart",
+            "year": 1970,
+            "approx": true,
+            "older": true,
+            "def": "Using a trained model to make predictions or generate output on new inputs — the “running” phase after training.",
+            "talk": "Every answer an AI gives uses energy. Does that change how often you would use it?",
+            "links": [
+                "Md",
+                "Ms",
+                "Gp",
+                "Ed"
+            ]
+        },
+        {
+            "sym": "Pm",
+            "name": "Parameters",
+            "family": "foundations",
+            "row": 5,
+            "col": 2,
+            "theme": "smart",
+            "year": 1960,
+            "approx": true,
+            "older": true,
+            "def": "The millions, billions or even trillions of numbers inside a model that it adjusts as it learns, like dials being tuned. A model’s size is often quoted in parameters.",
+            "talk": "Is a bigger model with more parameters always better? What else matters?",
+            "links": [
+                "Md",
+                "Qz",
+                "Sl"
+            ]
+        },
+        {
+            "sym": "Tk",
+            "name": "Token",
+            "family": "foundations",
+            "row": 6,
+            "col": 1,
+            "theme": "smart",
+            "year": 2016,
+            "approx": true,
+            "older": true,
+            "def": "The small chunk of text — a word, part of a word or a symbol — that language models read and write.",
+            "talk": "Why might AI find it hard to count the letters in a word it reads as tokens?",
+            "links": [
+                "Ll",
+                "Cw",
+                "Em"
+            ]
+        },
+        {
+            "sym": "Em",
+            "name": "Embedding",
+            "family": "foundations",
+            "row": 6,
+            "col": 2,
+            "theme": "smart",
+            "year": 2003,
+            "approx": false,
+            "older": false,
+            "def": "A list of numbers that represents the meaning of text, images or other data, so that similar things sit close together.",
+            "talk": "If words are stored as numbers, which words do you think would sit close together? Why?",
+            "links": [
+                "Vd",
+                "Tk",
+                "Ls",
+                "Rg"
+            ]
+        },
+        {
+            "sym": "Tf",
+            "name": "Transformer",
+            "family": "foundations",
+            "row": 7,
+            "col": 1,
+            "theme": "smart",
+            "year": 2017,
+            "approx": false,
+            "older": false,
+            "def": "The design behind today’s large language models, introduced in 2017. Its “attention” lets it weigh up how each word in a passage relates to every other word.",
+            "talk": "Why might one invention in 2017 have changed so much about the AI we use today?",
+            "links": [
+                "Ll",
+                "Tk",
+                "Dl"
+            ]
+        },
+        {
+            "sym": "Fm",
+            "name": "Foundation Model",
+            "family": "foundations",
+            "row": 7,
+            "col": 2,
+            "theme": "smart",
+            "year": 2021,
+            "approx": false,
+            "older": false,
+            "def": "A large model trained on broad data that can be adapted to many different tasks, rather than built for just one.",
+            "talk": "If many apps are built on the same few models, what happens when one of those models gets something wrong?",
+            "links": [
+                "Ll",
+                "Ft",
+                "Ow"
+            ]
+        },
+        {
+            "sym": "Ll",
+            "name": "Large Language Model",
+            "family": "generative",
+            "row": 4,
+            "col": 3,
+            "theme": "smart",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "An AI trained on huge amounts of writing so it can read and write language, like the AI behind ChatGPT or Gemini.",
+            "talk": "If a model only predicts the next word, can it understand what it writes? Argue both sides.",
+            "links": [
+                "Tf",
+                "Tk",
+                "Fm",
+                "Cb"
+            ],
+            "benchmark": "safe_adoption"
+        },
+        {
+            "sym": "Ga",
+            "name": "Generative AI",
+            "family": "generative",
+            "row": 4,
+            "col": 4,
+            "theme": "creative",
+            "year": 2022,
+            "approx": true,
+            "older": false,
+            "def": "AI that creates new content — text, images, audio, video or code — rather than only analysing existing data.",
+            "talk": "What have you seen this week that might have been made by generative AI?",
+            "links": [
+                "Ll",
+                "Df",
+                "Ti",
+                "Gv"
+            ],
+            "benchmark": "safe_adoption"
+        },
+        {
+            "sym": "Pr",
+            "name": "Prompt",
+            "family": "generative",
+            "row": 4,
+            "col": 5,
+            "theme": "creative",
+            "year": 2020,
+            "approx": true,
+            "older": false,
+            "def": "The instruction or input you give a generative model to get a response.",
+            "talk": "Turn \"help with my homework\" into a clear prompt. What did you add?",
+            "links": [
+                "Pe",
+                "Ce",
+                "Cw"
+            ],
+            "benchmark": "ai_dependency"
+        },
+        {
+            "sym": "Pe",
+            "name": "Prompt Engineering",
+            "family": "generative",
+            "row": 4,
+            "col": 6,
+            "theme": "creative",
+            "year": 2021,
+            "approx": true,
+            "older": false,
+            "def": "The craft of writing and structuring prompts to get more accurate, useful and consistent outputs.",
+            "talk": "Write the same request three ways. Which prompt gets the most useful answer, and why?",
+            "links": [
+                "Pr",
+                "Ce",
+                "Fs",
+                "Ct"
+            ],
+            "benchmark": "ai_dependency"
+        },
+        {
+            "sym": "Cw",
+            "name": "Context Window",
+            "family": "generative",
+            "row": 4,
+            "col": 7,
+            "theme": "smart",
+            "year": 2020,
+            "approx": true,
+            "older": false,
+            "def": "The maximum amount of text, measured in tokens, that a model can take into account at once.",
+            "talk": "What happens in a very long chat when the AI starts to forget what you said at the start?",
+            "links": [
+                "Tk",
+                "Me",
+                "Ce"
+            ]
+        },
+        {
+            "sym": "Mm",
+            "name": "Multimodal AI",
+            "family": "generative",
+            "row": 5,
+            "col": 3,
+            "theme": "creative",
+            "year": 2011,
+            "approx": true,
+            "older": false,
+            "def": "A model that can take in or produce more than one type of data, such as text, images and audio together.",
+            "talk": "An AI that can see, hear and read at once: what could it help with, and what new risks does it bring?",
+            "links": [
+                "Ll",
+                "Cv",
+                "Ts",
+                "Gv"
+            ]
+        },
+        {
+            "sym": "Df",
+            "name": "Diffusion Model",
+            "family": "generative",
+            "row": 5,
+            "col": 4,
+            "theme": "creative",
+            "year": 2015,
+            "approx": false,
+            "older": false,
+            "def": "A generative model that learns by adding noise to pictures until they are static, then learning to undo it. To make something new, it starts from random noise and removes it step by step.",
+            "talk": "An AI makes a picture from noise. Is the picture original? Who is the artist?",
+            "links": [
+                "Ti",
+                "Gv",
+                "Gn"
+            ]
+        },
+        {
+            "sym": "Gn",
+            "name": "Generative Adversarial Network",
+            "family": "generative",
+            "row": 5,
+            "col": 5,
+            "theme": "creative",
+            "year": 2014,
+            "approx": false,
+            "older": false,
+            "def": "Two networks in competition — one generates content, the other judges it — until the output looks realistic.",
+            "talk": "Two AIs compete until a fake looks real. How could this be used for good, and for harm?",
+            "links": [
+                "Df",
+                "Dk"
+            ]
+        },
+        {
+            "sym": "Ti",
+            "name": "Text-to-Image",
+            "family": "generative",
+            "row": 5,
+            "col": 6,
+            "theme": "creative",
+            "year": 2015,
+            "approx": true,
+            "older": false,
+            "def": "Generating pictures from a written description.",
+            "talk": "With your teacher, using a school-approved tool, make an image, then list every decision the AI made that you did not ask for.",
+            "links": [
+                "Df",
+                "Pr",
+                "Wm"
+            ],
+            "safeguarding": true
+        },
+        {
+            "sym": "Ts",
+            "name": "Text-to-Speech",
+            "family": "generative",
+            "row": 5,
+            "col": 7,
+            "theme": "creative",
+            "year": 1968,
+            "approx": true,
+            "older": false,
+            "def": "Converting written text into natural-sounding synthetic speech.",
+            "talk": "If an AI can speak in any voice, how could you be sure a voice note is really from a friend?",
+            "links": [
+                "Va",
+                "Np",
+                "Dk"
+            ]
+        },
+        {
+            "sym": "Ft",
+            "name": "Fine-Tuning",
+            "family": "generative",
+            "row": 6,
+            "col": 3,
+            "theme": "smart",
+            "year": 2006,
+            "approx": true,
+            "older": false,
+            "def": "Further training a pre-trained model on a smaller, specific dataset to specialise its behaviour.",
+            "talk": "If you could train an AI to be an expert in one subject, which would you choose and what would it need to learn from?",
+            "links": [
+                "Fm",
+                "Sd",
+                "Fs"
+            ]
+        },
+        {
+            "sym": "Rg",
+            "name": "Retrieval-Augmented Generation",
+            "family": "generative",
+            "row": 6,
+            "col": 4,
+            "theme": "smart",
+            "year": 2020,
+            "approx": false,
+            "older": false,
+            "def": "Fetching relevant documents first and handing them to the model, so its answers are grounded in real sources (RAG).",
+            "talk": "Does looking things up first make an AI answer trustworthy? What if the source is wrong?",
+            "links": [
+                "Vd",
+                "Em",
+                "Ha",
+                "Ll"
+            ]
+        },
+        {
+            "sym": "Te",
+            "name": "Temperature",
+            "family": "generative",
+            "row": 6,
+            "col": 5,
+            "theme": "creative",
+            "year": 1985,
+            "approx": true,
+            "older": true,
+            "def": "A setting that controls randomness in output: low is focused and predictable, high is varied and creative.",
+            "talk": "Would you want a high or a low temperature for a story, a revision quiz and a medical answer?",
+            "links": [
+                "Ha",
+                "Ll"
+            ]
+        },
+        {
+            "sym": "Ct",
+            "name": "Chain-of-Thought",
+            "family": "generative",
+            "row": 6,
+            "col": 6,
+            "theme": "smart",
+            "year": 2022,
+            "approx": false,
+            "older": false,
+            "def": "Getting a model to work through a problem step by step before giving its final answer.",
+            "talk": "Does an AI showing its working make the answer more trustworthy? How would you check?",
+            "links": [
+                "Rm",
+                "Pe"
+            ],
+            "benchmark": "ai_dependency"
+        },
+        {
+            "sym": "Fs",
+            "name": "Few-Shot Learning",
+            "family": "generative",
+            "row": 6,
+            "col": 7,
+            "theme": "smart",
+            "year": 2020,
+            "approx": false,
+            "older": false,
+            "def": "Showing a model a handful of examples in the prompt so it can pick up a new task without retraining.",
+            "talk": "Give an AI three examples and it copies the pattern. How is that like learning from a worked example?",
+            "links": [
+                "Pe",
+                "Ft"
+            ]
+        },
+        {
+            "sym": "Rm",
+            "name": "Reasoning Model",
+            "family": "generative",
+            "row": 7,
+            "col": 3,
+            "theme": "smart",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "A model trained to spend extra computation “thinking” through a problem before answering, improving maths, coding and logic.",
+            "talk": "With your teacher, using a school-approved tool, ask an AI to show its working on a maths problem. Check every step: is each one right?",
+            "links": [
+                "Ct",
+                "Pl",
+                "Ha"
+            ],
+            "benchmark": "ai_dependency"
+        },
+        {
+            "sym": "Sd",
+            "name": "Synthetic Data",
+            "family": "generative",
+            "row": 7,
+            "col": 4,
+            "theme": "responsible",
+            "year": 1993,
+            "approx": false,
+            "older": false,
+            "def": "Artificially generated data used to train or test models when real data is scarce, sensitive or expensive.",
+            "talk": "When is it fair to train AI on made-up data, and when could it hide real problems?",
+            "links": [
+                "Ft",
+                "Tr",
+                "Pv"
+            ],
+            "benchmark": "bias_equality"
+        },
+        {
+            "sym": "Ha",
+            "name": "Hallucination",
+            "family": "generative",
+            "row": 7,
+            "col": 5,
+            "theme": "smart",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "When a model produces confident-sounding information that is false or made up. It happens because the model predicts likely-sounding words rather than looking facts up.",
+            "talk": "With your teacher, using a school-approved tool, ask an AI for three sources on a topic. Do they all exist, and do they say what it claims?",
+            "links": [
+                "Rg",
+                "Te",
+                "Xa"
+            ],
+            "benchmark": "assessment_integrity"
+        },
+        {
+            "sym": "Dk",
+            "name": "Deepfake",
+            "family": "generative",
+            "row": 7,
+            "col": 6,
+            "theme": "safe",
+            "year": 2017,
+            "approx": false,
+            "older": false,
+            "def": "Realistic AI-generated or manipulated video, audio or images showing people saying or doing things they never did. Any sexual image of someone under 18, including an AI-made fake, is illegal to make, keep or share. In England and Wales it is also a crime to make or share a sexual deepfake of an adult without their consent.",
+            "talk": "How would you check whether a shocking video of a famous person is real?",
+            "links": [
+                "Gv",
+                "Gn",
+                "Wm",
+                "Ip"
+            ],
+            "benchmark": "safeguarding",
+            "safeguarding": true
+        },
+        {
+            "sym": "Vc",
+            "name": "Vibe Coding",
+            "family": "generative",
+            "row": 7,
+            "col": 7,
+            "theme": "creative",
+            "year": 2025,
+            "approx": false,
+            "older": false,
+            "def": "Building software by describing what you want in plain language and letting AI write most of the code.",
+            "talk": "If AI writes code that breaks something, whose job is it to fix it?",
+            "links": [
+                "Ca",
+                "Lc",
+                "Cp"
+            ],
+            "benchmark": "assessment_integrity"
+        },
+        {
+            "sym": "Ce",
+            "name": "Context Engineering",
+            "family": "generative",
+            "row": 8,
+            "col": 3,
+            "theme": "creative",
+            "year": 2025,
+            "approx": false,
+            "older": false,
+            "def": "Structuring everything you give an AI, including background documents, rules and examples, rather than relying on a single clever prompt.",
+            "talk": "What background would you give an AI so it could help with your homework fairly?",
+            "links": [
+                "Pe",
+                "Cw",
+                "Rg"
+            ]
+        },
+        {
+            "sym": "Gv",
+            "name": "Generative Video",
+            "family": "generative",
+            "row": 8,
+            "col": 4,
+            "theme": "creative",
+            "year": 2022,
+            "approx": true,
+            "older": false,
+            "def": "AI that creates video clips from a text description, an image or another video.",
+            "talk": "What clues might show that a video was generated? Are they reliable?",
+            "links": [
+                "Ga",
+                "Dk",
+                "Sp"
+            ],
+            "benchmark": "safeguarding",
+            "safeguarding": true
+        },
+        {
+            "sym": "Sp",
+            "name": "AI Slop",
+            "family": "generative",
+            "row": 8,
+            "col": 5,
+            "theme": "responsible",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "Low-effort, mass-produced AI text, images and videos that flood social media and search results.",
+            "talk": "How can you tell AI slop from something made with care? Find an example of each.",
+            "links": [
+                "Ga",
+                "Gv",
+                "Hp",
+                "Ge"
+            ],
+            "benchmark": "safeguarding"
+        },
+        {
+            "sym": "2d",
+            "name": "2D Design",
+            "family": "generative",
+            "row": 8,
+            "col": 6,
+            "theme": "creative",
+            "year": 1963,
+            "approx": true,
+            "older": false,
+            "def": "Flat designs such as drawings, logos, layouts and laser-cut parts. AI tools can now suggest, generate and refine them.",
+            "year_note": "Sketchpad (1963).",
+            "talk": "If AI designs a logo for you in seconds, what is left for a human designer to do?",
+            "links": [
+                "3d",
+                "Ti",
+                "Ga"
+            ]
+        },
+        {
+            "sym": "3d",
+            "name": "3D Design & CAD",
+            "family": "generative",
+            "row": 8,
+            "col": 7,
+            "theme": "creative",
+            "year": 1959,
+            "approx": false,
+            "older": false,
+            "def": "Designing objects in three dimensions with computer-aided design (CAD) software, ready to model, 3D print or manufacture. AI can generate and improve designs.",
+            "year_note": "\"Computer-aided design\", Douglas T. Ross (1959).",
+            "talk": "What would you design and 3D print if AI helped you? Who owns the design?",
+            "links": [
+                "2d",
+                "Ga"
+            ]
+        },
+        {
+            "sym": "Su",
+            "name": "Supervised Learning",
+            "family": "predictive",
+            "row": 4,
+            "col": 8,
+            "theme": "smart",
+            "year": 1960,
+            "approx": true,
+            "older": false,
+            "def": "Learning from labelled examples, where every input comes with the correct answer.",
+            "talk": "If the labels a model learns from are wrong, what will the model learn?",
+            "links": [
+                "Cl",
+                "Rr",
+                "Ml"
+            ]
+        },
+        {
+            "sym": "Un",
+            "name": "Unsupervised Learning",
+            "family": "predictive",
+            "row": 4,
+            "col": 9,
+            "theme": "smart",
+            "year": 1960,
+            "approx": true,
+            "older": false,
+            "def": "Finding structure in unlabelled data without being told what the right answers are.",
+            "talk": "If an AI groups people without being told how, how would you know whether the groups are fair?",
+            "links": [
+                "Cu",
+                "Ml",
+                "Ad"
+            ]
+        },
+        {
+            "sym": "Rr",
+            "name": "Regression",
+            "family": "predictive",
+            "row": 4,
+            "col": 10,
+            "theme": "smart",
+            "year": 1886,
+            "approx": false,
+            "older": false,
+            "def": "Predicting a continuous number, such as a price, a demand level or a temperature.",
+            "talk": "What would you want to predict with a number, such as revision hours and test scores? What could the prediction miss?",
+            "links": [
+                "Su",
+                "Fc"
+            ]
+        },
+        {
+            "sym": "Cl",
+            "name": "Classification",
+            "family": "predictive",
+            "row": 4,
+            "col": 11,
+            "theme": "smart",
+            "year": 1936,
+            "approx": true,
+            "older": true,
+            "def": "Assigning inputs to categories, such as spam or not spam, fraudulent or genuine.",
+            "talk": "Sorting emails into spam and not spam sounds simple. What could go wrong, and who would it affect?",
+            "links": [
+                "Su",
+                "Dt",
+                "Sa"
+            ]
+        },
+        {
+            "sym": "Cu",
+            "name": "Clustering",
+            "family": "predictive",
+            "row": 4,
+            "col": 12,
+            "theme": "smart",
+            "year": 1939,
+            "approx": false,
+            "older": false,
+            "def": "Grouping similar items together without predefined labels — customer segmentation is a classic use.",
+            "talk": "Sort your class's favourite apps into groups. Would a computer choose the same groups? Why not?",
+            "links": [
+                "Un",
+                "Fe"
+            ]
+        },
+        {
+            "sym": "Dt",
+            "name": "Decision Tree",
+            "family": "predictive",
+            "row": 5,
+            "col": 8,
+            "theme": "smart",
+            "year": 1963,
+            "approx": true,
+            "older": false,
+            "def": "A model that makes predictions through a flowchart of yes/no questions about the data.",
+            "talk": "Draw a yes/no flowchart to decide what to wear. What does it get wrong about real people?",
+            "links": [
+                "Rf",
+                "Gb",
+                "Cl"
+            ]
+        },
+        {
+            "sym": "Rf",
+            "name": "Random Forest",
+            "family": "predictive",
+            "row": 5,
+            "col": 9,
+            "theme": "smart",
+            "year": 1995,
+            "approx": false,
+            "older": false,
+            "def": "Many decision trees combined, whose collective vote gives a more robust prediction than any single tree.",
+            "talk": "Is asking a hundred decision trees and taking the vote like asking a crowd? When is a crowd wrong?",
+            "links": [
+                "Dt",
+                "Gb"
+            ]
+        },
+        {
+            "sym": "Gb",
+            "name": "Gradient Boosting",
+            "family": "predictive",
+            "row": 5,
+            "col": 10,
+            "theme": "smart",
+            "year": 1999,
+            "approx": false,
+            "older": false,
+            "def": "Building many small models one after another, each fixing the mistakes of the one before, so together they make good predictions from tables of data.",
+            "talk": "Each model fixes the last one's mistakes. How is that like learning from your own mistakes?",
+            "links": [
+                "Rf",
+                "Fe"
+            ]
+        },
+        {
+            "sym": "Fe",
+            "name": "Feature Engineering",
+            "family": "predictive",
+            "row": 5,
+            "col": 11,
+            "theme": "smart",
+            "year": 2005,
+            "approx": true,
+            "older": false,
+            "def": "Selecting and transforming raw data into inputs (features) that help a model predict well.",
+            "talk": "If you were predicting who enjoys a book, which facts about a reader would you use, and which would be unfair?",
+            "links": [
+                "Gb",
+                "Of",
+                "Dp"
+            ]
+        },
+        {
+            "sym": "Of",
+            "name": "Overfitting",
+            "family": "predictive",
+            "row": 5,
+            "col": 12,
+            "theme": "smart",
+            "year": 1950,
+            "approx": true,
+            "older": false,
+            "def": "When a model memorises its training data so closely that it performs poorly on new, unseen data.",
+            "talk": "A student memorises past papers but cannot answer a new question. How is that like overfitting?",
+            "links": [
+                "Tr",
+                "Ev",
+                "Fs"
+            ]
+        },
+        {
+            "sym": "Fc",
+            "name": "Forecasting",
+            "family": "predictive",
+            "row": 6,
+            "col": 8,
+            "theme": "future",
+            "year": 1861,
+            "approx": true,
+            "older": true,
+            "def": "Predicting future values — sales, demand, traffic — from historical patterns.",
+            "talk": "What would you want an AI to forecast for your school, and what should it never predict about people?",
+            "links": [
+                "Tm",
+                "Pa"
+            ]
+        },
+        {
+            "sym": "Tm",
+            "name": "Time Series",
+            "family": "predictive",
+            "row": 6,
+            "col": 9,
+            "theme": "smart",
+            "year": 1927,
+            "approx": true,
+            "older": false,
+            "def": "Data recorded over time, and the methods for modelling the trends, seasonality and cycles within it.",
+            "talk": "What patterns can you spot in your school's attendance over a year? Would a computer spot the same ones?",
+            "links": [
+                "Fc",
+                "Ad"
+            ]
+        },
+        {
+            "sym": "Ad",
+            "name": "Anomaly Detection",
+            "family": "predictive",
+            "row": 6,
+            "col": 10,
+            "theme": "safe",
+            "year": 1987,
+            "approx": true,
+            "older": false,
+            "def": "Spotting unusual data points or behaviour, such as fraud, equipment faults or security breaches.",
+            "talk": "Your bank blocks a payment that looks unusual. Is that helpful or annoying? Who decides what is unusual?",
+            "links": [
+                "Tm",
+                "Un"
+            ]
+        },
+        {
+            "sym": "Pa",
+            "name": "Predictive Analytics",
+            "family": "predictive",
+            "row": 6,
+            "col": 11,
+            "theme": "future",
+            "year": 2005,
+            "approx": true,
+            "older": false,
+            "def": "Using historical data and statistical models to estimate what is likely to happen next.",
+            "talk": "Should a school use AI to predict which students might struggle? What could help, and what could harm?",
+            "links": [
+                "Fc",
+                "Ps",
+                "Ch"
+            ]
+        },
+        {
+            "sym": "Ps",
+            "name": "Prescriptive Analytics",
+            "family": "predictive",
+            "row": 6,
+            "col": 12,
+            "theme": "future",
+            "year": 2010,
+            "approx": true,
+            "older": false,
+            "def": "Going beyond predicting what will happen to recommending the best action to take.",
+            "talk": "If an AI recommends what you should do next, would you follow it? When would you ignore it?",
+            "links": [
+                "Pa",
+                "Mi"
+            ]
+        },
+        {
+            "sym": "Rc",
+            "name": "Recommendation Engine",
+            "family": "predictive",
+            "row": 7,
+            "col": 8,
+            "theme": "responsible",
+            "year": 1992,
+            "approx": true,
+            "older": false,
+            "def": "A system that suggests products, content or actions based on a person’s behaviour and preferences.",
+            "talk": "Why might your feed look completely different from your friend's?",
+            "links": [
+                "Pa",
+                "Em",
+                "Ge"
+            ]
+        },
+        {
+            "sym": "Ch",
+            "name": "Churn Prediction",
+            "family": "predictive",
+            "row": 7,
+            "col": 9,
+            "theme": "responsible",
+            "year": 2000,
+            "approx": true,
+            "older": false,
+            "def": "Identifying which customers are likely to leave, so a business can act before they do.",
+            "talk": "A streaming app predicts you will cancel and offers a discount. Is that helpful or sneaky?",
+            "links": [
+                "Pa",
+                "Sa"
+            ]
+        },
+        {
+            "sym": "Sa",
+            "name": "Sentiment Analysis",
+            "family": "predictive",
+            "row": 7,
+            "col": 10,
+            "theme": "responsible",
+            "year": 2003,
+            "approx": false,
+            "older": false,
+            "def": "Detecting the emotional tone — positive, negative or neutral — in text such as reviews or social posts.",
+            "talk": "Can a computer tell when someone is being sarcastic? Write a sarcastic sentence and discuss why a computer might misread it.",
+            "links": [
+                "Np",
+                "Cl",
+                "Ch"
+            ]
+        },
+        {
+            "sym": "Np",
+            "name": "Natural Language Processing",
+            "family": "predictive",
+            "row": 7,
+            "col": 11,
+            "theme": "smart",
+            "year": 1960,
+            "approx": true,
+            "older": false,
+            "def": "The field of AI that enables computers to understand, interpret and work with human language (NLP).",
+            "talk": "Which languages and accents do voice assistants understand best? Who gets left out?",
+            "links": [
+                "Ll",
+                "Sa",
+                "Ts"
+            ]
+        },
+        {
+            "sym": "Cv",
+            "name": "Computer Vision",
+            "family": "predictive",
+            "row": 7,
+            "col": 12,
+            "theme": "safe",
+            "year": 1966,
+            "approx": false,
+            "older": false,
+            "def": "The field of AI that lets machines interpret images and video, from recognising faces to spotting defects on a production line.",
+            "talk": "Who should be told when a camera is recognising things, and how?",
+            "links": [
+                "Oc",
+                "Mm",
+                "Ed"
+            ]
+        },
+        {
+            "sym": "Ge",
+            "name": "Generative Engine Optimisation",
+            "family": "predictive",
+            "row": 8,
+            "col": 8,
+            "theme": "smart",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "Shaping online content so that AI assistants find, cite and recommend it: search engine optimisation for the age of AI. Also called answer engine optimisation (AEO), as more searches end in an AI answer with no click.",
+            "talk": "If companies shape what AI assistants recommend, how can you tell an answer is fair?",
+            "links": [
+                "Rc",
+                "Sp",
+                "Rg"
+            ]
+        },
+        {
+            "sym": "Ag",
+            "name": "AI Agent",
+            "family": "agents",
+            "row": 2,
+            "col": 13,
+            "theme": "future",
+            "year": 1995,
+            "approx": true,
+            "older": false,
+            "def": "A system that uses an AI model to pursue a goal by deciding on and taking actions, not just answering questions.",
+            "talk": "What should an AI agent always check with you before doing it on your behalf?",
+            "links": [
+                "Ac",
+                "Fn",
+                "Pl",
+                "Lp",
+                "Me"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Ac",
+            "name": "Agentic AI",
+            "family": "agents",
+            "row": 2,
+            "col": 14,
+            "theme": "future",
+            "year": 2024,
+            "approx": true,
+            "older": false,
+            "def": "AI that can plan, use tools and carry out several steps of a job by itself, with a person checking in only now and then.",
+            "talk": "Which jobs would you trust an AI to finish on its own, and which should always be checked?",
+            "links": [
+                "Ag",
+                "Au",
+                "Ma",
+                "Hi"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Au",
+            "name": "Autonomy",
+            "family": "agents",
+            "row": 2,
+            "col": 15,
+            "theme": "responsible",
+            "year": 1985,
+            "approx": true,
+            "older": true,
+            "def": "How much an AI system can decide and do on its own before a human needs to step in.",
+            "talk": "Should a self-driving bus, a marking tool and a chatbot each have the same amount of freedom? Why not?",
+            "links": [
+                "Ac",
+                "Hi",
+                "Co"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Pl",
+            "name": "Planning",
+            "family": "agents",
+            "row": 3,
+            "col": 13,
+            "theme": "smart",
+            "year": 1971,
+            "approx": false,
+            "older": true,
+            "def": "An agent breaking a goal down into ordered steps and deciding what to do next.",
+            "talk": "Plan a school trip in five steps. Which step would you trust an AI to plan, and which not?",
+            "links": [
+                "Ag",
+                "Ra",
+                "Rm"
+            ]
+        },
+        {
+            "sym": "Me",
+            "name": "Memory",
+            "family": "agents",
+            "row": 3,
+            "col": 14,
+            "theme": "safe",
+            "year": 2023,
+            "approx": true,
+            "older": true,
+            "def": "How an agent retains information — within a single task (short-term) or across sessions (long-term).",
+            "talk": "What do you think an AI tool remembers about you? How could an adult help you check?",
+            "links": [
+                "Ag",
+                "Cw",
+                "Pv"
+            ],
+            "benchmark": "privacy"
+        },
+        {
+            "sym": "Fn",
+            "name": "Function Calling",
+            "family": "agents",
+            "row": 3,
+            "col": 15,
+            "theme": "future",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "Letting a model use other tools, such as a calculator, a search engine or a booking system, to look things up or take actions. Also called tool use.",
+            "talk": "Which tools should an AI never be given access to, and why?",
+            "links": [
+                "Ag",
+                "Ap",
+                "Mc"
+            ]
+        },
+        {
+            "sym": "Ra",
+            "name": "ReAct",
+            "family": "agents",
+            "row": 4,
+            "col": 13,
+            "theme": "smart",
+            "year": 2022,
+            "approx": false,
+            "older": false,
+            "def": "A pattern where an agent alternates between reasoning about a problem and acting with tools (Reason + Act).",
+            "talk": "When you solve a problem, how often do you stop, think and try again? How is that like an AI that thinks, acts, then checks?",
+            "links": [
+                "Lp",
+                "Pl",
+                "Fn"
+            ]
+        },
+        {
+            "sym": "Lp",
+            "name": "Agent Loop",
+            "family": "agents",
+            "row": 4,
+            "col": 14,
+            "theme": "smart",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "The cycle an agent repeats — observe, think, act, check the result — until the goal is met.",
+            "talk": "An agent keeps trying until it succeeds. When should it stop and ask a person instead?",
+            "links": [
+                "Ag",
+                "Ra",
+                "Sr"
+            ]
+        },
+        {
+            "sym": "Sr",
+            "name": "Self-Reflection",
+            "family": "agents",
+            "row": 4,
+            "col": 15,
+            "theme": "smart",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "An agent reviewing and critiquing its own work, then correcting mistakes before it finishes.",
+            "talk": "Can an AI really check its own work? Who should check the checker?",
+            "links": [
+                "Lp",
+                "Rm",
+                "Ev"
+            ]
+        },
+        {
+            "sym": "Mc",
+            "name": "Model Context Protocol",
+            "family": "agents",
+            "row": 5,
+            "col": 13,
+            "theme": "future",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "A shared set of rules (MCP) that lets AI assistants connect to other tools and data, such as a calendar or a folder of files, in the same way every time.",
+            "talk": "What could go well, and what could go wrong, if every AI tool could connect to your files in the same way?",
+            "links": [
+                "Fn",
+                "Ap",
+                "Aa"
+            ]
+        },
+        {
+            "sym": "Aa",
+            "name": "Agent-to-Agent (A2A)",
+            "family": "agents",
+            "row": 5,
+            "col": 14,
+            "theme": "future",
+            "year": 2025,
+            "approx": false,
+            "older": false,
+            "def": "Shared rules that let AI agents made by different companies find each other and work together on a task.",
+            "talk": "If AI agents from different companies talk to each other, who is responsible when they make a mistake?",
+            "links": [
+                "Mc",
+                "Ma",
+                "Or"
+            ]
+        },
+        {
+            "sym": "Or",
+            "name": "Orchestrator",
+            "family": "agents",
+            "row": 5,
+            "col": 15,
+            "theme": "future",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "A coordinating agent or component that assigns tasks to other agents or tools and combines their results.",
+            "talk": "An AI manager hands out jobs to other AIs. What should a human manager still do?",
+            "links": [
+                "Ma",
+                "Wo",
+                "Aa"
+            ]
+        },
+        {
+            "sym": "Ma",
+            "name": "Multi-Agent System",
+            "family": "agents",
+            "row": 6,
+            "col": 13,
+            "theme": "future",
+            "year": 1986,
+            "approx": true,
+            "older": false,
+            "def": "Several specialised agents working together, each handling one part of a larger task.",
+            "talk": "A team of AIs each does one part of a job. How is that like group work, and where could it go wrong?",
+            "links": [
+                "Aa",
+                "Or",
+                "Sw"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Sw",
+            "name": "Agent Swarm",
+            "family": "agents",
+            "row": 6,
+            "col": 14,
+            "theme": "future",
+            "year": 1989,
+            "approx": false,
+            "older": false,
+            "def": "A large group of simple agents coordinating to solve problems collectively, inspired by swarms in nature.",
+            "talk": "Ants, birds and bees work together without a leader. Should AI agents work that way too?",
+            "links": [
+                "Ma",
+                "Or"
+            ]
+        },
+        {
+            "sym": "Rl",
+            "name": "Reinforcement Learning",
+            "family": "agents",
+            "row": 6,
+            "col": 15,
+            "theme": "smart",
+            "year": 1961,
+            "approx": true,
+            "older": false,
+            "def": "Learning by trial and error: an agent is rewarded for good actions and gradually learns the best strategy. Chatbots are tuned this way too, with people rating their answers (reinforcement learning from human feedback).",
+            "talk": "How is learning by trial and reward like the way you learned a game? What is different?",
+            "links": [
+                "Pl",
+                "An",
+                "Rv"
+            ]
+        },
+        {
+            "sym": "Co",
+            "name": "Computer Use",
+            "family": "agents",
+            "row": 7,
+            "col": 13,
+            "theme": "safe",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "An agent that operates a computer like a person would — reading the screen, moving the cursor and typing.",
+            "talk": "Would you let an AI use your computer for you? What would you never let it click?",
+            "links": [
+                "Br",
+                "Ag",
+                "Au"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Br",
+            "name": "Browser Agent",
+            "family": "agents",
+            "row": 7,
+            "col": 14,
+            "theme": "future",
+            "year": 2024,
+            "approx": true,
+            "older": false,
+            "def": "An agent that navigates websites, fills in forms and completes online tasks on your behalf.",
+            "talk": "If an AI books something online for you and gets it wrong, who should put it right?",
+            "links": [
+                "Co",
+                "Ag"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Ca",
+            "name": "Coding Agent",
+            "family": "agents",
+            "row": 7,
+            "col": 15,
+            "theme": "future",
+            "year": 2024,
+            "approx": true,
+            "older": false,
+            "def": "An agent that writes, tests and fixes code across a codebase with minimal human input.",
+            "talk": "If AI writes the code, which coding skills should people still learn?",
+            "links": [
+                "Vc",
+                "Cp",
+                "Ag"
+            ],
+            "benchmark": "assessment_integrity"
+        },
+        {
+            "sym": "Rp",
+            "name": "Robotic Process Automation",
+            "family": "automation",
+            "row": 2,
+            "col": 16,
+            "theme": "future",
+            "year": 2012,
+            "approx": true,
+            "older": false,
+            "def": "Software bots that mimic human clicks and keystrokes to complete rule-based, repetitive tasks (RPA).",
+            "talk": "Which boring, repetitive task at school would you hand to a bot? What could go wrong?",
+            "links": [
+                "Ia",
+                "Dw",
+                "St"
+            ]
+        },
+        {
+            "sym": "Ia",
+            "name": "Intelligent Automation",
+            "family": "automation",
+            "row": 2,
+            "col": 17,
+            "theme": "future",
+            "year": 2017,
+            "approx": true,
+            "older": false,
+            "def": "Mixing simple software bots with AI that can read and make decisions, so computers can handle jobs that need some judgement, not just fixed rules.",
+            "talk": "Pick a job a person does at school, such as marking or answering the office phone. What would we gain and lose if a machine did it?",
+            "links": [
+                "Rp",
+                "Hy",
+                "Id"
+            ]
+        },
+        {
+            "sym": "Hy",
+            "name": "Hyperautomation",
+            "family": "automation",
+            "row": 2,
+            "col": 18,
+            "theme": "future",
+            "year": 2019,
+            "approx": false,
+            "older": false,
+            "def": "When an organisation tries to hand as many of its everyday tasks as possible to computers, using several kinds of software and AI together.",
+            "talk": "If a business automated everything it could, what should it still keep people doing?",
+            "links": [
+                "Ia",
+                "Wo",
+                "Lc"
+            ]
+        },
+        {
+            "sym": "Wo",
+            "name": "Workflow Orchestration",
+            "family": "automation",
+            "row": 3,
+            "col": 16,
+            "theme": "future",
+            "year": 2015,
+            "approx": true,
+            "older": false,
+            "def": "Coordinating the sequence of tasks, systems and people in an end-to-end business process.",
+            "talk": "Map how a lost-property report travels around your school. Where could automation help, and where would a person be better?",
+            "links": [
+                "Or",
+                "Tg",
+                "Hy"
+            ]
+        },
+        {
+            "sym": "Tg",
+            "name": "Trigger",
+            "family": "automation",
+            "row": 3,
+            "col": 17,
+            "theme": "future",
+            "year": 2010,
+            "approx": true,
+            "older": true,
+            "def": "The event that starts an automation — a new email, a form submission, a scheduled time.",
+            "talk": "Design a helpful automation: “When this happens, do that.” What could make it go wrong?",
+            "links": [
+                "En",
+                "Wh"
+            ]
+        },
+        {
+            "sym": "En",
+            "name": "Event-Driven Automation",
+            "family": "automation",
+            "row": 3,
+            "col": 18,
+            "theme": "future",
+            "year": 2005,
+            "approx": true,
+            "older": false,
+            "def": "Workflows that react instantly to events happening in other systems, rather than running on a schedule.",
+            "talk": "Should an app act the instant something happens, or wait for a person to check first? When?",
+            "links": [
+                "Tg",
+                "Wh",
+                "Wo"
+            ]
+        },
+        {
+            "sym": "Ap",
+            "name": "API Integration",
+            "family": "automation",
+            "row": 4,
+            "col": 16,
+            "theme": "future",
+            "year": 2000,
+            "approx": true,
+            "older": false,
+            "def": "Connecting apps so they pass information and actions to each other automatically, through their APIs: the doors one program opens for another.",
+            "talk": "Which of your information would you be happy for apps to share automatically, and which not?",
+            "links": [
+                "Fn",
+                "Wh",
+                "Mc"
+            ]
+        },
+        {
+            "sym": "Wh",
+            "name": "Webhook",
+            "family": "automation",
+            "row": 4,
+            "col": 17,
+            "theme": "future",
+            "year": 2007,
+            "approx": false,
+            "older": false,
+            "def": "A message one app sends to another the moment something happens — often used to kick off a workflow.",
+            "talk": "An app sends a message the moment you do something. What information might it be sharing?",
+            "links": [
+                "Ap",
+                "Tg",
+                "En"
+            ]
+        },
+        {
+            "sym": "Lc",
+            "name": "Low-Code / No-Code",
+            "family": "automation",
+            "row": 4,
+            "col": 18,
+            "theme": "creative",
+            "year": 2014,
+            "approx": false,
+            "older": false,
+            "def": "Building apps and automations with visual, drag-and-drop tools and little or no hand-written code.",
+            "talk": "If anyone can build an app without coding, who makes sure it is safe and fair?",
+            "links": [
+                "Vc",
+                "Wo"
+            ]
+        },
+        {
+            "sym": "Id",
+            "name": "Intelligent Document Processing",
+            "family": "automation",
+            "row": 5,
+            "col": 16,
+            "theme": "future",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "Using AI to capture, classify and extract data from documents such as invoices, forms and contracts (IDP).",
+            "talk": "An AI reads and sorts school forms. What could go wrong if it misreads one?",
+            "links": [
+                "Oc",
+                "St",
+                "Ia"
+            ]
+        },
+        {
+            "sym": "Oc",
+            "name": "Optical Character Recognition",
+            "family": "automation",
+            "row": 5,
+            "col": 17,
+            "theme": "future",
+            "year": 1955,
+            "approx": true,
+            "older": false,
+            "def": "Converting images of text, such as scans or photos, into machine-readable text (OCR).",
+            "talk": "Try reading messy handwriting. Why might a computer find it hard, and whose handwriting might it struggle with most?",
+            "links": [
+                "Id",
+                "Cv"
+            ]
+        },
+        {
+            "sym": "Mi",
+            "name": "Process Mining",
+            "family": "automation",
+            "row": 5,
+            "col": 18,
+            "theme": "future",
+            "year": 1999,
+            "approx": true,
+            "older": false,
+            "def": "Using the records computers keep to see how work really gets done, where it slows down, and which steps could be automated.",
+            "talk": "If software watches how work really gets done, how could that help people, and how could it feel like being watched?",
+            "links": [
+                "Wo",
+                "Ps"
+            ]
+        },
+        {
+            "sym": "Be",
+            "name": "Business Rules Engine",
+            "family": "automation",
+            "row": 6,
+            "col": 16,
+            "theme": "future",
+            "year": 1995,
+            "approx": true,
+            "older": false,
+            "def": "Software that applies predefined if-then logic to make consistent, automated decisions.",
+            "talk": "Write three if-then rules for a school canteen. Which cases would your rules get wrong?",
+            "links": [
+                "St",
+                "Rp"
+            ]
+        },
+        {
+            "sym": "St",
+            "name": "Straight-Through Processing",
+            "family": "automation",
+            "row": 6,
+            "col": 17,
+            "theme": "future",
+            "year": 1995,
+            "approx": true,
+            "older": false,
+            "def": "When a computer handles a whole job, such as a payment or an order, from start to finish without a person checking it.",
+            "talk": "Should any decision about a person go from start to finish with no one checking it? Which ones?",
+            "links": [
+                "Rp",
+                "Be",
+                "Id"
+            ]
+        },
+        {
+            "sym": "Dw",
+            "name": "Digital Worker",
+            "family": "automation",
+            "row": 6,
+            "col": 18,
+            "theme": "future",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "A software bot or AI agent positioned as a virtual team member that handles a defined role or set of tasks.",
+            "talk": "Should a software bot be called a “worker”? What does that word suggest?",
+            "links": [
+                "Rp",
+                "Ag",
+                "Co"
+            ]
+        },
+        {
+            "sym": "Cb",
+            "name": "Chatbot",
+            "family": "automation",
+            "row": 7,
+            "col": 16,
+            "theme": "smart",
+            "year": 1994,
+            "approx": false,
+            "older": false,
+            "def": "A program that holds text or voice conversations with people, from simple scripted helpers to AI assistants. If a chatbot ever encourages you to hurt yourself or to keep secrets, stop and tell a trusted adult. You can talk to Childline on 0800 1111 or Samaritans on 116 123, free, any time.",
+            "talk": "How is talking to a chatbot different from talking to a friend or a teacher?",
+            "links": [
+                "Ll",
+                "Va",
+                "Gr"
+            ],
+            "benchmark": "safe_adoption",
+            "safeguarding": true
+        },
+        {
+            "sym": "Va",
+            "name": "Virtual Assistant",
+            "family": "automation",
+            "row": 7,
+            "col": 17,
+            "theme": "safe",
+            "year": 2011,
+            "approx": true,
+            "older": false,
+            "def": "A conversational assistant that helps with tasks such as scheduling, searching or customer support.",
+            "talk": "What should a virtual assistant be allowed to remember about you?",
+            "links": [
+                "Cb",
+                "Ts",
+                "Np"
+            ],
+            "benchmark": "safe_adoption"
+        },
+        {
+            "sym": "Cp",
+            "name": "Copilot",
+            "family": "automation",
+            "row": 7,
+            "col": 18,
+            "theme": "future",
+            "year": 2021,
+            "approx": false,
+            "older": false,
+            "def": "An AI assistant built into an app or workflow that works alongside you — suggesting and drafting rather than acting alone.",
+            "talk": "Is work done with a copilot still your own work? Where would you draw the line?",
+            "links": [
+                "Ca",
+                "Cb",
+                "Hi"
+            ],
+            "benchmark": "assessment_integrity"
+        },
+        {
+            "sym": "Rs",
+            "name": "Responsible AI",
+            "family": "governance",
+            "row": 10,
+            "col": 4,
+            "theme": "responsible",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "Developing and using AI in ways that are safe, fair, transparent and accountable.",
+            "talk": "Write three rules for using AI responsibly in your school.",
+            "links": [
+                "Et",
+                "Fa",
+                "Xa",
+                "Sf"
+            ],
+            "benchmark": "bias_equality"
+        },
+        {
+            "sym": "Et",
+            "name": "AI Ethics",
+            "family": "governance",
+            "row": 10,
+            "col": 5,
+            "theme": "responsible",
+            "year": 2016,
+            "approx": true,
+            "older": false,
+            "def": "The moral principles guiding how AI is designed and used, from consent to wider societal impact.",
+            "talk": "Who should decide what is right and wrong for AI: the companies, governments or the public?",
+            "links": [
+                "Rs",
+                "Bi",
+                "Fa",
+                "Hp"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Bi",
+            "name": "Bias",
+            "family": "governance",
+            "row": 10,
+            "col": 6,
+            "theme": "responsible",
+            "year": 1996,
+            "approx": false,
+            "older": true,
+            "def": "When an AI keeps treating some groups of people unfairly, often because the data it learned from was unbalanced.",
+            "talk": "Where could bias in an AI cause real harm, for example in jobs, policing or exam results?",
+            "links": [
+                "Fa",
+                "Sd",
+                "Et"
+            ],
+            "benchmark": "bias_equality"
+        },
+        {
+            "sym": "Fa",
+            "name": "Fairness",
+            "family": "governance",
+            "row": 10,
+            "col": 7,
+            "theme": "responsible",
+            "year": 2012,
+            "approx": false,
+            "older": true,
+            "def": "Making sure an AI system’s outcomes don’t unjustly favour or disadvantage particular people or groups.",
+            "talk": "Is it fair if an AI is right 95% of the time, but is wrong most often for one group?",
+            "links": [
+                "Bi",
+                "Rs"
+            ],
+            "benchmark": "bias_equality"
+        },
+        {
+            "sym": "Xa",
+            "name": "Explainability",
+            "family": "governance",
+            "row": 10,
+            "col": 8,
+            "theme": "responsible",
+            "year": 2004,
+            "approx": false,
+            "older": false,
+            "def": "Techniques that make it understandable why a model produced a particular output — often called XAI.",
+            "talk": "Which decisions about you would you want explained, and who should do the explaining?",
+            "links": [
+                "Tn",
+                "Mp",
+                "Ha"
+            ],
+            "benchmark": "bias_equality"
+        },
+        {
+            "sym": "Tn",
+            "name": "Transparency",
+            "family": "governance",
+            "row": 10,
+            "col": 9,
+            "theme": "responsible",
+            "year": 2016,
+            "approx": true,
+            "older": true,
+            "def": "Being open about when AI is being used, how it works and what data it relies on.",
+            "talk": "When does it matter most to know you are talking to an AI, and when might it not matter?",
+            "links": [
+                "Xa",
+                "Wm",
+                "Aw"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "An",
+            "name": "Alignment",
+            "family": "governance",
+            "row": 10,
+            "col": 10,
+            "theme": "safe",
+            "year": 2014,
+            "approx": true,
+            "older": false,
+            "def": "Ensuring an AI system’s goals and behaviour match human intentions and values.",
+            "talk": "How would you check that an AI is really doing what people want, not just what they asked?",
+            "links": [
+                "Sf",
+                "Rl",
+                "Rd"
+            ]
+        },
+        {
+            "sym": "Gr",
+            "name": "Guardrails",
+            "family": "governance",
+            "row": 10,
+            "col": 11,
+            "theme": "safe",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "Rules and filters that keep an AI system’s inputs and outputs within safe, acceptable bounds.",
+            "talk": "Should a chatbot for young people have stricter rules than one for adults? Which rules?",
+            "links": [
+                "Sf",
+                "Jb",
+                "Rd",
+                "Cb"
+            ],
+            "benchmark": "safe_adoption"
+        },
+        {
+            "sym": "Hi",
+            "name": "Human-in-the-Loop",
+            "family": "governance",
+            "row": 10,
+            "col": 12,
+            "theme": "responsible",
+            "year": 1965,
+            "approx": true,
+            "older": false,
+            "def": "Keeping a person involved to review, approve or correct AI decisions before they take effect.",
+            "talk": "Where should a person always have the final say, whatever the AI suggests?",
+            "links": [
+                "Au",
+                "Rs",
+                "Ag"
+            ],
+            "benchmark": "human_oversight"
+        },
+        {
+            "sym": "Rt",
+            "name": "Red Teaming",
+            "family": "governance",
+            "row": 10,
+            "col": 13,
+            "theme": "safe",
+            "year": 2022,
+            "approx": true,
+            "older": true,
+            "def": "Deliberately attacking or stress-testing an AI system to uncover vulnerabilities and harmful behaviour.",
+            "talk": "Why might a company pay people to try to break its own AI?",
+            "links": [
+                "Ev",
+                "Jb",
+                "Sf"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Sf",
+            "name": "AI Safety",
+            "family": "governance",
+            "row": 10,
+            "col": 14,
+            "theme": "safe",
+            "year": 2011,
+            "approx": true,
+            "older": false,
+            "def": "Research and practice aimed at preventing AI systems from causing accidental or deliberate harm.",
+            "talk": "What is the biggest risk from AI in your life, and who should be working on it?",
+            "links": [
+                "An",
+                "Gr",
+                "Rt",
+                "Si"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Pv",
+            "name": "Privacy",
+            "family": "governance",
+            "row": 10,
+            "col": 15,
+            "theme": "safe",
+            "year": 1970,
+            "approx": true,
+            "older": true,
+            "def": "Protecting personal data that is used to train or is processed by AI, in line with laws such as the UK GDPR and the Data Protection Act 2018.",
+            "talk": "What would you never type into a chatbot? Why?",
+            "links": [
+                "Dg",
+                "Sh",
+                "Me"
+            ],
+            "benchmark": "privacy"
+        },
+        {
+            "sym": "Dg",
+            "name": "Data Governance",
+            "family": "governance",
+            "row": 10,
+            "col": 16,
+            "theme": "safe",
+            "year": 2005,
+            "approx": true,
+            "older": false,
+            "def": "The policies that control how data is collected, stored, accessed and used across an organisation.",
+            "talk": "Who in your school decides how pupils' data is used? How would you find out?",
+            "links": [
+                "Pv",
+                "Dp",
+                "Re"
+            ],
+            "benchmark": "privacy"
+        },
+        {
+            "sym": "Re",
+            "name": "AI Regulation",
+            "family": "governance",
+            "row": 10,
+            "col": 17,
+            "theme": "responsible",
+            "year": 2021,
+            "approx": false,
+            "older": false,
+            "def": "Laws and standards that govern AI — such as the EU AI Act, which sets rules according to a system’s level of risk.",
+            "talk": "If you could add one law about AI, what would it be?",
+            "links": [
+                "Dg",
+                "Ip",
+                "So"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Ip",
+            "name": "Copyright & IP",
+            "family": "governance",
+            "row": 10,
+            "col": 18,
+            "theme": "creative",
+            "year": 2022,
+            "approx": true,
+            "older": true,
+            "def": "Questions over who owns AI training data and AI-generated content, and how creators’ rights are protected. In the UK, creators’ work is protected by the Copyright, Designs and Patents Act 1988.",
+            "talk": "Should artists be asked, or paid, before AI learns from their work?",
+            "links": [
+                "Dk",
+                "Wm",
+                "Re",
+                "Mx"
+            ],
+            "benchmark": "assessment_integrity"
+        },
+        {
+            "sym": "Aw",
+            "name": "AI Washing",
+            "family": "governance",
+            "row": 11,
+            "col": 4,
+            "theme": "responsible",
+            "year": 2019,
+            "approx": true,
+            "older": false,
+            "def": "Exaggerating how much a product uses AI to ride the hype, such as labelling basic software “AI-powered”.",
+            "talk": "Find a product that says it is “AI-powered”. What does the AI actually do?",
+            "links": [
+                "Tn",
+                "Hp",
+                "Re"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Sh",
+            "name": "Shadow AI",
+            "family": "governance",
+            "row": 11,
+            "col": 5,
+            "theme": "safe",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "Using AI tools at work or school that haven’t been approved, which can put private data at risk.",
+            "talk": "Why might staff or students use AI tools the school has not approved? What could go wrong?",
+            "links": [
+                "Pv",
+                "Dg"
+            ],
+            "benchmark": "privacy"
+        },
+        {
+            "sym": "Hp",
+            "name": "Human Premium",
+            "family": "governance",
+            "row": 11,
+            "col": 6,
+            "theme": "creative",
+            "year": 2024,
+            "approx": true,
+            "older": false,
+            "def": "The extra value people place on work, art and services verified as made by humans.",
+            "talk": "Would you pay more for art, music or writing you knew was made by a person? Why?",
+            "links": [
+                "Sp",
+                "Ip",
+                "Et"
+            ]
+        },
+        {
+            "sym": "Wm",
+            "name": "AI Watermarking",
+            "family": "governance",
+            "row": 11,
+            "col": 7,
+            "theme": "safe",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "Hidden signals built into AI-generated images, audio, video or text so their origin can be checked later.",
+            "talk": "Should every AI-made image carry a watermark? Who would check?",
+            "links": [
+                "Dk",
+                "Ti",
+                "Tn"
+            ],
+            "benchmark": "safeguarding"
+        },
+        {
+            "sym": "So",
+            "name": "AI Sovereignty",
+            "family": "governance",
+            "row": 11,
+            "col": 8,
+            "theme": "future",
+            "year": 2024,
+            "approx": true,
+            "older": false,
+            "def": "A country’s or organisation’s ability to build, run and control its own AI, data and computing power, rather than relying on other countries or companies.",
+            "talk": "Should every country build its own AI, or share it? What are the risks either way?",
+            "links": [
+                "Re",
+                "Cd",
+                "Gp"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Rv",
+            "name": "Reverse Engineering",
+            "family": "governance",
+            "row": 11,
+            "col": 9,
+            "theme": "smart",
+            "year": 1980,
+            "approx": true,
+            "older": false,
+            "def": "Taking a finished product, program or AI model apart to work out how it was made and how it works.",
+            "talk": "Is taking something apart to see how it works always fair? When does it become copying?",
+            "links": [
+                "Mp",
+                "Mx",
+                "Ow"
+            ]
+        },
+        {
+            "sym": "Mp",
+            "name": "Mechanistic Interpretability",
+            "family": "governance",
+            "row": 11,
+            "col": 10,
+            "theme": "smart",
+            "year": 2020,
+            "approx": true,
+            "older": false,
+            "def": "Looking inside an AI model, piece by piece, to find which parts of it store particular ideas and how they lead to its answers.",
+            "talk": "Why might it matter to understand what is happening inside an AI, not just what it says?",
+            "links": [
+                "Ls",
+                "Xa",
+                "Rv",
+                "As"
+            ]
+        },
+        {
+            "sym": "As",
+            "name": "Activation Steering",
+            "family": "governance",
+            "row": 11,
+            "col": 11,
+            "theme": "smart",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "Nudging a model’s internal signals while it responds, to strengthen or weaken a particular behaviour.",
+            "talk": "If people can nudge what an AI says from the inside, who should be allowed to do it?",
+            "links": [
+                "Ls",
+                "Mp",
+                "Rd"
+            ]
+        },
+        {
+            "sym": "Mx",
+            "name": "Model Extraction",
+            "family": "governance",
+            "row": 11,
+            "col": 12,
+            "theme": "safe",
+            "year": 2016,
+            "approx": false,
+            "older": false,
+            "def": "Questioning an AI system again and again to copy its behaviour without access to its files. It can break terms of use and intellectual property law.",
+            "talk": "Someone copies an AI by asking it thousands of questions. How is that like copying homework, and how is it different?",
+            "links": [
+                "Rv",
+                "Ip",
+                "Ds"
+            ]
+        },
+        {
+            "sym": "Rd",
+            "name": "Refusal Direction",
+            "family": "governance",
+            "row": 11,
+            "col": 13,
+            "theme": "safe",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "A pattern inside a model that researchers have linked to it declining unsafe or restricted requests.",
+            "talk": "Why might researchers want to understand how an AI decides to say no?",
+            "links": [
+                "As",
+                "An",
+                "Ab"
+            ]
+        },
+        {
+            "sym": "Ab",
+            "name": "Abliteration",
+            "family": "governance",
+            "row": 11,
+            "col": 14,
+            "theme": "safe",
+            "year": 2024,
+            "approx": false,
+            "older": false,
+            "def": "Editing an AI model to strip out its safety protections, so it no longer refuses harmful requests. Doing this does not make harmful or illegal content legal.",
+            "talk": "Who should be responsible for keeping AI safe once a model is shared online?",
+            "links": [
+                "Rd",
+                "Uc",
+                "Ow"
+            ],
+            "benchmark": "safeguarding",
+            "safeguarding": true
+        },
+        {
+            "sym": "Uc",
+            "name": "Uncensored Model",
+            "family": "governance",
+            "row": 11,
+            "col": 15,
+            "theme": "safe",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "An open-weight model that has been changed so it no longer refuses harmful requests. Removing the safety rules does not make anything legal: illegal content is still illegal, whichever tool makes it.",
+            "talk": "Who is responsible for what an AI makes: the person asking, the person who changed the tool, or both?",
+            "links": [
+                "Ab",
+                "Ow",
+                "Jb"
+            ],
+            "benchmark": "safeguarding",
+            "safeguarding": true
+        },
+        {
+            "sym": "Jb",
+            "name": "Jailbreaking",
+            "family": "governance",
+            "row": 11,
+            "col": 16,
+            "theme": "safe",
+            "year": 2022,
+            "approx": true,
+            "older": false,
+            "def": "Writing prompts designed to trick an AI into ignoring its safety rules, without changing the model itself. It usually breaks the tool’s terms of use.",
+            "talk": "Why do AI tools have safety rules at all, and what could happen if anyone could switch them off?",
+            "links": [
+                "Gr",
+                "Rt",
+                "Uc"
+            ],
+            "benchmark": "safeguarding",
+            "safeguarding": true
+        },
+        {
+            "sym": "Gp",
+            "name": "GPU",
+            "family": "infra",
+            "row": 12,
+            "col": 4,
+            "theme": "responsible",
+            "year": 1999,
+            "approx": false,
+            "older": false,
+            "def": "Graphics Processing Unit: chips that run huge numbers of calculations in parallel — the workhorse of AI training and inference.",
+            "talk": "The chips that run AI are made by only a few companies. Why might that matter?",
+            "links": [
+                "Tp",
+                "Tr",
+                "Cd"
+            ]
+        },
+        {
+            "sym": "Tp",
+            "name": "TPU & Accelerators",
+            "family": "infra",
+            "row": 12,
+            "col": 5,
+            "theme": "future",
+            "year": 2016,
+            "approx": false,
+            "older": false,
+            "def": "Computer chips built just for AI. They do AI’s maths faster and use less power than ordinary chips. Google’s TPU (Tensor Processing Unit) is one example.",
+            "talk": "Why would a company design its own chips just for AI? What does that tell you about AI's cost?",
+            "links": [
+                "Gp",
+                "Ed"
+            ]
+        },
+        {
+            "sym": "Cd",
+            "name": "Cloud AI",
+            "family": "infra",
+            "row": 12,
+            "col": 6,
+            "theme": "responsible",
+            "year": 2017,
+            "approx": true,
+            "older": false,
+            "def": "AI models, compute and tools delivered on demand over the internet.",
+            "talk": "When you use an AI in the cloud, where does your data go? How could you find out?",
+            "links": [
+                "Gp",
+                "Ms",
+                "So"
+            ]
+        },
+        {
+            "sym": "Ed",
+            "name": "Edge AI",
+            "family": "infra",
+            "row": 12,
+            "col": 7,
+            "theme": "safe",
+            "year": 2017,
+            "approx": true,
+            "older": false,
+            "def": "Running AI directly on devices such as phones, cameras or sensors, rather than in the cloud.",
+            "talk": "Is it safer for AI to run on your phone rather than in the cloud? What do you gain and lose?",
+            "links": [
+                "Sm",
+                "Qz",
+                "If"
+            ]
+        },
+        {
+            "sym": "Mo",
+            "name": "MLOps",
+            "family": "infra",
+            "row": 12,
+            "col": 8,
+            "theme": "future",
+            "year": 2018,
+            "approx": true,
+            "older": false,
+            "def": "The work of keeping machine learning models working well once people are using them: updating, checking and fixing them.",
+            "talk": "An AI that worked well last year starts making mistakes. Why might that happen, and who should notice?",
+            "links": [
+                "Lo",
+                "Ms",
+                "Dp"
+            ]
+        },
+        {
+            "sym": "Lo",
+            "name": "LLMOps",
+            "family": "infra",
+            "row": 12,
+            "col": 9,
+            "theme": "future",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "The everyday work of running large language model tools well: keeping track of prompts, testing the answers, watching the costs and spotting harmful output.",
+            "talk": "How would you check that a school chatbot is still giving safe answers every week?",
+            "links": [
+                "Mo",
+                "Ev",
+                "Ll"
+            ]
+        },
+        {
+            "sym": "Vd",
+            "name": "Vector Database",
+            "family": "infra",
+            "row": 12,
+            "col": 10,
+            "theme": "smart",
+            "year": 2019,
+            "approx": true,
+            "older": false,
+            "def": "A database that stores information as lists of numbers (embeddings), so it can quickly find things with a similar meaning. Many chatbots use one to look things up before they answer.",
+            "talk": "If an AI looks up answers in a database, what happens when the database is out of date?",
+            "links": [
+                "Em",
+                "Rg"
+            ]
+        },
+        {
+            "sym": "Ms",
+            "name": "Model Serving",
+            "family": "infra",
+            "row": 12,
+            "col": 11,
+            "theme": "future",
+            "year": 2016,
+            "approx": true,
+            "older": false,
+            "def": "The computers and software that run a trained model and answer requests from many people at once.",
+            "talk": "What happens to an app when millions of people ask it questions at once?",
+            "links": [
+                "If",
+                "Mo",
+                "Cd"
+            ]
+        },
+        {
+            "sym": "Qz",
+            "name": "Quantisation",
+            "family": "infra",
+            "row": 12,
+            "col": 12,
+            "theme": "future",
+            "year": 2016,
+            "approx": true,
+            "older": false,
+            "def": "Shrinking a model by storing its numbers at lower precision, making it faster and cheaper to run.",
+            "talk": "Would you choose a smaller, faster AI on your phone or a bigger one in the cloud? Why?",
+            "links": [
+                "Pm",
+                "Sm",
+                "Ed"
+            ]
+        },
+        {
+            "sym": "Ds",
+            "name": "Distillation",
+            "family": "infra",
+            "row": 12,
+            "col": 13,
+            "theme": "future",
+            "year": 2015,
+            "approx": false,
+            "older": false,
+            "def": "Training a smaller “student” model to mimic the behaviour of a larger “teacher” model.",
+            "talk": "A small model learns by copying a big one. What good and bad habits might it pick up?",
+            "links": [
+                "Sm",
+                "Mx",
+                "Md"
+            ]
+        },
+        {
+            "sym": "Ow",
+            "name": "Open-Weight Model",
+            "family": "infra",
+            "row": 12,
+            "col": 14,
+            "theme": "responsible",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "A model whose trained parameters are publicly released, so anyone can run, study or adapt it, usually under a licence that sets some rules. Sharing it openly helps research, but also lets people remove its safety features.",
+            "talk": "Should powerful AI models be free for anyone to download and change? Argue both sides.",
+            "links": [
+                "Fm",
+                "Rv",
+                "Uc"
+            ]
+        },
+        {
+            "sym": "Sm",
+            "name": "Small Language Model",
+            "family": "infra",
+            "row": 12,
+            "col": 15,
+            "theme": "future",
+            "year": 2023,
+            "approx": true,
+            "older": false,
+            "def": "A compact language model designed to run quickly and cheaply, often directly on a device.",
+            "talk": "Why might a school prefer an AI that runs on its own computers rather than in the cloud?",
+            "links": [
+                "Ds",
+                "Qz",
+                "Ed"
+            ]
+        },
+        {
+            "sym": "Ev",
+            "name": "Evals",
+            "family": "infra",
+            "row": 12,
+            "col": 16,
+            "theme": "safe",
+            "year": 2023,
+            "approx": false,
+            "older": false,
+            "def": "Structured tests that measure a model’s accuracy, safety and behaviour on specific tasks.",
+            "talk": "How would you test an AI homework helper before letting a class use it?",
+            "links": [
+                "Rt",
+                "Of",
+                "Lo"
+            ],
+            "benchmark": "governance"
+        },
+        {
+            "sym": "Sl",
+            "name": "Scaling Laws",
+            "family": "infra",
+            "row": 12,
+            "col": 17,
+            "theme": "future",
+            "year": 2020,
+            "approx": false,
+            "older": false,
+            "def": "The pattern researchers have seen that AI models tend to get better, in a predictable way, when they are made bigger and trained on more data with more computing power.",
+            "talk": "If bigger AI keeps getting better, should we keep building bigger? What are the costs?",
+            "links": [
+                "Pm",
+                "Gp",
+                "Agi"
+            ]
+        },
+        {
+            "sym": "Dp",
+            "name": "Data Pipeline",
+            "family": "infra",
+            "row": 12,
+            "col": 18,
+            "theme": "responsible",
+            "year": 2010,
+            "approx": true,
+            "older": false,
+            "def": "The automated flow that collects, cleans and prepares data for training and analysis.",
+            "talk": "Data is collected, cleaned and fed to AI. At which step could mistakes or bias creep in?",
+            "links": [
+                "Dg",
+                "Mo",
+                "Tr"
+            ]
+        }
+    ]
+}

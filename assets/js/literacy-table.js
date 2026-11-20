@@ -1776,21 +1776,102 @@
 			}
 		} );
 
+		// Share: the device's own share sheet where there is one (phones, Safari), otherwise a row of share links
+		// (LinkedIn, X, Facebook, WhatsApp, email, copy link) under the element.
+		var shareButton = root.querySelector( '[data-alpt-share]' );
+		var shareMenu = root.querySelector( '[data-alpt-share-menu]' );
 		var copyButton = root.querySelector( '[data-alpt-copy]' );
-		if ( copyButton && navigator.clipboard && window.isSecureContext !== false ) {
-			copyButton.hidden = false;
+		var shareInfo = function () {
+			var el = elements[ current ];
+			return {
+				url: window.location.origin + window.location.pathname + '#element-' + el[ 0 ].toLowerCase(),
+				title: el[ 0 ] + ' · ' + el[ 1 ] + ' | The AI Literacy Periodic Table',
+				text: el[ 1 ] + ': ' + el[ 3 ] + ' From the AI Literacy Periodic Table by AI Awareness Day.'
+			};
+		};
+		var closeShare = function ( refocus ) {
+			if ( ! shareMenu || shareMenu.hidden ) {
+				return;
+			}
+			shareMenu.hidden = true;
+			shareButton.setAttribute( 'aria-expanded', 'false' );
+			if ( refocus ) {
+				shareButton.focus();
+			}
+		};
+		var fillShare = function () {
+			var info = shareInfo();
+			var u = encodeURIComponent( info.url );
+			var t = encodeURIComponent( info.title );
+			var links = {
+				linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + u,
+				x: 'https://x.com/intent/post?text=' + encodeURIComponent( info.text ) + '&url=' + u,
+				facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + u,
+				whatsapp: 'https://wa.me/?text=' + encodeURIComponent( info.text + ' ' + info.url ),
+				email: 'mailto:?subject=' + t + '&body=' + encodeURIComponent( info.text + '\n\n' + info.url )
+			};
+			Array.prototype.forEach.call( shareMenu.querySelectorAll( '[data-alpt-share-to]' ), function ( a ) {
+				a.href = links[ a.getAttribute( 'data-alpt-share-to' ) ];
+			} );
+		};
+		if ( shareButton && shareMenu ) {
+			shareButton.addEventListener( 'click', function () {
+				var info = shareInfo();
+				if ( navigator.share && ( ! navigator.canShare || navigator.canShare( { url: info.url } ) ) ) {
+					navigator.share( { title: info.title, text: info.text, url: info.url } ).catch( function () {} );
+					return;
+				}
+				if ( shareMenu.hidden ) {
+					fillShare();
+					shareMenu.hidden = false;
+					shareButton.setAttribute( 'aria-expanded', 'true' );
+					var first = shareMenu.querySelector( 'a, button' );
+					if ( first ) {
+						first.focus();
+					}
+				} else {
+					closeShare( true );
+				}
+			} );
+			shareMenu.addEventListener( 'keydown', function ( event ) {
+				if ( 'Escape' === event.key ) {
+					event.stopPropagation();
+					closeShare( true );
+				}
+			} );
+			shareMenu.addEventListener( 'click', function ( event ) {
+				if ( event.target.closest( '[data-alpt-share-to]' ) ) {
+					window.setTimeout( closeShare, 0 );
+				}
+			} );
+			// A different element, or closing the panel, closes the menu.
+			var shareName = root.querySelector( '.alpt-panel [data-alpt-out="name"]' );
+			if ( shareName && window.MutationObserver ) {
+				new MutationObserver( function () {
+					closeShare();
+				} ).observe( shareName, { childList: true, characterData: true, subtree: true } );
+			}
+		}
+		if ( copyButton ) {
 			var copyLabel = copyButton.textContent;
 			var copyTimer = null;
 			copyButton.addEventListener( 'click', function () {
-				var url = window.location.href.split( '#' )[ 0 ] + '#element-' + elements[ current ][ 0 ].toLowerCase();
-				navigator.clipboard.writeText( url ).then( function () {
+				var url = shareInfo().url;
+				var done = function () {
 					copyButton.textContent = 'Link copied';
 					status.textContent = 'Link to ' + elements[ current ][ 1 ] + ' copied.';
 					window.clearTimeout( copyTimer );
 					copyTimer = window.setTimeout( function () {
 						copyButton.textContent = copyLabel;
 					}, 2500 );
-				} ).catch( function () {} );
+				};
+				if ( navigator.clipboard && window.isSecureContext !== false ) {
+					navigator.clipboard.writeText( url ).then( done ).catch( function () {
+						window.prompt( 'Copy this link:', url );
+					} );
+				} else {
+					window.prompt( 'Copy this link:', url );
+				}
 			} );
 		}
 
@@ -2265,6 +2346,16 @@
 				current = t.label;
 			}
 		} );
+		// While an element is open and its card crosses the line under the bar, name the element instead.
+		var panel = root.classList.contains( 'is-detail-open' ) ? root.querySelector( '.alpt-panel' ) : null;
+		if ( panel && panel.offsetParent ) {
+			var box = panel.getBoundingClientRect();
+			var name = panel.querySelector( '[data-alpt-out="name"]' );
+			var sym = panel.querySelector( '[data-alpt-out="sym"]' );
+			if ( name && box.top < window.innerHeight * 0.5 && box.bottom > line + 80 ) {
+				current = ( sym && sym.textContent.trim() ? sym.textContent.trim() + ' · ' : '' ) + name.textContent.trim();
+			}
+		}
 		if ( here.textContent !== current ) {
 			here.textContent = current;
 		}
@@ -2279,6 +2370,11 @@
 
 	window.addEventListener( 'scroll', onScroll, { passive: true } );
 	window.addEventListener( 'resize', onScroll );
+	// Previous, Next and the arrow keys change the open element without scrolling.
+	var shownName = root.querySelector( '.alpt-panel [data-alpt-out="name"]' );
+	if ( shownName && window.MutationObserver ) {
+		new MutationObserver( onScroll ).observe( shownName, { childList: true, characterData: true, subtree: true } );
+	}
 	if ( phone.addEventListener ) {
 		phone.addEventListener( 'change', onScroll );
 	}

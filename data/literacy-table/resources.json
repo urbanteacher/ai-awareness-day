@@ -1,0 +1,444 @@
+{
+    "schema": "aiad.literacy-table/1",
+    "kind": "resources",
+    "about": "The \"Learn more\" links: site posts by post type and slug. Unpublished ones are left out of the page.",
+    "resources": [
+        {
+            "post_type": "resource",
+            "slug": "ai-is-already-here",
+            "kind": "lesson",
+            "elements": [
+                "Ai"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "resource",
+            "slug": "how-ai-actually-works-bbc-ideas",
+            "kind": "lesson",
+            "elements": [
+                "Ml",
+                "Nn"
+            ],
+            "issues": [
+                "prediction"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "how-does-ai-actually-think",
+            "kind": "lesson",
+            "elements": [
+                "Ll"
+            ],
+            "issues": [
+                "pattern",
+                "prediction"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "ai-relationships-easier-than-the-real-thing",
+            "kind": "lesson",
+            "elements": [
+                "Cb"
+            ],
+            "issues": [
+                "ai-companion",
+                "wellbeing"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "whos-really-behind-the-screen",
+            "kind": "lesson",
+            "elements": [
+                "Cb",
+                "Dk"
+            ],
+            "issues": [
+                "trust"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "ai-as-your-creative-partner",
+            "kind": "lesson",
+            "elements": [
+                "Ga"
+            ],
+            "issues": [
+                "creativity",
+                "your-own-voice"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "the-hidden-costs-of-ai",
+            "kind": "lesson",
+            "elements": [
+                "Gp",
+                "Cd"
+            ],
+            "issues": [
+                "environmental-impact",
+                "hidden-workers"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "how-ai-uses-our-drinking-water-bbc",
+            "kind": "lesson",
+            "elements": [
+                "Cd"
+            ],
+            "issues": [
+                "environmental-impact"
+            ]
+        },
+        {
+            "post_type": "resource",
+            "slug": "your-ai-ready-future",
+            "kind": "lesson",
+            "elements": [
+                "Dw"
+            ],
+            "issues": [
+                "future-of-work"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "misinformation-detector-teachers",
+            "kind": "tool",
+            "elements": [
+                "Dk",
+                "Gv"
+            ],
+            "issues": [
+                "misinformation",
+                "fact-checking",
+                "disinformation"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "15-ai-buzzwords-teachers-2026",
+            "kind": "tool",
+            "elements": [
+                "Ac",
+                "Ag",
+                "Vc",
+                "Rm",
+                "Pe",
+                "Mm",
+                "Ha",
+                "Cw",
+                "Sp",
+                "Si",
+                "Rg",
+                "Aw",
+                "Ds",
+                "Hi",
+                "Ce"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "timeline",
+            "slug": "ai-speed-quiz-for-teachers",
+            "kind": "tool",
+            "elements": [
+                "Ai"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "timeline",
+            "slug": "how-does-a-large-language-model-work",
+            "kind": "article",
+            "elements": [
+                "Ll",
+                "Tf",
+                "Tk"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "timeline",
+            "slug": "%f0%9f%94%a5%f0%9f%94%a5teachers-have-you-heard-of-ai-agents-yet%f0%9f%94%a5%f0%9f%94%a5",
+            "kind": "article",
+            "elements": [
+                "Ag",
+                "Ac"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "timeline",
+            "slug": "beyond-the-holy-grail",
+            "kind": "article",
+            "elements": [
+                "Ll"
+            ],
+            "issues": [
+                "critical-thinking"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "two-out-of-three-principle",
+            "kind": "article",
+            "elements": [
+                "Hi"
+            ],
+            "issues": [
+                "human-review"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "ai-tutors",
+            "kind": "article",
+            "elements": [
+                "Rm"
+            ],
+            "issues": [
+                "ai-tutor",
+                "over-reliance"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "ai-mental-health-student-perspective-student-voice",
+            "kind": "article",
+            "elements": [
+                "Cb"
+            ],
+            "issues": [
+                "wellbeing",
+                "ai-companion"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "social-media-ban",
+            "kind": "article",
+            "elements": [
+                "Rc"
+            ],
+            "issues": [
+                "age-limits",
+                "wellbeing"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "parent-tips",
+            "kind": "article",
+            "elements": [],
+            "issues": [
+                "age-limits",
+                "personal-information"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "human-bottleneck-ai-workplace",
+            "kind": "article",
+            "elements": [
+                "Hi"
+            ],
+            "issues": [
+                "future-of-work",
+                "human-skills"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "milburn-review-ai-work-readiness",
+            "kind": "article",
+            "elements": [],
+            "issues": [
+                "future-of-work",
+                "lifelong-learning"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "the-skills-england-report",
+            "kind": "article",
+            "elements": [],
+            "issues": [
+                "future-of-work",
+                "adaptability"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "stop-asking-if-students-should-use-ai-start-asking-how-students-perspective",
+            "kind": "article",
+            "elements": [],
+            "issues": [
+                "academic-integrity",
+                "youth-voice"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "the-future-of-ai-through-a-students-perspective",
+            "kind": "article",
+            "elements": [
+                "Agi"
+            ],
+            "issues": [
+                "youth-voice"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "ai-in-healthcare-a-helpful-tool-or-a-risk",
+            "kind": "article",
+            "elements": [
+                "Pa"
+            ],
+            "issues": [
+                "discovery"
+            ]
+        },
+        {
+            "post_type": "timeline",
+            "slug": "english-premier-league",
+            "kind": "article",
+            "elements": [
+                "Cv",
+                "Pa"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "timeline",
+            "slug": "is-ai-killing-computer-science-in-uk-schools",
+            "kind": "article",
+            "elements": [
+                "Vc",
+                "Ca"
+            ],
+            "issues": [
+                "future-of-work"
+            ]
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "spot-the-deepfake",
+            "kind": "partner",
+            "elements": [
+                "Dk"
+            ],
+            "issues": [
+                "disinformation"
+            ]
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "quiz-ai-or-real",
+            "kind": "partner",
+            "elements": [
+                "Ti",
+                "Gv"
+            ],
+            "issues": [
+                "fact-checking"
+            ]
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "harmony-square",
+            "kind": "partner",
+            "elements": [],
+            "issues": [
+                "disinformation",
+                "misinformation"
+            ]
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "teachable-machine",
+            "kind": "partner",
+            "elements": [
+                "Ml",
+                "Su",
+                "Cl"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "quick-draw",
+            "kind": "partner",
+            "elements": [
+                "Cv",
+                "Nn"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "turing-test-live",
+            "kind": "partner",
+            "elements": [
+                "Cb",
+                "Agi"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "emoji-scavenger-hunt",
+            "kind": "partner",
+            "elements": [
+                "Cv"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "defend-the-rhino-with-ai",
+            "kind": "partner",
+            "elements": [
+                "Cv",
+                "Ad"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "how-could-ai-affect-your-job",
+            "kind": "partner",
+            "elements": [
+                "Dw"
+            ],
+            "issues": [
+                "future-of-work"
+            ]
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "ai-quests",
+            "kind": "partner",
+            "elements": [
+                "Ml"
+            ],
+            "issues": []
+        },
+        {
+            "post_type": "featured_resource",
+            "slug": "alexa-skill-blueprints",
+            "kind": "partner",
+            "elements": [
+                "Va"
+            ],
+            "issues": []
+        }
+    ]
+}
