@@ -5053,6 +5053,14 @@ html.alpt-board-open {
 
 .alpt-panel__tile.has-pic .alpt-panel__tile-name {
   display: block;
+  /* The tile is picture-sized now, so the name and number are sized to it, not to the old small tile. */
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.alpt-panel__tile.has-pic .alpt-panel__n {
+  font-size: 1.15rem;
 }
 
 .alpt-panel__tile.is-flipped {
@@ -5144,8 +5152,5 @@ html.alpt-board-open {
     font-size: 5.4rem;
   }
 
-  .alpt-panel__tile.has-pic .alpt-panel__n,
-  .alpt-panel__tile.has-pic .alpt-panel__tile-name {
-    font-size: 1.05rem;
-  }
+
 }
