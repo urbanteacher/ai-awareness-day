@@ -24,6 +24,14 @@
 		var elements = data.elements; // [ sym, name, family, def, id ]
 		var families = data.families;
 		var tiles = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-el]' ) );
+		// Shows a part of the table if it is on the page. Editable pages can drop parts, and one missing part must
+		// not stop the rest of the table working.
+		function unhide( selector ) {
+			var node = root.querySelector( selector );
+			if ( node ) {
+				node.hidden = false;
+			}
+		}
 
 		// Tile names: a whole word moves to the next line rather than splitting ("Data / Governance", not
 		// "Data Gover- / nance"). Each name carries soft hyphens from the server; here they are kept only in words too
@@ -108,7 +116,7 @@
 		elements.forEach( function ( el, i ) {
 			symIndex[ el[ 0 ] ] = i;
 		} );
-		initBuzzwordQuiz( root, elements, symIndex );
+		initBuzzwordQuiz( root, elements, symIndex, data.quiz );
 		var linksOut = root.querySelector( '[data-alpt-links-out]' );
 		var linksList = root.querySelector( '[data-alpt-links-list]' );
 		var linksCompounds = root.querySelector( '[data-alpt-links-compounds]' );
@@ -138,26 +146,48 @@
 			actions.prepend( explore );
 		}
 		if ( actions ) {
-			actions.querySelector( '[href="#alpt-explore"]' ).addEventListener( 'click', function ( event ) {
+			actions.querySelector( '[href="#alpt-explore"]' )?.addEventListener( 'click', function ( event ) {
 				event.preventDefault();
 				root.scrollIntoView( { block: 'start' } );
 				search.focus( { preventScroll: true } );
 			} );
 		}
 		panel.tabIndex = -1;
-		root.querySelector( '[data-alpt-dismiss]' ).addEventListener( 'click', function () {
+		root.querySelector( '[data-alpt-dismiss]' )?.addEventListener( 'click', function () {
 			root.classList.remove( 'is-detail-open' );
 			tiles[ current ].focus();
 		} );
 		// Esc closes the panel on narrower screens too, like Back to elements (the board handles its own Esc).
 		root.addEventListener( 'keydown', function ( event ) {
-			if ( 'Escape' === event.key && narrow.matches && root.classList.contains( 'is-detail-open' ) && ! event.target.closest( '.alpt-board' ) ) {
+			if ( 'Escape' !== event.key || event.target.closest( '.alpt-board' ) ) {
+				return;
+			}
+			if ( narrow.matches && root.classList.contains( 'is-detail-open' ) ) {
 				root.classList.remove( 'is-detail-open' );
+				tiles[ current ].focus();
+			} else if ( ! narrow.matches && panel.contains( event.target ) && tiles[ current ] ) {
+				// On wide screens Esc in the panel goes back to the tile it shows.
 				tiles[ current ].focus();
 			}
 		} );
-		root.querySelector( '[data-alpt-controls]' ).hidden = false;
-		root.querySelector( '[data-alpt-nav]' ).hidden = false;
+		// On tablets the panel is a drawer over the bottom of the screen: a tile reached with Tab is scrolled
+		// up so it isn't hidden behind it.
+		root.addEventListener( 'focusin', function ( event ) {
+			var tile = event.target.closest ? event.target.closest( '[data-alpt-el]' ) : null;
+			if ( ! tile || ! tablet.matches || ! root.classList.contains( 'is-detail-open' ) ) {
+				return;
+			}
+			// After the browser's own scroll to the focused tile.
+			window.requestAnimationFrame( function () {
+				var drawerTop = window.innerHeight - panel.offsetHeight;
+				var box = tile.getBoundingClientRect();
+				if ( box.bottom > drawerTop - 8 ) {
+					window.scrollBy( { top: box.bottom - drawerTop + 24, behavior: 'instant' } );
+				}
+			} );
+		} );
+		unhide( '[data-alpt-controls]' );
+		unhide( '[data-alpt-nav]' );
 
 		function setText( key, text ) {
 			if ( outs[ key ] ) {
@@ -562,6 +592,11 @@
 					return;
 				}
 				show( index, { updateHash: true, reveal: true } );
+				// From the keyboard (Enter gives a click with no detail count), go on into the panel beside the
+				// tiles, so Share and Previous/Next are a few Tabs away rather than past every tile. Esc comes back.
+				if ( 0 === event.detail && ! narrow.matches ) {
+					panel.focus( { preventScroll: true } );
+				}
 				return;
 			}
 			var step = event.target.closest( '[data-alpt-step]' );
@@ -741,10 +776,51 @@
 			setView( viewMatch[ 1 ], false );
 		}
 
-		// Arrow keys move between tiles in reading order.
+		// Arrow keys move between tiles: Left and Right in reading order, Up and Down to the nearest tile in the
+		// row above or below, Home and End to the first and last tile showing.
 		root.addEventListener( 'keydown', function ( event ) {
 			var tile = event.target.closest( '[data-alpt-el]' );
-			if ( ! tile || ( event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' ) ) {
+			if ( ! tile ) {
+				return;
+			}
+			var showing = function ( t ) {
+				return ! t.classList.contains( 'is-excluded' ) && null !== t.offsetParent;
+			};
+			if ( 'Home' === event.key || 'End' === event.key ) {
+				var list = tiles.filter( showing );
+				if ( list.length ) {
+					event.preventDefault();
+					list[ 'Home' === event.key ? 0 : list.length - 1 ].focus();
+				}
+				return;
+			}
+			if ( 'ArrowUp' === event.key || 'ArrowDown' === event.key ) {
+				var from = tile.getBoundingClientRect();
+				var cx = from.left + from.width / 2;
+				var down = 'ArrowDown' === event.key;
+				var best = null, bestScore = Infinity;
+				tiles.forEach( function ( t ) {
+					if ( t === tile || ! showing( t ) ) {
+						return;
+					}
+					var b = t.getBoundingClientRect();
+					var dy = down ? b.top - from.bottom : from.top - b.bottom;
+					if ( dy < -2 ) {
+						return;
+					}
+					var score = dy * 4 + Math.abs( b.left + b.width / 2 - cx );
+					if ( score < bestScore ) {
+						bestScore = score;
+						best = t;
+					}
+				} );
+				if ( best ) {
+					event.preventDefault();
+					best.focus();
+				}
+				return;
+			}
+			if ( event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' ) {
 				return;
 			}
 			var i = parseInt( tile.getAttribute( 'data-alpt-el' ), 10 ) + ( event.key === 'ArrowRight' ? 1 : -1 );
@@ -920,7 +996,9 @@
 			tiles.forEach( function ( tile, t ) {
 				tile.classList.toggle( 'is-picked', picked.indexOf( t ) !== -1 );
 			} );
-			combineButton.disabled = picked.length < 2;
+			if ( combineButton ) {
+				combineButton.disabled = picked.length < 2;
+			}
 			clearButton.disabled = ! picked.length;
 			if ( typeof renderFocus === 'function' && targetBox ) {
 				renderFocus();
@@ -1086,7 +1164,7 @@
 			}
 		}
 
-		combineButton.addEventListener( 'click', combine );
+		combineButton?.addEventListener( 'click', combine );
 		clearButton.addEventListener( 'click', function () {
 			clearHint();
 			picked = [];
@@ -1372,7 +1450,7 @@
 				? start + drop + 'The next element is in the highlighted ' + family + ' area' + ( left > 1 ? ' (' + left + ' still to find).' : '.' ) + ' Press Hint again to narrow it down.'
 				: start + drop + 'It\'s the glowing tile in ' + family + '.' );
 		}
-		root.querySelector( '[data-alpt-free-hint]' ).addEventListener( 'click', hint );
+		root.querySelector( '[data-alpt-free-hint]' )?.addEventListener( 'click', hint );
 
 		Array.prototype.forEach.call( root.querySelectorAll( '[data-alpt-target]' ), function ( button ) {
 			button.addEventListener( 'click', function () {
@@ -1380,7 +1458,7 @@
 			} );
 		} );
 		hintButton.addEventListener( 'click', hint );
-		root.querySelector( '[data-alpt-unfocus]' ).addEventListener( 'click', function () {
+		root.querySelector( '[data-alpt-unfocus]' )?.addEventListener( 'click', function () {
 			unfocus();
 			say( 'The whole table is back. Choose any elements to combine.' );
 		} );
@@ -1415,8 +1493,8 @@
 		} );
 		window.addEventListener( 'resize', setLabHeight );
 
-		root.querySelector( '[data-alpt-challenge]' ).hidden = false;
-		root.querySelector( '[data-alpt-levels]' ).hidden = false;
+		unhide( '[data-alpt-challenge]' );
+		unhide( '[data-alpt-levels]' );
 		root.classList.add( 'has-lab' );
 		setLevel( '' );
 
@@ -1524,21 +1602,38 @@
 			return out;
 		}
 
+		// Breaks at spaces and after hyphens, so "Human-in-the-Loop" can wrap.
 		function wrapLines( ctx, text, width ) {
 			var lines = [], line = '';
-			String( text ).split( /\s+/ ).forEach( function ( w ) {
-				var test = line ? line + ' ' + w : w;
-				if ( line && ctx.measureText( test ).width > width ) {
-					lines.push( line );
-					line = w;
-				} else {
-					line = test;
-				}
+			String( text ).split( /\s+/ ).forEach( function ( word ) {
+				word.split( /(?<=-)/ ).forEach( function ( bit, j ) {
+					var test = line ? line + ( 0 === j ? ' ' : '' ) + bit : bit;
+					if ( line && ctx.measureText( test ).width > width ) {
+						lines.push( line );
+						line = bit;
+					} else {
+						line = test;
+					}
+				} );
 			} );
 			if ( line ) {
 				lines.push( line );
 			}
 			return lines;
+		}
+
+		// Keeps at most max lines, ending the last with "…" when text was cut.
+		function clampLines( ctx, lines, max, width ) {
+			if ( lines.length <= max ) {
+				return lines;
+			}
+			var out = lines.slice( 0, max );
+			var last = out[ max - 1 ];
+			while ( last.length > 1 && ctx.measureText( last + '…' ).width > width ) {
+				last = last.slice( 0, -1 );
+			}
+			out[ max - 1 ] = last.replace( /[\s-]+$/, '' ) + '…';
+			return out;
 		}
 
 		function spaced( ctx, text, x, y, px ) {
@@ -1725,9 +1820,20 @@
 				ctx.lineTo( x, ty + T );
 				ctx.closePath();
 				ctx.fill();
-				var nameSize = Math.max( 18, T * 0.1 );
+				// Shrink the name until every line fits inside the tile.
+				var nameSize = Math.max( 18, T * 0.1 ), nameW = T - T * 0.2, lines;
+				var fits = function () {
+					return lines.length <= 3 && lines.every( function ( l ) {
+						return ctx.measureText( l ).width <= nameW;
+					} );
+				};
+				do {
+					ctx.font = font( 700, nameSize );
+					lines = wrapLines( ctx, e[ 1 ], nameW );
+				} while ( ! fits() && ( nameSize -= 1 ) >= 14 );
+				nameSize = Math.max( 14, nameSize );
 				ctx.font = font( 700, nameSize );
-				var lines = wrapLines( ctx, e[ 1 ], T - T * 0.2 ).slice( 0, 3 );
+				lines = clampLines( ctx, wrapLines( ctx, e[ 1 ], nameW ), 3, nameW );
 				var nameTop = ty + T - T * 0.1 - ( lines.length - 1 ) * ( nameSize + 4 ) - nameSize;
 				ctx.fillStyle = ink;
 				lines.forEach( function ( l, j ) {
@@ -1813,6 +1919,40 @@
 			return canvas;
 		}
 
+		// Cards are drawn ahead of time (when the board shows one), so the
+		// share sheet can open straight from the tap. Safari refuses to share
+		// if the tap was followed by slow work such as drawing the card.
+		var cardBlobs = {}, cardJobs = {};
+
+		function cardFonts() {
+			if ( ! document.fonts || ! document.fonts.load ) {
+				return Promise.resolve();
+			}
+			var face = getComputedStyle( document.querySelector( '.alpt-tile__sym' ) || document.body ).fontFamily;
+			return Promise.all( [ 400, 500, 600, 700 ].map( function ( w ) {
+				return document.fonts.load( w + ' 40px ' + face ).catch( function () {} );
+			} ) );
+		}
+
+		function prepareCard( index, mode ) {
+			var key = mode + ':' + index;
+			if ( ! cardJobs[ key ] ) {
+				cardJobs[ key ] = cardFonts().then( function () {
+					return new Promise( function ( resolve ) {
+						( 'compound' === mode ? drawCompoundCard( index ) : drawCard( index ) ).toBlob( resolve, 'image/png' );
+					} );
+				} ).then( function ( blob ) {
+					if ( blob ) {
+						cardBlobs[ key ] = blob;
+					} else {
+						delete cardJobs[ key ];
+					}
+					return blob;
+				} );
+			}
+			return cardJobs[ key ];
+		}
+
 		function shareCard( index, button, mode ) {
 			var compound = 'compound' === mode;
 			var item = compound ? compounds[ index ] : elements[ index ];
@@ -1833,29 +1973,48 @@
 					}
 				}, 2500 );
 			};
-			var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-			ready.then( function () {
-				( compound ? drawCompoundCard( index ) : drawCard( index ) ).toBlob( function ( blob ) {
-					if ( ! blob ) {
-						return;
+			var download = function ( blob ) {
+				var link = document.createElement( 'a' );
+				link.href = URL.createObjectURL( blob );
+				link.download = name;
+				document.body.appendChild( link );
+				link.click();
+				link.remove();
+				window.setTimeout( function () {
+					URL.revokeObjectURL( link.href );
+				}, 4000 );
+				flash( 'Card downloaded' );
+				boardSay.textContent = 'Card for ' + title + ' downloaded.';
+			};
+			var send = function ( blob ) {
+				if ( ! canShareFiles() ) {
+					download( blob );
+					return;
+				}
+				var file = new File( [ blob ], name, { type: 'image/png' } );
+				var first = String( about ).split( /(?<=[.!?])\s/ )[ 0 ];
+				navigator.share( { files: [ file ], title: title + ' | The AI Literacy Periodic Table', text: title + ': ' + first + ' ' + url } ).catch( function ( err ) {
+					// Closing the share sheet is fine; anything else falls back to a download.
+					if ( ! err || 'AbortError' !== err.name ) {
+						download( blob );
 					}
-					if ( canShareFiles() ) {
-						var file = new File( [ blob ], name, { type: 'image/png' } );
-						navigator.share( { files: [ file ], title: title + ' | The AI Literacy Periodic Table', text: title + ': ' + about + ' ' + url } ).catch( function () {} );
-						return;
-					}
-					var link = document.createElement( 'a' );
-					link.href = URL.createObjectURL( blob );
-					link.download = name;
-					document.body.appendChild( link );
-					link.click();
-					link.remove();
-					window.setTimeout( function () {
-						URL.revokeObjectURL( link.href );
-					}, 4000 );
-					flash( 'Card downloaded' );
-					boardSay.textContent = 'Card for ' + title + ' downloaded.';
-				}, 'image/png' );
+				} );
+			};
+			var ready = cardBlobs[ mode + ':' + index ];
+			if ( ready ) {
+				send( ready );
+				return;
+			}
+			flash( 'Making the card…' );
+			prepareCard( index, mode ).then( function ( blob ) {
+				if ( ! blob ) {
+					flash( 'Card could not be made' );
+					return;
+				}
+				if ( button ) {
+					button.textContent = label;
+				}
+				send( blob );
 			} );
 		}
 
@@ -1947,6 +2106,11 @@
 			} else {
 				renderBoardElement();
 			}
+			// Draw this card in the background so Share can open at once.
+			var mode = boardMode, index = boardIndex;
+			( window.requestIdleCallback || window.setTimeout )( function () {
+				prepareCard( index, mode );
+			} );
 		}
 
 		function openBoard( mode, index, opener ) {
@@ -2210,10 +2374,25 @@
 					closeShare( true );
 				}
 			} );
-			shareMenu.addEventListener( 'keydown', function ( event ) {
-				if ( 'Escape' === event.key ) {
-					event.stopPropagation();
-					closeShare( true );
+			[ shareMenu, shareButton ].forEach( function ( node ) {
+				node.addEventListener( 'keydown', function ( event ) {
+					if ( 'Escape' === event.key && ! shareMenu.hidden ) {
+						event.stopPropagation();
+						closeShare( true );
+					}
+				} );
+				// Tabbing away from the button and the menu closes it.
+				node.addEventListener( 'focusout', function ( event ) {
+					var to = event.relatedTarget;
+					if ( to && ! shareMenu.contains( to ) && to !== shareButton ) {
+						closeShare();
+					}
+				} );
+			} );
+			// So does a click anywhere else.
+			document.addEventListener( 'click', function ( event ) {
+				if ( ! shareMenu.hidden && ! shareMenu.contains( event.target ) && ! shareButton.contains( event.target ) ) {
+					closeShare();
 				}
 			} );
 			shareMenu.addEventListener( 'click', function ( event ) {
@@ -2282,30 +2461,23 @@
 	}
 
 	// "Suggest a new element": sent to aiad/v1/literacy-term (inc/literacy-table.php), which saves it for the team.
-	function initBuzzwordQuiz( root, elements, indexes ) {
+	function initBuzzwordQuiz( root, elements, indexes, quiz ) {
 		var section = root.querySelector( '.alpt-quiz' );
 		if ( ! section ) return;
 		// Each scenario's first symbol is the answer. The order on screen varies by question.
-		var questions = [
-			[ 'A chatbot recommends a journal article. The title sounds convincing, but the article has never existed. What happened?', 'Ha', 'Sp', 'Dk' ],
-			[ 'A school assistant looks up the attendance policy before drafting an answer from it. Which technique is it using?', 'Rg', 'Ft', 'Fm' ],
-			[ 'An app can describe a photograph and answer a spoken question about it. What capability does that show?', 'Mm', 'Ac', 'Sd' ],
-			[ 'Someone shares a realistic recording of a singer saying words they never spoke. What is the recording called?', 'Dk', 'Sp', 'Ha' ],
-			[ 'A pupil describes a game in everyday language, lets an AI write the code and requests changes by chatting. What is this approach called?', 'Vc', 'Ft', 'Rg' ],
-			[ 'A model breaks “unbelievable” into several pieces before processing the sentence. What is each piece called?', 'Tk', 'Cw', 'Fm' ],
-			[ 'A team adapts an existing model by training it further on labelled support tickets. Which technique is this?', 'Ft', 'Rg', 'Gr' ],
-			[ 'A long conversation exceeds the amount of text a model can consider at once. Which limit has it reached?', 'Cw', 'Tk', 'Gr' ],
-			[ 'A simulator generates fictional journeys to train a traffic model. What kind of training data are these?', 'Sd', 'Dk', 'Sp' ],
-			[ 'A feed fills up with cheaply generated, repetitive AI posts made mainly to attract clicks. Which term describes this content?', 'Sp', 'Ha', 'Sd' ],
-			[ 'Given a goal, a system plans several steps, calls tools and adjusts its plan after checking the results. What kind of AI is this?', 'Ac', 'Mm', 'Rg' ],
-			[ 'A chat service checks inputs and blocks outputs that would reveal private details. What are those safeguards called?', 'Gr', 'Ft', 'Cw' ],
-			[ 'A developer starts with a broadly trained model that can be adapted for translation, summaries or classification. What is that starting model called?', 'Fm', 'Ac', 'Tk' ],
-			[ 'A user tries to persuade a chatbot to ignore its safety rules. What is this type of attempt called?', 'Jb', 'Vc', 'Ft' ],
-			[ 'A timeline of clicks and purchases helps a system choose which film to suggest next. Which technology selects the suggestion?', 'Rc', 'Rg', 'Mm' ]
-		];
+		// The questions live in data/literacy-table/lists.json ("quiz"): the right answer first, then two others.
+		// Any question whose symbols aren't on the table is left out, so renaming an element can't break the quiz.
+		var questions = ( quiz || [] ).filter( function ( q ) {
+			return q.length === 4 && q.slice( 1 ).every( function ( sym ) {
+				return undefined !== indexes[ sym ];
+			} );
+		} );
+		if ( questions.length < 3 ) {
+			return;
+		}
 		// Each round deals ten of the questions, in a new order; the best score is remembered on this device.
 		var bank = questions.slice();
-		var ROUND = 10;
+		var ROUND = Math.min( 10, bank.length );
 		function deal() {
 			for ( var i = bank.length - 1; i > 0; i-- ) {
 				var j = Math.floor( Math.random() * ( i + 1 ) );
@@ -2425,6 +2597,11 @@
 		form.hidden = false;
 		var status = form.querySelector( '[data-alpt-suggest-status]' );
 		var button = form.querySelector( 'button[type="submit"]' );
+		// How long the visitor spent on the form: a person needs more than a few seconds to write a definition.
+		var started = 0;
+		form.addEventListener( 'focusin', function () {
+			started = started || Date.now();
+		} );
 		form.addEventListener( 'submit', function ( event ) {
 			event.preventDefault();
 			var term = form.elements.term.value.trim();
@@ -2453,6 +2630,7 @@
 			[ 'term', 'symbol', 'family', 'definition', 'why', 'name', 'role', 'credit', 'aiad_website' ].forEach( function ( key ) {
 				body[ key ] = form.elements[ key ] ? form.elements[ key ].value : '';
 			} );
+			body.elapsed = started ? Date.now() - started : 0;
 			button.disabled = true;
 			status.textContent = 'Sending…';
 			window.fetch( form.getAttribute( 'data-endpoint' ), {
@@ -2469,6 +2647,7 @@
 				status.textContent = ( result.json && result.json.message ) || ( result.ok ? 'Thank you!' : 'Sorry, that didn\'t send. Please try again.' );
 				if ( result.ok ) {
 					form.reset();
+					started = 0;
 				}
 			} ).catch( function () {
 				button.disabled = false;

@@ -179,6 +179,18 @@ function aiad_literacy_check(): array {
 	}
 
 	$seen = array();
+	foreach ( (array) ( aiad_literacy_data( 'lists' )['quiz'] ?? array() ) as $n => $q ) {
+		$q_syms = array_merge( array( (string) ( $q['answer'] ?? '' ) ), array_map( 'strval', (array) ( $q['others'] ?? array() ) ) );
+		if ( 3 !== count( $q_syms ) || '' === (string) ( $q['question'] ?? '' ) ) {
+			$warn( sprintf( 'Quiz question %d needs a question, an answer and two others. It is left out of the quiz.', $n + 1 ) );
+			continue;
+		}
+		foreach ( $q_syms as $sym ) {
+			if ( ! isset( $syms[ $sym ] ) ) {
+				$warn( sprintf( 'Quiz question %1$d uses %2$s, which is not on the table. It is left out of the quiz.', $n + 1, $sym ) );
+			}
+		}
+	}
 	foreach ( (array) ( aiad_literacy_data( 'lists' )['week_rotation'] ?? array() ) as $sym ) {
 		if ( ! isset( $syms[ $sym ] ) ) {
 			$err( sprintf( 'The word-of-the-week order names %s, which is not an element.', $sym ) );
@@ -290,7 +302,7 @@ add_action(
 			$fh = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 			fwrite( $fh, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- So Excel reads it as UTF-8.
 			foreach ( aiad_literacy_csv_rows( $what ) as $row ) {
-				fputcsv( $fh, $row );
+				fputcsv( $fh, aiad_csv_safe_row( $row ) );
 			}
 			fclose( $fh ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 			exit;
@@ -542,6 +554,9 @@ function aiad_render_literacy_admin(): void {
 				$monday = strtotime( 'monday this week', current_time( 'timestamp' ) );
 				for ( $w = 0; $w < 12; $w++ ) :
 					$week = aiad_literacy_element_of_week( $monday + $w * WEEK_IN_SECONDS );
+					if ( null === $week['el'] ) {
+						break;
+					}
 					?>
 					<tr>
 						<td><?php echo esc_html( wp_date( 'j M Y', $week['monday'] ) ); ?><?php echo 0 === $w ? ' <strong>' . esc_html__( '(this week)', 'ai-awareness-day' ) . '</strong>' : ''; ?></td>
@@ -575,4 +590,23 @@ function aiad_render_literacy_admin(): void {
 		</script>
 	</div>
 	<?php
+}
+
+if ( ! function_exists( 'aiad_csv_safe_row' ) ) {
+	/**
+	 * Stops spreadsheet formula injection: a cell that starts with = + - @, a tab or a carriage return gets a
+	 * leading apostrophe, so Excel and Google Sheets show it as text instead of running it.
+	 *
+	 * @param array<int|string, mixed> $row One CSV row.
+	 * @return array<int, string>
+	 */
+	function aiad_csv_safe_row( array $row ): array {
+		return array_map(
+			static function ( $cell ): string {
+				$cell = (string) $cell;
+				return ( '' !== $cell && false !== strpos( "=+-@\t\r", $cell[0] ) ) ? "'" . $cell : $cell;
+			},
+			array_values( $row )
+		);
+	}
 }

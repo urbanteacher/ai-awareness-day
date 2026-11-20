@@ -296,5 +296,128 @@
         "Me",
         "Re",
         "Ia"
+    ],
+    "quiz_about": "The buzzword quiz under Try it. Each question has the right answer first, then two other elements; the order on screen is shuffled. Every symbol must be on the table, or the question is left out.",
+    "quiz": [
+        {
+            "question": "A chatbot recommends a journal article. The title sounds convincing, but the article has never existed. What happened?",
+            "answer": "Ha",
+            "others": [
+                "Sp",
+                "Dk"
+            ]
+        },
+        {
+            "question": "A school assistant looks up the attendance policy before drafting an answer from it. Which technique is it using?",
+            "answer": "Rg",
+            "others": [
+                "Ft",
+                "Fm"
+            ]
+        },
+        {
+            "question": "An app can describe a photograph and answer a spoken question about it. What capability does that show?",
+            "answer": "Mm",
+            "others": [
+                "Ac",
+                "Sd"
+            ]
+        },
+        {
+            "question": "Someone shares a realistic recording of a singer saying words they never spoke. What is the recording called?",
+            "answer": "Dk",
+            "others": [
+                "Sp",
+                "Ha"
+            ]
+        },
+        {
+            "question": "A pupil describes a game in everyday language, lets an AI write the code and requests changes by chatting. What is this approach called?",
+            "answer": "Vc",
+            "others": [
+                "Ft",
+                "Rg"
+            ]
+        },
+        {
+            "question": "A model breaks “unbelievable” into several pieces before processing the sentence. What is each piece called?",
+            "answer": "Tk",
+            "others": [
+                "Cw",
+                "Fm"
+            ]
+        },
+        {
+            "question": "A team adapts an existing model by training it further on labelled support tickets. Which technique is this?",
+            "answer": "Ft",
+            "others": [
+                "Rg",
+                "Gr"
+            ]
+        },
+        {
+            "question": "A long conversation exceeds the amount of text a model can consider at once. Which limit has it reached?",
+            "answer": "Cw",
+            "others": [
+                "Tk",
+                "Gr"
+            ]
+        },
+        {
+            "question": "A simulator generates fictional journeys to train a traffic model. What kind of training data are these?",
+            "answer": "Sd",
+            "others": [
+                "Dk",
+                "Sp"
+            ]
+        },
+        {
+            "question": "A feed fills up with cheaply generated, repetitive AI posts made mainly to attract clicks. Which term describes this content?",
+            "answer": "Sp",
+            "others": [
+                "Ha",
+                "Sd"
+            ]
+        },
+        {
+            "question": "Given a goal, a system plans several steps, calls tools and adjusts its plan after checking the results. What kind of AI is this?",
+            "answer": "Ac",
+            "others": [
+                "Mm",
+                "Rg"
+            ]
+        },
+        {
+            "question": "A chat service checks inputs and blocks outputs that would reveal private details. What are those safeguards called?",
+            "answer": "Gr",
+            "others": [
+                "Ft",
+                "Cw"
+            ]
+        },
+        {
+            "question": "A developer starts with a broadly trained model that can be adapted for translation, summaries or classification. What is that starting model called?",
+            "answer": "Fm",
+            "others": [
+                "Ac",
+                "Tk"
+            ]
+        },
+        {
+            "question": "A user tries to persuade a chatbot to ignore its safety rules. What is this type of attempt called?",
+            "answer": "Jb",
+            "others": [
+                "Vc",
+                "Ft"
+            ]
+        },
+        {
+            "question": "A timeline of clicks and purchases helps a system choose which film to suggest next. Which technology selects the suggestion?",
+            "answer": "Rc",
+            "others": [
+                "Rg",
+                "Mm"
+            ]
+        }
     ]
 }

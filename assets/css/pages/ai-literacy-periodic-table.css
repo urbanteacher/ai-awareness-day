@@ -226,6 +226,12 @@
 }
 
 /* Printing needs the script, so the button shows only when it has run. */
+/* The search, filters and panel buttons need the script; the head marks the page .alpt-js before it paints. */
+html:not(.alpt-js) [data-alpt-controls],
+html:not(.alpt-js) [data-alpt-nav] {
+  display: none;
+}
+
 html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   display: none;
 }
@@ -429,8 +435,8 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   line-height: 1;
 }
 
+/* No overflow: hidden, so with larger text spacing (WCAG 1.4.12) a long name makes its tile taller instead of being cut off. */
 .alpt-tile__name {
-  overflow: hidden;
   font-size: clamp(0.6rem, 0.62vw, 0.78rem);
   font-weight: 600;
   line-height: 1.12;
@@ -4429,7 +4435,14 @@ html.alpt-board-open {
   justify-content: stretch;
 }
 
+/* One column that may shrink, so a name that can't fit (for example with wider letter spacing, WCAG 1.4.12) wraps
+   inside its tile instead of running over the edge. */
+.alpt-grid .alpt-tile {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .alpt-grid .alpt-tile__name {
+  min-width: 0;
   align-self: end;
   /* Only the break points the page sets: the script keeps them just for words too wide to fit on their own. */
   -webkit-hyphens: manual;

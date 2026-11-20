@@ -200,7 +200,7 @@ function aiad_literacy_safeguarding_syms(): array {
  * (and the homepage promo) has something new each week. The same element all week, for everyone.
  * The aiad_literacy_element_of_week filter can choose a different one (return a symbol).
  *
- * @return array{el:array, talk:string, monday:int} The element, its question and the Monday its week began.
+ * @return array{el:?array, talk:string, monday:int} The element (null if there are none), its question and the Monday its week began.
  */
 function aiad_literacy_element_of_week( ?int $monday = null ): array {
 	$talk   = aiad_literacy_talk();
@@ -214,7 +214,7 @@ function aiad_literacy_element_of_week( ?int $monday = null ): array {
 	if ( ! isset( $by_sym[ $sym ] ) ) {
 		$sym = $pool[0];
 	}
-	return array( 'el' => $by_sym[ $sym ], 'talk' => $talk[ $sym ] ?? '', 'monday' => $monday );
+	return array( 'el' => $by_sym[ $sym ] ?? null, 'talk' => $talk[ $sym ] ?? '', 'monday' => $monday );
 }
 
 /**
@@ -251,6 +251,24 @@ function aiad_literacy_talk(): array {
 }
 
 /**
+ * The buzzword quiz from lists.json, as [question, answer, other, other], leaving out any question that names a
+ * symbol not on the table.
+ *
+ * @return array<int, array<int, string>>
+ */
+function aiad_literacy_quiz(): array {
+	$syms = array_flip( array_column( aiad_literacy_element_records(), 'sym' ) );
+	$out  = array();
+	foreach ( (array) ( aiad_literacy_data( 'lists' )['quiz'] ?? array() ) as $q ) {
+		$row = array_merge( array( (string) ( $q['question'] ?? '' ), (string) ( $q['answer'] ?? '' ) ), array_map( 'strval', (array) ( $q['others'] ?? array() ) ) );
+		if ( 4 === count( $row ) && '' !== $row[0] && ! array_diff_key( array_flip( array_slice( $row, 1 ) ), $syms ) ) {
+			$out[] = $row;
+		}
+	}
+	return $out;
+}
+
+/**
  * AI Awareness Day's own resources (and some from partners) that go deeper on an element or an issue: the panel,
  * the issues and both lists link to them as "Learn more". Each is found by its post type and slug, so one that isn't
  * on the site (or not yet published) is simply left out. AIAD's own come first; partners' are marked.
@@ -268,10 +286,28 @@ function aiad_literacy_resources(): array {
 		static fn( array $r ): array => array( (string) $r['post_type'], (string) $r['slug'], (string) $r['kind'], implode( ' ', (array) ( $r['elements'] ?? array() ) ), implode( ' ', (array) ( $r['issues'] ?? array() ) ) ),
 		(array) ( aiad_literacy_data( 'resources' )['resources'] ?? array() )
 	);
+	// One query for every linked post (was one get_page_by_path() call each, about 77 queries).
+	global $wpdb;
+	$found = array();
+	if ( $raw ) {
+		$slugs = array_values( array_unique( array_map( static fn( array $r ): string => rawurlencode( urldecode( $r[1] ) ), $raw ) ) );
+		$types = array_values( array_unique( array_map( static fn( array $r ): string => $r[0], $raw ) ) );
+		$rows  = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID, post_name, post_type FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_name IN (" . implode( ',', array_fill( 0, count( $slugs ), '%s' ) ) . ') AND post_type IN (' . implode( ',', array_fill( 0, count( $types ), '%s' ) ) . ')', // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+				array_merge( $slugs, $types )
+			)
+		);
+		foreach ( (array) $rows as $row ) {
+			$found[ $row->post_type . '|' . strtolower( $row->post_name ) ] = (int) $row->ID;
+		}
+		_prime_post_caches( array_values( $found ), false, false );
+	}
 	$resources = array();
 	foreach ( $raw as $r ) {
-		$post = get_page_by_path( $r[1], OBJECT, $r[0] );
-		if ( ! $post instanceof WP_Post || 'publish' !== $post->post_status ) {
+		$id   = $found[ $r[0] . '|' . strtolower( rawurlencode( urldecode( $r[1] ) ) ) ] ?? 0;
+		$post = $id ? get_post( $id ) : null;
+		if ( ! $post instanceof WP_Post ) {
 			continue;
 		}
 		$resources[] = array(
@@ -538,6 +574,10 @@ function aiad_literacy_compounds(): array {
 function aiad_render_literacy_table(): string {
 	$families = aiad_literacy_families();
 	$elements = aiad_literacy_elements();
+	if ( array() === $elements ) {
+		// Nothing to show (a broken elements.json and no saved copy yet). Tools > Periodic Table says what is wrong.
+		return '';
+	}
 	$total    = count( $elements );
 	$order    = array_flip( array_keys( $families ) );
 	$first    = $elements[0];
@@ -562,7 +602,7 @@ function aiad_render_literacy_table(): string {
 	ob_start();
 	?>
 <div class="alpt" id="alpt-explore" data-alpt>
-	<div class="alpt-controls" data-alpt-controls hidden>
+	<div class="alpt-controls" data-alpt-controls>
 		<div class="alpt-view" role="group" aria-label="<?php esc_attr_e( 'Colour the table by', 'ai-awareness-day' ); ?>">
 			<span class="alpt-view__label"><?php esc_html_e( 'View by', 'ai-awareness-day' ); ?></span>
 			<button type="button" class="alpt-view__option" data-alpt-view="families" aria-pressed="true"><?php esc_html_e( 'Technical terms', 'ai-awareness-day' ); ?></button>
@@ -664,7 +704,7 @@ function aiad_render_literacy_table(): string {
 				</div>
 			</div>
 
-			<div class="alpt-panel__nav" data-alpt-nav hidden>
+			<div class="alpt-panel__nav" data-alpt-nav>
 				<button type="button" class="alpt-btn alpt-step alpt-step--prev" data-alpt-step="-1"><span aria-hidden="true">&larr;</span> <?php esc_html_e( 'Previous', 'ai-awareness-day' ); ?></button>
 				<button type="button" class="alpt-btn alpt-btn--ink alpt-links-toggle" data-alpt-links aria-pressed="false"><span class="alpt-links-toggle__icon" aria-hidden="true"></span><?php esc_html_e( 'Connections', 'ai-awareness-day' ); ?></button>
 				<button type="button" class="alpt-btn alpt-board-btn" data-alpt-board-element><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></button>
@@ -1097,7 +1137,7 @@ function aiad_render_literacy_table(): string {
 		</form>
 	</section>
 
-	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
+	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 </div>
 	<?php
 	return (string) ob_get_clean();
@@ -1155,7 +1195,7 @@ function aiad_literacy_benchmark_domain( string $sym ): string {
 /**
  * POST aiad/v1/literacy-term: a visitor suggests a new element for the table. Like the Get Involved form
  * (plugins/aiad-core/modules/contact.php) it is a public route with no nonce, as cached pages outlive one; a hidden
- * honeypot field, three suggestions per visitor per hour and validation protect it. Suggestions are saved as private
+ * honeypot field, a typing-time check, ten suggestions per network address per hour and validation protect it. Suggestions are saved as private
  * form submissions for the team to review, and emailed to them. Nothing a visitor sends is published.
  *
  * @param WP_REST_Request $request The form's fields.
@@ -1165,34 +1205,45 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 	$error = static function ( string $message, int $status = 400 ): WP_Error {
 		return new WP_Error( 'aiad_literacy_term', $message, array( 'status' => $status ) );
 	};
-	$field = static function ( string $key, int $max ) use ( $request ): string {
+	// Single-line fields lose line breaks; only the definition and the reason keep them.
+	$field = static function ( string $key, int $max, bool $multiline = false ) use ( $request ): string {
 		$value = $request->get_param( $key );
-		$value = is_string( $value ) ? trim( sanitize_textarea_field( $value ) ) : '';
+		$value = is_string( $value ) ? trim( $multiline ? sanitize_textarea_field( $value ) : sanitize_text_field( $value ) ) : '';
 		return mb_substr( $value, 0, $max );
 	};
+	$thanks = new WP_REST_Response( array( 'message' => __( 'Thank you for your suggestion.', 'ai-awareness-day' ) ) );
 
 	if ( '' !== $field( 'aiad_website', 200 ) ) {
 		// A bot filled the hidden field: say thanks and keep nothing.
-		return new WP_REST_Response( array( 'message' => __( 'Thank you for your suggestion.', 'ai-awareness-day' ) ) );
+		return $thanks;
+	}
+	// Sent in under three seconds of typing: a script, not a person. (Older cached pages send no time, so 0 passes.)
+	$elapsed = (int) $request->get_param( 'elapsed' );
+	if ( $elapsed > 0 && $elapsed < 3000 ) {
+		return $thanks;
 	}
 
+	// Each network address gets ten suggestions an hour, enough for a class sharing one school connection. The
+	// address alone is used: the browser name is easy to fake, so it could not stop one person sending hundreds.
 	$ip        = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$agent     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-	$limit_key = 'aiad_alpt_term_' . md5( $ip . '|' . $agent );
+	$limit_key = 'aiad_alpt_term_' . md5( $ip );
 	$count     = (int) get_transient( $limit_key );
-	// Each device gets a few suggestions an hour (keyed on its address and browser, so a class on one school
-	// network isn't treated as one person), and the whole site is capped so the team's inbox can't be flooded.
+	if ( $count >= 10 ) {
+		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'ai-awareness-day' ), 429 );
+	}
+	// Site-wide, emails stop after 40 an hour so the team's inbox can't be flooded, but suggestions are still saved
+	// (up to 300 an hour), so one person sending junk can't close the form for everyone else.
 	$all_key   = 'aiad_alpt_term_all';
 	$all_count = (int) get_transient( $all_key );
-	if ( $count >= 3 || $all_count >= 40 ) {
+	if ( $all_count >= 300 ) {
 		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'ai-awareness-day' ), 429 );
 	}
 
 	$term       = $field( 'term', 60 );
 	$symbol     = preg_replace( '/[^A-Za-z0-9]/', '', $field( 'symbol', 3 ) );
 	$family     = $field( 'family', 30 );
-	$definition = $field( 'definition', 400 );
-	$why        = $field( 'why', 300 );
+	$definition = $field( 'definition', 400, true );
+	$why        = $field( 'why', 300, true );
 	$name       = $field( 'name', 60 );
 	$role       = $field( 'role', 20 );
 	$credit     = $field( 'credit', 80 );
@@ -1234,7 +1285,7 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 	$body .= "\nSuggested by: " . ( $name ? $name : '(no name)' ) . ( $role ? ' (' . $roles[ $role ] . ')' : '' ) . "\n";
 	$body .= 'Credit line if added: ' . ( $credit ? $credit : '(none)' ) . "\n";
 	if ( $credit ) {
-		$body .= "To credit them, add the element's symbol and this line to aiad_literacy_reader_credits() in inc/literacy-table.php.\n";
+		$body .= "To credit them, add this line as the element's \"credit\" in data/literacy-table/elements.json.\n";
 	}
 
 	$saved = 0;
@@ -1253,6 +1304,16 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 			update_post_meta( $saved, '_submission_term', $term );
 			update_post_meta( $saved, '_submission_message', $definition );
 		}
+	}
+
+	if ( $all_count >= 40 ) {
+		// Saved for the team to review in Tools > Periodic Table > Suggestions, but not emailed.
+		return new WP_REST_Response(
+			array(
+				/* translators: %s: the suggested term */
+				'message' => sprintf( __( 'Thank you! We have received your suggestion, %s. The team reviews suggestions and adds the best ones to the table.', 'ai-awareness-day' ), $term ),
+			)
+		);
 	}
 
 	$to = function_exists( 'aiad_campaign_setting' ) && aiad_campaign_setting( 'contact_email' ) ? aiad_campaign_setting( 'contact_email' ) : get_option( 'admin_email' );
@@ -1287,6 +1348,10 @@ add_action(
  * sit beside the title while the table follows below; it still changes every Monday, since it is drawn on each view.
  */
 function aiad_render_literacy_week(): string {
+	// No elements (a broken elements.json and no saved copy yet): show nothing rather than a broken box.
+	if ( null === aiad_literacy_element_of_week()['el'] ) {
+		return '';
+	}
 	ob_start();
 	?>
 <?php $aiad_week = aiad_literacy_element_of_week(); $aiad_week_theme = $aiad_week['el']['theme'] ?? 'smart'; ?>
@@ -1367,6 +1432,19 @@ add_action(
 		}
 	},
 	15
+);
+
+// Mark the page as scripted before it first paints, so the search, filters and
+// panel buttons are laid out from the start instead of pushing the table down
+// when the deferred script runs. Without JavaScript the CSS keeps them hidden.
+add_action(
+	'wp_head',
+	static function (): void {
+		if ( aiad_is_literacy_table_page() ) {
+			wp_print_inline_script_tag( "document.documentElement.classList.add('alpt-js');" );
+		}
+	},
+	1
 );
 
 add_filter(

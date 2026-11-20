@@ -58,12 +58,31 @@ function aiad_submission_filename_slug( string $full_name, int $fallback_index )
 	return $slug;
 }
 
+if ( ! function_exists( 'aiad_csv_safe_row' ) ) {
+	/**
+	 * Stops spreadsheet formula injection: a cell that starts with = + - @, a tab or a carriage return gets a
+	 * leading apostrophe, so Excel and Google Sheets show it as text instead of running it.
+	 *
+	 * @param array<int|string, mixed> $row One CSV row.
+	 * @return array<int, string>
+	 */
+	function aiad_csv_safe_row( array $row ): array {
+		return array_map(
+			static function ( $cell ): string {
+				$cell = (string) $cell;
+				return ( '' !== $cell && false !== strpos( "=+-@\t\r", $cell[0] ) ) ? "'" . $cell : $cell;
+			},
+			array_values( $row )
+		);
+	}
+}
+
 /**
  * Add the "Export to CSV" button above the Form Submissions list table.
  */
 function aiad_submissions_csv_export_button( string $which ): void {
 	global $typenow;
-	if ( $typenow !== 'form_submission' || $which !== 'top' ) {
+	if ( $typenow !== 'form_submission' || $which !== 'top' || ! current_user_can( 'edit_others_posts' ) ) {
 		return;
 	}
 	$role   = isset( $_GET['aiad_role_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['aiad_role_filter'] ) ) : 'all';
@@ -87,7 +106,8 @@ add_action( 'manage_posts_extra_tablenav', 'aiad_submissions_csv_export_button' 
  * Streams the CSV download.
  */
 function aiad_handle_submissions_csv_export(): void {
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	// Names, emails and schools of everyone who wrote in: Editors and Administrators only, not Contributors or Authors.
+	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		wp_die( esc_html__( 'Insufficient permissions.', 'ai-awareness-day' ), 403 );
 	}
 	check_admin_referer( 'aiad_export_submissions_csv' );
@@ -187,7 +207,7 @@ function aiad_handle_submissions_csv_export(): void {
 		)
 	);
 	foreach ( $rows as $row ) {
-		fputcsv( $out, array_values( $row ) );
+		fputcsv( $out, aiad_csv_safe_row( $row ) );
 	}
 	fclose( $out );
 	exit;
