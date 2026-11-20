@@ -4417,3 +4417,68 @@ html.alpt-board-open {
 .alpt-say-next {
   margin-left: 0.5rem;
 }
+
+/* ---- Tile names that fit: every symbol sits at the same height under its number, whatever the name's length (the
+   name takes the space left at the bottom); long words carry soft hyphens (aiad_literacy_tile_name()), with the
+   browser's own English hyphenation (the page is lang="en-GB") as a safety net for words added later; and long names
+   get slightly smaller text, so none needs more than three lines. ---- */
+.alpt-grid .alpt-tile {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  align-content: stretch;
+  justify-content: stretch;
+}
+
+.alpt-grid .alpt-tile__name {
+  align-self: end;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  hyphenate-limit-chars: 7 3 3;
+  /* Break a word only at its hyphen points; chop it only if nothing else fits (an older rule allowed any letter). */
+  overflow-wrap: break-word;
+}
+
+.alpt-grid .alpt-tile__name--long {
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+
+.alpt-grid .alpt-tile__name--xlong {
+  font-size: 0.62rem;
+  line-height: 1.15;
+}
+
+/* ---- Roll over a tile to enlarge it: the table keeps its small tiles, and the one under the pointer (or focused with
+   the keyboard) grows over its neighbours so its full name is easy to read. Only with a mouse or trackpad: on touch
+   screens a tap opens the panel. Tiles at the edges grow inwards so they stay on screen. ---- */
+@media screen and (hover: hover) and (pointer: fine) {
+  .alpt-grid .alpt-tile[data-alpt-el] {
+    position: relative;
+    transform-origin: center;
+    transition: opacity 0.2s ease, transform 0.16s ease;
+  }
+
+  .alpt-grid .alpt-tile[data-alpt-el]:hover,
+  .alpt-grid .alpt-tile[data-alpt-el]:focus-visible {
+    z-index: 30;
+    transform: scale(1.6);
+  }
+
+  /* Edge columns grow inwards. */
+  .alpt-grid .alpt-tile[data-alpt-el][style*="--c:1;"],
+  .alpt-grid .alpt-tile[data-alpt-el][style*="--c:2;"] {
+    transform-origin: left center;
+  }
+
+  .alpt-grid .alpt-tile[data-alpt-el][style*="--c:17;"],
+  .alpt-grid .alpt-tile[data-alpt-el][style*="--c:18;"] {
+    transform-origin: right center;
+  }
+
+}
+
+@media screen and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  .alpt-grid .alpt-tile[data-alpt-el] {
+    transition: none;
+  }
+}

@@ -861,11 +861,11 @@ function aiad_literacy_tile_name( string $name ): string {
 			'Know|ledge', 'Meta|cognition', 'Mis|inform|ation', 'Oppor|tunity', 'Origin|ality', 'Per|mission', 'Plagia|rism', 'Pre|diction',
 			'Pro|ductive', 'Reason|ing', 'Recom|mend|ation', 'Regu|lation', 'Same|ness', 'Stereo|type', 'Summar|ising', 'Syco|phancy',
 			'Trans|parency', 'Water|mark',
-			'Accel|erators', 'Adver|sarial', 'Analy|tics', 'Augment|ed', 'Charac|ter', 'Classi|fication', 'Cluster|ing', 'Distil|lation',
+			'Adver|sarial', 'Analy|tics', 'Augment|ed', 'Charac|ter', 'Classi|fication', 'Cluster|ing', 'Distil|lation',
 			'Docu|ment', 'Embed|ding', 'Engineer|ing', 'Fore|casting', 'Gover|nance', 'Hyper|auto|mation', 'Integ|ration', 'Intelli|gent',
 			'Multi|modal', 'Orches|tration', 'Orches|trator', 'Para|meters', 'Predic|tive', 'Prescrip|tive', 'Process|ing', 'Proto|col',
-			'Recog|nition', 'Recur|sive', 'Improve|ment', 'Reflec|tion', 'Regres|sion', 'Reinforce|ment', 'Retriev|al', 'Senti|ment', 'Un|super|vised', 'Super|vised',
-			'Trans|former', 'Quanti|zation', 'Temper|ature', 'Respon|sible', 'Optim|isation', 'Super|intelli|gence', 'Mechan|istic', 'Interpret|ability', 'Activ|ation', 'Extrac|tion', 'Abli|ter|ation', 'Uncen|sored', 'Jail|breaking', 'Direc|tion',
+			'Recog|nition', 'Recur|sive', 'Improve|ment', 'Reflec|tion', 'Regres|sion', 'Retriev|al', 'Senti|ment', 'Un|super|vised', 'Super|vised',
+			'Trans|former', 'Quanti|sation', 'Guard|rails', 'Guard|rail', 'Auto|nomy', 'Com|puter', 'Align|ment', 'Sover|eignty', 'Over|fitting', 'Foun|dation', 'Rein|force|ment', 'Accel|er|ators', 'Temper|ature', 'Respon|sible', 'Optim|isation', 'Super|intelli|gence', 'Mechan|istic', 'Interpret|ability', 'Activ|ation', 'Extrac|tion', 'Abli|ter|ation', 'Uncen|sored', 'Jail|breaking', 'Direc|tion',
 		);
 		$breaks = array();
 		foreach ( $words as $word ) {
@@ -1309,9 +1309,9 @@ function aiad_render_literacy_table(): string {
 
 		<div class="alpt-key" aria-hidden="true">
 			<div class="alpt-tile alpt-tile--key">
-				<span class="alpt-tile__n">1</span>
-				<span class="alpt-tile__sym">Ai</span>
-				<span class="alpt-tile__name"><?php echo esc_html( aiad_literacy_tile_name( __( 'Artificial Intelligence', 'ai-awareness-day' ) ) ); ?></span>
+				<span class="alpt-tile__n">102</span>
+				<span class="alpt-tile__sym">Bi</span>
+				<span class="alpt-tile__name"><?php esc_html_e( 'Bias', 'ai-awareness-day' ); ?></span>
 			</div>
 			<div class="alpt-key__text">
 				<p class="alpt-key__title"><?php esc_html_e( 'How to read a tile', 'ai-awareness-day' ); ?></p>
@@ -1345,7 +1345,8 @@ function aiad_render_literacy_table(): string {
 			<a class="alpt-tile alpt-fam--<?php echo esc_attr( $el['family'] ); ?>" href="#<?php echo esc_attr( $el['id'] ); ?>" data-alpt-el="<?php echo esc_attr( (string) ( $el['n'] - 1 ) ); ?>" data-alpt-theme="<?php echo esc_attr( $el['theme'] ); ?>" data-alpt-era="<?php echo esc_attr( $el['era'] ); ?>" data-alpt-year="<?php echo esc_attr( (string) $el['year'] ); ?>" style="--o3:<?php echo esc_attr( (string) ( $era_order[ $el['era'] ] * 100000 + $el['year'] * 10 + 1 ) ); ?>;--r:<?php echo esc_attr( (string) $el['row'] ); ?>;--c:<?php echo esc_attr( (string) $el['col'] ); ?>;--o:<?php echo esc_attr( (string) ( $order[ $el['family'] ] * 1000 + $el['n'] ) ); ?>;--o2:<?php echo esc_attr( (string) ( ( $theme_order[ $el['theme'] ] ?? 0 ) * 1000 + $el['n'] ) ); ?>">
 				<span class="alpt-tile__n"><?php echo esc_html( (string) $el['n'] ); ?></span>
 				<span class="alpt-tile__sym"><?php echo esc_html( $el['sym'] ); ?></span>
-				<span class="alpt-tile__name"><?php echo esc_html( aiad_literacy_tile_name( $el['name'] ) ); ?></span>
+				<?php $aiad_len = mb_strlen( $el['name'] ); ?>
+				<span class="alpt-tile__name<?php echo $aiad_len >= 23 ? ' alpt-tile__name--xlong' : ( $aiad_len >= 21 ? ' alpt-tile__name--long' : '' ); ?>"><?php echo esc_html( aiad_literacy_tile_name( $el['name'] ) ); ?></span>
 				<span class="screen-reader-text">, <?php echo esc_html( $families[ $el['family'] ]['name'] ); ?></span>
 			</a>
 		<?php endforeach; ?>
