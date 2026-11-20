@@ -5031,3 +5031,88 @@ html.alpt-board-open {
     hyphens: manual;
   }
 }
+
+/* ---- Element pictures (assets/images/literacy-table/{symbol}.svg): in the panel the picture takes the big
+   tile's place and the symbol becomes a badge on it. The drawings use these classes, so they take the family
+   colour (or the theme or year colour in those views). ---- */
+.alpt-panel[data-alpt-theme="safe"] { --pic-accent: var(--a27-safe); }
+.alpt-panel[data-alpt-theme="smart"] { --pic-accent: var(--a27-smart); }
+.alpt-panel[data-alpt-theme="creative"] { --pic-accent: var(--a27-creative); }
+.alpt-panel[data-alpt-theme="responsible"] { --pic-accent: var(--a27-responsible); }
+.alpt-panel[data-alpt-theme="future"] { --pic-accent: var(--a27-future); }
+
+.alpt-panel__tile.has-pic {
+  position: relative;
+  width: clamp(12rem, 30vw, 17rem);
+  aspect-ratio: 300 / 330;
+  padding: 0;
+}
+
+.alpt-panel__tile.has-pic .alpt-panel__n,
+.alpt-panel__tile.has-pic .alpt-panel__tile-name {
+  display: none;
+}
+
+.alpt-panel__pic {
+  position: absolute;
+  inset: 0;
+}
+
+.alpt-panel__pic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.alpt-panel__tile.has-pic .alpt-panel__sym {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 3.4rem;
+  height: 3.4rem;
+  padding: 0 0.35rem;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF;
+  font-size: 1.7rem;
+  letter-spacing: -0.03em;
+}
+
+.alpt-pic text { font-family: inherit; fill: var(--a27-ink); }
+.alpt-pic .i-bg { fill: var(--fam); }
+.alpt-pic .i-deep { fill: var(--fam-deep); }
+.alpt-pic .i-paper { fill: #FFFFFF; }
+.alpt-pic .i-cream { fill: var(--a27-cream); }
+.alpt-pic .i-accent { fill: var(--pic-accent, var(--a27-smart)); }
+.alpt-pic .i-ink { fill: var(--a27-ink); }
+.alpt-pic .i-line { fill: none; stroke: var(--a27-ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.alpt-pic .i-deepline { fill: none; stroke: var(--fam-deep); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.alpt-pic .i-dash { stroke-dasharray: 7 7; }
+.alpt-pic .i-faint { opacity: 0.35; }
+.alpt-pic .t-xs { font-size: 13px; font-weight: 600; }
+.alpt-pic .t-s { font-size: 16px; font-weight: 600; }
+.alpt-pic .t-m { font-size: 22px; font-weight: 700; }
+.alpt-pic .t-l { font-size: 34px; font-weight: 700; }
+.alpt-pic .t-w { fill: #FFFFFF; }
+.alpt-pic .t-d { fill: var(--fam-deep); }
+
+/* Wide screens: the panel sits in the table at a fixed size, so the picture takes the height left above the
+   buttons and its width follows from its shape. */
+@media (min-width: 1200px) {
+  .alpt-panel__tile.has-pic {
+    width: auto;
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+}
+
+/* Phones: the panel is one column, so the picture can be wider than the small tile. */
+@media screen and (max-width: 599px) {
+  .alpt-panel__tile.has-pic {
+    width: min(100%, 17rem);
+    aspect-ratio: 300 / 330;
+  }
+}

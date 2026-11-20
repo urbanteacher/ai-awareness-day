@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Context Window: in a long chat the model only sees the newest messages. Top-left 100x95 stays clear for the symbol badge. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <g class="i-faint">
+    <rect class="i-paper" x="112" y="18" width="150" height="24" rx="10"/><rect class="i-line" x="112" y="18" width="150" height="24" rx="10"/>
+    <rect class="i-deep" x="140" y="52" width="140" height="24" rx="10"/>
+    <rect class="i-paper" x="112" y="86" width="130" height="24" rx="10"/><rect class="i-line" x="112" y="86" width="130" height="24" rx="10"/>
+  </g>
+  <text class="t-s" x="20" y="132">Forgotten</text>
+  <path class="i-line i-faint" d="M20 140 H96" stroke-dasharray="3 4"/>
+  <path d="M14 150 H262 L286 174 V318 H14 Z" fill="none" stroke="var(--fam-deep)" stroke-width="5" stroke-linejoin="round"/>
+  <rect class="i-deep" x="132" y="140" width="118" height="22" rx="4"/>
+  <text class="t-xs t-w" x="191" y="156" text-anchor="middle" letter-spacing="1">IT CAN SEE</text>
+  <rect class="i-paper" x="28" y="176" width="150" height="24" rx="10"/><rect class="i-line" x="28" y="176" width="150" height="24" rx="10"/>
+  <rect class="i-deep" x="126" y="210" width="146" height="24" rx="10"/>
+  <rect class="i-paper" x="28" y="244" width="160" height="24" rx="10"/><rect class="i-line" x="28" y="244" width="160" height="24" rx="10"/>
+  <rect class="i-deep" x="112" y="278" width="160" height="24" rx="10"/>
+</svg>

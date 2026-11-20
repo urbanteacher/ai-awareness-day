@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Foundation Model: four different apps are built on top of one big foundation model, which was trained on broad data such as books, pictures and code. -->
+  <defs><marker id="alpt-arr-fm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-paper" d="M20 118 L50 100 L80 118 V198 H20 Z"/><path class="i-line" d="M20 118 L50 100 L80 118 V198 H20 Z"/><rect class="i-line" x="38" y="134" width="24" height="18" rx="3" style="stroke-width:2"/><text class="t-s" x="50" y="184" text-anchor="middle">Chat</text>
+  <path class="i-accent" d="M86 104 L116 86 L146 104 V198 H86 Z"/><path class="i-line" d="M86 104 L116 86 L146 104 V198 H86 Z"/><rect class="i-line" x="104" y="120" width="24" height="18" rx="3" style="stroke-width:2"/><text class="t-s" x="116" y="184" text-anchor="middle">Tutor</text>
+  <path class="i-paper" d="M152 126 L182 108 L212 126 V198 H152 Z"/><path class="i-line" d="M152 126 L182 108 L212 126 V198 H152 Z"/><rect class="i-line" x="170" y="142" width="24" height="18" rx="3" style="stroke-width:2"/><text class="t-s" x="182" y="184" text-anchor="middle">Code</text>
+  <path class="i-cream" d="M218 112 L248 94 L278 112 V198 H218 Z"/><path class="i-line" d="M218 112 L248 94 L278 112 V198 H218 Z"/><rect class="i-line" x="236" y="128" width="24" height="18" rx="3" style="stroke-width:2"/><text class="t-s" x="248" y="184" text-anchor="middle">Search</text>
+  <rect class="i-deep" x="12" y="198" width="276" height="48" rx="4"/>
+  <text class="t-m t-w" x="150" y="230" text-anchor="middle">Foundation model</text>
+  <path class="i-line" d="M80 262 V252" marker-end="url(#alpt-arr-fm)"/><path class="i-line" d="M150 262 V252" marker-end="url(#alpt-arr-fm)"/><path class="i-line" d="M220 262 V252" marker-end="url(#alpt-arr-fm)"/>
+  <rect class="i-paper" x="26" y="266" width="30" height="24" rx="2"/><rect class="i-line" x="26" y="266" width="30" height="24" rx="2"/><path class="i-line" d="M41 266 V290" style="stroke-width:2"/>
+  <rect class="i-paper" x="76" y="266" width="34" height="24" rx="2"/><rect class="i-line" x="76" y="266" width="34" height="24" rx="2"/><path class="i-line" d="M80 286 L90 276 L98 284 L102 280 L108 286" style="stroke-width:2"/>
+  <text class="t-s" x="148" y="286" text-anchor="middle">&lt;/&gt;</text>
+  <rect class="i-paper" x="182" y="266" width="36" height="22" rx="8"/><rect class="i-line" x="182" y="266" width="36" height="22" rx="8"/>
+  <rect class="i-paper" x="238" y="266" width="34" height="24" rx="2"/><rect class="i-line" x="238" y="266" width="34" height="24" rx="2"/><path class="i-line" d="M238 274 H272 M238 282 H272 M255 266 V290" style="stroke-width:2"/>
+  <text class="t-xs" x="150" y="316" text-anchor="middle">Broad data</text>
+</svg>

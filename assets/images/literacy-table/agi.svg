@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Artificial General Intelligence: a narrow AI can do just one of six tasks, while a hypothetical general AI, drawn dashed, can do almost all of them. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="82" y="106" text-anchor="middle">Narrow AI</text>
+  <g transform="translate(58 118) scale(0.8)"><path class="i-deep" d="M0 0 H44 L58 14 V52 H0 Z"/><rect class="i-paper" x="12" y="16" width="32" height="22" rx="5"/><circle class="i-ink" cx="22" cy="27" r="3.5"/><circle class="i-ink" cx="34" cy="27" r="3.5"/></g>
+  <rect class="i-paper" x="19" y="170" width="36" height="36" rx="5"/><rect class="i-line" x="19" y="170" width="36" height="36" rx="5"/><g class="i-faint"><text class="t-m" x="37" y="196" text-anchor="middle">+</text></g>
+  <rect class="i-paper" x="61" y="170" width="36" height="36" rx="5"/><rect class="i-line" x="61" y="170" width="36" height="36" rx="5"/><g class="i-faint"><text class="t-s" x="79" y="194" text-anchor="middle">Aa</text></g>
+  <rect class="i-paper" x="103" y="170" width="36" height="36" rx="5"/><rect class="i-line" x="103" y="170" width="36" height="36" rx="5"/><g class="i-faint"><text class="t-m" x="121" y="196" text-anchor="middle">♪</text></g>
+  <rect class="i-paper" x="19" y="212" width="36" height="36" rx="5"/><rect class="i-deepline" x="19" y="212" width="36" height="36" rx="5" style="stroke-width:4"/><rect class="i-line" x="28" y="221" width="18" height="18" style="stroke-width:2"/><rect class="i-ink" x="28" y="221" width="9" height="9"/><rect class="i-ink" x="37" y="230" width="9" height="9"/>
+  <rect class="i-paper" x="61" y="212" width="36" height="36" rx="5"/><rect class="i-line" x="61" y="212" width="36" height="36" rx="5"/><g class="i-faint"><path class="i-line" d="M70 223 H88 M70 230 H88 M70 237 H82" style="stroke-width:2"/></g>
+  <rect class="i-paper" x="103" y="212" width="36" height="36" rx="5"/><rect class="i-line" x="103" y="212" width="36" height="36" rx="5"/><g class="i-faint"><circle class="i-line" cx="121" cy="230" r="9" style="stroke-width:2"/><ellipse class="i-line" cx="121" cy="230" rx="4" ry="9" style="stroke-width:2"/><path class="i-line" d="M112 230 H130" style="stroke-width:2"/></g>
+  <text class="t-s" x="82" y="282" text-anchor="middle">One job</text>
+  <rect class="i-deepline i-dash" x="152" y="86" width="134" height="214" rx="10"/>
+  <text class="t-s" x="219" y="108" text-anchor="middle">General AI?</text>
+  <g transform="translate(196 118) scale(0.8)"><path class="i-deep" d="M0 0 H44 L58 14 V52 H0 Z"/><rect class="i-paper" x="12" y="16" width="32" height="22" rx="5"/><circle class="i-ink" cx="22" cy="27" r="3.5"/><circle class="i-ink" cx="34" cy="27" r="3.5"/></g>
+  <rect class="i-paper" x="156" y="170" width="36" height="36" rx="5"/><rect class="i-deepline" x="156" y="170" width="36" height="36" rx="5" style="stroke-width:4"/><text class="t-m" x="174" y="196" text-anchor="middle">+</text>
+  <rect class="i-paper" x="198" y="170" width="36" height="36" rx="5"/><rect class="i-deepline" x="198" y="170" width="36" height="36" rx="5" style="stroke-width:4"/><text class="t-s" x="216" y="194" text-anchor="middle">Aa</text>
+  <rect class="i-paper" x="240" y="170" width="36" height="36" rx="5"/><rect class="i-deepline" x="240" y="170" width="36" height="36" rx="5" style="stroke-width:4"/><text class="t-m" x="258" y="196" text-anchor="middle">♪</text>
+  <rect class="i-paper" x="156" y="212" width="36" height="36" rx="5"/><rect class="i-deepline" x="156" y="212" width="36" height="36" rx="5" style="stroke-width:4"/><rect class="i-line" x="165" y="221" width="18" height="18" style="stroke-width:2"/><rect class="i-ink" x="165" y="221" width="9" height="9"/><rect class="i-ink" x="174" y="230" width="9" height="9"/>
+  <rect class="i-paper" x="198" y="212" width="36" height="36" rx="5"/><rect class="i-deepline" x="198" y="212" width="36" height="36" rx="5" style="stroke-width:4"/><path class="i-line" d="M207 223 H225 M207 230 H225 M207 237 H219" style="stroke-width:2"/>
+  <rect class="i-paper" x="240" y="212" width="36" height="36" rx="5"/><rect class="i-deepline" x="240" y="212" width="36" height="36" rx="5" style="stroke-width:4"/><circle class="i-line" cx="258" cy="230" r="9" style="stroke-width:2"/><ellipse class="i-line" cx="258" cy="230" rx="4" ry="9" style="stroke-width:2"/><path class="i-line" d="M249 230 H267" style="stroke-width:2"/>
+  <text class="t-s" x="219" y="282" text-anchor="middle">Almost any job</text>
+</svg>

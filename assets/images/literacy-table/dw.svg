@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Digital Worker: a team chart where the bot has its own job title. Top-left 100x95 stays clear for the symbol badge. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="200" y="44" text-anchor="middle" letter-spacing="2">TEAM</text>
+  <path class="i-line" d="M200 56 V80"/><path class="i-line" d="M84 80 H216 M84 80 V96 M216 80 V96 M150 80 V200"/>
+  <path class="i-line" d="M84 200 H216 M84 200 V210 M216 200 V210"/>
+  <rect class="i-paper" x="24" y="96" width="120" height="96" rx="6"/><rect class="i-line" x="24" y="96" width="120" height="96" rx="6"/>
+  <circle class="i-cream" cx="84" cy="124" r="14"/><circle class="i-line" cx="84" cy="124" r="14"/>
+  <path class="i-line" d="M62 158 C62 140 106 140 106 158"/>
+  <text class="t-s" x="84" y="182" text-anchor="middle">Payroll</text>
+  <rect class="i-paper" x="156" y="96" width="120" height="96" rx="6"/><rect class="i-line" x="156" y="96" width="120" height="96" rx="6"/>
+  <circle class="i-cream" cx="216" cy="124" r="14"/><circle class="i-line" cx="216" cy="124" r="14"/>
+  <path class="i-line" d="M194 158 C194 140 238 140 238 158"/>
+  <text class="t-s" x="216" y="182" text-anchor="middle">Budgets</text>
+  <rect class="i-paper" x="24" y="210" width="120" height="96" rx="6"/><rect class="i-line" x="24" y="210" width="120" height="96" rx="6"/>
+  <circle class="i-cream" cx="84" cy="238" r="14"/><circle class="i-line" cx="84" cy="238" r="14"/>
+  <path class="i-line" d="M62 272 C62 254 106 254 106 272"/>
+  <text class="t-s" x="84" y="296" text-anchor="middle">Manager</text>
+  <path class="i-deep" d="M156 210 H258 L276 228 V306 H156 Z"/><path class="i-line" d="M156 210 H258 L276 228 V306 H156 Z"/>
+  <rect class="i-paper" x="196" y="222" width="40" height="30" rx="7"/>
+  <circle class="i-ink" cx="208" cy="237" r="4"/><circle class="i-ink" cx="224" cy="237" r="4"/>
+  <path d="M194 272 C194 256 238 256 238 272" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <rect class="i-accent" x="168" y="279" width="96" height="22" rx="11"/>
+  <text class="t-s" x="216" y="296" text-anchor="middle">Invoices</text>
+</svg>

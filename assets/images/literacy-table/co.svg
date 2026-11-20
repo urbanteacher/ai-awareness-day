@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Computer Use: an AI agent reads the screen, moves the cursor to a Save button and types on the keyboard. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-ink" x="98" y="82" width="186" height="140" rx="8"/>
+  <rect class="i-paper" x="108" y="92" width="166" height="114" rx="3"/>
+  <rect class="i-cream" x="108" y="92" width="166" height="18" rx="3"/>
+  <circle class="i-ink" cx="118" cy="101" r="3"/><circle class="i-ink" cx="128" cy="101" r="3"/>
+  <text class="t-xs" x="118" y="134">Name</text>
+  <rect class="i-line" x="158" y="120" width="102" height="22" rx="3"/>
+  <text class="t-s" x="166" y="137">Sam</text><path class="i-line" d="M200 124 V138"/>
+  <rect class="i-deep" x="186" y="160" width="74" height="30" rx="6"/>
+  <text class="t-s t-w" x="216" y="181" text-anchor="middle">Save</text>
+  <path d="M246 178 V200 L252 195 L257 205 L262 203 L257 193 L265 193 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2" stroke-linejoin="round"/>
+  <path class="i-ink" d="M180 222 H202 L206 238 H176 Z"/>
+  <rect class="i-paper" x="110" y="252" width="174" height="44" rx="6"/><rect class="i-line" x="110" y="252" width="174" height="44" rx="6"/>
+  <path class="i-line" d="M122 264 H272 M122 276 H272 M150 288 H244" stroke-width="5" stroke-opacity=".25"/>
+  <rect class="i-accent" x="168" y="270" width="16" height="12" rx="2"/>
+  <text class="t-s" x="197" y="318" text-anchor="middle">Types</text>
+  <path class="i-deep" d="M18 176 H62 L76 190 V228 H18 Z"/>
+  <rect class="i-paper" x="30" y="190" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="40" cy="201" r="3.5"/><circle class="i-ink" cx="52" cy="201" r="3.5"/>
+  <path class="i-line" d="M64 186 L106 146 M64 196 L106 196" stroke-dasharray="3 5"/>
+  <text class="t-s" x="47" y="150" text-anchor="middle">Reads</text>
+  <path class="i-line" d="M50 230 C60 270 80 276 104 276"/>
+</svg>

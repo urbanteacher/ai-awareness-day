@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Data Governance: a policy book in the middle sets the rules for each step data goes through, collect, store, access and use. -->
+  <defs><marker id="alpt-arr-dg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="172" y="46" text-anchor="middle">Rules for every step</text>
+  <rect class="i-paper" x="20" y="92" width="112" height="76" rx="8"/><rect class="i-line" x="20" y="92" width="112" height="76" rx="8"/>
+  <rect class="i-cream" x="62" y="102" width="28" height="34" rx="3"/><rect class="i-line" x="62" y="102" width="28" height="34" rx="3"/>
+  <path class="i-line" d="M68 114 H84 M68 124 H80"/>
+  <text class="t-s" x="76" y="158" text-anchor="middle">Collect</text>
+  <rect class="i-paper" x="168" y="92" width="112" height="76" rx="8"/><rect class="i-line" x="168" y="92" width="112" height="76" rx="8"/>
+  <ellipse class="i-cream" cx="224" cy="108" rx="16" ry="6"/><path class="i-cream" d="M208 108 V130 C208 138 240 138 240 130 V108 Z"/>
+  <ellipse class="i-line" cx="224" cy="108" rx="16" ry="6"/><path class="i-line" d="M208 108 V130 C208 138 240 138 240 130 V108 M208 119 C208 127 240 127 240 119"/>
+  <text class="t-s" x="224" y="158" text-anchor="middle">Store</text>
+  <rect class="i-paper" x="168" y="236" width="112" height="76" rx="8"/><rect class="i-line" x="168" y="236" width="112" height="76" rx="8"/>
+  <circle class="i-line" cx="214" cy="262" r="9"/><path class="i-line" d="M223 262 H242 M236 262 V270 M242 262 V268"/>
+  <text class="t-s" x="224" y="302" text-anchor="middle">Access</text>
+  <rect class="i-paper" x="20" y="236" width="112" height="76" rx="8"/><rect class="i-line" x="20" y="236" width="112" height="76" rx="8"/>
+  <path class="i-line" d="M58 278 H96"/><rect class="i-cream" x="62" y="262" width="8" height="16"/><rect class="i-cream" x="74" y="252" width="8" height="26"/><rect class="i-cream" x="86" y="258" width="8" height="20"/>
+  <path class="i-line" d="M62 278 V262 H70 V278 M74 278 V252 H82 V278 M86 278 V258 H94 V278"/>
+  <text class="t-s" x="76" y="302" text-anchor="middle">Use</text>
+  <path class="i-line" d="M136 120 H162" marker-end="url(#alpt-arr-dg)"/>
+  <path class="i-line" d="M262 172 V230" marker-end="url(#alpt-arr-dg)"/>
+  <path class="i-line" d="M164 284 H138" marker-end="url(#alpt-arr-dg)"/>
+  <path class="i-deep" d="M108 178 H192 V228 H108 Z"/>
+  <path class="i-paper" d="M112 222 H188 V228 H112 Z"/>
+  <text class="t-xs t-w" x="150" y="206" text-anchor="middle" letter-spacing="2">POLICY</text>
+</svg>

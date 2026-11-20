@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- AI Ethics: a signpost of moral questions in front of an AI that could be built. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-xs" x="164" y="28" text-anchor="middle">We can build it.</text>
+  <text class="t-m t-d" x="164" y="58" text-anchor="middle">But should we?</text>
+  <rect class="i-ink" x="146" y="92" width="10" height="220" rx="3"/>
+  <path class="i-line" d="M20 312 H280"/>
+  <path class="i-deep" d="M156 100 H262 L282 120 L262 140 H156 Z"/>
+  <text class="t-s t-w" x="212" y="126" text-anchor="middle">Consent?</text>
+  <path class="i-paper" d="M146 152 H40 L20 172 L40 192 H146 Z"/><path class="i-line" d="M146 152 H40 L20 172 L40 192 H146 Z"/>
+  <text class="t-s" x="88" y="178" text-anchor="middle">Any harm?</text>
+  <path class="i-deep" d="M156 204 H262 L282 224 L262 244 H156 Z"/>
+  <text class="t-s t-w" x="212" y="230" text-anchor="middle">Society?</text>
+  <path class="i-deep" d="M200 260 H242 L254 272 V304 H200 Z"/>
+  <rect class="i-paper" x="210" y="270" width="30" height="20" rx="5"/>
+  <circle class="i-ink" cx="219" cy="280" r="3"/><circle class="i-ink" cx="231" cy="280" r="3"/>
+  <circle class="i-cream" cx="60" cy="246" r="14"/><circle class="i-line" cx="60" cy="246" r="14"/>
+  <path class="i-line" d="M38 280 C38 262 82 262 82 280"/>
+  <circle class="i-accent" cx="98" cy="222" r="13"/><text class="t-s" x="98" y="228" text-anchor="middle">?</text>
+</svg>

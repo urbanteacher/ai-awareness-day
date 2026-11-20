@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Distillation: a small student model learns to give the same answer as a big teacher model. -->
+  <defs><marker id="alpt-arr-ds" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="96" y="22" width="160" height="44" rx="12"/><rect class="i-line" x="96" y="22" width="160" height="44" rx="12"/>
+  <text class="t-s" x="176" y="50" text-anchor="middle">Capital of France?</text>
+  <rect class="i-paper" x="26" y="88" width="104" height="38" rx="12"/><rect class="i-line" x="26" y="88" width="104" height="38" rx="12"/>
+  <path class="i-paper" d="M66 124 L74 138 L86 124 Z"/><path class="i-line" d="M66 126 L74 138 L86 126"/>
+  <text class="t-s" x="78" y="113" text-anchor="middle">Paris</text>
+  <path class="i-deep" d="M20 144 H112.2 L140 171.8 V260 H20 Z"/>
+  <rect class="i-paper" x="44.0" y="178.8" width="72.0" height="41.8" rx="10.4"/>
+  <circle class="i-ink" cx="65.6" cy="199.7" r="7.0"/><circle class="i-ink" cx="94.4" cy="199.7" r="7.0"/>
+  <text class="t-s" x="80" y="286" text-anchor="middle">Teacher</text>
+  <rect class="i-paper" x="182" y="150" width="104" height="38" rx="12"/><rect class="i-line i-dash" x="182" y="150" width="104" height="38" rx="12"/>
+  <text class="t-s" x="234" y="175" text-anchor="middle">Paris</text>
+  <path class="i-line" d="M234 192 V202" />
+  <path class="i-deep" d="M206 208 H249.5 L262 220.5 V260 H206 Z"/>
+  <rect class="i-paper" x="217.2" y="223.6" width="33.6" height="18.7" rx="4.7"/>
+  <circle class="i-ink" cx="227.3" cy="233.0" r="3.9"/><circle class="i-ink" cx="240.7" cy="233.0" r="3.9"/>
+  <text class="t-s" x="234" y="286" text-anchor="middle">Student</text>
+  <path class="i-line i-dash" d="M134 104 C160 104 176 120 186 142" marker-end="url(#alpt-arr-ds)"/>
+  <text class="t-xs" x="170" y="100">copies</text>
+</svg>

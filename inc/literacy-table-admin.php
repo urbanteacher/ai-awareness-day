@@ -179,6 +179,24 @@ function aiad_literacy_check(): array {
 	}
 
 	$seen = array();
+	// Pictures: every SVG needs an element and alt text, and alt text needs a picture.
+	$pictures = aiad_literacy_pictures();
+	foreach ( $records as $e ) {
+		$sym = (string) ( $e['sym'] ?? '' );
+		if ( isset( $pictures[ $sym ] ) && '' === trim( (string) ( $e['picture_alt'] ?? '' ) ) ) {
+			$warn( sprintf( '%s has a picture but no "picture_alt" in elements.json, so screen readers get no description.', $sym ) );
+		}
+		if ( ! isset( $pictures[ $sym ] ) && '' !== trim( (string) ( $e['picture_alt'] ?? '' ) ) ) {
+			$warn( sprintf( '%1$s has "picture_alt" but no picture: add assets/images/literacy-table/%2$s.svg.', $sym, strtolower( $sym ) ) );
+		}
+	}
+	$lower = array_change_key_case( array_flip( array_keys( $syms ) ), CASE_LOWER );
+	foreach ( (array) glob( AIAD_DIR . '/assets/images/literacy-table/*.svg' ) as $file ) {
+		$name = basename( (string) $file, '.svg' );
+		if ( ! isset( $lower[ $name ] ) ) {
+			$warn( sprintf( 'The picture %s.svg does not match any element symbol, so it is not shown.', $name ) );
+		}
+	}
 	foreach ( (array) ( aiad_literacy_data( 'lists' )['quiz'] ?? array() ) as $n => $q ) {
 		$q_syms = array_merge( array( (string) ( $q['answer'] ?? '' ) ), array_map( 'strval', (array) ( $q['others'] ?? array() ) ) );
 		if ( 3 !== count( $q_syms ) || '' === (string) ( $q['question'] ?? '' ) ) {
@@ -452,9 +470,16 @@ function aiad_render_literacy_admin(): void {
 		<?php endif; ?>
 
 		<?php if ( 'elements' === $tab ) : ?>
+			<p>
+				<?php
+				/* translators: 1: elements with a picture, 2: all elements */
+				echo esc_html( sprintf( __( '%1$d of %2$d elements have a picture. To add one, save it as assets/images/literacy-table/{symbol in lower case}.svg and describe it in the element\'s "picture_alt" in elements.json. The README explains how to draw one.', 'ai-awareness-day' ), count( aiad_literacy_pictures() ), count( $elements ) ) );
+				?>
+			</p>
 			<table class="widefat striped" data-aiad-lt-table>
-				<thead><tr><th>#</th><th><?php esc_html_e( 'Element', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Family / theme', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Year', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Definition', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Talk about it', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Issues', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th>#</th><th><?php esc_html_e( 'Element', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Family / theme', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Year', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Definition', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Talk about it', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Issues', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Picture', 'ai-awareness-day' ); ?></th></tr></thead>
 				<tbody>
+				<?php $pictures = aiad_literacy_pictures(); ?>
 				<?php foreach ( $elements as $el ) : ?>
 					<tr>
 						<td><?php echo esc_html( (string) $el['n'] ); ?></td>
@@ -464,6 +489,7 @@ function aiad_render_literacy_admin(): void {
 						<td><?php echo esc_html( $el['def'] ); ?></td>
 						<td><?php echo isset( $talk[ $el['sym'] ] ) ? esc_html( $talk[ $el['sym'] ] ) : '<span class="aiad-lt__muted">—</span>'; ?></td>
 						<td class="aiad-lt__muted"><?php echo esc_html( implode( ', ', array_map( static fn( $k ) => $issues[ $k ]['name'] ?? $k, $el_issues[ $el['sym'] ] ?? array() ) ) ); ?></td>
+						<td><?php echo isset( $pictures[ $el['sym'] ] ) ? '<strong>' . esc_html__( 'Yes', 'ai-awareness-day' ) . '</strong><br><span class="aiad-lt__muted">' . esc_html( $pictures[ $el['sym'] ]['alt'] ) . '</span>' : '<span class="aiad-lt__muted">' . esc_html__( 'Not yet', 'ai-awareness-day' ) . '</span>'; ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>

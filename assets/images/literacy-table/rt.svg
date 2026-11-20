@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Red Teaming: testers fire trick prompts at an AI's defences on purpose; two bounce off and one finds a weak spot to fix. -->
+  <defs><marker id="alpt-arr-rt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-m" x="164" y="50" text-anchor="middle">Try to break it</text>
+  <path class="i-deep" d="M222 86 L280 106 V170 C280 216 252 244 222 260 C192 244 164 216 164 170 V106 Z"/>
+  <rect class="i-paper" x="204" y="136" width="36" height="24" rx="6"/>
+  <circle class="i-ink" cx="215" cy="148" r="3.5"/><circle class="i-ink" cx="229" cy="148" r="3.5"/>
+  <path d="M178 196 L190 206 L184 216 L198 226" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="i-line" d="M100 200 L156 130" marker-end="url(#alpt-arr-rt)"/>
+  <path class="i-line" d="M108 214 L156 178" marker-end="url(#alpt-arr-rt)"/>
+  <text class="t-m t-d" x="140" y="122" text-anchor="middle">✗</text>
+  <text class="t-m t-d" x="134" y="174" text-anchor="middle">✗</text>
+  <path class="i-line" d="M114 230 L182 214" marker-end="url(#alpt-arr-rt)"/>
+  <circle class="i-accent" cx="190" cy="211" r="11"/><circle class="i-line" cx="190" cy="211" r="11"/>
+  <circle class="i-cream" cx="46" cy="214" r="14"/><circle class="i-line" cx="46" cy="214" r="14"/>
+  <path class="i-line" d="M24 248 C24 230 68 230 68 248"/>
+  <circle class="i-cream" cx="88" cy="236" r="14"/><circle class="i-line" cx="88" cy="236" r="14"/>
+  <path class="i-line" d="M66 270 C66 252 110 252 110 270"/>
+  <text class="t-s" x="66" y="294" text-anchor="middle">Testers</text>
+  <text class="t-s t-d" x="222" y="290" text-anchor="middle">Weak spot!</text>
+  <text class="t-xs" x="222" y="310" text-anchor="middle">Fix before launch</text>
+</svg>

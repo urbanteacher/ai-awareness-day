@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Prompt: the instruction typed into the box, and the reply it gets. -->
+  <defs><marker id="alpt-arr-pr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="112" y="22" width="144" height="96" rx="12"/><rect class="i-line" x="112" y="22" width="144" height="96" rx="12"/>
+  <text class="t-s" x="128" y="50">Drip, drop,</text>
+  <text class="t-s" x="128" y="74">rain on the</text>
+  <text class="t-s" x="128" y="98">roof …</text>
+  <path class="i-deep" d="M28 128 H84 L98 142 V186 H28 Z"/>
+<rect class="i-paper" x="45" y="145" width="36" height="24" rx="6"/><circle class="i-ink" cx="56" cy="157" r="4"/><circle class="i-ink" cx="70" cy="157" r="4"/>
+  <path class="i-line" d="M102 146 C116 140 120 132 124 124" marker-end="url(#alpt-arr-pr)"/>
+  <path class="i-line" d="M63 210 V194" marker-end="url(#alpt-arr-pr)"/>
+  <rect class="i-paper" x="16" y="216" width="268" height="92" rx="14"/><rect class="i-deepline" x="16" y="216" width="268" height="92" rx="14" stroke-width="4"/>
+  <rect class="i-deep" x="116" y="204" width="84" height="24" rx="12"/>
+  <text class="t-xs t-w" x="158" y="221" text-anchor="middle" letter-spacing="1">PROMPT</text>
+  <text class="t-s" x="32" y="254">Write a 3-line poem</text>
+  <text class="t-s" x="32" y="280">about rain for Year 7</text>
+  <path class="i-line" d="M210 266 V284"/>
+  <circle class="i-accent" cx="254" cy="284" r="16"/>
+  <path d="M254 292 V277 M247 283 L254 276 L261 283" fill="none" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

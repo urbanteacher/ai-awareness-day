@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Model Extraction: thousands of questions to a locked AI, with the answers used to build a copy. -->
+  <defs><marker id="alpt-arr-mx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-m" x="188" y="76" text-anchor="middle">×10,000</text>
+  <text class="t-xs" x="188" y="98" text-anchor="middle">questions</text>
+  <path class="i-deep" d="M20 132 H82 L98 148 V206 H20 Z"/>
+  <rect class="i-paper" x="34" y="152" width="44" height="28" rx="7"/>
+  <circle class="i-ink" cx="48" cy="166" r="4"/><circle class="i-ink" cx="64" cy="166" r="4"/>
+  <path class="i-cream" d="M22 232 H48 L56 240 H96 V292 H22 Z"/><path class="i-line" d="M22 232 H48 L56 240 H96 V292 H22 Z"/>
+  <rect class="i-ink" x="48" y="260" width="22" height="18" rx="3"/>
+  <path class="i-line" d="M52 260 V252 C52 244 66 244 66 252 V260"/>
+  <text class="t-xs" x="59" y="312" text-anchor="middle">Files locked</text>
+  <path class="i-paper" d="M200 132 H262 L278 148 V206 H200 Z"/>
+  <path class="i-line i-dash" d="M200 132 H262 L278 148 V206 H200 Z"/>
+  <rect class="i-cream" x="214" y="152" width="44" height="28" rx="7"/><rect class="i-line" x="214" y="152" width="44" height="28" rx="7"/>
+  <circle class="i-ink" cx="228" cy="166" r="4"/><circle class="i-ink" cx="244" cy="166" r="4"/>
+  <text class="t-m t-d" x="239" y="240" text-anchor="middle">Copy</text>
+  <path class="i-line" d="M190 128 H110" marker-end="url(#alpt-arr-mx)"/>
+  <rect class="i-paper" x="138" y="116" width="24" height="24" rx="5"/><rect class="i-line" x="138" y="116" width="24" height="24" rx="5"/>
+  <text class="t-xs" x="150" y="133" text-anchor="middle">Q</text>
+  <path class="i-line" d="M108 160 H190" marker-end="url(#alpt-arr-mx)"/>
+  <rect class="i-deep" x="138" y="148" width="24" height="24" rx="5"/>
+  <text class="t-xs t-w" x="150" y="165" text-anchor="middle">A</text>
+  <path class="i-line" d="M190 192 H110" marker-end="url(#alpt-arr-mx)"/>
+  <rect class="i-paper" x="138" y="180" width="24" height="24" rx="5"/><rect class="i-line" x="138" y="180" width="24" height="24" rx="5"/>
+  <text class="t-xs" x="150" y="197" text-anchor="middle">Q</text>
+  <path class="i-line" d="M108 224 H190" marker-end="url(#alpt-arr-mx)"/>
+  <rect class="i-deep" x="138" y="212" width="24" height="24" rx="5"/>
+  <text class="t-xs t-w" x="150" y="229" text-anchor="middle">A</text>
+  <path class="i-line i-faint" d="M130 256 H170 M130 268 H170 M130 280 H170" stroke-dasharray="2 6"/>
+</svg>

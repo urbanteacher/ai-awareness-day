@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Coding Agent: an agent works across several code files in a loop of write, test and fix until the tests pass. -->
+  <defs><marker id="alpt-arr-ca" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <g>
+    <path class="i-paper" d="M108 22 H140 L150 32 V76 H108 Z"/><path class="i-line" d="M108 22 H140 L150 32 V76 H108 Z"/>
+    <path class="i-line" d="M116 40 H136 M120 50 H142 M120 60 H134" stroke-width="2"/>
+    <path class="i-paper" d="M160 22 H192 L202 32 V76 H160 Z"/><path class="i-line" d="M160 22 H192 L202 32 V76 H160 Z"/>
+    <path class="i-line" d="M168 40 H188 M172 50 H194 M168 60 H184" stroke-width="2"/>
+    <path class="i-deep" d="M212 22 H234 V76 H212 Z"/><path class="i-line" d="M212 22 H234 V76 H212 Z"/>
+    <path d="M218 40 H230 M218 50 H230 M218 60 H226" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <path class="i-line" d="M171 84 V98" stroke-dasharray="3 4"/>
+  <circle class="i-line" cx="150" cy="190" r="74" stroke-opacity=".25"/>
+  <path class="i-line" d="M184.7 124.7 A74 74 0 0 1 224.0 190.0" marker-end="url(#alpt-arr-ca)"/>
+  <path class="i-line" d="M206.7 237.6 A74 74 0 0 1 93.3 237.6" marker-end="url(#alpt-arr-ca)"/>
+  <path class="i-line" d="M76.0 190.0 A74 74 0 0 1 115.3 124.7" marker-end="url(#alpt-arr-ca)"/>
+  <rect class="i-paper" x="114" y="100" width="94" height="34" rx="17"/><rect class="i-line" x="114" y="100" width="94" height="34" rx="17"/>
+  <text class="t-s" x="161" y="123" text-anchor="middle">Write</text>
+  <rect class="i-paper" x="200" y="214" width="84" height="34" rx="17"/><rect class="i-line" x="200" y="214" width="84" height="34" rx="17"/>
+  <text class="t-s" x="242" y="237" text-anchor="middle">Test</text>
+  <rect class="i-paper" x="18" y="214" width="84" height="34" rx="17"/><rect class="i-line" x="18" y="214" width="84" height="34" rx="17"/>
+  <text class="t-s" x="60" y="237" text-anchor="middle">Fix</text>
+  <path class="i-deep" d="M121 164 H165 L179 178 V216 H121 Z"/>
+  <rect class="i-paper" x="133" y="178" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="143" cy="189" r="3.5"/><circle class="i-ink" cx="155" cy="189" r="3.5"/>
+  <rect class="i-accent" x="58" y="278" width="184" height="36" rx="8"/>
+  <text class="t-s" x="150" y="302" text-anchor="middle">12 tests pass ✓</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- MLOps: a model starts well, makes more mistakes over time, then is checked and updated. -->
+  <defs><marker id="alpt-arr-mo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="182" y="52" text-anchor="middle">Accuracy check</text>
+  <rect class="i-paper" x="14" y="106" width="80" height="140" rx="8"/><rect class="i-line" x="14" y="106" width="80" height="140" rx="8"/>
+  <path class="i-deep" d="M34 120 H65.8 L74 128.2 V154 H34 Z"/>
+  <rect class="i-paper" x="42.0" y="130.2" width="24.0" height="12.2" rx="3.1"/>
+  <circle class="i-ink" cx="49.2" cy="136.3" r="2.8"/><circle class="i-ink" cx="58.8" cy="136.3" r="2.8"/>
+  <text class="t-m" x="54" y="194" text-anchor="middle">95%</text>
+  <rect class="i-cream" x="26" y="206" width="56" height="12" rx="6"/><rect class="i-deep" x="26" y="206" width="53" height="12" rx="6"/><rect class="i-line" x="26" y="206" width="56" height="12" rx="6"/>
+  <text class="t-s" x="54" y="274" text-anchor="middle">Launch</text>
+  <rect class="i-paper" x="110" y="106" width="80" height="140" rx="8"/><rect class="i-line" x="110" y="106" width="80" height="140" rx="8"/>
+  <path class="i-deep" d="M130 120 H161.8 L170 128.2 V154 H130 Z"/>
+  <rect class="i-paper" x="138.0" y="130.2" width="24.0" height="12.2" rx="3.1"/>
+  <circle class="i-ink" cx="145.2" cy="136.3" r="2.8"/><circle class="i-ink" cx="154.8" cy="136.3" r="2.8"/>
+  <text class="t-m" x="150" y="194" text-anchor="middle">70%</text>
+  <rect class="i-cream" x="122" y="206" width="56" height="12" rx="6"/><rect class="i-accent" x="122" y="206" width="39" height="12" rx="6"/><rect class="i-line" x="122" y="206" width="56" height="12" rx="6"/>
+  <text class="t-s" x="150" y="274" text-anchor="middle">Mistakes</text>
+  <rect class="i-paper" x="206" y="106" width="80" height="140" rx="8"/><rect class="i-line" x="206" y="106" width="80" height="140" rx="8"/>
+  <path class="i-deep" d="M226 120 H257.8 L266 128.2 V154 H226 Z"/>
+  <rect class="i-paper" x="234.0" y="130.2" width="24.0" height="12.2" rx="3.1"/>
+  <circle class="i-ink" cx="241.2" cy="136.3" r="2.8"/><circle class="i-ink" cx="250.8" cy="136.3" r="2.8"/>
+  <text class="t-m" x="246" y="194" text-anchor="middle">94%</text>
+  <rect class="i-cream" x="218" y="206" width="56" height="12" rx="6"/><rect class="i-deep" x="218" y="206" width="53" height="12" rx="6"/><rect class="i-line" x="218" y="206" width="56" height="12" rx="6"/>
+  <text class="t-s" x="246" y="274" text-anchor="middle">Updated</text>
+  <circle class="i-ink" cx="178" cy="122" r="11"/><text class="t-s t-w" x="178" y="128" text-anchor="middle">!</text>
+  <circle class="i-ink" cx="274" cy="122" r="11"/><text class="t-xs t-w" x="274" y="127" text-anchor="middle">✓</text>
+  <path class="i-line" d="M96 176 H106" marker-end="url(#alpt-arr-mo)"/><path class="i-line" d="M192 176 H202" marker-end="url(#alpt-arr-mo)"/>
+  <path class="i-line" d="M20 300 H278" marker-end="url(#alpt-arr-mo)"/>
+  <text class="t-xs" x="150" y="320" text-anchor="middle">months of use</text>
+</svg>

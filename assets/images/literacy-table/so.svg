@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- AI Sovereignty: a country with its own computers, data and AI inside its own border. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-cream" d="M40 150 C40 116 104 106 150 116 C204 102 272 122 270 172 C290 222 252 302 180 298 C118 312 36 292 42 240 C20 210 28 178 40 150 Z"/>
+  <path class="i-deepline" d="M40 150 C40 116 104 106 150 116 C204 102 272 122 270 172 C290 222 252 302 180 298 C118 312 36 292 42 240 C20 210 28 178 40 150 Z" stroke-width="5"/>
+  <path class="i-line" d="M150 116 V50"/>
+  <path class="i-accent" d="M150 50 H196 L188 62 L196 74 H150 Z"/><path class="i-line" d="M150 50 H196 L188 62 L196 74 H150 Z"/>
+  <text class="t-s" x="206" y="68">Our own</text>
+  <rect class="i-paper" x="64" y="150" width="50" height="22" rx="3"/><rect class="i-line" x="64" y="150" width="50" height="22" rx="3"/>
+  <rect class="i-paper" x="64" y="176" width="50" height="22" rx="3"/><rect class="i-line" x="64" y="176" width="50" height="22" rx="3"/>
+  <rect class="i-paper" x="64" y="202" width="50" height="22" rx="3"/><rect class="i-line" x="64" y="202" width="50" height="22" rx="3"/>
+  <circle class="i-ink" cx="104" cy="161" r="3"/><circle class="i-ink" cx="104" cy="187" r="3"/><circle class="i-ink" cx="104" cy="213" r="3"/>
+  <text class="t-xs" x="89" y="246" text-anchor="middle">Computers</text>
+  <path class="i-paper" d="M134 162 V204 C134 214 178 214 178 204 V162 Z"/>
+  <path class="i-line" d="M134 162 V204 C134 214 178 214 178 204 V162"/>
+  <ellipse class="i-paper" cx="156" cy="162" rx="22" ry="8"/><ellipse class="i-line" cx="156" cy="162" rx="22" ry="8"/>
+  <path class="i-line" d="M134 183 C134 193 178 193 178 183"/>
+  <text class="t-xs" x="156" y="234" text-anchor="middle">Data</text>
+  <path class="i-deep" d="M198 152 H236 L250 166 V202 H198 Z"/>
+  <text class="t-m t-w" x="224" y="185" text-anchor="middle">AI</text>
+  <path class="i-line" d="M114 187 H134 M178 187 H198"/>
+  <path class="i-line" d="M100 270 H210" stroke-dasharray="2 6"/>
+  <text class="t-xs" x="155" y="284" text-anchor="middle">Our rules, our control</text>
+</svg>

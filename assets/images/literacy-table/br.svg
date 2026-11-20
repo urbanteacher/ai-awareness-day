@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Browser Agent: asked to book two cinema seats, an agent fills in the web form and clicks Book. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <circle class="i-cream" cx="116" cy="38" r="13"/><circle class="i-line" cx="116" cy="38" r="13"/>
+  <path class="i-line" d="M96 76 C96 56 136 56 136 76"/>
+  <rect class="i-paper" x="146" y="16" width="86" height="56" rx="12"/><rect class="i-line" x="146" y="16" width="86" height="56" rx="12"/>
+  <path class="i-paper" d="M148 52 L138 62 L156 60 Z"/><path class="i-line" d="M148 56 L138 62 L152 61"/>
+  <text class="t-s" x="189" y="40" text-anchor="middle">Book 2</text>
+  <text class="t-s" x="189" y="60" text-anchor="middle">seats</text>
+  <rect class="i-paper" x="16" y="92" width="268" height="224" rx="10"/><rect class="i-line" x="16" y="92" width="268" height="224" rx="10"/>
+  <path class="i-line" d="M16 122 H284"/>
+  <circle class="i-ink" cx="32" cy="107" r="4"/><circle class="i-ink" cx="46" cy="107" r="4"/>
+  <rect class="i-cream" x="60" y="99" width="160" height="16" rx="8"/>
+  <path class="i-deep" d="M240 98 H262 L270 106 V118 H240 Z"/>
+  <rect class="i-paper" x="245" y="104" width="16" height="9" rx="2"/>
+  <text class="t-s" x="32" y="160">Seats</text>
+  <rect class="i-line" x="100" y="140" width="128" height="30" rx="4"/>
+  <text class="t-s" x="112" y="161">2</text>
+  <circle class="i-deep" cx="254" cy="155" r="12"/><path d="M248 155 L252 159 L260 150" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="t-s" x="32" y="208">Day</text>
+  <rect class="i-line" x="100" y="188" width="128" height="30" rx="4"/>
+  <text class="t-s" x="112" y="209">Sat 7pm</text>
+  <circle class="i-deep" cx="254" cy="203" r="12"/><path d="M248 203 L252 207 L260 198" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="i-accent" x="100" y="240" width="128" height="40" rx="8"/>
+  <text class="t-m" x="164" y="268" text-anchor="middle">Book</text>
+  <path d="M206 266 V292 L213 286 L219 298 L225 295 L219 284 L228 284 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2" stroke-linejoin="round"/>
+</svg>

@@ -251,11 +251,38 @@ function aiad_literacy_talk(): array {
 }
 
 /**
- * The buzzword quiz from lists.json, as [question, answer, other, other], leaving out any question that names a
- * symbol not on the table.
+ * The elements' pictures: assets/images/literacy-table/{symbol}.svg (lower case), drawn with the classes styled in
+ * the page's stylesheet so they take the element's family colour. The alt text is the element's "picture_alt" in
+ * elements.json. An element without a picture keeps its plain tile.
  *
- * @return array<int, array<int, string>>
+ * @return array<string, array{alt:string}> Keyed by symbol.
  */
+function aiad_literacy_pictures(): array {
+	static $pictures = null;
+	if ( null !== $pictures ) {
+		return $pictures;
+	}
+	$pictures = array();
+	$dir      = AIAD_DIR . '/assets/images/literacy-table/';
+	foreach ( aiad_literacy_element_records() as $e ) {
+		$sym = (string) ( $e['sym'] ?? '' );
+		if ( '' !== $sym && is_readable( $dir . strtolower( $sym ) . '.svg' ) ) {
+			$pictures[ $sym ] = array( 'alt' => (string) ( $e['picture_alt'] ?? '' ) );
+		}
+	}
+	return $pictures;
+}
+
+/**
+ * Where the script fetches the pictures from (only when an element is opened), with a version so a new or redrawn
+ * picture isn't served from an old cache.
+ */
+function aiad_literacy_picture_base(): string {
+	$files = (array) glob( AIAD_DIR . '/assets/images/literacy-table/*.svg' );
+	$ver   = $files ? max( array_map( 'filemtime', $files ) ) : 0;
+	return add_query_arg( 'ver', (string) $ver, AIAD_URI . '/assets/images/literacy-table/{sym}.svg' );
+}
+
 function aiad_literacy_quiz(): array {
 	$syms = array_flip( array_column( aiad_literacy_element_records(), 'sym' ) );
 	$out  = array();
@@ -680,10 +707,11 @@ function aiad_render_literacy_table(): string {
 					<?php endforeach; ?>
 				</ul>
 			</div>
-			<div class="alpt-panel__tile" aria-hidden="true">
-				<span class="alpt-panel__n" data-alpt-out="n"><?php echo esc_html( (string) $first['n'] ); ?></span>
-				<span class="alpt-panel__sym" data-alpt-out="sym"><?php echo esc_html( $first['sym'] ); ?></span>
-				<span class="alpt-panel__tile-name" data-alpt-out="name"><?php echo esc_html( $first['name'] ); ?></span>
+			<div class="alpt-panel__tile">
+				<span class="alpt-panel__pic" data-alpt-pic-out hidden></span>
+				<span class="alpt-panel__n" data-alpt-out="n" aria-hidden="true"><?php echo esc_html( (string) $first['n'] ); ?></span>
+				<span class="alpt-panel__sym" data-alpt-out="sym" aria-hidden="true"><?php echo esc_html( $first['sym'] ); ?></span>
+				<span class="alpt-panel__tile-name" data-alpt-out="name" aria-hidden="true"><?php echo esc_html( $first['name'] ); ?></span>
 			</div>
 			<div class="alpt-panel__body" data-alpt-live><?php // Not a live region: it would re-read the whole panel. The script announces the element through a short line instead. ?>
 				<p class="alpt-panel__labels"><span class="alpt-panel__family" data-alpt-out="family"><?php echo esc_html( $families[ $first['family'] ]['name'] ); ?></span> <span class="alpt-panel__theme alpt-th--<?php echo esc_attr( $first['theme'] ); ?>" data-alpt-theme-label><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'ai-awareness-day' ), $strands[ $first['theme'] ] ?? '' ) ); ?></span> <span class="alpt-panel__year" data-alpt-out="year"><?php echo esc_html( aiad_literacy_year_label( $first ) ); ?></span></p>
@@ -1137,7 +1165,7 @@ function aiad_render_literacy_table(): string {
 		</form>
 	</section>
 
-	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
+	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'pics' => (object) array_map( static fn( array $p ): string => $p['alt'], aiad_literacy_pictures() ), 'picBase' => aiad_literacy_picture_base(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 </div>
 	<?php
 	return (string) ob_get_clean();

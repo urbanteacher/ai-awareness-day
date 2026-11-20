@@ -221,6 +221,70 @@
 			notesAfter.after( creditNote );
 		}
 
+		// An element with a picture shows it in place of the big tile, with its symbol as a badge on it.
+		var pics = data.pics || {};
+		var panelTile = panel.querySelector( '.alpt-panel__tile' );
+		var picOut = panel.querySelector( '[data-alpt-pic-out]' );
+		var picShown = null;
+		var picCache = {};
+		var picBase = data.picBase || '';
+		// The pictures are fetched only when an element is opened (then cached), so the page doesn't carry all of them.
+		function loadPicture( sym ) {
+			if ( ! picCache[ sym ] ) {
+				picCache[ sym ] = window.fetch( picBase.replace( '{sym}', encodeURIComponent( sym.toLowerCase() ) ) ).then( function ( response ) {
+					return response.ok ? response.text() : '';
+				} ).then( function ( text ) {
+					var svg = text ? new window.DOMParser().parseFromString( text, 'image/svg+xml' ).documentElement : null;
+					return svg && 'svg' === svg.nodeName ? svg : null;
+				} ).catch( function () {
+					delete picCache[ sym ];
+					return null;
+				} );
+			}
+			return picCache[ sym ];
+		}
+		function showPicture( sym ) {
+			if ( ! panelTile || ! picOut || picShown === sym ) {
+				return;
+			}
+			picShown = sym;
+			var has = !! picBase && Object.prototype.hasOwnProperty.call( pics, sym );
+			panelTile.classList.toggle( 'has-pic', has );
+			picOut.hidden = ! has;
+			picOut.replaceChildren();
+			if ( ! has ) {
+				picOut.removeAttribute( 'role' );
+				picOut.removeAttribute( 'aria-label' );
+				return;
+			}
+			picOut.setAttribute( 'role', 'img' );
+			picOut.setAttribute( 'aria-label', pics[ sym ] || '' );
+			loadPicture( sym ).then( function ( svg ) {
+				if ( picShown !== sym ) {
+					return;
+				}
+				if ( svg ) {
+					picOut.replaceChildren( document.importNode( svg, true ) );
+				} else {
+					// Couldn't load it: fall back to the plain tile.
+					panelTile.classList.remove( 'has-pic' );
+					picOut.hidden = true;
+					picOut.removeAttribute( 'role' );
+					picOut.removeAttribute( 'aria-label' );
+				}
+			} );
+			// Fetch the next and previous elements' pictures while the reader looks at this one.
+			var at = symIndex[ sym ];
+			[ at + 1, at - 1 ].forEach( function ( i ) {
+				var e = elements[ i ];
+				if ( e && Object.prototype.hasOwnProperty.call( pics, e[ 0 ] ) ) {
+					( window.requestIdleCallback || window.setTimeout )( function () {
+						loadPicture( e[ 0 ] );
+					} );
+				}
+			} );
+		}
+
 		function show( index, opts ) {
 			opts = opts || {};
 			var el = elements[ index ];
@@ -231,6 +295,7 @@
 			setText( 'n', String( index + 1 ) );
 			setText( 'n2', String( index + 1 ) );
 			setText( 'sym', el[ 0 ] );
+			showPicture( el[ 0 ] );
 			setText( 'name', el[ 1 ] );
 			setText( 'title', el[ 1 ] );
 			setText( 'family', families[ el[ 2 ] ] || '' );

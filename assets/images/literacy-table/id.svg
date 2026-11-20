@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Intelligent Document Processing: AI reads an invoice, sorts it as an invoice and pulls out who it is from, the date and the total. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-paper" d="M18 96 H112 L132 116 V306 H18 Z"/><path class="i-line" d="M18 96 H112 L132 116 V306 H18 Z"/><path class="i-line" d="M112 96 V116 H132"/>
+  <text class="t-xs" x="30" y="122" letter-spacing="1">INVOICE</text>
+  <path class="i-line" d="M30 146 H86 M30 182 H118 M30 196 H110 M30 210 H118 M30 244 H70"/>
+  <path class="i-line" d="M30 284 H72" stroke-width="5"/>
+  <rect class="i-deepline i-dash" x="24" y="136" width="70" height="20" rx="3"/>
+  <rect class="i-deepline i-dash" x="24" y="234" width="54" height="20" rx="3"/>
+  <rect class="i-deepline i-dash" x="24" y="272" width="56" height="24" rx="3"/>
+  <path class="i-line i-faint" d="M96 146 C120 146 128 190 142 196 M80 244 C110 244 126 210 142 204 M82 284 C120 284 130 216 142 208"/>
+  <rect class="i-deep" x="142" y="184" width="34" height="34" rx="6"/>
+  <text class="t-xs t-w" x="159" y="206" text-anchor="middle">AI</text>
+  <path class="i-line" d="M178 196 C186 160 186 124 194 122 M178 200 C186 180 186 170 194 168 M178 204 C186 210 186 214 194 214 M178 208 C186 240 186 258 194 260"/>
+  <rect class="i-accent" x="196" y="104" width="88" height="36" rx="18"/><rect class="i-line" x="196" y="104" width="88" height="36" rx="18"/>
+  <text class="t-s" x="240" y="128" text-anchor="middle">Invoice</text>
+  <rect class="i-paper" x="196" y="150" width="88" height="36" rx="6"/><rect class="i-line" x="196" y="150" width="88" height="36" rx="6"/>
+  <text class="t-s" x="240" y="174" text-anchor="middle">Bakery</text>
+  <rect class="i-paper" x="196" y="196" width="88" height="36" rx="6"/><rect class="i-line" x="196" y="196" width="88" height="36" rx="6"/>
+  <text class="t-s" x="240" y="220" text-anchor="middle">3 May</text>
+  <rect class="i-paper" x="196" y="242" width="88" height="36" rx="6"/><rect class="i-line" x="196" y="242" width="88" height="36" rx="6"/>
+  <text class="t-s" x="240" y="266" text-anchor="middle">£120</text>
+</svg>

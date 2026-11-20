@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Multimodal AI: a picture, a question and a sound go in together, one answer comes out. -->
+  <defs><marker id="alpt-arr-mm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="16" y="104" width="90" height="62" rx="8"/><rect class="i-line" x="16" y="104" width="90" height="62" rx="8"/>
+  <path class="i-line" d="M30 152 H92"/>
+  <ellipse class="i-deep" cx="58" cy="136" rx="16" ry="12"/><circle class="i-deep" cx="72" cy="124" r="8"/>
+  <path class="i-ink" d="M79 122 L88 125 L79 128 Z"/><path class="i-deep" d="M44 134 L32 128 L36 142 Z"/>
+  <path class="i-line" d="M56 148 V152 M62 148 V152"/>
+  <rect class="i-paper" x="16" y="178" width="90" height="62" rx="8"/><rect class="i-line" x="16" y="178" width="90" height="62" rx="8"/>
+  <text class="t-s" x="61" y="204" text-anchor="middle">What</text>
+  <text class="t-s" x="61" y="226" text-anchor="middle">bird?</text>
+  <rect class="i-paper" x="16" y="252" width="90" height="62" rx="8"/><rect class="i-line" x="16" y="252" width="90" height="62" rx="8"/>
+  <path class="i-deepline" d="M30 283 V283 M38 275 V291 M46 267 V299 M54 277 V289 M62 270 V296 M70 279 V287 M78 272 V294 M86 280 V286 M94 283 V283"/>
+  <path class="i-line" d="M112 135 C150 135 160 200 186 204" marker-end="url(#alpt-arr-mm)"/>
+  <path class="i-line" d="M112 209 H186" marker-end="url(#alpt-arr-mm)"/>
+  <path class="i-line" d="M112 283 C150 283 160 218 186 214" marker-end="url(#alpt-arr-mm)"/>
+  <path class="i-deep" d="M194 176 H264 L278 190 V242 H194 Z"/>
+<rect class="i-paper" x="218" y="197" width="36" height="24" rx="6"/><circle class="i-ink" cx="229" cy="209" r="4"/><circle class="i-ink" cx="243" cy="209" r="4"/>
+  <path class="i-line" d="M236 170 V126" marker-end="url(#alpt-arr-mm)"/>
+  <rect class="i-paper" x="114" y="22" width="140" height="94" rx="12"/><rect class="i-line" x="114" y="22" width="140" height="94" rx="12"/>
+  <text class="t-m" x="184" y="60" text-anchor="middle">A robin,</text>
+  <text class="t-m" x="184" y="90" text-anchor="middle">singing</text>
+</svg>

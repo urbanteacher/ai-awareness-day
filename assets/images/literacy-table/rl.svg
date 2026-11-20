@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Reinforcement Learning: an agent tries routes through a maze, loses a point for the trap and wins ten for the star; people rate chatbot answers the same way. -->
+  <defs><marker id="alpt-arr-rl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="104" y="84" width="180" height="135" rx="4"/>
+  <path class="i-line" d="M149 84 V219 M194 84 V219 M239 84 V219 M104 129 H284 M104 174 H284" stroke-opacity=".3"/>
+  <rect class="i-line" x="104" y="84" width="180" height="135" rx="4"/>
+  <rect class="i-cream" x="194" y="129" width="45" height="45"/>
+  <text class="t-m" x="216.5" y="159" text-anchor="middle">−1</text>
+  <path class="i-deep" d="M261.5 92 L266.5 102.5 L278 104 L269.7 112 L271.7 123.5 L261.5 118 L251.3 123.5 L253.3 112 L245 104 L256.5 102.5 Z"/>
+  <text class="t-s" x="261.5" y="146" text-anchor="middle">+10</text>
+  <path class="i-line" d="M126 196 H216 V182" stroke-dasharray="3 6" marker-end="url(#alpt-arr-rl)"/>
+  <path class="i-deepline" d="M126 184 V106 H238" stroke-width="5" marker-end="url(#alpt-arr-rl)"/>
+  <circle class="i-accent" cx="126" cy="196" r="11"/><circle class="i-line" cx="126" cy="196" r="11"/>
+  <text class="t-xs" x="20" y="116">Score</text>
+  <rect class="i-deep" x="20" y="194" width="10" height="16" rx="2"/>
+  <rect class="i-deep" x="36" y="184" width="10" height="26" rx="2"/>
+  <rect class="i-deep" x="52" y="166" width="10" height="44" rx="2"/>
+  <rect class="i-deep" x="68" y="140" width="10" height="70" rx="2"/>
+  <rect class="i-deep" x="84" y="126" width="10" height="84" rx="2"/>
+  <path class="i-line" d="M16 212 H96"/>
+  <text class="t-xs" x="56" y="228" text-anchor="middle">tries →</text>
+  <rect class="i-paper" x="16" y="248" width="268" height="66" rx="12"/><rect class="i-line" x="16" y="248" width="268" height="66" rx="12"/>
+  <text class="t-s" x="32" y="274">People rate</text>
+  <text class="t-s" x="32" y="296">the answers</text>
+  <rect class="i-deep" x="160" y="264" width="54" height="34" rx="17"/>
+  <text class="t-s t-w" x="187" y="287" text-anchor="middle">+1</text>
+  <rect class="i-paper" x="222" y="264" width="54" height="34" rx="17"/><rect class="i-line" x="222" y="264" width="54" height="34" rx="17"/>
+  <text class="t-s" x="249" y="287" text-anchor="middle">−1</text>
+</svg>

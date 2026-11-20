@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Intelligent Automation: AI reads a parent's email and decides it is an absence, then a bot logs it in the register. -->
+  <defs><marker id="alpt-arr-ia" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="108" y="22" width="148" height="62" rx="10"/><rect class="i-line" x="108" y="22" width="148" height="62" rx="10"/>
+  <text class="t-s" x="122" y="47">Sam is off ill</text>
+  <text class="t-s" x="122" y="70">today, sorry!</text>
+  <path class="i-line" d="M128 90 C112 98 96 104 90 114" marker-end="url(#alpt-arr-ia)"/>
+  <path class="i-deep" d="M28 122 H120 L136 138 V192 H28 Z"/>
+  <text class="t-m t-w" x="82" y="156" text-anchor="middle">AI</text>
+  <text class="t-xs t-w" x="82" y="178" text-anchor="middle">reads it</text>
+  <path class="i-line" d="M142 157 H164" marker-end="url(#alpt-arr-ia)"/>
+  <rect class="i-accent" x="170" y="138" width="110" height="38" rx="19"/><rect class="i-line" x="170" y="138" width="110" height="38" rx="19"/>
+  <text class="t-s" x="225" y="162" text-anchor="middle">Absence</text>
+  <path class="i-line" d="M225 182 V204" marker-end="url(#alpt-arr-ia)"/>
+  <path class="i-deep" d="M196 212 H250 L264 226 V262 H196 Z"/>
+  <rect class="i-paper" x="208" y="224" width="40" height="22" rx="6"/>
+  <circle class="i-ink" cx="221" cy="235" r="3.5"/><circle class="i-ink" cx="235" cy="235" r="3.5"/>
+  <text class="t-s" x="230" y="290" text-anchor="middle">Bot logs it</text>
+  <path class="i-line" d="M190 240 H166" marker-end="url(#alpt-arr-ia)"/>
+  <rect class="i-paper" x="24" y="210" width="134" height="102" rx="4"/><rect class="i-line" x="24" y="210" width="134" height="102" rx="4"/>
+  <text class="t-s" x="38" y="234">Register</text>
+  <path class="i-line" d="M24 246 H158 M24 278 H158"/>
+  <text class="t-s" x="38" y="268">Ali</text><path class="i-deepline" d="M124 260 L130 266 L142 254"/>
+  <rect class="i-deep" x="30" y="284" width="122" height="22" rx="3"/>
+  <text class="t-s t-w" x="38" y="301">Sam</text><text class="t-s t-w" x="144" y="301" text-anchor="end">ill</text>
+</svg>

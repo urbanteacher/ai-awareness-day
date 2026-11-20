@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Superintelligence: in maths, science and art, a dashed, hypothetical super AI bar towers far above the best human, each marked with a question mark. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-cream" x="110" y="28" width="18" height="18" rx="3"/><rect class="i-line" x="110" y="28" width="18" height="18" rx="3"/>
+  <text class="t-s" x="136" y="43" text-anchor="start">Best human</text>
+  <rect class="i-paper" x="110" y="56" width="18" height="18" rx="3"/><rect class="i-deepline" x="110" y="56" width="18" height="18" rx="3" style="stroke-dasharray:4 3"/>
+  <text class="t-s" x="136" y="71" text-anchor="start">Super AI?</text>
+  <rect class="i-cream" x="40" y="220" width="28" height="70" rx="3"/><rect class="i-line" x="40" y="220" width="28" height="70" rx="3"/><rect class="i-paper" x="72" y="98" width="28" height="192" rx="3"/><rect class="i-deepline i-dash" x="72" y="98" width="28" height="192" rx="3"/><text class="t-m t-d" x="86" y="186" text-anchor="middle">?</text><text class="t-s" x="70" y="314" text-anchor="middle">Maths</text>
+  <rect class="i-cream" x="130" y="208" width="28" height="82" rx="3"/><rect class="i-line" x="130" y="208" width="28" height="82" rx="3"/><rect class="i-paper" x="162" y="98" width="28" height="192" rx="3"/><rect class="i-deepline i-dash" x="162" y="98" width="28" height="192" rx="3"/><text class="t-m t-d" x="176" y="186" text-anchor="middle">?</text><text class="t-s" x="160" y="314" text-anchor="middle">Science</text>
+  <rect class="i-cream" x="220" y="226" width="28" height="64" rx="3"/><rect class="i-line" x="220" y="226" width="28" height="64" rx="3"/><rect class="i-paper" x="252" y="98" width="28" height="192" rx="3"/><rect class="i-deepline i-dash" x="252" y="98" width="28" height="192" rx="3"/><text class="t-m t-d" x="266" y="186" text-anchor="middle">?</text><text class="t-s" x="250" y="314" text-anchor="middle">Art</text>
+  <path class="i-line" d="M18 290 H286"/>
+</svg>

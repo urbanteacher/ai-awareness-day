@@ -111,3 +111,19 @@ Every file starts with the same three fields:
 ## History
 
 Until November 2026 this content was PHP arrays in `inc/literacy-table.php`. `tools/literacy-table-export.php` wrote it out to these files once and is kept for the record. Don't run it again, because it would read the new JSON-based functions.
+
+## Pictures
+
+An element can have a picture of the idea at work. In the panel it takes the place of the big tile, with the symbol as a badge on its top-left corner. Elements without one keep the plain tile.
+
+1. Save the drawing as `assets/images/literacy-table/{symbol in lower case}.svg`, for example `dw.svg` for Dw.
+2. Describe it in one sentence as the element's `"picture_alt"` in `elements.json`. Screen readers read this instead of the picture.
+3. Check Tools → Periodic Table: the Elements tab lists which elements have a picture, and the checks warn about a picture with no description, or a description with no picture.
+
+How to draw one (copy an existing file to start):
+
+- `viewBox="0 0 300 330"` and `class="alpt-pic"` on the `<svg>`. Keep the top-left 100 × 95 clear for the symbol badge.
+- Paint only with these classes, so the picture takes the family colour (and the theme or year colour in those views): `i-bg` (pale background), `i-deep` (the key part), `i-paper` (white), `i-cream`, `i-accent` (the AIAD theme colour, use once at most), `i-ink`, `i-line` and `i-deepline` (outlines), `i-dash`, `i-faint`. Text: `t-xs`, `t-s`, `t-m`, `t-l`, plus `t-w` (white) or `t-d` (deep).
+- Show the idea happening, not an icon for it. Up to about six short labels.
+- No photographs, and no faces or anything that could look like a real person.
+- An arrow marker needs an id unique to the file, such as `alpt-arr-rg`.

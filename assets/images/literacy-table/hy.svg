@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Hyperautomation: across the whole organisation almost every job goes to bots, AI or apps; a few stay with people. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="176" y="58" text-anchor="middle">Hand over all we can</text>
+  <path class="i-paper" d="M26 104 L150 82 L274 104 Z"/><path class="i-line" d="M26 104 L150 82 L274 104 Z"/>
+  <rect class="i-paper" x="36" y="104" width="228" height="146"/><rect class="i-line" x="36" y="104" width="228" height="146"/>
+  <rect class="i-deep" x="48" y="114" width="44" height="36" rx="4"/><circle class="i-paper" cx="63" cy="132" r="4"/><circle class="i-paper" cx="77" cy="132" r="4"/>
+  <rect class="i-deep" x="102" y="114" width="44" height="36" rx="4"/><text class="t-xs t-w" x="124" y="137" text-anchor="middle">AI</text>
+  <rect class="i-deep" x="156" y="114" width="44" height="36" rx="4"/><circle cx="178" cy="132" r="8" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-dasharray="3.5 2.8"/><circle class="i-paper" cx="178" cy="132" r="5"/>
+  <rect class="i-deep" x="210" y="114" width="44" height="36" rx="4"/><circle class="i-paper" cx="225" cy="132" r="4"/><circle class="i-paper" cx="239" cy="132" r="4"/>
+  <rect class="i-deep" x="48" y="160" width="44" height="36" rx="4"/><circle cx="70" cy="178" r="8" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-dasharray="3.5 2.8"/><circle class="i-paper" cx="70" cy="178" r="5"/>
+  <rect class="i-accent" x="102" y="160" width="44" height="36" rx="4"/><rect class="i-line" x="102" y="160" width="44" height="36" rx="4"/><circle class="i-paper" cx="124" cy="173" r="6"/><circle class="i-line" cx="124" cy="173" r="6"/><path class="i-line" d="M114 191 C114 180 134 180 134 191"/>
+  <rect class="i-deep" x="156" y="160" width="44" height="36" rx="4"/><circle class="i-paper" cx="171" cy="178" r="4"/><circle class="i-paper" cx="185" cy="178" r="4"/>
+  <rect class="i-deep" x="210" y="160" width="44" height="36" rx="4"/><text class="t-xs t-w" x="232" y="183" text-anchor="middle">AI</text>
+  <rect class="i-deep" x="48" y="206" width="44" height="36" rx="4"/><text class="t-xs t-w" x="70" y="229" text-anchor="middle">AI</text>
+  <rect class="i-deep" x="102" y="206" width="44" height="36" rx="4"/><circle class="i-paper" cx="117" cy="224" r="4"/><circle class="i-paper" cx="131" cy="224" r="4"/>
+  <rect class="i-deep" x="156" y="206" width="44" height="36" rx="4"/><circle cx="178" cy="224" r="8" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-dasharray="3.5 2.8"/><circle class="i-paper" cx="178" cy="224" r="5"/>
+  <rect class="i-accent" x="210" y="206" width="44" height="36" rx="4"/><rect class="i-line" x="210" y="206" width="44" height="36" rx="4"/><circle class="i-paper" cx="232" cy="219" r="6"/><circle class="i-line" cx="232" cy="219" r="6"/><path class="i-line" d="M222 237 C222 226 242 226 242 237"/>
+  <rect class="i-deep" x="48" y="264" width="44" height="36" rx="4"/><circle class="i-paper" cx="63" cy="282" r="4"/><circle class="i-paper" cx="77" cy="282" r="4"/>
+  <rect class="i-deep" x="102" y="264" width="44" height="36" rx="4"/><text class="t-xs t-w" x="124" y="287" text-anchor="middle">AI</text>
+  <rect class="i-deep" x="156" y="264" width="44" height="36" rx="4"/><circle cx="178" cy="282" r="8" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-dasharray="3.5 2.8"/><circle class="i-paper" cx="178" cy="282" r="5"/>
+  <rect class="i-accent" x="210" y="264" width="44" height="36" rx="4"/><rect class="i-line" x="210" y="264" width="44" height="36" rx="4"/><circle class="i-paper" cx="232" cy="277" r="6"/><circle class="i-line" cx="232" cy="277" r="6"/><path class="i-line" d="M222 295 C222 284 242 284 242 295"/>
+  <text class="t-s" x="70" y="320" text-anchor="middle">Bots</text>
+  <text class="t-s" x="124" y="320" text-anchor="middle">AI</text>
+  <text class="t-s" x="178" y="320" text-anchor="middle">Apps</text>
+  <text class="t-s" x="232" y="320" text-anchor="middle">People</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Context Engineering: documents, rules, examples and the task packed together for the AI, not one prompt. -->
+  <defs><marker id="alpt-arr-ce" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="104" y="56">Everything it needs</text>
+  <path class="i-line" d="M104 68 H252" stroke-opacity=".45"/>
+  <rect class="i-paper" x="16" y="94" width="206" height="220" rx="10"/>
+  <path class="i-line" d="M119 94 V314 M16 204 H222"/>
+  <rect x="16" y="94" width="206" height="220" rx="10" fill="none" stroke="var(--fam-deep)" stroke-width="5"/>
+  <rect class="i-cream" x="40" y="108" width="40" height="50" rx="3"/><rect class="i-line" x="40" y="108" width="40" height="50" rx="3"/>
+  <rect class="i-paper" x="52" y="116" width="40" height="50" rx="3"/><rect class="i-line" x="52" y="116" width="40" height="50" rx="3"/>
+  <path class="i-line" d="M60 130 H84 M60 140 H84 M60 150 H76"/>
+  <text class="t-s" x="67" y="192" text-anchor="middle">Docs</text>
+  <path class="i-deepline" d="M142 118 l5 6 9 -11 M142 138 l5 6 9 -11 M142 158 l5 6 9 -11"/>
+  <path class="i-line" d="M164 120 H200 M164 140 H196 M164 160 H200"/>
+  <text class="t-s" x="170" y="192" text-anchor="middle">Rules</text>
+  <rect class="i-cream" x="34" y="220" width="32" height="40" rx="3"/><rect class="i-line" x="34" y="220" width="32" height="40" rx="3"/>
+  <rect class="i-cream" x="72" y="220" width="32" height="40" rx="3"/><rect class="i-line" x="72" y="220" width="32" height="40" rx="3"/>
+  <path class="i-line" d="M41 232 H59 M41 242 H55 M79 232 H97 M79 242 H93"/>
+  <text class="t-s" x="67" y="296" text-anchor="middle">Examples</text>
+  <rect class="i-deep" x="146" y="218" width="48" height="40" rx="10"/><path class="i-deep" d="M154 256 L150 270 L166 256 Z"/>
+  <text class="t-m t-w" x="170" y="246" text-anchor="middle">?</text>
+  <text class="t-s" x="170" y="296" text-anchor="middle">Task</text>
+  <path class="i-line" d="M228 204 H244" marker-end="url(#alpt-arr-ce)"/>
+  <path class="i-deep" d="M248 180 h34 l14 14 v34 h-48 Z"/><rect class="i-paper" x="256" y="194" width="32" height="20" rx="5"/><circle class="i-ink" cx="266" cy="204" r="3.2"/><circle class="i-ink" cx="278" cy="204" r="3.2"/>
+  <text class="t-s" x="272" y="250" text-anchor="middle">AI</text>
+</svg>

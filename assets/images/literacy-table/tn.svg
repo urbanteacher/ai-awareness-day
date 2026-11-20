@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Transparency: a chatbot that says it is an AI, with a label showing how it works and what data it uses. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-deep" d="M96 28 H128 L140 40 V68 H96 Z"/>
+  <rect class="i-paper" x="104" y="38" width="26" height="18" rx="4"/>
+  <circle class="i-ink" cx="112" cy="47" r="2.8"/><circle class="i-ink" cx="122" cy="47" r="2.8"/>
+  <rect class="i-paper" x="152" y="28" width="104" height="40" rx="12"/><rect class="i-line" x="152" y="28" width="104" height="40" rx="12"/>
+  <text class="t-s" x="204" y="54" text-anchor="middle">I'm an AI</text>
+  <rect class="i-paper" x="24" y="96" width="252" height="218" rx="8"/><rect class="i-line" x="24" y="96" width="252" height="218" rx="8"/>
+  <path class="i-deep" d="M24 104 A8 8 0 0 1 32 96 H268 A8 8 0 0 1 276 104 V134 H24 Z"/><path class="i-line" d="M24 134 H276"/>
+  <text class="t-s t-w" x="150" y="121" text-anchor="middle" letter-spacing="3">AI LABEL</text>
+  <circle class="i-accent" cx="52" cy="168" r="12"/><circle class="i-line" cx="52" cy="168" r="12"/>
+  <path class="i-line" d="M46 168 L50 172 L58 163"/>
+  <text class="t-s" x="76" y="174">AI used: Yes</text>
+  <path class="i-line i-faint" d="M40 196 H260"/>
+  <circle class="i-deepline" cx="52" cy="228" r="9"/><path class="i-deepline" d="M52 213 V217 M52 239 V243 M37 228 H41 M63 228 H67"/>
+  <text class="t-s" x="76" y="234">How: predicts words</text>
+  <path class="i-line i-faint" d="M40 256 H260"/>
+  <ellipse class="i-deepline" cx="52" cy="276" rx="11" ry="4"/><path class="i-deepline" d="M41 276 V294 C41 300 63 300 63 294 V276"/>
+  <text class="t-s" x="76" y="292">Data: public web</text>
+</svg>

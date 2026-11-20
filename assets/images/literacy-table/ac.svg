@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Agentic AI: the AI works along a path of steps on its own, and a person checks in once. Top-left 80x80 stays clear for the symbol badge. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-line" d="M106 58 H250 C288 58 288 150 250 150" stroke-width="6" stroke-opacity=".3"/>
+  <path class="i-line" d="M250 150 H60 C22 150 22 240 60 240 H232" stroke-width="6" stroke-opacity=".3"/>
+  <path class="i-line i-dash" d="M106 58 H250 C288 58 288 150 250 150"/>
+  <path class="i-line i-dash" d="M250 150 H60 C22 150 22 240 60 240 H232"/>
+  <circle class="i-deep" cx="130" cy="58" r="16"/><text class="t-s t-w" x="130" y="64" text-anchor="middle">1</text>
+  <text class="t-s" x="130" y="96" text-anchor="middle">Plan</text>
+  <circle class="i-deep" cx="224" cy="58" r="16"/><text class="t-s t-w" x="224" y="64" text-anchor="middle">2</text>
+  <text class="t-s" x="224" y="96" text-anchor="middle">Search</text>
+  <circle class="i-deep" cx="222" cy="150" r="16"/><text class="t-s t-w" x="222" y="156" text-anchor="middle">3</text>
+  <text class="t-s" x="222" y="188" text-anchor="middle">Draft</text>
+  <path class="i-deep" d="M124 114 H156 L168 126 V148 H124 Z"/>
+  <rect class="i-paper" x="132" y="122" width="26" height="16" rx="4"/>
+  <circle class="i-ink" cx="140" cy="130" r="2.6"/><circle class="i-ink" cx="150" cy="130" r="2.6"/>
+  <circle class="i-cream" cx="74" cy="102" r="12"/><circle class="i-line" cx="74" cy="102" r="12"/>
+  <path class="i-line" d="M54 138 C54 118 94 118 94 138"/>
+  <rect class="i-accent" x="40" y="168" width="70" height="24" rx="12"/>
+  <text class="t-xs" x="75" y="185" text-anchor="middle">Check-in</text>
+  <circle class="i-deep" cx="130" cy="240" r="16"/><text class="t-s t-w" x="130" y="246" text-anchor="middle">4</text>
+  <text class="t-s" x="130" y="278" text-anchor="middle">Send</text>
+  <path class="i-line" d="M244 240 V196"/><path class="i-deep" d="M244 196 L276 206 L244 216 Z"/>
+  <circle class="i-ink" cx="244" cy="240" r="5"/>
+  <text class="t-s" x="244" y="278" text-anchor="middle">Done</text>
+</svg>

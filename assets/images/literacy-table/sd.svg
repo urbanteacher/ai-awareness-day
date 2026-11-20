@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Synthetic Data: a few private real records go in, many made-up look-alikes come out to train the AI. -->
+  <defs><marker id="alpt-arr-sd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="96" y="22" width="62" height="50" rx="4"/><rect class="i-line" x="96" y="22" width="62" height="50" rx="4"/>
+  <rect class="i-paper" x="106" y="32" width="62" height="50" rx="4"/><rect class="i-line" x="106" y="32" width="62" height="50" rx="4"/>
+  <circle class="i-ink" cx="122" cy="50" r="7"/><path class="i-line" d="M136 48 H158 M116 68 H158"/>
+  <path class="i-line" d="M184 52 V44 A10 10 0 0 1 204 44 V52" stroke-width="4"/>
+  <rect class="i-ink" x="178" y="52" width="32" height="26" rx="4"/>
+  <text class="t-s" x="218" y="72">Real</text>
+  <path class="i-line" d="M137 88 V112" marker-end="url(#alpt-arr-sd)"/>
+  <rect class="i-deep" x="36" y="120" width="228" height="46" rx="10"/>
+  <text class="t-s t-w" x="150" y="149" text-anchor="middle">Make look-alikes</text>
+  <path class="i-line" d="M120 170 V186" marker-end="url(#alpt-arr-sd)"/>
+  <rect class="i-cream" x="22" y="194" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="22" y="194" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="36" cy="210" r="6"/><path class="i-line" d="M48 208 H68 M30 226 H68"/><rect class="i-cream" x="88" y="194" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="88" y="194" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="102" cy="210" r="6"/><path class="i-line" d="M114 208 H134 M96 226 H134"/><rect class="i-cream" x="154" y="194" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="154" y="194" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="168" cy="210" r="6"/><path class="i-line" d="M180 208 H200 M162 226 H200"/>
+  <rect class="i-cream" x="22" y="246" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="22" y="246" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="36" cy="262" r="6"/><path class="i-line" d="M48 260 H68 M30 278 H68"/><rect class="i-cream" x="88" y="246" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="88" y="246" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="102" cy="262" r="6"/><path class="i-line" d="M114 260 H134 M96 278 H134"/><rect class="i-cream" x="154" y="246" width="56" height="44" rx="4"/><rect class="i-deepline i-dash" x="154" y="246" width="56" height="44" rx="4" stroke-dasharray="4 4"/><circle class="i-deep" cx="168" cy="262" r="6"/><path class="i-line" d="M180 260 H200 M162 278 H200"/>
+  <text class="t-s" x="121" y="316" text-anchor="middle">Made-up records</text>
+  <path class="i-line" d="M216 242 H232" marker-end="url(#alpt-arr-sd)"/>
+  <path class="i-deep" d="M238 218 h34 l14 14 v34 h-48 Z"/><rect class="i-paper" x="246" y="232" width="32" height="20" rx="5"/><circle class="i-ink" cx="256" cy="242" r="3.2"/><circle class="i-ink" cx="268" cy="242" r="3.2"/>
+  <text class="t-s" x="262" y="290" text-anchor="middle">Train</text>
+</svg>

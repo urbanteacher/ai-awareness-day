@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Large Language Model: trained on piles of writing, it guesses the next word. -->
+  <defs><marker id="alpt-arr-ll" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-cream" x="126" y="22" width="96" height="16" rx="3"/><rect class="i-line" x="126" y="22" width="96" height="16" rx="3"/>
+  <rect class="i-deep" x="116" y="38" width="110" height="18" rx="3"/>
+  <rect class="i-paper" x="122" y="56" width="104" height="16" rx="3"/><rect class="i-line" x="122" y="56" width="104" height="16" rx="3"/>
+  <rect class="i-cream" x="112" y="72" width="118" height="18" rx="3"/><rect class="i-line" x="112" y="72" width="118" height="18" rx="3"/>
+  <path class="i-line" d="M136 22 V38 M210 72 V90 M140 56 V72" stroke-opacity=".5"/>
+  <text class="t-xs" x="171" y="110" text-anchor="middle">Billions of words</text>
+  <path class="i-line" d="M171 116 V128" marker-end="url(#alpt-arr-ll)"/>
+  <path class="i-deep" d="M72 134 H214 L230 150 V176 H72 Z"/>
+  <text class="t-s t-w" x="151" y="161" text-anchor="middle">Language model</text>
+  <path class="i-line" d="M151 180 V192" marker-end="url(#alpt-arr-ll)"/>
+  <rect class="i-paper" x="16" y="198" width="268" height="118" rx="12"/><rect class="i-line" x="16" y="198" width="268" height="118" rx="12"/>
+  <text class="t-s" x="32" y="226">The cat sat on the …</text>
+  <text class="t-s" x="32" y="256">mat</text><rect class="i-accent" x="86" y="244" width="170" height="14" rx="7"/>
+  <text class="t-s" x="32" y="280">sofa</text><rect class="i-deep" x="86" y="269" width="64" height="12" rx="6"/>
+  <text class="t-s" x="32" y="304">moon</text><rect class="i-deep i-faint" x="86" y="294" width="14" height="10" rx="5"/>
+</svg>

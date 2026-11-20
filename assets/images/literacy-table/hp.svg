@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Human Premium: two similar pots, but the one checked as handmade costs far more. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-cream" d="M68 110 H112 L104 122 C136 140 134 200 114 212 H66 C46 200 44 140 76 122 Z"/>
+  <path class="i-deep" d="M52 158 H128 V172 H52 Z" opacity=".9"/>
+  <path class="i-line" d="M68 110 H112 L104 122 C136 140 134 200 114 212 H66 C46 200 44 140 76 122 Z"/>
+  <path class="i-cream" d="M188 110 H232 L224 122 C256 140 254 200 234 212 H186 C166 200 164 140 196 122 Z"/>
+  <path class="i-deep" d="M172 158 H248 V172 H172 Z" opacity=".9"/>
+  <path class="i-line" d="M188 110 H232 L224 122 C256 140 254 200 234 212 H186 C166 200 164 140 196 122 Z"/>
+  <circle class="i-accent" cx="250" cy="124" r="17"/><circle class="i-line" cx="250" cy="124" r="17"/>
+  <text class="t-s" x="250" y="130" text-anchor="middle">✓</text>
+  <path class="i-line" d="M18 214 H282" stroke-width="4"/>
+  <path class="i-line" d="M90 214 V232 M210 214 V232"/>
+  <path class="i-paper" d="M58 232 H110 L124 248 L110 264 H58 Z"/><path class="i-line" d="M58 232 H110 L124 248 L110 264 H58 Z"/>
+  <text class="t-m" x="88" y="256" text-anchor="middle">£5</text>
+  <path class="i-deep" d="M172 232 H232 L246 248 L232 264 H172 Z"/>
+  <text class="t-m t-w" x="206" y="256" text-anchor="middle">£40</text>
+  <text class="t-s" x="90" y="298" text-anchor="middle">AI-made</text>
+  <text class="t-s" x="210" y="298" text-anchor="middle">Made by</text>
+  <text class="t-s" x="210" y="316" text-anchor="middle">a person</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Activation Steering: one control inside the model is nudged up, and the reply comes out kinder. -->
+  <defs><marker id="alpt-arr-as" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="118" y="40" width="150" height="58" rx="12"/><rect class="i-line" x="118" y="40" width="150" height="58" rx="12"/>
+  <path class="i-paper" d="M160 96 L170 118 L182 96 Z"/><path class="i-line" d="M160 98 L170 118 L182 98"/>
+  <text class="t-s" x="193" y="75" text-anchor="middle">You've got this!</text>
+  <rect class="i-paper" x="20" y="130" width="206" height="184" rx="10"/><rect class="i-line" x="20" y="130" width="206" height="184" rx="10"/>
+  <path class="i-deep" d="M30 130 H216 Q226 130 226 140 V156 H20 V140 Q20 130 30 130 Z"/>
+  <text class="t-xs t-w" x="123" y="148" text-anchor="middle" letter-spacing="1">INSIDE THE MODEL</text>
+  <path class="i-line" d="M52 176 V280 M94 176 V280 M136 176 V280 M180 176 V280"/>
+  <rect class="i-ink" x="38" y="236" width="28" height="12" rx="3"/>
+  <rect class="i-ink" x="80" y="214" width="28" height="12" rx="3"/>
+  <rect class="i-ink" x="122" y="248" width="28" height="12" rx="3"/>
+  <path class="i-line" d="M180 262 V204" stroke-dasharray="3 5" opacity=".5"/>
+  <rect class="i-accent" x="164" y="184" width="32" height="16" rx="4"/><rect class="i-line" x="164" y="184" width="32" height="16" rx="4"/>
+  <text class="t-s t-d" x="180" y="302" text-anchor="middle">Kind</text>
+  <path class="i-line" d="M264 254 C264 214 240 194 206 192" marker-end="url(#alpt-arr-as)"/>
+  <text class="t-s" x="262" y="278" text-anchor="middle">Nudge</text>
+</svg>

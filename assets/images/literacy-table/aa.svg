@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Agent-to-Agent: two agents from different makers talk using shared rules to agree a booking. -->
+  <defs><marker id="alpt-arr-aa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="170" y="40" text-anchor="middle">Different makers,</text>
+  <text class="t-s" x="170" y="62" text-anchor="middle">same rules</text>
+  <rect class="i-paper" x="16" y="98" width="172" height="52" rx="12"/><rect class="i-line" x="16" y="98" width="172" height="52" rx="12"/>
+  <path class="i-paper" d="M36 148 L42 170 L60 148 Z"/><path class="i-line" d="M36 150 L42 170 L58 150"/>
+  <text class="t-s" x="102" y="130" text-anchor="middle">Coach for 30?</text>
+  <rect class="i-paper" x="112" y="164" width="170" height="52" rx="12"/><rect class="i-line" x="112" y="164" width="170" height="52" rx="12"/>
+  <path class="i-paper" d="M240 214 L252 234 L260 214 Z"/><path class="i-line" d="M240 216 L252 234 L258 216"/>
+  <text class="t-s" x="197" y="196" text-anchor="middle">Booked, Friday ✓</text>
+  <path class="i-deep" d="M18 236 H62 L76 250 V288 H18 Z"/>
+  <rect class="i-paper" x="30" y="250" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="40" cy="261" r="3.5"/><circle class="i-ink" cx="52" cy="261" r="3.5"/>
+  <text class="t-s" x="47" y="314" text-anchor="middle">School AI</text>
+  <rect class="i-paper" x="222" y="238" width="56" height="50" rx="25"/><rect class="i-deepline" x="222" y="238" width="56" height="50" rx="25"/>
+  <rect class="i-cream" x="234" y="252" width="32" height="20" rx="10"/>
+  <circle class="i-ink" cx="244" cy="262" r="3.5"/><circle class="i-ink" cx="256" cy="262" r="3.5"/>
+  <text class="t-s" x="250" y="314" text-anchor="middle">Coach AI</text>
+  <path class="i-line" d="M86 263 H212" stroke-dasharray="3 6" marker-start="url(#alpt-arr-aa)" marker-end="url(#alpt-arr-aa)"/>
+  <rect class="i-accent" x="118" y="250" width="64" height="26" rx="13"/>
+  <text class="t-s" x="150" y="269" text-anchor="middle">A2A</text>
+</svg>

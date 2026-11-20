@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Evals: a test results sheet scoring an AI on accuracy, safety and behaviour. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-deep" d="M198 30 H235.4 L246 40.6 V74 H198 Z"/>
+  <rect class="i-paper" x="207.6" y="43.2" width="28.8" height="15.8" rx="4.0"/>
+  <circle class="i-ink" cx="216.2" cy="51.1" r="3.4"/><circle class="i-ink" cx="227.8" cy="51.1" r="3.4"/>
+  <text class="t-s" x="182" y="60" text-anchor="end">Tested</text>
+  <rect class="i-paper" x="24" y="92" width="252" height="222" rx="8"/><rect class="i-line" x="24" y="92" width="252" height="222" rx="8"/>
+  <path class="i-deep" d="M24 100 C24 95 28 92 32 92 H268 C272 92 276 95 276 100 V126 H24 Z"/>
+  <text class="t-s t-w" x="150" y="115" text-anchor="middle" letter-spacing="2">TEST RESULTS</text>
+  <text class="t-s" x="42" y="160">Accuracy</text><text class="t-s" x="258" y="160" text-anchor="end">46/50</text>
+  <rect class="i-cream" x="42" y="170" width="216" height="14" rx="7"/><rect class="i-deep" x="42" y="170" width="199" height="14" rx="7"/><rect class="i-line" x="42" y="170" width="216" height="14" rx="7"/>
+  <text class="t-s" x="42" y="218">Safety</text><text class="t-s" x="258" y="218" text-anchor="end">50/50</text>
+  <rect class="i-cream" x="42" y="228" width="216" height="14" rx="7"/><rect class="i-deep" x="42" y="228" width="216" height="14" rx="7"/><rect class="i-line" x="42" y="228" width="216" height="14" rx="7"/>
+  <text class="t-s" x="42" y="276">Behaviour</text><text class="t-s" x="258" y="276" text-anchor="end">31/50</text>
+  <rect class="i-cream" x="42" y="286" width="216" height="14" rx="7"/><rect class="i-accent" x="42" y="286" width="134" height="14" rx="7"/><rect class="i-line" x="42" y="286" width="216" height="14" rx="7"/>
+</svg>

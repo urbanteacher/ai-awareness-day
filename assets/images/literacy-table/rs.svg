@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Responsible AI: a checklist the AI must pass, with a named person answering for it. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="120" y="74" width="160" height="242" rx="8"/><rect class="i-line" x="120" y="74" width="160" height="242" rx="8"/>
+  <rect class="i-deep" x="168" y="62" width="64" height="24" rx="6"/>
+  <text class="t-xs t-d" x="200" y="110" text-anchor="middle" letter-spacing="2">BEFORE USE</text>
+  <rect class="i-paper" x="136" y="130" width="24" height="24" rx="4"/><rect class="i-line" x="136" y="130" width="24" height="24" rx="4"/>
+  <path class="i-deepline" d="M141 142 L147 148 L157 134" stroke-width="4"/>
+  <text class="t-s" x="170" y="148">Safe</text>
+  <rect class="i-paper" x="136" y="176" width="24" height="24" rx="4"/><rect class="i-line" x="136" y="176" width="24" height="24" rx="4"/>
+  <path class="i-deepline" d="M141 188 L147 194 L157 180" stroke-width="4"/>
+  <text class="t-s" x="170" y="194">Fair</text>
+  <rect class="i-paper" x="136" y="222" width="24" height="24" rx="4"/><rect class="i-line" x="136" y="222" width="24" height="24" rx="4"/>
+  <path class="i-deepline" d="M141 234 L147 240 L157 226" stroke-width="4"/>
+  <text class="t-s" x="170" y="240">Transparent</text>
+  <rect class="i-accent" x="136" y="268" width="24" height="24" rx="4"/><rect class="i-line" x="136" y="268" width="24" height="24" rx="4"/>
+  <path class="i-line" d="M141 280 L147 286 L157 272" stroke-width="4"/>
+  <text class="t-s" x="170" y="286">Accountable</text>
+  <path class="i-deep" d="M28 112 H76 L92 128 V168 H28 Z"/>
+  <rect class="i-paper" x="40" y="128" width="36" height="24" rx="6"/>
+  <circle class="i-ink" cx="51" cy="140" r="3.5"/><circle class="i-ink" cx="65" cy="140" r="3.5"/>
+  <path class="i-line" d="M96 140 H112" stroke-dasharray="3 4"/>
+  <circle class="i-cream" cx="60" cy="230" r="14"/><circle class="i-line" cx="60" cy="230" r="14"/>
+  <path class="i-line" d="M38 264 C38 246 82 246 82 264"/>
+  <path class="i-line" d="M88 252 C104 266 112 276 128 280" stroke-dasharray="3 4"/>
+  <text class="t-xs" x="60" y="286" text-anchor="middle">In charge</text>
+</svg>

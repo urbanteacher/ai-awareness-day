@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Agent Swarm: many simple agents with no leader stream together from the start to a goal, each following its neighbours. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path d="M48 272 Q60 132 214 120" fill="none" stroke="var(--fam-deep)" stroke-width="56" stroke-linecap="round" opacity=".14"/>
+  <circle class="i-paper" cx="244" cy="118" r="30"/><circle class="i-deepline" cx="244" cy="118" r="30"/><circle class="i-deep" cx="244" cy="118" r="16"/><circle class="i-paper" cx="244" cy="118" r="6"/>
+  <text class="t-s" x="244" y="172" text-anchor="middle">Goal</text>
+  <ellipse class="i-cream" cx="46" cy="290" rx="32" ry="12"/><ellipse class="i-line" cx="46" cy="290" rx="32" ry="12"/>
+  <text class="t-s" x="46" y="322" text-anchor="middle">Start</text>
+  <path class="i-deep" transform="translate(36.2 250.7) rotate(-79) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(55.7 243.5) rotate(-78) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(68.4 236.6) rotate(-73) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(42.0 218.1) rotate(-71) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(62.0 214.8) rotate(-61) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(74.5 210.4) rotate(-69) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(54.0 189.1) rotate(-54) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(75.1 190.5) rotate(-68) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(93.3 193.0) rotate(-43) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(74.9 166.9) rotate(-47) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(88.7 166.8) rotate(-57) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(106.6 173.1) rotate(-52) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(94.1 143.7) rotate(-44) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(109.5 148.2) rotate(-35) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(126.3 158.1) rotate(-22) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(121.6 129.5) rotate(-24) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(136.6 137.7) rotate(-20) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(150.6 146.8) rotate(-25) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(152.6 121.1) rotate(-6) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(166.4 130.4) rotate(-10) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(178.9 137.5) rotate(-18) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(184.9 107.7) rotate(-19) scale(1.3)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <circle class="i-paper" cx="196" cy="250" r="46"/><circle class="i-line" cx="196" cy="250" r="46"/>
+  <circle class="i-line" cx="196" cy="250" r="31" stroke-dasharray="3 5" stroke-opacity=".5"/>
+  <path class="i-accent" transform="translate(196 250) rotate(-30) scale(1.7)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(172 238) rotate(-30) scale(1.7)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(182 272) rotate(-30) scale(1.7)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(218 232) rotate(-30) scale(1.7)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <path class="i-deep" transform="translate(216 268) rotate(-30) scale(1.7)" d="M7 0 L-5 -5 L-2 0 L-5 5 Z"/>
+  <text class="t-xs" x="196" y="316" text-anchor="middle">Each copies its neighbours</text>
+  <text class="t-s" x="170" y="40" text-anchor="middle">No leader,</text>
+  <text class="t-s" x="170" y="62" text-anchor="middle">simple rules</text>
+</svg>

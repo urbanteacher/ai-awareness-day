@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Sentiment Analysis: an AI reads three reviews and tags each as positive, neutral or negative. Top-left stays clear for the symbol badge. -->
+  <defs><marker id="alpt-arr-sa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-deep" d="M146 24 H196 L212 40 V76 H146 Z"/>
+  <rect class="i-paper" x="158" y="38" width="36" height="24" rx="6"/>
+  <circle class="i-ink" cx="169" cy="50" r="3.5"/><circle class="i-ink" cx="183" cy="50" r="3.5"/>
+  <path class="i-line" d="M179 82 V98" marker-end="url(#alpt-arr-sa)"/>
+  <rect class="i-paper" x="20" y="106" width="260" height="54" rx="10"/><rect class="i-line" x="20" y="106" width="260" height="54" rx="10"/>
+  <text class="t-s" x="36" y="139">Loved it, 10/10!</text>
+  <rect class="i-deep" x="182" y="120" width="86" height="26" rx="13"/>
+  <text class="t-xs t-w" x="225" y="138" text-anchor="middle">Positive</text>
+  <rect class="i-paper" x="20" y="174" width="260" height="54" rx="10"/><rect class="i-line" x="20" y="174" width="260" height="54" rx="10"/>
+  <text class="t-s" x="36" y="207">It was OK.</text>
+  <rect class="i-cream" x="182" y="188" width="86" height="26" rx="13"/><rect class="i-line" x="182" y="188" width="86" height="26" rx="13"/>
+  <text class="t-xs" x="225" y="206" text-anchor="middle">Neutral</text>
+  <rect class="i-paper" x="20" y="242" width="260" height="54" rx="10"/><rect class="i-line" x="20" y="242" width="260" height="54" rx="10"/>
+  <text class="t-s" x="36" y="275">Never again.</text>
+  <rect class="i-ink" x="182" y="256" width="86" height="26" rx="13"/>
+  <text class="t-xs t-w" x="225" y="274" text-anchor="middle">Negative</text>
+</svg>

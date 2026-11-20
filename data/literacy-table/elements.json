@@ -20,7 +20,8 @@
                 "Agi",
                 "Ga",
                 "Rs"
-            ]
+            ],
+            "picture_alt": "An AI chip linked to three cards showing jobs that usually need a human mind: understanding words, spotting patterns and making choices."
         },
         {
             "sym": "Ls",
@@ -39,7 +40,8 @@
                 "Nn",
                 "Mp",
                 "As"
-            ]
+            ],
+            "picture_alt": "The word whale enters a hidden map of numbers inside the model and moves from near the fish towards the mammals, giving the answer mammal."
         },
         {
             "sym": "Rsi",
@@ -60,7 +62,8 @@
                 "Sl",
                 "Hi",
                 "Sf"
-            ]
+            ],
+            "picture_alt": "Three AI robots stand on rising steps, each one building a bigger next version, while a person below asks who checks them."
         },
         {
             "sym": "Si",
@@ -79,7 +82,8 @@
                 "Sf",
                 "An",
                 "Sl"
-            ]
+            ],
+            "picture_alt": "A bar chart for maths, science and art where a dashed, hypothetical super AI bar marked with a question mark towers over the best human."
         },
         {
             "sym": "Agi",
@@ -98,7 +102,8 @@
                 "Sf",
                 "Sl",
                 "Rsi"
-            ]
+            ],
+            "picture_alt": "A narrow AI that can do one of six tasks beside a dashed, hypothetical general AI that can do almost all of them."
         },
         {
             "sym": "Ml",
@@ -118,7 +123,8 @@
                 "Su",
                 "Un",
                 "Tr"
-            ]
+            ],
+            "picture_alt": "Hand-written rules are crossed out; instead an AI learns from example pictures of cats and dogs, then recognises a new picture as a cat."
         },
         {
             "sym": "Dl",
@@ -136,7 +142,8 @@
                 "Ml",
                 "Nn",
                 "Tf"
-            ]
+            ],
+            "picture_alt": "A picture passes through many stacked layers that find edges, then shapes, then parts, until the last layer says cat."
         },
         {
             "sym": "Nn",
@@ -155,7 +162,8 @@
                 "Pm",
                 "Tr",
                 "Ls"
-            ]
+            ],
+            "picture_alt": "Input, hidden and output nodes in three layers, joined by thick strong connections and thin weak ones."
         },
         {
             "sym": "Al",
@@ -173,7 +181,8 @@
                 "Ml",
                 "Dt",
                 "Md"
-            ]
+            ],
+            "picture_alt": "Five numbered steps for making tea, from boiling the kettle to taking the bag out, ending at a steaming mug."
         },
         {
             "sym": "Md",
@@ -192,7 +201,8 @@
                 "If",
                 "Pm",
                 "Fm"
-            ]
+            ],
+            "picture_alt": "A model built from data turns a photo into the answer dog, and the question three times four into twelve."
         },
         {
             "sym": "Tr",
@@ -211,7 +221,8 @@
                 "Pm",
                 "Gp",
                 "Dp"
-            ]
+            ],
+            "picture_alt": "Data goes in and the model guesses, the guess is checked, its settings are adjusted, and its score rises round by round."
         },
         {
             "sym": "If",
@@ -230,7 +241,8 @@
                 "Ms",
                 "Gp",
                 "Ed"
-            ]
+            ],
+            "picture_alt": "After training is finished, the model is used on a new photo and answers bird, 92% sure, using a little energy."
         },
         {
             "sym": "Pm",
@@ -248,7 +260,8 @@
                 "Md",
                 "Qz",
                 "Sl"
-            ]
+            ],
+            "picture_alt": "A panel of twelve number dials inside a model, with one being turned from 0.42 to 0.47, and a note that there are billions more."
         },
         {
             "sym": "Tk",
@@ -266,7 +279,8 @@
                 "Ll",
                 "Cw",
                 "Em"
-            ]
+            ],
+            "picture_alt": "The word \"unbelievable\" is cut into three tokens, un, believ and able, each with the number the model reads."
         },
         {
             "sym": "Em",
@@ -285,7 +299,8 @@
                 "Tk",
                 "Ls",
                 "Rg"
-            ]
+            ],
+            "picture_alt": "A map of words: cat, kitten and dog sit close together, bus, car and train sit together far away, and each word is stored as a list of numbers."
         },
         {
             "sym": "Tf",
@@ -303,7 +318,8 @@
                 "Ll",
                 "Tk",
                 "Dl"
-            ]
+            ],
+            "picture_alt": "Attention lines link the word it's to every word in the sentence 'The cat sleeps because it's tired', with the thickest line going to cat."
         },
         {
             "sym": "Fm",
@@ -321,7 +337,8 @@
                 "Ll",
                 "Ft",
                 "Ow"
-            ]
+            ],
+            "picture_alt": "Four apps for chat, tutoring, code and search are built on one large foundation model trained on broad data such as books, pictures and code."
         },
         {
             "sym": "Ll",
@@ -341,7 +358,8 @@
                 "Fm",
                 "Cb"
             ],
-            "benchmark": "safe_adoption"
+            "benchmark": "safe_adoption",
+            "picture_alt": "A pile of books labelled billions of words feeds a language model, which guesses the next word in 'The cat sat on the…', with 'mat' far more likely than 'sofa' or 'moon'."
         },
         {
             "sym": "Ga",
@@ -361,7 +379,8 @@
                 "Ti",
                 "Gv"
             ],
-            "benchmark": "safe_adoption"
+            "benchmark": "safe_adoption",
+            "picture_alt": "An AI sends arrows out to five new things it has made: text, an image, audio, a video and code."
         },
         {
             "sym": "Pr",
@@ -380,7 +399,8 @@
                 "Ce",
                 "Cw"
             ],
-            "benchmark": "ai_dependency"
+            "benchmark": "ai_dependency",
+            "picture_alt": "A chat box marked prompt reads 'Write a 3-line poem about rain for Year 7', and an AI answers with a poem beginning 'Drip, drop, rain on the roof'."
         },
         {
             "sym": "Pe",
@@ -400,7 +420,8 @@
                 "Fs",
                 "Ct"
             ],
-            "benchmark": "ai_dependency"
+            "benchmark": "ai_dependency",
+            "picture_alt": "The vague request 'help me' is crossed out and rebuilt from three parts, role 'a maths tutor', task 'explain fractions' and format '3 short steps', which lead to a useful answer."
         },
         {
             "sym": "Cw",
@@ -418,7 +439,8 @@
                 "Tk",
                 "Me",
                 "Ce"
-            ]
+            ],
+            "picture_alt": "A long chat drawn as a column of messages. A frame covers only the newest ones, labelled \"It can see\"; the earliest messages above it are faded and marked \"Forgotten\"."
         },
         {
             "sym": "Mm",
@@ -437,7 +459,8 @@
                 "Cv",
                 "Ts",
                 "Gv"
-            ]
+            ],
+            "picture_alt": "A picture of a bird, the question 'What bird?' and a sound wave all go into one AI, which answers 'A robin, singing'."
         },
         {
             "sym": "Df",
@@ -455,7 +478,8 @@
                 "Ti",
                 "Gv",
                 "Gn"
-            ]
+            ],
+            "picture_alt": "Three small squares go from pure noise to a clearer and clearer picture, step by step, ending in a new picture of hills and a sun."
         },
         {
             "sym": "Gn",
@@ -472,7 +496,8 @@
             "links": [
                 "Df",
                 "Dk"
-            ]
+            ],
+            "picture_alt": "A maker AI hands a drawn flower to a judge AI with a magnifying glass, who says 'Fake!', and a dashed arrow sends the maker back to try again."
         },
         {
             "sym": "Ti",
@@ -509,7 +534,8 @@
                 "Va",
                 "Np",
                 "Dk"
-            ]
+            ],
+            "picture_alt": "The typed words 'Hi, class!' turn into a playing sound wave, and a speaker plays a natural voice to a listener."
         },
         {
             "sym": "Ft",
@@ -527,7 +553,8 @@
                 "Fm",
                 "Sd",
                 "Fs"
-            ]
+            ],
+            "picture_alt": "A general model, trained more on a small stack of maths data, becomes a maths expert."
         },
         {
             "sym": "Rg",
@@ -546,7 +573,8 @@
                 "Em",
                 "Ha",
                 "Ll"
-            ]
+            ],
+            "picture_alt": "A question, \"When is sports day?\", goes to a stack of documents. The AI finds the right one in the calendar and answers \"Friday 4 July\", marked with its source."
         },
         {
             "sym": "Te",
@@ -563,7 +591,8 @@
             "links": [
                 "Ha",
                 "Ll"
-            ]
+            ],
+            "picture_alt": "A thermometer next to the prompt 'My pet is a…': at high temperature the answers are varied, 'dragon, cloud, toaster'; at low they are predictable, 'dog, dog, dog'."
         },
         {
             "sym": "Ct",
@@ -581,7 +610,8 @@
                 "Rm",
                 "Pe"
             ],
-            "benchmark": "ai_dependency"
+            "benchmark": "ai_dependency",
+            "picture_alt": "A word problem about packs of pens is worked through in three numbered steps, including a check, before the final answer of 14 pens."
         },
         {
             "sym": "Fs",
@@ -598,7 +628,8 @@
             "links": [
                 "Pe",
                 "Ft"
-            ]
+            ],
+            "picture_alt": "Three examples, dog to woof, cow to moo and sheep to baa, are followed by a new one, duck, which the AI correctly completes as quack."
         },
         {
             "sym": "Rm",
@@ -617,7 +648,8 @@
                 "Pl",
                 "Ha"
             ],
-            "benchmark": "ai_dependency"
+            "benchmark": "ai_dependency",
+            "picture_alt": "An AI thinks for 20 seconds about x + 5 = 12, crosses out a wrong try, checks the right one, then answers x = 7."
         },
         {
             "sym": "Sd",
@@ -636,7 +668,8 @@
                 "Tr",
                 "Pv"
             ],
-            "benchmark": "bias_equality"
+            "benchmark": "bias_equality",
+            "picture_alt": "A few locked real records go into a machine that makes look-alikes, and the many made-up records are used to train an AI."
         },
         {
             "sym": "Ha",
@@ -655,7 +688,8 @@
                 "Te",
                 "Xa"
             ],
-            "benchmark": "assessment_integrity"
+            "benchmark": "assessment_integrity",
+            "picture_alt": "A chatbot says \"Smith (2019) proves it! 100% sure\", but the journal article it cites is only a dashed outline stamped \"Not real\"."
         },
         {
             "sym": "Dk",
@@ -695,7 +729,8 @@
                 "Lc",
                 "Cp"
             ],
-            "benchmark": "assessment_integrity"
+            "benchmark": "assessment_integrity",
+            "picture_alt": "A person asks for a quiz with a timer, the AI writes the code, and the finished quiz app runs."
         },
         {
             "sym": "Ce",
@@ -713,7 +748,8 @@
                 "Pe",
                 "Cw",
                 "Rg"
-            ]
+            ],
+            "picture_alt": "A box packed with documents, rules, examples and the task is passed to an AI, showing everything it needs rather than one prompt."
         },
         {
             "sym": "Gv",
@@ -753,7 +789,8 @@
                 "Hp",
                 "Ge"
             ],
-            "benchmark": "safeguarding"
+            "benchmark": "safeguarding",
+            "picture_alt": "A phone feed is filled with the same low-effort picture posts saying Wow, numbered one after another, with thousands more spilling out and the scroll never ending."
         },
         {
             "sym": "2d",
@@ -772,7 +809,8 @@
                 "3d",
                 "Ti",
                 "Ga"
-            ]
+            ],
+            "picture_alt": "A rough star sketch is turned by AI into three flat badge designs, and the person picks the shield one."
         },
         {
             "sym": "3d",
@@ -790,7 +828,8 @@
             "links": [
                 "2d",
                 "Ga"
-            ]
+            ],
+            "picture_alt": "A 3D CAD model of a 40 mm block with axes is made lighter by AI with a hole, then sent to a 3D printer building it layer by layer."
         },
         {
             "sym": "Su",
@@ -808,7 +847,8 @@
                 "Cl",
                 "Rr",
                 "Ml"
-            ]
+            ],
+            "picture_alt": "Two example cards, an apple labelled apple and a banana labelled banana, feed an AI, which then labels a new unlabelled apple as apple."
         },
         {
             "sym": "Un",
@@ -826,7 +866,8 @@
                 "Cu",
                 "Ml",
                 "Ad"
-            ]
+            ],
+            "picture_alt": "A jumbled pile of circles, triangles and squares with no labels is sorted by the AI into three groups of matching shapes."
         },
         {
             "sym": "Rr",
@@ -843,7 +884,8 @@
             "links": [
                 "Su",
                 "Fc"
-            ]
+            ],
+            "picture_alt": "A scatter graph of hours revised against test score with a straight best-fit line, used to predict a score of 72 for 6 hours of revision."
         },
         {
             "sym": "Cl",
@@ -861,7 +903,8 @@
                 "Su",
                 "Dt",
                 "Sa"
-            ]
+            ],
+            "picture_alt": "Two emails, one saying 'You won £1000!' and one about maths homework, go through an AI that sorts them into a Spam bin and a Not spam bin."
         },
         {
             "sym": "Cu",
@@ -878,7 +921,8 @@
             "links": [
                 "Un",
                 "Fe"
-            ]
+            ],
+            "picture_alt": "Shop customers plotted by visits and spend form three separate clusters, marked Group A, Group B and Group C."
         },
         {
             "sym": "Dt",
@@ -896,7 +940,8 @@
                 "Rf",
                 "Gb",
                 "Cl"
-            ]
+            ],
+            "picture_alt": "A yes/no flowchart asks 'Raining?' then 'Cold?', and for a dry, cold day it ends at Jumper rather than Coat or T-shirt."
         },
         {
             "sym": "Rf",
@@ -913,7 +958,8 @@
             "links": [
                 "Dt",
                 "Gb"
-            ]
+            ],
+            "picture_alt": "Three small decision trees each vote, two saying yes and one saying no, and the combined vote gives Yes by 2 to 1."
         },
         {
             "sym": "Gb",
@@ -930,7 +976,8 @@
             "links": [
                 "Rf",
                 "Fe"
-            ]
+            ],
+            "picture_alt": "Three small models in a row, each fixing the wrong answers left by the one before, until together they get 5 out of 5 right."
         },
         {
             "sym": "Fe",
@@ -948,7 +995,8 @@
                 "Gb",
                 "Of",
                 "Dp"
-            ]
+            ],
+            "picture_alt": "Raw facts about a reader are turned into features: born 2012 becomes age 14, 36 books in 3 years becomes 12 books a year, and their name is left out."
         },
         {
             "sym": "Of",
@@ -966,7 +1014,8 @@
                 "Tr",
                 "Ev",
                 "Fs"
-            ]
+            ],
+            "picture_alt": "A wiggly line passes through every training point and scores 100%, but the same line misses new points and scores only 40%."
         },
         {
             "sym": "Fc",
@@ -983,7 +1032,8 @@
             "links": [
                 "Tm",
                 "Pa"
-            ]
+            ],
+            "picture_alt": "A bar chart of lunches sold each week, with solid bars for past weeks and dashed bars after 'Now' forecasting the coming weeks."
         },
         {
             "sym": "Tm",
@@ -1000,7 +1050,8 @@
             "links": [
                 "Fc",
                 "Ad"
-            ]
+            ],
+            "picture_alt": "A line chart of ice creams sold over 2025 and 2026 that peaks every summer, with a dashed trend line showing sales going up overall."
         },
         {
             "sym": "Ad",
@@ -1017,7 +1068,8 @@
             "links": [
                 "Tm",
                 "Un"
-            ]
+            ],
+            "picture_alt": "A list of card payments of £4, £2 and £3, with one £950 payment made abroad at 3am highlighted and stamped unusual."
         },
         {
             "sym": "Pa",
@@ -1035,7 +1087,8 @@
                 "Fc",
                 "Ps",
                 "Ch"
-            ]
+            ],
+            "picture_alt": "Lunch counts from past Fridays, 230, 245 and 238, feed into a model that estimates about 240 lunches next Friday."
         },
         {
             "sym": "Ps",
@@ -1052,7 +1105,8 @@
             "links": [
                 "Pa",
                 "Mi"
-            ]
+            ],
+            "picture_alt": "A forecast of rain at 2pm leads to three sports day plans, with starting at 10am marked as the best choice over going ahead at 2pm or cancelling."
         },
         {
             "sym": "Rc",
@@ -1070,7 +1124,8 @@
                 "Pa",
                 "Em",
                 "Ge"
-            ]
+            ],
+            "picture_alt": "A person has watched two football clips and a music clip, and their feed now suggests more football."
         },
         {
             "sym": "Ch",
@@ -1087,7 +1142,8 @@
             "links": [
                 "Pa",
                 "Sa"
-            ]
+            ],
+            "picture_alt": "Three streaming app subscribers are scored for their chance of leaving, 12%, 20% and 85%, and the one most likely to leave is sent a half-price offer."
         },
         {
             "sym": "Sa",
@@ -1105,7 +1161,8 @@
                 "Np",
                 "Cl",
                 "Ch"
-            ]
+            ],
+            "picture_alt": "An AI reads three reviews and tags 'Loved it, 10/10!' as positive, 'It was OK.' as neutral and 'Never again.' as negative."
         },
         {
             "sym": "Np",
@@ -1123,7 +1180,8 @@
                 "Ll",
                 "Sa",
                 "Ts"
-            ]
+            ],
+            "picture_alt": "A person says 'Set a timer for ten minutes' and the AI turns it into a task, start a timer, lasting 10 minutes."
         },
         {
             "sym": "Cv",
@@ -1141,7 +1199,8 @@
                 "Oc",
                 "Mm",
                 "Ed"
-            ]
+            ],
+            "picture_alt": "A camera above a production line checks each bottle, marks three as OK and spots a crack in the fourth."
         },
         {
             "sym": "Ge",
@@ -1159,7 +1218,8 @@
                 "Rc",
                 "Sp",
                 "Rg"
-            ]
+            ],
+            "picture_alt": "Someone asks an AI assistant for the best bike lights, and its answer cites a web page written with clear questions and answers as its source."
         },
         {
             "sym": "Ag",
@@ -1180,7 +1240,8 @@
                 "Lp",
                 "Me"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "A bot is given the goal 'Book the hall' and works through the steps itself, ticking off 'Check diary' and 'Email office', then pauses at 'Pay £50?' and asks a person first."
         },
         {
             "sym": "Ac",
@@ -1200,7 +1261,8 @@
                 "Ma",
                 "Hi"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "A bot travels along a winding path of numbered steps, Plan, Search, Draft and Send, to a 'Done' flag, with a person checking in only once along the way."
         },
         {
             "sym": "Au",
@@ -1219,7 +1281,8 @@
                 "Hi",
                 "Co"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "Three sliders run from 'Human decides' to 'AI alone': a spelling fix is set almost fully to the AI, homework marks halfway, and exam grades almost entirely to a human."
         },
         {
             "sym": "Pl",
@@ -1237,7 +1300,8 @@
                 "Ag",
                 "Ra",
                 "Rm"
-            ]
+            ],
+            "picture_alt": "A bot stands at the bottom of four numbered steps, Date, Coach, Forms and Pack, that climb to a 'Trip day' flag, with the second step marked 'Next'."
         },
         {
             "sym": "Me",
@@ -1256,7 +1320,8 @@
                 "Cw",
                 "Pv"
             ],
-            "benchmark": "privacy"
+            "benchmark": "privacy",
+            "picture_alt": "Three separate chats each have their own short-term note, while one long-term memory bar under all three keeps the fact 'Likes chess'."
         },
         {
             "sym": "Fn",
@@ -1274,7 +1339,8 @@
                 "Ag",
                 "Ap",
                 "Mc"
-            ]
+            ],
+            "picture_alt": "Asked '17 × 23 = ?', a bot calls a calculator tool rather than search or booking, and the answer 391 comes back."
         },
         {
             "sym": "Ra",
@@ -1292,7 +1358,8 @@
                 "Lp",
                 "Pl",
                 "Fn"
-            ]
+            ],
+            "picture_alt": "An agent takes turns to think and act: 'Think: rain later?', 'Act: check weather', 'Think: rain at 3pm', 'Act: move the match', ending with a tick."
         },
         {
             "sym": "Lp",
@@ -1310,7 +1377,8 @@
                 "Ag",
                 "Ra",
                 "Sr"
-            ]
+            ],
+            "picture_alt": "A bot sits inside a loop of four steps, Observe, Think, Act and Check, that goes round again and again, with a way out to 'Done' from Check."
         },
         {
             "sym": "Sr",
@@ -1328,7 +1396,8 @@
                 "Lp",
                 "Rm",
                 "Ev"
-            ]
+            ],
+            "picture_alt": "A bot looks back at its draft, circles the wrong answer in '7 × 8 = 54', and its final version reads '7 × 8 = 56' with a 'Checked' label."
         },
         {
             "sym": "Mc",
@@ -1346,7 +1415,8 @@
                 "Fn",
                 "Ap",
                 "Aa"
-            ]
+            ],
+            "picture_alt": "An AI helper plugs into a bar labelled MCP, which connects it to a calendar, files and email using the same plug for every tool."
         },
         {
             "sym": "Aa",
@@ -1364,7 +1434,8 @@
                 "Mc",
                 "Ma",
                 "Or"
-            ]
+            ],
+            "picture_alt": "Two AI agents from different makers, a school AI and a coach company AI, use shared A2A rules to agree a coach booking for 30 people on Friday."
         },
         {
             "sym": "Or",
@@ -1382,7 +1453,8 @@
                 "Ma",
                 "Wo",
                 "Aa"
-            ]
+            ],
+            "picture_alt": "A lead agent is asked to plan a trip, hands out jobs on trains, the hotel and the weather to three helpers, then combines their answers into one trip plan."
         },
         {
             "sym": "Ma",
@@ -1401,7 +1473,8 @@
                 "Or",
                 "Sw"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "Three AI agents each do one part of making a quiz, one writing the questions, one drawing the picture and one checking the finished sheet."
         },
         {
             "sym": "Sw",
@@ -1418,7 +1491,8 @@
             "links": [
                 "Ma",
                 "Or"
-            ]
+            ],
+            "picture_alt": "A stream of many small, simple agents travels from a start point to a goal with no leader, each one copying the direction of its neighbours."
         },
         {
             "sym": "Rl",
@@ -1436,7 +1510,8 @@
                 "Pl",
                 "An",
                 "Rv"
-            ]
+            ],
+            "picture_alt": "An agent tries routes through a maze, losing a point in a trap and winning ten points at a star, while its score rises over many tries and people rate chatbot answers plus one or minus one."
         },
         {
             "sym": "Co",
@@ -1455,7 +1530,8 @@
                 "Ag",
                 "Au"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "An AI agent reads what is on a computer screen, types a name into a box on the keyboard and moves the cursor to click Save."
         },
         {
             "sym": "Br",
@@ -1473,7 +1549,8 @@
                 "Co",
                 "Ag"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "A person asks for two cinema seats, and an AI agent in the web browser fills in the seats and day on the booking form and clicks Book."
         },
         {
             "sym": "Ca",
@@ -1492,7 +1569,8 @@
                 "Cp",
                 "Ag"
             ],
-            "benchmark": "assessment_integrity"
+            "benchmark": "assessment_integrity",
+            "picture_alt": "An AI agent works across several code files in a repeating loop of write, test and fix until the result shows 12 tests pass."
         },
         {
             "sym": "Rp",
@@ -1510,7 +1588,8 @@
                 "Ia",
                 "Dw",
                 "St"
-            ]
+            ],
+            "picture_alt": "A software bot copies a name from a list into a form and clicks Submit, repeating the same steps 500 times."
         },
         {
             "sym": "Ia",
@@ -1528,7 +1607,8 @@
                 "Rp",
                 "Hy",
                 "Id"
-            ]
+            ],
+            "picture_alt": "AI reads a parent's email saying Sam is ill, decides it is an absence, and a bot marks Sam as ill in the register."
         },
         {
             "sym": "Hy",
@@ -1546,7 +1626,8 @@
                 "Ia",
                 "Wo",
                 "Lc"
-            ]
+            ],
+            "picture_alt": "A building full of tasks where almost every one is handed to bots, AI or apps, with just a couple kept by people."
         },
         {
             "sym": "Wo",
@@ -1564,7 +1645,8 @@
                 "Or",
                 "Tg",
                 "Hy"
-            ]
+            ],
+            "picture_alt": "A lost-coat report moves in order between the pupil, the school office and an app: report, log it, find, email, collect."
         },
         {
             "sym": "Tg",
@@ -1581,7 +1663,8 @@
             "links": [
                 "En",
                 "Wh"
-            ]
+            ],
+            "picture_alt": "Three possible starting events, a new email, a form sent or 9:00 am, with the form being sent setting off the automation."
         },
         {
             "sym": "En",
@@ -1599,7 +1682,8 @@
                 "Tg",
                 "Wh",
                 "Wo"
-            ]
+            ],
+            "picture_alt": "When a parcel arrives at 2 pm, the event-driven app reacts straight away while the scheduled one waits until 6 pm."
         },
         {
             "sym": "Ap",
@@ -1617,7 +1701,8 @@
                 "Fn",
                 "Wh",
                 "Mc"
-            ]
+            ],
+            "picture_alt": "A homework app passes a Friday due date through a doorway to a calendar app, which sends back a message that it was added."
         },
         {
             "sym": "Wh",
@@ -1635,7 +1720,8 @@
                 "Ap",
                 "Tg",
                 "En"
-            ]
+            ],
+            "picture_alt": "The moment a payment is made in a shop app, a message flies to the delivery app, which starts packing the order."
         },
         {
             "sym": "Lc",
@@ -1652,7 +1738,8 @@
             "links": [
                 "Vc",
                 "Wo"
-            ]
+            ],
+            "picture_alt": "Someone builds an automation without code by dragging an Email block into place under Form and If blocks."
         },
         {
             "sym": "Id",
@@ -1670,7 +1757,8 @@
                 "Oc",
                 "St",
                 "Ia"
-            ]
+            ],
+            "picture_alt": "AI reads an invoice, labels it as an invoice and pulls out who it is from, the date and the total of £120."
         },
         {
             "sym": "Oc",
@@ -1687,7 +1775,8 @@
             "links": [
                 "Id",
                 "Cv"
-            ]
+            ],
+            "picture_alt": "A photo of the handwritten word Hello is read letter by letter into typed text, with the computer unsure whether one letter is an l or a 1."
         },
         {
             "sym": "Mi",
@@ -1704,7 +1793,8 @@
             "links": [
                 "Wo",
                 "Ps"
-            ]
+            ],
+            "picture_alt": "Computer records are turned into a map of how work really flows, showing ordering to checking takes 2 minutes but checking to paying takes 3 days."
         },
         {
             "sym": "Be",
@@ -1721,7 +1811,8 @@
             "links": [
                 "St",
                 "Rp"
-            ]
+            ],
+            "picture_alt": "Canteen orders pass through if-then rules, so the pasta always gets yes and the nut bar always gets no."
         },
         {
             "sym": "St",
@@ -1739,7 +1830,8 @@
                 "Rp",
                 "Be",
                 "Id"
-            ]
+            ],
+            "picture_alt": "An order moves along a conveyor from ordered to paid to sent, all by computer, with an empty space where a person would check."
         },
         {
             "sym": "Dw",
@@ -1757,7 +1849,8 @@
                 "Rp",
                 "Ag",
                 "Co"
-            ]
+            ],
+            "picture_alt": "A team chart with three people, Payroll, Budgets and Manager, and a bot with its own job title, Invoices."
         },
         {
             "sym": "Cb",
@@ -1796,7 +1889,8 @@
                 "Ts",
                 "Np"
             ],
-            "benchmark": "safe_adoption"
+            "benchmark": "safe_adoption",
+            "picture_alt": "A pupil asks a chat assistant to move their club to Tuesday, and the assistant moves it in the calendar."
         },
         {
             "sym": "Cp",
@@ -1815,7 +1909,8 @@
                 "Cb",
                 "Hi"
             ],
-            "benchmark": "assessment_integrity"
+            "benchmark": "assessment_integrity",
+            "picture_alt": "A pupil writes a sentence while an AI beside them suggests the next words in grey, and the pupil chooses to accept or edit."
         },
         {
             "sym": "Rs",
@@ -1835,7 +1930,8 @@
                 "Xa",
                 "Sf"
             ],
-            "benchmark": "bias_equality"
+            "benchmark": "bias_equality",
+            "picture_alt": "An AI must pass a checklist before it is used, with Safe, Fair, Transparent and Accountable all ticked, and a person linked to Accountable as the one in charge."
         },
         {
             "sym": "Et",
@@ -1855,7 +1951,8 @@
                 "Fa",
                 "Hp"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "Under the heading 'We can build it. But should we?', a signpost points to Consent, Any harm and Society, while a person and an AI stand at the post."
         },
         {
             "sym": "Bi",
@@ -1874,7 +1971,8 @@
                 "Sd",
                 "Et"
             ],
-            "benchmark": "bias_equality"
+            "benchmark": "bias_equality",
+            "picture_alt": "Training data shows thirteen people of one kind and only one of another, so the AI says yes to the first kind and no to the second."
         },
         {
             "sym": "Fa",
@@ -1892,7 +1990,8 @@
                 "Bi",
                 "Rs"
             ],
-            "benchmark": "bias_equality"
+            "benchmark": "bias_equality",
+            "picture_alt": "A bar chart of right answers shows Group A at 98% and Group B at 70%, with a gap below the 95% overall line."
         },
         {
             "sym": "Xa",
@@ -1911,7 +2010,8 @@
                 "Mp",
                 "Ha"
             ],
-            "benchmark": "bias_equality"
+            "benchmark": "bias_equality",
+            "picture_alt": "An AI gives an essay grade of C and, asked why, shows bars for what lowered it, too short and spelling, and what raised it, good ideas."
         },
         {
             "sym": "Tn",
@@ -1930,7 +2030,8 @@
                 "Wm",
                 "Aw"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "A chatbot says 'I'm an AI', above a label that lists AI used: yes, how it works: predicts words, and data: public web."
         },
         {
             "sym": "An",
@@ -1948,7 +2049,8 @@
                 "Sf",
                 "Rl",
                 "Rd"
-            ]
+            ],
+            "picture_alt": "A person asks an AI for top marks, and the AI aims at the target of really learning rather than the faded shortcut of copying."
         },
         {
             "sym": "Gr",
@@ -1968,7 +2070,8 @@
                 "Rd",
                 "Cb"
             ],
-            "benchmark": "safe_adoption"
+            "benchmark": "safe_adoption",
+            "picture_alt": "Rails on either side of an AI let a homework question in and a helpful answer out, while an unsafe request and a harmful reply are blocked outside them."
         },
         {
             "sym": "Hi",
@@ -1987,7 +2090,8 @@
                 "Rs",
                 "Ag"
             ],
-            "benchmark": "human_oversight"
+            "benchmark": "human_oversight",
+            "picture_alt": "An AI suggests a mark of 4 out of 10, a teacher checks it and can approve it or send it back to change, and only after approval is the mark sent."
         },
         {
             "sym": "Rt",
@@ -2006,7 +2110,8 @@
                 "Jb",
                 "Sf"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "Two testers fire trick prompts at an AI's shield to try to break it; two bounce off and one finds a weak spot to fix before launch."
         },
         {
             "sym": "Sf",
@@ -2026,7 +2131,8 @@
                 "Rt",
                 "Si"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "Three layers of safety, tests, rules and checks, each have holes; an accident gets through the first layer and a misuse through two, but both are stopped."
         },
         {
             "sym": "Pv",
@@ -2045,7 +2151,8 @@
                 "Sh",
                 "Me"
             ],
-            "benchmark": "privacy"
+            "benchmark": "privacy",
+            "picture_alt": "Name, address and health details are locked away under UK GDPR, and only the homework question is sent on to the AI."
         },
         {
             "sym": "Dg",
@@ -2064,7 +2171,8 @@
                 "Dp",
                 "Re"
             ],
-            "benchmark": "privacy"
+            "benchmark": "privacy",
+            "picture_alt": "A policy book in the middle sets the rules as data moves through four steps: collect, store, access and use."
         },
         {
             "sym": "Re",
@@ -2083,7 +2191,8 @@
                 "Ip",
                 "So"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "A stepped pyramid of AI rules by risk level, from minimal risk at the bottom through limited and high risk to banned at the top, with an arrow showing more risk means more rules."
         },
         {
             "sym": "Ip",
@@ -2103,7 +2212,8 @@
                 "Re",
                 "Mx"
             ],
-            "benchmark": "assessment_integrity"
+            "benchmark": "assessment_integrity",
+            "picture_alt": "An artist's copyrighted painting is fed into an AI, which makes a similar picture, while the artist asks to be asked first and a label asks who owns the new picture."
         },
         {
             "sym": "Aw",
@@ -2122,7 +2232,8 @@
                 "Hp",
                 "Re"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "A plain toaster wears a big AI-powered sticker, but a look inside shows it only has a timer that pops the toast after two minutes."
         },
         {
             "sym": "Sh",
@@ -2140,7 +2251,8 @@
                 "Pv",
                 "Dg"
             ],
-            "benchmark": "privacy"
+            "benchmark": "privacy",
+            "picture_alt": "A pupil copies a list of pupil names from the school's approved apps into an app that has not been approved, with a warning sign for the private data."
         },
         {
             "sym": "Hp",
@@ -2158,7 +2270,8 @@
                 "Sp",
                 "Ip",
                 "Et"
-            ]
+            ],
+            "picture_alt": "Two almost identical pots sit on a shelf: the AI-made one costs £5 and the one checked as made by a person costs £40."
         },
         {
             "sym": "Wm",
@@ -2177,7 +2290,8 @@
                 "Ti",
                 "Tn"
             ],
-            "benchmark": "safeguarding"
+            "benchmark": "safeguarding",
+            "picture_alt": "An AI-made landscape picture looks normal, but zooming in reveals a hidden pattern of marks that a checker reads as made by AI."
         },
         {
             "sym": "So",
@@ -2196,7 +2310,8 @@
                 "Cd",
                 "Gp"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "A country with its own flag holds its own computers, data and AI inside its border, under its own rules and control."
         },
         {
             "sym": "Rv",
@@ -2214,7 +2329,8 @@
                 "Mp",
                 "Mx",
                 "Ow"
-            ]
+            ],
+            "picture_alt": "A finished robot toy is taken apart into gears, a chip and a battery, and a note works out how it runs: battery to chip to gears."
         },
         {
             "sym": "Mp",
@@ -2233,7 +2349,8 @@
                 "Xa",
                 "Rv",
                 "As"
-            ]
+            ],
+            "picture_alt": "The question capital of France goes into a network of connected parts, a magnifier highlights the one part that holds the idea of France, and the answer comes out as Paris."
         },
         {
             "sym": "As",
@@ -2251,7 +2368,8 @@
                 "Ls",
                 "Mp",
                 "Rd"
-            ]
+            ],
+            "picture_alt": "Inside a model, one control labelled kind is nudged upwards among several sliders, and the reply bubble says you've got this."
         },
         {
             "sym": "Mx",
@@ -2269,7 +2387,8 @@
                 "Rv",
                 "Ip",
                 "Ds"
-            ]
+            ],
+            "picture_alt": "Ten thousand questions go to a locked AI and its answers are used to build a dashed-outline copy of it, without opening its locked files."
         },
         {
             "sym": "Rd",
@@ -2287,7 +2406,8 @@
                 "As",
                 "An",
                 "Ab"
-            ]
+            ],
+            "picture_alt": "An unsafe request enters the inside of a model and lines up with an arrow marked refusal direction, so the model replies sorry, I can't help."
         },
         {
             "sym": "Ab",
@@ -2365,7 +2485,8 @@
                 "Tp",
                 "Tr",
                 "Cd"
-            ]
+            ],
+            "picture_alt": "A GPU chip packed with dozens of tiny cores, with many arrows going into it at once to show it does lots of sums at the same time."
         },
         {
             "sym": "Tp",
@@ -2382,7 +2503,8 @@
             "links": [
                 "Gp",
                 "Ed"
-            ]
+            ],
+            "picture_alt": "An ordinary chip beside a chip built for AI doing the same AI maths: the AI chip has a much longer speed bar and a much shorter power bar."
         },
         {
             "sym": "Cd",
@@ -2400,7 +2522,8 @@
                 "Gp",
                 "Ms",
                 "So"
-            ]
+            ],
+            "picture_alt": "A phone, laptop and tablet connect over the internet to AI running on servers in a cloud, sending a question up and getting an answer back."
         },
         {
             "sym": "Ed",
@@ -2418,7 +2541,8 @@
                 "Sm",
                 "Qz",
                 "If"
-            ]
+            ],
+            "picture_alt": "A phone uses its own AI chip to label a cat on its screen, with the link to the cloud crossed out to show nothing is uploaded."
         },
         {
             "sym": "Mo",
@@ -2436,7 +2560,8 @@
                 "Lo",
                 "Ms",
                 "Dp"
-            ]
+            ],
+            "picture_alt": "Three snapshots of the same model over months of use: 95% accurate at launch, dropping to 70% with a warning, then back to 94% after it is updated."
         },
         {
             "sym": "Lo",
@@ -2454,7 +2579,8 @@
                 "Mo",
                 "Ev",
                 "Ll"
-            ]
+            ],
+            "picture_alt": "A chatbot in the middle of a weekly loop of four checks: prompts, tests, costs and safety."
         },
         {
             "sym": "Vd",
@@ -2471,7 +2597,8 @@
             "links": [
                 "Em",
                 "Rg"
-            ]
+            ],
+            "picture_alt": "The word puppy is turned into a list of numbers and matched against a database of stored words, where dog is marked as the closest match ahead of kitten and bus."
         },
         {
             "sym": "Ms",
@@ -2489,7 +2616,8 @@
                 "If",
                 "Mo",
                 "Cd"
-            ]
+            ],
+            "picture_alt": "Four people send questions to a tall rack of servers running one AI model and each gets an answer back, with millions more like them."
         },
         {
             "sym": "Qz",
@@ -2507,7 +2635,8 @@
                 "Pm",
                 "Sm",
                 "Ed"
-            ]
+            ],
+            "picture_alt": "The long number 0.73914826 is rounded to 0.74, so a 16 GB model shrinks to a faster 4 GB one."
         },
         {
             "sym": "Ds",
@@ -2525,7 +2654,8 @@
                 "Sm",
                 "Mx",
                 "Md"
-            ]
+            ],
+            "picture_alt": "Asked the capital of France, a big teacher model answers Paris and a small student model copies the same answer."
         },
         {
             "sym": "Ow",
@@ -2543,7 +2673,8 @@
                 "Fm",
                 "Rv",
                 "Uc"
-            ]
+            ],
+            "picture_alt": "An unlocked file of model weights with arrows to three people who run, study and adapt it, and a cracked shield warning that safety can be removed."
         },
         {
             "sym": "Sm",
@@ -2561,7 +2692,8 @@
                 "Ds",
                 "Qz",
                 "Ed"
-            ]
+            ],
+            "picture_alt": "A small model answers in one second on a laptop, beside a large model that needs a whole room of server racks."
         },
         {
             "sym": "Ev",
@@ -2580,7 +2712,8 @@
                 "Of",
                 "Lo"
             ],
-            "benchmark": "governance"
+            "benchmark": "governance",
+            "picture_alt": "A test results sheet for an AI showing scores for accuracy (46 out of 50), safety (50 out of 50) and behaviour (31 out of 50)."
         },
         {
             "sym": "Sl",
@@ -2598,7 +2731,8 @@
                 "Pm",
                 "Gp",
                 "Agi"
-            ]
+            ],
+            "picture_alt": "A graph where three AI models of growing size sit higher and higher on a steady rising line, with a dashed line guessing the next one."
         },
         {
             "sym": "Dp",
@@ -2616,7 +2750,8 @@
                 "Dg",
                 "Mo",
                 "Tr"
-            ]
+            ],
+            "picture_alt": "Data from several files is collected in a jumble, cleaned by throwing out a bad item, and prepared in neat rows that feed into training an AI."
         }
     ]
 }

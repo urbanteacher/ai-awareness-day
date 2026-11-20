@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Event-Driven Automation: when a parcel arrives at 2 pm the event-driven app reacts at once, while the scheduled one waits until 6 pm. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="150" y="58" text-anchor="middle">Parcel arrives</text>
+  <circle class="i-accent" cx="150" cy="82" r="11"/><circle class="i-line" cx="150" cy="82" r="11"/>
+  <path class="i-deepline i-dash" d="M150 98 V298"/>
+  <text class="t-s" x="18" y="128">Event-driven</text>
+  <rect class="i-paper" x="16" y="136" width="268" height="52" rx="10"/><rect class="i-line" x="16" y="136" width="268" height="52" rx="10"/>
+  <circle class="i-deep" cx="150" cy="162" r="15"/><path d="M143 162 L148 167 L158 156" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="t-m" x="176" y="170">Now!</text>
+  <text class="t-s" x="18" y="218">On a schedule</text>
+  <rect class="i-paper" x="16" y="226" width="268" height="52" rx="10"/><rect class="i-line" x="16" y="226" width="268" height="52" rx="10"/>
+  <circle class="i-paper" cx="150" cy="252" r="7"/><circle class="i-line" cx="150" cy="252" r="7"/>
+  <path class="i-line" d="M162 252 H232" stroke-dasharray="2 7"/>
+  <circle class="i-deep" cx="252" cy="252" r="15"/><path d="M252 243 V252 H259" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="i-line" d="M16 300 H284 M252 294 V306 M150 294 V306"/>
+  <text class="t-xs" x="150" y="322" text-anchor="middle">2 pm</text>
+  <text class="t-xs" x="252" y="322" text-anchor="middle">6 pm</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Planning: a goal broken into ordered steps, with the bot choosing the next one. Top-left 80x80 stays clear for the symbol badge. -->
+  <defs><marker id="alpt-arr-pl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-paper" d="M20 318 V266 H84 V214 H148 V162 H212 V110 H276 V318 Z"/>
+  <path class="i-deep" d="M84 318 V214 H148 V318 Z"/>
+  <path class="i-line" d="M20 318 V266 H84 V214 H148 V162 H212 V110 H276 V318 Z M84 266 V318 M148 214 V318 M212 162 V318"/>
+  <text class="t-m" x="52" y="292" text-anchor="middle">1</text><text class="t-s" x="52" y="312" text-anchor="middle">Date</text>
+  <text class="t-m t-w" x="116" y="240" text-anchor="middle">2</text><text class="t-s t-w" x="116" y="260" text-anchor="middle">Coach</text>
+  <text class="t-m" x="180" y="188" text-anchor="middle">3</text><text class="t-s" x="180" y="208" text-anchor="middle">Forms</text>
+  <text class="t-m" x="244" y="136" text-anchor="middle">4</text><text class="t-s" x="244" y="156" text-anchor="middle">Pack</text>
+  <path class="i-line" d="M232 110 V54"/><path class="i-accent" d="M232 54 L268 64 L232 76 Z"/><path class="i-line" d="M232 54 L268 64 L232 76"/>
+  <text class="t-s" x="222" y="72" text-anchor="end">Trip day</text>
+  <path class="i-deep" d="M30 228 H62 L74 240 V266 H30 Z"/>
+  <rect class="i-paper" x="37" y="236" width="28" height="18" rx="4"/>
+  <circle class="i-ink" cx="46" cy="245" r="2.8"/><circle class="i-ink" cx="56" cy="245" r="2.8"/>
+  <rect class="i-ink" x="88" y="174" width="56" height="24" rx="12"/>
+  <text class="t-xs t-w" x="116" y="191" text-anchor="middle" letter-spacing="1">NEXT</text>
+  <path class="i-line" d="M64 222 C70 198 76 190 86 188" marker-end="url(#alpt-arr-pl)"/>
+</svg>
