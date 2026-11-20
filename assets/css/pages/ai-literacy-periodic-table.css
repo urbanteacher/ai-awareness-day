@@ -4715,3 +4715,66 @@ html.alpt-board-open {
     transition: none;
   }
 }
+
+/* ---- Phones: the element's buttons as a tidy, thumb-sized grid instead of a ragged wrap.
+   Row 1 is a stepper (Previous · 107 of 142 · Next), row 2 three equal tools, row 3 Back to elements. ---- */
+@media screen and (max-width: 767px) {
+  .alpt .alpt-panel__nav {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .alpt .alpt-panel__nav[hidden] {
+    display: none;
+  }
+
+  .alpt .alpt-panel__nav .alpt-btn {
+    min-height: 2.9rem;
+    margin: 0;
+    padding: 0.4rem 0.35rem;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .alpt .alpt-panel__nav .alpt-step--prev { grid-area: 1 / 1 / 2 / 3; order: 0; }
+  .alpt .alpt-panel__nav .alpt-panel__count { grid-area: 1 / 3 / 2 / 5; order: 0; }
+  .alpt .alpt-panel__nav .alpt-step--next { grid-area: 1 / 5 / 2 / 7; order: 0; }
+  .alpt .alpt-panel__nav .alpt-links-toggle { grid-area: 2 / 1 / 3 / 3; }
+  .alpt .alpt-panel__nav .alpt-board-btn { grid-area: 2 / 3 / 3 / 5; }
+  .alpt .alpt-panel__nav .alpt-copy-link { grid-area: 2 / 5 / 3 / 7; }
+  .alpt-js .alpt.is-detail-open .alpt-panel__nav .alpt-back-to-tiles {
+    display: flex;
+    grid-area: 3 / 1 / 4 / 7;
+    justify-self: stretch;
+  }
+
+  .alpt .alpt-panel__nav .alpt-panel__count {
+    display: block;
+    align-self: center;
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    text-align: center;
+    text-wrap: balance;
+    white-space: normal;
+  }
+
+  /* Text-only on phones: the icons squash in a third of the width. */
+  .alpt .alpt-panel__nav .alpt-links-toggle__icon,
+  .alpt .alpt-panel__nav .alpt-board-btn__icon {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 380px) {
+
+  .alpt .alpt-panel__nav .alpt-btn {
+    font-size: 0.78rem;
+  }
+}
