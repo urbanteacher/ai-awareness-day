@@ -5154,3 +5154,13 @@ html.alpt-board-open {
 
 
 }
+
+/* A note for teachers ("teacher_note" in elements.json), at the top of Classroom notes & resources. */
+.alpt-panel__teacher {
+  margin: 0.4rem 0 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 4px solid var(--fam-deep);
+  background: var(--fam);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

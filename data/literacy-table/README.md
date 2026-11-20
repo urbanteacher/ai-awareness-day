@@ -54,6 +54,7 @@ Every file starts with the same three fields:
 | `approx` | Optional | `true` when the year is approximate. |
 | `older` | Optional | `true` when the word is much older than AI. The panel then says "Used this way since … (the word is older)". |
 | `year_note` | Optional | Where the year comes from. |
+| `teacher_note` | Optional | A note for teachers (misconceptions, background), shown first under Classroom notes & resources. |
 | `talk` | Optional | The "Talk about it" question. |
 | `links` | Optional | Hand-picked connections, shown by the Connections button. They work both ways, so list each pair once. |
 | `benchmark` | Optional | A benchmark area key from `lists.json`. Elements without one fall under AI Literacy. |

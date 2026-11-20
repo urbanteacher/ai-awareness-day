@@ -214,6 +214,15 @@
 		var creditNote = document.createElement( 'p' );
 		creditNote.className = 'alpt-panel__credit';
 		creditNote.hidden = true;
+		// A note for teachers on some elements ("teacher_note" in elements.json), first in Classroom notes & resources.
+		var teacherNotes = data.notes || {};
+		var teacherNote = document.createElement( 'p' );
+		teacherNote.className = 'alpt-panel__teacher';
+		teacherNote.hidden = true;
+		var notesSummary = panel.querySelector( '.alpt-reader-notes > summary' );
+		if ( notesSummary ) {
+			notesSummary.after( teacherNote );
+		}
 		var defOut = root.querySelector( '[data-alpt-out="def"]' );
 		if ( defOut ) {
 			var notesAfter = defOut.nextElementSibling && defOut.nextElementSibling.classList.contains( 'alpt-panel__talk' ) ? defOut.nextElementSibling : defOut;
@@ -368,6 +377,13 @@
 			renderLinks();
 			renderIssues( el );
 			safeNote.hidden = safeSyms.indexOf( el[ 0 ] ) === -1;
+			teacherNote.hidden = ! teacherNotes[ el[ 0 ] ];
+			teacherNote.replaceChildren();
+			if ( teacherNotes[ el[ 0 ] ] ) {
+				var tnLabel = document.createElement( 'strong' );
+				tnLabel.textContent = 'Teacher note: ';
+				teacherNote.append( tnLabel, teacherNotes[ el[ 0 ] ] );
+			}
 			creditNote.hidden = ! credits[ el[ 0 ] ];
 			creditNote.textContent = credits[ el[ 0 ] ] ? 'Suggested by ' + credits[ el[ 0 ] ] + '. Thank you!' : '';
 			var bench = root.querySelector( '[data-alpt-bench]' );

@@ -231,7 +231,7 @@
             "row": 5,
             "col": 1,
             "theme": "smart",
-            "year": 1970,
+            "year": 2012,
             "approx": true,
             "older": true,
             "def": "Using a trained model to make predictions or generate output on new inputs — the “running” phase after training.",
@@ -242,7 +242,9 @@
                 "Gp",
                 "Ed"
             ],
-            "picture_alt": "After training is finished, the model is used on a new photo and answers bird, 92% sure, using a little energy."
+            "picture_alt": "After training, which used a lot of energy once, the model is used on a new photo and answers \"Bird, 92% sure\", which it can still get wrong, using a little energy every time.",
+            "year_note": "This meaning (running a trained model on new inputs, as opposed to training it) became common with deep learning in the 2010s. Around 1970 \"inference\" in AI mostly meant logical inference, as in the \"inference engines\" of rule-based expert systems.",
+            "teacher_note": "Training a large model uses a lot of energy in one go; inference uses a little for each answer, which adds up across millions of uses. The \"92%\" is the model's own confidence, not a chance of being right: a model can be confidently wrong. Watch out later: in statistics, \"inference\" means almost the opposite, using data to work out a model's settings, which is closer to what AI calls training."
         },
         {
             "sym": "Pm",
