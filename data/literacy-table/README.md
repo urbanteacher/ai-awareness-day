@@ -114,7 +114,7 @@ Until November 2026 this content was PHP arrays in `inc/literacy-table.php`. `to
 
 ## Pictures
 
-An element can have a picture of the idea at work. In the panel it takes the place of the big tile, with the symbol as a badge on its top-left corner. Elements without one keep the plain tile.
+An element can have a picture of the idea at work. It is on the back of the element's tile in the panel: the ↻ Picture button (where the element count usually is) or a click on the tile turns it over, and the side chosen stays while stepping through elements. Elements without one keep the plain tile and the count.
 
 1. Save the drawing as `assets/images/literacy-table/{symbol in lower case}.svg`, for example `dw.svg` for Dw.
 2. Describe it in one sentence as the element's `"picture_alt"` in `elements.json`. Screen readers read this instead of the picture.
@@ -122,7 +122,7 @@ An element can have a picture of the idea at work. In the panel it takes the pla
 
 How to draw one (copy an existing file to start):
 
-- `viewBox="0 0 300 330"` and `class="alpt-pic"` on the `<svg>`. Keep the top-left 100 × 95 clear for the symbol badge.
+- `viewBox="0 0 300 330"` and `class="alpt-pic"` on the `<svg>`. Keeping the top-left corner light helps, as the earlier pictures were drawn to leave room there.
 - Paint only with these classes, so the picture takes the family colour (and the theme or year colour in those views): `i-bg` (pale background), `i-deep` (the key part), `i-paper` (white), `i-cream`, `i-accent` (the AIAD theme colour, use once at most), `i-ink`, `i-line` and `i-deepline` (outlines), `i-dash`, `i-faint`. Text: `t-xs`, `t-s`, `t-m`, `t-l`, plus `t-w` (white) or `t-d` (deep).
 - Show the idea happening, not an icon for it. Up to about six short labels.
 - No photographs, and no faces or anything that could look like a real person.

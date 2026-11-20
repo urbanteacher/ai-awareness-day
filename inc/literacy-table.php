@@ -750,7 +750,8 @@ function aiad_render_literacy_table(): string {
 				</div>
 
 			<button type="button" class="alpt-btn alpt-back-to-tiles" data-alpt-dismiss><?php esc_html_e( 'Back to elements', 'ai-awareness-day' ); ?></button>
-				<span class="alpt-panel__count">
+				<button type="button" class="alpt-btn alpt-flip-btn" data-alpt-flip aria-pressed="false" hidden><span class="alpt-flip-btn__icon" aria-hidden="true">&#8635;</span> <span data-alpt-flip-label><?php esc_html_e( 'Picture', 'ai-awareness-day' ); ?></span></button>
+				<span class="alpt-panel__count" data-alpt-count>
 					<?php
 					/* translators: 1: element number, 2: number of elements */
 					printf( esc_html__( 'Element %1$s of %2$s', 'ai-awareness-day' ), '<span data-alpt-out="n2">' . esc_html( (string) $first['n'] ) . '</span>', esc_html( (string) $total ) );

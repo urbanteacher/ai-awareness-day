@@ -243,22 +243,70 @@
 			}
 			return picCache[ sym ];
 		}
+		// The tile turns over to show the picture: the ↻ Picture button (in the count's place) or a click on the
+		// tile. The side chosen is kept while stepping through elements, so a class can go through the pictures.
+		var flipBtn = panel.querySelector( '[data-alpt-flip]' );
+		var flipLabel = panel.querySelector( '[data-alpt-flip-label]' );
+		var countOut = panel.querySelector( '[data-alpt-count]' );
+		var flipped = false;
+		var hasPic = false;
+		function applyFlip() {
+			var back = flipped && hasPic;
+			panelTile.classList.toggle( 'is-flipped', back );
+			picOut.hidden = ! back;
+			if ( flipBtn ) {
+				flipBtn.hidden = ! hasPic;
+				flipBtn.setAttribute( 'aria-pressed', String( back ) );
+				flipBtn.setAttribute( 'aria-label', back ? 'Turn back to the card' : 'Turn over to see the picture' );
+				if ( flipLabel ) {
+					flipLabel.textContent = back ? 'Card' : 'Picture';
+				}
+			}
+			if ( countOut ) {
+				countOut.hidden = hasPic && !! flipBtn;
+			}
+		}
+		function flip() {
+			if ( ! hasPic ) {
+				return;
+			}
+			flipped = ! flipped;
+			if ( reduceMotion.matches || ! panelTile.animate ) {
+				applyFlip();
+				return;
+			}
+			// Half a turn to edge-on, swap the side, then the other half.
+			var turn = panelTile.animate( [ { transform: 'perspective(900px) rotateY(0deg)' }, { transform: 'perspective(900px) rotateY(90deg)' } ], { duration: 150, easing: 'ease-in' } );
+			turn.onfinish = function () {
+				applyFlip();
+				panelTile.animate( [ { transform: 'perspective(900px) rotateY(-90deg)' }, { transform: 'perspective(900px) rotateY(0deg)' } ], { duration: 190, easing: 'ease-out' } );
+			};
+		}
+		if ( flipBtn ) {
+			flipBtn.addEventListener( 'click', flip );
+		}
+		if ( panelTile ) {
+			panelTile.addEventListener( 'click', flip );
+		}
 		function showPicture( sym ) {
 			if ( ! panelTile || ! picOut || picShown === sym ) {
 				return;
 			}
 			picShown = sym;
-			var has = !! picBase && Object.prototype.hasOwnProperty.call( pics, sym );
-			panelTile.classList.toggle( 'has-pic', has );
-			picOut.hidden = ! has;
+			hasPic = !! picBase && Object.prototype.hasOwnProperty.call( pics, sym );
+			panelTile.classList.toggle( 'has-pic', hasPic );
 			picOut.replaceChildren();
-			if ( ! has ) {
+			if ( hasPic ) {
+				picOut.setAttribute( 'role', 'img' );
+				picOut.setAttribute( 'aria-label', pics[ sym ] || '' );
+			} else {
 				picOut.removeAttribute( 'role' );
 				picOut.removeAttribute( 'aria-label' );
+			}
+			applyFlip();
+			if ( ! hasPic ) {
 				return;
 			}
-			picOut.setAttribute( 'role', 'img' );
-			picOut.setAttribute( 'aria-label', pics[ sym ] || '' );
 			loadPicture( sym ).then( function ( svg ) {
 				if ( picShown !== sym ) {
 					return;
@@ -266,11 +314,10 @@
 				if ( svg ) {
 					picOut.replaceChildren( document.importNode( svg, true ) );
 				} else {
-					// Couldn't load it: fall back to the plain tile.
+					// Couldn't load it: keep the plain tile.
+					hasPic = false;
 					panelTile.classList.remove( 'has-pic' );
-					picOut.hidden = true;
-					picOut.removeAttribute( 'role' );
-					picOut.removeAttribute( 'aria-label' );
+					applyFlip();
 				}
 			} );
 			// Fetch the next and previous elements' pictures while the reader looks at this one.
