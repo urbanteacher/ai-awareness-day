@@ -4963,3 +4963,58 @@ html.alpt-board-open {
   border-color: var(--a27-cream);
   color: var(--a27-ink);
 }
+
+/* Phones: a compound's elements sit in one row on the board, and the title the board focuses on (for screen
+   readers) shows no box, as it isn't a control. */
+@media screen and (max-width: 767px) {
+  .alpt-board__formula {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .alpt-board__el {
+    --cut: 0.6rem;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: 6.5rem;
+    min-height: 0;
+    aspect-ratio: 1;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .alpt-board__el-sym {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+
+  .alpt-board__el-name {
+    font-size: 0.62rem;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}
+
+.alpt-board .alpt-board__title:focus {
+  outline: none;
+}
+
+/* The smallest phones: four elements in one row leave no room for their names, so they go two by two. */
+@media screen and (max-width: 380px) {
+  .alpt-board__formula:has(> :nth-child(4)) {
+    flex-wrap: wrap;
+  }
+
+  .alpt-board__formula:has(> :nth-child(4)) .alpt-board__el {
+    flex: 0 0 calc(50% - 0.2rem);
+    max-width: none;
+    aspect-ratio: 2 / 1;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .alpt-board__el-name {
+    overflow-wrap: normal;
+    hyphens: manual;
+  }
+}

@@ -1686,10 +1686,141 @@
 			return canvas;
 		}
 
-		function shareCard( index, button ) {
-			var e = elements[ index ];
-			var name = 'ai-literacy-periodic-table-' + e[ 0 ].toLowerCase() + '.png';
-			var url = window.location.origin + window.location.pathname + '#element-' + e[ 0 ].toLowerCase();
+		function drawCompoundCard( index ) {
+			var cp = compounds[ index ];
+			var rs = getComputedStyle( document.documentElement );
+			var ink = rs.getPropertyValue( '--a27-ink' ).trim() || '#231F20';
+			var cream = rs.getPropertyValue( '--a27-cream' ).trim() || '#F6F4ED';
+			var accent = rs.getPropertyValue( '--a27-safe' ).trim() || '#00BEDD';
+			var W = 1080, H = 1350, P = 84;
+			var canvas = document.createElement( 'canvas' );
+			canvas.width = W;
+			canvas.height = H;
+			var ctx = canvas.getContext( '2d' );
+			var face = getComputedStyle( document.querySelector( '.alpt-tile__sym' ) || document.body ).fontFamily;
+			var font = function ( weight, size ) {
+				return weight + ' ' + Math.round( size ) + 'px ' + face;
+			};
+			ctx.fillStyle = ink;
+			ctx.fillRect( 0, 0, W, H );
+			ctx.fillStyle = accent;
+			ctx.font = font( 700, 26 );
+			spaced( ctx, 'THE AI LITERACY PERIODIC TABLE · COMPOUND', P, P + 20, 4 );
+
+			// The elements it is made of, as tiles joined by "+".
+			var parts = cp[ 2 ].map( function ( sym ) {
+				return elements[ symIndex[ sym ] ];
+			} ).filter( Boolean );
+			var gapW = 64, n = parts.length;
+			var T = Math.min( 230, ( W - P * 2 - ( n - 1 ) * gapW ) / n );
+			var ty = P + 76, x = P, cut = T * 0.16;
+			parts.forEach( function ( e, i ) {
+				var colours = cardColours( e );
+				ctx.fillStyle = colours.fam;
+				ctx.beginPath();
+				ctx.moveTo( x, ty );
+				ctx.lineTo( x + T - cut, ty );
+				ctx.lineTo( x + T, ty + cut );
+				ctx.lineTo( x + T, ty + T );
+				ctx.lineTo( x, ty + T );
+				ctx.closePath();
+				ctx.fill();
+				var nameSize = Math.max( 18, T * 0.1 );
+				ctx.font = font( 700, nameSize );
+				var lines = wrapLines( ctx, e[ 1 ], T - T * 0.2 ).slice( 0, 3 );
+				var nameTop = ty + T - T * 0.1 - ( lines.length - 1 ) * ( nameSize + 4 ) - nameSize;
+				ctx.fillStyle = ink;
+				lines.forEach( function ( l, j ) {
+					ctx.fillText( l, x + T * 0.1, nameTop + nameSize + j * ( nameSize + 4 ) );
+				} );
+				var symSize = Math.min( T * 0.5, ( nameTop - ty - T * 0.14 ) / 0.96 );
+				ctx.font = font( 700, symSize );
+				while ( ctx.measureText( e[ 0 ] ).width > T * 0.82 && symSize > 30 ) {
+					symSize -= 4;
+					ctx.font = font( 700, symSize );
+				}
+				ctx.fillStyle = colours.deep;
+				ctx.fillText( e[ 0 ], x + T * 0.08, nameTop - T * 0.06 - symSize * 0.22 );
+				if ( i < n - 1 ) {
+					ctx.fillStyle = cream;
+					ctx.font = font( 700, 56 );
+					ctx.textAlign = 'center';
+					ctx.fillText( '+', x + T + gapW / 2, ty + T / 2 + 20 );
+					ctx.textAlign = 'left';
+				}
+				x += T + gapW;
+			} );
+
+			// Stable or volatile, theme, then the name, what it is and the debate, made smaller together to fit.
+			var top = ty + T + 92, bottom = H - P - 100, width = W - P * 2;
+			var label = ( cp[ 3 ] ? 'VOLATILE COMPOUND' : 'STABLE COMPOUND' ) + ' · ' + String( themes[ cp[ 7 ] ] || '' ).toUpperCase() + ' THEME';
+			var plan = function ( k ) {
+				var rows = [];
+				ctx.font = font( 700, 80 * k );
+				rows.push( { lines: wrapLines( ctx, cp[ 1 ], width ), size: 80 * k, weight: 700, lh: 1.04, after: 30 * k } );
+				ctx.font = font( 600, 42 * k );
+				rows.push( { lines: wrapLines( ctx, cp[ 5 ], width ), size: 42 * k, weight: 600, lh: 1.28, after: 46 * k } );
+				if ( cp[ 6 ] ) {
+					ctx.font = font( 500, 34 * k );
+					rows.push( { lines: wrapLines( ctx, cp[ 6 ], width - 40 ), size: 34 * k, weight: 500, lh: 1.34, after: 0, debate: true } );
+				}
+				var h = 60 * k;
+				rows.forEach( function ( r ) {
+					h += ( r.debate ? 48 * k : 0 ) + r.lines.length * r.size * r.lh + r.after;
+				} );
+				return { rows: rows, height: h, k: k };
+			};
+			var layout = plan( 1 );
+			for ( var k = 0.95; top + layout.height > bottom && k >= 0.5; k -= 0.05 ) {
+				layout = plan( k );
+			}
+			var y = top;
+			ctx.fillStyle = cp[ 3 ] ? '#F59E0B' : accent;
+			ctx.font = font( 700, 26 * layout.k );
+			spaced( ctx, label, P, y, 3 );
+			y += 60 * layout.k + 40 * layout.k;
+			layout.rows.forEach( function ( r ) {
+				var rx = P;
+				if ( r.debate ) {
+					var blockTop = y - r.size;
+					ctx.fillStyle = accent;
+					ctx.font = font( 700, 24 * layout.k );
+					spaced( ctx, 'DEBATE IT', P + 36, blockTop + 22 * layout.k, 3 );
+					y += 48 * layout.k;
+					ctx.fillRect( P, blockTop - 4, 8, 48 * layout.k + r.lines.length * r.size * r.lh );
+					rx = P + 36;
+				}
+				ctx.fillStyle = cream;
+				ctx.font = font( r.weight, r.size );
+				r.lines.forEach( function ( l ) {
+					ctx.fillText( l, rx, y );
+					y += r.size * r.lh;
+				} );
+				y += r.after;
+			} );
+
+			ctx.fillStyle = cream;
+			ctx.globalAlpha = 0.25;
+			ctx.fillRect( P, H - P - 62, W - P * 2, 2 );
+			ctx.globalAlpha = 1;
+			ctx.font = font( 700, 28 );
+			ctx.fillText( 'AI Awareness Day · Thursday 29 April 2027', P, H - P );
+			ctx.textAlign = 'right';
+			ctx.fillStyle = accent;
+			ctx.font = font( 600, 26 );
+			ctx.fillText( 'aiawarenessday.co.uk', W - P, H - P );
+			ctx.textAlign = 'left';
+			return canvas;
+		}
+
+		function shareCard( index, button, mode ) {
+			var compound = 'compound' === mode;
+			var item = compound ? compounds[ index ] : elements[ index ];
+			var title = item[ 1 ];
+			var about = compound ? item[ 5 ] : item[ 3 ];
+			var slug = compound ? item[ 0 ] : item[ 0 ].toLowerCase();
+			var name = 'ai-literacy-periodic-table-' + ( compound ? 'compound-' : '' ) + slug + '.png';
+			var url = window.location.origin + window.location.pathname + ( compound ? '#alpt-cp-' : '#element-' ) + slug;
 			var label = button ? button.textContent : '';
 			var flash = function ( text ) {
 				if ( ! button ) {
@@ -1704,13 +1835,13 @@
 			};
 			var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
 			ready.then( function () {
-				drawCard( index ).toBlob( function ( blob ) {
+				( compound ? drawCompoundCard( index ) : drawCard( index ) ).toBlob( function ( blob ) {
 					if ( ! blob ) {
 						return;
 					}
 					if ( canShareFiles() ) {
 						var file = new File( [ blob ], name, { type: 'image/png' } );
-						navigator.share( { files: [ file ], title: e[ 1 ] + ' | The AI Literacy Periodic Table', text: e[ 1 ] + ': ' + e[ 3 ] + ' ' + url } ).catch( function () {} );
+						navigator.share( { files: [ file ], title: title + ' | The AI Literacy Periodic Table', text: title + ': ' + about + ' ' + url } ).catch( function () {} );
 						return;
 					}
 					var link = document.createElement( 'a' );
@@ -1723,7 +1854,7 @@
 						URL.revokeObjectURL( link.href );
 					}, 4000 );
 					flash( 'Card downloaded' );
-					boardSay.textContent = 'Card for ' + e[ 1 ] + ' downloaded.';
+					boardSay.textContent = 'Card for ' + title + ' downloaded.';
 				}, 'image/png' );
 			} );
 		}
@@ -1786,7 +1917,9 @@
 				}
 				var li = el( 'li', 'alpt-board__el alpt-fam--' + e[ 2 ] + ' ' + themed( e[ 5 ] ) );
 				li.appendChild( el( 'span', 'alpt-board__el-sym', e[ 0 ] ) );
-				li.appendChild( el( 'span', 'alpt-board__el-name', e[ 1 ] ) );
+				// The tile's own name, which has soft hyphens in its long words, so a narrow tile breaks them cleanly.
+				var tileName = root.querySelector( '[data-alpt-el="' + symIndex[ sym ] + '"] .alpt-tile__name' );
+				li.appendChild( el( 'span', 'alpt-board__el-name', tileName ? tileName.textContent : e[ 1 ] ) );
 				formula.appendChild( li );
 			} );
 			text.appendChild( formula );
@@ -1802,7 +1935,8 @@
 			wrap.appendChild( text );
 			board.appendChild( wrap );
 			var bar = el( 'div', 'alpt-board__bar' );
-			bar.appendChild( boardButton( boardHideDef ? 'Show the answer' : 'Hide the answer', 'toggle' ) );
+			bar.appendChild( boardButton( boardHideDef ? 'Show the answer' : 'Hide the answer', 'toggle', 'alpt-board__btn--toggle' ) );
+			bar.appendChild( boardButton( canShareFiles() ? 'Share as a card' : 'Download as a card', 'card', 'alpt-board__btn--card' ) );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
 		}
@@ -1890,7 +2024,7 @@
 			} else if ( 'next' === action ) {
 				stepBoard( 1 );
 			} else if ( 'card' === action ) {
-				shareCard( boardIndex, b );
+				shareCard( boardIndex, b, boardMode );
 			} else if ( 'toggle' === action ) {
 				boardHideDef = ! boardHideDef;
 				if ( 'element' === boardMode ) {
