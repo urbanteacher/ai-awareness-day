@@ -4501,3 +4501,217 @@ html.alpt-board-open {
   line-height: 1.15;
   letter-spacing: 0;
 }
+
+/* ---- Phone navigation (under 768px), modelled on the benchmark's app bar: a dark bar under the site header with the
+   section you're in, a reading-progress line, a search button and a "Jump to" menu. Built by literacy-table.js. ---- */
+.alpt-mnav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .alpt-mnav {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 68px;
+    z-index: 80;
+    background: var(--a27-ink);
+    color: var(--a27-cream);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    transform: translateY(-110%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.22s ease, opacity 0.22s ease, visibility 0s linear 0.22s;
+  }
+
+  .alpt-mnav.is-shown {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+  }
+
+  .alpt-mnav__row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    min-height: 3.25rem;
+  }
+
+  .alpt-mnav__mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: #5EE08C;
+    color: var(--a27-ink);
+    font-weight: 800;
+    font-size: 0.95rem;
+    clip-path: polygon(0 0, 72% 0, 100% 28%, 100% 100%, 0 100%);
+  }
+
+  .alpt-mnav__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .alpt-mnav__title {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(247, 243, 236, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .alpt-mnav__here {
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .alpt-mnav__btn {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.7rem;
+    border: 2px solid rgba(247, 243, 236, 0.35);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .alpt-mnav__btn--search {
+    padding: 0;
+  }
+
+  .alpt-mnav__btn--jump {
+    background: var(--a27-cream);
+    border-color: var(--a27-cream);
+    color: var(--a27-ink);
+  }
+
+  .alpt-mnav__btn--jump svg {
+    transition: transform 0.2s ease;
+  }
+
+  .alpt-mnav.is-open .alpt-mnav__btn--jump svg {
+    transform: rotate(180deg);
+  }
+
+  .alpt-mnav__btn:focus-visible,
+  .alpt-mnav__item:focus-visible {
+    outline: 3px solid #5EE08C;
+    outline-offset: 2px;
+  }
+
+  .alpt-mnav__track {
+    display: block;
+    height: 3px;
+    background: rgba(247, 243, 236, 0.15);
+  }
+
+  .alpt-mnav__fill {
+    display: block;
+    height: 100%;
+    background: #5EE08C;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .alpt-mnav__menu {
+    max-height: min(70vh, 34rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.4rem 1rem 1rem;
+    border-top: 1px solid rgba(247, 243, 236, 0.15);
+  }
+
+  .alpt-mnav__group {
+    margin: 0.8rem 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5EE08C;
+  }
+
+  .alpt-mnav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .alpt-mnav__item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0.25rem;
+    border: 0;
+    border-bottom: 1px solid rgba(247, 243, 236, 0.12);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .alpt-mnav__item .alpt-chip__swatch {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* Families as one swipeable row instead of a stack that fills the screen. */
+  .alpt .alpt-legend {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-right: -1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .alpt .alpt-legend::-webkit-scrollbar {
+    display: none;
+  }
+
+  .alpt .alpt-legend > * {
+    flex: none;
+    scroll-snap-align: start;
+  }
+
+  /* Anything jumped to lands below the site header and the bar. */
+  html:has(.alpt-mnav.is-shown) {
+    scroll-padding-top: 8.5rem;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .alpt-mnav,
+  .alpt-mnav.is-shown {
+    transition: none;
+  }
+}

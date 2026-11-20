@@ -2039,3 +2039,248 @@
 		ready();
 	}
 }() );
+
+/*
+ * Phone navigation (under 768px): a dark bar, like the benchmark's app bar, that appears once the hero has scrolled
+ * away. It names the section you are in, shows how far down the page you are, and opens a "Jump to" menu with every
+ * family (or theme, or era, in the other views) and every section below the table. A search button goes straight
+ * back to the search box.
+ */
+( function () {
+	'use strict';
+	var root = document.querySelector( '.alpt' );
+	if ( ! root || ! window.matchMedia ) {
+		return;
+	}
+	var phone = window.matchMedia( '(max-width: 767px)' );
+	var sections = [
+		[ '.alpt-tryit__title', 'Try it' ],
+		[ '#alpt-compounds-title', 'Compounds' ],
+		[ '#alpt-challenge-title', 'Compound challenge' ],
+		[ '#alpt-buzzword-check', 'Buzzword check' ],
+		[ '#alpt-glossary-title', 'Glossary' ],
+		[ '#alpt-issues', 'The issues they raise' ],
+		[ '#alpt-suggest-title', 'Suggest an element' ],
+		[ '#alpt-sessions', 'Ready-made sessions' ],
+		[ '#alpt-classroom', 'Classroom display' ],
+		[ '#alpt-close', 'AI Awareness Day' ]
+	];
+	var controls = root.querySelector( '.alpt-controls' );
+	var search = root.querySelector( '.alpt-controls input[type="search"], .alpt-controls input' );
+	var bar = null, menu = null, here = null, fill = null, toggle = null, built = false, ticking = false;
+
+	function el( tag, cls, text ) {
+		var n = document.createElement( tag );
+		if ( cls ) {
+			n.className = cls;
+		}
+		if ( text ) {
+			n.textContent = text;
+		}
+		return n;
+	}
+
+	function headerOffset() {
+		var head = document.querySelector( '.site-header' );
+		var admin = document.getElementById( 'wpadminbar' );
+		var h = 0;
+		if ( head && 'fixed' === getComputedStyle( head ).position ) {
+			h += head.getBoundingClientRect().bottom > 0 ? head.offsetHeight : 0;
+		}
+		if ( admin && 'fixed' === getComputedStyle( admin ).position ) {
+			h += admin.offsetHeight;
+		}
+		return h;
+	}
+
+	function targets() {
+		var list = [];
+		if ( controls ) {
+			list.push( { node: controls, label: 'Search and filters', group: 'table' } );
+		}
+		root.querySelectorAll( '.alpt-family-label' ).forEach( function ( label ) {
+			if ( ! label.offsetParent ) {
+				return;
+			}
+			var name = label.querySelector( '.alpt-family-label__name' ) || label;
+			var cls = ( label.className.match( /alpt-(fam|th)--[a-z0-9-]+/ ) || [ '' ] )[ 0 ];
+			list.push( { node: label, label: name.textContent.trim(), group: 'table', cls: cls } );
+		} );
+		sections.forEach( function ( s ) {
+			var node = document.querySelector( s[ 0 ] );
+			if ( node && node.offsetParent ) {
+				list.push( { node: node, label: s[ 1 ], group: 'page' } );
+			}
+		} );
+		return list;
+	}
+
+	function go( node ) {
+		closeMenu();
+		var top = node.getBoundingClientRect().top + window.pageYOffset - headerOffset() - bar.offsetHeight - 12;
+		window.scrollTo( { top: Math.max( 0, top ), behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth' } );
+	}
+
+	function fillMenu() {
+		menu.textContent = '';
+		var groups = { table: el( 'ul', 'alpt-mnav__list' ), page: el( 'ul', 'alpt-mnav__list' ) };
+		targets().forEach( function ( t ) {
+			var li = el( 'li' );
+			var b = el( 'button', 'alpt-mnav__item' );
+			b.type = 'button';
+			if ( t.cls ) {
+				var sw = el( 'span', 'alpt-chip__swatch ' + t.cls );
+				sw.setAttribute( 'aria-hidden', 'true' );
+				b.appendChild( sw );
+			}
+			b.appendChild( el( 'span', '', t.label ) );
+			b.addEventListener( 'click', function () {
+				go( t.node );
+			} );
+			li.appendChild( b );
+			groups[ t.group ].appendChild( li );
+		} );
+		menu.appendChild( el( 'p', 'alpt-mnav__group', 'The table' ) );
+		menu.appendChild( groups.table );
+		menu.appendChild( el( 'p', 'alpt-mnav__group', 'On this page' ) );
+		menu.appendChild( groups.page );
+	}
+
+	function openMenu() {
+		fillMenu();
+		menu.hidden = false;
+		toggle.setAttribute( 'aria-expanded', 'true' );
+		bar.classList.add( 'is-open' );
+		var first = menu.querySelector( 'button' );
+		if ( first ) {
+			first.focus();
+		}
+	}
+
+	function closeMenu( refocus ) {
+		if ( ! menu || menu.hidden ) {
+			return;
+		}
+		menu.hidden = true;
+		toggle.setAttribute( 'aria-expanded', 'false' );
+		bar.classList.remove( 'is-open' );
+		if ( refocus ) {
+			toggle.focus();
+		}
+	}
+
+	function build() {
+		bar = el( 'nav', 'alpt-mnav' );
+		bar.setAttribute( 'aria-label', 'Periodic table sections' );
+		var row = el( 'div', 'alpt-mnav__row' );
+		var mark = el( 'span', 'alpt-mnav__mark', 'Pt' );
+		mark.setAttribute( 'aria-hidden', 'true' );
+		var text = el( 'span', 'alpt-mnav__text' );
+		text.appendChild( el( 'span', 'alpt-mnav__title', 'Periodic Table' ) );
+		here = el( 'span', 'alpt-mnav__here' );
+		here.setAttribute( 'aria-live', 'off' );
+		text.appendChild( here );
+		var find = el( 'button', 'alpt-mnav__btn alpt-mnav__btn--search' );
+		find.type = 'button';
+		find.setAttribute( 'aria-label', 'Search the table' );
+		find.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/></svg>';
+		find.addEventListener( 'click', function () {
+			if ( ! search ) {
+				return;
+			}
+			go( controls || search );
+			window.setTimeout( function () {
+				search.focus( { preventScroll: true } );
+			}, 450 );
+		} );
+		toggle = el( 'button', 'alpt-mnav__btn alpt-mnav__btn--jump' );
+		toggle.type = 'button';
+		toggle.setAttribute( 'aria-expanded', 'false' );
+		toggle.setAttribute( 'aria-controls', 'alpt-mnav-menu' );
+		toggle.innerHTML = '<span>Jump to</span><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+		toggle.addEventListener( 'click', function () {
+			if ( menu.hidden ) {
+				openMenu();
+			} else {
+				closeMenu( true );
+			}
+		} );
+		row.appendChild( mark );
+		row.appendChild( text );
+		row.appendChild( find );
+		row.appendChild( toggle );
+		var track = el( 'span', 'alpt-mnav__track' );
+		track.setAttribute( 'aria-hidden', 'true' );
+		fill = el( 'span', 'alpt-mnav__fill' );
+		track.appendChild( fill );
+		menu = el( 'div', 'alpt-mnav__menu' );
+		menu.id = 'alpt-mnav-menu';
+		menu.hidden = true;
+		bar.appendChild( row );
+		bar.appendChild( track );
+		bar.appendChild( menu );
+		document.body.appendChild( bar );
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key && ! menu.hidden ) {
+				closeMenu( true );
+			}
+		} );
+		document.addEventListener( 'click', function ( e ) {
+			if ( ! menu.hidden && ! bar.contains( e.target ) ) {
+				closeMenu();
+			}
+		} );
+		built = true;
+	}
+
+	function update() {
+		ticking = false;
+		if ( ! phone.matches ) {
+			if ( bar ) {
+				bar.classList.remove( 'is-shown' );
+				closeMenu();
+			}
+			return;
+		}
+		if ( ! built ) {
+			build();
+		}
+		var start = controls || root;
+		var shown = start.getBoundingClientRect().top < headerOffset() + 40;
+		// Out of the way while the challenge bar or the classroom board is open.
+		if ( document.documentElement.classList.contains( 'alpt-lab-open' ) || document.querySelector( '.alpt-board:not([hidden])' ) ) {
+			shown = false;
+		}
+		bar.style.top = headerOffset() + 'px';
+		bar.classList.toggle( 'is-shown', shown );
+		bar.inert = ! shown;
+		if ( ! shown ) {
+			closeMenu();
+		}
+		var max = document.documentElement.scrollHeight - window.innerHeight;
+		fill.style.transform = 'scaleX(' + ( max > 0 ? Math.min( 1, window.pageYOffset / max ) : 0 ) + ')';
+		var line = headerOffset() + bar.offsetHeight + 24, current = '';
+		targets().forEach( function ( t ) {
+			if ( t.node.getBoundingClientRect().top <= line ) {
+				current = t.label;
+			}
+		} );
+		if ( here.textContent !== current ) {
+			here.textContent = current;
+		}
+	}
+
+	function onScroll() {
+		if ( ! ticking ) {
+			ticking = true;
+			window.requestAnimationFrame( update );
+		}
+	}
+
+	window.addEventListener( 'scroll', onScroll, { passive: true } );
+	window.addEventListener( 'resize', onScroll );
+	if ( phone.addEventListener ) {
+		phone.addEventListener( 'change', onScroll );
+	}
+	onScroll();
+}() );
