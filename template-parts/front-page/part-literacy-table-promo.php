@@ -37,8 +37,14 @@ $aiad_samples   = array(
 		<p class="benchmark-promo__desc literacy-table-promo__desc">
 			<?php
 			/* translators: %d: number of elements */
-			echo esc_html( sprintf( __( '%d AI terms in plain English, coloured by the five themes, with the issues they raise, questions to talk about in class, compounds to discover and a poster to print for your display board.', 'ai-awareness-day' ), $aiad_count ) );
+			echo esc_html( sprintf( __( '%d AI terms in plain English, with the issues they raise, a question to talk about for every one, compounds to discover, ready-made sessions and a poster to print for your display board.', 'ai-awareness-day' ), $aiad_count ) );
 			?>
+		</p>
+		<?php $aiad_week = aiad_literacy_element_of_week(); ?>
+		<p class="literacy-table-promo__week">
+			<span class="literacy-table-promo__week-label"><?php esc_html_e( 'Word of the week:', 'ai-awareness-day' ); ?></span>
+			<a href="<?php echo esc_url( $aiad_table_url . '#element-' . strtolower( $aiad_week['el']['sym'] ) ); ?>"><?php echo esc_html( $aiad_week['el']['name'] ); ?></a>.
+			<?php echo esc_html( $aiad_week['talk'] ); ?>
 		</p>
 		<ul class="literacy-table-promo__tiles" aria-hidden="true">
 			<?php foreach ( $aiad_samples as $sample ) : ?>
@@ -52,7 +58,7 @@ $aiad_samples   = array(
 	<div class="literacy-table-promo__actions">
 		<a class="literacy-table-promo__btn" href="<?php echo esc_url( $aiad_table_url ); ?>"><?php esc_html_e( 'Explore the table', 'ai-awareness-day' ); ?></a>
 		<p class="literacy-table-promo__more">
-			<a href="<?php echo esc_url( add_query_arg( 'view', 'themes', $aiad_table_url ) ); ?>"><?php esc_html_e( 'See it by the five themes', 'ai-awareness-day' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'view', 'themes', $aiad_table_url ) ); ?>"><?php esc_html_e( 'See it in AIAD terms: the five themes', 'ai-awareness-day' ); ?></a>
 		</p>
 	</div>
 </div>

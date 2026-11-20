@@ -105,6 +105,28 @@ function aiad_get_og_data(): array {
 			$data['image']    = $share_image['image'];
 		}
 
+	} elseif ( function_exists( 'aiad_is_literacy_table_page' ) && aiad_is_literacy_table_page() ) {
+		// The AI Literacy Periodic Table shares as itself, with the launch post's cover as its card.
+		$data['title']       = __( 'The AI Literacy Periodic Table', 'ai-awareness-day' ) . ' — ' . $site_name;
+		$data['description'] = __( '142 AI terms in plain English, with the issues they raise, a question for class on every one, a printable poster and ready-made lessons. Free for schools.', 'ai-awareness-day' );
+		$data['url']         = get_permalink();
+
+		$launch   = get_page_by_path( 'ai-literacy-periodic-table-launch', OBJECT, 'timeline' );
+		$cover_id = $launch ? (int) get_post_thumbnail_id( $launch ) : 0;
+		if ( $cover_id ) {
+			$data['image_id']  = $cover_id;
+			$data['image']     = (string) wp_get_attachment_image_url( $cover_id, 'full' );
+			$data['image_alt'] = __( 'The AI Literacy Periodic Table', 'ai-awareness-day' );
+		} else {
+			$share_image = function_exists( 'aiad_get_social_share_image_data' )
+				? aiad_get_social_share_image_data()
+				: array( 'image_id' => 0, 'image' => '' );
+			if ( ! empty( $share_image['image'] ) ) {
+				$data['image_id'] = $share_image['image_id'];
+				$data['image']    = $share_image['image'];
+			}
+		}
+
 	} elseif ( is_singular( array( 'resource', 'partner', 'timeline', 'live_session' ) ) ) {
 		global $post;
 		$data['title'] = sprintf( '%s — %s', get_the_title( $post ), $site_name );

@@ -286,3 +286,21 @@
 		display: none;
 	}
 }
+
+/* The table's element of the week, on the homepage promo. */
+.literacy-table-promo__week {
+  max-width: 42rem;
+  margin: 0.9rem 0 1rem;
+  color: var(--a27-cream);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.literacy-table-promo__week-label {
+  font-weight: 700;
+}
+
+.literacy-table-promo__week a {
+  color: inherit;
+  font-weight: 700;
+}

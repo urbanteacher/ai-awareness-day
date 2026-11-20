@@ -38,13 +38,13 @@
 
 /* ---- Families ---- */
 /* The original table's family colours: a pale tile, with the symbol and selection ring in the deep shade. */
-.alpt-fam--foundations { --fam: #E3E8EF; --fam-fg: var(--a27-ink); --fam-deep: #334155; --fam-ring: #334155; }
-.alpt-fam--generative { --fam: #EEE6FF; --fam-fg: var(--a27-ink); --fam-deep: #6D28D9; --fam-ring: #6D28D9; }
-.alpt-fam--predictive { --fam: #DFE9FF; --fam-fg: var(--a27-ink); --fam-deep: #1D4ED8; --fam-ring: #1D4ED8; }
-.alpt-fam--agents { --fam: #FFEDD5; --fam-fg: var(--a27-ink); --fam-deep: #B45309; --fam-ring: #B45309; }
-.alpt-fam--automation { --fam: #D5F2EC; --fam-fg: var(--a27-ink); --fam-deep: #0F766E; --fam-ring: #0F766E; }
-.alpt-fam--governance { --fam: #FFE1E7; --fam-fg: var(--a27-ink); --fam-deep: #BE123C; --fam-ring: #BE123C; }
-.alpt-fam--infra { --fam: #E8F3D6; --fam-fg: var(--a27-ink); --fam-deep: #3F6212; --fam-ring: #3F6212; }
+.alpt-fam--foundations { --code: "F"; --fam: #E3E8EF; --fam-fg: var(--a27-ink); --fam-deep: #334155; --fam-ring: #334155; }
+.alpt-fam--generative { --code: "G"; --fam: #EEE6FF; --fam-fg: var(--a27-ink); --fam-deep: #6D28D9; --fam-ring: #6D28D9; }
+.alpt-fam--predictive { --code: "P"; --fam: #DFE9FF; --fam-fg: var(--a27-ink); --fam-deep: #1D4ED8; --fam-ring: #1D4ED8; }
+.alpt-fam--agents { --code: "A"; --fam: #FFEDD5; --fam-fg: var(--a27-ink); --fam-deep: #B45309; --fam-ring: #B45309; }
+.alpt-fam--automation { --code: "W"; --fam: #D5F2EC; --fam-fg: var(--a27-ink); --fam-deep: #0F766E; --fam-ring: #0F766E; }
+.alpt-fam--governance { --code: "E"; --fam: #FFE1E7; --fam-fg: var(--a27-ink); --fam-deep: #BE123C; --fam-ring: #BE123C; }
+.alpt-fam--infra { --code: "I"; --fam: #E8F3D6; --fam-fg: var(--a27-ink); --fam-deep: #3F6212; --fam-ring: #3F6212; }
 
 /* The AI Awareness Day themes, for "View by: AIAD themes": a pale tile in the theme's colour, with the symbol and
    selection ring in its deep shade. */
@@ -63,6 +63,30 @@
 .alpt-th--future,
 .is-themes .alpt-tile[data-alpt-theme="future"],
 .is-themes .alpt-panel[data-alpt-theme="future"] { --fam: color-mix(in srgb, var(--a27-future) 26%, #FFFFFF); --fam-fg: var(--a27-ink); --fam-deep: var(--a27-future-deep); --fam-ring: var(--a27-future-deep); }
+
+/* The eras, for "View by: Year": one ramp of their own, from pale sand for the oldest words to ink for the newest
+   (whose symbols take the Future pink), so no era shares a colour with a family. */
+.alpt-era--e1,
+.is-years .alpt-tile[data-alpt-era="e1"],
+.is-years .alpt-panel[data-alpt-era="e1"] { --fam: #F3EEE2; --fam-fg: var(--a27-ink); --fam-deep: #6B5B3E; --fam-ring: #6B5B3E; }
+.alpt-era--e2,
+.is-years .alpt-tile[data-alpt-era="e2"],
+.is-years .alpt-panel[data-alpt-era="e2"] { --fam: #E8DFCC; --fam-fg: var(--a27-ink); --fam-deep: #5E4E33; --fam-ring: #5E4E33; }
+.alpt-era--e3,
+.is-years .alpt-tile[data-alpt-era="e3"],
+.is-years .alpt-panel[data-alpt-era="e3"] { --fam: #D9CCB1; --fam-fg: var(--a27-ink); --fam-deep: #4F4029; --fam-ring: #4F4029; }
+.alpt-era--e4,
+.is-years .alpt-tile[data-alpt-era="e4"],
+.is-years .alpt-panel[data-alpt-era="e4"] { --fam: #C4B393; --fam-fg: var(--a27-ink); --fam-deep: #3A2F1E; --fam-ring: #3A2F1E; }
+.alpt-era--e5,
+.is-years .alpt-tile[data-alpt-era="e5"],
+.is-years .alpt-panel[data-alpt-era="e5"] { --fam: #6F624C; --fam-fg: var(--a27-cream); --fam-deep: #FFF3D6; --fam-ring: var(--a27-cream); }
+.alpt-era--e6,
+.is-years .alpt-tile[data-alpt-era="e6"],
+.is-years .alpt-panel[data-alpt-era="e6"] { --fam: #4A423A; --fam-fg: var(--a27-cream); --fam-deep: #FFE3B0; --fam-ring: var(--a27-cream); }
+.alpt-era--e7,
+.is-years .alpt-tile[data-alpt-era="e7"],
+.is-years .alpt-panel[data-alpt-era="e7"] { --fam: #231F20; --fam-fg: var(--a27-cream); --fam-deep: var(--a27-future); --fam-ring: var(--a27-cream); }
 
 /* ---- Buttons ---- */
 .alpt-btn {
@@ -93,15 +117,25 @@
   color: var(--a27-cream);
 }
 
+/* The outlined button: the default look, named so the markup says which it means. */
+.alpt-btn--ghost {
+  background: transparent;
+}
+
 .alpt-btn--ink:hover {
   background: var(--a27-safe-deep);
   border-color: var(--a27-safe-deep);
 }
 
+/* Every section on this page lines up with the table: the same width and the same left edge. */
+.literacy-table-page main .container {
+  width: min(100% - 2rem, 1680px);
+}
+
 /* ---- Introduction ---- */
 .alpt-hero {
   /* The site header is fixed, so the band starts below it. */
-  padding: 8.5rem 0 2rem;
+  padding: 8.5rem 0 1.5rem;
 }
 
 .alpt-eyebrow {
@@ -129,6 +163,68 @@
   color: var(--a27-dim);
 }
 
+/* Know the word, question it, act on it: the page's three learning outcomes, as numbered steps. */
+.alpt-steps {
+  counter-reset: alpt-step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  max-width: 60rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.alpt-step-item {
+  counter-increment: alpt-step;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem 0.95rem;
+  border-top: 4px solid var(--a27-ink);
+  background: #FFFFFF;
+}
+
+.alpt-step-item:nth-child(1) { border-top-color: var(--a27-safe); }
+.alpt-step-item:nth-child(2) { border-top-color: var(--a27-creative); }
+.alpt-step-item:nth-child(3) { border-top-color: var(--a27-responsible); }
+
+.alpt-step-item__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.alpt-step-item__title::before {
+  content: counter(alpt-step) ". ";
+}
+
+.alpt-step-item__title a {
+  color: inherit;
+}
+
+.alpt-step-item__text {
+  font-size: 0.95rem;
+  color: var(--a27-dim);
+  line-height: 1.4;
+}
+
+/* AI Awareness Day itself, under the buttons. */
+.alpt-day {
+  max-width: 44rem;
+  margin: 1.25rem 0 0 !important;
+  padding-left: 0.85rem;
+  border-left: 4px solid var(--a27-future);
+  font-size: 0.95rem;
+}
+
+.alpt-day a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.alpt-day__cta {
+  white-space: nowrap;
+}
+
 /* Printing needs the script, so the button shows only when it has run. */
 html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   display: none;
@@ -139,6 +235,18 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin: 1.5rem 0 0;
+}
+
+.alpt-jump {
+  margin: 0.85rem 0 0 !important;
+  font-size: 0.95rem;
+  color: var(--a27-dim);
+}
+
+.alpt-jump a {
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-underline-offset: 3px;
 }
 
 /* ---- The table ---- */
@@ -293,11 +401,24 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   box-shadow: inset 0 0 0 4px var(--fam-ring), inset 0 0 0 6px var(--fam);
 }
 
+/* Focus looks different from selection: a dashed line inside the ring, so you can tell which tile you're on. */
+.alpt-page .alpt-tile:focus-visible {
+  outline: 2px dashed var(--fam-ring);
+  outline-offset: -10px;
+}
+
 .alpt-tile__n {
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1;
   opacity: 0.85;
+}
+
+/* On the dark Year colours the dimmed number would fall below 4.5:1. */
+.is-years .alpt-tile[data-alpt-era="e5"] .alpt-tile__n,
+.is-years .alpt-tile[data-alpt-era="e6"] .alpt-tile__n,
+.is-years .alpt-tile[data-alpt-era="e7"] .alpt-tile__n {
+  opacity: 1;
 }
 
 .alpt-tile__sym {
@@ -616,7 +737,7 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   }
 
   .alpt-key {
-    grid-column: 13 / 17;
+    grid-column: 13 / 16; /* column 16 is Recursive Self-Improvement */
     grid-row: 1;
     display: flex;
     align-items: stretch;
@@ -841,11 +962,189 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   color: var(--a27-cream);
 }
 
+/* Tablets and up: View by and the search share the top row, label then control, and the filter chips get the row
+   below. */
+@media (min-width: 768px) {
+  .alpt-controls {
+    align-items: center;
+  }
+
+  .alpt-view {
+    flex: 0 0 auto;
+  }
+
+  .alpt-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 18rem;
+    max-width: 26rem;
+    margin-left: auto;
+  }
+
+  .alpt-search label {
+    flex: none;
+  }
+
+  .alpt-search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 2.5rem;
+  }
+
+  .alpt-controls .alpt-legend {
+    flex-basis: 100%;
+  }
+}
+
+/* On phones the label takes its own row and the three options share the next one, so none wraps on its own. */
+@media (max-width: 599px) {
+  .alpt-view__label {
+    flex-basis: 100%;
+    margin: 0 0 0.4rem;
+  }
+
+  .alpt-view__option {
+    flex: 1 1 0;
+    padding-inline: 0.5rem;
+  }
+}
+
 /* Each view shows its own chips, key and (on phones) group labels. */
 .alpt-legend--themes,
 .alpt-key-theme,
-.alpt-theme-label {
+.alpt-theme-label,
+.alpt-legend--eras,
+.alpt-key-year,
+.alpt-era-label,
+.alpt-timeline {
   display: none !important;
+}
+
+.is-years .alpt-legend--eras,
+.is-years .alpt-timeline {
+  display: flex !important;
+}
+
+.is-years .alpt-legend:not(.alpt-legend--eras),
+.is-years .alpt-key-family {
+  display: none !important;
+}
+
+.is-years .alpt-key-year {
+  display: revert !important;
+}
+
+.is-years .alpt-family-label .alpt-family-label__name {
+  color: var(--a27-ink);
+}
+
+/* The panel's "First used in" line. */
+.alpt-panel__year {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--a27-dim);
+}
+
+.is-years .alpt-panel__year {
+  padding: 0.1rem 0.45rem;
+  background: var(--fam);
+  box-shadow: inset 0 0 0 2px var(--fam-deep);
+  color: var(--fam-fg);
+  font-weight: 700;
+}
+
+/* The Year view's slider. Words from after the chosen year fade back. */
+.alpt-timeline {
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 10 1 34rem;
+}
+
+.alpt-timeline__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alpt-timeline__year {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.alpt-timeline__row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.alpt-timeline__play {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 6.5rem;
+  justify-content: center;
+}
+
+.alpt-timeline__play-icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.4rem 0 0.4rem 0.65rem;
+  border-color: transparent transparent transparent currentColor;
+}
+
+.alpt-timeline__play.is-playing .alpt-timeline__play-icon {
+  width: 0.65rem;
+  height: 0.8rem;
+  border: 0;
+  border-left: 0.22rem solid currentColor;
+  border-right: 0.22rem solid currentColor;
+}
+
+.alpt-timeline__range {
+  flex: 1;
+  min-width: 0;
+  height: 2.75rem;
+  margin: 0;
+  accent-color: var(--a27-ink);
+  cursor: pointer;
+}
+
+.alpt-timeline__note {
+  margin: 0 !important;
+  font-size: 0.85rem;
+  color: var(--a27-dim);
+}
+
+/* Words not yet in use: a pale hatched tile with grey text, still readable (4.5:1) and still clickable. */
+@media screen {
+  .is-years .alpt-tile.is-later {
+    --fam: #FBFAF7;
+    --fam-fg: #67615B;
+    --fam-deep: #67615B;
+    --fam-ring: #231F20;
+    background-image: repeating-linear-gradient(135deg, transparent 0 7px, rgba(35, 31, 32, 0.07) 7px 8px);
+  }
+}
+
+.is-years .alpt-tile {
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-years .alpt-tile {
+    transition: none;
+  }
 }
 
 .is-themes .alpt-legend--themes {
@@ -878,6 +1177,20 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   .is-themes .alpt-theme-label {
     display: flex !important;
     order: var(--o2);
+  }
+
+  /* On phones the Year view lists the words era by era, oldest first. */
+  .is-years .alpt-grid > .alpt-tile {
+    order: var(--o3);
+  }
+
+  .is-years .alpt-family-label:not(.alpt-era-label) {
+    display: none !important;
+  }
+
+  .is-years .alpt-era-label {
+    display: flex !important;
+    order: var(--o3);
   }
 }
 
@@ -994,6 +1307,11 @@ html.alpt-lab-open body {
   padding-bottom: var(--alpt-lab-h, 0);
 }
 
+/* Anything scrolled to (the quiz, a linked card) stays clear of the challenge bar. */
+html.alpt-lab-open {
+  scroll-padding-bottom: calc(var(--alpt-lab-h, 0px) + 1rem);
+}
+
 .alpt-lab {
   position: fixed;
   right: 0;
@@ -1004,6 +1322,10 @@ html.alpt-lab-open body {
   background: var(--a27-ink);
   color: var(--a27-cream);
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.18);
+  /* At high zoom or on a short screen the bar never covers more than half of it. */
+  max-height: 50vh;
+  max-height: 50dvh;
+  overflow-y: auto;
 }
 
 .alpt-lab[hidden] {
@@ -1162,8 +1484,18 @@ html.alpt-lab-open body {
 
   .alpt-lab .alpt-btn {
     min-height: 2.4rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.6rem;
     font-size: 0.88rem;
+  }
+
+  .alpt-lab__msg {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+  }
+
+  .alpt-view__option {
+    white-space: nowrap;
+    font-size: 0.85rem;
   }
 }
 
@@ -1218,9 +1550,9 @@ html.alpt-lab-open body {
 }
 
 /* ---- Levels ---- */
-.alpt-level--beginner { --level: #16A34A; --level-n: 1; }
-.alpt-level--intermediate { --level: #D97706; --level-n: 2; }
-.alpt-level--advanced { --level: #DC2626; --level-n: 3; }
+.alpt-level--primary { --level: #15803D; --level-n: 1; }
+.alpt-level--secondary { --level: #B45309; --level-n: 2; }
+.alpt-level--further { --level: #B91C1C; --level-n: 3; }
 
 /* One, two or three bars, like a signal meter. */
 .alpt-level-mark {
@@ -1235,12 +1567,12 @@ html.alpt-lab-open body {
     linear-gradient(var(--l3, var(--a27-rule)), var(--l3, var(--a27-rule))) 100% 100% / 22% 100% no-repeat;
 }
 
-.alpt-level--intermediate .alpt-level-mark,
-.alpt-level--advanced .alpt-level-mark {
+.alpt-level--secondary .alpt-level-mark,
+.alpt-level--further .alpt-level-mark {
   --l2: var(--level);
 }
 
-.alpt-level--advanced .alpt-level-mark {
+.alpt-level--further .alpt-level-mark {
   --l3: var(--level);
 }
 
@@ -1432,6 +1764,7 @@ html.alpt-lab-open body {
 }
 
 .alpt-lab__count {
+  white-space: nowrap;
   margin-left: 0.4rem;
   font-weight: 400;
   opacity: 0.75;
@@ -1957,8 +2290,20 @@ html.alpt-lab-open body {
   font-size: 0.8rem;
 }
 
-.alpt-compound__board[hidden] {
+.alpt-compound__board[hidden],
+.alpt-compound__copy[hidden] {
   display: none;
+}
+
+/* Copy link sits beside Show to class, the same size. */
+.alpt-compound__copy {
+  display: inline-flex;
+  align-self: flex-start;
+  width: auto;
+  min-height: 2.1rem;
+  margin: 0 0 0.6rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
 }
 
 .alpt-board {
@@ -1969,6 +2314,8 @@ html.alpt-lab-open body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* "safe" keeps the top reachable when the board is taller than the screen (phones). */
+  justify-content: safe center;
   gap: 3rem;
   overflow-y: auto;
   padding: 6vh 7vw;
@@ -2317,8 +2664,8 @@ html.alpt-board-open {
 }
 
 .alpt-glossary__family summary {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.25rem 0.75rem;
   padding: 1rem 0;
@@ -2332,6 +2679,8 @@ html.alpt-board-open {
 
 .alpt-glossary__family summary::after {
   content: "+";
+  grid-column: 3;
+  grid-row: 1;
   margin-left: auto;
   font-size: 1.5rem;
   font-weight: 700;
@@ -2353,6 +2702,7 @@ html.alpt-board-open {
 }
 
 .alpt-glossary__family-about {
+  grid-column: 2 / 3;
   color: var(--a27-dim);
 }
 
@@ -2675,12 +3025,1395 @@ html.alpt-board-open {
   .alpt-reader-notes[open] > :not(summary):not([hidden]) {margin-block:.5rem}
 }
 
-.alpt-quiz {margin-block:3rem;padding:clamp(1rem,3vw,2rem);background:#f1ebfa;border-block-start:5px solid #6d28d9;scroll-margin-top:6rem}
-.alpt-quiz h2,.alpt-quiz h3 {margin:0}
-.alpt-quiz h3 {max-width:52ch;font-size:clamp(1.2rem,2vw,1.65rem);line-height:1.3}
-.alpt-quiz [data-quiz-progress] {font-weight:700;color:#50288b}
-.alpt-quiz [data-quiz-options] {display:flex;flex-wrap:wrap;gap:.6rem;margin-block:1rem}
-.alpt-quiz .is-answer {background:#dcf2dd;color:#193b23;border-color:#266b38}
-.alpt-quiz [data-quiz-feedback] {max-width:65ch}
-.alpt-quiz [hidden],.alpt-quiz[hidden] {display:none}
+/* ---- Buzzword check: a quiz panel. The title and score on the dark side, the question card on the light side,
+   a ten-step progress bar, answers as lettered tiles, and right and wrong answers in green and red. ---- */
+.alpt-quiz {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-block: 3rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  box-shadow: 8px 8px 0 var(--a27-creative);
+  scroll-margin-top: 6rem;
+}
+
+@media (min-width: 900px) {
+  .alpt-quiz {
+    grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 2fr);
+    align-items: stretch;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+.alpt-quiz h2,
+.alpt-quiz h3,
+.alpt-quiz p {
+  margin: 0;
+}
+
+.alpt-quiz__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.alpt-quiz__eyebrow {
+  align-self: flex-start;
+  padding: 0.3rem 0.65rem;
+  background: var(--a27-creative);
+  color: var(--a27-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.alpt-quiz h2 {
+  color: var(--a27-cream);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.alpt-quiz__lead {
+  color: color-mix(in srgb, var(--a27-cream) 82%, transparent);
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.alpt-quiz__scores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  margin-top: auto !important;
+  padding-top: 1rem;
+}
+
+.alpt-quiz__score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.alpt-quiz__score-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a27-creative);
+}
+
+.alpt-quiz [data-quiz-score] {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.alpt-quiz__best {
+  color: color-mix(in srgb, var(--a27-cream) 75%, transparent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.alpt-quiz__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-quiz__top {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.alpt-quiz__progress {
+  color: var(--a27-creative-deep);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.alpt-quiz__bar {
+  height: 8px;
+  background: color-mix(in srgb, var(--a27-creative) 25%, #FFFFFF);
+}
+
+.alpt-quiz__bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--a27-creative-deep);
+  transition: width 0.3s ease;
+}
+
+.alpt-quiz__question {
+  max-width: 48ch;
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.alpt-quiz__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.6rem;
+  counter-reset: alpt-quiz;
+}
+
+.alpt-quiz__option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0.6rem 0.9rem 0.6rem 0.6rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: #FFFFFF;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  counter-increment: alpt-quiz;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* A, B, C badges. */
+.alpt-quiz__option::before {
+  content: counter(alpt-quiz, upper-alpha);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 0.9rem;
+}
+
+.alpt-quiz__option:hover:not([aria-disabled="true"]) {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--a27-creative-deep);
+}
+
+.alpt-quiz__option:focus-visible {
+  outline: 3px solid var(--a27-creative-deep);
+  outline-offset: 3px;
+}
+
+.alpt-quiz__option[aria-disabled="true"] {
+  cursor: default;
+}
+
+.alpt-quiz__option.is-answer {
+  border-color: var(--a27-responsible-deep);
+  background: color-mix(in srgb, var(--a27-responsible) 30%, #FFFFFF);
+}
+
+.alpt-quiz__option.is-answer::before {
+  content: "\2713";
+  background: var(--a27-responsible-deep);
+}
+
+.alpt-quiz__option.is-wrong {
+  border-color: #B91C1C;
+  background: #FDE8E8;
+}
+
+.alpt-quiz__option.is-wrong::before {
+  content: "\2717";
+  background: #B91C1C;
+}
+
+.alpt-quiz__feedback {
+  max-width: 65ch;
+  line-height: 1.5;
+}
+
+.alpt-quiz__feedback.is-right,
+.alpt-quiz__feedback.is-wrong {
+  padding: 0.7rem 0.9rem;
+  border-left: 4px solid var(--a27-responsible-deep);
+  background: color-mix(in srgb, var(--a27-responsible) 18%, #FFFFFF);
+}
+
+.alpt-quiz__feedback.is-wrong {
+  border-left-color: #B91C1C;
+  background: #FDF0F0;
+}
+
+.alpt-quiz__next {
+  align-self: flex-start;
+}
+
+/* The end of a round: the score takes the question's place. */
+.alpt-quiz.is-done .alpt-quiz__question {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-quiz__option,
+  .alpt-quiz__bar span {
+    transition: none;
+  }
+}
+
+.alpt-quiz [hidden],
+.alpt-quiz[hidden] {
+  display: none;
+}
+
 @media print { .alpt-quiz { display:none!important } }
+
+.alpt-quiz-shortcut {display:inline-flex;align-items:center;justify-self:start;align-self:center;gap:.5rem;min-height:44px;padding:.45rem .85rem;background:#f1ebfa;color:#50288b;border-inline-start:4px solid #6d28d9;font-weight:700;text-underline-offset:.15em}
+
+/* The poster always prints every word, whatever year the slider is on. */
+@media print {
+  .is-years .alpt-tile.is-later {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* ---- Element of the week: above the table, changing every Monday ---- */
+.alpt-eotw {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: #FFFFFF;
+  border-left: 6px solid var(--a27-smart);
+}
+
+.alpt-eotw__tile {
+  --cut: 12px;
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 0.4rem 0.5rem;
+  background: var(--fam);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+.alpt-eotw__sym {
+  color: var(--fam-deep);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.alpt-eotw__text {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.alpt-eotw__text p {
+  margin: 0 !important;
+}
+
+.alpt-eotw__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a27-dim);
+}
+
+.alpt-eotw__name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.alpt-eotw__talk {
+  color: var(--a27-ink);
+}
+
+.alpt-eotw__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* The card takes its accent from the word's AIAD theme; the tile keeps its family colour. */
+.alpt-eotw { --eotw-accent: var(--a27-future); }
+.alpt-eotw--safe { --eotw-accent: var(--a27-safe); }
+.alpt-eotw--smart { --eotw-accent: var(--a27-smart); }
+.alpt-eotw--creative { --eotw-accent: var(--a27-creative); }
+.alpt-eotw--responsible { --eotw-accent: var(--a27-responsible); }
+.alpt-eotw--future { --eotw-accent: var(--a27-future); }
+
+/* In the introduction: a weekly word taster. A dark card with a tilted sticker, the tile beside the word, the
+   question as a quote and a hard pink shadow. Below the text on phones and tablets, beside the title on wide
+   screens. */
+.alpt-hero .alpt-eotw {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem 1.1rem;
+  margin: 1.75rem 0.5rem 0.5rem 0;
+  padding: 1.4rem 1.4rem 1.25rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  border: 0;
+  box-shadow: 8px 8px 0 var(--eotw-accent);
+}
+
+.alpt-hero .alpt-eotw__sticker {
+  position: absolute;
+  top: -0.85rem;
+  right: 1.1rem;
+  padding: 0.3rem 0.65rem;
+  background: var(--eotw-accent);
+  color: var(--a27-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(3deg);
+}
+
+.alpt-hero .alpt-eotw__tile {
+  --cut: 14px;
+  width: 5rem;
+  height: 5rem;
+  transform: rotate(-4deg);
+}
+
+.alpt-hero .alpt-eotw__sym {
+  font-size: 2.4rem;
+}
+
+.alpt-hero .alpt-eotw__text {
+  display: contents;
+}
+
+.alpt-hero .alpt-eotw__label,
+.alpt-hero .alpt-eotw__name {
+  grid-column: 2;
+}
+
+.alpt-hero .alpt-eotw__label {
+  align-self: end;
+  color: var(--eotw-accent);
+  font-size: 0.72rem;
+}
+
+.alpt-hero .alpt-eotw__name {
+  align-self: start;
+  margin: -0.6rem 0 0 !important;
+  color: var(--a27-cream);
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+/* The tile takes the first two rows, beside the label and the word. */
+.alpt-hero .alpt-eotw__tile {
+  grid-row: 1 / span 2;
+}
+
+.alpt-hero .alpt-eotw__talk {
+  grid-column: 1 / -1;
+  padding-left: 0.8rem;
+  border-left: 3px solid var(--eotw-accent);
+  color: var(--a27-cream);
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.alpt-hero .alpt-eotw__actions {
+  grid-column: 1 / -1;
+}
+
+.alpt-hero .alpt-eotw .alpt-btn {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.9rem;
+  border-color: var(--a27-cream);
+  background: transparent;
+  color: var(--a27-cream);
+  font-size: 0.9rem;
+}
+
+.alpt-hero .alpt-eotw .alpt-btn--ink {
+  border-color: var(--eotw-accent);
+  background: var(--eotw-accent);
+  color: var(--a27-ink);
+}
+
+.alpt-hero .alpt-eotw .alpt-btn:hover {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-hero .alpt-eotw .alpt-btn:focus-visible {
+  outline: 3px solid var(--eotw-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .alpt-hero .alpt-eotw__tile {
+    transition: transform 0.25s ease;
+  }
+
+  .alpt-hero .alpt-eotw:hover .alpt-eotw__tile {
+    transform: rotate(0deg) scale(1.04);
+  }
+}
+
+@media (min-width: 1100px) {
+  .literacy-table-page .alpt-hero .container {
+    display: grid;
+    /* Half and half: the title and intro on the left, the word of the week on the right. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+  }
+
+  .literacy-table-page .alpt-hero .container > * {
+    grid-column: 1 / -1;
+  }
+
+  .literacy-table-page .alpt-hero .container > .alpt-eyebrow,
+  .literacy-table-page .alpt-hero .container > .alpt-title,
+  .literacy-table-page .alpt-hero .container > .alpt-lead {
+    grid-column: 1;
+  }
+
+  /* Half the width: the title scales with its column so it stays on two lines. */
+  .literacy-table-page .alpt-hero .alpt-title {
+    max-width: none;
+    font-size: clamp(3.2rem, 5.4vw, 5.5rem);
+  }
+
+  /* Flush with the big title and the lead: from the top of the title to the end of the lead. */
+  .literacy-table-page .alpt-hero .container > .alpt-eotw {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: stretch;
+    align-content: space-between;
+    margin: var(--alpt-title-gap, 1.5rem) 8px 8px 0;
+    gap: 0.75rem 1.5rem;
+    padding: 1.6rem 2rem 1.5rem;
+  }
+
+  /* The card is as tall as the title block, so everything inside it is drawn bigger. */
+  .alpt-hero .alpt-eotw__tile {
+    --cut: 18px;
+    width: clamp(5.5rem, 7vw, 7rem);
+    height: clamp(5.5rem, 7vw, 7rem);
+  }
+
+  .alpt-hero .alpt-eotw__sym {
+    font-size: clamp(2.6rem, 3.6vw, 3.6rem);
+  }
+
+  .alpt-hero .alpt-eotw__label {
+    font-size: 0.8rem;
+  }
+
+  .alpt-hero .alpt-eotw__name {
+    margin-top: -0.4rem !important;
+    font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+  }
+
+  .alpt-hero .alpt-eotw__talk {
+    padding-left: 1rem;
+    border-left-width: 4px;
+    font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+    line-height: 1.4;
+  }
+
+  .alpt-hero .alpt-eotw .alpt-btn {
+    min-height: 2.75rem;
+    padding: 0.5rem 1.15rem;
+    font-size: 1rem;
+  }
+
+  .alpt-hero .alpt-eotw__sticker {
+    top: -0.95rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ---- Try it: the three activities below the table ---- */
+.alpt-tryit {
+  margin: 3rem 0 0;
+}
+
+.alpt-tryit__title {
+  margin: 0 0 0.25rem !important;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.alpt-tryit__lead {
+  max-width: 44rem;
+  color: var(--a27-dim);
+}
+
+.alpt-tryit__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alpt-tryit__card {
+  display: grid;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.9rem 1rem 1rem;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF;
+  color: var(--a27-ink);
+  text-decoration: none;
+}
+
+.alpt-tryit__card:hover {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-tryit__name {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.alpt-tryit__name::after {
+  content: " \2193";
+}
+
+.alpt-tryit__about {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+/* ---- Safeguarding note, in the panel and on the board ---- */
+.alpt-panel__safe {
+  margin: 0.25rem 0 0 !important;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--a27-smart);
+  background: color-mix(in srgb, var(--a27-smart) 10%, #FFFFFF);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.alpt-board__safe {
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  padding: 0.6rem 1rem;
+  border-left: 5px solid var(--a27-smart);
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+  line-height: 1.4;
+}
+
+@media print {
+  .alpt-eotw,
+  .alpt-tryit {
+    display: none !important;
+  }
+}
+
+/* ---- Black-and-white printing: each family also gets a letter code, on the tiles and in the key, so the families
+   can be told apart without colour (F Foundations, G Generative, P Predictive, A Agents, W Workflow, E Ethics,
+   I Infrastructure). Only in the families view, whose colours are the families. ---- */
+@media print {
+  .alpt:not(.is-themes):not(.is-years) .alpt-grid > .alpt-tile {
+    position: relative;
+  }
+
+  .alpt:not(.is-themes):not(.is-years) .alpt-grid > .alpt-tile::after {
+    content: var(--code);
+    position: absolute;
+    /* Top right, just left of the cut corner, so the diagonal doesn't slice it and the name below stays clear. */
+    top: 0.15rem;
+    right: calc(var(--cut, 10px) + 0.2rem);
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: var(--a27-ink);
+  }
+
+  .alpt:not(.is-themes):not(.is-years) .alpt-key-family .alpt-chip__swatch::after {
+    content: var(--code);
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 700;
+    line-height: 0.9rem;
+    text-align: center;
+  }
+}
+
+/* ---- Printable element cards: twelve to an A4 page, to cut out. The script builds .alpt-cards-print from the
+   elements showing (so a filter prints just that family or theme), adds .alpt-printing-cards, and prints. ---- */
+.alpt-cards-print {
+  display: none;
+}
+
+.alpt-print-cards {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--a27-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@page alpt-cards {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  html.alpt-printing-cards body > *:not(.alpt-cards-print) {
+    display: none !important;
+  }
+
+  html.alpt-printing-cards .alpt-cards-print {
+    display: grid;
+    page: alpt-cards;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 68mm;
+    gap: 0;
+    font-family: var(--s-font);
+    color: #231F20;
+  }
+
+  .alpt-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5mm;
+    padding: 3.5mm 4mm;
+    border: 1px dashed #8A8580;
+    break-inside: avoid;
+    overflow: hidden;
+  }
+
+  .alpt-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2mm;
+  }
+
+  .alpt-card__sym {
+    display: flex;
+    align-items: flex-end;
+    width: 14mm;
+    height: 14mm;
+    padding: 1.5mm 2mm;
+    background: var(--fam);
+    box-shadow: inset 0 0 0 0.5mm var(--fam-deep);
+    color: var(--fam-deep);
+    font-size: 17pt;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .alpt-card__family {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1mm;
+    max-width: 30mm;
+    font-size: 6.5pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .alpt-card__code {
+    display: inline-block;
+    min-width: 4.5mm;
+    padding: 0.3mm 0.8mm;
+    border: 0.3mm solid #231F20;
+    font-size: 7pt;
+    text-align: center;
+  }
+
+  .alpt-card__name {
+    margin: 0;
+    font-size: 12pt;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .alpt-card__def {
+    margin: 0;
+    font-size: 8pt;
+    line-height: 1.3;
+  }
+
+  .alpt-card__talk {
+    margin: auto 0 0;
+    padding-top: 1.5mm;
+    border-top: 0.3mm solid #231F20;
+    font-size: 7.5pt;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .alpt-card__foot {
+    margin: 0;
+    font-size: 6pt;
+    color: #54504E;
+  }
+
+  .alpt-card__safe {
+    font-weight: 700;
+    color: #231F20;
+  }
+}
+
+/* ---- Tablets (768–1199px): the panel opens as a drawer along the bottom of the screen, over the tiles, rather than
+   above them, so choosing a tile doesn't jump the page. "Back to elements" closes it. ---- */
+@media screen and (min-width: 768px) and (max-width: 1199px) and (min-height: 600px) {
+  .alpt-js .alpt.is-detail-open .alpt-panel {
+    position: fixed;
+    z-index: 60;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: min(52vh, 34rem);
+    margin: 0;
+    overflow-y: auto;
+    border-top: 4px solid var(--fam-deep);
+    box-shadow: 0 -10px 30px rgba(35, 31, 32, 0.18);
+  }
+
+  .alpt-js .alpt.is-detail-open {
+    padding-bottom: min(52vh, 34rem);
+  }
+
+  /* During the compound challenge the lab bar is fixed at the bottom too: the drawer sits on top of it. */
+  html.alpt-lab-open .alpt-js .alpt.is-detail-open .alpt-panel,
+  html.alpt-lab-open .alpt.is-detail-open .alpt-panel {
+    bottom: var(--alpt-lab-h, 0);
+    max-height: min(40vh, 28rem);
+  }
+
+  /* Tiles reached with Tab scroll clear of the drawer rather than under it. */
+  html:has(.alpt.is-detail-open) {
+    scroll-padding-bottom: min(52vh, 34rem);
+  }
+
+  .alpt-js .alpt.is-detail-open .alpt-panel__nav {
+    position: sticky;
+    bottom: 0;
+    background: inherit;
+  }
+}
+
+/* A reader's credit on an element they suggested, and the help under the credit field. */
+.alpt-panel__credit {
+  margin: 0 !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--a27-responsible-deep);
+}
+
+.alpt-suggest__help {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--a27-dim);
+}
+
+/* ---- Ready-made sessions: the same open-and-close rows as the display board help, with timed steps ---- */
+.alpt-sessions-wrap {
+  padding: 3.5rem 0 1rem;
+}
+
+.alpt-session .alpt-session__meta,
+.alpt-session .alpt-session__after {
+  max-width: 48rem;
+  margin: 0 0 0.85rem;
+  color: var(--a27-dim);
+  line-height: 1.5;
+}
+
+.alpt-session ol {
+  max-width: 48rem;
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+  line-height: 1.5;
+}
+
+.alpt-session li + li {
+  margin-top: 0.45rem;
+}
+
+.alpt-session .alpt-session__after a {
+  color: var(--a27-ink);
+  font-weight: 700;
+}
+
+/* A compound opened from a shared link is marked for a moment. */
+.alpt-compound.is-linked {
+  outline: 4px solid var(--a27-future);
+  outline-offset: 3px;
+}
+
+/* ---- Phones: the panel stacks, tile above text, so the definition gets the full width ---- */
+@media screen and (max-width: 599px) {
+  .alpt-panel {
+    grid-template-columns: 1fr !important;
+  }
+
+  .alpt-panel__tile {
+    width: 5.5rem;
+    aspect-ratio: 1;
+  }
+
+  /* The name is the heading just below, so the small tile shows only its number and symbol. */
+  .alpt-panel__tile-name {
+    display: none;
+  }
+}
+
+/* ---- Closing call to action: AI Awareness Day itself ---- */
+.alpt-close {
+  padding: 3.5rem 0 4.5rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-close__title {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  color: var(--a27-cream);
+}
+
+.alpt-close__text {
+  max-width: 44rem;
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  color: #D9D6CE;
+}
+
+.alpt-close .alpt-btn {
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.alpt-close .alpt-btn--ink {
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.alpt-close .alpt-btn:hover {
+  background: var(--a27-future);
+  border-color: var(--a27-future);
+  color: var(--a27-ink);
+}
+
+@media print {
+  .alpt-close,
+  .alpt-sessions-wrap {
+    display: none !important;
+  }
+
+  html.alpt-lab-open body {
+    padding-bottom: 0 !important;
+  }
+}
+
+/* The hint after "Issues it raises": quieter, and in normal case. */
+.alpt-panel__issues-hint {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--a27-dim);
+}
+
+/* ---- Compound cards, compact: the elements as a one-row equation of mini tiles (Ll + Rg + Vd), and the two
+   buttons side by side, so no row is spent on a label or a lone button. ---- */
+.alpt-compound__body {
+  flex-flow: row wrap;
+  align-content: flex-start;
+  column-gap: 0.4rem;
+}
+
+.alpt-compound__body > * {
+  flex: 0 0 100%;
+}
+
+.alpt-compound__body > .alpt-compound__board,
+.alpt-compound__body > .alpt-compound__copy {
+  flex: 0 0 auto;
+  margin: 0 0 0.6rem;
+}
+
+.alpt-compound__made {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.alpt-compound__formula {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.alpt-compound__formula .alpt-compound__el {
+  --cut: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.15rem;
+  padding: 0.35rem 0.45rem 0.4rem;
+}
+
+/* A plus sign between the tiles. */
+.alpt-compound__plus {
+  flex: none;
+  align-self: center;
+  padding: 0 0.3rem;
+  color: var(--a27-dim);
+  font-size: 0.95rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+.alpt-compound__formula .alpt-compound__el-sym {
+  width: auto;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.alpt-compound__formula .alpt-compound__el-name {
+  font-size: 0.66rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* ==== One look for the page's interactive panels ====
+   Word of the week, the compound challenge, the Buzzword check, Suggest a new element and the closing band share it:
+   a dark panel, a tilted sticker label, a hard offset shadow and light inner cards, each in its own AIAD colour
+   (--panel-accent). The reading sections (definitions, issues, sessions, questions) stay light and calm. */
+.alpt-challenge { --panel-accent: var(--a27-smart); }
+.alpt-quiz { --panel-accent: var(--a27-creative); }
+.alpt-suggest { --panel-accent: var(--a27-future); }
+.alpt-close { --panel-accent: var(--a27-responsible); }
+
+.alpt-sticker {
+  display: inline-block;
+  align-self: flex-start;
+  justify-self: start;
+  margin: 0 0 0.85rem !important;
+  padding: 0.3rem 0.65rem;
+  background: var(--panel-accent, var(--a27-future));
+  color: var(--a27-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.alpt-quiz .alpt-sticker {
+  margin: 0 !important;
+}
+
+.alpt-challenge,
+.alpt-quiz,
+.alpt-suggest {
+  margin-right: 8px;
+  box-shadow: 8px 8px 0 var(--panel-accent);
+}
+
+/* The compound challenge: no cut corner (it would clip the shadow), and its meter in the accent. */
+.alpt-challenge {
+  clip-path: none;
+}
+
+.alpt-challenge .alpt-meter {
+  background: color-mix(in srgb, var(--a27-cream) 22%, transparent);
+}
+
+.alpt-challenge .alpt-meter__fill {
+  background: var(--panel-accent);
+}
+
+.alpt-challenge__title {
+  letter-spacing: -0.035em;
+}
+
+.alpt-challenge__level:hover {
+  box-shadow: 4px 4px 0 var(--panel-accent);
+}
+
+/* Suggest a new element: the dark panel, with the form on a light card. */
+.alpt-suggest {
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-suggest__title {
+  color: var(--a27-cream);
+}
+
+.alpt-suggest__intro p,
+.alpt-suggest__bench {
+  color: color-mix(in srgb, var(--a27-cream) 85%, transparent);
+}
+
+.alpt-suggest__bench a {
+  color: var(--panel-accent);
+}
+
+.alpt-suggest__form {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+/* The closing band keeps its full width, with the sticker above its title. */
+.alpt-close .alpt-sticker {
+  margin-bottom: 1rem !important;
+}
+
+/* Try it: each card wears the colour of the panel it jumps to. */
+.alpt-tryit__card {
+  border-top-width: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.alpt-tryit__card[href="#alpt-compounds-title"] { --card-accent: var(--a27-safe); }
+.alpt-tryit__card[href="#alpt-challenge-title"] { --card-accent: var(--a27-smart); }
+.alpt-tryit__card[href="#alpt-buzzword-check"] { --card-accent: var(--a27-creative); }
+.alpt-tryit__card[href="#alpt-sessions"] { --card-accent: var(--a27-responsible); }
+
+.alpt-tryit__card {
+  border-top-color: var(--card-accent, var(--a27-ink));
+}
+
+.alpt-tryit__card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--card-accent, var(--a27-ink));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-tryit__card {
+    transition: none;
+  }
+}
+
+@media print {
+  .alpt-challenge,
+  .alpt-suggest {
+    box-shadow: none;
+  }
+}
+
+.alpt-suggest .alpt-sticker,
+.alpt-close .alpt-sticker {
+  color: var(--a27-ink);
+}
+
+/* The closing band's main button in its accent, like Open it on the word of the week. */
+.alpt-close .alpt-btn--ink {
+  border-color: var(--panel-accent);
+  background: var(--panel-accent);
+  color: var(--a27-ink);
+}
+
+.alpt-close .alpt-btn:hover {
+  border-color: var(--a27-cream);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+/* ---- The definitions and issues lists as a grid of cards: one across on phones, two on tablets, three on wide
+   screens. Each card has a top stripe in its family or theme colour; an open card spans the full width, so its
+   definitions sit in columns rather than one long strip. ---- */
+.alpt-glossary__family,
+.alpt-glossary__family:last-of-type {
+  padding: 0 1.1rem;
+  border: 0;
+  border-top: 5px solid var(--fam-deep, var(--a27-ink));
+  background: #FFFFFF;
+}
+
+.alpt-glossary__family summary {
+  padding: 0.9rem 0;
+}
+
+.alpt-glossary__family-name {
+  font-size: 1.15rem;
+}
+
+.alpt-glossary__family-about {
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.alpt-glossary__family + .alpt-glossary__family {
+  margin-top: 0.75rem;
+}
+
+.alpt-glossary__family[open] {
+  padding-bottom: 0.25rem;
+}
+
+.alpt-glossary__family[open] summary {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--a27-rule, #D9D6CE);
+}
+
+@media screen and (min-width: 700px) {
+  .alpt-glossary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 0.75rem;
+  }
+
+  .alpt-glossary > :not(.alpt-glossary__family) {
+    grid-column: 1 / -1;
+  }
+
+  .alpt-glossary__family + .alpt-glossary__family {
+    margin-top: 0;
+  }
+
+  .alpt-glossary__family[open] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media screen and (min-width: 1100px) {
+  .alpt-glossary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---- Try it, sticker style: a tilted label, cards tinted in the colour of the panel they jump to, a hard ink
+   shadow, a tilted time sticker and a round arrow. Light, so it doesn't add another dark panel. ---- */
+.alpt-tryit {
+  --panel-accent: var(--a27-future);
+}
+
+.alpt-tryit__title {
+  border-left: 0 !important;
+  padding: 0 !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  letter-spacing: -0.035em;
+  line-height: 1 !important;
+}
+
+.alpt-tryit__lead {
+  margin-top: 0.5rem !important;
+}
+
+.alpt-tryit__cards {
+  gap: 1.25rem;
+  padding: 0.5rem 8px 8px 0;
+}
+
+.alpt-tryit__card {
+  position: relative;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 1.1rem 1.1rem 1rem;
+  border: 2px solid var(--a27-ink);
+  background: color-mix(in srgb, var(--card-accent, var(--a27-future)) 16%, #FFFFFF);
+  box-shadow: 6px 6px 0 var(--a27-ink);
+  text-decoration: none;
+}
+
+.alpt-tryit__card:hover,
+.alpt-tryit__card:focus-visible {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--card-accent, var(--a27-ink));
+}
+
+.alpt-tryit__card:focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 4px;
+}
+
+.alpt-tryit__time {
+  justify-self: start;
+  padding: 0.2rem 0.55rem;
+  background: var(--card-accent, var(--a27-future));
+  color: var(--a27-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+.alpt-tryit__name {
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* The card's own round arrow replaces the arrow after the name. */
+.alpt-tryit__name::after {
+  content: none !important;
+}
+
+.alpt-tryit__about {
+  color: var(--a27-ink);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.alpt-tryit__go {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: transform 0.15s ease;
+}
+
+.alpt-tryit__card:hover .alpt-tryit__go {
+  transform: translateY(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-tryit__go {
+    transition: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .alpt-tryit__card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto;
+    column-gap: 0.75rem;
+  }
+
+  .alpt-tryit__card > :not(.alpt-tryit__go) {
+    grid-column: 1;
+  }
+
+  .alpt-tryit__go {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    margin: 0;
+  }
+}
+
+/* ---- Compound cards, sticker style: tinted in their AIAD strand colour, a black border and a hard ink shadow,
+   lifting on hover. No cut corner: it would clip the shadow. Volatile ones keep an orange stripe across the top. ---- */
+.alpt-compounds { --panel-accent: var(--a27-safe); }
+
+.alpt-compound--safe { --strand-accent: var(--a27-safe); }
+.alpt-compound--smart { --strand-accent: var(--a27-smart); }
+.alpt-compound--creative { --strand-accent: var(--a27-creative); }
+.alpt-compound--responsible { --strand-accent: var(--a27-responsible); }
+.alpt-compound--future { --strand-accent: var(--a27-future); }
+
+.alpt-compounds__grid {
+  gap: 1.25rem;
+  padding: 0 8px 8px 0;
+}
+
+.alpt-compound {
+  clip-path: none;
+  border: 2px solid var(--a27-ink);
+  background: color-mix(in srgb, var(--strand-accent, var(--a27-cream)) 12%, #FFFFFF);
+  box-shadow: 6px 6px 0 var(--a27-ink);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.alpt-compound:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--strand-accent, var(--a27-ink));
+}
+
+.alpt-compound--volatile {
+  box-shadow: inset 0 5px 0 #D97706, 6px 6px 0 var(--a27-ink);
+}
+
+.alpt-compound--volatile:hover {
+  box-shadow: inset 0 5px 0 #D97706, 9px 9px 0 var(--strand-accent, var(--a27-ink));
+}
+
+.alpt-compounds__title {
+  letter-spacing: -0.035em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alpt-compound {
+    transition: none;
+  }
+
+  .alpt-compound:hover {
+    transform: none;
+  }
+}
+
+/* Try it time stickers: white text on each colour's deep shade, so the text stays readable (about 6:1). */
+.alpt-tryit__card[href="#alpt-compounds-title"] { --card-deep: var(--a27-safe-deep); }
+.alpt-tryit__card[href="#alpt-challenge-title"] { --card-deep: var(--a27-smart-deep); }
+.alpt-tryit__card[href="#alpt-buzzword-check"] { --card-deep: var(--a27-creative-deep); }
+.alpt-tryit__card[href="#alpt-sessions"] { --card-deep: var(--a27-responsible-deep); }
+
+.alpt-tryit__time {
+  background: var(--card-deep, var(--a27-ink));
+  color: #FFFFFF;
+}
+
+/* The real-life clue on a hidden compound, so nobody starts from a blank. */
+.alpt-compound__looks {
+  margin: 0.35rem 0 0 !important;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.alpt-say-next {
+  margin-left: 0.5rem;
+}

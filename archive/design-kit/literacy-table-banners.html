@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- "Introducing the AI Literacy Periodic Table" blog post: four section banners (600×300 each, rendered at 2× and
+     transparent), one per way to use the table. Same frame and type as crazy-week.html; the tiles use the table's family
+     colours. render-literacy-table-banners.mjs renders it. -->
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root {
+  --cream: #F6F4ED; --ink: #231F20; --dim: #54504E; --rule: #C9C6BE;
+  --safe: #00BEDD; --smart: #FF7038; --creative: #AC91FF; --responsible: #63DF93; --future: #FA83EB;
+  /* table families: pale fill / dark symbol */
+  --fo: #E3E8EF; --fo-d: #334155; --ge: #EEE6FF; --ge-d: #6D28D9; --pr: #DFE9FF; --pr-d: #1D4ED8;
+  --ag: #FFEDD5; --ag-d: #B45309; --au: #D5F2EC; --au-d: #0F766E; --go: #FFE1E7; --go-d: #BE123C; --in: #E8F3D6; --in-d: #3F6212;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #F6F4ED; font-family: 'AIAD Sans', Arial, sans-serif; color: var(--ink); padding: 20px; display: grid; gap: 20px; width: 660px; }
+.b { width: 600px; height: 300px; position: relative; overflow: hidden; padding: 26px 28px;
+     clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px)); }
+.cream { background: #EAE7DF; } .ink { background: var(--ink); color: var(--cream); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.sig { display: flex; gap: 3px; } .sig i { width: 8px; height: 8px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+h2 { font-weight: 700; letter-spacing: -.035em; line-height: .98; font-size: 44px; margin: 22px 0 14px; width: 280px; }
+.lead { font-size: 16px; line-height: 1.4; width: 270px; }
+.ink .lead { color: #C9C6BE; } .cream .lead { color: var(--dim); }
+.tile { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
+/* an element tile, like the table's: chamfered top-right corner only */
+.el { --cut: 9px; background: var(--p); color: var(--d); clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 6px 8px; }
+.el b { font-size: 26px; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+.el small { font-size: 9px; font-weight: 600; line-height: 1.15; margin-top: 3px; }
+.right { position: absolute; left: 320px; top: 30px; width: 254px; }
+
+/* 1 National AI Conversation */
+#l1 .q { background: var(--cream); color: var(--ink); padding: 13px 15px 14px; font-size: 17px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+#l1 .q span { display: block; font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+#l1 .els { display: flex; gap: 8px; margin-top: 10px; }
+#l1 .els .el { width: 72px; height: 72px; }
+#l1 .sides { flex: 1; display: grid; gap: 8px; }
+#l1 .side { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--ink); }
+#l1 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+#l1 .chip { font-size: 11px; font-weight: 600; padding: 5px 8px; border: 1.5px solid #6B6664; color: var(--cream); border-radius: 99px; }
+
+/* 2 Benchmark revision */
+#l2 .right { top: 58px; }
+#l2 .rows { display: grid; gap: 7px; }
+#l2 .r { display: grid; grid-template-columns: 104px 1fr 34px; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+#l2 .bar { height: 14px; background: #D6D2C8; position: relative; }
+#l2 .bar i { position: absolute; inset: 0 auto 0 0; background: var(--ink); }
+#l2 .r em { font-style: normal; font-weight: 700; text-align: right; }
+#l2 .low { color: var(--go-d); } #l2 .low .bar i { background: var(--smart); }
+#l2 .start { margin-top: 12px; background: var(--ink); color: var(--cream); padding: 10px 11px 11px; }
+#l2 .start span { display: block; font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9C6BE; margin-bottom: 8px; }
+#l2 .start .els { display: flex; gap: 6px; }
+#l2 .start .el { width: 52px; height: 52px; }
+#l2 .start .el b { font-size: 21px; }
+
+/* 3 Display board */
+#l3 { background: var(--responsible); }
+#l3 .lead { color: var(--ink); }
+#l3 .sig i { outline: 1.5px solid var(--ink); outline-offset: -0.5px; }
+#l3 .board { position: absolute; left: 316px; top: 26px; width: 262px; height: 248px; background: var(--ink); padding: 12px; }
+#l3 .poster { background: var(--cream); padding: 7px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; height: 104px; }
+#l3 .poster i { display: block; clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 0 100%); }
+#l3 .poster .gap { visibility: hidden; }
+#l3 .label { font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9C6BE; margin: 9px 0 6px; }
+#l3 .lower { display: grid; grid-template-columns: 118px 1fr; gap: 10px; }
+#l3 .week { background: var(--cream); padding: 8px; display: flex; gap: 8px; align-items: center; height: 92px; }
+#l3 .week .el { width: 56px; height: 56px; flex: none; }
+#l3 .week .el b { font-size: 28px; }
+#l3 .week .lines { flex: 1; display: grid; gap: 6px; }
+#l3 .week .lines i { display: block; height: 6px; background: var(--rule); }
+#l3 .notes { position: relative; }
+#l3 .note { position: absolute; width: 50px; height: 46px; padding: 6px; font-size: 8px; font-weight: 700; line-height: 1.15; color: var(--ink); }
+#l3 .note::after { content: ''; position: absolute; left: 50%; top: -3px; width: 7px; height: 7px; margin-left: -3px; border-radius: 50%; background: var(--cream); box-shadow: 0 0 0 1.5px var(--ink); }
+
+/* 4 Show to class */
+#l4 .screen { position: absolute; left: 316px; top: 38px; width: 262px; height: 196px; background: var(--cream); color: var(--ink); border: 7px solid #48423F; padding: 16px 16px 12px; display: grid; grid-template-columns: 96px 1fr; gap: 0 14px; align-content: start; }
+#l4 .screen .el { width: 96px; height: 96px; --cut: 14px; padding: 8px 10px; }
+#l4 .screen .el b { font-size: 46px; }
+#l4 .screen .el small { font-size: 10px; }
+#l4 .say { align-self: center; }
+#l4 .say span { display: block; font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+#l4 .say b { display: block; font-size: 19px; line-height: 1.08; letter-spacing: -.02em; }
+#l4 .ctl { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 10.5px; font-weight: 700; }
+#l4 .ctl .btn { padding: 6px 9px; border: 1.5px solid var(--ink); }
+#l4 .ctl .hide { background: var(--ink); color: var(--cream); }
+#l4 .stand { position: absolute; left: 427px; top: 234px; width: 40px; height: 20px; background: #48423F; }
+#l4 .foot { position: absolute; left: 397px; top: 254px; width: 100px; height: 8px; background: #48423F; }
+#l4 .hands { position: absolute; left: 330px; top: 262px; display: flex; gap: 8px; }
+#l4 .hands i { width: 30px; height: 12px; display: block; clip-path: polygon(0 100%, 0 30%, 30% 0, 70% 0, 100% 30%, 100% 100%); }
+</style></head>
+<body>
+
+<!-- 1 Prepare for the National AI Conversation -->
+<section class="b ink" id="l1">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>1 · National Conversation</div>
+  <h2>Shared words for a good debate</h2>
+  <p class="lead">Before the debate, give each group the elements behind their question.</p>
+  <div class="right">
+    <div class="q tile"><span>Debate question</span>Should an AI helper remember everything about you?</div>
+    <div class="els">
+      <div class="el" style="--p:var(--ag);--d:var(--ag-d)"><b>Me</b><small>Memory</small></div>
+      <div class="el" style="--p:var(--go);--d:var(--go-d)"><b>Pv</b><small>Privacy</small></div>
+      <div class="sides">
+        <div class="side tile" style="background:var(--responsible)">FOR</div>
+        <div class="side tile" style="background:var(--smart)">AGAINST</div>
+      </div>
+    </div>
+    <div class="chips"><span class="chip">Personal information</span><span class="chip">Digital footprint</span><span class="chip">Consent</span></div>
+  </div>
+</section>
+
+<!-- 2 Revise after the benchmark audit -->
+<section class="b cream" id="l2">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>2 · Benchmark · illustration</div>
+  <h2>Revise where you scored lowest</h2>
+  <p class="lead">Every element names the part of the AI Risk Readiness Benchmark it belongs to.</p>
+  <div class="right">
+    <div class="rows">
+      <div class="r"><span>Safeguarding</span><span class="bar"><i style="width:78%"></i></span><em>78%</em></div>
+      <div class="r"><span>Human Oversight</span><span class="bar"><i style="width:66%"></i></span><em>66%</em></div>
+      <div class="r"><span>Bias &amp; Equality</span><span class="bar"><i style="width:59%"></i></span><em>59%</em></div>
+      <div class="r low"><span>Privacy &amp; Data</span><span class="bar"><i style="width:32%"></i></span><em>32%</em></div>
+    </div>
+    <div class="start tile"><span>Start with these elements</span>
+      <div class="els">
+        <div class="el" style="--p:var(--go);--d:var(--go-d)"><b>Pv</b></div>
+        <div class="el" style="--p:var(--go);--d:var(--go-d)"><b>Dg</b></div>
+        <div class="el" style="--p:var(--go);--d:var(--go-d)"><b>Sh</b></div>
+        <div class="el" style="--p:var(--ag);--d:var(--ag-d)"><b>Me</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 Build your display board -->
+<section class="b" id="l3">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>3 · Display board</div>
+  <h2>Build your display board</h2>
+  <p class="lead">Print the poster on one page, then grow the board around it.</p>
+  <div class="board">
+    <div class="poster" id="poster"></div>
+    <div class="label">Element of the week</div>
+    <div class="lower">
+      <div class="week">
+        <div class="el" style="--p:var(--go);--d:var(--go-d)"><b>Hi</b></div>
+        <div class="lines"><i style="width:100%"></i><i style="width:80%"></i><i style="width:90%"></i><i style="width:55%;background:var(--safe)"></i></div>
+      </div>
+      <div class="notes">
+        <div class="note" style="left:2px;top:4px;background:var(--future);transform:rotate(-5deg)">Who checks it?</div>
+        <div class="note" style="left:62px;top:0;background:var(--safe);transform:rotate(4deg)">A teacher!</div>
+        <div class="note" style="left:30px;top:50px;background:var(--smart);transform:rotate(-2deg)">Not always</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Put a definition on the classroom screen -->
+<section class="b ink" id="l4">
+  <div class="eyebrow"><span class="sig"><i></i><i></i><i></i><i></i><i></i></span>4 · Show to class</div>
+  <h2>Put a definition on the screen</h2>
+  <p class="lead">Hide the definition, ask the room, then show it and compare.</p>
+  <div class="screen">
+    <div class="el" style="--p:var(--ge);--d:var(--ge-d)"><b>Ha</b><small>Hallucination</small></div>
+    <div class="say"><span>Definition hidden</span><b>What do you think it means?</b></div>
+    <div class="ctl"><span class="btn">‹ Previous</span><span class="btn hide">Show definition</span><span class="btn">Next ›</span></div>
+  </div>
+  <div class="stand"></div><div class="foot"></div>
+  </section>
+
+<script>
+// A miniature of the table for the poster: 7 rows of 12, with the gap the real table has between its top families.
+const fam = ['fo','fo','ge','ge','ge','pr','pr','pr','ag','ag','au','go'];
+const poster = document.getElementById('poster');
+for (let r = 0; r < 7; r++) for (let c = 0; c < 12; c++) {
+  const i = document.createElement('i');
+  const f = r === 6 ? (c < 6 ? 'go' : 'in') : fam[c];
+  if (r < 2 && c > 0 && c < 8) i.className = 'gap';
+  i.style.background = `var(--${f})`;
+  poster.appendChild(i);
+}
+</script>
+</body></html>

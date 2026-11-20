@@ -142,7 +142,8 @@ rewind_posts();
 									class="resource-activity-figure__img<?php echo esc_attr( $cover_fit_class ); ?>"
 									src="<?php echo esc_url( $cover_data['url'] ); ?>"
 									alt=""
-									loading="lazy"
+									loading="eager"
+									fetchpriority="high"
 									width="1200"
 									height="630"
 									<?php

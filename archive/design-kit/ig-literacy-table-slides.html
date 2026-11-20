@@ -1,0 +1,300 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- LinkedIn document carousel (10 slides, 540×675 = 4:5, 1080×1350 at 2×) for the AI Literacy Periodic Table. Same frame,
+     type and footer as ig-benchmark-slides.html: one idea per slide, large type for phones, everything drawn (no page
+     screenshots). Tiles use the table's family colours. Render the PDF with:
+     PW=<folder with node_modules/playwright> node render-benchmark-slides-pdf.mjs <out.pdf> ig-literacy-table-slides.html -->
+<style>
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'AIAD Sans'; src: url('THEME/assets/fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700; }
+:root { --cream:#F6F4ED; --ink:#231F20; --dim:#54504E; --rule:#C9C6BE;
+  --safe:#00BEDD; --smart:#FF7038; --creative:#AC91FF; --responsible:#63DF93; --future:#FA83EB;
+  --safe-d:#006A7D; --smart-d:#A7350B; --creative-d:#6441B8; --responsible-d:#176E3B; --future-d:#983488;
+  --fo:#E3E8EF; --fo-d:#334155; --ge:#EEE6FF; --ge-d:#6D28D9; --pr:#DFE9FF; --pr-d:#1D4ED8;
+  --ag:#FFEDD5; --ag-d:#B45309; --au:#D5F2EC; --au-d:#0F766E; --go:#FFE1E7; --go-d:#BE123C; --in:#E8F3D6; --in-d:#3F6212; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #888; font-family: 'AIAD Sans', Arial, sans-serif; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 20px; padding: 20px; width: 2400px; }
+.s { width: 540px; height: 675px; position: relative; overflow: hidden; padding: 44px 40px; background: var(--cream); color: var(--ink); }
+.s.ink { background: var(--ink); color: var(--cream); }
+.s.green { background: var(--responsible); color: var(--ink); }
+.s.grad { background: linear-gradient(150deg, #FF7038 0%, #FA83EB 55%, #AC91FF 100%); color: var(--ink); }
+.eyebrow { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; position: relative; z-index: 3; }
+.sig { display: flex; gap: 4px; } .sig i { width: 11px; height: 11px; display: block; }
+.sig i:nth-child(1){background:var(--safe)} .sig i:nth-child(2){background:var(--smart)} .sig i:nth-child(3){background:var(--creative)} .sig i:nth-child(4){background:var(--responsible)} .sig i:nth-child(5){background:var(--future)}
+.grad .sig i, .green .sig i { outline: 2px solid var(--ink); outline-offset: -1px; }
+h1, h2 { position: relative; z-index: 3; font-weight: 700; letter-spacing: -.045em; line-height: .98; }
+h1 { font-size: 66px; margin-top: 40px; }
+h2 { font-size: 52px; margin-top: 30px; }
+mark { background: none; color: inherit; box-shadow: inset 0 -.28em 0 var(--mk, var(--cream)); }
+.lead { position: relative; z-index: 3; font-size: 22px; line-height: 1.35; margin-top: 18px; }
+.ink .lead { color: #D6D3CC; }
+.foot { position: absolute; left: 40px; right: 40px; bottom: 34px; z-index: 4; display: flex; justify-content: space-between; align-items: flex-end; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+.foot .lk { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+.foot .lk u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.swipe { font-size: 15px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.sticker { display: inline-block; padding: 6px 11px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; transform: rotate(-3deg); background: var(--st, var(--future)); color: var(--ink); }
+
+/* An element tile, as on the table: chamfered top-right corner. */
+.el { --cut: 14px; position: absolute; background: var(--p); color: var(--d); clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 10px 11px; }
+.el .n { position: absolute; left: 11px; top: 9px; font-size: 13px; font-weight: 600; color: var(--ink); opacity: .8; }
+.el b { font-size: 44px; font-weight: 700; letter-spacing: -.05em; line-height: 1; }
+.el small { font-size: 12px; font-weight: 600; line-height: 1.15; margin-top: 4px; color: var(--ink); }
+.el.sm { --cut: 10px; padding: 7px 8px; } .el.sm b { font-size: 30px; } .el.sm small { font-size: 10px; }
+.fo{--p:var(--fo);--d:var(--fo-d)} .ge{--p:var(--ge);--d:var(--ge-d)} .pr{--p:var(--pr);--d:var(--pr-d)} .ag{--p:var(--ag);--d:var(--ag-d)}
+.au{--p:var(--au);--d:var(--au-d)} .go{--p:var(--go);--d:var(--go-d)} .in{--p:var(--in);--d:var(--in-d)}
+
+/* Tiles that grow with a long name, so the symbol never rides up into the number. */
+.el.grow { height: auto !important; padding-top: 32px; }
+
+/* 1 Cover */
+#c1 .sticker.v2 { position: relative; z-index: 3; margin-top: 30px; --st: var(--future); font-size: 15px; padding: 7px 13px; }
+#c1 h1 { font-size: 58px; margin-top: 14px; line-height: .95; }
+#c1 .lead { font-size: 24px; margin-top: 14px; color: var(--cream); }
+#c1 .lead b { color: var(--future); }
+#c1 .mini142 { position: absolute; left: 40px; right: 40px; top: 352px; display: grid; grid-template-columns: repeat(18, 1fr); gap: 2px; z-index: 1; }
+#c1 .mini142 i { display: block; height: 17px; clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%); }
+#c1 .mini142 .gap { visibility: hidden; }
+#c1 .mini142 .sep { grid-column: 1 / -1; height: 6px; visibility: hidden; clip-path: none; }
+#c1 .pop1 { left: 306px; top: 318px; width: 104px; min-height: 120px; transform: rotate(-6deg); z-index: 3; box-shadow: none; }
+#c1 .pop2 { left: 404px; top: 372px; width: 104px; min-height: 120px; transform: rotate(5deg); z-index: 3; }
+#c1 .pop1, #c1 .pop2 { filter: drop-shadow(5px 5px 0 var(--ink)); }
+
+/* 2 The problem */
+#c2 .words { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px 12px; position: relative; z-index: 3; }
+#c2 .words span { display: inline-block; font-size: 30px; font-weight: 700; letter-spacing: -.03em; padding: 6px 14px; border: 2px solid #5A5452; }
+#c2 .words span:nth-child(2) { transform: rotate(-2deg); }
+#c2 .words span:nth-child(3) { transform: rotate(1.5deg); }
+#c2 .words span:nth-child(4) { transform: rotate(-1deg); }
+#c2 .punch { position: absolute; left: 40px; right: 40px; bottom: 96px; font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
+#c2 .punch em { font-style: normal; color: var(--future); }
+
+/* 3 Anatomy of a tile */
+#c3 .big { left: 40px; top: 230px; width: 250px; height: 250px; --cut: 30px; padding: 20px 22px; }
+#c3 .big .n { left: 22px; top: 18px; font-size: 24px; }
+#c3 .big b { font-size: 120px; }
+#c3 .big small { font-size: 22px; margin-top: 8px; }
+#c3 .call { position: absolute; left: 312px; width: 190px; font-size: 18px; line-height: 1.3; }
+#c3 .call b { display: block; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+#c3 .call::before { content: ''; position: absolute; left: -26px; top: 9px; width: 18px; height: 3px; background: var(--ink); }
+
+/* 4 Seven families */
+#c4 .fams { margin-top: 24px; display: grid; gap: 7px; position: relative; z-index: 3; }
+#c4 .fam { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 12px; background: #fff; padding: 5px 14px 5px 6px; border: 2px solid var(--ink); }
+#c4 .fam i { width: 40px; height: 28px; background: var(--p); clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
+#c4 .fam span { font-size: 18px; font-weight: 700; letter-spacing: -.02em; }
+#c4 .fam em { font-style: normal; font-size: 18px; font-weight: 700; color: var(--d); }
+
+/* 5 Know it, question it, act on it */
+#c5 .card { position: relative; z-index: 3; margin-top: 26px; background: var(--cream); color: var(--ink); padding: 18px; box-shadow: 8px 8px 0 var(--smart); }
+#c5 .row { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; }
+#c5 .row .el { position: relative; width: 96px; height: 96px; }
+#c5 .row .el b { font-size: 40px; }
+#c5 .def { font-size: 17px; line-height: 1.35; }
+#c5 .lbl { margin-top: 14px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+#c5 .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 7px; }
+#c5 .chips span { font-size: 14px; font-weight: 700; padding: 5px 10px; background: color-mix(in srgb, var(--c) 30%, #fff); }
+#c5 .talk { margin-top: 14px; padding-left: 12px; border-left: 4px solid var(--smart); font-size: 17px; line-height: 1.35; font-weight: 600; }
+#c5 .steps { position: absolute; left: 40px; right: 40px; bottom: 92px; display: flex; gap: 10px; z-index: 3; }
+#c5 .steps span { flex: 1; text-align: center; font-size: 16px; font-weight: 700; padding: 9px 4px; border: 2px solid var(--cream); }
+
+/* 6 Three views */
+#c6 .views { margin-top: 28px; display: grid; gap: 14px; position: relative; z-index: 3; }
+#c6 .view { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: center; background: #fff; border: 2px solid var(--ink); padding: 12px; box-shadow: 6px 6px 0 var(--ink); }
+#c6 .mini { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; }
+#c6 .mini i { height: 16px; display: block; clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%); }
+#c6 .view b { display: block; font-size: 22px; letter-spacing: -.02em; }
+#c6 .view span { font-size: 15px; line-height: 1.3; color: var(--dim); }
+
+/* 7 Word of the week */
+#c7 .wotw { position: relative; z-index: 3; margin-top: 40px; background: var(--ink); color: var(--cream); padding: 26px 24px 22px; box-shadow: 9px 9px 0 var(--safe); }
+#c7 .wotw .sticker { position: absolute; top: -15px; right: 18px; --st: var(--safe); transform: rotate(3deg); }
+#c7 .top { display: grid; grid-template-columns: 104px 1fr; gap: 18px; align-items: center; }
+#c7 .top .el { position: relative; width: 104px; height: 104px; transform: rotate(-4deg); }
+#c7 .top .el b { font-size: 48px; }
+#c7 .k { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--safe); }
+#c7 .w { font-size: 46px; font-weight: 700; letter-spacing: -.04em; line-height: 1; margin-top: 4px; }
+#c7 .q { margin-top: 18px; padding-left: 14px; border-left: 4px solid var(--safe); font-size: 19px; line-height: 1.4; }
+#c7 .btns { display: flex; gap: 10px; margin-top: 18px; }
+#c7 .btns span { font-size: 16px; font-weight: 700; padding: 10px 16px; border: 2px solid var(--cream); }
+#c7 .btns span:first-child { background: var(--safe); border-color: var(--safe); color: var(--ink); }
+
+/* 8 Compounds */
+#c8 .eq { position: relative; z-index: 3; display: flex; align-items: center; gap: 8px; margin-top: 18px; }
+#c8 .eq .el { position: relative; width: 86px; height: auto; min-height: 84px; padding-top: 28px; }
+#c8 .eq .el b { font-size: 34px; }
+#c8 .eq .el small { font-size: 10px; }
+#c8 .op { font-size: 30px; font-weight: 700; color: var(--dim); }
+#c8 .res { position: relative; z-index: 3; margin-top: 10px; display: flex; align-items: center; gap: 12px; }
+#c8 .res b { font-size: 26px; letter-spacing: -.03em; }
+#c8 .badge { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 5px 9px; }
+#c8 .vol { background: #FDE8C8; color: #8A4B06; }
+#c8 .stb { background: #D3F5DF; color: #176E3B; }
+#c8 .box { position: relative; z-index: 3; margin-top: 18px; padding: 12px 16px; background: #fff; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+#c8 .box.good { box-shadow: 6px 6px 0 var(--responsible); }
+#c8 .swap { margin-top: 10px; font-size: 19px; font-weight: 700; text-align: center; }
+
+/* 9 Ready for class */
+#c9 .grid { position: relative; z-index: 3; margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#c9 .t { background: color-mix(in srgb, var(--c) 18%, #fff); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 13px 14px 14px; }
+#c9 .t em { display: inline-block; font-style: normal; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; color: #fff; background: var(--cd); transform: rotate(-3deg); }
+#c9 .t b { display: block; margin-top: 8px; font-size: 20px; letter-spacing: -.02em; line-height: 1.1; }
+#c9 .t span { display: block; margin-top: 4px; font-size: 14px; line-height: 1.3; color: var(--dim); }
+
+#c9 .free { position: relative; z-index: 3; margin-top: 34px; font-size: 24px; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
+
+/* 10 Call to action */
+#c10 .btn { position: absolute; left: 40px; right: 40px; top: 400px; z-index: 3; background: var(--ink); color: var(--cream); padding: 18px 20px; font-size: 23px; font-weight: 700; letter-spacing: -.01em; box-shadow: 8px 8px 0 var(--cream); }
+#c10 .btn small { display: block; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--future); margin-bottom: 6px; }
+#c10 .date { position: absolute; left: 40px; top: 548px; z-index: 3; --st: var(--ink); color: var(--cream); font-size: 15px; padding: 8px 13px; }
+</style></head><body>
+
+<!-- 1 Cover: a full mini periodic table of all 142 tiles in their family colours, with two tiles popping out -->
+<section class="s ink" id="c1" data-eb="Free for schools" data-swipe="1">
+  <span class="sticker v2">AI Literacy 2.0</span>
+  <h1>The AI Literacy Periodic Table</h1>
+  <p class="lead"><b>142 AI terms</b> to help you understand the difference.</p>
+  <div class="mini142" aria-hidden="true"></div>
+  <div class="el ge grow pop1"><span class="n">24</span><b>Ll</b><small>Large Language Model</small></div>
+  <div class="el go grow pop2"><span class="n">108</span><b>Hi</b><small>Human-in-the-Loop</small></div>
+</section>
+
+<!-- 2 The problem -->
+<section class="s ink" id="c2" data-eb="The problem" data-swipe="1">
+  <h2>The words come faster than anyone can learn them.</h2>
+  <div class="words"><span>Agentic AI</span><span>RAG</span><span>Vibe coding</span><span>AI slop</span></div>
+  <p class="punch">Students hear them online first. Staff are expected to <em>just know.</em></p>
+</section>
+
+<!-- 3 Anatomy of a tile -->
+<section class="s cream" id="c3" data-eb="How it works" data-swipe="1">
+  <h2>Every word<br>is a tile.</h2>
+  <div class="el big ge"><span class="n">24</span><b>Ll</b><small>Large Language Model</small></div>
+  <div class="call" style="top:246px"><b>Number</b>Its place in reading order.</div>
+  <div class="call" style="top:336px"><b>Symbol</b>Like a chemical element: Ll, Dk, Hi.</div>
+  <div class="call" style="top:426px"><b>Colour</b>The family it belongs to.</div>
+</section>
+
+<!-- 4 Seven families -->
+<section class="s cream" id="c4" data-eb="Seven families" data-swipe="1">
+  <h2 style="font-size:46px">From the basics to governance.</h2>
+  <div class="fams">
+    <div class="fam fo"><i></i><span>Foundations</span><em>17</em></div>
+    <div class="fam ge"><i></i><span>Generative AI</span><em>25</em></div>
+    <div class="fam pr"><i></i><span>Predictive &amp; Analytical AI</span><em>21</em></div>
+    <div class="fam ag"><i></i><span>Autonomous AI Agents</span><em>18</em></div>
+    <div class="fam au"><i></i><span>Automation &amp; Workflow AI</span><em>18</em></div>
+    <div class="fam go"><i></i><span>Governance &amp; Ethics</span><em>28</em></div>
+    <div class="fam in"><i></i><span>Infrastructure &amp; Ops</span><em>15</em></div>
+  </div>
+</section>
+
+<!-- 5 Know it, question it, act on it -->
+<section class="s ink" id="c5" data-eb="More than a glossary" data-swipe="1">
+  <h2>Know it. Question it.</h2>
+  <div class="card">
+    <div class="row"><div class="el ge"><span class="n">80</span><b>Ha</b><small>Hallucination</small></div>
+      <p class="def">When a model gives confident-sounding information that is false, because it predicts likely words rather than looking facts up.</p></div>
+    <p class="lbl">Issues it raises</p>
+    <div class="chips"><span style="--c:var(--smart)">Fact-checking</span><span style="--c:var(--smart)">Confident tone</span><span style="--c:var(--safe)">Misinformation</span></div>
+    <p class="talk">Talk about it: with your teacher, using a school-approved tool, ask an AI for three sources on a topic. Do they all exist, and do they say what it claims?</p>
+  </div>
+  <div class="steps"><span>Know the word</span><span>Question it</span><span>Act on it</span></div>
+</section>
+
+<!-- 6 Three views -->
+<section class="s cream" id="c6" data-eb="Three ways to see it" data-swipe="1">
+  <h2>One table, three views.</h2>
+  <div class="views">
+    <div class="view"><div class="mini">
+      <i style="background:var(--fo)"></i><i style="background:var(--fo)"></i><i style="background:var(--ge)"></i><i style="background:var(--ge)"></i><i style="background:var(--pr)"></i><i style="background:var(--pr)"></i><i style="background:var(--ag)"></i><i style="background:var(--au)"></i><i style="background:var(--au)"></i>
+      <i style="background:var(--fo)"></i><i style="background:var(--ge)"></i><i style="background:var(--ge)"></i><i style="background:var(--pr)"></i><i style="background:var(--pr)"></i><i style="background:var(--ag)"></i><i style="background:var(--ag)"></i><i style="background:var(--au)"></i><i style="background:var(--go)"></i>
+      <i style="background:var(--go)"></i><i style="background:var(--go)"></i><i style="background:var(--go)"></i><i style="background:var(--in)"></i><i style="background:var(--in)"></i><i style="background:var(--in)"></i><i style="background:var(--go)"></i><i style="background:var(--in)"></i><i style="background:var(--go)"></i>
+    </div><div><b>Technical terms</b><span>Coloured by family: what the technology is.</span></div></div>
+    <div class="view"><div class="mini">
+      <i style="background:var(--safe)"></i><i style="background:var(--smart)"></i><i style="background:var(--smart)"></i><i style="background:var(--creative)"></i><i style="background:var(--creative)"></i><i style="background:var(--safe)"></i><i style="background:var(--future)"></i><i style="background:var(--responsible)"></i><i style="background:var(--smart)"></i>
+      <i style="background:var(--smart)"></i><i style="background:var(--creative)"></i><i style="background:var(--safe)"></i><i style="background:var(--smart)"></i><i style="background:var(--responsible)"></i><i style="background:var(--future)"></i><i style="background:var(--safe)"></i><i style="background:var(--smart)"></i><i style="background:var(--responsible)"></i>
+      <i style="background:var(--responsible)"></i><i style="background:var(--safe)"></i><i style="background:var(--responsible)"></i><i style="background:var(--future)"></i><i style="background:var(--smart)"></i><i style="background:var(--responsible)"></i><i style="background:var(--safe)"></i><i style="background:var(--future)"></i><i style="background:var(--responsible)"></i>
+    </div><div><b>AIAD terms</b><span>Safe, Smart, Creative, Responsible, Future: why it matters.</span></div></div>
+    <div class="view"><div class="mini">
+      <i style="background:#F3EEE2"></i><i style="background:#E8DFCC"></i><i style="background:#D9CCB1"></i><i style="background:#C4B393"></i><i style="background:#6F624C"></i><i style="background:#4A423A"></i><i style="background:#231F20"></i><i style="background:#231F20"></i><i style="background:#4A423A"></i>
+      <i style="background:#E8DFCC"></i><i style="background:#D9CCB1"></i><i style="background:#C4B393"></i><i style="background:#6F624C"></i><i style="background:#6F624C"></i><i style="background:#4A423A"></i><i style="background:#231F20"></i><i style="background:#4A423A"></i><i style="background:#6F624C"></i>
+      <i style="background:#F3EEE2"></i><i style="background:#D9CCB1"></i><i style="background:#6F624C"></i><i style="background:#4A423A"></i><i style="background:#231F20"></i><i style="background:#C4B393"></i><i style="background:#4A423A"></i><i style="background:#231F20"></i><i style="background:#6F624C"></i>
+    </div><div><b>Year</b><span>Press Play: from Regression in 1886 to Vibe Coding in 2025.</span></div></div>
+  </div>
+</section>
+
+<!-- 7 Word of the week -->
+<section class="s cream" id="c7" data-eb="Word of the week" data-swipe="1">
+  <h2>A word of the week, ready for the board.</h2>
+  <div class="wotw">
+    <span class="sticker">New every Monday</span>
+    <div class="top"><div class="el ag"><span class="n">17</span><b>Me</b><small>Memory</small></div>
+      <div><div class="k">Word of the week · Safe theme</div><div class="w">Memory</div></div></div>
+    <p class="q">What do you think an AI tool remembers about you? How could an adult help you check?</p>
+    <div class="btns"><span>Open it</span><span>Show to class</span></div>
+  </div>
+</section>
+
+<!-- 8 Compounds: Keep Humans in the Loop -->
+<section class="s cream" id="c8" data-eb="Keep Humans in the Loop" data-swipe="1">
+  <h2 style="font-size:46px;margin-top:22px">Words combine into real AI.</h2>
+  <div class="box">
+    <div class="eq"><div class="el ag"><span class="n">8</span><b>Ag</b><small>AI Agent</small></div><span class="op">+</span><div class="el ag"><span class="n">18</span><b>Fn</b><small>Function Calling</small></div><span class="op">+</span><div class="el ag"><span class="n">10</span><b>Au</b><small>Autonomy</small></div></div>
+    <div class="res"><span class="op">=</span><b>Unchecked Agent</b><span class="badge vol">Volatile</span></div>
+  </div>
+  <p class="swap">Swap Autonomy for Human-in-the-Loop…</p>
+  <div class="box good" style="margin-top:12px">
+    <div class="eq" style="margin-top:0"><div class="el ag"><span class="n">8</span><b>Ag</b><small>AI Agent</small></div><span class="op">+</span><div class="el ag"><span class="n">18</span><b>Fn</b><small>Function Calling</small></div><span class="op">+</span><div class="el go"><span class="n">108</span><b>Hi</b><small>Human-in-the-Loop</small></div></div>
+    <div class="res"><span class="op">=</span><b>Supervised Agent</b><span class="badge stb">Stable</span></div>
+  </div>
+</section>
+
+<!-- 9 Ready for class -->
+<section class="s cream" id="c9" data-eb="Ready for class" data-swipe="1">
+  <h2>Run it tomorrow.</h2>
+  <div class="grid">
+    <div class="t" style="--c:var(--responsible);--cd:var(--responsible-d)"><em>10–50 min</em><b>Ready-made sessions</b><span>A starter, a lesson, a staff INSET and a page for parents.</span></div>
+    <div class="t" style="--c:var(--smart);--cd:var(--smart-d)"><em>15–30 min</em><b>Compound challenge</b><span>Primary, Secondary and Further education levels.</span></div>
+    <div class="t" style="--c:var(--creative);--cd:var(--creative-d)"><em>5 min</em><b>Buzzword check</b><span>Ten quick questions, different every time.</span></div>
+    <div class="t" style="--c:var(--safe);--cd:var(--safe-d)"><em>Print</em><b>Poster and cards</b><span>The table on one A3 page, or cards on A4.</span></div>
+  </div>
+  <p class="free">Free. No sign-up. Every word has a Show to class button for the board.</p>
+</section>
+
+<!-- 10 Call to action -->
+<section class="s grad" id="c10" data-eb="Free · from Key Stage 2 up">
+  <h1>Know the word.<br>Question it.<br>Keep humans in the loop.</h1>
+  <div class="btn"><small>Explore it free</small>aiawarenessday.co.uk/ai-literacy-periodic-table</div>
+  <span class="sticker date">AI Awareness Day · Thursday 29 April 2027</span>
+</section>
+
+<script>
+// The cover's mini table: 142 tiles, shaped like the real one (a top block with a gap, then three rows below),
+// coloured by family in the table's proportions.
+(function () {
+  const box = document.querySelector('#c1 .mini142'); if (!box) return;
+  const fam = { fo: 17, ge: 25, pr: 21, ag: 18, au: 18, go: 28, in: 15 };
+  const top = ['fo','ge','pr','ag','au'].flatMap(k => Array(fam[k]).fill(k)); // 99 in the top block
+  const low = ['go','in'].flatMap(k => Array(fam[k]).fill(k)); // 43 in the rows below
+  const cells = [];
+  const rows = [[1,2,17,18],[1,2,13,14,15,16,17,18],[1,2,13,14,15,16,17,18]];
+  let t = 0;
+  rows.forEach(cols => { for (let c = 1; c <= 18; c++) cells.push(cols.includes(c) ? top[t++] : null); });
+  while (t < top.length) { cells.push(top[t++]); }
+  while (cells.length % 18) cells.push(null);
+  box.innerHTML = cells.map(k => k ? `<i style="background:var(--${k})"></i>` : '<i class="gap"></i>').join('') + '<i class="sep"></i>';
+  let l = 0; let html = '';
+  [15, 14, 14].forEach(n => { html += '<i class="gap"></i><i class="gap"></i>'; for (let c = 0; c < n; c++) html += `<i style="background:var(--${low[l++]})"></i>`; for (let c = 2 + n; c < 18; c++) html += '<i class="gap"></i>'; });
+  box.insertAdjacentHTML('beforeend', html);
+})();
+</script>
+<script>
+const SIG = '<span class="sig"><i></i><i></i><i></i><i></i><i></i></span>';
+document.querySelectorAll('.s').forEach(s => {
+  if (s.dataset.eb) s.insertAdjacentHTML('afterbegin', `<div class="eyebrow">${SIG}${s.dataset.eb}</div>`);
+  s.insertAdjacentHTML('beforeend', `<div class="foot"><span class="lk">AI Awareness Day <u>2027</u></span><span class="swipe">${s.dataset.swipe ? 'Swipe →' : 'aiawarenessday.co.uk'}</span></div>`);
+});
+</script>
+</body></html>

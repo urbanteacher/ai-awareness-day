@@ -33,6 +33,8 @@
 		var status = root.querySelector( '[data-alpt-status]' );
 		var familyButtons = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-family]' ) );
 		var narrow = window.matchMedia( '(max-width: 1199px)' );
+		// Tablets show the panel as a drawer along the bottom of the screen, so the tiles stay where they are.
+		var tablet = window.matchMedia( '(min-width: 768px) and (max-width: 1199px) and (min-height: 600px)' );
 		var reduceMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' );
 		var current = 0;
 		var family = '';
@@ -40,6 +42,15 @@
 		var themes = data.themes || {};
 		var themeButtons = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-theme-filter]' ) );
 		var viewButtons = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-view]' ) );
+		var eraFilter = '';
+		var eras = data.eras || {};
+		var eraButtons = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-era-filter]' ) );
+		var yearRange = root.querySelector( '[data-alpt-year-range]' );
+		var yearOut = root.querySelector( '[data-alpt-year-out]' );
+		var playButton = root.querySelector( '[data-alpt-play]' );
+		var playText = root.querySelector( '[data-alpt-play-text]' );
+		var yearSteps = yearRange ? yearRange.getAttribute( 'data-years' ).split( ',' ).map( Number ) : [];
+		var playTimer = null;
 		var linksOn = false;
 		var links = data.links || {};
 		var symIndex = {};
@@ -87,6 +98,13 @@
 			root.classList.remove( 'is-detail-open' );
 			tiles[ current ].focus();
 		} );
+		// Esc closes the panel on narrower screens too, like Back to elements (the board handles its own Esc).
+		root.addEventListener( 'keydown', function ( event ) {
+			if ( 'Escape' === event.key && narrow.matches && root.classList.contains( 'is-detail-open' ) && ! event.target.closest( '.alpt-board' ) ) {
+				root.classList.remove( 'is-detail-open' );
+				tiles[ current ].focus();
+			}
+		} );
 		root.querySelector( '[data-alpt-controls]' ).hidden = false;
 		root.querySelector( '[data-alpt-nav]' ).hidden = false;
 
@@ -94,6 +112,32 @@
 			if ( outs[ key ] ) {
 				outs[ key ].textContent = text;
 			}
+		}
+
+		// A short, visually hidden line for screen readers: the element's name and definition, not the whole panel.
+		// (Named panelSay: the compound challenge has its own say() for its messages.)
+		var panelSay = document.createElement( 'div' );
+		panelSay.className = 'screen-reader-text';
+		panelSay.setAttribute( 'aria-live', 'polite' );
+		panel.appendChild( panelSay );
+		var shownOnce = false;
+		// Elements that can lead to a safeguarding conversation carry a note, in the panel and on the board.
+		var safeSyms = data.safe || [];
+		var SAFE_NOTE = 'This topic can lead to conversations about safeguarding. Follow your school\'s procedures, and make sure students know who they can talk to, including Childline on 0800 1111. If a child is in immediate danger, call 999.';
+		var safeNote = document.createElement( 'p' );
+		safeNote.className = 'alpt-panel__safe';
+		safeNote.textContent = SAFE_NOTE;
+		safeNote.hidden = true;
+		// An element added from a reader's suggestion thanks them by the credit line they chose.
+		var credits = data.credits || {};
+		var creditNote = document.createElement( 'p' );
+		creditNote.className = 'alpt-panel__credit';
+		creditNote.hidden = true;
+		var defOut = root.querySelector( '[data-alpt-out="def"]' );
+		if ( defOut ) {
+			var notesAfter = defOut.nextElementSibling && defOut.nextElementSibling.classList.contains( 'alpt-panel__talk' ) ? defOut.nextElementSibling : defOut;
+			notesAfter.after( safeNote );
+			notesAfter.after( creditNote );
 		}
 
 		function show( index, opts ) {
@@ -111,6 +155,8 @@
 			setText( 'family', families[ el[ 2 ] ] || '' );
 			setText( 'def', el[ 3 ] );
 			panel.setAttribute( 'data-alpt-theme', el[ 5 ] || '' );
+			panel.setAttribute( 'data-alpt-era', el[ 8 ] || '' );
+			setText( 'year', ( el[ 9 ] ? 'Used this way since ' : 'In use since ' ) + ( el[ 7 ] ? 'about ' : '' ) + el[ 6 ] + ( el[ 9 ] ? ' (the word is older)' : '' ) );
 			var themeLabel = root.querySelector( '[data-alpt-theme-label]' );
 			if ( themeLabel ) {
 				themeLabel.className = 'alpt-panel__theme alpt-th--' + el[ 5 ];
@@ -128,6 +174,9 @@
 
 			renderLinks();
 			renderIssues( el );
+			safeNote.hidden = safeSyms.indexOf( el[ 0 ] ) === -1;
+			creditNote.hidden = ! credits[ el[ 0 ] ];
+			creditNote.textContent = credits[ el[ 0 ] ] ? 'Suggested by ' + credits[ el[ 0 ] ] + '. Thank you!' : '';
 			var bench = root.querySelector( '[data-alpt-bench]' );
 			if ( bench && data.bench ) {
 				bench.textContent = data.bench[ el[ 0 ] ] || 'AI Literacy';
@@ -144,10 +193,22 @@
 				root.classList.add( 'is-detail-open' );
 				panel.focus( { preventScroll: true } );
 				var rect = panel.getBoundingClientRect();
-				if ( rect.top < 80 || rect.top > window.innerHeight * 0.5 ) {
+				if ( ! tablet.matches && ( rect.top < 80 || rect.top > window.innerHeight * 0.5 ) ) {
 					panel.scrollIntoView( { behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' } );
+				} else if ( tablet.matches && tiles[ index ] ) {
+					// The drawer covers the lower part of the screen: keep the chosen tile above it.
+					var tileRect = tiles[ index ].getBoundingClientRect();
+					var drawerTop = window.innerHeight - panel.offsetHeight;
+					if ( tileRect.bottom > drawerTop - 8 ) {
+						window.scrollBy( { top: tileRect.bottom - drawerTop + 24, behavior: reduceMotion.matches ? 'auto' : 'smooth' } );
+					}
 				}
 			}
+			// Announced last, once the panel is showing (on narrow screens it is hidden until a tile is chosen).
+			if ( shownOnce ) {
+				panelSay.textContent = el[ 1 ] + '. ' + el[ 3 ];
+			}
+			shownOnce = true;
 		}
 
 		// Issues: what the technical term raises in real life (like symptoms of it), each with what it means and a question
@@ -194,7 +255,13 @@
 			talkLine.className = 'alpt-panel__talk';
 			issuesOut.appendChild( issuesList );
 			issuesOut.appendChild( issueDetail );
-			issuesOut.parentNode.insertBefore( talkLine, issuesOut );
+			// The question shows under the definition, outside Classroom notes: questioning the word is the point.
+			var defLine = root.querySelector( '[data-alpt-out="def"]' );
+			if ( defLine ) {
+				defLine.after( talkLine );
+			} else {
+				issuesOut.parentNode.insertBefore( talkLine, issuesOut );
+			}
 		}
 
 		function openIssue( key ) {
@@ -277,6 +344,12 @@
 				issuesList.appendChild( b );
 			} );
 			issuesOut.hidden = ! keys.length;
+			// The first issue opens straight away, so Classroom notes always shows something to read; the others
+			// open with a press.
+			var first = keys.filter( function ( key ) { return issues[ key ]; } )[ 0 ];
+			if ( first ) {
+				openIssue( first );
+			}
 			var question = talk[ el[ 0 ] ];
 			talkLine.textContent = '';
 			if ( question ) {
@@ -371,6 +444,9 @@
 			if ( themeFilter && el[ 5 ] !== themeFilter ) {
 				return false;
 			}
+			if ( eraFilter && el[ 8 ] !== eraFilter ) {
+				return false;
+			}
 			if ( ! query ) {
 				return true;
 			}
@@ -392,7 +468,7 @@
 				}
 			} );
 
-			root.classList.toggle( 'is-filtered', Boolean( family || themeFilter || query ) );
+			root.classList.toggle( 'is-filtered', Boolean( family || themeFilter || eraFilter || query ) );
 			root.classList.toggle( 'has-no-matches', ! shown );
 			clearSearch.hidden = ! query;
 			familyButtons.forEach( function ( button ) {
@@ -401,13 +477,16 @@
 			themeButtons.forEach( function ( button ) {
 				button.setAttribute( 'aria-pressed', button.getAttribute( 'data-alpt-theme-filter' ) === themeFilter ? 'true' : 'false' );
 			} );
+			eraButtons.forEach( function ( button ) {
+				button.setAttribute( 'aria-pressed', button.getAttribute( 'data-alpt-era-filter' ) === eraFilter ? 'true' : 'false' );
+			} );
 
-			if ( ! family && ! themeFilter && ! query ) {
+			if ( ! family && ! themeFilter && ! eraFilter && ! query ) {
 				status.textContent = '';
 			} else if ( ! shown ) {
 				status.textContent = 'No elements match. Clear the search or try a different word.';
 			} else {
-				status.textContent = 'Showing ' + shown + ' of ' + elements.length + ( family ? ': ' + families[ family ] : '' ) + ( themeFilter ? ': ' + themes[ themeFilter ] + ' theme' : '' ) + ( query ? ', matching "' + search.value.trim() + '"' : '' ) + '.';
+				status.textContent = 'Showing ' + shown + ' of ' + elements.length + ( family ? ': ' + families[ family ] : '' ) + ( themeFilter ? ': ' + themes[ themeFilter ] + ' theme' : '' ) + ( eraFilter ? ': ' + eras[ eraFilter ] : '' ) + ( query ? ', matching "' + search.value.trim() + '"' : '' ) + '.';
 			}
 
 			// Keep the panel on an element that is still showing.
@@ -458,7 +537,7 @@
 			if ( go ) {
 				var destination = parseInt( go.getAttribute( 'data-alpt-goto' ), 10 );
 				if ( tiles[ destination ].classList.contains( 'is-excluded' ) ) {
-					family = ''; themeFilter = ''; search.value = '';
+					family = ''; themeFilter = ''; eraFilter = ''; search.value = '';
 					applyFilter();
 				}
 				show( destination, { updateHash: true } );
@@ -490,11 +569,101 @@
 			} );
 		} );
 
+		// The era chips work like the theme chips.
+		eraButtons.forEach( function ( button ) {
+			button.addEventListener( 'click', function () {
+				var picked = button.getAttribute( 'data-alpt-era-filter' );
+				eraFilter = ( picked && picked === eraFilter ) ? '' : picked;
+				applyFilter();
+			} );
+		} );
+
+		// The Year view's slider steps through the years in which a word on the table came into use. Words from later
+		// years fade, so dragging it (or pressing Play) shows the vocabulary arriving, from Regression (1886) to now.
+		function setYear( step ) {
+			if ( ! yearRange ) {
+				return;
+			}
+			step = Math.max( 0, Math.min( yearSteps.length - 1, step ) );
+			yearRange.value = String( step );
+			var year = yearSteps[ step ];
+			var count = 0;
+			elements.forEach( function ( el, i ) {
+				var later = el[ 6 ] > year;
+				tiles[ i ].classList.toggle( 'is-later', later );
+				// Faded tiles say so to screen readers too, not only by how they look.
+				var note = tiles[ i ].querySelector( '.alpt-tile__later' );
+				if ( later && ! note ) {
+					note = document.createElement( 'span' );
+					note.className = 'screen-reader-text alpt-tile__later';
+					note.textContent = ' (not yet in use in ' + year + ')';
+					tiles[ i ].appendChild( note );
+				} else if ( note ) {
+					if ( later ) {
+						note.textContent = ' (not yet in use in ' + year + ')';
+					} else {
+						note.remove();
+					}
+				}
+				if ( ! later ) {
+					count++;
+				}
+			} );
+			yearOut.textContent = String( year );
+			yearRange.setAttribute( 'aria-valuetext', year + ': ' + count + ' of ' + elements.length + ' words' );
+			root.classList.toggle( 'is-time-travelling', step < yearSteps.length - 1 );
+			// While Play runs, the status line waits: announcing every year would talk over itself. stopPlay() says it once.
+			if ( root.classList.contains( 'is-years' ) && ! playTimer ) {
+				status.textContent = step < yearSteps.length - 1 ? 'By ' + year + ': ' + count + ' of ' + elements.length + ' words on the table were in use.' : '';
+			}
+		}
+		function stopPlay() {
+			if ( playTimer ) {
+				window.clearInterval( playTimer );
+				playTimer = null;
+				setYear( parseInt( yearRange.value, 10 ) );
+			}
+			if ( playButton ) {
+				playText.textContent = 'Play';
+				playButton.classList.remove( 'is-playing' );
+			}
+		}
+		if ( yearRange ) {
+			yearRange.addEventListener( 'input', function () {
+				stopPlay();
+				setYear( parseInt( yearRange.value, 10 ) );
+			} );
+			playButton.addEventListener( 'click', function () {
+				if ( playTimer ) {
+					stopPlay();
+					return;
+				}
+				var step = parseInt( yearRange.value, 10 );
+				if ( step >= yearSteps.length - 1 ) {
+					step = 0;
+				}
+				setYear( step );
+				playText.textContent = 'Pause';
+				playButton.classList.add( 'is-playing' );
+				playTimer = window.setInterval( function () {
+					var next = parseInt( yearRange.value, 10 ) + 1;
+					setYear( next );
+					if ( next >= yearSteps.length - 1 ) {
+						stopPlay();
+					}
+				}, reduceMotion.matches ? 1200 : 650 );
+			} );
+		}
+
 		// View by: Families (the table's own colours) or AIAD themes. The tiles stay where they are; only their colours,
 		// the filter chips and the grouping on phones change. ?view=themes opens the page in the themes view.
 		function setView( view, updateUrl ) {
 			var themed = 'themes' === view;
 			root.classList.toggle( 'is-themes', themed );
+			root.classList.toggle( 'is-years', 'years' === view );
+			stopPlay();
+			eraFilter = '';
+			setYear( yearSteps.length - 1 );
 			viewButtons.forEach( function ( button ) {
 				button.setAttribute( 'aria-pressed', button.getAttribute( 'data-alpt-view' ) === view ? 'true' : 'false' );
 			} );
@@ -503,8 +672,8 @@
 			applyFilter();
 			if ( updateUrl && window.history && window.history.replaceState && window.URL ) {
 				var url = new window.URL( window.location.href );
-				if ( themed ) {
-					url.searchParams.set( 'view', 'themes' );
+				if ( 'families' !== view ) {
+					url.searchParams.set( 'view', view );
 				} else {
 					url.searchParams.delete( 'view' );
 				}
@@ -516,8 +685,9 @@
 				setView( button.getAttribute( 'data-alpt-view' ), true );
 			} );
 		} );
-		if ( /[?&]view=themes(&|$)/.test( window.location.search ) ) {
-			setView( 'themes', false );
+		var viewMatch = /[?&]view=(themes|years)(&|$)/.exec( window.location.search );
+		if ( viewMatch ) {
+			setView( viewMatch[ 1 ], false );
 		}
 
 		// Arrow keys move between tiles in reading order.
@@ -560,6 +730,22 @@
 		if ( ! fromHash() ) {
 			show( 0 );
 		}
+		window.addEventListener( 'hashchange', fromHash );
+		// The site's smooth-scroll script changes the address with pushState, which fires no hashchange, so links on
+		// the page to an element (#element-aw) or a compound (#alpt-cp-…) are handled once the address has changed.
+		root.addEventListener( 'click', function ( event ) {
+			var link = event.target.closest ? event.target.closest( 'a[href^="#element-"], a[href^="#alpt-cp-"]' ) : null;
+			if ( ! link ) {
+				return;
+			}
+			window.setTimeout( function () {
+				if ( 0 === link.getAttribute( 'href' ).indexOf( '#element-' ) ) {
+					fromHash();
+				} else if ( typeof compoundFromHash === 'function' ) {
+					compoundFromHash();
+				}
+			}, 0 );
+		} );
 
 		// ---- The compound challenge: choose two to four elements and combine them to discover a compound. ----
 		var compounds = data.compounds || []; // [ id, name, syms, volatile ]
@@ -577,6 +763,7 @@
 		var MAX = 4;
 		var picked = [];
 		var labOn = false;
+		var labStarter = null; // The level button that started the challenge, for focus when it ends.
 		var level = '';
 		var found = loadFound();
 
@@ -692,10 +879,14 @@
 		function setLabHeight() {
 			document.documentElement.style.setProperty( '--alpt-lab-h', ( labOn ? lab.offsetHeight : 0 ) + 'px' );
 		}
+		// The bar changes height as its messages come and go: keep the page's bottom padding matched to it.
+		if ( lab && 'ResizeObserver' in window ) {
+			new window.ResizeObserver( setLabHeight ).observe( lab );
+		}
 
 		function setLab( on ) {
 			if ( on ) {
-				family = ''; themeFilter = ''; search.value = '';
+				family = ''; themeFilter = ''; eraFilter = ''; search.value = '';
 				root.classList.remove( 'is-detail-open' );
 				applyFilter();
 			}
@@ -715,6 +906,21 @@
 			if ( on ) {
 				renderSlots();
 				say( 'Use the clues on the hidden compounds below the table.' );
+			} else {
+				if ( picked.length ) {
+					picked = [];
+					renderSlots();
+				}
+				// The bar is gone: don't leave focus on nothing.
+				if ( lab.contains( document.activeElement ) || document.activeElement === document.body ) {
+					var back = labStarter && labStarter.offsetParent ? labStarter : root.querySelector( '#alpt-challenge-title' );
+					if ( back ) {
+						if ( back.id === 'alpt-challenge-title' ) {
+							back.setAttribute( 'tabindex', '-1' );
+						}
+						back.focus();
+					}
+				}
 			}
 			if ( typeof setLevel === 'function' && levelChips ) {
 				setLevel( on ? level : '' );
@@ -782,7 +988,19 @@
 				var strong = document.createElement( 'strong' );
 				strong.textContent = 'New compound: ' + match[ 1 ] + '! ';
 				var note = match[ 3 ] ? 'It\'s volatile: risky without a human in the loop. Can you find the element that stabilises it? ' : '';
-				say( [ strong, note, found.length === compounds.length ? 'That\'s every compound. ' : found.length + ' of ' + compounds.length + ' discovered. ', link ] );
+				var parts = [ strong, note, found.length === compounds.length ? 'That\'s every compound. ' : found.length + ' of ' + compounds.length + ' discovered. ', link ];
+				var after = 'primary' === level ? nextGuided() : '';
+				if ( after ) {
+					var nextButton = document.createElement( 'button' );
+					nextButton.type = 'button';
+					nextButton.className = 'alpt-btn alpt-say-next';
+					nextButton.textContent = 'Next one';
+					nextButton.addEventListener( 'click', function () {
+						focusOn( after );
+					} );
+					parts.push( nextButton );
+				}
+				say( parts );
 				return;
 			}
 
@@ -847,7 +1065,7 @@
 		} );
 		// Levels: the chips above the compounds show one level; a level button in the challenge plays just that level.
 		// Outside the challenge only the first few compounds show, until "Show all".
-		var levelNames = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
+		var levelNames = { primary: 'Primary', secondary: 'Secondary', further: 'Further education' };
 		var levelChips = Array.prototype.slice.call( root.querySelectorAll( '[data-alpt-level]' ) );
 		var moreWrap = root.querySelector( '[data-alpt-more-wrap]' );
 		var moreButton = root.querySelector( '[data-alpt-more]' );
@@ -896,7 +1114,20 @@
 		Array.prototype.forEach.call( root.querySelectorAll( '[data-alpt-start]' ), function ( button ) {
 			button.addEventListener( 'click', function () {
 				setLevel( button.getAttribute( 'data-alpt-start' ) );
+				labStarter = button;
 				setLab( true );
+				// Primary starts guided: the table narrows straight to the first compound's few bright tiles.
+				if ( 'primary' === button.getAttribute( 'data-alpt-start' ) && nextGuided() ) {
+					focusOn( nextGuided() );
+					return;
+				}
+				// Focus goes up to the table with the view, so keyboard users start choosing tiles straight away.
+				for ( var f = 0; f < tiles.length; f++ ) {
+					if ( ! tiles[ f ].classList.contains( 'is-excluded' ) ) {
+						tiles[ f ].focus( { preventScroll: true } );
+						break;
+					}
+				}
 				// Back up to the table, below the fixed site header (the grid's scroll-margin-top).
 				var grid = root.querySelector( '.alpt-grid' );
 				var margin = parseFloat( window.getComputedStyle( grid ).scrollMarginTop ) || 0;
@@ -948,7 +1179,7 @@
 			}
 			var first = elements[ symIndex[ target[ 2 ][ 0 ] ] ];
 			var levelWord = levelNames[ target[ 4 ] ].toLowerCase();
-			targetText.textContent = 'Finding ' + ( /^[aeiou]/.test( levelWord ) ? 'an ' : 'a ' ) + levelWord + ' compound with ' + target[ 2 ].length + ' elements, including ' + first[ 1 ] + ' (' + first[ 0 ] + '). The answer is among the bright tiles.';
+			targetText.textContent = 'Finding ' + ( /^[aeiou]/.test( levelWord ) ? 'an ' : 'a ' ) + levelWord + ' compound with ' + target[ 2 ].length + ' elements, including ' + first[ 1 ] + ' (' + first[ 0 ] + '). The answer is among the bright tiles.' + ( target[ 8 ] ? ' Looks like: ' + target[ 8 ] : '' );
 			var missing = target[ 2 ].filter( function ( sym ) { return picked.indexOf( symIndex[ sym ] ) === -1; } );
 			hintButton.disabled = ! missing.length;
 		}
@@ -977,6 +1208,16 @@
 			var grid = root.querySelector( '.alpt-grid' );
 			var margin = parseFloat( window.getComputedStyle( grid ).scrollMarginTop ) || 0;
 			window.scrollTo( { top: grid.getBoundingClientRect().top + window.pageYOffset - margin, behavior: reduceMotion.matches ? 'auto' : 'smooth' } );
+		}
+
+		// The next compound in the level still to discover, for the guided Primary level.
+		function nextGuided() {
+			for ( var g = 0; g < compounds.length; g++ ) {
+				if ( compounds[ g ][ 4 ] === level && found.indexOf( compounds[ g ][ 0 ] ) === -1 ) {
+					return compounds[ g ][ 0 ];
+				}
+			}
+			return '';
 		}
 
 		function unfocus() {
@@ -1115,8 +1356,9 @@
 			} );
 		}
 
+		// Esc ends the challenge, but not while typing in a field (where it clears the field) or using the board.
 		document.addEventListener( 'keydown', function ( event ) {
-			if ( labOn && event.key === 'Escape' ) {
+			if ( labOn && event.key === 'Escape' && ! event.target.closest( 'input, textarea, select, .alpt-board' ) && board.hidden ) {
 				setLab( false );
 			}
 		} );
@@ -1126,6 +1368,28 @@
 		root.querySelector( '[data-alpt-levels]' ).hidden = false;
 		root.classList.add( 'has-lab' );
 		setLevel( '' );
+
+		// A link to a compound (#alpt-cp-…, from Copy link on its card) shows every compound, scrolls to that one and
+		// marks it for a moment. A compound still hidden by the challenge stays hidden, so links never give answers away.
+		function compoundFromHash() {
+			var hash = window.location.hash.slice( 1 );
+			if ( hash.indexOf( 'alpt-cp-' ) !== 0 ) {
+				return;
+			}
+			var card = cards[ hash.slice( 8 ) ];
+			if ( ! card ) {
+				return;
+			}
+			showAll = true;
+			setLevel( '' );
+			card.scrollIntoView( { block: 'center' } );
+			card.classList.add( 'is-linked' );
+			window.setTimeout( function () {
+				card.classList.remove( 'is-linked' );
+			}, 2500 );
+		}
+		compoundFromHash();
+		window.addEventListener( 'hashchange', compoundFromHash );
 
 		// ---- Show to class: an element or a compound fills the screen, like a resource's "Show on the board".
 		// Full screen where the browser allows it, otherwise the whole window. Arrow keys step through the elements;
@@ -1138,9 +1402,23 @@
 		board.tabIndex = -1;
 		board.hidden = true;
 		root.appendChild( board );
+		// Announces each new element as the board steps, since the board's content is rebuilt each time.
+		var boardSay = document.createElement( 'div' );
+		boardSay.className = 'screen-reader-text';
+		boardSay.setAttribute( 'aria-live', 'polite' );
+		board.appendChild( boardSay );
+		// The board is rebuilt for each element; this keeps its live region, inside the dialog, in place.
+		function clearBoard() {
+			Array.prototype.slice.call( board.children ).forEach( function ( child ) {
+				if ( child !== boardSay ) {
+					child.remove();
+				}
+			} );
+		}
 		var boardMode = null; // 'element' or 'compound'
 		var boardIndex = 0;
 		var boardHideDef = false;
+		var boardPrefHide = true; // Guess first: an element opens with its definition hidden until you choose otherwise.
 		var boardOpener = null;
 
 		function el( tag, className, text ) {
@@ -1167,7 +1445,7 @@
 
 		function renderBoardElement() {
 			var e = elements[ boardIndex ];
-			board.textContent = '';
+			clearBoard();
 			var wrap = el( 'div', 'alpt-board__inner' );
 			var tile = el( 'div', 'alpt-board__tile alpt-fam--' + e[ 2 ] + ' ' + themed( e[ 5 ] ) );
 			tile.appendChild( el( 'span', 'alpt-board__n', String( boardIndex + 1 ) ) );
@@ -1187,6 +1465,9 @@
 					text.appendChild( q );
 				}
 			}
+			if ( safeSyms.indexOf( e[ 0 ] ) !== -1 ) {
+				text.appendChild( el( 'p', 'alpt-board__safe', SAFE_NOTE ) );
+			}
 			wrap.appendChild( tile );
 			wrap.appendChild( text );
 			board.appendChild( wrap );
@@ -1200,7 +1481,7 @@
 
 		function renderBoardCompound() {
 			var c = compounds[ boardIndex ];
-			board.textContent = '';
+			clearBoard();
 			var wrap = el( 'div', 'alpt-board__inner alpt-board__inner--compound' );
 			var text = el( 'div', 'alpt-board__text' );
 			text.appendChild( el( 'p', 'alpt-board__label', ( c[ 3 ] ? 'Volatile compound' : 'Stable compound' ) + ' · ' + ( themes[ c[ 7 ] ] || '' ) + ' theme' ) );
@@ -1245,7 +1526,7 @@
 		function openBoard( mode, index, opener ) {
 			boardMode = mode;
 			boardIndex = index;
-			boardHideDef = false;
+			boardHideDef = 'element' === mode ? boardPrefHide : false;
 			boardOpener = opener || null;
 			renderBoard();
 			board.hidden = false;
@@ -1253,7 +1534,18 @@
 			if ( board.requestFullscreen ) {
 				board.requestFullscreen().catch( function () {} );
 			}
-			board.focus();
+			focusBoardTitle();
+		}
+
+		// Focus the title, so a screen reader starts with what is on the board.
+		function focusBoardTitle() {
+			var title = board.querySelector( '.alpt-board__title' );
+			if ( title ) {
+				title.tabIndex = -1;
+				title.focus();
+			} else {
+				board.focus();
+			}
 		}
 
 		function closeBoard() {
@@ -1269,7 +1561,10 @@
 				show( boardIndex );
 			}
 			if ( boardOpener ) {
-				boardOpener.focus();
+				var opener = boardOpener;
+				opener.focus();
+				// Leaving full screen can swallow that focus, so give it back once the browser has left it.
+				window.setTimeout( function () { opener.focus(); }, 150 );
 			}
 		}
 
@@ -1277,8 +1572,17 @@
 			if ( 'element' !== boardMode ) {
 				return;
 			}
+			// The board is rebuilt, so put focus back on the same button (Previous or Next), or on the title.
+			var was = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute( 'data-alpt-board-action' ) : null;
 			boardIndex = ( boardIndex + dir + elements.length ) % elements.length;
 			renderBoard();
+			var again = was ? board.querySelector( '[data-alpt-board-action="' + was + '"]' ) : null;
+			if ( again ) {
+				again.focus();
+			} else {
+				focusBoardTitle();
+			}
+			boardSay.textContent = ( boardIndex + 1 ) + ' of ' + elements.length + ': ' + elements[ boardIndex ][ 1 ] + '.';
 		}
 
 		board.addEventListener( 'click', function ( event ) {
@@ -1295,6 +1599,9 @@
 				stepBoard( 1 );
 			} else if ( 'toggle' === action ) {
 				boardHideDef = ! boardHideDef;
+				if ( 'element' === boardMode ) {
+					boardPrefHide = boardHideDef;
+				}
 				renderBoard();
 				var again = board.querySelector( '[data-alpt-board-action="toggle"]' );
 				if ( again ) {
@@ -1318,7 +1625,11 @@
 				}
 				var first = buttons[ 0 ];
 				var last = buttons[ buttons.length - 1 ];
-				if ( event.shiftKey && document.activeElement === first ) {
+				// From the board itself or its title (not buttons), Tab goes to the first button, Shift+Tab to the last.
+				if ( buttons.indexOf( document.activeElement ) === -1 ) {
+					event.preventDefault();
+					( event.shiftKey ? last : first ).focus();
+				} else if ( event.shiftKey && document.activeElement === first ) {
 					event.preventDefault();
 					last.focus();
 				} else if ( ! event.shiftKey && document.activeElement === last ) {
@@ -1338,6 +1649,113 @@
 		if ( boardElementButton ) {
 			boardElementButton.addEventListener( 'click', function () {
 				openBoard( 'element', current, boardElementButton );
+			} );
+		}
+		// The element of the week can go straight on the board.
+		// It sits in the page's introduction, above the table, so it is found in the whole document.
+		var weekBoard = document.querySelector( '[data-alpt-eotw-board]' );
+		var weekLink = document.querySelector( '.alpt-eotw a[href^="#element-"]' );
+		if ( weekLink ) {
+			weekLink.addEventListener( 'click', function () {
+				window.setTimeout( fromHash, 0 );
+			} );
+		}
+		if ( weekBoard ) {
+			weekBoard.hidden = false;
+			weekBoard.addEventListener( 'click', function () {
+				var i = parseInt( weekBoard.getAttribute( 'data-alpt-eotw-board' ), 10 );
+				show( i );
+				openBoard( 'element', i, weekBoard );
+			} );
+		}
+
+		// Copy link: the address of the element in the panel, to paste into a slide, an email or the staff bulletin.
+		// Print element cards: twelve to an A4 page, for the elements showing now, so a filter or search prints just
+		// that family, theme, era or word. Each card has the symbol, name, family, definition and Talk about it question.
+		var FAMILY_CODES = { foundations: 'F', generative: 'G', predictive: 'P', agents: 'A', automation: 'W', governance: 'E', infra: 'I' };
+		function printCards() {
+			var sheet = document.createElement( 'div' );
+			sheet.className = 'alpt-cards-print';
+			elements.forEach( function ( e, i ) {
+				if ( tiles[ i ].classList.contains( 'is-excluded' ) ) {
+					return;
+				}
+				var card = el( 'div', 'alpt-card alpt-fam--' + e[ 2 ] );
+				var head = el( 'div', 'alpt-card__head' );
+				head.appendChild( el( 'span', 'alpt-card__sym', e[ 0 ] ) );
+				var fam = el( 'span', 'alpt-card__family', families[ e[ 2 ] ] || '' );
+				fam.appendChild( el( 'span', 'alpt-card__code', FAMILY_CODES[ e[ 2 ] ] || '' ) );
+				head.appendChild( fam );
+				card.appendChild( head );
+				card.appendChild( el( 'p', 'alpt-card__name', e[ 1 ] ) );
+				card.appendChild( el( 'p', 'alpt-card__def', e[ 3 ] ) );
+				if ( talk[ e[ 0 ] ] ) {
+					card.appendChild( el( 'p', 'alpt-card__talk', 'Talk about it: ' + talk[ e[ 0 ] ] ) );
+				}
+				if ( safeSyms.indexOf( e[ 0 ] ) !== -1 ) {
+					card.appendChild( el( 'p', 'alpt-card__foot alpt-card__safe', 'Safeguarding: follow your school\'s procedures. Childline: 0800 1111.' ) );
+				}
+				card.appendChild( el( 'p', 'alpt-card__foot', 'The AI Literacy Periodic Table · AI Awareness Day' ) );
+				sheet.appendChild( card );
+			} );
+			document.body.appendChild( sheet );
+			// A4 portrait for the cards, also for browsers that don't support the stylesheet's named page.
+			var pageSize = document.createElement( 'style' );
+			pageSize.textContent = '@page { size: A4 portrait; margin: 10mm; }';
+			document.head.appendChild( pageSize );
+			document.documentElement.classList.add( 'alpt-printing-cards' );
+			var done = function () {
+				document.documentElement.classList.remove( 'alpt-printing-cards' );
+				sheet.remove();
+				pageSize.remove();
+				window.removeEventListener( 'afterprint', done );
+			};
+			window.addEventListener( 'afterprint', done );
+			window.print();
+		}
+		var printCardsButton = root.querySelector( '[data-alpt-print-cards]' );
+		if ( printCardsButton ) {
+			printCardsButton.hidden = false;
+			printCardsButton.addEventListener( 'click', printCards );
+		}
+		document.addEventListener( 'click', function ( event ) {
+			if ( event.target.closest( 'a[href="#alpt-print-cards"]' ) ) {
+				event.preventDefault();
+				printCards();
+			}
+		} );
+
+		var copyButton = root.querySelector( '[data-alpt-copy]' );
+		if ( copyButton && navigator.clipboard && window.isSecureContext !== false ) {
+			copyButton.hidden = false;
+			var copyLabel = copyButton.textContent;
+			var copyTimer = null;
+			copyButton.addEventListener( 'click', function () {
+				var url = window.location.href.split( '#' )[ 0 ] + '#element-' + elements[ current ][ 0 ].toLowerCase();
+				navigator.clipboard.writeText( url ).then( function () {
+					copyButton.textContent = 'Link copied';
+					status.textContent = 'Link to ' + elements[ current ][ 1 ] + ' copied.';
+					window.clearTimeout( copyTimer );
+					copyTimer = window.setTimeout( function () {
+						copyButton.textContent = copyLabel;
+					}, 2500 );
+				} ).catch( function () {} );
+			} );
+		}
+
+		if ( navigator.clipboard && window.isSecureContext !== false ) {
+			Array.prototype.forEach.call( root.querySelectorAll( '[data-alpt-copy-compound]' ), function ( button ) {
+				button.hidden = false;
+				button.addEventListener( 'click', function () {
+					var url = window.location.href.split( '#' )[ 0 ] + '#alpt-cp-' + button.getAttribute( 'data-alpt-copy-compound' );
+					navigator.clipboard.writeText( url ).then( function () {
+						button.textContent = 'Link copied';
+						status.textContent = 'Link to the compound copied.';
+						window.setTimeout( function () {
+							button.textContent = 'Copy link';
+						}, 2500 );
+					} ).catch( function () {} );
+				} );
 			} );
 		}
 		Array.prototype.forEach.call( root.querySelectorAll( '[data-alpt-board-compound]' ), function ( button ) {
@@ -1376,11 +1794,41 @@
 			[ 'A user tries to persuade a chatbot to ignore its safety rules. What is this type of attempt called?', 'Jb', 'Vc', 'Ft' ],
 			[ 'A timeline of clicks and purchases helps a system choose which film to suggest next. Which technology selects the suggestion?', 'Rc', 'Rg', 'Mm' ]
 		];
+		// Each round deals ten of the questions, in a new order; the best score is remembered on this device.
+		var bank = questions.slice();
+		var ROUND = 10;
+		function deal() {
+			for ( var i = bank.length - 1; i > 0; i-- ) {
+				var j = Math.floor( Math.random() * ( i + 1 ) );
+				var swap = bank[ i ]; bank[ i ] = bank[ j ]; bank[ j ] = swap;
+			}
+			questions = bank.slice( 0, ROUND );
+		}
+		deal();
+		var bestOut = section.querySelector( '[data-quiz-best]' );
+		var BEST_KEY = 'alpt-quiz-best-v1';
+		function readBest() {
+			try {
+				return parseInt( window.localStorage.getItem( BEST_KEY ), 10 ) || 0;
+			} catch ( e ) {
+				return 0;
+			}
+		}
+		function showBest() {
+			var best = readBest();
+			if ( bestOut && best ) {
+				bestOut.textContent = 'Your best so far: ' + best + ' out of ' + ROUND + '.';
+				bestOut.hidden = false;
+			}
+		}
+		showBest();
 		var question = section.querySelector( '[data-quiz-question]' );
 		var options = section.querySelector( '[data-quiz-options]' );
 		var progress = section.querySelector( '[data-quiz-progress]' );
 		var feedback = section.querySelector( '[data-quiz-feedback]' );
 		var next = section.querySelector( '[data-quiz-next]' );
+		var scoreOut = section.querySelector( '[data-quiz-score]' );
+		var bar = section.querySelector( '[data-quiz-bar]' );
 		var position = 0;
 		var score = 0;
 		var answered = false;
@@ -1389,10 +1837,25 @@
 			answered = false;
 			options.replaceChildren();
 			feedback.textContent = '';
+			feedback.className = 'alpt-quiz__feedback';
+			if ( scoreOut ) {
+				scoreOut.textContent = String( score );
+			}
+			if ( bar ) {
+				bar.style.width = ( Math.min( position, questions.length ) / questions.length * 100 ) + '%';
+			}
+			section.classList.toggle( 'is-done', ! questions[ position ] );
 			var item = questions[ position ];
 			if ( ! item ) {
 				progress.textContent = 'Quiz complete';
-				question.textContent = 'You scored ' + score + ' out of ' + questions.length + '.';
+				var before = readBest();
+				question.textContent = 'You scored ' + score + ' out of ' + questions.length + '.' + ( score > before ? ( before ? ' A new best!' : '' ) : ' Your best is ' + before + '.' );
+				if ( score > before ) {
+					try {
+						window.localStorage.setItem( BEST_KEY, String( score ) );
+					} catch ( e ) {}
+				}
+				showBest();
 				next.textContent = 'Try again';
 				next.hidden = false;
 				return;
@@ -1408,15 +1871,25 @@
 			choices.forEach( function ( symbol ) {
 				var button = document.createElement( 'button' );
 				button.type = 'button';
-				button.className = 'alpt-btn';
+				button.className = 'alpt-quiz__option';
 				button.textContent = elements[ indexes[ symbol ] ][ 1 ];
 				button.addEventListener( 'click', function () {
 					if ( answered ) return;
 					answered = true;
 					var correct = symbol === item[ 1 ];
 					if ( correct ) score++;
+					if ( scoreOut ) {
+						scoreOut.textContent = String( score );
+					}
+					if ( bar ) {
+						bar.style.width = ( ( position + 1 ) / questions.length * 100 ) + '%';
+					}
 					var term = elements[ indexes[ item[ 1 ] ] ];
 					feedback.textContent = ( correct ? 'Correct. ' : 'The answer is ' + term[ 1 ] + '. ' ) + term[ 3 ];
+					feedback.className = 'alpt-quiz__feedback ' + ( correct ? 'is-right' : 'is-wrong' );
+					if ( ! correct ) {
+						button.classList.add( 'is-wrong' );
+					}
 					Array.from( options.children ).forEach( function ( choice ) {
 						choice.setAttribute( 'aria-disabled', 'true' );
 						choice.tabIndex = choice === button ? 0 : -1;
@@ -1429,21 +1902,14 @@
 			} );
 		}
 		next.addEventListener( 'click', function () {
-			if ( position === questions.length ) { position = 0; score = 0; }
+			if ( position === questions.length ) { position = 0; score = 0; deal(); }
 			else position++;
 			display();
 			question.focus();
 		} );
 		display();
 		section.hidden = false;
-		var actions = document.querySelector( '.alpt-hero .alpt-actions' );
-		if ( actions && ! actions.querySelector( '[href="#alpt-buzzword-check"]' ) ) {
-			var shortcut = document.createElement( 'a' );
-			shortcut.className = 'alpt-btn alpt-btn--ghost';
-			shortcut.href = '#alpt-buzzword-check';
-			shortcut.textContent = 'Take the buzzword quiz';
-			actions.appendChild( shortcut );
-		}
+		// The quiz is listed under Try it, below the table, rather than with the introduction's buttons.
 	}
 
 	function initSuggest( form ) {
@@ -1454,18 +1920,28 @@
 			event.preventDefault();
 			var term = form.elements.term.value.trim();
 			var definition = form.elements.definition.value.trim();
+			// A field with a problem is marked invalid and points at the message, so a screen reader says what to fix.
+			status.id = status.id || 'alpt-suggest-status';
+			[ form.elements.term, form.elements.definition ].forEach( function ( field ) {
+				field.removeAttribute( 'aria-invalid' );
+				field.removeAttribute( 'aria-describedby' );
+			} );
+			function invalid( field, message ) {
+				status.textContent = message;
+				field.setAttribute( 'aria-invalid', 'true' );
+				field.setAttribute( 'aria-describedby', status.id );
+				field.focus();
+			}
 			if ( term.length < 2 ) {
-				status.textContent = 'Please enter the term you would like to add.';
-				form.elements.term.focus();
+				invalid( form.elements.term, 'Please enter the term you would like to add.' );
 				return;
 			}
 			if ( definition.length < 10 ) {
-				status.textContent = 'Please explain what the term means, in a sentence or two.';
-				form.elements.definition.focus();
+				invalid( form.elements.definition, 'Please explain what the term means, in a sentence or two.' );
 				return;
 			}
 			var body = {};
-			[ 'term', 'symbol', 'family', 'definition', 'why', 'name', 'role', 'aiad_website' ].forEach( function ( key ) {
+			[ 'term', 'symbol', 'family', 'definition', 'why', 'name', 'role', 'credit', 'aiad_website' ].forEach( function ( key ) {
 				body[ key ] = form.elements[ key ] ? form.elements[ key ].value : '';
 			} );
 			button.disabled = true;
