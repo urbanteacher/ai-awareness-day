@@ -90,11 +90,22 @@ $aiad_out[] = $aiad_section(
 	__( 'Three ways to take part', 'ai-awareness-day' )
 );
 
+// Timeline.
+$aiad_out[] = $aiad_section(
+	array(
+		aiad_block_heading( 2, aiad_block_text( __( 'The timeline', 'ai-awareness-day' ) ), '', 'ncp-timeline' ),
+		$aiad_cards( $aiad_timeline, 'ncp-timeline', 'ol' ),
+	),
+	__( 'Timeline', 'ai-awareness-day' ),
+	true,
+	'container ncp-narrow'
+);
+
 // Start now: what a class can use today, before (and after) schools can register.
 $aiad_out[] = $aiad_section(
 	array(
 		aiad_block_heading( 2, aiad_block_text( __( 'Get your class talking now', 'ai-awareness-day' ) ), '', 'ncp-start' ),
-		aiad_block_paragraph( aiad_block_text( __( 'Schools register from {opens}. You don\'t need to wait: these work in any lesson, today, and are good practice for a debate.', 'ai-awareness-day' ) ) . ' <a class="ncp-link" href="#ncp-timeline">' . aiad_block_text( __( 'See the full timeline', 'ai-awareness-day' ) ) . '</a>', 'ncp-intro' ),
+		aiad_block_paragraph( aiad_block_text( __( 'Schools register from {opens}. You don\'t need to wait: these work in any lesson, today, and are good practice for a debate.', 'ai-awareness-day' ) ), 'ncp-intro' ),
 		// This week's word from the AI Literacy Periodic Table (inc/literacy-table.php), a five-minute warm-up.
 		aiad_block_group(
 			array(
@@ -114,8 +125,7 @@ $aiad_out[] = $aiad_section(
 			'ncp-starters'
 		),
 	),
-	__( 'Start now', 'ai-awareness-day' ),
-	true
+	__( 'Start now', 'ai-awareness-day' )
 );
 
 // Five themes.
@@ -135,7 +145,8 @@ $aiad_out[] = $aiad_section(
 		aiad_block_heading( 2, aiad_block_text( __( 'Five themes to debate', 'ai-awareness-day' ) ), '', 'ncp-themes' ),
 		aiad_block_styled_list( $aiad_theme_items, 'ncp-themes' ),
 	),
-	__( 'Five themes', 'ai-awareness-day' )
+	__( 'Five themes', 'ai-awareness-day' ),
+	true
 );
 
 // Every age.
@@ -157,8 +168,7 @@ $aiad_out[] = $aiad_section(
 		aiad_block_styled_list( $aiad_age_items, 'ncp-agecards' ),
 		aiad_block_paragraph( aiad_block_text( __( 'Debate educators will review the questions and timings before the conversation opens.', 'ai-awareness-day' ) ), 'ncp-note' ),
 	),
-	__( 'Every age', 'ai-awareness-day' ),
-	true
+	__( 'Every age', 'ai-awareness-day' )
 );
 
 // Inside a debate.
@@ -190,7 +200,8 @@ $aiad_out[] = $aiad_section(
 		),
 		aiad_block_quote( aiad_block_text( __( 'Several sources for every fact. Don\'t rely on AI-generated content alone: it can be wrong.', 'ai-awareness-day' ) ), 'ncp-principle' ),
 	),
-	__( 'Inside a debate', 'ai-awareness-day' )
+	__( 'Inside a debate', 'ai-awareness-day' ),
+	true
 );
 
 // How an inter-school debate works.
@@ -210,8 +221,7 @@ $aiad_out[] = $aiad_section(
 		aiad_block_styled_list( array_map( static fn( array $step ): string => aiad_block_styled_item( array( aiad_block_heading( 3, aiad_block_text( $step[0] ) ), aiad_block_paragraph( str_replace( 'AID-7K42P', '<span class="ncp-nowrap">AID-7K42P</span>', aiad_block_text( $step[1] ) ) ) ) ), $aiad_steps ), 'ncp-steps', 'ol' ),
 		aiad_block_paragraph( aiad_block_text( __( 'If a step stalls, we send reminders. A debate with no action for 14 days expires, and you can invite another school.', 'ai-awareness-day' ) ), 'ncp-note' ),
 	),
-	__( 'How a debate works', 'ai-awareness-day' ),
-	true
+	__( 'How a debate works', 'ai-awareness-day' )
 );
 
 // Safeguarding.
@@ -238,7 +248,7 @@ $aiad_out[] = $aiad_section(
 		),
 	),
 	__( 'Safeguarding', 'ai-awareness-day' ),
-	false,
+	true,
 	'container ncp-split'
 );
 
@@ -260,8 +270,7 @@ $aiad_out[] = $aiad_section(
 			'ncp-news__grid'
 		),
 	),
-	__( 'In the news', 'ai-awareness-day' ),
-	true
+	__( 'In the news', 'ai-awareness-day' )
 );
 
 // The skills.
@@ -284,7 +293,7 @@ $aiad_out[] = aiad_block_group(
 			'container ncp-lede'
 		),
 	),
-	'ncp-section',
+	'ncp-section ncp-section--card',
 	'section',
 	'',
 	__( 'The skills', 'ai-awareness-day' )
@@ -306,8 +315,7 @@ $aiad_out[] = $aiad_section(
 		),
 		aiad_block_paragraph( aiad_block_text( __( 'We count schools taking part, debates completed, students involved, themes explored and links across trusts and regions.', 'ai-awareness-day' ) ), 'ncp-note' ),
 	),
-	__( 'Aims, objectives and ambitions', 'ai-awareness-day' ),
-	true
+	__( 'Aims, objectives and ambitions', 'ai-awareness-day' )
 );
 
 // Recognition.
@@ -318,7 +326,7 @@ $aiad_out[] = $aiad_section(
 		aiad_block_paragraph( aiad_block_text( __( 'Results are public: both schools, the theme, motion, date and result. The judge\'s name appears only if they agree. Teachers\' names and anything about students are never published. Every certificate carries a reference anyone can check.', 'ai-awareness-day' ) ) ),
 	),
 	__( 'Recognition', 'ai-awareness-day' ),
-	false,
+	true,
 	'container ncp-narrow'
 );
 
@@ -330,7 +338,7 @@ $aiad_out[] = $aiad_section(
 		aiad_block_paragraph( aiad_block_text( __( 'A multi-academy trust (MAT) can hold debates between its own academies before connecting with schools elsewhere. Each academy registers and is approved by its own headteacher. Ask the programme team for a report of your academies taking part.', 'ai-awareness-day' ) ) ),
 	),
 	__( 'MATs', 'ai-awareness-day' ),
-	true,
+	false,
 	'container ncp-narrow'
 );
 
@@ -360,18 +368,8 @@ $aiad_out[] = $aiad_section(
 			'ncp-callout ncp-callout--invite'
 		),
 	),
-	__( 'For organisations', 'ai-awareness-day' )
-);
-
-// Timeline.
-$aiad_out[] = $aiad_section(
-	array(
-		aiad_block_heading( 2, aiad_block_text( __( 'The timeline', 'ai-awareness-day' ) ), '', 'ncp-timeline' ),
-		$aiad_cards( $aiad_timeline, 'ncp-timeline', 'ol' ),
-	),
-	__( 'Timeline', 'ai-awareness-day' ),
-	true,
-	'container ncp-narrow'
+	__( 'For organisations', 'ai-awareness-day' ),
+	true
 );
 
 // Questions.
