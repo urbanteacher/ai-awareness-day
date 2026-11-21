@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Unsupervised Learning: a mixed pile with no labels, sorted into groups the AI finds by itself. -->
+  <defs><marker id="alpt-arr-un" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="190" y="50" text-anchor="middle">No labels</text>
+  <circle class="i-deep" cx="124" cy="100" r="12"/>
+  <circle class="i-deep" cx="240" cy="140" r="12"/>
+  <circle class="i-deep" cx="58" cy="176" r="12"/>
+  <path class="i-cream" d="M176 90 L190 114 H162 Z"/><path class="i-line" d="M176 90 L190 114 H162 Z"/>
+  <path class="i-cream" d="M40 114 L54 138 H26 Z" transform="rotate(-14 40 128)"/><path class="i-line" d="M40 114 L54 138 H26 Z" transform="rotate(-14 40 128)"/>
+  <path class="i-cream" d="M198 160 L212 184 H184 Z" transform="rotate(18 198 174)"/><path class="i-line" d="M198 160 L212 184 H184 Z" transform="rotate(18 198 174)"/>
+  <rect class="i-paper" x="216" y="86" width="22" height="22" transform="rotate(12 227 97)"/><rect class="i-line" x="216" y="86" width="22" height="22" transform="rotate(12 227 97)"/>
+  <rect class="i-paper" x="94" y="138" width="22" height="22" transform="rotate(-10 105 149)"/><rect class="i-line" x="94" y="138" width="22" height="22" transform="rotate(-10 105 149)"/>
+  <rect class="i-paper" x="136" y="166" width="22" height="22" transform="rotate(20 147 177)"/><rect class="i-line" x="136" y="166" width="22" height="22" transform="rotate(20 147 177)"/>
+  <path class="i-line" d="M150 204 V228" marker-end="url(#alpt-arr-un)"/>
+  <text class="t-xs" x="162" y="222">AI finds groups</text>
+  <rect class="i-paper" x="16" y="238" width="80" height="76" rx="8"/><rect class="i-line" x="16" y="238" width="80" height="76" rx="8"/>
+  <circle class="i-deep" cx="34" cy="264" r="9"/><circle class="i-deep" cx="56" cy="264" r="9"/><circle class="i-deep" cx="78" cy="264" r="9"/>
+  <text class="t-xs" x="56" y="302" text-anchor="middle">Group 1</text>
+  <rect class="i-paper" x="110" y="238" width="80" height="76" rx="8"/><rect class="i-line" x="110" y="238" width="80" height="76" rx="8"/>
+  <path class="i-cream" d="M128 254 L138 272 H118 Z M150 254 L160 272 H140 Z M172 254 L182 272 H162 Z"/><path class="i-line" d="M128 254 L138 272 H118 Z M150 254 L160 272 H140 Z M172 254 L182 272 H162 Z"/>
+  <text class="t-xs" x="150" y="302" text-anchor="middle">Group 2</text>
+  <rect class="i-paper" x="204" y="238" width="80" height="76" rx="8"/><rect class="i-line" x="204" y="238" width="80" height="76" rx="8"/>
+  <path class="i-line" d="M214 256 h16 v16 h-16 Z M236 256 h16 v16 h-16 Z M258 256 h16 v16 h-16 Z"/>
+  <text class="t-xs" x="244" y="302" text-anchor="middle">Group 3</text>
+</svg>

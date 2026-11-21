@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Alignment: asked for top marks, the AI aims at what the person really wants (learning), not the shortcut of copying. -->
+  <defs><marker id="alpt-arr-an" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="104" y="20" width="140" height="62" rx="12"/><rect class="i-line" x="104" y="20" width="140" height="62" rx="12"/>
+  <path class="i-paper" d="M116 80 L84 100 L134 80 Z"/><path class="i-line" d="M116 82 L84 100 L132 82"/>
+  <text class="t-s" x="174" y="46" text-anchor="middle">Get me</text>
+  <text class="t-s" x="174" y="68" text-anchor="middle">top marks!</text>
+  <circle class="i-cream" cx="52" cy="108" r="14"/><circle class="i-line" cx="52" cy="108" r="14"/>
+  <path class="i-line" d="M30 142 C30 124 74 124 74 142"/>
+  <g class="i-faint">
+    <circle class="i-line i-dash" cx="66" cy="204" r="32"/><circle class="i-line i-dash" cx="66" cy="204" r="16"/>
+    <path class="i-line" d="M130 250 L94 224" stroke-dasharray="4 5" marker-end="url(#alpt-arr-an)"/>
+  </g>
+  <text class="t-s" x="66" y="262" text-anchor="middle">Copy ✗</text>
+  <circle class="i-paper" cx="226" cy="186" r="42"/><circle class="i-deepline" cx="226" cy="186" r="42"/>
+  <circle class="i-deep" cx="226" cy="186" r="28"/><circle class="i-paper" cx="226" cy="186" r="15"/>
+  <circle class="i-accent" cx="226" cy="186" r="7"/>
+  <path class="i-line" d="M172 254 L212 202" marker-end="url(#alpt-arr-an)"/>
+  <text class="t-s t-d" x="226" y="252" text-anchor="middle">Learn ✓</text>
+  <path class="i-deep" d="M126 258 H170 L182 270 V306 H126 Z"/>
+  <rect class="i-paper" x="136" y="270" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="146" cy="281" r="3.2"/><circle class="i-ink" cx="158" cy="281" r="3.2"/>
+</svg>

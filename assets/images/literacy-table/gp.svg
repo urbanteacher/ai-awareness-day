@@ -1,17 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- GPU: a chip of many tiny cores all working on sums at the same time. -->
-  <defs><marker id="alpt-arr-gp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-gp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="170" y="50" text-anchor="middle">All at once</text>
-  <path class="i-line" d="M70 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M90 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M110 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M130 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M150 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M170 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M190 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M210 84 V106" marker-end="url(#alpt-arr-gp)"/>
-  <path class="i-line" d="M230 84 V106" marker-end="url(#alpt-arr-gp)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M70 80 L70 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M90 80 L90 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M110 80 L110 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M130 80 L130 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M150 80 L150 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M170 80 L170 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M190 80 L190 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M210 80 L210 108" marker-end="url(#alpt-arr-gp)"/><path class="i-line" d="M230 80 L230 108" marker-end="url(#alpt-arr-gp)"/></g>
   <rect class="i-deep" x="50" y="116" width="200" height="156" rx="8"/>
   <path class="i-line" d="M36 134 H50 M250 134 H264 M36 154 H50 M250 154 H264 M36 174 H50 M250 174 H264 M36 194 H50 M250 194 H264 M36 214 H50 M250 214 H264 M36 234 H50 M250 234 H264 M36 254 H50 M250 254 H264 M70 272 V286 M90 272 V286 M110 272 V286 M130 272 V286 M150 272 V286 M170 272 V286 M190 272 V286 M210 272 V286 M230 272 V286"/>
   <rect class="i-paper" x="67" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="88" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="109" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="130" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="151" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="172" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="193" y="132" width="14" height="14" rx="2"/><rect class="i-paper" x="214" y="132" width="14" height="14" rx="2"/>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Retrieval-Augmented Generation: look it up first, then answer and show the source. Top-left 100x95 stays clear for the symbol badge. -->
+  <defs><marker id="alpt-arr-rg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="112" y="22" width="166" height="62" rx="12"/><rect class="i-line" x="112" y="22" width="166" height="62" rx="12"/>
+  <path class="i-paper" d="M246 82 L258 98 L262 82 Z"/><path class="i-line" d="M246 84 L258 98 L262 84"/>
+  <text class="t-s" x="195" y="48" text-anchor="middle">When is</text>
+  <text class="t-s" x="195" y="70" text-anchor="middle">sports day?</text>
+  <path class="i-line" d="M150 92 C120 104 104 112 100 124" marker-end="url(#alpt-arr-rg)"/>
+  <rect class="i-cream" x="48" y="132" width="86" height="104" rx="4"/><rect class="i-line" x="48" y="132" width="86" height="104" rx="4"/>
+  <rect class="i-cream" x="38" y="142" width="86" height="104" rx="4"/><rect class="i-line" x="38" y="142" width="86" height="104" rx="4"/>
+  <rect class="i-paper" x="28" y="152" width="86" height="104" rx="4"/><rect class="i-line" x="28" y="152" width="86" height="104" rx="4"/>
+  <path class="i-line" d="M40 172 H100 M40 186 H92 M40 230 H100 M40 244 H86"/>
+  <rect class="i-accent" x="36" y="198" width="70" height="16" rx="3"/>
+  <circle class="i-deepline" cx="102" cy="214" r="22"/><path class="i-deepline" d="M118 230 L132 244" stroke-width="7"/>
+  <text class="t-xs" x="71" y="276" text-anchor="middle">Calendar</text>
+  <path class="i-line" d="M140 196 H170" marker-end="url(#alpt-arr-rg)"/>
+  <path class="i-deep" d="M180 168 H226 L242 184 V226 H180 Z"/>
+  <text class="t-m t-w" x="211" y="204" text-anchor="middle">AI</text>
+  <path class="i-line" d="M211 234 V250" marker-end="url(#alpt-arr-rg)"/>
+  <rect class="i-paper" x="138" y="258" width="146" height="58" rx="12"/><rect class="i-line" x="138" y="258" width="146" height="58" rx="12"/>
+  <text class="t-s" x="211" y="282" text-anchor="middle">Friday 4 July</text>
+  <rect class="i-deep" x="171" y="290" width="80" height="18" rx="9"/>
+  <text class="t-xs t-w" x="211" y="303" text-anchor="middle">SOURCE ✓</text>
+</svg>

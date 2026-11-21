@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Text-to-Speech: typed words turned into a spoken, human-sounding voice. -->
-  <defs><marker id="alpt-arr-ts" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-ts" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="112" y="22" width="140" height="70" rx="8"/><rect class="i-line" x="112" y="22" width="140" height="70" rx="8"/>
   <text class="t-xs" x="128" y="44" letter-spacing="1">TEXT</text>
   <text class="t-m" x="128" y="76">Hi, class!</text>
-  <path class="i-line" d="M182 98 V122" marker-end="url(#alpt-arr-ts)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M182 100 L182 122" marker-end="url(#alpt-arr-ts)"/></g>
   <rect class="i-paper" x="16" y="130" width="268" height="76" rx="38"/><rect class="i-line" x="16" y="130" width="268" height="76" rx="38"/>
   <circle class="i-accent" cx="54" cy="168" r="20"/><path class="i-ink" d="M48 158 L63 168 L48 178 Z"/>
   <path class="i-deepline" stroke-width="5" d="M88 168 V168 M100 160 V176 M112 148 V188 M124 156 V180 M136 144 V192 M148 160 V176 M160 150 V186 M172 164 V172 M184 152 V184 M196 146 V190 M208 158 V178 M220 150 V186 M232 162 V174 M244 156 V180 M256 166 V170"/>

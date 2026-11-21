@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "word": [50, 112, 200, 36],
+  "believ": [92, 196, 116, 54]
+ },
+ "edges": [
+  {"from": "word", "side": "bottom", "to": "believ", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "cut mark un": [92, 150, 6, 16],
+  "cut mark able": [193, 150, 6, 16],
+  "un token": [12, 196, 70, 54],
+  "able token": [218, 196, 70, 54],
+  "numbers": [20, 264, 260, 18],
+  "caption": [56, 299, 188, 16]
+ }
+}

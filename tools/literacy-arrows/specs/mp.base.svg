@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Mechanistic Interpretability: zooming in on the part of a model that holds the idea of France, which leads to the answer Paris. Arrows: tools/literacy-arrows/specs/mp.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <g transform="translate(8 0)">
+  <rect class="i-deep" x="138" y="40" width="124" height="30" rx="6"/>
+  <text class="t-s t-w" x="200" y="61" text-anchor="middle">"France" part</text>
+  <path class="i-deepline" d="M200 70 V144"/>
+  <g class="i-faint">
+    <path class="i-line" d="M140 120 L200 120 M140 120 L200 220 M140 170 L200 120 M140 170 L200 220 M140 220 L200 120 M140 220 L200 170 M200 120 L256 120 M200 120 L256 170 M200 170 L256 120 M200 220 L256 170 M200 220 L256 220 M200 170 L256 170"/>
+  </g>
+  <path class="i-deepline" d="M140 170 L200 170 L256 220" stroke-width="5"/>
+  <circle class="i-paper" cx="140" cy="120" r="10"/><circle class="i-line" cx="140" cy="120" r="10"/>
+  <circle class="i-deep" cx="140" cy="170" r="10"/><circle class="i-line" cx="140" cy="170" r="10"/>
+  <circle class="i-paper" cx="140" cy="220" r="10"/><circle class="i-line" cx="140" cy="220" r="10"/>
+  <circle class="i-paper" cx="200" cy="120" r="10"/><circle class="i-line" cx="200" cy="120" r="10"/>
+  <circle class="i-accent" cx="200" cy="170" r="10"/><circle class="i-line" cx="200" cy="170" r="10"/>
+  <circle class="i-paper" cx="200" cy="220" r="10"/><circle class="i-line" cx="200" cy="220" r="10"/>
+  <circle class="i-paper" cx="256" cy="120" r="10"/><circle class="i-line" cx="256" cy="120" r="10"/>
+  <circle class="i-paper" cx="256" cy="170" r="10"/><circle class="i-line" cx="256" cy="170" r="10"/>
+  <circle class="i-deep" cx="256" cy="220" r="10"/><circle class="i-line" cx="256" cy="220" r="10"/>
+  <circle class="i-line" cx="200" cy="170" r="24" stroke-width="4"/>
+  <path class="i-line" d="M183 187 L168 202" stroke-width="7"/>
+  </g>
+  <rect class="i-paper" x="10" y="142" width="90" height="58" rx="10"/><rect class="i-line" x="10" y="142" width="90" height="58" rx="10"/>
+  <text class="t-s" x="55" y="166" text-anchor="middle">Capital of</text>
+  <text class="t-s" x="55" y="188" text-anchor="middle">France?</text>
+  <rect class="i-paper" x="224" y="264" width="68" height="46" rx="12"/><rect class="i-line" x="224" y="264" width="68" height="46" rx="12"/>
+  <text class="t-m" x="258" y="295" text-anchor="middle">Paris</text>
+  <text class="t-xs" x="62" y="290" text-anchor="middle">Inside the model,</text>
+  <text class="t-xs" x="62" y="306" text-anchor="middle">part by part</text>
+</svg>

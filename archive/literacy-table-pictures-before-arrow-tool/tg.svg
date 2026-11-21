@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Trigger: one of three events (a new email, a form sent, a set time) fires and starts the automation. -->
+  <defs><marker id="alpt-arr-tg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-m" x="18" y="108">WHEN…</text>
+  <rect class="i-paper" x="16" y="120" width="132" height="46" rx="8"/><rect class="i-line" x="16" y="120" width="132" height="46" rx="8"/>
+  <rect class="i-line" x="26" y="134" width="24" height="18" rx="2"/><path class="i-line" d="M26 135 L38 145 L50 135"/>
+  <text class="t-s" x="58" y="149">New email</text>
+  <rect class="i-accent" x="16" y="184" width="132" height="46" rx="8"/><rect class="i-line" x="16" y="184" width="132" height="46" rx="8"/>
+  <rect class="i-paper" x="28" y="194" width="20" height="26" rx="2"/><rect class="i-line" x="28" y="194" width="20" height="26" rx="2"/><path class="i-line" d="M33 202 H43 M33 208 H43 M33 214 H40"/>
+  <text class="t-s" x="58" y="213">Form sent</text>
+  <rect class="i-paper" x="16" y="248" width="132" height="46" rx="8"/><rect class="i-line" x="16" y="248" width="132" height="46" rx="8"/>
+  <circle class="i-line" cx="38" cy="271" r="11"/><path class="i-line" d="M38 264 V271 H44"/>
+  <text class="t-s" x="58" y="277">9:00 am</text>
+  <path class="i-line i-faint" d="M150 143 C160 143 160 170 166 176" stroke-dasharray="3 5"/>
+  <path class="i-line i-faint" d="M150 271 C160 271 160 244 166 238" stroke-dasharray="3 5"/>
+  <path class="i-line" d="M152 207 H164" stroke-width="4"/>
+  <path class="i-ink" d="M158 194 L150 210 H158 L154 222 L168 204 H160 L164 194 Z"/>
+  <text class="t-m" x="226" y="142" text-anchor="middle">…DO</text>
+  <path class="i-deep" d="M170 156 H264 L282 174 V262 H170 Z"/>
+  <rect class="i-paper" x="200" y="176" width="52" height="30" rx="8"/>
+  <circle class="i-ink" cx="216" cy="191" r="4"/><circle class="i-ink" cx="236" cy="191" r="4"/>
+  <text class="t-m t-w" x="226" y="244" text-anchor="middle">Start!</text>
+</svg>

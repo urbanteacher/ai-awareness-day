@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Robotic Process Automation: a bot copies each row into a form and clicks Submit, again and again. -->
-  <defs><marker id="alpt-arr-rp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-rp-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="106" y="26" width="66" height="34" rx="6"/><rect class="i-line" x="106" y="26" width="66" height="34" rx="6"/>
   <text class="t-s" x="139" y="49" text-anchor="middle">Copy</text>
@@ -11,16 +11,16 @@
   <rect class="i-accent" x="34" y="118" width="88" height="28" rx="2"/>
   <rect class="i-line" x="34" y="118" width="88" height="84" rx="2"/><path class="i-line" d="M34 146 H122 M34 174 H122"/>
   <text class="t-s" x="46" y="138">Ali</text><text class="t-s" x="46" y="166">Bea</text><text class="t-s" x="46" y="194">Cal</text>
-  <rect class="i-cream" x="152" y="118" width="114" height="28" rx="4"/><rect class="i-line" x="152" y="118" width="114" height="28" rx="4"/>
-  <text class="t-s" x="164" y="138">Ali</text>
-  <path class="i-line" d="M124 132 H146" marker-end="url(#alpt-arr-rp)"/>
-  <rect class="i-deep" x="152" y="164" width="96" height="32" rx="6"/>
-  <text class="t-s t-w" x="200" y="185" text-anchor="middle">Submit</text>
-  <path d="M240 186 L240 216 L247 209 L253 222 L259 219 L253 207 L263 206 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect class="i-cream" x="164" y="118" width="102" height="28" rx="4"/><rect class="i-line" x="164" y="118" width="102" height="28" rx="4"/>
+  <text class="t-s" x="176" y="138">Ali</text>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M130 132 L156 132" marker-end="url(#alpt-arr-rp-d)"/></g>
+  <rect class="i-deep" x="164" y="164" width="96" height="32" rx="6"/>
+  <text class="t-s t-w" x="212" y="185" text-anchor="middle">Submit</text>
+  <path d="M250 186 L250 216 L257 209 L263 222 L269 219 L263 207 L273 206 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2.5" stroke-linejoin="round"/>
   <path class="i-line" d="M150 250 V262 M118 262 H182"/>
   <path class="i-deep" d="M26 270 H72 L86 284 V318 H26 Z"/>
   <rect class="i-paper" x="36" y="282" width="38" height="22" rx="6"/>
   <circle class="i-ink" cx="48" cy="293" r="3.5"/><circle class="i-ink" cx="62" cy="293" r="3.5"/>
-  <path class="i-line" d="M104 302 A15 15 0 1 1 119 317" marker-end="url(#alpt-arr-rp)"/>
+  <path class="i-line" d="M104 302 A15 15 0 1 1 119 317 M126 311 L119 317 L126 323"/>
   <text class="t-m" x="142" y="306">Again × 500</text>
 </svg>

@@ -1,0 +1,16 @@
+{
+ "nodes": {
+  "homework": [14, 96, 100, 160],
+  "calendar": [186, 96, 100, 160]
+ },
+ "edges": [
+  {"from": "homework", "side": "right", "to": "calendar", "to_side": "left", "at": 0.5, "to_at": 0.5, "main": true},
+  {"from": "calendar", "side": "left", "to": "homework", "to_side": "right", "at": 0.625, "to_at": 0.625}
+ ],
+ "shapes": {
+  "title": [112, 48, 132, 18],
+  "Due Fri chip": [118, 140, 64, 24],
+  "Added label": [118, 208, 64, 16],
+  "API doors label": [108, 286, 84, 18]
+ }
+}

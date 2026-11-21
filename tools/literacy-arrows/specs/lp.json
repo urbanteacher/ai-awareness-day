@@ -1,0 +1,23 @@
+{
+ "nodes": {
+  "observe": [108, 92, 84, 32],
+  "think": [200, 184, 84, 32],
+  "act": [108, 276, 84, 32],
+  "check": [16, 184, 84, 32],
+  "done": [8, 272, 64, 32]
+ },
+ "edges": [
+  {"from": "observe", "side": "right", "to": "think", "to_side": "top"},
+  {"from": "think", "side": "bottom", "to": "act", "to_side": "right"},
+  {"from": "act", "side": "left", "to": "check", "to_side": "bottom", "to_at": 0.8},
+  {"from": "check", "side": "top", "to": "observe", "to_side": "left"},
+  {"from": "check", "side": "bottom", "to": "done", "to_side": "top", "at": 0.2}
+ ],
+ "shapes": {
+  "the bot": [128, 180, 46, 42]
+ },
+ "edits": [
+  ["<rect class=\"i-accent\" x=\"12\" y=\"272\" width=\"80\" height=\"32\" rx=\"16\"/>", "<rect class=\"i-accent\" x=\"8\" y=\"272\" width=\"64\" height=\"32\" rx=\"16\"/>"],
+  ["<text class=\"t-s\" x=\"52\" y=\"294\" text-anchor=\"middle\">Done ✓</text>", "<text class=\"t-s\" x=\"40\" y=\"294\" text-anchor=\"middle\">Done ✓</text>"]
+ ]
+}

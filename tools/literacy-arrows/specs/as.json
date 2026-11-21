@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "from": [212, 270, 0, 0],
+  "to": [212, 194, 0, 0]
+ },
+ "edges": [
+  {"from": "from", "side": "top", "to": "to", "to_side": "bottom", "main": true, "label": "Nudge", "label_side": "right"}
+ ],
+ "shapes": {
+  "the Kind control": [164, 184, 32, 16],
+  "its slider": [177, 176, 6, 104],
+  "panel heading": [20, 130, 260, 26],
+  "Kind label": [160, 288, 40, 18]
+ },
+ "edits": [
+  ["<rect class=\"i-paper\" x=\"20\" y=\"130\" width=\"206\" height=\"184\" rx=\"10\"/><rect class=\"i-line\" x=\"20\" y=\"130\" width=\"206\" height=\"184\" rx=\"10\"/>", "<rect class=\"i-paper\" x=\"20\" y=\"130\" width=\"260\" height=\"184\" rx=\"10\"/><rect class=\"i-line\" x=\"20\" y=\"130\" width=\"260\" height=\"184\" rx=\"10\"/>"],
+  ["M30 130 H216 Q226 130 226 140 V156 H20 V140 Q20 130 30 130 Z", "M30 130 H270 Q280 130 280 140 V156 H20 V140 Q20 130 30 130 Z"],
+  ["x=\"123\" y=\"148\"", "x=\"150\" y=\"148\""],
+  ["<text class=\"t-s\" x=\"262\" y=\"278\" text-anchor=\"middle\">Nudge</text>", ""]
+ ]
+}

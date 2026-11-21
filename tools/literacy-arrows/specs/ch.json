@@ -1,0 +1,27 @@
+{
+ "nodes": {
+  "risky": [
+   14,
+   200,
+   272,
+   56
+  ],
+  "offer": [
+   106,
+   270,
+   180,
+   42
+  ]
+ },
+ "edges": [
+  {
+   "from": "risky",
+   "side": "bottom",
+   "to": "offer",
+   "to_side": "left",
+   "at": 0.09,
+   "main": true
+  }
+ ],
+ "shapes": {}
+}

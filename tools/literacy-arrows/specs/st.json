@@ -1,0 +1,88 @@
+{
+ "nodes": {
+  "order": [
+   18,
+   176,
+   62,
+   34
+  ],
+  "paid": [
+   118,
+   176,
+   62,
+   34
+  ],
+  "sent": [
+   218,
+   176,
+   64,
+   34
+  ],
+  "beltstart": [
+   16,
+   260,
+   0,
+   0
+  ],
+  "beltend": [
+   290,
+   260,
+   0,
+   0
+  ]
+ },
+ "edges": [
+  {
+   "from": "order",
+   "side": "right",
+   "to": "paid",
+   "to_side": "left",
+   "main": true
+  },
+  {
+   "from": "paid",
+   "side": "right",
+   "to": "sent",
+   "to_side": "left",
+   "main": true
+  },
+  {
+   "from": "beltstart",
+   "side": "right",
+   "to": "beltend",
+   "to_side": "left"
+  }
+ ],
+ "shapes": {
+  "belt": [
+   14,
+   212,
+   272,
+   22
+  ],
+  "empty person spot": [
+   84,
+   88,
+   56,
+   62
+  ],
+  "person line": [
+   72,
+   154,
+   80,
+   4
+  ],
+  "No one checks": [
+   162,
+   96,
+   90,
+   50
+  ],
+  "All by computer text": [
+   80,
+   276,
+   140,
+   42
+  ]
+ }
+}

@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Diffusion Model: random noise cleaned up step by step until a new picture appears. -->
-  <defs><marker id="alpt-arr-df" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Diffusion Model: random noise cleaned up step by step until a new picture appears. Arrows: tools/literacy-arrows/specs/df.json -->
+  <defs><marker id="alpt-arr-df" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-df-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
+  <g transform="translate(12 92) scale(0.8947) translate(-14 -112)">
   <rect class="i-paper" x="14" y="112" width="76" height="76"/>
   <rect class="i-deep" x="14.0" y="112.0" width="9.8" height="9.8"/>
   <rect class="i-ink" x="14.0" y="121.5" width="9.8" height="9.8"/>
@@ -67,6 +68,9 @@
   <rect class="i-deep" x="80.5" y="159.5" width="9.8" height="9.8"/>
   <rect class="i-deep" x="80.5" y="169.0" width="9.8" height="9.8"/>
   <rect class="i-deep" x="80.5" y="178.5" width="9.8" height="9.8"/>
+<rect class="i-line" x="14" y="112" width="76" height="76"/>
+  </g>
+  <g transform="translate(116 92) scale(0.8947) translate(-112 -112)">
   <rect class="i-paper" x="112" y="112" width="76" height="76"/>
   <circle class="i-deep" cx="166.7" cy="134.8" r="9.9"/>
   <path class="i-deep" d="M112 171.3 L134.8 146.2 L153.8 165.2 L166.7 154.6 L188 174.3 V188 H112 Z"/>
@@ -106,6 +110,9 @@
   <rect class="i-ink" x="178.5" y="121.5" width="9.8" height="9.8"/>
   <rect class="i-deep" x="178.5" y="140.5" width="9.8" height="9.8"/>
   <rect class="i-ink" x="178.5" y="169.0" width="9.8" height="9.8"/>
+  <rect class="i-line" x="112" y="112" width="76" height="76"/>
+  </g>
+  <g transform="translate(220 92) scale(0.8947) translate(-210 -112)">
   <rect class="i-paper" x="210" y="112" width="76" height="76"/>
   <circle class="i-deep" cx="264.7" cy="134.8" r="9.9"/>
   <path class="i-deep" d="M210 171.3 L232.8 146.2 L251.8 165.2 L264.7 154.6 L286 174.3 V188 H210 Z"/>
@@ -121,21 +128,19 @@
   <rect class="i-ink" x="267.0" y="121.5" width="9.8" height="9.8"/>
   <rect class="i-cream" x="276.5" y="140.5" width="9.8" height="9.8"/>
   <rect class="i-deep" x="276.5" y="178.5" width="9.8" height="9.8"/>
-  <rect class="i-line" x="14" y="112" width="76" height="76"/>
-  <rect class="i-line" x="112" y="112" width="76" height="76"/>
   <rect class="i-line" x="210" y="112" width="76" height="76"/>
-  <path class="i-line" d="M93 150 H107" marker-end="url(#alpt-arr-df)"/>
-  <path class="i-line" d="M191 150 H205" marker-end="url(#alpt-arr-df)"/>
+  </g>
+  <g class="alpt-arrows"><path class="i-line" d="M88 126 L108 126" marker-end="url(#alpt-arr-df)"/><path class="i-line" d="M192 126 L212 126" marker-end="url(#alpt-arr-df)"/><path class="i-line i-main" d="M254 168 L254 198" marker-end="url(#alpt-arr-df-d)"/><path class="i-line" d="M138 259 L168 259" marker-end="url(#alpt-arr-df)"/></g>
+  <g transform="translate(26 -4)">
   <rect class="i-paper" x="150" y="210" width="104" height="104"/>
   <circle class="i-accent" cx="224.9" cy="241.2" r="13.5"/>
   <path class="i-deep" d="M150 291.1 L181.2 256.8 L207.2 282.8 L224.9 268.2 L254 295.3 V314 H150 Z"/>
   <rect class="i-cream" x="150" y="299.4" width="104" height="14.6"/>
   <rect class="i-line" x="150" y="210" width="104" height="104"/>
-  <path class="i-line" d="M248 194 C262 214 266 236 260 254" marker-end="url(#alpt-arr-df)"/>
+  </g>
   <text class="t-s" x="176" y="44" text-anchor="middle">Remove the noise,</text>
   <text class="t-s" x="176" y="66" text-anchor="middle">step by step</text>
-  <text class="t-s" x="52" y="210" text-anchor="middle">Noise</text>
-  <text class="t-s" x="78" y="258" text-anchor="middle">A new</text>
-  <text class="t-s" x="78" y="280" text-anchor="middle">picture</text>
-  <path class="i-line" d="M114 266 H140" marker-end="url(#alpt-arr-df)"/>
+  <text class="t-s" x="46" y="184" text-anchor="middle">Noise</text>
+  <text class="t-s" x="100" y="252" text-anchor="middle">A new</text>
+  <text class="t-s" x="100" y="274" text-anchor="middle">picture</text>
 </svg>

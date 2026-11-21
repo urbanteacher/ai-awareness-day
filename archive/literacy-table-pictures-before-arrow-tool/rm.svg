@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Reasoning Model: the model spends time thinking, tries and checks, then answers. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-paper" d="M108 22 H226 L272 68 V188 Q272 200 260 200 H108 Q96 200 96 188 V34 Q96 22 108 22 Z"/>
+  <path class="i-line" d="M108 22 H226 L272 68 V188 Q272 200 260 200 H108 Q96 200 96 188 V34 Q96 22 108 22 Z"/>
+  <text class="t-m" x="112" y="52">x + 5 = 12</text>
+  <path class="i-line i-dash" d="M112 64 H236"/>
+  <g class="i-faint"><text class="t-s" x="112" y="90">Try x = 6</text><path class="i-line" d="M108 84 H196"/><text class="t-s" x="206" y="90">✗</text></g>
+  <text class="t-s" x="112" y="116">Try x = 7</text>
+  <text class="t-s" x="112" y="142">7 + 5 = 12 ✓</text>
+  <rect class="i-deep" x="112" y="160" width="130" height="24" rx="12"/>
+  <text class="t-xs t-w" x="177" y="177" text-anchor="middle">thinking… 20 s</text>
+  <circle class="i-paper" cx="84" cy="206" r="9"/><circle class="i-line" cx="84" cy="206" r="9"/>
+  <circle class="i-paper" cx="68" cy="226" r="5"/><circle class="i-line" cx="68" cy="226" r="5"/>
+  <path class="i-deep" d="M22 244 h34 l14 14 v34 h-48 Z"/><rect class="i-paper" x="30" y="258" width="32" height="20" rx="5"/><circle class="i-ink" cx="40" cy="268" r="3.2"/><circle class="i-ink" cx="52" cy="268" r="3.2"/>
+  <rect class="i-paper" x="122" y="240" width="156" height="62" rx="12"/><rect class="i-line" x="122" y="240" width="156" height="62" rx="12"/>
+  <path class="i-paper" d="M124 262 L94 276 L124 282 Z"/><path class="i-line" d="M123 262 L94 276 L123 282"/>
+  <text class="t-m" x="200" y="279" text-anchor="middle">x = 7</text>
+</svg>

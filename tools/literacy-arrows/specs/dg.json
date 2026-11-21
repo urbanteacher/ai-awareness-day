@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "collect": [20, 92, 112, 76],
+  "store": [168, 92, 112, 76],
+  "access": [168, 236, 112, 76],
+  "use": [20, 236, 112, 76]
+ },
+ "edges": [
+  {"from": "collect", "side": "right", "to": "store", "to_side": "left", "main": true},
+  {"from": "store", "side": "bottom", "to": "access", "to_side": "top", "main": true},
+  {"from": "access", "side": "left", "to": "use", "to_side": "right", "main": true}
+ ],
+ "shapes": {
+  "Rules for every step title": [94, 32, 156, 18],
+  "the policy book": [108, 178, 84, 50]
+ }
+}

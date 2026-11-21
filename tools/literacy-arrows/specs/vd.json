@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "puppy": [100, 18, 150, 46],
+  "database": [24, 102, 252, 28]
+ },
+ "edges": [
+  {"from": "puppy", "side": "bottom", "to": "database", "to_side": "top", "at": 0.24, "to_at": 0.444, "main": true}
+ ],
+ "shapes": {
+  "numbers label": [148, 72, 94, 16]
+ },
+ "edits": [
+  ["<rect class=\"i-paper\" x=\"100\" y=\"26\" width=\"150\" height=\"46\" rx=\"12\"/><rect class=\"i-line\" x=\"100\" y=\"26\" width=\"150\" height=\"46\" rx=\"12\"/>", "<rect class=\"i-paper\" x=\"100\" y=\"18\" width=\"150\" height=\"46\" rx=\"12\"/><rect class=\"i-line\" x=\"100\" y=\"18\" width=\"150\" height=\"46\" rx=\"12\"/>"],
+  ["<text class=\"t-m\" x=\"175\" y=\"57\"", "<text class=\"t-m\" x=\"175\" y=\"49\""],
+  ["<text class=\"t-xs\" x=\"148\" y=\"94\">", "<text class=\"t-xs\" x=\"148\" y=\"86\">"]
+ ]
+}

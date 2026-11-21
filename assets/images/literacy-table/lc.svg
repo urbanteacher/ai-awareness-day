@@ -1,24 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Low-Code / No-Code: building an automation by dragging blocks (Form, If, Email) into place instead of writing code. -->
-  <defs><marker id="alpt-arr-lc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Low-Code / No-Code: building an automation by dragging blocks (Form, If, Email) into place instead of writing code. Arrows: tools/literacy-arrows/specs/lc.json -->
+  <defs><marker id="alpt-arr-lc-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-
-  <text class="t-s" x="104" y="58">No code, just drag</text>
-  <rect class="i-paper" x="14" y="86" width="272" height="230" rx="8"/>
-  <rect class="i-cream" x="14" y="86" width="84" height="230" rx="8"/>
-  <rect class="i-line" x="14" y="86" width="272" height="230" rx="8"/><path class="i-line" d="M98 86 V316"/>
-  <rect class="i-deep" x="24" y="104" width="64" height="30" rx="6"/><text class="t-xs t-w" x="56" y="124" text-anchor="middle">Form</text>
-  <rect class="i-deep" x="24" y="146" width="64" height="30" rx="6"/><text class="t-xs t-w" x="56" y="166" text-anchor="middle">If</text>
-  <rect class="i-line i-dash" x="24" y="188" width="64" height="30" rx="6"/>
-  <rect class="i-deep" x="146" y="104" width="76" height="34" rx="6"/><text class="t-s t-w" x="184" y="127" text-anchor="middle">Form</text>
-  <path class="i-line" d="M184 140 V156" marker-end="url(#alpt-arr-lc)"/>
-  <path class="i-deep" d="M184 162 L218 186 L184 210 L150 186 Z"/><text class="t-s t-w" x="184" y="192" text-anchor="middle">If</text>
-  <path class="i-line" d="M184 212 V228" marker-end="url(#alpt-arr-lc)"/>
-  <rect class="i-deepline i-dash" x="146" y="234" width="76" height="34" rx="6"/>
-  <path class="i-line i-faint" d="M90 203 C120 210 150 250 176 264" stroke-dasharray="3 5"/>
-  <g transform="rotate(-6 214 268)">
-    <rect class="i-accent" x="176" y="252" width="80" height="34" rx="6"/><rect class="i-line" x="176" y="252" width="80" height="34" rx="6"/>
-    <text class="t-s" x="216" y="275" text-anchor="middle">Email</text>
+  <text class="t-s" x="104" y="50">No code, just drag</text>
+  <rect class="i-paper" x="14" y="76" width="272" height="242" rx="8"/>
+  <rect class="i-cream" x="14" y="76" width="84" height="242" rx="8"/>
+  <rect class="i-line" x="14" y="76" width="272" height="242" rx="8"/><path class="i-line" d="M98 76 V318"/>
+  <rect class="i-deep" x="24" y="98" width="64" height="30" rx="6"/><text class="t-xs t-w" x="56" y="118" text-anchor="middle">Form</text>
+  <rect class="i-deep" x="24" y="140" width="64" height="30" rx="6"/><text class="t-xs t-w" x="56" y="160" text-anchor="middle">If</text>
+  <rect class="i-line i-dash" x="24" y="182" width="64" height="30" rx="6"/>
+  <rect class="i-deep" x="146" y="90" width="76" height="34" rx="6"/><text class="t-s t-w" x="184" y="113" text-anchor="middle">Form</text>
+  <path class="i-deep" d="M184 160 L218 182 L184 204 L150 182 Z"/><text class="t-s t-w" x="184" y="188" text-anchor="middle">If</text>
+  <rect class="i-deepline i-dash" x="146" y="240" width="76" height="34" rx="6"/>
+  <path class="i-line i-faint" d="M90 197 C120 206 150 250 176 270" stroke-dasharray="3 5"/>
+  <g transform="rotate(-6 214 274)">
+    <rect class="i-accent" x="176" y="258" width="80" height="34" rx="6"/><rect class="i-line" x="176" y="258" width="80" height="34" rx="6"/>
+    <text class="t-s" x="216" y="281" text-anchor="middle">Email</text>
   </g>
-  <path d="M244 278 L244 304 L250 298 L255 309 L260 307 L255 296 L264 296 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2.5" stroke-linejoin="round"/>
-</svg>
+  <path d="M244 282 L244 306 L249.5 300.5 L254 310 L258.5 308 L254 298.5 L262 298.5 Z" fill="#FFFFFF" stroke="#231F20" stroke-width="2.5" stroke-linejoin="round"/>
+<g class="alpt-arrows"><path class="i-line i-main" d="M184 132 L184 152" marker-end="url(#alpt-arr-lc-d)"/><path class="i-line i-main" d="M184 212 L184 232" marker-end="url(#alpt-arr-lc-d)"/></g></svg>

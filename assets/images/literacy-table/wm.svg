@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- AI Watermarking: an AI picture looks normal, but zooming in reveals a hidden signal a checker can read. -->
-  <defs><marker id="alpt-arr-wm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-wm-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-cream" x="24" y="104" width="148" height="112" rx="4"/>
   <circle class="i-paper" cx="58" cy="132" r="12"/><circle class="i-line" cx="58" cy="132" r="12"/>
@@ -12,8 +12,8 @@
   <rect class="i-deep" x="207" y="127" width="6" height="6" rx="1"/><rect class="i-deep" x="217" y="127" width="6" height="6" rx="1"/><rect class="i-deep" x="227" y="127" width="6" height="6" rx="1"/><rect class="i-deep" x="237" y="127" width="6" height="6" rx="1"/><rect class="i-deep" x="247" y="127" width="6" height="6" rx="1"/><rect class="i-deep" x="207" y="137" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="217" y="137" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="227" y="137" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="237" y="137" width="6" height="6" rx="1"/><rect class="i-deep" x="247" y="137" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="207" y="147" width="6" height="6" rx="1"/><rect class="i-deep" x="217" y="147" width="6" height="6" rx="1"/><rect class="i-deep" x="227" y="147" width="6" height="6" rx="1"/><rect class="i-deep" x="237" y="147" width="6" height="6" rx="1"/><rect class="i-deep" x="247" y="147" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="207" y="157" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="217" y="157" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="227" y="157" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="237" y="157" width="6" height="6" rx="1"/><rect class="i-deep" x="247" y="157" width="6" height="6" rx="1"/><rect class="i-deep" x="207" y="167" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="217" y="167" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="227" y="167" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="237" y="167" width="6" height="6" rx="1"/><rect class="i-faint i-ink" x="247" y="167" width="6" height="6" rx="1"/>
   <circle class="i-deepline" cx="230" cy="150" r="42" stroke-width="5"/>
   <text class="t-s" x="98" y="242" text-anchor="middle">Looks normal</text>
-  <text class="t-xs" x="230" y="212" text-anchor="middle">Hidden signal</text>
-  <path class="i-line" d="M230 220 V238" marker-end="url(#alpt-arr-wm)"/>
+  <text class="t-xs" x="230" y="96" text-anchor="middle">Hidden signal</text>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M230 200 L230 238" marker-end="url(#alpt-arr-wm-d)"/></g>
   <rect class="i-deep" x="156" y="246" width="128" height="62" rx="10"/>
   <text class="t-xs t-w" x="220" y="268" text-anchor="middle">CHECKER SAYS</text>
   <text class="t-s t-w" x="220" y="292" text-anchor="middle">Made by AI</text>

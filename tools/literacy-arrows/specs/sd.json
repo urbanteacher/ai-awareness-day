@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "real": [96, 12, 72, 60],
+  "machine": [36, 108, 228, 40],
+  "madeup": [14, 186, 188, 96],
+  "ai": [246, 210, 48, 48]
+ },
+ "edges": [
+  {"from": "real", "side": "bottom", "to": "machine", "to_side": "top"},
+  {"from": "machine", "side": "bottom", "at": 0.316, "to": "madeup", "to_side": "top"},
+  {"from": "madeup", "side": "right", "to": "ai", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "the lock": [178, 24, 32, 44],
+  "Real label": [218, 50, 36, 16],
+  "Made-up records label": [44, 294, 128, 16],
+  "Train label": [242, 267, 42, 16]
+ }
+}

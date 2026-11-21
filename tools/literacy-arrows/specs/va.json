@@ -1,0 +1,13 @@
+{
+ "nodes": {
+  "old slot": [191, 119, 30, 26],
+  "club": [240, 227, 36, 30]
+ },
+ "edges": [
+  {"from": "old slot", "side": "right", "to": "club", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "calendar header": [184, 88, 98, 26],
+  "the chat": [24, 124, 134, 122]
+ }
+}

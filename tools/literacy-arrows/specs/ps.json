@@ -1,0 +1,13 @@
+{
+ "nodes": {
+  "forecast": [100, 22, 136, 66],
+  "plan 1": [24, 126, 252, 46]
+ },
+ "edges": [
+  {"from": "forecast", "side": "bottom", "to": "plan 1", "to_side": "top"}
+ ],
+ "shapes": {
+  "best plan": [24, 186, 252, 52],
+  "plan 3": [24, 252, 252, 46]
+ }
+}

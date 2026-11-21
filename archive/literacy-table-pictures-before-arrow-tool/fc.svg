@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Forecasting: past weeks of lunches sold, and dashed bars predicting the next weeks. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="186" y="50" text-anchor="middle">Lunches a week</text>
+  <g class="i-deep">
+    <rect x="22" y="206" width="22" height="84"/><rect x="50" y="186" width="22" height="104"/><rect x="78" y="196" width="22" height="94"/>
+    <rect x="106" y="170" width="22" height="120"/><rect x="134" y="160" width="22" height="130"/><rect x="162" y="172" width="22" height="118"/>
+  </g>
+  <g class="i-paper"><rect x="200" y="150" width="22" height="140"/><rect x="228" y="156" width="22" height="134"/><rect x="256" y="136" width="22" height="154"/></g>
+  <g class="i-deepline" stroke-dasharray="5 4"><rect x="200" y="150" width="22" height="140"/><rect x="228" y="156" width="22" height="134"/><rect x="256" y="136" width="22" height="154"/></g>
+  <path class="i-line" d="M33 200 L61 180 L89 190 L117 164 L145 154 L173 166"/>
+  <path class="i-line i-dash" d="M173 166 L211 144 L239 150 L267 130" stroke-dasharray="4 5"/>
+  <path class="i-line" d="M192 120 V296" stroke-dasharray="2 5"/>
+  <circle class="i-accent" cx="192" cy="112" r="6"/>
+  <text class="t-s" x="180" y="106" text-anchor="end">Now</text>
+  <path class="i-line" d="M16 290 H286"/>
+  <text class="t-s" x="103" y="314" text-anchor="middle">Past</text>
+  <text class="t-s t-d" x="239" y="314" text-anchor="middle">Forecast</text>
+</svg>

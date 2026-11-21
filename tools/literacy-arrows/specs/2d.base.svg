@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- 2D Design: a rough sketch of a badge turned into three flat AI design ideas, one picked. Arrows: tools/literacy-arrows/specs/2d.json -->
+  <defs><marker id="alpt-arr-2d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="16" y="104" width="120" height="150" rx="4"/><rect class="i-line" x="16" y="104" width="120" height="150" rx="4"/>
+  <g transform="translate(-5 0)"><path class="i-line" d="M81 127 L92 156 L121 155 L98 176 L106 205 L80 189 L54 203 L63 175 L39 158 L70 154 Z" stroke-dasharray="5 3"/>
+  <path class="i-line" d="M77 125 L89 158 L118 158 M57 206 L82 186" stroke-opacity=".4"/></g>
+  <text class="t-s" x="76" y="238" text-anchor="middle">My sketch</text>
+  <rect class="i-cream" x="16" y="272" width="120" height="24" rx="3"/><rect class="i-line" x="16" y="272" width="120" height="24" rx="3"/>
+  <path class="i-line" d="M28 272 V282 M44 272 V278 M60 272 V282 M76 272 V278 M92 272 V282 M108 272 V278 M124 272 V282"/>
+  <path class="i-line" d="M152 194 H166" marker-end="url(#alpt-arr-2d)"/>
+  <text class="t-s" x="226" y="78" text-anchor="middle">AI ideas</text>
+  <rect class="i-paper" x="176" y="88" width="100" height="64" rx="6"/><rect class="i-line" x="176" y="88" width="100" height="64" rx="6"/>
+  <circle class="i-deep" cx="226" cy="120" r="24"/><g transform="translate(226 121)"><path d="M0 -12 L2.9 -4 L11.4 -3.7 L4.8 1.5 L7.1 9.7 L0 5 L-7.1 9.7 L-4.8 1.5 L-11.4 -3.7 L-2.9 -4 Z" fill="#FFFFFF"/></g>
+  <rect class="i-paper" x="176" y="162" width="100" height="64" rx="6"/>
+  <path class="i-deep" d="M206 170 H246 V192 C246 206 236 214 226 218 C216 214 206 206 206 192 Z"/><g transform="translate(226 192)"><path d="M0 -12 L2.9 -4 L11.4 -3.7 L4.8 1.5 L7.1 9.7 L0 5 L-7.1 9.7 L-4.8 1.5 L-11.4 -3.7 L-2.9 -4 Z" fill="#FFFFFF"/></g>
+  <rect x="176" y="162" width="100" height="64" rx="6" fill="none" stroke="var(--fam-deep)" stroke-width="5"/>
+  <circle class="i-accent" cx="272" cy="166" r="13"/><text class="t-s" x="272" y="172" text-anchor="middle">✓</text>
+  <rect class="i-paper" x="176" y="236" width="100" height="64" rx="6"/><rect class="i-line" x="176" y="236" width="100" height="64" rx="6"/>
+  <rect class="i-deep" x="204" y="246" width="44" height="44" rx="10"/><g transform="translate(226 269)"><path d="M0 -12 L2.9 -4 L11.4 -3.7 L4.8 1.5 L7.1 9.7 L0 5 L-7.1 9.7 L-4.8 1.5 L-11.4 -3.7 L-2.9 -4 Z" fill="#FFFFFF"/></g>
+  <text class="t-xs" x="226" y="318" text-anchor="middle">You choose</text>
+</svg>

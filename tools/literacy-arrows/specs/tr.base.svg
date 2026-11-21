@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Training: data goes in, the model guesses, the guess is checked, the settings are adjusted, and round by round the score goes up. Arrows: tools/literacy-arrows/specs/tr.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <g class="i-faint"><rect class="i-cream" x="120" y="18" width="44" height="40" rx="3"/><rect class="i-line" x="120" y="18" width="44" height="40" rx="3"/></g><rect class="i-paper" x="112" y="26" width="44" height="40" rx="3"/><rect class="i-line" x="112" y="26" width="44" height="40" rx="3"/><path class="i-line" d="M120 38 H148 M120 48 H142 M120 58 H148" style="stroke-width:2"/>
+  <text class="t-s" x="172" y="50" text-anchor="start">Data</text>
+  <rect class="i-deep" x="96" y="98" width="88" height="32" rx="16"/><text class="t-s t-w" x="140" y="120" text-anchor="middle">Guess</text>
+  <rect class="i-paper" x="196" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="196" y="222" width="88" height="32" rx="16"/><text class="t-s" x="240" y="244" text-anchor="middle">Check</text>
+  <rect class="i-paper" x="16" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="16" y="222" width="88" height="32" rx="16"/><text class="t-s" x="60" y="244" text-anchor="middle">Adjust</text>
+  <circle class="i-cream" cx="126" cy="178" r="15"/><circle class="i-line" cx="126" cy="178" r="15"/><path class="i-line" d="M126 178 L134 166"/>
+  <circle class="i-cream" cx="170" cy="178" r="15"/><circle class="i-line" cx="170" cy="178" r="15"/><path class="i-line" d="M170 178 L158 168"/>
+  <text class="t-xs" x="148" y="212" text-anchor="middle">Settings</text>
+  <text class="t-xs" x="20" y="310" text-anchor="start">Score</text>
+  <rect class="i-deep" x="76" y="302" width="20" height="10" rx="2"/><rect class="i-deep" x="104" y="296" width="20" height="16" rx="2"/><rect class="i-deep" x="132" y="288" width="20" height="24" rx="2"/><rect class="i-deep" x="160" y="280" width="20" height="32" rx="2"/><rect class="i-accent" x="188" y="272" width="20" height="40" rx="2"/>
+</svg>

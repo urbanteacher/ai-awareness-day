@@ -1,0 +1,76 @@
+{
+ "nodes": {
+  "rules": [
+   100,
+   12,
+   132,
+   84
+  ],
+  "engine": [
+   96,
+   134,
+   108,
+   104
+  ]
+ },
+ "edges": [
+  {
+   "from": "rules",
+   "side": "bottom",
+   "at": 0.379,
+   "to": "engine",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "Pasta box": [
+   12,
+   146,
+   96,
+   30
+  ],
+  "Nut bar box": [
+   12,
+   196,
+   96,
+   30
+  ],
+  "YES box": [
+   192,
+   146,
+   92,
+   30
+  ],
+  "NO box": [
+   192,
+   196,
+   92,
+   30
+  ],
+  "Same answer label": [
+   94,
+   266,
+   112,
+   44
+  ]
+ },
+ "edits": [
+  [
+   "<rect class=\"i-paper\" x=\"100\" y=\"20\" width=\"132\" height=\"84\" rx=\"8\"/><rect class=\"i-line\" x=\"100\" y=\"20\"",
+   "<rect class=\"i-paper\" x=\"100\" y=\"12\" width=\"132\" height=\"84\" rx=\"8\"/><rect class=\"i-line\" x=\"100\" y=\"12\""
+  ],
+  [
+   "x=\"114\" y=\"40\" letter-spacing",
+   "x=\"114\" y=\"32\" letter-spacing"
+  ],
+  [
+   "x=\"114\" y=\"66\">",
+   "x=\"114\" y=\"58\">"
+  ],
+  [
+   "x=\"114\" y=\"90\">",
+   "x=\"114\" y=\"82\">"
+  ]
+ ]
+}

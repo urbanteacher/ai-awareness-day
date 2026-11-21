@@ -1,0 +1,45 @@
+{
+ "nodes": {
+  "chip": [
+   88,
+   256,
+   48,
+   40
+  ],
+  "note": [
+   184,
+   256,
+   102,
+   40
+  ]
+ },
+ "edges": [
+  {
+   "from": "note",
+   "side": "left",
+   "to": "chip",
+   "to_side": "right",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "chip pins top": [
+   94,
+   248,
+   36,
+   8
+  ],
+  "chip pins bottom": [
+   94,
+   296,
+   36,
+   8
+  ],
+  "screen": [
+   68,
+   114,
+   88,
+   130
+  ]
+ }
+}

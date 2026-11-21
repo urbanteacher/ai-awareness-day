@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Agent Loop: observe, think, act, check, and round again until the goal is met. Top-left 80x80 stays clear for the symbol badge. -->
-  <defs><marker id="alpt-arr-lp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-lp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <path class="i-line" d="M199 122 A92 92 0 0 1 238 175" marker-end="url(#alpt-arr-lp)"/>
-  <path class="i-line" d="M238 225 A92 92 0 0 1 199 278" marker-end="url(#alpt-arr-lp)"/>
-  <path class="i-line" d="M101 278 A92 92 0 0 1 62 225" marker-end="url(#alpt-arr-lp)"/>
-  <path class="i-line" d="M62 175 A92 92 0 0 1 101 122" marker-end="url(#alpt-arr-lp)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M200 108 C223.1 108 242 131.4 242 160 L242 176" marker-end="url(#alpt-arr-lp)"/><path class="i-line" d="M260 224 C260 261.4 250 292 216 292 L200 292" marker-end="url(#alpt-arr-lp)"/><path class="i-line" d="M100 292 C90.8 292 83.2 268.6 83.2 240 L83.2 224" marker-end="url(#alpt-arr-lp)"/><path class="i-line" d="M40 176 C40 138.6 50 108 84 108 L100 108" marker-end="url(#alpt-arr-lp)"/><path class="i-line" d="M32.8 224 L32.8 264" marker-end="url(#alpt-arr-lp)"/></g>
   <rect class="i-paper" x="108" y="92" width="84" height="32" rx="16"/><rect class="i-line" x="108" y="92" width="84" height="32" rx="16"/>
   <text class="t-s" x="150" y="114" text-anchor="middle">Observe</text>
   <rect class="i-paper" x="200" y="184" width="84" height="32" rx="16"/><rect class="i-line" x="200" y="184" width="84" height="32" rx="16"/>
@@ -17,7 +14,6 @@
   <path class="i-deep" d="M128 180 H162 L174 192 V222 H128 Z"/>
   <rect class="i-paper" x="135" y="189" width="30" height="20" rx="4"/>
   <circle class="i-ink" cx="145" cy="199" r="3"/><circle class="i-ink" cx="155" cy="199" r="3"/>
-  <path class="i-line" d="M30 218 V266" marker-end="url(#alpt-arr-lp)"/>
-  <rect class="i-accent" x="12" y="272" width="80" height="32" rx="16"/>
-  <text class="t-s" x="52" y="294" text-anchor="middle">Done ✓</text>
+  <rect class="i-accent" x="8" y="272" width="64" height="32" rx="16"/>
+  <text class="t-s" x="40" y="294" text-anchor="middle">Done ✓</text>
 </svg>

@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "ai change": [96, 24, 140, 30],
+  "model": [48, 130, 104, 130],
+  "printer": [190, 110, 96, 194]
+ },
+ "edges": [
+  {"from": "ai change", "side": "bottom", "to": "model", "to_side": "top"},
+  {"from": "model", "side": "right", "to": "printer", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "CAD model label": [20, 103, 86, 16],
+  "40 mm size line": [104, 236, 62, 46],
+  "40 mm label": [124, 258, 46, 28],
+  "axes": [16, 244, 60, 80],
+  "3D print label": [206, 308, 64, 16]
+ },
+ "edits": [
+  ["<path class=\"i-line\" d=\"M28 296 V262\" marker-end=\"url(#alpt-arr-3d)\"/><path class=\"i-line\" d=\"M28 296 L58 313\" marker-end=\"url(#alpt-arr-3d)\"/><path class=\"i-line\" d=\"M28 296 L58 279\" marker-end=\"url(#alpt-arr-3d)\"/>", "<path class=\"i-line\" d=\"M28 262 V296 L58 313 M28 296 L58 279\"/>"]
+ ]
+}

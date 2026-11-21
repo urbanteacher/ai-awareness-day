@@ -1,0 +1,25 @@
+{
+ "nodes": {
+  "accident start": [16, 160, 0, 0],
+  "misuse start": [16, 230, 0, 0],
+  "rules": [162, 100, 36, 118],
+  "checks": [224, 100, 36, 180]
+ },
+ "edges": [
+  {"from": "accident start", "side": "right", "to": "rules", "to_side": "left", "to_at": 0.508, "end": "cross"},
+  {"from": "misuse start", "side": "right", "to": "checks", "to_side": "left", "to_at": 0.7222, "end": "cross"}
+ ],
+ "shapes": {
+  "Tests layer above the first hole": [100, 100, 36, 48],
+  "Tests layer between the holes": [100, 172, 36, 46],
+  "Tests layer below the second hole": [100, 242, 36, 38],
+  "Rules layer below its hole": [162, 242, 36, 38],
+  "Accident label": [16, 136, 72, 18],
+  "Misuse label": [16, 206, 60, 18],
+  "Layers of safety title": [104, 36, 132, 18]
+ },
+ "edits": [
+  ["  <path class=\"i-deepline\" d=\"M152 146 L146 140 M152 174 L146 180\" stroke-width=\"3\"/>\n", ""],
+  ["  <rect class=\"i-accent\" x=\"214\" y=\"216\" width=\"8\" height=\"28\" rx=\"3\"/>\n", ""]
+ ]
+}

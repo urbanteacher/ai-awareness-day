@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "report": [76, 115, 62, 30],
+  "log": [76, 183, 62, 30],
+  "find": [76, 251, 62, 30],
+  "email": [200, 183, 70, 30],
+  "collect": [200, 115, 70, 30]
+ },
+ "edges": [
+  {"from": "report", "side": "bottom", "to": "log", "to_side": "top"},
+  {"from": "log", "side": "bottom", "to": "find", "to_side": "top"},
+  {"from": "find", "side": "right", "to": "email", "to_side": "bottom"},
+  {"from": "email", "side": "top", "to": "collect", "to_side": "bottom"}
+ ],
+ "shapes": {
+  "Lost coat title": [104, 44, 150, 20],
+  "pupil icon": [24, 112, 28, 36],
+  "app icon": [22, 182, 32, 32],
+  "office icon": [20, 246, 36, 40]
+ }
+}

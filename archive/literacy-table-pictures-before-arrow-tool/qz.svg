@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Quantisation: a long number is rounded to a short one, so the whole model shrinks from 16 GB to 4 GB. -->
+  <defs><marker id="alpt-arr-qz" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="182" y="50" text-anchor="middle">Store numbers shorter</text>
+  <text class="t-s" x="20" y="136">Before</text>
+  <rect class="i-paper" x="84" y="108" width="194" height="42" rx="6"/><rect class="i-line" x="84" y="108" width="194" height="42" rx="6"/>
+  <text class="t-m" x="181" y="137" text-anchor="middle">0.73914826</text>
+  <path class="i-line" d="M150 156 C140 166 132 172 126 182" marker-end="url(#alpt-arr-qz)"/>
+  <text class="t-s" x="20" y="214">After</text>
+  <rect class="i-deep" x="84" y="186" width="80" height="42" rx="6"/>
+  <text class="t-m t-w" x="124" y="215" text-anchor="middle">0.74</text>
+  <text class="t-s" x="20" y="290">Model</text>
+  <rect class="i-cream" x="84" y="244" width="90" height="72" rx="6"/><rect class="i-line" x="84" y="244" width="90" height="72" rx="6"/>
+  <text class="t-s" x="129" y="286" text-anchor="middle">16 GB</text>
+  <path class="i-line" d="M180 290 H196" marker-end="url(#alpt-arr-qz)"/>
+  <rect class="i-deep" x="204" y="272" width="56" height="44" rx="6"/>
+  <text class="t-s t-w" x="232" y="300" text-anchor="middle">4 GB</text>
+  <text class="t-xs" x="232" y="262" text-anchor="middle">Faster</text>
+</svg>

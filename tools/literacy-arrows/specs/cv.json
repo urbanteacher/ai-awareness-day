@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "belt start": [30, 305, 0, 0],
+  "belt end": [96, 305, 0, 0]
+ },
+ "edges": [
+  {"from": "belt start", "side": "right", "to": "belt end", "to_side": "left"}
+ ],
+ "shapes": {
+  "the belt": [14, 258, 272, 22],
+  "Crack pill": [128, 290, 100, 30],
+  "Crack leader": [176, 280, 4, 10]
+ }
+}

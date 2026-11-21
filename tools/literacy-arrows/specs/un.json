@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "pile": [20, 84, 240, 110],
+  "group2": [110, 238, 80, 76]
+ },
+ "edges": [
+  {"from": "pile", "side": "bottom", "to": "group2", "to_side": "top", "main": true, "label": "AI finds groups", "label_side": "right"}
+ ],
+ "shapes": {
+  "No labels title": [150, 36, 80, 18],
+  "Group 1": [16, 238, 80, 76],
+  "Group 3": [204, 238, 80, 76]
+ },
+ "edits": [
+  ["<text class=\"t-xs\" x=\"162\" y=\"222\">AI finds groups</text>", ""]
+ ]
+}

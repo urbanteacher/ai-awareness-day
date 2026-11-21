@@ -1,0 +1,23 @@
+{
+ "nodes": {
+  "files": [110, 18, 88, 30],
+  "collect": [92, 82, 124, 54],
+  "clean": [92, 170, 124, 42],
+  "prepare": [92, 248, 124, 52],
+  "train": [254, 255, 40, 38],
+  "out": [286, 191, 0, 0]
+ },
+ "edges": [
+  {"from": "files", "side": "bottom", "to": "collect", "to_side": "top"},
+  {"from": "collect", "side": "bottom", "to": "clean", "to_side": "top", "main": true},
+  {"from": "clean", "side": "bottom", "to": "prepare", "to_side": "top", "main": true},
+  {"from": "prepare", "side": "right", "to": "train", "to_side": "left", "main": true},
+  {"from": "clean", "side": "right", "to": "out", "to_side": "left", "label": "out", "label_side": "above"}
+ ],
+ "shapes": {
+  "Collect label": [18, 102, 60, 16],
+  "Clean label": [18, 184, 46, 16],
+  "Prepare label": [18, 267, 66, 16],
+  "Train label": [256, 303, 36, 14]
+ }
+}

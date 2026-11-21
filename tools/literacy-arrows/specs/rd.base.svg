@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Refusal Direction: inside the model, an unsafe request lines up with one pattern, and the model says no. Arrows: tools/literacy-arrows/specs/rd.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="90" y="16" width="140" height="36" rx="10"/><rect class="i-line" x="90" y="16" width="140" height="36" rx="10"/>
+  <text class="t-s" x="160" y="40" text-anchor="middle">Unsafe request</text>
+  <g transform="translate(160 164) scale(0.9) translate(-160 -180)">
+  <circle class="i-paper" cx="160" cy="180" r="80"/><circle class="i-line" cx="160" cy="180" r="80"/>
+  <circle class="i-ink i-faint" cx="136" cy="133" r="3"/><circle class="i-ink i-faint" cx="181" cy="122" r="3"/><circle class="i-ink i-faint" cx="100" cy="181" r="3"/><circle class="i-ink i-faint" cx="97" cy="171" r="3"/><circle class="i-ink i-faint" cx="150" cy="224" r="3"/><circle class="i-ink i-faint" cx="109" cy="142" r="3"/><circle class="i-ink i-faint" cx="177" cy="241" r="3"/><circle class="i-ink i-faint" cx="134" cy="223" r="3"/><circle class="i-ink i-faint" cx="166" cy="121" r="3"/><circle class="i-ink i-faint" cx="154" cy="153" r="3"/><circle class="i-ink i-faint" cx="200" cy="207" r="3"/><circle class="i-ink i-faint" cx="163" cy="231" r="3"/><circle class="i-ink i-faint" cx="149" cy="215" r="3"/><circle class="i-ink i-faint" cx="113" cy="178" r="3"/><circle class="i-ink i-faint" cx="97" cy="203" r="3"/><circle class="i-ink i-faint" cx="196" cy="190" r="3"/><circle class="i-ink i-faint" cx="211" cy="155" r="3"/><circle class="i-ink i-faint" cx="187" cy="193" r="3"/><circle class="i-ink i-faint" cx="156" cy="202" r="3"/><circle class="i-ink i-faint" cx="180" cy="247" r="3"/><circle class="i-ink i-faint" cx="95" cy="175" r="3"/>
+  <path class="i-deepline" d="M110 230 L206 143" stroke-width="7"/>
+  <path class="i-deep" d="M218 132 L194 138 L210 154 Z"/>
+  <circle class="i-accent" cx="194" cy="154" r="9"/><circle class="i-line" cx="194" cy="154" r="9"/>
+  <text class="t-xs t-d" transform="translate(116 206) rotate(-42)">refusal direction</text>
+  </g>
+  <text class="t-xs" x="16" y="116">Inside</text>
+  <text class="t-xs" x="16" y="132">the model</text>
+  <rect class="i-deep" x="40" y="272" width="240" height="36" rx="12"/>
+  <text class="t-s t-w" x="160" y="296" text-anchor="middle">Sorry, I can't help.</text>
+</svg>

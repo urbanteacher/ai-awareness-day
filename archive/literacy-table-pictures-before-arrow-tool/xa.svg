@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Explainability: an AI's grade broken down into the reasons that pushed it down or up. -->
+  <defs><marker id="alpt-arr-xa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="96" y="20" width="136" height="54" rx="10"/><rect class="i-line" x="96" y="20" width="136" height="54" rx="10"/>
+  <text class="t-m" x="164" y="55" text-anchor="middle">Grade: C</text>
+  <path class="i-line" d="M164 80 V96" marker-end="url(#alpt-arr-xa)"/>
+  <rect class="i-deep" x="124" y="102" width="80" height="32" rx="16"/>
+  <text class="t-s t-w" x="164" y="124" text-anchor="middle">Why?</text>
+  <path class="i-line" d="M150 146 V300"/>
+  <rect class="i-deep" x="44" y="160" width="106" height="24" rx="3"/>
+  <text class="t-s" x="160" y="178">Too short</text>
+  <rect class="i-deep" x="96" y="208" width="54" height="24" rx="3"/>
+  <text class="t-s" x="160" y="226">Spelling</text>
+  <rect class="i-paper" x="150" y="256" width="110" height="24" rx="3"/><rect class="i-line" x="150" y="256" width="110" height="24" rx="3"/>
+  <text class="t-s" x="140" y="274" text-anchor="end">Good ideas</text>
+  <text class="t-m t-d" x="30" y="312" text-anchor="middle">−</text>
+  <text class="t-m t-d" x="272" y="312" text-anchor="middle">+</text>
+  <text class="t-xs" x="62" y="310">lowered</text>
+  <text class="t-xs" x="196" y="310">raised</text>
+</svg>

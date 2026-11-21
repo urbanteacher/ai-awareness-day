@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Generative Adversarial Network: a maker AI and a judge AI compete until the fake looks real. -->
+  <defs><marker id="alpt-arr-gn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="128" y="22" width="112" height="56" rx="12"/><rect class="i-line" x="128" y="22" width="112" height="56" rx="12"/>
+  <path class="i-paper" d="M206 76 L226 98 L222 76 Z"/><path class="i-line" d="M206 78 L226 98 L222 78"/>
+  <text class="t-m" x="184" y="58" text-anchor="middle">Fake! ✗</text>
+  <path class="i-deep" d="M196 110 H266 L280 124 V176 H196 Z"/>
+<rect class="i-paper" x="220" y="131" width="36" height="24" rx="6"/><circle class="i-ink" cx="231" cy="143" r="4"/><circle class="i-ink" cx="245" cy="143" r="4"/>
+  <circle class="i-paper" cx="200" cy="170" r="14"/><circle class="i-line" cx="200" cy="170" r="14"/><path class="i-line" d="M210 180 L220 190" stroke-width="5"/>
+  <text class="t-s" x="238" y="210" text-anchor="middle">Judge</text>
+  <path class="i-deep" d="M20 206 H90 L104 220 V272 H20 Z"/>
+<rect class="i-paper" x="44" y="227" width="36" height="24" rx="6"/><circle class="i-ink" cx="55" cy="239" r="4"/><circle class="i-ink" cx="69" cy="239" r="4"/>
+  <text class="t-s" x="62" y="296" text-anchor="middle">Maker</text>
+  <g transform="rotate(-8 140 172)">
+    <rect class="i-paper" x="110" y="140" width="62" height="64" rx="4"/><rect class="i-line" x="110" y="140" width="62" height="64" rx="4"/>
+    <circle class="i-accent" cx="141" cy="164" r="7"/>
+    <circle class="i-deep" cx="141" cy="152" r="6"/><circle class="i-deep" cx="153" cy="164" r="6"/><circle class="i-deep" cx="141" cy="176" r="6"/><circle class="i-deep" cx="129" cy="164" r="6"/>
+    <path class="i-line" d="M141 182 V196"/>
+  </g>
+  <path class="i-line" d="M84 202 C92 190 98 186 106 182" marker-end="url(#alpt-arr-gn)"/>
+  <path class="i-line" d="M174 160 C180 156 184 154 188 152" marker-end="url(#alpt-arr-gn)"/>
+  <path class="i-line i-dash" d="M238 222 C238 290 170 300 112 260" marker-end="url(#alpt-arr-gn)"/>
+  <text class="t-s" x="186" y="306" text-anchor="middle">Try again</text>
+</svg>

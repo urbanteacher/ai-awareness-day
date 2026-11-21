@@ -1,0 +1,51 @@
+{
+ "nodes": {
+  "bubble": [
+   98,
+   22,
+   150,
+   66
+  ],
+  "ai": [
+   140,
+   130,
+   68,
+   54
+  ],
+  "task": [
+   20,
+   226,
+   264,
+   90
+  ]
+ },
+ "edges": [
+  {
+   "from": "bubble",
+   "side": "bottom",
+   "to": "ai",
+   "to_side": "top"
+  },
+  {
+   "from": "ai",
+   "side": "bottom",
+   "to": "task",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "bubble tail": [
+   84,
+   84,
+   50,
+   28
+  ],
+  "the person": [
+   24,
+   117,
+   48,
+   55
+  ]
+ }
+}

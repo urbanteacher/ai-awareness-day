@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "model": [12, 188, 276, 48],
+  "data": [12, 274, 276, 24]
+ },
+ "edges": [
+  {"from": "data", "side": "top", "to": "model", "to_side": "bottom", "at": 0.25, "to_at": 0.25},
+  {"from": "data", "side": "top", "to": "model", "to_side": "bottom", "at": 0.5, "to_at": 0.5},
+  {"from": "data", "side": "top", "to": "model", "to_side": "bottom", "at": 0.75, "to_at": 0.75}
+ ],
+ "shapes": {
+  "Broad data caption": [112, 304, 76, 16]
+ }
+}

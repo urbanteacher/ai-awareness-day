@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "prompts": [116, 106, 84, 30],
+  "tests": [200, 190, 84, 30],
+  "costs": [116, 274, 84, 30],
+  "safety": [32, 190, 84, 30]
+ },
+ "edges": [
+  {"from": "prompts", "side": "right", "to": "tests", "to_side": "top"},
+  {"from": "tests", "side": "bottom", "to": "costs", "to_side": "right"},
+  {"from": "costs", "side": "left", "to": "safety", "to_side": "bottom"},
+  {"from": "safety", "side": "top", "to": "prompts", "to_side": "left"}
+ ],
+ "shapes": {
+  "Every week label": [150, 36, 92, 18],
+  "the chatbot": [128, 176, 60, 70]
+ }
+}

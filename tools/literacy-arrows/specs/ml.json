@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "examples": [20, 140, 126, 82],
+  "new cat": [198, 82, 38, 38],
+  "bot": [188, 156, 58, 52],
+  "result": [150, 244, 134, 38]
+ },
+ "edges": [
+  {"from": "examples", "side": "right", "to": "bot", "to_side": "left"},
+  {"from": "new cat", "side": "bottom", "to": "bot", "to_side": "top"},
+  {"from": "bot", "side": "bottom", "to": "result", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "crossed-out rules": [100, 14, 100, 70],
+  "New label": [160, 95, 32, 14],
+  "Examples label": [46, 233, 74, 16],
+  "Learned, not told label": [95, 300, 110, 15]
+ }
+}

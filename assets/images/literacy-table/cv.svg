@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Computer Vision: a camera over a production line checks each bottle and spots the cracked one. Top-left stays clear for the symbol badge. -->
-  <defs><marker id="alpt-arr-cv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-cv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-line" d="M178 4 V24"/>
   <rect class="i-deep" x="148" y="24" width="60" height="34" rx="6"/>
@@ -20,5 +20,5 @@
   <path class="i-deepline" d="M178 280 V290"/>
   <rect class="i-accent" x="128" y="290" width="100" height="30" rx="15"/>
   <text class="t-s" x="178" y="311" text-anchor="middle">Crack!</text>
-  <path class="i-line" d="M30 305 H90" marker-end="url(#alpt-arr-cv)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M38 305 L88 305" marker-end="url(#alpt-arr-cv)"/></g>
 </svg>

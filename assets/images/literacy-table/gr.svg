@@ -1,23 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Guardrails: rails around the AI let a homework question and safe answer through, and stop an unsafe request and a harmful reply. -->
-  <defs><marker id="alpt-arr-gr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Guardrails: rails around the AI let a homework question and safe answer through, and stop an unsafe request and a harmful reply. Arrows: tools/literacy-arrows/specs/gr.json -->
+  <defs><marker id="alpt-arr-gr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-gr-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker><marker id="alpt-x-gr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M2.5 2.5 7.5 7.5 M7.5 2.5 2.5 7.5"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <rect class="i-paper i-faint" x="112" y="54" width="132" height="34" rx="10"/><rect class="i-line i-dash" x="112" y="54" width="132" height="34" rx="10"/>
-  <text class="t-s" x="178" y="77" text-anchor="middle">Unsafe ask ✗</text>
-  <path class="i-line" d="M178 94 V110" marker-end="url(#alpt-arr-gr)"/>
+  <rect class="i-paper i-faint" x="112" y="40" width="132" height="34" rx="10"/><rect class="i-line i-dash" x="112" y="40" width="132" height="34" rx="10"/>
+  <text class="t-s" x="178" y="63" text-anchor="middle">Unsafe ask ✗</text>
   <path class="i-line" d="M30 126 V140 M80 126 V140 M130 126 V140 M180 126 V140 M230 126 V140 M276 126 V140 M30 246 V260 M80 246 V260 M130 246 V260 M180 246 V260 M230 246 V260 M276 246 V260"/>
   <rect class="i-deep" x="16" y="114" width="272" height="12" rx="4"/>
   <rect class="i-deep" x="16" y="258" width="272" height="12" rx="4"/>
-  <rect class="i-paper" x="12" y="172" width="96" height="38" rx="10"/><rect class="i-line" x="12" y="172" width="96" height="38" rx="10"/>
-  <text class="t-s" x="60" y="196" text-anchor="middle">Homework</text>
-  <path class="i-line" d="M110 191 H118" marker-end="url(#alpt-arr-gr)"/>
-  <path class="i-deep" d="M124 164 H164 L176 176 V218 H124 Z"/>
-  <rect class="i-paper" x="133" y="178" width="32" height="22" rx="5"/>
-  <circle class="i-ink" cx="143" cy="189" r="3.2"/><circle class="i-ink" cx="155" cy="189" r="3.2"/>
-  <path class="i-line" d="M182 191 H194" marker-end="url(#alpt-arr-gr)"/>
-  <rect class="i-paper" x="200" y="172" width="84" height="38" rx="10"/><rect class="i-line" x="200" y="172" width="84" height="38" rx="10"/>
-  <text class="t-s" x="242" y="196" text-anchor="middle">Help ✓</text>
-  <path class="i-line" d="M150 222 V238" marker-end="url(#alpt-arr-gr)"/>
+  <rect class="i-paper" x="8" y="172" width="92" height="38" rx="10"/><rect class="i-line" x="8" y="172" width="92" height="38" rx="10"/>
+  <text class="t-s" x="54" y="196" text-anchor="middle">Homework</text>
+  <path class="i-deep" d="M134 164 H174 L186 176 V218 H134 Z"/>
+  <rect class="i-paper" x="143" y="178" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="153" cy="189" r="3.2"/><circle class="i-ink" cx="165" cy="189" r="3.2"/>
+  <rect class="i-paper" x="222" y="172" width="68" height="38" rx="10"/><rect class="i-line" x="222" y="172" width="68" height="38" rx="10"/>
+  <text class="t-s" x="256" y="196" text-anchor="middle">Help ✓</text>
   <rect class="i-paper i-faint" x="76" y="282" width="148" height="34" rx="10"/><rect class="i-line i-dash" x="76" y="282" width="148" height="34" rx="10"/>
   <text class="t-s" x="150" y="305" text-anchor="middle">Harmful reply ✗</text>
-</svg>
+<g class="alpt-arrows"><path class="i-line" d="M178.1 82 L178.1 106" marker-end="url(#alpt-x-gr)"/><path class="i-line" d="M108 191 L126 191" marker-end="url(#alpt-arr-gr)"/><path class="i-line i-main" d="M194 191 L214 191" marker-end="url(#alpt-arr-gr-d)"/><path class="i-line" d="M160 226 L160 250" marker-end="url(#alpt-x-gr)"/></g></svg>

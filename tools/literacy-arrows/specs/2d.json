@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "sketch": [16, 104, 120, 150],
+  "picked": [176, 162, 100, 64]
+ },
+ "edges": [
+  {"from": "sketch", "side": "right", "to": "picked", "to_side": "left", "at": 0.6, "main": true}
+ ],
+ "shapes": {
+  "idea 1": [176, 88, 100, 64],
+  "idea 3": [176, 236, 100, 64],
+  "ruler": [16, 272, 120, 24]
+ }
+}

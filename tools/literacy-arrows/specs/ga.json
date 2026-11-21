@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "ai": [16, 126, 56, 80],
+  "text": [180, 40, 112, 44],
+  "image": [180, 92, 112, 44],
+  "audio": [180, 144, 112, 44],
+  "video": [180, 196, 112, 44],
+  "code": [180, 248, 112, 44]
+ },
+ "edges": [
+  {"from": "ai", "side": "right", "to": "text", "to_side": "left", "fan": true},
+  {"from": "ai", "side": "right", "to": "image", "to_side": "left", "fan": true},
+  {"from": "ai", "side": "right", "to": "audio", "to_side": "left", "fan": true},
+  {"from": "ai", "side": "right", "to": "video", "to_side": "left", "fan": true},
+  {"from": "ai", "side": "right", "to": "code", "to_side": "left", "fan": true}
+ ],
+ "shapes": {
+  "the sparkle": [50, 104, 32, 32],
+  "makes new label": [8, 218, 72, 16]
+ }
+}

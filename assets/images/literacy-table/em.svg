@@ -1,16 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Embedding: a map of meanings where similar words sit together. Top-left 100x95 stays clear for the symbol badge. -->
+  <!-- Embedding: a map of meanings where similar words sit close together, so distance means similarity. Laid out by
+       tools/literacy-arrows/embedding.py: circles fit their dots and labels, labels sit one fixed distance from their
+       dots. Top-left 100x95 stays clear for the symbol badge. -->
   <rect class="i-bg" width="300" height="330"/>
-  <path class="i-line" d="M18 312 H288 M18 312 V110" stroke-opacity=".45"/>
-  <circle class="i-paper" cx="204" cy="94" r="70"/><circle class="i-deepline i-dash" cx="204" cy="94" r="70"/>
-  <circle class="i-deep" cx="176" cy="68" r="8"/><text class="t-s" x="189" y="74">cat</text>
-  <circle class="i-deep" cx="192" cy="116" r="8"/><text class="t-s" x="205" y="122">kitten</text>
-  <circle class="i-deep" cx="222" cy="52" r="8"/><text class="t-s" x="235" y="58">dog</text>
-  <circle class="i-paper" cx="96" cy="228" r="64"/><circle class="i-deepline i-dash" cx="96" cy="228" r="64"/>
-  <circle class="i-deep" cx="66" cy="208" r="8"/><text class="t-s" x="79" y="214">bus</text>
-  <circle class="i-deep" cx="110" cy="190" r="8"/><text class="t-s" x="123" y="196">car</text>
-  <circle class="i-deep" cx="82" cy="256" r="8"/><text class="t-s" x="95" y="262">train</text>
-  <circle class="i-accent" cx="226" cy="214" r="8"/><text class="t-s" x="239" y="220">happy</text>
-  <rect class="i-paper" x="162" y="276" width="124" height="26" rx="4"/><rect class="i-line" x="162" y="276" width="124" height="26" rx="4"/>
-  <text class="t-xs" x="224" y="294" text-anchor="middle">cat = [0.2, −0.7 …]</text>
+  <circle class="i-paper" cx="225.4" cy="119.6" r="63.5"/><circle class="i-deepline i-dash" cx="225.4" cy="119.6" r="63.5"/>
+  <circle class="i-paper" cx="86" cy="243.4" r="63.5"/><circle class="i-deepline i-dash" cx="86" cy="243.4" r="63.5"/>
+  <path class="i-line" d="M180 286 L180 137" style="stroke-width:1.5"/>
+  <circle class="i-deepline" cx="180" cy="124" r="12" style="stroke-width:2"/>
+  <circle class="i-deep" cx="180" cy="124" r="8"/><text class="t-s" x="198" y="129">cat</text><circle class="i-deep" cx="192" cy="150" r="8"/><text class="t-s" x="210" y="155">kitten</text><circle class="i-deep" cx="214" cy="84" r="8"/><text class="t-s" x="232" y="89">dog</text>
+  <circle class="i-deep" cx="42" cy="238" r="8"/><text class="t-s" x="60" y="243">bus</text><circle class="i-deep" cx="86" cy="222" r="8"/><text class="t-s" x="104" y="227">car</text><circle class="i-deep" cx="56" cy="276" r="8"/><text class="t-s" x="74" y="281">train</text>
+  <circle class="i-accent" cx="214" cy="238" r="8"/><text class="t-s" x="232" y="243">happy</text>
+  <rect class="i-paper" x="146" y="286" width="140" height="28" rx="4"/><rect class="i-line" x="146" y="286" width="140" height="28" rx="4"/>
+  <text class="t-xs" x="216" y="305" text-anchor="middle">cat = [0.2, −0.7, …]</text>
 </svg>

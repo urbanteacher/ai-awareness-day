@@ -1,0 +1,13 @@
+{
+ "nodes": {
+  "the context box": [16, 94, 194, 220],
+  "AI": [252, 183, 42, 42]
+ },
+ "edges": [
+  {"from": "the context box", "side": "right", "to": "AI", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "Everything it needs title": [104, 40, 152, 30],
+  "AI label": [262, 234, 24, 16]
+ }
+}

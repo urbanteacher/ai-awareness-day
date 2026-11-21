@@ -1,0 +1,25 @@
+{
+ "nodes": {
+  "records": [100, 18, 126, 80],
+  "map": [163, 130, 0, 0],
+  "order": [16, 140, 88, 38],
+  "check": [190, 140, 92, 38],
+  "pay": [190, 272, 92, 38]
+ },
+ "edges": [
+  {"from": "records", "side": "bottom", "to": "map", "to_side": "top"},
+  {"from": "order", "side": "right", "to": "check", "to_side": "left", "label": "2 min", "label_side": "below"},
+  {"from": "check", "side": "bottom", "to": "pay", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "3 days pill": [140, 210, 78, 30]
+ },
+ "edits": [
+  ["<text class=\"t-xs\" x=\"146\" y=\"196\" text-anchor=\"middle\">2 min</text>", ""],
+  ["<path d=\"M236 184 C236 236 214 268 196 282\" fill=\"none\" stroke=\"var(--fam-deep)\" stroke-width=\"12\" stroke-linecap=\"round\"/>", ""],
+  ["<rect class=\"i-accent\" x=\"206\" y=\"216\" width=\"78\" height=\"30\" rx=\"15\"/><rect class=\"i-line\" x=\"206\" y=\"216\" width=\"78\" height=\"30\" rx=\"15\"/>", "<rect class=\"i-accent\" x=\"140\" y=\"210\" width=\"78\" height=\"30\" rx=\"15\"/><rect class=\"i-line\" x=\"140\" y=\"210\" width=\"78\" height=\"30\" rx=\"15\"/>"],
+  ["<text class=\"t-s\" x=\"245\" y=\"237\" text-anchor=\"middle\">3 days</text>", "<text class=\"t-s\" x=\"179\" y=\"231\" text-anchor=\"middle\">3 days</text>"],
+  ["<rect class=\"i-deep\" x=\"100\" y=\"272\" width=\"92\" height=\"38\" rx=\"19\"/>", "<rect class=\"i-deep\" x=\"190\" y=\"272\" width=\"92\" height=\"38\" rx=\"19\"/>"],
+  ["<text class=\"t-s t-w\" x=\"146\" y=\"296\" text-anchor=\"middle\">Pay</text>", "<text class=\"t-s t-w\" x=\"236\" y=\"296\" text-anchor=\"middle\">Pay</text>"]
+ ]
+}

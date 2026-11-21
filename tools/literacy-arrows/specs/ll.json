@@ -1,0 +1,12 @@
+{
+ "nodes": {
+  "books": [112, 18, 118, 68],
+  "model": [72, 122, 158, 38],
+  "panel": [16, 198, 268, 118]
+ },
+ "edges": [
+  {"from": "books", "side": "bottom", "to": "model", "to_side": "top", "to_at": 0.627, "label": "Billions of words", "label_side": "right"},
+  {"from": "model", "side": "bottom", "to": "panel", "to_side": "top", "main": true}
+ ],
+ "shapes": {}
+}

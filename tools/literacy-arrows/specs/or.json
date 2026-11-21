@@ -1,0 +1,128 @@
+{
+ "nodes": {
+  "ask": [
+   100,
+   12,
+   128,
+   40
+  ],
+  "lead": [
+   128,
+   92,
+   72,
+   58
+  ],
+  "trains": [
+   18,
+   186,
+   84,
+   44
+  ],
+  "hotel": [
+   122,
+   186,
+   84,
+   44
+  ],
+  "rain": [
+   226,
+   186,
+   62,
+   44
+  ],
+  "plan": [
+   18,
+   272,
+   270,
+   44
+  ]
+ },
+ "edges": [
+  {
+   "from": "ask",
+   "side": "bottom",
+   "to": "lead",
+   "to_side": "top",
+   "to_at": 0.5
+  },
+  {
+   "from": "lead",
+   "side": "left",
+   "to": "trains",
+   "to_side": "top"
+  },
+  {
+   "from": "lead",
+   "side": "bottom",
+   "to": "hotel",
+   "to_side": "top",
+   "at": 0.5
+  },
+  {
+   "from": "lead",
+   "side": "right",
+   "to": "rain",
+   "to_side": "top"
+  },
+  {
+   "from": "trains",
+   "side": "bottom",
+   "to": "plan",
+   "to_side": "top",
+   "to_at": 0.156
+  },
+  {
+   "from": "hotel",
+   "side": "bottom",
+   "to": "plan",
+   "to_side": "top",
+   "to_at": 0.541
+  },
+  {
+   "from": "rain",
+   "side": "bottom",
+   "to": "plan",
+   "to_side": "top",
+   "to_at": 0.885
+  }
+ ],
+ "shapes": {},
+ "edits": [
+  [
+   "<rect class=\"i-paper\" x=\"100\" y=\"18\"",
+   "<rect class=\"i-paper\" x=\"100\" y=\"12\""
+  ],
+  [
+   "<rect class=\"i-line\" x=\"100\" y=\"18\"",
+   "<rect class=\"i-line\" x=\"100\" y=\"12\""
+  ],
+  [
+   "x=\"164\" y=\"44\"",
+   "x=\"164\" y=\"38\""
+  ],
+  [
+   "M128 84 H184 L200 100 V142 H128 Z",
+   "M128 92 H184 L200 108 V150 H128 Z"
+  ],
+  [
+   "x=\"144\" y=\"100\" width=\"40\"",
+   "x=\"144\" y=\"108\" width=\"40\""
+  ],
+  [
+   "cx=\"157\" cy=\"112\"",
+   "cx=\"157\" cy=\"120\""
+  ],
+  [
+   "cx=\"171\" cy=\"112\"",
+   "cx=\"171\" cy=\"120\""
+  ],
+  [
+   "<rect class=\"i-deep\" x=\"84\" y=\"272\" width=\"160\"",
+   "<rect class=\"i-deep\" x=\"18\" y=\"272\" width=\"270\""
+  ],
+  [
+   "x=\"164\" y=\"302\"",
+   "x=\"153\" y=\"302\""
+  ]
+ ]
+}

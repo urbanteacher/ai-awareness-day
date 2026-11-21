@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "email": [108, 22, 148, 62],
+  "ai": [28, 122, 108, 70],
+  "absence": [170, 138, 110, 38],
+  "bot": [196, 212, 68, 50],
+  "register": [24, 210, 134, 102]
+ },
+ "edges": [
+  {"from": "email", "side": "left", "to": "ai", "to_side": "top", "to_at": 0.6},
+  {"from": "ai", "side": "right", "to": "absence", "to_side": "left"},
+  {"from": "absence", "side": "bottom", "to": "bot", "to_side": "top"},
+  {"from": "bot", "side": "left", "to": "register", "to_side": "right"}
+ ],
+ "shapes": {
+  "Bot logs it label": [186, 276, 90, 18]
+ }
+}

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Deep Learning: a picture passes through many stacked layers, from edges to shapes to parts, until the last layer says cat. -->
-  <defs><marker id="alpt-arr-dl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-dl-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-line" d="M22 108 V100 H216 V108"/>
   <text class="t-s" x="140" y="90" text-anchor="middle">Many layers</text>
@@ -10,8 +10,8 @@
   <circle class="i-line" cx="119" cy="158" r="7" style="stroke-width:2"/><path class="i-line" d="M112 200 L119 188 L126 200 Z M112 220 H126 V232 H112 Z" style="stroke-width:2"/>
   <path d="M188 172 L192 156 L200 166 M210 172 L206 156 L198 166" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M190 196 C196 202 204 202 208 196" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
   <text class="t-s" x="39" y="284" text-anchor="middle">Edges</text><text class="t-s" x="119" y="284" text-anchor="middle">Shapes</text><text class="t-s" x="199" y="284" text-anchor="middle">Parts</text>
-  <path class="i-line" d="M222 186 H240" marker-end="url(#alpt-arr-dl)"/>
-  <rect class="i-accent" x="244" y="168" width="46" height="36" rx="10"/>
-  <text class="t-s" x="267" y="192" text-anchor="middle">Cat</text>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M224 186 L242 186" marker-end="url(#alpt-arr-dl-d)"/></g>
+  <rect class="i-accent" x="250" y="168" width="42" height="36" rx="10"/>
+  <text class="t-s" x="271" y="192" text-anchor="middle">Cat</text>
   <text class="t-xs" x="150" y="314" text-anchor="middle">Each layer builds on the last</text>
 </svg>

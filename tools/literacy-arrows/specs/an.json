@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "ai": [108, 190, 56, 48],
+  "copy": [10, 188, 52, 52],
+  "learn": [210, 174, 80, 80]
+ },
+ "edges": [
+  {"from": "ai", "side": "right", "to": "learn", "to_side": "left", "main": true},
+  {"from": "ai", "side": "left", "to": "copy", "to_side": "right", "end": "cross"}
+ ],
+ "shapes": {
+  "speech bubble": [84, 20, 160, 80],
+  "the person": [30, 94, 44, 48],
+  "Copy label": [6, 264, 60, 16],
+  "Learn label": [216, 264, 68, 16]
+ }
+}

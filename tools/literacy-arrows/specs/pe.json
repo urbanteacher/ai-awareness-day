@@ -1,0 +1,45 @@
+{
+ "nodes": {
+  "vague": [
+   122,
+   16,
+   112,
+   42
+  ],
+  "parts": [
+   16,
+   92,
+   268,
+   144
+  ],
+  "answer": [
+   70,
+   278,
+   160,
+   32
+  ]
+ },
+ "edges": [
+  {
+   "from": "vague",
+   "side": "bottom",
+   "to": "parts",
+   "to_side": "top"
+  },
+  {
+   "from": "parts",
+   "side": "bottom",
+   "to": "answer",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "tick badge": [
+   218,
+   280,
+   28,
+   28
+  ]
+ }
+}

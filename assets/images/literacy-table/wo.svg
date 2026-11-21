@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Workflow Orchestration: a lost-coat report passes in order between the pupil, the office and an app until the coat is collected. -->
-  <defs><marker id="alpt-arr-wo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Workflow Orchestration: a lost-coat report passes in order between the pupil, an app and the office until the coat is collected. Arrows: tools/literacy-arrows/specs/wo.json -->
+  <defs><marker id="alpt-arr-wo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="104" y="60">Lost coat: 5 steps</text>
   <rect class="i-paper" x="16" y="96" width="268" height="68"/>
@@ -8,16 +8,12 @@
   <rect class="i-paper" x="16" y="232" width="268" height="68"/>
   <rect class="i-line" x="16" y="96" width="268" height="204" rx="4"/><path class="i-line" d="M16 164 H284 M16 232 H284 M60 96 V300"/>
   <circle class="i-line" cx="38" cy="122" r="8"/><path class="i-line" d="M26 146 C26 132 50 132 50 146"/>
-  <circle class="i-line" cx="38" cy="188" r="8"/><path class="i-line" d="M26 212 C26 198 50 198 50 212 M22 216 H54"/>
-  <rect class="i-deep" x="24" y="252" width="28" height="20" rx="3"/><path class="i-line" d="M38 272 V280 M30 280 H46"/>
-  <path class="i-line" d="M95 145 C95 200 128 196 128 242" marker-end="url(#alpt-arr-wo)"/>
-  <path class="i-line" d="M140 251 C150 236 154 226 160 214" marker-end="url(#alpt-arr-wo)"/>
-  <path class="i-line" d="M180 214 C186 226 190 236 196 250" marker-end="url(#alpt-arr-wo)"/>
-  <path class="i-line" d="M218 251 C232 200 240 180 243 146" marker-end="url(#alpt-arr-wo)"/>
-  <rect class="i-deep" x="66" y="115" width="58" height="30" rx="6"/><text class="t-xs t-w" x="95" y="135" text-anchor="middle">Report</text>
-  <rect class="i-deep" x="100" y="251" width="58" height="30" rx="6"/><text class="t-xs t-w" x="129" y="271" text-anchor="middle">Log it</text>
-  <rect class="i-deep" x="140" y="183" width="58" height="30" rx="6"/><text class="t-xs t-w" x="169" y="203" text-anchor="middle">Find</text>
-  <rect class="i-deep" x="178" y="251" width="58" height="30" rx="6"/><text class="t-xs t-w" x="207" y="271" text-anchor="middle">Email</text>
-  <rect class="i-accent" x="206" y="115" width="70" height="30" rx="6"/><rect class="i-line" x="206" y="115" width="70" height="30" rx="6"/>
-  <text class="t-xs" x="241" y="135" text-anchor="middle">Collect ✓</text>
-</svg>
+  <rect class="i-deep" x="24" y="184" width="28" height="20" rx="3"/><path class="i-line" d="M38 204 V212 M30 212 H46"/>
+  <circle class="i-line" cx="38" cy="256" r="8"/><path class="i-line" d="M26 280 C26 266 50 266 50 280 M22 284 H54"/>
+  <rect class="i-deep" x="76" y="115" width="62" height="30" rx="6"/><text class="t-xs t-w" x="107" y="135" text-anchor="middle">Report</text>
+  <rect class="i-deep" x="76" y="183" width="62" height="30" rx="6"/><text class="t-xs t-w" x="107" y="203" text-anchor="middle">Log it</text>
+  <rect class="i-deep" x="76" y="251" width="62" height="30" rx="6"/><text class="t-xs t-w" x="107" y="271" text-anchor="middle">Find</text>
+  <rect class="i-deep" x="200" y="183" width="70" height="30" rx="6"/><text class="t-xs t-w" x="235" y="203" text-anchor="middle">Email</text>
+  <rect class="i-accent" x="200" y="115" width="70" height="30" rx="6"/><rect class="i-line" x="200" y="115" width="70" height="30" rx="6"/>
+  <text class="t-xs" x="235" y="135" text-anchor="middle">Collect ✓</text>
+<g class="alpt-arrows"><path class="i-line" d="M107 153 L107 175" marker-end="url(#alpt-arr-wo)"/><path class="i-line" d="M107 221 L107 243" marker-end="url(#alpt-arr-wo)"/><path class="i-line" d="M146 271 C194.9 271 235 273 235 237 L235 221" marker-end="url(#alpt-arr-wo)"/><path class="i-line" d="M235 175 L235 153" marker-end="url(#alpt-arr-wo)"/></g></svg>

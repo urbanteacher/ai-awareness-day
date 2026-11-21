@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Scaling laws: bigger models trained on more data sit higher on a steady rising line. -->
-  <defs><marker id="alpt-arr-sl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-sl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <path class="i-line" d="M30 296 H284" marker-end="url(#alpt-arr-sl)"/><path class="i-line" d="M30 296 V96" marker-end="url(#alpt-arr-sl)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M30 296 L284 296" marker-end="url(#alpt-arr-sl)"/><path class="i-line" d="M30 296 L30 96" marker-end="url(#alpt-arr-sl)"/></g>
   <text class="t-s" x="40" y="108">Better</text>
   <text class="t-s" x="157" y="322" text-anchor="middle">Bigger, more data</text>
   <path class="i-deepline" d="M46 278 L230 153" stroke-width="4"/>

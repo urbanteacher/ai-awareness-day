@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Business Rules Engine: canteen orders go through if-then rules, so a nut bar always gets NO and pasta always gets YES. -->
+  <defs><marker id="alpt-arr-be" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="100" y="20" width="132" height="84" rx="8"/><rect class="i-line" x="100" y="20" width="132" height="84" rx="8"/>
+  <text class="t-xs" x="114" y="40" letter-spacing="2">RULES</text>
+  <text class="t-s" x="114" y="66">IF nuts → NO</text>
+  <text class="t-s" x="114" y="90">ELSE → YES</text>
+  <path class="i-line" d="M150 108 V126" marker-end="url(#alpt-arr-be)"/>
+  <rect class="i-paper" x="12" y="146" width="96" height="30" rx="4"/><rect class="i-line" x="12" y="146" width="96" height="30" rx="4"/>
+  <text class="t-s" x="20" y="167">Pasta</text>
+  <rect class="i-paper" x="12" y="196" width="96" height="30" rx="4"/><rect class="i-line" x="12" y="196" width="96" height="30" rx="4"/>
+  <text class="t-s" x="20" y="217">Nut bar</text>
+  <rect class="i-paper" x="192" y="146" width="92" height="30" rx="4"/><rect class="i-line" x="192" y="146" width="92" height="30" rx="4"/>
+  <text class="t-s t-d" x="276" y="167" text-anchor="end">YES ✓</text>
+  <rect class="i-accent" x="192" y="196" width="92" height="30" rx="4"/><rect class="i-line" x="192" y="196" width="92" height="30" rx="4"/>
+  <text class="t-s" x="276" y="217" text-anchor="end">NO ✗</text>
+  <rect class="i-deep" x="96" y="134" width="108" height="104" rx="10"/>
+  <circle cx="150" cy="186" r="24" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-dasharray="7.5 7.6"/>
+  <circle class="i-paper" cx="150" cy="186" r="20"/><circle class="i-deep" cx="150" cy="186" r="7"/>
+  <text class="t-s" x="150" y="282" text-anchor="middle">Same answer,</text>
+  <text class="t-s" x="150" y="304" text-anchor="middle">every time</text>
+</svg>

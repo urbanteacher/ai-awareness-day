@@ -1,0 +1,10 @@
+{
+ "nodes": {
+  "text": [112, 22, 140, 70],
+  "voice": [16, 130, 268, 76]
+ },
+ "edges": [
+  {"from": "text", "side": "bottom", "to": "voice", "to_side": "top"}
+ ],
+ "shapes": {}
+}

@@ -1,0 +1,23 @@
+{
+ "nodes": {
+  "locked AI": [20, 128, 78, 92],
+  "copy": [200, 128, 78, 92],
+  "q1": [168, 142, 20, 20],
+  "a1": [108, 161, 20, 20],
+  "q2": [168, 180, 20, 20],
+  "a2": [108, 199, 20, 20]
+ },
+ "edges": [
+  {"from": "q1", "side": "left", "to": "locked AI", "to_side": "right"},
+  {"from": "a1", "side": "right", "to": "copy", "to_side": "left"},
+  {"from": "q2", "side": "left", "to": "locked AI", "to_side": "right"},
+  {"from": "a2", "side": "right", "to": "copy", "to_side": "left"}
+ ],
+ "shapes": {
+  "x10,000 questions": [140, 58, 96, 44],
+  "locked files": [22, 236, 74, 56],
+  "Files locked label": [22, 300, 74, 16],
+  "Copy label": [212, 232, 54, 20],
+  "more traffic": [126, 232, 44, 28]
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "request": [90, 16, 140, 36],
+  "model": [88, 92, 144, 144],
+  "reply": [40, 272, 240, 36]
+ },
+ "edges": [
+  {"from": "request", "side": "bottom", "to": "model", "to_side": "top"},
+  {"from": "model", "side": "bottom", "to": "reply", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "Inside the model label": [16, 104, 72, 32]
+ }
+}

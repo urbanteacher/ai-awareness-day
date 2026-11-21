@@ -1,0 +1,82 @@
+{
+ "nodes": {
+  "file": [
+   104,
+   14,
+   92,
+   88
+  ],
+  "run": [
+   30,
+   174,
+   40,
+   44
+  ],
+  "study": [
+   130,
+   174,
+   40,
+   44
+  ],
+  "adapt": [
+   230,
+   174,
+   40,
+   44
+  ]
+ },
+ "edges": [
+  {
+   "from": "file",
+   "side": "left",
+   "at": 0.9,
+   "to": "run",
+   "to_side": "top"
+  },
+  {
+   "from": "file",
+   "side": "bottom",
+   "to": "study",
+   "to_side": "top"
+  },
+  {
+   "from": "file",
+   "side": "right",
+   "at": 0.9,
+   "to": "adapt",
+   "to_side": "top"
+  }
+ ],
+ "shapes": {
+  "the lock": [
+   210,
+   14,
+   44,
+   66
+  ],
+  "Run label": [
+   30,
+   232,
+   40,
+   18
+  ],
+  "Study label": [
+   126,
+   232,
+   48,
+   18
+  ],
+  "Adapt label": [
+   226,
+   232,
+   48,
+   18
+  ],
+  "safety box": [
+   18,
+   258,
+   264,
+   54
+  ]
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "nodes": {
+  "robot": [126, 24, 64, 60],
+  "parts": [16, 132, 268, 104]
+ },
+ "edges": [
+  {"from": "robot", "side": "bottom", "to": "parts", "to_side": "top", "label": "Take apart", "label_side": "right"}
+ ],
+ "shapes": {
+  "Finished label": [200, 46, 70, 18]
+ },
+ "edits": [
+  ["<text class=\"t-xs\" x=\"170\" y=\"114\">Take apart</text>", ""]
+ ]
+}

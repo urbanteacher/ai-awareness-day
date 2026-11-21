@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Cloud AI: devices send questions over the internet to AI running in a data centre, and get answers back. -->
-  <defs><marker id="alpt-arr-cd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-cd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-paper" d="M112 132 H238 C262 132 274 112 264 94 C274 72 250 52 228 62 C218 36 180 30 164 50 C148 38 120 46 122 72 C100 74 92 96 102 112 C94 126 102 132 112 132 Z"/><path class="i-line" d="M112 132 H238 C262 132 274 112 264 94 C274 72 250 52 228 62 C218 36 180 30 164 50 C148 38 120 46 122 72 C100 74 92 96 102 112 C94 126 102 132 112 132 Z"/>
   <rect class="i-cream" x="140" y="70" width="26" height="50" rx="3"/><rect class="i-line" x="140" y="70" width="26" height="50" rx="3"/>
@@ -16,12 +16,10 @@
   <path class="i-paper" d="M106 288 H202 L210 300 H98 Z"/><path class="i-line" d="M106 288 H202 L210 300 H98 Z"/>
   <rect class="i-paper" x="226" y="230" width="52" height="72" rx="7"/><rect class="i-line" x="226" y="230" width="52" height="72" rx="7"/>
   <rect class="i-cream" x="233" y="239" width="38" height="52" rx="2"/>
-  <path class="i-line" d="M58 224 C56 180 80 150 112 136" marker-end="url(#alpt-arr-cd)"/>
-  <text class="t-s" x="20" y="166">Ask</text>
-  <path class="i-line" d="M250 138 C262 160 262 196 254 222" marker-end="url(#alpt-arr-cd)"/>
-  <text class="t-s" x="250" y="166" text-anchor="end">Answer</text>
+  <g class="alpt-arrows"><path class="i-line" d="M58 224 C58 190 117.1 190 117.1 156 L117.1 140" marker-end="url(#alpt-arr-cd)"/><path class="i-line" d="M249 140 L249 222" marker-end="url(#alpt-arr-cd)"/></g>
   <path class="i-line i-dash" d="M154 230 V140"/>
   <rect class="i-paper" x="114" y="190" width="80" height="26" rx="13"/><rect class="i-line" x="114" y="190" width="80" height="26" rx="13"/>
   <text class="t-s" x="154" y="209" text-anchor="middle">Internet</text>
   <text class="t-xs" x="154" y="322" text-anchor="middle">Your devices</text>
+  <g class="alpt-arrow-labels"><text class="t-xs" x="79.1" y="179.7" text-anchor="middle">Ask</text><text class="t-xs" x="221.4" y="185.5" text-anchor="middle">Answer</text></g>
 </svg>

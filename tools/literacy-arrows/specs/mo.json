@@ -1,0 +1,82 @@
+{
+ "nodes": {
+  "launch": [
+   14,
+   106,
+   64,
+   140
+  ],
+  "mistakes": [
+   118,
+   106,
+   64,
+   140
+  ],
+  "updated": [
+   222,
+   106,
+   64,
+   140
+  ],
+  "time start": [
+   20,
+   300,
+   0,
+   0
+  ],
+  "time end": [
+   286,
+   300,
+   0,
+   0
+  ]
+ },
+ "edges": [
+  {
+   "from": "launch",
+   "side": "right",
+   "to": "mistakes",
+   "to_side": "left",
+   "main": true
+  },
+  {
+   "from": "mistakes",
+   "side": "right",
+   "to": "updated",
+   "to_side": "left",
+   "main": true
+  },
+  {
+   "from": "time start",
+   "side": "right",
+   "to": "time end",
+   "to_side": "left"
+  }
+ ],
+ "shapes": {
+  "Launch label": [
+   16,
+   260,
+   60,
+   18
+  ],
+  "Mistakes label": [
+   112,
+   260,
+   76,
+   18
+  ],
+  "Updated label": [
+   214,
+   260,
+   64,
+   18
+  ],
+  "months of use label": [
+   104,
+   308,
+   92,
+   16
+  ]
+ }
+}

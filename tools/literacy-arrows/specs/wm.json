@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "zoom": [188, 108, 84, 84],
+  "checker": [156, 246, 128, 62]
+ },
+ "edges": [
+  {"from": "zoom", "side": "bottom", "to": "checker", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "the picture": [24, 104, 148, 112],
+  "zoom lines": [160, 120, 58, 82],
+  "Looks normal label": [44, 228, 108, 18],
+  "Hidden signal label": [183, 86, 94, 14]
+ },
+ "edits": [
+  ["<text class=\"t-xs\" x=\"230\" y=\"212\" text-anchor=\"middle\">Hidden signal</text>", "<text class=\"t-xs\" x=\"230\" y=\"96\" text-anchor=\"middle\">Hidden signal</text>"]
+ ]
+}

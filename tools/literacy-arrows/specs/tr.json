@@ -1,0 +1,95 @@
+{
+ "nodes": {
+  "data": [
+   112,
+   26,
+   44,
+   40
+  ],
+  "guess": [
+   96,
+   98,
+   88,
+   32
+  ],
+  "check": [
+   196,
+   222,
+   88,
+   32
+  ],
+  "adjust": [
+   16,
+   222,
+   88,
+   32
+  ]
+ },
+ "edges": [
+  {
+   "from": "data",
+   "side": "bottom",
+   "to": "guess",
+   "to_side": "top"
+  },
+  {
+   "from": "guess",
+   "side": "right",
+   "to": "check",
+   "to_side": "top",
+   "main": true
+  },
+  {
+   "from": "check",
+   "side": "left",
+   "to": "adjust",
+   "to_side": "right",
+   "main": true
+  },
+  {
+   "from": "adjust",
+   "side": "top",
+   "to": "guess",
+   "to_side": "left",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "the paper behind Data": [
+   120,
+   18,
+   44,
+   40
+  ],
+  "Data label": [
+   172,
+   38,
+   36,
+   16
+  ],
+  "the dials": [
+   111,
+   163,
+   74,
+   30
+  ],
+  "Settings label": [
+   122,
+   201,
+   52,
+   14
+  ],
+  "the score bars": [
+   76,
+   272,
+   132,
+   40
+  ],
+  "Score label": [
+   20,
+   299,
+   36,
+   14
+  ]
+ }
+}

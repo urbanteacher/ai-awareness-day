@@ -1,0 +1,84 @@
+{
+ "nodes": {
+  "rain": [
+   124,
+   26,
+   124,
+   42
+  ],
+  "coat": [
+   20,
+   162,
+   96,
+   40
+  ],
+  "cold": [
+   168,
+   124,
+   112,
+   42
+  ],
+  "jumper": [
+   112,
+   232,
+   88,
+   40
+  ],
+  "tshirt": [
+   210,
+   232,
+   78,
+   40
+  ]
+ },
+ "edges": [
+  {
+   "from": "rain",
+   "side": "bottom",
+   "to": "coat",
+   "to_side": "top",
+   "label": "yes",
+   "label_side": "left"
+  },
+  {
+   "from": "rain",
+   "side": "bottom",
+   "to": "cold",
+   "to_side": "top",
+   "main": true,
+   "label": "no",
+   "label_side": "right"
+  },
+  {
+   "from": "cold",
+   "side": "bottom",
+   "to": "jumper",
+   "to_side": "top",
+   "main": true,
+   "label": "yes",
+   "label_side": "left"
+  },
+  {
+   "from": "cold",
+   "side": "bottom",
+   "to": "tshirt",
+   "to_side": "top",
+   "label": "no",
+   "label_side": "right"
+  }
+ ],
+ "shapes": {
+  "the person": [
+   30,
+   212,
+   48,
+   56
+  ],
+  "Dry, cold today label": [
+   24,
+   281,
+   60,
+   30
+  ]
+ }
+}

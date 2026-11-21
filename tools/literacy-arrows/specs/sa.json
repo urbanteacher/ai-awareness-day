@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "bot": [146, 16, 66, 52],
+  "review": [20, 106, 260, 54]
+ },
+ "edges": [
+  {"from": "bot", "side": "bottom", "to": "review", "to_side": "top", "main": true}
+ ],
+ "shapes": {},
+ "edits": [
+  ["<path class=\"i-deep\" d=\"M146 24 H196 L212 40 V76 H146 Z\"/>", "<g transform=\"translate(0 -8)\"><path class=\"i-deep\" d=\"M146 24 H196 L212 40 V76 H146 Z\"/>"],
+  ["<circle class=\"i-ink\" cx=\"183\" cy=\"50\" r=\"3.5\"/>", "<circle class=\"i-ink\" cx=\"183\" cy=\"50\" r=\"3.5\"/></g>"]
+ ]
+}

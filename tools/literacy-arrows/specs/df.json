@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "noise": [12, 92, 68, 68],
+  "clearer": [116, 92, 68, 68],
+  "clearest": [220, 92, 68, 68],
+  "new": [176, 206, 104, 104],
+  "new label": [70, 238, 60, 42]
+ },
+ "edges": [
+  {"from": "noise", "side": "right", "to": "clearer", "to_side": "left"},
+  {"from": "clearer", "side": "right", "to": "clearest", "to_side": "left"},
+  {"from": "clearest", "side": "bottom", "to": "new", "to_side": "top", "to_at": 0.75, "main": true},
+  {"from": "new label", "side": "right", "to": "new", "to_side": "left"}
+ ],
+ "shapes": {
+  "Remove the noise label": [104, 30, 144, 42],
+  "Noise label": [24, 171, 44, 16]
+ }
+}

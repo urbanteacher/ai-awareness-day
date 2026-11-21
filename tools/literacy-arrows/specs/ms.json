@@ -1,0 +1,20 @@
+{
+ "nodes": {
+  "p1": [28, 99, 36, 40],
+  "p2": [28, 151, 36, 40],
+  "p3": [28, 203, 36, 40],
+  "p4": [28, 255, 36, 40],
+  "servers": [170, 100, 96, 204]
+ },
+ "edges": [
+  {"from": "p1", "side": "right", "to": "servers", "to_side": "left", "start": "arrow"},
+  {"from": "p2", "side": "right", "to": "servers", "to_side": "left", "start": "arrow"},
+  {"from": "p3", "side": "right", "to": "servers", "to_side": "left", "start": "arrow"},
+  {"from": "p4", "side": "right", "to": "servers", "to_side": "left", "start": "arrow"}
+ ],
+ "shapes": {
+  "title": [90, 36, 172, 18],
+  "Servers label": [186, 311, 64, 16],
+  "+ millions label": [12, 313, 68, 14]
+ }
+}

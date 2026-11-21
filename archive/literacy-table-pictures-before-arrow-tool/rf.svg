@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Random Forest: three decision trees each vote, and the majority answer wins. -->
+  <defs><marker id="alpt-arr-rf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="186" y="50" text-anchor="middle">Many trees vote</text>
+  <rect class="i-paper" x="16" y="94" width="82" height="92" rx="8"/><rect class="i-line" x="16" y="94" width="82" height="92" rx="8"/>
+  <rect class="i-paper" x="109" y="94" width="82" height="92" rx="8"/><rect class="i-line" x="109" y="94" width="82" height="92" rx="8"/>
+  <rect class="i-paper" x="202" y="94" width="82" height="92" rx="8"/><rect class="i-line" x="202" y="94" width="82" height="92" rx="8"/>
+  <path class="i-line" d="M57 114 L39 140 M57 114 L75 140 M39 140 L30 168 M39 140 L48 168 M75 140 L66 168 M75 140 L84 168"/>
+  <g class="i-deep"><circle cx="57" cy="114" r="7"/><circle cx="39" cy="140" r="6"/><circle cx="75" cy="140" r="6"/></g>
+  <g class="i-cream"><circle cx="30" cy="168" r="5"/><circle cx="48" cy="168" r="5"/><circle cx="66" cy="168" r="5"/><circle cx="84" cy="168" r="5"/></g>
+  <g class="i-line"><circle cx="30" cy="168" r="5"/><circle cx="48" cy="168" r="5"/><circle cx="66" cy="168" r="5"/><circle cx="84" cy="168" r="5"/></g>
+  <path class="i-line" d="M150 114 L132 140 M150 114 L168 140 M132 140 L123 168 M132 140 L141 168 M168 140 L159 168 M168 140 L177 168"/>
+  <g class="i-deep"><circle cx="150" cy="114" r="7"/><circle cx="132" cy="140" r="6"/><circle cx="168" cy="140" r="6"/></g>
+  <g class="i-cream"><circle cx="123" cy="168" r="5"/><circle cx="141" cy="168" r="5"/><circle cx="159" cy="168" r="5"/><circle cx="177" cy="168" r="5"/></g>
+  <g class="i-line"><circle cx="123" cy="168" r="5"/><circle cx="141" cy="168" r="5"/><circle cx="159" cy="168" r="5"/><circle cx="177" cy="168" r="5"/></g>
+  <path class="i-line" d="M243 114 L225 140 M243 114 L261 140 M225 140 L216 168 M225 140 L234 168 M261 140 L252 168 M261 140 L270 168"/>
+  <g class="i-deep"><circle cx="243" cy="114" r="7"/><circle cx="225" cy="140" r="6"/><circle cx="261" cy="140" r="6"/></g>
+  <g class="i-cream"><circle cx="216" cy="168" r="5"/><circle cx="234" cy="168" r="5"/><circle cx="252" cy="168" r="5"/><circle cx="270" cy="168" r="5"/></g>
+  <g class="i-line"><circle cx="216" cy="168" r="5"/><circle cx="234" cy="168" r="5"/><circle cx="252" cy="168" r="5"/><circle cx="270" cy="168" r="5"/></g>
+  <rect class="i-deep" x="27" y="196" width="60" height="28" rx="14"/><text class="t-s t-w" x="57" y="216" text-anchor="middle">Yes</text>
+  <rect class="i-deep" x="120" y="196" width="60" height="28" rx="14"/><text class="t-s t-w" x="150" y="216" text-anchor="middle">Yes</text>
+  <rect class="i-paper" x="213" y="196" width="60" height="28" rx="14"/><rect class="i-line" x="213" y="196" width="60" height="28" rx="14"/><text class="t-s" x="243" y="216" text-anchor="middle">No</text>
+  <path class="i-line" d="M57 230 C57 252 84 258 100 262" marker-end="url(#alpt-arr-rf)"/>
+  <path class="i-line" d="M150 230 V252" marker-end="url(#alpt-arr-rf)"/>
+  <path class="i-line" d="M243 230 C243 252 216 258 200 262" marker-end="url(#alpt-arr-rf)"/>
+  <rect class="i-deep" x="96" y="260" width="108" height="56" rx="6"/>
+  <rect class="i-accent" x="126" y="266" width="48" height="6" rx="3"/>
+  <text class="t-m t-w" x="150" y="302" text-anchor="middle">Yes 2–1</text>
+</svg>

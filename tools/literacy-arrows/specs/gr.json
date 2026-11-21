@@ -1,0 +1,23 @@
+{
+ "nodes": {
+  "unsafe": [112, 40, 132, 34],
+  "toprail": [16, 114, 272, 12],
+  "homework": [8, 172, 92, 38],
+  "ai": [134, 164, 52, 54],
+  "help": [222, 172, 68, 38],
+  "lowrail": [16, 258, 272, 12]
+ },
+ "edges": [
+  {"from": "unsafe", "side": "bottom", "to": "toprail", "to_side": "top", "to_at": 0.596, "end": "cross"},
+  {"from": "homework", "side": "right", "to": "ai", "to_side": "left"},
+  {"from": "ai", "side": "right", "to": "help", "to_side": "left", "main": true},
+  {"from": "ai", "side": "bottom", "to": "lowrail", "to_side": "top", "end": "cross"}
+ ],
+ "shapes": {
+  "post 130 top": [129, 126, 2, 14],
+  "post 180 top": [179, 126, 2, 14],
+  "post 130 low": [129, 246, 2, 14],
+  "post 180 low": [179, 246, 2, 14],
+  "harmful reply": [76, 282, 148, 34]
+ }
+}

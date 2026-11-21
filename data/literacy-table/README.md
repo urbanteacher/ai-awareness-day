@@ -127,4 +127,6 @@ How to draw one (copy an existing file to start):
 - Paint only with these classes, so the picture takes the family colour (and the theme or year colour in those views): `i-bg` (pale background), `i-deep` (the key part), `i-paper` (white), `i-cream`, `i-accent` (the AIAD theme colour, use once at most), `i-ink`, `i-line` and `i-deepline` (outlines), `i-dash`, `i-faint`. Text: `t-xs`, `t-s`, `t-m`, `t-l`, plus `t-w` (white) or `t-d` (deep).
 - Show the idea happening, not an icon for it. Up to about six short labels.
 - No photographs, and no faces or anything that could look like a real person.
-- An arrow marker needs an id unique to the file, such as `alpt-arr-rg`.
+- Don't draw arrows by hand. List the boxes and which side each arrow leaves and enters in
+  `tools/literacy-arrows/specs/{symbol}.json`, and `tools/literacy-arrows/apply.py` draws the arrows and checks them
+  for clashes (see `tools/literacy-arrows/README.md`).

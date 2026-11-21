@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "laptop": [40, 254, 70, 30],
+  "pupil names": [168, 236, 42, 54],
+  "unchecked app": [190, 118, 76, 76]
+ },
+ "edges": [
+  {"from": "laptop", "side": "right", "to": "pupil names", "to_side": "left"},
+  {"from": "pupil names", "side": "top", "to": "unchecked app", "to_side": "bottom", "main": true}
+ ],
+ "shapes": {
+  "warning sign": [236, 238, 44, 38],
+  "Pupil names label": [150, 301, 78, 15],
+  "Not approved label": [176, 92, 100, 16],
+  "the pupil": [48, 200, 48, 56],
+  "approved app 2": [90, 130, 50, 50]
+ }
+}

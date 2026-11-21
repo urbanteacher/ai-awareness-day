@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "data": [96, 36, 180, 88],
+  "ai": [156, 166, 60, 40],
+  "yes": [28, 250, 116, 72],
+  "no": [156, 250, 116, 72]
+ },
+ "edges": [
+  {"from": "data", "side": "bottom", "to": "ai", "to_side": "top", "at": 0.5},
+  {"from": "ai", "side": "left", "to": "yes", "to_side": "top"},
+  {"from": "ai", "side": "bottom", "to": "no", "to_side": "top", "to_at": 0.259}
+ ],
+ "shapes": {
+  "Training data title": [128, 14, 116, 18],
+  "Learns one pattern label": [16, 130, 82, 32]
+ }
+}

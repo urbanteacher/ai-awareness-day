@@ -1,21 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Decision Tree: yes/no questions lead step by step to a prediction of what to wear. -->
-  <defs><marker id="alpt-arr-dt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Decision Tree: yes/no questions lead step by step to a prediction of what to wear. Arrows: tools/literacy-arrows/specs/dt.json -->
+  <defs><marker id="alpt-arr-dt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-dt-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-deep" x="124" y="26" width="124" height="42" rx="8"/>
   <text class="t-s t-w" x="186" y="52" text-anchor="middle">Raining?</text>
-  <path class="i-line" d="M150 68 V84"/><path class="i-line" d="M150 84 C150 102 74 98 70 118" marker-end="url(#alpt-arr-dt)"/>
-  <text class="t-xs" x="116" y="122" text-anchor="middle">yes</text>
-  <path class="i-deepline" stroke-width="4" d="M222 68 C222 90 224 100 224 118" marker-end="url(#alpt-arr-dt)"/>
-  <text class="t-xs" x="234" y="98">no</text>
-  <rect class="i-paper" x="20" y="124" width="96" height="40" rx="20"/><rect class="i-line" x="20" y="124" width="96" height="40" rx="20"/>
-  <text class="t-s" x="68" y="150" text-anchor="middle">Coat</text>
+  <rect class="i-paper" x="20" y="162" width="96" height="40" rx="20"/><rect class="i-line" x="20" y="162" width="96" height="40" rx="20"/>
+  <text class="t-s" x="68" y="188" text-anchor="middle">Coat</text>
   <rect class="i-deep" x="168" y="124" width="112" height="42" rx="8"/>
   <text class="t-s t-w" x="224" y="151" text-anchor="middle">Cold?</text>
-  <path class="i-deepline" stroke-width="4" d="M200 166 C196 196 160 202 156 226" marker-end="url(#alpt-arr-dt)"/>
-  <text class="t-xs" x="168" y="198" text-anchor="end">yes</text>
-  <path class="i-line" d="M250 166 C252 190 250 206 250 226" marker-end="url(#alpt-arr-dt)"/>
-  <text class="t-xs" x="260" y="202">no</text>
   <rect class="i-accent" x="112" y="232" width="88" height="40" rx="20"/><rect class="i-line" x="112" y="232" width="88" height="40" rx="20"/>
   <text class="t-s" x="156" y="258" text-anchor="middle">Jumper</text>
   <rect class="i-paper" x="210" y="232" width="78" height="40" rx="20"/><rect class="i-line" x="210" y="232" width="78" height="40" rx="20"/>
@@ -24,4 +16,5 @@
   <path class="i-cream" d="M30 268 C30 244 78 244 78 268 Z"/><path class="i-line" d="M30 268 C30 244 78 244 78 268"/>
   <text class="t-xs" x="54" y="292" text-anchor="middle">Dry, cold</text>
   <text class="t-xs" x="54" y="308" text-anchor="middle">today</text>
+<g class="alpt-arrows"><path class="i-line" d="M168.7 76 C168.7 107 68 107 68 138 L68 154" marker-end="url(#alpt-arr-dt)"/><path class="i-line i-main" d="M203.3 76 L203.3 116" marker-end="url(#alpt-arr-dt-d)"/><path class="i-line i-main" d="M208.7 174 C208.7 191 156 191 156 208 L156 224" marker-end="url(#alpt-arr-dt-d)"/><path class="i-line" d="M239.3 174 L239.3 224" marker-end="url(#alpt-arr-dt)"/></g>  <g class="alpt-arrow-labels"><text class="t-xs" x="113.8" y="96.8" text-anchor="middle">yes</text><text class="t-xs" x="216.5" y="100.5" text-anchor="middle">no</text><text class="t-xs" x="177.6" y="180.7" text-anchor="middle">yes</text><text class="t-xs" x="252.5" y="203.5" text-anchor="middle">no</text></g>
 </svg>

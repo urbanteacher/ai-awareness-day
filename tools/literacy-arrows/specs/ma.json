@@ -1,0 +1,24 @@
+{
+ "nodes": {
+  "writer": [20, 96, 58, 52],
+  "drawer": [121, 96, 58, 52],
+  "checker": [222, 96, 58, 52],
+  "writes": [20, 96, 58, 82],
+  "draws": [121, 96, 58, 82],
+  "checks": [222, 96, 58, 82],
+  "sheet": [16, 220, 268, 94]
+ },
+ "edges": [
+  {"from": "writer", "side": "right", "to": "drawer", "to_side": "left"},
+  {"from": "drawer", "side": "right", "to": "checker", "to_side": "left"},
+  {"from": "writes", "side": "bottom", "to": "sheet", "to_side": "top", "to_at": 0.1231},
+  {"from": "draws", "side": "bottom", "to": "sheet", "to_side": "top", "to_at": 0.5},
+  {"from": "checks", "side": "bottom", "to": "sheet", "to_side": "top", "to_at": 0.8769}
+ ],
+ "shapes": {
+  "Make a quiz title": [114, 34, 124, 24]
+ },
+ "edits": [
+  ["\n  <path class=\"i-line\" d=\"M49 180 V214 M150 180 V214 M251 180 V214\" stroke-dasharray=\"3 5\"/>", ""]
+ ]
+}

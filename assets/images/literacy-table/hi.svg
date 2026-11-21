@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Human-in-the-Loop: an AI suggests a mark, a teacher approves or changes it, and only then is it sent. -->
-  <defs><marker id="alpt-arr-hi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-hi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-hi-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="96" y="22" width="140" height="52" rx="10"/><rect class="i-line" x="96" y="22" width="140" height="52" rx="10"/>
   <path class="i-deep" d="M106 32 H128 L136 40 V64 H106 Z"/>
   <circle class="i-paper" cx="115" cy="48" r="3"/><circle class="i-paper" cx="127" cy="48" r="3"/>
   <text class="t-s" x="146" y="54">Mark: 4/10</text>
-  <path class="i-line" d="M166 80 V98" marker-end="url(#alpt-arr-hi)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M166 82 L166 100" marker-end="url(#alpt-arr-hi)"/><path class="i-line" d="M258.8 188 C288.8 141.8 296 48 260 48 L244 48" marker-end="url(#alpt-arr-hi)"/><path class="i-line i-main" d="M112 240 L112 264" marker-end="url(#alpt-arr-hi-d)"/></g>
   <circle class="i-cream" cx="166" cy="122" r="14"/><circle class="i-line" cx="166" cy="122" r="14"/>
   <path class="i-line" d="M144 156 C144 138 188 138 188 156"/>
   <text class="t-s" x="166" y="180" text-anchor="middle">Teacher checks</text>
@@ -14,8 +14,6 @@
   <text class="t-s t-w" x="112" y="219" text-anchor="middle">Approve</text>
   <rect class="i-paper" x="176" y="196" width="92" height="36" rx="18"/><rect class="i-line" x="176" y="196" width="92" height="36" rx="18"/>
   <text class="t-s" x="222" y="219" text-anchor="middle">Change</text>
-  <path class="i-line" d="M262 194 C292 160 290 80 244 54" marker-end="url(#alpt-arr-hi)"/>
-  <path class="i-line" d="M112 238 V258" marker-end="url(#alpt-arr-hi)"/>
-  <rect class="i-accent" x="44" y="264" width="136" height="46" rx="10"/><rect class="i-line" x="44" y="264" width="136" height="46" rx="10"/>
-  <text class="t-s" x="112" y="293" text-anchor="middle">Mark sent ✓</text>
+  <rect class="i-accent" x="44" y="272" width="136" height="44" rx="10"/><rect class="i-line" x="44" y="272" width="136" height="44" rx="10"/>
+  <text class="t-s" x="112" y="300" text-anchor="middle">Mark sent ✓</text>
 </svg>

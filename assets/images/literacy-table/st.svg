@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Straight-Through Processing: an order moves along a belt from order to paid to sent, all by computer, with no person checking. -->
-  <defs><marker id="alpt-arr-st" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-st" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-st-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <g class="i-faint">
     <circle class="i-line i-dash" cx="112" cy="104" r="16"/>
@@ -11,15 +11,13 @@
   <text class="t-m" x="162" y="140">checks</text>
   <rect class="i-paper" x="18" y="176" width="62" height="34" rx="4"/><rect class="i-line" x="18" y="176" width="62" height="34" rx="4"/>
   <text class="t-s" x="49" y="198" text-anchor="middle">Order</text>
-  <path class="i-line" d="M84 193 H112" marker-end="url(#alpt-arr-st)"/>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M88 193 L110 193" marker-end="url(#alpt-arr-st-d)"/><path class="i-line i-main" d="M188 193 L210 193" marker-end="url(#alpt-arr-st-d)"/><path class="i-line" d="M24 260 L282 260" marker-end="url(#alpt-arr-st)"/></g>
   <rect class="i-deep" x="118" y="176" width="62" height="34" rx="4"/>
   <text class="t-s t-w" x="149" y="198" text-anchor="middle">Paid</text>
-  <path class="i-line" d="M184 193 H212" marker-end="url(#alpt-arr-st)"/>
   <rect class="i-accent" x="218" y="176" width="64" height="34" rx="4"/><rect class="i-line" x="218" y="176" width="64" height="34" rx="4"/>
   <text class="t-s" x="250" y="198" text-anchor="middle">Sent ✓</text>
   <rect class="i-paper" x="14" y="212" width="272" height="22" rx="11"/><rect class="i-line" x="14" y="212" width="272" height="22" rx="11"/>
   <circle class="i-line" cx="40" cy="223" r="5"/><circle class="i-line" cx="84" cy="223" r="5"/><circle class="i-line" cx="128" cy="223" r="5"/><circle class="i-line" cx="172" cy="223" r="5"/><circle class="i-line" cx="216" cy="223" r="5"/><circle class="i-line" cx="260" cy="223" r="5"/>
-  <path class="i-line" d="M24 260 H274" marker-end="url(#alpt-arr-st)"/>
   <text class="t-s" x="150" y="290" text-anchor="middle">All by computer,</text>
   <text class="t-s" x="150" y="312" text-anchor="middle">start to finish</text>
 </svg>

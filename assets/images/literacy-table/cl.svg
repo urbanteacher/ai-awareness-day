@@ -1,24 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Classification: the AI sorts each incoming email into one of two bins, spam or not spam. -->
-  <defs><marker id="alpt-arr-cl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Classification: the AI sorts each incoming email into one of two bins, spam or not spam. Arrows: tools/literacy-arrows/specs/cl.json -->
+  <defs><marker id="alpt-arr-cl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-cl-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <rect class="i-paper" x="96" y="22" width="154" height="34" rx="6"/><rect class="i-line" x="96" y="22" width="154" height="34" rx="6"/>
-  <rect class="i-cream" x="106" y="31" width="22" height="16" rx="2"/><rect class="i-line" x="106" y="31" width="22" height="16" rx="2"/><path class="i-line" d="M106 31 L117 40 L128 31"/>
-  <text class="t-xs" x="136" y="44">You won £1000!</text>
-  <rect class="i-paper" x="96" y="64" width="154" height="34" rx="6"/><rect class="i-line" x="96" y="64" width="154" height="34" rx="6"/>
-  <rect class="i-cream" x="106" y="73" width="22" height="16" rx="2"/><rect class="i-line" x="106" y="73" width="22" height="16" rx="2"/><path class="i-line" d="M106 73 L117 82 L128 73"/>
-  <text class="t-xs" x="136" y="86">Maths homework</text>
-  <path class="i-line" d="M150 104 V120" marker-end="url(#alpt-arr-cl)"/>
-  <path class="i-deep" d="M120 126 H168 L182 140 V172 H120 Z"/>
-  <text class="t-m t-w" x="151" y="157" text-anchor="middle">AI</text>
-  <path class="i-line" d="M118 162 C90 174 80 186 80 200" marker-end="url(#alpt-arr-cl)"/>
-  <path class="i-line" d="M184 162 C210 174 220 186 220 200" marker-end="url(#alpt-arr-cl)"/>
-  <path class="i-deep" d="M18 210 H142 L132 314 H28 Z"/>
-  <text class="t-m t-w" x="80" y="240" text-anchor="middle">Spam</text>
-  <rect class="i-accent" x="46" y="258" width="34" height="24" rx="2"/><rect class="i-line" x="46" y="258" width="34" height="24" rx="2"/><path class="i-line" d="M46 258 L63 272 L80 258"/>
-  <rect class="i-paper" x="82" y="270" width="34" height="24" rx="2"/><rect class="i-line" x="82" y="270" width="34" height="24" rx="2"/><path class="i-line" d="M82 270 L99 284 L116 270"/>
-  <path class="i-paper" d="M158 210 H282 L272 314 H168 Z"/><path class="i-line" d="M158 210 H282 L272 314 H168 Z"/>
-  <text class="t-m t-d" x="220" y="240" text-anchor="middle">Not spam</text>
-  <rect class="i-cream" x="186" y="258" width="34" height="24" rx="2"/><rect class="i-line" x="186" y="258" width="34" height="24" rx="2"/><path class="i-line" d="M186 258 L203 272 L220 258"/>
-  <rect class="i-cream" x="222" y="270" width="34" height="24" rx="2"/><rect class="i-line" x="222" y="270" width="34" height="24" rx="2"/><path class="i-line" d="M222 270 L239 284 L256 270"/>
-</svg>
+  <rect class="i-paper" x="96" y="16" width="154" height="34" rx="6"/><rect class="i-line" x="96" y="16" width="154" height="34" rx="6"/>
+  <rect class="i-cream" x="106" y="25" width="22" height="16" rx="2"/><rect class="i-line" x="106" y="25" width="22" height="16" rx="2"/><path class="i-line" d="M106 25 L117 34 L128 25"/>
+  <text class="t-xs" x="136" y="38">You won £1000!</text>
+  <rect class="i-paper" x="96" y="56" width="154" height="34" rx="6"/><rect class="i-line" x="96" y="56" width="154" height="34" rx="6"/>
+  <rect class="i-cream" x="106" y="65" width="22" height="16" rx="2"/><rect class="i-line" x="106" y="65" width="22" height="16" rx="2"/><path class="i-line" d="M106 65 L117 74 L128 65"/>
+  <text class="t-xs" x="136" y="78">Maths homework</text>
+  <path class="i-deep" d="M120 128 H168 L182 142 V174 H120 Z"/>
+  <text class="t-m t-w" x="151" y="159" text-anchor="middle">AI</text>
+  <path class="i-deep" d="M18 216 H142 L132 320 H28 Z"/>
+  <text class="t-m t-w" x="80" y="246" text-anchor="middle">Spam</text>
+  <rect class="i-accent" x="46" y="264" width="34" height="24" rx="2"/><rect class="i-line" x="46" y="264" width="34" height="24" rx="2"/><path class="i-line" d="M46 264 L63 278 L80 264"/>
+  <rect class="i-paper" x="82" y="276" width="34" height="24" rx="2"/><rect class="i-line" x="82" y="276" width="34" height="24" rx="2"/><path class="i-line" d="M82 276 L99 290 L116 276"/>
+  <path class="i-paper" d="M158 216 H282 L272 320 H168 Z"/><path class="i-line" d="M158 216 H282 L272 320 H168 Z"/>
+  <text class="t-m t-d" x="220" y="246" text-anchor="middle">Not spam</text>
+  <rect class="i-cream" x="186" y="264" width="34" height="24" rx="2"/><rect class="i-line" x="186" y="264" width="34" height="24" rx="2"/><path class="i-line" d="M186 264 L203 278 L220 264"/>
+  <rect class="i-cream" x="222" y="276" width="34" height="24" rx="2"/><rect class="i-line" x="222" y="276" width="34" height="24" rx="2"/><path class="i-line" d="M222 276 L239 290 L256 276"/>
+<g class="alpt-arrows"><path class="i-line i-main" d="M151 98 L151 120" marker-end="url(#alpt-arr-cl-d)"/><path class="i-line" d="M112 148 C94.4 148 80 167.8 80 192 L80 208" marker-end="url(#alpt-arr-cl)"/><path class="i-line" d="M190 148 C206.5 148 220 167.8 220 192 L220 208" marker-end="url(#alpt-arr-cl)"/></g></svg>

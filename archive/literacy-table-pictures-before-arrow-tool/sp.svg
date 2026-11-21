@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- AI Slop: a feed flooded with the same low-effort AI posts, spilling out by the thousand. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-ink" x="102" y="14" width="128" height="304" rx="16"/>
+  <rect class="i-paper" x="108" y="28" width="116" height="276" rx="6"/>
+  <rect class="i-cream" x="112" y="34" width="108" height="52" rx="6"/><rect class="i-paper" x="118" y="40" width="40" height="40" rx="3"/><circle class="i-deep" cx="146" cy="50" r="5"/><path class="i-deep" d="M120 78 L134 58 L146 70 L152 64 L156 78 Z"/><text class="t-s" x="164" y="58">Wow!</text><text class="t-xs" x="164" y="76">#41</text>
+  <rect class="i-cream" x="112" y="92" width="108" height="52" rx="6"/><rect class="i-paper" x="118" y="98" width="40" height="40" rx="3"/><circle class="i-deep" cx="146" cy="108" r="5"/><path class="i-deep" d="M120 136 L134 116 L146 128 L152 122 L156 136 Z"/><text class="t-s" x="164" y="116">Wow!</text><text class="t-xs" x="164" y="134">#42</text>
+  <rect class="i-cream" x="112" y="150" width="108" height="52" rx="6"/><rect class="i-paper" x="118" y="156" width="40" height="40" rx="3"/><circle class="i-deep" cx="146" cy="166" r="5"/><path class="i-deep" d="M120 194 L134 174 L146 186 L152 180 L156 194 Z"/><text class="t-s" x="164" y="174">Wow!</text><text class="t-xs" x="164" y="192">#43</text>
+  <rect class="i-cream" x="112" y="208" width="108" height="52" rx="6"/><rect class="i-paper" x="118" y="214" width="40" height="40" rx="3"/><circle class="i-deep" cx="146" cy="224" r="5"/><path class="i-deep" d="M120 252 L134 232 L146 244 L152 238 L156 252 Z"/><text class="t-s" x="164" y="232">Wow!</text><text class="t-xs" x="164" y="250">#44</text>
+  <g class="i-faint"><rect class="i-cream" x="112" y="266" width="108" height="52" rx="6"/><rect class="i-paper" x="118" y="272" width="40" height="40" rx="3"/><circle class="i-deep" cx="146" cy="282" r="5"/><path class="i-deep" d="M120 310 L134 290 L146 302 L152 296 L156 310 Z"/><text class="t-s" x="164" y="290">Wow!</text><text class="t-xs" x="164" y="308">#45</text></g>
+  <path class="i-ink" d="M100 298 H232 V302 Q232 320 214 320 H118 Q100 320 100 302 Z"/>
+  <text class="t-m" x="16" y="118">1000s</text>
+  <text class="t-s" x="16" y="140">more</text>
+  <g transform="rotate(-14 46 186)"><rect class="i-cream" x="24" y="168" width="44" height="36" rx="4"/><rect class="i-line" x="24" y="168" width="44" height="36" rx="4"/><path class="i-deep" d="M29 199 L39 183 L48 199 Z"/><path class="i-line" d="M52 180 H62"/></g>
+  <g transform="rotate(10 62 228)"><rect class="i-cream" x="40" y="210" width="44" height="36" rx="4"/><rect class="i-line" x="40" y="210" width="44" height="36" rx="4"/><path class="i-deep" d="M45 241 L55 225 L64 241 Z"/><path class="i-line" d="M68 222 H78"/></g>
+  <g transform="rotate(-6 40 270)"><rect class="i-cream" x="18" y="252" width="44" height="36" rx="4"/><rect class="i-line" x="18" y="252" width="44" height="36" rx="4"/><path class="i-deep" d="M23 283 L33 267 L42 283 Z"/><path class="i-line" d="M46 264 H56"/></g>
+  <g transform="rotate(18 72 298)"><rect class="i-cream" x="50" y="280" width="44" height="36" rx="4"/><rect class="i-line" x="50" y="280" width="44" height="36" rx="4"/><path class="i-deep" d="M55 311 L65 295 L74 311 Z"/><path class="i-line" d="M78 292 H88"/></g>
+  <path class="i-line" d="M262 110 V266" stroke-dasharray="3 6"/>
+  <path class="i-line" d="M252 254 L262 268 L272 254"/>
+  <text class="t-xs" x="262" y="292" text-anchor="middle">endless</text>
+</svg>

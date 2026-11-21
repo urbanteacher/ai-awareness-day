@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Algorithm: five numbered steps for making a cup of tea, in order, ending at a steaming mug. -->
-  <defs><marker id="alpt-arr-al" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Algorithm: five numbered steps for making a cup of tea, in order, ending at a steaming mug. Arrows: tools/literacy-arrows/specs/al.json -->
+  <defs><marker id="alpt-arr-al-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-m" x="184" y="58" text-anchor="middle">Make tea</text>
   <path class="i-line" d="M40 100 V290"/>
-  <rect class="i-paper" x="20" y="88" width="178" height="34" rx="17"/><rect class="i-line" x="20" y="88" width="178" height="34" rx="17"/><circle class="i-deep" cx="37" cy="105" r="12"/><text class="t-s t-w" x="37" y="111" text-anchor="middle">1</text><text class="t-s" x="58" y="111" text-anchor="start">Boil the kettle</text>
-  <rect class="i-paper" x="20" y="134" width="178" height="34" rx="17"/><rect class="i-line" x="20" y="134" width="178" height="34" rx="17"/><circle class="i-deep" cx="37" cy="151" r="12"/><text class="t-s t-w" x="37" y="157" text-anchor="middle">2</text><text class="t-s" x="58" y="157" text-anchor="start">Teabag in mug</text>
-  <rect class="i-paper" x="20" y="180" width="178" height="34" rx="17"/><rect class="i-line" x="20" y="180" width="178" height="34" rx="17"/><circle class="i-deep" cx="37" cy="197" r="12"/><text class="t-s t-w" x="37" y="203" text-anchor="middle">3</text><text class="t-s" x="58" y="203" text-anchor="start">Pour in water</text>
-  <rect class="i-paper" x="20" y="226" width="178" height="34" rx="17"/><rect class="i-line" x="20" y="226" width="178" height="34" rx="17"/><circle class="i-deep" cx="37" cy="243" r="12"/><text class="t-s t-w" x="37" y="249" text-anchor="middle">4</text><text class="t-s" x="58" y="249" text-anchor="start">Wait 3 minutes</text>
-  <rect class="i-paper" x="20" y="272" width="178" height="34" rx="17"/><rect class="i-line" x="20" y="272" width="178" height="34" rx="17"/><circle class="i-deep" cx="37" cy="289" r="12"/><text class="t-s t-w" x="37" y="295" text-anchor="middle">5</text><text class="t-s" x="58" y="295" text-anchor="start">Take bag out</text>
-  <path class="i-line" d="M202 289 H216" marker-end="url(#alpt-arr-al)"/>
-  <path class="i-paper" d="M222 238 H272 V284 Q272 302 254 302 H240 Q222 302 222 284 Z"/><path class="i-line" d="M222 238 H272 V284 Q272 302 254 302 H240 Q222 302 222 284 Z M272 250 Q290 250 290 266 Q290 282 272 282"/>
-  <rect class="i-deep" x="226" y="244" width="42" height="10" rx="3"/>
-  <path class="i-line" d="M236 228 Q230 218 236 208 Q242 198 236 188 M250 228 Q244 218 250 208 Q256 198 250 188 M264 228 Q258 218 264 208 Q270 198 264 188" style="stroke-width:2"/>
+  <rect class="i-paper" x="20" y="88" width="170" height="34" rx="17"/><rect class="i-line" x="20" y="88" width="170" height="34" rx="17"/><circle class="i-deep" cx="37" cy="105" r="12"/><text class="t-s t-w" x="37" y="111" text-anchor="middle">1</text><text class="t-s" x="58" y="111" text-anchor="start">Boil the kettle</text>
+  <rect class="i-paper" x="20" y="134" width="170" height="34" rx="17"/><rect class="i-line" x="20" y="134" width="170" height="34" rx="17"/><circle class="i-deep" cx="37" cy="151" r="12"/><text class="t-s t-w" x="37" y="157" text-anchor="middle">2</text><text class="t-s" x="58" y="157" text-anchor="start">Teabag in mug</text>
+  <rect class="i-paper" x="20" y="180" width="170" height="34" rx="17"/><rect class="i-line" x="20" y="180" width="170" height="34" rx="17"/><circle class="i-deep" cx="37" cy="197" r="12"/><text class="t-s t-w" x="37" y="203" text-anchor="middle">3</text><text class="t-s" x="58" y="203" text-anchor="start">Pour in water</text>
+  <rect class="i-paper" x="20" y="226" width="170" height="34" rx="17"/><rect class="i-line" x="20" y="226" width="170" height="34" rx="17"/><circle class="i-deep" cx="37" cy="243" r="12"/><text class="t-s t-w" x="37" y="249" text-anchor="middle">4</text><text class="t-s" x="58" y="249" text-anchor="start">Wait 3 minutes</text>
+  <rect class="i-paper" x="20" y="272" width="170" height="34" rx="17"/><rect class="i-line" x="20" y="272" width="170" height="34" rx="17"/><circle class="i-deep" cx="37" cy="289" r="12"/><text class="t-s t-w" x="37" y="295" text-anchor="middle">5</text><text class="t-s" x="58" y="295" text-anchor="start">Take bag out</text>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M198 289 L220 289" marker-end="url(#alpt-arr-al-d)"/></g>
+  <path class="i-paper" d="M228 238 H278 V284 Q278 302 260 302 H246 Q228 302 228 284 Z"/><path class="i-line" d="M228 238 H278 V284 Q278 302 260 302 H246 Q228 302 228 284 Z M278 250 Q294 250 294 266 Q294 282 278 282"/>
+  <rect class="i-deep" x="232" y="244" width="42" height="10" rx="3"/>
+  <path class="i-line" d="M242 228 Q236 218 242 208 Q248 198 242 188 M256 228 Q250 218 256 208 Q262 198 256 188 M270 228 Q264 218 270 208 Q276 198 270 188" style="stroke-width:2"/>
 </svg>

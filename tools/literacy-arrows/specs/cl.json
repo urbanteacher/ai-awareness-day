@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "emails": [96, 16, 154, 74],
+  "ai": [120, 128, 62, 46],
+  "spam": [18, 216, 124, 104],
+  "notspam": [158, 216, 124, 104]
+ },
+ "edges": [
+  {"from": "emails", "side": "bottom", "to": "ai", "to_side": "top", "main": true},
+  {"from": "ai", "side": "left", "to": "spam", "to_side": "top"},
+  {"from": "ai", "side": "right", "to": "notspam", "to_side": "top"}
+ ],
+ "shapes": {}
+}

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Copyright & IP: an artist's painting is used to train AI, and nobody is sure who owns what it makes. -->
-  <defs><marker id="alpt-arr-ip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-ip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-ip-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="24" y="104" width="112" height="92" rx="4"/>
   <circle class="i-cream" cx="56" cy="130" r="11"/><circle class="i-line" cx="56" cy="130" r="11"/>
@@ -8,10 +8,9 @@
   <rect class="i-line" x="24" y="104" width="112" height="92" rx="4"/>
   <circle class="i-accent" cx="124" cy="104" r="14"/><circle class="i-line" cx="124" cy="104" r="14"/>
   <text class="t-s" x="124" y="110" text-anchor="middle">©</text>
-  <path class="i-line" d="M146 150 H176" marker-end="url(#alpt-arr-ip)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M144 151 L178 151" marker-end="url(#alpt-arr-ip)"/><path class="i-line i-main" d="M224 192 L224 214" marker-end="url(#alpt-arr-ip-d)"/></g>
   <path class="i-deep" d="M186 118 H246 L262 134 V184 H186 Z"/>
   <text class="t-m t-w" x="224" y="159" text-anchor="middle">AI</text>
-  <path class="i-line" d="M224 192 V214" marker-end="url(#alpt-arr-ip)"/>
   <rect class="i-paper" x="180" y="222" width="90" height="66" rx="4"/>
   <path class="i-cream" d="M186 282 L210 254 L228 268 L244 248 L264 282 Z"/>
   <path class="i-line" d="M186 282 L210 254 L228 268 L244 248 L264 282"/>

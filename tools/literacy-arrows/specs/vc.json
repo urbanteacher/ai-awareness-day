@@ -1,0 +1,16 @@
+{
+ "nodes": {
+  "ask": [92, 16, 156, 62],
+  "code": [104, 118, 180, 80],
+  "app": [20, 238, 200, 76]
+ },
+ "edges": [
+  {"from": "ask", "side": "bottom", "to": "code", "to_side": "top", "at": 0.7179, "to_at": 0.5556},
+  {"from": "code", "side": "bottom", "to": "app", "to_side": "top", "at": 0.3111, "to_at": 0.7, "main": true}
+ ],
+ "shapes": {
+  "the bubble's tail": [84, 76, 46, 30],
+  "the person": [22, 112, 48, 58],
+  "It runs label": [224, 268, 66, 18]
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "general": [118, 24, 66, 66],
+  "data": [16, 236, 64, 52],
+  "expert": [118, 230, 66, 66]
+ },
+ "edges": [
+  {"from": "general", "side": "bottom", "to": "expert", "to_side": "top", "main": true},
+  {"from": "data", "side": "right", "to": "expert", "to_side": "left"}
+ ],
+ "shapes": {
+  "General model label": [196, 38, 66, 40],
+  "More training label": [168, 142, 64, 40],
+  "Maths data label": [14, 297, 68, 14],
+  "pi badge": [169, 277, 30, 30],
+  "Maths expert label": [210, 244, 56, 40]
+ }
+}

@@ -1,25 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Prompt Engineering: a vague request rebuilt from clear parts. -->
-  <defs><marker id="alpt-arr-pe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Prompt Engineering: a vague request rebuilt from clear parts. Arrows: tools/literacy-arrows/specs/pe.json -->
+  <defs><marker id="alpt-arr-pe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-pe-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <g class="i-faint">
-    <rect class="i-paper" x="122" y="28" width="112" height="44" rx="12"/><rect class="i-line" x="122" y="28" width="112" height="44" rx="12"/>
-    <text class="t-s" x="178" y="56" text-anchor="middle">help me</text>
+    <rect class="i-paper" x="122" y="16" width="112" height="42" rx="12"/><rect class="i-line" x="122" y="16" width="112" height="42" rx="12"/>
+    <text class="t-s" x="178" y="43" text-anchor="middle">help me</text>
   </g>
-  <path class="i-line" d="M130 52 H226"/>
-  <path class="i-line" d="M178 78 V96" marker-end="url(#alpt-arr-pe)"/>
-  <rect class="i-paper" x="16" y="102" width="268" height="46" rx="8"/><rect class="i-line" x="16" y="102" width="268" height="46" rx="8"/>
-<path class="i-deep" d="M18 104 H90 V146 H18 Z"/>
-<text class="t-xs t-w" x="54" y="130" text-anchor="middle">Role</text><text class="t-s" x="104" y="131">a maths tutor</text>
-  <rect class="i-paper" x="16" y="156" width="268" height="46" rx="8"/><rect class="i-line" x="16" y="156" width="268" height="46" rx="8"/>
-<path class="i-deep" d="M18 158 H90 V200 H18 Z"/>
-<text class="t-xs t-w" x="54" y="184" text-anchor="middle">Task</text><text class="t-s" x="104" y="185">explain fractions</text>
-  <rect class="i-paper" x="16" y="210" width="268" height="46" rx="8"/><rect class="i-line" x="16" y="210" width="268" height="46" rx="8"/>
-<path class="i-deep" d="M18 212 H90 V254 H18 Z"/>
-<text class="t-xs t-w" x="54" y="238" text-anchor="middle">Format</text><text class="t-s" x="104" y="239">3 short steps</text>
-  <path class="i-line" d="M150 262 V276" marker-end="url(#alpt-arr-pe)"/>
-  <rect class="i-deep" x="70" y="282" width="160" height="32" rx="16"/>
-  <text class="t-s t-w" x="150" y="304" text-anchor="middle">Useful answer</text>
-  <circle class="i-accent" cx="232" cy="298" r="14"/>
-  <path d="M225 298 L230 303 L239 293" fill="none" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+  <path class="i-line" d="M130 38 H226"/>
+  <rect class="i-paper" x="16" y="92" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="92" width="268" height="44" rx="8"/>
+  <path class="i-deep" d="M18 94 H90 V134 H18 Z"/>
+  <text class="t-xs t-w" x="54" y="119" text-anchor="middle">Role</text><text class="t-s" x="104" y="120">a maths tutor</text>
+  <rect class="i-paper" x="16" y="142" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="142" width="268" height="44" rx="8"/>
+  <path class="i-deep" d="M18 144 H90 V184 H18 Z"/>
+  <text class="t-xs t-w" x="54" y="169" text-anchor="middle">Task</text><text class="t-s" x="104" y="170">explain fractions</text>
+  <rect class="i-paper" x="16" y="192" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="192" width="268" height="44" rx="8"/>
+  <path class="i-deep" d="M18 194 H90 V234 H18 Z"/>
+  <text class="t-xs t-w" x="54" y="219" text-anchor="middle">Format</text><text class="t-s" x="104" y="220">3 short steps</text>
+  <rect class="i-deep" x="70" y="278" width="160" height="32" rx="16"/>
+  <text class="t-s t-w" x="150" y="300" text-anchor="middle">Useful answer</text>
+  <circle class="i-accent" cx="232" cy="294" r="14"/>
+  <path d="M225 294 L230 299 L239 289" fill="none" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g class="alpt-arrows"><path class="i-line" d="M178 66 L178 84" marker-end="url(#alpt-arr-pe)"/><path class="i-line i-main" d="M150 244 L150 270" marker-end="url(#alpt-arr-pe-d)"/></g></svg>

@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Vector database: a search for "puppy" is turned into numbers and matched to the closest stored meaning, dog. -->
-  <defs><marker id="alpt-arr-vd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-vd-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <rect class="i-paper" x="100" y="26" width="150" height="46" rx="12"/><rect class="i-line" x="100" y="26" width="150" height="46" rx="12"/>
-  <text class="t-m" x="175" y="57" text-anchor="middle">puppy</text>
-  <path class="i-line" d="M136 76 V98" marker-end="url(#alpt-arr-vd)"/>
-  <text class="t-xs" x="148" y="94">= [0.8, 0.3 …]</text>
+  <rect class="i-paper" x="100" y="18" width="150" height="46" rx="12"/><rect class="i-line" x="100" y="18" width="150" height="46" rx="12"/>
+  <text class="t-m" x="175" y="49" text-anchor="middle">puppy</text>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M136 72 L135.9 94" marker-end="url(#alpt-arr-vd-d)"/></g>
+  <text class="t-xs" x="148" y="86">= [0.8, 0.3 …]</text>
   <path class="i-paper" d="M24 116 V298 A126 14 0 0 0 276 298 V116 Z"/><path class="i-line" d="M24 116 V298 A126 14 0 0 0 276 298 V116"/>
   <ellipse class="i-cream" cx="150" cy="116" rx="126" ry="14"/><ellipse class="i-line" cx="150" cy="116" rx="126" ry="14"/>
   <rect class="i-deep" x="40" y="146" width="220" height="40" rx="6"/>

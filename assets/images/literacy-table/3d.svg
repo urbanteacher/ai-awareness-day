@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- 3D Design & CAD: a 3D model with axes and a size, improved by AI, then 3D printed. -->
-  <defs><marker id="alpt-arr-3d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-3d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-3d-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-deep" x="96" y="24" width="140" height="30" rx="15"/>
   <text class="t-xs t-w" x="166" y="44" text-anchor="middle">AI: 30% lighter</text>
-  <path class="i-line" d="M150 58 C146 96 124 124 108 148" marker-end="url(#alpt-arr-3d)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M124 62 L124 122" marker-end="url(#alpt-arr-3d)"/><path class="i-line i-main" d="M160 195 L182 195" marker-end="url(#alpt-arr-3d-d)"/></g>
   <text class="t-s" x="20" y="116">CAD model</text>
   <path class="i-cream" d="M48 230 L100 260 L100 190 L48 160 Z"/>
   <path class="i-deep" d="M100 260 L152 230 L152 160 L100 190 Z"/>
@@ -13,11 +13,10 @@
   <ellipse class="i-ink" cx="100" cy="160" rx="17" ry="9.5"/>
   <path class="i-line" d="M108 274 L160 244 M104 268 L112 280 M156 238 L164 250"/>
   <text class="t-xs" x="0" y="0" text-anchor="middle" transform="translate(146 276) rotate(-30)">40 mm</text>
-  <path class="i-line" d="M28 296 V262" marker-end="url(#alpt-arr-3d)"/><path class="i-line" d="M28 296 L58 313" marker-end="url(#alpt-arr-3d)"/><path class="i-line" d="M28 296 L58 279" marker-end="url(#alpt-arr-3d)"/>
+  <path class="i-line" d="M28 262 V296 L58 313 M28 296 L58 279"/>
   <text class="t-xs" x="28" y="254" text-anchor="middle">z</text>
   <text class="t-xs" x="68" y="320" text-anchor="middle">x</text>
   <text class="t-xs" x="68" y="280" text-anchor="middle">y</text>
-  <path class="i-line" d="M162 200 H180" marker-end="url(#alpt-arr-3d)"/>
   <rect class="i-ink" x="190" y="110" width="96" height="10" rx="3"/>
   <rect class="i-ink" x="190" y="110" width="8" height="194"/><rect class="i-ink" x="278" y="110" width="8" height="194"/>
   <path class="i-line" d="M238 120 V212"/>

@@ -1,0 +1,341 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arrow Style Trial</title>
+<style>
+:root{--ink:#231F20;--cream:#F6F4ED;--card:#EAE7DF;--dim:#54504E;--rule:#C9C6BE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.5 "AIAD Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:0 auto;padding:40px 16px 64px}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05;margin:.3rem 0 .8rem;letter-spacing:-.02em}
+.lead{max-width:44rem;font-size:1.1rem;margin:0 0 2rem}
+h2{font-size:1.5rem;margin:0 0 1rem}
+h3{font-size:1rem;margin:0}
+.rules{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:0 0 1.2rem}
+.rule{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;background:#fff;border:2px solid var(--ink);padding:12px}
+.rule p{margin:.15rem 0 0;font-size:.92rem;color:var(--dim)}
+.sw{background:var(--fam)}
+.also{max-width:48rem;margin:0 0 3rem;padding-left:1.2rem}
+.also li+li{margin-top:.3rem}
+.pair{background:#fff;border:2px solid var(--ink);padding:20px;margin:0 0 20px}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+figure{margin:0}
+.pic svg{display:block;width:100%;height:auto;max-width:340px}
+figcaption{font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.4rem}
+.notes{margin:1rem 0 0;padding-left:1.2rem;max-width:48rem}
+.notes li+li{margin-top:.3rem}
+.alpt-pic text{font-family:inherit;fill:var(--ink)}
+.alpt-pic .i-bg{fill:var(--fam)} .alpt-pic .i-deep{fill:var(--fam-deep)} .alpt-pic .i-paper{fill:#fff} .alpt-pic .i-cream{fill:var(--cream)}
+.alpt-pic .i-accent{fill:var(--pic-accent,#FF7038)} .alpt-pic .i-ink{fill:var(--ink)}
+.alpt-pic .i-line{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-deepline{fill:none;stroke:var(--fam-deep);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-dash{stroke-dasharray:7 7} .alpt-pic .i-faint{opacity:.35}
+.alpt-pic .i-main{stroke:var(--fam-deep)}
+.alpt-pic .i-head{fill:none;stroke:var(--ink);stroke-width:1.67;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-head--deep{stroke:var(--fam-deep)}
+.alpt-pic .i-dot{fill:var(--ink)}
+.alpt-pic .i-dot--deep{fill:var(--fam-deep)}
+.alpt-pic .t-xs{font-size:13px;font-weight:600} .alpt-pic .t-s{font-size:16px;font-weight:600} .alpt-pic .t-w{fill:#fff}
+.toggle{display:inline-flex;gap:.5rem;align-items:center;font-weight:700;margin:0 0 1.5rem;padding:.6rem .9rem;border:2px solid var(--ink);background:#fff;cursor:pointer}
+.toggle input{width:1.1rem;height:1.1rem;accent-color:var(--ink)}
+.ctrl{display:none}
+body.show-ctrl .ctrl{display:inline}
+.ctrl .c-line{fill:none;stroke:#E11D48;stroke-width:1.5;stroke-dasharray:3 3}
+.ctrl .c-dot{fill:#fff;stroke:#E11D48;stroke-width:2}
+.links{margin-top:1rem}
+.links summary{cursor:pointer;font-weight:700}
+.links ul{margin:.5rem 0 0;padding-left:1.2rem;font-size:.9rem}
+code{font-size:.88em;background:var(--card);padding:.05rem .3rem}
+.compare{background:#fff;border:2px solid var(--ink);padding:20px;margin:0 0 20px}
+.cmp-lead{margin:0 0 1rem;max-width:44rem}
+.cmp-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.cmp-box{background:var(--fam);min-height:200px;display:flex;align-items:center;justify-content:center;padding:8px}
+.cmp-box svg{display:block;width:100%;height:auto;max-width:300px}
+.cmp-grid figure p{font-size:.9rem;color:var(--dim);margin:.4rem 0 0}
+.mermaid{margin:0;background:transparent;font-family:inherit}
+.clash{margin:1rem 0 0;padding:.6rem .8rem;font-size:.92rem;font-weight:600}
+.clash.ok{background:#E3F4E8;border-left:4px solid #1F7A3A}
+.clash.bad{background:#FDE7EA;border-left:4px solid #BE123C}
+.clash p{margin:0}.clash ul{margin:.3rem 0 0;padding-left:1.2rem;font-weight:500}
+@media (max-width:560px){.pics{gap:10px} .rule{grid-template-columns:90px 1fr}}
+</style></head><body><main>
+<p class="eyebrow">AI Literacy Periodic Table · element pictures</p>
+<h1>Arrow style trial</h1>
+<p class="lead">One set of arrow rules for all 100 pictures with arrows, tried on three of them. “Now” is the live picture; “Trial” is redrawn to the rules. Nothing on the site has changed.</p>
+<h2>The rules</h2>
+<div class="rules"><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-m" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-main" d="M8 20 H104" marker-end="url(#d-m)"/></svg></div><div><h3>Main path</h3><p>The one route the picture is about. Family colour only: the same thickness and the same head as every other arrow. One per picture.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-s" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line" d="M8 20 H104" marker-end="url(#d-s)"/></svg></div><div><h3>Step</h3><p>“Leads to.” Ink, 2.5 thick. Most arrows.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-y" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-dash" d="M8 20 H104" marker-end="url(#d-y)"/></svg></div><div><h3>Maybe or later</h3><p>Dashed. Only for something optional, uncertain or still to happen.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-o" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><circle class="i-dot" cx="5" cy="5" r="3.5"/></marker></defs><path class="i-line" d="M12 20 H108" marker-start="url(#d-o)" marker-end="url(#d-o)"/></svg></div><div><h3>Related</h3><p>A line with a dot at each end. Linked, but nothing flows.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-x" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" orient="auto-start-reverse"><path class="i-head" d="M2.5 2.5 7.5 7.5 M7.5 2.5 2.5 7.5"/></marker></defs><path class="i-line" d="M8 20 H100" marker-end="url(#d-x)"/></svg></div><div><h3>Blocked</h3><p>A cross instead of a head: stopped, refused or not allowed. Good for guardrails and safeguarding.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-l" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-main" d="M10 30 C30 4 90 4 104 26" marker-end="url(#d-l)"/></svg></div><div><h3>Loop</h3><p>A cycle. Every arc in a loop uses the same curve.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-t" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line" d="M16 20 H104" marker-start="url(#d-t)" marker-end="url(#d-t)"/></svg></div><div><h3>Both ways</h3><p>Heads at both ends. Rare: only for a real two-way exchange.</p></div></div></div>
+<ul class="also">
+<li><strong>Every arrow stops 8 short</strong> of the shape it points to, so heads never touch or overlap a box.</li>
+<li><strong>One arrowhead, one thickness</strong>: every arrow is 2.5 thick with the same head; only the colour changes.</li>
+<li><strong>Leave and enter straight on</strong>: an arrow leaves a box at right angles to its edge and arrives the same way.</li>
+<li><strong>Checked on every build</strong>: <code>build.py</code> warns if an arrow crosses a box, shape or label it isn’t joined to, if two arrows cross, or if one is too short to read.</li>
+<li><strong>Near-misses snap straight</strong>: two boxes within 6 of lining up get a straight arrow, not a tiny wobble.</li>
+<li><strong>Calculated, not guessed</strong>: each trial arrow is written only as “from this box’s side to that box’s side”. <code>build.py</code> works out the rest: where on the edge it sits, whether it can be straight, and the curve, with both control points straight out from their edge.</li>
+<li><strong>Read left to right or top to bottom.</strong> Labels sit beside an arrow, never on the line.</li>
+</ul>
+<label class="toggle"><input type="checkbox" onchange="document.body.classList.toggle('show-ctrl',this.checked)"> Show curve control points</label>
+
+<section class="pair" style="--fam:#E3E8EF;--fam-deep:#334155;--pic-accent:#FF7038">
+<h2>Training</h2>
+<div class="pics"><figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-tr-old" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <g class="i-faint"><rect class="i-cream" x="120" y="18" width="44" height="40" rx="3"/><rect class="i-line" x="120" y="18" width="44" height="40" rx="3"/></g><rect class="i-paper" x="112" y="26" width="44" height="40" rx="3"/><rect class="i-line" x="112" y="26" width="44" height="40" rx="3"/><path class="i-line" d="M120 38 H148 M120 48 H142 M120 58 H148" style="stroke-width:2"/>
+  <text class="t-s" x="172" y="50" text-anchor="start">Data</text>
+  <path class="i-line" d="M140 70 V92" marker-end="url(#alpt-arr-tr-old)"/>
+  <rect class="i-deep" x="96" y="98" width="88" height="32" rx="16"/><text class="t-s t-w" x="140" y="120" text-anchor="middle">Guess</text>
+  <rect class="i-paper" x="196" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="196" y="222" width="88" height="32" rx="16"/><text class="t-s" x="240" y="244" text-anchor="middle">Check</text>
+  <rect class="i-paper" x="16" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="16" y="222" width="88" height="32" rx="16"/><text class="t-s" x="60" y="244" text-anchor="middle">Adjust</text>
+  <path class="i-line" d="M188 114 C228 118 244 160 242 214" marker-end="url(#alpt-arr-tr-old)"/>
+  <path class="i-line" d="M196 248 C166 266 134 266 110 248" marker-end="url(#alpt-arr-tr-old)"/>
+  <path class="i-line" d="M58 216 C56 160 66 122 90 115" marker-end="url(#alpt-arr-tr-old)"/>
+  <circle class="i-cream" cx="126" cy="178" r="15"/><circle class="i-line" cx="126" cy="178" r="15"/><path class="i-line" d="M126 178 L134 166"/>
+  <circle class="i-cream" cx="170" cy="178" r="15"/><circle class="i-line" cx="170" cy="178" r="15"/><path class="i-line" d="M170 178 L158 168"/>
+  <text class="t-xs" x="148" y="212" text-anchor="middle">Settings</text>
+  <text class="t-xs" x="20" y="310" text-anchor="start">Score</text>
+  <rect class="i-deep" x="76" y="302" width="20" height="10" rx="2"/><rect class="i-deep" x="104" y="296" width="20" height="16" rx="2"/><rect class="i-deep" x="132" y="288" width="20" height="24" rx="2"/><rect class="i-deep" x="160" y="280" width="20" height="32" rx="2"/><rect class="i-accent" x="188" y="272" width="20" height="40" rx="2"/>
+</svg>
+</div><figcaption>Now</figcaption></figure>
+<figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-tr-new" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-tr-new-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <g class="i-faint"><rect class="i-cream" x="120" y="18" width="44" height="40" rx="3"/><rect class="i-line" x="120" y="18" width="44" height="40" rx="3"/></g><rect class="i-paper" x="112" y="26" width="44" height="40" rx="3"/><rect class="i-line" x="112" y="26" width="44" height="40" rx="3"/><path class="i-line" d="M120 38 H148 M120 48 H142 M120 58 H148" style="stroke-width:2"/>
+  <text class="t-s" x="172" y="50" text-anchor="start">Data</text>
+  <rect class="i-deep" x="96" y="98" width="88" height="32" rx="16"/><text class="t-s t-w" x="140" y="120" text-anchor="middle">Guess</text>
+  <rect class="i-paper" x="196" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="196" y="222" width="88" height="32" rx="16"/><text class="t-s" x="240" y="244" text-anchor="middle">Check</text>
+  <rect class="i-paper" x="16" y="222" width="88" height="32" rx="16"/><rect class="i-line" x="16" y="222" width="88" height="32" rx="16"/><text class="t-s" x="60" y="244" text-anchor="middle">Adjust</text>
+  <path class="i-line" d="M134 74 L134 90" marker-end="url(#alpt-arr-tr-new)"/>
+  <path class="i-line i-main" d="M192 114 C218.4 114 240 151.8 240 198 L240 214" marker-end="url(#alpt-arr-tr-new-d)"/>
+  <path class="i-line i-main" d="M188 238 L112 238" marker-end="url(#alpt-arr-tr-new-d)"/>
+  <path class="i-line i-main" d="M28 214 C28 159 47.8 114 72 114 L88 114" marker-end="url(#alpt-arr-tr-new-d)"/>
+  <circle class="i-cream" cx="126" cy="178" r="15"/><circle class="i-line" cx="126" cy="178" r="15"/><path class="i-line" d="M126 178 L134 166"/>
+  <circle class="i-cream" cx="170" cy="178" r="15"/><circle class="i-line" cx="170" cy="178" r="15"/><path class="i-line" d="M170 178 L158 168"/>
+  <text class="t-xs" x="148" y="212" text-anchor="middle">Settings</text>
+  <text class="t-xs" x="20" y="310" text-anchor="start">Score</text>
+  <rect class="i-deep" x="76" y="302" width="20" height="10" rx="2"/><rect class="i-deep" x="104" y="296" width="20" height="16" rx="2"/><rect class="i-deep" x="132" y="288" width="20" height="24" rx="2"/><rect class="i-deep" x="160" y="280" width="20" height="32" rx="2"/><rect class="i-accent" x="188" y="272" width="20" height="40" rx="2"/>
+  <g class="ctrl"><path class="c-line" d="M192 114 L218.4 114 M240 198 L240 151.8"/><circle class="c-dot" cx="218.4" cy="114" r="3.5"/><circle class="c-dot" cx="240" cy="151.8" r="3.5"/><path class="c-line" d="M28 214 L28 159 M72 114 L47.8 114"/><circle class="c-dot" cx="28" cy="159" r="3.5"/><circle class="c-dot" cx="47.8" cy="114" r="3.5"/></g>
+</svg>
+</div><figcaption>Trial</figcaption></figure></div>
+<ul class="notes"><li>The loop is the main path, so it is drawn in the family colour, with heads to match (before, the heads stayed black).</li><li>Check and Adjust face each other on one line, so the code draws that arrow straight.</li></ul>
+<p class="clash ok">Clash check: no arrow crosses a box, shape or label, nothing crosses, nothing is too short.</p>
+<details class="links"><summary>The arrows as data</summary><ul><li><code>data bottom → guess top</code></li><li><code>guess right → check top</code> (main)</li><li><code>check left → adjust right</code> (main)</li><li><code>adjust top → guess left</code> (main)</li></ul></details></section>
+<section class="pair" style="--fam:#FFEDD5;--fam-deep:#B45309;--pic-accent:#FA83EB">
+<h2>AI Agent</h2>
+<div class="pics"><figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-ag-old" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="96" y="20" width="136" height="58" rx="10"/>
+  <text class="t-xs t-w" x="164" y="41" text-anchor="middle" letter-spacing="2">GOAL</text>
+  <text class="t-s t-w" x="164" y="64" text-anchor="middle">Book the hall</text>
+  <path class="i-line i-dash" d="M110 80 C80 92 64 100 60 114" marker-end="url(#alpt-arr-ag-old)"/>
+  <path class="i-deep" d="M26 124 H72 L88 140 V184 H26 Z"/>
+  <rect class="i-paper" x="38" y="140" width="36" height="24" rx="5"/>
+  <circle class="i-ink" cx="50" cy="152" r="3.5"/><circle class="i-ink" cx="62" cy="152" r="3.5"/>
+  <path class="i-line" d="M94 140 C106 128 108 124 118 122" marker-end="url(#alpt-arr-ag-old)"/>
+  <path class="i-line" d="M94 162 H118" marker-end="url(#alpt-arr-ag-old)"/>
+  <path class="i-line" d="M94 182 C106 198 108 218 118 222" marker-end="url(#alpt-arr-ag-old)"/>
+  <rect class="i-paper" x="124" y="104" width="156" height="36" rx="8"/><rect class="i-line" x="124" y="104" width="156" height="36" rx="8"/>
+  <text class="t-s" x="136" y="128">Check diary</text>
+  <path class="i-deepline" d="M254 122 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-paper" x="124" y="154" width="156" height="36" rx="8"/><rect class="i-line" x="124" y="154" width="156" height="36" rx="8"/>
+  <text class="t-s" x="136" y="178">Email office</text>
+  <path class="i-deepline" d="M254 172 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-accent" x="124" y="204" width="156" height="36" rx="8"/><rect class="i-line i-dash" x="124" y="204" width="156" height="36" rx="8"/>
+  <text class="t-s" x="136" y="228">Pay £50?</text>
+  <rect class="i-ink" x="252" y="213" width="5" height="18" rx="2"/><rect class="i-ink" x="263" y="213" width="5" height="18" rx="2"/>
+  <path class="i-line" d="M230 244 V258" marker-end="url(#alpt-arr-ag-old)"/>
+  <circle class="i-cream" cx="230" cy="276" r="12"/><circle class="i-line" cx="230" cy="276" r="12"/>
+  <path class="i-line" d="M210 312 C210 292 250 292 250 312"/>
+  <text class="t-s" x="200" y="298" text-anchor="end">Asks you first</text>
+</svg>
+</div><figcaption>Now</figcaption></figure>
+<figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-ag-new" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-ag-new-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="96" y="20" width="136" height="58" rx="10"/>
+  <text class="t-xs t-w" x="164" y="41" text-anchor="middle" letter-spacing="2">GOAL</text>
+  <text class="t-s t-w" x="164" y="64" text-anchor="middle">Book the hall</text>
+  <path class="i-deep" d="M16 124 H50 L66 140 V184 H16 Z"/>
+  <rect class="i-paper" x="24" y="142" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="34" cy="153" r="3.5"/><circle class="i-ink" cx="46" cy="153" r="3.5"/>
+  <path class="i-line" d="M88 49 C62.1 49 41 72 41 100 L41 116" marker-end="url(#alpt-arr-ag-new)"/>
+  <path class="i-line" d="M74 162 L80 162 C98 162 98 118 116 118 L132 118" marker-end="url(#alpt-arr-ag-new)"/>
+  <path class="i-line" d="M74 162 L132 162" marker-end="url(#alpt-arr-ag-new)"/>
+  <path class="i-line" d="M74 162 L80 162 C98 162 98 206 116 206 L132 206" marker-end="url(#alpt-arr-ag-new)"/>
+  <path class="i-line i-main" d="M230 232 L230 264" marker-end="url(#alpt-arr-ag-new-d)"/>
+  <rect class="i-paper" x="140" y="100" width="144" height="36" rx="8"/><rect class="i-line" x="140" y="100" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="124">Check diary</text>
+  <path class="i-deepline" d="M254 118 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-paper" x="140" y="144" width="144" height="36" rx="8"/><rect class="i-line" x="140" y="144" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="168">Email office</text>
+  <path class="i-deepline" d="M254 162 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-accent" x="140" y="188" width="144" height="36" rx="8"/><rect class="i-line i-dash" x="140" y="188" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="212">Pay £50?</text>
+  <rect class="i-ink" x="252" y="197" width="5" height="18" rx="2"/><rect class="i-ink" x="263" y="197" width="5" height="18" rx="2"/>
+  <circle class="i-cream" cx="230" cy="284" r="12"/><circle class="i-line" cx="230" cy="284" r="12"/>
+  <path class="i-line" d="M210 320 C210 300 250 300 250 320"/>
+  <text class="t-s" x="200" y="306" text-anchor="end">Asks you first</text>
+  <g class="ctrl"><path class="c-line" d="M88 49 L62.1 49 M41 100 L41 72"/><circle class="c-dot" cx="62.1" cy="49" r="3.5"/><circle class="c-dot" cx="41" cy="72" r="3.5"/><path class="c-line" d="M80 162 L98 162 M116 118 L98 118"/><circle class="c-dot" cx="98" cy="162" r="3.5"/><circle class="c-dot" cx="98" cy="118" r="3.5"/><path class="c-line" d="M80 162 L98 162 M116 206 L98 206"/><circle class="c-dot" cx="98" cy="162" r="3.5"/><circle class="c-dot" cx="98" cy="206" r="3.5"/></g>
+</svg>
+</div><figcaption>Trial</figcaption></figure></div>
+<ul class="notes"><li>The goal arrow is solid: the goal is handed over, it is not a “maybe”, so it should not be dashed.</li><li>The three steps are a fan: one shared starting point, level with the middle step, so that one is straight. The robot and the steps sit further apart, so the curves have room.</li><li>“Asks you first” is the point of the picture, so that arrow is the main path.</li></ul>
+<p class="clash ok">Clash check: no arrow crosses a box, shape or label, nothing crosses, nothing is too short.</p>
+<details class="links"><summary>The arrows as data</summary><ul><li><code>goal left → bot top</code></li><li><code>bot right → s1 left</code> (fan)</li><li><code>bot right → s2 left</code> (fan)</li><li><code>bot right → s3 left</code> (fan)</li><li><code>s3 bottom → person top</code> (main)</li></ul></details></section>
+<section class="pair" style="--fam:#DFE9FF;--fam-deep:#1D4ED8;--pic-accent:#FF7038">
+<h2>Decision Tree</h2>
+<div class="pics"><figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-dt-old" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="124" y="26" width="124" height="42" rx="8"/>
+  <text class="t-s t-w" x="186" y="52" text-anchor="middle">Raining?</text>
+  <path class="i-line" d="M150 68 V84"/><path class="i-line" d="M150 84 C150 102 74 98 70 118" marker-end="url(#alpt-arr-dt-old)"/>
+  <text class="t-xs" x="116" y="122" text-anchor="middle">yes</text>
+  <path class="i-deepline" stroke-width="4" d="M222 68 C222 90 224 100 224 118" marker-end="url(#alpt-arr-dt-old)"/>
+  <text class="t-xs" x="234" y="98">no</text>
+  <rect class="i-paper" x="20" y="124" width="96" height="40" rx="20"/><rect class="i-line" x="20" y="124" width="96" height="40" rx="20"/>
+  <text class="t-s" x="68" y="150" text-anchor="middle">Coat</text>
+  <rect class="i-deep" x="168" y="124" width="112" height="42" rx="8"/>
+  <text class="t-s t-w" x="224" y="151" text-anchor="middle">Cold?</text>
+  <path class="i-deepline" stroke-width="4" d="M200 166 C196 196 160 202 156 226" marker-end="url(#alpt-arr-dt-old)"/>
+  <text class="t-xs" x="168" y="198" text-anchor="end">yes</text>
+  <path class="i-line" d="M250 166 C252 190 250 206 250 226" marker-end="url(#alpt-arr-dt-old)"/>
+  <text class="t-xs" x="260" y="202">no</text>
+  <rect class="i-accent" x="112" y="232" width="88" height="40" rx="20"/><rect class="i-line" x="112" y="232" width="88" height="40" rx="20"/>
+  <text class="t-s" x="156" y="258" text-anchor="middle">Jumper</text>
+  <rect class="i-paper" x="210" y="232" width="78" height="40" rx="20"/><rect class="i-line" x="210" y="232" width="78" height="40" rx="20"/>
+  <text class="t-s" x="249" y="258" text-anchor="middle">T-shirt</text>
+  <circle class="i-cream" cx="54" cy="226" r="14"/><circle class="i-line" cx="54" cy="226" r="14"/>
+  <path class="i-cream" d="M30 268 C30 244 78 244 78 268 Z"/><path class="i-line" d="M30 268 C30 244 78 244 78 268"/>
+  <text class="t-xs" x="54" y="292" text-anchor="middle">Dry, cold</text>
+  <text class="t-xs" x="54" y="308" text-anchor="middle">today</text>
+</svg>
+</div><figcaption>Now</figcaption></figure>
+<figure><div class="pic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-dt-new" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-dt-new-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="124" y="26" width="124" height="42" rx="8"/>
+  <text class="t-s t-w" x="186" y="52" text-anchor="middle">Raining?</text>
+  <path class="i-line" d="M168.7 76 C168.7 107 68 107 68 138 L68 154" marker-end="url(#alpt-arr-dt-new)"/>
+  <path class="i-line i-main" d="M203.3 76 L203.3 116" marker-end="url(#alpt-arr-dt-new-d)"/>
+  <path class="i-line i-main" d="M208.7 174 C208.7 191 156 191 156 208 L156 224" marker-end="url(#alpt-arr-dt-new-d)"/>
+  <path class="i-line" d="M239.3 174 L239.3 224" marker-end="url(#alpt-arr-dt-new)"/>
+  <rect class="i-paper" x="20" y="162" width="96" height="40" rx="20"/><rect class="i-line" x="20" y="162" width="96" height="40" rx="20"/>
+  <text class="t-s" x="68" y="188" text-anchor="middle">Coat</text>
+  <rect class="i-deep" x="168" y="124" width="112" height="42" rx="8"/>
+  <text class="t-s t-w" x="224" y="151" text-anchor="middle">Cold?</text>
+  <rect class="i-accent" x="112" y="232" width="88" height="40" rx="20"/><rect class="i-line" x="112" y="232" width="88" height="40" rx="20"/>
+  <text class="t-s" x="156" y="258" text-anchor="middle">Jumper</text>
+  <rect class="i-paper" x="210" y="232" width="78" height="40" rx="20"/><rect class="i-line" x="210" y="232" width="78" height="40" rx="20"/>
+  <text class="t-s" x="249" y="258" text-anchor="middle">T-shirt</text>
+  <circle class="i-cream" cx="54" cy="226" r="14"/><circle class="i-line" cx="54" cy="226" r="14"/>
+  <path class="i-cream" d="M30 268 C30 244 78 244 78 268 Z"/><path class="i-line" d="M30 268 C30 244 78 244 78 268"/>
+  <text class="t-xs" x="54" y="292" text-anchor="middle">Dry, cold</text>
+  <text class="t-xs" x="54" y="308" text-anchor="middle">today</text>
+  <text class="t-xs" x="114.8" y="99.5" text-anchor="middle">yes</text>
+  <text class="t-xs" x="215.3" y="100" text-anchor="start">no</text>
+  <text class="t-xs" x="178.6" y="183.6" text-anchor="end">yes</text>
+  <text class="t-xs" x="251.3" y="203" text-anchor="start">no</text>
+  <g class="ctrl"><path class="c-line" d="M168.7 76 L168.7 107 M68 138 L68 107"/><circle class="c-dot" cx="168.7" cy="107" r="3.5"/><circle class="c-dot" cx="68" cy="107" r="3.5"/><path class="c-line" d="M208.7 174 L208.7 191 M156 208 L156 191"/><circle class="c-dot" cx="208.7" cy="191" r="3.5"/><circle class="c-dot" cx="156" cy="191" r="3.5"/></g>
+</svg>
+</div><figcaption>Trial</figcaption></figure></div>
+<ul class="notes"><li>The two arrows leaving each question are spread evenly along its edge; where one lands straight below, it is drawn straight.</li><li>The route to today’s answer is the main path, with heads in the family colour.</li><li>The yes and no labels are placed from the curve: at its middle, set off to one side.</li></ul>
+<p class="clash ok">Clash check: no arrow crosses a box, shape or label, nothing crosses, nothing is too short.</p>
+<details class="links"><summary>The arrows as data</summary><ul><li><code>rain bottom → coat top</code></li><li><code>rain bottom → cold top</code> (main)</li><li><code>cold bottom → jumper top</code> (main)</li><li><code>cold bottom → tshirt top</code></li></ul></details></section>
+<section class="compare" style="--fam:#FFEDD5;--fam-deep:#B45309;--pic-accent:#FA83EB">
+<h2>Three ways to draw it</h2>
+<p class="cmp-lead">AI Agent drawn three ways. The first two use the libraries suggested for this; the third is our method.</p>
+<div class="cmp-grid">
+<figure><div class="cmp-box"><pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+  G[Goal: Book the hall] --> A[Agent]
+  A --> D[Check diary ✓]
+  A --> E[Email office ✓]
+  A --> P[Pay £50? ⏸]
+  P ==> Y((Asks you first))</pre></div><figcaption>Mermaid, hand-drawn look</figcaption>
+<p>Written as text; Mermaid lays out the boxes itself. No coordinates to get wrong, but it decides the layout, it cannot draw our pictures (the robot, the person, the ticks) and every diagram looks like Mermaid.</p></figure>
+<figure><div class="cmp-box"><svg id="rough-ag" viewBox="0 0 300 330" class="alpt-pic"></svg></div><figcaption>Rough.js over our calculated paths</figcaption>
+<p>The same boxes and the same calculated curves as ours, sketched by Rough.js (roughness 0.6). Keeps our layout; the hand-drawn wobble is a different style from the rest of the site.</p></figure>
+<figure><div class="cmp-box"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  
+  <defs><marker id="alpt-arr-ag-cmp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-ag-cmp-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="96" y="20" width="136" height="58" rx="10"/>
+  <text class="t-xs t-w" x="164" y="41" text-anchor="middle" letter-spacing="2">GOAL</text>
+  <text class="t-s t-w" x="164" y="64" text-anchor="middle">Book the hall</text>
+  <path class="i-deep" d="M16 124 H50 L66 140 V184 H16 Z"/>
+  <rect class="i-paper" x="24" y="142" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="34" cy="153" r="3.5"/><circle class="i-ink" cx="46" cy="153" r="3.5"/>
+  <path class="i-line" d="M88 49 C62.1 49 41 72 41 100 L41 116" marker-end="url(#alpt-arr-ag-cmp)"/>
+  <path class="i-line" d="M74 162 L80 162 C98 162 98 118 116 118 L132 118" marker-end="url(#alpt-arr-ag-cmp)"/>
+  <path class="i-line" d="M74 162 L132 162" marker-end="url(#alpt-arr-ag-cmp)"/>
+  <path class="i-line" d="M74 162 L80 162 C98 162 98 206 116 206 L132 206" marker-end="url(#alpt-arr-ag-cmp)"/>
+  <path class="i-line i-main" d="M230 232 L230 264" marker-end="url(#alpt-arr-ag-cmp-d)"/>
+  <rect class="i-paper" x="140" y="100" width="144" height="36" rx="8"/><rect class="i-line" x="140" y="100" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="124">Check diary</text>
+  <path class="i-deepline" d="M254 118 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-paper" x="140" y="144" width="144" height="36" rx="8"/><rect class="i-line" x="140" y="144" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="168">Email office</text>
+  <path class="i-deepline" d="M254 162 l5 5 l10 -11" stroke-width="4"/>
+  <rect class="i-accent" x="140" y="188" width="144" height="36" rx="8"/><rect class="i-line i-dash" x="140" y="188" width="144" height="36" rx="8"/>
+  <text class="t-s" x="152" y="212">Pay £50?</text>
+  <rect class="i-ink" x="252" y="197" width="5" height="18" rx="2"/><rect class="i-ink" x="263" y="197" width="5" height="18" rx="2"/>
+  <circle class="i-cream" cx="230" cy="284" r="12"/><circle class="i-line" cx="230" cy="284" r="12"/>
+  <path class="i-line" d="M210 320 C210 300 250 300 250 320"/>
+  <text class="t-s" x="200" y="306" text-anchor="end">Asks you first</text>
+</svg>
+</div><figcaption>Ours (build.py)</figcaption>
+<p>Calculated from box and side, drawn in our line style with our illustrations. Matches the other 134 pictures.</p></figure>
+</div>
+<script type="application/json" id="rough-data">{"boxes": [{"name": "goal", "box": [96, 20, 136, 58], "text": "Goal: Book the hall"}, {"name": "bot", "box": [16, 124, 50, 60], "text": "Agent"}, {"name": "s1", "box": [140, 100, 144, 36], "text": "Check diary ✓"}, {"name": "s2", "box": [140, 144, 144, 36], "text": "Email office ✓"}, {"name": "s3", "box": [140, 188, 144, 36], "text": "Pay £50? ⏸"}, {"name": "person", "box": [218, 272, 24, 24], "text": "You"}], "arrows": [{"d": "M88 49 C62.1 49 41 72 41 100 L41 116", "end": [41.0, 116], "angle": 1.5708, "main": false}, {"d": "M80 162 C98 162 98 118 116 118 L132 118", "end": [132, 118.0], "angle": 0.0, "main": false}, {"d": "M80 162 C106 162 106 162 132 162 L132 162", "end": [132, 162.0], "angle": 0.0, "main": false}, {"d": "M80 162 C98 162 98 206 116 206 L132 206", "end": [132, 206.0], "angle": 0.0, "main": false}, {"d": "M230 232 C230 248 230 248 230 264 L230 264", "end": [230.0, 264], "angle": 1.5708, "main": true}]}</script>
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById('rough-data').textContent);
+  var svg = document.getElementById('rough-ag');
+  if (!window.rough || !svg) { return; }
+  var ns = 'http://www.w3.org/2000/svg';
+  var rc = rough.svg(svg);
+  var bg = document.createElementNS(ns, 'rect');
+  bg.setAttribute('width', 300); bg.setAttribute('height', 330); bg.setAttribute('class', 'i-bg');
+  svg.appendChild(bg);
+  var ink = '#231F20', deep = '#B45309';
+  var base = { roughness: 0.6, bowing: 1, seed: 7, strokeWidth: 2.5, stroke: ink };
+  data.boxes.forEach(function (b) {
+    var x = b.box[0], y = b.box[1], w = b.box[2], h = b.box[3];
+    var fill = b.name === 'goal' || b.name === 'bot' ? deep : b.name === 's3' ? '#FA83EB' : '#FFFFFF';
+    var shape = Object.assign({}, base, { fill: b.name === 'person' ? '#F6F4ED' : fill, fillStyle: 'solid' });
+    svg.appendChild(b.name === 'person' ? rc.circle(x + w / 2, y + h / 2, w, shape) : rc.rectangle(x, y, w, h, shape));
+    if (b.name === 'person') { svg.appendChild(rc.path('M210 320 C210 300 250 300 250 320', base)); }
+    var t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', x + w / 2); t.setAttribute('y', y + h / 2 + 5); t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('class', 't-xs' + (fill === deep ? ' t-w' : ''));
+    t.textContent = b.name === 'person' ? '' : b.text;
+    svg.appendChild(t);
+  });
+  data.arrows.forEach(function (a) {
+    var o = Object.assign({}, base, { stroke: a.main ? deep : ink, strokeWidth: 2.5 });
+    svg.appendChild(rc.path(a.d, o));
+    var L = 10, s = 0.5, x = a.end[0], y = a.end[1];
+    svg.appendChild(rc.linearPath([[x - L * Math.cos(a.angle - s), y - L * Math.sin(a.angle - s)], [x, y], [x - L * Math.cos(a.angle + s), y - L * Math.sin(a.angle + s)]], o));
+  });
+  var lbl = document.createElementNS(ns, 'text');
+  lbl.setAttribute('x', 200); lbl.setAttribute('y', 306); lbl.setAttribute('text-anchor', 'end'); lbl.setAttribute('class', 't-s');
+  lbl.textContent = 'Asks you first';
+  svg.appendChild(lbl);
+})();
+</script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, look: 'handDrawn', theme: 'neutral' });
+</script>
+</section>
+</main></body></html>

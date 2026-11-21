@@ -1,0 +1,66 @@
+{
+ "nodes": {
+  "picture": [
+   16,
+   104,
+   90,
+   62
+  ],
+  "question": [
+   16,
+   178,
+   90,
+   62
+  ],
+  "sound": [
+   16,
+   252,
+   90,
+   62
+  ],
+  "ai": [
+   194,
+   176,
+   84,
+   66
+  ],
+  "answer": [
+   114,
+   22,
+   140,
+   94
+  ]
+ },
+ "edges": [
+  {
+   "from": "picture",
+   "side": "right",
+   "to": "ai",
+   "to_side": "left",
+   "to_at": 0.2
+  },
+  {
+   "from": "question",
+   "side": "right",
+   "to": "ai",
+   "to_side": "left",
+   "to_at": 0.5
+  },
+  {
+   "from": "sound",
+   "side": "right",
+   "to": "ai",
+   "to_side": "left",
+   "to_at": 0.8
+  },
+  {
+   "from": "ai",
+   "side": "top",
+   "to": "answer",
+   "to_side": "bottom",
+   "to_at": 0.871,
+   "main": true
+  }
+ ],
+ "shapes": {}
+}

@@ -1,0 +1,31 @@
+{
+ "nodes": {
+  "bot": [124, 112, 58, 64],
+  "answer": [20, 136, 76, 36],
+  "calc": [34, 222, 50, 64]
+ },
+ "edges": [
+  {"from": "bot", "side": "bottom", "to": "calc", "to_side": "right", "main": true},
+  {"from": "calc", "side": "top", "to": "answer", "to_side": "bottom"}
+ ],
+ "shapes": {
+  "the question bubble": [100, 20, 144, 70],
+  "faint line to Search": [162, 182, 12, 42],
+  "faint line to Booking": [180, 178, 60, 42],
+  "Search": [160, 230, 46, 46],
+  "Booking": [228, 226, 52, 58],
+  "Calculator label": [20, 296, 80, 18],
+  "Search label": [153, 296, 56, 18],
+  "Booking label": [224, 296, 64, 18]
+ },
+ "edits": [
+  ["<g class=\"i-faint\"><path class=\"i-line i-dash\" d=\"M153 184 V212 M176 182 L222 214\"/></g>", "<g class=\"i-faint\"><path class=\"i-line i-dash\" d=\"M164 184 L172 222 M182 180 L238 218\"/></g>"],
+  ["<circle class=\"i-paper\" cx=\"148\" cy=\"248\" r=\"18\"/><circle class=\"i-deepline\" cx=\"148\" cy=\"248\" r=\"18\"/>", "<circle class=\"i-paper\" cx=\"178\" cy=\"248\" r=\"18\"/><circle class=\"i-deepline\" cx=\"178\" cy=\"248\" r=\"18\"/>"],
+  ["<path class=\"i-deepline\" d=\"M161 261 L174 274\" stroke-width=\"7\"/>", "<path class=\"i-deepline\" d=\"M191 261 L204 274\" stroke-width=\"7\"/>"],
+  ["<text class=\"t-s\" x=\"153\" y=\"310\" text-anchor=\"middle\">Search</text>", "<text class=\"t-s\" x=\"181\" y=\"310\" text-anchor=\"middle\">Search</text>"],
+  ["<rect class=\"i-paper\" x=\"216\" y=\"226\" width=\"52\" height=\"58\" rx=\"5\"/><rect class=\"i-line\" x=\"216\" y=\"226\" width=\"52\" height=\"58\" rx=\"5\"/>", "<rect class=\"i-paper\" x=\"228\" y=\"226\" width=\"52\" height=\"58\" rx=\"5\"/><rect class=\"i-line\" x=\"228\" y=\"226\" width=\"52\" height=\"58\" rx=\"5\"/>"],
+  ["d=\"M216 231 a5 5", "d=\"M228 231 a5 5"],
+  ["d=\"M224 252 h8 M238 252 h8 M252 252 h8 M224 264 h8 M238 264 h8 M252 264 h8 M224 276 h8 M238 276 h8\"", "d=\"M236 252 h8 M250 252 h8 M264 252 h8 M236 264 h8 M250 264 h8 M264 264 h8 M236 276 h8 M250 276 h8\""],
+  ["<text class=\"t-s\" x=\"242\" y=\"310\" text-anchor=\"middle\">Booking</text>", "<text class=\"t-s\" x=\"256\" y=\"310\" text-anchor=\"middle\">Booking</text>"]
+ ]
+}

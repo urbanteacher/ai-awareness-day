@@ -1,0 +1,25 @@
+{
+ "nodes": {
+  "word": [106, 22, 150, 36],
+  "whale": [103, 203, 18, 18],
+  "mammals": [206, 142, 46, 42],
+  "mapout": [150, 250, 0, 0],
+  "answer": [70, 286, 160, 34]
+ },
+ "edges": [
+  {"from": "word", "side": "bottom", "to": "whale", "to_side": "top", "at": 0.29},
+  {"from": "whale", "side": "right", "to": "mammals", "to_side": "left", "main": true},
+  {"from": "mapout", "side": "bottom", "to": "answer", "to_side": "top"}
+ ],
+ "shapes": {
+  "HIDDEN MAP label": [176, 86, 104, 22],
+  "fish label": [42, 184, 36, 18],
+  "fish dots": [40, 210, 44, 38],
+  "mammals label": [196, 120, 72, 18],
+  "vector label": [104, 229, 92, 14]
+ },
+ "edits": [
+  ["<rect class=\"i-deep\" x=\"70\" y=\"278\"", "<rect class=\"i-deep\" x=\"70\" y=\"286\""],
+  ["x=\"150\" y=\"300\"", "x=\"150\" y=\"308\""]
+ ]
+}

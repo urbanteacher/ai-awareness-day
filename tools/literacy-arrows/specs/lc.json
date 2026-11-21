@@ -1,0 +1,15 @@
+{
+ "nodes": {
+  "form": [146, 90, 76, 34],
+  "if": [150, 160, 68, 44],
+  "slot": [146, 240, 76, 34]
+ },
+ "edges": [
+  {"from": "form", "side": "bottom", "to": "if", "to_side": "top", "main": true},
+  {"from": "if", "side": "bottom", "to": "slot", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "the Email block being dragged": [172, 250, 88, 46],
+  "the drag trail": [90, 197, 86, 73]
+ }
+}

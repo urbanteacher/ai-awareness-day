@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Decision Tree: yes/no questions lead step by step to a prediction of what to wear. Arrows: tools/literacy-arrows/specs/dt.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-deep" x="124" y="26" width="124" height="42" rx="8"/>
+  <text class="t-s t-w" x="186" y="52" text-anchor="middle">Raining?</text>
+  <rect class="i-paper" x="20" y="162" width="96" height="40" rx="20"/><rect class="i-line" x="20" y="162" width="96" height="40" rx="20"/>
+  <text class="t-s" x="68" y="188" text-anchor="middle">Coat</text>
+  <rect class="i-deep" x="168" y="124" width="112" height="42" rx="8"/>
+  <text class="t-s t-w" x="224" y="151" text-anchor="middle">Cold?</text>
+  <rect class="i-accent" x="112" y="232" width="88" height="40" rx="20"/><rect class="i-line" x="112" y="232" width="88" height="40" rx="20"/>
+  <text class="t-s" x="156" y="258" text-anchor="middle">Jumper</text>
+  <rect class="i-paper" x="210" y="232" width="78" height="40" rx="20"/><rect class="i-line" x="210" y="232" width="78" height="40" rx="20"/>
+  <text class="t-s" x="249" y="258" text-anchor="middle">T-shirt</text>
+  <circle class="i-cream" cx="54" cy="226" r="14"/><circle class="i-line" cx="54" cy="226" r="14"/>
+  <path class="i-cream" d="M30 268 C30 244 78 244 78 268 Z"/><path class="i-line" d="M30 268 C30 244 78 244 78 268"/>
+  <text class="t-xs" x="54" y="292" text-anchor="middle">Dry, cold</text>
+  <text class="t-xs" x="54" y="308" text-anchor="middle">today</text>
+</svg>

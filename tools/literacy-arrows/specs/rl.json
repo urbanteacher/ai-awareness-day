@@ -1,0 +1,20 @@
+{
+ "nodes": {
+  "agent": [115, 185, 22, 22],
+  "trap": [194, 174, 45, 45],
+  "star": [245, 92, 33, 32]
+ },
+ "edges": [
+  {"from": "agent", "side": "right", "to": "trap", "to_side": "left"},
+  {"from": "agent", "side": "top", "to": "star", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "+10 label": [244, 132, 36, 18],
+  "score chart": [16, 105, 82, 128],
+  "people rate box": [16, 248, 268, 66]
+ },
+ "edits": [
+  ["<rect class=\"i-cream\" x=\"194\" y=\"129\" width=\"45\" height=\"45\"/>", "<rect class=\"i-cream\" x=\"194\" y=\"174\" width=\"45\" height=\"45\"/>"],
+  ["<text class=\"t-m\" x=\"216.5\" y=\"159\"", "<text class=\"t-m\" x=\"216.5\" y=\"204\""]
+ ]
+}

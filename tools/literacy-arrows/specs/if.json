@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "photo": [110, 20, 60, 52],
+  "bot": [111, 104, 58, 52],
+  "answer": [212, 104, 74, 52]
+ },
+ "edges": [
+  {"from": "photo", "side": "bottom", "to": "bot", "to_side": "top"},
+  {"from": "bot", "side": "right", "to": "answer", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "New photo label": [178, 40, 70, 14],
+  "can be wrong label": [205, 165, 88, 14],
+  "big energy bolt": [63, 196, 30, 56],
+  "small energy bolt": [254, 216, 18, 34],
+  "NOW marker": [200, 229, 34, 26],
+  "timeline": [16, 260, 268, 34]
+ }
+}

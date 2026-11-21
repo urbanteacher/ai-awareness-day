@@ -1,0 +1,24 @@
+{
+ "nodes": {
+  "data": [128, 36, 40, 44],
+  "model": [112, 118, 72, 132],
+  "photo": [12, 132, 52, 52],
+  "sum": [12, 202, 52, 36],
+  "dog": [228, 140, 60, 36],
+  "twelve": [228, 202, 60, 36]
+ },
+ "edges": [
+  {"from": "data", "side": "bottom", "to": "model", "to_side": "top"},
+  {"from": "photo", "side": "right", "to": "model", "to_side": "left", "to_at": 0.303},
+  {"from": "sum", "side": "right", "to": "model", "to_side": "left", "to_at": 0.773},
+  {"from": "model", "side": "right", "to": "dog", "to_side": "left", "at": 0.303, "main": true},
+  {"from": "model", "side": "right", "to": "twelve", "to_side": "left", "at": 0.773}
+ ],
+ "shapes": {
+  "papers behind": [136, 20, 48, 52],
+  "Learned from data label": [190, 40, 62, 32],
+  "IN label": [28, 110, 20, 14],
+  "OUT label": [242, 118, 32, 14],
+  "caption": [80, 274, 136, 36]
+ }
+}

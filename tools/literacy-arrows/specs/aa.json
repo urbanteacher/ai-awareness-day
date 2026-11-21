@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "school": [18, 236, 58, 52],
+  "a2a": [118, 250, 64, 26],
+  "coach": [222, 238, 56, 50]
+ },
+ "edges": [
+  {"from": "a2a", "side": "left", "to": "school", "to_side": "right", "start": "dot"},
+  {"from": "a2a", "side": "right", "to": "coach", "to_side": "left", "start": "dot"}
+ ],
+ "shapes": {
+  "title": [90, 26, 160, 42],
+  "question bubble": [16, 98, 172, 72],
+  "answer bubble": [112, 164, 170, 70],
+  "School AI label": [10, 300, 74, 18],
+  "Coach AI label": [212, 300, 76, 18]
+ }
+}

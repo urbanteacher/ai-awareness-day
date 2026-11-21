@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Multi-Agent System: three specialised agents each make one part of a quiz sheet. -->
+  <defs><marker id="alpt-arr-ma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-m" x="176" y="52" text-anchor="middle">Make a quiz</text>
+  <path class="i-deep" d="M20 96 H64 L78 110 V148 H20 Z"/><rect class="i-paper" x="32" y="110" width="32" height="22" rx="5"/><circle class="i-ink" cx="42" cy="121" r="3.5"/><circle class="i-ink" cx="54" cy="121" r="3.5"/>
+  <path class="i-deep" d="M121 96 H165 L179 110 V148 H121 Z"/><rect class="i-paper" x="133" y="110" width="32" height="22" rx="5"/><circle class="i-ink" cx="143" cy="121" r="3.5"/><circle class="i-ink" cx="155" cy="121" r="3.5"/>
+  <path class="i-deep" d="M222 96 H266 L280 110 V148 H222 Z"/><rect class="i-paper" x="234" y="110" width="32" height="22" rx="5"/><circle class="i-ink" cx="244" cy="121" r="3.5"/><circle class="i-ink" cx="256" cy="121" r="3.5"/>
+  <path class="i-line" d="M84 122 H113" marker-end="url(#alpt-arr-ma)"/>
+  <path class="i-line" d="M185 122 H214" marker-end="url(#alpt-arr-ma)"/>
+  <text class="t-s" x="49" y="172" text-anchor="middle">Writes</text>
+  <text class="t-s" x="150" y="172" text-anchor="middle">Draws</text>
+  <text class="t-s" x="251" y="172" text-anchor="middle">Checks</text>
+  <path class="i-line" d="M49 180 V214 M150 180 V214 M251 180 V214" stroke-dasharray="3 5"/>
+  <rect class="i-paper" x="16" y="220" width="268" height="94" rx="6"/><rect class="i-line" x="16" y="220" width="268" height="94" rx="6"/>
+  <text class="t-s" x="30" y="248">Q1</text>
+  <path class="i-line" d="M30 266 H92 M30 282 H84 M30 298 H92"/>
+  <rect class="i-cream" x="116" y="234" width="68" height="66" rx="4"/><rect class="i-line" x="116" y="234" width="68" height="66" rx="4"/>
+  <circle class="i-deep" cx="136" cy="256" r="9"/><path class="i-deep" d="M120 296 L144 268 L158 284 L168 274 L180 296 Z"/>
+  <circle class="i-accent" cx="251" cy="267" r="26"/>
+  <path d="M238 268 L248 278 L265 257" fill="none" stroke="#231F20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

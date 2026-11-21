@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Autonomy: three jobs set at different points between "a human decides" and "the AI decides alone". Top-left 80x80 stays clear for the symbol badge. -->
-  <defs><marker id="alpt-arr-au" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-au" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <circle class="i-cream" cx="46" cy="108" r="13"/><circle class="i-line" cx="46" cy="108" r="13"/>
   <path class="i-line" d="M24 142 C24 122 68 122 68 142"/>
   <path class="i-deep" d="M226 100 H264 L278 114 V142 H226 Z"/>
   <rect class="i-paper" x="234" y="110" width="32" height="20" rx="5"/>
   <circle class="i-ink" cx="244" cy="120" r="3"/><circle class="i-ink" cx="256" cy="120" r="3"/>
-  <path class="i-line i-dash" d="M86 122 H208" marker-start="url(#alpt-arr-au)" marker-end="url(#alpt-arr-au)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M76 121 L218 121" marker-start="url(#alpt-arr-au)" marker-end="url(#alpt-arr-au)"/></g>
   <text class="t-s" x="20" y="166">Human decides</text>
   <text class="t-s" x="280" y="166" text-anchor="end">AI alone</text>
   <text class="t-s" x="24" y="196">Spelling fix</text>

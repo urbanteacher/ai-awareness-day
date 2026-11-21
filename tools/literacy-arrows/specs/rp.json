@@ -1,0 +1,26 @@
+{
+ "nodes": {
+  "Ali row": [34, 118, 88, 28],
+  "name field": [164, 118, 102, 28]
+ },
+ "edges": [
+  {"from": "Ali row", "side": "right", "to": "name field", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "Copy Paste buttons": [106, 26, 140, 34],
+  "window title bar": [20, 84, 260, 20],
+  "Bea and Cal rows": [34, 146, 88, 56],
+  "Submit button and pointer": [164, 164, 99, 58],
+  "bot": [26, 270, 60, 48],
+  "again sign": [102, 285, 34, 40],
+  "Again x 500": [142, 288, 128, 22]
+ },
+ "edits": [
+  ["<rect class=\"i-cream\" x=\"152\" y=\"118\" width=\"114\" height=\"28\" rx=\"4\"/><rect class=\"i-line\" x=\"152\" y=\"118\" width=\"114\" height=\"28\" rx=\"4\"/>", "<rect class=\"i-cream\" x=\"164\" y=\"118\" width=\"102\" height=\"28\" rx=\"4\"/><rect class=\"i-line\" x=\"164\" y=\"118\" width=\"102\" height=\"28\" rx=\"4\"/>"],
+  ["<text class=\"t-s\" x=\"164\" y=\"138\">Ali</text>", "<text class=\"t-s\" x=\"176\" y=\"138\">Ali</text>"],
+  ["<rect class=\"i-deep\" x=\"152\" y=\"164\" width=\"96\" height=\"32\" rx=\"6\"/>", "<rect class=\"i-deep\" x=\"164\" y=\"164\" width=\"96\" height=\"32\" rx=\"6\"/>"],
+  ["<text class=\"t-s t-w\" x=\"200\" y=\"185\" text-anchor=\"middle\">Submit</text>", "<text class=\"t-s t-w\" x=\"212\" y=\"185\" text-anchor=\"middle\">Submit</text>"],
+  ["M240 186 L240 216 L247 209 L253 222 L259 219 L253 207 L263 206 Z", "M250 186 L250 216 L257 209 L263 222 L269 219 L263 207 L273 206 Z"],
+  ["<path class=\"i-line\" d=\"M104 302 A15 15 0 1 1 119 317\" marker-end=\"url(#alpt-arr-rp)\"/>", "<path class=\"i-line\" d=\"M104 302 A15 15 0 1 1 119 317 M126 311 L119 317 L126 323\"/>"]
+ ]
+}

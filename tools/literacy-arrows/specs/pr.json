@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "reply": [136, 18, 148, 84],
+  "bot": [28, 112, 70, 58],
+  "prompt": [16, 216, 268, 92]
+ },
+ "edges": [
+  {"from": "prompt", "side": "top", "to": "bot", "to_side": "bottom", "at": 0.175, "main": true},
+  {"from": "bot", "side": "right", "to": "reply", "to_side": "bottom", "to_at": 0.25}
+ ],
+ "shapes": {
+  "PROMPT pill": [116, 204, 84, 24]
+ }
+}

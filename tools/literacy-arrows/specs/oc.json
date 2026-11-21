@@ -1,0 +1,14 @@
+{
+ "nodes": {
+  "photo": [96, 30, 160, 100],
+  "letters": [20, 170, 260, 46],
+  "text": [20, 256, 260, 56]
+ },
+ "edges": [
+  {"from": "photo", "side": "bottom", "at": 0.3375, "to": "letters", "to_side": "top"},
+  {"from": "letters", "side": "bottom", "to": "text", "to_side": "top"}
+ ],
+ "shapes": {
+  "l or 1? label": [176, 227, 56, 18]
+ }
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Latent Space: inside the model, the word whale moves across a hidden map of numbers from the fish cluster to the mammal cluster before it answers. -->
+  <defs><marker id="alpt-arr-ls" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="106" y="22" width="150" height="36" rx="18"/><rect class="i-line" x="106" y="22" width="150" height="36" rx="18"/>
+  <text class="t-s" x="181" y="46" text-anchor="middle">Word in: whale</text>
+  <rect class="i-paper" x="16" y="96" width="268" height="156" rx="12"/><rect class="i-line" x="16" y="96" width="268" height="156" rx="12"/>
+  <g class="i-faint"><path class="i-line" d="M70 100 V248 M124 100 V248 M178 100 V248 M232 100 V248 M20 140 H280 M20 184 H280 M20 228 H280" style="stroke-width:1.5"/></g>
+  <rect class="i-deep" x="176" y="86" width="104" height="22" rx="4"/>
+  <text class="t-xs t-w" x="228" y="102" text-anchor="middle" letter-spacing="1">HIDDEN MAP</text>
+  <text class="t-s" x="60" y="198" text-anchor="middle">fish</text>
+  <circle class="i-cream" cx="48" cy="218" r="8"/><circle class="i-line" cx="48" cy="218" r="8"/><circle class="i-cream" cx="76" cy="226" r="8"/><circle class="i-line" cx="76" cy="226" r="8"/><circle class="i-cream" cx="52" cy="240" r="8"/><circle class="i-line" cx="52" cy="240" r="8"/>
+  <text class="t-s" x="232" y="134" text-anchor="middle">mammals</text>
+  <circle class="i-deep" cx="214" cy="150" r="8"/><circle class="i-deep" cx="244" cy="158" r="8"/><circle class="i-deep" cx="226" cy="176" r="8"/>
+  <path class="i-line" d="M150 62 C142 120 120 168 112 196" marker-end="url(#alpt-arr-ls)"/>
+  <circle class="i-accent" cx="112" cy="212" r="9"/><circle class="i-line" cx="112" cy="212" r="9"/>
+  <path class="i-line i-dash" d="M122 206 C150 190 168 176 196 168" style="stroke-dasharray:5 6" marker-end="url(#alpt-arr-ls)"/>
+  <text class="t-xs" x="104" y="240" text-anchor="start">[0.3, −1.2 …]</text>
+  <path class="i-line" d="M150 256 V272" marker-end="url(#alpt-arr-ls)"/>
+  <rect class="i-deep" x="70" y="278" width="160" height="34" rx="17"/>
+  <text class="t-s t-w" x="150" y="300" text-anchor="middle">Answer: mammal</text>
+</svg>

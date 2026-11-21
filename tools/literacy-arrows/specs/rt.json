@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "testers": [14, 116, 86, 80],
+  "shield": [164, 80, 116, 184],
+  "weak": [153, 171, 22, 22]
+ },
+ "edges": [
+  {"from": "testers", "side": "right", "to": "shield", "to_side": "left", "at": 0.1, "to_at": 0.239, "end": "cross"},
+  {"from": "testers", "side": "right", "to": "shield", "to_side": "left", "at": 0.475, "to_at": 0.402, "end": "cross"},
+  {"from": "testers", "side": "right", "to": "weak", "to_side": "left", "at": 0.825, "main": true}
+ ],
+ "shapes": {
+  "title": [84, 30, 160, 26],
+  "Testers label": [24, 204, 66, 18],
+  "Weak spot label": [176, 276, 92, 18],
+  "Fix before launch label": [166, 299, 112, 15]
+ }
+}

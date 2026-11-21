@@ -1,0 +1,113 @@
+{
+ "nodes": {
+  "v1": [
+   30,
+   232,
+   41,
+   36
+  ],
+  "v2": [
+   108,
+   170,
+   58,
+   52
+  ],
+  "v3": [
+   178,
+   94,
+   75,
+   68
+  ]
+ },
+ "edges": [
+  {
+   "from": "v1",
+   "side": "top",
+   "to": "v2",
+   "to_side": "left",
+   "label": "builds",
+   "label_side": "left"
+  },
+  {
+   "from": "v2",
+   "side": "top",
+   "to": "v3",
+   "to_side": "left",
+   "main": true,
+   "label": "builds",
+   "label_side": "left"
+  }
+ ],
+ "shapes": {
+  "v1 label": [
+   40,
+   280,
+   22,
+   16
+  ],
+  "v2 label": [
+   126,
+   234,
+   22,
+   16
+  ],
+  "v3 label": [
+   205,
+   178,
+   22,
+   16
+  ],
+  "the person": [
+   230,
+   209,
+   44,
+   53
+  ],
+  "Who checks bubble": [
+   104,
+   262,
+   132,
+   50
+  ],
+  "step 1 tread": [
+   16,
+   267,
+   82,
+   2
+  ],
+  "step 2 riser": [
+   97,
+   222,
+   2,
+   46
+  ],
+  "step 2 tread": [
+   98,
+   221,
+   74,
+   2
+  ],
+  "step 3 riser": [
+   171,
+   164,
+   2,
+   58
+  ],
+  "step 3 tread": [
+   172,
+   163,
+   112,
+   2
+  ]
+ },
+ "edits": [
+  [
+   "\n  <text class=\"t-xs\" x=\"22\" y=\"206\" text-anchor=\"start\">builds</text>",
+   ""
+  ],
+  [
+   "\n  <text class=\"t-xs\" x=\"122\" y=\"144\" text-anchor=\"end\">builds</text>",
+   ""
+  ]
+ ]
+}

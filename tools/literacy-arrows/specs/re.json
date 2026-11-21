@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "less": [32, 308, 0, 0],
+  "more": [32, 88, 0, 0]
+ },
+ "edges": [
+  {"from": "less", "side": "top", "to": "more", "to_side": "bottom", "main": true}
+ ],
+ "shapes": {
+  "More risk, more rules label": [10, 148, 16, 144],
+  "RULES BY RISK label": [126, 50, 98, 14],
+  "Banned": [120, 80, 110, 46],
+  "High risk": [100, 136, 150, 46],
+  "Limited risk": [80, 192, 190, 46],
+  "Minimal risk": [60, 248, 230, 46]
+ }
+}

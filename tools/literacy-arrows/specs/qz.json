@@ -1,0 +1,24 @@
+{
+ "nodes": {
+  "before": [84, 108, 194, 42],
+  "after": [84, 186, 80, 42],
+  "big": [84, 244, 90, 72],
+  "small": [208, 272, 56, 44]
+ },
+ "edges": [
+  {"from": "before", "side": "bottom", "at": 0.206, "to": "after", "to_side": "top"},
+  {"from": "big", "side": "right", "at": 0.694, "to": "small", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "title": [100, 36, 164, 18],
+  "Before label": [20, 122, 50, 18],
+  "After label": [20, 200, 40, 18],
+  "Model label": [20, 276, 48, 18],
+  "Faster label": [212, 251, 48, 14]
+ },
+ "edits": [
+  ["<rect class=\"i-deep\" x=\"204\" y=\"272\"", "<rect class=\"i-deep\" x=\"208\" y=\"272\""],
+  ["<text class=\"t-s t-w\" x=\"232\"", "<text class=\"t-s t-w\" x=\"236\""],
+  ["<text class=\"t-xs\" x=\"232\"", "<text class=\"t-xs\" x=\"236\""]
+ ]
+}

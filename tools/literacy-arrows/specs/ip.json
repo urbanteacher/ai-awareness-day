@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "painting": [24, 104, 112, 92],
+  "ai": [186, 118, 76, 66],
+  "copy": [180, 222, 90, 66]
+ },
+ "edges": [
+  {"from": "painting", "side": "right", "to": "ai", "to_side": "left"},
+  {"from": "ai", "side": "bottom", "to": "copy", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "copyright badge": [110, 90, 28, 28],
+  "Who owns it label": [178, 298, 94, 18],
+  "the artist": [16, 234, 48, 62],
+  "Artist label": [20, 303, 40, 14],
+  "Ask me first bubble": [64, 222, 102, 56]
+ }
+}

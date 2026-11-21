@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Few-Shot Learning: three examples in the prompt, then the AI copies the pattern for a new one. -->
+  <defs><marker id="alpt-arr-fs" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="104" y="60" letter-spacing="2">3 EXAMPLES</text>
+  <path class="i-line" d="M104 72 H220" stroke-opacity=".45"/>
+  <rect class="i-paper" x="30" y="100" width="100" height="34" rx="17"/><rect class="i-line" x="30" y="100" width="100" height="34" rx="17"/><text class="t-s" x="80" y="123" text-anchor="middle">dog</text>
+<path class="i-line" d="M140 117 H168" marker-end="url(#alpt-arr-fs)"/>
+<rect class="i-cream" x="180" y="100" width="100" height="34" rx="17"/><rect class="i-line" x="180" y="100" width="100" height="34" rx="17"/>
+<text class="t-s" x="230" y="123" text-anchor="middle">woof</text>
+  <rect class="i-paper" x="30" y="144" width="100" height="34" rx="17"/><rect class="i-line" x="30" y="144" width="100" height="34" rx="17"/><text class="t-s" x="80" y="167" text-anchor="middle">cow</text>
+<path class="i-line" d="M140 161 H168" marker-end="url(#alpt-arr-fs)"/>
+<rect class="i-cream" x="180" y="144" width="100" height="34" rx="17"/><rect class="i-line" x="180" y="144" width="100" height="34" rx="17"/>
+<text class="t-s" x="230" y="167" text-anchor="middle">moo</text>
+  <rect class="i-paper" x="30" y="188" width="100" height="34" rx="17"/><rect class="i-line" x="30" y="188" width="100" height="34" rx="17"/><text class="t-s" x="80" y="211" text-anchor="middle">sheep</text>
+<path class="i-line" d="M140 205 H168" marker-end="url(#alpt-arr-fs)"/>
+<rect class="i-cream" x="180" y="188" width="100" height="34" rx="17"/><rect class="i-line" x="180" y="188" width="100" height="34" rx="17"/>
+<text class="t-s" x="230" y="211" text-anchor="middle">baa</text>
+  <path class="i-line i-dash" d="M24 240 H280"/>
+  <text class="t-xs" x="24" y="262">New one:</text>
+  <rect class="i-paper" x="30" y="270" width="100" height="34" rx="17"/><rect class="i-line" x="30" y="270" width="100" height="34" rx="17"/><text class="t-s" x="80" y="293" text-anchor="middle">duck</text>
+<path class="i-line" d="M140 287 H168" marker-end="url(#alpt-arr-fs)"/>
+<rect class="i-deep" x="180" y="270" width="100" height="34" rx="17"/>
+<text class="t-s t-w" x="230" y="293" text-anchor="middle">quack</text>
+  <rect class="i-accent" x="268" y="262" width="20" height="20" rx="10"/>
+  <text class="t-xs" x="278" y="277" text-anchor="middle">✓</text>
+</svg>

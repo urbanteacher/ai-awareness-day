@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "question": [10, 142, 90, 58],
+  "first part": [138, 160, 20, 20],
+  "last part": [254, 210, 20, 20],
+  "paris": [224, 264, 68, 46]
+ },
+ "edges": [
+  {"from": "question", "side": "right", "to": "first part", "to_side": "left"},
+  {"from": "last part", "side": "bottom", "to": "paris", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "part above": [138, 110, 20, 20],
+  "part below": [138, 210, 20, 20],
+  "magnifier handle": [173, 192, 22, 22],
+  "Inside the model label": [10, 278, 104, 32],
+  "middle bottom part": [198, 210, 20, 20]
+ }
+}

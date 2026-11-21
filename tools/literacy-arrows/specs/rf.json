@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "vote1": [27, 196, 60, 28],
+  "vote2": [120, 196, 60, 28],
+  "vote3": [213, 196, 60, 28],
+  "result": [96, 260, 108, 56]
+ },
+ "edges": [
+  {"from": "vote1", "side": "bottom", "to": "result", "to_side": "left"},
+  {"from": "vote2", "side": "bottom", "to": "result", "to_side": "top"},
+  {"from": "vote3", "side": "bottom", "to": "result", "to_side": "right"}
+ ],
+ "shapes": {
+  "tree 1": [16, 94, 82, 92],
+  "tree 2": [109, 94, 82, 92],
+  "tree 3": [202, 94, 82, 92],
+  "Many trees vote title": [120, 36, 132, 18]
+ }
+}

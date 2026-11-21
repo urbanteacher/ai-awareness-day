@@ -1,0 +1,17 @@
+{
+ "nodes": {
+  "parts layer": [182, 116, 34, 140],
+  "cat": [250, 168, 42, 36]
+ },
+ "edges": [
+  {"from": "parts layer", "side": "right", "to": "cat", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "Parts label": [176, 270, 48, 18],
+  "Each layer label": [60, 302, 180, 16]
+ },
+ "edits": [
+  ["<rect class=\"i-accent\" x=\"244\" y=\"168\" width=\"46\" height=\"36\" rx=\"10\"/>", "<rect class=\"i-accent\" x=\"250\" y=\"168\" width=\"42\" height=\"36\" rx=\"10\"/>"],
+  ["<text class=\"t-s\" x=\"267\" y=\"192\"", "<text class=\"t-s\" x=\"271\" y=\"192\""]
+ ]
+}

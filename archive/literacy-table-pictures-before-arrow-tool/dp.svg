@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Data pipeline: data is collected, cleaned of bad items, and prepared in neat rows to train an AI. -->
+  <defs><marker id="alpt-arr-dp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="118" y="24" width="24" height="30" rx="3"/><rect class="i-line" x="118" y="24" width="24" height="30" rx="3"/><path class="i-line" d="M124 34 H136 M124 42 H132"/>
+  <rect class="i-paper" x="150" y="24" width="24" height="30" rx="3"/><rect class="i-line" x="150" y="24" width="24" height="30" rx="3"/><path class="i-line" d="M156 34 H168 M156 42 H164"/>
+  <rect class="i-paper" x="182" y="24" width="24" height="30" rx="3"/><rect class="i-line" x="182" y="24" width="24" height="30" rx="3"/><path class="i-line" d="M188 34 H200 M188 42 H196"/>
+  <path class="i-line" d="M162 60 V82" marker-end="url(#alpt-arr-dp)"/>
+  <rect class="i-paper" x="94" y="90" width="134" height="60" rx="8"/><rect class="i-line" x="94" y="90" width="134" height="60" rx="8"/>
+  <text class="t-s" x="18" y="125">Collect</text>
+  <rect class="i-paper" x="94" y="170" width="134" height="60" rx="8"/><rect class="i-line" x="94" y="170" width="134" height="60" rx="8"/>
+  <text class="t-s" x="18" y="205">Clean</text>
+  <rect class="i-paper" x="94" y="250" width="134" height="60" rx="8"/><rect class="i-line" x="94" y="250" width="134" height="60" rx="8"/>
+  <text class="t-s" x="18" y="285">Prepare</text>
+  <path class="i-line" d="M162 154 V166" marker-end="url(#alpt-arr-dp)"/><path class="i-line" d="M162 234 V246" marker-end="url(#alpt-arr-dp)"/>
+  <circle class="i-deep" cx="116" cy="110" r="9"/><rect class="i-deep" x="134" y="118" width="18" height="18" rx="2" transform="rotate(20 143 127)"/>
+  <path class="i-ink" d="M168 102 L178 120 H158 Z"/><circle class="i-deep" cx="196" cy="128" r="9"/><circle class="i-deep" cx="208" cy="104" r="9"/>
+  <rect class="i-line i-dash" x="114" y="128" width="16" height="16" rx="2"/>
+  <rect class="i-deep" x="108" y="190" width="18" height="18" rx="3"/><rect class="i-deep" x="132" y="190" width="18" height="18" rx="3"/><rect class="i-deep" x="156" y="190" width="18" height="18" rx="3"/><rect class="i-deep" x="180" y="190" width="18" height="18" rx="3"/>
+  <rect class="i-accent" x="204" y="190" width="18" height="18" rx="3"/>
+  <path d="M206 192 L220 206 M220 192 L206 206" fill="none" stroke="#231F20" stroke-width="2.5" stroke-linecap="round"/>
+  <path class="i-line" d="M232 200 C252 200 262 210 262 226" marker-end="url(#alpt-arr-dp)"/>
+  <text class="t-xs" x="262" y="246" text-anchor="middle">out</text>
+  <rect class="i-deep" x="108" y="262" width="16" height="14" rx="2"/><rect class="i-deep" x="108" y="282" width="16" height="14" rx="2"/><rect class="i-deep" x="130" y="262" width="16" height="14" rx="2"/><rect class="i-deep" x="130" y="282" width="16" height="14" rx="2"/><rect class="i-deep" x="152" y="262" width="16" height="14" rx="2"/><rect class="i-deep" x="152" y="282" width="16" height="14" rx="2"/><rect class="i-deep" x="174" y="262" width="16" height="14" rx="2"/><rect class="i-deep" x="174" y="282" width="16" height="14" rx="2"/><rect class="i-deep" x="196" y="262" width="16" height="14" rx="2"/><rect class="i-deep" x="196" y="282" width="16" height="14" rx="2"/>
+  <path class="i-line" d="M230 280 H246" marker-end="url(#alpt-arr-dp)"/>
+  <path class="i-deep" d="M250 260 H280.9 L290 269.1 V298 H250 Z"/>
+  <rect class="i-paper" x="258.0" y="271.4" width="24.0" height="13.7" rx="3.4"/>
+  <circle class="i-ink" cx="265.2" cy="278.2" r="2.8"/><circle class="i-ink" cx="274.8" cy="278.2" r="2.8"/>
+  <text class="t-xs" x="270" y="316" text-anchor="middle">Train</text>
+</svg>

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Data Governance: a policy book in the middle sets the rules for each step data goes through, collect, store, access and use. -->
-  <defs><marker id="alpt-arr-dg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-dg-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="172" y="46" text-anchor="middle">Rules for every step</text>
   <rect class="i-paper" x="20" y="92" width="112" height="76" rx="8"/><rect class="i-line" x="20" y="92" width="112" height="76" rx="8"/>
@@ -18,9 +18,7 @@
   <path class="i-line" d="M58 278 H96"/><rect class="i-cream" x="62" y="262" width="8" height="16"/><rect class="i-cream" x="74" y="252" width="8" height="26"/><rect class="i-cream" x="86" y="258" width="8" height="20"/>
   <path class="i-line" d="M62 278 V262 H70 V278 M74 278 V252 H82 V278 M86 278 V258 H94 V278"/>
   <text class="t-s" x="76" y="302" text-anchor="middle">Use</text>
-  <path class="i-line" d="M136 120 H162" marker-end="url(#alpt-arr-dg)"/>
-  <path class="i-line" d="M262 172 V230" marker-end="url(#alpt-arr-dg)"/>
-  <path class="i-line" d="M164 284 H138" marker-end="url(#alpt-arr-dg)"/>
+  <g class="alpt-arrows"><path class="i-line i-main" d="M140 130 L160 130" marker-end="url(#alpt-arr-dg-d)"/><path class="i-line i-main" d="M224 176 L224 228" marker-end="url(#alpt-arr-dg-d)"/><path class="i-line i-main" d="M160 274 L140 274" marker-end="url(#alpt-arr-dg-d)"/></g>
   <path class="i-deep" d="M108 178 H192 V228 H108 Z"/>
   <path class="i-paper" d="M112 222 H188 V228 H112 Z"/>
   <text class="t-xs t-w" x="150" y="206" text-anchor="middle" letter-spacing="2">POLICY</text>

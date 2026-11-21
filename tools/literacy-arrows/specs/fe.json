@@ -1,0 +1,22 @@
+{
+ "nodes": {
+  "born": [18, 118, 132, 52],
+  "age": [188, 118, 94, 52],
+  "books": [18, 184, 132, 52],
+  "rate": [188, 184, 94, 52],
+  "name": [18, 250, 132, 52],
+  "out": [188, 250, 94, 52]
+ },
+ "edges": [
+  {"from": "born", "side": "right", "to": "age", "to_side": "left"},
+  {"from": "books", "side": "right", "to": "rate", "to_side": "left"},
+  {"from": "name", "side": "right", "to": "out", "to_side": "left", "dash": true, "end": "cross"}
+ ],
+ "shapes": {
+  "Raw data label": [48, 90, 72, 18],
+  "Features label": [200, 90, 70, 18]
+ },
+ "edits": [
+  ["\n  <path class=\"i-line i-faint\" d=\"M156 276 H180\" stroke-dasharray=\"3 4\"/>", ""]
+ ]
+}

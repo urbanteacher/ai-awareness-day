@@ -5132,6 +5132,13 @@ html.alpt-board-open {
 .alpt-pic .i-ink { fill: var(--a27-ink); }
 .alpt-pic .i-line { fill: none; stroke: var(--a27-ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .alpt-pic .i-deepline { fill: none; stroke: var(--fam-deep); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+/* Calculated arrows (tools/literacy-arrows): every arrow is i-line; the main path adds i-main for the family colour.
+   Heads, crosses and dots are drawn by markers in the same colour as their line. */
+.alpt-pic .i-main { stroke: var(--fam-deep); }
+.alpt-pic .i-head { fill: none; stroke: var(--a27-ink); stroke-width: 1.67; stroke-linecap: round; stroke-linejoin: round; }
+.alpt-pic .i-head--deep { stroke: var(--fam-deep); }
+.alpt-pic .i-dot { fill: var(--a27-ink); }
+.alpt-pic .i-dot--deep { fill: var(--fam-deep); }
 .alpt-pic .i-dash { stroke-dasharray: 7 7; }
 .alpt-pic .i-faint { opacity: 0.35; }
 .alpt-pic .t-xs { font-size: 13px; font-weight: 600; }

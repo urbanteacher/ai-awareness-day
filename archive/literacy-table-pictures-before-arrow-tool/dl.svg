@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Deep Learning: a picture passes through many stacked layers, from edges to shapes to parts, until the last layer says cat. -->
+  <defs><marker id="alpt-arr-dl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-line" d="M22 108 V100 H216 V108"/>
+  <text class="t-s" x="140" y="90" text-anchor="middle">Many layers</text>
+  <path class="i-paper" d="M22 132 L56 116 V240 L22 256 Z"/><path class="i-line" d="M22 132 L56 116 V240 L22 256 Z"/><path class="i-cream" d="M62 132 L96 116 V240 L62 256 Z"/><path class="i-line" d="M62 132 L96 116 V240 L62 256 Z"/><path class="i-paper" d="M102 132 L136 116 V240 L102 256 Z"/><path class="i-line" d="M102 132 L136 116 V240 L102 256 Z"/><path class="i-cream" d="M142 132 L176 116 V240 L142 256 Z"/><path class="i-line" d="M142 132 L176 116 V240 L142 256 Z"/><path class="i-deep" d="M182 132 L216 116 V240 L182 256 Z"/>
+  <path class="i-line" d="M30 156 L46 148 M28 180 L48 178 M38 196 V214 M30 236 L46 226" style="stroke-width:2"/>
+  <g class="i-faint"><path class="i-line" d="M70 160 L80 150 M68 196 H86 M76 220 L84 230" style="stroke-width:2"/><circle class="i-line" cx="156" cy="168" r="5" style="stroke-width:2"/><path class="i-line" d="M150 210 L158 198 L164 212" style="stroke-width:2"/></g>
+  <circle class="i-line" cx="119" cy="158" r="7" style="stroke-width:2"/><path class="i-line" d="M112 200 L119 188 L126 200 Z M112 220 H126 V232 H112 Z" style="stroke-width:2"/>
+  <path d="M188 172 L192 156 L200 166 M210 172 L206 156 L198 166" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M190 196 C196 202 204 202 208 196" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <text class="t-s" x="39" y="284" text-anchor="middle">Edges</text><text class="t-s" x="119" y="284" text-anchor="middle">Shapes</text><text class="t-s" x="199" y="284" text-anchor="middle">Parts</text>
+  <path class="i-line" d="M222 186 H240" marker-end="url(#alpt-arr-dl)"/>
+  <rect class="i-accent" x="244" y="168" width="46" height="36" rx="10"/>
+  <text class="t-s" x="267" y="192" text-anchor="middle">Cat</text>
+  <text class="t-xs" x="150" y="314" text-anchor="middle">Each layer builds on the last</text>
+</svg>

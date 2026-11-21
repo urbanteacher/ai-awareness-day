@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- AI Regulation: rules get stricter the more risky an AI system is. -->
+  <defs><marker id="alpt-arr-re" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-xs" x="175" y="62" text-anchor="middle" letter-spacing="1.5">RULES BY RISK</text>
+  <rect class="i-deep" x="120" y="80" width="110" height="46" rx="5"/>
+  <text class="t-s t-w" x="175" y="109" text-anchor="middle">Banned ✕</text>
+  <rect class="i-cream" x="100" y="136" width="150" height="46" rx="5"/><rect class="i-line" x="100" y="136" width="150" height="46" rx="5"/>
+  <text class="t-s" x="175" y="165" text-anchor="middle">High risk</text>
+  <rect class="i-paper" x="80" y="192" width="190" height="46" rx="5"/><rect class="i-line" x="80" y="192" width="190" height="46" rx="5"/>
+  <text class="t-s" x="175" y="221" text-anchor="middle">Limited risk</text>
+  <rect class="i-paper" x="60" y="248" width="230" height="46" rx="5"/><rect class="i-line" x="60" y="248" width="230" height="46" rx="5"/>
+  <text class="t-s" x="175" y="277" text-anchor="middle">Minimal risk</text>
+  <path class="i-line" d="M32 300 V96" marker-end="url(#alpt-arr-re)"/>
+  <text class="t-xs" transform="translate(24 290) rotate(-90)">More risk, more rules</text>
+</svg>

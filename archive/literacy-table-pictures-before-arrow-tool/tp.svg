@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- TPU and accelerators: a chip built for AI beside an ordinary chip, faster and using less power. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="178" y="50" text-anchor="middle">Same AI maths</text>
+  <path class="i-line" d="M50 92 V102 M70 92 V102 M90 92 V102 M110 92 V102 M50 174 V184 M70 174 V184 M90 174 V184 M110 174 V184"/>
+  <rect class="i-paper" x="36" y="102" width="88" height="72" rx="6"/><rect class="i-line" x="36" y="102" width="88" height="72" rx="6"/>
+  <rect class="i-cream" x="48" y="112" width="28" height="22" rx="3"/><rect class="i-line" x="48" y="112" width="28" height="22" rx="3"/><rect class="i-cream" x="48" y="142" width="28" height="22" rx="3"/><rect class="i-line" x="48" y="142" width="28" height="22" rx="3"/><rect class="i-cream" x="84" y="112" width="28" height="22" rx="3"/><rect class="i-line" x="84" y="112" width="28" height="22" rx="3"/><rect class="i-cream" x="84" y="142" width="28" height="22" rx="3"/><rect class="i-line" x="84" y="142" width="28" height="22" rx="3"/>
+  <path class="i-line" d="M190 92 V102 M210 92 V102 M230 92 V102 M250 92 V102 M190 174 V184 M210 174 V184 M230 174 V184 M250 174 V184"/>
+  <rect class="i-deep" x="176" y="102" width="88" height="72" rx="6"/>
+  <rect class="i-paper" x="186" y="110" width="12" height="10" rx="2"/><rect class="i-paper" x="186" y="125" width="12" height="10" rx="2"/><rect class="i-paper" x="186" y="140" width="12" height="10" rx="2"/><rect class="i-paper" x="186" y="155" width="12" height="10" rx="2"/><rect class="i-paper" x="204" y="110" width="12" height="10" rx="2"/><rect class="i-paper" x="204" y="125" width="12" height="10" rx="2"/><rect class="i-paper" x="204" y="140" width="12" height="10" rx="2"/><rect class="i-paper" x="204" y="155" width="12" height="10" rx="2"/><rect class="i-paper" x="222" y="110" width="12" height="10" rx="2"/><rect class="i-paper" x="222" y="125" width="12" height="10" rx="2"/><rect class="i-paper" x="222" y="140" width="12" height="10" rx="2"/><rect class="i-paper" x="222" y="155" width="12" height="10" rx="2"/><rect class="i-paper" x="240" y="110" width="12" height="10" rx="2"/><rect class="i-paper" x="240" y="125" width="12" height="10" rx="2"/><rect class="i-paper" x="240" y="140" width="12" height="10" rx="2"/><rect class="i-paper" x="240" y="155" width="12" height="10" rx="2"/>
+  <text class="t-s" x="80" y="206" text-anchor="middle">Ordinary chip</text>
+  <text class="t-s" x="220" y="206" text-anchor="middle">AI chip</text>
+  <text class="t-s" x="150" y="240" text-anchor="middle">Speed</text>
+  <rect class="i-paper" x="24" y="250" width="96" height="18" rx="9"/><rect class="i-line" x="24" y="250" width="96" height="18" rx="9"/>
+  <rect class="i-deep" x="24" y="250" width="30" height="18" rx="9"/><rect class="i-line" x="24" y="250" width="96" height="18" rx="9"/>
+  <rect class="i-paper" x="180" y="250" width="96" height="18" rx="9"/><rect class="i-line" x="180" y="250" width="96" height="18" rx="9"/>
+  <rect class="i-accent" x="180" y="250" width="90" height="18" rx="9"/><rect class="i-line" x="180" y="250" width="96" height="18" rx="9"/>
+  <text class="t-s" x="150" y="296" text-anchor="middle">Power used</text>
+  <rect class="i-paper" x="24" y="306" width="96" height="18" rx="9"/><rect class="i-line" x="24" y="306" width="96" height="18" rx="9"/>
+  <rect class="i-deep" x="24" y="306" width="84" height="18" rx="9"/><rect class="i-line" x="24" y="306" width="96" height="18" rx="9"/>
+  <rect class="i-paper" x="180" y="306" width="96" height="18" rx="9"/><rect class="i-line" x="180" y="306" width="96" height="18" rx="9"/>
+  <rect class="i-deep" x="180" y="306" width="32" height="18" rx="9"/><rect class="i-line" x="180" y="306" width="96" height="18" rx="9"/>
+</svg>

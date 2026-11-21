@@ -1,0 +1,86 @@
+{
+ "nodes": {
+  "ai": [
+   96,
+   22,
+   140,
+   52
+  ],
+  "teacher": [
+   152,
+   108,
+   28,
+   28
+  ],
+  "approve": [
+   62,
+   196,
+   100,
+   36
+  ],
+  "change": [
+   176,
+   196,
+   92,
+   36
+  ],
+  "sent": [
+   44,
+   272,
+   136,
+   44
+  ]
+ },
+ "edges": [
+  {
+   "from": "ai",
+   "side": "bottom",
+   "to": "teacher",
+   "to_side": "top",
+   "at": 0.5
+  },
+  {
+   "from": "change",
+   "side": "top",
+   "to": "ai",
+   "to_side": "right",
+   "at": 0.9,
+   "bow": 30
+  },
+  {
+   "from": "approve",
+   "side": "bottom",
+   "to": "sent",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "teacher body": [
+   144,
+   138,
+   44,
+   20
+  ],
+  "Teacher checks label": [
+   106,
+   166,
+   120,
+   18
+  ]
+ },
+ "edits": [
+  [
+   "<rect class=\"i-accent\" x=\"44\" y=\"264\" width=\"136\" height=\"46\"",
+   "<rect class=\"i-accent\" x=\"44\" y=\"272\" width=\"136\" height=\"44\""
+  ],
+  [
+   "<rect class=\"i-line\" x=\"44\" y=\"264\" width=\"136\" height=\"46\"",
+   "<rect class=\"i-line\" x=\"44\" y=\"272\" width=\"136\" height=\"44\""
+  ],
+  [
+   "x=\"112\" y=\"293\"",
+   "x=\"112\" y=\"300\""
+  ]
+ ]
+}

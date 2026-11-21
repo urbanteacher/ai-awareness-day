@@ -1,0 +1,10 @@
+{
+ "nodes": {
+  "AI chip": [116, 22, 88, 56],
+  "words card": [16, 100, 268, 58],
+  "patterns card": [16, 172, 268, 58],
+  "choices card": [16, 244, 268, 58]
+ },
+ "edges": [],
+ "shapes": {}
+}

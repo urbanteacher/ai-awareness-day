@@ -1,0 +1,19 @@
+{
+ "nodes": {
+  "watched": [111, 122, 78, 62],
+  "foryou": [111, 250, 78, 62]
+ },
+ "edges": [
+  {"from": "watched", "side": "bottom", "to": "foryou", "to_side": "top"}
+ ],
+ "shapes": {
+  "the person": [148, 22, 44, 52],
+  "You watched label": [20, 98, 96, 18],
+  "first clip": [20, 122, 78, 62],
+  "music clip": [202, 122, 78, 62],
+  "For you label": [20, 226, 62, 18],
+  "More football pill": [190, 226, 90, 24],
+  "first suggestion": [20, 250, 78, 62],
+  "third suggestion": [202, 250, 78, 62]
+ }
+}

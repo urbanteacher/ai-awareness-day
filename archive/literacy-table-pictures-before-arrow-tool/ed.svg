@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Edge AI: a phone spots a cat with its own AI chip, without sending the picture to the cloud. -->
+  <defs><marker id="alpt-arr-ed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="56" y="96" width="112" height="220" rx="16"/><rect class="i-line" x="56" y="96" width="112" height="220" rx="16"/>
+  <rect class="i-cream" x="68" y="114" width="88" height="130" rx="4"/>
+  <ellipse class="i-ink" cx="112" cy="208" rx="26" ry="20"/>
+  <circle class="i-ink" cx="112" cy="176" r="15"/>
+  <path class="i-ink" d="M100 168 L101 152 L110 163 Z M124 168 L123 152 L114 163 Z"/>
+  <path class="i-line" d="M136 214 C152 210 150 190 144 184"/>
+  <rect class="i-deepline i-dash" x="80" y="144" width="70" height="90" rx="3"/>
+  <rect class="i-deep" x="80" y="126" width="58" height="20" rx="3"/>
+  <text class="t-xs t-w" x="109" y="141" text-anchor="middle">Cat ✓</text>
+  <rect class="i-deep" x="88" y="256" width="48" height="40" rx="5"/>
+  <path class="i-line" d="M96 250 V256 M112 250 V256 M128 250 V256 M96 296 V302 M112 296 V302 M128 296 V302"/>
+  <text class="t-s t-w" x="112" y="282" text-anchor="middle">AI</text>
+  <path class="i-line" d="M180 276 H146" marker-end="url(#alpt-arr-ed)"/>
+  <text class="t-s" x="234" y="270" text-anchor="middle">AI runs</text>
+  <text class="t-s" x="234" y="290" text-anchor="middle">on the phone</text>
+  <g class="i-faint"><path class="i-paper" d="M196 118 H254 C268 118 272 102 262 94 C266 80 250 70 238 76 C232 62 210 62 206 78 C192 76 184 90 190 100 C180 104 182 118 196 118 Z"/><path class="i-line" d="M196 118 H254 C268 118 272 102 262 94 C266 80 250 70 238 76 C232 62 210 62 206 78 C192 76 184 90 190 100 C180 104 182 118 196 118 Z"/></g>
+  <path class="i-line i-dash" d="M174 170 L214 128"/>
+  <path d="M184 138 L204 158 M204 138 L184 158" fill="none" stroke="#231F20" stroke-width="4" stroke-linecap="round"/>
+  <text class="t-s" x="232" y="176" text-anchor="middle">No upload</text>
+</svg>

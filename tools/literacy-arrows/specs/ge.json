@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "answer": [168, 112, 116, 126],
+  "page": [16, 112, 136, 200]
+ },
+ "edges": [
+  {"from": "answer", "side": "bottom", "to": "page", "to_side": "right", "to_at": 0.88, "main": true}
+ ],
+ "shapes": {
+  "question bubble": [100, 20, 136, 80]
+ },
+ "edits": [
+  ["M168 112 H268 L284 128 V258 H168 Z", "M168 112 H268 L284 128 V238 H168 Z"],
+  ["M182 158 H266 M182 176 H258 M182 194 H262 M182 212 H236", "M182 154 H266 M182 168 H258 M182 182 H262 M182 196 H236"],
+  ["<rect class=\"i-accent\" x=\"182\" y=\"224\"", "<rect class=\"i-accent\" x=\"182\" y=\"206\""],
+  ["<text class=\"t-xs\" x=\"225\" y=\"241\"", "<text class=\"t-xs\" x=\"225\" y=\"223\""]
+ ]
+}

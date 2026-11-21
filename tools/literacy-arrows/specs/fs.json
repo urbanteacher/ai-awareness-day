@@ -1,0 +1,20 @@
+{
+ "nodes": {
+  "dog": [30, 100, 100, 34], "woof": [180, 100, 100, 34],
+  "cow": [30, 144, 100, 34], "moo": [180, 144, 100, 34],
+  "sheep": [30, 188, 100, 34], "baa": [180, 188, 100, 34],
+  "duck": [30, 270, 100, 34], "quack": [180, 270, 100, 34]
+ },
+ "edges": [
+  {"from": "dog", "side": "right", "to": "woof", "to_side": "left"},
+  {"from": "cow", "side": "right", "to": "moo", "to_side": "left"},
+  {"from": "sheep", "side": "right", "to": "baa", "to_side": "left"},
+  {"from": "duck", "side": "right", "to": "quack", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "3 EXAMPLES heading": [104, 46, 120, 28],
+  "dashed divider": [24, 239, 256, 2],
+  "New one label": [24, 251, 60, 14],
+  "tick": [268, 262, 20, 20]
+ }
+}

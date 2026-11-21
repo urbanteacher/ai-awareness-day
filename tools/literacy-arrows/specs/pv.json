@@ -1,0 +1,96 @@
+{
+ "nodes": {
+  "name": [
+   16,
+   98,
+   92,
+   38
+  ],
+  "address": [
+   16,
+   148,
+   92,
+   38
+  ],
+  "health": [
+   16,
+   198,
+   92,
+   38
+  ],
+  "lock": [
+   170,
+   140,
+   72,
+   62
+  ],
+  "homework": [
+   16,
+   266,
+   120,
+   40
+  ],
+  "ai": [
+   214,
+   258,
+   60,
+   54
+  ]
+ },
+ "edges": [
+  {
+   "from": "name",
+   "side": "right",
+   "to": "lock",
+   "to_side": "left",
+   "to_at": 0.2
+  },
+  {
+   "from": "address",
+   "side": "right",
+   "to": "lock",
+   "to_side": "left",
+   "to_at": 0.5
+  },
+  {
+   "from": "health",
+   "side": "right",
+   "to": "lock",
+   "to_side": "left",
+   "to_at": 0.8
+  },
+  {
+   "from": "homework",
+   "side": "right",
+   "to": "ai",
+   "to_side": "left",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "shackle": [
+   180,
+   102,
+   52,
+   40
+  ],
+  "UK GDPR label": [
+   176,
+   211,
+   60,
+   14
+  ],
+  "Kept private label": [
+   154,
+   46,
+   104,
+   18
+  ],
+  "dotted leader": [
+   204,
+   66,
+   4,
+   32
+  ]
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "nodes": {
+  "think1": [100, 64, 180, 32],
+  "act1": [20, 138, 180, 32],
+  "think2": [100, 212, 180, 32],
+  "act2": [20, 286, 180, 32]
+ },
+ "edges": [
+  {"from": "think1", "side": "bottom", "to": "act1", "to_side": "top", "at": 0.278, "to_at": 0.722},
+  {"from": "act1", "side": "bottom", "to": "think2", "to_side": "top", "at": 0.722, "to_at": 0.278},
+  {"from": "think2", "side": "bottom", "to": "act2", "to_side": "top", "at": 0.278, "to_at": 0.722}
+ ],
+ "shapes": {
+  "title": [126, 24, 128, 22],
+  "thought dot 1": [79, 85, 10, 10],
+  "magnifier": [228, 138, 32, 32],
+  "thought dot 2": [79, 233, 10, 10],
+  "tick": [228, 286, 32, 32]
+ }
+}

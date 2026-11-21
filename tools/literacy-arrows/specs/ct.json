@@ -1,0 +1,16 @@
+{
+ "nodes": {
+  "problem": [99, 16, 156, 58],
+  "step1": [74, 110, 206, 32],
+  "step3": [74, 202, 206, 32],
+  "answer": [74, 274, 206, 38]
+ },
+ "edges": [
+  {"from": "problem", "side": "bottom", "to": "step1", "to_side": "top"},
+  {"from": "step3", "side": "bottom", "to": "answer", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "step 2": [74, 156, 206, 32],
+  "the numbered circles": [28, 110, 32, 124]
+ }
+}

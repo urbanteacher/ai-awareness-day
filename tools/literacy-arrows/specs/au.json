@@ -1,0 +1,13 @@
+{
+ "nodes": {
+  "human": [24, 95, 44, 47],
+  "robot": [226, 100, 52, 42]
+ },
+ "edges": [
+  {"from": "human", "side": "right", "to": "robot", "to_side": "left", "start": "arrow"}
+ ],
+ "shapes": {
+  "Human decides label": [20, 153, 120, 16],
+  "AI alone label": [212, 153, 68, 16]
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "question": [112, 22, 166, 62],
+  "documents": [28, 132, 106, 124],
+  "ai": [180, 160, 62, 58],
+  "answer": [138, 258, 146, 58]
+ },
+ "edges": [
+  {"from": "question", "side": "bottom", "to": "documents", "to_side": "top"},
+  {"from": "documents", "side": "right", "to": "ai", "to_side": "left", "main": true},
+  {"from": "ai", "side": "bottom", "to": "answer", "to_side": "top"}
+ ],
+ "shapes": {
+  "speech bubble tail": [246, 82, 16, 16],
+  "Calendar label": [42, 265, 58, 15]
+ },
+ "edits": [
+  ["<path class=\"i-deep\" d=\"M180 168 H226 L242 184 V226 H180 Z\"/>", "<path class=\"i-deep\" d=\"M180 160 H226 L242 176 V218 H180 Z\"/>"],
+  ["<text class=\"t-m t-w\" x=\"211\" y=\"204\"", "<text class=\"t-m t-w\" x=\"211\" y=\"197\""]
+ ]
+}

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Regression: dots for revision hours against test score, a best-fit line, and a predicted score read off it. -->
-  <defs><marker id="alpt-arr-rr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-rr-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="186" y="50" text-anchor="middle">Predict a number</text>
   <path class="i-line" d="M40 96 V296 H284"/>
@@ -14,8 +14,8 @@
     <circle cx="200" cy="190" r="6"/><circle cx="252" cy="176" r="6"/><circle cx="262" cy="150" r="6"/>
   </g>
   <circle class="i-accent" cx="226" cy="186" r="9"/><circle class="i-line" cx="226" cy="186" r="9"/>
-  <rect class="i-paper" x="132" y="116" width="96" height="30" rx="6"/><rect class="i-line" x="132" y="116" width="96" height="30" rx="6"/>
-  <text class="t-s" x="180" y="137" text-anchor="middle">Prediction</text><path class="i-line" d="M200 150 L216 174" marker-end="url(#alpt-arr-rr)"/>
+  <rect class="i-paper" x="178" y="100" width="96" height="30" rx="6"/><rect class="i-line" x="178" y="100" width="96" height="30" rx="6"/>
+  <text class="t-s" x="226" y="121" text-anchor="middle">Prediction</text><g class="alpt-arrows"><path class="i-line i-main" d="M226 138 L226 169" marker-end="url(#alpt-arr-rr-d)"/></g>
   <text class="t-s" x="226" y="316" text-anchor="middle">6 h</text>
   <text class="t-s" x="46" y="180">72</text>
 </svg>

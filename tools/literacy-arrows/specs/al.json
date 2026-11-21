@@ -1,0 +1,15 @@
+{
+ "nodes": {
+  "step5": [20, 272, 170, 34],
+  "mug": [228, 238, 50, 64]
+ },
+ "edges": [
+  {"from": "step5", "side": "right", "to": "mug", "to_side": "left", "to_at": 0.797, "main": true}
+ ],
+ "shapes": {
+  "step 4": [20, 226, 170, 34],
+  "steam": [234, 186, 46, 44],
+  "mug handle": [278, 248, 18, 36],
+  "Make tea title": [134, 40, 100, 22]
+ }
+}

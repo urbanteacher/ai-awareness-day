@@ -1,24 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Copilot: a pupil writes, an AI sitting alongside suggests the next words in grey, and the pupil chooses to accept or edit them. -->
-  <defs><marker id="alpt-arr-cp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Copilot: a pupil writes, an AI sitting alongside suggests the next words in grey, and the pupil chooses to accept or edit them. Arrows: tools/literacy-arrows/specs/cp.json -->
+  <defs><marker id="alpt-arr-cp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-cp-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <rect class="i-paper" x="14" y="86" width="272" height="146" rx="8"/><rect class="i-line" x="14" y="86" width="272" height="146" rx="8"/>
+  <rect class="i-paper" x="14" y="86" width="272" height="134" rx="8"/><rect class="i-line" x="14" y="86" width="272" height="134" rx="8"/>
   <path class="i-line" d="M14 106 H286"/><circle class="i-ink" cx="28" cy="96" r="3"/><circle class="i-ink" cx="40" cy="96" r="3"/>
   <text class="t-s" x="28" y="136">Rain forms when</text>
   <rect class="i-ink" x="160" y="122" width="2.5" height="18"/>
   <text class="t-s t-d" opacity=".6" x="28" y="162">water vapour cools…</text>
   <path class="i-deepline i-faint" d="M28 170 H190" stroke-dasharray="2 5"/>
-  <rect class="i-deep" x="28" y="186" width="84" height="32" rx="6"/><text class="t-s t-w" x="70" y="207" text-anchor="middle">Accept</text>
-  <rect class="i-paper" x="122" y="186" width="66" height="32" rx="6"/><rect class="i-line" x="122" y="186" width="66" height="32" rx="6"/>
-  <text class="t-s" x="155" y="207" text-anchor="middle">Edit</text>
-  <path class="i-line" d="M30 302 H270"/>
+  <rect class="i-deep" x="28" y="180" width="84" height="28" rx="6"/><text class="t-s t-w" x="70" y="199" text-anchor="middle">Accept</text>
+  <rect class="i-paper" x="122" y="180" width="66" height="28" rx="6"/><rect class="i-line" x="122" y="180" width="66" height="28" rx="6"/>
+  <text class="t-s" x="155" y="199" text-anchor="middle">Edit</text>
+  <path class="i-line" d="M30 302 H282"/>
   <circle class="i-cream" cx="92" cy="262" r="15"/><circle class="i-line" cx="92" cy="262" r="15"/>
   <path class="i-line" d="M64 302 C64 278 120 278 120 302"/>
-  <path class="i-line" d="M86 242 L76 226" marker-end="url(#alpt-arr-cp)"/>
-  <path class="i-deep" d="M186 250 H226 L240 264 V302 H186 Z"/>
-  <rect class="i-paper" x="196" y="260" width="32" height="20" rx="6"/>
-  <circle class="i-ink" cx="206" cy="270" r="3"/><circle class="i-ink" cx="218" cy="270" r="3"/>
-  <path class="i-line" d="M222 246 C236 210 236 184 200 168" marker-end="url(#alpt-arr-cp)"/>
+  <path class="i-deep" d="M226 250 H266 L280 264 V302 H226 Z"/>
+  <rect class="i-paper" x="236" y="260" width="32" height="20" rx="6"/>
+  <circle class="i-ink" cx="246" cy="270" r="3"/><circle class="i-ink" cx="258" cy="270" r="3"/>
   <text class="t-s" x="92" y="324" text-anchor="middle">You</text>
-  <text class="t-s" x="213" y="324" text-anchor="middle">AI</text>
-</svg>
+  <text class="t-s" x="253" y="324" text-anchor="middle">AI</text>
+<g class="alpt-arrows"><path class="i-line" d="M92 239 L92 216" marker-end="url(#alpt-arr-cp)"/><path class="i-line i-main" d="M256 242 C256 196.3 248 159 212 159 L196 159" marker-end="url(#alpt-arr-cp-d)"/></g></svg>

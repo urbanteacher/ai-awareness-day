@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Latent Space: inside the model, the word whale moves across a hidden map of numbers from the fish cluster to the mammal cluster before it answers. -->
-  <defs><marker id="alpt-arr-ls" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-ls" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-ls-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="106" y="22" width="150" height="36" rx="18"/><rect class="i-line" x="106" y="22" width="150" height="36" rx="18"/>
   <text class="t-s" x="181" y="46" text-anchor="middle">Word in: whale</text>
@@ -12,11 +12,9 @@
   <circle class="i-cream" cx="48" cy="218" r="8"/><circle class="i-line" cx="48" cy="218" r="8"/><circle class="i-cream" cx="76" cy="226" r="8"/><circle class="i-line" cx="76" cy="226" r="8"/><circle class="i-cream" cx="52" cy="240" r="8"/><circle class="i-line" cx="52" cy="240" r="8"/>
   <text class="t-s" x="232" y="134" text-anchor="middle">mammals</text>
   <circle class="i-deep" cx="214" cy="150" r="8"/><circle class="i-deep" cx="244" cy="158" r="8"/><circle class="i-deep" cx="226" cy="176" r="8"/>
-  <path class="i-line" d="M150 62 C142 120 120 168 112 196" marker-end="url(#alpt-arr-ls)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M149.5 66 C149.5 122.5 112 122.5 112 179 L112 195" marker-end="url(#alpt-arr-ls)"/><path class="i-line i-main" d="M129 212 C155.5 212 155.5 163 182 163 L198 163" marker-end="url(#alpt-arr-ls-d)"/><path class="i-line" d="M150 258 L150 278" marker-end="url(#alpt-arr-ls)"/></g>
   <circle class="i-accent" cx="112" cy="212" r="9"/><circle class="i-line" cx="112" cy="212" r="9"/>
-  <path class="i-line i-dash" d="M122 206 C150 190 168 176 196 168" style="stroke-dasharray:5 6" marker-end="url(#alpt-arr-ls)"/>
   <text class="t-xs" x="104" y="240" text-anchor="start">[0.3, −1.2 …]</text>
-  <path class="i-line" d="M150 256 V272" marker-end="url(#alpt-arr-ls)"/>
-  <rect class="i-deep" x="70" y="278" width="160" height="34" rx="17"/>
-  <text class="t-s t-w" x="150" y="300" text-anchor="middle">Answer: mammal</text>
+  <rect class="i-deep" x="70" y="286" width="160" height="34" rx="17"/>
+  <text class="t-s t-w" x="150" y="308" text-anchor="middle">Answer: mammal</text>
 </svg>

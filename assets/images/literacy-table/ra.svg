@@ -1,22 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- ReAct: the agent takes turns to think and to act with a tool, until the job is done. Top-left 80x80 stays clear for the symbol badge. -->
-  <defs><marker id="alpt-arr-ra" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- ReAct: the agent takes turns to think and to act with a tool, until the job is done. Top-left 80x80 stays clear for the symbol badge. Arrows: tools/literacy-arrows/specs/ra.json -->
+  <defs><marker id="alpt-arr-ra" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <text class="t-m" x="184" y="54" text-anchor="middle">Reason + Act</text>
-  <circle class="i-paper" cx="84" cy="114" r="5"/><circle class="i-line" cx="84" cy="114" r="5"/>
-  <rect class="i-paper" x="100" y="88" width="180" height="36" rx="18"/><rect class="i-line i-dash" x="100" y="88" width="180" height="36" rx="18"/>
-  <text class="t-s" x="190" y="112" text-anchor="middle">Think: rain later?</text>
-  <path class="i-line" d="M150 126 V142" marker-end="url(#alpt-arr-ra)"/>
-  <rect class="i-deep" x="20" y="146" width="180" height="36" rx="6"/>
-  <text class="t-s t-w" x="110" y="170" text-anchor="middle">Act: check weather</text>
-  <circle class="i-deepline" cx="240" cy="160" r="12"/><path class="i-deepline" d="M249 169 L258 178" stroke-width="6"/>
-  <path class="i-line" d="M150 184 V200" marker-end="url(#alpt-arr-ra)"/>
-  <circle class="i-paper" cx="84" cy="230" r="5"/><circle class="i-line" cx="84" cy="230" r="5"/>
-  <rect class="i-paper" x="100" y="204" width="180" height="36" rx="18"/><rect class="i-line i-dash" x="100" y="204" width="180" height="36" rx="18"/>
-  <text class="t-s" x="190" y="228" text-anchor="middle">Think: rain at 3pm</text>
-  <path class="i-line" d="M150 242 V258" marker-end="url(#alpt-arr-ra)"/>
-  <rect class="i-deep" x="20" y="262" width="180" height="36" rx="6"/>
-  <text class="t-s t-w" x="110" y="286" text-anchor="middle">Act: move the match</text>
-  <circle class="i-accent" cx="244" cy="280" r="16"/>
-  <path class="i-line" d="M236 280 l6 6 l10 -12" stroke-width="3.5"/>
-</svg>
+  <text class="t-m" x="190" y="42" text-anchor="middle">Reason + Act</text>
+  <circle class="i-paper" cx="84" cy="90" r="5"/><circle class="i-line" cx="84" cy="90" r="5"/>
+  <rect class="i-paper" x="100" y="64" width="180" height="32" rx="16"/><rect class="i-line i-dash" x="100" y="64" width="180" height="32" rx="16"/>
+  <text class="t-s" x="190" y="86" text-anchor="middle">Think: rain later?</text>
+  <rect class="i-deep" x="20" y="138" width="180" height="32" rx="6"/>
+  <text class="t-s t-w" x="110" y="160" text-anchor="middle">Act: check weather</text>
+  <circle class="i-deepline" cx="240" cy="150" r="12"/><path class="i-deepline" d="M249 159 L258 168" stroke-width="6"/>
+  <circle class="i-paper" cx="84" cy="238" r="5"/><circle class="i-line" cx="84" cy="238" r="5"/>
+  <rect class="i-paper" x="100" y="212" width="180" height="32" rx="16"/><rect class="i-line i-dash" x="100" y="212" width="180" height="32" rx="16"/>
+  <text class="t-s" x="190" y="234" text-anchor="middle">Think: rain at 3pm</text>
+  <rect class="i-deep" x="20" y="286" width="180" height="32" rx="6"/>
+  <text class="t-s t-w" x="110" y="308" text-anchor="middle">Act: move the match</text>
+  <circle class="i-accent" cx="244" cy="302" r="16"/>
+  <path class="i-line" d="M236 302 l6 6 l10 -12" stroke-width="3.5"/>
+<g class="alpt-arrows"><path class="i-line" d="M150 104 L150 130" marker-end="url(#alpt-arr-ra)"/><path class="i-line" d="M150 178 L150 204" marker-end="url(#alpt-arr-ra)"/><path class="i-line" d="M150 252 L150 278" marker-end="url(#alpt-arr-ra)"/></g></svg>

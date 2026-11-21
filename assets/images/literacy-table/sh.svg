@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Shadow AI: a pupil list leaves the school's approved apps for an app nobody has checked. -->
-  <defs><marker id="alpt-arr-sh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-sh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-sh-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-line i-dash" d="M34 104 H136 Q150 104 150 118 V292 Q150 306 136 306 H34 Q20 306 20 292 V118 Q20 104 34 104 Z"/>
   <rect class="i-deep" x="30" y="94" width="110" height="22" rx="4"/>
@@ -13,11 +13,10 @@
   <path class="i-line" d="M48 256 C48 234 96 234 96 256"/>
   <rect class="i-paper" x="40" y="254" width="70" height="30" rx="3"/><rect class="i-line" x="40" y="254" width="70" height="30" rx="3"/>
   <path class="i-line" d="M32 290 H118"/>
-  <path class="i-line" d="M114 262 C140 262 150 262 160 262" marker-end="url(#alpt-arr-sh)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M118 269 L160 269" marker-end="url(#alpt-arr-sh)"/><path class="i-line i-main" d="M200 228 L200 202" marker-end="url(#alpt-arr-sh-d)"/></g>
   <path class="i-paper" d="M168 236 H198 L210 248 V290 H168 Z"/><path class="i-line" d="M168 236 H198 L210 248 V290 H168 Z"/>
   <path class="i-line" d="M176 256 H200 M176 266 H200 M176 276 H194"/>
   <text class="t-xs" x="189" y="312" text-anchor="middle">Pupil names</text>
-  <path class="i-line" d="M214 250 C236 244 238 224 238 206" marker-end="url(#alpt-arr-sh)"/>
   <text class="t-s" x="226" y="104" text-anchor="middle">Not approved</text>
   <rect class="i-ink" x="190" y="118" width="76" height="76" rx="14"/>
   <text class="t-l t-w" x="228" y="168" text-anchor="middle">?</text>

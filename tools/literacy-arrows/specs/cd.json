@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "cloud": [96, 34, 176, 98],
+  "phone": [38, 232, 40, 70],
+  "tablet": [226, 230, 52, 72]
+ },
+ "edges": [
+  {"from": "phone", "side": "top", "to": "cloud", "to_side": "bottom", "to_at": 0.12, "label": "Ask", "label_side": "left"},
+  {"from": "cloud", "side": "bottom", "to": "tablet", "to_side": "top", "label": "Answer", "label_side": "left"}
+ ],
+ "shapes": {
+  "internet line": [152, 140, 4, 90],
+  "Internet pill": [114, 190, 80, 26],
+  "laptop": [98, 238, 112, 62],
+  "Your devices label": [110, 311, 88, 14]
+ },
+ "edits": [
+  ["<text class=\"t-s\" x=\"20\" y=\"166\">Ask</text>", ""],
+  ["<text class=\"t-s\" x=\"250\" y=\"166\" text-anchor=\"end\">Answer</text>", ""]
+ ]
+}

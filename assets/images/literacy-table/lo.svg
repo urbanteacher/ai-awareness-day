@@ -1,12 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- LLMOps: a weekly loop round a chatbot of tracking prompts, testing answers, watching costs and checking safety. -->
-  <defs><marker id="alpt-arr-lo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-lo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="196" y="50" text-anchor="middle">Every week</text>
-  <path class="i-line" d="M200.0 132.3 A84 84 0 0 1 230.7 163.0" marker-end="url(#alpt-arr-lo)"/>
-  <path class="i-line" d="M230.7 247.0 A84 84 0 0 1 200.0 277.7" marker-end="url(#alpt-arr-lo)"/>
-  <path class="i-line" d="M116.0 277.7 A84 84 0 0 1 85.3 247.0" marker-end="url(#alpt-arr-lo)"/>
-  <path class="i-line" d="M85.3 163.0 A84 84 0 0 1 116.0 132.3" marker-end="url(#alpt-arr-lo)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M208 121 C226.7 121 242 141.2 242 166 L242 182" marker-end="url(#alpt-arr-lo)"/><path class="i-line" d="M268 228 C268 261.6 254.5 289 224 289 L208 289" marker-end="url(#alpt-arr-lo)"/><path class="i-line" d="M108 289 C89.3 289 74 268.8 74 244 L74 228" marker-end="url(#alpt-arr-lo)"/><path class="i-line" d="M48 182 C48 148.4 61.5 121 92 121 L108 121" marker-end="url(#alpt-arr-lo)"/></g>
   <rect class="i-paper" x="116" y="106" width="84" height="30" rx="15"/><rect class="i-line" x="116" y="106" width="84" height="30" rx="15"/>
   <text class="t-s" x="158" y="127" text-anchor="middle">Prompts</text>
   <rect class="i-paper" x="200" y="190" width="84" height="30" rx="15"/><rect class="i-line" x="200" y="190" width="84" height="30" rx="15"/>

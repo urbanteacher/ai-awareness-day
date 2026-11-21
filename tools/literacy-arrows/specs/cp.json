@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "you": [77, 247, 30, 30],
+  "accept": [28, 180, 84, 28],
+  "ai": [226, 250, 54, 52],
+  "suggestion": [28, 148, 160, 22]
+ },
+ "edges": [
+  {"from": "you", "side": "top", "to": "accept", "to_side": "bottom", "to_at": 0.762},
+  {"from": "ai", "side": "top", "to": "suggestion", "to_side": "right", "main": true}
+ ],
+ "shapes": {
+  "window dots": [24, 92, 20, 8],
+  "Rain forms when text": [28, 122, 136, 18],
+  "Edit button": [122, 180, 66, 28],
+  "your body": [64, 278, 56, 24],
+  "ground line": [30, 301, 252, 2],
+  "You label": [76, 310, 32, 16],
+  "AI label": [242, 310, 22, 16]
+ }
+}

@@ -1,22 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Process Mining: computer records are turned into a map of how work really flows, showing a slow three-day wait between checking and paying. -->
-  <defs><marker id="alpt-arr-mi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-mi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-mi-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="100" y="18" width="126" height="80" rx="8"/><rect class="i-line" x="100" y="18" width="126" height="80" rx="8"/>
   <text class="t-xs" x="112" y="38" letter-spacing="1">RECORDS</text>
   <circle class="i-ink" cx="115" cy="54" r="3"/><path class="i-line" d="M124 54 H212"/>
   <circle class="i-ink" cx="115" cy="69" r="3"/><path class="i-line" d="M124 69 H196"/>
   <circle class="i-ink" cx="115" cy="84" r="3"/><path class="i-line" d="M124 84 H206"/>
-  <path class="i-line" d="M163 104 V124" marker-end="url(#alpt-arr-mi)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M163 106 L163 122" marker-end="url(#alpt-arr-mi)"/><path class="i-line" d="M112 159 L182 159" marker-end="url(#alpt-arr-mi)"/><path class="i-line i-main" d="M236 186 L236 264" marker-end="url(#alpt-arr-mi-d)"/></g>
   <rect class="i-paper" x="16" y="140" width="88" height="38" rx="19"/><rect class="i-line" x="16" y="140" width="88" height="38" rx="19"/>
   <text class="t-s" x="60" y="164" text-anchor="middle">Order</text>
   <rect class="i-paper" x="190" y="140" width="92" height="38" rx="19"/><rect class="i-line" x="190" y="140" width="92" height="38" rx="19"/>
   <text class="t-s" x="236" y="164" text-anchor="middle">Check</text>
-  <path class="i-line" d="M108 159 H184" marker-end="url(#alpt-arr-mi)"/>
-  <text class="t-xs" x="146" y="196" text-anchor="middle">2 min</text>
-  <path d="M236 184 C236 236 214 268 196 282" fill="none" stroke="var(--fam-deep)" stroke-width="12" stroke-linecap="round"/>
-  <rect class="i-accent" x="206" y="216" width="78" height="30" rx="15"/><rect class="i-line" x="206" y="216" width="78" height="30" rx="15"/>
-  <text class="t-s" x="245" y="237" text-anchor="middle">3 days</text>
-  <rect class="i-deep" x="100" y="272" width="92" height="38" rx="19"/>
-  <text class="t-s t-w" x="146" y="296" text-anchor="middle">Pay</text>
+  <rect class="i-accent" x="140" y="210" width="78" height="30" rx="15"/><rect class="i-line" x="140" y="210" width="78" height="30" rx="15"/>
+  <text class="t-s" x="179" y="231" text-anchor="middle">3 days</text>
+  <rect class="i-deep" x="190" y="272" width="92" height="38" rx="19"/>
+  <text class="t-s t-w" x="236" y="296" text-anchor="middle">Pay</text>
+  <g class="alpt-arrow-labels"><text class="t-xs" x="147" y="176" text-anchor="middle">2 min</text></g>
 </svg>

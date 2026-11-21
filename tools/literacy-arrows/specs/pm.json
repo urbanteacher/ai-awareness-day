@@ -1,0 +1,13 @@
+{
+ "nodes": {
+  "new value": [100, 22, 128, 36],
+  "turned dial": [162, 118, 36, 36]
+ },
+ "edges": [
+  {"from": "new value", "side": "bottom", "to": "turned dial", "to_side": "top", "main": true}
+ ],
+ "shapes": {
+  "dial left": [102, 118, 36, 36],
+  "dial right": [222, 118, 36, 36]
+ }
+}

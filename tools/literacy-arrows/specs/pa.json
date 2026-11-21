@@ -1,0 +1,88 @@
+{
+ "nodes": {
+  "w1": [
+   22,
+   100,
+   84,
+   42
+  ],
+  "w2": [
+   22,
+   154,
+   84,
+   42
+  ],
+  "w3": [
+   22,
+   208,
+   84,
+   42
+  ],
+  "model": [
+   172,
+   146,
+   64,
+   60
+  ],
+  "next": [
+   118,
+   240,
+   166,
+   74
+  ]
+ },
+ "edges": [
+  {
+   "from": "w1",
+   "side": "right",
+   "to": "model",
+   "to_side": "left",
+   "to_at": 0.2
+  },
+  {
+   "from": "w2",
+   "side": "right",
+   "to": "model",
+   "to_side": "left",
+   "to_at": 0.5
+  },
+  {
+   "from": "w3",
+   "side": "right",
+   "to": "model",
+   "to_side": "left",
+   "to_at": 0.8
+  },
+  {
+   "from": "model",
+   "side": "bottom",
+   "to": "next",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "School lunches title": [
+   116,
+   32,
+   120,
+   18
+  ],
+  "Past Fridays label": [
+   24,
+   260,
+   80,
+   16
+  ]
+ },
+ "edits": [
+  [
+   "<path class=\"i-deep\" d=\"M148 146 H196 L212 162 V206 H148 Z\"/>",
+   "<path class=\"i-deep\" d=\"M172 146 H220 L236 162 V206 H172 Z\"/>"
+  ],
+  [
+   "d=\"M158 194 L170 182 L182 188 L200 166\"",
+   "d=\"M182 194 L194 182 L206 188 L224 166\""
+  ]
+ ]
+}

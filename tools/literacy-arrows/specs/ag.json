@@ -1,0 +1,90 @@
+{
+ "nodes": {
+  "goal": [
+   96,
+   20,
+   136,
+   58
+  ],
+  "bot": [
+   16,
+   124,
+   50,
+   60
+  ],
+  "s1": [
+   140,
+   100,
+   144,
+   36
+  ],
+  "s2": [
+   140,
+   144,
+   144,
+   36
+  ],
+  "s3": [
+   140,
+   188,
+   144,
+   36
+  ],
+  "person": [
+   218,
+   272,
+   24,
+   24
+  ]
+ },
+ "edges": [
+  {
+   "from": "goal",
+   "side": "left",
+   "to": "bot",
+   "to_side": "top"
+  },
+  {
+   "from": "bot",
+   "side": "right",
+   "to": "s1",
+   "to_side": "left",
+   "fan": true
+  },
+  {
+   "from": "bot",
+   "side": "right",
+   "to": "s2",
+   "to_side": "left",
+   "fan": true
+  },
+  {
+   "from": "bot",
+   "side": "right",
+   "to": "s3",
+   "to_side": "left",
+   "fan": true
+  },
+  {
+   "from": "s3",
+   "side": "bottom",
+   "to": "person",
+   "to_side": "top",
+   "main": true
+  }
+ ],
+ "shapes": {
+  "Asks you first label": [
+   88,
+   293,
+   112,
+   16
+  ],
+  "the person": [
+   210,
+   298,
+   40,
+   22
+  ]
+ }
+}

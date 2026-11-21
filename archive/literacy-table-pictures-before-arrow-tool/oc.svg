@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Optical Character Recognition: a photo of handwritten "Hello" is read letter by letter into typed text, with one letter it isn't sure of. -->
+  <defs><marker id="alpt-arr-oc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-cream" x="96" y="30" width="160" height="100" rx="4"/><rect class="i-line" x="96" y="30" width="160" height="100" rx="4"/>
+  <path class="i-deepline" d="M104 52 V38 H118 M234 38 H248 V52 M248 108 V122 H234 M118 122 H104 V108" stroke-width="4"/>
+  <path class="i-line" stroke-width="3.5" d="M124 70 L120 110 M144 68 L142 110 M122 92 C130 88 136 90 143 90"/>
+  <path class="i-line" stroke-width="3.5" d="M154 100 C164 100 170 94 164 90 C156 86 150 96 154 106 C158 112 166 110 170 106"/>
+  <path class="i-line" stroke-width="3.5" d="M176 108 C180 96 184 80 182 68 C180 62 174 70 176 84 C178 98 180 108 186 108"/>
+  <path class="i-line" stroke-width="3.5" d="M192 108 C196 96 200 80 198 68 C196 62 190 70 192 84 C194 98 196 108 202 108"/>
+  <path class="i-line" stroke-width="3.5" d="M216 92 C208 92 206 108 214 110 C224 112 226 92 216 92 Z"/>
+  <path class="i-line" d="M176 138 V160" marker-end="url(#alpt-arr-oc)"/>
+  <rect class="i-paper" x="20" y="170" width="44" height="46" rx="4"/><rect class="i-line" x="20" y="170" width="44" height="46" rx="4"/><text class="t-m" x="42" y="201" text-anchor="middle">H</text>
+  <rect class="i-paper" x="74" y="170" width="44" height="46" rx="4"/><rect class="i-line" x="74" y="170" width="44" height="46" rx="4"/><text class="t-m" x="96" y="201" text-anchor="middle">e</text>
+  <rect class="i-paper" x="128" y="170" width="44" height="46" rx="4"/><rect class="i-line" x="128" y="170" width="44" height="46" rx="4"/><text class="t-m" x="150" y="201" text-anchor="middle">l</text>
+  <rect class="i-accent" x="182" y="170" width="44" height="46" rx="4"/><rect class="i-line" x="182" y="170" width="44" height="46" rx="4"/><text class="t-m" x="204" y="201" text-anchor="middle">l</text>
+  <rect class="i-paper" x="236" y="170" width="44" height="46" rx="4"/><rect class="i-line" x="236" y="170" width="44" height="46" rx="4"/><text class="t-m" x="258" y="201" text-anchor="middle">o</text>
+  <text class="t-s" x="204" y="240" text-anchor="middle">l or 1?</text>
+  <rect class="i-paper" x="20" y="256" width="260" height="56" rx="8"/><rect class="i-line" x="20" y="256" width="260" height="56" rx="8"/>
+  <text class="t-l" x="36" y="296">Hello</text><rect class="i-ink" x="130" y="268" width="3" height="32"/>
+  <text class="t-xs" x="268" y="290" text-anchor="end">Text</text>
+</svg>

@@ -1,0 +1,21 @@
+{
+ "nodes": {
+  "write": [114, 100, 94, 34],
+  "test": [200, 214, 84, 34],
+  "fix": [18, 214, 84, 34]
+ },
+ "edges": [
+  {"from": "write", "side": "right", "to": "test", "to_side": "top", "main": true},
+  {"from": "test", "side": "left", "to": "fix", "to_side": "right", "main": true},
+  {"from": "fix", "side": "top", "to": "write", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "code files": [108, 22, 126, 54],
+  "line from files": [169, 82, 4, 18],
+  "the agent": [121, 164, 58, 52],
+  "12 tests pass": [58, 278, 184, 36]
+ },
+ "edits": [
+  ["<circle class=\"i-line\" cx=\"150\" cy=\"190\" r=\"74\" stroke-opacity=\".25\"/>", ""]
+ ]
+}

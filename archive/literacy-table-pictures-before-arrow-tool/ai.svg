@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Artificial Intelligence: one AI chip doing three jobs that usually need a human mind: understanding words, spotting patterns and making choices. -->
+  <defs><marker id="alpt-arr-ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-line" d="M128 12 V22 M146 12 V22 M164 12 V22 M182 12 V22 M128 78 V88 M146 78 V88 M182 78 V88 M164 78 V100 M104 36 H116 M104 50 H116 M104 64 H116 M204 36 H216 M204 50 H216 M204 64 H216"/>
+  <path class="i-line" d="M164 158 V172 M164 230 V244"/>
+  <rect class="i-deep" x="116" y="22" width="88" height="56" rx="6"/>
+  <text class="t-m t-w" x="160" y="58" text-anchor="middle">AI</text>
+  <rect class="i-paper" x="16" y="100" width="268" height="58" rx="10"/><rect class="i-line" x="16" y="100" width="268" height="58" rx="10"/>
+  <rect class="i-accent" x="30" y="112" width="64" height="30" rx="8"/><path class="i-accent" d="M44 140 L40 152 L56 140 Z"/><path class="i-line" d="M46 142 L40 152 L56 142 M38 112 H86 A8 8 0 0 1 94 120 V134 A8 8 0 0 1 86 142 H56 M46 142 H38 A8 8 0 0 1 30 134 V120 A8 8 0 0 1 38 112"/>
+  <path class="i-line" d="M42 122 H82 M42 132 H70"/>
+  <text class="t-s" x="112" y="135" text-anchor="start">Understands words</text>
+  <rect class="i-paper" x="16" y="172" width="268" height="58" rx="10"/><rect class="i-line" x="16" y="172" width="268" height="58" rx="10"/>
+  <circle class="i-deep" cx="36" cy="186" r="5.5"/><circle class="i-line" cx="52" cy="186" r="4" style="stroke-width:2"/><circle class="i-line" cx="68" cy="186" r="4" style="stroke-width:2"/><circle class="i-deep" cx="84" cy="186" r="5.5"/><circle class="i-line" cx="36" cy="201" r="4" style="stroke-width:2"/><circle class="i-deep" cx="52" cy="201" r="5.5"/><circle class="i-deep" cx="68" cy="201" r="5.5"/><circle class="i-line" cx="84" cy="201" r="4" style="stroke-width:2"/><circle class="i-line" cx="36" cy="216" r="4" style="stroke-width:2"/><circle class="i-line" cx="52" cy="216" r="4" style="stroke-width:2"/><circle class="i-deep" cx="68" cy="216" r="5.5"/><circle class="i-line" cx="84" cy="216" r="4" style="stroke-width:2"/>
+  <text class="t-s" x="112" y="207" text-anchor="start">Spots patterns</text>
+  <rect class="i-paper" x="16" y="244" width="268" height="58" rx="10"/><rect class="i-line" x="16" y="244" width="268" height="58" rx="10"/>
+  <path class="i-line" d="M28 273 H50"/><path class="i-line i-dash" d="M50 273 L84 291" style="stroke-dasharray:4 5"/><path class="i-deepline" d="M50 273 L84 256" style="stroke-width:5"/><path class="i-line" d="M50 273 L86 255" marker-end="url(#alpt-arr-ai)" style="stroke-width:0"/>
+  <circle class="i-deep" cx="92" cy="252" r="6"/>
+  <text class="t-s" x="112" y="279" text-anchor="start">Makes choices</text>
+</svg>

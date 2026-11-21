@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Generative Adversarial Network: a maker AI and a judge AI compete until the fake looks real. Arrows: tools/literacy-arrows/specs/gn.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="90" y="22" width="106" height="48" rx="12"/><rect class="i-line" x="90" y="22" width="106" height="48" rx="12"/>
+  <path class="i-paper" d="M194 38 L214 58 L194 54 Z"/><path class="i-line" d="M196 38 L214 58 L196 54"/>
+  <text class="t-m" x="143" y="54" text-anchor="middle">Fake! ✗</text>
+  <text class="t-s" x="245" y="54" text-anchor="middle">Judge</text>
+  <path class="i-deep" d="M206 66 H270 L284 80 V132 H206 Z"/>
+  <rect class="i-paper" x="228" y="86" width="36" height="24" rx="6"/><circle class="i-ink" cx="239" cy="98" r="4"/><circle class="i-ink" cx="253" cy="98" r="4"/>
+  <circle class="i-paper" cx="212" cy="128" r="13"/><circle class="i-line" cx="212" cy="128" r="13"/><path class="i-line" d="M221 138 L229 146" stroke-width="5"/>
+  <g transform="rotate(-8 140 182)">
+    <rect class="i-paper" x="110" y="150" width="60" height="64" rx="4"/><rect class="i-line" x="110" y="150" width="60" height="64" rx="4"/>
+    <circle class="i-accent" cx="140" cy="174" r="7"/>
+    <circle class="i-deep" cx="140" cy="162" r="6"/><circle class="i-deep" cx="152" cy="174" r="6"/><circle class="i-deep" cx="140" cy="186" r="6"/><circle class="i-deep" cx="128" cy="174" r="6"/>
+    <path class="i-line" d="M140 192 V206"/>
+  </g>
+  <path class="i-deep" d="M16 228 H82 L96 242 V292 H16 Z"/>
+  <rect class="i-paper" x="38" y="250" width="36" height="24" rx="6"/><circle class="i-ink" cx="49" cy="262" r="4"/><circle class="i-ink" cx="63" cy="262" r="4"/>
+  <text class="t-s" x="56" y="316" text-anchor="middle">Maker</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Generative Engine Optimisation: a web page written with clear question-and-answer facts gets cited in an AI assistant's answer. Top-left stays clear for the symbol badge. -->
+  <defs><marker id="alpt-arr-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="100" y="20" width="136" height="60" rx="14"/><rect class="i-line" x="100" y="20" width="136" height="60" rx="14"/>
+  <path class="i-paper" d="M206 78 L224 100 L222 78 Z"/><path class="i-line" d="M206 80 L224 100 L222 80"/>
+  <text class="t-s" x="168" y="45" text-anchor="middle">Best bike</text>
+  <text class="t-s" x="168" y="67" text-anchor="middle">lights?</text>
+  <rect class="i-paper" x="16" y="112" width="136" height="200" rx="6"/><rect class="i-line" x="16" y="112" width="136" height="200" rx="6"/>
+  <path class="i-cream" d="M17.5 113.5 H150.5 V134 H17.5 Z"/><path class="i-line" d="M16 134 H152"/>
+  <circle class="i-ink" cx="28" cy="123" r="3"/><circle class="i-ink" cx="38" cy="123" r="3"/><circle class="i-ink" cx="48" cy="123" r="3"/>
+  <text class="t-s t-d" x="28" y="160">Your page</text>
+  <text class="t-xs" x="28" y="188">Q: How bright?</text>
+  <text class="t-xs" x="28" y="206">A: 400 lumens</text>
+  <text class="t-xs" x="28" y="234">Q: Battery?</text>
+  <text class="t-xs" x="28" y="252">A: 6 hours</text>
+  <path class="i-line" d="M28 272 H130 M28 288 H110" stroke-opacity=".35"/>
+  <path class="i-deep" d="M168 112 H268 L284 128 V258 H168 Z"/>
+  <text class="t-xs t-w" x="182" y="136" letter-spacing="1">AI ANSWER</text>
+  <path d="M182 158 H266 M182 176 H258 M182 194 H262 M182 212 H236" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-opacity=".8"/>
+  <rect class="i-accent" x="182" y="224" width="86" height="24" rx="12"/>
+  <text class="t-xs" x="225" y="241" text-anchor="middle">Source [1]</text>
+  <path class="i-line" d="M222 254 C222 292 190 300 158 282" marker-end="url(#alpt-arr-ge)" stroke-dasharray="5 5"/>
+</svg>

@@ -1,0 +1,18 @@
+{
+ "nodes": {
+  "apple": [40, 84, 104, 110],
+  "banana": [156, 84, 104, 110],
+  "ai": [120, 246, 60, 54],
+  "new": [18, 238, 66, 70],
+  "result": [214, 255, 72, 36]
+ },
+ "edges": [
+  {"from": "apple", "side": "bottom", "to": "ai", "to_side": "top"},
+  {"from": "banana", "side": "bottom", "to": "ai", "to_side": "top"},
+  {"from": "new", "side": "right", "to": "ai", "to_side": "left"},
+  {"from": "ai", "side": "right", "to": "result", "to_side": "left", "main": true}
+ ],
+ "shapes": {
+  "Labelled examples title": [110, 36, 152, 18]
+ }
+}

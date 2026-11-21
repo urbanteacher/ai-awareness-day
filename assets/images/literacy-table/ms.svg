@@ -1,12 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Model serving: many people send questions at the same time to servers running one model, and each gets an answer. -->
-  <defs><marker id="alpt-arr-ms" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <defs><marker id="alpt-arr-ms" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="176" y="50" text-anchor="middle">Many asking at once</text>
-  <path class="i-line" d="M76 120 C110 120 130 150 160 150" marker-end="url(#alpt-arr-ms)" marker-start="url(#alpt-arr-ms)"/>
-  <path class="i-line" d="M76 172 C110 172 130 186 160 186" marker-end="url(#alpt-arr-ms)" marker-start="url(#alpt-arr-ms)"/>
-  <path class="i-line" d="M76 224 C110 224 130 222 160 222" marker-end="url(#alpt-arr-ms)" marker-start="url(#alpt-arr-ms)"/>
-  <path class="i-line" d="M76 276 C110 276 130 258 160 258" marker-end="url(#alpt-arr-ms)" marker-start="url(#alpt-arr-ms)"/>
+  <g class="alpt-arrows"><path class="i-line" d="M72 119.5 L162 119.5" marker-start="url(#alpt-arr-ms)" marker-end="url(#alpt-arr-ms)"/><path class="i-line" d="M72 171 L162 171" marker-start="url(#alpt-arr-ms)" marker-end="url(#alpt-arr-ms)"/><path class="i-line" d="M72 223 L162 223" marker-start="url(#alpt-arr-ms)" marker-end="url(#alpt-arr-ms)"/><path class="i-line" d="M72 275 L162 275" marker-start="url(#alpt-arr-ms)" marker-end="url(#alpt-arr-ms)"/></g>
   <circle class="i-cream" cx="46" cy="110" r="11"/><circle class="i-line" cx="46" cy="110" r="11"/>
   <path class="i-line" d="M28.4 138.6 C28.4 123.2 63.6 123.2 63.6 138.6"/>
   <circle class="i-cream" cx="46" cy="162" r="11"/><circle class="i-line" cx="46" cy="162" r="11"/>

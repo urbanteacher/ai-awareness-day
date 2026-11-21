@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Function Calling: asked a sum, the model calls the calculator tool and gets the answer back. Top-left 80x80 stays clear for the symbol badge. -->
+  <defs><marker id="alpt-arr-fn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="100" y="20" width="144" height="50" rx="12"/><rect class="i-line" x="100" y="20" width="144" height="50" rx="12"/>
+  <path class="i-paper" d="M142 68 L150 90 L162 68 Z"/><path class="i-line" d="M142 70 L150 90 L162 70"/>
+  <text class="t-m" x="172" y="53" text-anchor="middle">17 × 23 = ?</text>
+  <path class="i-deep" d="M124 112 H166 L182 128 V176 H124 Z"/>
+  <rect class="i-paper" x="135" y="128" width="36" height="24" rx="5"/>
+  <circle class="i-ink" cx="147" cy="140" r="3.5"/><circle class="i-ink" cx="159" cy="140" r="3.5"/>
+  <path class="i-deepline" d="M128 182 L80 214" stroke-width="4" marker-end="url(#alpt-arr-fn)"/>
+  <g class="i-faint"><path class="i-line i-dash" d="M153 184 V212 M176 182 L222 214"/></g>
+  <path class="i-line" d="M48 216 V180" marker-end="url(#alpt-arr-fn)"/>
+  <rect class="i-accent" x="20" y="136" width="76" height="36" rx="18"/>
+  <text class="t-m" x="58" y="162" text-anchor="middle">391</text>
+  <rect class="i-paper" x="34" y="222" width="50" height="64" rx="6"/><rect class="i-line" x="34" y="222" width="50" height="64" rx="6"/>
+  <rect class="i-deep" x="40" y="228" width="38" height="14" rx="2"/>
+  <path class="i-line" d="M44 254 h4 M57 254 h4 M70 254 h4 M44 266 h4 M57 266 h4 M70 266 h4 M44 278 h4 M57 278 h4 M70 278 h4" stroke-width="4"/>
+  <text class="t-s" x="59" y="310" text-anchor="middle">Calculator</text>
+  <circle class="i-paper" cx="148" cy="248" r="18"/><circle class="i-deepline" cx="148" cy="248" r="18"/>
+  <path class="i-deepline" d="M161 261 L174 274" stroke-width="7"/>
+  <text class="t-s" x="153" y="310" text-anchor="middle">Search</text>
+  <rect class="i-paper" x="216" y="226" width="52" height="58" rx="5"/><rect class="i-line" x="216" y="226" width="52" height="58" rx="5"/>
+  <path class="i-deep" d="M216 231 a5 5 0 0 1 5 -5 h42 a5 5 0 0 1 5 5 v9 h-52 Z"/>
+  <path class="i-line" d="M224 252 h8 M238 252 h8 M252 252 h8 M224 264 h8 M238 264 h8 M252 264 h8 M224 276 h8 M238 276 h8" stroke-width="3"/>
+  <text class="t-s" x="242" y="310" text-anchor="middle">Booking</text>
+</svg>

@@ -1,0 +1,75 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arrow Style Trial</title>
+<style>
+:root{--ink:#231F20;--cream:#F6F4ED;--card:#EAE7DF;--dim:#54504E;--rule:#C9C6BE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.5 "AIAD Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1080px;margin:0 auto;padding:40px 16px 64px}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05;margin:.3rem 0 .8rem;letter-spacing:-.02em}
+.lead{max-width:44rem;font-size:1.1rem;margin:0 0 2rem}
+h2{font-size:1.5rem;margin:0 0 1rem}
+h3{font-size:1rem;margin:0}
+.rules{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:0 0 1.2rem}
+.rule{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;background:#fff;border:2px solid var(--ink);padding:12px}
+.rule p{margin:.15rem 0 0;font-size:.92rem;color:var(--dim)}
+.sw{background:var(--fam)}
+.also{max-width:48rem;margin:0 0 3rem;padding-left:1.2rem}
+.also li+li{margin-top:.3rem}
+.pair{background:#fff;border:2px solid var(--ink);padding:20px;margin:0 0 20px}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+figure{margin:0}
+.pic svg{display:block;width:100%;height:auto;max-width:340px}
+figcaption{font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.4rem}
+.notes{margin:1rem 0 0;padding-left:1.2rem;max-width:48rem}
+.notes li+li{margin-top:.3rem}
+.alpt-pic text{font-family:inherit;fill:var(--ink)}
+.alpt-pic .i-bg{fill:var(--fam)} .alpt-pic .i-deep{fill:var(--fam-deep)} .alpt-pic .i-paper{fill:#fff} .alpt-pic .i-cream{fill:var(--cream)}
+.alpt-pic .i-accent{fill:var(--pic-accent,#FF7038)} .alpt-pic .i-ink{fill:var(--ink)}
+.alpt-pic .i-line{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-deepline{fill:none;stroke:var(--fam-deep);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-dash{stroke-dasharray:7 7} .alpt-pic .i-faint{opacity:.35}
+.alpt-pic .i-main{stroke:var(--fam-deep)}
+.alpt-pic .i-head{fill:none;stroke:var(--ink);stroke-width:1.67;stroke-linecap:round;stroke-linejoin:round}
+.alpt-pic .i-head--deep{stroke:var(--fam-deep)}
+.alpt-pic .i-dot{fill:var(--ink)}
+.alpt-pic .i-dot--deep{fill:var(--fam-deep)}
+.alpt-pic .t-xs{font-size:13px;font-weight:600} .alpt-pic .t-s{font-size:16px;font-weight:600} .alpt-pic .t-w{fill:#fff}
+.toggle{display:inline-flex;gap:.5rem;align-items:center;font-weight:700;margin:0 0 1.5rem;padding:.6rem .9rem;border:2px solid var(--ink);background:#fff;cursor:pointer}
+.toggle input{width:1.1rem;height:1.1rem;accent-color:var(--ink)}
+.ctrl{display:none}
+body.show-ctrl .ctrl{display:inline}
+.ctrl .c-line{fill:none;stroke:#E11D48;stroke-width:1.5;stroke-dasharray:3 3}
+.ctrl .c-dot{fill:#fff;stroke:#E11D48;stroke-width:2}
+.links{margin-top:1rem}
+.links summary{cursor:pointer;font-weight:700}
+.links ul{margin:.5rem 0 0;padding-left:1.2rem;font-size:.9rem}
+code{font-size:.88em;background:var(--card);padding:.05rem .3rem}
+.compare{background:#fff;border:2px solid var(--ink);padding:20px;margin:0 0 20px}
+.cmp-lead{margin:0 0 1rem;max-width:44rem}
+.cmp-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.cmp-box{background:var(--fam);min-height:200px;display:flex;align-items:center;justify-content:center;padding:8px}
+.cmp-box svg{display:block;width:100%;height:auto;max-width:300px}
+.cmp-grid figure p{font-size:.9rem;color:var(--dim);margin:.4rem 0 0}
+.mermaid{margin:0;background:transparent;font-family:inherit}
+.clash{margin:1rem 0 0;padding:.6rem .8rem;font-size:.92rem;font-weight:600}
+.clash.ok{background:#E3F4E8;border-left:4px solid #1F7A3A}
+.clash.bad{background:#FDE7EA;border-left:4px solid #BE123C}
+.clash p{margin:0}.clash ul{margin:.3rem 0 0;padding-left:1.2rem;font-weight:500}
+@media (max-width:560px){.pics{gap:10px} .rule{grid-template-columns:90px 1fr}}
+</style></head><body><main>
+<p class="eyebrow">AI Literacy Periodic Table · element pictures</p>
+<h1>Arrow style trial</h1>
+<p class="lead">One set of arrow rules for all 100 pictures with arrows, tried on three of them. “Now” is the live picture; “Trial” is redrawn to the rules. Nothing on the site has changed.</p>
+<h2>The rules</h2>
+<div class="rules"><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-m" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-main" d="M8 20 H104" marker-end="url(#d-m)"/></svg></div><div><h3>Main path</h3><p>The one route the picture is about. Family colour only: the same thickness and the same head as every other arrow. One per picture.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-s" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line" d="M8 20 H104" marker-end="url(#d-s)"/></svg></div><div><h3>Step</h3><p>“Leads to.” Ink, 2.5 thick. Most arrows.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-y" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-dash" d="M8 20 H104" marker-end="url(#d-y)"/></svg></div><div><h3>Maybe or later</h3><p>Dashed. Only for something optional, uncertain or still to happen.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-o" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><circle class="i-dot" cx="5" cy="5" r="3.5"/></marker></defs><path class="i-line" d="M12 20 H108" marker-start="url(#d-o)" marker-end="url(#d-o)"/></svg></div><div><h3>Related</h3><p>A line with a dot at each end. Linked, but nothing flows.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-x" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" orient="auto-start-reverse"><path class="i-head" d="M2.5 2.5 7.5 7.5 M7.5 2.5 2.5 7.5"/></marker></defs><path class="i-line" d="M8 20 H100" marker-end="url(#d-x)"/></svg></div><div><h3>Blocked</h3><p>A cross instead of a head: stopped, refused or not allowed. Good for guardrails and safeguarding.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-l" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line i-main" d="M10 30 C30 4 90 4 104 26" marker-end="url(#d-l)"/></svg></div><div><h3>Loop</h3><p>A cycle. Every arc in a loop uses the same curve.</p></div></div><div class="rule"><div class="sw" style="--fam:#E3E8EF;--fam-deep:#334155"><svg viewBox="0 0 120 40" class="alpt-pic"><defs><marker id="d-t" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="15" markerHeight="15" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs><path class="i-line" d="M16 20 H104" marker-start="url(#d-t)" marker-end="url(#d-t)"/></svg></div><div><h3>Both ways</h3><p>Heads at both ends. Rare: only for a real two-way exchange.</p></div></div></div>
+<ul class="also">
+<li><strong>Every arrow stops 8 short</strong> of the shape it points to, so heads never touch or overlap a box.</li>
+<li><strong>One arrowhead, one thickness</strong>: every arrow is 2.5 thick with the same head; only the colour changes.</li>
+<li><strong>Leave and enter straight on</strong>: an arrow leaves a box at right angles to its edge and arrives the same way.</li>
+<li><strong>Checked on every build</strong>: <code>build.py</code> warns if an arrow crosses a box, shape or label it isn’t joined to, if two arrows cross, or if one is too short to read.</li>
+<li><strong>Near-misses snap straight</strong>: two boxes within 6 of lining up get a straight arrow, not a tiny wobble.</li>
+<li><strong>Calculated, not guessed</strong>: each trial arrow is written only as “from this box’s side to that box’s side”. <code>build.py</code> works out the rest: where on the edge it sits, whether it can be straight, and the curve, with both control points straight out from their edge.</li>
+<li><strong>Read left to right or top to bottom.</strong> Labels sit beside an arrow, never on the line.</li>
+</ul>
+<label class="toggle"><input type="checkbox" onchange="document.body.classList.toggle('show-ctrl',this.checked)"> Show curve control points</label>

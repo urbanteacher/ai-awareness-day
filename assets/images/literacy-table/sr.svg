@@ -1,21 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Self-Reflection: the bot checks its own draft, spots the wrong answer and fixes it before finishing. Top-left 80x80 stays clear for the symbol badge. -->
-  <defs><marker id="alpt-arr-sr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <!-- Self-Reflection: the bot checks its own draft, spots the wrong answer and fixes it before finishing. Top-left 80x80 stays clear for the symbol badge. Arrows: tools/literacy-arrows/specs/sr.json -->
+  <defs><marker id="alpt-arr-sr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-sr-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
-  <rect class="i-paper" x="100" y="22" width="150" height="138" rx="6"/><rect class="i-line" x="100" y="22" width="150" height="138" rx="6"/>
-  <text class="t-xs" x="116" y="46" letter-spacing="2">DRAFT</text>
-  <path class="i-line i-faint" d="M116 62 H226 M116 76 H200"/>
-  <text class="t-m" x="116" y="112">7 × 8 = 54</text>
-  <ellipse class="i-deepline" cx="197" cy="104" rx="22" ry="18" stroke-width="4"/>
-  <text class="t-s t-d" x="240" y="146" text-anchor="end">Wrong?</text>
-  <path class="i-deep" d="M22 124 H62 L78 140 V174 H22 Z"/>
-  <rect class="i-paper" x="32" y="138" width="34" height="22" rx="5"/>
-  <circle class="i-ink" cx="43" cy="149" r="3.5"/><circle class="i-ink" cx="55" cy="149" r="3.5"/>
-  <path class="i-line i-dash" d="M84 150 C110 166 150 156 176 128" marker-end="url(#alpt-arr-sr)"/>
-  <path class="i-line" d="M176 164 V194" marker-end="url(#alpt-arr-sr)"/>
+  <rect class="i-paper" x="112" y="22" width="150" height="138" rx="6"/><rect class="i-line" x="112" y="22" width="150" height="138" rx="6"/>
+  <text class="t-xs" x="128" y="46" letter-spacing="2">DRAFT</text>
+  <path class="i-line i-faint" d="M128 62 H238 M128 76 H212"/>
+  <text class="t-m" x="128" y="112">7 × 8 = 54</text>
+  <ellipse class="i-deepline" cx="215" cy="104" rx="20" ry="18" stroke-width="4"/>
+  <text class="t-s t-d" x="252" y="146" text-anchor="end">Wrong?</text>
+  <path class="i-deep" d="M16 86 H56 L72 102 V136 H16 Z"/>
+  <rect class="i-paper" x="26" y="100" width="34" height="22" rx="5"/>
+  <circle class="i-ink" cx="37" cy="111" r="3.5"/><circle class="i-ink" cx="49" cy="111" r="3.5"/>
   <rect class="i-paper" x="100" y="200" width="180" height="110" rx="6"/><rect class="i-line" x="100" y="200" width="180" height="110" rx="6"/>
   <text class="t-xs" x="116" y="224" letter-spacing="2">FINAL</text>
   <text class="t-m" x="116" y="264">7 × 8 = 56</text>
   <rect class="i-deep" x="116" y="278" width="104" height="22" rx="11"/>
   <text class="t-xs t-w" x="168" y="294" text-anchor="middle">Checked ✓</text>
-</svg>
+<g class="alpt-arrows"><path class="i-line" d="M80 111 L104 111" marker-end="url(#alpt-arr-sr)"/><path class="i-line i-main" d="M187 168 L187 192" marker-end="url(#alpt-arr-sr-d)"/></g></svg>

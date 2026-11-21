@@ -1,0 +1,155 @@
+{
+ "nodes": {
+  "chip": [
+   50,
+   116,
+   200,
+   156
+  ],
+  "in0": [
+   70,
+   72,
+   0,
+   0
+  ],
+  "in1": [
+   90,
+   72,
+   0,
+   0
+  ],
+  "in2": [
+   110,
+   72,
+   0,
+   0
+  ],
+  "in3": [
+   130,
+   72,
+   0,
+   0
+  ],
+  "in4": [
+   150,
+   72,
+   0,
+   0
+  ],
+  "in5": [
+   170,
+   72,
+   0,
+   0
+  ],
+  "in6": [
+   190,
+   72,
+   0,
+   0
+  ],
+  "in7": [
+   210,
+   72,
+   0,
+   0
+  ],
+  "in8": [
+   230,
+   72,
+   0,
+   0
+  ]
+ },
+ "edges": [
+  {
+   "from": "in0",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.1
+  },
+  {
+   "from": "in1",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.2
+  },
+  {
+   "from": "in2",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.3
+  },
+  {
+   "from": "in3",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.4
+  },
+  {
+   "from": "in4",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.5
+  },
+  {
+   "from": "in5",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.6
+  },
+  {
+   "from": "in6",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.7
+  },
+  {
+   "from": "in7",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.8
+  },
+  {
+   "from": "in8",
+   "side": "bottom",
+   "to": "chip",
+   "to_side": "top",
+   "to_at": 0.9
+  }
+ ],
+ "shapes": {
+  "All at once title": [
+   110,
+   36,
+   120,
+   18
+  ],
+  "left pins": [
+   36,
+   130,
+   14,
+   128
+  ],
+  "right pins": [
+   250,
+   130,
+   14,
+   128
+  ],
+  "GPU label": [
+   56,
+   300,
+   188,
+   18
+  ]
+ }
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Temperature: the same prompt at low and high settings gives predictable or varied answers. -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="112" y="22" width="140" height="52" rx="12"/><rect class="i-line" x="112" y="22" width="140" height="52" rx="12"/>
+  <text class="t-s" x="182" y="54" text-anchor="middle">My pet is a …</text>
+  <rect class="i-paper" x="30" y="104" width="28" height="190" rx="14"/><rect class="i-line" x="30" y="104" width="28" height="190" rx="14"/>
+  <rect class="i-deep" x="38" y="150" width="12" height="140" rx="6"/>
+  <circle class="i-deep" cx="44" cy="296" r="20"/><circle class="i-line" cx="44" cy="296" r="20"/>
+  <path class="i-line" d="M58 124 H66 M58 154 H64 M58 184 H64 M58 214 H64 M58 244 H66"/>
+  <path class="i-line" d="M70 124 H80 M70 244 H80" stroke-dasharray="3 4"/>
+  <rect class="i-paper" x="84" y="96" width="200" height="90" rx="10"/><rect class="i-line" x="84" y="96" width="200" height="90" rx="10"/>
+  <rect class="i-accent" x="98" y="108" width="62" height="24" rx="12"/>
+  <text class="t-xs" x="129" y="125" text-anchor="middle" letter-spacing="1">HIGH</text>
+  <text class="t-xs" x="172" y="125">varied</text>
+  <text class="t-s" x="98" y="166">dragon, cloud, toaster</text>
+  <rect class="i-paper" x="84" y="206" width="200" height="90" rx="10"/><rect class="i-line" x="84" y="206" width="200" height="90" rx="10"/>
+  <rect class="i-deep" x="98" y="218" width="56" height="24" rx="12"/>
+  <text class="t-xs t-w" x="126" y="235" text-anchor="middle" letter-spacing="1">LOW</text>
+  <text class="t-xs" x="166" y="235">predictable</text>
+  <text class="t-s" x="98" y="276">dog, dog, dog</text>
+</svg>

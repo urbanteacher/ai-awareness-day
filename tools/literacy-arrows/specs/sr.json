@@ -1,0 +1,12 @@
+{
+ "nodes": {
+  "bot": [16, 86, 56, 50],
+  "draft": [112, 22, 150, 138],
+  "final": [100, 200, 180, 110]
+ },
+ "edges": [
+  {"from": "bot", "side": "right", "to": "draft", "to_side": "left"},
+  {"from": "draft", "side": "bottom", "to": "final", "to_side": "top", "main": true}
+ ],
+ "shapes": {}
+}

@@ -1,0 +1,27 @@
+{
+ "nodes": {
+  "teacher answer": [20, 88, 90, 38],
+  "student answer": [192, 88, 90, 38]
+ },
+ "edges": [
+  {"from": "teacher answer", "side": "right", "to": "student answer", "to_side": "left", "main": true, "label": "copies", "label_side": "above"}
+ ],
+ "shapes": {
+  "question": [96, 22, 160, 44],
+  "teacher bubble tail": [56, 124, 20, 14],
+  "teacher": [20, 144, 120, 116],
+  "Teacher label": [48, 272, 64, 18],
+  "student bubble stem": [235, 126, 4, 78],
+  "student": [206, 208, 56, 52],
+  "Student label": [202, 272, 64, 18]
+ },
+ "edits": [
+  ["<text class=\"t-xs\" x=\"170\" y=\"100\">copies</text>", ""],
+  ["<rect class=\"i-paper\" x=\"26\" y=\"88\" width=\"104\" height=\"38\" rx=\"12\"/><rect class=\"i-line\" x=\"26\" y=\"88\" width=\"104\" height=\"38\" rx=\"12\"/>", "<rect class=\"i-paper\" x=\"20\" y=\"88\" width=\"90\" height=\"38\" rx=\"12\"/><rect class=\"i-line\" x=\"20\" y=\"88\" width=\"90\" height=\"38\" rx=\"12\"/>"],
+  ["<path class=\"i-paper\" d=\"M66 124 L74 138 L86 124 Z\"/><path class=\"i-line\" d=\"M66 126 L74 138 L86 126\"/>", "<path class=\"i-paper\" d=\"M56 124 L64 138 L76 124 Z\"/><path class=\"i-line\" d=\"M56 126 L64 138 L76 126\"/>"],
+  ["<text class=\"t-s\" x=\"78\" y=\"113\" text-anchor=\"middle\">Paris</text>", "<text class=\"t-s\" x=\"65\" y=\"113\" text-anchor=\"middle\">Paris</text>"],
+  ["<rect class=\"i-paper\" x=\"182\" y=\"150\" width=\"104\" height=\"38\" rx=\"12\"/><rect class=\"i-line i-dash\" x=\"182\" y=\"150\" width=\"104\" height=\"38\" rx=\"12\"/>", "<rect class=\"i-paper\" x=\"192\" y=\"88\" width=\"90\" height=\"38\" rx=\"12\"/><rect class=\"i-line i-dash\" x=\"192\" y=\"88\" width=\"90\" height=\"38\" rx=\"12\"/>"],
+  ["<text class=\"t-s\" x=\"234\" y=\"175\" text-anchor=\"middle\">Paris</text>", "<text class=\"t-s\" x=\"237\" y=\"113\" text-anchor=\"middle\">Paris</text>"],
+  ["<path class=\"i-line\" d=\"M234 192 V202\" />", "<path class=\"i-line\" d=\"M237 130 V204\" />"]
+ ]
+}
