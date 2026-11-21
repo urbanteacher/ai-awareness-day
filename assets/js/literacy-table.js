@@ -460,8 +460,19 @@
 			issueDetail = document.createElement( 'div' );
 			issueDetail.className = 'alpt-panel__issue';
 			issueDetail.hidden = true;
-			talkLine = document.createElement( 'p' );
+			// A row that opens and closes, like Classroom notes: open on wider screens, closed on phones to save
+			// space. Once someone opens or closes it, it stays that way from element to element.
+			talkLine = document.createElement( 'details' );
 			talkLine.className = 'alpt-panel__talk';
+			talkLine.open = ! window.matchMedia( '(max-width: 599px)' ).matches;
+			var talkSummary = document.createElement( 'summary' );
+			var talkLabel = document.createElement( 'strong' );
+			talkLabel.textContent = 'Talk about it';
+			talkSummary.appendChild( talkLabel );
+			var talkText = document.createElement( 'p' );
+			talkText.className = 'alpt-panel__talk-q';
+			talkLine.appendChild( talkSummary );
+			talkLine.appendChild( talkText );
 			issuesOut.appendChild( issuesList );
 			issuesOut.appendChild( issueDetail );
 			// The question shows under the definition, outside Classroom notes: questioning the word is the point.
@@ -560,13 +571,7 @@
 				openIssue( first );
 			}
 			var question = talk[ el[ 0 ] ];
-			talkLine.textContent = '';
-			if ( question ) {
-				var label = document.createElement( 'strong' );
-				label.textContent = 'Talk about it: ';
-				talkLine.appendChild( label );
-				talkLine.appendChild( document.createTextNode( question ) );
-			}
+			talkLine.lastChild.textContent = question || '';
 			talkLine.hidden = ! question;
 			var resLine = root.querySelector( '[data-alpt-res]' );
 			var resList = root.querySelector( '[data-alpt-res-list]' );
@@ -2387,6 +2392,18 @@
 				show( i );
 				openBoard( 'element', i, weekBoard );
 			} );
+		}
+		// "Show to class" on the word of the week card on another page links here as #board-me: that element goes
+		// straight on the board. Not full screen, since the browser only allows that after a click on this page.
+		var boardHash = window.location.hash.slice( 1 ).toLowerCase();
+		if ( 0 === boardHash.indexOf( 'board-' ) ) {
+			for ( var bh = 0; bh < elements.length; bh++ ) {
+				if ( elements[ bh ][ 0 ].toLowerCase() === boardHash.slice( 6 ) ) {
+					show( bh );
+					openBoard( 'element', bh, null );
+					break;
+				}
+			}
 		}
 
 		// Copy link: the address of the element in the panel, to paste into a slide, an email or the staff bulletin.

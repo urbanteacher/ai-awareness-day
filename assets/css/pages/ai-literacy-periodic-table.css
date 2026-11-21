@@ -2147,10 +2147,22 @@ html.alpt-lab-open {
 .alpt-panel__talk {
   max-width: 48rem;
   margin: 0;
-  padding-left: 0.7rem;
-  border-left: 4px solid var(--fam-deep);
+  border-top: 1px solid var(--a27-rule);
   font-size: 0.9rem;
   line-height: 1.4;
+}
+
+.alpt-panel__talk > summary {
+  padding: 0.55rem 0;
+  cursor: pointer;
+}
+
+.alpt-panel__talk > summary strong {
+  font-weight: 650;
+}
+
+.alpt-panel__talk-q {
+  margin: 0 0 0.6rem;
 }
 
 .alpt-panel__talk[hidden],
@@ -3367,8 +3379,8 @@ html.alpt-board-open {
 
 /* In the introduction: a weekly word taster. A dark card with a tilted sticker, the tile beside the word, the
    question as a quote and a hard pink shadow. Below the text on phones and tablets, beside the title on wide
-   screens. */
-.alpt-hero .alpt-eotw {
+   screens. The same card on another page (.alpt-away, the National Conversation) keeps its smaller size. */
+:is(.alpt-hero, .alpt-away) .alpt-eotw {
   position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -3382,7 +3394,7 @@ html.alpt-board-open {
   box-shadow: 8px 8px 0 var(--eotw-accent);
 }
 
-.alpt-hero .alpt-eotw__sticker {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__sticker {
   position: absolute;
   top: -0.85rem;
   right: 1.1rem;
@@ -3396,33 +3408,33 @@ html.alpt-board-open {
   transform: rotate(3deg);
 }
 
-.alpt-hero .alpt-eotw__tile {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__tile {
   --cut: 14px;
   width: 5rem;
   height: 5rem;
   transform: rotate(-4deg);
 }
 
-.alpt-hero .alpt-eotw__sym {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__sym {
   font-size: 2.4rem;
 }
 
-.alpt-hero .alpt-eotw__text {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__text {
   display: contents;
 }
 
-.alpt-hero .alpt-eotw__label,
-.alpt-hero .alpt-eotw__name {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__label,
+:is(.alpt-hero, .alpt-away) .alpt-eotw__name {
   grid-column: 2;
 }
 
-.alpt-hero .alpt-eotw__label {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__label {
   align-self: end;
   color: var(--eotw-accent);
   font-size: 0.72rem;
 }
 
-.alpt-hero .alpt-eotw__name {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__name {
   align-self: start;
   margin: -0.6rem 0 0 !important;
   color: var(--a27-cream);
@@ -3432,11 +3444,11 @@ html.alpt-board-open {
 }
 
 /* The tile takes the first two rows, beside the label and the word. */
-.alpt-hero .alpt-eotw__tile {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__tile {
   grid-row: 1 / span 2;
 }
 
-.alpt-hero .alpt-eotw__talk {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__talk {
   grid-column: 1 / -1;
   padding-left: 0.8rem;
   border-left: 3px solid var(--eotw-accent);
@@ -3445,11 +3457,11 @@ html.alpt-board-open {
   line-height: 1.45;
 }
 
-.alpt-hero .alpt-eotw__actions {
+:is(.alpt-hero, .alpt-away) .alpt-eotw__actions {
   grid-column: 1 / -1;
 }
 
-.alpt-hero .alpt-eotw .alpt-btn {
+:is(.alpt-hero, .alpt-away) .alpt-eotw .alpt-btn {
   min-height: 2.4rem;
   padding: 0.4rem 0.9rem;
   border-color: var(--a27-cream);
@@ -3458,28 +3470,28 @@ html.alpt-board-open {
   font-size: 0.9rem;
 }
 
-.alpt-hero .alpt-eotw .alpt-btn--ink {
+:is(.alpt-hero, .alpt-away) .alpt-eotw .alpt-btn--ink {
   border-color: var(--eotw-accent);
   background: var(--eotw-accent);
   color: var(--a27-ink);
 }
 
-.alpt-hero .alpt-eotw .alpt-btn:hover {
+:is(.alpt-hero, .alpt-away) .alpt-eotw .alpt-btn:hover {
   background: var(--a27-cream);
   color: var(--a27-ink);
 }
 
-.alpt-hero .alpt-eotw .alpt-btn:focus-visible {
+:is(.alpt-hero, .alpt-away) .alpt-eotw .alpt-btn:focus-visible {
   outline: 3px solid var(--eotw-accent);
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .alpt-hero .alpt-eotw__tile {
+  :is(.alpt-hero, .alpt-away) .alpt-eotw__tile {
     transition: transform 0.25s ease;
   }
 
-  .alpt-hero .alpt-eotw:hover .alpt-eotw__tile {
+  :is(.alpt-hero, .alpt-away) .alpt-eotw:hover .alpt-eotw__tile {
     transform: rotate(0deg) scale(1.04);
   }
 }
@@ -5140,19 +5152,80 @@ html.alpt-board-open {
   }
 }
 
-/* Phones: the panel is one column, so the picture can be wider than the small tile. */
+/* Phones: the front stays a small tile so the definition and the buttons fit on the screen. Turned over, the
+   picture opens to full width so its labels can be read. */
 @media screen and (max-width: 599px) {
   .alpt-panel__tile.has-pic {
-    width: min(100%, 17rem);
+    width: 5.5rem;
     aspect-ratio: 300 / 330;
   }
 
-  /* The front is now a big tile, so its symbol is big too. */
-  .alpt-panel__tile.has-pic .alpt-panel__sym {
-    font-size: 5.4rem;
+  .alpt-panel__tile.has-pic .alpt-panel__n {
+    font-size: 0.95rem;
   }
 
+  .alpt-panel__tile.has-pic .alpt-panel__tile-name {
+    display: none;
+  }
 
+  .alpt-panel__tile.has-pic.is-flipped {
+    width: min(100%, 15rem);
+  }
+
+  /* The family, theme and year labels sit beside the small tile rather than below it, to save a row. The body's
+     contents join the panel's grid so the labels can share the tile's row; everything else is full width. */
+  .alpt .alpt-panel {
+    grid-template-columns: auto minmax(0, 1fr) !important;
+    gap: 0.55rem 0.9rem;
+  }
+
+  .alpt .alpt-panel__body {
+    display: contents;
+  }
+
+  .alpt .alpt-panel > *,
+  .alpt .alpt-panel__body > * {
+    grid-column: 1 / -1;
+  }
+
+  .alpt .alpt-panel > .alpt-panel__tile {
+    grid-column: 1;
+  }
+
+  .alpt .alpt-panel__body > .alpt-panel__labels {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .alpt .alpt-panel__labels > * {
+    align-self: flex-end;
+  }
+
+  .alpt .alpt-panel > .alpt-panel__tile.is-flipped {
+    grid-column: 1 / -1;
+  }
+
+  /* With the picture open, the family, theme and year labels go, so the buttons still fit on the screen. */
+  .alpt-panel:has(.alpt-panel__tile.is-flipped) .alpt-panel__labels {
+    display: none;
+  }
+
+  /* With the picture open, the buttons stay at the bottom of the screen while any of the panel is in view, so
+     they can be reached on any phone height. */
+  .alpt-panel:has(.alpt-panel__tile.is-flipped) .alpt-panel__nav {
+    position: sticky;
+    z-index: 2;
+    bottom: 0;
+    margin-inline: -1rem;
+    margin-bottom: -1rem;
+    padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+    border-top: 2px solid var(--a27-ink);
+    background: #FFFFFF;
+  }
 }
 
 /* A note for teachers ("teacher_note" in elements.json), at the top of Classroom notes & resources. */
