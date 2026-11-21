@@ -140,8 +140,9 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
             <div class="hero-flagship__themes">
                 <p class="hero-flagship__themes-label" id="hero-flagship-themes"><?php esc_html_e( 'Five themes to debate', 'ai-awareness-day' ); ?></p>
                 <ul aria-labelledby="hero-flagship-themes">
-                    <?php foreach ( array( 'safe' => __( 'Safe', 'ai-awareness-day' ), 'smart' => __( 'Smart', 'ai-awareness-day' ), 'creative' => __( 'Creative', 'ai-awareness-day' ), 'responsible' => __( 'Responsible', 'ai-awareness-day' ), 'future' => __( 'Future', 'ai-awareness-day' ) ) as $theme_slug => $theme_name ) : ?>
-                    <li><a class="hero-flagship__theme hero-flagship__theme--<?php echo esc_attr( $theme_slug ); ?>" href="<?php echo esc_url( add_query_arg( 'principle', $theme_slug, $library_url ) ); ?>" data-ncp-dialog="ncp-theme-resources-<?php echo esc_attr( $theme_slug ); ?>"><img src="<?php echo esc_url( aiad_strand_icon_uri( $theme_slug ) ); ?>" alt="" width="40" height="40" /><span><?php echo esc_html( $theme_name ); ?></span></a></li>
+                    <?php foreach ( aiad_hero27_strand_questions() as $theme_slug => $theme ) : ?>
+                    <?php /* Each theme's question to debate (Edit Homepage: Question: Safe, and so on). */ ?>
+                    <li><a class="hero-flagship__theme hero-flagship__theme--<?php echo esc_attr( $theme_slug ); ?>" href="<?php echo esc_url( add_query_arg( 'principle', $theme_slug, $library_url ) ); ?>" data-ncp-dialog="ncp-theme-resources-<?php echo esc_attr( $theme_slug ); ?>"><img src="<?php echo esc_url( aiad_strand_icon_uri( $theme_slug ) ); ?>" alt="" width="40" height="40" /><span class="hero-flagship__theme-name"><?php echo esc_html( $theme['name'] ); ?></span><span class="hero-flagship__theme-q"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_q_' . $theme_slug ) ); ?></span></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>

@@ -784,3 +784,46 @@
   .hero-flagship__steps li:last-child { border-bottom: 0; }
   .hero-flagship__steps li { padding: .6rem 0; }
 }
+
+/* Each theme's question to debate, under its icon and name. Five in a row from 600px wide; one list on phones, where
+   five short columns would leave a few words to a line. */
+.hero-flagship__themes ul { align-items: start; }
+
+.hero-flagship .hero-flagship__theme {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: .6rem;
+  row-gap: .5rem;
+  height: 100%;
+  padding: .35rem 0;
+  text-align: left;
+}
+
+.hero-flagship__theme-q {
+  grid-column: 1 / -1;
+  color: rgb(246 244 237 / .8);
+  font-size: .78rem;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.hero-flagship__theme:hover .hero-flagship__theme-q,
+.hero-flagship__theme:focus-visible .hero-flagship__theme-q {
+  color: var(--a27-cream);
+}
+
+/* All five stay on one row down to tablet width, with smaller type. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .hero-flagship__themes ul { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem 1rem; }
+  .hero-flagship .hero-flagship__theme { column-gap: .45rem; font-size: .9rem; }
+  .hero-flagship .hero-flagship__theme img { width: 2rem; height: 2rem; }
+}
+
+@media (max-width: 599px) {
+  .hero-flagship__themes ul { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .hero-flagship__themes li + li { border-top: 1px solid rgb(246 244 237 / .15); }
+  .hero-flagship .hero-flagship__theme { flex-direction: row; min-height: 0; padding: .8rem 0; font-size: 1rem; justify-content: start; text-align: left; row-gap: .35rem; }
+  .hero-flagship .hero-flagship__theme img { width: 2rem; height: 2rem; }
+  .hero-flagship__theme-q { grid-column: 2; }
+}

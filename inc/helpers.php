@@ -481,7 +481,7 @@ function aiad_hero27_fields(): array {
 			'label'       => sprintf( __( 'Question: %s', 'ai-awareness-day' ), $strand['name'] ),
 			'type'        => 'textarea',
 			'default'     => $strand['question'],
-			'description' => 'safe' === $slug ? __( 'The panel shows one question per strand and changes with it. Keep each to two short lines, answerable either way.', 'ai-awareness-day' ) : '',
+			'description' => 'safe' === $slug ? __( 'Shown under each theme\'s icon in the National Conversation section of the homepage. Keep each to two short lines, answerable either way.', 'ai-awareness-day' ) : '',
 		);
 	}
 	foreach ( $fields as $key => $field ) {
