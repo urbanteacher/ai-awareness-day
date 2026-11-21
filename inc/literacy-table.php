@@ -1418,6 +1418,45 @@ function aiad_render_literacy_week(): string {
 }
 
 /**
+ * A key word for one AIAD theme, on another page (the National Conversation's theme pop-ups): the word of the week
+ * card, drawn the same way, for an element in that theme with a question to talk about. Like the word of the week it
+ * changes every Monday, working through the theme's words in the same order, and leaves out the safeguarding ones.
+ * "Open it" goes to the word on the table and "Show to class" puts it on the table's board.
+ *
+ * @param string $theme safe, smart, creative, responsible or future.
+ */
+function aiad_render_literacy_theme_word( string $theme ): string {
+	$by_sym = array_column( aiad_literacy_elements(), null, 'sym' );
+	$pool   = array_values( array_filter( aiad_literacy_week_pool(), static fn( string $sym ): bool => ( $by_sym[ $sym ]['theme'] ?? '' ) === $theme ) );
+	if ( array() === $pool ) {
+		return '';
+	}
+	$monday = strtotime( 'monday this week', current_time( 'timestamp' ) );
+	$el     = $by_sym[ $pool[ (int) floor( $monday / WEEK_IN_SECONDS ) % count( $pool ) ] ];
+	$sym    = strtolower( $el['sym'] );
+	$base   = aiad_literacy_table_url();
+	wp_enqueue_style( 'aiad-literacy-table' );
+	ob_start();
+	?>
+<div class="alpt-away alpt-away--key">
+<div class="alpt-eotw alpt-eotw--<?php echo esc_attr( $theme ); ?>">
+	<div class="alpt-eotw__tile alpt-fam--<?php echo esc_attr( $el['family'] ); ?>" aria-hidden="true"><span class="alpt-eotw__sym"><?php echo esc_html( $el['sym'] ); ?></span></div>
+	<div class="alpt-eotw__text">
+		<p class="alpt-eotw__label"><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( 'Key word from the Periodic Table · %s theme', 'ai-awareness-day' ), aiad_literacy_strands()[ $theme ] ?? '' ) ); ?></p>
+		<p class="alpt-eotw__name"><?php echo esc_html( $el['name'] ); ?></p>
+		<p class="alpt-eotw__talk"><?php echo esc_html( aiad_literacy_talk()[ $el['sym'] ] ?? '' ); ?></p>
+	</div>
+	<div class="alpt-eotw__actions">
+		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $base . '#element-' . $sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
+		<a class="alpt-btn" href="<?php echo esc_url( $base . '#board-' . $sym ); ?>"><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></a>
+	</div>
+</div>
+</div>
+	<?php
+	return (string) ob_get_clean();
+}
+
+/**
  * The page's stylesheet and script, and the table's block (aiad/literacy-table), which loads them wherever it is used.
  * In the editor it shows the table as the page does (assets/js/literacy-table-edit.js).
  */

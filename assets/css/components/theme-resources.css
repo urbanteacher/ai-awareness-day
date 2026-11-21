@@ -1,0 +1,195 @@
+/*
+ * A theme's pop-up: a sample big question (with "Show on the board"), a key word from the AI Literacy Periodic
+ * Table and the theme's resources from the library. Drawn by aiad_theme_resources_dialog()
+ * (inc/national-conversation-page.php) and opened from the National Conversation's theme tiles and the homepage's
+ * principle cards. The ncp- names come from the National Conversation page, where it started.
+ */
+.ncp-theme-dialog {
+  --ncp-bright: var(--a27-safe);
+  width: min(100% - 2rem, 64rem);
+  max-height: min(100% - 2rem, 52rem);
+  /* Centred: the theme's reset takes away the browser's own margin. */
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-top: 8px solid var(--ncp-bright);
+  background: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.ncp-theme-dialog--smart { --ncp-bright: var(--a27-smart); }
+.ncp-theme-dialog--creative { --ncp-bright: var(--a27-creative); }
+.ncp-theme-dialog--responsible { --ncp-bright: var(--a27-responsible); }
+.ncp-theme-dialog--future { --ncp-bright: var(--a27-future); }
+
+.ncp-theme-dialog::backdrop {
+  background: rgb(35 31 32 / 0.7);
+}
+
+.ncp-theme-dialog__head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--a27-cream);
+  border-bottom: 1px solid var(--a27-line, #C9C6BE);
+}
+
+.ncp-theme-dialog__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ncp-theme-dialog__head form {
+  margin: 0;
+}
+
+.ncp-theme-dialog__close {
+  padding: 0.45rem 0.9rem;
+  border: 2px solid var(--a27-ink);
+  border-radius: 0;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ncp-theme-dialog .resource-tiles {
+  padding: 1.25rem;
+}
+
+.ncp-theme-dialog .resource-tiles__more {
+  display: inline-flex;
+  margin: 0 1.25rem 1.5rem;
+}
+
+/* The cards fade in as the page scrolls; in the pop-up they are already in view. */
+.ncp-theme-dialog .fade-up {
+  opacity: 1;
+  transform: none;
+}
+
+/* A theme's sample big question, as a lesson page shows it (resource-lesson.css .rl-question__panel), in the theme's
+   colour. "Show on the board" fills the screen with it. */
+.ncp-bigq {
+  --cut: 1.5rem;
+  margin: 1.25rem 1.25rem 0;
+  padding: 1.5rem clamp(1.25rem, 3vw, 2.25rem) 1.75rem;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+
+.ncp-bigq__label {
+  margin: 0 0 0.75rem;
+  color: var(--ncp-bright);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ncp-bigq__text {
+  max-width: 34ch;
+  margin: 0;
+  font-size: clamp(1.35rem, 3vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.ncp-bigq__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 1.25rem 0 0;
+}
+
+.ncp-bigq__show {
+  padding: 0.65rem 1.1rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--ncp-bright);
+  color: var(--a27-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ncp-bigq__show:hover {
+  background: var(--a27-cream);
+}
+
+.ncp-bigq__show:focus-visible {
+  outline: 3px solid var(--a27-cream);
+  outline-offset: 3px;
+}
+
+.ncp-bigq__from {
+  color: var(--a27-cream);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.ncp-bigq.is-board {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: 8vh 8vw;
+  overflow-y: auto;
+  clip-path: none;
+}
+
+.ncp-bigq.is-board .ncp-bigq__text {
+  max-width: 24ch;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+}
+
+.ncp-bigq.is-board .ncp-bigq__actions {
+  margin-top: 3rem;
+}
+
+.ncp-bigq.is-board .ncp-bigq__from {
+  display: none;
+}
+
+/* The pop-up's lead: the sample big question and the theme's key word from the Periodic Table, side by side on
+   wide screens. The key word is the table's own word of the week card (.alpt-away). */
+.ncp-theme-dialog__lead {
+  display: grid;
+  gap: 1.5rem;
+  align-items: stretch;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.ncp-theme-dialog__lead .ncp-bigq {
+  margin: 0;
+}
+
+.ncp-theme-dialog__lead .alpt-away .alpt-eotw {
+  height: calc(100% - 8px);
+  margin: 0 8px 8px 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 800px) {
+  .ncp-theme-dialog__lead {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+}

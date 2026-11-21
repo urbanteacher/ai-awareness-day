@@ -195,3 +195,208 @@ add_action(
 	},
 	16
 );
+
+/**
+ * A theme's pop-up: a sample big question (with "Show on the board"), a key word from the AI Literacy Periodic Table
+ * (aiad_render_literacy_theme_word()) and the newest resources in that theme from the library, as the library's own
+ * cards (template-parts/components/resource-tile.php), with a link to the library filtered to the theme. The
+ * National Conversation's theme tiles open it (block aiad/nc-theme-resources), and so do the homepage's principle
+ * cards. It is a <dialog>, so Escape and the browser's focus handling come with it. Empty for a theme with no
+ * resources, and drawn once per page.
+ *
+ * @param string $strand safe, smart, creative, responsible or future.
+ */
+function aiad_theme_resources_dialog( string $strand ): string {
+	static $drawn = array();
+	$strand = sanitize_key( $strand );
+	if ( isset( $drawn[ $strand ] ) ) {
+		return '';
+	}
+	$term = '' !== $strand ? get_term_by( 'slug', $strand, 'resource_principle' ) : false;
+	if ( ! $term instanceof WP_Term ) {
+		return '';
+	}
+	$query = new WP_Query(
+		array(
+			'post_type'           => 'resource',
+			'post_status'         => 'publish',
+			'posts_per_page'      => 6,
+			'ignore_sticky_posts' => true,
+			'no_found_rows'       => true,
+			'tax_query'           => array( array( 'taxonomy' => 'resource_principle', 'field' => 'term_id', 'terms' => $term->term_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		)
+	);
+	if ( ! $query->have_posts() ) {
+		return '';
+	}
+	$id      = 'ncp-theme-resources-' . $strand;
+	$library = get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' );
+
+	// A sample big question: the newest of these resources that has one (its lesson page shows it the same way). The
+	// lesson's "(from Slide 3)" pointer means nothing away from its slides, so it is left off.
+	$sample = null;
+	foreach ( $query->posts as $post ) {
+		$asked = trim( (string) preg_replace( '/\s*\(from slide[^)]*\)\s*$/i', '', (string) get_post_meta( $post->ID, '_aiad_discussion_question', true ) ) );
+		if ( '' !== $asked ) {
+			$sample = array( 'text' => $asked, 'url' => get_permalink( $post ), 'title' => get_the_title( $post ) );
+			break;
+		}
+	}
+	/* translators: %s: theme name, such as Safe */
+	$title = sprintf( __( '%s resources', 'ai-awareness-day' ), $term->name );
+
+	$drawn[ $strand ] = true;
+	$css = AIAD_DIR . '/assets/css/components/theme-resources.css';
+	wp_enqueue_style( 'aiad-theme-resources', AIAD_URI . '/assets/css/components/theme-resources.css', array( 'aiad-style' ), is_readable( $css ) ? (string) filemtime( $css ) : AIAD_VERSION );
+
+	ob_start();
+	?>
+<dialog id="<?php echo esc_attr( $id ); ?>" class="ncp-theme-dialog ncp-theme-dialog--<?php echo esc_attr( $strand ); ?>" aria-labelledby="<?php echo esc_attr( $id ); ?>-title">
+	<div class="ncp-theme-dialog__head">
+		<h3 id="<?php echo esc_attr( $id ); ?>-title" class="ncp-theme-dialog__title"><?php echo aiad_strand_icon_svg( $strand, 24 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed paths. ?><?php echo esc_html( $title ); ?></h3>
+		<form method="dialog"><button type="submit" class="ncp-theme-dialog__close"><?php esc_html_e( 'Close', 'ai-awareness-day' ); ?></button></form>
+	</div>
+	<?php $key_word = function_exists( 'aiad_render_literacy_theme_word' ) ? aiad_render_literacy_theme_word( $strand ) : ''; ?>
+	<?php if ( $sample || '' !== $key_word ) : ?>
+	<div class="ncp-theme-dialog__lead">
+	<?php endif; ?>
+	<?php if ( $sample ) : ?>
+	<div class="ncp-bigq" data-ncp-board-panel tabindex="-1">
+		<p class="ncp-bigq__label"><?php esc_html_e( 'Big question', 'ai-awareness-day' ); ?></p>
+		<p class="ncp-bigq__text"><?php echo wptexturize( esc_html( $sample['text'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+		<p class="ncp-bigq__actions">
+			<button type="button" class="ncp-bigq__show" data-ncp-board data-close="<?php esc_attr_e( 'Close', 'ai-awareness-day' ); ?>"><?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?></button>
+			<a class="ncp-bigq__from" href="<?php echo esc_url( $sample['url'] ); ?>"><?php echo esc_html( sprintf( /* translators: %s: resource title */ __( 'From the lesson: %s', 'ai-awareness-day' ), html_entity_decode( $sample['title'], ENT_QUOTES, 'UTF-8' ) ) ); ?></a>
+		</p>
+	</div>
+	<?php endif; ?>
+	<?php echo $key_word; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_render_literacy_theme_word(). ?>
+	<?php if ( $sample || '' !== $key_word ) : ?>
+	</div>
+	<?php endif; ?>
+	<div class="resource-tiles">
+		<?php
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			get_template_part( 'template-parts/components/resource-tile', null, array() );
+		}
+		wp_reset_postdata();
+		?>
+	</div>
+	<a class="resource-tiles__more" href="<?php echo esc_url( add_query_arg( 'principle', $strand, $library ) ); ?>"><?php echo esc_html( sprintf( /* translators: %s: theme name */ __( 'See all %s resources', 'ai-awareness-day' ), $term->name ) ); ?> <span aria-hidden="true">&rarr;</span></a>
+</dialog>
+	<?php
+	// One small script for every pop-up on the page: open it from its button or principle card, close it on a click on the backdrop, and put a big question
+	// on the board (full screen where the browser allows it, else filling the window), as resource-lesson.js does.
+	if ( ! wp_script_is( 'aiad-nc-theme-resources', 'enqueued' ) ) {
+		wp_register_script( 'aiad-nc-theme-resources', false, array(), AIAD_VERSION, true );
+		wp_enqueue_script( 'aiad-nc-theme-resources' );
+		wp_add_inline_script(
+			'aiad-nc-theme-resources',
+			<<<'JS'
+(function () {
+	var board = null;
+	function setBoard(panel, on) {
+		var button = panel.querySelector('[data-ncp-board]');
+		panel.classList.toggle('is-board', on);
+		if (!button.dataset.label) button.dataset.label = button.textContent;
+		button.textContent = on ? button.dataset.close : button.dataset.label;
+		board = on ? panel : null;
+		if (on) {
+			if (panel.requestFullscreen) panel.requestFullscreen().catch(function () {});
+			panel.focus();
+		} else if (document.fullscreenElement) {
+			document.exitFullscreen().catch(function () {});
+		}
+	}
+	document.addEventListener('click', function (e) {
+		var t = e.target.closest ? e.target : e.target.parentElement;
+		var open = t.closest('[data-ncp-dialog]');
+		if (open) {
+			var d = document.getElementById(open.getAttribute('data-ncp-dialog'));
+			if (d && d.showModal) d.showModal();
+			return;
+		}
+		// The homepage's principle cards (blocks/principle-card) open the same pop-up, where the page has it; the
+		// card's own link is the way in without JavaScript.
+		var card = t.closest('a.principle-card');
+		var strand = card && card.className.match(/principle-card--(safe|smart|creative|responsible|future)\b/);
+		var pop = strand && document.getElementById('ncp-theme-resources-' + strand[1]);
+		if (pop && pop.showModal) {
+			e.preventDefault();
+			pop.showModal();
+			return;
+		}
+		var show = t.closest('[data-ncp-board]');
+		if (show) {
+			var panel = show.closest('[data-ncp-board-panel]');
+			setBoard(panel, !panel.classList.contains('is-board'));
+			return;
+		}
+		if (t.classList.contains('ncp-theme-dialog')) t.close();
+	});
+	// Leaving full screen (Esc) leaves the board too. Without full screen, Esc closes the board, not the pop-up.
+	document.addEventListener('fullscreenchange', function () {
+		if (board && !document.fullscreenElement) setBoard(board, false);
+	});
+	document.addEventListener('cancel', function (e) {
+		if (board) { e.preventDefault(); setBoard(board, false); }
+	}, true);
+})();
+JS
+		);
+	}
+	return (string) ob_get_clean();
+}
+
+/**
+ * A theme tile's "Show resources" button and its pop-up (block aiad/nc-theme-resources). No button for a theme with
+ * no resources.
+ *
+ * @param array $attributes Block attributes: strand (safe, smart, creative, responsible or future).
+ */
+function aiad_render_national_conversation_theme_resources( array $attributes ): string {
+	$strand = sanitize_key( (string) ( $attributes['strand'] ?? '' ) );
+	$dialog = aiad_theme_resources_dialog( $strand );
+	if ( '' === $dialog ) {
+		return '';
+	}
+	$term = get_term_by( 'slug', $strand, 'resource_principle' );
+	return '<button type="button" class="ncp-theme__show" data-ncp-dialog="ncp-theme-resources-' . esc_attr( $strand ) . '" aria-haspopup="dialog">'
+		. esc_html__( 'Show resources', 'ai-awareness-day' )
+		. ' <span class="screen-reader-text">' . esc_html( sprintf( /* translators: %s: theme name */ __( 'for %s', 'ai-awareness-day' ), $term->name ) ) . '</span></button>'
+		. $dialog;
+}
+
+// The homepage's principle cards open the same pop-ups: they are drawn at the foot of the page.
+add_action(
+	'wp_footer',
+	static function (): void {
+		if ( ! is_front_page() ) {
+			return;
+		}
+		foreach ( array( 'safe', 'smart', 'creative', 'responsible', 'future' ) as $strand ) {
+			echo aiad_theme_resources_dialog( $strand ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_theme_resources_dialog().
+		}
+	},
+	5
+);
+
+add_action(
+	'init',
+	static function (): void {
+		register_block_type(
+			'aiad/nc-theme-resources',
+			array(
+				'api_version'     => 3,
+				'title'           => __( 'Theme resources pop-up', 'ai-awareness-day' ),
+				'description'     => __( 'A Show resources button and a pop-up of one theme\'s newest resources from the library.', 'ai-awareness-day' ),
+				'category'        => 'theme',
+				'icon'            => 'portfolio',
+				'attributes'      => array( 'strand' => array( 'type' => 'string', 'default' => '' ) ),
+				'supports'        => array( 'html' => false, 'reusable' => false ),
+				'render_callback' => 'aiad_render_national_conversation_theme_resources',
+			)
+		);
+	}
+);
