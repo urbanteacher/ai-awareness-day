@@ -26,7 +26,8 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
 ?>
 <?php
 /* Two offers, kept apart (archive/design-kit/home-hero-campaign-vs-conversation.html, option B): the hero is AI
-   Awareness Day, the campaign, in the Day's purple, with its date, countdown and buttons. The National AI Conversation
+   Awareness Day, the campaign, starting on the Day's purple and fading through the five theme colours, with its date,
+   countdown and buttons. The National AI Conversation
    is its flagship programme, in a dark lane of its own straight after the hero, with its own dates and buttons in its
    own blue. */
 ?>
@@ -74,6 +75,13 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
         </div>
     </div>
 </section>
+<?php
+/* The hero fades through the five theme colours (aiad27.css sets the ground for each data-strand), starting on the
+   Day's purple. It stays on purple for anyone who asks for less motion, and pauses while the tab is hidden. */
+wp_print_inline_script_tag(
+	"(function(){var h=document.getElementById('hero');if(!h||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;var s=['creative','responsible','future','safe','smart'],i=0;setInterval(function(){if(document.hidden)return;i=(i+1)%s.length;h.dataset.strand=s[i];},6000);})();"
+);
+?>
 <?php if ( $nc_dates ) : ?>
 <?php /* The Conversation's own lane, straight after the hero: a full-width dark band, so it reads as a programme of
          its own rather than part of the Day's hero. */ ?>
