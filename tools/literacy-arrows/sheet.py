@@ -25,7 +25,11 @@ for sym, el in els.items():
     current = LIVE / f'{sym}.svg'
     if not current.exists():
         continue
-    before = (ORIGINALS / current.name).read_text()
+    original = ORIGINALS / current.name
+    before = ''
+    if original.exists():
+        svg = inline(original.read_text(), "-b", "Original illustration of " + el["name"])
+        before = f'<figure>{svg}<figcaption>Before</figcaption></figure>'
     after = current.read_text()
     bg, deep = FAMILY[el['family']]
     acc = THEME[el['theme']]
@@ -33,7 +37,7 @@ for sym, el in els.items():
     name = escape(el['name'])
     cards.append(f'<section class="card" id="{sym}" style="{style}">'
                  f'<h2>{name} <span>{escape(el["sym"])}</span></h2>'
-                 f'<div class="two"><figure>{inline(before, "-b", "Original illustration of " + el["name"])}<figcaption>Before</figcaption></figure>'
+                 f'<div class="two">{before}'
                  f'<figure>{inline(after, "-a", el["picture_alt"])}<figcaption>Current</figcaption></figure></div>'
                  f'<p>{escape(el["def"])}</p><button type="button" aria-label="Present {name}">Present</button></section>')
 
@@ -42,7 +46,7 @@ body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.45 "AIAD Sans
 main{max-width:1240px;margin:0 auto;padding:32px 16px 64px}h1{font-size:2rem;margin:0 0 .4rem}.lead{margin:0 0 1.5rem;max-width:46rem}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr))}
 .card{background:#fff;border:2px solid var(--ink);padding:10px}.card h2{font-size:1rem;margin:0 0 .5rem}.card h2 span{font-weight:500;color:var(--dim);font-size:.85rem}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}figure{margin:0;min-width:0}figure svg{display:block;width:100%;height:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}figure{margin:0;min-width:0}.two>figure:only-child{grid-column:1/-1;width:min(100%,300px);justify-self:center}figure svg{display:block;width:100%;height:auto}
 figcaption{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
 .alpt-pic text{font-family:inherit;fill:var(--ink)}.alpt-pic .i-bg{fill:var(--fam)}.alpt-pic .i-deep{fill:var(--fam-deep)}.alpt-pic .i-paper{fill:#fff}
 .alpt-pic .i-cream{fill:var(--cream)}.alpt-pic .i-accent{fill:var(--pic-accent)}.alpt-pic .i-ink{fill:var(--ink)}

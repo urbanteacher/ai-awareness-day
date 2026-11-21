@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <rect class="i-deep" x="88" y="16" width="124" height="48" rx="6"/>
+  <text class="t-m t-w" x="150" y="47" text-anchor="middle">kitten</text>
+  <rect class="i-paper" x="14" y="83" width="272" height="204" rx="6"/>
+  <path class="i-line i-faint" d="M32 102 V268 H268"/>
+  <circle class="i-accent" cx="150" cy="125" r="7"/>
+  <circle class="i-line" cx="150" cy="125" r="7"/>
+  <circle class="i-deep" cx="122" cy="150" r="5"/>
+  <text class="t-s" x="111" y="155" text-anchor="end">cat</text>
+  <circle class="i-deep" cx="175" cy="157" r="5"/>
+  <text class="t-s" x="187" y="163" text-anchor="start">dog</text>
+  <circle class="i-deep" cx="76" cy="228" r="5"/>
+  <text class="t-s" x="65" y="232" text-anchor="end">bus</text>
+  <circle class="i-deep" cx="108" cy="246" r="5"/>
+  <text class="t-s" x="120" y="252" text-anchor="start">train</text>
+  <text class="t-s" x="150" y="313" text-anchor="middle">Similar words sit close together</text>
+</svg>

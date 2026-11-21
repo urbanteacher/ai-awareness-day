@@ -705,6 +705,7 @@
             "approx": false,
             "older": false,
             "def": "Realistic AI-made or edited video, audio or images showing people saying or doing things they never did. Sexual fakes of under-18s are illegal; if you see one, tell a trusted adult or use Childline’s Report Remove.",
+            "picture_alt": "In the original recording, a coach says kick-off is at ten. An AI imitation sounds like the coach announcing the match is off, words the coach never said.",
             "talk": "How would you check whether a shocking video of a famous person is real?",
             "links": [
                 "Gv",

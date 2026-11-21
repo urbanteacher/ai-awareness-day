@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <text class="t-m" x="150" y="46" text-anchor="middle">What comes next?</text>
+  <text class="t-s" x="150" y="78" text-anchor="middle">“Spread the toast with …”</text>
+  <rect class="i-paper" x="12" y="99" width="276" height="159" rx="6"/>
+  <text class="t-s t-d" x="138" y="127" text-anchor="middle">Teacher</text>
+  <text class="t-s t-d" x="233" y="127" text-anchor="middle">Student</text>
+  <text class="t-s" x="26" y="161" text-anchor="start">butter</text>
+  <rect class="i-cream" x="102" y="146" width="76" height="16" rx="6"/>
+  <rect class="i-cream" x="197" y="146" width="76" height="16" rx="6"/>
+  <rect class="i-deep" x="102" y="146" width="70" height="16" rx="6"/>
+  <rect class="i-deep" x="197" y="146" width="63" height="16" rx="6"/>
+  <text class="t-s" x="26" y="199" text-anchor="start">jam</text>
+  <rect class="i-cream" x="102" y="184" width="76" height="16" rx="6"/>
+  <rect class="i-cream" x="197" y="184" width="76" height="16" rx="6"/>
+  <rect class="i-deep" x="102" y="184" width="34" height="16" rx="6"/>
+  <rect class="i-deep" x="197" y="184" width="40" height="16" rx="6"/>
+  <text class="t-s" x="26" y="237" text-anchor="start">salt</text>
+  <rect class="i-cream" x="102" y="222" width="76" height="16" rx="6"/>
+  <rect class="i-cream" x="197" y="222" width="76" height="16" rx="6"/>
+  <rect class="i-deep" x="102" y="222" width="8" height="16" rx="6"/>
+  <rect class="i-deep" x="197" y="222" width="9" height="16" rx="6"/>
+  <text class="t-s" x="150" y="284" text-anchor="middle">A smaller model learns to match</text>
+  <text class="t-s" x="150" y="307" text-anchor="middle">the teacher’s predictions.</text>
+</svg>
