@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<title>From Sand to Sentence · AI Awareness Day</title>
+<meta name="description" content="A story for A-level students: follow one question from your phone, through a large language model and the GPU it runs on, back to the sand, chemistry and factories that made the chip.">
+<style>
+:root{--ink:var(--a27-ink);--paper:var(--a27-cream);--dim:var(--a27-dim);--rule:var(--a27-rule);--card:var(--a27-card);
+--chem:#1f2b3a;--chem-bg:#f2efe6;font:17px/1.55 'AIAD Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);padding-bottom:5rem}h1,h2,h3,h4,p{margin:0}
+a{color:inherit;text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--rule)}
+.top a{font-weight:650;font-size:.92rem}.top img{width:clamp(8.5rem,24vw,15rem);height:auto;display:block}
+.eyebrow{font-weight:700;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase}
+/* Hero */
+.hero{margin:clamp(1rem,3vw,2rem) 0;background:var(--ink);color:var(--paper);padding:clamp(1.4rem,4vw,3.4rem);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1rem,4vw,3rem);align-items:center;position:relative;overflow:hidden;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.13;background-image:radial-gradient(circle,#fff 1px,transparent 1.5px);background-size:14px 14px}
+.hero .eyebrow{color:var(--a27-safe)}
+.hero h1{font-size:clamp(2.6rem,7vw,5.6rem);line-height:.92;letter-spacing:-.06em;font-weight:800;margin:.6rem 0 1rem}
+.hero h1 span{color:var(--a27-future)}
+.hero p.lead{font-size:clamp(1.02rem,1.6vw,1.22rem);max-width:38ch;color:#e9e6dd}
+.hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}
+.pill{display:inline-block;border:1px solid #ffffff55;padding:.3rem .7rem;font-size:.82rem;font-weight:650}
+.hero-art{width:100%;height:auto}
+.hero .start{display:inline-flex;align-items:center;min-height:44px;margin-top:1.4rem;padding:.6rem 1.2rem;background:var(--a27-safe);color:var(--ink);font-weight:750;text-decoration:none}
+/* Route map */
+.route{display:flex;gap:.4rem;overflow-x:auto;padding:.3rem 0 1rem;margin-bottom:1rem;scrollbar-width:thin}
+.route a{flex:none;display:flex;flex-direction:column;min-width:7.4rem;padding:.55rem .7rem;border:1px solid var(--rule);background:#fff;text-decoration:none;font-size:.82rem;line-height:1.25}
+.route a b{font-size:.7rem;letter-spacing:.08em;color:var(--dim)}
+.route a.seen{border-color:var(--ink);box-shadow:inset 0 -4px 0 var(--c,var(--a27-safe))}
+/* Chapters */
+.chapter{--c:var(--a27-safe);--cd:var(--a27-safe-deep);position:relative;margin:0 0 clamp(2rem,5vw,3.5rem);padding-left:clamp(0rem,3vw,2.2rem);scroll-margin-top:1rem}
+.chapter:before{content:"";position:absolute;left:clamp(0rem,1vw,.6rem);top:0;bottom:-3.5rem;border-left:3px dotted var(--rule)}
+@media(max-width:700px){.chapter{padding-left:0}.chapter:before{display:none}}
+.chapter[data-theme=smart]{--c:var(--a27-smart);--cd:var(--a27-smart-deep)}
+.chapter[data-theme=creative]{--c:var(--a27-creative);--cd:var(--a27-creative-deep)}
+.chapter[data-theme=responsible]{--c:var(--a27-responsible);--cd:var(--a27-responsible-deep)}
+.chapter[data-theme=future]{--c:var(--a27-future);--cd:var(--a27-future-deep)}
+.place{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;color:var(--cd)}
+.place .num{display:grid;place-items:center;width:2.2rem;height:2.2rem;background:var(--c);color:var(--ink);font-weight:800;clip-path:polygon(0 0,78% 0,100% 22%,100% 100%,0 100%)}
+.chapter h2{font-size:clamp(1.9rem,4.4vw,3.2rem);line-height:1;letter-spacing:-.05em;font-weight:800;margin-bottom:1rem}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(1rem,3vw,2.4rem);align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+.story{font-size:clamp(1.06rem,1.5vw,1.2rem);border-left:5px solid var(--c);padding:.2rem 0 .2rem 1.1rem}
+.story p+p{margin-top:.8rem}.story em{font-style:normal;background:color-mix(in srgb,var(--c) 35%,transparent);padding:0 .15em}
+.really{margin-top:1.2rem}.really h3{font-size:1.02rem;margin-bottom:.4rem}.really p+p,.really ul{margin-top:.6rem}.really ul{padding-left:1.15rem}.really li+li{margin-top:.3rem}
+.fact{background:#fff;border:1px solid var(--rule);border-top:6px solid var(--c);padding:1rem 1.1rem;margin-top:1rem}
+.fact b.big{display:block;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.04em;line-height:1;color:var(--cd)}
+.fact small{display:block;color:var(--dim);margin-top:.35rem;font-size:.82rem}
+.lens{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem}
+.lens span{font-size:.75rem;font-weight:700;padding:.2rem .5rem;background:var(--card);border:1px solid var(--rule)}
+/* Panels: interactive, check, debate */
+.panel{background:#fff;border:1.5px solid var(--ink);padding:clamp(1rem,2.4vw,1.5rem);margin-top:1.2rem}
+.panel>.eyebrow{color:var(--cd);display:block;margin-bottom:.4rem}
+.panel h3{font-size:1.2rem;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.25}
+.note{font-size:.84rem;color:var(--dim);margin-top:.7rem}
+.btn{min-height:44px;padding:.5rem 1rem;border:1.5px solid var(--ink);background:var(--paper);font-weight:700}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.check .choices{display:grid;gap:.45rem;counter-reset:o}
+.check .choices button{counter-increment:o;display:flex;gap:.7rem;align-items:center;text-align:left;min-height:44px;padding:.5rem .7rem;background:#fff;border:1px solid #a9a397}
+.check .choices button:before{content:counter(o,upper-alpha);flex:none;display:grid;place-items:center;width:1.6rem;height:1.6rem;background:var(--card);font-weight:700;font-size:.8rem}
+.check .choices button.right{background:color-mix(in srgb,var(--a27-responsible) 45%,#fff);border-color:var(--a27-responsible-deep)}
+.check .choices button.wrong{border-color:var(--a27-crit);color:var(--a27-crit-deep)}
+.check .feedback:not(:empty){margin-top:.7rem;font-weight:650}
+.debate{background:var(--c);border:0;color:var(--ink)}
+.debate>.eyebrow{color:var(--ink)}.debate h3{font-size:clamp(1.2rem,2.2vw,1.55rem)}
+.debate details{margin-top:.6rem}.debate summary{cursor:pointer;font-weight:700;min-height:32px}
+.debate ul{margin:.5rem 0 0;padding-left:1.1rem}
+/* Element tiles */
+.found{margin-top:1.2rem}.found>p{font-weight:700;font-size:.85rem;margin-bottom:.5rem}
+.tiles{display:flex;flex-wrap:wrap;gap:.55rem}
+.tile{position:relative;width:7.3rem;min-height:7.6rem;padding:.45rem .55rem;display:flex;flex-direction:column;text-decoration:none;border:1.5px solid var(--ink);line-height:1.15}
+.tile .n{font-size:.72rem;font-weight:700}.tile .s{font-size:2rem;font-weight:800;letter-spacing:-.04em;margin:.15rem 0 .1rem}.tile .nm{font-size:.78rem;font-weight:650}
+.tile .k{position:absolute;top:.4rem;right:.45rem;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.tile.chem{background:var(--chem-bg);color:var(--chem);font-family:Georgia,'Times New Roman',serif}
+.tile.chem .s{font-family:Georgia,serif;font-weight:700}
+.tile.ai{background:var(--fam,#eee)}
+.tile.ai:hover .nm{text-decoration:underline}
+.tile[data-fam=foundations]{--fam:#E3E8EF}.tile[data-fam=generative]{--fam:#EEE6FF}.tile[data-fam=predictive]{--fam:#DFE9FF}.tile[data-fam=agents]{--fam:#FFEDD5}.tile[data-fam=automation]{--fam:#D5F2EC}.tile[data-fam=governance]{--fam:#FFE1E7}.tile[data-fam=infra]{--fam:#E8F3D6}
+.tile .role{font-size:.7rem;color:inherit;opacity:.85;margin-top:auto;padding-top:.3rem;font-family:'AIAD Sans',Arial,sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;font-size:.82rem;margin:.4rem 0 0}.legend span:before{content:"";display:inline-block;width:.9rem;height:.9rem;margin-right:.35rem;vertical-align:-.15rem;border:1.5px solid var(--ink)}
+.legend .lc:before{background:var(--chem-bg)}.legend .la:before{background:#EEE6FF}
+/* Tokens */
+.toks{display:flex;flex-wrap:wrap;gap:3px;margin:.6rem 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem}
+.toks span{padding:.15rem .3rem;border-bottom:3px solid}
+.toks span:nth-child(5n+1){background:#d9f6fb;border-color:var(--a27-safe-deep)}.toks span:nth-child(5n+2){background:#ffe3d6;border-color:var(--a27-smart-deep)}.toks span:nth-child(5n+3){background:#ece4ff;border-color:var(--a27-creative-deep)}.toks span:nth-child(5n+4){background:#ddf8e7;border-color:var(--a27-responsible-deep)}.toks span:nth-child(5n){background:#fde3f8;border-color:var(--a27-future-deep)}
+.tokin{width:100%;min-height:4.5rem;padding:.6rem;font:inherit;border:1px solid #a9a397}
+.counts{display:flex;gap:1.4rem;flex-wrap:wrap;font-size:.9rem}.counts b{font-size:1.4rem;display:block}
+/* Embedding map */
+.emb{width:100%;height:auto;background:#fbfaf6;border:1px solid var(--rule)}
+/* CPU/GPU race */
+.race{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:520px){.race{grid-template-columns:1fr}}
+.lane h4{font-size:.95rem;margin-bottom:.35rem}.lane .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.lane .grid i{aspect-ratio:1;background:var(--card);border:1px solid #d8d3c8}
+.lane .grid i.busy{background:var(--a27-smart)}.lane .grid i.done{background:var(--ink)}
+.lane .t{font-size:.85rem;margin-top:.35rem;font-variant-numeric:tabular-nums;min-height:1.4em}
+/* Calculator */
+.calc label{display:block;font-weight:700;font-size:.9rem;margin-top:.8rem}
+.calc input[type=range]{width:100%;accent-color:var(--ink);min-height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}.seg button{min-height:40px;padding:.35rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:700}.seg button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.6rem;margin-top:1rem}
+.out div{background:var(--card);padding:.7rem}.out b{display:block;font-size:1.45rem;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.out span{font-size:.8rem}
+.gpus{display:flex;flex-wrap:wrap;gap:3px;margin-top:.6rem}.gpus i{width:18px;height:24px;background:var(--a27-responsible);border:1.5px solid var(--ink)}
+.gpus i.part{background:linear-gradient(to top,var(--a27-responsible) var(--p),#fff var(--p))}
+/* Scale chart */
+.scale{display:grid;gap:.45rem;margin-top:.5rem}.scale .row{display:grid;grid-template-columns:8.5rem 1fr;gap:.6rem;align-items:center;font-size:.85rem}
+.scale .bar{height:1.35rem;background:var(--c);border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:flex-end;padding:0 .35rem;font-weight:700;font-size:.78rem;white-space:nowrap;min-width:max-content}
+/* Supply chain */
+.chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:.5rem;counter-reset:st}
+.chain div{counter-increment:st;background:#fff;border:1px solid var(--rule);border-top:5px solid var(--c);padding:.7rem;font-size:.88rem}
+.chain div:before{content:"Step " counter(st);display:block;font-size:.7rem;font-weight:800;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
+.chain b{display:block;font-size:1rem}
+/* Temperature */
+.probs{display:grid;gap:.35rem;margin-top:.6rem}.probs .row{display:grid;grid-template-columns:6.5rem 1fr 3.4rem;gap:.5rem;align-items:center;font-size:.92rem}
+.probs .bar{height:1.2rem;background:var(--c);border:1px solid var(--ink);transition:width .25s}
+.probs .row span:last-child{font-variant-numeric:tabular-nums;text-align:right}
+.sentence{font-size:1.15rem;margin:.3rem 0;font-weight:650}.sentence u{text-decoration-thickness:3px}
+/* Idea flows */
+.flows{display:grid;gap:.5rem}
+.flow{border:1px solid var(--rule);background:#fff}
+.flow>button{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto) minmax(0,1fr);gap:.6rem;align-items:center;padding:.7rem .8rem;background:none;border:0;text-align:left;min-height:56px}
+.flow .from,.flow .to{font-size:.85rem;line-height:1.25}.flow .to{text-align:right}
+.flow .tag{font-size:.65rem;font-weight:800;letter-spacing:.08em;display:inline-block;padding:.05rem .35rem;margin-bottom:.15rem}
+.tag.us{background:#dbe6f5;color:#1d3d6b}.tag.cn{background:#f8dcd6;color:#7a2416}
+.flow .idea{font-weight:800;text-align:center;font-size:.95rem;padding:.3rem .6rem;background:var(--c);max-width:11rem}
+.flow .idea:after{content:" →"}.flow.rev .idea:before{content:"← "}.flow.rev .idea:after{content:""}
+.flow .more{padding:0 .9rem .9rem;font-size:.93rem}.flow .more p+p{margin-top:.4rem}
+@media(max-width:560px){.flow>button{grid-template-columns:1fr;text-align:left}.flow .to{text-align:left}.flow .idea{justify-self:start}}
+/* Twist */
+.twist{display:grid;grid-template-columns:auto auto 1fr;gap:1rem;align-items:center;background:var(--ink);color:var(--paper);padding:clamp(1.2rem,3vw,2rem);margin-top:1.4rem}
+.twist .tile{color:var(--ink)}.twist h3{font-size:clamp(1.3rem,2.6vw,1.9rem);letter-spacing:-.03em;line-height:1.1;margin-bottom:.5rem}
+@media(max-width:640px){.twist{grid-template-columns:auto auto}.twist>div:last-child{grid-column:1/-1}}
+/* Compound & teachers */
+.compound{background:#fff;border:2px solid var(--ink);padding:clamp(1.2rem,3vw,2rem);margin:2rem 0}
+.compound h2,.teach h2,.sources h2{font-size:clamp(1.7rem,3.6vw,2.6rem);letter-spacing:-.05em;line-height:1;margin-bottom:.8rem}
+.formula{font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;margin:.8rem 0;line-height:1.6;word-spacing:.1em}
+.formula .c{font-family:Georgia,serif}
+.teach{background:var(--card);padding:clamp(1.2rem,3vw,2rem);margin:2rem 0}
+.plan{display:grid;gap:.5rem;margin-top:.8rem}.plan div{display:grid;grid-template-columns:4.5rem 1fr;gap:.8rem;background:#fff;padding:.7rem .8rem;border-left:5px solid var(--a27-creative)}
+.plan b{font-variant-numeric:tabular-nums}
+.subj{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem;margin-top:1rem}.subj div{background:#fff;padding:.8rem;font-size:.92rem}.subj b{display:block}
+.sources{margin:2rem 0;font-size:.9rem}.sources ol{padding-left:1.2rem}.sources li+li{margin-top:.35rem}
+footer.end{border-top:1px solid var(--rule);padding:1.2rem 0;font-size:.88rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+/* Collection tray */
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:var(--paper);box-shadow:0 -6px 18px #0003}
+.tray>button{width:100%;display:flex;align-items:center;gap:.8rem;padding:.65rem clamp(1rem,4vw,2.5rem);background:none;border:0;color:inherit;min-height:52px;text-align:left}
+.tray .meter{flex:1;max-width:16rem;height:8px;background:#ffffff30}.tray .meter i{display:block;height:100%;background:var(--a27-responsible);width:0;transition:width .4s}
+.tray .mini{display:flex;gap:3px;overflow:hidden;flex:1}.tray .mini span{flex:none;width:1.7rem;height:1.7rem;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:var(--a27-cream);color:var(--ink)}
+.tray .mini span.c{font-family:Georgia,serif;background:#cfd6df}
+@media(max-width:640px){.tray .mini{display:none}}
+.tray .drawer{max-height:55vh;overflow:auto;padding:0 clamp(1rem,4vw,2.5rem) 1rem}
+.tray .drawer .tile{width:6.2rem;min-height:6.4rem}.tray .drawer .tile .s{font-size:1.6rem}
+.tray .drawer .tile.missing{background:transparent;border-style:dashed;border-color:#ffffff60;color:#ffffff70}
+.tray .drawer .tile.missing .s{font-size:1.4rem}
+.pop{animation:pop .5s}@keyframes pop{40%{transform:scale(1.25)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.tray,.route,.hero-art{display:none}.chapter:before{display:none}body{padding:0}.panel,.fact{break-inside:avoid}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top"><a href="/">AI Awareness Day home</a><img src="../../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop"></header>
+
+<section class="hero" aria-labelledby="h1">
+  <div>
+    <span class="eyebrow">AI Awareness Day · Thursday 29 April 2027 · For A-level students</span>
+    <h1 id="h1">From Sand <span>to Sentence</span></h1>
+    <p class="lead">You type one question into an AI chatbot. Follow it through a large language model, into the chip that runs it, and back to the sand, chemistry and factories that made that chip.</p>
+    <div class="meta"><span class="pill">9 short chapters</span><span class="pill">About 45 minutes</span><span class="pill">Two periodic tables</span></div>
+    <a class="start" href="#ch0">Start the journey ↓</a>
+  </div>
+  <svg class="hero-art" viewBox="0 0 360 300" role="img" aria-label="A grain of sand turns into a chip, and the chip into a speech bubble of coloured word tiles">
+    <g fill="none" stroke="#F6F4ED" stroke-width="2">
+      <path d="M58 64c18-14 46-10 54 8s-4 40-26 42-44-6-46-24 6-16 18-26z" fill="#E9D9A6" stroke="none"/>
+      <g fill="#F6F4ED" stroke="none" opacity=".55"><circle cx="70" cy="80" r="2"/><circle cx="88" cy="74" r="1.6"/><circle cx="80" cy="96" r="1.8"/><circle cx="98" cy="92" r="1.4"/></g>
+      <path d="M124 88h46" stroke-dasharray="4 5"/><path d="M164 82l8 6-8 6"/>
+      <rect x="186" y="40" width="96" height="96" fill="#AC91FF" stroke="#F6F4ED"/>
+      <rect x="206" y="60" width="56" height="56" fill="#231F20"/>
+      <g stroke="#F6F4ED"><path d="M196 40v-12M214 40v-12M232 40v-12M250 40v-12M268 40v-12M196 136v12M214 136v12M232 136v12M250 136v12M268 136v12M186 50h-12M186 70h-12M186 90h-12M186 110h-12M186 128h-12M282 50h12M282 70h12M282 90h12M282 110h12M282 128h12"/></g>
+      <g stroke="#00BEDD" stroke-width="1.4"><path d="M214 72h40M214 82h28M214 92h40M214 102h20"/></g>
+      <path d="M234 160v30" stroke-dasharray="4 5"/><path d="M228 184l6 8 6-8"/>
+      <path d="M70 206h260a12 12 0 0 1 12 12v40a12 12 0 0 1-12 12H112l-24 22v-22H70a12 12 0 0 1-12-12v-40a12 12 0 0 1 12-12z" fill="#F6F4ED" stroke="none"/>
+    </g>
+    <g font-family="ui-monospace,Menlo,monospace" font-size="15" font-weight="700" fill="#231F20">
+      <rect x="74" y="224" width="54" height="26" fill="#00BEDD"/><text x="80" y="242">Why</text>
+      <rect x="132" y="224" width="40" height="26" fill="#FF7038"/><text x="138" y="242"> is</text>
+      <rect x="176" y="224" width="44" height="26" fill="#63DF93"/><text x="181" y="242"> the</text>
+      <rect x="224" y="224" width="44" height="26" fill="#FA83EB"/><text x="229" y="242"> sky</text>
+      <rect x="272" y="224" width="58" height="26" fill="#AC91FF"/><text x="277" y="242"> blue</text>
+    </g>
+  </svg>
+</section>
+
+<nav class="route" aria-label="Chapters">
+  <a href="#ch0" data-for="ch0"><b>START</b>23:47</a>
+  <a href="#ch1" data-for="ch1"><b>1</b>Tokens</a>
+  <a href="#ch2" data-for="ch2"><b>2</b>Meaning as numbers</a>
+  <a href="#ch3" data-for="ch3"><b>3</b>Data centre</a>
+  <a href="#ch4" data-for="ch4"><b>4</b>Inside the GPU</a>
+  <a href="#ch5" data-for="ch5"><b>5</b>Sand</a>
+  <a href="#ch6" data-for="ch6"><b>6</b>Printing with light</a>
+  <a href="#ch7" data-for="ch7"><b>7</b>The model thinks</a>
+  <a href="#ch8" data-for="ch8"><b>8</b>Ideas cross borders</a>
+  <a href="#ch9" data-for="ch9"><b>9</b>Home again</a>
+</nav>
+
+<main>
+<!-- Prologue -->
+<section class="chapter" id="ch0" data-theme="safe" data-els="ai:Pr ai:Ll" aria-labelledby="t0">
+  <p class="place"><span class="num">0</span><span class="eyebrow">Your bedroom · 23:47</span></p>
+  <h2 id="t0">One question, late at night</h2>
+  <div class="cols">
+    <div>
+      <div class="story">
+        <p>Your Physics mock is tomorrow. Your notes on scattering make no sense any more. You open a chatbot and type:</p>
+        <p><em>Why is the sky blue? Explain it like I'm revising for A-level Physics.</em></p>
+        <p>You press send. Words start to appear almost straight away, one small piece at a time.</p>
+        <p>In that gap, your question will cross a sea cable, wake up billions of tiny switches made from purified sand, and pass through a model built from ideas that came from labs in at least three countries. Let's follow it.</p>
+      </div>
+    </div>
+    <div>
+      <div class="fact"><b class="big">Two periodic tables</b>As you read, you'll collect tiles from two tables. <strong>Chemistry tiles</strong> are the real elements a chip is made of. <strong>AI tiles</strong> come from the <a href="/ai-literacy-periodic-table/">AI Literacy Periodic Table</a>. Open the tray at the bottom of the screen to see what you've collected.
+        <div class="legend"><span class="lc">Chemistry element</span><span class="la">AI literacy element</span></div></div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 1 Tokens -->
+<section class="chapter" id="ch1" data-theme="smart" data-els="ai:Tk ai:Cw" aria-labelledby="t1">
+  <p class="place"><span class="num">1</span><span class="eyebrow">Your phone, then the chatbot's servers</span></p>
+  <h2 id="t1">Your question is chopped into tokens</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Before the model can do anything, your sentence is cut up. Not into letters, and not quite into words: into <em>tokens</em>, chunks that the model has a fixed number for.</p>
+      <p>"Why" might be one token. "Scattering" might be two. A space often sticks to the front of the next word.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>Each model has a vocabulary of tokens, often between about 30,000 and a few hundred thousand of them. Common words get a token of their own. Rare words are built from smaller pieces. Every token is really a number, its position in the vocabulary.</p>
+      <p>For English, a token works out at about four characters, or roughly three-quarters of a word, on average. That's why chatbot limits and prices are counted in tokens, not words.</p>
+      <p>A model can only read so many tokens at once. That limit is its <strong>context window</strong>. Your question, the chat so far and the answer it is writing all have to fit inside it.</p></div>
+      <div class="lens"><span>Computer Science: data representation</span><span>Maths: estimation</span></div>
+    </div>
+    <div>
+      <div class="panel" id="tokenToy">
+        <span class="eyebrow">Try it</span><h3>See a sentence as tokens</h3>
+        <div class="toks" id="tokOut" aria-live="polite"></div>
+        <label for="tokIn" class="note" style="display:block;margin:0 0 .3rem">Type your own sentence:</label>
+        <textarea id="tokIn" class="tokin">Why is the sky blue? Explain it like I'm revising for A-level Physics.</textarea>
+        <div class="counts"><div><b id="cChars">0</b>characters</div><div><b id="cWords">0</b>words</div><div><b id="cToks">0</b>tokens (estimate)</div></div>
+        <p class="note">This splitter is a simple imitation. Real tokenisers learn their pieces from huge amounts of text, so they split words differently, and each model splits them its own way.</p>
+      </div>
+      <div class="panel check" data-answer="2">
+        <span class="eyebrow">Quick check</span><h3>A model's context window is 128,000 tokens. Roughly how many English words is that?</h3>
+        <div class="choices"><button type="button">128,000 words, one per token</button><button type="button">About 512,000 words</button><button type="button">About 96,000 words</button><button type="button">About 32,000 words</button></div>
+        <p class="feedback" role="status" data-right="Right. A token is about three-quarters of a word on average, so 128,000 × 0.75 ≈ 96,000 words. That's longer than most novels." data-wrong="Not quite. A token is about three-quarters of a word on average, so multiply 128,000 by 0.75."></p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 Embeddings -->
+<section class="chapter" id="ch2" data-theme="creative" data-els="ai:Em ai:Ls" aria-labelledby="t2">
+  <p class="place"><span class="num">2</span><span class="eyebrow">The first layer of the model</span></p>
+  <h2 id="t2">Each word becomes a point in space</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>A token number on its own means nothing. Token 9,412 is no closer to "sky" than token 9,413. So the model swaps each token for a long list of numbers called an <em>embedding</em>.</p>
+      <p>Think of each list as coordinates. Words with similar meanings end up near each other, like towns on a map.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>On paper you can draw a map with two coordinates. Large models use thousands. DeepSeek-V3, for example, gives every token a list of 7,168 numbers. Nobody chose those numbers. They were learned during training, by nudging them until the model got better at predicting text.</p>
+      <p>This huge space of numbers is called <strong>latent space</strong>. Directions in it can carry meaning. Researchers have found directions that seem to track things like tense, plural versus singular, or even whether a statement is true.</p></div>
+      <div class="lens"><span>Maths: vectors</span><span>Computer Science: abstraction</span><span>Psychology: how we group ideas</span></div>
+    </div>
+    <div>
+      <div class="panel">
+        <span class="eyebrow">Picture it</span><h3>A two-dimensional slice of meaning</h3>
+        <svg class="emb" viewBox="0 0 420 280" role="img" aria-label="A scatter of words. Sky, blue, sunlight and scattering sit close together. Red, sunset and wavelength sit nearby. Revision, exam and notes form a separate group. Banana and football sit far away.">
+          <g stroke="#C9C6BE" stroke-width="1"><path d="M30 250H400M30 250V20"/></g>
+          <g font-size="14" font-weight="700" fill="#231F20">
+            <circle cx="118" cy="78" r="44" fill="#AC91FF" opacity=".22"/>
+            <circle cx="96" cy="66" r="5" fill="#6441B8"/><text x="104" y="62">sky</text>
+            <circle cx="128" cy="90" r="5" fill="#6441B8"/><text x="136" y="94">blue</text>
+            <circle cx="84" cy="100" r="5" fill="#6441B8"/><text x="40" y="118">sunlight</text>
+            <circle cx="140" cy="58" r="5" fill="#6441B8"/><text x="148" y="54">scattering</text>
+            <circle cx="196" cy="118" r="5" fill="#983488"/><text x="204" y="122">wavelength</text>
+            <circle cx="176" cy="146" r="5" fill="#983488"/><text x="184" y="160">sunset</text>
+            <circle cx="214" cy="150" r="5" fill="#983488"/><text x="222" y="146">red</text>
+            <circle cx="320" cy="78" r="38" fill="#00BEDD" opacity=".2"/>
+            <circle cx="300" cy="68" r="5" fill="#006A7D"/><text x="308" y="64">revision</text>
+            <circle cx="330" cy="92" r="5" fill="#006A7D"/><text x="338" y="96">exam</text>
+            <circle cx="306" cy="104" r="5" fill="#006A7D"/><text x="258" y="122">notes</text>
+            <circle cx="96" cy="214" r="5" fill="#54504E"/><text x="104" y="218">banana</text>
+            <circle cx="330" cy="222" r="5" fill="#54504E"/><text x="338" y="226">football</text>
+          </g>
+        </svg>
+        <p class="note">This is a drawing to show the idea, not real model data. A real embedding has thousands of coordinates, and squashing them onto a flat page always loses something.</p>
+      </div>
+      <div class="panel check" data-answer="1">
+        <span class="eyebrow">Quick check</span><h3>Why do models use embeddings instead of the token numbers themselves?</h3>
+        <div class="choices"><button type="button">Embeddings take up less memory than token numbers</button><button type="button">Their distances and directions can carry meaning, while token numbers are just labels</button><button type="button">Humans write the embeddings by hand, so they're more accurate</button></div>
+        <p class="feedback" role="status" data-right="Yes. A token's number is just its place in a list. An embedding puts it in a space where nearness means something." data-wrong="Not that one. Embeddings are actually bigger than token numbers, and they're learned rather than written by people. The point is that their positions carry meaning."></p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 Data centre -->
+<section class="chapter" id="ch3" data-theme="responsible" data-els="ai:Cd ai:Ms" aria-labelledby="t3">
+  <p class="place"><span class="num">3</span><span class="eyebrow">A data centre, possibly in another country</span></p>
+  <h2 id="t3">The trip to a building full of chips</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Your question doesn't stay on your phone. It travels as light through fibre-optic cable, perhaps under the sea, to a windowless building the size of several football pitches.</p>
+      <p>Inside are rows of racks, each packed with chips, humming fans and pipes of cooling liquid. Thousands of other people's questions are arriving at the same moment. Software groups them together so the chips are never idle. That job is called <em>model serving</em>.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>Answering your question is called <strong>inference</strong>: running a model that has already been trained. It uses far less computing than training did, but it happens billions of times a day, so the total adds up.</p>
+      <p>All that computing turns electricity into heat, and the heat has to be removed. Some data centres use large amounts of water for cooling. This is why AI companies now sign deals for power stations, and why some local communities have pushed back against new data centres.</p></div>
+      <div class="lens"><span>Geography: infrastructure and resources</span><span>Physics: energy and heat transfer</span><span>Economics: externalities</span></div>
+    </div>
+    <div>
+      <div class="fact"><b class="big">About 1.5%</b>of the world's electricity was used by data centres in 2024, around 415 terawatt-hours. The International Energy Agency expects that to more than double by 2030, with AI the main reason.<small>Source: IEA, Energy and AI (2025). Data centres also run websites, streaming and storage, not only AI.</small></div>
+      <div class="panel debate">
+        <span class="eyebrow">Debate</span><h3>Is the electricity AI uses worth it? Who should decide?</h3>
+        <details><summary>Points to get you started</summary><ul>
+          <li>The same question costs far more energy to answer with a large model than with a web search. Does that matter if the answer is better?</li>
+          <li>AI is also used to design better batteries and to manage power grids. Should that count in its favour?</li>
+          <li>Should a town get a say before a data centre is built next to it?</li></ul></details>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 GPU -->
+<section class="chapter" id="ch4" data-theme="future" data-els="ai:Gp ai:Tp ai:Pm ai:Qz" aria-labelledby="t4">
+  <p class="place"><span class="num">4</span><span class="eyebrow">Inside one chip</span></p>
+  <h2 id="t4">Thousands of workers, one huge sum</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Your question arrives at a <em>GPU</em>, a graphics processing unit. These chips were first made to draw video games, which means working out millions of pixels at once.</p>
+      <p>That turned out to be exactly what AI needs. Running a language model is mostly one kind of maths, repeated billions of times: multiplying big grids of numbers called matrices.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>A CPU, like the one in your laptop, has a handful to a few dozen powerful cores. Each one is fast and flexible and good at jobs that must happen one step after another. A GPU swaps that for thousands of simpler cores that all do the same kind of sum at the same time. NVIDIA's H100 has nearly 17,000 of them, plus special units built just for matrix maths. Google's TPUs and other <strong>AI accelerators</strong> go further: they are designed for nothing else.</p>
+      <p>The surprise is that the maths is often not the slowest part. A model is its <strong>parameters</strong>, billions of stored numbers. To write each new token, the chip has to read every number it uses from memory. So AI chips sit next to stacks of very fast memory called HBM (high-bandwidth memory), and the fight is often about moving numbers quickly enough, not doing sums quickly enough.</p></div>
+      <div class="lens"><span>Computer Science: processor architecture, parallelism</span><span>Maths: matrices, standard form</span></div>
+      <div class="panel" id="race">
+        <span class="eyebrow">Race</span><h3>96 sums: a few fast workers or many slower ones?</h3>
+        <div class="race">
+          <div class="lane"><h4>CPU: 8 fast cores</h4><div class="grid" id="laneCpu"></div><p class="t" id="tCpu" aria-live="polite"></p></div>
+          <div class="lane"><h4>GPU: 96 simpler cores</h4><div class="grid" id="laneGpu"></div><p class="t" id="tGpu" aria-live="polite"></p></div>
+        </div>
+        <p style="margin-top:.8rem"><button type="button" class="btn primary" id="raceGo">Start the race</button></p>
+        <p class="note">Illustrative timings: here each CPU core does a sum three times faster than a GPU core, but the GPU has twelve times as many cores. Real chips have far more of both.</p>
+      </div>
+    </div>
+    <div>
+      <div class="panel calc" id="calc">
+        <span class="eyebrow">Calculator</span><h3>How much memory does a model need?</h3>
+        <label for="pSize">Model size: <span id="pLabel"></span></label>
+        <input type="range" id="pSize" min="0" max="6" step="1" value="3">
+        <label id="precLab">Each parameter stored as</label>
+        <div class="seg" role="group" aria-labelledby="precLab"><button type="button" data-bits="16" aria-pressed="true">16 bits</button><button type="button" data-bits="8" aria-pressed="false">8 bits</button><button type="button" data-bits="4" aria-pressed="false">4 bits</button></div>
+        <div class="out">
+          <div><b id="oGB"></b><span>gigabytes just to hold the parameters</span></div>
+          <div><b id="oGPU"></b><span>80 GB GPUs needed (at least)</span></div>
+          <div><b id="oMs"></b><span>to read the active parameters once, at one H100's memory speed</span></div>
+        </div>
+        <div class="gpus" id="gpuPics" aria-hidden="true"></div>
+        <p id="oNote" class="note" aria-live="polite"></p>
+        <p class="note">Bytes = parameters × bits ÷ 8. A real system needs extra memory on top, for example to remember the conversation so far. An H100 can read roughly 3.35 terabytes per second from its memory.</p>
+      </div>
+      <div class="panel check" data-answer="0">
+        <span class="eyebrow">Quick check</span><h3>Storing a model's numbers with 4 bits instead of 16 bits is called quantisation. What's the trade-off?</h3>
+        <div class="choices"><button type="button">It needs a quarter of the memory and runs faster, but the answers can be slightly worse</button><button type="button">It makes the model four times cleverer</button><button type="button">It deletes three-quarters of the parameters</button></div>
+        <p class="feedback" role="status" data-right="Right. Every parameter is still there, just rounded more coarsely, like writing 3.14 instead of 3.14159. Smaller and faster, with a small cost in accuracy." data-wrong="No. Quantisation keeps every parameter but stores each one with less precision, like rounding 3.14159 to 3.14."></p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 Sand -->
+<section class="chapter" id="ch5" data-theme="safe" data-els="chem:Si chem:O chem:B chem:P chem:Cu chem:Hf" aria-labelledby="t5">
+  <p class="place"><span class="num">5</span><span class="eyebrow">Rewind: a beach, a furnace, a crystal</span></p>
+  <h2 id="t5">The chip was once sand</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Pause your question for a moment and rewind the chip it's running on. Years ago, it was quartz: silicon dioxide, the main ingredient of sand.</p>
+      <p>Quartz is heated with carbon in an electric furnace to pull the oxygen away. The silicon is then purified again and again until it is one of the purest materials people make. It's melted, and a single perfect crystal is slowly pulled out of the melt, like lifting a stick out of honey. That crystal is sliced into thin, mirror-polished discs called <em>wafers</em>.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>Silicon is a <strong>semiconductor</strong>. On its own it barely conducts, but adding a tiny amount of another element changes that. A few boron atoms give it gaps for electrons, called holes (p-type). A few phosphorus atoms give it spare electrons (n-type). This is called doping.</p>
+      <p>Put p-type and n-type regions side by side and you can build a <strong>transistor</strong>: a switch with no moving parts, turned on and off by a voltage. One switch can store or pass a 1 or a 0. Billions of them, wired together with copper, make a processor. In today's smallest transistors, the insulating layer that controls each switch is made with hafnium oxide, because silicon dioxide made that thin would leak.</p></div>
+      <div class="lens"><span>Chemistry: periodic table, giant covalent structures</span><span>Physics: semiconductors, charge carriers</span><span>Computer Science: logic gates</span></div>
+    </div>
+    <div>
+      <div class="fact"><b class="big">About 28%</b>of the Earth's crust by mass is silicon, more than any element except oxygen. Getting it pure enough for chips is the hard part: semiconductor-grade silicon is about 99.9999999% pure (nine nines), and often purer.</div>
+      <div class="panel">
+        <span class="eyebrow">Scale</span><h3>Transistors on one chip</h3>
+        <div class="scale" id="scale"></div>
+        <p class="note">Bar lengths are drawn on a logarithmic scale: each step along is ten times more. On an ordinary scale, the 1971 chip would be invisible.</p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 Lithography & geopolitics -->
+<section class="chapter" id="ch6" data-theme="smart" data-els="chem:Sn chem:Ga chem:Ge ai:So" aria-labelledby="t6">
+  <p class="place"><span class="num">6</span><span class="eyebrow">Veldhoven, the Netherlands · Hsinchu, Taiwan</span></p>
+  <h2 id="t6">Printing with light no one can see</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>How do you draw billions of switches onto a wafer? With light. The pattern is projected onto a light-sensitive coating, a bit like an old film camera, and then etched in, layer after layer.</p>
+      <p>The trouble is that you can't draw lines much finer than the wavelength of the light you draw with. So the industry went to an extreme: extreme ultraviolet light, with a wavelength of 13.5 nanometres. To make it, a laser hits tiny falling droplets of molten <em>tin</em>, about 50,000 times a second, heating each one into a glowing plasma.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>Only one company in the world makes these EUV machines: ASML, based in Veldhoven in the Netherlands. Each one is the size of a bus and costs well over a hundred million euros. The most advanced chips are then mostly made by one company, TSMC, in Taiwan.</p>
+      <p>That makes the chip supply chain one of the most concentrated in the world economy. Governments have noticed. Since 2022 the US has restricted the sale of the most advanced AI chips, and the tools to make them, to China. In 2023 China began requiring export licences for gallium and germanium, two elements used in chipmaking and electronics, of which it produces most of the world's supply.</p>
+      <p>"Process nodes" such as "3 nanometre" sound like measurements, but they no longer measure any part of the transistor. They're closer to brand names for each new generation.</p></div>
+      <div class="lens"><span>Physics: waves, diffraction and resolution</span><span>Economics: monopoly, globalisation</span><span>Politics: sanctions and sovereignty</span></div>
+    </div>
+    <div>
+      <div class="panel">
+        <span class="eyebrow">Supply chain</span><h3>One chip, many countries</h3>
+        <div class="chain">
+          <div><b>Design</b>Chip designers such as NVIDIA, Google and AMD, mostly in the US</div>
+          <div><b>Machines</b>EUV lithography from ASML, Netherlands, with parts from Germany and elsewhere</div>
+          <div><b>Chemicals and wafers</b>Ultra-pure materials, with Japan a major supplier</div>
+          <div><b>Making the chip</b>Mostly TSMC, Taiwan</div>
+          <div><b>Memory</b>HBM stacks from SK hynix and Samsung (South Korea) and Micron (US)</div>
+          <div><b>Assembly</b>Chip and memory packaged together, often in Taiwan</div>
+        </div>
+        <p class="note">A simplified picture. Each step depends on hundreds of other suppliers.</p>
+      </div>
+      <div class="panel debate">
+        <span class="eyebrow">Debate</span><h3>Should one company be the only maker of a machine the whole world's AI depends on?</h3>
+        <details><summary>Points to get you started</summary><ul>
+          <li>EUV took decades and billions of euros to develop. Would we have it at all without one company focusing on it?</li>
+          <li>What happens to every AI company if that one supply line is disrupted?</li>
+          <li>Should countries be able to stop other countries buying advanced chips? What about <strong>AI sovereignty</strong>: should every country be able to build its own AI?</li></ul></details>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 Transformer -->
+<section class="chapter" id="ch7" data-theme="creative" data-els="ai:Tf ai:If ai:Te" aria-labelledby="t7">
+  <p class="place"><span class="num">7</span><span class="eyebrow">Back inside the model</span></p>
+  <h2 id="t7">The model guesses the next word, again and again</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Back in the data centre, your embeddings flow up through the model's layers, often about 60 to over 100 of them. In each layer, every token looks back at all the tokens before it and asks: which of these matter to me?</p>
+      <p>"Blue" pays attention to "sky". "Explain" pays attention to "A-level Physics". This step is called <em>attention</em>, and it is the heart of the <em>transformer</em>, the design Google researchers published in 2017.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>At the top of the model, out comes a list of probabilities for every token in the vocabulary: how likely each one is to come next. One token is chosen, added to the end, and the whole thing runs again for the next token. That's why answers appear word by word.</p>
+      <p>The model isn't looking up a stored answer. It's producing a likely-sounding continuation, based on patterns learned in training. Usually that's right. Sometimes it's confidently wrong. A setting called <strong>temperature</strong> controls how adventurous the choice is.</p></div>
+      <div class="lens"><span>Maths: probability distributions</span><span>Computer Science: algorithms</span><span>English Language: how meaning depends on context</span></div>
+    </div>
+    <div>
+      <div class="panel" id="temp">
+        <span class="eyebrow">Try it</span><h3>Choosing the next token</h3>
+        <p class="sentence">The sky looks blue because sunlight is <u id="pick">______</u></p>
+        <label for="tSlide" style="font-weight:700;font-size:.9rem">Temperature: <span id="tVal"></span></label>
+        <input type="range" id="tSlide" min="0.1" max="2" step="0.1" value="0.7" style="width:100%;accent-color:#231F20">
+        <div class="probs" id="probs"></div>
+        <p style="margin-top:.8rem"><button type="button" class="btn primary" id="sample">Pick a token</button></p>
+        <p class="note">The probabilities here are made up to show the idea. Low temperature almost always picks the top word. High temperature gives unlikely words more of a chance: more variety, more mistakes.</p>
+      </div>
+      <div class="panel check" data-answer="2">
+        <span class="eyebrow">Quick check</span><h3>Why does a chatbot's answer appear a word or so at a time?</h3>
+        <div class="choices"><button type="button">To make it look as if a person is typing</button><button type="button">Your internet connection is slow</button><button type="button">It really does produce one token, then runs the model again to produce the next</button></div>
+        <p class="feedback" role="status" data-right="Yes. Every new token needs another pass through the model, which is why the chip's memory speed matters so much." data-wrong="Not quite. The model really does work one token at a time: each new token needs another full pass through the model."></p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 Ideas cross borders -->
+<section class="chapter" id="ch8" data-theme="responsible" data-els="ai:Tr ai:Ow ai:Ds" aria-labelledby="t8">
+  <p class="place"><span class="num">8</span><span class="eyebrow">AI labs in the US and China</span></p>
+  <h2 id="t8">Every model is built from other models' ideas</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>The model answering you didn't come from nowhere. Before it could answer anything, it was <em>trained</em>: shown trillions of tokens of text for months, on thousands of GPUs, adjusting its parameters a tiny bit after every guess.</p>
+      <p>And the design it was trained with is a patchwork. News stories talk about an "AI race" between the US and China. Look closely at how the models are built, though, and you'll see ideas passing back and forth across the Pacific, often within months.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>This works because many labs publish their research, and many release <strong>open-weight models</strong>: the trained parameters themselves, free to download, study and build on. Meta's LLaMA, DeepSeek, Qwen (from Alibaba) and Kimi (from Moonshot AI) are all open-weight.</p>
+      <p>Chips shape the ideas, too. US export rules meant Chinese labs had less access to the most powerful chips, which pushed them to squeeze more out of the hardware they had. DeepSeek reported training its V3 model on 2,048 export-compliant NVIDIA H800 GPUs, a small number by frontier standards. That success pushed the whole industry towards efficiency tricks like the ones below.</p></div>
+      <div class="lens"><span>Politics: globalisation and competition</span><span>History: how ideas spread</span><span>Computer Science: open source</span></div>
+    </div>
+    <div>
+      <div class="panel">
+        <span class="eyebrow">Explore</span><h3>Six ideas that crossed borders</h3>
+        <div class="flows" id="flows"></div>
+        <p class="note">Based on Sebastian Raschka's diagram <a href="https://llm-gallery.com">"How LLMs build on each other"</a>, which maps many more.</p>
+      </div>
+      <div class="panel debate">
+        <span class="eyebrow">Debate</span><h3>If ideas flow this freely between rivals, does "winning the AI race" mean anything?</h3>
+        <details><summary>Points to get you started</summary><ul>
+          <li>If a country's lab publishes a breakthrough, who benefits most?</li>
+          <li>Should powerful models be released for anyone to download? Think about both research and misuse.</li>
+          <li>Do export controls on chips slow a rival down, or push it to invent workarounds faster?</li></ul></details>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 Home -->
+<section class="chapter" id="ch9" data-theme="future" data-els="ai:Ha ai:Hi ai:Ed ai:Sm" aria-labelledby="t9">
+  <p class="place"><span class="num">9</span><span class="eyebrow">Your bedroom · 23:47 and a few seconds</span></p>
+  <h2 id="t9">The answer comes home, and you check it</h2>
+  <div class="cols">
+    <div>
+      <div class="story"><p>Token by token, the answer travels back under the sea and onto your screen. It talks about sunlight being scattered by molecules in the air, and how shorter wavelengths scatter far more than longer ones. That's Rayleigh scattering.</p>
+      <p>Then it says the effect depends on the wavelength to the power of two. You frown. Your notes say <em>four</em>. Your notes are right: the scattering goes as 1/λ⁴. The model has just <em>hallucinated</em>, a fluent, confident sentence that is wrong.</p>
+      <p>You correct it, write the right version in your notes, and go to bed. You were the human in the loop.</p></div>
+      <div class="really"><h3>What's really happening</h3>
+      <p>Not every model needs a data centre. Small language models, and big ones shrunk by quantisation and <strong>distillation</strong>, can run on a phone or laptop. This is called <strong>edge AI</strong>. It keeps your data on your own device, works offline, and needs no distant power station, but the models are less capable.</p>
+      <p>Wherever the model runs, the same rule holds. It predicts likely text. It does not check facts the way you can. That's what AI Awareness Day 2027 means by <strong>Keep Humans in the Loop</strong>.</p></div>
+      <div class="lens"><span>Physics: Rayleigh scattering</span><span>All subjects: checking sources</span></div>
+    </div>
+    <div>
+      <div class="panel check" data-answer="3">
+        <span class="eyebrow">Final check</span><h3>Put the journey in order. Which is right?</h3>
+        <div class="choices"><button type="button">Embeddings → tokens → attention → next-token probabilities</button><button type="button">Tokens → next-token probabilities → embeddings → attention</button><button type="button">Attention → tokens → embeddings → next-token probabilities</button><button type="button">Tokens → embeddings → attention → next-token probabilities</button></div>
+        <p class="feedback" role="status" data-right="Exactly. Text becomes tokens, tokens become embeddings, attention layers mix in context, and the last layer gives probabilities for the next token." data-wrong="Not quite. Start with the text being chopped up, then turned into numbers with meaning, then mixed with context, then a guess at the next token."></p>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  </div>
+  <div class="twist">
+    <a class="tile chem" href="#ch5" style="width:6.6rem"><span class="n">14</span><span class="s">Si</span><span class="nm">Silicon</span><span class="k">Chem</span></a>
+    <a class="tile ai" data-fam="foundations" href="/ai-literacy-periodic-table/#element-si" style="width:6.6rem"><span class="n">AI</span><span class="s">Si</span><span class="nm">Superintelligence</span><span class="k">AI</span></a>
+    <div><h3>Same symbol, two tables</h3><p>In chemistry, Si is silicon, the element every chip is built on. In the AI Literacy Periodic Table, Si is superintelligence: a hypothetical AI far beyond any human mind. Some people think one could lead to the other. Many experts doubt it, or think it is a long way off. What would you need to see before you believed it?</p></div>
+  </div>
+</section>
+
+<section class="compound" aria-labelledby="tc">
+  <span class="eyebrow">Your collection</span>
+  <h2 id="tc">The compound behind one question</h2>
+  <p>Every tile you collected played a part in answering one late-night Physics question:</p>
+  <p class="formula" id="formula"></p>
+  <p id="collectMsg"></p>
+  <p style="margin-top:1rem"><a class="btn primary" href="/ai-literacy-periodic-table/" style="display:inline-flex;align-items:center;text-decoration:none">Explore all 142 AI elements →</a> <button type="button" class="btn" id="resetBtn">Start again</button></p>
+</section>
+
+<section class="teach" id="teachers" aria-labelledby="tt">
+  <span class="eyebrow">For teachers</span>
+  <h2 id="tt">Using this in a lesson</h2>
+  <p>The story works on its own for independent reading or homework. For a 60-minute lesson, try this:</p>
+  <div class="plan">
+    <div><b>0–5</b><span><strong>Hook.</strong> Ask: "What physically happens between pressing send and the first word appearing?" Collect guesses on the board.</span></div>
+    <div><b>5–20</b><span><strong>Read in pairs.</strong> Chapters 0 to 4. Each pair answers the quick checks, then tries the race and the memory calculator.</span></div>
+    <div><b>20–30</b><span><strong>Calculate.</strong> Using the calculator: can an 8-billion-parameter model run on a phone with 8 GB of memory? What about a 70-billion one? Which precision makes it fit?</span></div>
+    <div><b>30–45</b><span><strong>Read and debate.</strong> Chapters 5 to 8. Split the class into the three debates (energy, chip supply, the AI race) and have each group report its strongest argument on each side.</span></div>
+    <div><b>45–55</b><span><strong>Hallucination hunt.</strong> Chapter 9. Students ask a chatbot something they've studied in their own subject and check the answer against their notes. Did they catch anything?</span></div>
+    <div><b>55–60</b><span><strong>Exit ticket.</strong> "Name one element from each periodic table that your question depended on, and say why."</span></div>
+  </div>
+  <div class="subj">
+    <div><b>Computer Science</b>Processor architecture, CPU vs GPU, parallel processing, data representation, bits and bytes.</div>
+    <div><b>Physics</b>Semiconductors, waves and diffraction limits, Rayleigh scattering, energy and heat.</div>
+    <div><b>Chemistry</b>Group 14, giant covalent structures, doping, purification.</div>
+    <div><b>Maths and Further Maths</b>Vectors, matrices, probability distributions, logarithmic scales, estimation.</div>
+    <div><b>Economics, Politics and Geography</b>Supply chains, monopoly, export controls, globalisation, energy and land use.</div>
+    <div><b>EPQ starters</b>"Should open-weight AI models be legal?" "How much does one chatbot answer cost the planet?"</div>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="ts">
+  <h2 id="ts">Sources</h2>
+  <ol>
+    <li>Sebastian Raschka, <a href="https://llm-gallery.com">"How LLMs build on each other"</a>, LLM Gallery (2026).</li>
+    <li>Vaswani et al., <a href="https://arxiv.org/abs/1706.03762">"Attention Is All You Need"</a> (2017), the paper that introduced the transformer.</li>
+    <li>DeepSeek-AI, <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report</a> (2024): 2,048 H800 GPUs, an embedding size of 7,168, and 671 billion parameters with 37 billion active per token.</li>
+    <li>Su et al., <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> (2021); Ainslie et al., <a href="https://arxiv.org/abs/2305.13245">GQA</a> (2023); Dai et al., <a href="https://arxiv.org/abs/2401.06066">DeepSeekMoE</a> (2024); DeepSeek-AI, <a href="https://arxiv.org/abs/2405.04434">DeepSeek-V2</a> (2024).</li>
+    <li>International Energy Agency, <a href="https://www.iea.org/reports/energy-and-ai">Energy and AI</a> (2025).</li>
+    <li>OpenAI, <a href="https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them">What are tokens and how to count them?</a>, for the rule of thumb of about four characters per token.</li>
+    <li>NVIDIA product information for the <a href="https://www.nvidia.com/en-gb/data-center/h100/">H100</a> (80 billion transistors, 80 GB HBM3, about 3.35 TB/s) and Blackwell (208 billion transistors).</li>
+    <li>ASML, <a href="https://www.asml.com/en/products/euv-lithography-systems">EUV lithography systems</a>; Intel, the 4004 microprocessor (1971, 2,300 transistors).</li>
+    <li>US Bureau of Industry and Security, advanced computing export controls (October 2022, updated 2023 and 2024); China's Ministry of Commerce, export licensing for gallium and germanium (2023).</li>
+  </ol>
+</section>
+</main>
+
+<footer class="end"><span>AI Awareness Day · Thursday 29 April 2027 · Keep Humans in the Loop</span><a href="#teachers">Teacher notes</a></footer>
+</div>
+
+<aside class="tray" aria-label="Your element collection">
+  <button type="button" id="trayBtn" aria-expanded="false" aria-controls="drawer"><strong id="trayCount">0 of 0 elements</strong><span class="meter" aria-hidden="true"><i id="trayMeter"></i></span><span class="mini" id="trayMini" aria-hidden="true"></span><span aria-hidden="true" id="trayArrow">▲</span></button>
+  <div class="drawer" id="drawer" hidden><div class="tiles" id="drawerTiles"></div></div>
+</aside>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var AI=/*AI_ELEMENTS*/{"Cd":{"name":"Cloud AI","family":"infra","def":"AI that runs on powerful computers in big data centres and is used over the internet, rather than on your own device. Most chatbots work this way."},"Cw":{"name":"Context Window","family":"generative","def":"The maximum amount of text, measured in tokens, that a model can take into account at once."},"Ds":{"name":"Distillation","family":"infra","def":"Training a smaller “student” model to mimic the behaviour of a larger “teacher” model."},"Ed":{"name":"Edge AI","family":"infra","def":"Running AI directly on devices such as phones, cameras or sensors, rather than in the cloud."},"Em":{"name":"Embedding","family":"foundations","def":"A list of numbers that represents the meaning of text, images or other data, so that similar things sit close together."},"Gp":{"name":"GPU","family":"infra","def":"Graphics Processing Unit: a chip first made for video games that can do thousands of calculations at the same time. That makes it the main chip used to train and run AI."},"Ha":{"name":"Hallucination","family":"generative","def":"When an AI produces confident-sounding information that is false or made up, such as a book that does not exist. It happens mainly because the model predicts likely-sounding words rather than checking facts."},"Hi":{"name":"Human-in-the-Loop","family":"governance","def":"Keeping a person involved to review, approve or correct AI decisions before they take effect."},"If":{"name":"Inference","family":"foundations","def":"Using a trained model to make predictions or generate output on new inputs — the “running” phase after training."},"Ll":{"name":"Large Language Model","family":"generative","def":"An AI model trained on huge amounts of text to predict the next word (token), which lets it generate replies, summaries and translations – the kind of model behind most chatbots."},"Ls":{"name":"Latent Space","family":"foundations","def":"The space of numbers inside a model where each input is placed as a point, so similar things, such as ‘cat’ and ‘kitten’, end up close together. Each point is an embedding (Em)."},"Ms":{"name":"Model Serving","family":"infra","def":"The computers and software that run a trained model and answer requests from many people at once."},"Ow":{"name":"Open-Weight Model","family":"infra","def":"A model whose trained parameters are publicly released, so anyone can run, study or adapt it, usually under a licence that sets some rules. Sharing it openly helps research, but also lets people remove its safety features."},"Pm":{"name":"Parameters","family":"foundations","def":"The millions, billions or even trillions of numbers inside a model that it adjusts as it learns, like dials being tuned. A model’s size is often quoted in parameters."},"Pr":{"name":"Prompt","family":"generative","def":"The instruction or input you give a generative model to get a response."},"Qz":{"name":"Quantisation","family":"infra","def":"Shrinking an AI model by storing its numbers with fewer digits, a bit like rounding 3.14159 to 3.1. The model gets smaller, faster and cheaper to run, but can become slightly less accurate."},"Si":{"name":"Superintelligence","family":"foundations","def":"A hypothetical AI that would far surpass the best human minds in almost every field. Experts disagree on whether, or when, it could arrive."},"Sm":{"name":"Small Language Model","family":"infra","def":"A compact language model designed to run quickly and cheaply, often directly on a device."},"So":{"name":"AI Sovereignty","family":"governance","def":"A country’s or organisation’s ability to build, run and control its own AI, data and computing power, rather than relying on other countries or companies."},"Te":{"name":"Temperature","family":"generative","def":"A setting that controls randomness in output: low is focused and predictable, high is varied and creative."},"Tf":{"name":"Transformer","family":"foundations","def":"The design behind today’s large language models, introduced in 2017. Its “attention” lets it weigh up how each word in a passage relates to every other word."},"Tk":{"name":"Token","family":"foundations","def":"The small chunk of text — a word, part of a word or a symbol — that language models read and write."},"Tp":{"name":"TPU & Accelerators","family":"infra","def":"Computer chips built just for AI. They do AI’s maths faster and use less power than ordinary chips. Google’s TPU (Tensor Processing Unit) is one example."},"Tr":{"name":"Training","family":"foundations","def":"The process of feeding data to a model and adjusting its internal settings until its outputs improve."}};
+var CHEM={
+ Si:{n:14,name:'Silicon',role:'The chip itself',def:'A semiconductor. Purified from quartz sand and grown into single crystals, then sliced into wafers.'},
+ O:{n:8,name:'Oxygen',role:'Sand, and insulating layers',def:'Bonded to silicon it makes silicon dioxide: quartz sand, and a good insulator inside chips.'},
+ B:{n:5,name:'Boron',role:'p-type dopant',def:'A few boron atoms in silicon create "holes" that carry positive charge.'},
+ P:{n:15,name:'Phosphorus',role:'n-type dopant',def:'A few phosphorus atoms in silicon add spare electrons that carry negative charge.'},
+ Cu:{n:29,name:'Copper',role:'The wiring',def:'Copper wires, much thinner than a hair, connect the transistors in many layers above them.'},
+ Hf:{n:72,name:'Hafnium',role:'Gate insulator',def:'Hafnium oxide insulates the tiny switches in modern transistors without leaking.'},
+ Sn:{n:50,name:'Tin',role:'Makes EUV light',def:'Molten tin droplets hit by a laser give off the extreme ultraviolet light used to print chips.'},
+ Ga:{n:31,name:'Gallium',role:'Electronics and export controls',def:'Used in chips for power, radio and LEDs. China, the main producer, began licensing its export in 2023.'},
+ Ge:{n:32,name:'Germanium',role:'Electronics and export controls',def:'Another group 14 semiconductor, used with silicon and in fibre optics. Export licensing began in 2023.'}
+};
+var store={get:function(){try{return JSON.parse(localStorage.getItem('aiad-sand-to-sentence')||'[]')}catch(e){return[]}},set:function(v){try{localStorage.setItem('aiad-sand-to-sentence',JSON.stringify(v))}catch(e){}}};
+var chapters=[].slice.call(document.querySelectorAll('.chapter'));
+var ALL=[];chapters.forEach(function(c){c.dataset.els.split(' ').forEach(function(k){if(ALL.indexOf(k)<0)ALL.push(k)})});
+var got=store.get().filter(function(k){return ALL.indexOf(k)>=0});
+
+function tileHTML(key,small){
+ var p=key.split(':'),kind=p[0],s=p[1];
+ if(kind==='chem'){var c=CHEM[s];return '<span class="tile chem" title="'+c.def+'"><span class="n">'+c.n+'</span><span class="s">'+s+'</span><span class="nm">'+c.name+'</span><span class="k">Chem</span>'+(small?'':'<span class="role">'+c.role+'</span>')+'</span>'}
+ var a=AI[s]||{name:s,family:'foundations',def:''};
+ return '<a class="tile ai" data-fam="'+a.family+'" title="'+a.def.replace(/"/g,'&quot;')+'" href="/ai-literacy-periodic-table/#element-'+s.toLowerCase()+'"><span class="n">AI</span><span class="s">'+s+'</span><span class="nm">'+a.name+'</span><span class="k">AI</span></a>';
+}
+chapters.forEach(function(c){var box=c.querySelector('.found .tiles');if(box)box.innerHTML=c.dataset.els.split(' ').map(function(k){return tileHTML(k)}).join('')});
+
+function renderTray(pulse){
+ $('trayCount').textContent=got.length+' of '+ALL.length+' elements';
+ $('trayMeter').style.width=(100*got.length/ALL.length)+'%';
+ $('trayMini').innerHTML=got.map(function(k){var p=k.split(':');return '<span class="'+(p[0]==='chem'?'c':'')+'">'+p[1]+'</span>'}).join('');
+ $('drawerTiles').innerHTML=ALL.map(function(k){if(got.indexOf(k)>=0)return tileHTML(k,true);return '<span class="tile missing"><span class="n">?</span><span class="s">?</span><span class="nm">Not found yet</span></span>'}).join('');
+ if(pulse){$('trayCount').classList.remove('pop');void $('trayCount').offsetWidth;$('trayCount').classList.add('pop')}
+ var f=$('formula');
+ f.innerHTML=ALL.map(function(k){var p=k.split(':');var on=got.indexOf(k)>=0;return '<span class="'+(p[0]==='chem'?'c':'')+'" style="opacity:'+(on?1:.3)+'">'+p[1]+'</span>'}).join(' + ')+' → <span>one answer</span>';
+ $('collectMsg').textContent=got.length===ALL.length?'You found all '+ALL.length+'. Nine come from chemistry and the rest from the AI table: a chatbot answer depends on both.':'You have '+got.length+' of '+ALL.length+'. Scroll back through any chapter you skipped to collect the rest.';
+}
+$('trayBtn').addEventListener('click',function(){var open=$('drawer').hidden;$('drawer').hidden=!open;this.setAttribute('aria-expanded',open);$('trayArrow').textContent=open?'▼':'▲'});
+$('resetBtn').addEventListener('click',function(){got=[];store.set(got);renderTray();document.querySelectorAll('.route a').forEach(function(a){a.classList.remove('seen')});window.scrollTo(0,0)});
+
+var themeColour={safe:'var(--a27-safe)',smart:'var(--a27-smart)',creative:'var(--a27-creative)',responsible:'var(--a27-responsible)',future:'var(--a27-future)'};
+function collect(c){
+ var added=false;c.dataset.els.split(' ').forEach(function(k){if(got.indexOf(k)<0){got.push(k);added=true}});
+ var link=document.querySelector('.route a[data-for="'+c.id+'"]');if(link){link.classList.add('seen');link.style.setProperty('--c',themeColour[c.dataset.theme])}
+ if(added){store.set(got);renderTray(true)}
+}
+/* A chapter's tiles are collected once its top has scrolled past 60% of the screen height. */
+var pending=chapters.slice(),queued=false;
+function sweep(){queued=false;var line=innerHeight*.6;pending=pending.filter(function(c){if(c.getBoundingClientRect().top<line){collect(c);return false}return true})}
+addEventListener('scroll',function(){if(!queued&&pending.length){queued=true;setTimeout(sweep,120)}},{passive:true});
+setTimeout(sweep,300);
+chapters.forEach(function(c){var all=c.dataset.els.split(' ').every(function(k){return got.indexOf(k)>=0});if(all){var l=document.querySelector('.route a[data-for="'+c.id+'"]');if(l){l.classList.add('seen');l.style.setProperty('--c',themeColour[c.dataset.theme])}}});
+renderTray();
+
+/* Quick checks */
+document.querySelectorAll('.check').forEach(function(box){
+ var right=+box.dataset.answer,fb=box.querySelector('.feedback'),btns=[].slice.call(box.querySelectorAll('.choices button'));
+ btns.forEach(function(b,i){b.addEventListener('click',function(){
+  btns.forEach(function(x){x.classList.remove('wrong')});
+  if(i===right){b.classList.add('right');btns.forEach(function(x){x.disabled=true});fb.textContent=fb.dataset.right}
+  else{b.classList.add('wrong');fb.textContent=fb.dataset.wrong}
+ })});
+});
+
+/* Token toy: a rough imitation of how tokenisers split text. */
+var common=' the a an is it of to in and for on be like i i\'m why what how sky blue explain revising physics level a- are you can do this that with my me';
+function tokenise(t){
+ var out=[],re=/(\s?[A-Za-z]+|\s?\d{1,3}|\s?[^\sA-Za-z\d]|\s+)/g,m;
+ while((m=re.exec(t))){var w=m[0],bare=w.trim().toLowerCase();
+  if(/^\s?[A-Za-z]+$/.test(w)&&bare.length>6&&common.indexOf(' '+bare)<0){var cut=Math.ceil(w.length/2);if(w.length>11){var s=Math.ceil(w.length/3);out.push(w.slice(0,s),w.slice(s,2*s),w.slice(2*s))}else out.push(w.slice(0,cut),w.slice(cut))}
+  else out.push(w)}
+ return out;
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/ /g,'&nbsp;')}
+function runTok(){var t=$('tokIn').value.slice(0,600),toks=tokenise(t);
+ $('tokOut').innerHTML=toks.slice(0,160).map(function(x){return '<span>'+esc(x)+'</span>'}).join('');
+ $('cChars').textContent=t.length;$('cWords').textContent=(t.trim().match(/\S+/g)||[]).length;$('cToks').textContent=toks.length}
+$('tokIn').addEventListener('input',runTok);runTok();
+
+/* CPU vs GPU race */
+var N=96;['laneCpu','laneGpu'].forEach(function(id){$(id).innerHTML=new Array(N+1).join('<i></i>')});
+var racing=false;
+$('raceGo').addEventListener('click',function(){
+ if(racing)return;racing=true;var btn=this;btn.disabled=true;
+ var cells={cpu:[].slice.call($('laneCpu').children),gpu:[].slice.call($('laneGpu').children)};
+ cells.cpu.concat(cells.gpu).forEach(function(c){c.className=''});
+ var lanes=[{k:'cpu',cores:8,per:1,t:$('tCpu'),next:0,done:0,fin:0},{k:'gpu',cores:96,per:3,t:$('tGpu'),next:0,done:0,fin:0}];
+ var tick=0,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function step(){tick++;
+  lanes.forEach(function(L){if(L.fin)return;var cs=cells[L.k];
+   if((tick-1)%L.per===0){
+    for(var i=0;i<cs.length;i++)if(cs[i].className==='busy'){cs[i].className='done';L.done++}
+    for(var j=0;j<L.cores&&L.next<N;j++){cs[L.next++].className='busy'}
+   }
+   if(L.done>=N){L.fin=tick-1}
+   L.t.textContent=L.fin?'Finished in '+L.fin+' time steps':'Time step '+tick+' · '+L.done+' of '+N+' done';
+  });
+  if(lanes[0].fin&&lanes[1].fin){racing=false;btn.disabled=false;btn.textContent='Race again';
+   lanes[1].t.textContent+=' (the GPU wins)';return}
+  setTimeout(step,reduce?0:160)}
+ step();
+});
+
+/* Memory calculator */
+var SIZES=[{p:1,a:1,l:'1 billion',e:'a small model for phones'},{p:8,a:8,l:'8 billion',e:'a typical small open model'},{p:32,a:32,l:'32 billion',e:'a mid-sized model'},{p:70,a:70,l:'70 billion',e:'a large open model'},{p:405,a:405,l:'405 billion',e:'the size of Meta’s largest Llama 3.1'},{p:671,a:37,l:'671 billion (37 billion active)',e:'DeepSeek-V3, a mixture-of-experts model'},{p:1000,a:32,l:'1 trillion (32 billion active)',e:'Kimi K2, a mixture-of-experts model'}];
+var bits=16;
+function fmt(n){return n>=100?Math.round(n).toLocaleString('en-GB'):n>=10?n.toFixed(0):n.toFixed(1)}
+function calc(){var s=SIZES[+$('pSize').value],gb=s.p*bits/8,act=s.a*bits/8,g=gb/80,ms=act/3350*1000;
+ $('pLabel').textContent=s.l+' parameters: '+s.e;
+ $('oGB').textContent=fmt(gb)+' GB';$('oGPU').textContent=Math.max(1,Math.ceil(g));$('oMs').textContent=(ms<1?ms.toFixed(1):fmt(ms))+' ms';
+ var html='',full=Math.floor(g),rest=g-full;for(var i=0;i<Math.min(full,40);i++)html+='<i></i>';if(rest>0.01&&full<40)html+='<i class="part" style="--p:'+Math.round(rest*100)+'%"></i>';$('gpuPics').innerHTML=html;
+ var phone=gb<=6?' Small enough to run on a phone with 8 GB of memory.':'';
+ var moe=s.a<s.p?' Only '+s.a+' billion parameters are used for each token, so each token needs far less reading from memory, even though the whole model still has to be stored.':'';
+ $('oNote').textContent=(phone+moe).trim();
+}
+$('pSize').addEventListener('input',calc);
+document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){bits=+b.dataset.bits;document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});calc()})});
+calc();
+
+/* Transistor scale, log10 */
+var chips=[['Intel 4004 (1971)',2300,'2,300'],['Intel Pentium (1993)',3.1e6,'3.1 million'],['NVIDIA H100 (2022)',8e10,'80 billion'],['NVIDIA Blackwell (2024)',2.08e11,'208 billion']];
+$('scale').innerHTML=chips.map(function(c){var w=Math.max(18,(Math.log10(c[1])-2)/(11.4-2)*100);return '<div class="row"><span>'+c[0]+'</span><span class="bar" style="width:'+w.toFixed(1)+'%">'+c[2]+'</span></div>'}).join('');
+
+/* Temperature */
+var words=[['scattered',4.0],['reflected',2.3],['absorbed',1.7],['bent',1.2],['bouncing',0.7],['purple',-0.6],['banana',-2.5]];
+function probs(T){var ex=words.map(function(w){return Math.exp(w[1]/T)}),s=ex.reduce(function(a,b){return a+b},0);return ex.map(function(e){return e/s})}
+function drawT(){var T=+$('tSlide').value,ps=probs(T);$('tVal').textContent=T.toFixed(1)+(T<0.5?' (cautious)':T>1.3?' (adventurous)':'');
+ $('probs').innerHTML=words.map(function(w,i){return '<div class="row"><span>'+w[0]+'</span><span><span class="bar" style="display:block;width:'+Math.max(.5,ps[i]*100).toFixed(1)+'%"></span></span><span>'+(ps[i]*100<1?'<1':Math.round(ps[i]*100))+'%</span></div>'}).join('')}
+$('tSlide').addEventListener('input',drawT);drawT();
+$('sample').addEventListener('click',function(){var ps=probs(+$('tSlide').value),r=Math.random(),acc=0;for(var i=0;i<ps.length;i++){acc+=ps[i];if(r<=acc)break}
+ $('pick').textContent=words[Math.min(i,words.length-1)][0]});
+
+/* Idea flows, from Sebastian Raschka's diagram */
+var FLOWS=[
+ {idea:'RoPE',from:['cn','Zhuiyi Technology','RoFormer, 2021'],to:['us','Meta','LLaMA, 2023'],what:'Rotary position embeddings tell the model where each word sits by rotating its numbers by an angle, like a clock hand. The gap between two words becomes the gap between their angles.',why:'Word order matters: "dog bites man" is not "man bites dog".'},
+ {idea:'Grouped-query attention',from:['us','Google','2023'],to:['cn','DeepSeek and Alibaba','DeepSeek LLM, 2023; Qwen3, 2025'],what:'Attention keeps notes on every earlier token. With grouped-query attention, many "question" heads share a smaller set of notes, so the model uses much less memory.',why:'Less memory per conversation means more users per chip.'},
+ {idea:'Fine-grained experts',from:['cn','DeepSeek','DeepSeekMoE, 2024'],to:['us','Ai2 and Contextual AI','OLMoE, 2024'],what:'A mixture-of-experts model is like a school with dozens of specialist teachers. A "router" sends each token to just a few of them, so most of the model sits idle for each token.',why:'Huge total knowledge, but only a small slice of the computing per token.'},
+ {idea:'Multi-token prediction',from:['us','Meta FAIR','2024'],to:['cn','DeepSeek','DeepSeek-V3, 2024'],what:'In training, the model practises predicting several future tokens, not just the next one.',why:'It learns to plan a little ahead, and the extra predictions can speed up writing answers.'},
+ {idea:'Multi-head latent attention',from:['cn','DeepSeek','DeepSeek-V2, 2024'],to:['cn','Moonshot AI','Kimi K2, 2025'],what:'Instead of storing full notes on every earlier token, the model squeezes them into a much smaller summary and unpacks them when needed.',why:'Long conversations take up far less chip memory.',same:true},
+ {idea:'Gated DeltaNet',from:['us','MIT and NVIDIA','2024'],to:['cn','Alibaba','Qwen3-Next, 2025'],what:'Most layers look back at every earlier token, which gets slow for very long texts. A Gated DeltaNet layer keeps a fixed-size running memory instead, and learns what to forget.',why:'Long documents become much cheaper to process.'}
+];
+var lab={us:'US',cn:'China'};
+$('flows').innerHTML=FLOWS.map(function(f,i){return '<div class="flow"><button type="button" aria-expanded="false" aria-controls="fm'+i+'"><span class="from"><span class="tag '+f.from[0]+'">'+lab[f.from[0]]+'</span><br><b>'+f.from[1]+'</b><br>'+f.from[2]+'</span><span class="idea">'+f.idea+'</span><span class="to"><span class="tag '+f.to[0]+'">'+lab[f.to[0]]+'</span><br><b>'+f.to[1]+'</b><br>'+f.to[2]+'</span></button><div class="more" id="fm'+i+'" hidden><p>'+f.what+'</p><p><strong>Why it matters:</strong> '+f.why+'</p>'+(f.same?'<p><em>Not every idea crosses a border: this one spread between two Chinese labs.</em></p>':'')+'</div></div>'}).join('');
+document.querySelectorAll('.flow>button').forEach(function(b){b.addEventListener('click',function(){var m=b.nextElementSibling,open=m.hidden;m.hidden=!open;b.setAttribute('aria-expanded',open)})});
+})();
+</script>
+</body></html>
