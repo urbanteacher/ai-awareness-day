@@ -316,7 +316,13 @@ body {
   margin-top: calc(-1 * var(--section-padding-y));
   margin-bottom: clamp(1.75rem, 4vw, 3rem);
   padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
-  border-bottom: 1px solid var(--a27-rule);
+}
+
+/* WordPress's flow layout zeroes the first child's top margin, which undid the pull-up above: the logos sat 135px
+   below the National Conversation band and 47px above the rule. A more specific selector keeps it. The rule under
+   the strip is gone too: on cream, after the dark band, it read as a stray dark line. */
+.section .partner-strip {
+  margin-top: calc(-1 * var(--section-padding-y));
 }
 
 .partner-strip .hero-partner-marquee {
