@@ -7,11 +7,9 @@
   <g transform="translate(111 104) scale(1)"><path class="i-deep" d="M0 0 H44 L58 14 V52 H0 Z"/><rect class="i-paper" x="12" y="16" width="32" height="22" rx="5"/><circle class="i-ink" cx="22" cy="27" r="3.5"/><circle class="i-ink" cx="34" cy="27" r="3.5"/></g>
   <rect class="i-paper" x="212" y="104" width="74" height="52" rx="12"/><rect class="i-line" x="212" y="104" width="74" height="52" rx="12"/><text class="t-s" x="249" y="127" text-anchor="middle">Bird</text><text class="t-xs t-d" x="249" y="146" text-anchor="middle">92% sure</text>
   <text class="t-xs" x="249" y="176" text-anchor="middle">can be wrong</text>
-  <g transform="translate(-7 92)"><path class="i-accent" d="M88 104 L70 134 H84 L78 160 L100 126 H86 Z"/><path class="i-line" d="M88 104 L70 134 H84 L78 160 L100 126 H86 Z" style="stroke-width:2"/></g>
-  <g transform="translate(254 216) scale(0.6) translate(-70 -104)"><path class="i-accent" d="M88 104 L70 134 H84 L78 160 L100 126 H86 Z"/><path class="i-line" d="M88 104 L70 134 H84 L78 160 L100 126 H86 Z" style="stroke-width:3"/></g>
   <text class="t-xs" x="217" y="240" text-anchor="middle" letter-spacing="1">NOW</text><path class="i-ink" d="M210 246 H224 L217 254 Z"/>
-  <g class="i-faint"><path class="i-paper" d="M16 260 H136 L150 277 L136 294 H16 Z"/><path class="i-line" d="M16 260 H136 L150 277 L136 294 H16 Z"/><text class="t-s" x="78" y="283" text-anchor="middle">Training ✓</text></g>
+  <g><path class="i-paper" d="M16 260 H136 L150 277 L136 294 H16 Z"/><path class="i-line" d="M16 260 H136 L150 277 L136 294 H16 Z"/><text class="t-s" x="78" y="283" text-anchor="middle">Training ✓</text></g>
   <path class="i-deep" d="M146 260 H284 V294 H146 L160 277 Z"/><text class="t-s t-w" x="220" y="283" text-anchor="middle">Inference</text>
-  <text class="t-xs" x="83" y="314" text-anchor="middle">Lots of energy, once</text>
-  <text class="t-xs" x="215" y="314" text-anchor="middle">A little, every use</text>
+  <text class="t-xs" x="83" y="314" text-anchor="middle">Learn from data</text>
+  <text class="t-xs" x="215" y="314" text-anchor="middle">Use what was learnt</text>
 </svg>

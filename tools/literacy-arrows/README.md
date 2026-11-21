@@ -64,7 +64,7 @@ to move a box with an edit (and its node to match).
 
 ## Other tools here
 
-- `sheet.py` writes `archive/arrow-style-trial/all-pictures.html`: every picture with a spec, before and after.
+- `sheet.py` writes `archive/arrow-style-trial/all-pictures.html`: all illustrated concepts, with before-and-current comparisons and a presentation view.
 - `embedding.py` lays out the Embedding picture (`em.svg`) the same way: labels one fixed distance from their dots,
   each cluster's circle the smallest that holds its dots and labels (Welzl's algorithm), both circles the same size.
 

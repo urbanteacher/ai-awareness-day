@@ -41,7 +41,7 @@
                 "Mp",
                 "As"
             ],
-            "picture_alt": "The word whale enters a hidden map of numbers inside the model and moves from near the fish towards the mammals, giving the answer mammal."
+            "picture_alt": "On a simplified map of word embeddings, kitten lands near cat and dog. Bus and train sit together in a different part of the map."
         },
         {
             "sym": "Rsi",
@@ -243,7 +243,7 @@
                 "Gp",
                 "Ed"
             ],
-            "picture_alt": "After training, which used a lot of energy once, the model is used on a new photo and answers \"Bird, 92% sure\", which it can still get wrong, using a little energy every time.",
+            "picture_alt": "After training, a model labels a new photo as a bird with 92% confidence. The prediction can still be wrong.",
             "year_note": "This meaning (running a trained model on new inputs, as opposed to training it) became common with deep learning in the 2010s. Around 1970 \"inference\" in AI mostly meant logical inference, as in the \"inference engines\" of rule-based expert systems.",
             "teacher_note": "Training a large model uses a lot of energy in one go; inference uses a little for each answer, which adds up across millions of uses. The \"92%\" is the model's own confidence, not a chance of being right: a model can be confidently wrong. Watch out later: in statistics, \"inference\" means almost the opposite, using data to work out a model's settings, which is closer to what AI calls training."
         },
@@ -424,7 +424,7 @@
                 "Ct"
             ],
             "benchmark": "ai_dependency",
-            "picture_alt": "The vague request 'help me' is crossed out and rebuilt from three parts, role 'a maths tutor', task 'explain fractions' and format '3 short steps', which lead to a useful answer."
+            "picture_alt": "The broad prompt “Help with fractions” becomes “Show three quarters using four equal tiles.” The answer shows three shaded tiles and one empty tile."
         },
         {
             "sym": "Cw",
@@ -443,7 +443,7 @@
                 "Me",
                 "Ce"
             ],
-            "picture_alt": "A long chat drawn as a column of messages. A frame covers only the newest ones, labelled \"It can see\"; the earliest messages above it are faded and marked \"Forgotten\"."
+            "picture_alt": "A frame encloses the recent chat messages available for this response. Earlier messages sit outside the current context window."
         },
         {
             "sym": "Mm",
@@ -981,7 +981,7 @@
                 "Rf",
                 "Fe"
             ],
-            "picture_alt": "Three small models in a row, each fixing the wrong answers left by the one before, until together they get 5 out of 5 right."
+            "picture_alt": "For a training example with a known price of £10, the starting estimate is £6. Successive models contribute £3 and £1. Each bar adds the new contribution to the running prediction."
         },
         {
             "sym": "Fe",
@@ -1019,7 +1019,7 @@
                 "Ev",
                 "Fs"
             ],
-            "picture_alt": "A wiggly line passes through every training point and scores 100%, but the same line misses new points and scores only 40%."
+            "picture_alt": "A wavy curve passes through every training point. The same curve misses four new observations, with dashed lines showing the prediction errors."
         },
         {
             "sym": "Fc",
@@ -1631,7 +1631,7 @@
                 "Wo",
                 "Lc"
             ],
-            "picture_alt": "A building full of tasks where almost every one is handed to bots, AI or apps, with just a couple kept by people."
+            "picture_alt": "An invoice passes through three kinds of automation. AI reads the amount, rules match it to an order, and payment software schedules payment. People review exceptions."
         },
         {
             "sym": "Wo",
@@ -1668,7 +1668,7 @@
                 "En",
                 "Wh"
             ],
-            "picture_alt": "Three possible starting events, a new email, a form sent or 9:00 am, with the form being sent setting off the automation."
+            "picture_alt": "Sending a form triggers a system to log it. A new email and a scheduled time are two other possible triggers."
         },
         {
             "sym": "En",
@@ -1996,7 +1996,7 @@
                 "Rs"
             ],
             "benchmark": "bias_equality",
-            "picture_alt": "A bar chart of right answers shows Group A at 98% and Group B at 70%, with a gap below the 95% overall line."
+            "picture_alt": "On the same task, the system gets nine of ten answers right for Group A and six of ten for Group B. The gap prompts a fairness investigation."
         },
         {
             "sym": "Xa",
@@ -2296,7 +2296,7 @@
                 "Tn"
             ],
             "benchmark": "safeguarding",
-            "picture_alt": "An AI-made landscape picture looks normal, but zooming in reveals a hidden pattern of marks that a checker reads as made by AI."
+            "picture_alt": "A detector finds an embedded watermark in a landscape image and reports “Mark detected”."
         },
         {
             "sym": "So",
@@ -2355,7 +2355,7 @@
                 "Rv",
                 "As"
             ],
-            "picture_alt": "The question capital of France goes into a network of connected parts, a magnifier highlights the one part that holds the idea of France, and the answer comes out as Paris."
+            "picture_alt": "In an illustrative test on the question “Capital of France?”, researchers mute a highlighted pathway. The model becomes less likely to answer Paris, evidence that the pathway contributes to its answer."
         },
         {
             "sym": "As",
@@ -2641,7 +2641,7 @@
                 "Sm",
                 "Ed"
             ],
-            "picture_alt": "The long number 0.73914826 is rounded to 0.74, so a 16 GB model shrinks to a faster 4 GB one."
+            "picture_alt": "A rounded weight illustrates lower precision. An example model uses 4 GB for its weights instead of 16 GB."
         },
         {
             "sym": "Ds",
@@ -2660,7 +2660,7 @@
                 "Mx",
                 "Md"
             ],
-            "picture_alt": "Asked the capital of France, a big teacher model answers Paris and a small student model copies the same answer."
+            "picture_alt": "For the same unfinished sentence, a teacher model favours butter over jam and salt. A smaller student learns a similar pattern of predictions."
         },
         {
             "sym": "Ow",
@@ -2737,7 +2737,7 @@
                 "Gp",
                 "Agi"
             ],
-            "picture_alt": "A graph where three AI models of growing size sit higher and higher on a steady rising line, with a dashed line guessing the next one."
+            "picture_alt": "In an illustrative series of training runs, prediction error drops steeply at first, then more slowly as compute increases. A dashed extension and an open circle show a forecast."
         },
         {
             "sym": "Dp",

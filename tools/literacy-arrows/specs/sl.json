@@ -1,17 +1,5 @@
 {
- "nodes": {
-  "corner-x": [22, 296, 0, 0],
-  "corner-y": [30, 304, 0, 0],
-  "x-end": [292, 296, 0, 0],
-  "y-end": [30, 88, 0, 0]
- },
- "edges": [
-  {"from": "corner-x", "side": "right", "to": "x-end", "to_side": "left"},
-  {"from": "corner-y", "side": "top", "to": "y-end", "to_side": "bottom"}
- ],
- "shapes": {
-  "Better label": [40, 94, 52, 18],
-  "Bigger, more data label": [88, 309, 138, 16],
-  "the rising line": [46, 104, 230, 174]
- }
+  "nodes": {},
+  "edges": [],
+  "shapes": {}
 }

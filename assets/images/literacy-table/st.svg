@@ -7,8 +7,8 @@
     <path class="i-line i-dash" d="M84 150 C84 124 140 124 140 150"/>
   </g>
   <path class="i-line" d="M72 156 H152"/>
-  <text class="t-m" x="162" y="114">No one</text>
-  <text class="t-m" x="162" y="140">checks</text>
+  <text class="t-m" x="162" y="114">No manual</text>
+  <text class="t-m" x="162" y="140">handoff</text>
   <rect class="i-paper" x="18" y="176" width="62" height="34" rx="4"/><rect class="i-line" x="18" y="176" width="62" height="34" rx="4"/>
   <text class="t-s" x="49" y="198" text-anchor="middle">Order</text>
   <g class="alpt-arrows"><path class="i-line i-main" d="M88 193 L110 193" marker-end="url(#alpt-arr-st-d)"/><path class="i-line i-main" d="M188 193 L210 193" marker-end="url(#alpt-arr-st-d)"/><path class="i-line" d="M24 260 L282 260" marker-end="url(#alpt-arr-st)"/></g>

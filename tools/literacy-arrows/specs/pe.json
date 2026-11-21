@@ -1,45 +1,26 @@
 {
- "nodes": {
-  "vague": [
-   122,
-   16,
-   112,
-   42
-  ],
-  "parts": [
-   16,
-   92,
-   268,
-   144
-  ],
-  "answer": [
-   70,
-   278,
-   160,
-   32
-  ]
- },
- "edges": [
-  {
-   "from": "vague",
-   "side": "bottom",
-   "to": "parts",
-   "to_side": "top"
+  "nodes": {
+    "prompt": [
+      18,
+      94,
+      264,
+      87
+    ],
+    "reply": [
+      18,
+      228,
+      264,
+      88
+    ]
   },
-  {
-   "from": "parts",
-   "side": "bottom",
-   "to": "answer",
-   "to_side": "top",
-   "main": true
-  }
- ],
- "shapes": {
-  "tick badge": [
-   218,
-   280,
-   28,
-   28
-  ]
- }
+  "edges": [
+    {
+      "from": "prompt",
+      "side": "bottom",
+      "to": "reply",
+      "to_side": "top",
+      "main": true
+    }
+  ],
+  "shapes": {}
 }

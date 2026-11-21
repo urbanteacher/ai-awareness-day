@@ -1,22 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Prompt Engineering: a vague request rebuilt from clear parts. Arrows: tools/literacy-arrows/specs/pe.json -->
-  <rect class="i-bg" width="300" height="330"/>
-  <g class="i-faint">
-    <rect class="i-paper" x="122" y="16" width="112" height="42" rx="12"/><rect class="i-line" x="122" y="16" width="112" height="42" rx="12"/>
-    <text class="t-s" x="178" y="43" text-anchor="middle">help me</text>
-  </g>
-  <path class="i-line" d="M130 38 H226"/>
-  <rect class="i-paper" x="16" y="92" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="92" width="268" height="44" rx="8"/>
-  <path class="i-deep" d="M18 94 H90 V134 H18 Z"/>
-  <text class="t-xs t-w" x="54" y="119" text-anchor="middle">Role</text><text class="t-s" x="104" y="120">a maths tutor</text>
-  <rect class="i-paper" x="16" y="142" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="142" width="268" height="44" rx="8"/>
-  <path class="i-deep" d="M18 144 H90 V184 H18 Z"/>
-  <text class="t-xs t-w" x="54" y="169" text-anchor="middle">Task</text><text class="t-s" x="104" y="170">explain fractions</text>
-  <rect class="i-paper" x="16" y="192" width="268" height="44" rx="8"/><rect class="i-line" x="16" y="192" width="268" height="44" rx="8"/>
-  <path class="i-deep" d="M18 194 H90 V234 H18 Z"/>
-  <text class="t-xs t-w" x="54" y="219" text-anchor="middle">Format</text><text class="t-s" x="104" y="220">3 short steps</text>
-  <rect class="i-deep" x="70" y="278" width="160" height="32" rx="16"/>
-  <text class="t-s t-w" x="150" y="300" text-anchor="middle">Useful answer</text>
-  <circle class="i-accent" cx="232" cy="294" r="14"/>
-  <path d="M225 294 L230 299 L239 289" fill="none" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <text class="t-s t-d" x="184" y="48" text-anchor="middle">First prompt</text>
+  <text class="t-s" x="184" y="73" text-anchor="middle">“Help with fractions”</text>
+  <rect class="i-deep" x="18" y="94" width="264" height="87" rx="6"/>
+  <text class="t-xs t-w" x="34" y="117" text-anchor="start">REVISED PROMPT</text>
+  <text class="t-m t-w" x="34" y="146" text-anchor="start">“Show three quarters</text>
+  <text class="t-s t-w" x="34" y="170" text-anchor="start">using four equal tiles.”</text>
+  <rect class="i-paper" x="18" y="228" width="264" height="88" rx="6"/>
+  <rect class="i-deep" x="70" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-line" x="70" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-deep" x="112" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-line" x="112" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-deep" x="154" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-line" x="154" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-paper" x="196" y="242" width="35" height="35" rx="2"/>
+  <rect class="i-line" x="196" y="242" width="35" height="35" rx="2"/>
+  <text class="t-s" x="150" y="302" text-anchor="middle">3 of 4 tiles are shaded</text>
 </svg>

@@ -1,24 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Scaling laws: bigger models trained on more data sit higher on a steady rising line. -->
-  <defs><marker id="alpt-arr-sl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
-  <rect class="i-bg" width="300" height="330"/>
-  <g class="alpt-arrows"><path class="i-line" d="M30 296 L284 296" marker-end="url(#alpt-arr-sl)"/><path class="i-line" d="M30 296 L30 96" marker-end="url(#alpt-arr-sl)"/></g>
-  <text class="t-s" x="40" y="108">Better</text>
-  <text class="t-s" x="157" y="322" text-anchor="middle">Bigger, more data</text>
-  <path class="i-deepline" d="M46 278 L230 153" stroke-width="4"/>
-  <path class="i-line i-dash" d="M236 149 L268 127"/>
-  <circle class="i-ink" cx="70" cy="262" r="5"/>
-  <path class="i-deep" d="M57.0 225.68 H76.8 L83.0 231.9 V251.68 H57.0 Z"/>
-  <rect class="i-paper" x="62.2" y="233.5" width="15.6" height="9.4" rx="2.3"/>
-  <circle class="i-ink" cx="66.9" cy="238.2" r="2.5"/><circle class="i-ink" cx="73.1" cy="238.2" r="2.5"/>
-  <circle class="i-ink" cx="138" cy="215" r="5"/>
-  <path class="i-deep" d="M119.0 167.44 H147.9 L157.0 176.6 V205.44 H119.0 Z"/>
-  <rect class="i-paper" x="126.6" y="178.8" width="22.8" height="13.7" rx="3.4"/>
-  <circle class="i-ink" cx="133.4" cy="185.7" r="2.7"/><circle class="i-ink" cx="142.6" cy="185.7" r="2.7"/>
-  <circle class="i-ink" cx="210" cy="166" r="5"/>
-  <path class="i-deep" d="M184.0 104.47999999999999 H223.5 L236.0 117.0 V156.48 H184.0 Z"/>
-  <rect class="i-paper" x="194.4" y="120.1" width="31.2" height="18.7" rx="4.7"/>
-  <circle class="i-ink" cx="203.8" cy="129.4" r="3.6"/><circle class="i-ink" cx="216.2" cy="129.4" r="3.6"/>
-  <circle class="i-accent" cx="272" cy="124" r="8"/>
-  <text class="t-s" x="272" y="154" text-anchor="middle">?</text>
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <text class="t-m" x="186" y="45" text-anchor="middle">Prediction error</text>
+  <text class="t-s" x="186" y="69" text-anchor="middle">Illustrative training runs</text>
+  <rect class="i-paper" x="14" y="86" width="272" height="198" rx="6"/>
+  <path class="i-line" d="M42 107 V265 H269"/>
+  <path class="i-deepline" d="M53 119 C66 153 73 172 86 184 S119 213 139 219 S169 230 191 234"/>
+  <path class="i-line i-dash" d="M191 234 Q220 241 262 245"/>
+  <circle class="i-deep" cx="53" cy="119" r="5"/>
+  <circle class="i-deep" cx="86" cy="184" r="5"/>
+  <circle class="i-deep" cx="139" cy="219" r="5"/>
+  <circle class="i-deep" cx="191" cy="234" r="5"/>
+  <circle class="i-paper" cx="261" cy="245" r="6"/>
+  <circle class="i-line" cx="261" cy="245" r="6"/>
+  <text class="t-s t-d" x="107" y="130" text-anchor="middle">Runs</text>
+  <text class="t-s" x="227" y="211" text-anchor="middle">Forecast</text>
+  <text class="t-s" x="150" y="310" text-anchor="middle">More training compute</text>
 </svg>

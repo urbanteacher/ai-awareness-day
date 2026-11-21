@@ -3,12 +3,12 @@
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="16" y="88" width="268" height="112" rx="8"/><rect class="i-line" x="16" y="88" width="268" height="112" rx="8"/>
   <text class="t-s" x="30" y="112">Training data</text>
-  <rect class="i-deep" x="206" y="96" width="68" height="26" rx="13"/><text class="t-s t-w" x="240" y="114" text-anchor="middle">100%</text>
+  <rect class="i-deep" x="206" y="96" width="68" height="26" rx="13"/><text class="t-s t-w" x="240" y="114" text-anchor="middle">Fits</text>
   <path class="i-line" d="M44 170 C55 170 59 140 70 140 C81 140 85 176 96 176 C107 176 111 148 122 148 C133 148 137 182 148 182 C159 182 163 134 174 134 C185 134 189 168 200 168 C211 168 215 144 226 144 C237 144 241 178 252 178"/>
   <g class="i-deep"><circle cx="44" cy="170" r="5"/><circle cx="70" cy="140" r="5"/><circle cx="96" cy="176" r="5"/><circle cx="122" cy="148" r="5"/><circle cx="148" cy="182" r="5"/><circle cx="174" cy="134" r="5"/><circle cx="200" cy="168" r="5"/><circle cx="226" cy="144" r="5"/><circle cx="252" cy="178" r="5"/></g>
   <rect class="i-paper" x="16" y="210" width="268" height="112" rx="8"/><rect class="i-line" x="16" y="210" width="268" height="112" rx="8"/>
   <text class="t-s" x="30" y="234">New data</text>
-  <rect class="i-accent" x="206" y="218" width="68" height="26" rx="13"/><text class="t-s" x="240" y="236" text-anchor="middle">40%</text>
+  <rect class="i-accent" x="206" y="218" width="68" height="26" rx="13"/><text class="t-s" x="240" y="236" text-anchor="middle">Misses</text>
   <g transform="translate(0 122)"><path class="i-line" d="M44 170 C55 170 59 140 70 140 C81 140 85 176 96 176 C107 176 111 148 122 148 C133 148 137 182 148 182 C159 182 163 134 174 134 C185 134 189 168 200 168 C211 168 215 144 226 144 C237 144 241 178 252 178"/></g>
   <path class="i-line i-dash" d="M70 262 V296 M148 304 V270 M226 266 V298 M110 280 V258" stroke-dasharray="3 4"/>
   <g class="i-paper"><circle cx="70" cy="296" r="6"/><circle cx="148" cy="270" r="6"/><circle cx="226" cy="298" r="6"/><circle cx="110" cy="258" r="6"/></g>

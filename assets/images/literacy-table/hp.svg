@@ -16,6 +16,5 @@
   <path class="i-deep" d="M172 232 H232 L246 248 L232 264 H172 Z"/>
   <text class="t-m t-w" x="206" y="256" text-anchor="middle">£40</text>
   <text class="t-s" x="90" y="298" text-anchor="middle">AI-made</text>
-  <text class="t-s" x="210" y="298" text-anchor="middle">Made by</text>
-  <text class="t-s" x="210" y="316" text-anchor="middle">a person</text>
+  <text class="t-s" x="210" y="298" text-anchor="middle">Handmade</text>
 </svg>

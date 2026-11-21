@@ -14,11 +14,10 @@
   <text class="t-s" x="58" y="277">9:00 am</text>
   <path class="i-line i-faint" d="M150 143 C160 143 160 170 166 176" stroke-dasharray="3 5"/>
   <path class="i-line i-faint" d="M150 271 C160 271 160 244 166 238" stroke-dasharray="3 5"/>
-  <path class="i-line" d="M152 207 H164" stroke-width="4"/>
   <path class="i-ink" d="M158 194 L150 210 H158 L154 222 L168 204 H160 L164 194 Z"/>
   <text class="t-m" x="226" y="142" text-anchor="middle">…DO</text>
   <path class="i-deep" d="M170 156 H264 L282 174 V262 H170 Z"/>
   <rect class="i-paper" x="200" y="176" width="52" height="30" rx="8"/>
   <circle class="i-ink" cx="216" cy="191" r="4"/><circle class="i-ink" cx="236" cy="191" r="4"/>
-  <text class="t-m t-w" x="226" y="244" text-anchor="middle">Start!</text>
+  <text class="t-m t-w" x="226" y="244" text-anchor="middle">Log it</text>
 </svg>
