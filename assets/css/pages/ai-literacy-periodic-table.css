@@ -5267,11 +5267,17 @@ html.alpt-board-open {
 /* ---- The full table (1200px and wider): shorter rows, and a panel compact enough to sit in them ----
    Every row takes the tallest row's height (equal fr rows), so a handful of tall cells made all 142 tiles tall and
    narrow (66 x 106px at 1280px wide): the eight four-line names, such as Recursive Self-Improvement, and the
-   "How to read a tile" key. The tiles now put the number beside the symbol rather than above it, the longest names
+   "How to read a tile" key. The tiles (and the key's sample) now put the number beside the symbol rather than above it, the longest names
    are a little smaller so they take three lines, and the key no longer sets the row height. The panel then has three
    shorter rows to sit in, so it is tighter too: less padding, a smaller picture tile, title and buttons. */
 @media (min-width: 1200px) {
-  .alpt-grid .alpt-tile:not(.alpt-tile--key) {
+  /* Rows of at least 5.6rem (about 90px): short enough that the tiles are no longer tall and thin, tall enough that
+     the panel's three rows hold a definition, its question and the fold-outs without scrolling. */
+  .alpt-grid {
+    grid-template-rows: repeat(8, minmax(5.6rem, 1fr)) 1.25rem repeat(3, minmax(5.6rem, 1fr));
+  }
+
+  .alpt-grid .alpt-tile {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas: "sym n" "name name";
@@ -5279,16 +5285,16 @@ html.alpt-board-open {
     padding: 0.3rem 0.25rem 0.3rem 0.35rem;
   }
 
-  .alpt-grid .alpt-tile:not(.alpt-tile--key) .alpt-tile__n {
+  .alpt-grid .alpt-tile .alpt-tile__n {
     grid-area: n;
     align-self: start;
   }
 
-  .alpt-grid .alpt-tile:not(.alpt-tile--key) .alpt-tile__sym {
+  .alpt-grid .alpt-tile .alpt-tile__sym {
     grid-area: sym;
   }
 
-  .alpt-grid .alpt-tile:not(.alpt-tile--key) .alpt-tile__name {
+  .alpt-grid .alpt-tile .alpt-tile__name {
     grid-area: name;
   }
 
@@ -5332,6 +5338,14 @@ html.alpt-board-open {
     width: clamp(6rem, 8vw, 9.5rem);
   }
 
+  /* The picture tile took the panel's full height and so grew wide with it (188px at 1280px), squeezing the words
+     beside it onto more lines. A set width, with its height from its own shape. */
+  .alpt .alpt-panel > .alpt-panel__tile.has-pic {
+    width: clamp(7rem, 10vw, 11rem);
+    height: auto;
+    align-self: start;
+  }
+
   .alpt .alpt-panel__sym {
     font-size: clamp(2.4rem, 3.6vw, 4.4rem);
   }
@@ -5341,9 +5355,20 @@ html.alpt-board-open {
     padding-block: 0.25rem;
     font-size: 0.8rem;
   }
+
+  /* The two fold-outs' headings: less padding, and Classroom notes at the size of Talk about it. */
+  .alpt .alpt-panel__talk > summary,
+  .alpt .alpt-panel .alpt-reader-notes > summary {
+    padding-block: 0.35rem;
+    font-size: 0.88rem;
+  }
+
+  .alpt .alpt-panel__talk .alpt-panel__talk-q {
+    margin-bottom: 0.35rem;
+  }
 }
 
-/* Laptop widths: the key's sample tile goes, so its three lines each fit on one line in the row's height. */
+/* Laptop widths: the key's sample tile goes, so its lines each fit on one line in the row's height. */
 @media (min-width: 1200px) and (max-width: 1439px) {
   .alpt-key .alpt-tile--key {
     display: none;

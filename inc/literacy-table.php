@@ -769,8 +769,9 @@ function aiad_render_literacy_table(): string {
 			</div>
 			<div class="alpt-key__text">
 				<p class="alpt-key__title"><?php esc_html_e( 'How to read a tile', 'ai-awareness-day' ); ?></p>
-				<p><?php esc_html_e( 'Top: its number, in reading order', 'ai-awareness-day' ); ?></p>
-				<p><?php esc_html_e( 'Middle: its symbol. Bottom: the term', 'ai-awareness-day' ); ?></p>
+				<?php /* The full table's tiles put the number beside the symbol (ai-literacy-periodic-table.css). */ ?>
+				<p><?php esc_html_e( 'Top: its symbol and number', 'ai-awareness-day' ); ?></p>
+				<p><?php esc_html_e( 'Bottom: the term', 'ai-awareness-day' ); ?></p>
 				<p class="alpt-key-family"><?php esc_html_e( 'Colour: the family it belongs to', 'ai-awareness-day' ); ?></p>
 				<p class="alpt-key-theme"><?php esc_html_e( 'Colour: its AI Awareness Day theme', 'ai-awareness-day' ); ?></p>
 				<p class="alpt-key-year"><?php esc_html_e( 'Colour: when the word came into use', 'ai-awareness-day' ); ?></p>
