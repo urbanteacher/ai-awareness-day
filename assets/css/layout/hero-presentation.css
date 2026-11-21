@@ -827,3 +827,47 @@
   .hero-flagship .hero-flagship__theme img { width: 2rem; height: 2rem; }
   .hero-flagship__theme-q { grid-column: 2; }
 }
+
+/* Phones: the hero is as tall as its content, which starts close under the header. It used to fill the whole screen,
+   which left a third of it empty purple below the buttons; now the top of the National Conversation band shows
+   beneath them, which also tells a reader there is more to scroll to. */
+@media (max-width: 699px) {
+  /* The hero's top padding (72px) clears the fixed header; this adds a little air. */
+  #hero.hero-section--day .hero-title-block {
+    padding-top: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+
+  /* Less padding above the Conversation's band, and its tag in the flow rather than floated above the title, so the
+     title and the start of the intro show on the first screen under the hero's buttons. */
+  .flagship-lane {
+    padding-top: 1.5rem;
+  }
+
+  .flagship-lane .hero-flagship {
+    padding-top: 0;
+    gap: 0;
+  }
+
+  .flagship-lane .hero-flagship__tag {
+    position: static;
+    justify-self: start;
+    margin: 0 0 .75rem;
+  }
+
+  .flagship-lane .hero-flagship__side,
+  .flagship-lane .hero-flagship__themes {
+    margin-top: 1.25rem;
+  }
+
+  /* Signed in, the page already starts below the admin bar, so adding the bar's height to the hero's padding as well
+     (hero.css) left 46px more purple above the content than visitors see. */
+  .admin-bar #hero.hero-section--day {
+    padding-top: 72px;
+  }
+}
+
+/* The hero's "The National AI Conversation" button lands the dark band right under the fixed header (72px), not with
+   a strip of the hero's purple still showing above it. WordPress already adds the admin bar's height when signed in
+   (scroll-padding-top on html). */
+.flagship-lane { scroll-margin-top: 72px; }

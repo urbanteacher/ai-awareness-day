@@ -44,10 +44,11 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
                 <?php if ( function_exists( 'aiad_national_conversation_dates' ) ) : ?>
                 <p class="hero-eyebrow-date"><?php echo esc_html( wp_date( 'l jS F Y', aiad_national_conversation_dates()['event']->getTimestamp() ) ); ?></p>
                 <?php endif; ?>
-                <?php /* The Day's buttons only. The Conversation's are in its panel below. */ ?>
+                <?php /* The Day's button, and one down to the Conversation's section below (on phones it starts below the
+                         first screen, so this is the way to it). */ ?>
                 <div class="hero-cta">
                     <a href="<?php echo esc_url( aiad_hero27_text( 'aiad_hero27_involved_url' ) ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_involved_label' ) ); ?></a>
-                    <a href="<?php echo esc_url( $library_url ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Free resources', 'ai-awareness-day' ); ?></a>
+                    <a href="<?php echo esc_url( $nc_dates ? '#national-conversation' : $nc_page_url ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'The National AI Conversation', 'ai-awareness-day' ); ?></a>
                 </div>
                 <?php if ( $countdown ) : ?>
                 <?php /* Facts row: set on the strand ground under a rule, so it reads as
