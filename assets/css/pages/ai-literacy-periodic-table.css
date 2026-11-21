@@ -5213,19 +5213,6 @@ html.alpt-board-open {
   .alpt-panel:has(.alpt-panel__tile.is-flipped) .alpt-panel__labels {
     display: none;
   }
-
-  /* With the picture open, the buttons stay at the bottom of the screen while any of the panel is in view, so
-     they can be reached on any phone height. */
-  .alpt-panel:has(.alpt-panel__tile.is-flipped) .alpt-panel__nav {
-    position: sticky;
-    z-index: 2;
-    bottom: 0;
-    margin-inline: -1rem;
-    margin-bottom: -1rem;
-    padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
-    border-top: 2px solid var(--a27-ink);
-    background: #FFFFFF;
-  }
 }
 
 /* A note for teachers ("teacher_note" in elements.json), at the top of Classroom notes & resources. */
