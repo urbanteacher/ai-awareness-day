@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <text class="t-m" x="174" y="47" text-anchor="middle">Jailbreak attempt</text>
+  <rect class="i-paper" x="18" y="76" width="209" height="57" rx="6"/>
+  <text class="t-s" x="122" y="101" text-anchor="middle">A message tries to</text>
+  <text class="t-s" x="122" y="122" text-anchor="middle">override the rules.</text>
+  <path class="i-paper" d="M48 132 v14 l18 -14 Z"/>
+  <rect class="i-deep" x="65" y="166" width="217" height="58" rx="6"/>
+  <text class="t-s t-w" x="174" y="201" text-anchor="middle">“I can’t help with that.”</text>
+  <rect class="i-deep" x="31" y="254" width="53" height="48" rx="6"/>
+  <path class="i-line" d="M40 249 v5 m12 -5 v5 m12 -5 v5 M40 302 v5 m12 -5 v5 m12 -5 v5"/>
+  <rect class="i-paper" x="39" y="264" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="52" y="264" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="65" y="264" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="39" y="279" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="52" y="279" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="65" y="279" width="9" height="9" rx="1"/>
+  <text class="t-m" x="99" y="273" text-anchor="start">Same model</text>
+  <text class="t-s" x="99" y="299" text-anchor="start">Rules still in place</text>
+</svg>

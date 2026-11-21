@@ -513,6 +513,7 @@
             "approx": true,
             "older": false,
             "def": "AI that makes a picture from a written description, such as ‘a fox reading a book in a library, cartoon style’. The tool fills in many details you did not ask for.",
+            "picture_alt": "The prompt asks for a kite over the sea. The generated picture shows a diamond kite, waves and a sun the prompt never specified.",
             "talk": "With your teacher, using a school-approved tool, make an image, then list every decision the AI made that you did not ask for.",
             "links": [
                 "Df",
@@ -767,6 +768,7 @@
             "approx": true,
             "older": false,
             "def": "AI that creates video clips from a text description, an image or another video.",
+            "picture_alt": "A prompt asks for a bouncing ball. Three frames from the generated clip show it high, touching the ground, then rising again.",
             "talk": "What clues might show that a video was generated? Are they reliable?",
             "links": [
                 "Ga",
@@ -1868,6 +1870,7 @@
             "approx": false,
             "older": false,
             "def": "A program that people can chat with by typing or speaking, from simple scripted helpers to AI assistants that produce replies from patterns in text. If a chatbot ever encourages you to hurt yourself or keep secrets, stop and tell a trusted adult, or call Childline free on 0800 1111.",
+            "picture_alt": "A user asks a library chatbot about opening times. The bot asks which day, then gives Saturday’s hours when the user replies.",
             "talk": "How is talking to a chatbot different from talking to a friend or a teacher?",
             "links": [
                 "Ll",
@@ -2426,6 +2429,7 @@
             "approx": false,
             "older": false,
             "def": "Editing an AI model to strip out its safety protections, so it no longer refuses harmful requests. Doing this does not make harmful or illegal content legal.",
+            "picture_alt": "Two versions receive the same unsafe request. The original refuses. The edited version, drawn with a changed chip, may answer because a safeguard has been weakened.",
             "talk": "Who should be responsible for keeping AI safe once a model is shared online?",
             "links": [
                 "Rd",
@@ -2446,6 +2450,7 @@
             "approx": false,
             "older": false,
             "def": "A downloadable AI model that people have altered, by retraining or by abliteration, so it no longer refuses harmful requests. Illegal content is still illegal, whichever tool makes it. Contrast with jailbreaking, which tricks an unchanged model.",
+            "picture_alt": "A downloaded model file contains an altered model. When given an unsafe request, it may produce a harmful response.",
             "talk": "Who is responsible for what an AI makes: the person asking, the person who changed the tool, or both?",
             "links": [
                 "Ab",
@@ -2466,6 +2471,7 @@
             "approx": true,
             "older": true,
             "def": "Writing prompts designed to trick an AI into ignoring its safety rules, without changing the model itself. It usually breaks the tool’s terms of use.",
+            "picture_alt": "A message tries to override the chatbot’s rules. In this example the attempt fails and the chatbot refuses. The model itself stays the same.",
             "talk": "Why do AI tools have safety rules at all, and what could happen if anyone could switch them off?",
             "links": [
                 "Gr",

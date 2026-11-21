@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <rect class="i-paper" x="18" y="25" width="264" height="60" rx="6"/>
+  <text class="t-m" x="150" y="62" text-anchor="middle">“A ball bounces”</text>
+  <text class="t-s t-d" x="150" y="120" text-anchor="middle">Generated clip</text>
+  <rect class="i-paper" x="15" y="138" width="84" height="101" rx="6"/>
+  <rect class="i-line" x="15" y="138" width="84" height="101" rx="6"/>
+  <path class="i-line i-faint" d="M22 226 h70"/>
+  <circle class="i-accent" cx="57" cy="170" r="12"/>
+  <circle class="i-line" cx="57" cy="170" r="12"/>
+  <text class="t-s" x="57" y="262" text-anchor="middle">0.0 s</text>
+  <rect class="i-paper" x="108" y="138" width="84" height="101" rx="6"/>
+  <rect class="i-line" x="108" y="138" width="84" height="101" rx="6"/>
+  <path class="i-line i-faint" d="M115 226 h70"/>
+  <circle class="i-accent" cx="150" cy="213" r="12"/>
+  <circle class="i-line" cx="150" cy="213" r="12"/>
+  <text class="t-s" x="150" y="262" text-anchor="middle">0.3 s</text>
+  <rect class="i-paper" x="201" y="138" width="84" height="101" rx="6"/>
+  <rect class="i-line" x="201" y="138" width="84" height="101" rx="6"/>
+  <path class="i-line i-faint" d="M208 226 h70"/>
+  <circle class="i-accent" cx="243" cy="180" r="12"/>
+  <circle class="i-line" cx="243" cy="180" r="12"/>
+  <text class="t-s" x="243" y="262" text-anchor="middle">0.6 s</text>
+  <rect class="i-deep" x="30" y="288" width="240" height="6" rx="3"/>
+  <circle class="i-deep" cx="142" cy="291" r="8"/>
+</svg>

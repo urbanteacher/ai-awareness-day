@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <path class="i-paper" d="M84 28 H185 L216 59 V142 H84 Z"/>
+  <path class="i-line" d="M84 28 H185 L216 59 V142 H84 Z M185 28 V59 H216"/>
+  <rect class="i-deep" x="122" y="74" width="53" height="48" rx="6"/>
+  <path class="i-line" d="M131 69 v5 m12 -5 v5 m12 -5 v5 M131 122 v5 m12 -5 v5 m12 -5 v5"/>
+  <rect class="i-paper" x="130" y="84" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="143" y="84" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="156" y="84" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="130" y="99" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="143" y="99" width="9" height="9" rx="1"/>
+  <text class="t-m" x="150" y="173" text-anchor="middle">Downloaded model</text>
+  <rect class="i-paper" x="20" y="195" width="260" height="104" rx="6"/>
+  <text class="t-s" x="150" y="225" text-anchor="middle">Unsafe request</text>
+  <path class="i-line i-faint" d="M40 240 H260"/>
+  <text class="t-m t-d" x="150" y="272" text-anchor="middle">May produce harm</text>
+</svg>

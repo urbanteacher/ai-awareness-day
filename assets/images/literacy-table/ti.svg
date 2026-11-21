@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <rect class="i-paper" x="22" y="23" width="256" height="56" rx="6"/>
+  <text class="t-m" x="150" y="58" text-anchor="middle">“A kite over the sea”</text>
+  <rect class="i-paper" x="22" y="107" width="256" height="199" rx="6"/>
+  <rect class="i-line" x="22" y="107" width="256" height="199" rx="6"/>
+  <circle class="i-cream" cx="71" cy="153" r="18"/>
+  <path class="i-line" d="M175 200 Q164 223 185 238 T185 268"/>
+  <path class="i-accent" d="M176 129 L207 153 L175 204 L148 156 Z"/>
+  <path class="i-line" d="M176 129 L207 153 L175 204 L148 156 Z M176 129 L175 204 M148 156 L207 153"/>
+  <path class="i-deep" d="M24 258 Q54 238 86 257 T149 257 T212 257 T276 257 V303 H24 Z"/>
+  <path class="i-line" d="M43 278 Q57 268 72 278 M159 282 Q175 273 192 282"/>
+  <text class="t-xs t-d" x="150" y="101" text-anchor="middle">AI-generated picture</text>
+</svg>

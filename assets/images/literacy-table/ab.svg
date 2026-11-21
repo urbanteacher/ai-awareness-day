@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <rect class="i-bg" x="0" y="0" width="300" height="330" rx="0"/>
+  <text class="t-m" x="175" y="46" text-anchor="middle">Same unsafe request</text>
+  <rect class="i-paper" x="16" y="84" width="268" height="98" rx="6"/>
+  <rect class="i-deep" x="32" y="108" width="53" height="48" rx="6"/>
+  <path class="i-line" d="M41 103 v5 m12 -5 v5 m12 -5 v5 M41 156 v5 m12 -5 v5 m12 -5 v5"/>
+  <rect class="i-paper" x="40" y="118" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="53" y="118" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="66" y="118" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="40" y="133" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="53" y="133" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="66" y="133" width="9" height="9" rx="1"/>
+  <text class="t-s" x="102" y="121" text-anchor="start">Original model</text>
+  <text class="t-m t-d" x="102" y="156" text-anchor="start">Refuses</text>
+  <rect class="i-paper" x="16" y="202" width="268" height="98" rx="6"/>
+  <rect class="i-deep" x="32" y="226" width="53" height="48" rx="6"/>
+  <path class="i-line" d="M41 221 v5 m12 -5 v5 m12 -5 v5 M41 274 v5 m12 -5 v5 m12 -5 v5"/>
+  <rect class="i-paper" x="40" y="236" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="53" y="236" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="66" y="236" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="40" y="251" width="9" height="9" rx="1"/>
+  <rect class="i-paper" x="53" y="251" width="9" height="9" rx="1"/>
+  <text class="t-s" x="102" y="239" text-anchor="start">Edited model</text>
+  <text class="t-m t-d" x="102" y="274" text-anchor="start">May answer</text>
+</svg>
