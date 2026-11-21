@@ -71,7 +71,7 @@
             "theme": "smart",
             "level": "secondary",
             "volatile": false,
-            "what": "A reasoning model that works through a problem in steps before it answers, so you can follow, and check, its thinking.",
+            "what": "A reasoning model that writes out its working in steps before it answers, so you can check each step. The steps shown are not always how it really reached the answer.",
             "example": "Getting a hint for the next line of an equation, rather than the answer.",
             "loop": "You check each step and do the working yourself.",
             "debate": "If AI can show every step, does it matter whether you can do it alone?"
@@ -151,7 +151,7 @@
             "what": "An agent connected to your apps that plans tasks and remembers your preferences over time.",
             "example": "An assistant that manages your calendar, drafts emails and learns your routines.",
             "loop": "You decide what it can access and what it is allowed to remember.",
-            "debate": "Should each person manage what AI remembers about them?"
+            "debate": "Should an AI assistant remember things about you automatically, or only when you switch memory on?"
         },
         {
             "name": "Digital Errand Runner",
@@ -173,7 +173,7 @@
             "elements": [
                 "Ma",
                 "Or",
-                "Aa"
+                "Hi"
             ],
             "theme": "smart",
             "level": "further",
@@ -187,8 +187,8 @@
             "name": "AI Pair Programmer",
             "elements": [
                 "Ca",
-                "Vc",
-                "Ev"
+                "Cp",
+                "Hi"
             ],
             "theme": "future",
             "level": "secondary",
@@ -222,7 +222,7 @@
             "theme": "creative",
             "level": "secondary",
             "volatile": false,
-            "what": "An AI-generated picture carrying a hidden watermark, so it can be identified as AI-made later.",
+            "what": "An AI-generated picture carrying a hidden watermark or attached content credentials, so tools can check later that it was AI-made. These signals can sometimes be stripped out.",
             "example": "A social media app adding an “AI-generated” label to a picture.",
             "loop": "Creators label their work honestly, and platforms check for the watermark.",
             "debate": "Should every AI-made image have to carry a label?"
@@ -295,7 +295,7 @@
             "theme": "responsible",
             "level": "secondary",
             "volatile": true,
-            "what": "A recommendation engine that learns what keeps you watching and serves more and more of the same.",
+            "what": "A recommendation engine that keeps showing you more of what you already watch or agree with, so you see fewer different views. Its picks lean towards whatever keeps you watching.",
             "example": "A video feed that can drift towards more extreme content.",
             "loop": "Users can reset or switch off personalisation, and platforms audit their feeds for harm.",
             "debate": "Should social media apps let you turn the algorithm off?"
@@ -372,7 +372,7 @@
             "volatile": false,
             "what": "Anomaly detection that learns your usual spending over time, and flags payments that do not fit.",
             "example": "A text asking “Was this you?” after an unusual card payment.",
-            "loop": "You confirm or deny the payment, and the bank investigates.",
+            "loop": "You confirm or deny the payment in your banking app or by calling the number on your card, never through a link in a text, and the bank investigates.",
             "debate": "How much should a bank know about how you spend your money?"
         },
         {
@@ -402,7 +402,7 @@
             "what": "A chatbot whose guardrails have been tested against jailbreak attempts by red teams, and strengthened where they failed.",
             "example": "A company inviting testers to try to trick its chatbot before launch.",
             "loop": "Safety teams keep testing and fixing it after release.",
-            "debate": "Why do companies test their chatbots with trained, authorised testers rather than leaving it to the public?"
+            "debate": "Should companies be allowed to release a chatbot before independent testers have checked its safety rules?"
         },
         {
             "name": "AI Safety Lab",
@@ -444,7 +444,7 @@
             ],
             "theme": "responsible",
             "level": "secondary",
-            "volatile": false,
+            "volatile": true,
             "what": "Analytics that flag people likely to disengage or drop out, and suggest how to help.",
             "example": "Spotting students whose attendance patterns suggest they may need support.",
             "loop": "A trusted adult decides what, if anything, to do. The system only flags.",
@@ -460,7 +460,7 @@
             "level": "secondary",
             "volatile": false,
             "what": "Churn prediction spots who is about to cancel a subscription, so they can be sent a deal to stay.",
-            "example": "A discount appearing the moment you click “cancel membership”.",
+            "example": "A streaming app sending you a discount after you have watched less for a few weeks, before you have even thought about cancelling.",
             "loop": "People decide which offers are fair, and you decide whether to stay.",
             "debate": "Is it fair to use AI to predict when you are about to leave?"
         },
@@ -538,7 +538,7 @@
             "what": "A multimodal model that sees through a camera and describes the world out loud.",
             "example": "An app that reads signs and describes surroundings for blind and partially sighted people.",
             "loop": "The user decides when to rely on it and when to double-check.",
-            "debate": "Should accessibility be a priority for every AI product?"
+            "debate": "If an app describing the world for a blind person sometimes gets it wrong, should it still be used? Who is responsible for its mistakes?"
         },
         {
             "name": "Live Translator",
@@ -550,7 +550,7 @@
             "theme": "future",
             "level": "secondary",
             "volatile": false,
-            "what": "Understands speech or text in one language and speaks it in another.",
+            "what": "A tool that turns speech or text in one language into another language and reads it out loud.",
             "example": "A new student and their family talking with school staff in two languages.",
             "loop": "A professional translator checks anything important, such as medical or legal information.",
             "debate": "Will AI translation mean fewer people learn languages? Is that a loss?"
@@ -573,7 +573,7 @@
         {
             "name": "On-Device AI",
             "elements": [
-                "Ft",
+                "Qz",
                 "Sm",
                 "Ed"
             ],

@@ -13,7 +13,7 @@
             "year": 1955,
             "approx": false,
             "older": false,
-            "def": "Computer systems that perform tasks normally requiring human intelligence, such as understanding language, recognising patterns and making decisions.",
+            "def": "Computer systems, built and used by people, that do tasks we once thought only humans could do, such as translating text, recognising faces in photos or recommending what to watch next.",
             "talk": "Name three things you used today that might have AI inside. How could you tell?",
             "links": [
                 "Ml",
@@ -33,7 +33,7 @@
             "year": 2013,
             "approx": true,
             "older": false,
-            "def": "A model’s private map of ideas, made of numbers, where similar ideas sit close together as it works towards an answer.",
+            "def": "The space of numbers inside a model where each input is placed as a point, so similar things, such as ‘cat’ and ‘kitten’, end up close together. Each point is an embedding (Em).",
             "talk": "If an AI stores ideas as a map of numbers, can we ever be sure what it “thinks”?",
             "links": [
                 "Em",
@@ -53,7 +53,7 @@
             "year": 1965,
             "approx": true,
             "older": false,
-            "def": "AI helping to build better AI, which could then build better AI still. An idea first described in 1965. AI labs now use their own models to help train and test the next ones, which has made the question of who stays in charge more pressing.",
+            "def": "AI helping to build better AI, which could then build better AI still. The idea dates from 1965; today, AI companies already use their own models to help train and test the next ones.",
             "talk": "If AI helps to build the next AI, who should check each new version before it is used?",
             "links": [
                 "Agi",
@@ -172,7 +172,7 @@
             "row": 3,
             "col": 2,
             "theme": "smart",
-            "year": 1950,
+            "year": 1959,
             "approx": true,
             "older": true,
             "def": "A step-by-step set of instructions for solving a problem; in machine learning, the method a system uses to learn from data.",
@@ -182,7 +182,8 @@
                 "Dt",
                 "Md"
             ],
-            "picture_alt": "Five numbered steps for making tea, from boiling the kettle to taking the bag out, ending at a steaming mug."
+            "picture_alt": "Five numbered steps for making tea, from boiling the kettle to taking the bag out, ending at a steaming mug.",
+            "year_note": "The word comes from the 9th-century mathematician al-Khwarizmi; its machine-learning sense (\"learning algorithm\") dates from the late 1950s (Samuel, Rosenblatt)."
         },
         {
             "sym": "Md",
@@ -352,7 +353,7 @@
             "year": 2018,
             "approx": true,
             "older": false,
-            "def": "An AI trained on huge amounts of writing so it can read and write language, like the AI behind ChatGPT or Gemini.",
+            "def": "An AI model trained on huge amounts of text to predict the next word (token), which lets it generate replies, summaries and translations – the kind of model behind most chatbots.",
             "talk": "If a model only predicts the next word, can it understand what it writes? Argue both sides.",
             "links": [
                 "Tf",
@@ -474,7 +475,7 @@
             "year": 2015,
             "approx": false,
             "older": false,
-            "def": "A generative model that learns by adding noise to pictures until they are static, then learning to undo it. To make something new, it starts from random noise and removes it step by step.",
+            "def": "A generative model trained on pictures that have had random speckles (‘noise’) added, so it learns to remove the noise. To make a new picture, it starts from pure noise and cleans it up step by step.",
             "talk": "An AI makes a picture from noise. Is the picture original? Who is the artist?",
             "links": [
                 "Ti",
@@ -511,7 +512,7 @@
             "year": 2015,
             "approx": true,
             "older": false,
-            "def": "Generating pictures from a written description.",
+            "def": "AI that makes a picture from a written description, such as ‘a fox reading a book in a library, cartoon style’. The tool fills in many details you did not ask for.",
             "talk": "With your teacher, using a school-approved tool, make an image, then list every decision the AI made that you did not ask for.",
             "links": [
                 "Df",
@@ -549,7 +550,7 @@
             "year": 2006,
             "approx": true,
             "older": false,
-            "def": "Further training a pre-trained model on a smaller, specific dataset to specialise its behaviour.",
+            "def": "Taking a model that has already been trained on lots of general data and training it a bit more on a smaller set of examples, such as medical notes, so it does better at one job.",
             "talk": "If you could train an AI to be an expert in one subject, which would you choose and what would it need to learn from?",
             "links": [
                 "Fm",
@@ -568,7 +569,7 @@
             "year": 2020,
             "approx": false,
             "older": false,
-            "def": "Fetching relevant documents first and handing them to the model, so its answers are grounded in real sources (RAG).",
+            "def": "Retrieval-augmented generation (RAG): a system first looks up relevant documents, such as a school’s policies, and gives them to the model so its answer can draw on them. The answer can still be wrong.",
             "talk": "Does looking things up first make an AI answer trustworthy? What if the source is wrong?",
             "links": [
                 "Vd",
@@ -606,7 +607,7 @@
             "year": 2022,
             "approx": false,
             "older": false,
-            "def": "Getting a model to work through a problem step by step before giving its final answer.",
+            "def": "Asking a model to write out steps before its final answer, which often improves results. The written steps may not show how the answer was really produced. Compare Reasoning Model (Rm).",
             "talk": "Does an AI showing its working make the answer more trustworthy? How would you check?",
             "links": [
                 "Rm",
@@ -683,7 +684,7 @@
             "year": 2018,
             "approx": true,
             "older": false,
-            "def": "When a model produces confident-sounding information that is false or made up. It happens because the model predicts likely-sounding words rather than looking facts up.",
+            "def": "When an AI produces confident-sounding information that is false or made up, such as a book that does not exist. It happens mainly because the model predicts likely-sounding words rather than checking facts.",
             "talk": "With your teacher, using a school-approved tool, ask an AI for three sources on a topic. Do they all exist, and do they say what it claims?",
             "links": [
                 "Rg",
@@ -703,7 +704,7 @@
             "year": 2017,
             "approx": false,
             "older": false,
-            "def": "Realistic AI-generated or manipulated video, audio or images showing people saying or doing things they never did. Any sexual image of someone under 18, including an AI-made fake, is illegal to make, keep or share. In England and Wales it is also a crime to make or share a sexual deepfake of an adult without their consent.",
+            "def": "Realistic AI-made or edited video, audio or images showing people saying or doing things they never did. Sexual fakes of under-18s are illegal; if you see one, tell a trusted adult or use Childline’s Report Remove.",
             "talk": "How would you check whether a shocking video of a famous person is real?",
             "links": [
                 "Gv",
@@ -712,7 +713,8 @@
                 "Ip"
             ],
             "benchmark": "safeguarding",
-            "safeguarding": true
+            "safeguarding": true,
+            "teacher_note": "Any sexual image of someone under 18, including an AI-made fake, is illegal to make, keep or share. In England and Wales it is also an offence to make, or ask someone to make, a sexual deepfake of an adult without their consent (Data (Use and Access) Act 2025, section 138, in force since 6 February 2026)."
         },
         {
             "sym": "Vc",
@@ -724,7 +726,7 @@
             "year": 2025,
             "approx": false,
             "older": false,
-            "def": "Building software by describing what you want in plain language and letting AI write most of the code.",
+            "def": "Building software by describing what you want in plain language and accepting the code an AI tool writes, often without reading or checking it closely.",
             "talk": "If AI writes code that breaks something, whose job is it to fix it?",
             "links": [
                 "Ca",
@@ -784,7 +786,7 @@
             "approx": false,
             "older": false,
             "def": "Low-effort, mass-produced AI text, images and videos that flood social media and search results.",
-            "talk": "How can you tell AI slop from something made with care? Find an example of each.",
+            "talk": "Look at examples your teacher has chosen. How can you tell AI slop from something made with care?",
             "links": [
                 "Ga",
                 "Gv",
@@ -843,7 +845,7 @@
             "year": 1960,
             "approx": true,
             "older": false,
-            "def": "Learning from labelled examples, where every input comes with the correct answer.",
+            "def": "Training a model on labelled examples, where every input comes with the correct answer, such as thousands of photos each tagged ‘cat’ or ‘dog’.",
             "talk": "If the labels a model learns from are wrong, what will the model learn?",
             "links": [
                 "Cl",
@@ -862,7 +864,7 @@
             "year": 1960,
             "approx": true,
             "older": false,
-            "def": "Finding structure in unlabelled data without being told what the right answers are.",
+            "def": "Training a model to find patterns or groups in data that has no labels, such as sorting songs by how similar they sound, without being given the right answers. Contrast with supervised learning.",
             "talk": "If an AI groups people without being told how, how would you know whether the groups are fair?",
             "links": [
                 "Cu",
@@ -882,7 +884,7 @@
             "approx": false,
             "older": false,
             "def": "Predicting a continuous number, such as a price, a demand level or a temperature.",
-            "talk": "What would you want to predict with a number, such as revision hours and test scores? What could the prediction miss?",
+            "talk": "Could you predict someone’s test score from how many hours they revised? What would the prediction miss about them?",
             "links": [
                 "Su",
                 "Fc"
@@ -918,7 +920,7 @@
             "year": 1939,
             "approx": false,
             "older": false,
-            "def": "Grouping similar items together without predefined labels — customer segmentation is a classic use.",
+            "def": "Grouping similar items together when no one has said in advance what the groups should be, such as a shop sorting customers by what they tend to buy.",
             "talk": "Sort your class's favourite apps into groups. Would a computer choose the same groups? Why not?",
             "links": [
                 "Un",
@@ -974,7 +976,7 @@
             "approx": false,
             "older": false,
             "def": "Building many small models one after another, each fixing the mistakes of the one before, so together they make good predictions from tables of data.",
-            "talk": "Each model fixes the last one's mistakes. How is that like learning from your own mistakes?",
+            "talk": "Each model in the chain is built to fix the errors of the one before. How is that similar to, and different from, a person learning from their mistakes?",
             "links": [
                 "Rf",
                 "Fe"
@@ -1047,7 +1049,7 @@
             "year": 1927,
             "approx": true,
             "older": false,
-            "def": "Data recorded over time, and the methods for modelling the trends, seasonality and cycles within it.",
+            "def": "Data recorded at regular times, such as daily temperatures or weekly attendance, and the methods for spotting its trends and repeating patterns.",
             "talk": "What patterns can you spot in your school's attendance over a year? Would a computer spot the same ones?",
             "links": [
                 "Fc",
@@ -1176,7 +1178,7 @@
             "year": 1960,
             "approx": true,
             "older": false,
-            "def": "The field of AI that enables computers to understand, interpret and work with human language (NLP).",
+            "def": "Natural language processing (NLP) is the field of AI that builds systems to process, analyse and produce human language, such as translation apps, spellcheckers and voice assistants.",
             "talk": "Which languages and accents do voice assistants understand best? Who gets left out?",
             "links": [
                 "Ll",
@@ -1214,7 +1216,7 @@
             "year": 2023,
             "approx": false,
             "older": false,
-            "def": "Shaping online content so that AI assistants find, cite and recommend it: search engine optimisation for the age of AI. Also called answer engine optimisation (AEO), as more searches end in an AI answer with no click.",
+            "def": "Writing and arranging web content so that AI chatbots and AI search answers are more likely to mention or link to it, like a business trying to appear first in Google results. Also called answer engine optimisation.",
             "talk": "If companies shape what AI assistants recommend, how can you tell an answer is fair?",
             "links": [
                 "Rc",
@@ -1315,7 +1317,7 @@
             "year": 2023,
             "approx": true,
             "older": true,
-            "def": "How an agent retains information — within a single task (short-term) or across sessions (long-term).",
+            "def": "How an AI tool stores information to use later, either during one task (short-term) or between separate conversations (long-term), such as a chatbot saving your name.",
             "talk": "What do you think an AI tool remembers about you? How could an adult help you check?",
             "links": [
                 "Ag",
@@ -1335,7 +1337,7 @@
             "year": 2023,
             "approx": false,
             "older": false,
-            "def": "Letting a model use other tools, such as a calculator, a search engine or a booking system, to look things up or take actions. Also called tool use.",
+            "def": "A way for an AI model to ask other software, such as a calculator, a search engine or a booking system, to do a job; the app around the model runs the request. Also called tool use.",
             "talk": "Which tools should an AI never be given access to, and why?",
             "links": [
                 "Ag",
@@ -1355,7 +1357,7 @@
             "approx": false,
             "older": false,
             "def": "A pattern where an agent alternates between reasoning about a problem and acting with tools (Reason + Act).",
-            "talk": "When you solve a problem, how often do you stop, think and try again? How is that like an AI that thinks, acts, then checks?",
+            "talk": "When you solve a problem, how often do you stop, plan and try again? How is an AI system that writes out a plan, uses a tool, then checks the result similar to you, and how is it different?",
             "links": [
                 "Lp",
                 "Pl",
@@ -1373,7 +1375,7 @@
             "year": 2023,
             "approx": true,
             "older": false,
-            "def": "The cycle an agent repeats — observe, think, act, check the result — until the goal is met.",
+            "def": "The cycle an AI agent repeats (look at the situation, choose an action, act, check the result) until the goal is met or a person stops it.",
             "talk": "An agent keeps trying until it succeeds. When should it stop and ask a person instead?",
             "links": [
                 "Ag",
@@ -1449,7 +1451,7 @@
             "year": 2023,
             "approx": true,
             "older": false,
-            "def": "A coordinating agent or component that assigns tasks to other agents or tools and combines their results.",
+            "def": "A part of an AI system that splits a big task into smaller jobs, hands them to other agents or tools, then puts their results together. Contrast with Workflow Orchestration, which plans a whole business process.",
             "talk": "An AI manager hands out jobs to other AIs. What should a human manager still do?",
             "links": [
                 "Ma",
@@ -1506,7 +1508,7 @@
             "year": 1961,
             "approx": true,
             "older": false,
-            "def": "Learning by trial and error: an agent is rewarded for good actions and gradually learns the best strategy. Chatbots are tuned this way too, with people rating their answers (reinforcement learning from human feedback).",
+            "def": "A way of training a program by trial and error: it gets a reward score for good actions and is adjusted to get more rewards. Chatbots are partly tuned this way, using people’s ratings of their answers.",
             "talk": "How is learning by trial and reward like the way you learned a game? What is different?",
             "links": [
                 "Pl",
@@ -1525,7 +1527,7 @@
             "year": 2024,
             "approx": false,
             "older": false,
-            "def": "An agent that operates a computer like a person would — reading the screen, moving the cursor and typing.",
+            "def": "An AI agent that controls a computer by taking screenshots, moving the cursor and typing, so it can use ordinary apps the way a person would.",
             "talk": "Would you let an AI use your computer for you? What would you never let it click?",
             "links": [
                 "Br",
@@ -1564,7 +1566,7 @@
             "year": 2024,
             "approx": true,
             "older": false,
-            "def": "An agent that writes, tests and fixes code across a codebase with minimal human input.",
+            "def": "An AI agent that writes, tests and fixes code across a whole project, with a programmer setting the task and checking the changes before they are used.",
             "talk": "If AI writes the code, which coding skills should people still learn?",
             "links": [
                 "Vc",
@@ -1584,7 +1586,7 @@
             "year": 2012,
             "approx": true,
             "older": false,
-            "def": "Software bots that mimic human clicks and keystrokes to complete rule-based, repetitive tasks (RPA).",
+            "def": "Software ‘bots’ that copy the clicks and typing a person would do, to repeat the same fixed steps, such as copying data from emails into a spreadsheet (RPA).",
             "talk": "Which boring, repetitive task at school would you hand to a bot? What could go wrong?",
             "links": [
                 "Ia",
@@ -1603,7 +1605,7 @@
             "year": 2017,
             "approx": true,
             "older": false,
-            "def": "Mixing simple software bots with AI that can read and make decisions, so computers can handle jobs that need some judgement, not just fixed rules.",
+            "def": "Combining simple software bots with AI tools that can pull out information and pick between options, so computers can handle jobs that are not just fixed rules, like sorting emails by topic.",
             "talk": "Pick a job a person does at school, such as marking or answering the office phone. What would we gain and lose if a machine did it?",
             "links": [
                 "Rp",
@@ -1641,7 +1643,7 @@
             "year": 2015,
             "approx": true,
             "older": false,
-            "def": "Coordinating the sequence of tasks, systems and people in an end-to-end business process.",
+            "def": "Planning and running the order of steps in a whole process, across different apps and people, such as getting a new pupil’s details from the form to the register. Contrast with Orchestrator.",
             "talk": "Map how a lost-property report travels around your school. Where could automation help, and where would a person be better?",
             "links": [
                 "Or",
@@ -1678,7 +1680,7 @@
             "year": 2005,
             "approx": true,
             "older": false,
-            "def": "Workflows that react instantly to events happening in other systems, rather than running on a schedule.",
+            "def": "Automations that start as soon as something happens in another app, such as a new booking, instead of waiting for a set time. Triggers and webhooks are how this usually works.",
             "talk": "Should an app act the instant something happens, or wait for a person to check first? When?",
             "links": [
                 "Tg",
@@ -1753,7 +1755,7 @@
             "year": 2018,
             "approx": true,
             "older": false,
-            "def": "Using AI to capture, classify and extract data from documents such as invoices, forms and contracts (IDP).",
+            "def": "Using AI to read in documents such as forms, letters and invoices, sort them by type and pull out key details like names and dates (IDP).",
             "talk": "An AI reads and sorts school forms. What could go wrong if it misreads one?",
             "links": [
                 "Oc",
@@ -1808,7 +1810,7 @@
             "year": 1995,
             "approx": true,
             "older": false,
-            "def": "Software that applies predefined if-then logic to make consistent, automated decisions.",
+            "def": "Software that follows a list of ‘if this, then that’ rules written by people, so the same case always gets the same decision, such as ‘if a book is 7 days late, send a reminder’.",
             "talk": "Write three if-then rules for a school canteen. Which cases would your rules get wrong?",
             "links": [
                 "St",
@@ -1845,7 +1847,7 @@
             "year": 2018,
             "approx": true,
             "older": false,
-            "def": "A software bot or AI agent positioned as a virtual team member that handles a defined role or set of tasks.",
+            "def": "A marketing name for a software bot or AI agent set up to do a fixed set of tasks, described by its sellers as if it were a member of staff.",
             "talk": "Should a software bot be called a “worker”? What does that word suggest?",
             "links": [
                 "Rp",
@@ -1864,7 +1866,7 @@
             "year": 1994,
             "approx": false,
             "older": false,
-            "def": "A program that holds text or voice conversations with people, from simple scripted helpers to AI assistants. If a chatbot ever encourages you to hurt yourself or to keep secrets, stop and tell a trusted adult. You can talk to Childline on 0800 1111 or Samaritans on 116 123, free, any time.",
+            "def": "A program that people can chat with by typing or speaking, from simple scripted helpers to AI assistants that produce replies from patterns in text. If a chatbot ever encourages you to hurt yourself or keep secrets, stop and tell a trusted adult, or call Childline free on 0800 1111.",
             "talk": "How is talking to a chatbot different from talking to a friend or a teacher?",
             "links": [
                 "Ll",
@@ -1872,7 +1874,8 @@
                 "Gr"
             ],
             "benchmark": "safe_adoption",
-            "safeguarding": true
+            "safeguarding": true,
+            "teacher_note": "Pupils can also contact Samaritans free on 116 123, any time."
         },
         {
             "sym": "Va",
@@ -1884,7 +1887,7 @@
             "year": 2011,
             "approx": true,
             "older": false,
-            "def": "A conversational assistant that helps with tasks such as scheduling, searching or customer support.",
+            "def": "A voice or chat assistant, such as the one on a phone or smart speaker, that carries out tasks like setting reminders or searching. Contrast with Chatbot (mainly conversation) and Copilot (built into one app).",
             "talk": "What should a virtual assistant be allowed to remember about you?",
             "links": [
                 "Cb",
@@ -1945,7 +1948,7 @@
             "year": 2016,
             "approx": true,
             "older": false,
-            "def": "The moral principles guiding how AI is designed and used, from consent to wider societal impact.",
+            "def": "Thinking about what is right and wrong in how people build and use AI, from asking permission to use someone’s data to its effects on jobs and society. Contrast with Responsible AI, which puts these ideas into practice.",
             "talk": "Who should decide what is right and wrong for AI: the companies, governments or the public?",
             "links": [
                 "Rs",
@@ -2005,7 +2008,7 @@
             "year": 2004,
             "approx": false,
             "older": false,
-            "def": "Techniques that make it understandable why a model produced a particular output — often called XAI.",
+            "def": "Ways of showing people why an AI system gave a particular answer or decision, such as which information mattered most (XAI, explainable AI). Contrast with Transparency and Mechanistic Interpretability.",
             "talk": "Which decisions about you would you want explained, and who should do the explaining?",
             "links": [
                 "Tn",
@@ -2045,7 +2048,7 @@
             "year": 2014,
             "approx": true,
             "older": false,
-            "def": "Ensuring an AI system’s goals and behaviour match human intentions and values.",
+            "def": "Research and testing that tries to make an AI system’s behaviour match what people intend and value, for example not taking shortcuts that meet the instruction but miss its point.",
             "talk": "How would you check that an AI is really doing what people want, not just what they asked?",
             "links": [
                 "Sf",
@@ -2146,7 +2149,7 @@
             "year": 1970,
             "approx": true,
             "older": true,
-            "def": "Protecting personal data that is used to train or is processed by AI, in line with laws such as the UK GDPR and the Data Protection Act 2018.",
+            "def": "Keeping people's personal information safe and under their control, including data used to train or run AI. In the UK this is covered by the UK GDPR and Data Protection Act 2018, updated by the Data (Use and Access) Act 2025.",
             "talk": "What would you never type into a chatbot? Why?",
             "links": [
                 "Dg",
@@ -2184,8 +2187,8 @@
             "col": 17,
             "theme": "responsible",
             "year": 2021,
-            "approx": false,
-            "older": false,
+            "approx": true,
+            "older": true,
             "def": "Laws and standards that govern AI — such as the EU AI Act, which sets rules according to a system’s level of risk.",
             "talk": "If you could add one law about AI, what would it be?",
             "links": [
@@ -2207,7 +2210,7 @@
             "approx": true,
             "older": true,
             "def": "Questions over who owns AI training data and AI-generated content, and how creators’ rights are protected. In the UK, creators’ work is protected by the Copyright, Designs and Patents Act 1988.",
-            "talk": "Should artists be asked, or paid, before AI learns from their work?",
+            "talk": "Should artists be asked, or paid, before their work is used to train an AI?",
             "links": [
                 "Dk",
                 "Wm",
@@ -2285,7 +2288,7 @@
             "year": 2023,
             "approx": false,
             "older": false,
-            "def": "Hidden signals built into AI-generated images, audio, video or text so their origin can be checked later.",
+            "def": "Signals, often invisible, added to AI-generated images, audio, video or text so tools can later check where they came from. Watermarks can sometimes be removed, so they are not proof on their own.",
             "talk": "Should every AI-made image carry a watermark? Who would check?",
             "links": [
                 "Dk",
@@ -2383,7 +2386,7 @@
             "year": 2016,
             "approx": false,
             "older": false,
-            "def": "Questioning an AI system again and again to copy its behaviour without access to its files. It can break terms of use and intellectual property law.",
+            "def": "Sending an AI system thousands of questions and using its answers to build a copy, without access to its files. It usually breaks the tool’s terms of use and may break the law.",
             "talk": "Someone copies an AI by asking it thousands of questions. How is that like copying homework, and how is it different?",
             "links": [
                 "Rv",
@@ -2402,8 +2405,8 @@
             "year": 2024,
             "approx": false,
             "older": false,
-            "def": "A pattern inside a model that researchers have linked to it declining unsafe or restricted requests.",
-            "talk": "Why might researchers want to understand how an AI decides to say no?",
+            "def": "A single pattern in a model’s internal numbers that researchers found is linked to it refusing unsafe requests. Removing this pattern can stop the model refusing, which is how abliteration works.",
+            "talk": "Why might researchers want to find the part of an AI model linked to refusing requests? How could that knowledge be used well or badly?",
             "links": [
                 "As",
                 "An",
@@ -2441,7 +2444,7 @@
             "year": 2023,
             "approx": false,
             "older": false,
-            "def": "An open-weight model that has been changed so it no longer refuses harmful requests. Removing the safety rules does not make anything legal: illegal content is still illegal, whichever tool makes it.",
+            "def": "A downloadable AI model that people have altered, by retraining or by abliteration, so it no longer refuses harmful requests. Illegal content is still illegal, whichever tool makes it. Contrast with jailbreaking, which tricks an unchanged model.",
             "talk": "Who is responsible for what an AI makes: the person asking, the person who changed the tool, or both?",
             "links": [
                 "Ab",
@@ -2460,7 +2463,7 @@
             "theme": "safe",
             "year": 2022,
             "approx": true,
-            "older": false,
+            "older": true,
             "def": "Writing prompts designed to trick an AI into ignoring its safety rules, without changing the model itself. It usually breaks the tool’s terms of use.",
             "talk": "Why do AI tools have safety rules at all, and what could happen if anyone could switch them off?",
             "links": [
@@ -2481,7 +2484,7 @@
             "year": 1999,
             "approx": false,
             "older": false,
-            "def": "Graphics Processing Unit: chips that run huge numbers of calculations in parallel — the workhorse of AI training and inference.",
+            "def": "Graphics Processing Unit: a chip first made for video games that can do thousands of calculations at the same time. That makes it the main chip used to train and run AI.",
             "talk": "The chips that run AI are made by only a few companies. Why might that matter?",
             "links": [
                 "Tp",
@@ -2518,7 +2521,7 @@
             "year": 2017,
             "approx": true,
             "older": false,
-            "def": "AI models, compute and tools delivered on demand over the internet.",
+            "def": "AI that runs on powerful computers in big data centres and is used over the internet, rather than on your own device. Most chatbots work this way.",
             "talk": "When you use an AI in the cloud, where does your data go? How could you find out?",
             "links": [
                 "Gp",
@@ -2631,7 +2634,7 @@
             "year": 2016,
             "approx": true,
             "older": false,
-            "def": "Shrinking a model by storing its numbers at lower precision, making it faster and cheaper to run.",
+            "def": "Shrinking an AI model by storing its numbers with fewer digits, a bit like rounding 3.14159 to 3.1. The model gets smaller, faster and cheaper to run, but can become slightly less accurate.",
             "talk": "Would you choose a smaller, faster AI on your phone or a bigger one in the cloud? Why?",
             "links": [
                 "Pm",
@@ -2651,7 +2654,7 @@
             "approx": false,
             "older": false,
             "def": "Training a smaller “student” model to mimic the behaviour of a larger “teacher” model.",
-            "talk": "A small model learns by copying a big one. What good and bad habits might it pick up?",
+            "talk": "A small model is trained to copy a big one’s answers. What mistakes or biases might be copied across too?",
             "links": [
                 "Sm",
                 "Mx",
@@ -2689,7 +2692,7 @@
             "approx": true,
             "older": false,
             "def": "A compact language model designed to run quickly and cheaply, often directly on a device.",
-            "talk": "Why might a school prefer an AI that runs on its own computers rather than in the cloud?",
+            "talk": "A small AI model is quicker and cheaper to run but usually makes more mistakes. For which school tasks would a small model be good enough?",
             "links": [
                 "Ds",
                 "Qz",
