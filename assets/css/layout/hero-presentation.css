@@ -485,3 +485,302 @@
   #hero .hero-title__line { white-space: nowrap; }
   #hero .hero-eyebrow-date { font-size: 6.78cqi; }
 }
+
+/* ---- Option B: the hero is AI Awareness Day; the National AI Conversation is its flagship ----
+   (archive/design-kit/home-hero-campaign-vs-conversation.html). The Day keeps the purple ground, the date, the
+   countdown and its buttons in one column. The Conversation has its own lane after the hero (.flagship-lane): a
+   full-width dark band in its own blue, with its own dates and buttons. */
+#hero.hero-section--day .hero-title-block {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.flagship-lane {
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+#hero.hero-section--day .hero-copy {
+  max-width: 56rem;
+}
+
+.hero-flagship {
+  position: relative;
+  display: grid;
+  gap: 1.5rem 3rem;
+  padding-top: 2.75rem;
+}
+
+@media (min-width: 900px) {
+  .hero-flagship {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.hero-flagship__tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: .3rem .7rem;
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+/* Not under #hero any more, so the lane's heading sets its own colour and size. */
+.flagship-lane .hero-flagship__title {
+  margin: 0;
+  color: var(--a27-cream);
+  font-size: clamp(1.75rem, 3.2vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+}
+
+.hero-flagship__lead {
+  margin: .6rem 0 0;
+  max-width: 40rem;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.hero-flagship__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  margin: 1.4rem 0 0;
+}
+
+.hero-flagship__btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: .75rem 1.15rem;
+  border: 2px solid var(--a27-safe);
+  background: var(--a27-safe);
+  color: var(--a27-ink);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.hero-flagship__btn:hover,
+.hero-flagship__btn:focus-visible {
+  background: var(--a27-cream);
+  border-color: var(--a27-cream);
+  color: var(--a27-ink);
+}
+
+.hero-flagship__btn--outline {
+  background: transparent;
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.hero-flagship__btn:focus-visible {
+  outline: 3px solid var(--a27-safe);
+  outline-offset: 3px;
+}
+
+.hero-flagship__note {
+  color: var(--a27-safe);
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.hero-flagship .hero-cta-more {
+  margin: 1rem 0 0;
+}
+
+.hero-flagship .hero-cta-more a {
+  color: var(--a27-cream);
+}
+
+.hero-flagship__steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-flagship__steps li {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: .75rem;
+  padding: .7rem 0;
+  border-top: 1px solid rgb(246 244 237 / .25);
+  font-size: .95rem;
+  line-height: 1.35;
+}
+
+.hero-flagship__steps li:last-child {
+  border-bottom: 1px solid rgb(246 244 237 / .25);
+}
+
+.hero-flagship__steps b {
+  color: var(--a27-safe);
+}
+
+.hero-flagship .hero-totals {
+  margin: 1rem 0 0;
+  color: var(--a27-cream);
+}
+
+@media (max-width: 480px) {
+  .hero-flagship__steps li { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
+  .hero-flagship__btn { width: 100%; justify-content: center; text-align: center; }
+}
+
+/* The five themes, along the foot of the Conversation's panel. Each opens its theme's pop-up. */
+.hero-flagship__themes {
+  grid-column: 1 / -1;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(246 244 237 / .25);
+}
+
+.hero-flagship__themes-label {
+  margin: 0 0 .85rem;
+  color: var(--a27-safe);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.hero-flagship__themes ul {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-flagship__theme {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .35rem .25rem .35rem 0;
+  color: var(--a27-cream);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero-flagship__theme img {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  transition: transform .2s ease;
+}
+
+.hero-flagship__theme:hover span,
+.hero-flagship__theme:focus-visible span {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.hero-flagship__theme:hover img {
+  transform: scale(1.08);
+}
+
+.hero-flagship__theme:focus-visible {
+  outline: 3px solid var(--a27-safe);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .hero-flagship__themes ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Phones: three to a row, icon above the name, so the five sit in two short rows with none left on its own line. */
+@media (max-width: 480px) {
+  .hero-flagship__themes ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+  .hero-flagship__theme { flex-direction: column; gap: .35rem; min-height: 4.5rem; padding: .35rem 0; font-size: .9rem; text-align: center; justify-content: center; }
+  .hero-flagship__theme img { width: 2.25rem; height: 2.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-flagship__theme img { transition: none; }
+}
+
+.hero-flagship__lead strong {
+  color: var(--a27-safe);
+  font-weight: 700;
+}
+
+/* Speech bubbles beside the intro, after the oracy announcement's cover. From 700px wide they take the right of the
+   first row, and the three dates run below as one row; on phones the bubbles are left out. */
+.hero-flagship__talk svg {
+  display: block;
+  width: 100%;
+  max-width: 26rem;
+  height: auto;
+  margin-left: auto;
+  overflow: visible;
+}
+
+.hero-flagship__bubble path { fill: var(--a27-cream); }
+.hero-flagship__bubble circle { fill: var(--a27-ink); opacity: .55; }
+.hero-flagship__bubble--1 path { opacity: .9; }
+.hero-flagship__bubble--2 path { fill: var(--a27-safe); }
+.hero-flagship__bubble--3 path { opacity: .55; }
+.hero-flagship__bubble--4 path { fill: var(--a27-creative); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-flagship__bubble { animation: heroFlagshipFloat 6s ease-in-out infinite; }
+  .hero-flagship__bubble--2 { animation-delay: -1.5s; }
+  .hero-flagship__bubble--3 { animation-delay: -3s; }
+  .hero-flagship__bubble--4 { animation-delay: -4.5s; }
+}
+
+@keyframes heroFlagshipFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (min-width: 700px) {
+  .hero-flagship { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: center; }
+
+  .hero-flagship__side { grid-column: 1 / -1; }
+
+  .hero-flagship__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  .hero-flagship__steps li,
+  .hero-flagship__steps li:last-child {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .2rem;
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 699px) {
+  .hero-flagship__talk { display: none; }
+}
+
+/* The bubbles start level with the top of the heading, not centred on the intro. (The SVG's viewBox starts at the
+   top of its highest bubble, so there is no gap above it.) */
+.hero-flagship__talk {
+  align-self: start;
+}
+
+/* One column (phones and narrow tablets): tighter spacing, and one rule between the dates and the themes, not two. */
+@media (max-width: 699px) {
+  .hero-flagship { gap: 1.25rem; }
+  .hero-flagship__lead { font-size: 1rem; }
+  .hero-flagship__actions { margin-top: 1.1rem; }
+  .hero-flagship__steps li:last-child { border-bottom: 0; }
+  .hero-flagship__steps li { padding: .6rem 0; }
+}

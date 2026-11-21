@@ -19,9 +19,18 @@ $sign_in_url  = $portal_live ? aiad_conversation_url( 'join' ) : '';
 $nominate_url = $portal_live ? aiad_conversation_url( 'nominate' ) : '';
 $countdown    = aiad_national_conversation_countdown();
 $totals       = $portal_live ? aiad_national_conversation_totals() : null; // The live totals line starts on the opening day, like the portal.
+$nc_page_url  = function_exists( 'aiad_national_conversation_page_url' ) ? aiad_national_conversation_page_url() : home_url( '/national-conversation/' );
+$nc_dates     = function_exists( 'aiad_national_conversation_dates' ) ? aiad_national_conversation_dates() : null;
+$library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resources/' );
 
 ?>
-<section class="hero-section <?php echo esc_attr( $text_alignment_class ); ?>" id="hero" data-strand="safe">
+<?php
+/* Two offers, kept apart (archive/design-kit/home-hero-campaign-vs-conversation.html, option B): the hero is AI
+   Awareness Day, the campaign, in the Day's purple, with its date, countdown and buttons. The National AI Conversation
+   is its flagship programme, in a dark lane of its own straight after the hero, with its own dates and buttons in its
+   own blue. */
+?>
+<section class="hero-section hero-section--day <?php echo esc_attr( $text_alignment_class ); ?>" id="hero" data-strand="creative">
     <div class="container">
         <div class="hero-title-block">
             <div class="hero-copy">
@@ -35,18 +44,12 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                 <?php if ( function_exists( 'aiad_national_conversation_dates' ) ) : ?>
                 <p class="hero-eyebrow-date"><?php echo esc_html( wp_date( 'l jS F Y', aiad_national_conversation_dates()['event']->getTimestamp() ) ); ?></p>
                 <?php endif; ?>
-                <p class="hero-subtitle"><strong><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_lead' ) ); ?></strong> <?php echo esc_html( aiad_hero27_text( 'aiad_hero27_body' ) ); ?></p>
+                <?php /* The Day's buttons only. The Conversation's are in its panel below. */ ?>
                 <div class="hero-cta">
-                    <a href="<?php echo esc_url( aiad_hero27_text( 'aiad_hero27_involved_url' ) ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_involved_label' ) ); ?></a>
-                    <a href="<?php echo esc_url( $join_url ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_join_label' ) ); ?></a>
+                    <a href="<?php echo esc_url( aiad_hero27_text( 'aiad_hero27_involved_url' ) ); ?>" class="hero-cta__btn hero-cta__btn--primary"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_involved_label' ) ); ?></a>
+                    <a href="<?php echo esc_url( $library_url ); ?>" class="hero-cta__btn hero-cta__btn--secondary"><?php esc_html_e( 'Free resources', 'ai-awareness-day' ); ?></a>
                 </div>
-                <?php if ( $nominate_url || $sign_in_url ) : ?>
-                <p class="hero-cta-more">
-                    <?php if ( $nominate_url ) : ?><a href="<?php echo esc_url( $nominate_url ); ?>"><?php esc_html_e( 'Nominate a school you work with', 'ai-awareness-day' ); ?></a><?php endif; ?>
-                    <?php if ( $sign_in_url ) : ?><a href="<?php echo esc_url( $sign_in_url ); ?>"><?php esc_html_e( 'Already registered? Sign in', 'ai-awareness-day' ); ?></a><?php endif; ?>
-                </p>
-                <?php endif; ?>
-                <?php if ( $countdown || $totals ) : ?>
+                <?php if ( $countdown ) : ?>
                 <?php /* Facts row: set on the strand ground under a rule, so it reads as
                          supporting detail rather than a second dark box beside the panel. */ ?>
                 <div class="hero-facts">
@@ -64,57 +67,85 @@ $totals       = $portal_live ? aiad_national_conversation_totals() : null; // Th
                         </div>
                     </div>
                     <?php endif; ?>
-                    <?php if ( $totals ) : ?>
-                    <ul class="hero-totals">
-                        <?php
-                        $total_lines = array(
-                            /* translators: %s: number of schools */
-                            'schools'  => __( '%s schools', 'ai-awareness-day' ),
-                            /* translators: %s: number of debates judged */
-                            'debates'  => __( '%s debates judged', 'ai-awareness-day' ),
-                            /* translators: %s: number of students */
-                            'students' => __( '%s students taking part', 'ai-awareness-day' ),
-                        );
-                        foreach ( $total_lines as $key => $line ) :
-                            ?>
-                        <li><?php printf( esc_html( $line ), '<strong>' . esc_html( number_format_i18n( $totals[ $key ] ) ) . '</strong>' ); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
-            </div>
-            <div class="hero-strand-feature" aria-label="<?php esc_attr_e( 'The five AI Awareness Day strands', 'ai-awareness-day' ); ?>">
-                <?php /* The box is the way in to the National AI Conversation, so it carries the name. */ ?>
-                <div class="hero-strand-feature__head">
-                    <p class="hero-strand-feature__title"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_panel_title' ) ); ?></p>
-                    <?php if ( function_exists( 'aiad_national_conversation_dates' ) ) : ?>
-                    <p class="hero-strand-feature__starts">
-                        <?php
-                        if ( $portal_live ) {
-                            esc_html_e( 'Now open', 'ai-awareness-day' );
-                        } else {
-                            /* translators: %s: month and year the conversation opens, e.g. January 2027 */
-                            printf( esc_html__( 'Starting %s', 'ai-awareness-day' ), esc_html( wp_date( 'F Y', aiad_national_conversation_dates()['opens']->getTimestamp() ) ) );
-                        }
-                        ?>
-                    </p>
-                    <?php endif; ?>
-                    <?php /* The switcher leads, above the strand word it changes. */ ?>
-                    <div class="hero-strand-feature__themes" role="navigation" aria-label="<?php esc_attr_e( 'Choose a strand', 'ai-awareness-day' ); ?>">
-                        <?php /* Each strand carries its question (edited in the Customiser or Edit Homepage); main.js shows it with the strand. */ ?>
-                        <?php foreach ( aiad_hero27_strand_questions() as $slug => $strand ) : ?>
-                            <a href="#themes" class="hero-strand-feature__theme<?php echo $slug === 'safe' ? ' is-active' : ''; ?>" data-strand-target="<?php echo esc_attr( $slug ); ?>" data-motion="<?php echo esc_attr( aiad_hero27_text( 'aiad_hero27_q_' . $slug ) ); ?>" aria-current="<?php echo $slug === 'safe' ? 'true' : 'false'; ?>"><?php echo esc_html( $strand['name'] ); ?></a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <div class="hero-strand-feature__stage" aria-live="off">
-                    <span class="hero-strand-feature__mark" aria-hidden="true"></span>
-                    <span class="hero-strand-feature__word">Safe</span>
-                </div>
-                <?php /* The box asks one thing: the question to debate for the strand on show. main.js changes it with the strand. */ ?>
-                <p class="hero-strand-feature__summary"><span class="hero-strand-feature__motion-label"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_question_label' ) ); ?></span> <span class="hero-strand-feature__motion-text"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_q_safe' ) ); ?></span></p>
             </div>
         </div>
     </div>
 </section>
+<?php if ( $nc_dates ) : ?>
+<?php /* The Conversation's own lane, straight after the hero: a full-width dark band, so it reads as a programme of
+         its own rather than part of the Day's hero. */ ?>
+<section class="flagship-lane" id="national-conversation" aria-labelledby="hero-flagship-title">
+    <div class="container">
+        <div class="hero-flagship">
+            <p class="hero-flagship__tag"><?php esc_html_e( 'Flagship programme', 'ai-awareness-day' ); ?></p>
+            <div class="hero-flagship__main">
+                <h2 class="hero-flagship__title" id="hero-flagship-title"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_panel_title' ) ); ?></h2>
+                <?php /* The hero's intro (Edit Homepage: Intro, bold opening line and the rest of the paragraph) is about the
+                         Conversation, so it is set here rather than in the Day's hero. */ ?>
+                <p class="hero-flagship__lead"><strong><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_lead' ) ); ?></strong> <?php echo esc_html( aiad_hero27_text( 'aiad_hero27_body' ) ); ?></p>
+                <p class="hero-flagship__actions">
+                    <a href="<?php echo esc_url( $join_url ); ?>" class="hero-flagship__btn"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_join_label' ) ); ?></a>
+                    <?php if ( $portal_live ) : ?>
+                    <a href="<?php echo esc_url( $nc_page_url ); ?>" class="hero-flagship__btn hero-flagship__btn--outline"><?php esc_html_e( 'How it works', 'ai-awareness-day' ); ?></a>
+                    <?php else : ?>
+                    <?php /* translators: %s: the day schools can register, e.g. 1 January 2027 */ ?>
+                    <span class="hero-flagship__note"><?php echo esc_html( sprintf( __( 'Schools register from %s', 'ai-awareness-day' ), wp_date( 'j F Y', $nc_dates['opens']->getTimestamp() ) ) ); ?></span>
+                    <?php endif; ?>
+                </p>
+                <?php if ( $nominate_url || $sign_in_url ) : ?>
+                <p class="hero-cta-more">
+                    <?php if ( $nominate_url ) : ?><a href="<?php echo esc_url( $nominate_url ); ?>"><?php esc_html_e( 'Nominate a school you work with', 'ai-awareness-day' ); ?></a><?php endif; ?>
+                    <?php if ( $sign_in_url ) : ?><a href="<?php echo esc_url( $sign_in_url ); ?>"><?php esc_html_e( 'Already registered? Sign in', 'ai-awareness-day' ); ?></a><?php endif; ?>
+                </p>
+                <?php endif; ?>
+            </div>
+            <?php /* Speech bubbles, as on the oracy announcement's cover: the conversation itself. Decorative. */ ?>
+            <div class="hero-flagship__talk" aria-hidden="true">
+                <svg viewBox="0 14 420 246" focusable="false">
+                    <g class="hero-flagship__bubble hero-flagship__bubble--1"><path d="M28 70h150a22 22 0 0 1 22 22v62a22 22 0 0 1-22 22H78l-22 22v-22H28a22 22 0 0 1-22-22V92a22 22 0 0 1 22-22z"/><circle cx="68" cy="123" r="8"/><circle cx="103" cy="123" r="8"/><circle cx="138" cy="123" r="8"/></g>
+                    <g class="hero-flagship__bubble hero-flagship__bubble--2"><path d="M168 14h110a20 20 0 0 1 20 20v46a20 20 0 0 1-20 20h-74l-20 18v-18h-16a20 20 0 0 1-20-20V34a20 20 0 0 1 20-20z"/><circle cx="196" cy="57" r="7"/><circle cx="223" cy="57" r="7"/><circle cx="250" cy="57" r="7"/></g>
+                    <g class="hero-flagship__bubble hero-flagship__bubble--3"><path d="M236 118h158a22 22 0 0 1 22 22v62a22 22 0 0 1-22 22h-14v22l-22-22H236a22 22 0 0 1-22-22v-62a22 22 0 0 1 22-22z"/><circle cx="276" cy="171" r="8"/><circle cx="315" cy="171" r="8"/><circle cx="354" cy="171" r="8"/></g>
+                    <g class="hero-flagship__bubble hero-flagship__bubble--4"><path d="M330 20h62a18 18 0 0 1 18 18v32a18 18 0 0 1-18 18h-6v16l-16-16h-40a18 18 0 0 1-18-18V38a18 18 0 0 1 18-18z"/><circle cx="345" cy="54" r="5.5"/><circle cx="361" cy="54" r="5.5"/><circle cx="377" cy="54" r="5.5"/></g>
+                </svg>
+            </div>
+            <div class="hero-flagship__side">
+                <ol class="hero-flagship__steps">
+                    <li><b><?php echo esc_html( wp_date( 'j F', $nc_dates['opens']->getTimestamp() ) ); ?></b> <span><?php esc_html_e( 'Schools register and classroom conversations start', 'ai-awareness-day' ); ?></span></li>
+                    <?php /* translators: 1: month the conversation opens, 2: month of AI Awareness Day, e.g. January to April */ ?>
+                    <li><b><?php echo esc_html( sprintf( __( '%1$s to %2$s', 'ai-awareness-day' ), wp_date( 'F', $nc_dates['opens']->getTimestamp() ), wp_date( 'F', $nc_dates['event']->getTimestamp() ) ) ); ?></b> <span><?php esc_html_e( 'Debates within and between schools', 'ai-awareness-day' ); ?></span></li>
+                    <li><b><?php echo esc_html( wp_date( 'j F', $nc_dates['event']->getTimestamp() ) ); ?></b> <span><?php esc_html_e( 'National Day of Participation', 'ai-awareness-day' ); ?></span></li>
+                </ol>
+                <?php if ( $totals ) : ?>
+                <ul class="hero-totals">
+                    <?php
+                    $total_lines = array(
+                        /* translators: %s: number of schools */
+                        'schools'  => __( '%s schools', 'ai-awareness-day' ),
+                        /* translators: %s: number of debates judged */
+                        'debates'  => __( '%s debates judged', 'ai-awareness-day' ),
+                        /* translators: %s: number of students */
+                        'students' => __( '%s students taking part', 'ai-awareness-day' ),
+                    );
+                    foreach ( $total_lines as $key => $line ) :
+                        ?>
+                    <li><?php printf( esc_html( $line ), '<strong>' . esc_html( number_format_i18n( $totals[ $key ] ) ) . '</strong>' ); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+            </div>
+            <?php /* The five themes the Conversation debates. Each opens its theme's pop-up (aiad_theme_resources_dialog(),
+                     drawn at the foot of the homepage); the link to the library filtered to the theme is the way in without it. */ ?>
+            <div class="hero-flagship__themes">
+                <p class="hero-flagship__themes-label" id="hero-flagship-themes"><?php esc_html_e( 'Five themes to debate', 'ai-awareness-day' ); ?></p>
+                <ul aria-labelledby="hero-flagship-themes">
+                    <?php foreach ( array( 'safe' => __( 'Safe', 'ai-awareness-day' ), 'smart' => __( 'Smart', 'ai-awareness-day' ), 'creative' => __( 'Creative', 'ai-awareness-day' ), 'responsible' => __( 'Responsible', 'ai-awareness-day' ), 'future' => __( 'Future', 'ai-awareness-day' ) ) as $theme_slug => $theme_name ) : ?>
+                    <li><a class="hero-flagship__theme hero-flagship__theme--<?php echo esc_attr( $theme_slug ); ?>" href="<?php echo esc_url( add_query_arg( 'principle', $theme_slug, $library_url ) ); ?>" data-ncp-dialog="ncp-theme-resources-<?php echo esc_attr( $theme_slug ); ?>"><img src="<?php echo esc_url( aiad_strand_icon_uri( $theme_slug ) ); ?>" alt="" width="40" height="40" /><span><?php echo esc_html( $theme_name ); ?></span></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>

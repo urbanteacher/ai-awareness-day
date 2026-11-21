@@ -314,7 +314,8 @@ function aiad_theme_resources_dialog( string $strand ): string {
 		var open = t.closest('[data-ncp-dialog]');
 		if (open) {
 			var d = document.getElementById(open.getAttribute('data-ncp-dialog'));
-			if (d && d.showModal) d.showModal();
+			// A link (the homepage hero's theme icons) goes to its page when the page has no pop-up for it.
+			if (d && d.showModal) { e.preventDefault(); d.showModal(); }
 			return;
 		}
 		// The homepage's principle cards (blocks/principle-card) open the same pop-up, where the page has it; the
