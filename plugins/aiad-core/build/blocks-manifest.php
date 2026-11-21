@@ -1210,7 +1210,7 @@ return array(
 		'title' => 'Resource tiles',
 		'category' => 'aiad-homepage',
 		'icon' => 'media-document',
-		'description' => 'The resources picked in Appearance → Edit Homepage, as tiles, with a View all link. Free resources show nothing until some are picked; featured resources show the first three.',
+		'description' => 'The resources picked in Appearance → Edit Homepage, as tiles, with a View all link. Free resources show nothing until some are picked; featured resources show the first three. Discussion shows three discussion starters from the library.',
 		'keywords' => array(
 			'resources',
 			'tiles',
@@ -1222,7 +1222,8 @@ return array(
 				'type' => 'string',
 				'enum' => array(
 					'free',
-					'featured'
+					'featured',
+					'discussion'
 				),
 				'default' => 'free'
 			)

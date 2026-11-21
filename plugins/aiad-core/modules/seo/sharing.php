@@ -94,7 +94,7 @@ function aiad_get_og_data(): array {
 
 	} elseif ( function_exists( 'aiad_is_national_conversation_page' ) && aiad_is_national_conversation_page() ) {
 		$data['title']       = __( 'The National AI Conversation 2027', 'ai-awareness-day' ) . ' — ' . $site_name;
-		$data['description'] = __( 'A national conversation about AI, led by young people: classroom talks, school debates and judged inter-school debates before AI Awareness Day 2027.', 'ai-awareness-day' );
+		$data['description'] = __( 'Students question and debate AI, from five minutes in class to judged debates between schools. For primary, secondary and post-16, before AI Awareness Day 2027.', 'ai-awareness-day' );
 		$data['url']         = home_url( '/national-conversation/' );
 
 		$share_image = function_exists( 'aiad_get_social_share_image_data' )

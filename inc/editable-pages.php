@@ -36,8 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *               the theme loads it everywhere.
  * placeholders: a function returning placeholder => HTML, or ''.
  * note:         a sentence for the editor notice, or ''.
+ * words:        optional, for a page at its own address whose words follow the theme's until someone edits the page
+ *               (aiad_refresh_theme_pages()): fingerprints (aiad_theme_page_words_hash()) of earlier wordings the
+ *               theme wrote, so a page made before the theme recorded what it wrote is known to be unedited. Without
+ *               this key the theme never rewrites the page.
  *
- * @return array<string, array<string, string>>
+ * @return array<string, array<string, mixed>>
  */
 function aiad_editable_pages(): array {
 	return array(
@@ -48,6 +52,7 @@ function aiad_editable_pages(): array {
 			'style'        => 'aiad-national-conversation',
 			'placeholders' => 'aiad_national_conversation_placeholders',
 			'note'         => __( 'The buttons change on the day the conversation opens, so they are a block of their own.', 'ai-awareness-day' ),
+			'words'        => array( '4f61a6a81aa10b14a29c71c96f0f896b' ), // The wording from October to November 2026.
 		),
 		'walkthrough'           => array(
 			'title'        => __( 'Platform walkthrough', 'ai-awareness-day' ),
@@ -265,6 +270,9 @@ function aiad_editable_page_editor_notice(): void {
 	}
 	/* translators: %s: the placeholders and their values, e.g. "{opens} = 1 January 2027; {event} = …" */
 	$message = trim( sprintf( __( 'Words in braces are filled in when the page is shown, so they stay right on their own: %s.', 'ai-awareness-day' ), implode( '; ', $shown ) ) . ' ' . aiad_editable_pages()[ $slug ]['note'] );
+	if ( in_array( $slug, (array) get_option( 'aiad_theme_pages_words_kept', array() ), true ) ) {
+		$message .= ' ' . __( 'This page has been edited here, so the theme\'s newer wording was not put in. The theme\'s version is in the block inserter, under Patterns, Pages.', 'ai-awareness-day' );
+	}
 	wp_add_inline_script( 'wp-edit-post', 'wp.domReady( function () { wp.data.dispatch( "core/notices" ).createInfoNotice( ' . wp_json_encode( $message ) . ', { id: "aiad-page-placeholders", isDismissible: true } ); } );' );
 }
 add_action( 'enqueue_block_editor_assets', 'aiad_editable_page_editor_notice' );
@@ -392,16 +400,20 @@ function aiad_maybe_convert_theme_pages(): void {
 				// A page kept from before (a draft): publish it again as it was.
 				$id = wp_update_post( array( 'ID' => $current->ID, 'post_status' => 'publish' ), true );
 			} else {
-				$id = wp_insert_post(
+				$content = aiad_editable_page_content( $slug );
+				$id      = wp_insert_post(
 					array(
 						'post_type'    => 'page',
 						'post_status'  => 'publish',
 						'post_title'   => $settings['title'],
 						'post_name'    => $slug,
-						'post_content' => wp_slash( aiad_editable_page_content( $slug ) ),
+						'post_content' => wp_slash( $content ),
 					),
 					true
 				);
+				if ( ! is_wp_error( $id ) ) {
+					update_post_meta( $id, '_aiad_theme_words', aiad_theme_page_words_hash( $content ) );
+				}
 			}
 			if ( is_wp_error( $id ) ) {
 				$error = $id->get_error_message();
@@ -438,3 +450,89 @@ function aiad_maybe_convert_theme_pages(): void {
 }
 // After the Assets Pack page is ensured (priority 20) and the homepage is converted (30).
 add_action( 'init', 'aiad_maybe_convert_theme_pages', 31 );
+
+/**
+ * A fingerprint of a page's words, not its markup, so a change to how the blocks are saved (a block renamed, a class
+ * added) does not count as a change to what the page says.
+ *
+ * @param string $content Block markup.
+ */
+function aiad_theme_page_words_hash( string $content ): string {
+	$text = html_entity_decode( wp_strip_all_tags( (string) preg_replace( '/<!--.*?-->/s', ' ', $content ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	return md5( trim( (string) preg_replace( '/\s+/u', ' ', $text ) ) );
+}
+
+/**
+ * When the theme's words for a page change, give the page the new words, as long as nobody has edited it: its words
+ * must still be ones the theme wrote (_aiad_theme_words, or a wording listed under 'words' in aiad_editable_pages()).
+ * A page someone has edited keeps its words and is listed in aiad_theme_pages_words_kept, which its editor notice
+ * mentions. The page's revisions keep what it had. Only pages with 'words' take part, and each is checked once
+ * whenever its pattern or its content file (inc/{slug}-content.php) changes, which is to say after a deploy.
+ */
+function aiad_refresh_theme_pages(): void {
+	if ( wp_installing() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return;
+	}
+	$checked = (array) get_option( 'aiad_theme_pages_words_checked', array() );
+	$todo    = array();
+	foreach ( aiad_editable_pages() as $slug => $settings ) {
+		if ( ! isset( $settings['words'] ) || '' !== $settings['template'] ) {
+			continue;
+		}
+		$stamp = '';
+		foreach ( array( '/patterns/' . $slug . '.php', '/inc/' . $slug . '-content.php' ) as $file ) {
+			$stamp .= is_readable( AIAD_DIR . $file ) ? filemtime( AIAD_DIR . $file ) . ';' : '';
+		}
+		if ( ( $checked[ $slug ] ?? '' ) !== $stamp ) {
+			$todo[ $slug ] = $stamp;
+		}
+	}
+	if ( ! $todo ) {
+		return;
+	}
+	$locked = get_option( 'aiad_theme_pages_refreshing' );
+	if ( $locked && ( time() - (int) $locked ) < 10 * MINUTE_IN_SECONDS ) {
+		return;
+	}
+	delete_option( 'aiad_theme_pages_refreshing' );
+	if ( ! add_option( 'aiad_theme_pages_refreshing', time(), '', false ) ) {
+		return;
+	}
+
+	// The site writes this content itself, so it is saved as it is written, whoever's request makes it.
+	$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+	if ( $kses ) {
+		kses_remove_filters();
+	}
+	$kept = array_diff( (array) get_option( 'aiad_theme_pages_words_kept', array() ), array_keys( $todo ) );
+	foreach ( $todo as $slug => $stamp ) {
+		$page = aiad_editable_page_post( $slug );
+		if ( $page ) {
+			$content = aiad_editable_page_content( $slug );
+			$new     = aiad_theme_page_words_hash( $content );
+			$now     = aiad_theme_page_words_hash( $page->post_content );
+			$theirs  = array_merge( array( (string) get_post_meta( $page->ID, '_aiad_theme_words', true ) ), (array) aiad_editable_pages()[ $slug ]['words'] );
+			if ( $now !== $new && in_array( $now, $theirs, true ) ) {
+				$id = wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( $content ) ), true );
+				if ( is_wp_error( $id ) ) {
+					continue; // Not recorded as checked, so the next load tries again.
+				}
+			} elseif ( $now !== $new ) {
+				$kept[] = $slug;
+				$new    = '';
+			}
+			if ( '' !== $new ) {
+				update_post_meta( $page->ID, '_aiad_theme_words', $new );
+			}
+		}
+		$checked[ $slug ] = $stamp;
+	}
+	if ( $kses ) {
+		kses_init_filters();
+	}
+	update_option( 'aiad_theme_pages_words_checked', $checked, true );
+	update_option( 'aiad_theme_pages_words_kept', array_values( array_unique( $kept ) ), false );
+	delete_option( 'aiad_theme_pages_refreshing' );
+}
+// After the theme pages are made (31).
+add_action( 'init', 'aiad_refresh_theme_pages', 32 );

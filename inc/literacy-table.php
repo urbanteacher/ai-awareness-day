@@ -1381,9 +1381,14 @@ function aiad_render_literacy_week(): string {
 	if ( null === aiad_literacy_element_of_week()['el'] ) {
 		return '';
 	}
+	// On another page (the National Conversation, say) the card links to the table: "Open it" to the word's panel and
+	// "Show to class" to the table with the word already on the board (#board-me, read by literacy-table.js).
+	$aiad_away = ! aiad_is_literacy_table_page();
+	$aiad_base = $aiad_away ? aiad_literacy_table_url() : '';
 	ob_start();
 	?>
-<?php $aiad_week = aiad_literacy_element_of_week(); $aiad_week_theme = $aiad_week['el']['theme'] ?? 'smart'; ?>
+<?php $aiad_week = aiad_literacy_element_of_week(); $aiad_week_theme = $aiad_week['el']['theme'] ?? 'smart'; $aiad_week_sym = strtolower( $aiad_week['el']['sym'] ); ?>
+<?php if ( $aiad_away ) : ?><div class="alpt-away"><?php endif; ?>
 <div class="alpt-eotw alpt-eotw--<?php echo esc_attr( $aiad_week_theme ); ?>">
 	<span class="alpt-eotw__sticker" aria-hidden="true"><?php esc_html_e( 'New every Monday', 'ai-awareness-day' ); ?></span>
 	<div class="alpt-eotw__tile alpt-fam--<?php echo esc_attr( $aiad_week['el']['family'] ); ?>" aria-hidden="true"><span class="alpt-eotw__sym"><?php echo esc_html( $aiad_week['el']['sym'] ); ?></span></div>
@@ -1398,10 +1403,16 @@ function aiad_render_literacy_week(): string {
 		<p class="alpt-eotw__talk"><?php echo esc_html( $aiad_week['talk'] ); ?></p>
 	</div>
 	<div class="alpt-eotw__actions">
-		<a class="alpt-btn alpt-btn--ink" href="#element-<?php echo esc_attr( strtolower( $aiad_week['el']['sym'] ) ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
+		<?php if ( $aiad_away ) : ?>
+		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $aiad_base . '#element-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
+		<a class="alpt-btn" href="<?php echo esc_url( $aiad_base . '#board-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></a>
+		<?php else : ?>
+		<a class="alpt-btn alpt-btn--ink" href="#element-<?php echo esc_attr( $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
 		<button type="button" class="alpt-btn" data-alpt-eotw-board="<?php echo esc_attr( (string) ( $aiad_week['el']['n'] - 1 ) ); ?>" hidden><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></button>
+		<?php endif; ?>
 	</div>
 </div>
+<?php if ( $aiad_away ) : ?></div><?php endif; ?>
 	<?php
 	return (string) ob_get_clean();
 }

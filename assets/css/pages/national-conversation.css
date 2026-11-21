@@ -256,6 +256,35 @@
   font-size: 0.95rem;
 }
 
+/* The Periodic Table's word of the week (aiad/literacy-week), styled by the table's own stylesheet, as a warm-up. */
+.ncp-week {
+  max-width: 40rem;
+  margin-top: 2.5rem;
+}
+
+.ncp-week > h3 {
+  margin: 0 0 0.5rem;
+}
+
+.ncp-week > p,
+.ncp-starters > p {
+  margin: 0;
+}
+
+/* Discussion starters from the resource library (aiad/resource-tiles), in the library's own cards. */
+.ncp-starters {
+  margin-top: 3rem;
+}
+
+.ncp-starters > h3 {
+  margin: 0 0 0.5rem;
+}
+
+.ncp-starters > p {
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
+}
+
 /* ---- The skills we want young people to build ---- */
 /* Framed like a table: a solid ink border round the list, ink rules between
    the skills, and on wider screens a divider between each name, on a tinted
@@ -713,6 +742,43 @@
 
 .ncp-partner p {
   margin: 0;
+}
+
+/* ---- Aims, objectives and ambitions ---- */
+.ncp-aims {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ncp-aims > li {
+  padding: 1.25rem 1.35rem 1.4rem;
+  border-top: 6px solid var(--a27-ink);
+  background: var(--a27-card);
+}
+
+.ncp-aims h3 {
+  margin-bottom: 0.6rem;
+  font-size: 1.25rem;
+}
+
+.ncp-aims ol,
+.ncp-aims ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.ncp-aims li li + li {
+  margin-top: 0.45rem;
+}
+
+@media (min-width: 900px) {
+  .ncp-aims {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* ---- Approval callout ---- */
@@ -1269,5 +1335,72 @@
 @media (prefers-reduced-motion: reduce) {
   .ncp * {
     transition: none !important;
+  }
+}
+
+/* ---- In the news: a campaign update (aiad/nc-news) in the news feed's own card ---- */
+.ncp-news__grid {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+.ncp-news__eyebrow {
+  margin: 0 0 0.75rem !important;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ncp-news__text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Stacked, picture on top, at every width: the feed puts the picture beside the words from 640px. */
+.ncp-news__card.timeline-magazine__card-inner {
+  max-width: 34rem;
+  flex-direction: column;
+}
+
+.ncp-news__card .timeline-magazine__card-media {
+  width: 100%;
+}
+
+.ncp-news__card .timeline-magazine__card-media .timeline-magazine__card-media-link--chamfer {
+  aspect-ratio: 16 / 9;
+  height: auto;
+  max-height: none;
+}
+
+.ncp-news__card .timeline-magazine__card-body {
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.ncp-news__card .timeline-magazine__card-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.ncp-news__more {
+  display: inline-flex;
+  gap: 0.4em;
+  margin-top: 1rem;
+  color: var(--a27-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (min-width: 900px) {
+  .ncp-news__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+
+  .ncp-news__card {
+    justify-self: end;
+    width: 100%;
   }
 }

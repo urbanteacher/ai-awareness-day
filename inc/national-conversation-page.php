@@ -116,3 +116,82 @@ function aiad_national_conversation_placeholders(): array {
 		'{opens_label}' => time() >= $dates['opens']->getTimestamp() ? esc_html__( 'Opened', 'ai-awareness-day' ) : esc_html__( 'Opens', 'ai-awareness-day' ),
 	);
 }
+
+/**
+ * One campaign update as the news feed's card (inc/timeline-layouts.php), for the landing page's "In the news" section
+ * (block aiad/nc-news). The update is found by its slug, so the page shows nothing if it is unpublished or renamed.
+ * The card has no like or share buttons: those need the feed's script. The title and the "Read the article" link go
+ * to the update.
+ *
+ * @param array $attributes Block attributes: slug.
+ */
+function aiad_render_national_conversation_news( array $attributes ): string {
+	$slug  = sanitize_title( (string) ( $attributes['slug'] ?? '' ) );
+	$entry = '' !== $slug ? get_page_by_path( $slug, OBJECT, 'timeline' ) : null;
+	if ( ! $entry instanceof WP_Post || 'publish' !== $entry->post_status || ! function_exists( 'aiad_render_timeline_magazine_row' ) ) {
+		return '';
+	}
+	$pinned  = (bool) get_post_meta( $entry->ID, '_aiad_timeline_pinned', true );
+	$icon    = get_post_meta( $entry->ID, '_aiad_timeline_icon', true ) ?: 'announcement';
+	$url     = get_permalink( $entry ) ?: '#';
+	$excerpt = aiad_timeline_entry_excerpt_text( $entry );
+	ob_start();
+	?>
+<article class="timeline-magazine__card-inner ncp-news__card">
+	<div class="timeline-magazine__card-media">
+		<a href="<?php echo esc_url( $url ); ?>" class="timeline-magazine__card-media-link timeline-magazine__card-media-link--chamfer <?php echo esc_attr( aiad_timeline_cover_modifier_class( $icon, $pinned ) ); ?>" tabindex="-1" aria-hidden="true">
+			<?php echo aiad_timeline_entry_cover_visual( $entry, 'timeline-magazine', 'thumb' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<span class="timeline-magazine__cover-scrim timeline-magazine__cover-scrim--top" aria-hidden="true"></span>
+		</a>
+		<?php
+		/* translators: %s: a time span, such as 4 weeks */
+		echo aiad_timeline_magazine_cover_meta_html( aiad_timeline_featured_badge_label( $entry, $pinned, $icon ), $icon, $pinned, sprintf( __( '%s ago', 'ai-awareness-day' ), human_time_diff( get_post_timestamp( $entry ), time() ) ), get_the_date( 'c', $entry ), get_the_date( 'j F Y', $entry ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</div>
+	<div class="timeline-magazine__card-body">
+		<h3 class="timeline-magazine__card-title"><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( get_the_title( $entry ) ); ?></a></h3>
+		<?php if ( '' !== $excerpt ) : ?>
+		<p class="timeline-magazine__card-excerpt"><?php echo esc_html( $excerpt ); ?></p>
+		<?php endif; ?>
+		<a class="ncp-news__more" href="<?php echo esc_url( $url ); ?>" aria-hidden="true" tabindex="-1"><?php esc_html_e( 'Read the article', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></a>
+	</div>
+</article>
+	<?php
+	return (string) ob_get_clean();
+}
+
+add_action(
+	'init',
+	static function (): void {
+		register_block_type(
+			'aiad/nc-news',
+			array(
+				'api_version'     => 3,
+				'title'           => __( 'Campaign update card', 'ai-awareness-day' ),
+				'description'     => __( 'One campaign update, by its slug, as the news feed shows it.', 'ai-awareness-day' ),
+				'category'        => 'theme',
+				'icon'            => 'megaphone',
+				'attributes'      => array( 'slug' => array( 'type' => 'string', 'default' => '' ) ),
+				'supports'        => array( 'html' => false, 'reusable' => false ),
+				'render_callback' => 'aiad_render_national_conversation_news',
+			)
+		);
+	}
+);
+
+// The news card's styles: the feed's own stylesheets, which only load where the feed is.
+add_action(
+	'wp_enqueue_scripts',
+	static function (): void {
+		if ( is_admin() || ! aiad_is_national_conversation_page() || ! has_block( 'aiad/nc-news', aiad_national_conversation_post() ) ) {
+			return;
+		}
+		foreach ( array( 'aiad-entry-figure' => 'entry-figure', 'aiad-timeline' => 'timeline' ) as $handle => $file ) {
+			$path = AIAD_DIR . '/assets/css/components/' . $file . '.css';
+			if ( is_readable( $path ) && ! wp_style_is( $handle, 'enqueued' ) ) {
+				wp_enqueue_style( $handle, AIAD_URI . '/assets/css/components/' . $file . '.css', array( 'aiad-style' ), (string) filemtime( $path ) );
+			}
+		}
+	},
+	16
+);
