@@ -79,7 +79,17 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
 <section class="flagship-lane" id="national-conversation" aria-labelledby="hero-flagship-title">
     <div class="container">
         <div class="hero-flagship">
-            <p class="hero-flagship__tag"><?php esc_html_e( 'Flagship programme', 'ai-awareness-day' ); ?></p>
+            <?php /* When it starts, from the opening date; "Now open" once schools can register. */ ?>
+            <p class="hero-flagship__tag">
+                <?php
+                if ( $portal_live ) {
+                    esc_html_e( 'Now open', 'ai-awareness-day' );
+                } else {
+                    /* translators: %s: month and year the conversation opens, e.g. January 2027 */
+                    printf( esc_html__( 'Starting %s', 'ai-awareness-day' ), esc_html( wp_date( 'F Y', $nc_dates['opens']->getTimestamp() ) ) );
+                }
+                ?>
+            </p>
             <div class="hero-flagship__main">
                 <h2 class="hero-flagship__title" id="hero-flagship-title"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_panel_title' ) ); ?></h2>
                 <?php /* The hero's intro (Edit Homepage: Intro, bold opening line and the rest of the paragraph) is about the
@@ -89,9 +99,6 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
                     <a href="<?php echo esc_url( $join_url ); ?>" class="hero-flagship__btn"><?php echo esc_html( aiad_hero27_text( 'aiad_hero27_join_label' ) ); ?></a>
                     <?php if ( $portal_live ) : ?>
                     <a href="<?php echo esc_url( $nc_page_url ); ?>" class="hero-flagship__btn hero-flagship__btn--outline"><?php esc_html_e( 'How it works', 'ai-awareness-day' ); ?></a>
-                    <?php else : ?>
-                    <?php /* translators: %s: the day schools can register, e.g. 1 January 2027 */ ?>
-                    <span class="hero-flagship__note"><?php echo esc_html( sprintf( __( 'Schools register from %s', 'ai-awareness-day' ), wp_date( 'j F Y', $nc_dates['opens']->getTimestamp() ) ) ); ?></span>
                     <?php endif; ?>
                 </p>
                 <?php if ( $nominate_url || $sign_in_url ) : ?>
@@ -115,7 +122,7 @@ $library_url  = get_post_type_archive_link( 'resource' ) ?: home_url( '/resource
                     <li><b><?php echo esc_html( wp_date( 'j F', $nc_dates['opens']->getTimestamp() ) ); ?></b> <span><?php esc_html_e( 'Schools register and classroom conversations start', 'ai-awareness-day' ); ?></span></li>
                     <?php /* translators: 1: month the conversation opens, 2: month of AI Awareness Day, e.g. January to April */ ?>
                     <li><b><?php echo esc_html( sprintf( __( '%1$s to %2$s', 'ai-awareness-day' ), wp_date( 'F', $nc_dates['opens']->getTimestamp() ), wp_date( 'F', $nc_dates['event']->getTimestamp() ) ) ); ?></b> <span><?php esc_html_e( 'Debates within and between schools', 'ai-awareness-day' ); ?></span></li>
-                    <li><b><?php echo esc_html( wp_date( 'j F', $nc_dates['event']->getTimestamp() ) ); ?></b> <span><?php esc_html_e( 'National Day of Participation', 'ai-awareness-day' ); ?></span></li>
+                    <li><b><?php echo esc_html( wp_date( 'j F', $nc_dates['event']->getTimestamp() ) ); ?></b> <span><?php esc_html_e( 'AI Awareness Day: schools across the UK take part', 'ai-awareness-day' ); ?></span></li>
                 </ol>
                 <?php if ( $totals ) : ?>
                 <ul class="hero-totals">
