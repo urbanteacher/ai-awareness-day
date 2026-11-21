@@ -79,15 +79,38 @@ $aiad_out[] = aiad_block_group(
 	__( 'Hero', 'ai-awareness-day' )
 );
 
+// Every age.
+$aiad_age_items = array();
+foreach ( $aiad_ages as $aiad_age ) {
+	$aiad_rows = array(
+		aiad_block_heading( 3, aiad_block_text( $aiad_age['name'] ) ),
+		aiad_block_paragraph( aiad_block_text( $aiad_age['years'] ), 'ncp-agecards__years' ),
+	);
+	foreach ( $aiad_age_rows as $aiad_row_key => $aiad_row_label ) {
+		$aiad_rows[] = aiad_block_group( array( aiad_block_heading( 4, aiad_block_text( $aiad_row_label ) ), aiad_block_paragraph( aiad_block_text( $aiad_age[ $aiad_row_key ] ) ) ), 'ncp-agecards__row ncp-agecards__row--' . $aiad_row_key );
+	}
+	$aiad_age_items[] = aiad_block_styled_item( $aiad_rows );
+}
+$aiad_out[] = $aiad_section(
+	array(
+		aiad_block_heading( 2, aiad_block_text( __( 'How each age debates', 'ai-awareness-day' ) ), '', 'ncp-ages' ),
+		aiad_block_paragraph( aiad_block_text( __( 'Primary, secondary and post-16 students debate the same five themes, each with a question written for their age. These examples are from the Safe theme.', 'ai-awareness-day' ) ), 'ncp-intro' ),
+		aiad_block_styled_list( $aiad_age_items, 'ncp-agecards' ),
+		aiad_block_paragraph( aiad_block_text( __( 'Debate educators will review the questions and timings before the conversation opens.', 'ai-awareness-day' ) ), 'ncp-note' ),
+	),
+	__( 'Every age', 'ai-awareness-day' )
+);
+
 // Three ways to take part.
 $aiad_out[] = $aiad_section(
 	array(
 		aiad_block_heading( 2, aiad_block_text( __( 'Three ways to take part', 'ai-awareness-day' ) ), '', 'ncp-ways' ),
 		$aiad_image( 'classroom-listening.jpg', __( 'Pupils at their desks, seen from the back of the classroom, listening to their teacher', 'ai-awareness-day' ), $aiad_photo_credit( 'Taylor Flowe' ), 'ncp-photo ncp-photo--wide ncp-photo--classroom' ),
 		$aiad_cards( $aiad_ways, 'ncp-ways', 'ol' ),
-		aiad_block_paragraph( aiad_block_text( __( 'All three work at primary, secondary and post-16.', 'ai-awareness-day' ) ) . ' <a class="ncp-link" href="#ncp-ages">' . aiad_block_text( __( 'See how each age debates', 'ai-awareness-day' ) ) . '</a>', 'ncp-note' ),
+		aiad_block_paragraph( aiad_block_text( __( 'All three work at primary, secondary and post-16.', 'ai-awareness-day' ) ), 'ncp-note' ),
 	),
-	__( 'Three ways to take part', 'ai-awareness-day' )
+	__( 'Three ways to take part', 'ai-awareness-day' ),
+	true
 );
 
 // Timeline.
@@ -97,8 +120,41 @@ $aiad_out[] = $aiad_section(
 		$aiad_cards( $aiad_timeline, 'ncp-timeline', 'ol' ),
 	),
 	__( 'Timeline', 'ai-awareness-day' ),
-	true,
+	false,
 	'container ncp-narrow'
+);
+
+// Inside a debate.
+$aiad_out[] = $aiad_section(
+	array(
+		aiad_block_heading( 2, aiad_block_text( __( 'Inside a debate', 'ai-awareness-day' ) ), '', 'ncp-inside' ),
+		aiad_block_paragraph( aiad_block_text( __( 'About 30 minutes. Schools can adapt the timings to suit their students.', 'ai-awareness-day' ) ), 'ncp-intro' ),
+		$aiad_image( 'student-writing.jpg', __( 'A student writing notes in a hall of red seats', 'ai-awareness-day' ), $aiad_photo_credit( 'Kate Tweedy' ), 'ncp-photo ncp-photo--wide ncp-photo--writing' ),
+		aiad_block_styled_list( array_map( static fn( array $part ): string => aiad_block_styled_item( array( aiad_block_paragraph( aiad_block_text( $part[0] ), 'ncp-running__time' ), aiad_block_heading( 3, aiad_block_text( $part[1] ) ), aiad_block_paragraph( aiad_block_text( $part[2] ) ) ) ), $aiad_running ), 'ncp-running', 'ol' ),
+		aiad_block_group(
+			array(
+				aiad_block_group(
+					array(
+						aiad_block_heading( 3, aiad_block_text( __( 'A role for everyone', 'ai-awareness-day' ) ) ),
+						aiad_block_paragraph( aiad_block_text( __( 'The whole class takes part as speakers, note-takers, questioners or survey presenters. Each school\'s prep pack has a checklist, the survey questions and the research.', 'ai-awareness-day' ) ) ),
+					),
+					''
+				),
+				aiad_block_group(
+					array(
+						aiad_block_heading( 3, aiad_block_text( __( 'Judged on four things', 'ai-awareness-day' ) ) ),
+						aiad_block_styled_list( array_map( static fn( string $chip ): string => aiad_block_styled_text( aiad_block_text( $chip ) ), array( __( 'Argument', 'ai-awareness-day' ), __( 'Evidence', 'ai-awareness-day' ), __( 'Rebuttal', 'ai-awareness-day' ), __( 'Delivery', 'ai-awareness-day' ) ) ), 'ncp-chips', 'p' ),
+						aiad_block_paragraph( aiad_block_text( __( 'The judge scores both sides from 1 to 5 on each, at every age.', 'ai-awareness-day' ) ) ),
+					),
+					''
+				),
+			),
+			'ncp-inside'
+		),
+		aiad_block_quote( aiad_block_text( __( 'Several sources for every fact. Don\'t rely on AI-generated content alone: it can be wrong.', 'ai-awareness-day' ) ), 'ncp-principle' ),
+	),
+	__( 'Inside a debate', 'ai-awareness-day' ),
+	true
 );
 
 // Start now: what a class can use today, before (and after) schools can register.
@@ -146,61 +202,6 @@ $aiad_out[] = $aiad_section(
 		aiad_block_styled_list( $aiad_theme_items, 'ncp-themes' ),
 	),
 	__( 'Five themes', 'ai-awareness-day' ),
-	true
-);
-
-// Every age.
-$aiad_age_items = array();
-foreach ( $aiad_ages as $aiad_age ) {
-	$aiad_rows = array(
-		aiad_block_heading( 3, aiad_block_text( $aiad_age['name'] ) ),
-		aiad_block_paragraph( aiad_block_text( $aiad_age['years'] ), 'ncp-agecards__years' ),
-	);
-	foreach ( $aiad_age_rows as $aiad_row_key => $aiad_row_label ) {
-		$aiad_rows[] = aiad_block_group( array( aiad_block_heading( 4, aiad_block_text( $aiad_row_label ) ), aiad_block_paragraph( aiad_block_text( $aiad_age[ $aiad_row_key ] ) ) ), 'ncp-agecards__row ncp-agecards__row--' . $aiad_row_key );
-	}
-	$aiad_age_items[] = aiad_block_styled_item( $aiad_rows );
-}
-$aiad_out[] = $aiad_section(
-	array(
-		aiad_block_heading( 2, aiad_block_text( __( 'How each age debates', 'ai-awareness-day' ) ), '', 'ncp-ages' ),
-		aiad_block_paragraph( aiad_block_text( __( 'Primary, secondary and post-16 students debate the same five themes, each with a question written for their age. These examples are from the Safe theme.', 'ai-awareness-day' ) ), 'ncp-intro' ),
-		aiad_block_styled_list( $aiad_age_items, 'ncp-agecards' ),
-		aiad_block_paragraph( aiad_block_text( __( 'Debate educators will review the questions and timings before the conversation opens.', 'ai-awareness-day' ) ), 'ncp-note' ),
-	),
-	__( 'Every age', 'ai-awareness-day' )
-);
-
-// Inside a debate.
-$aiad_out[] = $aiad_section(
-	array(
-		aiad_block_heading( 2, aiad_block_text( __( 'Inside a debate', 'ai-awareness-day' ) ), '', 'ncp-inside' ),
-		aiad_block_paragraph( aiad_block_text( __( 'About 30 minutes. Schools can adapt the timings to suit their students.', 'ai-awareness-day' ) ), 'ncp-intro' ),
-		$aiad_image( 'student-writing.jpg', __( 'A student writing notes in a hall of red seats', 'ai-awareness-day' ), $aiad_photo_credit( 'Kate Tweedy' ), 'ncp-photo ncp-photo--wide ncp-photo--writing' ),
-		aiad_block_styled_list( array_map( static fn( array $part ): string => aiad_block_styled_item( array( aiad_block_paragraph( aiad_block_text( $part[0] ), 'ncp-running__time' ), aiad_block_heading( 3, aiad_block_text( $part[1] ) ), aiad_block_paragraph( aiad_block_text( $part[2] ) ) ) ), $aiad_running ), 'ncp-running', 'ol' ),
-		aiad_block_group(
-			array(
-				aiad_block_group(
-					array(
-						aiad_block_heading( 3, aiad_block_text( __( 'A role for everyone', 'ai-awareness-day' ) ) ),
-						aiad_block_paragraph( aiad_block_text( __( 'The whole class takes part as speakers, note-takers, questioners or survey presenters. Each school\'s prep pack has a checklist, the survey questions and the research.', 'ai-awareness-day' ) ) ),
-					),
-					''
-				),
-				aiad_block_group(
-					array(
-						aiad_block_heading( 3, aiad_block_text( __( 'Judged on four things', 'ai-awareness-day' ) ) ),
-						aiad_block_styled_list( array_map( static fn( string $chip ): string => aiad_block_styled_text( aiad_block_text( $chip ) ), array( __( 'Argument', 'ai-awareness-day' ), __( 'Evidence', 'ai-awareness-day' ), __( 'Rebuttal', 'ai-awareness-day' ), __( 'Delivery', 'ai-awareness-day' ) ) ), 'ncp-chips', 'p' ),
-						aiad_block_paragraph( aiad_block_text( __( 'The judge scores both sides from 1 to 5 on each, at every age.', 'ai-awareness-day' ) ) ),
-					),
-					''
-				),
-			),
-			'ncp-inside'
-		),
-		aiad_block_quote( aiad_block_text( __( 'Several sources for every fact. Don\'t rely on AI-generated content alone: it can be wrong.', 'ai-awareness-day' ) ), 'ncp-principle' ),
-	),
-	__( 'Inside a debate', 'ai-awareness-day' ),
 	true
 );
 
