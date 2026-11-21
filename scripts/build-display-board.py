@@ -63,7 +63,7 @@ STRANDS = {
     "future": ("What skills must stay human?",
                "Name the skills worth keeping human, and practise them on purpose."),
 }
-EVENT_DATE = "Friday 4 June 2027"     # aiad_event_date_ymd on the live site: 2027-06-04
+EVENT_DATE = "Thursday 29 April 2027"  # aiad_campaign_event_date() in plugins/aiad-core/modules/campaign.php
 RESOURCES_URL = "https://aiawarenessday.co.uk/resources/"
 
 # Bounds of each icon's path in its 24-unit box, measured with getBBox(), so an
