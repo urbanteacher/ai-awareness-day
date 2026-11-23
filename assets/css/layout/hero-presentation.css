@@ -171,7 +171,8 @@
   padding-top: 1.5rem;
 }
 #hero .hero-subtitle { order: 1; }
-#hero .hero-cta { order: 2; margin-top: auto; padding-top: clamp(1.5rem, 2.4vw, 2rem); }
+/* The actions sit clearly apart from the countdown above them: a bigger gap than the date's to the countdown. */
+#hero .hero-cta { order: 2; margin-top: auto; padding-top: clamp(2.25rem, 3vw, 2.75rem); }
 #hero .hero-cta-more { order: 3; }
 #hero .hero-facts > * { margin: 0; }
 #hero .hero-countdown-wrap {
@@ -423,7 +424,7 @@
   #hero .hero-title { font-size: clamp(3rem, 6vw, 5.75rem); }
   #hero .hero-eyebrow-date { font-size: clamp(1.2rem, 2.38vw, 2.28rem); }
   #hero .hero-subtitle { margin-top: 1.1rem; }
-  #hero .hero-cta { padding-top: 1.4rem; }
+  #hero .hero-cta { padding-top: 2.1rem; }
   #hero .hero-facts { padding-top: 1.5rem; }
 }
 
