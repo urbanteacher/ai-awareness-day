@@ -1,7 +1,7 @@
 /**
  * Resource sharing functionality with Web Share API and pre-written messages.
  *
- * @package AI_Awareness_Day
+ * @package AIAD_Core
  */
 (function() {
     'use strict';

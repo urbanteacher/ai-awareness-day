@@ -166,17 +166,7 @@ function aiad_scripts(): void
         );
     }
 
-    // Enqueue resource sharing script on single resource pages
-    if (is_singular('resource')) {
-        $resource_sharing_js = AIAD_DIR . '/assets/js/resource-sharing.js';
-        wp_enqueue_script(
-            'aiad-resource-sharing',
-            AIAD_URI . '/assets/js/resource-sharing.js',
-            array('aiad-main'),
-            file_exists( $resource_sharing_js ) ? filemtime( $resource_sharing_js ) : AIAD_VERSION,
-            true
-        );
-    }
+    // The share buttons on single resource pages are the aiad-core plugin's (modules/post-types/resource-sharing.php).
 
     // Enqueue tools CSS on front page and tools archive
     if ( ( is_front_page() || is_post_type_archive( 'ai_tool' ) ) && ! is_admin() ) {
