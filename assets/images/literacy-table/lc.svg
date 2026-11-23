@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Low-Code / No-Code: building an automation by dragging blocks (Form, If, Email) into place instead of writing code. Arrows: tools/literacy-arrows/specs/lc.json -->
+  <!-- Low-Code / No-Code: building an automation by dragging blocks (Form, If, Email) into place instead of writing code. Arrows: scripts/literacy-arrows/specs/lc.json -->
   <defs><marker id="alpt-arr-lc-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="104" y="50">No code, just drag</text>

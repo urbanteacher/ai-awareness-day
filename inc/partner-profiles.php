@@ -218,7 +218,7 @@ function aiad_partner_profiles_logo_done( string $slug ): void {
 	$done = is_array( $done ) ? $done : array();
 	if ( ! in_array( $slug, $done, true ) ) {
 		$done[] = $slug;
-		update_option( 'aiad_partner_logos_fixed', $done, false );
+		update_option( 'aiad_partner_logos_fixed', $done, true );
 	}
 }
 

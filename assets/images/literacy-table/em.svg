@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
   <!-- Embedding: a map of meanings where similar words sit close together, so distance means similarity. Laid out by
-       tools/literacy-arrows/embedding.py: circles fit their dots and labels, labels sit one fixed distance from their
+       scripts/literacy-arrows/embedding.py: circles fit their dots and labels, labels sit one fixed distance from their
        dots. Top-left 100x95 stays clear for the symbol badge. -->
   <rect class="i-bg" width="300" height="330"/>
   <circle class="i-paper" cx="225.4" cy="119.6" r="63.5"/><circle class="i-deepline i-dash" cx="225.4" cy="119.6" r="63.5"/>

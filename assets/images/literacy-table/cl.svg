@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Classification: the AI sorts each incoming email into one of two bins, spam or not spam. Arrows: tools/literacy-arrows/specs/cl.json -->
+  <!-- Classification: the AI sorts each incoming email into one of two bins, spam or not spam. Arrows: scripts/literacy-arrows/specs/cl.json -->
   <defs><marker id="alpt-arr-cl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-cl-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="96" y="16" width="154" height="34" rx="6"/><rect class="i-line" x="96" y="16" width="154" height="34" rx="6"/>

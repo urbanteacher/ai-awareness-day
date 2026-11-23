@@ -11,6 +11,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_defaults = aiad_get_customizer_defaults();
 $aiad_title    = aiad_homepage_field_fallback( 'aiad_contact_title', $aiad_defaults['aiad_contact_title'] );

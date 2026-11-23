@@ -14,6 +14,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_count = count( aiad_literacy_elements() );
 

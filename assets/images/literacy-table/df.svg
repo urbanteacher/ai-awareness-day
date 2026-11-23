@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Diffusion Model: random noise cleaned up step by step until a new picture appears. Arrows: tools/literacy-arrows/specs/df.json -->
+  <!-- Diffusion Model: random noise cleaned up step by step until a new picture appears. Arrows: scripts/literacy-arrows/specs/df.json -->
   <defs><marker id="alpt-arr-df" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-df-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <g transform="translate(12 92) scale(0.8947) translate(-14 -112)">

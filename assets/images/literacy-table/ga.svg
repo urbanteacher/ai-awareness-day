@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Generative AI: one AI making brand-new text, images, audio, video and code. Arrows: tools/literacy-arrows/specs/ga.json -->
+  <!-- Generative AI: one AI making brand-new text, images, audio, video and code. Arrows: scripts/literacy-arrows/specs/ga.json -->
   <defs><marker id="alpt-arr-ga" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-deep" d="M16 126 H56 L72 142 V206 H16 Z"/>

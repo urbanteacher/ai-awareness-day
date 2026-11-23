@@ -16,6 +16,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_nc_url = aiad_national_conversation_page_url();
 $aiad_parts  = aiad_walkthrough_parts( $aiad_nc_url );

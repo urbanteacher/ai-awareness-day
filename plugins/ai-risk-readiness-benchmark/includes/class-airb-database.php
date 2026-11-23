@@ -88,10 +88,10 @@ class AIRB_Database {
 			self::backfill_school_keys();
 			if ( class_exists( 'AIRB_Leads' ) ) {
 				AIRB_Leads::backfill_school_keys();
-				update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
+				update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, true );
 			}
 		}
-		update_option( 'airb_db_version', self::DB_VERSION, false );
+		update_option( 'airb_db_version', self::DB_VERSION, true );
 	}
 
 	/**

@@ -92,7 +92,7 @@ function aiad_maybe_convert_homepage(): void {
         return;
     }
     if ( aiad_block_homepage_page() ) {
-        update_option( 'aiad_homepage_converted', 'already a block homepage', false );
+        update_option( 'aiad_homepage_converted', 'already a block homepage', true );
         return;
     }
     // A lock: add_option() fails if it exists. A lock older than ten minutes is from a request that died.
@@ -128,7 +128,7 @@ function aiad_maybe_convert_homepage(): void {
         return;
     }
     delete_option( 'aiad_homepage_conversion_error' );
-    update_option( 'aiad_homepage_converted', gmdate( 'c' ), false );
+    update_option( 'aiad_homepage_converted', gmdate( 'c' ), true );
     delete_option( 'aiad_homepage_converting' );
 }
 // After the section blocks, the patterns and the options are registered.

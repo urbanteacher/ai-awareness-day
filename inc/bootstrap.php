@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AIAD_VERSION', '1.6.0' );
+define( 'AIAD_VERSION', '1.7.0' );
 
 if ( ! defined( 'AIAD_DIR' ) ) {
     define( 'AIAD_DIR', dirname( __DIR__ ) );
@@ -69,6 +69,7 @@ require_once $aiad_dir . '/inc/homepage-migration.php';
 require_once $aiad_dir . '/inc/homepage-campaign.php';
 require_once $aiad_dir . '/inc/homepage-resources.php';
 require_once $aiad_dir . '/inc/site-parts.php';
+aiad_require_core_module( 'rest-client' );
 aiad_require_core_module( 'contact' );
 aiad_require_core_module( 'resource-filter' );
 aiad_require_core_module( 'certificates' );
@@ -78,6 +79,7 @@ require_once $aiad_dir . '/inc/live-sessions.php';
 aiad_require_core_module( 'tracking' );
 aiad_require_core_module( 'ai-tools' );
 require_once $aiad_dir . '/inc/tools.php';
+require_once $aiad_dir . '/inc/courses.php';
 aiad_require_core_module( 'seo' );
 aiad_require_core_module( 'tools' );
 aiad_require_core_module( 'survey' );
@@ -92,3 +94,4 @@ require_once $aiad_dir . '/inc/national-conversation-page.php';
 require_once $aiad_dir . '/inc/national-conversation-content.php';
 require_once $aiad_dir . '/inc/literacy-table.php';
 require_once $aiad_dir . '/inc/literacy-table-admin.php';
+aiad_require_core_module( 'literacy-term' );

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<link rel="stylesheet" href="../shared/flow.css">
+<title>AI Under the Hood · AI Awareness Day</title>
+<meta name="description" content="Three free interactive story courses for A-level students: how AI runs on chips, how it reaches the world through RAG, tools and agents, and how AI systems are designed as teams.">
+<style>
+:root{--ink:var(--a27-ink);--paper:var(--a27-cream);--dim:var(--a27-dim);--rule:var(--a27-rule);--card:var(--a27-card);font:17px/1.55 'AIAD Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper)}h1,h2,h3,h4,p{margin:0}
+a{color:inherit;text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--rule)}
+.top a{font-weight:650;font-size:.92rem}.top img{width:clamp(8.5rem,24vw,15rem);height:auto;display:block}
+.eyebrow{font-weight:700;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase}
+/* Hero */
+.hero{margin:clamp(1rem,3vw,2rem) 0;background:var(--ink);color:var(--paper);padding:clamp(1.4rem,4vw,3.2rem);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(1rem,4vw,3rem);align-items:center;position:relative;overflow:hidden;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.13;background-image:radial-gradient(circle,#fff 1px,transparent 1.5px);background-size:14px 14px}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+.hero .eyebrow{color:var(--a27-safe)}
+.hero h1{font-size:clamp(2.7rem,7.4vw,5.8rem);line-height:.9;letter-spacing:-.06em;font-weight:800;margin:.6rem 0 1rem}
+.hero h1 span{color:var(--a27-responsible)}
+.hero .lead{font-size:clamp(1.02rem,1.6vw,1.22rem);max-width:40ch;color:#e9e6dd}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}
+.facts span{border:1px solid #ffffff55;padding:.3rem .7rem;font-size:.82rem;font-weight:650}
+.hero .ff{margin:0;color:var(--ink);--c:var(--a27-responsible);--cd:var(--a27-responsible-deep)}
+.hero .ff .ff-title{font-size:1rem}
+/* Course cards */
+.sec{margin:clamp(2rem,5vw,3.5rem) 0}
+.sec>h2{font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.05em;line-height:1;margin:.35rem 0 .6rem}
+.sec>p.intro{max-width:64ch;font-size:1.05rem}
+.courses{display:grid;gap:1.2rem;margin-top:1.3rem}
+.course{--c:var(--a27-safe);--cd:var(--a27-safe-deep);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);background:#fff;border:1.5px solid var(--ink)}
+.course[data-theme=creative]{--c:var(--a27-creative);--cd:var(--a27-creative-deep)}
+.course[data-theme=smart]{--c:var(--a27-smart);--cd:var(--a27-smart-deep)}
+@media(max-width:860px){.course{grid-template-columns:1fr}}
+.c-main{padding:clamp(1.1rem,2.6vw,1.8rem);border-left:10px solid var(--c)}
+.c-part{display:flex;align-items:center;gap:.6rem;color:var(--cd)}
+.c-part .num{display:grid;place-items:center;width:2.3rem;height:2.3rem;background:var(--c);color:var(--ink);font-weight:800;clip-path:polygon(0 0,78% 0,100% 22%,100% 100%,0 100%)}
+.c-main h3{font-size:clamp(1.7rem,3.4vw,2.5rem);letter-spacing:-.05em;line-height:1;margin:.6rem 0 .5rem}
+.c-main .hook{font-size:1.02rem;max-width:52ch}
+.c-main h4{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:1.1rem 0 .4rem}
+.c-main ul.skills{margin:0;padding-left:1.15rem;display:grid;gap:.25rem;font-size:.95rem}
+.c-chs{display:flex;flex-wrap:wrap;gap:.3rem}
+.c-chs a{font-size:.78rem;font-weight:650;padding:.22rem .5rem;border:1px solid var(--rule);background:#fbfaf6;text-decoration:none}
+.c-chs a:hover{border-color:var(--ink)}
+.c-chs a b{font-size:.68rem;color:var(--dim);margin-right:.25rem}
+.c-side{padding:clamp(1.1rem,2.6vw,1.8rem);background:color-mix(in srgb,var(--c) 14%,#fff);display:flex;flex-direction:column;gap:.9rem;border-left:1px solid var(--rule)}
+@media(max-width:860px){.c-side{border-left:0;border-top:1px solid var(--rule)}}
+.c-meta{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.c-meta div{background:#fff;border:1px solid var(--rule);padding:.55rem .65rem}
+.c-meta dt{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.c-meta dd{margin:.1rem 0 0;font-weight:750;font-size:.95rem;line-height:1.25}
+.c-prog .bar{height:10px;background:#fff;border:1.5px solid var(--ink);margin-top:.35rem}
+.c-prog .bar i{display:block;height:100%;width:0;background:var(--cd);transition:width .6s}
+.c-prog p{font-size:.86rem;font-weight:650}
+.c-go{display:flex;align-items:center;justify-content:center;min-height:52px;padding:.6rem 1rem;background:var(--ink);color:var(--paper);font-weight:800;text-decoration:none;font-size:1.02rem;margin-top:auto}
+.c-go:hover{background:var(--cd)}
+.c-teach{font-size:.86rem;font-weight:650;text-align:center}
+/* How it works */
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.8rem;margin-top:1.2rem}
+.how div{background:#fff;border:1px solid var(--rule);border-top:6px solid var(--k,var(--a27-safe));padding:1rem 1.1rem}
+.how b{display:block;font-size:1.08rem;margin-bottom:.3rem}
+.how p{font-size:.93rem}
+/* Teachers */
+.teach{background:var(--card);padding:clamp(1.2rem,3vw,2rem)}
+.teach h2{font-size:clamp(1.6rem,3.4vw,2.4rem);letter-spacing:-.05em;line-height:1;margin:.35rem 0 .7rem}
+.teach ul{margin:.8rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.6rem}
+.teach li{background:#fff;padding:.8rem .9rem;font-size:.93rem}
+.teach li a{font-weight:750}
+footer.end{border-top:1px solid var(--rule);padding:1.2rem 0;margin-top:2rem;font-size:.88rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+.fc{margin:1rem 0 1.2rem;padding:.8rem;background:#fbfaf6;border:1px solid var(--rule,#d8d3c8)}.fc svg{display:block;width:100%;height:auto}
+.fc .fc-node rect,.fc .fc-node path{transition:stroke-width .2s,stroke .2s}.fc .fc-node.on rect,.fc .fc-node.on path{stroke:#E0561F;stroke-width:3.5}
+.fc .fc-arrow{stroke:#231F20;stroke-width:2;fill:none}
+.fc-cap{min-height:3.2em;margin:.6rem 0 0;font-size:1rem;font-weight:650}
+.fc-ctl{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.5rem}
+.fc-ctl button{min-height:44px;padding:.5rem 1rem;border:1.5px solid #231F20;background:#fff;color:#231F20;font:inherit;font-weight:700;cursor:pointer}
+.fc-ctl button.primary{background:#231F20;color:#F6F4ED}.fc-ctl button:disabled{opacity:.45;cursor:default}
+.fc-ctl span{margin-left:auto;font-size:.85rem;color:var(--dim,#5f5a52);font-variant-numeric:tabular-nums}
+.hero .fc{margin:0;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.fc *{transition:none!important}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top"><a href="/">AI Awareness Day home</a><img src="../../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop"></header>
+
+<section class="hero" aria-labelledby="h1">
+  <div>
+    <span class="eyebrow">AI Awareness Day · Thursday 29 April 2027 · For A-level students</span>
+    <h1 id="h1">AI Under <span>the Hood</span></h1>
+    <p class="lead">Three free story courses that open AI up. Follow one student from a late-night revision question to a team of AI agents, and find out what really happens at every step.</p>
+    <div class="facts"><span>3 courses</span><span>About 45 minutes each</span><span>No sign-up</span><span>Teacher lesson plans included</span><span>Updated 21 November 2026</span></div>
+  </div>
+  <figure class="fc sf" id="sf">
+    <svg viewBox="0 0 440 410" role="img" aria-labelledby="sfT sfD">
+      <title id="sfT">The whole series in one flow, animated</title>
+      <desc id="sfD">A flowchart. Your question goes into Part 1, From Sand to Sentence: a model running on a chip made from sand. Then Part 2, From Answer to Action: documents to read, tools to use and an agent loop. Then Part 3, From Agent to Team: workflows and teams of agents. At the bottom is you, in the loop, and a dashed line runs back up to every part: a person checks what matters at every stage.</desc>
+      <defs><marker id="sfHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#231F20"/></marker></defs>
+      <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+        <path class="fc-arrow" id="sfP12" d="M190 60V82" marker-end="url(#sfHead)"/>
+        <path class="fc-arrow" id="sfP23" d="M190 144V166" marker-end="url(#sfHead)"/>
+        <path class="fc-arrow" id="sfP34" d="M190 228V250" marker-end="url(#sfHead)"/>
+        <path class="fc-arrow" id="sfP45" d="M190 312V340" marker-end="url(#sfHead)"/>
+        <path id="sfBack" d="M340 364H384V115" fill="none" stroke="#1d7a45" stroke-width="2" stroke-dasharray="5 4" opacity=".25"/>
+        <g id="sfTicks" opacity=".25" stroke="#1d7a45" stroke-width="2" fill="none"><path d="M384 115H352" marker-end="url(#sfHead)"/><path d="M384 197H352" marker-end="url(#sfHead)"/><path d="M384 281H352" marker-end="url(#sfHead)"/></g>
+        <text transform="translate(410 240) rotate(-90)" font-size="12" text-anchor="middle" fill="#5f5a52">a person checks what matters</text>
+        <g class="fc-node" id="sfN1"><rect x="40" y="16" width="300" height="44" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="52" y="44" font-size="15" id="sfTyped"></text></g>
+        <g class="fc-node" id="sfN2"><rect x="40" y="84" width="300" height="60" fill="#d9f6fb" stroke="#231F20" stroke-width="1.5"/><text x="52" y="106" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52">PART 1 · FROM SAND TO SENTENCE</text><text x="52" y="129" font-size="14" font-weight="800">A model on a chip made from sand</text></g>
+        <g class="fc-node" id="sfN3"><rect x="40" y="168" width="300" height="60" fill="#ece4ff" stroke="#231F20" stroke-width="1.5"/><text x="52" y="190" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52">PART 2 · FROM ANSWER TO ACTION</text><text x="52" y="213" font-size="14" font-weight="800">Documents, tools and an agent loop</text></g>
+        <g class="fc-node" id="sfN4"><rect x="40" y="252" width="300" height="60" fill="#ffe3d6" stroke="#231F20" stroke-width="1.5"/><text x="52" y="274" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52">PART 3 · FROM AGENT TO TEAM</text><text x="52" y="297" font-size="14" font-weight="800">Workflows and teams of agents</text></g>
+        <g class="fc-node" id="sfN5"><rect x="40" y="342" width="300" height="44" fill="#ddf8e7" stroke="#231F20" stroke-width="1.5"/><text x="52" y="370" font-size="15" font-weight="800">You, in the loop</text></g>
+        <circle id="sfDot" r="7" fill="#FF7038" stroke="#231F20" stroke-width="1.5" opacity="0"/>
+      </g>
+    </svg>
+    <p class="fc-cap" id="sfCap" aria-live="polite">Press Play to follow the whole series in one flow.</p>
+    <div class="fc-ctl">
+      <button type="button" class="primary" id="sfPlay">▶ Play</button>
+      <button type="button" id="sfNext">Next step</button>
+      <button type="button" id="sfReset">Start again</button>
+      <span id="sfCount"></span>
+    </div>
+  </figure>
+</section>
+
+<section class="sec" aria-labelledby="tc">
+  <span class="eyebrow" style="color:var(--a27-safe-deep)">The courses</span>
+  <h2 id="tc">Start anywhere, or follow the story in order</h2>
+  <p class="intro">Each course works on its own, but they tell one story: the same student, from the chip in a data centre to agents that act for them. Your progress is saved in this browser.</p>
+  <div class="courses" id="courses"></div>
+</section>
+
+<section class="sec" aria-labelledby="th">
+  <span class="eyebrow" style="color:var(--a27-creative-deep)">How these courses work</span>
+  <h2 id="th">Learn it by watching it, then doing it</h2>
+  <div class="how">
+    <div style="--k:var(--a27-safe)"><b>A story, not a lecture</b><p>Every chapter starts with a moment in one student's life, then explains what is really happening underneath.</p></div>
+    <div style="--k:var(--a27-smart)"><b>Animated flows</b><p>Watch work move through a system step by step: a question becoming tokens, a document being retrieved, an agent deciding what to do.</p></div>
+    <div style="--k:var(--a27-creative)"><b>Your turn</b><p>Put the steps in order yourself and the diagram builds as you go. Then try the calculators, simulators and quick checks.</p></div>
+    <div style="--k:var(--a27-responsible)"><b>Two periodic tables</b><p>Collect real chemical elements and terms from the <a href="/ai-literacy-periodic-table/">AI Literacy Periodic Table</a> as you read, and combine them into compounds.</p></div>
+    <div style="--k:#0072b2"><b>Nodes challenges</b><p>Build answers, don’t just pick them. Six in each course, from the Nodes method: keep two confusable ideas apart, join an answer link by link, judge three students’ answers, find the step where an answer broke, and try a new case with the help hidden.</p></div>
+    <div style="--k:var(--a27-future)"><b>Debates that matter</b><p>Who should control the chips? Who is to blame when an agent goes wrong? Each course ends with questions worth arguing about.</p></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="tm">
+  <span class="eyebrow" style="color:var(--a27-smart-deep)">The teaching model</span>
+  <h2 id="tm">Every chapter, the same four steps</h2>
+  <div class="how" style="grid-template-columns:repeat(auto-fit,minmax(12rem,1fr))">
+    <div style="--k:var(--a27-safe)"><b>1 · Explain, with examples</b><p>A real moment from a student’s day, then “What’s really happening”, with every term defined in context and a summary of definitions. <i>Research: concrete examples before abstract ideas.</i></p></div>
+    <div style="--k:var(--a27-smart)"><b>2 · Predict, see, say why</b><p>Guess what will happen, then watch the animated flow show whether you were right, and why. <i>Research: guessing first (pretesting), and dual coding (words with pictures).</i></p></div>
+    <div style="--k:var(--a27-creative)"><b>3 · Check</b><p>A quick check, then a harder Nodes challenge: sort, order or judge, so you build an answer instead of just picking one. <i>Research: retrieval practice and the generation effect.</i></p></div>
+    <div style="--k:var(--a27-responsible)"><b>4 · Sum it up</b><p>The chapter’s key points, then one question per element to earn its tile and open the next chapter. <i>Research: retrieval practice.</i></p></div>
+  </div>
+  <p style="margin-top:1rem;max-width:62ch">Parts 2 and 3 open with three questions from the part before. The courses work best when a teacher runs them in a lesson: the Education Endowment Foundation’s guidance on digital technology finds that how teachers use what students show, and how students act on feedback, matter more than the tool itself.</p>
+</section>
+
+<section class="sec" aria-labelledby="tx" style="background:var(--ink);color:var(--paper);padding:clamp(1.2rem,3vw,2rem)">
+  <span class="eyebrow" style="color:var(--a27-smart)">Test yourself</span>
+  <h2 id="tx" style="color:var(--paper)">Timed exams</h2>
+  <p class="intro" style="color:#e9e6dd">One timed exam for each course (12 questions, 12 minutes), and a full exam across all three (24 questions, 24 minutes). A fresh paper every time, with a full review and a link back to anything you got wrong.</p>
+  <p style="margin-top:1rem"><a href="../ai-exam/" style="display:inline-flex;align-items:center;min-height:50px;padding:.6rem 1.2rem;background:var(--a27-smart);color:var(--ink);font-weight:800;text-decoration:none">Go to the exams →</a></p>
+</section>
+
+<section class="teach" id="teachers" aria-labelledby="tt">
+  <span class="eyebrow">For teachers</span>
+  <h2 id="tt">Ready to teach</h2>
+  <p>Each course has learning objectives, timed lesson plans (two lessons for Parts 1 and 2, one for Part 3), links to Computer Science, Physics, Chemistry, Maths, Economics, Politics, Psychology and more, EPQ starters, and full sources. Students can work through them alone, in pairs, or as homework.</p>
+  <ul>
+    <li><a href="../sand-to-sentence/#teachers">Part 1 teacher notes →</a><br>Chips, tokens, GPUs, the chip supply chain, how models build on each other.</li>
+    <li><a href="../answer-to-action/#teachers">Part 2 teacher notes →</a><br>RAG, tool use, MCP, agents, autonomy and prompt injection.</li>
+    <li><a href="../agent-to-team/#teachers">Part 3 teacher notes →</a><br>Workflows, self-checking, teams of agents, and where humans should sit.</li>
+  </ul>
+</section>
+
+<footer class="end"><span>AI Awareness Day · Thursday 29 April 2027 · Keep Humans in the Loop</span><a href="/ai-literacy-periodic-table/">AI Literacy Periodic Table</a></footer>
+</div>
+
+<script src="../shared/flow.js"></script>
+<script>
+(function(){
+'use strict';
+var COURSES=[
+ {n:1,slug:'sand-to-sentence',key:'aiad-sand-to-sentence',total:32,theme:'safe',title:'From Sand to Sentence',
+  hook:'You type a revision question at 23:47. Follow it into a large language model, onto a GPU, and back to the sand, chemistry and factories that made the chip.',
+  time:'About 45 minutes',lessons:'2 lessons',level:'No prior knowledge',before:'None',
+  skills:['How text becomes tokens and embeddings','How a model writes one token at a time','Why AI runs on GPUs, and why memory speed matters','How a chip is made, and why its supply chain is so fragile'],
+  chs:['23:47','Tokens','Meaning as numbers','Data centre','Inside the GPU','Sand','Printing with light','The model thinks','Ideas cross borders','Home again']},
+ {n:2,slug:'answer-to-action',key:'aiad-answer-to-action',total:17,theme:'creative',title:'From Answer to Action',
+  hook:'A chatbot that only answers is stuck inside its own head. See how RAG, tools, MCP and agents let it read, reach and act, and decide how much you would let it do.',
+  time:'About 45 minutes',lessons:'2 lessons',level:'Beginner',before:'Part 1 helps',
+  skills:['How RAG finds the right documents','Why the app, not the model, runs a tool','What MCP standardises, and why it matters','How agents work, and how prompt injection catches them out'],
+  chs:['The morning after','RAG','Tools','MCP','Agents','Letting go','Which is which?']},
+ {n:3,slug:'agent-to-team',key:'aiad-agent-to-team',total:15,theme:'smart',title:'From Agent to Team',
+  hook:'One agent can book a room. Running a whole event takes a team. Explore the 20 patterns AI systems are built from, and where the humans should sit.',
+  time:'About 45 minutes',lessons:'1 lesson',level:'Intermediate',before:'Part 2 helps',
+  skills:['Workflows against agents, and when to use each','How self-checks and votes make answers more reliable','How teams of agents divide up work, and what it costs','Why long jobs fail, and where human checks belong']}
+];
+COURSES[2].chs=['Too many jobs','Workflows','Checking','Teams','The human','Pick a pattern'];
+function got(key){try{var v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v.length:0}catch(e){return 0}}
+document.getElementById('courses').innerHTML=COURSES.map(function(c){
+ var g=Math.min(got(c.key),c.total),pct=Math.round(100*g/c.total),url='../'+c.slug+'/';
+ var go=g===0?'Start Part '+c.n+' →':g>=c.total?'Revisit Part '+c.n+' →':'Continue Part '+c.n+' →';
+ var prog=g===0?'Not started yet':g>=c.total?'Finished: all '+c.total+' elements collected':'In progress: '+g+' of '+c.total+' elements collected';
+ return '<article class="course" data-theme="'+c.theme+'" aria-labelledby="c'+c.n+'">'+
+  '<div class="c-main"><p class="c-part"><span class="num">'+c.n+'</span><span class="eyebrow">Part '+c.n+' of 3</span></p>'+
+  '<h3 id="c'+c.n+'"><a href="'+url+'" style="text-decoration:none">'+c.title+'</a></h3><p class="hook">'+c.hook+'</p>'+
+  '<h4>Skills you\'ll gain</h4><ul class="skills">'+c.skills.map(function(s){return '<li>'+s+'</li>'}).join('')+'</ul>'+
+  '<h4>Chapters</h4><div class="c-chs">'+c.chs.map(function(t,i){return '<a href="'+url+'#ch'+i+'"><b>'+(i===0?'START':i)+'</b>'+t+'</a>'}).join('')+'</div></div>'+
+  '<div class="c-side"><dl class="c-meta"><div><dt>Time</dt><dd>'+c.time+'</dd></div><div><dt>In class</dt><dd>'+c.lessons+'</dd></div><div><dt>Level</dt><dd>'+c.level+'</dd></div><div><dt>Read first</dt><dd>'+c.before+'</dd></div></dl>'+
+  '<div class="c-prog"><p>'+prog+'</p><div class="bar" role="progressbar" aria-label="Part '+c.n+' progress" aria-valuemin="0" aria-valuemax="'+c.total+'" aria-valuenow="'+g+'"><i style="width:'+pct+'%"></i></div></div>'+
+  '<a class="c-go" href="'+url+'">'+go+'</a><a class="c-teach" href="../ai-exam/?exam='+c.n+'">⏱ Timed exam: 12 questions, 12 minutes</a><a class="c-teach" href="'+url+'#teachers">Teacher notes and lesson plan</a></div></article>'}).join('');
+/* The series flow is now the animated flowchart #sf (old AIADFlow version kept in archive/a-level-figures/hub-series-flow-v1.js). */
+})();
+</script>
+<script>
+(function(){
+  var root=document.getElementById('sf'); if(!root) return;
+  var $=function(id){return document.getElementById(id)};
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var Q='Why is the sky blue?';
+  var STEPS=[
+    'It starts with one question, typed late at night.',
+    'Part 1: your question travels into a model running on a chip made from sand.',
+    'Part 2: the model gets documents to read, tools to use, and an agent loop that lets it act.',
+    'Part 3: agents are combined into workflows and teams to take on bigger jobs.',
+    'And at every stage, a person checks what matters. Keep Humans in the Loop.'
+  ];
+  var N=STEPS.length, i=0, playing=false, busy=false, gen=0;
+  function wait(ms){return new Promise(function(r){setTimeout(r,reduce?0:ms)})}
+  function frame(){return new Promise(function(r){requestAnimationFrame(r)})}
+  function on(ids){[].forEach.call(root.querySelectorAll('.fc-node'),function(n){n.classList.remove('on')}); ids.forEach(function(id){$(id).classList.add('on')})}
+  async function travel(pid,g,dur){
+    if(reduce)return; var p=$(pid), L=p.getTotalLength(), d=$('sfDot'), t0=performance.now(); dur=dur||600;
+    d.setAttribute('opacity',1);
+    while(true){ await frame(); if(g!==gen)return; var t=Math.min(1,(performance.now()-t0)/dur), e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, pt=p.getPointAtLength(L*e); d.setAttribute('cx',pt.x); d.setAttribute('cy',pt.y); if(t>=1)break; }
+    d.setAttribute('opacity',0);
+  }
+  function checks(v){ $('sfBack').setAttribute('opacity',v?1:.25); $('sfTicks').setAttribute('opacity',v?1:.25); }
+  async function run(n,g){
+    $('sfCap').textContent=STEPS[n-1];
+    switch(n){
+      case 1: on(['sfN1']); for(var k=0;k<=Q.length;k++){ if(g!==gen)return; $('sfTyped').textContent=Q.slice(0,k); await wait(55); } break;
+      case 2: await travel('sfP12',g); if(g!==gen)return; on(['sfN2']); break;
+      case 3: await travel('sfP23',g); if(g!==gen)return; on(['sfN3']); break;
+      case 4: await travel('sfP34',g); if(g!==gen)return; on(['sfN4']); break;
+      case 5: await travel('sfP45',g); if(g!==gen)return; on(['sfN5']); await travel('sfBack',g,900); if(g!==gen)return; checks(true); on(['sfN2','sfN3','sfN4','sfN5']); break;
+    }
+  }
+  function count(){ $('sfCount').textContent='Step '+i+' of '+N; $('sfNext').disabled=i>=N||busy; $('sfPlay').disabled=i>=N; }
+  async function step(){ if(i>=N||busy)return; var g=gen; busy=true; count(); await run(i+1,g); if(g!==gen)return; i++; busy=false; count(); }
+  async function play(){
+    if(playing){ playing=false; $('sfPlay').textContent='▶ Play'; return; }
+    var g=gen; playing=true; $('sfPlay').textContent='❚❚ Pause';
+    while(playing&&g===gen&&i<N){ await step(); if(playing&&g===gen&&i<N) await wait(1300); }
+    if(g===gen){ playing=false; $('sfPlay').textContent='▶ Play'; count(); }
+  }
+  function reset(){
+    gen++; playing=false; busy=false; i=0; $('sfTyped').textContent=''; $('sfDot').setAttribute('opacity',0); checks(false); on([]);
+    $('sfPlay').textContent='▶ Play'; $('sfCap').textContent='Press Play to follow the whole series in one flow.'; count();
+  }
+  $('sfPlay').addEventListener('click',play);
+  $('sfNext').addEventListener('click',function(){ if(playing){playing=false;$('sfPlay').textContent='▶ Play'} step(); });
+  $('sfReset').addEventListener('click',reset);
+  reset();
+  /* Play once, the first time it is mostly on screen. */
+  if('IntersectionObserver' in window && !reduce){ var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); if(i===0&&!playing) play(); } }); },{threshold:.6}); io.observe(root.querySelector('svg')); }
+})();
+</script>
+<script src="../shared/live-links.js"></script>
+</body></html>

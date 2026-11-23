@@ -1,0 +1,13 @@
+# The theme copies this plugin into wp-content/plugins, where the theme's own .htaccess does not reach, so the plugin
+# keeps its development files off the web itself. Nothing here is needed by a visitor's browser: block sources (src/,
+# built into build/), npm and lint files, and notes. llms.txt is read from disk by modules/seo/seo.php.
+Options -Indexes
+RedirectMatch 403 /aiad-core/(src|node_modules)(/.*)?$
+<FilesMatch "^(package(-lock)?\.json|eslint\.config\.cjs|README\.md|llms\.txt|\.gitignore)$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Deny from all
+	</IfModule>
+</FilesMatch>

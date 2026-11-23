@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Guardrails: rails around the AI let a homework question and safe answer through, and stop an unsafe request and a harmful reply. Arrows: tools/literacy-arrows/specs/gr.json -->
+  <!-- Guardrails: rails around the AI let a homework question and safe answer through, and stop an unsafe request and a harmful reply. Arrows: scripts/literacy-arrows/specs/gr.json -->
   <defs><marker id="alpt-arr-gr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-gr-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker><marker id="alpt-x-gr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M2.5 2.5 7.5 7.5 M7.5 2.5 2.5 7.5"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper i-faint" x="112" y="40" width="132" height="34" rx="10"/><rect class="i-line i-dash" x="112" y="40" width="132" height="34" rx="10"/>

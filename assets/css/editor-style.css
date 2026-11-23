@@ -1,12 +1,7 @@
-/* Uncut Sans by Kasper Nordkvist. SIL OFL 1.1; license bundled beside fonts. */
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-Semibold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-Bold.woff2') format('woff2'); font-weight: 700 900; font-style: normal; font-display: swap; }
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-RegularItalic.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-SemiboldItalic.woff2') format('woff2'); font-weight: 600; font-style: italic; font-display: swap; }
-@font-face { font-family: 'AIAD Sans'; src: url('../fonts/aiad27/UncutSans-BoldItalic.woff2') format('woff2'); font-weight: 700 900; font-style: italic; font-display: swap; }
-
-body, .editor-styles-wrapper { font-family: 'AIAD Sans', Arial, sans-serif; background: #F6F4ED; color: #231F20; line-height: 1.6; }
+/* The editor's base look. The fonts are declared once, in theme.json (fontFace), which WordPress also loads into the
+   editor; the colours are the design tokens from base/tokens.css (loaded just before this file), with the same values
+   as fallbacks. */
+body, .editor-styles-wrapper { font-family: 'AIAD Sans', Arial, sans-serif; background: var(--a27-cream, #F6F4ED); color: var(--a27-ink, #231F20); line-height: 1.6; }
 .editor-styles-wrapper :is(h1,h2,h3,h4,h5,h6) { font-family: inherit; font-weight: 700; letter-spacing: -.035em; color: inherit; }
-.editor-styles-wrapper a { color: #006A7D; text-decoration: underline; }
-.editor-styles-wrapper blockquote { border-left: 2px solid #C9C6BE; }
+.editor-styles-wrapper a { color: var(--a27-safe-deep, #006A7D); text-decoration: underline; }
+.editor-styles-wrapper blockquote { border-left: 2px solid var(--a27-rule, #C9C6BE); }

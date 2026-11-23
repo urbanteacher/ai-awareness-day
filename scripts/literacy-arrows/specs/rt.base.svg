@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Red Teaming: testers fire trick prompts at an AI's defences on purpose; two bounce off and one finds a weak spot to fix. Arrows: scripts/literacy-arrows/specs/rt.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-m" x="164" y="50" text-anchor="middle">Try to break it</text>
+  <path class="i-deep" d="M222 80 L280 100 V192 C280 230 252 252 222 264 C192 252 164 230 164 192 V100 Z"/>
+  <rect class="i-paper" x="214" y="128" width="36" height="24" rx="6"/>
+  <circle class="i-ink" cx="225" cy="140" r="3.5"/><circle class="i-ink" cx="239" cy="140" r="3.5"/>
+  <path d="M174 188 L186 198 L180 208 L194 218" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="i-accent" cx="164" cy="182" r="11"/><circle class="i-line" cx="164" cy="182" r="11"/>
+  <circle class="i-cream" cx="36" cy="138" r="14"/><circle class="i-line" cx="36" cy="138" r="14"/>
+  <path class="i-line" d="M14 172 C14 154 58 154 58 172"/>
+  <circle class="i-cream" cx="78" cy="160" r="14"/><circle class="i-line" cx="78" cy="160" r="14"/>
+  <path class="i-line" d="M56 194 C56 176 100 176 100 194"/>
+  <text class="t-s" x="57" y="218" text-anchor="middle">Testers</text>
+  <text class="t-s t-d" x="222" y="290" text-anchor="middle">Weak spot!</text>
+  <text class="t-xs" x="222" y="310" text-anchor="middle">Fix before launch</text>
+</svg>

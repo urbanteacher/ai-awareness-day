@@ -5,6 +5,10 @@
  * @package AI_Awareness_Day
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $sessions = function_exists( 'aiad_get_live_sessions' ) ? aiad_get_live_sessions( -1 ) : array();
 if ( function_exists( 'aiad_filter_sessions_for_archive' ) ) {
     $sessions = aiad_filter_sessions_for_archive( $sessions );

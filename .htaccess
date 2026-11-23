@@ -4,6 +4,12 @@
 RewriteEngine On
 # Folders for developers.
 RewriteRule ^(scripts|docs|archive|\.git|\.github)(/|$) - [F,L]
+# Experimental pages; approved ones move to assets/courses/ or assets/challenges/ (inc/courses.php).
+RewriteRule ^assets/previews(/|$) - [F,L]
+# Content read from disk by PHP, never by a browser: the periodic table data and the articles' source markup.
+RewriteRule ^(data|inc/articles)(/|$) - [F,L]
+# Notes beside the assets.
+RewriteRule ^assets/.*\.md$ - [F,L]
 # Files for developers, at the theme root and in the bundled plugins.
 RewriteRule ^(docker-compose\.yml|composer\.(json|lock)|package(-lock)?\.json|\.env.*|\.gitignore|[^/]*\.(sql|backup|md))$ - [F,L]
 RewriteRule ^plugins/[^/]+/(README\.md|readme\.txt|llms\.txt|package(-lock)?\.json|eslint\.config\.cjs)$ - [F,L]

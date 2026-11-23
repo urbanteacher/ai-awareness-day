@@ -24,8 +24,7 @@ function aiad_get_press_release_page(): ?WP_Post {
 }
 
 /**
- * The press release file chosen on the settings screen, and the words around it: template-press-release.php prints them,
- * and patterns/press-release.php turns them into a Download card block.
+ * The press release file chosen on the settings screen, and the words around it: patterns/press-release.php turns them into a Download card block.
  *
  * @return array{id:int,url:string,filename:string,is_image:bool,preview:string,label:string,description:string,btn_label:string}
  */

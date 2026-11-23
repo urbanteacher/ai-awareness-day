@@ -955,7 +955,7 @@ function aiad_sync_llms_txt_to_document_root(): void {
 		return;
 	}
 
-	update_option( 'aiad_llms_txt_hash', $hash, false );
+	update_option( 'aiad_llms_txt_hash', $hash, true );
 }
 
 /**

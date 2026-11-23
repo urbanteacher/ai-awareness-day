@@ -11,14 +11,18 @@
  * The lists come from aiad_national_conversation_content() (inc/national-conversation-content.php).
  * Everything sits in one main group (main#main.ncp, as on the PHP page; templates/page-national-conversation.html
  * has only the header, the post content and the footer). Text is core blocks; lists whose items hold more than text are Styled list, Styled list item and Styled text blocks
- * (blocks/list, item, text), saved as plain HTML with the page's classes, so national-conversation.css styles them
+ * (aiad-core's list, list-item and text blocks), saved as plain HTML with the page's classes, so national-conversation.css styles them
  * as it styles the PHP page. What changes on its own is filled in when the page renders
  * (aiad_national_conversation_placeholders()): {opens}, {event}, {event_year}, {opens_label} and {retention}. The
- * buttons, which change on the day the conversation opens, are a block of their own (blocks/nc-actions), and so is
- * each strand's mark (blocks/strand-icon).
+ * buttons, which change on the day the conversation opens, are a block of their own (aiad/nc-actions), and so is
+ * each strand's mark (aiad/strand-icon).
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 [
 	'aims'           => $aiad_aims,

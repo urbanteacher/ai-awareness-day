@@ -16,6 +16,6 @@ See [`archive/docs/theme-installation.md`](archive/docs/theme-installation.md) f
 |------|---------|
 | `inc/`, `template-parts/`, `assets/` | Theme |
 | `plugins/ai-risk-readiness-benchmark/` | Benchmark plugin |
-| `archive/theme/generators/` | Certificate & letter HTML tools (admin URLs updated) |
+| `plugins/aiad-core/assets/generators/` | Certificate & letter HTML tools, opened from wp-admin |
 
 Deploying to Hostinger: see [`docs/DEPLOY.md`](docs/DEPLOY.md).

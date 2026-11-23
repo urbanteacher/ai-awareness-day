@@ -22,9 +22,9 @@ class AIRB_Activator {
 		AIRB_Certificates::create_table();
 		AIRB_Events::create_table();
 		AIRB_Leads::create_table();
-		update_option( 'airb_db_version', AIRB_Database::DB_VERSION, false );
-		update_option( 'airb_certificates_db_version', AIRB_Certificates::DB_VERSION, false );
-		update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, false );
+		update_option( 'airb_db_version', AIRB_Database::DB_VERSION, true );
+		update_option( 'airb_certificates_db_version', AIRB_Certificates::DB_VERSION, true );
+		update_option( 'airb_leads_db_version', AIRB_Leads::DB_VERSION, true );
 		AIRB_Config::maybe_seed_defaults();
 		AIRB_Copy_Tiers::export_missing_json_files();
 		AIRB_Hub_Pages::maybe_seed();

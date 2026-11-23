@@ -10,6 +10,11 @@
  * @package AI_Awareness_Day
  */
 
+// Command line only: never run from a browser.
+if ( 'cli' !== PHP_SAPI ) {
+	exit;
+}
+
 $theme_dir = dirname( __DIR__ );
 $css_dir   = $theme_dir . '/assets/css';
 $out_dir   = $css_dir . '/bundles';

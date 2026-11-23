@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Decision Tree: yes/no questions lead step by step to a prediction of what to wear. Arrows: tools/literacy-arrows/specs/dt.json -->
+  <!-- Decision Tree: yes/no questions lead step by step to a prediction of what to wear. Arrows: scripts/literacy-arrows/specs/dt.json -->
   <defs><marker id="alpt-arr-dt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-dt-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-deep" x="124" y="26" width="124" height="42" rx="8"/>

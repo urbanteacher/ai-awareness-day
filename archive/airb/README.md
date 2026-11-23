@@ -2,18 +2,15 @@
 
 Legacy and superseded plugin files kept here instead of deleting them during the Phase 2 migration.
 
-Location: repository root `archive/airb/` (loaders use `AIRB_ARCHIVE_DIR`).
+Location: repository root `archive/airb/`. Nothing in production loads from here.
 
 **Do not enqueue or require from this folder in production** unless you are restoring old behaviour for reference or one-off migration scripts.
 
 ## Contents
 
-### `includes/data/*-copy-tiers.php`
+### `includes/data/*-copy-tiers.php` (moved back, 1.59.1)
 
-Original PHP tier registries (teacher, leader, student, parent, support, public).
-
-- **Superseded by:** `includes/data/copy-tiers-{role}.json` for `copy_tiers` / `focus_tiers`
-- **Still loaded for:** `strength_tiers`, `domain_descriptions`, section labels, rollout copy, and other flat keys via `AIRB_Defaults::role_tier_data()` (paths updated to read from here first)
+The PHP tier registries (teacher, leader, student, parent, support, public) were kept here from 1.48.2, but they are still live data: `AIRB_Defaults::role_tier_data()` reads `strength_tiers`, `domain_descriptions`, section labels and rollout copy from them, with `includes/data/copy-tiers-{role}.json` replacing only `copy_tiers` / `focus_tiers`. The plugin copy in `wp-content/plugins` cannot reach this folder, so results lost that wording. They are back in the plugin's `includes/data/`.
 
 ### `js/airb-front-pre-1.48.0-snapshot.js`
 

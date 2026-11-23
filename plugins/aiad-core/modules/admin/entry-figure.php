@@ -323,21 +323,17 @@ function aiad_enqueue_thumbnail_focal_point_picker_admin( string $hook ): void {
 
 	wp_enqueue_media();
 	wp_enqueue_style( 'wp-components' );
-
-	$css_path = AIAD_DIR . '/admin/css/aiad-focal-point-picker.css';
 	wp_enqueue_style(
 		'aiad-focal-point-picker',
-		AIAD_URI . '/admin/css/aiad-focal-point-picker.css',
+		aiad_core_url( 'assets/css/admin/aiad-focal-point-picker.css' ),
 		array( 'wp-components' ),
-		file_exists( $css_path ) ? (string) filemtime( $css_path ) : AIAD_VERSION
+		aiad_core_asset_version( 'assets/css/admin/aiad-focal-point-picker.css' )
 	);
-
-	$js_path = AIAD_DIR . '/assets/js/admin-focal-point-picker.js';
 	wp_enqueue_script(
 		'aiad-admin-focal-point-picker',
-		AIAD_URI . '/assets/js/admin-focal-point-picker.js',
+		aiad_core_url( 'assets/js/admin/admin-focal-point-picker.js' ),
 		array( 'wp-element', 'wp-components', 'wp-i18n' ),
-		file_exists( $js_path ) ? (string) filemtime( $js_path ) : AIAD_VERSION,
+		aiad_core_asset_version( 'assets/js/admin/admin-focal-point-picker.js' ),
 		true
 	);
 }

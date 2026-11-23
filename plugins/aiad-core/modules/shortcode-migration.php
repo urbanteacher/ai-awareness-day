@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Marks this module as loaded. See aiad_core_load_modules().
+define( 'AIAD_CORE_MODULE_SHORTCODE_MIGRATION', __FILE__ );
+
 /**
  * Shortcode tag => block name.
  *
@@ -162,7 +165,7 @@ function aiad_migrate_shortcodes_in_existing_posts(): void {
 		clean_post_cache( $post->ID );
 		++$changed;
 	}
-	update_option( 'aiad_shortcodes_converted', array( 'at' => gmdate( 'c' ), 'posts' => $changed ), false );
+	update_option( 'aiad_shortcodes_converted', array( 'at' => gmdate( 'c' ), 'posts' => $changed ), true );
 }
 // After the blocks are registered (init 10) and the seeds have written their content (init 33 to 35).
 add_action( 'init', 'aiad_migrate_shortcodes_in_existing_posts', 40 );

@@ -305,7 +305,7 @@ function aiad_load_bundled_plugin_from_theme( string $slug, string $main_file ):
 				global $wpdb;
 				$table = AIRB_Database::table_name();
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+				if ( ! get_option( 'airb_db_version' ) && $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) { // The version is saved once the tables exist.
 					AIRB_Activator::activate();
 				}
 			}
@@ -334,7 +334,7 @@ function aiad_load_bundled_plugin_from_theme( string $slug, string $main_file ):
 		global $wpdb;
 		$table = AIRB_Database::table_name();
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+		if ( ! get_option( 'airb_db_version' ) && $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) { // The version is saved once the tables exist.
 			AIRB_Activator::activate();
 		}
 	}

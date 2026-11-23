@@ -2,7 +2,8 @@
 /**
  * National Survey 2026 — shortcode, AJAX handler, and admin CSV export.
  *
- * Shortcode: [aiad_national_survey]
+ * The survey form, printed by the aiad/national-survey block (the [aiad_national_survey] shortcode it replaced is converted
+ * to the block by shortcode-migration.php).
  * Responses are stored as 'survey_response' custom posts with _survey_* meta.
  *
  * Moved from the theme's inc/national-survey.php. The theme loads this file from its bundled copy of the plugin when

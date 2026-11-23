@@ -6,6 +6,10 @@
  * @package AI_Awareness_Day
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 ?>
 
 <main id="main" class="resources-archive featured-resources-archive">

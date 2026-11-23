@@ -70,7 +70,7 @@ class AIADN_Front {
 			return;
 		}
 		flush_rewrite_rules( false );
-		update_option( 'aiadn_rewrite_version', AIADN_VERSION, false );
+		update_option( 'aiadn_rewrite_version', AIADN_VERSION, true );
 	}
 
 	public static function add_rewrites(): void {

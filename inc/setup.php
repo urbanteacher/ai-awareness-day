@@ -89,7 +89,26 @@ add_action('init', function (): void {
     }
     flush_rewrite_rules(true);
     update_option('aiad_rewrite_version', AIAD_VERSION);
+    aiad_autoload_request_flags();
 }, 99); // After every post type and the theme's own rules are registered.
+
+/**
+ * The small "done" and version flags that the theme and its plugins read on every request are loaded with the rest
+ * of the site's options, in one query, instead of one query each (they were 20 a page). Their writers now save them
+ * that way; this switches over the copies already saved, once per theme version.
+ */
+function aiad_autoload_request_flags(): void
+{
+    $flags = array(
+        'aiad_llms_txt_hash', 'aiad_social_reconciled', 'aiad_assets_pack_page_id', 'aiad_homepage_converted',
+        'aiad_theme_pages_done', 'aiad_airb_hub_timeline_seeded_v1', 'aiad_shortcodes_converted',
+        'aiad_partner_logos_fixed', 'aiad_article_human_bottleneck_hash', 'aiad_event_rewrite_version',
+        'airb_db_version', 'airb_certificates_db_version', 'airb_leads_db_version', 'airb_hub_pages_seeded_v1',
+        'airb_hub_pages_no_benchmark_v1', 'airb_hub_intervention_v19', 'airb_hub_contact_cta_v1',
+        'airb_hub_interest_hash_v2', 'aiadn_db_version', 'aiadn_rewrite_version',
+    );
+    wp_set_option_autoload_values(array_fill_keys($flags, true));
+}
 
 /**
  * Enqueue Styles & Scripts
@@ -133,16 +152,9 @@ function aiad_scripts(): void
         $script_args
     );
 
-    // The theme's script modules. They share aiad/rest, which finds the REST routes through the discovery link.
-    $rest_js     = AIAD_DIR . '/assets/js/rest.js';
-    $tracking_js = AIAD_DIR . '/assets/js/tracking.js';
-    wp_register_script_module( 'aiad/rest', AIAD_URI . '/assets/js/rest.js', array(), file_exists( $rest_js ) ? filemtime( $rest_js ) : AIAD_VERSION );
-    // The contact form is on the front page and wherever the Get Involved form block is used; the script checks for the form.
-    $contact_js = AIAD_DIR . '/assets/js/contact-form.js';
-    wp_enqueue_script_module( 'aiad/contact-form', AIAD_URI . '/assets/js/contact-form.js', array( 'aiad/rest' ), file_exists( $contact_js ) ? filemtime( $contact_js ) : AIAD_VERSION );
-    wp_enqueue_script_module( 'aiad/tracking', AIAD_URI . '/assets/js/tracking.js', array( 'aiad/rest' ), file_exists( $tracking_js ) ? filemtime( $tracking_js ) : AIAD_VERSION );
+    // The theme's script modules below import aiad/rest, the shared REST client, which the aiad-core plugin registers
+    // (modules/rest-client.php) along with its own contact form and tracking modules.
 
-    // balloons-js disabled post-event. Assets remain in theme for reuse.
 
     if (is_post_type_archive('resource') || is_post_type_archive('featured_resource')) {
         $resource_filters_js = AIAD_DIR . '/assets/js/resource-filters.js';
@@ -256,22 +268,6 @@ function aiad_scripts(): void
 
 }
 add_action('wp_enqueue_scripts', 'aiad_scripts');
-
-/**
- * Load aiad-balloons as an ES module (static import of vendor balloons-js).
- *
- * @param string $tag    Full script tag HTML.
- * @param string $handle Script handle.
- * @param string $src    Script source URL (unused).
- */
-function aiad_script_loader_tag_module(string $tag, string $handle, string $src): string
-{
-    if ($handle === 'aiad-balloons' && str_contains($tag, '<script ')) {
-        $tag = str_replace('<script ', '<script type="module" ', $tag);
-    }
-    return $tag;
-}
-add_filter('script_loader_tag', 'aiad_script_loader_tag_module', 10, 3);
 
 /**
  * Register widget areas.

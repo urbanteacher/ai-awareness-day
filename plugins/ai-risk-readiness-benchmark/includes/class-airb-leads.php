@@ -109,7 +109,7 @@ class AIRB_Leads {
 		if ( $stored < 3 ) {
 			self::backfill_school_keys();
 		}
-		update_option( 'airb_leads_db_version', self::DB_VERSION, false );
+		update_option( 'airb_leads_db_version', self::DB_VERSION, true );
 	}
 
 	/**

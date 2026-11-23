@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Large Language Model: trained on piles of writing, it guesses the next word. Arrows: scripts/literacy-arrows/specs/ll.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-cream" x="126" y="18" width="96" height="16" rx="3"/><rect class="i-line" x="126" y="18" width="96" height="16" rx="3"/>
+  <rect class="i-deep" x="116" y="34" width="110" height="18" rx="3"/>
+  <rect class="i-paper" x="122" y="52" width="104" height="16" rx="3"/><rect class="i-line" x="122" y="52" width="104" height="16" rx="3"/>
+  <rect class="i-cream" x="112" y="68" width="118" height="18" rx="3"/><rect class="i-line" x="112" y="68" width="118" height="18" rx="3"/>
+  <path class="i-line" d="M136 18 V34 M210 68 V86 M140 52 V68" stroke-opacity=".5"/>
+  <path class="i-deep" d="M72 122 H214 L230 138 V160 H72 Z"/>
+  <text class="t-s t-w" x="151" y="147" text-anchor="middle">Language model</text>
+  <rect class="i-paper" x="16" y="198" width="268" height="118" rx="12"/><rect class="i-line" x="16" y="198" width="268" height="118" rx="12"/>
+  <text class="t-s" x="32" y="226">The cat sat on the …</text>
+  <text class="t-s" x="32" y="256">mat</text><rect class="i-accent" x="86" y="244" width="170" height="14" rx="7"/>
+  <text class="t-s" x="32" y="280">sofa</text><rect class="i-deep" x="86" y="269" width="64" height="12" rx="6"/>
+  <text class="t-s" x="32" y="304">moon</text><rect class="i-deep i-faint" x="86" y="294" width="14" height="10" rx="5"/>
+</svg>

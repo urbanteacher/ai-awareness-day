@@ -105,11 +105,18 @@ function aiad_seed_timeline_audience_terms(): void {
 		return;
 	}
 
-	foreach ( aiad_timeline_audience_role_options() as $slug => $label ) {
+	// Checked when the role list changes and once per theme version, not on every request.
+	$roles = aiad_timeline_audience_role_options();
+	$stamp = md5( (string) wp_json_encode( $roles ) . ( defined( 'AIAD_VERSION' ) ? AIAD_VERSION : '' ) );
+	if ( get_option( 'aiad_timeline_audience_terms_checked' ) === $stamp ) {
+		return;
+	}
+	foreach ( $roles as $slug => $label ) {
 		if ( ! term_exists( $slug, aiad_timeline_audience_taxonomy() ) ) {
 			wp_insert_term( $label, aiad_timeline_audience_taxonomy(), array( 'slug' => $slug ) );
 		}
 	}
+	update_option( 'aiad_timeline_audience_terms_checked', $stamp, true );
 }
 add_action( 'init', 'aiad_seed_timeline_audience_terms', 13 );
 

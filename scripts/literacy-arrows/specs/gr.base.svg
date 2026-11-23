@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Guardrails: rails around the AI let a homework question and safe answer through, and stop an unsafe request and a harmful reply. Arrows: scripts/literacy-arrows/specs/gr.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper i-faint" x="112" y="40" width="132" height="34" rx="10"/><rect class="i-line i-dash" x="112" y="40" width="132" height="34" rx="10"/>
+  <text class="t-s" x="178" y="63" text-anchor="middle">Unsafe ask ✗</text>
+  <path class="i-line" d="M30 126 V140 M80 126 V140 M130 126 V140 M180 126 V140 M230 126 V140 M276 126 V140 M30 246 V260 M80 246 V260 M130 246 V260 M180 246 V260 M230 246 V260 M276 246 V260"/>
+  <rect class="i-deep" x="16" y="114" width="272" height="12" rx="4"/>
+  <rect class="i-deep" x="16" y="258" width="272" height="12" rx="4"/>
+  <rect class="i-paper" x="8" y="172" width="92" height="38" rx="10"/><rect class="i-line" x="8" y="172" width="92" height="38" rx="10"/>
+  <text class="t-s" x="54" y="196" text-anchor="middle">Homework</text>
+  <path class="i-deep" d="M134 164 H174 L186 176 V218 H134 Z"/>
+  <rect class="i-paper" x="143" y="178" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="153" cy="189" r="3.2"/><circle class="i-ink" cx="165" cy="189" r="3.2"/>
+  <rect class="i-paper" x="222" y="172" width="68" height="38" rx="10"/><rect class="i-line" x="222" y="172" width="68" height="38" rx="10"/>
+  <text class="t-s" x="256" y="196" text-anchor="middle">Help ✓</text>
+  <rect class="i-paper i-faint" x="76" y="282" width="148" height="34" rx="10"/><rect class="i-line i-dash" x="76" y="282" width="148" height="34" rx="10"/>
+  <text class="t-s" x="150" y="305" text-anchor="middle">Harmful reply ✗</text>
+</svg>

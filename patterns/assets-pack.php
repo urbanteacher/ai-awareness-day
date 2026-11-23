@@ -12,7 +12,7 @@
  * template-assets-pack.php prints, as Download card blocks (blocks/download-card), whose file is chosen from the media
  * library. The logo and email banners chosen in the Customizer are included if they are set; after that, a card's
  * file is changed on the page. Everything sits in one main group (main#main.assets-pack-page, as on the PHP page);
- * the page then renders from templates/theme-page.html (inc/editable-pages.php). The page's own text, if it had
+ * the page then renders from templates/assets-pack.html (inc/editable-pages.php). The page's own text, if it had
  * any, stays as the introduction. The Demo link's address is the {demo_start_url} placeholder, left out away from the
  * presenter's laptop.
  *
@@ -20,6 +20,10 @@
  *
  * @var WP_Post|null $aiad_page The page, when the blocks are made for it (aiad_editable_page_content()).
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_page  = isset( $aiad_page ) && $aiad_page instanceof WP_Post ? $aiad_page : null;
 $aiad_intro = $aiad_page ? trim( $aiad_page->post_content ) : '';

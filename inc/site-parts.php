@@ -64,9 +64,8 @@ add_action(
 );
 
 /**
- * As a block theme, WordPress chooses a block template first; some pages then swap in a PHP template of their own
- * (National Conversation, Walkthrough, the benchmark's hub pages: template_include). For any page that ends up on a
- * PHP template, keep the head as header.php makes it:
+ * As a block theme, WordPress chooses a block template first; a page can still end up on a PHP template (one a plugin
+ * chooses through template_include). For any page that ends up on a PHP template, keep the head as header.php makes it:
  * - core queued its viewport tag for the block template, and header.php prints one already;
  * - the header and footer template parts render after wp_head(), so their blocks' small stylesheets would print at
  *   the end of the page; queue them now so they print in the head, as they do in a hybrid theme.

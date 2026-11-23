@@ -7,7 +7,7 @@
  * happens afterwards, and how to run it online. One guide for each age: primary, secondary and post-16.
  *
  * Inside the portal, for signed-in school staff and judges, like the prep pack. Each guide is also a PDF to download,
- * made from this same page by scripts/build-debate-guides.sh and kept in downloads/, which the web server does not
+ * made from this same page by scripts/build-debate-guides.php and kept in downloads/, which the web server does not
  * serve directly: the PDF goes out through this view, after the same sign-in check.
  *
  * The timings come from AIADN_Format, so the guide, the prep pack and the scorecard never disagree. The format is a

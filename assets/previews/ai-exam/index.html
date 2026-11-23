@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<title>Timed Exams · AI Under the Hood</title>
+<meta name="description" content="Timed exams for the AI Under the Hood courses: one for each part, and a full exam across all three.">
+<style>
+:root{--ink:var(--a27-ink);--paper:var(--a27-cream);--dim:var(--a27-dim);--rule:var(--a27-rule);--card:var(--a27-card);font:17px/1.55 'AIAD Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper)}h1,h2,h3,h4,p{margin:0}
+a{color:inherit;text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+.wrap{max-width:980px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem) 3rem}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--rule)}
+.top a{font-weight:650;font-size:.92rem}.top img{width:clamp(8.5rem,24vw,15rem);height:auto;display:block}
+.eyebrow{font-weight:700;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase}
+[hidden]{display:none!important}
+/* Start screen */
+.intro{margin:clamp(1rem,3vw,2rem) 0 1.4rem;background:var(--ink);color:var(--paper);padding:clamp(1.3rem,3.6vw,2.6rem)}
+.intro .eyebrow{color:var(--a27-safe)}
+.intro h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:.95;letter-spacing:-.06em;font-weight:800;margin:.5rem 0 .8rem}
+.intro h1 span{color:var(--a27-smart)}
+.intro p{max-width:58ch;color:#e9e6dd}
+.rules{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}.rules span{border:1px solid #ffffff55;padding:.3rem .7rem;font-size:.82rem;font-weight:650}
+.exams{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.9rem}
+.ex{--c:var(--a27-safe);--cd:var(--a27-safe-deep);background:#fff;border:1.5px solid var(--ink);border-top:8px solid var(--c);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.5rem}
+.ex[data-x="2"]{--c:var(--a27-creative);--cd:var(--a27-creative-deep)}.ex[data-x="3"]{--c:var(--a27-smart);--cd:var(--a27-smart-deep)}.ex[data-x="all"]{--c:var(--a27-future);--cd:var(--a27-future-deep)}
+.ex h2{font-size:1.35rem;letter-spacing:-.03em;line-height:1.1}
+.ex .k{color:var(--cd)}
+.ex .meta{font-size:.88rem;font-weight:650}
+.ex .best{font-size:.85rem;color:var(--dim);min-height:2.6em}
+.ex button{margin-top:auto;min-height:48px;background:var(--ink);color:var(--paper);border:0;font-weight:800}
+.ex button:hover{background:var(--cd)}
+.hist{margin-top:1.6rem;background:var(--card);padding:1rem 1.1rem}
+.hist h3{font-size:1rem;margin-bottom:.5rem}
+.hist table{width:100%;border-collapse:collapse;font-size:.88rem}
+.hist th,.hist td{text-align:left;padding:.35rem .4rem;border-bottom:1px solid var(--rule)}
+.hist .empty{font-size:.9rem;color:var(--dim)}
+/* Exam screen */
+.bar{position:sticky;top:0;z-index:10;background:var(--paper);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem;padding:.8rem 0;border-bottom:1px solid var(--rule)}
+.bar h2{font-size:1.05rem;letter-spacing:-.02em}
+.timer{display:flex;align-items:center;gap:.5rem;font-weight:800;font-variant-numeric:tabular-nums;font-size:1.35rem}
+.timer .ring{width:2.1rem;height:2.1rem;border-radius:50%;background:conic-gradient(var(--ink) var(--p,100%),var(--rule) 0)}
+.timer.low{color:var(--a27-crit)}.timer.low .ring{background:conic-gradient(var(--a27-crit) var(--p,100%),var(--rule) 0)}
+.prog{height:6px;background:var(--rule);margin:.6rem 0 1rem}.prog i{display:block;height:100%;width:0;background:var(--ink);transition:width .3s}
+.qcard{background:#fff;border:1.5px solid var(--ink);padding:clamp(1rem,3vw,1.8rem)}
+.qmeta{display:flex;justify-content:space-between;gap:1rem;font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.qcard h3{font-size:clamp(1.2rem,2.6vw,1.55rem);letter-spacing:-.02em;line-height:1.25;margin:.6rem 0 1rem}
+.opts{display:grid;gap:.5rem;counter-reset:o}
+.opts button{counter-increment:o;display:flex;align-items:center;gap:.8rem;text-align:left;min-height:52px;padding:.6rem .8rem;background:#fff;border:1.5px solid #a9a397;font-size:1rem}
+.opts button::before{content:counter(o,upper-alpha);flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;background:var(--card);font-weight:800;font-size:.85rem}
+.opts button:hover{border-color:var(--ink)}
+.opts button[aria-checked=true]{border-color:var(--ink);background:#EEF4FF;box-shadow:inset 5px 0 0 var(--ink)}
+.opts button[aria-checked=true]::before{background:var(--ink);color:var(--paper)}
+.nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-top:1rem}
+.nav button{min-height:46px;padding:.4rem 1rem;border:1.5px solid var(--ink);background:#fff;font-weight:750}
+.nav .pri{background:var(--ink);color:var(--paper)}
+.nav .flag[aria-pressed=true]{background:#FFE7A3}
+.grid{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:1.2rem}
+.grid button{width:2.4rem;height:2.4rem;border:1.5px solid var(--rule);background:#fff;font-weight:750;font-size:.85rem;position:relative}
+.grid button.ans{background:var(--card);border-color:var(--ink)}
+.grid button.cur{outline:3px solid var(--ink);outline-offset:1px}
+.grid button.flg::after{content:"";position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;background:#E6AA27;border:1.5px solid var(--ink)}
+.keys{font-size:.8rem;color:var(--dim);margin-top:.7rem}
+/* Results */
+.res{margin:1.2rem 0;background:#fff;border:1.5px solid var(--ink);padding:clamp(1.2rem,3.5vw,2.2rem)}
+.score{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem}
+.dial{width:9rem;height:9rem;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sc,#176E3B) var(--p,0%),var(--rule) 0)}
+.dial div{width:7rem;height:7rem;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;line-height:1.1}
+.dial b{font-size:2.2rem;letter-spacing:-.04em}.dial small{display:block;font-size:.8rem;color:var(--dim)}
+.band{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.04em;line-height:1}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.6rem}.facts span{background:var(--card);padding:.25rem .6rem;font-size:.85rem;font-weight:650}
+.parts{display:grid;gap:.5rem;margin-top:1.3rem}
+.parts .row{display:grid;grid-template-columns:11rem 1fr 3.5rem;gap:.6rem;align-items:center;font-size:.9rem}
+@media(max-width:560px){.parts .row{grid-template-columns:1fr 3rem}.parts .row .b{grid-column:1/-1;grid-row:2}}
+.parts .b{height:12px;background:var(--rule)}.parts .b i{display:block;height:100%}
+.review{margin-top:1.4rem;display:grid;gap:.6rem}
+.rv{border:1px solid var(--rule);border-left:6px solid #176E3B;padding:.7rem .9rem;background:#fbfaf6}
+.rv.no{border-left-color:var(--a27-crit)}.rv.skip{border-left-color:#E6AA27}
+.rv h4{font-size:1rem;line-height:1.3;margin:.2rem 0 .4rem}
+.rv .tag{font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.rv p{font-size:.9rem}.rv p+p{margin-top:.25rem}
+.rv a{font-weight:700;font-size:.86rem}
+.actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}
+.actions button,.actions a{display:inline-flex;align-items:center;min-height:46px;padding:.4rem 1rem;border:1.5px solid var(--ink);background:#fff;font-weight:750;text-decoration:none}
+.actions .pri{background:var(--ink);color:var(--paper)}
+.filter{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1.4rem}
+.filter button{min-height:38px;padding:.25rem .7rem;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:.85rem}
+.filter button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+@media print{.top,.actions,.filter,.bar{display:none}.res{border:0}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top"><a href="../ai-under-the-hood/">← All courses</a><img src="../../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop"></header>
+
+<!-- Start -->
+<section id="start">
+  <div class="intro">
+    <span class="eyebrow">AI Under the Hood · Test yourself</span>
+    <h1>Timed <span>exams</span></h1>
+    <p>One exam for each course, and a full exam across all three. Questions are drawn at random each time, so you can sit an exam again and get a different paper. No feedback until you submit: just like the real thing.</p>
+    <div class="rules"><span>About 1 minute per question</span><span>Flag questions to come back to</span><span>Auto-submits when time runs out</span><span>Keys 1–4 to answer</span></div>
+  </div>
+  <div class="exams" id="exams"></div>
+  <div class="hist" id="hist"></div>
+</section>
+
+<!-- Exam -->
+<section id="exam" hidden aria-labelledby="exTitle">
+  <div class="bar"><h2 id="exTitle"></h2><div class="timer" id="timer" role="timer" aria-live="off"><span class="ring" aria-hidden="true"></span><span id="clock">00:00</span></div></div>
+  <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+  <article class="qcard" aria-live="polite">
+    <div class="qmeta"><span id="qNum"></span><span id="qFrom"></span></div>
+    <h3 id="qText"></h3>
+    <div class="opts" id="opts" role="radiogroup" aria-labelledby="qText"></div>
+    <div class="nav">
+      <div><button type="button" id="prev">← Previous</button> <button type="button" class="flag" id="flag" aria-pressed="false">⚑ Flag for review</button></div>
+      <div><button type="button" class="pri" id="next">Next →</button></div>
+    </div>
+  </article>
+  <div class="grid" id="grid" aria-label="Jump to a question"></div>
+  <p class="keys">Shortcuts: 1–4 or A–D to choose, ← → to move. <button type="button" id="submit" style="margin-left:.5rem;min-height:40px;padding:.3rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:750">Submit exam</button></p>
+</section>
+
+<!-- Results -->
+<section id="results" hidden aria-labelledby="resTitle"><div class="res" id="res"></div></section>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var POOL=[{"course":1,"ch":"ch1","chTitle":"Your question is chopped into tokens","q":"A model's context window is 128,000 tokens. Roughly how many English words is that?","o":["128,000 words, one per token","About 512,000 words","About 96,000 words","About 32,000 words"],"a":2,"why":"Right. A token is about three-quarters of a word on average, so 128,000 × 0.75 ≈ 96,000 words. That's longer than most novels."},{"course":1,"ch":"ch2","chTitle":"Each word becomes a point in space","q":"Why do models use embeddings instead of the token numbers themselves?","o":["Embeddings take up less memory than token numbers","Their distances and directions can carry meaning, while token numbers are just labels","Humans write the embeddings by hand, so they're more accurate"],"a":1,"why":"Yes. A token's number is just its place in a list. An embedding puts it in a space where nearness means something."},{"course":1,"ch":"ch4","chTitle":"Thousands of workers, one huge sum","q":"Storing a model's numbers with 4 bits instead of 16 bits is called quantisation. What's the trade-off?","o":["It needs a quarter of the memory and runs faster, but the answers can be slightly worse","It makes the model four times cleverer","It deletes three-quarters of the parameters"],"a":0,"why":"Right. Every parameter is still there, just rounded more coarsely, like writing 3.14 instead of 3.14159. Smaller and faster, with a small cost in accuracy."},{"course":1,"ch":"ch5","chTitle":"The chip was once sand","q":"Why do chipmakers add a tiny amount of boron to silicon?","o":["To make it shiny enough to reflect light","To make it conduct as well as copper","To create holes that carry positive charge, making p-type silicon","To stop it melting during manufacture"],"a":2,"why":"Right. Boron has one fewer outer electron than silicon, so each boron atom leaves a hole. Phosphorus, with one more, gives n-type silicon."},{"course":1,"ch":"ch6","chTitle":"Printing with light no one can see","q":"Why do chipmakers use extreme ultraviolet light, rather than visible light, to print chips?","o":["It is cheaper to produce","Its much shorter wavelength lets them print much finer features","It can't be seen, so the designs stay secret","It heats the wafer faster"],"a":1,"why":"Yes. Diffraction limits how fine a pattern light can draw, and that limit shrinks with the wavelength. EUV is 13.5 nm; visible light is around 400 to 700 nm."},{"course":1,"ch":"ch7","chTitle":"The model guesses the next word, again and again","q":"Why does a chatbot's answer appear a word or so at a time?","o":["To make it look as if a person is typing","Your internet connection is slow","It really does produce one token, then runs the model again to produce the next"],"a":2,"why":"Yes. Every new token needs another pass through the model, which is why the chip's memory speed matters so much."},{"course":1,"ch":"ch8","chTitle":"Every model is built from other models' ideas","q":"How could a Chinese lab build on an idea first developed at Meta, a US company?","o":["It had to buy a licence for the idea from Meta","It copied Meta's chips","The two labs worked on it together","Meta published the research openly, and released its model's weights for anyone to download"],"a":3,"why":"Right. Published papers and open-weight models let any lab, anywhere, study and reuse an idea. That openness works in both directions."},{"course":1,"ch":"ch9","chTitle":"The answer comes home, and you check it","q":"Put the journey in order. Which is right?","o":["Embeddings → tokens → attention → next-token probabilities","Tokens → next-token probabilities → embeddings → attention","Attention → tokens → embeddings → next-token probabilities","Tokens → embeddings → attention → next-token probabilities"],"a":3,"why":"Exactly. Text becomes tokens, tokens become embeddings, attention layers mix in context, and the last layer gives probabilities for the next token."},{"course":1,"ch":"ch1","chTitle":"Your question is chopped into tokens","q":"About how many English words fit in 1,000 tokens?","o":["About 250","About 750","Exactly 1,000","About 4,000"],"a":1,"why":"Right: a token is about three-quarters of a word."},{"course":1,"ch":"ch4","chTitle":"Thousands of workers, one huge sum","q":"When a model writes each new token, what usually limits its speed?","o":["Reading its parameters from memory","Doing the arithmetic","The speed of your internet","How fast your screen refreshes"],"a":0,"why":"Yes. Each token means reading billions of numbers, so memory speed is often the bottleneck."},{"course":1,"ch":"ch4","chTitle":"Thousands of workers, one huge sum","q":"About how much memory do a 7-billion-parameter model's parameters need at 4 bits each?","o":["28 GB","14 GB","7 GB","3.5 GB"],"a":3,"why":"Right: 7 billion × 4 bits ÷ 8 = 3.5 billion bytes."},{"course":1,"ch":"ch5","chTitle":"The chip was once sand","q":"What does adding phosphorus to silicon do?","o":["Creates holes, making p-type silicon","Turns it into an insulator","Adds spare electrons, making n-type silicon","Makes it magnetic"],"a":2,"why":"Yes. Phosphorus has one more outer electron than silicon."},{"course":1,"ch":"ch6","chTitle":"Printing with light no one can see","q":"Which company is the only maker of EUV lithography machines?","o":["ASML","TSMC","NVIDIA","Samsung"],"a":0,"why":"Right. ASML, in the Netherlands. TSMC uses its machines to make the chips."},{"course":1,"ch":"ch7","chTitle":"The model guesses the next word, again and again","q":"What happens when you turn up a model's temperature?","o":["It runs hotter and uses more electricity","Less likely tokens get chosen more often","Its answers become more accurate","It reads more of the conversation"],"a":1,"why":"Yes. More variety, and more mistakes."},{"course":1,"ch":"ch8","chTitle":"Every model is built from other models' ideas","q":"RoPE, a way of encoding word position, travelled which way?","o":["From Google to Meta","From the US to China","From China to the US","It was invented separately in both"],"a":2,"why":"Right. Zhuiyi Technology in China published it in 2021, and Meta used it in LLaMA in 2023."},{"course":2,"ch":"ch1","chTitle":"Give it the right pages to read","q":"A school adds next year's timetable to its RAG system. What has to happen to the model?","o":["It must be retrained on the new timetable","Nothing: the new document is added to the store, and retrieved when it's relevant","Its parameters are updated with the dates"],"a":1,"why":"Right. That's the point of RAG: you update the documents, not the model. Retraining would take far longer and cost far more."},{"course":2,"ch":"ch2","chTitle":"Give it hands, sort of","q":"In function calling, who actually runs the booking?","o":["The language model","The person using the chatbot","The app around the model, after the model asks for it"],"a":2,"why":"Yes. The model only writes the request. That's why the app is the right place for safety checks."},{"course":2,"ch":"ch3","chTitle":"One plug for everything","q":"Does MCP replace function calling?","o":["Yes: MCP is a newer kind of AI model","Yes: with MCP, models no longer need to write tool requests","No: MCP is a standard way to deliver tools and data to an AI app, and the model still uses function calling to ask for them","No, because MCP only works with Claude"],"a":2,"why":"Right. Function calling is how the model asks for a tool. MCP is how the tool gets plugged into the app in the first place, the same way for every app."},{"course":2,"ch":"ch4","chTitle":"Let it take the steps itself","q":"What makes a system an agent, rather than a chatbot with tools?","o":["It decides its own next steps in a loop, towards a goal, without being asked at each step","It uses a bigger model","It can search the internet"],"a":0,"why":"Right. A chatbot with tools waits for you before each action. An agent keeps going on its own: think, act, observe, repeat."},{"course":2,"ch":"ch5","chTitle":"How much do you let it do?","q":"Your revision agent only needs to read timetables and book rooms. Which defence would have stopped the injected email, even on “Act alone”?","o":["A longer, stricter prompt","A bigger, cleverer model","Giving the agent no email tool at all","Turning off its memory"],"a":2,"why":"Right. Give each agent only the tools its job needs. An agent with no email tool can’t send an email, whatever it reads."},{"course":2,"ch":"ch1","chTitle":"Give it the right pages to read","q":"What does RAG change?","o":["The model’s parameters","What is pasted into the prompt","The model’s training data","The size of the model"],"a":1,"why":"Right. RAG leaves the model alone and changes what it reads at the moment you ask."},{"course":2,"ch":"ch1","chTitle":"Give it the right pages to read","q":"Why can a RAG answer still be wrong?","o":["RAG answers are never wrong","The wrong chunk may be retrieved, or the right one may be missing","Embeddings are random","The model forgets the question"],"a":1,"why":"Yes. Retrieval can miss, and the model can still answer confidently from the wrong text."},{"course":2,"ch":"ch2","chTitle":"Give it hands, sort of","q":"In function calling, what does the model actually do?","o":["Runs the code itself","Writes a structured request that the app runs","Sends emails directly","Changes its own parameters"],"a":1,"why":"Right. The model only writes the request. The app decides whether to run it."},{"course":2,"ch":"ch3","chTitle":"One plug for everything","q":"There are 8 AI apps and 10 tools. How many pieces need building with MCP?","o":["80","18","10","8"],"a":1,"why":"Yes: 8 + 10 = 18, instead of 8 × 10 = 80 custom connections."},{"course":2,"ch":"ch3","chTitle":"One plug for everything","q":"Which MCP message asks a server what it can do?","o":["tools/call","tools/list","resources/read","book_room"],"a":1,"why":"Right. \"tools/list\" comes first; \"tools/call\" runs one tool."},{"course":2,"ch":"ch4","chTitle":"Let it take the steps itself","q":"What makes a system an agent?","o":["A bigger model","Access to the internet","It decides its own next steps in a loop, towards a goal","It has a chat window"],"a":2,"why":"Yes. Think, act, observe, repeat, without being told each step."},{"course":2,"ch":"ch5","chTitle":"How much do you let it do?","q":"What is the best defence for actions that can’t be undone?","o":["A stronger model","A person approves them first","A longer prompt","Turning off memory"],"a":1,"why":"Right. A human in the loop, at the moments that matter."},{"course":3,"ch":"ch1","chTitle":"Draw the steps yourself","q":"When is a fixed workflow a better choice than an agent?","o":["When the steps are known in advance and you need the same result every time","When the task is too hard to explain","Whenever you want the system to be more intelligent"],"a":0,"why":"Yes. Fixed steps are cheaper, faster and easier to test. Save agents for jobs where the steps can't be known in advance."},{"course":3,"ch":"ch2","chTitle":"Check it, vote on it, try again","q":"A system asks a model the same question 9 times and keeps the most common answer. When can this make things worse?","o":["When the model is more often wrong than right, in the same way each time","Never: more answers always help","When the question is too easy"],"a":0,"why":"Right. A vote only helps if each answer is more likely right than wrong. If the model shares a misconception, the vote just makes the wrong answer look more certain."},{"course":3,"ch":"ch3","chTitle":"A manager and a team of specialists","q":"A customer-service agent passes you to a refunds agent, which now talks to you directly. Which pattern is that?","o":["Agent-as-tool","Hand-off","Debate"],"a":1,"why":"Yes. In a hand-off, control passes to the new agent. With agent-as-tool, the first agent would stay in charge and just use the refunds agent's answer."},{"course":3,"ch":"ch4","chTitle":"Where should the human sit?","q":"You are asked to approve 40 agent actions an hour, and you have started tapping Approve without reading. What is the best fix?","o":["Approve faster","Let an AI checker handle routine steps, and ask you only about the risky ones","Remove all the checks","Add a second person who also approves everything"],"a":1,"why":"Right. Fewer, better requests: put people where mistakes cost most."},{"course":3,"ch":"ch1","chTitle":"Draw the steps yourself","q":"What does a router do?","o":["Runs every request in parallel","Sorts each input into a category, then sends it to a specialist","Checks answers against a test","Approves risky actions"],"a":1,"why":"Yes. Classify first, then hand it to the prompt or model built for that category."},{"course":3,"ch":"ch2","chTitle":"Check it, vote on it, try again","q":"A system asks a model the same question 9 times and keeps the most common answer. When does this make things worse?","o":["When the model is usually wrong in the same way","When the question is easy","Never","When the temperature is high"],"a":0,"why":"Right. A shared misconception wins the vote, and becomes more certain."},{"course":3,"ch":"ch2","chTitle":"Check it, vote on it, try again","q":"What is the main weakness of reflection, where a model checks its own draft?","o":["It is too slow to be useful","Models often miss their own errors when there is nothing outside to check against","It always changes right answers to wrong ones","It needs a person"],"a":1,"why":"Yes. Reflection works best when the model can test its answer against something, like the question itself."},{"course":3,"ch":"ch3","chTitle":"A manager and a team of specialists","q":"Anthropic reported that its multi-agent system used roughly how many times the tokens of an ordinary chat?","o":["2 times","4 times","15 times","100 times"],"a":2,"why":"Right: about 15 times, against about 4 for a single agent. Teams are worth it only for jobs worth the cost."},{"course":3,"ch":"ch4","chTitle":"Where should the human sit?","q":"A job has 50 steps, and each goes right 98% of the time. Roughly what is the chance that every step goes right?","o":["98%","About 50%","About 36%","About 2%"],"a":2,"why":"Yes: 0.98⁵⁰ ≈ 0.36. Small chances of error add up over long jobs."},{"course":3,"ch":"ch4","chTitle":"Where should the human sit?","q":"What is automation bias?","o":["Bias in the data a model was trained on","Trusting a computer that is usually right, and so no longer checking it","Preferring human work to AI work","A setting that makes AI more careful"],"a":1,"why":"Right. It is why approving everything quickly becomes a reflex."},{"course":1,"ch":"ch3","chTitle":"The trip to a building full of chips","q":"What is “inference”?","o":["Training a new model from scratch","Using a trained model to answer a request","Designing a new chip","Cleaning up training data"],"a":1,"why":"Inference is running a model that has already been trained, which happens every time someone asks a question."},{"course":1,"ch":"ch4","chTitle":"Thousands of workers, one huge sum","q":"Why do AI chips sit next to high-bandwidth memory (HBM)?","o":["It is cheaper than normal memory","It moves the model’s numbers to the cores very fast","It stores the whole internet","It keeps the chip cool"],"a":1,"why":"Every new token means reading the model’s parameters, so fast memory is what keeps the cores busy."},{"course":1,"ch":"ch5","chTitle":"The chip was once sand","q":"Roughly how many transistors are on the newest AI chips, such as NVIDIA’s Blackwell?","o":["About 2,300","About 80 million","Over 200 billion","About a million trillion"],"a":2,"why":"Blackwell has 208 billion transistors. The first microprocessor, in 1971, had 2,300."},{"course":2,"ch":"ch1","chTitle":"Give it the right pages to read","q":"What does a vector database store?","o":["Photos of the documents","Embeddings, so it can find text with a similar meaning","The model’s parameters","Passwords for each user"],"a":1,"why":"It stores embeddings and can quickly find the ones closest in meaning to a question."},{"course":2,"ch":"ch1","chTitle":"Give it the right pages to read","q":"In RAG, what is a “chunk”?","o":["A short piece of a document, stored and retrieved on its own","A broken part of the model","A type of GPU","A single token"],"a":0,"why":"Documents are split into chunks so the system can retrieve just the relevant parts."},{"course":2,"ch":"ch3","chTitle":"One plug for everything","q":"Which company first published MCP as an open standard, in November 2024?","o":["OpenAI","Anthropic","Google","Microsoft"],"a":1,"why":"Anthropic published it; OpenAI, Google and Microsoft adopted it in 2025, and in December 2025 it was handed to the Agentic AI Foundation."},{"course":2,"ch":"ch3","chTitle":"One plug for everything","q":"An MCP server can offer three kinds of thing. Which list is right?","o":["Tools, resources and prompts","Models, chips and data centres","Passwords, cookies and logins","Images, videos and sounds"],"a":0,"why":"Tools to run, resources to read, and ready-made prompts."},{"course":2,"ch":"ch4","chTitle":"Let it take the steps itself","q":"In the ReAct pattern, what does an agent alternate between?","o":["Reading and deleting","Reasoning, and acting with tools","Training and testing","Asking and waiting"],"a":1,"why":"ReAct is short for reason and act: think about the next step, use a tool, look at the result, repeat."},{"course":2,"ch":"ch5","chTitle":"How much do you let it do?","q":"Why does prompt injection work?","o":["The internet is too slow","Models treat any text they read as possible instructions","Agents can’t read web pages","It only works on old models"],"a":1,"why":"Instructions hidden in a page or email look just like instructions from you, and there is no complete fix yet."},{"course":3,"ch":"ch1","chTitle":"Draw the steps yourself","q":"What is prompt chaining?","o":["Asking the same question many times","The output of one model call becomes the input to the next","Two agents arguing","Linking prompts to a database"],"a":1,"why":"A fixed chain of steps, often with a check between them."},{"course":3,"ch":"ch1","chTitle":"Draw the steps yourself","q":"When is parallelisation the right pattern?","o":["When each step depends on the last","When the pieces don’t depend on each other","When a person must approve every step","When the task is a single question"],"a":1,"why":"Independent pieces can run at the same time and be merged at the end."},{"course":3,"ch":"ch1","chTitle":"Draw the steps yourself","q":"What do Anthropic’s engineers advise when building with AI?","o":["Always use the biggest team of agents","Start with the simplest thing that works","Never use workflows","Let the model decide everything"],"a":1,"why":"Use an agent only when the steps really can’t be known in advance."},{"course":3,"ch":"ch2","chTitle":"Check it, vote on it, try again","q":"In the evaluator-optimiser pattern, what does the evaluator do?","o":["Writes the first draft","Grades the work against clear criteria","Chooses which model to use","Talks to the user"],"a":1,"why":"One call writes, another grades, and the loop repeats until the work passes."},{"course":3,"ch":"ch2","chTitle":"Check it, vote on it, try again","q":"A bat and a ball cost £1.10. The bat costs £1.00 more than the ball. How much is the ball?","o":["10p","5p","1p","15p"],"a":1,"why":"Ball x, bat x + £1.00, so 2x + £1.00 = £1.10 and x = 5p. The quick answer, 10p, is the classic mistake."},{"course":3,"ch":"ch3","chTitle":"A manager and a team of specialists","q":"What makes a hand-off different from agent-as-tool?","o":["In a hand-off, the other agent takes over the conversation","In a hand-off, the main agent stays in charge","There is no difference","A hand-off always needs a person"],"a":0,"why":"In agent-as-tool, the caller stays in charge and the other agent just returns an answer."},{"course":3,"ch":"ch3","chTitle":"A manager and a team of specialists","q":"In the debate pattern, who decides the final answer?","o":["The agent that speaks last","A judge, after the agents argue","The user, every time","Whichever agent is bigger"],"a":1,"why":"Each agent can point out the other’s mistakes, but shared blind spots can survive the debate."},{"course":3,"ch":"ch4","chTitle":"Where should the human sit?","q":"Which design usually catches the most mistakes for the fewest approval requests?","o":["No checks at all","A person approves every single step","An AI checker on every step, plus a person on the risky ones","Two people approving every step"],"a":2,"why":"Automatic checks handle routine steps, so the few requests a person gets are ones they actually read."}];
+var COURSES={1:{title:'From Sand to Sentence',slug:'sand-to-sentence',c:'var(--a27-safe-deep)'},2:{title:'From Answer to Action',slug:'answer-to-action',c:'var(--a27-creative-deep)'},3:{title:'From Agent to Team',slug:'agent-to-team',c:'var(--a27-smart-deep)'}};
+var EXAMS=[
+ {id:'1',name:'Part 1 exam',sub:'From Sand to Sentence',parts:[1],n:12,mins:12},
+ {id:'2',name:'Part 2 exam',sub:'From Answer to Action',parts:[2],n:12,mins:12},
+ {id:'3',name:'Part 3 exam',sub:'From Agent to Team',parts:[3],n:12,mins:12},
+ {id:'all',name:'Full exam',sub:'All three courses',parts:[1,2,3],n:24,mins:24}];
+var KEY='aiad-exam-history';
+function hist(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
+function saveHist(h){try{localStorage.setItem(KEY,JSON.stringify(h.slice(-60)))}catch(e){}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function mmss(s){s=Math.max(0,Math.ceil(s));return (s<600?'0':'')+Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60}
+function band(p){return p>=85?['Distinction','#176E3B']:p>=70?['Merit','#006A7D']:p>=50?['Pass','#A7350B']:['Keep going','#A32D2D']}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+
+/* Start screen */
+function renderStart(){
+ var h=hist();
+ $('exams').innerHTML=EXAMS.map(function(x){
+  var mine=h.filter(function(r){return r.exam===x.id}),best=mine.reduce(function(b,r){return Math.max(b,r.pct)},-1);
+  var pool=POOL.filter(function(q){return x.parts.indexOf(q.course)>=0}).length;
+  return '<article class="ex" data-x="'+x.id+'"><span class="eyebrow k">'+x.sub+'</span><h2>'+x.name+'</h2><p class="meta">'+x.n+' questions · '+x.mins+' minutes · from '+pool+' in the bank</p>'+
+   '<p class="best">'+(mine.length?'Best: <b>'+best+'%</b> ('+band(best)[0]+') · '+mine.length+' attempt'+(mine.length>1?'s':''):'Not attempted yet')+'</p>'+
+   '<button type="button" data-start="'+x.id+'">Start the '+x.name.toLowerCase()+' →</button></article>'}).join('');
+ $('hist').innerHTML='<h3>Your attempts</h3>'+(h.length?'<table><thead><tr><th>When</th><th>Exam</th><th>Score</th><th>Time</th></tr></thead><tbody>'+h.slice().reverse().slice(0,12).map(function(r){
+  var x=EXAMS.filter(function(e){return e.id===r.exam})[0];return '<tr><td>'+new Date(r.at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'</td><td>'+(x?x.name:r.exam)+'</td><td><b>'+r.pct+'%</b> ('+r.right+'/'+r.n+')</td><td>'+mmss(r.secs)+'</td></tr>'}).join('')+'</tbody></table>':'<p class="empty">Your scores will appear here, so you can see yourself improve. They are saved only in this browser.</p>');
+}
+$('exams').addEventListener('click',function(e){var b=e.target.closest('[data-start]');if(b)begin(b.getAttribute('data-start'))});
+
+/* Exam */
+var S=null,tick=null;
+function begin(id){
+ var x=EXAMS.filter(function(e){return e.id===id})[0],qs=[];
+ x.parts.forEach(function(p){var bank=shuffle(POOL.filter(function(q){return q.course===p}));qs=qs.concat(bank.slice(0,Math.round(x.n/x.parts.length)))});
+ qs=shuffle(qs).map(function(q){var order=shuffle(q.o.map(function(_,i){return i}));return {src:q,order:order,ans:-1,flag:false}});
+ S={x:x,qs:qs,i:0,start:Date.now(),end:Date.now()+x.mins*60000};
+ $('start').hidden=true;$('results').hidden=true;$('exam').hidden=false;
+ $('exTitle').textContent=x.name+' · '+x.sub;
+ window.scrollTo(0,0);show();
+ clearInterval(tick);tick=setInterval(time,250);time();
+ window.addEventListener('beforeunload',guard);
+}
+function guard(e){if(S){e.preventDefault();e.returnValue=''}}
+function time(){if(!S)return;var left=(S.end-Date.now())/1000,total=S.x.mins*60;$('clock').textContent=mmss(left);
+ var t=$('timer');t.style.setProperty('--p',Math.max(0,100*left/total)+'%');t.classList.toggle('low',left<=60);
+ if(left<=0)finish(true)}
+function show(){var Q=S.qs[S.i],q=Q.src;
+ $('qNum').textContent='Question '+(S.i+1)+' of '+S.qs.length;
+ $('qFrom').textContent=S.x.parts.length>1?'Part '+q.course:'';
+ $('qText').textContent=q.q;
+ $('opts').innerHTML=Q.order.map(function(oi,k){return '<button type="button" role="radio" data-k="'+k+'" aria-checked="'+(Q.ans===k)+'">'+esc(q.o[oi])+'</button>'}).join('');
+ $('prev').disabled=S.i===0;$('next').textContent=S.i===S.qs.length-1?'Review and submit':'Next →';
+ $('flag').setAttribute('aria-pressed',Q.flag);
+ var done=S.qs.filter(function(z){return z.ans>=0}).length;$('progBar').style.width=(100*done/S.qs.length)+'%';
+ $('grid').innerHTML=S.qs.map(function(z,k){return '<button type="button" data-g="'+k+'" class="'+(z.ans>=0?'ans ':'')+(z.flag?'flg ':'')+(k===S.i?'cur':'')+'" aria-label="Question '+(k+1)+(z.ans>=0?', answered':', not answered')+(z.flag?', flagged':'')+'">'+(k+1)+'</button>'}).join('');
+}
+function choose(k){if(!S)return;S.qs[S.i].ans=k;show()}
+$('opts').addEventListener('click',function(e){var b=e.target.closest('[data-k]');if(b)choose(+b.getAttribute('data-k'))});
+$('prev').addEventListener('click',function(){if(S.i>0){S.i--;show()}});
+$('next').addEventListener('click',function(){if(S.i<S.qs.length-1){S.i++;show()}else askSubmit()});
+$('flag').addEventListener('click',function(){S.qs[S.i].flag=!S.qs[S.i].flag;show()});
+$('grid').addEventListener('click',function(e){var b=e.target.closest('[data-g]');if(b){S.i=+b.getAttribute('data-g');show()}});
+$('submit').addEventListener('click',askSubmit);
+function askSubmit(){var un=S.qs.filter(function(z){return z.ans<0}).length,fl=S.qs.filter(function(z){return z.flag}).length;
+ var msg=(un?un+' question'+(un>1?'s are':' is')+' not answered. ':'')+(fl?fl+' flagged. ':'')+'Submit your exam now?';
+ if(!un&&!fl||window.confirm(msg))finish(false)}
+document.addEventListener('keydown',function(e){var tg=e.target;if(!S||$('exam').hidden||(tg&&tg.closest&&tg.closest('input,textarea,select')))return;var k=e.key.toLowerCase(),map={'1':0,'2':1,'3':2,'4':3,a:0,b:1,c:2,d:3};
+ if(k in map&&map[k]<S.qs[S.i].order.length){choose(map[k]);e.preventDefault()}
+ else if(e.key==='ArrowRight'&&S.i<S.qs.length-1){S.i++;show()}else if(e.key==='ArrowLeft'&&S.i>0){S.i--;show()}});
+
+/* Results */
+var lastReview=[];
+function finish(timeout){if(!S)return;clearInterval(tick);window.removeEventListener('beforeunload',guard);
+ var secs=Math.min(S.x.mins*60,(Date.now()-S.start)/1000),right=0,per={};
+ lastReview=S.qs.map(function(Q,k){var q=Q.src,chosen=Q.ans>=0?Q.order[Q.ans]:-1,ok=chosen===q.a;if(ok)right++;
+  per[q.course]=per[q.course]||{r:0,n:0};per[q.course].n++;if(ok)per[q.course].r++;return {k:k,q:q,chosen:chosen,ok:ok}});
+ var pct=Math.round(100*right/S.qs.length),b=band(pct),h=hist();
+ h.push({exam:S.x.id,pct:pct,right:right,n:S.qs.length,secs:Math.round(secs),at:Date.now()});saveHist(h);
+ var prev=h.filter(function(r){return r.exam===S.x.id}),before=prev.slice(0,-1).reduce(function(m,r){return Math.max(m,r.pct)},-1);
+ var x=S.x;S=null;
+ $('exam').hidden=true;$('results').hidden=false;window.scrollTo(0,0);
+ var weak=Object.keys(per).length>1?Object.keys(per).sort(function(a,b){return per[a].r/per[a].n-per[b].r/per[b].n})[0]:null;
+ $('res').innerHTML='<span class="eyebrow">'+(timeout?'Time’s up: your exam was submitted automatically':'Exam submitted')+'</span>'+
+  '<div class="score" style="margin-top:.8rem"><div class="dial" style="--p:'+pct+'%;--sc:'+b[1]+'"><div><span><b>'+pct+'%</b><small>'+right+' of '+lastReview.length+'</small></span></div></div>'+
+  '<div><p class="band" style="color:'+b[1]+'">'+b[0]+'</p><p style="margin-top:.4rem">'+x.name+' · '+x.sub+'</p><div class="facts"><span>Time used: '+mmss(secs)+' of '+x.mins+':00</span>'+
+  (before>=0?'<span>'+(pct>before?'New best! Up from '+before+'%':pct===before?'Equal to your best':'Your best is '+before+'%')+'</span>':'<span>First attempt</span>')+'</div></div></div>'+
+  (Object.keys(per).length>1?'<div class="parts">'+Object.keys(per).map(function(c){var p=Math.round(100*per[c].r/per[c].n);return '<div class="row"><span>Part '+c+': '+COURSES[c].title+'</span><span class="b"><i style="width:'+p+'%;background:'+COURSES[c].c+'"></i></span><b>'+p+'%</b></div>'}).join('')+'</div>'+
+   '<p style="margin-top:.7rem;font-weight:650">Revise next: Part '+weak+', '+COURSES[weak].title+'.</p>':'')+
+  '<div class="actions"><button type="button" class="pri" data-again="'+x.id+'">Try a new '+x.name.toLowerCase()+'</button><button type="button" data-home>Choose another exam</button><button type="button" onclick="window.print()">Print results</button></div>'+
+  '<div class="filter" role="group" aria-label="Show in the review"><button type="button" data-f="all" aria-pressed="true">All questions</button><button type="button" data-f="no" aria-pressed="false">Wrong or skipped ('+(lastReview.length-right)+')</button></div>'+
+  '<div class="review" id="review"></div>';
+ review('all');
+}
+function review(f){$('review').innerHTML=lastReview.filter(function(r){return f==='all'||!r.ok}).map(function(r){var q=r.q,url='../'+COURSES[q.course].slug+'/#'+q.ch;
+ return '<div class="rv'+(r.ok?'':r.chosen<0?' skip':' no')+'"><span class="tag">Question '+(r.k+1)+' · '+(r.ok?'Right':r.chosen<0?'Not answered':'Wrong')+' · Part '+q.course+(q.chTitle?', '+esc(q.chTitle):'')+'</span><h4>'+esc(q.q)+'</h4>'+
+  (r.ok?'':(r.chosen>=0?'<p>Your answer: '+esc(q.o[r.chosen])+'</p>':''))+'<p><b>Answer: '+esc(q.o[q.a])+'.</b> '+esc(q.why)+'</p>'+(r.ok?'':'<p><a href="'+url+'">Revisit this chapter →</a></p>')+'</div>'}).join('')||'<p>Every question right. Brilliant.</p>'}
+$('res').addEventListener('click',function(e){var a=e.target.closest('[data-again]'),h=e.target.closest('[data-home]'),f=e.target.closest('[data-f]');
+ if(a)begin(a.getAttribute('data-again'));
+ if(h){$('results').hidden=true;$('start').hidden=false;renderStart();window.scrollTo(0,0)}
+ if(f){document.querySelectorAll('[data-f]').forEach(function(x){x.setAttribute('aria-pressed',x===f)});review(f.getAttribute('data-f'))}});
+
+/* Start from a link such as ?exam=2 */
+renderStart();
+var want=(location.search.match(/[?&]exam=(\w+)/)||[])[1];
+if(want&&EXAMS.some(function(e){return e.id===want})){var card=document.querySelector('.ex[data-x="'+want+'"]');if(card){card.scrollIntoView({block:'center'});card.style.outline='4px solid var(--ink)'}}
+})();
+</script>
+<script src="../shared/live-links.js"></script>
+</body></html>

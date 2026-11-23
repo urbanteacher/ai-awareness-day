@@ -383,7 +383,7 @@ class AIADN_Database {
 		foreach ( $sql as $statement ) {
 			dbDelta( $statement );
 		}
-		update_option( self::OPTION, self::DB_VERSION, false );
+		update_option( self::OPTION, self::DB_VERSION, true );
 	}
 
 	public static function maybe_upgrade(): void {

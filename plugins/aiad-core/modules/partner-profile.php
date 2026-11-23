@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Marks this module as loaded. See aiad_core_load_modules().
+define( 'AIAD_CORE_MODULE_PARTNER_PROFILE', __FILE__ );
+
 /**
  * The partner a profile block is showing.
  *

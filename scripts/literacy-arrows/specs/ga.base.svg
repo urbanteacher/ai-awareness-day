@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Generative AI: one AI making brand-new text, images, audio, video and code. Arrows: scripts/literacy-arrows/specs/ga.json -->
+  <defs><marker id="alpt-arr-ga" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="#231F20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <rect class="i-bg" width="300" height="330"/>
+  <path class="i-deep" d="M16 126 H56 L72 142 V206 H16 Z"/>
+  <text class="t-l t-w" x="44" y="178" text-anchor="middle">AI</text>
+  <path class="i-accent" transform="translate(-28 0)" d="M94 104 L99 115 L110 120 L99 125 L94 136 L89 125 L78 120 L89 115 Z"/>
+  <text class="t-xs" x="44" y="230" text-anchor="middle">makes new</text>
+  <path class="i-line" d="M106 166 C116 166 112 50 122 50" marker-end="url(#alpt-arr-ga)"/>
+  <path class="i-line" d="M106 166 C116 166 114 108 122 108" marker-end="url(#alpt-arr-ga)"/>
+  <path class="i-line" d="M106 166 H122" marker-end="url(#alpt-arr-ga)"/>
+  <path class="i-line" d="M106 166 C116 166 114 224 122 224" marker-end="url(#alpt-arr-ga)"/>
+  <path class="i-line" d="M106 166 C116 166 112 282 122 282" marker-end="url(#alpt-arr-ga)"/>
+  <rect class="i-paper" x="180" y="40" width="112" height="44" rx="8"/><rect class="i-line" x="180" y="40" width="112" height="44" rx="8"/><text class="t-s" x="236" y="68">Text</text>
+  <g transform="translate(52 12)"><path class="i-line" d="M142 40 H174 M142 50 H170 M142 60 H162"/></g>
+  <rect class="i-paper" x="180" y="92" width="112" height="44" rx="8"/><rect class="i-line" x="180" y="92" width="112" height="44" rx="8"/><text class="t-s" x="236" y="120">Image</text>
+  <g transform="translate(52 6)"><rect class="i-cream" x="140" y="94" width="36" height="28" rx="3"/><rect class="i-line" x="140" y="94" width="36" height="28" rx="3"/></g>
+  <g transform="translate(52 6)"><path class="i-deep" d="M141 121 L153 106 L161 114 L166 109 L175 121 Z"/><circle class="i-deep" cx="167" cy="101" r="3.5"/></g>
+  <rect class="i-paper" x="180" y="144" width="112" height="44" rx="8"/><rect class="i-line" x="180" y="144" width="112" height="44" rx="8"/><text class="t-s" x="236" y="172">Audio</text>
+  <g transform="translate(52 0)"><path class="i-deepline" d="M142 166 V166 M148 158 V174 M154 152 V180 M160 160 V172 M166 154 V178 M172 162 V170"/></g>
+  <rect class="i-paper" x="180" y="196" width="112" height="44" rx="8"/><rect class="i-line" x="180" y="196" width="112" height="44" rx="8"/><text class="t-s" x="236" y="224">Video</text>
+  <g transform="translate(52 -6)"><rect class="i-deep" x="140" y="210" width="36" height="28" rx="4"/><path d="M153 217 L165 224 L153 231 Z" fill="#FFFFFF"/></g>
+  <rect class="i-paper" x="180" y="248" width="112" height="44" rx="8"/><rect class="i-line" x="180" y="248" width="112" height="44" rx="8"/><text class="t-s" x="236" y="276">Code</text>
+  <text class="t-s t-d" x="210" y="276" text-anchor="middle">&lt;/&gt;</text>
+</svg>

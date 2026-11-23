@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- ReAct: the agent takes turns to think and to act with a tool, until the job is done. Top-left 80x80 stays clear for the symbol badge. Arrows: tools/literacy-arrows/specs/ra.json -->
+  <!-- ReAct: the agent takes turns to think and to act with a tool, until the job is done. Top-left 80x80 stays clear for the symbol badge. Arrows: scripts/literacy-arrows/specs/ra.json -->
   <defs><marker id="alpt-arr-ra" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-m" x="190" y="42" text-anchor="middle">Reason + Act</text>

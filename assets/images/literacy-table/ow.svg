@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Open-weight model: an unlocked file of weights that anyone can download to run, study or adapt, including removing its safety. Arrows: tools/literacy-arrows/specs/ow.json -->
+  <!-- Open-weight model: an unlocked file of weights that anyone can download to run, study or adapt, including removing its safety. Arrows: scripts/literacy-arrows/specs/ow.json -->
   <defs><marker id="alpt-arr-ow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-paper" d="M104 14 H178 L196 32 V102 H104 Z"/><path class="i-line" d="M104 14 H178 L196 32 V102 H104 Z"/>

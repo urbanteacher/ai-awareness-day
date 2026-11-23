@@ -1,7 +1,7 @@
 <?php
 /**
  * Dashboard widget: Customizer + page links for Assets Pack and Press Release downloads; the Assets Pack's downloads,
- * shared by template-assets-pack.php and its editable page (patterns/assets-pack.php).
+ * used by its editable page (patterns/assets-pack.php).
  *
  * @package AI_Awareness_Day
  */
@@ -36,6 +36,12 @@ function aiad_get_assets_pack_public_url(): string {
  * Ensure a published Assets Pack page exists so the footer link works.
  */
 function aiad_ensure_assets_pack_page(): void {
+	// Checked once per theme version, not on every request.
+	if ( get_option( 'aiad_assets_pack_checked' ) === AIAD_VERSION ) {
+		return;
+	}
+	update_option( 'aiad_assets_pack_checked', AIAD_VERSION, true );
+
 	$stored_id = absint( get_option( 'aiad_assets_pack_page_id', 0 ) );
 	if ( $stored_id ) {
 		$stored = get_post( $stored_id );
@@ -50,7 +56,7 @@ function aiad_ensure_assets_pack_page(): void {
 
 	$existing = aiad_get_assets_pack_page();
 	if ( $existing ) {
-		update_option( 'aiad_assets_pack_page_id', $existing->ID, false );
+		update_option( 'aiad_assets_pack_page_id', $existing->ID, true );
 		return;
 	}
 
@@ -70,7 +76,7 @@ function aiad_ensure_assets_pack_page(): void {
 	}
 
 	update_post_meta( $page_id, '_wp_page_template', 'assets-pack' );
-	update_option( 'aiad_assets_pack_page_id', (int) $page_id, false );
+	update_option( 'aiad_assets_pack_page_id', (int) $page_id, true );
 
 	// A new page starts with its blocks (the pattern), as the converted one has.
 	$page = get_post( (int) $page_id );

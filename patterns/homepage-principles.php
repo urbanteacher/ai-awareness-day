@@ -12,6 +12,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_cards = array();
 foreach ( array_keys( aiad_principle_cards() ) as $aiad_strand ) {

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- 2D Design: a rough sketch of a badge turned into three flat AI design ideas, one picked. Arrows: tools/literacy-arrows/specs/2d.json -->
+  <!-- 2D Design: a rough sketch of a badge turned into three flat AI design ideas, one picked. Arrows: scripts/literacy-arrows/specs/2d.json -->
   <defs><marker id="alpt-arr-2d-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="16" y="104" width="120" height="150" rx="4"/><rect class="i-line" x="16" y="104" width="120" height="150" rx="4"/>

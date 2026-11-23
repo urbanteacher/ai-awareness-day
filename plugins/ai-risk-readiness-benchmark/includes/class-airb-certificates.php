@@ -81,7 +81,7 @@ class AIRB_Certificates {
 			return;
 		}
 		self::create_table();
-		update_option( 'airb_certificates_db_version', self::DB_VERSION, false );
+		update_option( 'airb_certificates_db_version', self::DB_VERSION, true );
 	}
 
 	/**

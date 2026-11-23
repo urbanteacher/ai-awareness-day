@@ -684,11 +684,19 @@ function aiad_get_partner_type_term_names(): array {
  * Ensure all partner_type taxonomy terms exist.
  */
 function aiad_ensure_partner_type_terms(): void {
-    foreach ( aiad_get_partner_type_term_names() as $name ) {
+    // Checked when the list of names changes and once per theme version, not on every request (it was 40 queries a
+    // page). A term deleted by hand comes back on the next deploy.
+    $names = aiad_get_partner_type_term_names();
+    $stamp = md5( (string) wp_json_encode( $names ) . ( defined( 'AIAD_VERSION' ) ? AIAD_VERSION : '' ) );
+    if ( get_option( 'aiad_partner_type_terms_checked' ) === $stamp ) {
+        return;
+    }
+    foreach ( $names as $name ) {
         if ( ! term_exists( $name, 'partner_type' ) ) {
             wp_insert_term( $name, 'partner_type' );
         }
     }
+    update_option( 'aiad_partner_type_terms_checked', $stamp, true );
 }
 add_action( 'init', 'aiad_ensure_partner_type_terms', 21 );
 

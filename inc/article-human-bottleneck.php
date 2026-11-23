@@ -121,7 +121,7 @@ function aiad_migrate_article_human_bottleneck(): void {
 		wp_set_object_terms( $id, $terms, 'timeline_category', false );
 	}
 
-	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
+	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), true );
 	update_option( 'aiad_article_human_bottleneck_added', '1' );
 }
 add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_article_human_bottleneck_added', 'aiad_migrate_article_human_bottleneck' ); }, 50 );
@@ -133,6 +133,14 @@ add_action( 'init', static function (): void { aiad_article_run_once( 'aiad_arti
  * hash; later versions by the hash stored when they were saved.
  */
 function aiad_sync_article_human_bottleneck(): void {
+	// Checked when the article's file changes (a deploy), not on every request.
+	$file  = AIAD_DIR . '/inc/articles/the-human-bottleneck.html';
+	$stamp = is_readable( $file ) ? (string) filemtime( $file ) : '';
+	if ( get_option( 'aiad_article_human_bottleneck_checked' ) === $stamp ) {
+		return;
+	}
+	update_option( 'aiad_article_human_bottleneck_checked', $stamp, true );
+
 	$post = get_page_by_path( 'human-bottleneck-ai-workplace', OBJECT, 'timeline' );
 	if ( ! $post ) {
 		return;
@@ -154,6 +162,6 @@ function aiad_sync_article_human_bottleneck(): void {
 		$wpdb->update( $wpdb->posts, $fields, array( 'ID' => $post->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		clean_post_cache( $post->ID );
 	}
-	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), false );
+	update_option( 'aiad_article_human_bottleneck_hash', md5( $content ), true );
 }
 add_action( 'init', 'aiad_sync_article_human_bottleneck', 51 );

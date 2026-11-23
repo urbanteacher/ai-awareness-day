@@ -725,9 +725,9 @@ function aiad_image_fetch_admin_scripts( string $hook ): void {
     wp_enqueue_media();
     wp_enqueue_script(
         'aiad-admin-image-fetch',
-        AIAD_URI . '/assets/js/admin-image-fetch.js',
+        aiad_core_url( 'assets/js/admin/admin-image-fetch.js' ),
         array( 'wp-api-fetch' ),
-        AIAD_VERSION,
+        aiad_core_asset_version( 'assets/js/admin/admin-image-fetch.js' ),
         true
     );
 }
@@ -1001,9 +1001,9 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
 
     wp_enqueue_script(
         'aiad-admin-meta-boxes',
-        AIAD_URI . '/assets/js/admin-meta-boxes.js',
+        aiad_core_url( 'assets/js/admin/admin-meta-boxes.js' ),
         array( 'wp-i18n' ),
-        AIAD_VERSION,
+        aiad_core_asset_version( 'assets/js/admin/admin-meta-boxes.js' ),
         true
     );
     wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
@@ -1030,9 +1030,9 @@ function aiad_partner_meta_box_enqueue_scripts( string $hook ): void {
 
     wp_enqueue_script(
         'aiad-admin-meta-boxes',
-        AIAD_URI . '/assets/js/admin-meta-boxes.js',
+        aiad_core_url( 'assets/js/admin/admin-meta-boxes.js' ),
         array( 'wp-i18n' ),
-        AIAD_VERSION,
+        aiad_core_asset_version( 'assets/js/admin/admin-meta-boxes.js' ),
         true
     );
     wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
@@ -1113,7 +1113,7 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
     }
 
     echo '</div>';
-    // JavaScript is now externalized to assets/js/admin-meta-boxes.js
+    // JavaScript is in this plugin's assets/js/admin/admin-meta-boxes.js
     // Enqueued via aiad_resource_content_meta_box_enqueue_scripts()
 }
 
@@ -1294,15 +1294,15 @@ function aiad_resource_download_admin_scripts( string $hook ): void {
     wp_enqueue_media();
     wp_enqueue_style(
         'aiad-resource-editor',
-        AIAD_URI . '/admin/css/aiad-resource-editor.css',
+        aiad_core_url( 'assets/css/admin/aiad-resource-editor.css' ),
         array(),
-        AIAD_VERSION
+        aiad_core_asset_version( 'assets/css/admin/aiad-resource-editor.css' )
     );
     wp_enqueue_script(
         'aiad-resource-download-admin',
-        AIAD_URI . '/assets/js/admin-resource-download.js',
+        aiad_core_url( 'assets/js/admin/admin-resource-download.js' ),
         array( 'wp-i18n', 'media-editor' ),
-        AIAD_VERSION,
+        aiad_core_asset_version( 'assets/js/admin/admin-resource-download.js' ),
         true
     );
     wp_set_script_translations( 'aiad-resource-download-admin', 'ai-awareness-day' );
@@ -1328,12 +1328,11 @@ function aiad_admin_common_styles( string $hook ): void {
     if ( ! in_array( $screen->post_type, $theme_cpts, true ) ) {
         return;
     }
-    $css_path = AIAD_DIR . '/admin/css/aiad-admin-common.css';
     wp_enqueue_style(
         'aiad-admin-common',
-        AIAD_URI . '/admin/css/aiad-admin-common.css',
+        aiad_core_url( 'assets/css/admin/aiad-admin-common.css' ),
         array(),
-        file_exists( $css_path ) ? filemtime( $css_path ) : AIAD_VERSION
+        aiad_core_asset_version( 'assets/css/admin/aiad-admin-common.css' )
     );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_admin_common_styles' );

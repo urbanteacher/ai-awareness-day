@@ -5,7 +5,7 @@
  *
  * Moved from the theme's inc/ folder. The theme loads this file from its bundled copy of the plugin when the plugin
  * isn't active, so this is the only copy. The generator tools themselves are HTML files in the theme
- * (archive/theme/generators/), and the REST bootstrap uses the theme's logo helpers.
+ * (assets/generators/ in this plugin), and the REST bootstrap uses the theme's logo helpers.
  *
  * @package AIAD_Core
  */

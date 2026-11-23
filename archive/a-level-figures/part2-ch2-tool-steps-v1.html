@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>Part 2 Ch 2 tool call step-through, v1 (superseded)</title>
+<!-- Replaced 22 Nov 2026 by the animated "One tool call: who does what" (#tc) in answer-to-action/index.html -->
+        <div class="panel">
+        <span class="eyebrow">Step through it</span><h3>One tool call, start to finish</h3>
+        <div class="chat" id="toolChat">
+          <div class="msg you"><small>You</small>Can you book me a study room on Wednesday after school?</div>
+          <div class="msg model" hidden><small>Model writes a tool request</small><code>{ "tool": "book_room",
+  "input": { "day": "2027-06-09",
+             "start": "16:00", "hours": 1 } }</code></div>
+          <div class="msg app" hidden><small>App runs it and sends back the result</small><code>{ "booked": true, "room": "L4",
+  "note": "Library, second floor" }</code></div>
+          <div class="msg model" hidden><small>Model writes a normal reply</small>Done. You're in room L4, on the library's second floor, on Wednesday 9 June from 4pm to 5pm.</div>
+        </div>
+        <p style="margin-top:.8rem"><button type="button" class="btn primary" id="toolNext">Next step</button></p>
+        <p class="note">Simplified. Real requests follow a format set by each AI provider.</p>
+      </div>
+<script>
+$('toolNext').addEventListener('click',function(){var hid=$('toolChat').querySelector('.msg[hidden]');
+ if(hid){hid.hidden=false;if(!$('toolChat').querySelector('.msg[hidden]'))this.textContent='Start again'}
+ else{[].forEach.call($('toolChat').querySelectorAll('.msg:not(.you)'),function(m){m.hidden=true});this.textContent='Next step'}});
+</script>

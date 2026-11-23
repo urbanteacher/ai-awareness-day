@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<link rel="stylesheet" href="../shared/flow.css">
+<link rel="stylesheet" href="../shared/nodes.css">
+<link rel="stylesheet" href="../shared/earn.css">
+<link rel="stylesheet" href="../shared/journey.css">
+<title>From Agent to Team · AI Awareness Day</title>
+<meta name="description" content="Part three of a story for A-level students: the design patterns behind AI systems, from fixed workflows and self-checks to teams of agents, and where humans should stay in the loop.">
+<style>
+:root{--ink:var(--a27-ink);--paper:var(--a27-cream);--dim:var(--a27-dim);--rule:var(--a27-rule);--card:var(--a27-card);
+--chem:#1f2b3a;--chem-bg:#f2efe6;font:17px/1.55 'AIAD Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);padding-bottom:5rem}h1,h2,h3,h4,p{margin:0}
+a{color:inherit;text-underline-offset:3px}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--rule)}
+.top a{font-weight:650;font-size:.92rem}.top img{width:clamp(8.5rem,24vw,15rem);height:auto;display:block}
+.eyebrow{font-weight:700;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase}
+/* Hero */
+.hero{margin:clamp(1rem,3vw,2rem) 0;background:var(--ink);color:var(--paper);padding:clamp(1.4rem,4vw,3.4rem);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(1rem,4vw,3rem);align-items:center;position:relative;overflow:hidden;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.13;background-image:radial-gradient(circle,#fff 1px,transparent 1.5px);background-size:14px 14px}
+.hero .eyebrow{color:var(--a27-safe)}
+.hero h1{font-size:clamp(2.6rem,7vw,5.6rem);line-height:.92;letter-spacing:-.06em;font-weight:800;margin:.6rem 0 1rem}
+.hero h1 span{color:var(--a27-future)}
+.hero p.lead{font-size:clamp(1.02rem,1.6vw,1.22rem);max-width:38ch;color:#e9e6dd}
+.hero .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}
+.pill{display:inline-block;border:1px solid #ffffff55;padding:.3rem .7rem;font-size:.82rem;font-weight:650}
+.hero-art{width:100%;height:auto}
+.hero .start{display:inline-flex;align-items:center;min-height:44px;margin-top:1.4rem;padding:.6rem 1.2rem;background:var(--a27-safe);color:var(--ink);font-weight:750;text-decoration:none}
+/* Route map */
+.route{display:flex;gap:.4rem;overflow-x:auto;padding:.3rem 0 1rem;margin-bottom:1rem;scrollbar-width:thin}
+.route a{flex:none;display:flex;flex-direction:column;min-width:7.4rem;padding:.55rem .7rem;border:1px solid var(--rule);background:#fff;text-decoration:none;font-size:.82rem;line-height:1.25}
+.route a b{font-size:.7rem;letter-spacing:.08em;color:var(--dim)}
+.route a.seen{border-color:var(--ink);box-shadow:inset 0 -4px 0 var(--c,var(--a27-safe))}
+/* Chapters */
+.chapter{--c:var(--a27-safe);--cd:var(--a27-safe-deep);position:relative;margin:0 0 clamp(2rem,5vw,3.5rem);padding-left:clamp(0rem,3vw,2.2rem);scroll-margin-top:1rem}
+.chapter:before{content:"";position:absolute;left:clamp(0rem,1vw,.6rem);top:0;bottom:-3.5rem;border-left:3px dotted var(--rule)}
+@media(max-width:700px){.chapter{padding-left:0}.chapter:before{display:none}}
+.chapter[data-theme=smart]{--c:var(--a27-smart);--cd:var(--a27-smart-deep)}
+.chapter[data-theme=creative]{--c:var(--a27-creative);--cd:var(--a27-creative-deep)}
+.chapter[data-theme=responsible]{--c:var(--a27-responsible);--cd:var(--a27-responsible-deep)}
+.chapter[data-theme=future]{--c:var(--a27-future);--cd:var(--a27-future-deep)}
+.place{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;color:var(--cd)}
+.place .num{display:grid;place-items:center;width:2.2rem;height:2.2rem;background:var(--c);color:var(--ink);font-weight:800;clip-path:polygon(0 0,78% 0,100% 22%,100% 100%,0 100%)}
+.chapter h2{font-size:clamp(1.9rem,4.4vw,3.2rem);line-height:1;letter-spacing:-.05em;font-weight:800;margin-bottom:1rem}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(1rem,3vw,2.4rem);align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+.story{font-size:clamp(1.06rem,1.5vw,1.2rem);border-left:5px solid var(--c);padding:.2rem 0 .2rem 1.1rem}
+.story p+p{margin-top:.8rem}.story em{font-style:normal;background:color-mix(in srgb,var(--c) 35%,transparent);padding:0 .15em}
+.really{margin-top:1.2rem}.really h3{font-size:1.02rem;margin-bottom:.4rem}.really p+p,.really ul{margin-top:.6rem}.really ul{padding-left:1.15rem}.really li+li{margin-top:.3rem}
+.fact{background:#fff;border:1px solid var(--rule);border-top:6px solid var(--c);padding:1rem 1.1rem;margin-top:1rem}
+.fact b.big{display:block;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.04em;line-height:1;color:var(--cd)}
+.fact small{display:block;color:var(--dim);margin-top:.35rem;font-size:.82rem}
+.lens{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem}
+.lens span{font-size:.75rem;font-weight:700;padding:.2rem .5rem;background:var(--card);border:1px solid var(--rule)}
+/* Panels: interactive, check, debate */
+.panel{background:#fff;border:1.5px solid var(--ink);padding:clamp(1rem,2.4vw,1.5rem);margin-top:1.2rem}
+.panel>.eyebrow{color:var(--cd);display:block;margin-bottom:.4rem}
+.panel h3{font-size:1.2rem;letter-spacing:-.02em;margin-bottom:.6rem;line-height:1.25}
+.note{font-size:.84rem;color:var(--dim);margin-top:.7rem}
+.btn{min-height:44px;padding:.5rem 1rem;border:1.5px solid var(--ink);background:var(--paper);font-weight:700}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.check .choices{display:grid;gap:.45rem;counter-reset:o}
+.check .choices button{counter-increment:o;display:flex;gap:.7rem;align-items:center;text-align:left;min-height:44px;padding:.5rem .7rem;background:#fff;border:1px solid #a9a397}
+.check .choices button:before{content:counter(o,upper-alpha);flex:none;display:grid;place-items:center;width:1.6rem;height:1.6rem;background:var(--card);font-weight:700;font-size:.8rem}
+.check .choices button.right{background:color-mix(in srgb,var(--a27-responsible) 45%,#fff);border-color:var(--a27-responsible-deep)}
+.check .choices button.wrong{border-color:var(--a27-crit);color:var(--a27-crit-deep)}
+.check .feedback:not(:empty){margin-top:.7rem;font-weight:650}
+.debate{background:var(--c);border:0;color:var(--ink)}
+.debate>.eyebrow{color:var(--ink)}.debate h3{font-size:clamp(1.2rem,2.2vw,1.55rem)}
+.debate details{margin-top:.6rem}.debate summary{cursor:pointer;font-weight:700;min-height:32px}
+.debate ul{margin:.5rem 0 0;padding-left:1.1rem}
+/* Element tiles */
+.found{margin-top:1.2rem}.found>p{font-weight:700;font-size:.85rem;margin-bottom:.5rem}
+.tiles{display:flex;flex-wrap:wrap;gap:.55rem}
+.tile{position:relative;width:7.3rem;min-height:7.6rem;padding:.45rem .55rem;display:flex;flex-direction:column;text-decoration:none;border:1.5px solid var(--ink);line-height:1.15}
+.tile .n{font-size:.72rem;font-weight:700}.tile .s{font-size:2rem;font-weight:800;letter-spacing:-.04em;margin:.15rem 0 .1rem}.tile .nm{font-size:.78rem;font-weight:650;overflow-wrap:anywhere;hyphens:auto}
+.tile .k{position:absolute;top:.4rem;right:.45rem;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.tile.chem{background:var(--chem-bg);color:var(--chem);font-family:Georgia,'Times New Roman',serif}
+.tile.chem .s{font-family:Georgia,serif;font-weight:700}
+.tile.ai{background:var(--fam,#eee)}
+.tile.ai:hover .nm{text-decoration:underline}
+.tile[data-fam=foundations]{--fam:#E3E8EF}.tile[data-fam=generative]{--fam:#EEE6FF}.tile[data-fam=predictive]{--fam:#DFE9FF}.tile[data-fam=agents]{--fam:#FFEDD5}.tile[data-fam=automation]{--fam:#D5F2EC}.tile[data-fam=governance]{--fam:#FFE1E7}.tile[data-fam=infra]{--fam:#E8F3D6}
+.tile .role{font-size:.7rem;color:inherit;opacity:.85;margin-top:auto;padding-top:.3rem;font-family:'AIAD Sans',Arial,sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;font-size:.82rem;margin:.4rem 0 0}.legend span:before{content:"";display:inline-block;width:.9rem;height:.9rem;margin-right:.35rem;vertical-align:-.15rem;border:1.5px solid var(--ink)}
+.legend .lc:before{background:var(--chem-bg)}.legend .la:before{background:#EEE6FF}
+/* Tokens */
+.toks{display:flex;flex-wrap:wrap;gap:3px;margin:.6rem 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem}
+.toks span{padding:.15rem .3rem;border-bottom:3px solid}
+.toks span:nth-child(5n+1){background:#d9f6fb;border-color:var(--a27-safe-deep)}.toks span:nth-child(5n+2){background:#ffe3d6;border-color:var(--a27-smart-deep)}.toks span:nth-child(5n+3){background:#ece4ff;border-color:var(--a27-creative-deep)}.toks span:nth-child(5n+4){background:#ddf8e7;border-color:var(--a27-responsible-deep)}.toks span:nth-child(5n){background:#fde3f8;border-color:var(--a27-future-deep)}
+.tokin{width:100%;min-height:4.5rem;padding:.6rem;font:inherit;border:1px solid #a9a397}
+.counts{display:flex;gap:1.4rem;flex-wrap:wrap;font-size:.9rem}.counts b{font-size:1.4rem;display:block}
+/* Embedding map */
+.emb{width:100%;height:auto;background:#fbfaf6;border:1px solid var(--rule)}
+/* CPU/GPU race */
+.race{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:520px){.race{grid-template-columns:1fr}}
+.lane h4{font-size:.95rem;margin-bottom:.35rem}.lane .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.lane .grid i{aspect-ratio:1;background:var(--card);border:1px solid #d8d3c8}
+.lane .grid i.busy{background:var(--a27-smart)}.lane .grid i.done{background:var(--ink)}
+.lane .t{font-size:.85rem;margin-top:.35rem;font-variant-numeric:tabular-nums;min-height:1.4em}
+/* Calculator */
+.calc label{display:block;font-weight:700;font-size:.9rem;margin-top:.8rem}
+.calc input[type=range]{width:100%;accent-color:var(--ink);min-height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}.seg button{min-height:40px;padding:.35rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:700}.seg button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.6rem;margin-top:1rem}
+.out div{background:var(--card);padding:.7rem}.out b{display:block;font-size:1.45rem;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.out span{font-size:.8rem}
+.gpus{display:flex;flex-wrap:wrap;gap:3px;margin-top:.6rem}.gpus i{width:18px;height:24px;background:var(--a27-responsible);border:1.5px solid var(--ink)}
+.gpus i.part{background:linear-gradient(to top,var(--a27-responsible) var(--p),#fff var(--p))}
+/* Scale chart */
+.scale{display:grid;gap:.45rem;margin-top:.5rem}.scale .row{display:grid;grid-template-columns:8.5rem 1fr;gap:.6rem;align-items:center;font-size:.85rem}
+.scale .bar{height:1.35rem;background:var(--c);border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:flex-end;padding:0 .35rem;font-weight:700;font-size:.78rem;white-space:nowrap;min-width:max-content}
+/* Supply chain */
+.chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:.5rem;counter-reset:st}
+.chain div{counter-increment:st;background:#fff;border:1px solid var(--rule);border-top:5px solid var(--c);padding:.7rem;font-size:.88rem}
+.chain div:before{content:"Step " counter(st);display:block;font-size:.7rem;font-weight:800;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
+.chain b{display:block;font-size:1rem}
+/* Temperature */
+.probs{display:grid;gap:.35rem;margin-top:.6rem}.probs .row{display:grid;grid-template-columns:6.5rem 1fr 3.4rem;gap:.5rem;align-items:center;font-size:.92rem}
+.probs .bar{height:1.2rem;background:var(--c);border:1px solid var(--ink);transition:width .25s}
+.probs .row span:last-child{font-variant-numeric:tabular-nums;text-align:right}
+.sentence{font-size:1.15rem;margin:.3rem 0;font-weight:650}.sentence u{text-decoration-thickness:3px}
+/* Idea flows */
+.flows{display:grid;gap:.5rem}
+.flow{border:1px solid var(--rule);background:#fff}
+.flow>button{width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto) minmax(0,1fr);gap:.6rem;align-items:center;padding:.7rem .8rem;background:none;border:0;text-align:left;min-height:56px}
+.flow .from,.flow .to{font-size:.85rem;line-height:1.25}.flow .to{text-align:right}
+.flow .tag{font-size:.65rem;font-weight:800;letter-spacing:.08em;display:inline-block;padding:.05rem .35rem;margin-bottom:.15rem}
+.tag.us{background:#dbe6f5;color:#1d3d6b}.tag.cn{background:#f8dcd6;color:#7a2416}
+.flow .idea{font-weight:800;text-align:center;font-size:.95rem;padding:.3rem .6rem;background:var(--c);max-width:11rem}
+.flow .idea:after{content:" →"}.flow.rev .idea:before{content:"← "}.flow.rev .idea:after{content:""}
+.flow .more{padding:0 .9rem .9rem;font-size:.93rem}.flow .more p+p{margin-top:.4rem}
+@media(max-width:560px){.flow>button{grid-template-columns:1fr;text-align:left}.flow .to{text-align:left}.flow .idea{justify-self:start}}
+/* Twist */
+.twist{display:grid;grid-template-columns:auto auto 1fr;gap:1rem;align-items:center;background:var(--ink);color:var(--paper);padding:clamp(1.2rem,3vw,2rem);margin-top:1.4rem}
+.twist .tile{color:var(--ink)}.twist h3{font-size:clamp(1.3rem,2.6vw,1.9rem);letter-spacing:-.03em;line-height:1.1;margin-bottom:.5rem}
+@media(max-width:640px){.twist{grid-template-columns:auto auto}.twist>div:last-child{grid-column:1/-1}}
+/* Compound & teachers */
+.compound{background:#fff;border:2px solid var(--ink);padding:clamp(1.2rem,3vw,2rem);margin:2rem 0}
+.compound h2,.teach h2,.sources h2{font-size:clamp(1.7rem,3.6vw,2.6rem);letter-spacing:-.05em;line-height:1;margin-bottom:.8rem}
+.formula{font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;margin:.8rem 0;line-height:1.6;word-spacing:.1em}
+.formula .c{font-family:Georgia,serif}
+.teach{background:var(--card);padding:clamp(1.2rem,3vw,2rem);margin:2rem 0}
+.plan{display:grid;gap:.5rem;margin-top:.8rem}.plan div{display:grid;grid-template-columns:4.5rem 1fr;gap:.8rem;background:#fff;padding:.7rem .8rem;border-left:5px solid var(--a27-creative)}
+.plan b{font-variant-numeric:tabular-nums}
+.subj{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem;margin-top:1rem}.subj div{background:#fff;padding:.8rem;font-size:.92rem}.subj b{display:block}
+.sources{margin:2rem 0;font-size:.9rem}.sources ol{padding-left:1.2rem}.sources li+li{margin-top:.35rem}
+footer.end{border-top:1px solid var(--rule);padding:1.2rem 0;font-size:.88rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+/* Collection tray */
+.tray{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:var(--paper);box-shadow:0 -6px 18px #0003}
+.tray>button{width:100%;display:flex;align-items:center;gap:.8rem;padding:.65rem clamp(1rem,4vw,2.5rem);background:none;border:0;color:inherit;min-height:52px;text-align:left}
+.tray .meter{flex:1;max-width:16rem;height:8px;background:#ffffff30}.tray .meter i{display:block;height:100%;background:var(--a27-responsible);width:0;transition:width .4s}
+.tray .mini{display:flex;gap:3px;overflow:hidden;flex:1}.tray .mini span{flex:none;width:1.7rem;height:1.7rem;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:var(--a27-cream);color:var(--ink)}
+.tray .mini span.c{font-family:Georgia,serif;background:#cfd6df}
+@media(max-width:640px){.tray .mini{display:none}}
+.tray .drawer{max-height:55vh;overflow:auto;padding:0 clamp(1rem,4vw,2.5rem) 1rem}
+.tray .drawer .tile{width:6.2rem;min-height:6.4rem}.tray .drawer .tile .s{font-size:1.6rem}
+.tray .drawer .tile.missing{background:transparent;border-style:dashed;border-color:#ffffff60;color:#ffffff70}
+.tray .drawer .tile.missing .s{font-size:1.4rem}
+.pop{animation:pop .5s}@keyframes pop{40%{transform:scale(1.25)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.tray,.route,.hero-art{display:none}.chapter:before{display:none}body{padding:0}.panel,.fact{break-inside:avoid}}
+
+/* Part two styles (shared) */
+.series{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}.series a,.series span{font-size:.82rem;font-weight:700;padding:.3rem .7rem;border:1px solid #ffffff55;text-decoration:none}.series span{background:var(--a27-future);color:var(--ink);border-color:var(--a27-future)}
+.kb{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.45rem;margin-top:.6rem}
+.doc{border:1px solid var(--rule);background:#fbfaf6;padding:.55rem .6rem;font-size:.82rem;line-height:1.35;position:relative}
+.doc b{display:block;font-size:.85rem;margin-bottom:.2rem}.doc .sc{display:block;height:5px;background:var(--card);margin-top:.45rem}.doc .sc i{display:block;height:100%;background:var(--c);transition:width .3s}
+.doc.hit{border:2px solid var(--ink);background:#fff}.doc.hit:after{content:"Retrieved";position:absolute;top:-.6rem;right:.4rem;background:var(--ink);color:var(--paper);font-size:.62rem;font-weight:800;letter-spacing:.07em;padding:.1rem .35rem;text-transform:uppercase}
+.qs{display:flex;flex-wrap:wrap;gap:.35rem}.qs button{min-height:40px;padding:.35rem .7rem;border:1.5px solid var(--ink);background:#fff;font-weight:650;text-align:left}.qs button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.prompt{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;background:var(--ink);color:#e9e6dd;padding:.8rem;margin-top:.8rem;white-space:pre-wrap;line-height:1.45;max-height:16rem;overflow:auto}
+.prompt .hl{color:var(--a27-responsible)}.prompt .q{color:var(--a27-safe)}
+.reply{margin-top:.7rem;padding:.7rem .8rem;border-left:5px solid var(--c);background:#fbfaf6}.reply.bad{border-left-color:var(--a27-crit)}
+.reply small{display:block;font-weight:800;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:.2rem}
+.switch{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;margin-top:.8rem;min-height:40px}.switch input{width:1.2rem;height:1.2rem;accent-color:var(--ink)}
+.chat{display:grid;gap:.45rem;margin-top:.5rem}
+.msg{padding:.55rem .7rem;font-size:.9rem;max-width:92%}.msg small{display:block;font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;opacity:.75;margin-bottom:.15rem}
+.msg.you{background:var(--a27-safe);justify-self:end}.msg.model{background:#efe9ff}.msg.app{background:var(--card);border:1px dashed #8d877c}
+.msg code,.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;white-space:pre-wrap;display:block}
+.msg[hidden]{display:none}
+.mesh{width:100%;height:auto;background:#fbfaf6;border:1px solid var(--rule);margin-top:.6rem}
+.big2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.7rem}.big2 div{background:var(--card);padding:.7rem}.big2 b{display:block;font-size:1.6rem;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.big2 span{font-size:.8rem}
+.dial{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin:.5rem 0}.dial button{min-height:52px;padding:.4rem .5rem;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:.88rem;line-height:1.2}.dial button small{display:block;font-weight:500;font-size:.72rem}
+.dial button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+@media(max-width:480px){.dial{grid-template-columns:1fr}}
+.steps{display:grid;gap:.4rem;margin-top:.7rem}
+.step{display:grid;grid-template-columns:5.6rem 1fr;gap:.6rem;padding:.55rem .65rem;font-size:.88rem;background:#fbfaf6;border:1px solid var(--rule)}
+.step>b{font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding-top:.15rem}
+.step.think>b{color:var(--a27-creative-deep)}.step.act>b{color:var(--a27-smart-deep)}.step.see>b{color:var(--a27-safe-deep)}.step.ask{background:#fff7d6;border:2px solid var(--ink)}.step.ask>b{color:var(--ink)}
+.step.danger{background:#fde8e8;border-color:var(--a27-crit)}.step.danger>b{color:var(--a27-crit-deep)}.step.good{background:#e3f8eb;border-color:var(--a27-responsible-deep)}
+.step .code{margin-top:.25rem;color:var(--dim)}.step .hidden-text{display:block;margin-top:.3rem;padding:.3rem .4rem;background:#fff;border:1px dashed var(--a27-crit);font-size:.8rem;color:var(--a27-crit-deep)}
+.step .yn{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}.step .yn button{min-height:40px;padding:.3rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:700}.step .yn button.yes{background:var(--ink);color:var(--paper)}
+.agentbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem}
+.sort{display:grid;gap:.6rem}.sort .item{background:#fff;border:1px solid var(--rule);padding:.7rem .8rem}.sort .item p{font-weight:650;margin-bottom:.45rem}
+.sort .opts{display:flex;flex-wrap:wrap;gap:.35rem}.sort .opts button{min-height:40px;padding:.3rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:700}
+.sort .opts button.right{background:color-mix(in srgb,var(--a27-responsible) 45%,#fff);border-color:var(--a27-responsible-deep)}.sort .opts button.wrong{border-color:var(--a27-crit);color:var(--a27-crit-deep)}
+.sort .why{font-size:.86rem;margin-top:.4rem}
+.cmp{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:.6rem}.cmp th,.cmp td{border:1px solid var(--rule);padding:.5rem .55rem;text-align:left;vertical-align:top}.cmp thead th{background:var(--ink);color:var(--paper)}.cmp tbody th{background:var(--card);white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.compounds{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.7rem;margin-top:1rem}
+.cpd{border:2px dashed var(--rule);padding:.8rem;background:#fbfaf6;opacity:.6}.cpd.made{border:2px solid var(--ink);background:#fff;opacity:1}
+.cpd h3{font-size:1.05rem;margin-bottom:.2rem}.cpd .eq{font-weight:800;font-size:1.15rem;margin:.3rem 0;letter-spacing:.02em}.cpd p{font-size:.86rem}.cpd .st{font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.cpd.made .st{color:var(--a27-responsible-deep)}.cpd.warn.made{border-color:var(--a27-crit)}.cpd.warn.made .st{color:var(--a27-crit-deep)}
+
+/* Part three additions */
+/* Pattern explorer */
+.px{margin-top:2rem;background:#fff;border:1.5px solid var(--ink);padding:clamp(1rem,2.6vw,1.8rem)}
+.px>header h3{font-size:clamp(1.35rem,2.8vw,2rem);letter-spacing:-.04em;line-height:1.05;margin:.3rem 0 .4rem}
+.px>header p{font-size:.95rem;max-width:62ch}
+.px-body{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(1rem,3vw,2rem);margin-top:1.1rem;align-items:start}
+@media(max-width:860px){.px-body{grid-template-columns:1fr}}
+.px-grid{display:grid;grid-template-columns:1.6rem repeat(5,minmax(0,1fr));gap:.35rem}
+.px-axis{grid-row:1/span 8;grid-column:1;display:flex;flex-direction:row;align-items:center;justify-content:space-between;font-size:.62rem;white-space:nowrap;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);writing-mode:vertical-rl;transform:rotate(180deg);padding:.2rem 0}
+.px-axis i{flex:1;width:2px;background:linear-gradient(var(--rule),var(--ink));margin:.4rem 0;font-style:normal}
+.px-rowname{grid-column:2/-1;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:.35rem 0 -.1rem;display:flex;align-items:center;gap:.4rem}
+.px-rowname:before{content:"";width:.7rem;height:.7rem;background:var(--rc);border:1.5px solid var(--ink)}
+.px-t{--rc:var(--a27-safe);position:relative;min-height:4.4rem;padding:.35rem .4rem;text-align:left;background:color-mix(in srgb,var(--rc) 22%,#fff);border:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;line-height:1.1;transition:transform .15s}
+.px-t b{font-size:.68rem;font-weight:800;font-variant-numeric:tabular-nums;opacity:.7}
+.px-t span{font-size:.8rem;font-weight:750;letter-spacing:-.01em;overflow-wrap:normal;hyphens:manual}
+.px-t:hover{transform:translateY(-2px)}
+.px-t[aria-pressed=true]{background:var(--ink);color:var(--paper);box-shadow:0 0 0 3px var(--rc)}
+.px-t[aria-pressed=true] b{opacity:1;color:var(--rc)}
+.px-t.seen:after{content:"";position:absolute;top:.35rem;right:.35rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--ink)}
+.px-t[aria-pressed=true].seen:after{background:var(--rc)}
+@media(max-width:520px){.px-t{min-height:3.6rem;padding:.3rem}.px-t span{font-size:.66rem}}
+.px-card{--rc:var(--a27-safe);border:1.5px solid var(--ink);border-top:8px solid var(--rc);background:#fbfaf6;padding:1rem 1.1rem;position:sticky;top:1rem}
+.px-card .kick{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.px-card .kick .n{background:var(--rc);color:var(--ink);padding:.1rem .4rem}
+.px-card h4{font-size:clamp(1.3rem,2.4vw,1.7rem);letter-spacing:-.04em;line-height:1.05;margin:.35rem 0 .3rem}
+.px-card .one{font-size:1rem}
+.px-card svg{width:100%;height:auto;display:block;margin:.8rem 0;background:#fff;border:1px solid var(--rule)}
+.px-card dl{display:grid;gap:.45rem;margin:0}.px-card dt{font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}.px-card dd{margin:0;font-size:.93rem}
+.px-card .links{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.px-card .links a{display:inline-flex;align-items:center;min-height:40px;padding:.3rem .75rem;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:.85rem;text-decoration:none}
+.px-card .links a.go{background:var(--ink);color:var(--paper)}
+.px-card .links a.el{background:var(--fam,#eee)}
+.px-card .links a.el[data-fam=foundations]{--fam:#E3E8EF}.px-card .links a.el[data-fam=generative]{--fam:#EEE6FF}.px-card .links a.el[data-fam=agents]{--fam:#FFEDD5}.px-card .links a.el[data-fam=governance]{--fam:#FFE1E7}.px-card .links a.el[data-fam=infra]{--fam:#E8F3D6}
+.px-card .pe path{transition:stroke .25s,stroke-width .25s}
+.px-card .pe.live path{stroke:var(--rcd,#231F20);stroke-width:1.8;stroke-dasharray:6 4;animation:pxMarch .5s linear infinite}
+.px-card .pe.done path{stroke-width:1.4}
+@keyframes pxMarch{to{stroke-dashoffset:-10}}
+.px-card .pn rect,.px-card .pn path{transition:stroke-width .25s,filter .25s}
+.px-card .pn.on rect,.px-card .pn.on path{stroke-width:2.8;filter:drop-shadow(0 0 4px var(--rc))}
+.px-card .ghost{opacity:.13}
+.px-card .pe,.px-card .pn{transition:opacity .35s}
+.px-card .dot{fill:var(--rcd,#231F20);stroke:#fff;stroke-width:2}
+.px-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:-.3rem 0 .5rem}
+.px-ctl button{min-height:40px;padding:.3rem .8rem;border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:.85rem}
+.px-ctl button.pri{background:var(--ink);color:var(--paper)}
+.px-ctl button:disabled{opacity:.45;cursor:default}
+.px-say{min-height:2.6em;font-size:.9rem;background:#fff;border-left:4px solid var(--rc);padding:.4rem .6rem;margin-bottom:.7rem}
+.px-say b{font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.px-card .pe.live path{animation:none}}
+.px-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-top:.9rem;font-size:.82rem;color:var(--dim)}
+.lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:.6rem}
+@media(max-width:520px){.lanes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lane2{border:1.5px solid var(--ink);background:#fbfaf6;padding:.45rem .5rem;font-size:.78rem;font-weight:700;line-height:1.2;transition:background .3s}
+.lane2 b{display:block;font-size:1.3rem;font-variant-numeric:tabular-nums}
+.lane2.human{background:#fff7d6}.lane2.flash{background:var(--c)}
+.rlog{display:grid;gap:.4rem;margin-top:.7rem}
+.rmsg{border:1px solid var(--rule);background:#fff;padding:.55rem .65rem;font-size:.88rem}
+.rmsg q{display:block;font-weight:650;quotes:none}
+.rmsg .to{display:block;font-size:.76rem;font-weight:800;letter-spacing:.04em;color:var(--dim);margin:.3rem 0 .2rem}
+.rmsg.bad{border:2px solid var(--a27-crit);background:#fde8e8}.rmsg.bad .why{color:var(--a27-crit-deep)}
+.rmsg.saved{border:2px solid var(--a27-responsible-deep);background:#e3f8eb}
+.rmsg .why{display:block;font-size:.82rem;font-weight:700;margin-top:.25rem}
+.ballots{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.7rem;min-height:2.6rem;align-items:center}
+.ballot{display:grid;place-items:center;min-width:3rem;height:2.3rem;padding:0 .4rem;border:1.5px solid var(--ink);font-weight:800;font-variant-numeric:tabular-nums;animation:pop .35s}
+.ballot.ok{background:color-mix(in srgb,var(--a27-responsible) 55%,#fff)}.ballot.no{background:#fde8e8;color:var(--a27-crit-deep);border-color:var(--a27-crit)}
+.verdict{flex-basis:100%;font-weight:700;font-size:.92rem;margin-top:.2rem}
+.teamsvg{width:100%;height:auto;background:#fbfaf6;border:1px solid var(--rule);margin-top:.2rem}
+.teamsvg .edges path{stroke:#c9c3b6;transition:stroke .3s}
+.teamsvg .edges path.on{stroke:#231F20;stroke-width:4;stroke-dasharray:7 5}
+.teamsvg rect{stroke:#231F20;stroke-width:1.5;opacity:.45;transition:opacity .3s}
+.teamsvg .node.on rect{opacity:1;stroke-width:3}
+.teamsvg text{font:700 14px 'AIAD Sans',Arial,sans-serif;fill:#231F20;text-anchor:middle}
+.step.lead>b{color:var(--a27-creative-deep)}.step.work>b{color:var(--a27-smart-deep)}
+.tokens{display:grid;grid-template-columns:auto 1fr auto;gap:.3rem .6rem;align-items:center;margin-top:.8rem;font-size:.85rem;font-weight:700}
+.tokens small{grid-column:1/-1;font-weight:500;color:var(--dim);font-size:.78rem}
+.tokens b{font-variant-numeric:tabular-nums;font-size:1.1rem}
+.meter2{position:relative;height:14px;background:var(--card);border:1px solid var(--ink)}
+.meter2 i{display:block;height:100%;width:0;background:var(--a27-smart);transition:width .4s}
+.meter2 em{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--ink)}
+.dbars{display:grid;gap:.6rem;margin-top:1rem}
+.drow{display:grid;grid-template-columns:minmax(0,1fr) 4.2rem;gap:.2rem .6rem;align-items:center;font-size:.86rem}
+.drow span{grid-column:1/-1;font-weight:700}
+.drow .bar{height:1.3rem;background:var(--card);border:1px solid var(--ink)}
+.drow .bar i{display:block;height:100%;background:var(--c);transition:width .25s}
+.drow b{font-size:1.1rem;font-variant-numeric:tabular-nums;text-align:right}
+.drow small{grid-column:1/-1;color:var(--dim);font-size:.78rem;margin-top:-.15rem}
+.aims{background:#fff;padding:.8rem 1rem;margin-top:.8rem;border-left:5px solid var(--a27-responsible)}
+.further{margin-top:1rem;border:1.5px dashed var(--cd);background:#fffdf7}
+.further summary{cursor:pointer;font-weight:750;padding:.7rem .9rem;min-height:44px;color:var(--cd)}
+.further>div{padding:0 .9rem .9rem;font-size:.95rem}.further>div p+p{margin-top:.5rem}
+.further .eq{font-family:Georgia,'Times New Roman',serif;font-size:1.12rem;background:var(--card);padding:.5rem .7rem;margin:.5rem 0;overflow-x:auto}
+.terms{background:#fff;border:1px solid var(--rule);padding:clamp(1.2rem,3vw,2rem);margin:2rem 0}
+.terms h2{font-size:clamp(1.7rem,3.6vw,2.6rem);letter-spacing:-.05em;line-height:1;margin-bottom:.8rem}
+.terms dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.5rem 1.2rem;margin:0}
+.terms dl div{border-top:1px solid var(--rule);padding-top:.45rem}.terms dt{font-weight:800}.terms dd{margin:0;font-size:.93rem}
+.quiz{margin:2rem 0}.quiz>h2{font-size:clamp(1.7rem,3.6vw,2.6rem);letter-spacing:-.05em;line-height:1;margin-bottom:.4rem}
+.quiz .qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:.2rem 1rem}
+.quiz .score{font-weight:800;font-size:1.1rem;margin-top:1rem}
+@media(max-width:400px){.quiz .qgrid{grid-template-columns:1fr}}
+.aims-top{background:#fff;border:2px solid var(--ink);border-left:10px solid var(--a27-smart);padding:clamp(1rem,2.6vw,1.6rem);margin:0 0 2.2rem}
+.aims-top h2{font-size:clamp(1.3rem,2.6vw,1.8rem);letter-spacing:-.04em;margin-bottom:.6rem}
+.aims-top ol{margin:0;padding-left:1.3rem;display:grid;gap:.35rem}
+.aims ul{margin:.4rem 0 0;padding-left:1.2rem}.aims li+li{margin-top:.25rem}
+@media(max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.cmp tbody th{white-space:normal;min-width:7.5rem}
+.px-interlude{border-top:3px dashed var(--rule)}
+.px-opt{font-size:.88rem;font-weight:650;margin:.2rem 0 .5rem}
+.recap{margin:0 0 clamp(2rem,5vw,3rem);max-width:52rem}.recap h2{font-size:clamp(1.3rem,2.6vw,1.8rem);letter-spacing:-.03em;margin:.2rem 0 .3rem}.recap h2 a{color:inherit}.recap-p{color:var(--dim);font-size:.95rem}.recap-qs .panel{margin-top:.8rem}
+.ill{margin:1rem 0 1.2rem;padding:.8rem;background:#fbfaf6;border:1px solid var(--rule)}.ill svg{display:block;width:100%;height:auto}.ill figcaption{font-size:.84rem;color:var(--dim);margin-top:.55rem}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top"><a href="/">AI Awareness Day home</a><img src="../../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop"></header>
+
+<section class="hero" aria-labelledby="h1">
+  <div>
+    <span class="eyebrow">AI Awareness Day · Thursday 29 April 2027 · For A-level students</span>
+    <h1 id="h1">From Agent <span>to Team</span></h1>
+    <p class="lead">One agent can book a room. Running a whole event takes a team. Find out how AI systems are built from a few simple patterns: fixed steps, self-checks, votes and teams of agents. Then decide where the humans should sit.</p>
+    <div class="meta"><span class="pill">6 short chapters</span><span class="pill">About 45 minutes</span><span class="pill">Updated 21 November 2026</span><span class="pill">4 compounds to build</span></div>
+    <div class="series"><a href="../ai-under-the-hood/">All courses</a><a href="../sand-to-sentence/">Part 1: From Sand to Sentence</a><a href="../answer-to-action/">Part 2: From Answer to Action</a><span>Part 3: From Agent to Team</span></div>
+    <a class="start" href="#ch0">Start the story ↓</a>
+  </div>
+  <svg class="hero-art" viewBox="0 0 360 300" role="img" aria-label="A lead agent at the top hands work to three specialist agents. Their results meet in one finished plan, which a person checks.">
+    <g fill="none" stroke="#F6F4ED" stroke-width="2">
+      <path d="M180 78L72 150M180 78v72M180 78l108 72" stroke-dasharray="4 5"/>
+      <rect x="140" y="28" width="80" height="50" fill="#AC91FF" stroke="none"/>
+      <path d="M158 46h44M158 60h28" stroke="#231F20" stroke-width="4"/>
+      <circle cx="72" cy="172" r="24" fill="#00BEDD" stroke="none"/>
+      <circle cx="180" cy="172" r="24" fill="#FF7038" stroke="none"/>
+      <circle cx="288" cy="172" r="24" fill="#63DF93" stroke="none"/>
+      <path d="M150 158a32 32 0 0 1 56-14" stroke="#FA83EB" stroke-width="5"/><path d="M208 132l2 16-14-4z" fill="#FA83EB" stroke="none"/>
+      <path d="M72 196l76 44M180 196v40M288 196l-76 44" stroke-dasharray="4 5"/>
+      <rect x="140" y="236" width="80" height="44" fill="#FA83EB" stroke="none"/>
+      <path d="M163 257l10 10 21-21" stroke="#231F20" stroke-width="5"/>
+      <path d="M222 258h26" stroke-dasharray="4 5"/>
+      <circle cx="270" cy="248" r="11" fill="#F6F4ED" stroke="none"/><path d="M251 286a19 19 0 0 1 38 0z" fill="#F6F4ED" stroke="none"/>
+    </g>
+  </svg>
+</section>
+
+<!-- Recap of the previous part: three recall questions before starting (retrieval days later is one of the most reliable effects in learning research). -->
+<section class="recap" aria-labelledby="trc">
+  <span class="eyebrow">Before you start</span>
+  <h2 id="trc">Three quick questions from <a href="../answer-to-action/">Part 2</a></h2>
+  <p class="recap-p">Recalling what you learned last time helps it stick. No marks, no lock: just try.</p>
+  <div class="recap-qs">
+  <div class="panel check" data-answer="0">
+    <span class="eyebrow">Recall</span><h3>What does RAG add to a chatbot?</h3>
+    <div class="choices"><button type="button">The right documents, added to the prompt when needed</button><button type="button">A bigger model</button><button type="button">The ability to book rooms</button></div>
+    <p class="feedback" role="status" data-right="Right. RAG retrieves relevant pages and adds them to the prompt. The model itself doesn’t change." data-wrong="Not quite. RAG looks up the right documents and adds them to the prompt."></p>
+  </div>
+  <div class="panel check" data-answer="1">
+    <span class="eyebrow">Recall</span><h3>When a chatbot “uses a tool”, who actually runs it?</h3>
+    <div class="choices"><button type="button">The model itself, online</button><button type="button">The app around the model</button><button type="button">You do</button></div>
+    <p class="feedback" role="status" data-right="Right. The model proposes a request; the app checks it and runs it." data-wrong="Not quite. The model only writes a request. The app around it checks it and runs it."></p>
+  </div>
+  <div class="panel check" data-answer="2">
+    <span class="eyebrow">Recall</span><h3>What turns a chatbot into an agent?</h3>
+    <div class="choices"><button type="button">A bigger context window</button><button type="button">A friendlier personality</button><button type="button">Running in a loop: think, act, observe, repeat</button></div>
+    <p class="feedback" role="status" data-right="Right. The loop lets it take several steps towards a goal, adjusting as it goes." data-wrong="Not quite. An agent runs a model in a loop, so it can act, see what happened, and decide the next step."></p>
+  </div>
+  </div>
+</section>
+
+<nav class="route" aria-label="Chapters">
+  <a href="#ch0" data-for="ch0"><b>START</b>Too many jobs</a>
+  <a href="#ch1" data-for="ch1"><b>1</b>Workflows</a>
+  <a href="#ch2" data-for="ch2"><b>2</b>Checking</a>
+  <a href="#ch3" data-for="ch3"><b>3</b>Teams</a>
+  <a href="#ch4" data-for="ch4"><b>4</b>The human</a>
+  <a href="#ch5" data-for="ch5"><b>5</b>Pick a pattern</a>
+</nav>
+
+<section class="aims-top" aria-labelledby="ta">
+  <span class="eyebrow">Learning objectives</span>
+  <h2 id="ta">By the end, you should be able to explain:</h2>
+  <ol>
+    <li>the difference between a workflow and an agent, and when each is the better choice</li>
+    <li>how reflection, evaluator-optimiser and voting make answers more reliable, and when a vote makes things worse</li>
+    <li>how teams of agents divide up work (supervisor, hand-off, agent-as-tool, debate), and what that costs</li>
+    <li>why long jobs go wrong more often than you would expect, using probability</li>
+    <li>where human checks should go, and why people asked to approve everything stop checking</li>
+    <li>which pattern you would choose for a real job, and why</li>
+  </ol>
+</section>
+
+<main>
+<!-- 0 -->
+<section class="chapter" id="ch0" data-theme="future" data-els="Ll Ag Cw" aria-labelledby="t0" data-sum="In one or two sentences, explain why one agent struggles with a big, messy job.">
+  <p class="place"><span class="num">0</span><span class="eyebrow">The week after exams</span></p>
+  <h2 id="t0">One agent, too many jobs</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>One agent given a huge job loses track: its context fills up and errors pile up.</li><li>Engineers use design patterns: reusable shapes for building AI systems.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>Exams are over (Parts <a href="../sand-to-sentence/">1</a> and <a href="../answer-to-action/">2</a> got you through them). The sixth form votes to end the year with a charity quiz night on Friday 2 July, and somehow you've ended up in charge.</p>
+      <p>You give your agent from Part 2 the whole job: <em>Organise the leavers' charity quiz night. Book the hall, write eight rounds of questions, make a poster, sell tickets and answer everyone's messages.</em></p>
+      <p>By Wednesday it's a mess. It has written the history round twice, forgotten a parent's question from Monday, and one of its answers is wrong. One agent, given everything at once, keeps losing track.</p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>Remember what an agent is. At its heart is a <strong>large language model</strong>: an AI model trained on huge amounts of text to predict the next token. An <strong>AI agent</strong> wraps that model in a loop, so it can pursue a goal by deciding on and taking actions, not just answering questions.</p>
+      <p>A single agent struggles with a big, messy job for three reasons:</p>
+      <ul><li>Its <strong>context window</strong> fills up with everything it has read and done, so early details get pushed out or overlooked.</li>
+      <li>Every step is another chance for a mistake, and mistakes carry forward into later steps.</li>
+      <li>One set of instructions has to cover very different jobs, from writing jokes to handling money.</li></ul>
+      <p>Engineers fix this the way people organise any big job: with a few reusable shapes, called <strong>design patterns</strong>. Most of them are things you already do in group projects. Split the work up. Check it. Take a vote. Ask whoever is in charge.</p>
+      <figure class="ill">
+  <svg viewBox="0 0 440 316" role="img" aria-labelledby="ill0T ill0D">
+    <title id="ill0T">Group-project habits are design patterns</title>
+    <desc id="ill0D">Four habits from group projects, each matched to an AI design pattern. Split the work up: workflows and teams, chapters 1 and 3. Check it: reflection and the evaluator, chapter 2. Take a vote: self-consistency, chapter 2. Ask whoever is in charge: human-in-the-loop, chapter 4.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">GROUP-PROJECT HABITS ARE DESIGN PATTERNS</text><text x="20" y="52" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">IN A GROUP PROJECT</text><text x="236" y="52" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">IN AI DESIGN</text><rect x="20" y="62" width="184" height="50" fill="#F6F4ED" stroke="#231F20" stroke-width="1.5"/><text x="32" y="92" font-size="14" font-weight="700" text-anchor="start" fill="#231F20">Split the work up</text><line x1="206" y1="87" x2="220.0" y2="87.0" stroke="#231F20" stroke-width="2"/><path d="M230 87L220.0 92.0L220.0 82.0Z" fill="#231F20"/><rect x="236" y="62" width="184" height="50" fill="#d9f6fb" stroke="#231F20" stroke-width="1.5"/><text x="248" y="84" font-size="14" font-weight="800" text-anchor="start" fill="#231F20">Workflows and teams</text><text x="248" y="102" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Chapters 1 and 3</text><rect x="20" y="124" width="184" height="50" fill="#F6F4ED" stroke="#231F20" stroke-width="1.5"/><text x="32" y="154" font-size="14" font-weight="700" text-anchor="start" fill="#231F20">Check it</text><line x1="206" y1="149" x2="220.0" y2="149.0" stroke="#231F20" stroke-width="2"/><path d="M230 149L220.0 154.0L220.0 144.0Z" fill="#231F20"/><rect x="236" y="124" width="184" height="50" fill="#ece4ff" stroke="#231F20" stroke-width="1.5"/><text x="248" y="146" font-size="14" font-weight="800" text-anchor="start" fill="#231F20">Reflection and evaluator</text><text x="248" y="164" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Chapter 2</text><rect x="20" y="186" width="184" height="50" fill="#F6F4ED" stroke="#231F20" stroke-width="1.5"/><text x="32" y="216" font-size="14" font-weight="700" text-anchor="start" fill="#231F20">Take a vote</text><line x1="206" y1="211" x2="220.0" y2="211.0" stroke="#231F20" stroke-width="2"/><path d="M230 211L220.0 216.0L220.0 206.0Z" fill="#231F20"/><rect x="236" y="186" width="184" height="50" fill="#ece4ff" stroke="#231F20" stroke-width="1.5"/><text x="248" y="208" font-size="14" font-weight="800" text-anchor="start" fill="#231F20">Self-consistency</text><text x="248" y="226" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Chapter 2</text><rect x="20" y="248" width="184" height="50" fill="#F6F4ED" stroke="#231F20" stroke-width="1.5"/><text x="32" y="278" font-size="14" font-weight="700" text-anchor="start" fill="#231F20">Ask whoever is in charge</text><line x1="206" y1="273" x2="220.0" y2="273.0" stroke="#231F20" stroke-width="2"/><path d="M230 273L220.0 278.0L220.0 268.0Z" fill="#231F20"/><rect x="236" y="248" width="184" height="50" fill="#ddf8e7" stroke="#231F20" stroke-width="1.5"/><text x="248" y="270" font-size="14" font-weight="800" text-anchor="start" fill="#231F20">Human-in-the-loop</text><text x="248" y="288" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Chapter 4</text>
+    </g>
+  </svg>
+  <figcaption>You already use these patterns with people. This course shows how engineers use them with AI, chapter by chapter.</figcaption>
+</figure></div>
+        <div class="lens"><span>Computer Science: decomposition</span><span>Business: organising work</span></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-flow="overload"></figure>
+        <div class="fact tiles-intro"><b class="big">4 compounds</b>As you read, you'll collect elements from the <a href="/ai-literacy-periodic-table/">AI Literacy Periodic Table</a> and build four compounds. One of them looks safe but isn't.</div>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel check" data-answer="0">
+        <span class="eyebrow">Quick check</span><h3>Why did the single agent forget a parent’s question from Monday?</h3>
+        <div class="choices"><button type="button">Its context window filled up, so earlier details were pushed out or overlooked</button><button type="button">It was switched off overnight</button><button type="button">It decided the question didn’t matter</button></div>
+        <p class="feedback" role="status" data-right="Right. Everything the agent read and did went into its context window. On a long, busy job, early details get crowded out." data-wrong="Not quite. Nothing switched it off, and it doesn’t decide what matters the way a person does. Its context window filled up, and Monday’s message got crowded out."></p>
+      </div>
+        <div data-node="p3-step"></div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+  <div class="px px-interlude" id="patterns" aria-labelledby="pxh">
+    <header><span class="eyebrow" style="color:var(--cd)">Optional interlude · The map</span><h3 id="pxh">20 patterns, four families</h3>
+    <p class="px-opt">Explore now, or come back after Chapter 5. It never blocks the next chapter.</p>
+    <p>Almost every AI system is built from these shapes. Each row hands more of the decisions to the AI, and costs more to run. Pick a pattern to see how it works. A dot means you've already looked at it.</p></header>
+    <div class="px-body">
+      <div class="px-grid" id="pxGrid" role="group" aria-label="Agent design patterns"></div>
+      <article class="px-card" id="pxCard" aria-live="polite"></article>
+    </div>
+    <div class="px-foot"><span id="pxSeen">0 of 20 explored</span><span>Grouping based on Rathnakumar Udayakumar's chart "Top 20 AI Agent Design Patterns".</span></div>
+  </div>
+</section>
+
+<!-- 1 Workflows -->
+<section class="chapter" id="ch1" data-theme="safe" data-els="Wo Pr" aria-labelledby="t1" data-sum="In one or two sentences, explain when a fixed workflow is better than an agent.">
+  <p class="place"><span class="num">1</span><span class="eyebrow">Workflows</span></p>
+  <h2 id="t1">Draw the steps yourself</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>In a workflow, people fix the steps. In an agent, the model chooses them.</li><li>Chaining, routing and parallelisation are the main workflow patterns.</li><li>Start with the simplest thing that works.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>Your Computing teacher, Ms Okafor, takes one look and asks a simple question: <em>"You already know the steps. Why let the AI decide them?"</em></p>
+      <p>So you write a fixed recipe. Questions are written first, then checked, then laid out on answer sheets. Every incoming message is sorted before anyone replies. And the eight rounds are written at the same time, by eight separate requests, instead of one after another.</p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>Engineers at Anthropic draw a useful line between two kinds of system. In a <strong>workflow</strong>, people decide the steps in advance and write them into the code. In an <strong>agent</strong>, the model decides its own next step. Their advice is to start with the simplest thing that works, and only use an agent when the steps really can't be known in advance.</p>
+      <ul><li><strong>Prompt chaining:</strong> the output of one model request becomes the input to the next. A <em>gate</em> between steps checks the work and stops the chain if something fails.</li>
+      <li><strong>Routing:</strong> a first request sorts each input into a category, then sends it to a prompt, tool or model built for that category. Easy questions can go to a small, cheap model and hard ones to a bigger one.</li>
+      <li><strong>Parallelisation:</strong> independent pieces run at the same time and are merged at the end. You'll meet another kind in chapter 2: running the same task several times and comparing the answers.</li></ul>
+      <figure class="ill">
+  <svg viewBox="0 0 440 482" role="img" aria-labelledby="ill1T ill1D">
+    <title id="ill1T">Three workflow shapes</title>
+    <desc id="ill1D">Three ways to fix steps in advance. Chaining: write, then a gate checks the work, then lay out; if the gate finds a fail, the chain stops. Routing: a router sends a ticket question to a small model, a complaint to a bigger model, and a refund to a person. Parallelisation: eight quiz rounds are written at the same time, then merged.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">THREE WORKFLOW SHAPES</text><text x="20" y="52" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">1 CHAINING</text><rect x="20" y="62" width="96" height="40" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="68" y="87" font-size="14" font-weight="400" text-anchor="middle" fill="#231F20">write</text><line x1="116" y1="82" x2="148.0" y2="82.0" stroke="#231F20" stroke-width="2"/><path d="M158 82L148.0 87.0L148.0 77.0Z" fill="#231F20"/><path d="M184 60L206 82L184 104L162 82Z" fill="#FFE08A" stroke="#231F20" stroke-width="1.5"/><text x="184" y="87" font-size="12" font-weight="700" text-anchor="middle" fill="#231F20">gate</text><line x1="206" y1="82" x2="238.0" y2="82.0" stroke="#231F20" stroke-width="2"/><path d="M248 82L238.0 87.0L238.0 77.0Z" fill="#231F20"/><rect x="248" y="62" width="96" height="40" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="296" y="87" font-size="14" font-weight="400" text-anchor="middle" fill="#231F20">lay out</text><line x1="344" y1="82" x2="376.0" y2="82.0" stroke="#231F20" stroke-width="2"/><path d="M386 82L376.0 87.0L376.0 77.0Z" fill="#231F20"/><circle cx="402" cy="82" r="9" fill="#63DF93" stroke="#231F20" stroke-width="1.2"/><path d="M398 82l3 3.5 5.5-6.5" fill="none" stroke="#231F20" stroke-width="2"/><line x1="184" y1="104" x2="184" y2="126" stroke="#d93025" stroke-width="2"/><circle cx="184" cy="136" r="9" fill="#fde8e8" stroke="#d93025" stroke-width="1.2"/><path d="M180 132l8 8M188 132l-8 8" stroke="#d93025" stroke-width="2"/><text x="200" y="141" font-size="13" font-weight="700" text-anchor="start" fill="#9b1c14">fail: the chain stops</text><text x="20" y="176" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">2 ROUTING</text><rect x="20" y="224" width="84" height="40" fill="#ffe3d6" stroke="#231F20" stroke-width="1.5"/><text x="62" y="249" font-size="14" font-weight="700" text-anchor="middle" fill="#231F20">router</text><path d="M104 244C150 244 150 206 196 206" fill="none" stroke="#231F20" stroke-width="2"/><line x1="196" y1="206" x2="278.0" y2="206.0" stroke="#231F20" stroke-width="2"/><path d="M288 206L278.0 211.0L278.0 201.0Z" fill="#231F20"/><text x="200" y="199" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">ticket question</text><rect x="290" y="186" width="130" height="40" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="355" y="211" font-size="14" font-weight="700" text-anchor="middle" fill="#231F20">small model</text><path d="M104 244C150 244 150 254 196 254" fill="none" stroke="#231F20" stroke-width="2"/><line x1="196" y1="254" x2="278.0" y2="254.0" stroke="#231F20" stroke-width="2"/><path d="M288 254L278.0 259.0L278.0 249.0Z" fill="#231F20"/><text x="200" y="247" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">complaint</text><rect x="290" y="234" width="130" height="40" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="355" y="259" font-size="14" font-weight="700" text-anchor="middle" fill="#231F20">bigger model</text><path d="M104 244C150 244 150 302 196 302" fill="none" stroke="#231F20" stroke-width="2"/><line x1="196" y1="302" x2="278.0" y2="302.0" stroke="#231F20" stroke-width="2"/><path d="M288 302L278.0 307.0L278.0 297.0Z" fill="#231F20"/><text x="200" y="295" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">refund</text><rect x="290" y="282" width="130" height="40" fill="#ddf8e7" stroke="#231F20" stroke-width="1.5"/><text x="355" y="307" font-size="14" font-weight="700" text-anchor="middle" fill="#231F20">a person</text><text x="20" y="346" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">3 PARALLELISATION</text><rect x="20" y="400" width="70" height="40" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="55" y="425" font-size="14" font-weight="400" text-anchor="middle" fill="#231F20">start</text><path d="M90 420H110M110 378V462" fill="none" stroke="#231F20" stroke-width="2"/><path d="M110 378H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="374" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 378H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 390H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="386" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 390H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 402H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="398" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 402H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 414H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="410" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 414H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 426H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="422" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 426H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 438H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="434" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 438H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 450H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="446" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 450H310" stroke="#231F20" stroke-width="1.5"/><path d="M110 462H124" stroke="#231F20" stroke-width="1.5"/><rect x="126" y="458" width="170" height="8" fill="#AC91FF" stroke="#231F20" stroke-width="1"/><path d="M296 462H310" stroke="#231F20" stroke-width="1.5"/><text x="211" y="366" font-size="12" font-weight="700" text-anchor="middle" fill="#231F20">8 rounds written at once</text><path d="M310 378V462M310 420H322" fill="none" stroke="#231F20" stroke-width="2"/><line x1="322" y1="420" x2="324.0" y2="420.0" stroke="#231F20" stroke-width="2"/><path d="M334 420L324.0 425.0L324.0 415.0Z" fill="#231F20"/><rect x="336" y="400" width="84" height="40" fill="#ddf8e7" stroke="#231F20" stroke-width="1.5"/><text x="378" y="425" font-size="14" font-weight="700" text-anchor="middle" fill="#231F20">merge</text>
+    </g>
+  </svg>
+  <figcaption>In all three, people fix the steps in advance. The AI does the work inside each step.</figcaption>
+</figure>
+      <p>Workflows are predictable, cheaper and easier to test. Agents are flexible. Most real systems mix both.</p></div>
+        <div class="lens"><span>Computer Science: sequence, selection, decomposition</span><span>Business: process design</span></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-compare="wfvs"></figure>
+        <figure data-flow="chain"></figure>
+        <div class="panel" id="router">
+        <span class="eyebrow">Try it</span><h3>Route the inbox</h3>
+        <p style="font-size:.92rem">A router reads each message and sends it to a specialist. Watch what happens when a message doesn't fit neatly.</p>
+        <div class="lanes" id="lanes"></div>
+        <label class="switch"><input type="checkbox" id="unsure" checked> Send messages the router isn't sure about (below 70%) to a person</label>
+        <div class="rlog" id="rlog" aria-live="polite"></div>
+        <div class="agentbar"><button type="button" class="btn primary" id="routeNext">Route the first message</button><button type="button" class="btn" id="routeReset">Reset</button></div>
+        <p class="note">Messages and percentages are made up for this example. A real router is usually a model asked to pick a category, or a simpler classifier.</p>
+      </div>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel check" data-answer="0">
+        <span class="eyebrow">Quick check</span><h3>When is a fixed workflow a better choice than an agent?</h3>
+        <div class="choices"><button type="button">When the steps are known in advance and you need the same result every time</button><button type="button">When the task is too hard to explain</button><button type="button">Whenever you want the system to be more intelligent</button></div>
+        <p class="feedback" role="status" data-right="Yes. Fixed steps are cheaper, faster and easier to test. Save agents for jobs where the steps can't be known in advance." data-wrong="Not quite. Agents are for jobs whose steps can't be predicted. When you already know the steps, a workflow is simpler, cheaper and easier to test."></p>
+      </div>
+        <div data-node="p3-apart"></div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+</section>
+
+<!-- 2 Checking -->
+<section class="chapter" id="ch2" data-theme="creative" data-els="Ct Ev Te" aria-labelledby="t2" data-sum="In one or two sentences, explain how an AI can check its own work, and when that fails.">
+  <p class="place"><span class="num">2</span><span class="eyebrow">Reasoning patterns</span></p>
+  <h2 id="t2">Check it, vote on it, try again</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>Reflection, evaluator-optimiser and voting make answers more reliable, at extra cost.</li><li>Self-checks often miss errors when there is nothing outside to test against.</li><li>Voting only helps if the model is right more often than wrong.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>The questions are written. Now the answers have to be right. Nothing ruins a quiz night faster than a wrong answer read out to a hall full of parents.</p>
+      <p>The puzzle round includes a classic: <em>A bat and a ball cost £1.10 in total. The bat costs £1.00 more than the ball. How much does the ball cost?</em></p>
+      <p>Most people answer 10p straight away. The right answer is 5p. Will the AI get it right?</p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>Several patterns make one model more reliable, at the cost of more requests.</p>
+      <ul><li><strong>Reflection:</strong> the model reads its own draft, criticises it and rewrites it. It catches some mistakes, but research shows that models checking themselves, with nothing from outside to go on, often miss their own errors.</li>
+      <li><strong>Evaluator-optimiser:</strong> one request writes, a separate one grades the work against clear criteria, and the loop repeats until it passes. It works best when "good" can be tested, like code that must pass its tests. <strong>Evals</strong> are tests that score an AI’s output against clear criteria, like a mark scheme. Evaluator-optimiser runs an eval inside the loop, every time.</li>
+      <li><strong>Self-consistency:</strong> ask the same question several times and keep the most common answer. This is where temperature from Part 1 matters. Near zero, you'd get almost the same answer every time, and there would be nothing to vote on.</li>
+      <li><strong>Plan-and-execute</strong> writes out every step before acting. <strong>Tree of thoughts</strong> explores several lines of reasoning, like branches, and drops the weak ones.</li></ul>
+      <figure class="ill">
+  <svg viewBox="0 0 440 302" role="img" aria-labelledby="ill2T ill2D">
+    <title id="ill2T">What each check has to go on</title>
+    <desc id="ill2D">Three ways a model's answer gets checked, and what each is compared with. Reflection: the model rereads its own draft with its own judgement, with nothing from outside, so it can miss its own blind spots. Evaluator: the draft is checked against a mark scheme of stated criteria, so it is only as good as its criteria. Vote: the answer is compared with other answers to the same question, such as 5p, 5p, 10p, 5p, 5p, so it only works if the answers vary.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">WHAT EACH CHECK HAS TO GO ON</text><rect x="20" y="40" width="116" height="250" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="78" y="62" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="middle">REFLECTION</text><text x="78" y="84" font-size="12" font-weight="400" text-anchor="middle" fill="#5f5a52">checks against:</text><rect x="162" y="40" width="116" height="250" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="220" y="62" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="middle">EVALUATOR</text><text x="220" y="84" font-size="12" font-weight="400" text-anchor="middle" fill="#5f5a52">checks against:</text><rect x="304" y="40" width="116" height="250" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="362" y="62" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="middle">VOTE</text><text x="362" y="84" font-size="12" font-weight="400" text-anchor="middle" fill="#5f5a52">checks against:</text><rect x="32" y="98" width="92" height="64" fill="#fbfaf6" stroke="#231F20" stroke-width="1.5" stroke-dasharray="5 4"/><text x="78" y="126" font-size="12" font-weight="700" text-anchor="middle" fill="#231F20">nothing</text><text x="78" y="143" font-size="12" font-weight="700" text-anchor="middle" fill="#231F20">from outside</text><path d="M56 176a22 22 0 1 0 44 0" fill="none" stroke="#231F20" stroke-width="2"/><line x1="100" y1="176" x2="99.4" y2="179.9" stroke="#231F20" stroke-width="2"/><path d="M101 170L104.3 180.7L94.4 179.0Z" fill="#231F20"/><text x="78" y="214" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">its own draft,</text><text x="78" y="230" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">its own judgement</text><text x="78" y="256" font-size="13" font-weight="700" text-anchor="middle" fill="#9b1c14">Can miss its</text><text x="78" y="273" font-size="13" font-weight="700" text-anchor="middle" fill="#9b1c14">own blind spots</text><rect x="170" y="98" width="100" height="92" fill="#FFF3C4" stroke="#231F20" stroke-width="1.5"/><text x="220" y="115" font-size="9" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="middle">MARK SCHEME</text><circle cx="184" cy="134" r="9" fill="#63DF93" stroke="#231F20" stroke-width="1.2"/><path d="M180 134l3 3.5 5.5-6.5" fill="none" stroke="#231F20" stroke-width="2"/><text x="197" y="138" font-size="11" font-weight="400" text-anchor="start" fill="#231F20">one answer</text><circle cx="184" cy="154" r="9" fill="#63DF93" stroke="#231F20" stroke-width="1.2"/><path d="M180 154l3 3.5 5.5-6.5" fill="none" stroke="#231F20" stroke-width="2"/><text x="197" y="158" font-size="11" font-weight="400" text-anchor="start" fill="#231F20">clear</text><circle cx="184" cy="174" r="9" fill="#63DF93" stroke="#231F20" stroke-width="1.2"/><path d="M180 174l3 3.5 5.5-6.5" fill="none" stroke="#231F20" stroke-width="2"/><text x="197" y="178" font-size="11" font-weight="400" text-anchor="start" fill="#231F20">all ages</text><text x="220" y="214" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">stated criteria,</text><text x="220" y="230" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">from outside</text><text x="220" y="256" font-size="13" font-weight="700" text-anchor="middle" fill="#1d7a45">Only as good as</text><text x="220" y="273" font-size="13" font-weight="700" text-anchor="middle" fill="#1d7a45">its criteria</text><rect x="332" y="100" width="60" height="15" fill="#ddf8e7" stroke="#231F20" stroke-width="1"/><text x="362" y="112" font-size="11" font-weight="700" text-anchor="middle" fill="#231F20">5p</text><rect x="332" y="118" width="60" height="15" fill="#ddf8e7" stroke="#231F20" stroke-width="1"/><text x="362" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="#231F20">5p</text><rect x="332" y="136" width="60" height="15" fill="#fde8e8" stroke="#231F20" stroke-width="1"/><text x="362" y="148" font-size="11" font-weight="700" text-anchor="middle" fill="#231F20">10p</text><rect x="332" y="154" width="60" height="15" fill="#ddf8e7" stroke="#231F20" stroke-width="1"/><text x="362" y="166" font-size="11" font-weight="700" text-anchor="middle" fill="#231F20">5p</text><rect x="332" y="172" width="60" height="15" fill="#ddf8e7" stroke="#231F20" stroke-width="1"/><text x="362" y="184" font-size="11" font-weight="700" text-anchor="middle" fill="#231F20">5p</text><text x="362" y="214" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">the other</text><text x="362" y="230" font-size="12" font-weight="400" text-anchor="middle" fill="#231F20">answers</text><text x="362" y="256" font-size="13" font-weight="700" text-anchor="middle" fill="#6441B8">Only works if</text><text x="362" y="273" font-size="13" font-weight="700" text-anchor="middle" fill="#6441B8">the answers vary</text>
+    </g>
+  </svg>
+  <figcaption>A check is only as good as what it checks against. Reflection has the least to go on; a vote needs some randomness (temperature) so the answers can differ.</figcaption>
+</figure>
+      <p>Many of these rely on <strong>chain of thought</strong>: getting the model to write out its reasoning step by step before it answers. That often helps with maths and logic, though the written steps don't always show how the model really reached its answer.</p></div>
+        <div class="lens"><span>Maths: binomial distribution</span><span>Psychology: fast and slow thinking</span><span>Computer Science: testing</span></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-flow="evalopt"></figure>
+        <div class="panel">
+        <span class="eyebrow">Worked example</span><h3>Draft, check, fix</h3>
+        <div class="chat" id="reflChat">
+          <div class="msg you"><small>Question</small>A bat and a ball cost £1.10 in total. The bat costs £1.00 more than the ball. How much does the ball cost?</div>
+          <div class="msg model" hidden><small>First draft</small>The ball costs 10p.</div>
+          <div class="msg app" hidden><small>Same model, asked to check its draft</small>If the ball is 10p, the bat is £1.10, and together they cost £1.20, not £1.10. The draft is wrong.</div>
+          <div class="msg model" hidden><small>Revised answer, reasoning shown</small>Call the ball x. The bat is x + £1.00, so 2x + £1.00 = £1.10. That gives 2x = 10p, so the ball costs 5p.</div>
+        </div>
+        <p style="margin-top:.8rem"><button type="button" class="btn primary" id="reflNext">Next step</button></p>
+        <p class="note">Here the check works because the model tested its answer against the question. Asked only "Are you sure?", models often just repeat themselves, or change a right answer to a wrong one.</p>
+      </div>
+        <div class="panel" id="vote">
+        <span class="eyebrow">Try it</span><h3>Ask several times, take a vote</h3>
+        <label for="pRight" style="font-weight:700;font-size:.9rem;display:block">Chance each answer is right: <span id="vP"></span></label>
+        <input type="range" id="pRight" min="30" max="95" step="5" value="70" style="width:100%;accent-color:#231F20;min-height:32px">
+        <p style="font-weight:700;font-size:.9rem;margin-top:.5rem">Answers in each vote</p>
+        <div class="seg" role="group" aria-label="Answers in each vote" id="voteN"><button type="button" data-n="1" aria-pressed="false">1</button><button type="button" data-n="3" aria-pressed="false">3</button><button type="button" data-n="5" aria-pressed="true">5</button><button type="button" data-n="9" aria-pressed="false">9</button></div>
+        <div class="ballots" id="ballots" aria-live="polite"></div>
+        <p style="margin-top:.6rem"><button type="button" class="btn primary" id="ask">Ask the model</button></p>
+        <div class="big2"><div><b id="pOne"></b><span>chance one answer on its own is right</span></div><div><b id="pVote"></b><span id="pVoteL">chance the vote is right</span></div></div>
+        <p id="voteMsg" style="margin-top:.7rem;font-weight:650"></p>
+        <p class="note">Simplified: every wrong answer here is the same wrong answer (10p), like a shared misconception, and each answer is independent of the others. Real answers are not fully independent, so real gains are smaller.</p>
+      </div>
+        <details class="further"><summary>Go further: Maths</summary><div><p>The voting simulator uses the <strong>binomial distribution</strong>. If each answer is right with probability p, the chance that a majority of 5 answers is right is:</p><p class="eq">P = Σ<sub>k=3</sub><sup>5</sup> C(5,k) p<sup>k</sup> (1−p)<sup>5−k</sup></p><p>At p = 0.7 that is 0.309 + 0.360 + 0.168 ≈ 0.837: the vote is right about 84% of the time, against 70% for one answer. Now try p = 0.4. What happens, and why?</p></div></details>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel check" data-answer="0">
+        <span class="eyebrow">Quick check</span><h3>A system asks a model the same question 9 times and keeps the most common answer. When can this make things worse?</h3>
+        <div class="choices"><button type="button">When the model is more often wrong than right, in the same way each time</button><button type="button">Never: more answers always help</button><button type="button">When the question is too easy</button></div>
+        <p class="feedback" role="status" data-right="Right. A vote only helps if each answer is more likely right than wrong. If the model shares a misconception, the vote just makes the wrong answer look more certain." data-wrong="Not quite. Try the vote with the slider below 50%. The most common answer is then the wrong one, and more votes make it win more often."></p>
+      </div>
+        <div data-node="p3-join"></div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+</section>
+
+<!-- 3 Teams -->
+<section class="chapter" id="ch3" data-theme="smart" data-els="Ma Or Pl" aria-labelledby="t3" data-sum="In one or two sentences, explain how a team of agents works, and what it costs.">
+  <p class="place"><span class="num">3</span><span class="eyebrow">Multi-agent patterns</span></p>
+  <h2 id="t3">A manager and a team of specialists</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>A lead agent can hand jobs to specialists and combine their results.</li><li>Team patterns include supervisor, hand-off, agent-as-tool and debate.</li><li>Teams cost far more: about 15 times the tokens of a chat in Anthropic’s report.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>Some problems can't be planned for. On Thursday, the caretaker emails: the hall's projector is broken. Can the picture round still work? Suddenly there's research to do, a round to rewrite and a poster to change.</p>
+      <p>So you set up a team. A <em>lead agent</em> reads each new problem, decides which jobs it needs, and hands them to specialist agents: a researcher, a question writer and a designer. Each one gets only the instructions and tools for its own job. They work at the same time and report back, and the lead agent puts it all together.</p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>This is the <strong>orchestrator-workers</strong> or <strong>supervisor</strong> pattern. It looks like parallelisation from chapter 1, with one big difference: the jobs aren't fixed in advance. The lead agent decides them as it goes. That’s the difference from <strong>workflow orchestration</strong> in chapter 1: there, people fixed the steps in advance; an <strong>orchestrator</strong> decides them while the job runs. That's <strong>planning</strong>: breaking a goal down into ordered steps and deciding what to do next, and here the plan changes whenever a new problem arrives. Anthropic uses this shape for Claude's Research feature, where a lead agent sends several sub-agents to search at once.</p>
+      <figure class="ill">
+  <svg viewBox="0 0 440 372" role="img" aria-labelledby="ill3T ill3D">
+    <title id="ill3T">Fixed jobs, or jobs decided as it goes</title>
+    <desc id="ill3D">Top: parallelisation. The jobs are listed in the code: write rounds, make poster, sell tickets. It cannot add a job it was not given. Bottom: orchestrator-workers. On Thursday the projector breaks. The lead agent responds by creating three new jobs: check the hall, redo the picture round, and update the poster.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">FIXED JOBS, OR JOBS DECIDED AS IT GOES</text><text x="20" y="52" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">PARALLELISATION: JOBS FIXED IN THE CODE</text><rect x="20" y="62" width="150" height="94" fill="#fbfaf6" stroke="#231F20" stroke-width="1.5"/><text x="30" y="82" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">jobs listed in</text><text x="30" y="98" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">the code:</text><text x="30" y="120" font-size="12" font-weight="400" text-anchor="start" fill="#231F20" font-family="ui-monospace,Menlo,Consolas,monospace">• write rounds</text><text x="30" y="136" font-size="12" font-weight="400" text-anchor="start" fill="#231F20" font-family="ui-monospace,Menlo,Consolas,monospace">• make poster</text><text x="30" y="152" font-size="12" font-weight="400" text-anchor="start" fill="#231F20" font-family="ui-monospace,Menlo,Consolas,monospace">• sell tickets</text><line x1="170" y1="109" x2="227.1" y2="80.5" stroke="#231F20" stroke-width="2"/><path d="M236 76L229.3 84.9L224.8 76.0Z" fill="#231F20"/><rect x="240" y="62" width="180" height="28" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="330" y="81" font-size="13" font-weight="400" text-anchor="middle" fill="#231F20">write rounds</text><line x1="170" y1="109" x2="226.0" y2="109.8" stroke="#231F20" stroke-width="2"/><path d="M236 110L225.9 114.8L226.1 104.8Z" fill="#231F20"/><rect x="240" y="96" width="180" height="28" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="330" y="115" font-size="13" font-weight="400" text-anchor="middle" fill="#231F20">make poster</text><line x1="170" y1="109" x2="227.2" y2="139.3" stroke="#231F20" stroke-width="2"/><path d="M236 144L224.8 143.7L229.5 134.9Z" fill="#231F20"/><rect x="240" y="130" width="180" height="28" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="330" y="149" font-size="13" font-weight="400" text-anchor="middle" fill="#231F20">sell tickets</text><text x="20" y="178" font-size="13" font-weight="700" text-anchor="start" fill="#231F20">It can't add a job it wasn't given.</text><text x="20" y="210" font-size="11" font-weight="800" letter-spacing=".08em" fill="#5f5a52" text-anchor="start">ORCHESTRATOR-WORKERS: JOBS DECIDED AS IT GOES</text><rect x="20" y="234" width="96" height="52" fill="#fde8e8" stroke="#d93025" stroke-width="1.5"/><text x="68" y="251" font-size="12" font-weight="700" text-anchor="middle" fill="#9b1c14">Thursday:</text><text x="68" y="266" font-size="12" font-weight="700" text-anchor="middle" fill="#9b1c14">projector</text><text x="68" y="281" font-size="12" font-weight="700" text-anchor="middle" fill="#9b1c14">breaks</text><line x1="116" y1="260" x2="132.0" y2="260.0" stroke="#231F20" stroke-width="2"/><path d="M142 260L132.0 265.0L132.0 255.0Z" fill="#231F20"/><rect x="144" y="234" width="86" height="52" fill="#ece4ff" stroke="#231F20" stroke-width="1.5"/><text x="187" y="256" font-size="13" font-weight="800" text-anchor="middle" fill="#231F20">lead</text><text x="187" y="274" font-size="13" font-weight="800" text-anchor="middle" fill="#231F20">agent</text><line x1="230" y1="260" x2="251.8" y2="244.7" stroke="#231F20" stroke-width="2"/><path d="M260 239L254.7 248.8L248.9 240.6Z" fill="#231F20"/><rect x="262" y="224" width="158" height="30" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="272" y="244" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">check the hall</text><rect x="384" y="218" width="34" height="14" fill="#FF7038" stroke="#231F20" stroke-width="1"/><text x="401" y="229" font-size="9" font-weight="800" text-anchor="middle" fill="#231F20">NEW</text><line x1="230" y1="260" x2="251.1" y2="270.5" stroke="#231F20" stroke-width="2"/><path d="M260 275L248.8 275.0L253.3 266.1Z" fill="#231F20"/><rect x="262" y="260" width="158" height="30" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="272" y="280" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">redo picture round</text><rect x="384" y="254" width="34" height="14" fill="#FF7038" stroke="#231F20" stroke-width="1"/><text x="401" y="265" font-size="9" font-weight="800" text-anchor="middle" fill="#231F20">NEW</text><line x1="230" y1="260" x2="254.9" y2="302.4" stroke="#231F20" stroke-width="2"/><path d="M260 311L250.6 304.9L259.2 299.8Z" fill="#231F20"/><rect x="262" y="296" width="158" height="30" fill="#fff" stroke="#231F20" stroke-width="1.5"/><text x="272" y="316" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">update poster</text><rect x="384" y="290" width="34" height="14" fill="#FF7038" stroke="#231F20" stroke-width="1"/><text x="401" y="301" font-size="9" font-weight="800" text-anchor="middle" fill="#231F20">NEW</text><text x="20" y="358" font-size="13" font-weight="700" text-anchor="start" fill="#231F20">The lead agent creates the jobs it needs.</text>
+    </g>
+  </svg>
+  <figcaption>Both can run jobs at the same time. The difference is who decides the jobs: people, in the code, or the lead agent, as surprises happen.</figcaption>
+</figure>
+      <ul><li><strong>Hierarchical teams:</strong> supervisors of supervisors, like a head teacher, heads of department and teachers.</li>
+      <li><strong>Hand-off:</strong> control passes to another agent, which takes over the conversation, like a phone call put through to the right department.</li>
+      <li><strong>Agent-as-tool:</strong> the main agent calls another agent like a function and stays in charge. The other agent just returns an answer.</li>
+      <li><strong>Debate:</strong> two agents argue for different answers over several rounds, and a judge decides. Each can point out mistakes the other missed.</li></ul>
+      <p>Teams aren't free. Every agent reads its own instructions and context, which costs tokens, money and electricity. Anthropic reported that its single agents used about 4 times as many tokens as a chat, and its multi-agent systems about 15 times as many. On its own test of hard research questions, the team scored about 90% better than a single agent. A team is worth it only when the job is worth the cost.</p></div>
+        <div class="lens"><span>Business: delegation and management</span><span>Computer Science: concurrency, abstraction</span><span>Economics: cost-benefit</span></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-flow="help"></figure>
+        <div class="panel" id="team">
+        <span class="eyebrow">Run the team</span><h3>Fixing the picture round</h3>
+        <svg class="teamsvg" id="teamSvg" viewBox="0 0 400 250" role="img" aria-label="You at the top, a lead agent below, and three specialist agents beneath it">
+          <g class="edges" fill="none" stroke-width="2.5">
+            <path id="e-you" d="M200 40V82"/>
+            <path id="e-r" d="M200 124L72 186"/>
+            <path id="e-w" d="M200 124V186"/>
+            <path id="e-d" d="M200 124L328 186"/>
+          </g>
+          <g class="node" id="n-you"><rect x="160" y="8" width="80" height="32" fill="#F6F4ED"/><text x="200" y="29">You</text></g>
+          <g class="node" id="n-lead"><rect x="140" y="82" width="120" height="42" fill="#AC91FF"/><text x="200" y="108">Lead agent</text></g>
+          <g class="node" id="n-r"><rect x="22" y="186" width="100" height="40" fill="#00BEDD"/><text x="72" y="211">Researcher</text></g>
+          <g class="node" id="n-w"><rect x="150" y="186" width="100" height="40" fill="#FF7038"/><text x="200" y="211">Writer</text></g>
+          <g class="node" id="n-d"><rect x="278" y="186" width="100" height="40" fill="#63DF93"/><text x="328" y="211">Designer</text></g>
+        </svg>
+        <div class="steps" id="teamLog" aria-live="polite"></div>
+        <div class="tokens"><span>Tokens used so far</span><div class="meter2"><i id="tokBar"></i><em id="chatMark" title="One ordinary chat answer"></em></div><b id="tokN">0</b><small>The dark mark shows one ordinary chat answer, about 2,000 tokens.</small></div>
+        <div class="agentbar"><button type="button" class="btn primary" id="teamNext">Start the team</button><button type="button" class="btn" id="teamReset">Reset</button></div>
+        <p class="note">Token counts are made up to show the scale. They match Anthropic's report that multi-agent systems use about 15 times as many tokens as chats.</p>
+      </div>
+        <details class="further"><summary>Go further: Economics</summary><div><p>Anthropic reported that a team of agents used about 15 times the tokens of a chat, and scored about 90% better than a single agent on its own hard research test.</p><p>If an ordinary chat answer costs 2,000 tokens, a team answer costs about 30,000. Is a 90% better answer worth 15 times the cost? Describe one job where it clearly is, and one where it clearly isn’t.</p><p>Remember that tokens also mean electricity (see Part 1, chapter 3).</p></div></details>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel check" data-answer="1">
+        <span class="eyebrow">Quick check</span><h3>A customer-service agent passes you to a refunds agent, which now talks to you directly. Which pattern is that?</h3>
+        <div class="choices"><button type="button">Agent-as-tool</button><button type="button">Hand-off</button><button type="button">Debate</button></div>
+        <p class="feedback" role="status" data-right="Yes. In a hand-off, control passes to the new agent. With agent-as-tool, the first agent would stay in charge and just use the refunds agent's answer." data-wrong="Not quite. The refunds agent now owns the conversation, so control has been handed off. With agent-as-tool, the first agent would stay in charge."></p>
+      </div>
+        <div data-node="p3-apart2"></div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+</section>
+
+<!-- 4 The human -->
+<section class="chapter" id="ch4" data-theme="responsible" data-els="Hi Gr Au" aria-labelledby="t4" data-sum="In one or two sentences, explain where a person should check an AI’s work, and why.">
+  <p class="place"><span class="num">4</span><span class="eyebrow">Humans in the loop</span></p>
+  <h2 id="t4">Where should the human sit?</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>Small chances of error add up over long jobs: 0.98⁵⁰ is only about 36%.</li><li>People asked to approve everything stop checking. That is automation bias.</li><li>Put people on the risky steps, and keep their list short.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>You learned in Part 2 to make the agents ask before doing anything that matters. So by Thursday night your phone buzzes every few minutes. Approve? Approve? Approve? Somewhere around the twentieth request, you stop reading and just tap <em>Approve</em>.</p>
+      <p>Request twenty-three was the deposit for the hall. The agent had misread the price list and paid £350 for the whole weekend, instead of £35 for one evening. The school office spotted it the next morning and got the money back. You were in the loop. You just weren't looking.</p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>Each extra step is another chance for a mistake, and over a long job small chances add up. If each step goes right 98% of the time, the chance that fifty steps in a row all go right is 0.98<sup>50</sup>, only about 36%.</p>
+      <p>Checks help: <strong>guardrails</strong> that filter what goes in and out, an AI evaluator, or a person. But people have a weakness too. <strong>Automation bias</strong> is our tendency to trust a computer that is usually right, and to stop checking it. Ask someone to approve too many things, and approving becomes a reflex.</p>
+      <figure class="ill">
+  <svg viewBox="0 0 440 262" role="img" aria-labelledby="ill4T ill4D">
+    <title id="ill4T">Attention fades with every request</title>
+    <desc id="ill4D">A bar chart of the chance you spot a mistake at each approval request, from 1 to 30. It starts at 9 in 10 for the first request and falls by 3 percentage points with each one. By request 23, the 350 pound deposit, it is about 1 in 4. It never falls below 1 in 10.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">CHANCE YOU SPOT A MISTAKE, REQUEST BY REQUEST</text><rect x="40.0" y="70.0" width="10" height="144.0" fill="#63DF93" stroke="#231F20" stroke-width="1.5"/><rect x="52.8" y="74.8" width="10" height="139.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="65.6" y="79.6" width="10" height="134.4" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="78.4" y="84.4" width="10" height="129.6" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="91.2" y="89.2" width="10" height="124.8" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="104.0" y="94.0" width="10" height="120.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="116.8" y="98.8" width="10" height="115.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="129.6" y="103.6" width="10" height="110.4" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="142.4" y="108.4" width="10" height="105.6" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="155.2" y="113.2" width="10" height="100.8" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="168.0" y="118.0" width="10" height="96.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="180.8" y="122.8" width="10" height="91.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="193.6" y="127.6" width="10" height="86.4" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="206.4" y="132.4" width="10" height="81.6" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="219.2" y="137.2" width="10" height="76.8" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="232.0" y="142.0" width="10" height="72.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="244.8" y="146.8" width="10" height="67.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="257.6" y="151.6" width="10" height="62.4" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="270.4" y="156.4" width="10" height="57.6" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="283.2" y="161.2" width="10" height="52.8" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="296.0" y="166.0" width="10" height="48.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="308.8" y="170.8" width="10" height="43.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="321.6" y="175.6" width="10" height="38.4" fill="#FF7038" stroke="#231F20" stroke-width="1.5"/><rect x="334.4" y="180.4" width="10" height="33.6" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="347.2" y="185.2" width="10" height="28.8" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="360.0" y="190.0" width="10" height="24.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="372.8" y="194.8" width="10" height="19.2" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="385.6" y="198.0" width="10" height="16.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="398.4" y="198.0" width="10" height="16.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><rect x="411.2" y="198.0" width="10" height="16.0" fill="#c9c3b6" stroke="#231F20" stroke-width="0.6"/><line x1="36" y1="214" x2="424.0" y2="214" stroke="#231F20" stroke-width="1.5"/><line x1="36" y1="54" x2="36" y2="214" stroke="#231F20" stroke-width="1.5"/><text x="32" y="58" font-size="10" font-weight="400" text-anchor="end" fill="#5f5a52">100%</text><text x="32" y="218" font-size="10" font-weight="400" text-anchor="end" fill="#5f5a52">0</text><text x="55.0" y="64.0" font-size="13" font-weight="700" text-anchor="start" fill="#231F20">Request 1: 9 in 10</text><path d="M326.6 171.59999999999997V117.59999999999997" stroke="#231F20" stroke-width="1.5"/><text x="320.6" y="95.59999999999997" font-size="13" font-weight="700" text-anchor="end" fill="#231F20">Request 23: the £350</text><text x="320.6" y="112.59999999999997" font-size="13" font-weight="700" text-anchor="end" fill="#231F20">deposit, about 1 in 4</text><text x="45.0" y="230" font-size="11" font-weight="400" text-anchor="middle" fill="#5f5a52">1</text><text x="160.2" y="230" font-size="11" font-weight="400" text-anchor="middle" fill="#5f5a52">10</text><text x="288.20000000000005" y="230" font-size="11" font-weight="400" text-anchor="middle" fill="#5f5a52">20</text><text x="416.20000000000005" y="230" font-size="11" font-weight="400" text-anchor="middle" fill="#5f5a52">30</text><text x="220" y="250" font-size="12" font-weight="400" text-anchor="middle" fill="#5f5a52">approval requests, in order</text>
+    </g>
+  </svg>
+  <figcaption>Made-up numbers, the same ones the calculator uses: you start by catching 9 in 10 mistakes, and catch 3 percentage points fewer with every request. Real attention varies, but the pattern is well documented.</figcaption>
+</figure>
+      <p>How much an AI system can decide and do on its own before a person steps in is its <strong>autonomy</strong>. Keeping a person involved to review, approve or correct its decisions before they take effect is called <strong>human-in-the-loop</strong>. The two pull against each other, and the design question is where to set the dial.</p>
+      <p>So good designs put people where they matter most: before actions that spend money, can't be undone, or speak for someone. Automatic checks handle the rest. Requests for approval are few, and say exactly what will happen.</p></div>
+        <div class="lens"><span>Maths: probability of independent events</span><span>Psychology: automation bias, attention</span><span>Law: accountability</span></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-flow="checks"></figure>
+        <div class="panel calc" id="chain">
+        <span class="eyebrow">Calculator</span><h3>How likely is a long job to go right?</h3>
+        <label for="nSteps">Steps in the job: <span id="vSteps"></span></label>
+        <input type="range" id="nSteps" min="1" max="60" value="20">
+        <label for="pStep">Each step goes right: <span id="vStep"></span></label>
+        <input type="range" id="pStep" min="900" max="999" value="980">
+        <div class="dbars" id="dbars"></div>
+        <p id="chainMsg" style="margin-top:.7rem;font-weight:650"></p>
+        <p class="note">Made-up but reasonable assumptions: the AI checker catches half of all mistakes. You catch 9 in 10 at first, but 3 percentage points fewer for every request you've already been asked (never fewer than 1 in 10). One step in five is risky, like spending money. Mistakes are independent.</p>
+      </div>
+        <details class="further"><summary>Go further: Maths</summary><div><p>How many steps before a job is more likely to fail than to succeed? Solve p<sup>n</sup> = 0.5 with logarithms:</p><p class="eq">n = ln 0.5 ÷ ln p</p><p>At p = 0.98, n = −0.693 ÷ −0.0202 ≈ 34. After about 34 steps, the job is more likely to have gone wrong somewhere than not. What does p need to be for 100 steps to have a 90% chance of success?</p></div></details>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel check" data-answer="1"><span class="eyebrow">Quick check</span><h3>You are asked to approve 40 agent actions an hour, and you have started tapping Approve without reading. What is the best fix?</h3><div class="choices"><button type="button">Approve faster</button><button type="button">Let an AI checker handle routine steps, and ask you only about the risky ones</button><button type="button">Remove all the checks</button><button type="button">Add a second person who also approves everything</button></div><p class="feedback" role="status" data-right="Right. Fewer, better requests: put people where mistakes cost most." data-wrong="Not quite. More approvals of everything just spreads the same problem across more people."></p></div>
+        <div data-node="p3-three"></div>
+        <div class="panel debate">
+        <span class="eyebrow">Debate</span><h3>If AIs can check each other's work, do we still need a human in the loop?</h3>
+        <details><summary>Points to get you started</summary><ul>
+          <li>An AI judge can check thousands of answers a minute. A person can't. When is a human check worth slowing everything down?</li>
+          <li>If two agents share the same blind spot, can a debate between them ever catch it?</li>
+          <li>If you tap Approve without reading, were you really in the loop? Who is responsible for the £350?</li>
+          <li>Should the law say that some decisions, like spending money or sending messages as you, always need a person?</li></ul></details>
+      </div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+</section>
+
+<!-- 5 Pick a pattern -->
+<section class="chapter" id="ch5" data-theme="safe" data-els="Ac" aria-labelledby="t5" data-sum="In one or two sentences, explain how you’d choose the right design for an AI system.">
+  <p class="place"><span class="num">5</span><span class="eyebrow">Putting it together</span></p>
+  <h2 id="t5">Pick the pattern</h2>
+  <aside class="kp" aria-label="Key points"><b>Key points</b><ul><li>Start simple, add checks where mistakes cost most, and use teams only when the job needs one.</li><li>Keep a person on anything that spends money.</li></ul></aside>
+  <div class="stages">
+      <div class="stage s-explain">
+        <p class="stage-l"><b>1</b>Explain</p>
+        <div class="story"><p>Friday 2 July. The hall is full, the picture round works on paper, and the bat-and-ball question catches out half the parents. You raise £640 for charity.</p>
+      <p>Afterwards you leave a note for next year's organisers: <em>Start simple. Add checks where mistakes cost most. Use a team only when the job needs one. Keep a person on anything that spends money, and keep their list short.</em></p></div>
+        <div class="really"><h3>What's really happening</h3>
+      <p>You've just run a piece of <strong>agentic AI</strong>: AI that can plan, use tools and carry out several steps of a job by itself, with a person checking in only now and then. Every system in this course is a mix of the same few patterns. The table sums them up.</p>
+      <figure class="ill">
+  <svg viewBox="0 0 440 272" role="img" aria-labelledby="ill5T ill5D">
+    <title id="ill5T">Who decides the steps?</title>
+    <desc id="ill5D">Three families of patterns on a line from people deciding the steps in advance to the model deciding as it goes. Workflows, marked start here: chaining, routing and parallelisation, with steps fixed by people. Reasoning: reflection, evaluator and vote, with steps fixed and the model checking itself. Teams: supervisor, hand-off and debate, where a lead agent decides the jobs. Underneath, a safety band covers every level: guardrails, and a person on risky steps.</desc>
+    <g font-family="'AIAD Sans',Arial,sans-serif" fill="#231F20">
+      <text x="20" y="24" font-size="13" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">WHO DECIDES THE STEPS?</text><line x1="20" y1="58" x2="410.0" y2="58.0" stroke="#231F20" stroke-width="2"/><path d="M420 58L410.0 63.0L410.0 53.0Z" fill="#231F20"/><text x="20" y="48" font-size="12" font-weight="700" text-anchor="start" fill="#231F20">People, in advance</text><text x="420" y="48" font-size="12" font-weight="700" text-anchor="end" fill="#231F20">The model, as it goes</text><rect x="20" y="80" width="128" height="122" fill="#d9f6fb" stroke="#231F20" stroke-width="1.5"/><text x="32" y="102" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">WORKFLOWS</text><text x="32" y="124" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">Chaining, routing,</text><text x="32" y="141" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">parallelisation</text><text x="32" y="170" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Steps fixed</text><text x="32" y="186" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">by people</text><rect x="156" y="80" width="128" height="122" fill="#ece4ff" stroke="#231F20" stroke-width="1.5"/><text x="168" y="102" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">REASONING</text><text x="168" y="124" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">Reflection,</text><text x="168" y="141" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">evaluator, vote</text><text x="168" y="170" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">Steps fixed; the</text><text x="168" y="186" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">model checks itself</text><rect x="292" y="80" width="128" height="122" fill="#ffe3d6" stroke="#231F20" stroke-width="1.5"/><text x="304" y="102" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">TEAMS</text><text x="304" y="124" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">Supervisor,</text><text x="304" y="141" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">hand-off, debate</text><text x="304" y="170" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">A lead agent</text><text x="304" y="186" font-size="12" font-weight="400" text-anchor="start" fill="#5f5a52">decides the jobs</text><rect x="20" y="66" width="86" height="18" fill="#231F20"/><text x="63" y="79" font-size="10" font-weight="800" text-anchor="middle" fill="#F6F4ED">START HERE</text><rect x="20" y="212" width="400" height="48" fill="#ddf8e7" stroke="#231F20" stroke-width="1.5"/><text x="32" y="232" font-size="12" font-weight="800" letter-spacing=".08em" fill="#231F20" text-anchor="start">SAFETY, AT EVERY LEVEL</text><text x="32" y="250" font-size="13" font-weight="400" text-anchor="start" fill="#231F20">Guardrails, and a person on risky steps</text>
+    </g>
+  </svg>
+  <figcaption>Start on the left with the simplest design that works, and move right only when the job needs it. Safety applies whichever you choose.</figcaption>
+</figure></div>
+        <div class="tablewrap"><table class="cmp">
+        <thead><tr><th></th><th>Workflows</th><th>Reasoning</th><th>Teams</th><th>Safety</th></tr></thead>
+        <tbody>
+          <tr><th>Who decides the steps?</th><td>People, in advance</td><td>Mostly fixed; the model checks its own work</td><td>A lead agent, as it goes</td><td>People, at the moments that matter</td></tr>
+          <tr><th>Examples</th><td>Chaining, routing, parallelisation</td><td>Reflection, evaluator-optimiser, self-consistency</td><td>Supervisor, hand-off, agent-as-tool, debate</td><td>Guardrails, human-in-the-loop</td></tr>
+          <tr><th>Good for</th><td>Jobs you can describe step by step</td><td>Answers that must be right</td><td>Big jobs with parts that can't be planned</td><td>Anything costly or irreversible</td></tr>
+          <tr><th>Watch out for</th><td>Inputs that fit no step or category</td><td>Shared blind spots survive every check</td><td>Many times the cost; errors passed along</td><td>People who stop reading</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="stage s-show">
+        <p class="stage-l"><b>2</b>See it</p>
+        <figure data-flow="layers"></figure>
+      </div>
+      <div class="stage s-check">
+        <p class="stage-l"><b>3</b>Check it</p>
+        <div class="panel">
+        <span class="eyebrow">Sort them</span><h3>Which pattern is each one using?</h3>
+        <div class="sort" id="sort"></div>
+        <p class="note" id="sortScore" aria-live="polite"></p>
+      </div>
+        <div data-node="p3-ladder"></div>
+      </div>
+      <div class="found"><p>Collected in this chapter</p><div class="tiles"></div></div>
+    </div>
+</section>
+
+<section class="quiz" id="quiz" aria-labelledby="tq">
+  <span class="eyebrow">End of the journey</span>
+  <h2 id="tq">Final quiz: the whole course</h2>
+  <p>7 questions from across the chapters. Try them without scrolling back.</p>
+  <div class="qgrid"><div class="panel check" data-answer="0"><span class="eyebrow">Chapter 1</span><h3>When is a fixed workflow a better choice than an agent?</h3><div class="choices"><button type="button">When the steps are known in advance</button><button type="button">When the task is impossible to describe</button><button type="button">Whenever you want it to seem cleverer</button><button type="button">Never</button></div><p class="feedback" role="status" data-right="Right. Predictable steps are cheaper, faster and easier to test as a workflow." data-wrong="Not quite. Workflows win when people already know the steps."></p></div><div class="panel check" data-answer="1"><span class="eyebrow">Chapter 1</span><h3>What does a router do?</h3><div class="choices"><button type="button">Runs every request in parallel</button><button type="button">Sorts each input into a category, then sends it to a specialist</button><button type="button">Checks answers against a test</button><button type="button">Approves risky actions</button></div><p class="feedback" role="status" data-right="Yes. Classify first, then hand it to the prompt or model built for that category." data-wrong="Not that one. Think about the inbox in chapter 1."></p></div><div class="panel check" data-answer="0"><span class="eyebrow">Chapter 2</span><h3>A system asks a model the same question 9 times and keeps the most common answer. When does this make things worse?</h3><div class="choices"><button type="button">When the model is usually wrong in the same way</button><button type="button">When the question is easy</button><button type="button">Never</button><button type="button">When the temperature is high</button></div><p class="feedback" role="status" data-right="Right. A shared misconception wins the vote, and becomes more certain." data-wrong="Not quite. Try the voting simulator with the slider below 50%."></p></div><div class="panel check" data-answer="1"><span class="eyebrow">Chapter 2</span><h3>What is the main weakness of reflection, where a model checks its own draft?</h3><div class="choices"><button type="button">It is too slow to be useful</button><button type="button">Models often miss their own errors when there is nothing outside to check against</button><button type="button">It always changes right answers to wrong ones</button><button type="button">It needs a person</button></div><p class="feedback" role="status" data-right="Yes. Reflection works best when the model can test its answer against something, like the question itself." data-wrong="Not quite. Think about what the bat-and-ball check had to work with."></p></div><div class="panel check" data-answer="2"><span class="eyebrow">Chapter 3</span><h3>Anthropic reported that its multi-agent system used roughly how many times the tokens of an ordinary chat?</h3><div class="choices"><button type="button">2 times</button><button type="button">4 times</button><button type="button">15 times</button><button type="button">100 times</button></div><p class="feedback" role="status" data-right="Right: about 15 times, against about 4 for a single agent. Teams are worth it only for jobs worth the cost." data-wrong="Not quite. Look back at the token counter in chapter 3."></p></div><div class="panel check" data-answer="2"><span class="eyebrow">Chapter 4</span><h3>A job has 50 steps, and each goes right 98% of the time. Roughly what is the chance that every step goes right?</h3><div class="choices"><button type="button">98%</button><button type="button">About 50%</button><button type="button">About 36%</button><button type="button">About 2%</button></div><p class="feedback" role="status" data-right="Yes: 0.98⁵⁰ ≈ 0.36. Small chances of error add up over long jobs." data-wrong="Not quite. Multiply 0.98 by itself 50 times."></p></div><div class="panel check" data-answer="1"><span class="eyebrow">Chapter 4</span><h3>What is automation bias?</h3><div class="choices"><button type="button">Bias in the data a model was trained on</button><button type="button">Trusting a computer that is usually right, and so no longer checking it</button><button type="button">Preferring human work to AI work</button><button type="button">A setting that makes AI more careful</button></div><p class="feedback" role="status" data-right="Right. It is why approving everything quickly becomes a reflex." data-wrong="Not quite. Think about the £350 hall deposit."></p></div></div>
+  <p class="score" id="quizScore" aria-live="polite">0 of 7 correct</p>
+</section>
+
+<section class="terms" aria-labelledby="tk">
+  <span class="eyebrow">Recap</span>
+  <h2 id="tk">Key terms</h2>
+  <dl><div><dt>Design pattern</dt><dd>A reusable shape for building a system, like a recipe engineers can share.</dd></div><div><dt>Workflow</dt><dd>Steps decided by people in advance, which the AI carries out each time.</dd></div><div><dt>Prompt chaining</dt><dd>The output of one model call becomes the input to the next, with checks in between.</dd></div><div><dt>Routing</dt><dd>Sorting each input into a category, then sending it to a specialist.</dd></div><div><dt>Parallelisation</dt><dd>Independent pieces run at the same time, then are merged.</dd></div><div><dt>Orchestrator-workers</dt><dd>A lead model decides sub-tasks as it goes and hands them to workers.</dd></div><div><dt>Evaluator-optimiser</dt><dd>One call writes, another grades against clear criteria, repeat until it passes.</dd></div><div><dt>Reflection</dt><dd>A model critiques and rewrites its own draft.</dd></div><div><dt>Self-consistency</dt><dd>Ask several times and keep the most common answer.</dd></div><div><dt>Chain of thought</dt><dd>Writing out reasoning step by step before answering.</dd></div><div><dt>Supervisor</dt><dd>A manager agent that hands work to specialists and collects results.</dd></div><div><dt>Hand-off</dt><dd>Control passes to another agent, which takes over the conversation.</dd></div><div><dt>Agent-as-tool</dt><dd>One agent calls another like a function and stays in charge.</dd></div><div><dt>Automation bias</dt><dd>Trusting a usually-right computer so much that you stop checking it.</dd></div></dl>
+</section>
+
+<section class="compound" aria-labelledby="tc">
+  <span class="eyebrow">Your compounds</span>
+  <h2 id="tc">Four AI systems, built from elements</h2>
+  <p>These four compounds come from the <a href="/ai-literacy-periodic-table/">AI Literacy Periodic Table</a>. Each one forms when you have collected all of its elements.</p>
+  <div class="compounds" id="cpds"></div>
+  <p id="collectMsg" style="margin-top:1rem"></p>
+  <p style="margin-top:1rem"><a class="btn primary" href="../ai-exam/?exam=3" style="display:inline-flex;align-items:center;text-decoration:none">⏱ Take the Part 3 timed exam</a> <a class="btn primary" href="/ai-literacy-periodic-table/" style="display:inline-flex;align-items:center;text-decoration:none">Explore all 142 AI elements →</a> <a class="btn" href="../answer-to-action/" style="display:inline-flex;align-items:center;text-decoration:none">Back to Part 2</a> <button type="button" class="btn" id="resetBtn">Start again</button></p>
+</section>
+
+<section class="teach" id="teachers" aria-labelledby="tt">
+  <span class="eyebrow">For teachers</span>
+  <h2 id="tt">Using this in a lesson</h2>
+  <p>Works on its own, or as a third lesson after <a href="../sand-to-sentence/">From Sand to Sentence</a> and <a href="../answer-to-action/">From Answer to Action</a>.</p>
+  <div class="aims"><b>By the end, students can:</b><ul>
+    <li>explain the difference between a workflow and an agent, and say when each is the better choice;</li>
+    <li>describe how reflection, evaluator-optimiser and self-consistency make answers more reliable, and explain when a vote makes things worse;</li>
+    <li>compare multi-agent patterns (supervisor, hand-off, agent-as-tool, debate) and weigh their benefits against their cost;</li>
+    <li>calculate how the chance of error grows over many steps, and argue where human checks should go.</li></ul></div>
+  <p style="margin-top:1rem">For one 60-minute lesson (two lessons are suggested below):</p>
+  <div class="plan">
+    <div><b>0–5</b><span><strong>Hook.</strong> Ask: "Think of a group project that went wrong. Was the problem the plan, the checking or the teamwork?" Sort answers into three columns on the board. They map onto chapters 1, 2 and 3.</span></div>
+    <div><b>5–15</b><span><strong>Workflows.</strong> Chapters 0 and 1. Pairs route the inbox twice, with the "send to a person" switch on and then off. Which messages go wrong, and why?</span></div>
+    <div><b>15–27</b><span><strong>Checking.</strong> Chapter 2. Before reading, everyone answers the bat-and-ball question on a mini whiteboard. Then use the vote: find a setting where voting makes things worse, and explain why. Maths students can check the percentages with the binomial distribution.</span></div>
+    <div><b>27–37</b><span><strong>Teams.</strong> Chapter 3. Run the team and note the final token count. Was a team worth roughly 15 times the cost for this job? What job would be worth it?</span></div>
+    <div><b>37–50</b><span><strong>The human.</strong> Chapter 4. Pairs use the calculator at 10 steps and at 50 steps: which design gives the best result for the fewest approvals? Then the debate.</span></div>
+    <div><b>50–57</b><span><strong>Sort.</strong> Chapter 5 individually, then compare answers.</span></div>
+    <div><b>57–60</b><span><strong>Exit ticket.</strong> "Your school wants an AI to answer parents' emails. Which pattern would you start with, and where would a person check?"</span></div>
+  </div>
+  <p style="margin-top:1rem"><strong>Two lessons?</strong> Lesson 1: chapters 0 to 2, with the pattern map, the workflow flow and its puzzle, the inbox router and the voting simulator. Lesson 2: chapters 3 to 5, with the team run, the "where the human sits" flow, the calculator and the debate, then the final quiz. Use the Key terms list as a starter for Lesson 2.</p>
+  <div class="subj">
+    <div><b>Computer Science</b>Sequence, selection and iteration, decomposition, concurrency, testing, client and server roles.</div>
+    <div><b>Maths and Further Maths</b>Independent events, the binomial distribution, how p<sup>n</sup> shrinks as n grows.</div>
+    <div><b>Psychology</b>Fast and slow thinking (the bat-and-ball problem), automation bias, attention and fatigue.</div>
+    <div><b>Business and Economics</b>Delegation, management structures, the cost-benefit case for automation.</div>
+    <div><b>Philosophy and RS</b>Trust, responsibility and what counts as real oversight.</div>
+    <div><b>EPQ starters</b>"Can AI systems reliably check their own work?" "Should a person have to approve every action an AI agent takes?"</div>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="ts">
+  <h2 id="ts">Sources</h2>
+  <ol>
+    <li>Rathnakumar Udayakumar, "Top 20 AI Agent Design Patterns" (infographic), which groups the patterns into workflows, reasoning, capabilities and multi-agent rows.</li>
+    <li>Anthropic, <a href="https://www.anthropic.com/engineering/building-effective-agents">"Building effective agents"</a> (December 2024): the difference between workflows and agents, and the prompt chaining, routing, parallelisation, orchestrator-workers and evaluator-optimiser patterns.</li>
+    <li>Anthropic, <a href="https://www.anthropic.com/engineering/multi-agent-research-system">"How we built our multi-agent research system"</a> (June 2025): the orchestrator-worker design, and token use of about 4 times a chat for agents and about 15 times for multi-agent systems.</li>
+    <li>Wei et al., <a href="https://arxiv.org/abs/2201.11903">"Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"</a> (2022).</li>
+    <li>Wang et al., <a href="https://arxiv.org/abs/2203.11171">"Self-Consistency Improves Chain of Thought Reasoning in Language Models"</a> (2022).</li>
+    <li>Madaan et al., <a href="https://arxiv.org/abs/2303.17651">"Self-Refine"</a> (2023); Shinn et al., <a href="https://arxiv.org/abs/2303.11366">"Reflexion"</a> (2023); Huang et al., <a href="https://arxiv.org/abs/2310.01798">"Large Language Models Cannot Self-Correct Reasoning Yet"</a> (2023).</li>
+    <li>Yao et al., <a href="https://arxiv.org/abs/2305.10601">"Tree of Thoughts"</a> (2023).</li>
+    <li>Du et al., <a href="https://arxiv.org/abs/2305.14325">"Improving Factuality and Reasoning in Language Models through Multiagent Debate"</a> (2023).</li>
+    <li>Frederick, "Cognitive Reflection and Decision Making", <em>Journal of Economic Perspectives</em> 19(4) (2005), the source of the bat-and-ball problem.</li>
+    <li>Parasuraman and Manzey, "Complacency and Bias in Human Use of Automation: An Attentional Integration", <em>Human Factors</em> 52(3) (2010).</li>
+  </ol>
+</section>
+</main>
+
+<footer class="end"><span>AI Awareness Day · Thursday 29 April 2027 · Keep Humans in the Loop</span><a href="#teachers">Teacher notes</a></footer>
+</div>
+
+<aside class="tray" aria-label="Your element collection">
+  <button type="button" id="trayBtn" aria-expanded="false" aria-controls="drawer"><strong id="trayCount">0 of 0 elements</strong><span class="meter" aria-hidden="true"><i id="trayMeter"></i></span><span class="mini" id="trayMini" aria-hidden="true"></span><span aria-hidden="true" id="trayArrow">▲</span></button>
+  <div class="drawer" id="drawer" hidden><div class="tiles" id="drawerTiles"></div></div>
+</aside>
+
+<script src="../shared/earn.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+/* Elements from data/literacy-table/elements.json */
+var AI={"Ac":{"name":"Agentic AI","family":"agents","def":"AI that can plan, use tools and carry out several steps of a job by itself, with a person checking in only now and then."},"Ag":{"name":"AI Agent","family":"agents","def":"A system that uses an AI model to pursue a goal by deciding on and taking actions, not just answering questions."},"Au":{"name":"Autonomy","family":"agents","def":"How much an AI system can decide and do on its own before a human needs to step in."},"Ct":{"name":"Chain-of-Thought","family":"generative","def":"Asking a model to write out steps before its final answer, which often improves results. The written steps may not show how the answer was really produced. Compare Reasoning Model (Rm)."},"Cw":{"name":"Context Window","family":"generative","def":"The maximum amount of text, measured in tokens, that a model can take into account at once."},"Ev":{"name":"Evals","family":"infra","def":"Structured tests that measure a model’s accuracy, safety and behaviour on specific tasks."},"Gr":{"name":"Guardrails","family":"governance","def":"Rules and filters that keep an AI system’s inputs and outputs within safe, acceptable bounds."},"Hi":{"name":"Human-in-the-Loop","family":"governance","def":"Keeping a person involved to review, approve or correct AI decisions before they take effect."},"Ll":{"name":"Large Language Model","family":"generative","def":"An AI model trained on huge amounts of text to predict the next word (token), which lets it generate replies, summaries and translations – the kind of model behind most chatbots."},"Ma":{"name":"Multi-Agent System","family":"agents","def":"Several specialised agents working together, each handling one part of a larger task."},"Or":{"name":"Orchestrator","family":"agents","def":"A part of an AI system that splits a big task into smaller jobs, hands them to other agents or tools, then puts their results together. Contrast with Workflow Orchestration, which plans a whole business process."},"Pl":{"name":"Planning","family":"agents","def":"An agent breaking a goal down into ordered steps and deciding what to do next."},"Pr":{"name":"Prompt","family":"generative","def":"The instruction or input you give a generative model to get a response."},"Te":{"name":"Temperature","family":"generative","def":"A setting that controls randomness in output: low is focused and predictable, high is varied and creative."},"Wo":{"name":"Workflow Orchestration","family":"automation","def":"Planning and running the order of steps in a whole process, across different apps and people, such as getting a new pupil’s details from the form to the register. Contrast with Orchestrator."}};
+var COMPOUNDS=[{"name":"Reliable Pipeline","elements":["Wo","Pr","Gr"],"what":"A fixed chain of prompts with checks at the edges: predictable, cheap and easy to test.","warn":false},{"name":"Self-Checking Solver","elements":["Ll","Ct","Ev"],"what":"A model that reasons step by step and has its answers checked against clear criteria before you see them.","warn":false},{"name":"Supervised Team","elements":["Ma","Or","Hi"],"what":"A lead agent coordinating specialists, with a person approving the steps that matter.","warn":false},{"name":"Rubber-Stamp Team","elements":["Ma","Hi","Au"],"what":"A team of agents overseen by a person who approves everything without really reading it. On paper there is a human in the loop; in practice the team has full autonomy.","warn":true}];
+var KEY='aiad-agent-to-team';
+var store={get:function(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}},set:function(v){try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}}};
+var chapters=[].slice.call(document.querySelectorAll('.chapter'));
+var ALL=[];chapters.forEach(function(c){c.dataset.els.split(' ').forEach(function(k){if(ALL.indexOf(k)<0)ALL.push(k)})});
+var got=store.get().filter(function(k){return ALL.indexOf(k)>=0});
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function tileHTML(s){var a=AI[s]||{name:s,family:'foundations',def:''};
+ return '<a class="tile ai" data-fam="'+a.family+'" title="'+esc(a.def)+'" href="/ai-literacy-periodic-table/#element-'+s.toLowerCase()+'"><span class="n">AI</span><span class="s">'+s+'</span><span class="nm">'+a.name+'</span><span class="k">AI</span></a>'}
+chapters.forEach(function(c){var b=c.querySelector('.found .tiles');if(b)b.innerHTML=c.dataset.els.split(' ').map(tileHTML).join('')});
+
+function renderCompounds(){
+ $('cpds').innerHTML=COMPOUNDS.map(function(c){var made=c.elements.every(function(s){return got.indexOf(s)>=0});
+  return '<div class="cpd'+(c.warn?' warn':'')+(made?' made':'')+'"><span class="st">'+(made?(c.warn?'Formed: handle with care':'Formed'):'Not formed yet')+'</span><h3>'+c.name+'</h3><p class="eq">'+c.elements.map(function(s){return '<span style="opacity:'+(got.indexOf(s)>=0?1:.35)+'">'+s+'</span>'}).join(' + ')+'</p><p>'+c.what+'</p></div>'}).join('');
+}
+function renderTray(pulse){
+ $('trayCount').textContent=got.length+' of '+ALL.length+' elements';
+ $('trayMeter').style.width=(100*got.length/ALL.length)+'%';
+ $('trayMini').innerHTML=got.map(function(s){return '<span>'+s+'</span>'}).join('');
+ $('drawerTiles').innerHTML=ALL.map(function(s){return got.indexOf(s)>=0?tileHTML(s):'<span class="tile missing"><span class="n">?</span><span class="s">?</span><span class="nm">Not earned yet</span></span>'}).join('');
+ if(pulse){$('trayCount').classList.remove('pop');void $('trayCount').offsetWidth;$('trayCount').classList.add('pop')}
+ renderCompounds();
+ var n=COMPOUNDS.filter(function(c){return c.elements.every(function(s){return got.indexOf(s)>=0})}).length;
+ $('collectMsg').textContent=got.length===ALL.length?'You found all '+ALL.length+' elements and formed all '+n+' compounds. Notice that the Rubber-Stamp Team contains Human-in-the-Loop. A person in the loop only helps if they actually check.':'You have '+got.length+' of '+ALL.length+' elements and '+n+' of '+COMPOUNDS.length+' compounds. Answer the element questions at the end of each chapter to earn the rest.';
+}
+$('trayBtn').addEventListener('click',function(){var open=$('drawer').hidden;$('drawer').hidden=!open;this.setAttribute('aria-expanded',open);$('trayArrow').textContent=open?'▼':'▲'});
+$('resetBtn').addEventListener('click',function(){got.length=0;store.set(got);pending=chapters.slice();renderTray();document.querySelectorAll('.route a').forEach(function(a){a.classList.remove('seen')});if(window.AIADEarn)AIADEarn.refresh();window.scrollTo(0,0)});
+var themeColour={safe:'var(--a27-safe)',smart:'var(--a27-smart)',creative:'var(--a27-creative)',responsible:'var(--a27-responsible)',future:'var(--a27-future)'};
+function markSeen(c){var l=document.querySelector('.route a[data-for="'+c.id+'"]');if(l){l.classList.add('seen');l.style.setProperty('--c',themeColour[c.dataset.theme])}}
+function collect(c){var added=false;c.dataset.els.split(' ').forEach(function(k){if(got.indexOf(k)<0){got.push(k);added=true}});markSeen(c);if(added){store.set(got);renderTray(true)}}
+var pending=chapters.slice(),queued=false;
+function sweep(){queued=false;var line=innerHeight*.6;pending=pending.filter(function(c){if(c.getBoundingClientRect().top<line){markSeen(c);return false}return true})}
+addEventListener('scroll',function(){if(!queued&&pending.length){queued=true;setTimeout(sweep,120)}},{passive:true});
+setTimeout(sweep,300);
+chapters.forEach(function(c){if(c.dataset.els.split(' ').every(function(k){return got.indexOf(k)>=0}))markSeen(c)});
+renderTray();
+/* Earn the elements: each tile is locked until you answer a question about it. */
+if(window.AIADEarn)AIADEarn.init({key:KEY,got:got,info:function(k){var a=AI[k]||{name:k,def:''};return{sym:k,name:a.name,def:a.def,fam:a.family}},tile:function(k){return tileHTML(k)},earn:function(k){if(got.indexOf(k)<0){got.push(k);store.set(got);renderTray(true)}},reset:function(){got.length=0;store.set(got);renderTray()}});
+
+/* Quick checks */
+document.querySelectorAll('.check').forEach(function(box){
+ var right=+box.dataset.answer,fb=box.querySelector('.feedback'),btns=[].slice.call(box.querySelectorAll('.choices button'));
+ btns.forEach(function(b,i){b.addEventListener('click',function(){btns.forEach(function(x){x.classList.remove('wrong')});
+  if(i===right){b.classList.add('right');btns.forEach(function(x){x.disabled=true});fb.textContent=fb.dataset.right;if(box.closest('#quiz')){if(!box.dataset.missed)box.classList.add('first');var qs=document.querySelectorAll('#quiz .check'),done=document.querySelectorAll('#quiz .check .right').length,first=document.querySelectorAll('#quiz .check.first').length;$('quizScore').textContent=done+' of '+qs.length+' answered, '+first+' right first time'+(done===qs.length?'. '+(first>=qs.length-1?'Excellent.':first>=Math.ceil(qs.length/2)?'Good. Look back at the chapters you missed.':'Worth reading those chapters again.'):'')}}else{b.classList.add('wrong');box.dataset.missed='1';fb.textContent=fb.dataset.wrong}})});
+});
+
+/* Pattern explorer: one grid, one diagram at a time */
+var FAM=[{k:'Workflows',c:'var(--a27-safe)',cd:'var(--a27-safe-deep)',d:'People fix the steps'},{k:'Reasoning',c:'var(--a27-creative)',cd:'var(--a27-creative-deep)',d:'The model checks its thinking'},{k:'Capabilities',c:'var(--a27-responsible)',cd:'var(--a27-responsible-deep)',d:'What an agent can reach'},{k:'Multi-agent',c:'var(--a27-smart)',cd:'var(--a27-smart-deep)',d:'Agents working as a team'}];
+var PAT=[
+ {f:0,s:'Chaining',n:'Prompt chaining',where:'1',one:'Fixed steps in a row. The output of one model call is the input to the next, and a check between steps stops the chain if something fails.',use:'The job splits cleanly into stages, like write, check, then format.',watch:'An early mistake flows down the whole chain unless a check catches it.',
+  g:{n:[['i','in',18,50,'io'],['a','LLM',80,50,'m'],['g','check',150,50,'g'],['b','LLM',220,50,'m'],['o','out',292,50,'io'],['x','stop',150,98,'x']],e:[['i','a'],['a','g'],['g','b'],['b','o'],['g','x',{d:1,l:'fail'}]]}},
+ {f:0,s:'Routing',n:'Routing',where:'1',one:'A first call sorts each input into a category, then sends it to a prompt, tool or model built for that category.',use:'Requests are very different from each other, like tickets, food and quiz questions.',watch:'Inputs that fit no category get forced into the wrong one.',
+  g:{n:[['i','in',20,58,'io'],['r','router',100,58,'m'],['a','tickets',230,16,'m'],['b','food',230,58,'m'],['c','quiz',230,100,'m']],e:[['i','r'],['r','a'],['r','b'],['r','c']]}},
+ {f:0,s:'Parallel',n:'Parallelisation',where:'1',one:'Independent pieces run at the same time, then the results are merged.',use:'The pieces don\'t depend on each other, like eight quiz rounds.',watch:'Merging can hide pieces that contradict each other.',
+  g:{n:[['i','in',20,58,'io'],['a','LLM',115,16,'m'],['b','LLM',115,58,'m'],['c','LLM',115,100,'m'],['m','merge',215,58,'m'],['o','out',292,58,'io']],e:[['i','a'],['i','b'],['i','c'],['a','m'],['b','m'],['c','m'],['m','o']]}},
+ {f:0,s:'Lead + workers',n:'Orchestrator-workers',where:'3',el:'Or',one:'A lead model decides the sub-tasks as it goes and hands them to workers, then combines what they send back.',use:'You can\'t list the sub-tasks in advance.',watch:'More calls and more tokens. A bad split at the start spoils everything after it.',
+  g:{n:[['i','in',20,58,'io'],['l','lead',95,58,'m'],['a','worker',190,16,'m'],['b','worker',190,58,'m'],['c','worker?',190,100,'x'],['s','combine',282,58,'m']],e:[['i','l'],['l','a'],['l','b'],['l','c',{d:1}],['a','s'],['b','s'],['c','s',{d:1}]]}},
+ {f:0,s:'Evaluator',n:'Evaluator-optimiser',where:'2',one:'One call writes, a separate call grades the work against clear criteria, and the loop repeats until it passes.',use:'"Good" can be tested, like code that must pass its tests.',watch:'With vague criteria, the loop may never settle.',
+  g:{n:[['i','in',20,40,'io'],['w','writer',100,40,'m'],['v','grader',212,40,'m'],['o','pass',292,40,'io']],e:[['i','w'],['w','v'],['v','o'],['v','w',{c:-38,l:'fix this'}]]}},
+ {f:1,s:'ReAct',n:'ReAct',where:'P2',el:'Ra',one:'Think, act with a tool, observe the result, and repeat until the goal is met.',use:'The goal needs several tool steps, and each depends on what the last one found.',watch:'Loops that never finish, and instructions hidden in what it reads.',
+  g:{n:[['t','think',160,18,'m'],['a','act',262,90,'x'],['o','observe',58,90,'m']],e:[['t','a',{c:-18}],['a','o',{c:-18}],['o','t',{c:-18}]]}},
+ {f:1,s:'Plan & execute',n:'Plan-and-execute',where:'2',one:'A planner writes every step first; an executor carries them out and asks for a new plan if a step fails.',use:'Long tasks where seeing the whole plan helps.',watch:'Plans go stale when the situation changes.',
+  g:{n:[['i','goal',22,45,'io'],['p','planner',100,45,'m'],['l','1·2·3',190,45,'x'],['e','executor',272,45,'m']],e:[['i','p'],['p','l'],['l','e'],['e','p',{c:-40,l:'replan'}]]}},
+ {f:1,s:'Reflection',n:'Reflection',where:'2',el:'Sr',one:'The model reads its own draft, criticises it and rewrites it before answering.',use:'Drafts with mistakes the model can test, like a sum it can check.',watch:'Models often miss their own errors when there\'s nothing outside to check against.',
+  g:{n:[['i','in',20,72,'io'],['d','draft',105,72,'m'],['c','critique',210,72,'m'],['o','out',292,72,'io']],e:[['i','d'],['d','c'],['c','o'],['c','d',{c:38,l:'revise'}]]}},
+ {f:1,s:'Tree of thoughts',n:'Tree of thoughts',where:'2',one:'Explore several lines of reasoning like branches, score them, and drop the weak ones.',use:'Puzzles with dead ends, where the first idea is often wrong.',watch:'Many more calls than a single answer.',
+  g:{n:[['r','start',35,58,'m'],['a','path A',125,24,'m'],['b','path B',125,94,'m'],['a1','A1',215,10,'x'],['a2','A2 ★',215,52,'m'],['b1','B1 ✗',215,98,'x'],['o','best',292,52,'io']],e:[['r','a'],['r','b'],['a','a1',{d:1}],['a','a2'],['b','b1',{d:1}],['a2','o']]}},
+ {f:1,s:'Voting',n:'Self-consistency',where:'2',one:'Ask the same question several times and keep the most common answer.',use:'The model is right more often than it is wrong.',watch:'If it is usually wrong in the same way, the vote makes the wrong answer more certain.',
+  g:{n:[['i','ask',22,58,'io'],['a','5p',120,16,'m'],['b','5p',120,58,'m'],['c','10p',120,100,'x'],['v','vote',215,58,'m'],['o','5p',292,58,'io']],e:[['i','a'],['i','b'],['i','c'],['a','v'],['b','v'],['c','v'],['v','o']]}},
+ {f:2,s:'Tool use',n:'Tool use',where:'P2',el:'Fn',one:'The model writes a structured request; your code runs the tool and hands back the result.',use:'Facts, sums or actions the model can\'t do on its own.',watch:'The app, not the model, must decide which requests are allowed.',
+  g:{n:[['m','model',50,40,'m'],['c','your code',160,40,'x'],['t','API',272,40,'x']],e:[['m','c'],['c','t'],['t','m',{c:-42,l:'result'}]]}},
+ {f:2,s:'Agentic RAG',n:'Agentic RAG',where:'P2',el:'Rg',one:'Searching becomes a tool. The agent decides when to look things up, and rewrites the search if the results are poor.',use:'Questions where the agent can\'t know in advance what it needs to read.',watch:'It may answer from memory when it should have searched.',
+  g:{n:[['a','agent',50,58,'m'],['s','search',160,20,'x'],['d','documents',268,20,'x'],['o','answer',160,100,'io']],e:[['a','s',{l:'query'}],['s','d'],['d','a',{c:-30,l:'chunks'}],['a','o']]}},
+ {f:2,s:'Memory',n:'Memory',where:'P2',el:'Me',one:'Short-term memory is the context for the task in hand. Long-term memory is a store the agent can recall from later.',use:'Long tasks, or remembering a user\'s preferences between chats.',watch:'Remembering things you\'d rather it forgot, or recalling them wrongly.',
+  g:{n:[['s','now',50,58,'x'],['a','agent',160,58,'m'],['l','later',270,58,'x']],start:'a',e:[['a','s',{c:22}],['s','a',{c:22}],['a','l',{c:22,l:'save'}],['l','a',{c:22,l:'recall'}]]}},
+ {f:2,s:'Human in loop',n:'Human-in-the-loop',where:'4',el:'Hi',one:'Nothing important runs until a person approves or edits it.',use:'Anything that spends money, can\'t be undone, or speaks for someone.',watch:'People asked to approve too often stop reading, then approve everything.',
+  g:{n:[['a','agent',40,58,'m'],['q','pay £35?',138,58,'x'],['h','you',225,58,'h'],['y','do it',292,20,'io'],['n','stop',292,98,'x']],e:[['a','q'],['q','h'],['h','y'],['h','n',{d:1}]]}},
+ {f:2,s:'Guardrails',n:'Guardrails',where:'4',el:'Gr',one:'Checks on what goes into a model and what comes out of it.',use:'Blocking prompt injection, leaks of personal data and off-limits answers.',watch:'Filters can be fooled, and can block good answers too.',
+  g:{n:[['i','in',20,45,'io'],['c','check',88,45,'g'],['m','LLM',160,45,'m'],['d','check',232,45,'g'],['o','out',296,45,'io'],['x','blocked',88,100,'x'],['y','blocked',232,100,'x']],e:[['i','c'],['c','m'],['m','d'],['d','o'],['c','x',{d:1}],['d','y',{d:1}]]}},
+ {f:3,s:'Supervisor',n:'Supervisor',where:'3',el:'Or',one:'One manager agent hands work to specialists and collects their results.',use:'A job with clearly different parts, like research, writing and design.',watch:'If the manager misunderstands, every specialist gets it wrong too.',
+  g:{n:[['s','supervisor',160,18,'m'],['a','research',55,98,'m'],['b','writer',160,98,'m'],['c','designer',265,98,'m']],e:[['s','a'],['s','b'],['s','c']]}},
+ {f:3,s:'Hierarchy',n:'Hierarchical teams',where:'3',el:'Ma',one:'Supervisors of supervisors, like a head teacher, heads of department and teachers.',use:'Jobs too big for one manager to keep track of.',watch:'Instructions get garbled as they pass down the levels.',
+  g:{n:[['t','lead',160,14,'m'],['a','lead A',85,58,'m'],['b','lead B',235,58,'m'],['a1','a1',45,102,'m'],['a2','a2',125,102,'m'],['b1','b1',195,102,'m'],['b2','b2',275,102,'m']],e:[['t','a'],['t','b'],['a','a1'],['a','a2'],['b','b1'],['b','b2']]}},
+ {f:3,s:'Hand-off',n:'Hand-off',where:'3',one:'Control passes to the agent best placed for the next step, which then takes over the conversation.',use:'A triage desk that passes you on, like a helpline.',watch:'Important details can be lost in the hand-over.',
+  g:{n:[['t','triage',50,40,'m'],['b','billing',160,40,'m'],['r','refunds',270,40,'m'],['h','you',270,100,'h']],start:'t',e:[['t','b',{l:'pass on'}],['b','r',{l:'pass on'}],['h','r',{d:1,l:'now talks to'}]]}},
+ {f:3,s:'Agent as tool',n:'Agent-as-tool',where:'3',one:'The main agent calls another agent like a function. It stays in charge; the other agent just returns an answer.',use:'A specialist job inside a bigger task, like checking facts.',watch:'The caller may trust whatever comes back without checking it.',
+  g:{n:[['m','main agent',60,58,'m'],['s','sub-agent',250,18,'m'],['t','tool',250,100,'x']],e:[['m','s',{l:'call'}],['s','m',{c:-34,l:'answer'}],['m','t']]}},
+ {f:3,s:'Debate',n:'Debate',where:'3',one:'Two agents argue for different answers over several rounds, and a judge decides.',use:'Questions where each side can spot the other\'s mistakes.',watch:'If both agents share a blind spot, the argument won\'t reveal it.',
+  g:{n:[['a','agent A',60,20,'m'],['b','agent B',60,98,'m'],['j','judge',185,58,'m'],['o','verdict',272,58,'io']],e:[['a','b',{c:-22}],['b','a',{c:-22}],['a','j'],['b','j'],['j','o']]}}
+];
+function pxSvg(p){var col=FAM[p.f].c,N={},out='';
+ p.g.n.forEach(function(n){var w=Math.max(40,n[1].length*7.4+18),hh=24;N[n[0]]={x:n[2],y:n[3],w:w,h:hh,k:n[4],l:n[1]}});
+ function clip(cx,cy,dx,dy,n){var ax=Math.abs(dx)||1e-9,ay=Math.abs(dy)||1e-9,t=Math.min(n.w/2/ax,n.h/2/ay);return [cx+dx*t,cy+dy*t]}
+ p.g.e.forEach(function(e,ei){var a=N[e[0]],b=N[e[1]],o=e[2]||{},dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,c=o.c||0;
+  var mx=(a.x+b.x)/2+(-dy/L)*c,my=(a.y+b.y)/2+(dx/L)*c;
+  var s=clip(a.x,a.y,mx-a.x,my-a.y,a),t=clip(b.x,b.y,mx-b.x,my-b.y,b);
+  t=[t[0]+(mx-t[0])*0.04,t[1]+(my-t[1])*0.04];
+  out+='<g class="pe" data-e="'+ei+'"><path d="M'+s[0].toFixed(1)+' '+s[1].toFixed(1)+(c?' Q'+mx.toFixed(1)+' '+my.toFixed(1)+' ':' L')+t[0].toFixed(1)+' '+t[1].toFixed(1)+'" fill="none" stroke="#231F20" stroke-width="1.15"'+(o.d?' stroke-dasharray="4 4"':'')+' marker-end="url(#pxArrow)"/>';
+  if(o.l){var lx=c?(s[0]+2*mx+t[0])/4:(s[0]+t[0])/2,ly=c?(s[1]+2*my+t[1])/4:(s[1]+t[1])/2;var vert=Math.abs(t[0]-s[0])<Math.abs(t[1]-s[1])*0.5;out+='<text x="'+(vert?lx-6:lx).toFixed(1)+'" y="'+(vert?ly+3:(c&&my>(s[1]+t[1])/2?ly+13:ly-7)).toFixed(1)+'" text-anchor="'+(vert?'end':'middle')+'" font-size="10" font-weight="700" fill="#54504E" paint-order="stroke" stroke="#fff" stroke-width="4">'+o.l+'</text>'}out+='</g>'});
+ Object.keys(N).forEach(function(k){var n=N[k],x=n.x-n.w/2,y=n.y-n.h/2,fill='#fff',st='#231F20',da='',shape;
+  if(n.k==='m')fill='color-mix(in srgb,'+col+' 55%,#fff)';
+  if(n.k==='h')fill='#FFE7A3';
+  if(n.k==='io')fill='#EAE7DF';
+  if(n.k==='x')da=' stroke-dasharray="3 3"';
+  if(n.k==='g')shape='<path d="M'+n.x+' '+(n.y-15)+' L'+(n.x+n.w/2)+' '+n.y+' L'+n.x+' '+(n.y+15)+' L'+(n.x-n.w/2)+' '+n.y+'Z" fill="#fff" stroke="'+st+'" stroke-width="1.6"/>';
+  else shape='<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+n.w.toFixed(1)+'" height="'+n.h+'" rx="'+(n.k==='io'||n.k==='h'?12:2)+'" style="fill:'+fill+'" stroke="'+st+'" stroke-width="1.6"'+da+'/>';
+  out+='<g class="pn" data-n="'+k+'">'+shape+'<text x="'+n.x+'" y="'+(n.y+4)+'" text-anchor="middle" font-size="11" font-weight="700" fill="#231F20">'+(n.k==='h'?'☺ ':'')+n.l+'</text></g>'});
+ return '<svg viewBox="0 0 320 120" role="img" aria-label="Diagram of '+p.n+'"><defs><marker id="pxArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#231F20"/></marker></defs>'+out+'<circle class="dot" r="5" cx="-20" cy="-20"/></svg>'}
+/* The order work flows through a pattern: waves of arrows leaving boxes the work has reached. A loop runs round twice. */
+function pxWaves(p){var E=p.g.e,ids=p.g.n.map(function(n){return n[0]}),inc={};E.forEach(function(e){inc[e[1]]=1});
+ var starts=p.g.start?[p.g.start]:ids.filter(function(i){return !inc[i]});if(!starts.length)starts=[ids[0]];
+ var active={},used={},waves=[],round=0;starts.forEach(function(s){active[s]=1});
+ while(waves.length<12){var w=[];E.forEach(function(e,i){if(!used[i]&&active[e[0]])w.push(i)});
+  if(!w.length){var cyc=E.some(function(e,i){return used[i]&&starts.indexOf(e[1])>=0});if(cyc&&round<1){round++;used={};continue}break}
+  w.forEach(function(i){used[i]=1;active[E[i][1]]=1});waves.push(w)}
+ return {starts:starts,waves:waves}}
+function pxLabel(p,id){for(var i=0;i<p.g.n.length;i++)if(p.g.n[i][0]===id)return p.g.n[i][1];return id}
+function pxSay(p,w,k,n){var E=p.g.e,by={},order=[];w.forEach(function(i){var a=E[i][0];if(!by[a]){by[a]=[];order.push(a)}by[a].push(i)});
+ return '<b>Step '+k+' of '+n+'.</b> '+order.map(function(a){var to=by[a].map(function(i){var o=E[i][2]||{};return '<strong>'+pxLabel(p,E[i][1])+'</strong>'+(o.l?' ('+o.l+')':'')+(o.d?', only sometimes':'')});
+  return '<strong>'+pxLabel(p,a)+'</strong> → '+(to.length>1?to.slice(0,-1).join(', ')+' and '+to[to.length-1]:to[0])}).join('; ')+'.'}
+var pxRun=0,pxReduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function pxEls(){var c=$('pxCard');return {svg:c.querySelector('svg'),dot:c.querySelector('.dot'),say:c.querySelector('.px-say')}}
+function pxMoveDot(path,ms,run){return new Promise(function(res){var d=pxEls().dot,L=path.getTotalLength(),t0=null;
+ if(pxReduce||!L){res();return}
+ function f(t){if(run!==pxRun){res();return}if(!t0)t0=t;var k=Math.min(1,(t-t0)/ms),pt=path.getPointAtLength(L*k);d.setAttribute('cx',pt.x);d.setAttribute('cy',pt.y);if(k<1)requestAnimationFrame(f);else res()}
+ requestAnimationFrame(f)})}
+function pxWait(ms){return new Promise(function(r){setTimeout(r,pxReduce?Math.min(ms,500):ms)})}
+function pxResetDraw(ghost){var e=pxEls();e.svg.querySelectorAll('.pe,.pn').forEach(function(g){g.classList.remove('live','done','on');g.classList.toggle('ghost',!!ghost)});e.dot.setAttribute('cx',-20);e.dot.setAttribute('cy',-20)}
+function pxNode(id,on){var g=pxEls().svg.querySelector('.pn[data-n="'+id+'"]');if(g){g.classList.remove('ghost');if(on)g.classList.add('on')}}
+function pxEdge(i,cls){var g=pxEls().svg.querySelector('.pe[data-e="'+i+'"]');if(g){g.classList.remove('ghost','live','done');if(cls)g.classList.add(cls)}}
+function pxPlay(i){var p=PAT[i],fl=pxWaves(p),run=++pxRun,e=pxEls();pxResetDraw(false);pxBuildPos=-1;pxCtl('play');
+ e.say.innerHTML='<b>Watch the work flow.</b> It starts at <strong>'+fl.starts.map(function(s){return pxLabel(p,s)}).join(' and ')+'</strong>.';
+ fl.starts.forEach(function(s){pxNode(s,true)});
+ var chain=pxWait(500);
+ fl.waves.forEach(function(w,k){chain=chain.then(function(){if(run!==pxRun)return;
+   e.say.innerHTML=pxSay(p,w,k+1,fl.waves.length);w.forEach(function(j){pxEdge(j,'live')});
+   return Promise.all(w.map(function(j,n){return pxWait(n*90).then(function(){return n===0?pxMoveDot(e.svg.querySelector('.pe[data-e="'+j+'"] path'),700,run):pxWait(700)})})).then(function(){if(run!==pxRun)return;
+    w.forEach(function(j){pxEdge(j,'done');pxNode(p.g.e[j][1],true)});return pxWait(350)})})});
+ chain.then(function(){if(run!==pxRun)return;var d=pxEls().dot;d.setAttribute('cx',-20);d.setAttribute('cy',-20);
+  e.say.innerHTML='<b>That\'s the whole flow.</b> Press <strong>Build it step by step</strong> to put it together yourself.';pxCtl('idle')})}
+var pxBuildPos=-1;
+function pxBuild(i){var p=PAT[i],fl=pxWaves(p),e=pxEls();pxRun++;
+ if(pxBuildPos<0){pxResetDraw(true);pxBuildPos=0;fl.starts.forEach(function(s){pxNode(s,true)});
+  e.say.innerHTML='<b>Step 0 of '+fl.waves.length+'.</b> Start with <strong>'+fl.starts.map(function(s){return pxLabel(p,s)}).join(' and ')+'</strong>. Press Next step to add the next arrow.';pxCtl('build',fl.waves.length);return}
+ var w=fl.waves[pxBuildPos++];e.svg.querySelectorAll('.pe.live').forEach(function(g){g.classList.remove('live');g.classList.add('done')});
+ w.forEach(function(j){pxEdge(j,'live');pxNode(p.g.e[j][1],true)});
+ var path=e.svg.querySelector('.pe[data-e="'+w[0]+'"] path');pxMoveDot(path,600,pxRun);
+ e.say.innerHTML=pxSay(p,w,pxBuildPos,fl.waves.length)+(pxBuildPos===fl.waves.length?' <b>Built.</b>':'');
+ pxCtl(pxBuildPos===fl.waves.length?'built':'build',fl.waves.length)}
+function pxCtl(state){var c=$('pxCard'),pl=c.querySelector('[data-a=play]'),bu=c.querySelector('[data-a=build]');if(!pl)return;
+ pl.disabled=state==='play';bu.disabled=state==='play';
+ bu.textContent=state==='build'?'Next step →':state==='built'?'Build it again':'Build it step by step';
+ bu.classList.toggle('pri',state==='build');if(state==='built')pxBuildPos=-1}
+var pxKey='aiad-agent-to-team-patterns',pxSeen;try{pxSeen=JSON.parse(localStorage.getItem(pxKey)||'[]')}catch(e){pxSeen=[]}
+var pxCur=0,grid='<div class="px-axis" aria-hidden="true"><span>More autonomy, more cost</span><i></i><span>Simple, predictable</span></div>';
+FAM.forEach(function(F,fi){grid+='<div class="px-rowname" style="--rc:'+F.c+'">'+F.k+' <small style="font-weight:600;letter-spacing:0;text-transform:none;color:var(--dim)">· '+F.d+'</small></div>';
+ PAT.forEach(function(p,i){if(p.f!==fi)return;grid+='<button type="button" class="px-t" data-i="'+i+'" style="--rc:'+F.c+'" aria-pressed="false" aria-label="'+(i+1)+'. '+p.n+'"><b>'+(i+1<10?'0':'')+(i+1)+'</b><span>'+p.s+'</span></button>'})});
+$('pxGrid').innerHTML=grid;
+function pxShow(i,focus){pxCur=i;var p=PAT[i],F=FAM[p.f];
+ if(pxSeen.indexOf(i)<0){pxSeen.push(i);try{localStorage.setItem(pxKey,JSON.stringify(pxSeen))}catch(e){}}
+ document.querySelectorAll('.px-t').forEach(function(t){var k=+t.dataset.i;t.setAttribute('aria-pressed',k===i);t.classList.toggle('seen',pxSeen.indexOf(k)>=0)});
+ $('pxSeen').textContent=pxSeen.length+' of 20 explored';
+ var where=p.where==='P2'?'<a href="../answer-to-action/">Covered in Part 2 →</a>':'<a class="go" href="#ch'+p.where+'">Read it in chapter '+p.where+' →</a>';
+ var el=p.el&&AI_ALL[p.el]?'<a class="el" data-fam="'+AI_ALL[p.el].family+'" href="/ai-literacy-periodic-table/#element-'+p.el.toLowerCase()+'">AI table: '+p.el+' · '+AI_ALL[p.el].name+'</a>':'';
+ var c=$('pxCard');c.style.setProperty('--rc',F.c);c.style.setProperty('--rcd',F.cd);pxRun++;pxBuildPos=-1;
+ c.innerHTML='<div class="kick"><span class="n">'+(i+1<10?'0':'')+(i+1)+'</span>'+F.k+'</div><h4>'+p.n+'</h4><p class="one">'+p.one+'</p>'+pxSvg(p)+'<div class="px-ctl"><button type="button" data-a="play">▶ Play the flow</button><button type="button" data-a="build">Build it step by step</button></div><p class="px-say" aria-live="polite"></p><dl><div><dt>Use it when</dt><dd>'+p.use+'</dd></div><div><dt>Watch out for</dt><dd>'+p.watch+'</dd></div></dl><div class="links">'+where+el+'</div>';
+ c.querySelector('[data-a=play]').addEventListener('click',function(){pxPlay(pxCur)});
+ c.querySelector('[data-a=build]').addEventListener('click',function(){pxBuild(pxCur)});
+ if(focus)c.scrollIntoView({block:'nearest',behavior:'smooth'});
+ pxPlay(i)}
+var AI_ALL={"Or":{"name":"Orchestrator","family":"agents"},"Ra":{"name":"ReAct","family":"agents"},"Sr":{"name":"Self-Reflection","family":"agents"},"Fn":{"name":"Function Calling","family":"agents"},"Rg":{"name":"Retrieval-Augmented Generation","family":"generative"},"Me":{"name":"Memory","family":"agents"},"Hi":{"name":"Human-in-the-Loop","family":"governance"},"Gr":{"name":"Guardrails","family":"governance"},"Ma":{"name":"Multi-Agent System","family":"agents"}};
+$('pxGrid').addEventListener('click',function(e){var t=e.target.closest('.px-t');if(t)pxShow(+t.dataset.i,matchMedia('(max-width:860px)').matches)});
+$('pxGrid').addEventListener('keydown',function(e){var t=e.target.closest('.px-t');if(!t)return;var i=+t.dataset.i,n={ArrowRight:1,ArrowLeft:-1,ArrowDown:5,ArrowUp:-5}[e.key];if(n===undefined)return;e.preventDefault();var j=Math.min(19,Math.max(0,i+n));document.querySelector('.px-t[data-i="'+j+'"]').focus();pxShow(j)});
+pxShow(0);
+
+/* Router */
+var LANES=[{id:'t',name:'Tickets agent'},{id:'f',name:'Food agent'},{id:'q',name:'Quiz agent'},{id:'h',name:'Ms Okafor (a person)'}];
+var MSGS=[
+ {m:"Can I buy four tickets for Friday?",g:'t',c:96,r:"Four tickets are £20. Here’s the link to pay."},
+ {m:"Is the pizza vegetarian?",g:'f',c:93,r:"There’s a margherita and a veggie supreme, both vegetarian."},
+ {m:"I’ve got a brilliant question for the music round!",g:'q',c:88,r:"Thanks! Send it over and we’ll check it."},
+ {m:"My daughter has a nut allergy. If there’s nothing safe for her to eat, can I get a refund?",g:'f',c:54,r:"Good news: the brownies are nut-free.",bad:"It answered the food part and ignored the refund question.",h:"Ms Okafor checks the menu with the caterer and agrees a refund if needed."},
+ {m:"Do you take card payments at the door?",g:'t',c:81,r:"Yes, card and cash at the door."},
+ {m:"Your poster spells our company name wrong, and we’re one of your sponsors.",g:'q',c:31,r:"Thanks for your question idea! We’ll consider it for a future round.",bad:"No lane fits sponsors, so the router guessed. The reply makes things worse.",h:"Ms Okafor apologises and asks for the poster to be fixed."}];
+var LN={t:'Tickets',f:'Food',q:'Quiz'};
+var ri=0,counts;
+function drawLanes(flash){$('lanes').innerHTML=LANES.map(function(l){return '<div class="lane2'+(l.id==='h'?' human':'')+(l.id===flash?' flash':'')+'">'+l.name+'<b>'+counts[l.id]+'</b></div>'}).join('')}
+function resetRoute(){ri=0;counts={t:0,f:0,q:0,h:0};$('rlog').innerHTML='';drawLanes();$('routeNext').disabled=false;$('routeNext').textContent='Route the first message'}
+$('routeNext').addEventListener('click',function(){var x=MSGS[ri++];if(!x)return;
+ var toHuman=x.c<70&&$('unsure').checked,lane=toHuman?'h':x.g;counts[lane]++;drawLanes(lane);
+ var d=document.createElement('div'),cls='rmsg',body;
+ var guess='Router: '+LN[x.g]+', '+x.c+'% sure';
+ if(toHuman){cls+=' saved';body='<span class="to">'+guess+' → not sure enough, so sent to Ms Okafor</span>'+x.h+'<span class="why">Caught: a person handles the message that didn’t fit.</span>'}
+ else if(x.bad){cls+=' bad';body='<span class="to">'+guess+' → '+LN[x.g]+' agent</span>Reply: “'+x.r+'”<span class="why">'+x.bad+'</span>'}
+ else body='<span class="to">'+guess+' → '+LN[x.g]+' agent</span>Reply: “'+x.r+'”';
+ d.className=cls;d.innerHTML='<q>“'+x.m+'”</q>'+body;$('rlog').appendChild(d);
+ if(ri>=MSGS.length){this.disabled=true;this.textContent='Inbox empty'}else this.textContent='Route the next message'});
+$('routeReset').addEventListener('click',resetRoute);$('unsure').addEventListener('change',resetRoute);resetRoute();
+
+/* Reflection stepper */
+$('reflNext').addEventListener('click',function(){var hid=$('reflChat').querySelector('.msg[hidden]');
+ if(hid){hid.hidden=false;if(!$('reflChat').querySelector('.msg[hidden]'))this.textContent='Start again'}
+ else{[].forEach.call($('reflChat').querySelectorAll('.msg:not(.you)'),function(m){m.hidden=true});this.textContent='Next step'}});
+
+/* Self-consistency vote */
+var vn=5;
+function choose(n,k){var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
+function pMaj(n,p){var s=0;for(var k=(n+1)/2;k<=n;k++)s+=choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k);return s}
+function pct(x){return (Math.round(x*1000)/10).toString().replace(/\.0$/,'')+'%'}
+function voteStats(){var p=+$('pRight').value/100;$('vP').textContent=pct(p);$('pOne').textContent=pct(p);
+ $('pVote').textContent=pct(pMaj(vn,p));$('pVoteL').textContent=vn===1?'with just one answer, there is no vote':'chance a majority of '+vn+' is right';
+ var m;if(vn===1)m='Pick 3, 5 or 9 answers to take a vote.';
+ else if(p>.5)m='Voting helps: the most common answer is more likely to be right than any single answer.';
+ else if(p===.5)m='At 50%, voting can’t help. It’s a coin toss either way.';
+ else m='Voting makes it worse. The model is usually wrong in the same way, so the vote makes the wrong answer more certain.';
+ $('voteMsg').textContent=m}
+$('pRight').addEventListener('input',function(){voteStats();$('ballots').innerHTML=''});
+document.querySelectorAll('#voteN button').forEach(function(b){b.addEventListener('click',function(){vn=+b.dataset.n;document.querySelectorAll('#voteN button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});$('ballots').innerHTML='';voteStats()})});
+$('ask').addEventListener('click',function(){var p=+$('pRight').value/100,ok=0,h='';
+ for(var i=0;i<vn;i++){var r=Math.random()<p;if(r)ok++;h+='<span class="ballot '+(r?'ok':'no')+'">'+(r?'5p':'10p')+'</span>'}
+ var win=ok>vn-ok;
+ h+='<span class="verdict">'+(vn===1?'The answer is '+(win?'5p, which is right.':'10p, which is wrong.'):(win?'5p':'10p')+' wins '+Math.max(ok,vn-ok)+' to '+Math.min(ok,vn-ok)+(win?'. Right.':'. Wrong.'))+'</span>';
+ $('ballots').innerHTML=h});
+voteStats();
+
+/* Team run */
+var TEAM=[
+ {on:['n-you','n-lead','e-you'],k:'see',who:'You ask',t:"The hall’s projector is broken. Can the picture round still work?",tok:300},
+ {on:['n-lead'],k:'lead',who:'Lead thinks',t:"Three jobs: find out what the hall has, redesign the picture round for paper, and update the poster. None depends on the others, so they can run at the same time.",tok:4000},
+ {on:['n-lead','n-r','n-w','n-d','e-r','e-w','e-d'],k:'lead',who:'Lead delegates',t:"Each specialist gets its own instructions, tools and one clear task. None of them sees the others’ work.",tok:6000},
+ {on:['n-r','e-r','n-lead'],k:'work',who:'Researcher',t:"The hall has speakers but no screen. Printing 30 colour picture sheets costs £6 at the school print room.",tok:7000},
+ {on:['n-w','e-w','n-lead'],k:'work',who:'Writer',t:"New picture round: 10 close-up photos of objects around school, printed on the answer sheets.",tok:6000},
+ {on:['n-d','e-d','n-lead'],k:'work',who:'Designer',t:"Poster updated: “Picture round on paper this year!”",tok:4000},
+ {on:['n-lead','e-you','n-you'],k:'ask',who:'Lead asks you',t:"Plan ready. One step spends money: printing 30 sheets for £6. Sending it to you for approval before anything is printed.",tok:3000}];
+var ti=0,tok=0,TOKMAX=32000;
+$('chatMark').style.left=(100*2000/TOKMAX)+'%';
+function teamHL(ids){document.querySelectorAll('#teamSvg .on').forEach(function(e){e.classList.remove('on')});ids.forEach(function(id){$(id).classList.add('on')})}
+function teamReset(){ti=0;tok=0;$('teamLog').innerHTML='';teamHL([]);$('tokN').textContent='0';$('tokBar').style.width='0';$('teamNext').disabled=false;$('teamNext').textContent='Start the team'}
+$('teamNext').addEventListener('click',function(){var s=TEAM[ti++];if(!s)return;teamHL(s.on);tok+=s.tok;
+ var d=document.createElement('div');d.className='step '+s.k;d.innerHTML='<b>'+s.who+'</b><span>'+s.t+'</span>';$('teamLog').appendChild(d);
+ $('tokN').textContent=tok.toLocaleString('en-GB');$('tokBar').style.width=Math.min(100,100*tok/TOKMAX)+'%';
+ if(ti>=TEAM.length){this.disabled=true;this.textContent='Done: about '+Math.round(tok/2000)+' times a chat';}else this.textContent='Next step'});
+$('teamReset').addEventListener('click',teamReset);teamReset();
+
+/* Chain calculator */
+var DES=[{l:'No checks'},{l:'An AI checker on every step'},{l:'You approve every step'},{l:'An AI checker, and you approve only the risky steps'}];
+function humanCatch(k){return Math.max(.1,.9-.03*(k-1))}
+function chain(){var n=+$('nSteps').value,p=+$('pStep').value/1000,e=1-p;
+ $('vSteps').textContent=n;$('vStep').textContent=(p*100).toFixed(1)+'%';
+ var none=Math.pow(p,n),ai=Math.pow(1-e*.5,n),every=1,mix=1,r=0;
+ for(var k=1;k<=n;k++){every*=1-e*(1-humanCatch(k));
+  if(k%5===0){r++;mix*=1-e*.5*(1-humanCatch(r))}else mix*=1-e*.5}
+ var res=[[none,0],[ai,0],[every,n],[mix,r]];
+ $('dbars').innerHTML=res.map(function(x,i){return '<div class="drow"><span>'+DES[i].l+'</span><div class="bar"><i style="width:'+(100*x[0]).toFixed(1)+'%"></i></div><b>'+pct(x[0])+'</b><small>'+(x[1]===1?'1 approval request':x[1]+' approval requests')+'</small></div>'}).join('');
+ var m='Checking every step means '+n+' requests for you. Checking only the risky ones means '+r+'.';
+ if(every<ai)m+=' By the last request you’d catch only '+Math.round(humanCatch(n)*100)+'% of mistakes, so approving everything now does worse than an AI checker alone.';
+ else if(n>=10&&mix>=every-.03)m+=' The mixed design gets close to approving everything, with far fewer requests.';
+ $('chainMsg').textContent=m;
+ $('dbars').setAttribute('aria-label','Chance the whole job goes right: no checks '+pct(none)+', AI checker '+pct(ai)+', approve every step '+pct(every)+', AI checker plus approving risky steps '+pct(mix))}
+['nSteps','pStep'].forEach(function(id){$(id).addEventListener('input',chain)});chain();
+
+/* Sorting quiz */
+var ITEMS=[
+ {p:"A school helpdesk bot reads each message and sends it to the exams assistant, the IT assistant or the canteen assistant.",o:['Routing','Self-consistency','Debate'],a:0,w:"Routing: classify first, then send to a specialist."},
+ {p:"A translation app translates a leaflet into six languages at the same time, then puts them together.",o:['Prompt chaining','Parallelisation','Supervisor'],a:1,w:"Parallelisation: independent jobs, run at once, then merged."},
+ {p:"A coding assistant writes a function, runs the tests, reads the failures and tries again until they all pass.",o:['Evaluator-optimiser','Routing','Hand-off'],a:0,w:"Evaluator-optimiser: the tests are the clear criteria, and it repeats until it passes."},
+ {p:"A research tool's lead agent splits a big question into sub-questions as it goes, sends each to a separate agent, and writes up what they find.",o:['Parallelisation','Orchestrator-workers','Prompt chaining'],a:1,w:"Orchestrator-workers: unlike parallelisation, the lead agent decides the sub-questions as it goes."},
+ {p:"A maths tutor app solves the same problem five times and shows the most common answer.",o:['Reflection','Self-consistency','Debate'],a:1,w:"Self-consistency: several answers, one vote."},
+ {p:"A bank's chatbot passes you to a mortgage agent, which then takes over the conversation.",o:['Agent-as-tool','Hand-off','Routing'],a:1,w:"Hand-off: the mortgage agent now owns the conversation."},
+ {p:"An essay feedback tool writes its comments, rereads them looking for mistakes, and rewrites them before showing you.",o:['Reflection','Parallelisation','Supervisor'],a:0,w:"Reflection: the model reviews and fixes its own output."}];
+var right=0;
+$('sort').innerHTML=ITEMS.map(function(it,i){return '<div class="item"><p>'+it.p+'</p><div class="opts">'+it.o.map(function(o,j){return '<button type="button" data-i="'+i+'" data-j="'+j+'">'+o+'</button>'}).join('')+'</div><p class="why" aria-live="polite"></p></div>'}).join('');
+$('sort').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;var it=ITEMS[+b.dataset.i],box=b.closest('.item'),btns=box.querySelectorAll('button');
+ if(+b.dataset.j===it.a){b.classList.add('right');[].forEach.call(btns,function(x){x.disabled=true});box.querySelector('.why').textContent=it.w;right++;$('sortScore').textContent=right+' of '+ITEMS.length+' sorted.'+(right===ITEMS.length?' All done. Real products usually combine several patterns.':'')}
+ else{b.classList.add('wrong');box.querySelector('.why').textContent='Not that one. Try again.'}});
+})();
+</script>
+<script src="../shared/journey.js"></script>
+<script src="../shared/flow.js"></script>
+<script>
+(function(){'use strict';
+var FLOWS={"chain": {"title": "A workflow with a check", "w": 340, "h": 185, "start": ["in"], "predict": {"q": "In a fixed workflow, who decides what the steps are?", "options": ["The AI, as it goes", "People, in advance", "Whoever sends the request"], "answer": 1, "why": "People write the steps into the system beforehand. The AI does the work inside each step, but never chooses the next one."}, "nodes": [["in", "your request", 52, 58, "h"], ["w", "write the\n8 rounds", 165, 58], ["g", "check every\nanswer", 280, 58, "x"], ["lay", "lay out answer\nsheets", 280, 148], ["out", "ready to\nprint", 150, 148, "io"]], "edges": [["in", "w"], ["w", "g"], ["g", "w", {"c": 42, "d": 1, "l": "fails: rewrite", "id": "fail"}], ["g", "lay", {"l": "passes"}], ["lay", "out"]], "steps": [{"go": ["in>w"], "say": "You ask for the quiz. Step one, fixed in advance: write the questions."}, {"go": ["w>g"], "say": "Step two is a check. Another model call tests every answer against a trusted source."}, {"go": ["fail"], "say": "If anything fails, the workflow goes back and rewrites that question. Nothing moves on until the check passes."}, {"go": ["g>lay"], "say": "Step three: lay the questions out on answer sheets."}, {"go": ["lay>out"], "say": "Ready to print. People decided every step; the AI did the work inside each one."}], "end": "Predictable, cheap and easy to test: that is why workflows come first."}, "checks": {"title": "Where the human sits", "w": 340, "h": 190, "start": ["ag"], "predict": {"q": "You are asked to approve everything an agent does, 50 times a day. What tends to happen?", "options": ["You catch every mistake", "You stop reading and approve automatically", "The agent slows down until you are ready"], "answer": 1, "why": "That is automation bias. Good designs ask people only about the steps that matter, so they really read them."}, "nodes": [["ag", "agent wants\nto act", 52, 40], ["ai", "AI checker", 170, 40], ["r", "risky step?", 282, 40, "x"], ["auto", "runs\nautomatically", 282, 140, "ok"], ["you", "you check it\nproperly", 160, 140, "h"], ["act", "action\napproved", 48, 140, "ok"]], "edges": [["ag", "ai"], ["ai", "r"], ["r", "auto", {"l": "no"}], ["r", "you", {"l": "yes"}], ["you", "act"]], "steps": [{"go": ["ag>ai"], "say": "The agent wants to take an action. First, an automatic AI checker looks for obvious mistakes and blocks them."}, {"go": ["ai>r"], "say": "Does the step spend money, can’t be undone, or speak for someone?"}, {"go": ["r>auto"], "say": "Most steps aren’t risky. They run without bothering you."}, {"go": ["r>you"], "say": "Risky steps come to you. Because there are only a few, you actually read them."}, {"go": ["you>act"], "say": "Only then does the action happen. Fewer requests, better attention."}], "anyOrder": [[2, 3]], "end": "Put people where they matter most, and keep their list short."}, "overload": {"title": "One agent, too many jobs", "w": 340, "h": 220, "start": ["job"], "nodes": [["job", "the whole\nquiz night", 40, 118, "h"], ["ag", "one\nagent", 145, 118], ["cw", "context\nwindow", 145, 30, "s"], ["o1", "hall\nbooked", 290, 30, "ok"], ["o2", "history round\ntwice", 290, 88, "bad"], ["o3", "a message\nforgotten", 290, 146, "bad"], ["o4", "a wrong\nanswer", 290, 200, "bad"]], "edges": [["job", "ag"], ["ag", "cw", {"c": -26, "l": "fills up", "id": "in"}], ["cw", "ag", {"c": -26, "l": "details lost", "id": "lost"}], ["ag", "o1"], ["ag", "o2"], ["ag", "o3"], ["ag", "o4"]], "steps": [{"go": ["job>ag"], "say": "You hand one agent the whole job: book the hall, write eight rounds, make a poster, sell tickets, answer messages."}, {"go": ["in"], "say": "Everything it reads and does goes into its context window: emails, drafts, tool results."}, {"go": ["ag>o1"], "say": "Early on it goes well: the hall is booked."}, {"go": ["lost"], "say": "But the context window keeps filling, and early details get crowded out."}, {"go": ["ag>o2"], "say": "It forgets it already wrote the history round, and writes it again."}, {"go": ["ag>o3", "ag>o4"], "say": "A parent’s question from Monday is lost, and one answer is wrong. Each mistake carries forward."}], "end": "The fix isn’t a cleverer agent. It’s a better shape: split the job, check the work, and keep a person on what matters.", "predict": {"q": "The agent wrote the history round twice. What’s the most likely reason?", "options": ["Earlier work got crowded out of its context window, so it forgot", "It enjoys history", "Someone asked for it twice"], "answer": 0, "why": "An agent only ‘remembers’ what’s still in its context window. On a long, busy job, early work gets crowded out."}}, "evalopt": {"title": "Write, grade, revise", "w": 360, "h": 170, "start": ["w"], "nodes": [["w", "writer agent:\ndrafts a round", 52, 35], ["ev", "evaluator\nagent", 185, 35], ["cr", "criteria:\none right answer,\nclear, all ages", 185, 128, "s"], ["fb", "feedback:\nQ3 is\nambiguous", 52, 128, "bad"], ["ok", "passes:\nonto the\nanswer sheet", 318, 128, "ok"]], "edges": [["w", "ev", {"l": "draft"}], ["cr", "ev", {"l": "checks"}], ["ev", "fb", {"l": "fails"}], ["fb", "w", {"l": "revise"}], ["ev", "ok", {"l": "passes"}]], "steps": [{"go": ["w>ev"], "say": "The writer agent drafts the eight questions for the science round."}, {"go": ["cr>ev"], "say": "A separate evaluator agent checks the draft against clear criteria: one correct answer each, no ambiguity, suitable for all ages."}, {"go": ["ev>fb"], "say": "Question 3 has two defensible answers, so the draft fails, with specific feedback."}, {"go": ["fb>w"], "say": "The writer revises exactly that question, and the loop runs again."}, {"go": ["ev>ok"], "say": "This time every criterion is met, so the round goes onto the answer sheet."}], "end": "Without clear criteria, the evaluator is just guessing too.", "predict": {"q": "A writer agent drafts quiz questions. What does a second agent need in order to check them properly?", "options": ["Clear criteria to check against", "A bigger model than the writer", "More time to think"], "answer": 0, "why": "An evaluator is only as good as what it checks against. With clear criteria, it can say exactly what failed; without them, it’s guessing too."}}, "help": {"title": "Two ways to get help", "w": 340, "h": 250, "start": ["p1", "p2"], "zones": [[6, 6, 328, 108, "Agent as a tool"], [6, 134, 328, 108, "Hand-off"]], "nodes": [["p1", "parent", 45, 68, "h"], ["t1", "ticket\nagent", 165, 68], ["r1", "refunds\nagent", 290, 68], ["p2", "parent", 45, 196, "h"], ["t2", "ticket\nagent", 165, 196], ["r2", "refunds\nagent", 290, 196]], "edges": [["p1", "t1", {"l": "asks"}], ["t1", "r1", {"l": "asks", "id": "askA"}], ["r1", "t1", {"c": -20, "l": "answer", "id": "ansA"}], ["t1", "p1", {"c": -20, "l": "replies", "id": "repA"}], ["p2", "t2", {"l": "asks"}], ["t2", "r2", {"l": "passes it on", "id": "pass"}], ["r2", "p2", {"c": 32, "l": "replies from now on", "id": "repB"}]], "steps": [{"go": ["p1>t1"], "say": "Agent as a tool: a parent asks the ticket agent about a refund."}, {"go": ["askA"], "say": "The ticket agent asks the refunds agent, just like calling a tool."}, {"go": ["ansA"], "say": "The refunds agent sends an answer back."}, {"go": ["repA"], "say": "The ticket agent replies to the parent itself. It never let go of the conversation."}, {"go": ["p2>t2"], "say": "Hand-off: the same question arrives."}, {"go": ["pass"], "say": "This time the ticket agent passes the whole conversation to the refunds agent."}, {"go": ["repB"], "say": "The refunds agent replies, and keeps talking to the parent from now on."}], "end": "The question is who holds the conversation.", "predict": {"q": "A ticket agent hands a refund question off to a refunds agent. Who talks to the parent next?", "options": ["The ticket agent, as before", "The refunds agent", "A human manager"], "answer": 1, "why": "In a hand-off, the conversation itself moves. The refunds agent takes over. In agent-as-tool, the ticket agent would stay in charge and just use the answer."}}, "layers": {"title": "Build up the design", "w": 340, "h": 250, "start": ["job"], "nodes": [["job", "the quiz\nnight", 40, 30, "h"], ["q1", "Can you write\nthe steps down?", 158, 30], ["a1", "start with\na workflow", 292, 30, "ok"], ["q2", "Are mistakes\ncostly?", 158, 92], ["a2", "add\nchecks", 292, 92, "ok"], ["q3", "Do jobs appear\nonly as you go?", 158, 154], ["a3", "use a\nteam", 292, 154, "ok"], ["q4", "Can an action\nnot be undone?", 158, 216], ["a4", "a person\napproves it", 292, 216, "ok"]], "edges": [["job", "q1"], ["q1", "a1", {"l": "yes"}], ["q1", "q2", {"l": "then"}], ["q2", "a2", {"l": "yes"}], ["q2", "q3", {"l": "then"}], ["q3", "a3", {"l": "yes"}], ["q3", "q4", {"l": "then"}], ["q4", "a4", {"l": "yes"}]], "steps": [{"go": ["job>q1", "q1>a1"], "say": "Can you write the steps down? For the rounds and the poster, yes. Start with a workflow."}, {"go": ["q1>q2", "q2>a2"], "say": "Are mistakes costly? A wrong answer in front of 200 people is. Add checks: an evaluator, or a vote."}, {"go": ["q2>q3", "q3>a3"], "say": "Do jobs appear only as you go? The broken projector did. Add a team with a lead agent for surprises."}, {"go": ["q3>q4", "q4>a4"], "say": "Can an action not be undone? Taking ticket money can’t. A person approves it."}], "end": "Each yes adds a layer. Start simple, and add only what the job needs.", "predict": {"q": "You’re designing an AI system for a new job. Where should you start?", "options": ["The simplest thing that works, usually a workflow", "The biggest team of agents you can afford", "One agent with full autonomy"], "answer": 0, "why": "Start simple, then add checks, a team or a person only where the job needs them. Each layer costs time and money."}}};
+if(!window.AIADFlow)return;document.querySelectorAll('[data-flow]').forEach(function(f){var s=FLOWS[f.getAttribute('data-flow')];if(s)AIADFlow.mount(f,s)});
+})();
+</script>
+<script>
+(function(){'use strict';if(!window.AIADFlow||!AIADFlow.compare)return;var C={"wfvs":{"title":"The same job: a workflow and an agent","intro":"A parent messages: “Can I buy 4 tickets?” One system follows fixed steps; the other decides its own. Both get there.","left":{"label":"Workflow","good":true,"verdict":"Done in 3 fixed steps: cheap, fast and the same every time. Best when the job is predictable.","spec":{"w":220,"h":240,"start":["m"],"nodes":[["m","“Can I buy\n4 tickets?”",110,30,"h"],["r","router: tickets",110,95],["t","fill ticket\nreply template",110,155],["s","reply sent",110,215,"ok"]],"edges":[["m","r"],["r","t"],["t","s"]],"steps":[{"go":["m>r"],"say":"The router sorts the message: it’s about tickets."},{"go":["r>t"],"say":"The ticket template is filled in: price and payment link."},{"go":["t>s"],"say":"The reply goes out. Same steps every time."}],"end":"Predictable and cheap."}},"right":{"label":"Agent","good":true,"verdict":"Done in 5 steps it chose itself: flexible, but slower, costlier and less predictable. Best when the job can’t be planned.","spec":{"w":220,"h":240,"start":["m"],"nodes":[["m","“Can I buy\n4 tickets?”",58,30,"h"],["s","reply sent",168,30,"ok"],["th","think",58,105],["a","look up prices\n(tool)",158,160,"x"],["o","observe:\n£5 each",58,205]],"edges":[["m","th"],["th","a"],["a","o"],["o","th",{"c":-22,"id":"again"}],["th","s"]],"steps":[{"go":["m>th"],"say":"The agent thinks: what does this parent need?"},{"go":["th>a"],"say":"It decides to use a tool to look up the ticket price."},{"go":["a>o"],"say":"It reads the result: £5 each."},{"go":["again"],"say":"It thinks again, with the new information."},{"go":["th>s"],"say":"It decides it has enough, writes the reply and sends it."}],"end":"Flexible, at a cost."}}}};document.querySelectorAll('[data-compare]').forEach(function(f){var c=C[f.getAttribute('data-compare')];if(c)AIADFlow.compare(f,c)});})();
+</script>
+<script src="../shared/nodes.js"></script>
+<script>
+/* Nodes challenges: answer-building activities from the Nodes method (shared/nodes.js). */
+(function(){var NODES={"p3-step":{"type":"step","rel":"sequence","q":"Explain why one AI agent given a very long, complicated job can lose track of it.","marks":2,"answer":"Because the agent gets tired after working for a long time, so it starts making mistakes.","step":"Retrieve","why":"A wrong idea: models don’t get tired. What fills up is the context window. Every step adds more text, so earlier details get crowded out and errors build up. Retrieve is where you check the key idea before writing.","fix":"Its context window fills up with earlier steps, tool results and notes, so important details get lost among everything else, and small errors build on each other.","not":{"Decode":"It answers the right question: why it loses track.","Reason":"It does give a because. The because itself is wrong. Look earlier.","Refine":"Better wording won’t fix a wrong idea.","Review":"Re-reading the question won’t fix a wrong idea."}},"p3-apart":{"type":"apart","rel":"comparison","both":true,"a":["Prompt chaining","Steps in a fixed order: each model call takes the last one’s output as its input."],"b":["Parallelisation","Independent pieces run at the same time, then the results are combined."],"as":"Chaining","bs":"Parallel","test":"Does this step need the result of another step? If it does, chain it. If not, it can run in parallel.","items":[["Write an outline, check it, then write the essay from the outline.","a","Each step needs the one before."],["Check a contract for legal, money and privacy problems, each checked separately.","b","The three checks don’t depend on each other."],["Translate a speech into French, Spanish and German.","b","Each translation only needs the original."],["Pull the facts out of a report, then turn them into a quiz.","a","The quiz needs the facts first."],["Ask the same question three times and take the majority answer.","b","Voting: the same task run several times at once."],["People decide the steps in advance.","both","Both are workflows. The difference is one after another versus at the same time."]]},"p3-join":{"type":"join","rel":"sequence","q":"Explain how an evaluator-optimiser loop can improve the quality of an AI’s answer.","marks":3,"size":"Explain, 3 marks: a point, the reason, and what follows from it","links":[["Point","One model call writes a draft and a second call grades it against clear criteria,"],["Because","which picks out the specific ways the draft falls short,"],["So","so the writer can revise exactly those parts,"],["In this case","and the loop repeats until the draft meets every criterion, or a set number of rounds runs out."]],"decoy":["The evaluator is always a bigger, more expensive model.","Not why it works: the improvement comes from specific feedback and another try."],"refused":"“It checks the answer” on its own: no criteria, no revision, no loop."},"p3-apart2":{"type":"apart","rel":"meaning","both":true,"a":["Agent as a tool","The lead agent calls a specialist, gets an answer back and stays in charge of the conversation."],"b":["Hand-off","The first agent passes the whole conversation to another agent, which takes over."],"as":"Agent as a tool","bs":"Hand-off","test":"After the call, who is talking to the user?","items":[["A research lead asks three specialist agents for summaries, then writes the final report itself.","a","The lead stays in charge and uses their answers."],["A help-desk agent works out you want a refund and passes you to the refunds agent, which carries on talking to you.","b","The refunds agent takes over the conversation."],["The specialist’s answer comes back to the caller, like a tool result.","a","That’s exactly agent-as-tool."],["Best when a different specialist should own the rest of the conversation.","b","Hand over when someone else should take it from here."],["A specialist agent does part of the work.","both","True of both. Who keeps control is what differs."]]},"p3-three":{"type":"three","rel":"judgement","q":"An AI agent pays suppliers’ invoices for a small business. Explain where a person should check its work.","marks":4,"answers":[["A person should check everything the AI does, because AI makes mistakes.",2,"One idea, and no rule for where. Checking everything sounds safe, but people soon stop reading approval requests they get all day."],["AI makes mistakes. Payments can’t be undone. Some invoices are large. People can spot fraud.",3,"Good points, listed. Turn them into a rule: which payments, and why those?"],["A person should approve payments that are large, go to a new supplier or look unusual, because those are the hardest mistakes to undo and the likeliest signs of fraud. Routine payments to known suppliers can go through with automatic checks, so the person gets few enough requests that they actually read them.",4,"Relational: a rule (risk, and whether it can be undone), the reason for it, and what it means for the rest."]],"why":"It sets a rule (how risky, and whether it can be undone) and uses it to decide where the person checks.","lesson":"Student {C} turns {B}’s list into a rule with a reason."},"p3-ladder":{"type":"ladder","rel":"judgement","q":"A company wants AI to draft and send replies to customer complaints. Justify the design you would recommend.","marks":4,"probe":"What could go wrong if a reply goes out with a mistake in it, and could it be undone?","hint":"Start simple: a workflow, not a team. Then put a check where a mistake would cost most.","model":"I’d use a simple workflow, not a team of agents: sort the complaint, draft a reply, then have an AI checker test it for tone, accuracy and promises the company can’t keep. A sent email can’t be unsent, and a wrong promise or a rude reply could damage trust, so a person should approve replies that offer refunds, mention legal action or are flagged by the checker. Routine replies can go automatically once the checks have proved reliable.","check":["make a clear recommendation?","give the risk that justifies it?","say when or where a person checks?"],"later":{"q":"A school wants AI to mark Year 7 spelling tests and to write end-of-year report comments. Would you use the same design for both? Why?","model":"No. Spelling marks are low-risk, quick to check and easy to correct, so automatic marking with spot checks is enough. Report comments go to families and are hard to take back, so the AI could draft them, but a teacher should read and approve every one."},"link":"Claim → the risk that justifies it → when a person checks"}};if(window.AIADNodes)AIADNodes.mountAll(NODES);})();
+</script>
+<script src="../shared/keypoints.js"></script>
+<script src="../shared/live-links.js"></script>
+</body></html>

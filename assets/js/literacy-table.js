@@ -2605,7 +2605,7 @@
 		} );
 	}
 
-	// "Suggest a new element": sent to aiad/v1/literacy-term (inc/literacy-table.php), which saves it for the team.
+	// "Suggest a new element": sent to aiad/v1/literacy-term (plugins/aiad-core/modules/literacy-term.php), which saves it for the team.
 	function initBuzzwordQuiz( root, elements, indexes, quiz ) {
 		var section = root.querySelector( '.alpt-quiz' );
 		if ( ! section ) return;

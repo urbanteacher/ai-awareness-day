@@ -5,9 +5,9 @@
  * Seeds a timeline post containing the launch blog article plus the embedded
  * benchmark tool ([ai_risk_benchmark], provided by the bundled plugin).
  *
- * Reference: import/ai-risk-benchmark-post-content.html
+ * Reference: archive/theme/import/ai-risk-benchmark-post-content.html (in the theme repository)
  *
- * @package AI_Awareness_Day
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -193,6 +193,13 @@ function aiad_create_risk_benchmark_timeline_entry(): int {
  * One-time seed: benchmark launch as a timeline entry (same pattern as buzzwords / NEU / Risk Academy).
  */
 function aiad_seed_risk_benchmark_timeline_entry(): void {
+	// Checked once per theme version, not on every request.
+	$stamp = defined( 'AIAD_VERSION' ) ? AIAD_VERSION : '1';
+	if ( get_option( 'aiad_risk_benchmark_timeline_checked' ) === $stamp ) {
+		return;
+	}
+	update_option( 'aiad_risk_benchmark_timeline_checked', $stamp, true );
+
 	$slug  = aiad_risk_benchmark_post_slug();
 	$title = aiad_risk_benchmark_get_headline();
 

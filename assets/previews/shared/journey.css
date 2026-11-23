@@ -1,0 +1,71 @@
+/* "You are here" journey map (shared/journey.js): the chapter strip becomes a sticky line with a travelling dot. */
+.chapter{scroll-margin-top:calc(var(--yah-h, 0px) + .8rem)!important}
+nav.route.yah{position:sticky;top:0;z-index:15;display:block;overflow:visible;margin:0 0 1.2rem;padding:.55rem 0 .45rem;background:var(--paper,#F6F4ED);border-bottom:1px solid transparent;transition:border-color .2s,box-shadow .2s}
+nav.route.yah.stuck{border-bottom-color:var(--rule,#C9C6BE);box-shadow:0 6px 14px -10px #0004}
+.yah-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;font-size:.78rem;margin-bottom:.2rem}
+.yah-head .k{font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim,#54504E)}
+.yah-head .now{font-weight:700;text-align:right}
+.yah-head .now b{color:var(--yd,#231F20)}
+.yah-scroll{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.yah-scroll::-webkit-scrollbar{display:none}
+.yah-track{position:relative;display:flex;min-width:100%;padding-top:20px}
+.yah-line,.yah-fill{position:absolute;top:29px;height:3px;border-radius:2px;pointer-events:none}
+.yah-line{background:var(--rule,#C9C6BE)}
+.yah-fill{background:var(--ink,#231F20);width:0}
+.yah-dot{position:absolute;top:21px;width:19px;height:19px;margin-left:-9.5px;border-radius:50%;background:var(--yc,#00BEDD);border:3px solid var(--ink,#231F20);box-shadow:0 0 0 3px var(--paper,#F6F4ED);pointer-events:none;z-index:2}
+.yah-dot b{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--ink,#231F20);color:var(--paper,#F6F4ED);padding:.08rem .35rem}
+.yah-dot.off{opacity:0}
+nav.route.yah a{flex:1 0 4.9rem;min-width:4.9rem;display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:0 .2rem .1rem;border:0;background:none;box-shadow:none;text-decoration:none;text-align:center;font-size:.74rem;line-height:1.15;color:var(--dim,#54504E);position:relative;z-index:1}
+nav.route.yah a::before{content:"";width:13px;height:13px;border-radius:50%;background:var(--paper,#F6F4ED);border:2.5px solid var(--rule,#C9C6BE);margin-top:3px;transition:background .2s,border-color .2s}
+nav.route.yah a b{font-size:.62rem;letter-spacing:.08em;color:inherit}
+nav.route.yah a.past{color:var(--ink,#231F20)}
+nav.route.yah a.past::before{background:var(--ink,#231F20);border-color:var(--ink,#231F20)}
+nav.route.yah a.here{color:var(--ink,#231F20);font-weight:800}
+nav.route.yah a.here::before{border-color:var(--ink,#231F20)}
+nav.route.yah a.seen{border:0;box-shadow:none}
+nav.route.yah a:hover{color:var(--ink,#231F20)}
+nav.route.yah a:focus-visible{outline:3px solid #005fcc;outline-offset:2px}
+@media(max-width:640px){
+ nav.route.yah a{flex-basis:3.4rem;min-width:3.4rem;font-size:0}
+ nav.route.yah a b{font-size:.62rem}
+ nav.route.yah a.here{font-size:.68rem}
+ nav.route.yah a.here b{display:none}
+}
+@media(prefers-reduced-motion:reduce){.yah-dot,.yah-fill{transition:none}}
+@media print{nav.route.yah{position:static;box-shadow:none}}
+
+/* Key points box at the top of each chapter (Bitesize-style summary) */
+.kp{background:#fff;border:1.5px solid var(--ink,#231F20);border-left:6px solid var(--c,#00BEDD);padding:.65rem .9rem .7rem;margin:-.2rem 0 1.2rem;max-width:62rem}
+.kp>b{display:block;font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--cd,#006A7D);margin-bottom:.25rem}
+.kp ul{margin:0;padding-left:1.1rem;display:grid;gap:.15rem;font-size:.95rem}
+@media print{.kp{break-inside:avoid}}
+
+/* Key points and story highlights linked to periodic table elements (shared/keypoints.js) */
+.kpel{display:inline-flex;align-items:center;gap:.28em;text-decoration:none;font-weight:700;white-space:nowrap}
+.kpel:hover{text-decoration:underline;text-underline-offset:3px}
+.kpel-t{display:inline-flex;align-items:baseline;gap:.12em;padding:.02em .3em;border:1.5px solid var(--ink,#231F20);background:var(--fam-bg,#EEE6FF);font-size:.78em;line-height:1.2;vertical-align:.08em;margin-right:.25em}
+.kpel-t b{font-weight:800;letter-spacing:-.02em}
+.kpel-t small{font-size:.75em;font-weight:700;opacity:.75}
+.kpel.chem .kpel-t,.kpel-em.chem .kpel-t{background:#f2efe6;font-family:Georgia,'Times New Roman',serif;color:#1f2b3a}
+[data-fam=foundations]{--fam-bg:#E3E8EF}[data-fam=generative]{--fam-bg:#EEE6FF}[data-fam=predictive]{--fam-bg:#DFE9FF}[data-fam=agents]{--fam-bg:#FFEDD5}[data-fam=automation]{--fam-bg:#D5F2EC}[data-fam=governance]{--fam-bg:#FFE1E7}[data-fam=infra]{--fam-bg:#E8F3D6}
+.kp-els{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .8rem;margin:.55rem 0 0;padding-top:.5rem;border-top:1px dashed var(--rule,#C9C6BE);font-size:.85rem}
+.kp-els>span:first-child{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim,#54504E);margin-right:.2rem}
+.kp-els .kpel{font-weight:650}
+a.kpel-em{text-decoration:none;color:inherit}
+a.kpel-em:hover em{text-decoration:underline;text-underline-offset:3px}
+.kpel-em em .kpel-t{font-style:normal}
+
+/* One column per chapter, in three stages: Explain → See it → Check it. Replaces the old two columns, which made
+   the eye jump between the story and the activity beside it (the split-attention effect). */
+.chapter>.kp,.stages{max-width:52rem}
+.stage{margin-top:clamp(1.8rem,3.4vw,2.6rem)}
+.stage:first-child{margin-top:1.4rem}
+.stage-l{display:flex;align-items:center;gap:.55rem;margin:0 0 .9rem;padding-top:.9rem;border-top:1.5px solid var(--rule,#C9C6BE);font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cd,var(--ink,#231F20))}
+.stage:first-child .stage-l{border-top:0;padding-top:0}
+.stage-l b{display:grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--c,#00BEDD);color:var(--ink,#231F20);font-size:.78rem;letter-spacing:0}
+.stage>.stage-l+*{margin-top:0!important}
+.stages>.found{margin-top:clamp(1.8rem,3.4vw,2.6rem)}
+/* Flow diagrams were drawn for the old side column: keep them at that size in the wider single column. */
+.stage .ff svg{max-width:36rem;margin-inline:auto}
+/* Defined terms in "What's really happening" link to their element too */
+a.kpel-em:hover strong{text-decoration:underline;text-underline-offset:3px}

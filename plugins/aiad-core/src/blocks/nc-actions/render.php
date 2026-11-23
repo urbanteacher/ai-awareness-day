@@ -13,6 +13,14 @@
  * @var array $attributes Block attributes.
  */
 
+// This block prints the AI Awareness Day theme's markup with the theme's own functions; under another theme it
+// prints nothing rather than stopping the page with a fatal error.
+foreach ( array( 'aiad_portal_is_live', 'aiad_conversation_url', 'aiad_national_conversation_dates' ) as $aiad_theme_fn ) {
+	if ( ! function_exists( $aiad_theme_fn ) ) {
+		return;
+	}
+}
+
 $aiad_portal_live  = aiad_portal_is_live();
 $aiad_register_url = $aiad_portal_live ? ( aiad_conversation_url( 'register' ) ?: home_url( '/#contact' ) ) : '';
 $aiad_sign_in_url  = $aiad_portal_live ? aiad_conversation_url( 'join' ) : '';

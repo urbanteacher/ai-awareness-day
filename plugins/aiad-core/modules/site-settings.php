@@ -322,7 +322,7 @@ function aiad_site_reconcile_social(): void {
 		update_option( 'aiad_seo', $seo );
 	}
 	// The values SEO had that the footer's replaced, with the time. Empty when the two already agreed.
-	add_option( 'aiad_social_reconciled', array( 'at' => gmdate( 'c' ), 'previous_seo' => $replaced ), '', false );
+	add_option( 'aiad_social_reconciled', array( 'at' => gmdate( 'c' ), 'previous_seo' => $replaced ), '', true );
 }
 add_action( 'init', 'aiad_site_reconcile_social', 20 );
 

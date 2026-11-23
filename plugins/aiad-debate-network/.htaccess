@@ -1,0 +1,2 @@
+# The theme copies this plugin into wp-content/plugins, where the theme's own .htaccess does not reach.
+Options -Indexes

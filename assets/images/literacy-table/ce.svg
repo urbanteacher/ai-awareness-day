@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Context Engineering: documents, rules, examples and the task packed together for the AI, not one prompt. Arrows: tools/literacy-arrows/specs/ce.json -->
+  <!-- Context Engineering: documents, rules, examples and the task packed together for the AI, not one prompt. Arrows: scripts/literacy-arrows/specs/ce.json -->
   <defs><marker id="alpt-arr-ce-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="104" y="56">Everything it needs</text>

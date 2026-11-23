@@ -10,6 +10,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_aims = array(
 	__( 'Help young people keep humans in the loop — knowing when to trust AI, when to check it, and when to decide without it.', 'ai-awareness-day' ),

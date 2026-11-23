@@ -5,6 +5,10 @@
  * @package AI_Awareness_Day
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Start the singular query again when rendering inside the block template canvas.
 rewind_posts();
 

@@ -68,7 +68,7 @@ function aiad_maybe_flush_event_rewrite_rules(): void {
         return;
     }
     flush_rewrite_rules( false );
-    update_option( 'aiad_event_rewrite_version', $rewrite_version, false );
+    update_option( 'aiad_event_rewrite_version', $rewrite_version, true );
 }
 add_action( 'init', 'aiad_maybe_flush_event_rewrite_rules', 99 );
 

@@ -11,6 +11,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_title    = aiad_homepage_field_fallback( 'aiad_handpicked_resources_title', __( 'Handpicked Quality Resources', 'ai-awareness-day' ) );
 $aiad_desc     = aiad_homepage_field_fallback( 'aiad_handpicked_resources_desc', __( 'A curated selection of interactive AI games and learning tools from trusted organisations.', 'ai-awareness-day' ) );

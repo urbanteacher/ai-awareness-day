@@ -62,9 +62,10 @@ class AIRB_Defaults {
 			return array();
 		}
 
-		$archive_file = ( defined( 'AIRB_ARCHIVE_DIR' ) ? AIRB_ARCHIVE_DIR : AIRB_PLUGIN_DIR . 'archive/' ) . 'includes/data/' . $map[ $role ];
-		$legacy_file  = AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
-		$tier_file    = is_readable( $archive_file ) ? $archive_file : $legacy_file;
+		// The PHP tier files hold strength_tiers, domain_descriptions and the other flat keys; the JSON overlay below
+		// replaces only copy_tiers and focus_tiers. They must ship with the plugin (1.59.1: they had moved to the repo's
+		// archive/, which the plugin copy in wp-content/plugins cannot reach, so results lost that wording).
+		$tier_file = AIRB_PLUGIN_DIR . 'includes/data/' . $map[ $role ];
 
 		if ( ! class_exists( 'AIRB_Copy_Tiers', false ) || ! AIRB_Copy_Tiers::use_json_copy() ) {
 			if ( ! is_readable( $tier_file ) ) {

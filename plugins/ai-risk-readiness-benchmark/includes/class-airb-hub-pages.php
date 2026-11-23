@@ -153,7 +153,7 @@ class AIRB_Hub_Pages {
 			self::ensure_page( (array) $page );
 		}
 
-		update_option( self::OPTION, 'yes', false );
+		update_option( self::OPTION, 'yes', true );
 		self::maybe_remove_embedded_benchmark();
 		self::maybe_upgrade_intervention_content();
 		self::maybe_fix_hub_contact_cta_links();
@@ -203,7 +203,7 @@ class AIRB_Hub_Pages {
 			);
 		}
 
-		update_option( self::PATCH_NO_BENCHMARK, 'yes', false );
+		update_option( self::PATCH_NO_BENCHMARK, 'yes', true );
 	}
 
 	/**
@@ -249,7 +249,7 @@ class AIRB_Hub_Pages {
 			);
 		}
 
-		update_option( self::PATCH_INTERVENTION, 'yes', false );
+		update_option( self::PATCH_INTERVENTION, 'yes', true );
 	}
 
 	/**
@@ -297,7 +297,7 @@ class AIRB_Hub_Pages {
 			);
 		}
 
-		update_option( self::PATCH_HUB_CONTACT_CTA, 'yes', false );
+		update_option( self::PATCH_HUB_CONTACT_CTA, 'yes', true );
 	}
 
 	/**
@@ -343,7 +343,7 @@ class AIRB_Hub_Pages {
 			);
 		}
 
-		update_option( self::PATCH_HUB_INTEREST_HASH, 'yes', false );
+		update_option( self::PATCH_HUB_INTEREST_HASH, 'yes', true );
 	}
 
 	/**

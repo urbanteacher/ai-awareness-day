@@ -308,3 +308,12 @@ function aiad_register_contact_rest_route(): void {
     );
 }
 add_action( 'rest_api_init', 'aiad_register_contact_rest_route' );
+
+/**
+ * The Get Involved form's script module. The form is on the front page and wherever the Get Involved form block is
+ * used; the script checks for the form, so it is queued on every page. Moved from the theme's inc/setup.php.
+ */
+function aiad_enqueue_contact_form_module(): void {
+	wp_enqueue_script_module( 'aiad/contact-form', aiad_core_url( 'assets/js/contact-form.js' ), array( 'aiad/rest' ), aiad_core_asset_version( 'assets/js/contact-form.js' ) );
+}
+add_action( 'wp_enqueue_scripts', 'aiad_enqueue_contact_form_module' );

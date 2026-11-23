@@ -10,6 +10,14 @@
  * @var array $attributes Block attributes.
  */
 
+// This block prints the AI Awareness Day theme's markup with the theme's own functions; under another theme it
+// prints nothing rather than stopping the page with a fatal error.
+foreach ( array( 'aiad_principle_cards', 'aiad_principle_card_wording', 'aiad_strand_icon_uri', 'aiad_get_logo_image_url', 'aiad_get_literacy_logo_attachment_id' ) as $aiad_theme_fn ) {
+	if ( ! function_exists( $aiad_theme_fn ) ) {
+		return;
+	}
+}
+
 if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }

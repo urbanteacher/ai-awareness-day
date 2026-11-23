@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Virtual Assistant: a pupil asks a chat assistant to move their club to Tuesday and it moves the club in the calendar. Arrows: tools/literacy-arrows/specs/va.json -->
+  <!-- Virtual Assistant: a pupil asks a chat assistant to move their club to Tuesday and it moves the club in the calendar. Arrows: scripts/literacy-arrows/specs/va.json -->
   <defs><marker id="alpt-arr-va-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <rect class="i-paper" x="16" y="96" width="152" height="220" rx="16"/><rect class="i-line" x="16" y="96" width="152" height="220" rx="16"/>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Context Engineering: documents, rules, examples and the task packed together for the AI, not one prompt. Arrows: scripts/literacy-arrows/specs/ce.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="104" y="56">Everything it needs</text>
+  <path class="i-line" d="M104 68 H252" stroke-opacity=".45"/>
+  <rect class="i-paper" x="16" y="94" width="194" height="220" rx="10"/>
+  <path class="i-line" d="M115 94 V314 M16 204 H210"/>
+  <rect class="i-deepline" x="16" y="94" width="194" height="220" rx="10" style="stroke-width:5"/>
+  <rect class="i-cream" x="38" y="108" width="40" height="50" rx="3"/><rect class="i-line" x="38" y="108" width="40" height="50" rx="3"/>
+  <rect class="i-paper" x="50" y="116" width="40" height="50" rx="3"/><rect class="i-line" x="50" y="116" width="40" height="50" rx="3"/>
+  <path class="i-line" d="M58 130 H82 M58 140 H82 M58 150 H74"/>
+  <text class="t-s" x="65" y="192" text-anchor="middle">Docs</text>
+  <path class="i-deepline" d="M132 118 l5 6 9 -11 M132 138 l5 6 9 -11 M132 158 l5 6 9 -11"/>
+  <path class="i-line" d="M154 120 H190 M154 140 H186 M154 160 H190"/>
+  <text class="t-s" x="162" y="192" text-anchor="middle">Rules</text>
+  <rect class="i-cream" x="32" y="220" width="32" height="40" rx="3"/><rect class="i-line" x="32" y="220" width="32" height="40" rx="3"/>
+  <rect class="i-cream" x="70" y="220" width="32" height="40" rx="3"/><rect class="i-line" x="70" y="220" width="32" height="40" rx="3"/>
+  <path class="i-line" d="M39 232 H57 M39 242 H53 M77 232 H95 M77 242 H91"/>
+  <text class="t-s" x="65" y="296" text-anchor="middle">Examples</text>
+  <rect class="i-deep" x="138" y="218" width="48" height="40" rx="10"/><path class="i-deep" d="M146 256 L142 270 L158 256 Z"/>
+  <text class="t-m t-w" x="162" y="246" text-anchor="middle">?</text>
+  <text class="t-s" x="162" y="296" text-anchor="middle">Task</text>
+  <path class="i-deep" d="M252 183 h30 l12 12 v30 h-42 Z"/><rect class="i-paper" x="258" y="195" width="30" height="18" rx="5"/><circle class="i-ink" cx="268" cy="204" r="3"/><circle class="i-ink" cx="278" cy="204" r="3"/>
+  <text class="t-s" x="273" y="248" text-anchor="middle">AI</text>
+</svg>

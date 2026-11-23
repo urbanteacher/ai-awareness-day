@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Supervised Learning: examples come with the right answer, then the model labels a new one. Arrows: scripts/literacy-arrows/specs/su.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <text class="t-s" x="186" y="50" text-anchor="middle">Labelled examples</text>
+  <rect class="i-paper" x="40" y="84" width="104" height="110" rx="6"/><rect class="i-line" x="40" y="84" width="104" height="110" rx="6"/>
+  <g transform="translate(8 0)">
+  <circle class="i-deep" cx="84" cy="128" r="22"/>
+  <path class="i-line" d="M84 104 V96"/>
+  <path class="i-cream" d="M86 102 C92 90 104 92 106 94 C102 104 92 106 86 102 Z"/><path class="i-line" d="M86 102 C92 90 104 92 106 94 C102 104 92 106 86 102 Z"/>
+  <rect class="i-deep" x="44" y="160" width="80" height="24" rx="12"/>
+  <text class="t-s t-w" x="84" y="177" text-anchor="middle">apple</text>
+  </g>
+  <rect class="i-paper" x="156" y="84" width="104" height="110" rx="6"/><rect class="i-line" x="156" y="84" width="104" height="110" rx="6"/>
+  <g transform="translate(-8 0)">
+  <path class="i-cream" d="M184 106 C188 142 222 154 252 134 C230 142 204 132 196 104 Z"/><path class="i-line" d="M184 106 C188 142 222 154 252 134 C230 142 204 132 196 104 Z"/>
+  <path class="i-line" d="M188 106 L186 98"/>
+  <rect class="i-deep" x="176" y="160" width="80" height="24" rx="12"/>
+  <text class="t-s t-w" x="216" y="177" text-anchor="middle">banana</text>
+  </g>
+  <path class="i-deep" d="M120 246 H166 L180 260 V300 H120 Z"/>
+  <text class="t-m t-w" x="150" y="281" text-anchor="middle">AI</text>
+  <rect class="i-paper" x="18" y="238" width="66" height="70" rx="6"/><rect class="i-line i-dash" x="18" y="238" width="66" height="70" rx="6"/>
+  <circle class="i-deep" cx="45" cy="276" r="17"/><path class="i-line" d="M45 259 V251"/>
+  <text class="t-s" x="72" y="260" text-anchor="middle">?</text>
+  <rect class="i-accent" x="214" y="255" width="72" height="36" rx="18"/>
+  <text class="t-s" x="250" y="279" text-anchor="middle">apple ✓</text>
+</svg>

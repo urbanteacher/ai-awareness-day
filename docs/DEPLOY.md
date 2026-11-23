@@ -23,7 +23,7 @@ nothing else; the theme then installs its plugins itself the first time WordPres
    - aiad-core converts shortcodes in existing content to blocks, saving each post's old content first: as a revision
      (so revisions must not be switched off: `WP_POST_REVISIONS` is not `false` in `wp-config.php`), or in the
      `_aiad_pre_block_content` field for a post type without revisions (the timeline).
-   - The theme's version (`AIAD_VERSION`, 1.6.0) changed, so permalink rules are flushed once on the first request: routes
+   - The theme's version (`AIAD_VERSION`, 1.7.0) changed, so permalink rules are flushed once on the first request: the `/courses/` and `/challenges/` addresses (`inc/courses.php`) start working, and routes
      removed in this release (`/national-conversation/` was a virtual route) no longer redirect to the homepage. Bump the
      version with any change to post types or routes.
    - The settings the Customizer held are copied to `aiad_site`, `aiad_campaign` and `aiad_seo`. The Customizer values stay.
@@ -43,7 +43,7 @@ nothing else; the theme then installs its plugins itself the first time WordPres
 
 ## After the push
 
-- [ ] `/` shows the block homepage, `/national-conversation/`, `/walkthrough/` and `/ai-literacy-periodic-table/` answer 200, the Assets Pack and
+- [ ] `/courses/` opens the hub, and `/courses/sand-to-sentence/` loads with its animations working. `/` shows the block homepage, `/national-conversation/`, `/walkthrough/` and `/ai-literacy-periodic-table/` answer 200, the Assets Pack and
       Press Release pages show their blocks, the footer links work.
 - [ ] Plugins page: AI Awareness Day Core, the Benchmark and the Debate Network are active.
 - [ ] Contact form, benchmark report email (needs a real sender domain) and the school dashboard lookup.

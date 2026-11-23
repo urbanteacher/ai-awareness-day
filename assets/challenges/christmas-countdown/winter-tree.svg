@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="none">
+<defs><pattern id="snow" width="43" height="37" patternUnits="userSpaceOnUse"><circle cx="9" cy="8" r="1.8" fill="#efe7cf"/><circle cx="31" cy="23" r=".9" fill="#fff"/></pattern></defs>
+<rect width="400" height="400" fill="#254553"/><rect width="400" height="400" fill="url(#snow)"/>
+<circle cx="325" cy="67" r="26" fill="#ffdc8b"/>
+<path d="M0 303Q80 270 180 311T400 282V400H0Z" fill="#bfd5cd"/>
+<path d="M0 335Q102 292 218 321T400 314V400H0Z" fill="#f8efda"/>
+<path d="M185 300h29v61h-29z" fill="#794a32"/>
+<path d="M200 35 137 138h27l-65 79h39l-77 91q132 39 278 0l-77-91h39l-65-79h27Z" fill="#196547" stroke="#133c32" stroke-width="4"/>
+<path d="M149 140q42 19 98 3M121 211q80 35 154 1M92 284q104 39 216 0" fill="none" stroke="#eac66d" stroke-width="4"/>
+<path d="m200 13 6 15 17 1-13 11 4 16-14-9-14 9 4-16-13-11 17-1Z" fill="#ffdb74"/>
+<g transform="translate(200 111)"><circle r="17" fill="#143d32" stroke="#dfbd71"/><path transform="translate(-12 -12)" fill="#FF7038" d="M12 2 A7 7 0 0 0 8 14.8 V17 h8 v-2.2 A7 7 0 0 0 12 2 Z M9 18.6 h6 v1.6 h-6 Z M10 21.2 h4 v1.4 h-4 Z"/></g><g transform="translate(158 178)"><circle r="17" fill="#143d32" stroke="#dfbd71"/><path transform="translate(-12 -12)" fill="#00BEDD" d="M12 2 L21 6 V12 C21 16.8 17 20.6 12 22 C7 20.6 3 16.8 3 12 V6 Z"/></g><g transform="translate(239 188)"><circle r="17" fill="#143d32" stroke="#dfbd71"/><path transform="translate(-12 -12)" fill="#FA83EB" d="M3 21 C3 14 8 12 12 12 C16 12 18 10 18 6 h-3.4 L19.6 1 L24 6 h-3.4 c0 6-4 8-8.6 8 C8.4 14 5.6 15.6 5.4 21 Z"/></g><g transform="translate(113 257)"><circle r="17" fill="#143d32" stroke="#dfbd71"/><path transform="translate(-12 -12)" fill="#AC91FF" d="M12 1 L14.4 8.6 L22 11 L14.4 13.4 L12 21 L9.6 13.4 L2 11 L9.6 8.6 Z"/></g><g transform="translate(274 264)"><circle r="17" fill="#143d32" stroke="#dfbd71"/><path transform="translate(-12 -12)" fill="#63DF93" d="M11 2 h2 v3.2 h6.4 v1.8 H13 V20 h5 v2 H6 v-2 h5 V7 H4.6 V5.2 H11 Z M4.6 8.4 L1.4 15 h6.4 Z M19.4 8.4 L16.2 15 h6.4 Z"/></g><path fill="#9e2940" d="M115 338h44v34h-44zm133 1h38v26h-38z"/><path fill="#e4b857" d="M133 338h7v34h-7zm130 1h6v26h-6z"/></svg>

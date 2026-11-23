@@ -26,12 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_rest_timeline_feed( WP_REST_Request $request ): WP_REST_Response {
 	$filter = (string) $request->get_param( 'filter' );
 
+	// The cards' markup comes from the theme (inc/timeline-layouts.php); under another theme the feed is empty, not a fatal error.
 	if ( $request->get_param( 'archive' ) ) {
 		$result = aiad_get_timeline_archive_entries( 1, $filter );
-		$html   = aiad_render_timeline_archive_feed( $result['entries'] );
+		$html   = function_exists( 'aiad_render_timeline_archive_feed' ) ? aiad_render_timeline_archive_feed( $result['entries'] ) : '';
 	} else {
 		$result = aiad_get_timeline_entries( aiad_timeline_feed_per_page(), 0, $filter );
-		$html   = aiad_render_timeline_feed_layouts( $result['entries'] );
+		$html   = function_exists( 'aiad_render_timeline_feed_layouts' ) ? aiad_render_timeline_feed_layouts( $result['entries'] ) : '';
 	}
 
 	return new WP_REST_Response(

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
+  <!-- Alignment: asked for top marks, the AI aims at what the person really wants (learning), not the shortcut of copying. Arrows: scripts/literacy-arrows/specs/an.json -->
+  <rect class="i-bg" width="300" height="330"/>
+  <rect class="i-paper" x="104" y="20" width="140" height="62" rx="12"/><rect class="i-line" x="104" y="20" width="140" height="62" rx="12"/>
+  <path class="i-paper" d="M116 80 L84 100 L134 80 Z"/><path class="i-line" d="M116 82 L84 100 L132 82"/>
+  <text class="t-s" x="174" y="46" text-anchor="middle">Get me</text>
+  <text class="t-s" x="174" y="68" text-anchor="middle">top marks!</text>
+  <circle class="i-cream" cx="52" cy="108" r="14"/><circle class="i-line" cx="52" cy="108" r="14"/>
+  <path class="i-line" d="M30 142 C30 124 74 124 74 142"/>
+  <g class="i-faint">
+    <circle class="i-line i-dash" cx="36" cy="214" r="26"/><circle class="i-line i-dash" cx="36" cy="214" r="13"/>
+  </g>
+  <text class="t-s" x="36" y="276" text-anchor="middle">Copy ✗</text>
+  <path class="i-deep" d="M108 190 H152 L164 202 V238 H108 Z"/>
+  <rect class="i-paper" x="118" y="202" width="32" height="22" rx="5"/>
+  <circle class="i-ink" cx="128" cy="213" r="3.2"/><circle class="i-ink" cx="140" cy="213" r="3.2"/>
+  <circle class="i-paper" cx="250" cy="214" r="40"/><circle class="i-deepline" cx="250" cy="214" r="40"/>
+  <circle class="i-deep" cx="250" cy="214" r="27"/><circle class="i-paper" cx="250" cy="214" r="14"/>
+  <circle class="i-accent" cx="250" cy="214" r="7"/>
+  <text class="t-s t-d" x="250" y="276" text-anchor="middle">Learn ✓</text>
+</svg>

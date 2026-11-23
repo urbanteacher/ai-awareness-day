@@ -1,0 +1,12 @@
+# The theme copies this plugin into wp-content/plugins, where the theme's own .htaccess does not reach, so the plugin
+# keeps its development files off the web itself: tools/ (command-line checks and exports) and notes.
+Options -Indexes
+RedirectMatch 403 /ai-risk-readiness-benchmark/tools(/.*)?$
+<FilesMatch "\.(md|sh)$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Deny from all
+	</IfModule>
+</FilesMatch>

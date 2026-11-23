@@ -148,3 +148,12 @@ function aiad_register_tracking_rest_routes(): void {
 	);
 }
 add_action( 'rest_api_init', 'aiad_register_tracking_rest_routes' );
+
+/**
+ * The script module that sends view and download counts to the routes above, on every front-end page. Moved from the
+ * theme's inc/setup.php.
+ */
+function aiad_enqueue_tracking_module(): void {
+	wp_enqueue_script_module( 'aiad/tracking', aiad_core_url( 'assets/js/tracking.js' ), array( 'aiad/rest' ), aiad_core_asset_version( 'assets/js/tracking.js' ) );
+}
+add_action( 'wp_enqueue_scripts', 'aiad_enqueue_tracking_module' );

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Inference: training (a lot of energy, once) is finished; now the model is used on a new photo and answers bird, 92 per cent sure but able to be wrong, using a little energy every time. Arrows: tools/literacy-arrows/specs/if.json -->
+  <!-- Inference: training (a lot of energy, once) is finished; now the model is used on a new photo and answers bird, 92 per cent sure but able to be wrong, using a little energy every time. Arrows: scripts/literacy-arrows/specs/if.json -->
   <defs><marker id="alpt-arr-if" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-if-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <g transform="translate(-10 0)"><rect class="i-paper" x="120" y="20" width="60" height="52" rx="4"/><rect class="i-line" x="120" y="20" width="60" height="52" rx="4"/>

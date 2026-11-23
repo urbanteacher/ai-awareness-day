@@ -445,7 +445,7 @@ function aiad_maybe_convert_theme_pages(): void {
 	}
 	delete_option( 'aiad_theme_pages_conversion_error' );
 	update_option( 'aiad_theme_pages_converted', gmdate( 'c' ), false );
-	update_option( 'aiad_theme_pages_done', array_keys( aiad_editable_pages() ), false );
+	update_option( 'aiad_theme_pages_done', array_keys( aiad_editable_pages() ), true );
 	delete_option( 'aiad_theme_pages_converting' );
 }
 // After the Assets Pack page is ensured (priority 20) and the homepage is converted (30).

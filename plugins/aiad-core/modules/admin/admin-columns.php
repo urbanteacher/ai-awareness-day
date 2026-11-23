@@ -573,9 +573,9 @@ function aiad_partner_quick_edit_js( string $hook ): void {
     }
     wp_enqueue_script(
         'aiad-admin-partner-quick-edit',
-        AIAD_URI . '/assets/js/admin-partner-quick-edit.js',
+        aiad_core_url( 'assets/js/admin/admin-partner-quick-edit.js' ),
         array( 'inline-edit-post' ),
-        AIAD_VERSION,
+        aiad_core_asset_version( 'assets/js/admin/admin-partner-quick-edit.js' ),
         true
     );
 }

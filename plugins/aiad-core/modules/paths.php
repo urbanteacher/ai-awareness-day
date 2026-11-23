@@ -35,3 +35,14 @@ function aiad_core_url( string $relative = '' ): string {
 		: plugins_url( '', __DIR__ );
 	return trailingslashit( $base ) . ltrim( $relative, '/' );
 }
+
+/**
+ * Version string for a file in this plugin, from its modified time, so browsers fetch it again whenever it changes.
+ */
+function aiad_core_asset_version( string $relative ): string {
+	$file = aiad_core_path( $relative );
+	if ( file_exists( $file ) ) {
+		return (string) filemtime( $file );
+	}
+	return defined( 'AIAD_CORE_VERSION' ) ? AIAD_CORE_VERSION : '1';
+}

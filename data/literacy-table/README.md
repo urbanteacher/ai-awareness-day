@@ -111,7 +111,7 @@ Every file starts with the same three fields:
 
 ## History
 
-Until November 2026 this content was PHP arrays in `inc/literacy-table.php`. `tools/literacy-table-export.php` wrote it out to these files once and is kept for the record. Don't run it again, because it would read the new JSON-based functions.
+Until November 2026 this content was PHP arrays in `inc/literacy-table.php`. `scripts/literacy-table-export.php` wrote it out to these files once and is kept for the record. Don't run it again, because it would read the new JSON-based functions.
 
 ## Pictures
 
@@ -128,5 +128,5 @@ How to draw one (copy an existing file to start):
 - Show the idea happening, not an icon for it. Up to about six short labels.
 - No photographs, and no faces or anything that could look like a real person.
 - Don't draw arrows by hand. List the boxes and which side each arrow leaves and enters in
-  `tools/literacy-arrows/specs/{symbol}.json`, and `tools/literacy-arrows/apply.py` draws the arrows and checks them
-  for clashes (see `tools/literacy-arrows/README.md`).
+  `scripts/literacy-arrows/specs/{symbol}.json`, and `scripts/literacy-arrows/apply.py` draws the arrows and checks them
+  for clashes (see `scripts/literacy-arrows/README.md`).

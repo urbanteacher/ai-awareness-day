@@ -8,6 +8,10 @@
  *
  * @package AI_Awareness_Day
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 return array(
 	'ai-awareness-day-newsletter-september-2026' => array( 'id' => 977, 'topics' => array( 'campaign-news' ) ), // AI Awareness Day Newsletter — September 2026

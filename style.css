@@ -3,8 +3,8 @@ Theme Name: AI Awareness Day
 Theme URI: https://aiawarenessday.org
 Author: AI Awareness Day Team
 Author URI: https://aiawarenessday.org
-Description: A modern, minimal block theme for AI Awareness Day — a nationwide campaign for schools, students, and parents to explore AI through activities and discussions. Pages, posts, archives, the homepage, header and footer are edited in the block editor and the Site Editor; the data-heavy templates (resources, partners, live sessions, the timeline, National Conversation) stay PHP. Some settings are still in the Customizer.
-Version: 1.6.0
+Description: A modern, minimal block theme for AI Awareness Day — a nationwide campaign for schools, students, and parents to explore AI through activities and discussions. Pages, posts, archives, the homepage, header and footer are edited in the block editor and the Site Editor; every template is a block template, and the data-heavy parts render through the AI Awareness Day Core plugin's blocks. Some settings are still in the Customizer.
+Version: 1.7.0
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.0
@@ -15,5 +15,5 @@ Tags: one-column, custom-menu, featured-images, theme-options, education, block-
 
 NOTE: This theme has migrated to a modular CSS architecture.
 All styles live in /assets/css/ (modular files are canonical).
-Keep Version above in sync with AIAD_VERSION in functions.php.
+Keep Version above in sync with AIAD_VERSION in inc/bootstrap.php.
 */

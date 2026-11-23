@@ -512,9 +512,10 @@ function aiad_timeline_maybe_create_countdown_entries(): void
 function aiad_timeline_clear_countdown_cron(): void
 {
     $timestamp = wp_next_scheduled('aiad_timeline_countdown_daily');
-    if ($timestamp) {
-        wp_unschedule_event($timestamp, 'aiad_timeline_countdown_daily');
+    if (! $timestamp) {
+        return; // Nothing scheduled (the cron list is already in memory, so this check costs no query).
     }
+    wp_unschedule_event($timestamp, 'aiad_timeline_countdown_daily');
     wp_clear_scheduled_hook('aiad_timeline_countdown_daily');
     delete_transient('aiad_timeline_cron_scheduled');
 }

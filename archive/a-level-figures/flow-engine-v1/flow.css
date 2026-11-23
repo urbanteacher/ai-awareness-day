@@ -1,0 +1,111 @@
+/* AIAD animated flow diagrams (shared/flow.js). Colours follow the chapter's --c and --cd. */
+.ff{margin:1.2rem 0 0;background:#fff;border:1.5px solid var(--ink,#231F20);padding:clamp(.9rem,2.2vw,1.3rem)}
+.ff-title{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:.6rem}
+.ff-title .eyebrow{display:block;color:var(--cd,#006A7D);margin-bottom:.25rem}
+.ff svg{width:100%;height:auto;display:block;background:#fbfaf6;border:1px solid var(--rule,#C9C6BE)}
+.ff svg text{font-family:inherit;font-size:11px;font-weight:700;fill:#231F20}
+.ff marker path{fill:#231F20}
+.ff-zone rect{fill:#fff;stroke:#9e9789;stroke-width:1;stroke-dasharray:3 3}
+.ff-zone text{font-size:8.5px!important;font-weight:800!important;letter-spacing:.06em;text-transform:uppercase;fill:#54504E!important}
+.ff-e path{fill:none;stroke:#231F20;stroke-width:1.15;transition:stroke .25s,stroke-width .25s}
+.ff-e .ff-l{font-size:9.5px;fill:#54504E;paint-order:stroke;stroke:#fbfaf6;stroke-width:4px}
+.ff-e.live path{stroke:var(--cd,#231F20);stroke-width:1.8;stroke-dasharray:6 4;animation:ffMarch .5s linear infinite}
+.ff-e.done path{stroke-width:1.4}
+@keyframes ffMarch{to{stroke-dashoffset:-10}}
+.ff-n rect{stroke:#231F20;stroke-width:1.6;fill:#fff;transition:stroke-width .25s,filter .25s}
+.ff-m rect{fill:color-mix(in srgb,var(--c,#00BEDD) 50%,#fff)}
+.ff-h rect{fill:#FFE7A3}
+.ff-io rect{fill:#EAE7DF}
+.ff-x rect{stroke-dasharray:3 3}
+.ff-s rect{fill:#F1EEE6}.ff-lid{fill:none;stroke:#231F20;stroke-width:1.2}
+.ff-bad rect{fill:#FDE8E8;stroke:#A32D2D}
+.ff-ok rect{fill:#E3F8EB;stroke:#176E3B}
+.ff-n.on rect{stroke-width:2.8;filter:drop-shadow(0 0 4px var(--c,#00BEDD))}
+.ff-bad.on rect{filter:drop-shadow(0 0 5px #A32D2D)}
+.ff .ghost{opacity:.12}
+.ff-e,.ff-n{transition:opacity .35s}
+.ff-dot{fill:var(--cd,#231F20);stroke:#fff;stroke-width:2}
+.ff-ctl{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 .5rem}
+.ff-ctl button{min-height:40px;padding:.3rem .8rem;border:1.5px solid var(--ink,#231F20);background:#fff;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer}
+.ff-ctl button.pri{background:var(--ink,#231F20);color:var(--paper,#F6F4ED)}
+.ff-ctl button:disabled{opacity:.5;cursor:default}
+.ff-say{min-height:3em;font-size:.93rem;border-left:4px solid var(--c,#00BEDD);background:#fbfaf6;padding:.45rem .65rem;margin:0}
+.ff-pred{background:#FFF7D6;border:1.5px solid var(--ink,#231F20);border-left:8px solid #E6AA27;padding:.8rem .9rem;margin-bottom:.8rem}
+.ff-pred.is-right{border-left-color:#176E3B;background:#EEF9F1}
+.ff-pred.is-wrong{border-left-color:#A32D2D}
+.ff-pred-k{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7A5A10;margin:0 0 .25rem}
+.ff-pred.is-right .ff-pred-k{color:#176E3B}
+.ff-pred-q{font-weight:750;font-size:1.02rem;line-height:1.3;margin:0 0 .6rem}
+.ff-pred-opts{display:grid;gap:.35rem;counter-reset:po}
+.ff-pred-opts button{counter-increment:po;display:flex;align-items:center;gap:.6rem;text-align:left;min-height:44px;padding:.45rem .65rem;background:#fff;border:1.5px solid #a9a397;font:inherit;font-size:.92rem;cursor:pointer}
+.ff-pred-opts button::before{content:counter(po,upper-alpha);flex:none;display:grid;place-items:center;width:1.5rem;height:1.5rem;background:#F0ECE3;font-weight:800;font-size:.75rem}
+.ff-pred-opts button:hover:enabled{border-color:var(--ink,#231F20)}
+.ff-pred-opts button:disabled{cursor:default;opacity:.7}
+.ff-pred-opts button.chosen{opacity:1;border-color:var(--ink,#231F20);background:#FFEFB3}
+.ff-pred-opts button.right{opacity:1;border-color:#176E3B;background:#DDF5E5}
+.ff-pred-opts button.wrong{opacity:1;border-color:#A32D2D;background:#FDE8E8}
+.ff-pred-res:not(:empty){margin:.6rem 0 0;font-size:.93rem}
+.ff-pred-skip{margin-top:.55rem;background:none;border:0;padding:.2rem 0;font:inherit;font-size:.82rem;text-decoration:underline;text-underline-offset:3px;color:var(--dim,#54504E);cursor:pointer;min-height:32px}
+.ff-ctl .ff-pzb{border-style:dashed}
+.ff-ctl .ff-pzb.pri{border-style:solid}
+.ff-pz{margin-top:.7rem}
+.ff-pz-done{margin:0 0 .6rem;padding:0;list-style:none;counter-reset:pz;display:grid;gap:.3rem}
+.ff-pz-done li{counter-increment:pz;display:grid;grid-template-columns:1.7rem 1fr;gap:.5rem;align-items:start;font-size:.88rem;padding:.4rem .55rem;background:color-mix(in srgb,var(--c,#00BEDD) 18%,#fff);border-left:4px solid var(--cd,#231F20);animation:ffIn .35s ease-out}
+.ff-pz-done li::before{content:counter(pz);display:grid;place-items:center;width:1.5rem;height:1.5rem;background:var(--ink,#231F20);color:var(--paper,#F6F4ED);font-weight:800;font-size:.75rem;border-radius:50%}
+.ff-pz-k{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim,#54504E);margin:.2rem 0 .35rem}
+.ff-pz-cards{display:grid;gap:.4rem}
+.ff-card{display:block;width:100%;text-align:left;min-height:44px;padding:.55rem .7rem;font:inherit;font-size:.9rem;line-height:1.35;background:#fff;border:1.5px solid var(--ink,#231F20);cursor:pointer;transition:transform .12s,background .12s}
+.ff-card:hover{background:#fbfaf6;transform:translateX(3px)}
+.ff-card.no{border-color:#A32D2D;background:#FDE8E8;animation:ffShake .4s}
+@keyframes ffShake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes ffIn{from{opacity:0;transform:translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){.ff-e.live path{animation:none}.ff-card.no,.ff-pz-done li{animation:none}}
+
+/* Icons in the text: a small shape matching the diagram box, before the word that names it */
+.gw{white-space:nowrap;border-bottom:1.5px dotted currentColor;cursor:default}
+.gw:hover{background:color-mix(in srgb,var(--c,#00BEDD) 22%,transparent)}
+.g{display:inline-block;width:.78em;height:.62em;margin:0 .22em 0 .05em;vertical-align:.02em;border:1.5px solid #231F20;border-radius:2px;background:#fff}
+.g-m{background:color-mix(in srgb,var(--c,#00BEDD) 50%,#fff)}
+.g-h{background:#FFE7A3;border-radius:.4em}
+.g-io{background:#EAE7DF;border-radius:.4em}
+.g-x{border-style:dashed}
+.g-s{background:#F1EEE6;box-shadow:inset 0 .14em 0 -.05em #231F20}
+.g-bad{background:#FDE8E8;border-color:#A32D2D}
+.g-ok{background:#E3F8EB;border-color:#176E3B}
+.ff-n.hl rect,.ff-n.hl path{stroke-width:3;filter:drop-shadow(0 0 6px var(--cd,#231F20))}
+.ff-n.hl.ghost{opacity:.6}
+
+/* Side by side: two versions of one job, played together */
+.ffc{margin:1.2rem 0 0;background:#fff;border:1.5px solid var(--ink,#231F20);padding:clamp(.9rem,2.2vw,1.3rem)}
+.ffc .ff-title .eyebrow{display:block;color:var(--cd,#006A7D);margin-bottom:.25rem}
+.ffc-intro{font-size:.95rem;margin:0 0 .7rem}
+.ffc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:560px){.ffc-grid{grid-template-columns:1fr}}
+.ffc-side h4{margin:0 0 .35rem;font-size:.8rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:.25rem .5rem;border-left:5px solid #A32D2D;background:#FDF1F1}
+.ffc-side.good h4{border-left-color:#176E3B;background:#EEF9F1}
+.ffc .ff{margin:0;border:0;padding:0;background:none}
+.ffc .ff-ctl,.ffc .ff-pz{display:none}
+.ffc .ff-say{font-size:.86rem;min-height:4.4em;margin-top:.4rem}
+.ffc-v{margin:.5rem 0 0;font-size:.9rem;font-weight:650;padding:.45rem .6rem;background:#FDE8E8;border:1px solid #A32D2D}
+.ffc-side.good .ffc-v{background:#E3F8EB;border-color:#176E3B}
+.ffc-ctl{margin-top:.8rem}
+.ffc-ctl button{min-height:44px;padding:.4rem 1rem;border:1.5px solid var(--ink,#231F20);background:var(--ink,#231F20);color:var(--paper,#F6F4ED);font:inherit;font-weight:800;cursor:pointer}
+.ffc-ctl button:disabled{opacity:.55;cursor:default}
+
+/* The prediction sits under the diagram: students read the boxes first, then predict from them. */
+.ff svg+.ff-pred{margin:.8rem 0}
+.ff-pred-hint{margin:0 0 .5rem;font-size:.84rem;color:#5a4a1e}
+/* A prediction moved into Check it, after the illustration */
+.ff-pred.ff-pred-out{margin:0 0 1rem}
+.ff-pred-hint b{font-weight:800}
+.ff-pred-watch{margin-top:.6rem;min-height:40px;padding:.35rem .9rem;background:var(--ink,#231F20);color:#fff;border:0;font:inherit;font-size:.86rem;font-weight:700;cursor:pointer}
+/* Predict, observe, explain */
+.ff-why-k{display:block;font-weight:800;margin-bottom:.15rem}
+.ff-why{display:block;width:100%;margin:.45rem 0 .4rem;font:inherit;font-size:.92rem;padding:.45rem .6rem;border:1.5px solid #a9a397;background:#fff;resize:vertical}
+.ff-why-act{display:flex;gap:.5rem;flex-wrap:wrap}
+.ff-why-go{min-height:40px;padding:.35rem .9rem;background:var(--ink,#231F20);color:#fff;border:0;font:inherit;font-size:.86rem;font-weight:700;cursor:pointer}
+.ff-why-go:disabled{opacity:.4;cursor:default}
+.ff-why-skip{background:none;border:0;font:inherit;font-size:.82rem;text-decoration:underline;cursor:pointer}
+.ff-why-mine{display:block;margin-top:.45rem;font-size:.86rem;color:#4a463f}
+/* Skip links stay available but quieter than the answers: the benefit comes from actually guessing */
+.ff-pred-skip,.ff-why-skip{color:var(--dim,#54504E)!important;font-size:.76rem!important;opacity:.85}

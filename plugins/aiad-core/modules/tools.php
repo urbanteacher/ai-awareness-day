@@ -5,8 +5,8 @@
  * shortcode, assets and timeline seed.
  *
  * Moved from the theme's inc/ folder. The theme loads this file from its bundled copy of the plugin when the plugin
- * isn't active, so this is the only copy. Their CSS and JS (and the Risk Academy's template) still load from the
- * theme until each tool's block takes them over.
+ * isn't active, so this is the only copy. Their CSS and JS load from this plugin's assets/ (aiad_core_url()), and the Risk
+ * Academy's markup is in this plugin's template-parts/.
  *
  * @package AIAD_Core
  */

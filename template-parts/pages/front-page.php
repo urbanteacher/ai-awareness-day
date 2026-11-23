@@ -8,6 +8,10 @@
  * @package AI_Awareness_Day
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $container_class      = aiad_get_container_width_class();
 $text_alignment_class = aiad_get_text_alignment_class();
 $block_homepage       = aiad_block_homepage_page();

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../css/base/fonts.css">
+<link rel="stylesheet" href="../../css/base/tokens.css">
+<title>AI Advent Calendar 2026 · AI Awareness Day</title>
+<style>:root{--ink:#242032;--paper:#fffaf1;--pine:#154d40;--pink:#ffc6df;--lime:#d7f29e;--gold:#ffdb69;--violet:#dac9ff;font:16px/1.48 'AIAD Sans',Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body,h1,h2,h3,p{margin:0}button,a{font:inherit;color:inherit}button{cursor:pointer}a{text-underline-offset:4px}button:focus-visible,a:focus-visible{outline:3px solid #005fcc;outline-offset:4px}header,main{max-width:1380px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:1.1rem clamp(1rem,4vw,4rem);border-bottom:1px solid #cfc8bb}header strong{font-weight:900;letter-spacing:-.06em;font-size:clamp(1rem,2vw,1.5rem)}header small{display:block;font-size:.69rem;text-align:right}header a{font-weight:650;font-size:.9rem}main{padding:clamp(1rem,3vw,2.6rem)}
+.hero{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.12fr);gap:clamp(1rem,4vw,4rem);align-items:center;background:#eadffc;border-radius:28px;padding:clamp(1.2rem,3.2vw,3.2rem);position:relative;isolation:isolate;overflow:hidden}
+.hero:before{content:'';pointer-events:none;position:absolute;z-index:-1;inset:0;background:radial-gradient(ellipse at 0 5%,#fce2ea,transparent 54%),repeating-linear-gradient(135deg,transparent 0 18px,#ffffff30 19px 20px)}
+.intro{display:flex;flex-direction:column;align-items:flex-start;gap:1rem}
+.date,.day{font:700 .82rem/1.3 'AIAD Sans',Arial,sans-serif;text-transform:uppercase;letter-spacing:.07em}.date{background:var(--paper);padding:.4rem .85rem;border:1.5px solid;border-radius:4px;transform:rotate(-3deg)}
+h1{font-size:clamp(3rem,7.8vw,7.6rem);letter-spacing:-.085em;line-height:.86;font-weight:900}h1 span{display:block;color:var(--pine)}.lead{font-size:clamp(1rem,1.5vw,1.25rem);max-width:32ch}.primary,.reveal{min-height:44px;padding:.65rem 1.05rem;border:1.5px solid;border-radius:2rem;font-weight:750}.primary{background:var(--ink);color:white}.progress{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}.progress span{background:#fff9;border:1px solid #66587855;border-radius:2rem;font-size:.85rem;font-weight:700;padding:.3rem .7rem}.progress #stars{background:var(--gold)}
+.board{padding:clamp(.65rem,1.5vw,1.45rem);border:2px solid var(--ink);border-radius:19px;background:repeating-linear-gradient(45deg,#11483d 0 12px,#185547 12px 24px);box-shadow:4px 5px 0 var(--ink)}
+.doors{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(.35rem,.8vw,.75rem)}
+.door{aspect-ratio:1.25;position:relative;border:1.5px solid var(--ink);border-radius:10% 25% 10% 10%;font-weight:900;font-size:clamp(1.15rem,2.8vw,2.7rem);letter-spacing:-.075em;background:var(--paper);box-shadow:0 3px 0 #102b24;line-height:1}.door:nth-child(4n+1){background:var(--lime);border-radius:40% 40% 10% 10%}.door:nth-child(4n+2){background:var(--pink)}.door:nth-child(4n+3){background:var(--violet);border-radius:35%}.door:last-child{background:var(--gold)}.door:hover,.door:focus-visible{outline:3px solid white;outline-offset:0}.door[aria-pressed=true]{background:var(--ink);color:white;border-color:white}.door.earned:after{content:'★';position:absolute;top:3%;right:4%;font-size:.43em;color:#30230c;background:var(--gold);border-radius:50%;padding:.2em}
+.activity{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.12fr);gap:clamp(1rem,2vw,2rem);margin-top:1.3rem;scroll-margin:1rem}
+.brief,.check{padding:clamp(1.1rem,2.4vw,2.15rem);border:1.5px solid var(--ink);border-radius:20px;background:#fffdf7}.brief{border-top:7px solid #be85b8}.check{background:#fff4d2;border-top:7px solid #e6aa27}
+.brief-head{display:flex;align-items:center;gap:.85rem}.symbol{width:3.7rem;aspect-ratio:1;display:grid;place-items:center;background:var(--violet);color:#422d61;font-weight:900;font-size:1.8rem;clip-path:polygon(0 0,80% 0,100% 20%,100% 100%,0 100%)}
+.day{color:#5d476c}h2{font-size:clamp(1.65rem,2.8vw,2.65rem);line-height:1.04;letter-spacing:-.06em}.prompt{margin:1rem 0}.reveal{background:white}.answer{margin-top:1rem;border-top:1px solid #cec6bf;padding-top:.7rem}.answer p{margin:.25rem 0}.answer a{font-weight:650}
+.check>strong{font:700 .85rem 'AIAD Sans',Arial,sans-serif;color:#644814}.check h3{font-size:clamp(1.15rem,1.6vw,1.45rem);letter-spacing:-.03em;line-height:1.25;margin:.5rem 0 .8rem}.choices{display:grid;gap:.45rem;counter-reset:option}.choices button{counter-increment:option;display:flex;align-items:center;gap:.7rem;text-align:left;padding:.55rem .7rem;min-height:44px;background:white;border:1px solid #9e9684;border-radius:.65rem}.choices button:before{content:counter(option,upper-alpha);display:grid;place-items:center;flex:none;width:1.55rem;height:1.55rem;background:#f0ece3;border-radius:50%;font-weight:700;font-size:.77rem}.choices button:hover:enabled{border-color:var(--ink)}.choices .right{background:var(--gold);border-color:#785a10}.choices button:disabled{cursor:default}.feedback:not(:empty){margin-top:.7rem;font-weight:700}.check.complete{border-top-color:#a6760c}.check.complete>strong{color:#493002}
+@media(max-width:740px){.hero,.activity{grid-template-columns:1fr}.hero{border-radius:18px}.intro{gap:.7rem}.intro h1 span{display:inline}.intro h1{font-size:clamp(2.75rem,11.3vw,5rem)}.lead{max-width:none}.progress{margin-top:.15rem}.door{aspect-ratio:1.45;min-height:44px}.activity{gap:.8rem}.board{box-shadow:2px 3px 0 var(--ink)}}
+
+.activity{margin:0 0 1.3rem;grid-template-columns:minmax(0,1.12fr) minmax(0,.92fr)}
+.check h2{font-size:clamp(1.45rem,2.5vw,2.5rem);margin:.65rem 0 1rem}
+.check #reward{display:inline-block;margin-left:.6rem}
+@media(max-width:740px){.activity{grid-template-columns:1fr}}
+
+.countdown-heading{padding:clamp(1.1rem,3vw,2.5rem);border:0;border-radius:22px;background:linear-gradient(115deg,#fce3e9,#e5dcff);gap:1rem;flex-wrap:wrap}
+.countdown-heading .date{display:inline-block;margin-bottom:.75rem}
+.countdown-heading h1{font-size:clamp(3rem,6.2vw,6rem)}
+.countdown-heading h1 span{display:inline}
+.brief{margin:1rem 0;display:flex;align-items:center;gap:clamp(1rem,3vw,3rem)}
+.brief-head{flex:1}.definition{flex:1.5}.definition strong{font-size:1.2rem}.element-link{margin-top:1rem;padding:.8rem 0;border-top:1px solid #b7a373}.element-link a{display:inline-flex;align-items:center;min-height:44px;font-weight:600;font-size:.95rem}
+.feature-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+.calendar-feature{border-radius:20px;background:#ede6ff;padding:clamp(1rem,2vw,2rem)}
+.calendar-feature h2{font-size:clamp(1.5rem,2.2vw,2.3rem)}.calendar-feature p{margin:.35rem 0 1rem}
+.discuss{margin-top:1rem}.discuss summary{cursor:pointer;font-weight:650}.discuss p{margin-top:.5rem}
+@media(max-width:740px){.brief{display:grid;gap:.8rem}.feature-row{grid-template-columns:1fr}.countdown-heading{align-items:start}}
+
+/* Printed wrapping paper, winter greenery and brass-numbered doors. */
+:root{--ink:var(--a27-ink);--paper:var(--a27-cream);--pine:#123f33;--gold:#f7d777}
+body{background-color:var(--paper);background-image:repeating-linear-gradient(90deg,transparent 0 39px,#a98c5020 40px,transparent 41px)}
+body>header{background:var(--paper);border-color:#c2ad84}
+.countdown-heading{position:relative;isolation:isolate;overflow:hidden;background:#123f33;color:#fff6de;border:3px double #dfbd71;border-radius:10px;box-shadow:0 4px 0 #67232b;padding:clamp(1.25rem,3.3vw,3rem)}
+.countdown-heading:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.58;background-image:radial-gradient(circle,#fcf5d9 1px,transparent 1.6px),radial-gradient(circle,#fcf5d9 1px,transparent 1.8px);background-size:54px 49px,87px 79px;background-position:0 0,13px 22px}
+.countdown-heading h1,.calendar-feature h2,.brief h2{font-family:inherit;font-weight:700;letter-spacing:-.045em}
+.countdown-heading h1{line-height:1.05;font-size:clamp(2.4rem,5.4vw,5.3rem);text-shadow:0 2px #173527}
+.countdown-heading h1 span{color:#ffdf83}
+.countdown-heading .date{background:#8d1f32;color:#fff8e5;border-color:#dfbc6a;transform:none;border-radius:2px}
+.countdown-heading .progress span{background:#fff3d2;color:#25372c;border-color:#d4af59}
+.countdown-heading .progress #stars{background:#ffda76}
+.brief{background:var(--paper);border-color:#b7a373;border-top-color:#922a38;border-radius:9px}.symbol{background:#e7eedb;color:#174735}.day,.definition a{color:#723040}
+.calendar-feature{color:#fffae4;background:#153c31;border:3px double #c8a55a;border-radius:12px}
+.calendar-feature p{color:#f2e5bd}
+.board{background:#a01720 url('calendar-art.png') 82.75% 28.28% / 168.79% 161.26% no-repeat;border:0;border-radius:0;box-shadow:none;clip-path:polygon(5% 0,95% 0,100% 7%,100% 94%,96% 100%,4% 100%,0 94%,0 7%);padding:6% 7%}
+.doors{background:#aa1e2c;padding:1.5%;gap:clamp(.3rem,.65vw,.65rem)}
+.doors .door{aspect-ratio:1.22;border-radius:5px 12px 3px 3px;background:#fff0c9;color:#39251c;border:1px dashed #947137;font-family:inherit;font-weight:bold;box-shadow:1px 2px #5b2023;letter-spacing:-.05em}
+.doors .door:nth-child(3n+1){background:#1d5941;color:#fff6d9;border-color:#d6c38c}
+.doors .door:nth-child(3n+2){background:#d4e4bb;color:#234231}
+.doors .door[aria-pressed=true]{background:#ffe095;color:#642131;outline:2px solid #fff5d7;outline-offset:1px}
+.doors .door:last-child{background:#f1cb69;color:#652233}
+.door:before{content:"✦";position:absolute;left:7%;top:7%;font-size:.32em;opacity:.8}
+.door:nth-child(3n):before{content:"❄"}.door:nth-child(3n+1):before{content:"✧"}
+.check{background:var(--paper);border-color:#bba57e;border-top:7px solid #97243a;border-radius:9px}
+.choices button{border-color:#b9ad92}.choices .right{border-color:#9b721f;background:#ffe298}
+@media(max-width:740px){.countdown-heading h1{font-size:clamp(2.35rem,8.5vw,4rem)}.doors .door{min-height:42px}.board{padding:6% 5%}}
+
+.campaign-lockup{display:block;width:clamp(8.75rem,26vw,17rem);height:auto}
+.countdown-heading h1,.brief h2,.calendar-feature h2,.check h2{font-weight:700;letter-spacing:-.045em}
+.date,.day,.check>strong{font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.doors .door{font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.brief,.check{border-radius:2px}.choices button{border-radius:2px;color:var(--ink)}
+.choices button:before{border-radius:0;clip-path:polygon(0 0,78% 0,100% 22%,100% 100%,0 100%);font-weight:700}
+
+/* The five campaign marks hang from a brass cord like tree ornaments. */
+.strand-garland{position:absolute;top:0;right:clamp(1rem,3vw,3rem);width:clamp(9rem,21vw,18rem);display:flex;align-items:flex-start;justify-content:space-around;pointer-events:none}
+.strand-garland:before{content:"";position:absolute;inset:-15px 0 auto;height:25px;border-bottom:1px solid #dfbd71;border-radius:0 0 50% 50%}
+.strand-garland span{--drop:8px;position:relative;margin-top:var(--drop);display:grid;place-items:center;width:26px;height:29px;border:1px solid #dfbd7180;border-radius:48%;background:#193c32}
+.strand-garland span:before{content:"";position:absolute;bottom:100%;width:1px;height:6px;background:#dfbd71}
+.strand-garland span:nth-child(2),.strand-garland span:nth-child(4){--drop:13px}
+.strand-garland span:nth-child(3){--drop:17px}
+.strand-garland img{width:18px;height:18px}
+.doors .door.theme-seal:before{content:"";position:absolute;left:5%;top:6%;width:clamp(12px,1.25vw,18px);aspect-ratio:1;background:#213e34 var(--mark) center/78% no-repeat;border-radius:50%;opacity:1}
+@media(max-width:740px){.countdown-heading{padding-top:3.35rem}.strand-garland{width:9rem;right:1rem}}
+
+.doors .door.earned{background-color:#244454;background-image:url('winter-tree.svg');background-size:500% 500%;background-position:var(--piece-x) var(--piece-y);color:#fff;text-shadow:0 1px 4px #000,0 0 5px #000;font-size:clamp(.9rem,1.5vw,1.3rem);text-align:left;padding:0 .35rem;display:flex;align-items:flex-end;border:1px solid #e6d6a7}
+.doors .door.earned:before{display:none}.door.earned:after{font-size:.78rem;text-shadow:none}.doors .door:last-child{border:2px solid #dbb54d}
+#shareDay,#ornamentForm button{margin:.65rem .55rem 0 0;padding:.5rem .8rem;background:var(--paper);border:1px solid var(--ink);font-weight:600;min-height:44px}
+#ornament{margin-top:1rem;background:var(--paper);border-top:4px solid #dbb54d;padding:1rem}
+#ornamentForm{display:grid;gap:.7rem;max-width:40rem}#ornamentForm label{display:grid;font-weight:600}#ornamentForm input,#ornamentForm textarea{padding:.5rem;font:inherit;width:100%}#ornamentForm button{justify-self:start}
+#paperCard{display:none}
+@media print{body.print-ornament{background:white}body.print-ornament>header,body.print-ornament main>:not(#ornament),body.print-ornament #ornament>:not(#paperCard){display:none}
+body.print-ornament #ornament{border:0;background:white}body.print-ornament #paperCard{display:grid;gap:4mm;padding:8mm;width:95mm;border:2px dashed #38634b;text-align:center;break-inside:avoid;overflow-wrap:anywhere}#paperSymbol{font-size:38pt;color:#145337}}
+</style></head><body><header><a href="/">AI Awareness Day home</a><img class="campaign-lockup" src="../../brand/aiad27/aiad27-lockup.svg" alt="AI Awareness Day 2027 — Keep Humans in the Loop"></header><main>
+<header class="countdown-heading">
+  <div class="strand-garland" aria-hidden="true">
+    <span><img src="../../brand/aiad27/icon-safe.svg" alt="" width="20" height="20"></span>
+    <span><img src="../../brand/aiad27/icon-smart.svg" alt="" width="20" height="20"></span>
+    <span><img src="../../brand/aiad27/icon-creative.svg" alt="" width="20" height="20"></span>
+    <span><img src="../../brand/aiad27/icon-responsible.svg" alt="" width="20" height="20"></span>
+    <span><img src="../../brand/aiad27/icon-future.svg" alt="" width="20" height="20"></span>
+  </div>
+  <div><p class="date">1–25 December</p><h1>AI Advent Calendar <span>2026</span></h1></div>
+  <p class="progress" aria-live="polite"><span id="stars"></span><span id="streak"></span></p>
+</header>
+<section class="brief" id="activity" aria-labelledby="title">
+  <div class="brief-head"><div class="symbol" id="symbol" aria-hidden="true"></div><div><span class="day" id="day"></span><h2 id="title" tabindex="-1"></h2></div></div>
+  <div class="definition"><strong id="term"></strong><p id="explanation"></p> <button type="button" id="shareDay">Copy day link</button><span id="shareStatus" role="status"></span></div>
+</section>
+<div class="feature-row">
+  <section class="calendar-feature" aria-labelledby="calendar-title"><h2 id="calendar-title">Open a Christmas door</h2><p>Earn a star to uncover a piece of the Christmas tree.</p><div class="board"><div class="doors" role="group" aria-label="Choose a December door" id="doors"></div></div></section>
+  <section class="check" id="check" aria-labelledby="question"><span class="day" id="quizDay"></span> <strong id="reward">★ Earn a star</strong><h2 id="question" tabindex="-1"></h2><div class="choices" id="choices" role="group" aria-labelledby="question"></div><p class="feedback" id="feedback" role="status"></p>
+  <details class="discuss"><summary>Discuss this day’s activity</summary><p id="prompt"></p></details></section>
+</div>
+<section id="ornament" hidden><h2>Make your element ornament</h2>
+<form id="ornamentForm"><label>Symbol<input id="cardSymbol" required maxlength="4" placeholder="Ai"></label><label>AI term<input id="cardTerm" required maxlength="48"></label><label>Your definition<textarea id="cardDefinition" required maxlength="220"></textarea></label><label>A question for the class<textarea id="cardQuestion" required maxlength="160"></textarea></label><button>Print my ornament</button></form>
+<article id="paperCard"><span aria-hidden="true">○</span><small>AI Advent Calendar 2026 · Day 25</small><b id="paperSymbol"></b><h2 id="paperTerm"></h2><p id="paperDefinition"></p><p id="paperQuestion"></p></article></section>
+<footer class="element-link"><a id="table">Explore this element in the periodic table →</a></footer>
+</main>
+<script>
+const activities = [
+['Ai','Spot the AI','Name three things you used this morning. Which might use AI, and how could you check?','Artificial Intelligence','Check what the tool does and what its maker says about how it works. Automation alone is not proof of AI.'],
+['Ml','Teach a sorter','How could a computer learn to sort pictures of winter hats and gloves?','Machine Learning','Train it on labelled examples, then test it on pictures it has never seen.'],
+['Tk','Break it into pieces','How many pieces might a language model need to read “snowflake”? Compare guesses.','Token','A tokenizer may treat a word as one piece or several. Different models can split the same word differently.'],
+['Mm','Two ways in','Design a tool that needs both a photo and a spoken question. What does each input add?','Multimodal AI','A multimodal system can work across different kinds of input, such as sound and images.'],
+['Bi','Who got left out?','A glove detector was trained only on adult-sized gloves. Who should test it next?','Bias','An unrepresentative training set can create systematic differences in how well a model works for different people.'],
+['Pr','Ask it clearly','Rewrite “make something festive” so a classmate knows exactly what to create.','Prompt','A prompt can specify the task, audience and constraints. Compare two versions and see which gives clearer direction.'],
+['Ha','The missing source','A chatbot recommends a book you can’t find. How would you check whether it exists?','Hallucination','Check a library catalogue or the publisher. A plausible title and author can still be invented.'],
+['Cw','What slipped out?','Imagine being able to see only the last page of a long conversation. Which detail would you want repeated?','Context Window','A model can only consider a limited amount of information at once. Restating a key constraint can help.'],
+['Sd','Invent a dataset','Invent five fictional bus journeys for testing a timetable app. What real information did you avoid collecting?','Synthetic Data','Artificial examples can support testing. Check that they cover realistic situations.'],
+['Rc','Why this song?','Two friends open the same music app and see different winter playlists. Suggest two reasons.','Recommendation Engine','Listening history, skips or other preferences can influence what a system suggests.'],
+['Cv','Look twice','A camera mistakes a white scarf for snow. What photos would make a better test?','Computer Vision','Try different lighting, backgrounds and materials to test what the system recognises in images.'],
+['Rg','Bring the evidence','A school assistant answers a question about the last day of term. Which document should it consult?','Retrieval-Augmented Generation','Retrieving the current school calendar gives the model evidence to use. Check the answer against the document.'],
+['Dk','Check the clip','A surprising video of a famous singer is being shared. What would you verify before passing it on?','Deepfake','Look for the original upload and independent confirmation. Realistic audio or video can be generated or altered.'],
+['Ft','Train for one task','A general model needs to classify support tickets. What examples would you give it for further training?','Fine-Tuning','A smaller, task-specific training set can adapt a model to a particular job.'],
+['Pl','Plan the class party','Split arranging a class party into three steps. Which step needs someone’s approval?','Planning','An AI system can break a goal into steps. People can set constraints and approve consequential actions.'],
+['Gr','Draw the boundary','Design one rule for a classroom chatbot that protects pupils’ personal details. How would you test it?','Guardrails','Rules and checks can limit inputs or outputs. Test the rule using fictional examples.'],
+['Cl','Pick a label','Sort six imaginary messages into “question”, “request” and “announcement”. Which one was tricky?','Classification','A classifier assigns items to categories. Some examples are ambiguous even for human reviewers.'],
+['Sp','Find the care','Compare a thoughtful seasonal message with a pile of repetitive generated greetings. What makes one worth reading?','AI Slop','The term describes low-effort, mass-produced AI content. Look for relevance, accuracy and care.'],
+['Ed','Work offline','Design a winter-walk gadget that recognises a sound without sending the recording anywhere.','Edge AI','Running a model on the device can reduce the need to send data to a remote server.'],
+['Ag','Give it a goal','An assistant can organise a trip. What may it research, and when must it ask before acting?','AI Agent','An agent can take steps towards a goal. Give it clear limits, especially before bookings or payments.'],
+['Ev','Build a fair test','Write three questions that would test a school chatbot before pupils use it. What counts as a pass?','Evals','Evaluations use tasks and criteria to measure performance. Include a case where the system should admit uncertainty.'],
+['Vd','Find a similar idea','How might a search for “cosy winter stories” find a book that never uses those exact words?','Vector Database','It can retrieve similar representations of meaning, helping a system find related material.'],
+['Fa','Same chance?','A selection tool makes fewer accurate decisions for one group. What should the school investigate?','Fairness','Compare outcomes and error rates across groups, then investigate the data and decision process.'],
+['Hi','Keep a human involved','Choose one decision at school that a person should always review. Explain why.','Human in the Loop','Build in a point where someone can question, change or stop the system’s decision.'],
+['★','Make your own element','Choose an AI idea you now understand. Give it a symbol, a plain-English definition and a question for the class.','Your Christmas element','Swap cards with a classmate. Can they explain your idea using a different example?']
+];
+// The first option is the answer. rotate the display order by door.
+const checks = [
+['Which is the strongest evidence that a gadget uses AI?','Its documentation describes a trained model','It has a touchscreen','It runs on batteries'],
+['How should you test your hat sorter?','Use new photos it has never seen','Repeat the training photos','Count the labels you wrote'],
+['Which can be a token?','Part of a word','Only a full sentence','Only a number'],
+['Which task uses two types of input?','Answering a spoken question about a photo','Sorting typed names','Counting typed words'],
+['What would best test the glove detector for bias?','Compare accuracy across glove sizes','Give it a festive name','Test only its best example'],
+['Which prompt gives the clearest direction?','Write a four-line winter poem for seven-year-olds','Do something nice','Make it better'],
+['What is the best first check for the book?','Search a library catalogue by title and author','Ask the same chatbot to promise it exists','Trust the detailed cover description'],
+['Why might an early instruction disappear?','It fell outside the context window','The model dislikes repetition','Every chat has a five-message limit'],
+['Which journey record is synthetic?','A fictional trip created by a simulator','A real ticket with the name removed','A timetable copied from a bus stop'],
+['Why might two friends see different playlists?','Their listening histories differ','One phone has a bigger screen','Songs always appear alphabetically'],
+['What would make the snow detector test stronger?','Include scarves and snow in varied lighting','Use one clear photo repeatedly','Only test outdoors at noon'],
+['What should the assistant retrieve for a term-date question?','The current official school calendar','A timetable from ten years ago','A popular winter poem'],
+['A surprising clip looks real. What should you do first?','Check the source and independent reports','Share it before it disappears','Treat a realistic voice as proof'],
+['Which example is fine-tuning?','Training an existing model further on labelled tickets','Changing the colour of the app','Writing a single new prompt'],
+['Which party-planning step most needs approval?','Spending the class budget','Listing possible themes','Counting days until term ends'],
+['How could you safely test a privacy guardrail?','Use made-up pupil details','Upload the real class register','Skip testing if a rule exists'],
+['What does a classifier output for a message?','A category such as “question”','A guarantee that it is true','The sender’s next message'],
+['Which is the clearest sign of AI slop?','Large amounts of repetitive, low-effort generated content','Any spelling mistake','A message written on a phone'],
+['Which example uses edge AI?','A device recognises sounds using its own model','A microphone uploads every sound for remote analysis','A website stores recordings'],
+['When should a trip-planning agent pause?','Before paying for tickets','Before listing destinations','Before organising public timetables'],
+['Which makes an evaluation more useful?','Define what a good answer looks like before testing','Only use questions the model already passed','Change the pass mark after every answer'],
+['What helps a search find differently worded but related stories?','Comparing representations of meaning','Matching only exact titles','Sorting results by file size'],
+['What should you compare when checking fairness?','Error rates across relevant groups','Only the overall number of decisions','Only the fastest decisions'],
+['What makes human oversight meaningful?','A person can review and stop the decision','A person sees an unchangeable result','A person designed the logo'],
+['Which makes the most useful element card?','A clear definition and a fresh example','A long word with no explanation','A symbol nobody can explain']
+];
+const $=id=>document.getElementById(id);
+const storageKey='aiad-christmas-25-stars-v1';
+let earned={};
+try {
+ const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
+ for(const [id,date] of Object.entries(saved||{})){
+  if(/^(?:[1-9]|1[0-9]|2[0-5])$/.test(id)&&typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)) earned[id]=date;
+ }
+} catch {}
+function dayKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function updateProgress(){
+ const days=new Set(Object.values(earned)), cursor=new Date();let count=0;
+ if(!days.has(dayKey(cursor)))cursor.setDate(cursor.getDate()-1);
+ while(days.has(dayKey(cursor))){count++;cursor.setDate(cursor.getDate()-1)}
+ $('stars').textContent='★ '+Object.keys(earned).length+' / 25 stars';
+ $('streak').textContent=count+'-day streak';
+ for(const [i,door] of Array.from($('doors').children).entries()){door.classList.toggle('earned',!!earned[i+1]);door.setAttribute('aria-label','Open day '+(i+1)+(earned[i+1]?', star earned':''))}
+}
+function renderCheck(index){
+ const [question,...answers]=checks[index], id=index+1;
+ $('check').classList.toggle('complete',!!earned[id]);
+ $('reward').textContent=earned[id]?'★ Star collected':'★ Earn a star';
+ $('question').textContent=question;$('choices').replaceChildren();
+ $('feedback').textContent=earned[id]?'★ Star earned for this door.':'';
+ for(let n=0;n<answers.length;n++){
+  const option=(n+id)%answers.length, button=document.createElement('button');
+  button.type='button';button.textContent=answers[option];button.disabled=!!earned[id];
+  if(earned[id]&&option===0)button.className='right';
+  button.onclick=()=>{
+   if(earned[id])return;
+   if(option!==0){$('feedback').textContent='Have another go. The activity above gives you a clue.';return}
+   earned[id]=dayKey(new Date());let saved=true;
+   try{localStorage.setItem(storageKey,JSON.stringify(earned))}catch{saved=false}
+   for(const choice of $('choices').children)choice.disabled=true;
+   button.className='right';$('check').classList.add('complete');$('reward').textContent='★ Star collected';updateProgress();
+   $('feedback').textContent=saved?'★ Correct! Your star is saved on this device.':'★ Correct! Your star counts for this visit.';
+  };
+  $('choices').append(button);
+ }
+ updateProgress();
+}
+let selected=6;
+function showDay(index,focus){
+ selected=index;
+ $('ornament').hidden=index!==24;$('shareStatus').textContent='';
+ if(focus){const url=new URL(location.href);url.searchParams.set('day',index+1);history.replaceState(null,'',url)}
+ const [symbol,title,prompt,term,explanation]=activities[index];
+ $('quizDay').textContent='Day '+(index+1)+' of 25';
+ $('symbol').textContent=symbol;$('day').textContent='Day '+(index+1);$('title').textContent=title;$('prompt').textContent=prompt;
+ $('term').textContent=term;$('explanation').textContent=explanation;
+ $('table').href='/ai-literacy-periodic-table/'+(index===24?'':'#element-'+symbol.toLowerCase());
+ $('table').textContent=index===24?'Explore the periodic table →':'Explore this element in the periodic table →';
+ Array.from($('doors').children).forEach((button,i)=>{button.setAttribute('aria-pressed',String(i===index));button.textContent=i+1});
+ renderCheck(index);
+ if(focus){$('question').focus({preventScroll:true});$('question').scrollIntoView({block:'nearest'})}
+}
+const sealDays={0:'safe',6:'smart',12:'creative',18:'responsible',24:'future'};
+activities.forEach((_,i)=>{const button=document.createElement('button');button.className='door';button.style.setProperty('--piece-x',(i%5)*25+'%');button.style.setProperty('--piece-y',Math.floor(i/5)*25+'%');
+ if(sealDays[i]){
+  button.classList.add('theme-seal');
+  button.style.setProperty('--mark','url("../../brand/aiad27/icon-'+sealDays[i]+'.svg")');
+ }
+ button.setAttribute('aria-label','Open day '+(i+1));button.onclick=()=>showDay(i,true);$('doors').append(button)});
+$('shareDay').onclick=async()=>{
+ const url=new URL(location.href);url.searchParams.set('day',selected+1);
+ try{await navigator.clipboard.writeText(url.href);$('shareStatus').textContent='Day link copied.'}
+ catch{window.prompt('Copy this day’s link:',url.href)}
+};
+$('ornamentForm').onsubmit=event=>{
+ event.preventDefault();
+ for(const key of ['Symbol','Term','Definition','Question'])$('paper'+key).textContent=$('card'+key).value;
+ document.body.classList.add('print-ornament');window.print();
+};
+window.addEventListener('afterprint',()=>document.body.classList.remove('print-ornament'));
+const linkedDay=Number(new URLSearchParams(location.search).get('day'));
+showDay(Number.isInteger(linkedDay)&&linkedDay>=1&&linkedDay<=25?linkedDay-1:6,false);
+</script></body></html>

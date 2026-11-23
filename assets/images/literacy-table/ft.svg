@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Fine-Tuning: a general model trained a little more on maths becomes a maths specialist. Arrows: tools/literacy-arrows/specs/ft.json -->
+  <!-- Fine-Tuning: a general model trained a little more on maths becomes a maths specialist. Arrows: scripts/literacy-arrows/specs/ft.json -->
   <defs><marker id="alpt-arr-ft" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker><marker id="alpt-arr-ft-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <path class="i-paper" d="M118 24 H170 L184 38 V90 H118 Z"/><path class="i-deepline" d="M118 24 H170 L184 38 V90 H118 Z"/>

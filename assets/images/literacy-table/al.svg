@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Algorithm: five numbered steps for making a cup of tea, in order, ending at a steaming mug. Arrows: tools/literacy-arrows/specs/al.json -->
+  <!-- Algorithm: five numbered steps for making a cup of tea, in order, ending at a steaming mug. Arrows: scripts/literacy-arrows/specs/al.json -->
   <defs><marker id="alpt-arr-al-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head i-head--deep" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-m" x="184" y="58" text-anchor="middle">Make tea</text>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Model Extraction: thousands of questions to a locked AI, with the answers used to build a copy. Arrows: tools/literacy-arrows/specs/mx.json -->
+  <!-- Model Extraction: thousands of questions to a locked AI, with the answers used to build a copy. Arrows: scripts/literacy-arrows/specs/mx.json -->
   <defs><marker id="alpt-arr-mx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-m" x="188" y="76" text-anchor="middle">×10,000</text>

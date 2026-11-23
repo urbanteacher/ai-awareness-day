@@ -5,7 +5,7 @@
  * Canonical benchmark links still use WordPress Pages (flat URLs). Timeline copies
  * live at /timeline/{slug}/ as drafts until URLs are swapped in a future migration.
  *
- * @package AI_Awareness_Day
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -186,7 +186,7 @@ function aiad_seed_airb_hub_timeline_entries(): void {
 	}
 
 	if ( $created > 0 ) {
-		update_option( 'aiad_airb_hub_timeline_seeded_v1', 'yes', false );
+		update_option( 'aiad_airb_hub_timeline_seeded_v1', 'yes', true );
 	}
 }
 add_action( 'init', 'aiad_seed_airb_hub_timeline_entries', 35 );

@@ -11,6 +11,11 @@
  * @package AI_Risk_Readiness_Benchmark
  */
 
+// Command line only: never run from a browser.
+if ( 'cli' !== PHP_SAPI ) {
+	exit;
+}
+
 require_once '/var/www/html/wp-load.php';
 
 $bank_id = $argv[1] ?? 'benchmark-public';

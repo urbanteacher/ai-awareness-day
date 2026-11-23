@@ -11,13 +11,17 @@
  * The file comes from aiad_press_release_download(), as template-press-release.php shows it: a Download card block
  * (blocks/download-card), whose file is then chosen from the media library; a document shows its type in place of a
  * preview. With no file chosen yet, the page says the file is being prepared, as the PHP page does. The page's own
- * text, if it had any, stays as the introduction. The page renders from templates/theme-page.html
+ * text, if it had any, stays as the introduction. The page renders from templates/press-release.html
  * (inc/editable-pages.php).
  *
  * @package AI_Awareness_Day
  *
  * @var WP_Post|null $aiad_page The page, when the blocks are made for it (aiad_editable_page_content()).
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 $aiad_page  = isset( $aiad_page ) && $aiad_page instanceof WP_Post ? $aiad_page : null;
 $aiad_intro = $aiad_page ? trim( $aiad_page->post_content ) : '';

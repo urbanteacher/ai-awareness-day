@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" class="alpt-pic">
-  <!-- Bias: training data with almost all one kind of person, so the AI keeps saying no to the other kind. Arrows: tools/literacy-arrows/specs/bi.json -->
+  <!-- Bias: training data with almost all one kind of person, so the AI keeps saying no to the other kind. Arrows: scripts/literacy-arrows/specs/bi.json -->
   <defs><marker id="alpt-arr-bi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path class="i-head" d="M1 1 9 5 1 9"/></marker></defs>
   <rect class="i-bg" width="300" height="330"/>
   <text class="t-s" x="186" y="28" text-anchor="middle">Training data</text>
