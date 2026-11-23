@@ -252,50 +252,84 @@
 			}
 			return picCache[ sym ];
 		}
-		// The tile turns over to show the picture: the ↻ Picture button (in the count's place) or a click on the
-		// tile. The side chosen is kept while stepping through elements, so a class can go through the pictures.
+		// An element with a picture shows it in the tile's place straight away. A click on the picture (or Enter or
+		// Space on it) opens it large in a dialog, with the term's name and definition under it.
 		var flipBtn = panel.querySelector( '[data-alpt-flip]' );
-		var flipLabel = panel.querySelector( '[data-alpt-flip-label]' );
-		var countOut = panel.querySelector( '[data-alpt-count]' );
-		var flipped = false;
-		var hasPic = false;
-		function applyFlip() {
-			var back = flipped && hasPic;
-			panelTile.classList.toggle( 'is-flipped', back );
-			picOut.hidden = ! back;
-			if ( flipBtn ) {
-				flipBtn.hidden = ! hasPic;
-				flipBtn.setAttribute( 'aria-pressed', String( back ) );
-				flipBtn.setAttribute( 'aria-label', back ? 'Turn back to the card' : 'Turn over to see the picture' );
-				if ( flipLabel ) {
-					flipLabel.textContent = back ? 'Card' : 'Picture';
-				}
-			}
-			if ( countOut ) {
-				countOut.hidden = hasPic && !! flipBtn;
-			}
-		}
-		function flip() {
-			if ( ! hasPic ) {
-				return;
-			}
-			flipped = ! flipped;
-			if ( reduceMotion.matches || ! panelTile.animate ) {
-				applyFlip();
-				return;
-			}
-			// Half a turn to edge-on, swap the side, then the other half.
-			var turn = panelTile.animate( [ { transform: 'perspective(900px) rotateY(0deg)' }, { transform: 'perspective(900px) rotateY(90deg)' } ], { duration: 150, easing: 'ease-in' } );
-			turn.onfinish = function () {
-				applyFlip();
-				panelTile.animate( [ { transform: 'perspective(900px) rotateY(-90deg)' }, { transform: 'perspective(900px) rotateY(0deg)' } ], { duration: 190, easing: 'ease-out' } );
-			};
-		}
 		if ( flipBtn ) {
-			flipBtn.addEventListener( 'click', flip );
+			flipBtn.remove();
+		}
+		var hasPic = false;
+		var zoom = null;
+		// Phones hide the picture (so the buttons stay on screen) and show a Picture button that opens it instead.
+		var picBtn = panel.querySelector( '[data-alpt-pic-btn]' );
+		function applyFlip() {
+			panelTile.classList.toggle( 'is-flipped', hasPic );
+			picOut.hidden = ! hasPic;
+			if ( picBtn ) {
+				picBtn.hidden = ! hasPic;
+			}
+			if ( hasPic ) {
+				panelTile.setAttribute( 'tabindex', '0' );
+				panelTile.setAttribute( 'role', 'button' );
+				panelTile.setAttribute( 'aria-label', 'Enlarge the picture: ' + ( picOut.getAttribute( 'aria-label' ) || '' ) );
+			} else {
+				panelTile.removeAttribute( 'tabindex' );
+				panelTile.removeAttribute( 'role' );
+				panelTile.removeAttribute( 'aria-label' );
+			}
+		}
+		function buildZoom() {
+			zoom = document.createElement( 'dialog' );
+			zoom.className = 'alpt-zoom';
+			zoom.setAttribute( 'aria-labelledby', 'alpt-zoom-title' );
+			zoom.innerHTML = '<div class="alpt-zoom__inner"><button type="button" class="alpt-btn alpt-zoom__close" data-alpt-zoom-close>Close <span aria-hidden="true">&times;</span></button><div class="alpt-zoom__pic alpt-pic" role="img"></div><p class="alpt-zoom__title" id="alpt-zoom-title"></p><p class="alpt-zoom__def"></p></div>';
+			zoom.addEventListener( 'click', function ( event ) {
+				// A click on the backdrop (the dialog itself, outside its inner box) or on Close shuts it.
+				if ( event.target === zoom || event.target.closest( '[data-alpt-zoom-close]' ) ) {
+					zoom.close();
+				}
+			} );
+			zoom.addEventListener( 'close', function () {
+				// Back to whichever opened it: the Picture button on phones, the picture elsewhere.
+				var back = picBtn && picBtn.offsetParent ? picBtn : panelTile;
+				if ( hasPic && back.offsetParent ) {
+					back.focus( { preventScroll: true } );
+				}
+			} );
+			document.body.appendChild( zoom );
+		}
+		function openZoom() {
+			var svg = picOut.querySelector( 'svg' );
+			if ( ! hasPic || ! svg ) {
+				return;
+			}
+			if ( ! zoom ) {
+				buildZoom();
+			}
+			// The dialog sits outside the table, so it takes the panel's family and theme colours with it.
+			var cs = window.getComputedStyle( panel );
+			[ '--fam', '--fam-fg', '--fam-deep', '--pic-accent' ].forEach( function ( prop ) {
+				zoom.style.setProperty( prop, cs.getPropertyValue( prop ) );
+			} );
+			var pic = zoom.querySelector( '.alpt-zoom__pic' );
+			pic.replaceChildren( svg.cloneNode( true ) );
+			pic.setAttribute( 'aria-label', picOut.getAttribute( 'aria-label' ) || '' );
+			var title = root.querySelector( '[data-alpt-out="title"]' );
+			zoom.querySelector( '.alpt-zoom__title' ).textContent = title ? title.textContent : '';
+			zoom.querySelector( '.alpt-zoom__def' ).textContent = defOut ? defOut.textContent : '';
+			zoom.showModal();
+		}
+		if ( picBtn ) {
+			picBtn.addEventListener( 'click', openZoom );
 		}
 		if ( panelTile ) {
-			panelTile.addEventListener( 'click', flip );
+			panelTile.addEventListener( 'click', openZoom );
+			panelTile.addEventListener( 'keydown', function ( event ) {
+				if ( hasPic && ( 'Enter' === event.key || ' ' === event.key ) ) {
+					event.preventDefault();
+					openZoom();
+				}
+			} );
 		}
 		function showPicture( sym ) {
 			if ( ! panelTile || ! picOut || picShown === sym ) {
@@ -1680,6 +1714,8 @@
 		var boardMode = null; // 'element' or 'compound'
 		var boardIndex = 0;
 		var boardHideDef = false;
+		// Show picture: the board's big tile becomes the element's picture, kept on while stepping through elements.
+		var boardShowPic = false;
 		var boardPrefHide = true; // Guess first: an element opens with its definition hidden until you choose otherwise.
 		var boardOpener = null;
 
@@ -1779,9 +1815,118 @@
 			}
 		}
 
-		function drawCard( index ) {
+		// The element's picture for its card, as an image the canvas can draw. The drawing is styled by the page's CSS
+		// (family colours, line widths, the AIAD Sans font), which an image on its own doesn't see, so the styles are
+		// copied onto each shape and the two font weights the drawings use are built into it.
+		var cardFontCss = null;
+		function cardPictureFonts() {
+			if ( ! cardFontCss ) {
+				var urls = {};
+				Array.prototype.forEach.call( document.styleSheets, function ( sheet ) {
+					var rules;
+					try {
+						rules = sheet.cssRules;
+					} catch ( err ) {
+						return;
+					}
+					Array.prototype.forEach.call( rules || [], function ( r ) {
+						if ( ! window.CSSFontFaceRule || ! ( r instanceof window.CSSFontFaceRule ) || ! /AIAD Sans/.test( r.style.fontFamily ) || 'italic' === r.style.fontStyle ) {
+							return;
+						}
+						var weight = String( r.style.fontWeight ).split( ' ' )[ 0 ];
+						var m = /url\(["']?([^"')]+)/.exec( r.style.getPropertyValue( 'src' ) );
+						if ( m && ( '600' === weight || '700' === weight ) && ! urls[ weight ] ) {
+							urls[ weight ] = new URL( m[ 1 ], sheet.href || window.location.href ).href;
+						}
+					} );
+				} );
+				cardFontCss = Promise.all( [ '600', '700' ].map( function ( w ) {
+					if ( ! urls[ w ] ) {
+						return '';
+					}
+					return window.fetch( urls[ w ] ).then( function ( r ) {
+						return r.ok ? r.blob() : null;
+					} ).then( function ( blob ) {
+						return blob ? new Promise( function ( resolve ) {
+							var reader = new window.FileReader();
+							reader.onload = function () {
+								resolve( "@font-face{font-family:'AIAD Sans';font-weight:" + w + ';src:url(' + reader.result + ") format('woff2')}" );
+							};
+							reader.onerror = function () {
+								resolve( '' );
+							};
+							reader.readAsDataURL( blob );
+						} ) : '';
+					} ).catch( function () {
+						return '';
+					} );
+				} ) ).then( function ( parts ) {
+					return parts.join( '' );
+				} );
+			}
+			return cardFontCss;
+		}
+
+		var CARD_PIC_STYLES = [ 'fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'opacity', 'font-size', 'font-weight', 'letter-spacing', 'text-anchor', 'dominant-baseline' ];
+		function cardPicture( index ) {
+			var e = elements[ index ];
+			if ( ! picBase || ! Object.prototype.hasOwnProperty.call( pics, e[ 0 ] ) ) {
+				return Promise.resolve( null );
+			}
+			return Promise.all( [ loadPicture( e[ 0 ] ), cardPictureFonts() ] ).then( function ( got ) {
+				var svg = got[ 0 ];
+				if ( ! svg ) {
+					return null;
+				}
+				// Styled in the page (off screen) in the element's family colours, then the styles copied onto it.
+				var host = el( 'div', 'alpt-fam--' + e[ 2 ] );
+				host.setAttribute( 'aria-hidden', 'true' );
+				host.style.cssText = 'position:absolute;left:-9999px;top:0;width:300px;height:330px;--pic-accent:var(--a27-' + e[ 5 ] + ')';
+				var copy = document.importNode( svg, true );
+				copy.setAttribute( 'width', '300' );
+				copy.setAttribute( 'height', '330' );
+				host.appendChild( copy );
+				root.appendChild( host );
+				Array.prototype.forEach.call( copy.querySelectorAll( '*' ), function ( n ) {
+					var cs = window.getComputedStyle( n );
+					CARD_PIC_STYLES.forEach( function ( prop ) {
+						var v = cs.getPropertyValue( prop );
+						if ( v ) {
+							n.style.setProperty( prop, v );
+						}
+					} );
+					if ( 'text' === n.nodeName || 'tspan' === n.nodeName ) {
+						n.style.fontFamily = "'AIAD Sans', Arial, sans-serif";
+					}
+				} );
+				host.remove();
+				if ( got[ 1 ] ) {
+					var style = document.createElementNS( 'http://www.w3.org/2000/svg', 'style' );
+					style.textContent = got[ 1 ];
+					copy.insertBefore( style, copy.firstChild );
+				}
+				var img = new window.Image();
+				img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent( new window.XMLSerializer().serializeToString( copy ) );
+				return ( img.decode ? img.decode() : Promise.resolve() ).then( function () {
+					return img;
+				} );
+			} ).catch( function () {
+				return null;
+			} );
+		}
+
+		// tone: 'dark' (cream words on ink) or 'light' (ink words on cream). pic: the element's picture (from
+		// cardPicture), drawn in the tile's place; without one the card shows the symbol tile.
+		function drawCard( index, tone, pic ) {
 			var e = elements[ index ];
 			var c = cardColours( e );
+			var light = 'light' === tone;
+			// What each part of the card is drawn in. On cream the cyan accent is too pale for words, so the words that
+			// were cyan take the family's deep colour (the talk bar stays cyan).
+			var bg = light ? c.cream : c.ink;
+			var fg = light ? c.ink : c.cream;
+			var famLabel = light ? c.deep : c.fam;
+			var accentText = light ? c.deep : c.accent;
 			var W = 1080, H = 1350, P = 84;
 			var canvas = document.createElement( 'canvas' );
 			canvas.width = W;
@@ -1791,28 +1936,35 @@
 			var font = function ( weight, size ) {
 				return weight + ' ' + Math.round( size ) + 'px ' + face;
 			};
-			ctx.fillStyle = c.ink;
+			ctx.fillStyle = bg;
 			ctx.fillRect( 0, 0, W, H );
 
-			ctx.fillStyle = c.accent;
+			ctx.fillStyle = accentText;
 			ctx.font = font( 700, 26 );
 			spaced( ctx, 'THE AI LITERACY PERIODIC TABLE', P, P + 20, 4 );
 
-			// The tile, with its cut corner, as on the table.
-			var T = 400, tx = P, ty = P + 72, cut = 64;
+			// The tile, with its cut corner, as on the table: the element's picture (300 × 330, so 400 × 440 here) or,
+			// without one, the number, symbol and name.
+			var T = 400, TH = pic ? 440 : T, tx = P, ty = P + 72, cut = 64;
 			ctx.fillStyle = c.fam;
 			ctx.beginPath();
 			ctx.moveTo( tx, ty );
 			ctx.lineTo( tx + T - cut, ty );
 			ctx.lineTo( tx + T, ty + cut );
-			ctx.lineTo( tx + T, ty + T );
-			ctx.lineTo( tx, ty + T );
+			ctx.lineTo( tx + T, ty + TH );
+			ctx.lineTo( tx, ty + TH );
 			ctx.closePath();
 			ctx.fill();
-			ctx.fillStyle = c.ink;
+			if ( pic ) {
+				ctx.save();
+				ctx.clip();
+				ctx.drawImage( pic, tx, ty, T, TH );
+				ctx.restore();
+			}
+			ctx.fillStyle = pic ? 'rgba(0,0,0,0)' : c.ink;
 			ctx.font = font( 600, 40 );
 			ctx.fillText( String( index + 1 ), tx + 36, ty + 72 );
-			// The name first, at the foot of the tile, then the symbol in the space left above it.
+			// The name first, at the foot of the tile, then the symbol in the space left above it (no picture only).
 			var nameSize = 34;
 			ctx.font = font( 700, nameSize );
 			var nameLines = wrapLines( ctx, e[ 1 ], T - 72 );
@@ -1823,7 +1975,7 @@
 			}
 			nameLines = nameLines.slice( 0, 3 );
 			var nameTop = ty + T - 36 - ( nameLines.length - 1 ) * ( nameSize + 6 ) - nameSize;
-			ctx.fillStyle = c.ink;
+			ctx.fillStyle = pic ? 'rgba(0,0,0,0)' : c.ink;
 			nameLines.forEach( function ( l, i ) {
 				ctx.fillText( l, tx + 36, nameTop + nameSize + i * ( nameSize + 6 ) );
 			} );
@@ -1835,19 +1987,19 @@
 				symSize -= 6;
 				ctx.font = font( 700, symSize );
 			}
-			ctx.fillStyle = c.deep;
+			ctx.fillStyle = pic ? 'rgba(0,0,0,0)' : c.deep;
 			ctx.fillText( e[ 0 ], tx + 30, nameTop - 16 - symSize * 0.22 );
 
 			// Beside the tile: the family and the theme.
 			var sx = tx + T + 48, sw = W - P - sx, y = ty + 52;
-			ctx.fillStyle = c.fam;
+			ctx.fillStyle = famLabel;
 			ctx.font = font( 700, 30 );
 			wrapLines( ctx, ( families[ e[ 2 ] ] || '' ).toUpperCase(), sw ).forEach( function ( l ) {
 				spaced( ctx, l, sx, y, 2 );
 				y += 42;
 			} );
 			y += 8;
-			ctx.fillStyle = c.cream;
+			ctx.fillStyle = fg;
 			ctx.globalAlpha = 0.75;
 			ctx.font = font( 500, 30 );
 			wrapLines( ctx, ( themes[ e[ 5 ] ] || '' ) + ' theme', sw ).forEach( function ( l ) {
@@ -1857,7 +2009,7 @@
 			ctx.globalAlpha = 1;
 
 			// The name, definition and talk question, made smaller together until they fit above the footer.
-			var top = ty + T + 110, bottom = H - P - 100, width = W - P * 2, question = talk[ e[ 0 ] ] || '';
+			var top = ty + TH + 110, bottom = H - P - 100, width = W - P * 2, question = talk[ e[ 0 ] ] || '';
 			var plan = function ( k ) {
 				var parts = [];
 				ctx.font = font( 700, 84 * k );
@@ -1883,14 +2035,15 @@
 				var x = P;
 				if ( p.talk ) {
 					var blockTop = y - p.size;
-					ctx.fillStyle = c.accent;
+					ctx.fillStyle = accentText;
 					ctx.font = font( 700, 24 * layout.k );
 					spaced( ctx, 'TALK ABOUT IT', P + 36, blockTop + 22 * layout.k, 3 );
 					y += 48 * layout.k;
+					ctx.fillStyle = c.accent;
 					ctx.fillRect( P, blockTop - 4, 8, 48 * layout.k + p.lines.length * p.size * p.lh );
 					x = P + 36;
 				}
-				ctx.fillStyle = c.cream;
+				ctx.fillStyle = fg;
 				ctx.font = font( p.weight, p.size );
 				p.lines.forEach( function ( l ) {
 					ctx.fillText( l, x, y );
@@ -1900,14 +2053,14 @@
 			} );
 
 			// Footer.
-			ctx.fillStyle = c.cream;
+			ctx.fillStyle = fg;
 			ctx.globalAlpha = 0.25;
 			ctx.fillRect( P, H - P - 62, W - P * 2, 2 );
 			ctx.globalAlpha = 1;
 			ctx.font = font( 700, 28 );
 			ctx.fillText( 'AI Awareness Day · Thursday 29 April 2027', P, H - P );
 			ctx.textAlign = 'right';
-			ctx.fillStyle = c.accent;
+			ctx.fillStyle = accentText;
 			ctx.font = font( 600, 26 );
 			ctx.fillText( 'aiawarenessday.co.uk', W - P, H - P );
 			ctx.textAlign = 'left';
@@ -2067,12 +2220,19 @@
 			} ) );
 		}
 
-		function prepareCard( index, mode ) {
-			var key = mode + ':' + index;
+		function prepareCard( index, mode, tone ) {
+			tone = 'compound' === mode ? 'dark' : ( tone || 'dark' );
+			var key = mode + ':' + tone + ':' + index;
 			if ( ! cardJobs[ key ] ) {
-				cardJobs[ key ] = cardFonts().then( function () {
+				cardJobs[ key ] = Promise.all( [ cardFonts(), 'compound' === mode ? null : cardPicture( index ) ] ).then( function ( got ) {
 					return new Promise( function ( resolve ) {
-						( 'compound' === mode ? drawCompoundCard( index ) : drawCard( index ) ).toBlob( resolve, 'image/png' );
+						var canvas = 'compound' === mode ? drawCompoundCard( index ) : drawCard( index, tone, got[ 1 ] );
+						try {
+							canvas.toBlob( resolve, 'image/png' );
+						} catch ( err ) {
+							// A browser that won't export a canvas with the picture on it: the card without it.
+							drawCard( index, tone, null ).toBlob( resolve, 'image/png' );
+						}
 					} );
 				} ).then( function ( blob ) {
 					if ( blob ) {
@@ -2086,15 +2246,17 @@
 			return cardJobs[ key ];
 		}
 
-		function shareCard( index, button, mode ) {
+		function shareCard( index, button, mode, tone ) {
 			var compound = 'compound' === mode;
+			tone = compound ? 'dark' : ( tone || 'dark' );
 			var item = compound ? compounds[ index ] : elements[ index ];
 			var title = item[ 1 ];
 			var about = compound ? item[ 5 ] : item[ 3 ];
 			var slug = compound ? item[ 0 ] : item[ 0 ].toLowerCase();
-			var name = 'ai-literacy-periodic-table-' + ( compound ? 'compound-' : '' ) + slug + '.png';
+			var name = 'ai-literacy-periodic-table-' + ( compound ? 'compound-' : '' ) + slug + ( compound ? '' : '-' + tone ) + '.png';
 			var url = window.location.origin + window.location.pathname + ( compound ? '#alpt-cp-' : '#element-' ) + slug;
-			var label = button ? button.textContent : '';
+			// The button's own markup (its icon too), put back after a message such as Card downloaded.
+			var label = button ? button.innerHTML : '';
 			var flash = function ( text ) {
 				if ( ! button ) {
 					return;
@@ -2102,7 +2264,7 @@
 				button.textContent = text;
 				window.setTimeout( function () {
 					if ( button.isConnected ) {
-						button.textContent = label;
+						button.innerHTML = label;
 					}
 				}, 2500 );
 			};
@@ -2133,19 +2295,19 @@
 					}
 				} );
 			};
-			var ready = cardBlobs[ mode + ':' + index ];
+			var ready = cardBlobs[ mode + ':' + tone + ':' + index ];
 			if ( ready ) {
 				send( ready );
 				return;
 			}
 			flash( 'Making the card…' );
-			prepareCard( index, mode ).then( function ( blob ) {
+			prepareCard( index, mode, tone ).then( function ( blob ) {
 				if ( ! blob ) {
 					flash( 'Card could not be made' );
 					return;
 				}
 				if ( button ) {
-					button.textContent = label;
+					button.innerHTML = label;
 				}
 				send( blob );
 			} );
@@ -2159,6 +2321,24 @@
 			tile.appendChild( el( 'span', 'alpt-board__n', String( boardIndex + 1 ) ) );
 			tile.appendChild( el( 'span', 'alpt-board__sym', e[ 0 ] ) );
 			tile.appendChild( el( 'span', 'alpt-board__tile-name', e[ 1 ] ) );
+			var boardHasPic = !! picBase && Object.prototype.hasOwnProperty.call( pics, e[ 0 ] );
+			if ( boardHasPic && boardShowPic ) {
+				var shownSym = e[ 0 ];
+				tile.classList.add( 'has-pic' );
+				tile.style.setProperty( '--pic-accent', 'var(--a27-' + e[ 5 ] + ')' );
+				var boardPic = el( 'span', 'alpt-board__pic' );
+				boardPic.setAttribute( 'role', 'img' );
+				boardPic.setAttribute( 'aria-label', pics[ e[ 0 ] ] || '' );
+				tile.appendChild( boardPic );
+				loadPicture( e[ 0 ] ).then( function ( svg ) {
+					// Still on the same element (the board is rebuilt on every step).
+					if ( ! svg || ! boardPic.isConnected || elements[ boardIndex ][ 0 ] !== shownSym ) {
+						tile.classList.remove( 'has-pic' );
+						return;
+					}
+					boardPic.replaceChildren( document.importNode( svg, true ) );
+				} );
+			}
 			var text = el( 'div', 'alpt-board__text' );
 			text.appendChild( el( 'p', 'alpt-board__label', ( families[ e[ 2 ] ] || '' ) + ' · ' + ( themes[ e[ 5 ] ] || '' ) + ' theme' ) );
 			text.appendChild( el( 'h2', 'alpt-board__title', e[ 1 ] ) );
@@ -2189,7 +2369,20 @@
 			bar.appendChild( prev );
 			bar.appendChild( next );
 			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle', 'alpt-board__btn--toggle' ) );
-			bar.appendChild( boardButton( canShareFiles() ? 'Share as a card' : 'Download as a card', 'card', 'alpt-board__btn--card' ) );
+			if ( boardHasPic ) {
+				var picToggle = boardButton( boardShowPic ? 'Hide picture' : 'Show picture', 'pic', 'alpt-board__btn--pic' );
+				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
+				bar.appendChild( picToggle );
+			}
+			// The card in two versions: dark (cream on ink) and light (ink on cream). Each button is drawn in its card's colours.
+			[ [ 'dark', 'Dark card' ], [ 'light', 'Light card' ] ].forEach( function ( t ) {
+				var cardBtn = boardButton( '', 'card', 'alpt-board__btn--card alpt-board__btn--card-' + t[ 0 ] );
+				cardBtn.setAttribute( 'data-alpt-tone', t[ 0 ] );
+				cardBtn.innerHTML = '<svg class="alpt-board__btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
+				cardBtn.appendChild( document.createTextNode( t[ 1 ] ) );
+				cardBtn.setAttribute( 'aria-label', ( canShareFiles() ? 'Share a ' : 'Download a ' ) + t[ 0 ] + ' card of ' + e[ 1 ] );
+				bar.appendChild( cardBtn );
+			} );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
 		}
@@ -2242,7 +2435,10 @@
 			// Draw this card in the background so Share can open at once.
 			var mode = boardMode, index = boardIndex;
 			( window.requestIdleCallback || window.setTimeout )( function () {
-				prepareCard( index, mode );
+				prepareCard( index, mode, 'dark' );
+				if ( 'element' === mode ) {
+					prepareCard( index, mode, 'light' );
+				}
 			} );
 		}
 
@@ -2321,7 +2517,14 @@
 			} else if ( 'next' === action ) {
 				stepBoard( 1 );
 			} else if ( 'card' === action ) {
-				shareCard( boardIndex, b, boardMode );
+				shareCard( boardIndex, b, boardMode, b.getAttribute( 'data-alpt-tone' ) );
+			} else if ( 'pic' === action ) {
+				boardShowPic = ! boardShowPic;
+				renderBoard();
+				var picAgain = board.querySelector( '[data-alpt-board-action="pic"]' );
+				if ( picAgain ) {
+					picAgain.focus();
+				}
 			} else if ( 'toggle' === action ) {
 				boardHideDef = ! boardHideDef;
 				if ( 'element' === boardMode ) {

@@ -536,7 +536,10 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
   font-size: clamp(1.5rem, 2.6vw, 2.6rem);
 }
 
-.alpt-panel__def {
+/* The Talk about it question is set at the definition's size on every screen (each rule below that sizes the
+   definition sizes the question too). */
+.alpt-panel__def,
+.alpt-panel__talk-q {
   max-width: 48rem;
   margin: 0;
   font-size: clamp(1rem, 1.25vw, 1.25rem);
@@ -705,7 +708,8 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
     grid-row: 6;
   }
 
-  .alpt-panel__body .alpt-panel__def {
+  .alpt-panel__body .alpt-panel__def,
+  .alpt-panel__body .alpt-panel__talk-q {
     font-size: clamp(0.88rem, 0.95vw, 1.05rem);
     line-height: 1.4;
   }
@@ -842,7 +846,8 @@ html:not(.alpt-js) .alpt-actions a[href="#alpt-print"] {
     font-size: 1.6rem;
   }
 
-  .alpt-panel__def {
+  .alpt-panel__def,
+  .alpt-panel__talk-q {
     font-size: 0.95rem;
   }
 }
@@ -2153,7 +2158,10 @@ html.alpt-lab-open {
 }
 
 .alpt-panel__talk > summary {
-  padding: 0.55rem 0;
+  /* The same size and spacing as Classroom notes & resources below it (wide screens shrink both together). */
+  padding: 0.65rem 0;
+  font-size: 1rem;
+  font-weight: 650;
   cursor: pointer;
 }
 
@@ -2397,6 +2405,31 @@ html.alpt-board-open {
   flex: 1 1 26rem;
   min-width: 0;
 }
+
+/* Show picture: the tile becomes the element's picture, as large as the screen allows beside the words. The
+   number, symbol and name stay in the tile (hidden) so its size and the reading order don't change. */
+.alpt-board__tile.has-pic {
+  position: relative;
+  width: min(36vw, calc(68vh * 300 / 330), 34rem);
+  aspect-ratio: 300 / 330;
+  padding: 0;
+}
+
+.alpt-board__tile.has-pic > :not(.alpt-board__pic) {
+  visibility: hidden;
+}
+
+.alpt-board__pic {
+  position: absolute;
+  inset: 0;
+}
+
+.alpt-board__pic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 
 .alpt-board .alpt-board__label {
   margin: 0 0 1rem;
@@ -4728,9 +4761,14 @@ html.alpt-board-open {
     scroll-snap-align: start;
   }
 
-  /* Anything jumped to lands below the site header and the bar. */
-  html:has(.alpt-mnav.is-shown) {
-    scroll-padding-top: 8.5rem;
+  /* Anything jumped to (a tapped symbol opens the panel and scrolls to it) lands just below the site header and the
+     Periodic Table bar (131px). One offset, whether or not the bar was showing when the jump began: a page-wide
+     scroll-padding that switched on with the bar stacked on top of this, leaving a big gap, and without it the
+     panel's labels sat under the bar. */
+  .alpt-page [id],
+  .alpt-panel,
+  .alpt-grid {
+    scroll-margin-top: 8.75rem;
   }
 }
 
@@ -4968,6 +5006,102 @@ html.alpt-board-open {
   .alpt-board .alpt-board__btn--card { grid-area: 2 / 1 / 3 / 4; }
   .alpt-board .alpt-board__btn-word { display: none; }
 
+  /* The element board: row 1 is ← · Show definition · →, row 2 Show picture, Dark card and Light card, three
+     equal buttons (six columns, so the arrows keep their width). */
+  .alpt-board__bar:has(.alpt-board__btn--card-dark) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .alpt-board__bar:has(.alpt-board__btn--card-dark) .alpt-board__btn--prev { grid-area: 1 / 1 / 2 / 2; }
+  .alpt-board__bar:has(.alpt-board__btn--card-dark) .alpt-board__btn--toggle { grid-area: 1 / 2 / 2 / 6; }
+  .alpt-board__bar:has(.alpt-board__btn--card-dark) .alpt-board__btn--next { grid-area: 1 / 6 / 2 / 7; }
+  .alpt-board .alpt-board__btn--pic { grid-area: 2 / 1 / 3 / 3; }
+  .alpt-board__bar:has(.alpt-board__btn--pic) .alpt-board__btn--card-dark { grid-area: 2 / 3 / 3 / 5; }
+  .alpt-board__bar:has(.alpt-board__btn--pic) .alpt-board__btn--card-light { grid-area: 2 / 5 / 3 / 7; }
+  .alpt-board__bar:not(:has(.alpt-board__btn--pic)) .alpt-board__btn--card-dark { grid-area: 2 / 1 / 3 / 4; }
+  .alpt-board__bar:not(:has(.alpt-board__btn--pic)) .alpt-board__btn--card-light { grid-area: 2 / 4 / 3 / 7; }
+
+  /* The three row-2 buttons fit on one line each: smaller words, no download icon. */
+  .alpt-board .alpt-board__btn--pic,
+  .alpt-board .alpt-board__btn--card-dark,
+  .alpt-board .alpt-board__btn--card-light {
+    padding-inline: 0.3rem;
+    font-size: 0.86rem;
+  }
+
+  .alpt-board__bar .alpt-board__btn-icon {
+    display: none;
+  }
+
+  /* An element on the board fills the screen: its tile (the picture, or the number, symbol and name) runs edge to
+     edge from the top and takes whatever height the words and the buttons leave (the words keep their full
+     length), down to 10rem; below that the board scrolls. A strip at the top is kept clear for Close. */
+  .alpt-board__inner:has(> .alpt-board__tile) {
+    flex: 1 1 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-right: 0;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__text {
+    flex: none;
+  }
+
+  .alpt-board__inner > .alpt-board__tile {
+    flex: 1 1 auto;
+    width: 100vw;
+    height: auto;
+    min-height: 10rem;
+    aspect-ratio: auto;
+    margin: calc(-1rem - env(safe-area-inset-top, 0px)) -1.25rem 0;
+    padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.25rem 1.1rem;
+    overflow: hidden;
+    clip-path: none;
+  }
+
+  /* Without the picture: the symbol as big as the block allows, the number and name around it. */
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__n {
+    font-size: 1.2rem;
+  }
+
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__sym {
+    font-size: clamp(3.5rem, 15dvh, 9rem);
+  }
+
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-name {
+    font-size: 1.35rem;
+  }
+
+  .alpt-board__tile.has-pic .alpt-board__pic {
+    inset: calc(3.5rem + env(safe-area-inset-top, 0px)) 0 0.5rem;
+  }
+
+  /* The words are smaller so the whole definition (and its question) fits above the buttons with room left for
+     the tile. */
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__title {
+    margin-bottom: 0.4rem;
+    font-size: 1.75rem;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__def,
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__prompt {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__talk {
+    margin-top: 0.6rem;
+    font-size: 0.92rem;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__safe {
+    margin-top: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
   /* The compound board has only Show the answer and Close. */
   .alpt-board .alpt-board__inner--compound + .alpt-board__bar .alpt-board__btn:not(.alpt-board__btn--close) {
     grid-column: 1 / -1;
@@ -4983,11 +5117,32 @@ html.alpt-board-open {
   }
 }
 
-/* The card button reads as the share action: ink on cream. */
+/* The card button reads as the share action: ink on cream. The element board has two, each in its card's colours:
+   Light card ink on cream, Dark card cream on ink. */
 .alpt-board .alpt-board__btn--card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   background: var(--a27-cream);
   border-color: var(--a27-cream);
   color: var(--a27-ink);
+}
+
+.alpt-board .alpt-board__btn--card-dark {
+  background: var(--a27-ink);
+  border-color: var(--a27-cream);
+  color: var(--a27-cream);
+}
+
+.alpt-board .alpt-board__btn--card-dark:hover {
+  background: var(--a27-safe);
+  border-color: var(--a27-safe);
+  color: var(--a27-ink);
+}
+
+.alpt-board__btn-icon {
+  flex: none;
 }
 
 /* Phones: a compound's elements sit in one row on the board, and the title the board focuses on (for screen
@@ -5054,13 +5209,43 @@ html.alpt-board-open {
 .alpt-panel[data-alpt-theme="responsible"] { --pic-accent: var(--a27-responsible); }
 .alpt-panel[data-alpt-theme="future"] { --pic-accent: var(--a27-future); }
 
-/* An element with a picture keeps its tile on the front and has the picture on the back: the ↻ Picture button
-   (in the count's place) or a click on the tile turns it over. Both sides are the picture's size. */
+/* An element with a picture shows the picture in the tile's place, as large as the panel allows. A click on it
+   opens it larger still in a dialog (.alpt-zoom, below). */
 .alpt-panel__tile.has-pic {
   position: relative;
-  width: clamp(12rem, 30vw, 17rem);
+  width: clamp(14rem, 40vw, 22rem);
   aspect-ratio: 300 / 330;
-  cursor: pointer;
+  cursor: zoom-in;
+}
+
+/* A small "enlarge" mark in the corner tells readers the picture opens. */
+.alpt-panel__tile.has-pic::after {
+  content: "";
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2.4'%3E%3Cpath d='M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7'/%3E%3C/svg%3E") center / 1.1rem no-repeat;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* Shown on hover or keyboard focus, so it doesn't sit over the drawing; touch screens, with no hover, always show it. */
+.alpt-panel__tile.has-pic:is(:hover, :focus-visible)::after {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .alpt-panel__tile.has-pic::after {
+    opacity: 1;
+  }
+}
+
+.alpt-panel__tile.has-pic:focus-visible {
+  outline: 3px solid var(--a27-ink);
+  outline-offset: 3px;
 }
 
 .alpt-panel__tile.has-pic .alpt-panel__tile-name {
@@ -5156,16 +5341,84 @@ html.alpt-board-open {
     height: 100%;
     min-height: 0;
     align-self: stretch;
+    /* The picture takes the panel's full height; the buttons sit beside it, under the text. */
+    grid-row: 1 / -1;
+  }
+
+  .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__nav {
+    grid-column: 2;
+  }
+
+  /* Less text beside the picture: the year label goes (the Year view still shows it) and the definition is a
+     touch smaller. */
+  .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__year {
+    display: none;
+  }
+
+  .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__body .alpt-panel__def,
+  .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__body .alpt-panel__talk-q {
+    font-size: clamp(0.85rem, 0.88vw, 0.98rem);
   }
 }
 
-/* Phones: the front stays a small tile so the definition and the buttons fit on the screen. Turned over, the
-   picture opens to full width so its labels can be read. */
+/* ---- The enlarged picture: a dialog over the page, closed with Close, Escape or a click outside it. ---- */
+.alpt-zoom {
+  /* Centred: the theme's reset takes away the dialog's own auto margin. */
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  width: min(94vw, 46rem);
+  max-height: 94vh;
+  padding: 0;
+  border: 2px solid var(--a27-ink);
+  background: #FFFFFF;
+  color: var(--a27-ink);
+}
+
+.alpt-zoom::backdrop {
+  background: rgb(20 20 20 / 0.72);
+}
+
+.alpt-zoom__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem;
+}
+
+.alpt-zoom__close {
+  align-self: flex-end;
+  gap: 0.4rem;
+}
+
+.alpt-zoom__pic {
+  /* As big as the screen allows, keeping the drawing's shape. */
+  width: min(100%, calc((94vh - 12rem) * 300 / 330));
+  align-self: center;
+  aspect-ratio: 300 / 330;
+}
+
+.alpt-zoom__pic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.alpt-zoom__title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.alpt-zoom__def {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* Phones: the picture is full width (up to 18rem) so its labels can be read; a tap opens it larger. */
 @media screen and (max-width: 599px) {
-  .alpt-panel__tile.has-pic {
-    width: 5.5rem;
-    aspect-ratio: 300 / 330;
-  }
 
   .alpt-panel__tile.has-pic .alpt-panel__n {
     font-size: 0.95rem;
@@ -5176,7 +5429,8 @@ html.alpt-board-open {
   }
 
   .alpt-panel__tile.has-pic.is-flipped {
-    width: min(100%, 15rem);
+    width: min(100%, 18rem);
+    justify-self: center;
   }
 
   /* The family, theme and year labels sit beside the small tile rather than below it, to save a row. The body's
@@ -5216,10 +5470,43 @@ html.alpt-board-open {
     grid-column: 1 / -1;
   }
 
-  /* With the picture open, the family, theme and year labels go, so the buttons still fit on the screen. */
-  .alpt-panel:has(.alpt-panel__tile.is-flipped) .alpt-panel__labels {
+  /* The picture is hidden here so the definition and the buttons fit on the screen; the Picture button (in the
+     element count's place) opens it large with its definition. The labels then take the full width. */
+  .alpt .alpt-panel > .alpt-panel__tile.has-pic {
     display: none;
   }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__body > .alpt-panel__labels {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__labels > * {
+    align-self: auto;
+  }
+
+  .alpt .alpt-panel__nav .alpt-pic-btn:not([hidden]) {
+    display: flex;
+    grid-area: 1 / 3 / 2 / 5;
+    order: 0;
+  }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__nav .alpt-panel__count {
+    display: none;
+  }
+}
+
+/* The Picture button is for phones only (above). */
+@media screen and (min-width: 600px) {
+  .alpt-pic-btn {
+    display: none !important;
+  }
+}
+
+.alpt-pic-btn[hidden] {
+  display: none !important;
 }
 
 /* A note for teachers ("teacher_note" in elements.json), at the top of Classroom notes & resources. */
@@ -5325,7 +5612,8 @@ html.alpt-board-open {
     font-size: clamp(1.15rem, 1.5vw, 1.7rem);
   }
 
-  .alpt .alpt-panel__body .alpt-panel__def {
+  .alpt .alpt-panel__body .alpt-panel__def,
+  .alpt .alpt-panel__body .alpt-panel__talk-q {
     font-size: clamp(0.82rem, 0.85vw, 0.98rem);
     line-height: 1.35;
   }
@@ -5338,12 +5626,33 @@ html.alpt-board-open {
     width: clamp(6rem, 8vw, 9.5rem);
   }
 
-  /* The picture tile took the panel's full height and so grew wide with it (188px at 1280px), squeezing the words
-     beside it onto more lines. A set width, with its height from its own shape. */
+  /* The picture takes the panel's full height (its width follows from its shape), so it can be read in place;
+     the words beside it are trimmed to make room, and a click opens it larger. */
   .alpt .alpt-panel > .alpt-panel__tile.has-pic {
-    width: clamp(7rem, 10vw, 11rem);
-    height: auto;
-    align-self: start;
+    width: auto;
+    height: 100%;
+    align-self: stretch;
+  }
+
+  /* Beside a picture the buttons have less room: the element count goes so they stay on one row. */
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__count {
+    display: none;
+  }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__nav {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__nav .alpt-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: 0.45rem;
+    white-space: nowrap;
+  }
+
+  .alpt .alpt-panel:has(.alpt-panel__tile.has-pic) .alpt-panel__nav :is(.alpt-links-toggle__icon, .alpt-board-btn__icon, .alpt-share-btn__icon) {
+    display: none;
   }
 
   .alpt .alpt-panel__sym {

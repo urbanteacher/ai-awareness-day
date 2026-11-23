@@ -755,7 +755,8 @@ function aiad_render_literacy_table(): string {
 				</div>
 
 			<button type="button" class="alpt-btn alpt-back-to-tiles" data-alpt-dismiss><?php esc_html_e( 'Back to elements', 'aiad-core' ); ?></button>
-				<button type="button" class="alpt-btn alpt-flip-btn" data-alpt-flip aria-pressed="false" hidden><span class="alpt-flip-btn__icon" aria-hidden="true">&#8635;</span> <span data-alpt-flip-label><?php esc_html_e( 'Picture', 'aiad-core' ); ?></span></button>
+				<?php // Phones only (the picture is hidden there to keep the buttons on screen): opens the picture with its definition. ?>
+				<button type="button" class="alpt-btn alpt-pic-btn" data-alpt-pic-btn hidden><svg class="alpt-pic-btn__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M3 17l6-6 5 5 3-3 4 4" fill="none" stroke="currentColor" stroke-width="2.2"/></svg><?php esc_html_e( 'Picture', 'aiad-core' ); ?></button>
 				<span class="alpt-panel__count" data-alpt-count>
 					<?php
 					/* translators: 1: element number, 2: number of elements */
