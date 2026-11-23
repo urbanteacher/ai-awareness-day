@@ -1,7 +1,7 @@
 <?php
 /**
- * Homepage promo for the AI Literacy Periodic Table (inc/literacy-table.php), after the five themes: the table can
- * be coloured by them. Printed after the Principles section (a filter in inc/literacy-table.php) once the table's page
+ * Homepage promo for the AI Literacy Periodic Table (the aiad-core plugin's literacy-table module), after the five themes: the table can
+ * be coloured by them. Printed after the Principles section (a filter in inc/literacy-table-page.php) once the table's page
  * exists. It uses the benchmark promo's
  * layout and styles (assets/css/components/benchmark-promo.css), with a row of sample tiles.
  *

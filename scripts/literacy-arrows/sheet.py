@@ -11,7 +11,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 from apply import FAMILY, THEME, ORIGINALS, LIVE  # noqa: E402
 
-els = {e['sym'].lower(): e for e in json.loads((ROOT / 'data/literacy-table/elements.json').read_text())['elements']}
+els = {e['sym'].lower(): e for e in json.loads((ROOT / 'plugins/aiad-core/data/literacy-table/elements.json').read_text())['elements']}
 
 
 def inline(svg, suffix, description):

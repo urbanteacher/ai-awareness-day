@@ -14,7 +14,11 @@
  * that list. Without JavaScript the tiles are links to their definitions; assets/js/literacy-table.js turns them into
  * the interactive table (detail panel, family filter, search, random element, print).
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/literacy-table.php with its data (data/literacy-table/), pictures, script and
+ * stylesheet, so the table and its content no longer depend on the theme. The page's own presentation (title, body
+ * class, the homepage promo card) stays in the theme's inc/literacy-table-page.php.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,7 +36,8 @@ function aiad_literacy_table_url(): string {
  * Whether this request is the table's page.
  */
 function aiad_is_literacy_table_page(): bool {
-	return 'ai-literacy-periodic-table' === aiad_current_editable_page();
+	// The theme decides which editable page is showing; under another theme this is never the table's page.
+	return function_exists( 'aiad_current_editable_page' ) && 'ai-literacy-periodic-table' === aiad_current_editable_page();
 }
 
 /**
@@ -48,7 +53,7 @@ function aiad_literacy_data( string $kind ): array {
 	if ( isset( $cache[ $kind ] ) ) {
 		return $cache[ $kind ];
 	}
-	$path = AIAD_DIR . '/data/literacy-table/' . sanitize_file_name( $kind ) . '.json';
+	$path = aiad_core_path( 'data/literacy-table/' . sanitize_file_name( $kind ) . '.json' );
 	$raw  = is_readable( $path ) ? (string) file_get_contents( $path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 	$data = '' === $raw ? null : json_decode( $raw, true );
 	$keep = 'aiad_literacy_data_' . $kind;
@@ -263,7 +268,7 @@ function aiad_literacy_pictures(): array {
 		return $pictures;
 	}
 	$pictures = array();
-	$dir      = AIAD_DIR . '/assets/images/literacy-table/';
+	$dir      = aiad_core_path( 'assets/images/literacy-table/' );
 	foreach ( aiad_literacy_element_records() as $e ) {
 		$sym = (string) ( $e['sym'] ?? '' );
 		if ( '' !== $sym && is_readable( $dir . strtolower( $sym ) . '.svg' ) ) {
@@ -278,9 +283,9 @@ function aiad_literacy_pictures(): array {
  * picture isn't served from an old cache.
  */
 function aiad_literacy_picture_base(): string {
-	$files = (array) glob( AIAD_DIR . '/assets/images/literacy-table/*.svg' );
+	$files = (array) glob( aiad_core_path( 'assets/images/literacy-table/*.svg' ) );
 	$ver   = $files ? max( array_map( 'filemtime', $files ) ) : 0;
-	return add_query_arg( 'ver', (string) $ver, AIAD_URI . '/assets/images/literacy-table/{sym}.svg' );
+	return add_query_arg( 'ver', (string) $ver, aiad_core_url( 'assets/images/literacy-table/{sym}.svg' ) );
 }
 
 function aiad_literacy_quiz(): array {
@@ -379,10 +384,10 @@ function aiad_literacy_resources_for( string $field, string $key ): array {
 function aiad_literacy_resource_links( array $indexes ): string {
 	$resources = aiad_literacy_resources();
 	$kinds     = array(
-		'lesson'  => __( 'AIAD lesson', 'ai-awareness-day' ),
-		'article' => __( 'AIAD article', 'ai-awareness-day' ),
-		'tool'    => __( 'AIAD tool', 'ai-awareness-day' ),
-		'partner' => __( 'from a partner', 'ai-awareness-day' ),
+		'lesson'  => __( 'AIAD lesson', 'aiad-core' ),
+		'article' => __( 'AIAD article', 'aiad-core' ),
+		'tool'    => __( 'AIAD tool', 'aiad-core' ),
+		'partner' => __( 'from a partner', 'aiad-core' ),
 	);
 	$links = array();
 	foreach ( $indexes as $i ) {
@@ -446,10 +451,10 @@ function aiad_literacy_era( int $year ): string {
 function aiad_literacy_year_label( array $el ): string {
 	if ( $el['older'] ) {
 		/* translators: %d: a year */
-		return sprintf( $el['approx'] ? __( 'Used this way since about %d (the word is older)', 'ai-awareness-day' ) : __( 'Used this way since %d (the word is older)', 'ai-awareness-day' ), $el['year'] );
+		return sprintf( $el['approx'] ? __( 'Used this way since about %d (the word is older)', 'aiad-core' ) : __( 'Used this way since %d (the word is older)', 'aiad-core' ), $el['year'] );
 	}
 	/* translators: %d: a year */
-	return sprintf( $el['approx'] ? __( 'In use since about %d', 'ai-awareness-day' ) : __( 'In use since %d', 'ai-awareness-day' ), $el['year'] );
+	return sprintf( $el['approx'] ? __( 'In use since about %d', 'aiad-core' ) : __( 'In use since %d', 'aiad-core' ), $el['year'] );
 }
 
 /**
@@ -630,17 +635,17 @@ function aiad_render_literacy_table(): string {
 	?>
 <div class="alpt" id="alpt-explore" data-alpt>
 	<div class="alpt-controls" data-alpt-controls>
-		<div class="alpt-view" role="group" aria-label="<?php esc_attr_e( 'Colour the table by', 'ai-awareness-day' ); ?>">
-			<span class="alpt-view__label"><?php esc_html_e( 'View by', 'ai-awareness-day' ); ?></span>
-			<button type="button" class="alpt-view__option" data-alpt-view="families" aria-pressed="true"><?php esc_html_e( 'Technical terms', 'ai-awareness-day' ); ?></button>
-			<button type="button" class="alpt-view__option" data-alpt-view="themes" aria-pressed="false"><?php esc_html_e( 'AIAD terms', 'ai-awareness-day' ); ?></button>
-			<button type="button" class="alpt-view__option" data-alpt-view="years" aria-pressed="false"><?php esc_html_e( 'Year', 'ai-awareness-day' ); ?></button>
+		<div class="alpt-view" role="group" aria-label="<?php esc_attr_e( 'Colour the table by', 'aiad-core' ); ?>">
+			<span class="alpt-view__label"><?php esc_html_e( 'View by', 'aiad-core' ); ?></span>
+			<button type="button" class="alpt-view__option" data-alpt-view="families" aria-pressed="true"><?php esc_html_e( 'Technical terms', 'aiad-core' ); ?></button>
+			<button type="button" class="alpt-view__option" data-alpt-view="themes" aria-pressed="false"><?php esc_html_e( 'AIAD terms', 'aiad-core' ); ?></button>
+			<button type="button" class="alpt-view__option" data-alpt-view="years" aria-pressed="false"><?php esc_html_e( 'Year', 'aiad-core' ); ?></button>
 		</div>
 		<div class="alpt-search">
-			<label for="alpt-search-input"><?php esc_html_e( 'Search the table', 'ai-awareness-day' ); ?></label>
-			<input type="search" id="alpt-search-input" data-alpt-search autocomplete="off" placeholder="<?php esc_attr_e( 'Try "privacy" or "bias"', 'ai-awareness-day' ); ?>">
+			<label for="alpt-search-input"><?php esc_html_e( 'Search the table', 'aiad-core' ); ?></label>
+			<input type="search" id="alpt-search-input" data-alpt-search autocomplete="off" placeholder="<?php esc_attr_e( 'Try "privacy" or "bias"', 'aiad-core' ); ?>">
 		</div>
-		<div class="alpt-legend" role="group" aria-label="<?php esc_attr_e( 'Show one family', 'ai-awareness-day' ); ?>">
+		<div class="alpt-legend" role="group" aria-label="<?php esc_attr_e( 'Show one family', 'aiad-core' ); ?>">
 			<?php foreach ( $families as $key => $family ) : ?>
 				<button type="button" class="alpt-chip alpt-fam--<?php echo esc_attr( $key ); ?>" data-alpt-family="<?php echo esc_attr( $key ); ?>" aria-pressed="false">
 					<span class="alpt-chip__swatch" aria-hidden="true"></span>
@@ -648,9 +653,9 @@ function aiad_render_literacy_table(): string {
 					<span class="alpt-chip__count"><?php echo esc_html( (string) ( $counts[ $key ] ?? 0 ) ); ?></span>
 				</button>
 			<?php endforeach; ?>
-			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-family="" aria-pressed="true"><?php esc_html_e( 'All families', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-family="" aria-pressed="true"><?php esc_html_e( 'All families', 'aiad-core' ); ?></button>
 		</div>
-		<div class="alpt-legend alpt-legend--themes" role="group" aria-label="<?php esc_attr_e( 'Show one theme', 'ai-awareness-day' ); ?>">
+		<div class="alpt-legend alpt-legend--themes" role="group" aria-label="<?php esc_attr_e( 'Show one theme', 'aiad-core' ); ?>">
 			<?php foreach ( $strands as $key => $label ) : ?>
 				<button type="button" class="alpt-chip alpt-th--<?php echo esc_attr( $key ); ?>" data-alpt-theme-filter="<?php echo esc_attr( $key ); ?>" aria-pressed="false">
 					<span class="alpt-chip__swatch" aria-hidden="true"></span>
@@ -658,17 +663,17 @@ function aiad_render_literacy_table(): string {
 					<span class="alpt-chip__count"><?php echo esc_html( (string) ( $theme_counts[ $key ] ?? 0 ) ); ?></span>
 				</button>
 			<?php endforeach; ?>
-			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-theme-filter="" aria-pressed="true"><?php esc_html_e( 'All themes', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-theme-filter="" aria-pressed="true"><?php esc_html_e( 'All themes', 'aiad-core' ); ?></button>
 		</div>
 		<div class="alpt-timeline" data-alpt-timeline>
-			<label class="alpt-timeline__label" for="alpt-year-range"><?php esc_html_e( 'Words in use by', 'ai-awareness-day' ); ?> <output class="alpt-timeline__year" data-alpt-year-out for="alpt-year-range"><?php echo esc_html( (string) end( $years ) ); ?></output></label>
+			<label class="alpt-timeline__label" for="alpt-year-range"><?php esc_html_e( 'Words in use by', 'aiad-core' ); ?> <output class="alpt-timeline__year" data-alpt-year-out for="alpt-year-range"><?php echo esc_html( (string) end( $years ) ); ?></output></label>
 			<div class="alpt-timeline__row">
-				<button type="button" class="alpt-btn alpt-btn--ink alpt-timeline__play" data-alpt-play><span class="alpt-timeline__play-icon" aria-hidden="true"></span><span data-alpt-play-text><?php esc_html_e( 'Play', 'ai-awareness-day' ); ?></span></button>
+				<button type="button" class="alpt-btn alpt-btn--ink alpt-timeline__play" data-alpt-play><span class="alpt-timeline__play-icon" aria-hidden="true"></span><span data-alpt-play-text><?php esc_html_e( 'Play', 'aiad-core' ); ?></span></button>
 				<input type="range" id="alpt-year-range" class="alpt-timeline__range" data-alpt-year-range min="0" max="<?php echo esc_attr( (string) ( count( $years ) - 1 ) ); ?>" step="1" value="<?php echo esc_attr( (string) ( count( $years ) - 1 ) ); ?>" data-years="<?php echo esc_attr( implode( ',', $years ) ); ?>">
 			</div>
-			<p class="alpt-timeline__note"><?php esc_html_e( 'Drag the slider, or press Play, to watch the words arrive. Dates show when each term was in use in AI, not necessarily the very first time anyone said it; "about" means it came into use gradually. Some words, like Bias and Privacy, are much older: their year is when they took on their AI meaning.', 'ai-awareness-day' ); ?> <a href="#alpt-suggest-title"><?php esc_html_e( 'Know an earlier date? Tell us.', 'ai-awareness-day' ); ?></a></p>
+			<p class="alpt-timeline__note"><?php esc_html_e( 'Drag the slider, or press Play, to watch the words arrive. Dates show when each term was in use in AI, not necessarily the very first time anyone said it; "about" means it came into use gradually. Some words, like Bias and Privacy, are much older: their year is when they took on their AI meaning.', 'aiad-core' ); ?> <a href="#alpt-suggest-title"><?php esc_html_e( 'Know an earlier date? Tell us.', 'aiad-core' ); ?></a></p>
 		</div>
-		<div class="alpt-legend alpt-legend--eras" role="group" aria-label="<?php esc_attr_e( 'Show one era', 'ai-awareness-day' ); ?>">
+		<div class="alpt-legend alpt-legend--eras" role="group" aria-label="<?php esc_attr_e( 'Show one era', 'aiad-core' ); ?>">
 			<?php foreach ( $eras as $key => $era ) : ?>
 				<button type="button" class="alpt-chip alpt-era--<?php echo esc_attr( $key ); ?>" data-alpt-era-filter="<?php echo esc_attr( $key ); ?>" aria-pressed="false">
 					<span class="alpt-chip__swatch" aria-hidden="true"></span>
@@ -676,23 +681,23 @@ function aiad_render_literacy_table(): string {
 					<span class="alpt-chip__count"><?php echo esc_html( (string) ( $era_counts[ $key ] ?? 0 ) ); ?></span>
 				</button>
 			<?php endforeach; ?>
-			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-era-filter="" aria-pressed="true"><?php esc_html_e( 'All years', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="alpt-chip alpt-chip--all" data-alpt-era-filter="" aria-pressed="true"><?php esc_html_e( 'All years', 'aiad-core' ); ?></button>
 		</div>
-		<button type="button" class="alpt-btn" data-alpt-clear-search hidden><?php esc_html_e( 'Clear search', 'ai-awareness-day' ); ?></button>
-		<a class="alpt-print-cards alpt-print-poster" href="#alpt-print"><?php esc_html_e( 'Print the poster', 'ai-awareness-day' ); ?></a>
-		<button type="button" class="alpt-print-cards" data-alpt-print-cards hidden><?php esc_html_e( 'Print these as cards', 'ai-awareness-day' ); ?></button>
+		<button type="button" class="alpt-btn" data-alpt-clear-search hidden><?php esc_html_e( 'Clear search', 'aiad-core' ); ?></button>
+		<a class="alpt-print-cards alpt-print-poster" href="#alpt-print"><?php esc_html_e( 'Print the poster', 'aiad-core' ); ?></a>
+		<button type="button" class="alpt-print-cards" data-alpt-print-cards hidden><?php esc_html_e( 'Print these as cards', 'aiad-core' ); ?></button>
 		<div class="alpt-status" data-alpt-status aria-live="polite"></div><?php // A div, not a p: theme pages drop empty paragraphs (aiad_editable_page_render_block()). ?>
 	</div>
 
 	<div class="alpt-grid">
 		<div class="alpt-panel alpt-fam--<?php echo esc_attr( $first['family'] ); ?>" data-alpt-panel>
 			<div class="alpt-panel__print" aria-hidden="true">
-				<p class="alpt-panel__print-eyebrow"><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></p>
-				<p class="alpt-panel__print-title"><?php esc_html_e( 'The AI Literacy Periodic Table', 'ai-awareness-day' ); ?></p>
+				<p class="alpt-panel__print-eyebrow"><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></p>
+				<p class="alpt-panel__print-title"><?php esc_html_e( 'The AI Literacy Periodic Table', 'aiad-core' ); ?></p>
 				<p class="alpt-panel__print-lead">
 					<?php
 					/* translators: %d: number of elements */
-					echo esc_html( sprintf( __( '%d AI terms in seven families. Read every definition at aiawarenessday.co.uk/ai-literacy-periodic-table', 'ai-awareness-day' ), $total ) );
+					echo esc_html( sprintf( __( '%d AI terms in seven families. Read every definition at aiawarenessday.co.uk/ai-literacy-periodic-table', 'aiad-core' ), $total ) );
 					?>
 				</p>
 				<ul class="alpt-panel__print-key">
@@ -714,50 +719,50 @@ function aiad_render_literacy_table(): string {
 				<span class="alpt-panel__tile-name" data-alpt-out="name" aria-hidden="true"><?php echo esc_html( $first['name'] ); ?></span>
 			</div>
 			<div class="alpt-panel__body" data-alpt-live><?php // Not a live region: it would re-read the whole panel. The script announces the element through a short line instead. ?>
-				<p class="alpt-panel__labels"><span class="alpt-panel__family" data-alpt-out="family"><?php echo esc_html( $families[ $first['family'] ]['name'] ); ?></span> <span class="alpt-panel__theme alpt-th--<?php echo esc_attr( $first['theme'] ); ?>" data-alpt-theme-label><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'ai-awareness-day' ), $strands[ $first['theme'] ] ?? '' ) ); ?></span> <span class="alpt-panel__year" data-alpt-out="year"><?php echo esc_html( aiad_literacy_year_label( $first ) ); ?></span></p>
+				<p class="alpt-panel__labels"><span class="alpt-panel__family" data-alpt-out="family"><?php echo esc_html( $families[ $first['family'] ]['name'] ); ?></span> <span class="alpt-panel__theme alpt-th--<?php echo esc_attr( $first['theme'] ); ?>" data-alpt-theme-label><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'aiad-core' ), $strands[ $first['theme'] ] ?? '' ) ); ?></span> <span class="alpt-panel__year" data-alpt-out="year"><?php echo esc_html( aiad_literacy_year_label( $first ) ); ?></span></p>
 				<h2 class="alpt-panel__title" data-alpt-out="title"><?php echo esc_html( $first['name'] ); ?></h2>
 				<p class="alpt-panel__def" data-alpt-out="def"><?php echo esc_html( $first['def'] ); ?></p>
 				<details class="alpt-reader-notes">
-					<summary><?php esc_html_e( 'Classroom notes & resources', 'ai-awareness-day' ); ?></summary>
+					<summary><?php esc_html_e( 'Classroom notes & resources', 'aiad-core' ); ?></summary>
 				<div class="alpt-panel__issues" data-alpt-issues-out>
-					<p class="alpt-panel__issues-label"><?php esc_html_e( 'Issues it raises', 'ai-awareness-day' ); ?> <span class="alpt-panel__issues-hint"><?php esc_html_e( '· choose one to read about it', 'ai-awareness-day' ); ?></span></p>
+					<p class="alpt-panel__issues-label"><?php esc_html_e( 'Issues it raises', 'aiad-core' ); ?> <span class="alpt-panel__issues-hint"><?php esc_html_e( '· choose one to read about it', 'aiad-core' ); ?></span></p>
 					<?php // The script fills in the issues and the question (theme pages drop empty elements). ?>
 				</div>
-				<p class="alpt-panel__res" data-alpt-res hidden><span class="alpt-panel__bench-label"><?php esc_html_e( 'Learn more:', 'ai-awareness-day' ); ?></span> <span data-alpt-res-list>&nbsp;</span></p>
-				<p class="alpt-panel__bench"><span class="alpt-panel__bench-label"><?php esc_html_e( 'Benchmark:', 'ai-awareness-day' ); ?></span> <a href="<?php echo esc_url( aiad_literacy_benchmark_url() ); ?>" data-alpt-bench><?php echo esc_html( aiad_literacy_benchmark_domain( $first['sym'] ) ); ?></a></p>
+				<p class="alpt-panel__res" data-alpt-res hidden><span class="alpt-panel__bench-label"><?php esc_html_e( 'Learn more:', 'aiad-core' ); ?></span> <span data-alpt-res-list>&nbsp;</span></p>
+				<p class="alpt-panel__bench"><span class="alpt-panel__bench-label"><?php esc_html_e( 'Benchmark:', 'aiad-core' ); ?></span> <a href="<?php echo esc_url( aiad_literacy_benchmark_url() ); ?>" data-alpt-bench><?php echo esc_html( aiad_literacy_benchmark_domain( $first['sym'] ) ); ?></a></p>
 				</details>
 				<div class="alpt-panel__links" data-alpt-links-out hidden>
-					<p class="alpt-panel__links-label"><?php esc_html_e( 'Connected to', 'ai-awareness-day' ); ?></p>
+					<p class="alpt-panel__links-label"><?php esc_html_e( 'Connected to', 'aiad-core' ); ?></p>
 					<?php // The script fills in the list and the compounds line (theme pages drop empty elements). ?>
 				</div>
 			</div>
 
 			<div class="alpt-panel__nav" data-alpt-nav>
-				<button type="button" class="alpt-btn alpt-step alpt-step--prev" data-alpt-step="-1"><span aria-hidden="true">&larr;</span> <?php esc_html_e( 'Previous', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-btn--ink alpt-links-toggle" data-alpt-links aria-pressed="false"><span class="alpt-links-toggle__icon" aria-hidden="true"></span><?php esc_html_e( 'Connections', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-board-btn" data-alpt-board-element><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-share-btn" data-alpt-share aria-expanded="false" aria-controls="alpt-share-menu"><svg class="alpt-share-btn__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 3v12M7 8l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><?php esc_html_e( 'Share', 'ai-awareness-day' ); ?></button>
+				<button type="button" class="alpt-btn alpt-step alpt-step--prev" data-alpt-step="-1"><span aria-hidden="true">&larr;</span> <?php esc_html_e( 'Previous', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-btn--ink alpt-links-toggle" data-alpt-links aria-pressed="false"><span class="alpt-links-toggle__icon" aria-hidden="true"></span><?php esc_html_e( 'Connections', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-board-btn" data-alpt-board-element><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-share-btn" data-alpt-share aria-expanded="false" aria-controls="alpt-share-menu"><svg class="alpt-share-btn__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 3v12M7 8l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><?php esc_html_e( 'Share', 'aiad-core' ); ?></button>
 				<div class="alpt-share" id="alpt-share-menu" data-alpt-share-menu hidden>
-					<p class="alpt-share__label"><?php esc_html_e( 'Share this element', 'ai-awareness-day' ); ?></p>
+					<p class="alpt-share__label"><?php esc_html_e( 'Share this element', 'aiad-core' ); ?></p>
 					<ul class="alpt-share__list">
 						<li><a class="alpt-share__link alpt-share__link--linkedin" data-alpt-share-to="linkedin" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
 						<li><a class="alpt-share__link alpt-share__link--x" data-alpt-share-to="x" href="#" target="_blank" rel="noopener noreferrer">X</a></li>
 						<li><a class="alpt-share__link alpt-share__link--facebook" data-alpt-share-to="facebook" href="#" target="_blank" rel="noopener noreferrer">Facebook</a></li>
 						<li><a class="alpt-share__link alpt-share__link--whatsapp" data-alpt-share-to="whatsapp" href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
-						<li><a class="alpt-share__link alpt-share__link--email" data-alpt-share-to="email" href="#"><?php esc_html_e( 'Email', 'ai-awareness-day' ); ?></a></li>
-						<li><button type="button" class="alpt-share__link alpt-share__link--copy" data-alpt-copy><?php esc_html_e( 'Copy link', 'ai-awareness-day' ); ?></button></li>
+						<li><a class="alpt-share__link alpt-share__link--email" data-alpt-share-to="email" href="#"><?php esc_html_e( 'Email', 'aiad-core' ); ?></a></li>
+						<li><button type="button" class="alpt-share__link alpt-share__link--copy" data-alpt-copy><?php esc_html_e( 'Copy link', 'aiad-core' ); ?></button></li>
 					</ul>
 				</div>
 
-			<button type="button" class="alpt-btn alpt-back-to-tiles" data-alpt-dismiss><?php esc_html_e( 'Back to elements', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-flip-btn" data-alpt-flip aria-pressed="false" hidden><span class="alpt-flip-btn__icon" aria-hidden="true">&#8635;</span> <span data-alpt-flip-label><?php esc_html_e( 'Picture', 'ai-awareness-day' ); ?></span></button>
+			<button type="button" class="alpt-btn alpt-back-to-tiles" data-alpt-dismiss><?php esc_html_e( 'Back to elements', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-flip-btn" data-alpt-flip aria-pressed="false" hidden><span class="alpt-flip-btn__icon" aria-hidden="true">&#8635;</span> <span data-alpt-flip-label><?php esc_html_e( 'Picture', 'aiad-core' ); ?></span></button>
 				<span class="alpt-panel__count" data-alpt-count>
 					<?php
 					/* translators: 1: element number, 2: number of elements */
-					printf( esc_html__( 'Element %1$s of %2$s', 'ai-awareness-day' ), '<span data-alpt-out="n2">' . esc_html( (string) $first['n'] ) . '</span>', esc_html( (string) $total ) );
+					printf( esc_html__( 'Element %1$s of %2$s', 'aiad-core' ), '<span data-alpt-out="n2">' . esc_html( (string) $first['n'] ) . '</span>', esc_html( (string) $total ) );
 					?>
 				</span>
-				<button type="button" class="alpt-btn alpt-step alpt-step--next" data-alpt-step="1"><?php esc_html_e( 'Next', 'ai-awareness-day' ); ?> <span aria-hidden="true">&rarr;</span></button>
+				<button type="button" class="alpt-btn alpt-step alpt-step--next" data-alpt-step="1"><?php esc_html_e( 'Next', 'aiad-core' ); ?> <span aria-hidden="true">&rarr;</span></button>
 			</div>
 		</div>
 
@@ -765,16 +770,16 @@ function aiad_render_literacy_table(): string {
 			<div class="alpt-tile alpt-tile--key">
 				<span class="alpt-tile__n">102</span>
 				<span class="alpt-tile__sym">Bi</span>
-				<span class="alpt-tile__name"><?php esc_html_e( 'Bias', 'ai-awareness-day' ); ?></span>
+				<span class="alpt-tile__name"><?php esc_html_e( 'Bias', 'aiad-core' ); ?></span>
 			</div>
 			<div class="alpt-key__text">
-				<p class="alpt-key__title"><?php esc_html_e( 'How to read a tile', 'ai-awareness-day' ); ?></p>
+				<p class="alpt-key__title"><?php esc_html_e( 'How to read a tile', 'aiad-core' ); ?></p>
 				<?php /* The full table's tiles put the number beside the symbol (ai-literacy-periodic-table.css). */ ?>
-				<p><?php esc_html_e( 'Top: its symbol and number', 'ai-awareness-day' ); ?></p>
-				<p><?php esc_html_e( 'Bottom: the term', 'ai-awareness-day' ); ?></p>
-				<p class="alpt-key-family"><?php esc_html_e( 'Colour: the family it belongs to', 'ai-awareness-day' ); ?></p>
-				<p class="alpt-key-theme"><?php esc_html_e( 'Colour: its AI Awareness Day theme', 'ai-awareness-day' ); ?></p>
-				<p class="alpt-key-year"><?php esc_html_e( 'Colour: when the word came into use', 'ai-awareness-day' ); ?></p>
+				<p><?php esc_html_e( 'Top: its symbol and number', 'aiad-core' ); ?></p>
+				<p><?php esc_html_e( 'Bottom: the term', 'aiad-core' ); ?></p>
+				<p class="alpt-key-family"><?php esc_html_e( 'Colour: the family it belongs to', 'aiad-core' ); ?></p>
+				<p class="alpt-key-theme"><?php esc_html_e( 'Colour: its AI Awareness Day theme', 'aiad-core' ); ?></p>
+				<p class="alpt-key-year"><?php esc_html_e( 'Colour: when the word came into use', 'aiad-core' ); ?></p>
 			</div>
 		</div>
 
@@ -786,7 +791,7 @@ function aiad_render_literacy_table(): string {
 		<?php endforeach; ?>
 		<?php foreach ( $strands as $key => $label ) : ?>
 			<p class="alpt-family-label alpt-theme-label alpt-th--<?php echo esc_attr( $key ); ?>" style="--o2:<?php echo esc_attr( (string) ( $theme_order[ $key ] * 1000 ) ); ?>">
-				<span class="alpt-family-label__name"><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'ai-awareness-day' ), $label ) ); ?></span>
+				<span class="alpt-family-label__name"><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'aiad-core' ), $label ) ); ?></span>
 			</p>
 		<?php endforeach; ?>
 
@@ -807,17 +812,17 @@ function aiad_render_literacy_table(): string {
 		<?php endforeach; ?>
 	</div>
 
-	<p class="alpt-footnote"><?php esc_html_e( 'Left: foundations. Centre: generative and predictive AI. Right: autonomous agents and automation. Below: the governance and infrastructure that hold it all together. Numbers run left to right, top to bottom.', 'ai-awareness-day' ); ?></p>
+	<p class="alpt-footnote"><?php esc_html_e( 'Left: foundations. Centre: generative and predictive AI. Right: autonomous agents and automation. Below: the governance and infrastructure that hold it all together. Numbers run left to right, top to bottom.', 'aiad-core' ); ?></p>
 
 	<div class="alpt-tryit" id="alpt-tryit">
-		<p class="alpt-sticker"><?php esc_html_e( 'Pick one · 5 to 50 minutes', 'ai-awareness-day' ); ?></p>
-		<h2 class="alpt-tryit__title"><?php esc_html_e( 'Try it', 'ai-awareness-day' ); ?></h2>
-		<p class="alpt-tryit__lead"><?php esc_html_e( 'Ways to put the words to work, from a five-minute quiz to a full lesson.', 'ai-awareness-day' ); ?></p>
+		<p class="alpt-sticker"><?php esc_html_e( 'Pick one · 5 to 50 minutes', 'aiad-core' ); ?></p>
+		<h2 class="alpt-tryit__title"><?php esc_html_e( 'Try it', 'aiad-core' ); ?></h2>
+		<p class="alpt-tryit__lead"><?php esc_html_e( 'Ways to put the words to work, from a five-minute quiz to a full lesson.', 'aiad-core' ); ?></p>
 		<ul class="alpt-tryit__cards">
-			<li><a class="alpt-tryit__card" href="#alpt-compounds-title"><span class="alpt-tryit__time"><?php esc_html_e( '10 min', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Compound combinations', 'ai-awareness-day' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'See how elements combine into the AI people use every day.', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
-			<li><a class="alpt-tryit__card" href="#alpt-challenge-title"><span class="alpt-tryit__time"><?php esc_html_e( '15–30 min', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'The compound challenge', 'ai-awareness-day' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'Work the compounds out yourself, at three levels.', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
-			<li><a class="alpt-tryit__card" href="#alpt-buzzword-check"><span class="alpt-tryit__time"><?php esc_html_e( '5 min', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Buzzword check', 'ai-awareness-day' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'Ten quick questions, different each time.', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
-			<li><a class="alpt-tryit__card" href="#alpt-sessions"><span class="alpt-tryit__time"><?php esc_html_e( '10–50 min', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Ready-made sessions', 'ai-awareness-day' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'A starter, a 50-minute lesson, a staff INSET and a page for parents.', 'ai-awareness-day' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
+			<li><a class="alpt-tryit__card" href="#alpt-compounds-title"><span class="alpt-tryit__time"><?php esc_html_e( '10 min', 'aiad-core' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Compound combinations', 'aiad-core' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'See how elements combine into the AI people use every day.', 'aiad-core' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
+			<li><a class="alpt-tryit__card" href="#alpt-challenge-title"><span class="alpt-tryit__time"><?php esc_html_e( '15–30 min', 'aiad-core' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'The compound challenge', 'aiad-core' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'Work the compounds out yourself, at three levels.', 'aiad-core' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
+			<li><a class="alpt-tryit__card" href="#alpt-buzzword-check"><span class="alpt-tryit__time"><?php esc_html_e( '5 min', 'aiad-core' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Buzzword check', 'aiad-core' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'Ten quick questions, different each time.', 'aiad-core' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
+			<li><a class="alpt-tryit__card" href="#alpt-sessions"><span class="alpt-tryit__time"><?php esc_html_e( '10–50 min', 'aiad-core' ); ?></span><span class="alpt-tryit__name"><?php esc_html_e( 'Ready-made sessions', 'aiad-core' ); ?></span> <span class="alpt-tryit__about"><?php esc_html_e( 'A starter, a 50-minute lesson, a staff INSET and a page for parents.', 'aiad-core' ); ?></span><span class="alpt-tryit__go" aria-hidden="true">&darr;</span></a></li>
 		</ul>
 	</div>
 
@@ -825,22 +830,22 @@ function aiad_render_literacy_table(): string {
 		<p class="alpt-sticker">
 			<?php
 			/* translators: %d: number of compounds */
-			echo esc_html( sprintf( __( '%d compounds · Stable or volatile?', 'ai-awareness-day' ), count( $compounds ) ) );
+			echo esc_html( sprintf( __( '%d compounds · Stable or volatile?', 'aiad-core' ), count( $compounds ) ) );
 			?>
 		</p>
-		<h2 id="alpt-compounds-title" class="alpt-compounds__title"><?php esc_html_e( 'Compound combinations', 'ai-awareness-day' ); ?></h2>
-		<p class="alpt-compounds__lead"><?php esc_html_e( 'Elements combine into the AI systems people use every day. Each compound shows which elements a real system needs, where a human stays in the loop, and a question for your class to debate. Want to work them out yourself? Take the compound challenge below.', 'ai-awareness-day' ); ?></p>
+		<h2 id="alpt-compounds-title" class="alpt-compounds__title"><?php esc_html_e( 'Compound combinations', 'aiad-core' ); ?></h2>
+		<p class="alpt-compounds__lead"><?php esc_html_e( 'Elements combine into the AI systems people use every day. Each compound shows which elements a real system needs, where a human stays in the loop, and a question for your class to debate. Want to work them out yourself? Take the compound challenge below.', 'aiad-core' ); ?></p>
 		<p class="alpt-compounds__key">
-			<span class="alpt-badge alpt-badge--stable"><?php esc_html_e( 'Stable', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'A human stays in the loop.', 'ai-awareness-day' ); ?>
-			<span class="alpt-badge alpt-badge--volatile"><?php esc_html_e( 'Volatile', 'ai-awareness-day' ); ?></span> <?php esc_html_e( 'Risky without a human in the loop. Can you find the element that stabilises it?', 'ai-awareness-day' ); ?>
+			<span class="alpt-badge alpt-badge--stable"><?php esc_html_e( 'Stable', 'aiad-core' ); ?></span> <?php esc_html_e( 'A human stays in the loop.', 'aiad-core' ); ?>
+			<span class="alpt-badge alpt-badge--volatile"><?php esc_html_e( 'Volatile', 'aiad-core' ); ?></span> <?php esc_html_e( 'Risky without a human in the loop. Can you find the element that stabilises it?', 'aiad-core' ); ?>
 		</p>
-		<div class="alpt-levels" role="group" aria-label="<?php esc_attr_e( 'Show one level', 'ai-awareness-day' ); ?>" data-alpt-levels hidden>
-			<button type="button" class="alpt-chip" data-alpt-level="" aria-pressed="true"><?php esc_html_e( 'All levels', 'ai-awareness-day' ); ?> <span class="alpt-chip__count"><?php echo esc_html( (string) count( $compounds ) ); ?></span></button>
+		<div class="alpt-levels" role="group" aria-label="<?php esc_attr_e( 'Show one level', 'aiad-core' ); ?>" data-alpt-levels hidden>
+			<button type="button" class="alpt-chip" data-alpt-level="" aria-pressed="true"><?php esc_html_e( 'All levels', 'aiad-core' ); ?> <span class="alpt-chip__count"><?php echo esc_html( (string) count( $compounds ) ); ?></span></button>
 			<?php foreach ( $levels as $key => $label ) : ?>
 				<button type="button" class="alpt-chip alpt-level--<?php echo esc_attr( $key ); ?>" data-alpt-level="<?php echo esc_attr( $key ); ?>" aria-pressed="false"><span class="alpt-level-mark" aria-hidden="true"></span><?php echo esc_html( $label ); ?> <span class="alpt-chip__count"><?php echo esc_html( (string) ( $level_counts[ $key ] ?? 0 ) ); ?></span></button>
 			<?php endforeach; ?>
 		</div>
-		<p class="alpt-compounds__locked-note" data-alpt-locked-note><?php esc_html_e( 'Challenge on: compounds you haven\'t discovered yet are hidden. Each one gives you a clue: how many elements it needs, and one of them.', 'ai-awareness-day' ); ?></p>
+		<p class="alpt-compounds__locked-note" data-alpt-locked-note><?php esc_html_e( 'Challenge on: compounds you haven\'t discovered yet are hidden. Each one gives you a clue: how many elements it needs, and one of them.', 'aiad-core' ); ?></p>
 		<ul class="alpt-compounds__grid" data-alpt-compounds>
 			<?php foreach ( $compounds as $compound ) : ?>
 				<?php
@@ -851,14 +856,14 @@ function aiad_render_literacy_table(): string {
 				<li class="alpt-compound alpt-compound--<?php echo esc_attr( $compound['strand'] ); ?><?php echo $aiad_vol ? ' alpt-compound--volatile' : ''; ?>" id="alpt-cp-<?php echo esc_attr( $compound['id'] ); ?>" data-alpt-compound="<?php echo esc_attr( $compound['id'] ); ?>" data-alpt-compound-level="<?php echo esc_attr( $compound['level'] ); ?>">
 					<div class="alpt-compound__locked">
 						<span class="alpt-compound__q" aria-hidden="true">?</span>
-						<p class="alpt-compound__locked-title"><?php esc_html_e( 'Undiscovered compound', 'ai-awareness-day' ); ?></p>
+						<p class="alpt-compound__locked-title"><?php esc_html_e( 'Undiscovered compound', 'aiad-core' ); ?></p>
 						<p class="alpt-compound__hint">
 							<?php
 							/* translators: 1: number of elements in the compound, 2: an element's name, 3: its symbol */
-							echo esc_html( sprintf( _n( 'Clue: %1$d element, including %2$s (%3$s).', 'Clue: %1$d elements, including %2$s (%3$s).', count( $compound['syms'] ), 'ai-awareness-day' ), count( $compound['syms'] ), $aiad_first['name'] ?? '', $compound['syms'][0] ) );
+							echo esc_html( sprintf( _n( 'Clue: %1$d element, including %2$s (%3$s).', 'Clue: %1$d elements, including %2$s (%3$s).', count( $compound['syms'] ), 'aiad-core' ), count( $compound['syms'] ), $aiad_first['name'] ?? '', $compound['syms'][0] ) );
 							?>
 						</p>
-						<p class="alpt-compound__looks"><strong><?php esc_html_e( 'Looks like:', 'ai-awareness-day' ); ?></strong> <?php echo esc_html( $compound['example'] ); ?></p>
+						<p class="alpt-compound__looks"><strong><?php esc_html_e( 'Looks like:', 'aiad-core' ); ?></strong> <?php echo esc_html( $compound['example'] ); ?></p>
 						<span class="alpt-compound__swatches" aria-hidden="true">
 							<?php foreach ( $compound['syms'] as $sym ) : ?>
 								<span class="alpt-chip__swatch alpt-fam--<?php echo esc_attr( $by_sym[ $sym ]['family'] ?? '' ); ?>"></span>
@@ -867,15 +872,15 @@ function aiad_render_literacy_table(): string {
 						<p class="alpt-compound__strand alpt-strand--<?php echo esc_attr( $compound['strand'] ); ?>">
 							<?php
 							/* translators: %s: strand name, such as Safe */
-							echo esc_html( sprintf( __( '%s strand', 'ai-awareness-day' ), $aiad_strand ) );
+							echo esc_html( sprintf( __( '%s strand', 'aiad-core' ), $aiad_strand ) );
 							?>
 						</p>
-						<button type="button" class="alpt-btn alpt-compound__try" data-alpt-target="<?php echo esc_attr( $compound['id'] ); ?>"><?php esc_html_e( 'Find this one', 'ai-awareness-day' ); ?></button>
+						<button type="button" class="alpt-btn alpt-compound__try" data-alpt-target="<?php echo esc_attr( $compound['id'] ); ?>"><?php esc_html_e( 'Find this one', 'aiad-core' ); ?></button>
 					</div>
 					<div class="alpt-compound__body">
 						<div class="alpt-compound__tags">
-							<span class="alpt-badge alpt-badge--<?php echo $aiad_vol ? 'volatile' : 'stable'; ?>"><?php echo $aiad_vol ? esc_html__( 'Volatile', 'ai-awareness-day' ) : esc_html__( 'Stable', 'ai-awareness-day' ); ?></span>
-							<span class="alpt-compound__found" data-alpt-found-mark hidden><?php esc_html_e( 'Discovered', 'ai-awareness-day' ); ?></span>
+							<span class="alpt-badge alpt-badge--<?php echo $aiad_vol ? 'volatile' : 'stable'; ?>"><?php echo $aiad_vol ? esc_html__( 'Volatile', 'aiad-core' ) : esc_html__( 'Stable', 'aiad-core' ); ?></span>
+							<span class="alpt-compound__found" data-alpt-found-mark hidden><?php esc_html_e( 'Discovered', 'aiad-core' ); ?></span>
 							<span class="alpt-compound__level alpt-level--<?php echo esc_attr( $compound['level'] ); ?>"><span class="alpt-level-mark" aria-hidden="true"></span><?php echo esc_html( $levels[ $compound['level'] ] ?? '' ); ?></span>
 						</div>
 						<div class="alpt-compound__head">
@@ -883,11 +888,11 @@ function aiad_render_literacy_table(): string {
 							<p class="alpt-compound__strand alpt-strand--<?php echo esc_attr( $compound['strand'] ); ?>">
 								<?php
 								/* translators: %s: strand name, such as Safe */
-								echo esc_html( sprintf( __( '%s strand', 'ai-awareness-day' ), $aiad_strand ) );
+								echo esc_html( sprintf( __( '%s strand', 'aiad-core' ), $aiad_strand ) );
 								?>
 							</p>
 						</div>
-						<p class="alpt-compound__made"><?php esc_html_e( 'Made from', 'ai-awareness-day' ); ?></p>
+						<p class="alpt-compound__made"><?php esc_html_e( 'Made from', 'aiad-core' ); ?></p>
 						<ul class="alpt-compound__formula">
 							<?php foreach ( $compound['syms'] as $i => $sym ) : ?>
 								<?php if ( $i > 0 ) : ?><li class="alpt-compound__plus" aria-hidden="true">+</li><?php endif; ?>
@@ -897,23 +902,23 @@ function aiad_render_literacy_table(): string {
 								</li>
 							<?php endforeach; ?>
 						</ul>
-						<button type="button" class="alpt-btn alpt-board-btn alpt-compound__board" data-alpt-board-compound="<?php echo esc_attr( $compound['id'] ); ?>" hidden><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></button>
-						<button type="button" class="alpt-btn alpt-compound__copy" data-alpt-copy-compound="<?php echo esc_attr( $compound['id'] ); ?>" hidden><?php esc_html_e( 'Copy link', 'ai-awareness-day' ); ?></button>
+						<button type="button" class="alpt-btn alpt-board-btn alpt-compound__board" data-alpt-board-compound="<?php echo esc_attr( $compound['id'] ); ?>" hidden><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></button>
+						<button type="button" class="alpt-btn alpt-compound__copy" data-alpt-copy-compound="<?php echo esc_attr( $compound['id'] ); ?>" hidden><?php esc_html_e( 'Copy link', 'aiad-core' ); ?></button>
 						<details class="alpt-compound__more">
-							<summary><?php esc_html_e( 'More about it', 'ai-awareness-day' ); ?></summary>
+							<summary><?php esc_html_e( 'More about it', 'aiad-core' ); ?></summary>
 							<p class="alpt-compound__what"><?php echo esc_html( $compound['what'] ); ?></p>
 							<dl class="alpt-compound__facts">
 								<div>
-									<dt><?php esc_html_e( 'In real life', 'ai-awareness-day' ); ?></dt>
+									<dt><?php esc_html_e( 'In real life', 'aiad-core' ); ?></dt>
 									<dd><?php echo esc_html( $compound['example'] ); ?></dd>
 								</div>
 								<div>
-									<dt><?php esc_html_e( 'Human in the loop', 'ai-awareness-day' ); ?></dt>
+									<dt><?php esc_html_e( 'Human in the loop', 'aiad-core' ); ?></dt>
 									<dd><?php echo esc_html( $compound['loop'] ); ?></dd>
 								</div>
 							</dl>
 							<div class="alpt-compound__debate">
-								<p class="alpt-compound__debate-label"><?php esc_html_e( 'Debate it', 'ai-awareness-day' ); ?></p>
+								<p class="alpt-compound__debate-label"><?php esc_html_e( 'Debate it', 'aiad-core' ); ?></p>
 								<p class="alpt-compound__debate-q"><?php echo esc_html( $compound['debate'] ); ?></p>
 							</div>
 						</details>
@@ -928,11 +933,11 @@ function aiad_render_literacy_table(): string {
 		<p class="alpt-sticker">
 			<?php
 			/* translators: %d: number of compounds */
-			echo esc_html( sprintf( __( 'Challenge · %d compounds', 'ai-awareness-day' ), count( $compounds ) ) );
+			echo esc_html( sprintf( __( 'Challenge · %d compounds', 'aiad-core' ), count( $compounds ) ) );
 			?>
 		</p>
-		<h2 id="alpt-challenge-title" class="alpt-challenge__title"><?php esc_html_e( 'The compound challenge', 'ai-awareness-day' ); ?></h2>
-		<p class="alpt-challenge__lead"><?php esc_html_e( 'Ready to work them out yourself? Choose a level: the compounds you haven\'t discovered are hidden, with a clue for each. Choose two to four elements on the table and combine them to find the answers. Stuck? Press Find this one on any hidden compound: the table narrows to a few elements, and hints help you the rest of the way. End the challenge to see every compound again.', 'ai-awareness-day' ); ?></p>
+		<h2 id="alpt-challenge-title" class="alpt-challenge__title"><?php esc_html_e( 'The compound challenge', 'aiad-core' ); ?></h2>
+		<p class="alpt-challenge__lead"><?php esc_html_e( 'Ready to work them out yourself? Choose a level: the compounds you haven\'t discovered are hidden, with a clue for each. Choose two to four elements on the table and combine them to find the answers. Stuck? Press Find this one on any hidden compound: the table narrows to a few elements, and hints help you the rest of the way. End the challenge to see every compound again.', 'aiad-core' ); ?></p>
 		<div class="alpt-challenge__bar">
 			<p class="alpt-challenge__progress"><span data-alpt-found-text></span></p>
 			<div class="alpt-meter" aria-hidden="true"><span class="alpt-meter__fill" data-alpt-meter></span></div>
@@ -944,9 +949,9 @@ function aiad_render_literacy_table(): string {
 					<span class="alpt-challenge__level-about">
 						<?php
 						$aiad_about = array(
-							'primary'   => __( 'Words children know, two at a time. The table narrows to a few tiles for you.', 'ai-awareness-day' ),
-							'secondary' => __( 'Everyday AI, agents, predictions and fair decisions.', 'ai-awareness-day' ),
-							'further'   => __( 'How AI is built, tested, run and governed.', 'ai-awareness-day' ),
+							'primary'   => __( 'Words children know, two at a time. The table narrows to a few tiles for you.', 'aiad-core' ),
+							'secondary' => __( 'Everyday AI, agents, predictions and fair decisions.', 'aiad-core' ),
+							'further'   => __( 'How AI is built, tested, run and governed.', 'aiad-core' ),
 						);
 						echo esc_html( $aiad_about[ $key ] ?? '' );
 						?>
@@ -955,35 +960,35 @@ function aiad_render_literacy_table(): string {
 				</button>
 			<?php endforeach; ?>
 			<button type="button" class="alpt-challenge__level alpt-challenge__level--all" data-alpt-start="">
-				<span class="alpt-challenge__level-name"><?php esc_html_e( 'All levels', 'ai-awareness-day' ); ?></span>
-				<span class="alpt-challenge__level-about"><?php esc_html_e( 'Every compound at once.', 'ai-awareness-day' ); ?></span>
+				<span class="alpt-challenge__level-name"><?php esc_html_e( 'All levels', 'aiad-core' ); ?></span>
+				<span class="alpt-challenge__level-about"><?php esc_html_e( 'Every compound at once.', 'aiad-core' ); ?></span>
 				<span class="alpt-challenge__level-count" data-alpt-level-count=""></span>
 			</button>
 		</div>
 		<div class="alpt-challenge__actions">
-			<button type="button" class="alpt-btn alpt-btn--ghost" data-alpt-reset hidden><?php esc_html_e( 'Start again', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="alpt-btn alpt-btn--ghost" data-alpt-reset hidden><?php esc_html_e( 'Start again', 'aiad-core' ); ?></button>
 		</div>
 	</section>
 
-	<div class="alpt-lab" id="alpt-lab" data-alpt-lab role="region" aria-label="<?php esc_attr_e( 'The compound challenge', 'ai-awareness-day' ); ?>" hidden>
+	<div class="alpt-lab" id="alpt-lab" data-alpt-lab role="region" aria-label="<?php esc_attr_e( 'The compound challenge', 'aiad-core' ); ?>" hidden>
 		<div class="alpt-lab__inner">
 			<div class="alpt-lab__head">
-				<p class="alpt-lab__title"><?php esc_html_e( 'The compound challenge', 'ai-awareness-day' ); ?> <span class="alpt-lab__count" data-alpt-found-count></span></p>
-				<p class="alpt-lab__help"><?php esc_html_e( 'Choose two to four elements on the table, then combine them.', 'ai-awareness-day' ); ?></p>
+				<p class="alpt-lab__title"><?php esc_html_e( 'The compound challenge', 'aiad-core' ); ?> <span class="alpt-lab__count" data-alpt-found-count></span></p>
+				<p class="alpt-lab__help"><?php esc_html_e( 'Choose two to four elements on the table, then combine them.', 'aiad-core' ); ?></p>
 			</div>
 			<div class="alpt-lab__target" data-alpt-target-box hidden>
 				<p class="alpt-lab__target-text" data-alpt-target-text>&nbsp;</p>
 				<div class="alpt-lab__target-actions">
-					<button type="button" class="alpt-btn" data-alpt-hint><?php esc_html_e( 'Give me a hint', 'ai-awareness-day' ); ?></button>
-					<button type="button" class="alpt-btn alpt-btn--ghost" data-alpt-unfocus><?php esc_html_e( 'Show the whole table', 'ai-awareness-day' ); ?></button>
+					<button type="button" class="alpt-btn" data-alpt-hint><?php esc_html_e( 'Give me a hint', 'aiad-core' ); ?></button>
+					<button type="button" class="alpt-btn alpt-btn--ghost" data-alpt-unfocus><?php esc_html_e( 'Show the whole table', 'aiad-core' ); ?></button>
 				</div>
 			</div>
-			<ol class="alpt-lab__slots" data-alpt-slots aria-label="<?php esc_attr_e( 'Chosen elements', 'ai-awareness-day' ); ?>"></ol>
+			<ol class="alpt-lab__slots" data-alpt-slots aria-label="<?php esc_attr_e( 'Chosen elements', 'aiad-core' ); ?>"></ol>
 			<div class="alpt-lab__actions">
-				<button type="button" class="alpt-btn alpt-btn--ink" data-alpt-combine disabled><?php esc_html_e( 'Combine', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn" data-alpt-clear disabled><?php esc_html_e( 'Clear', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-lab__hint" data-alpt-free-hint><span class="alpt-lab__hint-icon" aria-hidden="true">?</span><?php esc_html_e( 'Hint', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="alpt-btn alpt-btn--ghost alpt-lab__close" data-alpt-lab-toggle aria-controls="alpt-lab"><?php esc_html_e( 'End challenge', 'ai-awareness-day' ); ?></button>
+				<button type="button" class="alpt-btn alpt-btn--ink" data-alpt-combine disabled><?php esc_html_e( 'Combine', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn" data-alpt-clear disabled><?php esc_html_e( 'Clear', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-lab__hint" data-alpt-free-hint><span class="alpt-lab__hint-icon" aria-hidden="true">?</span><?php esc_html_e( 'Hint', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-btn--ghost alpt-lab__close" data-alpt-lab-toggle aria-controls="alpt-lab"><?php esc_html_e( 'End challenge', 'aiad-core' ); ?></button>
 			</div>
 			<div class="alpt-lab__msg" data-alpt-lab-msg aria-live="polite"></div>
 		</div>
@@ -991,11 +996,11 @@ function aiad_render_literacy_table(): string {
 
 	<section class="alpt-quiz" id="alpt-buzzword-check" aria-labelledby="alpt-quiz-title" hidden>
 		<div class="alpt-quiz__intro">
-			<p class="alpt-sticker alpt-quiz__eyebrow"><?php esc_html_e( 'Quiz · 10 questions', 'ai-awareness-day' ); ?></p>
-			<h2 id="alpt-quiz-title"><?php esc_html_e( 'Buzzword check', 'ai-awareness-day' ); ?></h2>
-			<p class="alpt-quiz__lead"><?php esc_html_e( 'Which AI term fits the situation? Ten questions, picked at random each time you play.', 'ai-awareness-day' ); ?></p>
+			<p class="alpt-sticker alpt-quiz__eyebrow"><?php esc_html_e( 'Quiz · 10 questions', 'aiad-core' ); ?></p>
+			<h2 id="alpt-quiz-title"><?php esc_html_e( 'Buzzword check', 'aiad-core' ); ?></h2>
+			<p class="alpt-quiz__lead"><?php esc_html_e( 'Which AI term fits the situation? Ten questions, picked at random each time you play.', 'aiad-core' ); ?></p>
 			<div class="alpt-quiz__scores">
-				<p class="alpt-quiz__score"><span class="alpt-quiz__score-label"><?php esc_html_e( 'Score', 'ai-awareness-day' ); ?></span> <span data-quiz-score>0</span></p>
+				<p class="alpt-quiz__score"><span class="alpt-quiz__score-label"><?php esc_html_e( 'Score', 'aiad-core' ); ?></span> <span data-quiz-score>0</span></p>
 				<p class="alpt-quiz__best" data-quiz-best hidden>&nbsp;</p>
 			</div>
 		</div>
@@ -1012,8 +1017,8 @@ function aiad_render_literacy_table(): string {
 	</section>
 
 	<section class="alpt-glossary" aria-labelledby="alpt-glossary-title">
-		<h2 id="alpt-glossary-title" class="alpt-glossary__title"><?php esc_html_e( 'Glossary: the periodic table broken down', 'ai-awareness-day' ); ?></h2>
-		<p class="alpt-glossary__lead"><?php esc_html_e( 'All 142 definitions, family by family, to read, copy into a lesson or print.', 'ai-awareness-day' ); ?></p>
+		<h2 id="alpt-glossary-title" class="alpt-glossary__title"><?php esc_html_e( 'Glossary: the periodic table broken down', 'aiad-core' ); ?></h2>
+		<p class="alpt-glossary__lead"><?php esc_html_e( 'All 142 definitions, family by family, to read, copy into a lesson or print.', 'aiad-core' ); ?></p>
 		<?php foreach ( $families as $key => $family ) : ?>
 			<details class="alpt-glossary__family alpt-fam--<?php echo esc_attr( $key ); ?>">
 				<summary>
@@ -1033,19 +1038,19 @@ function aiad_render_literacy_table(): string {
 							<dd>
 								<p><?php echo esc_html( $el['def'] ); ?></p>
 								<?php if ( ! empty( $talk[ $el['sym'] ] ) ) : ?>
-									<p class="alpt-glossary__talk"><strong><?php esc_html_e( 'Talk about it:', 'ai-awareness-day' ); ?></strong> <?php echo esc_html( $talk[ $el['sym'] ] ); ?></p>
+									<p class="alpt-glossary__talk"><strong><?php esc_html_e( 'Talk about it:', 'aiad-core' ); ?></strong> <?php echo esc_html( $talk[ $el['sym'] ] ); ?></p>
 								<?php endif; ?>
 								<?php $aiad_res = aiad_literacy_resources_for( 'syms', $el['sym'] ); ?>
 								<?php if ( $aiad_res ) : ?>
-									<p class="alpt-glossary__res"><strong><?php esc_html_e( 'Learn more:', 'ai-awareness-day' ); ?></strong> <?php echo aiad_literacy_resource_links( $aiad_res ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_literacy_resource_links(). ?></p>
+									<p class="alpt-glossary__res"><strong><?php esc_html_e( 'Learn more:', 'aiad-core' ); ?></strong> <?php echo aiad_literacy_resource_links( $aiad_res ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_literacy_resource_links(). ?></p>
 								<?php endif; ?>
 								<?php if ( ! empty( $el_issues[ $el['sym'] ] ) ) : ?>
-									<p class="alpt-glossary__issues"><strong><?php esc_html_e( 'Issues it raises:', 'ai-awareness-day' ); ?></strong> <?php echo esc_html( implode( ', ', array_map( static fn( string $k ): string => $issues[ $k ]['name'], $el_issues[ $el['sym'] ] ) ) ); ?></p>
+									<p class="alpt-glossary__issues"><strong><?php esc_html_e( 'Issues it raises:', 'aiad-core' ); ?></strong> <?php echo esc_html( implode( ', ', array_map( static fn( string $k ): string => $issues[ $k ]['name'], $el_issues[ $el['sym'] ] ) ) ); ?></p>
 								<?php endif; ?>
 								<p class="alpt-glossary__bench">
 									<?php
 									/* translators: %s: a benchmark domain, such as Privacy & Data Protection */
-									printf( esc_html__( 'In the benchmark: %s.', 'ai-awareness-day' ), '<a href="' . esc_url( $bench_url ) . '">' . esc_html( aiad_literacy_benchmark_domain( $el['sym'] ) ) . '</a>' );
+									printf( esc_html__( 'In the benchmark: %s.', 'aiad-core' ), '<a href="' . esc_url( $bench_url ) . '">' . esc_html( aiad_literacy_benchmark_domain( $el['sym'] ) ) . '</a>' );
 									?>
 								</p>
 							</dd>
@@ -1057,8 +1062,8 @@ function aiad_render_literacy_table(): string {
 	</section>
 
 	<section class="alpt-glossary alpt-issues" aria-labelledby="alpt-issues-title" id="alpt-issues">
-		<h2 id="alpt-issues-title" class="alpt-glossary__title"><?php esc_html_e( 'The issues they raise, theme by theme', 'ai-awareness-day' ); ?></h2>
-		<p class="alpt-glossary__lead"><?php esc_html_e( 'The technical terms are the causes; these are the symptoms: what students actually meet when people use the technology. Each comes with a question to talk about in class, and the elements it arises from.', 'ai-awareness-day' ); ?></p>
+		<h2 id="alpt-issues-title" class="alpt-glossary__title"><?php esc_html_e( 'The issues they raise, theme by theme', 'aiad-core' ); ?></h2>
+		<p class="alpt-glossary__lead"><?php esc_html_e( 'The technical terms are the causes; these are the symptoms: what students actually meet when people use the technology. Each comes with a question to talk about in class, and the elements it arises from.', 'aiad-core' ); ?></p>
 		<?php foreach ( $strands as $theme_key => $theme_name ) : ?>
 			<details class="alpt-glossary__family alpt-th--<?php echo esc_attr( $theme_key ); ?>">
 				<summary>
@@ -1066,7 +1071,7 @@ function aiad_render_literacy_table(): string {
 					<span class="alpt-glossary__family-name">
 						<?php
 						/* translators: %s: theme name, such as Safe */
-						echo esc_html( sprintf( __( '%s theme', 'ai-awareness-day' ), $theme_name ) );
+						echo esc_html( sprintf( __( '%s theme', 'aiad-core' ), $theme_name ) );
 						?>
 					</span>
 				</summary>
@@ -1081,12 +1086,12 @@ function aiad_render_literacy_table(): string {
 							<dt id="alpt-issue-<?php echo esc_attr( $issue_key ); ?>"><?php echo esc_html( $issue['name'] ); ?></dt>
 							<dd>
 								<p><?php echo esc_html( $issue['def'] ); ?></p>
-								<p class="alpt-glossary__talk"><strong><?php esc_html_e( 'Talk about it:', 'ai-awareness-day' ); ?></strong> <?php echo esc_html( $issue['talk'] ); ?></p>
+								<p class="alpt-glossary__talk"><strong><?php esc_html_e( 'Talk about it:', 'aiad-core' ); ?></strong> <?php echo esc_html( $issue['talk'] ); ?></p>
 								<?php $aiad_res = aiad_literacy_resources_for( 'issues', $issue_key ); ?>
 								<?php if ( $aiad_res ) : ?>
-									<p class="alpt-glossary__res"><strong><?php esc_html_e( 'Learn more:', 'ai-awareness-day' ); ?></strong> <?php echo aiad_literacy_resource_links( $aiad_res ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_literacy_resource_links(). ?></p>
+									<p class="alpt-glossary__res"><strong><?php esc_html_e( 'Learn more:', 'aiad-core' ); ?></strong> <?php echo aiad_literacy_resource_links( $aiad_res ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in aiad_literacy_resource_links(). ?></p>
 								<?php endif; ?>
-								<p class="alpt-glossary__issues"><strong><?php esc_html_e( 'Arises from:', 'ai-awareness-day' ); ?></strong>
+								<p class="alpt-glossary__issues"><strong><?php esc_html_e( 'Arises from:', 'aiad-core' ); ?></strong>
 									<?php
 									echo implode( ', ', array_map( static fn( string $sym ): string => '<a href="#' . esc_attr( $by_sym[ $sym ]['id'] ?? '' ) . '">' . esc_html( $by_sym[ $sym ]['name'] ?? $sym ) . '</a>', $issue['syms'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
 									?>
@@ -1101,28 +1106,28 @@ function aiad_render_literacy_table(): string {
 
 	<section class="alpt-suggest" aria-labelledby="alpt-suggest-title">
 		<div class="alpt-suggest__intro">
-			<p class="alpt-sticker"><?php esc_html_e( 'Your word here', 'ai-awareness-day' ); ?></p>
-			<h2 id="alpt-suggest-title" class="alpt-suggest__title"><?php esc_html_e( 'Suggest a new element', 'ai-awareness-day' ); ?></h2>
-			<p><?php esc_html_e( 'AI words change every month. Heard a term that should be on the table? Tell us what it means and which family it belongs to. The team reviews every suggestion and adds the best ones.', 'ai-awareness-day' ); ?> <?php esc_html_e( 'If we add your word, we can credit you or your class on the table.', 'ai-awareness-day' ); ?></p>
+			<p class="alpt-sticker"><?php esc_html_e( 'Your word here', 'aiad-core' ); ?></p>
+			<h2 id="alpt-suggest-title" class="alpt-suggest__title"><?php esc_html_e( 'Suggest a new element', 'aiad-core' ); ?></h2>
+			<p><?php esc_html_e( 'AI words change every month. Heard a term that should be on the table? Tell us what it means and which family it belongs to. The team reviews every suggestion and adds the best ones.', 'aiad-core' ); ?> <?php esc_html_e( 'If we add your word, we can credit you or your class on the table.', 'aiad-core' ); ?></p>
 			<p class="alpt-suggest__bench">
-				<?php esc_html_e( 'Want to see how ready you or your school are for these ideas in practice?', 'ai-awareness-day' ); ?>
-				<a href="<?php echo esc_url( aiad_literacy_benchmark_url() ); ?>"><?php esc_html_e( 'Take the AI Risk Readiness Benchmark', 'ai-awareness-day' ); ?></a>
+				<?php esc_html_e( 'Want to see how ready you or your school are for these ideas in practice?', 'aiad-core' ); ?>
+				<a href="<?php echo esc_url( aiad_literacy_benchmark_url() ); ?>"><?php esc_html_e( 'Take the AI Risk Readiness Benchmark', 'aiad-core' ); ?></a>
 			</p>
 		</div>
 		<form class="alpt-suggest__form" data-alpt-suggest data-endpoint="<?php echo esc_url( rest_url( 'aiad/v1/literacy-term' ) ); ?>" novalidate hidden>
 			<div class="alpt-suggest__row">
 				<label class="alpt-suggest__field alpt-suggest__field--wide">
-					<span><?php esc_html_e( 'The term', 'ai-awareness-day' ); ?></span>
-					<input type="text" name="term" maxlength="60" required autocomplete="off" placeholder="<?php esc_attr_e( 'For example, Prompt Injection', 'ai-awareness-day' ); ?>">
+					<span><?php esc_html_e( 'The term', 'aiad-core' ); ?></span>
+					<input type="text" name="term" maxlength="60" required autocomplete="off" placeholder="<?php esc_attr_e( 'For example, Prompt Injection', 'aiad-core' ); ?>">
 				</label>
 				<label class="alpt-suggest__field">
-					<span><?php esc_html_e( 'Symbol (optional)', 'ai-awareness-day' ); ?></span>
-					<input type="text" name="symbol" maxlength="3" autocomplete="off" placeholder="<?php esc_attr_e( 'Pj', 'ai-awareness-day' ); ?>">
+					<span><?php esc_html_e( 'Symbol (optional)', 'aiad-core' ); ?></span>
+					<input type="text" name="symbol" maxlength="3" autocomplete="off" placeholder="<?php esc_attr_e( 'Pj', 'aiad-core' ); ?>">
 				</label>
 				<label class="alpt-suggest__field">
-					<span><?php esc_html_e( 'Family', 'ai-awareness-day' ); ?></span>
+					<span><?php esc_html_e( 'Family', 'aiad-core' ); ?></span>
 					<select name="family">
-						<option value=""><?php esc_html_e( 'Not sure', 'ai-awareness-day' ); ?></option>
+						<option value=""><?php esc_html_e( 'Not sure', 'aiad-core' ); ?></option>
 						<?php foreach ( $families as $key => $family ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $family['name'] ); ?></option>
 						<?php endforeach; ?>
@@ -1130,38 +1135,38 @@ function aiad_render_literacy_table(): string {
 				</label>
 			</div>
 			<label class="alpt-suggest__field">
-				<span><?php esc_html_e( 'What it means, in plain English', 'ai-awareness-day' ); ?></span>
+				<span><?php esc_html_e( 'What it means, in plain English', 'aiad-core' ); ?></span>
 				<textarea name="definition" rows="3" maxlength="400" required></textarea>
 			</label>
 			<label class="alpt-suggest__field">
-				<span><?php esc_html_e( 'Why should it be on the table? (optional)', 'ai-awareness-day' ); ?></span>
+				<span><?php esc_html_e( 'Why should it be on the table? (optional)', 'aiad-core' ); ?></span>
 				<textarea name="why" rows="2" maxlength="300"></textarea>
 			</label>
 			<div class="alpt-suggest__row">
 				<label class="alpt-suggest__field alpt-suggest__field--wide">
-					<span><?php esc_html_e( 'Your first name (optional)', 'ai-awareness-day' ); ?></span>
+					<span><?php esc_html_e( 'Your first name (optional)', 'aiad-core' ); ?></span>
 					<input type="text" name="name" maxlength="60" autocomplete="given-name">
 				</label>
 				<label class="alpt-suggest__field">
-					<span><?php esc_html_e( 'I am a…', 'ai-awareness-day' ); ?></span>
+					<span><?php esc_html_e( 'I am a…', 'aiad-core' ); ?></span>
 					<select name="role">
-						<option value=""><?php esc_html_e( 'Prefer not to say', 'ai-awareness-day' ); ?></option>
-						<option value="student"><?php esc_html_e( 'Student', 'ai-awareness-day' ); ?></option>
-						<option value="teacher"><?php esc_html_e( 'Teacher', 'ai-awareness-day' ); ?></option>
-						<option value="parent"><?php esc_html_e( 'Parent or carer', 'ai-awareness-day' ); ?></option>
-						<option value="other"><?php esc_html_e( 'Other', 'ai-awareness-day' ); ?></option>
+						<option value=""><?php esc_html_e( 'Prefer not to say', 'aiad-core' ); ?></option>
+						<option value="student"><?php esc_html_e( 'Student', 'aiad-core' ); ?></option>
+						<option value="teacher"><?php esc_html_e( 'Teacher', 'aiad-core' ); ?></option>
+						<option value="parent"><?php esc_html_e( 'Parent or carer', 'aiad-core' ); ?></option>
+						<option value="other"><?php esc_html_e( 'Other', 'aiad-core' ); ?></option>
 					</select>
 				</label>
 			</div>
 			<label class="alpt-suggest__field">
-				<span><?php esc_html_e( 'If we add it, credit it to (optional)', 'ai-awareness-day' ); ?></span>
-				<input type="text" name="credit" maxlength="80" autocomplete="off" placeholder="<?php esc_attr_e( 'For example, Year 9 at Oakfield School', 'ai-awareness-day' ); ?>" aria-describedby="alpt-credit-help">
-				<small id="alpt-credit-help" class="alpt-suggest__help"><?php esc_html_e( 'A class, group or first name only. Never a surname.', 'ai-awareness-day' ); ?></small>
+				<span><?php esc_html_e( 'If we add it, credit it to (optional)', 'aiad-core' ); ?></span>
+				<input type="text" name="credit" maxlength="80" autocomplete="off" placeholder="<?php esc_attr_e( 'For example, Year 9 at Oakfield School', 'aiad-core' ); ?>" aria-describedby="alpt-credit-help">
+				<small id="alpt-credit-help" class="alpt-suggest__help"><?php esc_html_e( 'A class, group or first name only. Never a surname.', 'aiad-core' ); ?></small>
 			</label>
-			<label class="alpt-suggest__trap" aria-hidden="true"><?php esc_html_e( 'Leave this empty', 'ai-awareness-day' ); ?> <input type="text" name="aiad_website" tabindex="-1" autocomplete="off"></label>
-			<p class="alpt-suggest__note"><?php esc_html_e( 'Please don\'t include anyone\'s personal details. Suggestions are not published as they are: the team checks and edits them first.', 'ai-awareness-day' ); ?></p>
+			<label class="alpt-suggest__trap" aria-hidden="true"><?php esc_html_e( 'Leave this empty', 'aiad-core' ); ?> <input type="text" name="aiad_website" tabindex="-1" autocomplete="off"></label>
+			<p class="alpt-suggest__note"><?php esc_html_e( 'Please don\'t include anyone\'s personal details. Suggestions are not published as they are: the team checks and edits them first.', 'aiad-core' ); ?></p>
 			<div class="alpt-suggest__actions">
-				<button type="submit" class="alpt-btn alpt-btn--ink"><?php esc_html_e( 'Send my suggestion', 'ai-awareness-day' ); ?></button>
+				<button type="submit" class="alpt-btn alpt-btn--ink"><?php esc_html_e( 'Send my suggestion', 'aiad-core' ); ?></button>
 				<div class="alpt-suggest__status" data-alpt-suggest-status role="status" aria-live="polite">&nbsp;</div>
 			</div>
 		</form>
@@ -1219,7 +1224,7 @@ function aiad_literacy_benchmark_domain( string $sym ): string {
 			}
 		}
 	}
-	return $by_sym[ $sym ] ?? __( 'AI Literacy', 'ai-awareness-day' );
+	return $by_sym[ $sym ] ?? __( 'AI Literacy', 'aiad-core' );
 }
 
 /*
@@ -1245,13 +1250,13 @@ function aiad_render_literacy_week(): string {
 <?php $aiad_week = aiad_literacy_element_of_week(); $aiad_week_theme = $aiad_week['el']['theme'] ?? 'smart'; $aiad_week_sym = strtolower( $aiad_week['el']['sym'] ); ?>
 <?php if ( $aiad_away ) : ?><div class="alpt-away"><?php endif; ?>
 <div class="alpt-eotw alpt-eotw--<?php echo esc_attr( $aiad_week_theme ); ?>">
-	<span class="alpt-eotw__sticker" aria-hidden="true"><?php esc_html_e( 'New every Monday', 'ai-awareness-day' ); ?></span>
+	<span class="alpt-eotw__sticker" aria-hidden="true"><?php esc_html_e( 'New every Monday', 'aiad-core' ); ?></span>
 	<div class="alpt-eotw__tile alpt-fam--<?php echo esc_attr( $aiad_week['el']['family'] ); ?>" aria-hidden="true"><span class="alpt-eotw__sym"><?php echo esc_html( $aiad_week['el']['sym'] ); ?></span></div>
 	<div class="alpt-eotw__text">
 		<p class="alpt-eotw__label">
 			<?php
 			/* translators: %s: a date, such as 16 November 2026 */
-			echo esc_html( sprintf( /* translators: 1: date, such as 16 Nov, 2: theme name, such as Safe */ __( 'Word of the week · %1$s · %2$s theme', 'ai-awareness-day' ), date_i18n( 'j M', $aiad_week['monday'] ), aiad_literacy_strands()[ $aiad_week_theme ] ?? '' ) );
+			echo esc_html( sprintf( /* translators: 1: date, such as 16 Nov, 2: theme name, such as Safe */ __( 'Word of the week · %1$s · %2$s theme', 'aiad-core' ), date_i18n( 'j M', $aiad_week['monday'] ), aiad_literacy_strands()[ $aiad_week_theme ] ?? '' ) );
 			?>
 		</p>
 		<h2 class="alpt-eotw__name"><?php echo esc_html( $aiad_week['el']['name'] ); ?></h2>
@@ -1259,11 +1264,11 @@ function aiad_render_literacy_week(): string {
 	</div>
 	<div class="alpt-eotw__actions">
 		<?php if ( $aiad_away ) : ?>
-		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $aiad_base . '#element-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
-		<a class="alpt-btn" href="<?php echo esc_url( $aiad_base . '#board-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></a>
+		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $aiad_base . '#element-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'aiad-core' ); ?></a>
+		<a class="alpt-btn" href="<?php echo esc_url( $aiad_base . '#board-' . $aiad_week_sym ); ?>"><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></a>
 		<?php else : ?>
-		<a class="alpt-btn alpt-btn--ink" href="#element-<?php echo esc_attr( $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
-		<button type="button" class="alpt-btn" data-alpt-eotw-board="<?php echo esc_attr( (string) ( $aiad_week['el']['n'] - 1 ) ); ?>" hidden><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></button>
+		<a class="alpt-btn alpt-btn--ink" href="#element-<?php echo esc_attr( $aiad_week_sym ); ?>"><?php esc_html_e( 'Open it', 'aiad-core' ); ?></a>
+		<button type="button" class="alpt-btn" data-alpt-eotw-board="<?php echo esc_attr( (string) ( $aiad_week['el']['n'] - 1 ) ); ?>" hidden><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></button>
 		<?php endif; ?>
 	</div>
 </div>
@@ -1297,13 +1302,13 @@ function aiad_render_literacy_theme_word( string $theme ): string {
 <div class="alpt-eotw alpt-eotw--<?php echo esc_attr( $theme ); ?>">
 	<div class="alpt-eotw__tile alpt-fam--<?php echo esc_attr( $el['family'] ); ?>" aria-hidden="true"><span class="alpt-eotw__sym"><?php echo esc_html( $el['sym'] ); ?></span></div>
 	<div class="alpt-eotw__text">
-		<p class="alpt-eotw__label"><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( 'Key word from the Periodic Table · %s theme', 'ai-awareness-day' ), aiad_literacy_strands()[ $theme ] ?? '' ) ); ?></p>
+		<p class="alpt-eotw__label"><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( 'Key word from the Periodic Table · %s theme', 'aiad-core' ), aiad_literacy_strands()[ $theme ] ?? '' ) ); ?></p>
 		<p class="alpt-eotw__name"><?php echo esc_html( $el['name'] ); ?></p>
 		<p class="alpt-eotw__talk"><?php echo esc_html( aiad_literacy_talk()[ $el['sym'] ] ?? '' ); ?></p>
 	</div>
 	<div class="alpt-eotw__actions">
-		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $base . '#element-' . $sym ); ?>"><?php esc_html_e( 'Open it', 'ai-awareness-day' ); ?></a>
-		<a class="alpt-btn" href="<?php echo esc_url( $base . '#board-' . $sym ); ?>"><?php esc_html_e( 'Show to class', 'ai-awareness-day' ); ?></a>
+		<a class="alpt-btn alpt-btn--ink" href="<?php echo esc_url( $base . '#element-' . $sym ); ?>"><?php esc_html_e( 'Open it', 'aiad-core' ); ?></a>
+		<a class="alpt-btn" href="<?php echo esc_url( $base . '#board-' . $sym ); ?>"><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></a>
 	</div>
 </div>
 </div>
@@ -1316,21 +1321,22 @@ function aiad_render_literacy_theme_word( string $theme ): string {
  * In the editor it shows the table as the page does (assets/js/literacy-table-edit.js).
  */
 function aiad_register_literacy_table(): void {
-	$css    = AIAD_DIR . '/assets/css/pages/ai-literacy-periodic-table.css';
-	$js     = AIAD_DIR . '/assets/js/literacy-table.js';
-	$editor = AIAD_DIR . '/assets/js/literacy-table-edit.js';
-	$ver    = static fn( string $file ): string => AIAD_VERSION . '.' . ( is_readable( $file ) ? (string) filemtime( $file ) : '0' );
+	$css    = 'assets/css/pages/ai-literacy-periodic-table.css';
+	$js     = 'assets/js/literacy-table.js';
+	$editor = 'assets/js/literacy-table-edit.js';
 
-	wp_register_style( 'aiad-literacy-table', AIAD_URI . '/assets/css/pages/ai-literacy-periodic-table.css', array( 'aiad-style' ), $ver( $css ) );
-	wp_register_script( 'aiad-literacy-table', AIAD_URI . '/assets/js/literacy-table.js', array(), $ver( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
-	wp_register_script( 'aiad-literacy-table-edit', AIAD_URI . '/assets/js/literacy-table-edit.js', array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-server-side-render' ), $ver( $editor ), true );
+	// No dependency here: the theme's main stylesheet is added as one when it is registered (below), so the table's
+	// styles still print after it, and still print at all under another theme.
+	wp_register_style( 'aiad-literacy-table', aiad_core_url( $css ), array(), aiad_core_asset_version( $css ) );
+	wp_register_script( 'aiad-literacy-table', aiad_core_url( $js ), array(), aiad_core_asset_version( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+	wp_register_script( 'aiad-literacy-table-edit', aiad_core_url( $editor ), array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-server-side-render' ), aiad_core_asset_version( $editor ), true );
 
 	register_block_type(
 		'aiad/literacy-table',
 		array(
 			'api_version'     => 3,
-			'title'           => __( 'AI Literacy Periodic Table', 'ai-awareness-day' ),
-			'description'     => __( 'The interactive table of 142 AI terms, with every definition listed below it. Its elements are written in the theme (inc/literacy-table.php).', 'ai-awareness-day' ),
+			'title'           => __( 'AI Literacy Periodic Table', 'aiad-core' ),
+			'description'     => __( 'The interactive table of 142 AI terms, with every definition listed below it. Its elements come from the JSON files in the AI Awareness Day Core plugin.', 'aiad-core' ),
 			'category'        => 'widgets',
 			'icon'            => 'grid-view',
 			'keywords'        => array( 'periodic', 'literacy', 'glossary' ),
@@ -1345,8 +1351,8 @@ function aiad_register_literacy_table(): void {
 		'aiad/literacy-week',
 		array(
 			'api_version'     => 3,
-			'title'           => __( 'AI Literacy element of the week', 'ai-awareness-day' ),
-			'description'     => __( 'This week\'s element from the AI Literacy Periodic Table, with its question for class. It changes every Monday.', 'ai-awareness-day' ),
+			'title'           => __( 'AI Literacy element of the week', 'aiad-core' ),
+			'description'     => __( 'This week\'s element from the AI Literacy Periodic Table, with its question for class. It changes every Monday.', 'aiad-core' ),
 			'category'        => 'widgets',
 			'icon'            => 'calendar-alt',
 			'supports'        => array( 'html' => false, 'multiple' => false, 'reusable' => false ),
@@ -1357,66 +1363,13 @@ function aiad_register_literacy_table(): void {
 }
 add_action( 'init', 'aiad_register_literacy_table' );
 
-// The page's own stylesheet, for its introduction and classroom ideas, even if the table's block is taken out.
-add_action(
-	'wp_enqueue_scripts',
-	static function (): void {
-		if ( ! is_admin() && aiad_is_literacy_table_page() ) {
-			wp_enqueue_style( 'aiad-literacy-table' );
-		}
-	},
-	15
-);
-
-// Mark the page as scripted before it first paints, so the search, filters and
-// panel buttons are laid out from the start instead of pushing the table down
-// when the deferred script runs. Without JavaScript the CSS keeps them hidden.
-add_action(
-	'wp_head',
-	static function (): void {
-		if ( aiad_is_literacy_table_page() ) {
-			wp_print_inline_script_tag( "document.documentElement.classList.add('alpt-js');" );
-		}
-	},
-	1
-);
-
-add_filter(
-	'pre_get_document_title',
-	static function ( string $title ): string {
-		return aiad_is_literacy_table_page() ? __( 'The AI Literacy Periodic Table for teachers and students | AI Awareness Day', 'ai-awareness-day' ) : $title;
-	},
-	20
-);
-
-add_filter(
-	'body_class',
-	static function ( array $classes ): array {
-		if ( aiad_is_literacy_table_page() ) {
-			$classes[] = 'literacy-table-page';
-		}
-		return $classes;
-	}
-);
-
-/*
- * The homepage promo (template-parts/front-page/part-literacy-table-promo.php) goes at the end of the Handpicked
- * resources section, under its "View all" link. That section is an editable group on the Home page, so the card is
- * added inside it as the page is shown (before the container's closing tag) rather than written into the page.
+/**
+ * Print the table's stylesheet after the theme's main one, as it always has, when the theme provides it.
  */
-add_filter(
-	'render_block_core/group',
-	static function ( string $html, array $block ): string {
-		if ( 'partner-resources' !== ( $block['attrs']['anchor'] ?? '' ) || ! is_front_page() ) {
-			return $html;
-		}
-		ob_start();
-		get_template_part( 'template-parts/front-page/part', 'literacy-table-promo' );
-		$promo = (string) ob_get_clean();
-		$end   = strrpos( $html, '</div>' );
-		return false === $end || '' === $promo ? $html : substr( $html, 0, $end ) . $promo . substr( $html, $end );
-	},
-	10,
-	2
-);
-
+function aiad_literacy_table_style_after_theme(): void {
+	$styles = wp_styles();
+	if ( isset( $styles->registered['aiad-literacy-table'], $styles->registered['aiad-style'] ) && ! in_array( 'aiad-style', $styles->registered['aiad-literacy-table']->deps, true ) ) {
+		$styles->registered['aiad-literacy-table']->deps[] = 'aiad-style';
+	}
+}
+add_action( 'wp_enqueue_scripts', 'aiad_literacy_table_style_after_theme', 11 );

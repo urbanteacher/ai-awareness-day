@@ -1,5 +1,5 @@
 /**
- * The AI Literacy Periodic Table (inc/literacy-table.php).
+ * The AI Literacy Periodic Table (modules/literacy-table/table.php).
  *
  * Without this script every tile is a link to its definition in the list below the table. With it, choosing a tile
  * shows the element in the detail panel; the family buttons and the search box filter the elements; Previous,
@@ -2610,7 +2610,7 @@
 		var section = root.querySelector( '.alpt-quiz' );
 		if ( ! section ) return;
 		// Each scenario's first symbol is the answer. The order on screen varies by question.
-		// The questions live in data/literacy-table/lists.json ("quiz"): the right answer first, then two others.
+		// The questions live in data/literacy-table/lists.json in this plugin ("quiz"): the right answer first, then two others.
 		// Any question whose symbols aren't on the table is left out, so renaming an element can't break the quiz.
 		var questions = ( quiz || [] ).filter( function ( q ) {
 			return q.length === 4 && q.slice( 1 ).every( function ( sym ) {

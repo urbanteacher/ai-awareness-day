@@ -1,7 +1,7 @@
 <?php
 /**
  * One-time: publish "Introducing the AI Literacy Periodic Table", AI Awareness Day's post about the new table
- * (inc/literacy-table.php) and five ways to use it: the National AI Conversation, revising after the AI Risk Readiness
+ * (now in the aiad-core plugin's literacy-table module) and five ways to use it: the National AI Conversation, revising after the AI Risk Readiness
  * Benchmark, display boards, showing a definition to the class, and suggesting new elements. A campaign update (the
  * timeline post type, shown at /timeline/). The text is inc/articles/ai-literacy-periodic-table.html; its text-free cover
  * (assets/images/articles/literacy-table-card.jpg) is made by archive/design-kit/literacy-table-card.html, and its four

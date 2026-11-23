@@ -92,6 +92,6 @@ require_once $aiad_dir . '/inc/block-markup.php';
 require_once $aiad_dir . '/inc/editable-pages.php';
 require_once $aiad_dir . '/inc/national-conversation-page.php';
 require_once $aiad_dir . '/inc/national-conversation-content.php';
-require_once $aiad_dir . '/inc/literacy-table.php';
-require_once $aiad_dir . '/inc/literacy-table-admin.php';
+aiad_require_core_module( 'literacy-table' );
+require_once $aiad_dir . '/inc/literacy-table-page.php';
 aiad_require_core_module( 'literacy-term' );

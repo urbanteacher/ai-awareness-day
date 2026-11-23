@@ -1,5 +1,5 @@
 /**
- * Editor side of the AI Literacy Periodic Table block (aiad/literacy-table, inc/literacy-table.php).
+ * Editor side of the AI Literacy Periodic Table block (aiad/literacy-table, modules/literacy-table/table.php).
  *
  * The block has nothing to set: its elements are written in the theme. The editor shows the table as the page
  * renders it, so the page reads the same in the editor as on the site.

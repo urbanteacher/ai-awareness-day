@@ -5,8 +5,8 @@
  *
  * Moved from the theme's inc/literacy-table.php: saving form entries and sending email is plugin work, next to the
  * Get Involved form (contact.php), and the entries use this plugin's form_submission post type. The table itself, its
- * data (data/literacy-table/) and its blocks stay in the theme for now, so the route only registers while the theme's
- * table is there (aiad_literacy_elements() and aiad_literacy_families()); without it there is nothing to suggest for.
+ * data and blocks are the literacy-table module, so the route only registers while that
+ * module is loaded (aiad_literacy_elements() and aiad_literacy_families()); without it there is nothing to suggest for.
  * The theme loads this file from its bundled copy of the plugin when the plugin isn't active, so this is the only copy.
  *
  * @package AIAD_Core

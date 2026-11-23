@@ -10,7 +10,7 @@ one (a picture redrawn or rearranged for this tool), otherwise from the archived
 archive/literacy-table-pictures-before-arrow-tool/. Its hand-drawn arrows (anything with a marker), arrow markers and
 any earlier calculated arrows are taken out, the spec's "edits" are applied, and the calculated arrows go in where the
 first old arrow was, so they keep their place in front of or behind the drawing. The result is written to
-assets/images/literacy-table/{sym}.svg. Running it again gives the same file.
+plugins/aiad-core/assets/images/literacy-table/{sym}.svg. Running it again gives the same file.
 """
 import json
 import re
@@ -22,7 +22,7 @@ import arrows as A
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-LIVE = ROOT / 'assets/images/literacy-table'
+LIVE = ROOT / 'plugins/aiad-core/assets/images/literacy-table'
 ORIGINALS = ROOT / 'archive/literacy-table-pictures-before-arrow-tool'
 SPECS = HERE / 'specs'
 
@@ -37,7 +37,7 @@ GROUP = re.compile(r'<g class="alpt-(?:arrows|arrow-labels)">.*?</g>\n?', re.S)
 
 
 def element_info(sym):
-    data = json.loads((ROOT / 'data/literacy-table/elements.json').read_text())
+    data = json.loads((ROOT / 'plugins/aiad-core/data/literacy-table/elements.json').read_text())
     for el in data['elements']:
         if el['sym'].lower() == sym:
             return el

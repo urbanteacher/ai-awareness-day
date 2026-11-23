@@ -1,6 +1,6 @@
 # AI Literacy Periodic Table: content files
 
-Everything on the table at `/ai-literacy-periodic-table/` comes from the five JSON files in this folder. The page, the poster, the homepage promo, the word of the week and the classroom board all read them through `aiad_literacy_data()` in `inc/literacy-table.php`.
+Everything on the table at `/ai-literacy-periodic-table/` comes from the five JSON files in this folder. The page, the poster, the homepage promo, the word of the week and the classroom board all read them through `aiad_literacy_data()` in the aiad-core plugin (`plugins/aiad-core/modules/literacy-table/table.php`).
 
 To change the content, edit a file, commit it to `main` and deploy. **WordPress → Tools → Periodic Table** checks the files, previews the coming words of the week, and exports everything as JSON or CSV.
 
@@ -111,13 +111,13 @@ Every file starts with the same three fields:
 
 ## History
 
-Until November 2026 this content was PHP arrays in `inc/literacy-table.php`. `scripts/literacy-table-export.php` wrote it out to these files once and is kept for the record. Don't run it again, because it would read the new JSON-based functions.
+Until November 2026 this content was PHP arrays in the theme's `inc/literacy-table.php`. `scripts/literacy-table-export.php` (now in `archive/theme/unused-2026-11/scripts/`) wrote it out to these files once and is kept for the record. Don't run it again, because it would read the new JSON-based functions.
 
 ## Pictures
 
 An element can have a picture of the idea at work. It is on the back of the element's tile in the panel: the ↻ Picture button (where the element count usually is) or a click on the tile turns it over, and the side chosen stays while stepping through elements. Elements without one keep the plain tile and the count.
 
-1. Save the drawing as `assets/images/literacy-table/{symbol in lower case}.svg`, for example `dw.svg` for Dw.
+1. Save the drawing as `plugins/aiad-core/assets/images/literacy-table/{symbol in lower case}.svg`, for example `dw.svg` for Dw.
 2. Describe it in one sentence as the element's `"picture_alt"` in `elements.json`. Screen readers read this instead of the picture.
 3. Check Tools → Periodic Table: the Elements tab lists which elements have a picture, and the checks warn about a picture with no description, or a description with no picture.
 

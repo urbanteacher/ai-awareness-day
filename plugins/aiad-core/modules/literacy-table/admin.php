@@ -2,14 +2,16 @@
 /**
  * The AI Literacy Periodic Table's back end: Tools → Periodic Table in wp-admin.
  *
- * The table's content lives in the JSON files in data/literacy-table/ (format: data/literacy-table/README.md), the way
+ * The table's content lives in the JSON files in plugins/aiad-core/data/literacy-table/ (format: plugins/aiad-core/data/literacy-table/README.md), the way
  * the AI Risk Readiness Benchmark keeps its question bank in JSON. Edit those files and deploy; this page shows what is
  * in them, checks them (an issue naming an element that doesn't exist, two tiles in one place, a compound with an
  * unknown level…), previews the coming words of the week, and exports everything as JSON or CSV for review.
  *
  * Read-only on purpose: the files stay the one source, with their history in git.
  *
- * @package AI_Awareness_Day
+ * Moved from the theme's inc/literacy-table-admin.php; the data and pictures are this plugin's.
+ *
+ * @package AIAD_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -187,11 +189,11 @@ function aiad_literacy_check(): array {
 			$warn( sprintf( '%s has a picture but no "picture_alt" in elements.json, so screen readers get no description.', $sym ) );
 		}
 		if ( ! isset( $pictures[ $sym ] ) && '' !== trim( (string) ( $e['picture_alt'] ?? '' ) ) ) {
-			$warn( sprintf( '%1$s has "picture_alt" but no picture: add assets/images/literacy-table/%2$s.svg.', $sym, strtolower( $sym ) ) );
+			$warn( sprintf( '%1$s has "picture_alt" but no picture: add plugins/aiad-core/assets/images/literacy-table/%2$s.svg.', $sym, strtolower( $sym ) ) );
 		}
 	}
 	$lower = array_change_key_case( array_flip( array_keys( $syms ) ), CASE_LOWER );
-	foreach ( (array) glob( AIAD_DIR . '/assets/images/literacy-table/*.svg' ) as $file ) {
+	foreach ( (array) glob( aiad_core_path( 'assets/images/literacy-table/*.svg' ) ) as $file ) {
 		$name = basename( (string) $file, '.svg' );
 		if ( ! isset( $lower[ $name ] ) ) {
 			$warn( sprintf( 'The picture %s.svg does not match any element symbol, so it is not shown.', $name ) );
@@ -294,8 +296,8 @@ add_action(
 	'admin_menu',
 	static function (): void {
 		add_management_page(
-			__( 'AI Literacy Periodic Table', 'ai-awareness-day' ),
-			__( 'Periodic Table', 'ai-awareness-day' ),
+			__( 'AI Literacy Periodic Table', 'aiad-core' ),
+			__( 'Periodic Table', 'aiad-core' ),
 			aiad_literacy_admin_cap(),
 			'aiad-literacy-table',
 			'aiad_render_literacy_admin'
@@ -307,7 +309,7 @@ add_action(
 	'admin_post_aiad_literacy_export',
 	static function (): void {
 		if ( ! current_user_can( aiad_literacy_admin_cap() ) ) {
-			wp_die( esc_html__( 'You are not allowed to export the table.', 'ai-awareness-day' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to export the table.', 'aiad-core' ), 403 );
 		}
 		check_admin_referer( 'aiad_literacy_export' );
 		$format = isset( $_GET['format'] ) ? sanitize_key( wp_unslash( $_GET['format'] ) ) : 'json';
@@ -360,7 +362,7 @@ function aiad_render_literacy_admin(): void {
 	$el_issues = aiad_literacy_element_issues();
 	$res_all   = (array) ( aiad_literacy_data( 'resources' )['resources'] ?? array() );
 	$res_live  = aiad_literacy_resources();
-	$dir       = AIAD_DIR . '/data/literacy-table';
+	$dir       = aiad_core_path( 'data/literacy-table' );
 	$suggested = post_type_exists( 'form_submission' ) ? get_posts(
 		array(
 			'post_type'   => 'form_submission',
@@ -372,12 +374,12 @@ function aiad_render_literacy_admin(): void {
 	) : array();
 	$tab       = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'elements'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$tabs      = array(
-		'elements'  => sprintf( __( 'Elements (%d)', 'ai-awareness-day' ), count( $elements ) ),
-		'issues'    => sprintf( __( 'Issues (%d)', 'ai-awareness-day' ), count( $issues ) ),
-		'compounds' => sprintf( __( 'Compounds (%d)', 'ai-awareness-day' ), count( $compounds ) ),
-		'resources' => sprintf( __( 'Learn more links (%d)', 'ai-awareness-day' ), count( $res_all ) ),
-		'week'      => __( 'Word of the week', 'ai-awareness-day' ),
-		'suggest'   => sprintf( __( 'Suggestions from visitors (%d)', 'ai-awareness-day' ), count( $suggested ) ),
+		'elements'  => sprintf( __( 'Elements (%d)', 'aiad-core' ), count( $elements ) ),
+		'issues'    => sprintf( __( 'Issues (%d)', 'aiad-core' ), count( $issues ) ),
+		'compounds' => sprintf( __( 'Compounds (%d)', 'aiad-core' ), count( $compounds ) ),
+		'resources' => sprintf( __( 'Learn more links (%d)', 'aiad-core' ), count( $res_all ) ),
+		'week'      => __( 'Word of the week', 'aiad-core' ),
+		'suggest'   => sprintf( __( 'Suggestions from visitors (%d)', 'aiad-core' ), count( $suggested ) ),
 	);
 	if ( ! isset( $tabs[ $tab ] ) ) {
 		$tab = 'elements';
@@ -403,38 +405,38 @@ function aiad_render_literacy_admin(): void {
 			.aiad-lt code { white-space: nowrap; }
 			.aiad-lt .aiad-lt__files td:first-child { white-space: nowrap; }
 		</style>
-		<h1><?php esc_html_e( 'AI Literacy Periodic Table', 'ai-awareness-day' ); ?></h1>
+		<h1><?php esc_html_e( 'AI Literacy Periodic Table', 'aiad-core' ); ?></h1>
 		<p>
-			<?php esc_html_e( 'Everything on the table comes from the JSON files below, kept with the theme in git, the way the AI Risk Readiness Benchmark keeps its questions. To change a definition, add an element or issue, or move the word of the week on, edit the file, commit it to main and deploy. This page checks the files and exports them.', 'ai-awareness-day' ); ?>
-			<a href="<?php echo esc_url( aiad_literacy_table_url() ); ?>"><?php esc_html_e( 'View the table', 'ai-awareness-day' ); ?></a>
+			<?php esc_html_e( 'Everything on the table comes from the JSON files below, kept with the theme in git, the way the AI Risk Readiness Benchmark keeps its questions. To change a definition, add an element or issue, or move the word of the week on, edit the file, commit it to main and deploy. This page checks the files and exports them.', 'aiad-core' ); ?>
+			<a href="<?php echo esc_url( aiad_literacy_table_url() ); ?>"><?php esc_html_e( 'View the table', 'aiad-core' ); ?></a>
 		</p>
 
 		<div class="aiad-lt__cards">
 			<div class="aiad-lt__card <?php echo $errors ? 'aiad-lt__card--bad' : ( $warnings ? 'aiad-lt__card--warn' : 'aiad-lt__card--ok' ); ?>">
 				<strong><?php echo $errors ? esc_html( (string) count( $errors ) ) : '✓'; ?></strong>
-				<?php echo $errors ? esc_html( _n( 'error to fix', 'errors to fix', count( $errors ), 'ai-awareness-day' ) ) : esc_html__( 'No errors', 'ai-awareness-day' ); ?>
+				<?php echo $errors ? esc_html( _n( 'error to fix', 'errors to fix', count( $errors ), 'aiad-core' ) ) : esc_html__( 'No errors', 'aiad-core' ); ?>
 				<?php if ( $warnings ) : ?>
-					<br><span class="aiad-lt__muted"><?php echo esc_html( sprintf( _n( '%d thing to check', '%d things to check', count( $warnings ), 'ai-awareness-day' ), count( $warnings ) ) ); ?></span>
+					<br><span class="aiad-lt__muted"><?php echo esc_html( sprintf( _n( '%d thing to check', '%d things to check', count( $warnings ), 'aiad-core' ), count( $warnings ) ) ); ?></span>
 				<?php endif; ?>
 			</div>
-			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $elements ) ); ?></strong><?php esc_html_e( 'elements', 'ai-awareness-day' ); ?></div>
-			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $issues ) ); ?></strong><?php esc_html_e( 'issues', 'ai-awareness-day' ); ?></div>
-			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $compounds ) ); ?></strong><?php esc_html_e( 'compounds', 'ai-awareness-day' ); ?></div>
-			<div class="aiad-lt__card"><strong><?php echo esc_html( count( $res_live ) . ' / ' . count( $res_all ) ); ?></strong><?php esc_html_e( 'learn-more links live', 'ai-awareness-day' ); ?></div>
-			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $talk ) ); ?></strong><?php esc_html_e( 'talk questions', 'ai-awareness-day' ); ?></div>
+			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $elements ) ); ?></strong><?php esc_html_e( 'elements', 'aiad-core' ); ?></div>
+			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $issues ) ); ?></strong><?php esc_html_e( 'issues', 'aiad-core' ); ?></div>
+			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $compounds ) ); ?></strong><?php esc_html_e( 'compounds', 'aiad-core' ); ?></div>
+			<div class="aiad-lt__card"><strong><?php echo esc_html( count( $res_live ) . ' / ' . count( $res_all ) ); ?></strong><?php esc_html_e( 'learn-more links live', 'aiad-core' ); ?></div>
+			<div class="aiad-lt__card"><strong><?php echo esc_html( (string) count( $talk ) ); ?></strong><?php esc_html_e( 'talk questions', 'aiad-core' ); ?></div>
 		</div>
 
 		<div class="aiad-lt__exports">
-			<strong><?php esc_html_e( 'Export:', 'ai-awareness-day' ); ?></strong>
-			<a class="button button-primary" href="<?php echo esc_url( aiad_literacy_export_url( 'json', 'all' ) ); ?>"><?php esc_html_e( 'Everything, as JSON', 'ai-awareness-day' ); ?></a>
-			<?php foreach ( array( 'elements' => __( 'Elements, CSV', 'ai-awareness-day' ), 'issues' => __( 'Issues, CSV', 'ai-awareness-day' ), 'compounds' => __( 'Compounds, CSV', 'ai-awareness-day' ), 'resources' => __( 'Links, CSV', 'ai-awareness-day' ) ) as $what => $label ) : ?>
+			<strong><?php esc_html_e( 'Export:', 'aiad-core' ); ?></strong>
+			<a class="button button-primary" href="<?php echo esc_url( aiad_literacy_export_url( 'json', 'all' ) ); ?>"><?php esc_html_e( 'Everything, as JSON', 'aiad-core' ); ?></a>
+			<?php foreach ( array( 'elements' => __( 'Elements, CSV', 'aiad-core' ), 'issues' => __( 'Issues, CSV', 'aiad-core' ), 'compounds' => __( 'Compounds, CSV', 'aiad-core' ), 'resources' => __( 'Links, CSV', 'aiad-core' ) ) as $what => $label ) : ?>
 				<a class="button" href="<?php echo esc_url( aiad_literacy_export_url( 'csv', $what ) ); ?>"><?php echo esc_html( $label ); ?></a>
 			<?php endforeach; ?>
-			<span class="aiad-lt__muted"><?php esc_html_e( 'CSVs open in Excel or Google Sheets, for reviewing and proofreading.', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-lt__muted"><?php esc_html_e( 'CSVs open in Excel or Google Sheets, for reviewing and proofreading.', 'aiad-core' ); ?></span>
 		</div>
 
 		<?php if ( $checks ) : ?>
-			<h2><?php esc_html_e( 'Checks', 'ai-awareness-day' ); ?></h2>
+			<h2><?php esc_html_e( 'Checks', 'aiad-core' ); ?></h2>
 			<ul class="aiad-lt__checks">
 				<?php foreach ( array_merge( $errors, $warnings ) as $c ) : ?>
 					<li class="is-<?php echo esc_attr( $c[0] ); ?>"><?php echo esc_html( $c[1] ); ?></li>
@@ -443,18 +445,18 @@ function aiad_render_literacy_admin(): void {
 		<?php endif; ?>
 
 		<details>
-			<summary><strong><?php esc_html_e( 'The files', 'ai-awareness-day' ); ?></strong></summary>
+			<summary><strong><?php esc_html_e( 'The files', 'aiad-core' ); ?></strong></summary>
 			<table class="widefat striped aiad-lt__files" style="max-width:60rem;margin-top:8px">
 				<tbody>
 				<?php foreach ( array( 'elements', 'issues', 'compounds', 'resources', 'lists' ) as $kind ) : ?>
 					<?php $path = $dir . '/' . $kind . '.json'; ?>
 					<tr>
-						<td><code>data/literacy-table/<?php echo esc_html( $kind ); ?>.json</code></td>
+						<td><code>plugins/aiad-core/data/literacy-table/<?php echo esc_html( $kind ); ?>.json</code></td>
 						<td><?php echo esc_html( (string) ( aiad_literacy_data( $kind )['about'] ?? '' ) ); ?></td>
-						<td class="aiad-lt__muted"><?php echo is_readable( $path ) ? esc_html( wp_date( 'j M Y, H:i', (int) filemtime( $path ) ) ) : esc_html__( 'missing', 'ai-awareness-day' ); ?></td>
+						<td class="aiad-lt__muted"><?php echo is_readable( $path ) ? esc_html( wp_date( 'j M Y, H:i', (int) filemtime( $path ) ) ) : esc_html__( 'missing', 'aiad-core' ); ?></td>
 					</tr>
 				<?php endforeach; ?>
-					<tr><td><code>data/literacy-table/README.md</code></td><td colspan="2"><?php esc_html_e( 'How each file is laid out, and how to add an element, issue or compound.', 'ai-awareness-day' ); ?></td></tr>
+					<tr><td><code>plugins/aiad-core/data/literacy-table/README.md</code></td><td colspan="2"><?php esc_html_e( 'How each file is laid out, and how to add an element, issue or compound.', 'aiad-core' ); ?></td></tr>
 				</tbody>
 			</table>
 		</details>
@@ -466,37 +468,37 @@ function aiad_render_literacy_admin(): void {
 		</nav>
 
 		<?php if ( ! in_array( $tab, array( 'week', 'suggest' ), true ) ) : ?>
-			<p><label><?php esc_html_e( 'Filter:', 'ai-awareness-day' ); ?> <input type="search" class="aiad-lt__filter" data-aiad-lt-filter placeholder="<?php esc_attr_e( 'Type a word, symbol, family or theme', 'ai-awareness-day' ); ?>"></label> <span class="aiad-lt__muted" data-aiad-lt-count></span></p>
+			<p><label><?php esc_html_e( 'Filter:', 'aiad-core' ); ?> <input type="search" class="aiad-lt__filter" data-aiad-lt-filter placeholder="<?php esc_attr_e( 'Type a word, symbol, family or theme', 'aiad-core' ); ?>"></label> <span class="aiad-lt__muted" data-aiad-lt-count></span></p>
 		<?php endif; ?>
 
 		<?php if ( 'elements' === $tab ) : ?>
 			<p>
 				<?php
 				/* translators: 1: elements with a picture, 2: all elements */
-				echo esc_html( sprintf( __( '%1$d of %2$d elements have a picture. To add one, save it as assets/images/literacy-table/{symbol in lower case}.svg and describe it in the element\'s "picture_alt" in elements.json. The README explains how to draw one.', 'ai-awareness-day' ), count( aiad_literacy_pictures() ), count( $elements ) ) );
+				echo esc_html( sprintf( __( '%1$d of %2$d elements have a picture. To add one, save it as plugins/aiad-core/assets/images/literacy-table/{symbol in lower case}.svg and describe it in the element\'s "picture_alt" in elements.json. The README explains how to draw one.', 'aiad-core' ), count( aiad_literacy_pictures() ), count( $elements ) ) );
 				?>
 			</p>
 			<table class="widefat striped" data-aiad-lt-table>
-				<thead><tr><th>#</th><th><?php esc_html_e( 'Element', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Family / theme', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Year', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Definition', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Talk about it', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Issues', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Picture', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th>#</th><th><?php esc_html_e( 'Element', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Family / theme', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Year', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Definition', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Talk about it', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Issues', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Picture', 'aiad-core' ); ?></th></tr></thead>
 				<tbody>
 				<?php $pictures = aiad_literacy_pictures(); ?>
 				<?php foreach ( $elements as $el ) : ?>
 					<tr>
 						<td><?php echo esc_html( (string) $el['n'] ); ?></td>
-						<td><span class="aiad-lt__sym"><?php echo esc_html( $el['sym'] ); ?></span><br><?php echo esc_html( $el['name'] ); ?><?php echo in_array( $el['sym'], aiad_literacy_safeguarding_syms(), true ) ? '<br><span class="aiad-lt__muted">' . esc_html__( 'Safeguarding note', 'ai-awareness-day' ) . '</span>' : ''; ?></td>
+						<td><span class="aiad-lt__sym"><?php echo esc_html( $el['sym'] ); ?></span><br><?php echo esc_html( $el['name'] ); ?><?php echo in_array( $el['sym'], aiad_literacy_safeguarding_syms(), true ) ? '<br><span class="aiad-lt__muted">' . esc_html__( 'Safeguarding note', 'aiad-core' ) . '</span>' : ''; ?></td>
 						<td><?php echo esc_html( $families[ $el['family'] ]['name'] ?? $el['family'] ); ?><br><span class="aiad-lt__muted"><?php echo esc_html( ( $themes[ $el['theme'] ] ?? $el['theme'] ) . ' theme' ); ?></span></td>
 						<td><?php echo esc_html( ( $el['approx'] ? '~' : '' ) . $el['year'] ); ?></td>
 						<td><?php echo esc_html( $el['def'] ); ?></td>
 						<td><?php echo isset( $talk[ $el['sym'] ] ) ? esc_html( $talk[ $el['sym'] ] ) : '<span class="aiad-lt__muted">—</span>'; ?></td>
 						<td class="aiad-lt__muted"><?php echo esc_html( implode( ', ', array_map( static fn( $k ) => $issues[ $k ]['name'] ?? $k, $el_issues[ $el['sym'] ] ?? array() ) ) ); ?></td>
-						<td><?php echo isset( $pictures[ $el['sym'] ] ) ? '<strong>' . esc_html__( 'Yes', 'ai-awareness-day' ) . '</strong><br><span class="aiad-lt__muted">' . esc_html( $pictures[ $el['sym'] ]['alt'] ) . '</span>' : '<span class="aiad-lt__muted">' . esc_html__( 'Not yet', 'ai-awareness-day' ) . '</span>'; ?></td>
+						<td><?php echo isset( $pictures[ $el['sym'] ] ) ? '<strong>' . esc_html__( 'Yes', 'aiad-core' ) . '</strong><br><span class="aiad-lt__muted">' . esc_html( $pictures[ $el['sym'] ]['alt'] ) . '</span>' : '<span class="aiad-lt__muted">' . esc_html__( 'Not yet', 'aiad-core' ) . '</span>'; ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
 			</table>
 		<?php elseif ( 'issues' === $tab ) : ?>
 			<table class="widefat striped" data-aiad-lt-table>
-				<thead><tr><th><?php esc_html_e( 'Issue', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Theme', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'What it means', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Talk about it', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Elements', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th><?php esc_html_e( 'Issue', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Theme', 'aiad-core' ); ?></th><th><?php esc_html_e( 'What it means', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Talk about it', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Elements', 'aiad-core' ); ?></th></tr></thead>
 				<tbody>
 				<?php foreach ( $issues as $key => $issue ) : ?>
 					<tr>
@@ -511,11 +513,11 @@ function aiad_render_literacy_admin(): void {
 			</table>
 		<?php elseif ( 'compounds' === $tab ) : ?>
 			<table class="widefat striped" data-aiad-lt-table>
-				<thead><tr><th><?php esc_html_e( 'Compound', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Elements', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Level / theme', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'What it is', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Example', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Debate', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th><?php esc_html_e( 'Compound', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Elements', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Level / theme', 'aiad-core' ); ?></th><th><?php esc_html_e( 'What it is', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Example', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Debate', 'aiad-core' ); ?></th></tr></thead>
 				<tbody>
 				<?php foreach ( $compounds as $c ) : ?>
 					<tr>
-						<td><strong><?php echo esc_html( $c['name'] ); ?></strong><?php echo $c['volatile'] ? '<br><span class="aiad-lt__muted">' . esc_html__( 'Volatile', 'ai-awareness-day' ) . '</span>' : ''; ?></td>
+						<td><strong><?php echo esc_html( $c['name'] ); ?></strong><?php echo $c['volatile'] ? '<br><span class="aiad-lt__muted">' . esc_html__( 'Volatile', 'aiad-core' ) . '</span>' : ''; ?></td>
 						<td><?php echo esc_html( implode( ' + ', $c['syms'] ) ); ?></td>
 						<td><?php echo esc_html( $levels[ $c['level'] ] ?? $c['level'] ); ?><br><span class="aiad-lt__muted"><?php echo esc_html( $themes[ $c['strand'] ] ?? $c['strand'] ); ?></span></td>
 						<td><?php echo esc_html( $c['what'] ); ?></td>
@@ -527,7 +529,7 @@ function aiad_render_literacy_admin(): void {
 			</table>
 		<?php elseif ( 'resources' === $tab ) : ?>
 			<table class="widefat striped" data-aiad-lt-table>
-				<thead><tr><th><?php esc_html_e( 'Post', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Kind', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Elements', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Issues', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'On the page', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th><?php esc_html_e( 'Post', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Kind', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Elements', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Issues', 'aiad-core' ); ?></th><th><?php esc_html_e( 'On the page', 'aiad-core' ); ?></th></tr></thead>
 				<tbody>
 				<?php foreach ( $res_all as $r ) : ?>
 					<?php
@@ -539,21 +541,21 @@ function aiad_render_literacy_admin(): void {
 						<td><?php echo esc_html( $r['kind'] ); ?></td>
 						<td><?php echo esc_html( implode( ' ', (array) $r['elements'] ) ); ?></td>
 						<td><?php echo esc_html( implode( ', ', (array) $r['issues'] ) ); ?></td>
-						<td><?php echo $live ? esc_html__( 'Yes', 'ai-awareness-day' ) : '<strong>' . esc_html__( 'No: not published', 'ai-awareness-day' ) . '</strong>'; ?></td>
+						<td><?php echo $live ? esc_html__( 'Yes', 'aiad-core' ) : '<strong>' . esc_html__( 'No: not published', 'aiad-core' ) . '</strong>'; ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
 			</table>
 		<?php elseif ( 'suggest' === $tab ) : ?>
 			<p>
-				<?php esc_html_e( 'What visitors send through "Suggest a new element" on the table. Nothing they send is published: to add a word, write it into elements.json (with a "credit" line if they asked for one, a class or first name only) and deploy. Each suggestion is also emailed to the team and kept under Form Submissions.', 'ai-awareness-day' ); ?>
-				<a href="<?php echo esc_url( aiad_literacy_table_url() . '#alpt-suggest-title' ); ?>"><?php esc_html_e( 'See the form', 'ai-awareness-day' ); ?></a>
+				<?php esc_html_e( 'What visitors send through "Suggest a new element" on the table. Nothing they send is published: to add a word, write it into elements.json (with a "credit" line if they asked for one, a class or first name only) and deploy. Each suggestion is also emailed to the team and kept under Form Submissions.', 'aiad-core' ); ?>
+				<a href="<?php echo esc_url( aiad_literacy_table_url() . '#alpt-suggest-title' ); ?>"><?php esc_html_e( 'See the form', 'aiad-core' ); ?></a>
 			</p>
 			<?php if ( ! $suggested ) : ?>
-				<p><em><?php esc_html_e( 'No suggestions yet.', 'ai-awareness-day' ); ?></em></p>
+				<p><em><?php esc_html_e( 'No suggestions yet.', 'aiad-core' ); ?></em></p>
 			<?php else : ?>
 				<table class="widefat striped">
-					<thead><tr><th><?php esc_html_e( 'Sent', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Term', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Already on the table?', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'What they sent', 'ai-awareness-day' ); ?></th></tr></thead>
+					<thead><tr><th><?php esc_html_e( 'Sent', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Term', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Already on the table?', 'aiad-core' ); ?></th><th><?php esc_html_e( 'What they sent', 'aiad-core' ); ?></th></tr></thead>
 					<tbody>
 					<?php
 					$names = array_map( 'strtolower', array_column( $elements, 'name' ) );
@@ -562,9 +564,9 @@ function aiad_render_literacy_admin(): void {
 						$have = in_array( strtolower( trim( $term ) ), $names, true ) || isset( $issues[ sanitize_title( $term ) ] );
 						?>
 						<tr>
-							<td><?php echo esc_html( get_the_date( 'j M Y', $sp ) ); ?><br><a href="<?php echo esc_url( (string) get_edit_post_link( $sp->ID ) ); ?>"><?php esc_html_e( 'Open', 'ai-awareness-day' ); ?></a></td>
+							<td><?php echo esc_html( get_the_date( 'j M Y', $sp ) ); ?><br><a href="<?php echo esc_url( (string) get_edit_post_link( $sp->ID ) ); ?>"><?php esc_html_e( 'Open', 'aiad-core' ); ?></a></td>
 							<td><strong><?php echo esc_html( $term ); ?></strong></td>
-							<td><?php echo $have ? esc_html__( 'Yes', 'ai-awareness-day' ) : esc_html__( 'No', 'ai-awareness-day' ); ?></td>
+							<td><?php echo $have ? esc_html__( 'Yes', 'aiad-core' ) : esc_html__( 'No', 'aiad-core' ); ?></td>
 							<td><?php echo nl2br( esc_html( wp_strip_all_tags( $sp->post_content ) ) ); ?></td>
 						</tr>
 					<?php endforeach; ?>
@@ -572,9 +574,9 @@ function aiad_render_literacy_admin(): void {
 				</table>
 			<?php endif; ?>
 		<?php else : ?>
-			<p><?php esc_html_e( 'A new word every Monday, worked through in the order of week_rotation in lists.json. Elements with a safeguarding note are skipped.', 'ai-awareness-day' ); ?></p>
+			<p><?php esc_html_e( 'A new word every Monday, worked through in the order of week_rotation in lists.json. Elements with a safeguarding note are skipped.', 'aiad-core' ); ?></p>
 			<table class="widefat striped" style="max-width:60rem">
-				<thead><tr><th><?php esc_html_e( 'Week of', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Element', 'ai-awareness-day' ); ?></th><th><?php esc_html_e( 'Talk about it', 'ai-awareness-day' ); ?></th></tr></thead>
+				<thead><tr><th><?php esc_html_e( 'Week of', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Element', 'aiad-core' ); ?></th><th><?php esc_html_e( 'Talk about it', 'aiad-core' ); ?></th></tr></thead>
 				<tbody>
 				<?php
 				$monday = strtotime( 'monday this week', current_time( 'timestamp' ) );
@@ -585,7 +587,7 @@ function aiad_render_literacy_admin(): void {
 					}
 					?>
 					<tr>
-						<td><?php echo esc_html( wp_date( 'j M Y', $week['monday'] ) ); ?><?php echo 0 === $w ? ' <strong>' . esc_html__( '(this week)', 'ai-awareness-day' ) . '</strong>' : ''; ?></td>
+						<td><?php echo esc_html( wp_date( 'j M Y', $week['monday'] ) ); ?><?php echo 0 === $w ? ' <strong>' . esc_html__( '(this week)', 'aiad-core' ) . '</strong>' : ''; ?></td>
 						<td><span class="aiad-lt__sym"><?php echo esc_html( $week['el']['sym'] ); ?></span> <?php echo esc_html( $week['el']['name'] ); ?></td>
 						<td><?php echo esc_html( $week['talk'] ); ?></td>
 					</tr>

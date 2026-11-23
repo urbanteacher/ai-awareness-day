@@ -1,6 +1,6 @@
 /* ============================================
    PAGE: THE AI LITERACY PERIODIC TABLE (/ai-literacy-periodic-table/)
-   inc/literacy-table.php draws the table; patterns/ai-literacy-periodic-table.php the page around it.
+   modules/literacy-table/table.php in this plugin draws the table; patterns/ai-literacy-periodic-table.php the page around it.
    Families take the campaign's strand colours, with "How AI works" in ink. Tiles carry the AiAd27 chamfer.
    Wide screens (and print) show the 18-column table with the detail panel in its gap; narrower screens show
    the elements family by family, under the panel.
@@ -5045,7 +5045,7 @@ html.alpt-board-open {
   }
 }
 
-/* ---- Element pictures (assets/images/literacy-table/{symbol}.svg): in the panel the picture takes the big
+/* ---- Element pictures (this plugin's assets/images/literacy-table/{symbol}.svg): in the panel the picture takes the big
    tile's place and the symbol becomes a badge on it. The drawings use these classes, so they take the family
    colour (or the theme or year colour in those views). ---- */
 .alpt-panel[data-alpt-theme="safe"] { --pic-accent: var(--a27-safe); }

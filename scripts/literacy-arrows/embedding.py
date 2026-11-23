@@ -1,4 +1,4 @@
-"""The Embedding picture (assets/images/literacy-table/em.svg), laid out by calculation rather than by eye.
+"""The Embedding picture (plugins/aiad-core/assets/images/literacy-table/em.svg), laid out by calculation rather than by eye.
 
     python3 scripts/literacy-arrows/embedding.py [--preview DIR]
 
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE.parent.parent / 'assets/images/literacy-table/em.svg'
+OUT = HERE.parent.parent / 'plugins/aiad-core/assets/images/literacy-table/em.svg'
 
 DOT = 8                     # dot radius
 OFFSET = DOT + 10           # dot centre to the start of its label (clears the ring round cat too)

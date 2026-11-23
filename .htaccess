@@ -6,8 +6,10 @@ RewriteEngine On
 RewriteRule ^(scripts|docs|archive|\.git|\.github)(/|$) - [F,L]
 # Experimental pages; approved ones move to assets/courses/ or assets/challenges/ (inc/courses.php).
 RewriteRule ^assets/previews(/|$) - [F,L]
-# Content read from disk by PHP, never by a browser: the periodic table data and the articles' source markup.
-RewriteRule ^(data|inc/articles)(/|$) - [F,L]
+# Content read from disk by PHP, never by a browser: the articles' source markup.
+RewriteRule ^inc/articles(/|$) - [F,L]
+# The periodic table's pictures moved to the aiad-core plugin (November 2026); old addresses still work.
+RewriteRule ^assets/images/literacy-table/([a-z0-9-]+\.svg)$ /wp-content/plugins/aiad-core/assets/images/literacy-table/$1 [R=301,L]
 # Notes beside the assets.
 RewriteRule ^assets/.*\.md$ - [F,L]
 # Files for developers, at the theme root and in the bundled plugins.

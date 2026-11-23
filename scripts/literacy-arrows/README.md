@@ -1,6 +1,6 @@
 # Arrows for the periodic table pictures
 
-The arrows in `assets/images/literacy-table/*.svg` are calculated, never typed in. Each picture with arrows has a
+The arrows in `plugins/aiad-core/assets/images/literacy-table/*.svg` are calculated, never typed in. Each picture with arrows has a
 spec here, `specs/{sym}.json`, and `apply.py` turns the spec into the arrows and checks them.
 
 ```bash
@@ -68,7 +68,7 @@ to move a box with an edit (and its node to match).
 - `embedding.py` lays out the Embedding picture (`em.svg`) the same way: labels one fixed distance from their dots,
   each cluster's circle the smallest that holds its dots and labels (Welzl's algorithm), both circles the same size.
 
-## Drawing rules (from data/literacy-table/README.md)
+## Drawing rules (from plugins/aiad-core/data/literacy-table/README.md)
 
 `viewBox="0 0 300 330"`, `class="alpt-pic"`, paint only with the `i-*` and `t-*` classes, keep the top-left corner
 (about 80 x 80) light for the symbol badge, show the idea happening, up to about six short labels, no photographs and

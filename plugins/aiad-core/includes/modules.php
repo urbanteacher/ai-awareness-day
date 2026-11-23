@@ -42,6 +42,7 @@ function aiad_core_modules(): array {
 		// After tools: their timeline seeds share init priorities 33-35, and tools seeded first in the theme.
 		'benchmark-content'    => 'benchmark-content.php',
 		'certificate-showcase' => 'certificate-showcase.php',
+		'literacy-table'       => 'literacy-table.php',
 		'literacy-term'        => 'literacy-term.php',
 	);
 }

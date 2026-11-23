@@ -9,7 +9,7 @@
  * Description: The AI Literacy Periodic Table page: an introduction, the interactive table and ideas for using it in class.
  *
  * The introduction and the display board help (questions and answers) are core blocks, edited on the page. The table, with every definition
- * listed below it, is one block (aiad/literacy-table) drawn from aiad_literacy_elements() in inc/literacy-table.php.
+ * listed below it, is one block (aiad/literacy-table) drawn from aiad_literacy_elements() in the aiad-core plugin (modules/literacy-table/).
  * Everything sits in one main group (main#main.alpt-page), so the editor shows it as the site does.
  *
  * @package AI_Awareness_Day
