@@ -16,28 +16,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_get_thank_you_letter_copy(): array {
 	return array(
-		'title'      => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
+		'title'      => __( 'AI Awareness Day 2027', 'aiad-core' ),
 		'paragraphs' => array(
 			__(
 				'Thank you for taking part in AI Awareness Day 2027. We are deeply grateful for your participation, and for the support and backing you have given our campaign.',
-				'ai-awareness-day'
+				'aiad-core'
 			),
 			__(
 				'The idea behind the day has always been simple: to build AI literacy across UK schools by asking every school to commit to just one activity — one conversation, one lesson, one assembly. This year, we rallied around a single, powerful message: Your AI. Your choices. Keep Humans in the Loop.',
-				'ai-awareness-day'
+				'aiad-core'
 			),
 			__(
 				'Your involvement strengthens our nationwide work to explore artificial intelligence in education and helps build a future where every learner and educator feels confident with AI. Because of your support, that message reached classrooms across the country — and together, we are helping a generation of young people grow up curious, confident and thoughtful about the technology shaping their world.',
-				'ai-awareness-day'
+				'aiad-core'
 			),
 			__(
 				'We would love to see how you took part. Please do share any photos from your activities, or tag us in your posts using #AiAwarenessDay27 — we would be delighted to celebrate your work alongside others across the UK.',
-				'ai-awareness-day'
+				'aiad-core'
 			),
 		),
 		'signoff'    => array(
-			__( 'With heartfelt thanks and humility,', 'ai-awareness-day' ),
-			__( 'The AI Awareness Day team', 'ai-awareness-day' ),
+			__( 'With heartfelt thanks and humility,', 'aiad-core' ),
+			__( 'The AI Awareness Day team', 'aiad-core' ),
 		),
 	);
 }

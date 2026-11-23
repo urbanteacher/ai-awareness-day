@@ -47,7 +47,7 @@ if ( 'discussion' === ( $attributes['source'] ?? 'free' ) ) {
 	printf(
 		'<a class="resource-tiles__more" href="%1$s">%2$s <span aria-hidden="true">&rarr;</span></a>',
 		esc_url( add_query_arg( 'activity_type', 'discussion', $aiad_library ) ),
-		esc_html__( 'See all discussion starters', 'ai-awareness-day' )
+		esc_html__( 'See all discussion starters', 'aiad-core' )
 	);
 	wp_reset_postdata();
 	return;

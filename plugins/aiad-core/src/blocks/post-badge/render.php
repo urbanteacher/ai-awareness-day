@@ -10,5 +10,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( is_sticky( (int) ( $block->context['postId'] ?? get_the_ID() ) ) ) {
-	echo '<p class="single-post-entry__badge">' . esc_html__( 'Featured', 'ai-awareness-day' ) . '</p>';
+	echo '<p class="single-post-entry__badge">' . esc_html__( 'Featured', 'aiad-core' ) . '</p>';
 }

@@ -29,22 +29,22 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Item', 'ai-awareness-day' ) },
+						{ title: __( 'Item', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'HTML element', 'ai-awareness-day' ),
+							label: __( 'HTML element', 'aiad-core' ),
 							value: a.tagName,
 							options: [
 								{
 									label: __(
 										'List item (li)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'li',
 								},
 								{
 									label: __(
 										'Box (div)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'div',
 								},

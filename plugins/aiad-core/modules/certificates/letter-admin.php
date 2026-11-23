@@ -22,8 +22,8 @@ function aiad_letter_generator_url( int $submission_id = 0 ): string {
 function aiad_register_letter_admin_page(): void {
 	add_submenu_page(
 		'edit.php?post_type=form_submission',
-		__( 'Thank-you letters', 'ai-awareness-day' ),
-		__( 'Thank-you letters', 'ai-awareness-day' ),
+		__( 'Thank-you letters', 'aiad-core' ),
+		__( 'Thank-you letters', 'aiad-core' ),
 		'edit_posts',
 		'aiad-letter-generator',
 		'aiad_render_letter_admin_page'
@@ -39,12 +39,12 @@ function aiad_render_letter_admin_page(): void {
 	$iframe_url    = aiad_letter_generator_url( $submission_id );
 	?>
 	<div class="wrap aiad-letter-admin-wrap">
-		<h1><?php esc_html_e( 'Thank-you letters', 'ai-awareness-day' ); ?></h1>
+		<h1><?php esc_html_e( 'Thank-you letters', 'aiad-core' ); ?></h1>
 		<p class="description">
-			<?php esc_html_e( 'Personalised thank-you letters for everyone who took part. Download one PDF per person, or export all participants in a single PDF.', 'ai-awareness-day' ); ?>
+			<?php esc_html_e( 'Personalised thank-you letters for everyone who took part. Download one PDF per person, or export all participants in a single PDF.', 'aiad-core' ); ?>
 		</p>
 		<iframe
-			title="<?php esc_attr_e( 'Thank-you letter generator', 'ai-awareness-day' ); ?>"
+			title="<?php esc_attr_e( 'Thank-you letter generator', 'aiad-core' ); ?>"
 			src="<?php echo esc_url( $iframe_url ); ?>"
 			class="aiad-letter-admin-frame"
 			style="width:100%;min-height:calc(100vh - 120px);border:1px solid #c3c4c7;border-radius:4px;background:#f4f4f5;"
@@ -75,7 +75,7 @@ function aiad_form_submission_letter_row_action( array $actions, WP_Post $post )
 	$actions['aiad_letter'] = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( $url ),
-		esc_html__( 'Letter', 'ai-awareness-day' )
+		esc_html__( 'Letter', 'aiad-core' )
 	);
 	return $actions;
 }
@@ -87,7 +87,7 @@ add_filter( 'post_row_actions', 'aiad_form_submission_letter_row_action', 10, 2 
 function aiad_form_submission_letter_meta_box(): void {
 	add_meta_box(
 		'aiad_thank_you_letter',
-		__( 'Thank-you letter', 'ai-awareness-day' ),
+		__( 'Thank-you letter', 'aiad-core' ),
 		'aiad_form_submission_letter_meta_box_render',
 		'form_submission',
 		'side',
@@ -109,10 +109,10 @@ function aiad_form_submission_letter_meta_box_render( WP_Post $post ): void {
 		admin_url( 'edit.php' )
 	);
 	?>
-	<p><?php esc_html_e( 'Download a personalised thank-you letter (PDF) for this participant.', 'ai-awareness-day' ); ?></p>
+	<p><?php esc_html_e( 'Download a personalised thank-you letter (PDF) for this participant.', 'aiad-core' ); ?></p>
 	<p>
 		<a class="button button-secondary" href="<?php echo esc_url( $url ); ?>">
-			<?php esc_html_e( 'Open letter generator', 'ai-awareness-day' ); ?>
+			<?php esc_html_e( 'Open letter generator', 'aiad-core' ); ?>
 		</a>
 	</p>
 	<?php

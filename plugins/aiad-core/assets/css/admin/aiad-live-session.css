@@ -1,0 +1,8 @@
+/* The event details meta box on the live_session edit screen (modules/live-sessions.php). */
+.aiad-ls-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem; margin-top:.5rem; }
+.aiad-ls-grid label { display:block; font-weight:600; margin-bottom:.25rem; }
+.aiad-ls-grid input[type="datetime-local"],
+.aiad-ls-grid input[type="text"],
+.aiad-ls-grid input[type="url"],
+.aiad-ls-grid select { width:100%; }
+.aiad-ls-full { grid-column:1 / -1; }

@@ -11,7 +11,7 @@
 		"resource",
 		"footer"
 	],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"usesContext": [
 		"postId"
 	],

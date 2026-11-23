@@ -38,11 +38,11 @@ function aiad_timeline_audience_taxonomy(): string {
  */
 function aiad_timeline_audience_role_options(): array {
 	return array(
-		'student'       => __( 'Students', 'ai-awareness-day' ),
-		'parent'        => __( 'Parents & carers', 'ai-awareness-day' ),
-		'teacher'       => __( 'Teachers', 'ai-awareness-day' ),
-		'leader'        => __( 'School leaders', 'ai-awareness-day' ),
-		'support_staff' => __( 'Education support staff', 'ai-awareness-day' ),
+		'student'       => __( 'Students', 'aiad-core' ),
+		'parent'        => __( 'Parents & carers', 'aiad-core' ),
+		'teacher'       => __( 'Teachers', 'aiad-core' ),
+		'leader'        => __( 'School leaders', 'aiad-core' ),
+		'support_staff' => __( 'Education support staff', 'aiad-core' ),
 	);
 }
 
@@ -55,13 +55,13 @@ function aiad_register_timeline_audience_taxonomy(): void {
 		'timeline',
 		array(
 			'labels'            => array(
-				'name'          => __( 'Benchmark audience', 'ai-awareness-day' ),
-				'singular_name' => __( 'Benchmark audience', 'ai-awareness-day' ),
-				'add_new_item'  => __( 'Add audience', 'ai-awareness-day' ),
-				'search_items'  => __( 'Search audiences', 'ai-awareness-day' ),
-				'all_items'     => __( 'All audiences', 'ai-awareness-day' ),
-				'edit_item'     => __( 'Edit audience', 'ai-awareness-day' ),
-				'update_item'   => __( 'Update audience', 'ai-awareness-day' ),
+				'name'          => __( 'Benchmark audience', 'aiad-core' ),
+				'singular_name' => __( 'Benchmark audience', 'aiad-core' ),
+				'add_new_item'  => __( 'Add audience', 'aiad-core' ),
+				'search_items'  => __( 'Search audiences', 'aiad-core' ),
+				'all_items'     => __( 'All audiences', 'aiad-core' ),
+				'edit_item'     => __( 'Edit audience', 'aiad-core' ),
+				'update_item'   => __( 'Update audience', 'aiad-core' ),
 			),
 			'hierarchical'      => false,
 			'public'            => false,

@@ -25,10 +25,10 @@ define( 'AIAD_CORE_MODULE_HELPERS_DATA', __FILE__ );
 function aiad_duration_badge_label( object|string $term_or_slug ): string {
     $slug = is_object( $term_or_slug ) ? $term_or_slug->slug : $term_or_slug;
     $labels = array(
-        '5-min-lesson-starters'    => __( 'Lesson Starter (5 min)', 'ai-awareness-day' ),
-        '15-20-min-tutor-time'     => __( 'Tutor Time (15 min)', 'ai-awareness-day' ),
-        '20-min-assemblies'        => __( 'Assembly (20 min)', 'ai-awareness-day' ),
-        '30-45-min-after-school'   => __( 'After School (30 min)', 'ai-awareness-day' ),
+        '5-min-lesson-starters'    => __( 'Lesson Starter (5 min)', 'aiad-core' ),
+        '15-20-min-tutor-time'     => __( 'Tutor Time (15 min)', 'aiad-core' ),
+        '20-min-assemblies'        => __( 'Assembly (20 min)', 'aiad-core' ),
+        '30-45-min-after-school'   => __( 'After School (30 min)', 'aiad-core' ),
     );
     return isset( $labels[ $slug ] ) ? $labels[ $slug ] : ( is_object( $term_or_slug ) ? $term_or_slug->name : $term_or_slug );
 }
@@ -43,20 +43,20 @@ function aiad_duration_badge_parts( object|string $term_or_slug ): ?array {
     $slug = is_object( $term_or_slug ) ? $term_or_slug->slug : $term_or_slug;
     $map  = array(
         '5-min-lesson-starters'  => array(
-            'slot' => __( 'Lesson Starter', 'ai-awareness-day' ),
-            'time' => __( '5 min', 'ai-awareness-day' ),
+            'slot' => __( 'Lesson Starter', 'aiad-core' ),
+            'time' => __( '5 min', 'aiad-core' ),
         ),
         '15-20-min-tutor-time'   => array(
-            'slot' => __( 'Tutor Time', 'ai-awareness-day' ),
-            'time' => __( '15 min', 'ai-awareness-day' ),
+            'slot' => __( 'Tutor Time', 'aiad-core' ),
+            'time' => __( '15 min', 'aiad-core' ),
         ),
         '20-min-assemblies'      => array(
-            'slot' => __( 'Assembly', 'ai-awareness-day' ),
-            'time' => __( '20 min', 'ai-awareness-day' ),
+            'slot' => __( 'Assembly', 'aiad-core' ),
+            'time' => __( '20 min', 'aiad-core' ),
         ),
         '30-45-min-after-school' => array(
-            'slot' => __( 'After School', 'ai-awareness-day' ),
-            'time' => __( '30 min', 'ai-awareness-day' ),
+            'slot' => __( 'After School', 'aiad-core' ),
+            'time' => __( '30 min', 'aiad-core' ),
         ),
     );
     return isset( $map[ $slug ] ) ? $map[ $slug ] : null;
@@ -201,12 +201,12 @@ function aiad_key_stage_options(): array {
  */
 function aiad_get_organisation_type_options(): array {
     return array(
-        'charity'            => __( 'Charity', 'ai-awareness-day' ),
-        'public_body'        => __( 'Public body', 'ai-awareness-day' ),
-        'institution'        => __( 'Institution', 'ai-awareness-day' ),
-        'company'            => __( 'Company', 'ai-awareness-day' ),
-        'education_provider' => __( 'Education provider', 'ai-awareness-day' ),
-        'other'              => __( 'Other', 'ai-awareness-day' ),
+        'charity'            => __( 'Charity', 'aiad-core' ),
+        'public_body'        => __( 'Public body', 'aiad-core' ),
+        'institution'        => __( 'Institution', 'aiad-core' ),
+        'company'            => __( 'Company', 'aiad-core' ),
+        'education_provider' => __( 'Education provider', 'aiad-core' ),
+        'other'              => __( 'Other', 'aiad-core' ),
     );
 }
 
@@ -242,13 +242,13 @@ function aiad_youtube_video_id( string $url ): string {
  */
 function aiad_resource_download_label( string $url ): string {
     if ( ! $url ) {
-        return __( 'Download', 'ai-awareness-day' );
+        return __( 'Download', 'aiad-core' );
     }
     $path = wp_parse_url( $url, PHP_URL_PATH );
     if ( $path && preg_match( '/\.(pdf|pptx?)$/i', $path, $m ) ) {
-        return $m[1] === 'pdf' ? __( 'Download PDF', 'ai-awareness-day' ) : __( 'Download PPTX', 'ai-awareness-day' );
+        return $m[1] === 'pdf' ? __( 'Download PDF', 'aiad-core' ) : __( 'Download PPTX', 'aiad-core' );
     }
-    return __( 'Download', 'ai-awareness-day' );
+    return __( 'Download', 'aiad-core' );
 }
 
 /**

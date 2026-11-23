@@ -11,7 +11,7 @@
 		"next",
 		"navigation"
 	],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"usesContext": [
 		"postId",
 		"postType"

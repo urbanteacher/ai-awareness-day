@@ -49,27 +49,27 @@ function aiad_benchmark_promo_roles(): array {
 		return array(
 			array(
 				'slug'  => 'teacher',
-				'label' => __( 'Teacher', 'ai-awareness-day' ),
+				'label' => __( 'Teacher', 'aiad-core' ),
 				'url'   => aiad_get_benchmark_start_url( 'teacher' ),
 			),
 			array(
 				'slug'  => 'student',
-				'label' => __( 'Student', 'ai-awareness-day' ),
+				'label' => __( 'Student', 'aiad-core' ),
 				'url'   => aiad_get_benchmark_start_url( 'student' ),
 			),
 			array(
 				'slug'  => 'parent',
-				'label' => __( 'Parent / Carer', 'ai-awareness-day' ),
+				'label' => __( 'Parent / Carer', 'aiad-core' ),
 				'url'   => aiad_get_benchmark_start_url( 'parent' ),
 			),
 			array(
 				'slug'  => 'leader',
-				'label' => __( 'School Leader', 'ai-awareness-day' ),
+				'label' => __( 'School Leader', 'aiad-core' ),
 				'url'   => aiad_get_benchmark_start_url( 'leader' ),
 			),
 			array(
 				'slug'  => 'support_staff',
-				'label' => __( 'Support Staff', 'ai-awareness-day' ),
+				'label' => __( 'Support Staff', 'aiad-core' ),
 				'url'   => aiad_get_benchmark_start_url( 'support_staff' ),
 			),
 		);
@@ -77,7 +77,7 @@ function aiad_benchmark_promo_roles(): array {
 
 	$roles  = AIRB_Defaults::roles();
 	$shorts = array(
-		'support_staff' => __( 'Support Staff', 'ai-awareness-day' ),
+		'support_staff' => __( 'Support Staff', 'aiad-core' ),
 	);
 
 	$items = array();

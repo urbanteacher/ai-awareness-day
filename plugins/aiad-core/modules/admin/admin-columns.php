@@ -15,11 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_form_submission_columns( $columns ): array {
     $new_columns = array();
     $new_columns['cb'] = $columns['cb'];
-    $new_columns['title'] = __( 'Name', 'ai-awareness-day' );
-    $new_columns['email'] = __( 'Email', 'ai-awareness-day' );
-    $new_columns['role'] = __( 'Role', 'ai-awareness-day' );
-    $new_columns['interests'] = __( 'Interests', 'ai-awareness-day' );
-    $new_columns['chase_status'] = __( 'Status', 'ai-awareness-day' );
+    $new_columns['title'] = __( 'Name', 'aiad-core' );
+    $new_columns['email'] = __( 'Email', 'aiad-core' );
+    $new_columns['role'] = __( 'Role', 'aiad-core' );
+    $new_columns['interests'] = __( 'Interests', 'aiad-core' );
+    $new_columns['chase_status'] = __( 'Status', 'aiad-core' );
     $new_columns['date'] = $columns['date'];
     return $new_columns;
 }
@@ -31,10 +31,10 @@ function aiad_form_submission_columns( $columns ): array {
  */
 function aiad_submission_status_options(): array {
     return array(
-        'not_contacted' => __( 'Not contacted', 'ai-awareness-day' ),
-        'contacted'     => __( 'Contacted', 'ai-awareness-day' ),
-        'following_up'  => __( 'Following up', 'ai-awareness-day' ),
-        'done'          => __( 'Done', 'ai-awareness-day' ),
+        'not_contacted' => __( 'Not contacted', 'aiad-core' ),
+        'contacted'     => __( 'Contacted', 'aiad-core' ),
+        'following_up'  => __( 'Following up', 'aiad-core' ),
+        'done'          => __( 'Done', 'aiad-core' ),
     );
 }
 add_filter( 'manage_form_submission_posts_columns', 'aiad_form_submission_columns' );
@@ -53,10 +53,10 @@ function aiad_form_submission_column_content( $column, $post_id ): void {
         case 'role':
             $involved_as = get_post_meta( $post_id, '_submission_involved_as', true );
             $role_labels = array(
-                'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
-                'parent'        => __( 'Parent', 'ai-awareness-day' ),
-                'school_leader' => __( 'School leader', 'ai-awareness-day' ),
-                'organisation' => __( 'Organisation', 'ai-awareness-day' ),
+                'teacher'       => __( 'Teacher', 'aiad-core' ),
+                'parent'        => __( 'Parent', 'aiad-core' ),
+                'school_leader' => __( 'School leader', 'aiad-core' ),
+                'organisation' => __( 'Organisation', 'aiad-core' ),
             );
             $role_display = isset( $role_labels[ $involved_as ] ) ? $role_labels[ $involved_as ] : $involved_as;
             echo esc_html( $role_display );
@@ -154,7 +154,7 @@ function aiad_form_submission_interest_filter( string $post_type ): void {
     if ( function_exists( 'aiad_get_contact_checklist_labels' ) ) {
         $current = isset( $_GET['interest'] ) ? sanitize_text_field( wp_unslash( $_GET['interest'] ) ) : '';
         $labels  = aiad_get_contact_checklist_labels();
-        echo '<select name="interest"><option value="">' . esc_html__( 'All interests', 'ai-awareness-day' ) . '</option>';
+        echo '<select name="interest"><option value="">' . esc_html__( 'All interests', 'aiad-core' ) . '</option>';
         foreach ( $labels as $key => $label ) {
             printf(
                 '<option value="%s" %s>%s</option>',
@@ -169,7 +169,7 @@ function aiad_form_submission_interest_filter( string $post_type ): void {
     if ( function_exists( 'aiad_get_organisation_type_options' ) ) {
         $current_org = isset( $_GET['org_type'] ) ? sanitize_text_field( wp_unslash( $_GET['org_type'] ) ) : '';
         $org_types   = aiad_get_organisation_type_options();
-        echo '<select name="org_type"><option value="">' . esc_html__( 'All organisation types', 'ai-awareness-day' ) . '</option>';
+        echo '<select name="org_type"><option value="">' . esc_html__( 'All organisation types', 'aiad-core' ) . '</option>';
         foreach ( $org_types as $key => $label ) {
             printf(
                 '<option value="%s" %s>%s</option>',
@@ -183,7 +183,7 @@ function aiad_form_submission_interest_filter( string $post_type ): void {
 
     $current_status = isset( $_GET['chase_status'] ) ? sanitize_text_field( wp_unslash( $_GET['chase_status'] ) ) : '';
     $status_options = aiad_submission_status_options();
-    echo '<select name="chase_status"><option value="">' . esc_html__( 'All statuses', 'ai-awareness-day' ) . '</option>';
+    echo '<select name="chase_status"><option value="">' . esc_html__( 'All statuses', 'aiad-core' ) . '</option>';
     foreach ( $status_options as $key => $label ) {
         printf(
             '<option value="%s" %s>%s</option>',
@@ -292,10 +292,10 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
     wp_nonce_field( 'aiad_submission_chase_save', 'aiad_submission_chase_nonce' );
 
     $role_labels = array(
-        'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
-        'parent'        => __( 'Parent', 'ai-awareness-day' ),
-        'school_leader' => __( 'School leader', 'ai-awareness-day' ),
-        'organisation' => __( 'Organisation', 'ai-awareness-day' ),
+        'teacher'       => __( 'Teacher', 'aiad-core' ),
+        'parent'        => __( 'Parent', 'aiad-core' ),
+        'school_leader' => __( 'School leader', 'aiad-core' ),
+        'organisation' => __( 'Organisation', 'aiad-core' ),
     );
     $role_display = isset( $role_labels[ $involved_as ] ) ? $role_labels[ $involved_as ] : $involved_as;
 
@@ -303,7 +303,7 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
     <div class="form-submission-details" style="padding: 20px;">
         <table class="form-table">
             <tr>
-                <th><label for="aiad_submission_chase_status"><?php esc_html_e( 'Chase-up status', 'ai-awareness-day' ); ?></label></th>
+                <th><label for="aiad_submission_chase_status"><?php esc_html_e( 'Chase-up status', 'aiad-core' ); ?></label></th>
                 <td>
                     <select id="aiad_submission_chase_status" name="aiad_submission_chase_status">
                         <?php foreach ( aiad_submission_status_options() as $key => $label ) : ?>
@@ -311,50 +311,50 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
                         <?php endforeach; ?>
                     </select>
                     <p>
-                        <label for="aiad_submission_chase_note" class="screen-reader-text"><?php esc_html_e( 'Internal note', 'ai-awareness-day' ); ?></label>
-                        <textarea id="aiad_submission_chase_note" name="aiad_submission_chase_note" rows="2" class="large-text" placeholder="<?php esc_attr_e( 'Internal notes (e.g. who emailed, what was sent)', 'ai-awareness-day' ); ?>"><?php echo esc_textarea( $chase_note ); ?></textarea>
+                        <label for="aiad_submission_chase_note" class="screen-reader-text"><?php esc_html_e( 'Internal note', 'aiad-core' ); ?></label>
+                        <textarea id="aiad_submission_chase_note" name="aiad_submission_chase_note" rows="2" class="large-text" placeholder="<?php esc_attr_e( 'Internal notes (e.g. who emailed, what was sent)', 'aiad-core' ); ?>"><?php echo esc_textarea( $chase_note ); ?></textarea>
                     </p>
                 </td>
             </tr>
             <tr>
-                <th><?php esc_html_e( 'Name', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Name', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $first_name . ' ' . $last_name ); ?></td>
             </tr>
             <tr>
-                <th><?php esc_html_e( 'Email', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Email', 'aiad-core' ); ?></th>
                 <td><a href="mailto:<?php echo esc_attr( $email ); ?>"><?php echo esc_html( $email ); ?></a></td>
             </tr>
             <tr>
-                <th><?php esc_html_e( 'Getting involved as', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Getting involved as', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $role_display ); ?></td>
             </tr>
             <?php if ( $school_name ) : ?>
             <tr>
-                <th><?php esc_html_e( 'School', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'School', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $school_name ); ?></td>
             </tr>
             <?php endif; ?>
             <?php if ( $subject ) : ?>
             <tr>
-                <th><?php esc_html_e( 'Subject / Area', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Subject / Area', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $subject ); ?></td>
             </tr>
             <?php endif; ?>
             <?php if ( $child_school ) : ?>
             <tr>
-                <th><?php esc_html_e( 'Child\'s School', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Child\'s School', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $child_school ); ?></td>
             </tr>
             <?php endif; ?>
             <?php if ( $role_title ) : ?>
             <tr>
-                <th><?php esc_html_e( 'Role Title', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Role Title', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $role_title ); ?></td>
             </tr>
             <?php endif; ?>
             <?php if ( $organisation ) : ?>
             <tr>
-                <th><?php esc_html_e( 'Organisation', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Organisation', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $organisation ); ?></td>
             </tr>
             <?php endif; ?>
@@ -369,7 +369,7 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
             }
             ?>
             <tr>
-                <th><?php esc_html_e( 'Organisation Type', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Organisation Type', 'aiad-core' ); ?></th>
                 <td><?php echo esc_html( $org_type_display ); ?></td>
             </tr>
             <?php endif; ?>
@@ -385,7 +385,7 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
                 if ( ! empty( $checklist_display ) ) :
                     ?>
             <tr>
-                <th><?php esc_html_e( 'Interested in', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Interested in', 'aiad-core' ); ?></th>
                 <td><ul style="margin:0; padding-left:1.25rem;"><?php foreach ( $checklist_display as $label ) : ?><li><?php echo esc_html( $label ); ?></li><?php endforeach; ?></ul></td>
             </tr>
             <?php
@@ -394,7 +394,7 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
             ?>
             <?php if ( $message ) : ?>
             <tr>
-                <th><?php esc_html_e( 'Message', 'ai-awareness-day' ); ?></th>
+                <th><?php esc_html_e( 'Message', 'aiad-core' ); ?></th>
                 <td><?php echo nl2br( esc_html( $message ) ); ?></td>
             </tr>
             <?php endif; ?>
@@ -405,7 +405,7 @@ function aiad_form_submission_meta_box( $post, $metabox = null ): void {
 function aiad_register_form_submission_meta_box(): void {
     add_meta_box(
         'aiad_form_submission_details',
-        __( 'Submission Details', 'ai-awareness-day' ),
+        __( 'Submission Details', 'aiad-core' ),
         'aiad_form_submission_meta_box',
         'form_submission',
         'normal',
@@ -456,8 +456,8 @@ function aiad_partner_admin_columns( array $columns ): array {
     foreach ( $columns as $key => $label ) {
         $new[ $key ] = $label;
         if ( 'title' === $key ) {
-            $new['position']    = __( 'Position', 'ai-awareness-day' );
-            $new['ai_resources'] = __( 'AI resources', 'ai-awareness-day' );
+            $new['position']    = __( 'Position', 'aiad-core' );
+            $new['ai_resources'] = __( 'AI resources', 'aiad-core' );
         }
     }
     return $new;
@@ -478,9 +478,9 @@ function aiad_partner_admin_column_content( string $column, int $post_id ): void
         $home = (string) get_post_meta( $post_id, '_partner_url', true );
         $href = $url !== '' ? $url : $home;
         if ( $flag && $href !== '' ) {
-            echo '<span aria-hidden="true">✓</span> <a href="' . esc_url( $href ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Link', 'ai-awareness-day' ) . '</a>';
+            echo '<span aria-hidden="true">✓</span> <a href="' . esc_url( $href ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Link', 'aiad-core' ) . '</a>';
         } elseif ( $flag ) {
-            echo '<span style="color:#b45309" title="' . esc_attr__( 'Checked — add Website URL or AI resources URL', 'ai-awareness-day' ) . '">!</span>';
+            echo '<span style="color:#b45309" title="' . esc_attr__( 'Checked — add Website URL or AI resources URL', 'aiad-core' ) . '">!</span>';
         } else {
             echo '—';
         }
@@ -526,7 +526,7 @@ function aiad_partner_quick_edit_field( string $column_name, string $post_type )
         <div class="inline-edit-col">
             <?php wp_nonce_field( 'aiad_partner_quick_edit', 'aiad_partner_quick_edit_nonce' ); ?>
             <label>
-                <span class="title"><?php esc_html_e( 'Position', 'ai-awareness-day' ); ?></span>
+                <span class="title"><?php esc_html_e( 'Position', 'aiad-core' ); ?></span>
                 <input type="number" name="aiad_partner_menu_order" class="aiad-partner-menu-order" value="0" min="0" step="1" style="width:60px;">
             </label>
         </div>
@@ -588,8 +588,8 @@ add_action( 'admin_enqueue_scripts', 'aiad_partner_quick_edit_js' );
  * @return array
  */
 function aiad_resource_admin_columns( array $columns ): array {
-    $columns['downloads'] = __( 'Downloads', 'ai-awareness-day' );
-    $columns['views']     = __( 'Views', 'ai-awareness-day' );
+    $columns['downloads'] = __( 'Downloads', 'aiad-core' );
+    $columns['views']     = __( 'Views', 'aiad-core' );
     return $columns;
 }
 add_filter( 'manage_resource_posts_columns', 'aiad_resource_admin_columns' );

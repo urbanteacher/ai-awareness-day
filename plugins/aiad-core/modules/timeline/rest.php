@@ -53,12 +53,12 @@ function aiad_rest_timeline_like( WP_REST_Request $request ) {
 	$entry_id = absint( $request['id'] );
 	$post     = $entry_id ? get_post( $entry_id ) : null;
 	if ( ! $post || 'timeline' !== $post->post_type || 'publish' !== $post->post_status ) {
-		return new WP_Error( 'aiad_invalid_entry', __( 'Invalid entry.', 'ai-awareness-day' ), array( 'status' => 404 ) );
+		return new WP_Error( 'aiad_invalid_entry', __( 'Invalid entry.', 'aiad-core' ), array( 'status' => 404 ) );
 	}
 
 	$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 	if ( '' === $ip_address ) {
-		return new WP_Error( 'aiad_unverified', __( 'Unable to verify request.', 'ai-awareness-day' ), array( 'status' => 400 ) );
+		return new WP_Error( 'aiad_unverified', __( 'Unable to verify request.', 'aiad-core' ), array( 'status' => 400 ) );
 	}
 
 	$count          = (int) get_post_meta( $entry_id, '_aiad_timeline_like_count', true );
@@ -66,7 +66,7 @@ function aiad_rest_timeline_like( WP_REST_Request $request ) {
 	if ( get_transient( $rate_limit_key ) ) {
 		return new WP_Error(
 			'aiad_already_liked',
-			__( 'You have already liked this entry.', 'ai-awareness-day' ),
+			__( 'You have already liked this entry.', 'aiad-core' ),
 			array(
 				'status' => 429,
 				'count'  => $count,

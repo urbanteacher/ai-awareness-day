@@ -19,13 +19,13 @@ if (!defined('ABSPATH')) {
 function aiad_timeline_icon_options(): array
 {
     return array(
-        'announcement' => __('Announcement', 'ai-awareness-day'),
-        'resource' => __('New Resource', 'ai-awareness-day'),
-        'partner' => __('New Partner', 'ai-awareness-day'),
-        'signup' => __('Sign-up / Submission', 'ai-awareness-day'),
-        'milestone' => __('News', 'ai-awareness-day'),
-        'media' => __('CPD', 'ai-awareness-day'),
-        'event' => __('Event', 'ai-awareness-day'),
+        'announcement' => __('Announcement', 'aiad-core'),
+        'resource' => __('New Resource', 'aiad-core'),
+        'partner' => __('New Partner', 'aiad-core'),
+        'signup' => __('Sign-up / Submission', 'aiad-core'),
+        'milestone' => __('News', 'aiad-core'),
+        'media' => __('CPD', 'aiad-core'),
+        'event' => __('Event', 'aiad-core'),
     );
 }
 
@@ -37,9 +37,9 @@ function aiad_timeline_icon_options(): array
 function aiad_timeline_cover_fallback_options(): array
 {
     return array(
-        '' => __('Auto (category gradient or tech)', 'ai-awareness-day'),
-        'gradient' => __('Category gradient', 'ai-awareness-day'),
-        'tech' => __('Tech pattern', 'ai-awareness-day'),
+        '' => __('Auto (category gradient or tech)', 'aiad-core'),
+        'gradient' => __('Category gradient', 'aiad-core'),
+        'tech' => __('Tech pattern', 'aiad-core'),
     );
 }
 
@@ -75,7 +75,7 @@ function aiad_timeline_resolve_cover_fallback(string $icon, string $fallback = '
 function aiad_timeline_featured_badge_label(WP_Post $entry, bool $pinned, string $icon): string
 {
     if ($pinned) {
-        return __('Pinned', 'ai-awareness-day');
+        return __('Pinned', 'aiad-core');
     }
     // In assigned order: the first is the primary topic (see 'sort' on the taxonomy).
     $terms = wp_get_object_terms($entry->ID, 'timeline_category', array('orderby' => 'term_order'));
@@ -84,13 +84,13 @@ function aiad_timeline_featured_badge_label(WP_Post $entry, bool $pinned, string
         return html_entity_decode($terms[0]->name, ENT_QUOTES, 'UTF-8');
     }
     $labels = array(
-        'announcement' => __('Announcement', 'ai-awareness-day'),
-        'media' => __('CPD', 'ai-awareness-day'),
-        'resource' => __('Resource', 'ai-awareness-day'),
-        'partner' => __('Partner', 'ai-awareness-day'),
-        'event' => __('Event', 'ai-awareness-day'),
-        'milestone' => __('News', 'ai-awareness-day'),
-        'signup' => __('Sign-up', 'ai-awareness-day'),
+        'announcement' => __('Announcement', 'aiad-core'),
+        'media' => __('CPD', 'aiad-core'),
+        'resource' => __('Resource', 'aiad-core'),
+        'partner' => __('Partner', 'aiad-core'),
+        'event' => __('Event', 'aiad-core'),
+        'milestone' => __('News', 'aiad-core'),
+        'signup' => __('Sign-up', 'aiad-core'),
     );
     return $labels[$icon] ?? $labels['announcement'];
 }

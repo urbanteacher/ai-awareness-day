@@ -27,15 +27,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function aiad_timeline_topics(): array {
 	return array(
-		'teaching-learning'   => __( 'Teaching & learning', 'ai-awareness-day' ),
-		'training-cpd'        => __( 'Training & CPD', 'ai-awareness-day' ),
-		'policy-regulation'   => __( 'Policy & regulation', 'ai-awareness-day' ),
-		'safety-wellbeing'    => __( 'Safety & wellbeing', 'ai-awareness-day' ),
-		'skills-careers'      => __( 'Skills & careers', 'ai-awareness-day' ),
-		'research-insight'    => __( 'Research & insight', 'ai-awareness-day' ),
-		'student-voice'       => __( 'Student voice', 'ai-awareness-day' ),
-		'classroom-resources' => __( 'Classroom resources', 'ai-awareness-day' ),
-		'campaign-news'       => __( 'Campaign news', 'ai-awareness-day' ),
+		'teaching-learning'   => __( 'Teaching & learning', 'aiad-core' ),
+		'training-cpd'        => __( 'Training & CPD', 'aiad-core' ),
+		'policy-regulation'   => __( 'Policy & regulation', 'aiad-core' ),
+		'safety-wellbeing'    => __( 'Safety & wellbeing', 'aiad-core' ),
+		'skills-careers'      => __( 'Skills & careers', 'aiad-core' ),
+		'research-insight'    => __( 'Research & insight', 'aiad-core' ),
+		'student-voice'       => __( 'Student voice', 'aiad-core' ),
+		'classroom-resources' => __( 'Classroom resources', 'aiad-core' ),
+		'campaign-news'       => __( 'Campaign news', 'aiad-core' ),
 	);
 }
 

@@ -64,7 +64,7 @@ function aiad_ensure_airb_hub_timeline_category(): int {
 	}
 
 	$created = wp_insert_term(
-		__( 'Benchmark resources', 'ai-awareness-day' ),
+		__( 'Benchmark resources', 'aiad-core' ),
 		'timeline_category',
 		array(
 			'slug' => 'benchmark-resources',

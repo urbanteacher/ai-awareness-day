@@ -38,50 +38,50 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'List', 'ai-awareness-day' ) },
+						{ title: __( 'List', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'HTML element', 'ai-awareness-day' ),
+							label: __( 'HTML element', 'aiad-core' ),
 							value: a.tagName,
 							options: [
 								{
 									label: __(
 										'Bulleted list (ul)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'ul',
 								},
 								{
 									label: __(
 										'Numbered list (ol)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'ol',
 								},
 								{
 									label: __(
 										'Terms and descriptions (dl)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'dl',
 								},
 								{
 									label: __(
 										'Paragraph of tags (p)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'p',
 								},
 								{
 									label: __(
 										'Box (div)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'div',
 								},
 								{
 									label: __(
 										'Navigation (nav)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'nav',
 								},
@@ -94,7 +94,7 @@ import '@wordpress/i18n';
 						el( components.TextControl, {
 							label: __(
 								'Name for screen readers (aria-label)',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							value: a.ariaLabel || '',
 							onChange( value ) {
@@ -107,7 +107,7 @@ import '@wordpress/i18n';
 						el( components.TextControl, {
 							label: __(
 								'Named by the element with this ID (aria-labelledby)',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							value: a.ariaLabelledby || '',
 							onChange( value ) {

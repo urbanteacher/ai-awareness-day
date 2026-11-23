@@ -80,7 +80,7 @@ $heading_id   = 'cert-showcase-title';
 			<figure class="cert-showcase__art">
 				<div data-airb-cert-showcase-art data-cert-theme="<?php echo esc_attr( $strand ); ?>"></div>
 				<figcaption class="cert-showcase__caption">
-					<?php esc_html_e( 'Example — your name and strand appear on the certificate you earn.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Example — your name and strand appear on the certificate you earn.', 'aiad-core' ); ?>
 				</figcaption>
 			</figure>
 		</div>

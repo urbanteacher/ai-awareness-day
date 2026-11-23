@@ -30,9 +30,9 @@ import '@wordpress/server-side-render';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Strand', 'ai-awareness-day' ) },
+						{ title: __( 'Strand', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'Strand', 'ai-awareness-day' ),
+							label: __( 'Strand', 'aiad-core' ),
 							value: props.attributes.strand,
 							options: [
 								'safe',

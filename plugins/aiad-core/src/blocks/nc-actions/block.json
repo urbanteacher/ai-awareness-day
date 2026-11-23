@@ -7,7 +7,7 @@
 	"icon": "button",
 	"description": "The National Conversation's buttons and links, which change on the day it opens: until then, when registration opens and the readiness check; from then, joining, signing in and nominating a school.",
 	"keywords": [ "national conversation", "register", "join", "buttons" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"variant": { "type": "string", "enum": [ "hero", "cta", "nominate" ], "default": "hero" }
 	},

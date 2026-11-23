@@ -9,7 +9,7 @@
 	'use strict';
 
 	var __ = window.wp.i18n.__;
-	var D = 'ai-awareness-day';
+	var D = 'aiad-core';
 
 	function esc( text ) {
 		var span = document.createElement( 'span' );

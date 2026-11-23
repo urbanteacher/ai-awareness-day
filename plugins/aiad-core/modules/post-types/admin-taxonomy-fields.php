@@ -60,7 +60,7 @@ function aiad_render_resource_principle_control( int $post_id, array $args = arr
 		)
 	);
 	if ( is_wp_error( $theme_terms ) || empty( $theme_terms ) ) {
-		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No themes found. Add themes under Resources → Themes.', 'ai-awareness-day' ) . '</p></div>';
+		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No themes found. Add themes under Resources → Themes.', 'aiad-core' ) . '</p></div>';
 		return;
 	}
 
@@ -70,10 +70,10 @@ function aiad_render_resource_principle_control( int $post_id, array $args = arr
 	$theme_slugs = array( 'safe', 'smart', 'creative', 'responsible', 'future' );
 
 	if ( 'select_single' === $args['mode'] ) {
-		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select a theme (optional)', 'ai-awareness-day' );
+		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select a theme (optional)', 'aiad-core' );
 		echo '<div class="aiad-rd-section">';
-		echo '<strong class="aiad-rd-label">' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong>';
-		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</label>';
+		echo '<strong class="aiad-rd-label">' . esc_html__( 'Theme', 'aiad-core' ) . '</strong>';
+		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Theme', 'aiad-core' ) . '</label>';
 		echo '<select id="' . esc_attr( $args['select_id'] ) . '" name="' . esc_attr( $args['input_name'] ) . '" class="widefat">';
 		echo '<option value="">' . esc_html( $empty_label ) . '</option>';
 		foreach ( $theme_terms as $term ) {
@@ -91,7 +91,7 @@ function aiad_render_resource_principle_control( int $post_id, array $args = arr
 	}
 
 	// pills (default)
-	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Theme', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-pills">';
+	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Theme', 'aiad-core' ) . '</strong><div class="aiad-rd-pills">';
 	foreach ( $theme_terms as $term ) {
 		if ( is_wp_error( $term ) ) {
 			continue;
@@ -116,7 +116,7 @@ function aiad_render_resource_duration_control( int $post_id, array $args = arra
 		$args,
 		array(
 			'input_name'      => 'aiad_resource_duration',
-			'description'     => __( 'Select all slots this resource fits (e.g. both a 5-minute starter and a 20-minute assembly).', 'ai-awareness-day' ),
+			'description'     => __( 'Select all slots this resource fits (e.g. both a 5-minute starter and a 20-minute assembly).', 'aiad-core' ),
 			'checkbox_block'  => false,
 		)
 	);
@@ -133,13 +133,13 @@ function aiad_render_resource_duration_control( int $post_id, array $args = arra
 	$current_duration = wp_get_object_terms( $post_id, 'resource_duration' );
 	$current_slugs    = $current_duration && ! is_wp_error( $current_duration ) ? wp_list_pluck( $current_duration, 'slug' ) : array();
 
-	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Session length', 'ai-awareness-day' ) . '</strong>';
+	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Session length', 'aiad-core' ) . '</strong>';
 	if ( $args['description'] !== '' ) {
 		echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html( $args['description'] ) . '</p>';
 	}
 	echo '<div class="aiad-rd-checkboxes">';
 	if ( is_wp_error( $duration_terms ) || empty( $duration_terms ) ) {
-		echo '<p class="description">' . esc_html__( 'No session lengths found.', 'ai-awareness-day' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'No session lengths found.', 'aiad-core' ) . '</p>';
 		echo '</div></div>';
 		return;
 	}
@@ -189,7 +189,7 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 		)
 	);
 	if ( is_wp_error( $activity_terms ) || empty( $activity_terms ) ) {
-		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No formats found. Add them under Resources → Formats.', 'ai-awareness-day' ) . '</p></div>';
+		echo '<div class="aiad-rd-section"><p class="description">' . esc_html__( 'No formats found. Add them under Resources → Formats.', 'aiad-core' ) . '</p></div>';
 		return;
 	}
 
@@ -200,10 +200,10 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 		if ( $current_activities && ! is_wp_error( $current_activities ) && ! empty( $current_activities ) ) {
 			$current_slug = $current_activities[0]->slug;
 		}
-		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select a format (optional)', 'ai-awareness-day' );
+		$empty_label = $args['empty_label'] !== '' ? $args['empty_label'] : __( 'Select a format (optional)', 'aiad-core' );
 		echo '<div class="aiad-rd-section">';
-		echo '<strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong>';
-		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</label>';
+		echo '<strong class="aiad-rd-label">' . esc_html__( 'Format', 'aiad-core' ) . '</strong>';
+		echo '<p><label for="' . esc_attr( $args['select_id'] ) . '" class="screen-reader-text">' . esc_html__( 'Format', 'aiad-core' ) . '</label>';
 		echo '<select id="' . esc_attr( $args['select_id'] ) . '" name="' . esc_attr( $args['input_name'] ) . '" class="widefat">';
 		echo '<option value="">' . esc_html( $empty_label ) . '</option>';
 		foreach ( $activity_terms as $term ) {
@@ -224,7 +224,7 @@ function aiad_render_activity_type_control( int $post_id, array $args = array() 
 	$current_slugs = $current_activities && ! is_wp_error( $current_activities ) ? wp_list_pluck( $current_activities, 'slug' ) : array();
 	$name_with_array = $args['input_name'] . '[]';
 
-	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Format', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
+	echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Format', 'aiad-core' ) . '</strong><div class="aiad-rd-checkboxes">';
 	foreach ( $activity_terms as $term ) {
 		if ( is_wp_error( $term ) ) {
 			continue;

@@ -13,7 +13,7 @@
     "logo",
     "card"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "kind": {
       "type": "string",

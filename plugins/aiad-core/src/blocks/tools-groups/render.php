@@ -48,7 +48,7 @@ foreach ( $aiad_categories as $aiad_cat ) :
 				<?php
 				printf(
 					/* translators: %d: number of tools */
-					esc_html( _n( '%d tool', '%d tools', $aiad_tools->found_posts, 'ai-awareness-day' ) ),
+					esc_html( _n( '%d tool', '%d tools', $aiad_tools->found_posts, 'aiad-core' ) ),
 					(int) $aiad_tools->found_posts
 				);
 				?>

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 the_post_navigation(
 	array(
-		'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Previous', 'ai-awareness-day' ) . '</span><span class="nav-title">%title</span>',
-		'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next', 'ai-awareness-day' ) . '</span><span class="nav-title">%title</span>',
+		'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Previous', 'aiad-core' ) . '</span><span class="nav-title">%title</span>',
+		'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next', 'aiad-core' ) . '</span><span class="nav-title">%title</span>',
 	)
 );

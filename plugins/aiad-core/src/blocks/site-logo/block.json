@@ -10,7 +10,7 @@
 		"logo",
 		"header"
 	],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,

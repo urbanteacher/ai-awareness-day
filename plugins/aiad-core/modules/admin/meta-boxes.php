@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_partner_url_meta_box(): void {
     add_meta_box(
         'aiad_partner_url',
-        __( 'Partner URL', 'ai-awareness-day' ),
+        __( 'Partner URL', 'aiad-core' ),
         'aiad_partner_url_callback',
         'partner',
         'normal',
@@ -198,7 +198,7 @@ add_action( 'add_meta_boxes', 'aiad_partner_url_meta_box' );
 function aiad_partner_stats_meta_box(): void {
     add_meta_box(
         'aiad_partner_stats',
-        __( 'Partner Statistics', 'ai-awareness-day' ),
+        __( 'Partner Statistics', 'aiad-core' ),
         'aiad_partner_stats_meta_box_callback',
         'partner',
         'normal',
@@ -250,7 +250,7 @@ add_action( 'save_post_partner', 'aiad_save_partner_url' );
 function aiad_featured_resource_meta_box(): void {
     add_meta_box(
         'aiad_featured_resource',
-        __( 'External resource link, theme & attribution', 'ai-awareness-day' ),
+        __( 'External resource link, theme & attribution', 'aiad-core' ),
         'aiad_featured_resource_callback',
         'featured_resource',
         'normal',
@@ -267,16 +267,16 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
     $org_name = get_post_meta( $post->ID, '_featured_resource_org_name', true );
     $org_url  = get_post_meta( $post->ID, '_featured_resource_org_url', true );
     echo '<div class="aiad-resource-details">';
-    echo '<p><label for="featured_resource_url">' . esc_html__( 'Resource URL *', 'ai-awareness-day' ) . '</label><br>';
+    echo '<p><label for="featured_resource_url">' . esc_html__( 'Resource URL *', 'aiad-core' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_url" name="featured_resource_url" value="' . esc_attr( $url ) . '" class="widefat" required placeholder="https://..."></p>';
-    echo '<p><label for="featured_resource_org_name">' . esc_html__( 'Organisation name', 'ai-awareness-day' ) . '</label><br>';
+    echo '<p><label for="featured_resource_org_name">' . esc_html__( 'Organisation name', 'aiad-core' ) . '</label><br>';
     echo '<input type="text" id="featured_resource_org_name" name="featured_resource_org_name" value="' . esc_attr( $org_name ) . '" class="widefat" placeholder="e.g. STEM Learning"></p>';
-    echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'ai-awareness-day' ) . '</label><br>';
+    echo '<p><label for="featured_resource_org_url">' . esc_html__( 'Organisation website (optional)', 'aiad-core' ) . '</label><br>';
     echo '<input type="url" id="featured_resource_org_url" name="featured_resource_org_url" value="' . esc_attr( $org_url ) . '" class="widefat" placeholder="https://..."></p>';
     $img_keywords = get_post_meta( $post->ID, '_featured_resource_image_keywords', true );
-    echo '<p><label for="featured_resource_image_keywords">' . esc_html__( 'Card image keywords', 'ai-awareness-day' ) . '</label><br>';
+    echo '<p><label for="featured_resource_image_keywords">' . esc_html__( 'Card image keywords', 'aiad-core' ) . '</label><br>';
     echo '<input type="text" id="featured_resource_image_keywords" name="featured_resource_image_keywords" value="' . esc_attr( $img_keywords ) . '" class="widefat aiad-image-keywords-input" placeholder="e.g. rhino, wildlife, conservation"> ';
-    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'ai-awareness-day' ) . '</button>';
+    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'aiad-core' ) . '</button>';
     echo '<span class="aiad-fetch-image-status" style="margin-left:0.5rem;font-style:italic;"></span></p>';
 
     if ( function_exists( 'aiad_render_resource_principle_control' ) ) {
@@ -286,7 +286,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
                 'mode'        => 'select_single',
                 'input_name'  => 'aiad_featured_resource_principle',
                 'select_id'   => 'aiad_featured_resource_principle',
-                'description' => __( 'Used for the Safe / Smart / Creative / Responsible / Future pill and filters.', 'ai-awareness-day' ),
+                'description' => __( 'Used for the Safe / Smart / Creative / Responsible / Future pill and filters.', 'aiad-core' ),
             )
         );
     }
@@ -297,7 +297,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
                 'mode'        => 'select_single',
                 'input_name'  => 'aiad_featured_resource_activity',
                 'select_id'   => 'aiad_featured_resource_activity',
-                'description' => __( 'Used for the “Format” filter (Game, Quiz, Creative Task, etc.).', 'ai-awareness-day' ),
+                'description' => __( 'Used for the “Format” filter (Game, Quiz, Creative Task, etc.).', 'aiad-core' ),
             )
         );
     }
@@ -306,7 +306,7 @@ function aiad_featured_resource_callback( WP_Post $post ): void {
             $post->ID,
             array(
                 'input_name'     => 'aiad_featured_resource_duration',
-                'description'    => __( 'Select all slots this resource fits.', 'ai-awareness-day' ),
+                'description'    => __( 'Select all slots this resource fits.', 'aiad-core' ),
                 'checkbox_block' => true,
             )
         );
@@ -439,35 +439,35 @@ function aiad_seed_partner_resources(): void {
         // Existing five seed resources
         array(
             'title'   => 'Quick, Draw!',
-            'excerpt' => __( 'Draw everyday objects and watch as an AI tries to guess what you\'re sketching in real time. A fun way to see how machines learn from patterns.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Draw everyday objects and watch as an AI tries to guess what you\'re sketching in real time. A fun way to see how machines learn from patterns.', 'aiad-core' ),
             'url'     => 'https://quickdraw.withgoogle.com/',
             'org'     => 'Google',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'Guess the Line',
-            'excerpt' => __( 'Draw imaginative prompts (like styles or abstract ideas) and see if an AI can recognise your artwork. A more artistic twist on AI guessing games.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Draw imaginative prompts (like styles or abstract ideas) and see if an AI can recognise your artwork. A more artistic twist on AI guessing games.', 'aiad-core' ),
             'url'     => 'https://artsandculture.google.com/experiment/guess-the-line/ogH0ouxdq_sR6w?hl=en',
             'org'     => 'Google Arts & Culture',
             'theme'   => 'creative',
         ),
         array(
             'title'   => 'Quiz: AI or Real?',
-            'excerpt' => __( 'Test your ability to tell the difference between human-made and AI-generated content.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Test your ability to tell the difference between human-made and AI-generated content.', 'aiad-core' ),
             'url'     => 'https://www.bbc.co.uk/bitesize/articles/zqnwxg8',
             'org'     => 'BBC Bitesize',
             'theme'   => 'safe',
         ),
         array(
             'title'   => 'Turing Test Live',
-            'excerpt' => __( 'Chat and guess: are you talking to a human or an AI? A modern take on a classic AI question.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Chat and guess: are you talking to a human or an AI? A modern take on a classic AI question.', 'aiad-core' ),
             'url'     => 'https://turingtest.live/',
             'org'     => 'Turing Test',
             'theme'   => 'safe',
         ),
         array(
             'title'   => 'How Could AI Affect Your Job?',
-            'excerpt' => __( 'Explore how artificial intelligence may change careers, skills, and workplaces in the future.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Explore how artificial intelligence may change careers, skills, and workplaces in the future.', 'aiad-core' ),
             'url'     => 'https://www.bbc.co.uk/bitesize/articles/zm9scxs',
             'org'     => 'BBC Bitesize',
             'theme'   => 'future',
@@ -476,63 +476,63 @@ function aiad_seed_partner_resources(): void {
         // New handpicked resources (from interactive AI games & tools)
         array(
             'title'   => 'Teachable Machine',
-            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'aiad-core' ),
             'url'     => 'https://teachablemachine.withgoogle.com/',
             'org'     => 'Google',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'Harmony Square',
-            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'aiad-core' ),
             'url'     => 'https://harmonysquare.game/en',
             'org'     => 'U.S. Department of State & partners',
             'theme'   => 'responsible',
         ),
         array(
             'title'   => 'Emoji Scavenger Hunt',
-            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'aiad-core' ),
             'url'     => 'https://emojiscavengerhunt.withgoogle.com/',
             'org'     => 'Google',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'FreddieMeter',
-            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'aiad-core' ),
             'url'     => 'https://freddiemeter.withyoutube.com/',
             'org'     => 'YouTube & Google Creative Lab',
             'theme'   => 'creative',
         ),
         array(
             'title'   => 'Alexa Skill Blueprints',
-            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'aiad-core' ),
             'url'     => 'https://blueprints.amazon.com/',
             'org'     => 'Amazon',
             'theme'   => 'future',
         ),
         array(
             'title'   => 'AI Quests',
-            'excerpt' => __( 'Hands-on AI quests and classroom-friendly challenges that walk students through data, models and real-world applications of AI.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Hands-on AI quests and classroom-friendly challenges that walk students through data, models and real-world applications of AI.', 'aiad-core' ),
             'url'     => 'https://research.google/ai-quests/intl/en_gb',
             'org'     => 'Google Research',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'Spot the Deepfake',
-            'excerpt' => __( 'Interactive activities that explain how deepfakes work and help students practice spotting manipulated media.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Interactive activities that explain how deepfakes work and help students practice spotting manipulated media.', 'aiad-core' ),
             'url'     => 'https://www.spotdeepfakes.org/en-US',
             'org'     => 'Microsoft',
             'theme'   => 'safe',
         ),
         array(
             'title'   => 'AI Quests',
-            'excerpt' => __( 'Hands-on AI quests and classroom-friendly challenges that walk students through data, models and real-world applications of AI.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Hands-on AI quests and classroom-friendly challenges that walk students through data, models and real-world applications of AI.', 'aiad-core' ),
             'url'     => 'https://research.google/ai-quests/intl/en_gb',
             'org'     => 'Google Research',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'Spot the Deepfake',
-            'excerpt' => __( 'Interactive activities that explain how deepfakes work and help students practice spotting manipulated media.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Interactive activities that explain how deepfakes work and help students practice spotting manipulated media.', 'aiad-core' ),
             'url'     => 'https://www.spotdeepfakes.org/en-US',
             'org'     => 'Microsoft',
             'theme'   => 'safe',
@@ -571,35 +571,35 @@ function aiad_seed_additional_partner_resources(): void {
     $items = array(
         array(
             'title'   => 'Teachable Machine',
-            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Train simple machine‑learning models in the browser and see how data shapes predictions — perfect for classroom demos about data → algorithm → prediction.', 'aiad-core' ),
             'url'     => 'https://teachablemachine.withgoogle.com/',
             'org'     => 'Google',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'Harmony Square',
-            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Play through a fictional social media town to learn how disinformation spreads — then spot the same tricks in the real world.', 'aiad-core' ),
             'url'     => 'https://harmonysquare.game/en',
             'org'     => 'U.S. Department of State & partners',
             'theme'   => 'responsible',
         ),
         array(
             'title'   => 'Emoji Scavenger Hunt',
-            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Use your device camera to find real‑world objects that match emojis while an AI model tries to recognise them in real time.', 'aiad-core' ),
             'url'     => 'https://emojiscavengerhunt.withgoogle.com/',
             'org'     => 'Google',
             'theme'   => 'smart',
         ),
         array(
             'title'   => 'FreddieMeter',
-            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Sing along to Queen and get a score for how closely your pitch, melody and timbre match Freddie Mercury — a fun doorway into AI audio analysis.', 'aiad-core' ),
             'url'     => 'https://freddiemeter.withyoutube.com/',
             'org'     => 'YouTube & Google Creative Lab',
             'theme'   => 'creative',
         ),
         array(
             'title'   => 'Alexa Skill Blueprints',
-            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'ai-awareness-day' ),
+            'excerpt' => __( 'Create simple custom Alexa skills from templates — stories, quizzes and lists — without writing code, great for “how does Alexa work?” lessons.', 'aiad-core' ),
             'url'     => 'https://blueprints.amazon.com/',
             'org'     => 'Amazon',
             'theme'   => 'future',
@@ -645,28 +645,28 @@ function aiad_seed_lesson_starters(): void {
 
     $items = array(
         array(
-            'title'   => __( "Who's Really Behind the Screen?", 'ai-awareness-day' ),
-            'excerpt' => __( 'Understanding AI-generated content and deepfakes. 5-Minute Lesson Starter.', 'ai-awareness-day' ),
+            'title'   => __( "Who's Really Behind the Screen?", 'aiad-core' ),
+            'excerpt' => __( 'Understanding AI-generated content and deepfakes. 5-Minute Lesson Starter.', 'aiad-core' ),
             'theme'   => 'safe',
         ),
         array(
-            'title'   => __( "How Does AI Actually 'Think'?", 'ai-awareness-day' ),
-            'excerpt' => __( 'Understanding the technology behind the tools you use.', 'ai-awareness-day' ),
+            'title'   => __( "How Does AI Actually 'Think'?", 'aiad-core' ),
+            'excerpt' => __( 'Understanding the technology behind the tools you use.', 'aiad-core' ),
             'theme'   => 'smart',
         ),
         array(
-            'title'   => __( 'AI as Your Creative Partner', 'ai-awareness-day' ),
-            'excerpt' => __( 'Using AI to amplify human creativity, not replace it.', 'ai-awareness-day' ),
+            'title'   => __( 'AI as Your Creative Partner', 'aiad-core' ),
+            'excerpt' => __( 'Using AI to amplify human creativity, not replace it.', 'aiad-core' ),
             'theme'   => 'creative',
         ),
         array(
-            'title'   => __( 'The Hidden Costs of AI', 'ai-awareness-day' ),
-            'excerpt' => __( 'Understanding the environmental and ethical impact of AI.', 'ai-awareness-day' ),
+            'title'   => __( 'The Hidden Costs of AI', 'aiad-core' ),
+            'excerpt' => __( 'Understanding the environmental and ethical impact of AI.', 'aiad-core' ),
             'theme'   => 'responsible',
         ),
         array(
-            'title'   => __( 'Your AI-Ready Future', 'ai-awareness-day' ),
-            'excerpt' => __( 'Preparing for careers in an AI-transformed world.', 'ai-awareness-day' ),
+            'title'   => __( 'Your AI-Ready Future', 'aiad-core' ),
+            'excerpt' => __( 'Preparing for careers in an AI-transformed world.', 'aiad-core' ),
             'theme'   => 'future',
         ),
     );
@@ -739,7 +739,7 @@ add_action( 'admin_enqueue_scripts', 'aiad_image_fetch_admin_scripts' );
 function aiad_resource_details_meta_box(): void {
     add_meta_box(
         'aiad_resource_details',
-        __( 'Resource Details', 'ai-awareness-day' ),
+        __( 'Resource Details', 'aiad-core' ),
         'aiad_resource_details_callback',
         'resource',
         'normal',
@@ -814,26 +814,26 @@ function aiad_resource_details_callback( WP_Post $post ): void {
 
     // Card image keywords
     $img_kw = get_post_meta( $post->ID, '_aiad_image_keywords', true );
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Card image keywords', 'ai-awareness-day' ) . '</strong>';
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Card image keywords', 'aiad-core' ) . '</strong>';
     echo '<input type="text" name="aiad_image_keywords" value="' . esc_attr( $img_kw ) . '" class="widefat aiad-image-keywords-input" placeholder="e.g. classroom, students, AI, technology"> ';
-    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'ai-awareness-day' ) . '</button>';
+    echo '<button type="button" class="button aiad-fetch-image-btn" data-post-id="' . esc_attr( $post->ID ) . '" style="margin-top:0.4rem;">' . esc_html__( 'Fetch image', 'aiad-core' ) . '</button>';
     echo '<span class="aiad-fetch-image-status" style="margin-left:0.5rem;font-style:italic;"></span></div>';
 
     // Download file
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Download file', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-download">';
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Download file', 'aiad-core' ) . '</strong><div class="aiad-rd-download">';
     echo '<input type="hidden" id="aiad_download_url" name="aiad_download_url" value="' . esc_attr( $download_url ) . '">';
-    echo '<button type="button" class="button" id="aiad_upload_download_btn">' . esc_html__( 'Upload / Select PDF or PPTX', 'ai-awareness-day' ) . '</button> ';
-    echo '<button type="button" class="button" id="aiad_remove_download_btn" style="' . ( $download_url ? '' : 'display:none;' ) . '">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button>';
-    echo '<p id="aiad_download_filename" class="description" style="' . ( $filename ? '' : 'display:none;' ) . '">' . esc_html__( 'File:', 'ai-awareness-day' ) . ' <strong>' . esc_html( $filename ) . '</strong></p>';
+    echo '<button type="button" class="button" id="aiad_upload_download_btn">' . esc_html__( 'Upload / Select PDF or PPTX', 'aiad-core' ) . '</button> ';
+    echo '<button type="button" class="button" id="aiad_remove_download_btn" style="' . ( $download_url ? '' : 'display:none;' ) . '">' . esc_html__( 'Remove', 'aiad-core' ) . '</button>';
+    echo '<p id="aiad_download_filename" class="description" style="' . ( $filename ? '' : 'display:none;' ) . '">' . esc_html__( 'File:', 'aiad-core' ) . ' <strong>' . esc_html( $filename ) . '</strong></p>';
     echo '</div></div>';
 
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Video preview (optional)', 'ai-awareness-day' ) . '</strong>';
-    echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html__( 'Paste a YouTube or Vimeo link, or a direct link to an MP4/WebM file hosted on your site. When set, this appears in the preview area instead of the Microsoft Office slide viewer (PPTX).', 'ai-awareness-day' ) . '</p>';
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Video preview (optional)', 'aiad-core' ) . '</strong>';
+    echo '<p class="description" style="margin:0 0 0.5rem;">' . esc_html__( 'Paste a YouTube or Vimeo link, or a direct link to an MP4/WebM file hosted on your site. When set, this appears in the preview area instead of the Microsoft Office slide viewer (PPTX).', 'aiad-core' ) . '</p>';
     echo '<input type="url" name="aiad_preview_video_url" id="aiad_preview_video_url" class="widefat" value="' . esc_attr( is_string( $preview_video_url ) ? $preview_video_url : '' ) . '" placeholder="https://" autocomplete="off" />';
     echo '</div>';
 
     // Key Stage (checkboxes)
-    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Key stage', 'ai-awareness-day' ) . '</strong><div class="aiad-rd-checkboxes">';
+    echo '<div class="aiad-rd-section"><strong class="aiad-rd-label">' . esc_html__( 'Key stage', 'aiad-core' ) . '</strong><div class="aiad-rd-checkboxes">';
     $key_stage_opts = aiad_key_stage_options();
     foreach ( $key_stage_opts as $slug => $label ) {
         $checked = in_array( $slug, $key_stages, true );
@@ -968,7 +968,7 @@ add_action( 'save_post_resource', 'aiad_save_resource_details' );
 function aiad_resource_content_sections_meta_box(): void {
     add_meta_box(
         'aiad_resource_content_sections',
-        __( 'Resource content sections', 'ai-awareness-day' ),
+        __( 'Resource content sections', 'aiad-core' ),
         'aiad_resource_content_sections_callback',
         'resource',
         'normal',
@@ -1006,7 +1006,7 @@ function aiad_resource_content_meta_box_enqueue_scripts( string $hook ): void {
         aiad_core_asset_version( 'assets/js/admin/admin-meta-boxes.js' ),
         true
     );
-    wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
+    wp_set_script_translations( 'aiad-admin-meta-boxes', 'aiad-core' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_content_meta_box_enqueue_scripts' );
 
@@ -1035,7 +1035,7 @@ function aiad_partner_meta_box_enqueue_scripts( string $hook ): void {
         aiad_core_asset_version( 'assets/js/admin/admin-meta-boxes.js' ),
         true
     );
-    wp_set_script_translations( 'aiad-admin-meta-boxes', 'ai-awareness-day' );
+    wp_set_script_translations( 'aiad-admin-meta-boxes', 'aiad-core' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_partner_meta_box_enqueue_scripts' );
 
@@ -1063,7 +1063,7 @@ function aiad_resource_content_sections_callback( WP_Post $post ): void {
     $diff_stretch = isset( $differentiation['stretch'] ) ? $differentiation['stretch'] : '';
     $diff_send    = isset( $differentiation['send'] ) ? $differentiation['send'] : '';
 
-    echo '<p class="description" style="margin-bottom: 1rem;">' . esc_html__( 'Structured content (Activity Schema v1). Use Add/Remove for consistent formatting.', 'ai-awareness-day' ) . '</p>';
+    echo '<p class="description" style="margin-bottom: 1rem;">' . esc_html__( 'Structured content (Activity Schema v1). Use Add/Remove for consistent formatting.', 'aiad-core' ) . '</p>';
 
     echo '<div class="aiad-content-sections-fields">';
 
@@ -1305,7 +1305,7 @@ function aiad_resource_download_admin_scripts( string $hook ): void {
         aiad_core_asset_version( 'assets/js/admin/admin-resource-download.js' ),
         true
     );
-    wp_set_script_translations( 'aiad-resource-download-admin', 'ai-awareness-day' );
+    wp_set_script_translations( 'aiad-resource-download-admin', 'aiad-core' );
 }
 add_action( 'admin_enqueue_scripts', 'aiad_resource_download_admin_scripts' );
 
@@ -1349,25 +1349,25 @@ function aiad_resource_edit_screen_notice(): void {
     global $post;
     ?>
     <div class="notice notice-info is-dismissible" style="margin-top: 12px;">
-        <p><?php esc_html_e( 'Set Theme, Session length, and Format in Resource Details on this page (and in the boxes on the right on desktop, or below on mobile). The Themes, Session length, and Formats items under Resources are only for managing the list of options (for example, adding a new theme). You do not need to open those screens while editing a resource.', 'ai-awareness-day' ); ?></p>
+        <p><?php esc_html_e( 'Set Theme, Session length, and Format in Resource Details on this page (and in the boxes on the right on desktop, or below on mobile). The Themes, Session length, and Formats items under Resources are only for managing the list of options (for example, adding a new theme). You do not need to open those screens while editing a resource.', 'aiad-core' ); ?></p>
     </div>
     <?php
     $schema_errors = $post && get_post_type( $post ) === 'resource' ? get_transient( 'aiad_schema_validation_errors_' . $post->ID ) : false;
     if ( $schema_errors && is_array( $schema_errors ) && ! empty( $schema_errors ) ) {
         $messages = array();
         if ( in_array( 'blocklist', $schema_errors, true ) ) {
-            $messages[] = __( 'Remove generic filler phrases (e.g. "as specified", "follow the guidelines", "explore related topics"). Write specific content instead.', 'ai-awareness-day' );
+            $messages[] = __( 'Remove generic filler phrases (e.g. "as specified", "follow the guidelines", "explore related topics"). Write specific content instead.', 'aiad-core' );
         }
         if ( in_array( 'learning_objectives_count', $schema_errors, true ) ) {
-            $messages[] = __( 'Learning objectives: require between 2 and 5 objectives.', 'ai-awareness-day' );
+            $messages[] = __( 'Learning objectives: require between 2 and 5 objectives.', 'aiad-core' );
         }
         if ( in_array( 'instructions_duration', $schema_errors, true ) ) {
-            $messages[] = __( 'Instructions: at least one step must have a duration (e.g. "60 seconds", "5 min").', 'ai-awareness-day' );
+            $messages[] = __( 'Instructions: at least one step must have a duration (e.g. "60 seconds", "5 min").', 'aiad-core' );
         }
         if ( ! empty( $messages ) ) {
             ?>
             <div class="notice notice-error is-dismissible" style="margin-top: 8px;">
-                <p><strong><?php esc_html_e( 'Activity Schema validation failed. Status was set to "In review" until fixed.', 'ai-awareness-day' ); ?></strong></p>
+                <p><strong><?php esc_html_e( 'Activity Schema validation failed. Status was set to "In review" until fixed.', 'aiad-core' ); ?></strong></p>
                 <ul style="list-style: disc; margin-left: 1.5rem;">
                     <?php foreach ( $messages as $msg ) : ?>
                         <li><?php echo esc_html( $msg ); ?></li>

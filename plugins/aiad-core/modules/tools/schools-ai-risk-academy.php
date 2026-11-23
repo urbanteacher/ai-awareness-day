@@ -96,7 +96,7 @@ function aiad_enqueue_risk_academy_assets(): void {
  * Timeline headline.
  */
 function aiad_risk_academy_get_headline(): string {
-	return __( 'Schools AI Risk Academy', 'ai-awareness-day' );
+	return __( 'Schools AI Risk Academy', 'aiad-core' );
 }
 
 /**
@@ -198,7 +198,7 @@ function aiad_create_risk_academy_timeline_entry(): int {
 			'post_status'  => 'publish',
 			'post_name'    => $slug,
 			'post_title'   => aiad_risk_academy_get_headline(),
-			'post_excerpt' => __( 'A free mini-app for UK schools: assess AI exposure in your tasks, check student reliance, roll up a school risk level, and work through six DfE-aligned curriculum modules — all in the browser, nothing stored.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'A free mini-app for UK schools: assess AI exposure in your tasks, check student reliance, roll up a school risk level, and work through six DfE-aligned curriculum modules — all in the browser, nothing stored.', 'aiad-core' ),
 			'post_content' => '<!-- wp:shortcode -->[aiad_risk_academy]<!-- /wp:shortcode -->',
 			'post_author'  => 1,
 		),
@@ -251,7 +251,7 @@ function aiad_backfill_risk_academy_excerpt(): void {
 		wp_update_post(
 			array(
 				'ID'           => $post->ID,
-				'post_excerpt' => __( 'A free mini-app for UK schools: assess AI exposure in your tasks, check student reliance, roll up a school risk level, and work through six DfE-aligned curriculum modules — all in the browser, nothing stored.', 'ai-awareness-day' ),
+				'post_excerpt' => __( 'A free mini-app for UK schools: assess AI exposure in your tasks, check student reliance, roll up a school risk level, and work through six DfE-aligned curriculum modules — all in the browser, nothing stored.', 'aiad-core' ),
 			)
 		);
 	}

@@ -36,12 +36,12 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Strand', 'ai-awareness-day' ) },
+						{ title: __( 'Strand', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'Strand', 'ai-awareness-day' ),
+							label: __( 'Strand', 'aiad-core' ),
 							help: __(
 								'Sets the card’s colour and icon.',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							value: strand,
 							options: Object.keys( data.strands ).map(

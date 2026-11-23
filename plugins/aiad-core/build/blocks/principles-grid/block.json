@@ -11,7 +11,7 @@
     "principles",
     "homepage"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "allowedBlocks": [
     "aiad/principle-card"
   ],

@@ -51,11 +51,11 @@ function aiad_partner_profile_post_id( $block = null ): int {
  */
 function aiad_partner_profile_theme_labels(): array {
 	return array(
-		'safe'        => __( 'Safe', 'ai-awareness-day' ),
-		'smart'       => __( 'Smart', 'ai-awareness-day' ),
-		'creative'    => __( 'Creative', 'ai-awareness-day' ),
-		'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-		'future'      => __( 'Future', 'ai-awareness-day' ),
+		'safe'        => __( 'Safe', 'aiad-core' ),
+		'smart'       => __( 'Smart', 'aiad-core' ),
+		'creative'    => __( 'Creative', 'aiad-core' ),
+		'responsible' => __( 'Responsible', 'aiad-core' ),
+		'future'      => __( 'Future', 'aiad-core' ),
 	);
 }
 

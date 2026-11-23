@@ -12,6 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 ?>
-<div class="principles-grid" role="region" aria-label="<?php echo esc_attr__( 'Core principles — swipe sideways to explore each card', 'ai-awareness-day' ); ?>">
+<div class="principles-grid" role="region" aria-label="<?php echo esc_attr__( 'Core principles — swipe sideways to explore each card', 'aiad-core' ); ?>">
 <?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered blocks. ?>
 </div>

@@ -86,9 +86,9 @@ function aiad_thumbnail_focal_point_contexts_for_post_type( string $post_type ):
  */
 function aiad_thumbnail_focal_point_context_label( string $context ): string {
 	if ( 'single' === $context ) {
-		return __( 'Blog post page', 'ai-awareness-day' );
+		return __( 'Blog post page', 'aiad-core' );
 	}
-	return __( 'Homepage timeline cards', 'ai-awareness-day' );
+	return __( 'Homepage timeline cards', 'aiad-core' );
 }
 
 /**
@@ -355,11 +355,11 @@ function aiad_render_thumbnail_focal_point_picker_block( WP_Post $post, string $
 		<strong class="aiad-rd-label"><?php echo esc_html( aiad_thumbnail_focal_point_context_label( $context ) ); ?></strong>
 		<?php if ( 'single' === $context ) : ?>
 			<p class="description" style="margin-top:0;">
-				<?php esc_html_e( 'Taller crop on the blog post page — drag to keep faces or headline text in view.', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Taller crop on the blog post page — drag to keep faces or headline text in view.', 'aiad-core' ); ?>
 			</p>
 		<?php else : ?>
 			<p class="description" style="margin-top:0;">
-				<?php esc_html_e( 'Wide crop on homepage timeline cards (swipe + magazine).', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Wide crop on homepage timeline cards (swipe + magazine).', 'aiad-core' ); ?>
 			</p>
 		<?php endif; ?>
 		<div
@@ -372,7 +372,7 @@ function aiad_render_thumbnail_focal_point_picker_block( WP_Post $post, string $
 		>
 			<div class="aiad-focal-point-picker-mount"<?php echo $image_url ? '' : ' hidden'; ?>></div>
 			<p class="aiad-focal-point-picker-empty description"<?php echo $image_url ? ' hidden' : ''; ?>>
-				<?php esc_html_e( 'Set a Featured Image above, then drag to set the focal point.', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Set a Featured Image above, then drag to set the focal point.', 'aiad-core' ); ?>
 			</p>
 			<input type="hidden" name="aiad_thumbnail_focal_<?php echo esc_attr( $context ); ?>_x" value="<?php echo esc_attr( (string) $x_pct ); ?>" />
 			<input type="hidden" name="aiad_thumbnail_focal_<?php echo esc_attr( $context ); ?>_y" value="<?php echo esc_attr( (string) $y_pct ); ?>" />
@@ -380,7 +380,7 @@ function aiad_render_thumbnail_focal_point_picker_block( WP_Post $post, string $
 				<?php
 				printf(
 					/* translators: 1: horizontal %, 2: vertical % */
-					esc_html__( '%1$s%% · %2$s%%', 'ai-awareness-day' ),
+					esc_html__( '%1$s%% · %2$s%%', 'aiad-core' ),
 					esc_html( (string) $x_pct ),
 					esc_html( (string) $y_pct )
 				);
@@ -401,14 +401,14 @@ function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
 	}
 	?>
 	<div class="aiad-rd-section aiad-focal-point-fields">
-		<strong class="aiad-rd-label"><?php esc_html_e( 'Image focal point', 'ai-awareness-day' ); ?></strong>
+		<strong class="aiad-rd-label"><?php esc_html_e( 'Image focal point', 'aiad-core' ); ?></strong>
 		<p class="description" style="margin-top:0;">
 			<?php
 			echo wp_kses_post(
 				sprintf(
 					/* translators: %s: link to Focal Point Picker docs */
-					__( 'Separate focus for homepage cards vs the full blog post. Drag using the %s.', 'ai-awareness-day' ),
-					'<a href="https://developer.wordpress.org/block-editor/reference-guides/components/focal-point-picker/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Focal Point Picker', 'ai-awareness-day' ) . '</a>'
+					__( 'Separate focus for homepage cards vs the full blog post. Drag using the %s.', 'aiad-core' ),
+					'<a href="https://developer.wordpress.org/block-editor/reference-guides/components/focal-point-picker/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Focal Point Picker', 'aiad-core' ) . '</a>'
 				)
 			);
 			?>
@@ -418,7 +418,7 @@ function aiad_render_thumbnail_focal_point_fields( WP_Post $post ): void {
 			aiad_render_thumbnail_focal_point_picker_block( $post, $context, $image_url );
 		}
 		?>
-		<p class="description"><?php esc_html_e( 'Only applies when the image uses cover cropping (not partner logos).', 'ai-awareness-day' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Only applies when the image uses cover cropping (not partner logos).', 'aiad-core' ); ?></p>
 	</div>
 	<?php
 }

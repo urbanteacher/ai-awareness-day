@@ -27,7 +27,7 @@ function aiad_certificate_is_tech_organisation( string $org_type ): bool {
 function aiad_get_certificate_school_body( string $involved_as, string $org_type = '' ): string {
 	$default = __(
 		'has actively contributed to AI Awareness Day 2027 through participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-		'ai-awareness-day'
+		'aiad-core'
 	);
 
 	switch ( $involved_as ) {
@@ -35,26 +35,26 @@ function aiad_get_certificate_school_body( string $involved_as, string $org_type
 		case 'school_leader':
 			return __(
 				'has actively contributed to AI Awareness Day 2027 through the school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-				'ai-awareness-day'
+				'aiad-core'
 			);
 
 		case 'organisation':
 			if ( aiad_certificate_is_tech_organisation( $org_type ) ) {
 				return __(
 					'has actively contributed to AI Awareness Day 2027 through the organisation\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-					'ai-awareness-day'
+					'aiad-core'
 				);
 			}
 
 			return __(
 				'has actively contributed to AI Awareness Day 2027 through the organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-				'ai-awareness-day'
+				'aiad-core'
 			);
 
 		case 'parent':
 			return __(
 				'has actively contributed to AI Awareness Day 2027 as part of our nationwide exploration of artificial intelligence in education, supporting confident and responsible AI use for learners and families.',
-				'ai-awareness-day'
+				'aiad-core'
 			);
 
 		default:
@@ -72,13 +72,13 @@ function aiad_get_certificate_school_body( string $involved_as, string $org_type
 function aiad_get_certificate_copy( string $involved_as, string $org_type = '' ): array {
 	$default_body = __(
 		'has actively contributed to AI Awareness Day 2027 through their engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-		'ai-awareness-day'
+		'aiad-core'
 	);
 
 	$base = array(
-		'headline_primary'   => __( 'AI Awareness Day 2027', 'ai-awareness-day' ),
-		'eyebrow'            => __( 'Certificate of participation', 'ai-awareness-day' ),
-		'affiliation_prefix' => __( 'from', 'ai-awareness-day' ),
+		'headline_primary'   => __( 'AI Awareness Day 2027', 'aiad-core' ),
+		'eyebrow'            => __( 'Certificate of participation', 'aiad-core' ),
+		'affiliation_prefix' => __( 'from', 'aiad-core' ),
 		'body'               => $default_body,
 	);
 
@@ -89,7 +89,7 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 				array(
 					'body' => __(
 						'has actively contributed to AI Awareness Day 2027 through their work with learners and participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 				)
 			);
@@ -101,7 +101,7 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 				array(
 					'body' => __(
 						'has actively contributed to AI Awareness Day 2027 through their leadership and their school\'s participation in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 				)
 			);
@@ -114,7 +114,7 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 					array(
 						'body' => __(
 							'has actively contributed to AI Awareness Day 2027 through their organisation\'s engagement in our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-							'ai-awareness-day'
+							'aiad-core'
 						),
 					)
 				);
@@ -126,7 +126,7 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 				array(
 					'body' => __(
 						'has actively contributed to AI Awareness Day 2027 through their organisation\'s support of our nationwide exploration of artificial intelligence in education, helping build a future where every learner and educator feels confident with AI.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 				)
 			);
@@ -136,10 +136,10 @@ function aiad_get_certificate_copy( string $involved_as, string $org_type = '' )
 			$copy = array_merge(
 				$base,
 				array(
-					'affiliation_prefix' => __( 'in support of', 'ai-awareness-day' ),
+					'affiliation_prefix' => __( 'in support of', 'aiad-core' ),
 					'body'               => __(
 						'has actively contributed to AI Awareness Day 2027 as a parent or carer supporting their child\'s learning, as part of our nationwide exploration of artificial intelligence in education.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 				)
 			);

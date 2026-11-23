@@ -142,8 +142,8 @@ import '@wordpress/i18n';
 					el( blockEditor.MediaReplaceFlow, {
 						mediaURL: a.href,
 						name: page
-							? __( 'Preview image', 'ai-awareness-day' )
-							: __( 'Choose file', 'ai-awareness-day' ),
+							? __( 'Preview image', 'aiad-core' )
+							: __( 'Choose file', 'aiad-core' ),
 						onSelect( media ) {
 							if ( page ) {
 								set( { preview: media.url } );
@@ -187,11 +187,11 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Card', 'ai-awareness-day' ) },
+						{ title: __( 'Card', 'aiad-core' ) },
 						el( components.ToggleControl, {
 							label: __(
 								'Opens a page instead of downloading a file',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							checked: page,
 							onChange( value ) {
@@ -202,22 +202,22 @@ import '@wordpress/i18n';
 						field(
 							'href',
 							page
-								? __( 'Page address', 'ai-awareness-day' )
-								: __( 'File address', 'ai-awareness-day' )
+								? __( 'Page address', 'aiad-core' )
+								: __( 'File address', 'aiad-core' )
 						),
 						page
 							? field(
 									'badge',
 									__(
 										'Badge on the preview',
-										'ai-awareness-day'
+										'aiad-core'
 									)
 								)
 							: field(
 									'filename',
 									__(
 										'File name when downloaded',
-										'ai-awareness-day'
+										'aiad-core'
 									)
 								),
 						! page && ! a.preview
@@ -225,7 +225,7 @@ import '@wordpress/i18n';
 									'badge',
 									__(
 										'Document type shown',
-										'ai-awareness-day'
+										'aiad-core'
 									)
 								)
 							: null,
@@ -234,23 +234,23 @@ import '@wordpress/i18n';
 									'docLabel',
 									__(
 										'Label under the document type',
-										'ai-awareness-day'
+										'aiad-core'
 									)
 								)
 							: null,
 						field(
 							'preview',
-							__( 'Preview image address', 'ai-awareness-day' )
+							__( 'Preview image address', 'aiad-core' )
 						),
 						field(
 							'alt',
 							__(
 								"Preview's alternative text",
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							__(
 								'Leave empty when the title says what the preview shows.',
-								'ai-awareness-day'
+								'aiad-core'
 							)
 						)
 					)
@@ -262,7 +262,7 @@ import '@wordpress/i18n';
 						'title',
 						'h2',
 						'assets-pack__card-title',
-						__( 'Title', 'ai-awareness-day' ),
+						__( 'Title', 'aiad-core' ),
 						props
 					),
 					text(
@@ -271,7 +271,7 @@ import '@wordpress/i18n';
 						'assets-pack__card-desc section-desc',
 						__(
 							'What it is and where to use it',
-							'ai-awareness-day'
+							'aiad-core'
 						),
 						props
 					),
@@ -285,7 +285,7 @@ import '@wordpress/i18n';
 							withoutInteractiveFormatting: true,
 							placeholder: __(
 								'Button label',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							onChange( value ) {
 								set( { button: value } );

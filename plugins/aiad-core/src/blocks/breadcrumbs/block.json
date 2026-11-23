@@ -10,7 +10,7 @@
 		"breadcrumbs",
 		"navigation"
 	],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,

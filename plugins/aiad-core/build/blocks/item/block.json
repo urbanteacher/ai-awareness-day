@@ -10,7 +10,7 @@
     "item",
     "card"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "tagName": {
       "type": "string",

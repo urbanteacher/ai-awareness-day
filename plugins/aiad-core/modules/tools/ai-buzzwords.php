@@ -91,8 +91,8 @@ function aiad_buzzwords_render( $atts = array() ): string {
 
 	$atts = shortcode_atts(
 		array(
-			'title'       => __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' ),
-			'description' => __( 'From "agentic AI" to "vibe coding" — the terms everyone\'s talking about, explained in plain English with classroom angles.', 'ai-awareness-day' ),
+			'title'       => __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'aiad-core' ),
+			'description' => __( 'From "agentic AI" to "vibe coding" — the terms everyone\'s talking about, explained in plain English with classroom angles.', 'aiad-core' ),
 			'hide_intro'  => '0',
 			'quiz'        => '1',
 		),
@@ -107,7 +107,7 @@ function aiad_buzzwords_render( $atts = array() ): string {
 
 	ob_start();
 	?>
-	<div data-aiad-buzzwords class="aiad-buzzwords-widget" aria-label="<?php esc_attr_e( 'AI buzzwords glossary', 'ai-awareness-day' ); ?>"<?php echo $show_quiz ? ' data-aiad-bz-quiz-enabled="1"' : ''; ?>>
+	<div data-aiad-buzzwords class="aiad-buzzwords-widget" aria-label="<?php esc_attr_e( 'AI buzzwords glossary', 'aiad-core' ); ?>"<?php echo $show_quiz ? ' data-aiad-bz-quiz-enabled="1"' : ''; ?>>
 		<?php if ( ! $hide_intro ) : ?>
 			<div class="aiad-intro">
 				<h2><?php echo esc_html( $atts['title'] ); ?></h2>
@@ -119,28 +119,28 @@ function aiad_buzzwords_render( $atts = array() ): string {
 		<div class="aiad-grid" data-aiad-bz-grid></div>
 		<?php if ( $show_quiz ) : ?>
 			<section class="aiad-bz-quiz" data-aiad-bz-quiz aria-labelledby="aiad-bz-quiz-heading">
-				<h3 id="aiad-bz-quiz-heading" class="aiad-bz-quiz__heading"><?php esc_html_e( 'Quick quiz: score out of 5', 'ai-awareness-day' ); ?></h3>
-				<p class="aiad-bz-quiz__intro"><?php esc_html_e( 'Five questions drawn from the glossary. Match each definition to the right buzzword.', 'ai-awareness-day' ); ?></p>
+				<h3 id="aiad-bz-quiz-heading" class="aiad-bz-quiz__heading"><?php esc_html_e( 'Quick quiz: score out of 5', 'aiad-core' ); ?></h3>
+				<p class="aiad-bz-quiz__intro"><?php esc_html_e( 'Five questions drawn from the glossary. Match each definition to the right buzzword.', 'aiad-core' ); ?></p>
 				<div class="aiad-bz-quiz__start-card" data-aiad-bz-quiz-start-card>
-					<p class="aiad-bz-quiz__start-eyebrow"><?php esc_html_e( 'Ready to test yourself?', 'ai-awareness-day' ); ?></p>
+					<p class="aiad-bz-quiz__start-eyebrow"><?php esc_html_e( 'Ready to test yourself?', 'aiad-core' ); ?></p>
 					<ul class="aiad-bz-quiz__start-list">
-						<li><?php esc_html_e( 'Match each definition to a buzzword', 'ai-awareness-day' ); ?></li>
-						<li><?php esc_html_e( 'New random questions every time', 'ai-awareness-day' ); ?></li>
-						<li><?php esc_html_e( 'See your score out of 5 with a review', 'ai-awareness-day' ); ?></li>
+						<li><?php esc_html_e( 'Match each definition to a buzzword', 'aiad-core' ); ?></li>
+						<li><?php esc_html_e( 'New random questions every time', 'aiad-core' ); ?></li>
+						<li><?php esc_html_e( 'See your score out of 5 with a review', 'aiad-core' ); ?></li>
 					</ul>
 					<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--cta" data-aiad-bz-quiz-start>
-						<?php esc_html_e( 'Start quiz', 'ai-awareness-day' ); ?>
+						<?php esc_html_e( 'Start quiz', 'aiad-core' ); ?>
 					</button>
 				</div>
 
 				<div class="aiad-bz-quiz__play" data-aiad-bz-quiz-play hidden>
-					<div class="aiad-bz-quiz__stepper" data-aiad-bz-quiz-stepper role="list" aria-label="<?php esc_attr_e( 'Quiz progress', 'ai-awareness-day' ); ?>"></div>
+					<div class="aiad-bz-quiz__stepper" data-aiad-bz-quiz-stepper role="list" aria-label="<?php esc_attr_e( 'Quiz progress', 'aiad-core' ); ?>"></div>
 					<p class="aiad-bz-quiz__progress" data-aiad-bz-quiz-progress aria-live="polite"></p>
-					<p class="aiad-bz-quiz__hint"><?php esc_html_e( 'Choose one answer, then tap the button below.', 'ai-awareness-day' ); ?></p>
+					<p class="aiad-bz-quiz__hint"><?php esc_html_e( 'Choose one answer, then tap the button below.', 'aiad-core' ); ?></p>
 					<div class="aiad-bz-quiz__panel" data-aiad-bz-quiz-panel></div>
 					<div class="aiad-bz-quiz__actions">
 						<button type="button" class="aiad-bz-quiz__btn aiad-bz-quiz__btn--cta" data-aiad-bz-quiz-next>
-							<?php esc_html_e( 'Next question', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'Next question', 'aiad-core' ); ?>
 						</button>
 					</div>
 				</div>
@@ -149,8 +149,8 @@ function aiad_buzzwords_render( $atts = array() ): string {
 			</section>
 		<?php endif; ?>
 		<p class="aiad-bz-credit">
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			·
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ?: 'aiawarenessday.com' ); ?></a>
 		</p>
@@ -223,7 +223,7 @@ function aiad_set_buzzwords_timeline_meta( int $post_id ): void {
  */
 function aiad_create_buzzwords_timeline_entry(): int {
 	$slug  = aiad_buzzwords_post_slug();
-	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' );
+	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'aiad-core' );
 
 	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
 	if ( $existing instanceof WP_Post ) {
@@ -235,7 +235,7 @@ function aiad_create_buzzwords_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'An interactive glossary of the AI terms educators hear most in 2027 — from agentic AI to vibe coding — with classroom angles for every buzzword.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'An interactive glossary of the AI terms educators hear most in 2027 — from agentic AI to vibe coding — with classroom angles for every buzzword.', 'aiad-core' ),
 			'post_content' => aiad_get_ai_buzzwords_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,
@@ -304,7 +304,7 @@ function aiad_seed_ai_buzzwords_timeline_entry(): void {
 		return;
 	}
 
-	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'ai-awareness-day' );
+	$title = __( '15 AI Buzzwords Every Teacher Should Know in 2027', 'aiad-core' );
 	$slug  = aiad_buzzwords_post_slug();
 
 	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {

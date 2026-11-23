@@ -7,7 +7,7 @@
 	"icon": "download",
 	"description": "A card with a preview (or, for a document, its type), a title, a description and a button that downloads a file, or opens a page. Used on the Assets Pack and the Press Release.",
 	"keywords": [ "download", "file", "asset", "logo", "card" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"kind": { "type": "string", "enum": [ "download", "page" ], "default": "download" },
 		"href": { "type": "string", "default": "", "role": "content" },

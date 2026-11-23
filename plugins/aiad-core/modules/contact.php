@@ -22,18 +22,18 @@ define( 'AIAD_CORE_MODULE_CONTACT', __FILE__ );
  */
 function aiad_get_contact_checklist_labels(): array {
     return array(
-        'teacher_display_board'       => __( 'Interested in creating a display board', 'ai-awareness-day' ),
-        'teacher_activity_day'        => __( 'I want to do an activity for the day', 'ai-awareness-day' ),
-        'teacher_learn_ai'            => _x( 'I want to learn more about AI', 'Teacher checklist option', 'ai-awareness-day' ),
-        'parent_support_child'        => __( 'I want to support my child in AI', 'ai-awareness-day' ),
-        'parent_learn_ai'             => _x( 'I want to learn more about AI', 'Parent checklist option', 'ai-awareness-day' ),
-        'parent_school_take_part'     => __( "I'd like my child's school to take part", 'ai-awareness-day' ),
-        'school_leader_staff_activity' => __( 'I want my staff to do an activity', 'ai-awareness-day' ),
-        'school_leader_logo_supporter' => __( 'I want our logo as a supporter', 'ai-awareness-day' ),
-        'school_leader_school_promote' => __( 'I want our school to promote AI Awareness Day', 'ai-awareness-day' ),
-        'org_brand_sponsor'           => __( 'Brand Sponsor', 'ai-awareness-day' ),
-        'org_theme_sponsor'           => __( 'Theme Sponsor', 'ai-awareness-day' ),
-        'org_campaign_sponsor'        => __( 'Campaign Sponsor', 'ai-awareness-day' ),
+        'teacher_display_board'       => __( 'Interested in creating a display board', 'aiad-core' ),
+        'teacher_activity_day'        => __( 'I want to do an activity for the day', 'aiad-core' ),
+        'teacher_learn_ai'            => _x( 'I want to learn more about AI', 'Teacher checklist option', 'aiad-core' ),
+        'parent_support_child'        => __( 'I want to support my child in AI', 'aiad-core' ),
+        'parent_learn_ai'             => _x( 'I want to learn more about AI', 'Parent checklist option', 'aiad-core' ),
+        'parent_school_take_part'     => __( "I'd like my child's school to take part", 'aiad-core' ),
+        'school_leader_staff_activity' => __( 'I want my staff to do an activity', 'aiad-core' ),
+        'school_leader_logo_supporter' => __( 'I want our logo as a supporter', 'aiad-core' ),
+        'school_leader_school_promote' => __( 'I want our school to promote AI Awareness Day', 'aiad-core' ),
+        'org_brand_sponsor'           => __( 'Brand Sponsor', 'aiad-core' ),
+        'org_theme_sponsor'           => __( 'Theme Sponsor', 'aiad-core' ),
+        'org_campaign_sponsor'        => __( 'Campaign Sponsor', 'aiad-core' ),
     );
 }
 
@@ -82,14 +82,14 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
     // Honeypot field (hidden from users, bots may fill it)
     $honeypot = sanitize_text_field( $field( 'aiad_website' ) );
     if ( $honeypot !== '' ) {
-        return $error( __( 'Invalid submission detected. Please refresh the page and try again.', 'ai-awareness-day' ) );
+        return $error( __( 'Invalid submission detected. Please refresh the page and try again.', 'aiad-core' ) );
     }
 
     // Rate limit: 3 submissions per IP per 5 minutes
     $limit_key = 'aiad_contact_limit_' . aiad_get_client_fingerprint();
     $count    = (int) get_transient( $limit_key );
     if ( $count >= 3 ) {
-        return $error( __( 'Too many submissions from your address. Please try again in a few minutes.', 'ai-awareness-day' ), 429 );
+        return $error( __( 'Too many submissions from your address. Please try again in a few minutes.', 'aiad-core' ), 429 );
     }
 
     $first_name    = sanitize_text_field( $field( 'first_name' ) );
@@ -119,32 +119,32 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
 
     // Validate: all visible fields are compulsory
     if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) || empty( $message ) ) {
-        return $error( __( 'Please fill in all required fields.', 'ai-awareness-day' ) );
+        return $error( __( 'Please fill in all required fields.', 'aiad-core' ) );
     }
 
     if ( empty( $involved_as ) ) {
-        return $error( __( 'Please select how you\'re getting involved.', 'ai-awareness-day' ) );
+        return $error( __( 'Please select how you\'re getting involved.', 'aiad-core' ) );
     }
 
     // Role-specific required fields
     if ( ( $involved_as === 'teacher' || $involved_as === 'school_leader' ) && empty( $school_name ) ) {
-        return $error( __( 'Please provide your school name.', 'ai-awareness-day' ) );
+        return $error( __( 'Please provide your school name.', 'aiad-core' ) );
     }
 
     if ( $involved_as === 'teacher' && empty( $subject ) ) {
-        return $error( __( 'Please provide your subject or area.', 'ai-awareness-day' ) );
+        return $error( __( 'Please provide your subject or area.', 'aiad-core' ) );
     }
 
     if ( $involved_as === 'parent' && empty( $child_school ) ) {
-        return $error( __( 'Please provide your child\'s school.', 'ai-awareness-day' ) );
+        return $error( __( 'Please provide your child\'s school.', 'aiad-core' ) );
     }
 
     if ( $involved_as === 'school_leader' && empty( $role_title ) ) {
-        return $error( __( 'Please provide your role.', 'ai-awareness-day' ) );
+        return $error( __( 'Please provide your role.', 'aiad-core' ) );
     }
 
     if ( $involved_as === 'organisation' && ( empty( $organisation ) || empty( $org_type ) ) ) {
-        return $error( __( 'Please provide your organisation name and type.', 'ai-awareness-day' ) );
+        return $error( __( 'Please provide your organisation name and type.', 'aiad-core' ) );
     }
     $org_type_options = function_exists( 'aiad_get_organisation_type_options' ) ? aiad_get_organisation_type_options() : array();
     if ( $involved_as === 'organisation' && $org_type && ! isset( $org_type_options[ $org_type ] ) ) {
@@ -152,17 +152,17 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
     }
 
     if ( ! is_email( $email ) ) {
-        return $error( __( 'Please enter a valid email address.', 'ai-awareness-day' ) );
+        return $error( __( 'Please enter a valid email address.', 'aiad-core' ) );
     }
 
     // Increment rate-limit counter only for valid submissions.
     set_transient( $limit_key, $count + 1, 300 );
 
     $role_labels = array(
-        'teacher'       => __( 'Teacher', 'ai-awareness-day' ),
-        'parent'        => __( 'Parent', 'ai-awareness-day' ),
-        'school_leader' => __( 'School leader', 'ai-awareness-day' ),
-        'organisation'  => __( 'Organisation', 'ai-awareness-day' ),
+        'teacher'       => __( 'Teacher', 'aiad-core' ),
+        'parent'        => __( 'Parent', 'aiad-core' ),
+        'school_leader' => __( 'School leader', 'aiad-core' ),
+        'organisation'  => __( 'Organisation', 'aiad-core' ),
     );
     $role_display = isset( $role_labels[ $involved_as ] ) ? $role_labels[ $involved_as ] : $involved_as;
 
@@ -253,7 +253,7 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
     $admin_sent = wp_mail( $to, $subject_line, $body, $headers );
 
     // Send confirmation email to user
-    $user_subject = __( 'Thank you for your interest in AI Awareness Day', 'ai-awareness-day' );
+    $user_subject = __( 'Thank you for your interest in AI Awareness Day', 'aiad-core' );
     $user_body = sprintf(
         "Dear %s,\n\n" .
         "Thank you for getting in touch with AI Awareness Day!\n\n" .
@@ -276,7 +276,7 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
     if ( $admin_sent || $submission_id ) {
         return new WP_REST_Response(
             array(
-                'message'      => __( 'Thank you! We\'ll be in touch soon.', 'ai-awareness-day' ),
+                'message'      => __( 'Thank you! We\'ll be in touch soon.', 'aiad-core' ),
                 'pledge_count' => $pledge_count,
                 'pledge_goal'  => $pledge_goal,
             )
@@ -285,7 +285,7 @@ function aiad_rest_contact_form( WP_REST_Request $request ) {
         // Submission was saved but email failed — still show success to user.
         return new WP_REST_Response(
             array(
-                'message'      => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'ai-awareness-day' ),
+                'message'      => __( 'Thank you! Your submission has been received. We\'ll be in touch soon.', 'aiad-core' ),
                 'pledge_count' => $pledge_count,
                 'pledge_goal'  => $pledge_goal,
             )

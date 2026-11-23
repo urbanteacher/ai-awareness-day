@@ -12,7 +12,7 @@
     "join",
     "buttons"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "variant": {
       "type": "string",

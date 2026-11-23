@@ -113,16 +113,16 @@ function aiad_speed_quiz_render( $atts = array() ): string {
 		data-seconds="<?php echo esc_attr( $atts['seconds'] ); ?>"
 		data-bonus="<?php echo esc_attr( $atts['bonus'] ); ?>"
 		data-points="<?php echo esc_attr( $atts['points'] ); ?>"
-		aria-label="<?php esc_attr_e( 'AI speed quiz for teachers', 'ai-awareness-day' ); ?>"
+		aria-label="<?php esc_attr_e( 'AI speed quiz for teachers', 'aiad-core' ); ?>"
 	>
 		<div class="sq-card" data-sq-start>
-			<p class="sq-badge"><?php esc_html_e( 'Timed challenge', 'ai-awareness-day' ); ?></p>
-			<h2 class="sq-title"><?php esc_html_e( 'The AI speed quiz for teachers', 'ai-awareness-day' ); ?></h2>
+			<p class="sq-badge"><?php esc_html_e( 'Timed challenge', 'aiad-core' ); ?></p>
+			<h2 class="sq-title"><?php esc_html_e( 'The AI speed quiz for teachers', 'aiad-core' ); ?></h2>
 			<p class="sq-lead">
 				<?php
 				printf(
 					/* translators: 1: question count, 2: seconds per question */
-					esc_html__( '%1$d questions. %2$d seconds each. How well do you really know AI? Your score, time and rank go on the leaderboard (saved on this device).', 'ai-awareness-day' ),
+					esc_html__( '%1$d questions. %2$d seconds each. How well do you really know AI? Your score, time and rank go on the leaderboard (saved on this device).', 'aiad-core' ),
 					(int) $atts['questions'],
 					(int) $atts['seconds']
 				);
@@ -131,23 +131,23 @@ function aiad_speed_quiz_render( $atts = array() ): string {
 			<div class="sq-stats" aria-hidden="true">
 				<div class="sq-stat">
 					<span class="sq-stat__val"><?php echo esc_html( $atts['questions'] ); ?></span>
-					<span class="sq-stat__lbl"><?php esc_html_e( 'questions', 'ai-awareness-day' ); ?></span>
+					<span class="sq-stat__lbl"><?php esc_html_e( 'questions', 'aiad-core' ); ?></span>
 				</div>
 				<div class="sq-stat">
 					<span class="sq-stat__val"><?php echo esc_html( $atts['seconds'] ); ?>s</span>
-					<span class="sq-stat__lbl"><?php esc_html_e( 'per question', 'ai-awareness-day' ); ?></span>
+					<span class="sq-stat__lbl"><?php esc_html_e( 'per question', 'aiad-core' ); ?></span>
 				</div>
 				<div class="sq-stat">
 					<span class="sq-stat__val">+<?php echo esc_html( $atts['bonus'] ); ?></span>
-					<span class="sq-stat__lbl"><?php esc_html_e( 'speed bonus', 'ai-awareness-day' ); ?></span>
+					<span class="sq-stat__lbl"><?php esc_html_e( 'speed bonus', 'aiad-core' ); ?></span>
 				</div>
 				<div class="sq-stat">
 					<span class="sq-stat__val">🏆</span>
-					<span class="sq-stat__lbl"><?php esc_html_e( 'leaderboard', 'ai-awareness-day' ); ?></span>
+					<span class="sq-stat__lbl"><?php esc_html_e( 'leaderboard', 'aiad-core' ); ?></span>
 				</div>
 			</div>
 			<div class="sq-start-row">
-				<label class="screen-reader-text" for="aiad-sq-name"><?php esc_html_e( 'Your name', 'ai-awareness-day' ); ?></label>
+				<label class="screen-reader-text" for="aiad-sq-name"><?php esc_html_e( 'Your name', 'aiad-core' ); ?></label>
 				<input
 					type="text"
 					id="aiad-sq-name"
@@ -155,18 +155,18 @@ function aiad_speed_quiz_render( $atts = array() ): string {
 					data-sq-name
 					maxlength="40"
 					autocomplete="nickname"
-					placeholder="<?php esc_attr_e( 'Your name (for the leaderboard)', 'ai-awareness-day' ); ?>"
+					placeholder="<?php esc_attr_e( 'Your name (for the leaderboard)', 'aiad-core' ); ?>"
 				/>
 				<button type="button" class="sq-btn sq-btn--primary" data-sq-start-btn>
-					<?php esc_html_e( 'Start', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Start', 'aiad-core' ); ?>
 				</button>
 			</div>
 		</div>
 
 		<div class="sq-card" data-sq-play hidden>
 			<div class="sq-play-top">
-				<span class="sq-meta"><?php esc_html_e( 'Score', 'ai-awareness-day' ); ?>: <strong data-sq-score-live>0</strong></span>
-				<span class="sq-meta"><?php esc_html_e( 'Question', 'ai-awareness-day' ); ?>: <strong data-sq-q-live>1/10</strong></span>
+				<span class="sq-meta"><?php esc_html_e( 'Score', 'aiad-core' ); ?>: <strong data-sq-score-live>0</strong></span>
+				<span class="sq-meta"><?php esc_html_e( 'Question', 'aiad-core' ); ?>: <strong data-sq-q-live>1/10</strong></span>
 			</div>
 			<div class="sq-timer-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
 				<div class="sq-timer-fill" data-sq-timer-fill style="width:100%"></div>
@@ -180,18 +180,18 @@ function aiad_speed_quiz_render( $atts = array() ): string {
 		<div class="sq-card" data-sq-results hidden>
 			<div data-sq-results-body></div>
 			<div class="sq-results-actions">
-				<button type="button" class="sq-btn sq-btn--primary" data-sq-retry><?php esc_html_e( 'Play again', 'ai-awareness-day' ); ?></button>
-				<button type="button" class="sq-btn" data-sq-copy><?php esc_html_e( 'Copy result', 'ai-awareness-day' ); ?></button>
+				<button type="button" class="sq-btn sq-btn--primary" data-sq-retry><?php esc_html_e( 'Play again', 'aiad-core' ); ?></button>
+				<button type="button" class="sq-btn" data-sq-copy><?php esc_html_e( 'Copy result', 'aiad-core' ); ?></button>
 			</div>
 			<div class="sq-leaderboard">
-				<h4><?php esc_html_e( 'Leaderboard (this browser)', 'ai-awareness-day' ); ?></h4>
+				<h4><?php esc_html_e( 'Leaderboard (this browser)', 'aiad-core' ); ?></h4>
 				<ul class="sq-lb-list" data-sq-lb-list></ul>
 			</div>
 		</div>
 
 		<p class="sq-credit">
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			&middot;
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( (string) $host ); ?></a>
 		</p>
@@ -261,7 +261,7 @@ function aiad_set_speed_quiz_timeline_meta( int $post_id ): void {
  */
 function aiad_create_speed_quiz_timeline_entry(): int {
 	$slug  = aiad_speed_quiz_post_slug();
-	$title = __( 'The AI Speed Quiz for Teachers', 'ai-awareness-day' );
+	$title = __( 'The AI Speed Quiz for Teachers', 'aiad-core' );
 
 	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
 	if ( $existing instanceof WP_Post ) {
@@ -273,7 +273,7 @@ function aiad_create_speed_quiz_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( '10 AI questions, 15 seconds each — score points, earn speed bonuses, and climb the leaderboard.', 'ai-awareness-day' ),
+			'post_excerpt' => __( '10 AI questions, 15 seconds each — score points, earn speed bonuses, and climb the leaderboard.', 'aiad-core' ),
 			'post_content' => aiad_get_speed_quiz_timeline_content(),
 			'post_status'  => 'draft',
 			'post_author'  => 1,

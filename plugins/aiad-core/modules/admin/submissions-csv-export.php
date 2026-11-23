@@ -97,7 +97,7 @@ function aiad_submissions_csv_export_button( string $which ): void {
 		'aiad_export_submissions_csv'
 	);
 	echo '<a href="' . esc_url( $url ) . '" class="button button-secondary" style="margin-left:8px;">'
-		. esc_html__( 'Export to CSV (mail merge)', 'ai-awareness-day' )
+		. esc_html__( 'Export to CSV (mail merge)', 'aiad-core' )
 		. '</a>';
 }
 add_action( 'manage_posts_extra_tablenav', 'aiad_submissions_csv_export_button' );
@@ -108,7 +108,7 @@ add_action( 'manage_posts_extra_tablenav', 'aiad_submissions_csv_export_button' 
 function aiad_handle_submissions_csv_export(): void {
 	// Names, emails and schools of everyone who wrote in: Editors and Administrators only, not Contributors or Authors.
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
-		wp_die( esc_html__( 'Insufficient permissions.', 'ai-awareness-day' ), 403 );
+		wp_die( esc_html__( 'Insufficient permissions.', 'aiad-core' ), 403 );
 	}
 	check_admin_referer( 'aiad_export_submissions_csv' );
 
@@ -187,7 +187,7 @@ function aiad_handle_submissions_csv_export(): void {
 
 	$out = fopen( 'php://output', 'w' );
 	if ( $out === false ) {
-		wp_die( esc_html__( 'Could not open output stream.', 'ai-awareness-day' ) );
+		wp_die( esc_html__( 'Could not open output stream.', 'aiad-core' ) );
 	}
 	// UTF-8 BOM so Excel opens accented characters correctly on Windows.
 	fwrite( $out, "\xEF\xBB\xBF" );
@@ -227,16 +227,16 @@ function aiad_submissions_role_filter_dropdown(): void {
 	$current = isset( $_GET['aiad_role_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['aiad_role_filter'] ) ) : 'all';
 
 	$labels = array(
-		'all'                    => __( 'All roles', 'ai-awareness-day' ),
-		'teacher'                => __( 'Teachers', 'ai-awareness-day' ),
-		'school_leader'          => __( 'School leaders', 'ai-awareness-day' ),
-		'parent'                 => __( 'Parents / carers', 'ai-awareness-day' ),
-		'organisation'           => __( 'Organisations (any)', 'ai-awareness-day' ),
-		'org:company'            => __( 'Orgs — Companies', 'ai-awareness-day' ),
-		'org:education_provider' => __( 'Orgs — Education providers', 'ai-awareness-day' ),
-		'org:charity'            => __( 'Orgs — Charities', 'ai-awareness-day' ),
-		'org:university'         => __( 'Orgs — Universities', 'ai-awareness-day' ),
-		'org:institute'          => __( 'Orgs — Institutes', 'ai-awareness-day' ),
+		'all'                    => __( 'All roles', 'aiad-core' ),
+		'teacher'                => __( 'Teachers', 'aiad-core' ),
+		'school_leader'          => __( 'School leaders', 'aiad-core' ),
+		'parent'                 => __( 'Parents / carers', 'aiad-core' ),
+		'organisation'           => __( 'Organisations (any)', 'aiad-core' ),
+		'org:company'            => __( 'Orgs — Companies', 'aiad-core' ),
+		'org:education_provider' => __( 'Orgs — Education providers', 'aiad-core' ),
+		'org:charity'            => __( 'Orgs — Charities', 'aiad-core' ),
+		'org:university'         => __( 'Orgs — Universities', 'aiad-core' ),
+		'org:institute'          => __( 'Orgs — Institutes', 'aiad-core' ),
 	);
 
 	echo '<select name="aiad_role_filter" style="margin-right:6px;">';

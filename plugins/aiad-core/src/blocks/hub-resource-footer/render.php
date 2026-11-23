@@ -23,6 +23,6 @@ $aiad_back_url = function_exists( 'aiad_hub_resource_back_url' ) ? aiad_hub_reso
 		<?php if ( function_exists( 'aiad_back_icon_svg' ) ) : ?>
 			<span aria-hidden="true"><?php echo aiad_back_icon_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 		<?php endif; ?>
-		<?php esc_html_e( 'Back to the AI Risk & Readiness Benchmark', 'ai-awareness-day' ); ?>
+		<?php esc_html_e( 'Back to the AI Risk & Readiness Benchmark', 'aiad-core' ); ?>
 	</a>
 </div>

@@ -7,7 +7,7 @@
 	"icon": "editor-ul",
 	"description": "A list whose items can hold any blocks (a heading and text, for example), styled by its class. Used on the National Conversation page.",
 	"keywords": [ "list", "cards", "steps" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"tagName": { "type": "string", "enum": [ "ul", "ol", "dl", "p", "div", "nav" ], "default": "ul" },
 		"ariaLabel": { "type": "string", "source": "attribute", "selector": "ul,ol,dl,p,div,nav", "attribute": "aria-label" },

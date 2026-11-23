@@ -22,8 +22,8 @@ function aiad_certificate_generator_url( int $submission_id = 0 ): string {
 function aiad_register_certificate_admin_page(): void {
 	add_submenu_page(
 		'edit.php?post_type=form_submission',
-		__( 'Generate certificate', 'ai-awareness-day' ),
-		__( 'Certificates', 'ai-awareness-day' ),
+		__( 'Generate certificate', 'aiad-core' ),
+		__( 'Certificates', 'aiad-core' ),
 		'edit_posts',
 		'aiad-certificate-generator',
 		'aiad_render_certificate_admin_page'
@@ -39,12 +39,12 @@ function aiad_render_certificate_admin_page(): void {
 	$iframe_url    = aiad_certificate_generator_url( $submission_id );
 	?>
 	<div class="wrap aiad-certificate-admin-wrap">
-		<h1><?php esc_html_e( 'Participation certificates', 'ai-awareness-day' ); ?></h1>
+		<h1><?php esc_html_e( 'Participation certificates', 'aiad-core' ); ?></h1>
 		<p class="description">
-			<?php esc_html_e( 'Pick a signup from the list (or open a submission and choose “Certificate”). Choose Individual or Whole school before downloading. Logos and copy load from this WordPress site.', 'ai-awareness-day' ); ?>
+			<?php esc_html_e( 'Pick a signup from the list (or open a submission and choose “Certificate”). Choose Individual or Whole school before downloading. Logos and copy load from this WordPress site.', 'aiad-core' ); ?>
 		</p>
 		<iframe
-			title="<?php esc_attr_e( 'Certificate generator', 'ai-awareness-day' ); ?>"
+			title="<?php esc_attr_e( 'Certificate generator', 'aiad-core' ); ?>"
 			src="<?php echo esc_url( $iframe_url ); ?>"
 			class="aiad-certificate-admin-frame"
 			style="width:100%;min-height:calc(100vh - 120px);border:1px solid #c3c4c7;border-radius:4px;background:#f4f4f5;"
@@ -75,7 +75,7 @@ function aiad_form_submission_certificate_row_action( array $actions, WP_Post $p
 	$actions['aiad_certificate'] = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( $url ),
-		esc_html__( 'Certificate', 'ai-awareness-day' )
+		esc_html__( 'Certificate', 'aiad-core' )
 	);
 	return $actions;
 }
@@ -87,7 +87,7 @@ add_filter( 'post_row_actions', 'aiad_form_submission_certificate_row_action', 1
 function aiad_form_submission_certificate_meta_box(): void {
 	add_meta_box(
 		'aiad_certificate',
-		__( 'Certificate', 'ai-awareness-day' ),
+		__( 'Certificate', 'aiad-core' ),
 		'aiad_form_submission_certificate_meta_box_render',
 		'form_submission',
 		'side',
@@ -109,10 +109,10 @@ function aiad_form_submission_certificate_meta_box_render( WP_Post $post ): void
 		admin_url( 'edit.php' )
 	);
 	?>
-	<p><?php esc_html_e( 'Generate a participation PDF for this signup.', 'ai-awareness-day' ); ?></p>
+	<p><?php esc_html_e( 'Generate a participation PDF for this signup.', 'aiad-core' ); ?></p>
 	<p>
 		<a class="button button-primary" href="<?php echo esc_url( $url ); ?>">
-			<?php esc_html_e( 'Open certificate generator', 'ai-awareness-day' ); ?>
+			<?php esc_html_e( 'Open certificate generator', 'aiad-core' ); ?>
 		</a>
 	</p>
 	<?php

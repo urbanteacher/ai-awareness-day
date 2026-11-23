@@ -25,14 +25,14 @@ function aiad_risk_benchmark_post_slug(): string {
  * Timeline headline / post title.
  */
 function aiad_risk_benchmark_get_headline(): string {
-	return __( 'The Hidden Threat in School AI Adoption: It’s Not the Tech, It’s the Dependency', 'ai-awareness-day' );
+	return __( 'The Hidden Threat in School AI Adoption: It’s Not the Tech, It’s the Dependency', 'aiad-core' );
 }
 
 /**
  * Timeline excerpt shown on the single timeline entry.
  */
 function aiad_risk_benchmark_get_excerpt(): string {
-	return __( 'During the build-up to AI Awareness Day 2027, we received many enquiries about AI in schools. This article introduces our free AI Risk & Readiness Benchmark™ — a practical audit to measure adoption, dependency and readiness for you and your school.', 'ai-awareness-day' );
+	return __( 'During the build-up to AI Awareness Day 2027, we received many enquiries about AI in schools. This article introduces our free AI Risk & Readiness Benchmark™ — a practical audit to measure adoption, dependency and readiness for you and your school.', 'aiad-core' );
 }
 
 /**
@@ -135,9 +135,9 @@ function aiad_get_risk_benchmark_timeline_content(): string {
 		. '</tbody></table></figure><!-- /wp:table -->';
 
 	// ── Free audit CTA (the live tool, at the bottom) ───────────────────
-	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html__( 'Audit yourself or your school for free', 'ai-awareness-day' ) . '</h2><!-- /wp:heading -->';
+	$blocks[] = '<!-- wp:heading --><h2 class="wp-block-heading">' . esc_html__( 'Audit yourself or your school for free', 'aiad-core' ) . '</h2><!-- /wp:heading -->';
 
-	$blocks[] = '<!-- wp:paragraph --><p>' . esc_html__( 'Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ) . '</p><!-- /wp:paragraph -->';
+	$blocks[] = '<!-- wp:paragraph --><p>' . esc_html__( 'Don’t wait for a compliance failure or a safeguarding incident to find out where your risks are. Move beyond basic adoption checklists and discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'aiad-core' ) . '</p><!-- /wp:paragraph -->';
 
 	$blocks[] = '<!-- wp:shortcode -->[ai_risk_benchmark]<!-- /wp:shortcode -->';
 
@@ -312,23 +312,23 @@ function aiad_backfill_risk_benchmark_audit_heading(): void {
 
 	$content = (string) $post->post_content;
 	$old     = 'Audit your school for free';
-	$new     = __( 'Audit yourself or your school for free', 'ai-awareness-day' );
+	$new     = __( 'Audit yourself or your school for free', 'aiad-core' );
 
 	if ( str_contains( $content, $old ) ) {
 		$content = str_replace( $old, $new, $content );
 		$content = str_replace(
 			'discover your school’s actual AI exposure — try the benchmark below.',
-			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'aiad-core' ),
 			$content
 		);
 		$content = str_replace(
 			"discover your school's actual AI exposure — try the benchmark below.",
-			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'aiad-core' ),
 			$content
 		);
 		$content = str_replace(
 			'discover your school’s actual AI exposure — start the benchmark below.',
-			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'ai-awareness-day' ),
+			__( 'discover your actual AI exposure — teachers, students, parents and leaders can all start the benchmark below.', 'aiad-core' ),
 			$content
 		);
 

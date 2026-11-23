@@ -22,8 +22,8 @@ if ( empty( $aiad_grouped ) ) {
 // One plain list: the strand each link was filed under is for the editor, not shown here.
 $aiad_links = array_merge( ...array_values( $aiad_grouped ) );
 ?>
-<div <?php echo get_block_wrapper_attributes( array( 'class' => 'partner-bio__resources', 'aria-label' => __( 'Partner resources', 'ai-awareness-day' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<h2 class="partner-bio__resources-title"><?php esc_html_e( 'Partner resources', 'ai-awareness-day' ); ?></h2>
+<div <?php echo get_block_wrapper_attributes( array( 'class' => 'partner-bio__resources', 'aria-label' => __( 'Partner resources', 'aiad-core' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<h2 class="partner-bio__resources-title"><?php esc_html_e( 'Partner resources', 'aiad-core' ); ?></h2>
 	<ul class="partner-bio__link-list">
 		<?php foreach ( $aiad_links as $aiad_link ) : ?>
 			<li class="partner-bio__link-item">

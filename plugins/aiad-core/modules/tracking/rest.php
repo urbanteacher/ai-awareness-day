@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_rest_track_resource( WP_REST_Request $request ) {
 	$post_id = absint( $request['id'] );
 	if ( ! $post_id || 'resource' !== get_post_type( $post_id ) || 'publish' !== get_post_status( $post_id ) ) {
-		return new WP_Error( 'aiad_invalid_resource', __( 'Invalid resource.', 'ai-awareness-day' ), array( 'status' => 404 ) );
+		return new WP_Error( 'aiad_invalid_resource', __( 'Invalid resource.', 'aiad-core' ), array( 'status' => 404 ) );
 	}
 
 	$is_view  = 'view' === $request['event'];
@@ -66,13 +66,13 @@ function aiad_rest_track_engagement( WP_REST_Request $request ) {
 	}
 
 	if ( ! $post_id || ! aiad_engagement_is_trackable_post( $post_id, $event ) ) {
-		return new WP_Error( 'aiad_invalid_content', __( 'Invalid content.', 'ai-awareness-day' ), array( 'status' => 404 ) );
+		return new WP_Error( 'aiad_invalid_content', __( 'Invalid content.', 'aiad-core' ), array( 'status' => 404 ) );
 	}
 
 	$post     = get_post( $post_id );
 	$meta_key = $post ? aiad_engagement_event_meta_key( $post->post_type, $event ) : null;
 	if ( ! $meta_key ) {
-		return new WP_Error( 'aiad_invalid_event', __( 'Invalid event.', 'ai-awareness-day' ), array( 'status' => 400 ) );
+		return new WP_Error( 'aiad_invalid_event', __( 'Invalid event.', 'aiad-core' ), array( 'status' => 400 ) );
 	}
 
 	if ( 'view' === $event ) {

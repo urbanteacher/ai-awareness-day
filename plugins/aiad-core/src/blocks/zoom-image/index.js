@@ -60,12 +60,12 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Image', 'ai-awareness-day' ) },
+						{ title: __( 'Image', 'aiad-core' ) },
 						el( components.TextareaControl, {
-							label: __( 'Alternative text', 'ai-awareness-day' ),
+							label: __( 'Alternative text', 'aiad-core' ),
 							help: __(
 								'What the image shows, for people who cannot see it.',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							value: a.alt,
 							onChange( value ) {
@@ -90,7 +90,7 @@ import '@wordpress/i18n';
 								null,
 								__(
 									'Choose an image from the toolbar.',
-									'ai-awareness-day'
+									'aiad-core'
 								)
 							),
 					el( blockEditor.RichText, {
@@ -98,7 +98,7 @@ import '@wordpress/i18n';
 						className: 'wt-shot__zoom',
 						value: a.label,
 						allowedFormats: [],
-						placeholder: __( 'Label', 'ai-awareness-day' ),
+						placeholder: __( 'Label', 'aiad-core' ),
 						onChange( value ) {
 							props.setAttributes( { label: value } );
 						},

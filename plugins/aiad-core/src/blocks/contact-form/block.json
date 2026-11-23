@@ -7,7 +7,7 @@
 	"icon": "email",
 	"description": "The Get Involved contact form. Messages go to the contact address in Settings → Campaign & contact.",
 	"keywords": [ "contact", "form", "get involved" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"supports": {
 		"html": false,
 		"multiple": false,

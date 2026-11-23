@@ -106,21 +106,21 @@ function aiad_certificate_showcase( array $args = array() ): string {
 			/* The audit pitch, carried over from the old ink promo block so
 			   that section could be retired without losing its messaging. */
 			'section_id'  => 'benchmark-audit',
-			'eyebrow'     => __( 'New · Free for UK schools', 'ai-awareness-day' ),
-			'title'       => __( 'Audit your AI usage', 'ai-awareness-day' ),
-			'lead'        => __( 'Take the AI Risk & Readiness Benchmark™ — a free interactive audit to measure adoption, dependency and readiness across your whole school community.', 'ai-awareness-day' ),
+			'eyebrow'     => __( 'New · Free for UK schools', 'aiad-core' ),
+			'title'       => __( 'Audit your AI usage', 'aiad-core' ),
+			'lead'        => __( 'Take the AI Risk & Readiness Benchmark™ — a free interactive audit to measure adoption, dependency and readiness across your whole school community.', 'aiad-core' ),
 			'roles'       => function_exists( 'aiad_benchmark_promo_roles' ) ? aiad_benchmark_promo_roles() : array(),
 			'cta_url'     => function_exists( 'aiad_get_benchmark_start_url' ) ? aiad_get_benchmark_start_url() : '',
-			'cta_text'    => __( 'Start the free audit', 'ai-awareness-day' ),
+			'cta_text'    => __( 'Start the free audit', 'aiad-core' ),
 
 			/* What completing it earns. */
-			'cert_eyebrow' => __( 'What you earn', 'ai-awareness-day' ),
-			'cert_title'   => __( 'A certificate you can evidence', 'ai-awareness-day' ),
-			'cert_lead'    => __( 'Score 70 or above, then describe one thing you changed in your practice. Your certificate is issued in the AI Awareness Day strand you worked on, and downloads as an image you can keep, print or add to your CPD record.', 'ai-awareness-day' ),
+			'cert_eyebrow' => __( 'What you earn', 'aiad-core' ),
+			'cert_title'   => __( 'A certificate you can evidence', 'aiad-core' ),
+			'cert_lead'    => __( 'Score 70 or above, then describe one thing you changed in your practice. Your certificate is issued in the AI Awareness Day strand you worked on, and downloads as an image you can keep, print or add to your CPD record.', 'aiad-core' ),
 			'steps'        => array(
-				__( 'Complete your benchmark', 'ai-awareness-day' ),
-				__( 'Evidence one change you made', 'ai-awareness-day' ),
-				__( 'Download your certificate', 'ai-awareness-day' ),
+				__( 'Complete your benchmark', 'aiad-core' ),
+				__( 'Evidence one change you made', 'aiad-core' ),
+				__( 'Download your certificate', 'aiad-core' ),
 			),
 
 			'strand'      => 'safe',

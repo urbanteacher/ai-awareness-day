@@ -7,7 +7,7 @@
 	"icon": "marker",
 	"description": "The mark of one of the five strands: Safe, Smart, Creative, Responsible or Future.",
 	"keywords": [ "strand", "theme", "icon" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"strand": { "type": "string", "enum": [ "safe", "smart", "creative", "responsible", "future" ], "default": "safe" },
 		"size": { "type": "number", "default": 32 }

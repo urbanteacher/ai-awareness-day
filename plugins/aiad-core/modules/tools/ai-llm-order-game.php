@@ -84,8 +84,8 @@ function aiad_llm_order_game_render( $atts = array() ): string {
 
 	$atts = shortcode_atts(
 		array(
-			'title' => __( 'Put the pipeline in order', 'ai-awareness-day' ),
-			'intro' => __( 'Drag each definition into the correct step — or use the arrows on mobile. When you have finished the explainer above, this is a quick check that the sequence sticks.', 'ai-awareness-day' ),
+			'title' => __( 'Put the pipeline in order', 'aiad-core' ),
+			'intro' => __( 'Drag each definition into the correct step — or use the arrows on mobile. When you have finished the explainer above, this is a quick check that the sequence sticks.', 'aiad-core' ),
 		),
 		is_array( $atts ) ? $atts : array(),
 		'aiad_llm_order_game'
@@ -103,14 +103,14 @@ function aiad_llm_order_game_render( $atts = array() ): string {
 		<h3 id="aiad-llm-order-heading" class="aiad-llm-order__heading"><?php echo esc_html( $atts['title'] ); ?></h3>
 		<p class="aiad-llm-order__intro"><?php echo esc_html( $atts['intro'] ); ?></p>
 		<div class="aiad-llm-order__panel">
-			<p class="aiad-llm-order__hint"><?php esc_html_e( 'Tip: drag cards or tap ↑ ↓ to reorder. Position numbers show the slot (1 = first step in the pipeline).', 'ai-awareness-day' ); ?></p>
+			<p class="aiad-llm-order__hint"><?php esc_html_e( 'Tip: drag cards or tap ↑ ↓ to reorder. Position numbers show the slot (1 = first step in the pipeline).', 'aiad-core' ); ?></p>
 			<ol class="aiad-llm-order__list" data-aiad-llm-order-list></ol>
 			<div class="aiad-llm-order__actions">
 				<button type="button" class="aiad-llm-order__btn aiad-llm-order__btn--primary" data-aiad-llm-order-check>
-					<?php esc_html_e( 'Check order', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Check order', 'aiad-core' ); ?>
 				</button>
 				<button type="button" class="aiad-llm-order__btn aiad-llm-order__btn--ghost" data-aiad-llm-order-shuffle>
-					<?php esc_html_e( 'Shuffle again', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Shuffle again', 'aiad-core' ); ?>
 				</button>
 				<button
 					type="button"
@@ -119,7 +119,7 @@ function aiad_llm_order_game_render( $atts = array() ): string {
 					aria-expanded="false"
 					aria-controls="aiad-llm-order-answer"
 				>
-					<?php esc_html_e( 'Show answer key', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Show answer key', 'aiad-core' ); ?>
 				</button>
 			</div>
 			<p class="aiad-llm-order__feedback" data-aiad-llm-order-feedback hidden role="status" aria-live="polite"></p>

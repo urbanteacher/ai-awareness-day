@@ -15,9 +15,9 @@ if ( empty( $aiad_categories ) ) {
 	return;
 }
 ?>
-<div class="tools-filter" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'ai-awareness-day' ); ?>">
+<div class="tools-filter" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'aiad-core' ); ?>">
 	<button class="tools-filter__btn tools-filter__btn--active" data-filter="all" aria-pressed="true" type="button">
-		<?php esc_html_e( 'All', 'ai-awareness-day' ); ?>
+		<?php esc_html_e( 'All', 'aiad-core' ); ?>
 	</button>
 	<?php foreach ( $aiad_categories as $aiad_cat ) : ?>
 		<button class="tools-filter__btn" data-filter="<?php echo esc_attr( $aiad_cat->slug ); ?>" aria-pressed="false" type="button">

@@ -26,7 +26,7 @@
 				return;
 			}
 			frame = wp.media( {
-				title: __( 'Select or upload PDF or PPTX', 'ai-awareness-day' ),
+				title: __( 'Select or upload PDF or PPTX', 'aiad-core' ),
 				library: {
 					type: [
 						'application/pdf',
@@ -34,7 +34,7 @@
 						'application/vnd.ms-powerpoint',
 					],
 				},
-				button: { text: __( 'Use this file', 'ai-awareness-day' ) },
+				button: { text: __( 'Use this file', 'aiad-core' ) },
 				multiple: false,
 			} );
 			frame.on( 'select', function () {

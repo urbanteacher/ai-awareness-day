@@ -93,8 +93,8 @@ function aiad_get_og_data(): array {
 		}
 
 	} elseif ( function_exists( 'aiad_is_national_conversation_page' ) && aiad_is_national_conversation_page() ) {
-		$data['title']       = __( 'The National AI Conversation 2027', 'ai-awareness-day' ) . ' — ' . $site_name;
-		$data['description'] = __( 'Students question and debate AI, from five minutes in class to judged debates between schools. For primary, secondary and post-16, before AI Awareness Day 2027.', 'ai-awareness-day' );
+		$data['title']       = __( 'The National AI Conversation 2027', 'aiad-core' ) . ' — ' . $site_name;
+		$data['description'] = __( 'Students question and debate AI, from five minutes in class to judged debates between schools. For primary, secondary and post-16, before AI Awareness Day 2027.', 'aiad-core' );
 		$data['url']         = home_url( '/national-conversation/' );
 
 		$share_image = function_exists( 'aiad_get_social_share_image_data' )
@@ -107,8 +107,8 @@ function aiad_get_og_data(): array {
 
 	} elseif ( function_exists( 'aiad_is_literacy_table_page' ) && aiad_is_literacy_table_page() ) {
 		// The AI Literacy Periodic Table shares as itself, with the launch post's cover as its card.
-		$data['title']       = __( 'The AI Literacy Periodic Table', 'ai-awareness-day' ) . ' — ' . $site_name;
-		$data['description'] = __( '142 AI terms in plain English, with the issues they raise, a question for class on every one, a printable poster and ready-made lessons. Free for schools.', 'ai-awareness-day' );
+		$data['title']       = __( 'The AI Literacy Periodic Table', 'aiad-core' ) . ' — ' . $site_name;
+		$data['description'] = __( '142 AI terms in plain English, with the issues they raise, a question for class on every one, a printable poster and ready-made lessons. Free for schools.', 'aiad-core' );
 		$data['url']         = get_permalink();
 
 		$launch   = get_page_by_path( 'ai-literacy-periodic-table-launch', OBJECT, 'timeline' );
@@ -116,7 +116,7 @@ function aiad_get_og_data(): array {
 		if ( $cover_id ) {
 			$data['image_id']  = $cover_id;
 			$data['image']     = (string) wp_get_attachment_image_url( $cover_id, 'full' );
-			$data['image_alt'] = __( 'The AI Literacy Periodic Table', 'ai-awareness-day' );
+			$data['image_alt'] = __( 'The AI Literacy Periodic Table', 'aiad-core' );
 		} else {
 			$share_image = function_exists( 'aiad_get_social_share_image_data' )
 				? aiad_get_social_share_image_data()
@@ -163,9 +163,9 @@ function aiad_get_og_data(): array {
 				if ( ! empty( $link_label ) ) {
 					$timeline_content = $link_label;
 				} elseif ( ! empty( $video_url ) ) {
-					$timeline_content = __( 'Watch video', 'ai-awareness-day' );
+					$timeline_content = __( 'Watch video', 'aiad-core' );
 				} elseif ( ! empty( $linkedin_url ) ) {
-					$timeline_content = __( 'View LinkedIn post', 'ai-awareness-day' );
+					$timeline_content = __( 'View LinkedIn post', 'aiad-core' );
 				}
 			}
 			
@@ -239,7 +239,7 @@ function aiad_get_og_data(): array {
 						$data['image_dims']  = array( 1280, 720 );
 						$data['image_alt']   = sprintf(
 							/* translators: %s: resource title */
-							__( '%s — video thumbnail', 'ai-awareness-day' ),
+							__( '%s — video thumbnail', 'aiad-core' ),
 							get_the_title( $post )
 						);
 					}
@@ -254,7 +254,7 @@ function aiad_get_og_data(): array {
 					$data['image_dims'] = array( 1200, 630 );
 					$data['image_alt']  = sprintf(
 						/* translators: %s: resource title */
-						__( '%s — title slide', 'ai-awareness-day' ),
+						__( '%s — title slide', 'aiad-core' ),
 						get_the_title( $post )
 					);
 				}
@@ -287,9 +287,9 @@ function aiad_get_og_data(): array {
 		$data['url']   = get_post_type_archive_link( $post_type );
 
 		if ( 'resource' === $post_type ) {
-			$data['description'] = __( 'Lesson starters, lesson activities, and assembly materials for AI Awareness Day.', 'ai-awareness-day' );
+			$data['description'] = __( 'Lesson starters, lesson activities, and assembly materials for AI Awareness Day.', 'aiad-core' );
 		} elseif ( 'partner' === $post_type ) {
-			$data['description'] = __( 'Schools, charities, universities, institutes, tech companies, sponsors, and educators supporting AI Awareness Day.', 'ai-awareness-day' );
+			$data['description'] = __( 'Schools, charities, universities, institutes, tech companies, sponsors, and educators supporting AI Awareness Day.', 'aiad-core' );
 		} else {
 			$data['description'] = get_bloginfo( 'description' );
 		}
@@ -344,7 +344,7 @@ function aiad_get_share_message( string $context, ?WP_Post $post = null ): strin
 				global $post;
 			}
 			if ( ! $post ) {
-				return sprintf( __( 'I found this free AI activity for AI Awareness Day 👉 {URL}', 'ai-awareness-day' ) );
+				return sprintf( __( 'I found this free AI activity for AI Awareness Day 👉 {URL}', 'aiad-core' ) );
 			}
 			
 			// Get key stage
@@ -379,42 +379,42 @@ function aiad_get_share_message( string $context, ?WP_Post $post = null ): strin
 			// Build message
 			if ( $key_stage_str && $duration_str ) {
 				return sprintf(
-					__( 'I found this free AI activity for %s — takes just %s. Worth a look for AI Awareness Day 👉 {URL}', 'ai-awareness-day' ),
+					__( 'I found this free AI activity for %s — takes just %s. Worth a look for AI Awareness Day 👉 {URL}', 'aiad-core' ),
 					$key_stage_str,
 					$duration_str
 				);
 			} elseif ( $key_stage_str ) {
 				return sprintf(
-					__( 'I found this free AI activity for %s. Worth a look for AI Awareness Day 👉 {URL}', 'ai-awareness-day' ),
+					__( 'I found this free AI activity for %s. Worth a look for AI Awareness Day 👉 {URL}', 'aiad-core' ),
 					$key_stage_str
 				);
 			} elseif ( $duration_str ) {
 				return sprintf(
-					__( 'I found this free AI activity — takes just %s. Worth a look for AI Awareness Day 👉 {URL}', 'ai-awareness-day' ),
+					__( 'I found this free AI activity — takes just %s. Worth a look for AI Awareness Day 👉 {URL}', 'aiad-core' ),
 					$duration_str
 				);
 			}
-			return __( 'I found this free AI activity for AI Awareness Day 👉 {URL}', 'ai-awareness-day' );
+			return __( 'I found this free AI activity for AI Awareness Day 👉 {URL}', 'aiad-core' );
 			
 		case 'front_page':
 			$event_date = aiad_seo_setting( 'event_date' );
 			if ( $event_date ) {
 				return sprintf(
-					__( 'Our school is taking part in AI Awareness Day (%s). Free resources for every key stage 👉 {URL}', 'ai-awareness-day' ),
+					__( 'Our school is taking part in AI Awareness Day (%s). Free resources for every key stage 👉 {URL}', 'aiad-core' ),
 					$event_date
 				);
 			}
-			return __( 'Our school is taking part in AI Awareness Day. Free resources for every key stage 👉 {URL}', 'ai-awareness-day' );
+			return __( 'Our school is taking part in AI Awareness Day. Free resources for every key stage 👉 {URL}', 'aiad-core' );
 			
 		case 'archive':
-			return __( 'Check out these free AI resources for AI Awareness Day 👉 {URL}', 'ai-awareness-day' );
+			return __( 'Check out these free AI resources for AI Awareness Day 👉 {URL}', 'aiad-core' );
 			
 		case 'timeline':
 			// Timeline entries use their title as the message (handled in timeline.js)
 			return '';
 			
 		default:
-			return __( 'Check out AI Awareness Day 👉 {URL}', 'ai-awareness-day' );
+			return __( 'Check out AI Awareness Day 👉 {URL}', 'aiad-core' );
 	}
 }
 

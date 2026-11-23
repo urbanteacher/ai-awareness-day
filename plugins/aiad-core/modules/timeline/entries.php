@@ -289,7 +289,7 @@ function aiad_timeline_sync_live_session_entry(int $session_id): void
     if ($time_range) {
         $intro_parts[] = sprintf(
             /* translators: %s: time range e.g. 10:00 – 11:00 */
-            __('Live at %s (UK time).', 'ai-awareness-day'),
+            __('Live at %s (UK time).', 'aiad-core'),
             $time_range
         );
     }
@@ -303,8 +303,8 @@ function aiad_timeline_sync_live_session_entry(int $session_id): void
 
     $link_url = $reg_url ? $reg_url : (get_permalink($session_id) ?: '');
     $link_label = $reg_url
-        ? __('Register →', 'ai-awareness-day')
-        : __('View session →', 'ai-awareness-day');
+        ? __('Register →', 'aiad-core')
+        : __('View session →', 'aiad-core');
 
     if ($timeline_id) {
         wp_update_post(
@@ -491,15 +491,15 @@ function aiad_timeline_maybe_create_countdown_entries(): void
             continue;
         }
         $title = $weeks === 1
-            ? __('1 week to go — book your slot', 'ai-awareness-day')
-            : sprintf(__('%d weeks to go — book your slot', 'ai-awareness-day'), $weeks);
+            ? __('1 week to go — book your slot', 'aiad-core')
+            : sprintf(__('%d weeks to go — book your slot', 'aiad-core'), $weeks);
         aiad_create_timeline_entry(array(
             'title' => $title,
-            'content' => sprintf(__('AI Awareness Day is in %d week(s). Sign up and get your school involved.', 'ai-awareness-day'), $weeks),
+            'content' => sprintf(__('AI Awareness Day is in %d week(s). Sign up and get your school involved.', 'aiad-core'), $weeks),
             'auto_type' => 'countdown',
             'icon' => 'signup',
             'link_url' => home_url('#contact'),
-            'link_label' => __('Join the campaign →', 'ai-awareness-day'),
+            'link_label' => __('Join the campaign →', 'aiad-core'),
             'countdown_weeks' => $weeks,
         ));
     }
@@ -559,10 +559,10 @@ function aiad_timeline_maybe_create_resource_announcement(WP_Post $post)
 
     if ($post->post_type === 'featured_resource') {
         $link_url = get_post_meta($post->ID, '_featured_resource_url', true);
-        $link_label = __('Try it now →', 'ai-awareness-day');
+        $link_label = __('Try it now →', 'aiad-core');
     } else {
         $link_url = get_permalink($post->ID);
-        $link_label = __('View resource →', 'ai-awareness-day');
+        $link_label = __('View resource →', 'aiad-core');
     }
 
     $timeline_slug = 'new-resource-added-' . $post->post_name;
@@ -570,7 +570,7 @@ function aiad_timeline_maybe_create_resource_announcement(WP_Post $post)
     return aiad_create_timeline_entry(array(
         'title' => sprintf(
             /* translators: %s: resource title */
-            __('New resource added: %s', 'ai-awareness-day'),
+            __('New resource added: %s', 'aiad-core'),
             $post->post_title . $suffix
         ),
         'content' => $content,
@@ -759,12 +759,12 @@ function aiad_timeline_maybe_create_partner_announcement(WP_Post $post)
     }
 
     $types = get_the_terms($post->ID, 'partner_type');
-    $type_name = $types && !is_wp_error($types) ? $types[0]->name : __('Partner', 'ai-awareness-day');
+    $type_name = $types && !is_wp_error($types) ? $types[0]->name : __('Partner', 'aiad-core');
 
     return aiad_create_timeline_entry(array(
         'title' => sprintf(
             /* translators: 1: partner name, 2: partner type */
-            __('%1$s joined as %2$s', 'ai-awareness-day'),
+            __('%1$s joined as %2$s', 'aiad-core'),
             $post->post_title,
             $type_name
         ),

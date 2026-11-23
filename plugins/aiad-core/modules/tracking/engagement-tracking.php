@@ -393,7 +393,7 @@ function aiad_get_top_ai_resource_partners( int $limit = 5 ): array {
 			'id'         => (int) $p->ID,
 			'title'      => get_the_title( $p ),
 			'count'      => (int) get_post_meta( $p->ID, '_aiad_partner_ai_clicks', true ),
-			'type_label' => __( 'Partner', 'ai-awareness-day' ),
+			'type_label' => __( 'Partner', 'aiad-core' ),
 			'edit'       => (string) get_edit_post_link( $p->ID ),
 		);
 	}
@@ -406,17 +406,17 @@ function aiad_get_top_ai_resource_partners( int $limit = 5 ): array {
 function aiad_register_engagement_dashboard_widget(): void {
 	wp_add_dashboard_widget(
 		'aiad_content_engagement',
-		__( '📰 Content engagement — Clicks, hearts & shares', 'ai-awareness-day' ),
+		__( '📰 Content engagement — Clicks, hearts & shares', 'aiad-core' ),
 		'aiad_content_engagement_widget_callback'
 	);
 	wp_add_dashboard_widget(
 		'aiad_schedule_engagement',
-		__( '📅 Live schedule — Joins & session clicks', 'ai-awareness-day' ),
+		__( '📅 Live schedule — Joins & session clicks', 'aiad-core' ),
 		'aiad_schedule_engagement_widget_callback'
 	);
 	wp_add_dashboard_widget(
 		'aiad_partner_engagement',
-		__( '🤝 Partner analytics', 'ai-awareness-day' ),
+		__( '🤝 Partner analytics', 'aiad-core' ),
 		'aiad_partner_engagement_widget_callback'
 	);
 }
@@ -430,7 +430,7 @@ add_action( 'wp_dashboard_setup', 'aiad_register_engagement_dashboard_widget', 1
  */
 function aiad_engagement_render_list( array $rows, string $suffix ): void {
 	if ( empty( $rows ) ) {
-		echo '<p class="aiad-ce-empty">' . esc_html__( 'No data yet.', 'ai-awareness-day' ) . '</p>';
+		echo '<p class="aiad-ce-empty">' . esc_html__( 'No data yet.', 'aiad-core' ) . '</p>';
 		return;
 	}
 	echo '<ul class="aiad-ce-list">';
@@ -535,31 +535,31 @@ function aiad_content_engagement_widget_callback(): void {
 		}
 	</style>
 
-	<p class="aiad-ce-note"><?php esc_html_e( 'Timeline updates and blog posts. Hearts are timeline only; clicks include “Learn more” and article links.', 'ai-awareness-day' ); ?></p>
+	<p class="aiad-ce-note"><?php esc_html_e( 'Timeline updates and blog posts. Hearts are timeline only; clicks include “Learn more” and article links.', 'aiad-core' ); ?></p>
 
 	<div class="aiad-ce-grid">
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_clicks ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Clicks', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Clicks', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_hearts ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hearts', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hearts', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_shares ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Shares', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Shares', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_views ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Views', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Views', 'aiad-core' ); ?></span>
 		</div>
 	</div>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_clicks, __( 'clicks', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_clicks, __( 'clicks', 'aiad-core' ) ); ?>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most hearts', 'ai-awareness-day' ); ?></p>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most hearts', 'aiad-core' ); ?></p>
 	<?php
 	// Hearts only exist on timeline; query timeline like meta explicitly.
 	$heart_q = new WP_Query(
@@ -586,35 +586,35 @@ function aiad_content_engagement_widget_callback(): void {
 			'id'         => (int) $p->ID,
 			'title'      => get_the_title( $p ),
 			'count'      => (int) get_post_meta( $p->ID, '_aiad_timeline_like_count', true ),
-			'type_label' => __( 'Timeline', 'ai-awareness-day' ),
+			'type_label' => __( 'Timeline', 'aiad-core' ),
 			'edit'       => (string) get_edit_post_link( $p->ID ),
 		);
 	}
 	if ( empty( $heart_rows ) ) {
-		echo '<p class="aiad-ce-empty">' . esc_html__( 'No hearts yet.', 'ai-awareness-day' ) . '</p>';
+		echo '<p class="aiad-ce-empty">' . esc_html__( 'No hearts yet.', 'aiad-core' ) . '</p>';
 	} else {
 		echo '<ul class="aiad-ce-list">';
 		foreach ( $heart_rows as $row ) {
 			echo '<li>';
 			echo '<a href="' . esc_url( $row['edit'] ) . '">' . esc_html( $row['title'] ) . '</a>';
 			echo '<span class="aiad-ce-meta">' . esc_html( $row['type_label'] ) . '</span>';
-			echo '<span class="aiad-ce-count">' . esc_html( number_format( $row['count'] ) ) . ' ' . esc_html__( 'hearts', 'ai-awareness-day' ) . '</span>';
+			echo '<span class="aiad-ce-count">' . esc_html( number_format( $row['count'] ) ) . ' ' . esc_html__( 'hearts', 'aiad-core' ) . '</span>';
 			echo '</li>';
 		}
 		echo '</ul>';
 	}
 	?>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most shared', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_shares, __( 'shares', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most shared', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_shares, __( 'shares', 'aiad-core' ) ); ?>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most viewed articles', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_views, __( 'views', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most viewed articles', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_views, __( 'views', 'aiad-core' ) ); ?>
 
 	<p style="margin:0.5rem 0 0;">
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=timeline' ) ); ?>"><?php esc_html_e( 'All timeline posts →', 'ai-awareness-day' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=timeline' ) ); ?>"><?php esc_html_e( 'All timeline posts →', 'aiad-core' ); ?></a>
 		&nbsp;·&nbsp;
-		<a href="<?php echo esc_url( admin_url( 'edit.php' ) ); ?>"><?php esc_html_e( 'All blog posts →', 'ai-awareness-day' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php' ) ); ?>"><?php esc_html_e( 'All blog posts →', 'aiad-core' ); ?></a>
 	</p>
 	<?php
 }
@@ -702,34 +702,34 @@ function aiad_schedule_engagement_widget_callback(): void {
 		#aiad_schedule_engagement .aiad-ce-note { font-size: 0.78rem; color: #646970; margin: 0 0 0.5rem; }
 	</style>
 
-	<p class="aiad-ce-note"><?php esc_html_e( 'Homepage schedule spotlight and full schedule archive. Stats count from deploy onward.', 'ai-awareness-day' ); ?></p>
+	<p class="aiad-ce-note"><?php esc_html_e( 'Homepage schedule spotlight and full schedule archive. Stats count from deploy onward.', 'aiad-core' ); ?></p>
 
 	<div class="aiad-ce-grid">
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_joins ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Join clicks', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Join clicks', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_clicks ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Session clicks', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Session clicks', 'aiad-core' ); ?></span>
 		</div>
 	</div>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most joined sessions', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_joins, __( 'joins', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most joined sessions', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_joins, __( 'joins', 'aiad-core' ) ); ?>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked sessions', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_clicks, __( 'clicks', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Most clicked sessions', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_clicks, __( 'clicks', 'aiad-core' ) ); ?>
 
 	<p style="margin:0.5rem 0 0;font-size:0.85rem;">
-		<?php esc_html_e( 'Calendar adds:', 'ai-awareness-day' ); ?>
+		<?php esc_html_e( 'Calendar adds:', 'aiad-core' ); ?>
 		<strong><?php echo esc_html( number_format( $total_calendar ) ); ?></strong>
 		&nbsp;·&nbsp;
-		<?php esc_html_e( 'Session shares:', 'ai-awareness-day' ); ?>
+		<?php esc_html_e( 'Session shares:', 'aiad-core' ); ?>
 		<strong><?php echo esc_html( number_format( $total_shares ) ); ?></strong>
 	</p>
 	<p style="margin:0.35rem 0 0;">
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=live_session' ) ); ?>"><?php esc_html_e( 'All live sessions →', 'ai-awareness-day' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=live_session' ) ); ?>"><?php esc_html_e( 'All live sessions →', 'aiad-core' ); ?></a>
 	</p>
 	<?php
 }
@@ -812,20 +812,20 @@ function aiad_partner_engagement_widget_callback(): void {
 		}
 	</style>
 
-	<p class="aiad-ce-note"><?php esc_html_e( 'Homepage partner activity: Reach AI resource cards, hero logo marquee, and the Partners stat block.', 'ai-awareness-day' ); ?></p>
+	<p class="aiad-ce-note"><?php esc_html_e( 'Homepage partner activity: Reach AI resource cards, hero logo marquee, and the Partners stat block.', 'aiad-core' ); ?></p>
 
 	<div class="aiad-ce-grid">
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_ai_clicks ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'AI resource clicks', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'AI resource clicks', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $total_marquee ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hero logo clicks', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'Hero logo clicks', 'aiad-core' ); ?></span>
 		</div>
 		<div>
 			<span class="aiad-ce-stat__val"><?php echo esc_html( number_format( $partners_stat ) ); ?></span>
-			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'See all partners', 'ai-awareness-day' ); ?></span>
+			<span class="aiad-ce-stat__lbl"><?php esc_html_e( 'See all partners', 'aiad-core' ); ?></span>
 		</div>
 	</div>
 
@@ -834,7 +834,7 @@ function aiad_partner_engagement_widget_callback(): void {
 		echo esc_html(
 			sprintf(
 				/* translators: 1: partners with AI resources flag, 2: partners with at least one AI click */
-				__( '%1$d partners offer AI resources · %2$d with Reach clicks recorded', 'ai-awareness-day' ),
+				__( '%1$d partners offer AI resources · %2$d with Reach clicks recorded', 'aiad-core' ),
 				$partner_count,
 				$with_ai_clicks
 			)
@@ -842,14 +842,14 @@ function aiad_partner_engagement_widget_callback(): void {
 		?>
 	</p>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Reach — AI resource partners', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_ai_partners, __( 'clicks', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Reach — AI resource partners', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_ai_partners, __( 'clicks', 'aiad-core' ) ); ?>
 
-	<p class="aiad-ce-section-title"><?php esc_html_e( 'Hero — partner logo marquee', 'ai-awareness-day' ); ?></p>
-	<?php aiad_engagement_render_list( $top_marquee, __( 'clicks', 'ai-awareness-day' ) ); ?>
+	<p class="aiad-ce-section-title"><?php esc_html_e( 'Hero — partner logo marquee', 'aiad-core' ); ?></p>
+	<?php aiad_engagement_render_list( $top_marquee, __( 'clicks', 'aiad-core' ) ); ?>
 
 	<p style="margin:0.5rem 0 0;">
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=partner' ) ); ?>"><?php esc_html_e( 'All partners →', 'ai-awareness-day' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=partner' ) ); ?>"><?php esc_html_e( 'All partners →', 'aiad-core' ); ?></a>
 	</p>
 	<?php
 }

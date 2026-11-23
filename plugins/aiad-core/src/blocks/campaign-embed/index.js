@@ -29,11 +29,11 @@ import '@wordpress/server-side-render';
 				el( components.TextControl, {
 					label: __(
 						'Video or LinkedIn post address',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 					help: __(
 						'A YouTube or Vimeo embed address, or the src of a LinkedIn post embed. Leave empty to show the campaign text full width.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 					type: 'url',
 					value: url,

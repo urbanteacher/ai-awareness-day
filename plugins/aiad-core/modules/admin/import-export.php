@@ -30,8 +30,8 @@ function aiad_bundled_bbc_how_ai_wxr_url(): string {
 function aiad_register_resource_import_page(): void {
     add_submenu_page(
         'edit.php?post_type=resource',
-        __( 'Import demo resources', 'ai-awareness-day' ),
-        __( 'Import demo resources', 'ai-awareness-day' ),
+        __( 'Import demo resources', 'aiad-core' ),
+        __( 'Import demo resources', 'aiad-core' ),
         'manage_options',
         'aiad-import-resources',
         'aiad_render_resource_import_page'
@@ -68,8 +68,8 @@ add_action( 'admin_init', 'aiad_maybe_do_export_download', 1 );
 function aiad_register_resource_export_page(): void {
     add_submenu_page(
         'edit.php?post_type=resource',
-        __( 'Export demo resources', 'ai-awareness-day' ),
-        __( 'Export demo resources', 'ai-awareness-day' ),
+        __( 'Export demo resources', 'aiad-core' ),
+        __( 'Export demo resources', 'aiad-core' ),
         'manage_options',
         'aiad-export-resources',
         'aiad_render_resource_export_page'
@@ -83,8 +83,8 @@ add_action( 'admin_menu', 'aiad_register_resource_export_page' );
 function aiad_register_partner_export_submenu(): void {
     add_submenu_page(
         'edit.php?post_type=featured_resource',
-        __( 'Export partner resources', 'ai-awareness-day' ),
-        __( 'Export partner resources', 'ai-awareness-day' ),
+        __( 'Export partner resources', 'aiad-core' ),
+        __( 'Export partner resources', 'aiad-core' ),
         'manage_options',
         'aiad-export-resources',
         'aiad_render_resource_export_page'
@@ -106,7 +106,7 @@ function aiad_export_clean_buffer(): void {
  */
 function aiad_render_resource_export_page(): void {
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( esc_html__( 'You do not have permission to access this page.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'You do not have permission to access this page.', 'aiad-core' ) );
     }
 
     // Export downloads are handled in admin_init (aiad_maybe_do_export_download) so headers are sent before any output.
@@ -117,41 +117,41 @@ function aiad_render_resource_export_page(): void {
 
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Export demo resources', 'ai-awareness-day' ); ?></h1>
+        <h1><?php esc_html_e( 'Export demo resources', 'aiad-core' ); ?></h1>
         <?php
         $bundled_wxr = aiad_bundled_bbc_how_ai_wxr_url();
         if ( $bundled_wxr !== '' ) :
             ?>
             <div class="notice notice-info">
                 <p>
-                    <strong><?php esc_html_e( 'Live / staging bundle', 'ai-awareness-day' ); ?></strong>
+                    <strong><?php esc_html_e( 'Live / staging bundle', 'aiad-core' ); ?></strong>
                     —
-                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'bbc-how-ai-actually-works.wxr.xml', 'ai-awareness-day' ); ?></a>
-                    <?php esc_html_e( 'is included in the theme for importing the BBC Ideas tutor-time resource without using auto-seed. Same format as a full export.', 'ai-awareness-day' ); ?>
+                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'bbc-how-ai-actually-works.wxr.xml', 'aiad-core' ); ?></a>
+                    <?php esc_html_e( 'is included in the theme for importing the BBC Ideas tutor-time resource without using auto-seed. Same format as a full export.', 'aiad-core' ); ?>
                 </p>
             </div>
         <?php endif; ?>
-        <p><?php esc_html_e( 'Export all Resource posts to a WordPress WXR (.xml) file. This file can be imported on another WordPress site using the Import demo resources tool.', 'ai-awareness-day' ); ?></p>
+        <p><?php esc_html_e( 'Export all Resource posts to a WordPress WXR (.xml) file. This file can be imported on another WordPress site using the Import demo resources tool.', 'aiad-core' ); ?></p>
         
         <?php if ( $total_resources > 0 ) : ?>
             <div class="notice notice-info">
                 <p>
                     <?php
                     /* translators: %d: number of resources */
-                    printf( esc_html__( 'Found %d resource(s) to export.', 'ai-awareness-day' ), $total_resources );
+                    printf( esc_html__( 'Found %d resource(s) to export.', 'aiad-core' ), $total_resources );
                     ?>
                 </p>
             </div>
             <p>
                 <a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=aiad-export-resources&aiad_export_resources=1' ), 'aiad_export_resources', 'aiad_export_nonce' ) ); ?>" class="button button-primary">
-                    <?php esc_html_e( 'Download WXR Export File', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'Download WXR Export File', 'aiad-core' ); ?>
                 </a>
             </p>
             <p class="description">
-                <?php esc_html_e( 'The exported WXR file will include all Resource posts with their metadata, taxonomy terms, and custom fields. You can import this file on another WordPress site using the Import demo resources tool.', 'ai-awareness-day' ); ?>
+                <?php esc_html_e( 'The exported WXR file will include all Resource posts with their metadata, taxonomy terms, and custom fields. You can import this file on another WordPress site using the Import demo resources tool.', 'aiad-core' ); ?>
             </p>
             <hr />
-            <h2><?php esc_html_e( 'Export Resources from partners', 'ai-awareness-day' ); ?></h2>
+            <h2><?php esc_html_e( 'Export Resources from partners', 'aiad-core' ); ?></h2>
             <?php
             $partner_count = wp_count_posts( 'featured_resource' );
             $total_partner  = (int) $partner_count->publish + (int) $partner_count->draft + (int) $partner_count->pending;
@@ -160,27 +160,27 @@ function aiad_render_resource_export_page(): void {
                 <p>
                     <?php
                     /* translators: %d: number of partner resources */
-                    printf( esc_html__( 'Found %d resource(s) from partners to export.', 'ai-awareness-day' ), $total_partner );
+                    printf( esc_html__( 'Found %d resource(s) from partners to export.', 'aiad-core' ), $total_partner );
                     ?>
                 </p>
                 <p>
                     <a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=aiad-export-resources&aiad_export_partner_resources=1' ), 'aiad_export_partner_resources', 'aiad_export_partner_nonce' ) ); ?>" class="button button-primary">
-                        <?php esc_html_e( 'Download WXR: Resources from partners', 'ai-awareness-day' ); ?>
+                        <?php esc_html_e( 'Download WXR: Resources from partners', 'aiad-core' ); ?>
                     </a>
                 </p>
                 <p class="description">
-                    <?php esc_html_e( 'Use this WXR file to import or move Resources from partners (featured resources) to another site. Import via Resources → Import demo resources.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'Use this WXR file to import or move Resources from partners (featured resources) to another site. Import via Resources → Import demo resources.', 'aiad-core' ); ?>
                 </p>
             <?php else : ?>
-                <p><?php esc_html_e( 'No resources from partners to export. Add entries under Partners → Resources from partners.', 'ai-awareness-day' ); ?></p>
+                <p><?php esc_html_e( 'No resources from partners to export. Add entries under Partners → Resources from partners.', 'aiad-core' ); ?></p>
             <?php endif; ?>
         <?php else : ?>
             <div class="notice notice-warning">
                 <p>
-                    <?php esc_html_e( 'No resources found to export.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'No resources found to export.', 'aiad-core' ); ?>
                 </p>
                 <p>
-                    <?php esc_html_e( 'To generate demo content for export, you can temporarily enable the seed functions in functions.php (uncomment the add_action hooks), then refresh this page after the resources are created.', 'ai-awareness-day' ); ?>
+                    <?php esc_html_e( 'To generate demo content for export, you can temporarily enable the seed functions in functions.php (uncomment the add_action hooks), then refresh this page after the resources are created.', 'aiad-core' ); ?>
                 </p>
             </div>
         <?php endif; ?>
@@ -194,7 +194,7 @@ function aiad_render_resource_export_page(): void {
  */
 function aiad_export_featured_resources_to_wxr(): void {
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( esc_html__( 'You do not have permission to export resources.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'You do not have permission to export resources.', 'aiad-core' ) );
     }
     aiad_export_clean_buffer();
 
@@ -207,7 +207,7 @@ function aiad_export_featured_resources_to_wxr(): void {
     ) );
 
     if ( empty( $resources ) ) {
-        wp_die( esc_html__( 'No resources from partners found to export.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'No resources from partners found to export.', 'aiad-core' ) );
     }
 
     $filename = 'ai-awareness-day-partner-resources-' . wp_date( 'Y-m-d-His' ) . '.xml';
@@ -257,7 +257,7 @@ function aiad_export_featured_resources_to_wxr(): void {
  */
 function aiad_export_resources_to_wxr(): void {
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( esc_html__( 'You do not have permission to export resources.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'You do not have permission to export resources.', 'aiad-core' ) );
     }
     aiad_export_clean_buffer();
 
@@ -271,7 +271,7 @@ function aiad_export_resources_to_wxr(): void {
     ) );
 
     if ( empty( $resources ) ) {
-        wp_die( esc_html__( 'No resources found to export.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'No resources found to export.', 'aiad-core' ) );
     }
 
     // Generate filename with timestamp
@@ -467,7 +467,7 @@ function aiad_wxr_cdata( $str ): string {
  */
 function aiad_render_resource_import_page(): void {
     if ( ! current_user_can( 'manage_options' ) ) {
-        wp_die( esc_html__( 'You do not have permission to access this page.', 'ai-awareness-day' ) );
+        wp_die( esc_html__( 'You do not have permission to access this page.', 'aiad-core' ) );
     }
 
     $message = '';
@@ -477,60 +477,60 @@ function aiad_render_resource_import_page(): void {
         if ( ! empty( $_FILES['aiad_wxr_file']['tmp_name'] ) ) {
             $file = $_FILES['aiad_wxr_file'];
             if ( ! empty( $file['error'] ) ) {
-                $message = esc_html__( 'Upload error. Please try again.', 'ai-awareness-day' );
+                $message = esc_html__( 'Upload error. Please try again.', 'aiad-core' );
                 $type    = 'error';
             } else {
                 $result = aiad_import_resources_from_wxr( $file['tmp_name'], $file['name'] );
                 if ( is_wp_error( $result ) ) {
                     /* translators: %s: error message */
-                    $message = sprintf( esc_html__( 'Import failed: %s', 'ai-awareness-day' ), $result->get_error_message() );
+                    $message = sprintf( esc_html__( 'Import failed: %s', 'aiad-core' ), $result->get_error_message() );
                     $type    = 'error';
                 } else {
                     $res_count   = isset( $result['resource'] ) ? (int) $result['resource'] : 0;
                     $partner_count = isset( $result['featured_resource'] ) ? (int) $result['featured_resource'] : 0;
                     $parts = array();
                     if ( $res_count > 0 ) {
-                        $parts[] = sprintf( /* translators: %d: number */ _n( '%d resource', '%d resources', $res_count, 'ai-awareness-day' ), $res_count );
+                        $parts[] = sprintf( /* translators: %d: number */ _n( '%d resource', '%d resources', $res_count, 'aiad-core' ), $res_count );
                     }
                     if ( $partner_count > 0 ) {
-                        $parts[] = sprintf( /* translators: %d: number */ _n( '%d resource from partner', '%d resources from partners', $partner_count, 'ai-awareness-day' ), $partner_count );
+                        $parts[] = sprintf( /* translators: %d: number */ _n( '%d resource from partner', '%d resources from partners', $partner_count, 'aiad-core' ), $partner_count );
                     }
-                    $message = $parts ? sprintf( esc_html__( 'Import completed. %s processed.', 'ai-awareness-day' ), implode( ', ', $parts ) ) : esc_html__( 'Import completed. No matching content in file.', 'ai-awareness-day' );
+                    $message = $parts ? sprintf( esc_html__( 'Import completed. %s processed.', 'aiad-core' ), implode( ', ', $parts ) ) : esc_html__( 'Import completed. No matching content in file.', 'aiad-core' );
                     if ( $res_count > 0 ) {
-                        $message .= ' <a href="' . esc_url( admin_url( 'edit.php?post_type=resource' ) ) . '">' . esc_html__( 'View resources', 'ai-awareness-day' ) . '</a>';
+                        $message .= ' <a href="' . esc_url( admin_url( 'edit.php?post_type=resource' ) ) . '">' . esc_html__( 'View resources', 'aiad-core' ) . '</a>';
                     }
                     if ( $partner_count > 0 ) {
                         if ( $res_count > 0 ) {
                             $message .= ' | ';
                         }
-                        $message .= ' <a href="' . esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ) . '">' . esc_html__( 'View resources from partners', 'ai-awareness-day' ) . '</a>';
+                        $message .= ' <a href="' . esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ) . '">' . esc_html__( 'View resources from partners', 'aiad-core' ) . '</a>';
                     }
                     $type = 'updated';
                 }
             }
         } else {
-            $message = esc_html__( 'Please choose a WXR (.xml) file to upload.', 'ai-awareness-day' );
+            $message = esc_html__( 'Please choose a WXR (.xml) file to upload.', 'aiad-core' );
             $type    = 'error';
         }
     }
 
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Import demo resources', 'ai-awareness-day' ); ?></h1>
+        <h1><?php esc_html_e( 'Import demo resources', 'aiad-core' ); ?></h1>
         <?php
         $bundled_wxr = aiad_bundled_bbc_how_ai_wxr_url();
         if ( $bundled_wxr !== '' ) :
             ?>
             <div class="notice notice-info">
                 <p>
-                    <strong><?php esc_html_e( 'Live / staging bundle', 'ai-awareness-day' ); ?></strong>
+                    <strong><?php esc_html_e( 'Live / staging bundle', 'aiad-core' ); ?></strong>
                     —
-                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'Download bbc-how-ai-actually-works.wxr.xml', 'ai-awareness-day' ); ?></a>
-                    <?php esc_html_e( '(BBC Ideas — How AI actually works, tutor time). Upload it below to add or update that resource by slug on any site running this theme.', 'ai-awareness-day' ); ?>
+                    <a href="<?php echo esc_url( $bundled_wxr ); ?>"><?php esc_html_e( 'Download bbc-how-ai-actually-works.wxr.xml', 'aiad-core' ); ?></a>
+                    <?php esc_html_e( '(BBC Ideas — How AI actually works, tutor time). Upload it below to add or update that resource by slug on any site running this theme.', 'aiad-core' ); ?>
                 </p>
             </div>
         <?php endif; ?>
-        <p><?php esc_html_e( 'Upload a WordPress WXR (.xml) file to import Resources and/or Resources from partners. Matching posts are created or updated by slug. You can use the Export tools (below) to generate WXR files from this site.', 'ai-awareness-day' ); ?></p>
+        <p><?php esc_html_e( 'Upload a WordPress WXR (.xml) file to import Resources and/or Resources from partners. Matching posts are created or updated by slug. You can use the Export tools (below) to generate WXR files from this site.', 'aiad-core' ); ?></p>
         <?php if ( $message ) : ?>
             <div class="<?php echo $type === 'error' ? 'notice notice-error' : 'notice notice-success'; ?> is-dismissible">
                 <p><?php echo esc_html( $message ); ?></p>
@@ -541,17 +541,17 @@ function aiad_render_resource_import_page(): void {
             <table class="form-table" role="presentation">
                 <tr>
                     <th scope="row">
-                        <label for="aiad_wxr_file"><?php esc_html_e( 'WXR file', 'ai-awareness-day' ); ?></label>
+                        <label for="aiad_wxr_file"><?php esc_html_e( 'WXR file', 'aiad-core' ); ?></label>
                     </th>
                     <td>
                         <input type="file" id="aiad_wxr_file" name="aiad_wxr_file" accept=".xml" class="regular-text" />
                         <p class="description">
-                            <?php esc_html_e( 'Accepts WXR files containing Resources and/or Resources from partners (e.g. from this site’s Export demo resources or Export partner resources).', 'ai-awareness-day' ); ?>
+                            <?php esc_html_e( 'Accepts WXR files containing Resources and/or Resources from partners (e.g. from this site’s Export demo resources or Export partner resources).', 'aiad-core' ); ?>
                         </p>
                     </td>
                 </tr>
             </table>
-            <?php submit_button( __( 'Import demo resources', 'ai-awareness-day' ), 'primary', 'aiad_resource_import_submit' ); ?>
+            <?php submit_button( __( 'Import demo resources', 'aiad-core' ), 'primary', 'aiad_resource_import_submit' ); ?>
         </form>
     </div>
     <?php
@@ -567,7 +567,7 @@ function aiad_render_resource_import_page(): void {
  */
 function aiad_import_resources_from_wxr( string $file_path, string $original_name = '' ) {
     if ( ! file_exists( $file_path ) ) {
-        return new WP_Error( 'aiad_import_missing_file', __( 'Import file not found.', 'ai-awareness-day' ) );
+        return new WP_Error( 'aiad_import_missing_file', __( 'Import file not found.', 'aiad-core' ) );
     }
 
     // Try WordPress Importer plugin first if available
@@ -633,7 +633,7 @@ function aiad_wxr_import_post_types(): array {
  */
 function aiad_import_resources_from_wxr_simple( string $file_path ) {
     if ( ! file_exists( $file_path ) ) {
-        return new WP_Error( 'aiad_import_missing_file', __( 'Import file not found.', 'ai-awareness-day' ) );
+        return new WP_Error( 'aiad_import_missing_file', __( 'Import file not found.', 'aiad-core' ) );
     }
 
     // Load XML file
@@ -643,7 +643,7 @@ function aiad_import_resources_from_wxr_simple( string $file_path ) {
     if ( $xml === false ) {
         $errors = libxml_get_errors();
         libxml_clear_errors();
-        return new WP_Error( 'aiad_import_xml_error', __( 'Invalid XML file.', 'ai-awareness-day' ) );
+        return new WP_Error( 'aiad_import_xml_error', __( 'Invalid XML file.', 'aiad-core' ) );
     }
 
     // Register namespaces

@@ -38,7 +38,7 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 		$value = is_string( $value ) ? trim( $multiline ? sanitize_textarea_field( $value ) : sanitize_text_field( $value ) ) : '';
 		return mb_substr( $value, 0, $max );
 	};
-	$thanks = new WP_REST_Response( array( 'message' => __( 'Thank you for your suggestion.', 'ai-awareness-day' ) ) );
+	$thanks = new WP_REST_Response( array( 'message' => __( 'Thank you for your suggestion.', 'aiad-core' ) ) );
 
 	if ( '' !== $field( 'aiad_website', 200 ) ) {
 		// A bot filled the hidden field: say thanks and keep nothing.
@@ -56,14 +56,14 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 	$limit_key = 'aiad_alpt_term_' . md5( $ip );
 	$count     = (int) get_transient( $limit_key );
 	if ( $count >= 10 ) {
-		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'ai-awareness-day' ), 429 );
+		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'aiad-core' ), 429 );
 	}
 	// Site-wide, emails stop after 40 an hour so the team's inbox can't be flooded, but suggestions are still saved
 	// (up to 300 an hour), so one person sending junk can't close the form for everyone else.
 	$all_key   = 'aiad_alpt_term_all';
 	$all_count = (int) get_transient( $all_key );
 	if ( $all_count >= 300 ) {
-		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'ai-awareness-day' ), 429 );
+		return $error( __( 'Thank you for your ideas! You can suggest more in an hour.', 'aiad-core' ), 429 );
 	}
 
 	$term       = $field( 'term', 60 );
@@ -76,25 +76,25 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 	$credit     = $field( 'credit', 80 );
 
 	if ( mb_strlen( $term ) < 2 ) {
-		return $error( __( 'Please enter the term you would like to add.', 'ai-awareness-day' ) );
+		return $error( __( 'Please enter the term you would like to add.', 'aiad-core' ) );
 	}
 	if ( mb_strlen( $definition ) < 10 ) {
-		return $error( __( 'Please explain what the term means, in a sentence or two.', 'ai-awareness-day' ) );
+		return $error( __( 'Please explain what the term means, in a sentence or two.', 'aiad-core' ) );
 	}
 	foreach ( aiad_literacy_elements() as $el ) {
 		if ( 0 === strcasecmp( $el['name'], $term ) ) {
 			/* translators: 1: element name, 2: its symbol */
-			return $error( sprintf( __( '%1$s is already on the table (%2$s). Is there another term we are missing?', 'ai-awareness-day' ), $el['name'], $el['sym'] ) );
+			return $error( sprintf( __( '%1$s is already on the table (%2$s). Is there another term we are missing?', 'aiad-core' ), $el['name'], $el['sym'] ) );
 		}
 	}
 
 	$families = aiad_literacy_families();
 	$family   = isset( $families[ $family ] ) ? $family : '';
 	$roles    = array(
-		'student' => __( 'Student', 'ai-awareness-day' ),
-		'teacher' => __( 'Teacher', 'ai-awareness-day' ),
-		'parent'  => __( 'Parent or carer', 'ai-awareness-day' ),
-		'other'   => __( 'Other', 'ai-awareness-day' ),
+		'student' => __( 'Student', 'aiad-core' ),
+		'teacher' => __( 'Teacher', 'aiad-core' ),
+		'parent'  => __( 'Parent or carer', 'aiad-core' ),
+		'other'   => __( 'Other', 'aiad-core' ),
 	);
 	$role = isset( $roles[ $role ] ) ? $role : '';
 
@@ -120,7 +120,7 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 		$saved = wp_insert_post(
 			array(
 				/* translators: %s: the suggested term */
-				'post_title'   => sprintf( __( 'Periodic table suggestion: %s', 'ai-awareness-day' ), $term ),
+				'post_title'   => sprintf( __( 'Periodic table suggestion: %s', 'aiad-core' ), $term ),
 				'post_content' => $body,
 				'post_status'  => 'private',
 				'post_type'    => 'form_submission',
@@ -138,19 +138,19 @@ function aiad_rest_literacy_term( WP_REST_Request $request ) {
 		return new WP_REST_Response(
 			array(
 				/* translators: %s: the suggested term */
-				'message' => sprintf( __( 'Thank you! We have received your suggestion, %s. The team reviews suggestions and adds the best ones to the table.', 'ai-awareness-day' ), $term ),
+				'message' => sprintf( __( 'Thank you! We have received your suggestion, %s. The team reviews suggestions and adds the best ones to the table.', 'aiad-core' ), $term ),
 			)
 		);
 	}
 
 	$to = function_exists( 'aiad_campaign_setting' ) && aiad_campaign_setting( 'contact_email' ) ? aiad_campaign_setting( 'contact_email' ) : get_option( 'admin_email' );
 	/* translators: %s: the suggested term */
-	wp_mail( $to, sprintf( __( '[AI Awareness Day] Periodic table suggestion: %s', 'ai-awareness-day' ), $term ), $body );
+	wp_mail( $to, sprintf( __( '[AI Awareness Day] Periodic table suggestion: %s', 'aiad-core' ), $term ), $body );
 
 	return new WP_REST_Response(
 		array(
 			/* translators: %s: the suggested term */
-			'message' => sprintf( __( 'Thank you! We have received your suggestion, %s. The team reviews suggestions and adds the best ones to the table.', 'ai-awareness-day' ), $term ),
+			'message' => sprintf( __( 'Thank you! We have received your suggestion, %s. The team reviews suggestions and adds the best ones to the table.', 'aiad-core' ), $term ),
 		)
 	);
 }

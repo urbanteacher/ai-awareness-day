@@ -35,45 +35,45 @@ $aiad_more = static function () use ( $aiad_nominate_url, $aiad_sign_in_url ): v
 	}
 	echo '<p class="ncp-more">';
 	if ( $aiad_nominate_url ) {
-		echo '<a href="' . esc_url( $aiad_nominate_url ) . '">' . esc_html__( 'Nominate a school you work with', 'ai-awareness-day' ) . '</a>';
+		echo '<a href="' . esc_url( $aiad_nominate_url ) . '">' . esc_html__( 'Nominate a school you work with', 'aiad-core' ) . '</a>';
 	}
 	if ( $aiad_sign_in_url ) {
-		echo '<a href="' . esc_url( $aiad_sign_in_url ) . '">' . esc_html__( 'Already registered? Sign in', 'ai-awareness-day' ) . '</a>';
+		echo '<a href="' . esc_url( $aiad_sign_in_url ) . '">' . esc_html__( 'Already registered? Sign in', 'aiad-core' ) . '</a>';
 	}
 	echo '</p>';
 };
 
 if ( 'nominate' === $aiad_variant ) {
 	if ( $aiad_nominate_url ) {
-		echo '<p><a class="ncp-link" href="' . esc_url( $aiad_nominate_url ) . '">' . esc_html__( 'Work with a school? Nominate it', 'ai-awareness-day' ) . '</a></p>';
+		echo '<p><a class="ncp-link" href="' . esc_url( $aiad_nominate_url ) . '">' . esc_html__( 'Work with a school? Nominate it', 'aiad-core' ) . '</a></p>';
 	}
 	return;
 }
 
 if ( 'cta' === $aiad_variant ) {
 	if ( $aiad_register_url ) {
-		echo '<p>' . esc_html__( 'It takes a few minutes, and your headteacher approves with one click.', 'ai-awareness-day' ) . '</p>';
-		echo '<p class="ncp-actions"><a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_register_url ) . '">' . esc_html__( 'Register your school', 'ai-awareness-day' ) . '</a></p>';
+		echo '<p>' . esc_html__( 'It takes a few minutes, and your headteacher approves with one click.', 'aiad-core' ) . '</p>';
+		echo '<p class="ncp-actions"><a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_register_url ) . '">' . esc_html__( 'Register your school', 'aiad-core' ) . '</a></p>';
 		$aiad_more();
 		return;
 	}
 	/* translators: %s: opening date */
-	echo '<p>' . sprintf( esc_html__( 'Schools can register from %s. Until then, see how ready your school is for AI.', 'ai-awareness-day' ), esc_html( $aiad_opens_long ) ) . '</p>';
+	echo '<p>' . sprintf( esc_html__( 'Schools can register from %s. Until then, see how ready your school is for AI.', 'aiad-core' ), esc_html( $aiad_opens_long ) ) . '</p>';
 	if ( $aiad_readiness ) {
-		echo '<p class="ncp-actions"><a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_readiness ) . '">' . esc_html__( 'Check your AI readiness', 'ai-awareness-day' ) . '</a></p>';
+		echo '<p class="ncp-actions"><a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_readiness ) . '">' . esc_html__( 'Check your AI readiness', 'aiad-core' ) . '</a></p>';
 	}
 	return;
 }
 
 echo '<p class="ncp-actions">';
 if ( $aiad_register_url ) {
-	echo '<a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_register_url ) . '">' . esc_html__( 'Register your school', 'ai-awareness-day' ) . '</a>';
+	echo '<a class="ncp-btn ncp-btn--primary" href="' . esc_url( $aiad_register_url ) . '">' . esc_html__( 'Register your school', 'aiad-core' ) . '</a>';
 } else {
 	/* translators: %s: opening date */
-	echo '<span class="ncp-btn ncp-btn--soon">' . sprintf( esc_html__( 'Schools can register from %s', 'ai-awareness-day' ), esc_html( $aiad_opens_long ) ) . '</span>';
+	echo '<span class="ncp-btn ncp-btn--soon">' . sprintf( esc_html__( 'Schools can register from %s', 'aiad-core' ), esc_html( $aiad_opens_long ) ) . '</span>';
 }
 if ( $aiad_readiness ) {
-	echo '<a class="ncp-btn ncp-btn--ghost" href="' . esc_url( $aiad_readiness ) . '">' . esc_html__( 'Check your AI readiness', 'ai-awareness-day' ) . '</a>';
+	echo '<a class="ncp-btn ncp-btn--ghost" href="' . esc_url( $aiad_readiness ) . '">' . esc_html__( 'Check your AI readiness', 'aiad-core' ) . '</a>';
 }
 echo '</p>';
 $aiad_more();

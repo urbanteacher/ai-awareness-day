@@ -23,36 +23,36 @@ import '@wordpress/i18n';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Text', 'ai-awareness-day' ) },
+						{ title: __( 'Text', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'HTML element', 'ai-awareness-day' ),
+							label: __( 'HTML element', 'aiad-core' ),
 							value: a.tagName,
 							options: [
 								{
 									label: __(
 										'Term (dt)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'dt',
 								},
 								{
 									label: __(
 										'Description (dd)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'dd',
 								},
 								{
 									label: __(
 										'List item (li)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'li',
 								},
 								{
 									label: __(
 										'Tag (span)',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'span',
 								},
@@ -69,7 +69,7 @@ import '@wordpress/i18n';
 					Object.assign( blockEditor.useBlockProps(), {
 						tagName: a.tagName,
 						value: a.content,
-						placeholder: __( 'Text', 'ai-awareness-day' ),
+						placeholder: __( 'Text', 'aiad-core' ),
 						onChange( value ) {
 							props.setAttributes( { content: value } );
 						},

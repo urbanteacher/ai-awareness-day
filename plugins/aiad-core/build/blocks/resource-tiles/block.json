@@ -11,7 +11,7 @@
     "tiles",
     "homepage"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "source": {
       "type": "string",

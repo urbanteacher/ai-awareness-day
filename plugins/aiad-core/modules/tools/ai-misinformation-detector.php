@@ -81,7 +81,7 @@ function aiad_enqueue_misinformation_detector_assets(): void {
  * Timeline headline for the misinformation detector article.
  */
 function aiad_misinformation_detector_get_headline(): string {
-	return __( 'How good are you at detecting misinformation? The teacher challenge', 'ai-awareness-day' );
+	return __( 'How good are you at detecting misinformation? The teacher challenge', 'aiad-core' );
 }
 
 /**
@@ -143,21 +143,21 @@ function aiad_misinformation_detector_render( $atts = array() ): string {
 	<div id="aiad-misinfo" class="aiad-misinformation-detector" aria-label="<?php echo esc_attr( aiad_misinformation_detector_get_headline() ); ?>">
 		<?php if ( ! $hide_intro ) : ?>
 		<div id="aiad-mi-intro" class="mi-card">
-			<p class="mi-kicker"><?php esc_html_e( 'AI Awareness Day · Media literacy', 'ai-awareness-day' ); ?></p>
+			<p class="mi-kicker"><?php esc_html_e( 'AI Awareness Day · Media literacy', 'aiad-core' ); ?></p>
 			<h2 class="mi-title"><?php echo esc_html( aiad_misinformation_detector_get_headline() ); ?></h2>
-			<p class="mi-lead"><?php esc_html_e( 'Six real claims — genuine BBC headlines, AI-generated text, and viral posts. Check your sources, give your verdict, then see the truth revealed.', 'ai-awareness-day' ); ?></p>
-			<p class="mi-lead"><?php esc_html_e( '10 points for a correct verdict, plus 5 bonus points when you name two or more sources before answering.', 'ai-awareness-day' ); ?></p>
-			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'ai-awareness-day' ); ?></button>
+			<p class="mi-lead"><?php esc_html_e( 'Six real claims — genuine BBC headlines, AI-generated text, and viral posts. Check your sources, give your verdict, then see the truth revealed.', 'aiad-core' ); ?></p>
+			<p class="mi-lead"><?php esc_html_e( '10 points for a correct verdict, plus 5 bonus points when you name two or more sources before answering.', 'aiad-core' ); ?></p>
+			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'aiad-core' ); ?></button>
 		</div>
 		<?php else : ?>
 		<div id="aiad-mi-intro" class="mi-card" hidden>
-			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-start"><?php esc_html_e( 'Start activity', 'aiad-core' ); ?></button>
 		</div>
 		<?php endif; ?>
 
 		<div id="aiad-mi-quiz" class="mi-quiz" hidden>
 			<div class="mi-progress-wrap">
-				<p class="mi-progress-lbl" id="aiad-mi-progress-lbl"><?php esc_html_e( 'Item 1 of 6', 'ai-awareness-day' ); ?></p>
+				<p class="mi-progress-lbl" id="aiad-mi-progress-lbl"><?php esc_html_e( 'Item 1 of 6', 'aiad-core' ); ?></p>
 				<div class="mi-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
 					<div class="mi-progress-bar" id="aiad-mi-progress-bar"></div>
 				</div>
@@ -169,85 +169,85 @@ function aiad_misinformation_detector_render( $atts = array() ): string {
 				<p class="mi-source-lbl" id="aiad-mi-source"></p>
 				<p class="mi-context" id="aiad-mi-context" hidden></p>
 
-				<p class="mi-sources-title"><?php esc_html_e( 'Sources I would check', 'ai-awareness-day' ); ?></p>
-				<p class="mi-sources-hint" id="aiad-mi-sources-hint"><?php esc_html_e( 'Name at least one before choosing a verdict (two or more earns bonus points).', 'ai-awareness-day' ); ?></p>
-				<label class="screen-reader-text" for="aiad-mi-src-1"><?php esc_html_e( 'Source 1', 'ai-awareness-day' ); ?></label>
-				<input type="text" class="mi-src-input" id="aiad-mi-src-1" placeholder="<?php esc_attr_e( 'e.g. GOV.UK, BBC News, Full Fact…', 'ai-awareness-day' ); ?>" autocomplete="off">
-				<label class="screen-reader-text" for="aiad-mi-src-2"><?php esc_html_e( 'Source 2', 'ai-awareness-day' ); ?></label>
-				<input type="text" class="mi-src-input" id="aiad-mi-src-2" placeholder="<?php esc_attr_e( 'Second source (optional)', 'ai-awareness-day' ); ?>" autocomplete="off">
-				<label class="screen-reader-text" for="aiad-mi-src-3"><?php esc_html_e( 'Source 3', 'ai-awareness-day' ); ?></label>
-				<input type="text" class="mi-src-input" id="aiad-mi-src-3" placeholder="<?php esc_attr_e( 'Third source (optional)', 'ai-awareness-day' ); ?>" autocomplete="off">
+				<p class="mi-sources-title"><?php esc_html_e( 'Sources I would check', 'aiad-core' ); ?></p>
+				<p class="mi-sources-hint" id="aiad-mi-sources-hint"><?php esc_html_e( 'Name at least one before choosing a verdict (two or more earns bonus points).', 'aiad-core' ); ?></p>
+				<label class="screen-reader-text" for="aiad-mi-src-1"><?php esc_html_e( 'Source 1', 'aiad-core' ); ?></label>
+				<input type="text" class="mi-src-input" id="aiad-mi-src-1" placeholder="<?php esc_attr_e( 'e.g. GOV.UK, BBC News, Full Fact…', 'aiad-core' ); ?>" autocomplete="off">
+				<label class="screen-reader-text" for="aiad-mi-src-2"><?php esc_html_e( 'Source 2', 'aiad-core' ); ?></label>
+				<input type="text" class="mi-src-input" id="aiad-mi-src-2" placeholder="<?php esc_attr_e( 'Second source (optional)', 'aiad-core' ); ?>" autocomplete="off">
+				<label class="screen-reader-text" for="aiad-mi-src-3"><?php esc_html_e( 'Source 3', 'aiad-core' ); ?></label>
+				<input type="text" class="mi-src-input" id="aiad-mi-src-3" placeholder="<?php esc_attr_e( 'Third source (optional)', 'aiad-core' ); ?>" autocomplete="off">
 
-				<p class="mi-verdict-title"><?php esc_html_e( 'Your verdict', 'ai-awareness-day' ); ?></p>
-				<div class="mi-verdicts" id="aiad-mi-verdicts" role="group" aria-label="<?php esc_attr_e( 'Choose a verdict', 'ai-awareness-day' ); ?>">
-					<button type="button" class="mi-verdict-btn" data-verdict="true"><?php esc_html_e( 'Likely true', 'ai-awareness-day' ); ?></button>
-					<button type="button" class="mi-verdict-btn" data-verdict="false"><?php esc_html_e( 'Likely false', 'ai-awareness-day' ); ?></button>
-					<button type="button" class="mi-verdict-btn" data-verdict="mixed"><?php esc_html_e( 'Needs context', 'ai-awareness-day' ); ?></button>
+				<p class="mi-verdict-title"><?php esc_html_e( 'Your verdict', 'aiad-core' ); ?></p>
+				<div class="mi-verdicts" id="aiad-mi-verdicts" role="group" aria-label="<?php esc_attr_e( 'Choose a verdict', 'aiad-core' ); ?>">
+					<button type="button" class="mi-verdict-btn" data-verdict="true"><?php esc_html_e( 'Likely true', 'aiad-core' ); ?></button>
+					<button type="button" class="mi-verdict-btn" data-verdict="false"><?php esc_html_e( 'Likely false', 'aiad-core' ); ?></button>
+					<button type="button" class="mi-verdict-btn" data-verdict="mixed"><?php esc_html_e( 'Needs context', 'aiad-core' ); ?></button>
 				</div>
 
 				<div class="mi-reveal" id="aiad-mi-reveal" hidden>
 					<p class="mi-reveal-title" id="aiad-mi-reveal-title"></p>
 					<p class="mi-reveal-fb" id="aiad-mi-reveal-fb"></p>
 					<p class="mi-reveal-expl" id="aiad-mi-reveal-expl"></p>
-					<p class="mi-reveal-sub"><?php esc_html_e( 'Where to verify', 'ai-awareness-day' ); ?></p>
+					<p class="mi-reveal-sub"><?php esc_html_e( 'Where to verify', 'aiad-core' ); ?></p>
 					<ul class="mi-reveal-sources" id="aiad-mi-reveal-sources"></ul>
-					<p class="mi-reveal-sub"><?php esc_html_e( 'Discernment lesson', 'ai-awareness-day' ); ?></p>
+					<p class="mi-reveal-sub"><?php esc_html_e( 'Discernment lesson', 'aiad-core' ); ?></p>
 					<p class="mi-reveal-lesson" id="aiad-mi-reveal-lesson"></p>
 				</div>
 
 				<div class="mi-nav">
-					<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-next" hidden><?php esc_html_e( 'Next item →', 'ai-awareness-day' ); ?></button>
+					<button type="button" class="mi-btn mi-btn--primary" id="aiad-mi-next" hidden><?php esc_html_e( 'Next item →', 'aiad-core' ); ?></button>
 				</div>
 			</div>
 		</div>
 
 		<div id="aiad-mi-results" hidden>
 			<div class="mi-card">
-				<p class="mi-kicker"><?php esc_html_e( 'Your results', 'ai-awareness-day' ); ?></p>
-				<h2 class="mi-title"><?php esc_html_e( 'How did you do?', 'ai-awareness-day' ); ?></h2>
+				<p class="mi-kicker"><?php esc_html_e( 'Your results', 'aiad-core' ); ?></p>
+				<h2 class="mi-title"><?php esc_html_e( 'How did you do?', 'aiad-core' ); ?></h2>
 				<span class="mi-conf-badge mi-conf--low" id="aiad-mi-conf-badge"></span>
 
 				<div class="mi-stat-grid">
 					<div class="mi-stat">
 						<span class="mi-stat-val" id="aiad-mi-stat-points">0</span>
-						<span class="mi-stat-lbl"><?php esc_html_e( 'Total points', 'ai-awareness-day' ); ?></span>
+						<span class="mi-stat-lbl"><?php esc_html_e( 'Total points', 'aiad-core' ); ?></span>
 					</div>
 					<div class="mi-stat">
 						<span class="mi-stat-val" id="aiad-mi-stat-correct">0 / 6</span>
-						<span class="mi-stat-lbl"><?php esc_html_e( 'Correct verdicts', 'ai-awareness-day' ); ?></span>
+						<span class="mi-stat-lbl"><?php esc_html_e( 'Correct verdicts', 'aiad-core' ); ?></span>
 					</div>
 					<div class="mi-stat">
 						<span class="mi-stat-val" id="aiad-mi-stat-sources">0</span>
-						<span class="mi-stat-lbl"><?php esc_html_e( 'Items with 2+ sources logged', 'ai-awareness-day' ); ?></span>
+						<span class="mi-stat-lbl"><?php esc_html_e( 'Items with 2+ sources logged', 'aiad-core' ); ?></span>
 					</div>
 				</div>
 
-				<h3 class="mi-verdict-title"><?php esc_html_e( 'Five habits of discernment', 'ai-awareness-day' ); ?></h3>
+				<h3 class="mi-verdict-title"><?php esc_html_e( 'Five habits of discernment', 'aiad-core' ); ?></h3>
 				<ol class="mi-habits" id="aiad-mi-habits">
-					<li><?php esc_html_e( 'Pause on urgency — “share before deleted” is a red flag.', 'ai-awareness-day' ); ?></li>
-					<li><?php esc_html_e( 'Name the source type: newsroom, AI output, or anonymous viral post.', 'ai-awareness-day' ); ?></li>
-					<li><?php esc_html_e( 'Log where you would check before you judge.', 'ai-awareness-day' ); ?></li>
-					<li><?php esc_html_e( 'Separate the number or headline from the story someone wants you to believe.', 'ai-awareness-day' ); ?></li>
-					<li><?php esc_html_e( 'Teach students the same habit: verify, then verdict.', 'ai-awareness-day' ); ?></li>
+					<li><?php esc_html_e( 'Pause on urgency — “share before deleted” is a red flag.', 'aiad-core' ); ?></li>
+					<li><?php esc_html_e( 'Name the source type: newsroom, AI output, or anonymous viral post.', 'aiad-core' ); ?></li>
+					<li><?php esc_html_e( 'Log where you would check before you judge.', 'aiad-core' ); ?></li>
+					<li><?php esc_html_e( 'Separate the number or headline from the story someone wants you to believe.', 'aiad-core' ); ?></li>
+					<li><?php esc_html_e( 'Teach students the same habit: verify, then verdict.', 'aiad-core' ); ?></li>
 				</ol>
 
-				<h3 class="mi-verdict-title"><?php esc_html_e( 'What this exercise revealed', 'ai-awareness-day' ); ?></h3>
+				<h3 class="mi-verdict-title"><?php esc_html_e( 'What this exercise revealed', 'aiad-core' ); ?></h3>
 				<div class="mi-insights">
 					<div class="mi-insight">
-						<p class="mi-insight-title"><?php esc_html_e( 'AI hallucinations', 'ai-awareness-day' ); ?></p>
-						<p class="mi-insight-text"><?php esc_html_e( 'Chatbots invent studies, laws, and statistics. Numbers without citations are not evidence.', 'ai-awareness-day' ); ?></p>
+						<p class="mi-insight-title"><?php esc_html_e( 'AI hallucinations', 'aiad-core' ); ?></p>
+						<p class="mi-insight-text"><?php esc_html_e( 'Chatbots invent studies, laws, and statistics. Numbers without citations are not evidence.', 'aiad-core' ); ?></p>
 					</div>
 					<div class="mi-insight">
-						<p class="mi-insight-title"><?php esc_html_e( 'Real headlines, stretched meaning', 'ai-awareness-day' ); ?></p>
-						<p class="mi-insight-text"><?php esc_html_e( 'BBC and Guardian stories can be real while captions or WhatsApp forwards add false certainty.', 'ai-awareness-day' ); ?></p>
+						<p class="mi-insight-title"><?php esc_html_e( 'Real headlines, stretched meaning', 'aiad-core' ); ?></p>
+						<p class="mi-insight-text"><?php esc_html_e( 'BBC and Guardian stories can be real while captions or WhatsApp forwards add false certainty.', 'aiad-core' ); ?></p>
 					</div>
 					<div class="mi-insight">
-						<p class="mi-insight-title"><?php esc_html_e( 'Viral posts mimic news', 'ai-awareness-day' ); ?></p>
-						<p class="mi-insight-text"><?php esc_html_e( 'WhatsApp chains borrow the tone of journalism without links, bylines, or accountability.', 'ai-awareness-day' ); ?></p>
+						<p class="mi-insight-title"><?php esc_html_e( 'Viral posts mimic news', 'aiad-core' ); ?></p>
+						<p class="mi-insight-text"><?php esc_html_e( 'WhatsApp chains borrow the tone of journalism without links, bylines, or accountability.', 'aiad-core' ); ?></p>
 					</div>
 				</div>
 
-				<button type="button" class="mi-btn" id="aiad-mi-retry"><?php esc_html_e( 'Try again', 'ai-awareness-day' ); ?></button>
+				<button type="button" class="mi-btn" id="aiad-mi-retry"><?php esc_html_e( 'Try again', 'aiad-core' ); ?></button>
 			</div>
 		</div>
 	</div>
@@ -332,7 +332,7 @@ function aiad_create_misinformation_detector_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'Six-claim media literacy challenge for teachers: verify headlines, AI outputs, and viral posts before you share — with scoring, sources, and discernment habits.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'Six-claim media literacy challenge for teachers: verify headlines, AI outputs, and viral posts before you share — with scoring, sources, and discernment habits.', 'aiad-core' ),
 			'post_content' => aiad_get_misinformation_detector_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,

@@ -8,7 +8,7 @@
 	"icon": "star-filled",
 	"description": "One strand of the principles: its icon, title and description. The card links to the activities.",
 	"keywords": [ "strand", "principle", "homepage" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"strand": {
 			"type": "string",

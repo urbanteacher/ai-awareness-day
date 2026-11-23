@@ -26,14 +26,14 @@ define( 'AIAD_CORE_MODULE_AI_TOOLS', __FILE__ );
 function aiad_register_ai_tool_post_type(): void {
 	register_post_type( 'ai_tool', array(
 		'labels' => array(
-			'name'               => __( 'AI Tools', 'ai-awareness-day' ),
-			'singular_name'      => __( 'AI Tool', 'ai-awareness-day' ),
-			'add_new'            => __( 'Add Tool', 'ai-awareness-day' ),
-			'add_new_item'       => __( 'Add New AI Tool', 'ai-awareness-day' ),
-			'edit_item'          => __( 'Edit AI Tool', 'ai-awareness-day' ),
-			'view_item'          => __( 'View AI Tool', 'ai-awareness-day' ),
-			'all_items'          => __( 'All AI Tools', 'ai-awareness-day' ),
-			'search_items'       => __( 'Search AI Tools', 'ai-awareness-day' ),
+			'name'               => __( 'AI Tools', 'aiad-core' ),
+			'singular_name'      => __( 'AI Tool', 'aiad-core' ),
+			'add_new'            => __( 'Add Tool', 'aiad-core' ),
+			'add_new_item'       => __( 'Add New AI Tool', 'aiad-core' ),
+			'edit_item'          => __( 'Edit AI Tool', 'aiad-core' ),
+			'view_item'          => __( 'View AI Tool', 'aiad-core' ),
+			'all_items'          => __( 'All AI Tools', 'aiad-core' ),
+			'search_items'       => __( 'Search AI Tools', 'aiad-core' ),
 		),
 		'public'             => true,
 		'publicly_queryable' => true,
@@ -56,10 +56,10 @@ add_action( 'init', 'aiad_register_ai_tool_post_type', 10 );
 function aiad_register_tool_category_taxonomy(): void {
 	register_taxonomy( 'tool_category', 'ai_tool', array(
 		'labels' => array(
-			'name'          => __( 'Tool Categories', 'ai-awareness-day' ),
-			'singular_name' => __( 'Tool Category', 'ai-awareness-day' ),
-			'add_new_item'  => __( 'Add New Category', 'ai-awareness-day' ),
-			'edit_item'     => __( 'Edit Category', 'ai-awareness-day' ),
+			'name'          => __( 'Tool Categories', 'aiad-core' ),
+			'singular_name' => __( 'Tool Category', 'aiad-core' ),
+			'add_new_item'  => __( 'Add New Category', 'aiad-core' ),
+			'edit_item'     => __( 'Edit Category', 'aiad-core' ),
 		),
 		'hierarchical'      => true,
 		'show_ui'           => true,
@@ -516,7 +516,7 @@ add_action( 'init', 'aiad_register_tool_meta', 15 );
 function aiad_add_tool_meta_box(): void {
 	add_meta_box(
 		'aiad_tool_details',
-		__( 'Tool Details', 'ai-awareness-day' ),
+		__( 'Tool Details', 'aiad-core' ),
 		'aiad_render_tool_meta_box',
 		'ai_tool',
 		'normal',

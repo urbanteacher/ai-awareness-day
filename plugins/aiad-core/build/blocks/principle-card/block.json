@@ -14,7 +14,7 @@
     "principle",
     "homepage"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "strand": {
       "type": "string",

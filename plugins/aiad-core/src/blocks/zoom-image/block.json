@@ -7,7 +7,7 @@
 	"icon": "search",
 	"description": "An image that opens full size in a new tab, with a label over it. Used for the walkthrough's screenshots.",
 	"keywords": [ "image", "screenshot", "zoom" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"url": { "type": "string", "source": "attribute", "selector": "img", "attribute": "src", "role": "content" },
 		"alt": { "type": "string", "source": "attribute", "selector": "img", "attribute": "alt", "default": "", "role": "content" },

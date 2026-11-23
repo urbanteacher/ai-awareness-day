@@ -30,29 +30,29 @@ import '@wordpress/server-side-render';
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Buttons', 'ai-awareness-day' ) },
+						{ title: __( 'Buttons', 'aiad-core' ) },
 						el( components.SelectControl, {
-							label: __( 'Which buttons', 'ai-awareness-day' ),
+							label: __( 'Which buttons', 'aiad-core' ),
 							value: props.attributes.variant,
 							options: [
 								{
 									label: __(
 										'Top of the page',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'hero',
 								},
 								{
 									label: __(
 										'Closing section',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'cta',
 								},
 								{
 									label: __(
 										'Nominate a school link',
-										'ai-awareness-day'
+										'aiad-core'
 									),
 									value: 'nominate',
 								},
@@ -62,7 +62,7 @@ import '@wordpress/server-side-render';
 							},
 							help: __(
 								'They change on the day the conversation opens, so they are not edited here.',
-								'ai-awareness-day'
+								'aiad-core'
 							),
 							__nextHasNoMarginBottom: true,
 						} )
@@ -80,7 +80,7 @@ import '@wordpress/server-side-render';
 								{ className: 'ncp-note' },
 								__(
 									'Nominate a school link: shown here once the conversation opens.',
-									'ai-awareness-day'
+									'aiad-core'
 								)
 							);
 						},

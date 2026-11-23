@@ -86,36 +86,36 @@ function aiad_ict_curriculum_render(): string {
 	ob_start();
 	?>
 	<p class="aiad-ict-curriculum-intro">
-		<?php esc_html_e( 'Whatever subject you teach, algorithms and computational thinking are now part of every pupil\'s education — and increasingly part of how AI shapes your classroom. This is a teaser of how those ideas are introduced across the computing curriculum, designed for teachers from any discipline. No coding experience needed.', 'ai-awareness-day' ); ?>
+		<?php esc_html_e( 'Whatever subject you teach, algorithms and computational thinking are now part of every pupil\'s education — and increasingly part of how AI shapes your classroom. This is a teaser of how those ideas are introduced across the computing curriculum, designed for teachers from any discipline. No coding experience needed.', 'aiad-core' ); ?>
 	</p>
 	<div
 		class="aiad-ict-curriculum-widget"
 		data-aiad-ict-curriculum
-		aria-label="<?php esc_attr_e( 'Interactive KS2, KS3, KS4 and KS5 Computing and ICT assessment playground', 'ai-awareness-day' ); ?>"
+		aria-label="<?php esc_attr_e( 'Interactive KS2, KS3, KS4 and KS5 Computing and ICT assessment playground', 'aiad-core' ); ?>"
 	>
 		<!-- Widget Hub Header -->
 		<div class="ict-widget__header">
-			<div class="ict-widget__badge"><?php esc_html_e( 'AI Awareness Day · Interactive CPD Tool', 'ai-awareness-day' ); ?></div>
+			<div class="ict-widget__badge"><?php esc_html_e( 'AI Awareness Day · Interactive CPD Tool', 'aiad-core' ); ?></div>
 			<p class="ict-widget__lead">
-				<?php esc_html_e( 'Have a go across the different key stages below: see the coding, logic, and data puzzles pupils actually face as they progress, and explore the educational thinking behind each one.', 'ai-awareness-day' ); ?>
+				<?php esc_html_e( 'Have a go across the different key stages below: see the coding, logic, and data puzzles pupils actually face as they progress, and explore the educational thinking behind each one.', 'aiad-core' ); ?>
 			</p>
 			
 			<div class="ict-widget__tabs" role="tablist">
 				<button class="ict-widget__tab-btn is-active" id="tab-ks2" role="tab" aria-selected="true" aria-controls="panel-ks2" type="button">
-					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 2', 'ai-awareness-day' ); ?></span>
-					<span class="tab-label-sub"><?php esc_html_e( 'Block-based logic (Ages 7-11)', 'ai-awareness-day' ); ?></span>
+					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 2', 'aiad-core' ); ?></span>
+					<span class="tab-label-sub"><?php esc_html_e( 'Block-based logic (Ages 7-11)', 'aiad-core' ); ?></span>
 				</button>
 				<button class="ict-widget__tab-btn" id="tab-ks3" role="tab" aria-selected="false" aria-controls="panel-ks3" type="button" tabindex="-1">
-					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 3', 'ai-awareness-day' ); ?></span>
-					<span class="tab-label-sub"><?php esc_html_e( 'Data & Text-based coding (Ages 11-14)', 'ai-awareness-day' ); ?></span>
+					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 3', 'aiad-core' ); ?></span>
+					<span class="tab-label-sub"><?php esc_html_e( 'Data & Text-based coding (Ages 11-14)', 'aiad-core' ); ?></span>
 				</button>
 				<button class="ict-widget__tab-btn" id="tab-ks4" role="tab" aria-selected="false" aria-controls="panel-ks4" type="button" tabindex="-1">
-					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 4', 'ai-awareness-day' ); ?></span>
-					<span class="tab-label-sub"><?php esc_html_e( 'GCSE iteration & loops (Ages 14-16)', 'ai-awareness-day' ); ?></span>
+					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 4', 'aiad-core' ); ?></span>
+					<span class="tab-label-sub"><?php esc_html_e( 'GCSE iteration & loops (Ages 14-16)', 'aiad-core' ); ?></span>
 				</button>
 				<button class="ict-widget__tab-btn" id="tab-ks5" role="tab" aria-selected="false" aria-controls="panel-ks5" type="button" tabindex="-1">
-					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 5', 'ai-awareness-day' ); ?></span>
-					<span class="tab-label-sub"><?php esc_html_e( 'A-Level recursion (Ages 16-18)', 'ai-awareness-day' ); ?></span>
+					<span class="tab-label-main"><?php esc_html_e( 'Key Stage 5', 'aiad-core' ); ?></span>
+					<span class="tab-label-sub"><?php esc_html_e( 'A-Level recursion (Ages 16-18)', 'aiad-core' ); ?></span>
 				</button>
 			</div>
 		</div>
@@ -123,9 +123,9 @@ function aiad_ict_curriculum_render(): string {
 		<!-- Panel: Key Stage 2 -->
 		<div class="ict-widget__panel is-active" id="panel-ks2" role="tabpanel" aria-labelledby="tab-ks2">
 			<div class="ict-widget__panel-intro">
-				<h3><?php esc_html_e( 'Key Stage 2: Sequencing, Selection & Iteration', 'ai-awareness-day' ); ?></h3>
+				<h3><?php esc_html_e( 'Key Stage 2: Sequencing, Selection & Iteration', 'aiad-core' ); ?></h3>
 				<p>
-					<?php esc_html_e( 'Primary computing focuses on logical reasoning, algorithms, and block-based coding (usually Scratch). A crucial milestone is moving from single commands (sequencing) to repeating instructions (iteration/loops) to draw shapes or control objects.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'Primary computing focuses on logical reasoning, algorithms, and block-based coding (usually Scratch). A crucial milestone is moving from single commands (sequencing) to repeating instructions (iteration/loops) to draw shapes or control objects.', 'aiad-core' ); ?>
 				</p>
 			</div>
 
@@ -138,42 +138,42 @@ function aiad_ict_curriculum_render(): string {
 							<span class="dot-btn red"></span>
 							<span class="dot-btn yellow"></span>
 							<span class="dot-btn green"></span>
-							<span class="editor-title"><?php esc_html_e( 'Workspace — Scratch Logic', 'ai-awareness-day' ); ?></span>
+							<span class="editor-title"><?php esc_html_e( 'Workspace — Scratch Logic', 'aiad-core' ); ?></span>
 						</div>
 						
 						<div class="scratch-blocks-list">
 							<!-- Block: When Clicked -->
 							<div class="scratch-block scratch-block--event">
-								<span class="block-flag-icon">🏁</span> <?php esc_html_e( 'when green flag clicked', 'ai-awareness-day' ); ?>
+								<span class="block-flag-icon">🏁</span> <?php esc_html_e( 'when green flag clicked', 'aiad-core' ); ?>
 							</div>
 
 							<!-- Block: Pen down -->
 							<div class="scratch-block scratch-block--pen">
-								🖋️ <?php esc_html_e( 'pen down', 'ai-awareness-day' ); ?>
+								🖋️ <?php esc_html_e( 'pen down', 'aiad-core' ); ?>
 							</div>
 
 							<!-- Block: Repeat Loop -->
 							<div class="scratch-block scratch-block--control block-has-children">
 								<div class="block-top-row">
-									🔄 <?php esc_html_e( 'repeat', 'ai-awareness-day' ); ?>
-									<select class="scratch-select select-repeat" data-scratch-input="repeat" aria-label="<?php esc_attr_e( 'Loop repeat count', 'ai-awareness-day' ); ?>">
+									🔄 <?php esc_html_e( 'repeat', 'aiad-core' ); ?>
+									<select class="scratch-select select-repeat" data-scratch-input="repeat" aria-label="<?php esc_attr_e( 'Loop repeat count', 'aiad-core' ); ?>">
 										<option value="3" selected>3</option>
 										<option value="4">4</option>
 										<option value="5">5</option>
 										<option value="8">8</option>
 									</select>
-									<?php esc_html_e( 'times', 'ai-awareness-day' ); ?>
+									<?php esc_html_e( 'times', 'aiad-core' ); ?>
 								</div>
 								
 								<div class="block-nested-contents">
 									<div class="scratch-block scratch-block--motion">
-										➡️ <?php esc_html_e( 'move', 'ai-awareness-day' ); ?>
+										➡️ <?php esc_html_e( 'move', 'aiad-core' ); ?>
 										<span class="block-input-value">100</span>
-										<?php esc_html_e( 'steps', 'ai-awareness-day' ); ?>
+										<?php esc_html_e( 'steps', 'aiad-core' ); ?>
 									</div>
 									<div class="scratch-block scratch-block--motion">
-										↪️ <?php esc_html_e( 'turn right', 'ai-awareness-day' ); ?>
-										<select class="scratch-select select-turn" data-scratch-input="turn" aria-label="<?php esc_attr_e( 'Degrees of turn', 'ai-awareness-day' ); ?>">
+										↪️ <?php esc_html_e( 'turn right', 'aiad-core' ); ?>
+										<select class="scratch-select select-turn" data-scratch-input="turn" aria-label="<?php esc_attr_e( 'Degrees of turn', 'aiad-core' ); ?>">
 											<option value="45">45°</option>
 											<option value="90">90°</option>
 											<option value="120">120°</option>
@@ -188,16 +188,16 @@ function aiad_ict_curriculum_render(): string {
 
 							<!-- Block: Pen up -->
 							<div class="scratch-block scratch-block--pen">
-								🖋️ <?php esc_html_e( 'pen up', 'ai-awareness-day' ); ?>
+								🖋️ <?php esc_html_e( 'pen up', 'aiad-core' ); ?>
 							</div>
 						</div>
 
 						<div class="editor-actions">
 							<button class="playground-btn playground-btn--run" data-action="run-scratch" type="button">
-								<span class="btn-icon">▶</span> <?php esc_html_e( 'Run Code', 'ai-awareness-day' ); ?>
+								<span class="btn-icon">▶</span> <?php esc_html_e( 'Run Code', 'aiad-core' ); ?>
 							</button>
 							<button class="playground-btn playground-btn--reset" data-action="reset-scratch" type="button">
-								<?php esc_html_e( 'Reset Grid', 'ai-awareness-day' ); ?>
+								<?php esc_html_e( 'Reset Grid', 'aiad-core' ); ?>
 							</button>
 						</div>
 					</div>
@@ -205,7 +205,7 @@ function aiad_ict_curriculum_render(): string {
 					<!-- Grid Simulation Panel -->
 					<div class="grid-simulator">
 						<div class="simulator-header">
-							<span class="sim-label"><?php esc_html_e( 'Stage Preview', 'ai-awareness-day' ); ?></span>
+							<span class="sim-label"><?php esc_html_e( 'Stage Preview', 'aiad-core' ); ?></span>
 							<span class="sim-coordinates" data-scratch-coords>x: 0, y: 0</span>
 						</div>
 						<div class="grid-canvas-wrap">
@@ -219,7 +219,7 @@ function aiad_ict_curriculum_render(): string {
 						</div>
 						<div class="simulator-instruction">
 							<span class="instruction-icon">💡</span>
-							<p><?php esc_html_e( 'Challenge: Set the repeat loops and turn degrees to guide the rocket on a perfect square path and collect the space gem!', 'ai-awareness-day' ); ?></p>
+							<p><?php esc_html_e( 'Challenge: Set the repeat loops and turn degrees to guide the rocket on a perfect square path and collect the space gem!', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -229,38 +229,38 @@ function aiad_ict_curriculum_render(): string {
 					<div class="feedback-status success">
 						<span class="status-icon">🏆</span>
 						<div>
-							<h4><?php esc_html_e( 'Success! You completed the KS2 coding challenge.', 'ai-awareness-day' ); ?></h4>
-							<p><?php esc_html_e( 'The rocket successfully traced a perfect 4-sided square (repeat 4 times, turning 90 degrees each time).', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Success! You completed the KS2 coding challenge.', 'aiad-core' ); ?></h4>
+							<p><?php esc_html_e( 'The rocket successfully traced a perfect 4-sided square (repeat 4 times, turning 90 degrees each time).', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 					<div class="feedback-status error hidden">
 						<span class="status-icon">⚠️</span>
 						<div>
-							<h4><?php esc_html_e( 'Incorrect Path', 'ai-awareness-day' ); ?></h4>
-							<p class="error-msg-text"><?php esc_html_e( 'The rocket did not make a square. Review your instructions and try again!', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Incorrect Path', 'aiad-core' ); ?></h4>
+							<p class="error-msg-text"><?php esc_html_e( 'The rocket did not make a square. Review your instructions and try again!', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 
 					<div class="feedback-curriculum-tabs">
-						<button class="feedback-tab-btn is-active" data-feedback-tab="insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'ai-awareness-day' ); ?></button>
-						<button class="feedback-tab-btn" data-feedback-tab="classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'ai-awareness-day' ); ?></button>
+						<button class="feedback-tab-btn is-active" data-feedback-tab="insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'aiad-core' ); ?></button>
+						<button class="feedback-tab-btn" data-feedback-tab="classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'aiad-core' ); ?></button>
 					</div>
 
 					<div class="feedback-tab-content" data-feedback-panel="insight">
-						<p><strong><?php esc_html_e( 'The Mathematics of Repeating Paths:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'The Mathematics of Repeating Paths:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'At KS2, pupils are taught to think computationally using simple loops. A very common misconception pupils make is that to draw a shape, you rotate by the interior angle rather than the exterior turn. For example, to draw an equilateral triangle, pupils often choose a 60° turn. However, the computer turns the sprite *exteriorly*, meaning they must turn 120° (calculated by dividing 360° by the 3 sides).', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'At KS2, pupils are taught to think computationally using simple loops. A very common misconception pupils make is that to draw a shape, you rotate by the interior angle rather than the exterior turn. For example, to draw an equilateral triangle, pupils often choose a 60° turn. However, the computer turns the sprite *exteriorly*, meaning they must turn 120° (calculated by dividing 360° by the 3 sides).', 'aiad-core' ); ?>
 						</p>
 						<blockquote>
-							<strong><?php esc_html_e( 'Curriculum Link:', 'ai-awareness-day' ); ?></strong>
-							<?php esc_html_e( 'UK National Curriculum Computing KS2 states that pupils must: "design, write and debug programs that accomplish specific goals, including controlling or simulating physical systems; solve problems by decomposing them into smaller parts."', 'ai-awareness-day' ); ?>
+							<strong><?php esc_html_e( 'Curriculum Link:', 'aiad-core' ); ?></strong>
+							<?php esc_html_e( 'UK National Curriculum Computing KS2 states that pupils must: "design, write and debug programs that accomplish specific goals, including controlling or simulating physical systems; solve problems by decomposing them into smaller parts."', 'aiad-core' ); ?>
 						</blockquote>
 					</div>
 
 					<div class="feedback-tab-content hidden" data-feedback-panel="classroom">
-						<p><strong><?php esc_html_e( 'Debugging in the Classroom:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Debugging in the Classroom:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'When students encounter logic bugs (e.g. their shape is open or asymmetrical), teachers are trained to use "unplugged" roleplay. Asking students to stand up, act as the sprite, take 10 steps, and turn is a powerful way to bridge the abstract logic of code with spatial reasoning. This aligns with the NCCE (National Centre for Computing Education) model of Semantic Waves — grounding abstract code in concrete experiences.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'When students encounter logic bugs (e.g. their shape is open or asymmetrical), teachers are trained to use "unplugged" roleplay. Asking students to stand up, act as the sprite, take 10 steps, and turn is a powerful way to bridge the abstract logic of code with spatial reasoning. This aligns with the NCCE (National Centre for Computing Education) model of Semantic Waves — grounding abstract code in concrete experiences.', 'aiad-core' ); ?>
 						</p>
 					</div>
 				</div>
@@ -270,9 +270,9 @@ function aiad_ict_curriculum_render(): string {
 		<!-- Panel: Key Stage 3 -->
 		<div class="ict-widget__panel" id="panel-ks3" role="tabpanel" aria-labelledby="tab-ks3" hidden>
 			<div class="ict-widget__panel-intro">
-				<h3><?php esc_html_e( 'Key Stage 3: Data Representation & Text-Based Code', 'ai-awareness-day' ); ?></h3>
+				<h3><?php esc_html_e( 'Key Stage 3: Data Representation & Text-Based Code', 'aiad-core' ); ?></h3>
 				<p>
-					<?php esc_html_e( 'In secondary school, the curriculum makes two massive leaps: understanding how digital computers store and represent data (binary representation), and transitioning from block-based visuals to text-based coding (primarily Python).', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'In secondary school, the curriculum makes two massive leaps: understanding how digital computers store and represent data (binary representation), and transitioning from block-based visuals to text-based coding (primarily Python).', 'aiad-core' ); ?>
 				</p>
 			</div>
 
@@ -282,35 +282,35 @@ function aiad_ict_curriculum_render(): string {
 					<div class="binary-lock__header">
 						<div class="lock-icon">🔒</div>
 						<div>
-							<h4><?php esc_html_e( 'Part A: The Binary Register Decoder', 'ai-awareness-day' ); ?></h4>
-							<p><?php esc_html_e( 'Before accessing the Python engine, you must unlock the terminal by setting the 4-bit binary register to represent the decimal number 11.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Part A: The Binary Register Decoder', 'aiad-core' ); ?></h4>
+							<p><?php esc_html_e( 'Before accessing the Python engine, you must unlock the terminal by setting the 4-bit binary register to represent the decimal number 11.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 
 					<div class="binary-register">
 						<!-- Bit 8 -->
 						<div class="bit-card">
-							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 8', 'ai-awareness-day' ); ?></span>
+							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 8', 'aiad-core' ); ?></span>
 							<button class="bit-toggle-btn" data-bit-index="3" data-bit-value="8" type="button">0</button>
-							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'ai-awareness-day' ); ?></span>
+							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'aiad-core' ); ?></span>
 						</div>
 						<!-- Bit 4 -->
 						<div class="bit-card">
-							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 4', 'ai-awareness-day' ); ?></span>
+							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 4', 'aiad-core' ); ?></span>
 							<button class="bit-toggle-btn" data-bit-index="2" data-bit-value="4" type="button">0</button>
-							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'ai-awareness-day' ); ?></span>
+							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'aiad-core' ); ?></span>
 						</div>
 						<!-- Bit 2 -->
 						<div class="bit-card">
-							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 2', 'ai-awareness-day' ); ?></span>
+							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 2', 'aiad-core' ); ?></span>
 							<button class="bit-toggle-btn" data-bit-index="1" data-bit-value="2" type="button">0</button>
-							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'ai-awareness-day' ); ?></span>
+							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'aiad-core' ); ?></span>
 						</div>
 						<!-- Bit 1 -->
 						<div class="bit-card">
-							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 1', 'ai-awareness-day' ); ?></span>
+							<span class="bit-value-label"><?php esc_html_e( 'Place Value: 1', 'aiad-core' ); ?></span>
 							<button class="bit-toggle-btn" data-bit-index="0" data-bit-value="1" type="button">0</button>
-							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'ai-awareness-day' ); ?></span>
+							<span class="bit-status-label"><?php esc_html_e( 'OFF', 'aiad-core' ); ?></span>
 						</div>
 					</div>
 
@@ -322,7 +322,7 @@ function aiad_ict_curriculum_render(): string {
 							<span class="formula-term" id="term-1">0 × 1</span>
 						</div>
 						<div class="bar-total">
-							<?php esc_html_e( 'Current Total:', 'ai-awareness-day' ); ?> <span class="total-number" data-binary-total>0</span>
+							<?php esc_html_e( 'Current Total:', 'aiad-core' ); ?> <span class="total-number" data-binary-total>0</span>
 						</div>
 					</div>
 					
@@ -333,7 +333,7 @@ function aiad_ict_curriculum_render(): string {
 				<div class="python-section is-locked" data-python-section>
 					<div class="python-lock-overlay" data-python-overlay>
 						<span class="overlay-lock-icon">🔒</span>
-						<p><?php esc_html_e( 'Solve Part A to unlock the Python logic engine.', 'ai-awareness-day' ); ?></p>
+						<p><?php esc_html_e( 'Solve Part A to unlock the Python logic engine.', 'aiad-core' ); ?></p>
 					</div>
 
 					<div class="python-terminal-wrap">
@@ -364,13 +364,13 @@ function aiad_ict_curriculum_render(): string {
 						</div>
 
 						<div class="terminal-output-bar" data-terminal-output>
-							<span class="prompt">>>></span> <span class="output-text blink-cursor"><?php esc_html_e( 'Awaiting trace answer...', 'ai-awareness-day' ); ?></span>
+							<span class="prompt">>>></span> <span class="output-text blink-cursor"><?php esc_html_e( 'Awaiting trace answer...', 'aiad-core' ); ?></span>
 						</div>
 					</div>
 
 					<!-- Multiple Choice Panel -->
 					<div class="python-question-panel">
-						<h4 class="question-title">💡 <?php esc_html_e( 'Trace the code logic. What will the terminal output be when this Python script is executed?', 'ai-awareness-day' ); ?></h4>
+						<h4 class="question-title">💡 <?php esc_html_e( 'Trace the code logic. What will the terminal output be when this Python script is executed?', 'aiad-core' ); ?></h4>
 						<div class="python-options">
 							<button class="python-opt-btn" data-opt-value="0" type="button">0</button>
 							<button class="python-opt-btn" data-opt-value="10" type="button">10</button>
@@ -385,38 +385,38 @@ function aiad_ict_curriculum_render(): string {
 					<div class="feedback-status success">
 						<span class="status-icon">🏆</span>
 						<div>
-							<h4><?php esc_html_e( 'Excellent! You fully decoded the KS3 experience.', 'ai-awareness-day' ); ?></h4>
-							<p><?php esc_html_e( 'Binary 1011 matches decimal 11. And the Python tracing correctly evaluates to 50.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Excellent! You fully decoded the KS3 experience.', 'aiad-core' ); ?></h4>
+							<p><?php esc_html_e( 'Binary 1011 matches decimal 11. And the Python tracing correctly evaluates to 50.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 					<div class="feedback-status error hidden">
 						<span class="status-icon">⚠️</span>
 						<div>
-							<h4><?php esc_html_e( 'Trace Incorrect', 'ai-awareness-day' ); ?></h4>
-							<p class="ks3-error-msg-text"><?php esc_html_e( 'That is not the correct output. Carefully trace line by line!', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Trace Incorrect', 'aiad-core' ); ?></h4>
+							<p class="ks3-error-msg-text"><?php esc_html_e( 'That is not the correct output. Carefully trace line by line!', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 
 					<div class="feedback-curriculum-tabs">
-						<button class="feedback-tab-btn is-active" data-feedback-tab="ks3-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'ai-awareness-day' ); ?></button>
-						<button class="feedback-tab-btn" data-feedback-tab="ks3-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'ai-awareness-day' ); ?></button>
+						<button class="feedback-tab-btn is-active" data-feedback-tab="ks3-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'aiad-core' ); ?></button>
+						<button class="feedback-tab-btn" data-feedback-tab="ks3-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'aiad-core' ); ?></button>
 					</div>
 
 					<div class="feedback-tab-content" data-feedback-panel="ks3-insight">
-						<p><strong><?php esc_html_e( 'Transitioning from blocks to text-based code:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Transitioning from blocks to text-based code:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'At KS3, binary registers demonstrate how numeric data, text, and imagery are represented inside physical silicon gates using bits (Binary Digits). Transitioning to Python adds syntax rules, where boolean operations (such as `and` or `not`) require logical precision. In the code above, the first `if` statement evaluates to `False` because `not is_raining` is `False`. The logic then cascades to the `elif` branch, which evaluates to `True`, assigning `50` to `motor_speed`.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'At KS3, binary registers demonstrate how numeric data, text, and imagery are represented inside physical silicon gates using bits (Binary Digits). Transitioning to Python adds syntax rules, where boolean operations (such as `and` or `not`) require logical precision. In the code above, the first `if` statement evaluates to `False` because `not is_raining` is `False`. The logic then cascades to the `elif` branch, which evaluates to `True`, assigning `50` to `motor_speed`.', 'aiad-core' ); ?>
 						</p>
 						<blockquote>
-							<strong><?php esc_html_e( 'Curriculum Link:', 'ai-awareness-day' ); ?></strong>
-							<?php esc_html_e( 'UK National Curriculum Computing KS3 states that pupils must: "use two or more programming languages, at least one of which is text-based, to solve a variety of computational problems... understand how data of various types can be represented and manipulated digitally, in the form of binary digits."', 'ai-awareness-day' ); ?>
+							<strong><?php esc_html_e( 'Curriculum Link:', 'aiad-core' ); ?></strong>
+							<?php esc_html_e( 'UK National Curriculum Computing KS3 states that pupils must: "use two or more programming languages, at least one of which is text-based, to solve a variety of computational problems... understand how data of various types can be represented and manipulated digitally, in the form of binary digits."', 'aiad-core' ); ?>
 						</blockquote>
 					</div>
 
 					<div class="feedback-tab-content hidden" data-feedback-panel="ks3-classroom">
-						<p><strong><?php esc_html_e( 'Teaching Trace Tables & Code Comprehension:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Teaching Trace Tables & Code Comprehension:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'In secondary classrooms, teachers use "trace tables" to help students track variable states line by line. This is a foundational technique to combat the common mistake of students reading code like a book (skimming) rather than executing it sequentially like a machine. Tracing variables encourages computational literacy and ensures pupils understand how programs store states before they write long programs of their own.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'In secondary classrooms, teachers use "trace tables" to help students track variable states line by line. This is a foundational technique to combat the common mistake of students reading code like a book (skimming) rather than executing it sequentially like a machine. Tracing variables encourages computational literacy and ensures pupils understand how programs store states before they write long programs of their own.', 'aiad-core' ); ?>
 						</p>
 					</div>
 				</div>
@@ -426,9 +426,9 @@ function aiad_ict_curriculum_render(): string {
 		<!-- Panel: Key Stage 4 -->
 		<div class="ict-widget__panel" id="panel-ks4" role="tabpanel" aria-labelledby="tab-ks4" hidden>
 			<div class="ict-widget__panel-intro">
-				<h3><?php esc_html_e( 'Key Stage 4: Count-Controlled Loops (Iteration)', 'ai-awareness-day' ); ?></h3>
+				<h3><?php esc_html_e( 'Key Stage 4: Count-Controlled Loops (Iteration)', 'aiad-core' ); ?></h3>
 				<p>
-					<?php esc_html_e( 'At GCSE, pupils must read and trace text-based code with confidence. The count-controlled loop (a "for" loop) is one of the most heavily assessed constructs. Predict what the program prints first, then step through the loop one iteration at a time to watch how the variables change and check your answer.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'At GCSE, pupils must read and trace text-based code with confidence. The count-controlled loop (a "for" loop) is one of the most heavily assessed constructs. Predict what the program prints first, then step through the loop one iteration at a time to watch how the variables change and check your answer.', 'aiad-core' ); ?>
 				</p>
 			</div>
 
@@ -453,16 +453,16 @@ function aiad_ict_curriculum_render(): string {
 							</div>
 							<div class="terminal-output-bar">
 								<span class="prompt">>>></span>
-								<span class="output-text" data-ks4-output><?php esc_html_e( 'Awaiting trace…', 'ai-awareness-day' ); ?></span>
+								<span class="output-text" data-ks4-output><?php esc_html_e( 'Awaiting trace…', 'aiad-core' ); ?></span>
 							</div>
 						</div>
 
 						<div class="ks4-controls">
 							<button class="playground-btn playground-btn--run" data-ks4-step type="button">
-								<span class="btn-icon">▶</span> <?php esc_html_e( 'Step Through Loop', 'ai-awareness-day' ); ?>
+								<span class="btn-icon">▶</span> <?php esc_html_e( 'Step Through Loop', 'aiad-core' ); ?>
 							</button>
 							<button class="playground-btn playground-btn--reset" data-ks4-reset type="button">
-								<?php esc_html_e( 'Reset', 'ai-awareness-day' ); ?>
+								<?php esc_html_e( 'Reset', 'aiad-core' ); ?>
 							</button>
 						</div>
 					</div>
@@ -471,32 +471,32 @@ function aiad_ict_curriculum_render(): string {
 					<div class="ks4-trace-col">
 						<div class="ks4-trace-card">
 							<div class="ks4-trace-head">
-								<span class="ks4-trace-title"><?php esc_html_e( 'Trace Table', 'ai-awareness-day' ); ?></span>
+								<span class="ks4-trace-title"><?php esc_html_e( 'Trace Table', 'aiad-core' ); ?></span>
 								<span class="ks4-total-chip">
-									<?php esc_html_e( 'total =', 'ai-awareness-day' ); ?>
+									<?php esc_html_e( 'total =', 'aiad-core' ); ?>
 									<strong data-ks4-total>0</strong>
 								</span>
 							</div>
 							<table class="ks4-trace-table">
 								<thead>
 									<tr>
-										<th><?php esc_html_e( 'Iteration', 'ai-awareness-day' ); ?></th>
-										<th><?php esc_html_e( 'i', 'ai-awareness-day' ); ?></th>
-										<th><?php esc_html_e( 'total', 'ai-awareness-day' ); ?></th>
+										<th><?php esc_html_e( 'Iteration', 'aiad-core' ); ?></th>
+										<th><?php esc_html_e( 'i', 'aiad-core' ); ?></th>
+										<th><?php esc_html_e( 'total', 'aiad-core' ); ?></th>
 									</tr>
 								</thead>
 								<tbody data-ks4-trace-body>
 									<!-- rows injected by JS -->
 								</tbody>
 							</table>
-							<p class="ks4-trace-hint" data-ks4-hint><?php esc_html_e( 'Make your prediction below first — then press “Step Through Loop” to check it iteration by iteration.', 'ai-awareness-day' ); ?></p>
+							<p class="ks4-trace-hint" data-ks4-hint><?php esc_html_e( 'Make your prediction below first — then press “Step Through Loop” to check it iteration by iteration.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 				</div>
 
 				<!-- Prediction question (shown first — predict before stepping through) -->
 				<div class="python-question-panel ks4-question" data-ks4-question>
-					<h4 class="question-title">💡 <?php esc_html_e( 'Predict first: what will print(total) output? Then step through the loop to check.', 'ai-awareness-day' ); ?></h4>
+					<h4 class="question-title">💡 <?php esc_html_e( 'Predict first: what will print(total) output? Then step through the loop to check.', 'aiad-core' ); ?></h4>
 					<div class="python-options ks4-options">
 						<button class="python-opt-btn ks4-opt-btn" data-opt-value="0" type="button">0</button>
 						<button class="python-opt-btn ks4-opt-btn" data-opt-value="4" type="button">4</button>
@@ -510,38 +510,38 @@ function aiad_ict_curriculum_render(): string {
 					<div class="feedback-status success">
 						<span class="status-icon">🏆</span>
 						<div>
-							<h4><?php esc_html_e( 'Correct! The loop accumulates to 10.', 'ai-awareness-day' ); ?></h4>
-							<p><?php esc_html_e( 'i takes the values 1, 2, 3, 4 and each is added to total: 1 + 2 + 3 + 4 = 10.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Correct! The loop accumulates to 10.', 'aiad-core' ); ?></h4>
+							<p><?php esc_html_e( 'i takes the values 1, 2, 3, 4 and each is added to total: 1 + 2 + 3 + 4 = 10.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 					<div class="feedback-status error hidden">
 						<span class="status-icon">⚠️</span>
 						<div>
-							<h4><?php esc_html_e( 'Not quite — trace it again', 'ai-awareness-day' ); ?></h4>
-							<p class="ks4-error-msg-text"><?php esc_html_e( 'Follow the trace table row by row and add each value of i to total.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Not quite — trace it again', 'aiad-core' ); ?></h4>
+							<p class="ks4-error-msg-text"><?php esc_html_e( 'Follow the trace table row by row and add each value of i to total.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 
 					<div class="feedback-curriculum-tabs">
-						<button class="feedback-tab-btn is-active" data-feedback-tab="ks4-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'ai-awareness-day' ); ?></button>
-						<button class="feedback-tab-btn" data-feedback-tab="ks4-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'ai-awareness-day' ); ?></button>
+						<button class="feedback-tab-btn is-active" data-feedback-tab="ks4-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'aiad-core' ); ?></button>
+						<button class="feedback-tab-btn" data-feedback-tab="ks4-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'aiad-core' ); ?></button>
 					</div>
 
 					<div class="feedback-tab-content" data-feedback-panel="ks4-insight">
-						<p><strong><?php esc_html_e( 'Count-controlled iteration and the off-by-one trap:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Count-controlled iteration and the off-by-one trap:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'A "for" loop with range(1, 5) is count-controlled: it runs a fixed number of times, with the loop variable i taking the values 1, 2, 3 and 4. Crucially, Python\'s range stops BEFORE the second number, so 5 is never reached. Each pass adds the current i to a running total (an "accumulator" pattern). After four passes the total is 1 + 2 + 3 + 4 = 10.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'A "for" loop with range(1, 5) is count-controlled: it runs a fixed number of times, with the loop variable i taking the values 1, 2, 3 and 4. Crucially, Python\'s range stops BEFORE the second number, so 5 is never reached. Each pass adds the current i to a running total (an "accumulator" pattern). After four passes the total is 1 + 2 + 3 + 4 = 10.', 'aiad-core' ); ?>
 						</p>
 						<blockquote>
-							<strong><?php esc_html_e( 'Curriculum Link:', 'ai-awareness-day' ); ?></strong>
-							<?php esc_html_e( 'AQA GCSE Computer Science requires pupils to "use, understand and trace" definite (count-controlled) iteration and to follow the flow of a program that uses variables, assignment and arithmetic.', 'ai-awareness-day' ); ?>
+							<strong><?php esc_html_e( 'Curriculum Link:', 'aiad-core' ); ?></strong>
+							<?php esc_html_e( 'AQA GCSE Computer Science requires pupils to "use, understand and trace" definite (count-controlled) iteration and to follow the flow of a program that uses variables, assignment and arithmetic.', 'aiad-core' ); ?>
 						</blockquote>
 					</div>
 
 					<div class="feedback-tab-content hidden" data-feedback-panel="ks4-classroom">
-						<p><strong><?php esc_html_e( 'Teaching the accumulator with trace tables:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Teaching the accumulator with trace tables:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'The single most common error here is the "off-by-one": pupils include 5 and answer 15, because they read range(1, 5) as 1 to 5 inclusive. A trace table — one row per iteration, columns for i and total — makes the boundary visible and forces pupils to execute the code like a machine rather than skim it. Stepping through one iteration at a time, as in this tool, builds the habit before pupils write loops of their own.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'The single most common error here is the "off-by-one": pupils include 5 and answer 15, because they read range(1, 5) as 1 to 5 inclusive. A trace table — one row per iteration, columns for i and total — makes the boundary visible and forces pupils to execute the code like a machine rather than skim it. Stepping through one iteration at a time, as in this tool, builds the habit before pupils write loops of their own.', 'aiad-core' ); ?>
 						</p>
 					</div>
 				</div>
@@ -551,9 +551,9 @@ function aiad_ict_curriculum_render(): string {
 		<!-- Panel: Key Stage 5 -->
 		<div class="ict-widget__panel" id="panel-ks5" role="tabpanel" aria-labelledby="tab-ks5" hidden>
 			<div class="ict-widget__panel-intro">
-				<h3><?php esc_html_e( 'Key Stage 5: Recursion & the Call Stack', 'ai-awareness-day' ); ?></h3>
+				<h3><?php esc_html_e( 'Key Stage 5: Recursion & the Call Stack', 'aiad-core' ); ?></h3>
 				<p>
-					<?php esc_html_e( 'At A-Level, recursion is a defining concept: a subroutine that calls itself, with a base case that stops it. Each call is stacked until the base case is reached, then the results unwind back up. Predict the final result first, then step through to watch the call stack build up and resolve.', 'ai-awareness-day' ); ?>
+					<?php esc_html_e( 'At A-Level, recursion is a defining concept: a subroutine that calls itself, with a base case that stops it. Each call is stacked until the base case is reached, then the results unwind back up. Predict the final result first, then step through to watch the call stack build up and resolve.', 'aiad-core' ); ?>
 				</p>
 			</div>
 
@@ -580,16 +580,16 @@ function aiad_ict_curriculum_render(): string {
 							</div>
 							<div class="terminal-output-bar">
 								<span class="prompt">>>></span>
-								<span class="output-text" data-ks5-output><?php esc_html_e( 'Awaiting trace…', 'ai-awareness-day' ); ?></span>
+								<span class="output-text" data-ks5-output><?php esc_html_e( 'Awaiting trace…', 'aiad-core' ); ?></span>
 							</div>
 						</div>
 
 						<div class="ks5-controls">
 							<button class="playground-btn playground-btn--run" data-ks5-step type="button">
-								<span class="btn-icon">▶</span> <?php esc_html_e( 'Step Through Calls', 'ai-awareness-day' ); ?>
+								<span class="btn-icon">▶</span> <?php esc_html_e( 'Step Through Calls', 'aiad-core' ); ?>
 							</button>
 							<button class="playground-btn playground-btn--reset" data-ks5-reset type="button">
-								<?php esc_html_e( 'Reset', 'ai-awareness-day' ); ?>
+								<?php esc_html_e( 'Reset', 'aiad-core' ); ?>
 							</button>
 						</div>
 					</div>
@@ -598,20 +598,20 @@ function aiad_ict_curriculum_render(): string {
 					<div class="ks5-stack-col">
 						<div class="ks5-stack-card">
 							<div class="ks5-stack-head">
-								<span class="ks5-stack-title"><?php esc_html_e( 'Call Stack', 'ai-awareness-day' ); ?></span>
-								<span class="ks5-phase-chip" data-ks5-phase><?php esc_html_e( 'Ready', 'ai-awareness-day' ); ?></span>
+								<span class="ks5-stack-title"><?php esc_html_e( 'Call Stack', 'aiad-core' ); ?></span>
+								<span class="ks5-phase-chip" data-ks5-phase><?php esc_html_e( 'Ready', 'aiad-core' ); ?></span>
 							</div>
 							<div class="ks5-stack-frames" data-ks5-stack>
-								<div class="ks5-stack-empty" data-ks5-stack-empty><?php esc_html_e( 'The stack is empty. Stepping will push factorial() calls on top of each other.', 'ai-awareness-day' ); ?></div>
+								<div class="ks5-stack-empty" data-ks5-stack-empty><?php esc_html_e( 'The stack is empty. Stepping will push factorial() calls on top of each other.', 'aiad-core' ); ?></div>
 							</div>
-							<p class="ks5-stack-hint" data-ks5-hint><?php esc_html_e( 'Make your prediction below first — then step through to watch the stack grow and unwind.', 'ai-awareness-day' ); ?></p>
+							<p class="ks5-stack-hint" data-ks5-hint><?php esc_html_e( 'Make your prediction below first — then step through to watch the stack grow and unwind.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 				</div>
 
 				<!-- Prediction question (shown first — predict before stepping through) -->
 				<div class="python-question-panel ks5-question" data-ks5-question>
-					<h4 class="question-title">💡 <?php esc_html_e( 'Predict first: what will print(factorial(4)) output? Then step through to check.', 'ai-awareness-day' ); ?></h4>
+					<h4 class="question-title">💡 <?php esc_html_e( 'Predict first: what will print(factorial(4)) output? Then step through to check.', 'aiad-core' ); ?></h4>
 					<div class="python-options ks5-options">
 						<button class="python-opt-btn ks5-opt-btn" data-opt-value="4" type="button">4</button>
 						<button class="python-opt-btn ks5-opt-btn" data-opt-value="10" type="button">10</button>
@@ -625,38 +625,38 @@ function aiad_ict_curriculum_render(): string {
 					<div class="feedback-status success">
 						<span class="status-icon">🏆</span>
 						<div>
-							<h4><?php esc_html_e( 'Correct! factorial(4) returns 24.', 'ai-awareness-day' ); ?></h4>
-							<p><?php esc_html_e( 'The calls unwind as 1, then 2 × 1 = 2, 3 × 2 = 6, 4 × 6 = 24.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Correct! factorial(4) returns 24.', 'aiad-core' ); ?></h4>
+							<p><?php esc_html_e( 'The calls unwind as 1, then 2 × 1 = 2, 3 × 2 = 6, 4 × 6 = 24.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 					<div class="feedback-status error hidden">
 						<span class="status-icon">⚠️</span>
 						<div>
-							<h4><?php esc_html_e( 'Not quite — trace the call stack', 'ai-awareness-day' ); ?></h4>
-							<p class="ks5-error-msg-text"><?php esc_html_e( 'Step through to see how each return value multiplies up the stack.', 'ai-awareness-day' ); ?></p>
+							<h4><?php esc_html_e( 'Not quite — trace the call stack', 'aiad-core' ); ?></h4>
+							<p class="ks5-error-msg-text"><?php esc_html_e( 'Step through to see how each return value multiplies up the stack.', 'aiad-core' ); ?></p>
 						</div>
 					</div>
 
 					<div class="feedback-curriculum-tabs">
-						<button class="feedback-tab-btn is-active" data-feedback-tab="ks5-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'ai-awareness-day' ); ?></button>
-						<button class="feedback-tab-btn" data-feedback-tab="ks5-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'ai-awareness-day' ); ?></button>
+						<button class="feedback-tab-btn is-active" data-feedback-tab="ks5-insight" type="button"><?php esc_html_e( 'Curriculum Insight', 'aiad-core' ); ?></button>
+						<button class="feedback-tab-btn" data-feedback-tab="ks5-classroom" type="button"><?php esc_html_e( 'Classroom Pedagogy', 'aiad-core' ); ?></button>
 					</div>
 
 					<div class="feedback-tab-content" data-feedback-panel="ks5-insight">
-						<p><strong><?php esc_html_e( 'Recursion, base cases and the call stack:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Recursion, base cases and the call stack:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'factorial(4) cannot return immediately — it needs factorial(3), which needs factorial(2), which needs factorial(1). Each unresolved call is pushed onto the call stack. factorial(1) meets the base case (n <= 1) and returns 1 without recursing. The stack then unwinds: 2 × 1 = 2, 3 × 2 = 6, 4 × 6 = 24. Without a correct base case the recursion would never stop, causing a stack overflow.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'factorial(4) cannot return immediately — it needs factorial(3), which needs factorial(2), which needs factorial(1). Each unresolved call is pushed onto the call stack. factorial(1) meets the base case (n <= 1) and returns 1 without recursing. The stack then unwinds: 2 × 1 = 2, 3 × 2 = 6, 4 × 6 = 24. Without a correct base case the recursion would never stop, causing a stack overflow.', 'aiad-core' ); ?>
 						</p>
 						<blockquote>
-							<strong><?php esc_html_e( 'Curriculum Link:', 'ai-awareness-day' ); ?></strong>
-							<?php esc_html_e( 'OCR A-Level Computer Science requires learners to understand recursion — including base cases, the call stack, and how recursive solutions wind up and unwind — and to trace recursive algorithms by hand.', 'ai-awareness-day' ); ?>
+							<strong><?php esc_html_e( 'Curriculum Link:', 'aiad-core' ); ?></strong>
+							<?php esc_html_e( 'OCR A-Level Computer Science requires learners to understand recursion — including base cases, the call stack, and how recursive solutions wind up and unwind — and to trace recursive algorithms by hand.', 'aiad-core' ); ?>
 						</blockquote>
 					</div>
 
 					<div class="feedback-tab-content hidden" data-feedback-panel="ks5-classroom">
-						<p><strong><?php esc_html_e( 'Making the invisible stack visible:', 'ai-awareness-day' ); ?></strong></p>
+						<p><strong><?php esc_html_e( 'Making the invisible stack visible:', 'aiad-core' ); ?></strong></p>
 						<p>
-							<?php esc_html_e( 'Recursion is hard because the work happens on the way back DOWN the stack, not on the way up. Common errors: adding instead of multiplying (4 + 3 + 2 + 1 = 10), or stopping one call early (4 × 3 = 12). Visualising the stack of pending calls — and resolving them one return at a time — helps learners separate the "winding" phase (calls) from the "unwinding" phase (returns), which is the conceptual hurdle at A-Level.', 'ai-awareness-day' ); ?>
+							<?php esc_html_e( 'Recursion is hard because the work happens on the way back DOWN the stack, not on the way up. Common errors: adding instead of multiplying (4 + 3 + 2 + 1 = 10), or stopping one call early (4 × 3 = 12). Visualising the stack of pending calls — and resolving them one return at a time — helps learners separate the "winding" phase (calls) from the "unwinding" phase (returns), which is the conceptual hurdle at A-Level.', 'aiad-core' ); ?>
 						</p>
 					</div>
 				</div>
@@ -665,8 +665,8 @@ function aiad_ict_curriculum_render(): string {
 
 		<!-- Widget Footer Credits -->
 		<p class="ict-widget__credit">
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			&middot;
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( (string) $host ); ?></a>
 		</p>
@@ -706,7 +706,7 @@ function aiad_ict_curriculum_timeline_slug(): string {
  * Timeline entry title for the curriculum experience.
  */
 function aiad_ict_curriculum_timeline_title(): string {
-	return __( 'Experience the Computing Curriculum — Non-Technical Teachers!', 'ai-awareness-day' );
+	return __( 'Experience the Computing Curriculum — Non-Technical Teachers!', 'aiad-core' );
 }
 
 /**
@@ -751,7 +751,7 @@ function aiad_create_ict_curriculum_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'Interactive KS2–KS5 computing taster for non-specialist teachers: block logic, binary, Python tracing, loops, and recursion — with curriculum insight and classroom pedagogy notes.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'Interactive KS2–KS5 computing taster for non-specialist teachers: block logic, binary, Python tracing, loops, and recursion — with curriculum insight and classroom pedagogy notes.', 'aiad-core' ),
 			'post_content' => aiad_get_ict_curriculum_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,

@@ -27,7 +27,7 @@ function aiad_rest_fetch_card_image( WP_REST_Request $request ) {
     $keywords = sanitize_text_field( (string) $request->get_param( 'keywords' ) );
 
     if ( ! $post_id || ! $keywords ) {
-        return new WP_Error( 'aiad_missing', __( 'Missing post ID or keywords.', 'ai-awareness-day' ), array( 'status' => 400 ) );
+        return new WP_Error( 'aiad_missing', __( 'Missing post ID or keywords.', 'aiad-core' ), array( 'status' => 400 ) );
     }
 
     // Build LoremFlickr URL — comma-separate keywords, random seed busts cache

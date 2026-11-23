@@ -17,22 +17,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 function aiad_register_dashboard_widget(): void {
     wp_add_dashboard_widget(
         'aiad_campaign_analytics',
-        __( '📊 AI Awareness Day — Campaign Analytics', 'ai-awareness-day' ),
+        __( '📊 AI Awareness Day — Campaign Analytics', 'aiad-core' ),
         'aiad_dashboard_widget_callback'
     );
     wp_add_dashboard_widget(
         'aiad_resource_analytics',
-        __( '📚 Resource Analytics — Downloads & Views', 'ai-awareness-day' ),
+        __( '📚 Resource Analytics — Downloads & Views', 'aiad-core' ),
         'aiad_resource_analytics_widget_callback'
     );
     wp_add_dashboard_widget(
         'aiad_ai_tool_analytics',
-        __( '🛠 AI Tools — Homepage visits', 'ai-awareness-day' ),
+        __( '🛠 AI Tools — Homepage visits', 'aiad-core' ),
         'aiad_ai_tool_analytics_widget_callback'
     );
     wp_add_dashboard_widget(
         'aiad_survey_analytics',
-        __( '📋 National Survey 2026 — Response Summary', 'ai-awareness-day' ),
+        __( '📋 National Survey 2026 — Response Summary', 'aiad-core' ),
         'aiad_survey_dashboard_widget_callback'
     );
 }
@@ -229,29 +229,29 @@ function aiad_resource_analytics_widget_callback(): void {
     <div class="aiad-ra-grid">
         <div>
             <span class="aiad-ra-stat__val"><?php echo esc_html( number_format( $stats['total_downloads'] ) ); ?></span>
-            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total downloads', 'ai-awareness-day' ); ?></span>
+            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total downloads', 'aiad-core' ); ?></span>
             <p class="aiad-ra-sub">
                 <?php
                 /* translators: 1: count, 2: total resources, 3: coverage % */
-                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'ai-awareness-day' ), $stats['resources_with_downloads'], $stats['resource_count'], $coverage_dl ) );
+                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'aiad-core' ), $stats['resources_with_downloads'], $stats['resource_count'], $coverage_dl ) );
                 ?>
             </p>
         </div>
         <div>
             <span class="aiad-ra-stat__val"><?php echo esc_html( number_format( $stats['total_views'] ) ); ?></span>
-            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total views', 'ai-awareness-day' ); ?></span>
+            <span class="aiad-ra-stat__lbl"><?php esc_html_e( 'Total views', 'aiad-core' ); ?></span>
             <p class="aiad-ra-sub">
                 <?php
-                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'ai-awareness-day' ), $stats['resources_with_views'], $stats['resource_count'], $coverage_vw ) );
+                echo esc_html( sprintf( __( '%1$d of %2$d resources (%3$d%%)', 'aiad-core' ), $stats['resources_with_views'], $stats['resource_count'], $coverage_vw ) );
                 ?>
             </p>
         </div>
     </div>
 
     <hr class="aiad-ra-divider">
-    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top downloads', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top downloads', 'aiad-core' ); ?></p>
     <?php if ( empty( $top_downloads ) ) : ?>
-        <p class="aiad-ra-empty"><?php esc_html_e( 'No downloads recorded yet.', 'ai-awareness-day' ); ?></p>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No downloads recorded yet.', 'aiad-core' ); ?></p>
     <?php else : ?>
         <ul class="aiad-ra-list">
             <?php foreach ( $top_downloads as $row ) : ?>
@@ -263,9 +263,9 @@ function aiad_resource_analytics_widget_callback(): void {
         </ul>
     <?php endif; ?>
 
-    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top views', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Top views', 'aiad-core' ); ?></p>
     <?php if ( empty( $top_views ) ) : ?>
-        <p class="aiad-ra-empty"><?php esc_html_e( 'No views recorded yet.', 'ai-awareness-day' ); ?></p>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No views recorded yet.', 'aiad-core' ); ?></p>
     <?php else : ?>
         <ul class="aiad-ra-list">
             <?php foreach ( $top_views as $row ) : ?>
@@ -278,14 +278,14 @@ function aiad_resource_analytics_widget_callback(): void {
     <?php endif; ?>
 
     <hr class="aiad-ra-divider">
-    <p class="aiad-ra-section-title"><?php esc_html_e( 'Handpicked partner resources (homepage clicks)', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-ra-section-title"><?php esc_html_e( 'Handpicked partner resources (homepage clicks)', 'aiad-core' ); ?></p>
     <p class="aiad-ra-sub" style="margin:0 0 0.5rem;">
-        <?php esc_html_e( 'Outbound clicks on handpicked cards in the Extra Resources section.', 'ai-awareness-day' ); ?>
+        <?php esc_html_e( 'Outbound clicks on handpicked cards in the Extra Resources section.', 'aiad-core' ); ?>
         <strong><?php echo esc_html( number_format( $handpicked_total ) ); ?></strong>
-        <?php esc_html_e( 'total', 'ai-awareness-day' ); ?>
+        <?php esc_html_e( 'total', 'aiad-core' ); ?>
     </p>
     <?php if ( empty( $top_handpicked ) ) : ?>
-        <p class="aiad-ra-empty"><?php esc_html_e( 'No handpicked clicks recorded yet.', 'ai-awareness-day' ); ?></p>
+        <p class="aiad-ra-empty"><?php esc_html_e( 'No handpicked clicks recorded yet.', 'aiad-core' ); ?></p>
     <?php else : ?>
         <ul class="aiad-ra-list">
             <?php foreach ( $top_handpicked as $row ) : ?>
@@ -299,11 +299,11 @@ function aiad_resource_analytics_widget_callback(): void {
 
     <hr class="aiad-ra-divider">
     <p style="margin:0;">
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=downloads&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by downloads →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=downloads&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by downloads →', 'aiad-core' ); ?></a>
         &nbsp;·&nbsp;
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=views&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by views →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=resource&orderby=views&order=desc' ) ); ?>"><?php esc_html_e( 'All resources by views →', 'aiad-core' ); ?></a>
         &nbsp;·&nbsp;
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ); ?>"><?php esc_html_e( 'Handpicked resources →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=featured_resource' ) ); ?>"><?php esc_html_e( 'Handpicked resources →', 'aiad-core' ); ?></a>
     </p>
     <?php
 }
@@ -379,25 +379,25 @@ function aiad_ai_tool_analytics_widget_callback(): void {
         }
     </style>
 
-    <p class="aiad-at-note"><?php esc_html_e( '“Visit website” clicks on AI tool cards on the homepage. Stats count from deploy onward.', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-at-note"><?php esc_html_e( '“Visit website” clicks on AI tool cards on the homepage. Stats count from deploy onward.', 'aiad-core' ); ?></p>
 
     <span class="aiad-at-stat__val"><?php echo esc_html( number_format( $total_clicks ) ); ?></span>
-    <span class="aiad-at-stat__lbl"><?php esc_html_e( 'Total homepage visits', 'ai-awareness-day' ); ?></span>
+    <span class="aiad-at-stat__lbl"><?php esc_html_e( 'Total homepage visits', 'aiad-core' ); ?></span>
     <p class="aiad-at-note" style="margin-top:0.35rem;">
         <?php
         echo esc_html(
             sprintf(
                 /* translators: %d: number of published AI tools */
-                __( '%d published tools', 'ai-awareness-day' ),
+                __( '%d published tools', 'aiad-core' ),
                 $tool_count
             )
         );
         ?>
     </p>
 
-    <p class="aiad-at-section-title"><?php esc_html_e( 'Most visited tools', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-at-section-title"><?php esc_html_e( 'Most visited tools', 'aiad-core' ); ?></p>
     <?php if ( empty( $top_tools ) ) : ?>
-        <p class="aiad-at-empty"><?php esc_html_e( 'No visits recorded yet.', 'ai-awareness-day' ); ?></p>
+        <p class="aiad-at-empty"><?php esc_html_e( 'No visits recorded yet.', 'aiad-core' ); ?></p>
     <?php else : ?>
         <ul class="aiad-at-list">
             <?php foreach ( $top_tools as $row ) : ?>
@@ -410,7 +410,7 @@ function aiad_ai_tool_analytics_widget_callback(): void {
     <?php endif; ?>
 
     <p style="margin:0.5rem 0 0;">
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=ai_tool' ) ); ?>"><?php esc_html_e( 'All AI tools →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=ai_tool' ) ); ?>"><?php esc_html_e( 'All AI tools →', 'aiad-core' ); ?></a>
     </p>
     <?php
 }
@@ -768,10 +768,10 @@ function aiad_dashboard_widget_callback(): void {
     <?php
     $chase = aiad_get_submission_chase_breakdown();
     $chase_labels = function_exists( 'aiad_submission_status_options' ) ? aiad_submission_status_options() : array(
-        'not_contacted' => __( 'Not contacted', 'ai-awareness-day' ),
-        'contacted'     => __( 'Contacted', 'ai-awareness-day' ),
-        'following_up'  => __( 'Following up', 'ai-awareness-day' ),
-        'done'          => __( 'Done', 'ai-awareness-day' ),
+        'not_contacted' => __( 'Not contacted', 'aiad-core' ),
+        'contacted'     => __( 'Contacted', 'aiad-core' ),
+        'following_up'  => __( 'Following up', 'aiad-core' ),
+        'done'          => __( 'Done', 'aiad-core' ),
     );
     $chase_colors = array(
         'not_contacted' => '#b45309',
@@ -781,7 +781,7 @@ function aiad_dashboard_widget_callback(): void {
     );
     $chase_total = array_sum( $chase );
     ?>
-    <p class="aiad-dw-section-title"><?php esc_html_e( 'Chase-up progress', 'ai-awareness-day' ); ?></p>
+    <p class="aiad-dw-section-title"><?php esc_html_e( 'Chase-up progress', 'aiad-core' ); ?></p>
     <ul class="aiad-dw-breakdown">
         <?php foreach ( $chase_labels as $key => $label ) :
             $val     = $chase[ $key ] ?? 0;
@@ -806,7 +806,7 @@ function aiad_dashboard_widget_callback(): void {
     ?>
     <?php if ( $interests && $interest_max > 0 ) : ?>
         <hr class="aiad-dw-divider">
-        <p class="aiad-dw-section-title"><?php esc_html_e( 'Interest demand', 'ai-awareness-day' ); ?></p>
+        <p class="aiad-dw-section-title"><?php esc_html_e( 'Interest demand', 'aiad-core' ); ?></p>
         <ul class="aiad-dw-breakdown">
             <?php foreach ( $interests as $key => $val ) :
                 if ( $val === 0 ) { continue; }
@@ -999,18 +999,18 @@ function aiad_survey_dashboard_widget_callback(): void {
     ?>
     <p style="font-size:2rem;font-weight:700;margin:0 0 4px;">
         <?php echo esc_html( number_format_i18n( $total ) ); ?>
-        <span style="font-size:1rem;font-weight:400;color:#6b7280;"><?php esc_html_e( 'responses', 'ai-awareness-day' ); ?></span>
+        <span style="font-size:1rem;font-weight:400;color:#6b7280;"><?php esc_html_e( 'responses', 'aiad-core' ); ?></span>
     </p>
 
     <p style="margin:0 0 8px;font-size:0.875rem;color:#6b7280;">
         <strong style="color:#16a34a;"><?php echo esc_html( number_format_i18n( $participants ) ); ?></strong>
-        <?php esc_html_e( 'participated', 'ai-awareness-day' ); ?>
+        <?php esc_html_e( 'participated', 'aiad-core' ); ?>
         &nbsp;·&nbsp;
         <strong style="color:#dc2626;"><?php echo esc_html( number_format_i18n( $non_participants ) ); ?></strong>
-        <?php esc_html_e( 'did not', 'ai-awareness-day' ); ?>
+        <?php esc_html_e( 'did not', 'aiad-core' ); ?>
     </p>
 
-    <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Respondents by role', 'ai-awareness-day' ); ?></h4>
+    <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Respondents by role', 'aiad-core' ); ?></h4>
     <ul style="margin:0;padding:0;list-style:none;">
         <?php foreach ( $roles_raw as $row ) :
             $label = $role_labels[ $row->val ] ?? ucfirst( str_replace( '_', ' ', $row->val ) );
@@ -1025,7 +1025,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     </ul>
 
     <?php if ( ! empty( $averages ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Average ratings (participants)', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Average ratings (participants)', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $averages as $label => $avg ) : ?>
                 <li style="margin-bottom:4px;font-size:0.875rem;">
@@ -1038,7 +1038,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $curriculum_embedded_raw ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'AI activities in curriculum', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'AI activities in curriculum', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $curriculum_embedded_raw as $row ) :
                 $label = $maturity_labels[ $row->val ] ?? ucfirst( $row->val );
@@ -1054,7 +1054,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $display_board_raw ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Has an AI Awareness display board', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Has an AI Awareness display board', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $display_board_raw as $row ) :
                 $label = $maturity_labels[ $row->val ] ?? ucfirst( $row->val );
@@ -1070,7 +1070,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $ai_policy_raw ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Has an AI Awareness / AI-use policy', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Has an AI Awareness / AI-use policy', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $ai_policy_raw as $row ) :
                 $label = $maturity_labels[ $row->val ] ?? ucfirst( $row->val );
@@ -1086,7 +1086,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $materials_raw ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Did materials meet needs?', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Did materials meet needs?', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $materials_raw as $row ) :
                 $label = $materials_labels[ $row->val ] ?? ucfirst( $row->val );
@@ -1102,7 +1102,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $best_format_raw ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Best content format', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Best content format', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $best_format_raw as $row ) :
                 $label = $best_format_labels[ $row->val ] ?? ucfirst( $row->val );
@@ -1121,7 +1121,7 @@ function aiad_survey_dashboard_widget_callback(): void {
         $top_modules = array_slice( $module_counts, 0, 5, true );
         $max_module  = max( $top_modules );
         ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Top support modules requested for 2027', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Top support modules requested for 2027', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $top_modules as $key => $count ) :
                 $label = $module_labels[ $key ] ?? $key;
@@ -1137,7 +1137,7 @@ function aiad_survey_dashboard_widget_callback(): void {
     <?php endif; ?>
 
     <?php if ( ! empty( $comms_counts ) ) : ?>
-        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Preferred update channels', 'ai-awareness-day' ); ?></h4>
+        <h4 style="margin:12px 0 6px;"><?php esc_html_e( 'Preferred update channels', 'aiad-core' ); ?></h4>
         <ul style="margin:0;padding:0;list-style:none;">
             <?php foreach ( $comms_counts as $key => $count ) :
                 $label = $comms_labels[ $key ] ?? $key;
@@ -1154,9 +1154,9 @@ function aiad_survey_dashboard_widget_callback(): void {
 
     <hr style="margin:12px 0;">
     <p style="margin:0;font-size:0.875rem;">
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response' ) ); ?>"><?php esc_html_e( 'View all responses →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response' ) ); ?>"><?php esc_html_e( 'View all responses →', 'aiad-core' ); ?></a>
         &nbsp;·&nbsp;
-        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response&page=aiad-survey-analytics' ) ); ?>"><?php esc_html_e( 'Full analytics →', 'ai-awareness-day' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=survey_response&page=aiad-survey-analytics' ) ); ?>"><?php esc_html_e( 'Full analytics →', 'aiad-core' ); ?></a>
     </p>
     <?php
 }

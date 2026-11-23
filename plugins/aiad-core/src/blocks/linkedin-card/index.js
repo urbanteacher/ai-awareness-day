@@ -27,10 +27,10 @@ import '@wordpress/server-side-render';
 				'div',
 				blockEditor.useBlockProps(),
 				el( components.TextControl, {
-					label: __( 'LinkedIn post address', 'ai-awareness-day' ),
+					label: __( 'LinkedIn post address', 'aiad-core' ),
 					help: __(
 						'Leave empty to hide the card.',
-						'ai-awareness-day'
+						'aiad-core'
 					),
 					type: 'url',
 					value: url,

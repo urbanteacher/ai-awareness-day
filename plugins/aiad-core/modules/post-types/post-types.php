@@ -21,8 +21,8 @@ function aiad_register_post_types(): void {
             array( 'resource', 'featured_resource' ),
             array(
                 'labels'            => array(
-                    'name'          => __( 'Resource Types (legacy)', 'ai-awareness-day' ),
-                    'singular_name' => __( 'Resource Type', 'ai-awareness-day' ),
+                    'name'          => __( 'Resource Types (legacy)', 'aiad-core' ),
+                    'singular_name' => __( 'Resource Type', 'aiad-core' ),
                 ),
                 'hierarchical'      => true,
                 'public'            => false,
@@ -37,10 +37,10 @@ function aiad_register_post_types(): void {
     // This taxonomy stores the five core themes/principles that resources are categorized under.
     register_taxonomy( 'resource_principle', array( 'resource', 'featured_resource' ), array(
         'labels'            => array(
-            'name'          => __( 'Themes', 'ai-awareness-day' ),
-            'singular_name' => __( 'Theme', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Theme', 'ai-awareness-day' ),
-            'description'   => __( 'Thematic area for this resource. Links to the Explore the Themes section.', 'ai-awareness-day' ),
+            'name'          => __( 'Themes', 'aiad-core' ),
+            'singular_name' => __( 'Theme', 'aiad-core' ),
+            'add_new_item'  => __( 'Add New Theme', 'aiad-core' ),
+            'description'   => __( 'Thematic area for this resource. Links to the Explore the Themes section.', 'aiad-core' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -52,10 +52,10 @@ function aiad_register_post_types(): void {
     // Taxonomy: Session length (slot + time — e.g. Lesson Starter 5 min, Assembly 20 min)
     register_taxonomy( 'resource_duration', array( 'resource', 'featured_resource' ), array(
         'labels'            => array(
-            'name'          => __( 'Session length', 'ai-awareness-day' ),
-            'singular_name' => __( 'Session length', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Session length', 'ai-awareness-day' ),
-            'description'   => __( 'Where this fits in the day and how long it runs (starter, tutor time, assembly, etc.).', 'ai-awareness-day' ),
+            'name'          => __( 'Session length', 'aiad-core' ),
+            'singular_name' => __( 'Session length', 'aiad-core' ),
+            'add_new_item'  => __( 'Add New Session length', 'aiad-core' ),
+            'description'   => __( 'Where this fits in the day and how long it runs (starter, tutor time, assembly, etc.).', 'aiad-core' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -67,10 +67,10 @@ function aiad_register_post_types(): void {
     // Taxonomy: Format (Discussion, Quiz, Video, Hands-On, etc.) — registered as activity_type for back-compat
     register_taxonomy( 'activity_type', array( 'resource', 'featured_resource' ), array(
         'labels'            => array(
-            'name'          => __( 'Formats', 'ai-awareness-day' ),
-            'singular_name' => __( 'Format', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Format', 'ai-awareness-day' ),
-            'description'   => __( 'What kind of activity is this? (Discussion, Quiz, Hands-on, etc.)', 'ai-awareness-day' ),
+            'name'          => __( 'Formats', 'aiad-core' ),
+            'singular_name' => __( 'Format', 'aiad-core' ),
+            'add_new_item'  => __( 'Add New Format', 'aiad-core' ),
+            'description'   => __( 'What kind of activity is this? (Discussion, Quiz, Hands-on, etc.)', 'aiad-core' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -81,12 +81,12 @@ function aiad_register_post_types(): void {
     // CPT: Resource (activities and materials; categorised by session length, theme, etc.)
     register_post_type( 'resource', array(
         'labels'       => array(
-            'name'               => __( 'Resources', 'ai-awareness-day' ),
-            'singular_name'      => __( 'Resource', 'ai-awareness-day' ),
-            'add_new'            => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'       => __( 'Add New Resource', 'ai-awareness-day' ),
-            'edit_item'          => __( 'Edit Resource', 'ai-awareness-day' ),
-            'view_item'          => __( 'View Resource', 'ai-awareness-day' ),
+            'name'               => __( 'Resources', 'aiad-core' ),
+            'singular_name'      => __( 'Resource', 'aiad-core' ),
+            'add_new'            => __( 'Add New', 'aiad-core' ),
+            'add_new_item'       => __( 'Add New Resource', 'aiad-core' ),
+            'edit_item'          => __( 'Edit Resource', 'aiad-core' ),
+            'view_item'          => __( 'View Resource', 'aiad-core' ),
         ),
         'public'       => true,
         'has_archive'  => true,
@@ -100,8 +100,8 @@ function aiad_register_post_types(): void {
     // Taxonomy: Partner Type (Teacher, Sponsor, School, Tech Company, Charity, University, Institute)
     register_taxonomy( 'partner_type', array( 'partner' ), array(
         'labels'            => array(
-            'name'          => __( 'Partner Types', 'ai-awareness-day' ),
-            'singular_name' => __( 'Partner Type', 'ai-awareness-day' ),
+            'name'          => __( 'Partner Types', 'aiad-core' ),
+            'singular_name' => __( 'Partner Type', 'aiad-core' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -111,10 +111,10 @@ function aiad_register_post_types(): void {
     // CPT: Partner (Teachers, Sponsors, Schools, tech companies, charities, universities, institutes – name + logo)
     register_post_type( 'partner', array(
         'labels'       => array(
-            'name'               => __( 'Partners', 'ai-awareness-day' ),
-            'singular_name'      => __( 'Partner', 'ai-awareness-day' ),
-            'add_new'            => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'       => __( 'Add New Partner', 'ai-awareness-day' ),
+            'name'               => __( 'Partners', 'aiad-core' ),
+            'singular_name'      => __( 'Partner', 'aiad-core' ),
+            'add_new'            => __( 'Add New', 'aiad-core' ),
+            'add_new_item'       => __( 'Add New Partner', 'aiad-core' ),
         ),
         'public'       => true,
         'has_archive'  => true,
@@ -128,10 +128,10 @@ function aiad_register_post_types(): void {
     // CPT: Featured resource (from other organisations – external links)
     register_post_type( 'featured_resource', array(
         'labels'       => array(
-            'name'               => __( 'Resources from partners', 'ai-awareness-day' ),
-            'singular_name'      => __( 'Resource from partner', 'ai-awareness-day' ),
-            'add_new'            => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'       => __( 'Add resource from another org', 'ai-awareness-day' ),
+            'name'               => __( 'Resources from partners', 'aiad-core' ),
+            'singular_name'      => __( 'Resource from partner', 'aiad-core' ),
+            'add_new'            => __( 'Add New', 'aiad-core' ),
+            'add_new_item'       => __( 'Add resource from another org', 'aiad-core' ),
         ),
         'public'       => true,
         'has_archive'  => true,
@@ -145,14 +145,14 @@ function aiad_register_post_types(): void {
     // CPT: Form Submission (for storing contact form submissions)
     register_post_type( 'form_submission', array(
         'labels'       => array(
-            'name'               => __( 'Form Submissions', 'ai-awareness-day' ),
-            'singular_name'      => __( 'Form Submission', 'ai-awareness-day' ),
-            'add_new'            => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'       => __( 'Add New Submission', 'ai-awareness-day' ),
-            'edit_item'          => __( 'View Submission', 'ai-awareness-day' ),
-            'view_item'          => __( 'View Submission', 'ai-awareness-day' ),
-            'all_items'          => __( 'All Submissions', 'ai-awareness-day' ),
-            'search_items'       => __( 'Search Submissions', 'ai-awareness-day' ),
+            'name'               => __( 'Form Submissions', 'aiad-core' ),
+            'singular_name'      => __( 'Form Submission', 'aiad-core' ),
+            'add_new'            => __( 'Add New', 'aiad-core' ),
+            'add_new_item'       => __( 'Add New Submission', 'aiad-core' ),
+            'edit_item'          => __( 'View Submission', 'aiad-core' ),
+            'view_item'          => __( 'View Submission', 'aiad-core' ),
+            'all_items'          => __( 'All Submissions', 'aiad-core' ),
+            'search_items'       => __( 'Search Submissions', 'aiad-core' ),
         ),
         'public'       => false,
         'publicly_queryable' => false,
@@ -993,8 +993,8 @@ add_action( 'init', 'aiad_activity_type_terms', 22 );
 function aiad_resource_settings_menu(): void {
     add_submenu_page(
         'edit.php?post_type=resource',
-        __( 'Resource Settings', 'ai-awareness-day' ),
-        __( 'Settings', 'ai-awareness-day' ),
+        __( 'Resource Settings', 'aiad-core' ),
+        __( 'Settings', 'aiad-core' ),
         'manage_options',
         'aiad-resource-settings',
         'aiad_resource_settings_page'
@@ -1010,23 +1010,23 @@ function aiad_resource_settings_page(): void {
     if ( isset( $_POST['aiad_resource_settings_nonce'] ) &&
          wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['aiad_resource_settings_nonce'] ) ), 'aiad_resource_settings_save' ) ) {
         update_option( 'aiad_show_resource_stats', isset( $_POST['aiad_show_resource_stats'] ) ? 1 : 0 );
-        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'ai-awareness-day' ) . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings saved.', 'aiad-core' ) . '</p></div>';
     }
     $show_stats = (bool) get_option( 'aiad_show_resource_stats', 0 );
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Resource Settings', 'ai-awareness-day' ); ?></h1>
+        <h1><?php esc_html_e( 'Resource Settings', 'aiad-core' ); ?></h1>
         <form method="post">
             <?php wp_nonce_field( 'aiad_resource_settings_save', 'aiad_resource_settings_nonce' ); ?>
             <table class="form-table" role="presentation">
                 <tr>
-                    <th scope="row"><?php esc_html_e( 'Show stats on resource pages', 'ai-awareness-day' ); ?></th>
+                    <th scope="row"><?php esc_html_e( 'Show stats on resource pages', 'aiad-core' ); ?></th>
                     <td>
                         <label>
                             <input type="checkbox" name="aiad_show_resource_stats" value="1" <?php checked( $show_stats ); ?> />
-                            <?php esc_html_e( 'Display download and preview counts in the resource header', 'ai-awareness-day' ); ?>
+                            <?php esc_html_e( 'Display download and preview counts in the resource header', 'aiad-core' ); ?>
                         </label>
-                        <p class="description"><?php esc_html_e( 'Recommended to enable once resources have meaningful engagement numbers.', 'ai-awareness-day' ); ?></p>
+                        <p class="description"><?php esc_html_e( 'Recommended to enable once resources have meaningful engagement numbers.', 'aiad-core' ); ?></p>
                     </td>
                 </tr>
             </table>

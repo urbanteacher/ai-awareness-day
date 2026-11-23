@@ -23,14 +23,14 @@ function aiad_register_timeline_post_type(): void
 {
     register_post_type('timeline', array(
         'labels' => array(
-            'name' => __('Timeline', 'ai-awareness-day'),
-            'singular_name' => __('Timeline Entry', 'ai-awareness-day'),
-            'add_new' => __('Add Update', 'ai-awareness-day'),
-            'add_new_item' => __('Add Timeline Entry', 'ai-awareness-day'),
-            'edit_item' => __('Edit Timeline Entry', 'ai-awareness-day'),
-            'view_item' => __('View Entry', 'ai-awareness-day'),
-            'all_items' => __('All Entries', 'ai-awareness-day'),
-            'search_items' => __('Search Timeline', 'ai-awareness-day'),
+            'name' => __('Timeline', 'aiad-core'),
+            'singular_name' => __('Timeline Entry', 'aiad-core'),
+            'add_new' => __('Add Update', 'aiad-core'),
+            'add_new_item' => __('Add Timeline Entry', 'aiad-core'),
+            'edit_item' => __('Edit Timeline Entry', 'aiad-core'),
+            'view_item' => __('View Entry', 'aiad-core'),
+            'all_items' => __('All Entries', 'aiad-core'),
+            'search_items' => __('Search Timeline', 'aiad-core'),
         ),
         'public' => true,
         'publicly_queryable' => true,
@@ -53,11 +53,11 @@ function aiad_register_timeline_category_taxonomy(): void
     register_taxonomy('timeline_category', 'timeline', array(
         // Shown as "Topics": these drive the filter pills (plugins/aiad-core/modules/timeline/topics.php).
         'labels' => array(
-            'name' => __('Topics', 'ai-awareness-day'),
-            'singular_name' => __('Topic', 'ai-awareness-day'),
-            'add_new_item' => __('Add New Topic', 'ai-awareness-day'),
-            'edit_item' => __('Edit Topic', 'ai-awareness-day'),
-            'menu_name' => __('Topics', 'ai-awareness-day'),
+            'name' => __('Topics', 'aiad-core'),
+            'singular_name' => __('Topic', 'aiad-core'),
+            'add_new_item' => __('Add New Topic', 'aiad-core'),
+            'edit_item' => __('Edit Topic', 'aiad-core'),
+            'menu_name' => __('Topics', 'aiad-core'),
         ),
         'hierarchical' => true,
         'show_ui' => true,
@@ -264,37 +264,37 @@ function aiad_timeline_editable_meta_config(): array
     return array(
         '_aiad_timeline_card_type' => array(
             'type' => 'select',
-            'label' => __('Card Type', 'ai-awareness-day'),
-            'description' => __('Choose what type of content this card displays.', 'ai-awareness-day'),
+            'label' => __('Card Type', 'aiad-core'),
+            'description' => __('Choose what type of content this card displays.', 'aiad-core'),
             'options' => array(
-                'default' => __('Standard (text + optional image)', 'ai-awareness-day'),
-                'video' => __('YouTube/Vimeo Video', 'ai-awareness-day'),
-                'linkedin' => __('LinkedIn Post', 'ai-awareness-day'),
-                'link' => __('External Link Card', 'ai-awareness-day'),
+                'default' => __('Standard (text + optional image)', 'aiad-core'),
+                'video' => __('YouTube/Vimeo Video', 'aiad-core'),
+                'linkedin' => __('LinkedIn Post', 'aiad-core'),
+                'link' => __('External Link Card', 'aiad-core'),
             ),
         ),
         '_aiad_timeline_video_url' => array(
             'type' => 'url',
-            'label' => __('Video URL', 'ai-awareness-day'),
+            'label' => __('Video URL', 'aiad-core'),
             'placeholder' => 'https://www.youtube.com/watch?v=...',
-            'description' => __('YouTube or Vimeo link — will be embedded in the card.', 'ai-awareness-day'),
+            'description' => __('YouTube or Vimeo link — will be embedded in the card.', 'aiad-core'),
         ),
         '_aiad_timeline_linkedin_url' => array(
             'type' => 'url',
-            'label' => __('LinkedIn Post URL', 'ai-awareness-day'),
+            'label' => __('LinkedIn Post URL', 'aiad-core'),
             'placeholder' => 'https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:...',
-            'description' => __('Paste the LinkedIn embed URL (from "Embed this post" option on LinkedIn). Format: linkedin.com/embed/feed/update/...', 'ai-awareness-day'),
+            'description' => __('Paste the LinkedIn embed URL (from "Embed this post" option on LinkedIn). Format: linkedin.com/embed/feed/update/...', 'aiad-core'),
         ),
         '_aiad_timeline_link_url' => array(
             'type' => 'url',
-            'label' => __('Link URL', 'ai-awareness-day'),
+            'label' => __('Link URL', 'aiad-core'),
             'placeholder' => 'https://...',
-            'description' => __('External link for "Learn more" button.', 'ai-awareness-day'),
+            'description' => __('External link for "Learn more" button.', 'aiad-core'),
         ),
         '_aiad_timeline_link_label' => array(
             'type' => 'text',
-            'label' => __('Link Label', 'ai-awareness-day'),
-            'placeholder' => __('View resource →', 'ai-awareness-day'),
+            'label' => __('Link Label', 'aiad-core'),
+            'placeholder' => __('View resource →', 'aiad-core'),
         ),
     );
 }

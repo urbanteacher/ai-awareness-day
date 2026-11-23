@@ -334,7 +334,7 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 		$description = wp_trim_words( wp_strip_all_tags( $post->post_content ), 40, '…' );
 	}
 	if ( ! $description ) {
-		$description = __( 'Live session for AI Awareness Day 2027.', 'ai-awareness-day' );
+		$description = __( 'Live session for AI Awareness Day 2027.', 'aiad-core' );
 	}
 
 	$is_online  = $reg_url !== '';
@@ -345,12 +345,12 @@ function aiad_get_live_session_event_schema( WP_Post $post ): array {
 	$location = $is_online
 		? array(
 			'@type' => 'VirtualLocation',
-			'name'  => __( 'Online live stream', 'ai-awareness-day' ),
+			'name'  => __( 'Online live stream', 'aiad-core' ),
 			'url'   => esc_url( $reg_url ),
 		)
 		: array(
 			'@type'   => 'Place',
-			'name'    => __( 'UK schools', 'ai-awareness-day' ),
+			'name'    => __( 'UK schools', 'aiad-core' ),
 			'address' => array(
 				'@type'          => 'PostalAddress',
 				'addressCountry' => 'GB',
@@ -561,7 +561,7 @@ function aiad_get_breadcrumb_trail(): array {
 	
 	// Home
 	$trail[] = array(
-		'name' => __( 'Home', 'ai-awareness-day' ),
+		'name' => __( 'Home', 'aiad-core' ),
 		'url'  => home_url( '/' ),
 	);
 	
@@ -630,7 +630,7 @@ function aiad_render_breadcrumbs(): void {
 		return;
 	}
 	$last_index = count( $trail ) - 1;
-	echo '<nav class="aiad-breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumb', 'ai-awareness-day' ) . '">';
+	echo '<nav class="aiad-breadcrumbs" aria-label="' . esc_attr__( 'Breadcrumb', 'aiad-core' ) . '">';
 	echo '<div class="container"><ol class="aiad-breadcrumbs__list">';
 	foreach ( $trail as $i => $item ) {
 		$is_current = ( $i === $last_index );
@@ -862,11 +862,11 @@ function aiad_notice_search_engines_discouraged(): void {
 	}
 	$fix_url = admin_url( 'options-reading.php' );
 	echo '<div class="notice notice-error"><p><strong>'
-		. esc_html__( 'Search engine indexing is currently DISABLED.', 'ai-awareness-day' )
+		. esc_html__( 'Search engine indexing is currently DISABLED.', 'aiad-core' )
 		. '</strong> '
-		. esc_html__( 'Your site is hidden from Google and other search engines because "Discourage search engines from indexing this site" is enabled.', 'ai-awareness-day' )
+		. esc_html__( 'Your site is hidden from Google and other search engines because "Discourage search engines from indexing this site" is enabled.', 'aiad-core' )
 		. ' <a href="' . esc_url( $fix_url ) . '">'
-		. esc_html__( 'Fix this now in Settings → Reading.', 'ai-awareness-day' )
+		. esc_html__( 'Fix this now in Settings → Reading.', 'aiad-core' )
 		. '</a></p></div>';
 }
 add_action( 'admin_notices', 'aiad_notice_search_engines_discouraged' );

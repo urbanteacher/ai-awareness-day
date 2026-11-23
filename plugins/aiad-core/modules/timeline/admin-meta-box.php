@@ -19,7 +19,7 @@ function aiad_timeline_meta_box(): void
 {
     add_meta_box(
         'aiad_timeline_details',
-        __('Entry Details', 'ai-awareness-day'),
+        __('Entry Details', 'aiad-core'),
         'aiad_timeline_meta_box_callback',
         'timeline',
         'side',
@@ -78,8 +78,8 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
     ?>
     <div class="aiad-resource-details">
         <p class="description" style="margin-top:0;">
-            <strong><?php esc_html_e('Visual (recommended):', 'ai-awareness-day'); ?></strong><br>
-            <?php esc_html_e('Set a Featured Image (school logo, display board, faces, etc.) and/or choose a card type below. The timeline card will show the content prominently.', 'ai-awareness-day'); ?>
+            <strong><?php esc_html_e('Visual (recommended):', 'aiad-core'); ?></strong><br>
+            <?php esc_html_e('Set a Featured Image (school logo, display board, faces, etc.) and/or choose a card type below. The timeline card will show the content prominently.', 'aiad-core'); ?>
         </p>
         <?php
         foreach ($editable as $meta_key => $field) {
@@ -136,15 +136,15 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
         }
         ?>
         <div class="aiad-rd-section">
-            <strong class="aiad-rd-label"><?php esc_html_e('Source', 'ai-awareness-day'); ?></strong>
+            <strong class="aiad-rd-label"><?php esc_html_e('Source', 'aiad-core'); ?></strong>
             <p class="description" style="margin-top:0;">
-                <?php echo esc_html('auto' === $source ? __('Auto-generated', 'ai-awareness-day') : __('Manual', 'ai-awareness-day')); ?>
+                <?php echo esc_html('auto' === $source ? __('Auto-generated', 'aiad-core') : __('Manual', 'aiad-core')); ?>
             </p>
         </div>
         <div class="aiad-rd-section">
-            <strong class="aiad-rd-label"><?php esc_html_e('Benchmark results', 'ai-awareness-day'); ?></strong>
+            <strong class="aiad-rd-label"><?php esc_html_e('Benchmark results', 'aiad-core'); ?></strong>
             <p class="description" style="margin-top:0;">
-                <?php esc_html_e('Tag who should see this in the AI Risk Benchmark “More to read” links after they finish the audit. You can select more than one.', 'ai-awareness-day'); ?>
+                <?php esc_html_e('Tag who should see this in the AI Risk Benchmark “More to read” links after they finish the audit. You can select more than one.', 'aiad-core'); ?>
             </p>
             <?php
             $audience_roles = function_exists('aiad_timeline_audience_role_options')
@@ -168,17 +168,17 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
             <label style="display:block;margin:0.65rem 0 0;">
                 <input type="checkbox" id="aiad_timeline_benchmark_pin" name="aiad_timeline_benchmark_pin"
                     value="1" <?php checked($outcome_pinned); ?> />
-                <?php esc_html_e('Pin in benchmark results (always show when audience matches)', 'ai-awareness-day'); ?>
+                <?php esc_html_e('Pin in benchmark results (always show when audience matches)', 'aiad-core'); ?>
             </label>
         </div>
         <div class="aiad-rd-section">
             <label for="aiad_timeline_pinned">
                 <input type="checkbox" id="aiad_timeline_pinned" name="aiad_timeline_pinned" value="1" <?php checked($pinned); ?> />
-                <?php esc_html_e('Pin to top of timeline', 'ai-awareness-day'); ?>
+                <?php esc_html_e('Pin to top of timeline', 'aiad-core'); ?>
             </label>
         </div>
         <div class="aiad-rd-section">
-            <label for="aiad_timeline_icon" class="aiad-rd-label"><?php esc_html_e('Icon', 'ai-awareness-day'); ?></label>
+            <label for="aiad_timeline_icon" class="aiad-rd-label"><?php esc_html_e('Icon', 'aiad-core'); ?></label>
             <select id="aiad_timeline_icon" name="aiad_timeline_icon" class="widefat">
                 <?php foreach ($icon_options as $value => $label): ?>
                     <option value="<?php echo esc_attr($value); ?>" <?php selected($icon, $value); ?>>
@@ -192,7 +192,7 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
         ?>
         <div class="aiad-rd-section">
             <label for="aiad_timeline_cover_fallback"
-                class="aiad-rd-label"><?php esc_html_e('Cover when no featured image', 'ai-awareness-day'); ?></label>
+                class="aiad-rd-label"><?php esc_html_e('Cover when no featured image', 'aiad-core'); ?></label>
             <select id="aiad_timeline_cover_fallback" name="aiad_timeline_cover_fallback" class="widefat">
                 <?php foreach ($cover_options as $value => $label): ?>
                     <option value="<?php echo esc_attr($value); ?>" <?php selected($cover_fallback, $value); ?>>
@@ -200,7 +200,7 @@ function aiad_timeline_meta_box_callback(WP_Post $post): void
                 <?php endforeach; ?>
             </select>
             <p class="description">
-                <?php esc_html_e('Used if no Featured Image is set. Upload a Featured Image to use your own photo instead.', 'ai-awareness-day'); ?>
+                <?php esc_html_e('Used if no Featured Image is set. Upload a Featured Image to use your own photo instead.', 'aiad-core'); ?>
             </p>
         </div>
         <?php

@@ -7,7 +7,7 @@
 	"icon": "excerpt-view",
 	"description": "One item of a styled list, holding any blocks.",
 	"keywords": [ "item", "card" ],
-	"textdomain": "ai-awareness-day",
+	"textdomain": "aiad-core",
 	"attributes": {
 		"tagName": { "type": "string", "enum": [ "li", "div" ], "default": "li" }
 	},

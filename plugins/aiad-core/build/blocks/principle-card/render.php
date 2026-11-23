@@ -40,7 +40,7 @@ if ( 'literacy' === $aiad_strand ) :
 			<img src="<?php echo esc_url( $aiad_logo ); ?>" alt="" aria-hidden="true" class="principle-badge__img" onerror="this.classList.add('is-broken');" />
 		<?php else : ?>
 			<div class="principle-badge__placeholder" aria-hidden="true">
-				<span class="principle-badge__placeholder-text"><?php esc_html_e( 'AI', 'ai-awareness-day' ); ?></span>
+				<span class="principle-badge__placeholder-text"><?php esc_html_e( 'AI', 'aiad-core' ); ?></span>
 			</div>
 		<?php endif; ?>
 	</div>
@@ -50,7 +50,7 @@ if ( 'literacy' === $aiad_strand ) :
 	<?php
 else :
 	/* translators: %s: strand name e.g. Safe */
-	$aiad_label = sprintf( __( 'Explore %s activities', 'ai-awareness-day' ), wp_strip_all_tags( $aiad_title ) );
+	$aiad_label = sprintf( __( 'Explore %s activities', 'aiad-core' ), wp_strip_all_tags( $aiad_title ) );
 	?>
 <a href="#themes" class="principle-card principle-card--<?php echo esc_attr( $aiad_strand . ' ' . $aiad_class ); ?>" aria-label="<?php echo esc_attr( $aiad_label ); ?>">
 	<div class="principle-badge">

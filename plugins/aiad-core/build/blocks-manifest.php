@@ -14,7 +14,7 @@ return array(
 			'featured',
 			'resource'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -37,7 +37,7 @@ return array(
 			'live',
 			'session'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -59,7 +59,7 @@ return array(
 			'archive',
 			'resource'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -81,7 +81,7 @@ return array(
 			'breadcrumbs',
 			'navigation'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -142,7 +142,7 @@ return array(
 			'embed',
 			'campaign'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'url' => array(
 				'type' => 'string',
@@ -250,7 +250,7 @@ return array(
 			'comments',
 			'discussion'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId',
 			'postType'
@@ -305,7 +305,7 @@ return array(
 			'form',
 			'get involved'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -331,7 +331,7 @@ return array(
 			'logo',
 			'card'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'kind' => array(
 				'type' => 'string',
@@ -404,7 +404,7 @@ return array(
 			'downloads',
 			'footer'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -429,7 +429,7 @@ return array(
 			'instagram',
 			'footer'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -452,7 +452,7 @@ return array(
 			'widgets',
 			'footer'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -475,7 +475,7 @@ return array(
 			'homepage',
 			'front'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -498,7 +498,7 @@ return array(
 			'resource',
 			'badge'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -523,7 +523,7 @@ return array(
 			'resource',
 			'excerpt'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -548,7 +548,7 @@ return array(
 			'resource',
 			'footer'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -599,7 +599,7 @@ return array(
 			'item',
 			'card'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'tagName' => array(
 				'type' => 'string',
@@ -654,7 +654,7 @@ return array(
 			'social',
 			'post'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'url' => array(
 				'type' => 'string',
@@ -683,7 +683,7 @@ return array(
 			'cards',
 			'steps'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'tagName' => array(
 				'type' => 'string',
@@ -854,7 +854,7 @@ return array(
 			'join',
 			'buttons'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'variant' => array(
 				'type' => 'string',
@@ -918,7 +918,7 @@ return array(
 			'partner',
 			'profile'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -942,7 +942,7 @@ return array(
 			'partner',
 			'profile'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -966,7 +966,7 @@ return array(
 			'partner',
 			'profile'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -990,7 +990,7 @@ return array(
 			'partner',
 			'profile'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId'
 		),
@@ -1015,7 +1015,7 @@ return array(
 			'logos',
 			'marquee'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1039,7 +1039,7 @@ return array(
 			'directory',
 			'filter'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1063,7 +1063,7 @@ return array(
 			'reach',
 			'cards'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1086,7 +1086,7 @@ return array(
 			'featured',
 			'sticky'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId',
 			'postType'
@@ -1114,7 +1114,7 @@ return array(
 			'next',
 			'navigation'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'usesContext' => array(
 			'postId',
 			'postType'
@@ -1145,7 +1145,7 @@ return array(
 			'principle',
 			'homepage'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'strand' => array(
 				'type' => 'string',
@@ -1190,7 +1190,7 @@ return array(
 			'principles',
 			'homepage'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'allowedBlocks' => array(
 			'aiad/principle-card'
 		),
@@ -1216,7 +1216,7 @@ return array(
 			'tiles',
 			'homepage'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'source' => array(
 				'type' => 'string',
@@ -1372,7 +1372,7 @@ return array(
 			'live',
 			'session'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1394,7 +1394,7 @@ return array(
 			'single',
 			'resource'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1416,7 +1416,7 @@ return array(
 			'single',
 			'timeline'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1438,7 +1438,7 @@ return array(
 			'logo',
 			'header'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1462,7 +1462,7 @@ return array(
 			'navigation',
 			'header'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1531,7 +1531,7 @@ return array(
 			'theme',
 			'icon'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'strand' => array(
 				'type' => 'string',
@@ -1570,7 +1570,7 @@ return array(
 			'definition',
 			'tag'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'tagName' => array(
 				'type' => 'string',
@@ -1609,7 +1609,7 @@ return array(
 			'news',
 			'feed'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1632,7 +1632,7 @@ return array(
 			'tools',
 			'filter'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1653,7 +1653,7 @@ return array(
 			'tools',
 			'groups'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'supports' => array(
 			'html' => false,
 			'multiple' => false,
@@ -1675,7 +1675,7 @@ return array(
 			'screenshot',
 			'zoom'
 		),
-		'textdomain' => 'ai-awareness-day',
+		'textdomain' => 'aiad-core',
 		'attributes' => array(
 			'url' => array(
 				'type' => 'string',

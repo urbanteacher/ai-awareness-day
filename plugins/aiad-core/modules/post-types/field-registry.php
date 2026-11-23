@@ -22,9 +22,9 @@ function aiad_get_field_registry(): array {
         'resource_details' => array(
             '_aiad_subtitle' => array(
                 'type'        => 'text',
-                'label'       => __( 'Subtitle', 'ai-awareness-day' ),
-                'description' => __( 'Max 120 characters.', 'ai-awareness-day' ),
-                'placeholder' => __( 'One sentence: what students will actually do', 'ai-awareness-day' ),
+                'label'       => __( 'Subtitle', 'aiad-core' ),
+                'description' => __( 'Max 120 characters.', 'aiad-core' ),
+                'placeholder' => __( 'One sentence: what students will actually do', 'aiad-core' ),
                 'maxlength'   => 120,
                 'class'       => 'large-text',
                 'meta_key'    => '_aiad_subtitle',
@@ -33,21 +33,21 @@ function aiad_get_field_registry(): array {
             // Meta remains registered in post-types for legacy content / REST; single template uses it only when no session-length terms are set.
             '_aiad_level' => array(
                 'type'        => 'radio',
-                'label'       => __( 'Level', 'ai-awareness-day' ),
+                'label'       => __( 'Level', 'aiad-core' ),
                 'options'     => array(
-                    'beginner'    => __( 'Beginner', 'ai-awareness-day' ),
-                    'intermediate' => __( 'Intermediate', 'ai-awareness-day' ),
-                    'advanced'    => __( 'Advanced', 'ai-awareness-day' ),
+                    'beginner'    => __( 'Beginner', 'aiad-core' ),
+                    'intermediate' => __( 'Intermediate', 'aiad-core' ),
+                    'advanced'    => __( 'Advanced', 'aiad-core' ),
                 ),
                 'meta_key'    => '_aiad_level',
             ),
             '_aiad_status' => array(
                 'type'        => 'radio',
-                'label'       => __( 'Status', 'ai-awareness-day' ),
+                'label'       => __( 'Status', 'aiad-core' ),
                 'options'     => array(
-                    'draft'     => __( 'Draft', 'ai-awareness-day' ),
-                    'in_review' => __( 'In review', 'ai-awareness-day' ),
-                    'published' => __( 'Published', 'ai-awareness-day' ),
+                    'draft'     => __( 'Draft', 'aiad-core' ),
+                    'in_review' => __( 'In review', 'aiad-core' ),
+                    'published' => __( 'Published', 'aiad-core' ),
                 ),
                 'meta_key'    => '_aiad_status',
                 'default'     => 'draft',
@@ -56,25 +56,25 @@ function aiad_get_field_registry(): array {
         'ai_tool_details' => array(
             '_aiad_tool_url' => array(
                 'type'        => 'url',
-                'label'       => __( 'Website URL', 'ai-awareness-day' ),
+                'label'       => __( 'Website URL', 'aiad-core' ),
                 'placeholder' => 'https://example.com',
                 'class'       => 'large-text',
                 'meta_key'    => '_aiad_tool_url',
             ),
             '_aiad_tool_use_case' => array(
                 'type'        => 'text',
-                'label'       => __( 'Use Case', 'ai-awareness-day' ),
-                'description' => __( 'Short description shown on the card.', 'ai-awareness-day' ),
-                'placeholder' => __( 'e.g. Lesson planning, differentiation, feedback', 'ai-awareness-day' ),
+                'label'       => __( 'Use Case', 'aiad-core' ),
+                'description' => __( 'Short description shown on the card.', 'aiad-core' ),
+                'placeholder' => __( 'e.g. Lesson planning, differentiation, feedback', 'aiad-core' ),
                 'class'       => 'large-text',
                 'meta_key'    => '_aiad_tool_use_case',
             ),
             '_aiad_tool_features' => array(
                 'type'        => 'textarea',
-                'label'       => __( 'Key Features', 'ai-awareness-day' ),
-                'description' => __( 'One feature per line. First 3 are shown on cards; the rest appear as "+N more".', 'ai-awareness-day' ),
+                'label'       => __( 'Key Features', 'aiad-core' ),
+                'description' => __( 'One feature per line. First 3 are shown on cards; the rest appear as "+N more".', 'aiad-core' ),
                 'rows'        => 5,
-                'placeholder' => __( 'One feature per line', 'ai-awareness-day' ),
+                'placeholder' => __( 'One feature per line', 'aiad-core' ),
                 'class'       => 'large-text',
                 'meta_key'    => '_aiad_tool_features',
             ),
@@ -82,44 +82,44 @@ function aiad_get_field_registry(): array {
         'partner_details' => array(
             '_partner_url' => array(
                 'type'        => 'url',
-                'label'       => __( 'Website URL (optional)', 'ai-awareness-day' ),
+                'label'       => __( 'Website URL (optional)', 'aiad-core' ),
                 'class'       => 'large-text',
                 'meta_key'    => '_partner_url',
             ),
             '_partner_profile_intro' => array(
                 'type'        => 'textarea',
-                'label'       => __( 'Profile intro (optional)', 'ai-awareness-day' ),
-                'description' => __( 'Short intro shown near the top of the partner profile page. If empty, the page content is used as the description.', 'ai-awareness-day' ),
-                'placeholder' => __( 'One sentence summary of who they are and what they offer for AI Awareness Day.', 'ai-awareness-day' ),
+                'label'       => __( 'Profile intro (optional)', 'aiad-core' ),
+                'description' => __( 'Short intro shown near the top of the partner profile page. If empty, the page content is used as the description.', 'aiad-core' ),
+                'placeholder' => __( 'One sentence summary of who they are and what they offer for AI Awareness Day.', 'aiad-core' ),
                 'rows'        => 3,
                 'class'       => 'large-text',
                 'meta_key'    => '_partner_profile_intro',
             ),
             '_partner_provides_ai_resources' => array(
                 'type'        => 'checkbox',
-                'label'       => __( 'Provides linked AI learning resources', 'ai-awareness-day' ),
+                'label'       => __( 'Provides linked AI learning resources', 'aiad-core' ),
                 'meta_key'    => '_partner_provides_ai_resources',
             ),
             '_partner_ai_resources_url' => array(
                 'type'        => 'url',
-                'label'       => __( 'AI resources URL (optional)', 'ai-awareness-day' ),
-                'description' => __( 'When checked, this partner appears first on the homepage Traction grid with a subtle highlight. The card links here, or to the website URL if this is empty.', 'ai-awareness-day' ),
-                'placeholder' => __( 'Leave empty to use website URL above', 'ai-awareness-day' ),
+                'label'       => __( 'AI resources URL (optional)', 'aiad-core' ),
+                'description' => __( 'When checked, this partner appears first on the homepage Traction grid with a subtle highlight. The card links here, or to the website URL if this is empty.', 'aiad-core' ),
+                'placeholder' => __( 'Leave empty to use website URL above', 'aiad-core' ),
                 'class'       => 'large-text',
                 'meta_key'    => '_partner_ai_resources_url',
             ),
             '_partner_stats' => array(
                 'type'        => 'text',
-                'label'       => __( 'Statistics/Description', 'ai-awareness-day' ),
-                'description' => __( 'Displayed on the Traction section card (e.g. "32,000 students", "20 schools across Bedfordshire").', 'ai-awareness-day' ),
-                'placeholder' => __( 'e.g., 32,000 students', 'ai-awareness-day' ),
+                'label'       => __( 'Statistics/Description', 'aiad-core' ),
+                'description' => __( 'Displayed on the Traction section card (e.g. "32,000 students", "20 schools across Bedfordshire").', 'aiad-core' ),
+                'placeholder' => __( 'e.g., 32,000 students', 'aiad-core' ),
                 'class'       => 'large-text',
                 'meta_key'    => '_partner_stats',
             ),
             '_partner_school_count' => array(
                 'type'        => 'number',
-                'label'       => __( 'Schools in portfolio', 'ai-awareness-day' ),
-                'description' => __( 'For MATs and organisations: enter how many schools are in their catchment. This is added to the "Schools registered" total on the front page.', 'ai-awareness-day' ),
+                'label'       => __( 'Schools in portfolio', 'aiad-core' ),
+                'description' => __( 'For MATs and organisations: enter how many schools are in their catchment. This is added to the "Schools registered" total on the front page.', 'aiad-core' ),
                 'min'         => 0,
                 'step'        => 1,
                 'class'       => 'small-text',
@@ -127,37 +127,37 @@ function aiad_get_field_registry(): array {
             ),
             '_partner_links' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Partner resources & links (optional)', 'ai-awareness-day' ),
-                'description' => __( 'Add themed links to the partner’s own AI Awareness Day page, units, downloads, or activities. These show on the partner profile page grouped by theme.', 'ai-awareness-day' ),
+                'label'       => __( 'Partner resources & links (optional)', 'aiad-core' ),
+                'description' => __( 'Add themed links to the partner’s own AI Awareness Day page, units, downloads, or activities. These show on the partner profile page grouped by theme.', 'aiad-core' ),
                 'meta_key'    => '_partner_links',
-                'add_button'  => __( 'Add link', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add link', 'aiad-core' ),
                 'fields'      => array(
                     'theme' => array(
                         'type'    => 'select',
-                        'label'   => __( 'Theme', 'ai-awareness-day' ),
+                        'label'   => __( 'Theme', 'aiad-core' ),
                         'options' => array(
-                            'safe'        => __( 'Safe', 'ai-awareness-day' ),
-                            'smart'       => __( 'Smart', 'ai-awareness-day' ),
-                            'creative'    => __( 'Creative', 'ai-awareness-day' ),
-                            'responsible' => __( 'Responsible', 'ai-awareness-day' ),
-                            'future'      => __( 'Future', 'ai-awareness-day' ),
+                            'safe'        => __( 'Safe', 'aiad-core' ),
+                            'smart'       => __( 'Smart', 'aiad-core' ),
+                            'creative'    => __( 'Creative', 'aiad-core' ),
+                            'responsible' => __( 'Responsible', 'aiad-core' ),
+                            'future'      => __( 'Future', 'aiad-core' ),
                         ),
                     ),
                     'title' => array(
                         'type'        => 'text',
-                        'label'       => __( 'Title', 'ai-awareness-day' ),
-                        'placeholder' => __( 'e.g. Introduction to Artificial Intelligence', 'ai-awareness-day' ),
+                        'label'       => __( 'Title', 'aiad-core' ),
+                        'placeholder' => __( 'e.g. Introduction to Artificial Intelligence', 'aiad-core' ),
                         'class'       => 'large-text',
                     ),
                     'duration' => array(
                         'type'        => 'text',
-                        'label'       => __( 'Duration (optional)', 'ai-awareness-day' ),
-                        'placeholder' => __( 'e.g. 30 mins, 1 hour, 2 lessons', 'ai-awareness-day' ),
+                        'label'       => __( 'Duration (optional)', 'aiad-core' ),
+                        'placeholder' => __( 'e.g. 30 mins, 1 hour, 2 lessons', 'aiad-core' ),
                         'class'       => 'regular-text',
                     ),
                     'url' => array(
                         'type'        => 'url',
-                        'label'       => __( 'Link URL', 'ai-awareness-day' ),
+                        'label'       => __( 'Link URL', 'aiad-core' ),
                         'placeholder' => 'https://…',
                     ),
                 ),
@@ -166,139 +166,139 @@ function aiad_get_field_registry(): array {
         'content_sections' => array(
             '_aiad_preparation' => array(
                 'type'        => 'repeatable_text',
-                'label'       => __( 'Preparation', 'ai-awareness-day' ),
-                'description' => __( 'What the teacher must have ready before the lesson. One concrete action per item.', 'ai-awareness-day' ),
+                'label'       => __( 'Preparation', 'aiad-core' ),
+                'description' => __( 'What the teacher must have ready before the lesson. One concrete action per item.', 'aiad-core' ),
                 'meta_key'    => '_aiad_preparation',
-                'add_button'  => __( 'Add item', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add item', 'aiad-core' ),
             ),
             '_aiad_key_definitions' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Key definitions', 'ai-awareness-day' ),
-                'description' => __( 'Term, definition; tick if simplified for key stage.', 'ai-awareness-day' ),
+                'label'       => __( 'Key definitions', 'aiad-core' ),
+                'description' => __( 'Term, definition; tick if simplified for key stage.', 'aiad-core' ),
                 'meta_key'    => '_aiad_key_definitions',
                 'fields'      => array(
-                    'term'              => array( 'type' => 'text', 'label' => __( 'Term', 'ai-awareness-day' ) ),
-                    'definition'        => array( 'type' => 'textarea', 'label' => __( 'Definition', 'ai-awareness-day' ), 'rows' => 2 ),
-                    'key_stage_adapted' => array( 'type' => 'checkbox', 'label' => __( 'Key stage adapted', 'ai-awareness-day' ) ),
+                    'term'              => array( 'type' => 'text', 'label' => __( 'Term', 'aiad-core' ) ),
+                    'definition'        => array( 'type' => 'textarea', 'label' => __( 'Definition', 'aiad-core' ), 'rows' => 2 ),
+                    'key_stage_adapted' => array( 'type' => 'checkbox', 'label' => __( 'Key stage adapted', 'aiad-core' ) ),
                 ),
-                'add_button'  => __( 'Add definition', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add definition', 'aiad-core' ),
             ),
             '_aiad_learning_objectives' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Learning objectives', 'ai-awareness-day' ),
-                'description' => __( 'Start with a Bloom\'s verb (understand, recognise, analyse, evaluate, create, apply). Min 2, max 5.', 'ai-awareness-day' ),
+                'label'       => __( 'Learning objectives', 'aiad-core' ),
+                'description' => __( 'Start with a Bloom\'s verb (understand, recognise, analyse, evaluate, create, apply). Min 2, max 5.', 'aiad-core' ),
                 'meta_key'    => '_aiad_learning_objectives',
                 'fields'      => array(
-                    'objective'  => array( 'type' => 'text', 'label' => __( 'Objective', 'ai-awareness-day' ), 'placeholder' => __( 'e.g. Understand that AI predicts patterns', 'ai-awareness-day' ) ),
+                    'objective'  => array( 'type' => 'text', 'label' => __( 'Objective', 'aiad-core' ), 'placeholder' => __( 'e.g. Understand that AI predicts patterns', 'aiad-core' ) ),
                 ),
-                'add_button'  => __( 'Add objective', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add objective', 'aiad-core' ),
                 'min'         => 2,
                 'max'         => 5,
             ),
             '_aiad_instructions' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Instructions', 'ai-awareness-day' ),
-                'description' => __( 'Teacher script. At least one step should have a duration. Min 2 steps.', 'ai-awareness-day' ),
+                'label'       => __( 'Instructions', 'aiad-core' ),
+                'description' => __( 'Teacher script. At least one step should have a duration. Min 2 steps.', 'aiad-core' ),
                 'meta_key'    => '_aiad_instructions',
                 'fields'      => array(
-                    'step'          => array( 'type' => 'number', 'label' => __( 'Step', 'ai-awareness-day' ), 'min' => 1 ),
-                    'action'        => array( 'type' => 'textarea', 'label' => __( 'Action', 'ai-awareness-day' ), 'rows' => 2 ),
-                    'duration'      => array( 'type' => 'text', 'label' => __( 'Duration', 'ai-awareness-day' ), 'placeholder' => 'e.g. 60 seconds' ),
-                    'resource_ref'  => array( 'type' => 'text', 'label' => __( 'Resource ref', 'ai-awareness-day' ), 'placeholder' => 'e.g. Slide 6' ),
-                    'student_action'=> array( 'type' => 'text', 'label' => __( 'Student action', 'ai-awareness-day' ), 'placeholder' => 'e.g. Pair discussion' ),
-                    'teacher_tip'   => array( 'type' => 'textarea', 'label' => __( 'Teacher tip', 'ai-awareness-day' ), 'rows' => 1 ),
-                    'optional'      => array( 'type' => 'checkbox', 'label' => __( 'Optional (left off the lesson time)', 'ai-awareness-day' ) ),
+                    'step'          => array( 'type' => 'number', 'label' => __( 'Step', 'aiad-core' ), 'min' => 1 ),
+                    'action'        => array( 'type' => 'textarea', 'label' => __( 'Action', 'aiad-core' ), 'rows' => 2 ),
+                    'duration'      => array( 'type' => 'text', 'label' => __( 'Duration', 'aiad-core' ), 'placeholder' => 'e.g. 60 seconds' ),
+                    'resource_ref'  => array( 'type' => 'text', 'label' => __( 'Resource ref', 'aiad-core' ), 'placeholder' => 'e.g. Slide 6' ),
+                    'student_action'=> array( 'type' => 'text', 'label' => __( 'Student action', 'aiad-core' ), 'placeholder' => 'e.g. Pair discussion' ),
+                    'teacher_tip'   => array( 'type' => 'textarea', 'label' => __( 'Teacher tip', 'aiad-core' ), 'rows' => 1 ),
+                    'optional'      => array( 'type' => 'checkbox', 'label' => __( 'Optional (left off the lesson time)', 'aiad-core' ) ),
                 ),
-                'add_button'  => __( 'Add step', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add step', 'aiad-core' ),
                 'min'         => 2,
             ),
             '_aiad_discussion_question' => array(
                 'type'        => 'text',
-                'label'       => __( 'Discussion question', 'ai-awareness-day' ),
+                'label'       => __( 'Discussion question', 'aiad-core' ),
                 'meta_key'    => '_aiad_discussion_question',
                 'class'       => 'large-text',
             ),
             '_aiad_teacher_notes' => array(
                 'type'        => 'textarea',
-                'label'       => __( 'Teacher notes (optional)', 'ai-awareness-day' ),
-                'description' => __( 'Optional background, misconceptions, and tips for teachers. This does not affect publishing.', 'ai-awareness-day' ),
+                'label'       => __( 'Teacher notes (optional)', 'aiad-core' ),
+                'description' => __( 'Optional background, misconceptions, and tips for teachers. This does not affect publishing.', 'aiad-core' ),
                 'meta_key'    => '_aiad_teacher_notes',
                 'rows'        => 5,
                 'class'       => 'large-text',
             ),
             '_aiad_differentiation' => array(
                 'type'        => 'object',
-                'label'       => __( 'Differentiation', 'ai-awareness-day' ),
-                'description' => __( 'How to adapt for different learners.', 'ai-awareness-day' ),
+                'label'       => __( 'Differentiation', 'aiad-core' ),
+                'description' => __( 'How to adapt for different learners.', 'aiad-core' ),
                 'meta_key'    => '_aiad_differentiation',
                 'fields'      => array(
-                    'support' => array( 'type' => 'textarea', 'label' => __( 'Support (struggling)', 'ai-awareness-day' ), 'rows' => 2 ),
-                    'stretch' => array( 'type' => 'textarea', 'label' => __( 'Stretch (high ability)', 'ai-awareness-day' ), 'rows' => 2 ),
-                    'send'    => array( 'type' => 'textarea', 'label' => __( 'SEND (additional needs)', 'ai-awareness-day' ), 'rows' => 2 ),
+                    'support' => array( 'type' => 'textarea', 'label' => __( 'Support (struggling)', 'aiad-core' ), 'rows' => 2 ),
+                    'stretch' => array( 'type' => 'textarea', 'label' => __( 'Stretch (high ability)', 'aiad-core' ), 'rows' => 2 ),
+                    'send'    => array( 'type' => 'textarea', 'label' => __( 'SEND (additional needs)', 'aiad-core' ), 'rows' => 2 ),
                 ),
             ),
             '_aiad_debate' => array(
                 'type'        => 'textarea',
-                'label'       => __( 'Debate it (optional)', 'ai-awareness-day' ),
-                'description' => __( 'How pupils can debate this topic in class for the National AI Conversation, in about 30 words. Start with a short label, e.g. "Motion: This house believes…". Left empty, the page shows general advice built on the discussion question.', 'ai-awareness-day' ),
+                'label'       => __( 'Debate it (optional)', 'aiad-core' ),
+                'description' => __( 'How pupils can debate this topic in class for the National AI Conversation, in about 30 words. Start with a short label, e.g. "Motion: This house believes…". Left empty, the page shows general advice built on the discussion question.', 'aiad-core' ),
                 'meta_key'    => '_aiad_debate',
                 'rows'        => 3,
                 'class'       => 'large-text',
             ),
             '_aiad_debate_pack' => array(
                 'type'        => 'object',
-                'label'       => __( 'Debate pack', 'ai-awareness-day' ),
-                'description' => __( 'The full debate set-up for this topic, pitched for each age pathway: a motion, a prompt to get pupils going, and three points each way. An empty motion falls back to the National Conversation motion bank for this theme.', 'ai-awareness-day' ),
+                'label'       => __( 'Debate pack', 'aiad-core' ),
+                'description' => __( 'The full debate set-up for this topic, pitched for each age pathway: a motion, a prompt to get pupils going, and three points each way. An empty motion falls back to the National Conversation motion bank for this theme.', 'aiad-core' ),
                 'meta_key'    => '_aiad_debate_pack',
                 'fields'      => array(
-                    'primary_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Primary: motion', 'ai-awareness-day' ) ),
-                    'primary_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Primary: help to get going (optional)', 'ai-awareness-day' ) ),
-                    'primary_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Primary: points for (one per line)', 'ai-awareness-day' ) ),
-                    'primary_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Primary: points against (one per line)', 'ai-awareness-day' ) ),
-                    'secondary_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Secondary: motion', 'ai-awareness-day' ) ),
-                    'secondary_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Secondary: help to get going (optional)', 'ai-awareness-day' ) ),
-                    'secondary_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Secondary: points for (one per line)', 'ai-awareness-day' ) ),
-                    'secondary_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Secondary: points against (one per line)', 'ai-awareness-day' ) ),
-                    'post16_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Post-16: motion', 'ai-awareness-day' ) ),
-                    'post16_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Post-16: help to get going (optional)', 'ai-awareness-day' ) ),
-                    'post16_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Post-16: points for (one per line)', 'ai-awareness-day' ) ),
-                    'post16_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Post-16: points against (one per line)', 'ai-awareness-day' ) ),
+                    'primary_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Primary: motion', 'aiad-core' ) ),
+                    'primary_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Primary: help to get going (optional)', 'aiad-core' ) ),
+                    'primary_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Primary: points for (one per line)', 'aiad-core' ) ),
+                    'primary_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Primary: points against (one per line)', 'aiad-core' ) ),
+                    'secondary_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Secondary: motion', 'aiad-core' ) ),
+                    'secondary_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Secondary: help to get going (optional)', 'aiad-core' ) ),
+                    'secondary_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Secondary: points for (one per line)', 'aiad-core' ) ),
+                    'secondary_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Secondary: points against (one per line)', 'aiad-core' ) ),
+                    'post16_motion'  => array( 'type' => 'textarea', 'rows' => 2, 'label' => __( 'Post-16: motion', 'aiad-core' ) ),
+                    'post16_prompt'  => array( 'type' => 'textarea', 'rows' => 1, 'label' => __( 'Post-16: help to get going (optional)', 'aiad-core' ) ),
+                    'post16_for'     => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Post-16: points for (one per line)', 'aiad-core' ) ),
+                    'post16_against' => array( 'type' => 'textarea', 'rows' => 3, 'label' => __( 'Post-16: points against (one per line)', 'aiad-core' ) ),
                 ),
             ),
             '_aiad_extensions' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Extension activities', 'ai-awareness-day' ),
-                'description' => __( 'Specific, actionable task + type.', 'ai-awareness-day' ),
+                'label'       => __( 'Extension activities', 'aiad-core' ),
+                'description' => __( 'Specific, actionable task + type.', 'aiad-core' ),
                 'meta_key'    => '_aiad_extensions',
                 'fields'      => array(
-                    'activity' => array( 'type' => 'text', 'label' => __( 'Activity', 'ai-awareness-day' ), 'placeholder' => __( 'Specific task', 'ai-awareness-day' ) ),
-                    'type'     => array( 'type' => 'select', 'label' => __( 'Type', 'ai-awareness-day' ), 'options' => array(
-                        'homework'        => __( 'Homework', 'ai-awareness-day' ),
-                        'next_lesson'     => __( 'Next lesson', 'ai-awareness-day' ),
-                        'cross_curricular' => __( 'Cross-curricular', 'ai-awareness-day' ),
-                        'independent'     => __( 'Independent', 'ai-awareness-day' ),
+                    'activity' => array( 'type' => 'text', 'label' => __( 'Activity', 'aiad-core' ), 'placeholder' => __( 'Specific task', 'aiad-core' ) ),
+                    'type'     => array( 'type' => 'select', 'label' => __( 'Type', 'aiad-core' ), 'options' => array(
+                        'homework'        => __( 'Homework', 'aiad-core' ),
+                        'next_lesson'     => __( 'Next lesson', 'aiad-core' ),
+                        'cross_curricular' => __( 'Cross-curricular', 'aiad-core' ),
+                        'independent'     => __( 'Independent', 'aiad-core' ),
                     ) ),
                 ),
-                'add_button'  => __( 'Add extension', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add extension', 'aiad-core' ),
             ),
             '_aiad_resources' => array(
                 'type'        => 'repeatable_object',
-                'label'       => __( 'Resources', 'ai-awareness-day' ),
-                'description' => __( 'Slide deck, worksheet, etc. (optional link).', 'ai-awareness-day' ),
+                'label'       => __( 'Resources', 'aiad-core' ),
+                'description' => __( 'Slide deck, worksheet, etc. (optional link).', 'aiad-core' ),
                 'meta_key'    => '_aiad_resources',
                 'fields'      => array(
-                    'name' => array( 'type' => 'text', 'label' => __( 'Name', 'ai-awareness-day' ), 'placeholder' => __( 'e.g. Slide deck', 'ai-awareness-day' ) ),
-                    'type' => array( 'type' => 'select', 'label' => __( 'Type', 'ai-awareness-day' ), 'options' => array(
-                        'slides'   => __( 'Slides', 'ai-awareness-day' ),
-                        'worksheet' => __( 'Worksheet', 'ai-awareness-day' ),
-                        'handout'  => __( 'Handout', 'ai-awareness-day' ),
-                        'video'    => __( 'Video', 'ai-awareness-day' ),
-                        'link'     => __( 'Link', 'ai-awareness-day' ),
-                        'other'    => __( 'Other', 'ai-awareness-day' ),
+                    'name' => array( 'type' => 'text', 'label' => __( 'Name', 'aiad-core' ), 'placeholder' => __( 'e.g. Slide deck', 'aiad-core' ) ),
+                    'type' => array( 'type' => 'select', 'label' => __( 'Type', 'aiad-core' ), 'options' => array(
+                        'slides'   => __( 'Slides', 'aiad-core' ),
+                        'worksheet' => __( 'Worksheet', 'aiad-core' ),
+                        'handout'  => __( 'Handout', 'aiad-core' ),
+                        'video'    => __( 'Video', 'aiad-core' ),
+                        'link'     => __( 'Link', 'aiad-core' ),
+                        'other'    => __( 'Other', 'aiad-core' ),
                     ) ),
-                    'url'  => array( 'type' => 'url', 'label' => __( 'URL', 'ai-awareness-day' ), 'placeholder' => 'URL' ),
+                    'url'  => array( 'type' => 'url', 'label' => __( 'URL', 'aiad-core' ), 'placeholder' => 'URL' ),
                 ),
-                'add_button'  => __( 'Add resource', 'ai-awareness-day' ),
+                'add_button'  => __( 'Add resource', 'aiad-core' ),
             ),
         ),
     );
@@ -463,7 +463,7 @@ function aiad_render_field( array $config, $value, string $name = '' ): string {
 function aiad_render_repeatable_text_field( array $config, array $values, string $name ): string {
     $label = $config['label'] ?? '';
     $description = $config['description'] ?? '';
-    $add_button = $config['add_button'] ?? __( 'Add item', 'ai-awareness-day' );
+    $add_button = $config['add_button'] ?? __( 'Add item', 'aiad-core' );
 
     if ( empty( $values ) ) {
         $values = array( '' );
@@ -481,7 +481,7 @@ function aiad_render_repeatable_text_field( array $config, array $values, string
         $val = is_string( $val ) ? $val : '';
         $html .= '<div class="aiad-repeatable-row" style="margin-bottom: 0.5rem;">';
         $html .= '<input type="text" name="' . esc_attr( $name ) . '[]" value="' . esc_attr( $val ) . '" class="large-text" /> ';
-        $html .= '<button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'ai-awareness-day' ) . '</button>';
+        $html .= '<button type="button" class="button button-small aiad-remove-row">' . esc_html__( 'Remove', 'aiad-core' ) . '</button>';
         $html .= '</div>';
     }
     $html .= '</div>';
@@ -502,7 +502,7 @@ function aiad_render_repeatable_text_field( array $config, array $values, string
 function aiad_render_repeatable_object_field( array $config, array $values, string $name ): string {
     $label = $config['label'] ?? '';
     $description = $config['description'] ?? '';
-    $add_button = $config['add_button'] ?? __( 'Add item', 'ai-awareness-day' );
+    $add_button = $config['add_button'] ?? __( 'Add item', 'aiad-core' );
     $fields = $config['fields'] ?? array();
     $special_class = '';
 
@@ -613,7 +613,7 @@ function aiad_render_repeatable_object_field( array $config, array $values, stri
             }
         }
 
-        $remove_text = $name === 'aiad_instructions' ? __( 'Remove step', 'ai-awareness-day' ) : __( 'Remove', 'ai-awareness-day' );
+        $remove_text = $name === 'aiad_instructions' ? __( 'Remove step', 'aiad-core' ) : __( 'Remove', 'aiad-core' );
         $html .= ' <button type="button" class="button button-small aiad-remove-row" style="' . ( $name === 'aiad_instructions' ? 'margin-top:0.5rem;' : '' ) . '">' . esc_html( $remove_text ) . '</button>';
         $html .= '</div>';
     }

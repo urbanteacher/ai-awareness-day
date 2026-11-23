@@ -112,20 +112,20 @@ function aiad_computing_curriculum_render( $atts = array() ): string {
 
 	ob_start();
 	?>
-	<div id="aiad-cc" class="aiad-computing-curriculum" aria-label="<?php esc_attr_e( 'Computing and AI curriculum taster for all teachers', 'ai-awareness-day' ); ?>">
+	<div id="aiad-cc" class="aiad-computing-curriculum" aria-label="<?php esc_attr_e( 'Computing and AI curriculum taster for all teachers', 'aiad-core' ); ?>">
 		<div class="cc-intro">
-			<p class="cc-intro-kicker"><?php esc_html_e( 'AI Awareness Day · Computing & AI taster', 'ai-awareness-day' ); ?></p>
-			<h2><?php esc_html_e( 'A quick taste of computing — for every teacher', 'ai-awareness-day' ); ?></h2>
-			<p><?php esc_html_e( 'You do not need to be a computing specialist to take part. This embedded activity gives colleagues from any subject a short, low-pressure introduction to what students learn in the UK computing curriculum — and how AI connects at each key stage.', 'ai-awareness-day' ); ?></p>
-			<p><?php esc_html_e( 'Choose a key stage below. Each section takes a few minutes and uses familiar classroom-style tasks: multiple choice, matching, and a short self-marked response at GCSE and A level. Nothing to submit — explore at your own pace, compare notes with colleagues, and notice the computing ideas behind the AI topics your students already meet.', 'ai-awareness-day' ); ?></p>
-			<p class="cc-intro-note"><?php esc_html_e( 'This is a taster of how students across the different key stages encounter the backbone of AI.', 'ai-awareness-day' ); ?></p>
+			<p class="cc-intro-kicker"><?php esc_html_e( 'AI Awareness Day · Computing & AI taster', 'aiad-core' ); ?></p>
+			<h2><?php esc_html_e( 'A quick taste of computing — for every teacher', 'aiad-core' ); ?></h2>
+			<p><?php esc_html_e( 'You do not need to be a computing specialist to take part. This embedded activity gives colleagues from any subject a short, low-pressure introduction to what students learn in the UK computing curriculum — and how AI connects at each key stage.', 'aiad-core' ); ?></p>
+			<p><?php esc_html_e( 'Choose a key stage below. Each section takes a few minutes and uses familiar classroom-style tasks: multiple choice, matching, and a short self-marked response at GCSE and A level. Nothing to submit — explore at your own pace, compare notes with colleagues, and notice the computing ideas behind the AI topics your students already meet.', 'aiad-core' ); ?></p>
+			<p class="cc-intro-note"><?php esc_html_e( 'This is a taster of how students across the different key stages encounter the backbone of AI.', 'aiad-core' ); ?></p>
 		</div>
-		<p class="cc-hub-title"><?php esc_html_e( 'Choose a key stage to try', 'ai-awareness-day' ); ?></p>
-		<div class="cc-ks-tabs" id="aiad-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Key stages', 'ai-awareness-day' ); ?>"></div>
+		<p class="cc-hub-title"><?php esc_html_e( 'Choose a key stage to try', 'aiad-core' ); ?></p>
+		<div class="cc-ks-tabs" id="aiad-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Key stages', 'aiad-core' ); ?>"></div>
 		<div id="aiad-screens"></div>
 		<p class="cc-footer">
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			&middot;
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( (string) $host ); ?></a>
 		</p>

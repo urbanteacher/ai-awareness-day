@@ -26,13 +26,13 @@ define( 'AIAD_CORE_MODULE_LIVE_SESSIONS', __FILE__ );
 function aiad_register_live_session_cpt(): void {
     register_post_type( 'live_session', array(
         'labels'        => array(
-            'name'          => __( 'Events', 'ai-awareness-day' ),
-            'singular_name' => __( 'Event', 'ai-awareness-day' ),
-            'add_new'       => __( 'Add New', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Event', 'ai-awareness-day' ),
-            'edit_item'     => __( 'Edit Event', 'ai-awareness-day' ),
-            'view_item'     => __( 'View Event', 'ai-awareness-day' ),
-            'menu_name'     => __( 'Events', 'ai-awareness-day' ),
+            'name'          => __( 'Events', 'aiad-core' ),
+            'singular_name' => __( 'Event', 'aiad-core' ),
+            'add_new'       => __( 'Add New', 'aiad-core' ),
+            'add_new_item'  => __( 'Add New Event', 'aiad-core' ),
+            'edit_item'     => __( 'Edit Event', 'aiad-core' ),
+            'view_item'     => __( 'View Event', 'aiad-core' ),
+            'menu_name'     => __( 'Events', 'aiad-core' ),
         ),
         'public'        => true,
         'has_archive'   => 'events',
@@ -46,9 +46,9 @@ function aiad_register_live_session_cpt(): void {
 
     register_taxonomy( 'session_audience', array( 'live_session' ), array(
         'labels'            => array(
-            'name'          => __( 'Audiences', 'ai-awareness-day' ),
-            'singular_name' => __( 'Audience', 'ai-awareness-day' ),
-            'add_new_item'  => __( 'Add New Audience', 'ai-awareness-day' ),
+            'name'          => __( 'Audiences', 'aiad-core' ),
+            'singular_name' => __( 'Audience', 'aiad-core' ),
+            'add_new_item'  => __( 'Add New Audience', 'aiad-core' ),
         ),
         'hierarchical'      => true,
         'show_ui'           => true,
@@ -103,8 +103,8 @@ function aiad_seed_session_audience_terms(): void {
         'KS3 (ages 11–13)' => 'ks3',
         'KS4 (ages 14–16)' => 'ks4',
         'KS5 (ages 16–18)' => 'ks5',
-        __( 'Teachers', 'ai-awareness-day' ) => 'teachers',
-        __( 'All audiences', 'ai-awareness-day' ) => 'all',
+        __( 'Teachers', 'aiad-core' ) => 'teachers',
+        __( 'All audiences', 'aiad-core' ) => 'all',
     );
     foreach ( $terms as $name => $slug ) {
         if ( ! term_exists( $slug, 'session_audience' ) ) {
@@ -167,7 +167,7 @@ add_action( 'init', 'aiad_register_live_session_meta', 15 );
 function aiad_live_session_meta_box(): void {
     add_meta_box(
         'aiad_live_session_details',
-        __( 'Event details', 'ai-awareness-day' ),
+        __( 'Event details', 'aiad-core' ),
         'aiad_live_session_meta_box_callback',
         'live_session',
         'normal',
@@ -179,6 +179,23 @@ function aiad_live_session_meta_box(): void {
     );
 }
 add_action( 'add_meta_boxes', 'aiad_live_session_meta_box' );
+
+/**
+ * The meta box's layout (assets/css/admin/aiad-live-session.css), on the live_session edit screens.
+ *
+ * @param string $hook Current admin page.
+ */
+function aiad_live_session_meta_box_styles( string $hook ): void {
+    if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen || 'live_session' !== $screen->post_type ) {
+        return;
+    }
+    wp_enqueue_style( 'aiad-live-session-admin', aiad_core_url( 'assets/css/admin/aiad-live-session.css' ), array(), aiad_core_asset_version( 'assets/css/admin/aiad-live-session.css' ) );
+}
+add_action( 'admin_enqueue_scripts', 'aiad_live_session_meta_box_styles' );
 
 /**
  * Meta box content.
@@ -196,7 +213,7 @@ function aiad_live_session_meta_box_callback( WP_Post $post ): void {
 
     // Pre-fill format with sensible default.
     if ( $format_label === '' ) {
-        $format_label = __( 'LIVE — MS Teams', 'ai-awareness-day' );
+        $format_label = __( 'LIVE — MS Teams', 'aiad-core' );
     }
 
     $partners = get_posts( array(
@@ -207,45 +224,36 @@ function aiad_live_session_meta_box_callback( WP_Post $post ): void {
         'order'          => 'ASC',
     ) );
     ?>
-    <style>
-        .aiad-ls-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem 1.5rem; margin-top:.5rem; }
-        .aiad-ls-grid label { display:block; font-weight:600; margin-bottom:.25rem; }
-        .aiad-ls-grid input[type="datetime-local"],
-        .aiad-ls-grid input[type="text"],
-        .aiad-ls-grid input[type="url"],
-        .aiad-ls-grid select { width:100%; }
-        .aiad-ls-full { grid-column:1 / -1; }
-    </style>
     <div class="aiad-ls-grid">
         <div>
-            <label for="aiad_session_start_time"><?php esc_html_e( 'Start time', 'ai-awareness-day' ); ?></label>
+            <label for="aiad_session_start_time"><?php esc_html_e( 'Start time', 'aiad-core' ); ?></label>
             <input type="datetime-local" id="aiad_session_start_time" name="aiad_session_start_time" value="<?php echo esc_attr( $start_time ); ?>" />
-            <p class="description"><?php esc_html_e( 'Local time (Europe/London).', 'ai-awareness-day' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Local time (Europe/London).', 'aiad-core' ); ?></p>
         </div>
         <div>
-            <label for="aiad_session_end_time"><?php esc_html_e( 'End time', 'ai-awareness-day' ); ?></label>
+            <label for="aiad_session_end_time"><?php esc_html_e( 'End time', 'aiad-core' ); ?></label>
             <input type="datetime-local" id="aiad_session_end_time" name="aiad_session_end_time" value="<?php echo esc_attr( $end_time ); ?>" />
         </div>
         <div>
-            <label for="aiad_session_format"><?php esc_html_e( 'Format', 'ai-awareness-day' ); ?></label>
+            <label for="aiad_session_format"><?php esc_html_e( 'Format', 'aiad-core' ); ?></label>
             <input type="text" id="aiad_session_format" name="aiad_session_format" value="<?php echo esc_attr( $format_label ); ?>" placeholder="LIVE — MS Teams" />
         </div>
         <div>
-            <label for="aiad_session_partner_id"><?php esc_html_e( 'Provider (Partner)', 'ai-awareness-day' ); ?></label>
+            <label for="aiad_session_partner_id"><?php esc_html_e( 'Provider (Partner)', 'aiad-core' ); ?></label>
             <select id="aiad_session_partner_id" name="aiad_session_partner_id">
-                <option value="0"><?php esc_html_e( '— Select partner —', 'ai-awareness-day' ); ?></option>
+                <option value="0"><?php esc_html_e( '— Select partner —', 'aiad-core' ); ?></option>
                 <?php foreach ( $partners as $partner ) : ?>
                     <option value="<?php echo esc_attr( $partner->ID ); ?>" <?php selected( $partner_id, (int) $partner->ID ); ?>>
                         <?php echo esc_html( $partner->post_title ); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <p class="description"><?php esc_html_e( 'Reuses logo and name from the Partner post. Add the partner first under Partners.', 'ai-awareness-day' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Reuses logo and name from the Partner post. Add the partner first under Partners.', 'aiad-core' ); ?></p>
         </div>
         <div class="aiad-ls-full">
-            <label for="aiad_session_registration_url"><?php esc_html_e( 'Registration / join URL', 'ai-awareness-day' ); ?></label>
+            <label for="aiad_session_registration_url"><?php esc_html_e( 'Registration / join URL', 'aiad-core' ); ?></label>
             <input type="url" id="aiad_session_registration_url" name="aiad_session_registration_url" value="<?php echo esc_attr( $registration_url ); ?>" placeholder="https://" />
-            <p class="description"><?php esc_html_e( 'Full URL required for online sessions (e.g. https://teams.microsoft.com/…). Used for the join button and event schema.', 'ai-awareness-day' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Full URL required for online sessions (e.g. https://teams.microsoft.com/…). Used for the join button and event schema.', 'aiad-core' ); ?></p>
         </div>
     </div>
     <?php
@@ -638,9 +646,9 @@ function aiad_session_is_conference( int $post_id ): bool {
  */
 function aiad_session_cta_label( int $post_id ): string {
 	if ( aiad_session_is_conference( $post_id ) ) {
-		return __( 'External link', 'ai-awareness-day' );
+		return __( 'External link', 'aiad-core' );
 	}
-	return __( 'Join', 'ai-awareness-day' );
+	return __( 'Join', 'aiad-core' );
 }
 
 /**
@@ -743,9 +751,9 @@ function aiad_live_session_admin_columns( array $cols ): array {
     foreach ( $cols as $k => $v ) {
         $new[ $k ] = $v;
         if ( $k === 'title' ) {
-            $new['session_time']     = __( 'Time', 'ai-awareness-day' );
-            $new['session_audience'] = __( 'Audience', 'ai-awareness-day' );
-            $new['session_provider'] = __( 'Provider', 'ai-awareness-day' );
+            $new['session_time']     = __( 'Time', 'aiad-core' );
+            $new['session_audience'] = __( 'Audience', 'aiad-core' );
+            $new['session_provider'] = __( 'Provider', 'aiad-core' );
         }
     }
     return $new;

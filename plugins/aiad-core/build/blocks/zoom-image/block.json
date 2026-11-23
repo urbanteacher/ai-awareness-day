@@ -11,7 +11,7 @@
     "screenshot",
     "zoom"
   ],
-  "textdomain": "ai-awareness-day",
+  "textdomain": "aiad-core",
   "attributes": {
     "url": {
       "type": "string",

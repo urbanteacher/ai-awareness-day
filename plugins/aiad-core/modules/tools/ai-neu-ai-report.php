@@ -28,13 +28,13 @@ function aiad_post_content_has_neu_ai_report_shortcode( WP_Post $post ): bool {
  */
 function aiad_neu_ai_report_get_headline(): string {
 	if ( ! function_exists( 'aiad_neu_ai_report_get_config' ) ) {
-		return __( 'Unpacking the NEU AI Report', 'ai-awareness-day' );
+		return __( 'Unpacking the NEU AI Report', 'aiad-core' );
 	}
 	$config = aiad_neu_ai_report_get_config();
 	$headline = $config['editorial']['headline'] ?? '';
 	return is_string( $headline ) && '' !== $headline
 		? $headline
-		: __( 'Unpacking the NEU AI Report', 'ai-awareness-day' );
+		: __( 'Unpacking the NEU AI Report', 'aiad-core' );
 }
 
 /**
@@ -161,19 +161,19 @@ function aiad_neu_ai_report_render( $atts = array() ): string {
 
 		<h2 id="aiad-neu-data-lead" class="nr-data-lead"></h2>
 
-		<p class="nr-lens-label" id="aiad-neu-lens-label"><?php esc_html_e( 'View through the lens of:', 'ai-awareness-day' ); ?></p>
+		<p class="nr-lens-label" id="aiad-neu-lens-label"><?php esc_html_e( 'View through the lens of:', 'aiad-core' ); ?></p>
 		<div class="nr-lens-row" role="tablist" aria-labelledby="aiad-neu-lens-label">
-			<button type="button" class="nr-lens-btn" role="tab" data-lens="teacher" aria-pressed="true" aria-selected="true"><?php esc_html_e( 'Classroom teacher', 'ai-awareness-day' ); ?></button>
-			<button type="button" class="nr-lens-btn" role="tab" data-lens="leader" aria-pressed="false" aria-selected="false"><?php esc_html_e( 'School leader / governor', 'ai-awareness-day' ); ?></button>
+			<button type="button" class="nr-lens-btn" role="tab" data-lens="teacher" aria-pressed="true" aria-selected="true"><?php esc_html_e( 'Classroom teacher', 'aiad-core' ); ?></button>
+			<button type="button" class="nr-lens-btn" role="tab" data-lens="leader" aria-pressed="false" aria-selected="false"><?php esc_html_e( 'School leader / governor', 'aiad-core' ); ?></button>
 		</div>
 
 		<div class="nr-sections" id="aiad-neu-sections"></div>
 
 		<p class="nr-footer">
-			<?php esc_html_e( 'Data source:', 'ai-awareness-day' ); ?>
-			<a href="<?php echo esc_url( $source_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'NEU State of Education: AI Report 2026', 'ai-awareness-day' ); ?></a><br>
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Data source:', 'aiad-core' ); ?>
+			<a href="<?php echo esc_url( $source_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'NEU State of Education: AI Report 2026', 'aiad-core' ); ?></a><br>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			&middot;
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( (string) $host ); ?></a>
 		</p>
@@ -251,7 +251,7 @@ function aiad_create_neu_ai_report_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'Interactive analysis of the NEU State of Education: AI 2026 survey — teacher adoption, critical thinking, policy gaps, and views on the DfE AI tutor plan.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'Interactive analysis of the NEU State of Education: AI 2026 survey — teacher adoption, critical thinking, policy gaps, and views on the DfE AI tutor plan.', 'aiad-core' ),
 			'post_content' => aiad_get_neu_ai_report_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,

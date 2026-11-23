@@ -91,8 +91,8 @@ function aiad_llm_explainer_render( $atts = array() ): string {
 
 	$atts = shortcode_atts(
 		array(
-			'title'       => __( 'How does a large language model work?', 'ai-awareness-day' ),
-			'description' => __( 'A 6-step interactive explainer — no jargon, just clear analogies designed for teachers.', 'ai-awareness-day' ),
+			'title'       => __( 'How does a large language model work?', 'aiad-core' ),
+			'description' => __( 'A 6-step interactive explainer — no jargon, just clear analogies designed for teachers.', 'aiad-core' ),
 			'hide_intro'  => '0',
 			'explore_url' => '',
 		),
@@ -113,7 +113,7 @@ function aiad_llm_explainer_render( $atts = array() ): string {
 		data-aiad-llm
 		class="aiad-llm-explainer"
 		data-more-url="<?php echo esc_attr( $more_url ); ?>"
-		aria-label="<?php esc_attr_e( 'How large language models work — interactive explainer', 'ai-awareness-day' ); ?>"
+		aria-label="<?php esc_attr_e( 'How large language models work — interactive explainer', 'aiad-core' ); ?>"
 	>
 		<?php if ( ! $hide_intro ) : ?>
 			<div class="llm-header">
@@ -121,11 +121,11 @@ function aiad_llm_explainer_render( $atts = array() ): string {
 				<p><?php echo esc_html( $atts['description'] ); ?></p>
 			</div>
 		<?php endif; ?>
-		<div class="step-nav" data-aiad-llm-nav role="navigation" aria-label="<?php esc_attr_e( 'Explainer steps', 'ai-awareness-day' ); ?>"></div>
+		<div class="step-nav" data-aiad-llm-nav role="navigation" aria-label="<?php esc_attr_e( 'Explainer steps', 'aiad-core' ); ?>"></div>
 		<div class="step-panel" data-aiad-llm-panel></div>
 		<p class="aiad-llm-credit">
-			<?php esc_html_e( 'Produced by', 'ai-awareness-day' ); ?>
-			<strong><?php esc_html_e( 'AI Awareness Day', 'ai-awareness-day' ); ?></strong>
+			<?php esc_html_e( 'Produced by', 'aiad-core' ); ?>
+			<strong><?php esc_html_e( 'AI Awareness Day', 'aiad-core' ); ?></strong>
 			&middot;
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( (string) $host ); ?></a>
 		</p>
@@ -203,7 +203,7 @@ function aiad_set_llm_explainer_timeline_meta( int $post_id ): void {
  */
 function aiad_create_llm_explainer_timeline_entry(): int {
 	$slug  = aiad_llm_explainer_post_slug();
-	$title = __( 'How Does a Large Language Model Work?', 'ai-awareness-day' );
+	$title = __( 'How Does a Large Language Model Work?', 'aiad-core' );
 
 	$existing = get_page_by_path( $slug, OBJECT, 'timeline' );
 	if ( $existing instanceof WP_Post ) {
@@ -215,7 +215,7 @@ function aiad_create_llm_explainer_timeline_entry(): int {
 			'post_type'    => 'timeline',
 			'post_title'   => $title,
 			'post_name'    => $slug,
-			'post_excerpt' => __( 'A 6-step interactive explainer for teachers — tokens, attention, layers, prediction, and training, with classroom analogies and no jargon.', 'ai-awareness-day' ),
+			'post_excerpt' => __( 'A 6-step interactive explainer for teachers — tokens, attention, layers, prediction, and training, with classroom analogies and no jargon.', 'aiad-core' ),
 			'post_content' => aiad_get_llm_explainer_timeline_content(),
 			'post_status'  => 'publish',
 			'post_author'  => 1,
@@ -240,7 +240,7 @@ function aiad_seed_llm_explainer_timeline_entry(): void {
 	}
 
 	$slug  = aiad_llm_explainer_post_slug();
-	$title = __( 'How Does a Large Language Model Work?', 'ai-awareness-day' );
+	$title = __( 'How Does a Large Language Model Work?', 'aiad-core' );
 
 	if ( get_page_by_path( $slug, OBJECT, 'timeline' ) ) {
 		update_option( 'aiad_llm_explainer_timeline_seeded', 'yes' );
