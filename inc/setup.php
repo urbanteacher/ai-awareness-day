@@ -340,7 +340,7 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
 
 /**
  * The header menu. The theme owns it (not Appearance > Menus) so it always points at the homepage's
- * main parts: the 2027 flagship first, then the campaign, resources, the periodic table and the audit.
+ * main parts: the 2027 flagship first, then the campaign, resources, AI Literacy (the periodic table) and the audit.
  * Section links are anchors on the front page; their ids must match the sections there.
  */
 function aiad_fallback_menu(): void
@@ -349,7 +349,7 @@ function aiad_fallback_menu(): void
         array( __( 'Conversation', 'ai-awareness-day' ), home_url( '/#national-conversation' ), '' ),
         array( __( 'Campaign', 'ai-awareness-day' ), home_url( '/#campaign' ), '' ),
         array( __( 'Resources', 'ai-awareness-day' ), home_url( '/#themes' ), '' ),
-        array( __( 'Periodic Table', 'ai-awareness-day' ), home_url( '/ai-literacy-periodic-table/' ), 'ai-literacy-periodic-table' ),
+        array( __( 'AI Literacy', 'ai-awareness-day' ), home_url( '/ai-literacy-periodic-table/' ), 'ai-literacy-periodic-table' ),
         array( __( 'Audit', 'ai-awareness-day' ), home_url( '/#benchmark-audit' ), '' ),
     );
 

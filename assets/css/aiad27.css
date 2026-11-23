@@ -32,7 +32,7 @@ body {
 
 .main-navigation a::after { background: var(--a27-safe-deep); }
 
-/* The page you're on (Periodic Table) keeps its underline. */
+/* The page you're on (AI Literacy) keeps its underline. */
 .main-navigation a[aria-current="page"]::after { width: 100%; }
 
 /* Labels never break ("Periodic / Table"); on small laptops and tablets the row tightens to fit. */
