@@ -2,7 +2,7 @@
 /**
  * The footer's download and resource links (newsletter, press release, asset pack, implementation guide): the
  * footer template part's footer links block (blocks/footer-links) prints them. The addresses are set on Settings → AI Awareness Day
- * and on their pages; a link without one shows as pending.
+ * and on their pages; a link without one stays hidden until it has one.
  *
  * @package AI_Awareness_Day
  */
@@ -24,11 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             $resource_links[ __( 'AI Literacy Periodic Table', 'ai-awareness-day' ) ] = aiad_literacy_table_url();
         } ?>
         <nav class="footer-links" aria-label="<?php esc_attr_e( 'Downloads and resources', 'ai-awareness-day' ); ?>">
-            <?php foreach ( $resource_links as $label => $url ) :
-                if ( $url ) : ?>
+            <?php foreach ( array_filter( $resource_links ) as $label => $url ) : ?>
                     <a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $label ); ?></a>
-                <?php else : ?>
-                    <span class="footer-links__pending"><?php echo esc_html( $label ); ?></span>
-                <?php endif;
-            endforeach; ?>
+            <?php endforeach; ?>
         </nav>

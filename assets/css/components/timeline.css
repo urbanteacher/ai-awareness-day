@@ -1105,13 +1105,18 @@
        headline starts 1.75rem in, so it has to sit at least (cut - 1.75rem) up,
        or the cut clips its first letter. */
     padding: 1.5rem 1.75rem max(1.6rem, calc(11.7% - 1.25rem));
-    background: linear-gradient(180deg, rgba(20, 17, 18, 0) 30%, rgba(20, 17, 18, 0.55) 58%, rgba(20, 17, 18, 0.92) 100%);
+    /* A long headline climbs well up a busy picture, so the dark starts high. */
+    background: linear-gradient(180deg, rgba(20, 17, 18, 0) 8%, rgba(20, 17, 18, 0.6) 34%, rgba(20, 17, 18, 0.88) 58%, rgba(20, 17, 18, 0.95) 100%);
 }
 
+/* The kind and date sit on their own ink chip, so they read on any picture. */
 .timeline-newsroom__lead-overlay .timeline-newsroom__meta {
+    align-self: flex-start;
     justify-content: flex-start;
     gap: 0;                       /* the dot below is the only separator */
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    background: var(--a27-ink, #231F20);
 }
 
 .timeline-newsroom__lead-overlay .timeline-newsroom__when {

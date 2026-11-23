@@ -426,19 +426,36 @@
         // so JS and native hash jumps land in the same place.
         const anchorReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        // A section can name a child to land on with data-anchor-target, e.g.
-        // #campaign lands on its heading, not the partner logo strip above it.
-        // Folding the child's offset into the section's scroll-margin keeps the
-        // browser's own hash jump (arriving from another page) on the child too.
+        // Every section the header menu links to (and any with data-anchor-target) lands the same way:
+        // its first label ("Campaign", "Activities", "New · Free for UK schools") sits a fixed gap under
+        // the header, 2rem on desktop and 1.5rem on phones, whatever padding the section has above it.
+        // Folding the label's offset into the section's scroll-margin keeps the browser's own hash jump
+        // (arriving from another page) on the same line.
+        const anchorLabelSelector = '.section-label, .hero-flagship__tag, .cert-showcase__eyebrow';
+        const anchorHeader = document.getElementById('site-header');
         const anchorOffsetSections = Array.prototype.slice.call(document.querySelectorAll('[data-anchor-target]'));
+        document.querySelectorAll('#main-nav a[href*="#"]').forEach(function (link) {
+            if (link.pathname !== window.location.pathname) return;
+            const section = link.hash.length > 1 ? document.getElementById(decodeURIComponent(link.hash.slice(1))) : null;
+            if (section && anchorOffsetSections.indexOf(section) === -1) anchorOffsetSections.push(section);
+        });
+        function anchorPageTop(el) {
+            let top = 0;
+            for (; el; el = el.offsetParent) top += el.offsetTop;
+            return top;
+        }
         function updateAnchorOffsets() {
+            // The header's bottom edge, not its height: the admin bar or a top offset moves it down.
+            const headerHeight = anchorHeader ? Math.max(0, anchorHeader.getBoundingClientRect().bottom) : 72;
+            const gap = window.matchMedia('(max-width: 768px)').matches ? 24 : 32;
             anchorOffsetSections.forEach(function (section) {
-                const child = section.querySelector(section.dataset.anchorTarget);
+                const child = section.querySelector(anchorLabelSelector) ||
+                    (section.dataset.anchorTarget ? section.querySelector(section.dataset.anchorTarget) : null);
                 if (!child) return;
-                section.style.scrollMarginTop = '';
-                const base = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
-                const offset = child.getBoundingClientRect().top - section.getBoundingClientRect().top;
-                section.style.scrollMarginTop = (base - offset) + 'px';
+                // offsetTop, not getBoundingClientRect: fade-up content is still shifted down until it
+                // scrolls into view, and that shift would move the landing line.
+                const offset = anchorPageTop(child) - anchorPageTop(section);
+                section.style.scrollMarginTop = (headerHeight + gap - offset) + 'px';
             });
         }
         if (anchorOffsetSections.length) {
@@ -457,6 +474,8 @@
             if (!target) return;
 
             e.preventDefault();
+            // Measure again now: sections above can change height after load (images, late content).
+            if (anchorOffsetSections.indexOf(target) !== -1) updateAnchorOffsets();
             target.scrollIntoView({ behavior: anchorReducedMotion ? 'auto' : 'smooth', block: 'start' });
             if (history && history.pushState && anchor.hash !== window.location.hash) {
                 history.pushState(null, '', anchor.hash);
@@ -588,6 +607,25 @@
                     card.classList.remove('partner-card--hidden');
                 }
             });
+            fillPartnersLastRow();
+        }
+
+        // "Join the campaign" stretches across whatever the last row leaves empty, so the grid
+        // never ends on one card beside a row of gaps. Alone on its row, it becomes a full-width band.
+        function fillPartnersLastRow() {
+            const grid = momentumSection.querySelector('.partners-grid');
+            const join = grid && grid.querySelector('.partner-card--dummy');
+            if (!join) {
+                return;
+            }
+            // Clear the old span first: a span wider than the grid adds implicit columns, which the
+            // computed template then counts (a 5-column span on a 2-column phone grid squeezed two cards thin).
+            join.style.gridColumn = '';
+            const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+            const shown = grid.querySelectorAll('.partner-card:not(.partner-card--dummy):not(.partner-card--hidden)').length;
+            const span = cols - (shown % cols);
+            join.style.gridColumn = span > 1 ? 'span ' + span : '';
+            join.classList.toggle('partner-card--wide', span > 1);
         }
 
         if (momentumSection) {

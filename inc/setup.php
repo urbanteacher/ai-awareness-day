@@ -339,17 +339,26 @@ class AIAD_Nav_Walker extends Walker_Nav_Menu
 }
 
 /**
- * Fallback navigation menu (anchors must match section IDs on front page)
+ * The header menu. The theme owns it (not Appearance > Menus) so it always points at the homepage's
+ * main parts: the 2027 flagship first, then the campaign, resources, the periodic table and the audit.
+ * Section links are anchors on the front page; their ids must match the sections there.
  */
 function aiad_fallback_menu(): void
 {
+    $items = array(
+        array( __( 'Conversation', 'ai-awareness-day' ), home_url( '/#national-conversation' ), '' ),
+        array( __( 'Campaign', 'ai-awareness-day' ), home_url( '/#campaign' ), '' ),
+        array( __( 'Resources', 'ai-awareness-day' ), home_url( '/#themes' ), '' ),
+        array( __( 'Periodic Table', 'ai-awareness-day' ), home_url( '/ai-literacy-periodic-table/' ), 'ai-literacy-periodic-table' ),
+        array( __( 'Audit', 'ai-awareness-day' ), home_url( '/#benchmark-audit' ), '' ),
+    );
+
     echo '<ul>';
-    echo '<li><a href="' . esc_url(home_url('/#campaign')) . '">' . esc_html__('Campaign', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#reach')) . '">' . esc_html__('Reach', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#aim')) . '">' . esc_html__('Aim', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#themes')) . '">' . esc_html__('Resources', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#ai-tools')) . '">' . esc_html__('AI Tools', 'ai-awareness-day') . '</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/#contact')) . '" class="nav-cta">' . esc_html__('Get Involved', 'ai-awareness-day') . '</a></li>';
+    foreach ( $items as $item ) {
+        $current = '' !== $item[2] && is_page( $item[2] ) ? ' aria-current="page"' : '';
+        echo '<li><a href="' . esc_url( $item[1] ) . '"' . $current . '>' . esc_html( $item[0] ) . '</a></li>';
+    }
+    echo '<li><a href="' . esc_url( home_url( '/#contact' ) ) . '" class="nav-cta">' . esc_html__( 'Get Involved', 'ai-awareness-day' ) . '</a></li>';
     echo '</ul>';
 }
 

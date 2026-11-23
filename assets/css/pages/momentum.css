@@ -135,6 +135,43 @@ a.partner-card {
   border: 1px solid var(--a27-ink, #231F20);
 }
 
+/* Stretched across the end of the last row (main.js): mark, title and line side by side. */
+.partner-card--dummy.partner-card--wide {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  min-height: 0;
+  height: auto;
+  padding-block: 1.5rem;
+  text-align: left;
+}
+
+.partner-card--dummy.partner-card--wide h3 {
+  font-size: 1.25rem;
+}
+
+.partner-card--dummy.partner-card--wide .partner-logo,
+.partner-card--dummy.partner-card--wide h3,
+.partner-card--dummy.partner-card--wide .partner-stats {
+  margin: 0;
+}
+
+.partner-card--dummy.partner-card--wide .partner-logo {
+  flex: none;
+  width: auto;
+  height: auto;
+  min-height: 0;
+}
+
+.partner-card--dummy.partner-card--wide h3,
+.partner-card--dummy.partner-card--wide .partner-stats {
+  flex: 0 1 auto;
+  width: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
 .partner-card--dummy:hover {
   background: var(--a27-ink, #231F20);
   color: var(--a27-cream, #F6F4ED);

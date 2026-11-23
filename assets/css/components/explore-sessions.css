@@ -40,9 +40,9 @@ a.duration-badge:hover {
   margin-bottom: 0.5rem;
 }
 
-/* Explore subheadings (By theme, By session length) */
+/* Explore subheadings (By theme, By session length): clear of the intro text above. */
 .explore-subheading {
-  margin-top: 0;
+  margin-top: 1.75rem;
   margin-bottom: 0.35rem;
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -213,7 +213,7 @@ a.duration-badge:hover {
 /* ---- Desktop: 2-col vibrant cards ---- */
 @media (min-width: 768px) {
   .explore-subheading {
-    margin-top: 0.5rem;
+    margin-top: 1.75rem;
     margin-bottom: 0.35rem;
   }
 

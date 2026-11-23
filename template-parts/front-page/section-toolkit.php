@@ -172,6 +172,13 @@ if ( function_exists( 'aiad_certificate_showcase' ) ) {
                     $resources_url = add_query_arg('post_type', 'resource', home_url('/'));
                 }
                 $theme_terms = get_terms(array('taxonomy' => 'resource_principle', 'hide_empty' => false));
+                if ($theme_terms && !is_wp_error($theme_terms)) {
+                    // The campaign's order (Safe, Smart, Creative, Responsible, Future), not the alphabet; other terms follow.
+                    $strand_order = array_flip( array( 'safe', 'smart', 'creative', 'responsible', 'future' ) );
+                    usort( $theme_terms, static function ( $a, $b ) use ( $strand_order ) {
+                        return ( $strand_order[ $a->slug ] ?? 99 ) <=> ( $strand_order[ $b->slug ] ?? 99 );
+                    } );
+                }
                 if ($theme_terms && !is_wp_error($theme_terms)):
                     ?>
                     <p class="explore-subheading"><?php esc_html_e('By theme', 'ai-awareness-day'); ?></p>
