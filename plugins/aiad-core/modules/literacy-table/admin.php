@@ -158,6 +158,13 @@ function aiad_literacy_check(): array {
 				$warn( sprintf( '%s has no "%s".', $label, $field ) );
 			}
 		}
+		foreach ( $c['marks'] as $sym => $words ) {
+			if ( ! in_array( $sym, $c['syms'], true ) ) {
+				$warn( sprintf( '%s marks words for %s, which is not one of its elements.', $label, $sym ) );
+			} elseif ( false === strpos( $c['what'], $words ) ) {
+				$warn( sprintf( '%s marks "%s" for %s, but those words are not in its "what", so nothing is coloured.', $label, $words, $sym ) );
+			}
+		}
 	}
 
 	foreach ( (array) ( aiad_literacy_data( 'resources' )['resources'] ?? array() ) as $r ) {

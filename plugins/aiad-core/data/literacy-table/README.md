@@ -72,12 +72,13 @@ Every file starts with the same three fields:
 ### compounds.json
 
 ```json
-{ "name": "Supervised Agent", "elements": ["Ag", "Fn", "Hi"], "theme": "responsible", "level": "secondary", "volatile": false, "what": "…", "example": "…", "loop": "…", "debate": "…" }
+{ "name": "Supervised Agent", "elements": ["Ag", "Fn", "Hi"], "theme": "responsible", "level": "secondary", "volatile": false, "what": "…", "marks": { "Ag": "agent" }, "example": "…", "loop": "…", "debate": "…" }
 ```
 
 - **`level`** is `primary`, `secondary` or `further`. Primary compounds use two everyday elements.
 - **`volatile: true`** means the system is risky without a human in the loop.
 - **The compound's id** is its symbols in lowercase, sorted and joined with hyphens (`ag-fn-hi`). Saved challenge progress uses that id, so two compounds can't have the same elements.
+- **`marks`** (optional) pairs an element's symbol with the words in `what` that stand for it, for example `{ "Ag": "agent", "Fn": "uses tools", "Hi": "pauses for human approval" }`. On the classroom board and the downloaded card those words are highlighted in the element's tile colour, so the description lines up with the tiles. The words must appear in `what` exactly as written (Tools → Periodic Table warns when they don't), and an element can be left out when no words stand for it.
 
 ### resources.json
 

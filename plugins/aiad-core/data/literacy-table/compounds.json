@@ -14,6 +14,11 @@
             "level": "further",
             "volatile": false,
             "what": "A chatbot that looks up trusted documents before it answers, so its replies are based on real sources rather than memory alone.",
+            "marks": {
+                "Ll": "chatbot",
+                "Rg": "looks up",
+                "Vd": "trusted documents"
+            },
             "example": "A school helpdesk bot that answers staff questions straight from the policy handbook.",
             "loop": "A person keeps the documents up to date and spot-checks the answers.",
             "debate": "Should a school chatbot answer parents’ questions without a member of staff checking?"
@@ -29,6 +34,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A chat window on top of a large language model, built on the transformer. It predicts the most likely next words, which is why it can sound sure even when it is wrong.",
+            "marks": {
+                "Cb": "chat window",
+                "Ll": "large language model",
+                "Tf": "transformer"
+            },
             "example": "Asking a chatbot to explain photosynthesis in simpler words.",
             "loop": "You check anything that matters against a trusted source before you rely on it.",
             "debate": "Should students have to say when they have used a chatbot for homework?"
@@ -44,6 +54,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "An LLM chatbot with guardrails, designed to coach students rather than do the work for them.",
+            "marks": {
+                "Cb": "chatbot",
+                "Ll": "LLM",
+                "Gr": "guardrails"
+            },
             "example": "A tutor bot that offers hints and questions instead of full answers.",
             "loop": "Teachers set the rules and review how it is being used.",
             "debate": "Should AI tutors give students answers, or only hints?"
@@ -58,6 +73,10 @@
             "level": "secondary",
             "volatile": true,
             "what": "A language model confidently inventing sources, quotes or facts that do not exist.",
+            "marks": {
+                "Ll": "language model",
+                "Ha": "inventing sources, quotes or facts"
+            },
             "example": "An essay with references to books and articles that were never written.",
             "loop": "Check every source yourself before you use it.",
             "debate": "When AI gets a fact wrong, who is responsible: the tool or the person who used it?"
@@ -72,6 +91,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "A reasoning model that writes out its working in steps before it answers, so you can check each step. The steps shown are not always how it really reached the answer.",
+            "marks": {
+                "Rm": "reasoning model",
+                "Ct": "writes out its working in steps"
+            },
             "example": "Getting a hint for the next line of an equation, rather than the answer.",
             "loop": "You check each step and do the working yourself.",
             "debate": "If AI can show every step, does it matter whether you can do it alone?"
@@ -87,6 +110,11 @@
             "level": "further",
             "volatile": false,
             "what": "An AI-written answer at the top of search results, built from the pages it retrieves. Generative engine optimisation is how websites try to be part of it.",
+            "marks": {
+                "Ll": "AI-written answer",
+                "Rg": "built from the pages it retrieves",
+                "Ge": "Generative engine optimisation"
+            },
             "example": "Searching a homework question and getting a summary before any links.",
             "loop": "You open the sources it used and check they say what the summary claims.",
             "debate": "If fewer people click through to websites, who will keep writing them?"
@@ -103,6 +131,12 @@
             "level": "further",
             "volatile": false,
             "what": "The recipe for a large language model: a transformer trained on vast amounts of text tokens using huge numbers of GPUs.",
+            "marks": {
+                "Tf": "transformer",
+                "Tk": "text tokens",
+                "Tr": "trained",
+                "Gp": "GPUs"
+            },
             "example": "How a chatbot is built long before you type your first prompt.",
             "loop": "People choose the training data and test the result.",
             "debate": "Should we have the right to know what data an AI was trained on?"
@@ -118,6 +152,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "An agent that uses tools to get work done, but pauses for human approval before anything important happens.",
+            "marks": {
+                "Ag": "agent",
+                "Fn": "uses tools",
+                "Hi": "pauses for human approval"
+            },
             "example": "An agent that drafts a school trip plan and booking, then waits for a teacher to approve it.",
             "loop": "A human signs off every consequential action.",
             "debate": "Which decisions should an AI agent never make without asking first?"
@@ -133,6 +172,11 @@
             "level": "secondary",
             "volatile": true,
             "what": "An agent given tools and full autonomy, acting without anyone checking what it does.",
+            "marks": {
+                "Ag": "agent",
+                "Fn": "tools",
+                "Au": "full autonomy"
+            },
             "example": "An agent with access to your email that replies to people and buys things on its own.",
             "loop": "None, and that is the risk. Swap Autonomy (Au) for Human-in-the-Loop (Hi) to stabilise it.",
             "debate": "If an AI agent makes a costly mistake, who is responsible?"
@@ -149,6 +193,12 @@
             "level": "further",
             "volatile": false,
             "what": "An agent connected to your apps that plans tasks and remembers your preferences over time.",
+            "marks": {
+                "Ag": "agent",
+                "Mc": "connected to your apps",
+                "Pl": "plans tasks",
+                "Me": "remembers your preferences"
+            },
             "example": "An assistant that manages your calendar, drafts emails and learns your routines.",
             "loop": "You decide what it can access and what it is allowed to remember.",
             "debate": "Should an AI assistant remember things about you automatically, or only when you switch memory on?"
@@ -164,6 +214,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "An agent that operates a web browser like a person to complete online tasks.",
+            "marks": {
+                "Co": "like a person",
+                "Br": "web browser",
+                "Ag": "agent"
+            },
             "example": "Comparing train tickets and filling in the booking form for you.",
             "loop": "You confirm before it pays for or submits anything.",
             "debate": "Would you let an AI spend your money?"
@@ -179,6 +234,10 @@
             "level": "further",
             "volatile": false,
             "what": "Specialised agents coordinated by an orchestrator, passing work between each other.",
+            "marks": {
+                "Ma": "Specialised agents",
+                "Or": "orchestrator"
+            },
             "example": "One agent researches, another writes and a third fact-checks a report.",
             "loop": "A person sets the goal and signs off the final output.",
             "debate": "If agents check each other’s work, do we still need a human checker?"
@@ -194,6 +253,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "A coding agent that builds software from plain-language requests, with tests to check the result.",
+            "marks": {
+                "Ca": "coding agent",
+                "Cp": "plain-language requests"
+            },
             "example": "Building a revision quiz app just by describing what it should do.",
             "loop": "A developer reviews, tests and understands the code before it ships.",
             "debate": "If AI writes the code, which coding skills still need to stay human?"
@@ -209,6 +272,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A diffusion model that turns text prompts into images, raising real questions about who owns the result.",
+            "marks": {
+                "Df": "diffusion model",
+                "Ti": "turns text prompts into images",
+                "Ip": "who owns the result"
+            },
             "example": "Creating poster artwork for the school play from a written description.",
             "loop": "A person directs, selects and edits the image, and credits the AI honestly.",
             "debate": "If AI made the picture from your prompt, who really made it?"
@@ -223,6 +291,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "An AI-generated picture carrying a hidden watermark or attached content credentials, so tools can check later that it was AI-made. These signals can sometimes be stripped out.",
+            "marks": {
+                "Ti": "AI-generated picture",
+                "Wm": "hidden watermark"
+            },
             "example": "A social media app adding an “AI-generated” label to a picture.",
             "loop": "Creators label their work honestly, and platforms check for the watermark.",
             "debate": "Should every AI-made image have to carry a label?"
@@ -238,6 +310,10 @@
             "level": "secondary",
             "volatile": true,
             "what": "Generative AI that copies a real person’s voice from a short recording. The same technology can help or harm: it depends on consent and on who is in control.",
+            "marks": {
+                "Ga": "Generative AI",
+                "Dk": "copies a real person’s voice"
+            },
             "example": "Harm: scam calls that imitate a family member asking urgently for money. Help: people losing their voice to illness recording it first, so they can keep speaking in their own voice.",
             "loop": "Only clone a voice with its owner’s consent. Agree a family “safe word” and check by another route before acting on an urgent call.",
             "debate": "Voice cloning can scam a family or give someone their voice back. Should it be banned, or controlled?"
@@ -253,6 +329,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "Translates what you say during a call and speaks it in the other language, in a synthetic copy of your own voice, made with your consent.",
+            "marks": {
+                "Np": "Translates what you say",
+                "Ts": "speaks it in the other language",
+                "Ga": "synthetic copy of your own voice"
+            },
             "example": "A parent phoning school in Polish, and staff hearing them in English, in the parent’s own voice.",
             "loop": "The speaker agrees to their voice being copied, and the call makes clear the voice is AI-translated.",
             "debate": "If a copy of your voice is made with your consent, is it still a deepfake? What makes the difference?"
@@ -268,6 +349,11 @@
             "level": "secondary",
             "volatile": true,
             "what": "Realistic AI video of something that never happened, mass-produced to spread on social media.",
+            "marks": {
+                "Gv": "Realistic AI video",
+                "Dk": "something that never happened",
+                "Sp": "mass-produced"
+            },
             "example": "A fake clip of a celebrity or politician saying something they never said.",
             "loop": "Pause and check where a video came from before you share it, and report fakes.",
             "debate": "Should platforms remove deepfakes, or just label them?"
@@ -282,6 +368,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "A recommendation engine that predicts what you are most likely to watch or click, and shows you more of it.",
+            "marks": {
+                "Rc": "recommendation engine",
+                "Pa": "predicts what you are most likely to watch or click"
+            },
             "example": "The “For you” page on a video app.",
             "loop": "You tell it what you are not interested in, and choose when to scroll away.",
             "debate": "Do you choose what you watch, or does the app?"
@@ -296,6 +386,10 @@
             "level": "secondary",
             "volatile": true,
             "what": "A recommendation engine that keeps showing you more of what you already watch or agree with, so you see fewer different views. Its picks lean towards whatever keeps you watching.",
+            "marks": {
+                "Rc": "recommendation engine",
+                "Bi": "lean towards"
+            },
             "example": "A video feed that can drift towards more extreme content.",
             "loop": "Users can reset or switch off personalisation, and platforms audit their feeds for harm.",
             "debate": "Should social media apps let you turn the algorithm off?"
@@ -311,6 +405,11 @@
             "level": "secondary",
             "volatile": true,
             "what": "A classifier that reads job applications and sorts candidates, and can inherit bias from past hiring decisions.",
+            "marks": {
+                "Cl": "classifier",
+                "Np": "reads job applications",
+                "Bi": "bias"
+            },
             "example": "Software that ranks applicants before any person reads their application.",
             "loop": "A person reviews rejections and audits the results for unfair patterns.",
             "debate": "Should AI decide who gets a job interview?"
@@ -327,6 +426,12 @@
             "level": "further",
             "volatile": false,
             "what": "A predictive system that explains its reasoning, is checked for fairness and keeps a person in charge.",
+            "marks": {
+                "Cl": "predictive system",
+                "Xa": "explains its reasoning",
+                "Fa": "fairness",
+                "Hi": "keeps a person in charge"
+            },
             "example": "An appeals tool where every decision can be explained, challenged and overturned.",
             "loop": "A named person can review and overturn any decision.",
             "debate": "Do you have a right to know why an AI decided something about you?"
@@ -342,6 +447,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A chatbot that uses sentiment analysis to notice when a customer is getting upset, and hands them over to a person.",
+            "marks": {
+                "Cb": "chatbot",
+                "Sa": "sentiment analysis",
+                "Hi": "hands them over to a person"
+            },
             "example": "An online shop’s help chat passing you to a human when it cannot sort out a refund.",
             "loop": "A trained member of staff takes over the difficult conversations.",
             "debate": "Should companies always tell you whether you are talking to a bot or a person?"
@@ -357,6 +467,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A classifier trained on labelled examples of junk mail, which sorts new emails into inbox or spam.",
+            "marks": {
+                "Su": "trained on labelled examples",
+                "Cl": "classifier",
+                "Np": "new emails"
+            },
             "example": "Phishing emails pretending to be from your school landing in the junk folder.",
             "loop": "You mark its mistakes as “spam” or “not spam”, which teaches it.",
             "debate": "Is it worse to miss a real email or to let a scam through?"
@@ -371,6 +486,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "Anomaly detection that learns your usual spending over time, and flags payments that do not fit.",
+            "marks": {
+                "Ad": "Anomaly detection",
+                "Tm": "usual spending over time"
+            },
             "example": "A text asking “Was this you?” after an unusual card payment.",
             "loop": "You confirm or deny the payment in your banking app or by calling the number on your card, never through a link in a text, and the bank investigates.",
             "debate": "How much should a bank know about how you spend your money?"
@@ -385,6 +504,10 @@
             "level": "secondary",
             "volatile": true,
             "what": "Private information pasted into an AI tool that has not been approved, where it may be stored or used for training.",
+            "marks": {
+                "Sh": "AI tool that has not been approved",
+                "Pv": "Private information"
+            },
             "example": "Copying a class list with names and grades into a free chatbot to tidy it up.",
             "loop": "Use only approved tools, and remove names and personal details first.",
             "debate": "Should schools ban free AI tools, or teach people to use them safely?"
@@ -400,6 +523,11 @@
             "level": "further",
             "volatile": false,
             "what": "A chatbot whose guardrails have been tested against jailbreak attempts by red teams, and strengthened where they failed.",
+            "marks": {
+                "Jb": "jailbreak attempts",
+                "Gr": "guardrails",
+                "Rt": "red teams"
+            },
             "example": "A company inviting testers to try to trick its chatbot before launch.",
             "loop": "Safety teams keep testing and fixing it after release.",
             "debate": "Should companies be allowed to release a chatbot before independent testers have checked its safety rules?"
@@ -416,6 +544,12 @@
             "level": "further",
             "volatile": false,
             "what": "Testing, attacking and measuring a model before release to find and fix harmful behaviour.",
+            "marks": {
+                "Sf": "Testing",
+                "Rt": "attacking",
+                "Ev": "measuring",
+                "Gr": "fix harmful behaviour"
+            },
             "example": "Red teamers trying to trick a chatbot into giving dangerous advice, so it can be fixed.",
             "loop": "People set the standards a model must meet before release.",
             "debate": "Who should decide whether an AI model is safe enough to release?"
@@ -431,6 +565,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "Predictive models that use past patterns to estimate what will be needed next.",
+            "marks": {
+                "Pa": "Predictive models",
+                "Tm": "past patterns",
+                "Fc": "estimate what will be needed next"
+            },
             "example": "Predicting how many school lunches to cook each day to cut food waste.",
             "loop": "Staff adjust for things the data cannot know, like a trip day or a snow day.",
             "debate": "How much should we trust a prediction we cannot explain?"
@@ -446,6 +585,11 @@
             "level": "secondary",
             "volatile": true,
             "what": "Analytics that flag people likely to disengage or drop out, and suggest how to help.",
+            "marks": {
+                "Pa": "Analytics",
+                "Ch": "likely to disengage or drop out",
+                "Ps": "suggest how to help"
+            },
             "example": "Spotting students whose attendance patterns suggest they may need support.",
             "loop": "A trusted adult decides what, if anything, to do. The system only flags.",
             "debate": "Should schools act on AI predictions about individual students?"
@@ -460,6 +604,10 @@
             "level": "secondary",
             "volatile": false,
             "what": "Churn prediction spots who is about to cancel a subscription, so they can be sent a deal to stay.",
+            "marks": {
+                "Ch": "Churn prediction",
+                "Pa": "spots who is about to cancel"
+            },
             "example": "A streaming app sending you a discount after you have watched less for a few weeks, before you have even thought about cancelling.",
             "loop": "People decide which offers are fair, and you decide whether to stay.",
             "debate": "Is it fair to use AI to predict when you are about to leave?"
@@ -475,6 +623,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "Documents are scanned, read and entered into systems automatically, with no retyping.",
+            "marks": {
+                "Id": "Documents",
+                "Oc": "scanned, read",
+                "Rp": "entered into systems automatically"
+            },
             "example": "Invoices and permission slips processed straight into school systems.",
             "loop": "Staff handle the exceptions the system flags as unclear.",
             "debate": "Which school admin jobs should be automated, and which should not?"
@@ -491,6 +644,12 @@
             "level": "further",
             "volatile": false,
             "what": "A visual automation where one event triggers actions across several apps.",
+            "marks": {
+                "Lc": "visual automation",
+                "Wh": "one event",
+                "Tg": "triggers",
+                "Ap": "across several apps"
+            },
             "example": "A form submission that updates a spreadsheet and emails a confirmation automatically.",
             "loop": "A person designs the flow and checks it whenever something changes.",
             "debate": "Should everyone learn to build automations, not just programmers?"
@@ -506,6 +665,11 @@
             "level": "further",
             "volatile": false,
             "what": "Process mining finds the work worth automating, and digital workers take it on across the organisation.",
+            "marks": {
+                "Mi": "Process mining",
+                "Dw": "digital workers",
+                "Hy": "across the organisation"
+            },
             "example": "An organisation mapping its processes and handing repetitive steps to bots.",
             "loop": "People redesign roles and keep the judgement calls.",
             "debate": "If digital workers take on routine tasks, what should people do with the time?"
@@ -521,6 +685,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A virtual assistant that listens, works out what you mean and talks back.",
+            "marks": {
+                "Va": "virtual assistant",
+                "Np": "works out what you mean",
+                "Ts": "talks back"
+            },
             "example": "Asking for a timer, the weather or a song while you cook.",
             "loop": "You choose where it sits, when the microphone is on and what it can control.",
             "debate": "Should smart speakers be allowed in classrooms?"
@@ -536,6 +705,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A multimodal model that sees through a camera and describes the world out loud.",
+            "marks": {
+                "Mm": "multimodal model",
+                "Cv": "sees through a camera",
+                "Ts": "describes the world out loud"
+            },
             "example": "An app that reads signs and describes surroundings for blind and partially sighted people.",
             "loop": "The user decides when to rely on it and when to double-check.",
             "debate": "If an app describing the world for a blind person sometimes gets it wrong, should it still be used? Who is responsible for its mistakes?"
@@ -551,6 +725,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A tool that turns speech or text in one language into another language and reads it out loud.",
+            "marks": {
+                "Mm": "speech or text",
+                "Np": "into another language",
+                "Ts": "reads it out loud"
+            },
             "example": "A new student and their family talking with school staff in two languages.",
             "loop": "A professional translator checks anything important, such as medical or legal information.",
             "debate": "Will AI translation mean fewer people learn languages? Is that a loss?"
@@ -566,6 +745,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A neural network that recognises your face, running on the device so the image never has to leave it.",
+            "marks": {
+                "Nn": "neural network",
+                "Cv": "recognises your face",
+                "Ed": "running on the device"
+            },
             "example": "Unlocking a phone by looking at it.",
             "loop": "You choose whether to switch it on, and keep a passcode as a back-up.",
             "debate": "Should schools use face recognition for lunch payments or registration?"
@@ -581,6 +765,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "A small, fine-tuned model that runs on your own phone, so your data does not have to leave the device.",
+            "marks": {
+                "Qz": "small",
+                "Sm": "fine-tuned model",
+                "Ed": "runs on your own phone"
+            },
             "example": "Predictive text and photo search that work even when you are offline.",
             "loop": "You control the device and what it is allowed to do.",
             "debate": "Is AI on your phone more trustworthy than AI in the cloud?"
@@ -596,6 +785,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "Computer vision to see the road, machine learning trained on millions of miles of recorded and simulated driving, and edge AI to decide in a split second on board.",
+            "marks": {
+                "Cv": "Computer vision",
+                "Su": "trained on millions of miles",
+                "Ed": "edge AI"
+            },
             "example": "Robotaxis in some cities, and lane-keeping and emergency braking in ordinary cars.",
             "loop": "Safety drivers, remote operators and regulators decide where it may drive.",
             "debate": "If a self-driving car crashes, who is to blame?"
@@ -611,6 +805,11 @@
             "level": "secondary",
             "volatile": false,
             "what": "Sees the room, plans a route and adjusts on board as it goes.",
+            "marks": {
+                "Cv": "Sees the room",
+                "Pl": "plans a route",
+                "Ed": "on board"
+            },
             "example": "A robot vacuum mapping a house and steering around furniture.",
             "loop": "You set no-go zones and decide whether its map of your home is shared.",
             "debate": "Which household jobs would you hand to a robot, and which would you not?"
@@ -626,6 +825,11 @@
             "level": "further",
             "volatile": false,
             "what": "Reinforcement learning at huge scale, discovering strategies through millions of practice games.",
+            "marks": {
+                "Rl": "Reinforcement learning",
+                "Sl": "huge scale",
+                "Tp": "millions of practice games"
+            },
             "example": "AlphaGo, which learned partly by playing millions of games against itself, beating Go world champion Lee Sedol in 2016.",
             "loop": "Humans design the goals and the rewards the system learns from.",
             "debate": "If AI can beat us at a game, is the game still worth playing?"
@@ -641,6 +845,11 @@
             "level": "further",
             "volatile": false,
             "what": "Buildings full of AI chips that power cloud AI, using large amounts of electricity and water.",
+            "marks": {
+                "Gp": "AI chips",
+                "Cd": "cloud AI",
+                "Sl": "large amounts of electricity and water"
+            },
             "example": "The hidden infrastructure behind every chatbot reply and generated image.",
             "loop": "Companies and policymakers decide where to build and how to report the impact.",
             "debate": "Should AI companies have to publish their energy and water use?"
@@ -655,6 +864,10 @@
             "level": "primary",
             "volatile": true,
             "what": "A chatbot giving an answer that sounds sure of itself but is made up.",
+            "marks": {
+                "Cb": "chatbot",
+                "Ha": "made up"
+            },
             "example": "A helper app tells you a “fact” about your town that isn’t true.",
             "loop": "You check it in a book, on a trusted website or with an adult.",
             "debate": "How can you tell when a chatbot might be making something up?"
@@ -669,6 +882,10 @@
             "level": "primary",
             "volatile": false,
             "what": "An algorithm that suggests videos or songs based on what you watched before.",
+            "marks": {
+                "Al": "algorithm",
+                "Rc": "suggests videos or songs"
+            },
             "example": "The row of videos that appears after the one you just finished.",
             "loop": "You choose what to watch, and when to stop.",
             "debate": "Should an app choose what you watch next, or should you?"
@@ -683,6 +900,10 @@
             "level": "primary",
             "volatile": false,
             "what": "A virtual assistant that listens to your question and talks back out loud.",
+            "marks": {
+                "Va": "virtual assistant",
+                "Ts": "talks back out loud"
+            },
             "example": "Asking a speaker in the kitchen what the weather will be.",
             "loop": "A grown-up decides what it can do and when it can listen.",
             "debate": "Should a voice helper always be listening? Why, or why not?"
@@ -697,6 +918,10 @@
             "level": "primary",
             "volatile": false,
             "what": "AI that looks at photos and sorts them by what is in them.",
+            "marks": {
+                "Cv": "looks at photos",
+                "Cl": "sorts them"
+            },
             "example": "A phone gathering all your photos of dogs into one album.",
             "loop": "You move a photo when it ends up in the wrong place.",
             "debate": "What might a photo sorter get wrong, and why?"
@@ -711,6 +936,10 @@
             "level": "primary",
             "volatile": false,
             "what": "AI that makes a picture from the words you type.",
+            "marks": {
+                "Ai": "AI",
+                "Ti": "makes a picture from the words you type"
+            },
             "example": "Typing “a cat in a spacesuit” and getting a brand-new picture.",
             "loop": "With your teacher, using a school-approved tool: you decide if it is any good, and say it was made with AI.",
             "debate": "If AI made the picture, who is the artist?"
@@ -725,6 +954,10 @@
             "level": "primary",
             "volatile": true,
             "what": "Typing private things, like your address or a password, into a chatbot.",
+            "marks": {
+                "Pv": "private things",
+                "Cb": "chatbot"
+            },
             "example": "Telling a chatbot your full name and which school you go to.",
             "loop": "Ask a trusted adult before you share anything personal online.",
             "debate": "What should you never tell a chatbot?"
@@ -739,6 +972,10 @@
             "level": "primary",
             "volatile": false,
             "what": "A computer learning from lots of examples, instead of being told the rules.",
+            "marks": {
+                "Ml": "computer learning",
+                "Tr": "lots of examples"
+            },
             "example": "Showing a computer hundreds of pictures of apples until it can spot one on its own.",
             "loop": "People choose the examples and check what it has learned.",
             "debate": "What would go wrong if every example apple was red?"
@@ -753,6 +990,10 @@
             "level": "primary",
             "volatile": false,
             "what": "AI that suggests an answer, with a person who checks it and makes the final choice.",
+            "marks": {
+                "Ai": "AI",
+                "Hi": "a person who checks it"
+            },
             "example": "A teacher reading an AI’s marking suggestions before giving out marks.",
             "loop": "A person always has the final say.",
             "debate": "Which decisions should always be made by a person?"

@@ -565,10 +565,11 @@ function aiad_literacy_levels(): array {
  * has a name, the symbols it is made of (in any order), its AI Awareness Day strand, whether it is volatile (risky
  * without a human in the loop), what it is, an example from real life, where a human stays in the loop, a question
  * to debate, and its challenge level (primary: everyday words, two elements each; secondary: everyday systems,
- * agents and predictions; further: how AI is built and governed). A compound's id is its symbols, lowercase and sorted, so saved progress survives reordering
+ * agents and predictions; further: how AI is built and governed). Its marks pair each element's symbol with the words in
+ * "what" that stand for it; the classroom board and the card colour those words like the element's tile. A compound's id is its symbols, lowercase and sorted, so saved progress survives reordering
  * this list.
  *
- * @return array<int, array{id:string, name:string, syms:array<int, string>, strand:string, volatile:bool, what:string, example:string, loop:string, debate:string, level:string}>
+ * @return array<int, array{id:string, name:string, syms:array<int, string>, strand:string, volatile:bool, what:string, example:string, loop:string, debate:string, level:string, marks:array<string, string>}>
  */
 function aiad_literacy_compounds(): array {
 	static $compounds = null;
@@ -576,7 +577,7 @@ function aiad_literacy_compounds(): array {
 		return $compounds;
 	}
 	$raw = array_map(
-		static fn( array $c ): array => array( (string) $c['name'], array_values( (array) $c['elements'] ), (string) $c['theme'], ! empty( $c['volatile'] ), (string) $c['what'], (string) $c['example'], (string) $c['loop'], (string) $c['debate'], (string) $c['level'] ),
+		static fn( array $c ): array => array( (string) $c['name'], array_values( (array) $c['elements'] ), (string) $c['theme'], ! empty( $c['volatile'] ), (string) $c['what'], (string) $c['example'], (string) $c['loop'], (string) $c['debate'], (string) $c['level'], array_map( 'strval', (array) ( $c['marks'] ?? array() ) ) ),
 		(array) ( aiad_literacy_data( 'compounds' )['compounds'] ?? array() )
 	);
 	$compounds = array();
@@ -594,6 +595,7 @@ function aiad_literacy_compounds(): array {
 			'loop'     => $c[6],
 			'debate'   => $c[7],
 			'level'    => $c[8],
+			'marks'    => $c[9],
 		);
 	}
 	return $compounds;
@@ -1173,7 +1175,7 @@ function aiad_render_literacy_table(): string {
 		</form>
 	</section>
 
-	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'pics' => (object) array_map( static fn( array $p ): string => $p['alt'], aiad_literacy_pictures() ), 'picBase' => aiad_literacy_picture_base(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'notes' => (object) array_filter( array_column( aiad_literacy_element_records(), 'teacher_note', 'sym' ) ), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
+	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'pics' => (object) array_map( static fn( array $p ): string => $p['alt'], aiad_literacy_pictures() ), 'picBase' => aiad_literacy_picture_base(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'notes' => (object) array_filter( array_column( aiad_literacy_element_records(), 'teacher_note', 'sym' ) ), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'], (object) $c['marks'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 </div>
 	<?php
 	return (string) ob_get_clean();

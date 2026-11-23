@@ -4982,6 +4982,14 @@ html.alpt-board-open {
     font-size: 1.05rem;
   }
 
+  /* At these sizes the words are small, so the desktop line limits (30 and 40 characters) only leave the right of
+     the board empty: they run the full width instead. */
+  .alpt-board .alpt-board__def,
+  .alpt-board .alpt-board__prompt,
+  .alpt-board .alpt-board__talk {
+    max-width: none;
+  }
+
   .alpt-board__bar {
     position: sticky;
     bottom: 0;
@@ -5107,6 +5115,14 @@ html.alpt-board-open {
     grid-column: 1 / -1;
   }
 
+  /* A compound with Show symbols: row 1 is ← · Hide the answer · Hide symbols · →, the two words buttons equal. */
+  .alpt-board__bar:has(.alpt-board__btn--sym) .alpt-board__btn--toggle { grid-area: 1 / 2 / 2 / 4; }
+  .alpt-board .alpt-board__btn--sym { grid-area: 1 / 4 / 2 / 6; }
+  .alpt-board__bar:has(.alpt-board__btn--sym) .alpt-board__btn--toggle,
+  .alpt-board .alpt-board__btn--sym { padding-inline: 0.3rem; font-size: 0.86rem; }
+  .alpt-board__bar:has(.alpt-board__btn--sym):not(:has(.alpt-board__btn--prev)) .alpt-board__btn--toggle { grid-area: 1 / 1 / 2 / 4; }
+  .alpt-board__bar:not(:has(.alpt-board__btn--prev)) .alpt-board__btn--sym { grid-area: 1 / 4 / 2 / 7; }
+
   .alpt-board .alpt-board__btn--close {
     position: fixed;
     top: calc(0.75rem + env(safe-area-inset-top, 0px));
@@ -5200,6 +5216,45 @@ html.alpt-board-open {
   }
 }
 
+/* A compound's description: the words that stand for each element are highlighted in that element's tile colour,
+   so the sentence lines up with the tiles above it. */
+.alpt-board__mark {
+  padding: 0 0.06em;
+  background: var(--fam);
+  color: var(--a27-ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* The element's symbol tagged on the end of its words, so "connected to your apps" reads as Mc. */
+.alpt-board__mark-sym {
+  margin-left: 0.25em;
+  padding: 0.05em 0.3em;
+  border-radius: 0.2em;
+  background: var(--a27-ink);
+  color: var(--fam);
+  font-size: 0.5em;
+  font-weight: 800;
+  line-height: 1;
+  vertical-align: 0.9em;
+  letter-spacing: 0.02em;
+}
+
+/* Tags: minimal. Plain words, each element's symbol a pill in its tile colour after them. */
+.alpt-board__pill {
+  display: inline-block;
+  margin-left: 0.25em;
+  padding: 0.15em 0.55em;
+  border-radius: 999px;
+  background: var(--fam);
+  color: var(--a27-ink);
+  font-size: 0.55em;
+  font-weight: 800;
+  line-height: 1;
+  vertical-align: 0.35em;
+  letter-spacing: 0.02em;
+}
+
 /* Show pictures on a compound: each element's drawing in its tile's place (cut corner and all), its symbol a badge
    in the top-left corner the drawings keep clear, and its name under the tile. */
 .alpt-board__el.has-pic {
@@ -5268,6 +5323,21 @@ html.alpt-board-open {
 
   .alpt-board__inner--compound .alpt-board__el:not(.has-pic) .alpt-board__el-sym {
     font-size: clamp(1.6rem, 11vw, 3.2rem);
+  }
+
+  /* Without pictures the tiles only hold a symbol and a name, so they stay short (symbol at the top, name under
+     it) instead of stretching to fill the screen: the words come up under them. */
+  .alpt-board__inner--compound .alpt-board__formula:not(:has(.has-pic)) {
+    flex: none;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .alpt-board__inner--compound .alpt-board__formula:not(:has(.has-pic)) .alpt-board__el {
+    justify-content: flex-start;
+    gap: 0.35rem;
+    min-height: 0;
+    aspect-ratio: auto;
   }
 
   /* Names under the pictures keep two lines' room, so the pictures in a row end level. */

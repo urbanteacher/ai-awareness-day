@@ -1716,6 +1716,17 @@
 		var boardHideDef = false;
 		// Show picture: the board's big tile becomes the element's picture, kept on while stepping through elements.
 		var boardShowPic = false;
+		// Tags on a compound's description, the Tags button cycling through them: 'symbols' (each element's words in its
+		// tile colour, ending with its symbol), 'colour' (the colour alone), 'minimal' (plain words, each element's
+		// symbol a pill in its tile colour after them) and 'off' (plain words).
+		var TAG_MODES = [ 'symbols', 'colour', 'minimal', 'off' ];
+		var TAG_LABELS = { symbols: 'Tags: symbols', colour: 'Tags: colour', minimal: 'Tags: minimal', off: 'Tags: off' };
+		// Minimal and off are the pared-back versions: the sentence without the element tiles above it (minimal keeps
+		// the symbols as pills in the words). With the answer hidden the tiles are the clue, so they always show then.
+		function tagsHideTiles( tags ) {
+			return 'minimal' === tags || 'off' === tags;
+		}
+		var boardTags = 'symbols';
 		var boardPrefHide = true; // Guess first: an element opens with its definition hidden until you choose otherwise.
 		var boardOpener = null;
 
@@ -1786,6 +1797,38 @@
 				} );
 			} );
 			if ( line ) {
+				lines.push( line );
+			}
+			return lines;
+		}
+
+		// Wraps text word by word, keeping for each word the marked range it falls in (or null), so a card can draw the
+		// highlight behind it. Each line is an array of { w: word, r: range }.
+		function wrapMarked( ctx, text, ranges, width, tagW ) {
+			var lines = [], line = [], lineW = 0, re = /\S+/g, m;
+			var space = ctx.measureText( ' ' ).width;
+			while ( ( m = re.exec( text ) ) ) {
+				var r = null;
+				ranges.forEach( function ( x ) {
+					if ( m.index >= x.start && m.index < x.end ) {
+						r = x;
+					}
+				} );
+				var ww = ctx.measureText( m[ 0 ] ).width;
+				// The last word of a mark carries its element's symbol tag after it.
+				var last = r && tagW && m.index + m[ 0 ].length >= r.end;
+				if ( last ) {
+					ww += tagW( r );
+				}
+				if ( line.length && lineW + space + ww > width ) {
+					lines.push( line );
+					line = [];
+					lineW = 0;
+				}
+				lineW += ( line.length ? space : 0 ) + ww;
+				line.push( { w: m[ 0 ], r: r, tag: !! last } );
+			}
+			if ( line.length ) {
 				lines.push( line );
 			}
 			return lines;
@@ -2070,7 +2113,9 @@
 		// tone: 'dark' or 'light', as for an element's card. pics: each element's picture (from cardPicture), in the
 		// order of the formula; a tile with one shows it, its symbol a badge in the corner the drawing keeps clear, and
 		// the element's name goes under the tile. A tile without one shows the symbol and name, as on the table.
-		function drawCompoundCard( index, tone, pics ) {
+		function drawCompoundCard( index, tone, pics, tags ) {
+			tags = tags || 'symbols';
+			var sym = 'symbols' === tags || 'minimal' === tags, minimal = 'minimal' === tags, noTiles = tagsHideTiles( tags );
 			var cp = compounds[ index ];
 			pics = pics || [];
 			var light = 'light' === tone;
@@ -2107,6 +2152,9 @@
 					parts.push( { e: e, pic: pics[ i ] || null } );
 				}
 			} );
+			if ( noTiles ) {
+				parts = [];
+			}
 			var anyPic = parts.some( function ( p ) { return p.pic; } );
 			var gapW = 64, n = parts.length;
 			// Pictures earn bigger tiles: up to 300 wide (a compound of two), as wide as the row allows otherwise.
@@ -2191,17 +2239,24 @@
 				}
 				x += T + gapW;
 			} );
-			var tilesBottom = ty + TH + ( anyPic ? 18 + underLines * ( underSize + 4 ) : 0 );
+			var tilesBottom = noTiles ? P : ty + TH + ( anyPic ? 18 + underLines * ( underSize + 4 ) : 0 );
 
 			// Stable or volatile, theme, then the name, what it is and the debate, made smaller together to fit.
 			var top = tilesBottom + 92, bottom = H - P - 100, width = W - P * 2;
+			var ranges = 'off' === tags ? [] : markRanges( cp );
 			var label = ( cp[ 3 ] ? 'VOLATILE COMPOUND' : 'STABLE COMPOUND' ) + ' · ' + String( themes[ cp[ 7 ] ] || '' ).toUpperCase() + ' THEME';
 			var plan = function ( k ) {
 				var rows = [];
 				ctx.font = font( 700, 80 * k );
 				rows.push( { lines: wrapLines( ctx, cp[ 1 ], width ), size: 80 * k, weight: 700, lh: 1.04, after: 30 * k } );
 				ctx.font = font( 600, 42 * k );
-				rows.push( { lines: wrapLines( ctx, cp[ 5 ], width ), size: 42 * k, weight: 600, lh: 1.28, after: 46 * k } );
+				var tagW = sym ? function ( range ) {
+					ctx.font = font( 800, 21 * k );
+					var w = ctx.measureText( range.e[ 0 ] ).width + 21 * k * 0.6 + 42 * k * 0.25;
+					ctx.font = font( 600, 42 * k );
+					return w;
+				} : null;
+				rows.push( { lines: wrapMarked( ctx, cp[ 5 ], ranges, width - 12, tagW ), size: 42 * k, weight: 600, lh: 1.34, after: 46 * k, marked: true } );
 				if ( cp[ 6 ] ) {
 					ctx.font = font( 500, 34 * k );
 					rows.push( { lines: wrapLines( ctx, cp[ 6 ], width - 40 ), size: 34 * k, weight: 500, lh: 1.34, after: 0, debate: true } );
@@ -2212,11 +2267,13 @@
 				} );
 				return { rows: rows, height: h, k: k };
 			};
-			var layout = plan( 1 );
-			for ( var k = 0.95; top + layout.height > bottom && k >= 0.5; k -= 0.05 ) {
+			// Without the tiles the words have the card to themselves: they start larger and sit in the middle.
+			var startK = noTiles ? 1.4 : 1;
+			var layout = plan( startK );
+			for ( var k = startK - 0.05; top + layout.height > bottom && k >= 0.5; k -= 0.05 ) {
 				layout = plan( k );
 			}
-			var y = top;
+			var y = noTiles ? Math.max( top, top + ( bottom - top - layout.height ) / 2 ) : top;
 			ctx.fillStyle = cp[ 3 ] ? volatileColour : accent;
 			ctx.font = font( 700, 26 * layout.k );
 			spaced( ctx, label, P, y, 3 );
@@ -2233,8 +2290,80 @@
 					ctx.fillRect( P, blockTop - 4, 8, 48 * layout.k + r.lines.length * r.size * r.lh );
 					rx = P + 36;
 				}
-				ctx.fillStyle = fg;
 				ctx.font = font( r.weight, r.size );
+				if ( r.marked ) {
+					// Word by word: a marked word sits on its element's tile colour (the space before it too, when the
+					// word before is in the same mark), in ink. Two marks side by side keep a gap between them. On the
+					// light card the pale tile colours barely show on cream, so the words also take the element's deep
+					// colour (its symbol's colour on the tile) and a line underneath in it.
+					var space = ctx.measureText( ' ' ).width, padX = r.size * 0.07;
+					r.lines.forEach( function ( l ) {
+						var wx = rx;
+						l.forEach( function ( word, wi ) {
+							var ww = ctx.measureText( word.w ).width;
+							// The symbol tag's width (its gap included), so the highlight runs on behind it, as on the board.
+							var ts = r.size * 0.5, tw = 0, tagX = 0;
+							if ( word.tag ) {
+								ctx.font = font( 800, ts );
+								tw = ctx.measureText( word.r.e[ 0 ] ).width + ts * 0.6;
+								ctx.font = font( r.weight, r.size );
+								tagX = r.size * 0.25 + tw;
+							}
+							if ( word.r && ! minimal ) {
+								var joined = wi && l[ wi - 1 ].r === word.r;
+								var from = joined ? wx - space : wx - padX;
+								var tile = cardColours( word.r.e );
+								ctx.fillStyle = tile.fam;
+								ctx.fillRect( from, y - r.size * 0.9, wx + ww + tagX + padX - from, r.size * 1.18 );
+								if ( light ) {
+									ctx.fillStyle = tile.deep;
+									ctx.fillRect( from, y + r.size * 0.28 - 5, wx + ww + padX - from, 5 );
+								}
+							}
+							ctx.fillStyle = word.r && ! minimal ? ( light ? cardColours( word.r.e ).deep : ink ) : fg;
+							ctx.fillText( word.w, wx, y );
+							if ( word.tag ) {
+								// The symbol tag, as on the board: a small ink box raised after the words, the symbol in
+								// the tile colour (the deep colour on the light card's pale tiles would vanish, so ink
+								// and tile colour on both cards).
+								var tx = wx + ww + r.size * 0.25;
+								ctx.font = font( 800, ts );
+								var th = ts * 1.15, tTop = y - r.size * 0.8;
+								if ( minimal ) {
+									// Minimal: the symbol alone, a pill in the tile colour (the deep colour on the light
+									// card, where the pale tile colours would vanish on cream).
+									var pt = cardColours( word.r.e );
+									tTop = y - r.size * 0.66;
+									ctx.fillStyle = light ? pt.deep : pt.fam;
+									ctx.beginPath();
+									if ( ctx.roundRect ) {
+										ctx.roundRect( tx, tTop, tw, th, th / 2 );
+									} else {
+										ctx.rect( tx, tTop, tw, th );
+									}
+									ctx.fill();
+									ctx.fillStyle = light ? cream : ink;
+									ctx.fillText( word.r.e[ 0 ], tx + ts * 0.3, tTop + th * 0.8 );
+									ctx.font = font( r.weight, r.size );
+									ww += tagX;
+									wx += ww + space;
+									return;
+								}
+								ctx.fillStyle = ink;
+								ctx.fillRect( tx, tTop, tw, th );
+								ctx.fillStyle = cardColours( word.r.e ).fam;
+								ctx.fillText( word.r.e[ 0 ], tx + ts * 0.3, tTop + th * 0.8 );
+								ctx.font = font( r.weight, r.size );
+								ww += tagX;
+							}
+							wx += ww + space;
+						} );
+						y += r.size * r.lh;
+					} );
+					y += r.after;
+					return;
+				}
+				ctx.fillStyle = fg;
 				r.lines.forEach( function ( l ) {
 					ctx.fillText( l, rx, y );
 					y += r.size * r.lh;
@@ -2278,19 +2407,24 @@
 			} ) );
 		}
 
+		// A compound card shows the symbol tags when the board does, so with and without are two cards.
+		function cardKey( index, mode, tone ) {
+			return mode + ':' + tone + ':' + index + ( 'compound' === mode ? ':' + boardTags : '' );
+		}
+
 		function prepareCard( index, mode, tone ) {
 			tone = tone || 'dark';
 			var compound = 'compound' === mode;
-			var key = mode + ':' + tone + ':' + index;
+			var key = cardKey( index, mode, tone ), tags = boardTags;
 			if ( ! cardJobs[ key ] ) {
 				cardJobs[ key ] = Promise.all( [ cardFonts(), compound ? compoundPictures( index ) : cardPicture( index ) ] ).then( function ( got ) {
 					return new Promise( function ( resolve ) {
-						var canvas = compound ? drawCompoundCard( index, tone, got[ 1 ] ) : drawCard( index, tone, got[ 1 ] );
+						var canvas = compound ? drawCompoundCard( index, tone, got[ 1 ], tags ) : drawCard( index, tone, got[ 1 ] );
 						try {
 							canvas.toBlob( resolve, 'image/png' );
 						} catch ( err ) {
 							// A browser that won't export a canvas with the picture on it: the card without it.
-							( compound ? drawCompoundCard( index, tone, [] ) : drawCard( index, tone, null ) ).toBlob( resolve, 'image/png' );
+							( compound ? drawCompoundCard( index, tone, [], tags ) : drawCard( index, tone, null ) ).toBlob( resolve, 'image/png' );
 						}
 					} );
 				} ).then( function ( blob ) {
@@ -2354,7 +2488,7 @@
 					}
 				} );
 			};
-			var ready = cardBlobs[ mode + ':' + tone + ':' + index ];
+			var ready = cardBlobs[ cardKey( index, mode, tone ) ];
 			if ( ready ) {
 				send( ready );
 				return;
@@ -2450,6 +2584,54 @@
 			} );
 		}
 
+		// A compound's marks (c[ 9 ]: symbol → the words in its description that stand for that element) as character
+		// ranges, first match of each, in reading order, overlaps dropped.
+		function markRanges( c ) {
+			var text = c[ 5 ], out = [];
+			Object.keys( c[ 9 ] || {} ).forEach( function ( sym ) {
+				var words = c[ 9 ][ sym ];
+				var at = words ? text.indexOf( words ) : -1;
+				if ( at !== -1 && undefined !== symIndex[ sym ] ) {
+					out.push( { start: at, end: at + words.length, e: elements[ symIndex[ sym ] ] } );
+				}
+			} );
+			out.sort( function ( a, b ) { return a.start - b.start; } );
+			return out.filter( function ( r, i ) { return ! i || r.start >= out[ i - 1 ].end; } );
+		}
+
+		// The description with each element's words highlighted in that element's tile colour.
+		function markedDef( c ) {
+			var p = el( 'p', 'alpt-board__def' ), text = c[ 5 ], at = 0;
+			( 'off' === boardTags ? [] : markRanges( c ) ).forEach( function ( r ) {
+				if ( r.start > at ) {
+					p.appendChild( document.createTextNode( text.slice( at, r.start ) ) );
+				}
+				var fam = 'alpt-fam--' + r.e[ 2 ] + ' ' + themed( r.e[ 5 ] );
+				if ( 'minimal' === boardTags ) {
+					p.appendChild( document.createTextNode( text.slice( r.start, r.end ) ) );
+					var pill = el( 'span', 'alpt-board__pill ' + fam, r.e[ 0 ] );
+					pill.title = r.e[ 1 ];
+					pill.setAttribute( 'aria-hidden', 'true' );
+					p.appendChild( pill );
+					at = r.end;
+					return;
+				}
+				var mark = el( 'mark', 'alpt-board__mark ' + fam, text.slice( r.start, r.end ) );
+				mark.title = r.e[ 1 ];
+				if ( 'symbols' === boardTags ) {
+					var tag = el( 'sup', 'alpt-board__mark-sym', r.e[ 0 ] );
+					tag.setAttribute( 'aria-hidden', 'true' );
+					mark.appendChild( tag );
+				}
+				p.appendChild( mark );
+				at = r.end;
+			} );
+			if ( at < text.length ) {
+				p.appendChild( document.createTextNode( text.slice( at ) ) );
+			}
+			return p;
+		}
+
 		// The compounds Previous and Next step through: those in the level on show and, during the challenge, only the
 		// ones already discovered, so stepping never gives an answer away. The one on the board is always included.
 		function compoundSteps() {
@@ -2508,11 +2690,16 @@
 				}
 				formula.appendChild( li );
 			} );
-			text.appendChild( formula );
+			var noTiles = ! boardHideDef && tagsHideTiles( boardTags );
+			if ( noTiles ) {
+				anyPic = false;
+			} else {
+				text.appendChild( formula );
+			}
 			if ( boardHideDef ) {
 				text.appendChild( el( 'p', 'alpt-board__prompt', 'What could this AI system be?' ) );
 			} else {
-				text.appendChild( el( 'p', 'alpt-board__def', c[ 5 ] ) );
+				text.appendChild( markedDef( c ) );
 				var q = el( 'p', 'alpt-board__talk' );
 				q.appendChild( el( 'span', 'alpt-board__talk-label', 'Debate it' ) );
 				q.appendChild( document.createTextNode( c[ 6 ] ) );
@@ -2532,6 +2719,11 @@
 				bar.appendChild( next );
 			}
 			bar.appendChild( boardButton( boardHideDef ? 'Show the answer' : 'Hide the answer', 'toggle', 'alpt-board__btn--toggle' ) );
+			if ( ! boardHideDef && markRanges( c ).length ) {
+				var symToggle = boardButton( TAG_LABELS[ boardTags ], 'sym', 'alpt-board__btn--sym' );
+				symToggle.setAttribute( 'aria-label', TAG_LABELS[ boardTags ] + '. Change the tags on the words' );
+				bar.appendChild( symToggle );
+			}
 			if ( anyPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide pictures' : 'Show pictures', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
@@ -2640,6 +2832,13 @@
 				stepBoard( 1 );
 			} else if ( 'card' === action ) {
 				shareCard( boardIndex, b, boardMode, b.getAttribute( 'data-alpt-tone' ) );
+			} else if ( 'sym' === action ) {
+				boardTags = TAG_MODES[ ( TAG_MODES.indexOf( boardTags ) + 1 ) % TAG_MODES.length ];
+				renderBoard();
+				var symAgain = board.querySelector( '[data-alpt-board-action="sym"]' );
+				if ( symAgain ) {
+					symAgain.focus();
+				}
 			} else if ( 'pic' === action ) {
 				boardShowPic = ! boardShowPic;
 				renderBoard();
