@@ -2067,12 +2067,23 @@
 			return canvas;
 		}
 
-		function drawCompoundCard( index ) {
+		// tone: 'dark' or 'light', as for an element's card. pics: each element's picture (from cardPicture), in the
+		// order of the formula; a tile with one shows it, its symbol a badge in the corner the drawing keeps clear, and
+		// the element's name goes under the tile. A tile without one shows the symbol and name, as on the table.
+		function drawCompoundCard( index, tone, pics ) {
 			var cp = compounds[ index ];
+			pics = pics || [];
+			var light = 'light' === tone;
 			var rs = getComputedStyle( document.documentElement );
 			var ink = rs.getPropertyValue( '--a27-ink' ).trim() || '#231F20';
 			var cream = rs.getPropertyValue( '--a27-cream' ).trim() || '#F6F4ED';
-			var accent = rs.getPropertyValue( '--a27-safe' ).trim() || '#00BEDD';
+			var safe = rs.getPropertyValue( '--a27-safe' ).trim() || '#00BEDD';
+			var themeDeep = rs.getPropertyValue( '--a27-' + cp[ 7 ] + '-deep' ).trim() || ink;
+			var bg = light ? cream : ink;
+			var fg = light ? ink : cream;
+			// On cream the cyan is too pale for words, so they take the theme's deep colour (the debate bar stays cyan).
+			var accent = light ? themeDeep : safe;
+			var volatileColour = light ? '#B45309' : '#F59E0B';
 			var W = 1080, H = 1350, P = 84;
 			var canvas = document.createElement( 'canvas' );
 			canvas.width = W;
@@ -2082,32 +2093,54 @@
 			var font = function ( weight, size ) {
 				return weight + ' ' + Math.round( size ) + 'px ' + face;
 			};
-			ctx.fillStyle = ink;
+			ctx.fillStyle = bg;
 			ctx.fillRect( 0, 0, W, H );
 			ctx.fillStyle = accent;
 			ctx.font = font( 700, 26 );
 			spaced( ctx, 'THE AI LITERACY PERIODIC TABLE · COMPOUND', P, P + 20, 4 );
 
 			// The elements it is made of, as tiles joined by "+".
-			var parts = cp[ 2 ].map( function ( sym ) {
-				return elements[ symIndex[ sym ] ];
-			} ).filter( Boolean );
+			var parts = [];
+			cp[ 2 ].forEach( function ( sym, i ) {
+				var e = elements[ symIndex[ sym ] ];
+				if ( e ) {
+					parts.push( { e: e, pic: pics[ i ] || null } );
+				}
+			} );
+			var anyPic = parts.some( function ( p ) { return p.pic; } );
 			var gapW = 64, n = parts.length;
-			var T = Math.min( 230, ( W - P * 2 - ( n - 1 ) * gapW ) / n );
+			// Pictures earn bigger tiles: up to 300 wide (a compound of two), as wide as the row allows otherwise.
+			var T = Math.min( anyPic ? 300 : 230, ( W - P * 2 - ( n - 1 ) * gapW ) / n );
+			// With pictures the tiles take the drawings' shape (300 × 330) and the names go underneath.
+			var TH = anyPic ? T * 1.1 : T;
 			var ty = P + 76, x = P, cut = T * 0.16;
-			parts.forEach( function ( e, i ) {
+			var underSize = Math.max( 18, Math.min( 26, T * 0.12 ) ), underLines = 0;
+			parts.forEach( function ( part, i ) {
+				var e = part.e;
 				var colours = cardColours( e );
 				ctx.fillStyle = colours.fam;
 				ctx.beginPath();
 				ctx.moveTo( x, ty );
 				ctx.lineTo( x + T - cut, ty );
 				ctx.lineTo( x + T, ty + cut );
-				ctx.lineTo( x + T, ty + T );
-				ctx.lineTo( x, ty + T );
+				ctx.lineTo( x + T, ty + TH );
+				ctx.lineTo( x, ty + TH );
 				ctx.closePath();
 				ctx.fill();
-				// Shrink the name until every line fits inside the tile.
-				var nameSize = Math.max( 18, T * 0.1 ), nameW = T - T * 0.2, lines;
+				if ( part.pic ) {
+					ctx.save();
+					ctx.clip();
+					ctx.drawImage( part.pic, x, ty, T, TH );
+					ctx.restore();
+					// The symbol as a badge in the drawing's clear top-left corner (100 × 95 of its 300 × 330).
+					var badge = T * 0.17;
+					ctx.font = font( 700, badge );
+					ctx.fillStyle = colours.deep;
+					ctx.fillText( e[ 0 ], x + T * 0.07, ty + T * 0.07 + badge * 0.76 );
+				}
+				// The name: inside the tile without a picture, under it with one.
+				var nameW = part.pic || anyPic ? T : T - T * 0.2;
+				var nameSize = part.pic || anyPic ? underSize : Math.max( 18, T * 0.1 ), lines;
 				var fits = function () {
 					return lines.length <= 3 && lines.every( function ( l ) {
 						return ctx.measureText( l ).width <= nameW;
@@ -2120,31 +2153,48 @@
 				nameSize = Math.max( 14, nameSize );
 				ctx.font = font( 700, nameSize );
 				lines = clampLines( ctx, wrapLines( ctx, e[ 1 ], nameW ), 3, nameW );
-				var nameTop = ty + T - T * 0.1 - ( lines.length - 1 ) * ( nameSize + 4 ) - nameSize;
-				ctx.fillStyle = ink;
-				lines.forEach( function ( l, j ) {
-					ctx.fillText( l, x + T * 0.1, nameTop + nameSize + j * ( nameSize + 4 ) );
-				} );
-				var symSize = Math.min( T * 0.5, ( nameTop - ty - T * 0.14 ) / 0.96 );
-				ctx.font = font( 700, symSize );
-				while ( ctx.measureText( e[ 0 ] ).width > T * 0.82 && symSize > 30 ) {
-					symSize -= 4;
-					ctx.font = font( 700, symSize );
+				if ( anyPic ) {
+					underSize = Math.min( underSize, nameSize );
+					ctx.fillStyle = fg;
+					lines.forEach( function ( l, j ) {
+						ctx.fillText( l, x, ty + TH + 18 + nameSize + j * ( nameSize + 4 ) );
+					} );
+					underLines = Math.max( underLines, lines.length );
 				}
-				ctx.fillStyle = colours.deep;
-				ctx.fillText( e[ 0 ], x + T * 0.08, nameTop - T * 0.06 - symSize * 0.22 );
+				if ( ! part.pic && ! anyPic ) {
+					var nameTop = ty + T - T * 0.1 - ( lines.length - 1 ) * ( nameSize + 4 ) - nameSize;
+					ctx.fillStyle = ink;
+					lines.forEach( function ( l, j ) {
+						ctx.fillText( l, x + T * 0.1, nameTop + nameSize + j * ( nameSize + 4 ) );
+					} );
+					var symSize = Math.min( T * 0.5, ( nameTop - ty - T * 0.14 ) / 0.96 );
+					ctx.font = font( 700, symSize );
+					while ( ctx.measureText( e[ 0 ] ).width > T * 0.82 && symSize > 30 ) {
+						symSize -= 4;
+						ctx.font = font( 700, symSize );
+					}
+					ctx.fillStyle = colours.deep;
+					ctx.fillText( e[ 0 ], x + T * 0.08, nameTop - T * 0.06 - symSize * 0.22 );
+				} else if ( ! part.pic ) {
+					// Mixed: this one has no picture, so its symbol fills the tile.
+					var bigSym = T * 0.42;
+					ctx.font = font( 700, bigSym );
+					ctx.fillStyle = colours.deep;
+					ctx.fillText( e[ 0 ], x + T * 0.08, ty + TH * 0.55 );
+				}
 				if ( i < n - 1 ) {
-					ctx.fillStyle = cream;
+					ctx.fillStyle = fg;
 					ctx.font = font( 700, 56 );
 					ctx.textAlign = 'center';
-					ctx.fillText( '+', x + T + gapW / 2, ty + T / 2 + 20 );
+					ctx.fillText( '+', x + T + gapW / 2, ty + TH / 2 + 20 );
 					ctx.textAlign = 'left';
 				}
 				x += T + gapW;
 			} );
+			var tilesBottom = ty + TH + ( anyPic ? 18 + underLines * ( underSize + 4 ) : 0 );
 
 			// Stable or volatile, theme, then the name, what it is and the debate, made smaller together to fit.
-			var top = ty + T + 92, bottom = H - P - 100, width = W - P * 2;
+			var top = tilesBottom + 92, bottom = H - P - 100, width = W - P * 2;
 			var label = ( cp[ 3 ] ? 'VOLATILE COMPOUND' : 'STABLE COMPOUND' ) + ' · ' + String( themes[ cp[ 7 ] ] || '' ).toUpperCase() + ' THEME';
 			var plan = function ( k ) {
 				var rows = [];
@@ -2167,7 +2217,7 @@
 				layout = plan( k );
 			}
 			var y = top;
-			ctx.fillStyle = cp[ 3 ] ? '#F59E0B' : accent;
+			ctx.fillStyle = cp[ 3 ] ? volatileColour : accent;
 			ctx.font = font( 700, 26 * layout.k );
 			spaced( ctx, label, P, y, 3 );
 			y += 60 * layout.k + 40 * layout.k;
@@ -2179,10 +2229,11 @@
 					ctx.font = font( 700, 24 * layout.k );
 					spaced( ctx, 'DEBATE IT', P + 36, blockTop + 22 * layout.k, 3 );
 					y += 48 * layout.k;
+					ctx.fillStyle = safe;
 					ctx.fillRect( P, blockTop - 4, 8, 48 * layout.k + r.lines.length * r.size * r.lh );
 					rx = P + 36;
 				}
-				ctx.fillStyle = cream;
+				ctx.fillStyle = fg;
 				ctx.font = font( r.weight, r.size );
 				r.lines.forEach( function ( l ) {
 					ctx.fillText( l, rx, y );
@@ -2191,7 +2242,7 @@
 				y += r.after;
 			} );
 
-			ctx.fillStyle = cream;
+			ctx.fillStyle = fg;
 			ctx.globalAlpha = 0.25;
 			ctx.fillRect( P, H - P - 62, W - P * 2, 2 );
 			ctx.globalAlpha = 1;
@@ -2220,18 +2271,26 @@
 			} ) );
 		}
 
+		// A compound's card shows each element's picture in its tile, so it waits for all of them.
+		function compoundPictures( index ) {
+			return Promise.all( compounds[ index ][ 2 ].map( function ( sym ) {
+				return undefined === symIndex[ sym ] ? null : cardPicture( symIndex[ sym ] );
+			} ) );
+		}
+
 		function prepareCard( index, mode, tone ) {
-			tone = 'compound' === mode ? 'dark' : ( tone || 'dark' );
+			tone = tone || 'dark';
+			var compound = 'compound' === mode;
 			var key = mode + ':' + tone + ':' + index;
 			if ( ! cardJobs[ key ] ) {
-				cardJobs[ key ] = Promise.all( [ cardFonts(), 'compound' === mode ? null : cardPicture( index ) ] ).then( function ( got ) {
+				cardJobs[ key ] = Promise.all( [ cardFonts(), compound ? compoundPictures( index ) : cardPicture( index ) ] ).then( function ( got ) {
 					return new Promise( function ( resolve ) {
-						var canvas = 'compound' === mode ? drawCompoundCard( index ) : drawCard( index, tone, got[ 1 ] );
+						var canvas = compound ? drawCompoundCard( index, tone, got[ 1 ] ) : drawCard( index, tone, got[ 1 ] );
 						try {
 							canvas.toBlob( resolve, 'image/png' );
 						} catch ( err ) {
 							// A browser that won't export a canvas with the picture on it: the card without it.
-							drawCard( index, tone, null ).toBlob( resolve, 'image/png' );
+							( compound ? drawCompoundCard( index, tone, [] ) : drawCard( index, tone, null ) ).toBlob( resolve, 'image/png' );
 						}
 					} );
 				} ).then( function ( blob ) {
@@ -2248,12 +2307,12 @@
 
 		function shareCard( index, button, mode, tone ) {
 			var compound = 'compound' === mode;
-			tone = compound ? 'dark' : ( tone || 'dark' );
+			tone = tone || 'dark';
 			var item = compound ? compounds[ index ] : elements[ index ];
 			var title = item[ 1 ];
 			var about = compound ? item[ 5 ] : item[ 3 ];
 			var slug = compound ? item[ 0 ] : item[ 0 ].toLowerCase();
-			var name = 'ai-literacy-periodic-table-' + ( compound ? 'compound-' : '' ) + slug + ( compound ? '' : '-' + tone ) + '.png';
+			var name = 'ai-literacy-periodic-table-' + ( compound ? 'compound-' : '' ) + slug + '-' + tone + '.png';
 			var url = window.location.origin + window.location.pathname + ( compound ? '#alpt-cp-' : '#element-' ) + slug;
 			// The button's own markup (its icon too), put back after a message such as Card downloaded.
 			var label = button ? button.innerHTML : '';
@@ -2374,17 +2433,35 @@
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
 				bar.appendChild( picToggle );
 			}
-			// The card in two versions: dark (cream on ink) and light (ink on cream). Each button is drawn in its card's colours.
+			appendCardButtons( bar, e[ 1 ] );
+			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
+			board.appendChild( bar );
+		}
+
+		// The card in two versions: dark (cream on ink) and light (ink on cream). Each button is drawn in its card's colours.
+		function appendCardButtons( bar, title ) {
 			[ [ 'dark', 'Dark card' ], [ 'light', 'Light card' ] ].forEach( function ( t ) {
 				var cardBtn = boardButton( '', 'card', 'alpt-board__btn--card alpt-board__btn--card-' + t[ 0 ] );
 				cardBtn.setAttribute( 'data-alpt-tone', t[ 0 ] );
 				cardBtn.innerHTML = '<svg class="alpt-board__btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
 				cardBtn.appendChild( document.createTextNode( t[ 1 ] ) );
-				cardBtn.setAttribute( 'aria-label', ( canShareFiles() ? 'Share a ' : 'Download a ' ) + t[ 0 ] + ' card of ' + e[ 1 ] );
+				cardBtn.setAttribute( 'aria-label', ( canShareFiles() ? 'Share a ' : 'Download a ' ) + t[ 0 ] + ' card of ' + title );
 				bar.appendChild( cardBtn );
 			} );
-			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
-			board.appendChild( bar );
+		}
+
+		// The compounds Previous and Next step through: those in the level on show and, during the challenge, only the
+		// ones already discovered, so stepping never gives an answer away. The one on the board is always included.
+		function compoundSteps() {
+			var list = [];
+			compounds.forEach( function ( c, i ) {
+				var inLevel = ! level || c[ 4 ] === level;
+				var open = ! labOn || found.indexOf( c[ 0 ] ) !== -1;
+				if ( i === boardIndex || ( inLevel && open ) ) {
+					list.push( i );
+				}
+			} );
+			return list;
 		}
 
 		function renderBoardCompound() {
@@ -2395,6 +2472,8 @@
 			text.appendChild( el( 'p', 'alpt-board__label', ( c[ 3 ] ? 'Volatile compound' : 'Stable compound' ) + ' · ' + ( themes[ c[ 7 ] ] || '' ) + ' theme' ) );
 			text.appendChild( el( 'h2', 'alpt-board__title', c[ 1 ] ) );
 			var formula = el( 'ul', 'alpt-board__formula' );
+			var anyPic = false;
+			var shownId = c[ 0 ];
 			c[ 2 ].forEach( function ( sym ) {
 				var e = elements[ symIndex[ sym ] ];
 				if ( ! e ) {
@@ -2405,6 +2484,28 @@
 				// The tile's own name, which has soft hyphens in its long words, so a narrow tile breaks them cleanly.
 				var tileName = root.querySelector( '[data-alpt-el="' + symIndex[ sym ] + '"] .alpt-tile__name' );
 				li.appendChild( el( 'span', 'alpt-board__el-name', tileName ? tileName.textContent : e[ 1 ] ) );
+				var hasPic = !! picBase && Object.prototype.hasOwnProperty.call( pics, e[ 0 ] );
+				anyPic = anyPic || hasPic;
+				// Show picture: each element's picture fills its tile, the symbol a badge in the corner the drawings
+				// keep clear for it, the name underneath.
+				if ( hasPic && boardShowPic ) {
+					li.classList.add( 'has-pic' );
+					li.style.setProperty( '--pic-accent', 'var(--a27-' + e[ 5 ] + ')' );
+					var pic = el( 'span', 'alpt-board__pic' );
+					pic.setAttribute( 'role', 'img' );
+					pic.setAttribute( 'aria-label', pics[ e[ 0 ] ] || '' );
+					li.insertBefore( pic, li.firstChild );
+					loadPicture( e[ 0 ] ).then( function ( svg ) {
+						if ( ! svg || ! pic.isConnected || compounds[ boardIndex ][ 0 ] !== shownId ) {
+							li.classList.remove( 'has-pic' );
+							pic.remove();
+							return;
+						}
+						var copy = document.importNode( svg, true );
+						copy.setAttribute( 'preserveAspectRatio', 'xMidYMid meet' );
+						pic.replaceChildren( copy );
+					} );
+				}
 				formula.appendChild( li );
 			} );
 			text.appendChild( formula );
@@ -2420,8 +2521,23 @@
 			wrap.appendChild( text );
 			board.appendChild( wrap );
 			var bar = el( 'div', 'alpt-board__bar' );
+			if ( compoundSteps().length > 1 ) {
+				var prev = boardButton( '', 'prev', 'alpt-board__btn--prev' );
+				prev.innerHTML = '<span aria-hidden="true">←</span> <span class="alpt-board__btn-word">Previous</span>';
+				prev.setAttribute( 'aria-label', 'Previous compound' );
+				var next = boardButton( '', 'next', 'alpt-board__btn--next' );
+				next.innerHTML = '<span class="alpt-board__btn-word">Next</span> <span aria-hidden="true">→</span>';
+				next.setAttribute( 'aria-label', 'Next compound' );
+				bar.appendChild( prev );
+				bar.appendChild( next );
+			}
 			bar.appendChild( boardButton( boardHideDef ? 'Show the answer' : 'Hide the answer', 'toggle', 'alpt-board__btn--toggle' ) );
-			bar.appendChild( boardButton( canShareFiles() ? 'Share as a card' : 'Download as a card', 'card', 'alpt-board__btn--card' ) );
+			if ( anyPic ) {
+				var picToggle = boardButton( boardShowPic ? 'Hide pictures' : 'Show pictures', 'pic', 'alpt-board__btn--pic' );
+				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
+				bar.appendChild( picToggle );
+			}
+			appendCardButtons( bar, c[ 1 ] );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
 		}
@@ -2436,9 +2552,7 @@
 			var mode = boardMode, index = boardIndex;
 			( window.requestIdleCallback || window.setTimeout )( function () {
 				prepareCard( index, mode, 'dark' );
-				if ( 'element' === mode ) {
-					prepareCard( index, mode, 'light' );
-				}
+				prepareCard( index, mode, 'light' );
 			} );
 		}
 
@@ -2488,12 +2602,18 @@
 		}
 
 		function stepBoard( dir ) {
-			if ( 'element' !== boardMode ) {
+			var steps = 'compound' === boardMode ? compoundSteps() : null;
+			if ( steps && steps.length < 2 ) {
 				return;
 			}
 			// The board is rebuilt, so put focus back on the same button (Previous or Next), or on the title.
 			var was = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute( 'data-alpt-board-action' ) : null;
-			boardIndex = ( boardIndex + dir + elements.length ) % elements.length;
+			if ( steps ) {
+				var at = steps.indexOf( boardIndex );
+				boardIndex = steps[ ( at + dir + steps.length ) % steps.length ];
+			} else {
+				boardIndex = ( boardIndex + dir + elements.length ) % elements.length;
+			}
 			renderBoard();
 			var again = was ? board.querySelector( '[data-alpt-board-action="' + was + '"]' ) : null;
 			if ( again ) {
@@ -2501,7 +2621,9 @@
 			} else {
 				focusBoardTitle();
 			}
-			boardSay.textContent = ( boardIndex + 1 ) + ' of ' + elements.length + ': ' + elements[ boardIndex ][ 1 ] + '.';
+			boardSay.textContent = steps
+				? ( steps.indexOf( boardIndex ) + 1 ) + ' of ' + steps.length + ': ' + compounds[ boardIndex ][ 1 ] + '.'
+				: ( boardIndex + 1 ) + ' of ' + elements.length + ': ' + elements[ boardIndex ][ 1 ] + '.';
 		}
 
 		board.addEventListener( 'click', function ( event ) {
