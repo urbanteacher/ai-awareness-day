@@ -6286,3 +6286,53 @@ html.alpt-flow-open {
 .alpt-flowbox--board .alpt-flowbox__still svg {
   max-height: 62vh;
 }
+
+/* How it works, one picture per screen: a bar fixed to the bottom of the box steps through them. */
+.alpt-flowbox__screen[hidden] {
+  display: none;
+}
+
+.alpt-flowbox__pager {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem -1.1rem 0;
+  padding: 0.6rem 1.1rem;
+  background: var(--a27-cream);
+  border-top: 2px solid var(--a27-ink);
+}
+
+.alpt-flowbox__stage > .alpt-flowbox__pager:last-child {
+  margin-bottom: 0;
+}
+
+.alpt-flowbox__pager button {
+  min-height: 44px;
+  padding: 0.45rem 0.9rem;
+  border: 1.5px solid var(--a27-ink);
+  background: #fff;
+  color: var(--a27-ink);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.alpt-flowbox__pager .alpt-flowbox__next {
+  margin-left: auto;
+  background: var(--a27-ink);
+  color: var(--a27-cream);
+}
+
+.alpt-flowbox__pager button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.alpt-flowbox__at {
+  font-size: 0.85rem;
+  color: var(--a27-dim, #54504E);
+}

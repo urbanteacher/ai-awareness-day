@@ -274,41 +274,74 @@
 			] ).then( function ( got ) {
 				var drawings = got[ 1 ] || {};
 				stage.innerHTML = '';
+				// One screen per picture: the animation, the comparison, then each still. With more than one, a bar
+				// fixed to the bottom of the box steps between them, so nothing is a long scroll.
+				var screens = [];
+				function screen( label ) {
+					var sc = document.createElement( 'div' );
+					sc.className = 'alpt-flowbox__screen';
+					sc.setAttribute( 'data-label', label );
+					stage.appendChild( sc );
+					screens.push( sc );
+					return sc;
+				}
 				if ( how.flow ) {
+					var sc1 = screen( how.flow.spec.title || 'Animation' );
 					var fig = document.createElement( 'figure' );
-					stage.appendChild( fig );
+					sc1.appendChild( fig );
 					var spec = JSON.parse( JSON.stringify( how.flow.spec ) );
 					spec.media = true; // Rewind ‹ Play › controls
 					window.AIADFlow.mount( fig, spec );
-					stage.appendChild( courseCredit( how.flow ) );
+					sc1.appendChild( courseCredit( how.flow ) );
 				}
 				if ( how.compare ) {
+					var sc2 = screen( how.compare.spec.title || 'Comparison' );
 					var cfig = document.createElement( 'figure' );
-					stage.appendChild( cfig );
+					sc2.appendChild( cfig );
 					window.AIADFlow.compare( cfig, JSON.parse( JSON.stringify( how.compare.spec ) ) );
-					stage.appendChild( courseCredit( how.compare ) );
+					sc2.appendChild( courseCredit( how.compare ) );
 				}
-				if ( how.stills.length ) {
-					if ( needEngine ) {
-						var more = document.createElement( 'h3' );
-						more.className = 'alpt-flowbox__more';
-						more.textContent = 'More from the course';
-						stage.appendChild( more );
+				how.stills.forEach( function ( id ) {
+					var st = drawings[ id ];
+					if ( ! st ) {
+						return;
 					}
-					how.stills.forEach( function ( id ) {
-						var st = drawings[ id ];
-						if ( ! st ) {
-							return;
+					var sc3 = screen( st.title );
+					var still = document.createElement( 'figure' );
+					still.className = 'alpt-flowbox__still';
+					still.innerHTML = st.svg;
+					var cap = document.createElement( 'figcaption' );
+					cap.textContent = st.caption;
+					still.appendChild( cap );
+					sc3.appendChild( still );
+					sc3.appendChild( courseCredit( st ) );
+				} );
+				if ( screens.length > 1 ) {
+					var nav = document.createElement( 'nav' );
+					nav.className = 'alpt-flowbox__pager';
+					nav.setAttribute( 'aria-label', 'More pictures for this word' );
+					nav.innerHTML = '<button type="button" class="alpt-flowbox__prev">‹ Back</button>' +
+						'<span class="alpt-flowbox__at" aria-live="polite"></span>' +
+						'<button type="button" class="alpt-flowbox__next">More ›</button>';
+					stage.appendChild( nav );
+					var prev = nav.querySelector( '.alpt-flowbox__prev' ), next = nav.querySelector( '.alpt-flowbox__next' ), at = nav.querySelector( '.alpt-flowbox__at' );
+					var shown = 0;
+					var show = function ( k, focus ) {
+						shown = k;
+						screens.forEach( function ( sc, j ) { sc.hidden = j !== k; } );
+						prev.disabled = k === 0;
+						next.disabled = k === screens.length - 1;
+						at.textContent = ( k + 1 ) + ' of ' + screens.length;
+						next.setAttribute( 'aria-label', k < screens.length - 1 ? 'More: ' + screens[ k + 1 ].getAttribute( 'data-label' ) : 'More' );
+						prev.setAttribute( 'aria-label', k > 0 ? 'Back: ' + screens[ k - 1 ].getAttribute( 'data-label' ) : 'Back' );
+						flowBox.scrollTop = 0;
+						if ( focus ) {
+							( k === 0 ? next : k === screens.length - 1 ? prev : focus ).focus();
 						}
-						var still = document.createElement( 'figure' );
-						still.className = 'alpt-flowbox__still';
-						still.innerHTML = st.svg;
-						var cap = document.createElement( 'figcaption' );
-						cap.textContent = st.caption;
-						still.appendChild( cap );
-						stage.appendChild( still );
-						stage.appendChild( courseCredit( st ) );
-					} );
+					};
+					prev.addEventListener( 'click', function () { show( Math.max( 0, shown - 1 ), prev ); } );
+					next.addEventListener( 'click', function () { show( Math.min( screens.length - 1, shown + 1 ), next ); } );
+					show( 0 );
 				}
 			} ).catch( function () {
 				stage.innerHTML = '<p class="alpt-flowbox__loading">This could not load. Check your connection and try again.</p>';
