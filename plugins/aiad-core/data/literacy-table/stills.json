@@ -102,6 +102,36 @@
   ],
   "Hi": [
    "s35"
+  ],
+  "Bi": [
+   "s37"
+  ],
+  "Fa": [
+   "s38"
+  ],
+  "Xa": [
+   "s39"
+  ],
+  "Tn": [
+   "s40"
+  ],
+  "Pv": [
+   "s41"
+  ],
+  "Rs": [
+   "s42"
+  ],
+  "Et": [
+   "s43"
+  ],
+  "An": [
+   "s44"
+  ],
+  "Rt": [
+   "s45"
+  ],
+  "Wm": [
+   "s46"
   ]
  },
  "stills": {
@@ -212,6 +242,36 @@
   },
   "s36": {
    "title": "Who decides the steps?"
+  },
+  "s37": {
+   "title": "How bias gets in, and how it can grow"
+  },
+  "s38": {
+   "title": "Fair by which measure?"
+  },
+  "s39": {
+   "title": "Two kinds of explanation"
+  },
+  "s40": {
+   "title": "What being open about AI covers"
+  },
+  "s41": {
+   "title": "Where your words go, and what to ask"
+  },
+  "s42": {
+   "title": "Responsible AI, step by step"
+  },
+  "s43": {
+   "title": "Who gains, who could be harmed?"
+  },
+  "s44": {
+   "title": "Hitting the target, missing the point"
+  },
+  "s45": {
+   "title": "The red-team loop"
+  },
+  "s46": {
+   "title": "How a text watermark can work"
   }
  }
 }

@@ -157,6 +157,11 @@
 		function courseCredit( f ) {
 			var p = document.createElement( 'p' );
 			p.className = 'alpt-flowbox__from';
+			if ( ! f.course ) {
+				// One of the table's own illustrations.
+				p.textContent = 'Drawn for the AI Literacy Periodic Table.';
+				return p;
+			}
 			p.appendChild( document.createTextNode( 'From the free course ' ) );
 			var a = document.createElement( 'a' );
 			a.href = flowsEl.getAttribute( 'data-courses' ) + f.course + '/' + ( f.chapter ? '#' + f.chapter : '' );

@@ -1,0 +1,42 @@
+{
+ "Bi": {
+  "title": "How bias gets in, and how it can grow",
+  "caption": "Bias usually starts in the data: a model copies the patterns in past decisions, including unfair ones. If its own decisions are fed back in as new data, the gap can grow. Made-up numbers."
+ },
+ "Fa": {
+  "title": "Fair by which measure?",
+  "caption": "Fairness has more than one definition, and they can't always all be met at once. A tool can look equally accurate for two groups while its mistakes land much harder on one of them, so each group is checked on the measure that matters for the decision. Made-up numbers."
+ },
+ "Xa": {
+  "title": "Two kinds of explanation",
+  "caption": "Explainability tools, such as SHAP and LIME, estimate which inputs mattered: for the model as a whole (global) or for one answer (local). They're approximations of what the model does, not a full account of it. Made-up numbers."
+ },
+ "Tn": {
+  "title": "What being open about AI covers",
+  "caption": "Transparency means telling people that AI is being used, what it was built from, where it fails and who is responsible. A model card is one common way to write this down. In the EU, the AI Act has required telling people and labelling AI-generated content since August 2026."
+ },
+ "Pv": {
+  "title": "Where your words go, and what to ask",
+  "caption": "Each step is a place to ask what happens to your data. Under the UK GDPR, organisations should collect only what they need, keep it secure, keep it no longer than necessary and explain how it is used."
+ },
+ "Rs": {
+  "title": "Responsible AI, step by step",
+  "caption": "Responsible AI turns principles into checks at every stage, from deciding whether to build something at all to watching it after launch, when new problems often appear."
+ },
+ "Et": {
+  "title": "Who gains, who could be harmed?",
+  "caption": "Ethics weighs who gains and who could be harmed, and whether people agreed to it. Reasonable people can weigh these differently, which is why it's discussed, not calculated."
+ },
+ "An": {
+  "title": "Hitting the target, missing the point",
+  "caption": "AI is trained on something measurable that stands in for what we really want. When the two drift apart, the model can hit the target and miss the point: researchers call this specification gaming. Flattering people, sycophancy, is one result that has been linked to training on human ratings."
+ },
+ "Rt": {
+  "title": "The red-team loop",
+  "caption": "Red teams try to break a model before the public does. Every failure they find becomes a fix, and a new test so it stays fixed. Red teaming finds problems; it can't prove a model is safe."
+ },
+ "Wm": {
+  "title": "How a text watermark can work",
+  "caption": "One research method (Kirchenbauer and others, 2023): before each word, a secret key splits the possible next words into green and red halves, and the model is nudged towards green. A detector with the key counts them. Heavy rewording weakens the signal, so it's evidence, not proof. Made-up example."
+ }
+}
