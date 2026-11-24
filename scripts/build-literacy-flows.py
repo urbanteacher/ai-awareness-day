@@ -2,7 +2,8 @@
 """
 Copies the animated flows from the AI Under the Hood courses (assets/courses/*/index.html, their `var FLOWS={...}`)
 into plugins/aiad-core/data/literacy-table/flows.json, so the AI Literacy Periodic Table can play them with the same
-engine (assets/courses/shared/flow.js) under "See how it works".
+engine (assets/courses/shared/flow.js) under "See how it works". The courses' "Predict from the diagram" question is
+left out: in the table it was too much.
 
 ELEMENTS below picks, for each element, the one flow that explains it best. A course chapter tags several elements,
 but its flow often shows only one or two of them, so the choice is made here by hand rather than from the tags.
@@ -80,6 +81,8 @@ def main():
                         'spec': spec,
                     }
         for fid, spec in specs.items():
+            # The courses ask "Predict from the diagram" before each flow; the table plays them without it.
+            spec.pop('predict', None)
             ch, heading = chapters.get(fid, ('', ''))
             flows[fid] = {
                 'course': slug, 'courseTitle': title, 'part': PART[slug],
