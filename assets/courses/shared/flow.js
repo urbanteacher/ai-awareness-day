@@ -86,17 +86,21 @@
 		var start = spec.start || [spec.nodes[0][0]];
 		fig.classList.add('ff');
 		var P = spec.predict;
+		/* spec.media (the periodic table): player-style controls, Rewind ‹ Play › , with a step back as well as forward. */
+		var media = !!spec.media, INTRO = media ? 'Press Play to watch it, or › to go one step at a time.' : 'Press Play to watch it, or Next step to go at your own pace.';
 		fig.innerHTML = (spec.title ? '<figcaption class="ff-title"><span class="eyebrow">Animated flow</span>' + esc(spec.title) + '</figcaption>' : '') +
 			'<svg viewBox="' + X0.toFixed(1) + ' ' + Y0.toFixed(1) + ' ' + W.toFixed(1) + ' ' + H.toFixed(1) + '" role="img" aria-label="' + esc(spec.title || 'Flow diagram') + '"><defs><marker id="' + mid + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>' +
 			draw(spec, N, mid) + '<circle class="ff-dot" r="5.5" cx="-999" cy="-999"/></svg>' +
 			(P ? '<div class="ff-pred"><p class="ff-pred-k">Predict from the diagram</p><p class="ff-pred-hint">Use the boxes and arrows above to work it out.</p><p class="ff-pred-q">' + P.q + '</p><div class="ff-pred-opts" role="group" aria-label="Your prediction">' +
 				P.options.map(function (o, i) { return '<button type="button" data-i="' + i + '">' + o + '</button>'; }).join('') +
 				'</div><p class="ff-pred-res" aria-live="polite"></p><button type="button" class="ff-pred-skip">Skip and just watch</button></div>' : '') +
-			'<p class="ff-say" aria-live="polite">Press Play to watch it, or Next step to go at your own pace.</p>' +
-			'<div class="ff-ctl"><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build">Next step</button><button type="button" data-a="reset">Start again</button><button type="button" data-a="puzzle" class="ff-pzb">🧩 Your turn: order the steps</button><span class="ff-count"></span></div>' +
+			'<p class="ff-say" aria-live="polite">' + INTRO + '</p>' +
+			(media
+				? '<div class="ff-ctl ff-ctl--media"><button type="button" data-a="reset" aria-label="Rewind to the start">⏮ Rewind</button><button type="button" data-a="back" class="ff-ic" aria-label="Previous step" title="Previous step">‹</button><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build" class="ff-ic" aria-label="Next step" title="Next step">›</button><span class="ff-count"></span><button type="button" data-a="puzzle" class="ff-pzb">🧩 Your turn: order the steps</button></div>'
+				: '<div class="ff-ctl"><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build">Next step</button><button type="button" data-a="reset">Start again</button><button type="button" data-a="puzzle" class="ff-pzb">🧩 Your turn: order the steps</button><span class="ff-count"></span></div>') +
 			'<div class="ff-pz" hidden><ol class="ff-pz-done"></ol><p class="ff-pz-k">Tap the step that comes next:</p><div class="ff-pz-cards" role="group" aria-label="Steps to put in order"></div></div>';
 		var svg = fig.querySelector('svg'), dot = fig.querySelector('.ff-dot'), say = fig.querySelector('.ff-say');
-		var bPlay = fig.querySelector('[data-a=play]'), bBuild = fig.querySelector('[data-a=build]'), bPz = fig.querySelector('[data-a=puzzle]'), bReset = fig.querySelector('[data-a=reset]'), cnt = fig.querySelector('.ff-count');
+		var bPlay = fig.querySelector('[data-a=play]'), bBuild = fig.querySelector('[data-a=build]'), bPz = fig.querySelector('[data-a=puzzle]'), bReset = fig.querySelector('[data-a=reset]'), bBack = fig.querySelector('[data-a=back]'), cnt = fig.querySelector('.ff-count');
 		var pz = fig.querySelector('.ff-pz'), pzDone = pz.querySelector('.ff-pz-done'), pzCards = pz.querySelector('.ff-pz-cards'), pzK = pz.querySelector('.ff-pz-k');
 		var run = 0, pos = -1, pzState = null;
 		/* Steps that may honestly come in either order, e.g. two branches: [[2, 3]] */
@@ -206,7 +210,7 @@
 		})();
 		/* Controls, flowchart style: Play / Pause, Next step, Start again, and a step counter.
 		   Everything stays visible; the current box gets an orange outline and a dot travels along each arrow. */
-		var playing = false, busy = false, INTRO = 'Press Play to watch it, or Next step to go at your own pace.';
+		var playing = false, busy = false;
 		function clearCur() { svg.querySelectorAll('.ff-n.cur').forEach(function (g) { g.classList.remove('cur'); }); }
 		function count() { cnt.textContent = pos < 0 ? 'Step 0 of ' + steps.length : 'Step ' + Math.min(pos, steps.length) + ' of ' + steps.length; }
 		function controls(state) {
@@ -214,6 +218,7 @@
 			bPlay.textContent = playing ? '❚❚ Pause' : (pos >= steps.length ? '▶ Play again' : '▶ Play');
 			bBuild.disabled = busy && !playing || pos >= steps.length;
 			bPz.disabled = playing;
+			if (bBack) bBack.disabled = shown() <= 0;
 			count();
 		}
 		function begin(ghost) { reset(!!ghost); clearCur(); pos = 0; start.forEach(function (s) { node(s, true); }); }
@@ -265,6 +270,22 @@
 			var r = ++run; busy = true; controls();
 			doStep(pos, r, 800).then(function () { if (r !== run) return; busy = false; controls(); });
 		}
+		/* The step on screen: while a step is animating, pos is still the one before it. */
+		function shown() { return pos < 0 ? 0 : busy ? pos + 1 : pos; }
+		/* Jump to the state after n steps, without animating: earlier arrows done, step n's caption and boxes current. */
+		function showStep(n) {
+			if (n <= 0) { restart(); return; }
+			run++; playing = false; busy = false;
+			reset(false); clearCur(); hideDot();
+			start.forEach(function (s) { node(s, true); });
+			for (var j = 0; j < n; j++) steps[j].go.forEach(function (i) { edge(i, 'done'); node(spec.edges[i][0], true); node(spec.edges[i][1], true); });
+			clearCur();
+			steps[n - 1].go.forEach(function (i) { node(spec.edges[i][1], true); });
+			pos = n;
+			say.innerHTML = caption(n - 1);
+			controls();
+		}
+		function back() { showStep(shown() - 1); }
 		function restart() {
 			run++; playing = false; busy = false; pos = -1;
 			reset(false); clearCur(); start.forEach(function (s) { node(s, true); });
@@ -339,6 +360,7 @@
 		bBuild.addEventListener('click', build);
 		bPz.addEventListener('click', puzzle);
 		bReset.addEventListener('click', restart);
+		if (bBack) bBack.addEventListener('click', back);
 		count();
 
 		/* Predict first: commit to a guess, watch the flow, then see the verdict. */

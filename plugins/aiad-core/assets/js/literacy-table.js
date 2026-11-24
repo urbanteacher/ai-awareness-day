@@ -277,7 +277,9 @@
 				if ( how.flow ) {
 					var fig = document.createElement( 'figure' );
 					stage.appendChild( fig );
-					window.AIADFlow.mount( fig, JSON.parse( JSON.stringify( how.flow.spec ) ) );
+					var spec = JSON.parse( JSON.stringify( how.flow.spec ) );
+					spec.media = true; // Rewind ‹ Play › controls
+					window.AIADFlow.mount( fig, spec );
 					stage.appendChild( courseCredit( how.flow ) );
 				}
 				if ( how.compare ) {

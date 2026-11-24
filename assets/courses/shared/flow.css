@@ -47,6 +47,8 @@
 .ff-pred-res:not(:empty){margin:.6rem 0 0;font-size:.93rem}
 .ff-pred-skip{margin-top:.55rem;background:none;border:0;padding:.2rem 0;font:inherit;font-size:.82rem;text-decoration:underline;text-underline-offset:3px;color:var(--dim,#54504E);cursor:pointer;min-height:32px}
 .ff-ctl .ff-pzb{border-style:dashed}
+.ff-ctl--media .ff-ic{min-width:44px;padding:.5rem .7rem;font-size:1.25rem;line-height:1}
+.ff-ctl--media .ff-count{margin-right:auto}
 .ff-ctl .ff-pzb.pri{border-style:solid}
 .ff-pz{margin-top:.7rem}
 .ff-pz-done{margin:0 0 .6rem;padding:0;list-style:none;counter-reset:pz;display:grid;gap:.3rem}
