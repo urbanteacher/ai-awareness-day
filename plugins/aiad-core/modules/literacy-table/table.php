@@ -781,8 +781,7 @@ function aiad_render_literacy_table(): string {
 			</div>
 			<div class="alpt-key__text">
 				<p class="alpt-key__title"><?php esc_html_e( 'How to read a tile', 'aiad-core' ); ?></p>
-				<?php /* The full table's tiles put the number beside the symbol (ai-literacy-periodic-table.css). */ ?>
-				<p><?php esc_html_e( 'Top: its symbol and number', 'aiad-core' ); ?></p>
+				<p><?php esc_html_e( 'Top: its number, then its symbol', 'aiad-core' ); ?></p>
 				<p><?php esc_html_e( 'Bottom: the term', 'aiad-core' ); ?></p>
 				<p class="alpt-key-family"><?php esc_html_e( 'Colour: the family it belongs to', 'aiad-core' ); ?></p>
 				<p class="alpt-key-theme"><?php esc_html_e( 'Colour: its AI Awareness Day theme', 'aiad-core' ); ?></p>
