@@ -3115,6 +3115,15 @@
 			} else {
 				renderBoardElement();
 			}
+			// Where this is in the run, between the arrows ("28 / 142"), as a slideshow shows it. Screen readers
+			// hear the same from boardSay when the slide changes.
+			var nextBtn = board.querySelector( '.alpt-board__btn--next' );
+			if ( nextBtn ) {
+				var steps = 'compound' === boardMode ? compoundSteps() : null;
+				var pos = el( 'span', 'alpt-board__pos', steps ? ( steps.indexOf( boardIndex ) + 1 ) + ' / ' + steps.length : ( boardIndex + 1 ) + ' / ' + elements.length );
+				pos.setAttribute( 'aria-hidden', 'true' );
+				nextBtn.parentNode.insertBefore( pos, nextBtn );
+			}
 			fitBoardSoon();
 			// Draw this card in the background so Share can open at once.
 			var mode = boardMode, index = boardIndex;
@@ -3133,6 +3142,7 @@
 			board.hidden = false;
 			document.documentElement.classList.add( 'alpt-board-open' );
 			fitBoardSoon();
+			boardAwake();
 			// Full screen is for the projector. On a phone the board already fills the screen, and full screen there
 			// only adds the browser's own "drag to exit full screen" notice over the top of it.
 			var phone = window.matchMedia && window.matchMedia( '(max-width: 767px)' ).matches;
@@ -3162,6 +3172,8 @@
 			}
 			board.hidden = true;
 			document.documentElement.classList.remove( 'alpt-board-open' );
+			board.classList.remove( 'is-idle', 'is-blank' );
+			window.clearTimeout( boardIdleTimer );
 			if ( 'element' === boardMode ) {
 				show( boardIndex );
 			}
@@ -3251,7 +3263,49 @@
 				}
 			}
 		} );
+		// As in a slideshow: on a projector the button bar and the pointer fade after a few still seconds, and come
+		// back on any movement or key. The bar never fades while it has keyboard focus (CSS keeps it).
+		var boardIdleTimer = null;
+		function boardAwake() {
+			board.classList.remove( 'is-idle' );
+			window.clearTimeout( boardIdleTimer );
+			if ( slideScreen && slideScreen.matches && ! board.hidden ) {
+				boardIdleTimer = window.setTimeout( function () { board.classList.add( 'is-idle' ); }, 3000 );
+			}
+		}
+		board.addEventListener( 'pointermove', boardAwake );
+		board.addEventListener( 'pointerdown', boardAwake );
+		// B or . blanks the screen to black (as PowerPoint does); any key or click brings the slide back.
+		function boardBlank( on ) {
+			board.classList.toggle( 'is-blank', on );
+		}
+		board.addEventListener( 'click', function () {
+			if ( board.classList.contains( 'is-blank' ) ) {
+				boardBlank( false );
+			}
+		}, true );
+
 		board.addEventListener( 'keydown', function ( event ) {
+			boardAwake();
+			if ( board.classList.contains( 'is-blank' ) ) {
+				boardBlank( false );
+				if ( 'Escape' === event.key ) {
+					event.stopPropagation();
+				}
+				event.preventDefault();
+				return;
+			}
+			if ( ( 'b' === event.key || 'B' === event.key || '.' === event.key ) && ! event.ctrlKey && ! event.metaKey && ! event.altKey ) {
+				event.preventDefault();
+				boardBlank( true );
+				return;
+			}
+			// Presentation clickers send Page Down / Page Up.
+			if ( 'PageDown' === event.key || 'PageUp' === event.key ) {
+				event.preventDefault();
+				stepBoard( 'PageDown' === event.key ? 1 : -1 );
+				return;
+			}
 			if ( 'Escape' === event.key ) {
 				event.stopPropagation();
 				// Escape closes the card menu first, then the board.

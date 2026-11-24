@@ -6644,3 +6644,156 @@ html.alpt-flow-open {
     font-size: calc(15 * var(--v));
   }
 }
+
+/* ---- Show to class on a projector, presented like a SlideForge slideshow: the board is one 1280 x 720 slide on a
+   black surround (so 4:3 and 16:10 projectors get clean letterbox bars), with its controls in a floating pill at the
+   bottom centre: ← 28 / 142 → · Show definition · ▶ How it works · Show picture · ↓ · Close. The words stay on the
+   buttons (only the arrows and download are icons); the pill and the pointer fade after three still seconds
+   (literacy-table.js boardAwake()) and never while the pill has keyboard focus. B or . blanks the screen. ---- */
+/* The "28 / 142" counter belongs to the slideshow pill; phones and portrait screens keep their own button grid. */
+.alpt-board__pos {
+  display: none;
+}
+
+@media screen and (min-width: 1024px) and (orientation: landscape) {
+  .alpt-board {
+    --slide-x: calc((100vw - 1280 * var(--u)) / 2);
+    --slide-y: calc((100vh - 720 * var(--u)) / 2);
+    isolation: isolate;
+    padding: calc(var(--slide-y) + 40 * var(--u)) calc(var(--slide-x) + 72 * var(--u)) calc(var(--slide-y) + 110 * var(--u));
+    background: #000;
+  }
+
+  /* The slide itself. */
+  .alpt-board::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    top: var(--slide-y);
+    left: var(--slide-x);
+    width: calc(1280 * var(--u));
+    height: calc(720 * var(--u));
+    background: var(--a27-ink);
+  }
+
+  .alpt-board .alpt-board__bar {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    bottom: calc(var(--slide-y) + 24 * var(--u));
+    transform: translateX(-50%);
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: calc(4 * var(--u));
+    padding: calc(6 * var(--u)) calc(8 * var(--u));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(18, 20, 24, 0.92);
+    backdrop-filter: blur(12px);
+    transition: opacity 0.25s, visibility 0s;
+  }
+
+  .alpt-board .alpt-board__bar > .alpt-board__btn {
+    order: 3;
+    min-height: calc(46 * var(--u));
+    margin: 0;
+    padding: calc(8 * var(--u)) calc(18 * var(--u));
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--a27-cream);
+    font-size: calc(17 * var(--u));
+    white-space: nowrap;
+  }
+
+  .alpt-board .alpt-board__bar > .alpt-board__btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--a27-cream);
+  }
+
+  .alpt-board .alpt-board__bar > .alpt-board__btn[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* ← 28 / 142 → at the left of the pill; the arrows are icons, their names in their labels. */
+  .alpt-board .alpt-board__bar .alpt-board__btn--prev { order: 0; margin: 0; }
+  .alpt-board .alpt-board__bar .alpt-board__pos { order: 1; }
+  .alpt-board .alpt-board__bar .alpt-board__btn--next { order: 2; margin: 0 calc(8 * var(--u)) 0 0; }
+
+  .alpt-board .alpt-board__bar .alpt-board__btn--prev,
+  .alpt-board .alpt-board__bar .alpt-board__btn--next {
+    min-width: calc(46 * var(--u));
+    padding-inline: 0;
+    font-size: calc(22 * var(--u));
+  }
+
+  .alpt-board .alpt-board__bar .alpt-board__btn-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .alpt-board__pos {
+    display: inline;
+    padding: 0 calc(6 * var(--u));
+    color: #cfd4de;
+    font-size: calc(16 * var(--u));
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* How it works keeps its orange. */
+  .alpt-board .alpt-board__bar .alpt-board__btn--flow,
+  .alpt-board .alpt-board__bar .alpt-board__btn--flow:hover {
+    background: var(--a27-smart);
+    color: var(--a27-ink);
+  }
+
+  .alpt-board .alpt-board__bar .alpt-board__btn--card-dl {
+    min-width: calc(46 * var(--u));
+    padding-inline: 0;
+  }
+
+  /* Close ends the pill, after a hairline, as a slideshow's Exit does. */
+  .alpt-board .alpt-board__bar .alpt-board__btn--close {
+    position: static;
+    order: 10;
+    margin-left: calc(6 * var(--u));
+    box-shadow: -1px 0 0 0 rgba(255, 255, 255, 0.16);
+    border-radius: 0 999px 999px 0;
+    color: var(--a27-safe);
+  }
+
+  /* The download card menu opens above the pill. */
+  .alpt-board .alpt-board__bar .alpt-board__cardmenu {
+    bottom: calc(100% + 10 * var(--u));
+    top: auto;
+  }
+
+  /* Still for three seconds: the pill and the pointer fade (not while the pill has focus or the pointer). */
+  .alpt-board.is-idle {
+    cursor: none;
+  }
+
+  .alpt-board.is-idle .alpt-board__bar:not(:hover):not(:focus-within) {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s, visibility 0s linear 0.25s;
+  }
+}
+
+/* B or . blanks the screen to black, on any screen. */
+.alpt-board.is-blank::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #000;
+}
+
+.alpt-board.is-blank {
+  cursor: none;
+}
