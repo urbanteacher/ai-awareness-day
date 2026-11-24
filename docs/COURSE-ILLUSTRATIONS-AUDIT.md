@@ -113,3 +113,13 @@ Human-in-the-Loop, Agentic AI, AI Sovereignty).
 - Captions reworded where they referred to the course itself: Prompt Engineering, Planning (its illustration, mapped to
   Pl rather than Lp) and Human-in-the-Loop ("the calculator").
 - 43 words now have How it works (was 33).
+
+## The table's own illustrations (24 November 2026)
+
+- Every one of the 142 words now has How it works. Words the courses don't illustrate got a drawing of their own,
+  made by scripts/draw-literacy-illustrations.py in the courses' style. There are 99 of them, done one family at a
+  time: Governance, Predictive & Analytical, Generative, Automation, Foundations, then Agents and Infrastructure.
+- Each drawing shows how the idea works, not just what it is. Claims and figures were checked online; the sources
+  are listed at the top of the drawing script. Numbers marked "made-up" are illustrative.
+- Review sheets for each family are in docs/ (governance-batch-*.png, predictive-batch-*.png, generative-batch-*.png,
+  automation-batch-*.png, foundations-batch.png, agents-infra-batch.png).

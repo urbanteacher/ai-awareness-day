@@ -363,6 +363,42 @@
   ],
   "Fm": [
    "s123"
+  ],
+  "Sr": [
+   "s124"
+  ],
+  "Aa": [
+   "s125"
+  ],
+  "Sw": [
+   "s126"
+  ],
+  "Rl": [
+   "s127"
+  ],
+  "Co": [
+   "s128"
+  ],
+  "Br": [
+   "s129"
+  ],
+  "Ca": [
+   "s130"
+  ],
+  "Mo": [
+   "s131"
+  ],
+  "Lo": [
+   "s132"
+  ],
+  "Sm": [
+   "s133"
+  ],
+  "Sl": [
+   "s134"
+  ],
+  "Dp": [
+   "s135"
   ]
  },
  "stills": {
@@ -734,6 +770,42 @@
   },
   "s123": {
    "title": "One big model, many jobs"
+  },
+  "s124": {
+   "title": "Draft, critique, revise"
+  },
+  "s125": {
+   "title": "Agents from different companies working together"
+  },
+  "s126": {
+   "title": "Simple rules, group behaviour"
+  },
+  "s127": {
+   "title": "Try, get a score, adjust"
+  },
+  "s128": {
+   "title": "See the screen, decide, click, look again"
+  },
+  "s129": {
+   "title": "An errand on the web, with a stop before paying"
+  },
+  "s130": {
+   "title": "The programmer sets the task and checks the result"
+  },
+  "s131": {
+   "title": "Models drift; someone has to notice"
+  },
+  "s132": {
+   "title": "Running an LLM tool day to day"
+  },
+  "s133": {
+   "title": "Small enough to run on your phone"
+  },
+  "s134": {
+   "title": "Bigger, more data, more computing: steadily better"
+  },
+  "s135": {
+   "title": "Collect, clean, prepare, check"
   }
  }
 }

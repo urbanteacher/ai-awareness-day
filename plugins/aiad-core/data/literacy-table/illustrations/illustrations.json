@@ -346,5 +346,53 @@
  "Fm": {
   "title": "One big model, many jobs",
   "caption": "The term \"foundation model\" comes from Stanford researchers (Bommasani and others, 2021). Because many tools share one base model, a flaw in the base can show up everywhere it is used."
+ },
+ "Sr": {
+  "title": "Draft, critique, revise",
+  "caption": "Self-reflection helps most when the agent checks against something real: test results, a tool, a source. A 2023 study (Huang and others) found that models reviewing their own reasoning with no outside feedback often failed to improve it."
+ },
+ "Aa": {
+  "title": "Agents from different companies working together",
+  "caption": "A2A (Agent2Agent) is an open protocol, started by Google and run by the Linux Foundation since June 2025, that lets agents from different makers find each other and share tasks. Each side still needs to check who it is talking to."
+ },
+ "Sw": {
+  "title": "Simple rules, group behaviour",
+  "caption": "Swarms solve problems through many simple agents, each following local rules, with no leader. That makes them robust to losing a few agents, but their group behaviour can be hard to predict or test."
+ },
+ "Rl": {
+  "title": "Try, get a score, adjust",
+  "caption": "Reinforcement learning trains by trial and reward. With chatbots, the reward comes from people's ratings (RLHF), which is why they can learn to please rather than to be right: the reward has to match what we actually want."
+ },
+ "Co": {
+  "title": "See the screen, decide, click, look again",
+  "caption": "Computer-use agents drive ordinary apps by looking at screenshots and controlling the mouse and keyboard. Give them only the access they need, and confirm anything that sends, pays or deletes."
+ },
+ "Br": {
+  "title": "An errand on the web, with a stop before paying",
+  "caption": "Browser agents can save time on online errands. The two big risks are acting without asking, and following instructions hidden in a web page (prompt injection), so keep a person in charge of payments and logins."
+ },
+ "Ca": {
+  "title": "The programmer sets the task and checks the result",
+  "caption": "Coding agents work across a whole project, not just one line, and use test results as feedback. The programmer still sets the task, reviews the changes and owns the code."
+ },
+ "Mo": {
+  "title": "Models drift; someone has to notice",
+  "caption": "MLOps is the routine that keeps models healthy after launch: monitoring, retraining, testing and versioning. Without it, a model can quietly get worse. Made-up numbers."
+ },
+ "Lo": {
+  "title": "Running an LLM tool day to day",
+  "caption": "LLMOps treats prompts like code: versioned, tested on a fixed set of questions, and watched once live for cost, quality and harmful output. Made-up numbers."
+ },
+ "Sm": {
+  "title": "Small enough to run on your phone",
+  "caption": "Small language models trade breadth of knowledge for speed, cost and privacy. They are often made by distilling a larger model, and work best on focused tasks."
+ },
+ "Sl": {
+  "title": "Bigger, more data, more computing: steadily better",
+  "caption": "Scaling laws (Kaplan and others, 2020; Hoffmann and others, 2022) let labs predict how much better a bigger model will be. Gains shrink as costs grow, and no one knows how far the pattern holds."
+ },
+ "Dp": {
+  "title": "Collect, clean, prepare, check",
+  "caption": "Most of the work behind an AI model is the data pipeline. Mistakes here, like duplicates leaking between training and test data, quietly spoil everything after it: rubbish in, rubbish out."
  }
 }
