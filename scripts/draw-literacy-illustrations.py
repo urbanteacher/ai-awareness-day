@@ -1126,7 +1126,7 @@ def _of():
     d.add(f'<path d="M50 56 C120 135 170 158 210 156 S320 110 400 60" fill="none" stroke="{RED}" stroke-width="3"/>')
     d.text(392, 196, 'training data', 11, 800, 'end', SAFE_D)
     d.text(392, 54, 'new data', 11, 800, 'end', RED)
-    d.add(f'<line x1="205" y1="40" x2="205" y2="220" stroke="{RESP_D}" stroke-width="2" stroke-dasharray="5 4"/>')
+    d.add(f'<line x1="205" y1="52" x2="205" y2="220" stroke="{RESP_D}" stroke-width="2" stroke-dasharray="5 4"/>')
     d.text(205, 44, 'sweet spot', 11, 800, 'middle', RESP_D)
     d.text(100, 214, 'too simple', 10.5, 700, 'middle', DIM)
     d.text(330, 140, 'overfitting:', 10.5, 700, 'middle', RED)
