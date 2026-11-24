@@ -6279,7 +6279,8 @@ html.alpt-flow-open {
   font-size: 0.85rem;
 }
 
-.alpt-flowbox__stage > :last-child {
+.alpt-flowbox__stage > :last-child,
+.alpt-flowbox__screen > :last-child {
   margin-bottom: 1.1rem;
 }
 
@@ -6287,29 +6288,21 @@ html.alpt-flow-open {
   max-height: 62vh;
 }
 
-/* How it works, one picture per screen: a bar fixed to the bottom of the box steps through them. */
+/* How it works, one picture per screen. More sits on the screen's own row: at the end of the animation's controls,
+   or with Back under a picture. */
 .alpt-flowbox__screen[hidden] {
   display: none;
 }
 
 .alpt-flowbox__pager {
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 1rem -1.1rem 0;
-  padding: 0.6rem 1.1rem;
-  background: var(--a27-cream);
-  border-top: 2px solid var(--a27-ink);
+  margin-top: 0.8rem;
 }
 
-.alpt-flowbox__stage > .alpt-flowbox__pager:last-child {
-  margin-bottom: 0;
-}
-
-.alpt-flowbox__pager button {
+.alpt-flowbox__pager button,
+.alpt-flowbox__stage .ff-ctl .alpt-flowbox__next {
   min-height: 44px;
   padding: 0.45rem 0.9rem;
   border: 1.5px solid var(--a27-ink);
@@ -6318,13 +6311,23 @@ html.alpt-flow-open {
   font: inherit;
   font-weight: 700;
   font-size: 0.9rem;
+  white-space: nowrap;
   cursor: pointer;
 }
 
-.alpt-flowbox__pager .alpt-flowbox__next {
+.alpt-flowbox__pager .alpt-flowbox__next,
+.alpt-flowbox__stage .ff-ctl .alpt-flowbox__next {
   margin-left: auto;
   background: var(--a27-ink);
   color: var(--a27-cream);
+}
+
+.alpt-flowbox__stage .ff-ctl--more .ff-count {
+  margin-left: auto;
+}
+
+.alpt-flowbox__stage .ff-ctl--more .alpt-flowbox__next {
+  margin-left: 0.4rem;
 }
 
 .alpt-flowbox__pager button:disabled {
@@ -6335,4 +6338,26 @@ html.alpt-flow-open {
 .alpt-flowbox__at {
   font-size: 0.85rem;
   color: var(--a27-dim, #54504E);
+}
+
+/* Phones: a little less padding round the animation, and its step counter gives way, so More fits on the row. */
+@media (max-width: 480px) {
+  .alpt-flowbox__stage {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .alpt-flowbox__stage .ff {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .alpt-flowbox__stage .ff-ctl--more .ff-count {
+    display: none;
+  }
+
+  .alpt-flowbox__stage .ff-ctl--more .alpt-flowbox__next {
+    margin-left: auto;
+    padding: 0.45rem 0.6rem;
+  }
 }

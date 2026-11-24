@@ -317,31 +317,54 @@
 					sc3.appendChild( courseCredit( st ) );
 				} );
 				if ( screens.length > 1 ) {
-					var nav = document.createElement( 'nav' );
-					nav.className = 'alpt-flowbox__pager';
-					nav.setAttribute( 'aria-label', 'More pictures for this word' );
-					nav.innerHTML = '<button type="button" class="alpt-flowbox__prev">‹ Back</button>' +
-						'<span class="alpt-flowbox__at" aria-live="polite"></span>' +
-						'<button type="button" class="alpt-flowbox__next">More ›</button>';
-					stage.appendChild( nav );
-					var prev = nav.querySelector( '.alpt-flowbox__prev' ), next = nav.querySelector( '.alpt-flowbox__next' ), at = nav.querySelector( '.alpt-flowbox__at' );
-					var shown = 0;
-					var show = function ( k, focus ) {
-						shown = k;
+					// More (and Back) sit on the screen's own row: in the animation's controls, or under a picture.
+					var n = screens.length;
+					var go = function ( k, from ) {
 						screens.forEach( function ( sc, j ) { sc.hidden = j !== k; } );
-						prev.disabled = k === 0;
-						next.disabled = k === screens.length - 1;
-						at.textContent = ( k + 1 ) + ' of ' + screens.length;
-						next.setAttribute( 'aria-label', k < screens.length - 1 ? 'More: ' + screens[ k + 1 ].getAttribute( 'data-label' ) : 'More' );
-						prev.setAttribute( 'aria-label', k > 0 ? 'Back: ' + screens[ k - 1 ].getAttribute( 'data-label' ) : 'Back' );
 						flowBox.scrollTop = 0;
-						if ( focus ) {
-							( k === 0 ? next : k === screens.length - 1 ? prev : focus ).focus();
+						var target = screens[ k ].querySelector( from === 'next' ? '.alpt-flowbox__next' : '.alpt-flowbox__prev' ) ||
+							screens[ k ].querySelector( '.alpt-flowbox__next, .alpt-flowbox__prev' );
+						if ( target ) {
+							target.focus();
 						}
 					};
-					prev.addEventListener( 'click', function () { show( Math.max( 0, shown - 1 ), prev ); } );
-					next.addEventListener( 'click', function () { show( Math.min( screens.length - 1, shown + 1 ), next ); } );
-					show( 0 );
+					var moreButton = function ( k ) {
+						var b = document.createElement( 'button' );
+						b.type = 'button';
+						b.className = 'alpt-flowbox__next';
+						b.innerHTML = 'More <span aria-hidden="true">›</span>';
+						b.setAttribute( 'aria-label', 'More: ' + screens[ k + 1 ].getAttribute( 'data-label' ) + ' (' + ( k + 2 ) + ' of ' + n + ')' );
+						b.addEventListener( 'click', function () { go( k + 1, 'next' ); } );
+						return b;
+					};
+					screens.forEach( function ( sc, k ) {
+						var ctl = sc.querySelector( '.ff-ctl--media' );
+						if ( ctl && k === 0 ) {
+							ctl.classList.add( 'ff-ctl--more' );
+							ctl.appendChild( moreButton( k ) );
+							return;
+						}
+						var row = document.createElement( 'div' );
+						row.className = 'alpt-flowbox__pager';
+						var back = document.createElement( 'button' );
+						back.type = 'button';
+						back.className = 'alpt-flowbox__prev';
+						back.innerHTML = '<span aria-hidden="true">‹</span> Back';
+						back.setAttribute( 'aria-label', 'Back: ' + screens[ k - 1 ].getAttribute( 'data-label' ) );
+						back.disabled = k === 0;
+						back.addEventListener( 'click', function () { go( k - 1, 'prev' ); } );
+						var at = document.createElement( 'span' );
+						at.className = 'alpt-flowbox__at';
+						at.textContent = ( k + 1 ) + ' of ' + n;
+						row.appendChild( back );
+						row.appendChild( at );
+						if ( k < n - 1 ) {
+							row.appendChild( moreButton( k ) );
+						}
+						sc.appendChild( row );
+					} );
+					go( 0 );
+					flowBox.querySelector( '.alpt-flowbox__close' ).focus();
 				}
 			} ).catch( function () {
 				stage.innerHTML = '<p class="alpt-flowbox__loading">This could not load. Check your connection and try again.</p>';
