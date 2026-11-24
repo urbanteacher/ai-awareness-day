@@ -5894,7 +5894,7 @@ html.alpt-board-open {
 /* ---- The full table (1200px and wider): shorter rows, and a panel compact enough to sit in them ----
    Every row takes the tallest row's height (equal fr rows), so a handful of tall cells made all 142 tiles tall and
    narrow (66 x 106px at 1280px wide): the eight four-line names, such as Recursive Self-Improvement, and the
-   "How to read a tile" key. The tiles keep the number small above the symbol (it was beside it, but sat under the cut corner and ran into wide symbols such as Mm), the longest names
+   "How to read a tile" key. The tiles keep the number small at the top right, on its own line above the symbol and in from the cut corner (beside the symbol it sat under the diagonal and ran into wide symbols such as Mm), the longest names
    are a little smaller so they take three lines, and the key no longer sets the row height. The panel then has three
    shorter rows to sit in, so it is tighter too: less padding, a smaller picture tile, title and buttons. */
 @media (min-width: 1200px) {
@@ -5915,9 +5915,11 @@ html.alpt-board-open {
   .alpt-grid .alpt-tile .alpt-tile__n {
     grid-area: n;
     align-self: start;
-    /* Top left, above the symbol as on a periodic table: clear of the cut corner and of wide symbols. */
-    margin: 0;
-    font-size: 0.6rem;
+    /* Top right on its own line above the symbol, brought in from the edge so the cut corner's diagonal clears it,
+       and wide symbols such as Mm can't run into it. */
+    justify-self: end;
+    margin: 0 calc(var(--cut, 12px) - 0.1rem) 0 0;
+    font-size: 0.62rem;
   }
 
   .alpt-grid .alpt-tile .alpt-tile__sym {
