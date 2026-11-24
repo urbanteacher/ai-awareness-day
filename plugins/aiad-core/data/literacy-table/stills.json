@@ -237,6 +237,57 @@
   ],
   "Ge": [
    "s81"
+  ],
+  "Ga": [
+   "s82"
+  ],
+  "Mm": [
+   "s83"
+  ],
+  "Df": [
+   "s84"
+  ],
+  "Gn": [
+   "s85"
+  ],
+  "Ti": [
+   "s86"
+  ],
+  "Ts": [
+   "s87"
+  ],
+  "Ft": [
+   "s88"
+  ],
+  "Fs": [
+   "s89"
+  ],
+  "Rm": [
+   "s90"
+  ],
+  "Sd": [
+   "s91"
+  ],
+  "Dk": [
+   "s92"
+  ],
+  "Vc": [
+   "s93"
+  ],
+  "Ce": [
+   "s94"
+  ],
+  "Gv": [
+   "s95"
+  ],
+  "Sp": [
+   "s96"
+  ],
+  "2d": [
+   "s97"
+  ],
+  "3d": [
+   "s98"
   ]
  },
  "stills": {
@@ -482,6 +533,57 @@
   },
   "s81": {
    "title": "How an AI answer chooses its sources"
+  },
+  "s82": {
+   "title": "Analysing versus creating"
+  },
+  "s83": {
+   "title": "Different inputs, one shared model"
+  },
+  "s84": {
+   "title": "Add noise to learn; remove it to create"
+  },
+  "s85": {
+   "title": "A forger and a detective"
+  },
+  "s86": {
+   "title": "What you asked, and what the tool decided"
+  },
+  "s87": {
+   "title": "From text to a voice"
+  },
+  "s88": {
+   "title": "A short extra course for one job"
+  },
+  "s89": {
+   "title": "Examples in the prompt, not new training"
+  },
+  "s90": {
+   "title": "Thinking before answering"
+  },
+  "s91": {
+   "title": "Useful extra data, with a catch"
+  },
+  "s92": {
+   "title": "Stop, check the source, report"
+  },
+  "s93": {
+   "title": "The loop that skips the checks"
+  },
+  "s94": {
+   "title": "Everything the model reads, not just your question"
+  },
+  "s95": {
+   "title": "Every frame has to agree"
+  },
+  "s96": {
+   "title": "Cheap to make, costly to sort through"
+  },
+  "s97": {
+   "title": "AI suggests, the designer decides"
+  },
+  "s98": {
+   "title": "Set the goals, let it propose shapes"
   }
  }
 }

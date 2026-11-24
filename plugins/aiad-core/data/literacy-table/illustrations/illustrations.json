@@ -178,5 +178,73 @@
  "Ge": {
   "title": "How an AI answer chooses its sources",
   "caption": "Generative engine optimisation tries to get pages cited in AI answers. One study (Aggarwal and others, 2024) found adding citations, quotations and statistics helped most, but results vary and added numbers still need to be true."
+ },
+ "Ga": {
+  "title": "Analysing versus creating",
+  "caption": "Generative AI learns patterns from huge numbers of examples, then produces new text, images, audio, video or code that fit them. The output is what is likely, not what is checked."
+ },
+ "Mm": {
+  "title": "Different inputs, one shared model",
+  "caption": "Multimodal models turn text, images and sound into the same kind of numbers, so one model can read them together, and some can answer in more than one mode too."
+ },
+ "Df": {
+  "title": "Add noise to learn; remove it to create",
+  "caption": "A diffusion model learns by watching pictures dissolve into noise and practising the reverse. To make a new picture, it starts from noise and cleans it up in many small steps, steered by the prompt."
+ },
+ "Gn": {
+  "title": "A forger and a detective",
+  "caption": "A GAN trains a generator and a discriminator against each other. When the discriminator can only guess, right about half the time, the fakes are realistic. Diffusion models have since overtaken GANs for most image tools. Made-up numbers."
+ },
+ "Ti": {
+  "title": "What you asked, and what the tool decided",
+  "caption": "Text-to-image tools fill every gap in your prompt with their own defaults, learned from training images. Say what matters, then check what it decided for you."
+ },
+ "Ts": {
+  "title": "From text to a voice",
+  "caption": "Modern text-to-speech sounds natural because a neural model learned from hours of recorded speech. Voice cloning can copy a person from a short sample: only use a voice with that person's permission."
+ },
+ "Ft": {
+  "title": "A short extra course for one job",
+  "caption": "Fine-tuning changes a trained model's settings with a small, focused set of examples. It is far cheaper than starting again, but the examples must be good, and other skills can slip. Made-up numbers."
+ },
+ "Fs": {
+  "title": "Examples in the prompt, not new training",
+  "caption": "Few-shot prompting shows the model a few examples so it copies the pattern. Zero-shot gives none, one-shot gives one. Unlike fine-tuning, the model itself doesn't change."
+ },
+ "Rm": {
+  "title": "Thinking before answering",
+  "caption": "Reasoning models are trained to work through a problem, and check their steps, before answering. They do better at maths, coding and logic, but are slower and cost more, and their steps can still go wrong."
+ },
+ "Sd": {
+  "title": "Useful extra data, with a catch",
+  "caption": "Synthetic data fills gaps and protects privacy. A 2024 Nature study (Shumailov and others) showed that models trained over and over on generated data lose the rare cases first, so real data must stay in the mix."
+ },
+ "Dk": {
+  "title": "Stop, check the source, report",
+  "caption": "Deepfakes are getting too good to spot by eye, so check the source, not just the pixels. In England and Wales, creating a sexual deepfake of an adult without consent has been a crime since 6 February 2026; any sexual image of an under-18 is illegal. Young people can use Childline's Report Remove."
+ },
+ "Vc": {
+  "title": "The loop that skips the checks",
+  "caption": "Vibe coding is great for quick prototypes and learning. Before real users or real data, someone has to read, test and security-check the code: Veracode (2025) found flaws in 45% of AI-written samples."
+ },
+ "Ce": {
+  "title": "Everything the model reads, not just your question",
+  "caption": "Context engineering decides what the model gets to read: rules, documents, examples, tool results, memory and the question. The window has a limit, so choosing what to leave out matters as much as what to put in."
+ },
+ "Gv": {
+  "title": "Every frame has to agree",
+  "caption": "Generative video makes many frames that must agree with each other. Today's tools make short clips and still slip on physics, hands and text, and most label or watermark what they make."
+ },
+ "Sp": {
+  "title": "Cheap to make, costly to sort through",
+  "caption": "AI slop spreads because it costs almost nothing to make and clicks still pay. It drowns out real work and can mislead. Check for a named source, and don't feed it with shares."
+ },
+ "2d": {
+  "title": "AI suggests, the designer decides",
+  "caption": "AI tools can produce lots of 2D ideas quickly. A designer still chooses, edits and checks them, and a laser cutter needs vector paths, not a pixel picture."
+ },
+ "3d": {
+  "title": "Set the goals, let it propose shapes",
+  "caption": "In 3D design, AI-driven generative design proposes shapes that meet set goals and limits. People set the goals and must still check and test the result, because a design that passes on screen can fail in use."
  }
 }

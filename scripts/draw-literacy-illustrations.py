@@ -28,6 +28,14 @@ Checked against (24 November 2026):
   Friedman 2001 (gradient boosting); Hyndman and Athanasopoulos, Forecasting: Principles and Practice.
 - Generative engine optimisation, citations, quotations and statistics raising visibility by up to about 40% on the
   study's benchmark: Aggarwal et al., KDD 2024 (arXiv 2311.09735).
+- Diffusion: Ho, Jain and Abbeel 2020 (arXiv 2006.11239). GANs: Goodfellow et al. 2014 (arXiv 1406.2661).
+- Few-shot prompting: Brown et al. 2020 (arXiv 2005.14165). Reasoning models: OpenAI o1 (September 2024) and later,
+  trained to use more computation before answering.
+- Synthetic data and model collapse: Shumailov et al., Nature 631, 755-759 (2024).
+- Deepfakes: creating, or requesting, a purported intimate image of an adult without consent is an offence in England
+  and Wales from 6 February 2026 (Data (Use and Access) Act 2025, s138; SI 2026/31). Report Remove: Childline and IWF.
+- Vibe coding: coined by Andrej Karpathy, February 2025. Veracode 2025 GenAI Code Security Report: 80 tasks, 100+
+  models, flaws in 45% of samples.
 """
 import json
 import os
@@ -1413,6 +1421,510 @@ def _ge():
         d.text(32, 166 + i * 17, '· ' + s, 11, 400)
     d.box(20, 238, 400, 44, fill=PALE[SMART])
     d.lines(220, 256, ['Up to about 40% more visible in that study; results vary.', 'Added statistics still have to be true.'], 10.5, 700, 'middle', INK, 15)
+    return d
+
+
+# ---- Generative AI ------------------------------------------------------------------------------------------------
+
+def speckle(d, x, y, s, amount, seed, shape=None):
+    """A square picture with random speckles: amount 0 (clean) to 1 (pure noise); shape draws the clean picture."""
+    import random
+    rnd = random.Random(seed)
+    d.add(f'<rect x="{x}" y="{y}" width="{s}" height="{s}" fill="{WHITE}" stroke="{INK}" stroke-width="1.2"/>')
+    if shape and amount < 1:
+        d.add(f'<g opacity="{1 - amount * 0.85:.2f}">{shape(x, y, s)}</g>')
+    for _ in range(int(amount * 70)):
+        px, py = x + 2 + rnd.random() * (s - 6), y + 2 + rnd.random() * (s - 6)
+        c = rnd.choice(['#231F20', '#9b9590', '#c9c3b8', SAFE, SMART])
+        d.add(f'<rect x="{px:.1f}" y="{py:.1f}" width="3" height="3" fill="{c}"/>')
+
+
+def house(x, y, s):
+    k = s / 60
+    return (f'<rect x="{x + 16 * k:.1f}" y="{y + 30 * k:.1f}" width="{28 * k:.1f}" height="{20 * k:.1f}" fill="{PALE[SMART]}" stroke="{INK}" stroke-width="1.2"/>'
+            f'<path d="M{x + 12 * k:.1f} {y + 31 * k:.1f} L{x + 30 * k:.1f} {y + 14 * k:.1f} L{x + 48 * k:.1f} {y + 31 * k:.1f}z" fill="{SMART}" stroke="{INK}" stroke-width="1.2"/>'
+            f'<circle cx="{x + 48 * k:.1f}" cy="{y + 12 * k:.1f}" r="{5 * k:.1f}" fill="{YELLOW}" stroke="{INK}" stroke-width="1"/>')
+
+
+@illustration('Ga', 'Analysing versus creating',
+              'Given the same kind of data, analytical AI answers a question about it, such as "is this a cat?", '
+              'while generative AI makes something new that fits the patterns it learned: a new cat picture, a poem, '
+              'a voice or code. What it makes is likely, not checked: it can look right and still be wrong.',
+              'Generative AI learns patterns from huge numbers of examples, then produces new text, images, audio, '
+              'video or code that fit them. The output is what is likely, not what is checked.')
+def _ga():
+    d = D(440, 290)
+    d.box(20, 36, 196, 160, fill=PALE[SAFE])
+    d.text(118, 56, 'ANALYTICAL AI', 10.5, 800, 'middle', SAFE_D)
+    d.text(118, 72, 'answers a question about data', 10, 400, 'middle', DIM)
+    d.box(48, 86, 140, 44, fill=WHITE)
+    d.text(118, 113, 'photo of a cat', 11.5, 700, 'middle')
+    d.arrow(118, 132, 118, 150)
+    d.text(118, 176, '"Cat: 97% likely"', 13, 800, 'middle')
+    d.box(224, 36, 196, 160, fill=PALE[CREATIVE])
+    d.text(322, 56, 'GENERATIVE AI', 10.5, 800, 'middle', CREATIVE_D)
+    d.text(322, 72, 'makes something new', 10, 400, 'middle', DIM)
+    d.box(252, 86, 140, 44, fill=WHITE)
+    d.text(322, 113, '"a cat in a top hat"', 11.5, 700, 'middle')
+    d.arrow(322, 132, 322, 150)
+    for i, k in enumerate(['picture', 'text', 'audio', 'code']):
+        d.box(236 + i * 44, 156, 40, 28, fill=WHITE)
+        d.text(256 + i * 44, 174, k, 9, 700, 'middle')
+    d.box(20, 210, 400, 66, fill=YELLOW)
+    d.lines(220, 232, ['It learns patterns from huge numbers of examples,', 'then makes what is likely to fit them.',
+                       'Likely is not the same as checked.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Mm', 'Different inputs, one shared model',
+              'A multimodal model takes a photo of the inside of a fridge and the question "What can I cook?". Each '
+              'kind of input is turned into the same kind of numbers, so one model can read them together and '
+              'answer in text, or in other modes such as speech or an image.',
+              'Multimodal models turn text, images and sound into the same kind of numbers, so one model can read '
+              'them together, and some can answer in more than one mode too.')
+def _mm():
+    d = D(440, 290)
+    ins = [('PHOTO', 'inside of a fridge', SAFE), ('TEXT', '"What can I cook?"', SMART), ('AUDIO', 'or ask out loud', CREATIVE)]
+    for i, (k, v, c) in enumerate(ins):
+        y = 40 + i * 62
+        d.box(20, y, 130, 50, fill=PALE[c])
+        d.text(32, y + 20, k, 10, 800)
+        d.text(32, y + 38, v, 10.5, 700)
+        d.arrow(152, y + 25, 188, 125 + (i - 1) * 20)
+    d.box(190, 70, 104, 110, fill=YELLOW, sw=2.5)
+    d.lines(242, 104, ['all turned into', 'the same kind', 'of numbers:', 'one model', 'reads them', 'together'], 10.5, 700, 'middle', INK, 13)
+    d.arrow(296, 125, 316, 125)
+    d.box(318, 70, 102, 110, fill=PALE[RESP])
+    d.text(369, 90, 'ANSWER', 10, 800, 'middle')
+    d.lines(369, 112, ['"Omelette:', 'you have eggs,', 'cheese and', 'peppers."'], 10.5, 700, 'middle', INK, 14)
+    d.box(20, 222, 400, 54, fill=WHITE, dash=True)
+    d.lines(220, 244, ['It can still misread a picture: check what it says it saw.', 'Some models can also answer in speech or images.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Df', 'Add noise to learn; remove it to create',
+              'Training: real pictures have more and more random noise added, step by step, and the model learns to '
+              'predict the noise so it can take it away. Creating: it starts from pure noise and removes a little at '
+              'a time, guided by your prompt, until a new picture appears.',
+              'A diffusion model learns by watching pictures dissolve into noise and practising the reverse. To '
+              'make a new picture, it starts from noise and cleans it up in many small steps, steered by the prompt.')
+def _df():
+    d = D(440, 290)
+    d.text(20, 30, 'TRAINING: ADD NOISE, STEP BY STEP', 10.5, 800, fill=SAFE_D)
+    amts = [0, 0.33, 0.66, 1]
+    for i, a in enumerate(amts):
+        x = 30 + i * 102
+        speckle(d, x, 40, 62, a, 10 + i, house)
+        if i < 3:
+            d.arrow(x + 64, 71, x + 100, 71)
+    d.text(220, 122, 'the model learns to predict the noise that was added', 10.5, 400, 'middle', DIM)
+    d.text(20, 150, 'CREATING: START FROM NOISE, REMOVE IT STEP BY STEP', 10.5, 800, fill=CREATIVE_D)
+    for i, a in enumerate(reversed(amts)):
+        x = 30 + i * 102
+        speckle(d, x, 160, 62, a, 50 + i, house)
+        if i < 3:
+            d.arrow(x + 64, 191, x + 100, 191, stroke=CREATIVE_D)
+    d.box(20, 236, 400, 42, fill=YELLOW)
+    d.lines(220, 253, ['Your prompt ("a house on a sunny day") steers each clean-up step.', 'Usually 20 to 50 steps; made-up pictures here.'], 10.5, 700, 'middle', INK, 15)
+    return d
+
+
+@illustration('Gn', 'A forger and a detective',
+              'A generative adversarial network has two parts. The generator makes fake pictures; the discriminator '
+              'sees real and fake ones and guesses which is which. Each learns from the other: the generator from '
+              'being caught, the discriminator from its mistakes. Training aims for fakes the discriminator can '
+              'only guess at, right about half the time.',
+              'A GAN trains a generator and a discriminator against each other. When the discriminator can only '
+              'guess, right about half the time, the fakes are realistic. Diffusion models have since overtaken GANs '
+              'for most image tools. Made-up numbers.')
+def _gn():
+    d = D(440, 290)
+    d.box(20, 50, 120, 70, fill=PALE[CREATIVE])
+    d.text(80, 72, 'GENERATOR', 10.5, 800, 'middle', CREATIVE_D)
+    d.lines(80, 92, ['the forger:', 'makes fakes'], 10.5, 700, 'middle', INK, 14)
+    d.box(20, 140, 120, 50, fill=PALE[SAFE])
+    d.lines(80, 160, ['real photos'], 11, 800, 'middle')
+    d.text(80, 178, 'from the training set', 9.5, 400, 'middle', DIM)
+    d.arrow(142, 85, 196, 112)
+    d.arrow(142, 165, 196, 132)
+    d.box(198, 90, 120, 70, fill=PALE[SMART])
+    d.text(258, 112, 'DISCRIMINATOR', 10.5, 800, 'middle', SMART_D)
+    d.lines(258, 132, ['the detective:', 'real or fake?'], 10.5, 700, 'middle', INK, 14)
+    d.arrow(258, 88, 142, 58, dash=True, curve=-20)
+    d.text(232, 50, 'caught! the forger learns', 10, 700, 'middle', DIM)
+    d.box(330, 50, 90, 140)
+    d.text(375, 68, 'FAKES CAUGHT', 9, 800, 'middle')
+    for i, (r, p) in enumerate([('round 1', 98), ('round 50', 75), ('round 500', 52)]):
+        y = 82 + i * 36
+        d.text(342, y + 10, r, 9.5, 700, fill=DIM)
+        d.add(f'<rect x="342" y="{y + 15}" width="{p * 0.4:.0f}" height="10" fill="{SMART}" stroke="{INK}" stroke-width=".8"/>')
+        d.text(412, y + 24, f'{p}%', 9.5, 800, 'end')
+    d.box(20, 210, 400, 66, fill=YELLOW)
+    d.lines(220, 232, ['When the detective is right only about half the time,', 'it is guessing: the fakes look real.',
+                       'Most image tools now use diffusion models instead.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Ti', 'What you asked, and what the tool decided',
+              'The prompt "a fox reading a book in a library, cartoon style" names four things. Everything else in '
+              'the picture, such as the fox\'s size, the lighting, the angle and what the book is, is chosen by the '
+              'tool from patterns in its training images. Those defaults can carry stereotypes, so describe what '
+              'matters and check what it filled in.',
+              'Text-to-image tools fill every gap in your prompt with their own defaults, learned from training '
+              'images. Say what matters, then check what it decided for you.')
+def _ti():
+    d = D(440, 290)
+    d.box(20, 36, 400, 40, fill=YELLOW)
+    d.text(220, 61, '"a fox reading a book in a library, cartoon style"', 12, 800, 'middle')
+    d.box(20, 88, 160, 140, fill=PALE[RESP])
+    d.text(100, 108, 'YOU ASKED FOR', 10, 800, 'middle', RESP_D)
+    for i, k in enumerate(['a fox', 'a book', 'a library', 'cartoon style']):
+        d.text(36, 132 + i * 22, '✓  ' + k, 11.5, 700)
+    d.box(190, 88, 230, 140, fill=PALE[CREATIVE])
+    d.text(305, 108, 'THE TOOL DECIDED', 10, 800, 'middle', CREATIVE_D)
+    for i, k in enumerate(['colours and lighting', 'camera angle', 'what the book is', 'glasses? a chair? a cat?', 'who else is there']):
+        d.text(206, 132 + i * 19, '?  ' + k, 11, 700)
+    d.box(20, 240, 400, 40, fill=WHITE, dash=True)
+    d.lines(220, 256, ['Defaults come from training pictures and can carry stereotypes:', 'describe what matters, then check.'], 10.5, 700, 'middle', INK, 14)
+    return d
+
+
+@illustration('Ts', 'From text to a voice',
+              'Text-to-speech first tidies the text, so "Dr" becomes "doctor" and "29/4" becomes "the 29th of April". '
+              'It works out the sounds and where the stress and pauses go, then a neural voice model turns them into '
+              'audio. Some tools can copy a real voice from a short recording, which is why consent matters.',
+              'Modern text-to-speech sounds natural because a neural model learned from hours of recorded speech. '
+              'Voice cloning can copy a person from a short sample: only use a voice with that person\'s permission.')
+def _ts():
+    d = D(440, 290)
+    d.box(20, 36, 400, 36, fill=YELLOW)
+    d.text(220, 59, '"Dr Khan\'s talk is on 29/4."', 13, 800, 'middle')
+    rows = [('1 · TIDY THE TEXT', '"Doctor Khan\'s talk is on the 29th of April."', SAFE),
+            ('2 · WORK OUT THE SOUNDS', 'DOK-tuh KAHN · stress, pauses, rising or falling', CREATIVE),
+            ('3 · A VOICE MODEL', 'turns the sounds into audio', SMART)]
+    for i, (k, v, c) in enumerate(rows):
+        y = 84 + i * 44
+        d.box(20, y, 400, 36, fill=PALE[c])
+        d.text(32, y + 15, k, 9.5, 800)
+        d.text(32, y + 30, v, 11, 700)
+    import math
+    pts = ' '.join(f'{40 + t * 3.6:.1f},{226 + math.sin(t / 2.2) * (4 + 10 * abs(math.sin(t / 13))):.1f}' for t in range(101))
+    d.add(f'<polyline points="{pts}" fill="none" stroke="{SMART_D}" stroke-width="2"/>')
+    d.box(20, 248, 400, 34, fill=WHITE, dash=True)
+    d.text(220, 270, 'A voice can be copied from a short sample: ask permission first.', 11, 700, 'middle', RED)
+    return d
+
+
+@illustration('Ft', 'A short extra course for one job',
+              'A general model already knows a lot. Fine-tuning trains it a little more on a smaller set of '
+              'examples, such as 2,000 marked science answers, which changes some of its settings so it gets better '
+              'at that one job. It costs far less than training from scratch, but it can get worse at other things.',
+              'Fine-tuning changes a trained model\'s settings with a small, focused set of examples. It is far '
+              'cheaper than starting again, but the examples must be good, and other skills can slip. Made-up numbers.')
+def _ft():
+    d = D(440, 290)
+    steps_row(d, 36, [('GENERAL MODEL', ['trained on a huge', 'mix of text'], PALE[SAFE]),
+                      ('+ 2,000 EXAMPLES', ['science answers,', 'marked by teachers'], YELLOW),
+                      ('FINE-TUNED', ['its settings now', 'suit this job'], PALE[RESP])], h=70)
+    d.head(20, 136, 'Marking science answers well')
+    for i, (k, v, c) in enumerate([('before', 61, PALE[SAFE]), ('after', 88, RESP)]):
+        y = 148 + i * 30
+        d.text(20, y + 16, k, 11, 700)
+        d.bar(80, y + 2, v * 3.2, 20, c)
+        d.text(86 + v * 3.2, y + 17, f'{v}%', 11, 800)
+    d.box(20, 216, 400, 62, fill=WHITE, dash=True)
+    d.lines(220, 236, ['Far cheaper than training from scratch.', 'But poor examples teach poor habits,',
+                       'and the model can get worse at other things.'], 11, 700, 'middle', INK, 15)
+    return d
+
+
+@illustration('Fs', 'Examples in the prompt, not new training',
+              'Few-shot learning puts a handful of worked examples in the prompt: "happy → positive", "awful → '
+              'negative", "fine → neutral". The model spots the pattern and answers the new one the same way. '
+              'Nothing in the model changes: the examples only last for that conversation.',
+              'Few-shot prompting shows the model a few examples so it copies the pattern. Zero-shot gives none, '
+              'one-shot gives one. Unlike fine-tuning, the model itself doesn\'t change.')
+def _fs():
+    d = D(440, 290)
+    d.box(20, 36, 250, 170, fill=WHITE)
+    d.text(32, 56, 'THE PROMPT', 10, 800, fill=DIM)
+    for i, (a, b) in enumerate([('"I loved it"', 'positive'), ('"Total waste of time"', 'negative'), ('"It was OK"', 'neutral')]):
+        y = 80 + i * 26
+        d.box(30, y - 16, 230, 22, fill=PALE[CREATIVE])
+        d.text(40, y, a, 11, 700)
+        d.text(250, y, '→ ' + b, 11, 800, 'end', CREATIVE_D)
+    d.text(40, 172, '"Best trip ever"', 11.5, 800)
+    d.text(250, 172, '→ ?', 11.5, 800, 'end')
+    d.text(145, 196, 'three examples, then the new one', 9.5, 400, 'middle', DIM)
+    d.arrow(272, 166, 300, 166)
+    d.box(302, 140, 118, 52, fill=PALE[RESP])
+    d.text(361, 162, 'positive', 13, 800, 'middle', RESP_D)
+    d.text(361, 180, 'pattern copied', 9.5, 400, 'middle', DIM)
+    for i, (k, v) in enumerate([('zero-shot', 'no examples'), ('one-shot', 'one example'), ('few-shot', 'a handful')]):
+        d.text(304, 52 + i * 26, k, 11, 800)
+        d.text(304, 66 + i * 26, v, 9.5, 400, fill=DIM)
+    d.box(20, 220, 400, 56, fill=YELLOW)
+    d.lines(220, 242, ['Nothing inside the model changes:', 'the examples only last for this conversation.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Rm', 'Thinking before answering',
+              'A bat and a ball cost £1.10 in total; the bat costs £1 more than the ball. A quick answer says the '
+              'ball costs 10p, which is wrong. A reasoning model works through steps first, checks them, and finds '
+              '5p. The extra thinking helps with maths, code and logic, but takes longer and costs more.',
+              'Reasoning models are trained to work through a problem, and check their steps, before answering. '
+              'They do better at maths, coding and logic, but are slower and cost more, and their steps can still '
+              'go wrong.')
+def _rm():
+    d = D(440, 290)
+    d.box(20, 36, 400, 40, fill=YELLOW)
+    d.lines(220, 52, ['A bat and a ball cost £1.10. The bat costs £1 more', 'than the ball. How much is the ball?'], 11, 800, 'middle', INK, 15)
+    d.box(20, 88, 150, 110)
+    d.text(95, 108, 'QUICK ANSWER', 10, 800, 'middle', DIM)
+    d.text(95, 146, '"10p"', 18, 800, 'middle', RED)
+    d.tick(95, 176, False)
+    d.box(180, 88, 240, 110, fill=PALE[RESP])
+    d.text(300, 108, 'REASONING MODEL', 10, 800, 'middle', RESP_D)
+    d.lines(194, 128, ['ball = x, bat = x + £1', 'x + x + £1 = £1.10, so 2x = 10p', 'check: 5p + £1.05 = £1.10 ✓'], 10.5, 700, 'start', INK, 16)
+    d.text(300, 188, '"5p"', 14, 800, 'middle', RESP_D)
+    d.box(20, 212, 400, 66, fill=WHITE, dash=True)
+    d.lines(220, 234, ['Better at maths, code and logic.', 'Slower and dearer: more thinking means more computing.',
+                       'Its steps can still go wrong, so check them.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Sd', 'Useful extra data, with a catch',
+              'When real examples are rare, such as photos of a rare skin condition, a generator can make more, so '
+              'a model sees enough to learn. But if models are trained on generated data generation after '
+              'generation, the rare cases fade and the output drifts from reality: "model collapse". Real data has '
+              'to stay in the mix.',
+              'Synthetic data fills gaps and protects privacy. A 2024 Nature study (Shumailov and others) showed '
+              'that models trained over and over on generated data lose the rare cases first, so real data must stay '
+              'in the mix.')
+def _sd():
+    d = D(440, 290)
+    d.box(20, 36, 400, 84, fill=PALE[RESP])
+    d.text(32, 56, 'THE USE', 10.5, 800, fill=RESP_D)
+    d.text(32, 78, '50 real photos of a rare condition', 11.5, 700)
+    d.arrow(262, 74, 290, 74)
+    d.text(296, 78, '+ 950 generated', 11.5, 800)
+    d.text(32, 102, 'enough to train on, with no extra patient photos needed', 10.5, 400, fill=DIM)
+    d.box(20, 130, 400, 148)
+    d.text(32, 150, 'THE CATCH: TRAINED ON ITS OWN OUTPUT, AGAIN AND AGAIN', 10.5, 800, fill=RED)
+    for i, (k, w) in enumerate([('real data', 1.0), ('generation 3', 0.62), ('generation 9', 0.3)]):
+        x = 40 + i * 128
+        cx = x + 50
+        pts = []
+        import math
+        for t in range(-50, 51):
+            y = 236 - 56 * math.exp(-(t / (22 * w)) ** 2) * (1 / max(w, .45)) ** .4
+            pts.append(f'{cx + t:.0f},{max(y, 166):.1f}')
+        d.add(f'<polyline points="{" ".join(pts)}" fill="{PALE[SAFE]}" stroke="{SAFE_D}" stroke-width="2"/>')
+        d.add(f'<line x1="{cx - 52}" y1="236" x2="{cx + 52}" y2="236" stroke="{INK}" stroke-width="1"/>')
+        d.text(cx, 252, k, 10.5, 800, 'middle')
+    d.text(220, 270, 'Rare cases at the edges vanish first: keep real data in the mix.', 10.5, 700, 'middle', RED)
+    return d
+
+
+@illustration('Dk', 'Stop, check the source, report',
+              'Spotting glitches in deepfakes, such as odd hands or blinking, works less and less as tools improve. '
+              'Better habits: stop before sharing, check who posted it first and whether trusted news reports it, '
+              'look for a content credentials label, and report it. Creating sexual deepfakes is a crime.',
+              'Deepfakes are getting too good to spot by eye, so check the source, not just the pixels. In England '
+              'and Wales, creating a sexual deepfake of an adult without consent has been a crime since 6 February '
+              '2026; any sexual image of an under-18 is illegal. Young people can use Childline\'s Report Remove.')
+def _dk():
+    d = D(440, 290)
+    d.box(20, 36, 400, 46, fill=WHITE, dash=True)
+    d.lines(220, 54, ['Looking for glitches (hands, blinking, lip sync) works less', 'and less as the tools improve. Check the source instead.'], 10.5, 700, 'middle', DIM, 15)
+    cols = [('1 · STOP', ['before you share', 'or react', 'shocking = suspicious'], SMART),
+            ('2 · CHECK', ['who posted it first?', 'do trusted news sites', 'report it too?', 'a content credentials', 'label?'], SAFE),
+            ('3 · REPORT', ['to the platform', 'tell a trusted adult', 'Childline', 'Report Remove'], RESP)]
+    for i, (k, ls, c) in enumerate(cols):
+        x = 20 + i * 136
+        d.box(x, 94, 128, 128, fill=PALE[c])
+        d.text(x + 64, 114, k, 11, 800, 'middle')
+        d.lines(x + 64, 136, ls, 10, 700, 'middle', INK, 15)
+        if i < 2:
+            d.arrow(x + 129, 158, x + 135, 158)
+    d.box(20, 234, 400, 46, fill=YELLOW)
+    d.lines(220, 252, ['Making a sexual deepfake of someone without consent is a crime', 'in England and Wales; of an under-18, it always is.'], 10.5, 800, 'middle', INK, 15)
+    return d
+
+
+@illustration('Vc', 'The loop that skips the checks',
+              'Vibe coding: describe what you want, let the AI write the code, run it, and if it seems to work, ship '
+              'it. The steps it skips are reading the code, testing the edge cases and checking security. In one '
+              '2025 test of over 100 models, 45% of AI-written code samples had a security flaw.',
+              'Vibe coding is great for quick prototypes and learning. Before real users or real data, someone has '
+              'to read, test and security-check the code: Veracode (2025) found flaws in 45% of AI-written samples.')
+def _vc():
+    d = D(440, 290)
+    loop = [('describe it', 90, 56), ('AI writes code', 230, 56), ('run it', 230, 130), ('"it works!"', 90, 130)]
+    for k, x, y in loop:
+        d.box(x - 60, y - 18, 120, 36, fill=PALE[CREATIVE])
+        d.text(x, y + 5, k, 11.5, 800, 'middle')
+    d.arrow(152, 56, 168, 56)
+    d.arrow(230, 76, 230, 110)
+    d.arrow(168, 130, 152, 130)
+    d.arrow(90, 110, 90, 76)
+    d.arrow(292, 130, 316, 130)
+    d.box(318, 112, 102, 36, fill=YELLOW)
+    d.text(369, 135, 'ship it', 12, 800, 'middle')
+    d.box(20, 170, 400, 64, fill=WHITE, dash=True)
+    d.text(32, 190, 'WHAT GETS SKIPPED', 10, 800, fill=RED)
+    for i, k in enumerate(['reading the code', 'testing odd cases', 'security checks']):
+        d.tick(48 + i * 132, 214, False)
+        d.text(62 + i * 132, 219, k, 11, 700)
+    d.box(20, 244, 400, 38, fill=PALE[SMART])
+    d.text(220, 268, '45% of AI-written code samples had a security flaw (Veracode, 2025)', 10.5, 800, 'middle')
+    return d
+
+
+@illustration('Ce', 'Everything the model reads, not just your question',
+              'Context engineering plans everything that goes into the model\'s context window: rules and role, '
+              'background documents, worked examples, tool results, the conversation so far, and finally the '
+              'question. A clever question alone is a small part of it. Too much, or the wrong things, crowds out '
+              'what matters.',
+              'Context engineering decides what the model gets to read: rules, documents, examples, tool results, '
+              'memory and the question. The window has a limit, so choosing what to leave out matters as much as '
+              'what to put in.')
+def _ce():
+    d = D(440, 290)
+    d.head(20, 24, 'What fills the context window')
+    parts = [('rules and role', 'mark like a Year 9 science teacher', 44, SAFE),
+             ('background documents', 'the mark scheme, the topic notes', 70, CREATIVE),
+             ('worked examples', 'two marked answers', 40, SMART),
+             ('tool results and memory', 'last week\'s marks', 30, FUTURE),
+             ('the question', '"Mark this answer"', 22, RESP)]
+    y = 38
+    for k, v, h, c in parts:
+        d.box(20, y, 250, h, fill=PALE[c] if k != 'the question' else c)
+        d.text(32, y + min(h / 2 + 4, 20), k, 11, 800)
+        if h >= 40:
+            d.text(32, y + 34, v, 10, 400, fill=DIM)
+        y += h
+    d.add(f'<path d="M278 38 h8 v{y - 38} h-8" fill="none" stroke="{INK}" stroke-width="1.5"/>')
+    d.lines(294, 110, ['one context', 'window,', 'with a limit'], 11, 700, 'start', INK, 15)
+    d.add(f'<path d="M278 {y - 22} h8 v22 h-8" fill="none" stroke="{RED}" stroke-width="1.5"/>')
+    d.lines(294, y - 14, ['your prompt is', 'only this bit'], 10, 700, 'start', RED, 12)
+    d.box(20, 254, 400, 30, fill=YELLOW)
+    d.text(220, 274, 'Choose what goes in, and what stays out.', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Gv', 'Every frame has to agree',
+              'A video clip is many still frames, often 24 a second. A generative video model has to make each frame '
+              'look right and also keep them consistent: the same face, objects that don\'t vanish, movement that '
+              'obeys gravity. Long clips, hands, text and physics are where it most often slips.',
+              'Generative video makes many frames that must agree with each other. Today\'s tools make short clips '
+              'and still slip on physics, hands and text, and most label or watermark what they make.')
+def _gv():
+    d = D(440, 290)
+    d.box(20, 36, 400, 34, fill=YELLOW)
+    d.text(220, 58, '"a red ball bounces down some steps"', 12, 800, 'middle')
+    for i in range(5):
+        x = 20 + i * 82
+        d.add(f'<rect x="{x}" y="84" width="74" height="74" fill="{WHITE}" stroke="{INK}" stroke-width="1.4"/>')
+        d.add(f'<path d="M{x} 158 v-14 h20 v-16 h20 v-16 h20 v-16 h14 v62z" fill="{PALE[SAFE]}" stroke="{INK}" stroke-width="1"/>')
+        bx = [64, 48, 36, 24, 12][i]
+        by = [100, 104, 120, 122, 138][i]
+        bad = i == 3
+        d.add(f'<circle cx="{x + bx}" cy="{by}" r="{6 if not bad else 4}" fill="{SMART if not bad else CREATIVE}" stroke="{INK}" stroke-width="1"/>')
+        d.text(x + 37, 172, f'frame {i + 1}', 9.5, 700, 'middle', RED if bad else DIM)
+    d.add(f'<rect x="262" y="84" width="74" height="74" fill="none" stroke="{RED}" stroke-width="3"/>')
+    d.text(299, 190, 'slip: ball changed', 10, 800, 'middle', RED)
+    d.box(20, 204, 400, 76, fill=WHITE, dash=True)
+    d.text(32, 224, 'EVERY FRAME HAS TO AGREE', 10, 800, fill=SAFE_D)
+    d.lines(32, 244, ['same faces and objects, movement that obeys gravity', 'Most likely to slip: long clips, hands, text, physics'], 11, 700, 'start', INK, 17)
+    return d
+
+
+@illustration('Sp', 'Cheap to make, costly to sort through',
+              'AI slop is cheap to make: one account can post a hundred AI images or articles an hour, aiming for '
+              'clicks rather than truth. Signs include generic text, odd details, no named source and accounts '
+              'posting non-stop. Not sharing it, and choosing trusted sources, stops it spreading.',
+              'AI slop spreads because it costs almost nothing to make and clicks still pay. It drowns out real work '
+              'and can mislead. Check for a named source, and don\'t feed it with shares.')
+def _sp():
+    d = D(440, 290)
+    d.head(20, 24, 'One account, one hour')
+    for i in range(100):
+        x, y = 20 + (i % 20) * 12, 38 + (i // 20) * 16
+        d.add(f'<rect x="{x}" y="{y}" width="10" height="13" fill="{PALE[SMART] if i % 7 else SMART}" stroke="{INK}" stroke-width=".7"/>')
+    d.text(272, 58, '100 posts', 13, 800)
+    d.text(272, 76, 'a few pence to make', 10.5, 700, fill=DIM)
+    d.text(272, 94, 'aimed at clicks,', 10.5, 700, fill=DIM)
+    d.text(272, 108, 'not truth', 10.5, 700, fill=DIM)
+    d.box(20, 126, 196, 118, fill=PALE[SMART])
+    d.text(118, 146, 'SIGNS', 10.5, 800, 'middle', SMART_D)
+    d.lines(34, 168, ['generic, padded text', 'odd details in pictures', 'no named source', 'posting non-stop'], 11, 700, 'start', INK, 18)
+    d.box(224, 126, 196, 118, fill=PALE[RESP])
+    d.text(322, 146, 'WHAT HELPS', 10.5, 800, 'middle', RESP_D)
+    d.lines(238, 168, ['don\'t share or reply', 'check for a source', 'follow trusted people', 'report spam accounts'], 11, 700, 'start', INK, 18)
+    d.text(220, 270, 'Every click and share pays the people making it.', 11.5, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('2d', 'AI suggests, the designer decides',
+              'A 2D design brief, a logo for a school robotics club, goes to an AI tool, which suggests several '
+              'options. The designer picks one, edits it and turns it into vector paths: clean lines a laser cutter '
+              'or printer can follow, unlike a pixel image.',
+              'AI tools can produce lots of 2D ideas quickly. A designer still chooses, edits and checks them, and '
+              'a laser cutter needs vector paths, not a pixel picture.')
+def _2d():
+    d = D(440, 290)
+    d.box(20, 36, 400, 34, fill=YELLOW)
+    d.text(220, 58, 'Brief: a logo for the school robotics club', 12, 800, 'middle')
+    for i in range(4):
+        x = 20 + i * 102
+        best = i == 2
+        d.box(x, 84, 94, 80, fill=PALE[RESP] if best else WHITE, sw=2.5 if best else 1.5)
+        cx = x + 47
+        if i == 0:
+            d.add(f'<rect x="{cx - 18}" y="102" width="36" height="30" rx="6" fill="{PALE[SAFE]}" stroke="{INK}" stroke-width="1.4"/><circle cx="{cx - 8}" cy="116" r="4" fill="{INK}"/><circle cx="{cx + 8}" cy="116" r="4" fill="{INK}"/>')
+        elif i == 1:
+            d.add(f'<path d="M{cx} 98 l20 34 h-40z" fill="{PALE[SMART]}" stroke="{INK}" stroke-width="1.4"/>')
+        elif i == 2:
+            d.add(f'<circle cx="{cx}" cy="118" r="20" fill="{PALE[CREATIVE]}" stroke="{INK}" stroke-width="1.4"/><path d="M{cx - 9} 112 h18 M{cx} 112 v16 M{cx - 12} 128 h24" stroke="{INK}" stroke-width="2"/>')
+        else:
+            d.add(f'<path d="M{cx - 20} 130 q20 -40 40 0" fill="none" stroke="{INK}" stroke-width="2"/><circle cx="{cx}" cy="108" r="6" fill="{SMART}" stroke="{INK}"/>')
+        d.text(cx, 156, 'picked' if best else f'option {i + 1}', 9.5, 800 if best else 400, 'middle', RESP_D if best else DIM)
+    d.text(20, 182, 'AI SUGGESTS OPTIONS', 9.5, 800, fill=DIM)
+    steps_row(d, 196, [('DESIGNER EDITS', ['fixes the details'], WHITE), ('VECTOR PATHS', ['clean lines, any size'], PALE[SAFE]),
+                       ('LASER CUT', ['or print'], PALE[SMART])], h=54)
+    d.text(220, 272, 'A laser cutter follows paths, not pixels.', 11, 700, 'middle', SAFE_D)
+    return d
+
+
+@illustration('3d', 'Set the goals, let it propose shapes',
+              'Generative design starts from goals rather than a drawing: where a bracket must attach, what weight '
+              'it carries, the material and how it will be made. The software proposes many shapes that meet them, '
+              'often lighter and more curved than a person would draw. An engineer chooses, checks and tests one '
+              'before it is printed.',
+              'In 3D design, AI-driven generative design proposes shapes that meet set goals and limits. People set '
+              'the goals and must still check and test the result, because a design that passes on screen can fail '
+              'in use.')
+def _3d():
+    d = D(440, 290)
+    d.box(20, 36, 150, 150, fill=PALE[SAFE])
+    d.text(95, 56, 'THE GOALS', 10.5, 800, 'middle', SAFE_D)
+    d.lines(32, 78, ['fix to 2 bolt holes', 'hold 5 kg', 'use PLA plastic', '3D printable', 'as light as possible'], 10.5, 700, 'start', INK, 20)
+    d.arrow(172, 111, 194, 111)
+    d.box(196, 36, 224, 150)
+    d.text(308, 56, 'SHAPES IT PROPOSES', 10.5, 800, 'middle')
+    shapes = [f'M206 160 h60 v-14 h-46 v-60 h-14z',
+              f'M280 160 h64 v-12 q-30 -4 -44 -30 q-6 -14 -6 -34 h-14z',
+              f'M356 160 h56 v-10 c-22 0 -24 -14 -30 -24 c-8 -14 2 -26 -10 -42 h-16z']
+    for i, p in enumerate(shapes):
+        best = i == 2
+        d.add(f'<path d="{p}" fill="{PALE[RESP] if best else PALE[CREATIVE]}" stroke="{INK}" stroke-width="{2.2 if best else 1.4}"/>')
+    d.text(236, 178, 'heavy', 9.5, 700, 'middle', DIM)
+    d.text(312, 178, 'lighter', 9.5, 700, 'middle', DIM)
+    d.text(384, 178, 'lightest', 9.5, 800, 'middle', RESP_D)
+    steps_row(d, 200, [('ENGINEER CHOOSES', ['and checks it'], WHITE), ('TEST IT', ['on screen, then for real'], PALE[SMART]),
+                       ('PRINT OR MAKE', ['ready to use'], PALE[RESP])], h=54)
+    d.text(220, 276, 'People set the goals and test the result.', 11, 700, 'middle', SAFE_D)
     return d
 
 
