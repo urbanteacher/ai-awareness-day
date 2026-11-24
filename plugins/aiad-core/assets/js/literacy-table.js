@@ -117,6 +117,133 @@
 			symIndex[ el[ 0 ] ] = i;
 		} );
 		initBuzzwordQuiz( root, elements, symIndex, data.quiz );
+
+		// ---- See how it works: the animated flow from the AI Under the Hood course that explains this element. ----
+		// The flows (data/literacy-table/flows.json) are the courses' own, played by the courses' own engine
+		// (assets/courses/shared/flow.js), which only loads the first time someone opens one.
+		var flowsEl = root.querySelector( '[data-alpt-flows]' );
+		var flowData = null;
+		if ( flowsEl ) {
+			try {
+				flowData = JSON.parse( flowsEl.textContent );
+			} catch ( err ) {
+				flowData = null;
+			}
+		}
+		var flowButton = root.querySelector( '[data-alpt-flow]' );
+		var flowFrom = root.querySelector( '[data-alpt-flow-from]' );
+		var flowLoad = null, flowBox = null;
+		function flowFor( sym ) {
+			var id = flowData && flowData.elements && flowData.elements[ sym ];
+			return id && flowData.flows[ id ] ? flowData.flows[ id ] : null;
+		}
+		function flowSource( f ) {
+			return 'AI Under the Hood, Part ' + f.part + ': ' + f.courseTitle + ( null !== f.chapterNumber ? ', chapter ' + f.chapterNumber : '' );
+		}
+		function updateFlowButton( sym ) {
+			if ( ! flowButton ) {
+				return;
+			}
+			var f = flowFor( sym );
+			flowButton.hidden = ! f;
+			if ( f && flowFrom ) {
+				flowFrom.textContent = 'Animated · ' + f.spec.title;
+			}
+		}
+		function loadFlowEngine() {
+			if ( ! flowLoad ) {
+				flowLoad = new Promise( function ( resolve, reject ) {
+					if ( window.AIADFlow ) {
+						resolve();
+						return;
+					}
+					var css = document.createElement( 'link' );
+					css.rel = 'stylesheet';
+					css.href = flowsEl.getAttribute( 'data-flow-css' );
+					document.head.appendChild( css );
+					var js = document.createElement( 'script' );
+					js.src = flowsEl.getAttribute( 'data-flow-js' );
+					js.onload = function () { resolve(); };
+					js.onerror = function () { flowLoad = null; reject(); };
+					document.head.appendChild( js );
+				} );
+			}
+			return flowLoad;
+		}
+		// An element's flow, with its tile and name at the top.
+		function openFlow( sym, opener ) {
+			var el = elements[ symIndex[ sym ] ];
+			if ( el ) {
+				openFlowBox( flowFor( sym ), { tile: el[ 0 ], title: el[ 1 ], fam: el[ 2 ], theme: el[ 5 ] }, opener );
+			}
+		}
+		// Any flow in the pop-out: o = { tile: symbol or '', title, fam: family key or '', theme }.
+		function openFlowBox( f, o, opener ) {
+			if ( ! f ) {
+				return;
+			}
+			if ( ! flowBox ) {
+				flowBox = document.createElement( 'dialog' );
+				flowBox.className = 'alpt-flowbox';
+				flowBox.setAttribute( 'aria-labelledby', 'alpt-flowbox-title' );
+				flowBox.innerHTML = '<div class="alpt-flowbox__head"><span class="alpt-flowbox__tile"></span><div><p class="alpt-flowbox__k">See how it works</p>' +
+					'<h2 class="alpt-flowbox__title" id="alpt-flowbox-title"></h2></div><button type="button" class="alpt-flowbox__close" aria-label="Close">&times;</button></div>' +
+					'<div class="alpt-flowbox__stage"></div><p class="alpt-flowbox__from"></p>';
+				document.body.appendChild( flowBox );
+				flowBox.querySelector( '.alpt-flowbox__close' ).addEventListener( 'click', function () { flowBox.close(); } );
+				flowBox.addEventListener( 'click', function ( ev ) {
+					if ( ev.target === flowBox ) {
+						flowBox.close();
+					}
+				} );
+				flowBox.addEventListener( 'close', function () {
+					document.documentElement.classList.remove( 'alpt-flow-open' );
+					if ( flowBox.opener && flowBox.opener.focus ) {
+						flowBox.opener.focus();
+					}
+				} );
+			}
+			flowBox.opener = opener || null;
+			flowBox.className = 'alpt-flowbox' + ( o.fam ? ' alpt-fam--' + o.fam : '' ) + ( document.documentElement.classList.contains( 'alpt-board-open' ) ? ' alpt-flowbox--board' : '' );
+			flowBox.style.setProperty( '--c', 'var(--a27-' + o.theme + ')' );
+			flowBox.style.setProperty( '--cd', 'var(--a27-' + o.theme + '-deep)' );
+			var tile = flowBox.querySelector( '.alpt-flowbox__tile' );
+			tile.textContent = o.tile || '';
+			tile.hidden = ! o.tile;
+			flowBox.querySelector( '.alpt-flowbox__title' ).textContent = o.title;
+			var from = flowBox.querySelector( '.alpt-flowbox__from' );
+			var href = flowsEl.getAttribute( 'data-courses' ) + f.course + '/' + ( f.chapter ? '#' + f.chapter : '' );
+			from.innerHTML = '';
+			from.appendChild( document.createTextNode( 'From the free course ' ) );
+			var a = document.createElement( 'a' );
+			a.href = href;
+			a.textContent = flowSource( f ) + ( f.chapterTitle ? ': ' + f.chapterTitle : '' );
+			from.appendChild( a );
+			from.appendChild( document.createTextNode( ( /[?!.]$/.test( a.textContent ) ? '' : '.' ) + ' Students can try the whole chapter there.' ) );
+			var stage = flowBox.querySelector( '.alpt-flowbox__stage' );
+			stage.innerHTML = '<p class="alpt-flowbox__loading">Loading the animation…</p>';
+			if ( flowBox.showModal ) {
+				if ( ! flowBox.open ) {
+					flowBox.showModal();
+				}
+			} else {
+				flowBox.setAttribute( 'open', '' );
+			}
+			document.documentElement.classList.add( 'alpt-flow-open' );
+			loadFlowEngine().then( function () {
+				var fig = document.createElement( 'figure' );
+				stage.innerHTML = '';
+				stage.appendChild( fig );
+				window.AIADFlow.mount( fig, JSON.parse( JSON.stringify( f.spec ) ) );
+			} ).catch( function () {
+				stage.innerHTML = '<p class="alpt-flowbox__loading">The animation could not load. Try the course link below.</p>';
+			} );
+		}
+		if ( flowButton ) {
+			flowButton.addEventListener( 'click', function () {
+				openFlow( elements[ current ][ 0 ], flowButton );
+			} );
+		}
 		var linksOut = root.querySelector( '[data-alpt-links-out]' );
 		var linksList = root.querySelector( '[data-alpt-links-list]' );
 		var linksCompounds = root.querySelector( '[data-alpt-links-compounds]' );
@@ -390,6 +517,7 @@
 			setText( 'title', el[ 1 ] );
 			setText( 'family', families[ el[ 2 ] ] || '' );
 			setText( 'def', el[ 3 ] );
+			updateFlowButton( el[ 0 ] );
 			panel.setAttribute( 'data-alpt-theme', el[ 5 ] || '' );
 			panel.setAttribute( 'data-alpt-era', el[ 8 ] || '' );
 			setText( 'year', ( el[ 9 ] ? 'Used this way since ' : 'In use since ' ) + ( el[ 7 ] ? 'about ' : '' ) + el[ 6 ] + ( el[ 9 ] ? ' (the word is older)' : '' ) );
@@ -1741,6 +1869,50 @@
 			return node;
 		}
 
+		// How it works: the course animation for the element on the board. A compound plays the animation that covers
+		// most of its elements; on a tie, the later element's, which is usually the one that makes the compound what it
+		// is (Guardrails in Safe Study Buddy, Hallucination in Confident but Wrong). It opens in the same pop-out as the
+		// panel's See how it works, made larger for the board.
+		// flows.json's "compounds" picks by hand where that rule picks badly (null: no animation).
+		function compoundFlowId( c ) {
+			if ( ! flowData ) {
+				return '';
+			}
+			if ( flowData.compounds && Object.prototype.hasOwnProperty.call( flowData.compounds, c[ 0 ] ) ) {
+				return flowData.compounds[ c[ 0 ] ] || '';
+			}
+			var counts = {}, best = '', bestN = 0;
+			c[ 2 ].forEach( function ( sym ) {
+				var id = flowData.elements && flowData.elements[ sym ];
+				if ( id && flowData.flows[ id ] ) {
+					counts[ id ] = ( counts[ id ] || 0 ) + 1;
+					if ( counts[ id ] >= bestN ) {
+						bestN = counts[ id ];
+						best = id;
+					}
+				}
+			} );
+			return best;
+		}
+		function boardFlowId() {
+			if ( 'compound' === boardMode ) {
+				return compoundFlowId( compounds[ boardIndex ] );
+			}
+			var id = flowData && flowData.elements && flowData.elements[ elements[ boardIndex ][ 0 ] ];
+			return id && flowData.flows[ id ] ? id : '';
+		}
+		function appendFlowButton( bar ) {
+			var id = boardFlowId();
+			var f = id ? flowData.flows[ id ] : null;
+			if ( ! f ) {
+				return;
+			}
+			var b = boardButton( '', 'flow', 'alpt-board__btn--flow' );
+			b.innerHTML = '<svg class="alpt-board__play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg><span>How it works</span>';
+			b.setAttribute( 'aria-label', 'How it works: ' + f.spec.title );
+			bar.appendChild( b );
+		}
+
 		function boardButton( label, action, extra ) {
 			var b = el( 'button', 'alpt-board__btn' + ( extra ? ' ' + extra : '' ), label );
 			b.type = 'button';
@@ -2562,6 +2734,7 @@
 			bar.appendChild( prev );
 			bar.appendChild( next );
 			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle', 'alpt-board__btn--toggle' ) );
+			appendFlowButton( bar );
 			if ( boardHasPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide picture' : 'Show picture', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
@@ -2573,15 +2746,45 @@
 		}
 
 		// The card in two versions: dark (cream on ink) and light (ink on cream). Each button is drawn in its card's colours.
+		// One Download card button keeps the bar short; it opens a small menu to pick the dark or the light card.
+		var DOWNLOAD_ICON = '<svg class="alpt-board__btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
 		function appendCardButtons( bar, title ) {
+			var verb = canShareFiles() ? 'Share' : 'Download';
+			var cardBtn = boardButton( '', 'cardmenu', 'alpt-board__btn--card alpt-board__btn--card-dl' );
+			// Just the icon, to keep the bar short; the name is its label and tooltip.
+			cardBtn.innerHTML = DOWNLOAD_ICON.replace( 'width="18" height="18"', 'width="24" height="24"' ) + '<span class="alpt-board__dl-word" aria-hidden="true">' + verb + ' card</span>';
+			cardBtn.setAttribute( 'aria-label', verb + ' a card of ' + title );
+			cardBtn.title = verb + ' card';
+			cardBtn.setAttribute( 'aria-expanded', 'false' );
+			cardBtn.setAttribute( 'aria-controls', 'alpt-board-cardmenu' );
+			bar.appendChild( cardBtn );
+			var menu = el( 'div', 'alpt-board__cardmenu' );
+			menu.id = 'alpt-board-cardmenu';
+			menu.hidden = true;
+			menu.appendChild( el( 'p', 'alpt-board__cardmenu-k', 'Which card?' ) );
 			[ [ 'dark', 'Dark card' ], [ 'light', 'Light card' ] ].forEach( function ( t ) {
-				var cardBtn = boardButton( '', 'card', 'alpt-board__btn--card alpt-board__btn--card-' + t[ 0 ] );
-				cardBtn.setAttribute( 'data-alpt-tone', t[ 0 ] );
-				cardBtn.innerHTML = '<svg class="alpt-board__btn-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
-				cardBtn.appendChild( document.createTextNode( t[ 1 ] ) );
-				cardBtn.setAttribute( 'aria-label', ( canShareFiles() ? 'Share a ' : 'Download a ' ) + t[ 0 ] + ' card of ' + title );
-				bar.appendChild( cardBtn );
+				var opt = boardButton( t[ 1 ], 'card', 'alpt-board__cardopt alpt-board__cardopt--' + t[ 0 ] );
+				opt.setAttribute( 'data-alpt-tone', t[ 0 ] );
+				opt.setAttribute( 'aria-label', verb + ' a ' + t[ 0 ] + ' card of ' + title );
+				menu.appendChild( opt );
 			} );
+			bar.appendChild( menu );
+		}
+		function cardMenu( open ) {
+			var menu = board.querySelector( '.alpt-board__cardmenu' );
+			var btn = board.querySelector( '.alpt-board__btn--card-dl' );
+			if ( ! menu || ! btn ) {
+				return false;
+			}
+			var was = ! menu.hidden;
+			menu.hidden = ! open;
+			btn.setAttribute( 'aria-expanded', String( !! open ) );
+			if ( open ) {
+				menu.querySelector( 'button' ).focus();
+			} else if ( was ) {
+				btn.focus();
+			}
+			return was;
 		}
 
 		// A compound's marks (c[ 9 ]: symbol → the words in its description that stand for that element) as character
@@ -2724,6 +2927,7 @@
 				symToggle.setAttribute( 'aria-label', TAG_LABELS[ boardTags ] + '. Change the tags on the words' );
 				bar.appendChild( symToggle );
 			}
+			appendFlowButton( bar );
 			if ( anyPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide pictures' : 'Show pictures', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
@@ -2822,6 +3026,10 @@
 		}
 
 		board.addEventListener( 'click', function ( event ) {
+			// A click anywhere but the card menu (or its button) closes the menu.
+			if ( ! event.target.closest( '.alpt-board__cardmenu, .alpt-board__btn--card-dl' ) ) {
+				cardMenu( false );
+			}
 			var b = event.target.closest( '[data-alpt-board-action]' );
 			if ( ! b ) {
 				return;
@@ -2833,8 +3041,17 @@
 				stepBoard( -1 );
 			} else if ( 'next' === action ) {
 				stepBoard( 1 );
+			} else if ( 'cardmenu' === action ) {
+				cardMenu( 'true' !== b.getAttribute( 'aria-expanded' ) );
 			} else if ( 'card' === action ) {
 				shareCard( boardIndex, b, boardMode, b.getAttribute( 'data-alpt-tone' ) );
+			} else if ( 'flow' === action ) {
+				if ( 'compound' === boardMode ) {
+					var cf = compounds[ boardIndex ];
+					openFlowBox( flowData.flows[ boardFlowId() ], { tile: '', title: cf[ 1 ], fam: '', theme: cf[ 7 ] }, b );
+				} else {
+					openFlow( elements[ boardIndex ][ 0 ], b );
+				}
 			} else if ( 'sym' === action ) {
 				boardTags = TAG_MODES[ ( TAG_MODES.indexOf( boardTags ) + 1 ) % TAG_MODES.length ];
 				renderBoard();
@@ -2864,7 +3081,10 @@
 		board.addEventListener( 'keydown', function ( event ) {
 			if ( 'Escape' === event.key ) {
 				event.stopPropagation();
-				closeBoard();
+				// Escape closes the card menu first, then the board.
+				if ( ! cardMenu( false ) ) {
+					closeBoard();
+				}
 			} else if ( 'ArrowRight' === event.key ) {
 				stepBoard( 1 );
 			} else if ( 'ArrowLeft' === event.key ) {

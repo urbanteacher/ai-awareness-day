@@ -724,6 +724,9 @@ function aiad_render_literacy_table(): string {
 				<p class="alpt-panel__labels"><span class="alpt-panel__family" data-alpt-out="family"><?php echo esc_html( $families[ $first['family'] ]['name'] ); ?></span> <span class="alpt-panel__theme alpt-th--<?php echo esc_attr( $first['theme'] ); ?>" data-alpt-theme-label><?php echo esc_html( sprintf( /* translators: %s: theme name, such as Safe */ __( '%s theme', 'aiad-core' ), $strands[ $first['theme'] ] ?? '' ) ); ?></span> <span class="alpt-panel__year" data-alpt-out="year"><?php echo esc_html( aiad_literacy_year_label( $first ) ); ?></span></p>
 				<h2 class="alpt-panel__title" data-alpt-out="title"><?php echo esc_html( $first['name'] ); ?></h2>
 				<p class="alpt-panel__def" data-alpt-out="def"><?php echo esc_html( $first['def'] ); ?></p>
+				<?php if ( aiad_literacy_flows_ready() ) : ?>
+				<button type="button" class="alpt-flow-cta" data-alpt-flow hidden><span class="alpt-flow-cta__play" aria-hidden="true"></span><span class="alpt-flow-cta__text"><b><?php esc_html_e( 'See how it works', 'aiad-core' ); ?></b><small data-alpt-flow-from>&nbsp;</small></span></button>
+				<?php endif; ?>
 				<details class="alpt-reader-notes">
 					<summary><?php esc_html_e( 'Classroom notes & resources', 'aiad-core' ); ?></summary>
 				<div class="alpt-panel__issues" data-alpt-issues-out>
@@ -1175,10 +1178,21 @@ function aiad_render_literacy_table(): string {
 		</form>
 	</section>
 
+	<?php if ( aiad_literacy_flows_ready() ) : ?>
+	<script type="application/json" data-alpt-flows data-flow-js="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.js' ); ?>" data-flow-css="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.css' ); ?>" data-courses="<?php echo esc_url( home_url( '/courses/' ) ); ?>"><?php echo wp_json_encode( aiad_literacy_data( 'flows' ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
+	<?php endif; ?>
 	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'pics' => (object) array_map( static fn( array $p ): string => $p['alt'], aiad_literacy_pictures() ), 'picBase' => aiad_literacy_picture_base(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'notes' => (object) array_filter( array_column( aiad_literacy_element_records(), 'teacher_note', 'sym' ) ), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'], (object) $c['marks'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 </div>
 	<?php
 	return (string) ob_get_clean();
+}
+
+/**
+ * Whether "See how it works" can run: the course animations (data/literacy-table/flows.json, built from the AI Under
+ * the Hood courses by scripts/build-literacy-flows.py) and the courses' flow engine in the theme.
+ */
+function aiad_literacy_flows_ready(): bool {
+	return defined( 'AIAD_URI' ) && defined( 'AIAD_DIR' ) && is_readable( AIAD_DIR . '/assets/courses/shared/flow.js' ) && ! empty( aiad_literacy_data( 'flows' )['elements'] );
 }
 
 /**
