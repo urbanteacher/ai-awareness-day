@@ -6538,3 +6538,109 @@ html.alpt-flow-open {
     padding-bottom: 0.6rem;
   }
 }
+
+/* ---- Show to class on a projector or TV: laid out as a 16:9 slide, 1280 x 720 like a PowerPoint widescreen
+   slide (13.333 x 7.5 in), and scaled to the largest 16:9 that fits the screen, as the slide tool does
+   (assets/aiad27-review/js/render.js). --u is one slide pixel: 1.5px on a 1920 x 1080 projector, 1px at
+   1280 x 720, so the tile, words and buttons keep the same proportions on every screen. Phones keep their own
+   layout (max-width: 767px). A long definition with its picture can still be too tall for the slide, so
+   fitBoard() (literacy-table.js) lowers --t from 1, and --v (one slide pixel times --t) shrinks the tile, picture
+   and words together until it fits, as PowerPoint shrinks text on overflow. Buttons stay full size. ---- */
+@media screen and (min-width: 1024px) and (orientation: landscape) {
+  .alpt-board {
+    --u: min(calc(100vw / 1280), calc(100vh / 720));
+    --v: calc(var(--u) * var(--t, 1));
+    gap: calc(40 * var(--u));
+    padding: calc(40 * var(--u)) calc(72 * var(--u));
+  }
+
+  .alpt-board__inner {
+    gap: calc(40 * var(--v)) calc(56 * var(--v));
+  }
+
+  .alpt-board__tile {
+    --cut: calc(34 * var(--v));
+    width: calc(300 * var(--v));
+    padding: calc(22 * var(--v)) calc(24 * var(--v));
+  }
+
+  .alpt-board__n,
+  .alpt-board__tile-name {
+    font-size: calc(24 * var(--v));
+  }
+
+  .alpt-board__sym {
+    font-size: calc(150 * var(--v));
+  }
+
+  .alpt-board__tile.has-pic {
+    width: calc(440 * var(--v));
+    padding: 0;
+  }
+
+  .alpt-board__text {
+    flex: 1 1 calc(520 * var(--v));
+  }
+
+  .alpt-board .alpt-board__label {
+    margin-bottom: calc(14 * var(--v));
+    font-size: calc(17 * var(--v));
+  }
+
+  .alpt-board .alpt-board__title {
+    margin-bottom: calc(18 * var(--v));
+    font-size: calc(88 * var(--v));
+  }
+
+  .alpt-board .alpt-board__def,
+  .alpt-board .alpt-board__prompt {
+    font-size: calc(40 * var(--v));
+  }
+
+  .alpt-board .alpt-board__talk {
+    margin-top: calc(28 * var(--v));
+    padding-left: calc(18 * var(--v));
+    border-left-width: calc(6 * var(--v));
+    font-size: calc(26 * var(--v));
+  }
+
+  .alpt-board__bar {
+    gap: calc(10 * var(--u));
+  }
+
+  .alpt-board .alpt-board__btn {
+    min-height: calc(52 * var(--u));
+    padding: calc(12 * var(--u)) calc(22 * var(--u));
+    font-size: calc(18 * var(--u));
+  }
+
+  .alpt-board .alpt-board__btn--card-dl {
+    min-width: calc(52 * var(--u));
+    padding-inline: calc(12 * var(--u));
+  }
+
+  .alpt-board .alpt-board__bar .alpt-board__btn--close {
+    top: calc(24 * var(--u));
+    right: calc(24 * var(--u));
+  }
+
+  .alpt-board__formula {
+    gap: calc(12 * var(--v));
+    margin-bottom: calc(28 * var(--v));
+  }
+
+  .alpt-board__el {
+    --cut: calc(16 * var(--v));
+    width: calc(150 * var(--v));
+    min-height: calc(150 * var(--v));
+    padding: calc(13 * var(--v)) calc(14 * var(--v));
+  }
+
+  .alpt-board__el-sym {
+    font-size: calc(56 * var(--v));
+  }
+
+  .alpt-board__el-name {
+    font-size: calc(15 * var(--v));
+  }
+}

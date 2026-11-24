@@ -3082,12 +3082,40 @@
 			board.appendChild( bar );
 		}
 
+		// On a projector the board is a 16:9 slide (see "Show to class on a projector or TV" in the CSS). A long
+		// definition with its picture can be taller than the slide, so shrink the words, tile and picture together
+		// (--t, from 1 down to 0.55) until nothing scrolls. Phones keep their own layout and scroll as before.
+		var slideScreen = window.matchMedia ? window.matchMedia( '(min-width: 1024px) and (orientation: landscape)' ) : null;
+		function fitBoard() {
+			if ( board.hidden ) {
+				return;
+			}
+			board.style.removeProperty( '--t' );
+			if ( ! slideScreen || ! slideScreen.matches ) {
+				return;
+			}
+			var t = 1;
+			while ( board.scrollHeight > board.clientHeight + 1 && t > 0.56 ) {
+				t -= 0.04;
+				board.style.setProperty( '--t', t.toFixed( 2 ) );
+			}
+		}
+		function fitBoardSoon() {
+			fitBoard();
+			// Pictures and fonts can arrive a moment later.
+			window.requestAnimationFrame( fitBoard );
+			window.setTimeout( fitBoard, 250 );
+		}
+		window.addEventListener( 'resize', fitBoardSoon );
+		document.addEventListener( 'fullscreenchange', fitBoardSoon );
+
 		function renderBoard() {
 			if ( 'compound' === boardMode ) {
 				renderBoardCompound();
 			} else {
 				renderBoardElement();
 			}
+			fitBoardSoon();
 			// Draw this card in the background so Share can open at once.
 			var mode = boardMode, index = boardIndex;
 			( window.requestIdleCallback || window.setTimeout )( function () {
@@ -3104,6 +3132,7 @@
 			renderBoard();
 			board.hidden = false;
 			document.documentElement.classList.add( 'alpt-board-open' );
+			fitBoardSoon();
 			// Full screen is for the projector. On a phone the board already fills the screen, and full screen there
 			// only adds the browser's own "drag to exit full screen" notice over the top of it.
 			var phone = window.matchMedia && window.matchMedia( '(max-width: 767px)' ).matches;
