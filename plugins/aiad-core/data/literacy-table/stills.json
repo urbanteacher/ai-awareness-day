@@ -132,6 +132,48 @@
   ],
   "Wm": [
    "s46"
+  ],
+  "Sf": [
+   "s47"
+  ],
+  "Dg": [
+   "s48"
+  ],
+  "Re": [
+   "s49"
+  ],
+  "Ip": [
+   "s50"
+  ],
+  "Aw": [
+   "s51"
+  ],
+  "Sh": [
+   "s52"
+  ],
+  "Hp": [
+   "s53"
+  ],
+  "Rv": [
+   "s54"
+  ],
+  "Mp": [
+   "s55"
+  ],
+  "As": [
+   "s56"
+  ],
+  "Mx": [
+   "s57"
+  ],
+  "Rd": [
+   "s58"
+  ],
+  "Ab": [
+   "s59"
+  ],
+  "Uc": [
+   "s60"
   ]
  },
  "stills": {
@@ -272,6 +314,48 @@
   },
   "s46": {
    "title": "How a text watermark can work"
+  },
+  "s47": {
+   "title": "Two kinds of harm, many layers"
+  },
+  "s48": {
+   "title": "Rules for data, from start to finish"
+  },
+  "s49": {
+   "title": "Same AI, different rules, depending on use"
+  },
+  "s50": {
+   "title": "Two copyright questions"
+  },
+  "s51": {
+   "title": "Three questions for an \"AI-powered\" claim"
+  },
+  "s52": {
+   "title": "Approved tool or shadow AI?"
+  },
+  "s53": {
+   "title": "Where the extra value comes from"
+  },
+  "s54": {
+   "title": "Two ways into an AI model"
+  },
+  "s55": {
+   "title": "Finding the ideas inside a model"
+  },
+  "s56": {
+   "title": "Steering a reply without retraining"
+  },
+  "s57": {
+   "title": "Copying a model through its answers"
+  },
+  "s58": {
+   "title": "One direction that means \"refuse\""
+  },
+  "s59": {
+   "title": "Removing a model's \"no\""
+  },
+  "s60": {
+   "title": "How an uncensored model differs from a jailbreak"
   }
  }
 }

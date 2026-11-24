@@ -437,6 +437,399 @@ def _wm():
     return d
 
 
+# ---- Governance & Ethics, batch 2 ---------------------------------------------------------------------------------
+
+def steps_row(d, y, items, w=None, h=74, gap=12, x0=20, total=400):
+    """A row of boxes joined by arrows: items = [(title, [lines], fill)]."""
+    n = len(items)
+    w = w or (total - gap * (n - 1)) / n
+    for i, (t, ls, fill) in enumerate(items):
+        x = x0 + i * (w + gap)
+        d.box(round(x, 1), y, round(w, 1), h, fill=fill)
+        d.text(round(x + w / 2, 1), y + 18, t, 10.5, 800, 'middle')
+        d.lines(round(x + w / 2, 1), y + 36, ls, 10, 400, 'middle', DIM, 13)
+        if i < n - 1:
+            d.arrow(round(x + w + 1, 1), y + h / 2, round(x + w + gap - 1, 1), y + h / 2)
+    return w
+
+
+@illustration('Sf', 'Two kinds of harm, many layers',
+              'AI safety guards against accidents, where the AI makes a harmful mistake, and misuse, where a person '
+              'uses it to cause harm. Layers work at different times: tests before release, training the model to '
+              'refuse, filters around it, and monitoring after launch. Each layer misses some things, so several are used.',
+              'AI safety covers accidents (the AI gets something harmfully wrong) and misuse (someone uses it to do '
+              "harm). No single layer catches everything, so safety teams stack several, before and after release.")
+def _sf():
+    d = D(440, 290)
+    d.head(20, 24, 'Layers before and after release')
+    layers = [('TESTS', ['evals, red', 'teaming'], PALE[SMART]), ('TRAINING', ['taught to', 'refuse harm'], PALE[CREATIVE]),
+              ('FILTERS', ['check what goes', 'in and out'], PALE[SAFE]), ('MONITORING', ['reports,', 'fixes'], PALE[RESP])]
+    steps_row(d, 40, layers)
+    rows = [('ACCIDENT', 'gives a dangerous wrong answer', [False, False, True, True]),
+            ('MISUSE', 'someone asks for help to cause harm', [False, True, True, True])]
+    for r, (k, s, caught) in enumerate(rows):
+        y = 138 + r * 62
+        d.text(20, y, k, 10.5, 800, fill=RED)
+        d.text(98, y, s, 11, 400, fill=DIM)
+        for i, c in enumerate(caught):
+            cx = 20 + i * 103 + 45.5
+            if c and i == caught.index(True):
+                d.tick(cx, y + 24)
+                d.text(cx, y + 48, 'caught', 10, 700, 'middle', RESP_D)
+            elif not c:
+                d.text(cx, y + 28, 'slips past', 10, 700, 'middle', DIM)
+    d.lines(220, 266, ['Each layer misses something; together they catch more.'], 12, 700, 'middle', RESP_D)
+    return d
+
+
+@illustration('Dg', 'Rules for data, from start to finish',
+              'Data governance sets rules at each stage of data\'s life: collect only what is needed with a clear '
+              'purpose, store it securely, give access only to those who need it, use it only for the agreed purpose, '
+              'and delete it on schedule. A school example shows who may see pupil data, and that an AI tool may only '
+              'if it has been approved.',
+              'Data governance means agreed rules for every stage of data\'s life, and named people responsible for '
+              'them. In a school, that decides who can see pupil data, and whether an AI tool may.')
+def _dg():
+    d = D(440, 300)
+    d.head(20, 24, 'The life of pupil data')
+    steps_row(d, 40, [('COLLECT', ['only what\'s', 'needed, why'], PALE[SAFE]), ('STORE', ['secure,', 'in the UK?'], PALE[CREATIVE]),
+                      ('ACCESS', ['only those', 'who need it'], PALE[SMART]), ('USE', ['for the agreed', 'purpose'], PALE[RESP]),
+                      ('DELETE', ['on a', 'schedule'], PALE[FUTURE])], h=70)
+    d.box(20, 128, 400, 140)
+    d.text(32, 148, 'WHO MAY SEE PUPIL DATA?', 10.5, 800)
+    rows = [('Class teacher', 'their own classes', True), ('School office', 'contact details', True),
+            ('Approved AI tool', 'only what its agreement allows', True), ('Unapproved AI app', 'nothing', False)]
+    for i, (who, what, ok) in enumerate(rows):
+        y = 172 + i * 24
+        d.tick(40, y - 4, ok)
+        d.text(56, y, who, 11, 700)
+        d.text(200, y, what, 11, 400, fill=DIM)
+    d.text(220, 288, 'A named person is responsible for each rule.', 11, 700, 'middle', SAFE_D)
+    return d
+
+
+@illustration('Re', 'Same AI, different rules, depending on use',
+              'Under the EU AI Act, the rules depend on what an AI system is used for. In a school: a homework '
+              'chatbot is limited risk, so users must be told it is AI; AI used to mark exams or decide admissions '
+              'is high risk, with checks and human oversight; AI that reads pupils\' emotions in class is banned.',
+              'The EU AI Act sets rules by use, not by technology. Its bans have applied since February 2025 and its '
+              'transparency rules since August 2026; dates for high-risk rules have been under review. The UK has no '
+              'single AI law and relies mainly on existing laws, such as data protection and equality law.')
+def _re():
+    d = D(440, 300)
+    d.head(20, 24, 'EU AI Act: in a school')
+    rows = [('BANNED', 'Reading pupils\' emotions in class', 'not allowed (since Feb 2025)', '#F7C1C1', RED),
+            ('HIGH RISK', 'Marking exams, deciding admissions', 'checks, records, a human overseeing', PALE[SMART], SMART_D),
+            ('LIMITED RISK', 'A homework help chatbot', 'tell users it\'s AI (since Aug 2026)', PALE[SAFE], SAFE_D),
+            ('MINIMAL RISK', 'A spam filter on school email', 'no extra rules', PALE[RESP], RESP_D)]
+    for i, (tier, use, rule, fill, col) in enumerate(rows):
+        y = 40 + i * 58
+        inset = (3 - i) * 0
+        d.box(20, y, 400, 50, fill=fill)
+        d.text(32, y + 20, tier, 10.5, 800, fill=col)
+        d.text(150, y + 20, use, 11.5, 700)
+        d.text(150, y + 38, rule, 10.5, 400, fill=DIM)
+    d.text(220, 288, 'The same model can sit in different rows.', 11.5, 700, 'middle', INK)
+    return d
+
+
+@illustration('Ip', 'Two copyright questions',
+              'Copyright and AI raises two questions. Going in: can a company train on people\'s work? In UK law, '
+              'mining others\' work is clearly allowed only for non-commercial research, so commercial training '
+              'generally needs permission or a licence. Coming out: who owns what the AI makes, and does it copy '
+              'anyone? That depends on how much a person shaped it, and the law is still being settled.',
+              'In the UK, text and data mining of others\' work is clearly allowed only for non-commercial research '
+              '(section 29A of the Copyright, Designs and Patents Act 1988); in 2026 the government dropped a proposed '
+              'broad exception for AI training. Ownership of AI-made work is still being settled.')
+def _ip():
+    d = D(440, 300)
+    d.box(20, 40, 196, 220, fill=PALE[CREATIVE])
+    d.text(118, 62, 'GOING IN', 11, 800, 'middle', CREATIVE_D)
+    d.lines(118, 82, ['Can a company train', 'on your work?'], 12, 700, 'middle')
+    d.box(32, 120, 172, 46)
+    d.tick(48, 143)
+    d.lines(62, 139, ['Non-commercial research:', 'allowed (section 29A)'], 10.5, 400)
+    d.box(32, 176, 172, 70)
+    d.text(48, 196, '?', 15, 800, 'middle', GOV_D)
+    d.lines(62, 194, ['Commercial training:', 'generally needs', 'permission or a licence'], 10.5, 400)
+    d.box(224, 40, 196, 220, fill=PALE[SMART])
+    d.text(322, 62, 'COMING OUT', 11, 800, 'middle', SMART_D)
+    d.lines(322, 82, ['Who owns what', 'the AI makes?'], 12, 700, 'middle')
+    d.box(236, 120, 172, 60)
+    d.lines(322, 140, ['A person shaped it a lot:', 'a stronger claim'], 10.5, 400, 'middle')
+    d.box(236, 188, 172, 58)
+    d.lines(322, 208, ['Does it copy someone\'s', 'work too closely?'], 10.5, 400, 'middle')
+    d.text(220, 284, 'UK law on AI and copyright is still being settled.', 11, 700, 'middle', RED)
+    return d
+
+
+@illustration('Aw', 'Three questions for an "AI-powered" claim',
+              'To test a product\'s AI claim, ask: what exactly does the AI do, could it be done without AI, and '
+              'where is the evidence? In 2024 the US Securities and Exchange Commission fined two investment firms, '
+              '$225,000 and $175,000, for saying they used AI in ways they did not.',
+              'AI washing is overclaiming AI to ride the hype. Regulators have acted: in March 2024 the US Securities '
+              'and Exchange Commission fined two investment firms for AI claims they could not back up.')
+def _aw():
+    d = D(440, 290)
+    d.box(20, 40, 160, 80, fill=YELLOW)
+    d.text(100, 62, 'THE CLAIM', 10.5, 800, 'middle')
+    d.lines(100, 86, ['"Our AI-powered', 'revision planner"'], 12, 700, 'middle')
+    qs = [('What does the AI actually do?', 'Name the task, not the buzzword.'),
+          ('Could it be done without AI?', 'A timer or a rule isn\'t AI.'),
+          ('Where\'s the evidence?', 'Tests, results, a model card.')]
+    for i, (q, a) in enumerate(qs):
+        y = 40 + i * 62
+        d.box(200, y, 220, 54)
+        d.text(212, y + 22, f'{i + 1}. {q}', 11, 800)
+        d.text(212, y + 40, a, 10.5, 400, fill=DIM)
+        d.arrow(182, 80, 198, y + 27)
+    d.box(20, 236, 400, 44, fill=PALE[SAFE])
+    d.lines(32, 254, ['Real case: in 2024 the US SEC fined two investment firms', '($225,000 and $175,000) for AI claims they couldn\'t back up.'], 10.5, 700, gap=15)
+    return d
+
+
+@illustration('Sh', 'Approved tool or shadow AI?',
+              'The same homework question can go two ways. Through an approved school tool, a data agreement '
+              'controls how it is stored, it is not used for training, and the school can help if something goes '
+              'wrong. Through an unapproved app on a personal account, nobody at school knows what happens to the '
+              'data, which may be kept or used for training.',
+              'Shadow AI is using AI tools that haven\'t been approved. The risk is less the tool itself than what '
+              'happens to the data, and that nobody responsible knows it\'s being used.')
+def _sh():
+    d = D(440, 290)
+    d.box(160, 40, 120, 46, fill=YELLOW)
+    d.lines(220, 60, ['A question with', 'pupil names in it'], 11, 700, 'middle')
+    d.arrow(190, 88, 110, 118)
+    d.arrow(250, 88, 330, 118)
+    for x, title, fill, col, rows in ((20, 'APPROVED SCHOOL TOOL', PALE[RESP], RESP_D,
+                                       [(True, 'data agreement in place'), (True, 'not used for training'), (True, 'school can see and help')]),
+                                      (230, 'UNAPPROVED APP', '#FCEBEB', RED,
+                                       [(False, 'personal account'), (False, 'may be kept or trained on'), (False, 'nobody at school knows')])):
+        d.box(x, 120, 190, 130, fill=fill)
+        d.text(x + 95, 142, title, 10.5, 800, 'middle', col)
+        for i, (ok, s) in enumerate(rows):
+            y = 170 + i * 26
+            d.tick(x + 20, y - 4, ok)
+            d.text(x + 36, y, s, 11, 400)
+    d.text(220, 278, 'Same question; very different journey for the data.', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Hp', 'Where the extra value comes from',
+              'Two similar pots: one AI-designed and machine-made, one made by hand. The handmade one is worth more '
+              'because of its story, the maker\'s skill and time, and proof that a person made it, such as a record '
+              'of the making or a verified label like Content Credentials.',
+              'The human premium rests on proof as much as on the object: people pay more when they can trust a '
+              'person made it. Records of the making and verified labels, such as Content Credentials, provide that proof.')
+def _hp():
+    d = D(440, 290)
+    for x, label, price, col in ((40, 'AI-designed, machine-made', '£5', DIM), (250, 'Made by hand, proven', '£40', RESP_D)):
+        d.add(f'<path d="M{x + 50} 50 h50 l10 18 c14 24 8 56 -10 72 h-50 c-18 -16 -24 -48 -10 -72 z" fill="{PALE[SMART]}" stroke="{INK}" stroke-width="1.5"/>')
+        d.text(x + 75, 168, label, 11, 700, 'middle')
+        d.text(x + 75, 194, price, 20, 800, 'middle', col)
+    proofs = ['the maker\'s story', 'skill and hours', 'record of the making', 'verified label']
+    for i, p in enumerate(proofs):
+        x = 20 + i * 102
+        d.box(x, 218, 94, 44, fill=PALE[RESP])
+        d.lines(x + 47, 236, _wrap(p, 13), 10.5, 700, 'middle', INK, 13)
+    d.text(220, 284, 'What adds the £35: trust that a person made it.', 11.5, 700, 'middle', RESP_D)
+    return d
+
+
+@illustration('Rv', 'Two ways into an AI model',
+              'To work out how an AI model works, you can probe it from outside, sending inputs and studying the '
+              'outputs, which works even when the model is closed; or, for an open-weight model, look inside at its '
+              'numbers and test which parts do what, which is the work of interpretability.',
+              'Reverse engineering an AI model means probing it from outside (inputs and outputs) or, when its '
+              'weights are available, studying it from inside. Probing a closed service may break its terms of use.')
+def _rv():
+    d = D(440, 290)
+    d.box(160, 100, 120, 90, fill=PALE[CREATIVE])
+    d.text(220, 130, 'AI MODEL', 11, 800, 'middle', CREATIVE_D)
+    for i in range(4):
+        for j in range(3):
+            d.add(f'<circle cx="{190 + i * 20}" cy="{150 + j * 13}" r="4" fill="{CREATIVE}" stroke="{INK}" stroke-width=".8"/>')
+    d.box(20, 40, 120, 210)
+    d.text(80, 62, 'FROM OUTSIDE', 10.5, 800, 'middle', SMART_D)
+    d.lines(80, 84, ['send inputs,', 'study outputs'], 11, 400, 'middle', DIM)
+    for i, s in enumerate(['input A → ?', 'input B → ?', 'input C → ?']):
+        d.text(80, 128 + i * 22, s, 11, 700, 'middle')
+    d.lines(80, 212, ['works on closed', 'models too'], 10.5, 700, 'middle', SMART_D)
+    d.arrow(142, 145, 158, 145)
+    d.box(300, 40, 120, 210)
+    d.text(360, 62, 'FROM INSIDE', 10.5, 800, 'middle', SAFE_D)
+    d.lines(360, 84, ['open the weights,', 'test the parts'], 11, 400, 'middle', DIM)
+    d.lines(360, 128, ['which numbers', 'light up for', 'which ideas?'], 11, 700, 'middle')
+    d.lines(360, 212, ['needs an open-', 'weight model'], 10.5, 700, 'middle', SAFE_D)
+    d.arrow(298, 145, 282, 145)
+    d.text(220, 278, 'Probing a closed service may break its terms of use.', 11, 700, 'middle', RED)
+    return d
+
+
+@illustration('Mp', 'Finding the ideas inside a model',
+              'Inside a model, each word is a long list of numbers that mixes many ideas together. Researchers train a '
+              'second tool, a sparse autoencoder, to split those numbers into features that each match one idea, such '
+              'as the Golden Gate Bridge, a bug in code or sarcasm. Turning a feature up or down and watching the '
+              'answer change tests whether it really does that job.',
+              'Mechanistic interpretability looks inside a model to find which parts carry which ideas. In 2024, '
+              'Anthropic found millions of such features in a production model using sparse autoencoders, and '
+              'checked them by turning them up and down. It\'s still far from a complete map.')
+def _mp():
+    d = D(440, 300)
+    d.box(20, 40, 120, 150, fill=PALE[CREATIVE])
+    d.text(80, 60, 'INSIDE THE MODEL', 9.5, 800, 'middle', CREATIVE_D)
+    vals = ['0.8', '−1.2', '0.1', '2.4', '−0.3', '1.1', '…']
+    for i, v in enumerate(vals):
+        d.text(80, 82 + i * 15, v, 11, 700, 'middle')
+    d.lines(80, 206, ['numbers that mix', 'many ideas'], 10.5, 400, 'middle', DIM)
+    d.arrow(142, 115, 168, 115)
+    d.box(170, 80, 100, 70, fill=YELLOW)
+    d.lines(220, 104, ['sparse', 'autoencoder', 'splits them'], 10.5, 700, 'middle', INK, 14)
+    d.arrow(272, 115, 296, 115)
+    feats = [('Golden Gate Bridge', SAFE), ('bug in code', SMART), ('sarcasm', CREATIVE), ('…millions more', None)]
+    for i, (f, c) in enumerate(feats):
+        y = 40 + i * 38
+        d.box(298, y, 122, 30, fill=PALE[c] if c else WHITE, dash=not c)
+        d.text(359, y + 20, f, 11, 700, 'middle')
+    d.box(20, 236, 400, 50, fill=WHITE)
+    d.text(32, 256, 'TEST IT', 10.5, 800, fill=RESP_D)
+    d.text(32, 276, 'Turn a feature up or down: does the answer change as expected?', 11, 400)
+    return d
+
+
+@illustration('As', 'Steering a reply without retraining',
+              'Researchers record the model\'s internal numbers for contrasting prompts, such as kind and unkind ones, '
+              'and take the difference: a steering direction. Adding a little of it while the model answers makes the '
+              'reply kinder; adding more pushes harder. The model\'s weights are not changed.',
+              'Activation steering finds a direction inside the model by comparing contrasting prompts, then adds it '
+              'while the model answers. It changes this reply, not the model itself, and too much can make replies '
+              'strange.')
+def _as():
+    d = D(440, 300)
+    d.head(20, 24, 'Find a direction, then add it')
+    d.box(20, 40, 120, 56, fill=PALE[RESP])
+    d.lines(80, 62, ['kind prompts', '→ inner numbers'], 10.5, 700, 'middle')
+    d.box(20, 104, 120, 56, fill='#FCEBEB')
+    d.lines(80, 126, ['unkind prompts', '→ inner numbers'], 10.5, 700, 'middle')
+    d.arrow(142, 100, 168, 100)
+    d.box(170, 72, 100, 56, fill=YELLOW)
+    d.lines(220, 94, ['difference =', 'a "kind" direction'], 10.5, 700, 'middle')
+    d.arrow(272, 100, 296, 100)
+    d.box(298, 40, 122, 120)
+    d.text(359, 60, 'WHILE ANSWERING', 9.5, 800, 'middle')
+    for i, (amt, reply) in enumerate([('add none', '"Revise more."'), ('add a little', '"You\'ve got this!"'), ('add a lot', 'odd, over the top')]):
+        y = 80 + i * 27
+        d.text(308, y, amt, 10, 800)
+        d.text(308, y + 13, reply, 10, 400, 'start', DIM if i < 2 else RED)
+    d.box(20, 186, 400, 46, fill=PALE[SAFE])
+    d.lines(32, 205, ['The model\'s weights aren\'t changed: only this reply is steered.'], 11, 700)
+    d.lines(32, 222, ['The same idea, used on safety directions, can also weaken them.'], 10.5, 400, fill=DIM)
+    d.text(220, 266, 'Researchers use it to test what a direction really does.', 11, 700, 'middle', SAFE_D)
+    return d
+
+
+@illustration('Mx', 'Copying a model through its answers',
+              'An attacker sends a closed model thousands of chosen questions, saves the answers, and trains their own '
+              'model to match them. The copy can agree with the original most of the time without ever seeing its '
+              'files. Defences include limiting how many questions one user can ask, giving less detail in answers, '
+              'and watermarking outputs.',
+              'Model extraction copies a model\'s behaviour, not its files. Researchers showed in 2016 that '
+              'prediction services could be copied this way. It usually breaks the service\'s terms and may break '
+              'the law.')
+def _mx():
+    d = D(440, 290)
+    d.box(160, 40, 120, 90, fill=PALE[SAFE])
+    d.text(220, 64, 'CLOSED MODEL', 10.5, 800, 'middle', SAFE_D)
+    d.add(f'<rect x="206" y="88" width="28" height="20" fill="{WHITE}" stroke="{INK}" stroke-width="1.4"/><path d="M211 88v-6a9 9 0 0 1 18 0v6" fill="none" stroke="{INK}" stroke-width="1.4"/>')
+    d.text(220, 123, 'files locked', 10, 400, 'middle', DIM)
+    d.box(20, 50, 110, 70)
+    d.lines(75, 74, ['10,000', 'chosen', 'questions'], 11, 700, 'middle')
+    d.arrow(132, 75, 158, 75)
+    d.arrow(282, 95, 308, 95)
+    d.box(310, 50, 110, 70)
+    d.lines(365, 78, ['answers', 'saved'], 11, 700, 'middle')
+    d.arrow(365, 122, 365, 148)
+    d.box(290, 150, 130, 60, dash=True)
+    d.lines(355, 172, ['copy trained to', 'match the answers'], 10.5, 700, 'middle')
+    d.box(20, 150, 250, 100, fill=PALE[RESP])
+    d.text(32, 170, 'DEFENCES', 10.5, 800, fill=RESP_D)
+    for i, s in enumerate(['limit questions per user', 'give less detail in answers', 'watermark outputs', 'terms of use, and the law']):
+        d.text(32, 192 + i * 16, '· ' + s, 11, 400)
+    d.text(220, 278, 'It copies behaviour, not files.', 11.5, 700, 'middle', RED)
+    return d
+
+
+@illustration('Rd', 'One direction that means "refuse"',
+              'Researchers compared a model\'s internal numbers for harmful and harmless requests and found one '
+              'direction that separates them. When a request\'s numbers point along that direction, the model '
+              'refuses. This was found across many open chat models in 2024.',
+              'In 2024 researchers found that, across 13 open chat models, refusing harmful requests runs through '
+              'a single direction in the model\'s internal numbers. It shows how much safety can hang on one small '
+              'part of a model.')
+def _rd():
+    d = D(440, 290)
+    d.head(20, 24, 'Inside the model\'s numbers')
+    d.box(20, 40, 400, 190, fill=WHITE)
+    d.add(f'<line x1="60" y1="200" x2="390" y2="70" stroke="{GOV_D}" stroke-width="3" marker-end="url(#ar)"/>')
+    d.text(300, 74, 'refusal direction', 11.5, 800, 'end', GOV_D)
+    import math
+    for (x, y) in [(110, 190), (140, 205), (90, 176), (160, 186), (125, 170)]:
+        d.add(f'<circle cx="{x}" cy="{y}" r="6" fill="{PALE[RESP]}" stroke="{INK}" stroke-width="1"/>')
+    for (x, y) in [(300, 108), (330, 96), (280, 124), (320, 122), (350, 104)]:
+        d.add(f'<circle cx="{x}" cy="{y}" r="6" fill="#F7C1C1" stroke="{INK}" stroke-width="1"/>')
+    d.text(120, 220, 'harmless requests', 10.5, 700, 'middle', RESP_D)
+    d.text(328, 150, 'harmful requests', 10.5, 700, 'middle', RED)
+    d.box(20, 240, 400, 40, fill=YELLOW)
+    d.text(220, 265, 'Points along the direction → "Sorry, I can\'t help with that."', 11, 700, 'middle')
+    return d
+
+
+@illustration('Ab', 'Removing a model\'s "no"',
+              'Abliteration edits an open model\'s weights to remove its refusal direction. The original model '
+              'refuses an unsafe request; the edited copy may answer it. The edit removes the safety behaviour, not '
+              'the law: harmful or illegal content stays illegal.',
+              'Abliteration builds on the refusal direction: removing it from an open model\'s weights stops the '
+              'model refusing. That only removes a safety behaviour; it doesn\'t make harmful or illegal content legal.')
+def _ab():
+    d = D(440, 290)
+    d.box(160, 40, 120, 44, fill=YELLOW)
+    d.lines(220, 60, ['An unsafe', 'request'], 11, 700, 'middle')
+    d.arrow(190, 86, 110, 112)
+    d.arrow(250, 86, 330, 112)
+    for x, title, fill, col, body, out, oc in ((20, 'ORIGINAL MODEL', PALE[RESP], RESP_D, ['refusal direction', 'in place'], '"Sorry, I can\'t help."', RESP_D),
+                                               (230, 'EDITED COPY', '#FCEBEB', RED, ['refusal direction', 'removed'], 'may answer it', RED)):
+        d.box(x, 114, 190, 112, fill=fill)
+        d.text(x + 95, 136, title, 10.5, 800, 'middle', col)
+        d.lines(x + 95, 160, body, 11, 400, 'middle', DIM)
+        d.box(x + 15, 186, 160, 28)
+        d.text(x + 95, 205, out, 11, 800, 'middle', oc)
+    d.box(20, 238, 400, 40, fill=WHITE, dash=True)
+    d.text(220, 263, 'It removes a safety behaviour, not the law: illegal stays illegal.', 11, 700, 'middle', RED)
+    return d
+
+
+@illustration('Uc', 'How an uncensored model differs from a jailbreak',
+              'A jailbreak tricks an unchanged model with a cleverly worded prompt, and the company can patch it. An '
+              'uncensored model is a downloaded copy that someone has altered, by retraining or abliteration, so the '
+              'change is built into the file and nobody can patch it centrally. Illegal content is illegal from either.',
+              'An uncensored model has its refusals removed from the file itself, unlike a jailbreak, which tricks an '
+              'unchanged model. Because it runs on someone\'s own computer, nobody can patch it. Illegal content is '
+              'still illegal, whichever tool makes it.')
+def _uc():
+    d = D(440, 290)
+    for x, title, fill, col, rows in ((20, 'JAILBREAK', PALE[SMART], SMART_D,
+                                       ['model unchanged', 'a tricky prompt fools it', 'company can patch it']),
+                                      (230, 'UNCENSORED MODEL', '#FCEBEB', RED,
+                                       ['the file itself altered', 'by retraining or abliteration', 'runs on someone\'s own', 'computer: no patch'])):
+        d.box(x, 40, 190, 190, fill=fill)
+        d.text(x + 95, 64, title, 11, 800, 'middle', col)
+        for i, s in enumerate(rows):
+            d.text(x + 18, 96 + i * 26, '· ' + s, 11, 400)
+    d.box(20, 242, 400, 38, fill=YELLOW)
+    d.text(220, 266, 'Either way, illegal content is still illegal.', 12, 800, 'middle')
+    return d
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     index = {}
