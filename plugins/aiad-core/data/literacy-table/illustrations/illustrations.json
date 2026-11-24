@@ -246,5 +246,65 @@
  "3d": {
   "title": "Set the goals, let it propose shapes",
   "caption": "In 3D design, AI-driven generative design proposes shapes that meet set goals and limits. People set the goals and must still check and test the result, because a design that passes on screen can fail in use."
+ },
+ "Rp": {
+  "title": "A bot that copies your clicks",
+  "caption": "RPA bots follow the same clicks and typing every time. They are fast and tireless on fixed steps, but brittle: a changed screen or an unusual email breaks them."
+ },
+ "Ia": {
+  "title": "Bots plus AI that can decide",
+  "caption": "Intelligent automation lets bots handle work that needs judgement, like sorting messages, by adding AI. Low-confidence cases should go to a person. Made-up numbers."
+ },
+ "Hy": {
+  "title": "Many tools, one process",
+  "caption": "Hyperautomation, a term Gartner popularised in 2019, means combining many automation and AI tools across whole processes. Not every step should be automated: people keep the judgement calls."
+ },
+ "Tg": {
+  "title": "What starts an automation",
+  "caption": "Trigger, condition, action: the shape of almost every automation. A badly chosen trigger can fire too often, or never, so test it."
+ },
+ "En": {
+  "title": "Act the moment it happens",
+  "caption": "Event-driven automations react as things happen instead of checking on a timer. That is faster and wastes fewer checks, but the system sending the events has to be reliable."
+ },
+ "Wh": {
+  "title": "A message sent the moment something happens",
+  "caption": "A webhook is one app calling another's web address the moment something happens, with the details attached. Because anyone could send to that address, the receiver should check a signature."
+ },
+ "Lc": {
+  "title": "Build it from blocks",
+  "caption": "Low-code and no-code tools let non-programmers build apps and automations quickly. The questions don't go away: whose data does it touch, who maintains it, and what happens when it breaks?"
+ },
+ "Id": {
+  "title": "From a pile of paper to checked data",
+  "caption": "IDP combines OCR, classification and extraction. The confidence score decides what flows through and what a person checks. Made-up example."
+ },
+ "Oc": {
+  "title": "From pixels to letters",
+  "caption": "OCR turns pictures of text into text a computer can search and edit. It is very accurate on clear print, less so on handwriting or poor photos, so important numbers are worth a check."
+ },
+ "Mi": {
+  "title": "How the work really flows",
+  "caption": "Process mining uses event logs, which case, which step, when, to map how work really flows, including loops and waits nobody planned. Made-up numbers."
+ },
+ "Be": {
+  "title": "Rules people write, applied the same way every time",
+  "caption": "Rules engines are predictable and easy to explain, unlike models that learn from data. But they only know the cases someone thought of, so unusual cases need a person."
+ },
+ "St": {
+  "title": "Straight through, or out to a person",
+  "caption": "Straight-through processing removes hand-offs, so routine jobs finish in seconds. The checks along the way, and a clear route out for exceptions, are what make it safe. Made-up numbers."
+ },
+ "Dw": {
+  "title": "What is inside a \"digital worker\"",
+  "caption": "\"Digital worker\" is a marketing name for a bundle of bots, AI and rules. It can save time, but it is not a colleague: a person owns its work, its access and its mistakes."
+ },
+ "Va": {
+  "title": "From \"Hey…\" to a reminder",
+  "caption": "Virtual assistants turn speech into actions on your phone or speaker. A chatbot is mainly for conversation; a copilot sits inside one app. All of them can mishear, so check important ones."
+ },
+ "Cp": {
+  "title": "It suggests; you decide",
+  "caption": "Copilots speed up drafting by suggesting as you work. In one controlled study (Peng and others, 2023) developers finished a coding task 55.8% faster. Checking what you accept is still your job."
  }
 }

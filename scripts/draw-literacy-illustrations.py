@@ -36,6 +36,9 @@ Checked against (24 November 2026):
   and Wales from 6 February 2026 (Data (Use and Access) Act 2025, s138; SI 2026/31). Report Remove: Childline and IWF.
 - Vibe coding: coined by Andrej Karpathy, February 2025. Veracode 2025 GenAI Code Security Report: 80 tasks, 100+
   models, flaws in 45% of samples.
+- Automation: hyperautomation as named by Gartner, top strategic technology trends for 2020 (October 2019); process
+  mining from event logs (case, activity, timestamp): van der Aalst, Process Mining (2016); copilots: Peng et al. 2023
+  (arXiv 2302.06590), a set coding task 55.8% faster with GitHub Copilot.
 """
 import json
 import os
@@ -1925,6 +1928,394 @@ def _3d():
     steps_row(d, 200, [('ENGINEER CHOOSES', ['and checks it'], WHITE), ('TEST IT', ['on screen, then for real'], PALE[SMART]),
                        ('PRINT OR MAKE', ['ready to use'], PALE[RESP])], h=54)
     d.text(220, 276, 'People set the goals and test the result.', 11, 700, 'middle', SAFE_D)
+    return d
+
+
+# ---- Automation ---------------------------------------------------------------------------------------------------
+
+@illustration('Rp', 'A bot that copies your clicks',
+              'Robotic process automation records the fixed steps a person does on screen, such as open the email, '
+              'copy the name, paste it into the spreadsheet, next email, and repeats them exactly, hundreds of '
+              'times. It does not understand the screen: if a button moves or a form changes, the bot stops.',
+              'RPA bots follow the same clicks and typing every time. They are fast and tireless on fixed steps, '
+              'but brittle: a changed screen or an unusual email breaks them.')
+def _rp():
+    d = D(440, 290)
+    d.head(20, 24, 'The steps the bot repeats')
+    steps = ['open next email', 'copy the name', 'paste into sheet', 'copy the date', 'paste, save']
+    for i, k in enumerate(steps):
+        y = 38 + i * 30
+        d.box(20, y, 180, 24, fill=PALE[SAFE])
+        d.text(32, y + 16, f'{i + 1}  {k}', 11, 700)
+    d.arrow(208, 170, 208, 50, dash=True, curve=24)
+    d.text(236, 116, '× 300', 14, 800, 'start', SAFE_D)
+    d.box(290, 40, 130, 70, fill=PALE[RESP])
+    d.lines(355, 64, ['300 emails', 'in 10 minutes'], 11.5, 800, 'middle', INK, 16)
+    d.box(290, 122, 130, 66, fill=PALE[SMART])
+    d.lines(355, 142, ['the form changes:', 'button moved', 'bot stops'], 10.5, 700, 'middle', INK, 14)
+    d.box(20, 204, 400, 74, fill=YELLOW)
+    d.lines(220, 226, ['It copies clicks; it doesn\'t understand them.', 'Great for fixed, repetitive steps.',
+                       'Someone has to fix it when the screen changes.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Ia', 'Bots plus AI that can decide',
+              'Intelligent automation adds AI to bots. Emails arrive in a school office inbox. An AI model reads each '
+              'one and picks its topic, with a confidence score: absence, trip, or complaint. A bot then files it in '
+              'the right place. Anything the AI is unsure about goes to a person.',
+              'Intelligent automation lets bots handle work that needs judgement, like sorting messages, by adding '
+              'AI. Low-confidence cases should go to a person. Made-up numbers.')
+def _ia():
+    d = D(440, 290)
+    d.box(20, 40, 100, 120, fill=WHITE)
+    d.text(70, 60, 'INBOX', 10, 800, 'middle', DIM)
+    for i in range(4):
+        d.add(f'<rect x="34" y="{72 + i * 20}" width="72" height="14" fill="{PALE[SAFE]}" stroke="{INK}" stroke-width=".8"/>')
+    d.arrow(122, 100, 146, 100)
+    d.box(148, 40, 120, 120, fill=PALE[CREATIVE])
+    d.text(208, 60, 'AI READS IT', 10, 800, 'middle', CREATIVE_D)
+    for i, (k, v) in enumerate([('absence', '96%'), ('trip', '91%'), ('complaint', '88%'), ('unsure', '54%')]):
+        d.text(160, 84 + i * 20, k, 10.5, 700)
+        d.text(256, 84 + i * 20, v, 10.5, 800, 'end', RED if k == 'unsure' else INK)
+    d.arrow(270, 100, 294, 100)
+    d.box(296, 40, 124, 74, fill=PALE[SAFE])
+    d.text(358, 60, 'BOT FILES IT', 10, 800, 'middle', SAFE_D)
+    d.lines(358, 80, ['register, trips folder,', 'head of year'], 10, 700, 'middle', INK, 14)
+    d.box(296, 122, 124, 38, fill=YELLOW)
+    d.text(358, 146, 'unsure → a person', 11, 800, 'middle')
+    d.box(20, 180, 400, 98, fill=WHITE, dash=True)
+    d.text(32, 200, 'RPA ON ITS OWN', 10, 800, fill=DIM)
+    d.text(32, 218, 'follows fixed rules: can\'t tell what an email is about', 11, 700)
+    d.text(32, 244, 'WITH AI ADDED', 10, 800, fill=CREATIVE_D)
+    d.text(32, 262, 'reads, sorts and picks between options, with a confidence score', 11, 700)
+    return d
+
+
+@illustration('Hy', 'Many tools, one process',
+              'Hyperautomation looks at a whole process, such as a school trip, and hands each step to the best tool: '
+              'a form and a trigger for sign-up, document AI for consent forms, a rules engine for payment '
+              'reminders, a bot to update the register. People keep the decisions that need judgement.',
+              'Hyperautomation, a term Gartner popularised in 2019, means combining many automation and AI tools '
+              'across whole processes. Not every step should be automated: people keep the judgement calls.')
+def _hy():
+    d = D(440, 290)
+    d.head(20, 24, 'A school trip, step by step')
+    steps = [('sign-up form', 'trigger', SAFE), ('consent forms read', 'document AI', CREATIVE),
+             ('payment reminders', 'rules engine', SMART), ('register updated', 'bot (RPA)', SAFE),
+             ('who can go if full?', 'a person decides', RESP)]
+    for i, (k, tool, c) in enumerate(steps):
+        y = 38 + i * 36
+        d.box(20, y, 210, 30)
+        d.text(32, y + 20, k, 11.5, 700)
+        d.arrow(232, y + 15, 256, y + 15)
+        d.box(258, y, 162, 30, fill=PALE[c] if c != RESP else RESP)
+        d.text(339, y + 20, tool, 11, 800, 'middle')
+    d.box(20, 228, 400, 50, fill=YELLOW)
+    d.lines(220, 248, ['Each step gets the right tool, not one tool for everything.', 'People keep the judgement calls.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Tg', 'What starts an automation',
+              'Every automation starts with a trigger, then may check a condition, then does its actions. Triggers '
+              'come in three kinds: something happens (a new email arrives), someone does something (a form is '
+              'submitted), or a time arrives (every Monday at 8am).',
+              'Trigger, condition, action: the shape of almost every automation. A badly chosen trigger can fire too '
+              'often, or never, so test it.')
+def _tg():
+    d = D(440, 290)
+    d.text(20, 30, 'THREE KINDS OF TRIGGER', 10.5, 800, fill=DIM)
+    trig = [('SOMETHING HAPPENS', 'a new email arrives', SAFE), ('SOMEONE ACTS', 'a form is submitted', CREATIVE),
+            ('A TIME ARRIVES', 'every Monday, 8am', SMART)]
+    for i, (k, v, c) in enumerate(trig):
+        x = 20 + i * 136
+        d.box(x, 40, 128, 60, fill=PALE[c])
+        d.text(x + 64, 62, k, 9.5, 800, 'middle')
+        d.text(x + 64, 84, v, 10.5, 700, 'middle')
+    d.text(20, 132, 'THEN, FOR EXAMPLE', 10.5, 800, fill=DIM)
+    steps_row(d, 142, [('TRIGGER', ['form submitted'], YELLOW), ('CONDITION', ['is it Year 7?'], WHITE),
+                       ('ACTION', ['email the tutor,', 'add a row'], PALE[RESP])], h=66)
+    d.box(20, 224, 400, 54, fill=WHITE, dash=True)
+    d.lines(220, 246, ['A trigger that fires too often floods inboxes;', 'one that never fires fails silently. Test it.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('En', 'Act the moment it happens',
+              'A booking is made at 9:02. An automation that checks on a schedule, every 15 minutes, only spots it at '
+              '9:15 and wastes checks when nothing has happened. An event-driven automation is told straight away, '
+              'usually by a webhook, and acts at 9:02.',
+              'Event-driven automations react as things happen instead of checking on a timer. That is faster and '
+              'wastes fewer checks, but the system sending the events has to be reliable.')
+def _en():
+    d = D(440, 290)
+    d.head(20, 24, 'A booking is made at 9:02')
+    for row, (k, c) in enumerate([('CHECKS EVERY 15 MINUTES', SMART), ('EVENT-DRIVEN', RESP)]):
+        y = 50 + row * 90
+        d.text(20, y, k, 10.5, 800, fill=SMART_D if row == 0 else RESP_D)
+        d.add(f'<line x1="40" y1="{y + 36}" x2="400" y2="{y + 36}" stroke="{INK}" stroke-width="1.4"/>')
+        for t, lab in ((0, '9:00'), (15, '9:15'), (30, '9:30')):
+            x = 40 + t * 12
+            d.add(f'<line x1="{x}" y1="{y + 31}" x2="{x}" y2="{y + 41}" stroke="{INK}" stroke-width="1.4"/>')
+            d.text(x, y + 56, lab, 9.5, 400, 'middle', DIM)
+        bx = 40 + 2 * 12
+        d.add(f'<circle cx="{bx}" cy="{y + 36}" r="6" fill="{YELLOW}" stroke="{INK}" stroke-width="1.3"/>')
+        if row == 0:
+            for t in (0, 15, 30):
+                d.add(f'<circle cx="{40 + t * 12}" cy="{y + 20}" r="5" fill="{PALE[SMART]}" stroke="{INK}" stroke-width="1"/>')
+            d.arrow(bx + 6, y + 20, 40 + 15 * 12 - 8, y + 20, stroke=SMART_D, dash=True)
+            d.text(226, y + 12, 'spotted at 9:15', 10.5, 800, 'start', SMART_D)
+        else:
+            d.add(f'<circle cx="{bx}" cy="{y + 18}" r="7" fill="{RESP}" stroke="{INK}" stroke-width="1"/>')
+            d.text(bx + 14, y + 22, 'acts at 9:02: told the moment it happens', 10.5, 800, 'start', RESP_D)
+    d.box(20, 236, 400, 44, fill=YELLOW)
+    d.lines(220, 254, ['Faster, with no wasted checks.', 'Usually set up with triggers and webhooks.'], 11, 700, 'middle', INK, 15)
+    return d
+
+
+@illustration('Wh', 'A message sent the moment something happens',
+              'When a parent pays for a trip, the payment app sends a short message to a web address the school\'s '
+              'system gave it: which event, which pupil, how much. The school system checks the message is genuine, '
+              'replies "got it", and updates the trip list. No one had to ask.',
+              'A webhook is one app calling another\'s web address the moment something happens, with the details '
+              'attached. Because anyone could send to that address, the receiver should check a signature.')
+def _wh():
+    d = D(440, 290)
+    d.box(20, 40, 120, 70, fill=PALE[SAFE])
+    d.lines(80, 66, ['PAYMENT APP', 'a parent pays'], 10.5, 800, 'middle', INK, 18)
+    d.box(300, 40, 120, 70, fill=PALE[RESP])
+    d.lines(360, 66, ['SCHOOL SYSTEM', 'trip list updated'], 10.5, 800, 'middle', INK, 18)
+    d.arrow(142, 62, 298, 62)
+    d.text(220, 54, 'sends a message, at once', 10, 700, 'middle', DIM)
+    d.arrow(298, 92, 142, 92, dash=True)
+    d.text(220, 106, 'replies "got it" (200 OK)', 10, 700, 'middle', DIM)
+    d.box(60, 126, 320, 92, fill=WHITE)
+    d.text(72, 144, 'THE MESSAGE, SENT TO school.example/hooks/pay', 9, 800, fill=DIM)
+    d.lines(72, 166, ['{ "event": "payment.paid",', '  "pupil": "Y8-0412", "amount": 12.50,', '  "signature": "a91f…" }'], 11, 700, 'start', INK, 16)
+    d.box(20, 230, 400, 48, fill=YELLOW)
+    d.lines(220, 249, ['Anyone could send to that address, so the school system', 'checks the signature before trusting it.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Lc', 'Build it from blocks',
+              'A low-code or no-code tool lets you build an automation by dragging blocks: when a form is '
+              'submitted, if the pupil is in Year 7, send an email to their tutor and add a row to a sheet. It is '
+              'quick and needs no programming, but someone still has to own it, keep data safe and fix it.',
+              'Low-code and no-code tools let non-programmers build apps and automations quickly. The questions '
+              'don\'t go away: whose data does it touch, who maintains it, and what happens when it breaks?')
+def _lc():
+    d = D(440, 290)
+    blocks = [('WHEN', 'a form is submitted', SAFE), ('IF', 'year group = 7', SMART),
+              ('THEN', 'email the tutor', RESP), ('AND', 'add a row to the sheet', RESP)]
+    for i, (k, v, c) in enumerate(blocks):
+        y = 36 + i * 40
+        x = 20 + (24 if i >= 2 else 0)
+        d.add(f'<rect x="{x}" y="{y}" width="230" height="32" rx="6" fill="{PALE[c]}" stroke="{INK}" stroke-width="1.5"/>')
+        d.text(x + 12, y + 21, k, 10.5, 800)
+        d.text(x + 62, y + 21, v, 11.5, 700)
+    d.text(20, 210, 'drag, drop, done: no code', 10.5, 700, fill=DIM)
+    d.box(290, 36, 130, 72, fill=PALE[RESP])
+    d.text(355, 56, 'GOOD FOR', 10, 800, 'middle', RESP_D)
+    d.lines(355, 76, ['quick tools', 'made by those', 'who use them'], 10, 700, 'middle', INK, 13)
+    d.box(290, 116, 130, 86, fill=PALE[SMART])
+    d.text(355, 136, 'STILL ASK', 10, 800, 'middle', SMART_D)
+    d.lines(355, 156, ['whose data?', 'who fixes it?', 'what if it breaks?'], 10, 700, 'middle', INK, 14)
+    d.box(20, 228, 400, 50, fill=YELLOW)
+    d.lines(220, 248, ['Fewer lines of code, same responsibilities:', 'someone owns it, protects the data and fixes it.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Id', 'From a pile of paper to checked data',
+              'Intelligent document processing takes in scanned documents, reads the text, works out what each one '
+              'is (a consent form, an invoice, a letter), pulls out the key details with a confidence score for each, '
+              'checks them against rules, and sends anything uncertain to a person.',
+              'IDP combines OCR, classification and extraction. The confidence score decides what flows through and '
+              'what a person checks. Made-up example.')
+def _id():
+    d = D(440, 290)
+    steps_row(d, 36, [('READ', ['scan + OCR'], PALE[SAFE]), ('SORT', ['consent form?', 'invoice? letter?'], PALE[CREATIVE]),
+                      ('EXTRACT', ['the key details'], PALE[SMART])], h=62)
+    d.box(20, 112, 400, 120, fill=WHITE)
+    d.text(32, 132, 'CONSENT FORM, DETAILS FOUND', 10, 800, fill=DIM)
+    rows = [('Pupil', 'Amira Khan', 98), ('Date of trip', '12 March', 95), ('Allergies', 'nuts (?)', 61), ('Signed', 'yes', 97)]
+    for i, (k, v, c) in enumerate(rows):
+        y = 152 + i * 20
+        low = c < 80
+        d.text(32, y, k, 11, 700, fill=DIM)
+        d.text(150, y, v, 11.5, 800, fill=RED if low else INK)
+        d.text(300, y, f'{c}% sure', 10.5, 800, 'start', RED if low else RESP_D)
+    d.box(20, 242, 400, 38, fill=YELLOW)
+    d.text(220, 266, 'Low confidence (allergies, 61%) → a person checks it', 11.5, 800, 'middle')
+    return d
+
+
+@illustration('Oc', 'From pixels to letters',
+              'OCR finds the lines of text in an image, splits them into characters and recognises each one, with a '
+              'confidence score. Similar shapes cause mistakes: 0 and O, 1 and l, rn and m. Clean print is read '
+              'almost perfectly; handwriting, blur and tilted photos are much harder.',
+              'OCR turns pictures of text into text a computer can search and edit. It is very accurate on clear '
+              'print, less so on handwriting or poor photos, so important numbers are worth a check.')
+def _oc():
+    d = D(440, 290)
+    d.box(20, 36, 180, 70, fill='#efece4')
+    d.add(f'<g transform="rotate(-3 110 71)"><text x="110" y="80" font-family="Georgia,serif" font-size="24" text-anchor="middle" fill="#3a3633">Room 10l</text></g>')
+    d.text(110, 124, 'a photo of a door sign', 10, 400, 'middle', DIM)
+    d.arrow(202, 71, 234, 71)
+    d.box(236, 36, 184, 70, fill=PALE[SAFE])
+    d.text(248, 56, 'READ AS', 10, 800, fill=SAFE_D)
+    d.text(248, 86, '"Room 10l"', 18, 800)
+    d.text(20, 152, 'LOOK-ALIKES THAT TRIP IT UP', 10.5, 800, fill=RED)
+    for i, (a, b) in enumerate([('0', 'O'), ('1', 'l'), ('rn', 'm'), ('5', 'S')]):
+        x = 20 + i * 102
+        d.box(x, 162, 94, 44)
+        d.text(x + 47, 191, f'{a}  ·  {b}', 16, 800, 'middle')
+    d.box(20, 220, 400, 58, fill=YELLOW)
+    d.lines(220, 242, ['Was it "101" or "10l"? Clear print: very accurate.', 'Handwriting, blur and tilt: check important numbers.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Mi', 'How the work really flows',
+              'Process mining reads the records systems already keep, each a case, a step and a time, and draws how '
+              'the work really happens. For 400 trip requests it shows most go straight through in a day, but some '
+              'wait 3 days for a signature: the bottleneck worth fixing or automating.',
+              'Process mining uses event logs, which case, which step, when, to map how work really flows, '
+              'including loops and waits nobody planned. Made-up numbers.')
+def _mi():
+    d = D(440, 290)
+    d.box(20, 36, 150, 112, fill=WHITE)
+    d.text(30, 54, 'THE RECORDS', 9.5, 800, fill=DIM)
+    for i, row in enumerate([('#17', 'request', 'Mon 9:10'), ('#17', 'signed', 'Thu 14:02'), ('#18', 'request', 'Mon 9:30'), ('#18', 'signed', 'Mon 11:15')]):
+        y = 74 + i * 18
+        d.text(30, y, row[0], 9.5, 800)
+        d.text(60, y, row[1], 9.5, 700)
+        d.text(162, y, row[2], 9.5, 400, 'end', DIM)
+    d.arrow(172, 59, 194, 59)
+    for k, x, y in [('request', 196, 44), ('approve', 320, 44), ('sign', 320, 112), ('book', 196, 112)]:
+        d.box(x, y, 100, 30, fill=PALE[SMART] if k == 'sign' else PALE[SAFE])
+        d.text(x + 50, y + 20, k, 11, 800, 'middle')
+    d.arrow(298, 59, 318, 59)
+    d.text(308, 40, '400', 9.5, 800, 'middle')
+    d.arrow(370, 76, 370, 110)
+    d.text(376, 98, '400', 9.5, 800)
+    d.arrow(318, 127, 298, 127, stroke=RED, sw=2.5)
+    d.text(308, 158, 'waits 3 days', 10.5, 800, 'middle', RED)
+    d.box(20, 166, 400, 112, fill=YELLOW)
+    d.text(32, 188, 'WHAT IT SHOWS', 10, 800)
+    d.lines(32, 210, ['Most requests flow through in under a day.', 'Waiting for a signature adds 3 days: the bottleneck.',
+                      'Fix: e-signatures, or a reminder after 1 day.'], 11, 700, 'start', INK, 20)
+    return d
+
+
+@illustration('Be', 'Rules people write, applied the same way every time',
+              'A rules engine checks each case against rules people wrote, in order. A book 3 days late: no action. '
+              '9 days late: a reminder. 25 days late: a letter home. The same case always gets the same decision, '
+              'and anyone can read why. To change the decision, people change the rule.',
+              'Rules engines are predictable and easy to explain, unlike models that learn from data. But they only '
+              'know the cases someone thought of, so unusual cases need a person.')
+def _be():
+    d = D(440, 290)
+    d.box(20, 36, 400, 102, fill=PALE[SAFE])
+    d.text(32, 56, 'THE RULES, WRITTEN BY STAFF', 10, 800, fill=SAFE_D)
+    for i, (c, a) in enumerate([('if 21 or more days late', 'letter home'), ('if 7 or more days late', 'send a reminder'), ('otherwise', 'no action')]):
+        y = 78 + i * 22
+        d.text(32, y, c, 11.5, 700)
+        d.text(300, y, '→ ' + a, 11.5, 800)
+    cases = [('3 days late', 'no action', WHITE), ('9 days late', 'reminder', PALE[SMART]), ('25 days late', 'letter home', '#F7C1C1')]
+    for i, (k, v, f) in enumerate(cases):
+        x = 20 + i * 136
+        d.box(x, 152, 128, 60, fill=f)
+        d.text(x + 64, 174, k, 11, 700, 'middle', DIM)
+        d.text(x + 64, 196, v, 12, 800, 'middle')
+    d.box(20, 224, 400, 54, fill=YELLOW)
+    d.lines(220, 246, ['Same case, same decision, and you can see why.', 'It only knows cases someone thought of.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('St', 'Straight through, or out to a person',
+              'Straight-through processing lets a computer handle a whole job, such as a lunch-money top-up, with no '
+              'person in the middle: received, checked, paid in, confirmed. Cases that fail a check, such as a name '
+              'that doesn\'t match, drop out to a person. The share that goes straight through is the measure.',
+              'Straight-through processing removes hand-offs, so routine jobs finish in seconds. The checks along '
+              'the way, and a clear route out for exceptions, are what make it safe. Made-up numbers.')
+def _st():
+    d = D(440, 290)
+    steps_row(d, 40, [('RECEIVED', ['£20 top-up'], PALE[SAFE]), ('CHECKED', ['name, account,', 'amount'], PALE[CREATIVE]),
+                      ('PAID IN', ['balance', 'updated'], PALE[RESP]), ('CONFIRMED', ['email sent'], PALE[RESP])], h=64, gap=10)
+    d.arrow(160, 106, 160, 140, stroke=RED)
+    d.box(90, 142, 140, 40, fill='#F7C1C1')
+    d.lines(160, 158, ['check fails:', 'to a person'], 10.5, 800, 'middle', INK, 14)
+    d.text(260, 124, 'no one in the middle', 10.5, 800, 'start', RESP_D)
+    d.head(20, 208, '1,000 top-ups')
+    d.bar(20, 218, 368, 24, RESP)
+    d.bar(388, 218, 32, 24, '#F7C1C1')
+    d.text(30, 235, '920 straight through, in seconds', 11, 800)
+    d.text(404, 260, '80 to a person', 10, 800, 'end', RED)
+    return d
+
+
+@illustration('Dw', 'What is inside a "digital worker"',
+              'A seller may present a "digital worker" with a name and a face, as if it were a member of staff. '
+              'Inside it is software: bots that follow set steps, an AI model, some rules and the logins it has been '
+              'given. It cannot take responsibility, so a named person must own what it does.',
+              '"Digital worker" is a marketing name for a bundle of bots, AI and rules. It can save time, but it is '
+              'not a colleague: a person owns its work, its access and its mistakes.')
+def _dw():
+    d = D(440, 290)
+    d.box(20, 36, 170, 170, fill=PALE[CREATIVE])
+    d.text(105, 56, 'THE SALES PAGE', 10, 800, 'middle', CREATIVE_D)
+    d.add(f'<circle cx="105" cy="100" r="26" fill="{YELLOW}" stroke="{INK}" stroke-width="1.5"/><circle cx="96" cy="96" r="3" fill="{INK}"/><circle cx="114" cy="96" r="3" fill="{INK}"/><path d="M94 108 q11 9 22 0" fill="none" stroke="{INK}" stroke-width="2"/>')
+    d.lines(105, 148, ['"Meet Ava, your', 'new team member"'], 11.5, 800, 'middle', INK, 16)
+    d.arrow(192, 120, 222, 120)
+    d.box(224, 36, 196, 170)
+    d.text(322, 56, 'WHAT IS INSIDE', 10, 800, 'middle')
+    for i, (k, c) in enumerate([('bots: set steps', SAFE), ('an AI model', CREATIVE), ('rules', SMART), ('logins it was given', FUTURE)]):
+        y = 68 + i * 33
+        d.box(238, y, 168, 26, fill=PALE[c])
+        d.text(322, y + 18, k, 11, 700, 'middle')
+    d.box(20, 220, 400, 58, fill=YELLOW)
+    d.lines(220, 242, ['Software, not staff: it can\'t take responsibility.', 'A named person owns its work, access and mistakes.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Va', 'From "Hey…" to a reminder',
+              'A virtual assistant listens for its wake word on the device, then sends what you say to be turned '
+              'into text. It works out the intent (set a reminder) and the details (6pm, PE kit), carries out the '
+              'action through an app, and answers out loud.',
+              'Virtual assistants turn speech into actions on your phone or speaker. A chatbot is mainly for '
+              'conversation; a copilot sits inside one app. All of them can mishear, so check important ones.')
+def _va():
+    d = D(440, 290)
+    d.box(20, 36, 400, 36, fill=YELLOW)
+    d.text(220, 59, '"Hey, remind me to pack my PE kit at 6pm"', 12, 800, 'middle')
+    steps_row(d, 84, [('WAKE WORD', ['heard on', 'the device'], PALE[SAFE]), ('SPEECH → TEXT', ['what you said'], PALE[CREATIVE]),
+                      ('INTENT', ['reminder, 6pm,', 'PE kit'], PALE[SMART]), ('ACT + REPLY', ['"Done. 6pm."'], PALE[RESP])], h=66, gap=10)
+    d.box(20, 166, 400, 112, fill=WHITE)
+    for i, (k, v) in enumerate([('Virtual assistant', 'does tasks for you: reminders, music, searches'),
+                                ('Chatbot', 'mainly conversation'), ('Copilot', 'built into one app, suggests as you work')]):
+        y = 190 + i * 30
+        d.text(32, y, k, 11.5, 800, fill=SMART_D if i == 0 else INK)
+        d.text(156, y, v, 11, 400, fill=DIM)
+    return d
+
+
+@illustration('Cp', 'It suggests; you decide',
+              'A copilot sits inside the app you are using. As you write an email or code, it suggests the next part. '
+              'You accept it, edit it or reject it. In one 2023 experiment, programmers with GitHub Copilot finished '
+              'a set task 55.8% faster; you are still responsible for what you keep.',
+              'Copilots speed up drafting by suggesting as you work. In one controlled study (Peng and others, 2023) '
+              'developers finished a coding task 55.8% faster. Checking what you accept is still your job.')
+def _cp():
+    d = D(440, 290)
+    d.box(20, 36, 400, 96, fill=WHITE)
+    d.text(32, 56, 'DRAFTING AN EMAIL', 10, 800, fill=DIM)
+    d.text(32, 80, 'Dear parents, the Year 8 trip to the', 12, 700)
+    d.text(32, 102, 'Science Museum is on Friday 12 March.', 12, 700, fill=CREATIVE_D, italic=True)
+    d.text(32, 122, '↑ the copilot\'s suggestion, until you choose', 9.5, 400, fill=DIM)
+    for i, (k, c) in enumerate([('accept', RESP), ('edit', SAFE), ('reject', SMART)]):
+        x = 60 + i * 112
+        d.box(x, 146, 96, 34, fill=PALE[c])
+        d.text(x + 48, 168, k, 12, 800, 'middle')
+    d.box(20, 196, 400, 82, fill=YELLOW)
+    d.lines(220, 218, ['One 2023 experiment: programmers with a copilot', 'finished a set task 55.8% faster.',
+                       'You are still responsible for what you keep.'], 11, 700, 'middle', INK, 17)
     return d
 
 

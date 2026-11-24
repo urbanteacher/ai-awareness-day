@@ -288,6 +288,51 @@
   ],
   "3d": [
    "s98"
+  ],
+  "Rp": [
+   "s99"
+  ],
+  "Ia": [
+   "s100"
+  ],
+  "Hy": [
+   "s101"
+  ],
+  "Tg": [
+   "s102"
+  ],
+  "En": [
+   "s103"
+  ],
+  "Wh": [
+   "s104"
+  ],
+  "Lc": [
+   "s105"
+  ],
+  "Id": [
+   "s106"
+  ],
+  "Oc": [
+   "s107"
+  ],
+  "Mi": [
+   "s108"
+  ],
+  "Be": [
+   "s109"
+  ],
+  "St": [
+   "s110"
+  ],
+  "Dw": [
+   "s111"
+  ],
+  "Va": [
+   "s112"
+  ],
+  "Cp": [
+   "s113"
   ]
  },
  "stills": {
@@ -584,6 +629,51 @@
   },
   "s98": {
    "title": "Set the goals, let it propose shapes"
+  },
+  "s99": {
+   "title": "A bot that copies your clicks"
+  },
+  "s100": {
+   "title": "Bots plus AI that can decide"
+  },
+  "s101": {
+   "title": "Many tools, one process"
+  },
+  "s102": {
+   "title": "What starts an automation"
+  },
+  "s103": {
+   "title": "Act the moment it happens"
+  },
+  "s104": {
+   "title": "A message sent the moment something happens"
+  },
+  "s105": {
+   "title": "Build it from blocks"
+  },
+  "s106": {
+   "title": "From a pile of paper to checked data"
+  },
+  "s107": {
+   "title": "From pixels to letters"
+  },
+  "s108": {
+   "title": "How the work really flows"
+  },
+  "s109": {
+   "title": "Rules people write, applied the same way every time"
+  },
+  "s110": {
+   "title": "Straight through, or out to a person"
+  },
+  "s111": {
+   "title": "What is inside a \"digital worker\""
+  },
+  "s112": {
+   "title": "From \"Hey…\" to a reminder"
+  },
+  "s113": {
+   "title": "It suggests; you decide"
   }
  }
 }
