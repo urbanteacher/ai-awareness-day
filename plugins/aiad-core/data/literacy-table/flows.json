@@ -2946,5 +2946,383 @@
     }
    }
   }
+ },
+ "compareElements": {
+  "Hi": "hcheck",
+  "Wo": "wfvs"
+ },
+ "compares": {
+  "hcheck": {
+   "course": "sand-to-sentence",
+   "courseTitle": "From Sand to Sentence",
+   "part": 1,
+   "chapter": "ch9",
+   "chapterNumber": 9,
+   "chapterTitle": "The answer comes home, and you check it",
+   "spec": {
+    "title": "The same wrong answer, without and with a check",
+    "intro": "Two students get the same answer: “scattering depends on 1/λ²”. Watch what happens next.",
+    "left": {
+     "label": "Nobody checks",
+     "good": false,
+     "verdict": "The model was wrong once. Not checking let the mistake travel into the exam and cost a mark.",
+     "spec": {
+      "w": 220,
+      "h": 300,
+      "start": [
+       "a"
+      ],
+      "nodes": [
+       [
+        "a",
+        "answer:\n“1/λ²”",
+        110,
+        30,
+        "io"
+       ],
+       [
+        "n",
+        "copied into\nrevision notes",
+        110,
+        105
+       ],
+       [
+        "e",
+        "exam: “blue scatters\nabout 2½× red”",
+        110,
+        185
+       ],
+       [
+        "x",
+        "mark\nlost",
+        110,
+        265,
+        "bad"
+       ]
+      ],
+      "edges": [
+       [
+        "a",
+        "n"
+       ],
+       [
+        "n",
+        "e"
+       ],
+       [
+        "e",
+        "x"
+       ]
+      ],
+      "steps": [
+       {
+        "go": [
+         "a>n"
+        ],
+        "say": "It sounds right, so it goes straight into your notes."
+       },
+       {
+        "go": [
+         "n>e"
+        ],
+        "say": "In the exam you use it: blue (450 nm) scatters about 2½ times as much as red (700 nm)."
+       },
+       {
+        "go": [
+         "e>x"
+        ],
+        "say": "The real figure is nearly 6 times. The mark is lost."
+       }
+      ],
+      "end": "A confident mistake, repeated."
+     }
+    },
+    "right": {
+     "label": "You check",
+     "good": true,
+     "verdict": "One check against your class notes caught it. That’s being the human in the loop.",
+     "spec": {
+      "w": 220,
+      "h": 300,
+      "start": [
+       "a"
+      ],
+      "nodes": [
+       [
+        "a",
+        "answer:\n“1/λ²”",
+        110,
+        30,
+        "io"
+       ],
+       [
+        "c",
+        "check against\nclass notes",
+        110,
+        95,
+        "h"
+       ],
+       [
+        "s",
+        "λ² ≠ λ⁴:\nspot it",
+        110,
+        158
+       ],
+       [
+        "f",
+        "correct it\nto 1/λ⁴",
+        110,
+        218
+       ],
+       [
+        "ok",
+        "exam: “nearly\n6× more” ✓",
+        110,
+        278,
+        "ok"
+       ]
+      ],
+      "edges": [
+       [
+        "a",
+        "c"
+       ],
+       [
+        "c",
+        "s"
+       ],
+       [
+        "s",
+        "f"
+       ],
+       [
+        "f",
+        "ok"
+       ]
+      ],
+      "steps": [
+       {
+        "go": [
+         "a>c"
+        ],
+        "say": "Before using it, you check it against your class notes."
+       },
+       {
+        "go": [
+         "c>s"
+        ],
+        "say": "Your notes say λ⁴. The answer says λ². Something is wrong."
+       },
+       {
+        "go": [
+         "s>f"
+        ],
+        "say": "You trust the source you can verify, and correct it."
+       },
+       {
+        "go": [
+         "f>ok"
+        ],
+        "say": "In the exam: blue scatters nearly 6 times as much as red. Full marks."
+       }
+      ],
+      "end": "A mistake caught before it mattered."
+     }
+    }
+   }
+  },
+  "wfvs": {
+   "course": "agent-to-team",
+   "courseTitle": "From Agent to Team",
+   "part": 3,
+   "chapter": "ch1",
+   "chapterNumber": 1,
+   "chapterTitle": "Draw the steps yourself",
+   "spec": {
+    "title": "The same job: a workflow and an agent",
+    "intro": "A parent messages: “Can I buy 4 tickets?” One system follows fixed steps; the other decides its own. Both get there.",
+    "left": {
+     "label": "Workflow",
+     "good": true,
+     "verdict": "Done in 3 fixed steps: cheap, fast and the same every time. Best when the job is predictable.",
+     "spec": {
+      "w": 220,
+      "h": 240,
+      "start": [
+       "m"
+      ],
+      "nodes": [
+       [
+        "m",
+        "“Can I buy\n4 tickets?”",
+        110,
+        30,
+        "h"
+       ],
+       [
+        "r",
+        "router: tickets",
+        110,
+        95
+       ],
+       [
+        "t",
+        "fill ticket\nreply template",
+        110,
+        155
+       ],
+       [
+        "s",
+        "reply sent",
+        110,
+        215,
+        "ok"
+       ]
+      ],
+      "edges": [
+       [
+        "m",
+        "r"
+       ],
+       [
+        "r",
+        "t"
+       ],
+       [
+        "t",
+        "s"
+       ]
+      ],
+      "steps": [
+       {
+        "go": [
+         "m>r"
+        ],
+        "say": "The router sorts the message: it’s about tickets."
+       },
+       {
+        "go": [
+         "r>t"
+        ],
+        "say": "The ticket template is filled in: price and payment link."
+       },
+       {
+        "go": [
+         "t>s"
+        ],
+        "say": "The reply goes out. Same steps every time."
+       }
+      ],
+      "end": "Predictable and cheap."
+     }
+    },
+    "right": {
+     "label": "Agent",
+     "good": true,
+     "verdict": "Done in 5 steps it chose itself: flexible, but slower, costlier and less predictable. Best when the job can’t be planned.",
+     "spec": {
+      "w": 220,
+      "h": 240,
+      "start": [
+       "m"
+      ],
+      "nodes": [
+       [
+        "m",
+        "“Can I buy\n4 tickets?”",
+        58,
+        30,
+        "h"
+       ],
+       [
+        "s",
+        "reply sent",
+        168,
+        30,
+        "ok"
+       ],
+       [
+        "th",
+        "think",
+        58,
+        105
+       ],
+       [
+        "a",
+        "look up prices\n(tool)",
+        158,
+        160,
+        "x"
+       ],
+       [
+        "o",
+        "observe:\n£5 each",
+        58,
+        205
+       ]
+      ],
+      "edges": [
+       [
+        "m",
+        "th"
+       ],
+       [
+        "th",
+        "a"
+       ],
+       [
+        "a",
+        "o"
+       ],
+       [
+        "o",
+        "th",
+        {
+         "c": -22,
+         "id": "again"
+        }
+       ],
+       [
+        "th",
+        "s"
+       ]
+      ],
+      "steps": [
+       {
+        "go": [
+         "m>th"
+        ],
+        "say": "The agent thinks: what does this parent need?"
+       },
+       {
+        "go": [
+         "th>a"
+        ],
+        "say": "It decides to use a tool to look up the ticket price."
+       },
+       {
+        "go": [
+         "a>o"
+        ],
+        "say": "It reads the result: £5 each."
+       },
+       {
+        "go": [
+         "again"
+        ],
+        "say": "It thinks again, with the new information."
+       },
+       {
+        "go": [
+         "th>s"
+        ],
+        "say": "It decides it has enough, writes the reply and sends it."
+       }
+      ],
+      "end": "Flexible, at a cost."
+     }
+    }
+   }
+  }
  }
 }

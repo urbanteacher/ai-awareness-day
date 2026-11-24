@@ -1179,7 +1179,7 @@ function aiad_render_literacy_table(): string {
 	</section>
 
 	<?php if ( aiad_literacy_flows_ready() ) : ?>
-	<script type="application/json" data-alpt-flows data-flow-js="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.js' ); ?>" data-flow-css="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.css' ); ?>" data-courses="<?php echo esc_url( home_url( '/courses/' ) ); ?>"><?php echo wp_json_encode( aiad_literacy_data( 'flows' ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
+	<script type="application/json" data-alpt-flows data-flow-js="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.js' ); ?>" data-flow-css="<?php echo esc_url( AIAD_URI . '/assets/courses/shared/flow.css' ); ?>" data-courses="<?php echo esc_url( home_url( '/courses/' ) ); ?>" data-stills="<?php echo esc_url( aiad_core_url( 'assets/data/literacy-table-stills.json' ) . '?ver=' . aiad_core_asset_version( 'assets/data/literacy-table-stills.json' ) ); ?>"><?php echo wp_json_encode( aiad_literacy_data( 'flows' ) + array( 'stills' => aiad_literacy_data( 'stills' ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 	<?php endif; ?>
 	<script type="application/json" data-alpt-data><?php echo wp_json_encode( array( 'families' => array_map( static fn( array $f ): string => $f['name'], $families ), 'themes' => $strands, 'eras' => array_map( static fn( array $e ): string => $e['name'], $eras ), 'issues' => array_map( static fn( array $i ): array => array( $i['name'], $i['theme'], $i['def'], $i['talk'] ), $issues ), 'elIssues' => $el_issues, 'resources' => array_map( static fn( array $r ): array => array( $r['title'], $r['url'], $r['kind'] ), aiad_literacy_resources() ), 'elRes' => array_combine( array_column( $elements, 'sym' ), array_map( static fn( string $sym ): array => aiad_literacy_resources_for( 'syms', $sym ), array_column( $elements, 'sym' ) ) ), 'issueRes' => array_combine( array_keys( $issues ), array_map( static fn( string $k ): array => aiad_literacy_resources_for( 'issues', $k ), array_keys( $issues ) ) ), 'talk' => $talk, 'quiz' => aiad_literacy_quiz(), 'pics' => (object) array_map( static fn( array $p ): string => $p['alt'], aiad_literacy_pictures() ), 'picBase' => aiad_literacy_picture_base(), 'safe' => aiad_literacy_safeguarding_syms(), 'credits' => (object) aiad_literacy_reader_credits(), 'notes' => (object) array_filter( array_column( aiad_literacy_element_records(), 'teacher_note', 'sym' ) ), 'elements' => array_map( static fn( array $el ): array => array( $el['sym'], $el['name'], $el['family'], $el['def'], $el['id'], $el['theme'], $el['year'], $el['approx'], $el['era'], $el['older'] ), $elements ), 'compounds' => array_map( static fn( array $c ): array => array( $c['id'], $c['name'], $c['syms'], $c['volatile'], $c['level'], $c['what'], $c['debate'], $c['strand'], $c['example'], (object) $c['marks'] ), $compounds ), 'links' => aiad_literacy_connections(), 'bench' => array_combine( array_column( $elements, 'sym' ), array_map( 'aiad_literacy_benchmark_domain', array_column( $elements, 'sym' ) ) ) ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE ); ?></script>
 </div>
@@ -1188,8 +1188,9 @@ function aiad_render_literacy_table(): string {
 }
 
 /**
- * Whether "See how it works" can run: the course animations (data/literacy-table/flows.json, built from the AI Under
- * the Hood courses by scripts/build-literacy-flows.py) and the courses' flow engine in the theme.
+ * Whether "See how it works" can run: the course animations and illustrations (data/literacy-table/flows.json and
+ * stills.json, built from the AI Under the Hood courses by scripts/build-literacy-flows.py and build-literacy-stills.mjs;
+ * the drawings themselves are in assets/data/literacy-table-stills.json) and the courses' flow engine in the theme.
  */
 function aiad_literacy_flows_ready(): bool {
 	return defined( 'AIAD_URI' ) && defined( 'AIAD_DIR' ) && is_readable( AIAD_DIR . '/assets/courses/shared/flow.js' ) && ! empty( aiad_literacy_data( 'flows' )['elements'] );

@@ -118,9 +118,11 @@
 		} );
 		initBuzzwordQuiz( root, elements, symIndex, data.quiz );
 
-		// ---- See how it works: the animated flow from the AI Under the Hood course that explains this element. ----
-		// The flows (data/literacy-table/flows.json) are the courses' own, played by the courses' own engine
-		// (assets/courses/shared/flow.js), which only loads the first time someone opens one.
+		// ---- How it works: what the AI Under the Hood courses use to explain this element: its animated flow, a
+		// side-by-side comparison ("Play both") and still illustrations. They come from the courses (built into
+		// data/literacy-table/flows.json and stills.json by scripts/build-literacy-flows.py and build-literacy-stills.mjs),
+		// and the courses' own engine (assets/courses/shared/flow.js) and the drawings
+		// (assets/data/literacy-table-stills.json) load only the first time someone opens one. ----
 		var flowsEl = root.querySelector( '[data-alpt-flows]' );
 		var flowData = null;
 		if ( flowsEl ) {
@@ -132,22 +134,46 @@
 		}
 		var flowButton = root.querySelector( '[data-alpt-flow]' );
 		var flowFrom = root.querySelector( '[data-alpt-flow-from]' );
-		var flowLoad = null, flowBox = null;
+		var flowLoad = null, stillsLoad = null, flowBox = null;
 		function flowFor( sym ) {
 			var id = flowData && flowData.elements && flowData.elements[ sym ];
 			return id && flowData.flows[ id ] ? flowData.flows[ id ] : null;
 		}
-		function flowSource( f ) {
-			return 'AI Under the Hood, Part ' + f.part + ': ' + f.courseTitle + ( null !== f.chapterNumber ? ', chapter ' + f.chapterNumber : '' );
+		// Everything the courses have for an element: { flow, compare, stills: [ids] }, or null.
+		function howFor( sym ) {
+			if ( ! flowData ) {
+				return null;
+			}
+			var flow = flowFor( sym );
+			var cid = flowData.compareElements && flowData.compareElements[ sym ];
+			var compare = cid && flowData.compares ? flowData.compares[ cid ] || null : null;
+			var stills = ( flowData.stills && flowData.stills.elements && flowData.stills.elements[ sym ] ) || [];
+			return flow || compare || stills.length ? { flow: flow, compare: compare, stills: stills } : null;
+		}
+		function stillTitle( id ) {
+			return flowData.stills.stills[ id ] ? flowData.stills.stills[ id ].title : '';
+		}
+		// "From the free course AI Under the Hood, Part 2: From Answer to Action, chapter 3: One plug for everything."
+		function courseCredit( f ) {
+			var p = document.createElement( 'p' );
+			p.className = 'alpt-flowbox__from';
+			p.appendChild( document.createTextNode( 'From the free course ' ) );
+			var a = document.createElement( 'a' );
+			a.href = flowsEl.getAttribute( 'data-courses' ) + f.course + '/' + ( f.chapter ? '#' + f.chapter : '' );
+			a.textContent = 'AI Under the Hood, Part ' + f.part + ': ' + f.courseTitle + ( null !== f.chapterNumber && undefined !== f.chapterNumber ? ', chapter ' + f.chapterNumber : '' ) + ( f.chapterTitle ? ': ' + f.chapterTitle : '' );
+			p.appendChild( a );
+			p.appendChild( document.createTextNode( /[?!.]$/.test( a.textContent ) ? '' : '.' ) );
+			return p;
 		}
 		function updateFlowButton( sym ) {
 			if ( ! flowButton ) {
 				return;
 			}
-			var f = flowFor( sym );
-			flowButton.hidden = ! f;
-			if ( f && flowFrom ) {
-				flowFrom.textContent = 'Animated · ' + f.spec.title;
+			var h = howFor( sym );
+			flowButton.hidden = ! h;
+			if ( h && flowFrom ) {
+				var count = ( h.flow ? 1 : 0 ) + ( h.compare ? 1 : 0 ) + h.stills.length;
+				flowFrom.textContent = ( h.flow ? 'Animated · ' + h.flow.spec.title : ( h.compare ? 'Animated · ' + h.compare.spec.title : 'Illustrated · ' + stillTitle( h.stills[ 0 ] ) ) ) + ( count > 1 ? ' · +' + ( count - 1 ) + ' more' : '' );
 			}
 		}
 		function loadFlowEngine() {
@@ -170,16 +196,29 @@
 			}
 			return flowLoad;
 		}
-		// An element's flow, with its tile and name at the top.
+		function loadStills() {
+			if ( ! stillsLoad ) {
+				stillsLoad = fetch( flowsEl.getAttribute( 'data-stills' ) ).then( function ( r ) {
+					return r.ok ? r.json() : Promise.reject();
+				} ).then( function ( d ) {
+					return d.stills || {};
+				} ).catch( function () {
+					stillsLoad = null;
+					return Promise.reject();
+				} );
+			}
+			return stillsLoad;
+		}
+		// An element's How it works, with its tile and name at the top.
 		function openFlow( sym, opener ) {
 			var el = elements[ symIndex[ sym ] ];
 			if ( el ) {
-				openFlowBox( flowFor( sym ), { tile: el[ 0 ], title: el[ 1 ], fam: el[ 2 ], theme: el[ 5 ] }, opener );
+				openFlowBox( howFor( sym ), { tile: el[ 0 ], title: el[ 1 ], fam: el[ 2 ], theme: el[ 5 ] }, opener );
 			}
 		}
-		// Any flow in the pop-out: o = { tile: symbol or '', title, fam: family key or '', theme }.
-		function openFlowBox( f, o, opener ) {
-			if ( ! f ) {
+		// The pop-out: how = { flow, compare, stills }; o = { tile: symbol or '', title, fam: family key or '', theme }.
+		function openFlowBox( how, o, opener ) {
+			if ( ! how ) {
 				return;
 			}
 			if ( ! flowBox ) {
@@ -188,7 +227,7 @@
 				flowBox.setAttribute( 'aria-labelledby', 'alpt-flowbox-title' );
 				flowBox.innerHTML = '<div class="alpt-flowbox__head"><span class="alpt-flowbox__tile"></span><div><p class="alpt-flowbox__k">See how it works</p>' +
 					'<h2 class="alpt-flowbox__title" id="alpt-flowbox-title"></h2></div><button type="button" class="alpt-flowbox__close" aria-label="Close">&times;</button></div>' +
-					'<div class="alpt-flowbox__stage"></div><p class="alpt-flowbox__from"></p>';
+					'<div class="alpt-flowbox__stage"></div>';
 				document.body.appendChild( flowBox );
 				flowBox.querySelector( '.alpt-flowbox__close' ).addEventListener( 'click', function () { flowBox.close(); } );
 				flowBox.addEventListener( 'click', function ( ev ) {
@@ -211,17 +250,10 @@
 			tile.textContent = o.tile || '';
 			tile.hidden = ! o.tile;
 			flowBox.querySelector( '.alpt-flowbox__title' ).textContent = o.title;
-			var from = flowBox.querySelector( '.alpt-flowbox__from' );
-			var href = flowsEl.getAttribute( 'data-courses' ) + f.course + '/' + ( f.chapter ? '#' + f.chapter : '' );
-			from.innerHTML = '';
-			from.appendChild( document.createTextNode( 'From the free course ' ) );
-			var a = document.createElement( 'a' );
-			a.href = href;
-			a.textContent = flowSource( f ) + ( f.chapterTitle ? ': ' + f.chapterTitle : '' );
-			from.appendChild( a );
-			from.appendChild( document.createTextNode( ( /[?!.]$/.test( a.textContent ) ? '' : '.' ) + ' Students can try the whole chapter there.' ) );
 			var stage = flowBox.querySelector( '.alpt-flowbox__stage' );
-			stage.innerHTML = '<p class="alpt-flowbox__loading">Loading the animation…</p>';
+			stage.innerHTML = '<p class="alpt-flowbox__loading">Loading…</p>';
+			stage.scrollTop = 0;
+			flowBox.scrollTop = 0;
 			if ( flowBox.showModal ) {
 				if ( ! flowBox.open ) {
 					flowBox.showModal();
@@ -230,13 +262,49 @@
 				flowBox.setAttribute( 'open', '' );
 			}
 			document.documentElement.classList.add( 'alpt-flow-open' );
-			loadFlowEngine().then( function () {
-				var fig = document.createElement( 'figure' );
+			var needEngine = how.flow || how.compare;
+			Promise.all( [
+				needEngine ? loadFlowEngine() : null,
+				how.stills.length ? loadStills() : null,
+			] ).then( function ( got ) {
+				var drawings = got[ 1 ] || {};
 				stage.innerHTML = '';
-				stage.appendChild( fig );
-				window.AIADFlow.mount( fig, JSON.parse( JSON.stringify( f.spec ) ) );
+				if ( how.flow ) {
+					var fig = document.createElement( 'figure' );
+					stage.appendChild( fig );
+					window.AIADFlow.mount( fig, JSON.parse( JSON.stringify( how.flow.spec ) ) );
+					stage.appendChild( courseCredit( how.flow ) );
+				}
+				if ( how.compare ) {
+					var cfig = document.createElement( 'figure' );
+					stage.appendChild( cfig );
+					window.AIADFlow.compare( cfig, JSON.parse( JSON.stringify( how.compare.spec ) ) );
+					stage.appendChild( courseCredit( how.compare ) );
+				}
+				if ( how.stills.length ) {
+					if ( needEngine ) {
+						var more = document.createElement( 'h3' );
+						more.className = 'alpt-flowbox__more';
+						more.textContent = 'More from the course';
+						stage.appendChild( more );
+					}
+					how.stills.forEach( function ( id ) {
+						var st = drawings[ id ];
+						if ( ! st ) {
+							return;
+						}
+						var still = document.createElement( 'figure' );
+						still.className = 'alpt-flowbox__still';
+						still.innerHTML = st.svg;
+						var cap = document.createElement( 'figcaption' );
+						cap.textContent = st.caption;
+						still.appendChild( cap );
+						stage.appendChild( still );
+						stage.appendChild( courseCredit( st ) );
+					} );
+				}
 			} ).catch( function () {
-				stage.innerHTML = '<p class="alpt-flowbox__loading">The animation could not load. Try the course link below.</p>';
+				stage.innerHTML = '<p class="alpt-flowbox__loading">This could not load. Check your connection and try again.</p>';
 			} );
 		}
 		if ( flowButton ) {
@@ -1894,22 +1962,22 @@
 			} );
 			return best;
 		}
-		function boardFlowId() {
+		// What How it works shows for the board: an element's flow, comparison and illustrations; a compound's flow.
+		function boardHow() {
 			if ( 'compound' === boardMode ) {
-				return compoundFlowId( compounds[ boardIndex ] );
+				var id = compoundFlowId( compounds[ boardIndex ] );
+				return id ? { flow: flowData.flows[ id ], compare: null, stills: [] } : null;
 			}
-			var id = flowData && flowData.elements && flowData.elements[ elements[ boardIndex ][ 0 ] ];
-			return id && flowData.flows[ id ] ? id : '';
+			return howFor( elements[ boardIndex ][ 0 ] );
 		}
 		function appendFlowButton( bar ) {
-			var id = boardFlowId();
-			var f = id ? flowData.flows[ id ] : null;
-			if ( ! f ) {
+			var h = boardHow();
+			if ( ! h ) {
 				return;
 			}
 			var b = boardButton( '', 'flow', 'alpt-board__btn--flow' );
 			b.innerHTML = '<svg class="alpt-board__play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg><span>How it works</span>';
-			b.setAttribute( 'aria-label', 'How it works: ' + f.spec.title );
+			b.setAttribute( 'aria-label', 'How it works: ' + ( h.flow ? h.flow.spec.title : h.compare ? h.compare.spec.title : stillTitle( h.stills[ 0 ] ) ) );
 			bar.appendChild( b );
 		}
 
@@ -3048,7 +3116,7 @@
 			} else if ( 'flow' === action ) {
 				if ( 'compound' === boardMode ) {
 					var cf = compounds[ boardIndex ];
-					openFlowBox( flowData.flows[ boardFlowId() ], { tile: '', title: cf[ 1 ], fam: '', theme: cf[ 7 ] }, b );
+					openFlowBox( boardHow(), { tile: '', title: cf[ 1 ], fam: '', theme: cf[ 7 ] }, b );
 				} else {
 					openFlow( elements[ boardIndex ][ 0 ], b );
 				}

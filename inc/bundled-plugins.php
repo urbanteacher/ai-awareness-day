@@ -120,6 +120,8 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'data/literacy-table/compounds.json',
 			'data/literacy-table/elements.json',
 			'data/literacy-table/flows.json',
+			'data/literacy-table/stills.json',
+			'assets/data/literacy-table-stills.json',
 		),
 		'ai-risk-readiness-benchmark' => array(
 			'public/js/airb-front.js',
