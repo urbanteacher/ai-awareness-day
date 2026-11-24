@@ -1988,6 +1988,8 @@
 		var boardHideDef = false;
 		// Show picture: the board's big tile becomes the element's picture, kept on while stepping through elements.
 		var boardShowPic = false;
+		// Talk about it (Debate it on a compound) waits behind its own button, so the definition can be shown on its own.
+		var boardShowTalk = false;
 		// Tags on a compound's description, the Tags button cycling through them: 'symbols' (each element's words in its
 		// tile colour, ending with its symbol), 'colour' (the colour alone), 'minimal' (plain words, each element's
 		// symbol a pill in its tile colour after them) and 'off' (plain words).
@@ -2045,6 +2047,12 @@
 				return id ? { flow: flowData.flows[ id ], compare: null, stills: [] } : null;
 			}
 			return howFor( elements[ boardIndex ][ 0 ] );
+		}
+		function appendTalkButton( bar, label ) {
+			var b = boardButton( label, 'talk', 'alpt-board__btn--talk' );
+			b.setAttribute( 'aria-pressed', String( boardShowTalk ) );
+			b.title = ( boardShowTalk ? 'Hide' : 'Show' ) + ' the question';
+			bar.appendChild( b );
 		}
 		function appendFlowButton( bar ) {
 			var h = boardHow();
@@ -2855,7 +2863,7 @@
 				text.appendChild( el( 'p', 'alpt-board__prompt', 'What do you think it means?' ) );
 			} else {
 				text.appendChild( el( 'p', 'alpt-board__def', e[ 3 ] ) );
-				if ( talk[ e[ 0 ] ] ) {
+				if ( talk[ e[ 0 ] ] && boardShowTalk ) {
 					var q = el( 'p', 'alpt-board__talk' );
 					q.appendChild( el( 'span', 'alpt-board__talk-label', 'Talk about it' ) );
 					q.appendChild( document.createTextNode( talk[ e[ 0 ] ] ) );
@@ -2878,6 +2886,9 @@
 			bar.appendChild( prev );
 			bar.appendChild( next );
 			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle', 'alpt-board__btn--toggle' ) );
+			if ( ! boardHideDef && talk[ e[ 0 ] ] ) {
+				appendTalkButton( bar, 'Talk about it' );
+			}
 			appendFlowButton( bar );
 			if ( boardHasPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide picture' : 'Show picture', 'pic', 'alpt-board__btn--pic' );
@@ -3047,10 +3058,12 @@
 				text.appendChild( el( 'p', 'alpt-board__prompt', 'What could this AI system be?' ) );
 			} else {
 				text.appendChild( markedDef( c ) );
-				var q = el( 'p', 'alpt-board__talk' );
-				q.appendChild( el( 'span', 'alpt-board__talk-label', 'Debate it' ) );
-				q.appendChild( document.createTextNode( c[ 6 ] ) );
-				text.appendChild( q );
+				if ( c[ 6 ] && boardShowTalk ) {
+					var q = el( 'p', 'alpt-board__talk' );
+					q.appendChild( el( 'span', 'alpt-board__talk-label', 'Debate it' ) );
+					q.appendChild( document.createTextNode( c[ 6 ] ) );
+					text.appendChild( q );
+				}
 			}
 			wrap.appendChild( text );
 			board.appendChild( wrap );
@@ -3070,6 +3083,9 @@
 				var symToggle = boardButton( TAG_LABELS[ boardTags ], 'sym', 'alpt-board__btn--sym' );
 				symToggle.setAttribute( 'aria-label', TAG_LABELS[ boardTags ] + '. Change the tags on the words' );
 				bar.appendChild( symToggle );
+			}
+			if ( ! boardHideDef && c[ 6 ] ) {
+				appendTalkButton( bar, 'Debate it' );
 			}
 			appendFlowButton( bar );
 			if ( anyPic ) {
@@ -3243,6 +3259,13 @@
 				var symAgain = board.querySelector( '[data-alpt-board-action="sym"]' );
 				if ( symAgain ) {
 					symAgain.focus();
+				}
+			} else if ( 'talk' === action ) {
+				boardShowTalk = ! boardShowTalk;
+				renderBoard();
+				var talkAgain = board.querySelector( '[data-alpt-board-action="talk"]' );
+				if ( talkAgain ) {
+					talkAgain.focus();
 				}
 			} else if ( 'pic' === action ) {
 				boardShowPic = ! boardShowPic;

@@ -6797,3 +6797,14 @@ html.alpt-flow-open {
 .alpt-board.is-blank {
   cursor: none;
 }
+
+/* Phones: Talk about it (Debate it) shares row 2 with ▶ How it works and the download icon. */
+@media screen and (max-width: 767px) {
+  .alpt-board .alpt-board__bar:has(.alpt-board__btn--talk) .alpt-board__btn--flow { grid-area: 2 / 1 / 3 / 4; }
+  .alpt-board .alpt-board__bar .alpt-board__btn--talk { grid-area: 2 / 4 / 3 / 6; padding-inline: 0.3rem; font-size: 0.86rem; }
+  .alpt-board .alpt-board__bar .alpt-board__btn--talk[aria-pressed="true"] { background: var(--a27-cream); color: var(--a27-ink); }
+
+  /* A compound with its Tags button: row 2 is Show pictures · Debate it · download, row 3 ▶ How it works. */
+  .alpt-board .alpt-board__bar:has(.alpt-board__btn--sym):has(.alpt-board__btn--talk) .alpt-board__btn--pic { grid-area: 2 / 1 / 3 / 4; }
+  .alpt-board .alpt-board__bar:has(.alpt-board__btn--sym):has(.alpt-board__btn--talk) .alpt-board__btn--flow { grid-area: 3 / 1 / 4 / 7; }
+}
