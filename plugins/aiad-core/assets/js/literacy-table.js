@@ -2889,12 +2889,12 @@
 			if ( ! boardHideDef && talk[ e[ 0 ] ] ) {
 				appendTalkButton( bar, 'Talk about it' );
 			}
-			appendFlowButton( bar );
 			if ( boardHasPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide picture' : 'Show picture', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
 				bar.appendChild( picToggle );
 			}
+			appendFlowButton( bar );
 			appendCardButtons( bar, e[ 1 ] );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
@@ -3087,12 +3087,12 @@
 			if ( ! boardHideDef && c[ 6 ] ) {
 				appendTalkButton( bar, 'Debate it' );
 			}
-			appendFlowButton( bar );
 			if ( anyPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide pictures' : 'Show pictures', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
 				bar.appendChild( picToggle );
 			}
+			appendFlowButton( bar );
 			appendCardButtons( bar, c[ 1 ] );
 			bar.appendChild( boardButton( 'Close', 'close', 'alpt-board__btn--close' ) );
 			board.appendChild( bar );
