@@ -21,6 +21,13 @@ Checked against (24 November 2026):
   (arXiv 2310.13548).
 - Red teaming: NIST CSRC glossary, "artificial intelligence red teaming"; it finds flaws, it doesn't prove safety.
 - Watermarking, green and red lists, weakened by paraphrasing: Kirchenbauer et al. 2023 (arXiv 2301.10226).
+- Predictive & Analytical AI (supervised and unsupervised learning, regression, classification thresholds, k-means,
+  decision trees, random forests, gradient boosting, overfitting, anomaly detection, forecasting, time-series
+  decomposition, the four analytics steps, recommenders, churn, sentiment, NLP, computer vision): standard textbook
+  methods, e.g. Hastie, Tibshirani and Friedman, The Elements of Statistical Learning; Breiman 2001 (random forests);
+  Friedman 2001 (gradient boosting); Hyndman and Athanasopoulos, Forecasting: Principles and Practice.
+- Generative engine optimisation, citations, quotations and statistics raising visibility by up to about 40% on the
+  study's benchmark: Aggarwal et al., KDD 2024 (arXiv 2311.09735).
 """
 import json
 import os
@@ -827,6 +834,585 @@ def _uc():
             d.text(x + 18, 96 + i * 26, '· ' + s, 11, 400)
     d.box(20, 242, 400, 38, fill=YELLOW)
     d.text(220, 266, 'Either way, illegal content is still illegal.', 12, 800, 'middle')
+    return d
+
+
+# ---- Predictive & Analytical AI -----------------------------------------------------------------------------------
+
+def dot(d, x, y, fill, r=5):
+    d.add(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{fill}" stroke="{INK}" stroke-width="1"/>')
+
+
+def axes(d, x, y, w, h, xl='', yl=''):
+    d.add(f'<path d="M{x} {y} V{y + h} H{x + w}" fill="none" stroke="{INK}" stroke-width="1.4"/>')
+    if xl:
+        d.text(x + w, y + h + 14, xl, 9.5, 400, 'end', DIM)
+    if yl:
+        d.text(x - 4, y - 4, yl, 9.5, 400, 'start', DIM)
+
+
+@illustration('Su', 'Learn from answers, then test on new ones',
+              'In supervised learning, labelled examples are split: most are used to train the model, and some are '
+              'kept back. The trained model is tested on the kept-back examples it has never seen, and its score '
+              'there shows how well it will do on new data.',
+              'Supervised learning trains on examples that come with the right answers. The honest test is on '
+              'examples kept back from training: a model can score well on what it has seen and badly on what it '
+              'hasn\'t. Made-up numbers.')
+def _su():
+    d = D(440, 290)
+    d.head(20, 24, '1,000 labelled photos')
+    d.add(f'<rect x="20" y="40" width="320" height="34" fill="{PALE[SMART]}" stroke="{INK}" stroke-width="1.5"/>')
+    d.add(f'<rect x="340" y="40" width="80" height="34" fill="{PALE[SAFE]}" stroke="{INK}" stroke-width="1.5"/>')
+    d.text(180, 62, '800 to train on', 12, 800, 'middle')
+    d.text(380, 62, '200 kept back', 10.5, 800, 'middle')
+    d.arrow(180, 76, 180, 104)
+    d.box(110, 106, 140, 56, fill=YELLOW)
+    d.lines(180, 128, ['learns from photos', 'and their answers'], 11, 700, 'middle')
+    d.arrow(252, 134, 300, 134)
+    d.arrow(380, 76, 380, 104)
+    d.box(302, 106, 118, 56, fill=PALE[SAFE])
+    d.lines(361, 128, ['tested on photos', 'it never saw'], 11, 700, 'middle')
+    rows = [('Score on training photos', '99%', DIM), ('Score on kept-back photos', '92%', RESP_D)]
+    for i, (k, v, c) in enumerate(rows):
+        y = 190 + i * 32
+        d.box(20, y, 400, 26)
+        d.text(32, y + 18, k, 11.5, 700)
+        d.text(408, y + 18, v, 13, 800, 'end', c)
+    d.text(220, 282, 'The kept-back score is the one to trust.', 12, 700, 'middle', SAFE_D)
+    return d
+
+
+@illustration('Un', 'Finding groups no one named',
+              'Songs are plotted by tempo and energy, with no labels. Unsupervised learning finds three groups by '
+              'itself. It does not know what they mean: a person looks at each group and names it, such as calm, '
+              'pop and workout.',
+              'Unsupervised learning finds structure in data with no answers attached. It can find the groups, but '
+              'people still decide what each group means, and whether it is useful.')
+def _un():
+    d = D(440, 290)
+    d.head(20, 24, 'Songs, no labels')
+    axes(d, 40, 44, 230, 190, 'energy →', 'tempo ↑')
+    import random
+    rnd = random.Random(4)
+    groups = [(90, 190, SAFE), (160, 110, SMART), (230, 70, CREATIVE)]
+    for gx, gy, c in groups:
+        for _ in range(7):
+            dot(d, gx + rnd.randint(-22, 22), gy + rnd.randint(-18, 18), PALE[c])
+        d.add(f'<ellipse cx="{gx}" cy="{gy}" rx="34" ry="28" fill="none" stroke="{c}" stroke-width="2" stroke-dasharray="5 4"/>')
+    d.box(290, 44, 130, 190)
+    d.text(355, 64, 'A PERSON NAMES THEM', 9, 800, 'middle')
+    for i, (nm, c) in enumerate([('workout', CREATIVE), ('pop', SMART), ('calm', SAFE)]):
+        y = 84 + i * 46
+        d.box(304, y, 102, 32, fill=PALE[c])
+        d.text(355, y + 21, nm, 12, 800, 'middle')
+    d.text(220, 270, 'The AI finds the groups; people decide what they mean.', 11.5, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Rr', 'Choosing the line with the smallest errors',
+              'Points show hours revised and test scores. Regression draws the line that makes the gaps between the '
+              'points and the line, the errors, as small as possible overall. The line then predicts a score for '
+              'new hours, with a range rather than one exact number.',
+              'Regression finds the line (or curve) that keeps the errors, the gaps between real points and the '
+              'line, as small as possible overall. Its predictions are best read as a likely range. Made-up numbers.')
+def _rr():
+    d = D(440, 290)
+    d.head(20, 24, 'Hours revised and test score')
+    axes(d, 40, 44, 360, 190, 'hours revised →', 'score ↑')
+    pts = [(70, 200), (110, 180), (140, 192), (180, 150), (220, 160), (250, 120), (290, 128), (330, 96)]
+    def line(x):
+        return 214 - (x - 40) * 0.36
+    d.add(f'<polygon points="40,{line(40) - 18} 400,{line(400) - 18} 400,{line(400) + 18} 40,{line(40) + 18}" fill="{PALE[SAFE]}" opacity=".7"/>')
+    for x, y in pts:
+        d.add(f'<line x1="{x}" y1="{y}" x2="{x}" y2="{line(x):.1f}" stroke="{RED}" stroke-width="1.5" stroke-dasharray="3 2"/>')
+        dot(d, x, y, PALE[SMART])
+    d.add(f'<line x1="40" y1="{line(40)}" x2="400" y2="{line(400):.1f}" stroke="{SAFE_D}" stroke-width="2.5"/>')
+    d.add(f'<circle cx="370" cy="{line(370):.1f}" r="7" fill="{YELLOW}" stroke="{INK}" stroke-width="1.5"/>')
+    d.text(362, line(370) - 26, 'prediction', 10.5, 800, 'end')
+    d.text(60, 60, 'red dashes = errors', 10.5, 700, fill=RED)
+    d.text(60, 76, 'blue band = likely range', 10.5, 700, fill=SAFE_D)
+    d.text(220, 272, 'Training picks the line with the smallest total error.', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Cl', 'Where to draw the line',
+              'A spam classifier gives each email a score from 0 to 1. A threshold decides which count as spam. A low '
+              'threshold catches more spam but blocks some real emails; a high threshold lets more spam through but '
+              'blocks fewer real ones. Choosing it depends on which mistake costs more.',
+              'Most classifiers give a score, and a threshold turns it into a decision. Moving the threshold trades '
+              'one mistake for another, so the right setting depends on which mistake matters more. Made-up example.')
+def _cl():
+    d = D(440, 290)
+    d.head(20, 24, 'Spam score for each email')
+    d.add(f'<line x1="30" y1="120" x2="410" y2="120" stroke="{INK}" stroke-width="1.5"/>')
+    for v, lab in ((0, '0'), (0.5, '0.5'), (1, '1')):
+        x = 30 + v * 380
+        d.add(f'<line x1="{x}" y1="116" x2="{x}" y2="124" stroke="{INK}" stroke-width="1.5"/>')
+        d.text(x, 138, lab, 10, 400, 'middle', DIM)
+    emails = [(0.08, 0), (0.18, 0), (0.3, 0), (0.42, 1), (0.55, 0), (0.66, 1), (0.78, 1), (0.9, 1), (0.96, 1)]
+    for v, spam in emails:
+        x = 30 + v * 380
+        d.add(f'<rect x="{x - 9}" y="{88 if spam else 92}" width="18" height="{20 if spam else 16}" fill="{"#F7C1C1" if spam else PALE[RESP]}" stroke="{INK}" stroke-width="1"/>')
+    d.text(30, 64, 'red = really spam', 10.5, 700, fill=RED)
+    d.text(150, 64, 'green = real email', 10.5, 700, fill=RESP_D)
+    for x, lab, col in ((30 + 0.4 * 380, 'low threshold', SMART_D), (30 + 0.85 * 380, 'high threshold', SAFE_D)):
+        d.add(f'<line x1="{x}" y1="80" x2="{x}" y2="150" stroke="{col}" stroke-width="2.5" stroke-dasharray="5 3"/>')
+        d.text(x, 164, lab, 10.5, 800, 'middle', col)
+    d.box(20, 180, 196, 90, fill=PALE[SMART])
+    d.text(118, 200, 'LOW THRESHOLD', 10.5, 800, 'middle', SMART_D)
+    d.lines(118, 222, ['catches all the spam', 'but blocks a real email'], 11, 400, 'middle')
+    d.box(224, 180, 196, 90, fill=PALE[SAFE])
+    d.text(322, 200, 'HIGH THRESHOLD', 10.5, 800, 'middle', SAFE_D)
+    d.lines(322, 222, ['blocks no real email', 'but lets spam through'], 11, 400, 'middle')
+    return d
+
+
+@illustration('Cu', 'How k-means finds groups',
+              'One common clustering method, k-means, works in steps. Drop three centres at random. Give every point '
+              'to its nearest centre. Move each centre to the middle of its points. Repeat until the centres stop '
+              'moving: the groups are found.',
+              'K-means, one common clustering method, repeats two steps, assign each point to its nearest centre, '
+              'then move each centre to the middle of its points, until nothing changes. You choose how many groups '
+              'it looks for.')
+def _cu():
+    d = D(440, 280)
+    pts = [(30, 40), (42, 55), (25, 60), (38, 70), (95, 30), (110, 42), (100, 55), (118, 35), (70, 95), (82, 105), (65, 110), (90, 92)]
+    near = {}
+    panels = [('1 · DROP 3 CENTRES', [(55, 30), (60, 70), (110, 100)], False),
+              ('2 · NEAREST CENTRE', [(55, 30), (60, 70), (110, 100)], True),
+              ('3 · MOVE TO MIDDLE', None, True)]
+    cols = [SAFE, SMART, CREATIVE]
+    start = panels[0][1]
+    group = [min(range(3), key=lambda i: (x - start[i][0]) ** 2 + (y - start[i][1]) ** 2) for x, y in pts]
+    moved = []
+    for i in range(3):
+        mine = [pt for pt, g in zip(pts, group) if g == i]
+        moved.append((sum(x for x, _ in mine) / len(mine), sum(y for _, y in mine) / len(mine)))
+    for p, (title, cents, coloured) in enumerate(panels):
+        cents = cents or moved
+        ox = 20 + p * 138
+        d.box(ox, 40, 128, 170)
+        d.text(ox + 64, 60, title, 9, 800, 'middle')
+        for j, (x, y) in enumerate(pts):
+            k = group[j]
+            dot(d, ox + x, 70 + y, PALE[cols[k]] if coloured else WHITE, 4.5)
+        for i, (x, y) in enumerate(cents):
+            cx, cy = ox + x, 70 + y
+            d.add(f'<path d="M{cx - 7} {cy - 7}l14 14M{cx + 7} {cy - 7}l-14 14" stroke="{cols[i]}" stroke-width="3.5"/>')
+        if p < 2:
+            d.arrow(ox + 129, 125, ox + 137, 125)
+    d.arrow(304, 214, 90, 214, dash=True, curve=-26)
+    d.text(220, 250, 'repeat 2 and 3 until the centres stop moving', 11, 700, 'middle', DIM)
+    d.text(220, 272, 'You choose how many groups to look for.', 11.5, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Dt', 'How a tree picks its questions',
+              'Ten days: some needed a coat, some did not. To choose its first question, a decision tree tries each '
+              'one and keeps the question that splits the days into the purest groups. "Raining?" gives two mixed '
+              'groups; "Below 10°C?" sorts them almost perfectly, so the tree asks that first.',
+              'A decision tree is built by trying possible questions and keeping the one that best separates the '
+              'answers into pure groups, then repeating inside each branch. Made-up data.')
+def _dt():
+    d = D(440, 290)
+    d.head(20, 24, 'Coat or no coat? 10 days')
+    def tiles(x, y, coats, nocoats):
+        for i in range(coats):
+            d.add(f'<rect x="{x + i * 13}" y="{y}" width="10" height="14" fill="{SAFE}" stroke="{INK}" stroke-width=".8"/>')
+        for i in range(nocoats):
+            d.add(f'<rect x="{x + (coats + i) * 13}" y="{y}" width="10" height="14" fill="{PALE[SMART]}" stroke="{INK}" stroke-width=".8"/>')
+    for col, (q, left, right, verdict, good) in enumerate([('"Raining?"', (3, 2), (2, 3), 'mixed groups', False),
+                                                           ('"Below 10°C?"', (5, 0), (0, 5), 'pure groups', True)]):
+        x = 20 + col * 206
+        d.box(x, 40, 194, 196, fill=PALE[RESP] if good else WHITE)
+        d.text(x + 97, 62, 'TRY ' + q.upper(), 10.5, 800, 'middle')
+        d.text(x + 46, 96, 'yes', 10.5, 700, 'middle', DIM)
+        d.text(x + 146, 96, 'no', 10.5, 700, 'middle', DIM)
+        tiles(x + 14, 106, *left)
+        tiles(x + 114, 106, *right)
+        d.tick(x + 97, 170, good)
+        d.text(x + 97, 200, verdict, 12, 800, 'middle', RESP_D if good else RED)
+        d.text(x + 97, 220, 'ask this first' if good else 'try another', 10.5, 400, 'middle', DIM)
+    d.text(20, 258, 'blue = needed a coat', 10.5, 700, fill=SAFE_D)
+    d.text(220, 278, 'Then the tree repeats the search inside each branch.', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Rf', 'Why a forest of trees differs',
+              'A random forest trains each tree on a different random sample of the data, and lets each tree look '
+              'at a random choice of questions. The trees end up different, so their mistakes differ too, and when '
+              'they vote the mistakes tend to cancel out.',
+              'A random forest gives each tree a different random sample of the rows and of the questions it may ask. '
+              'Different trees make different mistakes, so the vote is steadier than any one tree.')
+def _rf():
+    d = D(440, 290)
+    d.box(150, 36, 140, 40, fill=PALE[SAFE])
+    d.text(220, 61, 'All the data', 12, 800, 'middle')
+    for i, (rows, q, vote) in enumerate([('rows 1, 3, 3, 7…', 'may ask: rain, wind', 'Yes'),
+                                         ('rows 2, 5, 6, 6…', 'may ask: cold, wind', 'Yes'),
+                                         ('rows 1, 4, 8, 9…', 'may ask: rain, cold', 'No')]):
+        x = 20 + i * 140
+        d.arrow(220, 78, x + 60, 100)
+        d.box(x, 102, 120, 110)
+        d.text(x + 60, 122, 'RANDOM SAMPLE', 9, 800, 'middle', DIM)
+        d.text(x + 60, 140, rows, 10.5, 700, 'middle')
+        d.text(x + 60, 158, q, 10, 400, 'middle', DIM)
+        d.add(f'<path d="M{x + 60} 170 l-14 18 h28 z" fill="{RESP}" stroke="{INK}" stroke-width="1"/><rect x="{x + 57}" y="188" width="6" height="8" fill="{SMART_D}"/>')
+        d.text(x + 60, 208, 'votes ' + vote, 10.5, 800, 'middle', RESP_D if vote == 'Yes' else RED)
+    d.box(100, 230, 240, 44, fill=YELLOW)
+    d.lines(220, 248, ['Vote: Yes, 2 to 1', 'different trees, different mistakes'], 11, 700, 'middle', INK, 15)
+    return d
+
+
+@illustration('Gb', 'Each model learns what is left over',
+              'Gradient boosting starts with a rough guess for every example, works out how far off each guess is, '
+              'and trains a small model to predict those leftover errors. Adding its corrections shrinks the error; '
+              'the next model learns what is left over again. Small steps each round help avoid overfitting.',
+              'Gradient boosting adds small models one at a time, each trained on the errors still left. It is one '
+              'of the most accurate methods for tables of data. Made-up numbers.')
+def _gb():
+    d = D(440, 290)
+    d.head(20, 24, 'Total error after each model')
+    errs = [100, 55, 32, 20, 13, 9]
+    for i, e in enumerate(errs):
+        x = 40 + i * 62
+        h = e * 1.5
+        d.bar(x, 200 - h, 40, h, SMART if i == 0 else PALE[SMART])
+        d.text(x + 20, 216, 'start' if i == 0 else f'+{i}', 10.5, 700, 'middle')
+        d.text(x + 20, 194 - h, str(e), 10.5, 800, 'middle')
+    d.add(f'<line x1="30" y1="200" x2="410" y2="200" stroke="{INK}" stroke-width="1.4"/>')
+    d.text(220, 236, 'models added →', 10.5, 400, 'middle', DIM)
+    d.box(20, 248, 400, 34, fill=PALE[SAFE])
+    d.text(220, 270, 'Each new model is trained only on the errors still left.', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Fe', 'Three ways to make better features',
+              'Feature engineering turns raw data into inputs a model can use. Combine: 36 books in 3 years becomes '
+              '12 books a year. Transform: a date of birth becomes an age. Encode: a favourite genre becomes columns '
+              'of 1s and 0s, because models work with numbers.',
+              'Models only see numbers, and they learn faster from numbers that capture what matters. Combining, '
+              'transforming and encoding raw data are three common ways to make better features. Made-up example.')
+def _fe():
+    d = D(440, 290)
+    rows = [('COMBINE', '36 books, 3 years', '12 books a year', SAFE),
+            ('TRANSFORM', 'born 14 May 2012', 'age 14', SMART),
+            ('ENCODE', 'favourite: fantasy', 'fantasy 1 · crime 0 · sport 0', CREATIVE)]
+    d.text(105, 30, 'RAW DATA', 10.5, 800, 'middle', DIM)
+    d.text(330, 30, 'FEATURE FOR THE MODEL', 10.5, 800, 'middle', DIM)
+    for i, (k, raw, feat, c) in enumerate(rows):
+        y = 42 + i * 74
+        d.text(20, y + 12, k, 10.5, 800, fill=c if c != SAFE else SAFE_D)
+        d.box(20, y + 20, 170, 40)
+        d.text(105, y + 45, raw, 11.5, 700, 'middle')
+        d.arrow(192, y + 40, 228, y + 40)
+        d.box(230, y + 20, 190, 40, fill=PALE[c])
+        d.text(325, y + 45, feat, 11.5, 800, 'middle')
+    d.text(220, 278, 'Models only see numbers: good features make the pattern easy to find.', 11, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Of', 'The sweet spot between too simple and too complex',
+              'As a model gets more complex, its error on training data keeps falling. Its error on new data falls '
+              'at first, then rises once it starts memorising noise: that is overfitting. The best model sits at the '
+              'lowest point of the new-data curve. More data, simpler models and stopping early all help.',
+              'Overfitting shows up as a gap: training error keeps falling while error on new data starts rising. '
+              'Checking on kept-back data shows where to stop.')
+def _of():
+    d = D(440, 290)
+    axes(d, 40, 30, 370, 190, '', 'error ↑')
+    d.text(220, 236, 'model complexity →', 10.5, 400, 'middle', DIM)
+    d.add(f'<path d="M50 66 C120 160 200 195 400 208" fill="none" stroke="{SAFE_D}" stroke-width="3"/>')
+    d.add(f'<path d="M50 56 C120 135 170 158 210 156 S320 110 400 60" fill="none" stroke="{RED}" stroke-width="3"/>')
+    d.text(392, 196, 'training data', 11, 800, 'end', SAFE_D)
+    d.text(392, 54, 'new data', 11, 800, 'end', RED)
+    d.add(f'<line x1="205" y1="40" x2="205" y2="220" stroke="{RESP_D}" stroke-width="2" stroke-dasharray="5 4"/>')
+    d.text(205, 44, 'sweet spot', 11, 800, 'middle', RESP_D)
+    d.text(100, 214, 'too simple', 10.5, 700, 'middle', DIM)
+    d.text(330, 140, 'overfitting:', 10.5, 700, 'middle', RED)
+    d.text(330, 154, 'memorising noise', 10.5, 700, 'middle', RED)
+    d.box(20, 248, 400, 34, fill=PALE[RESP])
+    d.text(220, 270, 'Helps: more data · a simpler model · stopping training early', 11.5, 700, 'middle')
+    return d
+
+
+@illustration('Ad', 'Learn what is normal, flag what is far from it',
+              'Anomaly detection first learns what normal looks like, such as usual payment amounts, times and '
+              'places. Each new event gets a score for how far it is from normal. Events past a threshold are '
+              'flagged for a person to check, because some unusual events are innocent.',
+              'Anomaly detection learns a picture of normal and scores how far each new event is from it. Flags are '
+              'for a person to check: unusual isn\'t always wrong. Made-up example.')
+def _ad():
+    d = D(440, 290)
+    d.head(20, 24, 'Card payments: how unusual?')
+    axes(d, 40, 40, 370, 160, 'how unusual →', '')
+    d.add(f'<path d="M50 190 C90 190 100 70 140 70 S190 190 230 192" fill="{PALE[SAFE]}" stroke="{SAFE_D}" stroke-width="2"/>')
+    d.text(140, 62, 'normal: £2–£10, daytime, UK', 10.5, 700, 'middle', SAFE_D)
+    d.add(f'<line x1="280" y1="50" x2="280" y2="200" stroke="{SMART_D}" stroke-width="2" stroke-dasharray="5 4"/>')
+    d.text(284, 60, 'threshold', 10.5, 800, 'start', SMART_D)
+    for x in (390, 320):
+        d.add(f'<circle cx="{x}" cy="180" r="7" fill="#F7C1C1" stroke="{INK}" stroke-width="1.2"/>')
+    d.text(294, 100, '£950, 3am, abroad', 10, 700, 'start', RED)
+    d.text(294, 138, '£40 trip', 10, 700, 'start', DIM)
+    d.add(f'<line x1="380" y1="104" x2="390" y2="172" stroke="{RED}" stroke-width="1"/>')
+    d.add(f'<line x1="312" y1="142" x2="320" y2="172" stroke="{DIM}" stroke-width="1"/>')
+    d.box(20, 226, 400, 54, fill=YELLOW)
+    d.lines(220, 248, ['Flagged for a person to check: the £40 school trip', 'was unusual but fine. Unusual isn\'t always wrong.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Fc', 'A forecast is a range, not a point',
+              'Past weekly lunch numbers are drawn as a line. The forecast continues the line, with a shaded band '
+              'showing the likely range, which gets wider the further ahead it looks, because uncertainty grows.',
+              'Good forecasts come with a range. The further ahead they look, the wider it gets: next week is easier '
+              'to predict than next term. Made-up numbers.')
+def _fc():
+    d = D(440, 280)
+    d.head(20, 24, 'Lunches sold each week')
+    axes(d, 40, 40, 370, 180, 'weeks →', '')
+    past = [(50, 150), (80, 140), (110, 156), (140, 132), (170, 144), (200, 126), (230, 138)]
+    d.add('<polyline points="' + ' '.join(f'{x},{y}' for x, y in past) + f'" fill="none" stroke="{INK}" stroke-width="2.5"/>')
+    d.add(f'<polygon points="230,138 400,{120 - 48} 400,{120 + 48}" fill="{PALE[FUTURE]}" stroke="none"/>')
+    d.add(f'<line x1="230" y1="138" x2="400" y2="120" stroke="{FUTURE_D}" stroke-width="2.5" stroke-dasharray="6 4"/>')
+    d.add(f'<line x1="230" y1="48" x2="230" y2="220" stroke="{DIM}" stroke-width="1" stroke-dasharray="3 3"/>')
+    d.text(226, 58, 'past', 10.5, 700, 'end', DIM)
+    d.text(236, 58, 'forecast', 10.5, 700, 'start', FUTURE_D)
+    d.text(396, 66, 'wider further ahead', 10.5, 800, 'end', FUTURE_D)
+    d.text(220, 252, 'Plan for the range, not just the middle line.', 12, 700, 'middle', FUTURE_D)
+    return d
+
+
+@illustration('Tm', 'Trend, season and the rest',
+              'A time series of ice cream sales can be split into three parts: a slow trend upwards, a seasonal '
+              'pattern that repeats every summer, and leftover noise. Spotting each part separately helps explain '
+              'the past and forecast the future.',
+              'Time-series methods often split data into a trend, a repeating season and leftover noise. A jump that '
+              'is just "summer again" isn\'t news; a change in the trend might be. Made-up data.')
+def _tm():
+    d = D(440, 320)
+    import math
+    rows = [('SALES', lambda t: 0.25 * t + 14 * math.sin(t / 8) + (6 if int(t) % 11 == 0 else 0), INK),
+            ('TREND', lambda t: 0.25 * t, SAFE_D), ('SEASON', lambda t: 14 * math.sin(t / 8), SMART_D),
+            ('NOISE', lambda t: (6 if int(t) % 11 == 0 else 0) - (4 if int(t) % 7 == 0 else 0), DIM)]
+    for i, (k, f, c) in enumerate(rows):
+        y0 = 40 + i * 64
+        d.text(20, y0 + 20, k, 10.5, 800, fill=c)
+        d.add(f'<rect x="90" y="{y0}" width="330" height="52" fill="{WHITE}" stroke="{INK}" stroke-width="1"/>')
+        pts = []
+        for t in range(0, 101):
+            v = f(t)
+            pts.append(f'{90 + t * 3.3:.1f},{y0 + 40 - v * 0.9:.1f}' if k != 'NOISE' else f'{90 + t * 3.3:.1f},{y0 + 26 - v * 1.5:.1f}')
+        d.add(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{c}" stroke-width="2"/>')
+        if i:
+            d.text(80, y0 + 32, '+' if i > 1 else '=', 14, 800, 'end', DIM)
+    d.text(220, 308, 'Sales = trend + season + noise', 12, 800, 'middle')
+    return d
+
+
+@illustration('Pa', 'From what happened to what will happen',
+              'Analytics climbs four steps. Descriptive: what happened? Diagnostic: why did it happen? Predictive: '
+              'what is likely to happen? Prescriptive: what should we do? Predictive analytics is the third step: '
+              'it gives a likelihood, such as about 240 lunches next Friday, give or take 15.',
+              'Predictive analytics turns past data into a likely future, stated with how sure it is. It is the third '
+              'of four common analytics steps, before deciding what to do. Made-up numbers.')
+def _pa():
+    d = D(440, 320)
+    steps = [('DESCRIPTIVE', 'What happened?', '238 lunches last Friday', SAFE),
+             ('DIAGNOSTIC', 'Why?', 'it was pizza day', CREATIVE),
+             ('PREDICTIVE', 'What\'s likely?', 'about 240 next Friday, ±15', FUTURE),
+             ('PRESCRIPTIVE', 'What should we do?', 'order for 255 to be safe', RESP)]
+    for i, (k, q, ex, c) in enumerate(steps):
+        h = 96 + i * 44
+        x, y = 20 + i * 100, 276 - h
+        d.box(x, y, 96, h, fill=PALE[c] if i != 2 else YELLOW, sw=2.5 if i == 2 else 1.5)
+        d.text(x + 48, y + 18, k, 9, 800, 'middle')
+        qs = _wrap(q, 12)
+        d.lines(x + 48, y + 36, qs, 10, 700, 'middle', INK, 13)
+        d.lines(x + 48, y + 42 + 13 * len(qs), _wrap(ex, 14), 9.5, 400, 'middle', DIM, 12)
+    d.text(20, 30, 'FOUR STEPS OF ANALYTICS', 13, 800)
+    d.text(220, 304, 'Predictive analytics gives a likelihood, not a certainty.', 11.5, 700, 'middle', FUTURE_D)
+    return d
+
+
+@illustration('Ps', 'Compare the options, then recommend one',
+              'Prescriptive analytics takes a forecast, such as rain likely at 2pm on sports day, and tests each '
+              'option against it and the constraints: start at 10am, move indoors, or postpone. It scores each one '
+              'and recommends the best, leaving the final decision to people.',
+              'Prescriptive analytics goes one step past prediction: it tests the options against the forecast and '
+              'the constraints, and recommends one. People still make the call. Made-up example.')
+def _ps():
+    d = D(440, 290)
+    d.box(20, 36, 400, 36, fill=PALE[FUTURE])
+    d.text(220, 59, 'Forecast: 80% chance of rain from 2pm on sports day', 12, 800, 'middle')
+    opts = [('Start at 10am', 'done by 1:30', 'all events', True), ('Move indoors', 'hall too small', 'half the events', False),
+            ('Postpone a week', 'clashes with exams', 'all events, later', False)]
+    for i, (o, con, ev, best) in enumerate(opts):
+        y = 84 + i * 56
+        d.box(20, y, 400, 48, fill=PALE[RESP] if best else WHITE, sw=2.5 if best else 1.5)
+        d.text(34, y + 20, o, 12, 800)
+        d.text(34, y + 38, con, 10.5, 400, fill=DIM)
+        d.text(300, y + 28, ev, 10.5, 700, 'middle')
+        d.tick(398, y + 24, best)
+    d.text(220, 270, 'Recommended: start at 10am. A person still decides.', 12, 700, 'middle', RESP_D)
+    return d
+
+
+@illustration('Rc', 'Two ways to recommend',
+              'Recommendation engines mostly mix two ideas. Content-based: suggest things similar to what you liked, '
+              'such as more football clips. Collaborative: suggest what people with similar tastes liked, such as a '
+              'cooking channel. Each click feeds back in, which can narrow what you are shown.',
+              'Recommenders suggest things like what you liked, and things people like you liked. Every click feeds '
+              'back in, so a feed can narrow over time unless it mixes in something new.')
+def _rc():
+    d = D(440, 290)
+    d.box(20, 40, 196, 170, fill=PALE[SAFE])
+    d.text(118, 60, 'LIKE WHAT YOU LIKED', 10.5, 800, 'middle', SAFE_D)
+    d.text(118, 78, 'content-based', 10.5, 400, 'middle', DIM)
+    d.lines(118, 104, ['you watched', 'football clips'], 11, 700, 'middle')
+    d.arrow(118, 124, 118, 150)
+    d.box(48, 152, 140, 40, fill=WHITE)
+    d.text(118, 177, 'more football', 12, 800, 'middle')
+    d.box(224, 40, 196, 170, fill=PALE[CREATIVE])
+    d.text(322, 60, 'LIKED BY PEOPLE LIKE YOU', 10.5, 800, 'middle', CREATIVE_D)
+    d.text(322, 78, 'collaborative', 10.5, 400, 'middle', DIM)
+    d.lines(322, 104, ['others who watch football', 'and music also watch…'], 10.5, 700, 'middle')
+    d.arrow(322, 124, 322, 150)
+    d.box(252, 152, 140, 40, fill=WHITE)
+    d.text(322, 177, 'a cooking channel', 12, 800, 'middle')
+    d.box(20, 224, 400, 54, fill=YELLOW)
+    d.lines(220, 246, ['Every click feeds back in, which can narrow your feed', 'unless the system mixes in something new.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Ch', 'From a risk score to an action',
+              'A churn model scores each subscriber\'s chance of leaving. Those above a threshold get an action, such '
+              'as a reminder or an offer. Afterwards, the business checks whether the action really kept people, '
+              'compared with similar people who got nothing, because some would have stayed anyway.',
+              'Churn prediction is only useful if it leads to action, and if that action is tested: compared with '
+              'similar customers who got nothing, did it change anything? Made-up numbers.')
+def _ch():
+    d = D(440, 290)
+    subs = [('Amir', 12), ('Bea', 34), ('Chloe', 85), ('Dev', 71)]
+    d.head(20, 24, 'Chance of leaving')
+    for i, (n, p) in enumerate(subs):
+        y = 40 + i * 34
+        d.text(20, y + 18, n, 11.5, 700)
+        d.add(f'<rect x="80" y="{y + 6}" width="200" height="16" fill="{WHITE}" stroke="{INK}" stroke-width="1"/>')
+        d.add(f'<rect x="80" y="{y + 6}" width="{p * 2}" height="16" fill="{SMART if p > 60 else PALE[SMART]}" stroke="{INK}" stroke-width="1"/>')
+        d.text(288, y + 19, f'{p}%', 11, 800)
+    d.add(f'<line x1="200" y1="36" x2="200" y2="176" stroke="{SMART_D}" stroke-width="2" stroke-dasharray="5 4"/>')
+    d.text(200, 188, 'threshold 60%', 10, 800, 'middle', SMART_D)
+    d.box(330, 64, 90, 84, fill=PALE[RESP])
+    d.lines(375, 92, ['Chloe, Dev:', 'send an', 'offer'], 11, 700, 'middle')
+    d.arrow(316, 106, 328, 106)
+    d.box(20, 206, 400, 72, fill=YELLOW)
+    d.text(32, 226, 'THEN TEST IT', 10.5, 800)
+    d.lines(32, 246, ['Compare with similar people who got no offer:', 'did the offer keep anyone who would have left?'], 11, 400, gap=16)
+    return d
+
+
+@illustration('Sa', 'Why tone is hard to read',
+              'Simple sentiment analysis counts positive and negative words, which goes wrong with sarcasm ("Great, '
+              'another Monday"), negation ("not bad") and mixed reviews ("food great, service slow"). Better systems '
+              'read the whole sentence, and can score each topic separately.',
+              'Sentiment analysis works well on clear reviews and struggles with sarcasm, negation and mixed '
+              'opinions. Scoring each topic separately, such as food and service, gives a truer picture.')
+def _sa():
+    d = D(440, 290)
+    d.text(160, 30, 'WORD-COUNTING SAYS', 10, 800, 'middle', DIM)
+    d.text(340, 30, 'REALLY', 10, 800, 'middle', DIM)
+    rows = [('SARCASM', '"Great, another Monday."', ('positive', RESP_D), ('negative', RED)),
+            ('NEGATION', '"Not bad at all."', ('negative', RED), ('positive', RESP_D)),
+            ('MIXED', '"Food great, service slow."', ('positive', RESP_D), ('food + / service −', SMART_D))]
+    for i, (k, quote, said, real) in enumerate(rows):
+        y = 42 + i * 66
+        d.box(20, y, 400, 58)
+        d.text(32, y + 20, k, 10, 800, fill=DIM)
+        d.text(32, y + 42, quote, 12, 700)
+        d.text(260, y + 42, said[0], 11, 700, 'middle', said[1])
+        d.text(360, y + 42, real[0], 11, 800, 'middle', real[1])
+    d.text(220, 254, 'Reading the whole sentence, and scoring each topic,', 11.5, 700, 'middle', SMART_D)
+    d.text(220, 272, 'gets much closer to what people mean.', 11.5, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Np', 'From words to an action',
+              'A voice assistant turns "Set a timer for ten minutes" into an action in steps: speech becomes text, '
+              'the text is split into tokens, the system finds the intent (set a timer) and the details (10 minutes), '
+              'then the app acts. Modern large language models do several of these steps at once.',
+              'Language processing turns messy human words into something a computer can act on: what you want '
+              '(the intent) and the details. Today\'s large language models handle several of these steps in one go.')
+def _np():
+    d = D(440, 290)
+    d.box(20, 36, 400, 40, fill=YELLOW)
+    d.text(220, 61, '"Set a timer for ten minutes"', 14, 800, 'middle')
+    stages = [('SPEECH → TEXT', 'set a timer for ten minutes', SAFE),
+              ('TOKENS', 'set · a · timer · for · ten · minutes', CREATIVE),
+              ('INTENT', 'start a timer', SMART),
+              ('DETAILS', 'length = 10 minutes', RESP)]
+    for i, (k, v, c) in enumerate(stages):
+        y = 90 + i * 40
+        d.box(20, y, 400, 32, fill=PALE[c])
+        d.text(32, y + 21, k, 10, 800)
+        d.text(150, y + 21, v, 11.5, 700)
+    d.text(220, 268, 'Large language models now do several steps in one go.', 11, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Cv', 'What a computer sees in a picture',
+              'To a computer an image is a grid of numbers, one per pixel. A vision model passes it through layers: '
+              'early ones pick out edges, later ones combine them into shapes, and the last ones recognise objects, '
+              'here a crack in a bottle.',
+              'Computer vision starts from numbers, one per pixel, and builds up from edges to shapes to objects. '
+              'Like any model, it can be fooled by things it rarely saw in training, such as unusual lighting.')
+def _cv():
+    d = D(440, 280)
+    vals = [[12, 14, 200, 13], [11, 210, 205, 12], [14, 198, 15, 10], [13, 12, 11, 14]]
+    d.text(70, 30, 'PIXELS = NUMBERS', 9.5, 800, 'middle')
+    for r, row in enumerate(vals):
+        for c, v in enumerate(row):
+            fill = '#888' if v > 100 else '#eee'
+            d.add(f'<rect x="{20 + c * 25}" y="{40 + r * 25}" width="25" height="25" fill="{fill}" stroke="{WHITE}" stroke-width="1"/>')
+            d.text(32.5 + c * 25, 56 + r * 25, str(v), 8.5, 700, 'middle', WHITE if v > 100 else INK)
+    stages = [('EDGES', SAFE), ('SHAPES', CREATIVE), ('OBJECTS', SMART)]
+    for i, (k, c) in enumerate(stages):
+        x = 140 + i * 92
+        d.arrow(x - 16, 90, x - 4, 90)
+        d.box(x, 50, 80, 80, fill=PALE[c])
+        d.text(x + 40, 70, k, 10, 800, 'middle')
+        if i == 0:
+            d.add(f'<path d="M{x + 16} 110 l16 -24 M{x + 40} 112 l12 -26 M{x + 56} 92 h14" stroke="{INK}" stroke-width="2"/>')
+        elif i == 1:
+            d.add(f'<path d="M{x + 22} 118 v-28 a18 18 0 0 1 36 0 v28 z" fill="none" stroke="{INK}" stroke-width="2"/>')
+        else:
+            d.add(f'<path d="M{x + 30} 120 v-30 l6 -10 h8 l6 10 v30 z" fill="{WHITE}" stroke="{INK}" stroke-width="1.5"/><path d="M{x + 38} 96 l4 8 l-4 6 l3 8" stroke="{RED}" stroke-width="2" fill="none"/>')
+    d.box(140, 150, 264, 40, fill=YELLOW)
+    d.text(272, 175, 'Answer: bottle, crack found', 12, 800, 'middle')
+    d.box(20, 210, 400, 52, fill=WHITE, dash=True)
+    d.lines(220, 230, ['Early layers see edges; later layers see objects.', 'Unusual lighting or angles can fool it.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Ge', 'How an AI answer chooses its sources',
+              'When you ask an AI search tool a question, it searches the web, reads some pages and writes an '
+              'answer that cites a few of them. Generative engine optimisation tries to make a page more likely to '
+              'be cited, for example with clear answers, sources and statistics. In one 2024 study this raised '
+              'visibility by up to about 40%.',
+              'Generative engine optimisation tries to get pages cited in AI answers. One study (Aggarwal and others, '
+              '2024) found adding citations, quotations and statistics helped most, but results vary and added '
+              'numbers still need to be true.')
+def _ge():
+    d = D(440, 290)
+    steps = [('YOUR QUESTION', ['"best bike lights', 'for winter?"'], YELLOW),
+             ('AI SEARCHES', ['and reads', 'some pages'], PALE[SAFE]),
+             ('WRITES AN ANSWER', ['citing a', 'few of them'], PALE[CREATIVE])]
+    steps_row(d, 36, steps, h=70)
+    d.box(20, 124, 400, 104)
+    d.text(32, 144, 'WHAT HELPED A PAGE GET CITED, IN ONE STUDY', 10, 800, fill=SMART_D)
+    for i, s in enumerate(['quotations from trusted sources', 'citing its own sources', 'relevant statistics', 'clear, direct answers']):
+        d.text(32, 166 + i * 17, '· ' + s, 11, 400)
+    d.box(20, 238, 400, 44, fill=PALE[SMART])
+    d.lines(220, 256, ['Up to about 40% more visible in that study; results vary.', 'Added statistics still have to be true.'], 10.5, 700, 'middle', INK, 15)
     return d
 
 

@@ -94,5 +94,89 @@
  "Uc": {
   "title": "How an uncensored model differs from a jailbreak",
   "caption": "An uncensored model has its refusals removed from the file itself, unlike a jailbreak, which tricks an unchanged model. Because it runs on someone's own computer, nobody can patch it. Illegal content is still illegal, whichever tool makes it."
+ },
+ "Su": {
+  "title": "Learn from answers, then test on new ones",
+  "caption": "Supervised learning trains on examples that come with the right answers. The honest test is on examples kept back from training: a model can score well on what it has seen and badly on what it hasn't. Made-up numbers."
+ },
+ "Un": {
+  "title": "Finding groups no one named",
+  "caption": "Unsupervised learning finds structure in data with no answers attached. It can find the groups, but people still decide what each group means, and whether it is useful."
+ },
+ "Rr": {
+  "title": "Choosing the line with the smallest errors",
+  "caption": "Regression finds the line (or curve) that keeps the errors, the gaps between real points and the line, as small as possible overall. Its predictions are best read as a likely range. Made-up numbers."
+ },
+ "Cl": {
+  "title": "Where to draw the line",
+  "caption": "Most classifiers give a score, and a threshold turns it into a decision. Moving the threshold trades one mistake for another, so the right setting depends on which mistake matters more. Made-up example."
+ },
+ "Cu": {
+  "title": "How k-means finds groups",
+  "caption": "K-means, one common clustering method, repeats two steps, assign each point to its nearest centre, then move each centre to the middle of its points, until nothing changes. You choose how many groups it looks for."
+ },
+ "Dt": {
+  "title": "How a tree picks its questions",
+  "caption": "A decision tree is built by trying possible questions and keeping the one that best separates the answers into pure groups, then repeating inside each branch. Made-up data."
+ },
+ "Rf": {
+  "title": "Why a forest of trees differs",
+  "caption": "A random forest gives each tree a different random sample of the rows and of the questions it may ask. Different trees make different mistakes, so the vote is steadier than any one tree."
+ },
+ "Gb": {
+  "title": "Each model learns what is left over",
+  "caption": "Gradient boosting adds small models one at a time, each trained on the errors still left. It is one of the most accurate methods for tables of data. Made-up numbers."
+ },
+ "Fe": {
+  "title": "Three ways to make better features",
+  "caption": "Models only see numbers, and they learn faster from numbers that capture what matters. Combining, transforming and encoding raw data are three common ways to make better features. Made-up example."
+ },
+ "Of": {
+  "title": "The sweet spot between too simple and too complex",
+  "caption": "Overfitting shows up as a gap: training error keeps falling while error on new data starts rising. Checking on kept-back data shows where to stop."
+ },
+ "Ad": {
+  "title": "Learn what is normal, flag what is far from it",
+  "caption": "Anomaly detection learns a picture of normal and scores how far each new event is from it. Flags are for a person to check: unusual isn't always wrong. Made-up example."
+ },
+ "Fc": {
+  "title": "A forecast is a range, not a point",
+  "caption": "Good forecasts come with a range. The further ahead they look, the wider it gets: next week is easier to predict than next term. Made-up numbers."
+ },
+ "Tm": {
+  "title": "Trend, season and the rest",
+  "caption": "Time-series methods often split data into a trend, a repeating season and leftover noise. A jump that is just \"summer again\" isn't news; a change in the trend might be. Made-up data."
+ },
+ "Pa": {
+  "title": "From what happened to what will happen",
+  "caption": "Predictive analytics turns past data into a likely future, stated with how sure it is. It is the third of four common analytics steps, before deciding what to do. Made-up numbers."
+ },
+ "Ps": {
+  "title": "Compare the options, then recommend one",
+  "caption": "Prescriptive analytics goes one step past prediction: it tests the options against the forecast and the constraints, and recommends one. People still make the call. Made-up example."
+ },
+ "Rc": {
+  "title": "Two ways to recommend",
+  "caption": "Recommenders suggest things like what you liked, and things people like you liked. Every click feeds back in, so a feed can narrow over time unless it mixes in something new."
+ },
+ "Ch": {
+  "title": "From a risk score to an action",
+  "caption": "Churn prediction is only useful if it leads to action, and if that action is tested: compared with similar customers who got nothing, did it change anything? Made-up numbers."
+ },
+ "Sa": {
+  "title": "Why tone is hard to read",
+  "caption": "Sentiment analysis works well on clear reviews and struggles with sarcasm, negation and mixed opinions. Scoring each topic separately, such as food and service, gives a truer picture."
+ },
+ "Np": {
+  "title": "From words to an action",
+  "caption": "Language processing turns messy human words into something a computer can act on: what you want (the intent) and the details. Today's large language models handle several of these steps in one go."
+ },
+ "Cv": {
+  "title": "What a computer sees in a picture",
+  "caption": "Computer vision starts from numbers, one per pixel, and builds up from edges to shapes to objects. Like any model, it can be fooled by things it rarely saw in training, such as unusual lighting."
+ },
+ "Ge": {
+  "title": "How an AI answer chooses its sources",
+  "caption": "Generative engine optimisation tries to get pages cited in AI answers. One study (Aggarwal and others, 2024) found adding citations, quotations and statistics helped most, but results vary and added numbers still need to be true."
  }
 }
