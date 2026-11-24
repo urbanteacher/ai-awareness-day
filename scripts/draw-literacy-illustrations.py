@@ -39,6 +39,11 @@ Checked against (24 November 2026):
 - Automation: hyperautomation as named by Gartner, top strategic technology trends for 2020 (October 2019); process
   mining from event logs (case, activity, timestamp): van der Aalst, Process Mining (2016); copilots: Peng et al. 2023
   (arXiv 2302.06590), a set coding task 55.8% faster with GitHub Copilot.
+- Foundations: I. J. Good, "Speculations Concerning the First Ultraintelligent Machine", Advances in Computers 6
+  (1965); Grace et al., "Thousands of AI Authors on the Future of AI" (arXiv 2401.02843; JAIR 2025): 2,778
+  researchers, 50% chance by 2047 that machines beat people at every task; Bommasani et al. 2021, "On the
+  Opportunities and Risks of Foundation Models" (arXiv 2108.07258); Krizhevsky et al. 2012 (AlexNet); Vaswani et al.
+  2017 (the transformer).
 """
 import json
 import os
@@ -2316,6 +2321,277 @@ def _cp():
     d.box(20, 196, 400, 82, fill=YELLOW)
     d.lines(220, 218, ['One 2023 experiment: programmers with a copilot', 'finished a set task 55.8% faster.',
                        'You are still responsible for what you keep.'], 11, 700, 'middle', INK, 17)
+    return d
+
+
+# ---- Foundations --------------------------------------------------------------------------------------------------
+
+@illustration('Ai', 'AI is the big family',
+              'Artificial intelligence is the widest circle. Inside it is machine learning, systems that learn from '
+              'data. Inside that is deep learning, using many-layered neural networks. Inside that are generative '
+              'models such as large language models. Some AI, like a chess program\'s rules, sits outside machine '
+              'learning altogether.',
+              'Every AI system is built and used by people, for a purpose they chose. The terms nest: generative AI '
+              'is a kind of deep learning, which is a kind of machine learning, which is one kind of AI.')
+def _ai():
+    d = D(440, 290)
+    rings = [(220, 140, 200, 118, PALE[SAFE], 'ARTIFICIAL INTELLIGENCE', 46),
+             (274, 150, 132, 86, PALE[CREATIVE], 'MACHINE LEARNING', 82),
+             (288, 164, 92, 62, PALE[SMART], 'DEEP LEARNING', 122),
+             (296, 180, 56, 32, PALE[RESP], 'GENERATIVE', 172)]
+    for cx, cy, rx, ry, f, k, ty in rings:
+        d.add(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{f}" stroke="{INK}" stroke-width="1.5"/>')
+        d.text(cx, ty, k, 10, 800, 'middle')
+    d.text(296, 192, 'e.g. chatbots', 9.5, 400, 'middle', DIM)
+    d.lines(80, 130, ['rule-based AI:', 'chess rules,', 'route finders'], 10, 700, 'middle', DIM, 13)
+    d.box(20, 264, 400, 22, fill=YELLOW)
+    d.text(220, 280, 'Every one of them is built and used by people, for a purpose.', 11, 700, 'middle')
+    return d
+
+
+@illustration('Rsi', 'AI helping to build the next AI',
+              'Version 1 of a model helps make version 2: writing some of the code, creating training data, grading '
+              'answers and testing for problems. If version 2 is better at that work, it helps more with version 3. '
+              'I. J. Good described this loop in 1965. Whether it speeds up or hits limits, such as computing power '
+              'and people\'s checks, is debated.',
+              'AI companies already use their models to help train and test the next ones. The loop could speed up '
+              'progress; limits like computing power, data and human oversight could slow it. That is why the '
+              'checks matter.')
+def _rsi():
+    d = D(440, 290)
+    for i, (k, x) in enumerate([('version 1', 70), ('version 2', 220), ('version 3', 370)]):
+        r = 30 + i * 6
+        d.add(f'<circle cx="{x}" cy="100" r="{r}" fill="{PALE[CREATIVE] if i < 2 else CREATIVE}" stroke="{INK}" stroke-width="1.5"/>')
+        d.text(x, 104, k, 11, 800, 'middle')
+        if i < 2:
+            d.arrow(x + r + 4, 100, x + 150 - r - 10, 100, stroke=CREATIVE_D, sw=2.4)
+    d.text(145, 56, 'helps build', 10, 700, 'middle', DIM)
+    d.text(295, 56, 'helps more?', 10, 700, 'middle', DIM)
+    d.box(20, 150, 196, 104, fill=PALE[RESP])
+    d.text(118, 170, 'ALREADY HAPPENING', 10, 800, 'middle', RESP_D)
+    d.lines(118, 190, ['writes some of the code', 'makes training data', 'grades answers', 'tests for problems'], 10.5, 700, 'middle', INK, 15)
+    d.box(224, 150, 196, 104, fill=PALE[SMART])
+    d.text(322, 170, 'DEBATED', 10, 800, 'middle', SMART_D)
+    d.lines(322, 190, ['does it speed up, or', 'hit limits: computing', 'power, data, people\'s', 'checks?'], 10.5, 700, 'middle', INK, 15)
+    d.text(220, 276, 'First described by I. J. Good in 1965.', 11, 700, 'middle', DIM)
+    return d
+
+
+@illustration('Si', 'Narrow, general, beyond',
+              'Today\'s AI is narrow: it can beat every human at chess but cannot do most other jobs. Artificial '
+              'general intelligence would match people across almost every task. Superintelligence would go far '
+              'beyond the best people in almost every field. Both are hypothetical; experts disagree on whether, or '
+              'when, they could arrive, and how to keep them under control.',
+              'Superintelligence is a hypothetical AI far beyond the best human minds. Whether it could arrive, and '
+              'when, is disputed. The question of how people would keep control is one reason AI safety research '
+              'exists.')
+def _si():
+    d = D(440, 290)
+    d.arrow(40, 44, 404, 44, stroke=DIM)
+    d.text(222, 36, 'more capable', 10, 700, 'middle', DIM)
+    stages = [('NARROW AI', 'today: superhuman at', 'one thing, e.g. chess', 40, 150, SAFE, True),
+              ('GENERAL AI', 'would match people', 'at almost every task', 160, 112, CREATIVE, False),
+              ('SUPERINTELLIGENCE', 'far beyond the best', 'people at almost all', 280, 74, FUTURE, False)]
+    for k, a, b, x, y, c, real in stages:
+        d.box(x, y, 124, 66, fill=PALE[c], dash=not real)
+        d.text(x + 62, y + 20, k, 9.5, 800, 'middle')
+        d.lines(x + 62, y + 38, [a, b], 9.5, 700, 'middle', INK, 13)
+    d.text(102, 232, 'exists', 10.5, 800, 'middle', RESP_D)
+    d.text(282, 200, 'hypothetical: dashed', 10.5, 800, 'middle', DIM)
+    d.box(20, 244, 400, 40, fill=YELLOW)
+    d.lines(220, 260, ['Experts disagree on whether and when; keeping control', 'of a far more capable system is an open question.'], 10.5, 700, 'middle', INK, 15)
+    return d
+
+
+@illustration('Agi', 'Good at some things, or almost everything',
+              'Today\'s AI is uneven: very strong at some tasks, such as writing code or translating, and weak at '
+              'others, such as handling the physical world or long, open-ended projects. AGI would be strong across '
+              'almost all of them. In a 2023 survey of 2,778 AI researchers, the average answer gave a 50% chance '
+              'that machines could beat people at every task by 2047, with wide disagreement.',
+              'AGI is hypothetical: an AI as capable as people across almost any intellectual task. Researchers\' '
+              'forecasts vary hugely (Grace and others, 2024), so treat any date with care.')
+def _agi():
+    d = D(440, 290)
+    tasks = [('translating', 90), ('writing code', 85), ('maths problems', 75), ('long projects', 35),
+             ('physical world', 20), ('learning from 1 example', 30)]
+    d.text(20, 30, 'TODAY\'S AI: UNEVEN', 10.5, 800, fill=SAFE_D)
+    d.text(300, 30, 'AGI WOULD BE', 10.5, 800, fill=CREATIVE_D)
+    for i, (k, v) in enumerate(tasks):
+        y = 42 + i * 24
+        d.text(20, y + 14, k, 10.5, 700)
+        d.add(f'<rect x="150" y="{y + 3}" width="120" height="14" fill="{WHITE}" stroke="{INK}" stroke-width="1"/>')
+        d.add(f'<rect x="150" y="{y + 3}" width="{v * 1.2}" height="14" fill="{SAFE}"/>')
+        d.add(f'<rect x="300" y="{y + 3}" width="120" height="14" fill="{PALE[CREATIVE]}" stroke="{CREATIVE_D}" stroke-width="1" stroke-dasharray="4 3"/>')
+    d.text(210, 196, 'made-up levels', 9.5, 400, 'middle', DIM)
+    d.text(360, 196, 'strong at almost all', 9.5, 700, 'middle', CREATIVE_D)
+    d.box(20, 208, 400, 72, fill=YELLOW)
+    d.text(32, 228, 'WHEN? A 2023 SURVEY OF 2,778 AI RESEARCHERS', 10, 800)
+    d.lines(32, 248, ['50% chance machines beat people at every task by 2047,', 'but answers ranged from a few years to never.'], 11, 700, 'start', INK, 16)
+    return d
+
+
+@illustration('Ml', 'Rules in, or rules out',
+              'In traditional programming, people write the rules, and the computer applies them to data to get '
+              'answers. In machine learning, people give the computer data and the right answers, and it works out '
+              'the rules, a model, which it can then apply to new data.',
+              'Machine learning flips programming round: instead of writing the rules, people supply examples and '
+              'the system learns them. The rules it learns are only as good as the examples.')
+def _ml():
+    d = D(440, 290)
+    for row, (k, ins, out, c) in enumerate([('TRADITIONAL PROGRAMMING', ['rules (written by people)', 'data'], 'answers', SAFE),
+                                            ('MACHINE LEARNING', ['data', 'the right answers'], 'rules: a model', CREATIVE)]):
+        y = 34 + row * 110
+        d.text(20, y, k, 10.5, 800, fill=SAFE_D if row == 0 else CREATIVE_D)
+        for i, v in enumerate(ins):
+            d.box(20, y + 10 + i * 38, 160, 30, fill=PALE[c])
+            d.text(100, y + 30 + i * 38, v, 11, 700, 'middle')
+            d.arrow(182, y + 25 + i * 38, 216, y + 46)
+        d.box(218, y + 24, 70, 44, fill=WHITE)
+        d.text(253, y + 50, 'computer', 10.5, 800, 'middle')
+        d.arrow(290, y + 46, 316, y + 46)
+        d.box(318, y + 24, 102, 44, fill=YELLOW if row else WHITE, sw=2.5 if row else 1.5)
+        d.text(369, y + 50, out, 11.5, 800, 'middle')
+    d.text(220, 268, 'The learned rules are only as good as the examples.', 11.5, 700, 'middle', CREATIVE_D)
+    return d
+
+
+@illustration('Dl', 'Many layers that find their own features',
+              'Older machine learning needed people to pick the features, such as "has whiskers". Deep learning '
+              'feeds in raw data, like pixels, and passes it through many layers; each layer learns its own '
+              'features, simple ones first, then complex ones. It needs lots of data and computing, and it powered '
+              'the jumps in images (2012), the transformer (2017) and chatbots (2022).',
+              '"Deep" means many layers. Deep learning learns its own features from raw data, which made it the '
+              'engine of modern AI, at the cost of needing huge amounts of data and computing power.')
+def _dl():
+    d = D(440, 290)
+    d.text(20, 30, 'OLDER MACHINE LEARNING', 10.5, 800, fill=DIM)
+    steps_row(d, 38, [('PHOTO', ['raw pixels'], WHITE), ('PEOPLE PICK FEATURES', ['whiskers? ears?'], PALE[SMART]),
+                      ('SMALL MODEL', ['cat or dog'], WHITE)], h=50)
+    d.text(20, 112, 'DEEP LEARNING', 10.5, 800, fill=CREATIVE_D)
+    d.box(20, 120, 80, 64)
+    d.lines(60, 148, ['raw', 'pixels'], 11, 700, 'middle', INK, 14)
+    for i in range(6):
+        x = 116 + i * 34
+        d.add(f'<rect x="{x}" y="{124 + i * 0}" width="24" height="56" fill="{PALE[CREATIVE] if i % 2 else CREATIVE}" stroke="{INK}" stroke-width="1"/>')
+    d.arrow(102, 152, 114, 152)
+    d.arrow(322, 152, 338, 152)
+    d.text(218, 196, 'many layers learn their own features', 10, 700, 'middle', CREATIVE_D)
+    d.box(340, 120, 80, 64, fill=YELLOW)
+    d.text(380, 156, 'cat', 13, 800, 'middle')
+    for i, (y, k) in enumerate([('2012', 'images'), ('2017', 'transformer'), ('2022', 'chatbots')]):
+        x = 20 + i * 136
+        d.box(x, 214, 128, 40, fill=PALE[SAFE])
+        d.text(x + 64, 232, y, 12, 800, 'middle')
+        d.text(x + 64, 247, k, 10, 700, 'middle', DIM)
+    d.text(220, 276, 'Needs lots of data and computing power.', 11, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Nn', 'Inside one node, and how it learns',
+              'Each node takes in numbers, multiplies each by a weight, the strength of that connection, adds them '
+              'up and passes on a result. A network is layers of these nodes. Learning means nudging the weights so '
+              'the network\'s answers get closer to the right ones.',
+              'A neural network is layers of simple nodes joined by weighted connections. Training adjusts the '
+              'weights; the network\'s "knowledge" is nothing more than those numbers. Loosely brain-inspired, but '
+              'much simpler than a brain.')
+def _nn():
+    d = D(440, 290)
+    d.head(20, 24, 'One node')
+    ins = [('0.9', '× 0.8'), ('0.2', '× −0.5'), ('0.6', '× 0.3')]
+    for i, (v, w) in enumerate(ins):
+        y = 50 + i * 40
+        d.add(f'<circle cx="40" cy="{y}" r="14" fill="{PALE[SAFE]}" stroke="{INK}" stroke-width="1.4"/>')
+        d.text(40, y + 4, v, 10, 800, 'middle')
+        d.add(f'<line x1="54" y1="{y}" x2="146" y2="90" stroke="{INK}" stroke-width="{1 + abs(float(w[2:].replace("−", "-"))) * 3:.1f}"/>')
+        d.text(88, [44, 82, 132][i], w, 10, 800, 'middle', SMART_D)
+    d.add(f'<circle cx="166" cy="90" r="22" fill="{YELLOW}" stroke="{INK}" stroke-width="1.6"/>')
+    d.text(166, 94, 'add up', 10, 800, 'middle')
+    d.arrow(190, 90, 218, 90)
+    d.text(224, 94, '0.80', 13, 800)
+    d.text(20, 172, '0.9×0.8 + 0.2×(−0.5) + 0.6×0.3 = 0.80', 10.5, 700, fill=DIM)
+    d.head(290, 24, 'A network')
+    layers = [3, 4, 2]
+    pos = [[(290 + li * 60, 50 + (130 - (n - 1) * 36) / 2 + k * 36) for k in range(n)] for li, n in enumerate(layers)]
+    for a, b in zip(pos, pos[1:]):
+        for (x1, y1) in a:
+            for (x2, y2) in b:
+                d.add(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{DIM}" stroke-width="1"/>')
+    for layer in pos:
+        for x, y in layer:
+            d.add(f'<circle cx="{x}" cy="{y}" r="9" fill="{PALE[CREATIVE]}" stroke="{INK}" stroke-width="1.2"/>')
+    d.box(20, 196, 400, 82, fill=WHITE, dash=True)
+    d.text(32, 216, 'LEARNING', 10, 800, fill=CREATIVE_D)
+    d.lines(32, 236, ['Thick lines are strong weights. Training nudges every weight', 'so answers get closer to the right ones. Its "knowledge"',
+                      'is just these numbers: billions of them in a big model.'], 11, 700, 'start', INK, 16)
+    return d
+
+
+@illustration('Al', 'One algorithm, different data, different models',
+              'An algorithm is a list of steps. A learning algorithm\'s steps are: guess, measure the error, adjust, '
+              'repeat. Run the same algorithm on photos of cats and it produces a cat detector; run it on photos of '
+              'rashes and it produces a rash checker. The algorithm is the recipe; the model is what it bakes.',
+              'In everyday life an algorithm is any set of steps. In machine learning it is the method used to learn '
+              'from data, and the same method trained on different data makes very different models.')
+def _al():
+    d = D(440, 290)
+    d.box(20, 36, 170, 150, fill=PALE[SAFE])
+    d.text(105, 56, 'THE ALGORITHM', 10.5, 800, 'middle', SAFE_D)
+    for i, k in enumerate(['1  guess', '2  measure the error', '3  adjust', '4  repeat']):
+        d.text(36, 82 + i * 24, k, 11.5, 700)
+    d.text(105, 176, 'the recipe', 10, 400, 'middle', DIM)
+    for i, (data, model, c) in enumerate([('+ cat photos', 'a cat detector', CREATIVE), ('+ rash photos', 'a rash checker', SMART)]):
+        y = 40 + i * 76
+        d.arrow(192, 110, 214, y + 30)
+        d.box(216, y, 90, 60, fill=WHITE)
+        d.text(261, y + 34, data, 10.5, 700, 'middle')
+        d.arrow(308, y + 30, 324, y + 30)
+        d.box(326, y, 94, 60, fill=PALE[c])
+        d.lines(373, y + 26, ['model:', model], 10.5, 800, 'middle', INK, 15)
+    d.box(20, 204, 400, 72, fill=YELLOW)
+    d.lines(220, 226, ['Same recipe, different ingredients, different results.', 'The algorithm is the method;',
+                       'the model is what it produces.'], 11, 700, 'middle', INK, 16)
+    return d
+
+
+@illustration('Md', 'What a model actually is',
+              'Training runs an algorithm over data and produces a model: a file of numbers, its parameters. Using '
+              'the model means feeding in an input, a photo or a question, and letting those numbers turn it into an '
+              'output. A small model might have thousands of numbers; a large language model has billions.',
+              'A model is the trained result, a file of learned numbers that turns inputs into outputs. It knows '
+              'nothing beyond what those numbers captured from its training data.')
+def _md():
+    d = D(440, 290)
+    d.text(20, 30, 'MAKING IT (TRAINING)', 10.5, 800, fill=DIM)
+    steps_row(d, 38, [('DATA', ['examples'], PALE[SAFE]), ('ALGORITHM', ['learns from them'], PALE[CREATIVE]),
+                      ('MODEL', ['a file of numbers'], YELLOW)], h=54)
+    d.box(308, 104, 112, 46, fill=WHITE, dash=True)
+    d.lines(364, 122, ['0.12 −0.80 1.31', '0.07 0.44 …'], 10, 700, 'middle', DIM, 13)
+    d.text(20, 176, 'USING IT', 10.5, 800, fill=DIM)
+    steps_row(d, 184, [('INPUT', ['a photo of a leaf'], WHITE), ('MODEL', ['its numbers do', 'the sums'], YELLOW),
+                       ('OUTPUT', ['"oak, 94% sure"'], PALE[RESP])], h=58)
+    d.text(220, 270, 'Thousands of numbers in a small model; billions in an LLM.', 11, 700, 'middle', SMART_D)
+    return d
+
+
+@illustration('Fm', 'One big model, many jobs',
+              'A foundation model is trained once, at great cost, on broad data such as text, code and images. '
+              'Many different tools are then built on it, by prompting or fine-tuning: a homework helper, a coding '
+              'assistant, a translator, a medical note writer. Its strengths, and its flaws and biases, pass into '
+              'all of them.',
+              'The term "foundation model" comes from Stanford researchers (Bommasani and others, 2021). Because '
+              'many tools share one base model, a flaw in the base can show up everywhere it is used.')
+def _fm():
+    d = D(440, 290)
+    d.box(120, 150, 200, 60, fill=PALE[SAFE], sw=2.5)
+    d.lines(220, 172, ['FOUNDATION MODEL', 'trained once on broad data'], 11, 800, 'middle', INK, 18)
+    tools = [('homework helper', 20), ('coding assistant', 126), ('translator', 232), ('medical notes', 330)]
+    for k, x in tools:
+        d.box(x, 50, 92 if x < 330 else 90, 44, fill=PALE[CREATIVE])
+        d.lines(x + 46, 70, k.split(' ', 1) if ' ' in k else [k], 10.5, 700, 'middle', INK, 13)
+        d.arrow(220, 148, x + 46, 96)
+    d.text(220, 36, 'BUILT ON IT, BY PROMPTING OR FINE-TUNING', 10, 800, 'middle', CREATIVE_D)
+    d.box(20, 226, 400, 54, fill=YELLOW)
+    d.lines(220, 248, ['Strengths are shared, and so are flaws:', 'a bias in the base can show up in every tool.'], 11, 700, 'middle', INK, 16)
     return d
 
 

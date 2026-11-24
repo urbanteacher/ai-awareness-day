@@ -333,6 +333,36 @@
   ],
   "Cp": [
    "s113"
+  ],
+  "Ai": [
+   "s114"
+  ],
+  "Rsi": [
+   "s115"
+  ],
+  "Si": [
+   "s116"
+  ],
+  "Agi": [
+   "s117"
+  ],
+  "Ml": [
+   "s118"
+  ],
+  "Dl": [
+   "s119"
+  ],
+  "Nn": [
+   "s120"
+  ],
+  "Al": [
+   "s121"
+  ],
+  "Md": [
+   "s122"
+  ],
+  "Fm": [
+   "s123"
   ]
  },
  "stills": {
@@ -674,6 +704,36 @@
   },
   "s113": {
    "title": "It suggests; you decide"
+  },
+  "s114": {
+   "title": "AI is the big family"
+  },
+  "s115": {
+   "title": "AI helping to build the next AI"
+  },
+  "s116": {
+   "title": "Narrow, general, beyond"
+  },
+  "s117": {
+   "title": "Good at some things, or almost everything"
+  },
+  "s118": {
+   "title": "Rules in, or rules out"
+  },
+  "s119": {
+   "title": "Many layers that find their own features"
+  },
+  "s120": {
+   "title": "Inside one node, and how it learns"
+  },
+  "s121": {
+   "title": "One algorithm, different data, different models"
+  },
+  "s122": {
+   "title": "What a model actually is"
+  },
+  "s123": {
+   "title": "One big model, many jobs"
   }
  }
 }

@@ -306,5 +306,45 @@
  "Cp": {
   "title": "It suggests; you decide",
   "caption": "Copilots speed up drafting by suggesting as you work. In one controlled study (Peng and others, 2023) developers finished a coding task 55.8% faster. Checking what you accept is still your job."
+ },
+ "Ai": {
+  "title": "AI is the big family",
+  "caption": "Every AI system is built and used by people, for a purpose they chose. The terms nest: generative AI is a kind of deep learning, which is a kind of machine learning, which is one kind of AI."
+ },
+ "Rsi": {
+  "title": "AI helping to build the next AI",
+  "caption": "AI companies already use their models to help train and test the next ones. The loop could speed up progress; limits like computing power, data and human oversight could slow it. That is why the checks matter."
+ },
+ "Si": {
+  "title": "Narrow, general, beyond",
+  "caption": "Superintelligence is a hypothetical AI far beyond the best human minds. Whether it could arrive, and when, is disputed. The question of how people would keep control is one reason AI safety research exists."
+ },
+ "Agi": {
+  "title": "Good at some things, or almost everything",
+  "caption": "AGI is hypothetical: an AI as capable as people across almost any intellectual task. Researchers' forecasts vary hugely (Grace and others, 2024), so treat any date with care."
+ },
+ "Ml": {
+  "title": "Rules in, or rules out",
+  "caption": "Machine learning flips programming round: instead of writing the rules, people supply examples and the system learns them. The rules it learns are only as good as the examples."
+ },
+ "Dl": {
+  "title": "Many layers that find their own features",
+  "caption": "\"Deep\" means many layers. Deep learning learns its own features from raw data, which made it the engine of modern AI, at the cost of needing huge amounts of data and computing power."
+ },
+ "Nn": {
+  "title": "Inside one node, and how it learns",
+  "caption": "A neural network is layers of simple nodes joined by weighted connections. Training adjusts the weights; the network's \"knowledge\" is nothing more than those numbers. Loosely brain-inspired, but much simpler than a brain."
+ },
+ "Al": {
+  "title": "One algorithm, different data, different models",
+  "caption": "In everyday life an algorithm is any set of steps. In machine learning it is the method used to learn from data, and the same method trained on different data makes very different models."
+ },
+ "Md": {
+  "title": "What a model actually is",
+  "caption": "A model is the trained result, a file of learned numbers that turns inputs into outputs. It knows nothing beyond what those numbers captured from its training data."
+ },
+ "Fm": {
+  "title": "One big model, many jobs",
+  "caption": "The term \"foundation model\" comes from Stanford researchers (Bommasani and others, 2021). Because many tools share one base model, a flaw in the base can show up everywhere it is used."
  }
 }
