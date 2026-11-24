@@ -2756,7 +2756,10 @@
 			renderBoard();
 			board.hidden = false;
 			document.documentElement.classList.add( 'alpt-board-open' );
-			if ( board.requestFullscreen ) {
+			// Full screen is for the projector. On a phone the board already fills the screen, and full screen there
+			// only adds the browser's own "drag to exit full screen" notice over the top of it.
+			var phone = window.matchMedia && window.matchMedia( '(max-width: 767px)' ).matches;
+			if ( board.requestFullscreen && ! phone ) {
 				board.requestFullscreen().catch( function () {} );
 			}
 			focusBoardTitle();

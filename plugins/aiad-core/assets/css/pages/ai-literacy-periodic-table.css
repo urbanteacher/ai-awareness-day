@@ -5069,13 +5069,21 @@ html.alpt-board-open {
     clip-path: none;
   }
 
-  /* Without the picture: the symbol as big as the block allows, the number and name around it. */
+  /* Without the picture there is only the number, symbol and name: the tile takes just their height (a big symbol,
+     not a screen of empty colour), and the words come up under it. */
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) {
+    flex: none;
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
   .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__n {
     font-size: 1.2rem;
   }
 
   .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__sym {
-    font-size: clamp(3.5rem, 15dvh, 9rem);
+    font-size: clamp(3.5rem, 24vw, 7rem);
+    line-height: 1;
   }
 
   .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-name {
@@ -5108,6 +5116,30 @@ html.alpt-board-open {
     margin-top: 0.6rem;
     padding: 0.5rem 0.75rem;
     font-size: 0.85rem;
+  }
+
+  /* Without the picture the tile is short, so the words get the room: larger, and in the middle of the space
+     between the tile and the buttons. */
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__text {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 1rem;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__title {
+    font-size: 2.2rem;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__def,
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__prompt {
+    font-size: 1.3rem;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__talk {
+    margin-top: 1rem;
+    font-size: 1.1rem;
   }
 
   /* With only one compound to show (no Previous or Next), Show the answer takes the whole first row. */
