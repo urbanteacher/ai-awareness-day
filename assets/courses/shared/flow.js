@@ -96,7 +96,7 @@
 				'</div><p class="ff-pred-res" aria-live="polite"></p><button type="button" class="ff-pred-skip">Skip and just watch</button></div>' : '') +
 			'<p class="ff-say" aria-live="polite">' + INTRO + '</p>' +
 			(media
-				? '<div class="ff-ctl ff-ctl--media"><button type="button" data-a="reset" aria-label="Rewind to the start">⏮ Rewind</button><button type="button" data-a="back" class="ff-ic" aria-label="Previous step" title="Previous step">‹</button><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build" class="ff-ic" aria-label="Next step" title="Next step">›</button><span class="ff-count"></span><button type="button" data-a="puzzle" class="ff-pzb">🧩 Your turn: order the steps</button></div>'
+				? '<div class="ff-ctl ff-ctl--media"><button type="button" data-a="reset" aria-label="Rewind to the start" title="Rewind to the start">⏮<span class="ff-lbl"> Rewind</span></button><button type="button" data-a="back" class="ff-ic" aria-label="Previous step" title="Previous step">‹</button><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build" class="ff-ic" aria-label="Next step" title="Next step">›</button><button type="button" data-a="puzzle" class="ff-pzb ff-ic" aria-pressed="false" aria-label="Your turn: order the steps" title="Your turn: order the steps">🧩</button><span class="ff-count"></span></div>'
 				: '<div class="ff-ctl"><button type="button" data-a="play" class="pri">▶ Play</button><button type="button" data-a="build">Next step</button><button type="button" data-a="reset">Start again</button><button type="button" data-a="puzzle" class="ff-pzb">🧩 Your turn: order the steps</button><span class="ff-count"></span></div>') +
 			'<div class="ff-pz" hidden><ol class="ff-pz-done"></ol><p class="ff-pz-k">Tap the step that comes next:</p><div class="ff-pz-cards" role="group" aria-label="Steps to put in order"></div></div>';
 		var svg = fig.querySelector('svg'), dot = fig.querySelector('.ff-dot'), say = fig.querySelector('.ff-say');
@@ -212,10 +212,23 @@
 		   Everything stays visible; the current box gets an orange outline and a dot travels along each arrow. */
 		var playing = false, busy = false;
 		function clearCur() { svg.querySelectorAll('.ff-n.cur').forEach(function (g) { g.classList.remove('cur'); }); }
-		function count() { cnt.textContent = pos < 0 ? 'Step 0 of ' + steps.length : 'Step ' + Math.min(pos, steps.length) + ' of ' + steps.length; }
+		function count() {
+			var k = pos < 0 ? 0 : Math.min(pos, steps.length);
+			if (media) cnt.innerHTML = '<span class="ff-lbl">Step </span>' + k + '<span class="ff-lbl"> of </span><span class="ff-sl" aria-hidden="true">/</span>' + steps.length;
+			else cnt.textContent = 'Step ' + k + ' of ' + steps.length;
+		}
+		/* In media mode the puzzle button stays a 🧩 switch: its words go in its label and tooltip, and it shows as pressed while the puzzle is open. */
+		function pzLabel(text, on) {
+			if (!media) { bPz.textContent = text; return; }
+			text = text.replace('🧩 ', '');
+			bPz.setAttribute('aria-label', text); bPz.title = text; bPz.setAttribute('aria-pressed', on ? 'true' : 'false');
+		}
 		function controls(state) {
-			if (state !== 'puzzle') { pz.hidden = true; pzState = null; bPz.textContent = '🧩 Your turn: order the steps'; bPz.classList.remove('pri'); }
-			bPlay.textContent = playing ? '❚❚ Pause' : (pos >= steps.length ? '▶ Play again' : '▶ Play');
+			if (state !== 'puzzle') { pz.hidden = true; pzState = null; pzLabel('🧩 Your turn: order the steps', false); bPz.classList.remove('pri'); }
+			if (media) {
+				var pl = playing ? ['❚❚', 'Pause'] : ['▶', 'Play'];
+				bPlay.innerHTML = pl[0] + '<span class="ff-lbl"> ' + pl[1] + '</span>'; bPlay.setAttribute('aria-label', pl[1]);
+			} else bPlay.textContent = playing ? '❚❚ Pause' : (pos >= steps.length ? '▶ Play again' : '▶ Play');
 			bBuild.disabled = busy && !playing || pos >= steps.length;
 			bPz.disabled = playing;
 			if (bBack) bBack.disabled = shown() <= 0;
@@ -316,7 +329,7 @@
 				return '<button type="button" class="ff-card" data-k="' + k + '">' + noOrder(steps[k].say) + '</button>';
 			}).join('');
 			pz.hidden = false;
-			bPz.textContent = 'Shuffle and start again';
+			pzLabel('Shuffle and start again', true);
 			say.innerHTML = '<b>Your turn.</b> The diagram has been cleared. Tap the steps below in the order they happen, and it will build as you go.';
 		}
 		pzCards.addEventListener('click', function (e) {
@@ -350,7 +363,7 @@
 				svg.querySelectorAll('.ff-e.live').forEach(function (g) { g.classList.remove('live'); g.classList.add('done'); });
 				var s = pzState.slips;
 				say.innerHTML = '<b>' + (s === 0 ? 'Perfect: every step in the right order first time!' : 'Built! ' + steps.length + ' steps, ' + s + (s === 1 ? ' slip.' : ' slips.')) + '</b> ' + esc(spec.end || '') + ' Press play to watch it run.';
-				bPz.textContent = 'Try again with a new shuffle';
+				pzLabel('Try again with a new shuffle', true);
 				pzState = null;
 				verdict();
 			}
