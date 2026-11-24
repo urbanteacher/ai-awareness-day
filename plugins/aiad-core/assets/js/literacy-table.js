@@ -2838,6 +2838,11 @@
 			tile.appendChild( el( 'span', 'alpt-board__n', String( boardIndex + 1 ) ) );
 			tile.appendChild( el( 'span', 'alpt-board__sym', e[ 0 ] ) );
 			tile.appendChild( el( 'span', 'alpt-board__tile-name', e[ 1 ] ) );
+			// Phones show the family and theme here, under the name, so the words below are only the definition.
+			// Screen readers hear it once, from the label in the words.
+			var tileLabel = el( 'span', 'alpt-board__tile-label', ( families[ e[ 2 ] ] || '' ) + ' · ' + ( themes[ e[ 5 ] ] || '' ) + ' theme' );
+			tileLabel.setAttribute( 'aria-hidden', 'true' );
+			tile.appendChild( tileLabel );
 			var boardHasPic = !! picBase && Object.prototype.hasOwnProperty.call( pics, e[ 0 ] );
 			if ( boardHasPic && boardShowPic ) {
 				var shownSym = e[ 0 ];
@@ -3102,16 +3107,22 @@
 		// definition with its picture can be taller than the slide, so shrink the words, tile and picture together
 		// (--t, from 1 down to 0.55) until nothing scrolls. Phones keep their own layout and scroll as before.
 		var slideScreen = window.matchMedia ? window.matchMedia( '(min-width: 768px) and (orientation: landscape)' ) : null;
+		var phoneScreen = window.matchMedia ? window.matchMedia( '(max-width: 767px)' ) : null;
 		function fitBoard() {
 			if ( board.hidden ) {
 				return;
 			}
 			board.style.removeProperty( '--t' );
-			if ( ! slideScreen || ! slideScreen.matches ) {
+			var phone = phoneScreen && phoneScreen.matches;
+			if ( ! phone && ( ! slideScreen || ! slideScreen.matches ) ) {
 				return;
 			}
+			// On a phone the words start large and shrink until the board doesn't scroll and no long word runs off
+			// the side, but never below 0.6 (the sizes phones had before).
+			var floor = phone ? 0.6 : 0.56;
+			var title = board.querySelector( '.alpt-board__title' );
 			var t = 1;
-			while ( board.scrollHeight > board.clientHeight + 1 && t > 0.56 ) {
+			while ( ( board.scrollHeight > board.clientHeight + 1 || ( title && title.clientWidth > 1 && title.scrollWidth > title.clientWidth + 1 ) ) && t > floor + 0.001 ) {
 				t -= 0.04;
 				board.style.setProperty( '--t', t.toFixed( 2 ) );
 			}

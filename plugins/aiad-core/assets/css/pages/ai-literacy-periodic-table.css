@@ -2395,6 +2395,10 @@ html.alpt-board-open {
   line-height: 1;
 }
 
+.alpt-board__tile-label {
+  display: none;
+}
+
 .alpt-board__tile-name {
   font-size: clamp(1rem, 1.6vw, 1.5rem);
   font-weight: 700;
@@ -5052,20 +5056,22 @@ html.alpt-board-open {
     letter-spacing: 0.1em;
   }
 
+  /* The words start large to fill the phone and literacy-table.js lowers --t (to 0.6 at most, the old sizes) until
+     the board doesn't scroll. */
   .alpt-board .alpt-board__title {
-    margin-bottom: 0.75rem;
-    font-size: 2.2rem;
+    margin-bottom: calc(1.25rem * var(--t, 1));
+    font-size: calc(3.7rem * var(--t, 1));
   }
 
   .alpt-board .alpt-board__def,
   .alpt-board .alpt-board__prompt {
-    font-size: 1.3rem;
+    font-size: calc(2.15rem * var(--t, 1));
     line-height: 1.25;
   }
 
   .alpt-board .alpt-board__talk {
     margin-top: 1.25rem;
-    font-size: 1.05rem;
+    font-size: calc(1.75rem * var(--t, 1));
   }
 
   /* At these sizes the words are small, so the desktop line limits (30 and 40 characters) only leave the right of
@@ -5181,22 +5187,44 @@ html.alpt-board-open {
     inset: calc(3.5rem + env(safe-area-inset-top, 0px)) 0 0.5rem;
   }
 
+  /* The family and theme sit in the tile, under the name, and leave the words (visually: screen readers still
+     hear them there). With the picture, which covers the tile, they go back to the words. */
+  .alpt-board__inner > .alpt-board__tile:not(.has-pic) .alpt-board__tile-label {
+    display: block;
+    margin-top: -0.25rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
   /* The words are smaller so the whole definition (and its question) fits above the buttons with room left for
      the tile. */
   .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__title {
     margin-bottom: 0.4rem;
-    font-size: 1.75rem;
+    font-size: calc(2.92rem * var(--t, 1));
   }
 
   .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__def,
   .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__prompt {
-    font-size: 1.05rem;
+    font-size: calc(1.75rem * var(--t, 1));
     line-height: 1.3;
   }
 
   .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__talk {
     margin-top: 0.6rem;
-    font-size: 0.92rem;
+    font-size: calc(1.53rem * var(--t, 1));
   }
 
   .alpt-board__inner:has(> .alpt-board__tile) .alpt-board__safe {
@@ -5216,17 +5244,29 @@ html.alpt-board-open {
   }
 
   .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__title {
-    font-size: 2.2rem;
+    font-size: calc(3.67rem * var(--t, 1));
   }
 
   .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__def,
   .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__prompt {
-    font-size: 1.3rem;
+    font-size: calc(2.17rem * var(--t, 1));
   }
 
   .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__talk {
     margin-top: 1rem;
-    font-size: 1.1rem;
+    font-size: calc(1.83rem * var(--t, 1));
+  }
+
+  /* With the definition showing, the tile above already names the word, so the big name isn't repeated: it stays
+     for screen readers (and focus). It shows again with the picture, which covers the tile's name. */
+  .alpt-board__inner:has(> .alpt-board__tile:not(.has-pic)) .alpt-board__text:has(.alpt-board__def) .alpt-board__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   /* With only one compound to show (no Previous or Next), Show the answer takes the whole first row. */
@@ -5467,7 +5507,7 @@ html.alpt-board-open {
   }
 
   .alpt-board__inner--compound .alpt-board__title {
-    font-size: 1.9rem;
+    font-size: calc(3.17rem * var(--t, 1));
   }
 
   .alpt-board__inner--compound .alpt-board__formula {
@@ -5525,12 +5565,12 @@ html.alpt-board-open {
 
   .alpt-board__inner--compound .alpt-board__def,
   .alpt-board__inner--compound .alpt-board__prompt {
-    font-size: 1.15rem;
+    font-size: calc(1.92rem * var(--t, 1));
   }
 
   .alpt-board__inner--compound .alpt-board__talk {
     margin-top: 0.9rem;
-    font-size: 0.95rem;
+    font-size: calc(1.58rem * var(--t, 1));
   }
 }
 
