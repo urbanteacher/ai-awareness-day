@@ -4779,6 +4779,36 @@ html.alpt-board-open {
   }
 }
 
+/* Desktop: Previous, Share and Next show only their icons. The words stay for screen readers (visually hidden) and
+   as tooltips; phones keep them on screen. */
+@media screen and (min-width: 768px) {
+  .alpt .alpt-panel__nav .alpt-btn__word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .alpt .alpt-panel__nav .alpt-step,
+  .alpt .alpt-panel__nav .alpt-share-btn {
+    justify-content: center;
+    min-width: 44px;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+
+  .alpt .alpt-panel__nav .alpt-step span[aria-hidden] {
+    font-size: 1.1rem;
+  }
+
+  .alpt .alpt-panel__nav .alpt-share-btn__icon {
+    margin: 0;
+  }
+}
+
 /* ---- Phones: the element's buttons as a tidy, thumb-sized grid instead of a ragged wrap.
    Row 1 is a stepper (Previous · 107 of 142 · Next), row 2 three equal tools, row 3 Back to elements. ---- */
 @media screen and (max-width: 767px) {

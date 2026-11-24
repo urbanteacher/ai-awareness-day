@@ -743,10 +743,10 @@ function aiad_render_literacy_table(): string {
 			</div>
 
 			<div class="alpt-panel__nav" data-alpt-nav>
-				<button type="button" class="alpt-btn alpt-step alpt-step--prev" data-alpt-step="-1"><span aria-hidden="true">&larr;</span> <?php esc_html_e( 'Previous', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-step alpt-step--prev" data-alpt-step="-1" title="<?php esc_attr_e( 'Previous', 'aiad-core' ); ?>"><span aria-hidden="true">&larr;</span> <span class="alpt-btn__word"><?php esc_html_e( 'Previous', 'aiad-core' ); ?></span></button>
 				<button type="button" class="alpt-btn alpt-btn--ink alpt-links-toggle" data-alpt-links aria-pressed="false"><span class="alpt-links-toggle__icon" aria-hidden="true"></span><?php esc_html_e( 'Connections', 'aiad-core' ); ?></button>
 				<button type="button" class="alpt-btn alpt-board-btn" data-alpt-board-element><span class="alpt-board-btn__icon" aria-hidden="true"></span><?php esc_html_e( 'Show to class', 'aiad-core' ); ?></button>
-				<button type="button" class="alpt-btn alpt-share-btn" data-alpt-share aria-expanded="false" aria-controls="alpt-share-menu"><svg class="alpt-share-btn__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 3v12M7 8l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><?php esc_html_e( 'Share', 'aiad-core' ); ?></button>
+				<button type="button" class="alpt-btn alpt-share-btn" data-alpt-share aria-expanded="false" aria-controls="alpt-share-menu" title="<?php esc_attr_e( 'Share', 'aiad-core' ); ?>"><svg class="alpt-share-btn__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 3v12M7 8l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span class="alpt-btn__word"><?php esc_html_e( 'Share', 'aiad-core' ); ?></span></button>
 				<div class="alpt-share" id="alpt-share-menu" data-alpt-share-menu hidden>
 					<p class="alpt-share__label"><?php esc_html_e( 'Share this element', 'aiad-core' ); ?></p>
 					<ul class="alpt-share__list">
@@ -768,7 +768,7 @@ function aiad_render_literacy_table(): string {
 					printf( esc_html__( 'Element %1$s of %2$s', 'aiad-core' ), '<span data-alpt-out="n2">' . esc_html( (string) $first['n'] ) . '</span>', esc_html( (string) $total ) );
 					?>
 				</span>
-				<button type="button" class="alpt-btn alpt-step alpt-step--next" data-alpt-step="1"><?php esc_html_e( 'Next', 'aiad-core' ); ?> <span aria-hidden="true">&rarr;</span></button>
+				<button type="button" class="alpt-btn alpt-step alpt-step--next" data-alpt-step="1" title="<?php esc_attr_e( 'Next', 'aiad-core' ); ?>"><span class="alpt-btn__word"><?php esc_html_e( 'Next', 'aiad-core' ); ?></span> <span aria-hidden="true">&rarr;</span></button>
 			</div>
 		</div>
 
