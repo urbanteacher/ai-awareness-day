@@ -6441,3 +6441,14 @@ html.alpt-flow-open {
     padding: 0.45rem 0.6rem;
   }
 }
+
+/* How it works: "Animated flow · its title" on one line, to save height. */
+.alpt-flowbox .ff-title .eyebrow {
+  display: inline;
+  margin: 0;
+}
+
+.alpt-flowbox .ff-title .eyebrow::after {
+  content: " · ";
+  color: var(--a27-dim, #54504E);
+}
