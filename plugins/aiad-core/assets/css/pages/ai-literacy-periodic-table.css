@@ -6215,9 +6215,6 @@ html.alpt-flow-open {
   border-color: var(--a27-cream);
 }
 
-
-}
-
 /* From the board, the pop-out is made for the projector: wider, with bigger captions and buttons. */
 .alpt-flowbox--board {
   width: min(1240px, 96vw);
@@ -6508,5 +6505,36 @@ html.alpt-flow-open {
 @container (max-width: 320px) {
   .alpt-flowbox .ff-ctl--media button {
     min-width: 40px;
+  }
+}
+
+/* On the board (a TV or projector), captions, credits and the More / Back row are read from the back of the room. */
+.alpt-flowbox--board .alpt-flowbox__still figcaption {
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+}
+
+.alpt-flowbox--board .alpt-flowbox__from,
+.alpt-flowbox--board .alpt-flowbox__stage .alpt-flowbox__from {
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+}
+
+.alpt-flowbox--board .alpt-flowbox__pager button,
+.alpt-flowbox--board .ff-ctl .alpt-flowbox__next {
+  font-size: 1.05rem;
+}
+
+/* Short projector screens (1366 x 768 and the like): the diagram gives a little height so the controls and credit fit. */
+@media (max-height: 820px) {
+  .alpt-flowbox--board .ff svg {
+    max-height: 48vh;
+  }
+
+  .alpt-flowbox--board .alpt-flowbox__still svg {
+    max-height: 52vh;
+  }
+
+  .alpt-flowbox--board .alpt-flowbox__head {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
   }
 }
