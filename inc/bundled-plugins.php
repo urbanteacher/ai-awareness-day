@@ -112,6 +112,13 @@ function aiad_bundled_plugin_sentinel_files(): array {
 			'modules/shortcode-migration.php',
 			'modules/post-types/resource-seeds.php',
 			'modules/seo/sharing.php',
+			// The AI Literacy Periodic Table changes often on its own: any of these newer refreshes the copy.
+			'modules/literacy-table/table.php',
+			'modules/literacy-table/admin.php',
+			'assets/js/literacy-table.js',
+			'assets/css/pages/ai-literacy-periodic-table.css',
+			'data/literacy-table/compounds.json',
+			'data/literacy-table/elements.json',
 		),
 		'ai-risk-readiness-benchmark' => array(
 			'public/js/airb-front.js',
