@@ -134,6 +134,8 @@
 		}
 		var flowButton = root.querySelector( '[data-alpt-flow]' );
 		var flowFrom = root.querySelector( '[data-alpt-flow-from]' );
+		// On desktop, See how it works is a ▶ in the element's button row instead of the big button (CSS picks which shows).
+		var flowNav = root.querySelector( '[data-alpt-flow-nav]' );
 		var flowLoad = null, stillsLoad = null, flowBox = null;
 		function flowFor( sym ) {
 			var id = flowData && flowData.elements && flowData.elements[ sym ];
@@ -176,9 +178,15 @@
 			}
 			var h = howFor( sym );
 			flowButton.hidden = ! h;
+			if ( flowNav ) {
+				flowNav.hidden = ! h;
+			}
 			if ( h && flowFrom ) {
 				var count = ( h.flow ? 1 : 0 ) + ( h.compare ? 1 : 0 ) + h.stills.length;
 				flowFrom.textContent = ( h.flow ? 'Animated · ' + h.flow.spec.title : ( h.compare ? 'Animated · ' + h.compare.spec.title : 'Illustrated · ' + stillTitle( h.stills[ 0 ] ) ) ) + ( count > 1 ? ' · +' + ( count - 1 ) + ' more' : '' );
+				if ( flowNav ) {
+					flowNav.title = 'See how it works: ' + flowFrom.textContent;
+				}
 			}
 		}
 		function loadFlowEngine() {
@@ -373,6 +381,11 @@
 		if ( flowButton ) {
 			flowButton.addEventListener( 'click', function () {
 				openFlow( elements[ current ][ 0 ], flowButton );
+			} );
+		}
+		if ( flowNav ) {
+			flowNav.addEventListener( 'click', function () {
+				openFlow( elements[ current ][ 0 ], flowNav );
 			} );
 		}
 		var linksOut = root.querySelector( '[data-alpt-links-out]' );
