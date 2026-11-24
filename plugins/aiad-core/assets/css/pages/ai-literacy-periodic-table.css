@@ -6546,7 +6546,7 @@ html.alpt-flow-open {
    layout (max-width: 767px). A long definition with its picture can still be too tall for the slide, so
    fitBoard() (literacy-table.js) lowers --t from 1, and --v (one slide pixel times --t) shrinks the tile, picture
    and words together until it fits, as PowerPoint shrinks text on overflow. Buttons stay full size. ---- */
-@media screen and (min-width: 1024px) and (orientation: landscape) {
+@media screen and (min-width: 768px) and (orientation: landscape) {
   .alpt-board {
     --u: min(calc(100vw / 1280), calc(100vh / 720));
     --v: calc(var(--u) * var(--t, 1));
@@ -6655,7 +6655,7 @@ html.alpt-flow-open {
   display: none;
 }
 
-@media screen and (min-width: 1024px) and (orientation: landscape) {
+@media screen and (min-width: 768px) and (orientation: landscape) {
   .alpt-board {
     --slide-x: calc((100vw - 1280 * var(--u)) / 2);
     --slide-y: calc((100vh - 720 * var(--u)) / 2);

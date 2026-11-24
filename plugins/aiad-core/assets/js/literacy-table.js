@@ -3085,7 +3085,7 @@
 		// On a projector the board is a 16:9 slide (see "Show to class on a projector or TV" in the CSS). A long
 		// definition with its picture can be taller than the slide, so shrink the words, tile and picture together
 		// (--t, from 1 down to 0.55) until nothing scrolls. Phones keep their own layout and scroll as before.
-		var slideScreen = window.matchMedia ? window.matchMedia( '(min-width: 1024px) and (orientation: landscape)' ) : null;
+		var slideScreen = window.matchMedia ? window.matchMedia( '(min-width: 768px) and (orientation: landscape)' ) : null;
 		function fitBoard() {
 			if ( board.hidden ) {
 				return;
