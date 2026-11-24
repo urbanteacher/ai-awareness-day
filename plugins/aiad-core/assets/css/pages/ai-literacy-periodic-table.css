@@ -4779,7 +4779,7 @@ html.alpt-board-open {
   }
 }
 
-/* Desktop: Previous, Share and Next show only their icons. The words stay for screen readers (visually hidden) and
+/* Desktop: Previous, Share, Next and Back to elements show only their icons. The words stay for screen readers (visually hidden) and
    as tooltips; phones keep them on screen. */
 @media screen and (min-width: 768px) {
   .alpt .alpt-panel__nav .alpt-btn__word {
@@ -4793,7 +4793,8 @@ html.alpt-board-open {
   }
 
   .alpt .alpt-panel__nav .alpt-step,
-  .alpt .alpt-panel__nav .alpt-share-btn {
+  .alpt .alpt-panel__nav .alpt-share-btn,
+  .alpt .alpt-panel__nav .alpt-back-to-tiles {
     justify-content: center;
     min-width: 44px;
     padding-left: 0.6rem;
@@ -4806,6 +4807,17 @@ html.alpt-board-open {
 
   .alpt .alpt-panel__nav .alpt-share-btn__icon {
     margin: 0;
+  }
+}
+
+/* Back to elements: an ✕ on desktop only; phones show the words. */
+.alpt-back-to-tiles__icon {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .alpt-back-to-tiles__icon {
+    display: block;
   }
 }
 
