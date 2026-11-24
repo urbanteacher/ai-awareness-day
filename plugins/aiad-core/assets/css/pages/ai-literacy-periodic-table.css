@@ -4810,23 +4810,27 @@ html.alpt-board-open {
   }
 }
 
-/* See how it works: the big button on phones, a ▶ in the element's button row on desktop. */
-.alpt .alpt-panel__nav .alpt-nav-play {
+/* See how it works: a ▶ in the element's button row (icon-only on desktop, with its words on phones), replacing
+   the big button that used to sit under Talk about it. */
+.alpt .alpt-panel__body .alpt-flow-cta {
   display: none;
 }
 
-@media screen and (min-width: 768px) {
-  .alpt .alpt-panel__body .alpt-flow-cta {
-    display: none;
-  }
+.alpt .alpt-panel__nav .alpt-nav-play[hidden] {
+  display: none;
+}
 
+.alpt .alpt-panel__nav .alpt-nav-play {
+  display: inline-flex;
+  justify-content: center;
+  background: var(--a27-smart);
+}
+
+@media screen and (min-width: 768px) {
   .alpt .alpt-panel__nav .alpt-nav-play:not([hidden]) {
-    display: inline-flex;
-    justify-content: center;
     min-width: 44px;
     padding-left: 0.6rem;
     padding-right: 0.6rem;
-    background: var(--a27-smart);
   }
 
   .alpt .alpt-panel__nav .alpt-nav-play:hover {
@@ -4895,9 +4899,11 @@ html.alpt-board-open {
   .alpt .alpt-panel__nav .alpt-share { grid-area: 4 / 1 / 5 / 7; }
   .alpt-js .alpt.is-detail-open .alpt-panel__nav .alpt-back-to-tiles {
     display: flex;
-    grid-area: 3 / 1 / 4 / 7;
+    grid-area: 3 / 4 / 4 / 7;
     justify-self: stretch;
   }
+
+  .alpt .alpt-panel__nav .alpt-nav-play { grid-area: 3 / 1 / 4 / 4; }
 
   .alpt .alpt-panel__nav .alpt-panel__count {
     display: block;
@@ -6451,4 +6457,51 @@ html.alpt-flow-open {
 .alpt-flowbox .ff-title .eyebrow::after {
   content: " · ";
   color: var(--a27-dim, #54504E);
+}
+
+/* The animation's control row fits whatever width the box has (not just the screen's). When the row with words
+   won't fit, Rewind and Play go icon-only and the step counter gives way to More; narrower still, the padding and
+   gaps tighten. */
+.alpt-flowbox__screen {
+  container-type: inline-size;
+}
+
+@container (max-width: 530px) {
+  .alpt-flowbox .ff-ctl--media .ff-lbl {
+    display: none;
+  }
+
+  .alpt-flowbox .ff-ctl--media .ff-sl {
+    display: inline;
+  }
+
+  .alpt-flowbox .ff-ctl--more .ff-count {
+    display: none;
+  }
+
+  .alpt-flowbox .ff-ctl--more .alpt-flowbox__next {
+    margin-left: auto;
+  }
+}
+
+@container (max-width: 380px) {
+  .alpt-flowbox__screen > .ff {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .alpt-flowbox .ff-ctl--media {
+    gap: 0.25rem;
+  }
+
+  .alpt-flowbox .ff-ctl--media button {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+  }
+}
+
+@container (max-width: 320px) {
+  .alpt-flowbox .ff-ctl--media button {
+    min-width: 40px;
+  }
 }

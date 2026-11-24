@@ -51,7 +51,8 @@
 .ff-ctl--media button{padding:.5rem .8rem;white-space:nowrap}
 .ff-ctl--media .ff-ic{min-width:44px;padding:.5rem .6rem;font-size:1.25rem;line-height:1}
 .ff-ctl--media .ff-pzb{font-size:1.1rem}
-.ff-ctl--media .ff-pzb[aria-pressed=true]{border-style:solid;background:var(--ink,#231F20)}
+.ff-ctl--media .ff-pzb[aria-pressed=true]{border-style:solid;background:var(--ink,#231F20);color:var(--paper,#F6F4ED)}
+.ff-ctl--media .ff-quiz-ic{display:block;margin:auto}
 .ff-ctl--media .ff-count{margin-left:auto;white-space:nowrap}
 .ff-ctl--media .ff-sl{display:none}
 @media (max-width:480px){.ff-ctl--media{gap:.3rem}.ff-ctl--media button{min-width:44px;padding:.5rem .4rem}.ff-ctl--media .ff-lbl{display:none}.ff-ctl--media .ff-sl{display:inline}.ff-ctl--media .ff-count{font-size:.8rem}}
