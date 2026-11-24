@@ -47,7 +47,9 @@
     // Tries real full screen. Where the browser refuses (an embedded view, an
     // older iPad) the element fills the window instead, so the button always
     // does something. Esc or the Close button puts it back.
-    var toBoard = function (target, button, onChange) {
+    // On the board the view is a slideshow slide (assets/js/slideshow.js): `pill` holds its controls (the bar of
+    // slide buttons, or the Close button itself for a big question).
+    var toBoard = function (target, button, onChange, pill) {
         if (!target || !button) return;
         var label = button.textContent.trim();
         var on = false;
@@ -58,6 +60,10 @@
             target.classList.toggle('is-board', now);
             button.textContent = now ? 'Close' : label;
             if (onChange) onChange(now);
+            if (window.AIADShow) {
+                if (now) window.AIADShow.start(target, { pill: pill || button });
+                else window.AIADShow.stop(target);
+            }
         };
         var open = function () {
             set(true);
@@ -169,7 +175,7 @@
             if (pdfBig) reloadPdf();
             pdfBig = false;
         }
-    });
+    }, media && media.querySelector('.rl-media__bar'));
 
 
     // ── Debate: one tab per age pathway ──

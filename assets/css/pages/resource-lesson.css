@@ -1417,3 +1417,26 @@ html:has(.is-board) {
     display: none;
   }
 }
+
+/* ---- The slides on the board, as a slideshow (assets/css/components/slideshow.css): one slide at a time fills
+   the 16:9 frame exactly, with ← 3 / 12 → · Slides PDF · Close in the floating pill. The PDF view keeps the whole
+   window for the browser's own page and zoom controls. ---- */
+@media screen and (min-width: 768px) and (orientation: landscape) {
+  .rl-media.is-board.aiad-show[data-view="slides"] {
+    padding: var(--slide-y) var(--slide-x);
+  }
+
+  .rl-media.is-board.aiad-show[data-view="pdf"]::before {
+    display: none;
+  }
+
+  .rl-media.is-board.aiad-show .rl-deck__nav,
+  .rl-media.is-board.aiad-show .rl-media__views {
+    gap: calc(4 * var(--u));
+    margin: 0;
+  }
+
+  .rl .rl-media.is-board.aiad-show .rl-media__views .rl-btn + .rl-btn {
+    margin-left: 0;
+  }
+}

@@ -330,20 +330,20 @@ rewind_posts();
 								<?php if ( ! $video_html ) : ?>
 									<?php /* The pinned frame is too small for the PDF viewer's own controls; the board gives them room. Hidden until resource-lesson.js is running. */ ?>
 									<div class="rl-media__bar">
-										<button type="button" class="rl-btn rl-media__show" data-rl-slides-project hidden>
-											<?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?>
-										</button>
 										<?php if ( $slide_pages ) : ?>
+											<div class="rl-deck__nav">
+												<button type="button" class="rl-btn" data-rl-prev aria-label="<?php esc_attr_e( 'Previous slide', 'ai-awareness-day' ); ?>">&larr;</button>
+												<span class="rl-deck__count aiad-show__count" data-rl-count aria-live="polite"></span>
+												<button type="button" class="rl-btn" data-rl-next aria-label="<?php esc_attr_e( 'Next slide', 'ai-awareness-day' ); ?>">&rarr;</button>
+											</div>
 											<div class="rl-media__views" role="group" aria-label="<?php esc_attr_e( 'How to show the slides', 'ai-awareness-day' ); ?>">
 												<button type="button" class="rl-btn" data-rl-view="slides" aria-pressed="true"><?php esc_html_e( 'Slides', 'ai-awareness-day' ); ?></button>
 												<button type="button" class="rl-btn" data-rl-view="pdf" aria-pressed="false"><?php esc_html_e( 'PDF', 'ai-awareness-day' ); ?></button>
 											</div>
-											<div class="rl-deck__nav">
-												<button type="button" class="rl-btn" data-rl-prev aria-label="<?php esc_attr_e( 'Previous slide', 'ai-awareness-day' ); ?>">&larr;</button>
-												<span class="rl-deck__count" data-rl-count aria-live="polite"></span>
-												<button type="button" class="rl-btn" data-rl-next aria-label="<?php esc_attr_e( 'Next slide', 'ai-awareness-day' ); ?>">&rarr;</button>
-											</div>
 										<?php endif; ?>
+										<button type="button" class="rl-btn rl-media__show" data-rl-slides-project hidden>
+											<?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?>
+										</button>
 									</div>
 								<?php endif; ?>
 								<figcaption class="rl-media__caption">
@@ -494,9 +494,9 @@ rewind_posts();
 
 					<?php if ( '' !== $question ) : ?>
 						<section class="rl-section rl-question" id="rl-question" aria-labelledby="rl-question-h">
-							<div class="rl-question__panel" data-rl-question tabindex="-1">
-								<h2 id="rl-question-h" class="rl-question__label"><?php esc_html_e( 'Big question', 'ai-awareness-day' ); ?></h2>
-								<p class="rl-question__text"><?php echo wptexturize( esc_html( $question ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+							<div class="rl-question__panel" data-rl-question data-show-question tabindex="-1">
+								<h2 id="rl-question-h" class="rl-question__label" data-show-label><?php esc_html_e( 'Big question', 'ai-awareness-day' ); ?></h2>
+								<p class="rl-question__text" data-show-fit><?php echo wptexturize( esc_html( $question ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 								<button type="button" class="rl-question__show" data-rl-project hidden>
 									<?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?>
 								</button>

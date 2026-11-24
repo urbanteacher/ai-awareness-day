@@ -1,0 +1,160 @@
+/* ==========================================================================
+   Slideshow frame for "Show on the board" (assets/js/slideshow.js): a resource lesson's slides and big question,
+   and the National Conversation's big question, presented as the AI Literacy Periodic Table's Show to class is,
+   after SlideForge.
+
+   On a landscape screen 768px and wider the view is one 1280 x 720 slide (PowerPoint widescreen) on a black
+   surround, scaled to the largest 16:9 that fits: --u is one slide pixel (1.5px on a 1920 x 1080 projector), --v is
+   --u times --t, which slideshow.js lowers when long text would not fit. Its controls sit in a floating pill at the
+   bottom centre, which fades with the pointer after three still seconds (never while it has focus). B or . blanks
+   the screen on any size.
+
+   The selectors repeat .aiad-show to outrank each view's own board styles, whichever loads first.
+   ========================================================================== */
+
+.aiad-show.is-blank::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #000;
+}
+
+.aiad-show.is-blank {
+  cursor: none;
+}
+
+@media screen and (min-width: 768px) and (orientation: landscape) {
+  .aiad-show.aiad-show {
+    --u: min(calc(100vw / 1280), calc(100vh / 720));
+    --v: calc(var(--u) * var(--t, 1));
+    --slide-x: calc((100vw - 1280 * var(--u)) / 2);
+    --slide-y: calc((100vh - 720 * var(--u)) / 2);
+    isolation: isolate;
+    background: #000;
+  }
+
+  /* The slide itself. */
+  .aiad-show.aiad-show::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    top: var(--slide-y);
+    left: var(--slide-x);
+    width: calc(1280 * var(--u));
+    height: calc(720 * var(--u));
+    background: var(--a27-ink, #231F20);
+  }
+
+  /* The pill: a bar of buttons, or a single button that is the pill. */
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    bottom: calc(var(--slide-y) + 24 * var(--u));
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: calc(4 * var(--u));
+    margin: 0;
+    padding: calc(6 * var(--u)) calc(8 * var(--u));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(18, 20, 24, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: var(--a27-cream, #F6F4ED);
+    transition: opacity 0.25s, visibility 0s;
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill button,
+  .aiad-show.aiad-show.aiad-show button.aiad-show__pill {
+    min-height: calc(46 * var(--u));
+    margin: 0;
+    padding: calc(8 * var(--u)) calc(18 * var(--u));
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--a27-cream, #F6F4ED);
+    font: inherit;
+    font-size: calc(17 * var(--u));
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  /* A single button is the pill, so it keeps the pill's dark and edge. */
+  .aiad-show.aiad-show.aiad-show button.aiad-show__pill {
+    padding: calc(12 * var(--u)) calc(28 * var(--u));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(18, 20, 24, 0.92);
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill button:hover:not(:disabled),
+  .aiad-show.aiad-show.aiad-show button.aiad-show__pill:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--a27-cream, #F6F4ED);
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill button[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--a27-cream, #F6F4ED);
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill button:focus-visible,
+  .aiad-show.aiad-show.aiad-show button.aiad-show__pill:focus-visible {
+    outline: 2px solid var(--a27-cream, #F6F4ED);
+    outline-offset: -2px;
+  }
+
+  .aiad-show.aiad-show.aiad-show .aiad-show__count {
+    min-width: 0;
+    padding: 0 calc(6 * var(--u));
+    color: #cfd4de;
+    font-size: calc(16 * var(--u));
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* A hairline before the last button (Close), as a slideshow's Exit has. */
+  .aiad-show.aiad-show.aiad-show .aiad-show__pill > :last-child {
+    margin-left: calc(6 * var(--u));
+    box-shadow: -1px 0 0 0 rgba(255, 255, 255, 0.16);
+    border-radius: 0 999px 999px 0;
+  }
+
+  /* Still for three seconds: the pill and the pointer fade (not while the pill has focus or the pointer). */
+  .aiad-show.is-idle {
+    cursor: none;
+  }
+
+  .aiad-show.aiad-show.is-idle .aiad-show__pill:not(:hover):not(:focus-within) {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s, visibility 0s linear 0.25s;
+  }
+
+  /* A big question on the board: the label and the question, large, on the slide. */
+  .aiad-show.aiad-show.aiad-show[data-show-question] {
+    justify-content: center;
+    padding: calc(var(--slide-y) + 56 * var(--u)) calc(var(--slide-x) + 96 * var(--u)) calc(var(--slide-y) + 120 * var(--u));
+  }
+
+  .aiad-show.aiad-show.aiad-show [data-show-label] {
+    margin: 0 0 calc(22 * var(--v));
+    font-size: calc(18 * var(--v));
+  }
+
+  .aiad-show.aiad-show.aiad-show [data-show-fit] {
+    max-width: 24ch;
+    font-size: calc(76 * var(--v));
+  }
+}

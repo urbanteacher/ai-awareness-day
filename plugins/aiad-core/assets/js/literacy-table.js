@@ -2886,13 +2886,13 @@
 			bar.appendChild( prev );
 			bar.appendChild( next );
 			bar.appendChild( boardButton( boardHideDef ? 'Show definition' : 'Hide definition', 'toggle', 'alpt-board__btn--toggle' ) );
-			if ( ! boardHideDef && talk[ e[ 0 ] ] ) {
-				appendTalkButton( bar, 'Talk about it' );
-			}
 			if ( boardHasPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide picture' : 'Show picture', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
 				bar.appendChild( picToggle );
+			}
+			if ( ! boardHideDef && talk[ e[ 0 ] ] ) {
+				appendTalkButton( bar, 'Talk about it' );
 			}
 			appendFlowButton( bar );
 			appendCardButtons( bar, e[ 1 ] );
@@ -3084,13 +3084,13 @@
 				symToggle.setAttribute( 'aria-label', TAG_LABELS[ boardTags ] + '. Change the tags on the words' );
 				bar.appendChild( symToggle );
 			}
-			if ( ! boardHideDef && c[ 6 ] ) {
-				appendTalkButton( bar, 'Debate it' );
-			}
 			if ( anyPic ) {
 				var picToggle = boardButton( boardShowPic ? 'Hide pictures' : 'Show pictures', 'pic', 'alpt-board__btn--pic' );
 				picToggle.setAttribute( 'aria-pressed', String( boardShowPic ) );
 				bar.appendChild( picToggle );
+			}
+			if ( ! boardHideDef && c[ 6 ] ) {
+				appendTalkButton( bar, 'Debate it' );
 			}
 			appendFlowButton( bar );
 			appendCardButtons( bar, c[ 1 ] );

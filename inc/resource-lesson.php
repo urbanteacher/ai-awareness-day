@@ -390,10 +390,26 @@ add_action(
 		if ( is_readable( $css ) ) {
 			wp_enqueue_style( 'aiad-resource-lesson', AIAD_URI . '/assets/css/pages/resource-lesson.css', array( 'aiad-style' ), (string) filemtime( $css ) );
 		}
+		// The slideshow frame for "Show on the board" (slides and big question): see assets/js/slideshow.js.
+		aiad_enqueue_slideshow();
 		$js = AIAD_DIR . '/assets/js/resource-lesson.js';
 		if ( is_readable( $js ) ) {
-			wp_enqueue_script( 'aiad-resource-lesson', AIAD_URI . '/assets/js/resource-lesson.js', array(), (string) filemtime( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+			wp_enqueue_script( 'aiad-resource-lesson', AIAD_URI . '/assets/js/resource-lesson.js', array( 'aiad-slideshow' ), (string) filemtime( $js ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		}
 	},
 	15
 );
+
+if ( ! function_exists( 'aiad_enqueue_slideshow' ) ) {
+	/**
+	 * The slideshow frame shared by every "Show on the board" view (a lesson's slides and big question, the National
+	 * Conversation's big question): a 16:9 slide with a floating control pill, after the AI Literacy Periodic Table's
+	 * Show to class. assets/css/components/slideshow.css and assets/js/slideshow.js.
+	 */
+	function aiad_enqueue_slideshow(): void {
+		$css = AIAD_DIR . '/assets/css/components/slideshow.css';
+		$js  = AIAD_DIR . '/assets/js/slideshow.js';
+		wp_enqueue_style( 'aiad-slideshow', AIAD_URI . '/assets/css/components/slideshow.css', array(), is_readable( $css ) ? (string) filemtime( $css ) : AIAD_VERSION );
+		wp_enqueue_script( 'aiad-slideshow', AIAD_URI . '/assets/js/slideshow.js', array(), is_readable( $js ) ? (string) filemtime( $js ) : AIAD_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+	}
+}

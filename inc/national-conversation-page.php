@@ -261,9 +261,9 @@ function aiad_theme_resources_dialog( string $strand ): string {
 	<div class="ncp-theme-dialog__lead">
 	<?php endif; ?>
 	<?php if ( $sample ) : ?>
-	<div class="ncp-bigq" data-ncp-board-panel tabindex="-1">
-		<p class="ncp-bigq__label"><?php esc_html_e( 'Big question', 'ai-awareness-day' ); ?></p>
-		<p class="ncp-bigq__text"><?php echo wptexturize( esc_html( $sample['text'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+	<div class="ncp-bigq" data-ncp-board-panel data-show-question tabindex="-1">
+		<p class="ncp-bigq__label" data-show-label><?php esc_html_e( 'Big question', 'ai-awareness-day' ); ?></p>
+		<p class="ncp-bigq__text" data-show-fit><?php echo wptexturize( esc_html( $sample['text'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 		<p class="ncp-bigq__actions">
 			<button type="button" class="ncp-bigq__show" data-ncp-board data-close="<?php esc_attr_e( 'Close', 'ai-awareness-day' ); ?>"><?php esc_html_e( 'Show on the board', 'ai-awareness-day' ); ?></button>
 			<a class="ncp-bigq__from" href="<?php echo esc_url( $sample['url'] ); ?>"><?php echo esc_html( sprintf( /* translators: %s: resource title */ __( 'From the lesson: %s', 'ai-awareness-day' ), html_entity_decode( $sample['title'], ENT_QUOTES, 'UTF-8' ) ) ); ?></a>
@@ -289,7 +289,10 @@ function aiad_theme_resources_dialog( string $strand ): string {
 	// One small script for every pop-up on the page: open it from its button or principle card, close it on a click on the backdrop, and put a big question
 	// on the board (full screen where the browser allows it, else filling the window), as resource-lesson.js does.
 	if ( ! wp_script_is( 'aiad-nc-theme-resources', 'enqueued' ) ) {
-		wp_register_script( 'aiad-nc-theme-resources', false, array(), AIAD_VERSION, true );
+		if ( function_exists( 'aiad_enqueue_slideshow' ) ) {
+			aiad_enqueue_slideshow();
+		}
+		wp_register_script( 'aiad-nc-theme-resources', false, function_exists( 'aiad_enqueue_slideshow' ) ? array( 'aiad-slideshow' ) : array(), AIAD_VERSION, true );
 		wp_enqueue_script( 'aiad-nc-theme-resources' );
 		wp_add_inline_script(
 			'aiad-nc-theme-resources',
@@ -302,6 +305,11 @@ function aiad_theme_resources_dialog( string $strand ): string {
 		if (!button.dataset.label) button.dataset.label = button.textContent;
 		button.textContent = on ? button.dataset.close : button.dataset.label;
 		board = on ? panel : null;
+		// On the board it is a slideshow slide, its Close button the pill (assets/js/slideshow.js).
+		if (window.AIADShow) {
+			if (on) window.AIADShow.start(panel, { pill: button });
+			else window.AIADShow.stop(panel);
+		}
 		if (on) {
 			if (panel.requestFullscreen) panel.requestFullscreen().catch(function () {});
 			panel.focus();
